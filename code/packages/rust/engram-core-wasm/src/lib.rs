@@ -306,10 +306,12 @@ impl EngramSession {
                 | EngramAppEvent::DeleteNoteType => {}
             }
 
+            let host_intent = host_intent_for_event(parsed.kind, &self.state, deck_id, now);
             let props = engram_app_props_for_state(&self.state, deck_id, now);
             Ok(json!({
                 "ok": true,
                 "event": parsed.kind.canonical_name(),
+                "hostIntent": host_intent,
                 "state": self.state,
                 "props": props,
             })
@@ -1050,6 +1052,45 @@ fn selected_deck_id(state: &AppState, deck_id: &str) -> String {
         .map(|active| active.deck_id.clone())
         .or_else(|| state.decks.first().map(|deck| deck.id.clone()))
         .unwrap_or_default()
+}
+
+fn host_intent_for_event(
+    event: EngramAppEvent,
+    state: &AppState,
+    deck_id: &str,
+    now: u64,
+) -> Option<Value> {
+    let selected_deck = selected_deck_id(state, deck_id);
+    let base = |intent_type: &str| {
+        json!({
+            "type": intent_type,
+            "event": event.canonical_name(),
+            "deckId": selected_deck,
+            "createdAt": now,
+        })
+    };
+
+    match event {
+        EngramAppEvent::ImportAnki => Some(json!({
+            "type": "importAnki",
+            "event": event.canonical_name(),
+            "deckId": selected_deck,
+            "createdAt": now,
+            "accept": [".apkg", ".colpkg"],
+        })),
+        EngramAppEvent::ExportAnki => Some(json!({
+            "type": "exportAnki",
+            "event": event.canonical_name(),
+            "deckId": selected_deck,
+            "createdAt": now,
+            "extension": ".apkg",
+        })),
+        EngramAppEvent::AddNote => Some(base("addNote")),
+        EngramAppEvent::AddNoteType => Some(base("addNoteType")),
+        EngramAppEvent::DeleteNote => Some(base("deleteNote")),
+        EngramAppEvent::DeleteNoteType => Some(base("deleteNoteType")),
+        _ => None,
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -3419,22 +3460,36 @@ mod tests {
             }"#,
         );
 
-        for (event, canonical) in [
-            ("onImportAnki", "onImportAnki"),
-            ("export-anki", "onExportAnki"),
-            ("add-note", "onAddNote"),
-            ("add-note-type", "onAddNoteType"),
-            ("delete-note", "onDeleteNote"),
-            ("delete-note-type", "onDeleteNoteType"),
+        for (event, canonical, intent_type) in [
+            ("onImportAnki", "onImportAnki", "importAnki"),
+            ("export-anki", "onExportAnki", "exportAnki"),
+            ("add-note", "onAddNote", "addNote"),
+            ("add-note-type", "onAddNoteType", "addNoteType"),
+            ("delete-note", "onDeleteNote", "deleteNote"),
+            ("delete-note-type", "onDeleteNoteType", "deleteNoteType"),
         ] {
             let value: Value =
-                serde_json::from_str(&session.handle_engram_app_event(event, "", NOW)).unwrap();
+                serde_json::from_str(&session.handle_engram_app_event(event, "deck", NOW)).unwrap();
             assert_eq!(value["ok"], true);
             assert_eq!(value["event"], canonical);
+            assert_eq!(value["hostIntent"]["type"], intent_type);
+            assert_eq!(value["hostIntent"]["event"], canonical);
+            assert_eq!(value["hostIntent"]["deckId"], "deck");
+            assert_eq!(value["hostIntent"]["createdAt"], NOW);
             assert_eq!(value["state"]["notes"].as_array().unwrap().len(), 1);
             assert_eq!(value["props"]["collection-note-count-value"], "1");
             assert_eq!(value["props"]["collection-note-type-count-value"], "1");
         }
+
+        let import: Value =
+            serde_json::from_str(&session.handle_engram_app_event("onImportAnki", "deck", NOW))
+                .unwrap();
+        assert_eq!(import["hostIntent"]["accept"], json!([".apkg", ".colpkg"]));
+
+        let export: Value =
+            serde_json::from_str(&session.handle_engram_app_event("onExportAnki", "deck", NOW))
+                .unwrap();
+        assert_eq!(export["hostIntent"]["extension"], ".apkg");
     }
 
     #[test]

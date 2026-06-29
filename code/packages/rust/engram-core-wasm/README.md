@@ -45,6 +45,8 @@ reimplement scheduling, card generation, queueing, stats, or state transitions.
 - `parse_cards_csv(csv)`
 - `parse_basic_cards_csv(csv, deck_id, id_prefix, created_at)`
 - `parse_anki_basic_tsv(tsv, deck_id, id_prefix, created_at)`
+- `engram_app_props(deck_id, now)`
+- `handle_engram_app_event(event, deck_id, now)`
 
 All JSON uses camelCase field names to match the existing TypeScript Engram app
 and keep generated bindings idiomatic.
@@ -89,6 +91,12 @@ Media commands update `AppState.mediaAssets` through the same facade, letting
 web, Electron, SwiftUI, XAML, Qt, and other native hosts copy attached media,
 replace imported payloads, or prune unreferenced media IDs without a separate
 platform reducer.
+
+`handle_engram_app_event` returns updated props for generated Mosaic shells.
+Events that require host APIs, including Anki package import/export and
+note/note-type dialogs, include a `hostIntent` payload so each platform can open
+files, save APKG bytes, or present native dialogs without forking the generated
+interface.
 
 `search_cards` exposes the shared browser-query engine. It returns
 `{ ok: true, results }` for valid queries and `{ ok: false, error, token }` for

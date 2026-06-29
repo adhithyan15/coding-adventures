@@ -40,7 +40,9 @@ Core session exports include `reset`, `snapshot`, `get_state`, `load_snapshot`,
 The JS loader in `js/engram-mosaic-host-wasm.mjs` adapts those JSON responses to
 the generated Mosaic React/Electron host contract by converting Mosaic
 kebab-case slot names such as `app-title` to generated prop names such as
-`appTitle`.
+`appTitle`. Generated app events that require platform work, such as Anki
+package import/export or note dialogs, also return a `hostIntent` object and
+may be observed through `createMosaicHost({ onHostIntent })`.
 
 ## Building
 

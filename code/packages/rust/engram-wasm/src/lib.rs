@@ -322,6 +322,28 @@ mod tests {
     }
 
     #[test]
+    fn abi_handle_app_event_returns_host_intents() {
+        load_fixture();
+        let (event_ptr, event_len) = put("onImportAnki");
+        let (deck_ptr, deck_len) = put("deck");
+        let imported =
+            unsafe { handle_engram_app_event(event_ptr, event_len, deck_ptr, deck_len, NOW) };
+        unsafe {
+            dealloc(event_ptr, event_len);
+            dealloc(deck_ptr, deck_len);
+        }
+        let imported = take(imported);
+
+        assert!(imported.contains(r#""event":"onImportAnki""#), "{imported}");
+        assert!(imported.contains(r#""hostIntent""#), "{imported}");
+        assert!(
+            imported.contains(r#""accept":[".apkg",".colpkg"]"#),
+            "{imported}"
+        );
+        assert!(imported.contains(r#""type":"importAnki""#), "{imported}");
+    }
+
+    #[test]
     fn abi_empty_inputs_return_json_errors_instead_of_trapping() {
         reset();
         let loaded = unsafe { load_snapshot(std::ptr::null(), 0) };

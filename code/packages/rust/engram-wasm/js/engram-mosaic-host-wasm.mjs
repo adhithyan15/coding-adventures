@@ -119,15 +119,21 @@ export function createEngramEngine(wasmBytes, options = {}) {
           const now = valueOf(hostOptions.now ?? currentNow);
           return toHostResponse(jsonResult(callStrU64("engram_app_props", deck, valueOf(now))));
         },
-        handleEvent: (request) => {
+        handleEvent: async (request) => {
           assertEngramComponent(request);
           const deck = valueOf(hostOptions.deckId ?? currentDeckId);
           const now = valueOf(hostOptions.now ?? currentNow);
-          return toHostResponse(
-            jsonResult(
-              callEventDeckNow("handle_engram_app_event", request.event, deck, valueOf(now)),
-            ),
+          const result = jsonResult(
+            callEventDeckNow("handle_engram_app_event", request.event, deck, valueOf(now)),
           );
+          const response = toHostResponse(result);
+          if (result.hostIntent && typeof hostOptions.onHostIntent === "function") {
+            const hostResult = await hostOptions.onHostIntent(result.hostIntent, result);
+            if (hostResult !== undefined) {
+              response.hostResult = hostResult;
+            }
+          }
+          return response;
         },
       }),
   };
@@ -177,7 +183,14 @@ function toHostResponse(result) {
   if (!result || result.ok !== true) {
     return { props: {}, error: result?.error ?? "Engram host returned an error" };
   }
-  return { props: camelCaseMosaicSlots(result.props ?? {}) };
+  const response = { props: camelCaseMosaicSlots(result.props ?? {}) };
+  if (result.hostIntent) {
+    response.hostIntent = result.hostIntent;
+  }
+  if (result.event) {
+    response.event = result.event;
+  }
+  return response;
 }
 
 function stringifyInput(value) {

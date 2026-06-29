@@ -401,6 +401,10 @@ Status:
 - `engram-wasm/js/engram-mosaic-host-wasm.mjs` adapts the WASM facade to the
   generated Mosaic `window.mosaicHost` contract, including kebab-case Mosaic
   slot names -> camelCase React/Electron prop names.
+- Generated app events that require platform file/dialog APIs now return a
+  shared `hostIntent` payload. The JS Mosaic host adapter preserves that intent
+  and offers `onHostIntent`, giving HTML/Electron hosts the same import/export
+  handoff contract that native C/Swift/XAML/Qt shells can use.
 
 ### 2.3 `engram-capi`
 

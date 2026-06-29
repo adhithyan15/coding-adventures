@@ -55,5 +55,17 @@ engine.dispatch({
 const revealed = await host.handleEvent({ component: "EngramApp", event: { type: "reveal" } });
 check("event updates props", revealed.props.answerVisible, true);
 
+let seenIntent = null;
+const intentHost = engine.createMosaicHost({
+  onHostIntent: (intent) => {
+    seenIntent = intent;
+    return { handled: true };
+  },
+});
+const imported = await intentHost.handleEvent({ component: "EngramApp", event: "onImportAnki" });
+check("host intent type", imported.hostIntent.type, "importAnki");
+check("host intent callback", seenIntent.type, "importAnki");
+check("host intent result", imported.hostResult, { handled: true });
+
 console.log(failures === 0 ? "\nALL PASS" : `\n${failures} FAILURE(S)`);
-process.exit(failures === 0 ? 0 : 1);
+process.exitCode = failures === 0 ? 0 : 1;

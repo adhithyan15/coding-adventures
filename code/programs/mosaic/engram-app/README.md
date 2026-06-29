@@ -80,4 +80,6 @@ Flutter outputs under `target/mosaic-engram-app/` by default.
 For a Rust-backed web or Electron host, build
 `code/packages/rust/engram-wasm` and install
 `js/engram-mosaic-host-wasm.mjs` as the generated shell's `window.mosaicHost`
-provider.
+provider. Collection actions such as Anki import/export return `hostIntent`
+payloads so hosts can open file pickers or save APKG bytes while keeping the
+Mosaic app interface shared.
