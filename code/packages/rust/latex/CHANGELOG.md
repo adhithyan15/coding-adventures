@@ -2,6 +2,35 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.12.0] — 2026-06-29
+
+### Fixed — deep `MathNode` trees now drop without overflowing the stack
+
+`MathNode` is a recursive `Box`-owning enum, so the compiler-generated destructor recurses
+once per level. The parser builds **left-nested** chains via loops with no per-term depth
+charge (`parse_add`/`parse_mul`/`parse_relation`), so input like `1+1+1+…` (or a long
+juxtaposition `aaa…`) yields an O(n)-deep tree even though `MAX_DEPTH` bounds *nesting*.
+Dropping a deep-enough such tree overflowed the stack — an **uncatchable abort**, even
+though `parse_math` itself survives (it builds iteratively). This was the pre-existing
+latent hazard flagged in the L6 security review.
+
+- **`impl Drop for MathNode`** now dismantles the tree with an explicit **heap worklist**
+  instead of the call stack: each node's boxed children are moved onto a `Vec` (replaced
+  in place by a cheap `Sym("")` leaf), popped, and repeated, so the generated destructor
+  recurses at most one trivial level. O(1) stack depth regardless of tree depth. This
+  mirrors `math_frontend::MathExpr`'s `Drop` (added in `math-frontend` 0.3.0).
+- **`take_children` helper** does the per-variant child extraction (leaves contribute
+  nothing; `Matrix` rows are drained via `mem::take`).
+- Because `MathNode` now implements `Drop`, fields can no longer be moved out of an owned
+  value in a by-value `match` (E0509). The `frontend.rs` `lower()` trampoline and the
+  by-value test matches were rewritten to `match &node`/`match &n` and extract children via
+  `mem::replace`/`Option::take`/`mem::take`. No behavior change — purely how ownership is
+  threaded.
+- New regression tests: `deep_left_nested_tree_drops_without_overflow` (200k-deep `Bin`
+  spine), `deep_parsed_chain_drops_without_overflow` (50k-term `+` chain through the real
+  parser), `deep_unary_chain_drops_without_overflow` (200k-deep `Unary` spine). 139 tests
+  pass; both the default build and `--no-default-features` (zero-dep L0–L5) stay green.
+
 ## [0.11.0] — 2026-06-28
 
 ### Changed — L6 closes its two honest neutral-AST gaps (± / ∓ and binomials)

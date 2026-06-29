@@ -226,6 +226,20 @@ The low-level `tokenize` is also public. Tokens and errors carry half-open byte 
 all of `parse`, `parse_math`, and `tokenize` return spanned errors rather than panicking,
 and recursion is depth-guarded so adversarial nesting errors instead of overflowing.
 
+### Deep-tree drop safety
+
+`MathNode` is a recursive `Box`-owning tree, so a naive (compiler-derived) destructor would
+recurse once per level. The parser's `MAX_DEPTH` bounds *nesting*, but left-associative
+chains — `1+1+1+…`, juxtaposition `aaa…` — are built in loops with no per-term depth charge,
+so they produce O(n)-deep trees that `parse_math` happily returns (it builds iteratively).
+Dropping such a tree would overflow the stack: an **uncatchable abort**. To prevent it,
+`MathNode` implements `Drop` explicitly, dismantling the tree with a **heap worklist** (each
+boxed child is moved onto a `Vec`, replaced in place by a cheap leaf, then popped) so the
+generated destructor recurses at most one trivial level — O(1) stack depth at any size. The
+neutral `math_frontend::MathExpr` does the same. (Consequence: because `MathNode: Drop`, you
+cannot move fields out of an owned `MathNode` in a by-value `match` — borrow with `match &node`
+and lift children via `mem::replace`/`Option::take`.)
+
 ## Tests
 
 ```

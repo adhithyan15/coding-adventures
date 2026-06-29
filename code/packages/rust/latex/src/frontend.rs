@@ -104,6 +104,13 @@ enum Task {
     Build(Build),
 }
 
+/// Lift the owned `MathNode` out of a boxed child, leaving a cheap leaf (`Sym("")`) in its
+/// place. Needed because `MathNode: Drop` forbids moving a field out of an owned value (E0509);
+/// the emptied parent then drops shallowly. Mirrors the `take` helper in `MathNode`'s own `Drop`.
+fn take_box(b: &mut Box<MathNode>) -> MathNode {
+    std::mem::replace(b.as_mut(), MathNode::Sym(String::new()))
+}
+
 /// Lower one [`MathNode`] (LaTeX-shaped) into the neutral [`MathExpr`].
 ///
 /// **Iterative on purpose.** A LaTeX math tree can be *arbitrarily* deep along a left-
@@ -131,91 +138,120 @@ fn lower(root: MathNode, span: (usize, usize)) -> Result<MathExpr, FrontendError
         match task {
             // --- Decompose a node: push its assembler, then its children in REVERSE natural
             //     order so the first natural child lands on top and is processed first. ---
-            Task::Node(node) => match node {
-                MathNode::Num(s) => vals.push(MathExpr::Number(Number::parse(&s).ok_or_else(
-                    || FrontendError::new("latex", format!("invalid numeric literal {s:?}"), span),
-                )?)),
-                MathNode::Sym(s) => vals.push(MathExpr::Symbol(s)),
-                MathNode::Text(s) => vals.push(MathExpr::Text(s)),
+            // `MathNode` now implements `Drop` (iterative, see math.rs), so its fields cannot be
+            // moved out of an owned value by a by-value `match` (E0509). We instead match by
+            // `&mut` and lift each child out with `take_box` / `Option::take` / `mem::take`,
+            // leaving a cheap leaf behind; the emptied `node` then drops shallowly at arm end.
+            Task::Node(mut node) => match &mut node {
+                MathNode::Num(s) => {
+                    let s = std::mem::take(s);
+                    vals.push(MathExpr::Number(Number::parse(&s).ok_or_else(|| {
+                        FrontendError::new("latex", format!("invalid numeric literal {s:?}"), span)
+                    })?))
+                }
+                MathNode::Sym(s) => vals.push(MathExpr::Symbol(std::mem::take(s))),
+                MathNode::Text(s) => vals.push(MathExpr::Text(std::mem::take(s))),
                 // `\binom{n}{k}` → the neutral binomial coefficient (no division bar).
                 MathNode::Binom(x, y) => {
+                    let (x, y) = (take_box(x), take_box(y));
                     work.push(Task::Build(Build::Binom));
-                    work.push(Task::Node(*y));
-                    work.push(Task::Node(*x));
+                    work.push(Task::Node(y));
+                    work.push(Task::Node(x));
                 }
                 MathNode::Bin(op, x, y) => {
-                    work.push(Task::Build(Build::Bin(lower_binop(op))));
-                    work.push(Task::Node(*y));
-                    work.push(Task::Node(*x));
+                    let bop = lower_binop(*op);
+                    let (x, y) = (take_box(x), take_box(y));
+                    work.push(Task::Build(Build::Bin(bop)));
+                    work.push(Task::Node(y));
+                    work.push(Task::Node(x));
                 }
                 MathNode::Rel(op, x, y) => {
-                    work.push(Task::Build(Build::Rel(lower_relop(op))));
-                    work.push(Task::Node(*y));
-                    work.push(Task::Node(*x));
+                    let rop = lower_relop(*op);
+                    let (x, y) = (take_box(x), take_box(y));
+                    work.push(Task::Build(Build::Rel(rop)));
+                    work.push(Task::Node(y));
+                    work.push(Task::Node(x));
                 }
                 MathNode::Unary(op, x) => {
-                    let op = match op {
+                    let op = match *op {
                         MUnOp::Neg => UnaryOp::Neg,
                         MUnOp::Pos => UnaryOp::Pos,
                     };
+                    let x = take_box(x);
                     work.push(Task::Build(Build::Unary(op)));
-                    work.push(Task::Node(*x));
+                    work.push(Task::Node(x));
                 }
                 MathNode::Frac(x, y) => {
+                    let (x, y) = (take_box(x), take_box(y));
                     work.push(Task::Build(Build::Frac));
-                    work.push(Task::Node(*y));
-                    work.push(Task::Node(*x));
+                    work.push(Task::Node(y));
+                    work.push(Task::Node(x));
                 }
                 MathNode::Root { degree, radicand } => {
                     let has_degree = degree.is_some();
+                    let deg = degree.take();
+                    let rad = take_box(radicand);
                     work.push(Task::Build(Build::Root { has_degree }));
-                    work.push(Task::Node(*radicand));
-                    if let Some(d) = degree {
+                    work.push(Task::Node(rad));
+                    if let Some(d) = deg {
                         work.push(Task::Node(*d));
                     }
                 }
                 MathNode::Script { base, sub, sup } => {
                     let (has_sub, has_sup) = (sub.is_some(), sup.is_some());
+                    let sub_n = sub.take();
+                    let sup_n = sup.take();
+                    let base_n = take_box(base);
                     work.push(Task::Build(Build::Script { has_sub, has_sup }));
-                    if let Some(p) = sup {
+                    if let Some(p) = sup_n {
                         work.push(Task::Node(*p));
                     }
-                    if let Some(s) = sub {
+                    if let Some(s) = sub_n {
                         work.push(Task::Node(*s));
                     }
-                    work.push(Task::Node(*base));
+                    work.push(Task::Node(base_n));
                 }
                 MathNode::Call { func, arg } => {
+                    let func = std::mem::take(func);
+                    let arg = take_box(arg);
                     work.push(Task::Build(Build::Call(lower_func(&func))));
-                    work.push(Task::Node(*arg));
+                    work.push(Task::Node(arg));
                 }
                 // An accent is a named unary operator on its argument (`\hat{x}` ≈ hat(x)).
                 MathNode::Accent { kind, body } => {
+                    let kind = std::mem::take(kind);
+                    let body = take_box(body);
                     work.push(Task::Build(Build::Call(Func::Other(kind))));
-                    work.push(Task::Node(*body));
+                    work.push(Task::Node(body));
                 }
                 MathNode::BigOp { op, lower: lo, upper, body } => {
                     let (has_lower, has_upper) = (lo.is_some(), upper.is_some());
+                    let opname = std::mem::take(op);
+                    let lo_n = lo.take();
+                    let up_n = upper.take();
+                    let body_n = take_box(body);
                     work.push(Task::Build(Build::BigOp {
-                        op: lower_bigop(&op),
+                        op: lower_bigop(&opname),
                         has_lower,
                         has_upper,
                     }));
-                    work.push(Task::Node(*body));
-                    if let Some(u) = upper {
+                    work.push(Task::Node(body_n));
+                    if let Some(u) = up_n {
                         work.push(Task::Node(*u));
                     }
-                    if let Some(l) = lo {
+                    if let Some(l) = lo_n {
                         work.push(Task::Node(*l));
                     }
                 }
                 // Fence style is presentation; the meaning is "this is grouped".
                 MathNode::Fenced { body, .. } => {
+                    let body = take_box(body);
                     work.push(Task::Build(Build::Group));
-                    work.push(Task::Node(*body));
+                    work.push(Task::Node(body));
                 }
                 // Matrix delimiter (pmatrix/bmatrix/cases/…) is presentation; cells carry it.
                 MathNode::Matrix { rows, .. } => {
+                    let rows = std::mem::take(rows);
                     let row_lens: Vec<usize> = rows.iter().map(|r| r.len()).collect();
                     work.push(Task::Build(Build::Matrix { row_lens }));
                     // Push cells in reverse so cell (0,0) is processed first.
