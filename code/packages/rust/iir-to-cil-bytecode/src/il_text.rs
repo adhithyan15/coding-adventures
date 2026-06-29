@@ -843,21 +843,32 @@ fn emit_method(
                 let _ = writeln!(il, "    conv.ovf.i4");
                 store_var(il, &regs, dest)?;
             }
-            // ── AL8 sqrt: IEEE-754 hardware square root ──────────────────────
+            // ── AL8 sqrt + transcendentals: System.Math calls ────────────────
             //
             // `System.Math::Sqrt(float64)float64` — every .NET JIT lowers this
             // to a hardware `sqrtsd`/`fsqrt` with no P/Invoke overhead.  NaN
             // propagates; negative inputs return NaN (IEEE-754, matches VM).
-            "f64_sqrt" => {
+            //
+            // `sin`/`cos`/`exp` map directly to the .NET method names; ALGOL's
+            // `ln` maps to `System.Math::Log(float64)float64` (natural log).
+            "f64_sqrt" | "f64_sin" | "f64_cos" | "f64_ln" | "f64_exp" => {
+                let dotnet_method = match instr.op.as_str() {
+                    "f64_sqrt" => "Sqrt",
+                    "f64_sin"  => "Sin",
+                    "f64_cos"  => "Cos",
+                    "f64_ln"   => "Log",
+                    "f64_exp"  => "Exp",
+                    _ => unreachable!(),
+                };
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
                     function: f.name.clone(),
-                    detail: "f64_sqrt must have a dest".to_string(),
+                    detail: format!("{} must have a dest", instr.op),
                 })?;
-                let src = var_src(f, instr, 0, "f64_sqrt")?;
+                let src = var_src(f, instr, 0, &instr.op.clone())?;
                 load_var(il, &regs, src)?;
                 let _ = writeln!(
                     il,
-                    "    call float64 [System.Runtime]System.Math::Sqrt(float64)"
+                    "    call float64 [System.Runtime]System.Math::{dotnet_method}(float64)"
                 );
                 store_var(il, &regs, dest)?;
             }

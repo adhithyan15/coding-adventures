@@ -596,6 +596,35 @@ fn emit_instr(
         return Ok(());
     }
 
+    // AL8 transcendentals — sin/cos/ln/exp via libm (AAPCS64: D0 → BL → D0).
+    //
+    // ALGOL 60 calls these `sin`, `cos`, `ln`, `exp` but libm uses `log` for
+    // natural log.  The AAPCS64 FP calling convention passes the first f64
+    // argument in D0 and returns the f64 result in D0, matching the ldr_d /
+    // str_d pattern already used by f64_sqrt (but with a BL instead of fsqrt).
+    //
+    // libm is pre-linked on both macOS (`-lSystem` includes libm) and Linux
+    // (`-lm`) — see twig-aot/src/lib.rs.  The BL placeholder is resolved by
+    // the AOT cross-function linker at link time.
+    if matches!(op, "f64_sin" | "f64_cos" | "f64_ln" | "f64_exp") {
+        let libm_sym = match op {
+            "f64_sin" => "sin",
+            "f64_cos" => "cos",
+            "f64_ln"  => "log",  // libm natural log is `log`, not `ln`
+            "f64_exp" => "exp",
+            _ => unreachable!(),
+        };
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(
+                format!("{op} needs srcs[0]")))?;
+        load_fp_operand(asm, alloc, Reg::X0, src)?; // f64 argument → D0
+        asm.bl_external(libm_sym);                   // BL sin/cos/log/exp
+        let slot = alloc.slot_of(dest);
+        asm.str_d(Reg::X0, Reg::Sp, slot)?;         // store f64 result
+        return Ok(());
+    }
+
     // ---- add/sub/mul (typed) --------------------------------------------
     for (prefix, kind) in &[("add_", BinKind::Add), ("sub_", BinKind::Sub), ("mul_", BinKind::Mul)] {
         if let Some(ty) = op.strip_prefix(*prefix) {
