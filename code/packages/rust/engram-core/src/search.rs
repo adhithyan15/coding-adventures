@@ -1,14 +1,15 @@
 use std::collections::{HashMap, HashSet};
 
 use crate::model::{
-    AppState, Card, CardFlag, CardProgress, CardState, Deck, ExternalSourceTarget, Note, NoteType,
-    Rating, Review,
+    AppState, Card, CardFlag, CardProgress, CardState, Deck, ExternalSourceRecord,
+    ExternalSourceTarget, Note, NoteType, Rating, Review,
 };
 use crate::queue::{is_new_progress_overlay, is_reviewable};
 use crate::sm2::ONE_DAY_MS as MS_PER_DAY;
 use regex::{Regex, RegexBuilder};
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 use unicode_normalization::{char::is_combining_mark, UnicodeNormalization};
 
 #[derive(Clone, Debug, PartialEq)]
@@ -45,6 +46,7 @@ enum SearchClauseKind {
     NoteId(IdFilter),
     CardTemplate(String),
     Deck(String),
+    Preset(String),
     NoteType(String),
     Tag(TagFilter),
     State(CardSearchState),
@@ -117,6 +119,7 @@ enum CardProperty {
     Lapses,
     Ease,
     Rated,
+    Position,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -163,6 +166,14 @@ enum TagFilter {
     Regex(TextFilter),
 }
 
+#[derive(Default)]
+struct SearchMetadata<'a> {
+    filtered_deck_ids: HashSet<&'a str>,
+    card_sources_by_id: HashMap<&'a str, Vec<&'a ExternalSourceRecord>>,
+    deck_preset_names_by_id: HashMap<&'a str, Vec<String>>,
+    deck_option_deck_ids: HashSet<&'a str>,
+}
+
 pub fn search_cards(
     state: &AppState,
     query: &str,
@@ -189,18 +200,7 @@ pub fn search_cards(
         .iter()
         .map(|note_type| (note_type.id.as_str(), note_type))
         .collect();
-    let filtered_deck_ids: HashSet<&str> = state
-        .external_sources
-        .iter()
-        .filter(|source| {
-            source.target == ExternalSourceTarget::Deck
-                && source
-                    .data
-                    .get("dyn")
-                    .is_some_and(|value| value.parse::<i64>().unwrap_or(0) != 0)
-        })
-        .map(|source| source.target_id.as_str())
-        .collect();
+    let metadata = SearchMetadata::from_state(state);
     let mut reviews_by_card: HashMap<&str, Vec<&Review>> = HashMap::new();
     for review in &state.reviews {
         reviews_by_card
@@ -229,7 +229,7 @@ pub fn search_cards(
                 deck,
                 note,
                 note_type,
-                &filtered_deck_ids,
+                &metadata,
                 reviews,
                 now,
             )
@@ -243,6 +243,53 @@ pub fn search_cards(
         .collect();
 
     Ok(results)
+}
+
+impl<'a> SearchMetadata<'a> {
+    fn from_state(state: &'a AppState) -> Self {
+        let deck_config_names = anki_deck_config_names_by_id(state);
+        let mut metadata = Self {
+            deck_option_deck_ids: state
+                .deck_options
+                .iter()
+                .map(|preset| preset.deck_id.as_str())
+                .collect(),
+            ..Self::default()
+        };
+
+        for source in &state.external_sources {
+            match source.target {
+                ExternalSourceTarget::Deck => {
+                    if source
+                        .data
+                        .get("dyn")
+                        .is_some_and(|value| value.parse::<i64>().unwrap_or(0) != 0)
+                    {
+                        metadata.filtered_deck_ids.insert(source.target_id.as_str());
+                    }
+
+                    let names = anki_deck_preset_names(source, &deck_config_names);
+                    if !names.is_empty() {
+                        metadata
+                            .deck_preset_names_by_id
+                            .entry(source.target_id.as_str())
+                            .or_default()
+                            .extend(names);
+                    }
+                }
+                ExternalSourceTarget::Card => {
+                    metadata
+                        .card_sources_by_id
+                        .entry(source.target_id.as_str())
+                        .or_default()
+                        .push(source);
+                }
+                _ => {}
+            }
+        }
+
+        metadata
+    }
 }
 
 fn parse_query(query: &str) -> Result<SearchExpr, SearchError> {
@@ -534,6 +581,7 @@ fn parse_keyed_clause(
             Ok(SearchClauseKind::CardTemplate(value.to_lowercase()))
         }
         "deck" => Ok(SearchClauseKind::Deck(value.to_lowercase())),
+        "preset" => Ok(SearchClauseKind::Preset(value.to_lowercase())),
         "note" | "notetype" | "note_type" | "note-type" => {
             Ok(SearchClauseKind::NoteType(value.to_lowercase()))
         }
@@ -768,6 +816,7 @@ fn parse_property_filter(token: &str, value: &str) -> Result<CardPropertyFilter,
         "lapses" => CardProperty::Lapses,
         "ease" => CardProperty::Ease,
         "rated" => CardProperty::Rated,
+        "pos" | "position" => CardProperty::Position,
         _ => {
             return Err(SearchError {
                 message: "unknown card property filter".to_string(),
@@ -882,58 +931,26 @@ fn expression_matches(
     deck: Option<&Deck>,
     note: Option<&Note>,
     note_type: Option<&NoteType>,
-    filtered_deck_ids: &HashSet<&str>,
+    metadata: &SearchMetadata<'_>,
     reviews: &[&Review],
     now: u64,
 ) -> bool {
     match expression {
         SearchExpr::Clause(clause) => clause_matches(
-            clause,
-            card,
-            progress,
-            deck,
-            note,
-            note_type,
-            filtered_deck_ids,
-            reviews,
-            now,
+            clause, card, progress, deck, note, note_type, metadata, reviews, now,
         ),
         SearchExpr::And(expressions) => expressions.iter().all(|expression| {
             expression_matches(
-                expression,
-                card,
-                progress,
-                deck,
-                note,
-                note_type,
-                filtered_deck_ids,
-                reviews,
-                now,
+                expression, card, progress, deck, note, note_type, metadata, reviews, now,
             )
         }),
         SearchExpr::Or(expressions) => expressions.iter().any(|expression| {
             expression_matches(
-                expression,
-                card,
-                progress,
-                deck,
-                note,
-                note_type,
-                filtered_deck_ids,
-                reviews,
-                now,
+                expression, card, progress, deck, note, note_type, metadata, reviews, now,
             )
         }),
         SearchExpr::Not(expression) => !expression_matches(
-            expression,
-            card,
-            progress,
-            deck,
-            note,
-            note_type,
-            filtered_deck_ids,
-            reviews,
-            now,
+            expression, card, progress, deck, note, note_type, metadata, reviews, now,
         ),
     }
 }
@@ -945,17 +962,22 @@ fn clause_matches(
     deck: Option<&Deck>,
     note: Option<&Note>,
     note_type: Option<&NoteType>,
-    filtered_deck_ids: &HashSet<&str>,
+    metadata: &SearchMetadata<'_>,
     reviews: &[&Review],
     now: u64,
 ) -> bool {
+    let card_sources = metadata
+        .card_sources_by_id
+        .get(card.id.as_str())
+        .map_or(&[] as &[&ExternalSourceRecord], Vec::as_slice);
     let matched = match &clause.kind {
         SearchClauseKind::Text(filter) => text_matches(filter, card, deck, note),
         SearchClauseKind::Field(filter) => field_matches(filter, card, note, note_type),
         SearchClauseKind::CardId(filter) => id_filter_matches(filter, &card.id),
         SearchClauseKind::NoteId(filter) => note_id_matches(filter, card, note),
         SearchClauseKind::CardTemplate(term) => card_template_matches(term, card, note_type),
-        SearchClauseKind::Deck(term) => deck_matches(term, card, deck, filtered_deck_ids),
+        SearchClauseKind::Deck(term) => deck_matches(term, card, deck, &metadata.filtered_deck_ids),
+        SearchClauseKind::Preset(term) => preset_matches(term, card, deck, metadata),
         SearchClauseKind::NoteType(term) => note_type_matches(term, note, note_type),
         SearchClauseKind::Tag(tag) => tag_matches(tag, note),
         SearchClauseKind::State(state) => state_matches(*state, progress, now),
@@ -963,7 +985,9 @@ fn clause_matches(
         SearchClauseKind::Marked(expected) => {
             progress.is_some_and(|progress| progress.marked_at.is_some()) == *expected
         }
-        SearchClauseKind::Property(filter) => property_matches(filter, progress, reviews, now),
+        SearchClauseKind::Property(filter) => {
+            property_matches(filter, progress, card_sources, reviews, now)
+        }
         SearchClauseKind::Added(filter) => happened_recently(card.created_at, filter.days, now),
         SearchClauseKind::Edited(filter) => {
             note.is_some_and(|note| happened_recently(note.updated_at, filter.days, now))
@@ -1157,6 +1181,81 @@ fn parse_search_cloze_marker(candidate: &str) -> Option<SearchClozeMarker<'_>> {
     Some(SearchClozeMarker { hidden, consumed })
 }
 
+fn anki_deck_config_names_by_id(state: &AppState) -> HashMap<String, String> {
+    let mut names = HashMap::new();
+
+    for source in state
+        .external_sources
+        .iter()
+        .filter(|source| source.target == ExternalSourceTarget::Collection)
+    {
+        let Some(raw_config) = source.data.get("deckConfigJson") else {
+            continue;
+        };
+        let Ok(Value::Object(configs)) = serde_json::from_str::<Value>(raw_config) else {
+            continue;
+        };
+
+        for (config_id, config) in configs {
+            if let Some(name) = config.get("name").and_then(Value::as_str) {
+                names.entry(config_id).or_insert_with(|| name.to_string());
+            }
+        }
+    }
+
+    names
+}
+
+fn anki_deck_preset_names(
+    source: &ExternalSourceRecord,
+    deck_config_names: &HashMap<String, String>,
+) -> Vec<String> {
+    let mut names = Vec::new();
+
+    for key in ["configName", "presetName"] {
+        if let Some(name) = source.data.get(key) {
+            push_unique_non_empty(&mut names, name);
+        }
+    }
+
+    let config_id = source_i64_from_data(source, "configId")
+        .or_else(|| source_i64_from_data(source, "conf"))
+        .or_else(|| source_i64_from_raw_json(source, "conf"))
+        .or_else(|| source.data.contains_key("rawJson").then_some(1));
+    if let Some(config_id) = config_id {
+        if let Some(name) = deck_config_names.get(&config_id.to_string()) {
+            push_unique_non_empty(&mut names, name);
+        }
+    }
+
+    names
+}
+
+fn push_unique_non_empty(values: &mut Vec<String>, value: &str) {
+    let value = value.trim();
+    if value.is_empty()
+        || values
+            .iter()
+            .any(|existing| existing.eq_ignore_ascii_case(value))
+    {
+        return;
+    }
+    values.push(value.to_string());
+}
+
+fn source_i64_from_data(source: &ExternalSourceRecord, key: &str) -> Option<i64> {
+    source
+        .data
+        .get(key)
+        .and_then(|value| value.trim().parse::<i64>().ok())
+}
+
+fn source_i64_from_raw_json(source: &ExternalSourceRecord, key: &str) -> Option<i64> {
+    let raw = source.data.get("rawJson")?;
+    let value = serde_json::from_str::<Value>(raw).ok()?;
+    value.get(key)?.as_i64()
+}
+
 fn deck_matches(
     term: &str,
     card: &Card,
@@ -1172,6 +1271,39 @@ fn deck_matches(
             anki_hierarchical_name_matches(term, &deck.id)
                 || anki_hierarchical_name_matches(term, &deck.name)
         })
+}
+
+fn preset_matches(
+    term: &str,
+    card: &Card,
+    deck: Option<&Deck>,
+    metadata: &SearchMetadata<'_>,
+) -> bool {
+    metadata
+        .deck_preset_names_by_id
+        .get(card.deck_id.as_str())
+        .is_some_and(|names| {
+            names
+                .iter()
+                .any(|name| preset_candidate_matches(term, name))
+        })
+        || (metadata
+            .deck_option_deck_ids
+            .contains(card.deck_id.as_str())
+            && (preset_candidate_matches(term, &card.deck_id)
+                || deck.is_some_and(|deck| {
+                    preset_candidate_matches(term, &deck.id)
+                        || preset_candidate_matches(term, &deck.name)
+                })))
+}
+
+fn preset_candidate_matches(term: &str, candidate: &str) -> bool {
+    let candidate = candidate.to_lowercase();
+    if contains_search_wildcard(term) {
+        search_pattern_matches(term, &candidate)
+    } else {
+        candidate == term
+    }
 }
 
 fn tag_matches(filter: &TagFilter, note: Option<&Note>) -> bool {
@@ -1297,6 +1429,7 @@ fn flag_matches(filter: FlagFilter, progress: Option<&CardProgress>) -> bool {
 fn property_matches(
     filter: &CardPropertyFilter,
     progress: Option<&CardProgress>,
+    card_sources: &[&ExternalSourceRecord],
     reviews: &[&Review],
     now: u64,
 ) -> bool {
@@ -1333,7 +1466,28 @@ fn property_matches(
                 filter.value,
             )
         }),
+        CardProperty::Position => imported_new_card_position(progress, card_sources)
+            .is_some_and(|position| compare_number(position as f64, filter.operator, filter.value)),
     }
+}
+
+fn imported_new_card_position(
+    progress: Option<&CardProgress>,
+    card_sources: &[&ExternalSourceRecord],
+) -> Option<i64> {
+    if !progress.map_or(true, is_new_progress_overlay) {
+        return None;
+    }
+
+    card_sources.iter().find_map(|source| {
+        let due = source_i64_from_data(source, "due")?;
+        if source_i64_from_data(source, "kind").is_some_and(|kind| kind != 0)
+            || source_i64_from_data(source, "queue").is_some_and(|queue| queue != 0)
+        {
+            return None;
+        }
+        Some(due)
+    })
 }
 
 fn rated_matches(reviews: &[&Review], filter: RatedFilter, now: u64) -> bool {
@@ -1406,8 +1560,8 @@ fn note_for_card<'a>(card: &Card, notes_by_id: &'a HashMap<&str, &Note>) -> Opti
 mod tests {
     use super::*;
     use crate::model::{
-        CardLineage, CardTemplate, Deck, ExternalSourceRecord, ExternalSourceTarget, FieldDef,
-        NoteFieldValue, NoteType, Review, TemplateRequirementMode,
+        CardLineage, CardTemplate, Deck, DeckOptions, DeckOptionsPreset, ExternalSourceRecord,
+        ExternalSourceTarget, FieldDef, NoteFieldValue, NoteType, Review, TemplateRequirementMode,
     };
     use crate::sm2::{INITIAL_EASE_FACTOR, ONE_DAY_MS};
     use std::collections::BTreeMap;
@@ -2141,6 +2295,71 @@ mod tests {
     }
 
     #[test]
+    fn anki_browser_preset_filter_matches_imported_and_native_deck_options() {
+        let state = AppState {
+            decks: vec![
+                deck("story", "Spanish::Latin"),
+                deck("defaulted", "Tamil"),
+                deck("native", "Native Deck"),
+            ],
+            cards: vec![
+                card("story-card", "story", "aqua", "water"),
+                card("default-card", "defaulted", "vanakkam", "hello"),
+                card("native-card", "native", "custom", "options"),
+            ],
+            deck_options: vec![DeckOptionsPreset {
+                deck_id: "native".to_string(),
+                options: DeckOptions::default(),
+            }],
+            external_sources: vec![
+                ExternalSourceRecord {
+                    target: ExternalSourceTarget::Collection,
+                    target_id: "collection".to_string(),
+                    source: "anki-v11".to_string(),
+                    original_id: Some("1".to_string()),
+                    data: BTreeMap::from([(
+                        "deckConfigJson".to_string(),
+                        r#"{"1":{"id":1,"name":"Default"},"7":{"id":7,"name":"Story defaults"}}"#
+                            .to_string(),
+                    )]),
+                },
+                ExternalSourceRecord {
+                    target: ExternalSourceTarget::Deck,
+                    target_id: "story".to_string(),
+                    source: "anki-v11".to_string(),
+                    original_id: Some("2".to_string()),
+                    data: BTreeMap::from([(
+                        "rawJson".to_string(),
+                        r#"{"id":2,"name":"Spanish::Latin","conf":7}"#.to_string(),
+                    )]),
+                },
+                ExternalSourceRecord {
+                    target: ExternalSourceTarget::Deck,
+                    target_id: "defaulted".to_string(),
+                    source: "anki-v11".to_string(),
+                    original_id: Some("3".to_string()),
+                    data: BTreeMap::from([("configId".to_string(), "1".to_string())]),
+                },
+            ],
+            ..AppState::default()
+        };
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for(r#"preset:"Story defaults""#), vec!["story-card"]);
+        assert_eq!(ids_for("preset:Story*"), vec!["story-card"]);
+        assert_eq!(ids_for("preset:Default"), vec!["default-card"]);
+        assert_eq!(ids_for(r#"preset:"Native Deck""#), vec!["native-card"]);
+        assert!(ids_for("preset:Spanish").is_empty());
+    }
+
+    #[test]
     fn property_filters_match_progress_metrics() {
         let mut state = AppState {
             decks: vec![deck("tamil", "Tamil")],
@@ -2194,6 +2413,51 @@ mod tests {
         ];
         assert_eq!(ids_for(&state, "prop:rated=0"), vec!["due"]);
         assert_eq!(ids_for(&state, "prop:rated<-1"), vec!["lapsed"]);
+    }
+
+    #[test]
+    fn position_property_matches_imported_anki_new_card_positions() {
+        let anki_card_source =
+            |card_id: &str, kind: i64, queue: i64, due: i64| ExternalSourceRecord {
+                target: ExternalSourceTarget::Card,
+                target_id: card_id.to_string(),
+                source: "anki-v11".to_string(),
+                original_id: Some(card_id.to_string()),
+                data: BTreeMap::from([
+                    ("kind".to_string(), kind.to_string()),
+                    ("queue".to_string(), queue.to_string()),
+                    ("due".to_string(), due.to_string()),
+                ]),
+            };
+        let state = AppState {
+            decks: vec![deck("tamil", "Tamil")],
+            cards: vec![
+                card("new-early", "tamil", "early", "position"),
+                card("new-late", "tamil", "late", "position"),
+                card("review", "tamil", "review", "position"),
+                card("native-new", "tamil", "native", "new"),
+            ],
+            card_progress: vec![progress("review", CardState::Review, NOW)],
+            external_sources: vec![
+                anki_card_source("new-early", 0, 0, 42),
+                anki_card_source("new-late", 0, 0, 175),
+                anki_card_source("review", 2, 2, 20),
+            ],
+            ..AppState::default()
+        };
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("prop:pos<=100"), vec!["new-early"]);
+        assert_eq!(ids_for("prop:position>100"), vec!["new-late"]);
+        assert!(ids_for("prop:pos=20").is_empty());
+        assert!(ids_for("prop:pos=0").is_empty());
     }
 
     #[test]

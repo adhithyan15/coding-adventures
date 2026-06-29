@@ -80,11 +80,13 @@ prior progress to restore.
 `search_cards` provides the first shared collection-browser query layer. It
 supports plain text terms plus Anki-style `w:`, `nc:`, `sc:`, and `re:` text
 modifiers, field-scoped regex searches such as `front:re:...`, tag regexes,
-`deck:`, `note:`, `noteType:`, `card:`, `cid:`, `nid:`, `front:`, `back:`,
-`tag:`, `state:`, `is:`, `flag:`, `marked:`, `prop:`, `added:`, `edited:`,
-`introduced:`, and `rated:` filters. Terms inside a group use implicit AND,
-`OR` joins groups, parentheses group subexpressions, and leading `-` negates a
-term or group.
+`deck:`, `preset:`, `note:`, `noteType:`, `card:`, `cid:`, `nid:`, `front:`,
+`back:`, `tag:`, `state:`, `is:`, `flag:`, `marked:`, `prop:`, `added:`,
+`edited:`, `introduced:`, and `rated:` filters. `preset:` resolves imported
+Anki deck-option preset names from preserved collection metadata, while
+`prop:pos` / `prop:position` uses imported Anki new-card queue positions when
+available. Terms inside a group use implicit AND, `OR` joins groups,
+parentheses group subexpressions, and leading `-` negates a term or group.
 
 `materialize_generated_card` turns a note-template `GeneratedCard` into a
 durable `Card` with note/template lineage. Cloze templates using

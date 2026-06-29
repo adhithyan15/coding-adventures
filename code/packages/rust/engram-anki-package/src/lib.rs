@@ -1012,6 +1012,18 @@ fn v11_external_sources(
 
     for deck in &collection.decks {
         let mut data = BTreeMap::new();
+        let config_id = json_i64(&deck.raw, "conf").unwrap_or(1);
+        insert_i64(&mut data, "configId", config_id);
+        if let Some(name) = collection
+            .metadata
+            .deck_config
+            .get(config_id.to_string())
+            .or_else(|| collection.metadata.deck_config.get("1"))
+            .and_then(|config| config.get("name"))
+            .and_then(Value::as_str)
+        {
+            insert_string(&mut data, "configName", name);
+        }
         insert_json(&mut data, "rawJson", &deck.raw, "Anki deck JSON")?;
         insert_i64(
             &mut data,
@@ -4163,6 +4175,19 @@ CREATE TABLE graves (
         assert!(!options.bury_new_siblings);
         assert!(!options.bury_review_siblings);
         assert!(!options.bury_interday_learning_siblings);
+        let deck_source = state
+            .external_sources
+            .iter()
+            .find(|source| source.target == ExternalSourceTarget::Deck && source.target_id == "2")
+            .unwrap();
+        assert_eq!(
+            deck_source.data.get("configId").map(String::as_str),
+            Some("1")
+        );
+        assert_eq!(
+            deck_source.data.get("configName").map(String::as_str),
+            Some("Default")
+        );
 
         assert_eq!(state.note_types.len(), 1);
         let note_type = &state.note_types[0];

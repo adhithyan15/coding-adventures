@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added shared browser support for Anki `preset:` deck option searches and
+  `prop:pos` / `prop:position` new-card queue position filters.
 - Expanded the shared Engram browser search core with Anki-style `w:`, `nc:`,
   `sc:`, and `re:` text modifiers, field-scoped regex searches, tag regexes,
   and single-character `_` wildcards.
