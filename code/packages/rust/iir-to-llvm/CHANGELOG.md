@@ -3,6 +3,14 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.25.0] — 2026-06-28 — `f64_sqrt` lowers to `@llvm.sqrt.f64` intrinsic (LANG-FULL AL8-sqrt)
+
+Added `lower_f64_sqrt` function emitting `%dest = call double @llvm.sqrt.f64(double %src)`.
+A new `used_f64_sqrt` flag gates a module-level `declare double @llvm.sqrt.f64(double)` that
+is emitted only when the op is present — identical pattern to `used_conversions`.
+`"f64_sqrt"` is added to the supported-ops list so the module validates cleanly.
+LLVM lowers `@llvm.sqrt.f64` to `sqrtsd` on x86_64 and `fsqrt` on aarch64 — no libm call.
+
 ## [0.24.0] — 2026-06-28 — literal string comparison metadata reaches LLVM (LANG-FULL E4)
 
 Literal-only `str_cmp` now folds through the LLVM string metadata pass. The

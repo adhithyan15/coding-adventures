@@ -1,6 +1,6 @@
 [package]
 name = "lang-aot"
-version = "0.151.0"
+version = "0.152.0"
 edition = "2021"
 description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.151.0 (LANG-FULL AL4): `tests/lang_matrix.rs` proves ALGOL string equality and ordering on native/LLVM/WASM/JVM/CLR/VM/JIT.  v0.150.0 proved BASIC lexical string ordering."
 

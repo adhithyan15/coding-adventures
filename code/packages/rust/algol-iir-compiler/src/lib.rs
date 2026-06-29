@@ -1129,18 +1129,21 @@ impl Compiler {
     ///
     /// Implemented so far: `abs` (PR-1) and `sign` (PR-2) — both pure IIR
     /// (compare + branch + move/const).  `entier` (floor of a real → integer)
-    /// needs a float-floor+convert that is not a portable IIR op, and
-    /// `sqrt`/`sin`/`cos`/… need a runtime math library on every backend; those
-    /// land in later slices.
+    /// uses the E8 `real_to_int_floor` op.  `sqrt` (PR-4) emits the new
+    /// `f64_sqrt` IIR op — every backend maps it to its native hardware sqrt
+    /// (aarch64 `fsqrt`, SSE2 `sqrtsd`, WASM `f64.sqrt`, LLVM intrinsic,
+    /// JVM `Math.sqrt`, CLR `Math.Sqrt`).  `sin`/`cos`/`ln`/`exp` need the
+    /// same cross-backend runtime math library and land in later slices.
     fn try_emit_standard_function(
         &mut self,
         name: &str,
         node: &GrammarASTNode,
     ) -> Result<Option<ExprValue>, CompileError> {
         match name {
-            "abs" => Ok(Some(self.emit_abs(node)?)),
-            "sign" => Ok(Some(self.emit_sign(node)?)),
+            "abs"    => Ok(Some(self.emit_abs(node)?)),
+            "sign"   => Ok(Some(self.emit_sign(node)?)),
             "entier" => Ok(Some(self.emit_entier(node)?)),
+            "sqrt"   => Ok(Some(self.emit_sqrt(node)?)),
             _ => Ok(None),
         }
     }
@@ -1426,6 +1429,48 @@ impl Compiler {
         Ok(ExprValue {
             slot: dest,
             ty: ScalarType::Integer,
+        })
+    }
+
+    /// `sqrt(E)` — ALGOL 60 §3.2.4 square root.  The operand must be `real`
+    /// (integer `sqrt` is a type error per the standard).  Lowers to the
+    /// portable `f64_sqrt` IIR op: every backend maps it to its native hardware
+    /// square-root instruction (aarch64 `fsqrt`, SSE2 `sqrtsd`, WASM
+    /// `f64.sqrt`, LLVM `@llvm.sqrt.f64`, JVM `Math.sqrt`, CLR `Math.Sqrt`).
+    ///
+    /// ```text
+    ///   t := E          ; evaluate the operand once (real)
+    ///   dest := f64_sqrt t
+    /// ```
+    fn emit_sqrt(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 {
+            return Err(CompileError::Type(format!(
+                "standard function sqrt expects 1 argument, got {}",
+                actuals.len()
+            )));
+        }
+        let value = self.emit_expr(actuals[0])?;
+        match value.ty {
+            ScalarType::Real => {}
+            other => {
+                return Err(CompileError::Type(format!(
+                    "standard function sqrt requires a real argument, got {}",
+                    other.name()
+                )))
+            }
+        }
+
+        let dest = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "f64_sqrt",
+            Some(dest.clone()),
+            vec![Operand::Var(value.slot)],
+            ScalarType::Real.iir(),
+        ));
+        Ok(ExprValue {
+            slot: dest,
+            ty: ScalarType::Real,
         })
     }
 

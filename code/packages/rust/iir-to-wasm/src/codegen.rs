@@ -374,6 +374,11 @@ pub const F64_NEG: u8 = 0x9A;
 /// `f64.floor` (0x9C) — round a double toward −∞ (for `real_to_int_floor`).
 pub const F64_FLOOR: u8 = 0x9C;
 
+/// `f64.sqrt` (0x9F) — IEEE-754 square root (hardware; no libm call).
+/// Adjacent ops in the spec: abs=0x99, neg=0x9A, ceil=0x9B, floor=0x9C,
+/// trunc=0x9D, nearest=0x9E, **sqrt=0x9F**.
+pub const F64_SQRT: u8 = 0x9F;
+
 /// `i64.trunc_f64_s` (0xB0) — truncate a double toward zero to a signed i64,
 /// **trapping** on NaN/±∞/out-of-range.
 pub const I64_TRUNC_F64_S: u8 = 0xB0;

@@ -3,6 +3,13 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.24.0] — 2026-06-28 (AL8-sqrt — `f64_sqrt` lowers to `Math.sqrt`)
+
+The JVM backend now lowers `f64_sqrt` by emitting `dload r; invokestatic
+java/lang/Math.sqrt:(D)D; dstore rd`.  HotSpot treats `Math.sqrt` as an
+intrinsic and lowers it directly to `sqrtsd` on x86_64 with no JNI overhead.
+NaN propagates; negative input returns NaN (IEEE-754, matches VM).
+
 ## [0.23.0] — 2026-06-28 (literal string comparison — LANG-FULL E4)
 
 The JVM backend now lowers `str_cmp` over managed `String` locals by invoking

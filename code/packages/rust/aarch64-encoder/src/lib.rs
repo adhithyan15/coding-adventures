@@ -897,6 +897,20 @@ impl Assembler {
         self.emit(0x1E654000 | (dn.idx() << 5) | dd.idx());
     }
 
+    /// `FSQRT Dd, Dn` — IEEE-754 double-precision square root (AL8 `sqrt`).
+    ///
+    /// A single hardware instruction — no libm call, no subroutine linkage.
+    /// NaN propagates; negative input returns NaN per IEEE-754 (same semantics
+    /// as Rust's `f64::sqrt` and the VM handler).
+    ///
+    /// FP data-processing (1 source) encoding:
+    /// `0 0 0 11110 type 1 opcode 10000 Rn Rd`, with `type=01` (double) and
+    /// `opcode=000011` (FSQRT): `0001_1110_0110_0001_1100_00nn_nnnd_dddd`
+    /// (`0x1E61C000`).
+    pub fn fsqrt(&mut self, dd: Reg, dn: Reg) {
+        self.emit(0x1E61C000 | (dn.idx() << 5) | dd.idx());
+    }
+
     /// `LDRB Wt, [Xn, #imm]` — load one byte, zero-extend to 32 bits (LANG76).
     ///
     /// `imm` is a 12-bit unsigned immediate in the range `[0, 4095]` (the

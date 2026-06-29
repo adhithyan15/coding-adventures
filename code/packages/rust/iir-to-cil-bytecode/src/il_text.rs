@@ -843,6 +843,24 @@ fn emit_method(
                 let _ = writeln!(il, "    conv.ovf.i4");
                 store_var(il, &regs, dest)?;
             }
+            // ── AL8 sqrt: IEEE-754 hardware square root ──────────────────────
+            //
+            // `System.Math::Sqrt(float64)float64` — every .NET JIT lowers this
+            // to a hardware `sqrtsd`/`fsqrt` with no P/Invoke overhead.  NaN
+            // propagates; negative inputs return NaN (IEEE-754, matches VM).
+            "f64_sqrt" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "f64_sqrt must have a dest".to_string(),
+                })?;
+                let src = var_src(f, instr, 0, "f64_sqrt")?;
+                load_var(il, &regs, src)?;
+                let _ = writeln!(
+                    il,
+                    "    call float64 [System.Runtime]System.Math::Sqrt(float64)"
+                );
+                store_var(il, &regs, dest)?;
+            }
             // ret <src>  →  ld<src>; ret
             "ret" => {
                 let src = var_src(f, instr, 0, "ret")?;
