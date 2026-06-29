@@ -552,14 +552,14 @@ impl Compiler {
             }
         }
 
-        self.infer_main_direct_string_param_types(&program.forms);
-
         // TW2: decide which value-globals may be lowered to typed `main`
         // locals.  A value-global captured by any lambda must stay on the host
         // global table (the closure compiles to a separate function); the rest
         // are read only from `main` and can live in a register.
         self.escaping_value_globals =
             crate::free_vars::lambda_captured_globals(&program.forms, &self.value_globals);
+
+        self.infer_main_direct_string_param_types(&program.forms);
 
         // ── Main pass: lower every form ──────────────────────────────
         let mut main_ctx = FnCtx::new();
@@ -750,6 +750,9 @@ impl Compiler {
 
     fn infer_main_direct_string_param_types(&mut self, forms: &[Form]) {
         let mut evidence: HashMap<String, Vec<StaticParamEvidence>> = HashMap::new();
+        let mut known_static_string_values: HashSet<String> = HashSet::new();
+        let mut defined_value_globals: HashSet<String> = HashSet::new();
+        let mut forward_referenced_values: HashSet<String> = HashSet::new();
 
         for form in forms {
             if let Form::Define(def) = form {
@@ -765,10 +768,45 @@ impl Compiler {
         for form in forms {
             match form {
                 Form::Expr(expr) => {
-                    self.collect_main_direct_string_call_evidence(expr, &mut evidence);
+                    self.record_main_forward_value_refs(
+                        expr,
+                        &defined_value_globals,
+                        &mut forward_referenced_values,
+                        &HashSet::new(),
+                    );
+                    self.collect_main_direct_string_call_evidence(
+                        expr,
+                        &mut evidence,
+                        &known_static_string_values,
+                    );
                 }
-                Form::Define(def) if !matches!(def.expr, Expr::Lambda(_)) => {
-                    self.collect_main_direct_string_call_evidence(&def.expr, &mut evidence);
+                Form::Define(def) if matches!(def.expr, Expr::Lambda(_)) => {
+                    known_static_string_values.remove(&def.name);
+                }
+                Form::Define(def) => {
+                    self.record_main_forward_value_refs(
+                        &def.expr,
+                        &defined_value_globals,
+                        &mut forward_referenced_values,
+                        &HashSet::new(),
+                    );
+                    self.collect_main_direct_string_call_evidence(
+                        &def.expr,
+                        &mut evidence,
+                        &known_static_string_values,
+                    );
+                    if !self.escaping_value_globals.contains(&def.name)
+                        && !forward_referenced_values.contains(&def.name)
+                        && Self::is_syntax_static_e4_string_expr(
+                            &def.expr,
+                            &known_static_string_values,
+                        )
+                    {
+                        known_static_string_values.insert(def.name.clone());
+                    } else {
+                        known_static_string_values.remove(&def.name);
+                    }
+                    defined_value_globals.insert(def.name.clone());
                 }
                 _ => {}
             }
@@ -793,36 +831,126 @@ impl Compiler {
             .collect();
     }
 
-    fn collect_main_direct_string_call_evidence(
+    fn record_main_forward_value_refs(
         &self,
         expr: &Expr,
-        evidence: &mut HashMap<String, Vec<StaticParamEvidence>>,
+        defined_value_globals: &HashSet<String>,
+        forward_referenced_values: &mut HashSet<String>,
+        shadowed: &HashSet<String>,
     ) {
         match expr {
+            Expr::VarRef(v) => {
+                if self.value_globals.contains(&v.name)
+                    && !defined_value_globals.contains(&v.name)
+                    && !shadowed.contains(&v.name)
+                {
+                    forward_referenced_values.insert(v.name.clone());
+                }
+            }
             Expr::If(i) => {
-                self.collect_main_direct_string_call_evidence(&i.cond, evidence);
-                self.collect_main_direct_string_call_evidence(&i.then_branch, evidence);
-                self.collect_main_direct_string_call_evidence(&i.else_branch, evidence);
+                self.record_main_forward_value_refs(&i.cond, defined_value_globals, forward_referenced_values, shadowed);
+                self.record_main_forward_value_refs(&i.then_branch, defined_value_globals, forward_referenced_values, shadowed);
+                self.record_main_forward_value_refs(&i.else_branch, defined_value_globals, forward_referenced_values, shadowed);
             }
             Expr::Begin(Begin { exprs, .. }) => {
                 for e in exprs {
-                    self.collect_main_direct_string_call_evidence(e, evidence);
+                    self.record_main_forward_value_refs(e, defined_value_globals, forward_referenced_values, shadowed);
                 }
             }
             Expr::Let(l) => {
                 for (_, rhs) in &l.bindings {
-                    self.collect_main_direct_string_call_evidence(rhs, evidence);
+                    self.record_main_forward_value_refs(rhs, defined_value_globals, forward_referenced_values, shadowed);
+                }
+                let mut body_shadowed = shadowed.clone();
+                for (name, _) in &l.bindings {
+                    body_shadowed.insert(name.clone());
                 }
                 for e in &l.body {
-                    self.collect_main_direct_string_call_evidence(e, evidence);
+                    self.record_main_forward_value_refs(e, defined_value_globals, forward_referenced_values, &body_shadowed);
                 }
             }
             Expr::LetStar(l) => {
-                for (_, rhs) in &l.bindings {
-                    self.collect_main_direct_string_call_evidence(rhs, evidence);
+                let mut scoped_shadowed = shadowed.clone();
+                for (name, rhs) in &l.bindings {
+                    self.record_main_forward_value_refs(rhs, defined_value_globals, forward_referenced_values, &scoped_shadowed);
+                    scoped_shadowed.insert(name.clone());
                 }
                 for e in &l.body {
-                    self.collect_main_direct_string_call_evidence(e, evidence);
+                    self.record_main_forward_value_refs(e, defined_value_globals, forward_referenced_values, &scoped_shadowed);
+                }
+            }
+            Expr::Apply(apply) => {
+                self.record_main_forward_value_refs(apply.fn_expr.as_ref(), defined_value_globals, forward_referenced_values, shadowed);
+                for arg in &apply.args {
+                    self.record_main_forward_value_refs(arg, defined_value_globals, forward_referenced_values, shadowed);
+                }
+            }
+            Expr::Match(m) => {
+                self.record_main_forward_value_refs(&m.scrutinee, defined_value_globals, forward_referenced_values, shadowed);
+                for arm in &m.arms {
+                    let mut arm_shadowed = shadowed.clone();
+                    match &arm.pat {
+                        MatchPat::Variant { bindings, .. } => {
+                            for name in bindings {
+                                arm_shadowed.insert(name.clone());
+                            }
+                        }
+                        MatchPat::Binding(name) => {
+                            arm_shadowed.insert(name.clone());
+                        }
+                        MatchPat::Wildcard => {}
+                    }
+                    for e in &arm.body {
+                        self.record_main_forward_value_refs(e, defined_value_globals, forward_referenced_values, &arm_shadowed);
+                    }
+                }
+            }
+            Expr::Lambda(_) => {}
+            Expr::IntLit(_)
+            | Expr::BoolLit(_)
+            | Expr::NilLit(_)
+            | Expr::SymLit(_)
+            | Expr::StrLit(_) => {}
+        }
+    }
+
+    fn collect_main_direct_string_call_evidence(
+        &self,
+        expr: &Expr,
+        evidence: &mut HashMap<String, Vec<StaticParamEvidence>>,
+        known_static_string_values: &HashSet<String>,
+    ) {
+        match expr {
+            Expr::If(i) => {
+                self.collect_main_direct_string_call_evidence(&i.cond, evidence, known_static_string_values);
+                self.collect_main_direct_string_call_evidence(&i.then_branch, evidence, known_static_string_values);
+                self.collect_main_direct_string_call_evidence(&i.else_branch, evidence, known_static_string_values);
+            }
+            Expr::Begin(Begin { exprs, .. }) => {
+                for e in exprs {
+                    self.collect_main_direct_string_call_evidence(e, evidence, known_static_string_values);
+                }
+            }
+            Expr::Let(l) => {
+                for (_, rhs) in &l.bindings {
+                    self.collect_main_direct_string_call_evidence(rhs, evidence, known_static_string_values);
+                }
+                let mut body_static_string_values = known_static_string_values.clone();
+                for (name, _) in &l.bindings {
+                    body_static_string_values.remove(name);
+                }
+                for e in &l.body {
+                    self.collect_main_direct_string_call_evidence(e, evidence, &body_static_string_values);
+                }
+            }
+            Expr::LetStar(l) => {
+                let mut scoped_static_string_values = known_static_string_values.clone();
+                for (name, rhs) in &l.bindings {
+                    self.collect_main_direct_string_call_evidence(rhs, evidence, &scoped_static_string_values);
+                    scoped_static_string_values.remove(name);
+                }
+                for e in &l.body {
+                    self.collect_main_direct_string_call_evidence(e, evidence, &scoped_static_string_values);
                 }
             }
             Expr::Apply(apply) => {
@@ -830,7 +958,10 @@ impl Compiler {
                     if let Some(slots) = evidence.get_mut(&f.name) {
                         if apply.args.len() == slots.len() {
                             for (slot, arg) in slots.iter_mut().zip(apply.args.iter()) {
-                                *slot = slot.observe(Self::is_syntax_static_e4_string_expr(arg));
+                                *slot = slot.observe(Self::is_syntax_static_e4_string_expr(
+                                    arg,
+                                    known_static_string_values,
+                                ));
                             }
                         } else {
                             for slot in slots {
@@ -839,9 +970,13 @@ impl Compiler {
                         }
                     }
                 }
-                self.collect_main_direct_string_call_evidence(apply.fn_expr.as_ref(), evidence);
+                self.collect_main_direct_string_call_evidence(
+                    apply.fn_expr.as_ref(),
+                    evidence,
+                    known_static_string_values,
+                );
                 for arg in &apply.args {
-                    self.collect_main_direct_string_call_evidence(arg, evidence);
+                    self.collect_main_direct_string_call_evidence(arg, evidence, known_static_string_values);
                 }
             }
             // Lambdas and match bodies can depend on dynamic closure/match-time
@@ -856,9 +991,13 @@ impl Compiler {
         }
     }
 
-    fn is_syntax_static_e4_string_expr(expr: &Expr) -> bool {
+    fn is_syntax_static_e4_string_expr(
+        expr: &Expr,
+        known_static_string_values: &HashSet<String>,
+    ) -> bool {
         match expr {
             Expr::StrLit(_) => true,
+            Expr::VarRef(v) => known_static_string_values.contains(&v.name),
             Expr::Apply(apply) => {
                 let Expr::VarRef(f) = apply.fn_expr.as_ref() else {
                     return false;
@@ -866,14 +1005,14 @@ impl Compiler {
                 match f.name.as_str() {
                     "string-append" => {
                         apply.args.len() == 2
-                            && Self::is_syntax_static_e4_string_expr(&apply.args[0])
-                            && Self::is_syntax_static_e4_string_expr(&apply.args[1])
+                            && Self::is_syntax_static_e4_string_expr(&apply.args[0], known_static_string_values)
+                            && Self::is_syntax_static_e4_string_expr(&apply.args[1], known_static_string_values)
                     }
                     "substring" => {
                         apply.args.len() == 3
-                            && Self::is_syntax_static_e4_string_expr(&apply.args[0])
-                            && Self::is_syntax_static_e4_index_expr(&apply.args[1])
-                            && Self::is_syntax_static_e4_index_expr(&apply.args[2])
+                            && Self::is_syntax_static_e4_string_expr(&apply.args[0], known_static_string_values)
+                            && Self::is_syntax_static_e4_index_expr(&apply.args[1], known_static_string_values)
+                            && Self::is_syntax_static_e4_index_expr(&apply.args[2], known_static_string_values)
                     }
                     _ => false,
                 }
@@ -882,7 +1021,10 @@ impl Compiler {
         }
     }
 
-    fn is_syntax_static_e4_index_expr(expr: &Expr) -> bool {
+    fn is_syntax_static_e4_index_expr(
+        expr: &Expr,
+        known_static_string_values: &HashSet<String>,
+    ) -> bool {
         match expr {
             Expr::IntLit(_) => true,
             Expr::Apply(apply) => {
@@ -892,14 +1034,14 @@ impl Compiler {
                 match f.name.as_str() {
                     "string-length" => {
                         apply.args.len() == 1
-                            && Self::is_syntax_static_e4_string_expr(&apply.args[0])
+                            && Self::is_syntax_static_e4_string_expr(&apply.args[0], known_static_string_values)
                     }
                     "+" | "-" | "*" | "/" => {
                         apply.args.len() >= 2
                             && apply
                                 .args
                                 .iter()
-                                .all(Self::is_syntax_static_e4_index_expr)
+                                .all(|arg| Self::is_syntax_static_e4_index_expr(arg, known_static_string_values))
                     }
                     _ => false,
                 }
