@@ -2608,16 +2608,23 @@ fn first_reviewed_within(
 }
 
 fn happened_recently(timestamp: u64, days: u32, now: u64) -> bool {
-    timestamp <= now && now.saturating_sub(timestamp) <= recent_window_ms(days)
+    timestamp <= now && timestamp >= recent_day_cutoff_ms(days, now)
 }
 
-fn recent_window_ms(days: u32) -> u64 {
-    u64::from(days).saturating_mul(MS_PER_DAY)
+fn recent_day_cutoff_ms(days: u32, now: u64) -> u64 {
+    let next_day_start = now
+        .checked_div(MS_PER_DAY)
+        .unwrap_or_default()
+        .saturating_add(1)
+        .saturating_mul(MS_PER_DAY);
+    next_day_start.saturating_sub(u64::from(days.max(1)).saturating_mul(MS_PER_DAY))
 }
 
 fn relative_day_bucket(timestamp: u64, now: u64) -> i32 {
-    let diff = timestamp as i128 - now as i128;
-    (diff / i128::from(MS_PER_DAY)) as i32
+    let timestamp_day = timestamp / MS_PER_DAY;
+    let now_day = now / MS_PER_DAY;
+    let diff = timestamp_day as i128 - now_day as i128;
+    diff.clamp(i128::from(i32::MIN), i128::from(i32::MAX)) as i32
 }
 
 fn compare_number(actual: f64, operator: ComparisonOperator, expected: f64) -> bool {
@@ -4315,6 +4322,84 @@ mod tests {
         assert_eq!(ids_for("rated:4:again"), vec!["future"]);
         assert_eq!(ids_for("prop:rated=0:good"), vec!["due"]);
         assert_eq!(ids_for("prop:rated<-1:again"), vec!["future"]);
+    }
+
+    #[test]
+    fn recent_event_filters_use_anki_day_boundaries() {
+        let day_start = (NOW / ONE_DAY_MS) * ONE_DAY_MS;
+        let now = day_start + ONE_DAY_MS / 2;
+        let just_before_today = day_start - 1;
+
+        let mut today_note = tagged_note();
+        today_note.id = "today-note".to_string();
+        today_note.updated_at = day_start;
+        let mut yesterday_note = tagged_note();
+        yesterday_note.id = "yesterday-note".to_string();
+        yesterday_note.updated_at = just_before_today;
+
+        let card_for_note = |note_id: &str| {
+            let mut card = card(&format!("{note_id}::forward"), "tamil", note_id, "answer");
+            card.created_at = just_before_today;
+            card.lineage = Some(CardLineage {
+                note_id: note_id.to_string(),
+                note_type_id: "basic".to_string(),
+                template_id: "forward".to_string(),
+                ordinal: 0,
+                cloze_ordinal: None,
+            });
+            card
+        };
+        let mut today_added = card("today-added", "tamil", "today", "added");
+        today_added.created_at = day_start;
+        let mut yesterday_added = card("yesterday-added", "tamil", "yesterday", "added");
+        yesterday_added.created_at = just_before_today;
+        let mut today_reviewed = card("today-reviewed", "tamil", "today", "reviewed");
+        today_reviewed.created_at = just_before_today;
+        let mut yesterday_reviewed = card("yesterday-reviewed", "tamil", "yesterday", "reviewed");
+        yesterday_reviewed.created_at = just_before_today;
+
+        let state = AppState {
+            decks: vec![deck("tamil", "Tamil")],
+            note_types: vec![note_type()],
+            notes: vec![today_note, yesterday_note],
+            cards: vec![
+                today_added,
+                yesterday_added,
+                card_for_note("today-note"),
+                card_for_note("yesterday-note"),
+                today_reviewed,
+                yesterday_reviewed,
+            ],
+            reviews: vec![
+                review("today-good", "today-reviewed", Rating::Good, day_start),
+                review(
+                    "yesterday-good",
+                    "yesterday-reviewed",
+                    Rating::Good,
+                    just_before_today,
+                ),
+            ],
+            ..AppState::default()
+        };
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, now)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("added:1"), vec!["today-added"]);
+        assert_eq!(ids_for("edited:1"), vec!["today-note::forward"]);
+        assert_eq!(ids_for("rated:1:good"), vec!["today-reviewed"]);
+        assert_eq!(ids_for("introduced:1"), vec!["today-reviewed"]);
+        assert_eq!(ids_for("prop:rated=0:good"), vec!["today-reviewed"]);
+        assert_eq!(ids_for("prop:rated=-1:good"), vec!["yesterday-reviewed"]);
+        assert_eq!(
+            ids_for("rated:2:good"),
+            vec!["today-reviewed", "yesterday-reviewed"]
+        );
     }
 
     #[test]
