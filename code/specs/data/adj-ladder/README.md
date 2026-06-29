@@ -209,8 +209,11 @@ python3 ladder_eval.py rung0_arithmetic --model 'cmd:ollama run <model>'
 so a cached CI run never clobbers a committed two-arm headline). Model scorecards
 also record the raw Arm B model output, the extracted ADJ decomposition, its kind
 (`formula` or `program`), and whether it passed the no-result-literals faithfulness
-gate. Those trace fields are the audit trail for the real north-star run: messy human
-input → local Gemma decomposition → native ADJ execution.
+gate. Program-backed model scorecards also record the native ADJ engine family and
+outcome (`arm_b_engine_kind` / `arm_b_engine_outcome`), so misses remain auditable as
+e.g. `solve/no_unique_solution` rather than opaque abstentions. Those trace fields are
+the audit trail for the real north-star run: messy human input → local Gemma
+decomposition → native ADJ execution.
 
 If the `adj-lang-cli` binary lives somewhere non-standard, point `ADJ_LANG_CLI` at it.
 

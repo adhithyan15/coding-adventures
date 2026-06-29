@@ -561,6 +561,37 @@ def program_answer_to_letter(
     return None
 
 
+def program_engine_trace(doc: dict | None, answer_from: dict | None) -> tuple[str | None, str | None]:
+    """Return the native engine result family and outcome for scorecard auditing.
+
+    This does not interpret the result or pick an option. It only records the section
+    Arm B asked ADJ to execute and the engine's own outcome label, so a model-mode
+    miss can be audited as e.g. `solve/no_unique_solution` instead of an opaque
+    abstention.
+    """
+    if not doc or not answer_from:
+        return None, None
+    typ = answer_from.get("type")
+    if typ in {"solve_assignment", "solve_roots"}:
+        section = doc.get("solve")
+        kind = "solve"
+    elif typ in {"optimize_value", "optimize_assignment"}:
+        section = doc.get("optimize")
+        kind = "optimize"
+    elif typ == "check_outcome":
+        section = doc.get("check")
+        kind = "check"
+    elif typ == "decision_leader":
+        section = doc.get("decision")
+        kind = "decision"
+    else:
+        return None, None
+    if not isinstance(section, dict):
+        return kind, None
+    outcome = section.get("outcome") or section.get("type")
+    return kind, str(outcome) if outcome is not None else None
+
+
 def formula_is_faithful(
     formula: str, stem: str, *, program: bool = False, structural_weights: bool = True
 ) -> bool:
@@ -613,6 +644,8 @@ class ItemResult:
     arm_b_decomposition: str | None = None
     arm_b_decomposition_kind: str | None = None
     arm_b_decomposition_faithful: bool | None = None
+    arm_b_engine_kind: str | None = None
+    arm_b_engine_outcome: str | None = None
 
 
 def outcome(letter: str | None, gold: str) -> str:
@@ -690,6 +723,8 @@ def score_item(item: dict, gen) -> ItemResult:
     arm_b_decomposition = None
     arm_b_decomposition_kind = None
     arm_b_decomposition_faithful = None
+    arm_b_engine_kind = None
+    arm_b_engine_outcome = None
 
     # --- Arm B: decompose → engine selects ---
     if gen is None:
@@ -721,9 +756,10 @@ def score_item(item: dict, gen) -> ItemResult:
     if not faithful:
         arm_b_letter = None                                  # decompose failed → abstain
     elif program:
-        arm_b_letter = program_answer_to_letter(
-            run_program(program), item.get("answer_from"), item["options"]
-        )
+        answer_from = item.get("answer_from")
+        engine_doc = run_program(program)
+        arm_b_engine_kind, arm_b_engine_outcome = program_engine_trace(engine_doc, answer_from)
+        arm_b_letter = program_answer_to_letter(engine_doc, answer_from, item["options"])
     elif formula:
         arm_b_letter = decision_to_letter(
             run_decision(build_arm_b_program(formula, item["options"]))
@@ -746,6 +782,8 @@ def score_item(item: dict, gen) -> ItemResult:
         arm_b_decomposition,
         arm_b_decomposition_kind,
         arm_b_decomposition_faithful,
+        arm_b_engine_kind,
+        arm_b_engine_outcome,
     )
 
 
@@ -764,6 +802,9 @@ def result_to_json(r: ItemResult) -> dict:
         out["arm_b_decomposition"] = r.arm_b_decomposition
         out["arm_b_decomposition_kind"] = r.arm_b_decomposition_kind
         out["arm_b_decomposition_faithful"] = r.arm_b_decomposition_faithful
+        if r.arm_b_engine_kind is not None:
+            out["arm_b_engine_kind"] = r.arm_b_engine_kind
+            out["arm_b_engine_outcome"] = r.arm_b_engine_outcome
     return out
 
 
@@ -1001,8 +1042,11 @@ def decompose_prompt(item: dict) -> str:
         return (
             "Translate the word problem into a native ADJ solve program. Name the "
             f"requested unknown `{name}`. Use ONLY numbers that appear in the "
-            "question. Do NOT compute the answer, do NOT mention the answer choices, "
-            "and output ONLY the ADJ program.\n\n"
+            "question. For a multi-variable system, declare every named unknown and "
+            "include every variable in `solve for { ... }` even if the question asks "
+            "for only one of them; the harness will read the requested variable. Do "
+            "NOT compute the answer, do NOT mention the answer choices, and output "
+            "ONLY the ADJ program.\n\n"
             "Question: A number plus 5 is 17. What is the number?\n"
             "Program:\n"
             "symbol x : scalar\n"

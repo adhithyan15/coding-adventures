@@ -214,6 +214,8 @@ def test_decompose_prompt_mentions_linear_system_program():
     })
     assert "symbol y : scalar" in prompt
     assert "solve for { x, y }" in prompt
+    assert "include every variable in `solve for { ... }`" in prompt
+    assert "the harness will read the requested variable" in prompt
     assert 'constrain latex "$x + 2y = 23$"' in prompt
 
 
@@ -446,12 +448,16 @@ def test_result_json_includes_trace_for_model_result():
         "99",
         "formula",
         False,
+        "solve",
+        "no_unique_solution",
     )
     out = le.result_to_json(result)
     assert out["arm_b_model_output"] == "Formula: 99"
     assert out["arm_b_decomposition"] == "99"
     assert out["arm_b_decomposition_kind"] == "formula"
     assert out["arm_b_decomposition_faithful"] is False
+    assert out["arm_b_engine_kind"] == "solve"
+    assert out["arm_b_engine_outcome"] == "no_unique_solution"
 
 
 def test_run_limit_caps_item_count():
@@ -489,6 +495,25 @@ def test_option_expression_predicate_runs_through_engine():
         le.build_arm_b_program("1 / 10 + 2 / 10", {"A": "3 / 10", "B": "1 / 2"})
     )
     assert le.decision_to_letter(decision) == "A"
+
+
+def test_program_engine_trace_records_native_outcomes():
+    assert le.program_engine_trace(
+        {"solve": {"outcome": "no_unique_solution"}},
+        {"type": "solve_assignment", "name": "x"},
+    ) == ("solve", "no_unique_solution")
+    assert le.program_engine_trace(
+        {"optimize": {"outcome": "optimal"}},
+        {"type": "optimize_value"},
+    ) == ("optimize", "optimal")
+    assert le.program_engine_trace(
+        {"check": {"outcome": "sat"}},
+        {"type": "check_outcome"},
+    ) == ("check", "sat")
+    assert le.program_engine_trace(
+        {"decision": {"type": "determinate", "leader": "a"}},
+        {"type": "decision_leader"},
+    ) == ("decision", "determinate")
 
 
 def test_solve_assignment_program_maps_engine_value_to_option():
