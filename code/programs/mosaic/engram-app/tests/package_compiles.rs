@@ -452,6 +452,27 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&electron_main, "new BrowserWindow");
     assert_contains(&electron_main, "MOSAIC_ELECTRON_DEV_SERVER_URL");
     assert_contains(&electron_main, "EngramApp");
+    assert_contains(&electron_main, "import { app, BrowserWindow, ipcMain }");
+    assert_contains(&electron_main, "ipcMain.handle(");
+    assert_contains(&electron_main, "mosaic:get-props");
+    assert_contains(&electron_main, "mosaic:handle-event");
+    let electron_preload = fs::read_to_string(
+        tmp.path()
+            .join("electron")
+            .join("electron")
+            .join("preload.ts"),
+    )
+    .expect("electron/electron/preload.ts");
+    assert_contains(&electron_preload, "import { contextBridge, ipcRenderer }");
+    assert_contains(
+        &electron_preload,
+        "contextBridge.exposeInMainWorld(\"mosaicHost\"",
+    );
+    assert_contains(&electron_preload, "getProps: (request: MosaicHostRequest)");
+    assert_contains(
+        &electron_preload,
+        "handleEvent: (request: MosaicHostRequest)",
+    );
 
     let flutter_app = fs::read_to_string(tmp.path().join("flutter").join("lib").join("main.dart"))
         .expect("flutter/lib/main.dart");

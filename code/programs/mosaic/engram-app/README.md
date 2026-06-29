@@ -31,6 +31,8 @@ binds them to the shared Rust business logic core through host shells.
 - The generated React and Electron renderer shells mount `EngramApp` through
   `window.mosaicHost.getProps` and `window.mosaicHost.handleEvent`, with sample
   slot values as a fallback when no host is installed.
+- The generated Electron preload/main shell exposes those calls over
+  context-isolated IPC channels so native hosts can bind them to app state.
 - The generated SwiftPM and Flutter shells mount `EngramApp` with sample slot
   values and dispatch callbacks, matching the generated interface shapes.
 - Smoke tests now assert the generated Qt, SwiftUI, and XAML project shells

@@ -5,6 +5,8 @@
 - Updated generated React and Electron renderer shells to use the Mosaic host
   adapter contract (`window.mosaicHost.getProps` / `handleEvent`) with sample
   fallback props, so Engram events can be routed to shared Rust-backed hosts.
+- Updated generated Electron preload/main shells to expose those host adapter
+  calls over context-isolated IPC channels instead of a placeholder host object.
 - Added the reusable `mosaic-pkg-collection-actions` dependency and mounted its
   `CollectionActions` component so generated host shells expose shared
   collection counts, Anki import/export intents, and note/note-type workflow
