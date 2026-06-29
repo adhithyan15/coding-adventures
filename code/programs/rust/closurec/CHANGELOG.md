@@ -23,6 +23,19 @@ ADVANCED-only global rename (`scale`→`f`, contrasted against SIMPLE which keep
 `scale`), and live-reference retention (`f(7)` + `sink(f)`). Size savings are
 measured against `WHITESPACE_ONLY` (not the raw source) so the shrink reflects
 optimization, not comment stripping. No production-code or CLI-surface change.
+## [0.226.0] - 2026-06-29
+
+### Added — SIMPLE/ADVANCED fold static `Object.keys({k: v, …})` → key-string array
+
+At `--compilation_level SIMPLE` (and `ADVANCED`, which routes through the same
+typed pipeline) `Object.keys` of a fully-static NON-EMPTY object literal now
+folds to the array of its own-enumerable string keys, e.g.
+`Object.keys({a:1,b:2})` → `["a","b"]`. The empty-object case
+(`Object.keys/values/entries({})` → `[]`) was already handled; this extends the
+existing `simple-fold-object-keys` fixture to cover the non-empty key-array fold
+and three declines (non-empty `Object.values`, an integer-index-keyed object,
+and an array). Folding requires `coding-adventures-closure-pass-constant-fold`
+0.75.0. No CLI surface change.
 ## [0.225.0] - 2026-06-29
 
 ### Added — characterization test pinning the per-fold tracing gap (`tests/cv_fold_provenance_gap.rs`)
