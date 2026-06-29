@@ -47,6 +47,16 @@ open/edit, Anki package import/export, or note dialogs, also return a
 
 ## Building
 
+PowerShell:
+
+```powershell
+cd code/packages/rust/engram-wasm
+.\build-wasm.ps1
+node js/smoke.mjs
+```
+
+Bash:
+
 ```bash
 cd code/packages/rust/engram-wasm
 bash build-wasm.sh
