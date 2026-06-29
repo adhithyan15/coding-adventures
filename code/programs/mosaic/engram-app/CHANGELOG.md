@@ -28,6 +28,8 @@
   including preserved original IDs from imported packages.
 - Added Anki-style `dupe:notetype,text` duplicate first-field browser searches,
   including imported sort-field metadata and HTML/media filename normalization.
+- Added imported Anki FSRS stability and difficulty browser filters via
+  `prop:s` / `prop:stability` and `prop:d` / `prop:difficulty`.
 - Expanded the shared Engram browser search core with Anki-style `w:`, `nc:`,
   `sc:`, and `re:` text modifiers, field-scoped regex searches, tag regexes,
   and single-character `_` wildcards.

@@ -95,10 +95,11 @@ filters. Imported Anki card custom data can be searched with
 `has-cd:key`, numeric `prop:cdn:key>5`, and scalar string
 `prop:cds:key=value` filters.
 `prop:rated` accepts Anki-style answer-button suffixes such as
-`prop:rated<-7:again`. Imported Anki revlog metadata powers manual reschedule
-searches with `resched:` and `prop:resched`; imported Anki queue metadata also
-powers `is:buried-manually` and `is:buried-sibling`; relearning cards match
-both `is:learn` and `is:review`
+`prop:rated<-7:again`; imported Anki FSRS card data powers stability and
+difficulty searches with `prop:s` and `prop:d`. Imported Anki revlog metadata
+powers manual reschedule searches with `resched:` and `prop:resched`; imported
+Anki queue metadata also powers `is:buried-manually` and `is:buried-sibling`;
+relearning cards match both `is:learn` and `is:review`
 for Anki-style lapsed-card queries. `introduced:` ignores imported manual
 reschedule rows when finding a card's first real review. Recent-day filters
 treat `:0` as Anki does: an alias for a one-day window. Terms inside a group

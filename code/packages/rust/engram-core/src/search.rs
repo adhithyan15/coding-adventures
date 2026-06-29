@@ -144,6 +144,8 @@ enum CardProperty {
     Rated,
     Rescheduled,
     Position,
+    Stability,
+    Difficulty,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -932,6 +934,8 @@ fn parse_property_filter(token: &str, value: &str) -> Result<SearchClauseKind, S
         "rated" => CardProperty::Rated,
         "resched" | "rescheduled" => CardProperty::Rescheduled,
         "pos" | "position" => CardProperty::Position,
+        "s" | "stability" => CardProperty::Stability,
+        "d" | "difficulty" => CardProperty::Difficulty,
         _ => {
             return Err(SearchError {
                 message: "unknown card property filter".to_string(),
@@ -1929,7 +1933,22 @@ fn property_matches(
         }),
         CardProperty::Position => imported_new_card_position(progress, card_sources)
             .is_some_and(|position| compare_number(position as f64, filter.operator, filter.value)),
+        CardProperty::Stability => imported_fsrs_variable(card_sources, "s")
+            .is_some_and(|actual| compare_number(actual, filter.operator, filter.value)),
+        CardProperty::Difficulty => {
+            imported_fsrs_variable(card_sources, "d").is_some_and(|actual| {
+                compare_number(actual, filter.operator, filter.value * 9.0 + 1.0)
+            })
+        }
     }
+}
+
+fn imported_fsrs_variable(card_sources: &[&ExternalSourceRecord], key: &str) -> Option<f64> {
+    card_sources.iter().find_map(|source| {
+        card_custom_data_value(source, key)
+            .as_ref()
+            .and_then(custom_data_number)
+    })
 }
 
 fn imported_new_card_position(
@@ -3241,6 +3260,44 @@ mod tests {
         ];
         assert_eq!(ids_for(&state, "prop:rated=0"), vec!["due"]);
         assert_eq!(ids_for(&state, "prop:rated<-1"), vec!["lapsed"]);
+    }
+
+    #[test]
+    fn fsrs_property_filters_match_imported_anki_card_data() {
+        let anki_card_data = |card_id: &str, data: &str| ExternalSourceRecord {
+            target: ExternalSourceTarget::Card,
+            target_id: card_id.to_string(),
+            source: "anki-v11".to_string(),
+            original_id: Some(card_id.to_string()),
+            data: BTreeMap::from([("data".to_string(), data.to_string())]),
+        };
+        let state = AppState {
+            decks: vec![deck("tamil", "Tamil")],
+            cards: vec![
+                card("stable", "tamil", "stable", "stable"),
+                card("difficult", "tamil", "difficult", "difficult"),
+                card("native", "tamil", "native", "native"),
+            ],
+            external_sources: vec![
+                anki_card_data("stable", r#"{"s":12.5,"d":5.5}"#),
+                anki_card_data("difficult", r#"{"s":2.0,"d":8.2}"#),
+            ],
+            ..AppState::default()
+        };
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("prop:s>10"), vec!["stable"]);
+        assert_eq!(ids_for("prop:stability<=2"), vec!["difficult"]);
+        assert_eq!(ids_for("prop:d=0.5"), vec!["stable"]);
+        assert_eq!(ids_for("prop:difficulty>0.7"), vec!["difficult"]);
+        assert!(ids_for("prop:s=0").is_empty());
     }
 
     #[test]
