@@ -94,7 +94,8 @@ case only; `w:` and `re:` use Unicode-aware regex case-insensitive matching.
 imported Anki deck-option preset names from preserved collection metadata, while
 imported Anki card-state filters use preserved type/queue metadata when
 available, `flag:` uses preserved Anki card flags, `is:marked` recognizes
-Anki's `marked` note tag, and `prop:due` uses imported Anki due metadata.
+Anki's `marked` note tag, and `prop:due` uses imported Anki due metadata,
+including review/day-learning scheduler days and learning queue seconds.
 `added:` uses imported Anki card-id timestamps when available. `prop:pos` /
 `prop:position` uses imported Anki new-card queue positions when available.
 For imported filtered-deck cards, `deck:` also matches the preserved original
