@@ -136,6 +136,24 @@ runtime and Chief of Staff tools a typed catalog for:
 - low-level mesh release ticket handoff execution work-order guardrails that
   classify lane work into release blockers, operator handoffs, review gates,
   and ready-to-execute checks
+- low-level mesh protocol-evidence package handoff execution action rows that
+  turn package handoff execution slots into repair, review, operator, dispatch,
+  execution, and release handoff work
+- mesh protocol-evidence package handoff execution action summaries that
+  combine action-row counts with next repair, review, operator, dispatch,
+  execution, and release handoff pointers
+- low-level mesh protocol-evidence package handoff execution action evidence
+  rows that preserve action, slot, package, packet, blocker, and release
+  evidence lineage
+- low-level mesh protocol-evidence package handoff execution action evidence
+  review rows that classify protocol evidence into blocker, operator, review,
+  lineage, and release-ready outcomes
+- mesh protocol-evidence package handoff execution action evidence summaries
+  that combine evidence-row counts with next blocker, protocol, and release
+  handoff pointers
+- mesh protocol-evidence package handoff execution action evidence review
+  summaries that combine review counts with next blocker, protocol, and
+  release handoff pointers
 - low-level mesh release ticket handoff execution work-order guardrail audit
   rows that expose release blockers, operator handoffs, review gates, and
   ready-to-execute checks for audit/release coordination
@@ -308,6 +326,14 @@ runtime and Chief of Staff tools a typed catalog for:
   readiness execution handoff action evidence review disposition action
   readiness execution handoff summaries that combine handoff rows with next
   repair, review, operator, lineage, and release handoff pointers
+- low-level mesh release ticket handoff readiness-evidence review
+  disposition-action readiness execution handoff action evidence review
+  disposition action readiness execution handoff action rows that turn
+  handoff readiness into repair, review, operator, and release actions
+- mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action evidence review disposition action
+  readiness execution handoff action summaries that combine action rows with
+  next repair, review, operator, lineage, and release handoff pointers
 - mesh release ticket handoff readiness-evidence review disposition-action
   readiness execution handoff action evidence review disposition action
   summaries that combine action rows with next repair, review, lineage, and
@@ -322,6 +348,34 @@ runtime and Chief of Staff tools a typed catalog for:
 - mesh release ticket handoff readiness-evidence review disposition-action
   readiness execution handoff action evidence summaries that combine evidence
   rows with next repair, review, and release handoff pointers
+- low-level mesh release ticket handoff readiness-evidence review
+  disposition-action readiness execution handoff action protocol-evidence
+  packet rows that join Zigbee, Z-Wave, and Thread substrate readiness with
+  handoff-action evidence state
+- mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action protocol-evidence packet summaries that
+  combine packet readiness, substrate blockers, and first actionable evidence
+  pointers
+- mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action protocol-evidence package readiness
+  summaries that lift protocol packet state into package-facing go/no-go
+  release coordination
+- low-level mesh release ticket handoff readiness-evidence review
+  disposition-action readiness execution handoff action protocol-evidence
+  package handoff rows that project Zigbee, Z-Wave, and Thread packet
+  readiness into package handoff work
+- mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action protocol-evidence package handoff
+  summaries that combine package handoff rows with next actionable protocol
+  and evidence pointers
+- low-level mesh release ticket handoff readiness-evidence review
+  disposition-action readiness execution handoff action protocol-evidence
+  package handoff execution slots that order Zigbee, Z-Wave, and Thread
+  package handoff work into deterministic release lanes
+- mesh release ticket handoff readiness-evidence review disposition-action
+  readiness execution handoff action protocol-evidence package handoff
+  execution slot summaries that combine slot lane counts with next actionable
+  protocol and release handoff pointers
 - mesh release ticket handoff work-order guardrail readiness summaries that
   combine work-order readiness with guardrail counts and first actionable
   handoff work

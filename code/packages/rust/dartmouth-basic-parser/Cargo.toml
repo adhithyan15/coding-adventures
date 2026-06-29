@@ -1,8 +1,8 @@
 [package]
 name = "coding-adventures-dartmouth-basic-parser"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "Dartmouth BASIC parser — parses 1964 BASIC source text into an AST using the grammar-driven parser and the dartmouth_basic.grammar file"
+description = "Dartmouth BASIC parser — v0.2.0 parses `$` string variables and STRING primaries for BA4."
 
 [dependencies]
 grammar-tools = { path = "../grammar-tools" }

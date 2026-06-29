@@ -1,0 +1,12 @@
+[package]
+name = "engram-core"
+version = "0.1.0"
+edition = "2021"
+description = "Headless spaced-repetition and language-learning memory core for Engram and Mosaic frontends."
+
+[features]
+default = []
+serde = ["dep:serde"]
+
+[dependencies]
+serde = { version = "1", features = ["derive"], optional = true }

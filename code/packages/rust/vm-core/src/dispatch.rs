@@ -32,6 +32,7 @@
 //! is masked with `& 0xFF`.  The mask is applied inside each arithmetic handler,
 //! not in the dispatch loop.
 
+use std::cmp::Ordering;
 use std::collections::HashMap;
 use interpreter_ir::instr::{IIRInstr, Operand};
 use crate::errors::VMError;
@@ -714,6 +715,164 @@ fn handle_global_store(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option
     Ok(None)
 }
 
+// Strings (LANG-FULL E4) -----------------------------------------------------
+//
+// A VM string is `Value::Str(String)`. The IIR semantics are byte-based:
+// `str_len` returns the UTF-8 byte count and `str_index` returns one unsigned
+// byte. Backends are free to use native managed strings or length-prefixed
+// buffers, but this is the reference behaviour they must match.
+
+fn string_src(frame: &VMFrame, srcs: &[Operand], idx: usize, op: &str) -> Result<String, VMError> {
+    match resolve_src(frame, srcs, idx)? {
+        Value::Str(s) => Ok(s),
+        other => Err(VMError::TypeError {
+            expected: "str".into(),
+            actual: other.iir_type_name().into(),
+            context: op.into(),
+        }),
+    }
+}
+
+fn handle_str_const(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let s = instr.srcs.first()
+        .and_then(Operand::as_str_lit)
+        .ok_or_else(|| VMError::Custom("str_const expects srcs[0] to be Operand::Str".into()))?
+        .to_string();
+    let value = Value::Str(s);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+fn handle_str_len(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let len = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        string_src(frame, &instr.srcs, 0, "str_len")?.len() as i64
+    };
+    let value = Value::Int(len);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+fn handle_str_index(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let byte = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let s = string_src(frame, &instr.srcs, 0, "str_index")?;
+        let idx_value = resolve_src(frame, &instr.srcs, 1)?;
+        let idx = idx_value
+            .as_i64()
+            .ok_or_else(|| VMError::TypeError {
+                expected: "i64".into(),
+                actual: idx_value.iir_type_name().into(),
+                context: "str_index".into(),
+            })?;
+        if idx < 0 || idx as usize >= s.len() {
+            return Err(VMError::Custom(format!(
+                "str_index: index {idx} out of bounds for string of length {}",
+                s.len()
+            )));
+        }
+        s.as_bytes()[idx as usize] as i64
+    };
+    let value = Value::Int(byte);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+fn handle_str_concat(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let value = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let mut a = string_src(frame, &instr.srcs, 0, "str_concat")?;
+        let b = string_src(frame, &instr.srcs, 1, "str_concat")?;
+        a.push_str(&b);
+        Value::Str(a)
+    };
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+fn handle_str_slice(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let value = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let s = string_src(frame, &instr.srcs, 0, "str_slice")?;
+        let start_value = resolve_src(frame, &instr.srcs, 1)?;
+        let end_value = resolve_src(frame, &instr.srcs, 2)?;
+        let start = start_value.as_i64().ok_or_else(|| VMError::TypeError {
+            expected: "i64".into(),
+            actual: start_value.iir_type_name().into(),
+            context: "str_slice".into(),
+        })?;
+        let end = end_value.as_i64().ok_or_else(|| VMError::TypeError {
+            expected: "i64".into(),
+            actual: end_value.iir_type_name().into(),
+            context: "str_slice".into(),
+        })?;
+        if start < 0 || end < start || end as usize > s.len() {
+            return Err(VMError::Custom(format!(
+                "str_slice: range {start}..{end} out of bounds for string of length {}",
+                s.len()
+            )));
+        }
+        let bytes = &s.as_bytes()[start as usize..end as usize];
+        let sliced = String::from_utf8(bytes.to_vec()).map_err(|_| {
+            VMError::Custom("str_slice: range does not preserve UTF-8 boundaries".into())
+        })?;
+        Value::Str(sliced)
+    };
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+fn handle_str_eq(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let same = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let a = string_src(frame, &instr.srcs, 0, "str_eq")?;
+        let b = string_src(frame, &instr.srcs, 1, "str_eq")?;
+        a == b
+    };
+    let value = Value::Int(if same { 1 } else { 0 });
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+fn handle_str_cmp(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let ordering = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let a = string_src(frame, &instr.srcs, 0, "str_cmp")?;
+        let b = string_src(frame, &instr.srcs, 1, "str_cmp")?;
+        a.as_bytes().cmp(b.as_bytes())
+    };
+    let value = Value::Int(match ordering {
+        Ordering::Less => -1,
+        Ordering::Equal => 0,
+        Ordering::Greater => 1,
+    });
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+fn handle_print_str(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let s = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        Value::Str(string_src(frame, &instr.srcs, 0, "print_str")?)
+    };
+    ctx.builtins.call("print_str", &[s])?;
+    Ok(None)
+}
+
 // Byte-tape memory (the shared-IIR byte buffer) ----------------------------
 //
 // `alloc_bytes` / `load_byte` / `store_byte` are the lowered byte-tape ops that
@@ -1218,6 +1377,14 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
         "store_byte"   => Some(handle_store_byte),
         "global_load"  => Some(handle_global_load),
         "global_store" => Some(handle_global_store),
+        "str_const"    => Some(handle_str_const),
+        "str_len"      => Some(handle_str_len),
+        "str_index"    => Some(handle_str_index),
+        "str_concat"   => Some(handle_str_concat),
+        "str_slice"    => Some(handle_str_slice),
+        "str_eq"       => Some(handle_str_eq),
+        "str_cmp"      => Some(handle_str_cmp),
+        "print_str"    => Some(handle_print_str),
         "alloc_array"  => Some(handle_alloc_array),
         "array_len"    => Some(handle_array_len),
         "array_get"    => Some(handle_array_get),

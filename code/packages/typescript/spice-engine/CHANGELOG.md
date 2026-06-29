@@ -2,6 +2,92 @@
 
 ## Unreleased
 
+- Add `deviceModelReferenceDeckAuditAnalysisSummary`,
+  `formatDeviceModelReferenceDeckAuditAnalysisSummaryTable`,
+  `deviceModelReferenceDeckAuditAnalysisSummaryRecords`,
+  `formatDeviceModelReferenceDeckAuditAnalysisSummaryCsv`, and
+  `formatDeviceModelReferenceDeckAuditAnalysisSummaryJson`, stable
+  per-analysis coverage summaries for the reference-deck audit matrix,
+  matching Python and Rust.
+- Add `deviceModelReferenceDeckAuditSummary`,
+  `formatDeviceModelReferenceDeckAuditSummaryTable`,
+  `deviceModelReferenceDeckAuditSummaryRecords`,
+  `formatDeviceModelReferenceDeckAuditSummaryCsv`, and
+  `formatDeviceModelReferenceDeckAuditSummaryJson`, stable per-kind coverage
+  summaries for the reference-deck audit matrix, matching Python and Rust.
+- Add `deviceModelReferenceDeckAuditRecords`,
+  `formatDeviceModelReferenceDeckAuditCsv`, and
+  `formatDeviceModelReferenceDeckAuditJson`, stable record-oriented exports
+  for the device-model reference-deck audit matrix, matching Python and Rust.
+- Add `deviceModelReferenceDeckAuditGate` and
+  `formatDeviceModelReferenceDeckAuditGateReport`, a stable pass/fail gate for
+  the required device-model reference-deck audit coverage matrix, matching
+  Python and Rust.
+- Add `formatDeviceModelReferenceDeckAuditTable`, a stable tab-separated
+  summary for the device-model reference-deck audit matrix, matching Python
+  and Rust.
+- Add `deviceModelReferenceDeckAuditFixtures`, a stable reference coverage
+  matrix across DC, temperature, AC, noise, and transient model-depth fixtures
+  for diode, BJT, JFET, and Level-1 MOS families, matching Python and Rust.
+- Shape Level-1 MOS reverse-biased bulk-junction capacitance with `PB` and
+  `MJ` model-card parameters for AC operating-point capacitance reports and
+  transient source-body / drain-body companions, matching Python and Rust,
+  with regression coverage for reverse-biased drain-step delay.
+- Stamp Level-1 MOS zero-bias bulk-junction `CBS` and `CBD` model-card storage
+  as transient source-body and drain-body companions, matching Python and
+  Rust, with regression coverage for drain-step delay.
+- Stamp Level-1 MOS `CGSO`, `CGDO`, and `CGBO` model-card storage as
+  transient gate-source, gate-drain, and gate-body companions, matching Python
+  and Rust, with regression coverage for gate-step delay.
+- Stamp JFET `gateSourceCapacitance` and `gateDrainCapacitance` model-card
+  storage as transient gate-source and gate-drain companions and AC
+  susceptance, matching Python and Rust, with regression coverage for gate-step
+  delay and high-frequency gate-drive shunting.
+- Stamp BJT `baseEmitterCapacitance`, `baseCollectorCapacitance`,
+  `forwardTransitTime`, and `reverseTransitTime` model-card storage as
+  transient base-emitter and base-collector companions, matching Python and
+  Rust, with regression coverage for base current-step delay and forward
+  transit-time turnoff charge.
+- Stamp diode `junctionCapacitance` and `transitTime` model-card storage as
+  transient anode-cathode companions, matching Python and Rust, with regression
+  coverage for current-step delay and turnoff charge retention.
+- Add `deviceModelChargeAuditFixtures` runnable one-device `.tran` fixtures
+  with reference deck lines, explicit terminal storage capacitance metadata,
+  stable first/final probe-voltage windows, and charge-behavior notes for
+  diode, BJT, JFET, and Level-1 MOS audits, matching Python and Rust.
+- Add `deviceModelNoiseAuditFixtures` runnable one-device `.noise` fixtures
+  with reference deck lines and stable source/output PSD windows for diode and
+  BJT shot noise plus JFET and Level-1 MOS channel thermal noise audits,
+  matching Python and Rust.
+- Fix TypeScript BJT small-signal and AC stamping to use the converged
+  operating-point junction voltage when deriving transconductance and diffusion
+  capacitance, matching Python and Rust.
+- Add `deviceModelCapacitanceAuditFixtures` runnable one-device AC fixtures
+  with `.ac` reference deck lines and stable high-frequency probe-magnitude
+  windows for diode, BJT, JFET, and Level-1 MOS model-depth audits, matching
+  Python and Rust.
+- Add `deviceModelTemperatureAuditFixtures` runnable one-device DC
+  temperature-sweep fixtures with `.temp` reference deck lines and stable
+  probe-voltage windows for diode, BJT, JFET, and Level-1 MOS model-depth
+  audits, matching Python and Rust.
+- Add `deviceModelBehaviorAuditFixtures` runnable one-device DC bias fixtures
+  with reference deck lines and stable probe-voltage windows for diode, BJT,
+  JFET, and Level-1 MOS model-depth audits, matching Python and Rust.
+- Add configurable nonlinear Newton damping through
+  `dcOp(..., { newtonStepLimit })`, plus stable diagnostics for
+  `newtonStepLimit`, `limitedNewtonSteps`, and `minimumDampingFactor`,
+  matching Python and Rust.
+- Add `dcOp(...).diagnostics.solverProfile` with matrix size, solver kind,
+  backend, structural nonzero count, density, peak fill-in, and fallback
+  metadata for production sparse-solver audits, matching Python and Rust.
+- Add `runDeck` whole-run execution for every parsed `.op`, `.dc`, `.ac`,
+  `.tran`, `.tf`, `.sens`, and `.noise` card in source order, preserving
+  duplicate analysis directives, defaulting analysis-less decks to an implicit
+  `.op`, and returning aggregate run-artifact table, CSV, compact JSON, and
+  header-keyed record exports, matching Python and Rust.
+- Expose selected analysis sweep, frequency, transient timing, and `UIC`
+  metadata in `runDeckAnalysis` output-plan artifacts, with stable table, CSV,
+  compact JSON, and header-keyed record exports, matching Python and Rust.
 - Expose selected analysis output-node metadata in `runDeckAnalysis`
   output-plan artifacts beside line/source metadata, with stable table, CSV,
   compact JSON, and header-keyed record exports, matching Python and Rust.

@@ -1,0 +1,11 @@
+[package]
+name = "mosaic-pkg-review-history"
+version = "0.1.0"
+description = "Reusable Anki-style review history summary controls built on the Mosaic UI pipeline"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["ReviewHistoryPanel"]
+
+[kernel]
+version = "1"

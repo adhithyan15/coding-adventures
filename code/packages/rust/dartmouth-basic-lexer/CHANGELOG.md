@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-06-27
+
+### Added
+
+- `NAME` now accepts a trailing dollar sign so Dartmouth BASIC string variables
+  such as `A$` and `N9$` remain single tokens instead of splitting at `$`.
+- Added lexer coverage for `LET A$ = "HI"` followed by `PRINT A$`.
+
 ## [0.1.0] - 2026-04-06
 
 ### Added

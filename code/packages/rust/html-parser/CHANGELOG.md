@@ -6,6 +6,15 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- The WHATWG formatting audit now includes a focused post-parse repair evidence
+  guard for the html5lib cases that still justify legacy finish-time recovery
+  shims.
+- `<hr>` inside open `select` elements is now placed during tree construction,
+  removing a post-parse repair while preserving the html5lib select-list DOM
+  audit behavior.
+- Browser-readiness completion is now documented as a bounded planning surface
+  and enforced by a manifest-style regression test that ties every public
+  readiness inventory to fixture or focused-test evidence.
 - Browser-readiness form-association descriptors now expose form owners, labels,
   fieldset membership, datalist links, and output calculation relationships as a
   flat browser-planning inventory.

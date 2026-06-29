@@ -4,7 +4,7 @@
 //! BASIC's IIR for arithmetic + control-flow shapes.  This file
 //! goes one step further: it actually runs each backend's
 //! *encoder* (`lower_iir_to_*`) and asserts the output is real
-//! bytecode (correct magic prefix etc.).
+//! bytecode / textual IL (correct magic prefix etc.).
 //!
 //! ## PRINT status
 //!
@@ -128,28 +128,34 @@ fn basic_control_flow_lowers_to_jvm_class_bytes() {
 }
 
 // ===========================================================================
-// CLR (CIL bytecode)
+// CLR (textual CIL)
 // ===========================================================================
 
 #[test]
-fn basic_arith_lowers_to_clr_assembly() {
-    use iir_to_cil_bytecode::{validate_iir_for_clr, lower_iir_to_cil, IIRClrConfig};
+fn basic_arith_lowers_to_clr_il() {
+    use iir_to_cil_bytecode::{emit_il, validate_iir_for_clr, IIRClrConfig};
     let m = compile_source(BASIC_ARITH, "basic_arith")
         .expect("BASIC compiles to IIR");
     let errs = validate_iir_for_clr(&m);
     assert!(errs.is_empty(), "clr validator must accept arith IIR; got {errs:?}");
-    let _assembly = lower_iir_to_cil(&m, &IIRClrConfig::default())
-        .expect("IIR -> CLR assembly");
+    let il = emit_il(&m, &IIRClrConfig::default())
+        .expect("IIR -> textual CLR IL");
+    assert!(il.contains("ldc.r8"), "BA7 scalar BASIC emits f64 constants; got:\n{il}");
+    assert!(il.lines().any(|line| line.trim() == "add"),
+        "arithmetic program must emit CIL add; got:\n{il}");
 }
 
 #[test]
-fn basic_for_loop_lowers_to_clr_assembly() {
-    use iir_to_cil_bytecode::{validate_iir_for_clr, lower_iir_to_cil, IIRClrConfig};
+fn basic_for_loop_lowers_to_clr_il() {
+    use iir_to_cil_bytecode::{emit_il, validate_iir_for_clr, IIRClrConfig};
     let m = compile_source(BASIC_FOR_LOOP, "basic_for")
         .expect("BASIC compiles to IIR");
     assert!(validate_iir_for_clr(&m).is_empty());
-    let _ = lower_iir_to_cil(&m, &IIRClrConfig::default())
-        .expect("IIR -> CLR assembly");
+    let il = emit_il(&m, &IIRClrConfig::default())
+        .expect("IIR -> textual CLR IL");
+    assert!(il.contains("ldc.r8"), "BA7 scalar FOR lowers through f64; got:\n{il}");
+    assert!(il.lines().any(|line| line.trim().starts_with("brfalse ")),
+        "FOR loop must emit a conditional branch; got:\n{il}");
 }
 
 // ===========================================================================

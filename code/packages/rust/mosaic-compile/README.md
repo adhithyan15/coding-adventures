@@ -76,8 +76,23 @@ FLAGS:
     -V, --version            Print version
 ```
 
-Pipeline mode currently supports `--backend react` only; the other backends
-continue to use legacy mode and will gain pipeline support in follow-up work.
+Pipeline mode supports the text/native emitter family (`react`, `html`,
+`webcomponent`, `swiftui`, `qt`, `xaml`, and `flutter`). The `paint` backend
+remains legacy single-file only.
+
+Package mode compiles a Mosaic package directory that contains
+`mosaic-package.toml` plus `src/*.mil`, `src/*.mll`, and optional `src/*.msl`
+files:
+
+```text
+mosaic-compile pkg <PACKAGE_ROOT> --backend <BACKEND> --output <DIR> [--emit-project]
+
+BACKEND: react | swiftui | qt | xaml | webcomponent | html | flutter
+```
+
+`--emit-project` asks the package builder to write the selected backend's
+runnable shell next to the component artifacts, such as a WinUI/XAML project or
+a Qt/CMake project.
 
 ## Examples
 

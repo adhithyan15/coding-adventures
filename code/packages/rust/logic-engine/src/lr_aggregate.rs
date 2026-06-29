@@ -11,8 +11,10 @@
 //! Each conclusion carries one Bayesian prior `prior(p, c)`. Every
 //! independent piece of evidence carries a likelihood ratio
 //! `contributes(LR, evidence_term, c)`. When the KB *observes* an
-//! evidence term (via a Certain Fact, see [`KnowledgeBase::observed_evidence`]),
-//! the contribution's `log(LR)` is added to the running log-odds.
+//! evidence term (via a Certain Fact or an SLD proof, see
+//! [`KnowledgeBase::observed_evidence`]), the contribution's `log(LR)`
+//! is added to the running log-odds. Rule-derived evidence attenuates
+//! that delta by the confidence of the proof that established it.
 //! Joint evidence interactions — synergy or explaining-away — are
 //! handled by `contributes_jointly(LR, [e1, …, en], c)`, which adds
 //! `log(joint LR)` to the log-odds iff *every* term in `evidence_set`
@@ -36,6 +38,7 @@
 
 use logic_core::{Substitution, Term};
 
+use crate::compute::{compute, ComputeExpr, ExactRational};
 use crate::proof_dag::{DerivationOrigin, Proof, ProofDAG, ProofStep};
 use crate::{
     ContributionClauseId, FactId, JointContributionClauseId, KnowledgeBase,
@@ -120,7 +123,9 @@ impl PriorClause {
 /// A single-source likelihood-ratio contribution.
 ///
 /// "When `evidence_term` is observed, multiply the conclusion's odds
-/// by `exp(logit_delta)`." Multiple contributions per
+/// by `exp(logit_delta)`." When the evidence is derived rather than directly
+/// observed, the applied delta is attenuated by the proof confidence. Multiple
+/// contributions per
 /// `(conclusion, evidence_term)` pair sum in log-odds — that is the
 /// LP19e semantics for combining LR sources (e.g., one LR per
 /// reviewing physician for the same finding, or one LR per cited
@@ -189,6 +194,28 @@ impl CmpOp {
         }
     }
 
+    /// Evaluate with exact rational sidecars when both sides have them.
+    /// This keeps legacy f64 behaviour for ordinary thresholds while making
+    /// fraction equality such as `1 / 10 + 2 / 10 == 3 / 10` exact.
+    pub fn eval_values(
+        &self,
+        lhs: f64,
+        rhs: f64,
+        lhs_exact: Option<ExactRational>,
+        rhs_exact: Option<ExactRational>,
+    ) -> bool {
+        match (lhs_exact, rhs_exact) {
+            (Some(a), Some(b)) => match self {
+                CmpOp::Ge => cmp_exact(a, b) >= 0,
+                CmpOp::Le => cmp_exact(a, b) <= 0,
+                CmpOp::Gt => cmp_exact(a, b) > 0,
+                CmpOp::Lt => cmp_exact(a, b) < 0,
+                CmpOp::Eq => a == b,
+            },
+            _ => self.eval(lhs, rhs),
+        }
+    }
+
     pub fn symbol(&self) -> &'static str {
         match self {
             CmpOp::Ge => ">=",
@@ -197,6 +224,24 @@ impl CmpOp {
             CmpOp::Lt => "<",
             CmpOp::Eq => "==",
         }
+    }
+}
+
+fn cmp_exact(lhs: ExactRational, rhs: ExactRational) -> i8 {
+    let Some(a) = lhs.num.checked_mul(rhs.den) else {
+        return ordering_i8(lhs.to_f64().total_cmp(&rhs.to_f64()));
+    };
+    let Some(b) = rhs.num.checked_mul(lhs.den) else {
+        return ordering_i8(lhs.to_f64().total_cmp(&rhs.to_f64()));
+    };
+    ordering_i8(a.cmp(&b))
+}
+
+fn ordering_i8(ordering: std::cmp::Ordering) -> i8 {
+    match ordering {
+        std::cmp::Ordering::Less => -1,
+        std::cmp::Ordering::Equal => 0,
+        std::cmp::Ordering::Greater => 1,
     }
 }
 
@@ -216,7 +261,7 @@ pub struct PredicateContributionClause {
     pub conclusion: Term,
     pub slot: String,
     pub op: CmpOp,
-    pub value: f64,
+    pub rhs: ComputeExpr,
     pub logit_delta: f64,
     pub provenance: Provenance,
 }
@@ -234,7 +279,25 @@ impl PredicateContributionClause {
             conclusion,
             slot: slot.into(),
             op,
-            value,
+            rhs: ComputeExpr::Lit(value),
+            logit_delta,
+            provenance: Provenance::unattributed(),
+        }
+    }
+
+    pub fn new_expr(
+        conclusion: Term,
+        slot: impl Into<String>,
+        op: CmpOp,
+        rhs: ComputeExpr,
+        logit_delta: f64,
+    ) -> Self {
+        Self {
+            id: PredicateContributionClauseId(u64::MAX),
+            conclusion,
+            slot: slot.into(),
+            op,
+            rhs,
             logit_delta,
             provenance: Provenance::unattributed(),
         }
@@ -253,6 +316,22 @@ impl PredicateContributionClause {
             "PredicateContributionClause::from_lr requires lr > 0.0; got {lr}"
         );
         Self::new(conclusion, slot, op, value, lr.ln())
+    }
+
+    /// Construct a predicate contribution whose right-hand side is a full
+    /// compute expression (`from answer == 3 / 10 to opt_a`).
+    pub fn from_lr_expr(
+        conclusion: Term,
+        slot: impl Into<String>,
+        op: CmpOp,
+        rhs: ComputeExpr,
+        lr: f64,
+    ) -> Self {
+        assert!(
+            lr > 0.0,
+            "PredicateContributionClause::from_lr_expr requires lr > 0.0; got {lr}"
+        );
+        Self::new_expr(conclusion, slot, op, rhs, lr.ln())
     }
 
     pub fn with_provenance(mut self, provenance: Provenance) -> Self {
@@ -691,9 +770,10 @@ pub enum LrAggregateWarning {
 /// 1. Look up the prior on `query`. If absent, proceed with
 ///    `prior_logit = 0` and emit [`LrAggregateWarning::NoPriorDeclared`].
 /// 2. For every single-source contribution naming `query` as its
-///    conclusion, check whether the evidence term is observed
-///    (`kb.observed_evidence`). If so, add `logit_delta` to the
-///    running log-odds and record a `FromContribution` step.
+///    conclusion, check whether the evidence term is observed or provable
+///    (`kb.observed_evidence`). If so, add the possibly attenuated
+///    `logit_delta` to the running log-odds and record a
+///    `FromContribution` step.
 /// 3. For every joint contribution naming `query`, check whether
 ///    *every* term in `evidence_set` is observed. If so, add
 ///    `joint_logit_delta` and record a `FromJointContribution` step.
@@ -709,6 +789,7 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
     let mut warnings: Vec<LrAggregateWarning> = Vec::new();
     let mut steps: Vec<ProofStep> = Vec::new();
     let mut via_facts: Vec<FactId> = Vec::new();
+    let mut via_rules = Vec::new();
 
     // Step 1: prior (or warned absence).
     let prior_logit = match kb.prior_for(query) {
@@ -735,9 +816,10 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
     let mut any_contribution_active = false;
     let contributions = kb.contributions_for(query);
     for contrib in &contributions {
-        if let Some(observed_facts) = kb.observed_evidence(&contrib.evidence_term) {
+        if let Some(observed) = kb.observed_evidence(&contrib.evidence_term) {
             any_contribution_active = true;
-            if contrib.logit_delta == 0.0 {
+            let logit_delta = contrib.logit_delta * observed.confidence;
+            if logit_delta == 0.0 {
                 warnings.push(LrAggregateWarning::DegenerateContribution {
                     clause_id: contrib.id,
                 });
@@ -746,12 +828,14 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
                 goal: query.clone(),
                 origin: DerivationOrigin::FromContribution {
                     clause_id: contrib.id,
-                    evidence_fact_ids: observed_facts.clone(),
-                    logit_delta: contrib.logit_delta,
+                    evidence_fact_ids: observed.fact_ids.clone(),
+                    evidence_proof: observed.proof.clone(),
+                    logit_delta,
                 },
             });
-            running_logit += contrib.logit_delta;
-            via_facts.extend(observed_facts);
+            running_logit += logit_delta;
+            via_facts.extend(observed.fact_ids);
+            via_rules.extend(observed.rule_ids);
         }
     }
 
@@ -760,9 +844,19 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
     for joint in &joints {
         let mut every_evidence_observed = true;
         let mut joint_evidence_facts: Vec<FactId> = Vec::new();
+        let mut joint_evidence_rules = Vec::new();
+        let mut joint_evidence_proofs = Vec::new();
+        let mut joint_confidence = 1.0;
         for ev_term in &joint.evidence_set {
             match kb.observed_evidence(ev_term) {
-                Some(ids) => joint_evidence_facts.extend(ids),
+                Some(observed) => {
+                    joint_confidence *= observed.confidence;
+                    joint_evidence_facts.extend(observed.fact_ids);
+                    joint_evidence_rules.extend(observed.rule_ids);
+                    if let Some(proof) = observed.proof {
+                        joint_evidence_proofs.push(*proof);
+                    }
+                }
                 None => {
                     every_evidence_observed = false;
                     break;
@@ -771,16 +865,19 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
         }
         if every_evidence_observed {
             any_contribution_active = true;
+            let joint_logit_delta = joint.joint_logit_delta * joint_confidence;
             steps.push(ProofStep {
                 goal: query.clone(),
                 origin: DerivationOrigin::FromJointContribution {
                     clause_id: joint.id,
                     evidence_fact_ids: joint_evidence_facts.clone(),
-                    joint_logit_delta: joint.joint_logit_delta,
+                    evidence_proofs: joint_evidence_proofs,
+                    joint_logit_delta,
                 },
             });
-            running_logit += joint.joint_logit_delta;
+            running_logit += joint_logit_delta;
             via_facts.extend(joint_evidence_facts);
+            via_rules.extend(joint_evidence_rules);
         }
     }
 
@@ -788,8 +885,14 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
     // value of its slot and evaluate the predicate on CPU; if true, apply its
     // logit_delta. A saturating logit_delta makes this a deterministic rule.
     for pc in kb.predicate_contributions_for(query) {
-        if let Some(observed) = kb.observed_value(&pc.slot) {
-            if pc.op.eval(observed, pc.value) {
+        if let Some((observed, observed_exact)) = kb.observed_numeric(&pc.slot) {
+            let Ok(rhs) = compute("__predicate_rhs", &pc.rhs, kb) else {
+                continue;
+            };
+            if pc
+                .op
+                .eval_values(observed, rhs.value, observed_exact, rhs.exact)
+            {
                 any_contribution_active = true;
                 steps.push(ProofStep {
                     goal: query.clone(),
@@ -797,7 +900,7 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
                         clause_id: pc.id,
                         slot: pc.slot.clone(),
                         op: pc.op,
-                        threshold: pc.value,
+                        threshold: rhs.value,
                         observed,
                         logit_delta: pc.logit_delta,
                     },
@@ -861,6 +964,8 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
     // Step 5: package the proof.
     via_facts.sort();
     via_facts.dedup();
+    via_rules.sort();
+    via_rules.dedup();
     let posterior = sigmoid(running_logit);
     LRAggregateResult {
         dag: ProofDAG {
@@ -869,7 +974,7 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
                 bindings: Substitution::empty(),
                 steps,
                 via_facts,
-                via_rules: Vec::new(),
+                via_rules,
                 posterior_logit: Some(running_logit),
                 posterior_probability: Some(posterior),
             }],
@@ -888,7 +993,7 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{Fact, KnowledgeBase};
+    use crate::{ComputeOp, Fact, KnowledgeBase};
     use logic_core::{atom, compound};
 
     fn approx_eq(a: f64, b: f64, tol: f64) -> bool {
@@ -1137,6 +1242,51 @@ mod tests {
             })
             .expect("a predicate step should be present");
         assert_eq!(step, ("gross_income".to_string(), ">=", 14600.0, 18000.0));
+    }
+
+    #[test]
+    fn predicate_expression_rhs_uses_exact_fraction_equality() {
+        let mut kb = KnowledgeBase::new();
+        kb.add_prior(PriorClause::from_probability(atom("opt_a"), 0.10))
+            .unwrap();
+        let answer = crate::compute(
+            "answer",
+            &ComputeExpr::Bin(
+                ComputeOp::Add,
+                Box::new(ComputeExpr::Bin(
+                    ComputeOp::Div,
+                    Box::new(ComputeExpr::Lit(1.0)),
+                    Box::new(ComputeExpr::Lit(10.0)),
+                )),
+                Box::new(ComputeExpr::Bin(
+                    ComputeOp::Div,
+                    Box::new(ComputeExpr::Lit(2.0)),
+                    Box::new(ComputeExpr::Lit(10.0)),
+                )),
+            ),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(answer.exact, ExactRational::new(3, 10));
+        kb.add_derived(answer);
+        kb.add_predicate_contribution(PredicateContributionClause::from_lr_expr(
+            atom("opt_a"),
+            "answer",
+            CmpOp::Eq,
+            ComputeExpr::Bin(
+                ComputeOp::Div,
+                Box::new(ComputeExpr::Lit(3.0)),
+                Box::new(ComputeExpr::Lit(10.0)),
+            ),
+            1e6,
+        ));
+
+        let result = lr_aggregate(&atom("opt_a"), &kb);
+        assert!(result.posterior > 0.9999, "got {}", result.posterior);
+        assert!(result.dag.proofs[0]
+            .steps
+            .iter()
+            .any(|s| matches!(s.origin, DerivationOrigin::FromPredicateContribution { .. })));
     }
 
     #[test]

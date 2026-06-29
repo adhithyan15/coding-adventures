@@ -111,6 +111,38 @@ fn int_src(f: &IIRFunction, instr: &IIRInstr, idx: usize, op: &str) -> Result<i3
     }
 }
 
+/// Quote a string literal for textual IL's `ldstr`.
+///
+/// This slice deliberately supports the ASCII BASIC literal path first. The shared
+/// E4 string VM defines strings as UTF-8 byte sequences; mapping every byte-level
+/// operation to `System.String` needs a fuller representation decision. For the
+/// source-language proof here, ASCII literals are exact and safe to embed.
+fn cil_string_literal(ctx: &str, s: &str) -> Result<String, IIRClrError> {
+    let mut out = String::with_capacity(s.len() + 2);
+    out.push('"');
+    for ch in s.chars() {
+        match ch {
+            '\\' => out.push_str("\\\\"),
+            '"' => out.push_str("\\\""),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            c if c.is_ascii_graphic() || c == ' ' => out.push(c),
+            c => {
+                return Err(IIRClrError::InvalidOperand {
+                    function: ctx.to_string(),
+                    detail: format!(
+                        "str_const literal contains unsupported non-printable/non-ASCII character U+{:04X}",
+                        c as u32
+                    ),
+                })
+            }
+        }
+    }
+    out.push('"');
+    Ok(out)
+}
+
 /// The CIL local type for an IIR register, from the producing instruction's
 /// `type_hint`. A cons cell (`ref<LispyPair>`) is a `System.Object[]`; a boxed
 /// atom or a loaded field (`ref<any>`) is a `System.Object`; everything else is a
@@ -131,6 +163,8 @@ fn cil_local_type(type_hint: &str) -> &'static str {
             Some((cil_array_ty, _, _, _)) => cil_array_ty,
             None => "object[]",
         }
+    } else if type_hint == "str" {
+        "string"
     } else if type_hint == "f64" {
         // ALGOL `real` (LANG-FULL E3): an IEEE-754 double. The `.locals`
         // declaration carries `float64`, and an `f64`-typed register is loaded/
@@ -407,9 +441,10 @@ pub fn emit_il(module: &IIRModule, config: &IIRClrConfig) -> Result<String, IIRC
     // own output and its (meaningless) `int32` exit value (a double-print).
     let prints = module.functions.iter().any(|f| {
         f.instructions.iter().any(|i| {
-            i.op == "call_builtin"
-                && matches!(i.srcs.first(),
-                    Some(Operand::Var(n)) if n == "print_i64" || n == "putchar")
+            i.op == "print_str"
+                || (i.op == "call_builtin"
+                    && matches!(i.srcs.first(),
+                        Some(Operand::Var(n)) if n == "print_i64" || n == "putchar"))
         })
     });
     let _ = writeln!(il, "  .method public static void Run() cil managed {{");
@@ -530,6 +565,156 @@ fn emit_method(
 
     for instr in &f.instructions {
         match instr.op.as_str() {
+            // str_const <dest> = Str(s)  ->  ldstr "..."; st<dest>
+            //
+            // LANG-FULL E4 first managed foothold: Dartmouth BASIC string
+            // literal PRINT lowers to `str_const` + `print_str`; literal
+            // string length, equality, ordering, and append lower to `str_len`,
+            // `str_eq`, `str_cmp`, and `str_concat`. These map naturally to CoreCLR's
+            // `System.String`.
+            // The richer byte-oriented string algebra remains deliberately
+            // unsupported here until the representation is specified for
+            // non-ASCII and byte indexing.
+            "str_const" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "str_const must have a dest".to_string(),
+                })?;
+                let literal = match instr.srcs.first() {
+                    Some(Operand::Str(s)) => cil_string_literal(&f.name, s)?,
+                    other => {
+                        return Err(IIRClrError::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: format!("str_const expects a string literal, got {other:?}"),
+                        })
+                    }
+                };
+                let _ = writeln!(il, "    ldstr {literal}");
+                store_var(il, &regs, dest)?;
+            }
+            // str_concat <dest>, <left>, <right>  ->  System.String::Concat(string,string)
+            "str_concat" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "str_concat must have a dest".to_string(),
+                })?;
+                let left = var_src(f, instr, 0, "str_concat")?;
+                let right = var_src(f, instr, 1, "str_concat")?;
+                load_var(il, &regs, left)?;
+                load_var(il, &regs, right)?;
+                let _ = writeln!(
+                    il,
+                    "    call string [System.Runtime]System.String::Concat(string, string)"
+                );
+                store_var(il, &regs, dest)?;
+            }
+            // str_slice <dest>, <src>, <start>, <end>
+            //     -> System.String::Substring(start, end - start)
+            "str_slice" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "str_slice must have a dest".to_string(),
+                })?;
+                let src = var_src(f, instr, 0, "str_slice")?;
+                let start = var_src(f, instr, 1, "str_slice")?;
+                let end = var_src(f, instr, 2, "str_slice")?;
+                load_var(il, &regs, src)?;
+                load_var(il, &regs, start)?;
+                load_var(il, &regs, end)?;
+                load_var(il, &regs, start)?;
+                let _ = writeln!(il, "    sub");
+                let _ = writeln!(
+                    il,
+                    "    callvirt instance string [System.Runtime]System.String::Substring(int32, int32)"
+                );
+                store_var(il, &regs, dest)?;
+            }
+            // str_len <dest>, <src>  ->  System.String::get_Length()
+            //
+            // The v1 literal slice accepts only printable ASCII strings, so
+            // CLR's UTF-16 character count is byte-identical to the E4 byte
+            // length.
+            "str_len" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "str_len must have a dest".to_string(),
+                })?;
+                let src = var_src(f, instr, 0, "str_len")?;
+                load_var(il, &regs, src)?;
+                let _ = writeln!(
+                    il,
+                    "    callvirt instance int32 [System.Runtime]System.String::get_Length()"
+                );
+                store_var(il, &regs, dest)?;
+            }
+            // str_index <dest>, <src>, <idx>  ->  System.String::get_Chars(idx)
+            //
+            // The v1 literal slice accepts only printable ASCII strings, so CLR's
+            // UTF-16 char value is byte-identical to E4's indexed byte.
+            "str_index" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "str_index must have a dest".to_string(),
+                })?;
+                let src = var_src(f, instr, 0, "str_index")?;
+                let idx = var_src(f, instr, 1, "str_index")?;
+                load_var(il, &regs, src)?;
+                load_var(il, &regs, idx)?;
+                let _ = writeln!(
+                    il,
+                    "    callvirt instance char [System.Runtime]System.String::get_Chars(int32)"
+                );
+                store_var(il, &regs, dest)?;
+            }
+            // str_eq <dest>, <left>, <right>  ->  System.String::Equals(string,string)
+            "str_eq" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "str_eq must have a dest".to_string(),
+                })?;
+                let left = var_src(f, instr, 0, "str_eq")?;
+                let right = var_src(f, instr, 1, "str_eq")?;
+                load_var(il, &regs, left)?;
+                load_var(il, &regs, right)?;
+                let _ = writeln!(
+                    il,
+                    "    call bool [System.Runtime]System.String::Equals(string, string)"
+                );
+                store_var(il, &regs, dest)?;
+            }
+            // str_cmp <dest>, <left>, <right>
+            //     -> Math.Sign(String.CompareOrdinal(left, right))
+            "str_cmp" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "str_cmp must have a dest".to_string(),
+                })?;
+                let left = var_src(f, instr, 0, "str_cmp")?;
+                let right = var_src(f, instr, 1, "str_cmp")?;
+                load_var(il, &regs, left)?;
+                load_var(il, &regs, right)?;
+                let _ = writeln!(
+                    il,
+                    "    call int32 [System.Runtime]System.String::CompareOrdinal(string, string)"
+                );
+                let _ = writeln!(il, "    call int32 [System.Runtime]System.Math::Sign(int32)");
+                store_var(il, &regs, dest)?;
+            }
+            // print_str <src>  ->  Console.Write(string)
+            "print_str" => {
+                if instr.dest.is_some() {
+                    return Err(IIRClrError::InvalidOperand {
+                        function: f.name.clone(),
+                        detail: "print_str is a side-effecting op and must not have a dest".into(),
+                    });
+                }
+                let src = var_src(f, instr, 0, "print_str")?;
+                load_var(il, &regs, src)?;
+                let _ = writeln!(
+                    il,
+                    "    call void [System.Console]System.Console::Write(string)"
+                );
+            }
             // const <dest> = Int(n)  →  ldc.i4 n; st<dest>
             //
             // A `const` whose *result type* is a reference (`ref<…>`) is the
@@ -1574,6 +1759,243 @@ mod tests {
         );
         let launcher = il.split(".entrypoint").nth(1).expect("a launcher");
         assert!(launcher.contains("pop"), "launcher discards the entry result; got:\n{il}");
+    }
+
+    #[test]
+    fn string_literal_print_emits_ldstr_console_write_and_discards_result() {
+        // Dartmouth BASIC `PRINT "HELLO"` lowers to this shape: the literal is a
+        // string local, `print_str` writes it with no implicit newline, and the
+        // normal PRINT newline comes later through `putchar`.
+        let instrs = vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(il.contains("string V_"), "str_const must allocate a string local; got:\n{il}");
+        assert!(il.contains("ldstr \"HELLO\""), "str_const must emit ldstr; got:\n{il}");
+        assert!(
+            il.contains("call void [System.Console]System.Console::Write(string)"),
+            "print_str must call Console.Write(string); got:\n{il}"
+        );
+        let launcher = il.split(".entrypoint").nth(1).expect("a launcher");
+        assert!(launcher.contains("pop"), "string-printing program discards result; got:\n{il}");
+        assert!(
+            !launcher.contains("WriteLine"),
+            "launcher must not print the entry result for print_str programs; got:\n{il}"
+        );
+    }
+
+    #[test]
+    fn string_literal_len_emits_string_length() {
+        let instrs = vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(il.contains("ldstr \"HELLO\""), "str_const must emit ldstr; got:\n{il}");
+        assert!(
+            il.contains("callvirt instance int32 [System.Runtime]System.String::get_Length()"),
+            "str_len must call System.String::get_Length(); got:\n{il}"
+        );
+    }
+
+    #[test]
+    fn string_literal_index_emits_string_get_chars() {
+        let instrs = vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("ABC".into())],
+                "str",
+            ),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i32"),
+            IIRInstr::new("str_index", Some("b".into()), vec![
+                Operand::Var("s".into()),
+                Operand::Var("i".into()),
+            ], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(il.contains("ldstr \"ABC\""), "str_const must emit ldstr; got:\n{il}");
+        assert!(
+            il.contains("callvirt instance char [System.Runtime]System.String::get_Chars(int32)"),
+            "str_index must call System.String::get_Chars(int32); got:\n{il}"
+        );
+    }
+
+    #[test]
+    fn string_literal_concat_len_emits_string_concat() {
+        let instrs = vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("AB".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("CDE".into())],
+                "str",
+            ),
+            IIRInstr::new("str_concat", Some("s".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "str"),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(
+            il.contains("call string [System.Runtime]System.String::Concat(string, string)"),
+            "str_concat must call System.String::Concat(string,string); got:\n{il}"
+        );
+        assert!(
+            il.contains("callvirt instance int32 [System.Runtime]System.String::get_Length()"),
+            "str_len must call System.String::get_Length(); got:\n{il}"
+        );
+    }
+
+    #[test]
+    fn string_literal_slice_index_emits_string_substring() {
+        let instrs = vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("ABCDE".into())],
+                "str",
+            ),
+            IIRInstr::new("const", Some("start".into()), vec![Operand::Int(1)], "i32"),
+            IIRInstr::new("const", Some("end".into()), vec![Operand::Int(4)], "i32"),
+            IIRInstr::new(
+                "str_slice",
+                Some("sub".into()),
+                vec![
+                    Operand::Var("s".into()),
+                    Operand::Var("start".into()),
+                    Operand::Var("end".into()),
+                ],
+                "str",
+            ),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i32"),
+            IIRInstr::new(
+                "str_index",
+                Some("b".into()),
+                vec![Operand::Var("sub".into()), Operand::Var("i".into())],
+                "i32",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(
+            il.contains("    sub"),
+            "str_slice must compute end-start for System.String::Substring; got:\n{il}"
+        );
+        assert!(
+            il.contains(
+                "callvirt instance string [System.Runtime]System.String::Substring(int32, int32)"
+            ),
+            "str_slice must call System.String::Substring(int32,int32); got:\n{il}"
+        );
+        assert!(
+            il.contains("callvirt instance char [System.Runtime]System.String::get_Chars(int32)"),
+            "str_index after str_slice must call System.String::get_Chars(int32); got:\n{il}"
+        );
+    }
+
+    #[test]
+    fn string_literal_eq_emits_string_equals() {
+        let instrs = vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("str_eq", Some("ok".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ok".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(il.contains("ldstr \"HELLO\""), "str_const must emit ldstr; got:\n{il}");
+        assert!(
+            il.contains("call bool [System.Runtime]System.String::Equals(string, string)"),
+            "str_eq must call System.String::Equals(string,string); got:\n{il}"
+        );
+    }
+
+    #[test]
+    fn string_literal_cmp_emits_compare_ordinal_and_sign() {
+        let instrs = vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("ALPHA".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("BETA".into())],
+                "str",
+            ),
+            IIRInstr::new("str_cmp", Some("ord".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ord".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(
+            il.contains("call int32 [System.Runtime]System.String::CompareOrdinal(string, string)"),
+            "str_cmp must call System.String::CompareOrdinal(string,string); got:\n{il}"
+        );
+        assert!(
+            il.contains("call int32 [System.Runtime]System.Math::Sign(int32)"),
+            "str_cmp must normalize via System.Math::Sign(int32); got:\n{il}"
+        );
     }
 
     #[test]

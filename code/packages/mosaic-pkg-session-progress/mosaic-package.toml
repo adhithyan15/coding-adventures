@@ -1,0 +1,14 @@
+[package]
+name = "mosaic-pkg-session-progress"
+version = "0.1.0"
+description = "Reusable spaced-repetition session progress counters built on the Mosaic UI pipeline"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["SessionProgress"]
+
+[dependencies]
+# Built only from UI29 kernel primitives.
+
+[kernel]
+version = "1"

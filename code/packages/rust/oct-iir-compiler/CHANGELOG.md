@@ -1,5 +1,18 @@
 # Changelog — `oct-iir-compiler`
 
+## 0.9.0 — 2026-06-27 — logical `!` lowers to a clean bool (LANG-FULL O-!)
+
+Unary logical NOT no longer reuses the bitwise `not` opcode. Oct booleans are
+materialised as 0/1 i64 values, so the old lowering produced `not 0 = -1` and
+`not 1 = -2` rather than a clean bool. `compile_unary` now lowers `!` through
+the same portable `jmp_if_false` / `jmp` / `label` branch substrate used by
+short-circuiting, assigning exactly `0` or `1` to the result slot.
+
+Bitwise `~` is unchanged: it still lowers to IIR `not` with the `u8` hint, so
+O2's 8-bit mask behaviour remains intact. New regression coverage asserts that
+`!` emits branch-based truthiness instead of `not`, and `lang-aot` proves
+`if !(1 == 2) { out(1, 42) }` on all 7 backends.
+
 ## 0.8.0 — 2026-06-22 — `static` module globals + void calls (LANG-FULL O3)
 
 Top-level `static` declarations were collected by the type checker but **silently

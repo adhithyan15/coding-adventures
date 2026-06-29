@@ -4,6 +4,138 @@
 
 ### Added
 
+- **Device model reference-deck audit analysis summaries** —
+  `device_model_reference_deck_audit_analysis_summary()`,
+  `format_device_model_reference_deck_audit_analysis_summary_table()`,
+  `device_model_reference_deck_audit_analysis_summary_records()`,
+  `format_device_model_reference_deck_audit_analysis_summary_csv()`, and
+  `format_device_model_reference_deck_audit_analysis_summary_json()` now expose
+  stable per-analysis coverage summaries for the reference-deck audit matrix,
+  matching Rust and TypeScript.
+
+- **Device model reference-deck audit summaries** —
+  `device_model_reference_deck_audit_summary()`,
+  `format_device_model_reference_deck_audit_summary_table()`,
+  `device_model_reference_deck_audit_summary_records()`,
+  `format_device_model_reference_deck_audit_summary_csv()`, and
+  `format_device_model_reference_deck_audit_summary_json()` now expose stable
+  per-kind coverage summaries for the reference-deck audit matrix, matching
+  Rust and TypeScript.
+
+- **Device model reference-deck audit record exports** —
+  `device_model_reference_deck_audit_records()`,
+  `format_device_model_reference_deck_audit_csv()`, and
+  `format_device_model_reference_deck_audit_json()` now expose the audit
+  matrix as stable header-keyed records plus CSV/JSON outputs, matching Rust
+  and TypeScript.
+
+- **Device model reference-deck audit release gate** —
+  `device_model_reference_deck_audit_gate()` and
+  `format_device_model_reference_deck_audit_gate_report()` now validate the
+  required kind-by-analysis coverage matrix and emit a stable pass/fail gate
+  report, matching Rust and TypeScript.
+
+- **Device model reference-deck audit table** —
+  `format_device_model_reference_deck_audit_table()` now emits a stable
+  tab-separated summary for the device-model reference-deck audit matrix,
+  matching Rust and TypeScript.
+
+- **Device model reference-deck audit fixtures** —
+  `device_model_reference_deck_audit_fixtures()` now exposes a stable
+  reference coverage matrix across DC, temperature, AC, noise, and transient
+  model-depth fixtures for diode, BJT, JFET, and Level-1 MOS families,
+  matching Rust and TypeScript.
+
+- **MOS Level-1 bulk-junction depletion charge shaping** —
+  Level-1 MOS `PB`/`MJ` model-card parameters now shape reverse-biased
+  `CBS`/`CBD` bulk-junction capacitance for AC operating-point capacitance
+  reports and transient source-body / drain-body charge companions, matching
+  Rust and TypeScript, with regression coverage for reverse-biased drain-step
+  delay.
+
+- **MOS Level-1 transient bulk-junction charge stamping** —
+  Level-1 MOS zero-bias bulk-junction `CBS`/`CBD` model-card storage now
+  stamps transient source-body and drain-body companions, matching Rust and
+  TypeScript, with regression coverage for drain-step delay.
+
+- **MOS Level-1 transient overlap charge stamping** —
+  Level-1 MOS `CGSO`/`CGDO`/`CGBO` model-card storage now stamps transient
+  gate-source, gate-drain, and gate-body companions, matching Rust and
+  TypeScript, with regression coverage for gate-step delay.
+
+- **JFET transient charge stamping** —
+  JFET `Cgs`/`Cgd` model-card storage now stamps transient gate-source and
+  gate-drain companions and contributes AC susceptance, matching Rust and
+  TypeScript, with regression coverage for gate-step delay and high-frequency
+  gate-drive shunting.
+
+- **BJT transient charge stamping** —
+  BJT `Cje`/`Cjc`/`Tf`/`Tr` model-card storage now stamps transient
+  base-emitter and base-collector companions, matching Rust and TypeScript,
+  with regression coverage for base current-step delay and forward transit-time
+  turnoff charge.
+
+- **Diode transient charge stamping** —
+  Diode `Cjo`/`Tt` model-card storage now stamps transient anode-cathode
+  companions, matching Rust and TypeScript, with regression coverage for
+  junction-capacitance current-step delay and transit-time turnoff charge.
+
+- **Device model charge audit fixtures** —
+  `device_model_charge_audit_fixtures()` now exposes runnable one-device
+  `.tran` fixtures with reference deck lines, explicit terminal storage
+  capacitance metadata, stable first/final probe-voltage windows, and
+  charge-behavior notes for diode, BJT, JFET, and Level-1 MOS audits,
+  matching Rust and TypeScript.
+
+- **Device model noise audit fixtures** —
+  `device_model_noise_audit_fixtures()` now exposes runnable one-device
+  `.noise` fixtures with reference deck lines and stable source/output PSD
+  windows for diode and BJT shot noise plus JFET and Level-1 MOS channel
+  thermal noise audits, matching Rust and TypeScript.
+
+- **Device model capacitance audit fixtures** —
+  `device_model_capacitance_audit_fixtures()` now exposes runnable
+  one-device AC fixtures with `.ac` reference deck lines and stable
+  high-frequency probe-magnitude windows for diode, BJT, JFET, and Level-1 MOS
+  model-depth audits, matching Rust and TypeScript.
+
+- **Device model temperature audit fixtures** —
+  `device_model_temperature_audit_fixtures()` now exposes runnable one-device
+  DC temperature-sweep fixtures with `.temp` reference deck lines and stable
+  probe-voltage windows for diode, BJT, JFET, and Level-1 MOS model-depth
+  audits, matching Rust and TypeScript.
+
+- **Device model behavior audit fixtures** —
+  `device_model_behavior_audit_fixtures()` now exposes runnable one-device DC
+  bias fixtures with reference deck lines and stable probe-voltage windows for
+  diode, BJT, JFET, and Level-1 MOS model-depth audits, matching Rust and
+  TypeScript.
+
+- **Nonlinear Newton damping diagnostics** —
+  `dc_op()` now applies a configurable `newton_step_limit` to nonlinear
+  Newton updates and reports `newton_step_limit`, `limited_newton_steps`, and
+  `minimum_damping_factor` in `DcResult.diagnostics`, matching Rust and
+  TypeScript.
+
+- **Production solver profiles** —
+  `DcResult.diagnostics` now carries a nested `solver_profile` with matrix
+  size, solver kind, backend, structural nonzero count, density, peak fill-in,
+  and fallback metadata. Large real DC solves prefer an optional SciPy
+  sparse-LU backend and fall back to the native sparse-row solver with a stable
+  fallback reason, matching Rust and TypeScript profile surfaces.
+
+- **Deck whole-run analysis execution** —
+  `run_deck()` now executes every parsed `.op`, `.dc`, `.ac`, `.tran`,
+  `.tf`, `.sens`, and `.noise` card in source order, preserves duplicate
+  analysis directives, defaults analysis-less decks to an implicit `.op`, and
+  returns aggregate run-artifact table, CSV, compact JSON, and header-keyed
+  record exports, matching Rust and TypeScript.
+
+- **Deck output-plan analysis sweep artifacts** —
+  selected `run_deck_analysis()` output-plan artifacts now expose selected
+  sweep, frequency, transient timing, and `UIC` metadata in table, CSV, compact
+  JSON, and header-keyed record exports, matching Rust and TypeScript.
+
 - **Deck output-plan analysis output-node artifacts** —
   selected `run_deck_analysis()` output-plan artifacts now expose the selected
   analysis output node beside line/source metadata in table, CSV, compact JSON,

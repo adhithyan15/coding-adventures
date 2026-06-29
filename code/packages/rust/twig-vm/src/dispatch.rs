@@ -1111,6 +1111,30 @@ fn dispatch(
                 exec_const(instr, &mut frame)?;
                 pc += 1;
             }
+            "str_const" => {
+                exec_str_const(instr, &mut frame)?;
+                pc += 1;
+            }
+            "str_len" => {
+                exec_str_len(instr, &mut frame)?;
+                pc += 1;
+            }
+            "str_index" => {
+                exec_str_index(instr, &mut frame)?;
+                pc += 1;
+            }
+            "str_concat" => {
+                exec_str_concat(instr, &mut frame)?;
+                pc += 1;
+            }
+            "str_eq" => {
+                exec_str_eq(instr, &mut frame)?;
+                pc += 1;
+            }
+            "print_str" => {
+                exec_print_str(instr, &frame)?;
+                pc += 1;
+            }
             "call_builtin" => {
                 exec_call_builtin(module, instr, &mut frame, depth, budget, globals, ic_table, profile, debug)?;
                 pc += 1;
@@ -1387,6 +1411,120 @@ fn exec_const(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
         }
     };
     frame.set(dest.clone(), value)?;
+    Ok(())
+}
+
+fn exec_str_const(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = instr.dest.as_ref().ok_or_else(|| {
+        RunError::MalformedInstruction("str_const requires dest".into())
+    })?;
+    let src = instr.srcs.first().ok_or_else(|| {
+        RunError::MalformedInstruction("str_const requires srcs[0]".into())
+    })?;
+    let Operand::Str(text) = src else {
+        return Err(RunError::MalformedInstruction(format!(
+            "str_const requires Operand::Str, got {src:?}"
+        )));
+    };
+    let value = lispy_runtime::heap::alloc_string(text.as_bytes());
+    frame.set(dest.clone(), value)?;
+    Ok(())
+}
+
+fn e4_dest<'a>(instr: &'a IIRInstr, op: &str) -> Result<&'a String, RunError> {
+    instr.dest.as_ref().ok_or_else(|| {
+        RunError::MalformedInstruction(format!("{op} requires dest"))
+    })
+}
+
+fn e4_value_arg(
+    op: &str,
+    instr: &IIRInstr,
+    frame: &Frame,
+    pos: usize,
+) -> Result<LispyValue, RunError> {
+    let src = instr.srcs.get(pos).ok_or_else(|| {
+        RunError::MalformedInstruction(format!("{op} requires srcs[{pos}]"))
+    })?;
+    operand_to_value(src, &|n| frame.get(n)).map_err(RunError::OperandConversion)
+}
+
+fn e4_string_arg(
+    op: &str,
+    instr: &IIRInstr,
+    frame: &Frame,
+    pos: usize,
+) -> Result<Vec<u8>, RunError> {
+    let src = instr.srcs.get(pos).ok_or_else(|| {
+        RunError::MalformedInstruction(format!("{op} requires srcs[{pos}]"))
+    })?;
+    if let Operand::Str(text) = src {
+        return Ok(text.as_bytes().to_vec());
+    }
+    let value = e4_value_arg(op, instr, frame, pos)?;
+    // SAFETY: dispatch values come from the VM's tagged value space.
+    unsafe { lispy_runtime::heap::string_bytes(value) }
+        .map(|bytes| bytes.to_vec())
+        .ok_or_else(|| {
+            RunError::Runtime(RuntimeError::TypeError(format!(
+                "{op}: expected str at srcs[{pos}], got {value}"
+            )))
+        })
+}
+
+fn e4_int_arg(op: &str, instr: &IIRInstr, frame: &Frame, pos: usize) -> Result<i64, RunError> {
+    let value = e4_value_arg(op, instr, frame, pos)?;
+    value.as_int().ok_or_else(|| {
+        RunError::Runtime(RuntimeError::TypeError(format!(
+            "{op}: expected i64 at srcs[{pos}], got {value}"
+        )))
+    })
+}
+
+fn exec_str_len(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = e4_dest(instr, "str_len")?;
+    let bytes = e4_string_arg("str_len", instr, frame, 0)?;
+    frame.set(dest.clone(), LispyValue::int(bytes.len() as i64))?;
+    Ok(())
+}
+
+fn exec_str_index(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = e4_dest(instr, "str_index")?;
+    let bytes = e4_string_arg("str_index", instr, frame, 0)?;
+    let idx = e4_int_arg("str_index", instr, frame, 1)?;
+    if idx < 0 || idx as usize >= bytes.len() {
+        return Err(RunError::Runtime(RuntimeError::TypeError(format!(
+            "str_index: index {idx} out of bounds for string of length {}",
+            bytes.len()
+        ))));
+    }
+    frame.set(dest.clone(), LispyValue::int(i64::from(bytes[idx as usize])))?;
+    Ok(())
+}
+
+fn exec_str_concat(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = e4_dest(instr, "str_concat")?;
+    let mut bytes = e4_string_arg("str_concat", instr, frame, 0)?;
+    let rhs = e4_string_arg("str_concat", instr, frame, 1)?;
+    bytes.extend_from_slice(&rhs);
+    frame.set(dest.clone(), lispy_runtime::heap::alloc_string(&bytes))?;
+    Ok(())
+}
+
+fn exec_str_eq(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = e4_dest(instr, "str_eq")?;
+    let lhs = e4_string_arg("str_eq", instr, frame, 0)?;
+    let rhs = e4_string_arg("str_eq", instr, frame, 1)?;
+    frame.set(dest.clone(), LispyValue::bool(lhs == rhs))?;
+    Ok(())
+}
+
+fn exec_print_str(instr: &IIRInstr, frame: &Frame) -> Result<(), RunError> {
+    let bytes = e4_string_arg("print_str", instr, frame, 0)?;
+    use std::io::Write as _;
+    std::io::stdout()
+        .write_all(&bytes)
+        .map_err(|e| RunError::HostIo(e.to_string()))?;
     Ok(())
 }
 
@@ -3414,37 +3552,54 @@ mod tests {
 
     #[test]
     fn deep_recursion_surfaces_depth_exceeded() {
-        // Self-recursion that never terminates — should hit the depth cap
-        // rather than blowing the host stack.  We don't assert the exact
-        // depth (the limit is intentionally generous for the self-hosted
-        // compiler's lex-loop), only that we get the right error variant.
-        //
-        // With MAX_DISPATCH_DEPTH = 65536 (LANG64), infinite recursion needs
-        // 65537 nested Rust `dispatch` frames before the guard fires.  The
-        // default test-thread stack (8 MiB on macOS/Linux) is too small for
-        // that, so we spawn a dedicated thread with 1 GiB of stack.  Each
-        // dispatch frame is conservatively ≤ 10 KiB, so 65536 frames ≤
-        // 640 MiB — well within the 1 GiB budget.  (In practice frames are
-        // much smaller; the 10 KiB upper bound is a worst-case estimate.)
-        let result = std::thread::Builder::new()
-            .stack_size(1024 * 1024 * 1024) // 1 GiB
-            .spawn(|| {
-                let src = "
-                    (define (loop n) (loop (+ n 1)))
-                    (loop 0)
-                ";
-                run_source(src).unwrap_err()
-            })
-            .expect("thread spawn failed")
-            .join()
-            .expect("thread panicked");
+        // Exercise the dispatcher guard directly instead of building
+        // 131k native stack frames.  The self-hosted compiler needs the
+        // large production depth limit, but the test only needs to prove
+        // that a frame past the ceiling returns a VM error before doing
+        // any more work.
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
 
-        // Depth or instruction limit — both are acceptable termination
-        // signals for an infinite-recursion test.
-        assert!(
-            matches!(result, RunError::DepthExceeded | RunError::InstructionLimitExceeded),
-            "expected DepthExceeded or InstructionLimitExceeded, got {result:?}",
-        );
+        let entry = IIRFunction {
+            name: "loop".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 0,
+            instructions: vec![],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let module = IIRModule {
+            name: "test".into(),
+            functions: vec![entry],
+            entry_point: Some("loop".into()),
+            language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
+        };
+        let mut budget = ExecutionBudget::new();
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let mut profile = ProfileTable::new();
+        let mut debug = None;
+
+        let err = dispatch(
+            &module,
+            &module.functions[0],
+            &[],
+            MAX_DISPATCH_DEPTH + 1,
+            &mut budget,
+            &mut globals,
+            &mut ic_table,
+            &mut profile,
+            &mut debug,
+        )
+        .unwrap_err();
+
+        assert!(matches!(err, RunError::DepthExceeded));
     }
 
     // ── Internal helpers ────────────────────────────────────────────
@@ -5375,6 +5530,80 @@ mod tests {
             let bytes = lispy_runtime::string_bytes(v).expect("string bytes");
             assert_eq!(bytes, b"hello");
         }
+    }
+
+    #[test]
+    fn str_const_produces_heap_string() {
+        let instrs = vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("hello".into())], "str"),
+            IIRInstr::new("ret", None, vec![Operand::Var("s".into())], "any"),
+        ];
+        let v = run(&module_with_main(instrs, 1)).unwrap();
+        assert!(v.is_heap(), "str_const should produce a heap value");
+        unsafe {
+            assert!(lispy_runtime::is_string(v), "heap value should be a LangString");
+            let bytes = lispy_runtime::string_bytes(v).expect("string bytes");
+            assert_eq!(bytes, b"hello");
+        }
+    }
+
+    #[test]
+    fn e4_str_concat_then_len_runs() {
+        let instrs = vec![
+            IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("foo".into())], "str"),
+            IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("bar".into())], "str"),
+            IIRInstr::new(
+                "str_concat",
+                Some("s".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())],
+                "str",
+            ),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "any"),
+        ];
+        assert_eq!(run(&module_with_main(instrs, 5)).unwrap().as_int(), Some(6));
+    }
+
+    #[test]
+    fn e4_str_index_returns_byte() {
+        let instrs = vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ABC".into())], "str"),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new(
+                "str_index",
+                Some("b".into()),
+                vec![Operand::Var("s".into()), Operand::Var("i".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "any"),
+        ];
+        assert_eq!(run(&module_with_main(instrs, 4)).unwrap().as_int(), Some(66));
+    }
+
+    #[test]
+    fn e4_str_eq_returns_scheme_bool_for_branching() {
+        assert_eq!(
+            run_source(r#"(if (string=? "same" "same") 42 0)"#)
+                .unwrap()
+                .as_int(),
+            Some(42),
+        );
+        assert_eq!(
+            run_source(r#"(if (string=? "same" "different") 42 0)"#)
+                .unwrap()
+                .as_int(),
+            Some(0),
+        );
+    }
+
+    #[test]
+    fn e4_print_str_writes_heap_string() {
+        let instrs = vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ok".into())], "str"),
+            IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "i64"),
+        ];
+        assert_eq!(run(&module_with_main(instrs, 2)).unwrap().as_int(), Some(0));
     }
 
     #[test]

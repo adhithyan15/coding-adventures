@@ -28,7 +28,7 @@ Source
 | `IIRModule` | Top-level container: functions + entry point + language tag |
 | `IIRFunction` | Named, parameterised sequence of `IIRInstr` |
 | `IIRInstr` | One instruction: `op`, `dest`, `srcs`, `type_hint`, profiling fields |
-| `Operand` | Instruction operand: `Var(name)`, `Int`, `Float`, or `Bool` |
+| `Operand` | Instruction operand: `Var(name)`, `Int`, `Float`, `Bool`, or `Str` |
 | `SlotState` | Per-instruction type-feedback slot (V8 Ignition–style) |
 | `FunctionTypeStatus` | `FullyTyped` / `PartiallyTyped` / `Untyped` |
 
@@ -49,6 +49,7 @@ Standard opcodes (handled by `vm-core`):
 | Flat memory / I/O | `load_mem store_mem io_in io_out` |
 | Calls | `call call_builtin` |
 | Type system | `cast type_assert` |
+| Strings | `str_const str_len str_index str_concat str_slice str_eq str_cmp print_str` |
 
 Type strings: `u8 u16 u32 u64 i8 i16 i32 i64 bool f32 f64 str void any`
 
@@ -127,4 +128,4 @@ src/
 cargo test -p interpreter-ir
 ```
 
-38 unit tests + 11 doctests, all green.
+86 unit tests + 37 doctests, all green.

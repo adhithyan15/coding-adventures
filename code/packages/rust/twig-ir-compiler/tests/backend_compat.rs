@@ -239,6 +239,682 @@ fn twig_typed_let_star_with_arithmetic() {
     }
 }
 
+/// E4 op-composition proof: a typed `string-append` result can feed
+/// `string-ref` without falling back to the dynamic builtin path.
+#[test]
+fn twig_local_string_concat_can_feed_index() {
+    let m = compile_source(
+        "(let ((a \"AB\") (b \"CDE\") (i 3)) (string-ref (string-append a b) i))",
+        "compat",
+    )
+    .expect("Twig must compile");
+    let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+    assert_eq!(main.return_type, "i64");
+
+    let concat = main
+        .instructions
+        .iter()
+        .find(|i| i.op == "str_concat")
+        .expect("string-append should lower to str_concat");
+    let concat_dest = concat
+        .dest
+        .as_deref()
+        .expect("str_concat should write a string temp");
+    let index = main
+        .instructions
+        .iter()
+        .find(|i| i.op == "str_index")
+        .expect("string-ref should lower to str_index");
+    assert!(
+        matches!(index.srcs.first(), Some(Operand::Var(v)) if v == concat_dest),
+        "str_index should consume the str_concat result; concat={concat:?}, index={index:?}",
+    );
+    assert!(
+        !main.instructions.iter().any(|i| {
+            i.op == "call_builtin"
+                && matches!(&i.srcs[0], Operand::Var(s)
+                    if s == "string-append" || s == "string-ref")
+        }),
+        "typed E4 string path must not use dynamic string builtins: {:?}",
+        main.instructions,
+    );
+
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(&m)),
+        ("jvm", iir_to_jvm_class_file::validate::validate_for_jvm(&m)),
+        (
+            "clr",
+            iir_to_cil_bytecode::validate::validate_iir_for_clr(&m),
+        ),
+    ] {
+        assert!(
+            errs.is_empty(),
+            "[{name}] should accept local `str_concat` feeding `str_index`; got {errs:?}",
+            errs = errs
+        );
+    }
+}
+
+/// E4 op-composition proof: `string-length` can compute a typed integer
+/// index that feeds `string-ref` without falling back to dynamic builtins.
+#[test]
+fn twig_local_string_length_can_compute_index() {
+    let m = compile_source(
+        "(let ((s \"ABCDE\")) (string-ref s (- (string-length s) 1)))",
+        "compat",
+    )
+    .expect("Twig must compile");
+    let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+    assert_eq!(main.return_type, "i64");
+
+    let len = main
+        .instructions
+        .iter()
+        .find(|i| i.op == "str_len")
+        .expect("string-length should lower to str_len");
+    let len_dest = len
+        .dest
+        .as_deref()
+        .expect("str_len should write an integer temp");
+    let sub = main
+        .instructions
+        .iter()
+        .find(|i| i.op == "sub" && i.type_hint == "i64")
+        .expect("computed index should lower to typed sub");
+    let sub_dest = sub.dest.as_deref().expect("sub should write an index temp");
+    assert!(
+        matches!(sub.srcs.first(), Some(Operand::Var(v)) if v == len_dest),
+        "sub should consume the str_len result; len={len:?}, sub={sub:?}",
+    );
+    let index = main
+        .instructions
+        .iter()
+        .find(|i| i.op == "str_index")
+        .expect("string-ref should lower to str_index");
+    assert!(
+        matches!(index.srcs.get(1), Some(Operand::Var(v)) if v == sub_dest),
+        "str_index should consume the computed index; sub={sub:?}, index={index:?}",
+    );
+    assert!(
+        !main.instructions.iter().any(|i| {
+            i.op == "call_builtin"
+                && matches!(&i.srcs[0], Operand::Var(s)
+                    if s == "string-length" || s == "string-ref" || s == "-")
+        }),
+        "typed E4 computed-index path must not use dynamic builtins: {:?}",
+        main.instructions,
+    );
+
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(&m)),
+        ("jvm", iir_to_jvm_class_file::validate::validate_for_jvm(&m)),
+        (
+            "clr",
+            iir_to_cil_bytecode::validate::validate_iir_for_clr(&m),
+        ),
+    ] {
+        assert!(
+            errs.is_empty(),
+            "[{name}] should accept `str_len` computing a `str_index` operand; got {errs:?}",
+            errs = errs
+        );
+    }
+}
+
+/// E4 function-call proof: a direct top-level Twig function whose body already
+/// lowers to typed E4 string ops should carry that return type through the
+/// caller's `call` instruction instead of falling back to `any`.
+#[test]
+fn twig_top_level_string_length_function_call_is_typed() {
+    let m = compile_source(
+        "(define (strlen) (string-length \"HELLO\")) (strlen)",
+        "compat",
+    )
+    .expect("Twig must compile");
+
+    let strlen = m
+        .functions
+        .iter()
+        .find(|f| f.name == "strlen")
+        .expect("module should contain the top-level function");
+    assert_eq!(strlen.return_type, "i64");
+    assert!(
+        strlen
+            .instructions
+            .iter()
+            .any(|i| i.op == "str_len" && i.type_hint == "i64"),
+        "function body should lower string-length to typed str_len: {:?}",
+        strlen.instructions,
+    );
+    assert!(
+        strlen
+            .instructions
+            .iter()
+            .any(|i| i.op == "ret" && i.type_hint == "i64"),
+        "function ret should carry the inferred i64 type: {:?}",
+        strlen.instructions,
+    );
+
+    let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+    assert_eq!(main.return_type, "i64");
+    assert!(
+        main.instructions.iter().any(|i| {
+            i.op == "call"
+                && i.type_hint == "i64"
+                && matches!(i.srcs.first(), Some(Operand::Var(name)) if name == "strlen")
+        }),
+        "direct call should inherit strlen's concrete return type: {:?}",
+        main.instructions,
+    );
+    assert!(
+        !m.functions.iter().flat_map(|f| f.instructions.iter()).any(|i| {
+            i.op == "call_builtin"
+                && matches!(&i.srcs[0], Operand::Var(s) if s == "string-length")
+        }),
+        "typed E4 function path must not use dynamic string builtins",
+    );
+
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(&m)),
+        ("jvm", iir_to_jvm_class_file::validate::validate_for_jvm(&m)),
+        (
+            "clr",
+            iir_to_cil_bytecode::validate::validate_iir_for_clr(&m),
+        ),
+    ] {
+        assert!(
+            errs.is_empty(),
+            "[{name}] should accept typed E4 string ops inside a direct top-level function; got {errs:?}",
+            errs = errs
+        );
+    }
+}
+
+/// E4 parameter proof: a bare `str` parameter annotation is enough static
+/// evidence for a top-level function body to use the typed E4 string path.
+#[test]
+fn twig_annotated_string_param_feeds_string_length_function() {
+    let m = compile_source(
+        "(define (strlen (s : str)) (string-length s)) (strlen \"HELLO\")",
+        "compat",
+    )
+    .expect("Twig must compile");
+
+    let strlen = m
+        .functions
+        .iter()
+        .find(|f| f.name == "strlen")
+        .expect("module should contain the top-level function");
+    assert_eq!(strlen.params, vec![("s".to_string(), "str".to_string())]);
+    assert_eq!(strlen.return_type, "i64");
+    let len = strlen
+        .instructions
+        .iter()
+        .find(|i| i.op == "str_len")
+        .expect("string-length should lower to str_len over the annotated param");
+    assert!(
+        matches!(len.srcs.first(), Some(Operand::Var(name)) if name == "s"),
+        "str_len should consume the annotated string parameter; got {len:?}",
+    );
+    assert!(
+        !strlen.instructions.iter().any(|i| {
+            i.op == "call_builtin"
+                && matches!(&i.srcs[0], Operand::Var(name) if name == "string-length")
+        }),
+        "typed E4 parameter path must not use dynamic string-length builtins: {:?}",
+        strlen.instructions,
+    );
+
+    let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+    assert_eq!(main.return_type, "i64");
+    assert!(
+        main.instructions.iter().any(|i| {
+            i.op == "call"
+                && i.type_hint == "i64"
+                && matches!(i.srcs.first(), Some(Operand::Var(name)) if name == "strlen")
+        }),
+        "direct call should inherit strlen's concrete return type: {:?}",
+        main.instructions,
+    );
+
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(&m)),
+        ("jvm", iir_to_jvm_class_file::validate::validate_for_jvm(&m)),
+        (
+            "clr",
+            iir_to_cil_bytecode::validate::validate_iir_for_clr(&m),
+        ),
+    ] {
+        assert!(
+            errs.is_empty(),
+            "[{name}] should accept a typed E4 string op over an annotated string parameter; got {errs:?}",
+            errs = errs
+        );
+    }
+}
+
+/// E4 direct-call evidence proof: a `main`-level direct call with a static
+/// string actual can seed a top-level function's otherwise-unannotated string
+/// parameter without opting into refinement annotations.
+#[test]
+fn twig_unannotated_string_param_direct_call_feeds_string_length_function() {
+    let m = compile_source(
+        "(define (strlen s) (string-length s)) (strlen \"HELLO\")",
+        "compat",
+    )
+    .expect("Twig must compile");
+
+    let strlen = m
+        .functions
+        .iter()
+        .find(|f| f.name == "strlen")
+        .expect("module should contain the top-level function");
+    assert_eq!(strlen.params, vec![("s".to_string(), "str".to_string())]);
+    assert!(
+        strlen.param_refinements.iter().all(|r| r.is_none()),
+        "call-site string evidence must not synthesize refinement annotations: {:?}",
+        strlen.param_refinements,
+    );
+    assert_eq!(strlen.return_type, "i64");
+    let len = strlen
+        .instructions
+        .iter()
+        .find(|i| i.op == "str_len")
+        .expect("string-length should lower to str_len over the inferred param");
+    assert!(
+        matches!(len.srcs.first(), Some(Operand::Var(name)) if name == "s"),
+        "str_len should consume the inferred string parameter; got {len:?}",
+    );
+    assert!(
+        !strlen.instructions.iter().any(|i| {
+            i.op == "call_builtin"
+                && matches!(&i.srcs[0], Operand::Var(name) if name == "string-length")
+        }),
+        "typed E4 inferred-parameter path must not use dynamic string-length builtins: {:?}",
+        strlen.instructions,
+    );
+
+    let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+    assert_eq!(main.return_type, "i64");
+    assert!(
+        main.instructions.iter().any(|i| {
+            i.op == "call"
+                && i.type_hint == "i64"
+                && matches!(i.srcs.first(), Some(Operand::Var(name)) if name == "strlen")
+        }),
+        "direct call should inherit strlen's concrete return type: {:?}",
+        main.instructions,
+    );
+
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(&m)),
+        ("jvm", iir_to_jvm_class_file::validate::validate_for_jvm(&m)),
+        (
+            "clr",
+            iir_to_cil_bytecode::validate::validate_iir_for_clr(&m),
+        ),
+    ] {
+        assert!(
+            errs.is_empty(),
+            "[{name}] should accept a typed E4 string op over an inferred string parameter; got {errs:?}",
+            errs = errs
+        );
+    }
+}
+
+/// E4 direct-call evidence proof: a static string expression actual can seed
+/// the same otherwise-unannotated top-level string parameter path as a string
+/// literal actual.
+#[test]
+fn twig_unannotated_string_param_direct_call_accepts_static_string_expression_actual() {
+    let m = compile_source(
+        "(define (strlen x) (string-length x)) (strlen (substring (string-append \"HE\" \"LLO!\") 0 5))",
+        "compat",
+    )
+    .expect("Twig must compile");
+
+    let strlen = m
+        .functions
+        .iter()
+        .find(|f| f.name == "strlen")
+        .expect("module should contain the top-level function");
+    assert_eq!(strlen.params, vec![("x".to_string(), "str".to_string())]);
+    assert!(
+        strlen.param_refinements.iter().all(|r| r.is_none()),
+        "call-site string evidence must not synthesize refinement annotations: {:?}",
+        strlen.param_refinements,
+    );
+    assert_eq!(strlen.return_type, "i64");
+    let len = strlen
+        .instructions
+        .iter()
+        .find(|i| i.op == "str_len")
+        .expect("string-length should lower to str_len over the inferred param");
+    assert!(
+        matches!(len.srcs.first(), Some(Operand::Var(name)) if name == "x"),
+        "str_len should consume the inferred string parameter; got {len:?}",
+    );
+    assert!(
+        !strlen.instructions.iter().any(|i| {
+            i.op == "call_builtin"
+                && matches!(&i.srcs[0], Operand::Var(name) if name == "string-length")
+        }),
+        "typed E4 inferred-parameter path must not use dynamic string-length builtins: {:?}",
+        strlen.instructions,
+    );
+
+    let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+    assert_eq!(main.return_type, "i64");
+    assert!(
+        main.instructions.iter().any(|i| i.op == "str_concat"),
+        "static expression actual should materialise concat through typed str_concat: {:?}",
+        main.instructions,
+    );
+    assert!(
+        main.instructions.iter().any(|i| i.op == "str_slice"),
+        "static expression actual should materialise substring through typed str_slice: {:?}",
+        main.instructions,
+    );
+    assert!(
+        main.instructions.iter().any(|i| {
+            i.op == "call"
+                && i.type_hint == "i64"
+                && matches!(i.srcs.first(), Some(Operand::Var(name)) if name == "strlen")
+        }),
+        "direct call should inherit strlen's concrete return type: {:?}",
+        main.instructions,
+    );
+
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(&m)),
+        ("jvm", iir_to_jvm_class_file::validate::validate_for_jvm(&m)),
+        (
+            "clr",
+            iir_to_cil_bytecode::validate::validate_iir_for_clr(&m),
+        ),
+    ] {
+        assert!(
+            errs.is_empty(),
+            "[{name}] should accept a typed E4 string op over a static-expression-actual inferred string parameter; got {errs:?}",
+            errs = errs
+        );
+    }
+}
+
+/// E4 direct-call evidence proof: a single direct call can seed multiple
+/// otherwise-unannotated top-level string parameters, letting the function body
+/// lower a parameter-to-parameter string equality through typed `str_eq`.
+#[test]
+fn twig_unannotated_string_param_direct_call_accepts_multiple_string_params() {
+    let m = compile_source(
+        "(define (same a b) (if (string=? a b) 42 0)) (same \"OK\" (string-append \"O\" \"K\"))",
+        "compat",
+    )
+    .expect("Twig must compile");
+
+    let same = m
+        .functions
+        .iter()
+        .find(|f| f.name == "same")
+        .expect("module should contain the top-level function");
+    assert_eq!(
+        same.params,
+        vec![
+            ("a".to_string(), "str".to_string()),
+            ("b".to_string(), "str".to_string()),
+        ]
+    );
+    assert!(
+        same.param_refinements.iter().all(|r| r.is_none()),
+        "call-site string evidence must not synthesize refinement annotations: {:?}",
+        same.param_refinements,
+    );
+    assert_eq!(same.return_type, "i64");
+    let eq = same
+        .instructions
+        .iter()
+        .find(|i| i.op == "str_eq")
+        .expect("string=? should lower to str_eq over the inferred params");
+    assert!(
+        matches!(eq.srcs.as_slice(), [Operand::Var(a), Operand::Var(b)] if a == "a" && b == "b"),
+        "str_eq should consume both inferred string parameters; got {eq:?}",
+    );
+    assert!(
+        !same.instructions.iter().any(|i| {
+            i.op == "call_builtin"
+                && matches!(&i.srcs[0], Operand::Var(name) if name == "string=?")
+        }),
+        "typed E4 inferred-parameter path must not use dynamic string=? builtins: {:?}",
+        same.instructions,
+    );
+
+    let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+    assert_eq!(main.return_type, "i64");
+    assert!(
+        main.instructions.iter().any(|i| i.op == "str_concat"),
+        "second direct-call actual should materialise through typed str_concat: {:?}",
+        main.instructions,
+    );
+    assert!(
+        main.instructions.iter().any(|i| {
+            i.op == "call"
+                && i.type_hint == "i64"
+                && matches!(i.srcs.first(), Some(Operand::Var(name)) if name == "same")
+        }),
+        "direct call should inherit same's concrete return type: {:?}",
+        main.instructions,
+    );
+
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(&m)),
+        ("jvm", iir_to_jvm_class_file::validate::validate_for_jvm(&m)),
+        (
+            "clr",
+            iir_to_cil_bytecode::validate::validate_iir_for_clr(&m),
+        ),
+    ] {
+        assert!(
+            errs.is_empty(),
+            "[{name}] should accept typed E4 string equality over multiple inferred string parameters; got {errs:?}",
+            errs = errs
+        );
+    }
+}
+
+/// E4 direct-call evidence proof: a static, non-escaping top-level string value
+/// used as a `main`-level direct-call actual can seed the same
+/// otherwise-unannotated string parameter path as a literal.
+#[test]
+fn twig_unannotated_string_param_direct_call_accepts_named_string_actual() {
+    let m = compile_source(
+        "(define s \"HELLO\") (define (strlen x) (string-length x)) (strlen s)",
+        "compat",
+    )
+    .expect("Twig must compile");
+
+    let strlen = m
+        .functions
+        .iter()
+        .find(|f| f.name == "strlen")
+        .expect("module should contain the top-level function");
+    assert_eq!(strlen.params, vec![("x".to_string(), "str".to_string())]);
+    assert!(
+        strlen.param_refinements.iter().all(|r| r.is_none()),
+        "call-site string evidence must not synthesize refinement annotations: {:?}",
+        strlen.param_refinements,
+    );
+    assert_eq!(strlen.return_type, "i64");
+    let len = strlen
+        .instructions
+        .iter()
+        .find(|i| i.op == "str_len")
+        .expect("string-length should lower to str_len over the inferred param");
+    assert!(
+        matches!(len.srcs.first(), Some(Operand::Var(name)) if name == "x"),
+        "str_len should consume the inferred string parameter; got {len:?}",
+    );
+    assert!(
+        !strlen.instructions.iter().any(|i| {
+            i.op == "call_builtin"
+                && matches!(&i.srcs[0], Operand::Var(name) if name == "string-length")
+        }),
+        "typed E4 inferred-parameter path must not use dynamic string-length builtins: {:?}",
+        strlen.instructions,
+    );
+
+    let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+    assert_eq!(main.return_type, "i64");
+    assert!(
+        !main.instructions.iter().any(|i| {
+            i.op == "call_builtin" && matches!(&i.srcs[0], Operand::Var(name) if name == "global_get")
+        }),
+        "non-escaping named string actual should stay in main as a typed register: {:?}",
+        main.instructions,
+    );
+
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(&m)),
+        ("jvm", iir_to_jvm_class_file::validate::validate_for_jvm(&m)),
+        (
+            "clr",
+            iir_to_cil_bytecode::validate::validate_iir_for_clr(&m),
+        ),
+    ] {
+        assert!(
+            errs.is_empty(),
+            "[{name}] should accept a typed E4 string op over a named-actual inferred string parameter; got {errs:?}",
+            errs = errs
+        );
+    }
+}
+
+/// E4 direct-call evidence proof: a lexical string local in `main` can seed an
+/// otherwise-unannotated top-level string parameter when the direct call occurs
+/// in the lexical scope that keeps the actual as a typed `str` register.
+#[test]
+fn twig_unannotated_string_param_direct_call_accepts_let_string_actual() {
+    let m = compile_source(
+        "(define (strlen x) (string-length x)) (let ((s \"HELLO\")) (strlen s))",
+        "compat",
+    )
+    .expect("Twig must compile");
+
+    let strlen = m
+        .functions
+        .iter()
+        .find(|f| f.name == "strlen")
+        .expect("module should contain the top-level function");
+    assert_eq!(strlen.params, vec![("x".to_string(), "str".to_string())]);
+    assert!(
+        strlen.param_refinements.iter().all(|r| r.is_none()),
+        "call-site string evidence must not synthesize refinement annotations: {:?}",
+        strlen.param_refinements,
+    );
+    assert_eq!(strlen.return_type, "i64");
+    let len = strlen
+        .instructions
+        .iter()
+        .find(|i| i.op == "str_len")
+        .expect("string-length should lower to str_len over the inferred param");
+    assert!(
+        matches!(len.srcs.first(), Some(Operand::Var(name)) if name == "x"),
+        "str_len should consume the inferred string parameter; got {len:?}",
+    );
+
+    let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+    assert_eq!(main.return_type, "i64");
+
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(&m)),
+        ("jvm", iir_to_jvm_class_file::validate::validate_for_jvm(&m)),
+        (
+            "clr",
+            iir_to_cil_bytecode::validate::validate_iir_for_clr(&m),
+        ),
+    ] {
+        assert!(
+            errs.is_empty(),
+            "[{name}] should accept a typed E4 string op over a lexical-actual inferred string parameter; got {errs:?}",
+            errs = errs
+        );
+    }
+}
+
+/// E4 direct-call evidence proof: a sequential `let*` lexical string local
+/// derived from an earlier local can seed an otherwise-unannotated top-level
+/// string parameter when the direct call sees the derived value as a typed
+/// `str` register.
+#[test]
+fn twig_unannotated_string_param_direct_call_accepts_let_star_derived_string_actual() {
+    let m = compile_source(
+        "(define (strlen x) (string-length x)) (let* ((a \"HE\") (b (string-append a \"LLO\"))) (strlen b))",
+        "compat",
+    )
+    .expect("Twig must compile");
+
+    let strlen = m
+        .functions
+        .iter()
+        .find(|f| f.name == "strlen")
+        .expect("module should contain the top-level function");
+    assert_eq!(strlen.params, vec![("x".to_string(), "str".to_string())]);
+    assert!(
+        strlen.param_refinements.iter().all(|r| r.is_none()),
+        "call-site string evidence must not synthesize refinement annotations: {:?}",
+        strlen.param_refinements,
+    );
+    assert_eq!(strlen.return_type, "i64");
+    let len = strlen
+        .instructions
+        .iter()
+        .find(|i| i.op == "str_len")
+        .expect("string-length should lower to str_len over the inferred param");
+    assert!(
+        matches!(len.srcs.first(), Some(Operand::Var(name)) if name == "x"),
+        "str_len should consume the inferred string parameter; got {len:?}",
+    );
+    assert!(
+        !strlen.instructions.iter().any(|i| {
+            i.op == "call_builtin"
+                && matches!(&i.srcs[0], Operand::Var(name) if name == "string-length")
+        }),
+        "typed E4 inferred-parameter path must not use dynamic string-length builtins: {:?}",
+        strlen.instructions,
+    );
+
+    let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+    assert_eq!(main.return_type, "i64");
+    assert!(
+        main.instructions.iter().any(|i| i.op == "str_concat"),
+        "derived let* actual should materialise through typed str_concat: {:?}",
+        main.instructions,
+    );
+    assert!(
+        main.instructions.iter().any(|i| {
+            i.op == "call"
+                && i.type_hint == "i64"
+                && matches!(i.srcs.first(), Some(Operand::Var(name)) if name == "strlen")
+        }),
+        "direct call should inherit strlen's concrete return type: {:?}",
+        main.instructions,
+    );
+
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(&m)),
+        ("jvm", iir_to_jvm_class_file::validate::validate_for_jvm(&m)),
+        (
+            "clr",
+            iir_to_cil_bytecode::validate::validate_iir_for_clr(&m),
+        ),
+    ] {
+        assert!(
+            errs.is_empty(),
+            "[{name}] should accept a typed E4 string op over a derived let*-actual inferred string parameter; got {errs:?}",
+            errs = errs
+        );
+    }
+}
+
 /// Path-A increment 5: `match` arms now use typed `mov` everywhere
 /// (scrutinee binding, nil-init, variant arm result merge, field
 /// extraction, body merge for variant / binding / wildcard arms).

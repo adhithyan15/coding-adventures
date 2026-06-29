@@ -22,6 +22,21 @@ literal's prototype setter). New end-to-end fixture
 `tests/diff/simple-fold-object-fromentries/` plus
 integration test `tests/diff_simple_fold_object_fromentries.rs`.
 
+## [0.219.0] - 2026-06-26
+
+### Added — SIMPLE/ADVANCED fold static `Object.is(a, b)` → boolean (SameValue)
+
+At `--compilation_level SIMPLE` (and ADVANCED, which routes through the same
+pipeline) the typed constant-fold pass now collapses a static `Object.is(a, b)`
+call (ECMAScript §20.1.2.13) to a boolean literal when both arguments are
+primitive literals. `Object.is` uses SameValue, which differs from `===` only at
+`Object.is(NaN, NaN)` (`true`) and `Object.is(+0, -0)` (`false`). We fold two
+number literals (NaN is the same as NaN; +0 and −0 distinguished by sign), two
+string literals, two booleans, two `null`s, and a literal-kind mismatch
+(`false`); we decline when either operand is a non-literal (including the bare
+global `NaN` identifier) or the arity is not two. New end-to-end fixture
+`tests/diff/simple-fold-object-is/` plus integration test
+`tests/diff_simple_fold_object_is.rs`.
 ## [0.217.0] - 2026-06-26
 
 ### Added — SIMPLE/ADVANCED fold static `Number.isSafeInteger(x)` → boolean

@@ -20,13 +20,10 @@
 //!
 //! ## What this crate is *not*
 //!
-//! - It is not a *resolver*. We do **not** look up cross-package references
-//!   here — every component is compiled in isolation against its own
-//!   three-file triple. Resolving `Grid` inside another package's `.mll`
-//!   is `mosaic-package-resolver`'s job.
-//! - It does not yet wire WebComponent or HTML — those backends do not have
-//!   a `from_pipeline` entry point yet. We return `UnsupportedBackend` for
-//!   them so callers can still type the API surface uniformly.
+//! - It is not a standalone *resolver*. Cross-package layout inlining lives in
+//!   `mosaic-package-resolver`; this crate coordinates that resolver during
+//!   artifact builds and merges dependency package styles before backend
+//!   emission.
 //! - It does not modify the existing emitter crates. We *consume* their
 //!   public `from_pipeline(interface, layout, style)` functions and treat
 //!   them as opaque IR-to-string lowerings.
@@ -46,7 +43,9 @@
 //!     │       │
 //!     │       ├── mosmodel_compiler::compile      → interface IR
 //!     │       ├── moslayout_compiler::compile     → layout IR
+//!     │       ├── inline pkg::P::C references     → resolved layout IR
 //!     │       ├── mosstyle_compiler::compile      → style IR (or empty default)
+//!     │       ├── merge dependency styles         → final style IR
 //!     │       │
 //!     │       └── <backend>::from_pipeline(I, L, S)
 //!     │             → write to <output>/<backend>/<Component>.<ext>
@@ -84,6 +83,7 @@
 //! }
 //! ```
 
+use std::collections::HashSet;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -103,6 +103,9 @@ use mosaic_package_manifest::{parse_path as parse_manifest, ManifestError};
 pub enum Backend {
     /// React functional components in `.tsx` files.
     React,
+    /// Electron desktop projects. Component artifacts reuse the React
+    /// `.tsx` shape; project shells add Electron main/preload files.
+    Electron,
     /// SwiftUI `View` structs in `.swift` files.
     SwiftUI,
     /// Qt Quick (QML) elements in `.qml` files.
@@ -133,6 +136,7 @@ impl Backend {
     fn dir_name(self) -> &'static str {
         match self {
             Backend::React => "react",
+            Backend::Electron => "electron",
             Backend::SwiftUI => "swiftui",
             Backend::Qt => "qt",
             Backend::WebComponent => "webcomponent",
@@ -154,6 +158,7 @@ impl Backend {
     fn component_extension(self) -> Option<&'static str> {
         match self {
             Backend::React => Some("tsx"),
+            Backend::Electron => Some("tsx"),
             Backend::SwiftUI => Some("swift"),
             Backend::Qt => Some("qml"),
             Backend::WebComponent => Some("js"),
@@ -247,10 +252,7 @@ pub enum BuildError {
     /// breaking the enum's exhaustive-match contract.)
     ///
     /// [`SourceNotFound`]: BuildError::SourceNotFound
-    MissingComponent {
-        package: String,
-        component: String,
-    },
+    MissingComponent { package: String, component: String },
     /// An exported component had no `<Component>.mil` / `<Component>.mll`
     /// pair under `src/`. The `.msl` is optional so its absence does not
     /// trigger this.
@@ -262,10 +264,10 @@ pub enum BuildError {
     /// `error` string is the rendered `Display` form of whichever sub-
     /// compiler complained first — mosmodel, moslayout, mosstyle, or the
     /// backend's `PipelineEmitError`.
-    PipelineError {
-        component: String,
-        error: String,
-    },
+    PipelineError { component: String, error: String },
+    /// A `pkg::P::C` reference in a component layout could not be resolved or
+    /// inlined before backend emission.
+    PackageReferenceError { component: String, error: String },
     /// A read/write/mkdir call failed. The string is `io::Error::to_string()`
     /// because we don't want to leak `std::io::Error`'s `Send`-only quirks
     /// into our public API.
@@ -284,13 +286,22 @@ impl std::fmt::Display for BuildError {
                 "package '{package}' lists component '{component}' but no \
                  source file matched"
             ),
-            BuildError::SourceNotFound { component, expected_dir } => write!(
+            BuildError::SourceNotFound {
+                component,
+                expected_dir,
+            } => write!(
                 f,
                 "no '{component}.mil'/'{component}.mll' under {}",
                 expected_dir.display()
             ),
             BuildError::PipelineError { component, error } => {
                 write!(f, "pipeline error for component '{component}': {error}")
+            }
+            BuildError::PackageReferenceError { component, error } => {
+                write!(
+                    f,
+                    "package reference error for component '{component}': {error}"
+                )
             }
             BuildError::UnsafeName { kind, name, reason } => write!(
                 f,
@@ -384,6 +395,7 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
     // behaviour. Every existing package builds byte-for-byte
     // identically.
     let src_dir = opts.package_root.join("src");
+    let package_search_paths = default_package_search_paths(&opts.package_root);
     let mut artifacts = Vec::new();
     let mut components_built = Vec::new();
 
@@ -396,6 +408,7 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
                 &src_dir,
                 &backend_dir,
                 opts.backend,
+                &package_search_paths,
             )?;
             artifacts.push(artifact);
         }
@@ -412,7 +425,12 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
     // The index file lists every component built. Empty packages still get
     // an index — it's just empty — so downstream tools don't have to
     // special-case "package with zero components".
-    let index_path = emit_index_file(&backend_dir, &components_built, opts.backend, &manifest.package.name)?;
+    let index_path = emit_index_file(
+        &backend_dir,
+        &components_built,
+        opts.backend,
+        &manifest.package.name,
+    )?;
     artifacts.push(index_path);
 
     // ----- 6. UI32-M: optional project-shell emission ----------------------
@@ -427,10 +445,8 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
     //     packages who want a tab/route bar between components hit
     //     this limitation; the spec §5 open question 1 picks
     //     "first-export-default" as the v1 policy.
-    //   - XAML is excluded — it already has its own `--emit-project`
-    //     mechanism via `EmitOptions::emit_project` in the emitter
-    //     itself (PR #3917), bypassing the artifact-builder. UI32-M.1
-    //     unifies the two paths.
+    //   - Every backend, including XAML, now flows through this same
+    //     artifact-builder project-shell path.
     //
     // The shell side-files (package.json, vite.config.ts, etc.) are
     // written into `backend_dir` alongside the per-component
@@ -443,6 +459,8 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
                 &src_dir,
                 &backend_dir,
                 opts.backend,
+                &manifest.package.name,
+                &package_search_paths,
             )?;
             artifacts.extend(shell_artifacts);
         }
@@ -476,6 +494,8 @@ fn emit_project_shell(
     src_dir: &Path,
     backend_dir: &Path,
     backend: Backend,
+    package_name: &str,
+    package_search_paths: &[PathBuf],
 ) -> Result<Vec<PathBuf>, BuildError> {
     // Re-read the triple. This duplicates `compile_one_component`'s
     // file-loading logic; we accept the redundancy because the shell
@@ -485,7 +505,7 @@ fn emit_project_shell(
     // cheap.
     let mil_path = src_dir.join(format!("{component}.mil"));
     let mll_path = src_dir.join(format!("{component}.mll"));
-    let msl_path = src_dir.join(format!("{component}.msl"));
+    let msl_path = resolve_style_path(src_dir, component)?;
 
     if !mil_path.exists() || !mll_path.exists() {
         return Err(BuildError::SourceNotFound {
@@ -496,18 +516,32 @@ fn emit_project_shell(
 
     let mil_src = read_to_string(&mil_path)?;
     let mll_src = read_to_string(&mll_path)?;
-    let msl_src = if msl_path.exists() {
+    let msl_src = if let Some(msl_path) = msl_path {
         read_to_string(&msl_path)?
     } else {
         format!("style {component} {{ }}")
     };
 
-    let mosmodel_out = mosmodel_compiler::compile(&mil_src)
+    let mosmodel_out =
+        mosmodel_compiler::compile(&mil_src).map_err(|errs| pipeline_err(component, &errs[0]))?;
+    let mut layout_out = moslayout_compiler::compile(&mll_src, Some(&mosmodel_out.descriptor_json))
         .map_err(|errs| pipeline_err(component, &errs[0]))?;
-    let layout_out = moslayout_compiler::compile(&mll_src, Some(&mosmodel_out.descriptor_json))
-        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+    let dependency_style_parts = collect_dependency_style_parts(
+        component,
+        &layout_out.def,
+        package_search_paths,
+        &mut Vec::new(),
+        &mut HashSet::new(),
+    )?;
+    resolve_layout_package_references(
+        component,
+        &mut layout_out,
+        &mosmodel_out.descriptor_json,
+        package_search_paths,
+    )?;
     let style_out = mosstyle_compiler::compile(&msl_src, Some(&layout_out.part_map_json))
         .map_err(|errs| pipeline_err(component, &errs[0]))?;
+    let style_def = merge_dependency_styles(style_out.def, dependency_style_parts);
 
     // Per-backend dispatch. Each branch builds an EmitOptions with
     // emit_project: true, calls the appropriate from_pipeline_with_options,
@@ -521,14 +555,15 @@ fn emit_project_shell(
             let r = mosaic_emit_react::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
-                &style_out.def,
+                &style_def,
                 &react_opts,
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
             if let Some(proj) = r.project {
-                let flat: [(&str, &str); 4] = [
+                let flat: [(&str, &str); 5] = [
                     ("package.json", &proj.package_json),
                     ("vite.config.ts", &proj.vite_config),
+                    ("tsconfig.json", &proj.tsconfig_json),
                     ("index.html", &proj.index_html),
                     ("README.md", &proj.readme),
                 ];
@@ -545,13 +580,61 @@ fn emit_project_shell(
                 written.push(nested);
             }
         }
+        Backend::Electron => {
+            let mut react_opts = mosaic_emit_react::pipeline::EmitOptions::default();
+            react_opts.emit_project = true;
+            let npm_name = format!("{package_name}-electron");
+            react_opts.package_name = Some(npm_name.clone());
+            let r = mosaic_emit_react::pipeline::from_pipeline_with_options(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_def,
+                &react_opts,
+            )
+            .map_err(|e| pipeline_emit_err(component, e))?;
+            if let Some(proj) = r.project {
+                let flat: [(&str, String); 7] = [
+                    (
+                        "package.json",
+                        build_electron_package_json(&npm_name, &react_opts),
+                    ),
+                    ("vite.config.ts", proj.vite_config),
+                    ("index.html", proj.index_html),
+                    ("tsconfig.json", build_electron_renderer_tsconfig()),
+                    ("tsconfig.electron.json", build_electron_main_tsconfig()),
+                    ("README.md", build_electron_readme(&npm_name, component)),
+                    ("src/main.tsx", proj.main_tsx),
+                ];
+                for (rel, body) in flat {
+                    let p = backend_dir.join(rel);
+                    if let Some(parent) = p.parent() {
+                        create_dir_all(parent)?;
+                    }
+                    write_file(&p, body.as_bytes())?;
+                    written.push(p);
+                }
+
+                let nested: [(&str, String); 2] = [
+                    ("electron/main.ts", build_electron_main_ts(component)),
+                    ("electron/preload.ts", build_electron_preload_ts()),
+                ];
+                for (rel, body) in nested {
+                    let p = backend_dir.join(rel);
+                    if let Some(parent) = p.parent() {
+                        create_dir_all(parent)?;
+                    }
+                    write_file(&p, body.as_bytes())?;
+                    written.push(p);
+                }
+            }
+        }
         Backend::Html => {
             let mut html_opts = mosaic_emit_html::pipeline::EmitOptions::default();
             html_opts.emit_project = true;
             let r = mosaic_emit_html::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
-                &style_out.def,
+                &style_def,
                 &html_opts,
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
@@ -577,7 +660,7 @@ fn emit_project_shell(
             let r = mosaic_emit_webcomponent::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
-                &style_out.def,
+                &style_def,
                 &wc_opts,
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
@@ -599,7 +682,7 @@ fn emit_project_shell(
             let r = mosaic_emit_flutter::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
-                &style_out.def,
+                &style_def,
                 &fl_opts,
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
@@ -627,7 +710,7 @@ fn emit_project_shell(
             let r = mosaic_emit_qt::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
-                &style_out.def,
+                &style_def,
                 &qt_opts,
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
@@ -655,10 +738,11 @@ fn emit_project_shell(
             let r = mosaic_emit_swiftui::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
-                &style_out.def,
+                &style_def,
                 &sw_opts,
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
+            let component_source = r.output.clone();
             if let Some(proj) = r.project {
                 let flat: [(&str, &str); 2] = [
                     ("Package.swift", &proj.package_swift),
@@ -675,20 +759,93 @@ fn emit_project_shell(
                 }
                 write_file(&nested, proj.app_swift.as_bytes())?;
                 written.push(nested);
+
+                let component_nested = backend_dir.join(format!("Sources/App/{component}.swift"));
+                write_file(&component_nested, component_source.as_bytes())?;
+                written.push(component_nested);
             }
         }
         Backend::Xaml => {
-            // XAML's project shell flows through its own
-            // `EmitOptions::emit_project` from PR #3917, which is
-            // wired in `mosaic-compile`'s xaml branch (not in the
-            // artifact-builder). For UI32-M v1 the artifact-builder
-            // path silently no-ops for XAML — invoking
-            // `--backend xaml --emit-project` through `build_package`
-            // does nothing extra. UI32-M.1 unifies the two paths so
-            // this branch becomes a wired call like the others.
+            let mut xaml_opts = mosaic_emit_xaml::pipeline::EmitOptions::default();
+            xaml_opts.emit_project = true;
+            let r = mosaic_emit_xaml::pipeline::from_pipeline(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_def,
+                None,
+                &xaml_opts,
+            )
+            .map_err(|e| pipeline_emit_err(component, e))?;
+            if let Some(proj) = r.project {
+                let flat: Vec<(String, &str)> = vec![
+                    (format!("{component}.csproj"), &proj.csproj),
+                    ("App.xaml".to_string(), &proj.app_xaml),
+                    ("App.xaml.cs".to_string(), &proj.app_xaml_cs),
+                    ("MainWindow.xaml".to_string(), &proj.main_window_xaml),
+                    ("MainWindow.xaml.cs".to_string(), &proj.main_window_cs),
+                    ("app.manifest".to_string(), &proj.package_manifest),
+                    ("build.ps1".to_string(), &proj.build_script),
+                    ("README.md".to_string(), &proj.readme),
+                ];
+                for (rel, body) in flat {
+                    let p = backend_dir.join(rel);
+                    write_file(&p, body.as_bytes())?;
+                    written.push(p);
+                }
+            }
+            for side_file in r.for_view_models.iter().chain(r.if_helpers.iter()) {
+                let p = backend_dir.join(&side_file.filename);
+                write_file(&p, side_file.source.as_bytes())?;
+                written.push(p);
+            }
         }
     }
     Ok(written)
+}
+
+fn build_electron_package_json(
+    npm_name: &str,
+    react_opts: &mosaic_emit_react::pipeline::EmitOptions,
+) -> String {
+    format!(
+        "{{\n  \"//\": \"AUTO-GENERATED by mosaic-compile pkg --backend electron --emit-project. Edits will be overwritten on next emit. Fork the file (remove this comment) to customise.\",\n  \"name\": \"{}\",\n  \"private\": true,\n  \"version\": \"0.0.0\",\n  \"type\": \"module\",\n  \"main\": \"dist-electron/main.js\",\n  \"scripts\": {{\n    \"dev\": \"concurrently -k \\\"vite --host 127.0.0.1\\\" \\\"wait-on http://127.0.0.1:5173 && electron .\\\"\",\n    \"build\": \"tsc -p tsconfig.json && vite build && tsc -p tsconfig.electron.json\",\n    \"start\": \"electron .\",\n    \"preview\": \"vite preview\"\n  }},\n  \"engines\": {{\n    \"node\": \"{}\"\n  }},\n  \"dependencies\": {{\n    \"react\": \"{}\",\n    \"react-dom\": \"{}\"\n  }},\n  \"devDependencies\": {{\n    \"@types/node\": \"26.0.1\",\n    \"@types/react\": \"{}\",\n    \"@types/react-dom\": \"{}\",\n    \"@vitejs/plugin-react-swc\": \"{}\",\n    \"concurrently\": \"10.0.3\",\n    \"electron\": \"42.5.0\",\n    \"typescript\": \"{}\",\n    \"vite\": \"{}\",\n    \"wait-on\": \"9.0.10\"\n  }}\n}}\n",
+        npm_name,
+        react_opts.pinned_node_engines,
+        react_opts.pinned_react,
+        react_opts.pinned_react,
+        react_opts.pinned_types_react,
+        react_opts.pinned_types_react_dom,
+        react_opts.pinned_vite_react_plugin,
+        react_opts.pinned_typescript,
+        react_opts.pinned_vite,
+    )
+}
+
+fn build_electron_renderer_tsconfig() -> String {
+    "{\n  \"compilerOptions\": {\n    \"target\": \"ES2020\",\n    \"useDefineForClassFields\": true,\n    \"lib\": [\"DOM\", \"DOM.Iterable\", \"ES2020\"],\n    \"allowJs\": false,\n    \"skipLibCheck\": true,\n    \"esModuleInterop\": true,\n    \"allowSyntheticDefaultImports\": true,\n    \"strict\": true,\n    \"forceConsistentCasingInFileNames\": true,\n    \"module\": \"ESNext\",\n    \"moduleResolution\": \"Bundler\",\n    \"resolveJsonModule\": true,\n    \"isolatedModules\": true,\n    \"noEmit\": true,\n    \"jsx\": \"react-jsx\"\n  },\n  \"include\": [\"*.tsx\", \"src/**/*.tsx\", \"src/**/*.ts\"]\n}\n"
+        .to_string()
+}
+
+fn build_electron_main_tsconfig() -> String {
+    "{\n  \"compilerOptions\": {\n    \"target\": \"ES2022\",\n    \"module\": \"NodeNext\",\n    \"moduleResolution\": \"NodeNext\",\n    \"strict\": true,\n    \"esModuleInterop\": true,\n    \"skipLibCheck\": true,\n    \"types\": [\"node\"],\n    \"outDir\": \"dist-electron\",\n    \"rootDir\": \"electron\"\n  },\n  \"include\": [\"electron/**/*.ts\"]\n}\n"
+        .to_string()
+}
+
+fn build_electron_main_ts(component_name: &str) -> String {
+    format!(
+        "// AUTO-GENERATED by mosaic-compile pkg --backend electron --emit-project. Edits will be overwritten on next emit.\n// Fork the file (remove this banner) to customise.\nimport {{ app, BrowserWindow, ipcMain }} from \"electron\";\nimport {{ fileURLToPath }} from \"node:url\";\nimport path from \"node:path\";\n\ntype MosaicHostRequest = {{\n  component: string;\n  event?: unknown;\n}};\n\ntype MosaicHostResponse = {{ props?: Record<string, unknown> }} | Record<string, unknown> | undefined;\n\nconst MOSAIC_GET_PROPS_CHANNEL = \"mosaic:get-props\";\nconst MOSAIC_HANDLE_EVENT_CHANNEL = \"mosaic:handle-event\";\nconst __filename = fileURLToPath(import.meta.url);\nconst __dirname = path.dirname(__filename);\nconst devServerUrl = process.env.MOSAIC_ELECTRON_DEV_SERVER_URL ??\n  (process.env.npm_lifecycle_event === \"dev\" ? \"http://127.0.0.1:5173\" : undefined);\n\nipcMain.handle(\n  MOSAIC_GET_PROPS_CHANNEL,\n  async (_event, _request: MosaicHostRequest): Promise<MosaicHostResponse> => undefined,\n);\nipcMain.handle(\n  MOSAIC_HANDLE_EVENT_CHANNEL,\n  async (_event, _request: MosaicHostRequest): Promise<MosaicHostResponse> => undefined,\n);\n\nasync function createWindow(): Promise<void> {{\n  const mainWindow = new BrowserWindow({{\n    title: \"{component_name}\",\n    width: 1180,\n    height: 820,\n    minWidth: 760,\n    minHeight: 560,\n    webPreferences: {{\n      contextIsolation: true,\n      nodeIntegration: false,\n      preload: path.join(__dirname, \"preload.js\"),\n    }},\n  }});\n\n  if (devServerUrl) {{\n    await mainWindow.loadURL(devServerUrl);\n  }} else {{\n    await mainWindow.loadFile(path.join(__dirname, \"..\", \"dist\", \"index.html\"));\n  }}\n}}\n\napp.whenReady().then(createWindow);\n\napp.on(\"activate\", () => {{\n  if (BrowserWindow.getAllWindows().length === 0) {{\n    void createWindow();\n  }}\n}});\n\napp.on(\"window-all-closed\", () => {{\n  if (process.platform !== \"darwin\") {{\n    app.quit();\n  }}\n}});\n"
+    )
+}
+
+fn build_electron_preload_ts() -> String {
+    "// AUTO-GENERATED by mosaic-compile pkg --backend electron --emit-project. Edits will be overwritten on next emit.\n// Fork the file (remove this banner) to customise.\nimport { contextBridge, ipcRenderer } from \"electron\";\n\ntype MosaicHostRequest = {\n  component: string;\n  event?: unknown;\n};\n\ntype MosaicHostResponse = { props?: Record<string, unknown> } | Record<string, unknown> | undefined;\n\nconst MOSAIC_GET_PROPS_CHANNEL = \"mosaic:get-props\";\nconst MOSAIC_HANDLE_EVENT_CHANNEL = \"mosaic:handle-event\";\n\ncontextBridge.exposeInMainWorld(\"mosaicHost\", {\n  platform: \"electron\",\n  getProps: (request: MosaicHostRequest): Promise<MosaicHostResponse> =>\n    ipcRenderer.invoke(MOSAIC_GET_PROPS_CHANNEL, request),\n  handleEvent: (request: MosaicHostRequest): Promise<MosaicHostResponse> =>\n    ipcRenderer.invoke(MOSAIC_HANDLE_EVENT_CHANNEL, request),\n});\n"
+        .to_string()
+}
+
+fn build_electron_readme(npm_name: &str, component_name: &str) -> String {
+    format!(
+        "<!-- AUTO-GENERATED by mosaic-compile pkg --backend electron --emit-project. Edits will be overwritten on next emit. -->\n<!-- Fork the file (remove this banner) to customise. -->\n# {component_name} - Electron + Vite + React shell\n\nAuto-generated by `mosaic-compile pkg --backend electron --emit-project`.\n\nThe renderer imports the same Mosaic-generated `{component_name}.tsx` artifact that the React backend emits. The Electron files are only the desktop host shell.\n\n## Host integration\n\nThe preload exposes `window.mosaicHost.getProps` and `window.mosaicHost.handleEvent` through context-isolated IPC channels. The generated main process returns no prop override by default; replace those handlers to bind the shell to app state.\n\n## Prerequisites\n\n- Node.js >= 18.\n- npm, pnpm, or yarn.\n\n## Run\n\n```sh\nnpm install\nnpm run dev\n```\n\n## Build\n\n```sh\nnpm run build\nnpm start\n```\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{component_name}.tsx` | The Mosaic-compiled renderer component. |\n| `src/main.tsx` | Mounts `<{component_name}>` into the Vite renderer root. |\n| `electron/main.ts` | Electron main process, window host, and Mosaic host IPC handlers. |\n| `electron/preload.ts` | Context-isolated bridge for `window.mosaicHost`. |\n| `package.json` | npm package manifest with pinned Electron/Vite/React dependencies. |\n\nnpm package name: `{npm_name}`.\n"
+    )
 }
 
 // ===========================================================================
@@ -706,6 +863,7 @@ fn compile_one_component(
     src_dir: &Path,
     out_dir: &Path,
     backend: Backend,
+    package_search_paths: &[PathBuf],
 ) -> Result<PathBuf, BuildError> {
     // ----- 1. Locate the three source files --------------------------------
     //
@@ -726,7 +884,7 @@ fn compile_one_component(
         Some(v) => src_dir.join(format!("{component}.{v}.mll")),
         None => src_dir.join(format!("{component}.mll")),
     };
-    let msl_path = src_dir.join(format!("{component}.msl"));
+    let msl_path = resolve_style_path(src_dir, component)?;
 
     if !mil_path.exists() || !mll_path.exists() {
         return Err(BuildError::SourceNotFound {
@@ -737,7 +895,7 @@ fn compile_one_component(
 
     let mil_src = read_to_string(&mil_path)?;
     let mll_src = read_to_string(&mll_path)?;
-    let msl_src = if msl_path.exists() {
+    let msl_src = if let Some(msl_path) = msl_path {
         read_to_string(&msl_path)?
     } else {
         // Defensive default: an empty style block targeting this component.
@@ -753,14 +911,28 @@ fn compile_one_component(
     // Each compile call may return a `Vec<CompileError>`. We render the
     // first one and wrap it as `PipelineError` so the caller gets one
     // line per component rather than a flood.
-    let mosmodel_out = mosmodel_compiler::compile(&mil_src)
-        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+    let mosmodel_out =
+        mosmodel_compiler::compile(&mil_src).map_err(|errs| pipeline_err(component, &errs[0]))?;
 
-    let layout_out = moslayout_compiler::compile(&mll_src, Some(&mosmodel_out.descriptor_json))
+    let mut layout_out = moslayout_compiler::compile(&mll_src, Some(&mosmodel_out.descriptor_json))
         .map_err(|errs| pipeline_err(component, &errs[0]))?;
+    let dependency_style_parts = collect_dependency_style_parts(
+        component,
+        &layout_out.def,
+        package_search_paths,
+        &mut Vec::new(),
+        &mut HashSet::new(),
+    )?;
+    resolve_layout_package_references(
+        component,
+        &mut layout_out,
+        &mosmodel_out.descriptor_json,
+        package_search_paths,
+    )?;
 
     let style_out = mosstyle_compiler::compile(&msl_src, Some(&layout_out.part_map_json))
         .map_err(|errs| pipeline_err(component, &errs[0]))?;
+    let style_def = merge_dependency_styles(style_out.def, dependency_style_parts);
 
     // ----- 3. Hand the three IRs to the chosen backend ---------------------
     //
@@ -790,38 +962,38 @@ fn compile_one_component(
     };
 
     let primary_bytes: String = match backend {
-        Backend::React => mosaic_emit_react::pipeline::from_pipeline(
+        Backend::React | Backend::Electron => mosaic_emit_react::pipeline::from_pipeline(
             &mosmodel_out.component,
             &layout_out.def,
-            &style_out.def,
+            &style_def,
         )
         .map(|r| r.output)
         .map_err(|e| pipeline_emit_err(component, e))?,
         Backend::SwiftUI => mosaic_emit_swiftui::pipeline::from_pipeline(
             &mosmodel_out.component,
             &layout_out.def,
-            &style_out.def,
+            &style_def,
         )
         .map(|r| r.output)
         .map_err(|e| pipeline_emit_err(component, e))?,
         Backend::Qt => mosaic_emit_qt::pipeline::from_pipeline(
             &mosmodel_out.component,
             &layout_out.def,
-            &style_out.def,
+            &style_def,
         )
         .map(|r| r.output)
         .map_err(|e| pipeline_emit_err(component, e))?,
         Backend::Html => mosaic_emit_html::pipeline::from_pipeline(
             &mosmodel_out.component,
             &layout_out.def,
-            &style_out.def,
+            &style_def,
         )
         .map(|r| r.output)
         .map_err(|e| pipeline_emit_err(component, e))?,
         Backend::WebComponent => mosaic_emit_webcomponent::pipeline::from_pipeline(
             &mosmodel_out.component,
             &layout_out.def,
-            &style_out.def,
+            &style_def,
         )
         .map(|r| r.output)
         .map_err(|e| pipeline_emit_err(component, e))?,
@@ -839,7 +1011,7 @@ fn compile_one_component(
             let result = mosaic_emit_xaml::pipeline::from_pipeline(
                 &mosmodel_out.component,
                 &layout_out.def,
-                &style_out.def,
+                &style_def,
                 None,
                 &opts,
             )
@@ -869,7 +1041,7 @@ fn compile_one_component(
         Backend::Flutter => mosaic_emit_flutter::pipeline::from_pipeline(
             &mosmodel_out.component,
             &layout_out.def,
-            &style_out.def,
+            &style_def,
         )
         .map(|r| r.output)
         .map_err(|e| pipeline_emit_err(component, e))?,
@@ -911,6 +1083,270 @@ fn compile_one_component(
 /// silently skipped — they'll surface later as moslayout parse
 /// errors, not silent misses, because they aren't valid mosaic
 /// sources anyway.
+fn resolve_layout_package_references(
+    component: &str,
+    layout_out: &mut moslayout_compiler::CompileOutput,
+    descriptor_json: &str,
+    package_search_paths: &[PathBuf],
+) -> Result<(), BuildError> {
+    let resolver =
+        mosaic_package_resolver::LayoutPackageResolver::new(package_search_paths.to_vec());
+    resolver
+        .resolve(&mut layout_out.def)
+        .map_err(|e| BuildError::PackageReferenceError {
+            component: component.to_string(),
+            error: e.to_string(),
+        })?;
+
+    if let Some(tag) = mosaic_package_resolver::first_qualified_tag(&layout_out.def.root) {
+        return Err(BuildError::PackageReferenceError {
+            component: component.to_string(),
+            error: format!("resolver left qualified tag `{tag}` in the layout"),
+        });
+    }
+
+    let resolved_parts = moslayout_compiler::validate(&layout_out.def, Some(descriptor_json))
+        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+    layout_out.parts = resolved_parts;
+    layout_out.part_map_json =
+        moslayout_compiler::emit_part_map_json(&layout_out.def.component_name, &layout_out.parts);
+    Ok(())
+}
+
+fn collect_dependency_style_parts(
+    owner_component: &str,
+    layout: &moslayout_compiler::LayoutDef,
+    package_search_paths: &[PathBuf],
+    visiting: &mut Vec<(String, String)>,
+    collected: &mut HashSet<(String, String)>,
+) -> Result<Vec<mosstyle_compiler::PartStyle>, BuildError> {
+    collect_dependency_style_parts_from_node(
+        owner_component,
+        &layout.root,
+        package_search_paths,
+        visiting,
+        collected,
+    )
+}
+
+fn collect_dependency_style_parts_from_node(
+    owner_component: &str,
+    node: &moslayout_compiler::LayoutNode,
+    package_search_paths: &[PathBuf],
+    visiting: &mut Vec<(String, String)>,
+    collected: &mut HashSet<(String, String)>,
+) -> Result<Vec<mosstyle_compiler::PartStyle>, BuildError> {
+    let mut parts = Vec::new();
+
+    if let Some((package, component)) = node.package_ref() {
+        parts.extend(collect_dependency_component_style_parts(
+            owner_component,
+            package,
+            component,
+            package_search_paths,
+            visiting,
+            collected,
+        )?);
+    }
+
+    for child in &node.children {
+        parts.extend(collect_dependency_style_parts_from_node(
+            owner_component,
+            child,
+            package_search_paths,
+            visiting,
+            collected,
+        )?);
+    }
+
+    Ok(parts)
+}
+
+fn collect_dependency_component_style_parts(
+    owner_component: &str,
+    package: &str,
+    component: &str,
+    package_search_paths: &[PathBuf],
+    visiting: &mut Vec<(String, String)>,
+    collected: &mut HashSet<(String, String)>,
+) -> Result<Vec<mosstyle_compiler::PartStyle>, BuildError> {
+    let key = (package.to_string(), component.to_string());
+    if collected.contains(&key) {
+        return Ok(Vec::new());
+    }
+    if visiting.iter().any(|entry| entry == &key) {
+        let mut cycle = visiting.clone();
+        cycle.push(key);
+        return Err(package_reference_err(
+            owner_component,
+            format!("circular package style reference: {cycle:?}"),
+        ));
+    }
+    visiting.push(key.clone());
+
+    let package_root = locate_dependency_package(owner_component, package, package_search_paths)?;
+    let manifest_path = package_root.join("mosaic-package.toml");
+    let manifest = parse_manifest(&manifest_path).map_err(|e| {
+        package_reference_err(
+            owner_component,
+            format!(
+                "dependency package `{package}` manifest {} failed to parse: {e}",
+                manifest_path.display()
+            ),
+        )
+    })?;
+    if !manifest.components.exports.iter().any(|e| e == component) {
+        return Err(package_reference_err(
+            owner_component,
+            format!("dependency package `{package}` does not export component `{component}`"),
+        ));
+    }
+
+    let src_dir = package_root.join("src");
+    let mil_path = src_dir.join(format!("{component}.mil"));
+    let mll_path = src_dir.join(format!("{component}.mll"));
+    let msl_path = resolve_style_path(&src_dir, component)?;
+
+    if !mil_path.exists() || !mll_path.exists() {
+        return Err(package_reference_err(
+            owner_component,
+            format!(
+                "dependency component `{package}::{component}` is missing {} or {}",
+                mil_path.display(),
+                mll_path.display()
+            ),
+        ));
+    }
+
+    let mil_src = read_to_string(&mil_path)?;
+    let mll_src = read_to_string(&mll_path)?;
+    let msl_src = if let Some(msl_path) = msl_path {
+        read_to_string(&msl_path)?
+    } else {
+        format!("style {component} {{ }}")
+    };
+
+    let mosmodel_out =
+        mosmodel_compiler::compile(&mil_src).map_err(|errs| pipeline_err(component, &errs[0]))?;
+    let mut layout_out = moslayout_compiler::compile(&mll_src, Some(&mosmodel_out.descriptor_json))
+        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+
+    let mut dependency_parts = collect_dependency_style_parts(
+        owner_component,
+        &layout_out.def,
+        package_search_paths,
+        visiting,
+        collected,
+    )?;
+    resolve_layout_package_references(
+        component,
+        &mut layout_out,
+        &mosmodel_out.descriptor_json,
+        package_search_paths,
+    )?;
+
+    let style_out = mosstyle_compiler::compile(&msl_src, Some(&layout_out.part_map_json))
+        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+    dependency_parts.extend(style_out.def.parts);
+
+    visiting.pop();
+    collected.insert(key);
+    Ok(dependency_parts)
+}
+
+fn locate_dependency_package(
+    owner_component: &str,
+    package: &str,
+    package_search_paths: &[PathBuf],
+) -> Result<PathBuf, BuildError> {
+    for search_root in package_search_paths {
+        let entries = match fs::read_dir(search_root) {
+            Ok(entries) => entries,
+            Err(_) => continue,
+        };
+        for entry in entries.flatten() {
+            let candidate = entry.path();
+            let manifest_path = candidate.join("mosaic-package.toml");
+            if !manifest_path.exists() {
+                continue;
+            }
+            let Ok(manifest) = parse_manifest(&manifest_path) else {
+                continue;
+            };
+            if manifest.package.name == package {
+                return Ok(candidate);
+            }
+        }
+    }
+
+    Err(package_reference_err(
+        owner_component,
+        format!("dependency package `{package}` could not be found"),
+    ))
+}
+
+fn merge_dependency_styles(
+    mut own: mosstyle_compiler::StyleDef,
+    mut dependency_parts: Vec<mosstyle_compiler::PartStyle>,
+) -> mosstyle_compiler::StyleDef {
+    dependency_parts.append(&mut own.parts);
+    own.parts = dependency_parts;
+    own
+}
+
+fn package_reference_err(component: &str, error: impl Into<String>) -> BuildError {
+    BuildError::PackageReferenceError {
+        component: component.to_string(),
+        error: error.into(),
+    }
+}
+
+fn resolve_style_path(src_dir: &Path, component: &str) -> Result<Option<PathBuf>, BuildError> {
+    let default = src_dir.join(format!("{component}.msl"));
+    if default.exists() {
+        return Ok(Some(default));
+    }
+
+    let prefix = format!("{component}.");
+    let mut themed = Vec::new();
+    for entry in fs::read_dir(src_dir).map_err(|e| BuildError::Io(e.to_string()))? {
+        let entry = entry.map_err(|e| BuildError::Io(e.to_string()))?;
+        let path = entry.path();
+        if path.extension().and_then(|ext| ext.to_str()) != Some("msl") {
+            continue;
+        }
+        let Some(file_name) = path.file_name().and_then(|name| name.to_str()) else {
+            continue;
+        };
+        if file_name.starts_with(&prefix) {
+            themed.push(path);
+        }
+    }
+    themed.sort();
+    Ok(themed.into_iter().next())
+}
+
+fn default_package_search_paths(package_root: &Path) -> Vec<PathBuf> {
+    let mut roots = Vec::new();
+    if let Some(parent) = package_root.parent() {
+        push_existing_unique(&mut roots, parent.to_path_buf());
+    }
+    for ancestor in package_root.ancestors() {
+        push_existing_unique(&mut roots, ancestor.join("packages"));
+    }
+    roots
+}
+
+fn push_existing_unique(roots: &mut Vec<PathBuf>, path: PathBuf) {
+    if !path.is_dir() {
+        return;
+    }
+    if roots.iter().any(|existing| existing == &path) {
+        return;
+    }
+    roots.push(path);
+}
+
 fn discover_variants(src_dir: &Path, component: &str) -> Result<Vec<Option<String>>, BuildError> {
     let mut variants: Vec<Option<String>> = Vec::new();
 
@@ -1035,7 +1471,7 @@ fn emit_index_file(
     package_name: &str,
 ) -> Result<PathBuf, BuildError> {
     match backend {
-        Backend::React => {
+        Backend::React | Backend::Electron => {
             // `index.ts` lives alongside `Grid.tsx`, `Cell.tsx`, …
             //
             // We use `export * from "./Grid"` (no `.tsx` extension) so the
@@ -1102,7 +1538,9 @@ fn emit_index_file(
             // index is itself an HTML fragment, not a full document.
             let path = backend_dir.join("index.html");
             let mut body = String::new();
-            body.push_str("<!-- Auto-generated by mosaic-package-artifact-builder. Do not edit. -->\n");
+            body.push_str(
+                "<!-- Auto-generated by mosaic-package-artifact-builder. Do not edit. -->\n",
+            );
             body.push_str(&format!("<!-- Package: {package_name} -->\n\n"));
             for c in components {
                 body.push_str(&format!("<!-- Component: {c} (see {c}.html) -->\n"));
@@ -1139,7 +1577,9 @@ fn emit_index_file(
             let shell_path = backend_dir.join("index-shell.html");
             let mut shell = String::new();
             shell.push_str("<!DOCTYPE html>\n");
-            shell.push_str("<!-- Auto-generated by mosaic-package-artifact-builder. Do not edit. -->\n");
+            shell.push_str(
+                "<!-- Auto-generated by mosaic-package-artifact-builder. Do not edit. -->\n",
+            );
             shell.push_str("<html>\n");
             shell.push_str("<head>\n");
             shell.push_str("  <meta charset=\"utf-8\">\n");
@@ -1167,9 +1607,7 @@ fn emit_index_file(
                         // it), emit a comment so the shell is still
                         // valid HTML and the missing piece is visible
                         // for diagnosis.
-                        shell.push_str(&format!(
-                            "    <!-- {c}.html missing -->\n"
-                        ));
+                        shell.push_str(&format!("    <!-- {c}.html missing -->\n"));
                     }
                 }
                 shell.push_str("  </section>\n");
@@ -1222,9 +1660,13 @@ fn emit_index_file(
             // time.
             let path = backend_dir.join("MosaicPackage.props");
             let mut body = String::new();
-            body.push_str("<!-- Auto-generated by mosaic-package-artifact-builder. Do not edit. -->\n");
+            body.push_str(
+                "<!-- Auto-generated by mosaic-package-artifact-builder. Do not edit. -->\n",
+            );
             body.push_str(&format!("<!-- Package: {package_name} -->\n"));
-            body.push_str("<Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\n");
+            body.push_str(
+                "<Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\n",
+            );
             body.push_str("  <ItemGroup>\n");
             for c in components {
                 body.push_str(&format!(
@@ -1310,10 +1752,7 @@ fn qmldir_module_name(package_name: &str) -> String {
         .collect();
 
     // Apply the `mosaic-pkg-foo-bar` → `MosaicPkg.FooBar` convention.
-    if pascal_segments.len() >= 3
-        && pascal_segments[0] == "Mosaic"
-        && pascal_segments[1] == "Pkg"
-    {
+    if pascal_segments.len() >= 3 && pascal_segments[0] == "Mosaic" && pascal_segments[1] == "Pkg" {
         let rest = pascal_segments[2..].concat();
         format!("MosaicPkg.{rest}")
     } else {
@@ -1341,8 +1780,7 @@ fn write_file(path: &Path, bytes: &[u8]) -> Result<(), BuildError> {
 }
 
 fn create_dir_all(path: &Path) -> Result<(), BuildError> {
-    fs::create_dir_all(path)
-        .map_err(|e| BuildError::Io(format!("mkdir {}: {e}", path.display())))
+    fs::create_dir_all(path).map_err(|e| BuildError::Io(format!("mkdir {}: {e}", path.display())))
 }
 
 // ===========================================================================
@@ -1503,6 +1941,52 @@ version = "1"
         tmp
     }
 
+    fn write_package_manifest(
+        root: &Path,
+        name: &str,
+        components: &[&str],
+        dependencies: &[(&str, &str)],
+    ) {
+        let exports = components
+            .iter()
+            .map(|c| format!("\"{c}\""))
+            .collect::<Vec<_>>()
+            .join(", ");
+        let deps = dependencies
+            .iter()
+            .map(|(name, version)| format!("{name} = \"{version}\""))
+            .collect::<Vec<_>>()
+            .join("\n");
+        let manifest = format!(
+            r#"
+[package]
+name = "{name}"
+version = "0.1.0"
+description = "fixture package for tests"
+license = "MIT"
+
+[components]
+exports = [{exports}]
+
+[dependencies]
+{deps}
+
+[kernel]
+version = "1"
+"#
+        );
+        fs::create_dir_all(root).unwrap();
+        fs::write(root.join("mosaic-package.toml"), manifest).unwrap();
+        fs::create_dir_all(root.join("src")).unwrap();
+    }
+
+    fn write_component_sources(root: &Path, component: &str, mil: &str, mll: &str, msl: &str) {
+        let src = root.join("src");
+        fs::write(src.join(format!("{component}.mil")), mil).unwrap();
+        fs::write(src.join(format!("{component}.mll")), mll).unwrap();
+        fs::write(src.join(format!("{component}.msl")), msl).unwrap();
+    }
+
     // -----------------------------------------------------------------------
     // 1. Empty package
     // -----------------------------------------------------------------------
@@ -1520,7 +2004,11 @@ version = "1"
         let result = build_package(&opts).expect("empty package should build");
         assert!(result.components_built.is_empty(), "no components expected");
         // Only the index file should be written.
-        assert_eq!(result.artifacts.len(), 1, "exactly one artifact (the index)");
+        assert_eq!(
+            result.artifacts.len(),
+            1,
+            "exactly one artifact (the index)"
+        );
         assert!(result.artifacts[0].ends_with("index.ts"));
     }
 
@@ -1580,8 +2068,14 @@ version = "1"
         let qmldir = out.path().join("qt").join("qmldir");
         assert!(qmldir.exists(), "qmldir should be written");
         let body = fs::read_to_string(&qmldir).unwrap();
-        assert!(body.contains("Grid 1.0 Grid.qml"), "qmldir lists the component");
-        assert!(body.contains("module MosaicPkg.Grid"), "module line present");
+        assert!(
+            body.contains("Grid 1.0 Grid.qml"),
+            "qmldir lists the component"
+        );
+        assert!(
+            body.contains("module MosaicPkg.Grid"),
+            "module line present"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -1645,10 +2139,7 @@ version = "1"
         assert_eq!(result.components_built, vec!["Grid".to_string()]);
 
         let shell_path = out.path().join("html").join("index-shell.html");
-        assert!(
-            shell_path.exists(),
-            "index-shell.html should be written"
-        );
+        assert!(shell_path.exists(), "index-shell.html should be written");
         let shell = fs::read_to_string(&shell_path).unwrap();
         assert!(
             shell.starts_with("<!DOCTYPE html>"),
@@ -1752,7 +2243,10 @@ version = "1"
         .expect("flutter build");
         assert_eq!(result.components_built, vec!["Grid".to_string()]);
         let flutter_dir = out.path().join("flutter");
-        assert!(flutter_dir.join("Grid.dart").exists(), "primary .dart present");
+        assert!(
+            flutter_dir.join("Grid.dart").exists(),
+            "primary .dart present"
+        );
         let index_path = flutter_dir.join("index.dart");
         assert!(index_path.exists(), "index.dart barrel present");
         let idx = fs::read_to_string(&index_path).unwrap();
@@ -1765,6 +2259,139 @@ version = "1"
             "package name must be kebab→snake cased, got:\n{pubspec}"
         );
         assert!(pubspec.contains("sdk: flutter"));
+    }
+
+    #[test]
+    fn dependency_component_styles_are_merged_into_parent_html_artifact() {
+        let workspace = TempDir::new().unwrap();
+        let child = workspace.path().join("mosaic-pkg-accent");
+        let parent = workspace.path().join("mosaic-pkg-shell");
+
+        write_package_manifest(&child, "mosaic-pkg-accent", &["Accent"], &[]);
+        write_component_sources(
+            &child,
+            "Accent",
+            r#"component Accent { slot label : text ; }"#,
+            r#"layout Accent {
+  Box [ accent-panel ] {
+    Text [ accent-label ] ( content : slot: label )
+  }
+}"#,
+            r##"style Accent {
+  part accent-panel { background : "#123456" ; }
+  part accent-label { color : "#abcdef" ; }
+}"##,
+        );
+
+        write_package_manifest(
+            &parent,
+            "mosaic-pkg-shell",
+            &["Shell"],
+            &[("mosaic-pkg-accent", "0.1.0")],
+        );
+        write_component_sources(
+            &parent,
+            "Shell",
+            r#"component Shell { slot label : text ; }"#,
+            r#"layout Shell {
+  Column [ shell-root ] {
+    pkg::mosaic-pkg-accent::Accent (
+      label : slot: label
+    )
+  }
+}"#,
+            r#"style Shell {
+  part shell-root { padding : 8 ; }
+}"#,
+        );
+
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: parent,
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Html,
+            emit_project: false,
+        })
+        .expect("parent package should build with dependency styles");
+
+        let html = fs::read_to_string(out.path().join("html").join("Shell.html")).unwrap();
+        assert!(
+            html.contains("#123456"),
+            "dependency background style should be present in emitted HTML:\n{html}"
+        );
+        assert!(
+            html.contains("#abcdef"),
+            "dependency text style should be present in emitted HTML:\n{html}"
+        );
+    }
+
+    #[test]
+    fn parent_style_overrides_dependency_style_for_same_part_name() {
+        let workspace = TempDir::new().unwrap();
+        let child = workspace.path().join("mosaic-pkg-accent");
+        let parent = workspace.path().join("mosaic-pkg-shell");
+
+        write_package_manifest(&child, "mosaic-pkg-accent", &["Accent"], &[]);
+        write_component_sources(
+            &child,
+            "Accent",
+            r#"component Accent { slot label : text ; }"#,
+            r#"layout Accent {
+  Box [ accent-panel ] {
+    Text [ accent-label ] ( content : slot: label )
+  }
+}"#,
+            r##"style Accent {
+  part accent-panel { background : "#123456" ; }
+  part accent-label { color : "#abcdef" ; }
+}"##,
+        );
+
+        write_package_manifest(
+            &parent,
+            "mosaic-pkg-shell",
+            &["Shell"],
+            &[("mosaic-pkg-accent", "0.1.0")],
+        );
+        write_component_sources(
+            &parent,
+            "Shell",
+            r#"component Shell { slot label : text ; }"#,
+            r#"layout Shell {
+  Column [ shell-root ] {
+    pkg::mosaic-pkg-accent::Accent (
+      label : slot: label
+    )
+  }
+}"#,
+            r##"style Shell {
+  part shell-root { padding : 8 ; }
+  part accent-panel { background : "#654321" ; }
+}"##,
+        );
+
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: parent,
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Html,
+            emit_project: false,
+        })
+        .expect("parent package should build with a dependency style override");
+
+        let html = fs::read_to_string(out.path().join("html").join("Shell.html")).unwrap();
+        assert!(
+            html.contains("#654321"),
+            "parent override should be present in emitted HTML:\n{html}"
+        );
+        assert!(
+            !html.contains("#123456"),
+            "dependency style for the same part should be overridden by the parent:\n{html}"
+        );
+        assert!(
+            html.contains("#abcdef"),
+            "non-overridden dependency part styles should still be present:\n{html}"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -1870,11 +2497,11 @@ version = "1"
             "Grid<script>",
             "Grid-->",
             "Grid; rm -rf /",
-            "1Grid",        // must lead with a letter
-            "",             // empty
-            "Grid-Hi",      // hyphen not allowed in components (PascalCase only)
-            "Grid.evil",    // dot not allowed
-            "Grid$",        // special chars
+            "1Grid",     // must lead with a letter
+            "",          // empty
+            "Grid-Hi",   // hyphen not allowed in components (PascalCase only)
+            "Grid.evil", // dot not allowed
+            "Grid$",     // special chars
         ] {
             let pkg = make_package_raw("mosaic-pkg-evil", &[bad]);
             let out = TempDir::new().unwrap();
@@ -1904,9 +2531,9 @@ version = "1"
     #[test]
     fn package_name_validation_rejects_unsafe_shapes() {
         for bad in [
-            "Mosaic-Pkg-Grid",  // capitals not allowed
-            "mosaic.pkg.grid",  // dots not allowed
-            "../escape",        // path traversal
+            "Mosaic-Pkg-Grid", // capitals not allowed
+            "mosaic.pkg.grid", // dots not allowed
+            "../escape",       // path traversal
             "mosaic-pkg-grid\"",
             "9starts-with-digit",
             "",
@@ -2226,7 +2853,11 @@ version = "1"
         let src = pkg.path().join("src");
         fs::write(src.join("Sidebar.touch.mll"), minimal_mll("Sidebar")).unwrap();
         let v = discover_variants(&src, "Grid").unwrap();
-        assert_eq!(v, vec![None], "Grid should only see its own .mll, not Sidebar's");
+        assert_eq!(
+            v,
+            vec![None],
+            "Grid should only see its own .mll, not Sidebar's"
+        );
     }
 
     /// Filenames that share a prefix-stem but have weird middles are
@@ -2303,6 +2934,7 @@ version = "1"
         .expect("single-variant build");
 
         // Exactly one component artifact + the index file.
+        assert_eq!(result.artifacts.len(), 2);
         let default_path = out.path().join("react").join("Grid.tsx");
         assert!(default_path.exists());
         // NO variant-suffixed file should exist.
@@ -2371,7 +3003,11 @@ version = "1"
         assert!(dir.join("index.ts").exists());
         // L2 React shell side-files now present.
         assert!(dir.join("package.json").exists(), "package.json missing");
-        assert!(dir.join("vite.config.ts").exists(), "vite.config.ts missing");
+        assert!(
+            dir.join("vite.config.ts").exists(),
+            "vite.config.ts missing"
+        );
+        assert!(dir.join("tsconfig.json").exists(), "tsconfig.json missing");
         assert!(dir.join("index.html").exists(), "index.html missing");
         assert!(dir.join("README.md").exists(), "README.md missing");
         assert!(
@@ -2396,20 +3032,73 @@ version = "1"
         );
     }
 
-    /// Per-backend smoke test: each non-XAML backend produces its
-    /// expected shell side-files when emit_project is true. Doesn't
+    /// Per-backend smoke test: each backend produces its expected
+    /// shell side-files when emit_project is true. Doesn't
     /// re-test the banner/pinning/etc. contracts (the per-emitter
     /// L2-L7 PRs do that); just confirms the artifact-builder
     /// routes correctly.
     #[test]
     fn ui32_m_emit_project_true_produces_expected_shell_per_backend() {
         for (backend, expected_files) in [
-            (Backend::React, vec!["package.json", "vite.config.ts", "index.html", "README.md", "src/main.tsx"]),
+            (
+                Backend::React,
+                vec![
+                    "package.json",
+                    "vite.config.ts",
+                    "tsconfig.json",
+                    "index.html",
+                    "README.md",
+                    "src/main.tsx",
+                ],
+            ),
+            (
+                Backend::Electron,
+                vec![
+                    "Grid.tsx",
+                    "index.ts",
+                    "package.json",
+                    "vite.config.ts",
+                    "index.html",
+                    "tsconfig.json",
+                    "tsconfig.electron.json",
+                    "src/main.tsx",
+                    "electron/main.ts",
+                    "electron/preload.ts",
+                    "README.md",
+                ],
+            ),
             (Backend::Html, vec!["index.html", "README.md"]),
             (Backend::WebComponent, vec!["index.html", "README.md"]),
-            (Backend::Flutter, vec!["pubspec.yaml", "README.md", "lib/main.dart"]),
-            (Backend::Qt, vec!["CMakeLists.txt", "main.cpp", "qmldir", "README.md"]),
-            (Backend::SwiftUI, vec!["Package.swift", "README.md", "Sources/App/App.swift"]),
+            (
+                Backend::Flutter,
+                vec!["pubspec.yaml", "README.md", "lib/main.dart"],
+            ),
+            (
+                Backend::Qt,
+                vec!["CMakeLists.txt", "main.cpp", "qmldir", "README.md"],
+            ),
+            (
+                Backend::SwiftUI,
+                vec![
+                    "Package.swift",
+                    "README.md",
+                    "Sources/App/App.swift",
+                    "Sources/App/Grid.swift",
+                ],
+            ),
+            (
+                Backend::Xaml,
+                vec![
+                    "Grid.csproj",
+                    "App.xaml",
+                    "App.xaml.cs",
+                    "MainWindow.xaml",
+                    "MainWindow.xaml.cs",
+                    "app.manifest",
+                    "build.ps1",
+                    "README.md",
+                ],
+            ),
         ] {
             let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
             let out = TempDir::new().unwrap();
@@ -2430,12 +3119,40 @@ version = "1"
         }
     }
 
-    /// XAML's --emit-project is wired through its own emitter
-    /// EmitOptions (PR #3917), bypassing the artifact-builder. v1
-    /// of UI32-M intentionally no-ops on XAML at this layer.
-    /// Documented as a deviation; UI32-M.1 unifies the paths.
     #[test]
-    fn ui32_m_emit_project_true_xaml_is_currently_a_noop_at_builder_layer() {
+    fn ui32_m_electron_project_shell_exposes_mosaic_host_ipc_bridge() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Electron,
+            emit_project: true,
+        })
+        .expect("electron build with emit_project: true");
+
+        let dir = out.path().join("electron");
+        let main_ts = fs::read_to_string(dir.join("electron/main.ts")).unwrap();
+        assert!(main_ts.contains("import { app, BrowserWindow, ipcMain } from \"electron\";"));
+        assert!(main_ts.contains("MOSAIC_GET_PROPS_CHANNEL"));
+        assert!(main_ts.contains("ipcMain.handle("));
+        assert!(main_ts.contains("mosaic:get-props"));
+        assert!(main_ts.contains("mosaic:handle-event"));
+
+        let preload_ts = fs::read_to_string(dir.join("electron/preload.ts")).unwrap();
+        assert!(preload_ts.contains("import { contextBridge, ipcRenderer } from \"electron\";"));
+        assert!(preload_ts.contains("contextBridge.exposeInMainWorld(\"mosaicHost\""));
+        assert!(preload_ts.contains("getProps: (request: MosaicHostRequest)"));
+        assert!(preload_ts.contains("handleEvent: (request: MosaicHostRequest)"));
+        assert!(preload_ts.contains("ipcRenderer.invoke(MOSAIC_GET_PROPS_CHANNEL, request)"));
+        assert!(preload_ts.contains("ipcRenderer.invoke(MOSAIC_HANDLE_EVENT_CHANNEL, request)"));
+    }
+
+    /// XAML's --emit-project path writes a full WinUI host shell via
+    /// the package artifact builder, alongside the component triple
+    /// and package props fragment.
+    #[test]
+    fn ui32_m_emit_project_true_xaml_writes_project_shell() {
         let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
         let out = TempDir::new().unwrap();
         build_package(&BuildOptions {
@@ -2444,16 +3161,15 @@ version = "1"
             backend: Backend::Xaml,
             emit_project: true,
         })
-        .expect("xaml build (emit_project: true) must not error even though shell is no-op'd");
-        // The xaml/ dir has the per-component triple + MosaicPackage.props
-        // but NOT the .csproj/App.xaml/MainWindow.xaml — those come
-        // from the XAML emitter's own --emit-project (PR #3917)
-        // accessed via mosaic-compile, not build_package, in v1.
+        .expect("xaml build with emit_project: true");
         let dir = out.path().join("xaml");
         assert!(dir.join("Grid.xaml").exists());
-        assert!(!dir.join("Grid.csproj").exists());
-        assert!(!dir.join("App.xaml").exists());
-        assert!(!dir.join("MainWindow.xaml").exists());
+        assert!(dir.join("Grid.xaml.cs").exists());
+        assert!(dir.join("Grid.Event.cs").exists());
+        assert!(dir.join("MosaicPackage.props").exists());
+        assert!(dir.join("Grid.csproj").exists());
+        assert!(dir.join("App.xaml").exists());
+        assert!(dir.join("MainWindow.xaml").exists());
     }
 
     /// §3.1 Reproducible: two emit_project builds against the same
@@ -2472,7 +3188,13 @@ version = "1"
             })
             .expect("react build");
         }
-        for shell_file in ["package.json", "vite.config.ts", "index.html", "README.md", "src/main.tsx"] {
+        for shell_file in [
+            "package.json",
+            "vite.config.ts",
+            "index.html",
+            "README.md",
+            "src/main.tsx",
+        ] {
             let a = fs::read_to_string(out_a.path().join("react").join(shell_file)).unwrap();
             let b = fs::read_to_string(out_b.path().join("react").join(shell_file)).unwrap();
             assert_eq!(a, b, "`{shell_file}` is not deterministic between runs");

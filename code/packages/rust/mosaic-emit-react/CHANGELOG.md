@@ -4,6 +4,18 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Changed - `--emit-project` Vite shell uses a host adapter
+
+`src/main.tsx` now mounts the generated component through
+`window.mosaicHost.getProps` and `window.mosaicHost.handleEvent`, with
+deterministic sample values as fallback props. Previously the Vite shell only
+passed sample props and logged events locally, which made generated app shells
+hard to wire to shared business logic.
+
+The React project shell now also emits `tsconfig.json`, matching its
+`npm run build` script (`tsc && vite build`) so generated shells are directly
+type-checkable.
+
 ### Added — UI28-1 §6.3 — Automatic React keys for `For` iterations
 
 Every `For` body is now wrapped in a `<React.Fragment key={...}>` so

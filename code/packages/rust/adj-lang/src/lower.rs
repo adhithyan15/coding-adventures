@@ -225,12 +225,12 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                     // Numeric predicate evidence → predicate-gated contribution.
                     // The comparison is evaluated on the CPU at decision time;
                     // a saturating `lr` makes the rule deterministic.
-                    Evidence::Predicate { slot, op, value } => {
-                        let clause = PredicateContributionClause::from_lr(
+                    Evidence::Predicate { slot, op, rhs } => {
+                        let clause = PredicateContributionClause::from_lr_expr(
                             lower_term(conclusion),
                             slot.clone(),
                             lower_cmp_op(*op),
-                            *value,
+                            lower_expr(rhs),
                             *lr,
                         )
                         .with_provenance(prov);
@@ -1383,6 +1383,19 @@ mod tests {
     }
 
     #[test]
+    fn predicate_rhs_expression_fires_over_fraction_result() {
+        let d = crate::compile_and_decide(
+            r#"let answer = 1 / 10 + 2 / 10
+prior 0.10 for opt_a
+contributes 1000000 from answer == 3 / 10 to opt_a
+? opt_a
+"#,
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
     fn let_sum_aggregates_repeated_observations() {
         let src = r#"
             observe line_item(12000)
@@ -1696,6 +1709,31 @@ mod tests {
         assert!(matches!(
             c.rhs,
             logic_engine::ComputeExpr::Bin(logic_engine::ComputeOp::Add, _, _)
+        ));
+    }
+
+    #[test]
+    fn native_latex_expr_computes_inside_let() {
+        let d = crate::compile_and_decide(
+            r#"let answer = latex "$5 \times 12$"
+prior 0.10 for correct
+contributes 1000000 from answer == 60 to correct
+? correct
+"#,
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_latex_relation_lowers_to_constraint() {
+        let lowered =
+            compile("symbol x : scalar\nconstrain latex \"$x^2 = 4$\"\nsolve for { x }\n").unwrap();
+        let c = &lowered.constraints.constraints[0];
+        assert_eq!(c.op, crate::ast::RelOp::Eq);
+        assert!(matches!(
+            c.lhs,
+            logic_engine::ComputeExpr::Bin(logic_engine::ComputeOp::Mul, _, _)
         ));
     }
 

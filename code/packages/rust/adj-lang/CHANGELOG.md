@@ -1,5 +1,39 @@
 # Changelog
 
+## [0.19.0] - 2026-06-27 — predicate RHS expressions
+
+### Added
+
+- Predicate evidence now accepts a full arithmetic expression on the right-hand
+  side: `contributes 1000000 from answer == 3 / 10 to opt_a`. This lets a
+  decomposer emit the printed option expression directly while ADJ evaluates and
+  compares the values.
+- Lowering now preserves the predicate RHS as a `ComputeExpr` through
+  `logic_engine::PredicateContributionClause::from_lr_expr`.
+
+## [0.18.0] - 2026-06-27 — native LaTeX math expressions and equations
+
+### Added
+
+- **`latex "<math>"` expression factors** — ADJ arithmetic now accepts LaTeX math
+  anywhere an expression is already legal (`let`, ordinary `constrain`, objectives).
+  The adapter parses the string with the repo's LaTeX `MathFrontend` and lowers the
+  supported arithmetic subset into the existing `ExprAst`; callers do not normalize
+  model output in host code.
+- **`constrain latex "<equation>"`** — relation-shaped LaTeX (`$x^2 = 4$`,
+  `x + y = 10`) lowers directly into the constraint system and flows through the
+  existing native solver. Integer powers up to 8 lower to repeated multiplication, so
+  the current polynomial root path handles equations like `x^2 = 4`.
+
+### Changed
+
+- `adj_lang.grammar` adds `latex_expr` and `constrain_latex_decl`; generated parser
+  grammar regenerated.
+- `adj_lang.tokens` now leaves string escapes raw so the adapter can preserve LaTeX
+  commands while keeping existing provenance-string escape behavior.
+- `adj-lang` now depends on the completed `latex`/`math-frontend` crates for native
+  notation parsing.
+
 ## [0.17.0] - 2026-06-21 — multi-source corroboration (`cites … locator …`, ADJ-A9)
 
 ### Added

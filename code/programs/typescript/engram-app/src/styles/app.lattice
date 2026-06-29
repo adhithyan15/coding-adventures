@@ -1,0 +1,472 @@
+// Engram app styles authored in Lattice.
+//
+// The current React shell still consumes these BEM class names while Engram's
+// UI is being moved into Mosaic components. Keeping this layer in Lattice gives
+// the web shell the same design-token vocabulary we can later thread into
+// Mosaic style tokens.
+
+$body-bg: #1a1a2e;
+$body-text: #e0ddd5;
+$panel-bg: #16213e;
+$panel-border: #2a3a5e;
+$panel-header: #0f3460;
+$accent: #e94560;
+$tab-text: #8899aa;
+$tab-active-text: #ffffff;
+
+$danger: #e94560;
+$card-radius: 8px;
+$input-radius: 6px;
+$space-xs: 4px;
+$space-sm: 8px;
+$space-md: 16px;
+$space-lg: 24px;
+$space-xl: 40px;
+$max-content-width: 680px;
+
+@mixin stack($gap: $space-md) {
+  display: flex;
+  flex-direction: column;
+  gap: $gap;
+}
+
+@mixin row($gap: $space-sm) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $gap;
+}
+
+@mixin panel($padding: $space-md) {
+  background: $panel-bg;
+  border: 1px solid $panel-border;
+  border-radius: $card-radius;
+  padding: $padding;
+}
+
+@mixin focus-ring() {
+  outline: 2px solid $accent;
+  outline-offset: 2px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --body-bg: $body-bg;
+  --body-text: $body-text;
+  --panel-bg: $panel-bg;
+  --panel-border: $panel-border;
+  --panel-header: $panel-header;
+  --accent: $accent;
+  --tab-text: $tab-text;
+  --tab-active-text: $tab-active-text;
+  --card-radius: $card-radius;
+  --input-radius: $input-radius;
+  --spacing-xs: $space-xs;
+  --spacing-sm: $space-sm;
+  --spacing-md: $space-md;
+  --spacing-lg: $space-lg;
+  --spacing-xl: $space-xl;
+  --max-content-width: $max-content-width;
+}
+
+html {
+  background: $body-bg;
+  color: $body-text;
+  font-family: var(--sans, system-ui, sans-serif);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+body {
+  min-height: 100vh;
+  padding: $space-lg;
+}
+
+#root {
+  margin: 0 auto;
+  max-width: $max-content-width;
+  width: 100%;
+}
+
+button {
+  border: none;
+  border-radius: $input-radius;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: $space-sm $space-md;
+  transition: opacity 0.15s, background 0.15s, border-color 0.15s;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+button:focus-visible,
+.form__input:focus-visible,
+.form__textarea:focus-visible {
+  @include focus-ring();
+}
+
+.app-header {
+  align-items: center;
+  border-bottom: 1px solid $panel-border;
+  display: flex;
+  margin-bottom: $space-xl;
+  padding-bottom: $space-md;
+}
+
+.app-header__title {
+  color: $tab-active-text;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.btn--primary {
+  background: $accent;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.btn--primary:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.btn--secondary {
+  background: $panel-bg;
+  border: 1px solid $panel-border;
+  color: $tab-text;
+}
+
+.btn--secondary:hover:not(:disabled) {
+  background: $panel-header;
+}
+
+.btn--danger {
+  background: transparent;
+  border: 1px solid $danger;
+  color: $danger;
+}
+
+.btn--danger:hover:not(:disabled) {
+  background: $danger;
+  color: #ffffff;
+}
+
+.deck-card {
+  @include panel($space-lg);
+  @include stack($space-sm);
+  transition: border-color 0.15s;
+}
+
+.deck-card:hover {
+  border-color: $accent;
+}
+
+.deck-card__name {
+  color: $tab-active-text;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.deck-card__description {
+  color: $tab-text;
+  flex: 1;
+  font-size: 0.875rem;
+}
+
+.deck-card__meta {
+  @include row($space-md);
+  color: $tab-text;
+  font-size: 0.8rem;
+}
+
+.deck-card__meta-due {
+  color: $accent;
+  font-weight: 600;
+}
+
+.deck-card__actions {
+  @include row($space-sm);
+  margin-top: $space-xs;
+}
+
+.deck-card__actions > button {
+  flex: 1 1 72px;
+}
+
+.deck-list {
+  @include stack($space-md);
+}
+
+.deck-list__header {
+  align-items: flex-start;
+  display: flex;
+  gap: $space-sm;
+  justify-content: flex-end;
+  margin-bottom: $space-sm;
+}
+
+.collection-tools {
+  align-items: flex-end;
+  @include stack($space-xs);
+}
+
+.collection-tools__actions {
+  display: flex;
+  gap: $space-sm;
+}
+
+.collection-tools__file {
+  display: none;
+}
+
+.collection-tools__status {
+  color: $tab-text;
+  font-size: 0.8rem;
+  margin: 0;
+  text-align: right;
+}
+
+.deck-list__empty,
+.card-list__empty {
+  color: $tab-text;
+  padding: $space-xl;
+  text-align: center;
+}
+
+.form-container,
+.form,
+.card-list,
+.card-list__items,
+.study-session,
+.deck-stats {
+  @include stack($space-md);
+}
+
+.form-container__title,
+.deck-stats__title {
+  color: $tab-active-text;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.form-container__subtitle,
+.form__label,
+.card-item__back {
+  color: $tab-text;
+  font-size: 0.875rem;
+}
+
+.form__label {
+  @include stack($space-xs);
+}
+
+.form__input,
+.form__textarea {
+  background: $panel-bg;
+  border: 1px solid $panel-border;
+  border-radius: $input-radius;
+  color: $body-text;
+  font-family: inherit;
+  font-size: 0.9rem;
+  outline: none;
+  padding: $space-sm $space-md;
+  transition: border-color 0.15s;
+}
+
+.form__input:focus,
+.form__textarea:focus {
+  border-color: $accent;
+}
+
+.form__textarea {
+  min-height: 60px;
+  resize: vertical;
+}
+
+.form__actions,
+.session-complete__actions {
+  @include row($space-sm);
+  margin-top: $space-sm;
+}
+
+.card-list__header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-list__title {
+  color: $tab-active-text;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.card-list__back,
+.deck-stats__back {
+  align-self: flex-start;
+  margin-top: $space-md;
+}
+
+.card-item {
+  @include panel($space-md);
+  align-items: flex-start;
+  display: flex;
+  gap: $space-md;
+  justify-content: space-between;
+}
+
+.card-item__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-item__front {
+  color: $tab-active-text;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: $space-xs;
+}
+
+.card-item__actions {
+  @include row($space-xs);
+  flex-shrink: 0;
+}
+
+.study-session {
+  gap: $space-lg;
+}
+
+.study-session__progress {
+  margin-bottom: $space-sm;
+}
+
+.study-session__card {
+  min-height: 260px;
+}
+
+.study-session__actions {
+  display: flex;
+  justify-content: center;
+  margin-top: $space-md;
+}
+
+.session-complete {
+  align-items: center;
+  @include stack($space-lg);
+  padding: $space-xl 0;
+  text-align: center;
+}
+
+.session-complete__title {
+  color: $tab-active-text;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.session-complete__grid {
+  display: grid;
+  gap: $space-md;
+  grid-template-columns: repeat(3, 1fr);
+  width: 100%;
+}
+
+.stat-card {
+  @include panel($space-md);
+  text-align: center;
+}
+
+.stat-card__value {
+  color: $accent;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.stat-card__label {
+  color: $tab-text;
+  font-size: 0.8rem;
+  margin-top: $space-xs;
+}
+
+.deck-stats {
+  gap: $space-lg;
+}
+
+.deck-stats__grid {
+  display: grid;
+  gap: $space-md;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+}
+
+@media (max-width: 520px) {
+  body {
+    padding: $space-md;
+  }
+
+  .app-header {
+    margin-bottom: $space-lg;
+  }
+
+  .deck-list__header,
+  .card-list__header,
+  .card-item {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .deck-list__header {
+    justify-content: stretch;
+  }
+
+  .deck-list__header > button,
+  .deck-card__actions > button {
+    width: 100%;
+  }
+
+  .collection-tools {
+    align-items: stretch;
+  }
+
+  .collection-tools__actions,
+  .deck-card__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .collection-tools__status {
+    text-align: left;
+  }
+
+  .deck-card,
+  .card-item,
+  .stat-card {
+    padding: $space-md;
+  }
+
+  .card-list__header {
+    gap: $space-sm;
+  }
+
+  .card-item__actions > button,
+  .form__actions > button,
+  .session-complete__actions > button {
+    flex: 1 1 140px;
+  }
+
+  .session-complete__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .study-session__card {
+    min-height: 240px;
+  }
+}

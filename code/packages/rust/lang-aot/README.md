@@ -4,6 +4,82 @@ Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, and McCarthy Lisp** to native executables through the shared
 LANG VM chain.
 
+> **LANG-FULL E4 — BASIC, ALGOL, and Twig string footholds run on all 7 backends (v0.133.0):**
+> `tests/lang_matrix.rs` now proves `10 PRINT "HELLO"` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+> It also proves `10 LET A$ = "HI"; 20 PRINT A$` produces stdout `HI` on
+> the same seven backends, and `LET A$ = "NO"; LET A$ = "OK"; PRINT A$`
+> produces `OK`, proving literal reassignment through the same E4 slot.
+> BASIC literal string concatenation now runs too: `LET A$ = "O" + "K"; PRINT A$`
+> reaches E4 `str_concat` and prints `OK` everywhere.
+> Literal-backed scalar string copy also runs everywhere:
+> `LET A$ = "OK"; LET B$ = A$; PRINT B$` lowers through `str_concat` with an
+> empty suffix.
+> Multi-item string `PRINT` runs too:
+> `LET A$ = "O"; LET B$ = "K"; PRINT A$; B$` prints `OK` through ordered
+> `print_str` calls.
+> Comma-separated string `PRINT` composes BA2 separators with BA4 strings:
+> `LET A$ = "O"; LET B$ = "K"; PRINT A$, B$` prints `O K` by placing
+> `putchar(' ')` between the same ordered `print_str` calls.
+> `PRINT A$ + "K"` now proves `PRINT` can consume a temporary E4 string
+> expression result directly.
+> `IF A$ + "K" = "OK" THEN ...` proves the same expression path can feed
+> `str_eq` before line-control branching.
+> `LET B$ = A$ + "K"; PRINT B$` proves a variable-backed concat can assign into
+> another scalar string slot.
+> BASIC string equality now drives control flow too:
+> `IF A$ = "Y" THEN ...` routes to `PRINT "OK"` through E4 `str_eq` on every
+> backend, and `IF A$ <> "Y" THEN ...` proves the inequality branch by reusing
+> `str_eq` with `jmp_if_false`.
+> Copied string slots now feed control flow as well:
+> `LET A$ = "OK"; LET B$ = A$; IF B$ = A$ THEN ...` prints `OK` everywhere.
+> ALGOL 60 now proves `begin print('HI') end`, lowering the implementation-defined
+> `print`/`output` output procedures to the same E4 `str_const` + `print_str`
+> path and producing stdout `HI` everywhere.
+> The next ALGOL row proves literal-backed scalar string variables too:
+> `begin string s; s := 'HI'; print(s) end` produces stdout `HI` everywhere,
+> and `begin string s; s := 'OK'; output(s) end` proves the `output` alias;
+> `begin string s, t; s := 'O'; t := 'K'; output(s, t) end` proves
+> multi-argument output preserves ordered scalar string actuals;
+> `begin string s, t; s := 'OK'; t := s; print(t) end` now proves
+> literal-backed scalar string copy, and `s := 'NO'` after the copy leaves
+> `print(t)` at `OK`; captured strings and broader dynamic string storage remain
+> follow-up work.
+> It also proves Twig `(string-length "HELLO")` returns exit code `5` and
+> `(string-ref "ABC" 1)` returns exit code `66`,
+> `(string=? "HELLO" "HELLO")` returns exit code `1`, plus
+> `(string-length (string-append "AB" "CDE"))` returns exit code `5`, on the same seven backends.
+> Named immutable top-level Twig strings now feed the same ops:
+> `(define a "AB") (define b "CDE") (string-length (string-append a b))` returns `5`,
+> `(define s "HELLO") (if (string=? s "HELLO") 42 0)` returns `42`, and
+> `(define s "ABC") (string-ref s 2)` returns `67` everywhere.
+> Lexical Twig string locals now feed E4 too:
+> `(let ((s "ABC") (i 2)) (string-ref s i))` returns `67` everywhere.
+> Sequential lexical Twig string locals also run:
+> `(let* ((s "HELLO")) (string-length s))` returns `5` everywhere.
+> Lexical local strings can drive equality branches too:
+> `(let ((s "OK") (t "OK")) (if (string=? s t) 42 0))` returns `42`
+> everywhere.
+> Local string concat now runs on the same path:
+> `(let ((a "AB") (b "CDE")) (string-length (string-append a b)))` returns
+> `5` everywhere.
+> Local concat results can feed byte indexing too:
+> `(let ((a "AB") (b "CDE") (i 3)) (string-ref (string-append a b) i))`
+> returns `68` (`D`) everywhere.
+> Local string lengths can compute byte indexes too:
+> `(let ((s "ABCDE")) (string-ref s (- (string-length s) 1)))` returns
+> `69` (`E`) everywhere.
+> The matrix also proves the bounds contract: `(string-ref "ABC" 3)` traps on
+> native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
+> Native AOT lowers the literal to `alloc_bytes` + `store_byte` + `print_string`;
+> LLVM emits a private `{len,bytes}` constant and calls `@__print_str(payload,len)`;
+> WASM stores literal bytes in linear memory and calls `env.__print_str(ptr,len)`;
+> JVM maps `str_const` to `ldc` + `CONSTANT_String` and `print_str` to
+> `PrintStream.print(String)`; CLR maps them to `ldstr` and `Console.Write(string)`.
+> Literal length/index/equality/append metadata is folded/read from metadata on
+> native/LLVM/WASM and uses host string APIs on JVM/CLR; the OOB index row proves
+> each backend fails closed. Dynamic byte-string ops, broader dynamic string
+> copies, and captured string variables stay follow-up E4/BA4 slices.
+
 > **LANG-FULL O2 — Oct bitwise `~` + u8 wrap on all 7 backends (v0.92.0):**
 > `tests/lang_matrix.rs` adds `out(1, ~0)` → `255` and `out(1, 200 + 100)` → `44` (wrap).
 > `oct-iir-compiler` 0.7.0 emits the `u8` hint on arithmetic/bitwise/`~` (Oct's only integer
@@ -239,7 +315,7 @@ lang-aot <FILE> [-o <OUT>] [--lang <LANG>]
 | Twig            | `.twig`         | `twig-ir-compiler`       | full |
 | Nib             | `.nib`          | `nib-iir-compiler`       | full |
 | Brainfuck       | `.bf`, `.b`    | `brainfuck-iir-compiler` + BF07 lowering pass | full — `lang-aot foo.bf` compiles end-to-end (cells live in a 30000-byte `alloc_bytes` tape; `load_mem`/`store_mem` are rewritten to `load_byte`/`store_byte` per LANG76) |
-| Dartmouth BASIC | `.bas`, `.basic` | `dartmouth-basic-iir-compiler` | full — integer programs with LET / PRINT / INPUT / IF / GOTO / FOR / NEXT / END / REM compile end-to-end (PL05).  GOSUB / arrays / strings / DEF deferred to V2 |
+| Dartmouth BASIC | `.bas`, `.basic` | `dartmouth-basic-iir-compiler` | full integer subset — LET / PRINT / INPUT / IF / GOTO / FOR / NEXT / END / REM, GOSUB / RETURN, DEF FN, DIM arrays, and READ / DATA / RESTORE compile and run end-to-end through the matrix. Strings, floating point, and `^` remain LANG-FULL follow-ups |
 | Oct             | `.oct`          | `oct-iir-compiler` (OCT02 phases 1–4) | full — integer subset compiles end-to-end (`fn`/`let`/`if`/`while`/`loop`/`break`, recursion).  8008 hardware intrinsics (`in`, `out`, `adc`, `sbb`, `rlc`, `rrc`, `ral`, `rar`, `carry`, `parity`) rejected cleanly with a pointer to the dedicated Intel-8008 simulator backend |
 | McCarthy Lisp   | `.mcl`, `.lisp` | `mccarthy-lisp-iir-compiler` | **L3a** — the full Lisp 1.0 frontend (literals, `QUOTE`, `CONS`/`CAR`/`CDR`/`ATOM`/`EQ`, `COND`, `LAMBDA`/`LABEL` closures) produces an `IIRModule`, and **scalar** programs run end-to-end on the native AOT pipeline (`echo 42 > p.mcl; lang-aot p.mcl` → exits 42).  Symbol/cons-returning programs (e.g. `(CAR '(A B C))`) are accepted by the frontend but the native backend `BackendRefused`s them until the `lispy-runtime` value model is lowered into each backend (**L3b**) |
 

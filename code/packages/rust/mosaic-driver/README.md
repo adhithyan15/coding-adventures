@@ -1,17 +1,20 @@
 # mosaic-driver
 
-The CLI entry point that stitches together the three Mosaic compiler stages into a
-single end-to-end pipeline.
+The CLI entry point that stitches together the three Mosaic compiler stages into
+a single end-to-end pipeline.
 
 ## Pipeline
 
+```text
+.mil -> mosmodel-compiler  -> interface descriptor JSON
+                              |
+.mll -> moslayout-compiler <-+-> part-map JSON
+                              |
+.msl -> mosstyle-compiler  <-+-> Lattice source
 ```
-.mil  ──▶  mosmodel-compiler  ──▶  interface descriptor JSON
-                                       │
-.mll  ──▶  moslayout-compiler ◀────────┤  ──▶  part-map JSON
-                                       │
-.msl  ──▶  mosstyle-compiler  ◀────────┘  ──▶  CSS string
-```
+
+Web targets that need CSS should compile the generated Lattice through the
+Lattice transpiler. Mosaic's style-stage artifact is Lattice, not CSS.
 
 ## Usage
 
@@ -22,7 +25,7 @@ mosaic Grid
 # Individual stages
 mosaic --interface  Grid.mil     # print interface descriptor JSON
 mosaic --layout     Grid.mll     # print part-map JSON
-mosaic --style      Grid.msl     # print CSS
+mosaic --style      Grid.msl     # print Lattice
 ```
 
 ## Output (stdout JSON)
@@ -34,7 +37,7 @@ mosaic --style      Grid.msl     # print CSS
     "component": "Grid",
     "slots": [
       { "name": "column-headers", "type": { "List": "Text" }, "required": true },
-      { "name": "viewport-rows",  "type": { "List": "Text" }, "required": true }
+      { "name": "viewport-rows", "type": { "List": "Text" }, "required": true }
     ],
     "emits": [
       { "name": "onRowClick", "params": [{ "name": "row", "type": "Number" }] }
@@ -43,11 +46,12 @@ mosaic --style      Grid.msl     # print CSS
   "parts": {
     "component": "Grid",
     "parts": [
-      { "name": "root",      "primitive": "Column" },
-      { "name": "cell-grid", "primitive": "Grid"   }
+      { "name": "root", "primitive": "Column" },
+      { "name": "cell-grid", "primitive": "Grid" }
     ]
   },
-  "css": ".mos-Grid-root { ... }\n.mos-Grid-cell-grid { ... }"
+  "lattice": ".mos-Grid-root { ... }\n.mos-Grid-cell-grid { ... }",
+  "style_map_json": "{\n  \"component\": \"Grid\",\n  \"parts\": [ ... ]\n}"
 }
 ```
 

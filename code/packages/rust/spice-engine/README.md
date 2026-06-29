@@ -6,7 +6,10 @@ The initial slices implement:
 
 - DC operating-point analysis for linear circuits using modified nodal analysis
   (MNA), with stable `DcResult::diagnostics` metadata for matrix size, selected
-  real solver path, tolerance, convergence aid, and final Newton delta.
+  real solver path, tolerance, convergence aid, final Newton delta, and a
+  nested solver profile for backend, structural nonzeros, density, and fill-in.
+  Nonlinear operating points can bound Newton updates with
+  `DcOpOptions::newton_step_limit`, and diagnostics report limiter activity.
 - DC operating-point sweeps across explicit analysis temperatures, including
   named corner sweeps and order-preserving parallel named corner DC sweeps.
 - DC source sweeps over independent voltage and current sources, including
@@ -69,13 +72,21 @@ The initial slices implement:
   sweeps.
 - Parsed transient and DC sweep `.measure` / `.meas` card extraction and
   execution helpers that route deck cards into stable scalar measurement rows.
+- Source-order `run_deck` whole-deck execution for parsed `.op`, `.dc`, `.ac`,
+  `.tran`, `.tf`, `.sens`, and `.noise` cards with aggregate run-artifact
+  table, CSV, compact JSON, and header-keyed record exports.
 
 The package supports resistors, capacitors, inductors, diodes, BJTs,
 independent current sources, independent voltage sources, voltage-controlled
 current sources, optional AC source phasors, optional source waveforms, ground
 aliases, node voltages, and voltage source branch currents.
-Large real DC and complex AC matrix solves use sparse-row solver paths when the
-matrix size reaches the package threshold.
+Large real DC and complex AC matrix solves use native sparse-row solver paths
+when the matrix size reaches the package threshold. DC diagnostics expose the
+actual real-solver backend and matrix sparsity profile for production audits.
+For nonlinear DC solves, `DcOpOptions::newton_step_limit` bounds each Newton
+update per unknown. `DcResult::diagnostics` reports the active limit, clipped
+step count, and minimum damping factor; set the option to `None` to disable
+the limiter.
 
 ```rust
 use spice_engine::{
@@ -112,6 +123,56 @@ BJT, and Level-1 MOSFET models before running an analysis.
 `.model` alias surface for diode, BJT, JFET, and Level-1 MOS cards.
 `device_model_audit_fixtures` returns the canonical cross-language fixture
 cards used to keep the Rust, Python, and TypeScript ports aligned.
+`device_model_behavior_audit_fixtures` extends those cards into runnable
+one-device DC bias fixtures with reference deck lines and stable expected
+probe-voltage windows for diode, BJT, JFET, and Level-1 MOS model-depth audits.
+`device_model_temperature_audit_fixtures` adds matching `.temp`
+reference-deck metadata and stable per-temperature probe windows for those same
+fixture circuits. `device_model_capacitance_audit_fixtures` adds matching
+`.ac` reference-deck metadata and stable high-frequency probe magnitude windows
+for diode, BJT, JFET `CGS`/`CGD`, and Level-1 MOS capacitance audits.
+`device_model_noise_audit_fixtures` adds matching `.noise` reference-deck
+metadata and stable source/output PSD windows for diode and BJT shot noise plus
+JFET and Level-1 MOS channel thermal noise audits.
+`device_model_charge_audit_fixtures` adds matching `.tran` reference-deck
+metadata, explicit terminal storage capacitance metadata, stable first/final
+probe-voltage windows, and charge-behavior notes for diode, BJT, JFET, and
+Level-1 MOS charge audits. Diode `junction_capacitance` / `transit_time` and
+BJT `base_emitter_capacitance` / `base_collector_capacitance` /
+`forward_transit_time` / `reverse_transit_time`, and JFET
+`gate_source_capacitance` / `gate_drain_capacitance` plus Level-1 MOS
+`gate_source_overlap_capacitance`, `gate_drain_overlap_capacitance`,
+`gate_bulk_overlap_capacitance`, and bulk-junction
+`source_bulk_capacitance` / `drain_bulk_capacitance` model-card parameters
+also stamp transient storage, with MOS `bulk_junction_potential` /
+`bulk_junction_grading_coefficient` shaping reverse-biased source-body and
+drain-body capacitance to match their small-signal AC semantics.
+`device_model_reference_deck_audit_fixtures` flattens those DC, temperature,
+AC, noise, and transient fixture families into a stable reference-deck
+coverage matrix for each supported diode, BJT, JFET, and Level-1 MOS model
+family.
+`format_device_model_reference_deck_audit_table` renders that matrix as a
+stable tab-separated audit table for release and reference-deck comparisons.
+`device_model_reference_deck_audit_records`,
+`format_device_model_reference_deck_audit_csv`, and
+`format_device_model_reference_deck_audit_json` expose the same matrix as
+header-keyed records and browser/release-friendly CSV or compact JSON.
+`device_model_reference_deck_audit_summary`,
+`format_device_model_reference_deck_audit_summary_table`,
+`device_model_reference_deck_audit_summary_records`,
+`format_device_model_reference_deck_audit_summary_csv`, and
+`format_device_model_reference_deck_audit_summary_json` expose stable per-kind
+coverage summaries with missing-analysis and deck-line totals.
+`device_model_reference_deck_audit_analysis_summary`,
+`format_device_model_reference_deck_audit_analysis_summary_table`,
+`device_model_reference_deck_audit_analysis_summary_records`,
+`format_device_model_reference_deck_audit_analysis_summary_csv`, and
+`format_device_model_reference_deck_audit_analysis_summary_json` expose the
+same audit matrix grouped by analysis kind, with missing-model-family and
+deck-line totals for release dashboards.
+`device_model_reference_deck_audit_gate` and
+`format_device_model_reference_deck_audit_gate_report` validate the required
+kind-by-analysis coverage matrix and emit a stable pass/fail gate report.
 
 `analyze_custom_model_source` accepts only a two-terminal `I(p,n) <+ ...`
 module shape and rejects dynamic/event/system constructs; it is not a full
@@ -182,10 +243,10 @@ a stable measurement table for `.dc`, `.ac`, and `.tran` executions.
 Execution `table_artifacts` preserve the same order as `tables` and carry each
 stable table's text, CSV, compact JSON, and header-keyed records.
 Execution `output_plan_artifacts` summarize the selected result row count,
-result columns, selected analysis line/source/output-node metadata, output
-probes, selected output probe source lines, output directives, normalized
-output directive kinds, normalized directive analysis scopes, selected output
-directive source lines, and stable table names, and the
+result columns, selected analysis line/source/output-node and sweep/time/frequency
+metadata, output probes, selected output probe source lines, output directives,
+normalized output directive kinds, normalized directive analysis scopes, selected
+output directive source lines, and stable table names, and the
 `output-plan` entry in `table_artifacts` carries the same
 table, CSV, compact JSON, and header-keyed record exports.
 Selected `.tran` plans route
@@ -198,6 +259,13 @@ artifact summaries plus `format_deck_run_artifact_table` and
 stable result-row, table, analysis-directive, output-probe, output-directive,
 measurement, Fourier, control-command, write-marker, rawfile-option, and
 diagnostic count/name lists.
+`run_deck` executes every parsed `.op`, `.dc`, `.ac`, `.tran`, `.tf`, `.sens`,
+and `.noise` card in source order, preserves duplicate analysis directives,
+and defaults analysis-less decks to an implicit `.op`. Its whole-run result
+returns ordered selected executions plus aggregate selected-run artifact table,
+CSV, compact JSON, and header-keyed records, and each selected-run artifact
+carries the deck-wide analysis kind/directive inventories beside the selected
+analysis directive metadata.
 Normalized accepted `.control` commands are surfaced separately in
 `control_line_count` / `control_lines` execution fields and in
 `ControlLines` / `ControlLineList` artifact fields.

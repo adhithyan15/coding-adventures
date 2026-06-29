@@ -1,0 +1,206 @@
+use std::fs;
+use std::path::PathBuf;
+
+use mosaic_package_artifact_builder::{build_package, Backend, BuildOptions};
+
+const COMPONENTS: &[&str] = &["CardBrowser"];
+
+fn package_root() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+}
+
+fn src_path(name: &str) -> PathBuf {
+    package_root().join("src").join(name)
+}
+
+fn read_source(name: &str) -> String {
+    let path = src_path(name);
+    fs::read_to_string(&path).unwrap_or_else(|e| panic!("failed to read {}: {}", path.display(), e))
+}
+
+fn compiled_card_browser() -> (
+    mosmodel_compiler::MosmodelComponent,
+    moslayout_compiler::LayoutDef,
+    mosstyle_compiler::StyleDef,
+) {
+    let mil = mosmodel_compiler::compile(&read_source("CardBrowser.mil"))
+        .expect("CardBrowser.mil should compile");
+    let mll =
+        moslayout_compiler::compile(&read_source("CardBrowser.mll"), Some(&mil.descriptor_json))
+            .expect("CardBrowser.mll should compile against CardBrowser.mil");
+    let msl = mosstyle_compiler::compile(
+        &read_source("CardBrowser.dark.msl"),
+        Some(&mll.part_map_json),
+    )
+    .expect("CardBrowser.dark.msl should compile against CardBrowser.mll parts");
+
+    (mil.component, mll.def, msl.def)
+}
+
+#[test]
+fn manifest_declares_expected_exports() {
+    let manifest_src = fs::read_to_string(package_root().join("mosaic-package.toml"))
+        .expect("mosaic-package.toml must exist");
+    let value: toml::Value =
+        toml::from_str(&manifest_src).expect("mosaic-package.toml must parse as TOML");
+
+    let name = value
+        .get("package")
+        .and_then(|p| p.get("name"))
+        .and_then(|n| n.as_str())
+        .expect("[package].name must be set");
+    assert_eq!(name, "mosaic-pkg-card-browser");
+
+    let exports = value
+        .get("components")
+        .and_then(|c| c.get("exports"))
+        .and_then(|e| e.as_array())
+        .expect("[components].exports must be an array");
+    let export_names: Vec<&str> = exports.iter().filter_map(|v| v.as_str()).collect();
+    assert_eq!(export_names, COMPONENTS);
+
+    let toolkit_version = value
+        .get("dependencies")
+        .and_then(|d| d.get("mosaic-pkg-toolkit"))
+        .and_then(|v| v.as_str())
+        .expect("[dependencies].mosaic-pkg-toolkit must be set");
+    assert_eq!(toolkit_version, "0.11.0");
+
+    let kernel_version = value
+        .get("kernel")
+        .and_then(|k| k.get("version"))
+        .and_then(|v| v.as_str())
+        .expect("[kernel].version must be set");
+    assert_eq!(kernel_version, "1");
+}
+
+#[test]
+fn card_browser_frontend_sources_compile() {
+    let (component, layout, style) = compiled_card_browser();
+
+    assert_eq!(component.component, "CardBrowser");
+    assert_eq!(layout.component_name, "CardBrowser");
+    assert_eq!(style.component_name, "CardBrowser");
+
+    let slot_names: Vec<&str> = component.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(
+        slot_names,
+        vec![
+            "browser-label",
+            "query-label",
+            "query",
+            "query-placeholder",
+            "search-label",
+            "results-label",
+            "results-summary",
+            "results",
+            "result-card-ids",
+            "result-note-ids",
+            "result-template-ids",
+            "result-states",
+            "selected-index",
+            "selected-card-id",
+            "selected-note-id",
+            "selected-template-id",
+            "selected-state",
+            "open-label",
+            "edit-label",
+            "suspend-label",
+            "mark-label",
+        ]
+    );
+
+    let emit_names: Vec<&str> = component.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(
+        emit_names,
+        vec![
+            "onQueryChange",
+            "onSearch",
+            "onSelectResult",
+            "onOpenSelected",
+            "onEditSelected",
+            "onToggleSuspendSelected",
+            "onToggleMarkSelected",
+        ]
+    );
+}
+
+#[test]
+fn card_browser_layout_wires_search_results_and_actions() {
+    let source = read_source("CardBrowser.mll");
+
+    assert!(source.contains("pkg::mosaic-pkg-toolkit::Input"));
+    assert!(source.contains("value : slot: query"));
+    assert!(source.contains("onChange : emit: onQueryChange"));
+    assert!(source.contains("onCommit : emit: onSearch"));
+    assert!(source.contains("pkg::mosaic-pkg-toolkit::ListGroup"));
+    assert!(source.contains("items : slot: results"));
+    assert!(source.contains("selected-index : slot: selected-index"));
+    assert!(source.contains("onSelect : emit: onSelectResult"));
+
+    for (label, emit) in [
+        ("open-label", "onOpenSelected"),
+        ("edit-label", "onEditSelected"),
+        ("suspend-label", "onToggleSuspendSelected"),
+        ("mark-label", "onToggleMarkSelected"),
+    ] {
+        assert!(
+            source.contains(&format!("label : slot: {label}")),
+            "CardBrowser.mll must bind {label}"
+        );
+        assert!(
+            source.contains(&format!("onClick : emit: {emit}")),
+            "CardBrowser.mll must wire {emit}"
+        );
+    }
+}
+
+#[test]
+fn card_browser_package_emitters_all_accept_nested_toolkit_controls() {
+    let tmp = tempfile::tempdir().expect("temp dist root");
+    let backends = [
+        (Backend::Html, "html/CardBrowser.html"),
+        (Backend::React, "react/CardBrowser.tsx"),
+        (Backend::SwiftUI, "swiftui/CardBrowser.swift"),
+        (Backend::Qt, "qt/CardBrowser.qml"),
+        (Backend::Xaml, "xaml/CardBrowser.xaml"),
+        (Backend::Flutter, "flutter/CardBrowser.dart"),
+    ];
+
+    for (backend, expected_artifact) in backends {
+        let result = build_package(&BuildOptions {
+            package_root: package_root(),
+            output_root: tmp.path().to_path_buf(),
+            backend,
+            emit_project: false,
+        })
+        .unwrap_or_else(|e| panic!("{backend:?} should build CardBrowser: {e}"));
+
+        assert_eq!(result.components_built, vec!["CardBrowser"]);
+        assert!(
+            tmp.path().join(expected_artifact).exists(),
+            "{backend:?} did not write {expected_artifact}"
+        );
+    }
+
+    let html = fs::read_to_string(tmp.path().join("html").join("CardBrowser.html"))
+        .expect("CardBrowser HTML artifact should be readable");
+    assert!(html.contains("data-mosaic-component=\"CardBrowser\""));
+    assert!(
+        html.contains("#1e293b"),
+        "nested toolkit Input/ListGroup styles should reach CardBrowser HTML"
+    );
+}
+
+#[test]
+fn source_tree_has_expected_shape() {
+    let expected = ["CardBrowser.mil", "CardBrowser.mll", "CardBrowser.dark.msl"];
+    for name in expected {
+        let path = src_path(name);
+        assert!(
+            path.exists(),
+            "expected source file missing: {}",
+            path.display()
+        );
+    }
+}

@@ -30,15 +30,13 @@ use std::process;
 // `run_pipeline` path between `moslayout_compiler::compile()` and the
 // backend emitter so every `pkg::P::C` reference in the consumer's
 // layout is substituted before any emitter sees it.
-mod resolver;
-
 use cli_builder::types::ParserOutput;
 use cli_builder::{load_spec_from_file, Parser};
 use mosaic_analyzer::analyze;
 use mosaic_emit_html::HtmlRenderer;
+use mosaic_emit_paint;
 use mosaic_emit_react::ReactRenderer;
 use mosaic_emit_webcomponent::WebComponentRenderer;
-use mosaic_emit_paint;
 use mosaic_package_artifact_builder::{build_package, Backend, BuildOptions};
 use mosaic_vm::MosaicVM;
 
@@ -95,11 +93,15 @@ fn main() {
 
     let root = find_root();
     let spec_path = root.join("code/specs/mosaic-compile.json");
-    let spec = load_spec_from_file(spec_path.to_str().unwrap_or("code/specs/mosaic-compile.json"))
-        .unwrap_or_else(|e| {
-            eprintln!("mosaic-compile: failed to load CLI spec: {e}");
-            process::exit(1);
-        });
+    let spec = load_spec_from_file(
+        spec_path
+            .to_str()
+            .unwrap_or("code/specs/mosaic-compile.json"),
+    )
+    .unwrap_or_else(|e| {
+        eprintln!("mosaic-compile: failed to load CLI spec: {e}");
+        process::exit(1);
+    });
 
     let parser = Parser::new(spec);
     let argv: Vec<String> = std::env::args().collect();
@@ -164,8 +166,15 @@ fn run(result: cli_builder::types::ParseResult) {
     // legacy "paint" backend is single-file SOURCE mode only and is
     // also kept here for back-compat.
     let allowed_backends = [
-        "webcomponent", "html", "react", "paint", "xaml",
-        "swiftui", "qt", "flutter", "compose",
+        "webcomponent",
+        "html",
+        "react",
+        "paint",
+        "xaml",
+        "swiftui",
+        "qt",
+        "flutter",
+        "compose",
     ];
     if !allowed_backends.contains(&backend) {
         eprintln!(
@@ -220,8 +229,7 @@ fn run(result: cli_builder::types::ParseResult) {
         .and_then(|v| v.as_str())
         .map(str::to_string);
 
-    let pipeline_any =
-        interface_path.is_some() || layout_path.is_some() || style_path.is_some();
+    let pipeline_any = interface_path.is_some() || layout_path.is_some() || style_path.is_some();
 
     if pipeline_any && source_path.is_some() {
         eprintln!(
@@ -420,9 +428,7 @@ fn build_self_package_registry(
     let manifest = match mosaic_package_manifest::parse_path(std::path::Path::new(path)) {
         Ok(m) => m,
         Err(e) => {
-            eprintln!(
-                "mosaic-compile: warning: ignoring --package-manifest {path}: {e:?}"
-            );
+            eprintln!("mosaic-compile: warning: ignoring --package-manifest {path}: {e:?}");
             return None;
         }
     };
@@ -489,11 +495,7 @@ fn build_self_package_registry(
 /// purpose. Authors who DO want strict-mode behavior can omit the
 /// bare `<Component>.mll` and ship only the variant files; the
 /// fallback then provably can't fire.
-fn resolve_layout_path(
-    layout_arg: &str,
-    component_name: &str,
-    variant: Option<&str>,
-) -> String {
+fn resolve_layout_path(layout_arg: &str, component_name: &str, variant: Option<&str>) -> String {
     // Defense-in-depth: validate component_name + variant against a
     // strict identifier shape before interpolating into path joins.
     // The mosmodel grammar already enforces PascalCase on component
@@ -638,11 +640,8 @@ fn run_pipeline(
     // every existing build script). When it's a directory, we resolve
     // <Component>.<variant>.mll inside it with fallback to bare
     // <Component>.mll. See `resolve_layout_path` for the rules.
-    let resolved_layout_path = resolve_layout_path(
-        layout_path,
-        &mosmodel_out.component.component,
-        variant,
-    );
+    let resolved_layout_path =
+        resolve_layout_path(layout_path, &mosmodel_out.component.component, variant);
 
     // -- 2. Compile the moslayout file --------------------------------------
     //
@@ -679,16 +678,20 @@ fn run_pipeline(
         Some(s) => s.split(':').map(PathBuf::from).collect(),
         None => {
             let default = PathBuf::from("code/packages");
-            if default.is_dir() { vec![default] } else { Vec::new() }
+            if default.is_dir() {
+                vec![default]
+            } else {
+                Vec::new()
+            }
         }
     };
-    let resolver = resolver::PackageResolver::new(search_paths);
+    let resolver = mosaic_package_resolver::LayoutPackageResolver::new(search_paths);
     if let Err(e) = resolver.resolve(&mut layout_out.def) {
         eprintln!("mosaic-compile: package-resolver error in {layout_path}:");
         eprintln!("  {e:?}");
         process::exit(1);
     }
-    if let Some(t) = resolver::first_qualified_tag(&layout_out.def.root) {
+    if let Some(t) = mosaic_package_resolver::first_qualified_tag(&layout_out.def.root) {
         // Defensive — the resolver should leave no qualified tags
         // behind.  If one slips through we exit cleanly rather than
         // letting it confuse the backend emitter.
@@ -706,24 +709,20 @@ fn run_pipeline(
     // catch any slot/emit mismatches that survived the package call,
     // surfacing them with the same UnknownSlot / UnknownEmit
     // diagnostics that pre-UI34 builds get.
-    let resolved_parts = moslayout_compiler::validate(
-        &layout_out.def,
-        Some(&mosmodel_out.descriptor_json),
-    )
-    .unwrap_or_else(|errs| {
-        eprintln!(
-            "mosaic-compile: moslayout post-resolver validation error(s) in {layout_path}:"
-        );
-        for e in errs {
-            eprintln!("  {e:?}");
-        }
-        process::exit(1);
-    });
+    let resolved_parts =
+        moslayout_compiler::validate(&layout_out.def, Some(&mosmodel_out.descriptor_json))
+            .unwrap_or_else(|errs| {
+                eprintln!(
+                    "mosaic-compile: moslayout post-resolver validation error(s) in {layout_path}:"
+                );
+                for e in errs {
+                    eprintln!("  {e:?}");
+                }
+                process::exit(1);
+            });
     layout_out.parts = resolved_parts;
-    layout_out.part_map_json = moslayout_compiler::emit_part_map_json(
-        &layout_out.def.component_name,
-        &layout_out.parts,
-    );
+    layout_out.part_map_json =
+        moslayout_compiler::emit_part_map_json(&layout_out.def.component_name, &layout_out.parts);
 
     // -- 3. Compile the mosstyle file ---------------------------------------
     //
@@ -796,10 +795,7 @@ fn run_pipeline(
                 if let Some(parent) = std::path::Path::new(&main_tsx_path).parent() {
                     if !parent.as_os_str().is_empty() {
                         if let Err(e) = std::fs::create_dir_all(parent) {
-                            eprintln!(
-                                "mosaic-compile: failed to create {}: {e}",
-                                parent.display()
-                            );
+                            eprintln!("mosaic-compile: failed to create {}: {e}", parent.display());
                             process::exit(1);
                         }
                     }
@@ -1040,10 +1036,7 @@ fn run_pipeline(
                 if let Some(parent) = std::path::Path::new(&app_swift_path).parent() {
                     if !parent.as_os_str().is_empty() {
                         if let Err(e) = std::fs::create_dir_all(parent) {
-                            eprintln!(
-                                "mosaic-compile: failed to create {}: {e}",
-                                parent.display()
-                            );
+                            eprintln!("mosaic-compile: failed to create {}: {e}", parent.display());
                             process::exit(1);
                         }
                     }
@@ -1143,10 +1136,7 @@ fn run_pipeline(
                 if let Some(parent) = std::path::Path::new(&main_dart_path).parent() {
                     if !parent.as_os_str().is_empty() {
                         if let Err(e) = std::fs::create_dir_all(parent) {
-                            eprintln!(
-                                "mosaic-compile: failed to create {}: {e}",
-                                parent.display()
-                            );
+                            eprintln!("mosaic-compile: failed to create {}: {e}", parent.display());
                             process::exit(1);
                         }
                     }
@@ -1212,12 +1202,28 @@ fn emit_single_file<E: std::fmt::Display>(
 // `pkg` subcommand — package-artifact build (UI29 §4.3)
 // ===========================================================================
 
+const PKG_BACKENDS: &str = "react|electron|swiftui|qt|xaml|webcomponent|html|flutter";
+
+fn pkg_backend_from_str(value: &str) -> Option<Backend> {
+    match value {
+        "react" => Some(Backend::React),
+        "electron" => Some(Backend::Electron),
+        "swiftui" => Some(Backend::SwiftUI),
+        "qt" => Some(Backend::Qt),
+        "xaml" => Some(Backend::Xaml),
+        "webcomponent" => Some(Backend::WebComponent),
+        "html" => Some(Backend::Html),
+        "flutter" => Some(Backend::Flutter),
+        _ => None,
+    }
+}
+
 /// Drive `mosaic_package_artifact_builder::build_package` from the CLI.
 ///
 /// Spec (mosaic-compile.json):
 ///
 /// ```text
-/// mosaic-compile pkg <PACKAGE_ROOT> --backend <react|swiftui|qt> --output <DIR>
+/// mosaic-compile pkg <PACKAGE_ROOT> --backend <react|electron|swiftui|qt|xaml|webcomponent|html|flutter> --output <DIR> [--emit-project]
 /// ```
 ///
 /// Required: `package_root` positional, `--backend`, `--output`. cli-builder
@@ -1261,24 +1267,13 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
         .and_then(|v| v.as_bool())
         .unwrap_or(false);
 
-    // Map the string to the typed `Backend`. The artifact builder accepts
-    // the un-wired variants too (so callers can type the API surface
-    // uniformly) but they return `UnsupportedBackend` immediately; we
-    // forward that as-is below.
-    let backend = match backend_str {
-        "react" => Backend::React,
-        "swiftui" => Backend::SwiftUI,
-        "qt" => Backend::Qt,
-        "webcomponent" => Backend::WebComponent,
-        "html" => Backend::Html,
-        other => {
-            eprintln!(
-                "mosaic-compile pkg: --backend must be one of \
-                 react|swiftui|qt|webcomponent|html, got '{other}'"
-            );
-            process::exit(1);
-        }
-    };
+    // Map the string to the typed `Backend`.
+    let backend = pkg_backend_from_str(backend_str).unwrap_or_else(|| {
+        eprintln!(
+            "mosaic-compile pkg: --backend must be one of {PKG_BACKENDS}, got '{backend_str}'"
+        );
+        process::exit(1);
+    });
 
     let opts = BuildOptions {
         package_root: PathBuf::from(package_root),
@@ -1325,7 +1320,10 @@ fn write_file_or_die(path: &str, content: &str) {
     if let Some(parent) = Path::new(path).parent() {
         if !parent.as_os_str().is_empty() {
             fs::create_dir_all(parent).unwrap_or_else(|e| {
-                eprintln!("mosaic-compile: cannot create directory {}: {e}", parent.display());
+                eprintln!(
+                    "mosaic-compile: cannot create directory {}: {e}",
+                    parent.display()
+                );
                 process::exit(1);
             });
         }
@@ -1345,7 +1343,10 @@ fn write_bytes_or_die(path: &str, content: &[u8]) {
     if let Some(parent) = Path::new(path).parent() {
         if !parent.as_os_str().is_empty() {
             fs::create_dir_all(parent).unwrap_or_else(|e| {
-                eprintln!("mosaic-compile: cannot create directory {}: {e}", parent.display());
+                eprintln!(
+                    "mosaic-compile: cannot create directory {}: {e}",
+                    parent.display()
+                );
                 process::exit(1);
             });
         }
@@ -1359,6 +1360,22 @@ fn write_bytes_or_die(path: &str, content: &[u8]) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn pkg_backend_mapping_exposes_native_and_web_package_backends() {
+        assert_eq!(pkg_backend_from_str("react"), Some(Backend::React));
+        assert_eq!(pkg_backend_from_str("electron"), Some(Backend::Electron));
+        assert_eq!(pkg_backend_from_str("swiftui"), Some(Backend::SwiftUI));
+        assert_eq!(pkg_backend_from_str("qt"), Some(Backend::Qt));
+        assert_eq!(pkg_backend_from_str("xaml"), Some(Backend::Xaml));
+        assert_eq!(
+            pkg_backend_from_str("webcomponent"),
+            Some(Backend::WebComponent)
+        );
+        assert_eq!(pkg_backend_from_str("html"), Some(Backend::Html));
+        assert_eq!(pkg_backend_from_str("flutter"), Some(Backend::Flutter));
+        assert_eq!(pkg_backend_from_str("paint"), None);
+    }
 
     /// `build_self_package_registry` returns None when no manifest
     /// path is provided.
@@ -1398,13 +1415,13 @@ version = "1"
         )
         .unwrap();
 
-        let r = build_self_package_registry(
-            Some(mpath.to_str().unwrap()),
-            "Field",
-            "Mosaic.Generated",
-        );
+        let r =
+            build_self_package_registry(Some(mpath.to_str().unwrap()), "Field", "Mosaic.Generated");
         let reg = r.expect("registry built from valid manifest");
-        assert!(reg.lookup("Button").is_some(), "Button should be registered");
+        assert!(
+            reg.lookup("Button").is_some(),
+            "Button should be registered"
+        );
         assert!(reg.lookup("Input").is_some(), "Input should be registered");
         assert!(
             reg.lookup("Field").is_none(),
@@ -1448,11 +1465,8 @@ version = "1"
 "#,
         )
         .unwrap();
-        let r = build_self_package_registry(
-            Some(mpath.to_str().unwrap()),
-            "Card",
-            "Mosaic.Generated",
-        );
+        let r =
+            build_self_package_registry(Some(mpath.to_str().unwrap()), "Card", "Mosaic.Generated");
         assert!(r.is_none());
         std::fs::remove_dir_all(&tmp).ok();
     }

@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.6.0 — 2026-06-27 — const/static initializer expressions are typed (LANG-FULL N10)
+
+Top-level `const` declarations now seed the module typing environment alongside
+`static`s. Const and static initializers are type-checked under their declared
+type, so deterministic initializer expressions such as `const N: u8 = 6 * 7;`
+and `static counter: u8 = N + 0;` type-check before the compiler folds them.
+
+## 0.5.0 — 2026-06-27 — logical NOT is typed as bool (LANG-FULL N9)
+
+`unary_expr` now recognizes leading `!` and types the expression as `Bool`
+instead of transparently passing through the operand type. This lets Nib accept
+logical-not conditions and bool bindings such as `if !(1 == 2) { ... }` and
+`let b: bool = !false;`.
+
+## 0.4.0 — 2026-06-27 — module-scoped static names type-check across functions (LANG-FULL N8)
+
+Top-level `static NAME: type = literal;` declarations now seed a module-scope
+typing environment before functions are checked. Reads and assignments in any
+function use the declared static type as context, while parameters and `let`
+locals still shadow the static name.
+
+This lets `static counter: u8 = 40; fn bump(step: u8) { counter = counter + step; }`
+type-check without treating `counter` as an unknown local, and rejects static
+initializers whose literal width does not fit the declared type.
+
 ## 0.3.0 — 2026-06-15 — bidirectional typing for E2 narrow-width arithmetic (LANG-FULL E2 / N6)
 
 Adds **bidirectional (top-down) type inference** so that integer literals in a

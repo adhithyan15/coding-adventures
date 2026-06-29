@@ -71,7 +71,7 @@ pub fn token_grammar() -> TokenGrammar {
             },
             TokenDefinition {
                 name: r#"NAME"#.to_string(),
-                pattern: r#"[a-z][a-z0-9]*"#.to_string(),
+                pattern: r#"[a-z][a-z0-9]*\$?"#.to_string(),
                 is_regex: true,
                 line_number: 202,
                 alias: None,

@@ -1,0 +1,21 @@
+[package]
+name = "engram-app"
+version = "0.1.0"
+description = "Engram Mosaic app package that assembles reusable components into the product shell"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["EngramApp"]
+
+[dependencies]
+mosaic-pkg-card-browser = "0.1.0"
+mosaic-pkg-collection-actions = "0.1.0"
+mosaic-pkg-deck-options = "0.1.0"
+mosaic-pkg-deck-stats = "0.1.0"
+mosaic-pkg-review-actions = "0.1.0"
+mosaic-pkg-review-card = "0.1.0"
+mosaic-pkg-review-history = "0.1.0"
+mosaic-pkg-session-progress = "0.1.0"
+
+[kernel]
+version = "1"

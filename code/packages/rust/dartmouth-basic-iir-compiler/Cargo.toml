@@ -1,8 +1,8 @@
 [package]
 name = "dartmouth-basic-iir-compiler"
-version = "0.10.0"
+version = "0.31.0"
 edition = "2021"
-description = "Dartmouth BASIC frontend for the LANG VM AOT chain — lowers parsed BASIC into interpreter_ir::IIRModule (i64 integer programs only in V1).  v0.2.0: ships BasicCirJit — a real bytecode JIT backend for jit-core.  v0.3.0: backend_compat e2e tests prove BASIC's IIR is accepted by every IIR-to-{wasm,jvm,clr,beam} validator.  v0.4.0: threads real source positions through IIRFunction::source_map for line-based debugger breakpoints.  v0.7.0: DIM arrays (BA3 / enabler E5) — DIM/subscripted-LET/subscripted-read lower to the shared alloc_array/array_set/array_get ops, 0-based inclusive."
+description = "Dartmouth BASIC frontend for the LANG VM AOT chain — lowers parsed BASIC into interpreter_ir::IIRModule. v0.31.0 proves BA4 lexical string ordering in IF branches on all seven backends; v0.30.0 proved variable-variable string concat in IF equality."
 
 [dependencies]
 coding-adventures-dartmouth-basic-parser = { path = "../dartmouth-basic-parser" }

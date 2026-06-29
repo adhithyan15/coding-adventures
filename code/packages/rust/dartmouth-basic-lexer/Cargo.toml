@@ -1,8 +1,8 @@
 [package]
 name = "coding-adventures-dartmouth-basic-lexer"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "Tokenizer for the 1964 Dartmouth BASIC language"
+description = "Tokenizer for the 1964 Dartmouth BASIC language; v0.2.0 keeps `$`-suffixed string variables as single NAME tokens for BA4."
 
 [dependencies]
 grammar-tools = { path = "../grammar-tools" }

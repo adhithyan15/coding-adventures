@@ -21,8 +21,9 @@ correlation output,
 stable text tables for selected node voltages, branch currents, AC phasors,
 Fourier harmonics, transfer-function results, pole-zero entries, and
 distortion harmonics, parsed `.save` / `.probe` / `.print` / `.plot`
-deck-selected output tables, and backward-Euler reactive-element companion
-models.
+deck-selected output tables, source-order `runDeck` whole-deck execution for
+parsed `.op`, `.dc`, `.ac`, `.tran`, `.tf`, `.sens`, and `.noise` cards, and
+backward-Euler reactive-element companion models.
 
 ```ts
 import {
@@ -54,9 +55,15 @@ const adaptive = transientAdaptive(circuit, 0.5e-9, 1.0e-9, { method: "gear2" })
 ```
 
 `dcOp(circuit).diagnostics` reports stable solve metadata, including the MNA
-matrix size, selected real solver path, tolerance, convergence aid, and final
-Newton delta. Large real DC and complex AC matrix solves use sparse-row solver
-paths when the matrix size reaches the package threshold.
+matrix size, selected real solver path, tolerance, convergence aid, final
+Newton delta, and a nested `solverProfile` with backend, structural nonzero
+count, density, fill-in, and fallback metadata. Large real DC and complex AC
+matrix solves use native sparse-row solver paths when the matrix size reaches
+the package threshold.
+For nonlinear operating points, `dcOp(circuit, { newtonStepLimit })` bounds
+each Newton update per unknown. Diagnostics report the active limit, how many
+steps were clipped, and the minimum damping factor; pass
+`newtonStepLimit: null` to disable the limiter.
 
 `diodeAtTemperature`, `bjtAtTemperature`, `mosfetAtTemperature`, and
 `circuitAtTemperature` provide operating-temperature footholds for diode, BJT,
@@ -96,11 +103,11 @@ table count/name list, output probes, and output directives that produced the
 table, plus selected `.measure` results and
 a stable measurement table for `.dc`, `.ac`, and `.tran` executions.
 Execution `outputPlanArtifacts` summarize the selected result columns, output
-probes, selected analysis line/source/output-node metadata, selected output
-probe source lines, output directives, normalized output directive kinds, normalized
-directive analysis scopes, selected output directive source lines, selected
-result row counts, and stable table names with table, CSV, compact JSON, and
-header-keyed record exports.
+probes, selected analysis line/source/output-node and sweep/time/frequency
+metadata, selected output probe source lines, output directives, normalized output
+directive kinds, normalized directive analysis scopes, selected output directive
+source lines, selected result row counts, and stable table names with table, CSV,
+compact JSON, and header-keyed record exports.
 Execution `tableArtifacts` preserve the same order as `tables` and carry each
 stable table's text, CSV, compact JSON, and header-keyed records.
 The `output-plan` entry in `tableArtifacts` carries the same
@@ -116,6 +123,13 @@ artifact summaries plus `formatDeckRunArtifactTable` and
 result-row, table, analysis-directive, output-probe, output-directive,
 measurement, Fourier, control-command, write-marker, rawfile-option, and
 diagnostic count/name lists.
+`runDeck` executes every parsed `.op`, `.dc`, `.ac`, `.tran`, `.tf`, `.sens`,
+and `.noise` card in source order, preserves duplicate analysis directives,
+and defaults analysis-less decks to an implicit `.op`. Its whole-run result
+returns ordered selected executions plus aggregate selected-run artifact table,
+CSV, compact JSON, and header-keyed records, and each selected-run artifact
+carries the deck-wide analysis kind/directive inventories beside the selected
+analysis directive metadata.
 Normalized accepted `.control` commands are surfaced separately in
 `controlLineCount` / `controlLines` execution fields and in
 `ControlLines` / `ControlLineList` artifact fields.
@@ -174,6 +188,52 @@ with optional `HARMONICS=` and `FROM=` controls.
 alias surface for diode, BJT, JFET, and Level-1 MOS cards.
 `deviceModelAuditFixtures` returns the canonical cross-language fixture cards
 used to keep the TypeScript, Python, and Rust ports aligned.
+`deviceModelBehaviorAuditFixtures` extends those cards into runnable one-device
+DC bias fixtures with reference deck lines and stable expected probe-voltage
+windows for diode, BJT, JFET, and Level-1 MOS model-depth audits.
+`deviceModelTemperatureAuditFixtures` adds matching `.temp` reference-deck
+metadata and stable per-temperature probe windows for those same fixture
+circuits. `deviceModelCapacitanceAuditFixtures` adds matching `.ac`
+reference-deck metadata and stable high-frequency probe magnitude windows for
+diode, BJT, JFET `CGS`/`CGD`, and Level-1 MOS capacitance audits.
+`deviceModelNoiseAuditFixtures` adds matching `.noise` reference-deck metadata
+and stable source/output PSD windows for diode and BJT shot noise plus JFET
+and Level-1 MOS channel thermal noise audits.
+`deviceModelChargeAuditFixtures` adds matching `.tran` reference-deck metadata,
+explicit terminal storage capacitance metadata, stable first/final
+probe-voltage windows, and charge-behavior notes for diode, BJT, JFET, and
+Level-1 MOS charge audits. Diode `junctionCapacitance` / `transitTime`, BJT
+`baseEmitterCapacitance` / `baseCollectorCapacitance` / `forwardTransitTime` /
+`reverseTransitTime`, and JFET `gateSourceCapacitance` /
+`gateDrainCapacitance` plus Level-1 MOS `CGSO` / `CGDO` / `CGBO` model-card
+parameters plus bulk-junction `CBS` / `CBD` model-card parameters also stamp
+transient storage, with MOS `PB` / `MJ` shaping reverse-biased source-body and
+drain-body capacitance to match their small-signal AC semantics.
+`deviceModelReferenceDeckAuditFixtures` flattens those DC, temperature, AC,
+noise, and transient fixture families into a stable reference-deck coverage
+matrix for each supported diode, BJT, JFET, and Level-1 MOS model family.
+`formatDeviceModelReferenceDeckAuditTable` renders that matrix as a stable
+tab-separated audit table for release and reference-deck comparisons.
+`deviceModelReferenceDeckAuditRecords`,
+`formatDeviceModelReferenceDeckAuditCsv`, and
+`formatDeviceModelReferenceDeckAuditJson` expose the same matrix as
+header-keyed records and browser/release-friendly CSV or compact JSON.
+`deviceModelReferenceDeckAuditSummary`,
+`formatDeviceModelReferenceDeckAuditSummaryTable`,
+`deviceModelReferenceDeckAuditSummaryRecords`,
+`formatDeviceModelReferenceDeckAuditSummaryCsv`, and
+`formatDeviceModelReferenceDeckAuditSummaryJson` expose stable per-kind
+coverage summaries with missing-analysis and deck-line totals.
+`deviceModelReferenceDeckAuditAnalysisSummary`,
+`formatDeviceModelReferenceDeckAuditAnalysisSummaryTable`,
+`deviceModelReferenceDeckAuditAnalysisSummaryRecords`,
+`formatDeviceModelReferenceDeckAuditAnalysisSummaryCsv`, and
+`formatDeviceModelReferenceDeckAuditAnalysisSummaryJson` expose the same audit
+matrix grouped by analysis kind, with missing-model-family and deck-line
+totals for release dashboards.
+`deviceModelReferenceDeckAuditGate` and
+`formatDeviceModelReferenceDeckAuditGateReport` validate the required
+kind-by-analysis coverage matrix and emit a stable pass/fail gate report.
 
 `CustomModel`, `CustomModelEvaluation`, `customLinearConductanceModel`, and
 `analyzeCustomModelSource` provide the first native-web custom-model foothold.

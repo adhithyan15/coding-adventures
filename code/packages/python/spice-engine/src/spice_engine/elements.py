@@ -502,6 +502,8 @@ class JFET:
     beta: float = 1.0e-4
     vto: float = -2.0
     lambda_: float = 0.0
+    Cgs: float = 0.0
+    Cgd: float = 0.0
 
 
 @dataclass(frozen=True, slots=True)

@@ -15,142 +15,20 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Deck execution layer.
-   - Status: current.
-   - Convert parsed netlists into runnable analysis plans beyond the initial
-     `.op`, `.dc`, `.ac`, and `.tran` subset.
-   - Support richer expression/function surfaces and execution wiring for
-     parsed `.func`, `.ic`, and `.nodeset` hints; `.end` boundary detection,
-     map-backed `.include` / `.lib` source resolution, scalar `.param`
-     evaluation, active-line expression rewriting, function-definition
-     extraction, scalar function-call evaluation, and initial-condition /
-     nodeset extraction plus DC warm-start execution aids now have shared
-     diagnostic and solver footholds; transient scalar `.measure`-style output
-     helpers now cover shared peak-to-peak and final-value measurement output,
-     and parsed transient `.measure` / `.meas` cards can now feed those
-     measurement helpers from deck text; parsed `.save`, `.probe`,
-     `.print <analysis> ...`, and `.plot <analysis> ...` cards now drive
-     stable table output for operating-point, DC sweep, AC sweep, and transient
-     results; unsupported `.control` / `.endc` blocks are now excluded from
-     active deck and source-resolved solver input while body commands emit
-     stable non-executed diagnostics, and selected `.control` block
-     analysis/output commands (`op`, `dc`, `ac`, `tran`, `save`, `probe`,
-     `measure`, `meas`, `four`, `fourier`, `print`, and `plot`) now normalize
-     into dotted deck cards while `run`, `reset`, `quit`, and UI-only
-     `set noaskquit` options plus ASCII rawfile-format `set filetype=ascii`
-     options, rawfile vector-name/single-scale toggles (`set wr_vecnames`,
-     `set wr_singlescale`), and rawfile append-write `set appendwrite` options
-     plus target-bearing rawfile `write <rawfile> [probes...]` markers and
-     ASCII data-write `wrdata <file> <probes...>` markers are accepted as
-     no-op control markers, and read-only `display` / `listing` / `show` /
-     `showmod` / `status` / `version` / `help` / `echo` / `rusage` / `where`
-     inspection, introspection, and console/debug commands are accepted as
-     no-op control markers, while selected `source` and `shell` external
-     script/shell commands now emit explicit policy diagnostics instead of
-     generic unsupported-command diagnostics, and selected `cd`
-     working-directory mutation commands now emit explicit policy diagnostics
-     instead of generic unsupported-command diagnostics, and selected
-     control-flow commands (`if`, `while`, `foreach`, and `repeat`) now emit
-     explicit policy diagnostics instead of generic unsupported-command
-     diagnostics, and selected variable/state mutation commands (`let`,
-     `alter`, `alterparam`, `set`, and `unset`) now emit explicit policy
-     diagnostics instead of generic unsupported-command diagnostics while
-     accepted no-op `set` options continue to route as no-op markers; parsed
-     `.measure dc` / `.meas dc` cards now route DC sweep probe samples into
-     the shared scalar measurement table surface;
-     parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
-     optional frequency windows into the same measurement table surface; parsed
-     transient `.measure ... FIND ... AT=` cards now route single-time probe
-     samples through the shared measurement table with interpolation between
-     neighboring transient samples; parsed transient
-     `.measure ... WHEN probe=target` cards now route first-crossing times over
-     optional transient windows into the shared measurement table; parsed
-     transient `.measure ... WHEN probe=target RISE|FALL|CROSS=n` cards now
-     route counted threshold occurrences into the same stable measurement
-     table; parsed transient `.measure ... TRIG ... TARG ...` cards now route
-     trigger-to-target delay measurements with counted crossing controls into
-     stable scalar rows; parsed transient `.four` deck cards now route harmonic
-     analyses over transient outputs with optional `HARMONICS=` and `FROM=`
-     controls; parsed `.op`, `.dc`, `.ac`, and `.tran` cards now resolve into
-     shared cross-language analysis-plan metadata before execution, and callers
-     can select one explicit or implicit plan with stable ambiguity errors and
-     route `.op`, `.dc`, `.ac LIN`, `.ac DEC`, `.ac OCT`, or `.tran` into the
-     matching solver plus deck-selected table output, including `.tran`
-     `START` output filtering, `MAXSTEP` fixed-step caps, and `UIC`
-     initial-condition intent; selected `.tran` execution now keeps `.tran
-     TSTEP` as the deck output print grid while `MAXSTEP` caps internal solver
-     stepping; deck executions now expose normalized selected table
-     count/name lists, analysis directives, output probes, and output
-     directives as inspectable artifacts alongside the stable table;
-     selected `.measure` outputs now travel with deck execution results as
-     structured measurements plus stable measurement tables; selected transient
-     `.four` outputs now
-     travel with deck execution results as structured Fourier artifacts plus
-     stable Fourier tables; selected deck executions now include structured
-     run-artifact summaries plus stable row/count tables for result rows,
-     stable table names, output probes, measurements, and Fourier artifacts,
-     with normalized table, output-probe, measurement, and Fourier probe name
-     lists included in the run artifacts, and selected executions now expose the
-     same stable table count/name inventory directly; transfer-function,
-     sensitivity, and noise run artifacts now
-     also expose their selected output node, and selected-run artifacts can now
-     render as stable CSV and compact JSON beside the existing tab-separated
-     table; stable deck output tables can now also convert to deterministic CSV
-     and compact JSON records or host-native header-keyed records across
-     Python, Rust, and TypeScript, and selected executions now expose ordered
-     table export artifacts with text, CSV, compact JSON, and host-native
-     records for each stable table; selected deck run artifacts now also carry
-     existing `.control` body policy diagnostic codes through their stable
-     table, CSV, compact JSON, and ordered table export artifacts; normalized
-     accepted `.control` command inventories now travel through
-     `ControlLines` / `ControlLineList` metadata in the same run-artifact
-     table, CSV, compact JSON, and ordered table export artifacts, and
-     selected executions now expose the same normalized control command
-     count/list directly beside table, output, measurement, Fourier, and
-     analysis-directive artifacts; selected executions now also expose
-     diagnostic count/code inventories directly beside those execution-level
-     artifacts; accepted rawfile/data-write marker inventories for `.control`
-     `write` / `wrdata` commands now travel through direct selected-execution
-     fields and stable selected-run artifact tables, CSV/JSON helpers, and
-     ordered table export artifacts without serializing files, and accepted
-     rawfile output option inventories for `.control` `set filetype=ascii`,
-     `set wr_vecnames`, `set wr_singlescale`, and `set appendwrite` now travel
-     through the same direct selected-execution fields and selected-run
-     artifact exports; accepted `.control` `write <rawfile> ...` markers now
-     also produce deterministic in-memory ASCII rawfile artifacts with stable
-     table, CSV, compact JSON, and host-native record summaries, and explicit
-     `write` probe lists now select the emitted in-memory rawfile vector
-     columns and carry matched/unmatched probe inventories, and accepted
-     `.control` `wrdata <file> ...` markers now produce deterministic
-     in-memory ASCII data-file artifacts with matching stable table, CSV,
-     compact JSON, and host-native record summaries, and WRDATA artifacts now
-     carry accepted rawfile/data-write option inventories plus deterministic
-     `wr_vecnames` / `wr_singlescale` rendering metadata, and explicit
-     `wrdata` probe lists now select the emitted in-memory data-file columns
-     and carry matched/unmatched probe inventories while filesystem writes
-     remain metadata-only, and policy-blocked `.control` commands now have
-     direct selected-execution artifacts with line, category, command, code,
-     severity, message, stable table, CSV, compact JSON, and host-native record
-     exports, and those row-level and category-summary policy tables now also
-     travel through ordered table export artifacts plus selected-run `TableList`
-     metadata; selected output-plan artifacts now also expose normalized
-     `.save`, `.probe`, `.print`, and `.plot` directive kind counts/lists
-     beside the selected directive tokens in table, CSV, compact JSON, and
-     host-native record exports, and selected output-plan artifacts now also
-     expose normalized output directive analysis scope counts/lists that
-     distinguish global `.save` / `.probe` selections from scoped `.probe`,
-     `.print`, and `.plot` selections in the same exports, and selected
-     output-plan artifacts now also expose selected output directive source
-     line counts/lists beside those directive provenance inventories, and
-     selected output-plan artifacts now also expose selected output probe
-     source line counts/lists aligned with the selected output-probe list, and
-     selected output-plan artifacts now also expose selected result row counts
-     beside result-column inventories, and selected output-plan artifacts now
-     also expose selected analysis line/source metadata beside directive
-     inventories, and selected output-plan artifacts now also expose selected
-     analysis output-node metadata beside that analysis provenance.
-   - Expand remaining deck-controlled analyses toward full SPICE compatibility
-     while keeping unsupported control-flow diagnostics explicit.
+1. Device model reference-deck audit analysis summaries.
+   - Status: current PR completion candidate.
+   - Python, Rust, and TypeScript now expose
+     `device_model_reference_deck_audit_analysis_summary` /
+     `deviceModelReferenceDeckAuditAnalysisSummary` helpers plus stable
+     analysis-summary table, header-keyed records, CSV, and compact JSON
+     output.
+   - The summary condenses the reference-deck audit matrix by analysis kind,
+     preserving expected model-family order, missing-kind gaps, total deck-line
+     counts, and reference labels for release dashboards and coverage reviews.
+   - Cross-language tests lock the five expected analysis summary rows,
+     CSV/JSON exports, and a negative missing `tran:NMOS` summary case so
+     downstream consumers can audit analysis coverage without scanning every
+     fixture row.
 
 ## Completed Slices
 
@@ -204,13 +82,19 @@ downstream tools to compare.
      results.
 
 7. Sparse solver productionization and convergence diagnostics.
-   - Status: completed in this sparse-solver diagnostics slice.
+   - Status: completed through the sparse-solver diagnostics and production
+     profile slices.
    - Python, Rust, and TypeScript now expose stable DC solver diagnostics with
      matrix size, selected real solver path, tolerance, convergence aid, and
      final Newton delta metadata.
    - Large real DC and complex AC matrix solves now route through sparse-row
      solver implementations in all three packages when the shared threshold is
      reached.
+   - Python now uses an optional SciPy sparse-LU backend for large real DC
+     solves with an explicit native sparse fallback, while Rust and TypeScript
+     expose their native sparse-row backend choices.
+   - DC diagnostics now include stable solver profiles with structural nonzero
+     counts, density, fill-in, backend, and fallback metadata.
 
 8. Device model audit fixtures and model-card alias compatibility.
    - Status: completed in this device-model alias fixture slice.
@@ -1233,12 +1117,280 @@ downstream tools to compare.
       `.sens`, and `.noise` selected output nodes auditable from the
       output-plan artifact without reparsing the analysis plan.
 
+113. Deck output-plan analysis sweep artifacts.
+    - Status: completed in this deck output-plan analysis sweep artifact slice.
+    - Python, Rust, and TypeScript selected output-plan artifacts now expose
+      selected sweep kind/count/value metadata, AC/noise frequency bounds, and
+      transient timing plus `UIC` metadata beside analysis line/source/output
+      provenance.
+    - Table, CSV, compact JSON, and host-native record exports make `.dc`,
+      `.ac`, `.tran`, and `.noise` sweep inputs auditable from the output-plan
+      artifact without reparsing the analysis plan.
+
+114. Deck whole-run analysis execution.
+    - Status: completed in this deck whole-run execution slice.
+    - Python, Rust, and TypeScript now expose `run_deck` / `runDeck` whole-deck
+      executors that run every parsed `.op`, `.dc`, `.ac`, `.tran`, `.tf`,
+      `.sens`, and `.noise` analysis card in source order while preserving
+      duplicate directives and defaulting analysis-less decks to an implicit
+      `.op`.
+    - Whole-run executions aggregate ordered selected-run artifacts as stable
+      table, CSV, compact JSON, and host-native record exports, and each
+      selected-run artifact now carries whole-deck analysis kind/directive
+      inventories beside the selected analysis directive metadata.
+
+115. Nonlinear convergence hardening.
+   - Status: completed in this nonlinear convergence hardening slice.
+   - Python, Rust, and TypeScript DC operating-point solves now apply a
+     configurable Newton update limit only when nonlinear devices are present,
+     keeping linear one-pass solves unchanged.
+   - `DcResult.diagnostics` now reports the active Newton step limit, clipped
+     Newton-step count, and minimum damping factor so difficult deck
+     convergence is auditable without reparsing iteration traces.
+   - Cross-language tests cover both the inactive linear sparse-ladder path and
+     a damped nonlinear first-step solve with convergence aids disabled.
+
+116. Device model behavior audit fixtures.
+   - Status: completed in this device model behavior audit fixture slice.
+   - Python, Rust, and TypeScript now expose matching runnable
+     `device_model_behavior_audit_fixtures` /
+     `deviceModelBehaviorAuditFixtures` one-device DC bias fixtures for diode,
+     BJT, JFET, and Level-1 MOS models.
+   - Each fixture carries the normalized model card, a constructed executable
+     circuit, reference deck lines, selected probe node, and stable expected
+     probe-voltage window so device-depth audits can compare behavior rather
+     than only model-card aliases.
+   - Cross-language tests execute every fixture through DC operating-point
+     solving and verify the probe window plus reference-deck metadata.
+
+117. Device model temperature audit fixtures.
+   - Status: completed in this device model temperature audit fixture slice.
+   - Python, Rust, and TypeScript now expose matching runnable
+     `device_model_temperature_audit_fixtures` /
+     `deviceModelTemperatureAuditFixtures` one-device DC temperature-sweep
+     fixtures for diode, BJT, JFET, and Level-1 MOS models.
+   - Each fixture extends the runnable behavior circuits with `.temp`
+     reference-deck metadata, nominal temperature, energy-gap metadata,
+     temperature-behavior notes, selected probe node, and stable
+     per-temperature probe-voltage windows.
+   - Cross-language tests execute every fixture through DC temperature sweeps
+     and verify the probe windows plus reference-deck metadata, including the
+     explicit JFET temperature-invariant policy.
+
+118. Device model capacitance audit fixtures.
+   - Status: completed in this device model capacitance audit fixture slice.
+   - Python, Rust, and TypeScript now expose matching runnable
+     `device_model_capacitance_audit_fixtures` /
+     `deviceModelCapacitanceAuditFixtures` one-device AC fixtures for diode,
+     BJT, JFET, and Level-1 MOS model cards.
+   - Each fixture carries the normalized model card, an executable AC circuit,
+     `.ac` reference deck lines, selected probe node, frequency, stable
+     expected probe-magnitude window, and a short capacitance-behavior note.
+   - The JFET fixture deliberately records the current conductance-only AC
+     response because JFET capacitance remains intentionally unmodeled until
+     that policy is chosen.
+   - Cross-language tests execute every fixture through AC sweep solving and
+     verify the probe-magnitude window plus reference-deck metadata.
+
+119. Device model noise audit fixtures.
+   - Status: completed in this device model noise audit fixture slice.
+   - Python, Rust, and TypeScript now expose matching runnable
+     `device_model_noise_audit_fixtures` /
+     `deviceModelNoiseAuditFixtures` one-device `.noise` fixtures for diode,
+     BJT, JFET, and Level-1 MOS model cards.
+   - Each fixture carries the normalized model card, an executable circuit,
+     `.noise` reference deck lines, output node, input source, frequency,
+     expected noise element/type, stable source/output PSD windows, and a
+     short noise-behavior note.
+   - Rust and TypeScript now include diode/BJT shot-noise sources and JFET
+     channel thermal-noise sources in addition to the existing resistor and
+     Level-1 MOS thermal noise coverage.
+   - TypeScript BJT small-signal behavior and AC stamping now derive
+     transconductance and diffusion capacitance from the converged operating
+     point, matching Python and Rust.
+   - Cross-language tests execute every fixture through `.noise` solving and
+     verify the PSD windows plus reference-deck metadata.
+
+120. Device model charge audit fixtures.
+   - Status: completed in PR 6794.
+   - Python, Rust, and TypeScript now expose matching runnable
+     `device_model_charge_audit_fixtures` /
+     `deviceModelChargeAuditFixtures` one-device `.tran` fixtures for diode,
+     BJT, JFET, and Level-1 MOS model cards.
+   - Each fixture carries the normalized model card, an executable circuit,
+     `.tran` reference deck lines, selected probe node, timestep, stoptime,
+     explicit terminal storage capacitance, stable first/final probe-voltage
+     windows, and a short charge-behavior note.
+   - The fixtures deliberately keep explicit terminal capacitors for comparable
+     probe windows while recording which model-card charge terms are
+     transient-stamped and which JFET/MOS charge policies remain
+     explicit-storage-only.
+   - Cross-language tests execute every fixture through transient solving and
+     verify the probe windows plus reference-deck metadata.
+
+121. Diode model-card transient charge stamping.
+   - Status: completed in PR 6798.
+   - Python, Rust, and TypeScript transient solvers now stamp diode
+     model-card `CJO` / `junction_capacitance` / `junctionCapacitance` and
+     `TT` / `transit_time` / `transitTime` as an anode-cathode storage
+     companion.
+   - The transient companion uses the previous diode bias to derive
+     `C = Cjo + Tt * gd`, reuses the existing Euler/trapezoidal/Gear-2
+     capacitor history policy, and seeds the synthetic diode charge state from
+     the initial operating point.
+   - Cross-language tests cover both junction-capacitance current-step delay
+     and transit-time forward-charge retention after turnoff.
+
+122. BJT model-card transient charge stamping.
+   - Status: completed in PR 6803.
+   - Python, Rust, and TypeScript transient solvers now stamp BJT model-card
+     `CJE` / `base_emitter_capacitance` / `baseEmitterCapacitance`,
+     `CJC` / `base_collector_capacitance` / `baseCollectorCapacitance`,
+     `TF` / `forward_transit_time` / `forwardTransitTime`, and
+     `TR` / `reverse_transit_time` / `reverseTransitTime` as base-emitter and
+     base-collector storage companions.
+   - The companions use the previous junction bias to derive
+     `Cbe = Cje + Tf * gm_forward` and `Cbc = Cjc + Tr * gm_reverse`, reuse the
+     existing Euler/trapezoidal/Gear-2 capacitor history policy, and seed the
+     synthetic BJT charge states from the initial operating point.
+   - Cross-language tests cover base-emitter capacitance current-step delay and
+     forward transit-time charge retention after turnoff.
+
+123. JFET model-card transient charge stamping.
+   - Status: completed in PR 6812.
+   - Python, Rust, and TypeScript transient solvers now stamp JFET model-card
+     `CGS` / `gate_source_capacitance` / `gateSourceCapacitance` and `CGD` /
+     `gate_drain_capacitance` / `gateDrainCapacitance` as fixed gate-source and
+     gate-drain storage companions.
+   - The companions reuse the existing Euler/trapezoidal/Gear-2 capacitor
+     history policy, seed synthetic JFET charge states from the initial
+     operating point, and contribute matching small-signal AC susceptance.
+   - Cross-language tests cover gate-step delay and high-frequency gate-drive
+     shunting.
+
+124. MOS Level-1 transient overlap charge stamping.
+   - Status: completed in PR 6816.
+   - Python, Rust, and TypeScript transient solvers now stamp Level-1 MOS
+     model-card `CGSO` / `gate_source_overlap_capacitance`, `CGDO` /
+     `gate_drain_overlap_capacitance`, and `CGBO` /
+     `gate_bulk_overlap_capacitance` as fixed gate-source, gate-drain, and
+     gate-body overlap storage companions.
+   - The companions reuse the existing Euler/trapezoidal/Gear-2 capacitor
+     history policy and seed the synthetic MOS overlap charge states from the
+     initial operating point.
+   - Cross-language tests cover MOS gate-step delay through `CGSO` overlap
+     storage, and charge-audit fixtures now record the MOS overlap terms as
+     transient-stamped.
+
+125. MOS Level-1 transient bulk-junction charge stamping.
+   - Status: completed in PR 6822.
+   - Python, Rust, and TypeScript transient solvers now stamp Level-1 MOS
+     model-card `CBS` / `source_bulk_capacitance` / source-bulk
+     capacitance and `CBD` / `drain_bulk_capacitance` / drain-bulk
+     capacitance as zero-bias source-body and drain-body storage companions.
+   - The companions reuse the existing Euler/trapezoidal/Gear-2 capacitor
+     history policy and seed the synthetic MOS bulk-junction charge states
+     from the initial operating point.
+   - Cross-language tests cover drain-step delay through `CBD` bulk-junction
+     storage, and charge-audit fixtures now record the MOS bulk terms as
+     transient-stamped.
+
+126. MOS Level-1 bulk-junction depletion charge shaping.
+   - Status: completed in PR 6827.
+   - Python, Rust, and TypeScript Level-1 MOS model-card parameters now include
+     `PB` / `bulk_junction_potential` / `PB` and `MJ` /
+     `bulk_junction_grading_coefficient` / `MJ` for bulk-junction depletion
+     shaping.
+   - AC operating-point capacitance reports and transient MOS source-body /
+     drain-body charge companions shape `CBS` / `source_bulk_capacitance` /
+     `CBS` and `CBD` / `drain_bulk_capacitance` / `CBD` under reverse
+     source-bulk and drain-bulk bias.
+   - Cross-language tests cover model-card alias propagation and a
+     reverse-biased drain-step transient where `MJ` reduces the effective
+     `CBD` companion relative to the zero-bias capacitance.
+   - Charge-audit fixtures now record MOS bulk-junction storage as
+     depletion-shaped while preserving the same runnable one-device `.tran`
+     fixture shape.
+
+127. Device model reference-deck audit matrix.
+   - Status: completed in PR 6832.
+   - Python, Rust, and TypeScript now expose a flattened
+     `device_model_reference_deck_audit_fixtures` /
+     `deviceModelReferenceDeckAuditFixtures` surface that summarizes the
+     runnable DC operating-point, temperature, AC capacitance, noise, and
+     transient charge fixture decks for every supported diode, BJT, JFET, and
+     Level-1 MOS model family.
+   - Each row carries the normalized model card, analysis kind, stable
+     reference label, expected behavior note, and reference deck lines so model
+     depth audits can compare coverage without re-discovering fixture families.
+   - Cross-language tests lock the four-family by five-analysis coverage matrix
+     and verify every row has model-card deck metadata, an `.end` boundary, and
+     a non-empty behavior note.
+
+128. Device model reference-deck audit table.
+   - Status: completed in PR 6836.
+   - Python, Rust, and TypeScript now expose stable
+     `format_device_model_reference_deck_audit_table` /
+     `formatDeviceModelReferenceDeckAuditTable` helpers for the flattened
+     reference-deck audit matrix.
+   - The tab-separated table locks `name`, `kind`, `analysis`, `model`,
+     `reference`, `expected_behavior`, and `deck_lines` columns so release
+     checks and reference-deck comparisons can diff model-depth coverage
+     without inspecting every fixture object.
+   - Cross-language tests lock the exact header, row count, and first/last rows
+     for the diode operating-point and Level-1 MOS transient-storage audit
+     entries.
+
+129. Device model reference-deck audit release gate.
+   - Status: completed in PR 6840.
+   - Python, Rust, and TypeScript now expose
+     `device_model_reference_deck_audit_gate` /
+     `deviceModelReferenceDeckAuditGate` helpers plus stable
+     `format_device_model_reference_deck_audit_gate_report` /
+     `formatDeviceModelReferenceDeckAuditGateReport` output.
+   - The release gate validates the required diode, BJT, JFET, and Level-1 MOS
+     by operating-point, temperature, AC, noise, and transient coverage matrix,
+     checks each row has documented model/reference/deck metadata, and reports
+     missing coverage as stable tab-separated issue rows.
+   - Cross-language tests lock the passing report header/body and a negative
+     missing `NMOS:tran` coverage issue so the audit matrix is enforceable by
+     release automation.
+
+130. Device model reference-deck audit record exports.
+   - Status: completed in PR 6844.
+   - Python, Rust, and TypeScript now expose
+     `device_model_reference_deck_audit_records` /
+     `deviceModelReferenceDeckAuditRecords` helpers plus stable
+     `format_device_model_reference_deck_audit_csv` /
+     `formatDeviceModelReferenceDeckAuditCsv` and
+     `format_device_model_reference_deck_audit_json` /
+     `formatDeviceModelReferenceDeckAuditJson` output.
+   - The exports reuse the reference-deck audit table contract to provide
+     header-keyed records plus browser/release-friendly CSV and compact JSON
+     for dashboards, release automation, and reference-deck comparison tools.
+   - Cross-language tests lock the first diode operating-point row, final
+     Level-1 MOS transient-storage row metadata, CSV comma escaping, and JSON
+     parseability so downstream consumers can rely on the audit matrix shape.
+
+131. Device model reference-deck audit summaries.
+   - Status: completed in PR 6850.
+   - Python, Rust, and TypeScript now expose
+     `device_model_reference_deck_audit_summary` /
+     `deviceModelReferenceDeckAuditSummary` helpers plus stable summary table,
+     header-keyed records, CSV, and compact JSON output.
+   - The summary condenses the reference-deck audit matrix by model family,
+     preserving expected analysis order, missing-analysis gaps, total deck-line
+     counts, and reference labels for release dashboards and coverage reviews.
+   - Cross-language tests lock the four expected summary rows, CSV/JSON
+     exports, and a negative missing `NMOS:tran` summary case so downstream
+     consumers can audit coverage without scanning every fixture row.
+
 ## Backlog
 
-1. Deck execution layer.
-   - Expand selected-plan execution beyond fixed-step transient basics,
-     including richer deck-owned run artifacts beyond selected table inventory, output,
-     output-directive, measurement, Fourier, and transfer-function probe lists.
+1. Deck compatibility follow-up.
+   - Expand deck-owned output compatibility beyond source-order analysis
+     execution and stable artifact exports toward nested sweeps, raw-format
+     interoperability, and remaining vendor-style output controls.
    - Expand deck-controlled output-plan integration beyond stable table
      routing and scoped `.save`, `.probe`, `.print`, `.plot`, and `.four`
      selection toward full SPICE compatibility.
@@ -1246,13 +1398,16 @@ downstream tools to compare.
      command routing, including control flow, variables, and script execution
      policy.
 
-2. Production solver core.
-   - Finish sparse real and complex matrix paths.
-   - Use a Rust production sparse path suitable for large decks, a Python
-     SciPy-backed path with a structured fallback, and a TypeScript native sparse
-     or WASM strategy for browser workloads.
-   - Harden Newton damping, device limiting, convergence aids, tolerances, and
-     diagnostics.
+2. Production solver core follow-up.
+   - Sparse real/complex matrix paths now have cross-language native coverage,
+     and Python real DC solves now use an optional SciPy sparse-LU backend with
+     structured native fallback metadata.
+   - Rust, Python, and TypeScript DC diagnostics now expose stable solver
+     profiles for sparse activation, structural nonzeros, density, fill-in,
+     backend choice, and fallback reasons.
+   - Remaining solver-core work should focus on nonlinear hardening: Newton
+     damping, device limiting, tolerance policy, and additional convergence
+     diagnostics for difficult transistor decks.
 
 3. Device model depth.
    - Audit diode, BJT, JFET, and MOS Level 1 behavior against reference decks.
@@ -1284,4 +1439,6 @@ downstream tools to compare.
 
 ## Suggested PR Queue
 
-1. Deck execution layer.
+1. Device model depth.
+2. Analysis completion.
+3. Mixed-signal integration.

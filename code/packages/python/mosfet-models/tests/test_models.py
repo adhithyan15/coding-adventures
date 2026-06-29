@@ -145,6 +145,20 @@ def test_overlap_and_bulk_capacitances_are_reported():
     assert r.Cbd == 7e-12
 
 
+def test_bulk_junction_capacitance_uses_pb_mj_for_reverse_bias():
+    p = Level1Params(
+        CBS=4e-12,
+        CBD=8e-12,
+        PB=1.0,
+        MJ=0.5,
+        subthreshold_enable=False,
+    )
+    r = evaluate_level1(p, V_GS=0.0, V_DS=2.0, V_BS=-1.0)
+
+    assert r.Cbs == pytest.approx(4e-12 / (2.0 ** 0.5))
+    assert r.Cbd == pytest.approx(8e-12 / (4.0 ** 0.5))
+
+
 # ---- MOSFET wrapper ----
 
 

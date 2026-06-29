@@ -1,0 +1,57 @@
+// CardBrowser.mll - target-neutral card browser layout.
+
+layout CardBrowser {
+  Column [ card-browser ] {
+    Text [ browser-title ] (
+      content : slot: browser-label
+    )
+    Row [ browser-search-row ] {
+      Column [ query-column ] {
+        Text [ query-label ] (
+          content : slot: query-label
+        )
+        pkg::mosaic-pkg-toolkit::Input (
+          value : slot: query ,
+          placeholder : slot: query-placeholder ,
+          disabled : false ,
+          size : "md" ,
+          onChange : emit: onQueryChange ,
+          onCommit : emit: onSearch
+        )
+      }
+      HostButton [ search-button ] (
+        label : slot: search-label ,
+        onClick : emit: onSearch
+      )
+    }
+    Text [ results-label ] (
+      content : slot: results-label
+    )
+    Text [ results-summary ] (
+      content : slot: results-summary
+    )
+    pkg::mosaic-pkg-toolkit::ListGroup (
+      items : slot: results ,
+      selected-index : slot: selected-index ,
+      onSelect : emit: onSelectResult
+    )
+    Row [ browser-actions ] {
+      HostButton [ open-button ] (
+        label : slot: open-label ,
+        onClick : emit: onOpenSelected
+      )
+      HostButton [ edit-button ] (
+        label : slot: edit-label ,
+        onClick : emit: onEditSelected
+      )
+      HostButton [ suspend-button ] (
+        label : slot: suspend-label ,
+        onClick : emit: onToggleSuspendSelected
+      )
+      HostButton [ mark-button ] (
+        label : slot: mark-label ,
+        onClick : emit: onToggleMarkSelected
+      )
+    }
+  }
+}

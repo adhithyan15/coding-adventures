@@ -149,15 +149,44 @@ is text-primary, which is a different mode model.)
     read raw to the matching `\end` (catcodes suspended, newlines kept) → `Node::VerbatimEnv`,
     round-tripping; lexer peeks after `\begin` and only diverts for these env names; spanned
     error on unterminated/wrong close. Implemented in lexer.rs + parser.rs + ast.rs.
-  - **L5c (later) — text accents** (`\'e`, `\"o`, `\~n`, `\^o`, `\=`, `\u`, `\v`, `\c`, …)
-    recognized over the next char/group.
-  - **L5d (later) — sectioning/font recognition + cross-refs + preamble**: `\section`(+`*`),
-    font/style commands, `\label`/`\ref`/`\cite`, `\documentclass`/`\usepackage` as
-    recognized nodes (mostly classification over the generic Commands L1 already produces).
-- **L6 — `math-frontend` adapter.** Implement `MathFrontend` for `latex`: lift `Math`/`MathNode`
-  subtrees to the neutral `MathExpr`; declare capabilities; register in the builtin registry.
-  (This is where LaTeX becomes a *plugin*; [PFE01](PFE01-pluggable-parser-frontends.md)'s
-  `math-frontend` crate can land independently before this.)
+  - **L5c (shipped) — text accents** (`\'e`, `\"o`, `\~n`, `\^o`, `\=`, `\.`, `\u`, `\v`, `\H`,
+    `\c`, `\d`, `\b`, `\r`, `\t`) recognized over the next char/group → `Node::Accent`, via the
+    opt-in `recognize_accents` pass (mirrors `expand`; L1 round-trip preserved); `to_latex`
+    re-recognizes either spelling. Implemented in text.rs + ast.rs.
+  - **L5d (shipped) — sectioning/font recognition + cross-refs + preamble.** The opt-in
+    `recognize_structure` pass (mirrors `recognize_accents`/`expand`; L1 round-trip preserved)
+    classifies the generic `Command` nodes L1 already produces into semantic nodes:
+    - `Node::Section { level, starred, short, title }` — `\part`/`\chapter`/`\section`/
+      `\subsection`/`\subsubsection`/`\paragraph`/`\subparagraph`, the starred form
+      (`\section*{T}` — the intervening `Text("*")` sibling is folded), and the optional short
+      TOC title (`\section[short]{Title}`);
+    - `Node::CrossRef { command, note, target }` — `\label`/`\ref`/`\eqref`/`\pageref`/
+      `\autoref`/`\nameref`/`\cite`/`\citep`/`\citet` (the `\cite[note]{key}` optional kept);
+    - `Node::Preamble { command, options, name }` — `\documentclass`/`\usepackage`/
+      `\RequirePackage` with their `[options]`;
+    - `Node::Styled { command, content }` — the argument-form text font commands
+      (`\textbf`/`\textit`/`\texttt`/`\emph`/`\underline`/…).
+
+    A command that does not match its expected shape (a sectioning command with no title, a
+    cross-ref with no key, …) is left as a plain `Command` — never dropped or mis-folded. Font
+    *declarations* (`\bfseries`, `\itshape`, `\large`, …) stay plain commands: their effect is
+    positional (until end of group), so wrapping them in an argument node would misrepresent
+    them. `to_latex` re-renders each recognized node to a form that re-recognizes to the same
+    node, so `recognize_structure(parse(&n.to_latex())) == [n]`. Implemented in structure.rs +
+    ast.rs.
+- **L6 (shipped) — `math-frontend` adapter.** `LatexMath` implements `MathFrontend` for `latex`:
+  `parse` runs the L2/L3a grammar and lowers `MathNode` → neutral `MathExpr` (presentation
+  dropped, meaning kept — `\times`/`\cdot`/juxtaposition → `Mul`, fence style → `Group`, matrix
+  delimiter → `Matrix`, accents → `Call{Other}`, exact numbers preserved). Declares
+  `Capabilities::all()` and conforms to the shared `check_frontend` harness. LaTeX is registered
+  as plugin #1 via `latex::registry()` / `register_latex` — `math-frontend`'s `with_builtins()`
+  stays empty because that crate cannot depend on `latex` (cycle), so the wiring lives in the
+  `latex` crate. Gated behind the default-on `frontend` cargo feature; `--no-default-features`
+  keeps L0–L5 dependency-free. Implemented in frontend.rs + Cargo.toml.
+  **Neutral-AST gaps:** `\pm`/`\mp` and `\binom` have no `MathExpr` representation today, so they
+  lower to a well-formed spanned `FrontendError` rather than being faked; extending the neutral
+  AST (a `math-frontend`-crate change) to cover them is deferred future work. This rung
+  **completes the LTX01 ladder (L0–L6).**
 
 **Asymptote (documented in README, not built):** runtime `\catcode`, `\expandafter`/
 `\noexpand`/`\csname`, arbitrary `\if…` programming, external `\input`/`\include`. Hit →

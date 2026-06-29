@@ -22,8 +22,10 @@ fn nib_iir_accepted_by_iir_to_wasm() {
     let m = compile_source("fn main() -> u8 { return 30 + 12; }", "compat")
         .expect("Nib must compile to IIR");
     let errs = iir_to_wasm::validate::validate_for_wasm(&m);
-    assert!(errs.is_empty(),
-        "wasm validator should accept Nib's typed IIR; got errors: {errs:?}");
+    assert!(
+        errs.is_empty(),
+        "wasm validator should accept Nib's typed IIR; got errors: {errs:?}"
+    );
 }
 
 #[test]
@@ -31,8 +33,10 @@ fn nib_iir_accepted_by_iir_to_jvm() {
     let m = compile_source("fn main() -> u8 { return 30 + 12; }", "compat")
         .expect("Nib must compile to IIR");
     let errs = iir_to_jvm_class_file::validate::validate_for_jvm(&m);
-    assert!(errs.is_empty(),
-        "jvm validator should accept Nib's typed IIR; got errors: {errs:?}");
+    assert!(
+        errs.is_empty(),
+        "jvm validator should accept Nib's typed IIR; got errors: {errs:?}"
+    );
 }
 
 #[test]
@@ -40,8 +44,10 @@ fn nib_iir_accepted_by_iir_to_clr() {
     let m = compile_source("fn main() -> u8 { return 30 + 12; }", "compat")
         .expect("Nib must compile to IIR");
     let errs = iir_to_cil_bytecode::validate::validate_iir_for_clr(&m);
-    assert!(errs.is_empty(),
-        "clr validator should accept Nib's typed IIR; got errors: {errs:?}");
+    assert!(
+        errs.is_empty(),
+        "clr validator should accept Nib's typed IIR; got errors: {errs:?}"
+    );
 }
 
 #[test]
@@ -49,8 +55,10 @@ fn nib_iir_accepted_by_iir_to_beam() {
     let m = compile_source("fn main() -> u8 { return 30 + 12; }", "compat")
         .expect("Nib must compile to IIR");
     let errs = iir_to_beam::validate::validate_for_beam(&m);
-    assert!(errs.is_empty(),
-        "beam validator should accept Nib's typed IIR; got errors: {errs:?}");
+    assert!(
+        errs.is_empty(),
+        "beam validator should accept Nib's typed IIR; got errors: {errs:?}"
+    );
 }
 
 /// Comparison operator: `cmp_lt` must be emitted (not `call_builtin "<"`)
@@ -63,19 +71,26 @@ fn nib_iir_with_comparison_accepted_by_every_backend() {
     let m = compile_source(src, "compat").expect("Nib must compile");
 
     // Must contain `cmp_lt`, never `call_builtin "<"`.
-    let ops: Vec<&str> = m.functions[0].instructions.iter()
-        .map(|i| i.op.as_str()).collect();
-    assert!(ops.contains(&"cmp_lt"),
-        "expected `cmp_lt` op; got {ops:?}");
+    let ops: Vec<&str> = m.functions[0]
+        .instructions
+        .iter()
+        .map(|i| i.op.as_str())
+        .collect();
+    assert!(ops.contains(&"cmp_lt"), "expected `cmp_lt` op; got {ops:?}");
 
     for (name, errs) in [
         ("wasm", iir_to_wasm::validate::validate_for_wasm(&m)),
-        ("jvm",  iir_to_jvm_class_file::validate::validate_for_jvm(&m)),
-        ("clr",  iir_to_cil_bytecode::validate::validate_iir_for_clr(&m)),
+        ("jvm", iir_to_jvm_class_file::validate::validate_for_jvm(&m)),
+        (
+            "clr",
+            iir_to_cil_bytecode::validate::validate_iir_for_clr(&m),
+        ),
         ("beam", iir_to_beam::validate::validate_for_beam(&m)),
     ] {
-        assert!(errs.is_empty(),
+        assert!(
+            errs.is_empty(),
             "[{name}] expected no validator errors; got {} error(s): {errs:?}",
-            errs.len());
+            errs.len()
+        );
     }
 }

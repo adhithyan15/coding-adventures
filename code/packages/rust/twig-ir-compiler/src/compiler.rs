@@ -10,8 +10,10 @@
 //! The output module always contains:
 //!
 //! 1. **One `IIRFunction` per `(define (name args...) body+)` form.**
-//!    Parameters lower 1-to-1 to typed `("any", name)` IIR params; the
-//!    function body is the lowered body expressions plus a final `ret`.
+//!    Parameters lower 1-to-1 to IIR params.  They stay `"any"` unless an
+//!    explicit static annotation or a conservative LANG-FULL E4 call-site proof
+//!    can stamp a concrete hint such as `"str"`; the function body is the
+//!    lowered body expressions plus a final `ret`.
 //! 2. **One `IIRFunction` per anonymous `(lambda ...)` expression.**
 //!    Synthetic name (`__lambda_0`, `__lambda_1`, …); captured variables
 //!    appear as the *leading* parameters, in the order produced by
@@ -25,10 +27,12 @@
 //!    Programs with no bare expressions return `nil` via
 //!    `call_builtin "make_nil"`.
 //!
-//! Every emitted instruction carries `type_hint = "any"` because Twig is
-//! dynamically typed — the function's `type_status` is therefore
-//! `Untyped`.  The vm-core profiler will fill in observed types at
-//! runtime; the JIT can specialise from those observations.
+//! Twig remains dynamically typed, so functions keep `type_status = Untyped`
+//! and dynamic paths still carry `type_hint = "any"`.  The LANG-FULL fast paths
+//! stamp concrete hints only where source-local evidence makes the type
+//! unambiguous.
+//! The vm-core profiler will fill in observed types at runtime; the JIT can
+//! specialise from those observations.
 //!
 //! ## Apply-site dispatch (compile-time)
 //!
@@ -80,7 +84,7 @@ use twig_parser::{
     // LANG52: sequential let* bindings
     LetStar,
     Match, MatchPat, NilLit, Program,
-    RecordDef, StrLit, SymLit, TypeAnnotation, UnionDef, VarRef,
+    RecordDef, StrLit, SymLit, TypeAnnotation, TypeExpr, UnionDef, VarRef,
 };
 
 use crate::errors::TwigCompileError;
@@ -126,6 +130,35 @@ fn type_annotation_to_refined_type(ann: &TypeAnnotation) -> RefinedType {
         // are erased to `any` in TW05-A.  The TW05-B type checker will interpret
         // them; for now they're treated as unconstrained.
         TypeAnnotation::Opaque(_) => RefinedType::unrefined(Kind::Any),
+    }
+}
+
+fn type_annotation_static_iir_hint(ann: &TypeAnnotation) -> Option<&'static str> {
+    match ann {
+        TypeAnnotation::Opaque(TypeExpr::Name(name))
+            if matches!(name.as_str(), "str" | "Str" | "string" | "String") =>
+        {
+            Some("str")
+        }
+        _ => None,
+    }
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum StaticParamEvidence {
+    Unknown,
+    Str,
+    Conflict,
+}
+
+impl StaticParamEvidence {
+    fn observe(self, is_str: bool) -> Self {
+        match (self, is_str) {
+            (StaticParamEvidence::Unknown, true) | (StaticParamEvidence::Str, true) => {
+                StaticParamEvidence::Str
+            }
+            _ => StaticParamEvidence::Conflict,
+        }
     }
 }
 
@@ -239,6 +272,9 @@ struct FnCtx {
     /// See [`interpreter_ir::SourceLoc`] for indexing conventions.
     source_map: Vec<SourceLoc>,
     locals: HashSet<String>,
+    /// Lexical names backed by an already-materialised register. This keeps
+    /// string-producing E4 bindings out of backend-unsupported `mov [str]` IR.
+    local_aliases: HashMap<String, String>,
     var_counter: usize,
     label_counter: usize,
     /// Current AST-nesting depth.  Incremented on every entry to
@@ -268,6 +304,7 @@ impl FnCtx {
             instrs: Vec::new(),
             source_map: Vec::new(),
             locals: HashSet::new(),
+            local_aliases: HashMap::new(),
             var_counter: 0,
             label_counter: 0,
             depth: 0,
@@ -303,6 +340,25 @@ impl FnCtx {
     /// genuinely `any` at static-analysis time".
     fn record_type(&mut self, var: &str, ty: &str) {
         self.var_types.insert(var.to_string(), ty.to_string());
+    }
+
+    fn emit_str_const(&mut self, literal: &str, loc: SourceLoc) -> String {
+        let v = self.fresh_var("s");
+        self.emit_str_const_to(&v, literal, loc);
+        v
+    }
+
+    fn emit_str_const_to(&mut self, dest: &str, literal: &str, loc: SourceLoc) {
+        self.emit(
+            IIRInstr::new(
+                "str_const",
+                Some(dest.to_string()),
+                vec![Operand::Str(literal.to_string())],
+                "str",
+            ),
+            loc,
+        );
+        self.record_type(dest, "str");
     }
 
     /// Look up the inferred type of `var`, returning the matching
@@ -362,6 +418,18 @@ pub struct Compiler {
     /// Names of top-level defines whose RHS is a `Lambda` — direct
     /// callables.
     fn_globals: HashSet<String>,
+    /// Statically-known return types for top-level functions already lowered in
+    /// source order. Direct calls that appear after such a definition can carry
+    /// the concrete IIR type instead of falling back to `any`.
+    fn_return_types: HashMap<String, String>,
+    /// Statically-known parameter types for top-level functions already lowered
+    /// in source order. Used only to keep later direct string arguments on the
+    /// E4 `str_const`/string-expression path when a callee parameter is `str`.
+    fn_param_types: HashMap<String, Vec<String>>,
+    /// Conservative call-site-derived parameter hints for top-level functions.
+    /// A hint appears only when `main`-level direct calls provide static E4
+    /// string evidence and no conflicting evidence for that parameter.
+    fn_inferred_param_types: HashMap<String, Vec<String>>,
     /// Names of top-level defines whose RHS is *not* a lambda — looked
     /// up through `global_get` at use sites.
     value_globals: HashSet<String>,
@@ -398,6 +466,9 @@ impl Compiler {
     pub fn new() -> Self {
         Compiler {
             fn_globals: HashSet::new(),
+            fn_return_types: HashMap::new(),
+            fn_param_types: HashMap::new(),
+            fn_inferred_param_types: HashMap::new(),
             value_globals: HashSet::new(),
             escaping_value_globals: HashSet::new(),
             value_global_locals: HashMap::new(),
@@ -492,6 +563,8 @@ impl Compiler {
         self.escaping_value_globals =
             crate::free_vars::lambda_captured_globals(&program.forms, &self.value_globals);
 
+        self.infer_main_direct_string_param_types(&program.forms);
+
         // ── Main pass: lower every form ──────────────────────────────
         let mut main_ctx = FnCtx::new();
         let mut last_main_value: Option<String> = None;
@@ -509,16 +582,28 @@ impl Compiler {
                 Form::Define(def) => {
                     // (define x value-expr) — evaluate at top level.
                     let loc = SourceLoc::new(def.line, def.column);
+                    if let Expr::StrLit(StrLit { value, .. }) = &def.expr {
+                        if !self.escaping_value_globals.contains(&def.name)
+                            && !self.forced_global_set.contains(&def.name)
+                        {
+                            let v = main_ctx.emit_str_const(value, loc);
+                            self.value_global_locals.insert(def.name.clone(), v);
+                            last_main_value = None;
+                            continue;
+                        }
+                    }
+
                     let v = self.compile_expr(&def.expr, &mut main_ctx)?;
 
-                    // TW2: when the value is statically typed (`i64` / `bool`)
+                    // TW2: when the value is statically typed (`i64` / `bool`
+                    // / main-only E4 `str`)
                     // and the name is neither captured by a lambda nor already
                     // forward-referenced, keep it in the register `v` and skip
                     // the dynamic `global_set` entirely.  Reads in `main` then
                     // return that register (see `compile_var_ref`), so the whole
                     // of `main` stays typed and clears every backend validator.
                     let ty = main_ctx.type_of(&v);
-                    let typed = ty == "i64" || ty == "bool";
+                    let typed = matches!(ty, "i64" | "bool" | "str");
                     if typed
                         && !self.escaping_value_globals.contains(&def.name)
                         && !self.forced_global_set.contains(&def.name)
@@ -667,6 +752,333 @@ impl Compiler {
         })
     }
 
+    fn infer_main_direct_string_param_types(&mut self, forms: &[Form]) {
+        let mut evidence: HashMap<String, Vec<StaticParamEvidence>> = HashMap::new();
+        let mut known_static_string_values: HashSet<String> = HashSet::new();
+        let mut defined_value_globals: HashSet<String> = HashSet::new();
+        let mut forward_referenced_values: HashSet<String> = HashSet::new();
+
+        for form in forms {
+            if let Form::Define(def) = form {
+                if let Expr::Lambda(lam) = &def.expr {
+                    evidence.insert(
+                        def.name.clone(),
+                        vec![StaticParamEvidence::Unknown; lam.params.len()],
+                    );
+                }
+            }
+        }
+
+        for form in forms {
+            match form {
+                Form::Expr(expr) => {
+                    self.record_main_forward_value_refs(
+                        expr,
+                        &defined_value_globals,
+                        &mut forward_referenced_values,
+                        &HashSet::new(),
+                    );
+                    self.collect_main_direct_string_call_evidence(
+                        expr,
+                        &mut evidence,
+                        &known_static_string_values,
+                    );
+                }
+                Form::Define(def) if matches!(def.expr, Expr::Lambda(_)) => {
+                    known_static_string_values.remove(&def.name);
+                }
+                Form::Define(def) => {
+                    self.record_main_forward_value_refs(
+                        &def.expr,
+                        &defined_value_globals,
+                        &mut forward_referenced_values,
+                        &HashSet::new(),
+                    );
+                    self.collect_main_direct_string_call_evidence(
+                        &def.expr,
+                        &mut evidence,
+                        &known_static_string_values,
+                    );
+                    if !self.escaping_value_globals.contains(&def.name)
+                        && !forward_referenced_values.contains(&def.name)
+                        && Self::is_syntax_static_e4_string_expr(
+                            &def.expr,
+                            &known_static_string_values,
+                        )
+                    {
+                        known_static_string_values.insert(def.name.clone());
+                    } else {
+                        known_static_string_values.remove(&def.name);
+                    }
+                    defined_value_globals.insert(def.name.clone());
+                }
+                _ => {}
+            }
+        }
+
+        self.fn_inferred_param_types = evidence
+            .into_iter()
+            .map(|(name, slots)| {
+                let types = slots
+                    .into_iter()
+                    .map(|e| {
+                        if e == StaticParamEvidence::Str {
+                            "str"
+                        } else {
+                            "any"
+                        }
+                        .to_string()
+                    })
+                    .collect();
+                (name, types)
+            })
+            .collect();
+    }
+
+    fn record_main_forward_value_refs(
+        &self,
+        expr: &Expr,
+        defined_value_globals: &HashSet<String>,
+        forward_referenced_values: &mut HashSet<String>,
+        shadowed: &HashSet<String>,
+    ) {
+        match expr {
+            Expr::VarRef(v) => {
+                if self.value_globals.contains(&v.name)
+                    && !defined_value_globals.contains(&v.name)
+                    && !shadowed.contains(&v.name)
+                {
+                    forward_referenced_values.insert(v.name.clone());
+                }
+            }
+            Expr::If(i) => {
+                self.record_main_forward_value_refs(&i.cond, defined_value_globals, forward_referenced_values, shadowed);
+                self.record_main_forward_value_refs(&i.then_branch, defined_value_globals, forward_referenced_values, shadowed);
+                self.record_main_forward_value_refs(&i.else_branch, defined_value_globals, forward_referenced_values, shadowed);
+            }
+            Expr::Begin(Begin { exprs, .. }) => {
+                for e in exprs {
+                    self.record_main_forward_value_refs(e, defined_value_globals, forward_referenced_values, shadowed);
+                }
+            }
+            Expr::Let(l) => {
+                for (_, rhs) in &l.bindings {
+                    self.record_main_forward_value_refs(rhs, defined_value_globals, forward_referenced_values, shadowed);
+                }
+                let mut body_shadowed = shadowed.clone();
+                for (name, _) in &l.bindings {
+                    body_shadowed.insert(name.clone());
+                }
+                for e in &l.body {
+                    self.record_main_forward_value_refs(e, defined_value_globals, forward_referenced_values, &body_shadowed);
+                }
+            }
+            Expr::LetStar(l) => {
+                let mut scoped_shadowed = shadowed.clone();
+                for (name, rhs) in &l.bindings {
+                    self.record_main_forward_value_refs(rhs, defined_value_globals, forward_referenced_values, &scoped_shadowed);
+                    scoped_shadowed.insert(name.clone());
+                }
+                for e in &l.body {
+                    self.record_main_forward_value_refs(e, defined_value_globals, forward_referenced_values, &scoped_shadowed);
+                }
+            }
+            Expr::Apply(apply) => {
+                self.record_main_forward_value_refs(apply.fn_expr.as_ref(), defined_value_globals, forward_referenced_values, shadowed);
+                for arg in &apply.args {
+                    self.record_main_forward_value_refs(arg, defined_value_globals, forward_referenced_values, shadowed);
+                }
+            }
+            Expr::Match(m) => {
+                self.record_main_forward_value_refs(&m.scrutinee, defined_value_globals, forward_referenced_values, shadowed);
+                for arm in &m.arms {
+                    let mut arm_shadowed = shadowed.clone();
+                    match &arm.pat {
+                        MatchPat::Variant { bindings, .. } => {
+                            for name in bindings {
+                                arm_shadowed.insert(name.clone());
+                            }
+                        }
+                        MatchPat::Binding(name) => {
+                            arm_shadowed.insert(name.clone());
+                        }
+                        MatchPat::Wildcard => {}
+                    }
+                    for e in &arm.body {
+                        self.record_main_forward_value_refs(e, defined_value_globals, forward_referenced_values, &arm_shadowed);
+                    }
+                }
+            }
+            Expr::Lambda(_) => {}
+            Expr::IntLit(_)
+            | Expr::BoolLit(_)
+            | Expr::NilLit(_)
+            | Expr::SymLit(_)
+            | Expr::StrLit(_) => {}
+        }
+    }
+
+    fn collect_main_direct_string_call_evidence(
+        &self,
+        expr: &Expr,
+        evidence: &mut HashMap<String, Vec<StaticParamEvidence>>,
+        known_static_string_values: &HashSet<String>,
+    ) {
+        match expr {
+            Expr::If(i) => {
+                self.collect_main_direct_string_call_evidence(&i.cond, evidence, known_static_string_values);
+                self.collect_main_direct_string_call_evidence(&i.then_branch, evidence, known_static_string_values);
+                self.collect_main_direct_string_call_evidence(&i.else_branch, evidence, known_static_string_values);
+            }
+            Expr::Begin(Begin { exprs, .. }) => {
+                for e in exprs {
+                    self.collect_main_direct_string_call_evidence(e, evidence, known_static_string_values);
+                }
+            }
+            Expr::Let(l) => {
+                for (_, rhs) in &l.bindings {
+                    self.collect_main_direct_string_call_evidence(rhs, evidence, known_static_string_values);
+                }
+                let mut body_static_string_values = known_static_string_values.clone();
+                for (name, _) in &l.bindings {
+                    body_static_string_values.remove(name);
+                }
+                for (name, rhs) in &l.bindings {
+                    if Self::is_syntax_static_e4_string_expr(rhs, known_static_string_values) {
+                        body_static_string_values.insert(name.clone());
+                    }
+                }
+                for e in &l.body {
+                    self.collect_main_direct_string_call_evidence(e, evidence, &body_static_string_values);
+                }
+            }
+            Expr::LetStar(l) => {
+                let mut scoped_static_string_values = known_static_string_values.clone();
+                for (name, rhs) in &l.bindings {
+                    self.collect_main_direct_string_call_evidence(rhs, evidence, &scoped_static_string_values);
+                    if Self::is_syntax_static_e4_string_expr(rhs, &scoped_static_string_values) {
+                        scoped_static_string_values.insert(name.clone());
+                    } else {
+                        scoped_static_string_values.remove(name);
+                    }
+                }
+                for e in &l.body {
+                    self.collect_main_direct_string_call_evidence(e, evidence, &scoped_static_string_values);
+                }
+            }
+            Expr::Apply(apply) => {
+                if let Expr::VarRef(f) = apply.fn_expr.as_ref() {
+                    if let Some(slots) = evidence.get_mut(&f.name) {
+                        if apply.args.len() == slots.len() {
+                            for (slot, arg) in slots.iter_mut().zip(apply.args.iter()) {
+                                *slot = slot.observe(Self::is_syntax_static_e4_string_expr(
+                                    arg,
+                                    known_static_string_values,
+                                ));
+                            }
+                        } else {
+                            for slot in slots {
+                                *slot = StaticParamEvidence::Conflict;
+                            }
+                        }
+                    }
+                }
+                self.collect_main_direct_string_call_evidence(
+                    apply.fn_expr.as_ref(),
+                    evidence,
+                    known_static_string_values,
+                );
+                for arg in &apply.args {
+                    self.collect_main_direct_string_call_evidence(arg, evidence, known_static_string_values);
+                }
+            }
+            // Lambdas and match bodies can depend on dynamic closure/match-time
+            // values, so this prepass deliberately does not infer from them.
+            Expr::Lambda(_) | Expr::Match(_) => {}
+            Expr::IntLit(_)
+            | Expr::BoolLit(_)
+            | Expr::NilLit(_)
+            | Expr::SymLit(_)
+            | Expr::StrLit(_)
+            | Expr::VarRef(_) => {}
+        }
+    }
+
+    fn is_syntax_static_e4_string_expr(
+        expr: &Expr,
+        known_static_string_values: &HashSet<String>,
+    ) -> bool {
+        match expr {
+            Expr::StrLit(_) => true,
+            Expr::VarRef(v) => known_static_string_values.contains(&v.name),
+            Expr::Apply(apply) => {
+                let Expr::VarRef(f) = apply.fn_expr.as_ref() else {
+                    return false;
+                };
+                match f.name.as_str() {
+                    "string-append" => {
+                        apply.args.len() == 2
+                            && Self::is_syntax_static_e4_string_expr(&apply.args[0], known_static_string_values)
+                            && Self::is_syntax_static_e4_string_expr(&apply.args[1], known_static_string_values)
+                    }
+                    "substring" => {
+                        apply.args.len() == 3
+                            && Self::is_syntax_static_e4_string_expr(&apply.args[0], known_static_string_values)
+                            && Self::is_syntax_static_e4_index_expr(&apply.args[1], known_static_string_values)
+                            && Self::is_syntax_static_e4_index_expr(&apply.args[2], known_static_string_values)
+                    }
+                    _ => false,
+                }
+            }
+            _ => false,
+        }
+    }
+
+    fn is_syntax_static_e4_index_expr(
+        expr: &Expr,
+        known_static_string_values: &HashSet<String>,
+    ) -> bool {
+        match expr {
+            Expr::IntLit(_) => true,
+            Expr::Apply(apply) => {
+                let Expr::VarRef(f) = apply.fn_expr.as_ref() else {
+                    return false;
+                };
+                match f.name.as_str() {
+                    "string-length" => {
+                        apply.args.len() == 1
+                            && Self::is_syntax_static_e4_string_expr(&apply.args[0], known_static_string_values)
+                    }
+                    "+" | "-" | "*" | "/" => {
+                        apply.args.len() >= 2
+                            && apply
+                                .args
+                                .iter()
+                                .all(|arg| Self::is_syntax_static_e4_index_expr(arg, known_static_string_values))
+                    }
+                    _ => false,
+                }
+            }
+            _ => false,
+        }
+    }
+
+    fn param_static_iir_hint(
+        &self,
+        ann: Option<&TypeAnnotation>,
+        inferred_param_types: &[String],
+        idx: usize,
+    ) -> Option<&'static str> {
+        if let Some(ann) = ann {
+            return type_annotation_static_iir_hint(ann);
+        }
+        if inferred_param_types.get(idx).map(|ty| ty.as_str()) == Some("str") {
+            Some("str")
+        } else {
+            None
+        }
+    }
+
     // ------------------------------------------------------------------
     // Top-level fn (define (name args...) body+)
     // ------------------------------------------------------------------
@@ -674,8 +1086,22 @@ impl Compiler {
     fn compile_top_level_lambda(&mut self, name: &str, lam: &Lambda) -> Result<(), TwigCompileError> {
         let mut ctx = FnCtx::new();
         let lam_loc = SourceLoc::new(lam.line, lam.column);
-        for p in &lam.params {
+        let inferred_param_types = self
+            .fn_inferred_param_types
+            .get(name)
+            .cloned()
+            .unwrap_or_default();
+        for (idx, (p, ann)) in lam
+            .params
+            .iter()
+            .zip(lam.param_annotations.iter())
+            .enumerate()
+        {
             ctx.locals.insert(p.clone());
+            if let Some(ty) = self.param_static_iir_hint(ann.as_ref(), &inferred_param_types, idx)
+            {
+                ctx.record_type(p, ty);
+            }
         }
 
         let mut last: Option<String> = None;
@@ -687,15 +1113,23 @@ impl Compiler {
             line: lam.line,
             column: lam.column,
         })?;
+        let return_type = ctx.type_of(&last).to_string();
         ctx.emit(
-            IIRInstr::new("ret", None, vec![Operand::Var(last)], "any"),
+            IIRInstr::new("ret", None, vec![Operand::Var(last)], return_type.as_str()),
             lam_loc,
         );
 
-        let params = lam
+        let params: Vec<(String, String)> = lam
             .params
             .iter()
-            .map(|p| (p.clone(), "any".to_string()))
+            .zip(lam.param_annotations.iter())
+            .enumerate()
+            .map(|(idx, (p, ann))| {
+                let ty = self
+                    .param_static_iir_hint(ann.as_ref(), &inferred_param_types, idx)
+                    .unwrap_or("any");
+                (p.clone(), ty.to_string())
+            })
             .collect();
 
         // LANG23 PR 23-E — lower TypeAnnotation → RefinedType for every param
@@ -713,8 +1147,8 @@ impl Compiler {
 
         self.functions.push(IIRFunction {
             name: name.to_string(),
-            params,
-            return_type: "any".into(),
+            params: params.clone(),
+            return_type: return_type.clone(),
             register_count: count_registers(&ctx.instrs),
             instructions: ctx.instrs,
             type_status: FunctionTypeStatus::Untyped,
@@ -724,6 +1158,11 @@ impl Compiler {
             param_refinements,
             return_refinement,
         });
+        self.fn_return_types.insert(name.to_string(), return_type);
+        self.fn_param_types.insert(
+            name.to_string(),
+            params.into_iter().map(|(_, ty)| ty).collect(),
+        );
         Ok(())
     }
 
@@ -938,6 +1377,7 @@ impl Compiler {
                     vec![Operand::Str(value.clone())],
                     "str",
                 ), loc);
+                ctx.record_type(&v, "str");
                 Ok(v)
             }
 
@@ -973,6 +1413,9 @@ impl Compiler {
         // Locals (params + lets) — return the name directly; the next
         // instruction that reads it resolves through the register file.
         if ctx.locals.contains(&v.name) {
+            if let Some(alias) = ctx.local_aliases.get(&v.name) {
+                return Ok(alias.clone());
+            }
             return Ok(v.name.clone());
         }
 
@@ -1123,24 +1566,46 @@ impl Compiler {
 
     fn compile_let(&mut self, expr: &Let, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
         let loc = SourceLoc::new(expr.line, expr.column);
+        enum BindingValue {
+            Reg(String),
+            StrLiteral(String, SourceLoc),
+        }
+
         // Compile RHSs in the OUTER scope (Scheme `let`, not `let*`).
-        let mut binding_values: Vec<(String, String)> = Vec::new();
+        let mut binding_values: Vec<(String, BindingValue)> = Vec::new();
         for (name, rhs) in &expr.bindings {
-            let v = self.compile_expr(rhs, ctx)?;
+            let v = if let Expr::StrLit(StrLit { value, .. }) = rhs {
+                BindingValue::StrLiteral(value.clone(), SourceLoc::new(rhs.pos().0, rhs.pos().1))
+            } else {
+                BindingValue::Reg(self.compile_expr(rhs, ctx)?)
+            };
             binding_values.push((name.clone(), v));
         }
 
-        // Bind each name into `locals_` via a typed `mov` copy so the
-        // binding name exists as a named register in the frame.
+        // Bind each name into `locals_` so the binding name exists in the
+        // lexical frame.
         // Path-A increment 4: typed `mov` propagates the RHS's
         // inferred type to the binding name, so subsequent expressions
-        // that reference `name` see the concrete type.
+        // that reference `name` see the concrete type. E4 string RHSs alias
+        // their producer register instead, because the current code-gen
+        // backends accept string producers but not generic string copies.
         let mut added: Vec<String> = Vec::new();
+        let mut saved_aliases: Vec<(String, Option<String>)> = Vec::new();
         for (name, src) in &binding_values {
             if ctx.locals.insert(name.clone()) {
                 added.push(name.clone());
             }
-            ctx.emit_move(name, src, loc);
+            match src {
+                BindingValue::Reg(src) if ctx.type_of(src) == "str" => {
+                    let previous = ctx.local_aliases.insert(name.clone(), src.clone());
+                    saved_aliases.push((name.clone(), previous));
+                    ctx.record_type(name, "str");
+                }
+                BindingValue::Reg(src) => ctx.emit_move(name, src, loc),
+                BindingValue::StrLiteral(value, value_loc) => {
+                    ctx.emit_str_const_to(name, value, *value_loc);
+                }
+            }
         }
 
         // Compile body — at least one expression (parser-enforced).
@@ -1154,6 +1619,13 @@ impl Compiler {
         // bound at this lexical position.
         for n in added {
             ctx.locals.remove(&n);
+        }
+        for (name, previous) in saved_aliases.into_iter().rev() {
+            if let Some(alias) = previous {
+                ctx.local_aliases.insert(name, alias);
+            } else {
+                ctx.local_aliases.remove(&name);
+            }
         }
         Ok(last)
     }
@@ -1175,19 +1647,35 @@ impl Compiler {
     fn compile_let_star(&mut self, expr: &LetStar, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
         let loc = SourceLoc::new(expr.line, expr.column);
         let mut added: Vec<String> = Vec::new();
+        let mut saved_aliases: Vec<(String, Option<String>)> = Vec::new();
 
         for (name, rhs) in &expr.bindings {
             // Compile the RHS in the current scope (which already includes
             // all prior let* bindings).
+            if let Expr::StrLit(StrLit { value, .. }) = rhs {
+                if ctx.locals.insert(name.clone()) {
+                    added.push(name.clone());
+                }
+                ctx.emit_str_const_to(name, value, SourceLoc::new(rhs.pos().0, rhs.pos().1));
+                continue;
+            }
+
             let v = self.compile_expr(rhs, ctx)?;
 
             // Bind the name into locals BEFORE compiling the next binding.
-            // Path-A increment 4: typed `mov` propagates the RHS's
-            // inferred type to the binding name (mirrors compile_let).
+            // Path-A increment 4: typed `mov` propagates scalar RHS types.
+            // E4 string RHSs mirror compile_let by aliasing the producer
+            // register instead of emitting backend-unsupported `mov [str]`.
             if ctx.locals.insert(name.clone()) {
                 added.push(name.clone());
             }
-            ctx.emit_move(name, &v, loc);
+            if ctx.type_of(&v) == "str" {
+                let previous = ctx.local_aliases.insert(name.clone(), v);
+                saved_aliases.push((name.clone(), previous));
+                ctx.record_type(name, "str");
+            } else {
+                ctx.emit_move(name, &v, loc);
+            }
         }
 
         // Compile body — parser-enforced at least one expression.
@@ -1200,6 +1688,13 @@ impl Compiler {
         // Remove bindings so they don't leak into enclosing scope peers.
         for n in added {
             ctx.locals.remove(&n);
+        }
+        for (name, previous) in saved_aliases.into_iter().rev() {
+            if let Some(alias) = previous {
+                ctx.local_aliases.insert(name, alias);
+            } else {
+                ctx.local_aliases.remove(&name);
+            }
         }
         Ok(last)
     }
@@ -1318,6 +1813,236 @@ impl Compiler {
         }
     }
 
+    fn is_known_main_value_type(&self, name: &str, ctx: &FnCtx, ty: &str) -> bool {
+        matches!(self.value_global_locals.get(name), Some(reg) if ctx.type_of(reg) == ty)
+    }
+
+    fn is_known_value_type(&self, name: &str, ctx: &FnCtx, ty: &str) -> bool {
+        self.is_known_main_value_type(name, ctx, ty)
+            || (ctx.locals.contains(name) && ctx.type_of(name) == ty)
+    }
+
+    fn can_compile_e4_string_expr(&self, expr: &Expr, ctx: &FnCtx) -> bool {
+        match expr {
+            Expr::StrLit(_) => true,
+            Expr::VarRef(v) => self.is_known_value_type(&v.name, ctx, "str"),
+            Expr::Apply(apply) => {
+                if let Expr::VarRef(f) = apply.fn_expr.as_ref() {
+                    match f.name.as_str() {
+                        "string-append" => {
+                            apply.args.len() == 2
+                                && self.can_compile_e4_string_expr(&apply.args[0], ctx)
+                                && self.can_compile_e4_string_expr(&apply.args[1], ctx)
+                        }
+                        "substring" => {
+                            apply.args.len() == 3
+                                && self.can_compile_e4_string_expr(&apply.args[0], ctx)
+                                && self.can_compile_e4_index_expr(&apply.args[1], ctx)
+                                && self.can_compile_e4_index_expr(&apply.args[2], ctx)
+                        }
+                        _ => false,
+                    }
+                } else {
+                    false
+                }
+            }
+            _ => false,
+        }
+    }
+
+    fn can_compile_e4_index_expr(&self, expr: &Expr, ctx: &FnCtx) -> bool {
+        match expr {
+            Expr::IntLit(_) => true,
+            Expr::VarRef(v) => {
+                self.is_known_value_type(&v.name, ctx, "i64")
+                    || self.is_known_value_type(&v.name, ctx, "i32")
+            }
+            Expr::Apply(apply) => {
+                let Expr::VarRef(f) = apply.fn_expr.as_ref() else {
+                    return false;
+                };
+                match f.name.as_str() {
+                    "string-length" => {
+                        apply.args.len() == 1
+                            && self.can_compile_e4_string_expr(&apply.args[0], ctx)
+                    }
+                    "+" | "-" | "*" | "/" => {
+                        apply.args.len() >= 2
+                            && apply
+                                .args
+                                .iter()
+                                .all(|arg| self.can_compile_e4_index_expr(arg, ctx))
+                    }
+                    _ => false,
+                }
+            }
+            _ => false,
+        }
+    }
+
+    fn compile_e4_string_expr(&mut self, expr: &Expr, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
+        let loc = SourceLoc::new(expr.pos().0, expr.pos().1);
+        if let Expr::StrLit(StrLit { value, .. }) = expr {
+            return Ok(ctx.emit_str_const(value, loc));
+        }
+        self.compile_expr(expr, ctx)
+    }
+
+    fn try_compile_e4_string_builtin(
+        &mut self,
+        name: &str,
+        args: &[Expr],
+        ctx: &mut FnCtx,
+        loc: SourceLoc,
+    ) -> Result<Option<String>, TwigCompileError> {
+        match name {
+            "string-length"
+                if args.len() == 1 && self.can_compile_e4_string_expr(&args[0], ctx) =>
+            {
+                let string_reg = self.compile_e4_string_expr(&args[0], ctx)?;
+                let dest = ctx.fresh_var("r");
+                ctx.emit(
+                    IIRInstr::new(
+                        "str_len",
+                        Some(dest.clone()),
+                        vec![Operand::Var(string_reg)],
+                        "i64",
+                    ),
+                    loc,
+                );
+                ctx.record_type(&dest, "i64");
+                Ok(Some(dest))
+            }
+            "string-append"
+                if args.len() == 2
+                    && self.can_compile_e4_string_expr(&args[0], ctx)
+                    && self.can_compile_e4_string_expr(&args[1], ctx) =>
+            {
+                let left = self.compile_e4_string_expr(&args[0], ctx)?;
+                let right = self.compile_e4_string_expr(&args[1], ctx)?;
+                let dest = ctx.fresh_var("s");
+                ctx.emit(
+                    IIRInstr::new(
+                        "str_concat",
+                        Some(dest.clone()),
+                        vec![Operand::Var(left), Operand::Var(right)],
+                        "str",
+                    ),
+                    loc,
+                );
+                ctx.record_type(&dest, "str");
+                Ok(Some(dest))
+            }
+            "string=?"
+                if args.len() == 2
+                    && self.can_compile_e4_string_expr(&args[0], ctx)
+                    && self.can_compile_e4_string_expr(&args[1], ctx) =>
+            {
+                let left = self.compile_e4_string_expr(&args[0], ctx)?;
+                let right = self.compile_e4_string_expr(&args[1], ctx)?;
+                let dest = ctx.fresh_var("r");
+                ctx.emit(
+                    IIRInstr::new(
+                        "str_eq",
+                        Some(dest.clone()),
+                        vec![Operand::Var(left), Operand::Var(right)],
+                        "i64",
+                    ),
+                    loc,
+                );
+                ctx.record_type(&dest, "i64");
+                Ok(Some(dest))
+            }
+            "string<?" | "string>?"
+                if args.len() == 2
+                    && self.can_compile_e4_string_expr(&args[0], ctx)
+                    && self.can_compile_e4_string_expr(&args[1], ctx) =>
+            {
+                let left = self.compile_e4_string_expr(&args[0], ctx)?;
+                let right = self.compile_e4_string_expr(&args[1], ctx)?;
+                let cmp = ctx.fresh_var("r");
+                ctx.emit(
+                    IIRInstr::new(
+                        "str_cmp",
+                        Some(cmp.clone()),
+                        vec![Operand::Var(left), Operand::Var(right)],
+                        "i64",
+                    ),
+                    loc,
+                );
+                ctx.record_type(&cmp, "i64");
+
+                let zero = ctx.fresh_var("n");
+                ctx.emit(
+                    IIRInstr::new("const", Some(zero.clone()), vec![Operand::Int(0)], "i64"),
+                    loc,
+                );
+                ctx.record_type(&zero, "i64");
+
+                let dest = ctx.fresh_var("r");
+                let op = if name == "string<?" { "cmp_lt" } else { "cmp_gt" };
+                ctx.emit(
+                    IIRInstr::new(
+                        op,
+                        Some(dest.clone()),
+                        vec![Operand::Var(cmp), Operand::Var(zero)],
+                        "i64",
+                    ),
+                    loc,
+                );
+                ctx.record_type(&dest, "bool");
+                Ok(Some(dest))
+            }
+            "string-ref"
+                if args.len() == 2
+                    && self.can_compile_e4_string_expr(&args[0], ctx)
+                    && self.can_compile_e4_index_expr(&args[1], ctx) =>
+            {
+                let string_reg = self.compile_e4_string_expr(&args[0], ctx)?;
+                let idx_reg = self.compile_expr(&args[1], ctx)?;
+                let dest = ctx.fresh_var("r");
+                ctx.emit(
+                    IIRInstr::new(
+                        "str_index",
+                        Some(dest.clone()),
+                        vec![Operand::Var(string_reg), Operand::Var(idx_reg)],
+                        "i64",
+                    ),
+                    loc,
+                );
+                ctx.record_type(&dest, "i64");
+                Ok(Some(dest))
+            }
+            "substring"
+                if args.len() == 3
+                    && self.can_compile_e4_string_expr(&args[0], ctx)
+                    && self.can_compile_e4_index_expr(&args[1], ctx)
+                    && self.can_compile_e4_index_expr(&args[2], ctx) =>
+            {
+                let string_reg = self.compile_e4_string_expr(&args[0], ctx)?;
+                let start_reg = self.compile_expr(&args[1], ctx)?;
+                let end_reg = self.compile_expr(&args[2], ctx)?;
+                let dest = ctx.fresh_var("s");
+                ctx.emit(
+                    IIRInstr::new(
+                        "str_slice",
+                        Some(dest.clone()),
+                        vec![
+                            Operand::Var(string_reg),
+                            Operand::Var(start_reg),
+                            Operand::Var(end_reg),
+                        ],
+                        "str",
+                    ),
+                    loc,
+                );
+                ctx.record_type(&dest, "str");
+                Ok(Some(dest))
+            }
+            _ => Ok(None),
+        }
+    }
+
     fn compile_apply(&mut self, expr: &Apply, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
         let loc = SourceLoc::new(expr.line, expr.column);
         // ── LANG52: `and` / `or` short-circuit special forms ─────────────────
@@ -1352,9 +2077,25 @@ impl Compiler {
         // compile time so the hot path stays a single `call`.
         if let Expr::VarRef(v) = expr.fn_expr.as_ref() {
             if self.fn_globals.contains(&v.name) {
+                let return_type = self
+                    .fn_return_types
+                    .get(&v.name)
+                    .cloned()
+                    .unwrap_or_else(|| "any".to_string());
+                let param_types = self
+                    .fn_param_types
+                    .get(&v.name)
+                    .cloned()
+                    .unwrap_or_default();
                 let mut srcs: Vec<Operand> = vec![Operand::Var(v.name.clone())];
-                for a in &expr.args {
-                    let r = self.compile_expr(a, ctx)?;
+                for (idx, a) in expr.args.iter().enumerate() {
+                    let r = if param_types.get(idx).map(|ty| ty.as_str()) == Some("str")
+                        && self.can_compile_e4_string_expr(a, ctx)
+                    {
+                        self.compile_e4_string_expr(a, ctx)?
+                    } else {
+                        self.compile_expr(a, ctx)?
+                    };
                     srcs.push(Operand::Var(r));
                 }
                 let dest = ctx.fresh_var("r");
@@ -1362,12 +2103,165 @@ impl Compiler {
                     "call",
                     Some(dest.clone()),
                     srcs,
-                    "any",
+                    return_type.as_str(),
                 ), loc);
+                if return_type != "any" {
+                    ctx.record_type(&dest, return_type.as_str());
+                }
                 return Ok(dest);
             }
 
             if is_builtin(&v.name) {
+                if let Some(result) =
+                    self.try_compile_e4_string_builtin(&v.name, &expr.args, ctx, loc)?
+                {
+                    return Ok(result);
+                }
+
+                if v.name == "string-length" && expr.args.len() == 1 {
+                    if let Expr::StrLit(StrLit { value, .. }) = &expr.args[0] {
+                        let string_reg = ctx.fresh_var("s");
+                        ctx.emit(IIRInstr::new(
+                            "str_const",
+                            Some(string_reg.clone()),
+                            vec![Operand::Str(value.clone())],
+                            "str",
+                        ), loc);
+                        ctx.var_types.insert(string_reg.clone(), "str".to_string());
+
+                        let dest = ctx.fresh_var("r");
+                        ctx.emit(IIRInstr::new(
+                            "str_len",
+                            Some(dest.clone()),
+                            vec![Operand::Var(string_reg)],
+                            "i64",
+                        ), loc);
+                        ctx.var_types.insert(dest.clone(), "i64".to_string());
+                        return Ok(dest);
+                    }
+                    if let Expr::Apply(append) = &expr.args[0] {
+                        if let Expr::VarRef(append_fn) = append.fn_expr.as_ref() {
+                            if append_fn.name == "string-append" && append.args.len() == 2 {
+                                if let (
+                                    Expr::StrLit(StrLit { value: left, .. }),
+                                    Expr::StrLit(StrLit { value: right, .. }),
+                                ) = (&append.args[0], &append.args[1])
+                                {
+                                    let left_reg = ctx.fresh_var("s");
+                                    ctx.emit(IIRInstr::new(
+                                        "str_const",
+                                        Some(left_reg.clone()),
+                                        vec![Operand::Str(left.clone())],
+                                        "str",
+                                    ), loc);
+                                    ctx.var_types.insert(left_reg.clone(), "str".to_string());
+
+                                    let right_reg = ctx.fresh_var("s");
+                                    ctx.emit(IIRInstr::new(
+                                        "str_const",
+                                        Some(right_reg.clone()),
+                                        vec![Operand::Str(right.clone())],
+                                        "str",
+                                    ), loc);
+                                    ctx.var_types.insert(right_reg.clone(), "str".to_string());
+
+                                    let concat_reg = ctx.fresh_var("s");
+                                    ctx.emit(IIRInstr::new(
+                                        "str_concat",
+                                        Some(concat_reg.clone()),
+                                        vec![
+                                            Operand::Var(left_reg),
+                                            Operand::Var(right_reg),
+                                        ],
+                                        "str",
+                                    ), loc);
+                                    ctx.var_types.insert(concat_reg.clone(), "str".to_string());
+
+                                    let dest = ctx.fresh_var("r");
+                                    ctx.emit(IIRInstr::new(
+                                        "str_len",
+                                        Some(dest.clone()),
+                                        vec![Operand::Var(concat_reg)],
+                                        "i64",
+                                    ), loc);
+                                    ctx.var_types.insert(dest.clone(), "i64".to_string());
+                                    return Ok(dest);
+                                }
+                            }
+                        }
+                    }
+                }
+                if v.name == "string=?" && expr.args.len() == 2 {
+                    if let (
+                        Expr::StrLit(StrLit { value: left, .. }),
+                        Expr::StrLit(StrLit { value: right, .. }),
+                    ) = (&expr.args[0], &expr.args[1])
+                    {
+                        let left_reg = ctx.fresh_var("s");
+                        ctx.emit(IIRInstr::new(
+                            "str_const",
+                            Some(left_reg.clone()),
+                            vec![Operand::Str(left.clone())],
+                            "str",
+                        ), loc);
+                        ctx.var_types.insert(left_reg.clone(), "str".to_string());
+
+                        let right_reg = ctx.fresh_var("s");
+                        ctx.emit(IIRInstr::new(
+                            "str_const",
+                            Some(right_reg.clone()),
+                            vec![Operand::Str(right.clone())],
+                            "str",
+                        ), loc);
+                        ctx.var_types.insert(right_reg.clone(), "str".to_string());
+
+                        let dest = ctx.fresh_var("r");
+                        ctx.emit(IIRInstr::new(
+                            "str_eq",
+                            Some(dest.clone()),
+                            vec![Operand::Var(left_reg), Operand::Var(right_reg)],
+                            "i64",
+                        ), loc);
+                        ctx.var_types.insert(dest.clone(), "i64".to_string());
+                        return Ok(dest);
+                    }
+                }
+                if v.name == "string-ref" && expr.args.len() == 2 {
+                    if let (
+                        Expr::StrLit(StrLit { value, .. }),
+                        Expr::IntLit(IntLit { value: idx, .. }),
+                    ) = (&expr.args[0], &expr.args[1])
+                    {
+                        let string_reg = ctx.fresh_var("s");
+                        ctx.emit(IIRInstr::new(
+                            "str_const",
+                            Some(string_reg.clone()),
+                            vec![Operand::Str(value.clone())],
+                            "str",
+                        ), loc);
+                        ctx.var_types.insert(string_reg.clone(), "str".to_string());
+
+                        let idx_reg = ctx.fresh_var("i");
+                        ctx.emit(IIRInstr::new(
+                            "const",
+                            Some(idx_reg.clone()),
+                            vec![Operand::Int(*idx)],
+                            "i64",
+                        ), loc);
+                        ctx.var_types.insert(idx_reg.clone(), "i64".to_string());
+
+                        let dest = ctx.fresh_var("r");
+                        ctx.emit(IIRInstr::new(
+                            "str_index",
+                            Some(dest.clone()),
+                            vec![Operand::Var(string_reg), Operand::Var(idx_reg)],
+                            "i64",
+                        ), loc);
+                        ctx.var_types.insert(dest.clone(), "i64".to_string());
+                        return Ok(dest);
+                    }
+                }
+
                 // Resolve every argument before deciding the lowering path.
                 let arg_regs: Vec<String> = expr
                     .args

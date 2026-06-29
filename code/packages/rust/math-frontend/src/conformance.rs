@@ -94,7 +94,7 @@ pub fn check_frontend(frontend: &dyn MathFrontend, samples: &[&str]) -> Conforma
 /// Names of capabilities that `used` requires but `declared` did not advertise.
 fn over_emitted(used: Capabilities, declared: Capabilities) -> Vec<&'static str> {
     let mut v = Vec::new();
-    let pairs: [(&str, bool, bool); 9] = [
+    let pairs: [(&str, bool, bool); 11] = [
         ("fractions", used.fractions, declared.fractions),
         ("roots", used.roots, declared.roots),
         ("powers", used.powers, declared.powers),
@@ -104,6 +104,8 @@ fn over_emitted(used: Capabilities, declared: Capabilities) -> Vec<&'static str>
         ("matrices", used.matrices, declared.matrices),
         ("implicit_mul", used.implicit_mul, declared.implicit_mul),
         ("text", used.text, declared.text),
+        ("plusminus", used.plusminus, declared.plusminus),
+        ("binomials", used.binomials, declared.binomials),
     ];
     for (label, used_it, declared_it) in pairs {
         if used_it && !declared_it {
@@ -125,6 +127,11 @@ fn collect_used(e: &MathExpr, caps: &mut Capabilities) {
             collect_used(a, caps);
             collect_used(b, caps);
         }
+        MathExpr::Bin(crate::BinOp::PlusMinus | crate::BinOp::MinusPlus, a, b) => {
+            caps.plusminus = true;
+            collect_used(a, caps);
+            collect_used(b, caps);
+        }
         MathExpr::Bin(_, a, b) => {
             collect_used(a, caps);
             collect_used(b, caps);
@@ -132,6 +139,11 @@ fn collect_used(e: &MathExpr, caps: &mut Capabilities) {
         MathExpr::Unary(_, a) => collect_used(a, caps),
         MathExpr::Frac(a, b) => {
             caps.fractions = true;
+            collect_used(a, caps);
+            collect_used(b, caps);
+        }
+        MathExpr::Binom(a, b) => {
+            caps.binomials = true;
             collect_used(a, caps);
             collect_used(b, caps);
         }
@@ -229,11 +241,52 @@ mod tests {
         fn capabilities(&self) -> Capabilities { Capabilities::none() }
     }
 
+    /// Dishonest frontend: emits ± / a binomial but declares neither capability.
+    struct PmBinomOverClaimer;
+    impl MathFrontend for PmBinomOverClaimer {
+        fn name(&self) -> &str { "pmbinom" }
+        fn parse(&self, src: &str) -> Result<MathExpr, FrontendError> {
+            let one = || Box::new(MathExpr::Number(Number::from_i64(1)));
+            if src == "pm" {
+                Ok(MathExpr::Bin(crate::BinOp::PlusMinus, one(), one()))
+            } else {
+                Ok(MathExpr::Binom(one(), one()))
+            }
+        }
+        fn capabilities(&self) -> Capabilities { Capabilities::none() }
+    }
+
     #[test]
     fn honest_frontend_conforms() {
         let r = check_frontend(&Honest, &["1", "2", "x"]);
         assert!(r.passed(), "{:?}", r.issues);
         assert_eq!(r.samples_checked, 3);
+    }
+
+    #[test]
+    fn over_claiming_plusminus_and_binomials_is_flagged() {
+        let r = check_frontend(&PmBinomOverClaimer, &["pm", "binom"]);
+        assert!(!r.passed());
+        assert!(r.issues.iter().any(|i| i.contains("plusminus")));
+        assert!(r.issues.iter().any(|i| i.contains("binomials")));
+    }
+
+    #[test]
+    fn all_caps_admits_plusminus_and_binom() {
+        // A frontend declaring all() may emit ± and Binom without being flagged.
+        struct Full;
+        impl MathFrontend for Full {
+            fn name(&self) -> &str { "full" }
+            fn parse(&self, _src: &str) -> Result<MathExpr, FrontendError> {
+                let one = || Box::new(MathExpr::Number(Number::from_i64(1)));
+                Ok(MathExpr::Binom(
+                    one(),
+                    Box::new(MathExpr::Bin(crate::BinOp::MinusPlus, one(), one())),
+                ))
+            }
+            fn capabilities(&self) -> Capabilities { Capabilities::all() }
+        }
+        assert!(check_frontend(&Full, &["x"]).passed());
     }
 
     #[test]

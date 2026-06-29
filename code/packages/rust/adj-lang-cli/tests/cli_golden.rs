@@ -131,6 +131,52 @@ fn let_computed_value_drives_a_predicate() {
 }
 
 #[test]
+fn predicate_rhs_expression_matches_fraction_result() {
+    // Rung-1 hardening: the option predicate can compare a computed answer
+    // against another ADJ arithmetic expression, so a model can emit
+    // `answer == 3 / 10` instead of relying on a decimal literal.
+    let (ok, s) = run(
+        "adjcli_fraction_rhs.adj",
+        "let answer = 1 / 10 + 2 / 10\n\
+         prior 0.10 for opt_a\n\
+         contributes 1000000 from answer == 3 / 10 to opt_a\n\
+         ? opt_a\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"kind\":\"predicate\""), "{s}");
+    assert!(s.contains("\"slot\":\"answer\""), "{s}");
+    assert!(
+        s.contains("\"posterior\":0.99") || s.contains("\"posterior\":1"),
+        "fraction expression predicate should fire: {s}"
+    );
+}
+
+#[test]
+fn rule_derived_evidence_drives_contribution() {
+    // The model can emit observations + a Horn rule; the engine proves the
+    // derived evidence term and uses that proof to license the LR contribution.
+    let (ok, s) = run(
+        "adjcli_derived_evidence.adj",
+        "prior 0.10 for bacterial\n  source \"base rate\" trust empirical\n\
+         contributes 10 from infection_present to bacterial\n  source \"clinical LR\" trust authoritative\n\
+         observe fever\n\
+         observe positive_culture\n\
+         rule { head: infection_present when: fever, positive_culture\n\
+                source \"case decomposition\" trust inferred }\n\
+         ? bacterial\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"kind\":\"contribution\""), "{s}");
+    assert!(s.contains("\"evidence\":\"infection_present\""), "{s}");
+    assert!(s.contains("\"evidence_proof\""), "{s}");
+    assert!(s.contains("\"kind\":\"rule\""), "{s}");
+    assert!(s.contains("\"goal\":\"infection_present\""), "{s}");
+    assert!(s.contains("\"source\":\"case decomposition\""), "{s}");
+    // prior odds 1/9, LR 10 => posterior 10/19 ≈ 0.526.
+    assert!(s.contains("\"posterior\":0.526"), "{s}");
+}
+
+#[test]
 fn predicate_below_threshold_does_not_fire() {
     // Income under the threshold: the predicate step never appears, and the
     // posterior stays at the prior.
@@ -206,6 +252,35 @@ fn solve_emits_roots_for_a_nonlinear_equation() {
     assert!(s.contains("\"outcome\":\"solved_roots\""), "{s}");
     assert!(s.contains("\"var\":\"x\""), "{s}");
     assert!(s.contains("\"roots\":[-2,2]"), "{s}");
+}
+
+#[test]
+fn solve_emits_roots_for_native_latex_equation() {
+    // The ADJ language owns LaTeX math input: the constraint parses through
+    // the LaTeX MathFrontend, lowers x^2 to the solver expression, and the
+    // existing native solver returns the roots.
+    let (ok, s) = run(
+        "adjcli_latex_quad.adj",
+        "symbol x : scalar\nconstrain latex \"$x^2 = 4$\"\nsolve for { x }\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"outcome\":\"solved_roots\""), "{s}");
+    assert!(s.contains("\"var\":\"x\""), "{s}");
+    assert!(s.contains("\"roots\":[-2,2]"), "{s}");
+}
+
+#[test]
+fn solve_emits_roots_for_native_latex_factored_equation() {
+    // Adjacent LaTeX factors stay on the native parser path; the solver expands
+    // the polynomial and returns the finite real roots.
+    let (ok, s) = run(
+        "adjcli_latex_factored.adj",
+        "symbol x : scalar\nconstrain latex \"$(x + 2)(x - 3)(x - 6) = 0$\"\nsolve for { x }\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"outcome\":\"solved_roots\""), "{s}");
+    assert!(s.contains("\"var\":\"x\""), "{s}");
+    assert!(s.contains("\"roots\":[-2,3,6]"), "{s}");
 }
 
 #[test]

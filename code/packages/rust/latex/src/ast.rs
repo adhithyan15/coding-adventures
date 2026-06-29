@@ -10,6 +10,43 @@
 //! `parse(&render(ast)) == ast` (AST-equality, not byte-equality — surface spacing and the
 //! `$…$` vs `\(…\)` delimiter choice are normalized).
 
+/// A sectioning level, in document-hierarchy order from coarsest (`\part`) to finest
+/// (`\subparagraph`). Produced by the L5d [`recognize_structure`](crate::recognize_structure)
+/// pass as part of [`Node::Section`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SectionLevel {
+    /// `\part`
+    Part,
+    /// `\chapter`
+    Chapter,
+    /// `\section`
+    Section,
+    /// `\subsection`
+    Subsection,
+    /// `\subsubsection`
+    Subsubsection,
+    /// `\paragraph` (a run-in heading, *not* a paragraph break — see [`Node::Par`])
+    Paragraph,
+    /// `\subparagraph`
+    Subparagraph,
+}
+
+impl SectionLevel {
+    /// The LaTeX control word for this level (without the leading backslash), used to render a
+    /// [`Node::Section`] back to source.
+    pub fn command(self) -> &'static str {
+        match self {
+            SectionLevel::Part => "part",
+            SectionLevel::Chapter => "chapter",
+            SectionLevel::Section => "section",
+            SectionLevel::Subsection => "subsection",
+            SectionLevel::Subsubsection => "subsubsection",
+            SectionLevel::Paragraph => "paragraph",
+            SectionLevel::Subparagraph => "subparagraph",
+        }
+    }
+}
+
 /// One node of the document tree.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Node {
@@ -49,6 +86,32 @@ pub enum Node {
     /// the **raw** inner text (catcodes suspended, newlines kept). `env` is the environment
     /// name verbatim, preserved so the node round-trips.
     VerbatimEnv { env: String, content: String },
+    /// A text accent applied to its argument (L5c): `\'e` → é, `\c{c}` → ç. `accent` is the
+    /// control-sequence name verbatim (`'`, `"`, `c`, `u`, …); `arg` is the accented content
+    /// (a single-character text run, or a braced group's nodes). Produced only by the opt-in
+    /// [`recognize_accents`](crate::recognize_accents) pass, not by L1.
+    Accent { accent: String, arg: Vec<Node> },
+    /// A sectioning heading (L5d): `\section{Title}`, `\section*{Title}`, `\section[Short]{Title}`
+    /// (and the `\part`…`\subparagraph` family). `starred` is the no-number `*` form; `short` is
+    /// the optional TOC/running-head title; `title` is the heading body. Produced only by the
+    /// opt-in [`recognize_structure`](crate::recognize_structure) pass, not by L1.
+    Section { level: SectionLevel, starred: bool, short: Option<Vec<Node>>, title: Vec<Node> },
+    /// A cross-reference or citation (L5d): `\label{k}`, `\ref{k}`, `\eqref{k}`, `\cite[note]{k}`,
+    /// … `command` is the control-word verbatim; `note` is the optional bracketed argument (the
+    /// citation note); `target` is the mandatory key argument. Produced only by the opt-in
+    /// [`recognize_structure`](crate::recognize_structure) pass, not by L1.
+    CrossRef { command: String, note: Option<Vec<Node>>, target: Vec<Node> },
+    /// A preamble directive (L5d): `\documentclass[opt]{article}`, `\usepackage[opt]{pkg}`,
+    /// `\RequirePackage{pkg}`. `command` is the control-word verbatim; `options` is the optional
+    /// bracketed package/class options; `name` is the mandatory class/package name. Produced only
+    /// by the opt-in [`recognize_structure`](crate::recognize_structure) pass, not by L1.
+    Preamble { command: String, options: Option<Vec<Node>>, name: Vec<Node> },
+    /// An argument-form text font command (L5d): `\textbf{x}`, `\emph{x}`, `\underline{x}`, …
+    /// `command` is the control-word verbatim; `content` is the wrapped argument. (Declaration-
+    /// form font commands like `\bfseries` stay plain [`Node::Command`]s — their effect is
+    /// positional, not a wrapped argument.) Produced only by the opt-in
+    /// [`recognize_structure`](crate::recognize_structure) pass, not by L1.
+    Styled { command: String, content: Vec<Node> },
     /// An active character that acts like a command — `~`.
     Active(char),
     /// A construct deliberately out of scope (the TeX-programmability asymptote — e.g.
@@ -152,6 +215,63 @@ impl Node {
                 out.push_str(content);
                 out.push_str("\\end{");
                 out.push_str(env);
+                out.push('}');
+            }
+            Node::Accent { accent, arg } => {
+                // Render the braced form `\<accent>{arg}` — it re-recognizes to the same node
+                // whether the source wrote `\'e` or `\'{e}`.
+                out.push('\\');
+                out.push_str(accent);
+                out.push('{');
+                render_seq(arg, out);
+                out.push('}');
+            }
+            Node::Section { level, starred, short, title } => {
+                // `\section` (+ `*` if starred) (+ `[short]` if present) `{title}`. Renders back
+                // to the exact shape `recognize_structure` folds, so it re-recognizes equal.
+                out.push('\\');
+                out.push_str(level.command());
+                if *starred {
+                    out.push('*');
+                }
+                if let Some(short) = short {
+                    out.push('[');
+                    render_seq(short, out);
+                    out.push(']');
+                }
+                out.push('{');
+                render_seq(title, out);
+                out.push('}');
+            }
+            Node::CrossRef { command, note, target } => {
+                out.push('\\');
+                out.push_str(command);
+                if let Some(note) = note {
+                    out.push('[');
+                    render_seq(note, out);
+                    out.push(']');
+                }
+                out.push('{');
+                render_seq(target, out);
+                out.push('}');
+            }
+            Node::Preamble { command, options, name } => {
+                out.push('\\');
+                out.push_str(command);
+                if let Some(options) = options {
+                    out.push('[');
+                    render_seq(options, out);
+                    out.push(']');
+                }
+                out.push('{');
+                render_seq(name, out);
+                out.push('}');
+            }
+            Node::Styled { command, content } => {
+                out.push('\\');
+                out.push_str(command);
+                out.push('{');
+                render_seq(content, out);
                 out.push('}');
             }
             Node::Active(c) => out.push(*c),

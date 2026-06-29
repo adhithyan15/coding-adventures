@@ -19,7 +19,7 @@
  *   SESSION_RATE       → put the updated CardProgress + put the new Review
  *                        + put the updated Session (counters)
  *   SESSION_COMPLETE   → put the updated Session (status: "completed")
- *   STATE_LOAD         → no-op (data came FROM storage)
+ *   STATE_LOAD         → no-op for startup; full replace for imported backups
  *   SESSION_REVEAL     → no-op (ephemeral UI state only)
  *   SESSION_ADVANCE    → no-op (ephemeral UI state only)
  *
@@ -40,12 +40,15 @@ import {
   SESSION_START,
   SESSION_RATE,
   SESSION_COMPLETE,
+  STATE_LOAD,
 } from "./actions.js";
 
 export function createPersistenceMiddleware(
   storage: KVStorage,
 ): Middleware<AppState> {
   return (store, action, next) => {
+    const stateBefore = store.getState();
+
     // ── Pre-reducer capture ───────────────────────────────────────────────
     //
     // Delete actions remove entities from state. We need to know WHICH
@@ -63,7 +66,6 @@ export function createPersistenceMiddleware(
     let cardDeleteId: string | null = null;
 
     if (action.type === DECK_DELETE) {
-      const stateBefore = store.getState();
       const deckId = action.deckId as string;
       const cardIds = stateBefore.cards
         .filter((c) => c.deckId === deckId)
@@ -167,9 +169,44 @@ export function createPersistenceMiddleware(
         break;
       }
 
+      case STATE_LOAD: {
+        if (action.persist === true) {
+          void replacePersistedState(storage, stateBefore, state);
+        }
+        break;
+      }
+
       // These actions only affect ephemeral activeSession — nothing to persist
       default:
         break;
     }
   };
+}
+
+async function replacePersistedState(
+  storage: KVStorage,
+  previous: AppState,
+  next: AppState,
+): Promise<void> {
+  const deletes: Promise<void>[] = [
+    ...previous.decks.map((deck) => storage.delete("decks", deck.id)),
+    ...previous.cards.map((card) => storage.delete("cards", card.id)),
+    ...previous.cardProgress.map((progress) =>
+      storage.delete("card_progress", progress.cardId),
+    ),
+    ...previous.sessions.map((session) => storage.delete("sessions", session.id)),
+    ...previous.reviews.map((review) => storage.delete("reviews", review.id)),
+  ];
+  await Promise.all(deletes);
+
+  const puts: Promise<void>[] = [
+    ...next.decks.map((deck) => storage.put("decks", deck)),
+    ...next.cards.map((card) => storage.put("cards", card)),
+    ...next.cardProgress.map((progress) =>
+      storage.put("card_progress", progress),
+    ),
+    ...next.sessions.map((session) => storage.put("sessions", session)),
+    ...next.reviews.map((review) => storage.put("reviews", review)),
+  ];
+  await Promise.all(puts);
 }

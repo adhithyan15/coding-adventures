@@ -7,7 +7,9 @@
 //!
 //! - WASM has no "any" type — every local and stack slot must have a concrete
 //!   numeric type (`i32`, `i64`, `f32`, `f64`) or a known GC reference type.
-//! - WASM has no strings or raw heap-pointer indirection in this lowering.
+//! - WASM has only the E4 literal string foothold in this lowering:
+//!   `str_const` + `str_len` + `str_index` + `str_eq` + `str_cmp` + `str_concat` +
+//!   `print_str`; richer dynamic string ops remain rejected.
 //! - Runtime / I/O opcodes have no WASM equivalent without a host import,
 //!   which this direct lowering does not provide.
 //!
@@ -42,7 +44,7 @@
 //! | `EmptyModule` | Module has zero functions |
 //! | `EmptyFunction` | A function has zero instructions |
 //! | `UntypedInstruction` | `type_hint` is `"any"` or `"polymorphic"` |
-//! | `UnsupportedType` | `type_hint` is `"str"` or is an unsupported `"ref<X>"` |
+//! | `UnsupportedType` | `type_hint` is `"str"` outside `str_const` or is an unsupported `"ref<X>"` |
 //! | `UnsupportedOp` | op is any runtime / I/O / unsupported GC opcode |
 
 use interpreter_ir::IIRModule;
@@ -274,7 +276,10 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
 
             // ── Check 4: UnsupportedType ─────────────────────────────────────
             //
-            // `"str"` — we produce no string data section and no string ops.
+            // `"str"` — accepted for the E4 literal-output/metadata foothold's
+            // direct string producers (`str_const`, `str_concat`, `str_slice`). `str_len`,
+            // `str_index`, `str_eq`, and `str_cmp` produce integers, not string values.
+            // Richer dynamic string ops still fail explicitly below.
             //
             // `"ref<X>"` — reference types require WasmGC.  We accept
             // `"ref<LispyPair>"` (the only struct type we define).  All
@@ -282,10 +287,12 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             //
             // NOTE: float types (`"f32"`, `"f64"`) are NOT rejected here.
             // WASM has native float arithmetic, so they are fully supported.
-            if instr.type_hint == "str" {
+            if instr.type_hint == "str"
+                && !matches!(instr.op.as_str(), "str_const" | "str_concat" | "str_slice")
+            {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
-                     string operations are not supported in this WASM backend",
+                     only str_const + str_concat + str_slice + str_len + str_index + str_eq + str_cmp + print_str literal output is supported in this WASM backend",
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<")
@@ -311,7 +318,158 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             // [`CALL_BUILTIN_SUPPORTED_NAMES`].  This lets Brainfuck's
             // `putchar` / `getchar` flow through while still rejecting
             // unknown / unsafe builtins.
-            if UNSUPPORTED_OPS.contains(&instr.op.as_str()) {
+            if instr.op == "str_const" {
+                match (instr.dest.as_ref(), instr.srcs.first()) {
+                    (Some(_), Some(interpreter_ir::Operand::Str(s)))
+                        if s.is_ascii()
+                            && s.bytes()
+                                .all(|b| b >= 0x20 || matches!(b, b'\n' | b'\r' | b'\t')) =>
+                    {
+                        // Accepted — lower.rs puts the literal in a data segment.
+                    }
+                    (Some(_), Some(interpreter_ir::Operand::Str(_))) => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_const\" only supports \
+                             printable ASCII string literals in the WASM literal-output slice",
+                            func.name
+                        ));
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_const\" requires \
+                             a dest and srcs[0] = Operand::Str(literal)",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_concat" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (
+                        Some(_),
+                        [
+                            interpreter_ir::Operand::Var(_),
+                            interpreter_ir::Operand::Var(_),
+                        ],
+                        "str",
+                    ) => {
+                        // Accepted — lower.rs materialises literal concatenation metadata.
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_concat\" requires \
+                             dest, two Operand::Var sources, and str result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_slice" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (
+                        Some(_),
+                        [
+                            interpreter_ir::Operand::Var(_),
+                            interpreter_ir::Operand::Var(_),
+                            interpreter_ir::Operand::Var(_),
+                        ],
+                        "str",
+                    ) => {
+                        // Accepted — lower.rs materialises literal slice metadata.
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_slice\" requires \
+                             dest, string/start/end Operand::Var sources, and str result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_index" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (
+                        Some(_),
+                        [
+                            interpreter_ir::Operand::Var(_),
+                            interpreter_ir::Operand::Var(_),
+                        ],
+                        "i64" | "i32",
+                    ) => {
+                        // Accepted — lower.rs bounds-checks and loads a literal byte.
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_index\" requires \
+                             dest, string Operand::Var, index Operand::Var, and i64/i32 result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_len" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (Some(_), [interpreter_ir::Operand::Var(_)], "i64" | "i32") => {
+                        // Accepted — lower.rs materialises the direct literal's byte length.
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_len\" requires \
+                             dest, one Operand::Var source, and i64/i32 result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_eq" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (
+                        Some(_),
+                        [
+                            interpreter_ir::Operand::Var(_),
+                            interpreter_ir::Operand::Var(_),
+                        ],
+                        "i64" | "i32",
+                    ) => {
+                        // Accepted — lower.rs materialises literal equality.
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_eq\" requires \
+                             dest, two Operand::Var sources, and i64/i32 result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_cmp" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (
+                        Some(_),
+                        [
+                            interpreter_ir::Operand::Var(_),
+                            interpreter_ir::Operand::Var(_),
+                        ],
+                        "i64" | "i32",
+                    ) => {
+                        // Accepted — lower.rs materialises literal ordering.
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_cmp\" requires \
+                             dest, two Operand::Var sources, and i64/i32 result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "print_str" {
+                match (instr.type_hint.as_str(), instr.srcs.first()) {
+                    ("void", Some(interpreter_ir::Operand::Var(_))) => {
+                        // Accepted — lower.rs calls env.__print_str(ptr, len).
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"print_str\" requires \
+                             type_hint \"void\" and srcs[0] = Operand::Var(str)",
+                            func.name
+                        ));
+                    }
+                }
+            } else if UNSUPPORTED_OPS.contains(&instr.op.as_str()) {
                 errors.push(format!(
                     "UnsupportedOp: function {:?}, op {:?} is not supported by \
                      the WASM backend; it requires a host import or runtime support",
@@ -486,6 +644,208 @@ mod tests {
             "str",
         )]));
         assert!(errs.iter().any(|e| e.contains("UnsupportedType")));
+    }
+
+    #[test]
+    fn e4_literal_print_accepted() {
+        let errs = validate_for_wasm(&module_with(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_const + print_str should be accepted; got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn e4_literal_str_len_accepted() {
+        let errs = validate_for_wasm(&module_with(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("ABC".into())],
+                "str",
+            ),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_len over a direct literal should be accepted; got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn e4_literal_str_eq_accepted() {
+        let errs = validate_for_wasm(&module_with(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("A".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("A".into())],
+                "str",
+            ),
+            IIRInstr::new("str_eq", Some("ok".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ok".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_eq over direct literals should be accepted; got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn e4_literal_str_cmp_accepted() {
+        let errs = validate_for_wasm(&module_with(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("ALPHA".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("BETA".into())],
+                "str",
+            ),
+            IIRInstr::new("str_cmp", Some("ord".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ord".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_cmp over direct literals should be accepted; got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn e4_literal_str_concat_len_accepted() {
+        let errs = validate_for_wasm(&module_with(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("AB".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("CDE".into())],
+                "str",
+            ),
+            IIRInstr::new("str_concat", Some("s".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "str"),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_concat + str_len over direct literals should be accepted; got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn e4_literal_str_slice_index_accepted() {
+        let errs = validate_for_wasm(&module_with(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("ABCDE".into())],
+                "str",
+            ),
+            IIRInstr::new("const", Some("start".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("const", Some("end".into()), vec![Operand::Int(4)], "i64"),
+            IIRInstr::new(
+                "str_slice",
+                Some("sub".into()),
+                vec![
+                    Operand::Var("s".into()),
+                    Operand::Var("start".into()),
+                    Operand::Var("end".into()),
+                ],
+                "str",
+            ),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new(
+                "str_index",
+                Some("b".into()),
+                vec![Operand::Var("sub".into()), Operand::Var("i".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_slice + str_index over direct literals should be accepted; got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn e4_literal_str_index_accepted() {
+        let errs = validate_for_wasm(&module_with(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("ABC".into())],
+                "str",
+            ),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("str_index", Some("b".into()), vec![
+                Operand::Var("s".into()),
+                Operand::Var("i".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_index over a direct literal should be accepted; got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn richer_string_ops_still_rejected() {
+        let errs = validate_for_wasm(&module_with(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("A".into())],
+                "str",
+            ),
+            IIRInstr::new("str_index", Some("b".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+        ]));
+        assert!(
+            errs.iter().any(|e| e.contains("UnsupportedOp")),
+            "malformed string ops must remain rejected; got: {:?}",
+            errs
+        );
     }
 
     #[test]

@@ -63,7 +63,7 @@ After:   LINE_NUM("10") KEYWORD("REM") NEWLINE
 | `KEYWORD`   | `PRINT`, `LET`      | Reserved word (always uppercase after normalization) |
 | `BUILTIN_FN`| `SIN`, `LOG`, `RND` | One of the 11 built-in mathematical functions        |
 | `USER_FN`   | `FNA`, `FNZ`        | User-defined function (FN + one letter)              |
-| `NAME`      | `X`, `A1`, `B9`     | Variable name (letter, or letter+digit)              |
+| `NAME`      | `X`, `A1`, `A$`     | Variable name, including `$` string variables         |
 | `PLUS`      | `+`                 | Addition                                             |
 | `MINUS`     | `-`                 | Subtraction                                          |
 | `STAR`      | `*`                 | Multiplication                                       |

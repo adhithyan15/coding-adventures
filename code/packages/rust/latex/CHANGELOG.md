@@ -2,6 +2,94 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.10.0] — 2026-06-27
+
+### Added — LTX01 L6: `math-frontend` adapter (the ladder's capstone)
+
+- **`LatexMath`** implements `math_frontend::MathFrontend`: `parse(src)` runs the L2/L3a math
+  grammar (`parse_math`) and **lowers** the LaTeX-shaped `MathNode` into the notation-agnostic
+  `math_frontend::MathExpr`. LaTeX is now the first **pluggable frontend** of the PFE01 framework
+  — a consumer (rule engine, CAS, renderer) lowers one neutral tree and gets LaTeX for free.
+- **Registration:** `latex::registry()` returns a `FrontendRegistry` with LaTeX installed, and
+  `latex::register_latex(&mut reg)` installs it into an existing one. (`math-frontend`'s own
+  `with_builtins()` stays empty by design — it cannot depend on this crate without a cycle; the
+  wiring lives here.)
+- **Neutral lowering** drops presentation, keeps meaning: `\times`/`\cdot`/juxtaposition →
+  `Mul`; `\frac`/`\dfrac`/`\tfrac` → `Frac`; every fence style → `Group`; every matrix
+  delimiter → `Matrix`; `a^n` → `Pow`, `a_i` → `Subscript`, `a_i^n` → `Pow(Subscript(..),..)`;
+  accents (`\hat{x}`) → `Call{Other(kind), arg}`. Numbers stay **exact** (`MathExpr::Number`,
+  never `f64`). Declares `Capabilities::all()`; conforms to the shared `check_frontend` harness.
+- **Honest gaps:** `\pm`/`\mp` and `\binom` have **no** neutral representation, so they lower to
+  a well-formed spanned `FrontendError` rather than being faked. Extending the neutral AST to
+  cover them is a future `math-frontend`-crate change, not a hack here.
+- **Feature-gated:** the adapter (and the only dependency, `math-frontend`) sit behind the
+  default-on **`frontend`** cargo feature. `--no-default-features` builds the zero-dependency
+  L0–L5 document/math parser alone (verified: core tests pass under `--no-default-features`).
+- Total / panic-free: the lowering walks the tree with an **explicit work stack** (not native
+  recursion), so its call-frame usage is O(1) in tree depth. This matters because a LaTeX math
+  tree can be arbitrarily deep along a left-associative spine (`a+a+a+…`, juxtaposition `aaa…`,
+  a chained relation) that `parse_math`'s nesting `MAX_DEPTH` does **not** bound — a recursive
+  lowering would overflow the stack (an uncatchable abort) on such adversarial input. No `unsafe`.
+- +16 tests (frac/pow/subscript/root/func/bigop/rel/implicit-mul/normalization/symbol/text/
+  group/accent/matrix/exact-number/gap-errors/parse-error-span/registry/conformance, plus a
+  deep-chain no-overflow regression at depth 4000). **136 unit + 1 doc test** green with default
+  features; core green under `--no-default-features`; clippy `-D warnings` clean both ways. Crate
+  0.9.0 → 0.10.0. **This completes the LTX01 ladder (L0–L6).**
+
+## [0.9.0] — 2026-06-27
+
+### Added — LTX01 L5d: document-structure recognition
+
+- **`recognize_structure(Vec<Node>) -> Vec<Node>`** — a new, opt-in recognition pass (a sibling
+  of `expand` / `recognize_accents`) that classifies the *generic* `Node::Command`s produced by
+  `parse` (L1) into **semantic** structure nodes. `parse` (L1) is unchanged, so its round-trip
+  is preserved; run the pass, or don't.
+- Four new `Node` variants (+ a `SectionLevel` enum):
+  - **`Node::Section { level, starred, short, title }`** — `\part`/`\chapter`/`\section`/
+    `\subsection`/`\subsubsection`/`\paragraph`/`\subparagraph`, including the starred form
+    `\section*{T}` (the intervening `Text("*")` sibling is folded) and the optional short TOC
+    title `\section[Short]{Title}`.
+  - **`Node::CrossRef { command, note, target }`** — `\label`/`\ref`/`\eqref`/`\pageref`/
+    `\autoref`/`\nameref`/`\cite`/`\citep`/`\citet`, keeping the `\cite[note]{key}` optional.
+  - **`Node::Preamble { command, options, name }`** — `\documentclass`/`\usepackage`/
+    `\RequirePackage` with their `[options]`.
+  - **`Node::Styled { command, content }`** — argument-form text font commands (`\textbf`,
+    `\textit`, `\texttt`, `\emph`, `\underline`, …). Font *declarations* (`\bfseries`,
+    `\itshape`, …) stay plain `Command`s — their effect is positional, not a wrapped argument.
+- **`to_latex`** renders each recognized node back to the exact shape the pass folds, so
+  `recognize_structure(parse(&n.to_latex())) == [n]`. The pass recurses into groups, command
+  arguments, environment bodies, and the parts of already-recognized nodes, so it is idempotent
+  and composes with itself.
+- Total / panic-free: a command that does not match its expected shape (a sectioning command
+  with no title, a cross-ref with no key, a styled command with the wrong argument count) is
+  left as a plain `Command`, never dropped or mis-folded. Recursion is bounded by the L1 tree
+  depth (`MAX_DEPTH`). No `unsafe`; no `MAX_DEPTH` change (Node size still dominated by
+  `Environment`).
+- +14 tests (plain/starred/short sectioning, all seven levels, title-less command left alone,
+  cross-refs, citation note, preamble, styled, declaration-stays-command, recursion into
+  titles, surrounding text preserved, idempotence, round-trip corpus). **117 unit + 1 doc
+  test** green; clippy `-D warnings` clean. Crate 0.8.0 → 0.9.0.
+
+## [0.8.0] — 2026-06-27
+
+### Added — LTX01 L5c: text accents
+
+- **`recognize_accents(Vec<Node>) -> Vec<Node>`** — a new, opt-in recognition pass (a sibling
+  of `expand`) that folds an accent control sequence and the character it accents into a new
+  `Node::Accent { accent, arg }`. `parse` (L1) is unchanged, so its round-trip is preserved.
+- Recognizes both spellings: control-symbol accents `\'  \`  \^  \"  \~  \=  \.` (which take no
+  L1 argument, so they pair with the next node) and control-word accents `\u \v \H \c \d \b
+  \r \t` (captured as `\c{e}`, or `\c e` where the lexer absorbed the space). The argument is
+  a single following character (`\'e` → é over `e`, the rest of the run kept as text) or a
+  braced group. Recurses into groups, command arguments, and environment bodies.
+- **`Node::Accent::to_latex`** renders the braced form `\'{e}`, so
+  `recognize_accents(parse(&n.to_latex())) == [n]` whether the source wrote `\'e` or `\'{e}`.
+- Total / panic-free: a dangling accent (nothing accent-able after it) is left as a plain
+  command, never dropped or mis-folded. No `unsafe`.
+- +9 tests (control-symbol over next char, first-char-only with remainder kept, braced arg,
+  control-word braced + bare, accent-in-group, non-accent untouched, dangling, round-trip
+  corpus). **103 unit + 1 doc test** green; clippy `-D warnings` clean. Crate 0.7.0 → 0.8.0.
+
 ## [0.7.0] — 2026-06-27
 
 ### Added — LTX01 L5b: `verbatim` environment

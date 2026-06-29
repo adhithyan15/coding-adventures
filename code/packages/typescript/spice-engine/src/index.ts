@@ -1,5 +1,6 @@
 const PIVOT_EPSILON = 1.0e-12;
 const SPARSE_SOLVER_THRESHOLD = 30;
+const DEFAULT_NEWTON_STEP_LIMIT = 5.0;
 const TWO_PI = Math.PI * 2.0;
 const BOLTZMANN = 1.380_649e-23;
 const ELECTRON_CHARGE = 1.602_176_634e-19;
@@ -666,6 +667,10 @@ export interface DeckRunArtifact {
   readonly directive: DeckAnalysisPlan["directive"];
   readonly analysisDirectiveCount: number;
   readonly analysisDirectives: readonly string[];
+  readonly deckAnalysisKindCount: number;
+  readonly deckAnalysisKinds: readonly string[];
+  readonly deckAnalysisDirectiveCount: number;
+  readonly deckAnalysisDirectives: readonly string[];
   readonly lineNumber: number;
   readonly sourceName?: string;
   readonly outputNode?: string;
@@ -722,6 +727,18 @@ export interface DeckOutputPlanArtifact {
   readonly lineNumber: number;
   readonly sourceName?: string;
   readonly outputNode?: string;
+  readonly sweepKind?: DeckAnalysisPlan["sweepKind"];
+  readonly startValue?: number;
+  readonly stopValue?: number;
+  readonly stepValue?: number;
+  readonly pointCount?: number;
+  readonly startFrequencyHz?: number;
+  readonly stopFrequencyHz?: number;
+  readonly stepTime?: number;
+  readonly stopTime?: number;
+  readonly startTime?: number;
+  readonly maxStep?: number;
+  readonly useInitialConditions?: boolean;
   readonly resultRowCount: number;
   readonly resultColumnCount: number;
   readonly resultColumns: readonly string[];
@@ -794,6 +811,10 @@ export interface DeckAnalysisExecution {
   readonly outputProbes: readonly string[];
   readonly outputDirectives: readonly string[];
   readonly analysisDirectives: readonly string[];
+  readonly deckAnalysisKindCount: number;
+  readonly deckAnalysisKinds: readonly string[];
+  readonly deckAnalysisDirectiveCount: number;
+  readonly deckAnalysisDirectives: readonly string[];
   readonly outputPlanArtifactCount: number;
   readonly outputPlanArtifacts: readonly DeckOutputPlanArtifact[];
   readonly outputPlanArtifactTable: string;
@@ -841,6 +862,19 @@ export interface DeckAnalysisExecution {
   readonly fourierTable: string;
   readonly runArtifacts: readonly DeckRunArtifact[];
   readonly runArtifactTable: string;
+}
+
+export interface DeckExecution {
+  readonly executionCount: number;
+  readonly analysisOrder: readonly string[];
+  readonly analysisDirectives: readonly string[];
+  readonly executions: readonly DeckAnalysisExecution[];
+  readonly runArtifactCount: number;
+  readonly runArtifacts: readonly DeckRunArtifact[];
+  readonly runArtifactTable: string;
+  readonly runArtifactCsv: string;
+  readonly runArtifactJson: string;
+  readonly runArtifactRecords: ReadonlyArray<Record<string, string>>;
 }
 
 export interface ReleaseReadinessIssue {
@@ -899,6 +933,8 @@ export interface Jfet {
   readonly beta: number;
   readonly thresholdVoltage: number;
   readonly channelLengthModulation: number;
+  readonly gateSourceCapacitance: number;
+  readonly gateDrainCapacitance: number;
 }
 
 export type BjtPolarity = "NPN" | "PNP";
@@ -937,6 +973,8 @@ export interface MosfetLevel1Params {
   readonly CGBO: number;
   readonly CBS: number;
   readonly CBD: number;
+  readonly PB: number;
+  readonly MJ: number;
 }
 
 export interface Mosfet {
@@ -959,6 +997,140 @@ export interface NormalizedModelCard {
   readonly parameters: Readonly<Record<string, number>>;
   readonly unsupportedParameters: readonly string[];
 }
+
+export interface DeviceModelBehaviorFixture {
+  readonly name: string;
+  readonly kind: ModelCardKind;
+  readonly model: NormalizedModelCard;
+  readonly circuit: Circuit;
+  readonly probeNode: string;
+  readonly expectedMin: number;
+  readonly expectedMax: number;
+  readonly deckLines: readonly string[];
+}
+
+export interface DeviceModelTemperaturePoint {
+  readonly temperatureKelvin: number;
+  readonly expectedMin: number;
+  readonly expectedMax: number;
+}
+
+export interface DeviceModelTemperatureBehaviorFixture {
+  readonly name: string;
+  readonly kind: ModelCardKind;
+  readonly model: NormalizedModelCard;
+  readonly circuit: Circuit;
+  readonly probeNode: string;
+  readonly nominalTemperatureKelvin: number;
+  readonly energyGapElectronVolts: number;
+  readonly temperatureBehavior: string;
+  readonly temperaturePoints: readonly DeviceModelTemperaturePoint[];
+  readonly deckLines: readonly string[];
+}
+
+export interface DeviceModelCapacitanceBehaviorFixture {
+  readonly name: string;
+  readonly kind: ModelCardKind;
+  readonly model: NormalizedModelCard;
+  readonly circuit: Circuit;
+  readonly probeNode: string;
+  readonly frequencyHz: number;
+  readonly expectedMagnitudeMin: number;
+  readonly expectedMagnitudeMax: number;
+  readonly capacitanceBehavior: string;
+  readonly deckLines: readonly string[];
+}
+
+export interface DeviceModelNoiseBehaviorFixture {
+  readonly name: string;
+  readonly kind: ModelCardKind;
+  readonly model: NormalizedModelCard;
+  readonly circuit: Circuit;
+  readonly outputNode: string;
+  readonly inputSource: string;
+  readonly frequencyHz: number;
+  readonly expectedNoiseElement: string;
+  readonly expectedNoiseType: NoiseType;
+  readonly expectedSourcePsdMin: number;
+  readonly expectedSourcePsdMax: number;
+  readonly expectedOutputPsdMin: number;
+  readonly expectedOutputPsdMax: number;
+  readonly noiseBehavior: string;
+  readonly deckLines: readonly string[];
+}
+
+export interface DeviceModelChargeBehaviorFixture {
+  readonly name: string;
+  readonly kind: ModelCardKind;
+  readonly model: NormalizedModelCard;
+  readonly circuit: Circuit;
+  readonly probeNode: string;
+  readonly timeStepSeconds: number;
+  readonly stopTimeSeconds: number;
+  readonly storageCapacitanceFarads: number;
+  readonly expectedInitialMin: number;
+  readonly expectedInitialMax: number;
+  readonly expectedFinalMin: number;
+  readonly expectedFinalMax: number;
+  readonly chargeBehavior: string;
+  readonly deckLines: readonly string[];
+}
+
+export interface DeviceModelReferenceDeckAuditFixture {
+  readonly name: string;
+  readonly kind: ModelCardKind;
+  readonly model: NormalizedModelCard;
+  readonly analysis: string;
+  readonly reference: string;
+  readonly expectedBehavior: string;
+  readonly deckLines: readonly string[];
+}
+
+export interface DeviceModelReferenceDeckAuditIssue {
+  readonly fixtureName: string;
+  readonly field: string;
+  readonly message: string;
+}
+
+export interface DeviceModelReferenceDeckAuditGateReport {
+  readonly passed: boolean;
+  readonly fixtureCount: number;
+  readonly expectedKinds: readonly ModelCardKind[];
+  readonly expectedAnalyses: readonly string[];
+  readonly issues: readonly DeviceModelReferenceDeckAuditIssue[];
+}
+
+export interface DeviceModelReferenceDeckAuditSummary {
+  readonly kind: ModelCardKind | string;
+  readonly fixtureCount: number;
+  readonly analyses: readonly string[];
+  readonly missingAnalyses: readonly string[];
+  readonly deckLineCount: number;
+  readonly references: readonly string[];
+}
+
+export interface DeviceModelReferenceDeckAuditAnalysisSummary {
+  readonly analysis: string;
+  readonly fixtureCount: number;
+  readonly kinds: readonly (ModelCardKind | string)[];
+  readonly missingKinds: readonly ModelCardKind[];
+  readonly deckLineCount: number;
+  readonly references: readonly string[];
+}
+
+const REFERENCE_DECK_AUDIT_EXPECTED_KINDS: readonly ModelCardKind[] = [
+  "D",
+  "NPN",
+  "NJF",
+  "NMOS",
+];
+const REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES = [
+  "op",
+  "temperature",
+  "ac",
+  "noise",
+  "tran",
+] as const;
 
 export interface Vccs {
   readonly kind: "vccs";
@@ -1013,12 +1185,28 @@ export type DcConvergenceAid = "newton" | "gmin" | "source" | "pseudo_transient"
 
 export type LinearSolverKind = "none" | "dense_real" | "sparse_real" | "dense_complex" | "sparse_complex";
 
+export type LinearSolverBackend = "none" | "dense_gaussian" | "native_sparse_gaussian";
+
+export interface LinearSolverProfile {
+  readonly matrixSize: number;
+  readonly solver: LinearSolverKind;
+  readonly backend: LinearSolverBackend;
+  readonly structuralNonzeros: number;
+  readonly density: number;
+  readonly fillInNonzeros: number;
+  readonly fallbackReason?: string;
+}
+
 export interface DcSolverDiagnostics {
   readonly matrixSize: number;
   readonly solver: LinearSolverKind;
   readonly tolerance: number;
   readonly maxDelta: number;
   readonly convergenceAid: DcConvergenceAid;
+  readonly newtonStepLimit?: number;
+  readonly limitedNewtonSteps: number;
+  readonly minimumDampingFactor: number;
+  readonly solverProfile: LinearSolverProfile;
 }
 
 export interface DcOpOptions {
@@ -1028,6 +1216,7 @@ export interface DcOpOptions {
   readonly pseudoTransientSteps?: number;
   readonly pseudoTransientConductance?: number;
   readonly pseudoTransientMaxIterations?: number;
+  readonly newtonStepLimit?: number | null;
 }
 
 export interface CornerOverride {
@@ -1216,7 +1405,7 @@ export interface CornerSParameterResult {
   readonly points: readonly CornerSParameterPoint[];
 }
 
-export type NoiseType = "thermal";
+export type NoiseType = "thermal" | "shot";
 
 export interface NoiseEntry {
   readonly elementName: string;
@@ -2524,7 +2713,7 @@ function cloneSubcktElement(
     case "diode":
       return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime);
     case "jfet":
-      return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation);
+      return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance);
     case "bjt":
       return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime);
     case "mosfet":
@@ -6627,6 +6816,8 @@ export function jfet(
   beta = 1.0e-4,
   thresholdVoltage = polarity === "NJF" ? -2.0 : 2.0,
   channelLengthModulation = 0.0,
+  gateSourceCapacitance = 0.0,
+  gateDrainCapacitance = 0.0,
 ): Jfet {
   return {
     kind: "jfet",
@@ -6638,6 +6829,8 @@ export function jfet(
     beta,
     thresholdVoltage,
     channelLengthModulation,
+    gateSourceCapacitance,
+    gateDrainCapacitance,
   };
 }
 
@@ -6689,6 +6882,8 @@ export function defaultMosfetLevel1Params(): MosfetLevel1Params {
     CGBO: 0.0,
     CBS: 0.0,
     CBD: 0.0,
+    PB: 0.8,
+    MJ: 0.5,
   };
 }
 
@@ -6771,6 +6966,10 @@ const JFET_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   VTH: "VTO",
   LAMBDA: "LAMBDA",
   LAM: "LAMBDA",
+  CGS: "CGS",
+  CGS0: "CGS",
+  CGD: "CGD",
+  CGD0: "CGD",
 };
 
 const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
@@ -6797,6 +6996,8 @@ const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   CJS: "CBS",
   CBD: "CBD",
   CJD: "CBD",
+  PB: "PB",
+  MJ: "MJ",
 };
 
 function modelTypeKey(text: string): string {
@@ -6930,6 +7131,8 @@ export function jfetFromModelCard(
     p.BETA ?? 1.0e-4,
     p.VTO ?? (model.kind === "NJF" ? -2.0 : 2.0),
     p.LAMBDA ?? 0.0,
+    p.CGS ?? 0.0,
+    p.CGD ?? 0.0,
   );
 }
 
@@ -6961,6 +7164,8 @@ export function mosfetFromModelCard(
     ...(p.CGBO !== undefined ? { CGBO: p.CGBO } : {}),
     ...(p.CBS !== undefined ? { CBS: p.CBS } : {}),
     ...(p.CBD !== undefined ? { CBD: p.CBD } : {}),
+    ...(p.PB !== undefined ? { PB: p.PB } : {}),
+    ...(p.MJ !== undefined ? { MJ: p.MJ } : {}),
   };
   return mosfet(name, drain, gate, source, body, model.kind, params);
 }
@@ -6978,6 +7183,1049 @@ export function deviceModelAuditFixtures(): readonly NormalizedModelCard[] {
       CJD: 3.0e-13,
     }),
   ];
+}
+
+function modelCardByName(models: readonly NormalizedModelCard[]): Map<string, NormalizedModelCard> {
+  return new Map(models.map((model) => [model.name, model]));
+}
+
+function requiredModel(
+  models: ReadonlyMap<string, NormalizedModelCard>,
+  name: string,
+  helperName = "deviceModelBehaviorAuditFixtures",
+): NormalizedModelCard {
+  const model = models.get(name);
+  if (model === undefined) {
+    throw invalidElement(helperName, `missing ${name} model fixture`);
+  }
+  return model;
+}
+
+export function deviceModelBehaviorAuditFixtures(): readonly DeviceModelBehaviorFixture[] {
+  const models = modelCardByName(deviceModelAuditFixtures());
+
+  const diodeModel = requiredModel(models, "Dfast");
+  const diodeCircuit = new Circuit();
+  diodeCircuit.add(voltageSource("Vbias", "vin", "0", 0.8));
+  diodeCircuit.add(resistor("Rlimit", "vin", "out", 1_000.0));
+  diodeCircuit.add(diodeFromModelCard("D1", "out", "0", diodeModel));
+
+  const bjtModel = requiredModel(models, "Qsmall");
+  const bjtCircuit = new Circuit();
+  bjtCircuit.add(voltageSource("Vcc", "vcc", "0", 5.0));
+  bjtCircuit.add(voltageSource("Vbase", "base", "0", 0.72));
+  bjtCircuit.add(resistor("Rload", "out", "0", 1_000.0));
+  bjtCircuit.add(bjtFromModelCard("Q1", "vcc", "base", "out", bjtModel));
+
+  const jfetModel = requiredModel(models, "Jn");
+  const jfetCircuit = new Circuit();
+  jfetCircuit.add(voltageSource("Vdd", "vdd", "0", 10.0));
+  jfetCircuit.add(voltageSource("Vg", "gate", "0", 0.0));
+  jfetCircuit.add(resistor("Rd", "vdd", "drain", 2_000.0));
+  jfetCircuit.add(resistor("Rs", "source", "0", 1_000.0));
+  jfetCircuit.add(jfetFromModelCard("J1", "drain", "gate", "source", jfetModel));
+
+  const mosModel = requiredModel(models, "Mn");
+  const mosCircuit = new Circuit();
+  mosCircuit.add(voltageSource("Vdd", "vdd", "0", 1.8));
+  mosCircuit.add(voltageSource("Vgate", "gate", "0", 1.8));
+  mosCircuit.add(resistor("Rload", "vdd", "out", 1_000.0));
+  mosCircuit.add(mosfetFromModelCard("M1", "out", "gate", "0", "0", mosModel));
+
+  return [
+    {
+      name: "diode-forward-bias",
+      kind: diodeModel.kind,
+      model: diodeModel,
+      circuit: diodeCircuit,
+      probeNode: "out",
+      expectedMin: 0.55,
+      expectedMax: 0.65,
+      deckLines: [
+        "* device-model behavior fixture: diode-forward-bias",
+        ".model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)",
+        "Vbias vin 0 0.8",
+        "Rlimit vin out 1k",
+        "D1 out 0 Dfast",
+        ".op",
+        ".save V(out)",
+        ".end",
+      ],
+    },
+    {
+      name: "bjt-emitter-follower",
+      kind: bjtModel.kind,
+      model: bjtModel,
+      circuit: bjtCircuit,
+      probeNode: "out",
+      expectedMin: 0.08,
+      expectedMax: 0.18,
+      deckLines: [
+        "* device-model behavior fixture: bjt-emitter-follower",
+        ".model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)",
+        "Vcc vcc 0 5",
+        "Vbase base 0 0.72",
+        "Q1 vcc base out Qsmall",
+        "Rload out 0 1k",
+        ".op",
+        ".save V(out)",
+        ".end",
+      ],
+    },
+    {
+      name: "jfet-source-bias",
+      kind: jfetModel.kind,
+      model: jfetModel,
+      circuit: jfetCircuit,
+      probeNode: "source",
+      expectedMin: 0.80,
+      expectedMax: 0.95,
+      deckLines: [
+        "* device-model behavior fixture: jfet-source-bias",
+        ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)",
+        "Vdd vdd 0 10",
+        "Vg gate 0 0",
+        "Rd vdd drain 2k",
+        "Rs source 0 1k",
+        "J1 drain gate source Jn",
+        ".op",
+        ".save V(source)",
+        ".end",
+      ],
+    },
+    {
+      name: "mos-level1-common-source",
+      kind: mosModel.kind,
+      model: mosModel,
+      circuit: mosCircuit,
+      probeNode: "out",
+      expectedMin: 0.55,
+      expectedMax: 0.85,
+      deckLines: [
+        "* device-model behavior fixture: mos-level1-common-source",
+        ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)",
+        "Vdd vdd 0 1.8",
+        "Vgate gate 0 1.8",
+        "Rload vdd out 1k",
+        "M1 out gate 0 0 Mn",
+        ".op",
+        ".save V(out)",
+        ".end",
+      ],
+    },
+  ];
+}
+
+function deviceModelTemperaturePoints(name: string): readonly DeviceModelTemperaturePoint[] {
+  const windows: Record<string, readonly [number, number, number][]> = {
+    "diode-forward-bias": [
+      [260.15, 0.63, 0.70],
+      [300.15, 0.55, 0.65],
+      [340.15, 0.49, 0.56],
+    ],
+    "bjt-emitter-follower": [
+      [260.15, 0.03, 0.09],
+      [300.15, 0.08, 0.18],
+      [340.15, 0.15, 0.22],
+    ],
+    "jfet-source-bias": [
+      [260.15, 0.86, 0.90],
+      [300.15, 0.86, 0.90],
+      [340.15, 0.86, 0.90],
+    ],
+    "mos-level1-common-source": [
+      [260.15, 0.58, 0.68],
+      [300.15, 0.55, 0.85],
+      [340.15, 0.70, 0.82],
+    ],
+  };
+  const fixtureWindows = windows[name];
+  if (fixtureWindows === undefined) {
+    throw invalidElement("deviceModelTemperatureAuditFixtures", `missing temperature windows for ${name}`);
+  }
+  return fixtureWindows.map(([temperatureKelvin, expectedMin, expectedMax]) => ({
+    temperatureKelvin,
+    expectedMin,
+    expectedMax,
+  }));
+}
+
+function deviceModelTemperatureBehavior(name: string): string {
+  const behaviors: Record<string, string> = {
+    "diode-forward-bias": "diode saturation current and thermal voltage scale with temperature",
+    "bjt-emitter-follower": "BJT saturation current and thermal voltage scale with temperature",
+    "jfet-source-bias": "JFET temperature scaling is intentionally invariant until a policy lands",
+    "mos-level1-common-source": "Level-1 MOS threshold and transconductance scale with temperature",
+  };
+  const behavior = behaviors[name];
+  if (behavior === undefined) {
+    throw invalidElement("deviceModelTemperatureAuditFixtures", `missing temperature behavior for ${name}`);
+  }
+  return behavior;
+}
+
+function deviceModelTemperatureDeckLines(fixture: DeviceModelBehaviorFixture): readonly string[] {
+  const lines = [...fixture.deckLines];
+  lines[0] = `* device-model temperature fixture: ${fixture.name}`;
+  const opIndex = lines.indexOf(".op");
+  lines.splice(opIndex >= 0 ? opIndex : lines.length, 0, ".temp 260.15 300.15 340.15");
+  return lines;
+}
+
+export function deviceModelTemperatureAuditFixtures(): readonly DeviceModelTemperatureBehaviorFixture[] {
+  return deviceModelBehaviorAuditFixtures().map((fixture) => ({
+    name: fixture.name,
+    kind: fixture.kind,
+    model: fixture.model,
+    circuit: fixture.circuit,
+    probeNode: fixture.probeNode,
+    nominalTemperatureKelvin: 300.15,
+    energyGapElectronVolts: 1.11,
+    temperatureBehavior: deviceModelTemperatureBehavior(fixture.name),
+    temperaturePoints: deviceModelTemperaturePoints(fixture.name),
+    deckLines: deviceModelTemperatureDeckLines(fixture),
+  }));
+}
+
+export function deviceModelCapacitanceAuditFixtures(): readonly DeviceModelCapacitanceBehaviorFixture[] {
+  const helperName = "deviceModelCapacitanceAuditFixtures";
+  const models = modelCardByName(deviceModelAuditFixtures());
+  const frequencyHz = 100_000.0;
+
+  const diodeModel = requiredModel(models, "Dfast", helperName);
+  const diodeCircuit = new Circuit();
+  diodeCircuit.add(voltageSourceWithAc("Vdrive", "in", "0", 0.0, 1.0, 0.0));
+  diodeCircuit.add(resistor("Rin", "in", "out", 1_000_000.0));
+  diodeCircuit.add(diodeFromModelCard("D1", "out", "0", diodeModel));
+
+  const bjtModel = requiredModel(models, "Qsmall", helperName);
+  const bjtCircuit = new Circuit();
+  bjtCircuit.add(voltageSourceWithAc("Vdrive", "in", "0", 0.0, 1.0, 0.0));
+  bjtCircuit.add(resistor("Rin", "in", "base", 1_000_000.0));
+  bjtCircuit.add(resistor("Rc", "col", "0", 1_000.0));
+  bjtCircuit.add(bjtFromModelCard("Q1", "col", "base", "0", bjtModel));
+
+  const jfetModel = normalizeModelCard("Jn", "NJF", {
+    BETA: 9.0e-4,
+    VTO: -1.8,
+    LAMBDA: 0.02,
+    CGS: 2.0e-9,
+    CGD: 1.0e-10,
+  });
+  const jfetCircuit = new Circuit();
+  jfetCircuit.add(voltageSourceWithAc("Vdrive", "in", "0", 0.0, 1.0, 0.0));
+  jfetCircuit.add(resistor("Rin", "in", "source", 1_000.0));
+  jfetCircuit.add(resistor("Rd", "drain", "0", 2_000.0));
+  jfetCircuit.add(voltageSource("Vgate", "gate", "0", 0.0));
+  jfetCircuit.add(jfetFromModelCard("J1", "drain", "gate", "source", jfetModel));
+
+  const mosModel = requiredModel(models, "Mn", helperName);
+  const mosCircuit = new Circuit();
+  mosCircuit.add(voltageSourceWithAc("Vdrive", "in", "0", 0.0, 1.0, 0.0));
+  mosCircuit.add(resistor("Rin", "in", "drain", 5_000_000.0));
+  mosCircuit.add(voltageSource("Vgate", "gate", "0", 0.0));
+  mosCircuit.add(mosfetFromModelCard("M1", "drain", "gate", "0", "0", mosModel));
+
+  return [
+    {
+      name: "diode-capacitance-ac",
+      kind: diodeModel.kind,
+      model: diodeModel,
+      circuit: diodeCircuit,
+      probeNode: "out",
+      frequencyHz,
+      expectedMagnitudeMin: 0.72,
+      expectedMagnitudeMax: 0.74,
+      capacitanceBehavior: "diode CJO and TT contribute high-frequency shunt capacitance",
+      deckLines: [
+        "* device-model capacitance fixture: diode-capacitance-ac",
+        ".model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)",
+        "Vdrive in 0 0 AC 1",
+        "Rin in out 1meg",
+        "D1 out 0 Dfast",
+        ".ac lin 1 100k 100k",
+        ".save V(out)",
+        ".end",
+      ],
+    },
+    {
+      name: "bjt-capacitance-ac",
+      kind: bjtModel.kind,
+      model: bjtModel,
+      circuit: bjtCircuit,
+      probeNode: "base",
+      frequencyHz,
+      expectedMagnitudeMin: 0.61,
+      expectedMagnitudeMax: 0.64,
+      capacitanceBehavior: "BJT CJE and TF contribute base-emitter AC capacitance",
+      deckLines: [
+        "* device-model capacitance fixture: bjt-capacitance-ac",
+        ".model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)",
+        "Vdrive in 0 0 AC 1",
+        "Rin in base 1meg",
+        "Rc col 0 1k",
+        "Q1 col base 0 Qsmall",
+        ".ac lin 1 100k 100k",
+        ".save V(base)",
+        ".end",
+      ],
+    },
+    {
+      name: "jfet-capacitance-ac",
+      kind: jfetModel.kind,
+      model: jfetModel,
+      circuit: jfetCircuit,
+      probeNode: "source",
+      frequencyHz,
+      expectedMagnitudeMin: 0.50,
+      expectedMagnitudeMax: 0.54,
+      capacitanceBehavior: "JFET CGS/CGD contribute high-frequency gate-channel capacitance",
+      deckLines: [
+        "* device-model capacitance fixture: jfet-capacitance-ac",
+        ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02 CGS=2n CGD=100p)",
+        "Vdrive in 0 0 AC 1",
+        "Rin in source 1k",
+        "Rd drain 0 2k",
+        "Vgate gate 0 0",
+        "J1 drain gate source Jn",
+        ".ac lin 1 100k 100k",
+        ".save V(source)",
+        ".end",
+      ],
+    },
+    {
+      name: "mos-level1-capacitance-ac",
+      kind: mosModel.kind,
+      model: mosModel,
+      circuit: mosCircuit,
+      probeNode: "drain",
+      frequencyHz,
+      expectedMagnitudeMin: 0.72,
+      expectedMagnitudeMax: 0.74,
+      capacitanceBehavior: "Level-1 MOS CBD contributes drain-bulk AC capacitance",
+      deckLines: [
+        "* device-model capacitance fixture: mos-level1-capacitance-ac",
+        ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)",
+        "Vdrive in 0 0 AC 1",
+        "Rin in drain 5meg",
+        "Vgate gate 0 0",
+        "M1 drain gate 0 0 Mn",
+        ".ac lin 1 100k 100k",
+        ".save V(drain)",
+        ".end",
+      ],
+    },
+  ];
+}
+
+export function deviceModelNoiseAuditFixtures(): readonly DeviceModelNoiseBehaviorFixture[] {
+  const helperName = "deviceModelNoiseAuditFixtures";
+  const models = modelCardByName(deviceModelAuditFixtures());
+  const frequencyHz = 1_000.0;
+
+  const diodeModel = requiredModel(models, "Dfast", helperName);
+  const diodeCircuit = new Circuit();
+  diodeCircuit.add(voltageSource("Vbias", "vin", "0", 0.8));
+  diodeCircuit.add(resistor("Rlimit", "vin", "out", 1_000.0));
+  diodeCircuit.add(diodeFromModelCard("D1", "out", "0", diodeModel));
+
+  const bjtModel = requiredModel(models, "Qsmall", helperName);
+  const bjtCircuit = new Circuit();
+  bjtCircuit.add(voltageSource("Vcc", "vcc", "0", 5.0));
+  bjtCircuit.add(voltageSource("Vbase", "base", "0", 0.72));
+  bjtCircuit.add(resistor("Rload", "out", "0", 1_000.0));
+  bjtCircuit.add(bjtFromModelCard("Q1", "vcc", "base", "out", bjtModel));
+
+  const jfetModel = requiredModel(models, "Jn", helperName);
+  const jfetCircuit = new Circuit();
+  jfetCircuit.add(voltageSource("Vdd", "vdd", "0", 10.0));
+  jfetCircuit.add(voltageSource("Vg", "gate", "0", 0.0));
+  jfetCircuit.add(resistor("Rd", "vdd", "drain", 2_000.0));
+  jfetCircuit.add(resistor("Rs", "source", "0", 1_000.0));
+  jfetCircuit.add(jfetFromModelCard("J1", "drain", "gate", "source", jfetModel));
+
+  const mosModel = requiredModel(models, "Mn", helperName);
+  const mosCircuit = new Circuit();
+  mosCircuit.add(voltageSource("Vdd", "vdd", "0", 1.8));
+  mosCircuit.add(voltageSource("Vgate", "gate", "0", 1.8));
+  mosCircuit.add(resistor("Rload", "vdd", "out", 1_000.0));
+  mosCircuit.add(mosfetFromModelCard("M1", "out", "gate", "0", "0", mosModel));
+
+  return [
+    {
+      name: "diode-shot-noise",
+      kind: diodeModel.kind,
+      model: diodeModel,
+      circuit: diodeCircuit,
+      outputNode: "out",
+      inputSource: "Vbias",
+      frequencyHz,
+      expectedNoiseElement: "D1",
+      expectedNoiseType: "shot",
+      expectedSourcePsdMin: 6.4e-23,
+      expectedSourcePsdMax: 6.7e-23,
+      expectedOutputPsdMin: 8.0e-19,
+      expectedOutputPsdMax: 8.5e-19,
+      noiseBehavior: "diode forward current contributes junction shot noise",
+      deckLines: [
+        "* device-model noise fixture: diode-shot-noise",
+        ".model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)",
+        "Vbias vin 0 0.8",
+        "Rlimit vin out 1k",
+        "D1 out 0 Dfast",
+        ".noise V(out) Vbias lin 1 1k 1k",
+        ".save V(out)",
+        ".end",
+      ],
+    },
+    {
+      name: "bjt-shot-noise",
+      kind: bjtModel.kind,
+      model: bjtModel,
+      circuit: bjtCircuit,
+      outputNode: "out",
+      inputSource: "Vbase",
+      frequencyHz,
+      expectedNoiseElement: "Q1",
+      expectedNoiseType: "shot",
+      expectedSourcePsdMin: 3.7e-23,
+      expectedSourcePsdMax: 3.9e-23,
+      expectedOutputPsdMin: 1.1e-18,
+      expectedOutputPsdMax: 1.3e-18,
+      noiseBehavior: "BJT forward-active collector current contributes shot noise",
+      deckLines: [
+        "* device-model noise fixture: bjt-shot-noise",
+        ".model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)",
+        "Vcc vcc 0 5",
+        "Vbase base 0 0.72",
+        "Q1 vcc base out Qsmall",
+        "Rload out 0 1k",
+        ".noise V(out) Vbase lin 1 1k 1k",
+        ".save V(out)",
+        ".end",
+      ],
+    },
+    {
+      name: "jfet-channel-noise",
+      kind: jfetModel.kind,
+      model: jfetModel,
+      circuit: jfetCircuit,
+      outputNode: "source",
+      inputSource: "Vdd",
+      frequencyHz,
+      expectedNoiseElement: "J1",
+      expectedNoiseType: "thermal",
+      expectedSourcePsdMin: 2.0e-23,
+      expectedSourcePsdMax: 2.2e-23,
+      expectedOutputPsdMin: 2.3e-18,
+      expectedOutputPsdMax: 2.5e-18,
+      noiseBehavior: "JFET transconductance contributes long-channel channel thermal noise",
+      deckLines: [
+        "* device-model noise fixture: jfet-channel-noise",
+        ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)",
+        "Vdd vdd 0 10",
+        "Vg gate 0 0",
+        "Rd vdd drain 2k",
+        "Rs source 0 1k",
+        "J1 drain gate source Jn",
+        ".noise V(source) Vdd lin 1 1k 1k",
+        ".save V(source)",
+        ".end",
+      ],
+    },
+    {
+      name: "mos-level1-channel-noise",
+      kind: mosModel.kind,
+      model: mosModel,
+      circuit: mosCircuit,
+      outputNode: "out",
+      inputSource: "Vgate",
+      frequencyHz,
+      expectedNoiseElement: "M1",
+      expectedNoiseType: "thermal",
+      expectedSourcePsdMin: 1.3e-23,
+      expectedSourcePsdMax: 1.4e-23,
+      expectedOutputPsdMin: 3.3e-18,
+      expectedOutputPsdMax: 3.5e-18,
+      noiseBehavior: "Level-1 MOS gm contributes long-channel channel thermal noise",
+      deckLines: [
+        "* device-model noise fixture: mos-level1-channel-noise",
+        ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)",
+        "Vdd vdd 0 1.8",
+        "Vgate gate 0 1.8",
+        "Rload vdd out 1k",
+        "M1 out gate 0 0 Mn",
+        ".noise V(out) Vgate lin 1 1k 1k",
+        ".save V(out)",
+        ".end",
+      ],
+    },
+  ];
+}
+
+export function deviceModelChargeAuditFixtures(): readonly DeviceModelChargeBehaviorFixture[] {
+  const helperName = "deviceModelChargeAuditFixtures";
+  const models = modelCardByName(deviceModelAuditFixtures());
+  const timeStepSeconds = 2.0e-8;
+  const stopTimeSeconds = 2.0e-6;
+  const storageCapacitanceFarads = 1.0e-10;
+
+  const diodeModel = requiredModel(models, "Dfast", helperName);
+  const diodeCircuit = new Circuit();
+  diodeCircuit.add(voltageSource("Vbias", "vin", "0", 0.8));
+  diodeCircuit.add(resistor("Rlimit", "vin", "out", 1_000.0));
+  diodeCircuit.add(diodeFromModelCard("D1", "out", "0", diodeModel));
+  diodeCircuit.add(capacitor("Cstore", "out", "0", storageCapacitanceFarads));
+
+  const bjtModel = requiredModel(models, "Qsmall", helperName);
+  const bjtCircuit = new Circuit();
+  bjtCircuit.add(voltageSource("Vcc", "vcc", "0", 5.0));
+  bjtCircuit.add(voltageSource("Vbase", "base", "0", 0.72));
+  bjtCircuit.add(resistor("Rload", "out", "0", 1_000.0));
+  bjtCircuit.add(bjtFromModelCard("Q1", "vcc", "base", "out", bjtModel));
+  bjtCircuit.add(capacitor("Cstore", "out", "0", storageCapacitanceFarads));
+
+  const jfetModel = normalizeModelCard("Jn", "NJF", {
+    BETA: 9.0e-4,
+    VTO: -1.8,
+    LAMBDA: 0.02,
+    CGS: 2.0e-11,
+    CGD: 5.0e-12,
+  });
+  const jfetCircuit = new Circuit();
+  jfetCircuit.add(voltageSource("Vdd", "vdd", "0", 10.0));
+  jfetCircuit.add(voltageSource("Vg", "gate", "0", 0.0));
+  jfetCircuit.add(resistor("Rd", "vdd", "drain", 2_000.0));
+  jfetCircuit.add(resistor("Rs", "source", "0", 1_000.0));
+  jfetCircuit.add(jfetFromModelCard("J1", "drain", "gate", "source", jfetModel));
+  jfetCircuit.add(capacitor("Cstore", "source", "0", storageCapacitanceFarads));
+
+  const mosModel = normalizeModelCard("Mn", "NMOS", {
+    LEVEL: 1.0,
+    VTO: 0.55,
+    LAMBDA: 0.04,
+    NSUB: 1.6,
+    CGSO: 2.0e-11,
+    CGDO: 5.0e-12,
+    CGBO: 1.0e-12,
+    CBS: 4.0e-13,
+    CBD: 3.0e-13,
+    PB: 0.9,
+    MJ: 0.45,
+  });
+  const mosCircuit = new Circuit();
+  mosCircuit.add(voltageSource("Vdd", "vdd", "0", 1.8));
+  mosCircuit.add(voltageSource("Vgate", "gate", "0", 1.8));
+  mosCircuit.add(resistor("Rload", "vdd", "out", 1_000.0));
+  mosCircuit.add(mosfetFromModelCard("M1", "out", "gate", "0", "0", mosModel));
+  mosCircuit.add(capacitor("Cstore", "out", "0", storageCapacitanceFarads));
+
+  return [
+    {
+      name: "diode-storage-charge",
+      kind: diodeModel.kind,
+      model: diodeModel,
+      circuit: diodeCircuit,
+      probeNode: "out",
+      timeStepSeconds,
+      stopTimeSeconds,
+      storageCapacitanceFarads,
+      expectedInitialMin: -1.0e-9,
+      expectedInitialMax: 1.0,
+      expectedFinalMin: 0.58,
+      expectedFinalMax: 0.61,
+      chargeBehavior:
+        "diode CJO/TT contribute transient anode-cathode storage; explicit Cstore keeps the fixture comparable with other charge audits",
+      deckLines: [
+        "* device-model charge fixture: diode-storage-charge",
+        ".model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)",
+        "Vbias vin 0 0.8",
+        "Rlimit vin out 1k",
+        "D1 out 0 Dfast",
+        "Cstore out 0 100p",
+        ".tran 20n 2u",
+        ".save V(out)",
+        ".end",
+      ],
+    },
+    {
+      name: "bjt-storage-charge",
+      kind: bjtModel.kind,
+      model: bjtModel,
+      circuit: bjtCircuit,
+      probeNode: "out",
+      timeStepSeconds,
+      stopTimeSeconds,
+      storageCapacitanceFarads,
+      expectedInitialMin: -1.0e-9,
+      expectedInitialMax: 1.0,
+      expectedFinalMin: 0.10,
+      expectedFinalMax: 0.14,
+      chargeBehavior:
+        "BJT CJE/CJC/TF/TR contribute transient base-emitter and base-collector storage; explicit Cstore keeps the fixture comparable with other charge audits",
+      deckLines: [
+        "* device-model charge fixture: bjt-storage-charge",
+        ".model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)",
+        "Vcc vcc 0 5",
+        "Vbase base 0 0.72",
+        "Q1 vcc base out Qsmall",
+        "Rload out 0 1k",
+        "Cstore out 0 100p",
+        ".tran 20n 2u",
+        ".save V(out)",
+        ".end",
+      ],
+    },
+    {
+      name: "jfet-storage-charge",
+      kind: jfetModel.kind,
+      model: jfetModel,
+      circuit: jfetCircuit,
+      probeNode: "source",
+      timeStepSeconds,
+      stopTimeSeconds,
+      storageCapacitanceFarads,
+      expectedInitialMin: -1.0e-9,
+      expectedInitialMax: 1.0,
+      expectedFinalMin: 0.86,
+      expectedFinalMax: 0.90,
+      chargeBehavior:
+        "JFET CGS/CGD contribute transient gate-source and gate-drain storage; explicit Cstore keeps the fixture comparable with other charge audits",
+      deckLines: [
+        "* device-model charge fixture: jfet-storage-charge",
+        ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02 CGS=20p CGD=5p)",
+        "Vdd vdd 0 10",
+        "Vg gate 0 0",
+        "Rd vdd drain 2k",
+        "Rs source 0 1k",
+        "J1 drain gate source Jn",
+        "Cstore source 0 100p",
+        ".tran 20n 2u",
+        ".save V(source)",
+        ".end",
+      ],
+    },
+    {
+      name: "mos-level1-storage-charge",
+      kind: mosModel.kind,
+      model: mosModel,
+      circuit: mosCircuit,
+      probeNode: "out",
+      timeStepSeconds,
+      stopTimeSeconds,
+      storageCapacitanceFarads,
+      expectedInitialMin: -1.0e-9,
+      expectedInitialMax: 1.0,
+      expectedFinalMin: 0.68,
+      expectedFinalMax: 0.73,
+      chargeBehavior:
+        "Level-1 MOS CGSO/CGDO/CGBO plus CBS/CBD contribute transient gate-overlap and depletion-shaped bulk-junction storage; explicit Cstore keeps the fixture comparable with other charge audits",
+      deckLines: [
+        "* device-model charge fixture: mos-level1-storage-charge",
+        ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CGSO=20p CGDO=5p CGBO=1p CBS=4e-13 CBD=3e-13 PB=0.9 MJ=0.45)",
+        "Vdd vdd 0 1.8",
+        "Vgate gate 0 1.8",
+        "Rload vdd out 1k",
+        "M1 out gate 0 0 Mn",
+        "Cstore out 0 100p",
+        ".tran 20n 2u",
+        ".save V(out)",
+        ".end",
+      ],
+    },
+  ];
+}
+
+export function deviceModelReferenceDeckAuditFixtures(): readonly DeviceModelReferenceDeckAuditFixture[] {
+  const reference = "SPICE2/SPICE3-style local model-depth fixture";
+  const rows: DeviceModelReferenceDeckAuditFixture[] = [];
+  for (const fixture of deviceModelBehaviorAuditFixtures()) {
+    rows.push({
+      name: `${fixture.name}:op`,
+      kind: fixture.kind,
+      model: fixture.model,
+      analysis: "op",
+      reference,
+      expectedBehavior: `DC probe ${fixture.probeNode} remains in [${fixture.expectedMin}, ${fixture.expectedMax}] V`,
+      deckLines: fixture.deckLines,
+    });
+  }
+  for (const fixture of deviceModelTemperatureAuditFixtures()) {
+    rows.push({
+      name: `${fixture.name}:temperature`,
+      kind: fixture.kind,
+      model: fixture.model,
+      analysis: "temperature",
+      reference,
+      expectedBehavior: fixture.temperatureBehavior,
+      deckLines: fixture.deckLines,
+    });
+  }
+  for (const fixture of deviceModelCapacitanceAuditFixtures()) {
+    rows.push({
+      name: `${fixture.name}:ac`,
+      kind: fixture.kind,
+      model: fixture.model,
+      analysis: "ac",
+      reference,
+      expectedBehavior: fixture.capacitanceBehavior,
+      deckLines: fixture.deckLines,
+    });
+  }
+  for (const fixture of deviceModelNoiseAuditFixtures()) {
+    rows.push({
+      name: `${fixture.name}:noise`,
+      kind: fixture.kind,
+      model: fixture.model,
+      analysis: "noise",
+      reference,
+      expectedBehavior: fixture.noiseBehavior,
+      deckLines: fixture.deckLines,
+    });
+  }
+  for (const fixture of deviceModelChargeAuditFixtures()) {
+    rows.push({
+      name: `${fixture.name}:tran`,
+      kind: fixture.kind,
+      model: fixture.model,
+      analysis: "tran",
+      reference,
+      expectedBehavior: fixture.chargeBehavior,
+      deckLines: fixture.deckLines,
+    });
+  }
+  return rows;
+}
+
+export function formatDeviceModelReferenceDeckAuditTable(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): string {
+  const lines = ["name\tkind\tanalysis\tmodel\treference\texpected_behavior\tdeck_lines"];
+  for (const fixture of fixtures) {
+    lines.push([
+      fixture.name,
+      fixture.kind,
+      fixture.analysis,
+      fixture.model.name,
+      fixture.reference,
+      fixture.expectedBehavior,
+      fixture.deckLines.length.toString(),
+    ].join("\t"));
+  }
+  return lines.join("\n");
+}
+
+export function deviceModelReferenceDeckAuditRecords(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): Array<Record<string, string>> {
+  return deckTableRecords(formatDeviceModelReferenceDeckAuditTable(fixtures));
+}
+
+export function formatDeviceModelReferenceDeckAuditCsv(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): string {
+  return formatDeckTableCsv(formatDeviceModelReferenceDeckAuditTable(fixtures));
+}
+
+export function formatDeviceModelReferenceDeckAuditJson(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): string {
+  return formatDeckTableJson(formatDeviceModelReferenceDeckAuditTable(fixtures));
+}
+
+export function deviceModelReferenceDeckAuditSummary(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): readonly DeviceModelReferenceDeckAuditSummary[] {
+  const expectedKinds = REFERENCE_DECK_AUDIT_EXPECTED_KINDS as readonly string[];
+  const kinds = [...expectedKinds];
+  for (const kind of [...new Set(fixtures.map((fixture) => fixture.kind))].sort()) {
+    if (!kinds.includes(kind)) {
+      kinds.push(kind);
+    }
+  }
+
+  return kinds.map((kind) => {
+    const rows = fixtures.filter((fixture) => fixture.kind === kind);
+    const rowAnalyses = new Set(rows.map((fixture) => fixture.analysis));
+    const analyses = [
+      ...REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES.filter((analysis) => rowAnalyses.has(analysis)),
+      ...[...rowAnalyses]
+        .filter((analysis) => !(REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES as readonly string[]).includes(analysis))
+        .sort(),
+    ];
+    const missingAnalyses = expectedKinds.includes(kind)
+      ? REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES.filter((analysis) => !rowAnalyses.has(analysis))
+      : [];
+    const references: string[] = [];
+    for (const fixture of rows) {
+      if (fixture.reference.length > 0 && !references.includes(fixture.reference)) {
+        references.push(fixture.reference);
+      }
+    }
+    return {
+      kind,
+      fixtureCount: rows.length,
+      analyses,
+      missingAnalyses,
+      deckLineCount: rows.reduce((total, fixture) => total + fixture.deckLines.length, 0),
+      references,
+    };
+  });
+}
+
+export function formatDeviceModelReferenceDeckAuditSummaryTable(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): string {
+  const lines = ["kind\tfixture_count\tanalyses\tmissing_analyses\tdeck_lines\treferences"];
+  for (const summary of deviceModelReferenceDeckAuditSummary(fixtures)) {
+    lines.push([
+      summary.kind,
+      summary.fixtureCount.toString(),
+      summary.analyses.join(","),
+      summary.missingAnalyses.join(","),
+      summary.deckLineCount.toString(),
+      summary.references.join(","),
+    ].join("\t"));
+  }
+  return lines.join("\n");
+}
+
+export function deviceModelReferenceDeckAuditSummaryRecords(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): Array<Record<string, string>> {
+  return deckTableRecords(formatDeviceModelReferenceDeckAuditSummaryTable(fixtures));
+}
+
+export function formatDeviceModelReferenceDeckAuditSummaryCsv(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): string {
+  return formatDeckTableCsv(formatDeviceModelReferenceDeckAuditSummaryTable(fixtures));
+}
+
+export function formatDeviceModelReferenceDeckAuditSummaryJson(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): string {
+  return formatDeckTableJson(formatDeviceModelReferenceDeckAuditSummaryTable(fixtures));
+}
+
+export function deviceModelReferenceDeckAuditAnalysisSummary(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): readonly DeviceModelReferenceDeckAuditAnalysisSummary[] {
+  const expectedKinds = REFERENCE_DECK_AUDIT_EXPECTED_KINDS as readonly string[];
+  const expectedAnalyses = REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES as readonly string[];
+  const analyses = [...expectedAnalyses];
+  for (const analysis of [...new Set(fixtures.map((fixture) => fixture.analysis))].sort()) {
+    if (!analyses.includes(analysis)) {
+      analyses.push(analysis);
+    }
+  }
+
+  return analyses.map((analysis) => {
+    const rows = fixtures.filter((fixture) => fixture.analysis === analysis);
+    const rowKinds = new Set(rows.map((fixture) => fixture.kind));
+    const kinds = [
+      ...REFERENCE_DECK_AUDIT_EXPECTED_KINDS.filter((kind) => rowKinds.has(kind)),
+      ...[...rowKinds]
+        .filter((kind) => !(REFERENCE_DECK_AUDIT_EXPECTED_KINDS as readonly string[]).includes(kind))
+        .sort(),
+    ];
+    const missingKinds = expectedAnalyses.includes(analysis)
+      ? REFERENCE_DECK_AUDIT_EXPECTED_KINDS.filter((kind) => !rowKinds.has(kind))
+      : [];
+    const references: string[] = [];
+    for (const fixture of rows) {
+      if (fixture.reference.length > 0 && !references.includes(fixture.reference)) {
+        references.push(fixture.reference);
+      }
+    }
+    return {
+      analysis,
+      fixtureCount: rows.length,
+      kinds,
+      missingKinds,
+      deckLineCount: rows.reduce((total, fixture) => total + fixture.deckLines.length, 0),
+      references,
+    };
+  });
+}
+
+export function formatDeviceModelReferenceDeckAuditAnalysisSummaryTable(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): string {
+  const lines = ["analysis\tfixture_count\tkinds\tmissing_kinds\tdeck_lines\treferences"];
+  for (const summary of deviceModelReferenceDeckAuditAnalysisSummary(fixtures)) {
+    lines.push([
+      summary.analysis,
+      summary.fixtureCount.toString(),
+      summary.kinds.join(","),
+      summary.missingKinds.join(","),
+      summary.deckLineCount.toString(),
+      summary.references.join(","),
+    ].join("\t"));
+  }
+  return lines.join("\n");
+}
+
+export function deviceModelReferenceDeckAuditAnalysisSummaryRecords(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): Array<Record<string, string>> {
+  return deckTableRecords(formatDeviceModelReferenceDeckAuditAnalysisSummaryTable(fixtures));
+}
+
+export function formatDeviceModelReferenceDeckAuditAnalysisSummaryCsv(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): string {
+  return formatDeckTableCsv(formatDeviceModelReferenceDeckAuditAnalysisSummaryTable(fixtures));
+}
+
+export function formatDeviceModelReferenceDeckAuditAnalysisSummaryJson(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): string {
+  return formatDeckTableJson(formatDeviceModelReferenceDeckAuditAnalysisSummaryTable(fixtures));
+}
+
+export function deviceModelReferenceDeckAuditGate(
+  fixtures: readonly DeviceModelReferenceDeckAuditFixture[] = deviceModelReferenceDeckAuditFixtures(),
+): DeviceModelReferenceDeckAuditGateReport {
+  const issues: DeviceModelReferenceDeckAuditIssue[] = [];
+  const seenNames = new Set<string>();
+  const seenPairs = new Set<string>();
+
+  if (fixtures.length === 0) {
+    issues.push({
+      fixtureName: "audit_matrix",
+      field: "fixture_count",
+      message: "audit matrix must contain at least one reference-deck row",
+    });
+  }
+
+  for (const fixture of fixtures) {
+    const fixtureName = fixture.name.length === 0 ? "<missing>" : fixture.name;
+    if (seenNames.has(fixture.name)) {
+      issues.push({
+        fixtureName,
+        field: "name",
+        message: "reference-deck audit fixture names must be unique",
+      });
+    }
+    seenNames.add(fixture.name);
+    if (fixture.name.trim().length === 0) {
+      issues.push({
+        fixtureName,
+        field: "name",
+        message: "field must be documented and non-empty",
+      });
+    }
+    if (!REFERENCE_DECK_AUDIT_EXPECTED_KINDS.includes(fixture.kind)) {
+      issues.push({
+        fixtureName,
+        field: "kind",
+        message: `unsupported reference-deck audit kind ${JSON.stringify(fixture.kind)}`,
+      });
+    }
+    if (
+      !(REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES as readonly string[]).includes(fixture.analysis)
+    ) {
+      issues.push({
+        fixtureName,
+        field: "analysis",
+        message: `unsupported reference-deck audit analysis ${JSON.stringify(fixture.analysis)}`,
+      });
+    }
+    seenPairs.add(`${fixture.kind}:${fixture.analysis}`);
+    if (fixture.model.name.trim().length === 0) {
+      issues.push({
+        fixtureName,
+        field: "model.name",
+        message: "field must be documented and non-empty",
+      });
+    }
+    if (fixture.reference.trim().length === 0) {
+      issues.push({
+        fixtureName,
+        field: "reference",
+        message: "field must be documented and non-empty",
+      });
+    }
+    if (fixture.expectedBehavior.trim().length === 0) {
+      issues.push({
+        fixtureName,
+        field: "expected_behavior",
+        message: "field must be documented and non-empty",
+      });
+    }
+    if (fixture.deckLines.length === 0) {
+      issues.push({
+        fixtureName,
+        field: "deck_lines",
+        message: "reference deck must contain active deck lines",
+      });
+    } else {
+      if (!fixture.deckLines[0]!.startsWith("* device-model ")) {
+        issues.push({
+          fixtureName,
+          field: "deck_lines[0]",
+          message: "reference deck must start with a device-model comment",
+        });
+      }
+      if (!fixture.deckLines.some((line) => line.startsWith(".model "))) {
+        issues.push({
+          fixtureName,
+          field: "deck_lines",
+          message: "reference deck must include a .model card",
+        });
+      }
+      if (fixture.deckLines.at(-1) !== ".end") {
+        issues.push({
+          fixtureName,
+          field: "deck_lines[-1]",
+          message: "reference deck must end with .end",
+        });
+      }
+    }
+  }
+
+  for (const kind of REFERENCE_DECK_AUDIT_EXPECTED_KINDS) {
+    for (const analysis of REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES) {
+      if (!seenPairs.has(`${kind}:${analysis}`)) {
+        issues.push({
+          fixtureName: `${kind}:${analysis}`,
+          field: "coverage",
+          message: `missing required ${kind} ${analysis} reference-deck audit row`,
+        });
+      }
+    }
+  }
+
+  return {
+    passed: issues.length === 0,
+    fixtureCount: fixtures.length,
+    expectedKinds: REFERENCE_DECK_AUDIT_EXPECTED_KINDS,
+    expectedAnalyses: REFERENCE_DECK_AUDIT_EXPECTED_ANALYSES,
+    issues,
+  };
+}
+
+export function formatDeviceModelReferenceDeckAuditGateReport(
+  report: DeviceModelReferenceDeckAuditGateReport,
+): string {
+  const lines = [
+    "passed\tfixture_count\texpected_kinds\texpected_analyses\tissue_count",
+    [
+      String(report.passed),
+      report.fixtureCount.toString(),
+      report.expectedKinds.join(","),
+      report.expectedAnalyses.join(","),
+      report.issues.length.toString(),
+    ].join("\t"),
+  ];
+  if (report.issues.length > 0) {
+    lines.push("fixture_name\tfield\tmessage");
+    for (const issue of report.issues) {
+      lines.push([issue.fixtureName, issue.field, issue.message].join("\t"));
+    }
+  }
+  return lines.join("\n");
 }
 
 export function vccs(
@@ -8163,10 +9411,12 @@ function deckRunArtifacts(
   rawfileOptions: readonly string[],
   diagnosticCodes: readonly string[],
   controlPolicyArtifacts: readonly DeckControlPolicyArtifact[],
+  deckAnalysisKinds: readonly string[],
+  deckAnalysisDirectiveInventory: readonly string[],
 ): DeckRunArtifact[] {
   const isTransient = plan.analysis === "tran";
   const analysisDirectives = deckAnalysisDirectives(plan);
-    const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
+  const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
   const controlPolicySummaries = deckControlPolicySummaryArtifacts(controlPolicyArtifacts);
   const controlPolicyCategories = controlPolicySummaries.map((artifact) => artifact.category);
   const controlPolicyCodes = controlPolicySummaries.flatMap((artifact) => artifact.codes);
@@ -8182,6 +9432,10 @@ function deckRunArtifacts(
       directive: plan.directive,
       analysisDirectiveCount: analysisDirectives.length,
       analysisDirectives,
+      deckAnalysisKindCount: deckAnalysisKinds.length,
+      deckAnalysisKinds: [...deckAnalysisKinds],
+      deckAnalysisDirectiveCount: deckAnalysisDirectiveInventory.length,
+      deckAnalysisDirectives: [...deckAnalysisDirectiveInventory],
       lineNumber: plan.lineNumber,
       sourceName: plan.sourceName,
       outputNode: plan.outputNode,
@@ -8228,6 +9482,23 @@ function deckRunArtifacts(
 
 function deckAnalysisDirectives(plan: DeckAnalysisPlan): string[] {
   return plan.directive.length === 0 ? [] : [plan.directive];
+}
+
+function deckAnalysisInventory(netlist: string): {
+  analysisKinds: string[];
+  directives: string[];
+} {
+  const analysisKinds: string[] = [];
+  const directives: string[] = [];
+  for (const plan of resolveDeckAnalyses(netlist).analyses) {
+    if (plan.analysis.length > 0) {
+      pushUniqueString(analysisKinds, plan.analysis);
+    }
+    if (plan.directive.length > 0) {
+      directives.push(plan.directive);
+    }
+  }
+  return { analysisKinds, directives };
 }
 
 function deckStableTables(
@@ -8336,6 +9607,10 @@ const DECK_RUN_ARTIFACT_COLUMNS = [
   "ControlPolicySeverityList",
   "Diagnostics",
   "DiagnosticCodeList",
+  "DeckAnalysisKinds",
+  "DeckAnalysisKindList",
+  "DeckAnalysisDirectives",
+  "DeckAnalysisDirectiveList",
 ] as const;
 
 function deckRunArtifactCells(artifact: DeckRunArtifact): string[] {
@@ -8384,6 +9659,10 @@ function deckRunArtifactCells(artifact: DeckRunArtifact): string[] {
     artifact.controlPolicySeverities.join(";"),
     String(artifact.diagnosticCount),
     artifact.diagnosticCodes.join(";"),
+    String(artifact.deckAnalysisKindCount),
+    artifact.deckAnalysisKinds.join(";"),
+    String(artifact.deckAnalysisDirectiveCount),
+    artifact.deckAnalysisDirectives.join(";"),
   ];
 }
 
@@ -8394,6 +9673,12 @@ function deckRunArtifactRecord(artifact: DeckRunArtifact): DeckRunArtifactRecord
   return Object.fromEntries(
     DECK_RUN_ARTIFACT_COLUMNS.map((column, index) => [column, cells[index] ?? ""]),
   ) as DeckRunArtifactRecord;
+}
+
+export function deckRunArtifactRecords(
+  artifacts: readonly DeckRunArtifact[],
+): DeckRunArtifactRecord[] {
+  return artifacts.map(deckRunArtifactRecord);
 }
 
 function deckOutputPlanArtifacts(
@@ -8408,6 +9693,7 @@ function deckOutputPlanArtifacts(
   tables: readonly string[],
 ): DeckOutputPlanArtifact[] {
   const outputDirectiveKinds = deckOutputDirectiveKinds(outputDirectives);
+  const isTransient = plan.analysis === "tran";
   return [
     {
       analysis: plan.analysis,
@@ -8415,6 +9701,18 @@ function deckOutputPlanArtifacts(
       lineNumber: plan.lineNumber,
       sourceName: plan.sourceName,
       outputNode: plan.outputNode,
+      sweepKind: plan.sweepKind,
+      startValue: plan.startValue,
+      stopValue: plan.stopValue,
+      stepValue: plan.stepValue,
+      pointCount: plan.pointCount,
+      startFrequencyHz: plan.startFrequencyHz,
+      stopFrequencyHz: plan.stopFrequencyHz,
+      stepTime: isTransient ? plan.stepTime : undefined,
+      stopTime: isTransient ? plan.stopTime : undefined,
+      startTime: isTransient ? plan.startTime : undefined,
+      maxStep: isTransient ? plan.maxStep : undefined,
+      useInitialConditions: isTransient ? plan.useInitialConditions : undefined,
       resultRowCount,
       resultColumnCount: resultColumns.length,
       resultColumns: [...resultColumns],
@@ -8461,6 +9759,18 @@ const DECK_OUTPUT_PLAN_ARTIFACT_COLUMNS = [
   "Line",
   "SourceName",
   "OutputNode",
+  "SweepKind",
+  "StartValue",
+  "StopValue",
+  "StepValue",
+  "PointCount",
+  "StartFrequencyHz",
+  "StopFrequencyHz",
+  "StepTime",
+  "StopTime",
+  "StartTime",
+  "MaxStep",
+  "UseInitialConditions",
   "ResultRows",
   "ResultColumns",
   "ResultColumnList",
@@ -8487,6 +9797,18 @@ function deckOutputPlanArtifactCells(artifact: DeckOutputPlanArtifact): string[]
     String(artifact.lineNumber),
     artifact.sourceName ?? "",
     artifact.outputNode ?? "",
+    artifact.sweepKind ?? "",
+    formatDeckArtifactFloat(artifact.startValue),
+    formatDeckArtifactFloat(artifact.stopValue),
+    formatDeckArtifactFloat(artifact.stepValue),
+    artifact.pointCount === undefined ? "" : String(artifact.pointCount),
+    formatDeckArtifactFloat(artifact.startFrequencyHz),
+    formatDeckArtifactFloat(artifact.stopFrequencyHz),
+    formatDeckArtifactFloat(artifact.stepTime),
+    formatDeckArtifactFloat(artifact.stopTime),
+    formatDeckArtifactFloat(artifact.startTime),
+    formatDeckArtifactFloat(artifact.maxStep),
+    formatDeckArtifactBoolean(artifact.useInitialConditions),
     String(artifact.resultRowCount),
     String(artifact.resultColumnCount),
     artifact.resultColumns.join(";"),
@@ -9274,7 +10596,7 @@ export function formatDeckRunArtifactCsv(artifacts: readonly DeckRunArtifact[]):
 }
 
 export function formatDeckRunArtifactJson(artifacts: readonly DeckRunArtifact[]): string {
-  return `${JSON.stringify(artifacts.map(deckRunArtifactRecord))}\n`;
+  return `${JSON.stringify(deckRunArtifactRecords(artifacts))}\n`;
 }
 
 function selectDeckMeasurementCardsForAnalysis(
@@ -9316,6 +10638,52 @@ export function runDeckAnalysis(
   analysis?: string,
 ): DeckAnalysisExecution {
   const plan = selectDeckAnalysisPlan(netlist, analysis);
+  return runDeckAnalysisPlan(circuit, netlist, plan);
+}
+
+export function runDeck(circuit: Circuit, netlist: string): DeckExecution {
+  const plans = deckAnalysisPlansForExecution(netlist, "runDeck");
+  const executions = plans.map((plan) => runDeckAnalysisPlan(circuit, netlist, plan));
+  const runArtifacts = executions.flatMap((execution) => execution.runArtifacts);
+  return {
+    executionCount: executions.length,
+    analysisOrder: plans.map((plan) => plan.analysis),
+    analysisDirectives: plans.map((plan) => plan.directive),
+    executions,
+    runArtifactCount: runArtifacts.length,
+    runArtifacts,
+    runArtifactTable: formatDeckRunArtifactTable(runArtifacts),
+    runArtifactCsv: formatDeckRunArtifactCsv(runArtifacts),
+    runArtifactJson: formatDeckRunArtifactJson(runArtifacts),
+    runArtifactRecords: deckRunArtifactRecords(runArtifacts),
+  };
+}
+
+function deckAnalysisPlansForExecution(netlist: string, context: string): DeckAnalysisPlan[] {
+  const summary = resolveDeckAnalyses(netlist);
+  if (summary.diagnostics.length > 0) {
+    const diagnostic = summary.diagnostics[0]!;
+    throw invalidElement(
+      context,
+      `line ${diagnostic.lineNumber}: ${diagnostic.message}`,
+    );
+  }
+  if (summary.analyses.length === 0) {
+    return [{
+      directive: ".op",
+      analysis: "op",
+      lineNumber: 0,
+      useInitialConditions: false,
+    }];
+  }
+  return [...summary.analyses];
+}
+
+function runDeckAnalysisPlan(
+  circuit: Circuit,
+  netlist: string,
+  plan: DeckAnalysisPlan,
+): DeckAnalysisExecution {
   const diagnosticCodes = deckRunDiagnosticCodes(netlist, plan);
   const controlLines = deckControlLines(netlist);
   const writeMarkers = deckControlWriteMarkers(netlist);
@@ -9339,6 +10707,10 @@ export function runDeckAnalysis(
     controlPolicySummaryArtifacts,
   );
   const analysisDirectives = deckAnalysisDirectives(plan);
+  const {
+    analysisKinds: deckAnalysisKinds,
+    directives: deckAnalysisDirectiveInventory,
+  } = deckAnalysisInventory(netlist);
   if (plan.analysis === "op") {
     const result = dcOp(circuit);
     const table = formatDeckOpTable(result, netlist);
@@ -9367,6 +10739,8 @@ export function runDeckAnalysis(
       rawfileOptions,
       diagnosticCodes,
       controlPolicyArtifacts,
+      deckAnalysisKinds,
+      deckAnalysisDirectiveInventory,
     );
     const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
     const outputPlanArtifactBundle = deckOutputPlanArtifactBundle(
@@ -9418,6 +10792,10 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      deckAnalysisKindCount: deckAnalysisKinds.length,
+      deckAnalysisKinds: [...deckAnalysisKinds],
+      deckAnalysisDirectiveCount: deckAnalysisDirectiveInventory.length,
+      deckAnalysisDirectives: [...deckAnalysisDirectiveInventory],
       outputPlanArtifactCount: outputPlanArtifactBundle.artifacts.length,
       outputPlanArtifacts: outputPlanArtifactBundle.artifacts,
       outputPlanArtifactTable: outputPlanArtifactBundle.table,
@@ -9501,6 +10879,8 @@ export function runDeckAnalysis(
       rawfileOptions,
       diagnosticCodes,
       controlPolicyArtifacts,
+      deckAnalysisKinds,
+      deckAnalysisDirectiveInventory,
     );
     const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
 
@@ -9553,6 +10933,10 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      deckAnalysisKindCount: deckAnalysisKinds.length,
+      deckAnalysisKinds: [...deckAnalysisKinds],
+      deckAnalysisDirectiveCount: deckAnalysisDirectiveInventory.length,
+      deckAnalysisDirectives: [...deckAnalysisDirectiveInventory],
       outputPlanArtifactCount: outputPlanArtifactBundle.artifacts.length,
       outputPlanArtifacts: outputPlanArtifactBundle.artifacts,
       outputPlanArtifactTable: outputPlanArtifactBundle.table,
@@ -9647,6 +11031,8 @@ export function runDeckAnalysis(
       rawfileOptions,
       diagnosticCodes,
       controlPolicyArtifacts,
+      deckAnalysisKinds,
+      deckAnalysisDirectiveInventory,
     );
     const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
 
@@ -9699,6 +11085,10 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      deckAnalysisKindCount: deckAnalysisKinds.length,
+      deckAnalysisKinds: [...deckAnalysisKinds],
+      deckAnalysisDirectiveCount: deckAnalysisDirectiveInventory.length,
+      deckAnalysisDirectives: [...deckAnalysisDirectiveInventory],
       outputPlanArtifactCount: outputPlanArtifactBundle.artifacts.length,
       outputPlanArtifacts: outputPlanArtifactBundle.artifacts,
       outputPlanArtifactTable: outputPlanArtifactBundle.table,
@@ -9788,6 +11178,8 @@ export function runDeckAnalysis(
       rawfileOptions,
       diagnosticCodes,
       controlPolicyArtifacts,
+      deckAnalysisKinds,
+      deckAnalysisDirectiveInventory,
     );
     const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
 
@@ -9840,6 +11232,10 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      deckAnalysisKindCount: deckAnalysisKinds.length,
+      deckAnalysisKinds: [...deckAnalysisKinds],
+      deckAnalysisDirectiveCount: deckAnalysisDirectiveInventory.length,
+      deckAnalysisDirectives: [...deckAnalysisDirectiveInventory],
       outputPlanArtifactCount: outputPlanArtifactBundle.artifacts.length,
       outputPlanArtifacts: outputPlanArtifactBundle.artifacts,
       outputPlanArtifactTable: outputPlanArtifactBundle.table,
@@ -9916,6 +11312,8 @@ export function runDeckAnalysis(
       rawfileOptions,
       diagnosticCodes,
       controlPolicyArtifacts,
+      deckAnalysisKinds,
+      deckAnalysisDirectiveInventory,
     );
     const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
 
@@ -9968,6 +11366,10 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      deckAnalysisKindCount: deckAnalysisKinds.length,
+      deckAnalysisKinds: [...deckAnalysisKinds],
+      deckAnalysisDirectiveCount: deckAnalysisDirectiveInventory.length,
+      deckAnalysisDirectives: [...deckAnalysisDirectiveInventory],
       outputPlanArtifactCount: outputPlanArtifactBundle.artifacts.length,
       outputPlanArtifacts: outputPlanArtifactBundle.artifacts,
       outputPlanArtifactTable: outputPlanArtifactBundle.table,
@@ -10043,6 +11445,8 @@ export function runDeckAnalysis(
       rawfileOptions,
       diagnosticCodes,
       controlPolicyArtifacts,
+      deckAnalysisKinds,
+      deckAnalysisDirectiveInventory,
     );
     const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
 
@@ -10095,6 +11499,10 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      deckAnalysisKindCount: deckAnalysisKinds.length,
+      deckAnalysisKinds: [...deckAnalysisKinds],
+      deckAnalysisDirectiveCount: deckAnalysisDirectiveInventory.length,
+      deckAnalysisDirectives: [...deckAnalysisDirectiveInventory],
       outputPlanArtifactCount: outputPlanArtifactBundle.artifacts.length,
       outputPlanArtifacts: outputPlanArtifactBundle.artifacts,
       outputPlanArtifactTable: outputPlanArtifactBundle.table,
@@ -10180,6 +11588,8 @@ export function runDeckAnalysis(
       rawfileOptions,
       diagnosticCodes,
       controlPolicyArtifacts,
+      deckAnalysisKinds,
+      deckAnalysisDirectiveInventory,
     );
     const tables = deckStableTables(measurements, fourier, controlPolicyArtifacts);
 
@@ -10232,6 +11642,10 @@ export function runDeckAnalysis(
       outputProbes,
       outputDirectives,
       analysisDirectives,
+      deckAnalysisKindCount: deckAnalysisKinds.length,
+      deckAnalysisKinds: [...deckAnalysisKinds],
+      deckAnalysisDirectiveCount: deckAnalysisDirectiveInventory.length,
+      deckAnalysisDirectives: [...deckAnalysisDirectiveInventory],
       outputPlanArtifactCount: outputPlanArtifactBundle.artifacts.length,
       outputPlanArtifacts: outputPlanArtifactBundle.artifacts,
       outputPlanArtifactTable: outputPlanArtifactBundle.table,
@@ -11107,6 +12521,50 @@ function complexSolverKind(matrixSize: number): LinearSolverKind {
   return matrixSize >= SPARSE_SOLVER_THRESHOLD ? "sparse_complex" : "dense_complex";
 }
 
+function emptySolverProfile(matrixSize = 0): LinearSolverProfile {
+  return {
+    matrixSize,
+    solver: realSolverKind(matrixSize),
+    backend: "none",
+    structuralNonzeros: 0,
+    density: 0.0,
+    fillInNonzeros: 0,
+  };
+}
+
+function realMatrixNonzeros(matrix: readonly (readonly number[])[]): number {
+  return matrix.reduce(
+    (count, row) => count + row.filter((value) => value !== 0.0).length,
+    0,
+  );
+}
+
+function realMatrixDensity(matrixSize: number, structuralNonzeros: number): number {
+  if (matrixSize === 0) {
+    return 0.0;
+  }
+  return structuralNonzeros / (matrixSize * matrixSize);
+}
+
+function realSolverProfile(
+  matrix: readonly (readonly number[])[],
+  backend: LinearSolverBackend,
+  fillInNonzeros = 0,
+  fallbackReason?: string,
+): LinearSolverProfile {
+  const matrixSize = matrix.length;
+  const structuralNonzeros = realMatrixNonzeros(matrix);
+  return {
+    matrixSize,
+    solver: realSolverKind(matrixSize),
+    backend,
+    structuralNonzeros,
+    density: realMatrixDensity(matrixSize, structuralNonzeros),
+    fillInNonzeros,
+    ...(fallbackReason === undefined ? {} : { fallbackReason }),
+  };
+}
+
 function dcDiagnosticsFromLinearSolution(
   solution: LinearSolution,
   convergenceAid: DcConvergenceAid,
@@ -11119,6 +12577,12 @@ function dcDiagnosticsFromLinearSolution(
     tolerance,
     maxDelta: solution.maxDelta,
     convergenceAid,
+    ...(solution.newtonStepLimit === undefined
+      ? {}
+      : { newtonStepLimit: solution.newtonStepLimit }),
+    limitedNewtonSteps: solution.limitedNewtonSteps,
+    minimumDampingFactor: solution.minimumDampingFactor,
+    solverProfile: solution.solverProfile,
   };
 }
 
@@ -11843,6 +13307,7 @@ export function transient(
     inductorStates,
     0.0,
   );
+  seedDeviceCapacitorStates(circuit, initialSolution.nodeVoltages, capacitorStates);
   updateTransmissionLineStates(circuit, initialSolution.nodeVoltages, lineStates, 0.0);
   const points: TransientPoint[] = [];
   for (let time = timeStep; time <= stopTime + timeStep * 1.0e-9; time += timeStep) {
@@ -12146,6 +13611,7 @@ export function transientAdaptive(
     inductorStates,
     0.0,
   );
+  seedDeviceCapacitorStates(circuit, initialSolution.nodeVoltages, capacitorStates);
   updateTransmissionLineStates(circuit, initialSolution.nodeVoltages, lineStates, 0.0);
 
   const points: TransientPoint[] = [];
@@ -13659,6 +15125,15 @@ interface LinearSolution {
   readonly iterations: number;
   readonly converged: boolean;
   readonly maxDelta: number;
+  readonly newtonStepLimit?: number;
+  readonly limitedNewtonSteps: number;
+  readonly minimumDampingFactor: number;
+  readonly solverProfile: LinearSolverProfile;
+}
+
+interface LinearSystemSolve {
+  readonly solution: readonly number[];
+  readonly profile: LinearSolverProfile;
 }
 
 interface LinearSolveOptions {
@@ -13666,6 +15141,7 @@ interface LinearSolveOptions {
   readonly tolerance: number;
   readonly initialVector?: readonly number[];
   readonly returnSingularAsUnconverged?: boolean;
+  readonly newtonStepLimit?: number;
 }
 
 interface ResolvedDcOpOptions {
@@ -13675,6 +15151,7 @@ interface ResolvedDcOpOptions {
   readonly pseudoTransientSteps: number;
   readonly pseudoTransientConductance: number;
   readonly pseudoTransientMaxIterations: number;
+  readonly newtonStepLimit?: number;
 }
 
 interface AcSolution {
@@ -13706,6 +15183,7 @@ function solveLinearCircuit(
     {
       maxIterations: 80,
       tolerance: 1.0e-9,
+      newtonStepLimit: undefined,
     },
   );
 }
@@ -13725,6 +15203,7 @@ function solveDcNewton(
       tolerance: options.tolerance,
       initialVector,
       returnSingularAsUnconverged: true,
+      newtonStepLimit: options.newtonStepLimit,
     },
   );
 }
@@ -13783,6 +15262,9 @@ function solveLinearCircuitWithOptions(
       iterations: 0,
       converged: true,
       maxDelta: 0.0,
+      limitedNewtonSteps: 0,
+      minimumDampingFactor: 1.0,
+      solverProfile: emptySolverProfile(0),
     };
   }
 
@@ -13805,16 +15287,51 @@ function solveLinearCircuitWithOptions(
     operatingPoint,
     returnSingularAsUnconverged,
   );
+  const activeStepLimit = hasNonlinearElement ? options.newtonStepLimit : undefined;
+  let limitedNewtonSteps = 0;
+  let minimumDampingFactor = 1.0;
+  const applyNewtonStepLimit = (candidate: LinearSolution): LinearSolution => {
+    if (!candidate.converged) {
+      return {
+        ...candidate,
+        newtonStepLimit: activeStepLimit,
+        limitedNewtonSteps,
+        minimumDampingFactor,
+      };
+    }
+    const step = limitNewtonStep(operatingPoint, candidate.vector, activeStepLimit);
+    if (step.limited) {
+      limitedNewtonSteps += 1;
+      minimumDampingFactor = Math.min(minimumDampingFactor, step.dampingFactor);
+    }
+    return {
+      ...linearSolutionFromVector(
+        circuit,
+        inductorStates,
+        nodeIndices,
+        voltageSources,
+        nodeCount,
+        step.vector,
+        candidate.converged,
+        step.maxDelta,
+        candidate.solverProfile,
+      ),
+      newtonStepLimit: activeStepLimit,
+      limitedNewtonSteps,
+      minimumDampingFactor,
+    };
+  };
   if (!hasNonlinearElement) {
     return { ...solution, iterations: 1, converged: solution.converged };
   }
+  solution = applyNewtonStepLimit(solution);
 
   let iterations = 1;
   while (iterations < options.maxIterations) {
     if (!solution.converged) {
       return { ...solution, iterations, converged: false, maxDelta: Number.POSITIVE_INFINITY };
     }
-    const delta = maxVectorDelta(solution.vector, operatingPoint);
+    const delta = solution.maxDelta;
     operatingPoint = [...solution.vector];
     if (delta < options.tolerance) {
       return { ...solution, iterations, converged: true, maxDelta: delta };
@@ -13831,10 +15348,11 @@ function solveLinearCircuitWithOptions(
       operatingPoint,
       returnSingularAsUnconverged,
     );
+    solution = applyNewtonStepLimit(solution);
     iterations += 1;
   }
 
-  const delta = maxVectorDelta(solution.vector, operatingPoint);
+  const delta = solution.maxDelta;
   return { ...solution, iterations, converged: delta < options.tolerance, maxDelta: delta };
 }
 
@@ -13878,6 +15396,7 @@ function solveLinearCircuitAtOperatingPointOrFailure(
         operatingPoint,
         false,
         Number.POSITIVE_INFINITY,
+        emptySolverProfile(matrixSize),
       );
     }
     throw error;
@@ -13890,6 +15409,10 @@ function validatedDcOpOptions(options: DcOpOptions): ResolvedDcOpOptions {
   const pseudoTransientSteps = options.pseudoTransientSteps ?? 20;
   const pseudoTransientConductance = options.pseudoTransientConductance ?? 1.0e-3;
   const pseudoTransientMaxIterations = options.pseudoTransientMaxIterations ?? maxIterations;
+  const newtonStepLimit =
+    options.newtonStepLimit === null
+      ? undefined
+      : options.newtonStepLimit ?? DEFAULT_NEWTON_STEP_LIMIT;
   if (!Number.isInteger(maxIterations) || maxIterations < 1) {
     throw invalidElement("dcOp", "maxIterations must be a positive integer");
   }
@@ -13905,6 +15428,12 @@ function validatedDcOpOptions(options: DcOpOptions): ResolvedDcOpOptions {
   if (!Number.isInteger(pseudoTransientMaxIterations) || pseudoTransientMaxIterations < 1) {
     throw invalidElement("dcOp", "pseudoTransientMaxIterations must be a positive integer");
   }
+  if (
+    newtonStepLimit !== undefined &&
+    (!Number.isFinite(newtonStepLimit) || newtonStepLimit <= 0.0)
+  ) {
+    throw invalidElement("dcOp", "newtonStepLimit must be finite and positive");
+  }
   return {
     maxIterations,
     tolerance,
@@ -13912,6 +15441,7 @@ function validatedDcOpOptions(options: DcOpOptions): ResolvedDcOpOptions {
     pseudoTransientSteps,
     pseudoTransientConductance,
     pseudoTransientMaxIterations,
+    newtonStepLimit,
   };
 }
 
@@ -14453,16 +15983,16 @@ function solveLinearCircuitAtOperatingPoint(
         stampCustomModel(element, nodeIndices, matrix, rhs, operatingPoint);
         break;
       case "diode":
-        stampDiode(element, nodeIndices, matrix, rhs, operatingPoint);
+        stampDiode(element, capacitorStates, nodeIndices, matrix, rhs, operatingPoint);
         break;
       case "jfet":
-        stampJfet(element, nodeIndices, matrix, rhs, operatingPoint);
+        stampJfet(element, capacitorStates, nodeIndices, matrix, rhs, operatingPoint);
         break;
       case "bjt":
-        stampBjt(element, nodeIndices, matrix, rhs, operatingPoint);
+        stampBjt(element, capacitorStates, nodeIndices, matrix, rhs, operatingPoint);
         break;
       case "mosfet":
-        stampMosfet(element, nodeIndices, matrix, rhs, operatingPoint);
+        stampMosfet(element, capacitorStates, nodeIndices, matrix, rhs, operatingPoint);
         break;
       case "vccs":
         stampVccs(element, nodeIndices, matrix);
@@ -14491,16 +16021,17 @@ function solveLinearCircuitAtOperatingPoint(
     }
   }
 
-  const solution = solveLinearSystem(matrix, rhs);
+  const solved = solveLinearSystemWithProfile(matrix, rhs);
   return linearSolutionFromVector(
     circuit,
     inductorStates,
     nodeIndices,
     voltageSources,
     nodeCount,
-    solution,
+    solved.solution,
     true,
     0.0,
+    solved.profile,
   );
 }
 
@@ -14513,6 +16044,7 @@ function linearSolutionFromVector(
   solution: readonly number[],
   converged: boolean,
   maxDelta: number,
+  solverProfile: LinearSolverProfile,
 ): LinearSolution {
   const nodeVoltages = new Map<string, number>();
   const nodesByIndex = Array.from(nodeIndices.entries()).sort(
@@ -14540,6 +16072,9 @@ function linearSolutionFromVector(
     iterations: 1,
     converged,
     maxDelta,
+    limitedNewtonSteps: 0,
+    minimumDampingFactor: 1.0,
+    solverProfile,
   };
 }
 
@@ -14549,6 +16084,63 @@ function maxVectorDelta(left: readonly number[], right: readonly number[]): numb
     max = Math.max(max, Math.abs(left[index] - right[index]));
   }
   return max;
+}
+
+interface NewtonStepLimitResult {
+  readonly vector: readonly number[];
+  readonly maxDelta: number;
+  readonly dampingFactor: number;
+  readonly limited: boolean;
+}
+
+function limitNewtonStep(
+  previous: readonly number[],
+  candidate: readonly number[],
+  stepLimit?: number,
+): NewtonStepLimitResult {
+  if (stepLimit === undefined) {
+    return {
+      vector: [...candidate],
+      maxDelta: maxVectorDelta(previous, candidate),
+      dampingFactor: 1.0,
+      limited: false,
+    };
+  }
+
+  const rawDelta = maxVectorDelta(previous, candidate);
+  if (rawDelta <= stepLimit) {
+    return {
+      vector: [...candidate],
+      maxDelta: rawDelta,
+      dampingFactor: 1.0,
+      limited: false,
+    };
+  }
+
+  if (!Number.isFinite(rawDelta)) {
+    return {
+      vector: candidate.map((value, index) => {
+        const delta = value - previous[index];
+        if (!Number.isFinite(delta)) {
+          return previous[index];
+        }
+        return previous[index] + Math.sign(delta) * stepLimit;
+      }),
+      maxDelta: stepLimit,
+      dampingFactor: 0.0,
+      limited: true,
+    };
+  }
+
+  const dampingFactor = stepLimit / rawDelta;
+  return {
+    vector: candidate.map(
+      (value, index) => previous[index] + (value - previous[index]) * dampingFactor,
+    ),
+    maxDelta: stepLimit,
+    dampingFactor,
+    limited: true,
+  };
 }
 
 function buildSmallSignalMatrix(
@@ -14621,7 +16213,7 @@ function buildSmallSignalMatrix(
         stampJfetSmallSignal(element, nodeIndices, matrix, operatingPoint);
         break;
       case "bjt":
-        stampBjtSmallSignal(element, nodeIndices, matrix);
+        stampBjtSmallSignal(element, nodeIndices, matrix, operatingPoint);
         break;
       case "mosfet":
         stampMosfetSmallSignal(element, nodeIndices, matrix, operatingPoint);
@@ -14801,10 +16393,10 @@ function buildAcMatrix(
         );
         break;
       case "jfet":
-        stampAcJfetSmallSignal(element, nodeIndices, matrix, operatingPoint);
+        stampAcJfetSmallSignal(element, nodeIndices, matrix, operatingPoint, omega);
         break;
       case "bjt":
-        stampAcBjtSmallSignal(element, nodeIndices, matrix, omega);
+        stampAcBjtSmallSignal(element, nodeIndices, matrix, operatingPoint, omega);
         break;
       case "mosfet":
         stampAcMosfetSmallSignal(element, nodeIndices, matrix, operatingPoint, omega);
@@ -14851,6 +16443,9 @@ function makeDcResult(
     tolerance: 0.0,
     maxDelta: 0.0,
     convergenceAid,
+    limitedNewtonSteps: 0,
+    minimumDampingFactor: 1.0,
+    solverProfile: emptySolverProfile(0),
   },
 ): DcResult {
   return {
@@ -15187,6 +16782,62 @@ function collectNoiseSources(
         negative: nodeIndex(nodeIndices, element.n2),
         sourcePsd: 4.0 * BOLTZMANN * temperatureKelvin / element.resistanceOhms,
       });
+    } else if (element.kind === "diode") {
+      validateDiode(element);
+      const anode = nodeIndex(nodeIndices, element.anode);
+      const cathode = nodeIndex(nodeIndices, element.cathode);
+      const anodeVoltage = vectorVoltage(operatingPoint, anode);
+      const cathodeVoltage = vectorVoltage(operatingPoint, cathode);
+      const [current] = diodeCurrentConductance(element, anodeVoltage - cathodeVoltage);
+      sources.push({
+        elementName: element.name,
+        noiseType: "shot",
+        positive: anode,
+        negative: cathode,
+        sourcePsd: 2.0 * ELECTRON_CHARGE * Math.abs(current),
+      });
+    } else if (element.kind === "bjt") {
+      validateBjt(element);
+      const base = nodeIndex(nodeIndices, element.base);
+      const emitter = nodeIndex(nodeIndices, element.emitter);
+      const baseVoltage = vectorVoltage(operatingPoint, base);
+      const emitterVoltage = vectorVoltage(operatingPoint, emitter);
+      const junctionVoltage =
+        element.polarity === "NPN"
+          ? baseVoltage - emitterVoltage
+          : emitterVoltage - baseVoltage;
+      const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / element.thermalVoltage));
+      const collectorCurrent = element.saturationCurrent * (Math.exp(exponent) - 1.0);
+      sources.push({
+        elementName: element.name,
+        noiseType: "shot",
+        positive: element.polarity === "NPN" ? base : emitter,
+        negative: element.polarity === "NPN" ? emitter : base,
+        sourcePsd: 2.0 * ELECTRON_CHARGE * Math.abs(collectorCurrent),
+      });
+    } else if (element.kind === "jfet") {
+      validateJfet(element);
+      const drain = nodeIndex(nodeIndices, element.drain);
+      const gate = nodeIndex(nodeIndices, element.gate);
+      const source = nodeIndex(nodeIndices, element.source);
+      const drainVoltage = vectorVoltage(operatingPoint, drain);
+      const gateVoltage = vectorVoltage(operatingPoint, gate);
+      const sourceVoltage = vectorVoltage(operatingPoint, source);
+      const result = evaluateJfet(
+        element,
+        gateVoltage - sourceVoltage,
+        drainVoltage - sourceVoltage,
+      );
+      const gm = Math.max(0.0, result.gm);
+      if (gm > 0.0) {
+        sources.push({
+          elementName: element.name,
+          noiseType: "thermal",
+          positive: drain,
+          negative: source,
+          sourcePsd: 4.0 * BOLTZMANN * temperatureKelvin * MOSFET_CHANNEL_NOISE_GAMMA * gm,
+        });
+      }
     } else if (element.kind === "mosfet") {
       validateMosfet(element);
       const drain = nodeIndex(nodeIndices, element.drain);
@@ -15539,6 +17190,7 @@ function customModelConductance(
 
 function stampDiode(
   element: Diode,
+  capacitorStates: readonly CapacitorState[],
   nodeIndices: ReadonlyMap<string, number>,
   matrix: number[][],
   rhs: number[],
@@ -15560,10 +17212,54 @@ function stampDiode(
   if (cathode !== undefined) {
     rhs[cathode] += equivalentCurrent;
   }
+  stampDiodeCharge(element, capacitorStates, nodeIndices, matrix, rhs);
+}
+
+function stampDiodeCharge(
+  element: Diode,
+  capacitorStates: readonly CapacitorState[],
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: number[][],
+  rhs: number[],
+): void {
+  const state = capacitorStates.find(
+    (candidate) => candidate.name === diodeChargeStateName(element),
+  );
+  if (state === undefined) {
+    return;
+  }
+  const capacitance = diodeDynamicCapacitance(element, state.previousVoltage);
+  if (capacitance <= 0.0) {
+    return;
+  }
+  const conductance =
+    state.method === "trap"
+      ? (2.0 * capacitance) / state.timeStep
+      : state.method === "gear2"
+        ? (3.0 * capacitance) / (2.0 * state.timeStep)
+        : capacitance / state.timeStep;
+  const historyCurrent =
+    state.method === "trap"
+      ? conductance * state.previousVoltage + state.previousCurrent
+      : state.method === "gear2"
+        ? capacitance *
+          (4.0 * state.previousVoltage - state.previousPreviousVoltage) /
+          (2.0 * state.timeStep)
+        : conductance * state.previousVoltage;
+  const anode = nodeIndex(nodeIndices, element.anode);
+  const cathode = nodeIndex(nodeIndices, element.cathode);
+  stampConductance(matrix, anode, cathode, conductance);
+  if (anode !== undefined) {
+    rhs[anode] += historyCurrent;
+  }
+  if (cathode !== undefined) {
+    rhs[cathode] -= historyCurrent;
+  }
 }
 
 function stampBjt(
   element: Bjt,
+  capacitorStates: readonly CapacitorState[],
   nodeIndices: ReadonlyMap<string, number>,
   matrix: number[][],
   rhs: number[],
@@ -15602,6 +17298,49 @@ function stampBjt(
     stampCurrentSourceEquivalent(rhs, emitter, base, equivalentBaseCurrent);
     stampCurrentSourceEquivalent(rhs, emitter, collector, equivalentCollectorCurrent);
   }
+  stampBjtCharge(element, capacitorStates, nodeIndices, matrix, rhs);
+}
+
+function stampBjtCharge(
+  element: Bjt,
+  capacitorStates: readonly CapacitorState[],
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: number[][],
+  rhs: number[],
+): void {
+  for (const spec of bjtChargeStateSpecs(element)) {
+    const state = capacitorStates.find((candidate) => candidate.name === spec.name);
+    if (state === undefined) {
+      continue;
+    }
+    const capacitance = bjtChargeDynamicCapacitance(element, spec.kind, state.previousVoltage);
+    if (capacitance <= 0.0) {
+      continue;
+    }
+    const conductance =
+      state.method === "trap"
+        ? (2.0 * capacitance) / state.timeStep
+        : state.method === "gear2"
+          ? (3.0 * capacitance) / (2.0 * state.timeStep)
+          : capacitance / state.timeStep;
+    const historyCurrent =
+      state.method === "trap"
+        ? conductance * state.previousVoltage + state.previousCurrent
+        : state.method === "gear2"
+          ? capacitance *
+            (4.0 * state.previousVoltage - state.previousPreviousVoltage) /
+            (2.0 * state.timeStep)
+          : conductance * state.previousVoltage;
+    const positive = nodeIndex(nodeIndices, spec.positive);
+    const negative = nodeIndex(nodeIndices, spec.negative);
+    stampConductance(matrix, positive, negative, conductance);
+    if (positive !== undefined) {
+      rhs[positive] += historyCurrent;
+    }
+    if (negative !== undefined) {
+      rhs[negative] -= historyCurrent;
+    }
+  }
 }
 
 interface MosfetDcResult {
@@ -15614,6 +17353,22 @@ interface MosfetDcResult {
   readonly cgb: number;
   readonly cbs: number;
   readonly cbd: number;
+}
+
+function mosfetBulkJunctionCapacitance(
+  zeroBiasCapacitance: number,
+  junctionVoltage: number,
+  junctionPotential: number,
+  gradingCoefficient: number,
+): number {
+  if (zeroBiasCapacitance <= 0.0) {
+    return zeroBiasCapacitance;
+  }
+  if (junctionPotential <= 0.0 || gradingCoefficient === 0.0) {
+    return zeroBiasCapacitance;
+  }
+  const reverseScale = Math.max(0.0, -junctionVoltage) / junctionPotential;
+  return zeroBiasCapacitance / ((1.0 + reverseScale) ** gradingCoefficient);
 }
 
 interface JfetDcResult {
@@ -15632,10 +17387,17 @@ function validateJfet(element: Jfet): void {
   if (!Number.isFinite(element.channelLengthModulation)) {
     throw invalidElement(element.name, "channel length modulation must be finite");
   }
+  if (!Number.isFinite(element.gateSourceCapacitance) || element.gateSourceCapacitance < 0.0) {
+    throw invalidElement(element.name, "gate-source capacitance must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.gateDrainCapacitance) || element.gateDrainCapacitance < 0.0) {
+    throw invalidElement(element.name, "gate-drain capacitance must be finite and non-negative");
+  }
 }
 
 function stampJfet(
   element: Jfet,
+  capacitorStates: readonly CapacitorState[],
   nodeIndices: ReadonlyMap<string, number>,
   matrix: number[][],
   rhs: number[],
@@ -15657,6 +17419,45 @@ function stampJfet(
   stampConductance(matrix, drain, source, result.gds);
   stampTransconductance(matrix, drain, source, gate, source, result.gm);
   stampCurrentSourceEquivalent(rhs, drain, source, equivalentCurrent);
+  stampJfetCharge(element, capacitorStates, nodeIndices, matrix, rhs);
+}
+
+function stampJfetCharge(
+  element: Jfet,
+  capacitorStates: readonly CapacitorState[],
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: number[][],
+  rhs: number[],
+): void {
+  for (const spec of jfetChargeStateSpecs(element)) {
+    const state = capacitorStates.find((candidate) => candidate.name === spec.name);
+    if (state === undefined || spec.capacitance <= 0.0) {
+      continue;
+    }
+    const conductance =
+      state.method === "trap"
+        ? (2.0 * spec.capacitance) / state.timeStep
+        : state.method === "gear2"
+          ? (3.0 * spec.capacitance) / (2.0 * state.timeStep)
+          : spec.capacitance / state.timeStep;
+    const historyCurrent =
+      state.method === "trap"
+        ? conductance * state.previousVoltage + state.previousCurrent
+        : state.method === "gear2"
+          ? (spec.capacitance *
+              (4.0 * state.previousVoltage - state.previousPreviousVoltage)) /
+            (2.0 * state.timeStep)
+          : conductance * state.previousVoltage;
+    const positive = nodeIndex(nodeIndices, spec.positive);
+    const negative = nodeIndex(nodeIndices, spec.negative);
+    stampConductance(matrix, positive, negative, conductance);
+    if (positive !== undefined) {
+      rhs[positive] += historyCurrent;
+    }
+    if (negative !== undefined) {
+      rhs[negative] -= historyCurrent;
+    }
+  }
 }
 
 function evaluateJfet(element: Jfet, vgs: number, vds: number): JfetDcResult {
@@ -15715,6 +17516,7 @@ function evaluateNjf(
 
 function stampMosfet(
   element: Mosfet,
+  capacitorStates: readonly CapacitorState[],
   nodeIndices: ReadonlyMap<string, number>,
   matrix: number[][],
   rhs: number[],
@@ -15740,6 +17542,49 @@ function stampMosfet(
   stampTransconductance(matrix, drain, source, gate, source, result.gm);
   stampTransconductance(matrix, drain, source, body, source, result.gmb);
   stampCurrentSourceEquivalent(rhs, drain, source, equivalentCurrent);
+  stampMosfetCharge(element, capacitorStates, nodeIndices, matrix, rhs);
+}
+
+function stampMosfetCharge(
+  element: Mosfet,
+  capacitorStates: readonly CapacitorState[],
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: number[][],
+  rhs: number[],
+): void {
+  for (const spec of mosfetChargeStateSpecs(element)) {
+    const state = capacitorStates.find((candidate) => candidate.name === spec.name);
+    if (state === undefined) {
+      continue;
+    }
+    const capacitance = mosfetChargeDynamicCapacitance(element, spec, state.previousVoltage);
+    if (capacitance <= 0.0) {
+      continue;
+    }
+    const conductance =
+      state.method === "trap"
+        ? (2.0 * capacitance) / state.timeStep
+        : state.method === "gear2"
+          ? (3.0 * capacitance) / (2.0 * state.timeStep)
+          : capacitance / state.timeStep;
+    const historyCurrent =
+      state.method === "trap"
+        ? conductance * state.previousVoltage + state.previousCurrent
+        : state.method === "gear2"
+          ? (capacitance *
+              (4.0 * state.previousVoltage - state.previousPreviousVoltage)) /
+            (2.0 * state.timeStep)
+          : conductance * state.previousVoltage;
+    const positive = nodeIndex(nodeIndices, spec.positive);
+    const negative = nodeIndex(nodeIndices, spec.negative);
+    stampConductance(matrix, positive, negative, conductance);
+    if (positive !== undefined) {
+      rhs[positive] += historyCurrent;
+    }
+    if (negative !== undefined) {
+      rhs[negative] -= historyCurrent;
+    }
+  }
 }
 
 function evaluateMosfetLevel1(
@@ -15776,12 +17621,14 @@ function evaluateNmosLevel1(
   const cgdOverlap = params.CGDO * params.W;
   const cgbOverlap = params.CGBO * params.L;
   const cgsIntrinsic = (2.0 / 3.0) * params.W * params.L * params.KP;
+  const cbsBulk = mosfetBulkJunctionCapacitance(params.CBS, vbs, params.PB, params.MJ);
+  const cbdBulk = mosfetBulkJunctionCapacitance(params.CBD, vbs - vds, params.PB, params.MJ);
   const capacitances = {
     cgs: cgsOverlap + cgsIntrinsic,
     cgd: cgdOverlap,
     cgb: cgbOverlap,
-    cbs: params.CBS,
-    cbd: params.CBD,
+    cbs: cbsBulk,
+    cbd: cbdBulk,
   };
   const threshold =
     params.PHI - vbs >= 0.0
@@ -15807,8 +17654,8 @@ function evaluateNmosLevel1(
       cgs: cgsOverlap + cgsIntrinsic / 2.0,
       cgd: cgdOverlap,
       cgb: cgbOverlap,
-      cbs: params.CBS,
-      cbd: params.CBD,
+      cbs: cbsBulk,
+      cbd: cbdBulk,
     };
   }
   const current = 0.5 * beta * overdrive * overdrive * (1.0 + params.LAMBDA * vds);
@@ -15821,8 +17668,8 @@ function evaluateNmosLevel1(
     cgs: cgsOverlap + (2.0 / 3.0) * cgsIntrinsic,
     cgd: cgdOverlap,
     cgb: cgbOverlap,
-    cbs: params.CBS,
-    cbd: params.CBD,
+    cbs: cbsBulk,
+    cbd: cbdBulk,
   };
 }
 
@@ -15906,6 +17753,243 @@ function diodeCurrentConductance(element: Diode, voltage: number): [number, numb
   return [current, conductance];
 }
 
+function diodeChargeStateName(element: Diode): string {
+  return `_D_${element.name}_charge`;
+}
+
+function diodeHasChargeStorage(element: Diode): boolean {
+  return element.junctionCapacitance > 0.0 || element.transitTime > 0.0;
+}
+
+function diodeDynamicCapacitance(element: Diode, voltage: number): number {
+  const [, conductance] = diodeCurrentConductance(element, voltage);
+  return element.junctionCapacitance + element.transitTime * conductance;
+}
+
+function diodeChargeVoltage(element: Diode, nodeVoltages: ReadonlyMap<string, number>): number {
+  return voltageAt(nodeVoltages, element.anode) - voltageAt(nodeVoltages, element.cathode);
+}
+
+type BjtChargeStateKind = "base-emitter" | "base-collector";
+
+interface BjtChargeStateSpec {
+  readonly name: string;
+  readonly positive: string;
+  readonly negative: string;
+  readonly kind: BjtChargeStateKind;
+}
+
+function bjtBaseEmitterChargeStateName(element: Bjt): string {
+  return `_Q_${element.name}_be_charge`;
+}
+
+function bjtBaseCollectorChargeStateName(element: Bjt): string {
+  return `_Q_${element.name}_bc_charge`;
+}
+
+function bjtJunctionTransconductance(element: Bjt, voltage: number): number {
+  const exponent = Math.max(-40.0, Math.min(40.0, voltage / element.thermalVoltage));
+  return (element.saturationCurrent / element.thermalVoltage) * Math.exp(exponent);
+}
+
+function bjtChargeDynamicCapacitance(
+  element: Bjt,
+  kind: BjtChargeStateKind,
+  voltage: number,
+): number {
+  const conductance = bjtJunctionTransconductance(element, voltage);
+  if (kind === "base-emitter") {
+    return element.baseEmitterCapacitance + element.forwardTransitTime * conductance;
+  }
+  return element.baseCollectorCapacitance + element.reverseTransitTime * conductance;
+}
+
+function bjtChargeStateSpecs(element: Bjt): BjtChargeStateSpec[] {
+  const specs: BjtChargeStateSpec[] = [];
+  if (element.baseEmitterCapacitance > 0.0 || element.forwardTransitTime > 0.0) {
+    const [positive, negative] =
+      element.polarity === "NPN"
+        ? [element.base, element.emitter]
+        : [element.emitter, element.base];
+    specs.push({
+      name: bjtBaseEmitterChargeStateName(element),
+      positive,
+      negative,
+      kind: "base-emitter",
+    });
+  }
+  if (element.baseCollectorCapacitance > 0.0 || element.reverseTransitTime > 0.0) {
+    const [positive, negative] =
+      element.polarity === "NPN"
+        ? [element.base, element.collector]
+        : [element.collector, element.base];
+    specs.push({
+      name: bjtBaseCollectorChargeStateName(element),
+      positive,
+      negative,
+      kind: "base-collector",
+    });
+  }
+  return specs;
+}
+
+function bjtChargeStateVoltage(
+  spec: BjtChargeStateSpec,
+  nodeVoltages: ReadonlyMap<string, number>,
+): number {
+  return voltageAt(nodeVoltages, spec.positive) - voltageAt(nodeVoltages, spec.negative);
+}
+
+interface JfetChargeStateSpec {
+  readonly name: string;
+  readonly positive: string;
+  readonly negative: string;
+  readonly capacitance: number;
+}
+
+function jfetGateSourceChargeStateName(element: Jfet): string {
+  return `_J_${element.name}_gs_charge`;
+}
+
+function jfetGateDrainChargeStateName(element: Jfet): string {
+  return `_J_${element.name}_gd_charge`;
+}
+
+function jfetChargeStateSpecs(element: Jfet): JfetChargeStateSpec[] {
+  const specs: JfetChargeStateSpec[] = [];
+  if (element.gateSourceCapacitance > 0.0) {
+    specs.push({
+      name: jfetGateSourceChargeStateName(element),
+      positive: element.gate,
+      negative: element.source,
+      capacitance: element.gateSourceCapacitance,
+    });
+  }
+  if (element.gateDrainCapacitance > 0.0) {
+    specs.push({
+      name: jfetGateDrainChargeStateName(element),
+      positive: element.gate,
+      negative: element.drain,
+      capacitance: element.gateDrainCapacitance,
+    });
+  }
+  return specs;
+}
+
+function jfetChargeStateVoltage(
+  spec: JfetChargeStateSpec,
+  nodeVoltages: ReadonlyMap<string, number>,
+): number {
+  return voltageAt(nodeVoltages, spec.positive) - voltageAt(nodeVoltages, spec.negative);
+}
+
+interface MosfetChargeStateSpec {
+  readonly name: string;
+  readonly positive: string;
+  readonly negative: string;
+  readonly capacitance: number;
+  readonly kind: "gate-overlap" | "source-body" | "drain-body";
+}
+
+function mosfetGateSourceChargeStateName(element: Mosfet): string {
+  return `_M_${element.name}_gs_charge`;
+}
+
+function mosfetGateDrainChargeStateName(element: Mosfet): string {
+  return `_M_${element.name}_gd_charge`;
+}
+
+function mosfetGateBodyChargeStateName(element: Mosfet): string {
+  return `_M_${element.name}_gb_charge`;
+}
+
+function mosfetSourceBodyChargeStateName(element: Mosfet): string {
+  return `_M_${element.name}_sb_charge`;
+}
+
+function mosfetDrainBodyChargeStateName(element: Mosfet): string {
+  return `_M_${element.name}_db_charge`;
+}
+
+function mosfetChargeStateSpecs(element: Mosfet): MosfetChargeStateSpec[] {
+  const specs: MosfetChargeStateSpec[] = [];
+  const gateSourceCapacitance = element.params.CGSO * element.params.W;
+  const gateDrainCapacitance = element.params.CGDO * element.params.W;
+  const gateBodyCapacitance = element.params.CGBO * element.params.L;
+  const sourceBodyCapacitance = element.params.CBS;
+  const drainBodyCapacitance = element.params.CBD;
+  if (gateSourceCapacitance > 0.0) {
+    specs.push({
+      name: mosfetGateSourceChargeStateName(element),
+      positive: element.gate,
+      negative: element.source,
+      capacitance: gateSourceCapacitance,
+      kind: "gate-overlap",
+    });
+  }
+  if (gateDrainCapacitance > 0.0) {
+    specs.push({
+      name: mosfetGateDrainChargeStateName(element),
+      positive: element.gate,
+      negative: element.drain,
+      capacitance: gateDrainCapacitance,
+      kind: "gate-overlap",
+    });
+  }
+  if (gateBodyCapacitance > 0.0) {
+    specs.push({
+      name: mosfetGateBodyChargeStateName(element),
+      positive: element.gate,
+      negative: element.body,
+      capacitance: gateBodyCapacitance,
+      kind: "gate-overlap",
+    });
+  }
+  if (sourceBodyCapacitance > 0.0) {
+    specs.push({
+      name: mosfetSourceBodyChargeStateName(element),
+      positive: element.source,
+      negative: element.body,
+      capacitance: sourceBodyCapacitance,
+      kind: "source-body",
+    });
+  }
+  if (drainBodyCapacitance > 0.0) {
+    specs.push({
+      name: mosfetDrainBodyChargeStateName(element),
+      positive: element.drain,
+      negative: element.body,
+      capacitance: drainBodyCapacitance,
+      kind: "drain-body",
+    });
+  }
+  return specs;
+}
+
+function mosfetChargeStateVoltage(
+  spec: MosfetChargeStateSpec,
+  nodeVoltages: ReadonlyMap<string, number>,
+): number {
+  return voltageAt(nodeVoltages, spec.positive) - voltageAt(nodeVoltages, spec.negative);
+}
+
+function mosfetChargeDynamicCapacitance(
+  element: Mosfet,
+  spec: MosfetChargeStateSpec,
+  stateVoltage: number,
+): number {
+  if (spec.kind !== "source-body" && spec.kind !== "drain-body") {
+    return spec.capacitance;
+  }
+  const junctionVoltage = element.type === "PMOS" ? stateVoltage : -stateVoltage;
+  return mosfetBulkJunctionCapacitance(
+    spec.capacitance,
+    junctionVoltage,
+    element.params.PB,
+    element.params.MJ,
+  );
+}
+
 function validateBjt(element: Bjt): void {
   if (element.polarity !== "NPN" && element.polarity !== "PNP") {
     throw invalidElement(element.name, "BJT polarity must be NPN or PNP");
@@ -15955,6 +18039,9 @@ function validateMosfet(element: Mosfet): void {
   if (params.IS <= 0.0 || params.N_SUB <= 0.0 || params.T_NOM <= 0.0) {
     throw invalidElement(element.name, "MOSFET IS, N_SUB, and T_NOM must be positive");
   }
+  if (params.PB <= 0.0 || params.MJ < 0.0) {
+    throw invalidElement(element.name, "MOSFET PB must be positive and MJ must be non-negative");
+  }
   if (
     params.CGSO < 0.0 ||
     params.CGDO < 0.0 ||
@@ -16000,6 +18087,48 @@ function initialCapacitorStates(
         timeStep,
         method,
       });
+    } else if (element.kind === "diode" && diodeHasChargeStorage(element)) {
+      states.push({
+        name: diodeChargeStateName(element),
+        previousVoltage: 0.0,
+        previousPreviousVoltage: 0.0,
+        previousCurrent: 0.0,
+        timeStep,
+        method,
+      });
+    } else if (element.kind === "bjt") {
+      for (const spec of bjtChargeStateSpecs(element)) {
+        states.push({
+          name: spec.name,
+          previousVoltage: 0.0,
+          previousPreviousVoltage: 0.0,
+          previousCurrent: 0.0,
+          timeStep,
+          method,
+        });
+      }
+    } else if (element.kind === "jfet") {
+      for (const spec of jfetChargeStateSpecs(element)) {
+        states.push({
+          name: spec.name,
+          previousVoltage: 0.0,
+          previousPreviousVoltage: 0.0,
+          previousCurrent: 0.0,
+          timeStep,
+          method,
+        });
+      }
+    } else if (element.kind === "mosfet") {
+      for (const spec of mosfetChargeStateSpecs(element)) {
+        states.push({
+          name: spec.name,
+          previousVoltage: 0.0,
+          previousPreviousVoltage: 0.0,
+          previousCurrent: 0.0,
+          timeStep,
+          method,
+        });
+      }
     }
   }
   return states;
@@ -16063,6 +18192,20 @@ function capacitorVoltages(
         element.name,
         voltageAt(nodeVoltages, element.n1) - voltageAt(nodeVoltages, element.n2),
       );
+    } else if (element.kind === "diode" && diodeHasChargeStorage(element)) {
+      voltages.set(diodeChargeStateName(element), diodeChargeVoltage(element, nodeVoltages));
+    } else if (element.kind === "bjt") {
+      for (const spec of bjtChargeStateSpecs(element)) {
+        voltages.set(spec.name, bjtChargeStateVoltage(spec, nodeVoltages));
+      }
+    } else if (element.kind === "jfet") {
+      for (const spec of jfetChargeStateSpecs(element)) {
+        voltages.set(spec.name, jfetChargeStateVoltage(spec, nodeVoltages));
+      }
+    } else if (element.kind === "mosfet") {
+      for (const spec of mosfetChargeStateSpecs(element)) {
+        voltages.set(spec.name, mosfetChargeStateVoltage(spec, nodeVoltages));
+      }
     }
   }
   return voltages;
@@ -16077,6 +18220,34 @@ function transientLteEstimate(
   let maxLte = 0.0;
   for (const element of circuit.elements()) {
     if (element.kind !== "capacitor") {
+      if (element.kind === "diode" && diodeHasChargeStorage(element)) {
+        const stateName = diodeChargeStateName(element);
+        const current = currentVoltages.get(stateName) ?? 0.0;
+        const previous = previousVoltages.get(stateName) ?? 0.0;
+        const previousPrevious = previousPreviousVoltages.get(stateName) ?? 0.0;
+        maxLte = Math.max(maxLte, Math.abs(current - 2.0 * previous + previousPrevious) / 2.0);
+      } else if (element.kind === "bjt") {
+        for (const spec of bjtChargeStateSpecs(element)) {
+          const current = currentVoltages.get(spec.name) ?? 0.0;
+          const previous = previousVoltages.get(spec.name) ?? 0.0;
+          const previousPrevious = previousPreviousVoltages.get(spec.name) ?? 0.0;
+          maxLte = Math.max(maxLte, Math.abs(current - 2.0 * previous + previousPrevious) / 2.0);
+        }
+      } else if (element.kind === "jfet") {
+        for (const spec of jfetChargeStateSpecs(element)) {
+          const current = currentVoltages.get(spec.name) ?? 0.0;
+          const previous = previousVoltages.get(spec.name) ?? 0.0;
+          const previousPrevious = previousPreviousVoltages.get(spec.name) ?? 0.0;
+          maxLte = Math.max(maxLte, Math.abs(current - 2.0 * previous + previousPrevious) / 2.0);
+        }
+      } else if (element.kind === "mosfet") {
+        for (const spec of mosfetChargeStateSpecs(element)) {
+          const current = currentVoltages.get(spec.name) ?? 0.0;
+          const previous = previousVoltages.get(spec.name) ?? 0.0;
+          const previousPrevious = previousPreviousVoltages.get(spec.name) ?? 0.0;
+          maxLte = Math.max(maxLte, Math.abs(current - 2.0 * previous + previousPrevious) / 2.0);
+        }
+      }
       continue;
     }
     const current = currentVoltages.get(element.name) ?? element.initialVoltage;
@@ -16225,33 +18396,169 @@ function updateCapacitorStates(
   capacitorStates: CapacitorState[],
 ): void {
   for (const state of capacitorStates) {
-    const element = circuit
+    const capacitorElement = circuit
       .elements()
       .find(
         (candidate): candidate is Capacitor =>
           candidate.kind === "capacitor" && candidate.name === state.name,
       );
-    if (element === undefined) {
+    const diodeElement =
+      capacitorElement === undefined
+        ? circuit
+            .elements()
+            .find(
+              (candidate): candidate is Diode =>
+                candidate.kind === "diode" && diodeChargeStateName(candidate) === state.name,
+            )
+        : undefined;
+    const bjtElement =
+      capacitorElement === undefined && diodeElement === undefined
+        ? circuit
+            .elements()
+            .find(
+              (candidate): candidate is Bjt =>
+                candidate.kind === "bjt" &&
+                bjtChargeStateSpecs(candidate).some((spec) => spec.name === state.name),
+            )
+        : undefined;
+    const bjtSpec =
+      bjtElement === undefined
+        ? undefined
+        : bjtChargeStateSpecs(bjtElement).find((spec) => spec.name === state.name);
+    const jfetElement =
+      capacitorElement === undefined && diodeElement === undefined && bjtSpec === undefined
+        ? circuit
+            .elements()
+            .find(
+              (candidate): candidate is Jfet =>
+                candidate.kind === "jfet" &&
+                jfetChargeStateSpecs(candidate).some((spec) => spec.name === state.name),
+            )
+        : undefined;
+    const jfetSpec =
+      jfetElement === undefined
+        ? undefined
+        : jfetChargeStateSpecs(jfetElement).find((spec) => spec.name === state.name);
+    const mosfetElement =
+      capacitorElement === undefined &&
+      diodeElement === undefined &&
+      bjtSpec === undefined &&
+      jfetSpec === undefined
+        ? circuit
+            .elements()
+            .find(
+              (candidate): candidate is Mosfet =>
+                candidate.kind === "mosfet" &&
+                mosfetChargeStateSpecs(candidate).some((spec) => spec.name === state.name),
+            )
+        : undefined;
+    const mosfetSpec =
+      mosfetElement === undefined
+        ? undefined
+        : mosfetChargeStateSpecs(mosfetElement).find((spec) => spec.name === state.name);
+    if (
+      capacitorElement === undefined &&
+      diodeElement === undefined &&
+      bjtSpec === undefined &&
+      jfetSpec === undefined &&
+      mosfetSpec === undefined
+    ) {
       continue;
     }
     const previousVoltage = state.previousVoltage;
     const previousCurrent = state.previousCurrent;
     const voltage =
-      voltageAt(nodeVoltages, element.n1) - voltageAt(nodeVoltages, element.n2);
+      capacitorElement !== undefined
+        ? voltageAt(nodeVoltages, capacitorElement.n1) - voltageAt(nodeVoltages, capacitorElement.n2)
+        : diodeElement !== undefined
+          ? diodeChargeVoltage(diodeElement, nodeVoltages)
+          : bjtSpec !== undefined
+            ? bjtChargeStateVoltage(bjtSpec, nodeVoltages)
+            : jfetSpec !== undefined
+              ? jfetChargeStateVoltage(jfetSpec, nodeVoltages)
+              : mosfetChargeStateVoltage(mosfetSpec!, nodeVoltages);
+    const capacitance =
+      capacitorElement !== undefined
+        ? capacitorElement.capacitanceFarads
+        : diodeElement !== undefined
+          ? diodeDynamicCapacitance(diodeElement, previousVoltage)
+          : bjtSpec !== undefined
+            ? bjtChargeDynamicCapacitance(bjtElement!, bjtSpec.kind, previousVoltage)
+            : jfetSpec !== undefined
+              ? jfetSpec.capacitance
+              : mosfetChargeDynamicCapacitance(
+                  mosfetElement!,
+                  mosfetSpec!,
+                  state.previousVoltage,
+                );
     if (state.method === "trap") {
-      const conductance = (2.0 * element.capacitanceFarads) / state.timeStep;
+      const conductance = (2.0 * capacitance) / state.timeStep;
       state.previousCurrent = conductance * (voltage - previousVoltage) - previousCurrent;
     } else if (state.method === "gear2") {
       state.previousCurrent =
-        element.capacitanceFarads *
+        capacitance *
         (3.0 * voltage - 4.0 * previousVoltage + state.previousPreviousVoltage) /
         (2.0 * state.timeStep);
     } else {
       state.previousCurrent =
-        (element.capacitanceFarads / state.timeStep) * (voltage - previousVoltage);
+        (capacitance / state.timeStep) * (voltage - previousVoltage);
     }
     state.previousVoltage = voltage;
     state.previousPreviousVoltage = previousVoltage;
+  }
+}
+
+function seedDeviceCapacitorStates(
+  circuit: Circuit,
+  nodeVoltages: ReadonlyMap<string, number>,
+  capacitorStates: CapacitorState[],
+): void {
+  for (const element of circuit.elements()) {
+    if (element.kind === "diode") {
+      const state = capacitorStates.find(
+        (candidate) => candidate.name === diodeChargeStateName(element),
+      );
+      if (state === undefined) {
+        continue;
+      }
+      const voltage = diodeChargeVoltage(element, nodeVoltages);
+      state.previousVoltage = voltage;
+      state.previousPreviousVoltage = voltage;
+      state.previousCurrent = 0.0;
+    } else if (element.kind === "bjt") {
+      for (const spec of bjtChargeStateSpecs(element)) {
+        const state = capacitorStates.find((candidate) => candidate.name === spec.name);
+        if (state === undefined) {
+          continue;
+        }
+        const voltage = bjtChargeStateVoltage(spec, nodeVoltages);
+        state.previousVoltage = voltage;
+        state.previousPreviousVoltage = voltage;
+        state.previousCurrent = 0.0;
+      }
+    } else if (element.kind === "jfet") {
+      for (const spec of jfetChargeStateSpecs(element)) {
+        const state = capacitorStates.find((candidate) => candidate.name === spec.name);
+        if (state === undefined) {
+          continue;
+        }
+        const voltage = jfetChargeStateVoltage(spec, nodeVoltages);
+        state.previousVoltage = voltage;
+        state.previousPreviousVoltage = voltage;
+        state.previousCurrent = 0.0;
+      }
+    } else if (element.kind === "mosfet") {
+      for (const spec of mosfetChargeStateSpecs(element)) {
+        const state = capacitorStates.find((candidate) => candidate.name === spec.name);
+        if (state === undefined) {
+          continue;
+        }
+        const voltage = mosfetChargeStateVoltage(spec, nodeVoltages);
+        state.previousVoltage = voltage;
+        state.previousPreviousVoltage = voltage;
+        state.previousCurrent = 0.0;
+      }
+    }
   }
 }
 
@@ -17004,12 +19311,20 @@ function stampBjtSmallSignal(
   element: Bjt,
   nodeIndices: ReadonlyMap<string, number>,
   matrix: number[][],
+  operatingPoint: readonly number[],
 ): void {
   validateBjt(element);
   const collector = nodeIndex(nodeIndices, element.collector);
   const base = nodeIndex(nodeIndices, element.base);
   const emitter = nodeIndex(nodeIndices, element.emitter);
-  const transconductance = element.saturationCurrent / element.thermalVoltage;
+  const baseVoltage = vectorVoltage(operatingPoint, base);
+  const emitterVoltage = vectorVoltage(operatingPoint, emitter);
+  const junctionVoltage =
+    element.polarity === "NPN"
+      ? baseVoltage - emitterVoltage
+      : emitterVoltage - baseVoltage;
+  const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / element.thermalVoltage));
+  const transconductance = element.saturationCurrent / element.thermalVoltage * Math.exp(exponent);
   const junctionConductance = transconductance / element.forwardBeta;
   if (element.polarity === "NPN") {
     stampConductance(matrix, base, emitter, junctionConductance);
@@ -17558,16 +19873,35 @@ function stampAcBjtSmallSignal(
   element: Bjt,
   nodeIndices: ReadonlyMap<string, number>,
   matrix: Complex[][],
+  operatingPoint: readonly number[],
   omega: number,
 ): void {
   validateBjt(element);
   const collector = nodeIndex(nodeIndices, element.collector);
   const base = nodeIndex(nodeIndices, element.base);
   const emitter = nodeIndex(nodeIndices, element.emitter);
-  const transconductance = element.saturationCurrent / element.thermalVoltage;
+  const collectorVoltage = vectorVoltage(operatingPoint, collector);
+  const baseVoltage = vectorVoltage(operatingPoint, base);
+  const emitterVoltage = vectorVoltage(operatingPoint, emitter);
+  const junctionVoltage =
+    element.polarity === "NPN"
+      ? baseVoltage - emitterVoltage
+      : emitterVoltage - baseVoltage;
+  const reverseJunctionVoltage =
+    element.polarity === "NPN"
+      ? baseVoltage - collectorVoltage
+      : collectorVoltage - baseVoltage;
+  const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / element.thermalVoltage));
+  const reverseExponent = Math.max(
+    -40.0,
+    Math.min(40.0, reverseJunctionVoltage / element.thermalVoltage),
+  );
+  const transconductance = element.saturationCurrent / element.thermalVoltage * Math.exp(exponent);
   const junctionConductance = transconductance / element.forwardBeta;
   const diffusionCapacitance = element.forwardTransitTime * transconductance;
-  const reverseDiffusionCapacitance = element.reverseTransitTime * transconductance;
+  const reverseTransconductance =
+    element.saturationCurrent / element.thermalVoltage * Math.exp(reverseExponent);
+  const reverseDiffusionCapacitance = element.reverseTransitTime * reverseTransconductance;
   const baseEmitterAdmittance = complex(
     junctionConductance,
     omega * (element.baseEmitterCapacitance + diffusionCapacitance),
@@ -17662,6 +19996,7 @@ function stampAcJfetSmallSignal(
   nodeIndices: ReadonlyMap<string, number>,
   matrix: Complex[][],
   operatingPoint: readonly number[],
+  omega: number,
 ): void {
   validateJfet(element);
   const drain = nodeIndex(nodeIndices, element.drain);
@@ -17676,6 +20011,18 @@ function stampAcJfetSmallSignal(
     drainVoltage - sourceVoltage,
   );
   stampComplexConductance(matrix, drain, source, complex(result.gds, 0.0));
+  stampComplexConductance(
+    matrix,
+    gate,
+    source,
+    complex(0.0, omega * element.gateSourceCapacitance),
+  );
+  stampComplexConductance(
+    matrix,
+    gate,
+    drain,
+    complex(0.0, omega * element.gateDrainCapacitance),
+  );
   stampComplexTransconductance(
     matrix,
     drain,
@@ -17687,10 +20034,18 @@ function stampAcJfetSmallSignal(
 }
 
 function solveLinearSystem(matrix: number[][], rhs: number[]): number[] {
+  return [...solveLinearSystemWithProfile(matrix, rhs).solution];
+}
+
+function solveLinearSystemWithProfile(matrix: number[][], rhs: number[]): LinearSystemSolve {
   if (rhs.length >= SPARSE_SOLVER_THRESHOLD) {
-    return solveSparseLinearSystem(matrix, rhs);
+    return solveSparseLinearSystemWithProfile(matrix, rhs);
   }
-  return solveDenseLinearSystem(matrix, rhs);
+  const profile = realSolverProfile(matrix, "dense_gaussian");
+  return {
+    solution: solveDenseLinearSystem(matrix, rhs),
+    profile,
+  };
 }
 
 function solveDenseLinearSystem(matrix: number[][], rhs: number[]): number[] {
@@ -17745,7 +20100,13 @@ function solveDenseLinearSystem(matrix: number[][], rhs: number[]): number[] {
 }
 
 function solveSparseLinearSystem(matrix: number[][], rhs: number[]): number[] {
+  return [...solveSparseLinearSystemWithProfile(matrix, rhs).solution];
+}
+
+function solveSparseLinearSystemWithProfile(matrix: number[][], rhs: number[]): LinearSystemSolve {
   const n = rhs.length;
+  const initialNonzeros = realMatrixNonzeros(matrix);
+  let peakNonzeros = initialNonzeros;
   const rows = matrix.map((row) => {
     const entries = new Map<number, number>();
     row.forEach((value, col) => {
@@ -17799,6 +20160,10 @@ function solveSparseLinearSystem(matrix: number[][], rhs: number[]): number[] {
       }
       sparseRhs[row] -= factor * sparseRhs[pivotCol];
     }
+    peakNonzeros = Math.max(
+      peakNonzeros,
+      rows.reduce((count, row) => count + row.size, 0),
+    );
   }
 
   const solution = Array.from({ length: n }, () => 0.0);
@@ -17815,7 +20180,14 @@ function solveSparseLinearSystem(matrix: number[][], rhs: number[]): number[] {
     }
     solution[row] = value / diagonal;
   }
-  return solution;
+  return {
+    solution,
+    profile: realSolverProfile(
+      matrix,
+      "native_sparse_gaussian",
+      Math.max(0, peakNonzeros - initialNonzeros),
+    ),
+  };
 }
 
 function cloneMatrix(matrix: readonly (readonly number[])[]): number[][] {

@@ -181,6 +181,18 @@ from spice_engine import (
     deck_output_plan_artifact_records,
     deck_table_records,
     device_model_audit_fixtures,
+    device_model_behavior_audit_fixtures,
+    device_model_capacitance_audit_fixtures,
+    device_model_charge_audit_fixtures,
+    device_model_noise_audit_fixtures,
+    device_model_reference_deck_audit_analysis_summary,
+    device_model_reference_deck_audit_analysis_summary_records,
+    device_model_reference_deck_audit_fixtures,
+    device_model_reference_deck_audit_gate,
+    device_model_reference_deck_audit_records,
+    device_model_reference_deck_audit_summary,
+    device_model_reference_deck_audit_summary_records,
+    device_model_temperature_audit_fixtures,
     digital_event_streams_to_bridge_schedule,
     digital_event_streams_to_voltage_sources,
     digital_events_to_pwl_waveform,
@@ -237,6 +249,16 @@ from spice_engine import (
     format_deck_wrdata_artifact_json,
     format_deck_wrdata_artifact_table,
     format_deck_wrdata_ascii,
+    format_device_model_reference_deck_audit_analysis_summary_csv,
+    format_device_model_reference_deck_audit_analysis_summary_json,
+    format_device_model_reference_deck_audit_analysis_summary_table,
+    format_device_model_reference_deck_audit_csv,
+    format_device_model_reference_deck_audit_gate_report,
+    format_device_model_reference_deck_audit_json,
+    format_device_model_reference_deck_audit_summary_csv,
+    format_device_model_reference_deck_audit_summary_json,
+    format_device_model_reference_deck_audit_summary_table,
+    format_device_model_reference_deck_audit_table,
     format_digital_bridge_schedule_table,
     format_digital_event_stream_table,
     format_digital_event_stream_vcd,
@@ -290,6 +312,7 @@ from spice_engine import (
     pss_residual,
     pss_residual_jacobian,
     resolve_deck_initial_conditions,
+    run_deck,
     run_deck_analysis,
     s_parameters,
     s_parameters_corners,
@@ -321,6 +344,18 @@ from spice_engine.engine import (
     _voltage_sources,
     _x_from_result,
 )
+
+
+def _assert_run_artifact_table_matches(
+    execution: object,
+) -> dict[str, str]:
+    assert execution.run_artifact_table == format_deck_run_artifact_table(
+        execution.run_artifacts
+    )
+    records = deck_table_records(execution.run_artifact_table)
+    assert records == json.loads(format_deck_run_artifact_json(execution.run_artifacts))
+    assert len(records) == 1
+    return records[0]
 
 
 def test_package_version_matches_pyproject_release() -> None:
@@ -364,7 +399,15 @@ def test_model_card_aliases_build_device_instances() -> None:
     mos_card = normalize_model_card(
         "Mn",
         "nmos",
-        {"LEVEL": 1.0, "VTO": 0.55, "LAM": 0.04, "NSUB": 1.6, "CJD": 3.0e-13},
+        {
+            "LEVEL": 1.0,
+            "VTO": 0.55,
+            "LAM": 0.04,
+            "NSUB": 1.6,
+            "CJD": 3.0e-13,
+            "PB": 0.9,
+            "MJ": 0.45,
+        },
     )
     mos_model = mosfet_from_model_card("M1", "d", "g", "s", "b", mos_card)
     assert mos_card.parameters == {
@@ -373,6 +416,8 @@ def test_model_card_aliases_build_device_instances() -> None:
         "LAMBDA": 0.04,
         "N_SUB": 1.6,
         "CBD": 3.0e-13,
+        "PB": 0.9,
+        "MJ": 0.45,
     }
     assert isinstance(mos_model.model, MOSFET)
     assert mos_model.model.type == MosfetType.NMOS
@@ -381,6 +426,8 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert pytest.approx(0.04) == mos_model.model.model.params.LAMBDA
     assert pytest.approx(1.6) == mos_model.model.model.params.N_SUB
     assert pytest.approx(3.0e-13) == mos_model.model.model.params.CBD
+    assert pytest.approx(0.9) == mos_model.model.model.params.PB
+    assert pytest.approx(0.45) == mos_model.model.model.params.MJ
 
 
 def test_model_card_audit_fixtures_cover_supported_device_families() -> None:
@@ -390,6 +437,648 @@ def test_model_card_audit_fixtures_cover_supported_device_families() -> None:
     assert fixtures[1].parameters["BF"] == pytest.approx(125.0)
     assert fixtures[2].parameters["VTO"] == pytest.approx(-1.8)
     assert fixtures[3].parameters["VT0"] == pytest.approx(0.55)
+
+
+def test_device_model_behavior_audit_fixtures_run_reference_bias_points() -> None:
+    fixtures = device_model_behavior_audit_fixtures()
+    assert [fixture.name for fixture in fixtures] == [
+        "diode-forward-bias",
+        "bjt-emitter-follower",
+        "jfet-source-bias",
+        "mos-level1-common-source",
+    ]
+
+    for fixture in fixtures:
+        result = dc_op(fixture.circuit)
+        value = result.node_voltages[fixture.probe_node]
+        assert result.converged
+        assert fixture.expected_min <= value <= fixture.expected_max
+        assert fixture.deck_lines[0].startswith("* device-model behavior fixture:")
+        assert ".op" in fixture.deck_lines
+        assert any(line.startswith(".model ") for line in fixture.deck_lines)
+
+
+def test_device_model_temperature_audit_fixtures_run_reference_sweeps() -> None:
+    fixtures = device_model_temperature_audit_fixtures()
+    assert [fixture.name for fixture in fixtures] == [
+        "diode-forward-bias",
+        "bjt-emitter-follower",
+        "jfet-source-bias",
+        "mos-level1-common-source",
+    ]
+
+    for fixture in fixtures:
+        result = dc_temperature_sweep(
+            fixture.circuit,
+            [point.temperature_kelvin for point in fixture.temperature_points],
+            nominal_temperature_kelvin=fixture.nominal_temperature_kelvin,
+            energy_gap_ev=fixture.energy_gap_ev,
+        )
+        assert ".temp 260.15 300.15 340.15" in fixture.deck_lines
+        assert fixture.deck_lines[0].startswith("* device-model temperature fixture:")
+        assert len(result.points) == len(fixture.temperature_points)
+        for actual, expected in zip(result.points, fixture.temperature_points, strict=True):
+            value = actual.result.node_voltages[fixture.probe_node]
+            assert actual.result.converged
+            assert actual.temperature_kelvin == pytest.approx(expected.temperature_kelvin)
+            assert expected.expected_min <= value <= expected.expected_max
+
+    jfet_fixture = next(fixture for fixture in fixtures if fixture.kind == "NJF")
+    assert jfet_fixture.temperature_behavior.startswith("JFET temperature scaling is intentionally")
+
+
+def test_device_model_capacitance_audit_fixtures_run_reference_ac_points() -> None:
+    fixtures = device_model_capacitance_audit_fixtures()
+    assert [fixture.name for fixture in fixtures] == [
+        "diode-capacitance-ac",
+        "bjt-capacitance-ac",
+        "jfet-capacitance-ac",
+        "mos-level1-capacitance-ac",
+    ]
+
+    for fixture in fixtures:
+        result = ac_sweep(
+            fixture.circuit,
+            f_start=fixture.frequency_hz,
+            f_stop=fixture.frequency_hz,
+            n_points=1,
+            sweep="lin",
+        )
+        value = abs(result.points[0].node_voltages[fixture.probe_node])
+        assert fixture.expected_magnitude_min <= value <= fixture.expected_magnitude_max, (
+            f"{fixture.name} expected {fixture.expected_magnitude_min} <= "
+            f"{value} <= {fixture.expected_magnitude_max}"
+        )
+        assert fixture.deck_lines[0].startswith("* device-model capacitance fixture:")
+        assert any(line.startswith(".model ") for line in fixture.deck_lines)
+        assert any(line.startswith(".ac ") for line in fixture.deck_lines)
+        assert fixture.capacitance_behavior
+
+    jfet_fixture = next(fixture for fixture in fixtures if fixture.kind == "NJF")
+    assert "CGS/CGD" in jfet_fixture.capacitance_behavior
+
+
+def test_device_model_noise_audit_fixtures_run_reference_noise_points() -> None:
+    fixtures = device_model_noise_audit_fixtures()
+    assert [fixture.name for fixture in fixtures] == [
+        "diode-shot-noise",
+        "bjt-shot-noise",
+        "jfet-channel-noise",
+        "mos-level1-channel-noise",
+    ]
+
+    for fixture in fixtures:
+        result = noise_ac(
+            fixture.circuit,
+            fixture.output_node,
+            fixture.input_source,
+            freqs=[fixture.frequency_hz],
+        )
+        assert result.points
+        entry = next(
+            entry
+            for entry in result.points[0].entries
+            if entry.element_name == fixture.expected_noise_element
+        )
+        assert entry.noise_type == fixture.expected_noise_type
+        assert fixture.expected_source_psd_min <= entry.source_psd <= fixture.expected_source_psd_max
+        assert fixture.expected_output_psd_min <= entry.output_psd <= fixture.expected_output_psd_max
+        assert fixture.deck_lines[0].startswith("* device-model noise fixture:")
+        assert any(line.startswith(".model ") for line in fixture.deck_lines)
+        assert any(line.startswith(".noise ") for line in fixture.deck_lines)
+        assert fixture.noise_behavior
+
+
+def test_device_model_charge_audit_fixtures_run_reference_transients() -> None:
+    fixtures = device_model_charge_audit_fixtures()
+    assert [fixture.name for fixture in fixtures] == [
+        "diode-storage-charge",
+        "bjt-storage-charge",
+        "jfet-storage-charge",
+        "mos-level1-storage-charge",
+    ]
+
+    for fixture in fixtures:
+        result = transient(
+            fixture.circuit,
+            t_step=fixture.time_step_s,
+            t_stop=fixture.stop_time_s,
+        )
+        assert result.converged
+        assert result.points
+        initial = result.points[0].node_voltages[fixture.probe_node]
+        final = result.points[-1].node_voltages[fixture.probe_node]
+        assert fixture.expected_initial_min <= initial <= fixture.expected_initial_max
+        assert fixture.expected_final_min <= final <= fixture.expected_final_max, (
+            f"{fixture.name} expected {fixture.expected_final_min} <= "
+            f"{final} <= {fixture.expected_final_max}"
+        )
+        assert fixture.storage_capacitance_f > 0.0
+        assert fixture.deck_lines[0].startswith("* device-model charge fixture:")
+        assert any(line.startswith(".model ") for line in fixture.deck_lines)
+        assert any(line.startswith(".tran ") for line in fixture.deck_lines)
+        assert fixture.charge_behavior
+
+    jfet_fixture = next(fixture for fixture in fixtures if fixture.kind == "NJF")
+    assert "CGS/CGD" in jfet_fixture.charge_behavior
+    mos_fixture = next(fixture for fixture in fixtures if fixture.kind == "NMOS")
+    assert "CGSO/CGDO/CGBO" in mos_fixture.charge_behavior
+    assert "CBS/CBD" in mos_fixture.charge_behavior
+
+
+def test_device_model_reference_deck_audit_fixtures_cover_model_depth_matrix() -> None:
+    fixtures = device_model_reference_deck_audit_fixtures()
+    assert len(fixtures) == 20
+    assert fixtures[0].name == "diode-forward-bias:op"
+    assert fixtures[-1].name == "mos-level1-storage-charge:tran"
+
+    expected_analyses = {"op", "temperature", "ac", "noise", "tran"}
+    assert {fixture.kind for fixture in fixtures} == {"D", "NPN", "NJF", "NMOS"}
+    for kind in {"D", "NPN", "NJF", "NMOS"}:
+        assert {
+            fixture.analysis
+            for fixture in fixtures
+            if fixture.kind == kind
+        } == expected_analyses
+
+    for fixture in fixtures:
+        assert fixture.reference == "SPICE2/SPICE3-style local model-depth fixture"
+        assert fixture.expected_behavior
+        assert fixture.deck_lines[0].startswith("* device-model ")
+        assert any(line.startswith(".model ") for line in fixture.deck_lines)
+        assert fixture.deck_lines[-1] == ".end"
+
+
+def test_device_model_reference_deck_audit_table_is_stable() -> None:
+    table = format_device_model_reference_deck_audit_table()
+    lines = table.splitlines()
+    assert len(lines) == 21
+    assert lines[0] == "name\tkind\tanalysis\tmodel\treference\texpected_behavior\tdeck_lines"
+    assert lines[1] == (
+        "diode-forward-bias:op\tD\top\tDfast\t"
+        "SPICE2/SPICE3-style local model-depth fixture\t"
+        "DC probe out remains in [0.55, 0.65] V\t8"
+    )
+    assert lines[-1] == (
+        "mos-level1-storage-charge:tran\tNMOS\ttran\tMn\t"
+        "SPICE2/SPICE3-style local model-depth fixture\t"
+        "Level-1 MOS CGSO/CGDO/CGBO plus CBS/CBD contribute transient "
+        "gate-overlap and depletion-shaped bulk-junction storage; explicit "
+        "Cstore keeps the fixture comparable with other charge audits\t10"
+    )
+
+
+def test_device_model_reference_deck_audit_record_exports_are_stable() -> None:
+    records = device_model_reference_deck_audit_records()
+    assert len(records) == 20
+    assert records[0] == {
+        "name": "diode-forward-bias:op",
+        "kind": "D",
+        "analysis": "op",
+        "model": "Dfast",
+        "reference": "SPICE2/SPICE3-style local model-depth fixture",
+        "expected_behavior": "DC probe out remains in [0.55, 0.65] V",
+        "deck_lines": "8",
+    }
+    assert records[-1]["name"] == "mos-level1-storage-charge:tran"
+    assert records[-1]["deck_lines"] == "10"
+
+    csv_lines = format_device_model_reference_deck_audit_csv().splitlines()
+    assert csv_lines[0] == (
+        "name,kind,analysis,model,reference,expected_behavior,deck_lines"
+    )
+    assert csv_lines[1] == (
+        "diode-forward-bias:op,D,op,Dfast,"
+        "SPICE2/SPICE3-style local model-depth fixture,"
+        '"DC probe out remains in [0.55, 0.65] V",8'
+    )
+
+    parsed = json.loads(format_device_model_reference_deck_audit_json())
+    assert parsed == records
+
+
+def test_device_model_reference_deck_audit_summary_exports_are_stable() -> None:
+    summary = device_model_reference_deck_audit_summary()
+    assert len(summary) == 4
+    assert summary[0].kind == "D"
+    assert summary[0].fixture_count == 5
+    assert summary[0].analyses == ("op", "temperature", "ac", "noise", "tran")
+    assert summary[0].missing_analyses == ()
+    assert summary[0].deck_line_count == 42
+    assert summary[0].references == ("SPICE2/SPICE3-style local model-depth fixture",)
+
+    table = format_device_model_reference_deck_audit_summary_table()
+    assert table.splitlines() == [
+        "kind\tfixture_count\tanalyses\tmissing_analyses\tdeck_lines\treferences",
+        (
+            "D\t5\top,temperature,ac,noise,tran\t\t42\t"
+            "SPICE2/SPICE3-style local model-depth fixture"
+        ),
+        (
+            "NPN\t5\top,temperature,ac,noise,tran\t\t47\t"
+            "SPICE2/SPICE3-style local model-depth fixture"
+        ),
+        (
+            "NJF\t5\top,temperature,ac,noise,tran\t\t52\t"
+            "SPICE2/SPICE3-style local model-depth fixture"
+        ),
+        (
+            "NMOS\t5\top,temperature,ac,noise,tran\t\t47\t"
+            "SPICE2/SPICE3-style local model-depth fixture"
+        ),
+    ]
+
+    records = device_model_reference_deck_audit_summary_records()
+    assert records[0] == {
+        "kind": "D",
+        "fixture_count": "5",
+        "analyses": "op,temperature,ac,noise,tran",
+        "missing_analyses": "",
+        "deck_lines": "42",
+        "references": "SPICE2/SPICE3-style local model-depth fixture",
+    }
+    assert format_device_model_reference_deck_audit_summary_csv().splitlines()[1] == (
+        'D,5,"op,temperature,ac,noise,tran",,42,'
+        "SPICE2/SPICE3-style local model-depth fixture"
+    )
+    assert json.loads(format_device_model_reference_deck_audit_summary_json()) == records
+
+
+def test_device_model_reference_deck_audit_summary_reports_missing_analysis() -> None:
+    fixtures = tuple(
+        fixture
+        for fixture in device_model_reference_deck_audit_fixtures()
+        if not (fixture.kind == "NMOS" and fixture.analysis == "tran")
+    )
+
+    summary = device_model_reference_deck_audit_summary(fixtures)
+    nmos = next(row for row in summary if row.kind == "NMOS")
+
+    assert nmos.fixture_count == 4
+    assert nmos.analyses == ("op", "temperature", "ac", "noise")
+    assert nmos.missing_analyses == ("tran",)
+    assert nmos.deck_line_count == 37
+    assert (
+        "NMOS\t4\top,temperature,ac,noise\ttran\t37\t"
+        "SPICE2/SPICE3-style local model-depth fixture"
+    ) in format_device_model_reference_deck_audit_summary_table(fixtures)
+
+
+def test_device_model_reference_deck_audit_analysis_summary_exports_are_stable() -> None:
+    summary = device_model_reference_deck_audit_analysis_summary()
+    assert len(summary) == 5
+    assert summary[0].analysis == "op"
+    assert summary[0].fixture_count == 4
+    assert summary[0].kinds == ("D", "NPN", "NJF", "NMOS")
+    assert summary[0].missing_kinds == ()
+    assert summary[0].deck_line_count == 36
+    assert summary[0].references == ("SPICE2/SPICE3-style local model-depth fixture",)
+
+    table = format_device_model_reference_deck_audit_analysis_summary_table()
+    assert table.splitlines() == [
+        "analysis\tfixture_count\tkinds\tmissing_kinds\tdeck_lines\treferences",
+        "op\t4\tD,NPN,NJF,NMOS\t\t36\tSPICE2/SPICE3-style local model-depth fixture",
+        (
+            "temperature\t4\tD,NPN,NJF,NMOS\t\t40\t"
+            "SPICE2/SPICE3-style local model-depth fixture"
+        ),
+        "ac\t4\tD,NPN,NJF,NMOS\t\t36\tSPICE2/SPICE3-style local model-depth fixture",
+        "noise\t4\tD,NPN,NJF,NMOS\t\t36\tSPICE2/SPICE3-style local model-depth fixture",
+        "tran\t4\tD,NPN,NJF,NMOS\t\t40\tSPICE2/SPICE3-style local model-depth fixture",
+    ]
+
+    records = device_model_reference_deck_audit_analysis_summary_records()
+    assert records[0] == {
+        "analysis": "op",
+        "fixture_count": "4",
+        "kinds": "D,NPN,NJF,NMOS",
+        "missing_kinds": "",
+        "deck_lines": "36",
+        "references": "SPICE2/SPICE3-style local model-depth fixture",
+    }
+    assert format_device_model_reference_deck_audit_analysis_summary_csv().splitlines()[1] == (
+        'op,4,"D,NPN,NJF,NMOS",,36,'
+        "SPICE2/SPICE3-style local model-depth fixture"
+    )
+    assert (
+        json.loads(format_device_model_reference_deck_audit_analysis_summary_json())
+        == records
+    )
+
+
+def test_device_model_reference_deck_audit_analysis_summary_reports_missing_kind() -> None:
+    fixtures = tuple(
+        fixture
+        for fixture in device_model_reference_deck_audit_fixtures()
+        if not (fixture.kind == "NMOS" and fixture.analysis == "tran")
+    )
+
+    summary = device_model_reference_deck_audit_analysis_summary(fixtures)
+    tran = next(row for row in summary if row.analysis == "tran")
+
+    assert tran.fixture_count == 3
+    assert tran.kinds == ("D", "NPN", "NJF")
+    assert tran.missing_kinds == ("NMOS",)
+    assert tran.deck_line_count == 30
+    assert (
+        "tran\t3\tD,NPN,NJF\tNMOS\t30\t"
+        "SPICE2/SPICE3-style local model-depth fixture"
+    ) in format_device_model_reference_deck_audit_analysis_summary_table(fixtures)
+
+
+def test_device_model_reference_deck_audit_gate_report_is_stable() -> None:
+    report = device_model_reference_deck_audit_gate()
+
+    assert report.passed is True
+    assert report.fixture_count == 20
+    assert report.expected_kinds == ("D", "NPN", "NJF", "NMOS")
+    assert report.expected_analyses == ("op", "temperature", "ac", "noise", "tran")
+    assert report.issues == ()
+    assert format_device_model_reference_deck_audit_gate_report(report) == (
+        "passed\tfixture_count\texpected_kinds\texpected_analyses\tissue_count\n"
+        "true\t20\tD,NPN,NJF,NMOS\top,temperature,ac,noise,tran\t0"
+    )
+
+
+def test_device_model_reference_deck_audit_gate_reports_missing_coverage() -> None:
+    fixtures = tuple(
+        fixture
+        for fixture in device_model_reference_deck_audit_fixtures()
+        if not (fixture.kind == "NMOS" and fixture.analysis == "tran")
+    )
+
+    report = device_model_reference_deck_audit_gate(fixtures)
+    table = format_device_model_reference_deck_audit_gate_report(report)
+
+    assert report.passed is False
+    assert any(
+        issue.fixture_name == "NMOS:tran" and issue.field == "coverage"
+        for issue in report.issues
+    )
+    assert "fixture_name\tfield\tmessage" in table
+    assert (
+        "NMOS:tran\tcoverage\t"
+        "missing required NMOS tran reference-deck audit row"
+    ) in table
+
+
+def test_transient_diode_junction_capacitance_slows_current_step() -> None:
+    def run(cjo: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(CurrentSource(
+            "Istep",
+            "0",
+            "out",
+            0.0,
+            waveform=PwlWaveform(((0.0, 0.0), (1.0e-9, 1.0e-6), (5.0e-9, 1.0e-6))),
+        ))
+        circuit.add(Resistor("Rshunt", "out", "0", 1.0e12))
+        circuit.add(Diode("D1", "out", "0", Is=1.0e-15, Vt=0.02585, Cjo=cjo))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    uncharged = run(0.0)
+    charged = run(1.0e-12)
+
+    assert uncharged.converged
+    assert charged.converged
+    uncharged_first = uncharged.points[1].node_voltages["out"]
+    charged_first = charged.points[1].node_voltages["out"]
+    assert uncharged_first > 0.5
+    assert charged_first < 0.01
+    assert charged_first < uncharged_first
+
+
+def test_transient_jfet_gate_source_capacitance_slows_gate_step() -> None:
+    def run(cgs: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource(
+            "Vstep",
+            "in",
+            "0",
+            0.0,
+            waveform=PwlWaveform(((0.0, 0.0), (1.0e-9, 1.0), (5.0e-9, 1.0))),
+        ))
+        circuit.add(Resistor("Rin", "in", "gate", 1_000.0))
+        circuit.add(Resistor("Rdrain", "drain", "0", 1_000.0))
+        circuit.add(JFET("J1", "drain", "gate", "0", beta=1.0e-12, vto=-2.0, Cgs=cgs))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    uncharged = run(0.0)
+    charged = run(1.0e-9)
+
+    assert uncharged.converged
+    assert charged.converged
+    uncharged_first = uncharged.points[1].node_voltages["gate"]
+    charged_first = charged.points[1].node_voltages["gate"]
+    assert uncharged_first > 0.5
+    assert charged_first < 0.01
+    assert charged_first < uncharged_first
+
+
+def test_transient_mosfet_overlap_capacitance_slows_gate_step() -> None:
+    def run(cgso: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource(
+            "Vstep",
+            "in",
+            "0",
+            0.0,
+            waveform=PwlWaveform(((0.0, 0.0), (1.0e-9, 1.0), (5.0e-9, 1.0))),
+        ))
+        circuit.add(Resistor("Rin", "in", "gate", 1_000.0))
+        circuit.add(Resistor("Rdrain", "drain", "0", 1_000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "drain",
+            "gate",
+            "0",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(Level1Params(KP=1.0e-12, W=1.0, L=1.0, CGSO=cgso)),
+            ),
+        ))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    uncharged = run(0.0)
+    charged = run(1.0e-9)
+
+    assert uncharged.converged
+    assert charged.converged
+    uncharged_first = uncharged.points[1].node_voltages["gate"]
+    charged_first = charged.points[1].node_voltages["gate"]
+    assert uncharged_first > 0.5
+    assert charged_first < 0.01
+    assert charged_first < uncharged_first
+
+
+def test_transient_mosfet_bulk_junction_capacitance_slows_drain_step() -> None:
+    def run(cbd: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource(
+            "Vstep",
+            "in",
+            "0",
+            0.0,
+            waveform=PwlWaveform(((0.0, 0.0), (1.0e-9, 1.0), (5.0e-9, 1.0))),
+        ))
+        circuit.add(Resistor("Rin", "in", "drain", 1_000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "drain",
+            "0",
+            "0",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(Level1Params(KP=1.0e-12, W=1.0, L=1.0, CBD=cbd)),
+            ),
+        ))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    uncharged = run(0.0)
+    charged = run(1.0e-9)
+
+    assert uncharged.converged
+    assert charged.converged
+    uncharged_first = uncharged.points[1].node_voltages["drain"]
+    charged_first = charged.points[1].node_voltages["drain"]
+    assert uncharged_first > 0.5
+    assert charged_first < 0.01
+    assert charged_first < uncharged_first
+
+
+def test_transient_mosfet_bulk_junction_depletion_shaping_reduces_reverse_bias_capacitance() -> None:
+    def run(grading_coefficient: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource(
+            "Vstep",
+            "in",
+            "0",
+            1.0,
+            waveform=PwlWaveform(((0.0, 1.0), (1.0e-9, 2.0), (5.0e-9, 2.0))),
+        ))
+        circuit.add(Resistor("Rin", "in", "drain", 1_000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "drain",
+            "0",
+            "0",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(Level1Params(
+                    KP=1.0e-12,
+                    W=1.0,
+                    L=1.0,
+                    CBD=1.0e-12,
+                    PB=1.0,
+                    MJ=grading_coefficient,
+                )),
+            ),
+        ))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    fixed = run(0.0)
+    shaped = run(0.5)
+
+    assert fixed.converged
+    assert shaped.converged
+    fixed_first = fixed.points[1].node_voltages["drain"]
+    shaped_first = shaped.points[1].node_voltages["drain"]
+    assert fixed_first == pytest.approx(1.5, rel=0.05)
+    assert shaped_first > fixed_first + 0.04
+    assert shaped_first < 1.7
+
+
+def test_transient_diode_transit_time_holds_forward_charge_on_turnoff() -> None:
+    def run(transit_time: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(CurrentSource(
+            "Istep",
+            "0",
+            "out",
+            0.0,
+            waveform=PwlWaveform(((0.0, 1.0e-3), (1.0e-9, 0.0), (5.0e-9, 0.0))),
+        ))
+        circuit.add(Resistor("Rshunt", "out", "0", 1.0e12))
+        circuit.add(Diode("D1", "out", "0", Is=1.0e-15, Vt=0.02585, Tt=transit_time))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    no_storage = run(0.0)
+    stored = run(1.0e-9)
+
+    assert no_storage.converged
+    assert stored.converged
+    assert no_storage.points[1].node_voltages["out"] == pytest.approx(0.0, abs=1.0e-12)
+    assert stored.points[1].node_voltages["out"] > 0.6
+    assert stored.points[1].node_voltages["out"] < stored.points[0].node_voltages["out"]
+
+
+def test_transient_bjt_base_emitter_capacitance_slows_base_current_step() -> None:
+    def run(base_emitter_capacitance: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vcc", "collector", "0", 5.0))
+        circuit.add(CurrentSource(
+            "Istep",
+            "0",
+            "base",
+            0.0,
+            waveform=PwlWaveform(((0.0, 0.0), (1.0e-9, 1.0e-6), (5.0e-9, 1.0e-6))),
+        ))
+        circuit.add(Resistor("Rshunt", "base", "0", 1.0e12))
+        circuit.add(BJT(
+            "Q1",
+            collector="collector",
+            base="base",
+            emitter="0",
+            Is=1.0e-15,
+            Cje=base_emitter_capacitance,
+        ))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    uncharged = run(0.0)
+    charged = run(1.0e-12)
+
+    assert uncharged.converged
+    assert charged.converged
+    uncharged_first = uncharged.points[1].node_voltages["base"]
+    charged_first = charged.points[1].node_voltages["base"]
+    assert uncharged_first > 0.5
+    assert charged_first < 0.01
+    assert charged_first < uncharged_first
+
+
+def test_transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() -> None:
+    def run(forward_transit_time: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vcc", "collector", "0", 5.0))
+        circuit.add(CurrentSource(
+            "Istep",
+            "0",
+            "base",
+            0.0,
+            waveform=PwlWaveform(((0.0, 1.0e-3), (1.0e-9, 0.0), (5.0e-9, 0.0))),
+        ))
+        circuit.add(Resistor("Rshunt", "base", "0", 1.0e12))
+        circuit.add(BJT(
+            "Q1",
+            collector="collector",
+            base="base",
+            emitter="0",
+            Is=1.0e-15,
+            Tf=forward_transit_time,
+        ))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    no_storage = run(0.0)
+    stored = run(1.0e-9)
+
+    assert no_storage.converged
+    assert stored.converged
+    assert no_storage.points[1].node_voltages["base"] == pytest.approx(0.0, abs=1.0e-12)
+    assert stored.points[1].node_voltages["base"] > 0.6
+    assert stored.points[1].node_voltages["base"] < stored.points[0].node_voltages["base"]
 
 
 def test_non_level_one_mos_model_cards_are_explicitly_rejected() -> None:
@@ -977,6 +1666,23 @@ def test_large_resistor_ladder_uses_sparse_real_solver_path():
     assert r.diagnostics.convergence_aid == "newton"
     assert r.diagnostics.tolerance == pytest.approx(1.0e-6)
     assert math.isfinite(r.diagnostics.max_delta)
+    assert r.diagnostics.newton_step_limit is None
+    assert r.diagnostics.limited_newton_steps == 0
+    assert r.diagnostics.minimum_damping_factor == pytest.approx(1.0)
+    profile = r.diagnostics.solver_profile
+    assert profile.matrix_size == 36
+    assert profile.solver == "sparse_real"
+    assert profile.backend in {"scipy_sparse_lu", "native_sparse_gaussian"}
+    assert profile.structural_nonzeros > 0
+    assert 0.0 < profile.density < 0.1
+    assert profile.fill_in_nonzeros >= 0
+    if profile.backend == "native_sparse_gaussian":
+        assert (
+            profile.fallback_reason in {None, "scipy_unavailable"}
+            or profile.fallback_reason.startswith("scipy_sparse_lu:")
+        )
+    else:
+        assert profile.fallback_reason is None
 
 
 def test_current_source_into_resistor():
@@ -1754,6 +2460,25 @@ def test_jfet_common_source_ac_gain_from_bias_point() -> None:
     out = result.points[0].node_voltages["drain"]
     assert out.real == pytest.approx(-4.0, abs=1.0e-6)
     assert out.imag == pytest.approx(0.0, abs=1.0e-12)
+
+
+def test_ac_jfet_gate_source_capacitance_shunts_high_frequency_gate_drive() -> None:
+    """JFET CGS contributes gate-source AC susceptance."""
+
+    def gate_amplitude(cgs: float) -> float:
+        c = Circuit()
+        c.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
+        c.add(Resistor("Rin", "in", "gate", 1_000.0))
+        c.add(Resistor("Rdrain", "drain", "0", 1_000.0))
+        c.add(JFET("J1", "drain", "gate", "0", beta=1.0e-12, vto=-2.0, Cgs=cgs))
+        result = ac_sweep(c, f_start=100_000.0, f_stop=100_000.0, n_points=1)
+        return abs(result.points[0].node_voltages["gate"])
+
+    without_capacitance = gate_amplitude(0.0)
+    with_capacitance = gate_amplitude(1.0e-6)
+
+    assert without_capacitance > 0.9
+    assert with_capacitance < without_capacitance / 100.0
 
 
 def test_jfet_transient_source_follower_charges_output_capacitor() -> None:
@@ -6865,6 +7590,20 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert op_execution.output_probes == ["V(mid)"]
     assert op_execution.output_directives == [".save"]
     assert op_execution.analysis_directives == [".op"]
+    expected_deck_analysis_kinds = ["op", "dc", "ac", "tran", "tf", "sens", "noise"]
+    expected_deck_analysis_directives = [
+        ".op",
+        ".dc",
+        ".ac",
+        ".tran",
+        ".tf",
+        ".sens",
+        ".noise",
+    ]
+    assert op_execution.deck_analysis_kind_count == 7
+    assert op_execution.deck_analysis_kinds == expected_deck_analysis_kinds
+    assert op_execution.deck_analysis_directive_count == 7
+    assert op_execution.deck_analysis_directives == expected_deck_analysis_directives
     assert op_execution.table_count == 3
     assert op_execution.tables == ["result", "output-plan", "run-artifact"]
     assert [artifact.name for artifact in op_execution.table_artifacts] == (
@@ -6890,44 +7629,86 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert op_execution.table_artifacts[0].records == deck_table_records(
         op_execution.table
     )
+    expected_output_plan_columns = [
+        "Analysis",
+        "Directive",
+        "Line",
+        "SourceName",
+        "OutputNode",
+        "SweepKind",
+        "StartValue",
+        "StopValue",
+        "StepValue",
+        "PointCount",
+        "StartFrequencyHz",
+        "StopFrequencyHz",
+        "StepTime",
+        "StopTime",
+        "StartTime",
+        "MaxStep",
+        "UseInitialConditions",
+        "ResultRows",
+        "ResultColumns",
+        "ResultColumnList",
+        "OutputProbes",
+        "OutputProbeList",
+        "OutputProbeLines",
+        "OutputProbeLineList",
+        "OutputDirectives",
+        "OutputDirectiveList",
+        "OutputDirectiveKinds",
+        "OutputDirectiveKindList",
+        "OutputDirectiveAnalysisKinds",
+        "OutputDirectiveAnalysisKindList",
+        "OutputDirectiveLines",
+        "OutputDirectiveLineList",
+        "Tables",
+        "TableList",
+    ]
+    expected_output_plan_row = [
+        "op",
+        ".op",
+        str(op_execution.plan.line_number),
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "1",
+        "2",
+        "Index;V(mid)",
+        "1",
+        "V(mid)",
+        "1",
+        str(save_line),
+        "1",
+        ".save",
+        "1",
+        "save",
+        "1",
+        "global",
+        "1",
+        str(save_line),
+        "3",
+        "result;output-plan;run-artifact",
+    ]
     expected_output_plan_table = (
-        "Analysis\tDirective\tLine\tSourceName\tOutputNode\tResultRows\tResultColumns\t"
-        "ResultColumnList\tOutputProbes\t"
-        "OutputProbeList\tOutputProbeLines\tOutputProbeLineList\t"
-        "OutputDirectives\tOutputDirectiveList\t"
-        "OutputDirectiveKinds\tOutputDirectiveKindList\t"
-        "OutputDirectiveAnalysisKinds\tOutputDirectiveAnalysisKindList\t"
-        "OutputDirectiveLines\tOutputDirectiveLineList\t"
-        "Tables\tTableList\n"
-        f"op\t.op\t{op_execution.plan.line_number}\t\t\t1\t2\tIndex;V(mid)\t1\tV(mid)\t"
-        f"1\t{save_line}\t1\t.save\t1\tsave\t1\tglobal\t1\t{save_line}\t3\t"
-        "result;output-plan;run-artifact\n"
+        "\t".join(expected_output_plan_columns)
+        + "\n"
+        + "\t".join(expected_output_plan_row)
+        + "\n"
     )
     expected_output_plan_records = [
-        {
-            "Analysis": "op",
-            "Directive": ".op",
-            "Line": str(op_execution.plan.line_number),
-            "SourceName": "",
-            "OutputNode": "",
-            "ResultRows": "1",
-            "ResultColumns": "2",
-            "ResultColumnList": "Index;V(mid)",
-            "OutputProbes": "1",
-            "OutputProbeList": "V(mid)",
-            "OutputProbeLines": "1",
-            "OutputProbeLineList": str(save_line),
-            "OutputDirectives": "1",
-            "OutputDirectiveList": ".save",
-            "OutputDirectiveKinds": "1",
-            "OutputDirectiveKindList": "save",
-            "OutputDirectiveAnalysisKinds": "1",
-            "OutputDirectiveAnalysisKindList": "global",
-            "OutputDirectiveLines": "1",
-            "OutputDirectiveLineList": str(save_line),
-            "Tables": "3",
-            "TableList": "result;output-plan;run-artifact",
-        }
+        dict(zip(expected_output_plan_columns, expected_output_plan_row, strict=False))
     ]
     assert op_execution.output_plan_artifact_count == 1
     assert len(op_execution.output_plan_artifacts) == 1
@@ -6937,6 +7718,18 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert output_plan_artifact.line_number == op_execution.plan.line_number
     assert output_plan_artifact.source_name is None
     assert output_plan_artifact.output_node is None
+    assert output_plan_artifact.sweep_kind is None
+    assert output_plan_artifact.start_value is None
+    assert output_plan_artifact.stop_value is None
+    assert output_plan_artifact.step_value is None
+    assert output_plan_artifact.point_count is None
+    assert output_plan_artifact.start_frequency_hz is None
+    assert output_plan_artifact.stop_frequency_hz is None
+    assert output_plan_artifact.step_time is None
+    assert output_plan_artifact.stop_time is None
+    assert output_plan_artifact.start_time is None
+    assert output_plan_artifact.max_step is None
+    assert output_plan_artifact.use_initial_conditions is None
     assert output_plan_artifact.result_row_count == 1
     assert output_plan_artifact.result_columns == ["Index", "V(mid)"]
     assert output_plan_artifact.output_probes == ["V(mid)"]
@@ -6955,16 +7748,10 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         format_deck_output_plan_artifact_table(op_execution.output_plan_artifacts)
     )
     assert op_execution.output_plan_artifact_csv == (
-        "Analysis,Directive,Line,SourceName,OutputNode,ResultRows,ResultColumns,"
-        "ResultColumnList,OutputProbes,"
-        "OutputProbeList,OutputProbeLines,OutputProbeLineList,"
-        "OutputDirectives,OutputDirectiveList,"
-        "OutputDirectiveKinds,OutputDirectiveKindList,"
-        "OutputDirectiveAnalysisKinds,OutputDirectiveAnalysisKindList,"
-        "OutputDirectiveLines,OutputDirectiveLineList,"
-        "Tables,TableList\n"
-        f"op,.op,{op_execution.plan.line_number},,,1,2,Index;V(mid),1,V(mid),1,{save_line},1,.save,1,save,1,global,1,{save_line},3,"
-        "result;output-plan;run-artifact\n"
+        ",".join(expected_output_plan_columns)
+        + "\n"
+        + ",".join(expected_output_plan_row)
+        + "\n"
     )
     assert op_execution.output_plan_artifact_csv == (
         format_deck_output_plan_artifact_csv(op_execution.output_plan_artifacts)
@@ -6994,6 +7781,14 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert op_execution.run_artifacts[0].output_directives == [".save"]
     assert op_execution.run_artifacts[0].analysis_directive_count == 1
     assert op_execution.run_artifacts[0].analysis_directives == [".op"]
+    assert op_execution.run_artifacts[0].deck_analysis_kind_count == 7
+    assert op_execution.run_artifacts[0].deck_analysis_kinds == (
+        expected_deck_analysis_kinds
+    )
+    assert op_execution.run_artifacts[0].deck_analysis_directive_count == 7
+    assert op_execution.run_artifacts[0].deck_analysis_directives == (
+        expected_deck_analysis_directives
+    )
     assert op_execution.run_artifacts[0].measurement_names == []
     assert op_execution.run_artifacts[0].fourier_probes == []
     assert op_execution.run_artifacts[0].control_line_count == 0
@@ -7003,8 +7798,8 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert op_execution.run_artifacts[0].diagnostic_count == 0
     assert op_execution.run_artifacts[0].diagnostic_codes == []
     assert op_execution.run_artifact_table == (
-        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\n"
-        f"op\t.op\t1\t.op\t{op_execution.plan.line_number}\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t1\t2\tIndex;V(mid)\t3\tresult;output-plan;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n"
+        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\tDeckAnalysisKinds\tDeckAnalysisKindList\tDeckAnalysisDirectives\tDeckAnalysisDirectiveList\n"
+        f"op\t.op\t1\t.op\t{op_execution.plan.line_number}\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t1\t2\tIndex;V(mid)\t3\tresult;output-plan;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\t7\top;dc;ac;tran;tf;sens;noise\t7\t.op;.dc;.ac;.tran;.tf;.sens;.noise\n"
     )
     assert op_execution.table_artifacts[1].name == "output-plan"
     assert op_execution.table_artifacts[1].table == op_execution.output_plan_artifact_table
@@ -7028,8 +7823,8 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         format_deck_run_artifact_json(op_execution.run_artifacts)
     )
     assert format_deck_run_artifact_csv(op_execution.run_artifacts) == (
-        "Analysis,Directive,AnalysisDirectives,AnalysisDirectiveList,Line,SourceName,OutputNode,SweepKind,StartValue,StopValue,StepValue,PointCount,StartFrequencyHz,StopFrequencyHz,StepTime,StopTime,StartTime,MaxStep,UseInitialConditions,ResultRows,ResultColumns,ResultColumnList,Tables,TableList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,Measurements,MeasurementList,Fourier,FourierList,ControlLines,ControlLineList,WriteMarkers,WriteMarkerList,RawfileOptions,RawfileOptionList,ControlPolicyArtifacts,ControlPolicyCategoryList,ControlPolicyCodeList,ControlPolicySeverityList,Diagnostics,DiagnosticCodeList\n"
-        f"op,.op,1,.op,{op_execution.plan.line_number},,,,,,,,,,,,,,,1,2,Index;V(mid),3,result;output-plan;run-artifact,1,V(mid),1,.save,0,,0,,0,,0,,0,,0,,,,0,\n"
+        "Analysis,Directive,AnalysisDirectives,AnalysisDirectiveList,Line,SourceName,OutputNode,SweepKind,StartValue,StopValue,StepValue,PointCount,StartFrequencyHz,StopFrequencyHz,StepTime,StopTime,StartTime,MaxStep,UseInitialConditions,ResultRows,ResultColumns,ResultColumnList,Tables,TableList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,Measurements,MeasurementList,Fourier,FourierList,ControlLines,ControlLineList,WriteMarkers,WriteMarkerList,RawfileOptions,RawfileOptionList,ControlPolicyArtifacts,ControlPolicyCategoryList,ControlPolicyCodeList,ControlPolicySeverityList,Diagnostics,DiagnosticCodeList,DeckAnalysisKinds,DeckAnalysisKindList,DeckAnalysisDirectives,DeckAnalysisDirectiveList\n"
+        f"op,.op,1,.op,{op_execution.plan.line_number},,,,,,,,,,,,,,,1,2,Index;V(mid),3,result;output-plan;run-artifact,1,V(mid),1,.save,0,,0,,0,,0,,0,,0,,,,0,,7,op;dc;ac;tran;tf;sens;noise,7,.op;.dc;.ac;.tran;.tf;.sens;.noise\n"
     )
     assert format_deck_table_csv('Name\tValue\nprobe\tSPICE,"QUOTED"\n') == (
         'Name,Value\nprobe,"SPICE,""QUOTED"""\n'
@@ -7087,6 +7882,10 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         "ControlPolicySeverityList",
         "Diagnostics",
         "DiagnosticCodeList",
+        "DeckAnalysisKinds",
+        "DeckAnalysisKindList",
+        "DeckAnalysisDirectives",
+        "DeckAnalysisDirectiveList",
     ]
     assert artifact_records == [
         {
@@ -7134,6 +7933,10 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
             "ControlPolicySeverityList": "",
             "Diagnostics": "0",
             "DiagnosticCodeList": "",
+            "DeckAnalysisKinds": "7",
+            "DeckAnalysisKindList": "op;dc;ac;tran;tf;sens;noise",
+            "DeckAnalysisDirectives": "7",
+            "DeckAnalysisDirectiveList": ".op;.dc;.ac;.tran;.tf;.sens;.noise",
         }
     ]
     diagnostic_artifact = replace(
@@ -7141,20 +7944,21 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         diagnostic_count=2,
         diagnostic_codes=["SPICE_DECK_ANALYSIS_TOKEN", "SPICE_DECK_ANALYSIS_RANGE"],
     )
-    diagnostic_row = format_deck_run_artifact_table(
-        [diagnostic_artifact]
-    ).splitlines()[1].split("\t")
-    assert diagnostic_row[-2:] == [
-        "2",
-        "SPICE_DECK_ANALYSIS_TOKEN;SPICE_DECK_ANALYSIS_RANGE",
-    ]
+    diagnostic_record = deck_table_records(
+        format_deck_run_artifact_table([diagnostic_artifact])
+    )[0]
+    assert diagnostic_record["Diagnostics"] == "2"
+    assert (
+        diagnostic_record["DiagnosticCodeList"]
+        == "SPICE_DECK_ANALYSIS_TOKEN;SPICE_DECK_ANALYSIS_RANGE"
+    )
     quoted_diagnostic_artifact = replace(
         op_execution.run_artifacts[0],
         diagnostic_count=2,
         diagnostic_codes=["SPICE_DECK_ANALYSIS_TOKEN", 'SPICE,"QUOTED"'],
     )
     assert format_deck_run_artifact_csv([quoted_diagnostic_artifact]).endswith(
-        ',0,,0,,0,,0,,,,2,"SPICE_DECK_ANALYSIS_TOKEN;SPICE,""QUOTED"""\n'
+        ',0,,0,,0,,0,,,,2,"SPICE_DECK_ANALYSIS_TOKEN;SPICE,""QUOTED""",7,op;dc;ac;tran;tf;sens;noise,7,.op;.dc;.ac;.tran;.tf;.sens;.noise\n'
     )
     assert json.loads(format_deck_run_artifact_json([quoted_diagnostic_artifact]))[
         0
@@ -7167,11 +7971,29 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert dc_execution.output_plan_artifacts[0].line_number == dc_execution.plan.line_number
     assert dc_execution.output_plan_artifacts[0].source_name == "V1"
     assert dc_execution.output_plan_artifacts[0].output_node is None
+    assert dc_execution.output_plan_artifacts[0].sweep_kind is None
+    assert dc_execution.output_plan_artifacts[0].start_value == pytest.approx(0.0)
+    assert dc_execution.output_plan_artifacts[0].stop_value == pytest.approx(1.0)
+    assert dc_execution.output_plan_artifacts[0].step_value == pytest.approx(1.0)
+    assert dc_execution.output_plan_artifacts[0].point_count is None
+    assert dc_execution.output_plan_artifacts[0].start_frequency_hz is None
+    assert dc_execution.output_plan_artifacts[0].stop_frequency_hz is None
+    assert dc_execution.output_plan_artifacts[0].step_time is None
+    assert dc_execution.output_plan_artifacts[0].use_initial_conditions is None
     assert dc_execution.output_plan_artifact_records[0]["Line"] == str(
         dc_execution.plan.line_number
     )
     assert dc_execution.output_plan_artifact_records[0]["SourceName"] == "V1"
     assert dc_execution.output_plan_artifact_records[0]["OutputNode"] == ""
+    assert dc_execution.output_plan_artifact_records[0]["SweepKind"] == ""
+    assert dc_execution.output_plan_artifact_records[0]["StartValue"] == "0.000000e+00"
+    assert dc_execution.output_plan_artifact_records[0]["StopValue"] == "1.000000e+00"
+    assert dc_execution.output_plan_artifact_records[0]["StepValue"] == "1.000000e+00"
+    assert dc_execution.output_plan_artifact_records[0]["PointCount"] == ""
+    assert dc_execution.output_plan_artifact_records[0]["StartFrequencyHz"] == ""
+    assert dc_execution.output_plan_artifact_records[0]["StopFrequencyHz"] == ""
+    assert dc_execution.output_plan_artifact_records[0]["StepTime"] == ""
+    assert dc_execution.output_plan_artifact_records[0]["UseInitialConditions"] == ""
     assert dc_execution.output_plan_artifacts[0].output_directive_kinds == [
         "save",
         "probe",
@@ -7263,15 +8085,31 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert dc_execution.run_artifacts[0].analysis_directives == [".dc"]
     assert dc_execution.run_artifacts[0].measurement_names == ["mid_avg"]
     assert dc_execution.run_artifacts[0].fourier_probes == []
-    assert dc_execution.run_artifact_table == (
-        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\n"
-        f"dc\t.dc\t1\t.dc\t{dc_execution.plan.line_number}\tV1\t\t\t0.000000e+00\t1.000000e+00\t1.000000e+00\t\t\t\t\t\t\t\t\t2\t5\tIndex;Source;Value;V(mid);I(V1)\t4\tresult;measurement;output-plan;run-artifact\t2\tV(mid);I(V1)\t3\t.save;.probe;.print\t1\tmid_avg\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n"
+    dc_run_artifact_record = _assert_run_artifact_table_matches(dc_execution)
+    assert dc_run_artifact_record["Analysis"] == "dc"
+    assert dc_run_artifact_record["DeckAnalysisKinds"] == "7"
+    assert (
+        dc_run_artifact_record["DeckAnalysisKindList"]
+        == "op;dc;ac;tran;tf;sens;noise"
     )
+    assert dc_run_artifact_record["DeckAnalysisDirectives"] == "7"
 
     ac_execution = run_deck_analysis(circuit, netlist, "ac")
     assert ac_execution.output_probes == ["V(mid)"]
     assert ac_execution.output_directives == [".save", ".plot"]
     assert ac_execution.output_plan_artifacts[0].output_node is None
+    assert ac_execution.output_plan_artifacts[0].sweep_kind == "dec"
+    assert ac_execution.output_plan_artifacts[0].point_count == 1
+    assert ac_execution.output_plan_artifacts[0].start_frequency_hz == pytest.approx(1.0e3)
+    assert ac_execution.output_plan_artifacts[0].stop_frequency_hz == pytest.approx(1.0e3)
+    assert ac_execution.output_plan_artifacts[0].start_value is None
+    assert ac_execution.output_plan_artifacts[0].step_time is None
+    assert ac_execution.output_plan_artifacts[0].use_initial_conditions is None
+    assert ac_execution.output_plan_artifact_records[0]["SweepKind"] == "dec"
+    assert ac_execution.output_plan_artifact_records[0]["PointCount"] == "1"
+    assert ac_execution.output_plan_artifact_records[0]["StartFrequencyHz"] == "1.000000e+03"
+    assert ac_execution.output_plan_artifact_records[0]["StopFrequencyHz"] == "1.000000e+03"
+    assert ac_execution.output_plan_artifact_records[0]["StepTime"] == ""
     assert ac_execution.output_plan_artifacts[0].output_directive_kinds == [
         "save",
         "plot",
@@ -7338,14 +8176,28 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert ac_execution.run_artifacts[0].output_directives == [".save", ".plot"]
     assert ac_execution.run_artifacts[0].measurement_names == ["mid_peak"]
     assert ac_execution.run_artifacts[0].fourier_probes == []
-    assert ac_execution.run_artifact_table == (
-        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\n"
-        f"ac\t.ac\t1\t.ac\t{ac_execution.plan.line_number}\t\t\tdec\t\t\t\t1\t1.000000e+03\t1.000000e+03\t\t\t\t\t\t1\t7\tIndex;Frequency;Probe;Real;Imaginary;Magnitude;Phase\t4\tresult;measurement;output-plan;run-artifact\t1\tV(mid)\t2\t.save;.plot\t1\tmid_peak\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n"
+    ac_run_artifact_record = _assert_run_artifact_table_matches(ac_execution)
+    assert ac_run_artifact_record["Analysis"] == "ac"
+    assert ac_run_artifact_record["DeckAnalysisKinds"] == "7"
+    assert (
+        ac_run_artifact_record["DeckAnalysisKindList"]
+        == "op;dc;ac;tran;tf;sens;noise"
     )
+    assert ac_run_artifact_record["DeckAnalysisDirectives"] == "7"
 
     tran_execution = run_deck_analysis(circuit, netlist, "tran")
     assert tran_execution.output_probes == ["V(mid)"]
     assert tran_execution.output_directives == [".save"]
+    assert tran_execution.output_plan_artifacts[0].step_time == pytest.approx(1.0e-3)
+    assert tran_execution.output_plan_artifacts[0].stop_time == pytest.approx(1.0e-3)
+    assert tran_execution.output_plan_artifacts[0].start_time is None
+    assert tran_execution.output_plan_artifacts[0].max_step is None
+    assert tran_execution.output_plan_artifacts[0].use_initial_conditions is False
+    assert tran_execution.output_plan_artifact_records[0]["StepTime"] == "1.000000e-03"
+    assert tran_execution.output_plan_artifact_records[0]["StopTime"] == "1.000000e-03"
+    assert tran_execution.output_plan_artifact_records[0]["StartTime"] == ""
+    assert tran_execution.output_plan_artifact_records[0]["MaxStep"] == ""
+    assert tran_execution.output_plan_artifact_records[0]["UseInitialConditions"] == "false"
     assert tran_execution.output_plan_artifacts[0].output_directive_lines == [
         save_line
     ]
@@ -7388,10 +8240,14 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert tran_execution.run_artifacts[0].fourier_probes == []
     assert tran_execution.run_artifacts[0].diagnostic_count == 0
     assert tran_execution.run_artifacts[0].diagnostic_codes == []
-    assert tran_execution.run_artifact_table == (
-        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\n"
-        f"tran\t.tran\t1\t.tran\t{tran_execution.plan.line_number}\t\t\t\t\t\t\t\t\t\t1.000000e-03\t1.000000e-03\t\t\tfalse\t2\t3\tIndex;Time;V(mid)\t4\tresult;measurement;output-plan;run-artifact\t1\tV(mid)\t1\t.save\t1\tmid_final\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n"
+    tran_run_artifact_record = _assert_run_artifact_table_matches(tran_execution)
+    assert tran_run_artifact_record["Analysis"] == "tran"
+    assert tran_run_artifact_record["DeckAnalysisKinds"] == "7"
+    assert (
+        tran_run_artifact_record["DeckAnalysisKindList"]
+        == "op;dc;ac;tran;tf;sens;noise"
     )
+    assert tran_run_artifact_record["DeckAnalysisDirectives"] == "7"
 
     tf_execution = run_deck_analysis(circuit, netlist, "tf")
     assert tf_execution.plan.output_node == "mid"
@@ -7431,10 +8287,14 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert tf_execution.run_artifacts[0].output_directives == []
     assert tf_execution.run_artifacts[0].measurement_names == []
     assert tf_execution.run_artifacts[0].fourier_probes == []
-    assert tf_execution.run_artifact_table == (
-        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\n"
-        f"tf\t.tf\t1\t.tf\t{tf_execution.plan.line_number}\tV1\tmid\t\t\t\t\t\t\t\t\t\t\t\t\t1\t3\tTransferRatio;InputImpedance;OutputImpedance\t3\tresult;output-plan;run-artifact\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n"
+    tf_run_artifact_record = _assert_run_artifact_table_matches(tf_execution)
+    assert tf_run_artifact_record["Analysis"] == "tf"
+    assert tf_run_artifact_record["DeckAnalysisKinds"] == "7"
+    assert (
+        tf_run_artifact_record["DeckAnalysisKindList"]
+        == "op;dc;ac;tran;tf;sens;noise"
     )
+    assert tf_run_artifact_record["DeckAnalysisDirectives"] == "7"
 
     sens_execution = run_deck_analysis(circuit, netlist, "sens")
     assert sens_execution.plan.output_node == "mid"
@@ -7475,10 +8335,14 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert sens_execution.run_artifacts[0].output_directives == []
     assert sens_execution.run_artifacts[0].measurement_names == []
     assert sens_execution.run_artifacts[0].fourier_probes == []
-    assert sens_execution.run_artifact_table == (
-        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\n"
-        f"sens\t.sens\t1\t.sens\t{sens_execution.plan.line_number}\t\tmid\t\t\t\t\t\t\t\t\t\t\t\t\t1\t7\tOutputNode;NominalVoltage;Element;Parameter;NominalValue;Sensitivity;RelativeSensitivity\t3\tresult;output-plan;run-artifact\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n"
+    sens_run_artifact_record = _assert_run_artifact_table_matches(sens_execution)
+    assert sens_run_artifact_record["Analysis"] == "sens"
+    assert sens_run_artifact_record["DeckAnalysisKinds"] == "7"
+    assert (
+        sens_run_artifact_record["DeckAnalysisKindList"]
+        == "op;dc;ac;tran;tf;sens;noise"
     )
+    assert sens_run_artifact_record["DeckAnalysisDirectives"] == "7"
 
     noise_execution = run_deck_analysis(circuit, netlist, "noise")
     assert noise_execution.plan.output_node == "mid"
@@ -7494,7 +8358,21 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert noise_execution.output_probes == ["V(mid)"]
     assert noise_execution.output_plan_artifacts[0].source_name == "V1"
     assert noise_execution.output_plan_artifacts[0].output_node == "mid"
+    assert noise_execution.output_plan_artifacts[0].sweep_kind == "lin"
+    assert noise_execution.output_plan_artifacts[0].point_count == 1
+    assert noise_execution.output_plan_artifacts[0].start_frequency_hz == pytest.approx(1.0e3)
+    assert noise_execution.output_plan_artifacts[0].stop_frequency_hz == pytest.approx(1.0e3)
     assert noise_execution.output_plan_artifact_records[0]["OutputNode"] == "mid"
+    assert noise_execution.output_plan_artifact_records[0]["SweepKind"] == "lin"
+    assert noise_execution.output_plan_artifact_records[0]["PointCount"] == "1"
+    assert (
+        noise_execution.output_plan_artifact_records[0]["StartFrequencyHz"]
+        == "1.000000e+03"
+    )
+    assert (
+        noise_execution.output_plan_artifact_records[0]["StopFrequencyHz"]
+        == "1.000000e+03"
+    )
     assert noise_execution.analysis_directives == [".noise"]
     assert noise_execution.table_count == 3
     assert noise_execution.tables == ["result", "output-plan", "run-artifact"]
@@ -7534,10 +8412,14 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert noise_execution.run_artifacts[0].output_directives == []
     assert noise_execution.run_artifacts[0].measurement_names == []
     assert noise_execution.run_artifacts[0].fourier_probes == []
-    assert noise_execution.run_artifact_table == (
-        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\n"
-        f"noise\t.noise\t1\t.noise\t{noise_execution.plan.line_number}\tV1\tmid\tlin\t\t\t\t1\t1.000000e+03\t1.000000e+03\t\t\t\t\t\t1\t10\tIndex;Frequency;OutputNode;InputSource;OutputPSD;InputReferredPSD;Element;Type;SourcePSD;ContributionPSD\t3\tresult;output-plan;run-artifact\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n"
+    noise_run_artifact_record = _assert_run_artifact_table_matches(noise_execution)
+    assert noise_run_artifact_record["Analysis"] == "noise"
+    assert noise_run_artifact_record["DeckAnalysisKinds"] == "7"
+    assert (
+        noise_run_artifact_record["DeckAnalysisKindList"]
+        == "op;dc;ac;tran;tf;sens;noise"
     )
+    assert noise_run_artifact_record["DeckAnalysisDirectives"] == "7"
 
     tran_window_execution = run_deck_analysis(
         circuit,
@@ -7576,10 +8458,13 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         "1\t4.000000e-03\t5.000000e-01\n"
         "2\t6.000000e-03\t5.000000e-01\n"
     )
-    assert tran_window_execution.run_artifact_table == (
-        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\n"
-        f"tran\t.tran\t1\t.tran\t{tran_window_execution.plan.line_number}\t\t\t\t\t\t\t\t\t\t2.000000e-03\t6.000000e-03\t2.000000e-03\t1.000000e-03\ttrue\t3\t3\tIndex;Time;V(mid)\t3\tresult;output-plan;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n"
+    tran_window_run_artifact_record = _assert_run_artifact_table_matches(
+        tran_window_execution
     )
+    assert tran_window_run_artifact_record["Analysis"] == "tran"
+    assert tran_window_run_artifact_record["DeckAnalysisKinds"] == "1"
+    assert tran_window_run_artifact_record["DeckAnalysisKindList"] == "tran"
+    assert tran_window_run_artifact_record["DeckAnalysisDirectives"] == "1"
 
     with pytest.raises(ValueError, match="multiple analysis cards"):
         run_deck_analysis(circuit, netlist)
@@ -7604,6 +8489,37 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         "0\t1.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
         "1\t2.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
         "2\t4.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+    )
+
+
+def test_run_deck_executes_all_analysis_cards_in_source_order() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("V1", "in", "0", 1.0))
+    circuit.add(Resistor("R1", "in", "0", 1000.0))
+    netlist = ".save V(in)\n.op\n.dc V1 0 1 1\n.op\n.end\n"
+
+    with pytest.raises(ValueError, match="multiple analysis cards"):
+        run_deck_analysis(circuit, netlist)
+
+    execution = run_deck(circuit, netlist)
+
+    assert execution.execution_count == 3
+    assert execution.analysis_order == ["op", "dc", "op"]
+    assert execution.analysis_directives == [".op", ".dc", ".op"]
+    assert [item.plan.analysis for item in execution.executions] == ["op", "dc", "op"]
+    assert execution.run_artifact_count == 3
+    assert [artifact.analysis for artifact in execution.run_artifacts] == ["op", "dc", "op"]
+    assert execution.run_artifact_records == deck_table_records(
+        execution.run_artifact_table
+    )
+    assert json.loads(execution.run_artifact_json) == execution.run_artifact_records
+    assert execution.run_artifact_records[1]["Analysis"] == "dc"
+    assert execution.run_artifact_records[1]["DeckAnalysisKinds"] == "2"
+    assert execution.run_artifact_records[1]["DeckAnalysisKindList"] == "op;dc"
+    assert execution.run_artifact_records[1]["DeckAnalysisDirectives"] == "3"
+    assert (
+        execution.run_artifact_records[1]["DeckAnalysisDirectiveList"]
+        == ".op;.dc;.op"
     )
 
 
@@ -8099,9 +9015,20 @@ def test_run_deck_analysis_exposes_selected_fourier_artifacts() -> None:
     assert tran_execution.run_artifacts[0].output_directives == [".save"]
     assert tran_execution.run_artifacts[0].measurement_names == []
     assert tran_execution.run_artifacts[0].fourier_probes == ["V(mid)"]
+    assert tran_execution.deck_analysis_kind_count == 2
+    assert tran_execution.deck_analysis_kinds == ["op", "tran"]
+    assert tran_execution.deck_analysis_directive_count == 2
+    assert tran_execution.deck_analysis_directives == [".op", ".tran"]
+    assert tran_execution.run_artifacts[0].deck_analysis_kind_count == 2
+    assert tran_execution.run_artifacts[0].deck_analysis_kinds == ["op", "tran"]
+    assert tran_execution.run_artifacts[0].deck_analysis_directive_count == 2
+    assert tran_execution.run_artifacts[0].deck_analysis_directives == [
+        ".op",
+        ".tran",
+    ]
     assert tran_execution.run_artifact_table == (
-        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\n"
-        f"tran\t.tran\t1\t.tran\t{tran_execution.plan.line_number}\t\t\t\t\t\t\t\t\t\t5.000000e-04\t1.000000e-03\t\t\tfalse\t3\t3\tIndex;Time;V(mid)\t4\tresult;fourier;output-plan;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\n"
+        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\tDeckAnalysisKinds\tDeckAnalysisKindList\tDeckAnalysisDirectives\tDeckAnalysisDirectiveList\n"
+        f"tran\t.tran\t1\t.tran\t{tran_execution.plan.line_number}\t\t\t\t\t\t\t\t\t\t5.000000e-04\t1.000000e-03\t\t\tfalse\t3\t3\tIndex;Time;V(mid)\t4\tresult;fourier;output-plan;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\t2\top;tran\t2\t.op;.tran\n"
     )
 
 
@@ -8735,6 +9662,34 @@ def test_dc_op_reports_no_convergence_aid_when_disabled_solve_fails() -> None:
     result = dc_op(c, max_iterations=1, convergence_aids=False)
     assert not result.converged
     assert result.convergence_aid == "none"
+
+
+def test_dc_op_newton_step_limit_reports_damped_nonlinear_step() -> None:
+    c = Circuit([
+        VoltageSource("Vs", "in", "0", 10.0),
+        Diode("D1", anode="in", cathode="out", Is=1e-15, Vt=0.02585),
+        Resistor("Rload", "out", "0", 100.0),
+    ])
+
+    result = dc_op(
+        c,
+        max_iterations=1,
+        convergence_aids=False,
+        newton_step_limit=0.25,
+    )
+
+    assert not result.converged
+    assert result.convergence_aid == "none"
+    assert result.diagnostics.newton_step_limit == pytest.approx(0.25)
+    assert result.diagnostics.limited_newton_steps == 1
+    assert 0.0 < result.diagnostics.minimum_damping_factor < 1.0
+    assert result.diagnostics.max_delta == pytest.approx(0.25)
+    assert max(abs(value) for value in result.node_voltages.values()) <= 0.25 + 1e-12
+
+
+def test_dc_op_rejects_invalid_newton_step_limit() -> None:
+    with pytest.raises(ValueError, match="newton_step_limit must be finite and positive"):
+        dc_op(Circuit(), newton_step_limit=0.0)
 
 
 def test_dc_op_pseudo_transient_recovers_after_earlier_aids_fail() -> None:

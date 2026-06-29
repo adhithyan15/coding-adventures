@@ -1464,6 +1464,80 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                     }
                 }
 
+                // ---- Object.is(a, b) → boolean (SameValue) ----
+                //
+                // `Object.is` (ECMAScript §20.1.2.13) compares two values with the
+                // SameValue algorithm (§7.2.11), which differs from `===` in exactly
+                // two cases:
+                //
+                //   * `Object.is(NaN, NaN)` is `true`   (=== gives `false`);
+                //   * `Object.is(+0, -0)`   is `false`  (=== gives `true`);
+                //
+                // everywhere else SameValue agrees with `===`: same-type primitives
+                // are equal iff their values are equal, and operands of different
+                // types are never the same. We fold ONLY when BOTH arguments are
+                // primitive LITERALS whose values we know exactly:
+                //
+                //   * two NUMBER literals → SameValue on the f64 values (NaN==NaN,
+                //     +0 ≠ -0 via the sign bit, otherwise `==`);
+                //   * two STRING literals → byte-equal;
+                //   * two BOOLEAN literals → equal;
+                //   * two NULL literals → `true`;
+                //   * a MISMATCH of literal kinds (number vs string, null vs
+                //     boolean, …) → `false` (SameValue requires the same Type).
+                //
+                // We DECLINE if EITHER argument is a non-literal (identifier, array,
+                // object, call — its value is unknown at compile time) or the call
+                // does not have exactly two arguments. Same bare-global-`Object`
+                // premise as `Object.keys` — only the literal `Object.is(...)`
+                // callee folds, never a shadowed receiver (`o.is(...)`).
+                if obj.name == "Object" && prop.name == "is" && arguments.len() == 2 {
+                    // SameValue on two f64 literals: NaN is the same as NaN; +0 and
+                    // −0 are distinguished by their sign; otherwise ordinary `==`.
+                    fn same_value_number(x: f64, y: f64) -> bool {
+                        if x.is_nan() && y.is_nan() {
+                            true
+                        } else if x == 0.0 && y == 0.0 {
+                            x.is_sign_negative() == y.is_sign_negative()
+                        } else {
+                            x == y
+                        }
+                    }
+                    let folded: Option<bool> = match (&arguments[0], &arguments[1]) {
+                        (Expression::NumericLiteral(a), Expression::NumericLiteral(b)) => {
+                            Some(same_value_number(a.value, b.value))
+                        }
+                        (Expression::StringLiteral(a), Expression::StringLiteral(b)) => {
+                            Some(a.value == b.value)
+                        }
+                        (Expression::BooleanLiteral(a), Expression::BooleanLiteral(b)) => {
+                            Some(a.value == b.value)
+                        }
+                        (Expression::NullLiteral(_), Expression::NullLiteral(_)) => Some(true),
+                        // A mismatch of two *known* primitive-literal kinds is
+                        // provably a different Type → SameValue is `false`.
+                        (
+                            Expression::NumericLiteral(_)
+                            | Expression::StringLiteral(_)
+                            | Expression::BooleanLiteral(_)
+                            | Expression::NullLiteral(_),
+                            Expression::NumericLiteral(_)
+                            | Expression::StringLiteral(_)
+                            | Expression::BooleanLiteral(_)
+                            | Expression::NullLiteral(_),
+                        ) => Some(false),
+                        // At least one operand is a non-literal — value unknown.
+                        _ => None,
+                    };
+                    if let Some(value) = folded {
+                        let parent = c.cv.clone();
+                        let before = "Object.is(a, b)".to_string();
+                        let after = if value { "!0" } else { "!1" };
+                        let new_cv = st.fork_cv(&parent, &before, after);
+                        return stamp_literal_cv(FoldedLiteral::Boolean(value), new_cv);
+                    }
+                }
+
                 // ---- Array.of(v0, v1, …) → array literal `[v0, v1, …]` ----
                 //
                 // `Array.of` (ECMAScript §23.1.2.3) ALWAYS builds a fresh array
@@ -7915,6 +7989,108 @@ mod tests {
         });
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "o.keys({{}}) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- Object.is (static, SameValue) ---------------
+
+    /// Build `Object.is(<a>, <b>)`.
+    fn object_is_call(a: Expression, b: Expression) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("Object"), "is")),
+            arguments: vec![a, b],
+        })
+    }
+
+    fn boolean_lit(value: bool) -> Expression {
+        Expression::BooleanLiteral(BooleanLiteral { cv: None, value })
+    }
+
+    #[test]
+    fn fold_object_is_same_value_literals() {
+        // (a, b, expected) — every result confirmed against V8's Object.is.
+        // The two cases where SameValue differs from === are the headline ones:
+        // Object.is(NaN, NaN) === true, Object.is(0, -0) === false.
+        let neg_zero = -0.0_f64;
+        let cases: Vec<(Expression, Expression, bool)> = vec![
+            // numbers
+            (num(1.0, None), num(1.0, None), true),
+            (num(1.0, None), num(2.0, None), false),
+            (num(f64::NAN, None), num(f64::NAN, None), true), // NaN IS NaN
+            (num(0.0, None), num(neg_zero, None), false),     // +0 is NOT -0
+            (num(neg_zero, None), num(neg_zero, None), true), // -0 IS -0
+            (num(0.0, None), num(0.0, None), true),
+            // strings
+            (string("a", None), string("a", None), true),
+            (string("a", None), string("b", None), false),
+            // booleans
+            (boolean_lit(true), boolean_lit(true), true),
+            (boolean_lit(true), boolean_lit(false), false),
+            // null
+            (
+                Expression::NullLiteral(NullLiteral { cv: None }),
+                Expression::NullLiteral(NullLiteral { cv: None }),
+                true,
+            ),
+            // type mismatches → false (different Type can never be SameValue)
+            (num(1.0, None), string("1", None), false),
+            (boolean_lit(true), num(1.0, None), false),
+            (
+                Expression::NullLiteral(NullLiteral { cv: None }),
+                num(0.0, None),
+                false,
+            ),
+        ];
+        for (a, b, expect) in cases {
+            let c = object_is_call(a, b);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(changed, "Object.is(.., ..) should fold");
+            match extract_expr(&out) {
+                Expression::BooleanLiteral(bl) => assert_eq!(bl.value, expect, "expected {expect}"),
+                other => panic!("expected bool; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn object_is_non_literal_argument_does_not_fold() {
+        // If EITHER operand is a non-literal, the value is unknown — decline.
+        let cases = [
+            object_is_call(ident("x"), num(1.0, None)),
+            object_is_call(num(1.0, None), ident("y")),
+            object_is_call(ident("x"), ident("y")),
+        ];
+        for c in cases {
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "Object.is with a non-literal must not fold");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn object_is_wrong_arity_does_not_fold() {
+        // We model only the two-argument form.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("Object"), "is")),
+            arguments: vec![num(1.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "Object.is(1) must not fold (needs two args)");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn object_is_on_non_object_receiver_does_not_fold() {
+        // Only the bare global `Object` folds; `o.is(1, 1)` is left alone.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("o"), "is")),
+            arguments: vec![num(1.0, None), num(1.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "o.is(1, 1) must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 

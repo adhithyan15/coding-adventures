@@ -1,5 +1,18 @@
 # Changelog — `x86_64-backend`
 
+## 0.16.0 — 2026-06-27 — `array<f64>` element support (LANG-FULL BA7)
+
+Native x86_64 arrays now accept `f64` element types in `alloc_array`,
+`array_get`, and `array_set`. The layout remains the E5 8-byte
+length-prefixed block; f64 elements ride those slots as raw IEEE-754 bits, and
+later floating-point operations load them through the existing SSE path.
+
+- Keeps the same explicit unsigned bounds checks and `ud2` trap behavior from
+  E5.
+- Retains fixed 8-byte native array elements and rejects non-8-byte types.
+- Verified by `x86_64-backend` unit tests and the BASIC BA7 matrix cell that
+  stores fractional `DATA` through `array<f64>` on the native column.
+
 ## 0.15.0 — 2026-06-23 — int ⇄ real conversions (LANG-FULL E8 PR-6b)
 
 Dispatch the three IIR numeric-conversion ops to x86_64 SSE — completing E8's
@@ -45,8 +58,8 @@ has no managed runtime to bounds-check for it, unlike JVM/CLR):
   `unreachable`.
 - Element width is a fixed **8 bytes** (the AOT specialiser drops the `array<T>`
   result type to `any`, so the stride isn't on `instr.ty`; `array_get`/`array_set`
-  validate the element is `i64`/`u64` — native is i64-only; `f64` arrays need SSE
-  element moves, a follow-up). Only **pre-existing, byte-verified encoders** are
+  validate the element is `i64`/`u64`; 0.16.0 adds `f64`). Only
+  **pre-existing, byte-verified encoders** are
   reused (`shl_imm8`/`add_imm32`/`cmp`/`jcc`/`mov_*`/`ud2`/`call_rel32`) — no new
   encodings.
 - 2 new unit tests (≥2 `ud2` traps emitted; non-`i64` element refused). The ALGOL

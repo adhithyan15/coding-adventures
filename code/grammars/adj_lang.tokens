@@ -24,6 +24,8 @@
 #   observe pmh(smoker)
 #   ? acs
 
+escapes: none
+
 skip:
   WHITESPACE      = /[ \t\r\n]+/
   LINE_COMMENT    = /%[^\n]*/
@@ -71,10 +73,10 @@ LT                = "<"
 # LR magnitudes (1.5, 2.5, 0.4).
 #
 # STRING is double-quoted with backslash escapes. The lexer accepts any
-# `\<char>`; the adapter's unquote_string() translates `\"` -> ", `\\` -> \,
-# `\n` -> newline, `\t` -> tab, and keeps any other `\<char>` verbatim. This
-# lets a `source "..."` provenance span carry a literal double quote (e.g. a
-# histology page's "Orphan Annie eye" nuclei) byte-for-byte.
+# `\<char>` and leaves escape processing to the adapter: provenance/source
+# strings translate `\"` -> ", `\\` -> \, `\n` -> newline, `\t` -> tab, and
+# keep any other `\<char>` verbatim, while LaTeX strings preserve commands such
+# as `\times` and `\frac` for the math frontend.
 # ----------------------------------------------------------------
 
 STRING            = /"([^"\\]|\\.)*"/

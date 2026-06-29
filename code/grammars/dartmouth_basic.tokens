@@ -172,21 +172,23 @@ USER_FN     = /fn[a-z]/
 # SECTION 5: Keywords and variable names
 #
 # Variable names in Dartmouth BASIC 1964 are exactly:
-#   - One uppercase letter: A, B, ..., Z  (26 scalars)
+#   - One uppercase letter: A, B, ..., Z  (26 numeric scalars)
 #   - One uppercase letter followed by one digit: A0-A9, ..., Z0-Z9
 #     (260 more)
+#   - String variables use a trailing dollar sign: A$, N9$
 #
 # Total: 286 possible variable names. All initialise to 0.
 #
 # Because case_sensitive: false, patterns use lowercase characters.
 # Variable name "X" in source becomes "x" before matching.
 #
-# The NAME pattern uses /[a-z][a-z0-9]*/ (multi-character) rather than
+# The NAME pattern uses /[a-z][a-z0-9]*\$?/ (multi-character) rather than
 # /[a-z][0-9]?/ (1-2 chars) to enable keyword promotion:
 #
 #   "let" -> NAME("let") -> keyword lookup: "LET" in keywordSet -> KEYWORD("LET")
 #   "x"   -> NAME("x")   -> keyword lookup: "X" not in keywordSet -> NAME("x")
 #   "a1"  -> NAME("a1")  -> keyword lookup: "A1" not in keywordSet -> NAME("a1")
+#   "a$"  -> NAME("a$")  -> string variable; not a keyword
 #
 # Keyword promotion: the grammar engine reclassifies NAME tokens whose
 # ToUpper(value) appears in the keywords: list as KEYWORD tokens.
@@ -199,7 +201,7 @@ USER_FN     = /fn[a-z]/
 # names. The lexer emits NAME for any identifier; the parser validates.
 # ============================================================
 
-NAME        = /[a-z][a-z0-9]*/
+NAME        = /[a-z][a-z0-9]*\$?/
 
 keywords:
   LET

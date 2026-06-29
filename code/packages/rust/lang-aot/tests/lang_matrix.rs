@@ -95,11 +95,22 @@ enum Backend {
 }
 
 /// The known, backend-independent observable result of a conformance program.
+#[derive(Debug)]
 enum Expect {
     /// The process exit code (an expression language's returned value, `& 0xFF`).
     Exit(i32),
     /// A trimmed stdout string (an I/O language's printed output).
     Stdout(&'static str),
+    /// The program must fail closed at runtime (for example, a bounds trap).
+    Trap,
+}
+
+/// The observed outcome from a backend that was present and successfully built
+/// the program.
+#[derive(Debug)]
+enum RunResult {
+    Completed { code: Option<i32>, stdout: String },
+    Trapped,
 }
 
 /// One conformance program: a language, a source-file extension, the source, the
@@ -140,6 +151,270 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(+ 10 20 12)",
         expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 literal `string-length`. The compiler lowers
+    // `(string-length "HELLO")` to shared `str_const` + `str_len`, avoiding the
+    // dynamic `call_builtin "string-length"` path that codegen validators reject.
+    // Native AOT folds the direct literal to a normal integer const; LLVM and
+    // WASM use their literal side tables; JVM/CLR call their managed
+    // `String.length` / `String.Length` APIs. The VM/JIT use vm-core's byte-count
+    // reference implementation. ASCII keeps managed char length equal to E4 byte
+    // length for this foothold.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(string-length \"HELLO\")",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 literal `string-ref`. The front-end emits `str_const` plus a
+    // typed integer index and `str_index`; ASCII keeps the byte-oriented E4
+    // result aligned with JVM/CLR host string char indexing for this foothold.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(string-ref \"ABC\" 1)",
+        expect: Expect::Exit(66),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 literal `string-ref` out-of-bounds trap. This proves the same
+    // runtime fail-closed contract on every backend: native/LLVM lower the
+    // compile-known OOB literal to a trap path, WASM/VM/JIT use their shared bounds
+    // checks, and JVM/CLR surface their managed string index exceptions.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(string-ref \"ABC\" 3)",
+        expect: Expect::Trap,
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 literal `string-append` feeding `string-length`. This exercises
+    // the shared `str_concat` op while staying on the direct-literal metadata
+    // path: static backends carry the concatenated bytes as compile-time
+    // metadata, and JVM/CLR use their host `String` concat APIs.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(string-length (string-append \"AB\" \"CDE\"))",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 literal `string=?`. Like the literal length row, this stays on
+    // the direct `str_const` + `str_eq` path so every codegen backend can prove
+    // observable string equality without taking on full dynamic byte-string
+    // algebra yet.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(string=? \"HELLO\" \"HELLO\")",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 named string values. Non-escaping top-level string `define`s
+    // now stay in `main` as typed `str_const` registers, so shared string ops can
+    // consume them without the dynamic `global_set`/`global_get` path. This
+    // proves non-literal `str_concat` feeding `str_len` while staying within the
+    // immutable top-level value subset; reassigned string variables remain a
+    // separate E4/BA4 frontend slice.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define a \"AB\") (define b \"CDE\") (string-length (string-append a b))",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 named string equality driving control flow. The `string=?`
+    // result is the shared i64 boolean consumed by the existing `if` lowering,
+    // which makes the observable value depend on the string operation rather
+    // than on a folded top-level constant.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define s \"HELLO\") (if (string=? s \"HELLO\") 42 0)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 named string indexing. This reuses the landed in-bounds
+    // `str_index` backend support but proves the source string can be a named
+    // top-level value rather than only a direct literal at the call site.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define s \"ABC\") (string-ref s 2)",
+        expect: Expect::Exit(67),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 lexical string locals. A `let` string binding now materialises
+    // directly as a typed `str_const` register, and a local integer binding can
+    // feed the `str_index` index operand. This proves local string slots across
+    // the same all-seven E4 path without claiming captured/reassigned strings.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(let ((s \"ABC\") (i 2)) (string-ref s i))",
+        expect: Expect::Exit(67),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 lexical `let*` string locals. The sequential-binding form uses
+    // the same typed `str_const` local slot path as `let`, and `str_len`
+    // observes it without falling back to dynamic `string-length`.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(let* ((s \"HELLO\")) (string-length s))",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 lexical string locals can drive equality control flow too.
+    // Two local string slots feed `str_eq`, and the resulting i64 boolean flows
+    // into the existing `if` branch shape.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(let ((s \"OK\") (t \"OK\")) (if (string=? s t) 42 0))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 lexical string locals feeding concat. This takes the local
+    // string path beyond indexing: two `let` string slots feed `str_concat`,
+    // then `str_len` observes the result. It proves local non-literal string
+    // operands without claiming captured or reassigned string variables.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(let ((a \"AB\") (b \"CDE\")) (string-length (string-append a b)))",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 `str_concat` feeding `str_index`. The prior local-string proof
+    // observed a concat result with `str_len`; this row makes the byte-indexing
+    // contract consume that same temporary string value. `AB` + `CDE` = `ABCDE`,
+    // and index 3 is byte `D` (68).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(let ((a \"AB\") (b \"CDE\") (i 3)) (string-ref (string-append a b) i))",
+        expect: Expect::Exit(68),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 `str_len` computing a `str_index` operand. This keeps
+    // `string-length` on the shared `str_len` path, lowers `(- len 1)` as typed
+    // integer arithmetic, and feeds the computed register into `str_index`.
+    // `ABCDE` length 5 minus 1 is index 4, byte `E` (69).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(let ((s \"ABCDE\")) (string-ref s (- (string-length s) 1)))",
+        expect: Expect::Exit(69),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 `substring` feeding `string-ref`. This proves the shared
+    // `str_slice` op produces a string value that all seven proven columns can
+    // consume with the existing byte-indexing contract. `substring` 1..4 is
+    // `BCD`, and index 1 is byte `C` (67).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(let ((s \"ABCDE\")) (string-ref (substring s 1 4) 1))",
+        expect: Expect::Exit(67),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 `str_cmp` driving lexical string predicates. The frontend lowers
+    // `string<?`/`string>?` to shared `str_cmp` followed by typed comparison
+    // against zero, so every proven column observes the same byte ordering.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(if (string<? \"ALPHA\" \"BETA\") (if (string>? \"BETA\" \"ALPHA\") 42 0) 0)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 string ops inside a direct top-level function. The function body
+    // lowers `(string-length "HELLO")` to typed `str_const` + `str_len`, and the
+    // direct `(strlen)` call now carries the function's `i64` return type instead
+    // of falling back to `any`.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (strlen) (string-length \"HELLO\")) (strlen)",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 string ops over an annotated top-level function parameter. The
+    // bare `str` annotation gives the compiler enough static evidence to stamp
+    // the parameter as `str`, so `string-length s` lowers to `str_len` instead of
+    // the dynamic builtin path.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (strlen (s : str)) (string-length s)) (strlen \"HELLO\")",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 string ops over an unannotated top-level function parameter
+    // with direct-call evidence from `main`. The direct `(strlen "HELLO")`
+    // call gives the compiler enough static evidence to stamp `s` as `str`
+    // without creating refinement annotations.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (strlen s) (string-length s)) (strlen \"HELLO\")",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 string ops over an unannotated top-level function parameter
+    // with direct-call evidence from a static string expression actual. The
+    // actual materialises through `str_concat` + `str_slice`, then feeds the
+    // inferred `str` parameter without creating refinement annotations.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (strlen x) (string-length x)) (strlen (substring (string-append \"HE\" \"LLO!\") 0 5))",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 string equality over multiple unannotated top-level function
+    // parameters inferred from one direct call. The first actual is literal,
+    // the second is a static `str_concat` expression, so both slots are stamped
+    // `str` and the function body lowers `string=? a b` through `str_eq`.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (same a b) (if (string=? a b) 42 0)) (same \"OK\" (string-append \"O\" \"K\"))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 string ops over an unannotated top-level function parameter
+    // with direct-call evidence from a non-escaping top-level string value. The
+    // named actual stays in `main` as a typed `str` register, so `(strlen s)`
+    // gets the same backend-safe parameter evidence as a literal actual.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define s \"HELLO\") (define (strlen x) (string-length x)) (strlen s)",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 string ops over an unannotated top-level function parameter
+    // with direct-call evidence from a lexical string local in `main`. The
+    // `let` binding keeps `s` as a typed `str` register at the call site.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (strlen x) (string-length x)) (let ((s \"HELLO\")) (strlen s))",
+        expect: Expect::Exit(5),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Twig — E4 string ops over an unannotated top-level function parameter
+    // with direct-call evidence from a derived sequential `let*` string local
+    // in `main`. The second binding sees the first as static string evidence,
+    // materialises `b` through `str_concat`, and keeps `(strlen b)` typed.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (strlen x) (string-length x)) (let* ((a \"HE\") (b (string-append a \"LLO\"))) (strlen b))",
+        expect: Expect::Exit(5),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — *top-level value `define`* read from `main` (`(define x 40) (define
@@ -279,6 +554,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Nib — logical NOT (`!`, LANG-FULL N9). `1 == 2` is false, so
+    // `!(1 == 2)` must be true and take the 42 branch. The old passthrough
+    // behavior would return 0 here.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { if !(1 == 2) { return 42; } return 0; }",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Nib — module-scoped `const` (LANG-FULL N5). A top-level `const N: u8 = 42;` is folded
     // to its literal at each use, so referencing it in `main` needs no runtime storage and
     // runs on every backend.
@@ -388,6 +673,31 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Nib — module-scoped `static` globals (LANG-FULL N8). The counter starts
+    // at 40, a separate function increments the same module global twice, and
+    // `main` reads back 42. A plain per-function register would lose the shared
+    // state. The frontend lowers the initializer/read/write to the shared E6
+    // `global_store`/`global_load` substrate that every backend already runs.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "static counter: u8 = 40; \
+              fn bump(step: u8) -> u8 { counter = counter + step; return counter; } \
+              fn main() -> u8 { let a: u8 = bump(1); let b: u8 = bump(1); return counter; }",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — const/static expression folding (LANG-FULL N10). `BASE` folds
+    // `6 * 7` at compile time, then the static initializer folds `BASE + 0`
+    // before seeding the shared module global. No runtime arithmetic is needed
+    // for the initializer, but every backend still observes the global value.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "const BASE: u8 = 6 * 7; static counter: u8 = BASE + 0; fn main() -> u8 { return counter; }",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Oct — `let` + `if` + comparison; `main` is void so the process exits 0.
     Prog {
         lang: Language::Oct,
@@ -466,6 +776,18 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("44"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Oct — logical NOT (`!`) produces a clean boolean 0/1 (LANG-FULL O-!).
+    // `1 == 2` is false, so `!(1 == 2)` is true and prints 42. The old lowering
+    // reused bitwise `not`: `not 0` produced `-1`, which branch truthiness treated
+    // as true but did NOT materialise a clean Oct bool value. The new lowering uses
+    // the same portable branch substrate as O1 short-circuiting.
+    Prog {
+        lang: Language::Oct,
+        ext: "oct",
+        src: "fn main() { if !(1 == 2) { out(1, 42); } else { out(1, 0); } }",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Oct — `static` module GLOBAL, shared across functions (LANG-FULL O3). Until now
     // Oct's top-level `static` was silently dropped at IIR-gen; `oct-iir-compiler` 0.8.0
     // lowers it to the IIR module-global ops (`global_load`/`global_store`, LANG32 — the
@@ -493,6 +815,91 @@ const PROGRAMS: &[Prog] = &[
         ext: "alg",
         src: "begin integer result; result := 17 mod 5 end",
         expect: Expect::Exit(2),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — literal string output (LANG-FULL AL4 on E4). ALGOL leaves I/O
+    // implementation-defined, so this frontend recognises undeclared statement
+    // calls named `print`/`output` as standard output procedures. The narrow
+    // foothold is deliberately literal-only: `print('HI')` lowers to E4
+    // `str_const` + `print_str`, exactly the same shared string op pair BASIC
+    // string `PRINT` already proved. That makes stdout the observable result on
+    // native-AOT / LLVM / WASM / JVM / CLR / VM / JIT without adding any
+    // ALGOL-specific backend hooks.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin print('HI') end",
+        expect: Expect::Stdout("HI"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — scalar string variables in the current AL4 foothold. A
+    // `string` scalar may be assigned from a literal, which emits `str_const`
+    // directly to the variable slot; `print(s)` is accepted only because that
+    // slot is literal-backed. This deliberately avoids dynamic string copies or
+    // captured string globals while still proving source-level string variables
+    // through the same E4 `print_str` path on all seven backends.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string s; s := 'HI'; print(s) end",
+        expect: Expect::Stdout("HI"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — the implementation-defined `output` spelling follows the same
+    // AL4 path as `print`: a literal-backed string slot consumed by E4
+    // `print_str`. This row proves the alias rather than only the `print`
+    // spelling, without widening into dynamic strings.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string s; s := 'OK'; output(s) end",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — `output` preserves multiple literal-backed scalar string
+    // actuals. This proves the AL4 standard-output alias can consume two E4
+    // string slots in source order without adding separators or using dynamic
+    // procedure calls.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string s, t; s := 'O'; t := 'K'; output(s, t) end",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — literal-backed scalar string copy. This keeps AL4 inside the
+    // same immutable E4 shape BASIC now uses: `t := s` lowers through
+    // `str_concat` with an empty suffix, then `print(t)` consumes the target
+    // string slot.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string s, t; s := 'OK'; t := s; print(t) end",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — copied scalar string slots are snapshots. Reassigning the
+    // source after `t := s` rematerializes `s` but must not change `t`, keeping
+    // the AL4 copy foothold inside immutable E4 string values.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string s, t; s := 'OK'; t := s; s := 'NO'; print(t) end",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — literal-backed scalar string predicates. AL4 now lowers
+    // comparisons over string literals and literal-backed scalar variables
+    // through the shared E4 `str_eq` / `str_cmp` ops, then compares their
+    // integer results against typed zero before the normal `if` branch consumes
+    // the boolean. This row proves equality, inequality, and both ordering
+    // operand orders without widening into captured strings, arrays, or dynamic
+    // string storage.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string s; s := 'ALPHA'; if (s = 'ALPHA' and s != 'OMEGA') and (s < 'BETA' and 'BETA' > s) then print('OK') else print('BAD') end",
+        expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — the `abs` **standard function** (§3.2.4, LANG-FULL AL8). `abs`
@@ -844,22 +1251,223 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("Hi"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
-    // Dartmouth BASIC — `PRINT 42` writes `42` to stdout. On LLVM the `.ll` emits
-    // `call void @__print_i64(i64 42)`, so `run_llvm` links the generic print runtime
-    // and the harness compares stdout (LM-L BASIC). On WASM the same `PRINT` lowers to
-    // `call $__print_i64`, imported as `env.__print_i64 : (i64) -> ()`; `run_wasm`'s
-    // `PrintHost` resolves that import and captures the printed value (LM-W BASIC). On
-    // JVM `print_i64` lowers to `invokestatic env/BasicRuntime.println(J)V`; `run_jvm`
-    // compiles that host class with `javac`, discards the entry result, and captures
-    // `System.out` (LM-J BASIC). On CLR `print_i64` lowers to `Console.WriteLine(int32)`
-    // and the launcher discards (rather than re-prints) the entry result; `run_clr`
-    // captures `Console` (LM-C BASIC). On the VM, `run_vm` registers a `print_i64`
-    // builtin closure that captures the printed integer into a buffer (Phase V).
+    // Dartmouth BASIC — `PRINT 42` writes `42` to stdout. BA7-1b makes even the
+    // integer-spelled literal a scalar `f64`, so this baseline cell now runs through
+    // `__basic_print_real` and the shared f64 backend tracks. The helper's current
+    // whole-valued contract truncates with E8 `real_to_int_trunc`, then reuses BA2's
+    // digit printer, keeping the observable output identical on all 7 backends.
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 PRINT 42\n20 END\n",
         expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — exponentiation with an integer-valued literal exponent
+    // (LANG-FULL BA-^). General `^` still needs a math runtime for variable or
+    // fractional exponents; this proof lowers `6 ^ 2` to repeated f64 `mul`,
+    // then adds 6 and prints 42 on every backend.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT 6 ^ 2 + 6\n20 END\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — E4/BA4 first string-PRINT proof. The frontend lowers a
+    // string literal item to shared `str_const` + `print_str`, and the existing
+    // BASIC PRINT machinery emits the trailing newline via `putchar`. Native AOT
+    // rewrites the literal to `alloc_bytes` + `store_byte` + `print_string`;
+    // LLVM emits a length-prefixed private constant and calls the generic
+    // `__print_str` runtime with `(payload,len)`; WASM stores the literal bytes in
+    // linear memory and calls `env.__print_str(ptr,len)`; JVM uses `ldc` +
+    // `PrintStream.print(String)` and textual CIL uses `ldstr` +
+    // `Console.Write(string)`, while richer byte-string operations stay outside
+    // this slice.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT \"HELLO\"\n20 END\n",
+        expect: Expect::Stdout("HELLO"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA4 string variables. The frontend accepts `$`-suffixed
+    // names, lowers `LET A$ = "HI"` directly into a safe typed `str_const` slot,
+    // and `PRINT A$` reuses the same `print_str` path proven by literal output.
+    // This is deliberately still the literal-backed scalar slice: string arrays,
+    // INPUT, and richer string expressions remain follow-ups.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"HI\"\n20 PRINT A$\n30 END\n",
+        expect: Expect::Stdout("HI"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA4 literal string reassignment. Re-emitting
+    // `str_const` into the same backend-facing slot makes the most recent
+    // literal assignment observable through `PRINT A$` without widening into
+    // string-to-string copies or dynamic byte-string storage.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"NO\"\n20 LET A$ = \"OK\"\n30 PRINT A$\n40 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA4 literal string concatenation. The frontend lowers
+    // `"O" + "K"` to E4 `str_const` + `str_concat`, stores the result in the
+    // same safe string slot, and `PRINT A$` proves the resulting value.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"O\" + \"K\"\n20 PRINT A$\n30 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA4 literal-backed scalar string copy. `B$ = A$`
+    // lowers to E4 `str_concat` with an empty suffix, proving immutable copy
+    // semantics without a new string-copy opcode or dynamic string storage.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"OK\"\n20 LET B$ = A$\n30 PRINT B$\n40 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA4 multi-item string PRINT. `;` keeps adjacent output,
+    // so two scalar string slots are consumed by ordered E4 `print_str` calls
+    // without using concat or numeric formatting helpers.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 PRINT A$; B$\n40 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA4 string PRINT composes with BA2 comma separators.
+    // The comma path emits a single `putchar(' ')` between the ordered E4
+    // `print_str` calls, proving separators stay language-neutral and do not
+    // route string items through numeric formatting.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 PRINT A$, B$\n40 END\n",
+        expect: Expect::Stdout("O K"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA4 string expression in PRINT. This keeps concat out
+    // of an assignment target and proves `PRINT` can consume a temporary E4
+    // string expression result directly.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"O\"\n20 PRINT A$ + \"K\"\n30 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA4 variable-variable string expression in PRINT.
+    // This proves `PRINT` can consume a temporary E4 `str_concat` result when
+    // both concat operands are scalar string slots, not only a slot + literal.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 PRINT A$ + B$\n40 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA4 string expression in IF equality. This proves the
+    // relation path can consume a temporary E4 string expression result before
+    // `str_eq` drives the existing line-control branch.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"O\"\n20 IF A$ + \"K\" = \"OK\" THEN 50\n30 PRINT \"BAD\"\n40 END\n50 PRINT \"OK\"\n60 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA4 variable-variable string expression in IF
+    // equality. This extends the equality branch proof beyond `A$ + literal`:
+    // both concat operands are scalar string slots, the temporary feeds E4
+    // `str_eq`, and `jmp_if_true` takes the line-control target.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 IF A$ + B$ = \"OK\" THEN 60\n40 PRINT \"BAD\"\n50 END\n60 PRINT \"OK\"\n70 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA4 string expression in IF inequality. This composes
+    // the variable-variable concat proof with the `<>` branch path: E4
+    // `str_eq` is still the only compare op, but the line-control jump is
+    // `jmp_if_false`, so stdout proves the false-equality path is taken.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 IF A$ + B$ <> \"NO\" THEN 60\n40 PRINT \"BAD\"\n50 END\n60 PRINT \"OK\"\n70 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA4 string expression assignment with a variable
+    // operand. This proves a non-literal concat can be stored in another safe
+    // scalar string slot before printing.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"O\"\n20 LET B$ = A$ + \"K\"\n30 PRINT B$\n40 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA4 chained string expression assignment. This takes
+    // the variable-backed concat proof beyond two operands: `A$ + "B" + "C"`
+    // lowers left-to-right through two E4 `str_concat` ops, and the final
+    // concat stores directly in the target scalar string slot.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"A\"\n20 LET B$ = A$ + \"B\" + \"C\"\n30 PRINT B$\n40 END\n",
+        expect: Expect::Stdout("ABC"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA4 string equality drives control flow. `IF A$ = "Y"`
+    // lowers to shared E4 `str_eq`, then the existing branch machinery chooses
+    // the target line. The false path prints BAD and stops; the true path prints
+    // OK, so stdout proves both the variable/string comparison and the branch.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"Y\"\n20 IF A$ = \"Y\" THEN 50\n30 PRINT \"BAD\"\n40 END\n50 PRINT \"OK\"\n60 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA4 copied string slots in control flow. This composes
+    // the scalar copy foothold with `str_eq` over two string slots, proving
+    // variable-to-variable equality rather than only slot-vs-literal equality.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"OK\"\n20 LET B$ = A$\n30 IF B$ = A$ THEN 60\n40 PRINT \"BAD\"\n50 END\n60 PRINT \"OK\"\n70 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA4 string inequality drives control flow too. The
+    // frontend reuses E4 `str_eq` but targets the THEN line with `jmp_if_false`,
+    // proving the standard `<>` relop without adding a new string-compare op.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"N\"\n20 IF A$ <> \"Y\" THEN 50\n30 PRINT \"BAD\"\n40 END\n50 PRINT \"OK\"\n60 END\n",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA4 lexical string ordering drives control flow. The
+    // frontend lowers `$` string `<` / `>` relops through E4 `str_cmp`, compares
+    // the ordering result with zero using typed `cmp_lt` / `cmp_gt`, and then
+    // uses the existing line-control `jmp_if_true` path.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A$ = \"ALPHA\"\n20 IF A$ < \"BETA\" THEN 40\n30 END\n40 IF \"BETA\" > A$ THEN 60\n50 END\n60 PRINT \"OK\"\n70 END\n",
+        expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Dartmouth BASIC — `FOR`/`NEXT` loop with an accumulator (LANG-FULL BA0). Sums
@@ -896,7 +1504,7 @@ const PROGRAMS: &[Prog] = &[
     },
     // Dartmouth BASIC — `DEF FN` user-defined function (LANG-FULL BA5). The
     // single-line definition `DEF FNS(X) = X * X` lowers to a *sibling*
-    // `IIRFunction` named `FNS` (one `i64` parameter, body `mul X X; ret`),
+    // `IIRFunction` named `FNS` (one `f64` parameter, body `mul X X; ret`),
     // and `PRINT FNS(7)` lowers to an IIR `call` — exactly the calling
     // convention ALGOL's value procedures (AL3) already run on every backend.
     // This RUNS a real cross-function call combined with `print_i64` output:
@@ -911,11 +1519,13 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("49"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
-    // Dartmouth BASIC — *one-dimensional integer arrays* (LANG-FULL BA3, enabler
+    // Dartmouth BASIC — *one-dimensional real arrays* (LANG-FULL BA3 + BA7,
+    // enabler
     // **E5**). `DIM A(3)` lowers to an IIR `alloc_array` (element count `3 + 1`,
     // since BASIC arrays are **0-based and inclusive**: `A(0)..A(3)`). `LET
-    // A(1) := 40` / `A(2) := 2` are `array_set`s and `PRINT A(1) + A(2)` reads
-    // them back with two `array_get`s ⇒ prints 42.  These are the *same* IIR
+    // A(1) := 40` / `A(2) := 2` are `array_set`s into `array<f64>` storage and
+    // `PRINT A(1) + A(2)` reads them back with two `array_get`s ⇒ prints 42.
+    // These are the *same* IIR
     // array ops ALGOL's E5 arrays emit, so BASIC arrays run on every backend E5
     // already supports — straight-line (no loop), so the JVM's BA-JVM-1
     // loop+print StackMapTable follow-up doesn't apply, and all 7 backends run:
@@ -932,9 +1542,9 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
-    // Dartmouth BASIC — *`READ` / `DATA` / `RESTORE`* (LANG-FULL BA6). The `DATA`
-    // pool is materialised once at the top of `main` as an `array<i64>` (the same
-    // E5 array ops BA3 uses) plus an `__basic_data_ptr` register seeded to 0;
+    // Dartmouth BASIC — *`READ` / `DATA` / `RESTORE`* (LANG-FULL BA6 + BA7). The
+    // `DATA` pool is materialised once at the top of `main` as an `array<f64>`
+    // (the same E5 array ops BA3 uses) plus an `__basic_data_ptr` register seeded to 0;
     // `READ` does `array_get pool, ptr` then `ptr := ptr + 1`, and `RESTORE` resets
     // `ptr := 0`. Here `DATA 21` is a one-value pool: `READ A` takes 21 and advances
     // the pointer; `RESTORE` rewinds it; `READ B` therefore takes 21 *again* — so
@@ -989,6 +1599,53 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 PRINT 5, 6\n20 END\n",
         expect: Expect::Stdout("5 6"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA7-1 scalar real arithmetic. Decimal spellings (`6.0`,
+    // `7.0`) stay on the same `f64` value path as integer-spelled literals; `*`
+    // is an `f64` multiply, and `PRINT` routes through `__basic_print_real`.
+    // This proof stays intentionally whole-valued: 6.0 * 7.0 => 42.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT 6.0 * 7.0\n20 END\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA7-2a fixed-decimal fractional `PRINT`. The helper
+    // handles ordinary fractional values without backend-specific code: an
+    // integer part plus trimmed fractional digits (`3.14`), a magnitude below 1
+    // with no leading zero (`.25`), and a negative fractional value (`-2.5`).
+    // This cell keeps the ordinary fixed-decimal smoke; the next BA7 cell covers
+    // six-significant-digit rounding and `E` notation on all 7 backends.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT 3.14\n20 PRINT 1.0 / 4.0\n30 PRINT 0.0 - 2.5\n40 END\n",
+        expect: Expect::Stdout("3.14\n.25\n-2.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA7-2b historical real formatting. The helper now
+    // rounds to six significant digits (`1.234567` -> `1.23457`) and switches
+    // to signed, two-digit `E` notation for large and small magnitudes, while
+    // retaining the no-leading-zero rule below 1.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT 1.234567\n20 PRINT 123456789\n30 PRINT 0.0001234567\n40 PRINT 1.0 / 4.0\n50 END\n",
+        expect: Expect::Stdout("1.23457\n1.23457E+08\n1.23457E-04\n.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — BA7-3 real aggregate storage. Fractional `DATA` values
+    // are materialised in an `array<f64>` pool, `READ A(0)` stores one into a
+    // BASIC `array<f64>`, and `READ B` stores the next into a scalar. Printing
+    // both proves fractional DATA survives the pool, array element storage, and
+    // scalar READ path on every backend.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 DIM A(1)\n20 DATA 3.14, 0.25\n30 READ A(0)\n40 READ B\n50 PRINT A(0)\n60 PRINT B\n70 END\n",
+        expect: Expect::Stdout("3.14\n.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Dartmouth BASIC — *unstructured `GOSUB` / `RETURN`* (LANG-FULL BA1, enabler
@@ -1130,7 +1787,7 @@ fn output_with_stdin(mut cmd: Command, input: &[u8]) -> Option<std::process::Out
 /// cannot pre-create the directory or plant a symlink at `prog` and have the harness
 /// execute substituted code in the compile→run window (CWE-377/367). The `_dir`
 /// guard is held until after the executable runs so it is not removed early.
-fn run_native(p: &Prog) -> Option<(Option<i32>, String)> {
+fn run_native(p: &Prog) -> Option<RunResult> {
     if !native_linker_ok() {
         return None;
     }
@@ -1143,7 +1800,10 @@ fn run_native(p: &Prog) -> Option<(Option<i32>, String)> {
     // every other program, so the prior no-stdin behaviour is unchanged.
     let out = output_with_stdin(Command::new(&exe), program_stdin(p))?;
     let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
-    Some((out.status.code(), stdout))
+    if matches!(&p.expect, Expect::Trap) && !out.status.success() {
+        return Some(RunResult::Trapped);
+    }
+    Some(RunResult::Completed { code: out.status.code(), stdout })
 }
 
 /// Is a usable `clang` present? Gates the LLVM column (skip when absent).
@@ -1155,28 +1815,28 @@ fn clang_ok() -> bool {
         .unwrap_or(false)
 }
 
-/// A minimal C runtime providing the generic `__print_i64` primitive that
-/// `iir-to-llvm` emits for a `print_i64` builtin (Dartmouth BASIC's `PRINT` is the
-/// first user — the same convention as wasm's `env.__print_i64` / JVM's
-/// `BasicRuntime.println(J)V` / CLR's `Console.WriteLine(int64)`). It is *not*
-/// language-specific: any IIR that calls `print_i64` links it. Linked only when the
-/// emitted `.ll` actually references `@__print_i64`, so the bare expression-language
-/// programs still link a standalone `.ll`.
+/// A minimal C runtime providing the generic print primitives that `iir-to-llvm`
+/// emits for I/O languages. `__print_i64` backs scalar BASIC `PRINT`, and
+/// `__print_str` backs the E4 string literal-output foothold. It is not
+/// language-specific: any IIR that references either symbol links it. Linked only
+/// when the emitted `.ll` actually references one of the symbols, so the bare
+/// expression-language programs still link a standalone `.ll`.
 const PRINT_RUNTIME_C: &str =
-    "#include <stdio.h>\n#include <stdint.h>\nvoid __print_i64(int64_t x){printf(\"%lld\\n\",(long long)x);}\n";
+    "#include <stdio.h>\n#include <stdint.h>\nvoid __print_i64(int64_t x){printf(\"%lld\\n\",(long long)x);}\nvoid __print_str(const char* p,int64_t len){if(len>0){fwrite(p,1,(size_t)len,stdout);}}\n";
 
 /// LLVM runner: source → textual `.ll` (`iir-to-llvm`) → real `clang` → run, the
 /// exact CLR-real/McCarthy strategy of handing symbolic code to the real toolchain.
 /// `None` when `clang` is absent or the build fails (skip).
 ///
 /// Handles both result kinds: the expression languages return an exit code from a
-/// bare `.ll`; an I/O language (Dartmouth BASIC) emits `call void @__print_i64(...)`,
-/// so when the `.ll` references that symbol the generic `PRINT_RUNTIME_C` is compiled
-/// in and the harness compares the program's **stdout**.
+/// bare `.ll`; an I/O language (Dartmouth BASIC) emits `@__print_i64` or
+/// `@__print_str`, so when the `.ll` references either symbol the generic
+/// `PRINT_RUNTIME_C` is compiled in and the harness compares the program's
+/// **stdout**.
 ///
 /// Same temp-file hardening as `run_native`: a fresh `tempfile::tempdir()` whose
 /// guard outlives the run, so the executed `prog` cannot be substituted (CWE-377/367).
-fn run_llvm(p: &Prog) -> Option<(Option<i32>, String)> {
+fn run_llvm(p: &Prog) -> Option<RunResult> {
     if !clang_ok() {
         return None;
     }
@@ -1194,7 +1854,7 @@ fn run_llvm(p: &Prog) -> Option<(Option<i32>, String)> {
     let mut cmd = Command::new("clang");
     cmd.arg("-x").arg("ir").arg(&ll_path);
     // Link the generic print runtime iff the program actually prints.
-    if ll.contains("@__print_i64") {
+    if ll.contains("@__print_i64") || ll.contains("@__print_str") {
         let rt_path = dir.path().join("rt.c");
         std::fs::write(&rt_path, PRINT_RUNTIME_C).ok()?;
         cmd.arg("-x").arg("c").arg(&rt_path);
@@ -1207,7 +1867,10 @@ fn run_llvm(p: &Prog) -> Option<(Option<i32>, String)> {
     // process stdin; empty for every other program.
     let out = output_with_stdin(Command::new(&exe), program_stdin(p))?;
     let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
-    Some((out.status.code(), stdout))
+    if matches!(&p.expect, Expect::Trap) && !out.status.success() {
+        return Some(RunResult::Trapped);
+    }
+    Some(RunResult::Completed { code: out.status.code(), stdout })
 }
 
 /// The generic stdout primitive an I/O language's wasm emits. Dartmouth BASIC's
@@ -1292,6 +1955,56 @@ impl wasm_execution::HostFunction for PutcharFunc {
     }
 }
 
+struct PrintStrFunc {
+    bytes: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
+}
+
+impl wasm_execution::HostFunction for PrintStrFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::I32, wasm_types::ValueType::I32],
+                results: vec![],
+            });
+        &FT
+    }
+
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let ptr = args
+            .first()
+            .ok_or_else(|| wasm_execution::TrapError::new("__print_str: missing ptr"))?
+            .as_i32()
+            .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        let len = args
+            .get(1)
+            .ok_or_else(|| wasm_execution::TrapError::new("__print_str: missing len"))?
+            .as_i32()
+            .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        if ptr < 0 || len < 0 {
+            return Err(wasm_execution::TrapError::new("__print_str: negative ptr/len"));
+        }
+        let memory = memory
+            .ok_or_else(|| wasm_execution::TrapError::new("__print_str: no linear memory"))?;
+        let start = usize::try_from(ptr)
+            .map_err(|_| wasm_execution::TrapError::new("__print_str: ptr overflow"))?;
+        let len = usize::try_from(len)
+            .map_err(|_| wasm_execution::TrapError::new("__print_str: len overflow"))?;
+        let mut chunk = Vec::with_capacity(len);
+        for offset in 0..len {
+            chunk.push(memory.load_i32_8u(start + offset)? as u8);
+        }
+        self.bytes
+            .lock()
+            .expect("lang-matrix print_str buffer poisoned")
+            .extend_from_slice(&chunk);
+        Ok(vec![])
+    }
+}
+
 /// Brainfuck's `,` lowers to `call $getchar`, imported as `env.getchar : () -> i32`
 /// (the wasm sibling of libc `@getchar`). Each call pops the next byte from the program's
 /// stdin buffer (seeded by `run_wasm` from `program_stdin`); when the buffer is drained it
@@ -1329,9 +2042,10 @@ impl wasm_execution::HostFunction for GetcharFunc {
 }
 
 /// The host interface the matrix runs wasm under: it resolves the generic
-/// `env.__print_i64` import to a `PrintFunc` (integer capture, for BASIC), and the
-/// Brainfuck I/O imports `env.putchar`/`env.getchar` to a `PutcharFunc` (byte capture)
-/// / `GetcharFunc` (EOF). Everything else resolves to nothing (the expression languages
+/// `env.__print_i64` import to a `PrintFunc` (integer capture, for BASIC),
+/// `env.__print_str` to a memory-reading byte capture, and the Brainfuck I/O
+/// imports `env.putchar`/`env.getchar` to a `PutcharFunc` (byte capture) /
+/// `GetcharFunc` (EOF). Everything else resolves to nothing (the expression languages
 /// import no host functions, so the host is never consulted for them and behaviour is
 /// identical to `WasmRuntime::new`).
 struct PrintHost {
@@ -1349,6 +2063,9 @@ impl wasm_execution::HostInterface for PrintHost {
         match (module_name, name) {
             ("env", "__print_i64") => Some(Box::new(PrintFunc {
                 captured: std::sync::Arc::clone(&self.captured),
+            })),
+            ("env", "__print_str") => Some(Box::new(PrintStrFunc {
+                bytes: std::sync::Arc::clone(&self.bytes),
             })),
             ("env", "putchar") => Some(Box::new(PutcharFunc {
                 bytes: std::sync::Arc::clone(&self.bytes),
@@ -1388,7 +2105,7 @@ impl wasm_execution::HostInterface for PrintHost {
 /// result kinds: an expression language returns its value as `main`'s wasm result
 /// (the `code`); an I/O language (Dartmouth BASIC) prints through `env.__print_i64`,
 /// whose arguments the host captured into the buffer, joined as the program's stdout.
-fn run_wasm(p: &Prog) -> Option<(Option<i32>, String)> {
+fn run_wasm(p: &Prog) -> Option<RunResult> {
     let wasm = lang_aot::compile_source_to_wasm(p.lang, p.src, "main").ok()?;
     let captured = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
     let byte_buf = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
@@ -1402,7 +2119,11 @@ fn run_wasm(p: &Prog) -> Option<(Option<i32>, String)> {
         input: std::sync::Arc::clone(&input),
     };
     let rt = wasm_runtime::WasmRuntime::with_host(Box::new(host));
-    let result = rt.load_and_run(&wasm, "main", &[]).ok()?;
+    let result = match rt.load_and_run(&wasm, "main", &[]) {
+        Ok(result) => result,
+        Err(_) if matches!(&p.expect, Expect::Trap) => return Some(RunResult::Trapped),
+        Err(_) => return None,
+    };
     // `main`'s single i64 result is the program's value (`& 0xFF` matches the exit
     // convention the native/LLVM columns use for the same programs).
     let code = result.first().copied().map(|v| (v as i32) & 0xFF);
@@ -1428,7 +2149,7 @@ fn run_wasm(p: &Prog) -> Option<(Option<i32>, String)> {
         // model surfaced). Inner newlines (multi-line output) are preserved.
         String::from_utf8_lossy(&printed_bytes).trim().to_string()
     };
-    Some((code, stdout))
+    Some(RunResult::Completed { code, stdout })
 }
 
 /// Is a usable `java` present? Gates the JVM column (skip when absent), exactly as
@@ -1505,7 +2226,7 @@ public static int getchar(){ try { int b = System.in.read(); return b < 0 ? 0 : 
 /// executed `Main.class` nor the `javac`-compiled host can be substituted in the
 /// write→run window (CWE-377/367); the class name is the constant `"Main"`, never
 /// interpolated from input; and each program terminates by construction.
-fn run_jvm(p: &Prog) -> Option<(Option<i32>, String)> {
+fn run_jvm(p: &Prog) -> Option<RunResult> {
     use iir_to_jvm_class_file::serialize_jvm_class_file;
     use jvm_class_file::{
         JvmCodeAttribute, JvmConstantPoolEntry, JvmMethodAttribute, JvmMethodInfo, ACC_PUBLIC,
@@ -1518,7 +2239,7 @@ fn run_jvm(p: &Prog) -> Option<(Option<i32>, String)> {
         cp.push(Some(e));
         (cp.len() - 1) as u16
     }
-    let prints = matches!(p.expect, Expect::Stdout(_));
+    let prints = matches!(&p.expect, Expect::Stdout(_));
     let mut class = lang_aot::compile_source_to_jvm_class(p.lang, p.src, "Main").ok()?;
     // The entry method's real return type — `I` (int) for the expression languages,
     // `J` (long) for a printing program. The launcher must match it exactly.
@@ -1644,13 +2365,16 @@ fn run_jvm(p: &Prog) -> Option<(Option<i32>, String)> {
     java.arg("-cp").arg(dir.path()).arg("Main");
     let out = output_with_stdin(java, program_stdin(p))?;
     let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    if matches!(&p.expect, Expect::Trap) && !out.status.success() {
+        return Some(RunResult::Trapped);
+    }
     if prints {
         // The program wrote its result to stdout via `env.BasicRuntime.println`.
-        Some((out.status.code(), stdout))
+        Some(RunResult::Completed { code: out.status.code(), stdout })
     } else {
         // The launcher printed the entry method's result; parse it as the program's
         // value (matching the exit-code convention of the other columns).
-        Some((stdout.parse::<i32>().ok(), String::new()))
+        Some(RunResult::Completed { code: stdout.parse::<i32>().ok(), stdout: String::new() })
     }
 }
 
@@ -1678,7 +2402,7 @@ fn dotnet_ok() -> bool {
 /// the run, so the executed assembly cannot be substituted in the assemble→run
 /// window (CWE-377/367); the class name is the constant `"Main"`, never from input;
 /// and each program terminates by construction.
-fn run_clr(p: &Prog) -> Option<(Option<i32>, String)> {
+fn run_clr(p: &Prog) -> Option<RunResult> {
     if !dotnet_ok() {
         return None;
     }
@@ -1711,6 +2435,9 @@ fn run_clr(p: &Prog) -> Option<(Option<i32>, String)> {
     dn.arg(&dll);
     let out = output_with_stdin(dn, program_stdin(p))?;
     if !out.status.success() {
+        if matches!(&p.expect, Expect::Trap) {
+            return Some(RunResult::Trapped);
+        }
         return None;
     }
     // Whatever the program wrote to `Console`: for an expression language that's the
@@ -1719,7 +2446,7 @@ fn run_clr(p: &Prog) -> Option<(Option<i32>, String)> {
     // the `PRINT` output captured directly. Return both — `assert_cell` picks the one
     // the program's `Expect` cares about.
     let printed = String::from_utf8_lossy(&out.stdout).trim().to_string();
-    Some((printed.parse::<i32>().ok(), printed))
+    Some(RunResult::Completed { code: printed.parse::<i32>().ok(), stdout: printed })
 }
 
 /// VM runner: source → IIR (`compile_source_to_iir`) → the **generic register VM**
@@ -1743,7 +2470,7 @@ fn run_clr(p: &Prog) -> Option<(Option<i32>, String)> {
 /// other columns' convention); an I/O language's stdout is the captured buffer. `None`
 /// only if the program fails to compile or the VM errors — the VM is in-process, so a
 /// tagged cell always runs (no host gate).
-fn run_vm(p: &Prog) -> Option<(Option<i32>, String)> {
+fn run_vm(p: &Prog) -> Option<RunResult> {
     use std::sync::{Arc, Mutex};
     use vm_core::core::VMCore;
     use vm_core::value::Value;
@@ -1772,6 +2499,15 @@ fn run_vm(p: &Prog) -> Option<(Option<i32>, String)> {
         bytes.lock().expect("lang-matrix VM putchar buffer poisoned").push(b);
         Ok(Value::Null)
     });
+    let bytes = Arc::clone(&printed_bytes);
+    vm.builtins_mut().register("print_str", move |args: &[Value]| {
+        let s = args.first().and_then(Value::as_str).unwrap_or("");
+        bytes
+            .lock()
+            .expect("lang-matrix VM print_str buffer poisoned")
+            .extend_from_slice(s.as_bytes());
+        Ok(Value::Null)
+    });
     // The program's stdin, drained one byte per `getchar` (Brainfuck `,`); empty for
     // every other program, so the first read is EOF → 0 (the prior behaviour).
     let stdin_buf: Arc<Mutex<std::collections::VecDeque<u8>>> =
@@ -1783,7 +2519,11 @@ fn run_vm(p: &Prog) -> Option<(Option<i32>, String)> {
         Ok(Value::Int(byte.map(i64::from).unwrap_or(0)))
     });
 
-    let result = vm.execute(&mut module, &entry, &[]).ok()?;
+    let result = match vm.execute(&mut module, &entry, &[]) {
+        Ok(result) => result,
+        Err(_) if matches!(&p.expect, Expect::Trap) => return Some(RunResult::Trapped),
+        Err(_) => return None,
+    };
 
     // The exit code: an expression language's `main` returns an `Int`.
     let code = result.and_then(|v| v.as_i64()).map(|n| (n as i32) & 0xFF);
@@ -1803,7 +2543,7 @@ fn run_vm(p: &Prog) -> Option<(Option<i32>, String)> {
         // each line with `putchar('\n')`, so the byte stream is e.g. `"42\n"`.
         String::from_utf8_lossy(&byte_buf).trim().to_string()
     };
-    Some((code, stdout))
+    Some(RunResult::Completed { code, stdout })
 }
 
 /// Run a program through the **generic JIT** and return `(exit_code, stdout)`.
@@ -1822,7 +2562,7 @@ fn run_vm(p: &Prog) -> Option<(Option<i32>, String)> {
 /// path) and the `GenericCirJit` backend (the compiled path) so output is captured
 /// regardless of which tier a given function lands on. Each closure appends a bounded
 /// amount per call — no DoS vector.
-fn run_jit(p: &Prog) -> Option<(Option<i32>, String)> {
+fn run_jit(p: &Prog) -> Option<RunResult> {
     use std::sync::{Arc, Mutex};
     use jit_core::core::JITCore;
     use jit_core::GenericCirJit;
@@ -1847,6 +2587,15 @@ fn run_jit(p: &Prog) -> Option<(Option<i32>, String)> {
     vm.builtins_mut().register("putchar", move |args: &[Value]| {
         let b = (args.first().and_then(|v| v.as_i64()).unwrap_or(0) & 0xFF) as u8;
         bytes.lock().expect("lang-matrix JIT putchar buffer poisoned").push(b);
+        Ok(Value::Null)
+    });
+    let bytes = Arc::clone(&printed_bytes);
+    vm.builtins_mut().register("print_str", move |args: &[Value]| {
+        let s = args.first().and_then(Value::as_str).unwrap_or("");
+        bytes
+            .lock()
+            .expect("lang-matrix JIT print_str buffer poisoned")
+            .extend_from_slice(s.as_bytes());
         Ok(Value::Null)
     });
     // The program's stdin, shared by BOTH tiers' `getchar` (a function runs on one tier,
@@ -1883,7 +2632,11 @@ fn run_jit(p: &Prog) -> Option<(Option<i32>, String)> {
     // `JITCore::new` takes `&mut vm` only to thread thresholds — it does not hold the
     // borrow, so `execute_with_jit` can re-borrow `vm` for the interpreter tier.
     let mut jit = JITCore::new(&mut vm, Box::new(backend));
-    let result = jit.execute_with_jit(&mut vm, &mut module, &entry, &[]).ok()?;
+    let result = match jit.execute_with_jit(&mut vm, &mut module, &entry, &[]) {
+        Ok(result) => result,
+        Err(_) if matches!(&p.expect, Expect::Trap) => return Some(RunResult::Trapped),
+        Err(_) => return None,
+    };
 
     // Exit code / stdout extraction is identical to `run_vm` — the JIT is observably
     // equivalent to the interpreter, which is the whole point of a JIT.
@@ -1902,12 +2655,12 @@ fn run_jit(p: &Prog) -> Option<(Option<i32>, String)> {
         // each line with `putchar('\n')`, so the byte stream is e.g. `"42\n"`.
         String::from_utf8_lossy(&byte_buf).trim().to_string()
     };
-    Some((code, stdout))
+    Some(RunResult::Completed { code, stdout })
 }
 
 /// Dispatch a program to a backend runner. `None` = the backend's toolchain is
 /// unavailable on this host (skip, like the W16 external-tool backends).
-fn run(backend: Backend, p: &Prog) -> Option<(Option<i32>, String)> {
+fn run(backend: Backend, p: &Prog) -> Option<RunResult> {
     match backend {
         Backend::NativeAot => run_native(p),
         Backend::Llvm => run_llvm(p),
@@ -1920,17 +2673,22 @@ fn run(backend: Backend, p: &Prog) -> Option<(Option<i32>, String)> {
 }
 
 /// Assert a single matrix cell agrees with the program's known result.
-fn assert_cell(backend: Backend, p: &Prog, code: Option<i32>, stdout: &str) {
-    match &p.expect {
-        Expect::Exit(n) => assert_eq!(
+fn assert_cell(backend: Backend, p: &Prog, result: RunResult) {
+    match (&p.expect, result) {
+        (Expect::Exit(n), RunResult::Completed { code, stdout }) => assert_eq!(
             code,
             Some(*n),
             "{backend:?} {:?}: expected exit {n}, got {code:?} (stdout {stdout:?})",
             p.lang
         ),
-        Expect::Stdout(s) => assert_eq!(
+        (Expect::Stdout(s), RunResult::Completed { stdout, .. }) => assert_eq!(
             stdout, *s,
             "{backend:?} {:?}: expected stdout {s:?}, got {stdout:?}",
+            p.lang
+        ),
+        (Expect::Trap, RunResult::Trapped) => {}
+        (expect, other) => panic!(
+            "{backend:?} {:?}: expected {expect:?}, got {other:?}",
             p.lang
         ),
     }
@@ -1944,10 +2702,10 @@ fn matrix_every_proven_cell_agrees() {
     let mut ran = 0usize;
     for p in PROGRAMS {
         for &backend in p.backends {
-            let Some((code, stdout)) = run(backend, p) else {
+            let Some(result) = run(backend, p) else {
                 continue;
             };
-            assert_cell(backend, p, code, &stdout);
+            assert_cell(backend, p, result);
             ran += 1;
         }
     }

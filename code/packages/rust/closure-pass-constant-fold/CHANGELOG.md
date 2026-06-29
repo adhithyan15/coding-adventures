@@ -33,6 +33,25 @@ non-literal value, or any hole. We also DECLINE a `"__proto__"` key —
 it would silently change semantics. Only the bare global `Object.fromEntries(...)`
 callee folds (never a shadowed `o.fromEntries(...)`).
 
+## [0.70.0] - 2026-06-26
+
+### Added — fold static `Object.is(a, b)` → boolean (SameValue)
+
+The static `Object.is` (ECMAScript §20.1.2.13) now folds to a boolean literal
+when BOTH arguments are primitive literals. `Object.is` uses the SameValue
+algorithm (§7.2.11), which differs from `===` in exactly two cases:
+
+| comparison          | `Object.is` | `===`   |
+|---------------------|-------------|---------|
+| `Object.is(NaN, NaN)` | `true`    | `false` |
+| `Object.is(+0, -0)`   | `false`   | `true`  |
+
+Everywhere else SameValue agrees with `===`. We fold two number literals (NaN is
+the same as NaN; +0 and −0 are distinguished by sign; otherwise `==`), two string
+literals (byte-equal), two boolean literals, two `null` literals (`true`), and a
+mismatch of literal kinds (`false`, different Type). We DECLINE if either argument
+is a non-literal (value unknown) or the arity is not two. Only the bare global
+`Object.is(...)` callee folds (never a shadowed `o.is(...)`).
 ## [0.68.0] - 2026-06-26
 
 ### Added — fold static `Number.isSafeInteger(x)` → boolean

@@ -1,0 +1,57 @@
+// ReviewActions.dark.msl - dark review-action theme.
+
+style ReviewActions {
+  part review-actions-row {
+    padding : 4 ;
+  }
+
+  part action-undo {
+    background    : "#334155" ;
+    border-width  : 1 ;
+    border-color  : "#64748b" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part action-bury-card {
+    background    : "#7c3aed" ;
+    border-width  : 1 ;
+    border-color  : "#4c1d95" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part action-bury-siblings {
+    background    : "#0f766e" ;
+    border-width  : 1 ;
+    border-color  : "#134e4a" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part action-suspend-card {
+    background    : "#b45309" ;
+    border-width  : 1 ;
+    border-color  : "#78350f" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part action-toggle-mark {
+    background    : "#be123c" ;
+    border-width  : 1 ;
+    border-color  : "#881337" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+}
