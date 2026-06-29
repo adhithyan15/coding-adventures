@@ -59,6 +59,32 @@ layout EngramApp {
         onLapseMultiplierChange : emit: onDeckOptionsLapseMultiplierChange
       )
     }
+    Box [ review-history-region ] {
+      pkg::mosaic-pkg-review-history::ReviewHistoryPanel (
+        history-label : slot: history-label ,
+        window-label : slot: history-window-label ,
+        total-label : slot: history-total-label ,
+        total-value : slot: history-total-value ,
+        correct-label : slot: history-correct-label ,
+        correct-value : slot: history-correct-value ,
+        unique-label : slot: history-unique-label ,
+        unique-value : slot: history-unique-value ,
+        accuracy-label : slot: history-accuracy-label ,
+        accuracy-value : slot: history-accuracy-value ,
+        again-label : slot: history-again-label ,
+        again-value : slot: history-again-value ,
+        hard-label : slot: history-hard-label ,
+        hard-value : slot: history-hard-value ,
+        good-label : slot: history-good-label ,
+        good-value : slot: history-good-value ,
+        easy-label : slot: history-easy-label ,
+        easy-value : slot: history-easy-value ,
+        first-label : slot: history-first-label ,
+        first-value : slot: history-first-value ,
+        last-label : slot: history-last-label ,
+        last-value : slot: history-last-value
+      )
+    }
     Box [ collection-region ] {
       pkg::mosaic-pkg-collection-actions::CollectionActions (
         collection-label : slot: collection-label ,

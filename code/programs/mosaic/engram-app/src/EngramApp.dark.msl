@@ -21,6 +21,10 @@ style EngramApp {
     padding-bottom : 14 ;
   }
 
+  part review-history-region {
+    padding-bottom : 14 ;
+  }
+
   part collection-region {
     padding-bottom : 14 ;
   }

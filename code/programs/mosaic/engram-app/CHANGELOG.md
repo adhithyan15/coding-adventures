@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added the reusable `mosaic-pkg-review-history` dependency and mounted its
+  `ReviewHistoryPanel` component so generated host shells expose shared
+  review totals, accuracy, per-rating counts, and first/last review fields.
 - Added the reusable `mosaic-pkg-deck-options` dependency and mounted its
   `DeckOptionsPanel` component so generated host shells expose shared
   Anki-style deck scheduler option controls.

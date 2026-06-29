@@ -1459,6 +1459,9 @@ CREATE TABLE graves (
             assert_eq!(props["props"]["browser-result-states"], json!(["new"]));
             assert_eq!(props["props"]["browser-selected-card-id"], "card");
             assert_eq!(props["props"]["browser-selected-state"], "new");
+            assert_eq!(props["props"]["history-label"], "Review history");
+            assert_eq!(props["props"]["history-total-value"], "0");
+            assert_eq!(props["props"]["history-accuracy-value"], "0%");
             assert_eq!(props["props"]["answer-visible"], false);
             assert_eq!(props["props"]["action-undo-label"], "Undo");
             assert_eq!(props["props"]["action-bury-card-label"], "Bury card");

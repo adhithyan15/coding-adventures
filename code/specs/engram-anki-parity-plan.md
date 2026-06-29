@@ -201,7 +201,9 @@ at least:
   shells can route back through the shared event bridge.
 - review history log
 - review history summaries for deck/date ranges. Core, JSON facade, and C ABI
-  support exists; richer graphing and browser UI still need to bind to it.
+  support exists, and the Mosaic app now exposes a reusable lifetime summary
+  panel for generated shells; richer graphing and browser UI still need to
+  bind to it.
 
 Possible later track:
 
@@ -541,6 +543,9 @@ Status:
   `mosaic-pkg-rating-controls` instead of owning the rating button row.
 - `code/packages/mosaic-pkg-review-actions` adds reusable Anki-style undo,
   bury-card, bury-siblings, suspend-card, and mark/unmark review controls.
+- `code/packages/mosaic-pkg-review-history` adds reusable review total,
+  accuracy, per-rating count, and first/last review summary controls backed by
+  shared Engram review-history props.
 - `code/packages/mosaic-pkg-deck-options` adds reusable daily-limit,
   graduation-interval, maximum-interval, interval-modifier, hard/easy
   multiplier, and lapse-multiplier controls for Anki-style deck settings.

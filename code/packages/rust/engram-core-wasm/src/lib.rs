@@ -531,6 +531,8 @@ fn engram_app_props_for_state(state: &AppState, deck_id: &str, now: u64) -> Valu
         now,
     );
     let deck_options = deck_options_for_state(state, selected_deck_id.as_str());
+    let review_history =
+        summarize_review_history(state, selected_deck_id.as_str(), 0, now.saturating_add(1));
     let progress = get_active_session_progress(state);
     let active_card = state
         .active_session
@@ -737,6 +739,99 @@ fn engram_app_props_for_state(state: &AppState, deck_id: &str, now: u64) -> Valu
             Value::from(deck_options.lapse_interval_multiplier),
         );
     }
+    {
+        props_object.insert(
+            "history-label".to_string(),
+            Value::String("Review history".to_string()),
+        );
+        props_object.insert(
+            "history-window-label".to_string(),
+            Value::String("Lifetime".to_string()),
+        );
+        props_object.insert(
+            "history-total-label".to_string(),
+            Value::String("Reviews".to_string()),
+        );
+        props_object.insert(
+            "history-total-value".to_string(),
+            Value::String(review_history.total_reviews.to_string()),
+        );
+        props_object.insert(
+            "history-correct-label".to_string(),
+            Value::String("Correct".to_string()),
+        );
+        props_object.insert(
+            "history-correct-value".to_string(),
+            Value::String(review_history.correct_reviews.to_string()),
+        );
+        props_object.insert(
+            "history-unique-label".to_string(),
+            Value::String("Cards".to_string()),
+        );
+        props_object.insert(
+            "history-unique-value".to_string(),
+            Value::String(review_history.unique_cards.to_string()),
+        );
+        props_object.insert(
+            "history-accuracy-label".to_string(),
+            Value::String("Accuracy".to_string()),
+        );
+        props_object.insert(
+            "history-accuracy-value".to_string(),
+            Value::String(format_review_accuracy(
+                review_history.correct_reviews,
+                review_history.total_reviews,
+            )),
+        );
+        props_object.insert(
+            "history-again-label".to_string(),
+            Value::String("Again".to_string()),
+        );
+        props_object.insert(
+            "history-again-value".to_string(),
+            Value::String(review_history.rating_counts.again.to_string()),
+        );
+        props_object.insert(
+            "history-hard-label".to_string(),
+            Value::String("Hard".to_string()),
+        );
+        props_object.insert(
+            "history-hard-value".to_string(),
+            Value::String(review_history.rating_counts.hard.to_string()),
+        );
+        props_object.insert(
+            "history-good-label".to_string(),
+            Value::String("Good".to_string()),
+        );
+        props_object.insert(
+            "history-good-value".to_string(),
+            Value::String(review_history.rating_counts.good.to_string()),
+        );
+        props_object.insert(
+            "history-easy-label".to_string(),
+            Value::String("Easy".to_string()),
+        );
+        props_object.insert(
+            "history-easy-value".to_string(),
+            Value::String(review_history.rating_counts.easy.to_string()),
+        );
+        props_object.insert(
+            "history-first-label".to_string(),
+            Value::String("First".to_string()),
+        );
+        props_object.insert(
+            "history-first-value".to_string(),
+            Value::String(format_optional_timestamp(review_history.first_reviewed_at)),
+        );
+        props_object.insert(
+            "history-last-label".to_string(),
+            Value::String("Last".to_string()),
+        );
+        props_object.insert(
+            "history-last-value".to_string(),
+            Value::String(format_optional_timestamp(review_history.last_reviewed_at)),
+        );
+    }
     if let Some(browser_object) = browser_props.as_object() {
         for (key, value) in browser_object {
             props_object.insert(key.clone(), value.clone());
@@ -752,6 +847,20 @@ fn format_step_minutes(steps: &[u32]) -> String {
         .map(u32::to_string)
         .collect::<Vec<_>>()
         .join(", ")
+}
+
+fn format_review_accuracy(correct_reviews: usize, total_reviews: usize) -> String {
+    if total_reviews == 0 {
+        return "0%".to_string();
+    }
+    let percentage = (correct_reviews as f64 / total_reviews as f64) * 100.0;
+    format!("{}%", percentage.round() as u32)
+}
+
+fn format_optional_timestamp(timestamp: Option<u64>) -> String {
+    timestamp
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "Never".to_string())
 }
 
 fn engram_browser_props_for_state(
@@ -2589,7 +2698,22 @@ mod tests {
                 {"id":"media:0","archiveName":"0","filename":"audio/amma.mp3","data":[109,112,51]}
             ],
             "sessions": [],
-            "reviews": [],
+            "reviews": [
+                {
+                    "id":"review-good",
+                    "sessionId":"session",
+                    "cardId":"card",
+                    "rating":"good",
+                    "reviewedAt":1699999999900
+                },
+                {
+                    "id":"review-again",
+                    "sessionId":"session",
+                    "cardId":"other",
+                    "rating":"again",
+                    "reviewedAt":1699999999950
+                }
+            ],
             "deckOptions": [{
                 "deckId": "deck",
                 "options": {
@@ -2646,6 +2770,16 @@ mod tests {
         assert_eq!(value["props"]["deck-options-hard-multiplier-value"], 1.4);
         assert_eq!(value["props"]["deck-options-easy-bonus-value"], 1.6);
         assert_eq!(value["props"]["deck-options-lapse-multiplier-value"], 0.5);
+        assert_eq!(value["props"]["history-label"], "Review history");
+        assert_eq!(value["props"]["history-window-label"], "Lifetime");
+        assert_eq!(value["props"]["history-total-value"], "2");
+        assert_eq!(value["props"]["history-correct-value"], "1");
+        assert_eq!(value["props"]["history-unique-value"], "2");
+        assert_eq!(value["props"]["history-accuracy-value"], "50%");
+        assert_eq!(value["props"]["history-again-value"], "1");
+        assert_eq!(value["props"]["history-good-value"], "1");
+        assert_eq!(value["props"]["history-first-value"], "1699999999900");
+        assert_eq!(value["props"]["history-last-value"], "1699999999950");
         assert_eq!(value["props"]["collection-label"], "Collection");
         assert_eq!(value["props"]["collection-note-count-value"], "1");
         assert_eq!(value["props"]["collection-note-type-count-value"], "1");

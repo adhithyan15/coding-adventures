@@ -6,8 +6,8 @@ This package is the product assembly layer. It exports `EngramApp`, owns the
 app/root surface, and depends on reusable Mosaic component packages such as
 `mosaic-pkg-card-browser`, `mosaic-pkg-collection-actions`,
 `mosaic-pkg-deck-options`, `mosaic-pkg-deck-stats`,
-`mosaic-pkg-review-actions`, `mosaic-pkg-review-card`, and
-`mosaic-pkg-session-progress`.
+`mosaic-pkg-review-actions`, `mosaic-pkg-review-card`,
+`mosaic-pkg-review-history`, and `mosaic-pkg-session-progress`.
 The review card composes further Mosaic packages such as
 `mosaic-pkg-rating-controls`; Engram does not fork those components into the app
 package.
@@ -24,6 +24,7 @@ binds them to the shared Rust business logic core through host shells.
   `pkg::mosaic-pkg-collection-actions::CollectionActions`,
   `pkg::mosaic-pkg-deck-options::DeckOptionsPanel`,
   `pkg::mosaic-pkg-deck-stats::DeckStatsPanel`,
+  `pkg::mosaic-pkg-review-history::ReviewHistoryPanel`,
   `pkg::mosaic-pkg-session-progress::SessionProgress`, and
   `pkg::mosaic-pkg-review-card::ReviewCard`, plus
   `pkg::mosaic-pkg-review-actions::ReviewActions`.
@@ -53,6 +54,9 @@ binds them to the shared Rust business logic core through host shells.
 - Deck option events carry numeric values and route through the shared
   `EngramSession::handle_engram_app_event` contract, which persists them with
   `EngramCommand::SetDeckOptions`.
+- The review history slots expose lifetime deck review totals, accuracy,
+  per-rating counts, and first/last review timestamps from the shared Rust
+  history summary.
 
 ## Running the smoke test
 

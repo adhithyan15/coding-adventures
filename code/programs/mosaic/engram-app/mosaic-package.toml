@@ -14,6 +14,7 @@ mosaic-pkg-deck-options = "0.1.0"
 mosaic-pkg-deck-stats = "0.1.0"
 mosaic-pkg-review-actions = "0.1.0"
 mosaic-pkg-review-card = "0.1.0"
+mosaic-pkg-review-history = "0.1.0"
 mosaic-pkg-session-progress = "0.1.0"
 
 [kernel]

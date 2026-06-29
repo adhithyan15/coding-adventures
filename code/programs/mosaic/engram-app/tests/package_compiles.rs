@@ -69,6 +69,10 @@ fn manifest_declares_app_package_boundary() {
         Some(&"0.1.0".to_string())
     );
     assert_eq!(
+        package.dependencies.get("mosaic-pkg-review-history"),
+        Some(&"0.1.0".to_string())
+    );
+    assert_eq!(
         package.dependencies.get("mosaic-pkg-session-progress"),
         Some(&"0.1.0".to_string())
     );
@@ -97,6 +101,7 @@ fn app_sources_compile_without_owning_review_card_component() {
     assert!(source.contains("pkg::mosaic-pkg-deck-stats::DeckStatsPanel"));
     assert!(source.contains("pkg::mosaic-pkg-review-card::ReviewCard"));
     assert!(source.contains("pkg::mosaic-pkg-review-actions::ReviewActions"));
+    assert!(source.contains("pkg::mosaic-pkg-review-history::ReviewHistoryPanel"));
     assert!(source.contains("pkg::mosaic-pkg-session-progress::SessionProgress"));
     assert!(!source.contains("layout CardBrowser"));
     assert!(!source.contains("layout CollectionActions"));
@@ -104,6 +109,7 @@ fn app_sources_compile_without_owning_review_card_component() {
     assert!(!source.contains("layout DeckStatsPanel"));
     assert!(!source.contains("layout ReviewCard"));
     assert!(!source.contains("layout ReviewActions"));
+    assert!(!source.contains("layout ReviewHistoryPanel"));
     assert!(!source.contains("layout SessionProgress"));
 }
 
@@ -184,6 +190,24 @@ fn app_manifest_resolves_deck_options_dependency() {
             assert!(package_path.ends_with("mosaic-pkg-deck-options"));
         }
         other => panic!("expected DeckOptionsPanel component resolution, got {other:?}"),
+    }
+}
+
+#[test]
+fn app_manifest_resolves_review_history_dependency() {
+    let resolver = dependency_resolver();
+
+    match resolver.resolve("ReviewHistoryPanel") {
+        Some(Resolution::Component {
+            package,
+            component,
+            package_path,
+        }) => {
+            assert_eq!(package, "mosaic-pkg-review-history");
+            assert_eq!(component, "ReviewHistoryPanel");
+            assert!(package_path.ends_with("mosaic-pkg-review-history"));
+        }
+        other => panic!("expected ReviewHistoryPanel component resolution, got {other:?}"),
     }
 }
 
@@ -404,6 +428,12 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(&react_app, "deckOptionsNewCardsValue: 0,");
     assert_contains(&react_app, "deckOptionsIntervalModifierValue: 0,");
+    assert_contains(&react_app, "historyLabel: \"Sample HistoryLabel\",");
+    assert_contains(&react_app, "historyTotalValue: \"Sample HistoryTotalValue\",");
+    assert_contains(
+        &react_app,
+        "historyAccuracyValue: \"Sample HistoryAccuracyValue\",",
+    );
     assert_contains(&react_app, "collectionLabel: \"Sample CollectionLabel\",");
     assert_contains(
         &react_app,
@@ -450,6 +480,11 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(&electron_app, "deckOptionsMaximumIntervalValue: 0,");
     assert_contains(&electron_app, "deckOptionsEasyBonusValue: 0,");
+    assert_contains(
+        &electron_app,
+        "historyWindowLabel: \"Sample HistoryWindowLabel\",",
+    );
+    assert_contains(&electron_app, "historyAgainValue: \"Sample HistoryAgainValue\",");
     assert_contains(
         &electron_app,
         "collectionImportLabel: \"Sample CollectionImportLabel\",",
@@ -532,6 +567,11 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(&flutter_app, "deckOptionsNewCardsValue: 0.0,");
     assert_contains(&flutter_app, "deckOptionsHardMultiplierValue: 0.0,");
+    assert_contains(&flutter_app, "historyLabel: \"Sample HistoryLabel\",");
+    assert_contains(
+        &flutter_app,
+        "historyCorrectValue: \"Sample HistoryCorrectValue\",",
+    );
     assert_contains(&flutter_app, "collectionLabel: \"Sample CollectionLabel\",");
     assert_contains(
         &flutter_app,
@@ -560,6 +600,9 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "property string deckOptionsRelearningStepsValue");
     assert_contains(&qml, "property real deckOptionsNewCardsValue");
     assert_contains(&qml, "property real deckOptionsEasyBonusValue");
+    assert_contains(&qml, "property string historyLabel");
+    assert_contains(&qml, "property string historyTotalValue");
+    assert_contains(&qml, "property string historyAccuracyValue");
     assert_contains(&qml, "property string collectionLabel");
     assert_contains(&qml, "property string collectionNoteCountValue");
     assert_contains(&qml, "property string browserQuery");
@@ -624,6 +667,9 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "let deckOptionsRelearningStepsValue: String");
     assert_contains(&swift, "let deckOptionsNewCardsValue: Double");
     assert_contains(&swift, "let deckOptionsEasyBonusValue: Double");
+    assert_contains(&swift, "let historyLabel: String");
+    assert_contains(&swift, "let historyTotalValue: String");
+    assert_contains(&swift, "let historyAccuracyValue: String");
     assert_contains(&swift, "let collectionLabel: String");
     assert_contains(&swift, "let collectionNoteCountValue: String");
     assert_contains(&swift, "let browserResults: [String]");
@@ -652,6 +698,11 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(&swift_app, "deckOptionsNewCardsValue: 0,");
     assert_contains(&swift_app, "deckOptionsEasyBonusValue: 0,");
+    assert_contains(&swift_app, "historyLabel: \"Sample HistoryLabel\",");
+    assert_contains(
+        &swift_app,
+        "historyLastValue: \"Sample HistoryLastValue\",",
+    );
     assert_contains(&swift_app, "collectionLabel: \"Sample CollectionLabel\",");
     assert_contains(
         &swift_app,
@@ -706,6 +757,18 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_code_behind,
         "public static readonly DependencyProperty DeckOptionsEasyBonusValueProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty HistoryLabelProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty HistoryTotalValueProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty HistoryAccuracyValueProperty",
     );
     assert_contains(
         &xaml_code_behind,
@@ -865,6 +928,7 @@ fn assert_contains(haystack: &str, needle: &str) {
 fn assert_dependency_styles_reach_all_backends(output_root: &Path) {
     let hex_sentinels = [
         ("DeckStatsPanel", "#2563eb"),
+        ("ReviewHistoryPanel", "#ca8a04"),
         ("ReviewCard", "#e94560"),
         ("SessionProgress", "#0f766e"),
         ("ReviewActions", "#7c3aed"),
@@ -931,6 +995,7 @@ fn assert_dependency_styles_reach_all_backends(output_root: &Path) {
     let swift = read_artifact(output_root, "swiftui/EngramApp.swift");
     for (component, needle) in [
         ("DeckStatsPanel", "0.145, green: 0.388, blue: 0.922"),
+        ("ReviewHistoryPanel", "0.792, green: 0.541, blue: 0.016"),
         ("DeckOptionsPanel", "0.961, green: 0.62, blue: 0.043"),
         ("CollectionActions", "0.031, green: 0.569, blue: 0.698"),
         ("ReviewCard", "0.914, green: 0.271, blue: 0.376"),
