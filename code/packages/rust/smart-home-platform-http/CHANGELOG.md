@@ -47,6 +47,8 @@ All notable changes to this package will be documented in this file.
   and scenes.
 - Added room-scoped entity/state filters and navigation links on room detail
   responses.
+- Added room-scoped state-history, runtime event-log, and command-result audit
+  filters with matching room detail links.
 - Added a browser dashboard event-log panel backed by the existing native
   runtime event stream route.
 - Added browser dashboard detail actions for history, event-log,

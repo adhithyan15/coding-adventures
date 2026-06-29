@@ -2066,7 +2066,7 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
         surface: "home_assistant",
         mutates_runtime: false,
         runtime_authorized: false,
-        query_params: &["filter_entity_id", "minimal_response"],
+        query_params: &["filter_entity_id", "minimal_response", "room_id"],
     },
     ApiRouteDescriptor {
         method: "GET",
@@ -2075,7 +2075,12 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
         surface: "home_assistant",
         mutates_runtime: false,
         runtime_authorized: false,
-        query_params: &["end_time", "filter_entity_id", "minimal_response"],
+        query_params: &[
+            "end_time",
+            "filter_entity_id",
+            "minimal_response",
+            "room_id",
+        ],
     },
     ApiRouteDescriptor {
         method: "GET",
@@ -2318,7 +2323,7 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
         surface: "smart_home",
         mutates_runtime: false,
         runtime_authorized: false,
-        query_params: &["from_sequence", "kind", "limit", "sort"],
+        query_params: &["from_sequence", "kind", "limit", "room_id", "sort"],
     },
     ApiRouteDescriptor {
         method: "GET",
@@ -2342,6 +2347,7 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
             "correlation_id",
             "from_sequence",
             "limit",
+            "room_id",
             "sort",
             "status",
         ],
@@ -2413,6 +2419,7 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
             "event_type",
             "from_ms",
             "limit",
+            "room_id",
             "to_ms",
         ],
     },
@@ -2846,8 +2853,18 @@ fn runtime_events_response(
         .runtime
         .lock()
         .expect("smart-home runtime mutex should not be poisoned");
-    let entries = runtime_guard.event_bus().query_events(&query);
-    let summary = runtime_guard.event_bus().event_log_summary(&query);
+    let limit = query.limit;
+    let mut entries = runtime_guard.event_bus().query_events(&RuntimeEventQuery {
+        limit: None,
+        ..query
+    });
+    if let Some(room_id) = query_string(request, "room_id") {
+        entries.retain(|entry| runtime_event_matches_room(&runtime_guard, entry.event, room_id));
+    }
+    if let Some(limit) = limit {
+        entries.truncate(limit);
+    }
+    let summary = smart_home_runtime::RuntimeEventLogSummary::from_entries(entries.iter().copied());
     WebResponse::json(runtime_event_log_json(&entries, &summary).into_bytes())
 }
 
@@ -2887,8 +2904,18 @@ fn runtime_command_results_response(
         .runtime
         .lock()
         .expect("smart-home runtime mutex should not be poisoned");
-    let records = runtime_guard.query_command_results(&query);
-    let summary = runtime_guard.command_result_summary(&query);
+    let limit = query.limit;
+    let mut records = runtime_guard.query_command_results(&RuntimeCommandResultQuery {
+        limit: None,
+        ..query
+    });
+    if let Some(room_id) = query_string(request, "room_id") {
+        records.retain(|record| bridge_has_room(&runtime_guard, &record.result.bridge_id, room_id));
+    }
+    if let Some(limit) = limit {
+        records.truncate(limit);
+    }
+    let summary = smart_home_runtime::RuntimeCommandResultSummary::from_records(records.iter());
     WebResponse::json(command_results_audit_json(&records, &summary).into_bytes())
 }
 
@@ -4718,7 +4745,7 @@ fn room_detail_json(room: &RuntimeRoomSummary, runtime: &SmartHomeRuntime, now_m
 fn room_links_json(room_id: &str) -> String {
     let room = url_component(room_id);
     format!(
-        "{{\"self\":{},\"rooms\":{},\"devices\":{},\"entities\":{},\"states\":{},\"state_gaps\":{},\"scenes\":{}}}",
+        "{{\"self\":{},\"rooms\":{},\"devices\":{},\"entities\":{},\"states\":{},\"state_gaps\":{},\"scenes\":{},\"history\":{},\"events\":{},\"command_results\":{}}}",
         json_string(format!("/api/smart_home/rooms/{room}")),
         json_string(format!("/api/smart_home/rooms?room_id={room}")),
         json_string(format!("/api/smart_home/devices?room_id={room}")),
@@ -4726,6 +4753,9 @@ fn room_links_json(room_id: &str) -> String {
         json_string(format!("/api/smart_home/states?room_id={room}")),
         json_string(format!("/api/smart_home/states?room_id={room}&stale=true")),
         json_string(format!("/api/smart_home/scenes?room_id={room}")),
+        json_string(format!("/api/smart_home/state_history?room_id={room}")),
+        json_string(format!("/api/smart_home/events?room_id={room}")),
+        json_string(format!("/api/smart_home/command_results?room_id={room}")),
     )
 }
 
@@ -4744,6 +4774,57 @@ fn entity_room_id<'a>(runtime: &'a SmartHomeRuntime, entity: &Entity) -> Option<
         .registry()
         .device(&entity.device_id)
         .and_then(|device| device.room_id.as_deref())
+}
+
+fn bridge_has_room(runtime: &SmartHomeRuntime, bridge_id: &BridgeId, room_id: &str) -> bool {
+    runtime
+        .registry()
+        .devices()
+        .any(|device| &device.bridge_id == bridge_id && device.room_id.as_deref() == Some(room_id))
+}
+
+fn entity_id_has_room(runtime: &SmartHomeRuntime, entity_id: &EntityId, room_id: &str) -> bool {
+    runtime
+        .registry()
+        .entity(entity_id)
+        .and_then(|entity| entity_room_id(runtime, entity))
+        == Some(room_id)
+}
+
+fn device_event_matches_room(
+    runtime: &SmartHomeRuntime,
+    event: &DeviceEvent,
+    room_id: &str,
+) -> bool {
+    event
+        .entity_id
+        .as_ref()
+        .is_some_and(|entity_id| entity_id_has_room(runtime, entity_id, room_id))
+        || event
+            .device_id
+            .as_ref()
+            .and_then(|device_id| runtime.registry().device(device_id))
+            .and_then(|device| device.room_id.as_deref())
+            == Some(room_id)
+}
+
+fn runtime_event_matches_room(
+    runtime: &SmartHomeRuntime,
+    event: &RuntimeEvent,
+    room_id: &str,
+) -> bool {
+    match event {
+        RuntimeEvent::Device(event) => device_event_matches_room(runtime, event, room_id),
+        RuntimeEvent::CommandResult(result) => bridge_has_room(runtime, &result.bridge_id, room_id),
+        RuntimeEvent::BridgeHealth { bridge_id, .. }
+        | RuntimeEvent::WorkerNeedsRestart { bridge_id, .. } => {
+            bridge_has_room(runtime, bridge_id, room_id)
+        }
+        RuntimeEvent::StateExpired { entity_id, .. }
+        | RuntimeEvent::DesiredStateDrift { entity_id, .. } => {
+            entity_id_has_room(runtime, entity_id, room_id)
+        }
+    }
 }
 
 fn runtime_room_entities<'a>(runtime: &'a SmartHomeRuntime, room_id: &str) -> Vec<&'a Entity> {
@@ -5389,6 +5470,7 @@ fn state_history_events<'a>(
     let event_type = query_string(request, "event_type")
         .map(device_event_type_from_label)
         .transpose()?;
+    let room_id = query_string(request, "room_id");
     let observed_at_or_after_ms = query_u64(request, "observed_at_or_after_ms")?;
     let received_at_or_after_ms = query_u64(request, "received_at_or_after_ms")?;
     let limit = query_limit(request, 100, 1_000)?;
@@ -5400,6 +5482,9 @@ fn state_history_events<'a>(
             entity_id
                 .as_ref()
                 .is_none_or(|entity_id| event.entity_id.as_ref() == Some(entity_id))
+        })
+        .filter(|event| {
+            room_id.is_none_or(|room_id| device_event_matches_room(runtime, event, room_id))
         })
         .filter(|event| event_type.is_none_or(|event_type| event.event_type == event_type))
         .filter(|event| {
@@ -7461,6 +7546,25 @@ mod tests {
         assert!(by_bridge_id.contains(r#""total_results":1"#));
         assert!(by_bridge_id.contains(&format!(r#""bridge_id":"{command_bridge_id}""#)));
 
+        let by_room = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/command_results?room_id=kitchen&limit=5",
+            ))
+            .into(),
+        );
+        assert!(by_room.contains(r#""total_results":1"#));
+        assert!(by_room.contains(&format!(r#""bridge_id":"{command_bridge_id}""#)));
+
+        let by_missing_room = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/command_results?room_id=garage&limit=5",
+            ))
+            .into(),
+        );
+        assert!(by_missing_room.contains(r#""total_results":0"#));
+
         let by_correlation_id = response_body(
             app.handle(request(
                 "GET",
@@ -7495,12 +7599,21 @@ mod tests {
         let events = response_body(
             app.handle(request(
                 "GET",
-                "/api/smart_home/events?kind=commands&sort=desc&limit=5",
+                "/api/smart_home/events?kind=commands&room_id=kitchen&sort=desc&limit=5",
             ))
             .into(),
         );
         assert!(events.contains(r#""command_results":1"#));
         assert!(events.contains(r#""kind":"command_result""#));
+
+        let missing_room_events = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/events?kind=commands&room_id=garage&sort=desc&limit=5",
+            ))
+            .into(),
+        );
+        assert!(missing_room_events.contains(r#""total_events":0"#));
 
         let event_detail = response_body(
             app.handle(request("GET", "/api/smart_home/events/0"))
@@ -7748,6 +7861,15 @@ mod tests {
         ));
         assert!(catalog.contains(
             r#""path":"/api/smart_home/states","category":"states","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["capability_id","confidence","domain","has_state","kind","limit","room_id","source","stale"]"#
+        ));
+        assert!(catalog.contains(
+            r#""path":"/api/smart_home/events","category":"events","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["from_sequence","kind","limit","room_id","sort"]"#
+        ));
+        assert!(catalog.contains(
+            r#""path":"/api/smart_home/command_results","category":"command_results","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["bridge_id","command_id","correlation_id","from_sequence","limit","room_id","sort","status"]"#
+        ));
+        assert!(catalog.contains(
+            r#""path":"/api/smart_home/state_history","category":"state_history","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["bridge_id","entity_id","event_type","from_ms","limit","room_id","to_ms"]"#
         ));
         let catalog_json: JsonValue =
             serde_json::from_str(&catalog).expect("API catalog response is JSON");
@@ -8064,7 +8186,7 @@ mod tests {
         assert!(detail.contains(r#""scene_action_count":1"#));
         assert!(detail.contains(r#""room":{"room_id":"kitchen""#));
         assert!(detail.contains(
-            r#""links":{"self":"/api/smart_home/rooms/kitchen","rooms":"/api/smart_home/rooms?room_id=kitchen","devices":"/api/smart_home/devices?room_id=kitchen","entities":"/api/smart_home/entities?room_id=kitchen","states":"/api/smart_home/states?room_id=kitchen","state_gaps":"/api/smart_home/states?room_id=kitchen&stale=true","scenes":"/api/smart_home/scenes?room_id=kitchen"}"#
+            r#""links":{"self":"/api/smart_home/rooms/kitchen","rooms":"/api/smart_home/rooms?room_id=kitchen","devices":"/api/smart_home/devices?room_id=kitchen","entities":"/api/smart_home/entities?room_id=kitchen","states":"/api/smart_home/states?room_id=kitchen","state_gaps":"/api/smart_home/states?room_id=kitchen&stale=true","scenes":"/api/smart_home/scenes?room_id=kitchen","history":"/api/smart_home/state_history?room_id=kitchen","events":"/api/smart_home/events?room_id=kitchen","command_results":"/api/smart_home/command_results?room_id=kitchen"}"#
         ));
         assert!(detail.contains(r#""members":{"device_count":1,"entity_count":2,"scene_count":1"#));
         assert!(detail.contains(r#""devices":[{"device_id":"device-1""#));
@@ -8330,6 +8452,25 @@ mod tests {
         assert!(body.contains(r#""capability_id":"light.on_off""#));
         assert!(body.contains(r#""value":true"#));
 
+        let room_body = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/state_history?room_id=kitchen&limit=5",
+            ))
+            .into(),
+        );
+        assert!(room_body.contains(r#""total_events":1"#));
+        assert!(room_body.contains(r#""event_id":"event-light-1-on""#));
+
+        let missing_room_body = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/state_history?room_id=garage&limit=5",
+            ))
+            .into(),
+        );
+        assert!(missing_room_body.contains(r#""total_events":0"#));
+
         let detail = response_body(
             app.handle(request(
                 "GET",
@@ -8367,6 +8508,18 @@ mod tests {
         assert!(body.contains(r#""canonical_entity_id":"entity-light-1""#));
         assert!(body.contains(r#""event_id":"event-light-1-on""#));
         assert!(body.contains(r#""capability_id":"light.on_off""#));
+
+        let room_body = response_body(
+            app.handle(request("GET", "/api/history/period?room_id=kitchen"))
+                .into(),
+        );
+        assert_eq!(room_body, body);
+
+        let missing_room_body = response_body(
+            app.handle(request("GET", "/api/history/period?room_id=garage"))
+                .into(),
+        );
+        assert_eq!(missing_room_body, "[]");
 
         let period_body = response_body(
             app.handle(request(
