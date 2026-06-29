@@ -430,6 +430,69 @@ fn twig_top_level_string_length_function_call_is_typed() {
     }
 }
 
+/// E4 parameter proof: a bare `str` parameter annotation is enough static
+/// evidence for a top-level function body to use the typed E4 string path.
+#[test]
+fn twig_annotated_string_param_feeds_string_length_function() {
+    let m = compile_source(
+        "(define (strlen (s : str)) (string-length s)) (strlen \"HELLO\")",
+        "compat",
+    )
+    .expect("Twig must compile");
+
+    let strlen = m
+        .functions
+        .iter()
+        .find(|f| f.name == "strlen")
+        .expect("module should contain the top-level function");
+    assert_eq!(strlen.params, vec![("s".to_string(), "str".to_string())]);
+    assert_eq!(strlen.return_type, "i64");
+    let len = strlen
+        .instructions
+        .iter()
+        .find(|i| i.op == "str_len")
+        .expect("string-length should lower to str_len over the annotated param");
+    assert!(
+        matches!(len.srcs.first(), Some(Operand::Var(name)) if name == "s"),
+        "str_len should consume the annotated string parameter; got {len:?}",
+    );
+    assert!(
+        !strlen.instructions.iter().any(|i| {
+            i.op == "call_builtin"
+                && matches!(&i.srcs[0], Operand::Var(name) if name == "string-length")
+        }),
+        "typed E4 parameter path must not use dynamic string-length builtins: {:?}",
+        strlen.instructions,
+    );
+
+    let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+    assert_eq!(main.return_type, "i64");
+    assert!(
+        main.instructions.iter().any(|i| {
+            i.op == "call"
+                && i.type_hint == "i64"
+                && matches!(i.srcs.first(), Some(Operand::Var(name)) if name == "strlen")
+        }),
+        "direct call should inherit strlen's concrete return type: {:?}",
+        main.instructions,
+    );
+
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(&m)),
+        ("jvm", iir_to_jvm_class_file::validate::validate_for_jvm(&m)),
+        (
+            "clr",
+            iir_to_cil_bytecode::validate::validate_iir_for_clr(&m),
+        ),
+    ] {
+        assert!(
+            errs.is_empty(),
+            "[{name}] should accept a typed E4 string op over an annotated string parameter; got {errs:?}",
+            errs = errs
+        );
+    }
+}
+
 /// Path-A increment 5: `match` arms now use typed `mov` everywhere
 /// (scrutinee binding, nil-init, variant arm result merge, field
 /// extraction, body merge for variant / binding / wildcard arms).

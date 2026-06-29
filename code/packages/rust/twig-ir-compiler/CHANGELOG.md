@@ -1,5 +1,19 @@
 # Changelog — twig-ir-compiler
 
+## [0.36.0] — 2026-06-28 (LANG-FULL E4 — annotated string parameters)
+
+Bare `str` / `string` parameter annotations on top-level Twig functions now seed
+the compiler's static IIR type map. A function body can therefore lower
+parameter-derived string operations through E4:
+
+```scheme
+(define (strlen (s : str)) (string-length s)) (strlen "HELLO")
+```
+
+The callee parameter is `str`, the body emits `str_len [i64]`, and direct callers
+with known string arguments materialise those arguments through E4 string ops
+instead of raw `const [str]`.
+
 ## [0.35.0] — 2026-06-28 (LANG-FULL E4 — top-level string function returns)
 
 Direct calls to top-level Twig functions now inherit the function's statically
