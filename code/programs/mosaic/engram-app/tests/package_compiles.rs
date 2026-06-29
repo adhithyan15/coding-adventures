@@ -972,6 +972,10 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "let deckOptionsNewCardsValue: Double");
     assert_contains(&swift, "let deckOptionsEasyBonusValue: Double");
     assert_contains(&swift, "let deckOptionsInitialEaseValue: Double");
+    assert_contains(
+        &swift,
+        "TextField(\"20\", value: Binding(get: { deckOptionsNewCardsValue }, set: { dispatch(.deckOptionsNewCardsChange(value: $0)) }), format: .number)",
+    );
     assert_contains(&swift, "let deckOptionsBuryNewSiblingsValue: Bool");
     assert_contains(&swift, "let deckOptionsBuryReviewSiblingsValue: Bool");
     assert_contains(

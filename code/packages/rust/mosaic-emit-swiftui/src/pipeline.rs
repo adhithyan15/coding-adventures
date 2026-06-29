@@ -2748,10 +2748,10 @@ fn emit_host_tooltip(
 ///     .disabled(disabled)
 /// ```
 ///
-/// `.constant(value)` is the read-only binding pattern this
-/// backend uses (same caveat as HostInput's `.constant` choice).
-/// True two-way binding would need either a `@State` proxy in the
-/// host or moving to a `Binding(get:set:)` shape; both are v2.
+/// `.constant(value)` is used when there is no `onChange` handler.
+/// When `value` and `onChange` are both present, the field uses a
+/// writable `Binding(get:set:)` whose setter dispatches the new
+/// numeric value back to the host.
 fn emit_host_number_input(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let mod_pad = " ".repeat(indent + 4);
@@ -2759,19 +2759,38 @@ fn emit_host_number_input(node: &LayoutNode, indent: usize) -> Result<String, Pi
     let placeholder = find_string_prop(node, "placeholder").unwrap_or("");
     let escaped_placeholder = escape_swift_string(placeholder);
 
-    let value_expr: String = match find_slot_ref_prop(node, "value") {
-        Some(slot) => {
+    let value_prop = find_prop_value(node, "value");
+    let value_expr: String = match value_prop {
+        Some(LayoutPropValue::SlotRef(slot)) => {
             let camel = to_camel_case_first_lower(slot);
             validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-            format!(".constant({camel})")
+            camel
         }
-        None => ".constant(0)".to_string(),
+        Some(LayoutPropValue::Expr(text)) => text.clone(),
+        Some(LayoutPropValue::Number(n)) => n.to_string(),
+        _ => "0".to_string(),
+    };
+
+    let editable_case = match find_emit_ref_prop(node, "onChange") {
+        Some(emit_name) if value_prop.is_some() => {
+            let case = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+            validate_emit_name(&case)?;
+            Some(case)
+        }
+        _ => None,
+    };
+
+    let value_binding = match &editable_case {
+        Some(case) => {
+            format!("Binding(get: {{ {value_expr} }}, set: {{ dispatch(.{case}(value: $0)) }})")
+        }
+        None => format!(".constant({value_expr})"),
     };
 
     let mut out = String::new();
     writeln!(
         out,
-        "{pad}TextField(\"{escaped_placeholder}\", value: {value_expr}, format: .number)"
+        "{pad}TextField(\"{escaped_placeholder}\", value: {value_binding}, format: .number)"
     )
     .unwrap();
 
@@ -2786,24 +2805,9 @@ fn emit_host_number_input(node: &LayoutNode, indent: usize) -> Result<String, Pi
         }
     }
 
-    // onChange — `.onChange(of: value) { _ in dispatch(...) }`.
-    // SwiftUI's `.onChange(of:)` is iOS 14+; the closure shape
-    // changed in iOS 17 (now takes (old, new) — both deprecated form
-    // and new shape compile against modern SDKs). We emit the
-    // pre-17 single-arg shape; the host can adapt if needed.
-    if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
-        if let Some(slot) = find_slot_ref_prop(node, "value") {
-            let camel = to_camel_case_first_lower(slot);
-            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-            let case = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-            validate_emit_name(&case)?;
-            writeln!(
-                out,
-                "{mod_pad}.onChange(of: {camel}) {{ dispatch(.{case}(value: {camel})) }}"
-            )
-            .unwrap();
-        }
-    }
+    // `onChange` is wired through the Binding setter above. Emitting a
+    // separate `.onChange(of:)` would double-dispatch after the host
+    // reflects the edited number back into the slot.
 
     Ok(out)
 }
@@ -6461,12 +6465,11 @@ mod tests {
         );
     }
 
-    /// UI29-4 SwiftUI test 5 — `onChange: emit: onSet` attaches an
-    /// `.onChange(of: value) { dispatch(.set(value: value)) }`
-    /// modifier (pre-iOS-17 closure shape; host can adapt to the
-    /// new (old, new) shape if needed).
+    /// UI29-4 SwiftUI test 5 — `onChange: emit: onSet` makes the
+    /// number TextField editable by routing writes through a binding
+    /// setter that dispatches the new numeric value.
     #[test]
-    fn host_number_input_on_change_emits_on_change_modifier() {
+    fn host_number_input_on_change_emits_binding_setter_dispatch() {
         let m = component(
             "X",
             vec![slot("count", SlotType::Number, true)],
@@ -6487,8 +6490,14 @@ mod tests {
         );
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
         assert!(
-            r.contains(".onChange(of: count) { dispatch(.set(value: count)) }"),
-            "expected .onChange modifier with dispatch, got:\n{r}"
+            r.contains(
+                "TextField(\"\", value: Binding(get: { count }, set: { dispatch(.set(value: $0)) }), format: .number)"
+            ),
+            "expected Binding setter with dispatch, got:\n{r}"
+        );
+        assert!(
+            !r.contains(".onChange(of:"),
+            "HostNumberInput should dispatch through the binding setter only, got:\n{r}"
         );
     }
 
