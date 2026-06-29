@@ -2154,6 +2154,7 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
             "has_state",
             "kind",
             "limit",
+            "room_id",
             "source",
             "stale",
         ],
@@ -2199,7 +2200,14 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
         surface: "smart_home",
         mutates_runtime: false,
         runtime_authorized: false,
-        query_params: &["capability_id", "commandable", "domain", "kind", "limit"],
+        query_params: &[
+            "capability_id",
+            "commandable",
+            "domain",
+            "kind",
+            "limit",
+            "room_id",
+        ],
     },
     ApiRouteDescriptor {
         method: "GET",
@@ -4683,8 +4691,9 @@ fn room_detail_json(room: &RuntimeRoomSummary, runtime: &SmartHomeRuntime, now_m
     let entities = runtime_room_entities(runtime, &room.room_id);
     let scenes = runtime_room_scenes(runtime, &room.room_id);
     format!(
-        "{{\"room\":{},\"members\":{{\"device_count\":{},\"entity_count\":{},\"scene_count\":{},\"devices\":[{}],\"entities\":[{}],\"scenes\":[{}]}}}}",
+        "{{\"room\":{},\"links\":{},\"members\":{{\"device_count\":{},\"entity_count\":{},\"scene_count\":{},\"devices\":[{}],\"entities\":[{}],\"scenes\":[{}]}}}}",
         room_json(room),
+        room_links_json(&room.room_id),
         devices.len(),
         entities.len(),
         scenes.len(),
@@ -4706,6 +4715,20 @@ fn room_detail_json(room: &RuntimeRoomSummary, runtime: &SmartHomeRuntime, now_m
     )
 }
 
+fn room_links_json(room_id: &str) -> String {
+    let room = url_component(room_id);
+    format!(
+        "{{\"self\":{},\"rooms\":{},\"devices\":{},\"entities\":{},\"states\":{},\"state_gaps\":{},\"scenes\":{}}}",
+        json_string(format!("/api/smart_home/rooms/{room}")),
+        json_string(format!("/api/smart_home/rooms?room_id={room}")),
+        json_string(format!("/api/smart_home/devices?room_id={room}")),
+        json_string(format!("/api/smart_home/entities?room_id={room}")),
+        json_string(format!("/api/smart_home/states?room_id={room}")),
+        json_string(format!("/api/smart_home/states?room_id={room}&stale=true")),
+        json_string(format!("/api/smart_home/scenes?room_id={room}")),
+    )
+}
+
 fn runtime_room_devices<'a>(runtime: &'a SmartHomeRuntime, room_id: &str) -> Vec<&'a Device> {
     let mut devices = runtime
         .registry()
@@ -4716,17 +4739,18 @@ fn runtime_room_devices<'a>(runtime: &'a SmartHomeRuntime, room_id: &str) -> Vec
     devices
 }
 
+fn entity_room_id<'a>(runtime: &'a SmartHomeRuntime, entity: &Entity) -> Option<&'a str> {
+    runtime
+        .registry()
+        .device(&entity.device_id)
+        .and_then(|device| device.room_id.as_deref())
+}
+
 fn runtime_room_entities<'a>(runtime: &'a SmartHomeRuntime, room_id: &str) -> Vec<&'a Entity> {
     let mut entities = runtime
         .registry()
         .entities()
-        .filter(|entity| {
-            runtime
-                .registry()
-                .device(&entity.device_id)
-                .and_then(|device| device.room_id.as_deref())
-                == Some(room_id)
-        })
+        .filter(|entity| entity_room_id(runtime, entity) == Some(room_id))
         .collect::<Vec<_>>();
     entities.sort_by(|left, right| left.entity_id.as_str().cmp(right.entity_id.as_str()));
     entities
@@ -5114,6 +5138,7 @@ fn runtime_entities<'a>(
     request: &WebRequest,
 ) -> Result<Vec<&'a Entity>, ApiError> {
     let domain = query_string(request, "domain");
+    let room_id = query_string(request, "room_id");
     let kind = query_string(request, "kind")
         .map(entity_kind_from_label)
         .transpose()?;
@@ -5125,6 +5150,9 @@ fn runtime_entities<'a>(
         .registry()
         .entities()
         .filter(|entity| domain.is_none_or(|domain| entity_domain(entity.kind) == domain))
+        .filter(|entity| {
+            room_id.is_none_or(|room_id| entity_room_id(runtime, entity) == Some(room_id))
+        })
         .filter(|entity| kind.is_none_or(|kind| entity.kind == kind))
         .filter(|entity| {
             capability_id.is_none_or(|capability_id| {
@@ -5152,6 +5180,7 @@ fn runtime_state_entities<'a>(
     now_ms: u64,
 ) -> Result<Vec<&'a Entity>, ApiError> {
     let domain = query_string(request, "domain");
+    let room_id = query_string(request, "room_id");
     let kind = query_string(request, "kind")
         .map(entity_kind_from_label)
         .transpose()?;
@@ -5170,6 +5199,9 @@ fn runtime_state_entities<'a>(
         .registry()
         .entities()
         .filter(|entity| domain.is_none_or(|domain| entity_domain(entity.kind) == domain))
+        .filter(|entity| {
+            room_id.is_none_or(|room_id| entity_room_id(runtime, entity) == Some(room_id))
+        })
         .filter(|entity| kind.is_none_or(|kind| entity.kind == kind))
         .filter(|entity| {
             capability_id.is_none_or(|capability_id| {
@@ -6941,6 +6973,21 @@ fn optional_str_json(value: Option<&str>) -> String {
     value.map(json_string).unwrap_or_else(|| "null".to_string())
 }
 
+fn url_component(value: &str) -> String {
+    const HEX: &[u8; 16] = b"0123456789ABCDEF";
+    let mut encoded = String::new();
+    for byte in value.bytes() {
+        if byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'.' | b'_' | b'~') {
+            encoded.push(byte as char);
+        } else {
+            encoded.push('%');
+            encoded.push(HEX[(byte >> 4) as usize] as char);
+            encoded.push(HEX[(byte & 0x0f) as usize] as char);
+        }
+    }
+    encoded
+}
+
 fn json_string(value: impl AsRef<str>) -> String {
     let mut escaped = String::from("\"");
     for ch in value.as_ref().chars() {
@@ -7696,6 +7743,12 @@ mod tests {
         assert!(catalog.contains(r#""path":"/api/services/:domain/:service""#));
         assert!(catalog
             .contains(r#""query_params":["authorized","category","method","mutating","surface"]"#));
+        assert!(catalog.contains(
+            r#""path":"/api/smart_home/entities","category":"entities","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["capability_id","commandable","domain","kind","limit","room_id"]"#
+        ));
+        assert!(catalog.contains(
+            r#""path":"/api/smart_home/states","category":"states","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["capability_id","confidence","domain","has_state","kind","limit","room_id","source","stale"]"#
+        ));
         let catalog_json: JsonValue =
             serde_json::from_str(&catalog).expect("API catalog response is JSON");
         assert!(
@@ -7830,6 +7883,18 @@ mod tests {
         assert!(body.contains(r#""min":0"#));
         assert!(body.contains(r#""max":100"#));
 
+        let room_entities = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/entities?room_id=kitchen&kind=sensor",
+            ))
+            .into(),
+        );
+        assert!(room_entities.contains(r#""total_entities":1"#));
+        assert!(room_entities.contains(r#""entity_id":"entity-sensor-1""#));
+        assert!(room_entities.contains(r#""room_id":"kitchen""#));
+        assert!(!room_entities.contains(r#""entity_id":"entity-light-1""#));
+
         let one_response: web_core::WebResponse = app
             .handle(request(
                 "GET",
@@ -7860,6 +7925,18 @@ mod tests {
         assert!(missing_states.contains(r#""has_state":false"#));
         assert!(missing_states.contains(r#""value":null"#));
         assert!(missing_states.contains(r#""stale":true"#));
+
+        let room_states = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/states?room_id=kitchen&stale=true",
+            ))
+            .into(),
+        );
+        assert!(room_states.contains(r#""total_entities":2"#));
+        assert!(room_states.contains(r#""entities_without_state":2"#));
+        assert!(room_states.contains(r#""home_assistant_entity_id":"light.entity_light_1""#));
+        assert!(room_states.contains(r#""home_assistant_entity_id":"sensor.entity_sensor_1""#));
 
         let response: web_core::WebResponse = app
             .handle(request_with_body(
@@ -7986,6 +8063,9 @@ mod tests {
         assert!(detail.contains(r#""entity_count":2"#));
         assert!(detail.contains(r#""scene_action_count":1"#));
         assert!(detail.contains(r#""room":{"room_id":"kitchen""#));
+        assert!(detail.contains(
+            r#""links":{"self":"/api/smart_home/rooms/kitchen","rooms":"/api/smart_home/rooms?room_id=kitchen","devices":"/api/smart_home/devices?room_id=kitchen","entities":"/api/smart_home/entities?room_id=kitchen","states":"/api/smart_home/states?room_id=kitchen","state_gaps":"/api/smart_home/states?room_id=kitchen&stale=true","scenes":"/api/smart_home/scenes?room_id=kitchen"}"#
+        ));
         assert!(detail.contains(r#""members":{"device_count":1,"entity_count":2,"scene_count":1"#));
         assert!(detail.contains(r#""devices":[{"device_id":"device-1""#));
         assert!(detail.contains(
