@@ -86,8 +86,8 @@ searches such as `front:re:...`, tag regexes, `deck:`, `preset:`, `note:`,
 `tag:`, `state:`, `is:`, `flag:`, `marked:`, `prop:`, `added:`, `edited:`,
 `introduced:`, `rated:`, `resched:`, and `dupe:` filters. `note:` / `noteType:`
 and `card:` / `template:` use Anki-style exact-or-wildcard name matching.
-`tag:*` follows Anki's universal-tag search behavior, while `tag:none` finds
-cards whose note has no tags.
+`tag:*` follows Anki's universal-tag search behavior, `tag:none` finds cards
+whose note has no tags, and `tag:nc:` matches tags without combining marks.
 `preset:` resolves
 imported Anki deck-option preset names from preserved collection metadata, while
 imported Anki card-state filters use preserved type/queue metadata when

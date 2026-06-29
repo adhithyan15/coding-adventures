@@ -7,6 +7,7 @@
 - Aligned `note:` / `noteType:` and `card:` / `template:` browser filters with
   Anki-style exact-or-wildcard name matching.
 - Aligned `tag:*` browser searches with Anki's universal tag-filter behavior.
+- Added Anki-style no-combining `tag:nc:` browser searches.
 - Added imported Anki card-flag support for `flag:` and `is:flagged` browser
   searches.
 - Aligned `is:marked` / `marked:true` searches with Anki's `marked` note tag.

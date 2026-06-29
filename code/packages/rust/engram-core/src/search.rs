@@ -224,6 +224,7 @@ enum FieldValuePattern {
 #[derive(Clone, Debug)]
 enum TagFilter {
     Hierarchical(String),
+    NoCombining(String),
     Regex(TextFilter),
 }
 
@@ -766,6 +767,7 @@ fn parse_exact_field_value_filter(value: &str) -> FieldValuePattern {
 fn parse_tag_filter(token: &str, value: &str) -> Result<TagFilter, SearchError> {
     match split_text_modifier(value) {
         Some(("re", pattern)) => parse_text_filter(token, "re", pattern).map(TagFilter::Regex),
+        Some(("nc", pattern)) => Ok(TagFilter::NoCombining(pattern.to_string())),
         _ => Ok(TagFilter::Hierarchical(value.to_lowercase())),
     }
 }
@@ -1601,6 +1603,21 @@ fn tag_matches(filter: &TagFilter, note: Option<&Note>) -> bool {
                 .iter()
                 .any(|candidate| anki_hierarchical_name_matches(tag, candidate))
         }),
+        TagFilter::NoCombining(pattern) => {
+            let pattern = normalize_no_combining(pattern);
+            if pattern == "*" {
+                return true;
+            }
+            if pattern == "none" {
+                return note.map_or(true, |note| note.tags.is_empty());
+            }
+            note.is_some_and(|note| {
+                note.tags.iter().any(|candidate| {
+                    let candidate = normalize_no_combining(candidate);
+                    anki_hierarchical_name_matches(&pattern, &candidate)
+                })
+            })
+        }
         TagFilter::Regex(regex) => note.is_some_and(|note| {
             note.tags
                 .iter()
@@ -3658,11 +3675,13 @@ mod tests {
             note_types: vec![note_type()],
             notes: vec![
                 note("animal-note", "french", vec!["animal::mammal"]),
+                note("accent-note", "french", vec!["U\u{0308}ber::Noun"]),
                 note("verb-note", "french-verbs", vec!["grammar"]),
                 note("language-note", "languages-french", vec!["language"]),
             ],
             cards: vec![
                 card_for_note("animal-note", "french"),
+                card_for_note("accent-note", "french"),
                 card_for_note("verb-note", "french-verbs"),
                 card_for_note("language-note", "languages-french"),
             ],
@@ -3679,14 +3698,25 @@ mod tests {
 
         assert_eq!(ids_for("tag:animal"), vec!["animal-note::forward"]);
         assert_eq!(ids_for("tag:animal::*"), vec!["animal-note::forward"]);
+        assert!(ids_for("tag:uber").is_empty());
+        assert_eq!(ids_for("tag:nc:uber"), vec!["accent-note::forward"]);
+        assert_eq!(ids_for("tag:nc:uber::*"), vec!["accent-note::forward"]);
         assert_eq!(
             ids_for("deck:french"),
-            vec!["animal-note::forward", "verb-note::forward"]
+            vec![
+                "animal-note::forward",
+                "accent-note::forward",
+                "verb-note::forward"
+            ]
         );
         assert_eq!(ids_for("deck:french::*"), vec!["verb-note::forward"]);
         assert_eq!(
             ids_for("deck:*french"),
-            vec!["animal-note::forward", "language-note::forward"]
+            vec![
+                "animal-note::forward",
+                "accent-note::forward",
+                "language-note::forward"
+            ]
         );
     }
 
