@@ -24,6 +24,8 @@
   names.
 - Updated `scripts/build-all.ps1` to build the Engram WASM host and install the
   React/Electron host adapter assets into generated app shells automatically.
+- Added an Engram XAML `MosaicHost` bridge that calls `engram-capi` for shared
+  Rust facade props/events, and installs it into generated WinUI project shells.
 - Added the reusable `mosaic-pkg-collection-actions` dependency and mounted its
   `CollectionActions` component so generated host shells expose shared
   collection counts, Anki import/export intents, and note/note-type workflow

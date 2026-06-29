@@ -1096,6 +1096,22 @@ fn native_project_shells_expose_engram_host_contract() {
         &xaml_events,
         "public sealed record BrowserSelectResult(double Index) : EngramAppEvent",
     );
+    let xaml_main_window = fs::read_to_string(tmp.path().join("xaml").join("MainWindow.xaml.cs"))
+        .expect("MainWindow.xaml.cs");
+    assert_contains(&xaml_main_window, "TryApplyMosaicHostProps");
+    assert_contains(
+        &xaml_main_window,
+        "FindMosaicHostMethod(\"ApplyProps\", typeof(EngramApp))",
+    );
+    assert_contains(
+        &xaml_main_window,
+        "FindMosaicHostMethod(\"HandleEvent\", typeof(EngramApp), typeof(EngramAppEvent))",
+    );
+    assert_contains(
+        &xaml_main_window,
+        "System.Type.GetType(\"Mosaic.Generated.MosaicHost\")",
+    );
+    assert_contains(&xaml_main_window, "Status: sample props loaded");
 
     let capi_header = fs::read_to_string(
         package_root()
@@ -1227,6 +1243,7 @@ fn source_tree_has_expected_shape() {
         "host/web/engram-host.ts",
         "host/web/engram-mosaic-host-wasm.d.ts",
         "host/electron/host.js",
+        "host/xaml/MosaicHost.cs",
     ] {
         let path = package_root().join(relative);
         assert!(
@@ -1235,4 +1252,15 @@ fn source_tree_has_expected_shape() {
             path.display()
         );
     }
+
+    let xaml_host = fs::read_to_string(package_root().join("host/xaml/MosaicHost.cs"))
+        .expect("xaml host template");
+    assert_contains(&xaml_host, "eg_engram_app_props");
+    assert_contains(&xaml_host, "eg_handle_engram_app_event");
+    assert_contains(&xaml_host, "SlotNameToPropertyName");
+
+    let build_script =
+        fs::read_to_string(package_root().join("scripts/build-all.ps1")).expect("build-all.ps1");
+    assert_contains(&build_script, "Install-EngramXamlHost");
+    assert_contains(&build_script, "engram_capi.dll");
 }

@@ -10,6 +10,15 @@ $packageRoot = (Resolve-Path (Join-Path $scriptRoot "..")).Path
 $rustWorkspace = (Resolve-Path (Join-Path $packageRoot "..\..\..\packages\rust")).Path
 $engramWasmRoot = (Resolve-Path (Join-Path $rustWorkspace "engram-wasm")).Path
 $hostRoot = Join-Path $packageRoot "host"
+$nativeProfile = if ($Release) { "release" } else { "debug" }
+$nativeLibraryName = if ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Windows)) {
+    "engram_capi.dll"
+} elseif ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::OSX)) {
+    "libengram_capi.dylib"
+} else {
+    "libengram_capi.so"
+}
+$engramCapiLibrary = Join-Path $rustWorkspace "target\$nativeProfile\$nativeLibraryName"
 
 if ([System.IO.Path]::IsPathRooted($Output)) {
     $outputRoot = [System.IO.Path]::GetFullPath($Output)
@@ -33,11 +42,27 @@ if ($LASTEXITCODE -ne 0) {
     throw "engram-wasm build failed with exit code $LASTEXITCODE"
 }
 
+Write-Host "==> Building Engram native C API host"
+$capiCargoArgs = @("build", "-p", "engram-capi")
+if ($Release) {
+    $capiCargoArgs += "--release"
+}
+Push-Location $rustWorkspace
+try {
+    & cargo @capiCargoArgs
+    if ($LASTEXITCODE -ne 0) {
+        throw "engram-capi build failed with exit code $LASTEXITCODE"
+    }
+} finally {
+    Pop-Location
+}
+
 $engramWasmFile = Join-Path $engramWasmRoot "pkg\engram_engine.wasm"
 $engramWasmLoader = Join-Path $engramWasmRoot "js\engram-mosaic-host-wasm.mjs"
 $engramWasmTypes = Join-Path $hostRoot "web\engram-mosaic-host-wasm.d.ts"
 $engramWebHost = Join-Path $hostRoot "web\engram-host.ts"
 $engramElectronHost = Join-Path $hostRoot "electron\host.js"
+$engramXamlHost = Join-Path $hostRoot "xaml\MosaicHost.cs"
 
 function Write-Utf8NoBom {
     param(
@@ -98,6 +123,44 @@ function Install-EngramElectronHost {
     Copy-Item -LiteralPath $engramElectronHost -Destination (Join-Path $electronDir "host.js") -Force
 }
 
+function Add-EngramXamlNativeContent {
+    param(
+        [Parameter(Mandatory = $true)][string]$CsprojPath,
+        [Parameter(Mandatory = $true)][string]$NativeLibraryName
+    )
+
+    if (-not (Test-Path -LiteralPath $CsprojPath)) {
+        return
+    }
+    $content = Get-Content -LiteralPath $CsprojPath -Raw
+    $includeLine = "<Content Include=""$NativeLibraryName"" CopyToOutputDirectory=""PreserveNewest"" />"
+    if ($content.Contains($includeLine)) {
+        return
+    }
+    $itemGroup = "  <ItemGroup>`r`n    $includeLine`r`n  </ItemGroup>`r`n"
+    $content = $content.Replace("</Project>", "$itemGroup</Project>")
+    Write-Utf8NoBom -Path $CsprojPath -Content $content
+}
+
+function Install-EngramXamlHost {
+    param([Parameter(Mandatory = $true)][string]$XamlRoot)
+
+    if (-not (Test-Path -LiteralPath $XamlRoot)) {
+        return
+    }
+    if (-not (Test-Path -LiteralPath $engramCapiLibrary)) {
+        throw "expected Engram native library missing: $engramCapiLibrary"
+    }
+
+    Copy-Item -LiteralPath $engramXamlHost -Destination (Join-Path $XamlRoot "MosaicHost.cs") -Force
+    Copy-Item -LiteralPath $engramCapiLibrary -Destination (Join-Path $XamlRoot $nativeLibraryName) -Force
+
+    $csproj = Get-ChildItem -LiteralPath $XamlRoot -Filter "*.csproj" | Select-Object -First 1
+    if ($null -ne $csproj) {
+        Add-EngramXamlNativeContent -CsprojPath $csproj.FullName -NativeLibraryName $nativeLibraryName
+    }
+}
+
 $backends = @(
     "html",
     "webcomponent",
@@ -142,5 +205,6 @@ foreach ($backend in $backends) {
 
 Install-EngramReactHost -ReactRoot (Join-Path $outputRoot "react")
 Install-EngramElectronHost -ElectronRoot (Join-Path $outputRoot "electron")
+Install-EngramXamlHost -XamlRoot (Join-Path $outputRoot "xaml")
 
 Write-Host "Engram Mosaic host shells written to $outputRoot"
