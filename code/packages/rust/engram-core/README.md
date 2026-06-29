@@ -90,13 +90,13 @@ numeric `prop:cdn:key>5`, and scalar string `prop:cds:key=value` filters.
 `prop:rated` accepts Anki-style answer-button suffixes such as
 `prop:rated<-7:again`. Imported Anki revlog metadata powers manual reschedule
 searches with `resched:` and `prop:resched`; imported Anki queue metadata also
-powers
-`is:buried-manually` and
-`is:buried-sibling`; relearning cards match both `is:learn` and `is:review`
-for Anki-style lapsed-card queries. Recent-day filters treat `:0` as Anki does:
-an alias for a one-day window. Terms inside a group use implicit AND, `OR`
-joins groups, parentheses group subexpressions, and leading `-` negates a term
-or group.
+powers `is:buried-manually` and `is:buried-sibling`; relearning cards match
+both `is:learn` and `is:review`
+for Anki-style lapsed-card queries. `introduced:` ignores imported manual
+reschedule rows when finding a card's first real review. Recent-day filters
+treat `:0` as Anki does: an alias for a one-day window. Terms inside a group
+use implicit AND, `OR` joins groups, parentheses group subexpressions, and
+leading `-` negates a term or group.
 
 `materialize_generated_card` turns a note-template `GeneratedCard` into a
 durable `Card` with note/template lineage. Cloze templates using

@@ -18,6 +18,8 @@
   rescheduled cards.
 - Added Anki-style answer-button suffix support for `prop:rated`, such as
   `prop:rated<-7:again`.
+- Aligned `introduced:` with Anki revlog semantics by ignoring imported manual
+  reschedule rows when detecting a card's first real review.
 - Expanded the shared Engram browser search core with Anki-style `w:`, `nc:`,
   `sc:`, and `re:` text modifiers, field-scoped regex searches, tag regexes,
   and single-character `_` wildcards.

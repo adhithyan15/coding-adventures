@@ -1147,7 +1147,9 @@ fn clause_matches(
         SearchClauseKind::Edited(filter) => {
             note.is_some_and(|note| happened_recently(note.updated_at, filter.days, now))
         }
-        SearchClauseKind::Introduced(filter) => first_reviewed_within(reviews, filter.days, now),
+        SearchClauseKind::Introduced(filter) => {
+            first_reviewed_within(reviews, filter.days, metadata, now)
+        }
         SearchClauseKind::Rated(filter) => rated_matches(reviews, *filter, metadata, now),
         SearchClauseKind::Rescheduled(filter) => {
             rescheduled_matches(reviews, *filter, metadata, now)
@@ -1770,9 +1772,15 @@ fn anki_review_is_manual_reschedule(review: &Review, metadata: &SearchMetadata<'
         })
 }
 
-fn first_reviewed_within(reviews: &[&Review], days: u32, now: u64) -> bool {
+fn first_reviewed_within(
+    reviews: &[&Review],
+    days: u32,
+    metadata: &SearchMetadata<'_>,
+    now: u64,
+) -> bool {
     reviews
         .iter()
+        .filter(|review| !anki_review_is_manual_reschedule(review, metadata))
         .map(|review| review.reviewed_at)
         .min()
         .is_some_and(|reviewed_at| happened_recently(reviewed_at, days, now))
@@ -2925,6 +2933,7 @@ mod tests {
 
         assert_eq!(ids_for("resched:1"), vec!["manual"]);
         assert_eq!(ids_for("resched:0"), ids_for("resched:1"));
+        assert_eq!(ids_for("introduced:1"), vec!["answered", "native"]);
         assert_eq!(ids_for("prop:resched=0"), vec!["manual"]);
         assert_eq!(ids_for("prop:rescheduled<-1"), vec!["old-manual"]);
         assert_eq!(ids_for("rated:1"), vec!["answered", "native"]);
