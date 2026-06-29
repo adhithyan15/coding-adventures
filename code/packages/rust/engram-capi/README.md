@@ -35,7 +35,9 @@ flat, Mosaic-slot-shaped JSON for the shared `EngramApp` surface.
 `eg_handle_engram_app_event` lets native Mosaic shells forward generated
 `EngramApp` events such as `onReveal`, `reveal`, `onGood`, `onUndo`,
 `onBuryCard`, `onSuspendCard`, or `onToggleMark` into the shared Rust review
-flow; it returns updated state and refreshed Mosaic props.
+flow; it also accepts browser row events such as
+`onBrowserToggleMarkSelected|card-id`. It returns updated state and refreshed
+Mosaic props.
 `eg_review_history` mirrors `EngramSession::review_history()` for native stats
 views that need deck-scoped review-log summaries over a timestamp range.
 `eg_daily_limit_usage` and `eg_build_queue_with_daily_limits` expose the shared

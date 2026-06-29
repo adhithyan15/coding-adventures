@@ -1567,6 +1567,33 @@ CREATE TABLE graves (
             assert_eq!(buried["event"], "onBuryCard");
             assert_eq!(buried["props"]["prompt"], "letter-aa");
 
+            let browser_mark = cstr("onBrowserToggleMarkSelected|other");
+            let browser_marked = take(eg_handle_engram_app_event(
+                session,
+                browser_mark.as_ptr(),
+                deck_id.as_ptr(),
+                NOW + 5,
+            ));
+            let browser_marked: Value = serde_json::from_str(&browser_marked).unwrap();
+            assert_eq!(browser_marked["ok"], true);
+            assert_eq!(browser_marked["event"], "onBrowserToggleMarkSelected");
+            assert!(browser_marked["state"]["cardProgress"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|progress| progress["cardId"] == "other" && progress["markedAt"] == NOW + 5));
+
+            let browser_select = cstr(r#"{"event":"onBrowserSelectResult","cardId":"other"}"#);
+            let browser_selected = take(eg_handle_engram_app_event(
+                session,
+                browser_select.as_ptr(),
+                deck_id.as_ptr(),
+                NOW + 6,
+            ));
+            let browser_selected: Value = serde_json::from_str(&browser_selected).unwrap();
+            assert_eq!(browser_selected["ok"], true);
+            assert_eq!(browser_selected["event"], "onBrowserSelectResult");
+
             eg_session_free(session);
         }
     }

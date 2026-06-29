@@ -173,8 +173,8 @@ impl EngramSession {
 
     pub fn handle_engram_app_event(&mut self, event: &str, deck_id: &str, now: u64) -> String {
         catch_json(|| {
-            let event = parse_engram_app_event(event)?;
-            match event {
+            let parsed = parse_engram_app_event(event)?;
+            match parsed.kind {
                 EngramAppEvent::Reveal => {
                     self.state = reduce(&self.state, engram_core::EngramCommand::RevealCurrentCard);
                 }
@@ -209,37 +209,11 @@ impl EngramSession {
                 }
                 EngramAppEvent::SuspendCard => {
                     let card_id = current_active_card_id(&self.state, "suspend")?;
-                    self.state = reduce(
-                        &self.state,
-                        engram_core::EngramCommand::SuspendCard {
-                            card_id,
-                            suspended_at: now,
-                        },
-                    );
+                    self.state = suspend_or_unsuspend_card(&self.state, card_id, now);
                 }
                 EngramAppEvent::ToggleMark => {
                     let card_id = current_active_card_id(&self.state, "mark")?;
-                    let is_marked = self
-                        .state
-                        .card_progress
-                        .iter()
-                        .find(|progress| progress.card_id == card_id)
-                        .and_then(|progress| progress.marked_at)
-                        .is_some();
-                    self.state = if is_marked {
-                        reduce(
-                            &self.state,
-                            engram_core::EngramCommand::UnmarkCard { card_id },
-                        )
-                    } else {
-                        reduce(
-                            &self.state,
-                            engram_core::EngramCommand::MarkCard {
-                                card_id,
-                                marked_at: now,
-                            },
-                        )
-                    };
+                    self.state = mark_or_unmark_card(&self.state, card_id, now);
                 }
                 EngramAppEvent::Rate(rating) => {
                     let active_session = self
@@ -271,12 +245,26 @@ impl EngramSession {
                     );
                     self.state = reduce(&self.state, engram_core::EngramCommand::AdvanceSession);
                 }
+                EngramAppEvent::BrowserToggleSuspendSelected => {
+                    let card_id =
+                        required_event_card_id(&self.state, parsed.card_id, "toggle suspend")?;
+                    self.state = suspend_or_unsuspend_card(&self.state, card_id, now);
+                }
+                EngramAppEvent::BrowserToggleMarkSelected => {
+                    let card_id = required_event_card_id(&self.state, parsed.card_id, "mark")?;
+                    self.state = mark_or_unmark_card(&self.state, card_id, now);
+                }
+                EngramAppEvent::BrowserQueryChange
+                | EngramAppEvent::BrowserSearch
+                | EngramAppEvent::BrowserSelectResult
+                | EngramAppEvent::BrowserOpenSelected
+                | EngramAppEvent::BrowserEditSelected => {}
             }
 
             let props = engram_app_props_for_state(&self.state, deck_id, now);
             Ok(json!({
                 "ok": true,
-                "event": event.canonical_name(),
+                "event": parsed.kind.canonical_name(),
                 "state": self.state,
                 "props": props,
             })
@@ -762,6 +750,13 @@ enum EngramAppEvent {
     SuspendCard,
     ToggleMark,
     Rate(Rating),
+    BrowserQueryChange,
+    BrowserSearch,
+    BrowserSelectResult,
+    BrowserOpenSelected,
+    BrowserEditSelected,
+    BrowserToggleSuspendSelected,
+    BrowserToggleMarkSelected,
 }
 
 impl EngramAppEvent {
@@ -777,28 +772,180 @@ impl EngramAppEvent {
             Self::Rate(Rating::Hard) => "onHard",
             Self::Rate(Rating::Good) => "onGood",
             Self::Rate(Rating::Easy) => "onEasy",
+            Self::BrowserQueryChange => "onBrowserQueryChange",
+            Self::BrowserSearch => "onBrowserSearch",
+            Self::BrowserSelectResult => "onBrowserSelectResult",
+            Self::BrowserOpenSelected => "onBrowserOpenSelected",
+            Self::BrowserEditSelected => "onBrowserEditSelected",
+            Self::BrowserToggleSuspendSelected => "onBrowserToggleSuspendSelected",
+            Self::BrowserToggleMarkSelected => "onBrowserToggleMarkSelected",
         }
     }
 }
 
-fn parse_engram_app_event(event: &str) -> Result<EngramAppEvent, String> {
-    let lowered = event.trim().to_ascii_lowercase();
-    match lowered.strip_prefix("on").unwrap_or(&lowered) {
-        "reveal" => Ok(EngramAppEvent::Reveal),
-        "undo" => Ok(EngramAppEvent::Undo),
-        "burycard" | "bury-card" | "bury_card" => Ok(EngramAppEvent::BuryCard),
-        "burysiblings" | "bury-siblings" | "bury_siblings" | "burynote" | "bury-note"
-        | "bury_note" => Ok(EngramAppEvent::BurySiblings),
-        "suspendcard" | "suspend-card" | "suspend_card" | "suspend" => {
-            Ok(EngramAppEvent::SuspendCard)
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct ParsedEngramAppEvent {
+    kind: EngramAppEvent,
+    card_id: Option<String>,
+}
+
+fn parse_engram_app_event(event: &str) -> Result<ParsedEngramAppEvent, String> {
+    let event = event.trim();
+    if let Ok(value) = serde_json::from_str::<Value>(event) {
+        if let Some(event_name) = value.as_str() {
+            return parse_engram_app_event_name(event_name, None);
         }
-        "togglemark" | "toggle-mark" | "toggle_mark" | "mark" => Ok(EngramAppEvent::ToggleMark),
-        "again" => Ok(EngramAppEvent::Rate(Rating::Again)),
-        "hard" => Ok(EngramAppEvent::Rate(Rating::Hard)),
-        "good" => Ok(EngramAppEvent::Rate(Rating::Good)),
-        "easy" => Ok(EngramAppEvent::Rate(Rating::Easy)),
-        _ => Err(format!("unknown Engram app event: {event}")),
+        let event_name = value
+            .get("event")
+            .or_else(|| value.get("name"))
+            .or_else(|| value.get("type"))
+            .and_then(Value::as_str)
+            .ok_or_else(|| "Engram app event object is missing an event name".to_string())?;
+        let card_id = value
+            .get("cardId")
+            .or_else(|| value.get("selectedCardId"))
+            .and_then(Value::as_str)
+            .map(str::to_string);
+        return parse_engram_app_event_name(event_name, card_id);
     }
+
+    let (event_name, card_id) = split_event_card_id(event);
+    parse_engram_app_event_name(event_name, card_id)
+}
+
+fn split_event_card_id(event: &str) -> (&str, Option<String>) {
+    event
+        .split_once('|')
+        .or_else(|| event.split_once(':'))
+        .map(|(event_name, card_id)| {
+            let card_id = card_id.trim();
+            (
+                event_name.trim(),
+                (!card_id.is_empty()).then(|| card_id.to_string()),
+            )
+        })
+        .unwrap_or((event, None))
+}
+
+fn parse_engram_app_event_name(
+    event_name: &str,
+    card_id: Option<String>,
+) -> Result<ParsedEngramAppEvent, String> {
+    let lowered = event_name.trim().to_ascii_lowercase();
+    match lowered.strip_prefix("on").unwrap_or(&lowered) {
+        "reveal" => Ok(parsed_event(EngramAppEvent::Reveal, card_id)),
+        "undo" => Ok(parsed_event(EngramAppEvent::Undo, card_id)),
+        "burycard" | "bury-card" | "bury_card" => {
+            Ok(parsed_event(EngramAppEvent::BuryCard, card_id))
+        }
+        "burysiblings" | "bury-siblings" | "bury_siblings" | "burynote" | "bury-note"
+        | "bury_note" => Ok(parsed_event(EngramAppEvent::BurySiblings, card_id)),
+        "suspendcard" | "suspend-card" | "suspend_card" | "suspend" => {
+            Ok(parsed_event(EngramAppEvent::SuspendCard, card_id))
+        }
+        "togglemark" | "toggle-mark" | "toggle_mark" | "mark" => {
+            Ok(parsed_event(EngramAppEvent::ToggleMark, card_id))
+        }
+        "again" => Ok(parsed_event(EngramAppEvent::Rate(Rating::Again), card_id)),
+        "hard" => Ok(parsed_event(EngramAppEvent::Rate(Rating::Hard), card_id)),
+        "good" => Ok(parsed_event(EngramAppEvent::Rate(Rating::Good), card_id)),
+        "easy" => Ok(parsed_event(EngramAppEvent::Rate(Rating::Easy), card_id)),
+        "browserquerychange" | "browser-query-change" | "browser_query_change" => {
+            Ok(parsed_event(EngramAppEvent::BrowserQueryChange, card_id))
+        }
+        "browsersearch" | "browser-search" | "browser_search" => {
+            Ok(parsed_event(EngramAppEvent::BrowserSearch, card_id))
+        }
+        "browserselectresult" | "browser-select-result" | "browser_select_result" => {
+            Ok(parsed_event(EngramAppEvent::BrowserSelectResult, card_id))
+        }
+        "browseropenselected" | "browser-open-selected" | "browser_open_selected" => {
+            Ok(parsed_event(EngramAppEvent::BrowserOpenSelected, card_id))
+        }
+        "browsereditselected" | "browser-edit-selected" | "browser_edit_selected" => {
+            Ok(parsed_event(EngramAppEvent::BrowserEditSelected, card_id))
+        }
+        "browsertogglesuspendselected"
+        | "browser-toggle-suspend-selected"
+        | "browser_toggle_suspend_selected" => Ok(parsed_event(
+            EngramAppEvent::BrowserToggleSuspendSelected,
+            card_id,
+        )),
+        "browsertogglemarkselected"
+        | "browser-toggle-mark-selected"
+        | "browser_toggle_mark_selected" => Ok(parsed_event(
+            EngramAppEvent::BrowserToggleMarkSelected,
+            card_id,
+        )),
+        _ => Err(format!("unknown Engram app event: {event_name}")),
+    }
+}
+
+fn parsed_event(kind: EngramAppEvent, card_id: Option<String>) -> ParsedEngramAppEvent {
+    ParsedEngramAppEvent { kind, card_id }
+}
+
+fn required_event_card_id(
+    state: &AppState,
+    card_id: Option<String>,
+    action: &str,
+) -> Result<String, String> {
+    let card_id = card_id
+        .map(|card_id| card_id.trim().to_string())
+        .filter(|card_id| !card_id.is_empty())
+        .ok_or_else(|| format!("cannot {action} browser row without a card id"))?;
+    if state.cards.iter().any(|card| card.id == card_id) {
+        Ok(card_id)
+    } else {
+        Err(format!("cannot {action} unknown browser card: {card_id}"))
+    }
+}
+
+fn mark_or_unmark_card(state: &AppState, card_id: String, now: u64) -> AppState {
+    if card_is_marked(state, &card_id) {
+        reduce(state, engram_core::EngramCommand::UnmarkCard { card_id })
+    } else {
+        reduce(
+            state,
+            engram_core::EngramCommand::MarkCard {
+                card_id,
+                marked_at: now,
+            },
+        )
+    }
+}
+
+fn card_is_marked(state: &AppState, card_id: &str) -> bool {
+    state
+        .card_progress
+        .iter()
+        .find(|progress| progress.card_id == card_id)
+        .and_then(|progress| progress.marked_at)
+        .is_some()
+}
+
+fn suspend_or_unsuspend_card(state: &AppState, card_id: String, now: u64) -> AppState {
+    if card_is_suspended(state, &card_id) {
+        reduce(state, engram_core::EngramCommand::UnsuspendCard { card_id })
+    } else {
+        reduce(
+            state,
+            engram_core::EngramCommand::SuspendCard {
+                card_id,
+                suspended_at: now,
+            },
+        )
+    }
+}
+
+fn card_is_suspended(state: &AppState, card_id: &str) -> bool {
+    state
+        .card_progress
+        .iter()
+        .find(|progress| progress.card_id == card_id)
+        .is_some_and(|progress| {
+            progress.suspended_at.is_some() || progress.state == CardState::Suspended
+        })
 }
 
 fn active_session_id(state: &AppState, action: &str) -> Result<String, String> {
@@ -1992,6 +2139,94 @@ mod tests {
             .unwrap()
             .is_empty());
         assert_eq!(suspended["props"]["prompt"], "No cards queued");
+    }
+
+    #[test]
+    fn handle_engram_app_browser_events_target_selected_card_ids() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000},
+                {"id":"other","deckId":"deck","front":"letter-aa","back":"aa","createdAt":1700000000000}
+            ],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+
+        let search: Value =
+            serde_json::from_str(&session.handle_engram_app_event("onBrowserSearch", "deck", NOW))
+                .unwrap();
+        assert_eq!(search["ok"], true);
+        assert_eq!(search["event"], "onBrowserSearch");
+        assert_eq!(search["props"]["browser-selected-card-id"], "card");
+
+        let marked: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onBrowserToggleMarkSelected|other",
+            "deck",
+            NOW + 1,
+        ))
+        .unwrap();
+        assert_eq!(marked["ok"], true);
+        assert_eq!(marked["event"], "onBrowserToggleMarkSelected");
+        assert_eq!(marked["state"]["cardProgress"][0]["cardId"], "other");
+        assert_eq!(marked["state"]["cardProgress"][0]["markedAt"], NOW + 1);
+
+        let unmarked: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onBrowserToggleMarkSelected","cardId":"other"}"#,
+            "deck",
+            NOW + 2,
+        ))
+        .unwrap();
+        assert_eq!(unmarked["ok"], true);
+        assert!(unmarked["state"]["cardProgress"]
+            .as_array()
+            .unwrap()
+            .is_empty());
+
+        let suspended: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onBrowserToggleSuspendSelected|other",
+            "deck",
+            NOW + 3,
+        ))
+        .unwrap();
+        assert_eq!(suspended["ok"], true);
+        assert_eq!(suspended["event"], "onBrowserToggleSuspendSelected");
+        assert_eq!(suspended["state"]["cardProgress"][0]["cardId"], "other");
+        assert_eq!(
+            suspended["state"]["cardProgress"][0]["suspendedAt"],
+            NOW + 3
+        );
+
+        let unsuspended: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onBrowserToggleSuspendSelected","selectedCardId":"other"}"#,
+            "deck",
+            NOW + 4,
+        ))
+        .unwrap();
+        assert_eq!(unsuspended["ok"], true);
+        assert!(unsuspended["state"]["cardProgress"]
+            .as_array()
+            .unwrap()
+            .is_empty());
+
+        let missing_card: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onBrowserToggleMarkSelected",
+            "deck",
+            NOW + 5,
+        ))
+        .unwrap();
+        assert_eq!(missing_card["ok"], false);
+        assert_eq!(
+            missing_card["error"],
+            "cannot mark browser row without a card id"
+        );
     }
 
     #[test]

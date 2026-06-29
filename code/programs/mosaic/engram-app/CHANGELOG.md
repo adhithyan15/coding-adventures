@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Routed generated Mosaic browser events through the shared Engram event facade,
+  including card-ID-targeted mark and suspend actions for browser rows.
 - Added browser result and selected-card metadata slots to the Engram app
   contract, backed by `EngramSession::engram_browser_props`, so generated host
   shells can route browser actions by card ID.

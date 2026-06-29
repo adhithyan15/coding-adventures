@@ -98,7 +98,10 @@ without an active session or contains shared review counters such as
 actions such as undo, bury card, bury siblings, suspend, and mark/unmark.
 `handle_engram_app_event` accepts those generated events (`onUndo`,
 `onBuryCard`, `onBurySiblings`, `onSuspendCard`, and `onToggleMark`) and routes
-them through the same core reducer commands used by direct JSON dispatch.
+them through the same core reducer commands used by direct JSON dispatch. It
+also accepts browser events such as `onBrowserSearch` and targeted row actions
+such as `onBrowserToggleMarkSelected|card-id` or
+`{"event":"onBrowserToggleSuspendSelected","cardId":"card-id"}`.
 
 `daily_limit_usage` returns `{ ok: true, usage }` with new/review counts already
 seen in a host-provided day window and the remaining slots from `DeckOptions`.
