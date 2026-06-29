@@ -46,6 +46,8 @@ stable local API responses for:
 - `/api/smart_home/events/:sequence`
 - `/api/smart_home/command_results`
 - `/api/smart_home/command_results/:command_id`
+- `/api/smart_home/capability_grants`
+- `/api/smart_home/capability_grants/:grant_id`
 - `/api/smart_home/authorization_decisions`
 - `/api/smart_home/authorization_decisions/:decision_index`
 - `/api/smart_home/desired_states`
@@ -82,8 +84,9 @@ target aliases, a native current-state registry with confidence/source/staleness
 filters plus room filters and detail lookups, a scene registry with room/action
 projections, command-result audit records with
 command, bridge, correlation, room, status, and sort filters, indexed
-authorization decisions with principal, outcome, and sort filters, and
-desired-state supervision targets.
+authorization decisions with principal, outcome, and sort filters, capability
+grant inventory/detail routes with principal, status, scope, capability,
+entity, and sort filters, and desired-state supervision targets.
 State-history reads expose registry-backed device events with Home Assistant
 entity aliases, room filters, state deltas, timestamp filters, and event-id
 detail lookups; the Home Assistant-style history route accepts
@@ -183,6 +186,8 @@ curl 'http://127.0.0.1:8123/api/smart_home/command_results?limit=10'
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?room_id=kitchen&limit=10'
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?bridge_id=bridge-1'
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?sort=status_then_newest'
+curl 'http://127.0.0.1:8123/api/smart_home/capability_grants?principal_id=agent:home-assistant-local-api&status=active'
+curl 'http://127.0.0.1:8123/api/smart_home/capability_grants/grant:agent:home-assistant-local-api:local-api-full-access'
 curl 'http://127.0.0.1:8123/api/smart_home/authorization_decisions?principal_id=agent:home-assistant-local-api&sort=oldest_first'
 curl 'http://127.0.0.1:8123/api/smart_home/authorization_decisions/0'
 curl 'http://127.0.0.1:8123/api/smart_home/state_history?entity_id=light.entity_light_1'
