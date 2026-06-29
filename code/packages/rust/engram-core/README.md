@@ -61,10 +61,11 @@ Rust core.
 letting settings screens update the same options that queue building and
 `RateCard` use.
 The slice-based queue/stat helpers keep their exact deck-ID behavior for legacy
-callers, while the state-aware helpers and review-history summaries include
-child decks whose names use Anki's `Parent::Child` hierarchy. Facade crates use
-the state-aware helpers so studying or inspecting a parent deck includes its
-descendants across web and native shells.
+callers, while the state-aware helpers, review-history summaries, and
+deck-scope collection helpers include child decks whose names use Anki's
+`Parent::Child` hierarchy. Facade crates use the state-aware helpers so
+studying, inspecting, or exporting a parent deck includes its descendants across
+web and native shells.
 
 Review-control commands such as `SuspendCard`, `UnsuspendCard`, `BuryCard`,
 `BuryCardSiblings`, `UnburyCard`, `SetCardFlag`, `MarkCard`, and `UnmarkCard`

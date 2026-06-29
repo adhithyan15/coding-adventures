@@ -2,6 +2,7 @@ use std::collections::{HashMap, HashSet};
 
 use crate::model::{
     AppState, Card, CardProgress, CardState, DailyStudyLimitUsage, Deck, DeckOptions, DeckStats,
+    Note,
 };
 
 pub const SESSION_SIZE: usize = 20;
@@ -77,6 +78,26 @@ pub fn deck_options_for_state(state: &AppState, deck_id: &str) -> DeckOptions {
         .find(|preset| preset.deck_id == deck_id)
         .map(|preset| preset.options.clone())
         .unwrap_or_default()
+}
+
+pub fn cards_in_deck_scope(state: &AppState, deck_id: &str) -> Vec<Card> {
+    let deck_ids = deck_ids_in_scope(state, deck_id);
+    state
+        .cards
+        .iter()
+        .filter(|card| deck_ids.contains(card.deck_id.as_str()))
+        .cloned()
+        .collect()
+}
+
+pub fn notes_in_deck_scope(state: &AppState, deck_id: &str) -> Vec<Note> {
+    let deck_ids = deck_ids_in_scope(state, deck_id);
+    state
+        .notes
+        .iter()
+        .filter(|note| deck_ids.contains(note.deck_id.as_str()))
+        .cloned()
+        .collect()
 }
 
 pub fn get_daily_study_limit_usage(
@@ -382,6 +403,18 @@ mod tests {
         }
     }
 
+    fn note(id: &str, deck_id: &str) -> Note {
+        Note {
+            id: id.to_string(),
+            note_type_id: "basic".to_string(),
+            deck_id: deck_id.to_string(),
+            fields: Vec::new(),
+            tags: Vec::new(),
+            created_at: NOW,
+            updated_at: NOW,
+        }
+    }
+
     fn progress(card_id: &str, next_due_at: u64, interval: u32) -> CardProgress {
         CardProgress {
             card_id: card_id.to_string(),
@@ -532,6 +565,11 @@ mod tests {
                 card("child-new", "child", 3),
                 card("sibling-due", "sibling", 4),
             ],
+            notes: vec![
+                note("parent-note", "parent"),
+                note("child-note", "child"),
+                note("sibling-note", "sibling"),
+            ],
             card_progress: vec![
                 progress("parent-due", NOW - 100, 3),
                 progress("child-due", NOW - 50, 3),
@@ -563,6 +601,27 @@ mod tests {
         let queue = build_session_queue_for_state_with_options(&state, "parent", NOW, &options);
         let ids: Vec<_> = queue.iter().map(|card| card.id.as_str()).collect();
         assert_eq!(ids, vec!["parent-due", "child-due", "child-new"]);
+
+        let scoped_card_ids: Vec<_> = cards_in_deck_scope(&state, "parent")
+            .into_iter()
+            .map(|card| card.id)
+            .collect();
+        assert_eq!(
+            scoped_card_ids,
+            vec![
+                "parent-due".to_string(),
+                "child-due".to_string(),
+                "child-new".to_string()
+            ]
+        );
+        let scoped_note_ids: Vec<_> = notes_in_deck_scope(&state, "parent")
+            .into_iter()
+            .map(|note| note.id)
+            .collect();
+        assert_eq!(
+            scoped_note_ids,
+            vec!["parent-note".to_string(), "child-note".to_string()]
+        );
 
         let stats = get_deck_stats_for_state(&state, "parent", NOW);
         assert_eq!(stats.total, 3);

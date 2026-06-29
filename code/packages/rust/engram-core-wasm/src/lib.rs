@@ -10,14 +10,15 @@ use std::panic::{catch_unwind, AssertUnwindSafe};
 
 use engram_core::{
     build_session_queue_for_state_with_options, build_session_queue_with_daily_limits,
-    create_engram_snapshot, deck_options_for_state, export_cards_anki_basic_tsv, export_cards_csv,
-    export_notes_anki_tsv, generate_cards_for_note, get_active_session_progress,
-    get_daily_study_limit_usage, get_deck_stats_for_state, import_anki_basic_tsv,
-    import_anki_notes_tsv, import_basic_cards_csv, import_cards_csv, materialize_generated_card,
-    reduce, restore_engram_snapshot, search_cards as search_core_cards, search_cards_with_context,
-    summarize_review_history, AnkiBasicTsvExportOptions, AnkiNoteTsvImportOptions, AppState,
-    BasicCardCsvImportOptions, Card, CardFlag, CardLineage, CardProgress, CardSearchResult,
-    CardState, DeckOptions, EngramSnapshot, LeechAction, MediaAssetRecord, Rating, SearchContext,
+    cards_in_deck_scope, create_engram_snapshot, deck_options_for_state,
+    export_cards_anki_basic_tsv, export_cards_csv, export_notes_anki_tsv, generate_cards_for_note,
+    get_active_session_progress, get_daily_study_limit_usage, get_deck_stats_for_state,
+    import_anki_basic_tsv, import_anki_notes_tsv, import_basic_cards_csv, import_cards_csv,
+    materialize_generated_card, notes_in_deck_scope, reduce, restore_engram_snapshot,
+    search_cards as search_core_cards, search_cards_with_context, summarize_review_history,
+    AnkiBasicTsvExportOptions, AnkiNoteTsvImportOptions, AppState, BasicCardCsvImportOptions, Card,
+    CardFlag, CardLineage, CardProgress, CardSearchResult, CardState, DeckOptions, EngramSnapshot,
+    LeechAction, MediaAssetRecord, Rating, SearchContext,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -449,13 +450,7 @@ impl EngramSession {
 
     pub fn export_cards_csv(&self, deck_id: &str) -> String {
         catch_json(|| {
-            let cards: Vec<Card> = self
-                .state
-                .cards
-                .iter()
-                .filter(|card| card.deck_id == deck_id)
-                .cloned()
-                .collect();
+            let cards = cards_in_deck_scope(&self.state, deck_id);
             Ok(ok_with("csv", &export_cards_csv(&cards)))
         })
     }
@@ -468,13 +463,7 @@ impl EngramSession {
         html: bool,
     ) -> String {
         catch_json(|| {
-            let cards: Vec<Card> = self
-                .state
-                .cards
-                .iter()
-                .filter(|card| card.deck_id == deck_id)
-                .cloned()
-                .collect();
+            let cards = cards_in_deck_scope(&self.state, deck_id);
             let options = AnkiBasicTsvExportOptions {
                 deck_name: deck_name.to_string(),
                 note_type_name: note_type_name.to_string(),
@@ -503,12 +492,9 @@ impl EngramSession {
                 .iter()
                 .find(|note_type| note_type.id == note_type_id)
                 .ok_or_else(|| format!("unknown note type: {note_type_id}"))?;
-            let notes: Vec<_> = self
-                .state
-                .notes
-                .iter()
-                .filter(|note| note.note_type_id == note_type_id && note.deck_id == deck_id)
-                .cloned()
+            let notes: Vec<_> = notes_in_deck_scope(&self.state, deck_id)
+                .into_iter()
+                .filter(|note| note.note_type_id == note_type_id)
                 .collect();
             let options = AnkiBasicTsvExportOptions {
                 deck_name: deck_name.to_string(),
@@ -4521,6 +4507,7 @@ mod tests {
         let snapshot = r#"{
             "decks": [
                 {"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000},
+                {"id":"child","name":"Tamil::Verbs","description":"Grammar","createdAt":1700000000000},
                 {"id":"other-deck","name":"Spanish","description":"Words","createdAt":1700000000000}
             ],
             "noteTypes": [],
@@ -4581,12 +4568,14 @@ mod tests {
         let snapshot = r#"{
             "decks": [
                 {"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000},
+                {"id":"child","name":"Tamil::Verbs","description":"Grammar","createdAt":1700000000000},
                 {"id":"other-deck","name":"Spanish","description":"Words","createdAt":1700000000000}
             ],
             "noteTypes": [],
             "notes": [],
             "cards": [
                 {"id":"card","deckId":"deck","front":"letter, \"a\"","back":"line one\nline two","createdAt":1700000000000},
+                {"id":"child-card","deckId":"child","front":"padi","back":"study","createdAt":1700000000000},
                 {"id":"other","deckId":"other-deck","front":"hola","back":"hello","createdAt":1700000000000}
             ],
             "cardProgress": [],
@@ -4601,12 +4590,14 @@ mod tests {
         assert_eq!(exported["ok"], true);
         let csv = exported["csv"].as_str().unwrap();
         assert!(csv.contains("\"letter, \"\"a\"\"\""));
+        assert!(csv.contains("child-card,child,padi,study"), "{csv}");
         assert!(!csv.contains("other-deck"));
 
         let parsed: Value = serde_json::from_str(&session.parse_cards_csv(csv)).unwrap();
         assert_eq!(parsed["ok"], true);
         assert_eq!(parsed["cards"][0]["id"], "card");
         assert_eq!(parsed["cards"][0]["front"], "letter, \"a\"");
+        assert_eq!(parsed["cards"][1]["id"], "child-card");
 
         let error: Value =
             serde_json::from_str(&session.parse_cards_csv("front,back\nx,y\n")).unwrap();
@@ -4618,11 +4609,15 @@ mod tests {
     fn export_anki_basic_tsv_uses_anki_text_headers() {
         let mut session = EngramSession::new();
         let snapshot = r#"{
-            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "decks": [
+                {"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000},
+                {"id":"child","name":"Tamil::Verbs","description":"Grammar","createdAt":1700000000000}
+            ],
             "noteTypes": [],
             "notes": [],
             "cards": [
-                {"id":"card","deckId":"deck","front":"letter\t\"a\"","back":"line one\nline two","createdAt":1700000000000}
+                {"id":"card","deckId":"deck","front":"letter\t\"a\"","back":"line one\nline two","createdAt":1700000000000},
+                {"id":"child-card","deckId":"child","front":"padi","back":"study","createdAt":1700000000000}
             ],
             "cardProgress": [],
             "sessions": [],
@@ -4645,13 +4640,17 @@ mod tests {
             "#separator:tab\n#html:false\n#notetype:Basic\n#deck:Tamil::Script\n#columns:Front\tBack\n"
         ));
         assert!(tsv.contains("\"letter\t\"\"a\"\"\"\t\"line one\nline two\"\n"));
+        assert!(tsv.contains("padi\tstudy\n"));
     }
 
     #[test]
     fn export_anki_notes_tsv_uses_note_fields_and_tags() {
         let mut session = EngramSession::new();
         let snapshot = r#"{
-            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "decks": [
+                {"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000},
+                {"id":"child","name":"Tamil::Verbs","description":"Grammar","createdAt":1700000000000}
+            ],
             "noteTypes": [{
                 "id": "basic",
                 "name": "Basic",
@@ -4681,6 +4680,17 @@ mod tests {
                 "tags": ["tamil", "script"],
                 "createdAt": 1700000000000,
                 "updatedAt": 1700000000000
+            }, {
+                "id": "child-note",
+                "noteTypeId": "basic",
+                "deckId": "child",
+                "fields": [
+                    {"fieldId": "front", "value": "padi"},
+                    {"fieldId": "back", "value": "study"}
+                ],
+                "tags": ["tamil", "verb"],
+                "createdAt": 1700000000000,
+                "updatedAt": 1700000000000
             }],
             "cards": [],
             "cardProgress": [],
@@ -4705,6 +4715,7 @@ mod tests {
             "#separator:tab\n#html:false\n#notetype:Basic\n#deck:Tamil::Script\n#columns:Front\tBack\tTags\n"
         ));
         assert!(tsv.contains("\"letter\t\"\"a\"\"\"\t\"line one\nline two\"\ttamil script\n"));
+        assert!(tsv.contains("padi\tstudy\ttamil verb\n"));
     }
 
     #[test]
