@@ -1134,7 +1134,7 @@ fn clause_matches(
         .get(card.id.as_str())
         .map_or(&[] as &[&ExternalSourceRecord], Vec::as_slice);
     let matched = match &clause.kind {
-        SearchClauseKind::Text(filter) => text_matches(filter, card, deck, note),
+        SearchClauseKind::Text(filter) => text_matches(filter, card, note),
         SearchClauseKind::Field(filter) => field_matches(filter, card, note, note_type),
         SearchClauseKind::CardId(filter) => id_filter_matches(filter, &card.id),
         SearchClauseKind::NoteId(filter) => note_id_matches(filter, card, note),
@@ -1178,25 +1178,14 @@ fn clause_matches(
     }
 }
 
-fn text_matches(
-    filter: &TextFilter,
-    card: &Card,
-    deck: Option<&Deck>,
-    note: Option<&Note>,
-) -> bool {
-    text_filter_matches(filter, &card.front)
-        || text_filter_matches(filter, &card.back)
-        || deck.is_some_and(|deck| {
-            text_filter_matches(filter, &deck.name)
-                || text_filter_matches(filter, &deck.description)
-        })
-        || note.is_some_and(|note| {
-            note.tags.iter().any(|tag| text_filter_matches(filter, tag))
-                || note
-                    .fields
-                    .iter()
-                    .any(|field| text_filter_matches(filter, &field.value))
-        })
+fn text_matches(filter: &TextFilter, card: &Card, note: Option<&Note>) -> bool {
+    if let Some(note) = note {
+        note.fields
+            .iter()
+            .any(|field| text_filter_matches(filter, &field.value))
+    } else {
+        text_filter_matches(filter, &card.front) || text_filter_matches(filter, &card.back)
+    }
 }
 
 fn field_matches(
@@ -2030,13 +2019,16 @@ mod tests {
     }
 
     #[test]
-    fn plain_text_search_matches_cards_decks_and_note_fields() {
+    fn plain_text_search_matches_standalone_cards_and_note_fields() {
         assert_eq!(ids_for("vanakkam"), vec!["due"]);
+        assert_eq!(ids_for("uyir"), vec!["note::forward"]);
+        assert_eq!(ids_for("\"script and vocabulary\""), Vec::<String>::new());
+        assert_eq!(ids_for("script"), Vec::<String>::new());
+        assert_eq!(ids_for("tag:script"), vec!["note::forward"]);
         assert_eq!(
-            ids_for("\"script and vocabulary\""),
+            ids_for("deck:tamil"),
             vec!["note::forward", "due", "future"]
         );
-        assert_eq!(ids_for("uyir"), vec!["note::forward"]);
     }
 
     #[test]
