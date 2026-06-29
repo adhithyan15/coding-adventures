@@ -39,6 +39,10 @@ Packages may declare optional `[host_assets]` file copies in
 `mosaic-package.toml`. Matching backend assets are copied from package-relative
 paths into the backend output directory after shell emission, so app packages
 can attach host adapters without moving that file list into bespoke scripts.
+For generated project shells, JavaScript module assets are also activated where
+the backend has a conventional host hook: HTML module assets are loaded before
+`main.js`, and React source modules under `src/` are imported from
+`src/main.tsx`.
 
 Electron project shells expose the same renderer-side `window.mosaicHost`
 contract as React and route it through context-isolated IPC. The generated main

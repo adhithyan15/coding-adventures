@@ -75,27 +75,6 @@ function Write-Utf8NoBom {
     [System.IO.File]::WriteAllText($Path, $Content, $encoding)
 }
 
-function Add-EngramHostImport {
-    param([Parameter(Mandatory = $true)][string]$MainPath)
-
-    if (-not (Test-Path -LiteralPath $MainPath)) {
-        return
-    }
-    $content = Get-Content -LiteralPath $MainPath -Raw
-    $importLine = 'import "./engram-host";'
-    if ($content.Contains($importLine)) {
-        return
-    }
-    $match = [regex]::Match($content, 'import \{ EngramApp \} from "\.\./EngramApp";\r?\n')
-    if ($match.Success) {
-        $insertAt = $match.Index + $match.Length
-        $content = $content.Insert($insertAt, "$importLine`r`n")
-    } else {
-        $content = "$importLine`r`n$content"
-    }
-    Write-Utf8NoBom -Path $MainPath -Content $content
-}
-
 function Install-EngramReactHost {
     param([Parameter(Mandatory = $true)][string]$ReactRoot)
 
@@ -107,27 +86,6 @@ function Install-EngramReactHost {
     New-Item -ItemType Directory -Force -Path $publicDir, $srcDir | Out-Null
     Copy-Item -LiteralPath $engramWasmFile -Destination (Join-Path $publicDir "engram_engine.wasm") -Force
     Copy-Item -LiteralPath $engramWasmLoader -Destination (Join-Path $srcDir "engram-mosaic-host-wasm.mjs") -Force
-    Add-EngramHostImport -MainPath (Join-Path $srcDir "main.tsx")
-}
-
-function Add-EngramHtmlHostScript {
-    param([Parameter(Mandatory = $true)][string]$IndexPath)
-
-    if (-not (Test-Path -LiteralPath $IndexPath)) {
-        return
-    }
-    $content = Get-Content -LiteralPath $IndexPath -Raw
-    $scriptLine = '  <script type="module" src="./engram-host.mjs"></script>'
-    if ($content.Contains($scriptLine)) {
-        return
-    }
-    $mainScriptLine = '  <script type="module" src="./main.js"></script>'
-    if ($content.Contains($mainScriptLine)) {
-        $content = $content.Replace($mainScriptLine, "$scriptLine`r`n$mainScriptLine")
-    } else {
-        $content = $content.Replace("</body>", "$scriptLine`r`n</body>")
-    }
-    Write-Utf8NoBom -Path $IndexPath -Content $content
 }
 
 function Install-EngramHtmlHost {
@@ -138,7 +96,6 @@ function Install-EngramHtmlHost {
     }
     Copy-Item -LiteralPath $engramWasmFile -Destination (Join-Path $HtmlRoot "engram_engine.wasm") -Force
     Copy-Item -LiteralPath $engramWasmLoader -Destination (Join-Path $HtmlRoot "engram-mosaic-host-wasm.mjs") -Force
-    Add-EngramHtmlHostScript -IndexPath (Join-Path $HtmlRoot "index.html")
 }
 
 function Install-EngramElectronHost {

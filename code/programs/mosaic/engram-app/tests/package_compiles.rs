@@ -463,7 +463,17 @@ fn native_project_shells_expose_engram_host_contract() {
     let html_index =
         fs::read_to_string(tmp.path().join("html").join("index.html")).expect("html/index.html");
     assert_contains(&html_index, "data-mosaic-html-root=\"EngramApp\"");
+    assert_contains(&html_index, "src=\"./engram-host.mjs\"");
     assert_contains(&html_index, "src=\"./main.js\"");
+    assert!(
+        html_index
+            .find("src=\"./engram-host.mjs\"")
+            .expect("html host script")
+            < html_index
+                .find("src=\"./main.js\"")
+                .expect("html main script"),
+        "HTML host adapter should load before generated main.js"
+    );
     let html_main =
         fs::read_to_string(tmp.path().join("html").join("main.js")).expect("html/main.js");
     assert_contains(
@@ -487,6 +497,7 @@ fn native_project_shells_expose_engram_host_contract() {
 
     let react_app = fs::read_to_string(tmp.path().join("react").join("src").join("main.tsx"))
         .expect("react/src/main.tsx");
+    assert_contains(&react_app, "import \"./engram-host\";");
     assert_contains(&react_app, "const fallbackProps = {");
     assert_contains(&react_app, "appTitle: \"Sample AppTitle\",");
     assert_contains(
@@ -1460,7 +1471,6 @@ fn source_tree_has_expected_shape() {
     let build_script =
         fs::read_to_string(package_root().join("scripts/build-all.ps1")).expect("build-all.ps1");
     assert_contains(&build_script, "Install-EngramHtmlHost");
-    assert_contains(&build_script, "engram-host.mjs");
     assert_contains(&build_script, "Install-EngramXamlHost");
     assert_contains(&build_script, "Install-EngramQtHost");
     assert_contains(&build_script, "Install-EngramSwiftUIHost");

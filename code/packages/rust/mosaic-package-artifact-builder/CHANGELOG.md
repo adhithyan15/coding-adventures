@@ -11,6 +11,9 @@ still emit backend artifacts from one app source tree.
 `mosaic-package.toml` under `[host_assets]`, copying source files from the
 package root into the emitted backend project after project-shell generation.
 Manifest asset paths are validated to stay relative to the package/output root.
+Generated HTML project shells automatically load copied JavaScript module host
+assets before `main.js`, and generated React project shells automatically import
+copied source-module host assets from `src/main.tsx`.
 
 Package builds now write non-empty merged Mosaic styles as `<Component>.lattice`
 sidecars beside each emitted component artifact and include those sidecars in

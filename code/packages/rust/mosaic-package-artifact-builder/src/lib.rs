@@ -519,14 +519,130 @@ fn install_host_assets(
 
         let source_rel = safe_manifest_relative_path("host asset source", &asset.source)?;
         let target_rel = safe_manifest_relative_path("host asset target", &asset.target)?;
-        let source = package_root.join(source_rel);
-        let target = backend_dir.join(target_rel);
+        let source = package_root.join(&source_rel);
+        let target = backend_dir.join(&target_rel);
         let bytes = fs::read(&source)
             .map_err(|e| BuildError::Io(format!("read {}: {e}", source.display())))?;
         write_file(&target, &bytes)?;
+        activate_host_asset(backend, backend_dir, &target_rel)?;
         written.push(target);
     }
     Ok(written)
+}
+
+fn activate_host_asset(
+    backend: Backend,
+    backend_dir: &Path,
+    target_rel: &Path,
+) -> Result<(), BuildError> {
+    match backend {
+        Backend::Html => activate_html_host_asset(backend_dir, target_rel),
+        Backend::React => activate_react_host_asset(backend_dir, target_rel),
+        _ => Ok(()),
+    }
+}
+
+fn activate_html_host_asset(backend_dir: &Path, target_rel: &Path) -> Result<(), BuildError> {
+    if !is_html_module_asset(target_rel) {
+        return Ok(());
+    }
+
+    let index_path = backend_dir.join("index.html");
+    if !index_path.exists() {
+        return Ok(());
+    }
+
+    let script_line = format!(
+        "  <script type=\"module\" src=\"./{}\"></script>",
+        path_to_web_src(target_rel)
+    );
+    let mut content = read_to_string(&index_path)?;
+    if content.contains(&script_line) {
+        return Ok(());
+    }
+
+    let main_script_line = "  <script type=\"module\" src=\"./main.js\"></script>";
+    if let Some(main_at) = content.find(main_script_line) {
+        content.insert_str(main_at, &format!("{script_line}\n"));
+        write_file(&index_path, content.as_bytes())?;
+    } else if let Some(body_at) = content.find("</body>") {
+        content.insert_str(body_at, &format!("{script_line}\n"));
+        write_file(&index_path, content.as_bytes())?;
+    }
+
+    Ok(())
+}
+
+fn activate_react_host_asset(backend_dir: &Path, target_rel: &Path) -> Result<(), BuildError> {
+    let Some(import_path) = react_host_asset_import_path(target_rel) else {
+        return Ok(());
+    };
+
+    let main_path = backend_dir.join("src").join("main.tsx");
+    if !main_path.exists() {
+        return Ok(());
+    }
+
+    let import_line = format!("import \"{import_path}\";");
+    let mut content = read_to_string(&main_path)?;
+    if content.contains(&import_line) {
+        return Ok(());
+    }
+
+    content.insert_str(0, &format!("{import_line}\n"));
+    write_file(&main_path, content.as_bytes())?;
+    Ok(())
+}
+
+fn is_html_module_asset(path: &Path) -> bool {
+    matches!(
+        path.extension().and_then(|extension| extension.to_str()),
+        Some("js") | Some("mjs")
+    )
+}
+
+fn react_host_asset_import_path(path: &Path) -> Option<String> {
+    if !is_react_module_asset(path) {
+        return None;
+    }
+
+    let src_rel = path.strip_prefix("src").ok()?;
+    let web_src = path_to_web_src(src_rel);
+    if web_src.is_empty() {
+        return None;
+    }
+
+    let import_target = web_src
+        .strip_suffix(".tsx")
+        .or_else(|| web_src.strip_suffix(".ts"))
+        .or_else(|| web_src.strip_suffix(".jsx"))
+        .or_else(|| web_src.strip_suffix(".js"))
+        .unwrap_or(&web_src);
+    Some(format!("./{import_target}"))
+}
+
+fn is_react_module_asset(path: &Path) -> bool {
+    let Some(file_name) = path.file_name().and_then(|name| name.to_str()) else {
+        return false;
+    };
+    if file_name.ends_with(".d.ts") {
+        return false;
+    }
+
+    matches!(
+        path.extension().and_then(|extension| extension.to_str()),
+        Some("ts") | Some("tsx") | Some("js") | Some("jsx") | Some("mjs")
+    )
+}
+
+fn path_to_web_src(path: &Path) -> String {
+    path.components()
+        .filter_map(|component| match component {
+            Component::Normal(part) => Some(part.to_string_lossy()),
+            _ => None,
+        })
+        .collect::<Vec<_>>()
+        .join("/")
 }
 
 fn safe_manifest_relative_path(kind: &'static str, value: &str) -> Result<PathBuf, BuildError> {
@@ -2464,6 +2580,58 @@ files = [
         assert!(
             !out.path().join("react").join("grid-host.ts").exists(),
             "qt-only asset must not be copied for react builds"
+        );
+        let main = fs::read_to_string(out.path().join("react").join("src").join("main.tsx"))
+            .expect("react src/main.tsx");
+        assert!(
+            main.contains("import \"./grid-host\";"),
+            "react project shell should activate copied host module"
+        );
+    }
+
+    #[test]
+    fn manifest_host_assets_activate_html_modules() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let host_dir = pkg.path().join("host").join("web");
+        fs::create_dir_all(&host_dir).unwrap();
+        fs::write(host_dir.join("grid-host.mjs"), "window.gridHost = true;\n").unwrap();
+        append_host_assets(
+            pkg.path(),
+            r#"[host_assets]
+files = [
+  { backend = "html", source = "host/web/grid-host.mjs", target = "grid-host.mjs" },
+]"#,
+        );
+
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Html,
+            emit_project: true,
+        })
+        .expect("html build");
+
+        let installed = out.path().join("html").join("grid-host.mjs");
+        assert_eq!(
+            fs::read_to_string(&installed).unwrap(),
+            "window.gridHost = true;\n"
+        );
+        assert!(
+            result.artifacts.iter().any(|path| path == &installed),
+            "copied host asset should appear in BuildResult.artifacts"
+        );
+        let index =
+            fs::read_to_string(out.path().join("html").join("index.html")).expect("index.html");
+        let host_at = index
+            .find("src=\"./grid-host.mjs\"")
+            .expect("html shell should activate copied host module");
+        let main_at = index
+            .find("src=\"./main.js\"")
+            .expect("html shell should load main.js");
+        assert!(
+            host_at < main_at,
+            "host module should load before generated main.js"
         );
     }
 

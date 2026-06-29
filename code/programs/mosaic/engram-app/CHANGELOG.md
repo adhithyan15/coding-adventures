@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Moved HTML/React host adapter activation into Mosaic package host asset
+  emission, leaving `build-all.ps1` responsible for generated runtime binaries
+  and loaders instead of editing generated shell entry files.
 - Added shared browser support for Anki `preset:` deck option searches and
   `prop:pos` / `prop:position` new-card queue position filters.
 - Aligned `note:` / `noteType:` and `card:` / `template:` browser filters with

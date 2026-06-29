@@ -93,14 +93,13 @@ Compose backend emits a pinned Gradle Compose Desktop shell plus the reusable
 Kotlin component source so it can be run with `gradle run`.
 
 The script also builds `code/packages/rust/engram-wasm` and
-`code/packages/rust/engram-capi`, then installs the Engram Mosaic host assets
-into generated app shells. The React shell receives `src/engram-host.ts`, the
-JS loader, and `public/engram_engine.wasm`; the Electron shell receives
-`electron/host.js`, the JS loader, and `electron/engram_engine.wasm`; the
-SwiftUI shell receives `Sources/App/MosaicHost.swift`, `Sources/CEngram`, and
-the static `engram-capi` library; the Qt shell receives `MosaicHost.h`,
-`MosaicHost.cpp`, and the dynamic `engram-capi` library; the XAML shell
-receives `MosaicHost.cs` and `engram_capi.dll` as project content. Collection
-actions such as Anki
+`code/packages/rust/engram-capi`, then installs the generated runtime assets
+that host adapters need. Static host adapters are declared in
+`mosaic-package.toml`, so the Mosaic package builder copies and activates
+`src/engram-host.ts`, `engram-host.mjs`, `electron/host.js`, and the native
+bridge sources during project emission. The script adds the JS loader and
+`engram_engine.wasm` for web/Electron shells, `Sources/CEngram` plus the static
+`engram-capi` library for SwiftUI, the dynamic `engram-capi` library for Qt,
+and `engram_capi.dll` as XAML project content. Collection actions such as Anki
 import/export return `hostIntent` payloads so hosts can open file pickers or
 save APKG bytes while keeping the Mosaic app interface shared.
