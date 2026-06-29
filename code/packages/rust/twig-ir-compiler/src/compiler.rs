@@ -272,6 +272,9 @@ struct FnCtx {
     /// See [`interpreter_ir::SourceLoc`] for indexing conventions.
     source_map: Vec<SourceLoc>,
     locals: HashSet<String>,
+    /// Lexical names backed by an already-materialised register. This keeps
+    /// string-producing E4 bindings out of backend-unsupported `mov [str]` IR.
+    local_aliases: HashMap<String, String>,
     var_counter: usize,
     label_counter: usize,
     /// Current AST-nesting depth.  Incremented on every entry to
@@ -301,6 +304,7 @@ impl FnCtx {
             instrs: Vec::new(),
             source_map: Vec::new(),
             locals: HashSet::new(),
+            local_aliases: HashMap::new(),
             var_counter: 0,
             label_counter: 0,
             depth: 0,
@@ -1409,6 +1413,9 @@ impl Compiler {
         // Locals (params + lets) — return the name directly; the next
         // instruction that reads it resolves through the register file.
         if ctx.locals.contains(&v.name) {
+            if let Some(alias) = ctx.local_aliases.get(&v.name) {
+                return Ok(alias.clone());
+            }
             return Ok(v.name.clone());
         }
 
@@ -1575,17 +1582,25 @@ impl Compiler {
             binding_values.push((name.clone(), v));
         }
 
-        // Bind each name into `locals_` via a typed `mov` copy so the
-        // binding name exists as a named register in the frame.
+        // Bind each name into `locals_` so the binding name exists in the
+        // lexical frame.
         // Path-A increment 4: typed `mov` propagates the RHS's
         // inferred type to the binding name, so subsequent expressions
-        // that reference `name` see the concrete type.
+        // that reference `name` see the concrete type. E4 string RHSs alias
+        // their producer register instead, because the current code-gen
+        // backends accept string producers but not generic string copies.
         let mut added: Vec<String> = Vec::new();
+        let mut saved_aliases: Vec<(String, Option<String>)> = Vec::new();
         for (name, src) in &binding_values {
             if ctx.locals.insert(name.clone()) {
                 added.push(name.clone());
             }
             match src {
+                BindingValue::Reg(src) if ctx.type_of(src) == "str" => {
+                    let previous = ctx.local_aliases.insert(name.clone(), src.clone());
+                    saved_aliases.push((name.clone(), previous));
+                    ctx.record_type(name, "str");
+                }
                 BindingValue::Reg(src) => ctx.emit_move(name, src, loc),
                 BindingValue::StrLiteral(value, value_loc) => {
                     ctx.emit_str_const_to(name, value, *value_loc);
@@ -1604,6 +1619,13 @@ impl Compiler {
         // bound at this lexical position.
         for n in added {
             ctx.locals.remove(&n);
+        }
+        for (name, previous) in saved_aliases.into_iter().rev() {
+            if let Some(alias) = previous {
+                ctx.local_aliases.insert(name, alias);
+            } else {
+                ctx.local_aliases.remove(&name);
+            }
         }
         Ok(last)
     }
@@ -1625,6 +1647,7 @@ impl Compiler {
     fn compile_let_star(&mut self, expr: &LetStar, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
         let loc = SourceLoc::new(expr.line, expr.column);
         let mut added: Vec<String> = Vec::new();
+        let mut saved_aliases: Vec<(String, Option<String>)> = Vec::new();
 
         for (name, rhs) in &expr.bindings {
             // Compile the RHS in the current scope (which already includes
@@ -1640,12 +1663,19 @@ impl Compiler {
             let v = self.compile_expr(rhs, ctx)?;
 
             // Bind the name into locals BEFORE compiling the next binding.
-            // Path-A increment 4: typed `mov` propagates the RHS's
-            // inferred type to the binding name (mirrors compile_let).
+            // Path-A increment 4: typed `mov` propagates scalar RHS types.
+            // E4 string RHSs mirror compile_let by aliasing the producer
+            // register instead of emitting backend-unsupported `mov [str]`.
             if ctx.locals.insert(name.clone()) {
                 added.push(name.clone());
             }
-            ctx.emit_move(name, &v, loc);
+            if ctx.type_of(&v) == "str" {
+                let previous = ctx.local_aliases.insert(name.clone(), v);
+                saved_aliases.push((name.clone(), previous));
+                ctx.record_type(name, "str");
+            } else {
+                ctx.emit_move(name, &v, loc);
+            }
         }
 
         // Compile body — parser-enforced at least one expression.
@@ -1658,6 +1688,13 @@ impl Compiler {
         // Remove bindings so they don't leak into enclosing scope peers.
         for n in added {
             ctx.locals.remove(&n);
+        }
+        for (name, previous) in saved_aliases.into_iter().rev() {
+            if let Some(alias) = previous {
+                ctx.local_aliases.insert(name, alias);
+            } else {
+                ctx.local_aliases.remove(&name);
+            }
         }
         Ok(last)
     }
