@@ -1464,6 +1464,61 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                     }
                 }
 
+                // ---- Object.entries({k: v, …}) → [["k", v], …] ----
+                //
+                // `Object.entries` (ECMAScript §20.1.2.5) returns an array of an
+                // object's own enumerable string-keyed `[key, value]` pairs — the
+                // exact inverse of `Object.fromEntries`. For a fully-static object
+                // LITERAL we can build that array at compile time:
+                //
+                //   Object.entries({a: 1, b: 2})  → [["a", 1], ["b", 2]]
+                //   Object.entries({x: "hi"})     → [["x", "hi"]]
+                //
+                // (The EMPTY-object case `Object.entries({})` → `[]` is already
+                // handled by the block above; this block fires only for non-empty
+                // literals.) Each entry KEY is always a string, so we emit a string
+                // literal; the VALUE expression is copied verbatim.
+                //
+                // Soundness conditions — EVERY property must satisfy all of these,
+                // else we DECLINE and leave the call untouched (declining is safe):
+                //   * the property is a plain data property `k: v` — NOT a getter or
+                //     setter (`get k() {…}` runs code), NOT a method, NOT a computed
+                //     key `[expr]: v` (the key is unknown);
+                //   * the VALUE is a primitive literal (string / number / boolean /
+                //     null) — a non-literal value (including the implicit identifier
+                //     of a shorthand `{x}`) may have side effects or an unknown value;
+                //   * the key is NOT `"__proto__"` — a non-computed `{__proto__: v}`
+                //     is the §B.3.1 prototype SETTER, which creates NO own property,
+                //     so `Object.entries` would not enumerate it (folding it in would
+                //     invent an entry that does not exist);
+                //   * NO key is a canonical ARRAY INDEX (e.g. `0`, `1`, `42`):
+                //     `[[OwnPropertyKeys]]` lists integer-index keys first, in numeric
+                //     order, ahead of the source insertion order we emit, so a single
+                //     index key could reorder the result.
+                //
+                // DUPLICATE keys in the source literal collapse to one own property
+                // whose value is the LAST occurrence (kept at the FIRST occurrence's
+                // position), exactly mirroring the object the literal builds. Same
+                // bare-global-`Object` premise as the other statics — only the literal
+                // `Object.entries(...)` callee folds, never a shadowed receiver.
+                if obj.name == "Object" && prop.name == "entries" && arguments.len() == 1 {
+                    if let Some(Expression::ObjectExpression(o)) = arguments.first() {
+                        if !o.properties.is_empty() {
+                            if let Some(pairs) = fold_object_entries_pairs(&o.properties) {
+                                let parent = c.cv.clone();
+                                let before =
+                                    format!("Object.entries({{{} prop(s)}})", o.properties.len());
+                                let after = format!("[{} pair(s)]", pairs.len());
+                                let new_cv = st.fork_cv(&parent, &before, &after);
+                                return Expression::ArrayExpression(ArrayExpression {
+                                    cv: new_cv,
+                                    elements: pairs.into_iter().map(Some).collect(),
+                                });
+                            }
+                        }
+                    }
+                }
+
                 // ---- Object.is(a, b) → boolean (SameValue) ----
                 //
                 // `Object.is` (ECMAScript §20.1.2.13) compares two values with the
@@ -4299,6 +4354,92 @@ fn literal_nullish(expr: &Expression) -> Option<bool> {
         | Expression::NumericLiteral(_)
         | Expression::StringLiteral(_) => Some(false),
         _ => None,
+    }
+}
+
+/// Lower the properties of the object literal passed to `Object.entries` into a
+/// list of `[key, value]` pair array-literal expressions, honouring the spec's
+/// own-enumerable-string-key semantics. Returns `None` (decline the fold) the
+/// instant any property fails the static-shape conditions documented at the call
+/// site. On success the pairs are in source order with duplicate keys collapsed
+/// (first position, last value).
+fn fold_object_entries_pairs(properties: &[Property]) -> Option<Vec<Expression>> {
+    // Parallel vectors in first-occurrence order; `keys` finds a duplicate so its
+    // value can be overwritten in place (the object the literal builds keeps only
+    // the last value under a repeated key).
+    let mut keys: Vec<String> = Vec::new();
+    let mut pairs: Vec<Expression> = Vec::new();
+    for p in properties {
+        // Only plain data properties `k: v`. Getters/setters execute code,
+        // methods are functions, and a computed key `[expr]: v` is unknown.
+        if p.kind != PropertyKind::Init || p.method || p.computed {
+            return None;
+        }
+        let key_string = match &p.key {
+            PropertyKey::Identifier(id) => id.name.clone(),
+            PropertyKey::StringLiteral(s) => s.value.clone(),
+            PropertyKey::NumericLiteral(n) => format_js_number(n.value),
+            PropertyKey::Expression(_) => return None, // computed
+        };
+        // A non-computed `{__proto__: v}` is the §B.3.1 prototype setter, not an
+        // own property, so `Object.entries` would not enumerate it — decline.
+        if key_string == "__proto__" {
+            return None;
+        }
+        // Integer-index keys enumerate first, in numeric order, ahead of the
+        // source insertion order we emit — decline if any key is one.
+        if is_array_index(&key_string) {
+            return None;
+        }
+        // VALUE must be a primitive literal. A shorthand `{x}` has the non-literal
+        // identifier `x` as its value and is declined here.
+        let value: Expression = match &*p.value {
+            Expression::StringLiteral(_)
+            | Expression::NumericLiteral(_)
+            | Expression::BooleanLiteral(_)
+            | Expression::NullLiteral(_) => (*p.value).clone(),
+            _ => return None,
+        };
+        // An entry key is ALWAYS a string; emit a string literal.
+        let key_raw = format!(
+            "\"{}\"",
+            key_string.replace('\\', "\\\\").replace('"', "\\\"")
+        );
+        let key_expr = Expression::StringLiteral(StringLiteral {
+            cv: None,
+            value: key_string.clone(),
+            raw: key_raw,
+        });
+        let pair = Expression::ArrayExpression(ArrayExpression {
+            cv: None,
+            elements: vec![Some(key_expr), Some(value)],
+        });
+        if let Some(pos) = keys.iter().position(|k| k == &key_string) {
+            pairs[pos] = pair;
+        } else {
+            keys.push(key_string);
+            pairs.push(pair);
+        }
+    }
+    Some(pairs)
+}
+
+/// True when `s` is a canonical ECMAScript *array index*: a string for which
+/// `ToString(ToUint32(s)) === s` and whose numeric value is in `[0, 2^32 − 2]`.
+/// In the ASCII subset that means: all digits, no leading zero (except the single
+/// character `"0"`), and a value strictly below `2^32 − 1`. Such keys are
+/// enumerated ahead of ordinary string keys, so folds containing them are
+/// declined to preserve ordering.
+fn is_array_index(s: &str) -> bool {
+    if s.is_empty() || !s.bytes().all(|b| b.is_ascii_digit()) {
+        return false;
+    }
+    if s.len() > 1 && s.as_bytes()[0] == b'0' {
+        return false; // leading zero → not the canonical form
+    }
+    match s.parse::<u64>() {
+        Ok(n) => n < u32::MAX as u64, // strictly below 2^32 − 1
+        Err(_) => false,              // larger than u64 → not an index
     }
 }
 
@@ -7989,6 +8130,347 @@ mod tests {
         });
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "o.keys({{}}) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- Object.entries (static, non-empty) ----------
+
+    /// A `{<name>: <value>}` data property with an identifier key.
+    fn entries_prop(name: &str, value: Expression) -> Property {
+        Property {
+            cv: None,
+            kind: PropertyKind::Init,
+            key: PropertyKey::Identifier(Identifier {
+                cv: None,
+                name: name.to_string(),
+            }),
+            value: Box::new(value),
+            shorthand: false,
+            computed: false,
+            method: false,
+        }
+    }
+
+    /// An object literal from a property list.
+    fn object_lit(props: Vec<Property>) -> Expression {
+        Expression::ObjectExpression(ObjectExpression {
+            cv: None,
+            properties: props,
+        })
+    }
+
+    /// Assert that `pair` is `["<key>", <expected-value-matcher>]`.
+    fn assert_pair_key(pair: &Expression, key: &str) -> Expression {
+        match pair {
+            Expression::ArrayExpression(a) => {
+                assert_eq!(a.elements.len(), 2, "each entry is a 2-element array");
+                match &a.elements[0] {
+                    Some(Expression::StringLiteral(s)) => {
+                        assert_eq!(s.value, key, "entry key string")
+                    }
+                    other => panic!("expected string key {key:?}; got {:?}", other),
+                }
+                a.elements[1].clone().expect("entry value present")
+            }
+            other => panic!("expected a [key, value] array; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_object_entries_to_pairs() {
+        // `Object.entries({a: 1, b: 2})` → `[["a", 1], ["b", 2]]`.
+        let c = object_static_call(
+            "entries",
+            object_lit(vec![
+                entries_prop("a", num(1.0, None)),
+                entries_prop("b", num(2.0, None)),
+            ]),
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "Object.entries({{a:1,b:2}}) should fold");
+        match extract_expr(&out) {
+            Expression::ArrayExpression(a) => {
+                assert_eq!(a.elements.len(), 2, "two entries");
+                let v0 = assert_pair_key(a.elements[0].as_ref().unwrap(), "a");
+                assert!(matches!(v0, Expression::NumericLiteral(n) if n.value == 1.0));
+                let v1 = assert_pair_key(a.elements[1].as_ref().unwrap(), "b");
+                assert!(matches!(v1, Expression::NumericLiteral(n) if n.value == 2.0));
+            }
+            other => panic!("expected array of pairs; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_object_entries_all_primitive_value_kinds() {
+        // Values may be string / number / boolean / null literals.
+        let c = object_static_call(
+            "entries",
+            object_lit(vec![
+                entries_prop("s", string("hi", None)),
+                entries_prop("n", num(42.0, None)),
+                entries_prop("b", boolean(true, None)),
+                entries_prop("z", null(None)),
+            ]),
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "all-primitive-value entries should fold");
+        match extract_expr(&out) {
+            Expression::ArrayExpression(a) => {
+                assert_eq!(a.elements.len(), 4);
+                assert!(matches!(
+                    assert_pair_key(a.elements[0].as_ref().unwrap(), "s"),
+                    Expression::StringLiteral(_)
+                ));
+                assert!(matches!(
+                    assert_pair_key(a.elements[1].as_ref().unwrap(), "n"),
+                    Expression::NumericLiteral(_)
+                ));
+                assert!(matches!(
+                    assert_pair_key(a.elements[2].as_ref().unwrap(), "b"),
+                    Expression::BooleanLiteral(_)
+                ));
+                assert!(matches!(
+                    assert_pair_key(a.elements[3].as_ref().unwrap(), "z"),
+                    Expression::NullLiteral(_)
+                ));
+            }
+            other => panic!("expected array of pairs; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_object_entries_string_and_noninteger_numeric_keys() {
+        // A string key and a non-integer-index numeric key (1.5 → "1.5", which is
+        // NOT an array index) both fold to string entry keys in source order.
+        let c = object_static_call(
+            "entries",
+            object_lit(vec![
+                Property {
+                    cv: None,
+                    kind: PropertyKind::Init,
+                    key: PropertyKey::StringLiteral(StringLiteral {
+                        cv: None,
+                        value: "a-b".to_string(),
+                        raw: "\"a-b\"".to_string(),
+                    }),
+                    value: Box::new(num(1.0, None)),
+                    shorthand: false,
+                    computed: false,
+                    method: false,
+                },
+                Property {
+                    cv: None,
+                    kind: PropertyKind::Init,
+                    key: PropertyKey::NumericLiteral(NumericLiteral {
+                        cv: None,
+                        value: 1.5,
+                        raw: "1.5".to_string(),
+                    }),
+                    value: Box::new(num(2.0, None)),
+                    shorthand: false,
+                    computed: false,
+                    method: false,
+                },
+            ]),
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "string + non-index numeric keys should fold");
+        match extract_expr(&out) {
+            Expression::ArrayExpression(a) => {
+                assert_eq!(a.elements.len(), 2);
+                assert_pair_key(a.elements[0].as_ref().unwrap(), "a-b");
+                assert_pair_key(a.elements[1].as_ref().unwrap(), "1.5");
+            }
+            other => panic!("expected array of pairs; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fold_object_entries_duplicate_key_last_value_first_position() {
+        // `{a: 1, b: 2, a: 3}` builds `{a: 3, b: 2}`, so entries are
+        // `[["a", 3], ["b", 2]]` — key `a` keeps first position, takes last value.
+        let c = object_static_call(
+            "entries",
+            object_lit(vec![
+                entries_prop("a", num(1.0, None)),
+                entries_prop("b", num(2.0, None)),
+                entries_prop("a", num(3.0, None)),
+            ]),
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(changed, "duplicate-key entries should fold");
+        match extract_expr(&out) {
+            Expression::ArrayExpression(a) => {
+                assert_eq!(a.elements.len(), 2, "deduped to two entries");
+                let v0 = assert_pair_key(a.elements[0].as_ref().unwrap(), "a");
+                assert!(
+                    matches!(v0, Expression::NumericLiteral(n) if n.value == 3.0),
+                    "a takes the LAST value (3)"
+                );
+                assert_pair_key(a.elements[1].as_ref().unwrap(), "b");
+            }
+            other => panic!("expected array of pairs; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn object_entries_integer_index_key_does_not_fold() {
+        // Integer-index keys (0, 1, 42) enumerate before string keys, which would
+        // reorder the result — decline. Covers numeric and string index forms.
+        let cases = [
+            // {1: "x"} — numeric literal key "1" is an array index
+            object_lit(vec![Property {
+                cv: None,
+                kind: PropertyKind::Init,
+                key: PropertyKey::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value: 1.0,
+                    raw: "1".to_string(),
+                }),
+                value: Box::new(string("x", None)),
+                shorthand: false,
+                computed: false,
+                method: false,
+            }]),
+            // {"0": "x"} — string key "0" is also an array index
+            object_lit(vec![Property {
+                cv: None,
+                kind: PropertyKind::Init,
+                key: PropertyKey::StringLiteral(StringLiteral {
+                    cv: None,
+                    value: "0".to_string(),
+                    raw: "\"0\"".to_string(),
+                }),
+                value: Box::new(string("x", None)),
+                shorthand: false,
+                computed: false,
+                method: false,
+            }]),
+        ];
+        for arg in cases {
+            let c = object_static_call("entries", arg);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "integer-index key must not fold (ordering)");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn object_entries_proto_key_does_not_fold() {
+        // `{__proto__: v}` is the §B.3.1 prototype setter, not an own property, so
+        // Object.entries would not enumerate it — decline rather than invent one.
+        let c = object_static_call("entries", object_lit(vec![entries_prop("__proto__", num(1.0, None))]));
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "__proto__ key must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn object_entries_non_literal_value_does_not_fold() {
+        // A non-literal value (identifier / call / nested object / array) is
+        // declined, as is a shorthand `{x}` (whose value is the identifier `x`).
+        let cases = [
+            object_lit(vec![entries_prop("a", ident("v"))]),
+            object_lit(vec![entries_prop("a", empty_object())]),
+            object_lit(vec![entries_prop(
+                "a",
+                Expression::ArrayExpression(ArrayExpression {
+                    cv: None,
+                    elements: vec![Some(num(1.0, None))],
+                }),
+            )]),
+            // shorthand { x }
+            object_lit(vec![Property {
+                cv: None,
+                kind: PropertyKind::Init,
+                key: PropertyKey::Identifier(Identifier {
+                    cv: None,
+                    name: "x".to_string(),
+                }),
+                value: Box::new(ident("x")),
+                shorthand: true,
+                computed: false,
+                method: false,
+            }]),
+        ];
+        for arg in cases {
+            let c = object_static_call("entries", arg);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "non-literal value must not fold");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn object_entries_getter_method_computed_do_not_fold() {
+        // Getters/setters run code, methods are functions, computed keys are
+        // unknown — each declines the whole fold.
+        let getter = object_lit(vec![Property {
+            cv: None,
+            kind: PropertyKind::Get,
+            key: PropertyKey::Identifier(Identifier {
+                cv: None,
+                name: "a".to_string(),
+            }),
+            value: Box::new(num(1.0, None)),
+            shorthand: false,
+            computed: false,
+            method: false,
+        }]);
+        let method = object_lit(vec![Property {
+            cv: None,
+            kind: PropertyKind::Init,
+            key: PropertyKey::Identifier(Identifier {
+                cv: None,
+                name: "a".to_string(),
+            }),
+            value: Box::new(num(1.0, None)),
+            shorthand: false,
+            computed: false,
+            method: true,
+        }]);
+        let computed = object_lit(vec![Property {
+            cv: None,
+            kind: PropertyKind::Init,
+            key: PropertyKey::Identifier(Identifier {
+                cv: None,
+                name: "a".to_string(),
+            }),
+            value: Box::new(num(1.0, None)),
+            shorthand: false,
+            computed: true,
+            method: false,
+        }]);
+        for arg in [getter, method, computed] {
+            let c = object_static_call("entries", arg);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "getter/method/computed must not fold");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn object_keys_values_nonempty_still_decline() {
+        // Only `entries` folds non-empty objects; `keys` and `values` are left
+        // for a future PR and must still decline.
+        for method in ["keys", "values"] {
+            let c = object_static_call(method, object_lit(vec![entries_prop("a", num(1.0, None))]));
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "Object.{method}({{a:1}}) must not fold yet");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn object_entries_on_non_object_receiver_does_not_fold() {
+        // Only the bare global `Object` folds; `o.entries({a:1})` is left alone.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("o"), "entries")),
+            arguments: vec![object_lit(vec![entries_prop("a", num(1.0, None))])],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "o.entries({{a:1}}) must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
     }
 

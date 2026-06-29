@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.221.0] - 2026-06-27
+
+### Added — SIMPLE/ADVANCED fold static `Object.entries({…})` → array of pairs
+
+At `--compilation_level SIMPLE` (and ADVANCED, which routes through the same
+pipeline) the typed constant-fold pass now collapses a static
+`Object.entries({k: v, …})` call (ECMAScript §20.1.2.5) — the inverse of
+`Object.fromEntries` — to an array of `[key, value]` pair literals when the
+argument is a non-empty object literal of plain data properties with
+primitive-literal values (string / number / boolean / null). Each entry key is
+emitted as a string literal. We decline a `"__proto__"` key (the object-literal
+form is the §B.3.1 prototype setter, not an own property), any canonical
+array-index key (`0`, `1`, `42`, … — enumerated ahead of string keys, which
+would reorder the result), any non-literal value (including a shorthand `{x}`),
+getters / setters / methods / computed keys, a non-global receiver, and arity
+≠ 1; duplicate keys collapse to one entry (first position, last value). The
+empty-object case `Object.entries({})` → `[]` was already handled. New
+end-to-end fixture `tests/diff/simple-fold-object-entries/` plus integration
+test `tests/diff_simple_fold_object_entries.rs`.
 ## [0.220.0] - 2026-06-27
 
 ### Added — SIMPLE/ADVANCED fold static `Object.fromEntries(...)` → object literal
