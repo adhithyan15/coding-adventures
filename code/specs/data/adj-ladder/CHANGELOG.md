@@ -2,6 +2,39 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.26.0] — 2026-06-29
+
+### Added — rung 4: dimensional analysis (the dimensional engine)
+
+- New **`rung4_dimensional/items.json`**: 20 self-authored word problems whose answer is a
+  **unit-bearing quantity** — speed (km/h, m/s), molarity (mol/l), flow rate (ml/min, ml/s),
+  concentration (mg/ml, g/l), density (g/cc), dose rate (mg/h), and a dimensionless ratio
+  (scalar). This is the *dimensional engine* rung promised by `rung4_physics_chem` (whose
+  first PR deliberately kept units in prose only); see ADJ-LADDER.md §5.
+- Each gold program `observe`s typed quantities (`quantity(240, km)`) and binds
+  `let answer = distance / time`. The **engine** carries the dimension through the division
+  via `Dimension::combine` and reports the result as `80 km/h` — the unit tag is computed,
+  never written by the model. Every option is a `{"value", "unit"}` object and the new
+  `compute_dimensioned` answer-extractor demands the engine's **(magnitude, unit)** match
+  BOTH, so every item carries a wrong-unit-same-magnitude distractor (80 m/s vs 80 km/h)
+  that a number-only reasoner falls for and the dimensional engine rejects.
+- Engine selects **20/20 in cached mode with zero miscomputations and zero unit mismatches**
+  — the same hard gate (`wrong == 0`) every self-contained rung must pass.
+
+### Added — harness
+
+- `ladder_eval.py`: `compute_dimensioned` answer type — `compute_dimensioned_to_letter`
+  reads the CLI's new `derived` section and matches `_letter_for_engine_dimensioned`
+  (value AND unit); `_option_dimensioned` parses the `{value, unit}` option shape;
+  `program_engine_trace` audits a dimensional item as `derived/<unit-tag>`.
+- `contamination_check.py`: `dimensioned_option_signature` — dimensioned options are
+  distinct iff they differ in magnitude OR unit (a wrong-unit distractor is a legitimate,
+  distinct choice), and the gold-maps-to-engine check runs the dimensional program through
+  the CLI like every other program rung.
+- Depends on a new `adj-lang-cli` `derived` JSON section (surfacing the engine's existing
+  per-`let` dimensional analysis) and a read-only `KnowledgeBase::derived_bindings()`
+  accessor in `logic-engine`.
+
 ## [0.25.0] — 2026-06-28
 
 ### Added — rung 4: physics & chemistry word problems (first PR)

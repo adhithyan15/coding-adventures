@@ -144,7 +144,12 @@ _LETTER = re.compile(r"\b([A-E])\b")
 # ----------------------------------------------------------------------------------
 # Arm B — build the ADJ program and read the engine's selection.
 # ----------------------------------------------------------------------------------
-OptionValue = Union[int, float, str, list[Union[int, float]]]
+# An option value as printed in the question. Most rungs use a bare number; a
+# root-set rung uses a list; a label rung uses a string. The rung-4 *dimensional*
+# rung uses a `{"value": <num>, "unit": "<tag>"}` object so the harness can demand
+# that the engine's answer match BOTH the magnitude and the inferred unit — a
+# numerically-right-but-unit-wrong distractor (80 mph vs 80 km/h) is rejected.
+OptionValue = Union[int, float, str, list[Union[int, float]], dict]
 
 _BINOPS = {
     ast.Add: operator.add,
@@ -197,6 +202,20 @@ def _option_label(value: OptionValue) -> str:
     if not label:
         raise ValueError("label option must not be empty")
     return label
+
+
+def _option_dimensioned(value: OptionValue) -> tuple[float, str]:
+    """A dimensioned option is `{"value": <num>, "unit": "<tag>"}`. Returns the
+    (magnitude, unit-tag) pair. The unit tag must match the engine's inferred
+    [`Dimension::tag()`] verbatim (e.g. `"km/h"`, `"mol/l"`, `"scalar"`)."""
+    if (
+        isinstance(value, dict)
+        and isinstance(value.get("value"), (int, float))
+        and isinstance(value.get("unit"), str)
+        and value["unit"].strip()
+    ):
+        return float(value["value"]), value["unit"].strip()
+    raise ValueError(f"unsupported dimensioned option value {value!r}")
 
 
 def _option_roots(value: OptionValue) -> tuple[float, ...]:
@@ -310,6 +329,25 @@ def _letter_for_engine_label(label: str, options: dict[str, OptionValue]) -> str
                 matches.append(ltr)
         except ValueError:
             return None
+    return matches[0] if len(matches) == 1 else None
+
+
+def _letter_for_engine_dimensioned(
+    value: float, unit: str, options: dict[str, OptionValue]
+) -> str | None:
+    """Match the engine's (magnitude, unit) answer against dimensioned options.
+
+    BOTH must agree: a distractor that prints the right number under the wrong
+    unit (80 "m/s" when the answer is 80 "km/h") fails the `unit ==` test, so the
+    engine's dimensional analysis — not Python — is what discriminates."""
+    matches = []
+    for ltr, option in options.items():
+        try:
+            opt_value, opt_unit = _option_dimensioned(option)
+        except (ValueError, TypeError):
+            return None
+        if abs(value - opt_value) <= 1e-9 and unit == opt_unit:
+            matches.append(ltr)
     return matches[0] if len(matches) == 1 else None
 
 
@@ -541,6 +579,44 @@ def decision_leader_to_letter(
     return _letter_for_engine_label(label, options)
 
 
+def compute_dimensioned_to_letter(
+    doc: dict | None, answer_from: dict | None, options: dict[str, OptionValue]
+) -> str | None:
+    """Map a `let`-derived dimensioned value to an option letter (rung-4 dimensional).
+
+    The model emits only `observe`d typed quantities and a `let answer = ...`
+    formula; the engine carries the units through every operation and reports the
+    result as e.g. `80 km/h` in the `"derived"` section. The harness reads that
+    (magnitude, unit) pair and matches BOTH against the printed dimensioned
+    choices — so the unit, not just the number, has to be right. Python never
+    computes the value or the unit; it only compares the engine's output to the
+    options."""
+    if not doc or not answer_from or answer_from.get("type") != "compute_dimensioned":
+        return None
+    if not program_requirements_hold(doc, answer_from):
+        return None
+    name = answer_from.get("name")
+    derived = doc.get("derived")
+    if not name or not isinstance(derived, list):
+        return None
+    entries = [
+        d for d in derived if isinstance(d, dict) and d.get("name") == name
+    ]
+    # The CLI emits exactly one entry per binding name (latest wins), so a clean
+    # program yields a single match; anything else is an abstain, not a guess.
+    if len(entries) != 1:
+        return None
+    entry = entries[0]
+    unit = entry.get("dim")
+    if not isinstance(unit, str):
+        return None
+    try:
+        value = float(entry.get("value"))
+    except (TypeError, ValueError):
+        return None
+    return _letter_for_engine_dimensioned(value, unit, options)
+
+
 def program_answer_to_letter(
     doc: dict | None, answer_from: dict | None, options: dict[str, OptionValue]
 ) -> str | None:
@@ -558,6 +634,8 @@ def program_answer_to_letter(
         return check_outcome_to_letter(doc, answer_from, options)
     if answer_from.get("type") == "decision_leader":
         return decision_leader_to_letter(doc, answer_from, options)
+    if answer_from.get("type") == "compute_dimensioned":
+        return compute_dimensioned_to_letter(doc, answer_from, options)
     return None
 
 
@@ -572,6 +650,18 @@ def program_engine_trace(doc: dict | None, answer_from: dict | None) -> tuple[st
     if not doc or not answer_from:
         return None, None
     typ = answer_from.get("type")
+    if typ == "compute_dimensioned":
+        # The derived section is a LIST; the audit "outcome" is the unit tag the
+        # engine inferred for the named binding (or None if it abstained / the
+        # program failed to bind it).
+        name = answer_from.get("name")
+        derived = doc.get("derived")
+        if isinstance(derived, list):
+            for d in derived:
+                if isinstance(d, dict) and d.get("name") == name:
+                    tag = d.get("dim")
+                    return "derived", str(tag) if tag is not None else None
+        return "derived", None
     if typ in {"solve_assignment", "solve_roots"}:
         section = doc.get("solve")
         kind = "solve"
