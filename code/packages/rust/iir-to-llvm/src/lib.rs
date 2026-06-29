@@ -270,7 +270,7 @@ const SUPPORTED_OPS: &[&str] = &[
     // NaN/∞/out-of-i64-range, matching the VM), then `fptosi double → i64`.
     "int_to_real", "real_to_int_trunc", "real_to_int_floor",
     // AL8 sqrt + transcendentals — IEEE-754 ops via LLVM intrinsics / libm.
-    "f64_sqrt", "f64_sin", "f64_cos", "f64_ln", "f64_exp",
+    "f64_sqrt", "f64_sin", "f64_cos", "f64_ln", "f64_exp", "f64_atan", "f64_tan",
     // LANG-FULL E4 — string literal foothold for the static LLVM column.
     // `str_const` materialises a length-prefixed private constant. `str_index`,
     // `str_concat`, `str_slice`, `str_len`, `str_eq`, and `str_cmp` read literal metadata,
@@ -711,11 +711,14 @@ pub fn lower_iir_to_llvm(
     let mut used_conversions = false;
     // AL8 sqrt/trig: `f64_sqrt`/`f64_sin`/`f64_cos`/`f64_ln`/`f64_exp` each
     // lower to a single LLVM intrinsic call — one `declare` per used op.
+    // `f64_atan`/`f64_tan` use direct libm declarations (no LLVM intrinsic).
     let mut used_f64_sqrt = false;
     let mut used_f64_sin  = false;
     let mut used_f64_cos  = false;
     let mut used_f64_ln   = false;
     let mut used_f64_exp  = false;
+    let mut used_f64_atan = false;
+    let mut used_f64_tan  = false;
     // McCarthy W12b: collect the tagged-word lisp builtins actually used, in
     // first-seen order, so each gets exactly one `declare i64 @__twig_lispy_*`.
     let mut used_lispy: Vec<&'static (&'static str, &'static str, usize)> = Vec::new();
@@ -741,6 +744,8 @@ pub fn lower_iir_to_llvm(
             if i.op == "f64_cos"  { used_f64_cos  = true; }
             if i.op == "f64_ln"   { used_f64_ln   = true; }
             if i.op == "f64_exp"  { used_f64_exp  = true; }
+            if i.op == "f64_atan" { used_f64_atan = true; }
+            if i.op == "f64_tan"  { used_f64_tan  = true; }
             if i.op == "call_builtin" {
                 if let Some(Operand::Var(name)) = i.srcs.first() {
                     match name.as_str() {
@@ -770,7 +775,8 @@ pub fn lower_iir_to_llvm(
     // LLVM05 — libc / allocator declarations for the Brainfuck tape & I/O.
     // `calloc(nmemb, size)` returns a zero-filled buffer (BF cells start at 0);
     // `putchar`/`getchar` are the libc character I/O the BF `.`/`,` map to.
-    if used_f64_sqrt || used_f64_sin || used_f64_cos || used_f64_ln || used_f64_exp {
+    if used_f64_sqrt || used_f64_sin || used_f64_cos || used_f64_ln || used_f64_exp
+        || used_f64_atan || used_f64_tan {
         out.push('\n');
     }
     if used_f64_sqrt {
@@ -785,6 +791,10 @@ pub fn lower_iir_to_llvm(
     if used_f64_cos  { out.push_str("declare double @llvm.cos.f64(double)\n"); }
     if used_f64_ln   { out.push_str("declare double @llvm.log.f64(double)\n"); }
     if used_f64_exp  { out.push_str("declare double @llvm.exp.f64(double)\n"); }
+    // `f64_atan`/`f64_tan` — LLVM has no `@llvm.atan`/`@llvm.tan` standard
+    // intrinsics; call libm directly.  libm is pre-linked on both platforms.
+    if used_f64_atan { out.push_str("declare double @atan(double)\n"); }
+    if used_f64_tan  { out.push_str("declare double @tan(double)\n"); }
     if used_alloc_bytes || used_arrays || used_conversions || used_str_index || used_putchar || used_getchar {
         out.push('\n');
         if used_alloc_bytes || used_arrays {
@@ -1571,6 +1581,9 @@ fn lower_instr(
         "f64_cos"  => lower_f64_intrinsic(instr, state, out, "f64_cos",  "@llvm.cos.f64"),
         "f64_ln"   => lower_f64_intrinsic(instr, state, out, "f64_ln",   "@llvm.log.f64"),
         "f64_exp"  => lower_f64_intrinsic(instr, state, out, "f64_exp",  "@llvm.exp.f64"),
+        // AL8-arctan: direct libm calls (no LLVM intrinsic for atan/tan).
+        "f64_atan" => lower_f64_intrinsic(instr, state, out, "f64_atan", "@atan"),
+        "f64_tan"  => lower_f64_intrinsic(instr, state, out, "f64_tan",  "@tan"),
 
         // ── strings (LANG-FULL E4 literal-output foothold) ─────────────────
         "str_const" => lower_str_const(instr, state),

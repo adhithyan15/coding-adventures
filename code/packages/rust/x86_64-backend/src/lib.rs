@@ -637,12 +637,14 @@ fn emit_instr(
     // return the f64 result in xmm0, so there is no ABI difference here.
     // libm is pre-linked on Linux (`-lm`) and macOS (`-lSystem`).
     // ALGOL `ln` maps to libm `log` (natural logarithm).
-    if matches!(op, "f64_sin" | "f64_cos" | "f64_ln" | "f64_exp") {
+    if matches!(op, "f64_sin" | "f64_cos" | "f64_ln" | "f64_exp" | "f64_atan" | "f64_tan") {
         let libm_sym = match op {
-            "f64_sin" => "sin",
-            "f64_cos" => "cos",
-            "f64_ln"  => "log",   // libm natural log is `log`, not `ln`
-            "f64_exp" => "exp",
+            "f64_sin"  => "sin",
+            "f64_cos"  => "cos",
+            "f64_ln"   => "log",   // libm natural log is `log`, not `ln`
+            "f64_exp"  => "exp",
+            "f64_atan" => "atan",
+            "f64_tan"  => "tan",
             _ => unreachable!(),
         };
         let dest = require_dest(instr)?;

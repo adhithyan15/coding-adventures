@@ -1,5 +1,15 @@
 # Changelog — vm-core
 
+## [0.15.0] — 2026-06-29 (LANG-FULL AL8-arctan — `f64_atan/f64_tan` VM dispatch handlers)
+
+Added two handlers registered in `lookup_standard`:
+- `f64_atan` → `handle_f64_atan` using `f64::atan` (inverse tangent; range −π/2 to π/2; f64_atan(0.0) = 0.0 exactly)
+- `f64_tan`  → `handle_f64_tan` using `f64::tan` (tangent; f64_tan(0.0) = 0.0 exactly)
+
+Both delegate through the existing `handle_f64_transcendental` helper — one source
+operand extracted as `Value::Float`, function applied, result stored.  JIT inherits both
+ops via the `lookup_standard` fallback at no extra cost.
+
 ## [0.14.0] — 2026-06-28 (LANG-FULL AL8-trig — `f64_sin/cos/ln/exp` VM dispatch handlers)
 
 Added `handle_f64_transcendental` generic helper and four handlers registered in the

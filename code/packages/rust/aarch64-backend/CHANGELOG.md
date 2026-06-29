@@ -1,5 +1,14 @@
 # Changelog — `aarch64-backend`
 
+## 0.17.0 — 2026-06-29 — `f64_atan/f64_tan` via libm `BL` (LANG-FULL AL8-arctan)
+
+Extended the transcendental match arm to cover two more ops:
+- `f64_atan` → `BL atan`  (libm inverse tangent)
+- `f64_tan`  → `BL tan`   (libm tangent)
+
+Pattern: `ldr_d D0,[src]; BL atan/tan (PltRel32 external reloc); str_d D0,[dest]`.
+AAPCS64 passes and returns f64 in D0 — no register adjustment needed.
+
 ## 0.16.0 — 2026-06-28 — `f64_sin/cos/ln/exp` via libm `BL` (LANG-FULL AL8-trig)
 
 Transcendentals call libm via AArch64's `BL` instruction with an external reloc:

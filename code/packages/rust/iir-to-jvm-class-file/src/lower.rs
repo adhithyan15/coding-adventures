@@ -2550,13 +2550,16 @@ fn lower_function(
             //
             // `sin`/`cos`/`exp` map directly to the Java method names; ALGOL's
             // `ln` maps to `java/lang/Math.log(D)D` (Java's natural log).
-            "f64_sqrt" | "f64_sin" | "f64_cos" | "f64_ln" | "f64_exp" => {
+            "f64_sqrt" | "f64_sin" | "f64_cos" | "f64_ln" | "f64_exp"
+            | "f64_atan" | "f64_tan" => {
                 let java_method = match instr.op.as_str() {
                     "f64_sqrt" => "sqrt",
                     "f64_sin"  => "sin",
                     "f64_cos"  => "cos",
                     "f64_ln"   => "log",
                     "f64_exp"  => "exp",
+                    "f64_atan" => "atan",
+                    "f64_tan"  => "tan",
                     _ => unreachable!(),
                 };
                 let src = one_src(func, instr, &slots)?;

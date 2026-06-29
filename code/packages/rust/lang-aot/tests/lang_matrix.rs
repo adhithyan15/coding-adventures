@@ -1019,6 +1019,18 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — **AL8-arctan**: `arctan` standard function (§3.2.4).
+    // `arctan(0.0)` = 0.0 exactly (arctan of 0 is 0).
+    // `entier(0.0 + 42.0)` = 42.
+    // Every backend calls libm `atan` / `Math.atan` / `@atan` etc.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real r; integer result; r := arctan(0.0); \
+               result := entier(r + 42.0) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a *typed procedure with a value parameter* (`integer procedure
     // sq(x); value x; integer x; sq := x*x`) called from the main block:
     // `result := sq(7)` ⇒ exit 49.  `algol-iir-compiler` lowers the procedure
@@ -1825,6 +1837,27 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("-1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — `ATN` (arctangent) built-in (LANG-FULL BA-arctan).
+    // ATN(X) lowers to the f64_atan IIR op which calls libm `atan` on every
+    // backend.  ATN(0) = 0.0 exactly in IEEE-754 double; BA7's formatter
+    // prints whole-valued reals without a decimal point, so output is `0`.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT ATN(0)\n20 END\n",
+        expect: Expect::Stdout("0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — `TAN` (tangent) built-in (LANG-FULL BA-arctan).
+    // TAN(X) lowers to the f64_tan IIR op which calls libm `tan` on every
+    // backend.  TAN(0) = 0.0 exactly; output is `0`.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT TAN(0)\n20 END\n",
+        expect: Expect::Stdout("0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -2279,6 +2312,52 @@ impl wasm_execution::HostFunction for ExpFunc {
     }
 }
 
+struct AtanFunc;
+impl wasm_execution::HostFunction for AtanFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::F64],
+                results: vec![wasm_types::ValueType::F64],
+            });
+        &FT
+    }
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let x = args.first()
+            .ok_or_else(|| wasm_execution::TrapError::new("__atan: missing argument"))?
+            .as_f64()
+            .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        Ok(vec![wasm_execution::WasmValue::F64(x.atan())])
+    }
+}
+
+struct TanFunc;
+impl wasm_execution::HostFunction for TanFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::F64],
+                results: vec![wasm_types::ValueType::F64],
+            });
+        &FT
+    }
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let x = args.first()
+            .ok_or_else(|| wasm_execution::TrapError::new("__tan: missing argument"))?
+            .as_f64()
+            .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        Ok(vec![wasm_execution::WasmValue::F64(x.tan())])
+    }
+}
+
 /// The host interface the matrix runs wasm under: it resolves the generic
 /// `env.__print_i64` import to a `PrintFunc` (integer capture, for BASIC),
 /// `env.__print_str` to a memory-reading byte capture, and the Brainfuck I/O
@@ -2312,10 +2391,13 @@ impl wasm_execution::HostInterface for PrintHost {
                 input: std::sync::Arc::clone(&self.input),
             })),
             // AL8 transcendentals: env.__sin/cos/ln/exp are f64→f64 host imports.
-            ("env", "__sin") => Some(Box::new(SinFunc)),
-            ("env", "__cos") => Some(Box::new(CosFunc)),
-            ("env", "__ln")  => Some(Box::new(LnFunc)),
-            ("env", "__exp") => Some(Box::new(ExpFunc)),
+            ("env", "__sin")  => Some(Box::new(SinFunc)),
+            ("env", "__cos")  => Some(Box::new(CosFunc)),
+            ("env", "__ln")   => Some(Box::new(LnFunc)),
+            ("env", "__exp")  => Some(Box::new(ExpFunc)),
+            // AL8-arctan: env.__atan/tan are f64→f64 host imports.
+            ("env", "__atan") => Some(Box::new(AtanFunc)),
+            ("env", "__tan")  => Some(Box::new(TanFunc)),
             _ => None,
         }
     }
