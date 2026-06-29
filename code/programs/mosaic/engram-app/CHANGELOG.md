@@ -13,6 +13,9 @@
 - Added imported Anki revlog-aware `resched:` and `prop:resched` manual
   reschedule browser filters, while excluding those rows from imported
   `rated:` searches.
+- Normalized Anki-style recent-day browser searches so top-level `:0` windows
+  behave as one-day searches for added, edited, introduced, rated, and
+  rescheduled cards.
 - Expanded the shared Engram browser search core with Anki-style `w:`, `nc:`,
   `sc:`, and `re:` text modifiers, field-scoped regex searches, tag regexes,
   and single-character `_` wildcards.

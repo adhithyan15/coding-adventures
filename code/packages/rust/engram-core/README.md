@@ -91,9 +91,10 @@ Imported Anki revlog metadata powers manual reschedule searches with
 `resched:` and `prop:resched`; imported Anki queue metadata also powers
 `is:buried-manually` and
 `is:buried-sibling`; relearning cards match both `is:learn` and `is:review`
-for Anki-style lapsed-card queries. Terms inside a group use implicit AND,
-`OR` joins groups, parentheses group subexpressions, and leading `-` negates a
-term or group.
+for Anki-style lapsed-card queries. Recent-day filters treat `:0` as Anki does:
+an alias for a one-day window. Terms inside a group use implicit AND, `OR`
+joins groups, parentheses group subexpressions, and leading `-` negates a term
+or group.
 
 `materialize_generated_card` turns a note-template `GeneratedCard` into a
 durable `Card` with note/template lineage. Cloze templates using

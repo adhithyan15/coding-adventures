@@ -982,7 +982,7 @@ fn parse_recent_days_filter(token: &str, value: &str) -> Result<RecentDaysFilter
         token: token.to_string(),
     })?;
 
-    Ok(RecentDaysFilter { days })
+    Ok(RecentDaysFilter { days: days.max(1) })
 }
 
 fn parse_rated_filter(token: &str, value: &str) -> Result<RatedFilter, SearchError> {
@@ -994,7 +994,8 @@ fn parse_rated_filter(token: &str, value: &str) -> Result<RatedFilter, SearchErr
         .map_err(|_| SearchError {
             message: "rated search value must start with a whole number of days".to_string(),
             token: token.to_string(),
-        })?;
+        })?
+        .max(1);
     let rating = match parts.next() {
         Some(raw_rating) if raw_rating.is_empty() => {
             return Err(SearchError {
@@ -2830,8 +2831,12 @@ mod tests {
             ids_for("added:1"),
             vec!["note::forward", "future", "suspended", "buried", "new"]
         );
+        assert_eq!(ids_for("added:0"), ids_for("added:1"));
         assert_eq!(ids_for("edited:1"), vec!["note::forward"]);
+        assert_eq!(ids_for("edited:0"), ids_for("edited:1"));
         assert_eq!(ids_for("introduced:1"), vec!["due"]);
+        assert_eq!(ids_for("introduced:0"), ids_for("introduced:1"));
+        assert_eq!(ids_for("rated:0"), ids_for("rated:1"));
         assert_eq!(ids_for("rated:1:3"), vec!["due"]);
         assert_eq!(ids_for("rated:4:again"), vec!["future"]);
     }
@@ -2891,6 +2896,7 @@ mod tests {
         };
 
         assert_eq!(ids_for("resched:1"), vec!["manual"]);
+        assert_eq!(ids_for("resched:0"), ids_for("resched:1"));
         assert_eq!(ids_for("prop:resched=0"), vec!["manual"]);
         assert_eq!(ids_for("prop:rescheduled<-1"), vec!["old-manual"]);
         assert_eq!(ids_for("rated:1"), vec!["answered", "native"]);
