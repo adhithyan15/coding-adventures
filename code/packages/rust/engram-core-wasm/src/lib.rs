@@ -990,7 +990,15 @@ fn engram_browser_props_for_state(
 ) -> Result<Value, engram_core::SearchError> {
     let query = normalize_browser_query(query);
     let results = if current_deck_id.is_some() {
-        search_cards_with_context(state, &query, now, SearchContext { current_deck_id })?
+        search_cards_with_context(
+            state,
+            &query,
+            now,
+            SearchContext {
+                current_deck_id,
+                ..SearchContext::default()
+            },
+        )?
     } else {
         search_core_cards(state, &query, now)?
     };
@@ -1251,7 +1259,10 @@ fn browser_selected_card_id(
                     state,
                     DEFAULT_BROWSER_QUERY,
                     now,
-                    SearchContext { current_deck_id },
+                    SearchContext {
+                        current_deck_id,
+                        ..SearchContext::default()
+                    },
                 )
             } else {
                 search_core_cards(state, DEFAULT_BROWSER_QUERY, now)
@@ -1271,7 +1282,15 @@ fn selected_browser_row(
 ) -> Option<BrowserRow> {
     let query = normalize_browser_query(browser.active_query());
     let results = if current_deck_id.is_some() {
-        search_cards_with_context(state, &query, now, SearchContext { current_deck_id })
+        search_cards_with_context(
+            state,
+            &query,
+            now,
+            SearchContext {
+                current_deck_id,
+                ..SearchContext::default()
+            },
+        )
     } else {
         search_core_cards(state, &query, now)
     };

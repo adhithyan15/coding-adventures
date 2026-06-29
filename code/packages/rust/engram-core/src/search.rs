@@ -62,6 +62,7 @@ pub struct SearchError {
 #[derive(Clone, Copy, Debug, Default)]
 pub struct SearchContext<'a> {
     pub current_deck_id: Option<&'a str>,
+    pub day_start_offset_ms: Option<u64>,
 }
 
 #[derive(Clone, Debug)]
@@ -249,6 +250,7 @@ struct SearchMetadata<'a> {
     deck_preset_names_by_id: HashMap<&'a str, Vec<String>>,
     deck_option_deck_ids: HashSet<&'a str>,
     collection_created_at_days: Option<i64>,
+    day_start_offset_ms: u64,
 }
 
 pub fn search_cards(
@@ -349,9 +351,11 @@ impl<'a> SearchMetadata<'a> {
                     .as_ref()
                     .map(|active| active.deck_id.clone())
             });
+        let day_start_offset_ms = context.day_start_offset_ms.unwrap_or_default() % MS_PER_DAY;
         let mut metadata = Self {
             current_deck_id,
             decks_by_id: decks_by_id.clone(),
+            day_start_offset_ms,
             deck_option_deck_ids: state
                 .deck_options
                 .iter()
@@ -1464,9 +1468,11 @@ fn clause_matches(
         SearchClauseKind::CustomDataString(filter) => {
             custom_data_string_matches(filter, card_sources)
         }
-        SearchClauseKind::Added(filter) => added_matches(card, card_sources, filter.days, now),
+        SearchClauseKind::Added(filter) => {
+            added_matches(card, card_sources, filter.days, metadata, now)
+        }
         SearchClauseKind::Edited(filter) => {
-            note.is_some_and(|note| happened_recently(note.updated_at, filter.days, now))
+            note.is_some_and(|note| happened_recently(note.updated_at, filter.days, metadata, now))
         }
         SearchClauseKind::Introduced(filter) => {
             first_reviewed_within(reviews, filter.days, metadata, now)
@@ -2500,7 +2506,11 @@ fn property_matches(
                 || {
                     progress.is_some_and(|progress| {
                         compare_number(
-                            f64::from(relative_day_bucket(progress.next_due_at, now)),
+                            f64::from(relative_day_bucket(
+                                progress.next_due_at,
+                                now,
+                                metadata.day_start_offset_ms,
+                            )),
                             filter.operator,
                             filter.value,
                         )
@@ -2541,7 +2551,11 @@ fn property_matches(
             !anki_review_is_manual_reschedule(review, metadata)
                 && filter.rating.map_or(true, |rating| review.rating == rating)
                 && compare_number(
-                    f64::from(relative_day_bucket(review.reviewed_at, now)),
+                    f64::from(relative_day_bucket(
+                        review.reviewed_at,
+                        now,
+                        metadata.day_start_offset_ms,
+                    )),
                     filter.operator,
                     filter.value,
                 )
@@ -2549,7 +2563,11 @@ fn property_matches(
         CardProperty::Rescheduled => reviews.iter().any(|review| {
             anki_review_is_manual_reschedule(review, metadata)
                 && compare_number(
-                    f64::from(relative_day_bucket(review.reviewed_at, now)),
+                    f64::from(relative_day_bucket(
+                        review.reviewed_at,
+                        now,
+                        metadata.day_start_offset_ms,
+                    )),
                     filter.operator,
                     filter.value,
                 )
@@ -2813,9 +2831,15 @@ fn custom_data_string(value: &Value) -> Option<String> {
     }
 }
 
-fn added_matches(card: &Card, card_sources: &[&ExternalSourceRecord], days: u32, now: u64) -> bool {
+fn added_matches(
+    card: &Card,
+    card_sources: &[&ExternalSourceRecord],
+    days: u32,
+    metadata: &SearchMetadata<'_>,
+    now: u64,
+) -> bool {
     let timestamp = imported_anki_card_added_at(card_sources).unwrap_or(card.created_at);
-    happened_recently(timestamp, days, now)
+    happened_recently(timestamp, days, metadata, now)
 }
 
 fn imported_anki_card_added_at(card_sources: &[&ExternalSourceRecord]) -> Option<u64> {
@@ -2833,7 +2857,7 @@ fn rated_matches(
     reviews.iter().any(|review| {
         !anki_review_is_manual_reschedule(review, metadata)
             && filter.rating.map_or(true, |rating| review.rating == rating)
-            && happened_recently(review.reviewed_at, filter.days, now)
+            && happened_recently(review.reviewed_at, filter.days, metadata, now)
     })
 }
 
@@ -2845,7 +2869,7 @@ fn rescheduled_matches(
 ) -> bool {
     reviews.iter().any(|review| {
         anki_review_is_manual_reschedule(review, metadata)
-            && happened_recently(review.reviewed_at, filter.days, now)
+            && happened_recently(review.reviewed_at, filter.days, metadata, now)
     })
 }
 
@@ -2871,27 +2895,36 @@ fn first_reviewed_within(
         .filter(|review| !anki_review_is_manual_reschedule(review, metadata))
         .map(|review| review.reviewed_at)
         .min()
-        .is_some_and(|reviewed_at| happened_recently(reviewed_at, days, now))
+        .is_some_and(|reviewed_at| happened_recently(reviewed_at, days, metadata, now))
 }
 
-fn happened_recently(timestamp: u64, days: u32, now: u64) -> bool {
-    timestamp <= now && timestamp >= recent_day_cutoff_ms(days, now)
+fn happened_recently(timestamp: u64, days: u32, metadata: &SearchMetadata<'_>, now: u64) -> bool {
+    timestamp <= now && timestamp >= recent_day_cutoff_ms(days, now, metadata.day_start_offset_ms)
 }
 
-fn recent_day_cutoff_ms(days: u32, now: u64) -> u64 {
-    let next_day_start = now
-        .checked_div(MS_PER_DAY)
-        .unwrap_or_default()
-        .saturating_add(1)
-        .saturating_mul(MS_PER_DAY);
+fn recent_day_cutoff_ms(days: u32, now: u64, day_start_offset_ms: u64) -> u64 {
+    let next_day_start = scheduler_day_start_ms(
+        scheduler_day_index(now, day_start_offset_ms).saturating_add(1),
+        day_start_offset_ms,
+    );
     next_day_start.saturating_sub(u64::from(days.max(1)).saturating_mul(MS_PER_DAY))
 }
 
-fn relative_day_bucket(timestamp: u64, now: u64) -> i32 {
-    let timestamp_day = timestamp / MS_PER_DAY;
-    let now_day = now / MS_PER_DAY;
+fn relative_day_bucket(timestamp: u64, now: u64, day_start_offset_ms: u64) -> i32 {
+    let timestamp_day = scheduler_day_index(timestamp, day_start_offset_ms);
+    let now_day = scheduler_day_index(now, day_start_offset_ms);
     let diff = timestamp_day as i128 - now_day as i128;
     diff.clamp(i128::from(i32::MIN), i128::from(i32::MAX)) as i32
+}
+
+fn scheduler_day_index(timestamp: u64, day_start_offset_ms: u64) -> u64 {
+    timestamp.saturating_sub(day_start_offset_ms) / MS_PER_DAY
+}
+
+fn scheduler_day_start_ms(day_index: u64, day_start_offset_ms: u64) -> u64 {
+    day_index
+        .saturating_mul(MS_PER_DAY)
+        .saturating_add(day_start_offset_ms)
 }
 
 fn compare_number(actual: f64, operator: ComparisonOperator, expected: f64) -> bool {
@@ -4076,6 +4109,7 @@ mod tests {
                 &state,
                 SearchContext {
                     current_deck_id: Some("tamil"),
+                    ..SearchContext::default()
                 },
             ),
             vec!["tamil-card", "tamil-child-card", "filtered-tamil-card"]
@@ -4102,6 +4136,7 @@ mod tests {
                 &state,
                 SearchContext {
                     current_deck_id: Some("tamil"),
+                    ..SearchContext::default()
                 },
             ),
             vec!["tamil-card", "tamil-child-card", "filtered-tamil-card"],
@@ -5005,6 +5040,111 @@ mod tests {
             ids_for("rated:2:good"),
             vec!["today-reviewed", "yesterday-reviewed"]
         );
+    }
+
+    #[test]
+    fn recent_event_filters_use_scheduler_day_cutoff_context() {
+        let cutoff_offset = 4 * 60 * 60 * 1000;
+        let day_start = (NOW / ONE_DAY_MS) * ONE_DAY_MS;
+        let now = day_start + 3 * 60 * 60 * 1000;
+        let scheduler_today_start = day_start + cutoff_offset - ONE_DAY_MS;
+        let just_before_scheduler_today = scheduler_today_start - 1;
+
+        let mut inside_note = tagged_note();
+        inside_note.id = "inside-note".to_string();
+        inside_note.updated_at = scheduler_today_start;
+        let mut outside_note = tagged_note();
+        outside_note.id = "outside-note".to_string();
+        outside_note.updated_at = just_before_scheduler_today;
+
+        let card_for_note = |note_id: &str| {
+            let mut card = card(&format!("{note_id}::forward"), "tamil", note_id, "answer");
+            card.created_at = just_before_scheduler_today;
+            card.lineage = Some(CardLineage {
+                note_id: note_id.to_string(),
+                note_type_id: "basic".to_string(),
+                template_id: "forward".to_string(),
+                ordinal: 0,
+                cloze_ordinal: None,
+            });
+            card
+        };
+        let mut inside_added = card("inside-added", "tamil", "inside", "added");
+        inside_added.created_at = scheduler_today_start;
+        let mut outside_added = card("outside-added", "tamil", "outside", "added");
+        outside_added.created_at = just_before_scheduler_today;
+        let old_card = |id: &str| {
+            let mut card = card(id, "tamil", id, id);
+            card.created_at = just_before_scheduler_today;
+            card
+        };
+
+        let state = AppState {
+            decks: vec![deck("tamil", "Tamil")],
+            note_types: vec![note_type()],
+            notes: vec![inside_note, outside_note],
+            cards: vec![
+                inside_added,
+                outside_added,
+                card_for_note("inside-note"),
+                card_for_note("outside-note"),
+                old_card("inside-reviewed"),
+                old_card("outside-reviewed"),
+                old_card("manual-rescheduled"),
+            ],
+            reviews: vec![
+                review(
+                    "inside-good",
+                    "inside-reviewed",
+                    Rating::Good,
+                    scheduler_today_start,
+                ),
+                review(
+                    "outside-good",
+                    "outside-reviewed",
+                    Rating::Good,
+                    just_before_scheduler_today,
+                ),
+                review(
+                    "manual-rescheduled-review",
+                    "manual-rescheduled",
+                    Rating::Good,
+                    scheduler_today_start,
+                ),
+            ],
+            external_sources: vec![ExternalSourceRecord {
+                target: ExternalSourceTarget::Review,
+                target_id: "manual-rescheduled-review".to_string(),
+                source: "anki-v11".to_string(),
+                original_id: Some("manual-rescheduled-review".to_string()),
+                data: BTreeMap::from([("ease".to_string(), "0".to_string())]),
+            }],
+            ..AppState::default()
+        };
+        let ids_for = |query: &str| {
+            search_cards_with_context(
+                &state,
+                query,
+                now,
+                SearchContext {
+                    day_start_offset_ms: Some(cutoff_offset),
+                    ..SearchContext::default()
+                },
+            )
+            .unwrap()
+            .into_iter()
+            .map(|result| result.card.id)
+            .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("added:1"), vec!["inside-added"]);
+        assert_eq!(ids_for("edited:1"), vec!["inside-note::forward"]);
+        assert_eq!(ids_for("rated:1:good"), vec!["inside-reviewed"]);
+        assert_eq!(ids_for("introduced:1"), vec!["inside-reviewed"]);
+        assert_eq!(ids_for("prop:rated=0:good"), vec!["inside-reviewed"]);
+        assert_eq!(ids_for("prop:rated=-1:good"), vec!["outside-reviewed"]);
+        assert_eq!(ids_for("resched:1"), vec!["manual-rescheduled"]);
+        assert_eq!(ids_for("prop:resched=0"), vec!["manual-rescheduled"]);
     }
 
     #[test]
