@@ -375,6 +375,9 @@ pub struct DeckOptions {
     pub hard_interval_multiplier: f64,
     pub easy_bonus_multiplier: f64,
     pub lapse_interval_multiplier: f64,
+    pub bury_new_siblings: bool,
+    pub bury_review_siblings: bool,
+    pub bury_interday_learning_siblings: bool,
 }
 
 impl Default for DeckOptions {
@@ -391,6 +394,9 @@ impl Default for DeckOptions {
             hard_interval_multiplier: 1.2,
             easy_bonus_multiplier: 1.3,
             lapse_interval_multiplier: 0.0,
+            bury_new_siblings: true,
+            bury_review_siblings: true,
+            bury_interday_learning_siblings: true,
         }
     }
 }

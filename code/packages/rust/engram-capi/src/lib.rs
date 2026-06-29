@@ -1459,6 +1459,18 @@ CREATE TABLE graves (
             assert_eq!(props["props"]["browser-result-states"], json!(["new"]));
             assert_eq!(props["props"]["browser-selected-card-id"], "card");
             assert_eq!(props["props"]["browser-selected-state"], "new");
+            assert_eq!(props["props"]["history-label"], "Review history");
+            assert_eq!(props["props"]["history-total-value"], "0");
+            assert_eq!(props["props"]["history-accuracy-value"], "0%");
+            assert_eq!(props["props"]["deck-options-bury-new-siblings-value"], true);
+            assert_eq!(
+                props["props"]["deck-options-bury-review-siblings-value"],
+                true
+            );
+            assert_eq!(
+                props["props"]["deck-options-bury-interday-learning-siblings-value"],
+                true
+            );
             assert_eq!(props["props"]["answer-visible"], false);
             assert_eq!(props["props"]["action-undo-label"], "Undo");
             assert_eq!(props["props"]["action-bury-card-label"], "Bury card");
@@ -1615,6 +1627,76 @@ CREATE TABLE graves (
             let browser_selected: Value = serde_json::from_str(&browser_selected).unwrap();
             assert_eq!(browser_selected["ok"], true);
             assert_eq!(browser_selected["event"], "onBrowserSelectResult");
+
+            let deck_option = cstr(r#"{"type":"deckOptionsMaximumIntervalChange","value":90}"#);
+            let deck_option_changed = take(eg_handle_engram_app_event(
+                session,
+                deck_option.as_ptr(),
+                deck_id.as_ptr(),
+                NOW + 7,
+            ));
+            let deck_option_changed: Value = serde_json::from_str(&deck_option_changed).unwrap();
+            assert_eq!(deck_option_changed["ok"], true);
+            assert_eq!(
+                deck_option_changed["event"],
+                "onDeckOptionsMaximumIntervalChange"
+            );
+            assert_eq!(
+                deck_option_changed["state"]["deckOptions"][0]["options"]["maximumIntervalDays"],
+                90
+            );
+            assert_eq!(
+                deck_option_changed["props"]["deck-options-maximum-interval-value"],
+                90
+            );
+
+            let learning_steps =
+                cstr(r#"{"type":"deckOptionsLearningStepsChange","value":"4, 40"}"#);
+            let learning_steps_changed = take(eg_handle_engram_app_event(
+                session,
+                learning_steps.as_ptr(),
+                deck_id.as_ptr(),
+                NOW + 8,
+            ));
+            let learning_steps_changed: Value =
+                serde_json::from_str(&learning_steps_changed).unwrap();
+            assert_eq!(learning_steps_changed["ok"], true);
+            assert_eq!(
+                learning_steps_changed["event"],
+                "onDeckOptionsLearningStepsChange"
+            );
+            assert_eq!(
+                learning_steps_changed["state"]["deckOptions"][0]["options"]
+                    ["learningStepsMinutes"],
+                json!([4, 40])
+            );
+            assert_eq!(
+                learning_steps_changed["props"]["deck-options-learning-steps-value"],
+                "4, 40"
+            );
+
+            let bury_review =
+                cstr(r#"{"type":"deckOptionsBuryReviewSiblingsChange","checked":false}"#);
+            let bury_review_changed = take(eg_handle_engram_app_event(
+                session,
+                bury_review.as_ptr(),
+                deck_id.as_ptr(),
+                NOW + 9,
+            ));
+            let bury_review_changed: Value = serde_json::from_str(&bury_review_changed).unwrap();
+            assert_eq!(bury_review_changed["ok"], true);
+            assert_eq!(
+                bury_review_changed["event"],
+                "onDeckOptionsBuryReviewSiblingsChange"
+            );
+            assert_eq!(
+                bury_review_changed["state"]["deckOptions"][0]["options"]["buryReviewSiblings"],
+                false
+            );
+            assert_eq!(
+                bury_review_changed["props"]["deck-options-bury-review-siblings-value"],
+                false
+            );
 
             eg_session_free(session);
         }

@@ -1,10 +1,11 @@
 use crate::model::{
-    ActiveSessionState, AppState, Card, CardFlag, CardProgress, CardProgressSnapshot, Deck,
-    DeckOptions, DeckOptionsPreset, ExternalSourceRecord, ExternalSourceTarget, MediaAssetRecord,
-    Note, NoteType, Rating, Review, Session, SessionStatus,
+    ActiveSessionState, AppState, Card, CardFlag, CardProgress, CardProgressSnapshot, CardState,
+    Deck, DeckOptions, DeckOptionsPreset, ExternalSourceRecord, ExternalSourceTarget,
+    MediaAssetRecord, Note, NoteType, Rating, Review, Session, SessionStatus,
 };
+use crate::queue::is_new_progress_overlay;
 use crate::scheduler::schedule_review;
-use crate::sm2::INITIAL_EASE_FACTOR;
+use crate::sm2::{INITIAL_EASE_FACTOR, ONE_DAY_MS};
 use crate::template::{
     generate_cards_for_note, materialize_generated_card, rename_note_type_field,
 };
@@ -590,6 +591,13 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             reviewed_at,
         } => {
             let deck_options = deck_options_for_card(state, &card_id);
+            let sibling_bury = SiblingBuryRule::from_deck_options(
+                state,
+                &card_id,
+                &deck_options,
+                reviewed_at.saturating_add(ONE_DAY_MS),
+                reviewed_at,
+            );
             reduce_rate_card(
                 state,
                 review_id,
@@ -598,7 +606,7 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                 rating,
                 reviewed_at,
                 &deck_options,
-                None,
+                sibling_bury,
             )
         }
         EngramCommand::RateCardAndBurySiblings {
@@ -618,7 +626,7 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                 rating,
                 reviewed_at,
                 &deck_options,
-                Some(buried_until),
+                SiblingBuryRule::All(buried_until),
             )
         }
         EngramCommand::RateCardWithOptions {
@@ -628,16 +636,25 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             rating,
             reviewed_at,
             deck_options,
-        } => reduce_rate_card(
-            state,
-            review_id,
-            session_id,
-            card_id,
-            rating,
-            reviewed_at,
-            &deck_options,
-            None,
-        ),
+        } => {
+            let sibling_bury = SiblingBuryRule::from_deck_options(
+                state,
+                &card_id,
+                &deck_options,
+                reviewed_at.saturating_add(ONE_DAY_MS),
+                reviewed_at,
+            );
+            reduce_rate_card(
+                state,
+                review_id,
+                session_id,
+                card_id,
+                rating,
+                reviewed_at,
+                &deck_options,
+                sibling_bury,
+            )
+        }
         EngramCommand::RateCardWithOptionsAndBurySiblings {
             review_id,
             session_id,
@@ -654,7 +671,7 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             rating,
             reviewed_at,
             &deck_options,
-            Some(buried_until),
+            SiblingBuryRule::All(buried_until),
         ),
         EngramCommand::UndoLastReview { session_id } => undo_last_review(state, &session_id),
         EngramCommand::AdvanceSession => {
@@ -854,6 +871,16 @@ fn bury_card_siblings_with_snapshots(
     buried_at: u64,
     buried_until: u64,
 ) -> (AppState, Vec<CardProgressSnapshot>) {
+    bury_card_siblings_matching_with_snapshots(state, card_id, buried_at, buried_until, |_| true)
+}
+
+fn bury_card_siblings_matching_with_snapshots(
+    state: &AppState,
+    card_id: &str,
+    buried_at: u64,
+    buried_until: u64,
+    should_bury: impl Fn(&Card) -> bool,
+) -> (AppState, Vec<CardProgressSnapshot>) {
     let Some(note_id) = state
         .cards
         .iter()
@@ -873,6 +900,7 @@ fn bury_card_siblings_with_snapshots(
                 .as_ref()
                 .is_some_and(|lineage| lineage.note_id == note_id)
         })
+        .filter(|card| should_bury(card))
         .map(|card| card.id.clone())
         .collect();
 
@@ -903,6 +931,117 @@ fn bury_card_siblings_with_snapshots(
     (next, snapshots)
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+enum BuryCardKind {
+    IntradayLearning,
+    InterdayLearning,
+    Review,
+    New,
+}
+
+#[derive(Clone, Copy, Debug)]
+enum SiblingBuryRule<'a> {
+    None,
+    All(u64),
+    DeckOptions {
+        options: &'a DeckOptions,
+        until: u64,
+        reviewed_kind: BuryCardKind,
+    },
+}
+
+impl<'a> SiblingBuryRule<'a> {
+    fn from_deck_options(
+        state: &AppState,
+        reviewed_card_id: &str,
+        options: &'a DeckOptions,
+        until: u64,
+        reviewed_at: u64,
+    ) -> Self {
+        if options.bury_new_siblings
+            || options.bury_review_siblings
+            || options.bury_interday_learning_siblings
+        {
+            let Some(reviewed_kind) = card_bury_kind(state, reviewed_card_id, reviewed_at) else {
+                return Self::None;
+            };
+            Self::DeckOptions {
+                options,
+                until,
+                reviewed_kind,
+            }
+        } else {
+            Self::None
+        }
+    }
+
+    fn captures_previous_session(self) -> bool {
+        !matches!(self, Self::None)
+    }
+}
+
+fn should_bury_sibling_for_deck_options(
+    state: &AppState,
+    sibling_id: &str,
+    reviewed_at: u64,
+    options: &DeckOptions,
+    reviewed_kind: BuryCardKind,
+) -> bool {
+    let Some(sibling_kind) = card_bury_kind(state, sibling_id, reviewed_at) else {
+        return false;
+    };
+
+    if sibling_kind < reviewed_kind {
+        return false;
+    }
+
+    match sibling_kind {
+        BuryCardKind::New => options.bury_new_siblings,
+        BuryCardKind::Review => options.bury_review_siblings,
+        BuryCardKind::InterdayLearning => options.bury_interday_learning_siblings,
+        BuryCardKind::IntradayLearning => false,
+    }
+}
+
+fn card_bury_kind(state: &AppState, card_id: &str, now: u64) -> Option<BuryCardKind> {
+    let Some(progress) = state
+        .card_progress
+        .iter()
+        .find(|progress| progress.card_id == card_id)
+    else {
+        return Some(BuryCardKind::New);
+    };
+
+    if progress.suspended_at.is_some()
+        || progress.state == CardState::Suspended
+        || progress
+            .buried_until
+            .is_some_and(|buried_until| buried_until > now)
+        || (progress.state == CardState::Buried
+            && !progress
+                .buried_until
+                .is_some_and(|buried_until| buried_until <= now))
+    {
+        return None;
+    }
+
+    if is_new_progress_overlay(progress) {
+        return Some(BuryCardKind::New);
+    }
+
+    match progress.state {
+        CardState::Learning | CardState::Relearning => {
+            if progress.next_due_at >= now.saturating_add(ONE_DAY_MS) {
+                Some(BuryCardKind::InterdayLearning)
+            } else {
+                Some(BuryCardKind::IntradayLearning)
+            }
+        }
+        CardState::Review | CardState::Buried => Some(BuryCardKind::Review),
+        CardState::Suspended => None,
+    }
+}
+
 fn reduce_rate_card(
     state: &AppState,
     review_id: String,
@@ -911,7 +1050,7 @@ fn reduce_rate_card(
     rating: Rating,
     reviewed_at: u64,
     deck_options: &DeckOptions,
-    bury_siblings_until: Option<u64>,
+    sibling_bury: SiblingBuryRule<'_>,
 ) -> AppState {
     if state.active_session.is_none() {
         return state.clone();
@@ -941,7 +1080,7 @@ fn reduce_rate_card(
         reviewed_at,
         previous_progress: existing,
         resulting_progress: Some(new_progress),
-        previous_active_session: if bury_siblings_until.is_some() {
+        previous_active_session: if sibling_bury.captures_previous_session() {
             state.active_session.clone()
         } else {
             None
@@ -957,13 +1096,45 @@ fn reduce_rate_card(
             break;
         }
     }
-    if let Some(buried_until) = bury_siblings_until {
-        let (mut buried, snapshots) =
-            bury_card_siblings_with_snapshots(&next, &reviewed_card_id, reviewed_at, buried_until);
-        if let Some(review) = buried.reviews.last_mut() {
-            review.sibling_progress_snapshots = snapshots;
+    match sibling_bury {
+        SiblingBuryRule::None => {}
+        SiblingBuryRule::All(buried_until) => {
+            let (mut buried, snapshots) = bury_card_siblings_with_snapshots(
+                &next,
+                &reviewed_card_id,
+                reviewed_at,
+                buried_until,
+            );
+            if let Some(review) = buried.reviews.last_mut() {
+                review.sibling_progress_snapshots = snapshots;
+            }
+            next = buried;
         }
-        next = buried;
+        SiblingBuryRule::DeckOptions {
+            options,
+            until,
+            reviewed_kind,
+        } => {
+            let (mut buried, snapshots) = bury_card_siblings_matching_with_snapshots(
+                &next,
+                &reviewed_card_id,
+                reviewed_at,
+                until,
+                |card| {
+                    should_bury_sibling_for_deck_options(
+                        state,
+                        &card.id,
+                        reviewed_at,
+                        options,
+                        reviewed_kind,
+                    )
+                },
+            );
+            if let Some(review) = buried.reviews.last_mut() {
+                review.sibling_progress_snapshots = snapshots;
+            }
+            next = buried;
+        }
     }
     next
 }
@@ -1896,6 +2067,112 @@ mod tests {
         assert_eq!(
             restored_ids,
             vec!["note::forward", "note::reverse", "other::forward"]
+        );
+    }
+
+    #[test]
+    fn rate_card_uses_deck_sibling_bury_options_by_card_kind() {
+        let target = card_with_note("note::target-review", "note", 0);
+        let review_sibling = card_with_note("note::review", "note", 1);
+        let new_sibling = card_with_note("note::new", "note", 2);
+        let interday_sibling = card_with_note("note::interday", "note", 3);
+        let intraday_sibling = card_with_note("note::intraday", "note", 4);
+        let unrelated = card_with_note("other::forward", "other", 0);
+
+        let mut interday_progress = progress(&interday_sibling.id);
+        interday_progress.state = CardState::Learning;
+        interday_progress.learning_step_index = Some(0);
+        interday_progress.next_due_at = NOW + ONE_DAY_MS;
+
+        let mut intraday_progress = progress(&intraday_sibling.id);
+        intraday_progress.state = CardState::Learning;
+        intraday_progress.learning_step_index = Some(0);
+        intraday_progress.next_due_at = NOW + ONE_MINUTE_MS;
+
+        let mut target_progress = progress(&target.id);
+        target_progress.state = CardState::Learning;
+        target_progress.learning_step_index = Some(0);
+        target_progress.next_due_at = NOW + ONE_DAY_MS;
+
+        let mut state = AppState {
+            cards: vec![
+                target.clone(),
+                review_sibling.clone(),
+                new_sibling.clone(),
+                interday_sibling.clone(),
+                intraday_sibling.clone(),
+                unrelated.clone(),
+            ],
+            card_progress: vec![
+                target_progress,
+                progress(&review_sibling.id),
+                interday_progress,
+                intraday_progress,
+            ],
+            deck_options: vec![DeckOptionsPreset {
+                deck_id: "deck".to_string(),
+                options: DeckOptions {
+                    bury_new_siblings: true,
+                    bury_review_siblings: false,
+                    bury_interday_learning_siblings: true,
+                    ..DeckOptions::default()
+                },
+            }],
+            ..AppState::default()
+        };
+        state = reduce(
+            &state,
+            EngramCommand::StartSession {
+                session_id: "session".to_string(),
+                deck_id: "deck".to_string(),
+                queue: state.cards.clone(),
+                started_at: NOW,
+            },
+        );
+
+        let reviewed = reduce(
+            &state,
+            EngramCommand::RateCard {
+                review_id: "review".to_string(),
+                session_id: "session".to_string(),
+                card_id: target.id.clone(),
+                rating: Rating::Good,
+                reviewed_at: NOW,
+            },
+        );
+
+        let mut buried_ids: Vec<_> = reviewed
+            .card_progress
+            .iter()
+            .filter(|progress| progress.buried_until == Some(NOW + ONE_DAY_MS))
+            .map(|progress| progress.card_id.as_str())
+            .collect();
+        buried_ids.sort_unstable();
+        assert_eq!(buried_ids, vec!["note::interday", "note::new"]);
+        assert_eq!(
+            reviewed.reviews[0]
+                .sibling_progress_snapshots
+                .iter()
+                .map(|snapshot| snapshot.card_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["note::new", "note::interday"]
+        );
+        let active_ids: Vec<_> = reviewed
+            .active_session
+            .as_ref()
+            .unwrap()
+            .queue
+            .iter()
+            .map(|card| card.id.as_str())
+            .collect();
+        assert_eq!(
+            active_ids,
+            vec![
+                "note::target-review",
+                "note::review",
+                "note::intraday",
+                "other::forward"
+            ]
         );
     }
 

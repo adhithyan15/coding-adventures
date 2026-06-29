@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Added the reusable `mosaic-pkg-review-history` dependency and mounted its
+  `ReviewHistoryPanel` component so generated host shells expose shared
+  review totals, accuracy, per-rating counts, and first/last review fields.
+- Added the reusable `mosaic-pkg-deck-options` dependency and mounted its
+  `DeckOptionsPanel` component so generated host shells expose shared
+  Anki-style deck scheduler option controls.
+- Expanded deck options with native checkbox bindings for Anki-style sibling
+  burying defaults.
+- Expanded the generated deck option contract with learning/relearning step
+  list slots and events.
+- Routed generated deck option change events through the shared Engram facade
+  so native/web hosts can persist settings without platform-specific reducers.
 - Updated generated React and Electron renderer shells to use the Mosaic host
   adapter contract (`window.mosaicHost.getProps` / `handleEvent`) with sample
   fallback props, so Engram events can be routed to shared Rust-backed hosts.
@@ -29,8 +41,9 @@
 - Added a multi-backend artifact-builder smoke test proving `EngramApp` emits
   through HTML, React, SwiftUI, Qt, XAML, and Flutter while consuming
   `mosaic-pkg-card-browser`, `mosaic-pkg-collection-actions`,
-  `mosaic-pkg-deck-stats`, `mosaic-pkg-review-actions`,
-  `mosaic-pkg-review-card`, and `mosaic-pkg-session-progress`.
+  `mosaic-pkg-deck-options`, `mosaic-pkg-deck-stats`,
+  `mosaic-pkg-review-actions`, `mosaic-pkg-review-card`, and
+  `mosaic-pkg-session-progress`.
 - Added `scripts/build-all.ps1` to emit HTML, WebComponent, React, Electron,
   SwiftUI, Qt, XAML, and Flutter host shells from the same Engram Mosaic app
   package into `target/mosaic-engram-app/`.

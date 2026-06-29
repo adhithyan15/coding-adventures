@@ -104,6 +104,9 @@ Current reducer integration:
 - `RateCardAndBurySiblings` and `RateCardWithOptionsAndBurySiblings` let hosts
   apply Anki-style sibling burying atomically during review; the JSON facade
   exposes this as optional `burySiblingsUntil` on `rateCard`.
+- Durable deck options now include Anki-style defaults for burying new, review,
+  and interday-learning same-note siblings; generated Engram app rating events
+  consume those defaults through the shared Rust facade.
 - Generated note-template cards can be materialized into durable `Card` records
   with lineage through the JSON facade and C ABI.
 - Anki-style Cloze templates using `{{cloze:Field}}` now generate one card per
@@ -181,23 +184,30 @@ The current scheduler is a compact SM-2 variant. Anki compatibility requires
 at least:
 
 - new, learning, review, and relearning queues
-- learning steps in minutes
+- learning and relearning steps in minutes. Core scheduling and durable deck
+  options support exists; the Mosaic `DeckOptionsPanel` now exposes editable
+  step-list controls that route through the shared event bridge.
 - graduating interval
 - easy interval
 - lapse handling
 - bury siblings until next day. Core and JSON facade support exists for
   lineage-backed sibling burying both as a direct command and as an atomic
-  `rateCard` option; UI controls/settings still need to bind to it.
+  `rateCard` option; durable deck-option defaults and Mosaic checkbox controls
+  now bind to new/review/interday-learning sibling burying.
 - deck options
 - daily limits. Core, JSON facade, and C ABI support exists for review-log-aware
-  daily queue limits; UI settings still need to bind to it.
+  daily queue limits; the Mosaic `DeckOptionsPanel` exposes editable new/review
+  daily-limit controls that route through the shared event bridge.
 - maximum interval, review interval modifier, hard interval multiplier, and easy
   bonus multiplier. Core scheduling and Anki package import/export support
-  exists, and shared `setDeckOptions` commands now persist these values; UI
-  settings still need visible controls for editing them.
+  exists; shared `setDeckOptions` commands persist these values; and the
+  Mosaic `DeckOptionsPanel` exposes visible controls that generated host
+  shells can route back through the shared event bridge.
 - review history log
 - review history summaries for deck/date ranges. Core, JSON facade, and C ABI
-  support exists; richer graphing and browser UI still need to bind to it.
+  support exists, and the Mosaic app now exposes a reusable lifetime summary
+  panel for generated shells; richer graphing and browser UI still need to
+  bind to it.
 
 Possible later track:
 
@@ -537,6 +547,13 @@ Status:
   `mosaic-pkg-rating-controls` instead of owning the rating button row.
 - `code/packages/mosaic-pkg-review-actions` adds reusable Anki-style undo,
   bury-card, bury-siblings, suspend-card, and mark/unmark review controls.
+- `code/packages/mosaic-pkg-review-history` adds reusable review total,
+  accuracy, per-rating count, and first/last review summary controls backed by
+  shared Engram review-history props.
+- `code/packages/mosaic-pkg-deck-options` adds reusable daily-limit,
+  graduation-interval, maximum-interval, interval-modifier, hard/easy
+  multiplier, lapse-multiplier, and sibling-bury checkbox controls for
+  Anki-style deck settings.
 - `code/packages/mosaic-pkg-rating-controls` adds reusable
   Again/Hard/Good/Easy answer grading controls with label slots and review
   events.
@@ -559,15 +576,20 @@ Status:
 - The Engram event bridge now handles generated review action events from the
   Mosaic app (`onUndo`, `onBuryCard`, `onBurySiblings`, `onSuspendCard`, and
   `onToggleMark`) by dispatching the existing shared Rust reducer commands.
+- The Engram event bridge also handles generated deck-option number, text, and
+  checkbox-change events by updating the selected deck through
+  `EngramCommand::SetDeckOptions`, so HTML, Electron, SwiftUI, XAML, and Qt
+  hosts can share the same settings mutation path.
 - `mosaic-package-artifact-builder` now emits XAML project-shell side files
   through the same package build path as React/HTML/Qt/SwiftUI/etc., and the
   Engram app smoke test verifies native project shells for Qt, SwiftUI, and
   XAML from the same Mosaic app sources.
 - `code/programs/mosaic/engram-app` adds the Engram Mosaic app package. The
   app exports `EngramApp`, declares dependencies on `mosaic-pkg-deck-stats`,
-  `mosaic-pkg-review-card`, and `mosaic-pkg-session-progress`, and mounts
-  package components rather than owning deck-stat, review-card, or
-  progress-counter component implementations itself.
+  `mosaic-pkg-deck-options`, `mosaic-pkg-review-card`, and
+  `mosaic-pkg-session-progress`, and mounts package components rather than
+  owning deck-stat, settings, review-card, or progress-counter component
+  implementations itself.
 - Shared `SessionProgress` counters are available in `engram-core`,
   `engram-core-wasm`, and `engram-capi` for Mosaic/native review screens.
 - This split is the first concrete pivot point for moving Engram UI out of
@@ -607,7 +629,8 @@ shared contract first, then let each shell bind to it.
 ### Commit C: Core Scheduler Step Toward Anki
 
 - Add learning/review card states.
-- Add deck options for learning steps and daily limits.
+- Add deck options for learning steps and daily limits. Initial shared core,
+  facade, and Mosaic settings bindings now exist.
 - Add deterministic scheduler tests.
 
 ### Commit D: Web App Import/Export

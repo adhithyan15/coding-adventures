@@ -21,6 +21,79 @@ layout EngramApp {
         hidden-value : slot: deck-hidden-value
       )
     }
+    Box [ deck-options-region ] {
+      pkg::mosaic-pkg-deck-options::DeckOptionsPanel (
+        settings-label : slot: deck-options-settings-label ,
+        learning-steps-label : slot: deck-options-learning-steps-label ,
+        learning-steps-value : slot: deck-options-learning-steps-value ,
+        relearning-steps-label : slot: deck-options-relearning-steps-label ,
+        relearning-steps-value : slot: deck-options-relearning-steps-value ,
+        new-cards-label : slot: deck-options-new-cards-label ,
+        new-cards-value : slot: deck-options-new-cards-value ,
+        reviews-label : slot: deck-options-reviews-label ,
+        reviews-value : slot: deck-options-reviews-value ,
+        graduating-interval-label : slot: deck-options-graduating-interval-label ,
+        graduating-interval-value : slot: deck-options-graduating-interval-value ,
+        easy-interval-label : slot: deck-options-easy-interval-label ,
+        easy-interval-value : slot: deck-options-easy-interval-value ,
+        maximum-interval-label : slot: deck-options-maximum-interval-label ,
+        maximum-interval-value : slot: deck-options-maximum-interval-value ,
+        interval-modifier-label : slot: deck-options-interval-modifier-label ,
+        interval-modifier-value : slot: deck-options-interval-modifier-value ,
+        hard-multiplier-label : slot: deck-options-hard-multiplier-label ,
+        hard-multiplier-value : slot: deck-options-hard-multiplier-value ,
+        easy-bonus-label : slot: deck-options-easy-bonus-label ,
+        easy-bonus-value : slot: deck-options-easy-bonus-value ,
+        lapse-multiplier-label : slot: deck-options-lapse-multiplier-label ,
+        lapse-multiplier-value : slot: deck-options-lapse-multiplier-value ,
+        bury-new-siblings-label : slot: deck-options-bury-new-siblings-label ,
+        bury-new-siblings-value : slot: deck-options-bury-new-siblings-value ,
+        bury-review-siblings-label : slot: deck-options-bury-review-siblings-label ,
+        bury-review-siblings-value : slot: deck-options-bury-review-siblings-value ,
+        bury-interday-learning-siblings-label : slot: deck-options-bury-interday-learning-siblings-label ,
+        bury-interday-learning-siblings-value : slot: deck-options-bury-interday-learning-siblings-value ,
+        onLearningStepsChange : emit: onDeckOptionsLearningStepsChange ,
+        onRelearningStepsChange : emit: onDeckOptionsRelearningStepsChange ,
+        onNewCardsChange : emit: onDeckOptionsNewCardsChange ,
+        onReviewsChange : emit: onDeckOptionsReviewsChange ,
+        onGraduatingIntervalChange : emit: onDeckOptionsGraduatingIntervalChange ,
+        onEasyIntervalChange : emit: onDeckOptionsEasyIntervalChange ,
+        onMaximumIntervalChange : emit: onDeckOptionsMaximumIntervalChange ,
+        onIntervalModifierChange : emit: onDeckOptionsIntervalModifierChange ,
+        onHardMultiplierChange : emit: onDeckOptionsHardMultiplierChange ,
+        onEasyBonusChange : emit: onDeckOptionsEasyBonusChange ,
+        onLapseMultiplierChange : emit: onDeckOptionsLapseMultiplierChange ,
+        onBuryNewSiblingsChange : emit: onDeckOptionsBuryNewSiblingsChange ,
+        onBuryReviewSiblingsChange : emit: onDeckOptionsBuryReviewSiblingsChange ,
+        onBuryInterdayLearningSiblingsChange : emit: onDeckOptionsBuryInterdayLearningSiblingsChange
+      )
+    }
+    Box [ review-history-region ] {
+      pkg::mosaic-pkg-review-history::ReviewHistoryPanel (
+        history-label : slot: history-label ,
+        window-label : slot: history-window-label ,
+        total-label : slot: history-total-label ,
+        total-value : slot: history-total-value ,
+        correct-label : slot: history-correct-label ,
+        correct-value : slot: history-correct-value ,
+        unique-label : slot: history-unique-label ,
+        unique-value : slot: history-unique-value ,
+        accuracy-label : slot: history-accuracy-label ,
+        accuracy-value : slot: history-accuracy-value ,
+        again-label : slot: history-again-label ,
+        again-value : slot: history-again-value ,
+        hard-label : slot: history-hard-label ,
+        hard-value : slot: history-hard-value ,
+        good-label : slot: history-good-label ,
+        good-value : slot: history-good-value ,
+        easy-label : slot: history-easy-label ,
+        easy-value : slot: history-easy-value ,
+        first-label : slot: history-first-label ,
+        first-value : slot: history-first-value ,
+        last-label : slot: history-last-label ,
+        last-value : slot: history-last-value
+      )
+    }
     Box [ collection-region ] {
       pkg::mosaic-pkg-collection-actions::CollectionActions (
         collection-label : slot: collection-label ,
