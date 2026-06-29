@@ -1413,6 +1413,25 @@ mod tests {
         );
     }
 
+    #[test]
+    fn direct_call_evidence_infers_multiple_string_params() {
+        let src = "(define (same a b) (if (string=? a b) 42 0)) (same \"OK\" (string-append \"O\" \"K\"))";
+        let m = compile_source(src, "test_e4_multi_param_infer").unwrap();
+        let f = m.functions.iter().find(|f| f.name == "same").unwrap();
+        assert_eq!(
+            f.params,
+            vec![
+                ("a".to_string(), "str".to_string()),
+                ("b".to_string(), "str".to_string()),
+            ],
+            "direct-call string evidence should type every consistently-static param slot"
+        );
+        assert!(
+            f.param_refinements.iter().all(|r| r.is_none()),
+            "call-site inference must not synthesize refinement annotations"
+        );
+    }
+
     /// Parsing non-static refinement annotations does not change the existing
     /// param type-hint strings; those refinements live in the parallel
     /// `param_refinements` field.  E4's `str` annotations are the deliberate

@@ -11,12 +11,13 @@ seven backends. Twig literal, immutable top-level, lexical-local, direct
 top-level-function, annotated string-parameter, and direct-call-inferred
 unannotated string-parameter string-op proofs, including named top-level string
 actuals plus static string expression, lexical, and derived sequential `let*`
-string actuals, run on all seven backends,
+string actuals, plus multi-parameter string equality, run on all seven backends,
 including `str_concat` and `str_slice` feeding `str_index`, lexical ordering
 predicates, a function-wrapped `string-length` direct call, `string-length` over
 a bare `str` parameter annotation, and `string-length` over an unannotated
 parameter with conservative literal, static-expression, named, lexical, or
-derived sequential `let*` direct-call evidence.
+derived sequential `let*` direct-call evidence, including multi-parameter
+direct-call evidence.
 Captured/dynamic strings, arrays/input/unobserved or conflicting parameters, and fuller backend
 byte-string representations remain.
 **Enabler:** E4 in [`LANG-FULL-IMPLEMENTATION.md`](LANG-FULL-IMPLEMENTATION.md).
@@ -219,7 +220,10 @@ E4. This is the one genuinely new piece of host surface E4 adds beyond E5.
   (define (strlen x) (string-length x)) (strlen s)`, `(define (strlen x)
   (string-length x)) (let ((s "HELLO")) (strlen s))`, and `(define (strlen x)
   (string-length x)) (let* ((a "HE") (b (string-append a "LLO"))) (strlen b))`
-  follow the same E4 path without synthesizing refinement annotations. Named
+  follow the same E4 path without synthesizing refinement annotations. A single
+  direct call can also type multiple unannotated string params, so `(define
+  (same a b) (if (string=? a b) 42 0)) (same "OK" (string-append "O" "K"))`
+  lowers the parameter equality through `str_eq`. Named
   evidence is limited to non-escaping top-level
   string values that can stay in `main` as typed registers; lexical evidence is
   limited to scoped `let`/`let*` string values whose dynamic shadows are excluded.
@@ -388,7 +392,9 @@ merge before the next:
    parameter, and `(define (strlen x) (string-length x)) (strlen (substring
    (string-append "HE" "LLO!") 0 5))` returns `5` through static-expression
    evidence for an unannotated
-   parameter, and `(define s "HELLO") (define (strlen x) (string-length x))
+   parameter, and `(define (same a b) (if (string=? a b) 42 0)) (same "OK"
+   (string-append "O" "K"))` returns `42` through multi-parameter evidence for
+   unannotated string parameters, and `(define s "HELLO") (define (strlen x) (string-length x))
    (strlen s)` returns `5` through named top-level string evidence, and
    `(define (strlen x) (string-length x)) (let ((s "HELLO")) (strlen s))`
    returns `5` through lexical string evidence, and `(define (strlen x)
@@ -411,7 +417,7 @@ merge before the next:
    function-call return typing, annotated string-parameter typing, and
    direct-call-inferred unannotated parameter typing for E4 string ops from
    literal, static-expression, named top-level, lexical, and derived sequential
-   `let*` actuals, plus the
+   `let*` actuals, multi-parameter string equality, plus the
    `str_index`
    out-of-bounds **trap** proof now run across every backend.
 7. **Follow-ups beyond v1** captured/reassigned dynamic strings,
