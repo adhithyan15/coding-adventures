@@ -80,7 +80,8 @@ Current reducer integration:
 - `EngramCommand::RateCard` routes through the scheduler state machine with
   `DeckOptions::default()`.
 - `EngramCommand::RateCardWithOptions` lets host shells pass deck-specific
-  learning steps, review limits, graduation intervals, and lapse behavior.
+  learning steps, review limits, graduation intervals, maximum interval,
+  interval modifier, hard/easy multipliers, and lapse behavior.
 - `engram-core-wasm` keeps the original `rateCard` JSON command compatible and
   accepts optional `deckOptions`.
 - Suspend and bury are reducer-owned commands (`SuspendCard`, `UnsuspendCard`,
@@ -187,6 +188,9 @@ at least:
 - deck options
 - daily limits. Core, JSON facade, and C ABI support exists for review-log-aware
   daily queue limits; UI settings still need to bind to it.
+- maximum interval, review interval modifier, hard interval multiplier, and easy
+  bonus multiplier. Core scheduling and Anki package import/export support
+  exists; UI settings still need to bind to these values.
 - review history log
 - review history summaries for deck/date ranges. Core, JSON facade, and C ABI
   support exists; richer graphing and browser UI still need to bind to it.

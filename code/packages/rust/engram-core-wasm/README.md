@@ -55,7 +55,9 @@ and `deleteNote` commands; pass `materializeCardsAt` with `upsertNoteType` or
 `rateCard` remains backward-compatible with the original command shape. Hosts
 may also include a `deckOptions` object to drive the Rust scheduler with custom
 learning steps, relearning steps, daily limits, graduation intervals, and lapse
-behavior. When `deckOptions` is omitted, the core applies `DeckOptions::default()`.
+behavior. `deckOptions` can also tune Anki-style maximum interval, review
+interval modifier, hard interval multiplier, and easy bonus multiplier values.
+When `deckOptions` is omitted, the core applies `DeckOptions::default()`.
 Hosts may also include `burySiblingsUntil` to rate the current card and bury
 same-note siblings in the same reducer transition; the review log records enough
 snapshots for `undoLastReview` to restore the sibling state and active queue.

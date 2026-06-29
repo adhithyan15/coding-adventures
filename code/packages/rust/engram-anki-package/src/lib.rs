@@ -885,15 +885,38 @@ fn v11_options_for_deck(deck: &AnkiV11Deck, deck_config: &Value) -> DeckOptions 
             }
         }
         if let Some(multiplier) = json_path_f64(config, &["lapse", "mult"]) {
-            options.lapse_interval_multiplier = if multiplier > 10.0 {
-                multiplier / 100.0
-            } else {
-                multiplier
-            };
+            options.lapse_interval_multiplier =
+                normalized_anki_multiplier(multiplier, options.lapse_interval_multiplier);
+        }
+        if let Some(max_interval) = json_path_u32(config, &["rev", "maxIvl"]) {
+            options.maximum_interval_days = max_interval.max(1);
+        }
+        if let Some(modifier) = json_path_f64(config, &["rev", "ivlFct"]) {
+            options.review_interval_modifier =
+                normalized_anki_multiplier(modifier, options.review_interval_modifier);
+        }
+        if let Some(multiplier) = json_path_f64(config, &["rev", "hardFactor"]) {
+            options.hard_interval_multiplier =
+                normalized_anki_multiplier(multiplier, options.hard_interval_multiplier);
+        }
+        if let Some(multiplier) = json_path_f64(config, &["rev", "ease4"]) {
+            options.easy_bonus_multiplier =
+                normalized_anki_multiplier(multiplier, options.easy_bonus_multiplier);
         }
     }
 
     options
+}
+
+fn normalized_anki_multiplier(value: f64, fallback: f64) -> f64 {
+    if !value.is_finite() || value <= 0.0 {
+        return fallback;
+    }
+    if value > 10.0 {
+        value / 100.0
+    } else {
+        value
+    }
 }
 
 fn v11_external_sources(
@@ -1776,9 +1799,26 @@ fn merge_deck_options_json(
         .get("rev")
         .cloned()
         .unwrap_or_else(|| serde_json::json!({}));
-    ensure_json_object(&mut review_section).insert(
+    let review_object = ensure_json_object(&mut review_section);
+    review_object.insert(
         "perDay".to_string(),
         Value::Number(i64::from(options.reviews_per_day).into()),
+    );
+    review_object.insert(
+        "maxIvl".to_string(),
+        Value::Number(i64::from(options.maximum_interval_days.max(1)).into()),
+    );
+    review_object.insert(
+        "ivlFct".to_string(),
+        json_f64_or(options.review_interval_modifier, 1.0),
+    );
+    review_object.insert(
+        "hardFactor".to_string(),
+        json_f64_or(options.hard_interval_multiplier, 1.2),
+    );
+    review_object.insert(
+        "ease4".to_string(),
+        json_f64_or(options.easy_bonus_multiplier, 1.3),
     );
     object.insert("rev".to_string(), review_section);
 
@@ -1799,11 +1839,16 @@ fn merge_deck_options_json(
     );
     lapse_object.insert(
         "mult".to_string(),
-        serde_json::Number::from_f64(options.lapse_interval_multiplier)
-            .map(Value::Number)
-            .unwrap_or_else(|| Value::Number(0_i64.into())),
+        json_f64_or(options.lapse_interval_multiplier, 0.0),
     );
     object.insert("lapse".to_string(), lapse_section);
+}
+
+fn json_f64_or(value: f64, fallback: f64) -> Value {
+    let normalized = if value.is_finite() { value } else { fallback };
+    serde_json::Number::from_f64(normalized)
+        .map(Value::Number)
+        .unwrap_or_else(|| Value::Number(0_i64.into()))
 }
 
 fn export_note_type_fields_json(note_type: &ExportNoteType, raw_fields: &Value) -> Vec<Value> {
@@ -3610,7 +3655,7 @@ CREATE TABLE graves (
                                 "id": 1,
                                 "name": "Default",
                                 "new": {"perDay": 12, "delays": [3, 12], "ints": [2, 5]},
-                                "rev": {"perDay": 80},
+                                "rev": {"perDay": 80, "maxIvl": 90, "ivlFct": 0.75, "hardFactor": 1.4, "ease4": 1.6},
                                 "lapse": {"delays": [20], "mult": 0.5}
                             }
                         }"#,
@@ -3862,6 +3907,10 @@ CREATE TABLE graves (
         assert_eq!(options.relearning_steps_minutes, vec![20]);
         assert_eq!(options.graduating_interval_days, 2);
         assert_eq!(options.easy_interval_days, 5);
+        assert_eq!(options.maximum_interval_days, 90);
+        assert_eq!(options.review_interval_modifier, 0.75);
+        assert_eq!(options.hard_interval_multiplier, 1.4);
+        assert_eq!(options.easy_bonus_multiplier, 1.6);
         assert_eq!(options.lapse_interval_multiplier, 0.5);
 
         assert_eq!(state.note_types.len(), 1);
@@ -3930,6 +3979,10 @@ CREATE TABLE graves (
             exported.metadata.deck_config["2"]["new"]["delays"],
             serde_json::json!([3, 12])
         );
+        assert_eq!(exported.metadata.deck_config["2"]["rev"]["maxIvl"], 90);
+        assert_eq!(exported.metadata.deck_config["2"]["rev"]["ivlFct"], 0.75);
+        assert_eq!(exported.metadata.deck_config["2"]["rev"]["hardFactor"], 1.4);
+        assert_eq!(exported.metadata.deck_config["2"]["rev"]["ease4"], 1.6);
         assert_eq!(exported.metadata.deck_config["2"]["lapse"]["mult"], 0.5);
 
         assert_eq!(state.sessions.len(), 1);

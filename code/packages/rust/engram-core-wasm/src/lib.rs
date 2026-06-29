@@ -3204,6 +3204,67 @@ mod tests {
     }
 
     #[test]
+    fn dispatch_rate_card_accepts_interval_deck_options() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+            "cardProgress": [{
+                "cardId": "card",
+                "state": "review",
+                "interval": 10,
+                "easeFactor": 2.5,
+                "nextDueAt": 1699999999000,
+                "learningStepIndex": null,
+                "buriedUntil": null,
+                "suspendedAt": null,
+                "timesSeen": 1,
+                "timesCorrect": 1,
+                "timesIncorrect": 0,
+                "lastSeenAt": 1699913600000
+            }],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        session.dispatch(
+            r#"{
+                "type": "startSession",
+                "sessionId": "session",
+                "deckId": "deck",
+                "queue": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+                "startedAt": 1700000000000
+            }"#,
+        );
+        let value: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                    "type": "rateCard",
+                    "reviewId": "review",
+                    "sessionId": "session",
+                    "cardId": "card",
+                    "rating": "good",
+                    "reviewedAt": 1700000000000,
+                    "deckOptions": {
+                        "maximumIntervalDays": 2,
+                        "reviewIntervalModifier": 10.0
+                    }
+                }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(value["state"]["cardProgress"][0]["interval"], 2);
+        assert_eq!(
+            value["state"]["cardProgress"][0]["nextDueAt"],
+            NOW + 2 * 24 * 60 * 60 * 1000
+        );
+    }
+
+    #[test]
     fn dispatch_suspend_and_unsuspend_card() {
         let mut session = EngramSession::new();
         let snapshot = r#"{

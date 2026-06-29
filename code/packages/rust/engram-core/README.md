@@ -52,6 +52,9 @@ scheduler state machine. Hosts that already expose deck-specific options can
 dispatch `EngramCommand::RateCardWithOptions` to provide learning steps,
 graduating/easy intervals, review limits, and lapse behavior without forking the
 review logic.
+Deck options also carry Anki-style maximum interval, review interval modifier,
+hard interval multiplier, and easy bonus multiplier settings, so hosts can keep
+deck-specific scheduler tuning in the shared Rust core.
 
 Review-control commands such as `SuspendCard`, `UnsuspendCard`, `BuryCard`,
 `BuryCardSiblings`, `UnburyCard`, `SetCardFlag`, `MarkCard`, and `UnmarkCard`
