@@ -48,11 +48,19 @@ reimplement scheduling, card generation, queueing, stats, or state transitions.
 
 All JSON uses camelCase field names to match the existing TypeScript Engram app
 and keep generated bindings idiomatic.
+`dispatch` accepts note-first `upsertNoteType`, `deleteNoteType`, `upsertNote`,
+and `deleteNote` commands; pass `materializeCardsAt` with `upsertNoteType` or
+`upsertNote` to sync generated cards from the note type through the shared core.
+It also accepts `setDeckOptions` to insert or replace the durable scheduler
+options for a deck, using the same camelCase `DeckOptions` shape accepted by
+`rateCard`.
 
 `rateCard` remains backward-compatible with the original command shape. Hosts
 may also include a `deckOptions` object to drive the Rust scheduler with custom
 learning steps, relearning steps, daily limits, graduation intervals, and lapse
-behavior. When `deckOptions` is omitted, the core applies `DeckOptions::default()`.
+behavior. `deckOptions` can also tune Anki-style maximum interval, review
+interval modifier, hard interval multiplier, and easy bonus multiplier values.
+When `deckOptions` is omitted, the core applies `DeckOptions::default()`.
 Hosts may also include `burySiblingsUntil` to rate the current card and bury
 same-note siblings in the same reducer transition; the review log records enough
 snapshots for `undoLastReview` to restore the sibling state and active queue.
@@ -94,11 +102,19 @@ without an active session or contains shared review counters such as
 `totalCards`, `currentPosition`, `remainingCards`, `cardsReviewed`,
 `cardsCorrect`, `revealed`, and `completed`.
 
-`engram_app_props` includes Mosaic-slot-shaped labels for secondary review
-actions such as undo, bury card, bury siblings, suspend, and mark/unmark.
+`engram_app_props` includes Mosaic-slot-shaped labels and counts for collection
+actions, browser rows, and secondary review actions such as undo, bury card,
+bury siblings, suspend, and mark/unmark.
 `handle_engram_app_event` accepts those generated events (`onUndo`,
 `onBuryCard`, `onBurySiblings`, `onSuspendCard`, and `onToggleMark`) and routes
-them through the same core reducer commands used by direct JSON dispatch.
+them through the same core reducer commands used by direct JSON dispatch. It
+also accepts browser events such as `onBrowserSearch` and targeted row actions
+such as `onBrowserToggleMarkSelected|card-id` or
+`{"event":"onBrowserToggleSuspendSelected","cardId":"card-id"}`.
+Collection workflow events such as `onImportAnki`, `onExportAnki`, `onAddNote`,
+`onAddNoteType`, `onDeleteNote`, and `onDeleteNoteType` round-trip through the
+same event parser as host intents so generated shells share one UI contract
+while file picking, dialogs, and concrete note payloads stay host-owned.
 
 `daily_limit_usage` returns `{ ok: true, usage }` with new/review counts already
 seen in a host-provided day window and the remaining slots from `DeckOptions`.

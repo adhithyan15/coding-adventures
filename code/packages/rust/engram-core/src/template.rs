@@ -8,6 +8,40 @@ enum ClozeSide {
     Answer,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum TemplateFieldFilter {
+    Cloze,
+    Hint,
+    Type,
+    NoCombining,
+    Text,
+    Furigana,
+    Kana,
+    Kanji,
+}
+
+impl TemplateFieldFilter {
+    fn prefix(self) -> &'static str {
+        match self {
+            Self::Cloze => "cloze:",
+            Self::Hint => "hint:",
+            Self::Type => "type:",
+            Self::NoCombining => "nc:",
+            Self::Text => "text:",
+            Self::Furigana => "furigana:",
+            Self::Kana => "kana:",
+            Self::Kanji => "kanji:",
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum RubyMode {
+    Furigana,
+    Kana,
+    Kanji,
+}
+
 pub fn generate_cards_for_note(note_type: &NoteType, note: &Note) -> Vec<GeneratedCard> {
     if note.note_type_id != note_type.id {
         return Vec::new();
@@ -193,13 +227,214 @@ fn render_template_tag(
         return front_side.to_string();
     }
 
-    let field_name = tag
-        .strip_prefix("hint:")
-        .or_else(|| tag.strip_prefix("type:"))
-        .unwrap_or(tag)
-        .trim();
+    render_template_field_tag(tag, field_values, None)
+}
 
-    field_values.get(field_name).cloned().unwrap_or_default()
+fn render_template_field_tag(
+    tag: &str,
+    field_values: &HashMap<String, String>,
+    cloze_context: Option<(u32, ClozeSide)>,
+) -> String {
+    let (filters, field_name) = parse_template_field_filters(tag);
+    let mut value = field_values
+        .get(field_name.trim())
+        .cloned()
+        .unwrap_or_default();
+
+    for filter in filters.iter().rev() {
+        match filter {
+            TemplateFieldFilter::Cloze => {
+                if let Some((cloze_ordinal, side)) = cloze_context {
+                    value = render_cloze_text(&value, cloze_ordinal, side);
+                }
+            }
+            TemplateFieldFilter::Text => value = html_to_text(&value),
+            TemplateFieldFilter::Furigana => value = render_ruby_text(&value, RubyMode::Furigana),
+            TemplateFieldFilter::Kana => value = render_ruby_text(&value, RubyMode::Kana),
+            TemplateFieldFilter::Kanji => value = render_ruby_text(&value, RubyMode::Kanji),
+            TemplateFieldFilter::Hint
+            | TemplateFieldFilter::Type
+            | TemplateFieldFilter::NoCombining => {}
+        }
+    }
+
+    value
+}
+
+fn parse_template_field_filters(tag: &str) -> (Vec<TemplateFieldFilter>, &str) {
+    let mut filters = Vec::new();
+    let mut rest = tag.trim();
+
+    loop {
+        let Some((filter, after_filter)) = parse_template_field_filter(rest) else {
+            break;
+        };
+        filters.push(filter);
+        rest = after_filter.trim_start();
+    }
+
+    (filters, rest)
+}
+
+fn parse_template_field_filter(tag: &str) -> Option<(TemplateFieldFilter, &str)> {
+    const FILTERS: [TemplateFieldFilter; 8] = [
+        TemplateFieldFilter::Cloze,
+        TemplateFieldFilter::Hint,
+        TemplateFieldFilter::Type,
+        TemplateFieldFilter::NoCombining,
+        TemplateFieldFilter::Text,
+        TemplateFieldFilter::Furigana,
+        TemplateFieldFilter::Kana,
+        TemplateFieldFilter::Kanji,
+    ];
+
+    FILTERS.iter().find_map(|filter| {
+        tag.strip_prefix(filter.prefix())
+            .map(|rest| (*filter, rest))
+    })
+}
+
+fn html_to_text(value: &str) -> String {
+    decode_html_entities(&strip_html_tags(value))
+}
+
+fn strip_html_tags(value: &str) -> String {
+    let mut stripped = String::with_capacity(value.len());
+    let mut rest = value;
+
+    while let Some(start) = rest.find('<') {
+        let (prefix, after_start) = rest.split_at(start);
+        stripped.push_str(prefix);
+        let after_start = &after_start[1..];
+        let Some(end) = after_start.find('>') else {
+            stripped.push('<');
+            stripped.push_str(after_start);
+            return stripped;
+        };
+
+        let tag_name = after_start[..end]
+            .trim_start_matches('/')
+            .split_whitespace()
+            .next()
+            .map(|name| name.trim_end_matches('/'));
+        if tag_name.is_some_and(|name| name.eq_ignore_ascii_case("br")) {
+            stripped.push('\n');
+        }
+        rest = &after_start[end + 1..];
+    }
+
+    stripped.push_str(rest);
+    stripped
+}
+
+fn decode_html_entities(value: &str) -> String {
+    let mut decoded = String::with_capacity(value.len());
+    let mut rest = value;
+
+    while let Some(start) = rest.find('&') {
+        let (prefix, after_start) = rest.split_at(start);
+        decoded.push_str(prefix);
+        let after_start = &after_start[1..];
+        let Some(end) = after_start.find(';') else {
+            decoded.push('&');
+            decoded.push_str(after_start);
+            return decoded;
+        };
+
+        let entity = &after_start[..end];
+        if let Some(ch) = decode_html_entity(entity) {
+            decoded.push(ch);
+        } else {
+            decoded.push('&');
+            decoded.push_str(entity);
+            decoded.push(';');
+        }
+        rest = &after_start[end + 1..];
+    }
+
+    decoded.push_str(rest);
+    decoded
+}
+
+fn decode_html_entity(entity: &str) -> Option<char> {
+    match entity {
+        "amp" => Some('&'),
+        "lt" => Some('<'),
+        "gt" => Some('>'),
+        "quot" => Some('"'),
+        "apos" | "#39" => Some('\''),
+        "nbsp" => Some(' '),
+        _ => {
+            let digits = entity
+                .strip_prefix("#x")
+                .or_else(|| entity.strip_prefix("#X"));
+            if let Some(digits) = digits {
+                u32::from_str_radix(digits, 16)
+                    .ok()
+                    .and_then(char::from_u32)
+            } else if let Some(digits) = entity.strip_prefix('#') {
+                digits.parse::<u32>().ok().and_then(char::from_u32)
+            } else {
+                None
+            }
+        }
+    }
+}
+
+fn render_ruby_text(value: &str, mode: RubyMode) -> String {
+    let mut rendered = String::with_capacity(value.len());
+    let mut index = 0;
+
+    while index < value.len() {
+        let ch = value[index..]
+            .chars()
+            .next()
+            .expect("index stays on char boundary");
+        if ch == '[' {
+            let after_open = index + ch.len_utf8();
+            if let Some(close) = value[after_open..].find(']') {
+                if let Some(base) = take_ruby_base(&mut rendered) {
+                    let ruby = &value[after_open..after_open + close];
+                    match mode {
+                        RubyMode::Furigana => {
+                            rendered.push_str("<ruby>");
+                            rendered.push_str(&base);
+                            rendered.push_str("<rt>");
+                            rendered.push_str(ruby);
+                            rendered.push_str("</rt></ruby>");
+                        }
+                        RubyMode::Kana => rendered.push_str(ruby),
+                        RubyMode::Kanji => rendered.push_str(&base),
+                    }
+                    index = after_open + close + 1;
+                    continue;
+                }
+            }
+        }
+
+        rendered.push(ch);
+        index += ch.len_utf8();
+    }
+
+    rendered
+}
+
+fn take_ruby_base(rendered: &mut String) -> Option<String> {
+    let mut start = rendered.len();
+    for (index, ch) in rendered.char_indices().rev() {
+        if ch.is_whitespace() {
+            break;
+        }
+        start = index;
+    }
+
+    if start == rendered.len() {
+        None
+    } else {
+        let base = rendered[start..].to_string();
+        rendered.truncate(start);
+        Some(base)
+    }
 }
 
 pub fn materialize_generated_card(generated: &GeneratedCard, created_at: u64) -> Card {
@@ -284,26 +519,9 @@ fn rename_template_field_references(template: &str, old_name: &str, new_name: &s
         match after_start.find("}}") {
             Some(end) => {
                 let (field_name, after_end) = after_start.split_at(end);
-                let trimmed = field_name.trim();
-                if trimmed == old_name {
-                    renamed.push_str("{{");
-                    renamed.push_str(new_name);
-                    renamed.push_str("}}");
-                } else if let Some(cloze_name) = trimmed.strip_prefix("cloze:") {
-                    if cloze_name.trim() == old_name {
-                        renamed.push_str("{{cloze:");
-                        renamed.push_str(new_name);
-                        renamed.push_str("}}");
-                    } else {
-                        renamed.push_str("{{");
-                        renamed.push_str(field_name);
-                        renamed.push_str("}}");
-                    }
-                } else {
-                    renamed.push_str("{{");
-                    renamed.push_str(field_name);
-                    renamed.push_str("}}");
-                }
+                renamed.push_str("{{");
+                renamed.push_str(&rename_template_tag(field_name, old_name, new_name));
+                renamed.push_str("}}");
                 rest = &after_end[2..];
             }
             None => {
@@ -316,6 +534,33 @@ fn rename_template_field_references(template: &str, old_name: &str, new_name: &s
 
     renamed.push_str(rest);
     renamed
+}
+
+fn rename_template_tag(tag: &str, old_name: &str, new_name: &str) -> String {
+    let trimmed = tag.trim();
+    if trimmed == old_name {
+        return new_name.to_string();
+    }
+
+    for prefix in ["#", "^", "/"] {
+        if let Some(field_name) = trimmed.strip_prefix(prefix) {
+            if field_name.trim() == old_name {
+                return format!("{prefix}{new_name}");
+            }
+        }
+    }
+
+    let (filters, field_name) = parse_template_field_filters(trimmed);
+    if !filters.is_empty() && field_name.trim() == old_name {
+        let mut renamed = String::new();
+        for filter in filters {
+            renamed.push_str(filter.prefix());
+        }
+        renamed.push_str(new_name);
+        return renamed;
+    }
+
+    tag.to_string()
 }
 
 fn cloze_field_names_for_template(front_template: &str, back_template: &str) -> BTreeSet<String> {
@@ -334,8 +579,9 @@ fn collect_cloze_field_names(template: &str, field_names: &mut BTreeSet<String>)
 
         match after_start.find("}}") {
             Some(end) => {
-                let (field_name, after_end) = after_start.split_at(end);
-                if let Some(field_name) = field_name.trim().strip_prefix("cloze:") {
+                let (tag, after_end) = after_start.split_at(end);
+                let (filters, field_name) = parse_template_field_filters(tag);
+                if filters.contains(&TemplateFieldFilter::Cloze) {
                     let field_name = field_name.trim();
                     if !field_name.is_empty() {
                         field_names.insert(field_name.to_string());
@@ -364,15 +610,12 @@ fn render_cloze_template(
 
         match after_start.find("}}") {
             Some(end) => {
-                let (field_name, after_end) = after_start.split_at(end);
-                let field_name = field_name.trim();
-                if let Some(field_name) = field_name.strip_prefix("cloze:") {
-                    if let Some(value) = field_values.get(field_name.trim()) {
-                        rendered.push_str(&render_cloze_text(value, cloze_ordinal, side));
-                    }
-                } else if let Some(value) = field_values.get(field_name) {
-                    rendered.push_str(value);
-                }
+                let (tag, after_end) = after_start.split_at(end);
+                rendered.push_str(&render_template_field_tag(
+                    tag,
+                    field_values,
+                    Some((cloze_ordinal, side)),
+                ));
                 rest = &after_end[2..];
             }
             None => {
@@ -694,6 +937,40 @@ mod tests {
     }
 
     #[test]
+    fn anki_style_field_filters_render_text_and_ruby_variants() {
+        let mut values = HashMap::new();
+        values.insert(
+            "Expression".to_string(),
+            "<b>amiga</b> &amp; amigo<br/>root&nbsp;word".to_string(),
+        );
+        values.insert(
+            "Reading".to_string(),
+            "root[ruut] stem[stem]ling".to_string(),
+        );
+
+        assert_eq!(
+            render_template("{{text:Expression}}", &values),
+            "amiga & amigo\nroot word"
+        );
+        assert_eq!(
+            render_template("{{furigana:Reading}}", &values),
+            "<ruby>root<rt>ruut</rt></ruby> <ruby>stem<rt>stem</rt></ruby>ling"
+        );
+        assert_eq!(
+            render_template("{{kana:Reading}}", &values),
+            "ruut stemling"
+        );
+        assert_eq!(
+            render_template("{{kanji:Reading}}", &values),
+            "root stemling"
+        );
+        assert_eq!(
+            render_template("{{type:nc:Expression}}", &values),
+            "<b>amiga</b> &amp; amigo<br/>root&nbsp;word"
+        );
+    }
+
+    #[test]
     fn generated_cards_support_front_side_on_back_template() {
         let mut note_type = basic_note_type();
         note_type.templates[0].back_template = "{{FrontSide}}<hr>{{Back}}".to_string();
@@ -724,6 +1001,26 @@ mod tests {
     }
 
     #[test]
+    fn renaming_field_migrates_anki_section_and_helper_references() {
+        let mut note_type = basic_note_type();
+        note_type.templates[0].front_template =
+            "{{#Front}}{{hint:Front}}{{/Front}}{{^Back}}{{type:nc:Front}}{{/Back}}".to_string();
+        note_type.templates[0].back_template =
+            "{{FrontSide}}<hr>{{cloze:Front}} {{text:Front}} {{furigana:Front}}".to_string();
+
+        let renamed = rename_note_type_field(&note_type, "front", "Prompt", NOW + 1);
+
+        assert_eq!(
+            renamed.templates[0].front_template,
+            "{{#Prompt}}{{hint:Prompt}}{{/Prompt}}{{^Back}}{{type:nc:Prompt}}{{/Back}}"
+        );
+        assert_eq!(
+            renamed.templates[0].back_template,
+            "{{FrontSide}}<hr>{{cloze:Prompt}} {{text:Prompt}} {{furigana:Prompt}}"
+        );
+    }
+
+    #[test]
     fn renaming_cloze_field_migrates_cloze_template_references() {
         let note_type = cloze_note_type();
         let renamed = rename_note_type_field(&note_type, "text", "Sentence", NOW + 1);
@@ -742,6 +1039,22 @@ mod tests {
         assert_eq!(cards.len(), 1);
         assert_eq!(cards[0].id, "cloze-note::cloze::c1");
         assert_eq!(cards[0].front, "A [base] carries meaning.");
+    }
+
+    #[test]
+    fn filtered_cloze_tags_generate_and_render_cards() {
+        let mut note_type = cloze_note_type();
+        note_type.templates[0].front_template = "{{type:cloze:Text}}".to_string();
+        note_type.templates[0].back_template = "{{text:cloze:Text}}<hr>{{Extra}}".to_string();
+
+        let cards = generate_cards_for_note(
+            &note_type,
+            &cloze_note("A <b>{{c1::root::base}}</b> carries meaning.", "etymology"),
+        );
+
+        assert_eq!(cards.len(), 1);
+        assert_eq!(cards[0].front, "A <b>[base]</b> carries meaning.");
+        assert_eq!(cards[0].back, "A root carries meaning.<hr>etymology");
     }
 
     #[test]

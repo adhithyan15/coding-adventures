@@ -370,6 +370,10 @@ pub struct DeckOptions {
     pub relearning_steps_minutes: Vec<u32>,
     pub graduating_interval_days: u32,
     pub easy_interval_days: u32,
+    pub maximum_interval_days: u32,
+    pub review_interval_modifier: f64,
+    pub hard_interval_multiplier: f64,
+    pub easy_bonus_multiplier: f64,
     pub lapse_interval_multiplier: f64,
 }
 
@@ -382,6 +386,10 @@ impl Default for DeckOptions {
             relearning_steps_minutes: vec![10],
             graduating_interval_days: 1,
             easy_interval_days: 4,
+            maximum_interval_days: 36_500,
+            review_interval_modifier: 1.0,
+            hard_interval_multiplier: 1.2,
+            easy_bonus_multiplier: 1.3,
             lapse_interval_multiplier: 0.0,
         }
     }

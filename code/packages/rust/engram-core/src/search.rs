@@ -1,7 +1,8 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use crate::model::{
-    AppState, Card, CardFlag, CardProgress, CardState, Deck, Note, NoteType, Rating, Review,
+    AppState, Card, CardFlag, CardProgress, CardState, Deck, ExternalSourceTarget, Note, NoteType,
+    Rating, Review,
 };
 use crate::queue::{is_new_progress_overlay, is_reviewable};
 use crate::sm2::ONE_DAY_MS as MS_PER_DAY;
@@ -37,8 +38,10 @@ struct SearchClause {
 #[derive(Clone, Debug, PartialEq)]
 enum SearchClauseKind {
     Text(String),
-    Front(String),
-    Back(String),
+    Field(FieldFilter),
+    CardId(IdFilter),
+    NoteId(IdFilter),
+    CardTemplate(String),
     Deck(String),
     NoteType(String),
     Tag(String),
@@ -116,6 +119,25 @@ struct RatedFilter {
     rating: Option<Rating>,
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct IdFilter {
+    values: Vec<String>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct FieldFilter {
+    name_pattern: String,
+    value_pattern: FieldValuePattern,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+enum FieldValuePattern {
+    Any,
+    NonEmpty,
+    Exact(String),
+    Wildcard(String),
+}
+
 pub fn search_cards(
     state: &AppState,
     query: &str,
@@ -141,6 +163,18 @@ pub fn search_cards(
         .note_types
         .iter()
         .map(|note_type| (note_type.id.as_str(), note_type))
+        .collect();
+    let filtered_deck_ids: HashSet<&str> = state
+        .external_sources
+        .iter()
+        .filter(|source| {
+            source.target == ExternalSourceTarget::Deck
+                && source
+                    .data
+                    .get("dyn")
+                    .is_some_and(|value| value.parse::<i64>().unwrap_or(0) != 0)
+        })
+        .map(|source| source.target_id.as_str())
         .collect();
     let mut reviews_by_card: HashMap<&str, Vec<&Review>> = HashMap::new();
     for review in &state.reviews {
@@ -170,6 +204,7 @@ pub fn search_cards(
                 deck,
                 note,
                 note_type,
+                &filtered_deck_ids,
                 reviews,
                 now,
             )
@@ -446,6 +481,11 @@ fn parse_keyed_clause(
     key: &str,
     value: &str,
 ) -> Result<SearchClauseKind, SearchError> {
+    let key = key.to_ascii_lowercase();
+    if is_field_search_key(&key) {
+        return Ok(SearchClauseKind::Field(parse_field_filter(&key, value)));
+    }
+
     if value.is_empty() {
         return Err(SearchError {
             message: "search filter is missing a value".to_string(),
@@ -454,9 +494,16 @@ fn parse_keyed_clause(
     }
 
     let value = value.to_lowercase();
-    match key.to_ascii_lowercase().as_str() {
-        "front" => Ok(SearchClauseKind::Front(value)),
-        "back" => Ok(SearchClauseKind::Back(value)),
+    match key.as_str() {
+        "cid" | "cardid" | "card_id" | "card-id" => {
+            parse_id_filter(token, &value).map(SearchClauseKind::CardId)
+        }
+        "nid" | "noteid" | "note_id" | "note-id" => {
+            parse_id_filter(token, &value).map(SearchClauseKind::NoteId)
+        }
+        "card" | "template" | "cardtemplate" | "card_template" | "card-template" => {
+            Ok(SearchClauseKind::CardTemplate(value))
+        }
         "deck" => Ok(SearchClauseKind::Deck(value)),
         "note" | "notetype" | "note_type" | "note-type" => Ok(SearchClauseKind::NoteType(value)),
         "tag" => Ok(SearchClauseKind::Tag(value)),
@@ -473,6 +520,25 @@ fn parse_keyed_clause(
             message: "unknown search filter".to_string(),
             token: token.to_string(),
         }),
+    }
+}
+
+fn is_field_search_key(key: &str) -> bool {
+    matches!(key, "front" | "back") || key.contains('*') || key.contains(' ')
+}
+
+fn parse_field_filter(key: &str, value: &str) -> FieldFilter {
+    let value = value.to_lowercase();
+    let value_pattern = match value.as_str() {
+        "*" => FieldValuePattern::Any,
+        "_*" => FieldValuePattern::NonEmpty,
+        _ if value.contains('*') => FieldValuePattern::Wildcard(value),
+        _ => FieldValuePattern::Exact(value),
+    };
+
+    FieldFilter {
+        name_pattern: key.to_string(),
+        value_pattern,
     }
 }
 
@@ -505,7 +571,7 @@ fn parse_state_filter(token: &str, value: &str) -> Result<CardSearchState, Searc
 fn parse_flag_filter(token: &str, value: &str) -> Result<FlagFilter, SearchError> {
     match value {
         "any" | "flagged" => Ok(FlagFilter::Any),
-        "none" | "unflagged" => Ok(FlagFilter::None),
+        "0" | "none" | "unflagged" => Ok(FlagFilter::None),
         "1" | "red" => Ok(FlagFilter::Color(CardFlag::Red)),
         "2" | "orange" => Ok(FlagFilter::Color(CardFlag::Orange)),
         "3" | "green" => Ok(FlagFilter::Color(CardFlag::Green)),
@@ -628,6 +694,24 @@ fn parse_rated_filter(token: &str, value: &str) -> Result<RatedFilter, SearchErr
     Ok(RatedFilter { days, rating })
 }
 
+fn parse_id_filter(token: &str, value: &str) -> Result<IdFilter, SearchError> {
+    let values = value
+        .split(',')
+        .map(str::trim)
+        .filter(|candidate| !candidate.is_empty())
+        .map(str::to_string)
+        .collect::<Vec<_>>();
+
+    if values.is_empty() {
+        return Err(SearchError {
+            message: "id search filter is missing a value".to_string(),
+            token: token.to_string(),
+        });
+    }
+
+    Ok(IdFilter { values })
+}
+
 fn parse_rating_filter(token: &str, value: &str) -> Result<Rating, SearchError> {
     match value {
         "1" | "again" => Ok(Rating::Again),
@@ -648,25 +732,58 @@ fn expression_matches(
     deck: Option<&Deck>,
     note: Option<&Note>,
     note_type: Option<&NoteType>,
+    filtered_deck_ids: &HashSet<&str>,
     reviews: &[&Review],
     now: u64,
 ) -> bool {
     match expression {
-        SearchExpr::Clause(clause) => {
-            clause_matches(clause, card, progress, deck, note, note_type, reviews, now)
-        }
+        SearchExpr::Clause(clause) => clause_matches(
+            clause,
+            card,
+            progress,
+            deck,
+            note,
+            note_type,
+            filtered_deck_ids,
+            reviews,
+            now,
+        ),
         SearchExpr::And(expressions) => expressions.iter().all(|expression| {
             expression_matches(
-                expression, card, progress, deck, note, note_type, reviews, now,
+                expression,
+                card,
+                progress,
+                deck,
+                note,
+                note_type,
+                filtered_deck_ids,
+                reviews,
+                now,
             )
         }),
         SearchExpr::Or(expressions) => expressions.iter().any(|expression| {
             expression_matches(
-                expression, card, progress, deck, note, note_type, reviews, now,
+                expression,
+                card,
+                progress,
+                deck,
+                note,
+                note_type,
+                filtered_deck_ids,
+                reviews,
+                now,
             )
         }),
         SearchExpr::Not(expression) => !expression_matches(
-            expression, card, progress, deck, note, note_type, reviews, now,
+            expression,
+            card,
+            progress,
+            deck,
+            note,
+            note_type,
+            filtered_deck_ids,
+            reviews,
+            now,
         ),
     }
 }
@@ -678,20 +795,19 @@ fn clause_matches(
     deck: Option<&Deck>,
     note: Option<&Note>,
     note_type: Option<&NoteType>,
+    filtered_deck_ids: &HashSet<&str>,
     reviews: &[&Review],
     now: u64,
 ) -> bool {
     let matched = match &clause.kind {
         SearchClauseKind::Text(term) => text_matches(term, card, deck, note),
-        SearchClauseKind::Front(term) => contains_case_insensitive(&card.front, term),
-        SearchClauseKind::Back(term) => contains_case_insensitive(&card.back, term),
-        SearchClauseKind::Deck(term) => deck_matches(term, card, deck),
+        SearchClauseKind::Field(filter) => field_matches(filter, card, note, note_type),
+        SearchClauseKind::CardId(filter) => id_filter_matches(filter, &card.id),
+        SearchClauseKind::NoteId(filter) => note_id_matches(filter, card, note),
+        SearchClauseKind::CardTemplate(term) => card_template_matches(term, card, note_type),
+        SearchClauseKind::Deck(term) => deck_matches(term, card, deck, filtered_deck_ids),
         SearchClauseKind::NoteType(term) => note_type_matches(term, note, note_type),
-        SearchClauseKind::Tag(tag) => note.is_some_and(|note| {
-            note.tags
-                .iter()
-                .any(|candidate| candidate.eq_ignore_ascii_case(tag))
-        }),
+        SearchClauseKind::Tag(tag) => tag_matches(tag, note),
         SearchClauseKind::State(state) => state_matches(*state, progress, now),
         SearchClauseKind::Flag(filter) => flag_matches(*filter, progress),
         SearchClauseKind::Marked(expected) => {
@@ -731,11 +847,124 @@ fn text_matches(term: &str, card: &Card, deck: Option<&Deck>, note: Option<&Note
         })
 }
 
-fn deck_matches(term: &str, card: &Card, deck: Option<&Deck>) -> bool {
-    contains_case_insensitive(&card.deck_id, term)
+fn field_matches(
+    filter: &FieldFilter,
+    card: &Card,
+    note: Option<&Note>,
+    note_type: Option<&NoteType>,
+) -> bool {
+    if let (Some(note), Some(note_type)) = (note, note_type) {
+        for field in &note_type.fields {
+            if !field_name_matches(&filter.name_pattern, &field.name) {
+                continue;
+            }
+            let value = note
+                .fields
+                .iter()
+                .find(|value| value.field_id == field.id)
+                .map_or("", |value| value.value.as_str());
+            if field_value_matches(&filter.value_pattern, value) {
+                return true;
+            }
+        }
+    }
+
+    match filter.name_pattern.as_str() {
+        "front" => field_value_matches(&filter.value_pattern, &card.front),
+        "back" => field_value_matches(&filter.value_pattern, &card.back),
+        _ => false,
+    }
+}
+
+fn field_name_matches(pattern: &str, candidate: &str) -> bool {
+    let candidate = candidate.to_lowercase();
+    if pattern.contains('*') {
+        wildcard_matches(pattern, &candidate)
+    } else {
+        candidate == pattern
+    }
+}
+
+fn field_value_matches(pattern: &FieldValuePattern, candidate: &str) -> bool {
+    match pattern {
+        FieldValuePattern::Any => true,
+        FieldValuePattern::NonEmpty => !candidate.trim().is_empty(),
+        FieldValuePattern::Exact(expected) => candidate.to_lowercase() == *expected,
+        FieldValuePattern::Wildcard(expected) => {
+            wildcard_matches(expected, &candidate.to_lowercase())
+        }
+    }
+}
+
+fn deck_matches(
+    term: &str,
+    card: &Card,
+    deck: Option<&Deck>,
+    filtered_deck_ids: &HashSet<&str>,
+) -> bool {
+    if term == "filtered" {
+        return filtered_deck_ids.contains(card.deck_id.as_str());
+    }
+
+    anki_hierarchical_name_matches(term, &card.deck_id)
         || deck.is_some_and(|deck| {
-            contains_case_insensitive(&deck.id, term) || contains_case_insensitive(&deck.name, term)
+            anki_hierarchical_name_matches(term, &deck.id)
+                || anki_hierarchical_name_matches(term, &deck.name)
         })
+}
+
+fn tag_matches(tag: &str, note: Option<&Note>) -> bool {
+    if tag == "none" {
+        return note.map_or(true, |note| note.tags.is_empty());
+    }
+
+    note.is_some_and(|note| {
+        note.tags
+            .iter()
+            .any(|candidate| anki_hierarchical_name_matches(tag, candidate))
+    })
+}
+
+fn anki_hierarchical_name_matches(pattern: &str, candidate: &str) -> bool {
+    let candidate = candidate.to_lowercase();
+    if pattern.contains('*') {
+        return wildcard_matches(pattern, &candidate);
+    }
+
+    candidate == pattern || candidate.starts_with(&format!("{pattern}::"))
+}
+
+fn wildcard_matches(pattern: &str, candidate: &str) -> bool {
+    let parts = pattern.split('*').collect::<Vec<_>>();
+    if parts.len() == 1 {
+        return candidate == pattern;
+    }
+
+    let mut position = 0;
+    for (index, part) in parts.iter().enumerate() {
+        if part.is_empty() {
+            continue;
+        }
+
+        if index == 0 && !pattern.starts_with('*') {
+            if !candidate[position..].starts_with(part) {
+                return false;
+            }
+            position += part.len();
+            continue;
+        }
+
+        let Some(found) = candidate[position..].find(part) else {
+            return false;
+        };
+        position += found + part.len();
+
+        if index == parts.len() - 1 && !pattern.ends_with('*') && position != candidate.len() {
+            return false;
+        }
+    }
+
+    true
 }
 
 fn note_type_matches(term: &str, note: Option<&Note>, note_type: Option<&NoteType>) -> bool {
@@ -743,6 +972,49 @@ fn note_type_matches(term: &str, note: Option<&Note>, note_type: Option<&NoteTyp
         || note_type.is_some_and(|note_type| {
             contains_case_insensitive(&note_type.id, term)
                 || contains_case_insensitive(&note_type.name, term)
+        })
+}
+
+fn id_filter_matches(filter: &IdFilter, value: &str) -> bool {
+    filter
+        .values
+        .iter()
+        .any(|expected| value.eq_ignore_ascii_case(expected))
+}
+
+fn note_id_matches(filter: &IdFilter, card: &Card, note: Option<&Note>) -> bool {
+    card.lineage
+        .as_ref()
+        .is_some_and(|lineage| id_filter_matches(filter, &lineage.note_id))
+        || note.is_some_and(|note| id_filter_matches(filter, &note.id))
+}
+
+fn card_template_matches(term: &str, card: &Card, note_type: Option<&NoteType>) -> bool {
+    let lineage = card.lineage.as_ref();
+    let template_id = lineage
+        .map(|lineage| lineage.template_id.as_str())
+        .or_else(|| card.id.split_once("::").map(|(_, template_id)| template_id));
+    let template_ordinal = lineage.map(|lineage| lineage.ordinal);
+    let requested_ordinal = term
+        .parse::<u32>()
+        .ok()
+        .and_then(|ordinal| ordinal.checked_sub(1));
+
+    if requested_ordinal.is_some_and(|ordinal| template_ordinal == Some(ordinal)) {
+        return true;
+    }
+
+    template_id.is_some_and(|template_id| contains_case_insensitive(template_id, term))
+        || note_type.is_some_and(|note_type| {
+            note_type.templates.iter().any(|template| {
+                let is_current_template = template_id
+                    .is_some_and(|template_id| template.id.eq_ignore_ascii_case(template_id))
+                    || template_ordinal.is_some_and(|ordinal| template.ordinal == ordinal);
+                is_current_template
+                    && (contains_case_insensitive(&template.id, term)
+                        || contains_case_insensitive(&template.name, term)
+                        || requested_ordinal.is_some_and(|ordinal| template.ordinal == ordinal))
+            })
         })
 }
 
@@ -887,9 +1159,11 @@ fn note_for_card<'a>(card: &Card, notes_by_id: &'a HashMap<&str, &Note>) -> Opti
 mod tests {
     use super::*;
     use crate::model::{
-        CardLineage, CardTemplate, Deck, FieldDef, NoteFieldValue, NoteType, Review,
+        CardLineage, CardTemplate, Deck, ExternalSourceRecord, ExternalSourceTarget, FieldDef,
+        NoteFieldValue, NoteType, Review,
     };
     use crate::sm2::{INITIAL_EASE_FACTOR, ONE_DAY_MS};
+    use std::collections::BTreeMap;
 
     const NOW: u64 = 1_700_000_000_000;
 
@@ -1062,6 +1336,97 @@ mod tests {
     }
 
     #[test]
+    fn anki_browser_field_filters_use_exact_and_wildcard_matching() {
+        let note_type = NoteType {
+            id: "basic".to_string(),
+            name: "Basic".to_string(),
+            fields: vec![
+                FieldDef {
+                    id: "front".to_string(),
+                    name: "Front".to_string(),
+                    required: true,
+                    ordinal: 0,
+                },
+                FieldDef {
+                    id: "back".to_string(),
+                    name: "Back".to_string(),
+                    required: false,
+                    ordinal: 1,
+                },
+            ],
+            templates: vec![CardTemplate {
+                id: "forward".to_string(),
+                name: "Forward".to_string(),
+                front_template: "{{Front}}".to_string(),
+                back_template: "{{Back}}".to_string(),
+                required_field_names: vec!["Front".to_string()],
+                ordinal: 0,
+            }],
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let note = |id: &str, front: &str, back: &str| Note {
+            id: id.to_string(),
+            note_type_id: "basic".to_string(),
+            deck_id: "tamil".to_string(),
+            fields: vec![
+                NoteFieldValue {
+                    field_id: "front".to_string(),
+                    value: front.to_string(),
+                },
+                NoteFieldValue {
+                    field_id: "back".to_string(),
+                    value: back.to_string(),
+                },
+            ],
+            tags: Vec::new(),
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let card_for_note = |note_id: &str, front: &str, back: &str| {
+            let mut card = card(&format!("{note_id}::forward"), "tamil", front, back);
+            card.lineage = Some(CardLineage {
+                note_id: note_id.to_string(),
+                note_type_id: "basic".to_string(),
+                template_id: "forward".to_string(),
+                ordinal: 0,
+                cloze_ordinal: None,
+            });
+            card
+        };
+        let state = AppState {
+            decks: vec![deck("tamil", "Tamil")],
+            note_types: vec![note_type],
+            notes: vec![
+                note("dog-note", "a dog", ""),
+                note("cat-note", "cat", "tail"),
+            ],
+            cards: vec![
+                card_for_note("dog-note", "a dog", ""),
+                card_for_note("cat-note", "cat", "tail"),
+                card("standalone", "tamil", "hola", "hello"),
+            ],
+            ..AppState::default()
+        };
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert!(ids_for("front:dog").is_empty());
+        assert_eq!(ids_for("front:\"a dog\""), vec!["dog-note::forward"]);
+        assert_eq!(ids_for("front:*dog*"), vec!["dog-note::forward"]);
+        assert_eq!(ids_for("fr*:\"a dog\""), vec!["dog-note::forward"]);
+        assert_eq!(ids_for("back:"), vec!["dog-note::forward"]);
+        assert_eq!(ids_for("back:_*"), vec!["cat-note::forward", "standalone"]);
+        assert_eq!(ids_for("front:hola"), vec!["standalone"]);
+    }
+
+    #[test]
     fn state_filters_find_new_due_suspended_and_buried_cards() {
         assert_eq!(ids_for("state:new"), vec!["note::forward", "new"]);
         assert_eq!(ids_for("is:due"), vec!["due"]);
@@ -1139,6 +1504,214 @@ mod tests {
         assert_eq!(ids_for("tag:script"), vec!["note::forward"]);
         assert_eq!(ids_for("note:basic"), vec!["note::forward"]);
         assert_eq!(ids_for("noteType:basic"), vec!["note::forward"]);
+    }
+
+    #[test]
+    fn anki_browser_id_and_card_template_filters_match_current_card() {
+        let mut state = state();
+        state.note_types[0].templates.push(CardTemplate {
+            id: "reverse".to_string(),
+            name: "Reverse".to_string(),
+            front_template: "{{Back}}".to_string(),
+            back_template: "{{Front}}".to_string(),
+            required_field_names: vec!["Back".to_string()],
+            ordinal: 1,
+        });
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(
+            ids_for("cid:due,note::forward"),
+            vec!["note::forward", "due"]
+        );
+        assert_eq!(ids_for("cardId:DUE"), vec!["due"]);
+        assert_eq!(ids_for("nid:note"), vec!["note::forward"]);
+        assert_eq!(ids_for("note-id:NOTE"), vec!["note::forward"]);
+        assert_eq!(ids_for("card:forward"), vec!["note::forward"]);
+        assert_eq!(ids_for("template:Forward"), vec!["note::forward"]);
+        assert!(ids_for("card:reverse").is_empty());
+    }
+
+    #[test]
+    fn anki_browser_none_filtered_and_card_number_filters_match() {
+        let mut state = AppState {
+            decks: vec![
+                deck("regular", "Regular"),
+                deck("filtered-deck", "Cram Session"),
+            ],
+            note_types: vec![note_type()],
+            notes: vec![
+                Note {
+                    id: "tagged-note".to_string(),
+                    note_type_id: "basic".to_string(),
+                    deck_id: "regular".to_string(),
+                    fields: vec![NoteFieldValue {
+                        field_id: "front".to_string(),
+                        value: "tagged".to_string(),
+                    }],
+                    tags: vec!["script".to_string()],
+                    created_at: NOW,
+                    updated_at: NOW,
+                },
+                Note {
+                    id: "untagged-note".to_string(),
+                    note_type_id: "basic".to_string(),
+                    deck_id: "filtered-deck".to_string(),
+                    fields: vec![NoteFieldValue {
+                        field_id: "front".to_string(),
+                        value: "untagged".to_string(),
+                    }],
+                    tags: Vec::new(),
+                    created_at: NOW,
+                    updated_at: NOW,
+                },
+            ],
+            cards: vec![
+                {
+                    let mut card = card("tagged-note::forward", "regular", "front", "back");
+                    card.lineage = Some(CardLineage {
+                        note_id: "tagged-note".to_string(),
+                        note_type_id: "basic".to_string(),
+                        template_id: "forward".to_string(),
+                        ordinal: 0,
+                        cloze_ordinal: None,
+                    });
+                    card
+                },
+                {
+                    let mut card = card("tagged-note::reverse", "regular", "back", "front");
+                    card.lineage = Some(CardLineage {
+                        note_id: "tagged-note".to_string(),
+                        note_type_id: "basic".to_string(),
+                        template_id: "reverse".to_string(),
+                        ordinal: 1,
+                        cloze_ordinal: None,
+                    });
+                    card
+                },
+                {
+                    let mut card = card("untagged-note::forward", "filtered-deck", "front", "back");
+                    card.lineage = Some(CardLineage {
+                        note_id: "untagged-note".to_string(),
+                        note_type_id: "basic".to_string(),
+                        template_id: "forward".to_string(),
+                        ordinal: 0,
+                        cloze_ordinal: None,
+                    });
+                    card
+                },
+            ],
+            card_progress: vec![{
+                let mut progress = progress("tagged-note::forward", CardState::Review, NOW);
+                progress.flag = Some(CardFlag::Red);
+                progress
+            }],
+            external_sources: vec![ExternalSourceRecord {
+                target: ExternalSourceTarget::Deck,
+                target_id: "filtered-deck".to_string(),
+                source: "anki".to_string(),
+                original_id: Some("3".to_string()),
+                data: BTreeMap::from([("dyn".to_string(), "1".to_string())]),
+            }],
+            ..AppState::default()
+        };
+        state.note_types[0].templates.push(CardTemplate {
+            id: "reverse".to_string(),
+            name: "Reverse".to_string(),
+            front_template: "{{Back}}".to_string(),
+            back_template: "{{Front}}".to_string(),
+            required_field_names: vec!["Back".to_string()],
+            ordinal: 1,
+        });
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("tag:none"), vec!["untagged-note::forward"]);
+        assert_eq!(ids_for("deck:filtered"), vec!["untagged-note::forward"]);
+        assert_eq!(
+            ids_for("card:1"),
+            vec!["tagged-note::forward", "untagged-note::forward"]
+        );
+        assert_eq!(ids_for("card:2"), vec!["tagged-note::reverse"]);
+        assert_eq!(ids_for("flag:0 card:2"), vec!["tagged-note::reverse"]);
+    }
+
+    #[test]
+    fn anki_browser_tag_and_deck_hierarchy_filters_match() {
+        let note = |id: &str, deck_id: &str, tags: Vec<&str>| Note {
+            id: id.to_string(),
+            note_type_id: "basic".to_string(),
+            deck_id: deck_id.to_string(),
+            fields: vec![NoteFieldValue {
+                field_id: "front".to_string(),
+                value: id.to_string(),
+            }],
+            tags: tags.into_iter().map(str::to_string).collect(),
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let card_for_note = |note_id: &str, deck_id: &str| {
+            let mut card = card(&format!("{note_id}::forward"), deck_id, note_id, note_id);
+            card.lineage = Some(CardLineage {
+                note_id: note_id.to_string(),
+                note_type_id: "basic".to_string(),
+                template_id: "forward".to_string(),
+                ordinal: 0,
+                cloze_ordinal: None,
+            });
+            card
+        };
+        let state = AppState {
+            decks: vec![
+                deck("french", "French"),
+                deck("french-verbs", "French::Verbs"),
+                deck("languages-french", "Languages::French"),
+            ],
+            note_types: vec![note_type()],
+            notes: vec![
+                note("animal-note", "french", vec!["animal::mammal"]),
+                note("verb-note", "french-verbs", vec!["grammar"]),
+                note("language-note", "languages-french", vec!["language"]),
+            ],
+            cards: vec![
+                card_for_note("animal-note", "french"),
+                card_for_note("verb-note", "french-verbs"),
+                card_for_note("language-note", "languages-french"),
+            ],
+            ..AppState::default()
+        };
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("tag:animal"), vec!["animal-note::forward"]);
+        assert_eq!(ids_for("tag:animal::*"), vec!["animal-note::forward"]);
+        assert_eq!(
+            ids_for("deck:french"),
+            vec!["animal-note::forward", "verb-note::forward"]
+        );
+        assert_eq!(ids_for("deck:french::*"), vec!["verb-note::forward"]);
+        assert_eq!(
+            ids_for("deck:*french"),
+            vec!["animal-note::forward", "language-note::forward"]
+        );
     }
 
     #[test]
@@ -1249,6 +1822,8 @@ mod tests {
 
         assert_eq!(ids_for("tag:script"), vec!["2000"]);
         assert_eq!(ids_for("note:basic"), vec!["2000"]);
+        assert_eq!(ids_for("nid:note"), vec!["2000"]);
+        assert_eq!(ids_for("card:forward"), vec!["2000"]);
         assert_eq!(ids_for("uyir"), vec!["2000"]);
     }
 

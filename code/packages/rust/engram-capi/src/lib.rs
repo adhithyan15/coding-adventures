@@ -11,6 +11,7 @@ use std::ptr;
 use engram_anki_package::{
     analyze_engram_media_references, inspect_apkg, read_media_file,
     read_v11_collection_as_engram_state, write_legacy_apkg_from_engram_state,
+    write_modern_apkg_from_engram_state,
 };
 use engram_core_wasm::EngramSession;
 use serde_json::{json, Value};
@@ -170,6 +171,18 @@ pub unsafe extern "C" fn eg_engram_app_props(
 ) -> *mut c_char {
     let deck_id = read_cstr(deck_id);
     with_session(session, |session| session.engram_app_props(&deck_id, now))
+}
+
+/// # Safety
+/// `session` must be valid; `query` must be null or a valid C string.
+#[no_mangle]
+pub unsafe extern "C" fn eg_engram_browser_props(
+    session: *mut EgSession,
+    query: *const c_char,
+    now: u64,
+) -> *mut c_char {
+    let query = read_cstr(query);
+    with_session(session, |session| session.engram_browser_props(&query, now))
 }
 
 /// # Safety
@@ -390,6 +403,16 @@ pub unsafe extern "C" fn eg_export_anki_apkg(session: *mut EgSession) -> *mut c_
 /// # Safety
 /// `session` must be a valid session pointer.
 #[no_mangle]
+pub unsafe extern "C" fn eg_export_anki_apkg_modern(session: *mut EgSession) -> *mut c_char {
+    if session.is_null() {
+        return ptr::null_mut();
+    }
+    into_cstr(export_modern_anki_apkg_json(&(*session).inner))
+}
+
+/// # Safety
+/// `session` must be a valid session pointer.
+#[no_mangle]
 pub unsafe extern "C" fn eg_analyze_media_references(session: *mut EgSession) -> *mut c_char {
     if session.is_null() {
         return ptr::null_mut();
@@ -533,6 +556,13 @@ fn import_anki_apkg_json(session: &mut EngramSession, bytes: &[u8]) -> String {
 
 fn export_anki_apkg_json(session: &EngramSession) -> String {
     match write_legacy_apkg_from_engram_state(session.state(), &[]) {
+        Ok(apkg) => ok_json_with("apkg", serde_json::to_value(apkg).unwrap_or(Value::Null)),
+        Err(error) => error_json(&error.message),
+    }
+}
+
+fn export_modern_anki_apkg_json(session: &EngramSession) -> String {
+    match write_modern_apkg_from_engram_state(session.state(), &[]) {
         Ok(apkg) => ok_json_with("apkg", serde_json::to_value(apkg).unwrap_or(Value::Null)),
         Err(error) => error_json(&error.message),
     }
@@ -791,8 +821,30 @@ CREATE TABLE graves (
             let result = take(eg_dispatch(session, command.as_ptr()));
             assert!(result.contains(r#""ok":true"#));
 
+            let options = cstr(
+                r#"{
+                    "type": "setDeckOptions",
+                    "deckId": "deck",
+                    "options": {
+                        "newCardsPerDay": 12,
+                        "maximumIntervalDays": 90
+                    }
+                }"#,
+            );
+            let result = take(eg_dispatch(session, options.as_ptr()));
+            let result: Value = serde_json::from_str(&result).unwrap();
+            assert_eq!(
+                result["state"]["deckOptions"][0]["options"]["newCardsPerDay"],
+                12
+            );
+            assert_eq!(
+                result["state"]["deckOptions"][0]["options"]["maximumIntervalDays"],
+                90
+            );
+
             let snapshot = take(eg_snapshot(session));
             assert!(snapshot.contains(r#""id":"deck""#));
+            assert!(snapshot.contains(r#""deckOptions""#));
 
             eg_session_free(session);
         }
@@ -981,6 +1033,32 @@ CREATE TABLE graves (
             assert_eq!(parsed["state"]["decks"][0]["name"], "Spanish::Latin");
             assert_eq!(parsed["state"]["cards"][0]["front"], "hola");
             assert_eq!(parsed["state"]["cards"][0]["back"], "hello");
+
+            let modern_exported = take(eg_export_anki_apkg_modern(session));
+            let modern_exported: Value = serde_json::from_str(&modern_exported).unwrap();
+            assert_eq!(modern_exported["ok"], true);
+            let modern_apkg = modern_exported["apkg"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|byte| byte.as_u64().unwrap() as u8)
+                .collect::<Vec<_>>();
+            let inspected = take(eg_inspect_anki_apkg(
+                session,
+                modern_apkg.as_ptr(),
+                modern_apkg.len(),
+            ));
+            let inspected: Value = serde_json::from_str(&inspected).unwrap();
+            assert_eq!(inspected["manifest"]["collection"]["format"], "sqlite21b");
+
+            let parsed = take(eg_parse_anki_apkg(
+                session,
+                modern_apkg.as_ptr(),
+                modern_apkg.len(),
+            ));
+            let parsed: Value = serde_json::from_str(&parsed).unwrap();
+            assert_eq!(parsed["ok"], true);
+            assert_eq!(parsed["state"]["cards"][0]["front"], "hola");
 
             eg_session_free(session);
         }
@@ -1374,6 +1452,13 @@ CREATE TABLE graves (
             assert_eq!(props["props"]["app-title"], "Engram");
             assert_eq!(props["props"]["deck-name"], "Tamil");
             assert_eq!(props["props"]["deck-total-value"], "1");
+            assert_eq!(props["props"]["browser-label"], "Card browser");
+            assert_eq!(props["props"]["browser-results-summary"], "1 matching card");
+            assert_eq!(props["props"]["browser-results"], json!(["letter-a -> a"]));
+            assert_eq!(props["props"]["browser-result-card-ids"], json!(["card"]));
+            assert_eq!(props["props"]["browser-result-states"], json!(["new"]));
+            assert_eq!(props["props"]["browser-selected-card-id"], "card");
+            assert_eq!(props["props"]["browser-selected-state"], "new");
             assert_eq!(props["props"]["answer-visible"], false);
             assert_eq!(props["props"]["action-undo-label"], "Undo");
             assert_eq!(props["props"]["action-bury-card-label"], "Bury card");
@@ -1383,6 +1468,24 @@ CREATE TABLE graves (
             );
             assert_eq!(props["props"]["action-suspend-card-label"], "Suspend");
             assert_eq!(props["props"]["action-mark-label"], "Mark");
+
+            let browser_props = take(eg_engram_browser_props(
+                session,
+                cstr("cid:card").as_ptr(),
+                NOW,
+            ));
+            let browser_props: Value = serde_json::from_str(&browser_props).unwrap();
+            assert_eq!(browser_props["ok"], true);
+            assert_eq!(browser_props["props"]["browser-query"], "cid:card");
+            assert_eq!(
+                browser_props["props"]["browser-results"],
+                json!(["letter-a -> a"])
+            );
+            assert_eq!(
+                browser_props["props"]["browser-result-card-ids"],
+                json!(["card"])
+            );
+            assert_eq!(browser_props["props"]["browser-selected-card-id"], "card");
 
             eg_session_free(session);
         }
@@ -1485,6 +1588,33 @@ CREATE TABLE graves (
             assert_eq!(buried["ok"], true);
             assert_eq!(buried["event"], "onBuryCard");
             assert_eq!(buried["props"]["prompt"], "letter-aa");
+
+            let browser_mark = cstr("onBrowserToggleMarkSelected|other");
+            let browser_marked = take(eg_handle_engram_app_event(
+                session,
+                browser_mark.as_ptr(),
+                deck_id.as_ptr(),
+                NOW + 5,
+            ));
+            let browser_marked: Value = serde_json::from_str(&browser_marked).unwrap();
+            assert_eq!(browser_marked["ok"], true);
+            assert_eq!(browser_marked["event"], "onBrowserToggleMarkSelected");
+            assert!(browser_marked["state"]["cardProgress"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|progress| progress["cardId"] == "other" && progress["markedAt"] == NOW + 5));
+
+            let browser_select = cstr(r#"{"event":"onBrowserSelectResult","cardId":"other"}"#);
+            let browser_selected = take(eg_handle_engram_app_event(
+                session,
+                browser_select.as_ptr(),
+                deck_id.as_ptr(),
+                NOW + 6,
+            ));
+            let browser_selected: Value = serde_json::from_str(&browser_selected).unwrap();
+            assert_eq!(browser_selected["ok"], true);
+            assert_eq!(browser_selected["event"], "onBrowserSelectResult");
 
             eg_session_free(session);
         }

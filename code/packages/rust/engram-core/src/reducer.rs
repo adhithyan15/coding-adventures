@@ -1,11 +1,13 @@
 use crate::model::{
     ActiveSessionState, AppState, Card, CardFlag, CardProgress, CardProgressSnapshot, Deck,
-    DeckOptions, ExternalSourceRecord, ExternalSourceTarget, MediaAssetRecord, Rating, Review,
-    Session, SessionStatus,
+    DeckOptions, DeckOptionsPreset, ExternalSourceRecord, ExternalSourceTarget, MediaAssetRecord,
+    Note, NoteType, Rating, Review, Session, SessionStatus,
 };
 use crate::scheduler::schedule_review;
 use crate::sm2::INITIAL_EASE_FACTOR;
-use crate::template::rename_note_type_field;
+use crate::template::{
+    generate_cards_for_note, materialize_generated_card, rename_note_type_field,
+};
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum EngramCommand {
@@ -21,6 +23,10 @@ pub enum EngramCommand {
         name: String,
         description: String,
     },
+    SetDeckOptions {
+        deck_id: String,
+        options: DeckOptions,
+    },
     DeleteDeck {
         deck_id: String,
     },
@@ -29,6 +35,20 @@ pub enum EngramCommand {
         field_id: String,
         name: String,
         updated_at: u64,
+    },
+    UpsertNoteType {
+        note_type: NoteType,
+        materialize_cards_at: Option<u64>,
+    },
+    DeleteNoteType {
+        note_type_id: String,
+    },
+    UpsertNote {
+        note: Note,
+        materialize_cards_at: Option<u64>,
+    },
+    DeleteNote {
+        note_id: String,
     },
     UpsertMediaAsset {
         asset: MediaAssetRecord,
@@ -172,6 +192,20 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             }
             next
         }
+        EngramCommand::SetDeckOptions { deck_id, options } => {
+            let mut next = state.clone();
+            match next
+                .deck_options
+                .iter_mut()
+                .find(|preset| preset.deck_id == deck_id)
+            {
+                Some(preset) => preset.options = options,
+                None => next
+                    .deck_options
+                    .push(DeckOptionsPreset { deck_id, options }),
+            }
+            next
+        }
         EngramCommand::DeleteDeck { deck_id } => {
             let card_ids: Vec<String> = state
                 .cards
@@ -279,6 +313,55 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             }
             next
         }
+        EngramCommand::UpsertNoteType {
+            note_type,
+            materialize_cards_at,
+        } => {
+            let note_type_id = note_type.id.clone();
+            let mut next = state.clone();
+            match next
+                .note_types
+                .iter_mut()
+                .find(|existing| existing.id == note_type_id)
+            {
+                Some(existing) => *existing = note_type,
+                None => next.note_types.push(note_type),
+            }
+            if let Some(created_at) = materialize_cards_at {
+                let note_ids = next
+                    .notes
+                    .iter()
+                    .filter(|note| note.note_type_id == note_type_id)
+                    .map(|note| note.id.clone())
+                    .collect::<Vec<_>>();
+                for note_id in note_ids {
+                    next = sync_generated_cards_for_note(&next, &note_id, created_at);
+                }
+            }
+            next
+        }
+        EngramCommand::DeleteNoteType { note_type_id } => {
+            delete_note_type_and_related_notes(state, &note_type_id)
+        }
+        EngramCommand::UpsertNote {
+            note,
+            materialize_cards_at,
+        } => {
+            let mut next = state.clone();
+            match next
+                .notes
+                .iter_mut()
+                .find(|existing| existing.id == note.id)
+            {
+                Some(existing) => *existing = note.clone(),
+                None => next.notes.push(note.clone()),
+            }
+            if let Some(created_at) = materialize_cards_at {
+                next = sync_generated_cards_for_note(&next, &note.id, created_at);
+            }
+            next
+        }
+        EngramCommand::DeleteNote { note_id } => delete_note_and_generated_cards(state, &note_id),
         EngramCommand::UpsertMediaAsset { asset } => {
             let mut next = state.clone();
             match next
@@ -612,6 +695,135 @@ fn without_external_source_target(
         .collect()
 }
 
+fn sync_generated_cards_for_note(state: &AppState, note_id: &str, created_at: u64) -> AppState {
+    let Some(note) = state.notes.iter().find(|note| note.id == note_id) else {
+        return state.clone();
+    };
+    let Some(note_type) = state
+        .note_types
+        .iter()
+        .find(|note_type| note_type.id == note.note_type_id)
+    else {
+        return state.clone();
+    };
+
+    let existing_generated = state
+        .cards
+        .iter()
+        .filter(|card| generated_card_belongs_to_note(card, note_id))
+        .cloned()
+        .collect::<Vec<_>>();
+    let mut generated_cards = generate_cards_for_note(note_type, note)
+        .iter()
+        .map(|generated| {
+            let mut card = materialize_generated_card(generated, created_at);
+            if let Some(existing) = existing_generated
+                .iter()
+                .find(|existing| existing.id == card.id)
+            {
+                card.created_at = existing.created_at;
+            }
+            card
+        })
+        .collect::<Vec<_>>();
+    let generated_ids = generated_cards
+        .iter()
+        .map(|card| card.id.clone())
+        .collect::<Vec<_>>();
+    let removed_card_ids = existing_generated
+        .iter()
+        .filter(|card| !generated_ids.contains(&card.id))
+        .map(|card| card.id.clone())
+        .collect::<Vec<_>>();
+
+    let mut next = state.clone();
+    next.cards = state
+        .cards
+        .iter()
+        .filter(|card| !generated_card_belongs_to_note(card, note_id))
+        .cloned()
+        .collect();
+    next.cards.append(&mut generated_cards);
+    prune_removed_cards(&mut next, &removed_card_ids);
+    next
+}
+
+fn delete_note_and_generated_cards(state: &AppState, note_id: &str) -> AppState {
+    let removed_card_ids = state
+        .cards
+        .iter()
+        .filter(|card| generated_card_belongs_to_note(card, note_id))
+        .map(|card| card.id.clone())
+        .collect::<Vec<_>>();
+
+    let mut next = state.clone();
+    next.notes = state
+        .notes
+        .iter()
+        .filter(|note| note.id != note_id)
+        .cloned()
+        .collect();
+    next.cards = state
+        .cards
+        .iter()
+        .filter(|card| !removed_card_ids.contains(&card.id))
+        .cloned()
+        .collect();
+    next.external_sources =
+        without_external_source_target(&next.external_sources, ExternalSourceTarget::Note, note_id);
+    prune_removed_cards(&mut next, &removed_card_ids);
+    next
+}
+
+fn delete_note_type_and_related_notes(state: &AppState, note_type_id: &str) -> AppState {
+    let note_ids = state
+        .notes
+        .iter()
+        .filter(|note| note.note_type_id == note_type_id)
+        .map(|note| note.id.clone())
+        .collect::<Vec<_>>();
+
+    let mut next = state.clone();
+    next.note_types = state
+        .note_types
+        .iter()
+        .filter(|note_type| note_type.id != note_type_id)
+        .cloned()
+        .collect();
+    next.external_sources = without_external_source_target(
+        &next.external_sources,
+        ExternalSourceTarget::NoteType,
+        note_type_id,
+    );
+    for note_id in note_ids {
+        next = delete_note_and_generated_cards(&next, &note_id);
+    }
+    next
+}
+
+fn generated_card_belongs_to_note(card: &Card, note_id: &str) -> bool {
+    card.lineage
+        .as_ref()
+        .is_some_and(|lineage| lineage.note_id == note_id)
+}
+
+fn prune_removed_cards(state: &mut AppState, removed_card_ids: &[String]) {
+    if removed_card_ids.is_empty() {
+        return;
+    }
+
+    state
+        .card_progress
+        .retain(|progress| !removed_card_ids.contains(&progress.card_id));
+    state.external_sources.retain(|source| {
+        source.target != ExternalSourceTarget::Card || !removed_card_ids.contains(&source.target_id)
+    });
+    for card_id in removed_card_ids {
+        state.active_session =
+            remove_card_from_active_session(state.active_session.clone(), card_id);
+    }
+}
+
 fn deck_options_for_card(state: &AppState, card_id: &str) -> DeckOptions {
     state
         .cards
@@ -928,7 +1140,6 @@ mod tests {
     use crate::queue::build_session_queue;
     use crate::scheduler::ONE_MINUTE_MS;
     use crate::sm2::ONE_DAY_MS;
-    use crate::template::generate_cards_for_note;
 
     const NOW: u64 = 1_700_000_000_000;
 
@@ -971,6 +1182,58 @@ mod tests {
             last_seen_at: NOW - ONE_DAY_MS,
             flag: None,
             marked_at: None,
+        }
+    }
+
+    fn basic_note_type() -> NoteType {
+        NoteType {
+            id: "basic".to_string(),
+            name: "Basic".to_string(),
+            fields: vec![
+                FieldDef {
+                    id: "front".to_string(),
+                    name: "Front".to_string(),
+                    required: true,
+                    ordinal: 0,
+                },
+                FieldDef {
+                    id: "back".to_string(),
+                    name: "Back".to_string(),
+                    required: true,
+                    ordinal: 1,
+                },
+            ],
+            templates: vec![CardTemplate {
+                id: "forward".to_string(),
+                name: "Forward".to_string(),
+                front_template: "{{Front}}".to_string(),
+                back_template: "{{Back}}".to_string(),
+                required_field_names: vec!["Front".to_string(), "Back".to_string()],
+                ordinal: 0,
+            }],
+            created_at: NOW,
+            updated_at: NOW,
+        }
+    }
+
+    fn basic_note() -> Note {
+        Note {
+            id: "note".to_string(),
+            note_type_id: "basic".to_string(),
+            deck_id: "deck".to_string(),
+            fields: vec![
+                NoteFieldValue {
+                    field_id: "front".to_string(),
+                    value: "amma".to_string(),
+                },
+                NoteFieldValue {
+                    field_id: "back".to_string(),
+                    value: "mother".to_string(),
+                },
+            ],
+            tags: vec!["tamil".to_string()],
+            created_at: NOW,
+            updated_at: NOW,
         }
     }
 
@@ -1132,6 +1395,275 @@ mod tests {
     }
 
     #[test]
+    fn upsert_note_type_can_sync_existing_notes() {
+        let note_type = basic_note_type();
+        let state = AppState {
+            notes: vec![basic_note()],
+            ..AppState::default()
+        };
+
+        let mut next = reduce(
+            &state,
+            EngramCommand::UpsertNoteType {
+                note_type: note_type.clone(),
+                materialize_cards_at: Some(NOW + 1),
+            },
+        );
+
+        assert_eq!(next.note_types, vec![note_type]);
+        assert_eq!(next.cards.len(), 1);
+        assert_eq!(next.cards[0].id, "note::forward");
+        assert_eq!(next.cards[0].front, "amma");
+        assert_eq!(next.cards[0].created_at, NOW + 1);
+        assert_eq!(
+            next.cards[0]
+                .lineage
+                .as_ref()
+                .map(|lineage| lineage.template_id.as_str()),
+            Some("forward")
+        );
+
+        next.card_progress.push(progress("note::forward"));
+        let mut changed_note_type = basic_note_type();
+        changed_note_type.templates[0].front_template = "{{Back}}".to_string();
+        changed_note_type.updated_at = NOW + 2;
+        next = reduce(
+            &next,
+            EngramCommand::UpsertNoteType {
+                note_type: changed_note_type,
+                materialize_cards_at: Some(NOW + 3),
+            },
+        );
+
+        assert_eq!(next.note_types[0].updated_at, NOW + 2);
+        assert_eq!(next.cards.len(), 1);
+        assert_eq!(next.cards[0].id, "note::forward");
+        assert_eq!(next.cards[0].front, "mother");
+        assert_eq!(next.cards[0].created_at, NOW + 1);
+        assert_eq!(next.card_progress.len(), 1);
+        assert_eq!(next.card_progress[0].card_id, "note::forward");
+    }
+
+    #[test]
+    fn upsert_note_can_sync_generated_cards_and_preserve_progress() {
+        let note_type = NoteType {
+            id: "basic".to_string(),
+            name: "Basic".to_string(),
+            fields: vec![
+                FieldDef {
+                    id: "front".to_string(),
+                    name: "Front".to_string(),
+                    required: true,
+                    ordinal: 0,
+                },
+                FieldDef {
+                    id: "back".to_string(),
+                    name: "Back".to_string(),
+                    required: true,
+                    ordinal: 1,
+                },
+            ],
+            templates: vec![
+                CardTemplate {
+                    id: "forward".to_string(),
+                    name: "Forward".to_string(),
+                    front_template: "{{Front}}".to_string(),
+                    back_template: "{{Back}}".to_string(),
+                    required_field_names: vec!["Front".to_string(), "Back".to_string()],
+                    ordinal: 0,
+                },
+                CardTemplate {
+                    id: "reverse".to_string(),
+                    name: "Reverse".to_string(),
+                    front_template: "{{Back}}".to_string(),
+                    back_template: "{{Front}}".to_string(),
+                    required_field_names: vec!["Front".to_string(), "Back".to_string()],
+                    ordinal: 1,
+                },
+            ],
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let note = Note {
+            id: "note".to_string(),
+            note_type_id: "basic".to_string(),
+            deck_id: "deck".to_string(),
+            fields: vec![
+                NoteFieldValue {
+                    field_id: "front".to_string(),
+                    value: "hola".to_string(),
+                },
+                NoteFieldValue {
+                    field_id: "back".to_string(),
+                    value: "hello".to_string(),
+                },
+            ],
+            tags: vec!["spanish".to_string()],
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let mut state = AppState {
+            note_types: vec![note_type],
+            ..AppState::default()
+        };
+
+        state = reduce(
+            &state,
+            EngramCommand::UpsertNote {
+                note: note.clone(),
+                materialize_cards_at: Some(NOW + 1),
+            },
+        );
+
+        assert_eq!(state.notes, vec![note.clone()]);
+        assert_eq!(state.cards.len(), 2);
+        assert_eq!(state.cards[0].id, "note::forward");
+        assert_eq!(state.cards[0].front, "hola");
+        assert_eq!(state.cards[0].created_at, NOW + 1);
+
+        state.card_progress.push(progress("note::forward"));
+        let mut edited = note;
+        edited.fields[0].value = "hola!".to_string();
+        edited.updated_at = NOW + 2;
+        state = reduce(
+            &state,
+            EngramCommand::UpsertNote {
+                note: edited,
+                materialize_cards_at: Some(NOW + 3),
+            },
+        );
+
+        assert_eq!(state.notes[0].updated_at, NOW + 2);
+        assert_eq!(state.cards.len(), 2);
+        assert_eq!(state.cards[0].id, "note::forward");
+        assert_eq!(state.cards[0].front, "hola!");
+        assert_eq!(state.cards[0].created_at, NOW + 1);
+        assert_eq!(state.card_progress.len(), 1);
+        assert_eq!(state.card_progress[0].card_id, "note::forward");
+    }
+
+    #[test]
+    fn delete_note_cascades_generated_cards_without_touching_manual_cards() {
+        let generated = card_with_note("note::forward", "note", 0);
+        let manual = card("manual");
+        let state = AppState {
+            notes: vec![Note {
+                id: "note".to_string(),
+                note_type_id: "basic".to_string(),
+                deck_id: "deck".to_string(),
+                fields: Vec::new(),
+                tags: Vec::new(),
+                created_at: NOW,
+                updated_at: NOW,
+            }],
+            cards: vec![generated.clone(), manual.clone()],
+            card_progress: vec![progress("note::forward"), progress("manual")],
+            external_sources: vec![
+                ExternalSourceRecord {
+                    source: "anki".to_string(),
+                    target: ExternalSourceTarget::Note,
+                    target_id: "note".to_string(),
+                    original_id: Some("1000".to_string()),
+                    data: Default::default(),
+                },
+                ExternalSourceRecord {
+                    source: "anki".to_string(),
+                    target: ExternalSourceTarget::Card,
+                    target_id: "note::forward".to_string(),
+                    original_id: Some("2000".to_string()),
+                    data: Default::default(),
+                },
+            ],
+            active_session: Some(ActiveSessionState {
+                session_id: "session".to_string(),
+                deck_id: "deck".to_string(),
+                queue: vec![generated, manual],
+                current_index: 0,
+                revealed: true,
+            }),
+            ..AppState::default()
+        };
+
+        let next = reduce(
+            &state,
+            EngramCommand::DeleteNote {
+                note_id: "note".to_string(),
+            },
+        );
+
+        assert!(next.notes.is_empty());
+        assert_eq!(next.cards, vec![card("manual")]);
+        assert_eq!(next.card_progress.len(), 1);
+        assert_eq!(next.card_progress[0].card_id, "manual");
+        assert!(next.external_sources.is_empty());
+        let active = next.active_session.unwrap();
+        assert_eq!(active.queue, vec![card("manual")]);
+        assert_eq!(active.current_index, 0);
+        assert!(!active.revealed);
+    }
+
+    #[test]
+    fn delete_note_type_cascades_notes_and_generated_cards() {
+        let generated = card_with_note("note::forward", "note", 0);
+        let manual = card("manual");
+        let state = AppState {
+            note_types: vec![basic_note_type()],
+            notes: vec![basic_note()],
+            cards: vec![generated.clone(), manual.clone()],
+            card_progress: vec![progress("note::forward"), progress("manual")],
+            external_sources: vec![
+                ExternalSourceRecord {
+                    source: "anki".to_string(),
+                    target: ExternalSourceTarget::NoteType,
+                    target_id: "basic".to_string(),
+                    original_id: Some("model".to_string()),
+                    data: Default::default(),
+                },
+                ExternalSourceRecord {
+                    source: "anki".to_string(),
+                    target: ExternalSourceTarget::Note,
+                    target_id: "note".to_string(),
+                    original_id: Some("note".to_string()),
+                    data: Default::default(),
+                },
+                ExternalSourceRecord {
+                    source: "anki".to_string(),
+                    target: ExternalSourceTarget::Card,
+                    target_id: "note::forward".to_string(),
+                    original_id: Some("card".to_string()),
+                    data: Default::default(),
+                },
+            ],
+            active_session: Some(ActiveSessionState {
+                session_id: "session".to_string(),
+                deck_id: "deck".to_string(),
+                queue: vec![generated, manual],
+                current_index: 0,
+                revealed: true,
+            }),
+            ..AppState::default()
+        };
+
+        let next = reduce(
+            &state,
+            EngramCommand::DeleteNoteType {
+                note_type_id: "basic".to_string(),
+            },
+        );
+
+        assert!(next.note_types.is_empty());
+        assert!(next.notes.is_empty());
+        assert_eq!(next.cards, vec![card("manual")]);
+        assert_eq!(next.card_progress.len(), 1);
+        assert_eq!(next.card_progress[0].card_id, "manual");
+        assert!(next.external_sources.is_empty());
+        let active = next.active_session.unwrap();
+        assert_eq!(active.queue, vec![card("manual")]);
+        assert_eq!(active.current_index, 0);
+        assert!(!active.revealed);
+    }
+
+    #[test]
     fn rate_card_creates_progress_review_and_session_stats() {
         let mut state = AppState::default();
         state.cards.push(card("card"));
@@ -1199,6 +1731,54 @@ mod tests {
         assert_eq!(next.card_progress[0].state, CardState::Learning);
         assert_eq!(next.card_progress[0].learning_step_index, Some(1));
         assert_eq!(next.card_progress[0].next_due_at, NOW + 30 * ONE_MINUTE_MS);
+    }
+
+    #[test]
+    fn set_deck_options_inserts_and_replaces_presets() {
+        let state = AppState::default();
+        let initial_options = DeckOptions {
+            learning_steps_minutes: vec![3, 30],
+            ..DeckOptions::default()
+        };
+
+        let inserted = reduce(
+            &state,
+            EngramCommand::SetDeckOptions {
+                deck_id: "deck".to_string(),
+                options: initial_options,
+            },
+        );
+
+        assert_eq!(inserted.deck_options.len(), 1);
+        assert_eq!(inserted.deck_options[0].deck_id, "deck");
+        assert_eq!(
+            inserted.deck_options[0].options.learning_steps_minutes,
+            vec![3, 30]
+        );
+
+        let replacement_options = DeckOptions {
+            maximum_interval_days: 90,
+            review_interval_modifier: 0.75,
+            ..DeckOptions::default()
+        };
+        let replaced = reduce(
+            &inserted,
+            EngramCommand::SetDeckOptions {
+                deck_id: "deck".to_string(),
+                options: replacement_options,
+            },
+        );
+
+        assert_eq!(replaced.deck_options.len(), 1);
+        assert_eq!(replaced.deck_options[0].options.maximum_interval_days, 90);
+        assert_eq!(
+            replaced.deck_options[0].options.review_interval_modifier,
+            0.75
+        );
+        assert_eq!(
+            replaced.deck_options[0].options.learning_steps_minutes,
+            DeckOptions::default().learning_steps_minutes
+        );
     }
 
     #[test]

@@ -38,6 +38,7 @@ char *eg_build_queue_with_daily_limits(
 char *eg_deck_stats(EgSession *session, const char *deck_id, uint64_t now);
 char *eg_session_progress(EgSession *session);
 char *eg_engram_app_props(EgSession *session, const char *deck_id, uint64_t now);
+char *eg_engram_browser_props(EgSession *session, const char *query, uint64_t now);
 char *eg_handle_engram_app_event(
     EgSession *session,
     const char *event,
@@ -99,6 +100,7 @@ char *eg_parse_anki_notes_tsv(
     uint64_t created_at
 );
 char *eg_export_anki_apkg(EgSession *session);
+char *eg_export_anki_apkg_modern(EgSession *session);
 char *eg_analyze_media_references(EgSession *session);
 char *eg_inspect_anki_apkg(EgSession *session, const uint8_t *data, size_t data_len);
 char *eg_read_anki_apkg_media(

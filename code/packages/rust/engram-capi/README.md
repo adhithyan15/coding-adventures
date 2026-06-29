@@ -35,7 +35,9 @@ flat, Mosaic-slot-shaped JSON for the shared `EngramApp` surface.
 `eg_handle_engram_app_event` lets native Mosaic shells forward generated
 `EngramApp` events such as `onReveal`, `reveal`, `onGood`, `onUndo`,
 `onBuryCard`, `onSuspendCard`, or `onToggleMark` into the shared Rust review
-flow; it returns updated state and refreshed Mosaic props.
+flow; it also accepts browser row events such as
+`onBrowserToggleMarkSelected|card-id`. It returns updated state and refreshed
+Mosaic props.
 `eg_review_history` mirrors `EngramSession::review_history()` for native stats
 views that need deck-scoped review-log summaries over a timestamp range.
 `eg_daily_limit_usage` and `eg_build_queue_with_daily_limits` expose the shared
@@ -49,9 +51,11 @@ packages and modern `collection.anki21b` envelopes by decoding Anki's `meta`
 protobuf plus zstd-compressed collection/media payloads before the shared
 SQLite import path runs.
 `eg_export_anki_apkg` writes the current session as a deterministic legacy/V11
-APKG and returns the package bytes as a JSON byte array under `apkg`, keeping
-the native ABI string-shaped while target-specific shells decide how to save or
-share the bytes.
+APKG. `eg_export_anki_apkg_modern` writes the same state in a modern
+`collection.anki21b` envelope with zstd-compressed collection/media payloads.
+Both return package bytes as a JSON byte array under `apkg`, keeping the native
+ABI string-shaped while target-specific shells decide how to save or share the
+bytes.
 `eg_inspect_anki_apkg` returns collection/media manifest JSON, and
 `eg_read_anki_apkg_media` reads one archived media payload by archive name for
 native import flows that need to copy audio or images alongside imported cards.
@@ -66,6 +70,9 @@ The same dispatch path accepts shared media commands such as
 `upsertMediaAsset`, `deleteMediaAsset`, and `deleteMediaAssets`, so native
 file-open/editor flows can copy, replace, or prune media assets without
 duplicating Engram state mutation logic.
+Native settings screens can also dispatch `setDeckOptions` with a camelCase
+`DeckOptions` object to update the durable scheduler options used by queues and
+reviews.
 
 ## Build
 

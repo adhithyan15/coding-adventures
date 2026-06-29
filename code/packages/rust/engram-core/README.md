@@ -52,6 +52,12 @@ scheduler state machine. Hosts that already expose deck-specific options can
 dispatch `EngramCommand::RateCardWithOptions` to provide learning steps,
 graduating/easy intervals, review limits, and lapse behavior without forking the
 review logic.
+Deck options also carry Anki-style maximum interval, review interval modifier,
+hard interval multiplier, and easy bonus multiplier settings, so hosts can keep
+deck-specific scheduler tuning in the shared Rust core.
+`EngramCommand::SetDeckOptions` inserts or replaces a stored deck option preset,
+letting settings screens update the same options that queue building and
+`RateCard` use.
 
 Review-control commands such as `SuspendCard`, `UnsuspendCard`, `BuryCard`,
 `BuryCardSiblings`, `UnburyCard`, `SetCardFlag`, `MarkCard`, and `UnmarkCard`
@@ -85,6 +91,13 @@ lineage to bury same-note sibling cards until a host-supplied boundary.
 `RateCardAndBurySiblings` and `RateCardWithOptionsAndBurySiblings` apply that
 behavior atomically during review and record undo snapshots, matching the shared
 behavior Anki-like review screens need.
+`EngramCommand::UpsertNoteType` can insert or replace note types and optionally
+resync generated cards for existing notes of that type, while
+`EngramCommand::DeleteNoteType` removes the note type, its notes, and only their
+lineaged generated cards.
+`EngramCommand::UpsertNote` can optionally materialize generated cards from the
+note type while preserving progress for stable generated card IDs, and
+`EngramCommand::DeleteNote` cascades only the note's lineaged generated cards.
 `rename_note_type_field` and `EngramCommand::RenameNoteTypeField` keep field
 IDs stable while migrating template references, Cloze references, and
 required-field names to the new display name.

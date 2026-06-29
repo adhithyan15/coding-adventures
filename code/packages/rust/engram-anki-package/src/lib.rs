@@ -401,6 +401,49 @@ pub fn write_legacy_apkg(collection_anki2: &[u8], media_assets: &[MediaAsset<'_>
     writer.finish()
 }
 
+pub fn write_modern_apkg(
+    collection_anki21b: &[u8],
+    media_assets: &[MediaAsset<'_>],
+) -> Result<Vec<u8>, ApkgError> {
+    let mut writer = ZipWriter::new();
+
+    let mut metadata = Vec::new();
+    PackageMetadataProto {
+        version: PackageVersionProto::Latest as i32,
+    }
+    .encode(&mut metadata)
+    .map_err(|err| apkg_error(format!("failed to encode Anki package metadata: {err}")))?;
+    writer.add_file(META, &metadata, false);
+
+    let collection = encode_package_payload("collection", collection_anki21b)?;
+    writer.add_file(SQLITE_21B_COLLECTION, &collection, false);
+
+    let media_entries = MediaEntriesProto {
+        entries: media_assets
+            .iter()
+            .map(|asset| MediaEntryProto {
+                name: asset.filename.to_string(),
+                size: asset.data.len() as u32,
+                sha1: sum1(asset.data).to_vec(),
+                legacy_zip_filename: None,
+            })
+            .collect(),
+    };
+    let mut media_map = Vec::new();
+    media_entries
+        .encode(&mut media_map)
+        .map_err(|err| apkg_error(format!("failed to encode Anki media entries: {err}")))?;
+    let media_map = encode_package_payload("media map", &media_map)?;
+    writer.add_file(MEDIA_MAP, &media_map, false);
+
+    for (index, asset) in media_assets.iter().enumerate() {
+        let media = encode_package_payload(&format!("media file {index}"), asset.data)?;
+        writer.add_file(&index.to_string(), &media, false);
+    }
+
+    Ok(writer.finish())
+}
+
 pub fn write_v11_collection_bytes_from_engram_state(
     state: &AppState,
 ) -> Result<Vec<u8>, ApkgError> {
@@ -440,6 +483,23 @@ pub fn write_legacy_apkg_from_engram_state(
         .collect::<Vec<_>>();
     state_media.extend_from_slice(media_assets);
     Ok(write_legacy_apkg(&collection, &state_media))
+}
+
+pub fn write_modern_apkg_from_engram_state(
+    state: &AppState,
+    media_assets: &[MediaAsset<'_>],
+) -> Result<Vec<u8>, ApkgError> {
+    let collection = write_v11_collection_bytes_from_engram_state(state)?;
+    let mut state_media = state
+        .media_assets
+        .iter()
+        .map(|asset| MediaAsset {
+            filename: asset.filename.as_deref().unwrap_or(&asset.archive_name),
+            data: asset.data.as_slice(),
+        })
+        .collect::<Vec<_>>();
+    state_media.extend_from_slice(media_assets);
+    write_modern_apkg(&collection, &state_media)
 }
 
 pub fn read_v11_collection(data: &[u8]) -> Result<AnkiV11Collection, ApkgError> {
@@ -697,8 +757,7 @@ fn media_asset_matches_filename(asset: &MediaAssetRecord, filename: &str) -> boo
 
 fn collect_media_references_from_text(text: &str, references: &mut BTreeSet<String>) {
     collect_sound_markers(text, references);
-    collect_src_attributes(text, references, "src=\"", '"');
-    collect_src_attributes(text, references, "src='", '\'');
+    collect_src_attributes(text, references);
 }
 
 fn collect_sound_markers(text: &str, references: &mut BTreeSet<String>) {
@@ -713,21 +772,67 @@ fn collect_sound_markers(text: &str, references: &mut BTreeSet<String>) {
     }
 }
 
-fn collect_src_attributes(
-    text: &str,
-    references: &mut BTreeSet<String>,
-    marker: &str,
-    terminator: char,
-) {
-    let mut rest = text;
-    while let Some(start) = rest.find(marker) {
-        rest = &rest[start + marker.len()..];
-        let Some(end) = rest.find(terminator) else {
+fn collect_src_attributes(text: &str, references: &mut BTreeSet<String>) {
+    let bytes = text.as_bytes();
+    let mut index = 0;
+    while index + 3 <= bytes.len() {
+        if !bytes[index..index + 3].eq_ignore_ascii_case(b"src")
+            || !is_html_attr_boundary(bytes.get(index.wrapping_sub(1)).copied())
+        {
+            index += 1;
+            continue;
+        }
+
+        let mut cursor = index + 3;
+        while bytes
+            .get(cursor)
+            .is_some_and(|byte| byte.is_ascii_whitespace())
+        {
+            cursor += 1;
+        }
+        if bytes.get(cursor) != Some(&b'=') {
+            index += 3;
+            continue;
+        }
+        cursor += 1;
+        while bytes
+            .get(cursor)
+            .is_some_and(|byte| byte.is_ascii_whitespace())
+        {
+            cursor += 1;
+        }
+
+        let Some(first) = bytes.get(cursor).copied() else {
             break;
         };
-        maybe_insert_media_reference(&rest[..end], references);
-        rest = &rest[end + terminator.len_utf8()..];
+        let (value_start, value_end) = if first == b'"' || first == b'\'' {
+            cursor += 1;
+            let terminator = first;
+            let start = cursor;
+            while bytes.get(cursor).is_some_and(|byte| *byte != terminator) {
+                cursor += 1;
+            }
+            (start, cursor)
+        } else {
+            let start = cursor;
+            while bytes
+                .get(cursor)
+                .is_some_and(|byte| !byte.is_ascii_whitespace() && *byte != b'>')
+            {
+                cursor += 1;
+            }
+            (start, cursor)
+        };
+
+        if let Some(value) = text.get(value_start..value_end) {
+            maybe_insert_media_reference(value, references);
+        }
+        index = cursor.saturating_add(1);
     }
+}
+
+fn is_html_attr_boundary(previous: Option<u8>) -> bool {
+    previous.is_none_or(|byte| byte.is_ascii_whitespace() || byte == b'<')
 }
 
 fn maybe_insert_media_reference(value: &str, references: &mut BTreeSet<String>) {
@@ -780,15 +885,38 @@ fn v11_options_for_deck(deck: &AnkiV11Deck, deck_config: &Value) -> DeckOptions 
             }
         }
         if let Some(multiplier) = json_path_f64(config, &["lapse", "mult"]) {
-            options.lapse_interval_multiplier = if multiplier > 10.0 {
-                multiplier / 100.0
-            } else {
-                multiplier
-            };
+            options.lapse_interval_multiplier =
+                normalized_anki_multiplier(multiplier, options.lapse_interval_multiplier);
+        }
+        if let Some(max_interval) = json_path_u32(config, &["rev", "maxIvl"]) {
+            options.maximum_interval_days = max_interval.max(1);
+        }
+        if let Some(modifier) = json_path_f64(config, &["rev", "ivlFct"]) {
+            options.review_interval_modifier =
+                normalized_anki_multiplier(modifier, options.review_interval_modifier);
+        }
+        if let Some(multiplier) = json_path_f64(config, &["rev", "hardFactor"]) {
+            options.hard_interval_multiplier =
+                normalized_anki_multiplier(multiplier, options.hard_interval_multiplier);
+        }
+        if let Some(multiplier) = json_path_f64(config, &["rev", "ease4"]) {
+            options.easy_bonus_multiplier =
+                normalized_anki_multiplier(multiplier, options.easy_bonus_multiplier);
         }
     }
 
     options
+}
+
+fn normalized_anki_multiplier(value: f64, fallback: f64) -> f64 {
+    if !value.is_finite() || value <= 0.0 {
+        return fallback;
+    }
+    if value > 10.0 {
+        value / 100.0
+    } else {
+        value
+    }
 }
 
 fn v11_external_sources(
@@ -859,6 +987,11 @@ fn v11_external_sources(
     for deck in &collection.decks {
         let mut data = BTreeMap::new();
         insert_json(&mut data, "rawJson", &deck.raw, "Anki deck JSON")?;
+        insert_i64(
+            &mut data,
+            "dyn",
+            deck.raw.get("dyn").and_then(Value::as_i64).unwrap_or(0),
+        );
         sources.push(source_record(
             ExternalSourceTarget::Deck,
             deck.id.to_string(),
@@ -1666,9 +1799,26 @@ fn merge_deck_options_json(
         .get("rev")
         .cloned()
         .unwrap_or_else(|| serde_json::json!({}));
-    ensure_json_object(&mut review_section).insert(
+    let review_object = ensure_json_object(&mut review_section);
+    review_object.insert(
         "perDay".to_string(),
         Value::Number(i64::from(options.reviews_per_day).into()),
+    );
+    review_object.insert(
+        "maxIvl".to_string(),
+        Value::Number(i64::from(options.maximum_interval_days.max(1)).into()),
+    );
+    review_object.insert(
+        "ivlFct".to_string(),
+        json_f64_or(options.review_interval_modifier, 1.0),
+    );
+    review_object.insert(
+        "hardFactor".to_string(),
+        json_f64_or(options.hard_interval_multiplier, 1.2),
+    );
+    review_object.insert(
+        "ease4".to_string(),
+        json_f64_or(options.easy_bonus_multiplier, 1.3),
     );
     object.insert("rev".to_string(), review_section);
 
@@ -1689,11 +1839,16 @@ fn merge_deck_options_json(
     );
     lapse_object.insert(
         "mult".to_string(),
-        serde_json::Number::from_f64(options.lapse_interval_multiplier)
-            .map(Value::Number)
-            .unwrap_or_else(|| Value::Number(0_i64.into())),
+        json_f64_or(options.lapse_interval_multiplier, 0.0),
     );
     object.insert("lapse".to_string(), lapse_section);
+}
+
+fn json_f64_or(value: f64, fallback: f64) -> Value {
+    let normalized = if value.is_finite() { value } else { fallback };
+    serde_json::Number::from_f64(normalized)
+        .map(Value::Number)
+        .unwrap_or_else(|| Value::Number(0_i64.into()))
 }
 
 fn export_note_type_fields_json(note_type: &ExportNoteType, raw_fields: &Value) -> Vec<Value> {
@@ -3227,6 +3382,11 @@ fn decode_package_payload(
     }
 }
 
+fn encode_package_payload(label: &str, bytes: &[u8]) -> Result<Vec<u8>, ApkgError> {
+    zstd_crate::stream::encode_all(Cursor::new(bytes), 0)
+        .map_err(|err| apkg_error(format!("failed to encode zstd-compressed {label}: {err}")))
+}
+
 fn media_manifest(
     reader: &ZipReader<'_>,
     format: CollectionFormat,
@@ -3495,7 +3655,7 @@ CREATE TABLE graves (
                                 "id": 1,
                                 "name": "Default",
                                 "new": {"perDay": 12, "delays": [3, 12], "ints": [2, 5]},
-                                "rev": {"perDay": 80},
+                                "rev": {"perDay": 80, "maxIvl": 90, "ivlFct": 0.75, "hardFactor": 1.4, "ease4": 1.6},
                                 "lapse": {"delays": [20], "mult": 0.5}
                             }
                         }"#,
@@ -3747,6 +3907,10 @@ CREATE TABLE graves (
         assert_eq!(options.relearning_steps_minutes, vec![20]);
         assert_eq!(options.graduating_interval_days, 2);
         assert_eq!(options.easy_interval_days, 5);
+        assert_eq!(options.maximum_interval_days, 90);
+        assert_eq!(options.review_interval_modifier, 0.75);
+        assert_eq!(options.hard_interval_multiplier, 1.4);
+        assert_eq!(options.easy_bonus_multiplier, 1.6);
         assert_eq!(options.lapse_interval_multiplier, 0.5);
 
         assert_eq!(state.note_types.len(), 1);
@@ -3815,6 +3979,10 @@ CREATE TABLE graves (
             exported.metadata.deck_config["2"]["new"]["delays"],
             serde_json::json!([3, 12])
         );
+        assert_eq!(exported.metadata.deck_config["2"]["rev"]["maxIvl"], 90);
+        assert_eq!(exported.metadata.deck_config["2"]["rev"]["ivlFct"], 0.75);
+        assert_eq!(exported.metadata.deck_config["2"]["rev"]["hardFactor"], 1.4);
+        assert_eq!(exported.metadata.deck_config["2"]["rev"]["ease4"], 1.6);
         assert_eq!(exported.metadata.deck_config["2"]["lapse"]["mult"], 0.5);
 
         assert_eq!(state.sessions.len(), 1);
@@ -4169,6 +4337,12 @@ CREATE TABLE graves (
         assert_eq!(state.cards[0].deck_id, "3");
         assert!(state.cards[0].front.contains("[sound:audio/hola.mp3]"));
         assert!(state.cards[0].back.contains("images/card.png"));
+        assert!(state.external_sources.iter().any(|source| {
+            source.source == ANKI_V11_SOURCE
+                && source.target == ExternalSourceTarget::Deck
+                && source.target_id == "3"
+                && source.data.get("dyn").map(String::as_str) == Some("1")
+        }));
         assert!(state.external_sources.iter().any(|source| {
             source.source == ANKI_V11_SOURCE
                 && source.target == ExternalSourceTarget::Card
@@ -4537,6 +4711,54 @@ CREATE TABLE graves (
     }
 
     #[test]
+    fn writes_modern_apkg_envelope_and_state_export() {
+        let sqlite = v11_sqlite_collection_bytes();
+        let media = [
+            MediaAsset {
+                filename: "audio/hola.mp3",
+                data: b"mp3",
+            },
+            MediaAsset {
+                filename: "images/card.png",
+                data: b"png",
+            },
+        ];
+
+        let modern = write_modern_apkg(&sqlite, &media).unwrap();
+        let manifest = inspect_apkg(&modern).unwrap();
+        assert_eq!(manifest.collection.name, SQLITE_21B_COLLECTION);
+        assert_eq!(manifest.collection.format, CollectionFormat::Sqlite21b);
+        assert_eq!(manifest.media.mapping["0"], "audio/hola.mp3");
+        assert_eq!(manifest.media.mapping["1"], "images/card.png");
+        assert!(manifest
+            .entries
+            .iter()
+            .any(|entry| entry.name == META && entry.size > 0));
+        assert!(manifest
+            .entries
+            .iter()
+            .all(|entry| entry.name != LEGACY_COLLECTION));
+
+        let collection = read_v11_collection(&modern).unwrap();
+        assert_eq!(collection.decks[1].name, "Spanish::Latin");
+        let audio = read_media_file(&modern, "0").unwrap();
+        assert_eq!(audio.filename.as_deref(), Some("audio/hola.mp3"));
+        assert_eq!(audio.data, b"mp3");
+
+        let imported_state =
+            read_v11_collection_as_engram_state(&write_legacy_apkg(&sqlite, &media)).unwrap();
+        let exported = write_modern_apkg_from_engram_state(&imported_state, &[]).unwrap();
+        let exported_manifest = inspect_apkg(&exported).unwrap();
+        assert_eq!(
+            exported_manifest.collection.format,
+            CollectionFormat::Sqlite21b
+        );
+        assert_eq!(exported_manifest.media.mapping["1"], "images/card.png");
+        let image = read_media_file(&exported, "1").unwrap();
+        assert_eq!(image.data, b"png");
+    }
+
+    #[test]
     fn analyzes_referenced_missing_and_unreferenced_media() {
         let mut state = AppState::default();
         state.notes.push(Note {
@@ -4545,7 +4767,9 @@ CREATE TABLE graves (
             deck_id: "deck".to_string(),
             fields: vec![NoteFieldValue {
                 field_id: "front".to_string(),
-                value: "[sound:audio/hola.mp3] <img src=\"missing.png\">".to_string(),
+                value:
+                    "[sound:audio/hola.mp3] <img SRC = \"images/caps.png\"> <img src=missing-unquoted.png> <img src=\"missing.png\">"
+                        .to_string(),
             }],
             tags: Vec::new(),
             created_at: 0,
@@ -4554,8 +4778,8 @@ CREATE TABLE graves (
         state.cards.push(Card {
             id: "card".to_string(),
             deck_id: "deck".to_string(),
-            front: "<img src='images/card.png'>".to_string(),
-            back: "<img src=\"https://example.com/remote.png\">".to_string(),
+            front: "<img data-src=\"ignored.png\"> <img Src='images/card.png'>".to_string(),
+            back: "<img src = https://example.com/remote.png>".to_string(),
             created_at: 0,
             lineage: None,
         });
@@ -4565,6 +4789,12 @@ CREATE TABLE graves (
                 archive_name: "0".to_string(),
                 filename: Some("audio/hola.mp3".to_string()),
                 data: b"mp3".to_vec(),
+            },
+            MediaAssetRecord {
+                id: "caps".to_string(),
+                archive_name: "3".to_string(),
+                filename: Some("images/caps.png".to_string()),
+                data: b"caps".to_vec(),
             },
             MediaAssetRecord {
                 id: "image".to_string(),
@@ -4584,10 +4814,22 @@ CREATE TABLE graves (
 
         assert_eq!(
             analysis.referenced_filenames,
-            vec!["audio/hola.mp3", "images/card.png", "missing.png"]
+            vec![
+                "audio/hola.mp3",
+                "images/caps.png",
+                "images/card.png",
+                "missing-unquoted.png",
+                "missing.png"
+            ]
         );
-        assert_eq!(analysis.referenced_asset_ids, vec!["audio", "image"]);
-        assert_eq!(analysis.missing_filenames, vec!["missing.png"]);
+        assert_eq!(
+            analysis.referenced_asset_ids,
+            vec!["audio", "caps", "image"]
+        );
+        assert_eq!(
+            analysis.missing_filenames,
+            vec!["missing-unquoted.png", "missing.png"]
+        );
         assert_eq!(analysis.unreferenced_asset_ids, vec!["unused"]);
     }
 

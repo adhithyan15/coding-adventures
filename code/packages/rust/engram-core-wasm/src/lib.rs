@@ -16,10 +16,13 @@ use engram_core::{
     import_basic_cards_csv, import_cards_csv, materialize_generated_card, reduce,
     restore_engram_snapshot, search_cards as search_core_cards, summarize_review_history,
     AnkiBasicTsvExportOptions, AnkiNoteTsvImportOptions, AppState, BasicCardCsvImportOptions, Card,
-    CardFlag, CardLineage, DeckOptions, EngramSnapshot, MediaAssetRecord, Rating,
+    CardFlag, CardLineage, CardProgress, CardSearchResult, CardState, DeckOptions, EngramSnapshot,
+    MediaAssetRecord, Rating,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
+
+const DEFAULT_BROWSER_QUERY: &str = "is:due OR is:new";
 
 #[derive(Default)]
 pub struct EngramSession {
@@ -159,10 +162,19 @@ impl EngramSession {
         })
     }
 
+    pub fn engram_browser_props(&self, query: &str, now: u64) -> String {
+        catch_json(
+            || match engram_browser_props_for_state(&self.state, query, now) {
+                Ok(props) => Ok(ok_with("props", &props)),
+                Err(error) => Ok(error_json_with_token(&error.message, &error.token)),
+            },
+        )
+    }
+
     pub fn handle_engram_app_event(&mut self, event: &str, deck_id: &str, now: u64) -> String {
         catch_json(|| {
-            let event = parse_engram_app_event(event)?;
-            match event {
+            let parsed = parse_engram_app_event(event)?;
+            match parsed.kind {
                 EngramAppEvent::Reveal => {
                     self.state = reduce(&self.state, engram_core::EngramCommand::RevealCurrentCard);
                 }
@@ -197,37 +209,11 @@ impl EngramSession {
                 }
                 EngramAppEvent::SuspendCard => {
                     let card_id = current_active_card_id(&self.state, "suspend")?;
-                    self.state = reduce(
-                        &self.state,
-                        engram_core::EngramCommand::SuspendCard {
-                            card_id,
-                            suspended_at: now,
-                        },
-                    );
+                    self.state = suspend_or_unsuspend_card(&self.state, card_id, now);
                 }
                 EngramAppEvent::ToggleMark => {
                     let card_id = current_active_card_id(&self.state, "mark")?;
-                    let is_marked = self
-                        .state
-                        .card_progress
-                        .iter()
-                        .find(|progress| progress.card_id == card_id)
-                        .and_then(|progress| progress.marked_at)
-                        .is_some();
-                    self.state = if is_marked {
-                        reduce(
-                            &self.state,
-                            engram_core::EngramCommand::UnmarkCard { card_id },
-                        )
-                    } else {
-                        reduce(
-                            &self.state,
-                            engram_core::EngramCommand::MarkCard {
-                                card_id,
-                                marked_at: now,
-                            },
-                        )
-                    };
+                    self.state = mark_or_unmark_card(&self.state, card_id, now);
                 }
                 EngramAppEvent::Rate(rating) => {
                     let active_session = self
@@ -259,12 +245,32 @@ impl EngramSession {
                     );
                     self.state = reduce(&self.state, engram_core::EngramCommand::AdvanceSession);
                 }
+                EngramAppEvent::BrowserToggleSuspendSelected => {
+                    let card_id =
+                        required_event_card_id(&self.state, parsed.card_id, "toggle suspend")?;
+                    self.state = suspend_or_unsuspend_card(&self.state, card_id, now);
+                }
+                EngramAppEvent::BrowserToggleMarkSelected => {
+                    let card_id = required_event_card_id(&self.state, parsed.card_id, "mark")?;
+                    self.state = mark_or_unmark_card(&self.state, card_id, now);
+                }
+                EngramAppEvent::BrowserQueryChange
+                | EngramAppEvent::BrowserSearch
+                | EngramAppEvent::BrowserSelectResult
+                | EngramAppEvent::BrowserOpenSelected
+                | EngramAppEvent::BrowserEditSelected
+                | EngramAppEvent::ImportAnki
+                | EngramAppEvent::ExportAnki
+                | EngramAppEvent::AddNote
+                | EngramAppEvent::AddNoteType
+                | EngramAppEvent::DeleteNote
+                | EngramAppEvent::DeleteNoteType => {}
             }
 
             let props = engram_app_props_for_state(&self.state, deck_id, now);
             Ok(json!({
                 "ok": true,
-                "event": event.canonical_name(),
+                "event": parsed.kind.canonical_name(),
                 "state": self.state,
                 "props": props,
             })
@@ -515,6 +521,8 @@ fn engram_app_props_for_state(state: &AppState, deck_id: &str, now: u64) -> Valu
         "Mark"
     };
     let hidden_count = stats.suspended_count + stats.buried_count;
+    let browser_props = engram_browser_props_for_state(state, DEFAULT_BROWSER_QUERY, now)
+        .unwrap_or_else(|_| fallback_browser_props_for_state(state));
     let (current_value, remaining_value, correct_value, total_value, progress_label) =
         if let Some(progress) = &progress {
             (
@@ -537,7 +545,7 @@ fn engram_app_props_for_state(state: &AppState, deck_id: &str, now: u64) -> Valu
             )
         };
 
-    json!({
+    let mut props = json!({
         "app-title": "Engram",
         "deck-name": deck_name,
         "deck-stats-label": "Deck stats",
@@ -570,7 +578,191 @@ fn engram_app_props_for_state(state: &AppState, deck_id: &str, now: u64) -> Valu
         "action-bury-siblings-label": "Bury siblings",
         "action-suspend-card-label": "Suspend",
         "action-mark-label": mark_label,
+    });
+
+    let props_object = props
+        .as_object_mut()
+        .expect("Engram app props literal must be a JSON object");
+    {
+        let mut insert_prop = |key: &str, value: String| {
+            props_object.insert(key.to_string(), Value::String(value));
+        };
+        insert_prop("collection-label", "Collection".to_string());
+        insert_prop("collection-note-count-label", "Notes".to_string());
+        insert_prop("collection-note-count-value", state.notes.len().to_string());
+        insert_prop("collection-note-type-count-label", "Note types".to_string());
+        insert_prop(
+            "collection-note-type-count-value",
+            state.note_types.len().to_string(),
+        );
+        insert_prop("collection-media-count-label", "Media".to_string());
+        insert_prop(
+            "collection-media-count-value",
+            state.media_assets.len().to_string(),
+        );
+        insert_prop("collection-import-label", "Import Anki".to_string());
+        insert_prop("collection-export-label", "Export Anki".to_string());
+        insert_prop("collection-add-note-label", "Add note".to_string());
+        insert_prop(
+            "collection-add-note-type-label",
+            "Add note type".to_string(),
+        );
+        insert_prop("collection-delete-note-label", "Delete note".to_string());
+        insert_prop(
+            "collection-delete-note-type-label",
+            "Delete note type".to_string(),
+        );
+    }
+    if let Some(browser_object) = browser_props.as_object() {
+        for (key, value) in browser_object {
+            props_object.insert(key.clone(), value.clone());
+        }
+    }
+
+    props
+}
+
+fn engram_browser_props_for_state(
+    state: &AppState,
+    query: &str,
+    now: u64,
+) -> Result<Value, engram_core::SearchError> {
+    let query = normalize_browser_query(query);
+    let results = search_core_cards(state, &query, now)?;
+    let rows = results
+        .iter()
+        .take(20)
+        .map(|result| BrowserRow::from_search_result(result, now))
+        .collect::<Vec<_>>();
+
+    Ok(browser_props_from_rows(query, rows, results.len()))
+}
+
+fn fallback_browser_props_for_state(state: &AppState) -> Value {
+    let rows = state
+        .cards
+        .iter()
+        .take(20)
+        .map(|card| BrowserRow::from_card(card, None, 0))
+        .collect::<Vec<_>>();
+    browser_props_from_rows(DEFAULT_BROWSER_QUERY.to_string(), rows, state.cards.len())
+}
+
+fn normalize_browser_query(query: &str) -> String {
+    let query = query.trim();
+    if query.is_empty() {
+        DEFAULT_BROWSER_QUERY.to_string()
+    } else {
+        query.to_string()
+    }
+}
+
+fn browser_props_from_rows(query: String, rows: Vec<BrowserRow>, total_results: usize) -> Value {
+    let visible = rows.len();
+    let summary = match total_results {
+        0 => "No matching cards".to_string(),
+        1 if visible == 1 => "1 matching card".to_string(),
+        total if visible == total => format!("{total} matching cards"),
+        total => format!("Showing {visible} of {total} matching cards"),
+    };
+    let selected_index = if rows.is_empty() { -1 } else { 0 };
+    let selected_row = rows.first();
+    let labels = rows.iter().map(|row| row.label.clone()).collect::<Vec<_>>();
+    let card_ids = rows
+        .iter()
+        .map(|row| row.card_id.clone())
+        .collect::<Vec<_>>();
+    let note_ids = rows
+        .iter()
+        .map(|row| row.note_id.clone())
+        .collect::<Vec<_>>();
+    let template_ids = rows
+        .iter()
+        .map(|row| row.template_id.clone())
+        .collect::<Vec<_>>();
+    let states = rows.iter().map(|row| row.state.clone()).collect::<Vec<_>>();
+
+    json!({
+        "browser-label": "Card browser",
+        "browser-query-label": "Search",
+        "browser-query": query,
+        "browser-query-placeholder": "deck:tamil tag:script is:due",
+        "browser-search-label": "Search",
+        "browser-results-label": "Results",
+        "browser-results-summary": summary,
+        "browser-results": labels,
+        "browser-result-card-ids": card_ids,
+        "browser-result-note-ids": note_ids,
+        "browser-result-template-ids": template_ids,
+        "browser-result-states": states,
+        "browser-selected-index": selected_index,
+        "browser-selected-card-id": selected_row.map_or("", |row| row.card_id.as_str()),
+        "browser-selected-note-id": selected_row.map_or("", |row| row.note_id.as_str()),
+        "browser-selected-template-id": selected_row.map_or("", |row| row.template_id.as_str()),
+        "browser-selected-state": selected_row.map_or("", |row| row.state.as_str()),
+        "browser-open-label": "Open",
+        "browser-edit-label": "Edit",
+        "browser-suspend-label": "Suspend",
+        "browser-mark-label": "Mark",
     })
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct BrowserRow {
+    label: String,
+    card_id: String,
+    note_id: String,
+    template_id: String,
+    state: String,
+}
+
+impl BrowserRow {
+    fn from_search_result(result: &CardSearchResult, now: u64) -> Self {
+        Self::from_card(&result.card, result.progress.as_ref(), now)
+    }
+
+    fn from_card(card: &Card, progress: Option<&CardProgress>, now: u64) -> Self {
+        let lineage = card.lineage.as_ref();
+        let fallback_lineage = card.id.split_once("::");
+        Self {
+            label: format_browser_card_row(card),
+            card_id: card.id.clone(),
+            note_id: lineage
+                .map(|lineage| lineage.note_id.clone())
+                .or_else(|| fallback_lineage.map(|(note_id, _)| note_id.to_string()))
+                .unwrap_or_default(),
+            template_id: lineage
+                .map(|lineage| lineage.template_id.clone())
+                .or_else(|| fallback_lineage.map(|(_, template_id)| template_id.to_string()))
+                .unwrap_or_default(),
+            state: browser_card_state(progress, now).to_string(),
+        }
+    }
+}
+
+fn format_browser_card_row(card: &Card) -> String {
+    format!("{} -> {}", card.front, card.back)
+}
+
+fn browser_card_state(progress: Option<&CardProgress>, now: u64) -> &'static str {
+    let Some(progress) = progress else {
+        return "new";
+    };
+    if progress.suspended_at.is_some() || progress.state == CardState::Suspended {
+        return "suspended";
+    }
+    if progress.buried_until.is_some_and(|until| until > now) || progress.state == CardState::Buried
+    {
+        return "buried";
+    }
+    match progress.state {
+        CardState::Learning => "learning",
+        CardState::Review if progress.next_due_at <= now => "due",
+        CardState::Review => "review",
+        CardState::Relearning => "relearning",
+        CardState::Suspended => "suspended",
+        CardState::Buried => "buried",
+    }
 }
 
 fn selected_deck_id(state: &AppState, deck_id: &str) -> String {
@@ -594,6 +786,19 @@ enum EngramAppEvent {
     SuspendCard,
     ToggleMark,
     Rate(Rating),
+    BrowserQueryChange,
+    BrowserSearch,
+    BrowserSelectResult,
+    BrowserOpenSelected,
+    BrowserEditSelected,
+    BrowserToggleSuspendSelected,
+    BrowserToggleMarkSelected,
+    ImportAnki,
+    ExportAnki,
+    AddNote,
+    AddNoteType,
+    DeleteNote,
+    DeleteNoteType,
 }
 
 impl EngramAppEvent {
@@ -609,28 +814,202 @@ impl EngramAppEvent {
             Self::Rate(Rating::Hard) => "onHard",
             Self::Rate(Rating::Good) => "onGood",
             Self::Rate(Rating::Easy) => "onEasy",
+            Self::BrowserQueryChange => "onBrowserQueryChange",
+            Self::BrowserSearch => "onBrowserSearch",
+            Self::BrowserSelectResult => "onBrowserSelectResult",
+            Self::BrowserOpenSelected => "onBrowserOpenSelected",
+            Self::BrowserEditSelected => "onBrowserEditSelected",
+            Self::BrowserToggleSuspendSelected => "onBrowserToggleSuspendSelected",
+            Self::BrowserToggleMarkSelected => "onBrowserToggleMarkSelected",
+            Self::ImportAnki => "onImportAnki",
+            Self::ExportAnki => "onExportAnki",
+            Self::AddNote => "onAddNote",
+            Self::AddNoteType => "onAddNoteType",
+            Self::DeleteNote => "onDeleteNote",
+            Self::DeleteNoteType => "onDeleteNoteType",
         }
     }
 }
 
-fn parse_engram_app_event(event: &str) -> Result<EngramAppEvent, String> {
-    let lowered = event.trim().to_ascii_lowercase();
-    match lowered.strip_prefix("on").unwrap_or(&lowered) {
-        "reveal" => Ok(EngramAppEvent::Reveal),
-        "undo" => Ok(EngramAppEvent::Undo),
-        "burycard" | "bury-card" | "bury_card" => Ok(EngramAppEvent::BuryCard),
-        "burysiblings" | "bury-siblings" | "bury_siblings" | "burynote" | "bury-note"
-        | "bury_note" => Ok(EngramAppEvent::BurySiblings),
-        "suspendcard" | "suspend-card" | "suspend_card" | "suspend" => {
-            Ok(EngramAppEvent::SuspendCard)
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct ParsedEngramAppEvent {
+    kind: EngramAppEvent,
+    card_id: Option<String>,
+}
+
+fn parse_engram_app_event(event: &str) -> Result<ParsedEngramAppEvent, String> {
+    let event = event.trim();
+    if let Ok(value) = serde_json::from_str::<Value>(event) {
+        if let Some(event_name) = value.as_str() {
+            return parse_engram_app_event_name(event_name, None);
         }
-        "togglemark" | "toggle-mark" | "toggle_mark" | "mark" => Ok(EngramAppEvent::ToggleMark),
-        "again" => Ok(EngramAppEvent::Rate(Rating::Again)),
-        "hard" => Ok(EngramAppEvent::Rate(Rating::Hard)),
-        "good" => Ok(EngramAppEvent::Rate(Rating::Good)),
-        "easy" => Ok(EngramAppEvent::Rate(Rating::Easy)),
-        _ => Err(format!("unknown Engram app event: {event}")),
+        let event_name = value
+            .get("event")
+            .or_else(|| value.get("name"))
+            .or_else(|| value.get("type"))
+            .and_then(Value::as_str)
+            .ok_or_else(|| "Engram app event object is missing an event name".to_string())?;
+        let card_id = value
+            .get("cardId")
+            .or_else(|| value.get("selectedCardId"))
+            .and_then(Value::as_str)
+            .map(str::to_string);
+        return parse_engram_app_event_name(event_name, card_id);
     }
+
+    let (event_name, card_id) = split_event_card_id(event);
+    parse_engram_app_event_name(event_name, card_id)
+}
+
+fn split_event_card_id(event: &str) -> (&str, Option<String>) {
+    event
+        .split_once('|')
+        .or_else(|| event.split_once(':'))
+        .map(|(event_name, card_id)| {
+            let card_id = card_id.trim();
+            (
+                event_name.trim(),
+                (!card_id.is_empty()).then(|| card_id.to_string()),
+            )
+        })
+        .unwrap_or((event, None))
+}
+
+fn parse_engram_app_event_name(
+    event_name: &str,
+    card_id: Option<String>,
+) -> Result<ParsedEngramAppEvent, String> {
+    let lowered = event_name.trim().to_ascii_lowercase();
+    match lowered.strip_prefix("on").unwrap_or(&lowered) {
+        "reveal" => Ok(parsed_event(EngramAppEvent::Reveal, card_id)),
+        "undo" => Ok(parsed_event(EngramAppEvent::Undo, card_id)),
+        "burycard" | "bury-card" | "bury_card" => {
+            Ok(parsed_event(EngramAppEvent::BuryCard, card_id))
+        }
+        "burysiblings" | "bury-siblings" | "bury_siblings" | "burynote" | "bury-note"
+        | "bury_note" => Ok(parsed_event(EngramAppEvent::BurySiblings, card_id)),
+        "suspendcard" | "suspend-card" | "suspend_card" | "suspend" => {
+            Ok(parsed_event(EngramAppEvent::SuspendCard, card_id))
+        }
+        "togglemark" | "toggle-mark" | "toggle_mark" | "mark" => {
+            Ok(parsed_event(EngramAppEvent::ToggleMark, card_id))
+        }
+        "again" => Ok(parsed_event(EngramAppEvent::Rate(Rating::Again), card_id)),
+        "hard" => Ok(parsed_event(EngramAppEvent::Rate(Rating::Hard), card_id)),
+        "good" => Ok(parsed_event(EngramAppEvent::Rate(Rating::Good), card_id)),
+        "easy" => Ok(parsed_event(EngramAppEvent::Rate(Rating::Easy), card_id)),
+        "browserquerychange" | "browser-query-change" | "browser_query_change" => {
+            Ok(parsed_event(EngramAppEvent::BrowserQueryChange, card_id))
+        }
+        "browsersearch" | "browser-search" | "browser_search" => {
+            Ok(parsed_event(EngramAppEvent::BrowserSearch, card_id))
+        }
+        "browserselectresult" | "browser-select-result" | "browser_select_result" => {
+            Ok(parsed_event(EngramAppEvent::BrowserSelectResult, card_id))
+        }
+        "browseropenselected" | "browser-open-selected" | "browser_open_selected" => {
+            Ok(parsed_event(EngramAppEvent::BrowserOpenSelected, card_id))
+        }
+        "browsereditselected" | "browser-edit-selected" | "browser_edit_selected" => {
+            Ok(parsed_event(EngramAppEvent::BrowserEditSelected, card_id))
+        }
+        "browsertogglesuspendselected"
+        | "browser-toggle-suspend-selected"
+        | "browser_toggle_suspend_selected" => Ok(parsed_event(
+            EngramAppEvent::BrowserToggleSuspendSelected,
+            card_id,
+        )),
+        "browsertogglemarkselected"
+        | "browser-toggle-mark-selected"
+        | "browser_toggle_mark_selected" => Ok(parsed_event(
+            EngramAppEvent::BrowserToggleMarkSelected,
+            card_id,
+        )),
+        "importanki" | "import-anki" | "import_anki" => {
+            Ok(parsed_event(EngramAppEvent::ImportAnki, card_id))
+        }
+        "exportanki" | "export-anki" | "export_anki" => {
+            Ok(parsed_event(EngramAppEvent::ExportAnki, card_id))
+        }
+        "addnote" | "add-note" | "add_note" => Ok(parsed_event(EngramAppEvent::AddNote, card_id)),
+        "addnotetype" | "add-note-type" | "add_note_type" => {
+            Ok(parsed_event(EngramAppEvent::AddNoteType, card_id))
+        }
+        "deletenote" | "delete-note" | "delete_note" => {
+            Ok(parsed_event(EngramAppEvent::DeleteNote, card_id))
+        }
+        "deletenotetype" | "delete-note-type" | "delete_note_type" => {
+            Ok(parsed_event(EngramAppEvent::DeleteNoteType, card_id))
+        }
+        _ => Err(format!("unknown Engram app event: {event_name}")),
+    }
+}
+
+fn parsed_event(kind: EngramAppEvent, card_id: Option<String>) -> ParsedEngramAppEvent {
+    ParsedEngramAppEvent { kind, card_id }
+}
+
+fn required_event_card_id(
+    state: &AppState,
+    card_id: Option<String>,
+    action: &str,
+) -> Result<String, String> {
+    let card_id = card_id
+        .map(|card_id| card_id.trim().to_string())
+        .filter(|card_id| !card_id.is_empty())
+        .ok_or_else(|| format!("cannot {action} browser row without a card id"))?;
+    if state.cards.iter().any(|card| card.id == card_id) {
+        Ok(card_id)
+    } else {
+        Err(format!("cannot {action} unknown browser card: {card_id}"))
+    }
+}
+
+fn mark_or_unmark_card(state: &AppState, card_id: String, now: u64) -> AppState {
+    if card_is_marked(state, &card_id) {
+        reduce(state, engram_core::EngramCommand::UnmarkCard { card_id })
+    } else {
+        reduce(
+            state,
+            engram_core::EngramCommand::MarkCard {
+                card_id,
+                marked_at: now,
+            },
+        )
+    }
+}
+
+fn card_is_marked(state: &AppState, card_id: &str) -> bool {
+    state
+        .card_progress
+        .iter()
+        .find(|progress| progress.card_id == card_id)
+        .and_then(|progress| progress.marked_at)
+        .is_some()
+}
+
+fn suspend_or_unsuspend_card(state: &AppState, card_id: String, now: u64) -> AppState {
+    if card_is_suspended(state, &card_id) {
+        reduce(state, engram_core::EngramCommand::UnsuspendCard { card_id })
+    } else {
+        reduce(
+            state,
+            engram_core::EngramCommand::SuspendCard {
+                card_id,
+                suspended_at: now,
+            },
+        )
+    }
+}
+
+fn card_is_suspended(state: &AppState, card_id: &str) -> bool {
+    state
+        .card_progress
+        .iter()
+        .find(|progress| progress.card_id == card_id)
+        .is_some_and(|progress| {
+            progress.suspended_at.is_some() || progress.state == CardState::Suspended
+        })
 }
 
 fn active_session_id(state: &AppState, action: &str) -> Result<String, String> {
@@ -683,8 +1062,28 @@ enum FacadeCommand {
         name: String,
         description: String,
     },
+    SetDeckOptions {
+        deck_id: String,
+        options: DeckOptions,
+    },
     DeleteDeck {
         deck_id: String,
+    },
+    UpsertNoteType {
+        note_type: engram_core::NoteType,
+        #[serde(default)]
+        materialize_cards_at: Option<u64>,
+    },
+    DeleteNoteType {
+        note_type_id: String,
+    },
+    UpsertNote {
+        note: engram_core::Note,
+        #[serde(default)]
+        materialize_cards_at: Option<u64>,
+    },
+    DeleteNote {
+        note_id: String,
     },
     RenameNoteTypeField {
         note_type_id: String,
@@ -802,7 +1201,28 @@ impl FacadeCommand {
                 name,
                 description,
             },
+            Self::SetDeckOptions { deck_id, options } => {
+                engram_core::EngramCommand::SetDeckOptions { deck_id, options }
+            }
             Self::DeleteDeck { deck_id } => engram_core::EngramCommand::DeleteDeck { deck_id },
+            Self::UpsertNoteType {
+                note_type,
+                materialize_cards_at,
+            } => engram_core::EngramCommand::UpsertNoteType {
+                note_type,
+                materialize_cards_at,
+            },
+            Self::DeleteNoteType { note_type_id } => {
+                engram_core::EngramCommand::DeleteNoteType { note_type_id }
+            }
+            Self::UpsertNote {
+                note,
+                materialize_cards_at,
+            } => engram_core::EngramCommand::UpsertNote {
+                note,
+                materialize_cards_at,
+            },
+            Self::DeleteNote { note_id } => engram_core::EngramCommand::DeleteNote { note_id },
             Self::RenameNoteTypeField {
                 note_type_id,
                 field_id,
@@ -1030,6 +1450,44 @@ mod tests {
     }
 
     #[test]
+    fn dispatch_set_deck_options_persists_partial_camel_case_options() {
+        let mut session = EngramSession::new();
+        let value: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "setDeckOptions",
+                "deckId": "deck",
+                "options": {
+                    "newCardsPerDay": 12,
+                    "maximumIntervalDays": 90,
+                    "reviewIntervalModifier": 0.75,
+                    "hardIntervalMultiplier": 1.4,
+                    "easyBonusMultiplier": 1.6
+                }
+            }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(value["state"]["deckOptions"][0]["deckId"], "deck");
+        assert_eq!(
+            value["state"]["deckOptions"][0]["options"]["newCardsPerDay"],
+            12
+        );
+        assert_eq!(
+            value["state"]["deckOptions"][0]["options"]["maximumIntervalDays"],
+            90
+        );
+        assert_eq!(
+            value["state"]["deckOptions"][0]["options"]["reviewIntervalModifier"],
+            0.75
+        );
+        assert_eq!(
+            value["state"]["deckOptions"][0]["options"]["learningStepsMinutes"],
+            json!([1, 10])
+        );
+    }
+
+    #[test]
     fn dispatch_media_asset_commands_use_shared_state_contract() {
         let mut session = EngramSession::new();
         let value: Value = serde_json::from_str(&session.dispatch(
@@ -1160,6 +1618,158 @@ mod tests {
             "Prompt"
         );
         assert_eq!(value["state"]["noteTypes"][0]["updatedAt"], NOW + 1);
+    }
+
+    #[test]
+    fn dispatch_upsert_and_delete_note_type_syncs_notes_and_cards() {
+        let mut session = EngramSession::new();
+        session.load_snapshot(
+            r#"{
+                "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+                "noteTypes": [],
+                "notes": [{
+                    "id": "note",
+                    "noteTypeId": "basic",
+                    "deckId": "deck",
+                    "fields": [
+                        {"fieldId": "front", "value": "amma"},
+                        {"fieldId": "back", "value": "mother"}
+                    ],
+                    "tags": ["tamil"],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                }],
+                "cards": [],
+                "cardProgress": [],
+                "sessions": [],
+                "reviews": [],
+                "activeSession": null
+            }"#,
+        );
+
+        let created: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "upsertNoteType",
+                "noteType": {
+                    "id": "basic",
+                    "name": "Basic",
+                    "fields": [
+                        {"id": "front", "name": "Front", "required": true, "ordinal": 0},
+                        {"id": "back", "name": "Back", "required": true, "ordinal": 1}
+                    ],
+                    "templates": [{
+                        "id": "forward",
+                        "name": "Forward",
+                        "frontTemplate": "{{Front}}",
+                        "backTemplate": "{{Back}}",
+                        "requiredFieldNames": ["Front", "Back"],
+                        "ordinal": 0
+                    }],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                },
+                "materializeCardsAt": 1700000000001
+            }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(created["ok"], true);
+        assert_eq!(created["state"]["noteTypes"][0]["id"], "basic");
+        assert_eq!(created["state"]["cards"][0]["id"], "note::forward");
+        assert_eq!(created["state"]["cards"][0]["front"], "amma");
+        assert_eq!(created["state"]["cards"][0]["createdAt"], NOW + 1);
+        assert_eq!(
+            created["state"]["cards"][0]["lineage"]["templateId"],
+            "forward"
+        );
+
+        let deleted: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "deleteNoteType",
+                "noteTypeId": "basic"
+            }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(deleted["ok"], true);
+        assert!(deleted["state"]["noteTypes"].as_array().unwrap().is_empty());
+        assert!(deleted["state"]["notes"].as_array().unwrap().is_empty());
+        assert!(deleted["state"]["cards"].as_array().unwrap().is_empty());
+    }
+
+    #[test]
+    fn dispatch_upsert_and_delete_note_syncs_generated_cards() {
+        let mut session = EngramSession::new();
+        session.load_snapshot(
+            r#"{
+                "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+                "noteTypes": [{
+                    "id": "basic",
+                    "name": "Basic",
+                    "fields": [
+                        {"id": "front", "name": "Front", "required": true, "ordinal": 0},
+                        {"id": "back", "name": "Back", "required": true, "ordinal": 1}
+                    ],
+                    "templates": [{
+                        "id": "forward",
+                        "name": "Forward",
+                        "frontTemplate": "{{Front}}",
+                        "backTemplate": "{{Back}}",
+                        "requiredFieldNames": ["Front", "Back"],
+                        "ordinal": 0
+                    }],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                }],
+                "notes": [],
+                "cards": [],
+                "cardProgress": [],
+                "sessions": [],
+                "reviews": [],
+                "activeSession": null
+            }"#,
+        );
+
+        let created: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "upsertNote",
+                "note": {
+                    "id": "note",
+                    "noteTypeId": "basic",
+                    "deckId": "deck",
+                    "fields": [
+                        {"fieldId": "front", "value": "amma"},
+                        {"fieldId": "back", "value": "mother"}
+                    ],
+                    "tags": ["tamil"],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                },
+                "materializeCardsAt": 1700000000001
+            }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(created["ok"], true);
+        assert_eq!(created["state"]["notes"][0]["id"], "note");
+        assert_eq!(created["state"]["cards"][0]["id"], "note::forward");
+        assert_eq!(created["state"]["cards"][0]["front"], "amma");
+        assert_eq!(
+            created["state"]["cards"][0]["lineage"]["templateId"],
+            "forward"
+        );
+
+        let deleted: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "deleteNote",
+                "noteId": "note"
+            }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(deleted["ok"], true);
+        assert!(deleted["state"]["notes"].as_array().unwrap().is_empty());
+        assert!(deleted["state"]["cards"].as_array().unwrap().is_empty());
     }
 
     #[test]
@@ -1565,13 +2175,31 @@ mod tests {
         let mut session = EngramSession::new();
         let snapshot = r#"{
             "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
-            "noteTypes": [],
-            "notes": [],
+            "noteTypes": [{
+                "id": "basic",
+                "name": "Basic",
+                "fields": [],
+                "templates": [],
+                "createdAt": 1700000000000,
+                "updatedAt": 1700000000000
+            }],
+            "notes": [{
+                "id": "note",
+                "noteTypeId": "basic",
+                "deckId": "deck",
+                "fields": [],
+                "tags": [],
+                "createdAt": 1700000000000,
+                "updatedAt": 1700000000000
+            }],
             "cards": [
                 {"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000},
                 {"id":"other","deckId":"deck","front":"letter-aa","back":"aa","createdAt":1700000000000}
             ],
             "cardProgress": [],
+            "mediaAssets": [
+                {"id":"media:0","archiveName":"0","filename":"audio/amma.mp3","data":[109,112,51]}
+            ],
             "sessions": [],
             "reviews": [],
             "activeSession": null
@@ -1599,6 +2227,46 @@ mod tests {
         assert_eq!(value["props"]["deck-name"], "Tamil");
         assert_eq!(value["props"]["deck-total-value"], "2");
         assert_eq!(value["props"]["deck-new-value"], "2");
+        assert_eq!(value["props"]["collection-label"], "Collection");
+        assert_eq!(value["props"]["collection-note-count-value"], "1");
+        assert_eq!(value["props"]["collection-note-type-count-value"], "1");
+        assert_eq!(value["props"]["collection-media-count-value"], "1");
+        assert_eq!(value["props"]["collection-import-label"], "Import Anki");
+        assert_eq!(value["props"]["collection-export-label"], "Export Anki");
+        assert_eq!(value["props"]["collection-add-note-label"], "Add note");
+        assert_eq!(
+            value["props"]["collection-add-note-type-label"],
+            "Add note type"
+        );
+        assert_eq!(
+            value["props"]["collection-delete-note-label"],
+            "Delete note"
+        );
+        assert_eq!(
+            value["props"]["collection-delete-note-type-label"],
+            "Delete note type"
+        );
+        assert_eq!(value["props"]["browser-label"], "Card browser");
+        assert_eq!(value["props"]["browser-query"], "is:due OR is:new");
+        assert_eq!(
+            value["props"]["browser-results-summary"],
+            "2 matching cards"
+        );
+        assert_eq!(
+            value["props"]["browser-results"],
+            json!(["letter-a -> a", "letter-aa -> aa"])
+        );
+        assert_eq!(
+            value["props"]["browser-result-card-ids"],
+            json!(["card", "other"])
+        );
+        assert_eq!(
+            value["props"]["browser-result-states"],
+            json!(["new", "new"])
+        );
+        assert_eq!(value["props"]["browser-selected-index"], 0);
+        assert_eq!(value["props"]["browser-selected-card-id"], "card");
+        assert_eq!(value["props"]["browser-selected-state"], "new");
         assert_eq!(value["props"]["prompt"], "letter-a");
         assert_eq!(value["props"]["answer"], "a");
         assert_eq!(value["props"]["answer-visible"], true);
@@ -1803,6 +2471,144 @@ mod tests {
             .unwrap()
             .is_empty());
         assert_eq!(suspended["props"]["prompt"], "No cards queued");
+    }
+
+    #[test]
+    fn handle_engram_app_browser_events_target_selected_card_ids() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000},
+                {"id":"other","deckId":"deck","front":"letter-aa","back":"aa","createdAt":1700000000000}
+            ],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+
+        let search: Value =
+            serde_json::from_str(&session.handle_engram_app_event("onBrowserSearch", "deck", NOW))
+                .unwrap();
+        assert_eq!(search["ok"], true);
+        assert_eq!(search["event"], "onBrowserSearch");
+        assert_eq!(search["props"]["browser-selected-card-id"], "card");
+
+        let marked: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onBrowserToggleMarkSelected|other",
+            "deck",
+            NOW + 1,
+        ))
+        .unwrap();
+        assert_eq!(marked["ok"], true);
+        assert_eq!(marked["event"], "onBrowserToggleMarkSelected");
+        assert_eq!(marked["state"]["cardProgress"][0]["cardId"], "other");
+        assert_eq!(marked["state"]["cardProgress"][0]["markedAt"], NOW + 1);
+
+        let unmarked: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onBrowserToggleMarkSelected","cardId":"other"}"#,
+            "deck",
+            NOW + 2,
+        ))
+        .unwrap();
+        assert_eq!(unmarked["ok"], true);
+        assert!(unmarked["state"]["cardProgress"]
+            .as_array()
+            .unwrap()
+            .is_empty());
+
+        let suspended: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onBrowserToggleSuspendSelected|other",
+            "deck",
+            NOW + 3,
+        ))
+        .unwrap();
+        assert_eq!(suspended["ok"], true);
+        assert_eq!(suspended["event"], "onBrowserToggleSuspendSelected");
+        assert_eq!(suspended["state"]["cardProgress"][0]["cardId"], "other");
+        assert_eq!(
+            suspended["state"]["cardProgress"][0]["suspendedAt"],
+            NOW + 3
+        );
+
+        let unsuspended: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onBrowserToggleSuspendSelected","selectedCardId":"other"}"#,
+            "deck",
+            NOW + 4,
+        ))
+        .unwrap();
+        assert_eq!(unsuspended["ok"], true);
+        assert!(unsuspended["state"]["cardProgress"]
+            .as_array()
+            .unwrap()
+            .is_empty());
+
+        let missing_card: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onBrowserToggleMarkSelected",
+            "deck",
+            NOW + 5,
+        ))
+        .unwrap();
+        assert_eq!(missing_card["ok"], false);
+        assert_eq!(
+            missing_card["error"],
+            "cannot mark browser row without a card id"
+        );
+    }
+
+    #[test]
+    fn handle_engram_app_collection_events_round_trip_as_host_intents() {
+        let mut session = EngramSession::new();
+        session.load_snapshot(
+            r#"{
+                "decks": [],
+                "noteTypes": [{
+                    "id": "basic",
+                    "name": "Basic",
+                    "fields": [],
+                    "templates": [],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                }],
+                "notes": [{
+                    "id": "note",
+                    "noteTypeId": "basic",
+                    "deckId": "deck",
+                    "fields": [],
+                    "tags": [],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                }],
+                "cards": [],
+                "cardProgress": [],
+                "mediaAssets": [],
+                "sessions": [],
+                "reviews": [],
+                "activeSession": null
+            }"#,
+        );
+
+        for (event, canonical) in [
+            ("onImportAnki", "onImportAnki"),
+            ("export-anki", "onExportAnki"),
+            ("add-note", "onAddNote"),
+            ("add-note-type", "onAddNoteType"),
+            ("delete-note", "onDeleteNote"),
+            ("delete-note-type", "onDeleteNoteType"),
+        ] {
+            let value: Value =
+                serde_json::from_str(&session.handle_engram_app_event(event, "", NOW)).unwrap();
+            assert_eq!(value["ok"], true);
+            assert_eq!(value["event"], canonical);
+            assert_eq!(value["state"]["notes"].as_array().unwrap().len(), 1);
+            assert_eq!(value["props"]["collection-note-count-value"], "1");
+            assert_eq!(value["props"]["collection-note-type-count-value"], "1");
+        }
     }
 
     #[test]
@@ -2052,10 +2858,69 @@ mod tests {
         assert_eq!(value["results"][0]["card"]["id"], "note::forward");
         assert_eq!(value["results"][0]["progress"]["flag"], "blue");
 
+        let browser_props: Value = serde_json::from_str(
+            &session.engram_browser_props("deck:tamil tag:script cid:note::forward", NOW),
+        )
+        .unwrap();
+
+        assert_eq!(browser_props["ok"], true);
+        assert_eq!(
+            browser_props["props"]["browser-query"],
+            "deck:tamil tag:script cid:note::forward"
+        );
+        assert_eq!(
+            browser_props["props"]["browser-results"],
+            json!(["letter-a -> a"])
+        );
+        assert_eq!(
+            browser_props["props"]["browser-result-card-ids"],
+            json!(["note::forward"])
+        );
+        assert_eq!(
+            browser_props["props"]["browser-result-note-ids"],
+            json!(["note"])
+        );
+        assert_eq!(
+            browser_props["props"]["browser-result-template-ids"],
+            json!(["forward"])
+        );
+        assert_eq!(
+            browser_props["props"]["browser-result-states"],
+            json!(["due"])
+        );
+        assert_eq!(
+            browser_props["props"]["browser-results-summary"],
+            "1 matching card"
+        );
+        assert_eq!(browser_props["props"]["browser-selected-index"], 0);
+        assert_eq!(
+            browser_props["props"]["browser-selected-card-id"],
+            "note::forward"
+        );
+        assert_eq!(browser_props["props"]["browser-selected-note-id"], "note");
+        assert_eq!(
+            browser_props["props"]["browser-selected-template-id"],
+            "forward"
+        );
+        assert_eq!(browser_props["props"]["browser-selected-state"], "due");
+
+        let empty_query_props: Value =
+            serde_json::from_str(&session.engram_browser_props("", NOW)).unwrap();
+        assert_eq!(empty_query_props["ok"], true);
+        assert_eq!(
+            empty_query_props["props"]["browser-query"],
+            "is:due OR is:new"
+        );
+
         let error: Value = serde_json::from_str(&session.search_cards("kind:review", NOW)).unwrap();
 
         assert_eq!(error["ok"], false);
         assert_eq!(error["token"], "kind:review");
+
+        let browser_error: Value =
+            serde_json::from_str(&session.engram_browser_props("kind:review", NOW)).unwrap();
+        assert_eq!(browser_error["ok"], false);
+        assert_eq!(browser_error["token"], "kind:review");
     }
 
     #[test]
@@ -2380,6 +3245,67 @@ mod tests {
         assert_eq!(
             value["state"]["cardProgress"][0]["nextDueAt"],
             NOW + 20 * 60 * 1000
+        );
+    }
+
+    #[test]
+    fn dispatch_rate_card_accepts_interval_deck_options() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+            "cardProgress": [{
+                "cardId": "card",
+                "state": "review",
+                "interval": 10,
+                "easeFactor": 2.5,
+                "nextDueAt": 1699999999000,
+                "learningStepIndex": null,
+                "buriedUntil": null,
+                "suspendedAt": null,
+                "timesSeen": 1,
+                "timesCorrect": 1,
+                "timesIncorrect": 0,
+                "lastSeenAt": 1699913600000
+            }],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        session.dispatch(
+            r#"{
+                "type": "startSession",
+                "sessionId": "session",
+                "deckId": "deck",
+                "queue": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+                "startedAt": 1700000000000
+            }"#,
+        );
+        let value: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                    "type": "rateCard",
+                    "reviewId": "review",
+                    "sessionId": "session",
+                    "cardId": "card",
+                    "rating": "good",
+                    "reviewedAt": 1700000000000,
+                    "deckOptions": {
+                        "maximumIntervalDays": 2,
+                        "reviewIntervalModifier": 10.0
+                    }
+                }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(value["state"]["cardProgress"][0]["interval"], 2);
+        assert_eq!(
+            value["state"]["cardProgress"][0]["nextDueAt"],
+            NOW + 2 * 24 * 60 * 60 * 1000
         );
     }
 

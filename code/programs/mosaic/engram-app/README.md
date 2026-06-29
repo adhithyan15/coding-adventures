@@ -4,7 +4,8 @@ Engram's Mosaic app package.
 
 This package is the product assembly layer. It exports `EngramApp`, owns the
 app/root surface, and depends on reusable Mosaic component packages such as
-`mosaic-pkg-deck-stats`, `mosaic-pkg-review-actions`, `mosaic-pkg-review-card`, and
+`mosaic-pkg-card-browser`, `mosaic-pkg-collection-actions`, `mosaic-pkg-deck-stats`,
+`mosaic-pkg-review-actions`, `mosaic-pkg-review-card`, and
 `mosaic-pkg-session-progress`.
 The review card composes further Mosaic packages such as
 `mosaic-pkg-rating-controls`; Engram does not fork those components into the app
@@ -18,6 +19,8 @@ binds them to the shared Rust business logic core through host shells.
 
 - `EngramApp.mil` defines the app-facing review slots and events.
 - `EngramApp.mll` owns the product shell and mounts
+  `pkg::mosaic-pkg-card-browser::CardBrowser`,
+  `pkg::mosaic-pkg-collection-actions::CollectionActions`,
   `pkg::mosaic-pkg-deck-stats::DeckStatsPanel`,
   `pkg::mosaic-pkg-session-progress::SessionProgress`, and
   `pkg::mosaic-pkg-review-card::ReviewCard`, plus
@@ -25,13 +28,22 @@ binds them to the shared Rust business logic core through host shells.
 - `EngramApp.dark.msl` owns app-shell styling only.
 - Package artifact builds inline component-package styles through the full
   dependency chain.
-- The generated React, SwiftPM, and Flutter shells mount `EngramApp` with
-  sample slot values and dispatch callbacks, matching the generated interface
-  shapes.
+- The generated React and Electron renderer shells mount `EngramApp` through
+  `window.mosaicHost.getProps` and `window.mosaicHost.handleEvent`, with sample
+  slot values as a fallback when no host is installed.
+- The generated Electron preload/main shell exposes those calls over
+  context-isolated IPC channels so native hosts can bind them to app state.
+- The generated SwiftPM and Flutter shells mount `EngramApp` with sample slot
+  values and dispatch callbacks, matching the generated interface shapes.
 - Smoke tests now assert the generated Qt, SwiftUI, and XAML project shells
-  expose the same Engram host contract slots, rating events, and Anki-style
-  review action events as the shared Rust `EngramSession::engram_app_props`
-  facade.
+  expose the same Engram host contract slots, collection events, card-browser
+  events, rating events, and Anki-style review action events as the shared Rust
+  `EngramSession::engram_app_props` facade.
+- The browser slots include stable result and selected-card metadata from the
+  Rust core so emitted native/web hosts can wire actions to card IDs instead of
+  display labels.
+- The collection slots expose note, note-type, and media counts plus shared
+  Anki import/export and note workflow intents for host shells.
 
 ## Running the smoke test
 
@@ -39,3 +51,13 @@ binds them to the shared Rust business logic core through host shells.
 cd code/programs/mosaic/engram-app
 cargo test
 ```
+
+## Emitting host shells
+
+```powershell
+cd code/programs/mosaic/engram-app
+./scripts/build-all.ps1
+```
+
+The script writes HTML, WebComponent, React, Electron, SwiftUI, Qt, XAML, and
+Flutter outputs under `target/mosaic-engram-app/` by default.

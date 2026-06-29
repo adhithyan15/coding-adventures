@@ -103,6 +103,9 @@ use mosaic_package_manifest::{parse_path as parse_manifest, ManifestError};
 pub enum Backend {
     /// React functional components in `.tsx` files.
     React,
+    /// Electron desktop projects. Component artifacts reuse the React
+    /// `.tsx` shape; project shells add Electron main/preload files.
+    Electron,
     /// SwiftUI `View` structs in `.swift` files.
     SwiftUI,
     /// Qt Quick (QML) elements in `.qml` files.
@@ -133,6 +136,7 @@ impl Backend {
     fn dir_name(self) -> &'static str {
         match self {
             Backend::React => "react",
+            Backend::Electron => "electron",
             Backend::SwiftUI => "swiftui",
             Backend::Qt => "qt",
             Backend::WebComponent => "webcomponent",
@@ -154,6 +158,7 @@ impl Backend {
     fn component_extension(self) -> Option<&'static str> {
         match self {
             Backend::React => Some("tsx"),
+            Backend::Electron => Some("tsx"),
             Backend::SwiftUI => Some("swift"),
             Backend::Qt => Some("qml"),
             Backend::WebComponent => Some("js"),
@@ -454,6 +459,7 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
                 &src_dir,
                 &backend_dir,
                 opts.backend,
+                &manifest.package.name,
                 &package_search_paths,
             )?;
             artifacts.extend(shell_artifacts);
@@ -488,6 +494,7 @@ fn emit_project_shell(
     src_dir: &Path,
     backend_dir: &Path,
     backend: Backend,
+    package_name: &str,
     package_search_paths: &[PathBuf],
 ) -> Result<Vec<PathBuf>, BuildError> {
     // Re-read the triple. This duplicates `compile_one_component`'s
@@ -553,9 +560,10 @@ fn emit_project_shell(
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
             if let Some(proj) = r.project {
-                let flat: [(&str, &str); 4] = [
+                let flat: [(&str, &str); 5] = [
                     ("package.json", &proj.package_json),
                     ("vite.config.ts", &proj.vite_config),
+                    ("tsconfig.json", &proj.tsconfig_json),
                     ("index.html", &proj.index_html),
                     ("README.md", &proj.readme),
                 ];
@@ -570,6 +578,54 @@ fn emit_project_shell(
                 }
                 write_file(&nested, proj.main_tsx.as_bytes())?;
                 written.push(nested);
+            }
+        }
+        Backend::Electron => {
+            let mut react_opts = mosaic_emit_react::pipeline::EmitOptions::default();
+            react_opts.emit_project = true;
+            let npm_name = format!("{package_name}-electron");
+            react_opts.package_name = Some(npm_name.clone());
+            let r = mosaic_emit_react::pipeline::from_pipeline_with_options(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_def,
+                &react_opts,
+            )
+            .map_err(|e| pipeline_emit_err(component, e))?;
+            if let Some(proj) = r.project {
+                let flat: [(&str, String); 7] = [
+                    (
+                        "package.json",
+                        build_electron_package_json(&npm_name, &react_opts),
+                    ),
+                    ("vite.config.ts", proj.vite_config),
+                    ("index.html", proj.index_html),
+                    ("tsconfig.json", build_electron_renderer_tsconfig()),
+                    ("tsconfig.electron.json", build_electron_main_tsconfig()),
+                    ("README.md", build_electron_readme(&npm_name, component)),
+                    ("src/main.tsx", proj.main_tsx),
+                ];
+                for (rel, body) in flat {
+                    let p = backend_dir.join(rel);
+                    if let Some(parent) = p.parent() {
+                        create_dir_all(parent)?;
+                    }
+                    write_file(&p, body.as_bytes())?;
+                    written.push(p);
+                }
+
+                let nested: [(&str, String); 2] = [
+                    ("electron/main.ts", build_electron_main_ts(component)),
+                    ("electron/preload.ts", build_electron_preload_ts()),
+                ];
+                for (rel, body) in nested {
+                    let p = backend_dir.join(rel);
+                    if let Some(parent) = p.parent() {
+                        create_dir_all(parent)?;
+                    }
+                    write_file(&p, body.as_bytes())?;
+                    written.push(p);
+                }
             }
         }
         Backend::Html => {
@@ -686,6 +742,7 @@ fn emit_project_shell(
                 &sw_opts,
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
+            let component_source = r.output.clone();
             if let Some(proj) = r.project {
                 let flat: [(&str, &str); 2] = [
                     ("Package.swift", &proj.package_swift),
@@ -702,6 +759,10 @@ fn emit_project_shell(
                 }
                 write_file(&nested, proj.app_swift.as_bytes())?;
                 written.push(nested);
+
+                let component_nested = backend_dir.join(format!("Sources/App/{component}.swift"));
+                write_file(&component_nested, component_source.as_bytes())?;
+                written.push(component_nested);
             }
         }
         Backend::Xaml => {
@@ -740,6 +801,51 @@ fn emit_project_shell(
         }
     }
     Ok(written)
+}
+
+fn build_electron_package_json(
+    npm_name: &str,
+    react_opts: &mosaic_emit_react::pipeline::EmitOptions,
+) -> String {
+    format!(
+        "{{\n  \"//\": \"AUTO-GENERATED by mosaic-compile pkg --backend electron --emit-project. Edits will be overwritten on next emit. Fork the file (remove this comment) to customise.\",\n  \"name\": \"{}\",\n  \"private\": true,\n  \"version\": \"0.0.0\",\n  \"type\": \"module\",\n  \"main\": \"dist-electron/main.js\",\n  \"scripts\": {{\n    \"dev\": \"concurrently -k \\\"vite --host 127.0.0.1\\\" \\\"wait-on http://127.0.0.1:5173 && electron .\\\"\",\n    \"build\": \"tsc -p tsconfig.json && vite build && tsc -p tsconfig.electron.json\",\n    \"start\": \"electron .\",\n    \"preview\": \"vite preview\"\n  }},\n  \"engines\": {{\n    \"node\": \"{}\"\n  }},\n  \"dependencies\": {{\n    \"react\": \"{}\",\n    \"react-dom\": \"{}\"\n  }},\n  \"devDependencies\": {{\n    \"@types/node\": \"26.0.1\",\n    \"@types/react\": \"{}\",\n    \"@types/react-dom\": \"{}\",\n    \"@vitejs/plugin-react-swc\": \"{}\",\n    \"concurrently\": \"10.0.3\",\n    \"electron\": \"42.5.0\",\n    \"typescript\": \"{}\",\n    \"vite\": \"{}\",\n    \"wait-on\": \"9.0.10\"\n  }}\n}}\n",
+        npm_name,
+        react_opts.pinned_node_engines,
+        react_opts.pinned_react,
+        react_opts.pinned_react,
+        react_opts.pinned_types_react,
+        react_opts.pinned_types_react_dom,
+        react_opts.pinned_vite_react_plugin,
+        react_opts.pinned_typescript,
+        react_opts.pinned_vite,
+    )
+}
+
+fn build_electron_renderer_tsconfig() -> String {
+    "{\n  \"compilerOptions\": {\n    \"target\": \"ES2020\",\n    \"useDefineForClassFields\": true,\n    \"lib\": [\"DOM\", \"DOM.Iterable\", \"ES2020\"],\n    \"allowJs\": false,\n    \"skipLibCheck\": true,\n    \"esModuleInterop\": true,\n    \"allowSyntheticDefaultImports\": true,\n    \"strict\": true,\n    \"forceConsistentCasingInFileNames\": true,\n    \"module\": \"ESNext\",\n    \"moduleResolution\": \"Bundler\",\n    \"resolveJsonModule\": true,\n    \"isolatedModules\": true,\n    \"noEmit\": true,\n    \"jsx\": \"react-jsx\"\n  },\n  \"include\": [\"*.tsx\", \"src/**/*.tsx\", \"src/**/*.ts\"]\n}\n"
+        .to_string()
+}
+
+fn build_electron_main_tsconfig() -> String {
+    "{\n  \"compilerOptions\": {\n    \"target\": \"ES2022\",\n    \"module\": \"NodeNext\",\n    \"moduleResolution\": \"NodeNext\",\n    \"strict\": true,\n    \"esModuleInterop\": true,\n    \"skipLibCheck\": true,\n    \"types\": [\"node\"],\n    \"outDir\": \"dist-electron\",\n    \"rootDir\": \"electron\"\n  },\n  \"include\": [\"electron/**/*.ts\"]\n}\n"
+        .to_string()
+}
+
+fn build_electron_main_ts(component_name: &str) -> String {
+    format!(
+        "// AUTO-GENERATED by mosaic-compile pkg --backend electron --emit-project. Edits will be overwritten on next emit.\n// Fork the file (remove this banner) to customise.\nimport {{ app, BrowserWindow, ipcMain }} from \"electron\";\nimport {{ fileURLToPath }} from \"node:url\";\nimport path from \"node:path\";\n\ntype MosaicHostRequest = {{\n  component: string;\n  event?: unknown;\n}};\n\ntype MosaicHostResponse = {{ props?: Record<string, unknown> }} | Record<string, unknown> | undefined;\n\nconst MOSAIC_GET_PROPS_CHANNEL = \"mosaic:get-props\";\nconst MOSAIC_HANDLE_EVENT_CHANNEL = \"mosaic:handle-event\";\nconst __filename = fileURLToPath(import.meta.url);\nconst __dirname = path.dirname(__filename);\nconst devServerUrl = process.env.MOSAIC_ELECTRON_DEV_SERVER_URL ??\n  (process.env.npm_lifecycle_event === \"dev\" ? \"http://127.0.0.1:5173\" : undefined);\n\nipcMain.handle(\n  MOSAIC_GET_PROPS_CHANNEL,\n  async (_event, _request: MosaicHostRequest): Promise<MosaicHostResponse> => undefined,\n);\nipcMain.handle(\n  MOSAIC_HANDLE_EVENT_CHANNEL,\n  async (_event, _request: MosaicHostRequest): Promise<MosaicHostResponse> => undefined,\n);\n\nasync function createWindow(): Promise<void> {{\n  const mainWindow = new BrowserWindow({{\n    title: \"{component_name}\",\n    width: 1180,\n    height: 820,\n    minWidth: 760,\n    minHeight: 560,\n    webPreferences: {{\n      contextIsolation: true,\n      nodeIntegration: false,\n      preload: path.join(__dirname, \"preload.js\"),\n    }},\n  }});\n\n  if (devServerUrl) {{\n    await mainWindow.loadURL(devServerUrl);\n  }} else {{\n    await mainWindow.loadFile(path.join(__dirname, \"..\", \"dist\", \"index.html\"));\n  }}\n}}\n\napp.whenReady().then(createWindow);\n\napp.on(\"activate\", () => {{\n  if (BrowserWindow.getAllWindows().length === 0) {{\n    void createWindow();\n  }}\n}});\n\napp.on(\"window-all-closed\", () => {{\n  if (process.platform !== \"darwin\") {{\n    app.quit();\n  }}\n}});\n"
+    )
+}
+
+fn build_electron_preload_ts() -> String {
+    "// AUTO-GENERATED by mosaic-compile pkg --backend electron --emit-project. Edits will be overwritten on next emit.\n// Fork the file (remove this banner) to customise.\nimport { contextBridge, ipcRenderer } from \"electron\";\n\ntype MosaicHostRequest = {\n  component: string;\n  event?: unknown;\n};\n\ntype MosaicHostResponse = { props?: Record<string, unknown> } | Record<string, unknown> | undefined;\n\nconst MOSAIC_GET_PROPS_CHANNEL = \"mosaic:get-props\";\nconst MOSAIC_HANDLE_EVENT_CHANNEL = \"mosaic:handle-event\";\n\ncontextBridge.exposeInMainWorld(\"mosaicHost\", {\n  platform: \"electron\",\n  getProps: (request: MosaicHostRequest): Promise<MosaicHostResponse> =>\n    ipcRenderer.invoke(MOSAIC_GET_PROPS_CHANNEL, request),\n  handleEvent: (request: MosaicHostRequest): Promise<MosaicHostResponse> =>\n    ipcRenderer.invoke(MOSAIC_HANDLE_EVENT_CHANNEL, request),\n});\n"
+        .to_string()
+}
+
+fn build_electron_readme(npm_name: &str, component_name: &str) -> String {
+    format!(
+        "<!-- AUTO-GENERATED by mosaic-compile pkg --backend electron --emit-project. Edits will be overwritten on next emit. -->\n<!-- Fork the file (remove this banner) to customise. -->\n# {component_name} - Electron + Vite + React shell\n\nAuto-generated by `mosaic-compile pkg --backend electron --emit-project`.\n\nThe renderer imports the same Mosaic-generated `{component_name}.tsx` artifact that the React backend emits. The Electron files are only the desktop host shell.\n\n## Host integration\n\nThe preload exposes `window.mosaicHost.getProps` and `window.mosaicHost.handleEvent` through context-isolated IPC channels. The generated main process returns no prop override by default; replace those handlers to bind the shell to app state.\n\n## Prerequisites\n\n- Node.js >= 18.\n- npm, pnpm, or yarn.\n\n## Run\n\n```sh\nnpm install\nnpm run dev\n```\n\n## Build\n\n```sh\nnpm run build\nnpm start\n```\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{component_name}.tsx` | The Mosaic-compiled renderer component. |\n| `src/main.tsx` | Mounts `<{component_name}>` into the Vite renderer root. |\n| `electron/main.ts` | Electron main process, window host, and Mosaic host IPC handlers. |\n| `electron/preload.ts` | Context-isolated bridge for `window.mosaicHost`. |\n| `package.json` | npm package manifest with pinned Electron/Vite/React dependencies. |\n\nnpm package name: `{npm_name}`.\n"
+    )
 }
 
 // ===========================================================================
@@ -856,7 +962,7 @@ fn compile_one_component(
     };
 
     let primary_bytes: String = match backend {
-        Backend::React => mosaic_emit_react::pipeline::from_pipeline(
+        Backend::React | Backend::Electron => mosaic_emit_react::pipeline::from_pipeline(
             &mosmodel_out.component,
             &layout_out.def,
             &style_def,
@@ -1365,7 +1471,7 @@ fn emit_index_file(
     package_name: &str,
 ) -> Result<PathBuf, BuildError> {
     match backend {
-        Backend::React => {
+        Backend::React | Backend::Electron => {
             // `index.ts` lives alongside `Grid.tsx`, `Cell.tsx`, …
             //
             // We use `export * from "./Grid"` (no `.tsx` extension) so the
@@ -2901,6 +3007,7 @@ version = "1"
             dir.join("vite.config.ts").exists(),
             "vite.config.ts missing"
         );
+        assert!(dir.join("tsconfig.json").exists(), "tsconfig.json missing");
         assert!(dir.join("index.html").exists(), "index.html missing");
         assert!(dir.join("README.md").exists(), "README.md missing");
         assert!(
@@ -2938,9 +3045,26 @@ version = "1"
                 vec![
                     "package.json",
                     "vite.config.ts",
+                    "tsconfig.json",
                     "index.html",
                     "README.md",
                     "src/main.tsx",
+                ],
+            ),
+            (
+                Backend::Electron,
+                vec![
+                    "Grid.tsx",
+                    "index.ts",
+                    "package.json",
+                    "vite.config.ts",
+                    "index.html",
+                    "tsconfig.json",
+                    "tsconfig.electron.json",
+                    "src/main.tsx",
+                    "electron/main.ts",
+                    "electron/preload.ts",
+                    "README.md",
                 ],
             ),
             (Backend::Html, vec!["index.html", "README.md"]),
@@ -2955,7 +3079,12 @@ version = "1"
             ),
             (
                 Backend::SwiftUI,
-                vec!["Package.swift", "README.md", "Sources/App/App.swift"],
+                vec![
+                    "Package.swift",
+                    "README.md",
+                    "Sources/App/App.swift",
+                    "Sources/App/Grid.swift",
+                ],
             ),
             (
                 Backend::Xaml,
@@ -2988,6 +3117,35 @@ version = "1"
                 );
             }
         }
+    }
+
+    #[test]
+    fn ui32_m_electron_project_shell_exposes_mosaic_host_ipc_bridge() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Electron,
+            emit_project: true,
+        })
+        .expect("electron build with emit_project: true");
+
+        let dir = out.path().join("electron");
+        let main_ts = fs::read_to_string(dir.join("electron/main.ts")).unwrap();
+        assert!(main_ts.contains("import { app, BrowserWindow, ipcMain } from \"electron\";"));
+        assert!(main_ts.contains("MOSAIC_GET_PROPS_CHANNEL"));
+        assert!(main_ts.contains("ipcMain.handle("));
+        assert!(main_ts.contains("mosaic:get-props"));
+        assert!(main_ts.contains("mosaic:handle-event"));
+
+        let preload_ts = fs::read_to_string(dir.join("electron/preload.ts")).unwrap();
+        assert!(preload_ts.contains("import { contextBridge, ipcRenderer } from \"electron\";"));
+        assert!(preload_ts.contains("contextBridge.exposeInMainWorld(\"mosaicHost\""));
+        assert!(preload_ts.contains("getProps: (request: MosaicHostRequest)"));
+        assert!(preload_ts.contains("handleEvent: (request: MosaicHostRequest)"));
+        assert!(preload_ts.contains("ipcRenderer.invoke(MOSAIC_GET_PROPS_CHANNEL, request)"));
+        assert!(preload_ts.contains("ipcRenderer.invoke(MOSAIC_HANDLE_EVENT_CHANNEL, request)"));
     }
 
     /// XAML's --emit-project path writes a full WinUI host shell via
