@@ -741,6 +741,7 @@ fn emit_project_shell(
                 &sw_opts,
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
+            let component_source = r.output.clone();
             if let Some(proj) = r.project {
                 let flat: [(&str, &str); 2] = [
                     ("Package.swift", &proj.package_swift),
@@ -757,6 +758,10 @@ fn emit_project_shell(
                 }
                 write_file(&nested, proj.app_swift.as_bytes())?;
                 written.push(nested);
+
+                let component_nested = backend_dir.join(format!("Sources/App/{component}.swift"));
+                write_file(&component_nested, component_source.as_bytes())?;
+                written.push(component_nested);
             }
         }
         Backend::Xaml => {
@@ -3071,7 +3076,12 @@ version = "1"
             ),
             (
                 Backend::SwiftUI,
-                vec!["Package.swift", "README.md", "Sources/App/App.swift"],
+                vec![
+                    "Package.swift",
+                    "README.md",
+                    "Sources/App/App.swift",
+                    "Sources/App/Grid.swift",
+                ],
             ),
             (
                 Backend::Xaml,

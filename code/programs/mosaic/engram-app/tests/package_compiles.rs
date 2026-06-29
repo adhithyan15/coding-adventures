@@ -259,6 +259,7 @@ fn app_package_emits_native_project_shells() {
                 "Package.swift",
                 "README.md",
                 "Sources/App/App.swift",
+                "Sources/App/EngramApp.swift",
             ],
         ),
         (
@@ -403,6 +404,18 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift_app, "actionUndoLabel: \"Sample ActionUndoLabel\",");
     assert_contains(&swift_app, "actionMarkLabel: \"Sample ActionMarkLabel\",");
     assert_contains(&swift_app, "dispatch: { event in");
+    let swift_package = fs::read_to_string(tmp.path().join("swiftui").join("Package.swift"))
+        .expect("Package.swift");
+    assert_contains(&swift_package, "platforms: [.macOS(.v13), .iOS(.v16)]");
+    let swift_nested_component = fs::read_to_string(
+        tmp.path()
+            .join("swiftui")
+            .join("Sources")
+            .join("App")
+            .join("EngramApp.swift"),
+    )
+    .expect("Sources/App/EngramApp.swift");
+    assert_contains(&swift_nested_component, "struct EngramAppView: View");
 
     let xaml_code_behind = fs::read_to_string(tmp.path().join("xaml").join("EngramApp.xaml.cs"))
         .expect("EngramApp.xaml.cs");
