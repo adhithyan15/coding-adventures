@@ -82,11 +82,12 @@ supports plain text terms against Anki-style note field content, falling back to
 standalone card front/back text only when a card has no note lineage, plus
 Anki-style `w:`, `nc:`, `sc:`, and `re:` text modifiers, field-scoped regex
 searches such as `front:re:...`, tag regexes, `deck:`, `preset:`, `note:`,
-`noteType:`, `card:`, `cid:`, `nid:`, `front:`, `back:`, `tag:`, `state:`,
-`is:`, `flag:`, `marked:`, `prop:`, `added:`, `edited:`, `introduced:`,
-`rated:`, and `resched:` filters. `preset:` resolves imported Anki deck-option
-preset names from preserved collection metadata, while `prop:pos` /
-`prop:position` uses imported Anki new-card queue positions when available.
+`noteType:`, `card:`, `cid:`, `nid:`, `did:`, `mid:`, `front:`, `back:`,
+`tag:`, `state:`, `is:`, `flag:`, `marked:`, `prop:`, `added:`, `edited:`,
+`introduced:`, `rated:`, and `resched:` filters. `preset:` resolves imported
+Anki deck-option preset names from preserved collection metadata, while
+`prop:pos` / `prop:position` uses imported Anki new-card queue positions when
+available.
 Unknown `key:value` searches fall back to Anki-style note field searches, so
 custom fields such as `Extra:` work alongside built-in `front:` and `back:`
 filters. Imported Anki card custom data can be searched with

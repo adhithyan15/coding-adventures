@@ -44,6 +44,8 @@ enum SearchClauseKind {
     Field(FieldFilter),
     CardId(IdFilter),
     NoteId(IdFilter),
+    DeckId(IdFilter),
+    NoteTypeId(IdFilter),
     CardTemplate(String),
     Deck(String),
     Preset(String),
@@ -193,6 +195,8 @@ struct SearchMetadata<'a> {
     filtered_deck_ids: HashSet<&'a str>,
     card_sources_by_id: HashMap<&'a str, Vec<&'a ExternalSourceRecord>>,
     review_sources_by_id: HashMap<&'a str, Vec<&'a ExternalSourceRecord>>,
+    deck_original_ids_by_id: HashMap<&'a str, Vec<&'a str>>,
+    note_type_original_ids_by_id: HashMap<&'a str, Vec<&'a str>>,
     deck_preset_names_by_id: HashMap<&'a str, Vec<String>>,
     deck_option_deck_ids: HashSet<&'a str>,
 }
@@ -283,6 +287,14 @@ impl<'a> SearchMetadata<'a> {
         for source in &state.external_sources {
             match source.target {
                 ExternalSourceTarget::Deck => {
+                    if let Some(original_id) = source.original_id.as_deref() {
+                        metadata
+                            .deck_original_ids_by_id
+                            .entry(source.target_id.as_str())
+                            .or_default()
+                            .push(original_id);
+                    }
+
                     if source
                         .data
                         .get("dyn")
@@ -298,6 +310,15 @@ impl<'a> SearchMetadata<'a> {
                             .entry(source.target_id.as_str())
                             .or_default()
                             .extend(names);
+                    }
+                }
+                ExternalSourceTarget::NoteType => {
+                    if let Some(original_id) = source.original_id.as_deref() {
+                        metadata
+                            .note_type_original_ids_by_id
+                            .entry(source.target_id.as_str())
+                            .or_default()
+                            .push(original_id);
                     }
                 }
                 ExternalSourceTarget::Card => {
@@ -599,6 +620,14 @@ fn parse_keyed_clause(
         "nid" | "noteid" | "note_id" | "note-id" => {
             let value = value.to_lowercase();
             parse_id_filter(token, &value).map(SearchClauseKind::NoteId)
+        }
+        "did" | "deckid" | "deck_id" | "deck-id" => {
+            let value = value.to_lowercase();
+            parse_id_filter(token, &value).map(SearchClauseKind::DeckId)
+        }
+        "mid" | "notetypeid" | "note_type_id" | "note-type-id" => {
+            let value = value.to_lowercase();
+            parse_id_filter(token, &value).map(SearchClauseKind::NoteTypeId)
         }
         "card" | "template" | "cardtemplate" | "card_template" | "card-template" => {
             require_keyed_filter_value(token, value)?;
@@ -1138,6 +1167,10 @@ fn clause_matches(
         SearchClauseKind::Field(filter) => field_matches(filter, card, note, note_type),
         SearchClauseKind::CardId(filter) => id_filter_matches(filter, &card.id),
         SearchClauseKind::NoteId(filter) => note_id_matches(filter, card, note),
+        SearchClauseKind::DeckId(filter) => deck_id_matches(filter, card, card_sources, metadata),
+        SearchClauseKind::NoteTypeId(filter) => {
+            note_type_id_matches(filter, note, note_type, metadata)
+        }
         SearchClauseKind::CardTemplate(term) => card_template_matches(term, card, note_type),
         SearchClauseKind::Deck(term) => deck_matches(term, card, deck, &metadata.filtered_deck_ids),
         SearchClauseKind::Preset(term) => preset_matches(term, card, deck, metadata),
@@ -1530,6 +1563,58 @@ fn note_id_matches(filter: &IdFilter, card: &Card, note: Option<&Note>) -> bool 
         .as_ref()
         .is_some_and(|lineage| id_filter_matches(filter, &lineage.note_id))
         || note.is_some_and(|note| id_filter_matches(filter, &note.id))
+}
+
+fn deck_id_matches(
+    filter: &IdFilter,
+    card: &Card,
+    card_sources: &[&ExternalSourceRecord],
+    metadata: &SearchMetadata<'_>,
+) -> bool {
+    id_filter_matches(filter, &card.deck_id)
+        || metadata
+            .deck_original_ids_by_id
+            .get(card.deck_id.as_str())
+            .is_some_and(|original_ids| {
+                original_ids
+                    .iter()
+                    .any(|original_id| id_filter_matches(filter, original_id))
+            })
+        || card_sources.iter().any(|source| {
+            source_i64_from_data(source, "deckId")
+                .is_some_and(|deck_id| id_filter_matches(filter, &deck_id.to_string()))
+                || source_i64_from_data(source, "originalDeckId").is_some_and(|deck_id| {
+                    deck_id != 0 && id_filter_matches(filter, &deck_id.to_string())
+                })
+        })
+}
+
+fn note_type_id_matches(
+    filter: &IdFilter,
+    note: Option<&Note>,
+    note_type: Option<&NoteType>,
+    metadata: &SearchMetadata<'_>,
+) -> bool {
+    note.is_some_and(|note| note_type_id_candidate_matches(filter, &note.note_type_id, metadata))
+        || note_type.is_some_and(|note_type| {
+            note_type_id_candidate_matches(filter, &note_type.id, metadata)
+        })
+}
+
+fn note_type_id_candidate_matches(
+    filter: &IdFilter,
+    note_type_id: &str,
+    metadata: &SearchMetadata<'_>,
+) -> bool {
+    id_filter_matches(filter, note_type_id)
+        || metadata
+            .note_type_original_ids_by_id
+            .get(note_type_id)
+            .is_some_and(|original_ids| {
+                original_ids
+                    .iter()
+                    .any(|original_id| id_filter_matches(filter, original_id))
+            })
 }
 
 fn card_template_matches(term: &str, card: &Card, note_type: Option<&NoteType>) -> bool {
@@ -2471,6 +2556,92 @@ mod tests {
         assert_eq!(ids_for("card:forward"), vec!["note::forward"]);
         assert_eq!(ids_for("template:Forward"), vec!["note::forward"]);
         assert!(ids_for("card:reverse").is_empty());
+    }
+
+    #[test]
+    fn anki_browser_mid_and_did_filters_match_imported_ids() {
+        let mut note_type = note_type();
+        note_type.id = "local-basic".to_string();
+
+        let note = |id: &str, deck_id: &str| Note {
+            id: id.to_string(),
+            note_type_id: "local-basic".to_string(),
+            deck_id: deck_id.to_string(),
+            fields: vec![NoteFieldValue {
+                field_id: "front".to_string(),
+                value: id.to_string(),
+            }],
+            tags: Vec::new(),
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let card_for_note = |card_id: &str, note_id: &str, deck_id: &str| {
+            let mut card = card(card_id, deck_id, note_id, note_id);
+            card.lineage = Some(CardLineage {
+                note_id: note_id.to_string(),
+                note_type_id: "local-basic".to_string(),
+                template_id: "forward".to_string(),
+                ordinal: 0,
+                cloze_ordinal: None,
+            });
+            card
+        };
+        let source_record = |target, target_id: &str, original_id: &str| ExternalSourceRecord {
+            target,
+            target_id: target_id.to_string(),
+            source: "anki-v11".to_string(),
+            original_id: Some(original_id.to_string()),
+            data: BTreeMap::new(),
+        };
+        let card_source =
+            |card_id: &str, deck_id: i64, original_deck_id: i64| ExternalSourceRecord {
+                target: ExternalSourceTarget::Card,
+                target_id: card_id.to_string(),
+                source: "anki-v11".to_string(),
+                original_id: Some(card_id.to_string()),
+                data: BTreeMap::from([
+                    ("deckId".to_string(), deck_id.to_string()),
+                    ("originalDeckId".to_string(), original_deck_id.to_string()),
+                ]),
+            };
+        let state = AppState {
+            decks: vec![deck("native", "Native"), deck("filtered", "Filtered")],
+            note_types: vec![note_type],
+            notes: vec![
+                note("native-note", "native"),
+                note("filtered-note", "filtered"),
+            ],
+            cards: vec![
+                card_for_note("native-card", "native-note", "native"),
+                card_for_note("filtered-card", "filtered-note", "filtered"),
+            ],
+            external_sources: vec![
+                source_record(ExternalSourceTarget::NoteType, "local-basic", "101"),
+                source_record(ExternalSourceTarget::Deck, "native", "2"),
+                source_record(ExternalSourceTarget::Deck, "filtered", "3"),
+                card_source("filtered-card", 3, 2),
+            ],
+            ..AppState::default()
+        };
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("did:2"), vec!["native-card", "filtered-card"]);
+        assert_eq!(ids_for("did:3"), vec!["filtered-card"]);
+        assert_eq!(ids_for("did:native"), vec!["native-card"]);
+        assert!(ids_for("did:4").is_empty());
+        assert_eq!(ids_for("mid:101"), vec!["native-card", "filtered-card"]);
+        assert_eq!(
+            ids_for("mid:local-basic"),
+            vec!["native-card", "filtered-card"]
+        );
+        assert!(ids_for("mid:102").is_empty());
     }
 
     #[test]
