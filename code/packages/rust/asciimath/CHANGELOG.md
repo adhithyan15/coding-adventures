@@ -2,6 +2,30 @@
 
 All notable changes to the AsciiMath pluggable frontend.
 
+## [0.2.0] — 2026-06-29
+
+### Added — ASM01 PR-2: breadth (matrices + big operators)
+
+- **Matrices** `[[a,b],[c,d]]` (rows may use `[…]` or `(…)`) → `MathExpr::Matrix(rows)`, cells
+  parsed as full expressions in source order. Disambiguated from nested grouping: `((a))` and
+  `[[a]]` remain *grouping* (a 1×1 single-cell shape is not a matrix); a real matrix has ≥2 rows
+  or a row with ≥2 cells (i.e. it genuinely uses commas). Ragged rows are rejected (clean spanned
+  error, no panic). `det[[a,b],[c,d]]` binds the matrix as the function argument.
+- **Big operators** `sum`, `prod`, `int`, `oint`, `coprod`, `lim` → `MathExpr::BigOp{op,lower,upper,body}`.
+  Optional `_`/`^` bounds attach to the operator (either order, each at most once); the body is the
+  next atom (`sum_(i=1)^n i` ⇒ BigOp over `i`), the same one-atom convention used by `sqrt`/functions.
+- New `Comma` token (cell/row separator); outside a matrix it yields a clean error, never a panic.
+- `capabilities()` now declares `matrices` + `big_operators` (verified by the shared conformance
+  harness against new matrix/big-op examples). **Accents stay out** — the neutral `MathExpr` has no
+  `Accent` node yet; adding one to `math-frontend` is a prerequisite for an accents PR.
+- Safety: matrix nesting charges the parser's `MAX_DEPTH` (a 3000-deep nested matrix returns a
+  spanned error, not a stack overflow); matrix-vs-group is decided by a two-token lookahead —
+  single-pass and committed, **no backtracking** — so deep `(((…` input stays linear (no
+  exponential re-parse) and fails cleanly at the depth cap.
+- Tests: 2×2 / row-vector / paren-row matrices, `det` of a matrix, grouping-not-matrix cases,
+  ragged-row error, `sum`/`int`/`prod` with/without bounds and either bound order, comma token,
+  deep-matrix overflow guard; conformance examples extended.
+
 ## [0.1.0] — 2026-06-28
 
 ### Added — ASM01 PR-1: the AsciiMath frontend (core subset)

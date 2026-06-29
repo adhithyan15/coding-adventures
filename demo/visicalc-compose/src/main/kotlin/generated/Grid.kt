@@ -66,6 +66,7 @@ fun Grid(
                     Box(
                         modifier = Modifier
                             .width(columnWidths[_kotlinIdxch].dp)
+                            .height(24.dp)
                             .background(Color(0xFF2D2D30))
                             .border(1.dp, Color(0xFF3F3F46)),
                         contentAlignment = Alignment.Center,

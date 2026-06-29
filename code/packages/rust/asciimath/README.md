@@ -42,10 +42,24 @@ second notation.
 | `( .. )`, `[ .. ]`, `{ .. }` | `Group` |
 | `"kg"` (text literal) | `Text` |
 
+## PR-2 breadth (matrices + big operators)
+
+| AsciiMath | → neutral `MathExpr` |
+|-----------|----------------------|
+| `[[a,b],[c,d]]`, `((1,0),(0,1))` | `Matrix(rows)` (rows of full-expression cells; `[…]` or `(…)` rows) |
+| `[[a,b,c]]` | `Matrix` 1×3 (row vector) |
+| `det[[a,b],[c,d]]` | `Call { func: Det, arg: Matrix(..) }` |
+| `sum_(i=1)^n i`, `int_a^b f`, `prod x`, `lim_(x->0) f` | `BigOp { op, lower, upper, body }` |
+
+`((a))` and `[[a]]` stay **grouping**, not a 1×1 matrix — a matrix must genuinely use commas
+(≥2 rows, or a row with ≥2 cells). Big-operator bounds (`_`/`^`) attach to the operator in either
+order; the body is the next atom (same convention as `sqrt`/functions). **Accents** (`hat x`, `vec x`)
+are not yet supported: the neutral `MathExpr` has no `Accent` node, so adding one to `math-frontend`
+is a prerequisite for an accents PR (see ASM01 §5).
+
 It is **total and panic-free**: every input returns `Ok(MathExpr)` or a spanned
-`FrontendError`. Recursion is depth-guarded; left-associative chains are built with loops, so
-neither deep nesting nor long chains overflow the parser. Later PRs add matrices, big
-operators (`sum`/`prod`/`int`), accents, and the full symbol table (see ASM01 §5).
+`FrontendError`. Recursion is depth-guarded (matrix nesting included); left-associative chains are
+built with loops, so neither deep nesting nor long chains overflow the parser.
 
 ## Usage
 

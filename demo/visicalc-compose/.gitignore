@@ -10,3 +10,7 @@ out/
 # by scripts/build.sh from the spreadsheet-capi crate (cdylib). A build
 # artifact, like the SwiftUI/Qt demos' Vendor/.
 native/
+
+# Compose native-distribution staging (per-target engine dylib, git-ignored
+# like native/ — scripts/build.sh repopulates it from the capi crate).
+appResources/

@@ -37,6 +37,7 @@ SELF_CONTAINED_RUNGS = (
     "rung3_factored_roots",
     "rung4_physics_chem",
     "rung4_dimensional",
+    "rung4_products",
 )
 
 

@@ -78,6 +78,7 @@ class Grid extends StatelessWidget {
                     final h = entry.value;
                     return Container(
                         width: columnWidths[ch],
+                        height: 24,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(color: const Color(0xFF2D2D30), border: Border.all(color: const Color(0xFF3F3F46), width: 1)),
                         child: DefaultTextStyle.merge(style: TextStyle(color: const Color(0xFF9D9D9D), fontFamily: "monospace", fontSize: 12), child: Text(( h ))),

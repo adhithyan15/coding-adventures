@@ -2,6 +2,23 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.27.0] — 2026-06-29
+
+### Added — rung 4: dimensional analysis, the MULTIPLICATION arm
+
+- New **`rung4_products/items.json`**: 20 self-authored word problems whose answer is a
+  **composite-unit quantity formed by multiplying two quantities** — work = force × distance
+  (`N·m`), energy = power × time (`W·s`), impulse = force × time (`N·s`), charge = current × time
+  (`A·s`), pressure × volume (`Pa·L`), apparent power = voltage × current (`V·A`). This is the
+  multiplication counterpart to `rung4_dimensional` (the division arm: `km/h`, `mol/l`, …) and
+  reuses the same `compute_dimensioned` harness — no harness or engine change.
+- Each gold program `observe`s two typed quantities and binds `let answer = a * b`; the **engine**
+  forms the composite tag `a·b` via `Dimension::combine` (combine_mul), never the model. Every item
+  carries a wrong-unit distractor including the **reversed-order** composite (`m·n` when the engine
+  produces `n·m` — an operand-order trap a number-only reasoner falls for) and a single-factor unit
+  (`n`). Engine selects **20/20 in cached mode, zero wrong, zero unit mismatches**.
+- Registered in `test_ladder_eval.py` `SELF_CONTAINED_RUNGS`; cached + contamination + json gates green.
+
 ## [0.26.0] — 2026-06-29
 
 ### Added — rung 4: dimensional analysis (the dimensional engine)
