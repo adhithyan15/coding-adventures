@@ -215,11 +215,12 @@ assert!(matches!(a, MathExpr::Bin(BinOp::Mul, _, _)));
 
 Lowering drops *presentation* and keeps *meaning*: fence style → `Group`, matrix delimiter →
 `Matrix`, `a^n` → `Pow`, `a_i` → `Subscript`, accents → `Call`; numbers stay **exact**
-(`MathExpr::Number`, never `f64`). Two constructs have no neutral counterpart yet — `\pm`/`\mp`
-and `\binom` — so they return a well-formed spanned error rather than being faked (extending the
-neutral AST to cover them is a future `math-frontend` change). The adapter sits behind the
-default-on **`frontend`** feature; build with `--no-default-features` for the zero-dependency
-L0–L5 parser alone.
+(`MathExpr::Number`, never `f64`). `\pm`/`\mp` lower to `BinOp::PlusMinus`/`MinusPlus` (the ± / ∓
+pair operators) and `\binom{n}{k}` to `MathExpr::Binom` — every LaTeX math construct the grammar
+parses now has a faithful neutral counterpart (the two former gaps were closed by extending the
+`math-frontend` neutral AST, not by faking them here). The adapter sits behind the default-on
+**`frontend`** feature; build with `--no-default-features` for the zero-dependency L0–L5 parser
+alone.
 
 The low-level `tokenize` is also public. Tokens and errors carry half-open byte `Span`s;
 all of `parse`, `parse_math`, and `tokenize` return spanned errors rather than panicking,

@@ -183,10 +183,13 @@ is text-primary, which is a different mode model.)
   stays empty because that crate cannot depend on `latex` (cycle), so the wiring lives in the
   `latex` crate. Gated behind the default-on `frontend` cargo feature; `--no-default-features`
   keeps L0–L5 dependency-free. Implemented in frontend.rs + Cargo.toml.
-  **Neutral-AST gaps:** `\pm`/`\mp` and `\binom` have no `MathExpr` representation today, so they
-  lower to a well-formed spanned `FrontendError` rather than being faked; extending the neutral
-  AST (a `math-frontend`-crate change) to cover them is deferred future work. This rung
-  **completes the LTX01 ladder (L0–L6).**
+  **Neutral-AST gaps (closed in latex 0.11.0):** the L6 capstone initially had to lower `\pm`,
+  `\mp`, and `\binom` to a spanned `FrontendError`, because the neutral `MathExpr` could not
+  represent them. `math-frontend` 0.2.0 added `BinOp::PlusMinus`/`MinusPlus` and `MathExpr::Binom`
+  (plus the matching `Capabilities` flags + conformance policing), and `latex` 0.11.0 wires the
+  adapter to **emit** them (`\pm`→`PlusMinus`, `\mp`→`MinusPlus`, `\binom{n}{k}`→`Binom(n,k)`).
+  Every LaTeX math construct the grammar parses now has a faithful neutral counterpart — no
+  honest-error islands remain. This rung **completes the LTX01 ladder (L0–L6).**
 
 **Asymptote (documented in README, not built):** runtime `\catcode`, `\expandafter`/
 `\noexpand`/`\csname`, arbitrary `\if…` programming, external `\input`/`\include`. Hit →

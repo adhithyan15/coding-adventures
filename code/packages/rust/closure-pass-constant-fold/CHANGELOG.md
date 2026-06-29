@@ -20,6 +20,37 @@ astral characters stay whole:
 We decline a second `mapFn` argument (its return values are unknown), any
 non-string-literal first argument (array-likes/iterables/identifiers/numbers),
 and a shadowed receiver — only the bare global `Array.from(...)` callee folds.
+## [0.71.0] - 2026-06-27
+
+### Added — fold static `Object.fromEntries([[k, v], …])` → object literal
+
+The static `Object.fromEntries` (ECMAScript §20.1.2.7) — the inverse of
+`Object.entries` — now folds to an object literal when its single argument is a
+fully-static array of `[key, value]` pairs:
+
+| call                                          | result        |
+|-----------------------------------------------|---------------|
+| `Object.fromEntries([["a", 1], ["b", 2]])`    | `{a: 1, b: 2}`|
+| `Object.fromEntries([[1, "x"]])`              | `{"1": "x"}`  |
+| `Object.fromEntries([["a", 1], ["a", 2]])`    | `{a: 2}`      |
+| `Object.fromEntries([])`                      | `{}`          |
+
+The fold applies ONLY when every soundness condition holds: exactly one
+argument that is an array literal with no holes; every element a 2-element array
+literal (no holes) `[key, value]`; the key a string or numeric literal (a
+numeric key folds to its ECMAScript ToString, e.g. `1` → `"1"`); and the value a
+primitive literal (string / number / boolean / null). Duplicate keys follow the
+spec — the property keeps the POSITION of its first occurrence but takes the
+value of its LAST (CreateDataPropertyOnObject overwrites in place). Keys that are
+valid identifier names emit as bare identifiers (`{a: 1}`), others as quoted
+strings (`{"1": "x"}`). We DECLINE any other shape: wrong arity, a non-array
+argument, a non-pair element, a non-literal/boolean/null/identifier key, a
+non-literal value, or any hole. We also DECLINE a `"__proto__"` key —
+`Object.fromEntries` makes an OWN property named `"__proto__"`, whereas
+`{__proto__: …}` in an object literal is the §B.3.1 prototype setter, so folding
+it would silently change semantics. Only the bare global `Object.fromEntries(...)`
+callee folds (never a shadowed `o.fromEntries(...)`).
+
 ## [0.70.0] - 2026-06-26
 
 ### Added — fold static `Object.is(a, b)` → boolean (SameValue)
