@@ -1633,10 +1633,10 @@ fn search_pattern_matches(pattern: &str, candidate: &str) -> bool {
 }
 
 fn note_type_matches(term: &str, note: Option<&Note>, note_type: Option<&NoteType>) -> bool {
-    note.is_some_and(|note| contains_case_insensitive(&note.note_type_id, term))
+    note.is_some_and(|note| anki_name_candidate_matches(term, &note.note_type_id))
         || note_type.is_some_and(|note_type| {
-            contains_case_insensitive(&note_type.id, term)
-                || contains_case_insensitive(&note_type.name, term)
+            anki_name_candidate_matches(term, &note_type.id)
+                || anki_name_candidate_matches(term, &note_type.name)
         })
 }
 
@@ -1840,24 +1840,33 @@ fn card_template_matches(term: &str, card: &Card, note_type: Option<&NoteType>) 
     let requested_ordinal = term
         .parse::<u32>()
         .ok()
-        .and_then(|ordinal| ordinal.checked_sub(1));
+        .map(|ordinal| ordinal.saturating_sub(1));
 
     if requested_ordinal.is_some_and(|ordinal| template_ordinal == Some(ordinal)) {
         return true;
     }
 
-    template_id.is_some_and(|template_id| contains_case_insensitive(template_id, term))
+    template_id.is_some_and(|template_id| anki_name_candidate_matches(term, template_id))
         || note_type.is_some_and(|note_type| {
             note_type.templates.iter().any(|template| {
                 let is_current_template = template_id
                     .is_some_and(|template_id| template.id.eq_ignore_ascii_case(template_id))
                     || template_ordinal.is_some_and(|ordinal| template.ordinal == ordinal);
                 is_current_template
-                    && (contains_case_insensitive(&template.id, term)
-                        || contains_case_insensitive(&template.name, term)
+                    && (anki_name_candidate_matches(term, &template.id)
+                        || anki_name_candidate_matches(term, &template.name)
                         || requested_ordinal.is_some_and(|ordinal| template.ordinal == ordinal))
             })
         })
+}
+
+fn anki_name_candidate_matches(term: &str, candidate: &str) -> bool {
+    let candidate = candidate.to_lowercase();
+    if contains_search_wildcard(term) {
+        search_pattern_matches(term, &candidate)
+    } else {
+        candidate == term
+    }
 }
 
 fn state_matches(
@@ -2384,10 +2393,6 @@ fn anki_card_queue_matches(card_sources: &[&ExternalSourceRecord], expected: i64
     card_sources
         .iter()
         .any(|source| source_i64_from_data(source, "queue") == Some(expected))
-}
-
-fn contains_case_insensitive(value: &str, term: &str) -> bool {
-    value.to_lowercase().contains(term)
 }
 
 fn note_for_card<'a>(card: &Card, notes_by_id: &'a HashMap<&str, &Note>) -> Option<&'a Note> {
@@ -3118,7 +3123,9 @@ mod tests {
 
         assert_eq!(ids_for("tag:script"), vec!["note::forward"]);
         assert_eq!(ids_for("note:basic"), vec!["note::forward"]);
+        assert_eq!(ids_for("note:bas*"), vec!["note::forward"]);
         assert_eq!(ids_for("noteType:basic"), vec!["note::forward"]);
+        assert!(ids_for("note:asi").is_empty());
     }
 
     #[test]
@@ -3150,7 +3157,10 @@ mod tests {
         assert_eq!(ids_for("nid:note"), vec!["note::forward"]);
         assert_eq!(ids_for("note-id:NOTE"), vec!["note::forward"]);
         assert_eq!(ids_for("card:forward"), vec!["note::forward"]);
+        assert_eq!(ids_for("card:for*"), vec!["note::forward"]);
+        assert_eq!(ids_for("card:0"), vec!["note::forward"]);
         assert_eq!(ids_for("template:Forward"), vec!["note::forward"]);
+        assert!(ids_for("card:ward").is_empty());
         assert!(ids_for("card:reverse").is_empty());
     }
 

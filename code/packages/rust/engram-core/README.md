@@ -84,7 +84,9 @@ Anki-style `w:`, `nc:`, `sc:`, and `re:` text modifiers, field-scoped regex
 searches such as `front:re:...`, tag regexes, `deck:`, `preset:`, `note:`,
 `noteType:`, `card:`, `cid:`, `nid:`, `did:`, `mid:`, `front:`, `back:`,
 `tag:`, `state:`, `is:`, `flag:`, `marked:`, `prop:`, `added:`, `edited:`,
-`introduced:`, `rated:`, `resched:`, and `dupe:` filters. `preset:` resolves
+`introduced:`, `rated:`, `resched:`, and `dupe:` filters. `note:` / `noteType:`
+and `card:` / `template:` use Anki-style exact-or-wildcard name matching.
+`preset:` resolves
 imported Anki deck-option preset names from preserved collection metadata, while
 imported Anki card-state filters use preserved type/queue metadata when
 available, and `prop:due` uses imported Anki due metadata. `prop:pos` /

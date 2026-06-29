@@ -4,6 +4,8 @@
 
 - Added shared browser support for Anki `preset:` deck option searches and
   `prop:pos` / `prop:position` new-card queue position filters.
+- Aligned `note:` / `noteType:` and `card:` / `template:` browser filters with
+  Anki-style exact-or-wildcard name matching.
 - Added imported Anki card-row metric support for `prop:ivl`, `prop:reps`,
   `prop:lapses`, and `prop:ease` browser filters.
 - Added shared browser support for Anki custom card data searches with
