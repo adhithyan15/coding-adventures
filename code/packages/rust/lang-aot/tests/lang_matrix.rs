@@ -1250,6 +1250,45 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — *`real` array* (LANG-FULL AL9-a — real-typed E5 arrays).  The E5
+    // array substrate (`alloc_array`/`array_set`/`array_get`) uses the IIR
+    // type_hint to decide the element width: `f64` instead of `i64`.  BASIC's BA3
+    // cells already proved `array<f64>` reaches all 7 backends, but this is the
+    // first ALGOL 60 real-array matrix cell — exercising `real array A[lo:hi]`
+    // syntax, the ALGOL lower-bound subtraction on access, and f64-typed element
+    // stores/loads through `entier` back to an integer exit code.
+    //
+    // `A[1] := 40.0; A[3] := 2.0; result := entier(A[1] + A[3])` ⇒ `entier(42.0)`
+    // = 42 ⇒ exit 42 on all 7 backends.  Exercises a *non-contiguous* pair of
+    // f64 slots (index 1 and 3 with a gap at 2) so the element-offset arithmetic is
+    // non-trivial.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real array A[1:3]; integer result; \
+               A[1] := 40.0; A[3] := 2.0; result := entier(A[1] + A[3]) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — *`real` procedure with a real value parameter* (LANG-FULL AL9-b).
+    // Proves that the `call`/`ret` pathway carries `f64` arguments and return values
+    // correctly across all 7 backends.  The function type is `(f64) -> f64`; the
+    // call site lowers to a `call square(x_slot)` with a real (f64) argument, and
+    // the callee emits `ret square` after `square := x * x` (an f64 multiply).
+    //
+    // `square(6.5)` = 6.5 × 6.5 = 42.25; `entier(42.25)` = 42 (floor, not trunc —
+    // same direction here since 42.25 > 0) ⇒ exit 42 on all 7 backends.  The
+    // non-integer argument (6.5) and non-integer intermediate result (42.25) both
+    // exercise the f64 parameter-passing path independently of the E3 scalar
+    // arithmetic cells, which use only whole-valued reals.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure square(x); value x; real x; square := x * x; \
+               integer result; result := entier(square(6.5)) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
     // `lower_brainfuck_for_aot` widens the BF cell/ptr registers to `i64` (byte width
     // survives only at the tape boundary) for every code-gen backend. On LLVM (LM-L)
