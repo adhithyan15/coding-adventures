@@ -52,6 +52,9 @@ All notable changes to this package will be documented in this file.
 - Added a browser dashboard room filter that scopes inventory, state,
   state-history, event-log, and command-result panels through native room-aware
   routes.
+- Added entity-centered dashboard links for state, desired state, state history,
+  entity-scoped events, and owning bridge command-result audit trails, plus an
+  entity-alias filter for runtime event-log reads.
 - Added a browser dashboard event-log panel backed by the existing native
   runtime event stream route.
 - Added browser dashboard detail actions for history, event-log,
