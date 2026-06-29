@@ -41,3 +41,13 @@ binds them to the shared Rust business logic core through host shells.
 cd code/programs/mosaic/engram-app
 cargo test
 ```
+
+## Emitting host shells
+
+```powershell
+cd code/programs/mosaic/engram-app
+./scripts/build-all.ps1
+```
+
+The script writes HTML, WebComponent, React, Electron, SwiftUI, Qt, XAML, and
+Flutter outputs under `target/mosaic-engram-app/` by default.

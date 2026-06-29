@@ -17,6 +17,9 @@
   `mosaic-pkg-card-browser`, `mosaic-pkg-deck-stats`,
   `mosaic-pkg-review-actions`, `mosaic-pkg-review-card`, and
   `mosaic-pkg-session-progress`.
+- Added `scripts/build-all.ps1` to emit HTML, WebComponent, React, Electron,
+  SwiftUI, Qt, XAML, and Flutter host shells from the same Engram Mosaic app
+  package into `target/mosaic-engram-app/`.
 - Asserted that the generated React, SwiftPM, and Flutter shells mount
   `EngramApp` with sample slot values and dispatch callbacks instead of
   non-compiling empty initializers.
