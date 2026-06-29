@@ -11,10 +11,12 @@ use std::io::Cursor;
 
 use coding_adventures_sha1::sum1;
 use engram_core::{
-    render_template, render_template_with_front_side, AppState, Card, CardFlag, CardLineage,
-    CardProgress, CardState, CardTemplate, Deck, DeckOptions, DeckOptionsPreset,
-    ExternalSourceRecord, ExternalSourceTarget, FieldDef, MediaAssetRecord, Note, NoteFieldValue,
-    NoteType, Rating, Review, Session, SessionStatus, INITIAL_EASE_FACTOR, ONE_DAY_MS,
+    render_cloze_template, render_cloze_template_with_front_side, render_template,
+    render_template_with_front_side, template_references_cloze, AppState, Card, CardFlag,
+    CardLineage, CardProgress, CardState, CardTemplate, ClozeRenderSide, Deck, DeckOptions,
+    DeckOptionsPreset, ExternalSourceRecord, ExternalSourceTarget, FieldDef, MediaAssetRecord,
+    Note, NoteFieldValue, NoteType, Rating, Review, Session, SessionStatus, INITIAL_EASE_FACTOR,
+    ONE_DAY_MS,
 };
 use prost::Message;
 use rusqlite::{Connection, OpenFlags};
@@ -2259,7 +2261,7 @@ fn lineage_is_exportable(
 
 fn note_type_kind(note_type: &NoteType) -> i64 {
     if note_type.templates.iter().any(|template| {
-        template.front_template.contains("{{cloze:") || template.back_template.contains("{{cloze:")
+        template_references_cloze(&template.front_template, &template.back_template)
     }) {
         1
     } else {
@@ -2491,13 +2493,30 @@ fn normalize_anki_template_field_tag(tag: &str) -> Option<&str> {
         return None;
     }
 
-    Some(
-        tag.strip_prefix("cloze:")
-            .or_else(|| tag.strip_prefix("hint:"))
-            .or_else(|| tag.strip_prefix("type:"))
-            .unwrap_or(tag)
-            .trim(),
-    )
+    let mut field_name = tag;
+    loop {
+        let Some(after_filter) = strip_anki_template_field_filter(field_name) else {
+            break;
+        };
+        field_name = after_filter.trim();
+    }
+
+    Some(field_name.trim())
+}
+
+fn strip_anki_template_field_filter(tag: &str) -> Option<&str> {
+    [
+        "cloze:",
+        "hint:",
+        "type:",
+        "nc:",
+        "text:",
+        "furigana:",
+        "kana:",
+        "kanji:",
+    ]
+    .iter()
+    .find_map(|prefix| tag.strip_prefix(prefix))
 }
 
 fn map_v11_note(note: &AnkiV11Note, note_type: &AnkiV11NoteType, deck_id: &str) -> Note {
@@ -2565,20 +2584,20 @@ fn map_v11_card(
         None
     };
     let (front, back) = if let Some(cloze_ordinal) = cloze_ordinal {
-        (
-            render_anki_cloze_template(
-                &template.front_template,
-                &field_values,
-                cloze_ordinal,
-                AnkiClozeSide::Question,
-            ),
-            render_anki_cloze_template(
-                &template.back_template,
-                &field_values,
-                cloze_ordinal,
-                AnkiClozeSide::Answer,
-            ),
-        )
+        let front = render_cloze_template(
+            &template.front_template,
+            &field_values,
+            cloze_ordinal,
+            ClozeRenderSide::Question,
+        );
+        let back = render_cloze_template_with_front_side(
+            &template.back_template,
+            &field_values,
+            cloze_ordinal,
+            ClozeRenderSide::Answer,
+            &front,
+        );
+        (front, back)
     } else {
         let front = render_template(&template.front_template, &field_values);
         let back = render_template_with_front_side(&template.back_template, &field_values, &front);
@@ -3194,133 +3213,6 @@ fn split_anki_fields(fields: &str) -> Vec<String> {
 
 fn split_anki_tags(tags: &str) -> Vec<String> {
     tags.split_whitespace().map(str::to_string).collect()
-}
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-enum AnkiClozeSide {
-    Question,
-    Answer,
-}
-
-fn render_anki_cloze_template(
-    template: &str,
-    field_values: &HashMap<String, String>,
-    cloze_ordinal: u32,
-    side: AnkiClozeSide,
-) -> String {
-    let mut rendered = String::with_capacity(template.len());
-    let mut rest = template;
-
-    while let Some(start) = rest.find("{{") {
-        let (prefix, after_start) = rest.split_at(start);
-        rendered.push_str(prefix);
-        let after_start = &after_start[2..];
-
-        match after_start.find("}}") {
-            Some(end) => {
-                let (field_name, after_end) = after_start.split_at(end);
-                let field_name = field_name.trim();
-                if let Some(field_name) = field_name.strip_prefix("cloze:") {
-                    if let Some(value) = field_values.get(field_name.trim()) {
-                        rendered.push_str(&render_anki_cloze_text(value, cloze_ordinal, side));
-                    }
-                } else if let Some(value) = field_values.get(field_name) {
-                    rendered.push_str(value);
-                }
-                rest = &after_end[2..];
-            }
-            None => {
-                rendered.push_str("{{");
-                rendered.push_str(after_start);
-                rest = "";
-            }
-        }
-    }
-
-    rendered.push_str(rest);
-    rendered
-}
-
-fn render_anki_cloze_text(value: &str, cloze_ordinal: u32, side: AnkiClozeSide) -> String {
-    let mut rendered = String::with_capacity(value.len());
-    let mut rest = value;
-
-    while let Some(start) = rest.find("{{c") {
-        let (prefix, candidate) = rest.split_at(start);
-        rendered.push_str(prefix);
-
-        if let Some(marker) = parse_anki_cloze_marker(candidate) {
-            if side == AnkiClozeSide::Question && marker.ordinal == cloze_ordinal {
-                match marker.hint.map(str::trim).filter(|hint| !hint.is_empty()) {
-                    Some(hint) => {
-                        rendered.push('[');
-                        rendered.push_str(hint);
-                        rendered.push(']');
-                    }
-                    None => rendered.push_str("[...]"),
-                }
-            } else {
-                rendered.push_str(&render_anki_cloze_text(
-                    marker.hidden,
-                    cloze_ordinal,
-                    AnkiClozeSide::Answer,
-                ));
-            }
-            rest = &candidate[marker.consumed..];
-        } else {
-            rendered.push_str("{{c");
-            rest = &candidate[3..];
-        }
-    }
-
-    rendered.push_str(rest);
-    rendered
-}
-
-#[derive(Debug, PartialEq, Eq)]
-struct AnkiClozeMarker<'a> {
-    ordinal: u32,
-    hidden: &'a str,
-    hint: Option<&'a str>,
-    consumed: usize,
-}
-
-fn parse_anki_cloze_marker(candidate: &str) -> Option<AnkiClozeMarker<'_>> {
-    if !candidate.starts_with("{{c") {
-        return None;
-    }
-
-    let after_prefix = &candidate[3..];
-    let digit_len = after_prefix
-        .find(|ch: char| !ch.is_ascii_digit())
-        .unwrap_or(after_prefix.len());
-    if digit_len == 0 {
-        return None;
-    }
-    let ordinal: u32 = after_prefix[..digit_len].parse().ok()?;
-    if ordinal == 0 {
-        return None;
-    }
-    let after_digits = &after_prefix[digit_len..];
-    if !after_digits.starts_with("::") {
-        return None;
-    }
-    let marker_body = &after_digits[2..];
-    let end = marker_body.find("}}")?;
-    let body = &marker_body[..end];
-    let consumed = 3 + digit_len + 2 + end + 2;
-
-    let (hidden, hint) = match body.split_once("::") {
-        Some((hidden, hint)) => (hidden, Some(hint)),
-        None => (body, None),
-    };
-
-    Some(AnkiClozeMarker {
-        ordinal,
-        hidden,
-        hint,
-        consumed,
-    })
 }
 
 fn sqlite_value_to_string(row: &rusqlite::Row<'_>, index: usize) -> rusqlite::Result<String> {
@@ -4374,8 +4266,8 @@ CREATE TABLE graves (
                 templates: vec![AnkiV11Template {
                     ordinal: 0,
                     name: "Cloze".to_string(),
-                    question_format: "{{cloze:Text}}".to_string(),
-                    answer_format: "{{cloze:Text}}<hr>{{Extra}}".to_string(),
+                    question_format: "{{#Extra}}{{type:cloze:Text}}{{/Extra}}".to_string(),
+                    answer_format: "{{FrontSide}}<hr>{{text:cloze:Text}}<br>{{Extra}}".to_string(),
                     deck_id: None,
                 }],
                 raw: serde_json::json!({}),
@@ -4422,14 +4314,24 @@ CREATE TABLE graves (
 
         let state = v11_collection_to_engram_state(&collection).unwrap();
 
+        assert_eq!(
+            state.note_types[0].templates[0].required_field_names,
+            vec!["Text"]
+        );
         assert_eq!(state.cards[0].front, "The word [old root] travels.");
         assert_eq!(
             state.cards[0].back,
-            "The word night travels.<hr>Proto-Indo-European stories go here."
+            "The word [old root] travels.<hr>The word night travels.<br>Proto-Indo-European stories go here."
         );
         let lineage = state.cards[0].lineage.as_ref().unwrap();
         assert_eq!(lineage.cloze_ordinal, Some(1));
         assert!(state.card_progress.is_empty());
+
+        let exported = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(exported.note_types[0].kind, 1);
     }
 
     #[test]

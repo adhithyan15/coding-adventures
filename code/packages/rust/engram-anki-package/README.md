@@ -23,8 +23,9 @@ the same parser for raw SQLite collection bytes.
 `read_v11_collection_as_engram_state` and `v11_collection_to_engram_state`
 map that parsed representation into `engram-core::AppState` while preserving
 Anki IDs as deterministic Engram IDs. Cloze note types render
-`{{cloze:Field}}` templates into Engram card fronts/backs with the same
-`[...]` / `[hint]` question behavior used by the core cloze generator.
+`{{cloze:Field}}` and filtered cloze templates into Engram card fronts/backs
+with the same `[...]` / `[hint]`, section, and `FrontSide` behavior used by the
+core cloze generator.
 
 `read_collection_bytes` returns the detected collection member as decoded raw
 SQLite bytes for inspection workflows. `read_v11_collection_bytes` accepts

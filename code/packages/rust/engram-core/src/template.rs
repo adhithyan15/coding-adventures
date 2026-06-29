@@ -3,7 +3,7 @@ use std::collections::{BTreeSet, HashMap};
 use crate::model::{Card, CardLineage, GeneratedCard, Note, NoteType};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-enum ClozeSide {
+pub enum ClozeRenderSide {
     Question,
     Answer,
 }
@@ -104,6 +104,19 @@ pub fn generate_cards_for_note(note_type: &NoteType, note: &Note) -> Vec<Generat
         }
 
         for cloze_ordinal in cloze_ordinals {
+            let front = render_cloze_template(
+                &template.front_template,
+                &field_values,
+                cloze_ordinal,
+                ClozeRenderSide::Question,
+            );
+            let back = render_cloze_template_with_front_side(
+                &template.back_template,
+                &field_values,
+                cloze_ordinal,
+                ClozeRenderSide::Answer,
+                &front,
+            );
             generated.push(GeneratedCard {
                 id: generated_cloze_card_id(&note.id, &template.id, cloze_ordinal),
                 note_id: note.id.clone(),
@@ -112,18 +125,8 @@ pub fn generate_cards_for_note(note_type: &NoteType, note: &Note) -> Vec<Generat
                 deck_id: note.deck_id.clone(),
                 ordinal: cloze_ordinal.saturating_sub(1),
                 cloze_ordinal: Some(cloze_ordinal),
-                front: render_cloze_template(
-                    &template.front_template,
-                    &field_values,
-                    cloze_ordinal,
-                    ClozeSide::Question,
-                ),
-                back: render_cloze_template(
-                    &template.back_template,
-                    &field_values,
-                    cloze_ordinal,
-                    ClozeSide::Answer,
-                ),
+                front,
+                back,
                 tags: note.tags.clone(),
             });
         }
@@ -233,7 +236,7 @@ fn render_template_tag(
 fn render_template_field_tag(
     tag: &str,
     field_values: &HashMap<String, String>,
-    cloze_context: Option<(u32, ClozeSide)>,
+    cloze_context: Option<(u32, ClozeRenderSide)>,
 ) -> String {
     let (filters, field_name) = parse_template_field_filters(tag);
     let mut value = field_values
@@ -594,11 +597,21 @@ fn collect_cloze_field_names(template: &str, field_names: &mut BTreeSet<String>)
     }
 }
 
-fn render_cloze_template(
+pub fn render_cloze_template(
     template: &str,
     field_values: &HashMap<String, String>,
     cloze_ordinal: u32,
-    side: ClozeSide,
+    side: ClozeRenderSide,
+) -> String {
+    render_cloze_template_with_front_side(template, field_values, cloze_ordinal, side, "")
+}
+
+pub fn render_cloze_template_with_front_side(
+    template: &str,
+    field_values: &HashMap<String, String>,
+    cloze_ordinal: u32,
+    side: ClozeRenderSide,
+    front_side: &str,
 ) -> String {
     let mut rendered = String::with_capacity(template.len());
     let mut rest = template;
@@ -611,12 +624,35 @@ fn render_cloze_template(
         match after_start.find("}}") {
             Some(end) => {
                 let (tag, after_end) = after_start.split_at(end);
-                rendered.push_str(&render_template_field_tag(
+                let tag = tag.trim();
+                let after_tag = &after_end[2..];
+
+                if let Some(section) = parse_section_tag(tag) {
+                    let close_tag = format!("{{{{/{}}}}}", section.field_name);
+                    if let Some(close_start) = after_tag.find(&close_tag) {
+                        let (body, after_body) = after_tag.split_at(close_start);
+                        if section_should_render(section, field_values) {
+                            rendered.push_str(&render_cloze_template_with_front_side(
+                                body,
+                                field_values,
+                                cloze_ordinal,
+                                side,
+                                front_side,
+                            ));
+                        }
+                        rest = &after_body[close_tag.len()..];
+                        continue;
+                    }
+                }
+
+                rendered.push_str(&render_cloze_template_tag(
                     tag,
                     field_values,
-                    Some((cloze_ordinal, side)),
+                    cloze_ordinal,
+                    side,
+                    front_side,
                 ));
-                rest = &after_end[2..];
+                rest = after_tag;
             }
             None => {
                 rendered.push_str("{{");
@@ -628,6 +664,24 @@ fn render_cloze_template(
 
     rendered.push_str(rest);
     rendered
+}
+
+fn render_cloze_template_tag(
+    tag: &str,
+    field_values: &HashMap<String, String>,
+    cloze_ordinal: u32,
+    side: ClozeRenderSide,
+    front_side: &str,
+) -> String {
+    if tag == "FrontSide" {
+        return front_side.to_string();
+    }
+
+    render_template_field_tag(tag, field_values, Some((cloze_ordinal, side)))
+}
+
+pub fn template_references_cloze(front_template: &str, back_template: &str) -> bool {
+    !cloze_field_names_for_template(front_template, back_template).is_empty()
 }
 
 fn collect_cloze_ordinals(value: &str, ordinals: &mut BTreeSet<u32>) {
@@ -644,7 +698,7 @@ fn collect_cloze_ordinals(value: &str, ordinals: &mut BTreeSet<u32>) {
     }
 }
 
-fn render_cloze_text(value: &str, cloze_ordinal: u32, side: ClozeSide) -> String {
+fn render_cloze_text(value: &str, cloze_ordinal: u32, side: ClozeRenderSide) -> String {
     let mut rendered = String::with_capacity(value.len());
     let mut rest = value;
 
@@ -653,7 +707,7 @@ fn render_cloze_text(value: &str, cloze_ordinal: u32, side: ClozeSide) -> String
         rendered.push_str(prefix);
 
         if let Some(marker) = parse_cloze_marker(candidate) {
-            if side == ClozeSide::Question && marker.ordinal == cloze_ordinal {
+            if side == ClozeRenderSide::Question && marker.ordinal == cloze_ordinal {
                 match marker.hint.map(str::trim).filter(|hint| !hint.is_empty()) {
                     Some(hint) => {
                         rendered.push('[');
@@ -666,7 +720,7 @@ fn render_cloze_text(value: &str, cloze_ordinal: u32, side: ClozeSide) -> String
                 rendered.push_str(&render_cloze_text(
                     marker.hidden,
                     cloze_ordinal,
-                    ClozeSide::Answer,
+                    ClozeRenderSide::Answer,
                 ));
             }
             rest = &candidate[marker.consumed..];
@@ -1044,17 +1098,26 @@ mod tests {
     #[test]
     fn filtered_cloze_tags_generate_and_render_cards() {
         let mut note_type = cloze_note_type();
-        note_type.templates[0].front_template = "{{type:cloze:Text}}".to_string();
-        note_type.templates[0].back_template = "{{text:cloze:Text}}<hr>{{Extra}}".to_string();
+        note_type.templates[0].front_template =
+            "{{#Extra}}{{type:cloze:Text}}{{/Extra}}{{^Extra}}missing{{/Extra}}".to_string();
+        note_type.templates[0].back_template =
+            "{{FrontSide}}<hr>{{text:cloze:Text}}<br>{{Extra}}".to_string();
 
         let cards = generate_cards_for_note(
             &note_type,
             &cloze_note("A <b>{{c1::root::base}}</b> carries meaning.", "etymology"),
         );
 
+        assert!(template_references_cloze(
+            &note_type.templates[0].front_template,
+            &note_type.templates[0].back_template
+        ));
         assert_eq!(cards.len(), 1);
         assert_eq!(cards[0].front, "A <b>[base]</b> carries meaning.");
-        assert_eq!(cards[0].back, "A root carries meaning.<hr>etymology");
+        assert_eq!(
+            cards[0].back,
+            "A <b>[base]</b> carries meaning.<hr>A root carries meaning.<br>etymology"
+        );
     }
 
     #[test]
@@ -1149,7 +1212,8 @@ mod tests {
 
         let mut values = HashMap::new();
         values.insert("Text".to_string(), "{{c1::root}} {{cx::kept}}".to_string());
-        let rendered = render_cloze_template("{{cloze:Text}}", &values, 1, ClozeSide::Question);
+        let rendered =
+            render_cloze_template("{{cloze:Text}}", &values, 1, ClozeRenderSide::Question);
 
         assert_eq!(rendered, "[...] {{cx::kept}}");
     }
