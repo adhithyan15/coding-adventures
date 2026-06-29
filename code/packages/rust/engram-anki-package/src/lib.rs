@@ -5060,6 +5060,36 @@ CREATE TABLE graves (
     }
 
     #[test]
+    fn exports_graves_for_deleted_imported_decks() {
+        let collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+
+        let deleted = engram_core::reduce(
+            &state,
+            engram_core::EngramCommand::DeleteDeck {
+                deck_id: "2".to_string(),
+            },
+        );
+
+        assert!(deleted.decks.iter().all(|deck| deck.id != "2"));
+        assert!(deleted.external_sources.iter().any(|source| {
+            source.target == ExternalSourceTarget::Deleted
+                && source.original_id.as_deref() == Some("2")
+                && source.data.get("deletedTarget").map(String::as_str) == Some("deck")
+        }));
+
+        let exported = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&deleted).unwrap(),
+        )
+        .unwrap();
+
+        assert!(exported
+            .graves
+            .iter()
+            .any(|grave| grave.object_id == 2 && grave.kind == 2));
+    }
+
+    #[test]
     fn maps_v11_cloze_cards_into_rendered_engram_cards() {
         let collection = AnkiV11Collection {
             metadata: AnkiV11CollectionMetadata {
