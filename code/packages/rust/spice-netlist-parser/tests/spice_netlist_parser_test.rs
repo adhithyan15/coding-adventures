@@ -1963,6 +1963,12 @@ C1 out 0 1p
     assert!(tran.table_row_count >= 1);
     assert!(tran.table_columns.iter().any(|column| column == "Time"));
     assert!(tran.table_columns.iter().any(|column| column == "V(out)"));
+    assert_eq!(tran.waveform_series_count, 1);
+    assert_eq!(tran.waveform_series[0].name, "V(out)");
+    assert_eq!(tran.waveform_series[0].x_column, "Time");
+    assert_eq!(tran.waveform_series[0].y_column, "V(out)");
+    assert_eq!(tran.waveform_series[0].point_count, tran.table_row_count);
+    assert_eq!(tran.waveform_series[0].points[0].row_index, 0);
     assert!(tran
         .table_artifacts
         .iter()
@@ -1979,7 +1985,43 @@ C1 out 0 1p
 
     let selected = app.run_selected_artifact(3).unwrap().unwrap();
     assert_eq!(selected.analysis, "tran");
+    let selected_waveforms = app.run_selected_waveform_series(3).unwrap().unwrap();
+    assert_eq!(selected_waveforms[0].name, "V(out)");
     assert!(app.run_selected_artifact(4).unwrap().is_none());
+}
+
+#[test]
+fn berkeley_app_facade_exports_probe_grouped_waveform_series() {
+    let app = parse_berkeley_app_deck(
+        r#"
+* ac UI
+V1 in 0 DC 0 AC 1
+R1 in out 1k
+C1 out 0 1u
+.ac dec 1 1k 1k
+.print ac V(out)
+.end
+"#,
+    );
+
+    assert!(!app.has_errors(), "{:?}", app.diagnostics);
+    let execution = app.run_artifacts().unwrap();
+    let ac = &execution.analyses[0];
+
+    assert_eq!(ac.syntax_card_index, Some(3));
+    assert_eq!(ac.analysis, "ac");
+    assert!(ac
+        .waveform_series
+        .iter()
+        .any(|series| series.name == "V(out):Magnitude"
+            && series.x_column == "Frequency"
+            && series.group_column.as_deref() == Some("Probe")
+            && series.group_value.as_deref() == Some("V(out)")
+            && series.point_count == 1));
+    assert!(execution
+        .waveform_series
+        .iter()
+        .any(|series| series.name == "V(out):Phase"));
 }
 
 #[test]

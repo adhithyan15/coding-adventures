@@ -44,15 +44,17 @@ assert_eq!(deck.syntax.cards[1].kind, BerkeleyCardKind::Element);
 let execution = deck.run_artifacts()?;
 assert_eq!(execution.analyses[0].syntax_card_index, Some(3));
 assert!(execution.analyses[0].table_columns.contains(&"Index".to_string()));
+assert_eq!(execution.analyses[0].waveform_series[0].x_column, "Index");
 ```
 
 The facade preserves normalized logical cards, source spans, token names
 aligned with `code/grammars/spice/berkeley.tokens`, stable syntax diagnostics,
 analysis inventory, source-order execution through the existing parser, and
 card-indexed app artifacts with stable result tables, output-plan artifacts,
-run-artifact summaries, and rawfile / wrdata artifact metadata from the engine
-deck execution layer. It is the Rust app/runtime entrypoint for Mosaic-backed
-UI work while the grammar-backed parser generator and Python/TypeScript parity
+run-artifact summaries, rawfile / wrdata artifact metadata from the engine deck
+execution layer, and numeric waveform series derived from result tables for
+Mosaic plot surfaces. It is the Rust app/runtime entrypoint for Mosaic-backed UI
+work while the grammar-backed parser generator and Python/TypeScript parity
 surfaces continue to mature.
 
 This parser supports `R`, `C`, `L`, `V`, `I`, `D`, `Q`, `M`, `G`, `E`, `F`, and

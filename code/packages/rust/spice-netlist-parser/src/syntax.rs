@@ -193,6 +193,8 @@ pub struct BerkeleyAppAnalysisArtifact {
     pub table: String,
     pub table_columns: Vec<String>,
     pub table_row_count: usize,
+    pub waveform_series_count: usize,
+    pub waveform_series: Vec<BerkeleyAppWaveformSeries>,
     pub table_artifacts: Vec<DeckTableArtifact>,
     pub output_plan_artifacts: Vec<DeckOutputPlanArtifact>,
     pub run_artifacts: Vec<DeckRunArtifact>,
@@ -201,9 +203,33 @@ pub struct BerkeleyAppAnalysisArtifact {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct BerkeleyAppWaveformPoint {
+    pub row_index: usize,
+    pub x: f64,
+    pub y: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct BerkeleyAppWaveformSeries {
+    pub syntax_card_index: Option<usize>,
+    pub directive: String,
+    pub analysis: String,
+    pub table_name: String,
+    pub name: String,
+    pub x_column: String,
+    pub y_column: String,
+    pub group_column: Option<String>,
+    pub group_value: Option<String>,
+    pub point_count: usize,
+    pub points: Vec<BerkeleyAppWaveformPoint>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct BerkeleyAppExecution {
     pub canonical_source: String,
     pub analyses: Vec<BerkeleyAppAnalysisArtifact>,
+    pub waveform_series_count: usize,
+    pub waveform_series: Vec<BerkeleyAppWaveformSeries>,
     pub run_artifacts: Vec<DeckRunArtifact>,
     pub run_artifact_table: String,
     pub run_artifact_csv: String,
@@ -264,6 +290,7 @@ impl BerkeleyAppDeck {
             .filter(|entry| deck_artifact_analysis_directive(&entry.directive))
             .collect::<Vec<_>>();
         let mut analysis_entries = analysis_entries.into_iter();
+        let mut execution_waveform_series = Vec::new();
         let analyses = deck_execution
             .executions
             .into_iter()
@@ -273,16 +300,28 @@ impl BerkeleyAppDeck {
                 } else {
                     analysis_entries.next()
                 };
+                let syntax_card_index = entry.as_ref().map(|entry| entry.index);
+                let directive = entry
+                    .as_ref()
+                    .map(|entry| entry.directive.clone())
+                    .unwrap_or_else(|| execution.plan.directive.clone());
+                let analysis = execution.plan.analysis.clone();
+                let waveform_series = deck_waveform_series(
+                    syntax_card_index,
+                    &directive,
+                    &analysis,
+                    &execution.table,
+                );
+                execution_waveform_series.extend(waveform_series.iter().cloned());
                 BerkeleyAppAnalysisArtifact {
-                    syntax_card_index: entry.as_ref().map(|entry| entry.index),
-                    directive: entry
-                        .as_ref()
-                        .map(|entry| entry.directive.clone())
-                        .unwrap_or_else(|| execution.plan.directive.clone()),
-                    analysis: execution.plan.analysis.clone(),
+                    syntax_card_index,
+                    directive,
+                    analysis,
                     span: entry.as_ref().map(|entry| entry.span),
                     table_columns: deck_table_columns(&execution.table),
                     table_row_count: deck_table_row_count(&execution.table),
+                    waveform_series_count: waveform_series.len(),
+                    waveform_series,
                     table: execution.table,
                     table_artifacts: execution.table_artifacts,
                     output_plan_artifacts: execution.output_plan_artifacts,
@@ -296,6 +335,8 @@ impl BerkeleyAppDeck {
         Ok(BerkeleyAppExecution {
             canonical_source: self.canonical_source.clone(),
             analyses,
+            waveform_series_count: execution_waveform_series.len(),
+            waveform_series: execution_waveform_series,
             run_artifacts: deck_execution.run_artifacts,
             run_artifact_table: deck_execution.run_artifact_table,
             run_artifact_csv: deck_execution.run_artifact_csv,
@@ -312,6 +353,15 @@ impl BerkeleyAppDeck {
             .analyses
             .into_iter()
             .find(|artifact| artifact.syntax_card_index == Some(syntax_card_index)))
+    }
+
+    pub fn run_selected_waveform_series(
+        &self,
+        syntax_card_index: usize,
+    ) -> Result<Option<Vec<BerkeleyAppWaveformSeries>>, AnalysisExecutionError> {
+        Ok(self
+            .run_selected_artifact(syntax_card_index)?
+            .map(|artifact| artifact.waveform_series))
     }
 
     fn blocking_message(&self) -> String {
@@ -526,6 +576,155 @@ fn deck_table_row_count(table: &str) -> usize {
     } else {
         lines.count()
     }
+}
+
+fn deck_waveform_series(
+    syntax_card_index: Option<usize>,
+    directive: &str,
+    analysis: &str,
+    table: &str,
+) -> Vec<BerkeleyAppWaveformSeries> {
+    let mut lines = table.lines();
+    let Some(header) = lines.next() else {
+        return Vec::new();
+    };
+    let columns = header.split('\t').map(str::to_string).collect::<Vec<_>>();
+    let Some(x_index) = deck_waveform_x_column(&columns) else {
+        return Vec::new();
+    };
+    let rows = lines
+        .map(|row| row.split('\t').map(str::to_string).collect::<Vec<_>>())
+        .collect::<Vec<_>>();
+    let group_index = deck_waveform_group_column(&columns, x_index);
+    let group_values = deck_waveform_group_values(&rows, group_index);
+    let mut series = Vec::new();
+
+    for (y_index, y_column) in columns.iter().enumerate() {
+        if y_index == x_index || Some(y_index) == group_index || !deck_waveform_y_column(y_column) {
+            continue;
+        }
+
+        if group_index.is_some() {
+            for group_value in &group_values {
+                let points =
+                    deck_waveform_points(&rows, x_index, y_index, group_index, Some(group_value));
+                if points.is_empty() {
+                    continue;
+                }
+                series.push(BerkeleyAppWaveformSeries {
+                    syntax_card_index,
+                    directive: directive.to_string(),
+                    analysis: analysis.to_string(),
+                    table_name: "result".to_string(),
+                    name: format!("{group_value}:{y_column}"),
+                    x_column: columns[x_index].clone(),
+                    y_column: y_column.clone(),
+                    group_column: group_index.map(|index| columns[index].clone()),
+                    group_value: Some(group_value.clone()),
+                    point_count: points.len(),
+                    points,
+                });
+            }
+        } else {
+            let points = deck_waveform_points(&rows, x_index, y_index, None, None);
+            if points.is_empty() {
+                continue;
+            }
+            series.push(BerkeleyAppWaveformSeries {
+                syntax_card_index,
+                directive: directive.to_string(),
+                analysis: analysis.to_string(),
+                table_name: "result".to_string(),
+                name: y_column.clone(),
+                x_column: columns[x_index].clone(),
+                y_column: y_column.clone(),
+                group_column: None,
+                group_value: None,
+                point_count: points.len(),
+                points,
+            });
+        }
+    }
+
+    series
+}
+
+fn deck_waveform_x_column(columns: &[String]) -> Option<usize> {
+    ["Time", "Frequency", "Value", "TemperatureKelvin"]
+        .into_iter()
+        .find_map(|preferred| {
+            columns
+                .iter()
+                .position(|column| column.eq_ignore_ascii_case(preferred))
+        })
+        .or_else(|| {
+            columns
+                .iter()
+                .position(|column| column.eq_ignore_ascii_case("Index"))
+        })
+}
+
+fn deck_waveform_group_column(columns: &[String], x_index: usize) -> Option<usize> {
+    ["Probe", "Source", "Corner", "Method"]
+        .into_iter()
+        .find_map(|preferred| {
+            columns.iter().enumerate().find_map(|(index, column)| {
+                if index != x_index && column.eq_ignore_ascii_case(preferred) {
+                    Some(index)
+                } else {
+                    None
+                }
+            })
+        })
+}
+
+fn deck_waveform_y_column(column: &str) -> bool {
+    !matches!(
+        column.to_ascii_lowercase().as_str(),
+        "index" | "source" | "probe" | "corner" | "method" | "converged" | "stepsrejected"
+    )
+}
+
+fn deck_waveform_group_values(rows: &[Vec<String>], group_index: Option<usize>) -> Vec<String> {
+    let Some(group_index) = group_index else {
+        return Vec::new();
+    };
+    let mut values = Vec::new();
+    for row in rows {
+        let value = row.get(group_index).cloned().unwrap_or_default();
+        if !values.iter().any(|existing| existing == &value) {
+            values.push(value);
+        }
+    }
+    values
+}
+
+fn deck_waveform_points(
+    rows: &[Vec<String>],
+    x_index: usize,
+    y_index: usize,
+    group_index: Option<usize>,
+    group_value: Option<&String>,
+) -> Vec<BerkeleyAppWaveformPoint> {
+    rows.iter()
+        .enumerate()
+        .filter_map(|(row_index, row)| {
+            if let (Some(group_index), Some(group_value)) = (group_index, group_value) {
+                if row.get(group_index) != Some(group_value) {
+                    return None;
+                }
+            }
+            let x = parse_finite_cell(row, x_index)?;
+            let y = parse_finite_cell(row, y_index)?;
+            Some(BerkeleyAppWaveformPoint { row_index, x, y })
+        })
+        .collect()
+}
+
+fn parse_finite_cell(row: &[String], index: usize) -> Option<f64> {
+    row.get(index)
+        .and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite())
 }
 
 fn logical_card(
