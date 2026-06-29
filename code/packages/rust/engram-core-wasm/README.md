@@ -51,6 +51,9 @@ and keep generated bindings idiomatic.
 `dispatch` accepts note-first `upsertNoteType`, `deleteNoteType`, `upsertNote`,
 and `deleteNote` commands; pass `materializeCardsAt` with `upsertNoteType` or
 `upsertNote` to sync generated cards from the note type through the shared core.
+It also accepts `setDeckOptions` to insert or replace the durable scheduler
+options for a deck, using the same camelCase `DeckOptions` shape accepted by
+`rateCard`.
 
 `rateCard` remains backward-compatible with the original command shape. Hosts
 may also include a `deckOptions` object to drive the Rust scheduler with custom

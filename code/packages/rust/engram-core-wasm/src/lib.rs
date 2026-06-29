@@ -1062,6 +1062,10 @@ enum FacadeCommand {
         name: String,
         description: String,
     },
+    SetDeckOptions {
+        deck_id: String,
+        options: DeckOptions,
+    },
     DeleteDeck {
         deck_id: String,
     },
@@ -1197,6 +1201,9 @@ impl FacadeCommand {
                 name,
                 description,
             },
+            Self::SetDeckOptions { deck_id, options } => {
+                engram_core::EngramCommand::SetDeckOptions { deck_id, options }
+            }
             Self::DeleteDeck { deck_id } => engram_core::EngramCommand::DeleteDeck { deck_id },
             Self::UpsertNoteType {
                 note_type,
@@ -1440,6 +1447,44 @@ mod tests {
         assert_eq!(value["ok"], true);
         assert_eq!(value["state"]["decks"][0]["createdAt"], NOW);
         assert!(value["state"].get("cardProgress").is_some());
+    }
+
+    #[test]
+    fn dispatch_set_deck_options_persists_partial_camel_case_options() {
+        let mut session = EngramSession::new();
+        let value: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "setDeckOptions",
+                "deckId": "deck",
+                "options": {
+                    "newCardsPerDay": 12,
+                    "maximumIntervalDays": 90,
+                    "reviewIntervalModifier": 0.75,
+                    "hardIntervalMultiplier": 1.4,
+                    "easyBonusMultiplier": 1.6
+                }
+            }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(value["state"]["deckOptions"][0]["deckId"], "deck");
+        assert_eq!(
+            value["state"]["deckOptions"][0]["options"]["newCardsPerDay"],
+            12
+        );
+        assert_eq!(
+            value["state"]["deckOptions"][0]["options"]["maximumIntervalDays"],
+            90
+        );
+        assert_eq!(
+            value["state"]["deckOptions"][0]["options"]["reviewIntervalModifier"],
+            0.75
+        );
+        assert_eq!(
+            value["state"]["deckOptions"][0]["options"]["learningStepsMinutes"],
+            json!([1, 10])
+        );
     }
 
     #[test]

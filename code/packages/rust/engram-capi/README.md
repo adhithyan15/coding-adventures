@@ -70,6 +70,9 @@ The same dispatch path accepts shared media commands such as
 `upsertMediaAsset`, `deleteMediaAsset`, and `deleteMediaAssets`, so native
 file-open/editor flows can copy, replace, or prune media assets without
 duplicating Engram state mutation logic.
+Native settings screens can also dispatch `setDeckOptions` with a camelCase
+`DeckOptions` object to update the durable scheduler options used by queues and
+reviews.
 
 ## Build
 

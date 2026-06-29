@@ -55,6 +55,9 @@ review logic.
 Deck options also carry Anki-style maximum interval, review interval modifier,
 hard interval multiplier, and easy bonus multiplier settings, so hosts can keep
 deck-specific scheduler tuning in the shared Rust core.
+`EngramCommand::SetDeckOptions` inserts or replaces a stored deck option preset,
+letting settings screens update the same options that queue building and
+`RateCard` use.
 
 Review-control commands such as `SuspendCard`, `UnsuspendCard`, `BuryCard`,
 `BuryCardSiblings`, `UnburyCard`, `SetCardFlag`, `MarkCard`, and `UnmarkCard`

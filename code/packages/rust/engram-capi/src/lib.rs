@@ -821,8 +821,30 @@ CREATE TABLE graves (
             let result = take(eg_dispatch(session, command.as_ptr()));
             assert!(result.contains(r#""ok":true"#));
 
+            let options = cstr(
+                r#"{
+                    "type": "setDeckOptions",
+                    "deckId": "deck",
+                    "options": {
+                        "newCardsPerDay": 12,
+                        "maximumIntervalDays": 90
+                    }
+                }"#,
+            );
+            let result = take(eg_dispatch(session, options.as_ptr()));
+            let result: Value = serde_json::from_str(&result).unwrap();
+            assert_eq!(
+                result["state"]["deckOptions"][0]["options"]["newCardsPerDay"],
+                12
+            );
+            assert_eq!(
+                result["state"]["deckOptions"][0]["options"]["maximumIntervalDays"],
+                90
+            );
+
             let snapshot = take(eg_snapshot(session));
             assert!(snapshot.contains(r#""id":"deck""#));
+            assert!(snapshot.contains(r#""deckOptions""#));
 
             eg_session_free(session);
         }

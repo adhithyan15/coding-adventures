@@ -1,7 +1,7 @@
 use crate::model::{
     ActiveSessionState, AppState, Card, CardFlag, CardProgress, CardProgressSnapshot, Deck,
-    DeckOptions, ExternalSourceRecord, ExternalSourceTarget, MediaAssetRecord, Note, NoteType,
-    Rating, Review, Session, SessionStatus,
+    DeckOptions, DeckOptionsPreset, ExternalSourceRecord, ExternalSourceTarget, MediaAssetRecord,
+    Note, NoteType, Rating, Review, Session, SessionStatus,
 };
 use crate::scheduler::schedule_review;
 use crate::sm2::INITIAL_EASE_FACTOR;
@@ -22,6 +22,10 @@ pub enum EngramCommand {
         deck_id: String,
         name: String,
         description: String,
+    },
+    SetDeckOptions {
+        deck_id: String,
+        options: DeckOptions,
     },
     DeleteDeck {
         deck_id: String,
@@ -185,6 +189,20 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                     deck.description = description;
                     break;
                 }
+            }
+            next
+        }
+        EngramCommand::SetDeckOptions { deck_id, options } => {
+            let mut next = state.clone();
+            match next
+                .deck_options
+                .iter_mut()
+                .find(|preset| preset.deck_id == deck_id)
+            {
+                Some(preset) => preset.options = options,
+                None => next
+                    .deck_options
+                    .push(DeckOptionsPreset { deck_id, options }),
             }
             next
         }
@@ -1713,6 +1731,54 @@ mod tests {
         assert_eq!(next.card_progress[0].state, CardState::Learning);
         assert_eq!(next.card_progress[0].learning_step_index, Some(1));
         assert_eq!(next.card_progress[0].next_due_at, NOW + 30 * ONE_MINUTE_MS);
+    }
+
+    #[test]
+    fn set_deck_options_inserts_and_replaces_presets() {
+        let state = AppState::default();
+        let initial_options = DeckOptions {
+            learning_steps_minutes: vec![3, 30],
+            ..DeckOptions::default()
+        };
+
+        let inserted = reduce(
+            &state,
+            EngramCommand::SetDeckOptions {
+                deck_id: "deck".to_string(),
+                options: initial_options,
+            },
+        );
+
+        assert_eq!(inserted.deck_options.len(), 1);
+        assert_eq!(inserted.deck_options[0].deck_id, "deck");
+        assert_eq!(
+            inserted.deck_options[0].options.learning_steps_minutes,
+            vec![3, 30]
+        );
+
+        let replacement_options = DeckOptions {
+            maximum_interval_days: 90,
+            review_interval_modifier: 0.75,
+            ..DeckOptions::default()
+        };
+        let replaced = reduce(
+            &inserted,
+            EngramCommand::SetDeckOptions {
+                deck_id: "deck".to_string(),
+                options: replacement_options,
+            },
+        );
+
+        assert_eq!(replaced.deck_options.len(), 1);
+        assert_eq!(replaced.deck_options[0].options.maximum_interval_days, 90);
+        assert_eq!(
+            replaced.deck_options[0].options.review_interval_modifier,
+            0.75
+        );
+        assert_eq!(
+            replaced.deck_options[0].options.learning_steps_minutes,
+            DeckOptions::default().learning_steps_minutes
+        );
     }
 
     #[test]
