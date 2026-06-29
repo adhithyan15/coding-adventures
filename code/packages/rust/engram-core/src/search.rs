@@ -1446,7 +1446,7 @@ fn clause_matches(
         SearchClauseKind::CardTemplate(term) => card_template_matches(term, card, note_type),
         SearchClauseKind::Deck(term) => deck_matches(term, card, deck, card_sources, metadata),
         SearchClauseKind::CurrentDeck => current_deck_matches(card, deck, card_sources, metadata),
-        SearchClauseKind::Preset(term) => preset_matches(term, card, deck, metadata),
+        SearchClauseKind::Preset(term) => preset_matches(term, card, deck, card_sources, metadata),
         SearchClauseKind::NoteType(term) => note_type_matches(term, note, note_type),
         SearchClauseKind::Tag(tag) => tag_matches(tag, note),
         SearchClauseKind::State(state) => {
@@ -1927,6 +1927,7 @@ fn preset_matches(
     term: &str,
     card: &Card,
     deck: Option<&Deck>,
+    card_sources: &[&ExternalSourceRecord],
     metadata: &SearchMetadata<'_>,
 ) -> bool {
     metadata
@@ -1945,6 +1946,36 @@ fn preset_matches(
                     preset_candidate_matches(term, &deck.id)
                         || preset_candidate_matches(term, &deck.name)
                 })))
+        || imported_original_deck_preset_matches(term, card_sources, metadata)
+}
+
+fn imported_original_deck_preset_matches(
+    term: &str,
+    card_sources: &[&ExternalSourceRecord],
+    metadata: &SearchMetadata<'_>,
+) -> bool {
+    let Some(original_deck_id) = imported_anki_original_deck_id(card_sources) else {
+        return false;
+    };
+    let original_deck_id = original_deck_id.to_string();
+    metadata
+        .decks_by_original_id
+        .get(original_deck_id.as_str())
+        .is_some_and(|decks| {
+            decks.iter().any(|deck| {
+                metadata
+                    .deck_preset_names_by_id
+                    .get(deck.id.as_str())
+                    .is_some_and(|names| {
+                        names
+                            .iter()
+                            .any(|name| preset_candidate_matches(term, name))
+                    })
+                    || (metadata.deck_option_deck_ids.contains(deck.id.as_str())
+                        && (preset_candidate_matches(term, &deck.id)
+                            || preset_candidate_matches(term, &deck.name)))
+            })
+        })
 }
 
 fn preset_candidate_matches(term: &str, candidate: &str) -> bool {
@@ -4484,11 +4515,13 @@ mod tests {
         let state = AppState {
             decks: vec![
                 deck("story", "Spanish::Latin"),
+                deck("filtered", "Filtered"),
                 deck("defaulted", "Tamil"),
                 deck("native", "Native Deck"),
             ],
             cards: vec![
                 card("story-card", "story", "aqua", "water"),
+                card("filtered-story-card", "filtered", "cram", "story"),
                 card("default-card", "defaulted", "vanakkam", "hello"),
                 card("native-card", "native", "custom", "options"),
             ],
@@ -4525,6 +4558,23 @@ mod tests {
                     original_id: Some("3".to_string()),
                     data: BTreeMap::from([("configId".to_string(), "1".to_string())]),
                 },
+                ExternalSourceRecord {
+                    target: ExternalSourceTarget::Deck,
+                    target_id: "filtered".to_string(),
+                    source: "anki-v11".to_string(),
+                    original_id: Some("4".to_string()),
+                    data: BTreeMap::from([("dyn".to_string(), "1".to_string())]),
+                },
+                ExternalSourceRecord {
+                    target: ExternalSourceTarget::Card,
+                    target_id: "filtered-story-card".to_string(),
+                    source: "anki-v11".to_string(),
+                    original_id: Some("5".to_string()),
+                    data: BTreeMap::from([
+                        ("deckId".to_string(), "4".to_string()),
+                        ("originalDeckId".to_string(), "2".to_string()),
+                    ]),
+                },
             ],
             ..AppState::default()
         };
@@ -4537,8 +4587,14 @@ mod tests {
                 .collect::<Vec<_>>()
         };
 
-        assert_eq!(ids_for(r#"preset:"Story defaults""#), vec!["story-card"]);
-        assert_eq!(ids_for("preset:Story*"), vec!["story-card"]);
+        assert_eq!(
+            ids_for(r#"preset:"Story defaults""#),
+            vec!["story-card", "filtered-story-card"]
+        );
+        assert_eq!(
+            ids_for("preset:Story*"),
+            vec!["story-card", "filtered-story-card"]
+        );
         assert_eq!(ids_for("preset:Default"), vec!["default-card"]);
         assert_eq!(ids_for(r#"preset:"Native Deck""#), vec!["native-card"]);
         assert!(ids_for("preset:Spanish").is_empty());
