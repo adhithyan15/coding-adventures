@@ -1,0 +1,306 @@
+{
+  "rung": "rung4_products",
+  "description": "Rung-4 dimensional analysis, MULTIPLICATION arm: word problems whose answer is a COMPOSITE-unit quantity formed by multiplying two quantities (work = force × distance → N·m, energy = power × time → W·s, impulse = force × time → N·s, charge = current × time → A·s, pressure × volume → Pa·L, voltage × current → V·A). Complements rung4_dimensional (the division arm: km/h, mol/l, …) and reuses the same `compute_dimensioned` harness. The gold ADJ program `observe`s two typed quantities and binds `let answer = a * b`; the ENGINE forms the composite unit tag `a·b` via Dimension::combine (combine_mul), never the model. Options are `{value, unit}` and the harness matches BOTH magnitude AND unit — so every item carries a wrong-unit distractor, including the REVERSED-order composite (`m·n` when the engine produces `n·m`, which a model that doesn't track operand order would accept) and a single-factor unit (`n`). All quantities are integers and every number in a program appears in its stem (no-result-literals gate); unit atoms are digit-free so they never pollute that gate.",
+  "items": [
+    {
+      "id": "r4p-01",
+      "qtype": "work",
+      "stem": "A force of 10 newtons acts over a distance of 3 meters in the direction of motion. What is the work done?",
+      "program": "observe force(quantity(10, n))\nobserve distance(quantity(3, m))\nlet answer = force * distance\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 30, "unit": "n·m"},
+        "B": {"value": 30, "unit": "m·n"},
+        "C": {"value": 30, "unit": "n"},
+        "D": {"value": 13, "unit": "n·m"},
+        "E": {"value": 30, "unit": "n/m"}
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r4p-02",
+      "qtype": "work",
+      "stem": "A constant force of 12 newtons pushes a crate 4 meters along the floor. How much work is done?",
+      "program": "observe force(quantity(12, n))\nobserve distance(quantity(4, m))\nlet answer = force * distance\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 48, "unit": "m·n"},
+        "B": {"value": 48, "unit": "n·m"},
+        "C": {"value": 16, "unit": "n·m"},
+        "D": {"value": 48, "unit": "m"},
+        "E": {"value": 3, "unit": "n·m"}
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r4p-03",
+      "qtype": "energy",
+      "stem": "A 5 watt device runs for 8 seconds. How much energy does it use?",
+      "program": "observe power(quantity(5, w))\nobserve time(quantity(8, s))\nlet answer = power * time\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 40, "unit": "w"},
+        "B": {"value": 40, "unit": "s·w"},
+        "C": {"value": 40, "unit": "w·s"},
+        "D": {"value": 13, "unit": "w·s"},
+        "E": {"value": 40, "unit": "w/s"}
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r4p-04",
+      "qtype": "energy",
+      "stem": "A 6 watt bulb is left on for 7 seconds. What is the energy consumed?",
+      "program": "observe power(quantity(6, w))\nobserve time(quantity(7, s))\nlet answer = power * time\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 42, "unit": "w·s"},
+        "B": {"value": 42, "unit": "s·w"},
+        "C": {"value": 42, "unit": "w"},
+        "D": {"value": 13, "unit": "w·s"},
+        "E": {"value": 42, "unit": "s/w"}
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r4p-05",
+      "qtype": "impulse",
+      "stem": "A force of 9 newtons is applied for 4 seconds. What is the impulse delivered?",
+      "program": "observe force(quantity(9, n))\nobserve time(quantity(4, s))\nlet answer = force * time\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 36, "unit": "s·n"},
+        "B": {"value": 36, "unit": "n·s"},
+        "C": {"value": 36, "unit": "n"},
+        "D": {"value": 13, "unit": "n·s"},
+        "E": {"value": 36, "unit": "n/s"}
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r4p-06",
+      "qtype": "impulse",
+      "stem": "A 7 newton force acts on a ball for 5 seconds. What impulse does it impart?",
+      "program": "observe force(quantity(7, n))\nobserve time(quantity(5, s))\nlet answer = force * time\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 35, "unit": "n"},
+        "B": {"value": 35, "unit": "s·n"},
+        "C": {"value": 35, "unit": "n·s"},
+        "D": {"value": 12, "unit": "n·s"},
+        "E": {"value": 35, "unit": "n/s"}
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r4p-07",
+      "qtype": "charge",
+      "stem": "A current of 3 amperes flows for 6 seconds. How much electric charge passes?",
+      "program": "observe current(quantity(3, a))\nobserve time(quantity(6, s))\nlet answer = current * time\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 18, "unit": "a·s"},
+        "B": {"value": 18, "unit": "s·a"},
+        "C": {"value": 18, "unit": "a"},
+        "D": {"value": 9, "unit": "a·s"},
+        "E": {"value": 18, "unit": "a/s"}
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r4p-08",
+      "qtype": "charge",
+      "stem": "A steady current of 8 amperes runs for 5 seconds. What charge is delivered?",
+      "program": "observe current(quantity(8, a))\nobserve time(quantity(5, s))\nlet answer = current * time\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 40, "unit": "s·a"},
+        "B": {"value": 40, "unit": "a"},
+        "C": {"value": 40, "unit": "a·s"},
+        "D": {"value": 13, "unit": "a·s"},
+        "E": {"value": 40, "unit": "a/s"}
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r4p-09",
+      "qtype": "pressure_volume",
+      "stem": "A gas at 4 pascals occupies 5 liters. What is the pressure-volume product?",
+      "program": "observe pressure(quantity(4, pa))\nobserve volume(quantity(5, l))\nlet answer = pressure * volume\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 20, "unit": "pa·l"},
+        "B": {"value": 20, "unit": "l·pa"},
+        "C": {"value": 20, "unit": "pa"},
+        "D": {"value": 9, "unit": "pa·l"},
+        "E": {"value": 20, "unit": "pa/l"}
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r4p-10",
+      "qtype": "pressure_volume",
+      "stem": "A sample at 6 pascals fills 7 liters. What is its pressure-volume product?",
+      "program": "observe pressure(quantity(6, pa))\nobserve volume(quantity(7, l))\nlet answer = pressure * volume\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 42, "unit": "l·pa"},
+        "B": {"value": 42, "unit": "pa·l"},
+        "C": {"value": 42, "unit": "pa"},
+        "D": {"value": 13, "unit": "pa·l"},
+        "E": {"value": 42, "unit": "pa/l"}
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r4p-11",
+      "qtype": "apparent_power",
+      "stem": "An AC circuit runs at 12 volts and draws 3 amperes. What is the apparent power (volt-amperes)?",
+      "program": "observe voltage(quantity(12, v))\nobserve current(quantity(3, a))\nlet answer = voltage * current\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 36, "unit": "a·v"},
+        "B": {"value": 36, "unit": "v·a"},
+        "C": {"value": 36, "unit": "v"},
+        "D": {"value": 15, "unit": "v·a"},
+        "E": {"value": 36, "unit": "v/a"}
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r4p-12",
+      "qtype": "torque",
+      "stem": "A wrench applies 15 newtons at a lever arm of 2 meters. What is the torque?",
+      "program": "observe force(quantity(15, n))\nobserve arm(quantity(2, m))\nlet answer = force * arm\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 30, "unit": "m·n"},
+        "B": {"value": 30, "unit": "n"},
+        "C": {"value": 30, "unit": "n·m"},
+        "D": {"value": 17, "unit": "n·m"},
+        "E": {"value": 30, "unit": "n/m"}
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r4p-13",
+      "qtype": "work",
+      "stem": "A 20 newton force drags a sled 3 meters. How much work is performed?",
+      "program": "observe force(quantity(20, n))\nobserve distance(quantity(3, m))\nlet answer = force * distance\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 60, "unit": "n·m"},
+        "B": {"value": 60, "unit": "m·n"},
+        "C": {"value": 60, "unit": "n"},
+        "D": {"value": 23, "unit": "n·m"},
+        "E": {"value": 60, "unit": "n/m"}
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r4p-14",
+      "qtype": "energy",
+      "stem": "A 10 watt motor operates for 9 seconds. What is the energy delivered?",
+      "program": "observe power(quantity(10, w))\nobserve time(quantity(9, s))\nlet answer = power * time\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 90, "unit": "s·w"},
+        "B": {"value": 90, "unit": "w"},
+        "C": {"value": 90, "unit": "w·s"},
+        "D": {"value": 19, "unit": "w·s"},
+        "E": {"value": 90, "unit": "w/s"}
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r4p-15",
+      "qtype": "impulse",
+      "stem": "An 11 newton thrust lasts 3 seconds. What is the impulse?",
+      "program": "observe force(quantity(11, n))\nobserve time(quantity(3, s))\nlet answer = force * time\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 33, "unit": "n·s"},
+        "B": {"value": 33, "unit": "s·n"},
+        "C": {"value": 33, "unit": "n"},
+        "D": {"value": 14, "unit": "n·s"},
+        "E": {"value": 33, "unit": "n/s"}
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r4p-16",
+      "qtype": "charge",
+      "stem": "A current of 7 amperes is sustained for 4 seconds. What charge flows?",
+      "program": "observe current(quantity(7, a))\nobserve time(quantity(4, s))\nlet answer = current * time\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 28, "unit": "s·a"},
+        "B": {"value": 28, "unit": "a·s"},
+        "C": {"value": 28, "unit": "a"},
+        "D": {"value": 11, "unit": "a·s"},
+        "E": {"value": 28, "unit": "a/s"}
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r4p-17",
+      "qtype": "pressure_volume",
+      "stem": "A gas at 9 pascals occupies 4 liters. What is the pressure-volume product?",
+      "program": "observe pressure(quantity(9, pa))\nobserve volume(quantity(4, l))\nlet answer = pressure * volume\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 36, "unit": "pa"},
+        "B": {"value": 36, "unit": "l·pa"},
+        "C": {"value": 36, "unit": "pa·l"},
+        "D": {"value": 13, "unit": "pa·l"},
+        "E": {"value": 36, "unit": "pa/l"}
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r4p-18",
+      "qtype": "work",
+      "stem": "A worker pushes with 8 newtons across 6 meters. What is the work done?",
+      "program": "observe force(quantity(8, n))\nobserve distance(quantity(6, m))\nlet answer = force * distance\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 48, "unit": "n·m"},
+        "B": {"value": 48, "unit": "m·n"},
+        "C": {"value": 48, "unit": "n"},
+        "D": {"value": 14, "unit": "n·m"},
+        "E": {"value": 48, "unit": "n/m"}
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r4p-19",
+      "qtype": "energy",
+      "stem": "A 4 watt sensor stays on for 6 seconds. What is the energy used?",
+      "program": "observe power(quantity(4, w))\nobserve time(quantity(6, s))\nlet answer = power * time\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 24, "unit": "s·w"},
+        "B": {"value": 24, "unit": "w"},
+        "C": {"value": 24, "unit": "w·s"},
+        "D": {"value": 10, "unit": "w·s"},
+        "E": {"value": 24, "unit": "w/s"}
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r4p-20",
+      "qtype": "charge",
+      "stem": "A current of 5 amperes runs for 9 seconds. How much charge is transferred?",
+      "program": "observe current(quantity(5, a))\nobserve time(quantity(9, s))\nlet answer = current * time\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 45, "unit": "a·s"},
+        "B": {"value": 45, "unit": "s·a"},
+        "C": {"value": 45, "unit": "a"},
+        "D": {"value": 14, "unit": "a·s"},
+        "E": {"value": 45, "unit": "a/s"}
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

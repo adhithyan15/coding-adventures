@@ -138,6 +138,18 @@ meaningless number — selects **20/20 in cached mode with zero unit mismatches*
 exactly the "offload the units to the CPU" thesis: the model only writes which quantities
 to divide; the engine owns the dimensional algebra.
 
+### Dimensional products rung (rung 4 products, cached engine)
+
+`rung4_products/` is the **multiplication** counterpart: the answer is a *composite-unit*
+quantity formed by multiplying two quantities — work = force × distance (`N·m`), energy =
+power × time (`W·s`), impulse (`N·s`), charge = current × time (`A·s`), pressure × volume
+(`Pa·L`), apparent power = voltage × current (`V·A`). The gold program binds
+`let answer = a * b` and the engine forms the composite tag `a·b` via `Dimension::combine`.
+Beyond a single-factor distractor (`n`), each item also carries the **reversed-order**
+composite (`m·n` when the engine emits `n·m`) — an operand-order trap that a number-only
+reasoner accepts but the dimensional engine rejects. Reuses the same `compute_dimensioned`
+harness as `rung4_dimensional`; engine selects **20/20 cached, zero unit mismatches**.
+
 ## Layout
 
 ```
