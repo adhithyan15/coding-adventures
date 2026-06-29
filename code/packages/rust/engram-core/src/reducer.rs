@@ -1307,6 +1307,7 @@ mod tests {
     use super::*;
     use crate::model::{
         CardLineage, CardState, CardTemplate, FieldDef, Note, NoteFieldValue, NoteType,
+        TemplateRequirementMode,
     };
     use crate::queue::build_session_queue;
     use crate::scheduler::ONE_MINUTE_MS;
@@ -1380,6 +1381,7 @@ mod tests {
                 front_template: "{{Front}}".to_string(),
                 back_template: "{{Back}}".to_string(),
                 required_field_names: vec!["Front".to_string(), "Back".to_string()],
+                requirement_mode: TemplateRequirementMode::All,
                 ordinal: 0,
             }],
             created_at: NOW,
@@ -1514,6 +1516,7 @@ mod tests {
                 front_template: "{{Front}}".to_string(),
                 back_template: "{{Back}}".to_string(),
                 required_field_names: vec!["Front".to_string(), "Back".to_string()],
+                requirement_mode: TemplateRequirementMode::All,
                 ordinal: 0,
             }],
             created_at: NOW,
@@ -1641,6 +1644,7 @@ mod tests {
                     front_template: "{{Front}}".to_string(),
                     back_template: "{{Back}}".to_string(),
                     required_field_names: vec!["Front".to_string(), "Back".to_string()],
+                    requirement_mode: TemplateRequirementMode::All,
                     ordinal: 0,
                 },
                 CardTemplate {
@@ -1649,6 +1653,7 @@ mod tests {
                     front_template: "{{Back}}".to_string(),
                     back_template: "{{Front}}".to_string(),
                     required_field_names: vec!["Front".to_string(), "Back".to_string()],
+                    requirement_mode: TemplateRequirementMode::All,
                     ordinal: 1,
                 },
             ],

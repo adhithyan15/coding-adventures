@@ -1160,7 +1160,7 @@ mod tests {
     use super::*;
     use crate::model::{
         CardLineage, CardTemplate, Deck, ExternalSourceRecord, ExternalSourceTarget, FieldDef,
-        NoteFieldValue, NoteType, Review,
+        NoteFieldValue, NoteType, Review, TemplateRequirementMode,
     };
     use crate::sm2::{INITIAL_EASE_FACTOR, ONE_DAY_MS};
     use std::collections::BTreeMap;
@@ -1259,6 +1259,7 @@ mod tests {
                 front_template: "{{Front}}".to_string(),
                 back_template: "Answer".to_string(),
                 required_field_names: vec!["Front".to_string()],
+                requirement_mode: TemplateRequirementMode::All,
                 ordinal: 0,
             }],
             created_at: NOW,
@@ -1360,6 +1361,7 @@ mod tests {
                 front_template: "{{Front}}".to_string(),
                 back_template: "{{Back}}".to_string(),
                 required_field_names: vec!["Front".to_string()],
+                requirement_mode: TemplateRequirementMode::All,
                 ordinal: 0,
             }],
             created_at: NOW,
@@ -1515,6 +1517,7 @@ mod tests {
             front_template: "{{Back}}".to_string(),
             back_template: "{{Front}}".to_string(),
             required_field_names: vec!["Back".to_string()],
+            requirement_mode: TemplateRequirementMode::All,
             ordinal: 1,
         });
 
@@ -1627,6 +1630,7 @@ mod tests {
             front_template: "{{Back}}".to_string(),
             back_template: "{{Front}}".to_string(),
             required_field_names: vec!["Back".to_string()],
+            requirement_mode: TemplateRequirementMode::All,
             ordinal: 1,
         });
 

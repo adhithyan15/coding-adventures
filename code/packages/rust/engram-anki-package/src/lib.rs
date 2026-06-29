@@ -15,8 +15,8 @@ use engram_core::{
     render_template_with_front_side, template_references_cloze, AppState, Card, CardFlag,
     CardLineage, CardProgress, CardState, CardTemplate, ClozeRenderSide, Deck, DeckOptions,
     DeckOptionsPreset, ExternalSourceRecord, ExternalSourceTarget, FieldDef, MediaAssetRecord,
-    Note, NoteFieldValue, NoteType, Rating, Review, Session, SessionStatus, INITIAL_EASE_FACTOR,
-    ONE_DAY_MS,
+    Note, NoteFieldValue, NoteType, Rating, Review, Session, SessionStatus,
+    TemplateRequirementMode, INITIAL_EASE_FACTOR, ONE_DAY_MS,
 };
 use prost::Message;
 use rusqlite::{Connection, OpenFlags};
@@ -1716,6 +1716,7 @@ fn export_note_types_json(export: &ExportModel) -> Value {
         let raw_templates = model_json.get("tmpls").cloned().unwrap_or(Value::Null);
         let fields = export_note_type_fields_json(note_type, &raw_fields);
         let templates = export_note_type_templates_json(note_type, &raw_templates);
+        let requirements = export_note_type_requirements_json(note_type);
         let model_object = ensure_json_object(&mut model_json);
         model_object.insert("id".to_string(), Value::Number(id.into()));
         model_object.insert("name".to_string(), Value::String(note_type.name.clone()));
@@ -1746,6 +1747,7 @@ fn export_note_types_json(export: &ExportModel) -> Value {
             .or_insert_with(|| Value::String("\\end{document}".to_string()));
         model_object.insert("flds".to_string(), Value::Array(fields));
         model_object.insert("tmpls".to_string(), Value::Array(templates));
+        model_object.insert("req".to_string(), Value::Array(requirements));
         object.insert(id.to_string(), model_json);
     }
     Value::Object(object)
@@ -2005,6 +2007,36 @@ fn export_note_type_templates_json(
                 .entry("bafmt".to_string())
                 .or_insert_with(|| Value::String(String::new()));
             template_json
+        })
+        .collect()
+}
+
+fn export_note_type_requirements_json(note_type: &ExportNoteType) -> Vec<Value> {
+    let field_ordinals_by_name = note_type
+        .fields
+        .iter()
+        .map(|field| (field.name.as_str(), i64::from(field.ordinal)))
+        .collect::<HashMap<_, _>>();
+    let mut templates = note_type.templates.clone();
+    templates.sort_by_key(|template| template.ordinal);
+    templates
+        .into_iter()
+        .map(|template| {
+            let field_ordinals = template
+                .required_field_names
+                .iter()
+                .filter_map(|field_name| field_ordinals_by_name.get(field_name.as_str()).copied())
+                .map(|ordinal| Value::Number(ordinal.into()))
+                .collect::<Vec<_>>();
+            let mode = match template.requirement_mode {
+                TemplateRequirementMode::Any => "any",
+                TemplateRequirementMode::All => "all",
+            };
+            Value::Array(vec![
+                Value::Number(i64::from(template.ordinal).into()),
+                Value::String(mode.to_string()),
+                Value::Array(field_ordinals),
+            ])
         })
         .collect()
 }
@@ -2389,6 +2421,7 @@ fn synthetic_basic_note_type() -> ExportNoteType {
             front_template: "{{Front}}".to_string(),
             back_template: "{{Back}}".to_string(),
             required_field_names: vec!["Front".to_string()],
+            requirement_mode: TemplateRequirementMode::All,
             ordinal: 0,
         }],
         created_at: 0,
@@ -2519,13 +2552,17 @@ fn map_v11_note_type(note_type: &AnkiV11NoteType) -> NoteType {
     let templates = note_type
         .templates
         .iter()
-        .map(|template| CardTemplate {
-            id: template_id(note_type.id, template.ordinal),
-            name: template.name.clone(),
-            front_template: template.question_format.clone(),
-            back_template: template.answer_format.clone(),
-            required_field_names: required_field_names_for_anki_template(note_type, template),
-            ordinal: i64_to_u32(template.ordinal),
+        .map(|template| {
+            let requirement = requirement_for_anki_template(note_type, template);
+            CardTemplate {
+                id: template_id(note_type.id, template.ordinal),
+                name: template.name.clone(),
+                front_template: template.question_format.clone(),
+                back_template: template.answer_format.clone(),
+                required_field_names: requirement.field_names,
+                requirement_mode: requirement.mode,
+                ordinal: i64_to_u32(template.ordinal),
+            }
         })
         .collect();
 
@@ -2539,7 +2576,56 @@ fn map_v11_note_type(note_type: &AnkiV11NoteType) -> NoteType {
     }
 }
 
-fn required_field_names_for_anki_template(
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct TemplateRequirement {
+    field_names: Vec<String>,
+    mode: TemplateRequirementMode,
+}
+
+fn requirement_for_anki_template(
+    note_type: &AnkiV11NoteType,
+    template: &AnkiV11Template,
+) -> TemplateRequirement {
+    anki_req_requirement_for_template(note_type, template).unwrap_or_else(|| TemplateRequirement {
+        field_names: inferred_required_field_names_for_anki_template(note_type, template),
+        mode: TemplateRequirementMode::All,
+    })
+}
+
+fn anki_req_requirement_for_template(
+    note_type: &AnkiV11NoteType,
+    template: &AnkiV11Template,
+) -> Option<TemplateRequirement> {
+    let field_names_by_ordinal = note_type
+        .fields
+        .iter()
+        .map(|field| (field.ordinal, field.name.as_str()))
+        .collect::<BTreeMap<_, _>>();
+    let req_rows = note_type.raw.get("req")?.as_array()?;
+    for row in req_rows {
+        let row = row.as_array()?;
+        if row.first().and_then(Value::as_i64) != Some(template.ordinal) {
+            continue;
+        }
+        let mode = match row.get(1).and_then(Value::as_str) {
+            Some("any") => TemplateRequirementMode::Any,
+            Some("all") => TemplateRequirementMode::All,
+            _ => return None,
+        };
+        let field_names = row
+            .get(2)
+            .and_then(Value::as_array)?
+            .iter()
+            .filter_map(Value::as_i64)
+            .filter_map(|ordinal| field_names_by_ordinal.get(&ordinal).copied())
+            .map(str::to_string)
+            .collect::<Vec<_>>();
+        return Some(TemplateRequirement { field_names, mode });
+    }
+    None
+}
+
+fn inferred_required_field_names_for_anki_template(
     note_type: &AnkiV11NoteType,
     template: &AnkiV11Template,
 ) -> Vec<String> {
@@ -4298,6 +4384,26 @@ CREATE TABLE graves (
     }
 
     #[test]
+    fn maps_v11_model_req_any_into_generated_card_rules() {
+        let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        collection.note_types[0].raw["req"] = serde_json::json!([[0, "any", [0, 1]]]);
+        collection.note_types[0].templates[0].question_format = "{{Front}}{{Back}}".to_string();
+        collection.notes[0].field_values = vec![String::new(), "hello".to_string()];
+
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+        let template = &state.note_types[0].templates[0];
+
+        assert_eq!(template.requirement_mode, TemplateRequirementMode::Any);
+        assert_eq!(
+            template.required_field_names,
+            vec!["Front".to_string(), "Back".to_string()]
+        );
+        let generated = engram_core::generate_cards_for_note(&state.note_types[0], &state.notes[0]);
+        assert_eq!(generated.len(), 1);
+        assert_eq!(generated[0].front, "hello");
+    }
+
+    #[test]
     fn maps_v11_new_card_flags_as_metadata_overlays() {
         let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
         collection.cards[0].kind = 0;
@@ -4770,7 +4876,8 @@ CREATE TABLE graves (
                     name: "Card 1".to_string(),
                     front_template: "{{Front}}".to_string(),
                     back_template: "{{Back}}".to_string(),
-                    required_field_names: vec!["Front".to_string()],
+                    required_field_names: vec!["Front".to_string(), "Back".to_string()],
+                    requirement_mode: TemplateRequirementMode::Any,
                     ordinal: 0,
                 }],
                 created_at: 1_641_600_000_000,
@@ -4850,6 +4957,10 @@ CREATE TABLE graves (
         assert_eq!(collection.decks[0].id, 2);
         assert_eq!(collection.decks[0].name, "Spanish::Latin");
         assert_eq!(collection.note_types[0].id, 100);
+        assert_eq!(
+            collection.note_types[0].raw["req"],
+            serde_json::json!([[0, "any", [0, 1]]])
+        );
         assert_eq!(collection.notes[0].id, 1000);
         assert_eq!(collection.notes[0].tags, vec!["spanish", "roots"]);
         assert_eq!(collection.cards[0].id, 2000);

@@ -1,6 +1,8 @@
 use std::collections::{BTreeSet, HashMap};
 
-use crate::model::{Card, CardLineage, CardTemplate, GeneratedCard, Note, NoteType};
+use crate::model::{
+    Card, CardLineage, CardTemplate, GeneratedCard, Note, NoteType, TemplateRequirementMode,
+};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ClozeRenderSide {
@@ -66,11 +68,7 @@ pub fn generate_cards_for_note(note_type: &NoteType, note: &Note) -> Vec<Generat
     let mut generated = Vec::new();
 
     for template in &note_type.templates {
-        if !template.required_field_names.iter().all(|field_name| {
-            base_field_values
-                .get(field_name)
-                .is_some_and(|value| !value.trim().is_empty())
-        }) {
+        if !template_requirement_satisfied(template, &base_field_values) {
             continue;
         }
 
@@ -546,6 +544,26 @@ fn insert_special_template_values(
         .or_insert_with(|| card_id.to_string());
 }
 
+fn template_requirement_satisfied(
+    template: &CardTemplate,
+    field_values: &HashMap<String, String>,
+) -> bool {
+    if template.required_field_names.is_empty() {
+        return true;
+    }
+
+    let field_is_nonempty = |field_name: &String| {
+        field_values
+            .get(field_name)
+            .is_some_and(|value| !value.trim().is_empty())
+    };
+
+    match template.requirement_mode {
+        TemplateRequirementMode::All => template.required_field_names.iter().all(field_is_nonempty),
+        TemplateRequirementMode::Any => template.required_field_names.iter().any(field_is_nonempty),
+    }
+}
+
 fn subdeck_name(deck_name: &str) -> &str {
     deck_name
         .rsplit_once("::")
@@ -856,6 +874,7 @@ mod tests {
                     front_template: "{{Front}}".to_string(),
                     back_template: "{{Back}}".to_string(),
                     required_field_names: vec!["Front".to_string(), "Back".to_string()],
+                    requirement_mode: TemplateRequirementMode::All,
                     ordinal: 0,
                 },
                 CardTemplate {
@@ -864,6 +883,7 @@ mod tests {
                     front_template: "{{Back}}".to_string(),
                     back_template: "{{Front}}".to_string(),
                     required_field_names: vec!["Front".to_string(), "Back".to_string()],
+                    requirement_mode: TemplateRequirementMode::All,
                     ordinal: 1,
                 },
             ],
@@ -896,6 +916,7 @@ mod tests {
                 front_template: "{{cloze:Text}}".to_string(),
                 back_template: "{{cloze:Text}}<hr>{{Extra}}".to_string(),
                 required_field_names: vec!["Text".to_string()],
+                requirement_mode: TemplateRequirementMode::All,
                 ordinal: 0,
             }],
             created_at: NOW,
@@ -963,6 +984,21 @@ mod tests {
         let cards = generate_cards_for_note(&basic_note_type(), &note("letter-a", "  "));
 
         assert!(cards.is_empty());
+    }
+
+    #[test]
+    fn any_required_field_can_generate_from_one_nonempty_field() {
+        let mut note_type = basic_note_type();
+        note_type.templates[0].front_template = "{{Front}}{{Back}}".to_string();
+        note_type.templates[0].required_field_names = vec!["Front".to_string(), "Back".to_string()];
+        note_type.templates[0].requirement_mode = TemplateRequirementMode::Any;
+        let note = note("letter-a", "  ");
+
+        let cards = generate_cards_for_note(&note_type, &note);
+
+        assert_eq!(cards.len(), 1);
+        assert_eq!(cards[0].id, "note-1::forward");
+        assert_eq!(cards[0].front, "letter-a  ");
     }
 
     #[test]

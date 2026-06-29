@@ -29,7 +29,7 @@ pub use model::{
     CardState, CardTemplate, DailyStudyLimitUsage, Deck, DeckOptions, DeckOptionsPreset, DeckStats,
     ExternalSourceRecord, ExternalSourceTarget, FieldDef, GeneratedCard, MediaAssetRecord, Note,
     NoteFieldValue, NoteType, Rating, RatingCounts, Review, ReviewHistorySummary, Session,
-    SessionProgress, SessionStatus,
+    SessionProgress, SessionStatus, TemplateRequirementMode,
 };
 pub use queue::{
     build_session_queue, build_session_queue_with_daily_limits, build_session_queue_with_options,

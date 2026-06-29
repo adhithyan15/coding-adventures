@@ -89,7 +89,8 @@ durable `Card` with note/template lineage. Cloze templates using
 card per Anki-style `{{c1::text::hint}}` ordinal, render sections and
 `FrontSide`, expose Anki-style special fields such as `Tags`, `Type`, `Deck`,
 `Subdeck`, `Card`, `CardFlag`, and `CardID`, and preserve the cloze ordinal in
-lineage.
+lineage. Templates can require all listed fields or any one listed field,
+matching Anki model `req` rules for optional card generation.
 `BuryCardSiblings` uses lineage to bury same-note sibling cards until a
 host-supplied boundary.
 `RateCardAndBurySiblings` and `RateCardWithOptionsAndBurySiblings` apply that

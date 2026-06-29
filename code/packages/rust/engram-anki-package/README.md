@@ -27,7 +27,8 @@ Anki IDs as deterministic Engram IDs. Cloze note types render
 with the same `[...]` / `[hint]`, section, and `FrontSide` behavior used by the
 core cloze generator. Imported card rendering also fills Anki's special
 template fields for tags, note type, deck, subdeck, card template, and card
-flag/card ID metadata.
+flag/card ID metadata, and model-level `req` rows import/export as Engram's
+shared template requirement mode.
 
 `read_collection_bytes` returns the detected collection member as decoded raw
 SQLite bytes for inspection workflows. `read_v11_collection_bytes` accepts
