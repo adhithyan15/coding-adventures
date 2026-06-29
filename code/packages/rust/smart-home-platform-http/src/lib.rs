@@ -331,6 +331,11 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           <label>Search
             <input id="filter-search" data-dashboard-filter="search" type="search" autocomplete="off">
           </label>
+          <label>Room
+            <select id="filter-room" data-dashboard-filter="room">
+              <option value="">All rooms</option>
+            </select>
+          </label>
           <label>Entities
             <select id="filter-domain" data-dashboard-filter="domain">
               <option value="">All domains</option>
@@ -491,6 +496,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       filterControl: document.querySelector("#filter-control"),
       filterDomain: document.querySelector("#filter-domain"),
       filterEventKind: document.querySelector("#filter-event-kind"),
+      filterRoom: document.querySelector("#filter-room"),
       filterSearch: document.querySelector("#filter-search"),
       filterState: document.querySelector("#filter-state"),
       gaps: document.querySelector("#gaps"),
@@ -519,6 +525,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
 
     const readFilters = () => ({
       search: els.filterSearch.value.trim().toLowerCase(),
+      room: els.filterRoom.value,
       domain: els.filterDomain.value,
       state: els.filterState.value,
       control: els.filterControl.value,
@@ -541,6 +548,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
     const matchesSearch = (filters, item) =>
       !filters.search || JSON.stringify(item).toLowerCase().includes(filters.search);
     const filterRows = (items, filters) => items.filter((item) => matchesSearch(filters, item));
+    const roomMatchesFilters = (filters, room) => !filters.room || room.room_id === filters.room;
     const isCommandable = (entity) => (entity.capabilities || []).some((item) => item.commandable);
     const entityMatchesFilters = (filters, entity) => {
       if (!matchesSearch(filters, entity)) {
@@ -693,8 +701,17 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       `).join("") || `<p class="muted">No routes</p>`;
     };
 
-    const renderRooms = (inventory) => {
+    const renderRoomOptions = (inventory, selectedRoom) => {
       const rooms = inventory.rooms || [];
+      const options = [`<option value="">All rooms</option>`].concat(
+        rooms.map((room) => `<option value="${room.room_id}">${room.room_id}</option>`)
+      );
+      els.filterRoom.innerHTML = options.join("");
+      els.filterRoom.value = rooms.some((room) => room.room_id === selectedRoom) ? selectedRoom : "";
+    };
+
+    const renderRooms = (inventory, filters) => {
+      const rooms = (inventory.rooms || []).filter((room) => roomMatchesFilters(filters, room));
       els.rooms.innerHTML = rooms.map((room) => `
         <article class="entity-card">
           <div class="row" style="justify-content: space-between;">
@@ -886,11 +903,13 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         : filters.state === "fresh"
           ? false
           : undefined;
+      const roomId = filters.room || undefined;
       try {
         const [
           bootstrap,
           readiness,
           states,
+          stateGaps,
           scenes,
           desiredStates,
           history,
@@ -905,18 +924,20 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         ] = await Promise.all([
           json("/api/smart_home/bootstrap"),
           json("/api/smart_home/readiness"),
-          json(queryUrl("/api/smart_home/states", {limit: 24, domain: filters.domain, stale})),
-          json(queryUrl("/api/smart_home/scenes", {limit: 12})),
+          json(queryUrl("/api/smart_home/states", {limit: 24, domain: filters.domain, room_id: roomId, stale})),
+          json(queryUrl("/api/smart_home/states", {limit: 24, room_id: roomId, stale: true})),
+          json(queryUrl("/api/smart_home/scenes", {limit: 12, room_id: roomId})),
           json(queryUrl("/api/smart_home/desired_states", {limit: 12})),
-          json("/api/smart_home/state_history?limit=12"),
+          json(queryUrl("/api/smart_home/state_history", {limit: 12, room_id: roomId})),
           json("/api/smart_home/services?limit=8"),
           json("/api/smart_home/api?mutating=true&authorized=true"),
           json("/api/smart_home/rooms?sort=scene_count"),
-          json("/api/smart_home/devices?limit=8"),
+          json(queryUrl("/api/smart_home/devices", {limit: 8, room_id: roomId})),
           json("/api/smart_home/bridges?limit=8"),
-          json(queryUrl("/api/smart_home/events", {limit: 12, kind: filters.eventKind})),
+          json(queryUrl("/api/smart_home/events", {limit: 12, kind: filters.eventKind, room_id: roomId})),
           json(queryUrl("/api/smart_home/command_results", {
             limit: 8,
+            room_id: roomId,
             status: filters.commandStatus
           })),
           json(queryUrl("/api/smart_home/authorization_decisions", {
@@ -943,13 +964,14 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         renderChecks(readiness);
         renderServices(services);
         renderRoutes(routes);
-        renderRooms(rooms);
+        renderRoomOptions(rooms, filters.room);
+        renderRooms(rooms, filters);
         renderDevices(devices);
         renderBridges(bridges);
         renderScenes(scenes);
         renderEntities(states, filters);
         renderDesiredStates(desiredStates, filters);
-        renderGaps(bootstrap.state_gaps, filters);
+        renderGaps(stateGaps, filters);
         renderHistory(history, filters);
         renderEvents(events, filters);
         renderCommandResults(commandResults, filters);
@@ -7356,26 +7378,38 @@ mod tests {
             assert!(body.contains("json(\"/api/smart_home/bootstrap\")"));
             assert!(body.contains("json(\"/api/smart_home/readiness\")"));
             assert!(body.contains("data-dashboard-filter=\"search\""));
+            assert!(body.contains("data-dashboard-filter=\"room\""));
             assert!(body.contains("data-dashboard-filter=\"domain\""));
             assert!(body.contains("data-dashboard-filter=\"command-status\""));
             assert!(body.contains(
-                "queryUrl(\"/api/smart_home/states\", {limit: 24, domain: filters.domain, stale})"
+                "queryUrl(\"/api/smart_home/states\", {limit: 24, domain: filters.domain, room_id: roomId, stale})"
             ));
-            assert!(body.contains("queryUrl(\"/api/smart_home/scenes\", {limit: 12})"));
+            assert!(body.contains(
+                "queryUrl(\"/api/smart_home/states\", {limit: 24, room_id: roomId, stale: true})"
+            ));
+            assert!(
+                body.contains("queryUrl(\"/api/smart_home/scenes\", {limit: 12, room_id: roomId})")
+            );
             assert!(body.contains("queryUrl(\"/api/smart_home/desired_states\", {limit: 12})"));
-            assert!(body.contains("json(\"/api/smart_home/state_history?limit=12\")"));
+            assert!(body.contains(
+                "queryUrl(\"/api/smart_home/state_history\", {limit: 12, room_id: roomId})"
+            ));
             assert!(body.contains("json(\"/api/smart_home/services?limit=8\")"));
             assert!(body.contains("json(\"/api/smart_home/api?mutating=true&authorized=true\")"));
             assert!(body.contains("json(\"/api/smart_home/rooms?sort=scene_count\")"));
-            assert!(body.contains("json(\"/api/smart_home/devices?limit=8\")"));
+            assert!(
+                body.contains("queryUrl(\"/api/smart_home/devices\", {limit: 8, room_id: roomId})")
+            );
             assert!(body.contains("json(\"/api/smart_home/bridges?limit=8\")"));
             assert!(body.contains(
-                "queryUrl(\"/api/smart_home/events\", {limit: 12, kind: filters.eventKind})"
+                "queryUrl(\"/api/smart_home/events\", {limit: 12, kind: filters.eventKind, room_id: roomId})"
             ));
             assert!(body.contains("queryUrl(\"/api/smart_home/command_results\", {"));
+            assert!(body.contains("room_id: roomId"));
             assert!(body.contains("status: filters.commandStatus"));
             assert!(body.contains("queryUrl(\"/api/smart_home/authorization_decisions\", {"));
             assert!(body.contains("outcome: filters.authorizationOutcome"));
+            assert!(body.contains("renderRoomOptions(rooms, filters.room)"));
             assert!(body.contains("entityMatchesFilters(filters, entity)"));
             assert!(body.contains("filterRows(history.events || [], filters)"));
             assert!(body.contains("<tbody id=\"events\"></tbody>"));
@@ -8590,13 +8624,15 @@ mod tests {
         assert!(body.contains("<title>Codex Home</title>"));
         assert!(body.contains("json(\"/api/smart_home/bootstrap\")"));
         assert!(body.contains("data-dashboard-filter=\"search\""));
-        assert!(body.contains("queryUrl(\"/api/smart_home/scenes\", {limit: 12})"));
+        assert!(body.contains("data-dashboard-filter=\"room\""));
+        assert!(body.contains("queryUrl(\"/api/smart_home/scenes\", {limit: 12, room_id: roomId})"));
         assert!(body.contains("queryUrl(\"/api/smart_home/desired_states\", {limit: 12})"));
-        assert!(body.contains("json(\"/api/smart_home/state_history?limit=12\")"));
+        assert!(body
+            .contains("queryUrl(\"/api/smart_home/state_history\", {limit: 12, room_id: roomId})"));
         assert!(body.contains("json(\"/api/smart_home/services?limit=8\")"));
         assert!(body.contains("json(\"/api/smart_home/api?mutating=true&authorized=true\")"));
         assert!(body.contains("json(\"/api/smart_home/rooms?sort=scene_count\")"));
-        assert!(body.contains("json(\"/api/smart_home/devices?limit=8\")"));
+        assert!(body.contains("queryUrl(\"/api/smart_home/devices\", {limit: 8, room_id: roomId})"));
         assert!(body.contains("json(\"/api/smart_home/bridges?limit=8\")"));
         assert!(body.contains("queryUrl(\"/api/smart_home/command_results\", {"));
         assert!(body.contains("queryUrl(\"/api/smart_home/authorization_decisions\", {"));

@@ -106,9 +106,10 @@ authorization. Entity, service, scene, device, bridge, history, event-log,
 command-result, and authorization rows/cards expose read-only detail buttons
 that fetch the matching native detail route and show the response in the
 dashboard log. The browser shell also exposes filters for
-entity domain/state/control status, runtime event kind, command-result status,
-and authorization outcome, with local text search across the rendered dashboard
-rows.
+room, entity domain/state/control status, runtime event kind, command-result
+status, and authorization outcome, with server-backed room scoping across
+inventory, state, history, event-log, and command-result panels plus local text
+search across the rendered dashboard rows.
 
 ## Dependencies
 
