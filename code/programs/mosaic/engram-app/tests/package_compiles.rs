@@ -49,6 +49,10 @@ fn manifest_declares_app_package_boundary() {
         Some(&"0.1.0".to_string())
     );
     assert_eq!(
+        package.dependencies.get("mosaic-pkg-collection-actions"),
+        Some(&"0.1.0".to_string())
+    );
+    assert_eq!(
         package.dependencies.get("mosaic-pkg-deck-stats"),
         Some(&"0.1.0".to_string())
     );
@@ -84,11 +88,13 @@ fn app_sources_compile_without_owning_review_card_component() {
 
     let source = read_source("EngramApp.mll");
     assert!(source.contains("pkg::mosaic-pkg-card-browser::CardBrowser"));
+    assert!(source.contains("pkg::mosaic-pkg-collection-actions::CollectionActions"));
     assert!(source.contains("pkg::mosaic-pkg-deck-stats::DeckStatsPanel"));
     assert!(source.contains("pkg::mosaic-pkg-review-card::ReviewCard"));
     assert!(source.contains("pkg::mosaic-pkg-review-actions::ReviewActions"));
     assert!(source.contains("pkg::mosaic-pkg-session-progress::SessionProgress"));
     assert!(!source.contains("layout CardBrowser"));
+    assert!(!source.contains("layout CollectionActions"));
     assert!(!source.contains("layout DeckStatsPanel"));
     assert!(!source.contains("layout ReviewCard"));
     assert!(!source.contains("layout ReviewActions"));
@@ -136,6 +142,24 @@ fn app_manifest_resolves_card_browser_dependency() {
             assert!(package_path.ends_with("mosaic-pkg-card-browser"));
         }
         other => panic!("expected CardBrowser component resolution, got {other:?}"),
+    }
+}
+
+#[test]
+fn app_manifest_resolves_collection_actions_dependency() {
+    let resolver = dependency_resolver();
+
+    match resolver.resolve("CollectionActions") {
+        Some(Resolution::Component {
+            package,
+            component,
+            package_path,
+        }) => {
+            assert_eq!(package, "mosaic-pkg-collection-actions");
+            assert_eq!(component, "CollectionActions");
+            assert!(package_path.ends_with("mosaic-pkg-collection-actions"));
+        }
+        other => panic!("expected CollectionActions component resolution, got {other:?}"),
     }
 }
 
@@ -346,10 +370,18 @@ fn native_project_shells_expose_engram_host_contract() {
         .expect("react/src/main.tsx");
     assert_contains(&react_app, "<EngramApp");
     assert_contains(&react_app, "appTitle=\"Sample AppTitle\"");
+    assert_contains(&react_app, "collectionLabel=\"Sample CollectionLabel\"");
+    assert_contains(
+        &react_app,
+        "collectionNoteCountValue=\"Sample CollectionNoteCountValue\"",
+    );
     assert_contains(&react_app, "browserQuery=\"Sample BrowserQuery\"");
     assert_contains(&react_app, "browserResults={[]}");
     assert_contains(&react_app, "browserResultCardIds={[]}");
-    assert_contains(&react_app, "browserSelectedCardId=\"Sample BrowserSelectedCardId\"");
+    assert_contains(
+        &react_app,
+        "browserSelectedCardId=\"Sample BrowserSelectedCardId\"",
+    );
     assert_contains(&react_app, "answerVisible={false}");
     assert_contains(&react_app, "actionUndoLabel=\"Sample ActionUndoLabel\"");
     assert_contains(&react_app, "actionMarkLabel=\"Sample ActionMarkLabel\"");
@@ -359,6 +391,14 @@ fn native_project_shells_expose_engram_host_contract() {
         .expect("electron/src/main.tsx");
     assert_contains(&electron_app, "<EngramApp");
     assert_contains(&electron_app, "appTitle=\"Sample AppTitle\"");
+    assert_contains(
+        &electron_app,
+        "collectionImportLabel=\"Sample CollectionImportLabel\"",
+    );
+    assert_contains(
+        &electron_app,
+        "collectionDeleteNoteTypeLabel=\"Sample CollectionDeleteNoteTypeLabel\"",
+    );
     assert_contains(&electron_app, "browserQuery=\"Sample BrowserQuery\"");
     assert_contains(&electron_app, "browserResults={[]}");
     assert_contains(&electron_app, "browserResultCardIds={[]}");
@@ -384,6 +424,11 @@ fn native_project_shells_expose_engram_host_contract() {
         .expect("flutter/lib/main.dart");
     assert_contains(&flutter_app, "EngramApp(");
     assert_contains(&flutter_app, "appTitle: \"Sample AppTitle\",");
+    assert_contains(&flutter_app, "collectionLabel: \"Sample CollectionLabel\",");
+    assert_contains(
+        &flutter_app,
+        "collectionExportLabel: \"Sample CollectionExportLabel\",",
+    );
     assert_contains(&flutter_app, "browserQuery: \"Sample BrowserQuery\",");
     assert_contains(&flutter_app, "browserResults: const [],");
     assert_contains(&flutter_app, "browserResultCardIds: const [],");
@@ -402,6 +447,8 @@ fn native_project_shells_expose_engram_host_contract() {
     let qml =
         fs::read_to_string(tmp.path().join("qt").join("EngramApp.qml")).expect("EngramApp.qml");
     assert_contains(&qml, "property string appTitle");
+    assert_contains(&qml, "property string collectionLabel");
+    assert_contains(&qml, "property string collectionNoteCountValue");
     assert_contains(&qml, "property string browserQuery");
     assert_contains(&qml, "property var browserResults");
     assert_contains(&qml, "property var browserResultCardIds");
@@ -417,6 +464,12 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "signal burySiblings()");
     assert_contains(&qml, "signal suspendCard()");
     assert_contains(&qml, "signal toggleMark()");
+    assert_contains(&qml, "signal importAnki()");
+    assert_contains(&qml, "signal exportAnki()");
+    assert_contains(&qml, "signal addNote()");
+    assert_contains(&qml, "signal addNoteType()");
+    assert_contains(&qml, "signal deleteNote()");
+    assert_contains(&qml, "signal deleteNoteType()");
     assert_contains(&qml, "signal browserSearch()");
     assert_contains(&qml, "signal browserSelectResult(real index)");
 
@@ -433,10 +486,18 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "case burySiblings");
     assert_contains(&swift, "case suspendCard");
     assert_contains(&swift, "case toggleMark");
+    assert_contains(&swift, "case importAnki");
+    assert_contains(&swift, "case exportAnki");
+    assert_contains(&swift, "case addNote");
+    assert_contains(&swift, "case addNoteType");
+    assert_contains(&swift, "case deleteNote");
+    assert_contains(&swift, "case deleteNoteType");
     assert_contains(&swift, "case browserSearch");
     assert_contains(&swift, "case browserSelectResult");
     assert_contains(&swift, "struct EngramAppView: View");
     assert_contains(&swift, "let appTitle: String");
+    assert_contains(&swift, "let collectionLabel: String");
+    assert_contains(&swift, "let collectionNoteCountValue: String");
     assert_contains(&swift, "let browserResults: [String]");
     assert_contains(&swift, "let browserResultCardIds: [String]");
     assert_contains(&swift, "let browserSelectedCardId: String");
@@ -453,6 +514,11 @@ fn native_project_shells_expose_engram_host_contract() {
     .expect("Sources/App/App.swift");
     assert_contains(&swift_app, "EngramAppView(");
     assert_contains(&swift_app, "appTitle: \"Sample AppTitle\",");
+    assert_contains(&swift_app, "collectionLabel: \"Sample CollectionLabel\",");
+    assert_contains(
+        &swift_app,
+        "collectionImportLabel: \"Sample CollectionImportLabel\",",
+    );
     assert_contains(&swift_app, "browserQuery: \"Sample BrowserQuery\",");
     assert_contains(&swift_app, "browserResults: [],");
     assert_contains(&swift_app, "browserResultCardIds: [],");
@@ -482,6 +548,14 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_code_behind,
         "public static readonly DependencyProperty AppTitleProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty CollectionLabelProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty CollectionNoteCountValueProperty",
     );
     assert_contains(
         &xaml_code_behind,
@@ -556,6 +630,30 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(
         &xaml_events,
+        "public sealed record ImportAnki() : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record ExportAnki() : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record AddNote() : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record AddNoteType() : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record DeleteNote() : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record DeleteNoteType() : EngramAppEvent;",
+    );
+    assert_contains(
+        &xaml_events,
         "public sealed record BrowserSearch() : EngramAppEvent;",
     );
     assert_contains(
@@ -619,10 +717,27 @@ fn assert_dependency_styles_reach_all_backends(output_root: &Path) {
             "{component} dependency style {needle} should reach Flutter artifact"
         );
     }
+    assert!(
+        read_artifact(output_root, "html/EngramApp.html").contains("#0891b2"),
+        "CollectionActions dependency style should reach HTML artifact"
+    );
+    assert!(
+        read_artifact(output_root, "react/EngramApp.tsx").contains("#0891b2"),
+        "CollectionActions dependency style should reach React artifact"
+    );
+    assert!(
+        read_artifact(output_root, "electron/EngramApp.tsx").contains("#0891b2"),
+        "CollectionActions dependency style should reach Electron artifact"
+    );
+    assert!(
+        read_artifact(output_root, "xaml/EngramApp.xaml").contains("#0891b2"),
+        "CollectionActions dependency style should reach XAML artifact"
+    );
 
     let swift = read_artifact(output_root, "swiftui/EngramApp.swift");
     for (component, needle) in [
         ("DeckStatsPanel", "0.145, green: 0.388, blue: 0.922"),
+        ("CollectionActions", "0.031, green: 0.569, blue: 0.698"),
         ("ReviewCard", "0.914, green: 0.271, blue: 0.376"),
         ("SessionProgress", "0.059, green: 0.463, blue: 0.431"),
         ("ReviewActions", "0.486, green: 0.227, blue: 0.929"),

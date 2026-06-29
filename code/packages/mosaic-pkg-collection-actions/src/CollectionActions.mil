@@ -1,0 +1,27 @@
+// CollectionActions.mil - reusable collection workflow surface.
+//
+// The host owns dialogs, binary APKG import/export, and concrete note payloads.
+// This component only describes the cross-target UI contract.
+
+component CollectionActions {
+  slot collection-label : text ;
+  slot note-count-label : text ;
+  slot note-count-value : text ;
+  slot note-type-count-label : text ;
+  slot note-type-count-value : text ;
+  slot media-count-label : text ;
+  slot media-count-value : text ;
+  slot import-label : text ;
+  slot export-label : text ;
+  slot add-note-label : text ;
+  slot add-note-type-label : text ;
+  slot delete-note-label : text ;
+  slot delete-note-type-label : text ;
+
+  emit onImportAnki ;
+  emit onExportAnki ;
+  emit onAddNote ;
+  emit onAddNoteType ;
+  emit onDeleteNote ;
+  emit onDeleteNoteType ;
+}

@@ -1,0 +1,74 @@
+// CollectionActions.dark.msl - dark collection action panel style.
+
+style CollectionActions {
+  part collection-actions {
+    background : "#111827" ;
+    border-color : "#0891b2" ;
+    border-width : 1 ;
+    padding : 14 ;
+  }
+
+  part collection-title {
+    color : "#ecfeff" ;
+    font-size : 18 ;
+    font-weight : 700 ;
+    padding-bottom : 10 ;
+  }
+
+  part collection-counts {
+    padding-bottom : 10 ;
+  }
+
+  part note-count {
+    padding : 8 ;
+  }
+
+  part note-type-count {
+    padding : 8 ;
+  }
+
+  part media-count {
+    padding : 8 ;
+  }
+
+  part note-count-value {
+    color : "#67e8f9" ;
+    font-size : 22 ;
+    font-weight : 700 ;
+  }
+
+  part note-type-count-value {
+    color : "#a7f3d0" ;
+    font-size : 22 ;
+    font-weight : 700 ;
+  }
+
+  part media-count-value {
+    color : "#fde68a" ;
+    font-size : 22 ;
+    font-weight : 700 ;
+  }
+
+  part note-count-label {
+    color : "#cbd5e1" ;
+    font-size : 12 ;
+  }
+
+  part note-type-count-label {
+    color : "#cbd5e1" ;
+    font-size : 12 ;
+  }
+
+  part media-count-label {
+    color : "#cbd5e1" ;
+    font-size : 12 ;
+  }
+
+  part import-export-actions {
+    padding-bottom : 8 ;
+  }
+
+  part note-actions {
+    padding-bottom : 8 ;
+  }
+}

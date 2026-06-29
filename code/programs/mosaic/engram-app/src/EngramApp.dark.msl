@@ -17,6 +17,10 @@ style EngramApp {
     padding-bottom : 14 ;
   }
 
+  part collection-region {
+    padding-bottom : 14 ;
+  }
+
   part browser-region {
     padding-bottom : 14 ;
   }

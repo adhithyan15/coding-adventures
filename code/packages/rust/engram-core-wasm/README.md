@@ -97,14 +97,19 @@ without an active session or contains shared review counters such as
 `totalCards`, `currentPosition`, `remainingCards`, `cardsReviewed`,
 `cardsCorrect`, `revealed`, and `completed`.
 
-`engram_app_props` includes Mosaic-slot-shaped labels for secondary review
-actions such as undo, bury card, bury siblings, suspend, and mark/unmark.
+`engram_app_props` includes Mosaic-slot-shaped labels and counts for collection
+actions, browser rows, and secondary review actions such as undo, bury card,
+bury siblings, suspend, and mark/unmark.
 `handle_engram_app_event` accepts those generated events (`onUndo`,
 `onBuryCard`, `onBurySiblings`, `onSuspendCard`, and `onToggleMark`) and routes
 them through the same core reducer commands used by direct JSON dispatch. It
 also accepts browser events such as `onBrowserSearch` and targeted row actions
 such as `onBrowserToggleMarkSelected|card-id` or
 `{"event":"onBrowserToggleSuspendSelected","cardId":"card-id"}`.
+Collection workflow events such as `onImportAnki`, `onExportAnki`, `onAddNote`,
+`onAddNoteType`, `onDeleteNote`, and `onDeleteNoteType` round-trip through the
+same event parser as host intents so generated shells share one UI contract
+while file picking, dialogs, and concrete note payloads stay host-owned.
 
 `daily_limit_usage` returns `{ ok: true, usage }` with new/review counts already
 seen in a host-provided day window and the remaining slots from `DeckOptions`.

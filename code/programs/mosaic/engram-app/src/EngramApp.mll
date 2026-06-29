@@ -21,6 +21,29 @@ layout EngramApp {
         hidden-value : slot: deck-hidden-value
       )
     }
+    Box [ collection-region ] {
+      pkg::mosaic-pkg-collection-actions::CollectionActions (
+        collection-label : slot: collection-label ,
+        note-count-label : slot: collection-note-count-label ,
+        note-count-value : slot: collection-note-count-value ,
+        note-type-count-label : slot: collection-note-type-count-label ,
+        note-type-count-value : slot: collection-note-type-count-value ,
+        media-count-label : slot: collection-media-count-label ,
+        media-count-value : slot: collection-media-count-value ,
+        import-label : slot: collection-import-label ,
+        export-label : slot: collection-export-label ,
+        add-note-label : slot: collection-add-note-label ,
+        add-note-type-label : slot: collection-add-note-type-label ,
+        delete-note-label : slot: collection-delete-note-label ,
+        delete-note-type-label : slot: collection-delete-note-type-label ,
+        onImportAnki : emit: onImportAnki ,
+        onExportAnki : emit: onExportAnki ,
+        onAddNote : emit: onAddNote ,
+        onAddNoteType : emit: onAddNoteType ,
+        onDeleteNote : emit: onDeleteNote ,
+        onDeleteNoteType : emit: onDeleteNoteType
+      )
+    }
     Box [ browser-region ] {
       pkg::mosaic-pkg-card-browser::CardBrowser (
         browser-label : slot: browser-label ,

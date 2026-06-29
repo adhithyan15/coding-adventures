@@ -258,7 +258,13 @@ impl EngramSession {
                 | EngramAppEvent::BrowserSearch
                 | EngramAppEvent::BrowserSelectResult
                 | EngramAppEvent::BrowserOpenSelected
-                | EngramAppEvent::BrowserEditSelected => {}
+                | EngramAppEvent::BrowserEditSelected
+                | EngramAppEvent::ImportAnki
+                | EngramAppEvent::ExportAnki
+                | EngramAppEvent::AddNote
+                | EngramAppEvent::AddNoteType
+                | EngramAppEvent::DeleteNote
+                | EngramAppEvent::DeleteNoteType => {}
             }
 
             let props = engram_app_props_for_state(&self.state, deck_id, now);
@@ -577,6 +583,36 @@ fn engram_app_props_for_state(state: &AppState, deck_id: &str, now: u64) -> Valu
     let props_object = props
         .as_object_mut()
         .expect("Engram app props literal must be a JSON object");
+    {
+        let mut insert_prop = |key: &str, value: String| {
+            props_object.insert(key.to_string(), Value::String(value));
+        };
+        insert_prop("collection-label", "Collection".to_string());
+        insert_prop("collection-note-count-label", "Notes".to_string());
+        insert_prop("collection-note-count-value", state.notes.len().to_string());
+        insert_prop("collection-note-type-count-label", "Note types".to_string());
+        insert_prop(
+            "collection-note-type-count-value",
+            state.note_types.len().to_string(),
+        );
+        insert_prop("collection-media-count-label", "Media".to_string());
+        insert_prop(
+            "collection-media-count-value",
+            state.media_assets.len().to_string(),
+        );
+        insert_prop("collection-import-label", "Import Anki".to_string());
+        insert_prop("collection-export-label", "Export Anki".to_string());
+        insert_prop("collection-add-note-label", "Add note".to_string());
+        insert_prop(
+            "collection-add-note-type-label",
+            "Add note type".to_string(),
+        );
+        insert_prop("collection-delete-note-label", "Delete note".to_string());
+        insert_prop(
+            "collection-delete-note-type-label",
+            "Delete note type".to_string(),
+        );
+    }
     if let Some(browser_object) = browser_props.as_object() {
         for (key, value) in browser_object {
             props_object.insert(key.clone(), value.clone());
@@ -757,6 +793,12 @@ enum EngramAppEvent {
     BrowserEditSelected,
     BrowserToggleSuspendSelected,
     BrowserToggleMarkSelected,
+    ImportAnki,
+    ExportAnki,
+    AddNote,
+    AddNoteType,
+    DeleteNote,
+    DeleteNoteType,
 }
 
 impl EngramAppEvent {
@@ -779,6 +821,12 @@ impl EngramAppEvent {
             Self::BrowserEditSelected => "onBrowserEditSelected",
             Self::BrowserToggleSuspendSelected => "onBrowserToggleSuspendSelected",
             Self::BrowserToggleMarkSelected => "onBrowserToggleMarkSelected",
+            Self::ImportAnki => "onImportAnki",
+            Self::ExportAnki => "onExportAnki",
+            Self::AddNote => "onAddNote",
+            Self::AddNoteType => "onAddNoteType",
+            Self::DeleteNote => "onDeleteNote",
+            Self::DeleteNoteType => "onDeleteNoteType",
         }
     }
 }
@@ -877,6 +925,22 @@ fn parse_engram_app_event_name(
             EngramAppEvent::BrowserToggleMarkSelected,
             card_id,
         )),
+        "importanki" | "import-anki" | "import_anki" => {
+            Ok(parsed_event(EngramAppEvent::ImportAnki, card_id))
+        }
+        "exportanki" | "export-anki" | "export_anki" => {
+            Ok(parsed_event(EngramAppEvent::ExportAnki, card_id))
+        }
+        "addnote" | "add-note" | "add_note" => Ok(parsed_event(EngramAppEvent::AddNote, card_id)),
+        "addnotetype" | "add-note-type" | "add_note_type" => {
+            Ok(parsed_event(EngramAppEvent::AddNoteType, card_id))
+        }
+        "deletenote" | "delete-note" | "delete_note" => {
+            Ok(parsed_event(EngramAppEvent::DeleteNote, card_id))
+        }
+        "deletenotetype" | "delete-note-type" | "delete_note_type" => {
+            Ok(parsed_event(EngramAppEvent::DeleteNoteType, card_id))
+        }
         _ => Err(format!("unknown Engram app event: {event_name}")),
     }
 }
@@ -2066,13 +2130,31 @@ mod tests {
         let mut session = EngramSession::new();
         let snapshot = r#"{
             "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
-            "noteTypes": [],
-            "notes": [],
+            "noteTypes": [{
+                "id": "basic",
+                "name": "Basic",
+                "fields": [],
+                "templates": [],
+                "createdAt": 1700000000000,
+                "updatedAt": 1700000000000
+            }],
+            "notes": [{
+                "id": "note",
+                "noteTypeId": "basic",
+                "deckId": "deck",
+                "fields": [],
+                "tags": [],
+                "createdAt": 1700000000000,
+                "updatedAt": 1700000000000
+            }],
             "cards": [
                 {"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000},
                 {"id":"other","deckId":"deck","front":"letter-aa","back":"aa","createdAt":1700000000000}
             ],
             "cardProgress": [],
+            "mediaAssets": [
+                {"id":"media:0","archiveName":"0","filename":"audio/amma.mp3","data":[109,112,51]}
+            ],
             "sessions": [],
             "reviews": [],
             "activeSession": null
@@ -2100,6 +2182,25 @@ mod tests {
         assert_eq!(value["props"]["deck-name"], "Tamil");
         assert_eq!(value["props"]["deck-total-value"], "2");
         assert_eq!(value["props"]["deck-new-value"], "2");
+        assert_eq!(value["props"]["collection-label"], "Collection");
+        assert_eq!(value["props"]["collection-note-count-value"], "1");
+        assert_eq!(value["props"]["collection-note-type-count-value"], "1");
+        assert_eq!(value["props"]["collection-media-count-value"], "1");
+        assert_eq!(value["props"]["collection-import-label"], "Import Anki");
+        assert_eq!(value["props"]["collection-export-label"], "Export Anki");
+        assert_eq!(value["props"]["collection-add-note-label"], "Add note");
+        assert_eq!(
+            value["props"]["collection-add-note-type-label"],
+            "Add note type"
+        );
+        assert_eq!(
+            value["props"]["collection-delete-note-label"],
+            "Delete note"
+        );
+        assert_eq!(
+            value["props"]["collection-delete-note-type-label"],
+            "Delete note type"
+        );
         assert_eq!(value["props"]["browser-label"], "Card browser");
         assert_eq!(value["props"]["browser-query"], "is:due OR is:new");
         assert_eq!(
@@ -2413,6 +2514,56 @@ mod tests {
             missing_card["error"],
             "cannot mark browser row without a card id"
         );
+    }
+
+    #[test]
+    fn handle_engram_app_collection_events_round_trip_as_host_intents() {
+        let mut session = EngramSession::new();
+        session.load_snapshot(
+            r#"{
+                "decks": [],
+                "noteTypes": [{
+                    "id": "basic",
+                    "name": "Basic",
+                    "fields": [],
+                    "templates": [],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                }],
+                "notes": [{
+                    "id": "note",
+                    "noteTypeId": "basic",
+                    "deckId": "deck",
+                    "fields": [],
+                    "tags": [],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                }],
+                "cards": [],
+                "cardProgress": [],
+                "mediaAssets": [],
+                "sessions": [],
+                "reviews": [],
+                "activeSession": null
+            }"#,
+        );
+
+        for (event, canonical) in [
+            ("onImportAnki", "onImportAnki"),
+            ("export-anki", "onExportAnki"),
+            ("add-note", "onAddNote"),
+            ("add-note-type", "onAddNoteType"),
+            ("delete-note", "onDeleteNote"),
+            ("delete-note-type", "onDeleteNoteType"),
+        ] {
+            let value: Value =
+                serde_json::from_str(&session.handle_engram_app_event(event, "", NOW)).unwrap();
+            assert_eq!(value["ok"], true);
+            assert_eq!(value["event"], canonical);
+            assert_eq!(value["state"]["notes"].as_array().unwrap().len(), 1);
+            assert_eq!(value["props"]["collection-note-count-value"], "1");
+            assert_eq!(value["props"]["collection-note-type-count-value"], "1");
+        }
     }
 
     #[test]

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added the reusable `mosaic-pkg-collection-actions` dependency and mounted its
+  `CollectionActions` component so generated host shells expose shared
+  collection counts, Anki import/export intents, and note/note-type workflow
+  events.
 - Routed generated Mosaic browser events through the shared Engram event facade,
   including card-ID-targeted mark and suspend actions for browser rows.
 - Added browser result and selected-card metadata slots to the Engram app
@@ -19,9 +23,9 @@
   suspend, and mark events through the shared Engram event bridge.
 - Added a multi-backend artifact-builder smoke test proving `EngramApp` emits
   through HTML, React, SwiftUI, Qt, XAML, and Flutter while consuming
-  `mosaic-pkg-card-browser`, `mosaic-pkg-deck-stats`,
-  `mosaic-pkg-review-actions`, `mosaic-pkg-review-card`, and
-  `mosaic-pkg-session-progress`.
+  `mosaic-pkg-card-browser`, `mosaic-pkg-collection-actions`,
+  `mosaic-pkg-deck-stats`, `mosaic-pkg-review-actions`,
+  `mosaic-pkg-review-card`, and `mosaic-pkg-session-progress`.
 - Added `scripts/build-all.ps1` to emit HTML, WebComponent, React, Electron,
   SwiftUI, Qt, XAML, and Flutter host shells from the same Engram Mosaic app
   package into `target/mosaic-engram-app/`.
