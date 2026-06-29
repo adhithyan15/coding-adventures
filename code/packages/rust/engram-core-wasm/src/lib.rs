@@ -1654,16 +1654,13 @@ fn host_intent_for_event(
                 now,
                 Some(selected_deck.as_str()),
             );
-            Some(json!({
-                "type": "openCard",
-                "event": event.canonical_name(),
-                "deckId": selected_deck,
-                "createdAt": now,
-                "cardId": selection.card_id,
-                "noteId": selection.note_id,
-                "templateId": selection.template_id,
-                "state": selection.state,
-            }))
+            Some(browser_card_host_intent(
+                "openCard",
+                event,
+                selected_deck,
+                now,
+                selection,
+            ))
         }
         EngramAppEvent::BrowserEditSelected => {
             let selection = browser_selected_card_details(
@@ -1673,16 +1670,13 @@ fn host_intent_for_event(
                 now,
                 Some(selected_deck.as_str()),
             );
-            Some(json!({
-                "type": "editCard",
-                "event": event.canonical_name(),
-                "deckId": selected_deck,
-                "createdAt": now,
-                "cardId": selection.card_id,
-                "noteId": selection.note_id,
-                "templateId": selection.template_id,
-                "state": selection.state,
-            }))
+            Some(browser_card_host_intent(
+                "editCard",
+                event,
+                selected_deck,
+                now,
+                selection,
+            ))
         }
         EngramAppEvent::AddNote => Some(base("addNote")),
         EngramAppEvent::AddNoteType => Some(base("addNoteType")),
@@ -1696,8 +1690,28 @@ fn host_intent_for_event(
 struct BrowserSelection {
     card_id: String,
     note_id: String,
+    note_type_id: String,
+    note_type_name: String,
     template_id: String,
+    template_name: String,
+    template_ordinal: Option<u32>,
+    cloze_ordinal: Option<u32>,
+    deck_id: String,
+    deck_name: String,
     state: String,
+    card_front: String,
+    card_back: String,
+    note_tags: Vec<String>,
+    fields: Vec<BrowserSelectionField>,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+struct BrowserSelectionField {
+    id: String,
+    name: String,
+    value: String,
+    required: bool,
+    ordinal: u32,
 }
 
 impl From<BrowserRow> for BrowserSelection {
@@ -1707,8 +1721,53 @@ impl From<BrowserRow> for BrowserSelection {
             note_id: row.note_id,
             template_id: row.template_id,
             state: row.state,
+            ..Self::default()
         }
     }
+}
+
+fn browser_card_host_intent(
+    intent_type: &str,
+    event: EngramAppEvent,
+    deck_id: String,
+    now: u64,
+    selection: BrowserSelection,
+) -> Value {
+    let fields = selection
+        .fields
+        .iter()
+        .map(|field| {
+            json!({
+                "id": field.id,
+                "name": field.name,
+                "value": field.value,
+                "required": field.required,
+                "ordinal": field.ordinal,
+            })
+        })
+        .collect::<Vec<_>>();
+
+    json!({
+        "type": intent_type,
+        "event": event.canonical_name(),
+        "deckId": deck_id,
+        "createdAt": now,
+        "cardId": selection.card_id,
+        "noteId": selection.note_id,
+        "noteTypeId": selection.note_type_id,
+        "noteTypeName": selection.note_type_name,
+        "templateId": selection.template_id,
+        "templateName": selection.template_name,
+        "templateOrdinal": selection.template_ordinal,
+        "clozeOrdinal": selection.cloze_ordinal,
+        "cardDeckId": selection.deck_id,
+        "deckName": selection.deck_name,
+        "state": selection.state,
+        "cardFront": selection.card_front,
+        "cardBack": selection.card_back,
+        "tags": selection.note_tags,
+        "fields": fields,
+    })
 }
 
 fn browser_selected_card_details(
@@ -1733,12 +1792,13 @@ fn browser_selected_card_details(
                     now,
                 )
             });
-        return row
+        let selection = row
             .map(BrowserSelection::from)
             .unwrap_or_else(|| BrowserSelection {
                 card_id: card_id.to_string(),
                 ..BrowserSelection::default()
             });
+        return enrich_browser_selection(state, selection);
     }
 
     selected_browser_row(state, browser, now, current_deck_id)
@@ -1775,7 +1835,113 @@ fn browser_selected_card_details(
             })
         })
         .map(BrowserSelection::from)
+        .map(|selection| enrich_browser_selection(state, selection))
         .unwrap_or_default()
+}
+
+fn enrich_browser_selection(state: &AppState, mut selection: BrowserSelection) -> BrowserSelection {
+    let card = state.cards.iter().find(|card| card.id == selection.card_id);
+    if let Some(card) = card {
+        selection.deck_id = card.deck_id.clone();
+        selection.card_front = card.front.clone();
+        selection.card_back = card.back.clone();
+        if let Some(lineage) = card.lineage.as_ref() {
+            if selection.note_id.is_empty() {
+                selection.note_id = lineage.note_id.clone();
+            }
+            if selection.note_type_id.is_empty() {
+                selection.note_type_id = lineage.note_type_id.clone();
+            }
+            if selection.template_id.is_empty() {
+                selection.template_id = lineage.template_id.clone();
+            }
+            selection.template_ordinal = Some(lineage.ordinal);
+            selection.cloze_ordinal = lineage.cloze_ordinal;
+        }
+    }
+
+    let note = state.notes.iter().find(|note| note.id == selection.note_id);
+    if let Some(note) = note {
+        if selection.note_type_id.is_empty() {
+            selection.note_type_id = note.note_type_id.clone();
+        }
+        if selection.deck_id.is_empty() {
+            selection.deck_id = note.deck_id.clone();
+        }
+        selection.note_tags = note.tags.clone();
+    }
+
+    let note_type = state
+        .note_types
+        .iter()
+        .find(|note_type| note_type.id == selection.note_type_id);
+    if let Some(note_type) = note_type {
+        selection.note_type_name = note_type.name.clone();
+        let template = note_type
+            .templates
+            .iter()
+            .find(|template| template.id == selection.template_id)
+            .or_else(|| {
+                selection.template_ordinal.and_then(|ordinal| {
+                    note_type
+                        .templates
+                        .iter()
+                        .find(|template| template.ordinal == ordinal)
+                })
+            });
+        if let Some(template) = template {
+            if selection.template_id.is_empty() {
+                selection.template_id = template.id.clone();
+            }
+            selection.template_name = template.name.clone();
+            selection.template_ordinal = Some(template.ordinal);
+        }
+
+        if let Some(note) = note {
+            let values_by_field_id = note
+                .fields
+                .iter()
+                .map(|field| (field.field_id.as_str(), field.value.as_str()))
+                .collect::<HashMap<_, _>>();
+            selection.fields = note_type
+                .fields
+                .iter()
+                .map(|field| BrowserSelectionField {
+                    id: field.id.clone(),
+                    name: field.name.clone(),
+                    value: values_by_field_id
+                        .get(field.id.as_str())
+                        .copied()
+                        .unwrap_or_default()
+                        .to_string(),
+                    required: field.required,
+                    ordinal: field.ordinal,
+                })
+                .collect();
+        }
+    } else if let Some(note) = note {
+        selection.fields = note
+            .fields
+            .iter()
+            .enumerate()
+            .map(|(index, field)| BrowserSelectionField {
+                id: field.field_id.clone(),
+                name: field.field_id.clone(),
+                value: field.value.clone(),
+                required: false,
+                ordinal: index as u32,
+            })
+            .collect();
+    }
+
+    selection.deck_name = state
+        .decks
+        .iter()
+        .find(|deck| deck.id == selection.deck_id)
+        .map(|deck| deck.name.clone())
+        .unwrap_or_else(|| selection.deck_id.clone());
+
+    selection
 }
 
 fn selected_browser_row(
@@ -4839,12 +5005,42 @@ mod tests {
         let mut session = EngramSession::new();
         let snapshot = r#"{
             "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
-            "noteTypes": [],
+            "noteTypes": [{
+                "id": "basic",
+                "name": "Basic",
+                "fields": [
+                    {"id": "front", "name": "Front", "required": true, "ordinal": 0},
+                    {"id": "back", "name": "Back", "required": true, "ordinal": 1}
+                ],
+                "templates": [
+                    {
+                        "id": "forward",
+                        "name": "Forward",
+                        "frontTemplate": "{{Front}}",
+                        "backTemplate": "{{Back}}",
+                        "requiredFieldNames": ["Front"],
+                        "ordinal": 0
+                    },
+                    {
+                        "id": "reverse",
+                        "name": "Reverse",
+                        "frontTemplate": "{{Back}}",
+                        "backTemplate": "{{Front}}",
+                        "requiredFieldNames": ["Back"],
+                        "ordinal": 1
+                    }
+                ],
+                "createdAt": 1700000000000,
+                "updatedAt": 1700000000000
+            }],
             "notes": [{
                 "id": "note",
                 "noteTypeId": "basic",
                 "deckId": "deck",
-                "fields": [{"fieldId": "front", "value": "letter-aa"}],
+                "fields": [
+                    {"fieldId": "front", "value": "letter-aa"},
+                    {"fieldId": "back", "value": "aa"}
+                ],
                 "tags": ["tamil"],
                 "createdAt": 1700000000000,
                 "updatedAt": 1700000000000
@@ -4901,8 +5097,36 @@ mod tests {
         assert_eq!(open["hostIntent"]["type"], "openCard");
         assert_eq!(open["hostIntent"]["cardId"], "other");
         assert_eq!(open["hostIntent"]["noteId"], "note");
+        assert_eq!(open["hostIntent"]["noteTypeId"], "basic");
+        assert_eq!(open["hostIntent"]["noteTypeName"], "Basic");
         assert_eq!(open["hostIntent"]["templateId"], "reverse");
+        assert_eq!(open["hostIntent"]["templateName"], "Reverse");
+        assert_eq!(open["hostIntent"]["templateOrdinal"], 1);
+        assert_eq!(open["hostIntent"]["cardDeckId"], "deck");
+        assert_eq!(open["hostIntent"]["deckName"], "Tamil");
         assert_eq!(open["hostIntent"]["state"], "new");
+        assert_eq!(open["hostIntent"]["cardFront"], "letter-aa");
+        assert_eq!(open["hostIntent"]["cardBack"], "aa");
+        assert_eq!(open["hostIntent"]["tags"], json!(["tamil"]));
+        assert_eq!(
+            open["hostIntent"]["fields"],
+            json!([
+                {
+                    "id": "front",
+                    "name": "Front",
+                    "value": "letter-aa",
+                    "required": true,
+                    "ordinal": 0
+                },
+                {
+                    "id": "back",
+                    "name": "Back",
+                    "value": "aa",
+                    "required": true,
+                    "ordinal": 1
+                }
+            ])
+        );
 
         let edit: Value = serde_json::from_str(&session.handle_engram_app_event(
             "onBrowserEditSelected",
@@ -4914,7 +5138,16 @@ mod tests {
         assert_eq!(edit["hostIntent"]["type"], "editCard");
         assert_eq!(edit["hostIntent"]["cardId"], "other");
         assert_eq!(edit["hostIntent"]["noteId"], "note");
+        assert_eq!(edit["hostIntent"]["noteTypeId"], "basic");
+        assert_eq!(edit["hostIntent"]["noteTypeName"], "Basic");
         assert_eq!(edit["hostIntent"]["templateId"], "reverse");
+        assert_eq!(edit["hostIntent"]["templateName"], "Reverse");
+        assert_eq!(edit["hostIntent"]["templateOrdinal"], 1);
+        assert_eq!(edit["hostIntent"]["cardFront"], "letter-aa");
+        assert_eq!(edit["hostIntent"]["cardBack"], "aa");
+        assert_eq!(edit["hostIntent"]["tags"], json!(["tamil"]));
+        assert_eq!(edit["hostIntent"]["fields"][1]["name"], "Back");
+        assert_eq!(edit["hostIntent"]["fields"][1]["value"], "aa");
         assert_eq!(edit["hostIntent"]["state"], "new");
 
         let tag_draft: Value = serde_json::from_str(&session.handle_engram_app_event(
