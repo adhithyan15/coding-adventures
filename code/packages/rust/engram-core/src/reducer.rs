@@ -1545,6 +1545,7 @@ mod tests {
                 requirement_mode: TemplateRequirementMode::All,
                 ordinal: 0,
             }],
+            stylesheet: None,
             created_at: NOW,
             updated_at: NOW,
         }
@@ -1681,6 +1682,7 @@ mod tests {
                 requirement_mode: TemplateRequirementMode::All,
                 ordinal: 0,
             }],
+            stylesheet: None,
             created_at: NOW,
             updated_at: NOW,
         };
@@ -1821,6 +1823,7 @@ mod tests {
                     ordinal: 1,
                 },
             ],
+            stylesheet: None,
             created_at: NOW,
             updated_at: NOW,
         };

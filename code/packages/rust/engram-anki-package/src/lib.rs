@@ -1205,6 +1205,7 @@ struct ExportNoteType {
     kind: i64,
     fields: Vec<FieldDef>,
     templates: Vec<CardTemplate>,
+    stylesheet: Option<String>,
     created_at: u64,
     updated_at: u64,
 }
@@ -1322,6 +1323,7 @@ impl ExportModel {
                 kind: note_type_kind(note_type),
                 fields: note_type.fields.clone(),
                 templates: note_type.templates.clone(),
+                stylesheet: note_type.stylesheet.clone(),
                 created_at: note_type.created_at,
                 updated_at: note_type.updated_at,
             })
@@ -1784,12 +1786,16 @@ fn export_note_types_json(export: &ExportModel) -> Value {
             .entry("sortf".to_string())
             .or_insert_with(|| Value::Number(0_i64.into()));
         model_object.entry("did".to_string()).or_insert(Value::Null);
-        model_object.entry("css".to_string()).or_insert_with(|| {
-            Value::String(
-                ".card { font-family: arial; font-size: 20px; text-align: center; color: black; background-color: white; }"
-                    .to_string(),
-            )
-        });
+        if let Some(stylesheet) = &note_type.stylesheet {
+            model_object.insert("css".to_string(), Value::String(stylesheet.clone()));
+        } else {
+            model_object.entry("css".to_string()).or_insert_with(|| {
+                Value::String(
+                    ".card { font-family: arial; font-size: 20px; text-align: center; color: black; background-color: white; }"
+                        .to_string(),
+                )
+            });
+        }
         model_object
             .entry("latexPre".to_string())
             .or_insert_with(|| Value::String("\\documentclass[12pt]{article}".to_string()));
@@ -2569,6 +2575,7 @@ fn synthetic_basic_note_type() -> ExportNoteType {
             requirement_mode: TemplateRequirementMode::All,
             ordinal: 0,
         }],
+        stylesheet: None,
         created_at: 0,
         updated_at: 0,
     }
@@ -2720,6 +2727,7 @@ fn map_v11_note_type(note_type: &AnkiV11NoteType) -> NoteType {
         name: note_type.name.clone(),
         fields,
         templates,
+        stylesheet: (!note_type.css.trim().is_empty()).then(|| note_type.css.clone()),
         created_at: 0,
         updated_at: 0,
     }
@@ -4814,6 +4822,7 @@ CREATE TABLE graves (
                 }
             ]
         });
+        collection.note_types[0].css = ".card { color: teal; }".to_string();
         collection.notes[0].guid = "stable-guid".to_string();
         collection.notes[0].modified_at = 1_700_006_666;
         collection.notes[0].update_sequence_number = 17;
@@ -4840,6 +4849,10 @@ CREATE TABLE graves (
         }];
 
         let state = v11_collection_to_engram_state(&collection).unwrap();
+        assert_eq!(
+            state.note_types[0].stylesheet.as_deref(),
+            Some(".card { color: teal; }")
+        );
         assert!(state.external_sources.iter().any(|source| {
             source.source == ANKI_V11_SOURCE
                 && source.target == ExternalSourceTarget::NoteType
@@ -5196,6 +5209,7 @@ CREATE TABLE graves (
                     requirement_mode: TemplateRequirementMode::Any,
                     ordinal: 0,
                 }],
+                stylesheet: Some(".card { color: navy; }".to_string()),
                 created_at: 1_641_600_000_000,
                 updated_at: 1_641_600_000_000,
             }],
@@ -5275,6 +5289,7 @@ CREATE TABLE graves (
         assert_eq!(collection.decks[0].id, 2);
         assert_eq!(collection.decks[0].name, "Spanish::Latin");
         assert_eq!(collection.note_types[0].id, 100);
+        assert_eq!(collection.note_types[0].css, ".card { color: navy; }");
         assert_eq!(collection.note_types[0].templates[0].deck_id, Some(2));
         assert_eq!(collection.note_types[0].raw["tmpls"][0]["did"], 2);
         assert_eq!(
@@ -5299,6 +5314,10 @@ CREATE TABLE graves (
         assert_eq!(
             imported.note_types[0].templates[0].deck_id.as_deref(),
             Some("2")
+        );
+        assert_eq!(
+            imported.note_types[0].stylesheet.as_deref(),
+            Some(".card { color: navy; }")
         );
         assert_eq!(imported.notes[0].fields[0].value, "hola");
         assert_eq!(imported.cards[0].front, "hola");

@@ -791,6 +791,7 @@ fn basic_note_type(id: &str, name: &str, created_at: u64, reverse: bool) -> Note
             },
         ],
         templates,
+        stylesheet: None,
         created_at,
         updated_at: created_at,
     }
@@ -824,6 +825,7 @@ fn cloze_note_type(id: &str, name: &str, created_at: u64) -> NoteType {
             requirement_mode: TemplateRequirementMode::All,
             ordinal: 0,
         }],
+        stylesheet: None,
         created_at,
         updated_at: created_at,
     }
@@ -850,6 +852,7 @@ fn custom_note_type(
             })
             .collect(),
         templates: Vec::new(),
+        stylesheet: None,
         created_at,
         updated_at: created_at,
     }

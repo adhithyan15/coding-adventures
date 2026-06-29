@@ -98,6 +98,11 @@ pub struct NoteType {
     pub name: String,
     pub fields: Vec<FieldDef>,
     pub templates: Vec<CardTemplate>,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub stylesheet: Option<String>,
     pub created_at: u64,
     pub updated_at: u64,
 }

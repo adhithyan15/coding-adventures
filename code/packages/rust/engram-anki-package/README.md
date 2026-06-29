@@ -56,6 +56,9 @@ when exporting back to APKG, along with the imported collection creation day
 that anchors Anki's due-day offsets and the collection's modification/schema
 metadata. Learning and relearning cards translate Anki's packed `left`
 remaining-step field into Engram's internal step index and back again on export.
+Anki model CSS imports into shared `NoteType::stylesheet`; Engram-native
+stylesheets export back to Anki model `css` so note styling does not depend on
+preserved raw model JSON alone.
 Deleted imported decks, notes, and cards that the shared core records as
 external-source tombstones export as Anki `graves` rows, preserving sync-visible
 deletions across APKG round-trips. Imported revlog rows can still export after

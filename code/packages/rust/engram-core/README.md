@@ -154,6 +154,9 @@ behavior Anki-like review screens need.
 resync generated cards for existing notes of that type, while
 `EngramCommand::DeleteNoteType` removes the note type, its notes, and only their
 lineaged generated cards.
+`NoteType::stylesheet` carries optional shared card styling text for imported
+or native note models without forcing every host to preserve backend-specific
+model JSON.
 `EngramCommand::UpsertNote` can optionally materialize generated cards from the
 note type while preserving progress for stable generated card IDs, and
 `EngramCommand::DeleteNote` cascades only the note's lineaged generated cards.
