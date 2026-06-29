@@ -560,9 +560,10 @@ fn emit_project_shell(
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
             if let Some(proj) = r.project {
-                let flat: [(&str, &str); 4] = [
+                let flat: [(&str, &str); 5] = [
                     ("package.json", &proj.package_json),
                     ("vite.config.ts", &proj.vite_config),
+                    ("tsconfig.json", &proj.tsconfig_json),
                     ("index.html", &proj.index_html),
                     ("README.md", &proj.readme),
                 ];
@@ -3006,6 +3007,7 @@ version = "1"
             dir.join("vite.config.ts").exists(),
             "vite.config.ts missing"
         );
+        assert!(dir.join("tsconfig.json").exists(), "tsconfig.json missing");
         assert!(dir.join("index.html").exists(), "index.html missing");
         assert!(dir.join("README.md").exists(), "README.md missing");
         assert!(
@@ -3043,6 +3045,7 @@ version = "1"
                 vec![
                     "package.json",
                     "vite.config.ts",
+                    "tsconfig.json",
                     "index.html",
                     "README.md",
                     "src/main.tsx",

@@ -28,9 +28,11 @@ binds them to the shared Rust business logic core through host shells.
 - `EngramApp.dark.msl` owns app-shell styling only.
 - Package artifact builds inline component-package styles through the full
   dependency chain.
-- The generated React, SwiftPM, and Flutter shells mount `EngramApp` with
-  sample slot values and dispatch callbacks, matching the generated interface
-  shapes.
+- The generated React and Electron renderer shells mount `EngramApp` through
+  `window.mosaicHost.getProps` and `window.mosaicHost.handleEvent`, with sample
+  slot values as a fallback when no host is installed.
+- The generated SwiftPM and Flutter shells mount `EngramApp` with sample slot
+  values and dispatch callbacks, matching the generated interface shapes.
 - Smoke tests now assert the generated Qt, SwiftUI, and XAML project shells
   expose the same Engram host contract slots, collection events, card-browser
   events, rating events, and Anki-style review action events as the shared Rust

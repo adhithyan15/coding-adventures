@@ -368,50 +368,83 @@ fn native_project_shells_expose_engram_host_contract() {
 
     let react_app = fs::read_to_string(tmp.path().join("react").join("src").join("main.tsx"))
         .expect("react/src/main.tsx");
-    assert_contains(&react_app, "<EngramApp");
-    assert_contains(&react_app, "appTitle=\"Sample AppTitle\"");
-    assert_contains(&react_app, "collectionLabel=\"Sample CollectionLabel\"");
+    assert_contains(&react_app, "const fallbackProps = {");
+    assert_contains(&react_app, "appTitle: \"Sample AppTitle\",");
+    assert_contains(&react_app, "collectionLabel: \"Sample CollectionLabel\",");
     assert_contains(
         &react_app,
-        "collectionNoteCountValue=\"Sample CollectionNoteCountValue\"",
+        "collectionNoteCountValue: \"Sample CollectionNoteCountValue\",",
     );
-    assert_contains(&react_app, "browserQuery=\"Sample BrowserQuery\"");
-    assert_contains(&react_app, "browserResults={[]}");
-    assert_contains(&react_app, "browserResultCardIds={[]}");
+    assert_contains(&react_app, "browserQuery: \"Sample BrowserQuery\",");
+    assert_contains(&react_app, "browserResults: [],");
+    assert_contains(&react_app, "browserResultCardIds: [],");
     assert_contains(
         &react_app,
-        "browserSelectedCardId=\"Sample BrowserSelectedCardId\"",
+        "browserSelectedCardId: \"Sample BrowserSelectedCardId\",",
     );
-    assert_contains(&react_app, "answerVisible={false}");
-    assert_contains(&react_app, "actionUndoLabel=\"Sample ActionUndoLabel\"");
-    assert_contains(&react_app, "actionMarkLabel=\"Sample ActionMarkLabel\"");
-    assert_contains(&react_app, "dispatch={(ev) => console.log(\"event:\", ev)}");
+    assert_contains(&react_app, "answerVisible: false,");
+    assert_contains(&react_app, "actionUndoLabel: \"Sample ActionUndoLabel\",");
+    assert_contains(&react_app, "actionMarkLabel: \"Sample ActionMarkLabel\",");
+    assert_contains(
+        &react_app,
+        "window.mosaicHost?.getProps?.({ component: \"EngramApp\" })",
+    );
+    assert_contains(
+        &react_app,
+        "window.mosaicHost?.handleEvent?.({ component: \"EngramApp\", event })",
+    );
+    assert_contains(
+        &react_app,
+        "return <EngramApp {...props} dispatch={dispatch} />;",
+    );
+    assert!(
+        !react_app.contains("dispatch={(ev) => console.log(\"event:\", ev)}"),
+        "react shell should route events through window.mosaicHost"
+    );
 
     let electron_app = fs::read_to_string(tmp.path().join("electron").join("src").join("main.tsx"))
         .expect("electron/src/main.tsx");
-    assert_contains(&electron_app, "<EngramApp");
-    assert_contains(&electron_app, "appTitle=\"Sample AppTitle\"");
+    assert_contains(&electron_app, "const fallbackProps = {");
+    assert_contains(&electron_app, "appTitle: \"Sample AppTitle\",");
     assert_contains(
         &electron_app,
-        "collectionImportLabel=\"Sample CollectionImportLabel\"",
+        "collectionImportLabel: \"Sample CollectionImportLabel\",",
     );
     assert_contains(
         &electron_app,
-        "collectionDeleteNoteTypeLabel=\"Sample CollectionDeleteNoteTypeLabel\"",
+        "collectionDeleteNoteTypeLabel: \"Sample CollectionDeleteNoteTypeLabel\",",
     );
-    assert_contains(&electron_app, "browserQuery=\"Sample BrowserQuery\"");
-    assert_contains(&electron_app, "browserResults={[]}");
-    assert_contains(&electron_app, "browserResultCardIds={[]}");
+    assert_contains(&electron_app, "browserQuery: \"Sample BrowserQuery\",");
+    assert_contains(&electron_app, "browserResults: [],");
+    assert_contains(&electron_app, "browserResultCardIds: [],");
     assert_contains(
         &electron_app,
-        "browserSelectedCardId=\"Sample BrowserSelectedCardId\"",
+        "browserSelectedCardId: \"Sample BrowserSelectedCardId\",",
     );
-    assert_contains(&electron_app, "answerVisible={false}");
-    assert_contains(&electron_app, "actionUndoLabel=\"Sample ActionUndoLabel\"");
-    assert_contains(&electron_app, "actionMarkLabel=\"Sample ActionMarkLabel\"");
+    assert_contains(&electron_app, "answerVisible: false,");
     assert_contains(
         &electron_app,
-        "dispatch={(ev) => console.log(\"event:\", ev)}",
+        "actionUndoLabel: \"Sample ActionUndoLabel\",",
+    );
+    assert_contains(
+        &electron_app,
+        "actionMarkLabel: \"Sample ActionMarkLabel\",",
+    );
+    assert_contains(
+        &electron_app,
+        "window.mosaicHost?.getProps?.({ component: \"EngramApp\" })",
+    );
+    assert_contains(
+        &electron_app,
+        "window.mosaicHost?.handleEvent?.({ component: \"EngramApp\", event })",
+    );
+    assert_contains(
+        &electron_app,
+        "return <EngramApp {...props} dispatch={dispatch} />;",
+    );
+    assert!(
+        !electron_app.contains("dispatch={(ev) => console.log(\"event:\", ev)}"),
+        "electron renderer shell should route events through window.mosaicHost"
     );
     let electron_main =
         fs::read_to_string(tmp.path().join("electron").join("electron").join("main.ts"))
