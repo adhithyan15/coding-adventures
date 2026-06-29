@@ -85,8 +85,10 @@ modifiers, field-scoped regex searches such as `front:re:...`, tag regexes,
 `edited:`, `introduced:`, and `rated:` filters. `preset:` resolves imported
 Anki deck-option preset names from preserved collection metadata, while
 `prop:pos` / `prop:position` uses imported Anki new-card queue positions when
-available. Terms inside a group use implicit AND, `OR` joins groups,
-parentheses group subexpressions, and leading `-` negates a term or group.
+available. Imported Anki card custom data can be searched with `has-cd:key`,
+numeric `prop:cdn:key>5`, and scalar string `prop:cds:key=value` filters.
+Terms inside a group use implicit AND, `OR` joins groups, parentheses group
+subexpressions, and leading `-` negates a term or group.
 
 `materialize_generated_card` turns a note-template `GeneratedCard` into a
 durable `Card` with note/template lineage. Cloze templates using

@@ -53,6 +53,9 @@ enum SearchClauseKind {
     Flag(FlagFilter),
     Marked(bool),
     Property(CardPropertyFilter),
+    CustomDataKey(String),
+    CustomDataNumeric(CardCustomDataNumericFilter),
+    CustomDataString(CardCustomDataStringFilter),
     Added(RecentDaysFilter),
     Edited(RecentDaysFilter),
     Introduced(RecentDaysFilter),
@@ -127,6 +130,20 @@ struct CardPropertyFilter {
     property: CardProperty,
     operator: ComparisonOperator,
     value: f64,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+struct CardCustomDataNumericFilter {
+    key: String,
+    operator: ComparisonOperator,
+    value: f64,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct CardCustomDataStringFilter {
+    key: String,
+    operator: ComparisonOperator,
+    value: String,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -590,9 +607,8 @@ fn parse_keyed_clause(
         "is" => parse_is_filter(token, &value.to_lowercase()),
         "flag" => parse_flag_filter(token, &value.to_lowercase()).map(SearchClauseKind::Flag),
         "marked" => parse_bool_filter(token, &value.to_lowercase()).map(SearchClauseKind::Marked),
-        "prop" => {
-            parse_property_filter(token, &value.to_lowercase()).map(SearchClauseKind::Property)
-        }
+        "has-cd" | "has_cd" | "hascd" => Ok(SearchClauseKind::CustomDataKey(value.to_string())),
+        "prop" => parse_property_filter(token, value),
         "added" => {
             parse_recent_days_filter(token, &value.to_lowercase()).map(SearchClauseKind::Added)
         }
@@ -795,7 +811,14 @@ fn parse_bool_filter(token: &str, value: &str) -> Result<bool, SearchError> {
     }
 }
 
-fn parse_property_filter(token: &str, value: &str) -> Result<CardPropertyFilter, SearchError> {
+fn parse_property_filter(token: &str, value: &str) -> Result<SearchClauseKind, SearchError> {
+    if let Some(filter) = parse_custom_data_numeric_filter(token, value)? {
+        return Ok(SearchClauseKind::CustomDataNumeric(filter));
+    }
+    if let Some(filter) = parse_custom_data_string_filter(token, value)? {
+        return Ok(SearchClauseKind::CustomDataString(filter));
+    }
+
     let Some((property, operator, expected)) = split_property_comparison(value) else {
         return Err(SearchError {
             message: "property search must include a comparison operator".to_string(),
@@ -809,7 +832,7 @@ fn parse_property_filter(token: &str, value: &str) -> Result<CardPropertyFilter,
         });
     }
 
-    let property = match property {
+    let property = match property.to_ascii_lowercase().as_str() {
         "ivl" | "interval" => CardProperty::Interval,
         "due" => CardProperty::Due,
         "reps" | "reviews" => CardProperty::Repetitions,
@@ -829,11 +852,79 @@ fn parse_property_filter(token: &str, value: &str) -> Result<CardPropertyFilter,
         token: token.to_string(),
     })?;
 
-    Ok(CardPropertyFilter {
+    Ok(SearchClauseKind::Property(CardPropertyFilter {
         property,
         operator,
         value,
-    })
+    }))
+}
+
+fn parse_custom_data_numeric_filter(
+    token: &str,
+    value: &str,
+) -> Result<Option<CardCustomDataNumericFilter>, SearchError> {
+    if !value
+        .get(..4)
+        .is_some_and(|prefix| prefix.eq_ignore_ascii_case("cdn:"))
+    {
+        return Ok(None);
+    }
+
+    let rest = &value[4..];
+    let Some((key, operator, expected)) = split_property_comparison(rest) else {
+        return Err(SearchError {
+            message: "custom numeric data search must include a comparison operator".to_string(),
+            token: token.to_string(),
+        });
+    };
+    if key.is_empty() || expected.is_empty() {
+        return Err(SearchError {
+            message: "custom numeric data search is missing a key or value".to_string(),
+            token: token.to_string(),
+        });
+    }
+    let value = expected.parse::<f64>().map_err(|_| SearchError {
+        message: "custom numeric data search value must be numeric".to_string(),
+        token: token.to_string(),
+    })?;
+
+    Ok(Some(CardCustomDataNumericFilter {
+        key: key.to_string(),
+        operator,
+        value,
+    }))
+}
+
+fn parse_custom_data_string_filter(
+    token: &str,
+    value: &str,
+) -> Result<Option<CardCustomDataStringFilter>, SearchError> {
+    if !value
+        .get(..4)
+        .is_some_and(|prefix| prefix.eq_ignore_ascii_case("cds:"))
+    {
+        return Ok(None);
+    }
+
+    let rest = &value[4..];
+    let Some((key, operator, expected)) = split_custom_data_string_comparison(rest) else {
+        return Err(SearchError {
+            message: "custom string data search must include = or !=".to_string(),
+            token: token.to_string(),
+        });
+    };
+    if key.is_empty() || expected.is_empty() {
+        return Err(SearchError {
+            message: "custom string data search is missing a key or value".to_string(),
+            token: token.to_string(),
+        });
+    }
+
+    Ok(Some(CardCustomDataStringFilter {
+        key: key.to_string(),
+        operator,
+        value: expected.to_string(),
+    }))
 }
 
 fn split_property_comparison(value: &str) -> Option<(&str, ComparisonOperator, &str)> {
@@ -843,6 +934,20 @@ fn split_property_comparison(value: &str) -> Option<(&str, ComparisonOperator, &
         ("!=", ComparisonOperator::NotEqual),
         (">", ComparisonOperator::GreaterThan),
         ("<", ComparisonOperator::LessThan),
+        ("=", ComparisonOperator::Equal),
+    ];
+
+    OPERATORS.iter().find_map(|(symbol, operator)| {
+        value.find(symbol).map(|index| {
+            let expected_start = index + symbol.len();
+            (&value[..index], *operator, &value[expected_start..])
+        })
+    })
+}
+
+fn split_custom_data_string_comparison(value: &str) -> Option<(&str, ComparisonOperator, &str)> {
+    const OPERATORS: [(&str, ComparisonOperator); 2] = [
+        ("!=", ComparisonOperator::NotEqual),
         ("=", ComparisonOperator::Equal),
     ];
 
@@ -987,6 +1092,13 @@ fn clause_matches(
         }
         SearchClauseKind::Property(filter) => {
             property_matches(filter, progress, card_sources, reviews, now)
+        }
+        SearchClauseKind::CustomDataKey(key) => custom_data_key_matches(key, card_sources),
+        SearchClauseKind::CustomDataNumeric(filter) => {
+            custom_data_numeric_matches(filter, card_sources)
+        }
+        SearchClauseKind::CustomDataString(filter) => {
+            custom_data_string_matches(filter, card_sources)
         }
         SearchClauseKind::Added(filter) => happened_recently(card.created_at, filter.days, now),
         SearchClauseKind::Edited(filter) => {
@@ -1488,6 +1600,68 @@ fn imported_new_card_position(
         }
         Some(due)
     })
+}
+
+fn custom_data_key_matches(key: &str, card_sources: &[&ExternalSourceRecord]) -> bool {
+    card_sources
+        .iter()
+        .any(|source| card_custom_data_value(source, key).is_some())
+}
+
+fn custom_data_numeric_matches(
+    filter: &CardCustomDataNumericFilter,
+    card_sources: &[&ExternalSourceRecord],
+) -> bool {
+    card_sources.iter().any(|source| {
+        card_custom_data_value(source, &filter.key)
+            .as_ref()
+            .and_then(custom_data_number)
+            .is_some_and(|actual| compare_number(actual, filter.operator, filter.value))
+    })
+}
+
+fn custom_data_string_matches(
+    filter: &CardCustomDataStringFilter,
+    card_sources: &[&ExternalSourceRecord],
+) -> bool {
+    card_sources.iter().any(|source| {
+        let Some(actual) = card_custom_data_value(source, &filter.key)
+            .and_then(|value| custom_data_string(&value))
+        else {
+            return false;
+        };
+        match filter.operator {
+            ComparisonOperator::Equal => actual == filter.value,
+            ComparisonOperator::NotEqual => actual != filter.value,
+            _ => false,
+        }
+    })
+}
+
+fn card_custom_data_value(source: &ExternalSourceRecord, key: &str) -> Option<Value> {
+    let raw = source.data.get("data")?;
+    let Value::Object(data) = serde_json::from_str::<Value>(raw).ok()? else {
+        return None;
+    };
+    data.get(key).cloned()
+}
+
+fn custom_data_number(value: &Value) -> Option<f64> {
+    match value {
+        Value::Number(number) => number.as_f64(),
+        Value::String(value) => value.parse::<f64>().ok(),
+        _ => None,
+    }
+}
+
+fn custom_data_string(value: &Value) -> Option<String> {
+    match value {
+        Value::String(value) => Some(value.clone()),
+        Value::Number(value) => Some(value.to_string()),
+        Value::Bool(value) => Some(value.to_string()),
+        Value::Null => Some("null".to_string()),
+        Value::Array(_) | Value::Object(_) => None,
+    }
 }
 
 fn rated_matches(reviews: &[&Review], filter: RatedFilter, now: u64) -> bool {
@@ -2458,6 +2632,52 @@ mod tests {
         assert_eq!(ids_for("prop:position>100"), vec!["new-late"]);
         assert!(ids_for("prop:pos=20").is_empty());
         assert!(ids_for("prop:pos=0").is_empty());
+    }
+
+    #[test]
+    fn custom_data_filters_match_imported_anki_card_data() {
+        let anki_card_data = |card_id: &str, data: &str| ExternalSourceRecord {
+            target: ExternalSourceTarget::Card,
+            target_id: card_id.to_string(),
+            source: "anki-v11".to_string(),
+            original_id: Some(card_id.to_string()),
+            data: BTreeMap::from([("data".to_string(), data.to_string())]),
+        };
+        let state = AppState {
+            decks: vec![deck("tamil", "Tamil")],
+            cards: vec![
+                card("rescheduled", "tamil", "one", "one"),
+                card("manual", "tamil", "two", "two"),
+                card("invalid", "tamil", "three", "three"),
+                card("plain", "tamil", "four", "four"),
+            ],
+            external_sources: vec![
+                anki_card_data(
+                    "rescheduled",
+                    r#"{"v":"reschedule","d":6.25,"n":"9","enabled":true,"empty":null}"#,
+                ),
+                anki_card_data("manual", r#"{"v":"manual","d":4}"#),
+                anki_card_data("invalid", "not-json"),
+            ],
+            ..AppState::default()
+        };
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("has-cd:v"), vec!["rescheduled", "manual"]);
+        assert_eq!(ids_for("has-cd:empty"), vec!["rescheduled"]);
+        assert_eq!(ids_for("prop:cdn:d>5"), vec!["rescheduled"]);
+        assert_eq!(ids_for("prop:cdn:n=9"), vec!["rescheduled"]);
+        assert_eq!(ids_for("prop:cds:v=reschedule"), vec!["rescheduled"]);
+        assert_eq!(ids_for("prop:cds:v!=reschedule"), vec!["manual"]);
+        assert_eq!(ids_for("prop:cds:enabled=true"), vec!["rescheduled"]);
+        assert!(ids_for("has-cd:missing").is_empty());
     }
 
     #[test]
