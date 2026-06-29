@@ -236,6 +236,43 @@ pub struct BerkeleyAppExecution {
     pub run_artifact_json: String,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppSessionAnalysis {
+    pub syntax_card_index: usize,
+    pub directive: String,
+    pub analysis: String,
+    pub span: SourceSpan,
+    pub runnable: bool,
+    pub artifact_supported: bool,
+    pub selected: bool,
+    pub execution_available: bool,
+    pub table_row_count: Option<usize>,
+    pub table_columns: Vec<String>,
+    pub waveform_series_count: Option<usize>,
+    pub output_probes: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppSessionState {
+    pub canonical_source: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub card_count: usize,
+    pub analysis_count: usize,
+    pub diagnostic_count: usize,
+    pub has_errors: bool,
+    pub parsed: bool,
+    pub execution_available: bool,
+    pub selected_syntax_card_index: Option<usize>,
+    pub selected_analysis: Option<BerkeleyAppSessionAnalysis>,
+    pub selected_table_columns: Vec<String>,
+    pub selected_output_probes: Vec<String>,
+    pub selected_waveform_series_count: Option<usize>,
+    pub blocking_message: Option<String>,
+    pub diagnostics: Vec<BerkeleySyntaxDiagnostic>,
+    pub analyses: Vec<BerkeleyAppSessionAnalysis>,
+}
+
 impl BerkeleyAppDeck {
     pub fn has_errors(&self) -> bool {
         self.diagnostics
@@ -245,6 +282,89 @@ impl BerkeleyAppDeck {
 
     pub fn analysis_inventory(&self) -> Vec<BerkeleyAnalysisInventoryEntry> {
         self.syntax.analysis_inventory()
+    }
+
+    pub fn session_state(
+        &self,
+        selected_syntax_card_index: Option<usize>,
+    ) -> BerkeleyAppSessionState {
+        let has_errors = self.has_errors();
+        let parsed = self.parsed.is_some();
+        let mut analyses = self
+            .analysis_inventory()
+            .into_iter()
+            .map(|entry| BerkeleyAppSessionAnalysis {
+                syntax_card_index: entry.index,
+                directive: entry.directive.clone(),
+                analysis: entry.analysis,
+                span: entry.span,
+                runnable: runnable_analysis_kind(&entry.directive).is_some(),
+                artifact_supported: deck_artifact_analysis_directive(&entry.directive),
+                selected: selected_syntax_card_index == Some(entry.index),
+                execution_available: false,
+                table_row_count: None,
+                table_columns: Vec::new(),
+                waveform_series_count: None,
+                output_probes: Vec::new(),
+            })
+            .collect::<Vec<_>>();
+        let selected_analysis = analyses.iter().find(|analysis| analysis.selected).cloned();
+
+        BerkeleyAppSessionState {
+            canonical_source: self.canonical_source.clone(),
+            source_fingerprint: stable_source_fingerprint(&self.canonical_source),
+            title: self.syntax.title.clone(),
+            card_count: self.syntax.cards.len(),
+            analysis_count: analyses.len(),
+            diagnostic_count: self.diagnostics.len(),
+            has_errors,
+            parsed,
+            execution_available: false,
+            selected_syntax_card_index,
+            selected_analysis,
+            selected_table_columns: Vec::new(),
+            selected_output_probes: Vec::new(),
+            selected_waveform_series_count: None,
+            blocking_message: if parsed {
+                None
+            } else {
+                Some(self.blocking_message())
+            },
+            diagnostics: self.diagnostics.clone(),
+            analyses: std::mem::take(&mut analyses),
+        }
+    }
+
+    pub fn run_session_state(
+        &self,
+        selected_syntax_card_index: Option<usize>,
+    ) -> Result<BerkeleyAppSessionState, AnalysisExecutionError> {
+        let mut state = self.session_state(selected_syntax_card_index);
+        if self.parsed.is_none() {
+            return Ok(state);
+        }
+
+        let execution = self.run_artifacts()?;
+        state.execution_available = true;
+        for artifact in &execution.analyses {
+            let Some(syntax_card_index) = artifact.syntax_card_index else {
+                continue;
+            };
+            let Some(analysis) = state
+                .analyses
+                .iter_mut()
+                .find(|analysis| analysis.syntax_card_index == syntax_card_index)
+            else {
+                continue;
+            };
+            analysis.execution_available = true;
+            analysis.table_row_count = Some(artifact.table_row_count);
+            analysis.table_columns = artifact.table_columns.clone();
+            analysis.waveform_series_count = Some(artifact.waveform_series_count);
+            analysis.output_probes = output_plan_probes(&artifact.output_plan_artifacts);
+        }
+        refresh_selected_session_analysis(&mut state);
+        Ok(state)
     }
 
     pub fn run_source_order(&self) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
@@ -373,6 +493,44 @@ impl BerkeleyAppDeck {
                 "Berkeley SPICE app deck did not produce a parsed netlist".to_string()
             })
     }
+}
+
+fn refresh_selected_session_analysis(state: &mut BerkeleyAppSessionState) {
+    state.selected_analysis = state
+        .analyses
+        .iter()
+        .find(|analysis| Some(analysis.syntax_card_index) == state.selected_syntax_card_index)
+        .cloned();
+    if let Some(selected) = &state.selected_analysis {
+        state.selected_table_columns = selected.table_columns.clone();
+        state.selected_output_probes = selected.output_probes.clone();
+        state.selected_waveform_series_count = selected.waveform_series_count;
+    } else {
+        state.selected_table_columns.clear();
+        state.selected_output_probes.clear();
+        state.selected_waveform_series_count = None;
+    }
+}
+
+fn output_plan_probes(artifacts: &[DeckOutputPlanArtifact]) -> Vec<String> {
+    let mut probes = Vec::new();
+    for artifact in artifacts {
+        for probe in &artifact.output_probes {
+            if !probes.iter().any(|existing| existing == probe) {
+                probes.push(probe.clone());
+            }
+        }
+    }
+    probes
+}
+
+fn stable_source_fingerprint(source: &str) -> String {
+    let mut hash = 0xcbf2_9ce4_8422_2325_u64;
+    for byte in source.as_bytes() {
+        hash ^= u64::from(*byte);
+        hash = hash.wrapping_mul(0x0000_0100_0000_01b3);
+    }
+    format!("{hash:016x}")
 }
 
 fn deck_artifact_analysis_directive(directive: &str) -> bool {

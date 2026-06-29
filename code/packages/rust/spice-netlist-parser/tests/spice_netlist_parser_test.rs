@@ -2025,6 +2025,92 @@ C1 out 0 1u
 }
 
 #[test]
+fn berkeley_app_facade_exports_selected_session_state() {
+    let app = parse_berkeley_app_deck(
+        r#"
+* transient session
+V1 in 0 PULSE(0 1 0 1n 1n 1n 4n)
+R1 in out 1k
+C1 out 0 1p
+.tran 1n 3n
+.print tran V(out)
+.end
+"#,
+    );
+
+    let state = app.run_session_state(Some(3)).unwrap();
+
+    assert!(state.parsed);
+    assert!(state.execution_available);
+    assert!(!state.has_errors, "{:?}", state.diagnostics);
+    assert_eq!(state.title.as_deref(), Some("transient session"));
+    assert_eq!(state.card_count, 6);
+    assert_eq!(state.analysis_count, 1);
+    assert_eq!(state.selected_syntax_card_index, Some(3));
+    assert_eq!(state.source_fingerprint.len(), 16);
+    assert!(state
+        .source_fingerprint
+        .chars()
+        .all(|ch| ch.is_ascii_hexdigit()));
+    assert_eq!(state.selected_waveform_series_count, Some(1));
+    assert_eq!(state.selected_output_probes, vec!["V(out)"]);
+    assert!(state
+        .selected_table_columns
+        .iter()
+        .any(|column| column == "Time"));
+    assert!(state
+        .selected_table_columns
+        .iter()
+        .any(|column| column == "V(out)"));
+
+    let selected = state.selected_analysis.unwrap();
+    assert!(selected.selected);
+    assert!(selected.runnable);
+    assert!(selected.artifact_supported);
+    assert!(selected.execution_available);
+    assert_eq!(selected.directive, ".tran");
+    assert_eq!(selected.analysis, "tran");
+    assert_eq!(selected.waveform_series_count, Some(1));
+    assert_eq!(selected.table_row_count, Some(3));
+    assert_eq!(selected.output_probes, vec!["V(out)"]);
+}
+
+#[test]
+fn berkeley_app_facade_session_state_reports_blocked_decks() {
+    let app = parse_berkeley_app_deck(
+        r#"
+V1 in 0 DC 1
+R1 in out
+.op
+.end
+"#,
+    );
+
+    let state = app.run_session_state(Some(2)).unwrap();
+
+    assert!(!state.parsed);
+    assert!(!state.execution_available);
+    assert!(state.has_errors);
+    assert_eq!(state.analysis_count, 1);
+    assert_eq!(state.selected_syntax_card_index, Some(2));
+    assert!(state
+        .blocking_message
+        .as_deref()
+        .unwrap()
+        .contains("Berkeley SPICE app deck:"));
+    assert_eq!(state.diagnostics[0].code, "SPICE_BERKELEY_LOWERING_ERROR");
+
+    let selected = state.selected_analysis.unwrap();
+    assert!(selected.selected);
+    assert!(selected.runnable);
+    assert!(selected.artifact_supported);
+    assert!(!selected.execution_available);
+    assert_eq!(selected.directive, ".op");
+    assert_eq!(selected.table_row_count, None);
+    assert_eq!(selected.waveform_series_count, None);
+}
+
+#[test]
 fn berkeley_app_facade_reports_lowering_errors_without_running() {
     let app = parse_berkeley_app_deck(
         r#"

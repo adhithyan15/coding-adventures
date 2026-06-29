@@ -45,6 +45,10 @@ let execution = deck.run_artifacts()?;
 assert_eq!(execution.analyses[0].syntax_card_index, Some(3));
 assert!(execution.analyses[0].table_columns.contains(&"Index".to_string()));
 assert_eq!(execution.analyses[0].waveform_series[0].x_column, "Index");
+
+let session = deck.run_session_state(Some(3))?;
+assert!(session.execution_available);
+assert_eq!(session.selected_waveform_series_count, Some(1));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -53,9 +57,12 @@ analysis inventory, source-order execution through the existing parser, and
 card-indexed app artifacts with stable result tables, output-plan artifacts,
 run-artifact summaries, rawfile / wrdata artifact metadata from the engine deck
 execution layer, and numeric waveform series derived from result tables for
-Mosaic plot surfaces. It is the Rust app/runtime entrypoint for Mosaic-backed UI
-work while the grammar-backed parser generator and Python/TypeScript parity
-surfaces continue to mature.
+Mosaic plot surfaces. It also exposes app session snapshots with deterministic
+source fingerprints, selected-analysis state, run/blocked status, diagnostics,
+table columns, output probes, and selected waveform availability so Mosaic UI
+hosts can render editor controls without owning simulator internals. It is the
+Rust app/runtime entrypoint for Mosaic-backed UI work while the grammar-backed
+parser generator and Python/TypeScript parity surfaces continue to mature.
 
 This parser supports `R`, `C`, `L`, `V`, `I`, `D`, `Q`, `M`, `G`, `E`, `F`, and
 `H` elements, `.model <name> D(...)` diode cards with `IS` and `VT`

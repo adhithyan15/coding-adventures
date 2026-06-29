@@ -33,11 +33,12 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic waveform inspection.
+1. Rust Berkeley Mosaic app session state.
    - Status: current PR completion candidate.
    - Expand the Rust `spice-netlist-parser` Berkeley app facade from
-     card-indexed stable result artifacts into plot-ready waveform inspection
-     series for Mosaic UI surfaces.
+     plot-ready waveform inspection into stable Mosaic-facing session snapshots
+     for source identity, selected analysis state, runnable/blocked status,
+     diagnostics, table/probe metadata, and waveform availability.
    - Keep this as a Rust-only app-substrate acceleration slice over the public
      parser contract and existing engine deck artifacts; Python and TypeScript
      parser parity was completed separately and should remain aligned when
@@ -1452,6 +1453,15 @@ the Rust, Python, and TypeScript surfaces together.
      deck artifacts as a Rust-only app-substrate acceleration layer while
      Python and TypeScript parser parity remains aligned for shared syntax
      behavior.
+
+137. Rust Berkeley Mosaic waveform inspection.
+   - Status: completed in PR 6936.
+   - Rust `spice-netlist-parser` Berkeley app-deck artifacts now expose numeric
+     plot-ready waveform series derived from stable result tables for Mosaic UI
+     surfaces.
+   - Selected-card waveform access covers transient series, and AC result
+     tables derive probe-grouped magnitude and phase series while preserving the
+     same public parser contract.
 
 ## Backlog
 
