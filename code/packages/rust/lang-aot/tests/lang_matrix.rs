@@ -374,6 +374,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(5),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Twig — E4 string equality over multiple unannotated top-level function
+    // parameters inferred from one direct call. The first actual is literal,
+    // the second is a static `str_concat` expression, so both slots are stamped
+    // `str` and the function body lowers `string=? a b` through `str_eq`.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (same a b) (if (string=? a b) 42 0)) (same \"OK\" (string-append \"O\" \"K\"))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a non-escaping top-level string value. The
     // named actual stays in `main` as a typed `str` register, so `(strlen s)`

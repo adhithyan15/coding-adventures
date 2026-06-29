@@ -641,6 +641,86 @@ fn twig_unannotated_string_param_direct_call_accepts_static_string_expression_ac
     }
 }
 
+/// E4 direct-call evidence proof: a single direct call can seed multiple
+/// otherwise-unannotated top-level string parameters, letting the function body
+/// lower a parameter-to-parameter string equality through typed `str_eq`.
+#[test]
+fn twig_unannotated_string_param_direct_call_accepts_multiple_string_params() {
+    let m = compile_source(
+        "(define (same a b) (if (string=? a b) 42 0)) (same \"OK\" (string-append \"O\" \"K\"))",
+        "compat",
+    )
+    .expect("Twig must compile");
+
+    let same = m
+        .functions
+        .iter()
+        .find(|f| f.name == "same")
+        .expect("module should contain the top-level function");
+    assert_eq!(
+        same.params,
+        vec![
+            ("a".to_string(), "str".to_string()),
+            ("b".to_string(), "str".to_string()),
+        ]
+    );
+    assert!(
+        same.param_refinements.iter().all(|r| r.is_none()),
+        "call-site string evidence must not synthesize refinement annotations: {:?}",
+        same.param_refinements,
+    );
+    assert_eq!(same.return_type, "i64");
+    let eq = same
+        .instructions
+        .iter()
+        .find(|i| i.op == "str_eq")
+        .expect("string=? should lower to str_eq over the inferred params");
+    assert!(
+        matches!(eq.srcs.as_slice(), [Operand::Var(a), Operand::Var(b)] if a == "a" && b == "b"),
+        "str_eq should consume both inferred string parameters; got {eq:?}",
+    );
+    assert!(
+        !same.instructions.iter().any(|i| {
+            i.op == "call_builtin"
+                && matches!(&i.srcs[0], Operand::Var(name) if name == "string=?")
+        }),
+        "typed E4 inferred-parameter path must not use dynamic string=? builtins: {:?}",
+        same.instructions,
+    );
+
+    let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+    assert_eq!(main.return_type, "i64");
+    assert!(
+        main.instructions.iter().any(|i| i.op == "str_concat"),
+        "second direct-call actual should materialise through typed str_concat: {:?}",
+        main.instructions,
+    );
+    assert!(
+        main.instructions.iter().any(|i| {
+            i.op == "call"
+                && i.type_hint == "i64"
+                && matches!(i.srcs.first(), Some(Operand::Var(name)) if name == "same")
+        }),
+        "direct call should inherit same's concrete return type: {:?}",
+        main.instructions,
+    );
+
+    for (name, errs) in [
+        ("wasm", iir_to_wasm::validate::validate_for_wasm(&m)),
+        ("jvm", iir_to_jvm_class_file::validate::validate_for_jvm(&m)),
+        (
+            "clr",
+            iir_to_cil_bytecode::validate::validate_iir_for_clr(&m),
+        ),
+    ] {
+        assert!(
+            errs.is_empty(),
+            "[{name}] should accept typed E4 string equality over multiple inferred string parameters; got {errs:?}",
+            errs = errs
+        );
+    }
+}
+
 /// E4 direct-call evidence proof: a static, non-escaping top-level string value
 /// used as a `main`-level direct-call actual can seed the same
 /// otherwise-unannotated string parameter path as a literal.
