@@ -64,6 +64,8 @@ pub struct Capabilities {
     pub plusminus: bool,
     /// Emits binomial coefficients ([`crate::MathExpr::Binom`]).
     pub binomials: bool,
+    /// Emits diacritical accents ([`crate::MathExpr::Accent`]: `\hat{x}`, `\bar{y}`, `\vec{v}`, …).
+    pub accents: bool,
 }
 
 impl Capabilities {
@@ -87,6 +89,7 @@ impl Capabilities {
             text: true,
             plusminus: true,
             binomials: true,
+            accents: true,
         }
     }
 
@@ -101,6 +104,7 @@ impl Capabilities {
     pub fn with_text(mut self) -> Self { self.text = true; self }
     pub fn with_plusminus(mut self) -> Self { self.plusminus = true; self }
     pub fn with_binomials(mut self) -> Self { self.binomials = true; self }
+    pub fn with_accents(mut self) -> Self { self.accents = true; self }
 }
 
 /// The contract every notation parser implements.

@@ -257,6 +257,13 @@ pub enum MathExpr {
     Text(String),
     /// A matrix as rows of cells.
     Matrix(Vec<Vec<MathExpr>>),
+    /// A diacritical accent applied to its argument: `\hat{x}`, `\bar{y}`, `\vec{v}`,
+    /// `\tilde{a}`, `\dot{x}`, `\widehat{AB}`, … `accent` is the accent's canonical name
+    /// (e.g. `"hat"`, `"bar"`, `"vec"`) — a `String` so the open-ended set of LaTeX/AsciiMath
+    /// accents needs no enum churn. Kept DISTINCT from a `Call`: `Accent { accent: "hat", x }` is a
+    /// diacritic *over* `x`, semantically unlike the named function `hat(x)`, and a faithful
+    /// renderer must reproduce the mark, not a function application.
+    Accent { accent: String, body: Box<MathExpr> },
 }
 
 /// Drop a `MathExpr` **iteratively** so freeing a deeply-nested tree cannot overflow the
@@ -315,6 +322,7 @@ fn take_children(e: &mut MathExpr, out: &mut Vec<MathExpr>) {
             take(radicand, out);
         }
         MathExpr::Call { arg, .. } => take(arg, out),
+        MathExpr::Accent { body, .. } => take(body, out),
         MathExpr::BigOp { lower, upper, body, .. } => {
             take_opt(lower, out);
             take_opt(upper, out);
@@ -344,6 +352,23 @@ mod tests {
         let binom = MathExpr::Binom(one(), one());
         assert_eq!(binom, MathExpr::Binom(one(), one()));
         assert_ne!(binom, MathExpr::Frac(one(), one()));
+    }
+
+    #[test]
+    fn accent_is_constructible_distinct_and_drops_deep() {
+        let x = || Box::new(MathExpr::Symbol("x".to_string()));
+        let hat = MathExpr::Accent { accent: "hat".to_string(), body: x() };
+        // Equal to itself, distinct from a different accent and from a like-named Call.
+        assert_eq!(hat, MathExpr::Accent { accent: "hat".to_string(), body: x() });
+        assert_ne!(hat, MathExpr::Accent { accent: "bar".to_string(), body: x() });
+        // An Accent over x is NOT the same as the symbol x (it carries the diacritic).
+        assert_ne!(hat, *x());
+        // A deep Accent spine must free via the iterative Drop, not a recursive overflow.
+        let mut e = MathExpr::Symbol("x".to_string());
+        for _ in 0..300_000 {
+            e = MathExpr::Accent { accent: "hat".to_string(), body: Box::new(e) };
+        }
+        drop(e);
     }
 
     #[test]

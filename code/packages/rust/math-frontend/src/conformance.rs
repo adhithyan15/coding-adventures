@@ -94,7 +94,7 @@ pub fn check_frontend(frontend: &dyn MathFrontend, samples: &[&str]) -> Conforma
 /// Names of capabilities that `used` requires but `declared` did not advertise.
 fn over_emitted(used: Capabilities, declared: Capabilities) -> Vec<&'static str> {
     let mut v = Vec::new();
-    let pairs: [(&str, bool, bool); 11] = [
+    let pairs: [(&str, bool, bool); 12] = [
         ("fractions", used.fractions, declared.fractions),
         ("roots", used.roots, declared.roots),
         ("powers", used.powers, declared.powers),
@@ -106,6 +106,7 @@ fn over_emitted(used: Capabilities, declared: Capabilities) -> Vec<&'static str>
         ("text", used.text, declared.text),
         ("plusminus", used.plusminus, declared.plusminus),
         ("binomials", used.binomials, declared.binomials),
+        ("accents", used.accents, declared.accents),
     ];
     for (label, used_it, declared_it) in pairs {
         if used_it && !declared_it {
@@ -186,6 +187,10 @@ fn collect_used(e: &MathExpr, caps: &mut Capabilities) {
                     collect_used(cell, caps);
                 }
             }
+        }
+        MathExpr::Accent { body, .. } => {
+            caps.accents = true;
+            collect_used(body, caps);
         }
     }
 }
@@ -269,6 +274,43 @@ mod tests {
         assert!(!r.passed());
         assert!(r.issues.iter().any(|i| i.contains("plusminus")));
         assert!(r.issues.iter().any(|i| i.contains("binomials")));
+    }
+
+    #[test]
+    fn emitting_accent_without_declaring_is_flagged() {
+        // A frontend that emits `\hat{x}` (an Accent) but declares `none()` must be flagged
+        // for the `accents` capability — the conformance gate polices the new node too.
+        struct AccentOverClaimer;
+        impl MathFrontend for AccentOverClaimer {
+            fn name(&self) -> &str { "accent" }
+            fn parse(&self, _src: &str) -> Result<MathExpr, FrontendError> {
+                Ok(MathExpr::Accent {
+                    accent: "hat".into(),
+                    body: Box::new(MathExpr::Symbol("x".into())),
+                })
+            }
+            fn capabilities(&self) -> Capabilities { Capabilities::none() }
+        }
+        let r = check_frontend(&AccentOverClaimer, &["xhat"]);
+        assert!(!r.passed());
+        assert!(r.issues.iter().any(|i| i.contains("accents")));
+    }
+
+    #[test]
+    fn declaring_accents_admits_accent() {
+        // Declaring `with_accents()` makes emitting an Accent conforming.
+        struct AccentHonest;
+        impl MathFrontend for AccentHonest {
+            fn name(&self) -> &str { "accent-honest" }
+            fn parse(&self, _src: &str) -> Result<MathExpr, FrontendError> {
+                Ok(MathExpr::Accent {
+                    accent: "vec".into(),
+                    body: Box::new(MathExpr::Symbol("v".into())),
+                })
+            }
+            fn capabilities(&self) -> Capabilities { Capabilities::none().with_accents() }
+        }
+        assert!(check_frontend(&AccentHonest, &["vvec"]).passed());
     }
 
     #[test]

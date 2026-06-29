@@ -2,6 +2,31 @@
 
 All notable changes to the pluggable parser-frontend framework.
 
+## [0.4.0] — 2026-06-29
+
+### Added — neutral `Accent` node (unblocks accents on every frontend)
+
+Diacritical accents (`\hat{x}`, `\bar{y}`, `\vec{v}`, `\tilde{a}`, `\dot{x}`, …) previously had
+**no faithful neutral representation** — frontends had to drop them or fake them as a function
+call. This release adds the node so any frontend (LaTeX, AsciiMath, future MathML/Unicode-math)
+can lower accents honestly. Additive; no existing variant or API changed.
+
+- **`MathExpr::Accent { accent: String, body: Box<MathExpr> }`** — `accent` is the canonical
+  accent name (`"hat"`, `"bar"`, `"vec"`, …) as a `String`, so the open-ended LaTeX/AsciiMath
+  accent set needs no enum churn. Kept **distinct from `Call`**: `Accent{accent:"hat", x}` is a
+  diacritic *over* `x`, not the named function `hat(x)` — a faithful renderer must reproduce the
+  mark. The iterative `Drop` (heap worklist) gained an `Accent` arm, so deep accent spines free
+  without overflowing.
+- **`Capabilities::accents`** flag + `with_accents()` builder + included in `all()`. The shared
+  conformance harness now polices it: a frontend that emits an `Accent` but doesn't declare
+  `accents` is flagged (`over_emitted` extended to 12 capabilities), exactly like ± / binomials.
+- Tests: `Accent` constructible / distinct-from-Call / deep-drop (300k spine); conformance
+  `emitting_accent_without_declaring_is_flagged` + `declaring_accents_admits_accent`.
+- Downstream `latex` (declares `Capabilities::all()`) and `asciimath` recompile unchanged — they
+  only *construct* `MathExpr`; `adj-lang`'s adapter has a catch-all arm so an `Accent` (not
+  computable arithmetic) correctly reports "unsupported ADJ arithmetic subset". This is the
+  prerequisite for the deferred latex/asciimath accent-emission PRs.
+
 ## [0.3.0] — 2026-06-28
 
 ### Fixed — iterative `Drop` for `MathExpr` (stack-overflow / abort on deep trees)
