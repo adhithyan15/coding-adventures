@@ -81,7 +81,7 @@ in the `COMPONENTS` array. All pass.
 
 **`Tabs`** — Bootstrap's horizontal tab bar + single body panel.
 Composition: `Column[tabs] { Row[tabs-bar] { For headers
-HostButton[tabs-tab] }, Text[tabs-panel] (content: active-body) }`.
+HostButton[tabs-tab/tabs-tab-active] }, Text[tabs-panel] (content: active-body) }`.
 Slots: `headers: list<text>`, `active-body`, `active-index`. Emit:
 `onSelect(index: number)`.
 
@@ -89,11 +89,16 @@ Host owns the active-index → active-body mapping. Simpler than
 Accordion's parallel-bodies workaround since only one body renders
 at a time.
 
+The active header now renders through a distinct `tabs-tab-active`
+part so every backend can style selection without relying on
+HostButton state support.
+
 ### Tests
 
-`tests/package_compiles.rs` grew to 20 (was 19): one more interface
-test (`tabs_interface_matches_spec`) plus the new component
-in the `COMPONENTS` array. All pass.
+`tests/package_compiles.rs` covers both the interface
+(`tabs_interface_matches_spec`) and active-header part/style
+regression (`tabs_active_header_part_compiles_and_is_styled`).
+All pass.
 
 ## [Unreleased] — v0.7 — Accordion
 
