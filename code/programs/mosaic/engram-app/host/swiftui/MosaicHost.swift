@@ -23,7 +23,7 @@ import Foundation
         let json = deckId.withCString { deckPointer in
             takeCString(eg_engram_app_props(session, deckPointer, currentTimeMillis()))
         }
-        return propsDictionary(from: json)
+        return hostResponseDictionary(from: json)
     }
 
     func handleEvent(_ envelope: NSDictionary, name: NSString) -> NSDictionary? {
@@ -41,10 +41,10 @@ import Foundation
                     currentTimeMillis()))
             }
         }
-        return propsDictionary(from: json)
+        return hostResponseDictionary(from: json)
     }
 
-    private func propsDictionary(from json: String) -> NSDictionary? {
+    private func hostResponseDictionary(from json: String) -> NSDictionary? {
         guard let root = decodeJsonObject(json) else {
             return [:]
         }
@@ -52,13 +52,17 @@ import Foundation
             if let error = root["error"] {
                 print("Engram host error: \(error)")
             }
-            return [:]
+            return ["error": root["error"] ?? "unknown error"] as NSDictionary
         }
+        var response: [String: Any] = [
+            "props": root["props"] as? [String: Any] ?? [:],
+        ]
         if let intent = root["hostIntent"] as? [String: Any],
            let type = intent["type"] {
             print("Engram host intent: \(type)")
+            response["hostIntent"] = intent
         }
-        return (root["props"] as? [String: Any] ?? [:]) as NSDictionary
+        return response as NSDictionary
     }
 
     private func encodeJson(_ object: NSDictionary) -> String {

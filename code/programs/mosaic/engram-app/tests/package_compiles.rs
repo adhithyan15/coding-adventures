@@ -776,11 +776,14 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "signal mosaicEvent(var event)");
     assert_contains(&qml, "id: mosaicRoot");
     assert_contains(&qml, "property var mosaicHost: null");
+    assert_contains(&qml, "property var lastHostIntent: null");
     assert_contains(&qml, "function applyMosaicProps(props)");
+    assert_contains(&qml, "function applyMosaicResponse(response)");
+    assert_contains(&qml, "lastHostIntent = response.hostIntent;");
     assert_contains(&qml, "mosaicRoot[key] = props[key];");
     assert_contains(
         &qml,
-        "onMosaicEvent: applyMosaicProps(mosaicHost ? mosaicHost.handleEvent(event) : null)",
+        "onMosaicEvent: applyMosaicResponse(mosaicHost ? mosaicHost.handleEvent(event) : null)",
     );
     assert_contains(
         &qml,
@@ -815,7 +818,7 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qt_main, "root->setProperty(\"mosaicHost\"");
     assert_contains(
         &qt_main,
-        "QMetaObject::invokeMethod(root, \"applyMosaicProps\"",
+        "QMetaObject::invokeMethod(root, \"applyMosaicResponse\"",
     );
     let qt_cmake = fs::read_to_string(tmp.path().join("qt").join("CMakeLists.txt"))
         .expect("qt/CMakeLists.txt");
@@ -963,6 +966,15 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift_app, "dispatch: { event in");
     assert_contains(&swift_app, "host.dispatch(event)");
     assert_contains(&swift_app, "final class MosaicHostState: ObservableObject");
+    assert_contains(
+        &swift_app,
+        "@Published var lastHostIntent: [String: Any]? = nil",
+    );
+    assert_contains(
+        &swift_app,
+        "private func applyHostResponse(_ response: [String: Any]?)",
+    );
+    assert_contains(&swift_app, "self.lastHostIntent = intent");
     assert_contains(&swift_app, "MosaicHostBridge.load()");
     assert_contains(&swift_app, "@objc protocol MosaicHostBridgeObject");
     assert_contains(&swift_app, "[\"App.MosaicHost\", \"MosaicHost\"]");
@@ -1169,6 +1181,7 @@ fn native_project_shells_expose_engram_host_contract() {
     let xaml_main_window = fs::read_to_string(tmp.path().join("xaml").join("MainWindow.xaml.cs"))
         .expect("MainWindow.xaml.cs");
     assert_contains(&xaml_main_window, "TryApplyMosaicHostProps");
+    assert_contains(&xaml_main_window, "CoerceMosaicHostResult");
     assert_contains(
         &xaml_main_window,
         "FindMosaicHostMethod(\"ApplyProps\", typeof(EngramApp))",
@@ -1331,12 +1344,19 @@ fn source_tree_has_expected_shape() {
     assert_contains(&xaml_host, "eg_engram_app_props");
     assert_contains(&xaml_host, "eg_handle_engram_app_event");
     assert_contains(&xaml_host, "SlotNameToPropertyName");
+    assert_contains(&xaml_host, "public sealed record MosaicHostIntent");
+    assert_contains(&xaml_host, "public sealed record MosaicHostResult");
+    assert_contains(&xaml_host, "HostIntentReceived");
+    assert_contains(&xaml_host, "LastHostIntent");
 
     let swiftui_host = fs::read_to_string(package_root().join("host/swiftui/MosaicHost.swift"))
         .expect("swiftui host template");
     assert_contains(&swiftui_host, "MosaicHostBridgeObject");
     assert_contains(&swiftui_host, "eg_engram_app_props");
     assert_contains(&swiftui_host, "eg_handle_engram_app_event");
+    assert_contains(&swiftui_host, "hostResponseDictionary");
+    assert_contains(&swiftui_host, "\"hostIntent\"");
+    assert_contains(&swiftui_host, "\"props\"");
 
     let qt_host = fs::read_to_string(package_root().join("host/qt/MosaicHost.cpp"))
         .expect("qt host template");
@@ -1344,6 +1364,9 @@ fn source_tree_has_expected_shape() {
     assert_contains(&qt_host, "eg_handle_engram_app_event");
     assert_contains(&qt_host, "QLibrary");
     assert_contains(&qt_host, "mosaicPropName");
+    assert_contains(&qt_host, "hostResponseFromJson");
+    assert_contains(&qt_host, "hostIntent");
+    assert_contains(&qt_host, "props");
 
     let build_script =
         fs::read_to_string(package_root().join("scripts/build-all.ps1")).expect("build-all.ps1");

@@ -27,7 +27,7 @@ private:
 
   bool ensureLoaded();
   QString takeCString(char *value) const;
-  QVariantMap propsFromResponse(const QString &json) const;
+  QVariantMap hostResponseFromJson(const QString &json) const;
   QVariantMap camelCaseProps(const QVariantMap &props) const;
   QString mosaicPropName(const QString &name) const;
   QByteArray deckId() const;

@@ -345,7 +345,7 @@ fn build_main_cpp(name: &str, module_name: &str) -> String {
     out.push_str(
         "  root->setProperty(\"mosaicHost\", QVariant::fromValue(static_cast<QObject *>(&mosaicHost)));\n",
     );
-    out.push_str("  QMetaObject::invokeMethod(root, \"applyMosaicProps\",\n");
+    out.push_str("  QMetaObject::invokeMethod(root, \"applyMosaicResponse\",\n");
     out.push_str(
         "                            Q_ARG(QVariant, QVariant::fromValue(mosaicHost.props())));\n",
     );
@@ -847,6 +847,7 @@ pub fn from_pipeline(
     writeln!(out, "    id: mosaicRoot").unwrap();
     writeln!(out, "    // Component: {name}").unwrap();
     writeln!(out, "    property var mosaicHost: null").unwrap();
+    writeln!(out, "    property var lastHostIntent: null").unwrap();
     writeln!(out).unwrap();
     writeln!(out, "    function applyMosaicProps(props) {{").unwrap();
     writeln!(
@@ -857,6 +858,22 @@ pub fn from_pipeline(
     writeln!(out, "        for (var key in props) {{").unwrap();
     writeln!(out, "            mosaicRoot[key] = props[key];").unwrap();
     writeln!(out, "        }}").unwrap();
+    writeln!(out, "    }}").unwrap();
+    writeln!(out).unwrap();
+    writeln!(out, "    function applyMosaicResponse(response) {{").unwrap();
+    writeln!(
+        out,
+        "        if (response === null || response === undefined) {{ return; }}"
+    )
+    .unwrap();
+    writeln!(out, "        if (response.hostIntent !== undefined) {{").unwrap();
+    writeln!(out, "            lastHostIntent = response.hostIntent;").unwrap();
+    writeln!(out, "        }}").unwrap();
+    writeln!(out, "        if (response.props !== undefined) {{").unwrap();
+    writeln!(out, "            applyMosaicProps(response.props);").unwrap();
+    writeln!(out, "            return;").unwrap();
+    writeln!(out, "        }}").unwrap();
+    writeln!(out, "        applyMosaicProps(response);").unwrap();
     writeln!(out, "    }}").unwrap();
 
     // 4. Properties — one `property` declaration per slot.
@@ -878,7 +895,7 @@ pub fn from_pipeline(
         writeln!(out, "    signal mosaicEvent(var event)").unwrap();
         writeln!(
             out,
-            "    onMosaicEvent: applyMosaicProps(mosaicHost ? mosaicHost.handleEvent(event) : null)"
+            "    onMosaicEvent: applyMosaicResponse(mosaicHost ? mosaicHost.handleEvent(event) : null)"
         )
         .unwrap();
         for e in &interface.emits {
@@ -6777,8 +6794,20 @@ mod tests {
             "root should accept an optional C++ host object:\n{out}"
         );
         assert!(
+            out.contains("property var lastHostIntent: null"),
+            "root should retain the last structured host intent:\n{out}"
+        );
+        assert!(
             out.contains("function applyMosaicProps(props)"),
             "root should expose an app-agnostic prop hydrator:\n{out}"
+        );
+        assert!(
+            out.contains("function applyMosaicResponse(response)"),
+            "root should normalize host responses that include props and hostIntent:\n{out}"
+        );
+        assert!(
+            out.contains("lastHostIntent = response.hostIntent;"),
+            "root should store host intents separately from props:\n{out}"
         );
         assert!(
             out.contains("mosaicRoot[key] = props[key];"),
@@ -6786,7 +6815,7 @@ mod tests {
         );
         assert!(
             out.contains(
-                "onMosaicEvent: applyMosaicProps(mosaicHost ? mosaicHost.handleEvent(event) : null)"
+                "onMosaicEvent: applyMosaicResponse(mosaicHost ? mosaicHost.handleEvent(event) : null)"
             ),
             "mosaicEvent should round-trip through the optional host:\n{out}"
         );
@@ -6822,7 +6851,7 @@ mod tests {
         );
         assert!(
             proj.main_cpp
-                .contains("QMetaObject::invokeMethod(root, \"applyMosaicProps\""),
+                .contains("QMetaObject::invokeMethod(root, \"applyMosaicResponse\""),
             "main.cpp should hydrate initial props through QML:\n{}",
             proj.main_cpp
         );

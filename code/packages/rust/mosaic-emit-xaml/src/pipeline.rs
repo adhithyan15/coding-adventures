@@ -779,7 +779,10 @@ fn build_style_fragment(props: &[mosstyle_compiler::StyleProp]) -> String {
 }
 
 fn upsert_style_attr(attrs: &mut Vec<(String, String)>, key: String, value: String) {
-    if let Some((_, existing)) = attrs.iter_mut().find(|(existing_key, _)| *existing_key == key) {
+    if let Some((_, existing)) = attrs
+        .iter_mut()
+        .find(|(existing_key, _)| *existing_key == key)
+    {
         *existing = value;
     } else {
         attrs.push((key, value));
@@ -3034,8 +3037,9 @@ fn build_optional_host_helpers(name: &str, namespace: &str) -> String {
              if (method is null) {{ return null; }}\n        \
              try\n        \
              {{\n            \
-                 return method.Invoke(null, new object[] {{ component }}) as string\n                \
-                     ?? \"Status: Mosaic host props loaded\";\n        \
+                 return CoerceMosaicHostResult(\n                \
+                     method.Invoke(null, new object[] {{ component }}),\n                \
+                     \"Status: Mosaic host props loaded\");\n        \
              }}\n        \
              catch (System.Reflection.TargetInvocationException ex) when (ex.InnerException is not null)\n        \
              {{\n            \
@@ -3053,8 +3057,9 @@ fn build_optional_host_helpers(name: &str, namespace: &str) -> String {
              if (method is null) {{ return null; }}\n        \
              try\n        \
              {{\n            \
-                 return method.Invoke(null, new object[] {{ component, ev }}) as string\n                \
-                     ?? $\"Status: Mosaic host handled {{ev.MosaicName}}\";\n        \
+                 return CoerceMosaicHostResult(\n                \
+                     method.Invoke(null, new object[] {{ component, ev }}),\n                \
+                     $\"Status: Mosaic host handled {{ev.MosaicName}}\");\n        \
              }}\n        \
              catch (System.Reflection.TargetInvocationException ex) when (ex.InnerException is not null)\n        \
              {{\n            \
@@ -3064,6 +3069,16 @@ fn build_optional_host_helpers(name: &str, namespace: &str) -> String {
              {{\n            \
                  return $\"Mosaic host failed: {{ex.GetType().Name}}: {{ex.Message}}\";\n        \
              }}\n    \
+         }}\n\
+         \n    \
+         private static string CoerceMosaicHostResult(object? result, string fallbackStatus)\n    \
+         {{\n        \
+             if (result is null) {{ return fallbackStatus; }}\n        \
+             if (result is string status) {{ return status; }}\n        \
+             var statusProperty = result.GetType().GetProperty(\n            \
+                 \"Status\",\n            \
+                 System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);\n        \
+             return statusProperty?.GetValue(result) as string ?? fallbackStatus;\n    \
          }}\n\
          \n    \
          private static System.Reflection.MethodInfo? FindMosaicHostMethod(string methodName, params System.Type[] parameterTypes)\n    \
@@ -8279,6 +8294,7 @@ mod tests {
         // MainWindow.xaml.cs can optionally delegate props/events to an
         // app-provided MosaicHost without requiring one to compile.
         assert!(p.main_window_cs.contains("TryApplyMosaicHostProps"));
+        assert!(p.main_window_cs.contains("CoerceMosaicHostResult"));
         assert!(p.main_window_cs.contains("FindMosaicHostMethod"));
         assert!(p.main_window_cs.contains("Mosaic.Generated.MosaicHost"));
         // MainWindow constructor pre-populates the Greeting slot stub.
@@ -9603,10 +9619,7 @@ mod tests {
             name: "padding-bottom".to_string(),
             value: "14px".to_string(),
         }]);
-        assert!(
-            bottom.contains("Padding=\"0,0,0,14\""),
-            "got:\n{bottom}"
-        );
+        assert!(bottom.contains("Padding=\"0,0,0,14\""), "got:\n{bottom}");
         assert!(
             !bottom.contains("PaddingBottom"),
             "PaddingBottom is not a WinUI property, got:\n{bottom}"
@@ -9616,10 +9629,7 @@ mod tests {
             name: "padding-top".to_string(),
             value: "16".to_string(),
         }]);
-        assert!(
-            top.contains("Padding=\"0,16,0,0\""),
-            "got:\n{top}"
-        );
+        assert!(top.contains("Padding=\"0,16,0,0\""), "got:\n{top}");
     }
 
     #[test]
@@ -9642,13 +9652,11 @@ mod tests {
                 }],
             },
         );
-        let s = style_for_box(
-            "shell",
-            vec![("background", "#101827"), ("padding", "24")],
-        );
+        let s = style_for_box("shell", vec![("background", "#101827"), ("padding", "24")]);
         let r = compile(&c, &l, &s);
         assert!(
-            r.xaml.contains("<Border Background=\"#101827\" Padding=\"24\">"),
+            r.xaml
+                .contains("<Border Background=\"#101827\" Padding=\"24\">"),
             "got:\n{}",
             r.xaml
         );

@@ -30,7 +30,7 @@ QVariantMap MosaicHost::props() {
   }
 
   const QByteArray deck = deckId();
-  return propsFromResponse(takeCString(engramAppProps_(session_, deck.constData(), nowMs())));
+  return hostResponseFromJson(takeCString(engramAppProps_(session_, deck.constData(), nowMs())));
 }
 
 QVariantMap MosaicHost::handleEvent(const QVariantMap &event) {
@@ -41,7 +41,7 @@ QVariantMap MosaicHost::handleEvent(const QVariantMap &event) {
   const QByteArray eventJson =
       QJsonDocument(QJsonObject::fromVariantMap(event)).toJson(QJsonDocument::Compact);
   const QByteArray deck = deckId();
-  return propsFromResponse(takeCString(
+  return hostResponseFromJson(takeCString(
       handleEngramAppEvent_(session_, eventJson.constData(), deck.constData(), nowMs())));
 }
 
@@ -112,7 +112,7 @@ QString MosaicHost::takeCString(char *value) const {
   return out;
 }
 
-QVariantMap MosaicHost::propsFromResponse(const QString &json) const {
+QVariantMap MosaicHost::hostResponseFromJson(const QString &json) const {
   if (json.isEmpty()) {
     return {};
   }
@@ -125,13 +125,24 @@ QVariantMap MosaicHost::propsFromResponse(const QString &json) const {
   }
 
   const QJsonObject root = document.object();
+  QVariantMap response;
+
+  if (root.value(QStringLiteral("ok")).toBool(true) == false) {
+    response.insert(QStringLiteral("error"), root.value(QStringLiteral("error")).toVariant());
+    return response;
+  }
+
   const QJsonObject hostIntent = root.value(QStringLiteral("hostIntent")).toObject();
   if (!hostIntent.isEmpty()) {
     qInfo().noquote() << "Engram host intent:"
                       << QJsonDocument(hostIntent).toJson(QJsonDocument::Compact);
+    response.insert(QStringLiteral("hostIntent"), hostIntent.toVariantMap());
   }
 
-  return camelCaseProps(root.value(QStringLiteral("props")).toObject().toVariantMap());
+  response.insert(
+      QStringLiteral("props"),
+      camelCaseProps(root.value(QStringLiteral("props")).toObject().toVariantMap()));
+  return response;
 }
 
 QVariantMap MosaicHost::camelCaseProps(const QVariantMap &props) const {
