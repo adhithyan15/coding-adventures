@@ -23,7 +23,10 @@ exactly — `Math.max` prefers `+0` over `-0`, `Math.min` prefers `-0` over `+0`
 argument (`Infinity` and `NaN` are global identifiers, never numeric literals,
 and a runtime value is unknown / could change the result), the empty call
 `Math.max()` / `Math.min()` (which would need an infinite literal), and a
-non-global receiver (`m.max(...)`). Only `max` and `min` are modelled.
+non-global receiver (`m.max(...)`). We also decline when the result is NEGATIVE
+ZERO (`Math.min(0, -0)` → `-0`): `-0` has no numeric-literal spelling (it is
+`UnaryMinus` on `0`, and `ToString(-0)` is `"0"`), so emitting it would flip the
+sign bit to `+0`. Only `max` and `min` are modelled.
 
 ## [0.71.0] - 2026-06-27
 

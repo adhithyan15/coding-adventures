@@ -1617,9 +1617,17 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                         } else {
                             js_math_min(&nums)
                         };
-                        // All-finite literal inputs always yield a finite result;
-                        // the guard keeps us from ever emitting an infinite literal.
-                        if result.is_finite() {
+                        // Emit only when the result has a faithful numeric-literal
+                        // spelling. Two results don't:
+                        //   * an infinite result — but all-finite literal inputs
+                        //     never produce one (defense-in-depth);
+                        //   * NEGATIVE ZERO — `-0` has NO numeric-literal token in
+                        //     JS (`-0` is UnaryMinus on `0`, and ToString(-0) is
+                        //     "0"), so a bare `NumericLiteral` would print as `0`
+                        //     (=== +0). `Math.min(0, -0)` is `-0`, so folding it
+                        //     would flip the sign bit (observable via `1/x` or
+                        //     `Object.is`). DECLINE — leaving the call intact is safe.
+                        if result.is_finite() && !(result == 0.0 && result.is_sign_negative()) {
                             let parent = c.cv.clone();
                             let before =
                                 format!("Math.{}({} numeric arg(s))", prop.name, nums.len());
@@ -8357,15 +8365,37 @@ mod tests {
     }
 
     #[test]
-    fn fold_math_min_prefers_negative_zero() {
-        // Math.min(-0, +0) === -0 and Math.min(+0, -0) === -0.
-        for args in [
-            vec![num(-0.0, None), num(0.0, None)],
-            vec![num(0.0, None), num(-0.0, None)],
+    fn math_negative_zero_result_does_not_fold() {
+        // A result of -0 has NO faithful numeric-literal spelling (`-0` is
+        // UnaryMinus on `0`, ToString(-0) === "0"), so emitting it would print
+        // `0` (=== +0) — a sign-bit miscompile. We DECLINE these:
+        //   Math.min(-0, +0) === -0, Math.min(+0, -0) === -0, Math.max(-0, -0) === -0,
+        //   Math.min(-0)     === -0.
+        let cases = [
+            math_call("min", vec![num(-0.0, None), num(0.0, None)]),
+            math_call("min", vec![num(0.0, None), num(-0.0, None)]),
+            math_call("max", vec![num(-0.0, None), num(-0.0, None)]),
+            math_call("min", vec![num(-0.0, None)]),
+        ];
+        for c in cases {
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "a -0 result must not fold (no -0 literal spelling)");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn fold_math_positive_zero_result_still_folds() {
+        // A +0 result IS representable, so it still folds.
+        // Math.max(-0, +0) === +0; Math.min(+0, +0) === +0; Math.max(0) === +0.
+        for c in [
+            math_call("max", vec![num(-0.0, None), num(0.0, None)]),
+            math_call("min", vec![num(0.0, None), num(0.0, None)]),
+            math_call("max", vec![num(0.0, None)]),
         ] {
-            let r = folded_number(math_call("min", args));
+            let r = folded_number(c);
             assert_eq!(r, 0.0);
-            assert!(r.is_sign_negative(), "Math.min(±0) must be -0");
+            assert!(r.is_sign_positive(), "a +0 result folds to +0");
         }
     }
 
