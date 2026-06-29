@@ -21,7 +21,7 @@ fn schedule_new(card_id: String, rating: Rating, options: &DeckOptions, now: u64
         card_id,
         state: CardState::Learning,
         interval: 0,
-        ease_factor: INITIAL_EASE_FACTOR,
+        ease_factor: finite_positive(options.initial_ease_factor, INITIAL_EASE_FACTOR),
         next_due_at: now,
         learning_step_index: Some(0),
         buried_until: None,
@@ -284,6 +284,19 @@ mod tests {
         assert_eq!(next.state, CardState::Review);
         assert_eq!(next.interval, 4);
         assert_eq!(next.next_due_at, NOW + 4 * ONE_DAY_MS);
+    }
+
+    #[test]
+    fn new_cards_start_with_deck_initial_ease_factor() {
+        let options = DeckOptions {
+            initial_ease_factor: 2.8,
+            ..options()
+        };
+
+        let next = schedule_review(None, "card", Rating::Good, &options, NOW);
+
+        assert_eq!(next.state, CardState::Learning);
+        assert_eq!(next.ease_factor, 2.8);
     }
 
     #[test]

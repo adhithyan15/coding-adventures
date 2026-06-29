@@ -53,10 +53,10 @@ scheduler state machine. Hosts that already expose deck-specific options can
 dispatch `EngramCommand::RateCardWithOptions` to provide learning steps,
 graduating/easy intervals, review limits, and lapse behavior without forking the
 review logic.
-Deck options also carry Anki-style maximum interval, review interval modifier,
-hard interval multiplier, easy bonus multiplier, leech threshold, and leech
-action settings, so hosts can keep deck-specific scheduler tuning in the shared
-Rust core.
+Deck options also carry Anki-style initial ease factor, maximum interval,
+review interval modifier, hard interval multiplier, easy bonus multiplier,
+leech threshold, and leech action settings, so hosts can keep deck-specific
+scheduler tuning in the shared Rust core.
 `EngramCommand::SetDeckOptions` inserts or replaces a stored deck option preset,
 letting settings screens update the same options that queue building and
 `RateCard` use.

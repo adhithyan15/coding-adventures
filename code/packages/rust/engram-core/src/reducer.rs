@@ -2401,6 +2401,40 @@ mod tests {
     }
 
     #[test]
+    fn rate_card_with_options_honors_initial_ease_factor() {
+        let mut state = AppState::default();
+        state.cards.push(card("card"));
+        state = reduce(
+            &state,
+            EngramCommand::StartSession {
+                session_id: "session".to_string(),
+                deck_id: "deck".to_string(),
+                queue: vec![card("card")],
+                started_at: NOW,
+            },
+        );
+        let deck_options = DeckOptions {
+            initial_ease_factor: 2.8,
+            ..DeckOptions::default()
+        };
+
+        let next = reduce(
+            &state,
+            EngramCommand::RateCardWithOptions {
+                review_id: "review".to_string(),
+                session_id: "session".to_string(),
+                card_id: "card".to_string(),
+                rating: Rating::Good,
+                reviewed_at: NOW,
+                deck_options,
+            },
+        );
+
+        assert_eq!(next.card_progress[0].state, CardState::Learning);
+        assert_eq!(next.card_progress[0].ease_factor, 2.8);
+    }
+
+    #[test]
     fn set_deck_options_inserts_and_replaces_presets() {
         let state = AppState::default();
         let initial_options = DeckOptions {

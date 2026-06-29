@@ -31,6 +31,8 @@ component EngramApp {
   slot deck-options-graduating-interval-value : number ;
   slot deck-options-easy-interval-label : text ;
   slot deck-options-easy-interval-value : number ;
+  slot deck-options-initial-ease-label : text ;
+  slot deck-options-initial-ease-value : number ;
   slot deck-options-maximum-interval-label : text ;
   slot deck-options-maximum-interval-value : number ;
   slot deck-options-interval-modifier-label : text ;
@@ -152,6 +154,7 @@ component EngramApp {
   emit onDeckOptionsReviewsChange ( value : number ) ;
   emit onDeckOptionsGraduatingIntervalChange ( value : number ) ;
   emit onDeckOptionsEasyIntervalChange ( value : number ) ;
+  emit onDeckOptionsInitialEaseChange ( value : number ) ;
   emit onDeckOptionsMaximumIntervalChange ( value : number ) ;
   emit onDeckOptionsIntervalModifierChange ( value : number ) ;
   emit onDeckOptionsHardMultiplierChange ( value : number ) ;

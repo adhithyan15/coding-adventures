@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added Anki `initialFactor` import/export and a shared initial-ease deck option
+  control across the Rust core, WASM facade, and generated Mosaic shells.
 - Moved HTML/React host adapter activation into Mosaic package host asset
   emission, leaving `build-all.ps1` responsible for generated runtime binaries
   and loaders instead of editing generated shell entry files.

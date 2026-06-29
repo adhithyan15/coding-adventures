@@ -921,6 +921,10 @@ fn v11_options_for_deck(deck: &AnkiV11Deck, deck_config: &Value) -> DeckOptions 
                 options.easy_interval_days = (*easy).max(options.graduating_interval_days);
             }
         }
+        if let Some(initial_factor) = json_path_f64(config, &["new", "initialFactor"]) {
+            options.initial_ease_factor =
+                normalized_anki_ease_factor(initial_factor, options.initial_ease_factor);
+        }
         if let Some(multiplier) = json_path_f64(config, &["lapse", "mult"]) {
             options.lapse_interval_multiplier =
                 normalized_anki_multiplier(multiplier, options.lapse_interval_multiplier);
@@ -960,6 +964,17 @@ fn normalized_anki_multiplier(value: f64, fallback: f64) -> f64 {
     }
     if value > 10.0 {
         value / 100.0
+    } else {
+        value
+    }
+}
+
+fn normalized_anki_ease_factor(value: f64, fallback: f64) -> f64 {
+    if !value.is_finite() || value <= 0.0 {
+        return fallback;
+    }
+    if value > 100.0 {
+        value / 1000.0
     } else {
         value
     }
@@ -1968,6 +1983,15 @@ fn merge_deck_options_json(
             Value::Number(i64::from(options.easy_interval_days).into()),
         ]),
     );
+    new_object.insert(
+        "initialFactor".to_string(),
+        Value::Number(
+            ((finite_positive(options.initial_ease_factor, INITIAL_EASE_FACTOR) * 1000.0)
+                .round()
+                .clamp(0.0, i64::MAX as f64) as i64)
+                .into(),
+        ),
+    );
     object.insert("new".to_string(), new_section);
 
     let mut review_section = object
@@ -2040,6 +2064,14 @@ fn json_f64_or(value: f64, fallback: f64) -> Value {
     serde_json::Number::from_f64(normalized)
         .map(Value::Number)
         .unwrap_or_else(|| Value::Number(0_i64.into()))
+}
+
+fn finite_positive(value: f64, fallback: f64) -> f64 {
+    if value.is_finite() && value > 0.0 {
+        value
+    } else {
+        fallback
+    }
 }
 
 fn leech_action_to_anki(action: LeechAction) -> i64 {
@@ -2283,8 +2315,12 @@ fn export_card_scheduling(
             queue: source_i64(source, "queue").unwrap_or(0),
             due: source_i64(source, "due").unwrap_or(index.saturating_add(1) as i64),
             interval: source_i64(source, "interval").unwrap_or(0),
-            factor: source_i64(source, "factor")
-                .unwrap_or((INITIAL_EASE_FACTOR * 1000.0).round() as i64),
+            factor: source_i64(source, "factor").unwrap_or_else(|| {
+                let initial_ease = deck_options
+                    .map(|options| options.initial_ease_factor)
+                    .unwrap_or(INITIAL_EASE_FACTOR);
+                (finite_positive(initial_ease, INITIAL_EASE_FACTOR) * 1000.0).round() as i64
+            }),
             repetitions: source_i64(source, "repetitions").unwrap_or(0),
             lapses: source_i64(source, "lapses").unwrap_or(0),
             left: source_i64(source, "left").unwrap_or(0),
@@ -4062,7 +4098,7 @@ CREATE TABLE graves (
                             "1": {
                                 "id": 1,
                                 "name": "Default",
-                                "new": {"perDay": 12, "bury": false, "delays": [3, 12], "ints": [2, 5]},
+                                "new": {"perDay": 12, "bury": false, "delays": [3, 12], "ints": [2, 5], "initialFactor": 2800},
                                 "rev": {"perDay": 80, "bury": false, "maxIvl": 90, "ivlFct": 0.75, "hardFactor": 1.4, "ease4": 1.6},
                                 "lapse": {"delays": [20], "mult": 0.5, "leechFails": 6, "leechAction": 0},
                                 "buryInterdayLearning": false
@@ -4334,6 +4370,7 @@ CREATE TABLE graves (
         assert_eq!(options.relearning_steps_minutes, vec![20]);
         assert_eq!(options.graduating_interval_days, 2);
         assert_eq!(options.easy_interval_days, 5);
+        assert_eq!(options.initial_ease_factor, 2.8);
         assert_eq!(options.maximum_interval_days, 90);
         assert_eq!(options.review_interval_modifier, 0.75);
         assert_eq!(options.hard_interval_multiplier, 1.4);
@@ -4425,6 +4462,10 @@ CREATE TABLE graves (
         assert_eq!(
             exported.metadata.deck_config["2"]["new"]["delays"],
             serde_json::json!([3, 12])
+        );
+        assert_eq!(
+            exported.metadata.deck_config["2"]["new"]["initialFactor"],
+            2800
         );
         assert_eq!(exported.metadata.deck_config["2"]["rev"]["maxIvl"], 90);
         assert_eq!(exported.metadata.deck_config["2"]["rev"]["ivlFct"], 0.75);

@@ -770,6 +770,14 @@ fn engram_app_props_for_state(
             Value::from(deck_options.easy_interval_days),
         );
         props_object.insert(
+            "deck-options-initial-ease-label".to_string(),
+            Value::String("Initial ease".to_string()),
+        );
+        props_object.insert(
+            "deck-options-initial-ease-value".to_string(),
+            Value::from(deck_options.initial_ease_factor),
+        );
+        props_object.insert(
             "deck-options-maximum-interval-label".to_string(),
             Value::String("Maximum interval".to_string()),
         );
@@ -1428,6 +1436,9 @@ impl EngramAppEvent {
             Self::DeckOptionsChange(DeckOptionField::EasyIntervalDays) => {
                 "onDeckOptionsEasyIntervalChange"
             }
+            Self::DeckOptionsChange(DeckOptionField::InitialEaseFactor) => {
+                "onDeckOptionsInitialEaseChange"
+            }
             Self::DeckOptionsChange(DeckOptionField::MaximumIntervalDays) => {
                 "onDeckOptionsMaximumIntervalChange"
             }
@@ -1487,6 +1498,7 @@ enum DeckOptionField {
     ReviewsPerDay,
     GraduatingIntervalDays,
     EasyIntervalDays,
+    InitialEaseFactor,
     MaximumIntervalDays,
     ReviewIntervalModifier,
     HardIntervalMultiplier,
@@ -1625,6 +1637,14 @@ fn parse_engram_app_event_name(
         | "deck-options-easy-interval-change"
         | "deck_options_easy_interval_change" => parsed(EngramAppEvent::DeckOptionsChange(
             DeckOptionField::EasyIntervalDays,
+        )),
+        "deckoptionsinitialeasechange"
+        | "deck-options-initial-ease-change"
+        | "deck_options_initial_ease_change"
+        | "deckoptionsinitialfactorchange"
+        | "deck-options-initial-factor-change"
+        | "deck_options_initial_factor_change" => parsed(EngramAppEvent::DeckOptionsChange(
+            DeckOptionField::InitialEaseFactor,
         )),
         "deckoptionsmaximumintervalchange"
         | "deck-options-maximum-interval-change"
@@ -1833,6 +1853,9 @@ fn apply_deck_option_number_change(
         }
         DeckOptionField::EasyIntervalDays => {
             options.easy_interval_days = deck_option_days(value, "easy interval")?;
+        }
+        DeckOptionField::InitialEaseFactor => {
+            options.initial_ease_factor = deck_option_positive_multiplier(value, "initial ease")?;
         }
         DeckOptionField::MaximumIntervalDays => {
             options.maximum_interval_days = deck_option_days(value, "maximum interval")?;
@@ -2433,6 +2456,7 @@ mod tests {
                 "options": {
                     "newCardsPerDay": 12,
                     "maximumIntervalDays": 90,
+                    "initialEaseFactor": 2.8,
                     "reviewIntervalModifier": 0.75,
                     "hardIntervalMultiplier": 1.4,
                     "easyBonusMultiplier": 1.6
@@ -2450,6 +2474,10 @@ mod tests {
         assert_eq!(
             value["state"]["deckOptions"][0]["options"]["maximumIntervalDays"],
             90
+        );
+        assert_eq!(
+            value["state"]["deckOptions"][0]["options"]["initialEaseFactor"],
+            2.8
         );
         assert_eq!(
             value["state"]["deckOptions"][0]["options"]["reviewIntervalModifier"],
@@ -3063,6 +3091,7 @@ mod tests {
                     "relearningStepsMinutes": [10],
                     "graduatingIntervalDays": 2,
                     "easyIntervalDays": 5,
+                    "initialEaseFactor": 2.8,
                     "maximumIntervalDays": 90,
                     "reviewIntervalModifier": 0.75,
                     "hardIntervalMultiplier": 1.4,
@@ -3322,6 +3351,7 @@ mod tests {
                     "relearningStepsMinutes": [10],
                     "graduatingIntervalDays": 2,
                     "easyIntervalDays": 5,
+                    "initialEaseFactor": 2.8,
                     "maximumIntervalDays": 90,
                     "reviewIntervalModifier": 0.75,
                     "hardIntervalMultiplier": 1.4,
@@ -3369,6 +3399,7 @@ mod tests {
         assert_eq!(value["props"]["deck-options-reviews-value"], 80);
         assert_eq!(value["props"]["deck-options-graduating-interval-value"], 2);
         assert_eq!(value["props"]["deck-options-easy-interval-value"], 5);
+        assert_eq!(value["props"]["deck-options-initial-ease-value"], 2.8);
         assert_eq!(value["props"]["deck-options-maximum-interval-value"], 90);
         assert_eq!(value["props"]["deck-options-interval-modifier-value"], 0.75);
         assert_eq!(value["props"]["deck-options-hard-multiplier-value"], 1.4);
@@ -4045,6 +4076,7 @@ mod tests {
                         "relearningStepsMinutes": [5],
                         "graduatingIntervalDays": 2,
                         "easyIntervalDays": 5,
+                        "initialEaseFactor": 2.5,
                         "maximumIntervalDays": 180,
                         "reviewIntervalModifier": 1.1,
                         "hardIntervalMultiplier": 1.2,
@@ -4097,6 +4129,23 @@ mod tests {
         assert_eq!(
             interval_modifier["props"]["deck-options-interval-modifier-value"],
             1.25
+        );
+
+        let initial_ease: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onDeckOptionsInitialEaseChange","value":"2.8"}"#,
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(initial_ease["ok"], true);
+        assert_eq!(initial_ease["event"], "onDeckOptionsInitialEaseChange");
+        assert_eq!(
+            initial_ease["state"]["deckOptions"][0]["options"]["initialEaseFactor"],
+            2.8
+        );
+        assert_eq!(
+            initial_ease["props"]["deck-options-initial-ease-value"],
+            2.8
         );
 
         let learning_steps: Value = serde_json::from_str(&session.handle_engram_app_event(
@@ -4978,6 +5027,7 @@ mod tests {
                         "relearningStepsMinutes": [10],
                         "graduatingIntervalDays": 1,
                         "easyIntervalDays": 4,
+                        "initialEaseFactor": 2.8,
                         "lapseIntervalMultiplier": 0.0
                     }
                 }"#,
@@ -4986,6 +5036,7 @@ mod tests {
 
         assert_eq!(value["ok"], true);
         assert_eq!(value["state"]["cardProgress"][0]["state"], "learning");
+        assert_eq!(value["state"]["cardProgress"][0]["easeFactor"], 2.8);
         assert_eq!(value["state"]["cardProgress"][0]["learningStepIndex"], 1);
         assert_eq!(
             value["state"]["cardProgress"][0]["nextDueAt"],

@@ -67,6 +67,10 @@ style DeckOptionsPanel {
     padding : 6 ;
   }
 
+  part initial-ease-field {
+    padding : 6 ;
+  }
+
   part interval-modifier-field {
     padding : 6 ;
   }
@@ -177,6 +181,16 @@ style DeckOptionsPanel {
     font-size : 14 ;
   }
 
+  part initial-ease-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#1e293b" ;
+    color : "#f1f5f9" ;
+    border-width : 1 ;
+    border-color : "#475569" ;
+    font-size : 14 ;
+  }
+
   part interval-modifier-input {
     padding : 8 ;
     border-radius : 4 ;
@@ -271,6 +285,13 @@ style DeckOptionsPanel {
 
   part maximum-interval-label {
     color : "#fbcfe8" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part initial-ease-label {
+    color : "#c7d2fe" ;
     font-size : 12 ;
     font-weight : 700 ;
     padding-bottom : 4 ;

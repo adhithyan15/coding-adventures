@@ -89,6 +89,17 @@ layout DeckOptionsPanel {
       }
     }
     Row [ review-factor-options ] {
+      Column [ initial-ease-field ] {
+        Text [ initial-ease-label ] (
+          content : slot: initial-ease-label
+        )
+        HostNumberInput [ initial-ease-input ] (
+          value : slot: initial-ease-value ,
+          placeholder : "2.5" ,
+          disabled : false ,
+          onChange : emit: onInitialEaseChange
+        )
+      }
       Column [ interval-modifier-field ] {
         Text [ interval-modifier-label ] (
           content : slot: interval-modifier-label

@@ -17,6 +17,8 @@ component DeckOptionsPanel {
   slot graduating-interval-value : number ;
   slot easy-interval-label : text ;
   slot easy-interval-value : number ;
+  slot initial-ease-label : text ;
+  slot initial-ease-value : number ;
   slot maximum-interval-label : text ;
   slot maximum-interval-value : number ;
   slot interval-modifier-label : text ;
@@ -47,6 +49,7 @@ component DeckOptionsPanel {
   emit onReviewsChange ( value : number ) ;
   emit onGraduatingIntervalChange ( value : number ) ;
   emit onEasyIntervalChange ( value : number ) ;
+  emit onInitialEaseChange ( value : number ) ;
   emit onMaximumIntervalChange ( value : number ) ;
   emit onIntervalModifierChange ( value : number ) ;
   emit onHardMultiplierChange ( value : number ) ;

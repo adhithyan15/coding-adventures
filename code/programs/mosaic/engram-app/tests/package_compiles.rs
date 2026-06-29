@@ -490,6 +490,7 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&html_main, "\"onBrowserSelectResult\"");
     assert_contains(&html_main, "\"name\": \"index\"");
     assert_contains(&html_main, "\"onDeckOptionsBuryNewSiblingsChange\"");
+    assert_contains(&html_main, "\"onDeckOptionsInitialEaseChange\"");
     assert_contains(&html_main, "\"onDeckOptionsLeechActionChange\"");
     assert_contains(&html_main, "\"name\": \"checked\"");
     let html_host =
@@ -511,6 +512,7 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(&react_app, "deckOptionsNewCardsValue: 0,");
     assert_contains(&react_app, "deckOptionsIntervalModifierValue: 0,");
+    assert_contains(&react_app, "deckOptionsInitialEaseValue: 0,");
     assert_contains(&react_app, "deckOptionsLeechThresholdValue: 0,");
     assert_contains(&react_app, "deckOptionsLeechActionSuspendValue: false,");
     assert_contains(&react_app, "deckOptionsBuryNewSiblingsValue: false,");
@@ -582,6 +584,7 @@ fn native_project_shells_expose_engram_host_contract() {
         "deckOptionsRelearningStepsValue: \"Sample DeckOptionsRelearningStepsValue\",",
     );
     assert_contains(&electron_app, "deckOptionsMaximumIntervalValue: 0,");
+    assert_contains(&electron_app, "deckOptionsInitialEaseValue: 0,");
     assert_contains(&electron_app, "deckOptionsEasyBonusValue: 0,");
     assert_contains(
         &electron_app,
@@ -692,6 +695,7 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(&flutter_app, "deckOptionsNewCardsValue: 0.0,");
     assert_contains(&flutter_app, "deckOptionsHardMultiplierValue: 0.0,");
+    assert_contains(&flutter_app, "deckOptionsInitialEaseValue: 0.0,");
     assert_contains(&flutter_app, "deckOptionsBuryNewSiblingsValue: false,");
     assert_contains(&flutter_app, "historyLabel: \"Sample HistoryLabel\",");
     assert_contains(
@@ -734,6 +738,10 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(
         &compose_app,
+        "data class DeckOptionsInitialEaseChange(val value: Double)",
+    );
+    assert_contains(
+        &compose_app,
         "override val mosaicPayload: Map<String, Any?> get() = mapOf(\"value\" to value)",
     );
     assert_contains(
@@ -751,6 +759,7 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&compose_app, "deckOptionsLearningStepsValue: String,");
     assert_contains(&compose_app, "deckOptionsNewCardsValue: Double,");
     assert_contains(&compose_app, "deckOptionsEasyBonusValue: Double,");
+    assert_contains(&compose_app, "deckOptionsInitialEaseValue: Double,");
     assert_contains(&compose_app, "deckOptionsBuryNewSiblingsValue: Boolean,");
     assert_contains(&compose_app, "historyLabel: String,");
     assert_contains(&compose_app, "collectionLabel: String,");
@@ -788,6 +797,7 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(&compose_main, "deckOptionsNewCardsValue = 0.0,");
     assert_contains(&compose_main, "deckOptionsEasyBonusValue = 0.0,");
+    assert_contains(&compose_main, "deckOptionsInitialEaseValue = 0.0,");
     assert_contains(&compose_main, "deckOptionsBuryNewSiblingsValue = false,");
     assert_contains(&compose_main, "historyLabel = \"Sample HistoryLabel\",");
     assert_contains(
@@ -830,6 +840,7 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "property string deckOptionsRelearningStepsValue");
     assert_contains(&qml, "property real deckOptionsNewCardsValue");
     assert_contains(&qml, "property real deckOptionsEasyBonusValue");
+    assert_contains(&qml, "property real deckOptionsInitialEaseValue");
     assert_contains(&qml, "property bool deckOptionsBuryNewSiblingsValue");
     assert_contains(&qml, "property bool deckOptionsBuryReviewSiblingsValue");
     assert_contains(
@@ -885,6 +896,7 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(&qml, "signal deckOptionsNewCardsChange(real value)");
     assert_contains(&qml, "signal deckOptionsMaximumIntervalChange(real value)");
+    assert_contains(&qml, "signal deckOptionsInitialEaseChange(real value)");
     assert_contains(&qml, "signal deckOptionsEasyBonusChange(real value)");
     assert_contains(
         &qml,
@@ -937,6 +949,7 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "case deckOptionsRelearningStepsChange");
     assert_contains(&swift, "case deckOptionsNewCardsChange");
     assert_contains(&swift, "case deckOptionsMaximumIntervalChange");
+    assert_contains(&swift, "case deckOptionsInitialEaseChange");
     assert_contains(&swift, "case deckOptionsEasyBonusChange");
     assert_contains(&swift, "case deckOptionsBuryNewSiblingsChange");
     assert_contains(&swift, "case deckOptionsBuryReviewSiblingsChange");
@@ -958,6 +971,7 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "let deckOptionsRelearningStepsValue: String");
     assert_contains(&swift, "let deckOptionsNewCardsValue: Double");
     assert_contains(&swift, "let deckOptionsEasyBonusValue: Double");
+    assert_contains(&swift, "let deckOptionsInitialEaseValue: Double");
     assert_contains(&swift, "let deckOptionsBuryNewSiblingsValue: Bool");
     assert_contains(&swift, "let deckOptionsBuryReviewSiblingsValue: Bool");
     assert_contains(
@@ -1003,6 +1017,10 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &swift_app,
         "deckOptionsEasyBonusValue: MosaicHostValue.double(host.props, \"deck-options-easy-bonus-value\", fallback: 0),",
+    );
+    assert_contains(
+        &swift_app,
+        "deckOptionsInitialEaseValue: MosaicHostValue.double(host.props, \"deck-options-initial-ease-value\", fallback: 0),",
     );
     assert_contains(
         &swift_app,
@@ -1126,6 +1144,10 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(
         &xaml_code_behind,
+        "public static readonly DependencyProperty DeckOptionsInitialEaseValueProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
         "public static readonly DependencyProperty DeckOptionsLeechThresholdValueProperty",
     );
     assert_contains(
@@ -1243,6 +1265,10 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_events,
         "public sealed record DeckOptionsMaximumIntervalChange(double Value) : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record DeckOptionsInitialEaseChange(double Value) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
