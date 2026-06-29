@@ -81,12 +81,13 @@ lookups, a native service catalog for command affordances and Home Assistant
 target aliases, a native current-state registry with confidence/source/staleness
 filters plus room filters and detail lookups, a scene registry with room/action
 projections, command-result audit records with
-command, bridge, correlation, status, and sort filters, indexed authorization
-decisions with principal, outcome, and sort filters, and desired-state
-supervision targets.
+command, bridge, correlation, room, status, and sort filters, indexed
+authorization decisions with principal, outcome, and sort filters, and
+desired-state supervision targets.
 State-history reads expose registry-backed device events with Home Assistant
-entity aliases, state deltas, timestamp filters, and event-id detail lookups;
-the Home Assistant-style history route accepts `filter_entity_id`.
+entity aliases, room filters, state deltas, timestamp filters, and event-id
+detail lookups; the Home Assistant-style history route accepts
+`filter_entity_id` and room filters.
 
 `GET /api/smart_home/smoke` exposes a machine-readable local-controller smoke
 plan with safe GET probes and a single runtime-authorized Home Assistant-style
@@ -166,15 +167,19 @@ curl 'http://127.0.0.1:8123/api/smart_home/rooms/kitchen'
 curl 'http://127.0.0.1:8123/api/smart_home/scenes?room_id=kitchen&scope=room'
 curl 'http://127.0.0.1:8123/api/smart_home/scenes/scene.scene_kitchen_bright'
 curl 'http://127.0.0.1:8123/api/smart_home/events?limit=12'
+curl 'http://127.0.0.1:8123/api/smart_home/events?room_id=kitchen&limit=12'
 curl 'http://127.0.0.1:8123/api/smart_home/events/0'
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?limit=10'
+curl 'http://127.0.0.1:8123/api/smart_home/command_results?room_id=kitchen&limit=10'
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?bridge_id=bridge-1'
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?sort=status_then_newest'
 curl 'http://127.0.0.1:8123/api/smart_home/authorization_decisions?principal_id=agent:home-assistant-local-api&sort=oldest_first'
 curl 'http://127.0.0.1:8123/api/smart_home/authorization_decisions/0'
 curl 'http://127.0.0.1:8123/api/smart_home/state_history?entity_id=light.entity_light_1'
+curl 'http://127.0.0.1:8123/api/smart_home/state_history?room_id=kitchen'
 curl 'http://127.0.0.1:8123/api/smart_home/state_history/event-light-1-on'
 curl 'http://127.0.0.1:8123/api/history/period?filter_entity_id=light.entity_light_1'
+curl 'http://127.0.0.1:8123/api/history/period?room_id=kitchen'
 curl -X POST http://127.0.0.1:8123/api/services/light/turn_on \
   -H 'Content-Type: application/json' \
   -d '{"entity_id":"light.entity_light_1","brightness_pct":75}'
