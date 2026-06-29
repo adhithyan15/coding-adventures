@@ -1289,6 +1289,55 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — *boolean variable* (LANG-FULL AL10). `boolean b` declares a
+    // slot at type_hint `"bool"` (LLVM `i1`, JVM/CLR `int32 0/1`, VM
+    // `Value::Bool`).  `b := true` lowers to `const _t0 = 1 / mov b, _t0`
+    // (both at `"bool"` type_hint).  The `if b` condition forwards the slot
+    // directly to `jmp_if_true`; since `b`'s env entry is the literal `1` and
+    // the instr's type_hint maps to `i1`, LLVM branches without a redundant
+    // trunc.  Every other backend already handles `bool`-typed conditions for
+    // comparison results; this cell proves a *named, mutable variable* of
+    // declared type `boolean` reaches every backend's branch op correctly.
+    // ALGOL 60 report §5.1: `boolean` is a primitive scalar type on equal
+    // footing with `integer` and `real`.  Exit 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean b; integer result; b := true; \
+               if b then result := 42 else result := 0 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — *boolean `not`* (LANG-FULL AL10).  The unary `not` op
+    // flips a `false` slot to `true`.  In LLVM it lowers to `xor i1 %b, 1`;
+    // in WASM to `i32.eqz` on the i32 bool representation; in JVM to a
+    // `ifeq`/`goto` pattern; in CLR to `ldc.i4.0` + `ceq`; in the VM to
+    // the `not` dispatch arm.  `b := false; if not b` → the then-arm fires →
+    // exit 42.  Together with the cell above this proves both `true` and
+    // `false` literals, direct boolean variable use, and logical negation.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean b; integer result; b := false; \
+               if not b then result := 42 else result := 0 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — *boolean `and` + `not` compound* (LANG-FULL AL10). Two
+    // boolean variables; the compound condition `a and (not b)` with
+    // `a = true`, `b = false` evaluates to `true and true = true`.  Exercises
+    // the two-operand `and` IIR op (LLVM `and i1`, WASM `i32.and`, JVM/CLR
+    // integer AND, VM `and`), wired up after a `not`-inverted sub-expression.
+    // Proves compound boolean algebra over named variables works end-to-end
+    // on all 7 backends.  Exit 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean a, b; integer result; a := true; b := false; \
+               if a and (not b) then result := 42 else result := 0 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
     // `lower_brainfuck_for_aot` widens the BF cell/ptr registers to `i64` (byte width
     // survives only at the tape boundary) for every code-gen backend. On LLVM (LM-L)
@@ -1625,6 +1674,21 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET S = 0\n20 FOR I = 1 TO 5\n30 LET S = S + I\n40 NEXT I\n50 PRINT S\n60 END\n",
         expect: Expect::Stdout("15"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — `FOR … STEP` with step size 2 (LANG-FULL BA-step). The
+    // `STEP` clause stores its value into a dedicated `_for_<n>_step` IIR slot
+    // (a `const 2` at `"i64"` type_hint); each `NEXT I` adds `step` to `I`
+    // before re-testing `I <= limit`.  Here I iterates 1 → 3 → 5 → (7 > 5
+    // exits); S accumulates 1+3+5 = 9.  Without STEP the loop would run 5
+    // iterations summing to 15 — the differing output distinguishes STEP-2 from
+    // default STEP-1.  Integer STEP keeps S on the `i64` track so `PRINT S`
+    // emits "9" via the integer helper on every backend.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET S = 0\n20 FOR I = 1 TO 5 STEP 2\n30 LET S = S + I\n40 NEXT I\n50 PRINT S\n60 END\n",
+        expect: Expect::Stdout("9"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Dartmouth BASIC — `IF … THEN <line>` + `GOTO`-style jump (LANG-FULL BA0). `A > 5`
