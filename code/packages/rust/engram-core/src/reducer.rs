@@ -71,6 +71,26 @@ pub enum EngramCommand {
     DeleteNote {
         note_id: String,
     },
+    AddNoteTags {
+        note_ids: Vec<String>,
+        tags: Vec<String>,
+        updated_at: u64,
+    },
+    RemoveNoteTags {
+        note_ids: Vec<String>,
+        tags: Vec<String>,
+        updated_at: u64,
+    },
+    AddCardTags {
+        card_ids: Vec<String>,
+        tags: Vec<String>,
+        updated_at: u64,
+    },
+    RemoveCardTags {
+        card_ids: Vec<String>,
+        tags: Vec<String>,
+        updated_at: u64,
+    },
     UpsertMediaAsset {
         asset: MediaAssetRecord,
     },
@@ -390,6 +410,26 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             next
         }
         EngramCommand::DeleteNote { note_id } => delete_note_and_generated_cards(state, &note_id),
+        EngramCommand::AddNoteTags {
+            note_ids,
+            tags,
+            updated_at,
+        } => update_note_tags_by_note_ids(state, &note_ids, &tags, updated_at, TagEdit::Add),
+        EngramCommand::RemoveNoteTags {
+            note_ids,
+            tags,
+            updated_at,
+        } => update_note_tags_by_note_ids(state, &note_ids, &tags, updated_at, TagEdit::Remove),
+        EngramCommand::AddCardTags {
+            card_ids,
+            tags,
+            updated_at,
+        } => update_note_tags_by_card_ids(state, &card_ids, &tags, updated_at, TagEdit::Add),
+        EngramCommand::RemoveCardTags {
+            card_ids,
+            tags,
+            updated_at,
+        } => update_note_tags_by_card_ids(state, &card_ids, &tags, updated_at, TagEdit::Remove),
         EngramCommand::UpsertMediaAsset { asset } => {
             let mut next = state.clone();
             match next
@@ -923,6 +963,107 @@ fn delete_note_type_and_related_notes(state: &AppState, note_type_id: &str) -> A
         next = delete_note_and_generated_cards(&next, &note_id);
     }
     next
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum TagEdit {
+    Add,
+    Remove,
+}
+
+fn update_note_tags_by_card_ids(
+    state: &AppState,
+    card_ids: &[String],
+    tags: &[String],
+    updated_at: u64,
+    edit: TagEdit,
+) -> AppState {
+    let mut note_ids = Vec::new();
+    for card_id in card_ids {
+        let Some(card) = state.cards.iter().find(|card| card.id == *card_id) else {
+            continue;
+        };
+        let Some(lineage) = &card.lineage else {
+            continue;
+        };
+        if !note_ids
+            .iter()
+            .any(|note_id: &String| note_id == &lineage.note_id)
+        {
+            note_ids.push(lineage.note_id.clone());
+        }
+    }
+    update_note_tags_by_note_ids(state, &note_ids, tags, updated_at, edit)
+}
+
+fn update_note_tags_by_note_ids(
+    state: &AppState,
+    note_ids: &[String],
+    tags: &[String],
+    updated_at: u64,
+    edit: TagEdit,
+) -> AppState {
+    let normalized_tags = normalized_edit_tags(tags);
+    if note_ids.is_empty() || normalized_tags.is_empty() {
+        return state.clone();
+    }
+
+    let mut next = state.clone();
+    for note in &mut next.notes {
+        if !note_ids.iter().any(|note_id| note_id == &note.id) {
+            continue;
+        }
+        let changed = match edit {
+            TagEdit::Add => add_tags_to_note(note, &normalized_tags),
+            TagEdit::Remove => remove_tags_from_note(note, &normalized_tags),
+        };
+        if changed {
+            note.updated_at = updated_at;
+        }
+    }
+    next
+}
+
+fn normalized_edit_tags(tags: &[String]) -> Vec<String> {
+    let mut normalized = Vec::new();
+    for tag in tags {
+        for part in tag.split_whitespace() {
+            let part = part.trim();
+            if part.is_empty() {
+                continue;
+            }
+            if !normalized
+                .iter()
+                .any(|existing: &String| existing.eq_ignore_ascii_case(part))
+            {
+                normalized.push(part.to_string());
+            }
+        }
+    }
+    normalized
+}
+
+fn add_tags_to_note(note: &mut Note, tags: &[String]) -> bool {
+    let mut changed = false;
+    for tag in tags {
+        if note
+            .tags
+            .iter()
+            .any(|existing| existing.eq_ignore_ascii_case(tag))
+        {
+            continue;
+        }
+        note.tags.push(tag.clone());
+        changed = true;
+    }
+    changed
+}
+
+fn remove_tags_from_note(note: &mut Note, tags: &[String]) -> bool {
+    let before = note.tags.len();
+    note.tags
+        .retain(|existing| !tags.iter().any(|tag| existing.eq_ignore_ascii_case(tag)));
+    note.tags.len() != before
 }
 
 fn generated_card_belongs_to_note(card: &Card, note_id: &str) -> bool {
@@ -2022,6 +2163,103 @@ mod tests {
         assert_eq!(state.cards[0].created_at, NOW + 1);
         assert_eq!(state.card_progress.len(), 1);
         assert_eq!(state.card_progress[0].card_id, "note::forward");
+    }
+
+    #[test]
+    fn note_tag_commands_add_remove_tags_without_duplicates() {
+        let mut note = basic_note();
+        note.tags = vec!["Tamil".to_string()];
+        let untouched = Note {
+            id: "other".to_string(),
+            tags: vec!["spanish".to_string()],
+            ..basic_note()
+        };
+        let state = AppState {
+            notes: vec![note, untouched.clone()],
+            ..AppState::default()
+        };
+
+        let tagged = reduce(
+            &state,
+            EngramCommand::AddNoteTags {
+                note_ids: vec!["note".to_string(), "missing".to_string()],
+                tags: vec![
+                    "script".to_string(),
+                    "tamil grammar".to_string(),
+                    "SCRIPT".to_string(),
+                ],
+                updated_at: NOW + 1,
+            },
+        );
+
+        assert_eq!(tagged.notes[0].tags, vec!["Tamil", "script", "grammar"]);
+        assert_eq!(tagged.notes[0].updated_at, NOW + 1);
+        assert_eq!(tagged.notes[1], untouched);
+
+        let unchanged = reduce(
+            &tagged,
+            EngramCommand::AddNoteTags {
+                note_ids: vec!["note".to_string()],
+                tags: vec!["SCRIPT tamil".to_string()],
+                updated_at: NOW + 2,
+            },
+        );
+        assert_eq!(unchanged.notes[0].updated_at, NOW + 1);
+
+        let removed = reduce(
+            &unchanged,
+            EngramCommand::RemoveNoteTags {
+                note_ids: vec!["note".to_string()],
+                tags: vec!["grammar TAMIL".to_string()],
+                updated_at: NOW + 3,
+            },
+        );
+
+        assert_eq!(removed.notes[0].tags, vec!["script"]);
+        assert_eq!(removed.notes[0].updated_at, NOW + 3);
+    }
+
+    #[test]
+    fn card_tag_commands_target_lineaged_notes_once() {
+        let mut note = basic_note();
+        note.tags = vec!["roots".to_string()];
+        let state = AppState {
+            notes: vec![note],
+            cards: vec![
+                card_with_note("note::forward", "note", 0),
+                card_with_note("note::reverse", "note", 1),
+                card("standalone"),
+            ],
+            ..AppState::default()
+        };
+
+        let tagged = reduce(
+            &state,
+            EngramCommand::AddCardTags {
+                card_ids: vec![
+                    "note::forward".to_string(),
+                    "note::reverse".to_string(),
+                    "standalone".to_string(),
+                ],
+                tags: vec!["grammar".to_string(), "roots".to_string()],
+                updated_at: NOW + 1,
+            },
+        );
+
+        assert_eq!(tagged.notes[0].tags, vec!["roots", "grammar"]);
+        assert_eq!(tagged.notes[0].updated_at, NOW + 1);
+
+        let removed = reduce(
+            &tagged,
+            EngramCommand::RemoveCardTags {
+                card_ids: vec!["note::reverse".to_string(), "standalone".to_string()],
+                tags: vec!["ROOTS".to_string()],
+                updated_at: NOW + 2,
+            },
+        );
+
+        assert_eq!(removed.notes[0].tags, vec!["grammar"]);
+        assert_eq!(removed.notes[0].updated_at, NOW + 2);
     }
 
     #[test]

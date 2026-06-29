@@ -2082,6 +2082,26 @@ enum FacadeCommand {
     DeleteNote {
         note_id: String,
     },
+    AddNoteTags {
+        note_ids: Vec<String>,
+        tags: Vec<String>,
+        updated_at: u64,
+    },
+    RemoveNoteTags {
+        note_ids: Vec<String>,
+        tags: Vec<String>,
+        updated_at: u64,
+    },
+    AddCardTags {
+        card_ids: Vec<String>,
+        tags: Vec<String>,
+        updated_at: u64,
+    },
+    RemoveCardTags {
+        card_ids: Vec<String>,
+        tags: Vec<String>,
+        updated_at: u64,
+    },
     RenameNoteTypeField {
         note_type_id: String,
         field_id: String,
@@ -2220,6 +2240,42 @@ impl FacadeCommand {
                 materialize_cards_at,
             },
             Self::DeleteNote { note_id } => engram_core::EngramCommand::DeleteNote { note_id },
+            Self::AddNoteTags {
+                note_ids,
+                tags,
+                updated_at,
+            } => engram_core::EngramCommand::AddNoteTags {
+                note_ids,
+                tags,
+                updated_at,
+            },
+            Self::RemoveNoteTags {
+                note_ids,
+                tags,
+                updated_at,
+            } => engram_core::EngramCommand::RemoveNoteTags {
+                note_ids,
+                tags,
+                updated_at,
+            },
+            Self::AddCardTags {
+                card_ids,
+                tags,
+                updated_at,
+            } => engram_core::EngramCommand::AddCardTags {
+                card_ids,
+                tags,
+                updated_at,
+            },
+            Self::RemoveCardTags {
+                card_ids,
+                tags,
+                updated_at,
+            } => engram_core::EngramCommand::RemoveCardTags {
+                card_ids,
+                tags,
+                updated_at,
+            },
             Self::RenameNoteTypeField {
                 note_type_id,
                 field_id,
@@ -2780,6 +2836,120 @@ mod tests {
         assert_eq!(deleted["ok"], true);
         assert!(deleted["state"]["notes"].as_array().unwrap().is_empty());
         assert!(deleted["state"]["cards"].as_array().unwrap().is_empty());
+    }
+
+    #[test]
+    fn dispatch_tag_commands_mutate_lineaged_note_tags() {
+        let mut session = EngramSession::new();
+        session.load_snapshot(
+            r#"{
+                "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+                "noteTypes": [],
+                "notes": [{
+                    "id": "note",
+                    "noteTypeId": "basic",
+                    "deckId": "deck",
+                    "fields": [
+                        {"fieldId": "front", "value": "amma"},
+                        {"fieldId": "back", "value": "mother"}
+                    ],
+                    "tags": ["tamil"],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                }],
+                "cards": [
+                    {
+                        "id": "note::forward",
+                        "deckId": "deck",
+                        "front": "amma",
+                        "back": "mother",
+                        "createdAt": 1700000000000,
+                        "lineage": {
+                            "noteId": "note",
+                            "noteTypeId": "basic",
+                            "templateId": "forward",
+                            "ordinal": 0
+                        }
+                    },
+                    {
+                        "id": "standalone",
+                        "deckId": "deck",
+                        "front": "one",
+                        "back": "1",
+                        "createdAt": 1700000000000
+                    }
+                ],
+                "cardProgress": [],
+                "sessions": [],
+                "reviews": [],
+                "activeSession": null
+            }"#,
+        );
+
+        let tagged: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "addNoteTags",
+                "noteIds": ["note"],
+                "tags": ["script tamil", "SCRIPT"],
+                "updatedAt": 1700000000001
+            }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(tagged["ok"], true);
+        assert_eq!(
+            tagged["state"]["notes"][0]["tags"],
+            json!(["tamil", "script"])
+        );
+        assert_eq!(tagged["state"]["notes"][0]["updatedAt"], NOW + 1);
+
+        let card_tagged: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "addCardTags",
+                "cardIds": ["note::forward", "standalone"],
+                "tags": ["grammar"],
+                "updatedAt": 1700000000002
+            }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(
+            card_tagged["state"]["notes"][0]["tags"],
+            json!(["tamil", "script", "grammar"])
+        );
+        assert_eq!(card_tagged["state"]["notes"][0]["updatedAt"], NOW + 2);
+
+        let card_removed: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "removeCardTags",
+                "cardIds": ["note::forward"],
+                "tags": ["TAMIL missing"],
+                "updatedAt": 1700000000003
+            }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(
+            card_removed["state"]["notes"][0]["tags"],
+            json!(["script", "grammar"])
+        );
+        assert_eq!(card_removed["state"]["notes"][0]["updatedAt"], NOW + 3);
+
+        let note_removed: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "removeNoteTags",
+                "noteIds": ["note"],
+                "tags": ["SCRIPT"],
+                "updatedAt": 1700000000004
+            }"#,
+        ))
+        .unwrap();
+
+        assert_eq!(
+            note_removed["state"]["notes"][0]["tags"],
+            json!(["grammar"])
+        );
+        assert_eq!(note_removed["state"]["notes"][0]["updatedAt"], NOW + 4);
     }
 
     #[test]

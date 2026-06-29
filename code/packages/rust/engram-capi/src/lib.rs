@@ -892,6 +892,69 @@ CREATE TABLE graves (
     }
 
     #[test]
+    fn c_abi_dispatches_shared_tag_commands() {
+        unsafe {
+            let session = eg_session_new();
+            let snapshot = cstr(
+                r#"{
+                    "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+                    "noteTypes": [],
+                    "notes": [{
+                        "id": "note",
+                        "noteTypeId": "basic",
+                        "deckId": "deck",
+                        "fields": [{"fieldId": "front", "value": "amma"}],
+                        "tags": ["tamil"],
+                        "createdAt": 1700000000000,
+                        "updatedAt": 1700000000000
+                    }],
+                    "cards": [{
+                        "id": "note::forward",
+                        "deckId": "deck",
+                        "front": "amma",
+                        "back": "mother",
+                        "createdAt": 1700000000000,
+                        "lineage": {
+                            "noteId": "note",
+                            "noteTypeId": "basic",
+                            "templateId": "forward",
+                            "ordinal": 0
+                        }
+                    }],
+                    "cardProgress": [],
+                    "sessions": [],
+                    "reviews": [],
+                    "activeSession": null
+                }"#,
+            );
+            take(eg_load_snapshot(session, snapshot.as_ptr()));
+
+            let command = cstr(
+                r#"{
+                    "type": "addCardTags",
+                    "cardIds": ["note::forward"],
+                    "tags": ["script tamil"],
+                    "updatedAt": 1700000000001
+                }"#,
+            );
+            let result = take(eg_dispatch(session, command.as_ptr()));
+            let result: Value = serde_json::from_str(&result).unwrap();
+
+            assert_eq!(result["ok"], true);
+            assert_eq!(
+                result["state"]["notes"][0]["tags"],
+                json!(["tamil", "script"])
+            );
+            assert_eq!(
+                result["state"]["notes"][0]["updatedAt"],
+                1_700_000_000_001_u64
+            );
+
+            eg_session_free(session);
+        }
+    }
+
+    #[test]
     fn c_abi_parses_and_imports_anki_apkg_state() {
         unsafe {
             let session = eg_session_new();

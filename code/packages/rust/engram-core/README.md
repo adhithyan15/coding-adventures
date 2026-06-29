@@ -43,6 +43,7 @@ This crate owns:
 - Anki-compatible Basic TSV card export
 - note-backed Anki Basic, Basic-and-reversed, Cloze, and custom-field TSV import/export
 - durable media asset state plus reducer commands for host-managed copy/prune flows
+- note-owned tag edit commands, including card-ID-targeted browser bulk actions
 - active review-session progress counts
 - deck-scoped review-history summaries
 - pure state transitions
@@ -77,6 +78,10 @@ Media commands such as `UpsertMediaAsset`, `DeleteMediaAsset`, and
 every shell one deterministic place to copy newly attached media, replace
 imported payloads, or prune unreferenced assets after a host-side media analysis
 pass.
+Tag commands such as `AddNoteTags`, `RemoveNoteTags`, `AddCardTags`, and
+`RemoveCardTags` mutate note-owned tags through the shared reducer. The card
+forms resolve lineaged cards back to their notes, matching Anki's tag model
+while letting collection browsers dispatch actions by selected card ID.
 
 Reviews carry optional answer-time durations for Anki-compatible revlog export,
 plus previous/resulting progress snapshots, sibling-progress snapshots, and
