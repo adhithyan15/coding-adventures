@@ -628,8 +628,14 @@ backend immediately) come before the enabler-dependent items.
   real). `ABS(X)` and `SGN(X)` lower inline via `cmp_lt`/`cmp_gt` + store-per-branch
   conditionals (same pattern as ALGOL `abs`/`sign`). **Verified by RUNNING** on
   native/LLVM/WASM/JVM/CLR/VM/JIT: `PRINT SQR(49)` → `7`, `PRINT INT(3.7)` → `3`,
-  `PRINT ABS(-42)` → `42`, `PRINT SGN(-5)` → `-1`. `SIN`, `COS`, `LOG`, `EXP`,
-  `TAN`, `ATN`, `RND` need a cross-backend math helper (libm/host call) — deferred.
+  `PRINT ABS(-42)` → `42`, `PRINT SGN(-5)` → `-1`.
+- ✅ **BA-trig** — `SIN`, `COS`, `LOG`, `EXP` built-in functions
+  (`dartmouth-basic-iir-compiler` 0.33.0). All four reuse the AL8-trig IIR ops
+  (`f64_sin`, `f64_cos`, `f64_ln`, `f64_exp`) — no new backend code needed.
+  Note: Dartmouth BASIC `LOG` is the natural logarithm (base e), not log₁₀;
+  it maps to `f64_ln` (same op ALGOL's `ln` uses). **Verified by RUNNING** on
+  native/LLVM/WASM/JVM/CLR/VM/JIT: `PRINT SIN(0)` → `0`, `PRINT COS(0)` → `1`,
+  `PRINT LOG(1)` → `0`, `PRINT EXP(0)` → `1`. `TAN`, `ATN`, `RND` remain.
 
 ### ALGOL 60
 - ✅ **AL1** — real arithmetic + `/` (algol-iir-compiler 0.4.0): `real` → IIR `f64`, `REAL_LIT`

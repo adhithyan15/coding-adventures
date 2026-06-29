@@ -1792,6 +1792,47 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("-1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — `SIN` built-in (LANG-FULL BA-trig).
+    // SIN(0) = 0.0 exactly in IEEE-754 double.  BA7 formatter prints `0`.
+    // Lowers to `f64_sin` IIR op: WASM `env.__sin`, LLVM `@llvm.sin.f64`,
+    // JVM `Math.sin`, CLR `System.Math.Sin`, native `BL sin`/`call sin`,
+    // VM/JIT `f64::sin`.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT SIN(0)\n20 END\n",
+        expect: Expect::Stdout("0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — `COS` built-in (LANG-FULL BA-trig).
+    // COS(0) = 1.0 exactly.  BA7 formatter prints `1`.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT COS(0)\n20 END\n",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — `LOG` built-in (LANG-FULL BA-trig).
+    // Dartmouth BASIC LOG is the natural log (ln, base e), not log₁₀.
+    // LOG(1) = 0.0 exactly.  BA7 formatter prints `0`.
+    // Lowers to `f64_ln` IIR op (same op ALGOL's `ln` uses).
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT LOG(1)\n20 END\n",
+        expect: Expect::Stdout("0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — `EXP` built-in (LANG-FULL BA-trig).
+    // EXP(0) = e⁰ = 1.0 exactly.  BA7 formatter prints `1`.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT EXP(0)\n20 END\n",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

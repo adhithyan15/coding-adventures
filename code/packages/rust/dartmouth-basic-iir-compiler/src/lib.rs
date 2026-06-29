@@ -1596,10 +1596,16 @@ impl Compiler {
     /// | `INT(X)` | `real_to_int_floor` → `int_to_real` | floor, result is f64 |
     /// | `ABS(X)` | inline if/neg/jmp    | store-per-branch, no phi          |
     /// | `SGN(X)` | inline 3-way if/jmp  | -1.0 / 0.0 / 1.0 per BA7 model   |
+    /// | `SIN(X)` | `f64_sin`            | libm/host/LLVM/JVM/CLR sin        |
+    /// | `COS(X)` | `f64_cos`            | libm/host/LLVM/JVM/CLR cos        |
+    /// | `LOG(X)` | `f64_ln`             | natural log (BASIC `LOG` = ln)    |
+    /// | `EXP(X)` | `f64_exp`            | libm/host/LLVM/JVM/CLR exp        |
     ///
-    /// `SIN`, `COS`, `LOG`, `EXP`, `TAN`, `ATN`, `RND` need a cross-backend
-    /// math helper (libm call) and are rejected with a clear error until that
-    /// infrastructure lands.
+    /// Note: Dartmouth BASIC `LOG` is the natural logarithm (base e), not base-10.
+    /// It maps to the `f64_ln` IIR op (which ALGOL calls `ln`).
+    ///
+    /// `TAN`, `ATN`, `RND` still need a cross-backend math helper and are
+    /// rejected with a clear error until that infrastructure lands.
     fn emit_builtin_fn(&mut self, name: &str, node: &GrammarASTNode)
         -> Result<ExprValue, CompileError>
     {
@@ -1698,6 +1704,42 @@ impl Compiler {
                 self.emit("label", None, vec![Operand::Var(zero_lbl)], "void");
                 self.emit("const", Some(&dest), vec![Operand::Float(0.0)], "f64");
                 self.emit("label", None, vec![Operand::Var(end_lbl)], "void");
+                Ok(ExprValue { slot: dest, ty: BasicScalarType::Real })
+            }
+
+            // SIN(X) — sine via f64_sin IIR op (AL8-trig infrastructure).
+            // Dartmouth BASIC SIN is the standard trigonometric sine in radians.
+            "sin" => {
+                let dest = self.fresh_temp();
+                self.emit("f64_sin", Some(&dest),
+                    vec![Operand::Var(arg.slot)], "f64");
+                Ok(ExprValue { slot: dest, ty: BasicScalarType::Real })
+            }
+
+            // COS(X) — cosine via f64_cos IIR op.
+            "cos" => {
+                let dest = self.fresh_temp();
+                self.emit("f64_cos", Some(&dest),
+                    vec![Operand::Var(arg.slot)], "f64");
+                Ok(ExprValue { slot: dest, ty: BasicScalarType::Real })
+            }
+
+            // LOG(X) — natural logarithm (base e) via f64_ln IIR op.
+            // Dartmouth BASIC LOG is ln, not log₁₀.  The IIR op is named
+            // f64_ln (matching ALGOL's `ln` name); all backends map it to
+            // libm `log` / Math.log / @llvm.log.f64, which is also ln.
+            "log" => {
+                let dest = self.fresh_temp();
+                self.emit("f64_ln", Some(&dest),
+                    vec![Operand::Var(arg.slot)], "f64");
+                Ok(ExprValue { slot: dest, ty: BasicScalarType::Real })
+            }
+
+            // EXP(X) — exponential (eˣ) via f64_exp IIR op.
+            "exp" => {
+                let dest = self.fresh_temp();
+                self.emit("f64_exp", Some(&dest),
+                    vec![Operand::Var(arg.slot)], "f64");
                 Ok(ExprValue { slot: dest, ty: BasicScalarType::Real })
             }
 

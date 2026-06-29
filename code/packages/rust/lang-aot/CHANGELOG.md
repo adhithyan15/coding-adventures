@@ -1,5 +1,20 @@
 # Changelog — `lang-aot`
 
+## 0.155.0 — 2026-06-29 — Dartmouth BASIC `SIN`/`COS`/`LOG`/`EXP` built-ins (LANG-FULL BA-trig)
+
+Four new matrix `Prog` cells proving Dartmouth BASIC's transcendental built-in
+functions on all 7 backends (NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit):
+
+- `PRINT SIN(0)` → stdout `0`
+- `PRINT COS(0)` → stdout `1`
+- `PRINT LOG(1)` → stdout `0`   (Dartmouth BASIC `LOG` = natural log)
+- `PRINT EXP(0)` → stdout `1`
+
+All four use exact IEEE-754 inputs/outputs (no rounding). Each lowers to the
+same `f64_sin/cos/ln/exp` IIR ops built for ALGOL (AL8-trig) — no new backend
+code. The `BA7` formatter correctly prints whole-valued reals without a decimal
+point.
+
 ## 0.154.0 — 2026-06-28 — ALGOL 60 transcendental functions `sin`/`cos`/`ln`/`exp` (LANG-FULL AL8-trig)
 
 Four new matrix `Prog` cells proving ALGOL 60's §3.2.4 transcendental standard

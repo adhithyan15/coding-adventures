@@ -1,5 +1,30 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.33.0 — 2026-06-29 — BA-trig: `SIN`, `COS`, `LOG`, `EXP` (LANG-FULL)
+
+Dartmouth BASIC's transcendental built-in functions `SIN`, `COS`, `LOG`, and
+`EXP` are now lowered — reusing the AL8-trig IIR ops (`f64_sin`, `f64_cos`,
+`f64_ln`, `f64_exp`) added for ALGOL 60.  No new backend code needed: the four
+ops are already mapped on all 7 backends.
+
+| Function | Lowers to | Note |
+|----------|-----------|------|
+| `SIN(X)` | `f64_sin` | sine in radians |
+| `COS(X)` | `f64_cos` | cosine in radians |
+| `LOG(X)` | `f64_ln`  | natural log (base e); Dartmouth BASIC `LOG` = ln, not log₁₀ |
+| `EXP(X)` | `f64_exp` | eˣ |
+
+Backend dispatch: WASM `env.__sin/cos/ln/exp` host imports; LLVM
+`@llvm.sin/cos/log/exp.f64` intrinsics; JVM `Math.sin/cos/log/exp`; CLR
+`System.Math.Sin/Cos/Log/Exp`; native aarch64/x86_64 `BL`/`call rel32` to
+libm; VM/JIT `f64_sin/cos/ln/exp` dispatch handlers.
+
+Verified by RUNNING `PRINT SIN(0)` → `0`, `PRINT COS(0)` → `1`,
+`PRINT LOG(1)` → `0`, `PRINT EXP(0)` → `1` on all 7 backends via
+`lang_matrix.rs` (`matrix_every_proven_cell_agrees`).
+
+`TAN`, `ATN`, and `RND` are still rejected until further infrastructure lands.
+
 ## 0.32.0 — 2026-06-28 — BA-builtins: `SQR`, `INT`, `ABS`, `SGN` (LANG-FULL)
 
 Dartmouth BASIC's built-in math functions `SQR`, `INT`, `ABS`, and `SGN` are
