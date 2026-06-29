@@ -38,7 +38,7 @@
 //! | `Image`       | `Image { source: "..." }`                                                   |
 //! | `Divider`     | `Rectangle { height: 1; color: "#888"; Layout.fillWidth: true }`            |
 //! | `Stack`       | `Item { ... }` with `anchors.fill: parent` on each child — Z-axis overlay   |
-//! | `HostInput`   | `TextInput { text: ...; readOnly: ...; onAccepted/Keys.onEscapePressed }`   |
+//! | `HostInput`   | `TextInput { ... }` or `TextField { ...; placeholderText: ... }`            |
 //! | `HostButton`  | `Button { text: ...; enabled: ...; onClicked: ... }` (Controls 2.15)        |
 //! | `HostScroll`  | `ScrollView { ... children ... }`                                           |
 //! | `HostDialog`  | `Popup { modal: ...; visible: ...; closePolicy: ...; contentItem: ColumnLayout { ... } }` (Controls 2.15) |
@@ -1586,10 +1586,8 @@ fn pick_signal_arg_with(
 /// | `value: "literal"`      | `text: "literal"` (escaped)                                 |
 /// | `read-only: slot: x`    | `readOnly: x`                                               |
 /// | `read-only: true/false` | `readOnly: true/false`                                      |
-/// | `placeholder: "..."`    | A `// placeholder: ...` comment line. `TextInput` has no    |
-/// |                         | placeholder attribute — the QML idiom is a sibling `Text`   |
-/// |                         | element shown when `text.length === 0`, but that requires   |
-/// |                         | a richer node-emission path; deferred to a follow-up PR.    |
+/// | `placeholder: "..."`    | `TextField { placeholderText: "..." }`                     |
+/// | `placeholder: slot: x`  | `TextField { placeholderText: x }`                         |
 /// | `onChange: emit: onE`   | `onTextChanged: e(<arg>)`  — `arg` is `text` when the signal      |
 /// |                         | declares one parameter, empty when it declares zero (see          |
 /// |                         | `pick_signal_arg`).                                               |
@@ -1621,7 +1619,13 @@ fn emit_host_input_qml(
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
-    writeln!(out, "{pad}TextInput {{").unwrap();
+    let placeholder_line = build_placeholder_text_attribute(node);
+    let control_tag = if placeholder_line.is_some() {
+        "TextField"
+    } else {
+        "TextInput"
+    };
+    writeln!(out, "{pad}{control_tag} {{").unwrap();
 
     // When the input is a styled cell's editor (it sits inside a styled
     // `Box [cell]` whose text style is in scope), fill the cell and adopt
@@ -1644,14 +1648,9 @@ fn emit_host_input_qml(
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
 
-    // placeholder: emit as a comment only — see the table above.
-    if let Some(s) = find_string_prop(node, "placeholder") {
-        writeln!(
-            out,
-            "{inner_pad}// placeholder: \"{}\" (not yet rendered — see backend doc)",
-            escape_qml_string(s)
-        )
-        .unwrap();
+    // placeholderText is available when HostInput lowers to TextField.
+    if let Some(line) = placeholder_line {
+        writeln!(out, "{inner_pad}{line}").unwrap();
     }
 
     // onTextChanged: e(<arg>)
@@ -2426,13 +2425,17 @@ fn build_dialog_title_text_line(node: &LayoutNode) -> Option<String> {
 }
 
 /// True iff any node in the layout tree lowers to a `QtQuick.Controls`
-/// element. Today: `HostButton` → `Button`, `HostScroll` →
-/// `ScrollView`, `HostDialog` → `Popup`, `HostCheckbox` → `CheckBox`,
+/// element. Today: `HostInput` with `placeholder` → `TextField`,
+/// `HostButton` → `Button`, `HostScroll` → `ScrollView`,
+/// `HostDialog` → `Popup`, `HostCheckbox` → `CheckBox`,
 /// `HostRadio` → `RadioButton`, `HostTooltip` → `ToolTip` attached
 /// property, `HostNumberInput` → `SpinBox`. `HostLink` is intentionally
 /// NOT here because it lowers to a plain `Text` element with rich-
 /// text + onLinkActivated, not a QtQuick.Controls widget.
 fn tree_needs_controls_import(node: &LayoutNode) -> bool {
+    if node.tag == "HostInput" && build_placeholder_text_attribute(node).is_some() {
+        return true;
+    }
     matches!(
         node.tag.as_str(),
         "HostButton"
@@ -3068,6 +3071,28 @@ fn build_read_only_attribute(node: &LayoutNode) -> Option<String> {
         // Anything else (a string literal, a number, an emit-ref) is
         // not a meaningful boolean source. Default to non-read-only.
         _ => "readOnly: false".to_string(),
+    })
+}
+
+/// Build the `placeholderText: ...` attribute for a `HostInput`.
+fn build_placeholder_text_attribute(node: &LayoutNode) -> Option<String> {
+    let prop = node.props.iter().find(|p| p.name == "placeholder")?;
+    Some(match &prop.value {
+        LayoutPropValue::String(s) => {
+            format!("placeholderText: \"{}\"", escape_qml_string(s))
+        }
+        LayoutPropValue::SlotRef(s) => {
+            let camel = to_camel_case_first_lower(s);
+            if is_safe_identifier(&camel) {
+                format!("placeholderText: {camel}")
+            } else {
+                "placeholderText: \"\"".to_string()
+            }
+        }
+        LayoutPropValue::Keyword(k) => format!("placeholderText: \"{k}\""),
+        LayoutPropValue::Number(n) => format!("placeholderText: \"{n}\""),
+        LayoutPropValue::Expr(text) => format!("placeholderText: {text}"),
+        LayoutPropValue::EmitRef(_) => "placeholderText: \"\"".to_string(),
     })
 }
 
@@ -4008,6 +4033,71 @@ mod tests {
         );
     }
 
+    #[test]
+    fn host_input_with_placeholder_string_emits_textfield_placeholder() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "placeholder".to_string(),
+                    value: LayoutPropValue::String("Search cards".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("TextField {"),
+            "placeholder-backed HostInput must lower to TextField:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("placeholderText: \"Search cards\""),
+            "missing placeholderText in:\n{}",
+            result.output
+        );
+        assert!(
+            !result.output.contains("// placeholder:"),
+            "placeholder should render, not remain a comment:\n{}",
+            result.output
+        );
+    }
+
+    #[test]
+    fn host_input_with_placeholder_slot_emits_placeholder_binding() {
+        let m = component(
+            "X",
+            vec![slot("search-placeholder", SlotType::Text, true)],
+            vec![],
+        );
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "placeholder".to_string(),
+                    value: LayoutPropValue::SlotRef("search-placeholder".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result.output.contains("TextField {"),
+            "slot placeholder HostInput must lower to TextField:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("placeholderText: searchPlaceholder"),
+            "missing slot placeholder binding in:\n{}",
+            result.output
+        );
+    }
+
     // -------- Test 20a: HostInput onCommit (parameterless signal) --------
 
     /// `onCommit: emit: onSubmit` where `onSubmit` is declared
@@ -4587,6 +4677,29 @@ mod tests {
             r_with.output.contains("import QtQuick.Controls 2.15"),
             "Controls import missing when HostButton present in:\n{}",
             r_with.output
+        );
+
+        // HostInput with a placeholder lowers to TextField, so it also
+        // needs QtQuick.Controls.
+        let l_placeholder = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "placeholder".to_string(),
+                    value: LayoutPropValue::String("Search".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let r_placeholder = from_pipeline(&m, &l_placeholder, &empty_style("X")).unwrap();
+        assert!(
+            r_placeholder
+                .output
+                .contains("import QtQuick.Controls 2.15"),
+            "Controls import missing when HostInput uses placeholder/TextField:\n{}",
+            r_placeholder.output
         );
 
         // Without any Host*-Controls primitive: NO Controls import.
