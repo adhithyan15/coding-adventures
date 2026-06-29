@@ -237,6 +237,7 @@ struct SearchMetadata<'a> {
     deck_original_ids_by_id: HashMap<&'a str, Vec<&'a str>>,
     decks_by_original_id: HashMap<&'a str, Vec<&'a Deck>>,
     note_type_original_ids_by_id: HashMap<&'a str, Vec<&'a str>>,
+    excluded_field_ids_by_note_type_id: HashMap<&'a str, HashSet<String>>,
     deck_preset_names_by_id: HashMap<&'a str, Vec<String>>,
     deck_option_deck_ids: HashSet<&'a str>,
     collection_created_at_days: Option<i64>,
@@ -376,6 +377,14 @@ impl<'a> SearchMetadata<'a> {
                             .entry(source.target_id.as_str())
                             .or_default()
                             .push(original_id);
+                    }
+                    let excluded = anki_excluded_field_ids(source);
+                    if !excluded.is_empty() {
+                        metadata
+                            .excluded_field_ids_by_note_type_id
+                            .entry(source.target_id.as_str())
+                            .or_default()
+                            .extend(excluded);
                     }
                 }
                 ExternalSourceTarget::Card => {
@@ -1393,7 +1402,7 @@ fn clause_matches(
         .get(card.id.as_str())
         .map_or(&[] as &[&ExternalSourceRecord], Vec::as_slice);
     let matched = match &clause.kind {
-        SearchClauseKind::Text(filter) => text_matches(filter, card, note),
+        SearchClauseKind::Text(filter) => text_matches(filter, card, note, note_type, metadata),
         SearchClauseKind::Field(filter) => field_matches(filter, card, note, note_type),
         SearchClauseKind::CardId(filter) => id_filter_matches(filter, &card.id),
         SearchClauseKind::NoteId(filter) => note_id_matches(filter, card, note),
@@ -1442,8 +1451,30 @@ fn clause_matches(
     }
 }
 
-fn text_matches(filter: &TextFilter, card: &Card, note: Option<&Note>) -> bool {
+fn text_matches(
+    filter: &TextFilter,
+    card: &Card,
+    note: Option<&Note>,
+    note_type: Option<&NoteType>,
+    metadata: &SearchMetadata<'_>,
+) -> bool {
     if let Some(note) = note {
+        if let Some(note_type) = note_type {
+            let excluded = metadata
+                .excluded_field_ids_by_note_type_id
+                .get(note_type.id.as_str());
+            return note_type.fields.iter().any(|field| {
+                if excluded.is_some_and(|fields| fields.contains(&field.id)) {
+                    return false;
+                }
+                let value = note
+                    .fields
+                    .iter()
+                    .find(|value| value.field_id == field.id)
+                    .map_or("", |value| value.value.as_str());
+                text_filter_matches(filter, value)
+            });
+        }
         note.fields
             .iter()
             .any(|field| text_filter_matches(filter, &field.value))
@@ -1696,6 +1727,41 @@ fn source_i64_from_raw_json(source: &ExternalSourceRecord, key: &str) -> Option<
     let raw = source.data.get("rawJson")?;
     let value = serde_json::from_str::<Value>(raw).ok()?;
     value.get(key)?.as_i64()
+}
+
+fn anki_excluded_field_ids(source: &ExternalSourceRecord) -> Vec<String> {
+    let raw = source.data.get("rawJson");
+    let Some(Value::Array(fields)) = raw
+        .and_then(|raw| serde_json::from_str::<Value>(raw).ok())
+        .and_then(|value| value.get("flds").cloned())
+    else {
+        return Vec::new();
+    };
+
+    fields
+        .iter()
+        .enumerate()
+        .filter_map(|(index, field)| {
+            anki_field_excluded_from_search(field).then(|| {
+                let ordinal = field
+                    .get("ord")
+                    .and_then(Value::as_i64)
+                    .unwrap_or(index as i64);
+                format!("{}:field:{ordinal}", source.target_id)
+            })
+        })
+        .collect()
+}
+
+fn anki_field_excluded_from_search(field: &Value) -> bool {
+    ["exclude_from_search", "excludeFromSearch"]
+        .into_iter()
+        .any(|key| field.get(key).and_then(Value::as_bool).unwrap_or(false))
+        || field.get("config").is_some_and(|config| {
+            ["exclude_from_search", "excludeFromSearch"]
+                .into_iter()
+                .any(|key| config.get(key).and_then(Value::as_bool).unwrap_or(false))
+        })
 }
 
 fn deck_matches(
@@ -3617,6 +3683,96 @@ mod tests {
             vec!["native-card", "filtered-card"]
         );
         assert!(ids_for("mid:102").is_empty());
+    }
+
+    #[test]
+    fn unqualified_search_skips_imported_anki_excluded_fields() {
+        let note_type = NoteType {
+            id: "100".to_string(),
+            name: "Imported Basic".to_string(),
+            fields: vec![
+                FieldDef {
+                    id: "100:field:0".to_string(),
+                    name: "Front".to_string(),
+                    required: true,
+                    ordinal: 0,
+                },
+                FieldDef {
+                    id: "100:field:1".to_string(),
+                    name: "Hidden".to_string(),
+                    required: false,
+                    ordinal: 1,
+                },
+            ],
+            templates: vec![CardTemplate {
+                id: "100:template:0".to_string(),
+                name: "Forward".to_string(),
+                front_template: "{{Front}}".to_string(),
+                back_template: "Answer".to_string(),
+                required_field_names: vec!["Front".to_string()],
+                requirement_mode: TemplateRequirementMode::All,
+                ordinal: 0,
+            }],
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let note = Note {
+            id: "hidden-note".to_string(),
+            note_type_id: "100".to_string(),
+            deck_id: "languages".to_string(),
+            fields: vec![
+                NoteFieldValue {
+                    field_id: "100:field:0".to_string(),
+                    value: "visible".to_string(),
+                },
+                NoteFieldValue {
+                    field_id: "100:field:1".to_string(),
+                    value: "secret etymology".to_string(),
+                },
+            ],
+            tags: Vec::new(),
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let mut note_card = card("hidden-note::forward", "languages", "visible", "answer");
+        note_card.lineage = Some(CardLineage {
+            note_id: "hidden-note".to_string(),
+            note_type_id: "100".to_string(),
+            template_id: "100:template:0".to_string(),
+            ordinal: 0,
+            cloze_ordinal: None,
+        });
+        let state = AppState {
+            decks: vec![deck("languages", "Languages")],
+            note_types: vec![note_type],
+            notes: vec![note],
+            cards: vec![note_card],
+            external_sources: vec![ExternalSourceRecord {
+                target: ExternalSourceTarget::NoteType,
+                target_id: "100".to_string(),
+                source: "anki-v11".to_string(),
+                original_id: Some("100".to_string()),
+                data: BTreeMap::from([(
+                    "rawJson".to_string(),
+                    r#"{"flds":[{"ord":0,"name":"Front"},{"ord":1,"name":"Hidden","exclude_from_search":true}]}"#
+                        .to_string(),
+                )]),
+            }],
+            ..AppState::default()
+        };
+
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("visible"), vec!["hidden-note::forward"]);
+        assert!(ids_for("secret").is_empty());
+        assert!(ids_for("re:secret").is_empty());
+        assert_eq!(ids_for("Hidden:*secret*"), vec!["hidden-note::forward"]);
     }
 
     #[test]
