@@ -84,6 +84,10 @@ When a review card lapses at the configured Anki-style leech threshold, the
 reducer records a leech event, adds the `leech` tag to the lineaged note, and
 suspends the card when the deck option requests Anki's suspend action. Undo
 restores both the previous progress and the previous note tags.
+Deleting imported decks, notes, or cards now preserves generic
+`ExternalSourceTarget::Deleted` tombstones with the original source ID, so
+package boundaries such as APKG can emit deletion markers without teaching the
+core about that package format.
 
 `search_cards` provides the first shared collection-browser query layer. It
 supports plain text terms against Anki-style note field content, falling back to

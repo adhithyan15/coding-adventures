@@ -1852,9 +1852,40 @@ fn export_collection_deck_config_json(export: &ExportModel) -> Value {
 }
 
 fn export_collection_graves(export: &ExportModel) -> Vec<AnkiV11Grave> {
-    export_collection_json(export, "gravesJson")
+    let mut graves: Vec<AnkiV11Grave> = export_collection_json(export, "gravesJson")
         .and_then(|value| serde_json::from_value(value).ok())
-        .unwrap_or_default()
+        .unwrap_or_default();
+    let mut seen = graves
+        .iter()
+        .map(|grave| (grave.kind, grave.object_id))
+        .collect::<BTreeSet<_>>();
+
+    for source in &export.external_sources {
+        if let Some(grave) = deleted_source_grave(source) {
+            if seen.insert((grave.kind, grave.object_id)) {
+                graves.push(grave);
+            }
+        }
+    }
+
+    graves
+}
+
+fn deleted_source_grave(source: &ExternalSourceRecord) -> Option<AnkiV11Grave> {
+    if source.source != ANKI_V11_SOURCE || source.target != ExternalSourceTarget::Deleted {
+        return None;
+    }
+    let kind = match source.data.get("deletedTarget")?.as_str() {
+        "card" => 0,
+        "note" => 1,
+        "deck" => 2,
+        _ => return None,
+    };
+    Some(AnkiV11Grave {
+        update_sequence_number: source_i64(Some(source), "updateSequenceNumber").unwrap_or(-1),
+        object_id: source.original_id.as_deref()?.parse::<i64>().ok()?,
+        kind,
+    })
 }
 
 fn export_collection_i64(export: &ExportModel, key: &str) -> Option<i64> {
@@ -4871,6 +4902,47 @@ CREATE TABLE graves (
         assert_eq!(review.factor, 2650);
         assert_eq!(review.time, 34_567);
         assert_eq!(review.kind, 3);
+    }
+
+    #[test]
+    fn exports_graves_for_deleted_imported_notes_and_cards() {
+        let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        collection.reviews.clear();
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+
+        let deleted = engram_core::reduce(
+            &state,
+            engram_core::EngramCommand::DeleteNote {
+                note_id: "1000".to_string(),
+            },
+        );
+
+        assert!(deleted.notes.is_empty());
+        assert!(deleted.cards.is_empty());
+        assert!(deleted.external_sources.iter().any(|source| {
+            source.target == ExternalSourceTarget::Deleted
+                && source.original_id.as_deref() == Some("1000")
+                && source.data.get("deletedTarget").map(String::as_str) == Some("note")
+        }));
+        assert!(deleted.external_sources.iter().any(|source| {
+            source.target == ExternalSourceTarget::Deleted
+                && source.original_id.as_deref() == Some("2000")
+                && source.data.get("deletedTarget").map(String::as_str) == Some("card")
+        }));
+
+        let exported = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&deleted).unwrap(),
+        )
+        .unwrap();
+
+        assert!(exported
+            .graves
+            .iter()
+            .any(|grave| grave.object_id == 1000 && grave.kind == 1));
+        assert!(exported
+            .graves
+            .iter()
+            .any(|grave| grave.object_id == 2000 && grave.kind == 0));
     }
 
     #[test]

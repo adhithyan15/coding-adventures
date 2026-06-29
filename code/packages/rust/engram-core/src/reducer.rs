@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 use crate::model::{
     ActiveSessionState, AppState, Card, CardFlag, CardProgress, CardProgressSnapshot, CardState,
     Deck, DeckOptions, DeckOptionsPreset, ExternalSourceRecord, ExternalSourceTarget, LeechAction,
@@ -226,6 +228,32 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                 .filter(|session| session.deck_id == deck_id)
                 .map(|session| session.id.clone())
                 .collect();
+            let mut external_sources = without_external_source_target(
+                &state.external_sources,
+                ExternalSourceTarget::Deck,
+                &deck_id,
+            );
+            for card_id in &card_ids {
+                external_sources = without_external_source_target(
+                    &external_sources,
+                    ExternalSourceTarget::Card,
+                    card_id,
+                );
+            }
+            for note_id in &note_ids {
+                external_sources = without_external_source_target(
+                    &external_sources,
+                    ExternalSourceTarget::Note,
+                    note_id,
+                );
+            }
+            for session_id in &session_ids {
+                external_sources = without_external_source_target(
+                    &external_sources,
+                    ExternalSourceTarget::Session,
+                    session_id,
+                );
+            }
 
             AppState {
                 decks: state
@@ -271,26 +299,7 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
                     .filter(|preset| preset.deck_id != deck_id)
                     .cloned()
                     .collect(),
-                external_sources: state
-                    .external_sources
-                    .iter()
-                    .filter(|source| {
-                        source.target != ExternalSourceTarget::Deck || source.target_id != deck_id
-                    })
-                    .filter(|source| {
-                        source.target != ExternalSourceTarget::Card
-                            || !card_ids.contains(&source.target_id)
-                    })
-                    .filter(|source| {
-                        source.target != ExternalSourceTarget::Note
-                            || !note_ids.contains(&source.target_id)
-                    })
-                    .filter(|source| {
-                        source.target != ExternalSourceTarget::Session
-                            || !session_ids.contains(&source.target_id)
-                    })
-                    .cloned()
-                    .collect(),
+                external_sources,
                 media_assets: state.media_assets.clone(),
                 active_session: state
                     .active_session
@@ -706,11 +715,48 @@ fn without_external_source_target(
     target: ExternalSourceTarget,
     target_id: &str,
 ) -> Vec<ExternalSourceRecord> {
-    sources
-        .iter()
-        .filter(|source| source.target != target || source.target_id != target_id)
-        .cloned()
-        .collect()
+    let mut next = Vec::with_capacity(sources.len());
+    let mut tombstones = Vec::new();
+    for source in sources {
+        if source.target == target && source.target_id == target_id {
+            if let Some(tombstone) = deleted_external_source_record(source) {
+                tombstones.push(tombstone);
+            }
+        } else {
+            next.push(source.clone());
+        }
+    }
+    next.extend(tombstones);
+    next
+}
+
+fn deleted_external_source_record(source: &ExternalSourceRecord) -> Option<ExternalSourceRecord> {
+    let deleted_target = match source.target {
+        ExternalSourceTarget::Deck => "deck",
+        ExternalSourceTarget::Note => "note",
+        ExternalSourceTarget::Card => "card",
+        _ => return None,
+    };
+    let original_id = source.original_id.clone()?;
+    let mut data = BTreeMap::new();
+    data.insert("deletedTarget".to_string(), deleted_target.to_string());
+    if let Some(update_sequence_number) = source.data.get("updateSequenceNumber") {
+        data.insert(
+            "updateSequenceNumber".to_string(),
+            update_sequence_number.clone(),
+        );
+    }
+
+    Some(ExternalSourceRecord {
+        target: ExternalSourceTarget::Deleted,
+        target_id: format!(
+            "deleted:{}:{}:{}",
+            source.source, deleted_target, original_id
+        ),
+        source: source.source.clone(),
+        original_id: Some(original_id),
+        data,
+    })
 }
 
 fn sync_generated_cards_for_note(state: &AppState, note_id: &str, created_at: u64) -> AppState {
@@ -833,9 +879,12 @@ fn prune_removed_cards(state: &mut AppState, removed_card_ids: &[String]) {
     state
         .card_progress
         .retain(|progress| !removed_card_ids.contains(&progress.card_id));
-    state.external_sources.retain(|source| {
-        source.target != ExternalSourceTarget::Card || !removed_card_ids.contains(&source.target_id)
-    });
+    let mut external_sources = state.external_sources.clone();
+    for card_id in removed_card_ids {
+        external_sources =
+            without_external_source_target(&external_sources, ExternalSourceTarget::Card, card_id);
+    }
+    state.external_sources = external_sources;
     for card_id in removed_card_ids {
         state.active_session =
             remove_card_from_active_session(state.active_session.clone(), card_id);
@@ -1887,7 +1936,17 @@ mod tests {
         assert_eq!(next.cards, vec![card("manual")]);
         assert_eq!(next.card_progress.len(), 1);
         assert_eq!(next.card_progress[0].card_id, "manual");
-        assert!(next.external_sources.is_empty());
+        assert_eq!(next.external_sources.len(), 2);
+        assert!(next.external_sources.iter().any(|source| {
+            source.target == ExternalSourceTarget::Deleted
+                && source.original_id.as_deref() == Some("1000")
+                && source.data.get("deletedTarget").map(String::as_str) == Some("note")
+        }));
+        assert!(next.external_sources.iter().any(|source| {
+            source.target == ExternalSourceTarget::Deleted
+                && source.original_id.as_deref() == Some("2000")
+                && source.data.get("deletedTarget").map(String::as_str) == Some("card")
+        }));
         let active = next.active_session.unwrap();
         assert_eq!(active.queue, vec![card("manual")]);
         assert_eq!(active.current_index, 0);
@@ -1949,7 +2008,17 @@ mod tests {
         assert_eq!(next.cards, vec![card("manual")]);
         assert_eq!(next.card_progress.len(), 1);
         assert_eq!(next.card_progress[0].card_id, "manual");
-        assert!(next.external_sources.is_empty());
+        assert_eq!(next.external_sources.len(), 2);
+        assert!(next.external_sources.iter().any(|source| {
+            source.target == ExternalSourceTarget::Deleted
+                && source.original_id.as_deref() == Some("note")
+                && source.data.get("deletedTarget").map(String::as_str) == Some("note")
+        }));
+        assert!(next.external_sources.iter().any(|source| {
+            source.target == ExternalSourceTarget::Deleted
+                && source.original_id.as_deref() == Some("card")
+                && source.data.get("deletedTarget").map(String::as_str) == Some("card")
+        }));
         let active = next.active_session.unwrap();
         assert_eq!(active.queue, vec![card("manual")]);
         assert_eq!(active.current_index, 0);

@@ -391,6 +391,7 @@ pub enum ExternalSourceTarget {
     Card,
     Review,
     Session,
+    Deleted,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

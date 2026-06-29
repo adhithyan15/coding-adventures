@@ -56,6 +56,9 @@ when exporting back to APKG, along with the imported collection creation day
 that anchors Anki's due-day offsets and the collection's modification/schema
 metadata. Learning and relearning cards translate Anki's packed `left`
 remaining-step field into Engram's internal step index and back again on export.
+Deleted imported decks, notes, and cards that the shared core records as
+external-source tombstones export as Anki `graves` rows, preserving sync-visible
+deletions across APKG round-trips.
 Imported deck and note-type modification metadata is also retained
 when Engram re-emits the stored Anki JSON, and imported note/card row
 modification timestamps, model sort-field selection, note checksums, and
