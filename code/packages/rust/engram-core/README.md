@@ -86,10 +86,11 @@ searches such as `front:re:...`, tag regexes, `deck:`, `preset:`, `note:`,
 `tag:`, `state:`, `is:`, `flag:`, `marked:`, `prop:`, `added:`, `edited:`,
 `introduced:`, `rated:`, `resched:`, and `dupe:` filters. `preset:` resolves
 imported Anki deck-option preset names from preserved collection metadata, while
-`is:due` and `prop:due` use imported Anki queue/due metadata when available.
-`prop:pos` / `prop:position` uses imported Anki new-card queue positions when
-available. `dupe:notetype,text` compares Anki-style first-field text, using
-preserved imported sort fields when available.
+imported Anki card-state filters use preserved type/queue metadata when
+available, and `prop:due` uses imported Anki due metadata. `prop:pos` /
+`prop:position` uses imported Anki new-card queue positions when available.
+`dupe:notetype,text` compares Anki-style first-field text, using preserved
+imported sort fields when available.
 Unknown `key:value` searches fall back to Anki-style note field searches, so
 custom fields such as `Extra:` work alongside built-in `front:` and `back:`
 filters. Imported Anki card custom data can be searched with

@@ -27,6 +27,13 @@ static DUPLICATE_HTML_TAGS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?is)<[^>]+>").expect("html tag regex should compile"));
 const FSRS5_DEFAULT_DECAY: f64 = 0.5;
 const SECONDS_PER_DAY: i64 = 86_400;
+const ANKI_TYPE_NEW: i64 = 0;
+const ANKI_TYPE_LEARN: i64 = 1;
+const ANKI_TYPE_REVIEW: i64 = 2;
+const ANKI_TYPE_RELEARN: i64 = 3;
+const ANKI_QUEUE_SCHED_BURIED: i64 = -3;
+const ANKI_QUEUE_USER_BURIED: i64 = -2;
+const ANKI_QUEUE_SUSPENDED: i64 = -1;
 const ANKI_QUEUE_LEARN: i64 = 1;
 const ANKI_QUEUE_REVIEW: i64 = 2;
 const ANKI_QUEUE_DAY_LEARN: i64 = 3;
@@ -1861,32 +1868,85 @@ fn state_matches(
     now: u64,
 ) -> bool {
     match state {
-        CardSearchState::New => progress.map_or(true, is_new_progress_overlay),
+        CardSearchState::New => imported_anki_state_matches(state, card_sources, metadata, now)
+            .unwrap_or_else(|| progress.map_or(true, is_new_progress_overlay)),
         CardSearchState::Due => imported_anki_card_is_due(card_sources, metadata, now)
             .unwrap_or_else(|| progress.is_some_and(|progress| is_reviewable(progress, now))),
-        CardSearchState::Learning => progress.is_some_and(|progress| {
-            matches!(progress.state, CardState::Learning | CardState::Relearning)
-        }),
-        CardSearchState::Review => progress.is_some_and(|progress| {
-            matches!(progress.state, CardState::Review | CardState::Relearning)
-                && !is_new_progress_overlay(progress)
-                && progress.suspended_at.is_none()
-                && !is_buried(progress, now)
-        }),
+        CardSearchState::Learning => {
+            imported_anki_state_matches(state, card_sources, metadata, now).unwrap_or_else(|| {
+                progress.is_some_and(|progress| {
+                    matches!(progress.state, CardState::Learning | CardState::Relearning)
+                })
+            })
+        }
+        CardSearchState::Review => imported_anki_state_matches(state, card_sources, metadata, now)
+            .unwrap_or_else(|| {
+                progress.is_some_and(|progress| {
+                    matches!(progress.state, CardState::Review | CardState::Relearning)
+                        && !is_new_progress_overlay(progress)
+                        && progress.suspended_at.is_none()
+                        && !is_buried(progress, now)
+                })
+            }),
         CardSearchState::Relearning => {
             progress.is_some_and(|progress| progress.state == CardState::Relearning)
         }
-        CardSearchState::Suspended => progress.is_some_and(is_suspended),
-        CardSearchState::Buried => progress.is_some_and(|progress| is_buried(progress, now)),
+        CardSearchState::Suspended => {
+            imported_anki_state_matches(state, card_sources, metadata, now)
+                .unwrap_or_else(|| progress.is_some_and(is_suspended))
+        }
+        CardSearchState::Buried => imported_anki_state_matches(state, card_sources, metadata, now)
+            .unwrap_or_else(|| progress.is_some_and(|progress| is_buried(progress, now))),
         CardSearchState::BuriedManually => {
-            progress.is_some_and(|progress| is_buried(progress, now))
-                && anki_card_queue_matches(card_sources, -2)
+            imported_anki_state_matches(state, card_sources, metadata, now).unwrap_or_else(|| {
+                progress.is_some_and(|progress| is_buried(progress, now))
+                    && anki_card_queue_matches(card_sources, ANKI_QUEUE_USER_BURIED)
+            })
         }
         CardSearchState::BuriedSibling => {
-            progress.is_some_and(|progress| is_buried(progress, now))
-                && anki_card_queue_matches(card_sources, -3)
+            imported_anki_state_matches(state, card_sources, metadata, now).unwrap_or_else(|| {
+                progress.is_some_and(|progress| is_buried(progress, now))
+                    && anki_card_queue_matches(card_sources, ANKI_QUEUE_SCHED_BURIED)
+            })
         }
     }
+}
+
+fn imported_anki_state_matches(
+    state: CardSearchState,
+    card_sources: &[&ExternalSourceRecord],
+    metadata: &SearchMetadata<'_>,
+    now: u64,
+) -> Option<bool> {
+    card_sources.iter().find_map(|source| match state {
+        CardSearchState::New => Some(source_i64_from_data(source, "kind")? == ANKI_TYPE_NEW),
+        CardSearchState::Learning => {
+            let kind = source_i64_from_data(source, "kind")?;
+            Some(matches!(kind, ANKI_TYPE_LEARN | ANKI_TYPE_RELEARN))
+        }
+        CardSearchState::Review => {
+            let kind = source_i64_from_data(source, "kind")?;
+            Some(matches!(kind, ANKI_TYPE_REVIEW | ANKI_TYPE_RELEARN))
+        }
+        CardSearchState::Due => imported_anki_card_is_due(&[*source], metadata, now),
+        CardSearchState::Suspended => {
+            Some(source_i64_from_data(source, "queue")? == ANKI_QUEUE_SUSPENDED)
+        }
+        CardSearchState::Buried => {
+            let queue = source_i64_from_data(source, "queue")?;
+            Some(matches!(
+                queue,
+                ANKI_QUEUE_USER_BURIED | ANKI_QUEUE_SCHED_BURIED
+            ))
+        }
+        CardSearchState::BuriedManually => {
+            Some(source_i64_from_data(source, "queue")? == ANKI_QUEUE_USER_BURIED)
+        }
+        CardSearchState::BuriedSibling => {
+            Some(source_i64_from_data(source, "queue")? == ANKI_QUEUE_SCHED_BURIED)
+        }
+        CardSearchState::Relearning => None,
+    })
 }
 
 fn flag_matches(filter: FlagFilter, progress: Option<&CardProgress>) -> bool {
@@ -2794,18 +2854,20 @@ mod tests {
             original_id: Some("1".to_string()),
             data: BTreeMap::from([("createdAtDays".to_string(), created_at_days.to_string())]),
         };
-        let card_source =
-            |card_id: &str, queue: i64, due: i64, original_due: i64| ExternalSourceRecord {
+        let card_source = |card_id: &str, kind: i64, queue: i64, due: i64, original_due: i64| {
+            ExternalSourceRecord {
                 target: ExternalSourceTarget::Card,
                 target_id: card_id.to_string(),
                 source: "anki-v11".to_string(),
                 original_id: Some(card_id.to_string()),
                 data: BTreeMap::from([
+                    ("kind".to_string(), kind.to_string()),
                     ("queue".to_string(), queue.to_string()),
                     ("due".to_string(), due.to_string()),
                     ("originalDue".to_string(), original_due.to_string()),
                 ]),
-            };
+            }
+        };
         let now_secs = (NOW / 1000) as i64;
         let state = AppState {
             decks: vec![deck("tamil", "Tamil")],
@@ -2820,13 +2882,49 @@ mod tests {
             ],
             external_sources: vec![
                 collection_source,
-                card_source("review-overdue", ANKI_QUEUE_REVIEW, today - 2, 0),
-                card_source("review-today", ANKI_QUEUE_REVIEW, today, 0),
-                card_source("review-future", ANKI_QUEUE_REVIEW, today + 3, 0),
-                card_source("day-learn", ANKI_QUEUE_DAY_LEARN, today, 0),
-                card_source("learn-due", ANKI_QUEUE_LEARN, now_secs - 1, 0),
-                card_source("learn-future", ANKI_QUEUE_LEARN, now_secs + 600, 0),
-                card_source("filtered-original", ANKI_QUEUE_REVIEW, today + 7, today - 1),
+                card_source(
+                    "review-overdue",
+                    ANKI_TYPE_REVIEW,
+                    ANKI_QUEUE_REVIEW,
+                    today - 2,
+                    0,
+                ),
+                card_source(
+                    "review-today",
+                    ANKI_TYPE_REVIEW,
+                    ANKI_QUEUE_REVIEW,
+                    today,
+                    0,
+                ),
+                card_source(
+                    "review-future",
+                    ANKI_TYPE_REVIEW,
+                    ANKI_QUEUE_REVIEW,
+                    today + 3,
+                    0,
+                ),
+                card_source("day-learn", ANKI_TYPE_LEARN, ANKI_QUEUE_DAY_LEARN, today, 0),
+                card_source(
+                    "learn-due",
+                    ANKI_TYPE_LEARN,
+                    ANKI_QUEUE_LEARN,
+                    now_secs - 1,
+                    0,
+                ),
+                card_source(
+                    "learn-future",
+                    ANKI_TYPE_LEARN,
+                    ANKI_QUEUE_LEARN,
+                    now_secs + 600,
+                    0,
+                ),
+                card_source(
+                    "filtered-original",
+                    ANKI_TYPE_REVIEW,
+                    ANKI_QUEUE_REVIEW,
+                    today + 7,
+                    today - 1,
+                ),
             ],
             ..AppState::default()
         };
@@ -2848,6 +2946,20 @@ mod tests {
                 "learn-due",
                 "filtered-original"
             ]
+        );
+        assert!(ids_for("is:new").is_empty());
+        assert_eq!(
+            ids_for("is:review"),
+            vec![
+                "review-overdue",
+                "review-today",
+                "review-future",
+                "filtered-original"
+            ]
+        );
+        assert_eq!(
+            ids_for("is:learn"),
+            vec!["day-learn", "learn-due", "learn-future"]
         );
         assert_eq!(
             ids_for("prop:due<0"),
