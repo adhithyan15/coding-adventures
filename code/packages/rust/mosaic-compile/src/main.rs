@@ -1202,11 +1202,12 @@ fn emit_single_file<E: std::fmt::Display>(
 // `pkg` subcommand — package-artifact build (UI29 §4.3)
 // ===========================================================================
 
-const PKG_BACKENDS: &str = "react|swiftui|qt|xaml|webcomponent|html|flutter";
+const PKG_BACKENDS: &str = "react|electron|swiftui|qt|xaml|webcomponent|html|flutter";
 
 fn pkg_backend_from_str(value: &str) -> Option<Backend> {
     match value {
         "react" => Some(Backend::React),
+        "electron" => Some(Backend::Electron),
         "swiftui" => Some(Backend::SwiftUI),
         "qt" => Some(Backend::Qt),
         "xaml" => Some(Backend::Xaml),
@@ -1222,7 +1223,7 @@ fn pkg_backend_from_str(value: &str) -> Option<Backend> {
 /// Spec (mosaic-compile.json):
 ///
 /// ```text
-/// mosaic-compile pkg <PACKAGE_ROOT> --backend <react|swiftui|qt|xaml|webcomponent|html|flutter> --output <DIR> [--emit-project]
+/// mosaic-compile pkg <PACKAGE_ROOT> --backend <react|electron|swiftui|qt|xaml|webcomponent|html|flutter> --output <DIR> [--emit-project]
 /// ```
 ///
 /// Required: `package_root` positional, `--backend`, `--output`. cli-builder
@@ -1363,6 +1364,7 @@ mod tests {
     #[test]
     fn pkg_backend_mapping_exposes_native_and_web_package_backends() {
         assert_eq!(pkg_backend_from_str("react"), Some(Backend::React));
+        assert_eq!(pkg_backend_from_str("electron"), Some(Backend::Electron));
         assert_eq!(pkg_backend_from_str("swiftui"), Some(Backend::SwiftUI));
         assert_eq!(pkg_backend_from_str("qt"), Some(Backend::Qt));
         assert_eq!(pkg_backend_from_str("xaml"), Some(Backend::Xaml));

@@ -193,6 +193,7 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
     let backends = [
         (Backend::Html, "html/EngramApp.html"),
         (Backend::React, "react/EngramApp.tsx"),
+        (Backend::Electron, "electron/EngramApp.tsx"),
         (Backend::SwiftUI, "swiftui/EngramApp.swift"),
         (Backend::Qt, "qt/EngramApp.qml"),
         (Backend::Xaml, "xaml/EngramApp.xaml"),
@@ -222,6 +223,23 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
 fn app_package_emits_native_project_shells() {
     let tmp = tempfile::tempdir().expect("temp dist root");
     let shells = [
+        (
+            Backend::Electron,
+            "electron",
+            vec![
+                "EngramApp.tsx",
+                "index.ts",
+                "package.json",
+                "vite.config.ts",
+                "index.html",
+                "tsconfig.json",
+                "tsconfig.electron.json",
+                "src/main.tsx",
+                "electron/main.ts",
+                "electron/preload.ts",
+                "README.md",
+            ],
+        ),
         (
             Backend::Qt,
             "qt",
@@ -284,6 +302,7 @@ fn native_project_shells_expose_engram_host_contract() {
     let tmp = tempfile::tempdir().expect("temp dist root");
     for backend in [
         Backend::React,
+        Backend::Electron,
         Backend::Flutter,
         Backend::Qt,
         Backend::SwiftUI,
@@ -306,6 +325,24 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&react_app, "actionUndoLabel=\"Sample ActionUndoLabel\"");
     assert_contains(&react_app, "actionMarkLabel=\"Sample ActionMarkLabel\"");
     assert_contains(&react_app, "dispatch={(ev) => console.log(\"event:\", ev)}");
+
+    let electron_app = fs::read_to_string(tmp.path().join("electron").join("src").join("main.tsx"))
+        .expect("electron/src/main.tsx");
+    assert_contains(&electron_app, "<EngramApp");
+    assert_contains(&electron_app, "appTitle=\"Sample AppTitle\"");
+    assert_contains(&electron_app, "answerVisible={false}");
+    assert_contains(&electron_app, "actionUndoLabel=\"Sample ActionUndoLabel\"");
+    assert_contains(&electron_app, "actionMarkLabel=\"Sample ActionMarkLabel\"");
+    assert_contains(
+        &electron_app,
+        "dispatch={(ev) => console.log(\"event:\", ev)}",
+    );
+    let electron_main =
+        fs::read_to_string(tmp.path().join("electron").join("electron").join("main.ts"))
+            .expect("electron/electron/main.ts");
+    assert_contains(&electron_main, "new BrowserWindow");
+    assert_contains(&electron_main, "MOSAIC_ELECTRON_DEV_SERVER_URL");
+    assert_contains(&electron_main, "EngramApp");
 
     let flutter_app = fs::read_to_string(tmp.path().join("flutter").join("lib").join("main.dart"))
         .expect("flutter/lib/main.dart");
@@ -467,6 +504,7 @@ fn assert_dependency_styles_reach_all_backends(output_root: &Path) {
     for (backend, artifact) in [
         ("HTML", "html/EngramApp.html"),
         ("React", "react/EngramApp.tsx"),
+        ("Electron", "electron/EngramApp.tsx"),
         ("Qt", "qt/EngramApp.qml"),
         ("XAML", "xaml/EngramApp.xaml"),
     ] {
