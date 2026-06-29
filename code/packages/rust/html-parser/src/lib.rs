@@ -8620,10 +8620,6 @@ fn repair_tricky_adoption_agency_in(nodes: &mut Vec<Node>) {
             repair_tricky_adoption_agency_in(&mut element.children);
         }
 
-        if repair_formatting_newline_continuation(nodes, index) {
-            index += 1;
-            continue;
-        }
         if repair_paragraph_trailing_block_continuation(nodes, index) {
             index += 1;
             continue;
@@ -8640,44 +8636,6 @@ fn repair_tricky_adoption_agency_in(nodes: &mut Vec<Node>) {
         }
         index += 1;
     }
-}
-
-fn repair_formatting_newline_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {
-    let Some(Node::Element(paragraph)) = nodes.get_mut(index) else {
-        return false;
-    };
-    if paragraph.name != "p" {
-        return false;
-    }
-    let Some(Node::Element(font)) = paragraph.children.last_mut() else {
-        return false;
-    };
-    if font.name != "font" {
-        return false;
-    }
-    let font_attributes = font.attributes.clone();
-    let Some(Node::Element(inner_formatting)) = font.children.last_mut() else {
-        return false;
-    };
-    if !is_formatting_element(&inner_formatting.name) {
-        return false;
-    }
-    let inner_name = inner_formatting.name.clone();
-    let inner_attributes = inner_formatting.attributes.clone();
-    let Some(newline) = split_tail_text(&mut inner_formatting.children, "\n") else {
-        return false;
-    };
-
-    let mut continuation_inner = Node::element(inner_name, inner_attributes);
-    if let Node::Element(element) = &mut continuation_inner {
-        element.children.push(Node::text(newline));
-    }
-    let mut continuation_font = Node::element("font".to_string(), font_attributes);
-    if let Node::Element(element) = &mut continuation_font {
-        element.children.push(continuation_inner);
-    }
-    nodes.insert(index + 1, continuation_font);
-    true
 }
 
 fn repair_paragraph_trailing_block_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {
