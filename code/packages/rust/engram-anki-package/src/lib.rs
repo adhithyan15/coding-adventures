@@ -659,6 +659,17 @@ pub fn v11_collection_to_engram_state(
         .filter_map(|note| anki_marked_at_for_note(note).map(|marked_at| (note.id, marked_at)))
         .collect::<BTreeMap<_, _>>();
     let last_reviewed_at_by_card = last_reviewed_at_by_card(&collection.reviews);
+    let deck_options = v11_deck_options(collection);
+    let deck_options_by_deck_id: HashMap<i64, &DeckOptions> = deck_options
+        .iter()
+        .filter_map(|preset| {
+            preset
+                .deck_id
+                .parse::<i64>()
+                .ok()
+                .map(|deck_id| (deck_id, &preset.options))
+        })
+        .collect();
     let card_progress = collection
         .cards
         .iter()
@@ -668,6 +679,7 @@ pub fn v11_collection_to_engram_state(
                 collection.metadata.created_at_days,
                 &marked_at_by_note_id,
                 &last_reviewed_at_by_card,
+                deck_options_by_deck_id.get(&card.deck_id).copied(),
             )
         })
         .collect::<Vec<_>>();
@@ -691,7 +703,6 @@ pub fn v11_collection_to_engram_state(
         })
         .collect::<Vec<_>>();
     let sessions = synthetic_import_sessions(&reviews, &deck_by_card_id, &default_deck_id);
-    let deck_options = v11_deck_options(collection);
     let external_sources = v11_external_sources(collection)?;
 
     Ok(AppState {
@@ -1592,7 +1603,18 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
     for (index, card) in export.cards.iter().enumerate() {
         let progress = export.progress_by_card.get(&card.key);
         let source = anki_source(export, ExternalSourceTarget::Card, &card.key);
-        let scheduling = export_card_scheduling(progress, export.created_at_days, index, source);
+        let deck_options = export
+            .deck_options
+            .iter()
+            .find(|preset| preset.deck_id == card.deck_key)
+            .map(|preset| &preset.options);
+        let scheduling = export_card_scheduling(
+            progress,
+            export.created_at_days,
+            index,
+            source,
+            deck_options,
+        );
         connection
             .execute(
                 "INSERT INTO cards VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18)",
@@ -2208,6 +2230,7 @@ fn export_card_scheduling(
     collection_created_at_days: i64,
     index: usize,
     source: Option<&ExternalSourceRecord>,
+    deck_options: Option<&DeckOptions>,
 ) -> ExportCardScheduling {
     let Some(progress) = progress else {
         return ExportCardScheduling {
@@ -2269,15 +2292,46 @@ fn export_card_scheduling(
         factor: progress_factor_to_anki(progress),
         repetitions: i64::from(progress.times_seen),
         lapses: i64::from(progress.times_incorrect),
-        left: progress
-            .learning_step_index
-            .map(i64::from)
-            .unwrap_or_else(|| source_i64(source, "left").unwrap_or_default()),
+        left: learning_step_index_to_anki_left(progress, source, deck_options),
         flags: progress
             .flag
             .map(card_flag_to_anki)
             .or_else(|| source_i64(source, "flags"))
             .unwrap_or_default(),
+    }
+}
+
+fn learning_step_index_to_anki_left(
+    progress: &CardProgress,
+    source: Option<&ExternalSourceRecord>,
+    deck_options: Option<&DeckOptions>,
+) -> i64 {
+    let Some(step_index) = progress.learning_step_index else {
+        return source_i64(source, "left").unwrap_or_default();
+    };
+    let step_count = learning_step_count_for_state(progress.state, deck_options);
+    if step_count == 0 {
+        return 0;
+    }
+
+    let clamped_index = (step_index as usize).min(step_count.saturating_sub(1));
+    let remaining = step_count.saturating_sub(clamped_index) as i64;
+    let learning_today = source_i64(source, "left")
+        .filter(|left| *left > 0)
+        .map(|left| (left / 1000) * 1000)
+        .unwrap_or_default();
+    learning_today + remaining
+}
+
+fn learning_step_count_for_state(state: CardState, deck_options: Option<&DeckOptions>) -> usize {
+    match state {
+        CardState::Learning => deck_options
+            .map(|options| options.learning_steps_minutes.len())
+            .unwrap_or_else(|| DeckOptions::default().learning_steps_minutes.len()),
+        CardState::Relearning => deck_options
+            .map(|options| options.relearning_steps_minutes.len())
+            .unwrap_or_else(|| DeckOptions::default().relearning_steps_minutes.len()),
+        _ => 0,
     }
 }
 
@@ -2962,6 +3016,7 @@ fn map_v11_card_progress(
     collection_created_at_days: i64,
     marked_at_by_note_id: &BTreeMap<i64, u64>,
     last_reviewed_at_by_card: &BTreeMap<i64, u64>,
+    deck_options: Option<&DeckOptions>,
 ) -> Option<CardProgress> {
     let flag = anki_card_flag(card.flags);
     let marked_at = marked_at_by_note_id.get(&card.note_id).copied();
@@ -2999,13 +3054,10 @@ fn map_v11_card_progress(
             INITIAL_EASE_FACTOR
         },
         next_due_at,
-        learning_step_index: if matches!(state, CardState::Learning | CardState::Relearning)
-            && card.left > 0
-        {
-            Some(i64_to_u32(card.left))
-        } else {
-            None
-        },
+        learning_step_index: anki_left_to_learning_step_index(
+            card.left,
+            learning_step_count_for_state(state, deck_options),
+        ),
         buried_until: (state == CardState::Buried).then_some(next_due_at),
         suspended_at: (state == CardState::Suspended)
             .then_some(anki_seconds_to_millis(card.modified_at)),
@@ -3016,6 +3068,20 @@ fn map_v11_card_progress(
         flag,
         marked_at,
     })
+}
+
+fn anki_left_to_learning_step_index(left: i64, step_count: usize) -> Option<u32> {
+    if step_count == 0 {
+        return None;
+    }
+    let remaining = left.rem_euclid(1000) as usize;
+    if remaining == 0 {
+        return None;
+    }
+    let index = step_count
+        .saturating_sub(remaining)
+        .min(step_count.saturating_sub(1));
+    Some(index as u32)
 }
 
 fn new_card_metadata_overlay(
@@ -4372,6 +4438,56 @@ CREATE TABLE graves (
             day_learning_state.card_progress[0].next_due_at,
             (19_000 + 43) * ONE_DAY_MS
         );
+    }
+
+    #[test]
+    fn maps_v11_learning_left_as_remaining_steps_and_preserves_packed_today_count() {
+        let collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+
+        let mut first_step = collection.clone();
+        first_step.cards[0].kind = 1;
+        first_step.cards[0].queue = 1;
+        first_step.cards[0].due = 1_700_000_300;
+        first_step.cards[0].left = 2;
+        let first_step_state = v11_collection_to_engram_state(&first_step).unwrap();
+        assert_eq!(
+            first_step_state.card_progress[0].learning_step_index,
+            Some(0)
+        );
+        let first_step_export = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&first_step_state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(first_step_export.cards[0].left, 2);
+
+        let mut second_step = collection.clone();
+        second_step.cards[0].kind = 1;
+        second_step.cards[0].queue = 1;
+        second_step.cards[0].due = 1_700_000_300;
+        second_step.cards[0].left = 1;
+        let second_step_state = v11_collection_to_engram_state(&second_step).unwrap();
+        assert_eq!(
+            second_step_state.card_progress[0].learning_step_index,
+            Some(1)
+        );
+        let second_step_export = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&second_step_state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(second_step_export.cards[0].left, 1);
+
+        let mut packed_today = first_step;
+        packed_today.cards[0].left = 1002;
+        let packed_today_state = v11_collection_to_engram_state(&packed_today).unwrap();
+        assert_eq!(
+            packed_today_state.card_progress[0].learning_step_index,
+            Some(0)
+        );
+        let packed_today_export = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&packed_today_state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(packed_today_export.cards[0].left, 1002);
     }
 
     #[test]

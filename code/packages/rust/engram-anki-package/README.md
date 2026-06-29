@@ -54,7 +54,9 @@ tag so the mark survives APKG round-trips. Imported suspended cards and Anki's
 user-buried / scheduler-buried queue distinction (`-2` vs `-3`) are preserved
 when exporting back to APKG, along with the imported collection creation day
 that anchors Anki's due-day offsets and the collection's modification/schema
-metadata. Imported deck and note-type modification metadata is also retained
+metadata. Learning and relearning cards translate Anki's packed `left`
+remaining-step field into Engram's internal step index and back again on export.
+Imported deck and note-type modification metadata is also retained
 when Engram re-emits the stored Anki JSON, and imported note/card row
 modification timestamps, model sort-field selection, note checksums, and
 revlog answer-time metadata are preserved on export. Engram-native reviews can
