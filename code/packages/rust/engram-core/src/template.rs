@@ -284,26 +284,9 @@ fn rename_template_field_references(template: &str, old_name: &str, new_name: &s
         match after_start.find("}}") {
             Some(end) => {
                 let (field_name, after_end) = after_start.split_at(end);
-                let trimmed = field_name.trim();
-                if trimmed == old_name {
-                    renamed.push_str("{{");
-                    renamed.push_str(new_name);
-                    renamed.push_str("}}");
-                } else if let Some(cloze_name) = trimmed.strip_prefix("cloze:") {
-                    if cloze_name.trim() == old_name {
-                        renamed.push_str("{{cloze:");
-                        renamed.push_str(new_name);
-                        renamed.push_str("}}");
-                    } else {
-                        renamed.push_str("{{");
-                        renamed.push_str(field_name);
-                        renamed.push_str("}}");
-                    }
-                } else {
-                    renamed.push_str("{{");
-                    renamed.push_str(field_name);
-                    renamed.push_str("}}");
-                }
+                renamed.push_str("{{");
+                renamed.push_str(&rename_template_tag(field_name, old_name, new_name));
+                renamed.push_str("}}");
                 rest = &after_end[2..];
             }
             None => {
@@ -316,6 +299,31 @@ fn rename_template_field_references(template: &str, old_name: &str, new_name: &s
 
     renamed.push_str(rest);
     renamed
+}
+
+fn rename_template_tag(tag: &str, old_name: &str, new_name: &str) -> String {
+    let trimmed = tag.trim();
+    if trimmed == old_name {
+        return new_name.to_string();
+    }
+
+    for prefix in ["cloze:", "hint:", "type:"] {
+        if let Some(field_name) = trimmed.strip_prefix(prefix) {
+            if field_name.trim() == old_name {
+                return format!("{prefix}{new_name}");
+            }
+        }
+    }
+
+    for prefix in ["#", "^", "/"] {
+        if let Some(field_name) = trimmed.strip_prefix(prefix) {
+            if field_name.trim() == old_name {
+                return format!("{prefix}{new_name}");
+            }
+        }
+    }
+
+    tag.to_string()
 }
 
 fn cloze_field_names_for_template(front_template: &str, back_template: &str) -> BTreeSet<String> {
@@ -721,6 +729,25 @@ mod tests {
         assert_eq!(cards[0].front, "letter-a");
         assert_eq!(cards[1].id, "note-1::reverse");
         assert_eq!(cards[1].back, "letter-a");
+    }
+
+    #[test]
+    fn renaming_field_migrates_anki_section_and_helper_references() {
+        let mut note_type = basic_note_type();
+        note_type.templates[0].front_template =
+            "{{#Front}}{{hint:Front}}{{/Front}}{{^Back}}{{type:Front}}{{/Back}}".to_string();
+        note_type.templates[0].back_template = "{{FrontSide}}<hr>{{cloze:Front}}".to_string();
+
+        let renamed = rename_note_type_field(&note_type, "front", "Prompt", NOW + 1);
+
+        assert_eq!(
+            renamed.templates[0].front_template,
+            "{{#Prompt}}{{hint:Prompt}}{{/Prompt}}{{^Back}}{{type:Prompt}}{{/Back}}"
+        );
+        assert_eq!(
+            renamed.templates[0].back_template,
+            "{{FrontSide}}<hr>{{cloze:Prompt}}"
+        );
     }
 
     #[test]
