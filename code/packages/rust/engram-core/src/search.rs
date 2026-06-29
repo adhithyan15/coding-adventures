@@ -752,31 +752,31 @@ fn parse_keyed_clause(
             parse_text_filter(token, &key, value).map(SearchClauseKind::Text)
         }
         "cid" | "cardid" | "card_id" | "card-id" => {
-            let value = value.to_lowercase();
+            let value = standard_search_fold(value);
             parse_id_filter(token, &value).map(SearchClauseKind::CardId)
         }
         "nid" | "noteid" | "note_id" | "note-id" => {
-            let value = value.to_lowercase();
+            let value = standard_search_fold(value);
             parse_id_filter(token, &value).map(SearchClauseKind::NoteId)
         }
         "did" | "deckid" | "deck_id" | "deck-id" => {
-            let value = value.to_lowercase();
+            let value = standard_search_fold(value);
             parse_id_filter(token, &value).map(SearchClauseKind::DeckId)
         }
         "mid" | "notetypeid" | "note_type_id" | "note-type-id" => {
-            let value = value.to_lowercase();
+            let value = standard_search_fold(value);
             parse_id_filter(token, &value).map(SearchClauseKind::NoteTypeId)
         }
         "dupe" => parse_duplicate_filter(token, value).map(SearchClauseKind::Duplicate),
         "card" | "template" | "cardtemplate" | "card_template" | "card-template" => {
             require_keyed_filter_value(token, value)?;
-            Ok(SearchClauseKind::CardTemplate(
-                unescape_search_pattern(token, value)?.to_lowercase(),
-            ))
+            Ok(SearchClauseKind::CardTemplate(standard_search_fold(
+                &unescape_search_pattern(token, value)?,
+            )))
         }
         "deck" => {
             require_keyed_filter_value(token, value)?;
-            let term = unescape_search_pattern(token, value)?.to_lowercase();
+            let term = standard_search_fold(&unescape_search_pattern(token, value)?);
             if term == "current" {
                 Ok(SearchClauseKind::CurrentDeck)
             } else {
@@ -785,15 +785,15 @@ fn parse_keyed_clause(
         }
         "preset" => {
             require_keyed_filter_value(token, value)?;
-            Ok(SearchClauseKind::Preset(
-                unescape_search_pattern(token, value)?.to_lowercase(),
-            ))
+            Ok(SearchClauseKind::Preset(standard_search_fold(
+                &unescape_search_pattern(token, value)?,
+            )))
         }
         "note" | "notetype" | "note_type" | "note-type" => {
             require_keyed_filter_value(token, value)?;
-            Ok(SearchClauseKind::NoteType(
-                unescape_search_pattern(token, value)?.to_lowercase(),
-            ))
+            Ok(SearchClauseKind::NoteType(standard_search_fold(
+                &unescape_search_pattern(token, value)?,
+            )))
         }
         "tag" => {
             require_keyed_filter_value(token, value)?;
@@ -858,7 +858,7 @@ fn parse_exact_field_value_filter(
     token: &str,
     value: &str,
 ) -> Result<FieldValuePattern, SearchError> {
-    let value = unescape_search_pattern(token, value)?.to_lowercase();
+    let value = standard_search_fold(&unescape_search_pattern(token, value)?);
     match value.as_str() {
         "*" if contains_search_wildcard(&value) => Ok(FieldValuePattern::Any),
         "_*" if contains_search_wildcard(&value) => Ok(FieldValuePattern::NonEmpty),
@@ -873,9 +873,9 @@ fn parse_tag_filter(token: &str, value: &str) -> Result<TagFilter, SearchError> 
         Some(("nc", pattern)) => Ok(TagFilter::NoCombining(unescape_search_pattern(
             token, pattern,
         )?)),
-        _ => Ok(TagFilter::Hierarchical(
-            unescape_search_pattern(token, value)?.to_lowercase(),
-        )),
+        _ => Ok(TagFilter::Hierarchical(standard_search_fold(
+            &unescape_search_pattern(token, value)?,
+        ))),
     }
 }
 
@@ -885,6 +885,10 @@ fn text_filter_contains(pattern: &str) -> TextFilter {
         mode: TextMatchMode::Contains,
         regex: None,
     }
+}
+
+fn standard_search_fold(value: &str) -> String {
+    value.to_ascii_lowercase()
 }
 
 fn parse_text_filter(token: &str, mode: &str, pattern: &str) -> Result<TextFilter, SearchError> {
@@ -1295,7 +1299,7 @@ fn parse_duplicate_filter(token: &str, value: &str) -> Result<DuplicateFilter, S
             token: token.to_string(),
         });
     };
-    let note_type_id = parse_id_filter(token, &note_type_id.to_lowercase())?;
+    let note_type_id = parse_id_filter(token, &standard_search_fold(note_type_id))?;
 
     Ok(DuplicateFilter {
         note_type_id,
@@ -1554,7 +1558,7 @@ fn field_matches(
 }
 
 fn field_name_matches(pattern: &str, candidate: &str) -> bool {
-    let candidate = candidate.to_lowercase();
+    let candidate = standard_search_fold(candidate);
     if contains_search_wildcard(pattern) {
         search_pattern_matches(pattern, &candidate)
     } else {
@@ -1567,16 +1571,16 @@ fn field_value_matches(pattern: &FieldValuePattern, candidate: &str) -> bool {
         FieldValuePattern::Any => true,
         FieldValuePattern::NonEmpty => !candidate.trim().is_empty(),
         FieldValuePattern::Exact(expected) => {
-            let candidate = candidate.to_lowercase();
+            let candidate = standard_search_fold(candidate);
             candidate == expected.as_str()
                 || decoded_html_entity_pattern(expected)
-                    .is_some_and(|decoded| candidate == decoded.to_lowercase())
+                    .is_some_and(|decoded| candidate == standard_search_fold(&decoded))
         }
         FieldValuePattern::Wildcard(expected) => {
-            let candidate = candidate.to_lowercase();
+            let candidate = standard_search_fold(candidate);
             search_pattern_matches(expected, &candidate)
                 || decoded_html_entity_pattern(expected).is_some_and(|decoded| {
-                    search_pattern_matches(&decoded.to_lowercase(), &candidate)
+                    search_pattern_matches(&standard_search_fold(&decoded), &candidate)
                 })
         }
         FieldValuePattern::Text(filter) => text_filter_matches(filter, candidate),
@@ -1586,17 +1590,16 @@ fn field_value_matches(pattern: &FieldValuePattern, candidate: &str) -> bool {
 fn text_filter_matches(filter: &TextFilter, candidate: &str) -> bool {
     match filter.mode {
         TextMatchMode::Contains => {
-            contains_search_pattern(
-                &filter.pattern.to_lowercase(),
-                &candidate.to_lowercase(),
-                WildcardScope::Text,
-            ) || decoded_html_entity_pattern(&filter.pattern).is_some_and(|decoded| {
-                contains_search_pattern(
-                    &decoded.to_lowercase(),
-                    &candidate.to_lowercase(),
-                    WildcardScope::Text,
-                )
-            })
+            let pattern = standard_search_fold(&filter.pattern);
+            let candidate = standard_search_fold(candidate);
+            contains_search_pattern(&pattern, &candidate, WildcardScope::Text)
+                || decoded_html_entity_pattern(&filter.pattern).is_some_and(|decoded| {
+                    contains_search_pattern(
+                        &standard_search_fold(&decoded),
+                        &candidate,
+                        WildcardScope::Text,
+                    )
+                })
         }
         TextMatchMode::WholeWord => {
             filter
@@ -1624,17 +1627,16 @@ fn text_filter_matches(filter: &TextFilter, candidate: &str) -> bool {
             })
         }
         TextMatchMode::StripCloze => {
-            contains_search_pattern(
-                &filter.pattern.to_lowercase(),
-                &strip_cloze_markup(candidate).to_lowercase(),
-                WildcardScope::Text,
-            ) || decoded_html_entity_pattern(&filter.pattern).is_some_and(|decoded| {
-                contains_search_pattern(
-                    &decoded.to_lowercase(),
-                    &strip_cloze_markup(candidate).to_lowercase(),
-                    WildcardScope::Text,
-                )
-            })
+            let pattern = standard_search_fold(&filter.pattern);
+            let candidate = standard_search_fold(&strip_cloze_markup(candidate));
+            contains_search_pattern(&pattern, &candidate, WildcardScope::Text)
+                || decoded_html_entity_pattern(&filter.pattern).is_some_and(|decoded| {
+                    contains_search_pattern(
+                        &standard_search_fold(&decoded),
+                        &candidate,
+                        WildcardScope::Text,
+                    )
+                })
         }
     }
 }
@@ -1887,14 +1889,14 @@ fn current_deck_matches(
         return false;
     };
 
-    let current_deck_id_term = current_deck_id.to_lowercase();
+    let current_deck_id_term = standard_search_fold(current_deck_id);
     deck_matches(&current_deck_id_term, card, deck, card_sources, metadata)
         || metadata
             .decks_by_id
             .get(current_deck_id)
             .is_some_and(|current_deck| {
                 deck_matches(
-                    &current_deck.name.to_lowercase(),
+                    &standard_search_fold(&current_deck.name),
                     card,
                     deck,
                     card_sources,
@@ -1985,7 +1987,7 @@ fn imported_original_deck_preset_matches(
 }
 
 fn preset_candidate_matches(term: &str, candidate: &str) -> bool {
-    let candidate = candidate.to_lowercase();
+    let candidate = standard_search_fold(candidate);
     if contains_search_wildcard(term) {
         search_pattern_matches(term, &candidate)
     } else {
@@ -2028,7 +2030,7 @@ fn tag_matches(filter: &TagFilter, note: Option<&Note>) -> bool {
 }
 
 fn anki_hierarchical_name_matches(pattern: &str, candidate: &str) -> bool {
-    let candidate = candidate.to_lowercase();
+    let candidate = standard_search_fold(candidate);
     if contains_search_wildcard(pattern) {
         return search_pattern_matches(pattern, &candidate);
     }
@@ -2335,7 +2337,7 @@ fn card_template_matches(term: &str, card: &Card, note_type: Option<&NoteType>) 
 }
 
 fn anki_name_candidate_matches(term: &str, candidate: &str) -> bool {
-    let candidate = candidate.to_lowercase();
+    let candidate = standard_search_fold(candidate);
     if contains_search_wildcard(term) {
         search_pattern_matches(term, &candidate)
     } else {
@@ -3240,6 +3242,115 @@ mod tests {
         );
         assert_eq!(ids_for("\"re:^A DOG$\""), vec!["dog-word"]);
         assert_eq!(ids_for("re:\\d{3}"), vec!["digits"]);
+    }
+
+    #[test]
+    fn standard_text_search_folds_ascii_case_only() {
+        let note_type = NoteType {
+            id: "basic".to_string(),
+            name: "Basic".to_string(),
+            fields: vec![FieldDef {
+                id: "front".to_string(),
+                name: "Front".to_string(),
+                required: true,
+                ordinal: 0,
+            }],
+            templates: vec![CardTemplate {
+                id: "forward".to_string(),
+                name: "Forward".to_string(),
+                front_template: "{{Front}}".to_string(),
+                back_template: "Answer".to_string(),
+                required_field_names: vec!["Front".to_string()],
+                requirement_mode: TemplateRequirementMode::All,
+                ordinal: 0,
+            }],
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let note = |id: &str, front: &str, tags: Vec<&str>| Note {
+            id: id.to_string(),
+            note_type_id: "basic".to_string(),
+            deck_id: "languages".to_string(),
+            fields: vec![NoteFieldValue {
+                field_id: "front".to_string(),
+                value: front.to_string(),
+            }],
+            tags: tags.into_iter().map(str::to_string).collect(),
+            created_at: NOW,
+            updated_at: NOW,
+        };
+        let card_for_note = |note_id: &str| {
+            let mut card = card(&format!("{note_id}::forward"), "languages", "front", "back");
+            card.lineage = Some(CardLineage {
+                note_id: note_id.to_string(),
+                note_type_id: "basic".to_string(),
+                template_id: "forward".to_string(),
+                ordinal: 0,
+                cloze_ordinal: None,
+            });
+            card
+        };
+        let state = AppState {
+            decks: vec![deck("languages", "Languages")],
+            note_types: vec![note_type],
+            notes: vec![
+                note("ascii-note", "Latin Root", vec!["CaseTag"]),
+                note(
+                    "greek-note",
+                    "\u{03c3}\u{03c5}\u{03c3}\u{03c4}\u{03b7}\u{03bc}\u{03b1}",
+                    vec!["\u{03b5}\u{03c4}\u{03b9}"],
+                ),
+                note(
+                    "cyrillic-note",
+                    "\u{043c}\u{0438}\u{0440}",
+                    vec!["\u{044f}\u{0437}\u{044b}\u{043a}"],
+                ),
+            ],
+            cards: vec![
+                card_for_note("ascii-note"),
+                card_for_note("greek-note"),
+                card_for_note("cyrillic-note"),
+            ],
+            ..AppState::default()
+        };
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("latin"), vec!["ascii-note::forward"]);
+        assert_eq!(ids_for("LATIN"), vec!["ascii-note::forward"]);
+        assert_eq!(ids_for("tag:casetag"), vec!["ascii-note::forward"]);
+        assert!(ids_for("\u{03a3}\u{03c5}\u{03c3}").is_empty());
+        assert_eq!(
+            ids_for("\u{03c3}\u{03c5}\u{03c3}"),
+            vec!["greek-note::forward"]
+        );
+        assert!(
+            ids_for("front:\u{03a3}\u{03c5}\u{03c3}\u{03c4}\u{03b7}\u{03bc}\u{03b1}").is_empty()
+        );
+        assert!(ids_for("front:\u{03a3}*").is_empty());
+        assert_eq!(
+            ids_for("w:\u{03a3}\u{03c5}\u{03c3}*"),
+            vec!["greek-note::forward"]
+        );
+        assert_eq!(
+            ids_for("re:\u{03a3}\u{03c5}\u{03c3}"),
+            vec!["greek-note::forward"]
+        );
+        assert!(ids_for("\u{041c}\u{0438}\u{0440}").is_empty());
+        assert_eq!(
+            ids_for("re:\u{041c}\u{0438}\u{0440}"),
+            vec!["cyrillic-note::forward"]
+        );
+        assert!(ids_for("tag:\u{042f}\u{0437}*").is_empty());
+        assert_eq!(
+            ids_for("tag:\u{044f}\u{0437}*"),
+            vec!["cyrillic-note::forward"]
+        );
     }
 
     #[test]

@@ -88,6 +88,8 @@ searches such as `front:re:...`, tag regexes, `deck:`, `preset:`, `note:`,
 and `card:` / `template:` use Anki-style exact-or-wildcard name matching.
 `tag:*` follows Anki's universal-tag search behavior, `tag:none` finds cards
 whose note has no tags, and `tag:nc:` matches tags without combining marks.
+Ordinary text, field, tag, deck, note type, and template matching folds ASCII
+case only; `w:` and `re:` use Unicode-aware regex case-insensitive matching.
 `preset:` resolves
 imported Anki deck-option preset names from preserved collection metadata, while
 imported Anki card-state filters use preserved type/queue metadata when
