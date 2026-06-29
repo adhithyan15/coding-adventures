@@ -49,6 +49,8 @@ Item {
     property url avatarUrl: ""
 
     signal avatarClick()
+    signal mosaicEvent(var event)
+    onAvatarClick: mosaicEvent({ "event": "onAvatarClick" })
 
     ColumnLayout {
         Text {
@@ -72,7 +74,10 @@ Three things to notice:
 3. **Slots become `property` declarations**, **emits become `signal`
    declarations**. This is the QML analogue of React's `props` and
    event dispatch — the host application binds the properties and
-   connects handlers to the signals.
+   connects handlers to the signals. Components with emits also expose a
+   generic `mosaicEvent(var event)` signal that re-emits each specific signal
+   as an event object such as `{ "event": "onAvatarClick" }`, preserving
+   payload keys for native host bridges.
 
 ## Primitive lowering table
 

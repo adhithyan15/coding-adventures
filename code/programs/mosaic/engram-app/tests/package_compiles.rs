@@ -651,6 +651,11 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "signal suspendCard()");
     assert_contains(&qml, "signal toggleMark()");
     assert_contains(&qml, "signal importAnki()");
+    assert_contains(&qml, "signal mosaicEvent(var event)");
+    assert_contains(
+        &qml,
+        "onImportAnki: mosaicEvent({ \"event\": \"onImportAnki\" })",
+    );
     assert_contains(&qml, "signal exportAnki()");
     assert_contains(&qml, "signal addNote()");
     assert_contains(&qml, "signal addNoteType()");
