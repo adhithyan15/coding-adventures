@@ -4222,6 +4222,18 @@ mod tests {
         assert!(err.to_string().to_lowercase().contains("boolean"));
     }
 
+    // ---- AL13: real-returning typed procedures ----
+
+    #[test]
+    fn real_procedure_runs() {
+        // scale(7.0) = 7.0 × 6.0 = 42.0; entier(42.0) = 42.
+        // Proves the implicit `scale` result slot is seeded as f64 and that
+        // `emit_entier` accepts a real procedure call as its argument.
+        let src = "begin real procedure scale(x); value x; real x; scale := x * 6.0; \
+                   integer result; result := entier(scale(7.0)) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
     // ---- AL5: switches + conditional designational expressions ----
 
     fn switch_prog(index: i64) -> String {
