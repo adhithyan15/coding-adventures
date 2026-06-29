@@ -60,6 +60,10 @@ binds them to the shared Rust business logic core through host shells.
 - The browser slots include stable result and selected-card metadata from the
   Rust core so emitted native/web hosts can wire actions to card IDs instead of
   display labels.
+- The browser tag-edit slots and events are composed from
+  `mosaic-pkg-card-browser` and route selected-card add/remove tag actions back
+  into the shared Rust core, keeping Anki-style note tags available to every
+  generated host shell.
 - Browser open/edit host intents also carry selected note, template, and
   scheduling-state metadata so host editors can be launched without re-querying
   or duplicating browser selection logic.

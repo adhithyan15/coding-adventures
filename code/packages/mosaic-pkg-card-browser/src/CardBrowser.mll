@@ -35,6 +35,27 @@ layout CardBrowser {
       selected-index : slot: selected-index ,
       onSelect : emit: onSelectResult
     )
+    Row [ browser-tag-row ] {
+      Column [ tag-edit-column ] {
+        Text [ tag-edit-label ] (
+          content : slot: tag-edit-label
+        )
+        HostInput [ tag-edit-input ] (
+          value : slot: tag-edit ,
+          placeholder : slot: tag-edit-placeholder ,
+          disabled : false ,
+          onChange : emit: onTagEditChange
+        )
+      }
+      HostButton [ add-tag-button ] (
+        label : slot: add-tag-label ,
+        onClick : emit: onAddTagSelected
+      )
+      HostButton [ remove-tag-button ] (
+        label : slot: remove-tag-label ,
+        onClick : emit: onRemoveTagSelected
+      )
+    }
     Row [ browser-actions ] {
       HostButton [ open-button ] (
         label : slot: open-label ,

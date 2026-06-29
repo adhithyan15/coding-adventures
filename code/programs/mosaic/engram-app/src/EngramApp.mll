@@ -152,13 +152,21 @@ layout EngramApp {
         edit-label : slot: browser-edit-label ,
         suspend-label : slot: browser-suspend-label ,
         mark-label : slot: browser-mark-label ,
+        tag-edit-label : slot: browser-tag-edit-label ,
+        tag-edit : slot: browser-tag-edit ,
+        tag-edit-placeholder : slot: browser-tag-edit-placeholder ,
+        add-tag-label : slot: browser-add-tag-label ,
+        remove-tag-label : slot: browser-remove-tag-label ,
         onQueryChange : emit: onBrowserQueryChange ,
         onSearch : emit: onBrowserSearch ,
         onSelectResult : emit: onBrowserSelectResult ,
         onOpenSelected : emit: onBrowserOpenSelected ,
         onEditSelected : emit: onBrowserEditSelected ,
         onToggleSuspendSelected : emit: onBrowserToggleSuspendSelected ,
-        onToggleMarkSelected : emit: onBrowserToggleMarkSelected
+        onToggleMarkSelected : emit: onBrowserToggleMarkSelected ,
+        onTagEditChange : emit: onBrowserTagEditChange ,
+        onAddTagSelected : emit: onBrowserAddTagSelected ,
+        onRemoveTagSelected : emit: onBrowserRemoveTagSelected
       )
     }
     pkg::mosaic-pkg-session-progress::SessionProgress (

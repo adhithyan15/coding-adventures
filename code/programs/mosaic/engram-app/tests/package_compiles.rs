@@ -338,6 +338,9 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
     let html = read_artifact(tmp.path(), "html/EngramApp.html");
     assert_contains(&html, "data-on-click=\"onImportAnki\"");
     assert_contains(&html, "data-on-commit=\"onBrowserSearch\"");
+    assert_contains(&html, "data-on-change=\"onBrowserTagEditChange\"");
+    assert_contains(&html, "data-on-click=\"onBrowserAddTagSelected\"");
+    assert_contains(&html, "data-on-click=\"onBrowserRemoveTagSelected\"");
     assert_dependency_styles_reach_all_backends(tmp.path());
 }
 
@@ -488,6 +491,9 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&html_main, "\"browserResults\": []");
     assert_contains(&html_main, "\"answerVisible\": false");
     assert_contains(&html_main, "\"onBrowserSelectResult\"");
+    assert_contains(&html_main, "\"onBrowserTagEditChange\"");
+    assert_contains(&html_main, "\"onBrowserAddTagSelected\"");
+    assert_contains(&html_main, "\"onBrowserRemoveTagSelected\"");
     assert_contains(&html_main, "\"name\": \"index\"");
     assert_contains(&html_main, "\"onDeckOptionsBuryNewSiblingsChange\"");
     assert_contains(&html_main, "\"onDeckOptionsInitialEaseChange\"");
@@ -532,6 +538,11 @@ fn native_project_shells_expose_engram_host_contract() {
         "collectionNoteCountValue: \"Sample CollectionNoteCountValue\",",
     );
     assert_contains(&react_app, "browserQuery: \"Sample BrowserQuery\",");
+    assert_contains(&react_app, "browserTagEdit: \"Sample BrowserTagEdit\",");
+    assert_contains(
+        &react_app,
+        "browserAddTagLabel: \"Sample BrowserAddTagLabel\",",
+    );
     assert_contains(&react_app, "browserResults: [],");
     assert_contains(&react_app, "browserResultCardIds: [],");
     assert_contains(
@@ -607,6 +618,11 @@ fn native_project_shells_expose_engram_host_contract() {
         "collectionDeleteNoteTypeLabel: \"Sample CollectionDeleteNoteTypeLabel\",",
     );
     assert_contains(&electron_app, "browserQuery: \"Sample BrowserQuery\",");
+    assert_contains(&electron_app, "browserTagEdit: \"Sample BrowserTagEdit\",");
+    assert_contains(
+        &electron_app,
+        "browserRemoveTagLabel: \"Sample BrowserRemoveTagLabel\",",
+    );
     assert_contains(&electron_app, "browserResults: [],");
     assert_contains(&electron_app, "browserResultCardIds: [],");
     assert_contains(
@@ -708,6 +724,11 @@ fn native_project_shells_expose_engram_host_contract() {
         "collectionExportLabel: \"Sample CollectionExportLabel\",",
     );
     assert_contains(&flutter_app, "browserQuery: \"Sample BrowserQuery\",");
+    assert_contains(&flutter_app, "browserTagEdit: \"Sample BrowserTagEdit\",");
+    assert_contains(
+        &flutter_app,
+        "browserAddTagLabel: \"Sample BrowserAddTagLabel\",",
+    );
     assert_contains(&flutter_app, "browserResults: const [],");
     assert_contains(&flutter_app, "browserResultCardIds: const [],");
     assert_contains(
@@ -752,6 +773,12 @@ fn native_project_shells_expose_engram_host_contract() {
         &compose_app,
         "override val mosaicPayload: Map<String, Any?> get() = mapOf(\"checked\" to checked)",
     );
+    assert_contains(
+        &compose_app,
+        "data class BrowserTagEditChange(val value: String)",
+    );
+    assert_contains(&compose_app, "data object BrowserAddTagSelected");
+    assert_contains(&compose_app, "data object BrowserRemoveTagSelected");
     assert_contains(&compose_app, "@Composable");
     assert_contains(&compose_app, "fun EngramApp(");
     assert_contains(&compose_app, "appTitle: String,");
@@ -764,6 +791,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&compose_app, "historyLabel: String,");
     assert_contains(&compose_app, "collectionLabel: String,");
     assert_contains(&compose_app, "browserQuery: String,");
+    assert_contains(&compose_app, "browserTagEdit: String,");
+    assert_contains(&compose_app, "browserAddTagLabel: String,");
     assert_contains(&compose_app, "browserResults: List<String>,");
     assert_contains(&compose_app, "browserResultCardIds: List<String>,");
     assert_contains(&compose_app, "browserSelectedCardId: String,");
@@ -805,6 +834,11 @@ fn native_project_shells_expose_engram_host_contract() {
         "collectionLabel = \"Sample CollectionLabel\",",
     );
     assert_contains(&compose_main, "browserQuery = \"Sample BrowserQuery\",");
+    assert_contains(&compose_main, "browserTagEdit = \"Sample BrowserTagEdit\",");
+    assert_contains(
+        &compose_main,
+        "browserRemoveTagLabel = \"Sample BrowserRemoveTagLabel\",",
+    );
     assert_contains(&compose_main, "browserResults = emptyList(),");
     assert_contains(&compose_main, "browserResultCardIds = emptyList(),");
     assert_contains(
@@ -853,6 +887,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "property string collectionLabel");
     assert_contains(&qml, "property string collectionNoteCountValue");
     assert_contains(&qml, "property string browserQuery");
+    assert_contains(&qml, "property string browserTagEdit");
+    assert_contains(&qml, "property string browserAddTagLabel");
     assert_contains(&qml, "property var browserResults");
     assert_contains(&qml, "property var browserResultCardIds");
     assert_contains(&qml, "property string browserSelectedCardId");
@@ -915,6 +951,9 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(&qml, "signal browserSearch()");
     assert_contains(&qml, "signal browserSelectResult(real index)");
+    assert_contains(&qml, "signal browserTagEditChange(string value)");
+    assert_contains(&qml, "signal browserAddTagSelected()");
+    assert_contains(&qml, "signal browserRemoveTagSelected()");
     let qt_main = fs::read_to_string(tmp.path().join("qt").join("main.cpp")).expect("qt/main.cpp");
     assert_contains(&qt_main, "#if __has_include(\"MosaicHost.h\")");
     assert_contains(&qt_main, "MosaicHost mosaicHost;");
@@ -969,6 +1008,9 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "case deleteNoteType");
     assert_contains(&swift, "case browserSearch");
     assert_contains(&swift, "case browserSelectResult");
+    assert_contains(&swift, "case browserTagEditChange");
+    assert_contains(&swift, "case browserAddTagSelected");
+    assert_contains(&swift, "case browserRemoveTagSelected");
     assert_contains(&swift, "var mosaicName: String");
     assert_contains(&swift, "var mosaicEnvelope: [String: Any]");
     assert_contains(&swift, "struct EngramAppView: View");
@@ -995,6 +1037,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "let collectionLabel: String");
     assert_contains(&swift, "let collectionNoteCountValue: String");
     assert_contains(&swift, "let browserResults: [String]");
+    assert_contains(&swift, "let browserTagEdit: String");
+    assert_contains(&swift, "let browserAddTagLabel: String");
     assert_contains(&swift, "let browserResultCardIds: [String]");
     assert_contains(&swift, "let browserSelectedCardId: String");
     assert_contains(&swift, "let answerVisible: Bool");
@@ -1064,6 +1108,14 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &swift_app,
         "browserQuery: MosaicHostValue.string(host.props, \"browser-query\", fallback: \"Sample BrowserQuery\"),",
+    );
+    assert_contains(
+        &swift_app,
+        "browserTagEdit: MosaicHostValue.string(host.props, \"browser-tag-edit\", fallback: \"Sample BrowserTagEdit\"),",
+    );
+    assert_contains(
+        &swift_app,
+        "browserAddTagLabel: MosaicHostValue.string(host.props, \"browser-add-tag-label\", fallback: \"Sample BrowserAddTagLabel\"),",
     );
     assert_contains(
         &swift_app,
@@ -1203,6 +1255,14 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(
         &xaml_code_behind,
+        "public static readonly DependencyProperty BrowserTagEditProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty BrowserAddTagLabelProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
         "public static readonly DependencyProperty BrowserResultCardIdsProperty",
     );
     assert_contains(
@@ -1336,6 +1396,18 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_events,
         "public sealed record BrowserSelectResult(double Index) : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record BrowserTagEditChange(string Value) : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record BrowserAddTagSelected() : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record BrowserRemoveTagSelected() : EngramAppEvent",
     );
     let xaml_main_window = fs::read_to_string(tmp.path().join("xaml").join("MainWindow.xaml.cs"))
         .expect("MainWindow.xaml.cs");

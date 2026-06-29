@@ -25,6 +25,11 @@ component CardBrowser {
   slot edit-label : text ;
   slot suspend-label : text ;
   slot mark-label : text ;
+  slot tag-edit-label : text ;
+  slot tag-edit : text ;
+  slot tag-edit-placeholder : text ;
+  slot add-tag-label : text ;
+  slot remove-tag-label : text ;
 
   emit onQueryChange ( value : text ) ;
   emit onSearch ;
@@ -33,4 +38,7 @@ component CardBrowser {
   emit onEditSelected ;
   emit onToggleSuspendSelected ;
   emit onToggleMarkSelected ;
+  emit onTagEditChange ( value : text ) ;
+  emit onAddTagSelected ;
+  emit onRemoveTagSelected ;
 }

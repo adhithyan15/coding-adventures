@@ -34,6 +34,7 @@ pub struct EngramSession {
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 struct BrowserSessionState {
     query: String,
+    tag_edit: String,
     selected_index: usize,
 }
 
@@ -50,6 +51,14 @@ impl BrowserSessionState {
     fn set_query(&mut self, query: String) {
         self.query = query;
         self.selected_index = 0;
+    }
+
+    fn set_tag_edit(&mut self, value: String) {
+        self.tag_edit = value;
+    }
+
+    fn active_tag_edit(&self) -> String {
+        self.tag_edit.trim().to_string()
     }
 
     fn set_selected_index(&mut self, value: f64) -> Result<(), String> {
@@ -346,6 +355,57 @@ impl EngramSession {
                         Some(selected_deck_context.as_str()),
                     )?;
                     self.state = mark_or_unmark_card(&self.state, card_id, now);
+                }
+                EngramAppEvent::BrowserTagEditChange => {
+                    if let Some(value) = parsed.text_value.clone() {
+                        self.browser.set_tag_edit(value);
+                    }
+                }
+                EngramAppEvent::BrowserAddTagSelected => {
+                    let card_id = required_browser_event_card_id(
+                        &self.state,
+                        &self.browser,
+                        parsed.card_id.clone(),
+                        "add tag to",
+                        now,
+                        Some(selected_deck_context.as_str()),
+                    )?;
+                    let tag = browser_event_tag_value(
+                        &self.browser,
+                        parsed.text_value.as_deref(),
+                        "add",
+                    )?;
+                    self.state = reduce(
+                        &self.state,
+                        engram_core::EngramCommand::AddCardTags {
+                            card_ids: vec![card_id],
+                            tags: vec![tag],
+                            updated_at: now,
+                        },
+                    );
+                }
+                EngramAppEvent::BrowserRemoveTagSelected => {
+                    let card_id = required_browser_event_card_id(
+                        &self.state,
+                        &self.browser,
+                        parsed.card_id.clone(),
+                        "remove tag from",
+                        now,
+                        Some(selected_deck_context.as_str()),
+                    )?;
+                    let tag = browser_event_tag_value(
+                        &self.browser,
+                        parsed.text_value.as_deref(),
+                        "remove",
+                    )?;
+                    self.state = reduce(
+                        &self.state,
+                        engram_core::EngramCommand::RemoveCardTags {
+                            card_ids: vec![card_id],
+                            tags: vec![tag],
+                            updated_at: now,
+                        },
+                    );
                 }
                 EngramAppEvent::BrowserQueryChange => {
                     if let Some(value) = parsed.text_value.clone() {
@@ -968,6 +1028,26 @@ fn engram_app_props_for_state(
             props_object.insert(key.clone(), value.clone());
         }
     }
+    props_object.insert(
+        "browser-tag-edit-label".to_string(),
+        Value::String("Tags".to_string()),
+    );
+    props_object.insert(
+        "browser-tag-edit".to_string(),
+        Value::String(browser.tag_edit.clone()),
+    );
+    props_object.insert(
+        "browser-tag-edit-placeholder".to_string(),
+        Value::String("grammar script".to_string()),
+    );
+    props_object.insert(
+        "browser-add-tag-label".to_string(),
+        Value::String("Add tag".to_string()),
+    );
+    props_object.insert(
+        "browser-remove-tag-label".to_string(),
+        Value::String("Remove tag".to_string()),
+    );
 
     props
 }
@@ -1403,6 +1483,9 @@ enum EngramAppEvent {
     BrowserEditSelected,
     BrowserToggleSuspendSelected,
     BrowserToggleMarkSelected,
+    BrowserTagEditChange,
+    BrowserAddTagSelected,
+    BrowserRemoveTagSelected,
     ImportAnki,
     ExportAnki,
     AddNote,
@@ -1480,6 +1563,9 @@ impl EngramAppEvent {
             Self::BrowserEditSelected => "onBrowserEditSelected",
             Self::BrowserToggleSuspendSelected => "onBrowserToggleSuspendSelected",
             Self::BrowserToggleMarkSelected => "onBrowserToggleMarkSelected",
+            Self::BrowserTagEditChange => "onBrowserTagEditChange",
+            Self::BrowserAddTagSelected => "onBrowserAddTagSelected",
+            Self::BrowserRemoveTagSelected => "onBrowserRemoveTagSelected",
             Self::ImportAnki => "onImportAnki",
             Self::ExportAnki => "onExportAnki",
             Self::AddNote => "onAddNote",
@@ -1721,6 +1807,15 @@ fn parse_engram_app_event_name(
         "browsertogglemarkselected"
         | "browser-toggle-mark-selected"
         | "browser_toggle_mark_selected" => parsed(EngramAppEvent::BrowserToggleMarkSelected),
+        "browsertageditchange" | "browser-tag-edit-change" | "browser_tag_edit_change" => {
+            parsed(EngramAppEvent::BrowserTagEditChange)
+        }
+        "browseraddtagselected" | "browser-add-tag-selected" | "browser_add_tag_selected" => {
+            parsed(EngramAppEvent::BrowserAddTagSelected)
+        }
+        "browserremovetagselected"
+        | "browser-remove-tag-selected"
+        | "browser_remove_tag_selected" => parsed(EngramAppEvent::BrowserRemoveTagSelected),
         "importanki" | "import-anki" | "import_anki" => parsed(EngramAppEvent::ImportAnki),
         "exportanki" | "export-anki" | "export_anki" => parsed(EngramAppEvent::ExportAnki),
         "addnote" | "add-note" | "add_note" => parsed(EngramAppEvent::AddNote),
@@ -1959,6 +2054,23 @@ fn required_browser_event_card_id(
         Ok(card_id)
     } else {
         Err(format!("cannot {action} unknown browser card: {card_id}"))
+    }
+}
+
+fn browser_event_tag_value(
+    browser: &BrowserSessionState,
+    explicit_value: Option<&str>,
+    action: &str,
+) -> Result<String, String> {
+    let tag = explicit_value
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .map(str::to_string)
+        .unwrap_or_else(|| browser.active_tag_edit());
+    if tag.is_empty() {
+        Err(format!("cannot {action} empty browser tag"))
+    } else {
+        Ok(tag)
     }
 }
 
@@ -4068,7 +4180,15 @@ mod tests {
         let snapshot = r#"{
             "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
             "noteTypes": [],
-            "notes": [],
+            "notes": [{
+                "id": "note",
+                "noteTypeId": "basic",
+                "deckId": "deck",
+                "fields": [{"fieldId": "front", "value": "letter-aa"}],
+                "tags": ["tamil"],
+                "createdAt": 1700000000000,
+                "updatedAt": 1700000000000
+            }],
             "cards": [
                 {"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000},
                 {
@@ -4137,21 +4257,69 @@ mod tests {
         assert_eq!(edit["hostIntent"]["templateId"], "reverse");
         assert_eq!(edit["hostIntent"]["state"], "new");
 
+        let tag_draft: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onBrowserTagEditChange","value":"script grammar"}"#,
+            "deck",
+            NOW + 1,
+        ))
+        .unwrap();
+        assert_eq!(tag_draft["ok"], true);
+        assert_eq!(tag_draft["event"], "onBrowserTagEditChange");
+        assert_eq!(tag_draft["props"]["browser-tag-edit"], "script grammar");
+
+        let tagged: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onBrowserAddTagSelected",
+            "deck",
+            NOW + 2,
+        ))
+        .unwrap();
+        assert_eq!(tagged["ok"], true);
+        assert_eq!(tagged["event"], "onBrowserAddTagSelected");
+        assert_eq!(
+            tagged["state"]["notes"][0]["tags"],
+            json!(["tamil", "script", "grammar"])
+        );
+        assert_eq!(tagged["state"]["notes"][0]["updatedAt"], NOW + 2);
+
+        let explicit_tagged: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onBrowserAddTagSelected","selectedCardId":"other","value":"roots"}"#,
+            "deck",
+            NOW + 3,
+        ))
+        .unwrap();
+        assert_eq!(
+            explicit_tagged["state"]["notes"][0]["tags"],
+            json!(["tamil", "script", "grammar", "roots"])
+        );
+        assert_eq!(explicit_tagged["state"]["notes"][0]["updatedAt"], NOW + 3);
+
+        let removed_tag: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onBrowserRemoveTagSelected","selectedCardId":"other","value":"TAMIL roots"}"#,
+            "deck",
+            NOW + 4,
+        ))
+        .unwrap();
+        assert_eq!(
+            removed_tag["state"]["notes"][0]["tags"],
+            json!(["script", "grammar"])
+        );
+        assert_eq!(removed_tag["state"]["notes"][0]["updatedAt"], NOW + 4);
+
         let marked: Value = serde_json::from_str(&session.handle_engram_app_event(
             "onBrowserToggleMarkSelected",
             "deck",
-            NOW + 1,
+            NOW + 5,
         ))
         .unwrap();
         assert_eq!(marked["ok"], true);
         assert_eq!(marked["event"], "onBrowserToggleMarkSelected");
         assert_eq!(marked["state"]["cardProgress"][0]["cardId"], "other");
-        assert_eq!(marked["state"]["cardProgress"][0]["markedAt"], NOW + 1);
+        assert_eq!(marked["state"]["cardProgress"][0]["markedAt"], NOW + 5);
 
         let unmarked: Value = serde_json::from_str(&session.handle_engram_app_event(
             "onBrowserToggleMarkSelected",
             "deck",
-            NOW + 2,
+            NOW + 6,
         ))
         .unwrap();
         assert_eq!(unmarked["ok"], true);
@@ -4163,7 +4331,7 @@ mod tests {
         let suspended: Value = serde_json::from_str(&session.handle_engram_app_event(
             "onBrowserToggleSuspendSelected",
             "deck",
-            NOW + 3,
+            NOW + 7,
         ))
         .unwrap();
         assert_eq!(suspended["ok"], true);
@@ -4171,13 +4339,13 @@ mod tests {
         assert_eq!(suspended["state"]["cardProgress"][0]["cardId"], "other");
         assert_eq!(
             suspended["state"]["cardProgress"][0]["suspendedAt"],
-            NOW + 3
+            NOW + 7
         );
 
         let unsuspended: Value = serde_json::from_str(&session.handle_engram_app_event(
             r#"{"event":"onBrowserToggleSuspendSelected","selectedCardId":"other"}"#,
             "deck",
-            NOW + 4,
+            NOW + 8,
         ))
         .unwrap();
         assert_eq!(unsuspended["ok"], true);
@@ -4189,7 +4357,7 @@ mod tests {
         let explicit_edit: Value = serde_json::from_str(&session.handle_engram_app_event(
             r#"{"event":"onBrowserEditSelected","selectedCardId":"card"}"#,
             "deck",
-            NOW + 5,
+            NOW + 9,
         ))
         .unwrap();
         assert_eq!(explicit_edit["ok"], true);
@@ -4199,7 +4367,7 @@ mod tests {
         let query_change: Value = serde_json::from_str(&session.handle_engram_app_event(
             r#"{"event":"onBrowserQueryChange","value":"cid:other"}"#,
             "deck",
-            NOW + 6,
+            NOW + 10,
         ))
         .unwrap();
         assert_eq!(query_change["ok"], true);

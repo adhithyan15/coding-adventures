@@ -112,6 +112,11 @@ component EngramApp {
   slot browser-edit-label : text ;
   slot browser-suspend-label : text ;
   slot browser-mark-label : text ;
+  slot browser-tag-edit-label : text ;
+  slot browser-tag-edit : text ;
+  slot browser-tag-edit-placeholder : text ;
+  slot browser-add-tag-label : text ;
+  slot browser-remove-tag-label : text ;
   slot prompt-label : text ;
   slot prompt : text ;
   slot answer-label : text ;
@@ -172,4 +177,7 @@ component EngramApp {
   emit onBrowserEditSelected ;
   emit onBrowserToggleSuspendSelected ;
   emit onBrowserToggleMarkSelected ;
+  emit onBrowserTagEditChange ( value : text ) ;
+  emit onBrowserAddTagSelected ;
+  emit onBrowserRemoveTagSelected ;
 }

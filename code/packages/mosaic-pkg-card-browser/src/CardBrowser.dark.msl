@@ -56,6 +56,50 @@ style CardBrowser {
     padding-top : 10 ;
   }
 
+  part browser-tag-row {
+    padding-top    : 10 ;
+    padding-bottom : 2 ;
+  }
+
+  part tag-edit-column {
+    padding : 2 ;
+  }
+
+  part tag-edit-label {
+    color       : "#86efac" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part tag-edit-input {
+    background    : "#0f172a" ;
+    border-width  : 1 ;
+    border-color  : "#334155" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    padding       : 8 ;
+  }
+
+  part add-tag-button {
+    background    : "#15803d" ;
+    border-width  : 1 ;
+    border-color  : "#166534" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part remove-tag-button {
+    background    : "#7f1d1d" ;
+    border-width  : 1 ;
+    border-color  : "#991b1b" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
   part open-button {
     background    : "#334155" ;
     border-width  : 1 ;

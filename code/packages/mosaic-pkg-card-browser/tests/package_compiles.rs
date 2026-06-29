@@ -107,6 +107,11 @@ fn card_browser_frontend_sources_compile() {
             "edit-label",
             "suspend-label",
             "mark-label",
+            "tag-edit-label",
+            "tag-edit",
+            "tag-edit-placeholder",
+            "add-tag-label",
+            "remove-tag-label",
         ]
     );
 
@@ -121,6 +126,9 @@ fn card_browser_frontend_sources_compile() {
             "onEditSelected",
             "onToggleSuspendSelected",
             "onToggleMarkSelected",
+            "onTagEditChange",
+            "onAddTagSelected",
+            "onRemoveTagSelected",
         ]
     );
 }
@@ -137,12 +145,19 @@ fn card_browser_layout_wires_search_results_and_actions() {
     assert!(source.contains("items : slot: results"));
     assert!(source.contains("selected-index : slot: selected-index"));
     assert!(source.contains("onSelect : emit: onSelectResult"));
+    assert!(source.contains("Row [ browser-tag-row ]"));
+    assert!(source.contains("HostInput [ tag-edit-input ]"));
+    assert!(source.contains("value : slot: tag-edit"));
+    assert!(source.contains("placeholder : slot: tag-edit-placeholder"));
+    assert!(source.contains("onChange : emit: onTagEditChange"));
 
     for (label, emit) in [
         ("open-label", "onOpenSelected"),
         ("edit-label", "onEditSelected"),
         ("suspend-label", "onToggleSuspendSelected"),
         ("mark-label", "onToggleMarkSelected"),
+        ("add-tag-label", "onAddTagSelected"),
+        ("remove-tag-label", "onRemoveTagSelected"),
     ] {
         assert!(
             source.contains(&format!("label : slot: {label}")),
@@ -151,6 +166,21 @@ fn card_browser_layout_wires_search_results_and_actions() {
         assert!(
             source.contains(&format!("onClick : emit: {emit}")),
             "CardBrowser.mll must wire {emit}"
+        );
+    }
+
+    let style = read_source("CardBrowser.dark.msl");
+    for part in [
+        "browser-tag-row",
+        "tag-edit-column",
+        "tag-edit-label",
+        "tag-edit-input",
+        "add-tag-button",
+        "remove-tag-button",
+    ] {
+        assert!(
+            style.contains(&format!("part {part}")),
+            "CardBrowser.dark.msl must style {part}"
         );
     }
 }
