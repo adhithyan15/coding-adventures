@@ -299,8 +299,12 @@ pub fn import_anki_notes_tsv(
     let columns = headers
         .columns
         .unwrap_or_else(|| import_kind.default_columns(&rows));
-    let column_plan =
-        import_kind.column_plan(&columns, headers.tags_column, headers.guid_column)?;
+    let column_plan = import_kind.column_plan(
+        &columns,
+        headers.tags_column,
+        headers.guid_column,
+        headers.deck_column,
+    )?;
     let note_type = import_kind.note_type(
         &note_type_id,
         &note_type_name,
@@ -325,10 +329,16 @@ pub fn import_anki_notes_tsv(
         }
 
         let sequence = notes.len() + 1;
+        let deck_id = note_deck_id_for_row(
+            &options.deck_id,
+            headers.deck_name.as_deref(),
+            &column_plan,
+            &fields,
+        );
         let note = Note {
             id: generated_basic_card_id(&options.note_id_prefix, sequence),
             note_type_id: note_type.id.clone(),
-            deck_id: options.deck_id.clone(),
+            deck_id,
             fields: column_plan
                 .field_columns
                 .iter()
@@ -364,10 +374,12 @@ pub fn import_anki_notes_tsv(
 #[derive(Default)]
 struct AnkiTsvHeaders {
     note_type_name: Option<String>,
+    deck_name: Option<String>,
     columns: Option<Vec<String>>,
     tags: Vec<String>,
     tags_column: Option<usize>,
     guid_column: Option<usize>,
+    deck_column: Option<usize>,
 }
 
 impl AnkiTsvHeaders {
@@ -378,6 +390,11 @@ impl AnkiTsvHeaders {
 
         if let Some(note_type_name) = first.strip_prefix("#notetype:") {
             self.note_type_name = Some(note_type_name.trim().to_string());
+            return Ok(());
+        }
+
+        if let Some(deck_name) = first.strip_prefix("#deck:") {
+            self.deck_name = Some(deck_name.trim().to_string());
             return Ok(());
         }
 
@@ -393,6 +410,11 @@ impl AnkiTsvHeaders {
 
         if let Some(guid_column) = first.strip_prefix("#guid column:") {
             self.guid_column = Some(parse_anki_header_column_index(guid_column, row)?);
+            return Ok(());
+        }
+
+        if let Some(deck_column) = first.strip_prefix("#deck column:") {
+            self.deck_column = Some(parse_anki_header_column_index(deck_column, row)?);
             return Ok(());
         }
 
@@ -443,6 +465,26 @@ fn note_guid_source_for_row(
     })
 }
 
+fn note_deck_id_for_row(
+    fallback_deck_id: &str,
+    header_deck_id: Option<&str>,
+    column_plan: &AnkiColumnPlan,
+    fields: &[String],
+) -> String {
+    column_plan
+        .deck_index
+        .and_then(|index| fields.get(index))
+        .map(|deck| deck.trim())
+        .filter(|deck| !deck.is_empty())
+        .or_else(|| {
+            header_deck_id
+                .map(str::trim)
+                .filter(|deck| !deck.is_empty())
+        })
+        .unwrap_or(fallback_deck_id)
+        .to_string()
+}
+
 fn extend_unique_tags(tags: &mut Vec<String>, incoming: Vec<String>) {
     for tag in incoming {
         if !tags.iter().any(|existing| existing == &tag) {
@@ -463,6 +505,7 @@ struct AnkiColumnPlan {
     field_columns: Vec<AnkiFieldColumn>,
     tag_index: Option<usize>,
     guid_index: Option<usize>,
+    deck_index: Option<usize>,
     required_columns: usize,
 }
 
@@ -536,6 +579,7 @@ impl AnkiNoteImportKind {
         columns: &[String],
         tags_column: Option<usize>,
         guid_column: Option<usize>,
+        deck_column: Option<usize>,
     ) -> Result<AnkiColumnPlan, CsvError> {
         match self {
             Self::Basic { .. } => {
@@ -566,6 +610,7 @@ impl AnkiNoteImportKind {
                     ],
                     tags_column.or_else(|| column_index(columns, "Tags")),
                     guid_column,
+                    deck_column,
                 ))
             }
             Self::Cloze => {
@@ -588,9 +633,10 @@ impl AnkiNoteImportKind {
                     field_columns,
                     tags_column.or_else(|| column_index(columns, "Tags")),
                     guid_column,
+                    deck_column,
                 ))
             }
-            Self::Custom => custom_column_plan(columns, tags_column, guid_column),
+            Self::Custom => custom_column_plan(columns, tags_column, guid_column, deck_column),
         }
     }
 }
@@ -599,18 +645,21 @@ fn column_plan(
     field_columns: Vec<AnkiFieldColumn>,
     tag_index: Option<usize>,
     guid_index: Option<usize>,
+    deck_index: Option<usize>,
 ) -> AnkiColumnPlan {
     let required_columns = field_columns
         .iter()
         .map(|field| field.column_index)
         .chain(tag_index)
         .chain(guid_index)
+        .chain(deck_index)
         .max()
         .map_or(0, |index| index + 1);
     AnkiColumnPlan {
         field_columns,
         tag_index,
         guid_index,
+        deck_index,
         required_columns,
     }
 }
@@ -1051,13 +1100,14 @@ fn custom_column_plan(
     columns: &[String],
     tags_column: Option<usize>,
     guid_column: Option<usize>,
+    deck_column: Option<usize>,
 ) -> Result<AnkiColumnPlan, CsvError> {
     let tag_index = tags_column.or_else(|| column_index(columns, "Tags"));
     let mut used_ids = BTreeSet::new();
     let mut field_columns = Vec::new();
 
     for (index, column) in columns.iter().enumerate() {
-        if Some(index) == tag_index || Some(index) == guid_column {
+        if Some(index) == tag_index || Some(index) == guid_column || Some(index) == deck_column {
             continue;
         }
         let field_name = custom_field_name(column, index);
@@ -1076,7 +1126,12 @@ fn custom_column_plan(
         ));
     }
 
-    Ok(column_plan(field_columns, tag_index, guid_column))
+    Ok(column_plan(
+        field_columns,
+        tag_index,
+        guid_column,
+        deck_column,
+    ))
 }
 
 fn custom_field_name(column: &str, index: usize) -> String {
@@ -1478,6 +1533,40 @@ mod tests {
     }
 
     #[test]
+    fn anki_note_text_import_honors_deck_headers() {
+        let options = AnkiNoteTsvImportOptions {
+            deck_id: "fallback-deck".to_string(),
+            note_type_id: String::new(),
+            note_type_name: String::new(),
+            note_id_prefix: "note".to_string(),
+            created_at: 456,
+        };
+        let text = "#separator:tab\n#deck:Tamil::Script\n#notetype:Basic\n#columns:Front\tBack\nletter-a\ta\n";
+
+        let imported = import_anki_notes_tsv(text, &options).unwrap();
+
+        assert_eq!(imported.notes[0].deck_id, "Tamil::Script");
+        assert_eq!(imported.cards[0].deck_id, "Tamil::Script");
+
+        let column_text = "#separator:tab\n#deck:Tamil::Script\n#deck column:3\n#notetype:Basic\n#columns:Front\tBack\tDeck\nhola\thello\tSpanish::Common\n";
+        let column_imported = import_anki_notes_tsv(column_text, &options).unwrap();
+        assert_eq!(column_imported.notes[0].deck_id, "Spanish::Common");
+        assert_eq!(column_imported.cards[0].deck_id, "Spanish::Common");
+
+        let custom_text = "#separator:tab\n#notetype:Vocabulary Story\n#deck column:3\n#columns:Word\tRoot\tDeck\nhablar\tfabl-\tSpanish::Common\n";
+        let custom_imported = import_anki_notes_tsv(custom_text, &options).unwrap();
+        assert_eq!(custom_imported.notes[0].deck_id, "Spanish::Common");
+        assert_eq!(
+            custom_imported.note_types[0]
+                .fields
+                .iter()
+                .map(|field| field.name.as_str())
+                .collect::<Vec<_>>(),
+            vec!["Word", "Root"]
+        );
+    }
+
+    #[test]
     fn anki_note_tsv_import_creates_cloze_notes_and_cards() {
         let tsv = "#separator:tab\n#notetype:Cloze\n#columns:Text\tExtra\tTags\n\"A {{c1::root::base}} plus {{c2::suffix}}\"\tetymology\tgrammar spanish\n";
         let options = AnkiNoteTsvImportOptions {
@@ -1680,6 +1769,14 @@ mod tests {
         .unwrap_err();
         assert_eq!(guid_column_error.row, Some(2));
         assert!(guid_column_error.message.contains("positive column number"));
+
+        let deck_column_error = import_anki_notes_tsv(
+            "#separator:tab\n#deck column:not-a-number\n#columns:Front\tBack\tDeck\nfront\tback\tdeck\n",
+            &options,
+        )
+        .unwrap_err();
+        assert_eq!(deck_column_error.row, Some(2));
+        assert!(deck_column_error.message.contains("positive column number"));
     }
 
     #[test]

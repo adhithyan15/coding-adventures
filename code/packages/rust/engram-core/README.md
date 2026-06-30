@@ -209,10 +209,12 @@ answer prompts, and Cloze rows produce cloze note models plus one generated
 card per cloze ordinal. Custom note-type rows preserve arbitrary field columns
 and Anki's Tags column as note data; imported `#tags:` headers are merged into
 each row's note tags, and `#tags column:N` can mark any one-based text column as
-the row's tag source. `#guid column:N` preserves Anki text GUIDs as `anki-text`
-note provenance records without changing generated Engram note IDs. Custom rows
-generate no cards until a real template is available because Anki text exports
-do not carry template definitions.
+the row's tag source. `#deck:` and `#deck column:N` populate imported note and
+generated-card deck IDs with the host-selected deck as a fallback.
+`#guid column:N` preserves Anki text GUIDs as `anki-text` note provenance
+records without changing generated Engram note IDs. Custom rows generate no
+cards until a real template is available because Anki text exports do not carry
+template definitions.
 
 `get_active_session_progress` derives the shared review UI counters from
 `AppState`: total cards, one-based current position, remaining cards, reviewed
