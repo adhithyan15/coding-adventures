@@ -2,6 +2,38 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.19.9] - 2026-06-30
+
+### Fixed — destructuring declarations aborted the compile instead of declining
+
+A `var` / `let` / `const` declaration with a destructuring binding pattern
+made the bridge raise an `Internal` error, which the CLI treats as a hard
+failure (`exit 2`, error text on stdout, no JS output):
+
+```
+var [a, b] = c;   →  bridge internal error: variable declarator: missing name
+let {p, q} = o;   →  bridge internal error: lexical_binding: ... missing name
+```
+
+Destructuring is a Phase 2 feature the typed bridge doesn't represent yet —
+but, like spread / optional chaining / `new`, it should DECLINE gracefully so
+the CLI falls back to WHITESPACE_ONLY and still emits valid (if less
+optimized) JavaScript, never abort.
+
+**Cause.** `convert_variable_declarator` searched the declarator's direct
+children for a NAME token and unwrapped it with
+`ok_or_else(|| internal(node, "missing name"))` BEFORE checking for a
+`binding_pattern` node. A destructuring target is a `binding_pattern` node
+with no NAME token at that level, so the unwrap fired the `Internal` error
+first and the later binding-pattern→`UnsupportedSyntax` check was dead code.
+
+**Fix.** The `binding_pattern` → `UnsupportedSyntax` decline now runs first,
+so `var [a,b]=c;` / `let {p,q}=o;` / `const [x]=y;` round-trip through the
+WHITESPACE_ONLY fallback (`exit 0`) instead of aborting. Plain (identifier)
+declarations are unaffected.
+
+Regression test: `destructuring_declarations_decline_gracefully_not_hard_error`.
+
 ## [0.19.8] - 2026-06-30
 
 ### Fixed — assignment expression as a call argument / array element was dropped (miscompile)
