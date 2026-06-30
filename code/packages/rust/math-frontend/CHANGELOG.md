@@ -2,6 +2,33 @@
 
 All notable changes to the pluggable parser-frontend framework.
 
+## [0.5.0] — 2026-06-29
+
+### Added — neutral `Overset` / `Underset` nodes (unblock stacked annotations on every frontend)
+
+Over/under-set annotations (`\overset{a}{b}`, `\stackrel{a}{R}`, `\underset{a}{b}`; AsciiMath
+`overset`/`underset`/`stackrel`) previously had **no faithful neutral representation** — a frontend
+had to drop them or misuse `Pow`/`Subscript`. This release adds the nodes so any frontend (LaTeX,
+AsciiMath, future MathML/Unicode-math) can lower a stacked annotation honestly. **Additive**; no
+existing variant or API changed — the same shape as the `Accent` node in 0.4.0.
+
+- **`MathExpr::Overset { over: Box<MathExpr>, base: Box<MathExpr> }`** and
+  **`MathExpr::Underset { under: Box<MathExpr>, base: Box<MathExpr> }`** — generalise `Accent`: where
+  an accent's mark is a fixed named diacritic, an `Overset`'s `over` is a *full sub-expression* (an
+  arrow label, a limit annotation, a reaction condition, …). Kept **distinct from `Pow`/`Subscript`**:
+  the annotation is *centered* above/below the base, not raised/lowered, and a faithful renderer must
+  stack it.
+- `Capabilities` gains **`oversets`** (set by `all()`, with a `with_oversets()` builder) and the
+  conformance harness now polices it: a frontend that emits an `Overset`/`Underset` but does not
+  declare `oversets` is flagged, exactly as for every other node-bearing capability.
+- The iterative `impl Drop for MathExpr` (heap worklist) gains arms for both new nodes, so a deep
+  `Overset`/`Underset` spine frees in O(1) stack depth — a 300 000-deep alternating spine is dropped
+  in a test without overflow.
+- Downstream unaffected: `latex` (declares `all()`), `asciimath`, and the `adj-lang` adapter all build
+  unchanged — frontends only *construct* `MathExpr`, and the adapter routes unknown nodes through its
+  catch-all. No emitter ships in this PR; the node is the prerequisite (same staging as `Accent`),
+  consumed by a later `asciimath`/`latex` `overset`/`underset`/`stackrel` emission PR.
+
 ## [0.4.0] — 2026-06-29
 
 ### Added — neutral `Accent` node (unblocks accents on every frontend)

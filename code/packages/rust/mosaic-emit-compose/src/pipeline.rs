@@ -39,6 +39,12 @@ pub struct PipelineEmitResult {
     pub component_name: String,
 }
 
+#[derive(Clone, Copy)]
+struct ForPayloadScope<'a> {
+    item: &'a str,
+    index: Option<&'a str>,
+}
+
 /// Emit one Composable function for the three-file triple.
 ///
 /// The `style` argument's `part` blocks are inlined as Jetpack Compose
@@ -110,12 +116,14 @@ pub fn from_pipeline(
     .unwrap();
     writeln!(out, "import androidx.compose.material.Button").unwrap();
     writeln!(out, "import androidx.compose.material.Checkbox").unwrap();
+    writeln!(out, "import androidx.compose.material.RadioButton").unwrap();
     writeln!(out, "import androidx.compose.material.Text").unwrap();
     writeln!(out, "import androidx.compose.material.TextField").unwrap();
     writeln!(out, "import androidx.compose.runtime.Composable").unwrap();
     writeln!(out, "import androidx.compose.ui.Alignment").unwrap();
     writeln!(out, "import androidx.compose.ui.Modifier").unwrap();
     writeln!(out, "import androidx.compose.ui.graphics.Color").unwrap();
+    writeln!(out, "import androidx.compose.ui.text.TextStyle").unwrap();
     writeln!(out, "import androidx.compose.ui.text.font.FontFamily").unwrap();
     writeln!(out, "import androidx.compose.ui.text.input.KeyboardType").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.dp").unwrap();
@@ -247,6 +255,7 @@ fn emit_composable_function(
         component_name,
         emits,
         part_styles,
+        None,
         None,
         None,
         None,
@@ -764,6 +773,34 @@ fn compose_box_style(
     }
 }
 
+fn compose_style_for_node(
+    node: &LayoutNode,
+    part_styles: &PartStyleMap,
+    injected_width: Option<&str>,
+    chain_indent: usize,
+    inherited_text_color: Option<&str>,
+) -> Option<ComposeStyle> {
+    if let Some(part) = &node.part_name {
+        let base_props = part_styles.get(part).map(|v| v.as_slice()).unwrap_or(&[]);
+        let state_layers = collect_state_layers(node, part, part_styles);
+        if !base_props.is_empty() || !state_layers.is_empty() || injected_width.is_some() {
+            Some(compose_box_style(
+                base_props,
+                &state_layers,
+                injected_width,
+                chain_indent,
+                inherited_text_color,
+            ))
+        } else {
+            None
+        }
+    } else {
+        injected_width.map(|width| {
+            compose_box_style(&[], &[], Some(width), chain_indent, inherited_text_color)
+        })
+    }
+}
+
 // =====================================================================
 // Layout tree walker
 // =====================================================================
@@ -801,6 +838,24 @@ impl TextStyleCtx {
             s.push_str(&format!(", fontSize = {sz}.sp"));
         }
         s
+    }
+
+    fn text_style_expr(&self) -> Option<String> {
+        let mut fields = Vec::new();
+        if let Some(c) = &self.color {
+            fields.push(format!("color = {c}"));
+        }
+        if self.mono {
+            fields.push("fontFamily = FontFamily.Monospace".to_string());
+        }
+        if let Some(sz) = &self.size {
+            fields.push(format!("fontSize = {sz}.sp"));
+        }
+        if fields.is_empty() {
+            None
+        } else {
+            Some(format!("TextStyle({})", fields.join(", ")))
+        }
     }
 }
 
@@ -842,6 +897,15 @@ fn cell_text_style(inherited: &TextStyleCtx, style: &ComposeStyle) -> TextStyleC
     ctx
 }
 
+fn text_call(value_expr: &str, text_ctx: Option<&TextStyleCtx>) -> String {
+    let args = text_ctx.map(TextStyleCtx::text_args).unwrap_or_default();
+    if args.is_empty() {
+        format!("Text(text = {value_expr})")
+    } else {
+        format!("Text({value_expr}{args})")
+    }
+}
+
 fn emit_compose_tree(
     node: &LayoutNode,
     depth: usize,
@@ -852,6 +916,7 @@ fn emit_compose_tree(
     // Inherited text styling for any `Text` this subtree emits; consumed
     // by `emit_text` / the inline-edit `BasicTextField`.
     text_ctx: Option<&TextStyleCtx>,
+    for_payload: Option<ForPayloadScope<'_>>,
     // Threaded column-width Kotlin expression (e.g.
     // `columnWidths[_kotlinIdxc]`) for THIS node only — `Some` exactly
     // when this is a direct body child of a width-threading HostTable
@@ -870,6 +935,7 @@ fn emit_compose_tree(
             part_styles,
             table_ctx,
             text_ctx,
+            for_payload,
             injected_width,
         ),
         "Row" => emit_container(
@@ -881,6 +947,7 @@ fn emit_compose_tree(
             part_styles,
             table_ctx,
             text_ctx,
+            for_payload,
             injected_width,
         ),
         "Column" => emit_container(
@@ -892,6 +959,7 @@ fn emit_compose_tree(
             part_styles,
             table_ctx,
             text_ctx,
+            for_payload,
             injected_width,
         ),
         // UI29 §2.1 — `HostTable` lowers to a vertical `Column`.  Before
@@ -915,6 +983,7 @@ fn emit_compose_tree(
                 part_styles,
                 Some(&ctx),
                 Some(&sheet_text),
+                for_payload,
                 injected_width,
             )
         }
@@ -930,6 +999,7 @@ fn emit_compose_tree(
             part_styles,
             table_ctx,
             text_ctx,
+            for_payload,
             injected_width,
         ),
         "HostTableColGroup" => {
@@ -946,6 +1016,7 @@ fn emit_compose_tree(
                 part_styles,
                 table_ctx,
                 text_ctx,
+                for_payload,
                 injected_width,
             )
         }
@@ -958,10 +1029,23 @@ fn emit_compose_tree(
         }
         "Text" => emit_text(node, depth, text_ctx),
         "Spacer" => Ok(format!("{pad}Spacer(modifier = Modifier.weight(1f))\n")),
-        "HostInput" => emit_host_input(node, depth, component_name, emits),
-        "HostButton" => emit_host_button(node, depth, component_name, emits),
-        "HostCheckbox" => emit_host_checkbox(node, depth, component_name, emits),
-        "HostNumberInput" => emit_host_number_input(node, depth, component_name, emits),
+        "HostInput" => emit_host_input(node, depth, component_name, emits, part_styles, text_ctx),
+        "HostButton" => emit_host_button(
+            node,
+            depth,
+            component_name,
+            emits,
+            part_styles,
+            text_ctx,
+            for_payload,
+        ),
+        "HostCheckbox" => {
+            emit_host_checkbox(node, depth, component_name, emits, part_styles, text_ctx)
+        }
+        "HostRadio" => emit_host_radio(node, depth, component_name, emits, part_styles, text_ctx),
+        "HostNumberInput" => {
+            emit_host_number_input(node, depth, component_name, emits, part_styles, text_ctx)
+        }
         // UI29 §3.1 / §3.2 — meta-primitives.
         "For" => emit_for_compose(
             node,
@@ -971,6 +1055,7 @@ fn emit_compose_tree(
             part_styles,
             table_ctx,
             text_ctx,
+            for_payload,
             /*width_thread=*/ false,
         ),
         "If" => emit_if_compose(
@@ -982,6 +1067,7 @@ fn emit_compose_tree(
             part_styles,
             table_ctx,
             text_ctx,
+            for_payload,
         ),
         // An orphan `Else` renders as a documenting Kotlin comment.
         "Else" => Ok(format!("{pad}// orphan Else — ignored\n")),
@@ -1011,6 +1097,7 @@ fn emit_container(
     part_styles: &PartStyleMap,
     table_ctx: Option<&TableContext>,
     text_ctx: Option<&TextStyleCtx>,
+    for_payload: Option<ForPayloadScope<'_>>,
     injected_width: Option<&str>,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
@@ -1117,6 +1204,7 @@ fn emit_container(
                 part_styles,
                 table_ctx,
                 child_text.as_ref(),
+                for_payload,
             )?);
         }
     } else {
@@ -1128,6 +1216,7 @@ fn emit_container(
             part_styles,
             table_ctx,
             child_text.as_ref(),
+            for_payload,
             None,
         )?);
     }
@@ -1149,6 +1238,7 @@ fn emit_table_cell(
     part_styles: &PartStyleMap,
     table_ctx: Option<&TableContext>,
     text_ctx: Option<&TextStyleCtx>,
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     if let Some(ctx) = table_ctx {
         if ctx.column_widths_slot.is_some()
@@ -1163,6 +1253,7 @@ fn emit_table_cell(
                 part_styles,
                 table_ctx,
                 text_ctx,
+                for_payload,
                 /*width_thread=*/ true,
             );
         }
@@ -1175,6 +1266,7 @@ fn emit_table_cell(
         part_styles,
         table_ctx,
         text_ctx,
+        for_payload,
         None,
     )
 }
@@ -1194,6 +1286,7 @@ fn emit_children_compose(
     part_styles: &PartStyleMap,
     table_ctx: Option<&TableContext>,
     text_ctx: Option<&TextStyleCtx>,
+    for_payload: Option<ForPayloadScope<'_>>,
     // Threaded column-width expression to inject into each DIRECT plain
     // child's Modifier chain.  `Some` only on the body-children dispatch
     // of a width-threading HostTable cell `For`.
@@ -1214,6 +1307,7 @@ fn emit_children_compose(
                 part_styles,
                 table_ctx,
                 text_ctx,
+                for_payload,
             )?);
             i += if else_node.is_some() { 2 } else { 1 };
             continue;
@@ -1226,6 +1320,7 @@ fn emit_children_compose(
             part_styles,
             table_ctx,
             text_ctx,
+            for_payload,
             injected_width,
         )?);
         i += 1;
@@ -1255,6 +1350,7 @@ fn emit_for_compose(
     part_styles: &PartStyleMap,
     table_ctx: Option<&TableContext>,
     text_ctx: Option<&TextStyleCtx>,
+    for_payload: Option<ForPayloadScope<'_>>,
     // When true AND a `column_widths_slot` is live AND this For has an
     // `index:` binding, each iteration's body Box gets a threaded
     // `.width(<slot>[_kotlinIdx<idx>].dp)`.  See [`emit_table_cell`].
@@ -1340,6 +1436,13 @@ fn emit_for_compose(
         None
     };
 
+    let scoped_payload = Some(ForPayloadScope {
+        item: as_name.as_str(),
+        index: index_name
+            .as_deref()
+            .or(for_payload.and_then(|scope| scope.index)),
+    });
+
     let mut out = header;
     if node.children.is_empty() {
         // Compose's content lambda is fine with no children — the
@@ -1358,6 +1461,7 @@ fn emit_for_compose(
             part_styles,
             table_ctx,
             text_ctx,
+            scoped_payload,
             width_expr.as_deref(),
         )?);
     }
@@ -1388,6 +1492,7 @@ fn emit_if_compose(
     part_styles: &PartStyleMap,
     table_ctx: Option<&TableContext>,
     text_ctx: Option<&TextStyleCtx>,
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_depth = depth + 1;
@@ -1406,6 +1511,7 @@ fn emit_if_compose(
                     part_styles,
                     table_ctx,
                     text_ctx,
+                    for_payload,
                     None,
                 );
             }
@@ -1419,6 +1525,7 @@ fn emit_if_compose(
                         part_styles,
                         table_ctx,
                         text_ctx,
+                        for_payload,
                         None,
                     );
                 }
@@ -1448,6 +1555,7 @@ fn emit_if_compose(
         part_styles,
         table_ctx,
         text_ctx,
+        for_payload,
         None,
     )?);
     if let Some(e) = else_node {
@@ -1460,6 +1568,7 @@ fn emit_if_compose(
             part_styles,
             table_ctx,
             text_ctx,
+            for_payload,
             None,
         )?);
     }
@@ -1497,12 +1606,7 @@ fn emit_text(
     // args appended (`Text(( v ), color = ..., fontFamily = ...)`).
     // With no styling, keep the labelled `Text(text = ...)` shape so the
     // styleless passthrough (e.g. FormulaBar) is byte-identical to before.
-    let args = text_ctx.map(TextStyleCtx::text_args).unwrap_or_default();
-    if args.is_empty() {
-        Ok(format!("{pad}Text(text = {value_expr})\n"))
-    } else {
-        Ok(format!("{pad}Text({value_expr}{args})\n"))
-    }
+    Ok(format!("{pad}{}\n", text_call(&value_expr, text_ctx)))
 }
 
 fn emit_host_input(
@@ -1510,9 +1614,19 @@ fn emit_host_input(
     depth: usize,
     component_name: &str,
     emits: &[EmitDecl],
+    part_styles: &PartStyleMap,
+    text_ctx: Option<&TextStyleCtx>,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner = "    ".repeat(depth + 1);
+    let chain_indent = (depth + 2) * 4;
+    let inherited_color = text_ctx.and_then(|t| t.color.as_deref());
+    let style = compose_style_for_node(node, part_styles, None, chain_indent, inherited_color);
+    let inherited_text = text_ctx.cloned().unwrap_or_default();
+    let input_text = match &style {
+        Some(s) => cell_text_style(&inherited_text, s),
+        None => inherited_text,
+    };
 
     let value_expr = match find_prop_value(node, "value") {
         Some(LayoutPropValue::SlotRef(slot)) => to_camel_case_first_lower(slot),
@@ -1554,6 +1668,15 @@ fn emit_host_input(
         writeln!(out, "{inner}onValueChange = {{ }},").unwrap();
     }
 
+    if let Some(style) = &style {
+        if !style.modifier.is_empty() {
+            writeln!(out, "{inner}modifier = Modifier{},", style.modifier).unwrap();
+        }
+    }
+    if let Some(text_style) = input_text.text_style_expr() {
+        writeln!(out, "{inner}textStyle = {text_style},").unwrap();
+    }
+
     // read-only -> enabled = !readOnly (Compose negates the polarity)
     if let Some(slot) = find_slot_ref_prop(node, "read-only") {
         let camel = to_camel_case_first_lower(slot);
@@ -1570,12 +1693,25 @@ fn emit_host_button(
     depth: usize,
     component_name: &str,
     emits: &[EmitDecl],
+    part_styles: &PartStyleMap,
+    text_ctx: Option<&TextStyleCtx>,
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner = "    ".repeat(depth + 1);
+    let chain_indent = (depth + 2) * 4;
+    let inherited_color = text_ctx.and_then(|t| t.color.as_deref());
+    let style = compose_style_for_node(node, part_styles, None, chain_indent, inherited_color);
+    let inherited_text = text_ctx.cloned().unwrap_or_default();
+    let label_text = match &style {
+        Some(s) => cell_text_style(&inherited_text, s),
+        None => inherited_text,
+    };
 
     // onTap → onClick dispatch
-    let on_click = if let Some(emit_name) = find_emit_ref_prop(node, "onTap") {
+    let on_click = if let Some(emit_name) =
+        find_emit_ref_prop(node, "onClick").or_else(|| find_emit_ref_prop(node, "onTap"))
+    {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
         let arity = emits
@@ -1583,31 +1719,65 @@ fn emit_host_button(
             .find(|e| e.name == *emit_name)
             .map(|e| e.params.len())
             .unwrap_or(0);
-        // Buttons have no inherent payload; only emit the dispatch
-        // call if the signal is parameterless.  A button wired to a
-        // payload-carrying signal won't know what to pass; surface
-        // that as `(/* TODO: ... */)` deliberately so the codegen
-        // is visibly incomplete rather than silently lying.
         if arity == 0 {
             format!("dispatch({component_name}Event.{case})")
+        } else if arity == 1 {
+            match host_button_single_payload_expr(emit_name, emits, for_payload) {
+                Some(payload) => format!("dispatch({component_name}Event.{case}({payload}))"),
+                None => format!("dispatch({component_name}Event.{case}(/* TODO: payload */))"),
+            }
         } else {
             format!("dispatch({component_name}Event.{case}(/* TODO: payload */))")
         }
     } else {
-        "/* no onTap bound */".to_string()
+        "/* no onClick bound */".to_string()
     };
 
     let label = match find_prop_value(node, "label") {
         Some(LayoutPropValue::String(s)) => format!("\"{}\"", escape_kotlin_string(s)),
         Some(LayoutPropValue::SlotRef(slot)) => to_camel_case_first_lower(slot),
+        Some(LayoutPropValue::Keyword(name)) => to_camel_case_first_lower(name),
+        Some(LayoutPropValue::Expr(text)) => text.trim().to_string(),
         _ => "\"\"".to_string(),
     };
 
     let mut out = String::new();
-    writeln!(out, "{pad}Button(onClick = {{ {on_click} }}) {{").unwrap();
-    writeln!(out, "{inner}Text(text = {label})").unwrap();
+    if style
+        .as_ref()
+        .map(|s| !s.modifier.is_empty())
+        .unwrap_or(false)
+    {
+        let style = style.as_ref().unwrap();
+        writeln!(out, "{pad}Button(").unwrap();
+        writeln!(out, "{inner}onClick = {{ {on_click} }},").unwrap();
+        writeln!(out, "{inner}modifier = Modifier{},", style.modifier).unwrap();
+        writeln!(out, "{pad}) {{").unwrap();
+    } else {
+        writeln!(out, "{pad}Button(onClick = {{ {on_click} }}) {{").unwrap();
+    }
+    writeln!(out, "{inner}{}", text_call(&label, Some(&label_text))).unwrap();
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
+}
+
+fn host_button_single_payload_expr(
+    emit_name: &str,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Option<String> {
+    let param_type = emits
+        .iter()
+        .find(|e| e.name == emit_name)
+        .and_then(|e| e.params.first())
+        .map(|p| &p.r#type)?;
+    let scope = for_payload?;
+    match param_type {
+        EmitPayloadType::Text | EmitPayloadType::Color | EmitPayloadType::Component(_) => {
+            Some(scope.item.to_string())
+        }
+        EmitPayloadType::Number => scope.index.map(str::to_string),
+        EmitPayloadType::Bool => None,
+    }
 }
 
 fn emit_host_checkbox(
@@ -1615,9 +1785,19 @@ fn emit_host_checkbox(
     depth: usize,
     component_name: &str,
     emits: &[EmitDecl],
+    part_styles: &PartStyleMap,
+    text_ctx: Option<&TextStyleCtx>,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner = "    ".repeat(depth + 1);
+    let chain_indent = (depth + 2) * 4;
+    let inherited_color = text_ctx.and_then(|t| t.color.as_deref());
+    let style = compose_style_for_node(node, part_styles, None, chain_indent, inherited_color);
+    let inherited_text = text_ctx.cloned().unwrap_or_default();
+    let label_text = match &style {
+        Some(s) => cell_text_style(&inherited_text, s),
+        None => inherited_text,
+    };
     let checked_expr = bool_prop_expr(node, "checked", "false")?;
     let enabled_expr = disabled_prop_enabled_expr(node)?;
 
@@ -1651,11 +1831,21 @@ fn emit_host_checkbox(
 
     if let Some(label) = text_prop_expr(node, "label")? {
         let mut out = String::new();
-        writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth()) {{").unwrap();
+        if let Some(style) = &style {
+            if !style.modifier.is_empty() {
+                writeln!(out, "{pad}Row(").unwrap();
+                writeln!(out, "{inner}modifier = Modifier{},", style.modifier).unwrap();
+                writeln!(out, "{pad}) {{").unwrap();
+            } else {
+                writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth()) {{").unwrap();
+            }
+        } else {
+            writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth()) {{").unwrap();
+        }
         for line in checkbox_lines {
             writeln!(out, "{line}").unwrap();
         }
-        writeln!(out, "{inner}Text(text = {label})").unwrap();
+        writeln!(out, "{inner}{}", text_call(&label, Some(&label_text))).unwrap();
         writeln!(out, "{pad}}}").unwrap();
         Ok(out)
     } else {
@@ -1667,6 +1857,96 @@ fn emit_host_checkbox(
             "{inner}onCheckedChange = {{ checked -> {on_checked} }},"
         )
         .unwrap();
+        if let Some(style) = &style {
+            if !style.modifier.is_empty() {
+                writeln!(out, "{inner}modifier = Modifier{},", style.modifier).unwrap();
+            }
+        }
+        if let Some(enabled) = enabled_expr.as_deref() {
+            writeln!(out, "{inner}enabled = {enabled},").unwrap();
+        }
+        writeln!(out, "{pad})").unwrap();
+        Ok(out)
+    }
+}
+
+fn emit_host_radio(
+    node: &LayoutNode,
+    depth: usize,
+    component_name: &str,
+    emits: &[EmitDecl],
+    part_styles: &PartStyleMap,
+    text_ctx: Option<&TextStyleCtx>,
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let chain_indent = (depth + 2) * 4;
+    let inherited_color = text_ctx.and_then(|t| t.color.as_deref());
+    let style = compose_style_for_node(node, part_styles, None, chain_indent, inherited_color);
+    let inherited_text = text_ctx.cloned().unwrap_or_default();
+    let label_text = match &style {
+        Some(s) => cell_text_style(&inherited_text, s),
+        None => inherited_text,
+    };
+    let checked_expr = bool_prop_expr(node, "checked", "false")?;
+    let enabled_expr = disabled_prop_enabled_expr(node)?;
+    let value_expr = text_prop_expr(node, "value")?.unwrap_or_else(|| "\"\"".to_string());
+
+    let on_select = if let Some(emit_name) = find_emit_ref_prop(node, "onSelect") {
+        let case = pascalize(&strip_on_prefix(emit_name));
+        validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
+        let arity = emits
+            .iter()
+            .find(|e| e.name == *emit_name)
+            .map(|e| e.params.len())
+            .unwrap_or(0);
+        if arity == 0 {
+            format!("dispatch({component_name}Event.{case})")
+        } else {
+            format!("dispatch({component_name}Event.{case}({value_expr}))")
+        }
+    } else {
+        "/* no onSelect bound */".to_string()
+    };
+
+    let mut radio_lines = Vec::new();
+    radio_lines.push(format!("{inner}RadioButton("));
+    radio_lines.push(format!("{inner}    selected = {checked_expr},"));
+    radio_lines.push(format!("{inner}    onClick = {{ {on_select} }},"));
+    if let Some(enabled) = enabled_expr.as_deref() {
+        radio_lines.push(format!("{inner}    enabled = {enabled},"));
+    }
+    radio_lines.push(format!("{inner})"));
+
+    if let Some(label) = text_prop_expr(node, "label")? {
+        let mut out = String::new();
+        if let Some(style) = &style {
+            if !style.modifier.is_empty() {
+                writeln!(out, "{pad}Row(").unwrap();
+                writeln!(out, "{inner}modifier = Modifier{},", style.modifier).unwrap();
+                writeln!(out, "{pad}) {{").unwrap();
+            } else {
+                writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth()) {{").unwrap();
+            }
+        } else {
+            writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth()) {{").unwrap();
+        }
+        for line in radio_lines {
+            writeln!(out, "{line}").unwrap();
+        }
+        writeln!(out, "{inner}{}", text_call(&label, Some(&label_text))).unwrap();
+        writeln!(out, "{pad}}}").unwrap();
+        Ok(out)
+    } else {
+        let mut out = String::new();
+        writeln!(out, "{pad}RadioButton(").unwrap();
+        writeln!(out, "{inner}selected = {checked_expr},").unwrap();
+        writeln!(out, "{inner}onClick = {{ {on_select} }},").unwrap();
+        if let Some(style) = &style {
+            if !style.modifier.is_empty() {
+                writeln!(out, "{inner}modifier = Modifier{},", style.modifier).unwrap();
+            }
+        }
         if let Some(enabled) = enabled_expr.as_deref() {
             writeln!(out, "{inner}enabled = {enabled},").unwrap();
         }
@@ -1680,9 +1960,19 @@ fn emit_host_number_input(
     depth: usize,
     component_name: &str,
     emits: &[EmitDecl],
+    part_styles: &PartStyleMap,
+    text_ctx: Option<&TextStyleCtx>,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner = "    ".repeat(depth + 1);
+    let chain_indent = (depth + 2) * 4;
+    let inherited_color = text_ctx.and_then(|t| t.color.as_deref());
+    let style = compose_style_for_node(node, part_styles, None, chain_indent, inherited_color);
+    let inherited_text = text_ctx.cloned().unwrap_or_default();
+    let input_text = match &style {
+        Some(s) => cell_text_style(&inherited_text, s),
+        None => inherited_text,
+    };
 
     let value_expr = match find_prop_value(node, "value") {
         Some(LayoutPropValue::SlotRef(slot)) => {
@@ -1716,6 +2006,14 @@ fn emit_host_number_input(
     writeln!(out, "{pad}TextField(").unwrap();
     writeln!(out, "{inner}value = {value_expr}.toString(),").unwrap();
     writeln!(out, "{inner}onValueChange = {{ v -> {on_value_change} }},").unwrap();
+    if let Some(style) = &style {
+        if !style.modifier.is_empty() {
+            writeln!(out, "{inner}modifier = Modifier{},", style.modifier).unwrap();
+        }
+    }
+    if let Some(text_style) = input_text.text_style_expr() {
+        writeln!(out, "{inner}textStyle = {text_style},").unwrap();
+    }
     writeln!(out, "{inner}singleLine = true,").unwrap();
     writeln!(
         out,
@@ -2471,6 +2769,62 @@ mod tests {
     }
 
     #[test]
+    fn host_input_part_style_reaches_modifier_and_text_style() {
+        let m = component(
+            "NoteTypeEditor",
+            vec![slot("name-value", SlotType::Text, true)],
+            vec![emit_decl(
+                "onNameChange",
+                vec![param("value", EmitPayloadType::Text)],
+            )],
+        );
+        let l = layout(
+            "NoteTypeEditor",
+            styled_node(
+                "HostInput",
+                "note-type-name-input",
+                vec![
+                    slot_prop("value", "name-value"),
+                    LayoutProp {
+                        name: "onChange".into(),
+                        value: LayoutPropValue::EmitRef("onNameChange".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let s = style_def(
+            "NoteTypeEditor",
+            vec![part(
+                "note-type-name-input",
+                vec![
+                    sprop("background", "#0f172a"),
+                    sprop("border-width", "1"),
+                    sprop("border-color", "#334155"),
+                    sprop("color", "#f8fafc"),
+                    sprop("padding", "8"),
+                ],
+                vec![],
+            )],
+        );
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(out.contains("import androidx.compose.ui.text.TextStyle"));
+        assert!(
+            out.contains(".background(Color(0xFF0F172A))"),
+            "got:\n{out}"
+        );
+        assert!(
+            out.contains(".border(1.dp, Color(0xFF334155))"),
+            "got:\n{out}"
+        );
+        assert!(out.contains(".padding(8.dp)"), "got:\n{out}");
+        assert!(
+            out.contains("textStyle = TextStyle(color = Color(0xFFF8FAFC)),"),
+            "got:\n{out}"
+        );
+    }
+
+    #[test]
     fn host_button_with_parameterless_emit_dispatches_data_object() {
         let m = component("Bar", vec![], vec![emit_decl("onTap", vec![])]);
         let l = layout(
@@ -2496,6 +2850,216 @@ mod tests {
             "expected dispatch(BarEvent.Tap), got:\n{out}"
         );
         assert!(out.contains("Text(text = \"Go\")"));
+    }
+
+    #[test]
+    fn host_button_with_on_click_dispatches_data_object() {
+        let m = component("Bar", vec![], vec![emit_decl("onClick", vec![])]);
+        let l = layout(
+            "Bar",
+            node(
+                "HostButton",
+                vec![
+                    LayoutProp {
+                        name: "label".into(),
+                        value: LayoutPropValue::String("Go".into()),
+                    },
+                    LayoutProp {
+                        name: "onClick".into(),
+                        value: LayoutPropValue::EmitRef("onClick".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Bar")).unwrap().output;
+        assert!(
+            out.contains("dispatch(BarEvent.Click)"),
+            "expected dispatch(BarEvent.Click), got:\n{out}"
+        );
+        assert!(out.contains("Text(text = \"Go\")"));
+    }
+
+    #[test]
+    fn host_button_part_style_reaches_modifier_and_label_text() {
+        let m = component(
+            "RatingControls",
+            vec![slot("again-label", SlotType::Text, true)],
+            vec![emit_decl("onAgain", vec![])],
+        );
+        let l = layout(
+            "RatingControls",
+            styled_node(
+                "HostButton",
+                "rating-again",
+                vec![
+                    slot_prop("label", "again-label"),
+                    LayoutProp {
+                        name: "onClick".into(),
+                        value: LayoutPropValue::EmitRef("onAgain".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let s = style_def(
+            "RatingControls",
+            vec![part(
+                "rating-again",
+                vec![
+                    sprop("background", "#f87171"),
+                    sprop("border-width", "1"),
+                    sprop("border-color", "#991b1b"),
+                    sprop("color", "#1a1a2e"),
+                    sprop("padding", "8"),
+                ],
+                vec![],
+            )],
+        );
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(
+            out.contains(".background(Color(0xFFF87171))"),
+            "got:\n{out}"
+        );
+        assert!(
+            out.contains(".border(1.dp, Color(0xFF991B1B))"),
+            "got:\n{out}"
+        );
+        assert!(out.contains(".padding(8.dp)"), "got:\n{out}");
+        assert!(
+            out.contains("Text(againLabel, color = Color(0xFF1A1A2E))"),
+            "got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_button_inside_indexed_for_dispatches_index_payload() {
+        let m = component(
+            "ListGroup",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit_decl(
+                "onSelect",
+                vec![param("index", EmitPayloadType::Number)],
+            )],
+        );
+        let l = layout(
+            "ListGroup",
+            node(
+                "Column",
+                vec![],
+                vec![node(
+                    "For",
+                    vec![
+                        LayoutProp {
+                            name: "each".into(),
+                            value: LayoutPropValue::SlotRef("items".into()),
+                        },
+                        LayoutProp {
+                            name: "as".into(),
+                            value: LayoutPropValue::Keyword("item".into()),
+                        },
+                        LayoutProp {
+                            name: "index".into(),
+                            value: LayoutPropValue::Keyword("i".into()),
+                        },
+                    ],
+                    vec![node(
+                        "HostButton",
+                        vec![
+                            LayoutProp {
+                                name: "label".into(),
+                                value: LayoutPropValue::Keyword("item".into()),
+                            },
+                            LayoutProp {
+                                name: "onClick".into(),
+                                value: LayoutPropValue::EmitRef("onSelect".into()),
+                            },
+                        ],
+                        vec![],
+                    )],
+                )],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("ListGroup"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("val i: Double = _kotlinIdxi.toDouble()"),
+            "expected numeric For index binding, got:\n{out}"
+        );
+        assert!(
+            out.contains("dispatch(ListGroupEvent.Select(i))"),
+            "expected HostButton to dispatch index payload, got:\n{out}"
+        );
+        assert!(
+            out.contains("Text(text = item)"),
+            "expected HostButton label to use For item binding, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_button_inside_for_dispatches_text_item_payload() {
+        let m = component(
+            "SelectMenu",
+            vec![slot(
+                "options",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit_decl(
+                "onChange",
+                vec![param("value", EmitPayloadType::Text)],
+            )],
+        );
+        let l = layout(
+            "SelectMenu",
+            node(
+                "Column",
+                vec![],
+                vec![node(
+                    "For",
+                    vec![
+                        LayoutProp {
+                            name: "each".into(),
+                            value: LayoutPropValue::SlotRef("options".into()),
+                        },
+                        LayoutProp {
+                            name: "as".into(),
+                            value: LayoutPropValue::Keyword("option".into()),
+                        },
+                    ],
+                    vec![node(
+                        "HostButton",
+                        vec![
+                            LayoutProp {
+                                name: "label".into(),
+                                value: LayoutPropValue::Keyword("option".into()),
+                            },
+                            LayoutProp {
+                                name: "onClick".into(),
+                                value: LayoutPropValue::EmitRef("onChange".into()),
+                            },
+                        ],
+                        vec![],
+                    )],
+                )],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("SelectMenu"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("dispatch(SelectMenuEvent.Change(option))"),
+            "expected HostButton to dispatch item payload, got:\n{out}"
+        );
+        assert!(
+            out.contains("Text(text = option)"),
+            "expected HostButton label to use For item binding, got:\n{out}"
+        );
     }
 
     #[test]
@@ -2600,6 +3164,65 @@ mod tests {
         ));
         assert!(out.contains("enabled = true,"));
         assert!(out.contains("Text(text = buryNewLabel)"));
+    }
+
+    #[test]
+    fn host_radio_dispatches_text_payload_with_label() {
+        let m = component(
+            "DeckOptions",
+            vec![
+                slot("suspend-label", SlotType::Text, true),
+                slot("suspend-selected", SlotType::Bool, true),
+            ],
+            vec![emit_decl(
+                "onLeechActionChange",
+                vec![param("value", EmitPayloadType::Text)],
+            )],
+        );
+        let l = layout(
+            "DeckOptions",
+            node(
+                "HostRadio",
+                vec![
+                    LayoutProp {
+                        name: "label".into(),
+                        value: LayoutPropValue::SlotRef("suspend-label".into()),
+                    },
+                    LayoutProp {
+                        name: "checked".into(),
+                        value: LayoutPropValue::SlotRef("suspend-selected".into()),
+                    },
+                    LayoutProp {
+                        name: "value".into(),
+                        value: LayoutPropValue::String("suspend".into()),
+                    },
+                    LayoutProp {
+                        name: "group".into(),
+                        value: LayoutPropValue::String("leech-action".into()),
+                    },
+                    LayoutProp {
+                        name: "disabled".into(),
+                        value: LayoutPropValue::Keyword("false".into()),
+                    },
+                    LayoutProp {
+                        name: "onSelect".into(),
+                        value: LayoutPropValue::EmitRef("onLeechActionChange".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("DeckOptions"))
+            .unwrap()
+            .output;
+        assert!(out.contains("import androidx.compose.material.RadioButton"));
+        assert!(out.contains("Row(modifier = Modifier.fillMaxWidth()) {"));
+        assert!(out.contains("RadioButton("));
+        assert!(out.contains("selected = suspendSelected,"));
+        assert!(out
+            .contains("onClick = { dispatch(DeckOptionsEvent.LeechActionChange(\"suspend\")) },"));
+        assert!(out.contains("enabled = true,"));
+        assert!(out.contains("Text(text = suspendLabel)"));
     }
 
     #[test]

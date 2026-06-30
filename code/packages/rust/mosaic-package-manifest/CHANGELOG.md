@@ -1,5 +1,13 @@
 # Changelog — mosaic-package-manifest
 
+## [Unreleased]
+
+### Added
+
+- Added optional `[host_assets]` support with `files = [{ backend, source, target }]`
+  declarations so app packages can describe backend-specific host adapter files
+  inside `mosaic-package.toml`.
+
 ## [0.1.0] — 2026-05-19
 
 ### Added

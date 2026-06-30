@@ -12,9 +12,17 @@ component ReviewCard {
   slot answer-label : text ;
   slot answer : text ;
   slot answer-visible : bool ;
+  slot type-answer-active : bool ;
+  slot type-answer-label : text ;
+  slot type-answer-value : text ;
+  slot type-answer-placeholder : text ;
+  slot type-answer-comparison-label : text ;
+  slot type-answer-comparison-value : text ;
+  slot type-answer-correct : bool ;
   slot progress-label : text ;
 
   emit onReveal ;
+  emit onTypeAnswerChange ( value : text ) ;
   emit onAgain ;
   emit onHard ;
   emit onGood ;

@@ -6,6 +6,8 @@
 component DeckStatsPanel {
   slot deck-label : text ;
   slot deck-name : text ;
+  slot deck-list-label : text ;
+  slot deck-names : list<text> ;
   slot total-label : text ;
   slot total-value : text ;
   slot new-label : text ;
@@ -16,4 +18,6 @@ component DeckStatsPanel {
   slot learning-value : text ;
   slot hidden-label : text ;
   slot hidden-value : text ;
+
+  emit onSelectDeck ( value : text ) ;
 }

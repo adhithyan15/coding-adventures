@@ -51,6 +51,10 @@ pub enum MathExpr {
     Accent { accent: String, body: Box<MathExpr> }, // diacritic over body: \hat{x}, \bar{y},
                                                 //   \vec{v}, … (distinct from a Call: a mark,
                                                 //   not a named-function application)
+    Overset  { over:  Box<MathExpr>, base: Box<MathExpr> }, // \overset{a}{b}, \stackrel{a}{R}:
+    Underset { under: Box<MathExpr>, base: Box<MathExpr> }, //   a full expr stacked over/under a
+                                                //   base — generalises Accent; distinct from
+                                                //   Pow/Subscript (centered, not raised/lowered)
 }
 ```
 

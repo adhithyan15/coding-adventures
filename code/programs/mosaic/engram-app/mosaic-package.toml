@@ -12,10 +12,27 @@ mosaic-pkg-card-browser = "0.1.0"
 mosaic-pkg-collection-actions = "0.1.0"
 mosaic-pkg-deck-options = "0.1.0"
 mosaic-pkg-deck-stats = "0.1.0"
+mosaic-pkg-note-editor = "0.1.0"
+mosaic-pkg-note-type-editor = "0.1.0"
 mosaic-pkg-review-actions = "0.1.0"
 mosaic-pkg-review-card = "0.1.0"
 mosaic-pkg-review-history = "0.1.0"
 mosaic-pkg-session-progress = "0.1.0"
+
+[host_assets]
+files = [
+  { backend = "html", source = "host/web/engram-host.mjs", target = "engram-host.mjs" },
+  { backend = "webcomponent", source = "host/web/engram-host.mjs", target = "engram-host.mjs" },
+  { backend = "react", source = "host/web/engram-host.ts", target = "src/engram-host.ts" },
+  { backend = "react", source = "host/web/engram-mosaic-host-wasm.d.ts", target = "src/engram-mosaic-host-wasm.d.ts" },
+  { backend = "electron", source = "host/electron/host.js", target = "electron/host.js" },
+  { backend = "qt", source = "host/qt/MosaicHost.h", target = "MosaicHost.h" },
+  { backend = "qt", source = "host/qt/MosaicHost.cpp", target = "MosaicHost.cpp" },
+  { backend = "swiftui", source = "host/swiftui/MosaicHost.swift", target = "Sources/App/MosaicHost.swift" },
+  { backend = "compose", source = "host/compose/MosaicHost.kt", target = "src/main/kotlin/MosaicHost.kt" },
+  { backend = "flutter", source = "host/flutter/mosaic_host.dart", target = "lib/mosaic_host.dart" },
+  { backend = "xaml", source = "host/xaml/MosaicHost.cs", target = "MosaicHost.cs" },
+]
 
 [kernel]
 version = "1"

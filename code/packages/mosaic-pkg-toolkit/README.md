@@ -63,7 +63,8 @@ for the architecture, component catalog, and phasing plan.
   comparison).
 - **`Tabs`** — horizontal tab bar + single body panel. Host owns
   the active-index → active-body mapping. Slots: `headers:
-  list<text>`, `active-body`, `active-index`. Emit:
+  list<text>`, `active-body`, `active-index`. The active header
+  renders through a distinct `tabs-tab-active` part. Emit:
   `onSelect(index: number)`.
 - **`DropdownMenu`** — toggle button + revealed item list. Host
   owns the open flag. Slots: `label`, `items: list<text>`, `open`.

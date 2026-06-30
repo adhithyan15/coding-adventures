@@ -86,10 +86,10 @@
 use std::collections::HashSet;
 use std::fmt::Write as _;
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::{Component, Path, PathBuf};
 
-use mosaic_package_manifest::{parse_path as parse_manifest, ManifestError};
-use mosmodel_compiler::{SlotDecl, SlotDefault, SlotType};
+use mosaic_package_manifest::{parse_path as parse_manifest, ManifestError, MosaicPackage};
+use mosmodel_compiler::{ListInnerType, SlotDecl, SlotDefault, SlotType};
 
 // ===========================================================================
 // Public types
@@ -254,6 +254,18 @@ pub enum BuildError {
         /// (e.g. `[A-Za-z][A-Za-z0-9_]*` for components).
         reason: &'static str,
     },
+    /// A manifest-declared host asset path would escape the package root or
+    /// backend output directory. Host assets are copied from package-relative
+    /// paths to backend-relative paths, so absolute paths, `..`, and `.` are
+    /// rejected before any filesystem write.
+    UnsafePath {
+        /// What path we were validating.
+        kind: &'static str,
+        /// The offending string verbatim.
+        path: String,
+        /// A short explanation of what's allowed.
+        reason: &'static str,
+    },
     /// The manifest's `[components].exports` listed a component name that
     /// matched no source file. (We don't error from this directly today —
     /// we error from [`SourceNotFound`] instead — but the variant exists
@@ -315,6 +327,10 @@ impl std::fmt::Display for BuildError {
             BuildError::UnsafeName { kind, name, reason } => write!(
                 f,
                 "unsafe {kind} name '{name}': {reason} (would break path or output safety)"
+            ),
+            BuildError::UnsafePath { kind, path, reason } => write!(
+                f,
+                "unsafe {kind} path '{path}': {reason} (would break path or output safety)"
             ),
             BuildError::Io(e) => write!(f, "io error: {e}"),
         }
@@ -393,16 +409,16 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
     //
     // UI30 multi-layout: for every component, discover its variants
     // by scanning `src/` for `<Component>.<variant>.mll` files, then
-    // emit one artifact per (component, variant) pair. The default
+    // emit one primary artifact per (component, variant) pair plus any
+    // backend-agnostic sidecars such as generated Lattice. The default
     // variant (bare `<Component>.mll`) emits the unsuffixed artifact
     // name `<Component>.<ext>`; named variants emit
     // `<Component>.<variant>.<ext>`.
     //
     // **Back-compat clause:** a component with only a bare
-    // `<Component>.mll` (no `.touch.mll`/etc.) produces exactly one
-    // artifact with the unsuffixed name — same as the pre-UI30
-    // behaviour. Every existing package builds byte-for-byte
-    // identically.
+    // `<Component>.mll` (no `.touch.mll`/etc.) still produces the same
+    // unsuffixed primary component artifact name; generated sidecars are
+    // listed separately in `BuildResult.artifacts`.
     let src_dir = opts.package_root.join("src");
     let package_search_paths = default_package_search_paths(&opts.package_root);
     let mut artifacts = Vec::new();
@@ -411,7 +427,7 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
     for component in &manifest.components.exports {
         let variants = discover_variants(&src_dir, component)?;
         for variant in &variants {
-            let artifact = compile_one_component(
+            let component_artifacts = compile_one_component(
                 component,
                 variant.as_deref(),
                 &src_dir,
@@ -419,7 +435,7 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
                 opts.backend,
                 &package_search_paths,
             )?;
-            artifacts.push(artifact);
+            artifacts.extend(component_artifacts);
         }
         // We list the component once in `components_built` even if it
         // produced multiple variant artifacts — the index file (qmldir
@@ -478,10 +494,184 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
         // step 5 still lands in `backend_dir`.
     }
 
+    let host_asset_artifacts =
+        install_host_assets(&manifest, opts.backend, &opts.package_root, &backend_dir)?;
+    artifacts.extend(host_asset_artifacts);
+
     Ok(BuildResult {
         artifacts,
         components_built,
     })
+}
+
+fn install_host_assets(
+    manifest: &MosaicPackage,
+    backend: Backend,
+    package_root: &Path,
+    backend_dir: &Path,
+) -> Result<Vec<PathBuf>, BuildError> {
+    let backend_name = backend.dir_name();
+    let mut written = Vec::new();
+    for asset in &manifest.host_assets.files {
+        if asset.backend != backend_name && asset.backend != "*" {
+            continue;
+        }
+
+        let source_rel = safe_manifest_relative_path("host asset source", &asset.source)?;
+        let target_rel = safe_manifest_relative_path("host asset target", &asset.target)?;
+        let source = package_root.join(&source_rel);
+        let target = backend_dir.join(&target_rel);
+        let bytes = fs::read(&source)
+            .map_err(|e| BuildError::Io(format!("read {}: {e}", source.display())))?;
+        write_file(&target, &bytes)?;
+        activate_host_asset(backend, backend_dir, &target_rel)?;
+        written.push(target);
+    }
+    Ok(written)
+}
+
+fn activate_host_asset(
+    backend: Backend,
+    backend_dir: &Path,
+    target_rel: &Path,
+) -> Result<(), BuildError> {
+    match backend {
+        Backend::Html | Backend::WebComponent => activate_html_host_asset(backend_dir, target_rel),
+        Backend::React => activate_react_host_asset(backend_dir, target_rel),
+        _ => Ok(()),
+    }
+}
+
+fn activate_html_host_asset(backend_dir: &Path, target_rel: &Path) -> Result<(), BuildError> {
+    if !is_html_module_asset(target_rel) {
+        return Ok(());
+    }
+
+    let index_path = backend_dir.join("index.html");
+    if !index_path.exists() {
+        return Ok(());
+    }
+
+    let script_line = format!(
+        "  <script type=\"module\" src=\"./{}\"></script>",
+        path_to_web_src(target_rel)
+    );
+    let mut content = read_to_string(&index_path)?;
+    if content.contains(&script_line) {
+        return Ok(());
+    }
+
+    let insertion_point = content.find("  <script type=\"module\" src=\"./");
+    if let Some(script_at) = insertion_point {
+        content.insert_str(script_at, &format!("{script_line}\n"));
+        write_file(&index_path, content.as_bytes())?;
+    } else if let Some(body_at) = content.find("</body>") {
+        content.insert_str(body_at, &format!("{script_line}\n"));
+        write_file(&index_path, content.as_bytes())?;
+    }
+
+    Ok(())
+}
+
+fn activate_react_host_asset(backend_dir: &Path, target_rel: &Path) -> Result<(), BuildError> {
+    let Some(import_path) = react_host_asset_import_path(target_rel) else {
+        return Ok(());
+    };
+
+    let main_path = backend_dir.join("src").join("main.tsx");
+    if !main_path.exists() {
+        return Ok(());
+    }
+
+    let import_line = format!("import \"{import_path}\";");
+    let mut content = read_to_string(&main_path)?;
+    if content.contains(&import_line) {
+        return Ok(());
+    }
+
+    content.insert_str(0, &format!("{import_line}\n"));
+    write_file(&main_path, content.as_bytes())?;
+    Ok(())
+}
+
+fn is_html_module_asset(path: &Path) -> bool {
+    matches!(
+        path.extension().and_then(|extension| extension.to_str()),
+        Some("js") | Some("mjs")
+    )
+}
+
+fn react_host_asset_import_path(path: &Path) -> Option<String> {
+    if !is_react_module_asset(path) {
+        return None;
+    }
+
+    let src_rel = path.strip_prefix("src").ok()?;
+    let web_src = path_to_web_src(src_rel);
+    if web_src.is_empty() {
+        return None;
+    }
+
+    let import_target = web_src
+        .strip_suffix(".tsx")
+        .or_else(|| web_src.strip_suffix(".ts"))
+        .or_else(|| web_src.strip_suffix(".jsx"))
+        .or_else(|| web_src.strip_suffix(".js"))
+        .unwrap_or(&web_src);
+    Some(format!("./{import_target}"))
+}
+
+fn is_react_module_asset(path: &Path) -> bool {
+    let Some(file_name) = path.file_name().and_then(|name| name.to_str()) else {
+        return false;
+    };
+    if file_name.ends_with(".d.ts") {
+        return false;
+    }
+
+    matches!(
+        path.extension().and_then(|extension| extension.to_str()),
+        Some("ts") | Some("tsx") | Some("js") | Some("jsx") | Some("mjs")
+    )
+}
+
+fn path_to_web_src(path: &Path) -> String {
+    path.components()
+        .filter_map(|component| match component {
+            Component::Normal(part) => Some(part.to_string_lossy()),
+            _ => None,
+        })
+        .collect::<Vec<_>>()
+        .join("/")
+}
+
+fn safe_manifest_relative_path(kind: &'static str, value: &str) -> Result<PathBuf, BuildError> {
+    let path = Path::new(value);
+    if value.trim().is_empty() || path.is_absolute() {
+        return Err(unsafe_path_err(kind, value));
+    }
+
+    let mut clean = PathBuf::new();
+    for component in path.components() {
+        match component {
+            Component::Normal(part) => clean.push(part),
+            _ => return Err(unsafe_path_err(kind, value)),
+        }
+    }
+
+    if clean.as_os_str().is_empty() {
+        return Err(unsafe_path_err(kind, value));
+    }
+
+    Ok(clean)
+}
+
+fn unsafe_path_err(kind: &'static str, path: &str) -> BuildError {
+    BuildError::UnsafePath {
+        kind,
+        path: path.to_string(),
+        reason: "must be a relative path made of normal path components",
+    }
 }
 
 /// UI32-M: emit the per-backend project shell for the package's first
@@ -652,8 +842,9 @@ fn emit_project_shell(
                 // manifest-only index from step 5 is at the same
                 // path, so this overwrites it — by design per UI32
                 // §3.4: with --emit-project, the shell IS the index).
-                let flat: [(&str, &str); 2] = [
+                let flat: [(&str, &str); 3] = [
                     ("index.html", &proj.index_html),
+                    ("main.js", &proj.main_js),
                     ("README.md", &proj.readme),
                 ];
                 for (rel, body) in flat {
@@ -674,8 +865,9 @@ fn emit_project_shell(
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
             if let Some(proj) = r.project {
-                let flat: [(&str, &str); 2] = [
+                let flat: [(&str, &str); 3] = [
                     ("index.html", &proj.index_html),
+                    ("main.js", &proj.main_js),
                     ("README.md", &proj.readme),
                 ];
                 for (rel, body) in flat {
@@ -711,6 +903,12 @@ fn emit_project_shell(
                 }
                 write_file(&nested, proj.main_dart.as_bytes())?;
                 written.push(nested);
+                let host_stub = backend_dir.join("lib/mosaic_host.dart");
+                if let Some(parent) = host_stub.parent() {
+                    create_dir_all(parent)?;
+                }
+                write_file(&host_stub, proj.mosaic_host_dart.as_bytes())?;
+                written.push(host_stub);
             }
         }
         Backend::Compose => {
@@ -940,15 +1138,88 @@ fn build_compose_main_kt(component_name: &str, slots: &[SlotDecl]) -> String {
         concat!(
             "// AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit.\n",
             "import androidx.compose.material.MaterialTheme\n",
+            "import androidx.compose.runtime.LaunchedEffect\n",
+            "import androidx.compose.runtime.getValue\n",
+            "import androidx.compose.runtime.mutableStateOf\n",
+            "import androidx.compose.runtime.remember\n",
+            "import androidx.compose.runtime.setValue\n",
             "import androidx.compose.ui.window.Window\n",
             "import androidx.compose.ui.window.application\n\n",
             "fun main() = application {{\n",
+            "    val mosaicHost = remember {{ MosaicComposeHostBridge.load() }}\n",
+            "    var hostProps by remember {{ mutableStateOf<Map<String, Any?>>(emptyMap()) }}\n",
+            "    fun applyMosaicResponse(response: Map<String, Any?>?) {{\n",
+            "        if (response == null) return\n",
+            "        val nextProps = mosaicMap(response[\"props\"])\n",
+            "        if (nextProps.isNotEmpty()) {{ hostProps = nextProps }}\n",
+            "        val hostIntent = mosaicMap(response[\"hostIntent\"])\n",
+            "        if (hostIntent.isNotEmpty()) {{ println(\"hostIntent: $hostIntent\") }}\n",
+            "        response[\"error\"]?.let {{ println(\"host error: $it\") }}\n",
+            "    }}\n",
+            "    LaunchedEffect(mosaicHost) {{\n",
+            "        applyMosaicResponse(mosaicHost?.props())\n",
+            "    }}\n",
             "    Window(onCloseRequest = ::exitApplication, title = \"{}\") {{\n",
             "        MaterialTheme {{\n",
             "{root}\n",
             "        }}\n",
             "    }}\n",
-            "}}\n",
+            "}}\n\n",
+            "private class MosaicComposeHostBridge(private val instance: Any) {{\n",
+            "    fun props(): Map<String, Any?>? = invokeMap(\"props\")\n",
+            "    fun handleEvent(event: Map<String, Any?>): Map<String, Any?>? = invokeMap(\"handleEvent\", event)\n\n",
+            "    private fun invokeMap(methodName: String, vararg args: Any): Map<String, Any?>? = runCatching {{\n",
+            "        val method = instance.javaClass.methods.firstOrNull {{ method ->\n",
+            "            method.name == methodName && method.parameterCount == args.size\n",
+            "        }} ?: return@runCatching null\n",
+            "        mosaicMap(method.invoke(instance, *args))\n",
+            "    }}.getOrNull()\n\n",
+            "    companion object {{\n",
+            "        fun load(): MosaicComposeHostBridge? = runCatching {{\n",
+            "            val clazz = Class.forName(\"MosaicHost\")\n",
+            "            MosaicComposeHostBridge(clazz.getDeclaredConstructor().newInstance())\n",
+            "        }}.getOrNull()\n",
+            "    }}\n",
+            "}}\n\n",
+            "private fun mosaicMap(value: Any?): Map<String, Any?> {{\n",
+            "    val source = value as? Map<*, *> ?: return emptyMap()\n",
+            "    return source.entries.mapNotNull {{ entry ->\n",
+            "        val key = entry.key as? String ?: return@mapNotNull null\n",
+            "        key to entry.value\n",
+            "    }}.toMap()\n",
+            "}}\n\n",
+            "private fun mosaicString(props: Map<String, Any?>, name: String, fallback: String): String =\n",
+            "    props[name]?.toString() ?: fallback\n\n",
+            "private fun mosaicDouble(props: Map<String, Any?>, name: String, fallback: Double): Double =\n",
+            "    when (val value = props[name]) {{\n",
+            "        is Number -> value.toDouble()\n",
+            "        is String -> value.toDoubleOrNull() ?: fallback\n",
+            "        else -> fallback\n",
+            "    }}\n\n",
+            "private fun mosaicBoolean(props: Map<String, Any?>, name: String, fallback: Boolean): Boolean =\n",
+            "    when (val value = props[name]) {{\n",
+            "        is Boolean -> value\n",
+            "        is String -> value.equals(\"true\", ignoreCase = true)\n",
+            "        else -> fallback\n",
+            "    }}\n\n",
+            "private fun mosaicStringList(props: Map<String, Any?>, name: String): List<String> =\n",
+            "    (props[name] as? List<*>)?.map {{ it.toString() }} ?: emptyList()\n\n",
+            "private fun mosaicDoubleList(props: Map<String, Any?>, name: String): List<Double> =\n",
+            "    (props[name] as? List<*>)?.mapNotNull {{ value ->\n",
+            "        when (value) {{\n",
+            "            is Number -> value.toDouble()\n",
+            "            is String -> value.toDoubleOrNull()\n",
+            "            else -> null\n",
+            "        }}\n",
+            "    }} ?: emptyList()\n\n",
+            "private fun mosaicBooleanList(props: Map<String, Any?>, name: String): List<Boolean> =\n",
+            "    (props[name] as? List<*>)?.mapNotNull {{ value ->\n",
+            "        when (value) {{\n",
+            "            is Boolean -> value\n",
+            "            is String -> value.equals(\"true\", ignoreCase = true)\n",
+            "            else -> null\n",
+            "        }}\n",
+            "    }} ?: emptyList()\n",
         ),
         escape_kotlin_string(component_name),
         root = root,
@@ -959,14 +1230,41 @@ fn build_compose_root_invocation(component_name: &str, slots: &[SlotDecl]) -> St
     let mut out = format!("            {component_name}(\n");
     for slot in slots {
         let field = to_camel_case_first_lower(&slot.name);
-        let value = sample_kotlin_value_for_slot(slot);
+        let value = compose_host_value_for_slot(slot);
         writeln!(out, "                {field} = {value},").unwrap();
     }
+    out.push_str("                dispatch = { event ->\n");
     out.push_str(
-        "                dispatch = { event -> println(\"event: ${event.mosaicEnvelope}\") },\n",
+        "                    val response = mosaicHost?.handleEvent(event.mosaicEnvelope)\n",
     );
+    out.push_str(
+        "                    if (response == null) println(\"event: ${event.mosaicEnvelope}\")\n",
+    );
+    out.push_str("                    applyMosaicResponse(response)\n");
+    out.push_str("                },\n");
     out.push_str("            )");
     out
+}
+
+fn compose_host_value_for_slot(slot: &SlotDecl) -> String {
+    let slot_name = escape_kotlin_string(&slot.name);
+    let fallback = sample_kotlin_value_for_slot(slot);
+    match &slot.r#type {
+        SlotType::Text | SlotType::Image | SlotType::Color => {
+            format!("mosaicString(hostProps, \"{slot_name}\", {fallback})")
+        }
+        SlotType::Number => format!("mosaicDouble(hostProps, \"{slot_name}\", {fallback})"),
+        SlotType::Bool => format!("mosaicBoolean(hostProps, \"{slot_name}\", {fallback})"),
+        SlotType::List(inner) => match inner.as_ref() {
+            ListInnerType::Text | ListInnerType::Image | ListInnerType::Color => {
+                format!("mosaicStringList(hostProps, \"{slot_name}\")")
+            }
+            ListInnerType::Number => format!("mosaicDoubleList(hostProps, \"{slot_name}\")"),
+            ListInnerType::Bool => format!("mosaicBooleanList(hostProps, \"{slot_name}\")"),
+            _ => fallback,
+        },
+        SlotType::Node | SlotType::Component(_) => fallback,
+    }
 }
 
 fn sample_kotlin_value_for_slot(slot: &SlotDecl) -> String {
@@ -1064,7 +1362,7 @@ fn build_compose_readme(package_name: &str, component: &str) -> String {
         "<!-- AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit. -->\n\
 # {component} - Compose Desktop shell\n\n\
 Auto-generated by `mosaic-compile pkg --backend compose --emit-project`.\n\n\
-The top-level `{component}.kt` remains the reusable Mosaic library artifact. The nested `src/main/kotlin/` copy plus Gradle files form a runnable Compose Desktop app that mounts `{component}(...)` with deterministic sample slot values and logs each event's `mosaicEnvelope`.\n\n\
+The top-level `{component}.kt` remains the reusable Mosaic library artifact. The nested `src/main/kotlin/` copy plus Gradle files form a runnable Compose Desktop app that mounts `{component}(...)` with deterministic sample slot values unless an optional `MosaicHost` class is present, in which case generated slot props and event envelopes round-trip through that host.\n\n\
 ## Prerequisites\n\n\
 - JDK 21 or newer.\n\
 - Gradle 8.7 or newer.\n\n\
@@ -1083,7 +1381,7 @@ gradle packageDistributionForCurrentOS\n\
 | `index.kt` | Lightweight manifest of generated Compose components. |\n\
 | `settings.gradle.kts` | Gradle settings with pinned repositories. |\n\
 | `build.gradle.kts` | Compose Desktop app build pinned to Compose Multiplatform {COMPOSE_GRADLE_PLUGIN_VERSION} and Kotlin {COMPOSE_KOTLIN_PLUGIN_VERSION}. |\n\
-| `src/main/kotlin/Main.kt` | Desktop app entrypoint that mounts `{component}` with sample slot values. |\n\
+| `src/main/kotlin/Main.kt` | Desktop app entrypoint that mounts `{component}` with sample slot values or optional `MosaicHost` props. |\n\
 | `src/main/kotlin/{component}.kt` | Source-set copy of the generated component so Gradle can compile it without file moves. |\n\n\
 Gradle native package name: `{app_id}`.\n"
     )
@@ -1117,7 +1415,7 @@ fn build_electron_readme(npm_name: &str, component_name: &str) -> String {
 
 /// Compile one component's three-file triple for the chosen backend.
 ///
-/// Returns the path of the written artifact, or a [`BuildError`] tagged
+/// Returns the paths of the written component artifacts, or a [`BuildError`] tagged
 /// with the component name so a CLI can render
 /// `mosaic-compile pkg: error compiling Grid: …`.
 fn compile_one_component(
@@ -1127,7 +1425,7 @@ fn compile_one_component(
     out_dir: &Path,
     backend: Backend,
     package_search_paths: &[PathBuf],
-) -> Result<PathBuf, BuildError> {
+) -> Result<Vec<PathBuf>, BuildError> {
     // ----- 1. Locate the three source files --------------------------------
     //
     // `.mil` and `.mll` are required; `.msl` is optional. If the user has
@@ -1196,6 +1494,7 @@ fn compile_one_component(
     let style_out = mosstyle_compiler::compile(&msl_src, Some(&layout_out.part_map_json))
         .map_err(|errs| pipeline_err(component, &errs[0]))?;
     let style_def = merge_dependency_styles(style_out.def, dependency_style_parts);
+    let lattice = mosstyle_compiler::emit_lattice(&style_def);
 
     // ----- 3. Hand the three IRs to the chosen backend ---------------------
     //
@@ -1317,9 +1616,18 @@ fn compile_one_component(
         .map_err(|e| pipeline_emit_err(component, e))?,
     };
 
-    // ----- 4. Write the primary artifact -----------------------------------
+    // ----- 4. Write the primary artifact and backend-agnostic style sidecar --
     write_file(&primary_path, primary_bytes.as_bytes())?;
-    Ok(primary_path)
+    let mut artifacts = vec![primary_path];
+    if !lattice.trim().is_empty() {
+        let lattice_path = match variant {
+            Some(v) => out_dir.join(format!("{component}.{v}.lattice")),
+            None => out_dir.join(format!("{component}.lattice")),
+        };
+        write_file(&lattice_path, lattice.as_bytes())?;
+        artifacts.push(lattice_path);
+    }
+    Ok(artifacts)
 }
 
 /// UI30 multi-layout — discover the layout variants present for one
@@ -2271,6 +2579,13 @@ version = "1"
         fs::write(src.join(format!("{component}.msl")), msl).unwrap();
     }
 
+    fn append_host_assets(root: &Path, toml: &str) {
+        let manifest_path = root.join("mosaic-package.toml");
+        let manifest = fs::read_to_string(&manifest_path).unwrap();
+        let manifest = manifest.replace("[kernel]", &format!("{toml}\n[kernel]"));
+        fs::write(manifest_path, manifest).unwrap();
+    }
+
     // -----------------------------------------------------------------------
     // 1. Empty package
     // -----------------------------------------------------------------------
@@ -2317,6 +2632,148 @@ version = "1"
         let body = fs::read_to_string(&tsx).unwrap();
         // The React emitter emits a `function Grid(...)` and the props type.
         assert!(body.contains("Grid"), "tsx must reference component name");
+        let lattice = out.path().join("react").join("Grid.lattice");
+        assert!(lattice.exists(), "Grid.lattice should be written");
+        let lattice_body = fs::read_to_string(&lattice).unwrap();
+        assert!(
+            lattice_body.contains("Generated as Lattice")
+                && lattice_body.contains(".mos-Grid-root")
+                && lattice_body.contains("width: 100%"),
+            "Lattice sidecar should contain scoped component styles"
+        );
+        assert!(
+            result.artifacts.iter().any(|path| path == &lattice),
+            "Lattice sidecar should appear in BuildResult.artifacts"
+        );
+    }
+
+    #[test]
+    fn manifest_host_assets_are_copied_for_matching_backend() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let host_dir = pkg.path().join("host").join("web");
+        fs::create_dir_all(&host_dir).unwrap();
+        fs::write(
+            host_dir.join("grid-host.ts"),
+            "export const gridHost = true;\n",
+        )
+        .unwrap();
+        append_host_assets(
+            pkg.path(),
+            r#"[host_assets]
+files = [
+  { backend = "react", source = "host/web/grid-host.ts", target = "src/grid-host.ts" },
+  { backend = "qt", source = "host/web/grid-host.ts", target = "grid-host.ts" },
+]"#,
+        );
+
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: true,
+        })
+        .expect("react build");
+
+        let installed = out.path().join("react").join("src").join("grid-host.ts");
+        assert_eq!(
+            fs::read_to_string(&installed).unwrap(),
+            "export const gridHost = true;\n"
+        );
+        assert!(
+            result.artifacts.iter().any(|path| path == &installed),
+            "copied host asset should appear in BuildResult.artifacts"
+        );
+        assert!(
+            !out.path().join("react").join("grid-host.ts").exists(),
+            "qt-only asset must not be copied for react builds"
+        );
+        let main = fs::read_to_string(out.path().join("react").join("src").join("main.tsx"))
+            .expect("react src/main.tsx");
+        assert!(
+            main.contains("import \"./grid-host\";"),
+            "react project shell should activate copied host module"
+        );
+    }
+
+    #[test]
+    fn manifest_host_assets_activate_html_modules() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let host_dir = pkg.path().join("host").join("web");
+        fs::create_dir_all(&host_dir).unwrap();
+        fs::write(host_dir.join("grid-host.mjs"), "window.gridHost = true;\n").unwrap();
+        append_host_assets(
+            pkg.path(),
+            r#"[host_assets]
+files = [
+  { backend = "html", source = "host/web/grid-host.mjs", target = "grid-host.mjs" },
+]"#,
+        );
+
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Html,
+            emit_project: true,
+        })
+        .expect("html build");
+
+        let installed = out.path().join("html").join("grid-host.mjs");
+        assert_eq!(
+            fs::read_to_string(&installed).unwrap(),
+            "window.gridHost = true;\n"
+        );
+        assert!(
+            result.artifacts.iter().any(|path| path == &installed),
+            "copied host asset should appear in BuildResult.artifacts"
+        );
+        let index =
+            fs::read_to_string(out.path().join("html").join("index.html")).expect("index.html");
+        let host_at = index
+            .find("src=\"./grid-host.mjs\"")
+            .expect("html shell should activate copied host module");
+        let main_at = index
+            .find("src=\"./main.js\"")
+            .expect("html shell should load main.js");
+        assert!(
+            host_at < main_at,
+            "host module should load before generated main.js"
+        );
+    }
+
+    #[test]
+    fn manifest_host_assets_reject_escaping_targets() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let host_dir = pkg.path().join("host");
+        fs::create_dir_all(&host_dir).unwrap();
+        fs::write(host_dir.join("grid-host.ts"), "export {};\n").unwrap();
+        append_host_assets(
+            pkg.path(),
+            r#"[host_assets]
+files = [
+  { backend = "react", source = "host/grid-host.ts", target = "../grid-host.ts" },
+]"#,
+        );
+
+        let out = TempDir::new().unwrap();
+        let err = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: false,
+        })
+        .unwrap_err();
+        assert!(
+            matches!(
+                err,
+                BuildError::UnsafePath {
+                    kind: "host asset target",
+                    ..
+                }
+            ),
+            "expected UnsafePath(host asset target), got {err:?}"
+        );
     }
 
     #[test]
@@ -3189,22 +3646,30 @@ version = "1"
         // file should list Grid once, not twice).
         assert_eq!(result.components_built, vec!["Grid".to_string()]);
 
-        // Two component artifacts + one index file = 3 artifacts.
+        // Two component artifacts + two Lattice sidecars + one index file.
         let default_path = out.path().join("react").join("Grid.tsx");
         let touch_path = out.path().join("react").join("Grid.touch.tsx");
+        let default_lattice = out.path().join("react").join("Grid.lattice");
+        let touch_lattice = out.path().join("react").join("Grid.touch.lattice");
         assert!(default_path.exists(), "Grid.tsx (default) must exist");
         assert!(touch_path.exists(), "Grid.touch.tsx (variant) must exist");
         assert!(
+            default_lattice.exists() && touch_lattice.exists(),
+            "each variant should have a matching Lattice sidecar"
+        );
+        assert!(
             result.artifacts.iter().any(|p| p == &default_path)
-                && result.artifacts.iter().any(|p| p == &touch_path),
-            "both artifact paths must be in the result"
+                && result.artifacts.iter().any(|p| p == &touch_path)
+                && result.artifacts.iter().any(|p| p == &default_lattice)
+                && result.artifacts.iter().any(|p| p == &touch_lattice),
+            "component and Lattice artifact paths must be in the result"
         );
     }
 
     /// Back-compat regression test: a package with only the bare
-    /// default `.mll` still produces exactly one unsuffixed artifact
-    /// per component. UI30 is opt-in via filesystem and existing
-    /// packages must build identically.
+    /// default `.mll` still produces exactly one unsuffixed primary
+    /// artifact per component. UI30 is opt-in via filesystem and existing
+    /// component-code filenames must build identically.
     #[test]
     fn build_package_without_variants_is_unchanged_from_pre_ui30() {
         let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
@@ -3217,8 +3682,8 @@ version = "1"
         })
         .expect("single-variant build");
 
-        // Exactly one component artifact + the index file.
-        assert_eq!(result.artifacts.len(), 2);
+        // Exactly one component artifact + one Lattice sidecar + the index file.
+        assert_eq!(result.artifacts.len(), 3);
         let default_path = out.path().join("react").join("Grid.tsx");
         assert!(default_path.exists());
         // NO variant-suffixed file should exist.
@@ -3261,8 +3726,8 @@ version = "1"
             !out.path().join("react").join("vite.config.ts").exists(),
             "vite.config.ts must not exist when emit_project is false"
         );
-        // No new artifacts beyond the per-component + index.ts.
-        assert_eq!(result.artifacts.len(), 2); // Grid.tsx + index.ts
+        // No shell artifacts beyond the per-component sidecar pair + index.ts.
+        assert_eq!(result.artifacts.len(), 3); // Grid.tsx + Grid.lattice + index.ts
     }
 
     /// §3.4 Composable: when emit_project is true, the React backend
@@ -3351,11 +3816,19 @@ version = "1"
                     "README.md",
                 ],
             ),
-            (Backend::Html, vec!["index.html", "README.md"]),
-            (Backend::WebComponent, vec!["index.html", "README.md"]),
+            (Backend::Html, vec!["index.html", "main.js", "README.md"]),
+            (
+                Backend::WebComponent,
+                vec!["index.html", "main.js", "README.md"],
+            ),
             (
                 Backend::Flutter,
-                vec!["pubspec.yaml", "README.md", "lib/main.dart"],
+                vec![
+                    "pubspec.yaml",
+                    "README.md",
+                    "lib/main.dart",
+                    "lib/mosaic_host.dart",
+                ],
             ),
             (
                 Backend::Compose,
@@ -3416,6 +3889,33 @@ version = "1"
     }
 
     #[test]
+    fn flutter_project_shell_exposes_mosaic_host_hook() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Flutter,
+            emit_project: true,
+        })
+        .expect("flutter package build");
+
+        let dir = out.path().join("flutter");
+        let main_dart = fs::read_to_string(dir.join("lib/main.dart")).expect("main.dart");
+        assert!(main_dart.contains("import 'mosaic_host.dart';"));
+        assert!(main_dart.contains("MosaicHost.load()"));
+        assert!(main_dart.contains("_applyMosaicResponse(_mosaicHost?.props())"));
+        assert!(main_dart.contains("String mosaicString(Map<String, Object?> props"));
+        assert!(main_dart.contains("_mosaicHost?.handleEvent(event.mosaicEnvelope)"));
+        assert!(main_dart.contains("debugPrint(\"event: ${event.mosaicEnvelope}\")"));
+
+        let host = fs::read_to_string(dir.join("lib/mosaic_host.dart")).expect("mosaic_host.dart");
+        assert!(host.contains("class MosaicHost"));
+        assert!(host.contains("static MosaicHost? load() => null;"));
+        assert!(host.contains("Map<String, Object?>? handleEvent"));
+    }
+
+    #[test]
     fn compose_package_artifact_exposes_mosaic_event_envelope() {
         let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
         let out = TempDir::new().unwrap();
@@ -3449,16 +3949,22 @@ version = "1"
         let main_kt = fs::read_to_string(dir.join("src/main/kotlin/Main.kt")).expect("Main.kt");
         assert!(main_kt.contains("fun main() = application"));
         assert!(main_kt.contains("Window(onCloseRequest = ::exitApplication, title = \"Grid\")"));
+        assert!(main_kt.contains("MosaicComposeHostBridge.load()"));
+        assert!(main_kt.contains("var hostProps by remember"));
+        assert!(main_kt.contains("applyMosaicResponse(mosaicHost?.props())"));
         assert!(main_kt.contains("Grid("));
+        assert!(main_kt.contains("private fun mosaicString("));
+        assert!(main_kt.contains("mosaicHost?.handleEvent(event.mosaicEnvelope)"));
         assert!(
-            main_kt.contains("dispatch = { event -> println(\"event: ${event.mosaicEnvelope}\") }")
+            main_kt.contains("if (response == null) println(\"event: ${event.mosaicEnvelope}\")")
         );
+        assert!(main_kt.contains("Class.forName(\"MosaicHost\")"));
         let nested_kotlin =
             fs::read_to_string(dir.join("src/main/kotlin/Grid.kt")).expect("src Grid.kt");
         assert_eq!(kotlin, nested_kotlin);
         let readme = fs::read_to_string(dir.join("README.md")).expect("README.md");
         assert!(readme.contains("Compose Desktop shell"));
-        assert!(readme.contains("mosaicEnvelope"));
+        assert!(readme.contains("optional `MosaicHost`"));
     }
 
     #[test]

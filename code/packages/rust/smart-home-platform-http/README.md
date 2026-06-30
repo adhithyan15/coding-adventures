@@ -131,7 +131,9 @@ grant-boundary views can be shared or reopened directly.
 State-history routes also accept numeric observed-time windows through
 `from_ms`/`to_ms` on `/api/smart_home/state_history` and
 `start_time`/`end_time` on Home Assistant period routes, and can scope runtime
-history to a single bridge through `bridge_id`.
+history to a single bridge through `bridge_id`. Runtime history can also be
+bounded by ingestion time with `received_at_or_after_ms` and
+`received_at_or_before_ms`.
 
 ## Dependencies
 

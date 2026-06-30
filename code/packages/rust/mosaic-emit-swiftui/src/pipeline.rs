@@ -122,6 +122,12 @@ pub struct PipelineEmitResult {
     pub component_name: String,
 }
 
+#[derive(Clone, Copy)]
+struct ForPayloadScope<'a> {
+    item: &'a str,
+    index: Option<&'a str>,
+}
+
 /// Errors the SwiftUI pipeline emitter can return.
 ///
 /// These mirror the React backend's variants verbatim so a generic CLI can
@@ -333,7 +339,7 @@ fn build_swiftui_project_files(
     Ok(ProjectFiles {
         package_swift: build_package_swift(options),
         app_swift: build_app_swift(name, &interface.slots),
-        readme: build_swiftui_readme(name),
+        readme: build_swiftui_platform_readme(name),
     })
 }
 
@@ -382,24 +388,79 @@ fn build_app_swift(component_name: &str, slots: &[SlotDecl]) -> String {
     // The Mosaic SwiftUI emitter produces a `View` struct named
     // `{component_name}View` (per pipeline.rs:120 doc comment), so
     // mount that here.
-    let root_view = build_root_view_initializer(component_name, slots);
-    format!(
-        "{BANNER_SWIFT}import SwiftUI\n\n@main\nstruct MosaicApp: App {{\n  var body: some Scene {{\n    WindowGroup(\"{component_name}\") {{\n      {root_view}\n    }}\n  }}\n}}\n"
+    let root_view = build_root_view_initializer(component_name, slots, "host.props");
+    let mut out = String::new();
+    write!(
+        out,
+        "{BANNER_SWIFT}import Combine\nimport Foundation\nimport SwiftUI\n\n"
     )
+    .unwrap();
+    writeln!(out, "@main").unwrap();
+    writeln!(out, "struct MosaicApp: App {{").unwrap();
+    writeln!(out, "  @StateObject private var host = MosaicHostState()").unwrap();
+    writeln!(out).unwrap();
+    writeln!(out, "  var body: some Scene {{").unwrap();
+    writeln!(out, "    WindowGroup(\"{component_name}\") {{").unwrap();
+    writeln!(out, "      {root_view}").unwrap();
+    writeln!(out, "    }}").unwrap();
+    writeln!(out, "  }}").unwrap();
+    writeln!(out, "}}").unwrap();
+    writeln!(out).unwrap();
+    out.push_str(&build_mosaic_host_state(component_name));
+    out
 }
 
-fn build_root_view_initializer(component_name: &str, slots: &[SlotDecl]) -> String {
+fn build_root_view_initializer(
+    component_name: &str,
+    slots: &[SlotDecl],
+    props_expr: &str,
+) -> String {
     let mut out = format!("{component_name}View(\n");
     for slot in slots {
         let field = to_camel_case_first_lower(&slot.name);
-        let value = sample_value_for_slot(slot);
+        let value = host_value_for_slot(slot, props_expr);
         writeln!(out, "        {field}: {value},").unwrap();
     }
     out.push_str("        dispatch: { event in\n");
-    out.push_str("          print(\"Mosaic dispatch: \\(event.mosaicEnvelope)\")\n");
+    out.push_str("          host.dispatch(event)\n");
     out.push_str("        }\n");
     out.push_str("      )");
     out
+}
+
+fn host_value_for_slot(slot: &SlotDecl, props_expr: &str) -> String {
+    let key = escape_swift_string(&slot.name);
+    let fallback = sample_value_for_slot(slot);
+    match &slot.r#type {
+        SlotType::Text | SlotType::Image | SlotType::Color => {
+            format!("MosaicHostValue.string({props_expr}, \"{key}\", fallback: {fallback})")
+        }
+        SlotType::Number => {
+            format!("MosaicHostValue.double({props_expr}, \"{key}\", fallback: {fallback})")
+        }
+        SlotType::Bool => {
+            format!("MosaicHostValue.bool({props_expr}, \"{key}\", fallback: {fallback})")
+        }
+        SlotType::List(inner) => match inner.as_ref() {
+            ListInnerType::Text | ListInnerType::Image | ListInnerType::Color => {
+                format!("MosaicHostValue.stringList({props_expr}, \"{key}\", fallback: {fallback})")
+            }
+            ListInnerType::Number => {
+                format!("MosaicHostValue.doubleList({props_expr}, \"{key}\", fallback: {fallback})")
+            }
+            ListInnerType::Bool => {
+                format!("MosaicHostValue.boolList({props_expr}, \"{key}\", fallback: {fallback})")
+            }
+            ListInnerType::Node | ListInnerType::Component(_) | ListInnerType::List(_) => fallback,
+        },
+        SlotType::Node | SlotType::Component(_) => fallback,
+    }
+}
+
+fn build_mosaic_host_state(component_name: &str) -> String {
+    format!(
+        "private final class MosaicHostState: ObservableObject {{\n  @Published var props: [String: Any] = [:]\n  @Published var lastHostIntent: [String: Any]? = nil\n  private let bridge: MosaicHostBridgeObject?\n\n  init() {{\n    self.bridge = MosaicHostBridge.load()\n    applyHostResponse(bridge?.applyProps() as? [String: Any])\n  }}\n\n  func dispatch(_ event: {component_name}Event) {{\n    guard let bridge else {{\n      print(\"Mosaic dispatch: \\(event.mosaicEnvelope)\")\n      return\n    }}\n    applyHostResponse(bridge.handleEvent(event.mosaicEnvelope as NSDictionary, name: event.mosaicName as NSString) as? [String: Any])\n  }}\n\n  private func applyHostResponse(_ response: [String: Any]?) {{\n    guard let response else {{ return }}\n    if let intent = response[\"hostIntent\"] as? [String: Any] {{\n      self.lastHostIntent = intent\n    }}\n    if let next = response[\"props\"] as? [String: Any] {{\n      self.props = next\n      return\n    }}\n    if response[\"hostIntent\"] != nil || response[\"error\"] != nil {{\n      return\n    }}\n    self.props = response\n  }}\n}}\n\n@objc protocol MosaicHostBridgeObject {{\n  func applyProps() -> NSDictionary?\n  func handleEvent(_ envelope: NSDictionary, name: NSString) -> NSDictionary?\n}}\n\nprivate enum MosaicHostBridge {{\n  static func load() -> MosaicHostBridgeObject? {{\n    for className in [\"App.MosaicHost\", \"MosaicHost\"] {{\n      guard let hostType = NSClassFromString(className) as? NSObject.Type else {{\n        continue\n      }}\n      if let bridge = hostType.init() as? MosaicHostBridgeObject {{\n        return bridge\n      }}\n    }}\n    return nil\n  }}\n}}\n\nprivate enum MosaicHostValue {{\n  static func string(_ props: [String: Any], _ key: String, fallback: String) -> String {{\n    if let value = props[key] as? String {{ return value }}\n    if let value = props[key] {{ return String(describing: value) }}\n    return fallback\n  }}\n\n  static func double(_ props: [String: Any], _ key: String, fallback: Double) -> Double {{\n    if let value = props[key] as? Double {{ return value }}\n    if let value = props[key] as? NSNumber {{ return value.doubleValue }}\n    if let value = props[key] as? String, let parsed = Double(value) {{ return parsed }}\n    return fallback\n  }}\n\n  static func bool(_ props: [String: Any], _ key: String, fallback: Bool) -> Bool {{\n    if let value = props[key] as? Bool {{ return value }}\n    if let value = props[key] as? NSNumber {{ return value.boolValue }}\n    if let value = props[key] as? String, let parsed = Bool(value) {{ return parsed }}\n    return fallback\n  }}\n\n  static func stringList(_ props: [String: Any], _ key: String, fallback: [String]) -> [String] {{\n    if let value = props[key] as? [String] {{ return value }}\n    if let value = props[key] as? [Any] {{ return value.map {{ String(describing: $0) }} }}\n    return fallback\n  }}\n\n  static func doubleList(_ props: [String: Any], _ key: String, fallback: [Double]) -> [Double] {{\n    if let value = props[key] as? [Double] {{ return value }}\n    if let value = props[key] as? [NSNumber] {{ return value.map {{ $0.doubleValue }} }}\n    return fallback\n  }}\n\n  static func boolList(_ props: [String: Any], _ key: String, fallback: [Bool]) -> [Bool] {{\n    if let value = props[key] as? [Bool] {{ return value }}\n    if let value = props[key] as? [NSNumber] {{ return value.map {{ $0.boolValue }} }}\n    return fallback\n  }}\n}}\n"
+    )
 }
 
 fn sample_value_for_slot(slot: &SlotDecl) -> String {
@@ -440,6 +501,13 @@ fn kebab_to_pascal_case_for_label(s: &str) -> String {
     }
 }
 
+fn build_swiftui_platform_readme(component_name: &str) -> String {
+    format!(
+        "{BANNER_MD}# {component_name} - SwiftUI macOS and iOS-ready shell\n\nAuto-generated by `mosaic-compile --backend swiftui --emit-project`.\n\n## Prerequisites\n\n- Swift 5.10+ (Xcode 15.3+ or the standalone Swift toolchain).\n- macOS 13 (Ventura) or later for `swift run`.\n- Xcode 15.3+ for adding the generated SwiftUI sources to an iOS 16+ host target.\n\n## Run on macOS\n\n```sh\nswift run\n```\n\nThis builds and launches a SwiftUI app with a single window hosting `{component_name}View(...)`. The first run downloads no dependencies; the package only depends on SwiftUI system frameworks.\n\n## Use from iOS\n\n`Package.swift` pins both `.macOS(.v13)` and `.iOS(.v16)`, and generated source guards macOS-only modifiers. Add the generated `Sources/App/{component_name}.swift`, `Sources/App/App.swift`, and any host adapter files to an iOS app target, or import this package from Xcode and mount `{component_name}View(...)` from your own iOS `App` shell.\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{component_name}.swift` | The Mosaic-compiled SwiftUI component emitted flat by single-component CLI runs. |\n| `Sources/App/{component_name}.swift` | The nested component source written by `mosaic-compile pkg` so SwiftPM can compile immediately. |\n| `Package.swift` | SwiftPM manifest with pinned Swift tools, macOS, and iOS deployment targets. |\n| `Sources/App/App.swift` | `@main App` with `WindowGroup` mounting `{component_name}View(...)` with sample slot values and a dispatch closure. |\n| `README.md` | This file. |\n\n## Layout\n\n`mosaic-compile pkg --backend swiftui --emit-project` writes a ready-to-build SwiftPM layout. If you used the single-component CLI and only have the flat `{component_name}.swift`, copy that file into `Sources/App/` next to `App.swift` before running `swift run`.\n\n## Editing\n\nGenerated files carry an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
+    )
+}
+
+#[allow(dead_code)]
 fn build_swiftui_readme(component_name: &str) -> String {
     format!(
         "{BANNER_MD}# {component_name} — SwiftUI macOS shell\n\nAuto-generated by `mosaic-compile --backend swiftui --emit-project`.\n\n## Prerequisites\n\n- Swift 5.10+ (Xcode 15.3+ or the standalone Swift toolchain).\n- macOS 13 (Ventura) or later target machine.\n\n## Run\n\n```sh\nswift run\n```\n\nThis builds and launches a SwiftUI app with a single window hosting `{component_name}View(...)`. The first run downloads no dependencies — the package only depends on the SwiftUI system framework.\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{component_name}.swift` | The Mosaic-compiled SwiftUI component. Place inside `Sources/App/` for SwiftPM to pick it up. |\n| `Package.swift` | SwiftPM manifest. Pinned swift-tools-version per UI32 spec §3.6.3. |\n| `Sources/App/App.swift` | `@main App` with `WindowGroup` mounting `{component_name}View(...)` with sample slot values and a dispatch closure. |\n| `README.md` | This file. |\n\n## Layout\n\nFor SwiftPM to compile the component, move `{component_name}.swift` into `Sources/App/` (next to `App.swift`):\n\n```sh\nmkdir -p Sources/App\nmv {component_name}.swift Sources/App/\nswift run\n```\n\n## Editing\n\nEvery file except `{component_name}.swift` carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
@@ -1256,6 +1324,7 @@ pub fn from_pipeline(
     out.push_str(&emit_view_struct(
         name,
         &interface.slots,
+        &interface.emits,
         &layout.root,
         &part_styles,
     )?);
@@ -1328,6 +1397,49 @@ fn emit_event_union(component: &str, emits: &[EmitDecl]) -> Result<String, Pipel
     writeln!(out, "}}").unwrap();
     out.push_str(&emit_event_wire_extension(component, emits)?);
     Ok(out)
+}
+
+fn host_button_event_args(
+    emit: &EmitDecl,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
+    if emit.params.is_empty() {
+        return Ok(String::new());
+    }
+    if emit.params.len() == 1 {
+        let param = &emit.params[0];
+        let field = to_camel_case_first_lower(&param.name);
+        validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+        let expr = host_button_payload_expr(&param.r#type, for_payload)
+            .unwrap_or_else(|| "/* TODO: payload */ fatalError(\"TODO: payload\")".to_string());
+        return Ok(format!("{field}: {expr}"));
+    }
+
+    emit.params
+        .iter()
+        .map(|param| {
+            let field = to_camel_case_first_lower(&param.name);
+            validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(format!(
+                "{field}: /* TODO: payload */ fatalError(\"TODO: payload\")"
+            ))
+        })
+        .collect::<Result<Vec<_>, _>>()
+        .map(|parts| parts.join(", "))
+}
+
+fn host_button_payload_expr(
+    t: &EmitPayloadType,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Option<String> {
+    let scope = for_payload?;
+    match t {
+        EmitPayloadType::Text | EmitPayloadType::Color | EmitPayloadType::Component(_) => {
+            Some(scope.item.to_string())
+        }
+        EmitPayloadType::Number => scope.index.map(str::to_string),
+        EmitPayloadType::Bool => None,
+    }
 }
 
 fn emit_event_wire_extension(
@@ -1423,6 +1535,7 @@ fn swift_event_payload_dictionary(emit: &EmitDecl) -> Result<String, PipelineEmi
 fn emit_view_struct(
     component: &str,
     slots: &[SlotDecl],
+    emits: &[EmitDecl],
     layout_root: &LayoutNode,
     part_styles: &PartStyleMap,
 ) -> Result<String, PipelineEmitError> {
@@ -1441,7 +1554,7 @@ fn emit_view_struct(
 
     // body computed property.
     writeln!(out, "    var body: some View {{").unwrap();
-    let body = emit_view_tree(layout_root, 8, part_styles, None, None)?;
+    let body = emit_view_tree(layout_root, 8, part_styles, emits, None, None, None)?;
     if body.trim().is_empty() {
         // Empty layout — emit an EmptyView so the file still type-checks.
         // Swift's `some View` cannot resolve to "nothing"; EmptyView is the
@@ -1481,7 +1594,9 @@ fn emit_view_tree(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
     table_ctx: Option<&TableContext>,
+    for_payload: Option<ForPayloadScope<'_>>,
     // The threaded column-width Swift expression (e.g.
     // `columnWidths[Int(c)]`) for THIS node only — `Some` exactly when
     // this is a direct body child of a width-threading HostTable cell
@@ -1499,7 +1614,15 @@ fn emit_view_tree(
         // Containers — open a SwiftUI view-builder block, recurse into
         // children at +4 indentation, then close.
         // -----------------------------------------------------------------
-        "Box" => container("Group", node, indent, part_styles, table_ctx)?,
+        "Box" => container(
+            "Group",
+            node,
+            indent,
+            part_styles,
+            emits,
+            table_ctx,
+            for_payload,
+        )?,
         // `Row` inside a HostTable lowers to `HStack(spacing: 0)` so cells
         // sit flush (matching `border-collapse: collapse` semantics in the
         // companion .msl).  Outside a HostTable we keep the default
@@ -1507,9 +1630,17 @@ fn emit_view_tree(
         // See [`TableContext`] for the discovery path.
         "Row" => {
             if table_ctx.is_some() {
-                container_table_row(node, indent, part_styles, table_ctx)?
+                container_table_row(node, indent, part_styles, emits, table_ctx, for_payload)?
             } else {
-                container("HStack", node, indent, part_styles, table_ctx)?
+                container(
+                    "HStack",
+                    node,
+                    indent,
+                    part_styles,
+                    emits,
+                    table_ctx,
+                    for_payload,
+                )?
             }
         }
         // TODO(UI28 §2.2): Column is being repurposed as Grid-metadata
@@ -1517,16 +1648,40 @@ fn emit_view_tree(
         // discarded as a SwiftUI view). For now we keep the legacy UI14
         // semantics: `Column → VStack`. The Cell/Column/Grid v3 SwiftUI
         // lowering lands in a separate follow-up PR.
-        "Column" => container("VStack", node, indent, part_styles, table_ctx)?,
+        "Column" => container(
+            "VStack",
+            node,
+            indent,
+            part_styles,
+            emits,
+            table_ctx,
+            for_payload,
+        )?,
         // UI29 kernel partial — Stack is the z-axis / overlay container.
         // It is *not* a synonym for VStack: SwiftUI's `ZStack` overlays
         // children along the depth axis, which is the UI29 semantics.
-        "Stack" => container("ZStack", node, indent, part_styles, table_ctx)?,
+        "Stack" => container(
+            "ZStack",
+            node,
+            indent,
+            part_styles,
+            emits,
+            table_ctx,
+            for_payload,
+        )?,
         // UI29 kernel partial — `HostScroll` is the kernel form of a
         // scrollable region. SwiftUI's `ScrollView` is the direct analog;
         // it implicitly handles its own scroll-state and viewport, so we
         // do not need to thread offset/extent slots through here.
-        "HostScroll" => container("ScrollView", node, indent, part_styles, table_ctx)?,
+        "HostScroll" => container(
+            "ScrollView",
+            node,
+            indent,
+            part_styles,
+            emits,
+            table_ctx,
+            for_payload,
+        )?,
 
         // -----------------------------------------------------------------
         // Leaf primitives — emit a single line, no children.
@@ -1553,7 +1708,7 @@ fn emit_view_tree(
         // respectively. They read slot/emit refs off the node props; see
         // the per-function doc comments below for the full mapping.
         "HostInput" => emit_host_input(node, indent)?,
-        "HostButton" => emit_host_button(node, indent)?,
+        "HostButton" => emit_host_button(node, indent, emits, for_payload)?,
 
         // UI29-2 kernel — `HostCheckbox` and `HostRadio` both lower to
         // SwiftUI `Toggle` with the platform's default toggle style.
@@ -1571,8 +1726,8 @@ fn emit_view_tree(
         // view modifier on the wrapped child (macOS / iOS 16+), and
         // `HostNumberInput` to `TextField` with the `.number`
         // format binding (iOS 15+/macOS 12+).
-        "HostLink" => emit_host_link(node, indent)?,
-        "HostTooltip" => emit_host_tooltip(node, indent, part_styles)?,
+        "HostLink" => emit_host_link(node, indent, emits, for_payload)?,
+        "HostTooltip" => emit_host_tooltip(node, indent, part_styles, emits, for_payload)?,
         "HostNumberInput" => emit_host_number_input(node, indent)?,
 
         // UI29 kernel — `HostTable` is the semantic data-table primitive.
@@ -1586,7 +1741,7 @@ fn emit_view_tree(
         // apply `.frame(width: columnWidths[Int(<idx>)])`.  Any inherited
         // `table_ctx` from a HostTable-inside-HostTable would be confusing
         // anyway, so we start a fresh context here rather than chaining.
-        "HostTable" => emit_host_table(node, indent, part_styles)?,
+        "HostTable" => emit_host_table(node, indent, part_styles, emits, for_payload)?,
 
         // UI29-1 kernel — `HostDialog` is the modal/popover primitive.
         // It lowers to a `Color.clear` anchor view carrying a
@@ -1594,7 +1749,7 @@ fn emit_view_tree(
         // modifier. See [`emit_host_dialog`] for the lowering rationale
         // (SwiftUI exposes dialogs as view modifiers, not standalone
         // views).
-        "HostDialog" => emit_host_dialog(node, indent, part_styles)?,
+        "HostDialog" => emit_host_dialog(node, indent, part_styles, emits, for_payload)?,
 
         // UI29 kernel — table sub-tags. When they appear OUTSIDE of a
         // HostTable parent they have nothing to attach to in SwiftUI;
@@ -1616,8 +1771,24 @@ fn emit_view_tree(
         // not visible — we lower as an if-only. The sibling-aware
         // pairing happens in [`emit_children`], which container-shaped
         // parents call instead of looping `emit_view_tree` directly.
-        "For" => emit_for_swift(node, indent, part_styles, table_ctx, false)?,
-        "If" => emit_if_swift(node, None, indent, part_styles, table_ctx)?,
+        "For" => emit_for_swift(
+            node,
+            indent,
+            part_styles,
+            emits,
+            table_ctx,
+            for_payload,
+            false,
+        )?,
+        "If" => emit_if_swift(
+            node,
+            None,
+            indent,
+            part_styles,
+            emits,
+            table_ctx,
+            for_payload,
+        )?,
         // An orphan `Else` (Else not preceded by If) is rejected by the
         // moslayout analyzer, but the emitter is defensive: rather than
         // erroring at the Swift level we emit a self-documenting Swift
@@ -1693,7 +1864,9 @@ fn container(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
     table_ctx: Option<&TableContext>,
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     if node.children.is_empty() {
@@ -1709,7 +1882,9 @@ fn container(
         &node.children,
         indent + 4,
         part_styles,
+        emits,
         table_ctx,
+        for_payload,
         None,
     )?);
     out.push_str(&format!("{pad}}}\n"));
@@ -1737,7 +1912,9 @@ fn container_table_row(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
     table_ctx: Option<&TableContext>,
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     if node.children.is_empty() {
@@ -1745,7 +1922,14 @@ fn container_table_row(
     }
     let mut out = format!("{pad}HStack(spacing: 0) {{\n");
     for cell in &node.children {
-        out.push_str(&emit_table_cell(cell, indent + 4, part_styles, table_ctx)?);
+        out.push_str(&emit_table_cell(
+            cell,
+            indent + 4,
+            part_styles,
+            emits,
+            table_ctx,
+            for_payload,
+        )?);
     }
     out.push_str(&format!("{pad}}}\n"));
     Ok(out)
@@ -1768,7 +1952,9 @@ fn emit_table_cell(
     cell: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
     table_ctx: Option<&TableContext>,
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     if let Some(ctx) = table_ctx {
         if ctx.column_widths_slot.is_some()
@@ -1779,12 +1965,22 @@ fn emit_table_cell(
                 cell,
                 indent,
                 part_styles,
+                emits,
                 table_ctx,
+                for_payload,
                 /*width_thread=*/ true,
             );
         }
     }
-    emit_view_tree(cell, indent, part_styles, table_ctx, None)
+    emit_view_tree(
+        cell,
+        indent,
+        part_styles,
+        emits,
+        table_ctx,
+        for_payload,
+        None,
+    )
 }
 
 /// Walk a flat list of sibling layout nodes at `indent`, with two
@@ -1803,7 +1999,9 @@ fn emit_children(
     children: &[LayoutNode],
     indent: usize,
     part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
     table_ctx: Option<&TableContext>,
+    for_payload: Option<ForPayloadScope<'_>>,
     // The threaded column-width Swift expression to inject into each
     // DIRECT child's modifier chain.  `Some` only on the body-children
     // dispatch of a width-threading HostTable cell `For`; `None`
@@ -1825,7 +2023,9 @@ fn emit_children(
                 else_node,
                 indent,
                 part_styles,
+                emits,
                 table_ctx,
+                for_payload,
             )?);
             i += if else_node.is_some() { 2 } else { 1 };
             continue;
@@ -1841,7 +2041,9 @@ fn emit_children(
             child,
             indent,
             part_styles,
+            emits,
             table_ctx,
+            for_payload,
             injected_width,
         )?);
         i += 1;
@@ -2086,9 +2288,11 @@ fn emit_host_input(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
 /// |-------------------------|-------------------------------------------------|
 /// | `label: "..."`          | `Text("...")` inside the label closure          |
 /// | `label: slot: x`        | `Text(x)` inside the label closure              |
+/// | `label: item`           | `Text(item)` for a scoped `For` binding         |
 /// | `disabled: slot: x`     | `.disabled(x)` modifier                         |
 /// | `disabled: true`/`false`| `.disabled(true)` / `.disabled(false)`          |
 /// | `onTap: emit: onE`      | `action: { dispatch(.e) }`                      |
+/// | `onClick: emit: onE`    | same, with single row payloads when declared    |
 ///
 /// ## Generated shape
 ///
@@ -2098,32 +2302,54 @@ fn emit_host_input(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
 /// }.disabled(disabled)
 /// ```
 ///
-/// If no `onTap` emit is bound the action closure is `{ }` (a no-op);
+/// If no click/tap emit is bound the action closure is `{ }` (a no-op);
 /// the file still compiles and the button is effectively decorative.
-fn emit_host_button(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_button(
+    node: &LayoutNode,
+    indent: usize,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 4);
 
     // Action closure body.
-    let action_body = match find_emit_ref_prop(node, "onTap") {
-        Some(emit_name) => {
-            let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-            validate_emit_name(&case_name)?;
-            format!("dispatch(.{case_name})")
-        }
-        None => String::new(),
-    };
+    let action_body =
+        match find_emit_ref_prop(node, "onClick").or_else(|| find_emit_ref_prop(node, "onTap")) {
+            Some(emit_name) => {
+                let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+                validate_emit_name(&case_name)?;
+                let args = emits
+                    .iter()
+                    .find(|e| e.name == *emit_name)
+                    .map(|e| host_button_event_args(e, for_payload))
+                    .transpose()?
+                    .unwrap_or_default();
+                if args.is_empty() {
+                    format!("dispatch(.{case_name})")
+                } else {
+                    format!("dispatch(.{case_name}({args}))")
+                }
+            }
+            None => String::new(),
+        };
 
     // Label expression. String literal → `Text("...")`; slot ref →
     // `Text(slotName)`; nothing bound → `Text("")` placeholder.
-    let label_expr = if let Some(s) = find_string_prop(node, "label") {
-        format!("Text(\"{}\")", escape_swift_string(s))
-    } else if let Some(slot) = find_slot_ref_prop(node, "label") {
-        let camel = to_camel_case_first_lower(slot);
-        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-        format!("Text({camel})")
-    } else {
-        "Text(\"\")".to_string()
+    let label_expr = match find_prop_value(node, "label") {
+        Some(LayoutPropValue::String(s)) => format!("Text(\"{}\")", escape_swift_string(s)),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            format!("Text({camel})")
+        }
+        Some(LayoutPropValue::Keyword(name)) => {
+            let camel = to_camel_case_first_lower(name);
+            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            format!("Text({camel})")
+        }
+        Some(LayoutPropValue::Expr(text)) => format!("Text({})", text.trim()),
+        _ => "Text(\"\")".to_string(),
     };
 
     let mut out = String::new();
@@ -2430,14 +2656,18 @@ fn emit_host_radio(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
 /// `onActivate` dispatch when `external != false` and documents
 /// the limitation. The far-more-common in-app routing path
 /// (`external: false`) gets the full Button-with-dispatch shape.
-fn emit_host_link(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_link(
+    node: &LayoutNode,
+    indent: usize,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 4);
 
     let href = find_string_prop(node, "href").unwrap_or("#");
-    let label = find_string_prop(node, "label").unwrap_or(href);
     let escaped_href = escape_swift_string(href);
-    let escaped_label = escape_swift_string(label);
+    let label_text = host_link_label_text_expr(node, href)?;
 
     let external_false = matches!(find_keyword_prop(node, "external"), Some("false"));
     let on_activate = find_emit_ref_prop(node, "onActivate");
@@ -2449,22 +2679,105 @@ fn emit_host_link(node: &LayoutNode, indent: usize) -> Result<String, PipelineEm
             Some(emit_name) => {
                 let case = to_camel_case_first_lower(&strip_on_prefix(emit_name));
                 validate_emit_name(&case)?;
-                // The href is passed through the dispatch payload as
-                // a String literal; downstream the host's router
-                // takes it and navigates in-app.
-                format!("dispatch(.{case}(href: \"{escaped_href}\"))")
+                let args = host_link_event_args(emit_name, emits, for_payload, &escaped_href)?;
+                if args.is_empty() {
+                    format!("dispatch(.{case})")
+                } else {
+                    format!("dispatch(.{case}({args}))")
+                }
             }
             None => "{ }".to_string(),
         };
         writeln!(out, "{pad}Button(action: {{ {action_body} }}) {{").unwrap();
-        writeln!(out, "{inner_pad}Text(\"{escaped_label}\")").unwrap();
+        writeln!(out, "{inner_pad}{label_text}").unwrap();
         writeln!(out, "{pad}}}").unwrap();
         Ok(out)
     } else {
         // Default: SwiftUI Link with OS-default open behaviour.
-        Ok(format!(
-            "{pad}Link(\"{escaped_label}\", destination: URL(string: \"{escaped_href}\")!)\n"
-        ))
+        let mut out = String::new();
+        writeln!(
+            out,
+            "{pad}Link(destination: URL(string: \"{escaped_href}\")!) {{"
+        )
+        .unwrap();
+        writeln!(out, "{inner_pad}{label_text}").unwrap();
+        writeln!(out, "{pad}}}").unwrap();
+        Ok(out)
+    }
+}
+
+fn host_link_label_text_expr(
+    node: &LayoutNode,
+    fallback_href: &str,
+) -> Result<String, PipelineEmitError> {
+    if let Some(label) = find_string_prop(node, "label") {
+        return Ok(format!("Text(\"{}\")", escape_swift_string(label)));
+    }
+    if let Some(slot) = find_slot_ref_prop(node, "label") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        return Ok(format!("Text({camel})"));
+    }
+    if let Some(keyword) = find_keyword_prop(node, "label") {
+        let camel = to_camel_case_first_lower(keyword);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        return Ok(format!("Text({camel})"));
+    }
+    Ok(format!("Text(\"{}\")", escape_swift_string(fallback_href)))
+}
+
+fn host_link_event_args(
+    emit_name: &str,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
+    escaped_href: &str,
+) -> Result<String, PipelineEmitError> {
+    let Some(emit) = emits.iter().find(|e| e.name == emit_name) else {
+        return Ok(String::new());
+    };
+    if emit.params.is_empty() {
+        return Ok(String::new());
+    }
+    if emit.params.len() == 1 {
+        let param = &emit.params[0];
+        let field = to_camel_case_first_lower(&param.name);
+        validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+        let expr = host_link_payload_expr(&param.r#type, &field, for_payload, escaped_href)
+            .unwrap_or_else(|| "/* TODO: payload */ fatalError(\"TODO: payload\")".to_string());
+        return Ok(format!("{field}: {expr}"));
+    }
+
+    emit.params
+        .iter()
+        .map(|param| {
+            let field = to_camel_case_first_lower(&param.name);
+            validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            let expr = host_link_payload_expr(&param.r#type, &field, for_payload, escaped_href)
+                .unwrap_or_else(|| "/* TODO: payload */ fatalError(\"TODO: payload\")".to_string());
+            Ok(format!("{field}: {expr}"))
+        })
+        .collect::<Result<Vec<_>, _>>()
+        .map(|parts| parts.join(", "))
+}
+
+fn host_link_payload_expr(
+    t: &EmitPayloadType,
+    field: &str,
+    for_payload: Option<ForPayloadScope<'_>>,
+    escaped_href: &str,
+) -> Option<String> {
+    if field == "href" {
+        return match t {
+            EmitPayloadType::Text => Some(format!("\"{escaped_href}\"")),
+            _ => None,
+        };
+    }
+    if let Some(expr) = host_button_payload_expr(t, for_payload) {
+        return Some(expr);
+    }
+    match t {
+        EmitPayloadType::Text => Some(format!("\"{escaped_href}\"")),
+        _ => None,
     }
 }
 
@@ -2491,6 +2804,8 @@ fn emit_host_tooltip(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let mod_pad = " ".repeat(indent + 4);
@@ -2505,7 +2820,9 @@ fn emit_host_tooltip(
             &node.children,
             indent + 4,
             part_styles,
+            emits,
             None,
+            for_payload,
             None,
         )?);
     }
@@ -2525,10 +2842,10 @@ fn emit_host_tooltip(
 ///     .disabled(disabled)
 /// ```
 ///
-/// `.constant(value)` is the read-only binding pattern this
-/// backend uses (same caveat as HostInput's `.constant` choice).
-/// True two-way binding would need either a `@State` proxy in the
-/// host or moving to a `Binding(get:set:)` shape; both are v2.
+/// `.constant(value)` is used when there is no `onChange` handler.
+/// When `value` and `onChange` are both present, the field uses a
+/// writable `Binding(get:set:)` whose setter dispatches the new
+/// numeric value back to the host.
 fn emit_host_number_input(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let mod_pad = " ".repeat(indent + 4);
@@ -2536,19 +2853,38 @@ fn emit_host_number_input(node: &LayoutNode, indent: usize) -> Result<String, Pi
     let placeholder = find_string_prop(node, "placeholder").unwrap_or("");
     let escaped_placeholder = escape_swift_string(placeholder);
 
-    let value_expr: String = match find_slot_ref_prop(node, "value") {
-        Some(slot) => {
+    let value_prop = find_prop_value(node, "value");
+    let value_expr: String = match value_prop {
+        Some(LayoutPropValue::SlotRef(slot)) => {
             let camel = to_camel_case_first_lower(slot);
             validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-            format!(".constant({camel})")
+            camel
         }
-        None => ".constant(0)".to_string(),
+        Some(LayoutPropValue::Expr(text)) => text.clone(),
+        Some(LayoutPropValue::Number(n)) => n.to_string(),
+        _ => "0".to_string(),
+    };
+
+    let editable_case = match find_emit_ref_prop(node, "onChange") {
+        Some(emit_name) if value_prop.is_some() => {
+            let case = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+            validate_emit_name(&case)?;
+            Some(case)
+        }
+        _ => None,
+    };
+
+    let value_binding = match &editable_case {
+        Some(case) => {
+            format!("Binding(get: {{ {value_expr} }}, set: {{ dispatch(.{case}(value: $0)) }})")
+        }
+        None => format!(".constant({value_expr})"),
     };
 
     let mut out = String::new();
     writeln!(
         out,
-        "{pad}TextField(\"{escaped_placeholder}\", value: {value_expr}, format: .number)"
+        "{pad}TextField(\"{escaped_placeholder}\", value: {value_binding}, format: .number)"
     )
     .unwrap();
 
@@ -2563,24 +2899,9 @@ fn emit_host_number_input(node: &LayoutNode, indent: usize) -> Result<String, Pi
         }
     }
 
-    // onChange — `.onChange(of: value) { _ in dispatch(...) }`.
-    // SwiftUI's `.onChange(of:)` is iOS 14+; the closure shape
-    // changed in iOS 17 (now takes (old, new) — both deprecated form
-    // and new shape compile against modern SDKs). We emit the
-    // pre-17 single-arg shape; the host can adapt if needed.
-    if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
-        if let Some(slot) = find_slot_ref_prop(node, "value") {
-            let camel = to_camel_case_first_lower(slot);
-            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-            let case = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-            validate_emit_name(&case)?;
-            writeln!(
-                out,
-                "{mod_pad}.onChange(of: {camel}) {{ dispatch(.{case}(value: {camel})) }}"
-            )
-            .unwrap();
-        }
-    }
+    // `onChange` is wired through the Binding setter above. Emitting a
+    // separate `.onChange(of:)` would double-dispatch after the host
+    // reflects the edited number back into the slot.
 
     Ok(out)
 }
@@ -2636,6 +2957,8 @@ fn emit_host_table(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 4);
@@ -2675,7 +2998,9 @@ fn emit_host_table(
                     indent + 4,
                     /*bold=*/ true,
                     part_styles,
+                    emits,
                     table_ctx,
+                    for_payload,
                 )?;
                 head_just_emitted = true;
             }
@@ -2690,7 +3015,9 @@ fn emit_host_table(
                     indent + 4,
                     /*bold=*/ false,
                     part_styles,
+                    emits,
                     table_ctx,
+                    for_payload,
                 )?;
             }
             "HostTableFoot" => {
@@ -2705,7 +3032,9 @@ fn emit_host_table(
                     indent + 4,
                     /*bold=*/ false,
                     part_styles,
+                    emits,
                     table_ctx,
+                    for_payload,
                 )?;
             }
             "HostTableColGroup" => {
@@ -2846,6 +3175,8 @@ fn emit_host_dialog(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let mod_pad = " ".repeat(indent + 4);
@@ -2904,7 +3235,9 @@ fn emit_host_dialog(
             &node.children,
             indent + 12,
             part_styles,
+            emits,
             None,
+            for_payload,
             None,
         )?);
     }
@@ -2950,7 +3283,9 @@ fn emit_table_section_rows(
     indent: usize,
     bold: bool,
     part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
     table_ctx: Option<&TableContext>,
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<(), PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -2972,7 +3307,8 @@ fn emit_table_section_rows(
                 // `index:` binding AND the table has a discovered
                 // column-widths slot.  Other cells go through
                 // [`emit_view_tree`] unchanged.
-                let emitted = emit_table_cell(cell, indent + 4, part_styles, table_ctx)?;
+                let emitted =
+                    emit_table_cell(cell, indent + 4, part_styles, emits, table_ctx, for_payload)?;
                 if bold {
                     // Apply `.bold()` to every `Text(...)` line we just
                     // produced. We do this by string-rewriting the
@@ -3011,7 +3347,15 @@ fn emit_table_section_rows(
                 child.tag
             )
             .unwrap();
-            let emitted = emit_view_tree(child, indent, part_styles, table_ctx, None)?;
+            let emitted = emit_view_tree(
+                child,
+                indent,
+                part_styles,
+                emits,
+                table_ctx,
+                for_payload,
+                None,
+            )?;
             out.push_str(&emitted);
         }
     }
@@ -3060,7 +3404,9 @@ fn emit_for_swift(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
     table_ctx: Option<&TableContext>,
+    for_payload: Option<ForPayloadScope<'_>>,
     width_thread: bool,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
@@ -3196,6 +3542,13 @@ fn emit_for_swift(
         None
     };
 
+    let scoped_payload = Some(ForPayloadScope {
+        item: as_name.as_str(),
+        index: index_name
+            .as_deref()
+            .or(for_payload.and_then(|scope| scope.index)),
+    });
+
     let mut out = header;
     if node.children.is_empty() {
         // Empty body — SwiftUI's view builder requires *something* in
@@ -3206,7 +3559,9 @@ fn emit_for_swift(
             &node.children,
             body_indent,
             part_styles,
+            emits,
             table_ctx,
+            scoped_payload,
             width_expr.as_deref(),
         )?);
     }
@@ -3236,7 +3591,9 @@ fn emit_if_swift(
     else_node: Option<&LayoutNode>,
     indent: usize,
     part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
     table_ctx: Option<&TableContext>,
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -3260,7 +3617,9 @@ fn emit_if_swift(
             &if_node.children,
             indent + 4,
             part_styles,
+            emits,
             table_ctx,
+            for_payload,
             None,
         )?);
     }
@@ -3274,7 +3633,9 @@ fn emit_if_swift(
                 &en.children,
                 indent + 4,
                 part_styles,
+                emits,
                 table_ctx,
+                for_payload,
                 None,
             )?);
         }
@@ -3345,6 +3706,13 @@ fn emit_payload_to_swift(t: &EmitPayloadType) -> String {
 
 /// Find a prop on `node` whose value is a `String` literal. Returns the
 /// unescaped inner text, or `None`.
+fn find_prop_value<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a LayoutPropValue> {
+    node.props
+        .iter()
+        .find(|p| p.name == prop_name)
+        .map(|p| &p.value)
+}
+
 fn find_string_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a str> {
     node.props.iter().find_map(|p| {
         if p.name == prop_name {
@@ -4381,6 +4749,147 @@ mod tests {
     // Like the other containers, the empty-children form prints
     // `ScrollView { }` so it still type-checks under SwiftUI's `some View`.
     // ---------------------------------------------------------------------
+
+    #[test]
+    fn host_button_on_click_emits_button_with_action_and_label() {
+        let layout = layout_with(
+            "Bar",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "HostButton",
+                    vec![
+                        prop_slot_ref("label", "caption"),
+                        prop_emit_ref("onClick", "onClick"),
+                    ],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component(
+                "Bar",
+                vec![slot("caption", SlotType::Text, true)],
+                vec![emit("onClick", vec![])],
+            ),
+            &layout,
+            &empty_style("Bar"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("Button(action: { dispatch(.click) }) {"),
+            "expected Button(action:) opener, got:\n{out}"
+        );
+        assert!(
+            out.contains("Text(caption)"),
+            "expected label closure with Text(caption), got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_button_inside_indexed_for_dispatches_index_payload() {
+        let layout = layout_with(
+            "ListGroup",
+            container_node(
+                "Column",
+                vec![node_with_props(
+                    "For",
+                    vec![
+                        prop_slot_ref("each", "items"),
+                        prop_keyword("as", "item"),
+                        prop_keyword("index", "i"),
+                    ],
+                    vec![leaf(
+                        "HostButton",
+                        vec![
+                            prop_keyword("label", "item"),
+                            prop_emit_ref("onClick", "onSelect"),
+                        ],
+                    )],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component(
+                "ListGroup",
+                vec![slot(
+                    "items",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    true,
+                )],
+                vec![emit(
+                    "onSelect",
+                    vec![param("index", EmitPayloadType::Number)],
+                )],
+            ),
+            &layout,
+            &empty_style("ListGroup"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("let i: Double = Double(_swiftIdxi)"),
+            "expected numeric For index binding, got:\n{out}"
+        );
+        assert!(
+            out.contains("dispatch(.select(index: i))"),
+            "expected HostButton to dispatch index payload, got:\n{out}"
+        );
+        assert!(
+            out.contains("Text(item)"),
+            "expected HostButton label to use For item binding, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_button_inside_for_dispatches_text_item_payload() {
+        let layout = layout_with(
+            "SelectMenu",
+            container_node(
+                "Column",
+                vec![node_with_props(
+                    "For",
+                    vec![
+                        prop_slot_ref("each", "options"),
+                        prop_keyword("as", "option"),
+                    ],
+                    vec![leaf(
+                        "HostButton",
+                        vec![
+                            prop_keyword("label", "option"),
+                            prop_emit_ref("onClick", "onChange"),
+                        ],
+                    )],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component(
+                "SelectMenu",
+                vec![slot(
+                    "options",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    true,
+                )],
+                vec![emit(
+                    "onChange",
+                    vec![param("value", EmitPayloadType::Text)],
+                )],
+            ),
+            &layout,
+            &empty_style("SelectMenu"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("dispatch(.change(value: option))"),
+            "expected HostButton to dispatch item payload, got:\n{out}"
+        );
+        assert!(
+            out.contains("Text(option)"),
+            "expected HostButton label to use For item binding, got:\n{out}"
+        );
+    }
 
     #[test]
     fn host_scroll_lowers_to_scroll_view() {
@@ -5961,8 +6470,12 @@ mod tests {
             .output;
         let _ = m;
         assert!(
-            r.contains("Link(\"Click me\", destination: URL(string: \"https://example.com\")!)"),
+            r.contains("Link(destination: URL(string: \"https://example.com\")!) {"),
             "expected SwiftUI Link with URL, got:\n{r}"
+        );
+        assert!(
+            r.contains("Text(\"Click me\")"),
+            "expected SwiftUI Link label, got:\n{r}"
         );
     }
 
@@ -5972,7 +6485,14 @@ mod tests {
     /// in-app routing path.
     #[test]
     fn host_link_external_false_with_on_activate_emits_button_dispatch() {
-        let m = component("X", vec![], vec![emit("onNavigate", vec![])]);
+        let m = component(
+            "X",
+            vec![],
+            vec![emit(
+                "onNavigate",
+                vec![param("href", EmitPayloadType::Text)],
+            )],
+        );
         let l = layout_with(
             "X",
             container_node(
@@ -5995,6 +6515,63 @@ mod tests {
         assert!(
             !r.contains("URL(string:"),
             "in-app routing path must NOT emit URL open, got:\n{r}"
+        );
+    }
+
+    #[test]
+    fn host_link_inside_indexed_for_dispatches_index_payload() {
+        let layout = layout_with(
+            "Nav",
+            container_node(
+                "Column",
+                vec![node_with_props(
+                    "For",
+                    vec![
+                        prop_slot_ref("each", "items"),
+                        prop_keyword("as", "item"),
+                        prop_keyword("index", "i"),
+                    ],
+                    vec![leaf(
+                        "HostLink",
+                        vec![
+                            prop_string("href", "#"),
+                            prop_keyword("label", "item"),
+                            prop_keyword("external", "false"),
+                            prop_emit_ref("onActivate", "onSelect"),
+                        ],
+                    )],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component(
+                "Nav",
+                vec![slot(
+                    "items",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    true,
+                )],
+                vec![emit(
+                    "onSelect",
+                    vec![param("index", EmitPayloadType::Number)],
+                )],
+            ),
+            &layout,
+            &empty_style("Nav"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("let i: Double = Double(_swiftIdxi)"),
+            "expected numeric For index binding, got:\n{out}"
+        );
+        assert!(
+            out.contains("dispatch(.select(index: i))"),
+            "expected HostLink to dispatch index payload, got:\n{out}"
+        );
+        assert!(
+            out.contains("Text(item)"),
+            "expected HostLink label to use For item binding, got:\n{out}"
         );
     }
 
@@ -6050,12 +6627,11 @@ mod tests {
         );
     }
 
-    /// UI29-4 SwiftUI test 5 — `onChange: emit: onSet` attaches an
-    /// `.onChange(of: value) { dispatch(.set(value: value)) }`
-    /// modifier (pre-iOS-17 closure shape; host can adapt to the
-    /// new (old, new) shape if needed).
+    /// UI29-4 SwiftUI test 5 — `onChange: emit: onSet` makes the
+    /// number TextField editable by routing writes through a binding
+    /// setter that dispatches the new numeric value.
     #[test]
-    fn host_number_input_on_change_emits_on_change_modifier() {
+    fn host_number_input_on_change_emits_binding_setter_dispatch() {
         let m = component(
             "X",
             vec![slot("count", SlotType::Number, true)],
@@ -6076,8 +6652,14 @@ mod tests {
         );
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
         assert!(
-            r.contains(".onChange(of: count) { dispatch(.set(value: count)) }"),
-            "expected .onChange modifier with dispatch, got:\n{r}"
+            r.contains(
+                "TextField(\"\", value: Binding(get: { count }, set: { dispatch(.set(value: $0)) }), format: .number)"
+            ),
+            "expected Binding setter with dispatch, got:\n{r}"
+        );
+        assert!(
+            !r.contains(".onChange(of:"),
+            "HostNumberInput should dispatch through the binding setter only, got:\n{r}"
         );
     }
 
@@ -6244,6 +6826,32 @@ mod tests {
         );
     }
 
+    /// README platform wording for the generated SwiftUI shell.
+    #[test]
+    fn ui32_readme_documents_macos_and_ios_ready_shell() {
+        let m = component("LanguageDeck", vec![], vec![]);
+        let l = layout_with("LanguageDeck", container_node("Box", vec![]));
+        let s = empty_style("LanguageDeck");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+
+        assert!(proj.readme.contains("SwiftUI macOS and iOS-ready shell"));
+        assert!(proj.readme.contains("## Run on macOS"));
+        assert!(proj.readme.contains("## Use from iOS"));
+        assert!(proj
+            .readme
+            .contains("`Package.swift` pins both `.macOS(.v13)` and `.iOS(.v16)`"));
+        assert!(proj.readme.contains("Sources/App/LanguageDeck.swift"));
+        assert!(
+            !proj.readme.contains("mv LanguageDeck.swift"),
+            "README should not tell package builds to move a file that pkg already nests"
+        );
+    }
+
     /// §3.7 Output paths tripwire.
     #[test]
     fn ui32_project_files_struct_exposes_only_spec_22_swiftui_files() {
@@ -6322,10 +6930,67 @@ mod tests {
             "App.swift must provide a dispatch closure"
         );
         assert!(
-            proj.app_swift
-                .contains("print(\"Mosaic dispatch: \\(event.mosaicEnvelope)\")"),
-            "App.swift should print the Mosaic wire envelope"
+            proj.app_swift.contains("host.dispatch(event)"),
+            "App.swift should dispatch the Mosaic wire envelope through the host"
         );
+    }
+
+    #[test]
+    fn ui32_app_swift_exposes_optional_mosaic_host_bridge() {
+        let m = component(
+            "Hostable",
+            vec![
+                slot("title", SlotType::Text, true),
+                slot("count", SlotType::Number, true),
+                slot("enabled", SlotType::Bool, true),
+                slot("items", SlotType::List(Box::new(ListInnerType::Text)), true),
+            ],
+            vec![emit("onTap", vec![])],
+        );
+        let l = layout_with("Hostable", container_node("Box", vec![]));
+        let s = empty_style("Hostable");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+
+        assert!(proj.app_swift.contains("import Combine"));
+        assert!(proj
+            .app_swift
+            .contains("@StateObject private var host = MosaicHostState()"));
+        assert!(proj
+            .app_swift
+            .contains("@Published var lastHostIntent: [String: Any]? = nil"));
+        assert!(proj
+            .app_swift
+            .contains("private func applyHostResponse(_ response: [String: Any]?)"));
+        assert!(proj.app_swift.contains("self.lastHostIntent = intent"));
+        assert!(proj
+            .app_swift
+            .contains("@objc protocol MosaicHostBridgeObject"));
+        assert!(proj.app_swift.contains("MosaicHostBridge.load()"));
+        assert!(proj
+            .app_swift
+            .contains("[\"App.MosaicHost\", \"MosaicHost\"]"));
+        assert!(proj.app_swift.contains("NSClassFromString(className)"));
+        assert!(proj.app_swift.contains(
+            "title: MosaicHostValue.string(host.props, \"title\", fallback: \"Sample Title\"),"
+        ));
+        assert!(proj
+            .app_swift
+            .contains("count: MosaicHostValue.double(host.props, \"count\", fallback: 0),"));
+        assert!(proj
+            .app_swift
+            .contains("enabled: MosaicHostValue.bool(host.props, \"enabled\", fallback: false),"));
+        assert!(proj
+            .app_swift
+            .contains("items: MosaicHostValue.stringList(host.props, \"items\", fallback: []),"));
+        assert!(proj.app_swift.contains("host.dispatch(event)"));
+        assert!(proj
+            .app_swift
+            .contains("applyHostResponse(bridge.handleEvent(event.mosaicEnvelope as NSDictionary"));
     }
 
     #[test]
@@ -6358,32 +7023,44 @@ mod tests {
             "App.swift must instantiate ProfileCardView"
         );
         assert!(
-            proj.app_swift.contains("displayName: \"Ada\","),
-            "text defaults should flow into the generated initializer"
+            proj.app_swift
+                .contains("displayName: MosaicHostValue.string(host.props, \"display-name\", fallback: \"Ada\"),"),
+            "text defaults should flow into the generated initializer fallback"
         );
         assert!(
-            proj.app_swift.contains("age: 0,"),
+            proj.app_swift
+                .contains("age: MosaicHostValue.double(host.props, \"age\", fallback: 0),"),
             "number slots need a sample value"
         );
         assert!(
-            proj.app_swift.contains("isActive: false,"),
+            proj.app_swift.contains(
+                "isActive: MosaicHostValue.bool(host.props, \"is-active\", fallback: false),"
+            ),
             "bool slots need a sample value"
         );
         assert!(
-            proj.app_swift.contains("avatarUrl: \"sample-image\","),
+            proj.app_swift
+                .contains("avatarUrl: MosaicHostValue.string(host.props, \"avatar-url\", fallback: \"sample-image\"),"),
             "image slots need a sample value"
         );
         assert!(
-            proj.app_swift.contains("accent: \"#808080\","),
+            proj.app_swift.contains(
+                "accent: MosaicHostValue.string(host.props, \"accent\", fallback: \"#808080\"),"
+            ),
             "color slots need a sample value"
         );
         assert!(
-            proj.app_swift.contains("tags: [],"),
+            proj.app_swift
+                .contains("tags: MosaicHostValue.stringList(host.props, \"tags\", fallback: []),"),
             "list slots need an empty sample value"
         );
         assert!(
             proj.app_swift.contains("dispatch: { event in"),
             "the generated initializer must pass dispatch last"
+        );
+        assert!(
+            proj.app_swift.contains("host.dispatch(event)"),
+            "dispatch should route through the optional Mosaic host state"
         );
     }
 

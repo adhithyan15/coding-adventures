@@ -3,15 +3,18 @@ use spice_engine::{
     BjtPolarity, Element, JfetPolarity, McDistribution, McOptions, MosfetType, TransientMethod,
 };
 use spice_netlist_parser::{
-    build_analysis_plan, parse_berkeley_app_deck, parse_berkeley_syntax, parse_netlist,
-    parse_value, run_netlist, AcAnalysis, Analysis, AnalysisKind, AnalysisResult,
-    BerkeleyAppEditorActionKind, BerkeleyAppHostPanelKind, BerkeleyAppPersistedEditorState,
-    BerkeleyCardKind, BerkeleyDiagnosticSeverity, BerkeleyGrammarMetadata, DcAnalysis,
-    DistortionAnalysis, FourAnalysis, McAnalysis, MeasureAnalysis, MeasureOperation,
-    NetlistParseError, NoiseAnalysis, OpAnalysis, OptionValue, OutputProbe, PlotAnalysis,
-    PoleZeroAnalysis, PoleZeroKind, PrintAnalysis, ProbeAnalysis, SaveAnalysis,
-    SelectedOutputValue, SensAnalysis, TempAnalysis, TfAnalysis, TranAnalysis,
-    BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION,
+    berkeley_app_package_manifest, berkeley_app_package_manifest_json, build_analysis_plan,
+    parse_berkeley_app_deck, parse_berkeley_syntax, parse_netlist, parse_value, run_netlist,
+    AcAnalysis, Analysis, AnalysisKind, AnalysisResult, BerkeleyAppEditorActionKind,
+    BerkeleyAppHostPanelKind, BerkeleyAppPersistedEditorState, BerkeleyCardKind,
+    BerkeleyDiagnosticSeverity, BerkeleyGrammarMetadata, DcAnalysis, DistortionAnalysis,
+    FourAnalysis, McAnalysis, MeasureAnalysis, MeasureOperation, NetlistParseError, NoiseAnalysis,
+    OpAnalysis, OptionValue, OutputProbe, PlotAnalysis, PoleZeroAnalysis, PoleZeroKind,
+    PrintAnalysis, ProbeAnalysis, SaveAnalysis, SelectedOutputValue, SensAnalysis, TempAnalysis,
+    TfAnalysis, TranAnalysis, BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION,
+    BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION, BERKELEY_APP_PACKAGE_NAME,
+    BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM, BERKELEY_SPICE_GRAMMAR_NAME,
+    BERKELEY_SPICE_GRAMMAR_VERSION,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -2484,6 +2487,67 @@ C1 out 0 1p
     assert_eq!(payload["panels"][4]["enabled"], true);
     assert_eq!(payload["panels"][4]["active"], true);
     assert!(payload["diagnostics"].as_array().unwrap().is_empty());
+}
+
+#[test]
+fn berkeley_app_facade_exports_package_manifest_json() {
+    let manifest = berkeley_app_package_manifest();
+
+    assert_eq!(
+        manifest.schema_version,
+        BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION
+    );
+    assert_eq!(manifest.package_name, BERKELEY_APP_PACKAGE_NAME);
+    assert_eq!(manifest.grammar_name, BERKELEY_SPICE_GRAMMAR_NAME);
+    assert_eq!(manifest.grammar_version, BERKELEY_SPICE_GRAMMAR_VERSION);
+    assert_eq!(
+        manifest.host_surface_wire_schema_version,
+        BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION
+    );
+    assert_eq!(
+        manifest.source_fingerprint_algorithm,
+        BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM
+    );
+    assert_eq!(
+        manifest.host_panel_kinds,
+        vec!["source", "diagnostics", "analysis", "table", "waveform"]
+    );
+    assert_eq!(
+        manifest.command_targets,
+        vec![
+            "analysis-selection",
+            "analysis-runner",
+            "analysis-table",
+            "analysis-waveform"
+        ]
+    );
+    assert_eq!(
+        manifest.runnable_analysis_directives,
+        vec![".op", ".dc", ".ac", ".tran"]
+    );
+    assert!(manifest
+        .artifact_capabilities
+        .iter()
+        .any(|capability| capability == "host-surface-wire-json"));
+
+    let payload: serde_json::Value = serde_json::from_str(&berkeley_app_package_manifest_json())
+        .expect("manifest JSON should parse");
+    assert_eq!(payload["schemaVersion"], 1);
+    assert_eq!(payload["packageName"], "berkeley-spice-mosaic-app");
+    assert_eq!(payload["grammarName"], BERKELEY_SPICE_GRAMMAR_NAME);
+    assert_eq!(
+        payload["hostSurfaceWireSchemaVersion"],
+        BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION
+    );
+    assert_eq!(payload["hostPanelKinds"][4], "waveform");
+    assert_eq!(payload["editorActionKinds"][1], "run-analysis");
+    assert_eq!(payload["commandTargets"][3], "analysis-waveform");
+    assert_eq!(payload["artifactAnalysisDirectives"][6], ".noise");
+    assert!(payload["artifactCapabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|capability| capability == "source-fingerprint"));
 }
 
 #[test]

@@ -1,7 +1,9 @@
 use crate::model::{CardProgress, CardState, DeckOptions, Rating};
 use crate::sm2::{INITIAL_EASE_FACTOR, MAX_EASE_FACTOR, MIN_EASE_FACTOR, ONE_DAY_MS};
+use fsrs::{ItemState, MemoryState, FSRS};
 
 pub const ONE_MINUTE_MS: u64 = 60 * 1000;
+const FSRS_PARAMETER_COUNT: usize = 21;
 
 pub fn schedule_review(
     existing: Option<&CardProgress>,
@@ -21,7 +23,7 @@ fn schedule_new(card_id: String, rating: Rating, options: &DeckOptions, now: u64
         card_id,
         state: CardState::Learning,
         interval: 0,
-        ease_factor: INITIAL_EASE_FACTOR,
+        ease_factor: finite_positive(options.initial_ease_factor, INITIAL_EASE_FACTOR),
         next_due_at: now,
         learning_step_index: Some(0),
         buried_until: None,
@@ -30,6 +32,8 @@ fn schedule_new(card_id: String, rating: Rating, options: &DeckOptions, now: u64
         times_correct: 0,
         times_incorrect: 0,
         last_seen_at: now,
+        fsrs_stability: None,
+        fsrs_difficulty: None,
         flag: None,
         marked_at: None,
     };
@@ -74,6 +78,10 @@ fn schedule_learning(
     next.last_seen_at = now;
     next.buried_until = None;
     next.suspended_at = None;
+    let fsrs_schedule = fsrs_schedule(Some(progress), rating, options, now);
+    if let Some(schedule) = fsrs_schedule {
+        apply_fsrs_memory(&mut next, schedule);
+    }
 
     match rating {
         Rating::Again => {
@@ -110,11 +118,23 @@ fn schedule_learning(
                 next.interval = 0;
                 next.next_due_at = due_after_step(steps, next_step, now);
             } else {
-                graduate(&mut next, options.graduating_interval_days, options, now);
+                graduate_with_fsrs(
+                    &mut next,
+                    options.graduating_interval_days,
+                    fsrs_schedule,
+                    options,
+                    now,
+                );
             }
         }
         Rating::Easy => {
-            graduate(&mut next, options.easy_interval_days, options, now);
+            graduate_with_fsrs(
+                &mut next,
+                options.easy_interval_days,
+                fsrs_schedule,
+                options,
+                now,
+            );
         }
     }
 
@@ -135,53 +155,73 @@ fn schedule_review_card(
     next.last_seen_at = now;
     next.buried_until = None;
     next.suspended_at = None;
+    let fsrs_schedule = fsrs_schedule(Some(progress), rating, options, now);
+    if let Some(schedule) = fsrs_schedule {
+        apply_fsrs_memory(&mut next, schedule);
+    }
 
     match rating {
         Rating::Again => {
             next.state = CardState::Relearning;
             next.learning_step_index = Some(0);
             next.ease_factor = (next.ease_factor - 0.20).max(MIN_EASE_FACTOR);
-            next.interval = capped_interval_days(
-                (progress.interval as f64)
-                    * finite_positive(options.lapse_interval_multiplier, 0.0),
-                options,
-            );
+            next.interval = fsrs_schedule
+                .map(|schedule| schedule.interval)
+                .unwrap_or_else(|| {
+                    capped_interval_days(
+                        (progress.interval as f64)
+                            * finite_positive(options.lapse_interval_multiplier, 0.0),
+                        options,
+                    )
+                });
             next.next_due_at = due_after_step(&options.relearning_steps_minutes, 0, now);
         }
         Rating::Hard => {
             next.state = CardState::Review;
             next.learning_step_index = None;
             next.ease_factor = (next.ease_factor - 0.15).max(MIN_EASE_FACTOR);
-            next.interval = capped_interval_days(
-                (progress.interval as f64)
-                    * finite_positive(options.hard_interval_multiplier, 1.2)
-                    * finite_positive(options.review_interval_modifier, 1.0),
-                options,
-            );
+            next.interval = fsrs_schedule
+                .map(|schedule| schedule.interval)
+                .unwrap_or_else(|| {
+                    capped_interval_days(
+                        (progress.interval as f64)
+                            * finite_positive(options.hard_interval_multiplier, 1.2)
+                            * finite_positive(options.review_interval_modifier, 1.0),
+                        options,
+                    )
+                });
             next.next_due_at = now + u64::from(next.interval) * ONE_DAY_MS;
         }
         Rating::Good => {
             next.state = CardState::Review;
             next.learning_step_index = None;
-            next.interval = capped_interval_days(
-                (progress.interval as f64)
-                    * progress.ease_factor
-                    * finite_positive(options.review_interval_modifier, 1.0),
-                options,
-            );
+            next.interval = fsrs_schedule
+                .map(|schedule| schedule.interval)
+                .unwrap_or_else(|| {
+                    capped_interval_days(
+                        (progress.interval as f64)
+                            * progress.ease_factor
+                            * finite_positive(options.review_interval_modifier, 1.0),
+                        options,
+                    )
+                });
             next.next_due_at = now + u64::from(next.interval) * ONE_DAY_MS;
         }
         Rating::Easy => {
             next.state = CardState::Review;
             next.learning_step_index = None;
             next.ease_factor = (next.ease_factor + 0.15).min(MAX_EASE_FACTOR);
-            next.interval = capped_interval_days(
-                (progress.interval as f64)
-                    * progress.ease_factor
-                    * finite_positive(options.easy_bonus_multiplier, 1.3)
-                    * finite_positive(options.review_interval_modifier, 1.0),
-                options,
-            );
+            next.interval = fsrs_schedule
+                .map(|schedule| schedule.interval)
+                .unwrap_or_else(|| {
+                    capped_interval_days(
+                        (progress.interval as f64)
+                            * progress.ease_factor
+                            * finite_positive(options.easy_bonus_multiplier, 1.3)
+                            * finite_positive(options.review_interval_modifier, 1.0),
+                        options,
+                    )
+                });
             next.next_due_at = now + u64::from(next.interval) * ONE_DAY_MS;
         }
     }
@@ -191,10 +231,131 @@ fn schedule_review_card(
 
 fn graduate(progress: &mut CardProgress, base_interval_days: u32, options: &DeckOptions, now: u64) {
     let interval = capped_interval_days(base_interval_days as f64, options);
+    graduate_with_interval(progress, interval, now);
+}
+
+fn graduate_with_fsrs(
+    progress: &mut CardProgress,
+    base_interval_days: u32,
+    fsrs_schedule: Option<FsrsSchedule>,
+    options: &DeckOptions,
+    now: u64,
+) {
+    if let Some(schedule) = fsrs_schedule {
+        graduate_with_interval(progress, schedule.interval, now);
+    } else {
+        graduate(progress, base_interval_days, options, now);
+    }
+}
+
+fn graduate_with_interval(progress: &mut CardProgress, interval: u32, now: u64) {
     progress.state = CardState::Review;
     progress.learning_step_index = None;
     progress.interval = interval;
     progress.next_due_at = now + u64::from(interval) * ONE_DAY_MS;
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+struct FsrsSchedule {
+    stability: f64,
+    difficulty: f64,
+    interval: u32,
+}
+
+fn apply_fsrs_memory(progress: &mut CardProgress, schedule: FsrsSchedule) {
+    progress.fsrs_stability = Some(schedule.stability);
+    progress.fsrs_difficulty = Some(schedule.difficulty);
+}
+
+fn fsrs_schedule(
+    existing: Option<&CardProgress>,
+    rating: Rating,
+    options: &DeckOptions,
+    now: u64,
+) -> Option<FsrsSchedule> {
+    let parameters = fsrs_parameters(options)?;
+    let fsrs = FSRS::new(&parameters).ok()?;
+    let desired_retention = desired_retention(options);
+    let current_memory = existing
+        .and_then(fsrs_memory_from_progress)
+        .or_else(|| existing.and_then(|progress| fsrs_memory_from_sm2(&fsrs, progress, options)));
+    let days_elapsed = existing
+        .map(|progress| elapsed_days(progress.last_seen_at, now))
+        .unwrap_or(0);
+    let states = fsrs
+        .next_states(current_memory, desired_retention, days_elapsed)
+        .ok()?;
+    let next_state = match rating {
+        Rating::Again => states.again,
+        Rating::Hard => states.hard,
+        Rating::Good => states.good,
+        Rating::Easy => states.easy,
+    };
+    Some(fsrs_schedule_from_item(next_state, options))
+}
+
+fn fsrs_parameters(options: &DeckOptions) -> Option<Vec<f32>> {
+    if options.fsrs_parameters.len() != FSRS_PARAMETER_COUNT {
+        return None;
+    }
+    let mut parameters = Vec::with_capacity(FSRS_PARAMETER_COUNT);
+    for value in &options.fsrs_parameters {
+        if !value.is_finite() {
+            return None;
+        }
+        parameters.push(*value as f32);
+    }
+    Some(parameters)
+}
+
+fn desired_retention(options: &DeckOptions) -> f32 {
+    if options.desired_retention.is_finite() {
+        (options.desired_retention as f32).clamp(0.70, 0.99)
+    } else {
+        0.90
+    }
+}
+
+fn fsrs_memory_from_progress(progress: &CardProgress) -> Option<MemoryState> {
+    let stability = progress.fsrs_stability?;
+    let difficulty = progress.fsrs_difficulty?;
+    if stability.is_finite() && stability > 0.0 && difficulty.is_finite() {
+        Some(MemoryState {
+            stability: stability as f32,
+            difficulty: difficulty as f32,
+        })
+    } else {
+        None
+    }
+}
+
+fn fsrs_memory_from_sm2(
+    fsrs: &FSRS,
+    progress: &CardProgress,
+    options: &DeckOptions,
+) -> Option<MemoryState> {
+    if progress.interval == 0 || !progress.ease_factor.is_finite() {
+        return None;
+    }
+    fsrs.memory_state_from_sm2(
+        progress.ease_factor as f32,
+        progress.interval as f32,
+        desired_retention(options),
+    )
+    .ok()
+}
+
+fn fsrs_schedule_from_item(item: ItemState, options: &DeckOptions) -> FsrsSchedule {
+    FsrsSchedule {
+        stability: f64::from(item.memory.stability),
+        difficulty: f64::from(item.memory.difficulty),
+        interval: capped_interval_days(f64::from(item.interval), options),
+    }
+}
+
+fn elapsed_days(last_seen_at: u64, now: u64) -> u32 {
+    let days = now.saturating_sub(last_seen_at) / ONE_DAY_MS;
+    days.min(u64::from(u32::MAX)) as u32
 }
 
 fn capped_interval_days(days: f64, options: &DeckOptions) -> u32 {
@@ -234,6 +395,16 @@ mod tests {
         }
     }
 
+    fn fsrs_options() -> DeckOptions {
+        DeckOptions {
+            fsrs_parameters: fsrs::DEFAULT_PARAMETERS
+                .iter()
+                .map(|value| f64::from(*value))
+                .collect(),
+            ..options()
+        }
+    }
+
     fn review_progress() -> CardProgress {
         CardProgress {
             card_id: "card".to_string(),
@@ -248,6 +419,8 @@ mod tests {
             times_correct: 3,
             times_incorrect: 0,
             last_seen_at: NOW - ONE_DAY_MS,
+            fsrs_stability: None,
+            fsrs_difficulty: None,
             flag: None,
             marked_at: None,
         }
@@ -284,6 +457,19 @@ mod tests {
         assert_eq!(next.state, CardState::Review);
         assert_eq!(next.interval, 4);
         assert_eq!(next.next_due_at, NOW + 4 * ONE_DAY_MS);
+    }
+
+    #[test]
+    fn new_cards_start_with_deck_initial_ease_factor() {
+        let options = DeckOptions {
+            initial_ease_factor: 2.8,
+            ..options()
+        };
+
+        let next = schedule_review(None, "card", Rating::Good, &options, NOW);
+
+        assert_eq!(next.state, CardState::Learning);
+        assert_eq!(next.ease_factor, 2.8);
     }
 
     #[test]
@@ -349,6 +535,109 @@ mod tests {
         assert_eq!(easy.interval, 50);
         assert_eq!(easy.next_due_at, NOW + 50 * ONE_DAY_MS);
         assert!((easy.ease_factor - 2.65).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn fsrs_parameters_update_learning_memory_without_changing_step_due() {
+        let next = schedule_review(None, "card", Rating::Good, &fsrs_options(), NOW);
+
+        assert_eq!(next.state, CardState::Learning);
+        assert_eq!(next.learning_step_index, Some(1));
+        assert_eq!(next.interval, 0);
+        assert_eq!(next.next_due_at, NOW + 10 * ONE_MINUTE_MS);
+        assert!(next.fsrs_stability.is_some_and(|value| value > 0.0));
+        assert!(next.fsrs_difficulty.is_some_and(|value| value > 0.0));
+    }
+
+    #[test]
+    fn fsrs_parameters_drive_graduating_interval() {
+        let options = DeckOptions {
+            learning_steps_minutes: vec![1],
+            graduating_interval_days: 99,
+            ..fsrs_options()
+        };
+        let parameters: Vec<f32> = options
+            .fsrs_parameters
+            .iter()
+            .map(|value| *value as f32)
+            .collect();
+        let expected = fsrs::FSRS::new(&parameters)
+            .unwrap()
+            .next_states(None, desired_retention(&options), 0)
+            .unwrap()
+            .good
+            .interval;
+
+        let next = schedule_review(None, "card", Rating::Good, &options, NOW);
+
+        assert_eq!(next.state, CardState::Review);
+        assert_eq!(
+            next.interval,
+            capped_interval_days(f64::from(expected), &options)
+        );
+        assert_ne!(next.interval, 99);
+        assert_eq!(
+            next.next_due_at,
+            NOW + u64::from(next.interval) * ONE_DAY_MS
+        );
+        assert!(next.fsrs_stability.is_some());
+        assert!(next.fsrs_difficulty.is_some());
+    }
+
+    #[test]
+    fn fsrs_review_uses_stored_memory_state_and_elapsed_days() {
+        let mut current = review_progress();
+        current.fsrs_stability = Some(7.0);
+        current.fsrs_difficulty = Some(5.0);
+        current.last_seen_at = NOW - 3 * ONE_DAY_MS;
+        let options = fsrs_options();
+        let parameters: Vec<f32> = options
+            .fsrs_parameters
+            .iter()
+            .map(|value| *value as f32)
+            .collect();
+        let expected = fsrs::FSRS::new(&parameters)
+            .unwrap()
+            .next_states(
+                Some(MemoryState {
+                    stability: 7.0,
+                    difficulty: 5.0,
+                }),
+                desired_retention(&options),
+                3,
+            )
+            .unwrap()
+            .good;
+
+        let next = schedule_review(Some(&current), "card", Rating::Good, &options, NOW);
+
+        assert_eq!(
+            next.interval,
+            capped_interval_days(f64::from(expected.interval), &options)
+        );
+        assert_eq!(
+            next.fsrs_stability,
+            Some(f64::from(expected.memory.stability))
+        );
+        assert_eq!(
+            next.fsrs_difficulty,
+            Some(f64::from(expected.memory.difficulty))
+        );
+    }
+
+    #[test]
+    fn invalid_fsrs_parameter_count_falls_back_to_sm2_scheduler() {
+        let current = review_progress();
+        let options = DeckOptions {
+            fsrs_parameters: vec![1.0; FSRS_PARAMETER_COUNT - 1],
+            ..options()
+        };
+
+        let next = schedule_review(Some(&current), "card", Rating::Good, &options, NOW);
+
+        assert_eq!(next.interval, 25);
+        assert_eq!(next.fsrs_stability, None);
+        assert_eq!(next.fsrs_difficulty, None);
     }
 
     #[test]

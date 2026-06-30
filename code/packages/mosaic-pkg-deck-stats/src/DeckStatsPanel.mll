@@ -8,6 +8,17 @@ layout DeckStatsPanel {
     Text [ deck-stats-name ] (
       content : slot: deck-name
     )
+    Text [ deck-list-label ] (
+      content : slot: deck-list-label
+    )
+    Row [ deck-list-row ] {
+      For ( each: slot: deck-names , as: deck-option , index: i ) {
+        HostButton [ deck-option-button ] (
+          label : deck-option ,
+          onClick : emit: onSelectDeck
+        )
+      }
+    }
     Row [ deck-stats-grid ] {
       Box [ deck-stat-total ] {
         Text [ deck-total-value ] (

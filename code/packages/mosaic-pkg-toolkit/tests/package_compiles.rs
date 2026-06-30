@@ -303,6 +303,58 @@ fn listgroup_interface_matches_spec() {
     assert_eq!(emit_names, vec!["onSelect"]);
 }
 
+/// ListGroup should render the selected row through a distinct part,
+/// not merely expose an unused selected-index slot.
+#[test]
+fn listgroup_selected_row_part_compiles_and_is_styled() {
+    let mil_src = read_source("ListGroup.mil");
+    let mil_out = mosmodel_compiler::compile(&mil_src).unwrap();
+
+    let mll_src = read_source("ListGroup.mll");
+    assert!(
+        mll_src.contains("i == selectedIndex"),
+        "ListGroup.mll should compare the loop index with selectedIndex"
+    );
+    assert!(
+        mll_src.contains("list-group-item-selected"),
+        "ListGroup.mll should route the selected row through its own part"
+    );
+
+    let mll_out = moslayout_compiler::compile(&mll_src, Some(&mil_out.descriptor_json))
+        .expect("ListGroup.mll should compile against ListGroup.mil");
+    assert!(
+        mll_out.part_map_json.contains("list-group-item-selected"),
+        "ListGroup part map should include the selected row part"
+    );
+
+    for theme in THEMES {
+        let style_filename = format!("ListGroup.{theme}.msl");
+        let style_src = read_source(&style_filename);
+        let style_out = mosstyle_compiler::compile(&style_src, Some(&mll_out.part_map_json))
+            .unwrap_or_else(|e| panic!("{style_filename} failed to compile:\n{:#?}", e));
+        let selected = style_out
+            .def
+            .parts
+            .iter()
+            .find(|part| part.name == "list-group-item-selected")
+            .unwrap_or_else(|| panic!("{style_filename} missing selected row part"));
+        let background = selected
+            .base
+            .iter()
+            .find(|prop| prop.name == "background")
+            .unwrap_or_else(|| panic!("{style_filename} selected row missing background"));
+        let expected_background = if *theme == "light" {
+            "#e7f1ff"
+        } else {
+            "#1d4ed8"
+        };
+        assert_eq!(
+            background.value, expected_background,
+            "{style_filename} selected row background mismatch"
+        );
+    }
+}
+
 /// Modal — wraps HostDialog with title + message slots.
 #[test]
 fn modal_interface_matches_spec() {
@@ -343,6 +395,58 @@ fn nav_interface_matches_spec() {
     assert_eq!(slot_names, vec!["items", "active-index"]);
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onSelect"]);
+}
+
+/// Nav should render the active link through a distinct part,
+/// not merely expose an unused active-index slot.
+#[test]
+fn nav_active_link_part_compiles_and_is_styled() {
+    let mil_src = read_source("Nav.mil");
+    let mil_out = mosmodel_compiler::compile(&mil_src).unwrap();
+
+    let mll_src = read_source("Nav.mll");
+    assert!(
+        mll_src.contains("i == activeIndex"),
+        "Nav.mll should compare the loop index with activeIndex"
+    );
+    assert!(
+        mll_src.contains("nav-link-active"),
+        "Nav.mll should route the active link through its own part"
+    );
+
+    let mll_out = moslayout_compiler::compile(&mll_src, Some(&mil_out.descriptor_json))
+        .expect("Nav.mll should compile against Nav.mil");
+    assert!(
+        mll_out.part_map_json.contains("nav-link-active"),
+        "Nav part map should include the active link part"
+    );
+
+    for theme in THEMES {
+        let style_filename = format!("Nav.{theme}.msl");
+        let style_src = read_source(&style_filename);
+        let style_out = mosstyle_compiler::compile(&style_src, Some(&mll_out.part_map_json))
+            .unwrap_or_else(|e| panic!("{style_filename} failed to compile:\n{:#?}", e));
+        let active = style_out
+            .def
+            .parts
+            .iter()
+            .find(|part| part.name == "nav-link-active")
+            .unwrap_or_else(|| panic!("{style_filename} missing active link part"));
+        let background = active
+            .base
+            .iter()
+            .find(|prop| prop.name == "background")
+            .unwrap_or_else(|| panic!("{style_filename} active link missing background"));
+        let expected_background = if *theme == "light" {
+            "#e7f1ff"
+        } else {
+            "#1d4ed8"
+        };
+        assert_eq!(
+            background.value, expected_background,
+            "{style_filename} active link background mismatch"
+        );
+    }
 }
 
 /// ButtonGroup — row of related buttons that visually share borders.
@@ -425,6 +529,58 @@ fn tabs_interface_matches_spec() {
     assert_eq!(slot_names, vec!["headers", "active-body", "active-index"]);
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onSelect"]);
+}
+
+/// Tabs should render the active header through a distinct part,
+/// not merely expose an unused active-index slot.
+#[test]
+fn tabs_active_header_part_compiles_and_is_styled() {
+    let mil_src = read_source("Tabs.mil");
+    let mil_out = mosmodel_compiler::compile(&mil_src).unwrap();
+
+    let mll_src = read_source("Tabs.mll");
+    assert!(
+        mll_src.contains("i == activeIndex"),
+        "Tabs.mll should compare the loop index with activeIndex"
+    );
+    assert!(
+        mll_src.contains("tabs-tab-active"),
+        "Tabs.mll should route the active header through its own part"
+    );
+
+    let mll_out = moslayout_compiler::compile(&mll_src, Some(&mil_out.descriptor_json))
+        .expect("Tabs.mll should compile against Tabs.mil");
+    assert!(
+        mll_out.part_map_json.contains("tabs-tab-active"),
+        "Tabs part map should include the active header part"
+    );
+
+    for theme in THEMES {
+        let style_filename = format!("Tabs.{theme}.msl");
+        let style_src = read_source(&style_filename);
+        let style_out = mosstyle_compiler::compile(&style_src, Some(&mll_out.part_map_json))
+            .unwrap_or_else(|e| panic!("{style_filename} failed to compile:\n{:#?}", e));
+        let active = style_out
+            .def
+            .parts
+            .iter()
+            .find(|part| part.name == "tabs-tab-active")
+            .unwrap_or_else(|| panic!("{style_filename} missing active tab part"));
+        let background = active
+            .base
+            .iter()
+            .find(|prop| prop.name == "background")
+            .unwrap_or_else(|| panic!("{style_filename} active tab missing background"));
+        let expected_background = if *theme == "light" {
+            "#e7f1ff"
+        } else {
+            "#1d4ed8"
+        };
+        assert_eq!(
+            background.value, expected_background,
+            "{style_filename} active tab background mismatch"
+        );
+    }
 }
 
 /// DropdownMenu — toggle button + revealed item list. Two emits:

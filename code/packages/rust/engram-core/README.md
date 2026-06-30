@@ -31,7 +31,8 @@ This crate owns:
 
 - decks, cards, progress, sessions, and reviews
 - Anki-style review scheduling over new, learning, review, and relearning states
-- due/new card queue assembly
+- due/new card queue assembly, including Anki-style parent deck scopes and
+  imported new-card position ordering when a caller passes full `AppState`
 - review-log-aware daily limit accounting
 - optional note/template lineage on durable cards
 - Anki-style Cloze note generation from `{{cloze:Field}}` templates
@@ -42,6 +43,7 @@ This crate owns:
 - Anki-compatible Basic TSV card export
 - note-backed Anki Basic, Basic-and-reversed, Cloze, and custom-field TSV import/export
 - durable media asset state plus reducer commands for host-managed copy/prune flows
+- note-owned tag edit commands, including card-ID-targeted browser bulk actions
 - active review-session progress counts
 - deck-scoped review-history summaries
 - pure state transitions
@@ -52,12 +54,23 @@ scheduler state machine. Hosts that already expose deck-specific options can
 dispatch `EngramCommand::RateCardWithOptions` to provide learning steps,
 graduating/easy intervals, review limits, and lapse behavior without forking the
 review logic.
-Deck options also carry Anki-style maximum interval, review interval modifier,
-hard interval multiplier, and easy bonus multiplier settings, so hosts can keep
-deck-specific scheduler tuning in the shared Rust core.
+Deck options also carry Anki-style initial ease factor, maximum interval,
+review interval modifier, hard interval multiplier, easy bonus multiplier,
+leech threshold, and leech action settings, so hosts can keep deck-specific
+scheduler tuning in the shared Rust core.
+When a deck option preset supplies a valid 21-value FSRS parameter vector, the
+same scheduler records FSRS stability/difficulty on card progress and uses FSRS
+intervals for review cards and cards graduating into review. Decks without valid
+FSRS parameters keep the existing Anki-style SM-2-compatible scheduling path.
 `EngramCommand::SetDeckOptions` inserts or replaces a stored deck option preset,
 letting settings screens update the same options that queue building and
 `RateCard` use.
+The slice-based queue/stat helpers keep their exact deck-ID behavior for legacy
+callers, while the state-aware helpers, review-history summaries, and
+deck-scope collection helpers include child decks whose names use Anki's
+`Parent::Child` hierarchy. Facade crates use the state-aware helpers so
+studying, inspecting, or exporting a parent deck includes its descendants across
+web and native shells.
 
 Review-control commands such as `SuspendCard`, `UnsuspendCard`, `BuryCard`,
 `BuryCardSiblings`, `UnburyCard`, `SetCardFlag`, `MarkCard`, and `UnmarkCard`
@@ -69,19 +82,95 @@ Media commands such as `UpsertMediaAsset`, `DeleteMediaAsset`, and
 every shell one deterministic place to copy newly attached media, replace
 imported payloads, or prune unreferenced assets after a host-side media analysis
 pass.
+Media payloads can also carry `ExternalSourceTarget::Media` records so package
+importers can preserve their archive-level provenance without making shell code
+package-aware. Media delete/prune commands clear those media provenance records
+with the asset, preventing stale package-source links after host cleanup flows.
+Tag commands such as `AddNoteTags`, `RemoveNoteTags`, `AddCardTags`, and
+`RemoveCardTags` mutate note-owned tags through the shared reducer. The card
+forms resolve lineaged cards back to their notes, matching Anki's tag model
+while letting collection browsers dispatch actions by selected card ID.
 
-Reviews carry optional previous/resulting progress snapshots, sibling-progress
-snapshots, and active-session snapshots. `UndoLastReview` uses those snapshots
-to remove the newest snapshot-backed review in a session, restore card progress,
-adjust session counters, and return the active session to its pre-review queue.
-Legacy reviews without snapshots are left unchanged because there is no reliable
-prior progress to restore.
+Reviews carry optional answer-time durations for Anki-compatible revlog export,
+plus previous/resulting progress snapshots, sibling-progress snapshots, and
+active-session snapshots. `UndoLastReview` uses those snapshots to remove the
+newest snapshot-backed review in a session, restore card progress, adjust
+session counters, and return the active session to its pre-review queue. Legacy
+reviews without snapshots are left unchanged because there is no reliable prior
+progress to restore. Review-history summaries ignore imported Anki manual
+reschedule revlog rows (`ease = 0`) so they do not inflate answer counts or
+accuracy.
+When a review card lapses at the configured Anki-style leech threshold, the
+reducer records a leech event, adds the `leech` tag to the lineaged note, and
+suspends the card when the deck option requests Anki's suspend action. Undo
+restores both the previous progress and the previous note tags.
+Imported Anki filtered decks with `resched=false` are treated as preview-style
+sessions: the review is logged and session counters advance, but card progress,
+leech handling, and sibling burying are left unchanged.
+`rebuild_filtered_deck` and `empty_filtered_deck` provide the shared custom
+study primitive for hosts: rebuild materializes an Anki-browser search into a
+temporary filtered deck while recording each card's original deck, and empty
+restores those cards back to their original decks while clearing temporary
+membership metadata. The C and WASM facades expose the same operations so web,
+Electron, Qt, XAML, SwiftUI, and other Mosaic hosts can call the core behavior
+without reimplementing filtered-deck membership.
+Deleting imported decks, notes, or cards now preserves generic
+`ExternalSourceTarget::Deleted` tombstones with the original source ID, so
+package boundaries such as APKG can emit deletion markers without teaching the
+core about that package format.
 
 `search_cards` provides the first shared collection-browser query layer. It
-supports plain text terms plus `deck:`, `note:`, `noteType:`, `front:`,
-`back:`, `tag:`, `state:`, `is:`, `flag:`, and `marked:` filters. Terms inside
-a group use implicit AND, `OR` joins groups, parentheses group subexpressions,
-and leading `-` negates a term or group.
+supports plain text terms against Anki-style note field content, falling back to
+standalone card front/back text only when a card has no note lineage, plus
+Anki-style `w:`, `nc:`, `sc:`, and `re:` text modifiers, field-scoped regex
+searches such as `front:re:...`, tag regexes, `deck:`, `preset:`, `note:`,
+`noteType:`, `card:`, `cid:`, `nid:`, `did:`, `mid:`, `front:`, `back:`,
+`tag:`, `state:`, `is:`, `flag:`, `marked:`, `prop:`, `added:`, `edited:`,
+`introduced:`, `rated:`, `resched:`, and `dupe:` filters. `note:` / `noteType:`
+and `card:` / `template:` use Anki-style exact-or-wildcard name matching.
+`tag:*` follows Anki's universal-tag search behavior, `tag:none` finds cards
+whose note has no tags, and `tag:nc:` matches tags without combining marks.
+Ordinary text, field, tag, deck, note type, and template matching folds ASCII
+case only; `w:` and `re:` use Unicode-aware regex case-insensitive matching.
+`preset:` resolves
+imported Anki deck-option preset names from preserved collection metadata, while
+imported Anki card-state filters use preserved type/queue metadata when
+available, `flag:` uses preserved Anki card flags, `is:marked` recognizes
+Anki's `marked` note tag, and `prop:due` uses imported Anki due metadata,
+including review/day-learning scheduler days and learning queue seconds.
+`added:` uses imported Anki card-id timestamps when available. `prop:pos` /
+`prop:position` uses imported Anki new-card queue positions when available, and
+state-aware queue builders use the same positions when ordering imported new
+cards for study.
+For imported filtered-deck cards, `deck:` also matches the preserved original
+deck ID/name; native filtered-deck cards use the same behavior when their
+temporary membership records store an original Engram deck key.
+Imported Anki card-row metrics also power `prop:ivl`, `prop:reps`,
+`prop:lapses`, and `prop:ease` searches when preserved source data is present.
+When the shared reducer locally rates, buries, suspends, unburies, unsuspends,
+or flags a card, it clears the stale imported card-row fields that would
+otherwise override current Engram progress in browser searches or APKG export.
+`dupe:notetype,text` compares Anki-style first-field text, using preserved
+imported sort fields when available.
+Unknown `key:value` searches fall back to Anki-style note field searches, so
+custom fields such as `Extra:` work alongside built-in `front:` and `back:`
+filters. Imported Anki card custom data can be searched with
+`has-cd:key`, numeric `prop:cdn:key>5`, and scalar string
+`prop:cds:key=value` filters, including values preserved in Anki's nested
+`cd` card data payload.
+`prop:rated` accepts Anki-style answer-button suffixes such as
+`prop:rated<-7:again`; imported Anki FSRS card data powers stability,
+difficulty, and retrievability searches with `prop:s`, `prop:d`, and `prop:r`.
+Native Engram FSRS progress uses those same browser filters when present.
+Imported Anki revlog metadata powers manual reschedule searches with `resched:`
+and `prop:resched`; imported Anki queue metadata also powers
+`is:buried-manually` and `is:buried-sibling`; relearning cards match both
+`is:learn` and `is:review`
+for Anki-style lapsed-card queries. `introduced:` ignores imported manual
+reschedule rows when finding a card's first real review. Recent-day filters
+treat `:0` as Anki does: an alias for a one-day window. Terms inside a group
+use implicit AND, `OR` joins groups, parentheses group subexpressions, and
+leading `-` negates a term or group.
 
 `materialize_generated_card` turns a note-template `GeneratedCard` into a
 durable `Card` with note/template lineage. Cloze templates using
@@ -90,7 +179,9 @@ card per Anki-style `{{c1::text::hint}}` ordinal, render sections and
 `FrontSide`, expose Anki-style special fields such as `Tags`, `Type`, `Deck`,
 `Subdeck`, `Card`, `CardFlag`, and `CardID`, and preserve the cloze ordinal in
 lineage. Templates can require all listed fields or any one listed field,
-matching Anki model `req` rules for optional card generation.
+matching Anki model `req` rules for optional card generation. Templates may also
+carry an optional deck override so generated sibling cards and their `Deck` /
+`Subdeck` special fields can follow Anki-style template-level deck routing.
 `BuryCardSiblings` uses lineage to bury same-note sibling cards until a
 host-supplied boundary.
 `RateCardAndBurySiblings` and `RateCardWithOptionsAndBurySiblings` apply that
@@ -100,6 +191,9 @@ behavior Anki-like review screens need.
 resync generated cards for existing notes of that type, while
 `EngramCommand::DeleteNoteType` removes the note type, its notes, and only their
 lineaged generated cards.
+`NoteType::stylesheet` carries optional shared card styling text for imported
+or native note models without forcing every host to preserve backend-specific
+model JSON.
 `EngramCommand::UpsertNote` can optionally materialize generated cards from the
 note type while preserving progress for stable generated card IDs, and
 `EngramCommand::DeleteNote` cascades only the note's lineaged generated cards.
@@ -116,16 +210,31 @@ format with the header `id,deckId,front,back,createdAt`. `import_basic_cards_csv
 accepts simpler `front,back` rows and uses host-supplied deck/timestamp/ID
 prefix options to create deterministic cards.
 `export_cards_anki_basic_tsv` and `import_anki_basic_tsv` cover Anki Basic
-front/back text files with import headers (`#separator:tab`, `#html`,
-`#notetype`, `#deck`, and `#columns`) and quoted fields containing tabs,
-newlines, or quotes.
+front/back text files with import headers (`#separator`, `#html`, `#notetype`,
+`#deck`, and `#columns`) and quoted fields containing separators, newlines, or
+quotes. `#html:false` imports field text as escaped plain text, while
+`#html:true` preserves markup in imported fields. Named Anki separators include
+tab, comma, semicolon, pipe, colon, and space, plus single-character custom
+separators.
 `import_anki_notes_tsv` and `export_notes_anki_tsv` use the note/template model
 instead: imported Basic rows produce `NoteType`, `Note`, and materialized
 lineage cards, Basic-and-reversed note types produce forward and reverse
-sibling cards, and Cloze rows produce cloze note models plus one generated card
-per cloze ordinal. Custom note-type rows preserve arbitrary field columns and
-Anki's Tags column as note data, but generate no cards until a real template is
-available because Anki text exports do not carry template definitions.
+sibling cards, Basic optional-reversed note types honor Anki's `Add Reverse`
+field, Basic type-in-answer note types preserve `{{type:Back}}` typed answer
+prompts, and Cloze rows produce cloze note models plus one generated card per
+cloze ordinal. Custom note-type rows preserve arbitrary field columns and
+Anki's Tags column as note data; imported `#tags:` headers are merged into each
+row's note tags, and `#tags column:N` can mark any one-based text column as the
+row's tag source. `#deck:` and `#deck column:N` populate imported note and
+generated-card deck IDs with the host-selected deck as a fallback.
+`#guid column:N` preserves Anki text GUIDs as `anki-text` note provenance
+records without changing generated Engram note IDs. `#notetype column:N` allows
+one text import to create multiple Basic, Basic-and-reversed, Basic
+type-in-answer, Cloze, or custom note models from row metadata. Custom rows
+generate no cards until a real template is available because Anki text exports
+do not carry template definitions. Note-backed text import uses the same
+`#html:false` plain-text escaping and `#html:true` markup preservation as Basic
+front/back import.
 
 `get_active_session_progress` derives the shared review UI counters from
 `AppState`: total cards, one-based current position, remaining cards, reviewed

@@ -19,6 +19,10 @@ style CollectionActions {
     padding-bottom : 10 ;
   }
 
+  part media-health-counts {
+    padding-bottom : 8 ;
+  }
+
   part note-count {
     padding : 8 ;
   }
@@ -28,6 +32,18 @@ style CollectionActions {
   }
 
   part media-count {
+    padding : 8 ;
+  }
+
+  part referenced-media-count {
+    padding : 8 ;
+  }
+
+  part missing-media-count {
+    padding : 8 ;
+  }
+
+  part unused-media-count {
     padding : 8 ;
   }
 
@@ -49,6 +65,24 @@ style CollectionActions {
     font-weight : 700 ;
   }
 
+  part referenced-media-value {
+    color : "#bae6fd" ;
+    font-size : 18 ;
+    font-weight : 700 ;
+  }
+
+  part missing-media-value {
+    color : "#fca5a5" ;
+    font-size : 18 ;
+    font-weight : 700 ;
+  }
+
+  part unused-media-value {
+    color : "#fcd34d" ;
+    font-size : 18 ;
+    font-weight : 700 ;
+  }
+
   part note-count-label {
     color : "#cbd5e1" ;
     font-size : 12 ;
@@ -62,6 +96,41 @@ style CollectionActions {
   part media-count-label {
     color : "#cbd5e1" ;
     font-size : 12 ;
+  }
+
+  part referenced-media-label {
+    color : "#cbd5e1" ;
+    font-size : 12 ;
+  }
+
+  part missing-media-label {
+    color : "#cbd5e1" ;
+    font-size : 12 ;
+  }
+
+  part unused-media-label {
+    color : "#cbd5e1" ;
+    font-size : 12 ;
+  }
+
+  part media-missing-list {
+    padding-bottom : 4 ;
+  }
+
+  part media-unused-list {
+    padding-bottom : 8 ;
+  }
+
+  part missing-media-item {
+    color : "#fecaca" ;
+    font-size : 12 ;
+    padding : 2 ;
+  }
+
+  part unused-media-item {
+    color : "#fde68a" ;
+    font-size : 12 ;
+    padding : 2 ;
   }
 
   part import-export-actions {

@@ -2,6 +2,25 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.33.0] — 2026-06-29
+
+### Added — rung 6c batch 2: three-tier formulary cost-minimization
+
+- **`rung6c_formulary_cost/items.json`** grows **20 → 40** (`r6c-21`..`r6c-40`): a **three-source**
+  split on top of batch 1's two-source one. Each item must meet a daily requirement using a **cheap**
+  capped formulation, a **mid-priced** capped formulation, and an **uncapped brand** (p1 < p2 < p3,
+  C1 + C2 < R so the brand is genuinely needed). The cost-minimizing fill is greedy by price — max the
+  cheap to its cap, then the mid to its cap, then top up with the brand —
+  `gold = p1*C1 + p2*C2 + p3*(R−C1−C2)`. Same `optimize_value` extractor, same engine (simplex); the
+  new reasoning is **ordering across three tiers** rather than two.
+- Planted distractors are the wrong fill orders: skip the mid tier (`p1*C1 + p3*(R−C1)`), skip the
+  cheap tier (`p2*C2 + p3*(R−C2)`), ignore both caps (`p1*R`), reach only for the brand (`p3*R`).
+- The gold answer letter is **rotated across A–E** by item index (batch 1 happened to cluster on B/C);
+  the engine selects by value, so position is irrelevant to scoring but the key is no longer constant.
+- Every price and bound stated **verbatim** in the stem (no-result-literal gate holds); options
+  distinct. Engine returns the correct optimum **40/40** cached, zero wrong. (Same `SELF_CONTAINED_RUNGS`
+  registration as batch 1 — no test-tuple change.)
+
 ## [0.32.0] — 2026-06-29
 
 ### Added — rung 6c: clinical management as a minimum-cost regimen

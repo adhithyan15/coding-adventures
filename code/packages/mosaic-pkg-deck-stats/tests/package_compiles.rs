@@ -1,6 +1,8 @@
 use std::fs;
 use std::path::PathBuf;
 
+use mosaic_package_artifact_builder::{build_package, Backend, BuildOptions};
+
 const COMPONENTS: &[&str] = &["DeckStatsPanel"];
 
 fn package_root() -> PathBuf {
@@ -81,6 +83,8 @@ fn deck_stats_frontend_sources_compile() {
         vec![
             "deck-label",
             "deck-name",
+            "deck-list-label",
+            "deck-names",
             "total-label",
             "total-value",
             "new-label",
@@ -94,12 +98,20 @@ fn deck_stats_frontend_sources_compile() {
         ]
     );
 
-    assert!(component.emits.is_empty());
+    let emit_names: Vec<&str> = component.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onSelectDeck"]);
 }
 
 #[test]
 fn deck_stats_layout_binds_all_stat_slots() {
     let source = read_source("DeckStatsPanel.mll");
+
+    assert!(source.contains("content : slot: deck-list-label"));
+    assert!(source.contains("Row [ deck-list-row ]"));
+    assert!(source.contains("For ( each: slot: deck-names"));
+    assert!(source.contains("HostButton [ deck-option-button ]"));
+    assert!(source.contains("label : deck-option"));
+    assert!(source.contains("onClick : emit: onSelectDeck"));
 
     for (part, label, value) in [
         ("deck-stat-total", "total-label", "total-value"),
@@ -124,45 +136,39 @@ fn deck_stats_layout_binds_all_stat_slots() {
 }
 
 #[test]
-fn deck_stats_pipeline_emitters_all_accept_the_same_sources() {
-    let (component, layout, style) = compiled_deck_stats_panel();
+fn deck_stats_package_emitters_all_accept_deck_selector_controls() {
+    let tmp = tempfile::tempdir().expect("temp dist root");
+    let backends = [
+        (Backend::Html, "html/DeckStatsPanel.html"),
+        (Backend::React, "react/DeckStatsPanel.tsx"),
+        (Backend::SwiftUI, "swiftui/DeckStatsPanel.swift"),
+        (Backend::Qt, "qt/DeckStatsPanel.qml"),
+        (Backend::Xaml, "xaml/DeckStatsPanel.xaml"),
+        (Backend::Flutter, "flutter/DeckStatsPanel.dart"),
+        (Backend::Compose, "compose/DeckStatsPanel.kt"),
+    ];
 
-    let react = mosaic_emit_react::pipeline::from_pipeline(&component, &layout, &style)
-        .expect("React emitter should compile DeckStatsPanel");
-    assert!(react.output.contains("DeckStatsPanel"));
+    for (backend, expected_artifact) in backends {
+        let result = build_package(&BuildOptions {
+            package_root: package_root(),
+            output_root: tmp.path().to_path_buf(),
+            backend,
+            emit_project: false,
+        })
+        .unwrap_or_else(|e| panic!("{backend:?} should build DeckStatsPanel: {e}"));
 
-    let html = mosaic_emit_html::from_pipeline(&component, &layout, &style)
-        .expect("HTML emitter should compile DeckStatsPanel");
-    assert!(html
-        .output
-        .contains("data-mosaic-component=\"DeckStatsPanel\""));
-    assert!(html.output.contains("#2563eb"));
+        assert_eq!(result.components_built, vec!["DeckStatsPanel"]);
+        assert!(
+            tmp.path().join(expected_artifact).exists(),
+            "{backend:?} did not write {expected_artifact}"
+        );
+    }
 
-    let swift = mosaic_emit_swiftui::from_pipeline(&component, &layout, &style)
-        .expect("SwiftUI emitter should compile DeckStatsPanel");
-    assert!(swift.output.contains("struct DeckStatsPanel"));
-
-    let qt = mosaic_emit_qt::from_pipeline(&component, &layout, &style)
-        .expect("Qt emitter should compile DeckStatsPanel");
-    assert!(qt.output.contains("DeckStatsPanel"));
-
-    let compose = mosaic_emit_compose::from_pipeline(&component, &layout, &style)
-        .expect("Compose emitter should compile DeckStatsPanel");
-    assert!(compose.output.contains("DeckStatsPanel"));
-
-    let flutter = mosaic_emit_flutter::from_pipeline(&component, &layout, &style)
-        .expect("Flutter emitter should compile DeckStatsPanel");
-    assert!(flutter.output.contains("DeckStatsPanel"));
-
-    let xaml = mosaic_emit_xaml::from_pipeline(
-        &component,
-        &layout,
-        &style,
-        None,
-        &mosaic_emit_xaml::EmitOptions::default(),
-    )
-    .expect("XAML emitter should compile DeckStatsPanel");
-    assert!(xaml.xaml.contains("DeckStatsPanel"));
+    let html = fs::read_to_string(tmp.path().join("html").join("DeckStatsPanel.html"))
+        .expect("DeckStatsPanel HTML artifact should be readable");
+    assert!(html.contains("data-mosaic-component=\"DeckStatsPanel\""));
+    assert!(html.contains("#2563eb"));
+    assert!(html.contains("#0f766e"));
 }
 
 #[test]

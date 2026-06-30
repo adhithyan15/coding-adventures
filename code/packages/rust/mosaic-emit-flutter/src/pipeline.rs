@@ -69,7 +69,7 @@ use std::fmt::Write as _;
 
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue};
 use mosmodel_compiler::{
-    EmitDecl, EmitPayloadType, MosmodelComponent, SlotDecl, SlotDefault, SlotType,
+    EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotDefault, SlotType,
 };
 #[cfg(test)]
 use mosstyle_compiler::PartStyle;
@@ -197,6 +197,11 @@ pub struct ProjectFiles {
     /// component as the `home:` widget. Imports the component
     /// sibling-relative from the project root.
     pub main_dart: String,
+    /// `lib/mosaic_host.dart` — default no-op host hook. App packages
+    /// can overwrite this file with a backend-specific bridge via
+    /// manifest host assets while the generated shell remains runnable
+    /// without a host installed.
+    pub mosaic_host_dart: String,
     /// `README.md` — prereqs (Flutter SDK), `flutter pub get` +
     /// `flutter run` commands, file map.
     pub readme: String,
@@ -281,6 +286,7 @@ fn build_flutter_project_files(
     Ok(ProjectFiles {
         pubspec_yaml: build_pubspec_yaml(&pub_name, options),
         main_dart: build_main_dart(name, &interface.slots),
+        mosaic_host_dart: build_mosaic_host_dart(),
         readme: build_flutter_readme(&pub_name, name),
     })
 }
@@ -330,7 +336,135 @@ fn build_pubspec_yaml(pub_name: &str, options: &EmitOptions) -> String {
 fn build_main_dart(component_name: &str, slots: &[SlotDecl]) -> String {
     let root_widget = build_root_widget_constructor(component_name, slots);
     format!(
-        "{BANNER_DART}import 'package:flutter/material.dart';\nimport '../{component_name}.dart';\n\nvoid main() {{\n  runApp(const _MosaicApp());\n}}\n\nclass _MosaicApp extends StatelessWidget {{\n  const _MosaicApp();\n\n  @override\n  Widget build(BuildContext context) {{\n    return MaterialApp(\n      title: '{component_name}',\n      home: Scaffold(\n        appBar: AppBar(title: const Text('{component_name}')),\n        body: Center(\n          child: {root_widget},\n        ),\n      ),\n    );\n  }}\n}}\n"
+        concat!(
+            "{banner}",
+            "import 'package:flutter/material.dart';\n",
+            "import '../{component_name}.dart';\n",
+            "import 'mosaic_host.dart';\n\n",
+            "void main() {{\n",
+            "  runApp(const _MosaicApp());\n",
+            "}}\n\n",
+            "class _MosaicApp extends StatefulWidget {{\n",
+            "  const _MosaicApp();\n\n",
+            "  @override\n",
+            "  State<_MosaicApp> createState() => _MosaicAppState();\n",
+            "}}\n\n",
+            "class _MosaicAppState extends State<_MosaicApp> {{\n",
+            "  late final MosaicHost? _mosaicHost;\n",
+            "  Map<String, Object?> _hostProps = const <String, Object?>{{}};\n\n",
+            "  @override\n",
+            "  void initState() {{\n",
+            "    super.initState();\n",
+            "    _mosaicHost = MosaicHost.load();\n",
+            "    _applyMosaicResponse(_mosaicHost?.props());\n",
+            "  }}\n\n",
+            "  @override\n",
+            "  void dispose() {{\n",
+            "    _mosaicHost?.dispose();\n",
+            "    super.dispose();\n",
+            "  }}\n\n",
+            "  void _applyMosaicResponse(Map<String, Object?>? response) {{\n",
+            "    if (response == null) return;\n",
+            "    final nextProps = mosaicMap(response['props']);\n",
+            "    final hostIntent = mosaicMap(response['hostIntent']);\n",
+            "    final error = response['error'];\n",
+            "    if (nextProps.isNotEmpty) {{\n",
+            "      setState(() {{\n",
+            "        _hostProps = nextProps;\n",
+            "      }});\n",
+            "    }}\n",
+            "    if (hostIntent.isNotEmpty) {{\n",
+            "      debugPrint('hostIntent: $hostIntent');\n",
+            "    }}\n",
+            "    if (error != null) {{\n",
+            "      debugPrint('host error: $error');\n",
+            "    }}\n",
+            "  }}\n\n",
+            "  @override\n",
+            "  Widget build(BuildContext context) {{\n",
+            "    return MaterialApp(\n",
+            "      title: '{component_name}',\n",
+            "      home: Scaffold(\n",
+            "        appBar: AppBar(title: const Text('{component_name}')),\n",
+            "        body: Center(\n",
+            "          child: {root_widget},\n",
+            "        ),\n",
+            "      ),\n",
+            "    );\n",
+            "  }}\n",
+            "}}\n\n",
+            "Map<String, Object?> mosaicMap(Object? value) {{\n",
+            "  if (value is Map<String, Object?>) return value;\n",
+            "  if (value is Map) {{\n",
+            "    return Map<String, Object?>.fromEntries(\n",
+            "      value.entries.where((entry) => entry.key is String).map(\n",
+            "        (entry) => MapEntry(entry.key as String, entry.value),\n",
+            "      ),\n",
+            "    );\n",
+            "  }}\n",
+            "  return const <String, Object?>{{}};\n",
+            "}}\n\n",
+            "String mosaicString(Map<String, Object?> props, String name, String fallback) =>\n",
+            "    props[name]?.toString() ?? fallback;\n\n",
+            "double mosaicDouble(Map<String, Object?> props, String name, double fallback) {{\n",
+            "  final value = props[name];\n",
+            "  if (value is num) return value.toDouble();\n",
+            "  if (value is String) return double.tryParse(value) ?? fallback;\n",
+            "  return fallback;\n",
+            "}}\n\n",
+            "bool mosaicBoolean(Map<String, Object?> props, String name, bool fallback) {{\n",
+            "  final value = props[name];\n",
+            "  if (value is bool) return value;\n",
+            "  if (value is String) {{\n",
+            "    final lowered = value.toLowerCase();\n",
+            "    if (lowered == 'true') return true;\n",
+            "    if (lowered == 'false') return false;\n",
+            "  }}\n",
+            "  return fallback;\n",
+            "}}\n\n",
+            "List<String> mosaicStringList(Map<String, Object?> props, String name) {{\n",
+            "  final value = props[name];\n",
+            "  if (value is List) {{\n",
+            "    return value.map((item) => item.toString()).toList(growable: false);\n",
+            "  }}\n",
+            "  return const <String>[];\n",
+            "}}\n\n",
+            "List<double> mosaicDoubleList(Map<String, Object?> props, String name) {{\n",
+            "  final value = props[name];\n",
+            "  if (value is List) {{\n",
+            "    return value\n",
+            "        .map((item) {{\n",
+            "          if (item is num) return item.toDouble();\n",
+            "          if (item is String) return double.tryParse(item);\n",
+            "          return null;\n",
+            "        }})\n",
+            "        .whereType<double>()\n",
+            "        .toList(growable: false);\n",
+            "  }}\n",
+            "  return const <double>[];\n",
+            "}}\n\n",
+            "List<bool> mosaicBooleanList(Map<String, Object?> props, String name) {{\n",
+            "  final value = props[name];\n",
+            "  if (value is List) {{\n",
+            "    return value\n",
+            "        .map((item) {{\n",
+            "          if (item is bool) return item;\n",
+            "          if (item is String) {{\n",
+            "            final lowered = item.toLowerCase();\n",
+            "            if (lowered == 'true') return true;\n",
+            "            if (lowered == 'false') return false;\n",
+            "          }}\n",
+            "          return null;\n",
+            "        }})\n",
+            "        .whereType<bool>()\n",
+            "        .toList(growable: false);\n",
+            "  }}\n",
+            "  return const <bool>[];\n",
+            "}}\n"
+        ),
+        banner = BANNER_DART,
+        component_name = component_name,
+        root_widget = root_widget
     )
 }
 
@@ -338,13 +472,52 @@ fn build_root_widget_constructor(component_name: &str, slots: &[SlotDecl]) -> St
     let mut out = format!("{component_name}(\n");
     for slot in slots {
         let field = to_camel_case_first_lower(&slot.name);
-        let value = sample_value_for_slot(slot);
+        let value = host_value_for_slot(slot);
         writeln!(out, "            {field}: {value},").unwrap();
     }
+    out.push_str("            dispatch: (event) {\n");
     out.push_str(
-        "            dispatch: (event) => debugPrint(\"event: ${event.mosaicEnvelope}\"),\n",
+        "              final response = _mosaicHost?.handleEvent(event.mosaicEnvelope);\n",
     );
+    out.push_str("              if (response == null) {\n");
+    out.push_str("                debugPrint(\"event: ${event.mosaicEnvelope}\");\n");
+    out.push_str("              }\n");
+    out.push_str("              _applyMosaicResponse(response);\n");
+    out.push_str("            },\n");
     out.push_str("          )");
+    out
+}
+
+fn host_value_for_slot(slot: &SlotDecl) -> String {
+    let slot_name = escape_dart_string(&slot.name);
+    let fallback = sample_value_for_slot(slot);
+    match &slot.r#type {
+        SlotType::Text | SlotType::Image | SlotType::Color => {
+            format!("mosaicString(_hostProps, \"{slot_name}\", {fallback})")
+        }
+        SlotType::Number => format!("mosaicDouble(_hostProps, \"{slot_name}\", {fallback})"),
+        SlotType::Bool => format!("mosaicBoolean(_hostProps, \"{slot_name}\", {fallback})"),
+        SlotType::List(inner) => match inner.as_ref() {
+            ListInnerType::Text | ListInnerType::Image | ListInnerType::Color => {
+                format!("mosaicStringList(_hostProps, \"{slot_name}\")")
+            }
+            ListInnerType::Number => format!("mosaicDoubleList(_hostProps, \"{slot_name}\")"),
+            ListInnerType::Bool => format!("mosaicBooleanList(_hostProps, \"{slot_name}\")"),
+            _ => fallback,
+        },
+        SlotType::Node | SlotType::Component(_) => fallback,
+    }
+}
+
+fn build_mosaic_host_dart() -> String {
+    let mut out = String::from(BANNER_DART);
+    out.push_str("class MosaicHost {\n");
+    out.push_str("  const MosaicHost();\n\n");
+    out.push_str("  static MosaicHost? load() => null;\n\n");
+    out.push_str("  Map<String, Object?>? props() => null;\n\n");
+    out.push_str("  Map<String, Object?>? handleEvent(Map<String, Object?> event) => null;\n\n");
+    out.push_str("  void dispose() {}\n");
+    out.push_str("}\n");
     out
 }
 
@@ -398,7 +571,7 @@ fn kebab_to_pascal_case_for_label(s: &str) -> String {
 
 fn build_flutter_readme(pub_name: &str, component_name: &str) -> String {
     format!(
-        "{BANNER_MD}# {component_name} — Flutter app shell\n\nAuto-generated by `mosaic-compile --backend flutter --emit-project`.\n\n## Prerequisites\n\n- Flutter SDK 3.24+ (run `flutter --version` to check).\n- A device target: iOS simulator, Android emulator, or desktop (`flutter config --enable-macos-desktop` / `--enable-linux-desktop` / `--enable-windows-desktop`).\n\n## Run\n\n```sh\nflutter pub get\nflutter run -d <device-id>   # or `flutter run` to pick interactively\n```\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{component_name}.dart` | The Mosaic-compiled component. |\n| `pubspec.yaml` | Dart pub manifest. Pinned Flutter + Dart SDKs per UI32 spec §3.6.3. |\n| `lib/main.dart` | MaterialApp shell that mounts `{component_name}(...)` with sample slot values and a dispatch callback. |\n| `README.md` | This file. |\n\nDart pub name: `{pub_name}`.\n\n## Editing\n\nEvery file except `{component_name}.dart` carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
+        "{BANNER_MD}# {component_name} — Flutter app shell\n\nAuto-generated by `mosaic-compile --backend flutter --emit-project`.\n\n## Prerequisites\n\n- Flutter SDK 3.24+ (run `flutter --version` to check).\n- A device target: iOS simulator, Android emulator, or desktop (`flutter config --enable-macos-desktop` / `--enable-linux-desktop` / `--enable-windows-desktop`).\n\n## Run\n\n```sh\nflutter pub get\nflutter run -d <device-id>   # or `flutter run` to pick interactively\n```\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{component_name}.dart` | The Mosaic-compiled component. |\n| `pubspec.yaml` | Dart pub manifest. Pinned Flutter + Dart SDKs per UI32 spec §3.6.3. |\n| `lib/main.dart` | MaterialApp shell that mounts `{component_name}(...)`, hydrates slot values from an optional Mosaic host, and forwards Mosaic event envelopes. |\n| `lib/mosaic_host.dart` | Default no-op Mosaic host hook. App packages can overwrite it with a real bridge. |\n| `README.md` | This file. |\n\nDart pub name: `{pub_name}`.\n\n## Editing\n\nEvery file except `{component_name}.dart` carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
     )
 }
 
@@ -446,6 +619,7 @@ pub fn from_pipeline(
     out.push_str(&emit_widget_class(
         name,
         &interface.slots,
+        &interface.emits,
         &layout.root,
         &part_styles,
     )?);
@@ -557,6 +731,7 @@ fn emit_event_union(component: &str, emits: &[EmitDecl]) -> Result<String, Pipel
 fn emit_widget_class(
     component: &str,
     slots: &[SlotDecl],
+    emits: &[EmitDecl],
     layout_root: &LayoutNode,
     part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
@@ -593,7 +768,14 @@ fn emit_widget_class(
     writeln!(out, "  @override").unwrap();
     writeln!(out, "  Widget build(BuildContext context) {{").unwrap();
     writeln!(out, "    return").unwrap();
-    let tree = emit_widget_tree(layout_root, 6, part_styles, component, TableCtx::default())?;
+    let tree = emit_widget_tree(
+        layout_root,
+        6,
+        part_styles,
+        component,
+        emits,
+        TableCtx::default(),
+    )?;
     out.push_str(&tree);
     // Trim trailing newline before adding the closing `;`.
     if out.ends_with('\n') {
@@ -635,6 +817,13 @@ fn emit_widget_class(
 struct TableCtx<'a> {
     column_widths_slot: Option<&'a str>,
     cell_index: Option<&'a str>,
+    /// Nearest enclosing `For` row binding. Buttons inside toolkit rows
+    /// use this to dispatch the selected item without each backend
+    /// inventing a separate row-selection primitive.
+    for_item: Option<&'a str>,
+    /// Nearest enclosing `For` index binding. Number-typed button emits
+    /// use this when the interface declares a single numeric payload.
+    for_index: Option<&'a str>,
     /// The table's own (`sheet`) part base text colour / font, threaded
     /// so cells fall back to the sheet's `color` / `font-family` /
     /// `font-size` instead of `null`. Each is the already-lowered Dart
@@ -687,6 +876,7 @@ fn emit_widget_tree(
     indent: usize,
     part_styles: &HashMap<String, String>,
     component: &str,
+    emits: &[EmitDecl],
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
@@ -696,7 +886,7 @@ fn emit_widget_tree(
         return emit_host_input(node, indent, part_styles, component);
     }
     if node.tag == "HostButton" {
-        return emit_host_button(node, indent, part_styles, component);
+        return emit_host_button(node, indent, part_styles, component, emits, ctx);
     }
     if node.tag == "HostCheckbox" {
         return emit_host_checkbox(node, indent, part_styles, component);
@@ -705,13 +895,13 @@ fn emit_widget_tree(
         return emit_host_radio(node, indent, part_styles, component);
     }
     if node.tag == "HostScroll" {
-        return emit_host_scroll(node, indent, part_styles, component, ctx);
+        return emit_host_scroll(node, indent, part_styles, component, emits, ctx);
     }
     if node.tag == "HostDialog" {
         return emit_host_dialog(node, indent, part_styles, component);
     }
     if node.tag == "HostTable" {
-        return emit_host_table(node, indent, part_styles, component, ctx);
+        return emit_host_table(node, indent, part_styles, component, emits, ctx);
     }
     // UI29-4 kernel — three new primitives. `HostLink` lowers to an
     // `InkWell` wrapping a `Text` (with a `url_launcher` TODO comment
@@ -724,7 +914,7 @@ fn emit_widget_tree(
         return emit_host_link(node, indent, component);
     }
     if node.tag == "HostTooltip" {
-        return emit_host_tooltip(node, indent, part_styles, component, ctx);
+        return emit_host_tooltip(node, indent, part_styles, component, emits, ctx);
     }
     if node.tag == "HostNumberInput" {
         return emit_host_number_input(node, indent, component);
@@ -808,7 +998,7 @@ fn emit_widget_tree(
         ));
     }
     if let Some(widget) = container {
-        return emit_container(node, widget, indent, part_styles, component, ctx);
+        return emit_container(node, widget, indent, part_styles, component, emits, ctx);
     }
 
     // --- Routing: meta-primitives ---
@@ -841,11 +1031,11 @@ fn emit_widget_tree(
         // handles that case). Falls back to a self-contained
         // `Column(children: …map().toList())` so it slots into any
         // single-child parent.
-        "For" => return emit_for_dart(node, indent, part_styles, component, ctx),
+        "For" => return emit_for_dart(node, indent, part_styles, component, emits, ctx),
         // Standalone If — no Else paired. The container walker fuses
         // sibling pairs, so this branch fires only when If is the lone
         // child or the parent didn't pair-walk.
-        "If" => return emit_if_dart(node, None, indent, part_styles, component, ctx),
+        "If" => return emit_if_dart(node, None, indent, part_styles, component, emits, ctx),
         "Else" => {
             return Ok(format!(
                 "{pad}/* orphan Else — analyzer should have rejected this */ const SizedBox.shrink()\n"
@@ -899,6 +1089,7 @@ fn emit_container(
     indent: usize,
     part_styles: &HashMap<String, String>,
     component: &str,
+    emits: &[EmitDecl],
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
@@ -923,7 +1114,7 @@ fn emit_container(
         // conditional background + text colour. See `emit_styled_box`.
         if let Some(part) = node.part_name.as_deref() {
             if part_has_decoration(style_props) || node_has_state_when(node) {
-                return emit_styled_box(node, part, indent, part_styles, component, ctx);
+                return emit_styled_box(node, part, indent, part_styles, component, emits, ctx);
             }
         }
 
@@ -939,16 +1130,28 @@ fn emit_container(
             ));
         }
         if node.children.len() == 1 {
-            let child_src =
-                emit_widget_tree(&node.children[0], indent + 2, part_styles, component, ctx)?;
+            let child_src = emit_widget_tree(
+                &node.children[0],
+                indent + 2,
+                part_styles,
+                component,
+                emits,
+                ctx,
+            )?;
             let child_src = child_src.trim_end_matches('\n');
             return Ok(format!(
                 "{pad}Container(\n{inner_pad}child: {child_src}{style_args}\n{pad})\n",
                 inner_pad = " ".repeat(indent + 2),
             ));
         }
-        let children =
-            emit_paired_children(&node.children, indent + 4, part_styles, component, ctx)?;
+        let children = emit_paired_children(
+            &node.children,
+            indent + 4,
+            part_styles,
+            component,
+            emits,
+            ctx,
+        )?;
         return Ok(format!(
             "{pad}Container(\n{pad}  child: Column(children: [\n{children}{pad}  ]){style_args}\n{pad})\n"
         ));
@@ -959,7 +1162,14 @@ fn emit_container(
     // child of this Row/Column SPREADS its mapped widgets into THIS
     // `children: [...]` list, so the Row lays cells across and the
     // Column stacks rows down — the parent controls orientation.
-    let children = emit_paired_children(&node.children, indent + 4, part_styles, component, ctx)?;
+    let children = emit_paired_children(
+        &node.children,
+        indent + 4,
+        part_styles,
+        component,
+        emits,
+        ctx,
+    )?;
 
     if children.is_empty() {
         return Ok(format!("{pad}const {widget}(children: [])\n"));
@@ -989,6 +1199,7 @@ fn emit_paired_children(
     indent: usize,
     part_styles: &HashMap<String, String>,
     component: &str,
+    emits: &[EmitDecl],
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
@@ -998,7 +1209,8 @@ fn emit_paired_children(
         if child.tag == "If" {
             // Peek for `Else` immediately after; pair if present.
             let else_node = children.get(i + 1).filter(|n| n.tag == "Else");
-            let if_src = emit_if_dart(child, else_node, indent, part_styles, component, ctx)?;
+            let if_src =
+                emit_if_dart(child, else_node, indent, part_styles, component, emits, ctx)?;
             let trimmed = if_src.trim_end_matches('\n');
             out.push_str(trimmed);
             out.push_str(",\n");
@@ -1015,7 +1227,7 @@ fn emit_paired_children(
         // bug that made the header A–E and each row's cells render as a
         // vertical stack.
         if child.tag == "For" {
-            let spread = emit_for_spread(child, indent, part_styles, component, ctx)?;
+            let spread = emit_for_spread(child, indent, part_styles, component, emits, ctx)?;
             out.push_str(spread.trim_end_matches('\n'));
             out.push_str(",\n");
             i += 1;
@@ -1023,7 +1235,7 @@ fn emit_paired_children(
         }
         // Orphan Else falls through to the standalone routing in
         // `emit_widget_tree`, which emits a documenting placeholder.
-        let sub = emit_widget_tree(child, indent, part_styles, component, ctx)?;
+        let sub = emit_widget_tree(child, indent, part_styles, component, emits, ctx)?;
         let sub = sub.trim_end_matches('\n');
         out.push_str(sub);
         out.push_str(",\n");
@@ -1052,6 +1264,7 @@ fn emit_for_spread(
     indent: usize,
     part_styles: &HashMap<String, String>,
     component: &str,
+    emits: &[EmitDecl],
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
@@ -1070,11 +1283,13 @@ fn emit_for_spread(
             (Some(idx), Some(_)) => Some(idx.as_str()),
             _ => ctx.cell_index,
         },
+        for_item: Some(as_name.as_str()),
+        for_index: index_name.as_deref().or(ctx.for_index),
         ..ctx
     };
 
     let body_pad = indent + 4;
-    let body = for_body_widget(node, body_pad, part_styles, component, body_ctx)?;
+    let body = for_body_widget(node, body_pad, part_styles, component, emits, body_ctx)?;
     let body_trimmed = body.trim_start();
 
     match index_name {
@@ -1129,19 +1344,32 @@ fn for_body_widget(
     body_pad: usize,
     part_styles: &HashMap<String, String>,
     component: &str,
+    emits: &[EmitDecl],
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     if node.children.is_empty() {
         return Ok(format!("{}const SizedBox.shrink()", " ".repeat(body_pad)));
     }
     if node.children.len() == 1 {
-        return Ok(
-            emit_widget_tree(&node.children[0], body_pad, part_styles, component, ctx)?
-                .trim_end_matches('\n')
-                .to_string(),
-        );
+        return Ok(emit_widget_tree(
+            &node.children[0],
+            body_pad,
+            part_styles,
+            component,
+            emits,
+            ctx,
+        )?
+        .trim_end_matches('\n')
+        .to_string());
     }
-    let inner = emit_paired_children(&node.children, body_pad + 4, part_styles, component, ctx)?;
+    let inner = emit_paired_children(
+        &node.children,
+        body_pad + 4,
+        part_styles,
+        component,
+        emits,
+        ctx,
+    )?;
     Ok(format!(
         "{}Column(children: [\n{}{}])",
         " ".repeat(body_pad),
@@ -1179,6 +1407,7 @@ fn emit_for_dart(
     indent: usize,
     part_styles: &HashMap<String, String>,
     component: &str,
+    emits: &[EmitDecl],
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
@@ -1193,10 +1422,15 @@ fn emit_for_dart(
 
     // `index:` — optional, always a Keyword when present.
     let index_name = find_keyword_prop(node, "index").map(to_camel_case_first_lower);
+    let body_ctx = TableCtx {
+        for_item: Some(as_name.as_str()),
+        for_index: index_name.as_deref().or(ctx.for_index),
+        ..ctx
+    };
 
     // Body is the children of the For.
     let body_pad = indent + 6;
-    let body = for_body_widget(node, body_pad, part_styles, component, ctx)?;
+    let body = for_body_widget(node, body_pad, part_styles, component, emits, body_ctx)?;
     let body_trimmed = body.trim_start();
 
     match index_name {
@@ -1251,6 +1485,7 @@ fn emit_if_dart(
     indent: usize,
     part_styles: &HashMap<String, String>,
     component: &str,
+    emits: &[EmitDecl],
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
@@ -1268,9 +1503,16 @@ fn emit_if_dart(
     };
 
     let body_pad = indent + 2;
-    let then_branch = render_branch(&if_node.children, body_pad, part_styles, component, ctx)?;
+    let then_branch = render_branch(
+        &if_node.children,
+        body_pad,
+        part_styles,
+        component,
+        emits,
+        ctx,
+    )?;
     let else_branch = match else_node {
-        Some(en) => render_branch(&en.children, body_pad, part_styles, component, ctx)?,
+        Some(en) => render_branch(&en.children, body_pad, part_styles, component, emits, ctx)?,
         None => "const SizedBox.shrink()".to_string(),
     };
 
@@ -1293,16 +1535,17 @@ fn render_branch(
     indent: usize,
     part_styles: &HashMap<String, String>,
     component: &str,
+    emits: &[EmitDecl],
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     if children.is_empty() {
         return Ok("const SizedBox.shrink()".to_string());
     }
     if children.len() == 1 {
-        let s = emit_widget_tree(&children[0], indent, part_styles, component, ctx)?;
+        let s = emit_widget_tree(&children[0], indent, part_styles, component, emits, ctx)?;
         return Ok(s.trim_end_matches('\n').trim_start().to_string());
     }
-    let inner = emit_paired_children(children, indent + 2, part_styles, component, ctx)?;
+    let inner = emit_paired_children(children, indent + 2, part_styles, component, emits, ctx)?;
     Ok(format!(
         "Column(children: [\n{}{}])",
         inner,
@@ -1558,6 +1801,7 @@ fn emit_styled_box(
     indent: usize,
     part_styles: &HashMap<String, String>,
     component: &str,
+    emits: &[EmitDecl],
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
@@ -1633,16 +1877,31 @@ fn emit_styled_box(
             indent + 4,
             part_styles,
             component,
+            emits,
             ctx,
         )?
         .trim_end_matches('\n')
         .to_string()
     } else if node.children.len() == 1 {
-        emit_widget_tree(&node.children[0], indent + 4, part_styles, component, ctx)?
-            .trim_end_matches('\n')
-            .to_string()
+        emit_widget_tree(
+            &node.children[0],
+            indent + 4,
+            part_styles,
+            component,
+            emits,
+            ctx,
+        )?
+        .trim_end_matches('\n')
+        .to_string()
     } else {
-        let kids = emit_paired_children(&node.children, indent + 6, part_styles, component, ctx)?;
+        let kids = emit_paired_children(
+            &node.children,
+            indent + 6,
+            part_styles,
+            component,
+            emits,
+            ctx,
+        )?;
         format!("{ip}Column(children: [\n{kids}{ip}])")
     };
     let inner_child = inner_child.trim_start();
@@ -1837,16 +2096,24 @@ fn emit_host_button(
     indent: usize,
     part_styles: &HashMap<String, String>,
     component: &str,
+    emits: &[EmitDecl],
+    ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
-    let label_expr: String = if let Some(s) = find_string_prop(node, "label") {
-        format!("Text(\"{}\")", escape_dart_string(s))
-    } else if let Some(slot) = find_slot_ref_prop(node, "label") {
-        let camel = to_camel_case_first_lower(slot);
-        validate_slot_or_field_name(&camel)?;
-        format!("Text({camel})")
-    } else {
-        "Text(\"\")".to_string()
+    let label_expr: String = match find_prop_value(node, "label") {
+        Some(LayoutPropValue::String(s)) => format!("Text(\"{}\")", escape_dart_string(s)),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel)?;
+            format!("Text({camel})")
+        }
+        Some(LayoutPropValue::Keyword(name)) => {
+            let camel = to_camel_case_first_lower(name);
+            validate_slot_or_field_name(&camel)?;
+            format!("Text({camel})")
+        }
+        Some(LayoutPropValue::Expr(text)) => format!("Text({})", text.trim()),
+        _ => "Text(\"\")".to_string(),
     };
 
     // onPressed callback.  `disabled: true` (compile-time keyword)
@@ -1854,16 +2121,26 @@ fn emit_host_button(
     // event — now that `component` is threaded down (after the
     // FormulaBar fix), we can finally produce a real
     // `dispatch(<Component>Event<Case>())` call.  Buttons have no
-    // inherent payload, so we always dispatch the parameterless
-    // form; a future PR will look up the .mil's emit arity and
-    // dispatch a constructed payload if one was declared.
+    // inherent payload; row-scoped single-payload events are handled
+    // by the current behavior note below.
+    // Current behavior: zero-payload events keep the `EventCase()`
+    // shape, while single text-like/number payloads borrow the nearest
+    // `For` item/index when present.
     let disabled_is_true = matches!(find_keyword_prop(node, "disabled"), Some("true"));
     let on_pressed_expr: String = if disabled_is_true {
         "null".to_string()
-    } else if let Some(emit_name) = find_emit_ref_prop(node, "onTap") {
+    } else if let Some(emit_name) =
+        find_emit_ref_prop(node, "onClick").or_else(|| find_emit_ref_prop(node, "onTap"))
+    {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_emit_name(&case)?;
-        format!("() => dispatch({component}Event{case}())")
+        let args = emits
+            .iter()
+            .find(|e| e.name == *emit_name)
+            .map(|e| host_button_event_args(e, ctx))
+            .transpose()?
+            .unwrap_or_default();
+        format!("() => dispatch({component}Event{case}({args}))")
     } else {
         "() {}".to_string()
     };
@@ -1872,6 +2149,41 @@ fn emit_host_button(
     Ok(format!(
         "{pad}ElevatedButton(onPressed: {on_pressed_expr}{style_arg}, child: {label_expr})\n"
     ))
+}
+
+fn host_button_event_args(emit: &EmitDecl, ctx: TableCtx) -> Result<String, PipelineEmitError> {
+    if emit.params.is_empty() {
+        return Ok(String::new());
+    }
+    if emit.params.len() == 1 {
+        let param = &emit.params[0];
+        let field = to_camel_case_first_lower(&param.name);
+        validate_slot_or_field_name(&field)?;
+        let expr = host_button_payload_expr(&param.r#type, ctx)
+            .unwrap_or_else(|| "/* TODO: payload */ throw UnimplementedError()".to_string());
+        return Ok(format!("{field}: {expr}"));
+    }
+    emit.params
+        .iter()
+        .map(|param| {
+            let field = to_camel_case_first_lower(&param.name);
+            validate_slot_or_field_name(&field)?;
+            Ok(format!(
+                "{field}: /* TODO: payload */ throw UnimplementedError()"
+            ))
+        })
+        .collect::<Result<Vec<_>, _>>()
+        .map(|parts| parts.join(", "))
+}
+
+fn host_button_payload_expr(t: &EmitPayloadType, ctx: TableCtx) -> Option<String> {
+    match t {
+        EmitPayloadType::Text | EmitPayloadType::Color | EmitPayloadType::Component(_) => {
+            ctx.for_item.map(str::to_string)
+        }
+        EmitPayloadType::Number => ctx.for_index.map(str::to_string),
+        EmitPayloadType::Bool => None,
+    }
 }
 
 /// Lower a styled Mosaic button part into a Flutter `ButtonStyle`.
@@ -2066,6 +2378,7 @@ fn emit_host_scroll(
     indent: usize,
     part_styles: &HashMap<String, String>,
     component: &str,
+    emits: &[EmitDecl],
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
@@ -2073,7 +2386,14 @@ fn emit_host_scroll(
         return Ok(format!("{pad}const SingleChildScrollView()\n"));
     }
     if node.children.len() == 1 {
-        let child = emit_widget_tree(&node.children[0], indent + 2, part_styles, component, ctx)?;
+        let child = emit_widget_tree(
+            &node.children[0],
+            indent + 2,
+            part_styles,
+            component,
+            emits,
+            ctx,
+        )?;
         let child = child.trim_end_matches('\n');
         return Ok(format!(
             "{pad}SingleChildScrollView(\n{pad}  child: {child},\n{pad})\n"
@@ -2082,7 +2402,14 @@ fn emit_host_scroll(
     // Multi-child path. Use the paired walker so an `If`/`Else`
     // sibling pair (Cell-style conditionals inside a scroll viewport)
     // is consumed correctly.
-    let children = emit_paired_children(&node.children, indent + 6, part_styles, component, ctx)?;
+    let children = emit_paired_children(
+        &node.children,
+        indent + 6,
+        part_styles,
+        component,
+        emits,
+        ctx,
+    )?;
     Ok(format!(
         "{pad}SingleChildScrollView(\n{pad}  child: Column(\n{pad}    children: [\n{children}{pad}    ],\n{pad}  ),\n{pad})\n"
     ))
@@ -2134,6 +2461,7 @@ fn emit_host_table(
     indent: usize,
     part_styles: &HashMap<String, String>,
     component: &str,
+    emits: &[EmitDecl],
     parent_ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
@@ -2162,6 +2490,8 @@ fn emit_host_table(
     let ctx = TableCtx {
         column_widths_slot: column_widths_slot.as_deref(),
         cell_index: parent_ctx.cell_index,
+        for_item: parent_ctx.for_item,
+        for_index: parent_ctx.for_index,
         sheet_text_color: sheet_text_color.as_deref(),
         sheet_font_family: sheet_font_family.as_deref(),
         sheet_font_size: sheet_font_size.as_deref(),
@@ -2197,7 +2527,14 @@ fn emit_host_table(
     let body_inner = if node.children.is_empty() {
         format!("{}const SizedBox.shrink()\n", " ".repeat(indent + 2))
     } else {
-        emit_paired_children(&node.children, indent + 4, part_styles, component, ctx)?
+        emit_paired_children(
+            &node.children,
+            indent + 4,
+            part_styles,
+            component,
+            emits,
+            ctx,
+        )?
     };
     let table_body = format!(
         "Column(\n{p}children: [\n{body}{p}],\n{pad})",
@@ -2416,6 +2753,7 @@ fn emit_host_tooltip(
     indent: usize,
     part_styles: &HashMap<String, String>,
     component: &str,
+    emits: &[EmitDecl],
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
@@ -2437,13 +2775,26 @@ fn emit_host_tooltip(
     let child_src: String = if node.children.is_empty() {
         format!("{inner_pad}const SizedBox.shrink()\n")
     } else if node.children.len() == 1 {
-        emit_widget_tree(&node.children[0], indent + 2, part_styles, component, ctx)?
+        emit_widget_tree(
+            &node.children[0],
+            indent + 2,
+            part_styles,
+            component,
+            emits,
+            ctx,
+        )?
     } else {
         // Multiple children — wrap in Column. Shouldn't happen for a
         // spec-conformant HostTooltip but we handle it defensively
         // (and through the paired walker so `If`/`Else` still fuses).
-        let children =
-            emit_paired_children(&node.children, indent + 6, part_styles, component, ctx)?;
+        let children = emit_paired_children(
+            &node.children,
+            indent + 6,
+            part_styles,
+            component,
+            emits,
+            ctx,
+        )?;
         format!(
             "{inner_pad}Column(\n{inner_pad}  children: [\n{children}{inner_pad}  ],\n{inner_pad})\n"
         )
@@ -2875,6 +3226,10 @@ fn escape_dart_string(s: &str) -> String {
 // LayoutProp lookup helpers (same shape as React/Swift backends)
 // =====================================================================
 
+fn find_prop_value<'a>(node: &'a LayoutNode, name: &str) -> Option<&'a LayoutPropValue> {
+    node.props.iter().find(|p| p.name == name).map(|p| &p.value)
+}
+
 /// Map a semantic glyph name to a Material widget that natively
 /// expresses that semantic.  Returns `None` for any name not in the
 /// table — the caller falls back to the standard
@@ -3220,6 +3575,168 @@ mod tests {
         let out = &r.output;
         assert!(out.contains("ElevatedButton"));
         assert!(out.contains("Text(\"Save\")"));
+    }
+
+    #[test]
+    fn host_button_with_on_click_emits_dispatch_handler() {
+        let m = component("X", vec![], vec![emit("onClick", vec![])]);
+        let l = layout(
+            "X",
+            node_with(
+                "HostButton",
+                vec![
+                    LayoutProp {
+                        name: "label".into(),
+                        value: LayoutPropValue::String("Save".into()),
+                    },
+                    LayoutProp {
+                        name: "onClick".into(),
+                        value: LayoutPropValue::EmitRef("onClick".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        let out = &r.output;
+        assert!(out.contains("onPressed: () => dispatch(XEventClick())"));
+        assert!(out.contains("Text(\"Save\")"));
+    }
+
+    #[test]
+    fn host_button_inside_indexed_for_dispatches_index_payload() {
+        let m = component(
+            "ListGroup",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit(
+                "onSelect",
+                vec![EmitParam {
+                    name: "index".into(),
+                    r#type: EmitPayloadType::Number,
+                }],
+            )],
+        );
+        let l = layout(
+            "ListGroup",
+            node_with(
+                "Column",
+                vec![],
+                vec![node_with(
+                    "For",
+                    vec![
+                        LayoutProp {
+                            name: "each".into(),
+                            value: LayoutPropValue::SlotRef("items".into()),
+                        },
+                        LayoutProp {
+                            name: "as".into(),
+                            value: LayoutPropValue::Keyword("item".into()),
+                        },
+                        LayoutProp {
+                            name: "index".into(),
+                            value: LayoutPropValue::Keyword("i".into()),
+                        },
+                    ],
+                    vec![node_with(
+                        "HostButton",
+                        vec![
+                            LayoutProp {
+                                name: "label".into(),
+                                value: LayoutPropValue::Keyword("item".into()),
+                            },
+                            LayoutProp {
+                                name: "onClick".into(),
+                                value: LayoutPropValue::EmitRef("onSelect".into()),
+                            },
+                        ],
+                        vec![],
+                    )],
+                )],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("ListGroup"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("final i = entry.key;"),
+            "expected indexed For binding, got:\n{out}"
+        );
+        assert!(
+            out.contains("dispatch(ListGroupEventSelect(index: i))"),
+            "expected HostButton to dispatch index payload, got:\n{out}"
+        );
+        assert!(
+            out.contains("Text(item)"),
+            "expected HostButton label to use For item binding, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_button_inside_for_dispatches_text_item_payload() {
+        let m = component(
+            "SelectMenu",
+            vec![slot(
+                "options",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit(
+                "onChange",
+                vec![EmitParam {
+                    name: "value".into(),
+                    r#type: EmitPayloadType::Text,
+                }],
+            )],
+        );
+        let l = layout(
+            "SelectMenu",
+            node_with(
+                "Column",
+                vec![],
+                vec![node_with(
+                    "For",
+                    vec![
+                        LayoutProp {
+                            name: "each".into(),
+                            value: LayoutPropValue::SlotRef("options".into()),
+                        },
+                        LayoutProp {
+                            name: "as".into(),
+                            value: LayoutPropValue::Keyword("option".into()),
+                        },
+                    ],
+                    vec![node_with(
+                        "HostButton",
+                        vec![
+                            LayoutProp {
+                                name: "label".into(),
+                                value: LayoutPropValue::Keyword("option".into()),
+                            },
+                            LayoutProp {
+                                name: "onClick".into(),
+                                value: LayoutPropValue::EmitRef("onChange".into()),
+                            },
+                        ],
+                        vec![],
+                    )],
+                )],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("SelectMenu"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("dispatch(SelectMenuEventChange(value: option))"),
+            "expected HostButton to dispatch item payload, got:\n{out}"
+        );
+        assert!(
+            out.contains("Text(option)"),
+            "expected HostButton label to use For item binding, got:\n{out}"
+        );
     }
 
     #[test]
@@ -4307,6 +4824,10 @@ mod tests {
             proj.main_dart.starts_with("// AUTO-GENERATED"),
             "lib/main.dart must START with `// AUTO-GENERATED`"
         );
+        assert!(
+            proj.mosaic_host_dart.starts_with("// AUTO-GENERATED"),
+            "lib/mosaic_host.dart must START with `// AUTO-GENERATED`"
+        );
         // README uses HTML-comment syntax.
         assert!(
             proj.readme.starts_with("<!-- AUTO-GENERATED"),
@@ -4409,10 +4930,12 @@ mod tests {
         let ProjectFiles {
             pubspec_yaml,
             main_dart,
+            mosaic_host_dart,
             readme,
         } = proj;
         assert!(!pubspec_yaml.is_empty(), "pubspec.yaml empty");
         assert!(!main_dart.is_empty(), "lib/main.dart empty");
+        assert!(!mosaic_host_dart.is_empty(), "lib/mosaic_host.dart empty");
         assert!(!readme.is_empty(), "README.md empty");
     }
 
@@ -4460,13 +4983,36 @@ mod tests {
             "main.dart must invoke MyWidget constructor"
         );
         assert!(
+            proj.main_dart.contains("import 'mosaic_host.dart';"),
+            "main.dart must import the optional Mosaic host hook"
+        );
+        assert!(
+            proj.main_dart.contains("MosaicHost.load()"),
+            "main.dart must load the optional Mosaic host"
+        );
+        assert!(
             proj.main_dart
-                .contains("dispatch: (event) => debugPrint(\"event: ${event.mosaicEnvelope}\")"),
-            "main.dart must provide a dispatch callback with a Mosaic envelope"
+                .contains("_applyMosaicResponse(_mosaicHost?.props())"),
+            "main.dart must hydrate initial props through the Mosaic host"
+        );
+        assert!(
+            proj.main_dart
+                .contains("final response = _mosaicHost?.handleEvent(event.mosaicEnvelope);"),
+            "main.dart must forward Mosaic event envelopes to the host"
+        );
+        assert!(
+            proj.main_dart
+                .contains("debugPrint(\"event: ${event.mosaicEnvelope}\");"),
+            "main.dart must keep a sample fallback when no host is installed"
         );
         assert!(
             proj.main_dart.contains("MaterialApp("),
             "main.dart must wrap in MaterialApp"
+        );
+        assert!(
+            proj.mosaic_host_dart
+                .contains("static MosaicHost? load() => null;"),
+            "default mosaic_host.dart must be a no-op hook"
         );
     }
 
@@ -4500,15 +5046,25 @@ mod tests {
             .unwrap();
 
         assert!(proj.main_dart.contains("ProfileCard("));
-        assert!(proj.main_dart.contains("displayName: \"Ada\","));
-        assert!(proj.main_dart.contains("age: 0.0,"));
-        assert!(proj.main_dart.contains("isActive: false,"));
-        assert!(proj.main_dart.contains("avatarUrl: \"sample-image\","));
-        assert!(proj.main_dart.contains("accent: \"#808080\","));
-        assert!(proj.main_dart.contains("tags: const [],"));
         assert!(proj
             .main_dart
-            .contains("dispatch: (event) => debugPrint(\"event: ${event.mosaicEnvelope}\")"));
+            .contains("displayName: mosaicString(_hostProps, \"display-name\", \"Ada\"),"));
+        assert!(proj
+            .main_dart
+            .contains("age: mosaicDouble(_hostProps, \"age\", 0.0),"));
+        assert!(proj
+            .main_dart
+            .contains("isActive: mosaicBoolean(_hostProps, \"is-active\", false),"));
+        assert!(proj
+            .main_dart
+            .contains("avatarUrl: mosaicString(_hostProps, \"avatar-url\", \"sample-image\"),"));
+        assert!(proj
+            .main_dart
+            .contains("accent: mosaicString(_hostProps, \"accent\", \"#808080\"),"));
+        assert!(proj
+            .main_dart
+            .contains("tags: mosaicStringList(_hostProps, \"tags\"),"));
+        assert!(proj.main_dart.contains("_applyMosaicResponse(response);"));
     }
 
     /// Truth table for is_valid_dart_pub_name.

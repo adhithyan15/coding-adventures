@@ -14,6 +14,7 @@ It answers with four sections:
 | `[package]`      | name (kebab-case), semver version, free-text description, SPDX license  |
 | `[components]`   | `exports = [...]` — PascalCase component names this package publishes   |
 | `[dependencies]` | map from kebab-case package name to semver string                       |
+| `[host_assets]`  | optional per-backend files copied into generated project shells          |
 | `[kernel]`       | `version = "1"` — primitive-kernel ABI this package targets             |
 
 Nothing else is permitted at the top level; the parser does not error on
@@ -34,6 +35,11 @@ exports = ["Grid", "Cell", "Column"]
 
 [dependencies]
 # empty for this one
+
+[host_assets]
+files = [
+  { backend = "react", source = "host/web/grid-host.ts", target = "src/grid-host.ts" },
+]
 
 [kernel]
 version = "1"
@@ -58,6 +64,7 @@ assert_eq!(pkg.kernel.version, "1");
 | `package.license`        | non-empty string (SPDX id recommended)                        |
 | `components.exports[]`   | `^[A-Z][a-zA-Z0-9]*$` (PascalCase)                            |
 | `dependencies.<name>`    | name = kebab-case, value = semver-like                        |
+| `host_assets.files[]`    | optional `{ backend, source, target }` strings                 |
 | `kernel.version`         | exactly `"1"` (kernel ABI v1)                                 |
 
 ## Error model
