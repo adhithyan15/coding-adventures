@@ -257,8 +257,38 @@ _OBJECT_METHODS = frozenset(
         "to_a",
         "to_s",
         "inspect",
+        # Kernel flow-control methods (M6).  ``send``/``__send__`` re-enter
+        # dispatch with a dynamic method name; ``tap`` and ``then``/``yield_self``
+        # are the block-taking pair (handled in :func:`_object_block_method`),
+        # but they are listed here so ``respond_to?`` reports them on *every*
+        # receiver — block-less and block-bearing calls alike resolve.
+        "send",
+        "__send__",
+        "public_send",
+        "tap",
+        "then",
+        "yield_self",
     }
 )
+
+# Block-taking universal methods (M6): ``tap`` yields the receiver and returns
+# it; ``then``/``yield_self`` yield the receiver and return the block's result.
+# Dispatched in :func:`_object_block_method` only when a trailing ``Closure`` is
+# present (block-less ``tap``/``then`` fall through to the receiver-identity
+# floor in :func:`_object_method`).
+_OBJECT_BLOCK_METHODS = frozenset({"tap", "then", "yield_self"})
+
+# ``Symbol``-routing methods (M6): the receiver's *first* argument names the
+# method to dispatch.  Listed for ``respond_to?`` honesty and split out in
+# :func:`call_method` because they recurse through dispatch with a dynamic name.
+_SEND_METHODS = frozenset({"send", "__send__", "public_send"})
+
+# ``TrueClass``/``FalseClass`` boolean logic (M6).  Ruby's ``&`` and ``|`` on a
+# boolean are *non-short-circuiting* logical operators (``true & nil == false``,
+# ``false | 1 == true``), distinct from the lazy ``&&``/``||`` keywords.  ``^`` is
+# logical XOR.  These resolve on a ``bool`` receiver *before* the universal
+# ``Object`` table so ``true & false`` runs rather than bottoming out at ``nil``.
+_BOOL_METHODS = frozenset({"&", "|", "^"})
 
 # Non-block ``Array`` methods (M1a).  Block methods (``each``/``map``/…) land in
 # a later PR; they are deliberately absent here so ``respond_to?`` stays honest.
@@ -465,7 +495,7 @@ def _responds_to(recv: Val, name: str) -> bool:
     if isinstance(recv, Symbol):
         return name in _SYMBOL_METHODS
     if isinstance(recv, bool):
-        return False
+        return name in _BOOL_METHODS
     if isinstance(recv, (int, float)):
         return name in _NUMERIC_METHODS or name in _NUMERIC_BLOCK_METHODS
     if isinstance(recv, list):
@@ -534,7 +564,59 @@ def _object_method(recv: Val, name: str, args: list[Val]) -> Val:
         return _ruby_to_s(recv)
     if name == "inspect":
         return _ruby_inspect(recv)
+    if name == "tap":
+        # Block-less ``tap`` (no ``Closure`` reached :func:`_object_block_method`)
+        # still returns the receiver — Ruby returns an Enumerator-less self in v0.
+        return recv
+    if name in ("then", "yield_self"):
+        # Block-less ``then``/``yield_self`` returns the receiver (Ruby returns an
+        # Enumerator; v0 floor — see the spec's "Out of scope" note).
+        return recv
     return _MISS
+
+
+def _object_block_method(recv: Val, name: str, block: Closure) -> Val:
+    """Block-taking universal methods (Kernel).  ``block`` is applied via
+    :func:`apply` with the receiver as its single argument.  Returns
+    :data:`_MISS` if ``name`` is not a universal block method.
+
+    | method                | yields | returns        |
+    |-----------------------|--------|----------------|
+    | ``tap``               | recv   | **recv**       |
+    | ``then``/``yield_self`` | recv | **block result** |
+
+    ``tap`` is the "inspect-in-a-pipeline" method (run a side effect, keep the
+    value); ``then``/``yield_self`` is functional "pipe into a block" (replace
+    the value with the block's result).
+    """
+    if name == "tap":
+        apply(block, [recv])
+        return recv
+    if name in ("then", "yield_self"):
+        return apply(block, [recv])
+    return _MISS
+
+
+def _bool_method(recv: bool, name: str, args: list[Val]) -> Val:
+    """``TrueClass``/``FalseClass`` logical operators (``&``, ``|``, ``^``).
+
+    These are Ruby's *eager* boolean operators (every operand is evaluated — no
+    short-circuit), and they coerce the argument by Ruby truthiness: ``nil`` and
+    ``false`` are falsy, everything else (``0``, ``""``, …) is truthy.  So
+    ``true & nil == false`` and ``false | 0 == true``.  Returns :data:`_MISS` if
+    ``name`` is not a boolean operator.
+    """
+    if name not in _BOOL_METHODS or not args:
+        # Not an operator (or called with no operand, e.g. ``true.to_s``) — defer
+        # to the universal ``Object`` table rather than indexing an empty ``args``.
+        return _MISS
+    other = truthy(args[0])
+    if name == "&":
+        return recv and other
+    if name == "|":
+        return recv or other
+    # name == "^"
+    return recv != other
 
 
 def _array_method(recv: list[Val], name: str, args: list[Val]) -> Val:
@@ -1102,9 +1184,20 @@ def call_method(recv: Val, name: str, *args: Val) -> Val:
     if name == "class":
         return class_of(recv)
 
+    # ``send``/``__send__``/``public_send`` re-enter dispatch with a *dynamic*
+    # method name taken from the first argument (a Symbol or string), forwarding
+    # the rest unchanged — so ``x.send(:upcase)`` is exactly ``x.upcase`` and a
+    # trailing block survives as a trailing arg.  An empty arg list (``send`` with
+    # no method name) bottoms out at the ``nil`` floor rather than raising.  The
+    # user :func:`define_method` table is consulted *first* (resolution order #2),
+    # so a user-defined ``send`` override wins; routing recurses through
+    # :func:`call_method`.
     fn = _methods.get(name)
     if fn is not None:
         return fn(recv, list(args))
+
+    if name in _SEND_METHODS and args:
+        return call_method(recv, _method_name(args[0]), *args[1:])
 
     arg_list = list(args)
     if isinstance(recv, str):
@@ -1122,8 +1215,11 @@ def call_method(recv: Val, name: str, *args: Val) -> Val:
             return result
     elif isinstance(recv, bool):
         # bool is a subclass of int — skip the numeric catalog so True/False
-        # resolve only the universal Object methods (true.to_s == "true").
-        pass
+        # resolve only the boolean operators (&/|/^) and the universal Object
+        # methods (true.to_s == "true").
+        result = _bool_method(recv, name, arg_list)
+        if result is not _MISS:
+            return result
     elif isinstance(recv, (int, float)):
         if name in _NUMERIC_BLOCK_METHODS and arg_list and isinstance(arg_list[-1], Closure):
             result = _numeric_block_method(recv, name, arg_list[:-1], arg_list[-1])
@@ -1150,6 +1246,17 @@ def call_method(recv: Val, name: str, *args: Val) -> Val:
         result = _hash_method(recv, name, arg_list)
         if result is not _MISS:
             return result
+
+    # Universal block-taking methods (``tap``/``then``/``yield_self``) apply to
+    # *every* receiver, so they are dispatched here — after the type-specific
+    # catalogs — only when an actual trailing ``Closure`` block is present.  A
+    # block-less ``tap``/``then`` falls through to :func:`_object_method`, which
+    # returns the receiver (the documented v0 Enumerator-less floor).
+    if name in _OBJECT_BLOCK_METHODS and arg_list and isinstance(arg_list[-1], Closure):
+        result = _object_block_method(recv, name, arg_list[-1])
+        if result is not _MISS:
+            return result
+
     result = _object_method(recv, name, arg_list)
     if result is not _MISS:
         return result

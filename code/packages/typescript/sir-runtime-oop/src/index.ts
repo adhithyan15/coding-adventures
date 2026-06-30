@@ -244,7 +244,35 @@ const OBJECT_METHODS = new Set<string>([
   "to_a",
   "to_s",
   "inspect",
+  // Kernel flow-control methods (M6).  `send`/`__send__` re-enter dispatch with
+  // a dynamic method name; `tap` and `then`/`yield_self` are the block-taking
+  // pair (handled in `objectBlockMethod`), but they are listed here so
+  // `respond_to?` reports them on *every* receiver — block-less and
+  // block-bearing calls alike resolve.
+  "send",
+  "__send__",
+  "public_send",
+  "tap",
+  "then",
+  "yield_self",
 ]);
+
+// Block-taking universal methods (M6): `tap` yields the receiver and returns it;
+// `then`/`yield_self` yield the receiver and return the block's result.
+// Dispatched in `objectBlockMethod` only when a trailing `Closure` is present
+// (block-less `tap`/`then` fall through to the receiver-identity floor).
+const OBJECT_BLOCK_METHODS = new Set<string>(["tap", "then", "yield_self"]);
+
+// `Symbol`-routing methods (M6): the receiver's *first* argument names the
+// method to dispatch. Listed for `respond_to?` honesty; split out in
+// `callMethod` because they recurse through dispatch with a dynamic name.
+const SEND_METHODS = new Set<string>(["send", "__send__", "public_send"]);
+
+// `TrueClass`/`FalseClass` boolean logic (M6).  Ruby's `&` and `|` on a boolean
+// are *non-short-circuiting* logical operators (`true & nil == false`,
+// `false | 1 == true`), distinct from the lazy `&&`/`||` keywords; `^` is XOR.
+// These resolve on a `boolean` receiver *before* the universal `Object` table.
+const BOOL_METHODS = new Set<string>(["&", "|", "^"]);
 
 // Non-block `Array` methods (M1a); block methods land in a later PR, kept absent
 // here so `respond_to?` stays honest.
@@ -448,7 +476,9 @@ function respondsTo(recv: Val, name: string): boolean {
     return true;
   }
   if (isSymbol(recv) && SYMBOL_METHODS.has(name)) return true;
-  // `boolean` is a distinct typeof — bools resolve only the Object methods above.
+  // `boolean` is a distinct typeof — bools resolve the boolean operators (&/|/^)
+  // plus the Object methods checked above.
+  if (typeof recv === "boolean" && BOOL_METHODS.has(name)) return true;
   if (
     typeof recv === "number" &&
     (NUMERIC_METHODS.has(name) || NUMERIC_BLOCK_METHODS.has(name))
@@ -520,8 +550,54 @@ function objectMethod(recv: Val, name: string, args: Val[]): Val | typeof MISS {
       return rubyToS(recv);
     case "inspect":
       return rubyInspect(recv);
+    case "tap":
+      // Block-less `tap` (no `Closure` reached `objectBlockMethod`) still returns
+      // the receiver — Ruby returns an Enumerator-less self in v0.
+      return recv;
+    case "then":
+    case "yield_self":
+      // Block-less `then`/`yield_self` returns the receiver (Ruby returns an
+      // Enumerator; v0 floor — see the spec's "Out of scope" note).
+      return recv;
     default:
       return MISS;
+  }
+}
+
+/** Block-taking universal methods (Kernel).  `block` is applied via `apply` with
+ * the receiver as its single argument.  `tap` yields the receiver and returns
+ * **it**; `then`/`yield_self` yields the receiver and returns the **block's
+ * result**.  Returns `MISS` if `name` is not a universal block method. */
+function objectBlockMethod(recv: Val, name: string, block: Closure): Val | typeof MISS {
+  switch (name) {
+    case "tap":
+      apply(block, [recv]);
+      return recv;
+    case "then":
+    case "yield_self":
+      return apply(block, [recv]);
+    default:
+      return MISS;
+  }
+}
+
+/** `TrueClass`/`FalseClass` logical operators (`&`, `|`, `^`).  Ruby's *eager*
+ * boolean operators (no short-circuit), coercing the argument by Ruby truthiness
+ * (`null`/`false` falsy, everything else — `0`, `""` — truthy): `true & null`
+ * is `false`, `false | 0` is `true`.  Returns `MISS` if `name` is not a boolean
+ * operator. */
+function boolMethod(recv: boolean, name: string, args: Val[]): Val | typeof MISS {
+  // Not an operator (or called with no operand, e.g. `true.to_s`) — defer to the
+  // universal `Object` table rather than coercing an absent argument.
+  if (!BOOL_METHODS.has(name) || args.length === 0) return MISS;
+  const other = truthy(args[0]);
+  switch (name) {
+    case "&":
+      return recv && other;
+    case "|":
+      return recv || other;
+    default: // "^"
+      return recv !== other;
   }
 }
 
@@ -1086,8 +1162,19 @@ export function callMethod(recv: Val, name: string, ...args: Val[]): Val {
       return classOf(recv);
   }
 
+  // The user `defineMethod` table is consulted first (resolution order #2), so a
+  // user-defined `send` override wins.
   const m = methods.get(name);
   if (m) return m(recv, args);
+
+  // `send`/`__send__`/`public_send` re-enter dispatch with a *dynamic* method
+  // name taken from the first argument (a Symbol or string), forwarding the rest
+  // unchanged — so `x.send("upcase")` is exactly `x.upcase` and a trailing block
+  // survives as a trailing arg.  An empty arg list bottoms out at the `null`
+  // floor rather than throwing; routing recurses through `callMethod`.
+  if (SEND_METHODS.has(name) && args.length > 0) {
+    return callMethod(recv, methodNameArg(args[0]), ...args.slice(1));
+  }
 
   if (typeof recv === "string") {
     // A block method (each_char) dispatches only with a trailing Closure.
@@ -1101,6 +1188,11 @@ export function callMethod(recv: Val, name: string, ...args: Val[]): Val {
   } else if (isSymbol(recv)) {
     const symResult = symbolMethod(recv, name);
     if (symResult !== MISS) return symResult;
+  } else if (typeof recv === "boolean") {
+    // `boolean` is a distinct typeof — resolve the eager logical operators
+    // (&/|/^) here, then fall through to the universal Object methods.
+    const boolResult = boolMethod(recv, name, args);
+    if (boolResult !== MISS) return boolResult;
   } else if (typeof recv === "number") {
     const last = args[args.length - 1];
     if (NUMERIC_BLOCK_METHODS.has(name) && args.length > 0 && last instanceof Closure) {
@@ -1128,6 +1220,18 @@ export function callMethod(recv: Val, name: string, ...args: Val[]): Val {
     const hashResult = hashMethod(recv, name, args);
     if (hashResult !== MISS) return hashResult;
   }
+
+  // Universal block-taking methods (`tap`/`then`/`yield_self`) apply to *every*
+  // receiver, so they are dispatched here — after the type-specific catalogs —
+  // only when an actual trailing `Closure` block is present.  A block-less
+  // `tap`/`then` falls through to `objectMethod`, which returns the receiver
+  // (the documented v0 Enumerator-less floor).
+  const lastArg = args[args.length - 1];
+  if (OBJECT_BLOCK_METHODS.has(name) && args.length > 0 && lastArg instanceof Closure) {
+    const blkResult = objectBlockMethod(recv, name, lastArg);
+    if (blkResult !== MISS) return blkResult;
+  }
+
   const objResult = objectMethod(recv, name, args);
   if (objResult !== MISS) return objResult;
 

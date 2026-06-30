@@ -2,6 +2,38 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.8] - 2026-06-30
+
+### Added (M6 — Kernel flow-control + boolean operators)
+
+Completes the spec's v0 universal-`Object` surface
+(`code/specs/sir-method-dispatch.md`), which listed `tap`, `then`/`yield_self`,
+and `send`/`__send__` but had not yet implemented them, plus the `nil`/`true`/
+`false` boolean operators:
+
+- **`send`/`__send__`/`public_send`** — dynamic dispatch. The first argument
+  names the method (a `Symbol` — the emitted form — or a bare string); the rest
+  forward unchanged and a **trailing block survives**, so
+  `[1, 2].send(:each) { … }` reaches the block-taking catalog method. Routed
+  ahead of the catalog because it recurses through `call_method`; an empty arg
+  list (`send` with no method name) bottoms out at the `nil` floor rather than
+  raising. This is the substrate the spec flagged for later metaprogramming.
+- **`tap`** — yields the receiver to the block, returns the **receiver**
+  (pipeline-friendly side effect).
+- **`then`/`yield_self`** — yields the receiver, returns the **block's result**
+  (functional "pipe into a block"). Block-less `tap`/`then`/`yield_self` return
+  the receiver (the documented v0 Enumerator-less floor).
+- **`TrueClass`/`FalseClass` `&` / `|` / `^`** — Ruby's *eager*
+  (non-short-circuit) logical operators, distinct from the lazy `&&`/`||`
+  keywords. The operand is coerced by SIR `truthy`, so `true & nil == false`,
+  `false | 0 == true`, `true ^ true == false`. They resolve on a `bool`
+  receiver before the universal `Object` table.
+
+`respond_to?` reports each new name honestly — `tap`/`then`/`send` on every
+receiver, the boolean operators on `bool` receivers only — and an out-of-catalog
+name stays both `nil` *and* `respond_to? == False`. `mypy --strict` + ruff clean;
+79 pytest cases at ~96% coverage.
+
 ## [0.1.7] - 2026-06-26
 
 ### Added (M5 — case-equality `===`)

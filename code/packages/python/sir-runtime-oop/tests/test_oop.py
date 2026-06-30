@@ -710,3 +710,85 @@ def test_case_eq_falls_back_to_equality() -> None:
     assert oop.case_eq(5, 5) is True
     assert oop.case_eq(5, 6) is False
     assert oop.case_eq("a", "a") is True
+
+
+# ── Kernel flow-control + boolean operators (M6) ──────────────────────────────
+
+
+def test_send_routes_to_named_method() -> None:
+    # `x.send(:meth, *args)` is exactly `x.meth(*args)`; the method name may
+    # arrive as a Symbol (the emitted form) or a bare string.
+    from coding_adventures_sir_runtime_core import intern
+
+    assert oop.call_method("hello", "send", "upcase") == "HELLO"
+    assert oop.call_method([3, 1, 2], "send", "sort") == [1, 2, 3]
+    # A Symbol method name (interned) routes identically.
+    assert oop.call_method("hi", "send", intern("upcase")) == "HI"
+    # `__send__` is the alias used when `send` itself is shadowed in real Ruby.
+    assert oop.call_method("hi", "__send__", "reverse") == "ih"
+    # Sanity: plain dispatch of a non-send method is unaffected.
+    assert oop.call_method("__send__", "size") == 8
+
+
+def test_send_forwards_arguments_and_block() -> None:
+    # Extra arguments forward through send.
+    assert oop.call_method("a,b,c", "send", "split", ",") == ["a", "b", "c"]
+    # A trailing block survives send and reaches the block-taking method.
+    seen: list[Val] = []
+    oop.call_method([1, 2], "send", "each", Closure(seen.append))
+    assert seen == [1, 2]
+
+
+def test_user_defined_send_override_wins() -> None:
+    # The user define_method table is consulted first (resolution order #2), so a
+    # user-defined `send` override takes precedence over the built-in routing.
+    oop.define_method("send", lambda recv, args: "overridden")
+    assert oop.call_method("x", "send", "upcase") == "overridden"
+
+
+def test_send_without_method_name_is_nil() -> None:
+    # `send` with no method name bottoms out at the nil floor (never raises).
+    assert oop.call_method("x", "send") is None
+
+
+def test_tap_yields_receiver_and_returns_it() -> None:
+    captured: list[Val] = []
+    result = oop.call_method([1, 2, 3], "tap", Closure(captured.append))
+    assert captured == [[1, 2, 3]]
+    assert result == [1, 2, 3]
+    # Block-less tap returns the receiver (v0 floor).
+    assert oop.call_method(42, "tap") == 42
+
+
+def test_then_returns_block_result() -> None:
+    # then/yield_self replace the value with the block's result.
+    assert oop.call_method(5, "then", Closure(lambda x: x * 2)) == 10
+    assert oop.call_method("hi", "yield_self", Closure(lambda s: s + "!")) == "hi!"
+    # Block-less then returns the receiver.
+    assert oop.call_method(7, "then") == 7
+
+
+def test_bool_logical_operators() -> None:
+    # Eager (non-short-circuit) logical operators on booleans.
+    assert oop.call_method(True, "&", True) is True
+    assert oop.call_method(True, "&", False) is False
+    assert oop.call_method(False, "|", True) is True
+    assert oop.call_method(True, "^", True) is False
+    assert oop.call_method(True, "^", False) is True
+    # Ruby truthiness on the argument: nil is falsy, 0/"" are truthy.
+    assert oop.call_method(True, "&", None) is False
+    assert oop.call_method(False, "|", 0) is True
+    assert oop.call_method(False, "|", "") is True
+
+
+def test_kernel_respond_to_is_honest() -> None:
+    # tap/then/send resolve on every receiver; bool operators on bools only.
+    assert oop.call_method(1, "respond_to?", "tap") is True
+    assert oop.call_method("x", "respond_to?", "then") is True
+    assert oop.call_method([], "respond_to?", "send") is True
+    assert oop.call_method(True, "respond_to?", "&") is True
+    # A non-bool receiver does not respond to the boolean operators.
+    assert oop.call_method(5, "respond_to?", "^") is False
+    # An out-of-catalog name is still both nil and respond_to? == False.
+    assert oop.call_method(True, "nonexistent_method") is None
+    assert oop.call_method(True, "respond_to?", "nonexistent_method") is False
