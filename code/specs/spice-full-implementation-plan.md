@@ -33,16 +33,16 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell event summary.
+1. Rust Berkeley Mosaic app shell event digest.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app shell event summaries and JSON helpers that
-     derive compact event-kind, severity, diagnostic, repaired-state, and
-     capability counts from Berkeley app shell event logs.
+   - Add schema-versioned Rust app shell event digests and JSON helpers that
+     derive a headline event, attention event IDs, metric event IDs, and
+     compact counts from Berkeley app shell event logs.
    - Preserve package name, source fingerprint, ready/blocked route, status
-     severity, status event ID, primary action, event counts, counted totals,
-     diagnostic count, repaired-state count, and advertised capability count so
-     Mosaic, WebAssembly, and product shells can gate startup dashboards without
-     walking the full event stream.
+     severity, headline event/message, primary action, attention/metric event
+     IDs, event counts, counted totals, diagnostic count, repaired-state count,
+     and advertised capability count so Mosaic, WebAssembly, and product shells
+     can render startup dashboards without walking the full event stream.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1622,6 +1622,18 @@ the Rust, Python, and TypeScript surfaces together.
      repaired-state count, and advertised capability count so Mosaic,
      WebAssembly, and product shells can append startup event streams without
      inspecting the full launch/readiness payload.
+
+153. Rust Berkeley Mosaic app shell event summary.
+   - Status: completed in PR 7055.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell event summaries plus JSON helpers that derive compact
+     event-kind, severity, diagnostic, repaired-state, and capability counts
+     from Berkeley app shell event logs.
+   - The summary payload preserves package name, source fingerprint,
+     ready/blocked route, status severity, status event ID, primary action,
+     event counts, counted totals, diagnostic count, repaired-state count, and
+     advertised capability count so Mosaic, WebAssembly, and product shells can
+     gate startup dashboards without walking the full event stream.
 
 ## Backlog
 
