@@ -285,11 +285,11 @@
     {
       "id": "csharp-level1-sql-codegen",
       "title": "C# sql-codegen (Level 1 prerequisite)",
-      "status": "pending",
+      "status": "in-review",
       "depends_on": ["csharp-level1-sql-optimizer"],
-      "branch": null,
+      "branch": "mini-sqlite/csharp-level1-sql-codegen",
       "pr_number": null,
-      "notes": "Port Python sql_codegen to C#."
+      "notes": "PR open 2026-06-30. 74 xUnit tests, 85.61% line coverage. Full instruction set: 36 instruction records, nested-loop scan, two-phase aggregation, DML/DDL. Instruction records BinaryOpInstr/UnaryOpInstr renamed to avoid clash with SqlExpr subtypes."
     },
     {
       "id": "csharp-level1-sql-vm",
