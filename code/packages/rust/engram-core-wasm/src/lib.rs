@@ -8876,6 +8876,38 @@ mod tests {
     }
 
     #[test]
+    fn parse_anki_notes_tsv_preserves_basic_type_answer_template() {
+        let session = EngramSession::new();
+        let value: Value = serde_json::from_str(&session.parse_anki_notes_tsv(
+            "#separator:tab\n#notetype:Basic (type in the answer)\n#columns:Front\tBack\tTags\nhola\thello\tspanish\n",
+            "deck",
+            "",
+            "",
+            "note",
+            NOW,
+        ))
+        .unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(
+            value["import"]["noteTypes"][0]["id"],
+            "basic-type-in-the-answer"
+        );
+        assert_eq!(
+            value["import"]["noteTypes"][0]["templates"][0]["frontTemplate"],
+            "{{Front}}{{type:Back}}"
+        );
+        assert_eq!(
+            value["import"]["noteTypes"][0]["templates"][0]["backTemplate"],
+            "{{FrontSide}}<hr id=answer>{{Back}}"
+        );
+        assert_eq!(
+            value["import"]["cards"][0]["front"],
+            "hola[type answer: Back]"
+        );
+    }
+
+    #[test]
     fn parse_anki_notes_tsv_generates_cloze_model_and_cards() {
         let session = EngramSession::new();
         let value: Value = serde_json::from_str(&session.parse_anki_notes_tsv(

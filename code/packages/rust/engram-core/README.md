@@ -203,10 +203,11 @@ quotes.
 `import_anki_notes_tsv` and `export_notes_anki_tsv` use the note/template model
 instead: imported Basic rows produce `NoteType`, `Note`, and materialized
 lineage cards, Basic-and-reversed note types produce forward and reverse
-sibling cards, and Cloze rows produce cloze note models plus one generated card
-per cloze ordinal. Custom note-type rows preserve arbitrary field columns and
-Anki's Tags column as note data; imported `#tags:` headers are merged into each
-row's note tags. Custom rows generate no cards until a real template is
+sibling cards, Basic type-in-answer note types preserve `{{type:Back}}` typed
+answer prompts, and Cloze rows produce cloze note models plus one generated
+card per cloze ordinal. Custom note-type rows preserve arbitrary field columns
+and Anki's Tags column as note data; imported `#tags:` headers are merged into
+each row's note tags. Custom rows generate no cards until a real template is
 available because Anki text exports do not carry template definitions.
 
 `get_active_session_progress` derives the shared review UI counters from

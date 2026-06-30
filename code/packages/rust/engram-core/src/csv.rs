@@ -407,7 +407,7 @@ fn extend_unique_tags(tags: &mut Vec<String>, incoming: Vec<String>) {
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum AnkiNoteImportKind {
-    Basic { reverse: bool },
+    Basic { reverse: bool, type_answer: bool },
     Cloze,
     Custom,
 }
@@ -433,6 +433,7 @@ impl AnkiNoteImportKind {
         } else if is_basic_note_type(note_type_name) {
             Self::Basic {
                 reverse: is_basic_and_reversed(note_type_name),
+                type_answer: is_basic_type_answer(note_type_name),
             }
         } else {
             Self::Custom
@@ -447,7 +448,10 @@ impl AnkiNoteImportKind {
         column_plan: &AnkiColumnPlan,
     ) -> NoteType {
         match self {
-            Self::Basic { reverse } => basic_note_type(id, name, created_at, *reverse),
+            Self::Basic {
+                reverse,
+                type_answer,
+            } => basic_note_type(id, name, created_at, *reverse, *type_answer),
             Self::Cloze => cloze_note_type(id, name, created_at),
             Self::Custom => custom_note_type(id, name, created_at, column_plan),
         }
@@ -807,12 +811,26 @@ fn generated_basic_card_id(id_prefix: &str, sequence: usize) -> String {
     }
 }
 
-fn basic_note_type(id: &str, name: &str, created_at: u64, reverse: bool) -> NoteType {
+fn basic_note_type(
+    id: &str,
+    name: &str,
+    created_at: u64,
+    reverse: bool,
+    type_answer: bool,
+) -> NoteType {
     let mut templates = vec![CardTemplate {
         id: "forward".to_string(),
         name: "Forward".to_string(),
-        front_template: "{{Front}}".to_string(),
-        back_template: "{{Back}}".to_string(),
+        front_template: if type_answer {
+            "{{Front}}{{type:Back}}".to_string()
+        } else {
+            "{{Front}}".to_string()
+        },
+        back_template: if type_answer {
+            "{{FrontSide}}<hr id=answer>{{Back}}".to_string()
+        } else {
+            "{{Back}}".to_string()
+        },
         deck_id: None,
         required_field_names: vec!["Front".to_string(), "Back".to_string()],
         requirement_mode: TemplateRequirementMode::All,
@@ -1015,6 +1033,11 @@ fn unique_custom_field_id(
 fn is_basic_and_reversed(note_type_name: &str) -> bool {
     let normalized = note_type_name.to_ascii_lowercase();
     normalized.contains("reversed") || normalized.contains("reverse")
+}
+
+fn is_basic_type_answer(note_type_name: &str) -> bool {
+    let normalized = note_type_name.to_ascii_lowercase();
+    normalized.contains("type") && normalized.contains("answer")
 }
 
 fn is_cloze_note_type(note_type_name: &str) -> bool {
@@ -1225,6 +1248,34 @@ mod tests {
     }
 
     #[test]
+    fn anki_note_tsv_import_creates_basic_type_answer_cards() {
+        let tsv = "#separator:tab\n#notetype:Basic (type in the answer)\n#columns:Front\tBack\tTags\nhola\thello\tspanish\n";
+        let options = AnkiNoteTsvImportOptions {
+            deck_id: "deck".to_string(),
+            note_type_id: String::new(),
+            note_type_name: String::new(),
+            note_id_prefix: "note".to_string(),
+            created_at: 456,
+        };
+
+        let imported = import_anki_notes_tsv(tsv, &options).unwrap();
+
+        let template = &imported.note_types[0].templates[0];
+        assert_eq!(imported.note_types[0].id, "basic-type-in-the-answer");
+        assert_eq!(template.front_template, "{{Front}}{{type:Back}}");
+        assert_eq!(
+            template.back_template,
+            "{{FrontSide}}<hr id=answer>{{Back}}"
+        );
+        assert_eq!(imported.cards.len(), 1);
+        assert_eq!(imported.cards[0].front, "hola[type answer: Back]");
+        assert_eq!(
+            imported.cards[0].back,
+            "hola[type answer: Back]<hr id=answer>hello"
+        );
+    }
+
+    #[test]
     fn anki_note_text_import_honors_separator_header() {
         let text = "#separator:semicolon\n#notetype:Basic\n#tags:imported spanish\n#columns:Front;Back;Tags\n\"hola;salve\";hello;spanish latin\n";
         let options = AnkiNoteTsvImportOptions {
@@ -1337,7 +1388,7 @@ mod tests {
 
     #[test]
     fn anki_note_tsv_export_writes_fields_tags_and_headers() {
-        let note_type = basic_note_type("basic", "Basic", 456, false);
+        let note_type = basic_note_type("basic", "Basic", 456, false, false);
         let notes = vec![
             Note {
                 id: "note-1".to_string(),
