@@ -409,6 +409,21 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
               <option value="health">Health</option>
             </select>
           </label>
+          <label>History Bridge
+            <input id="filter-history-bridge" data-dashboard-filter="history-bridge" type="search" autocomplete="off">
+          </label>
+          <label>Observed From
+            <input id="filter-history-from-ms" data-dashboard-filter="history-from-ms" type="number" min="0" step="1" inputmode="numeric">
+          </label>
+          <label>Observed To
+            <input id="filter-history-to-ms" data-dashboard-filter="history-to-ms" type="number" min="0" step="1" inputmode="numeric">
+          </label>
+          <label>Received From
+            <input id="filter-history-received-from-ms" data-dashboard-filter="history-received-from-ms" type="number" min="0" step="1" inputmode="numeric">
+          </label>
+          <label>Received To
+            <input id="filter-history-received-to-ms" data-dashboard-filter="history-received-to-ms" type="number" min="0" step="1" inputmode="numeric">
+          </label>
           <label>Commands
             <select id="filter-command-status" data-dashboard-filter="command-status">
               <option value="">All commands</option>
@@ -613,6 +628,11 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       filterGrantPrincipal: document.querySelector("#filter-grant-principal"),
       filterGrantScope: document.querySelector("#filter-grant-scope"),
       filterGrantStatus: document.querySelector("#filter-grant-status"),
+      filterHistoryBridge: document.querySelector("#filter-history-bridge"),
+      filterHistoryFromMs: document.querySelector("#filter-history-from-ms"),
+      filterHistoryReceivedFromMs: document.querySelector("#filter-history-received-from-ms"),
+      filterHistoryReceivedToMs: document.querySelector("#filter-history-received-to-ms"),
+      filterHistoryToMs: document.querySelector("#filter-history-to-ms"),
       filterHistoryType: document.querySelector("#filter-history-type"),
       filterRoom: document.querySelector("#filter-room"),
       filterSearch: document.querySelector("#filter-search"),
@@ -652,6 +672,11 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       ["event_to_sequence", els.filterEventToSequence],
       ["activity_entity", els.filterActivityEntity],
       ["history_type", els.filterHistoryType],
+      ["history_bridge", els.filterHistoryBridge],
+      ["history_from_ms", els.filterHistoryFromMs],
+      ["history_to_ms", els.filterHistoryToMs],
+      ["history_received_from_ms", els.filterHistoryReceivedFromMs],
+      ["history_received_to_ms", els.filterHistoryReceivedToMs],
       ["command_status", els.filterCommandStatus],
       ["command_id", els.filterCommandId],
       ["command_bridge", els.filterCommandBridge],
@@ -713,6 +738,11 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       eventToSequence: els.filterEventToSequence.value.trim(),
       activityEntity: els.filterActivityEntity.value.trim(),
       historyType: els.filterHistoryType.value,
+      historyBridge: els.filterHistoryBridge.value.trim(),
+      historyFromMs: els.filterHistoryFromMs.value.trim(),
+      historyToMs: els.filterHistoryToMs.value.trim(),
+      historyReceivedFromMs: els.filterHistoryReceivedFromMs.value.trim(),
+      historyReceivedToMs: els.filterHistoryReceivedToMs.value.trim(),
       commandStatus: els.filterCommandStatus.value,
       commandId: els.filterCommandId.value.trim(),
       commandBridge: els.filterCommandBridge.value.trim(),
@@ -1208,7 +1238,12 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
             limit: 12,
             room_id: roomId,
             entity_id: activityEntity,
-            event_type: historyType
+            event_type: historyType,
+            bridge_id: filters.historyBridge,
+            from_ms: filters.historyFromMs,
+            to_ms: filters.historyToMs,
+            received_at_or_after_ms: filters.historyReceivedFromMs,
+            received_at_or_before_ms: filters.historyReceivedToMs
           })),
           json("/api/smart_home/services?limit=8"),
           json("/api/smart_home/api?mutating=true&authorized=true"),
@@ -8027,6 +8062,11 @@ mod tests {
             assert!(body.contains("data-dashboard-filter=\"domain\""));
             assert!(body.contains("data-dashboard-filter=\"activity-entity\""));
             assert!(body.contains("data-dashboard-filter=\"history-type\""));
+            assert!(body.contains("data-dashboard-filter=\"history-bridge\""));
+            assert!(body.contains("data-dashboard-filter=\"history-from-ms\""));
+            assert!(body.contains("data-dashboard-filter=\"history-to-ms\""));
+            assert!(body.contains("data-dashboard-filter=\"history-received-from-ms\""));
+            assert!(body.contains("data-dashboard-filter=\"history-received-to-ms\""));
             assert!(body.contains("data-dashboard-filter=\"event-from-sequence\""));
             assert!(body.contains("data-dashboard-filter=\"event-to-sequence\""));
             assert!(body.contains("data-dashboard-filter=\"command-status\""));
@@ -8038,6 +8078,13 @@ mod tests {
             assert!(body.contains("[\"event_to_sequence\", els.filterEventToSequence]"));
             assert!(body.contains("[\"activity_entity\", els.filterActivityEntity]"));
             assert!(body.contains("[\"history_type\", els.filterHistoryType]"));
+            assert!(body.contains("[\"history_bridge\", els.filterHistoryBridge]"));
+            assert!(body.contains("[\"history_from_ms\", els.filterHistoryFromMs]"));
+            assert!(body.contains("[\"history_to_ms\", els.filterHistoryToMs]"));
+            assert!(
+                body.contains("[\"history_received_from_ms\", els.filterHistoryReceivedFromMs]")
+            );
+            assert!(body.contains("[\"history_received_to_ms\", els.filterHistoryReceivedToMs]"));
             assert!(body.contains("[\"command_status\", els.filterCommandStatus]"));
             assert!(body.contains("[\"command_from_sequence\", els.filterCommandFromSequence]"));
             assert!(body.contains("[\"command_to_sequence\", els.filterCommandToSequence]"));
@@ -8058,6 +8105,11 @@ mod tests {
             assert!(body.contains("queryUrl(\"/api/smart_home/state_history\", {"));
             assert!(body.contains("entity_id: activityEntity"));
             assert!(body.contains("event_type: historyType"));
+            assert!(body.contains("bridge_id: filters.historyBridge"));
+            assert!(body.contains("from_ms: filters.historyFromMs"));
+            assert!(body.contains("to_ms: filters.historyToMs"));
+            assert!(body.contains("received_at_or_after_ms: filters.historyReceivedFromMs"));
+            assert!(body.contains("received_at_or_before_ms: filters.historyReceivedToMs"));
             assert!(body.matches("entity_id: activityEntity").count() >= 2);
             assert!(body.contains("json(\"/api/smart_home/services?limit=8\")"));
             assert!(body.contains("json(\"/api/smart_home/api?mutating=true&authorized=true\")"));
@@ -9549,6 +9601,11 @@ mod tests {
         assert!(body.contains("data-dashboard-filter=\"authorization-principal\""));
         assert!(body.contains("data-dashboard-filter=\"activity-entity\""));
         assert!(body.contains("data-dashboard-filter=\"history-type\""));
+        assert!(body.contains("data-dashboard-filter=\"history-bridge\""));
+        assert!(body.contains("data-dashboard-filter=\"history-from-ms\""));
+        assert!(body.contains("data-dashboard-filter=\"history-to-ms\""));
+        assert!(body.contains("data-dashboard-filter=\"history-received-from-ms\""));
+        assert!(body.contains("data-dashboard-filter=\"history-received-to-ms\""));
         assert!(body.contains("data-dashboard-filter=\"event-from-sequence\""));
         assert!(body.contains("data-dashboard-filter=\"event-to-sequence\""));
         assert!(body.contains("data-dashboard-filter=\"command-id\""));
@@ -9561,6 +9618,11 @@ mod tests {
         assert!(body.contains("[\"event_to_sequence\", els.filterEventToSequence]"));
         assert!(body.contains("[\"activity_entity\", els.filterActivityEntity]"));
         assert!(body.contains("[\"history_type\", els.filterHistoryType]"));
+        assert!(body.contains("[\"history_bridge\", els.filterHistoryBridge]"));
+        assert!(body.contains("[\"history_from_ms\", els.filterHistoryFromMs]"));
+        assert!(body.contains("[\"history_to_ms\", els.filterHistoryToMs]"));
+        assert!(body.contains("[\"history_received_from_ms\", els.filterHistoryReceivedFromMs]"));
+        assert!(body.contains("[\"history_received_to_ms\", els.filterHistoryReceivedToMs]"));
         assert!(body.contains("[\"command_id\", els.filterCommandId]"));
         assert!(body.contains("[\"command_bridge\", els.filterCommandBridge]"));
         assert!(body.contains("[\"command_correlation\", els.filterCommandCorrelation]"));
@@ -9580,6 +9642,11 @@ mod tests {
         assert!(body.contains("to_sequence: filters.eventToSequence"));
         assert!(body.contains("entity_id: activityEntity"));
         assert!(body.contains("event_type: historyType"));
+        assert!(body.contains("bridge_id: filters.historyBridge"));
+        assert!(body.contains("from_ms: filters.historyFromMs"));
+        assert!(body.contains("to_ms: filters.historyToMs"));
+        assert!(body.contains("received_at_or_after_ms: filters.historyReceivedFromMs"));
+        assert!(body.contains("received_at_or_before_ms: filters.historyReceivedToMs"));
         assert!(body.matches("entity_id: activityEntity").count() >= 2);
         assert!(body.contains("json(\"/api/smart_home/services?limit=8\")"));
         assert!(body.contains("json(\"/api/smart_home/api?mutating=true&authorized=true\")"));
