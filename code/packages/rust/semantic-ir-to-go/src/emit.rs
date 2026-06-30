@@ -36,7 +36,7 @@ pub fn emit_module(m: &Module) -> String {
     let mut out = String::new();
     emit_banner(&mut out, m);
     out.push_str("package main\n\n");
-    out.push_str("import (\n\t\"fmt\"\n\t\"strconv\"\n)\n\n");
+    out.push_str("import (\n\t\"fmt\"\n\t\"math\"\n\t\"strconv\"\n)\n\n");
     // Suppress unused-import linter complaints if a tiny module
     // happens not to reference them (the runtime always does, so
     // we're fine — but blank-import the packages defensively in
@@ -312,15 +312,46 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 name, span
             );
         }
-        // SIR16 expression kinds — Go backend hasn't been extended.
-        Expr::FloatLit { span, .. }
-        | Expr::SeqLit { span, .. }
+        // ── SIR16: floats ──────────────────────────────────────────
+        // Emit a Go `float64` literal wrapped as a `Value`.  Integral
+        // values must spell out `3.0` (not `3`) so the runtime's type
+        // switches hit the `float64` arm rather than the int one.
+        // Non-finite values have no Go float literal, so we route them
+        // through `math.NaN()` / `math.Inf(±1)`.
+        Expr::FloatLit { value, .. } => emit_float_literal(out, *value),
+        // ── SIR16: short-circuit logical ───────────────────────────
+        // Go has no expression-position `&&`/`||` over arbitrary
+        // `Value`s, so we lift to an immediately-invoked func literal
+        // with a fresh `__l` binding: evaluate `lhs` exactly once, then
+        // decide whether to evaluate `rhs`, routing the test through SIR
+        // truthiness (`_sir_truthy`: only `false`/`nil` are falsy).
+        // `and` yields `rhs` when `lhs` is truthy else `lhs`; `or` is
+        // the mirror.  Each IIFE has its own scope, so nested `and`/`or`
+        // never collide on `__l`.
+        Expr::LogicalAnd { lhs, rhs, .. } => {
+            out.push_str("func() Value { __l := ");
+            emit_expr(out, lhs, indent);
+            out.push_str("; if _sir_truthy(__l) { return ");
+            emit_expr(out, rhs, indent);
+            out.push_str(" } else { return __l } }()");
+        }
+        Expr::LogicalOr { lhs, rhs, .. } => {
+            out.push_str("func() Value { __l := ");
+            emit_expr(out, lhs, indent);
+            out.push_str("; if _sir_truthy(__l) { return __l } else { return ");
+            emit_expr(out, rhs, indent);
+            out.push_str(" } }()");
+        }
+        // Remaining SIR16+ expression kinds — Go backend hasn't been
+        // extended to these yet (Sequences/Maps land in a later PR;
+        // `StrConcat` is SIR18 string interpolation).  Their features
+        // are undeclared, so the capability check rejects such modules
+        // before emit; reaching this arm is an internal bug.
+        Expr::SeqLit { span, .. }
         | Expr::SeqIndex { span, .. }
         | Expr::SeqLen { span, .. }
         | Expr::MapLit { span, .. }
         | Expr::MapGet { span, .. }
-        | Expr::LogicalAnd { span, .. }
-        | Expr::LogicalOr { span, .. }
         | Expr::StrConcat { span, .. } => {
             panic!("go backend reached SIR16+ expression at {} — capability check should have rejected it", span);
         }
@@ -453,6 +484,35 @@ thread_local! {
 
 fn indent_str(level: usize) -> String {
     "\t".repeat(level)
+}
+
+/// Emit a SIR float literal as a Go `Value(float64(<lit>))`.
+///
+/// Truth table for the spelling we choose:
+///
+/// | SIR value | Go expression emitted          | Why                        |
+/// |-----------|--------------------------------|----------------------------|
+/// | `3.0`     | `Value(float64(3.0))`          | `{:?}` keeps the `.0`      |
+/// | `3.25`    | `Value(float64(3.25))`         | round-trippable decimal    |
+/// | `-7.5`    | `Value(float64(-7.5))`         | sign preserved             |
+/// | `NaN`     | `Value(math.NaN())`            | no Go float literal exists |
+/// | `+∞`      | `Value(math.Inf(1))`           | ditto                      |
+/// | `-∞`      | `Value(math.Inf(-1))`          | ditto                      |
+///
+/// Rust's `{:?}` (Debug) is used for the finite literal body because it
+/// renders an integral f64 as `"3.0"` (keeping the `.0`), whereas `{}`
+/// (Display) would render `"3"` — which Go would parse as an `int`,
+/// landing in the wrong runtime type-switch arm.
+fn emit_float_literal(out: &mut String, value: f64) {
+    if value.is_finite() {
+        let _ = write!(out, "Value(float64({:?}))", value);
+    } else if value.is_nan() {
+        out.push_str("Value(math.NaN())");
+    } else if value > 0.0 {
+        out.push_str("Value(math.Inf(1))");
+    } else {
+        out.push_str("Value(math.Inf(-1))");
+    }
 }
 
 /// Sanitize a SIR identifier for Go.
@@ -626,6 +686,97 @@ mod tests {
     }
 
     #[test]
+    fn emit_float_literal_keeps_trailing_zero() {
+        // Integral floats must render with `.0` so the Go literal is a
+        // float64, never an int.
+        let mut out = String::new();
+        emit_expr(&mut out, &Expr::FloatLit { value: 3.0, span: s() }, 0);
+        assert_eq!(out, "Value(float64(3.0))");
+    }
+
+    #[test]
+    fn emit_float_literal_fractional_and_negative() {
+        let mut a = String::new();
+        let mut b = String::new();
+        emit_expr(&mut a, &Expr::FloatLit { value: 3.25, span: s() }, 0);
+        emit_expr(&mut b, &Expr::FloatLit { value: -7.5, span: s() }, 0);
+        assert_eq!(a, "Value(float64(3.25))");
+        assert_eq!(b, "Value(float64(-7.5))");
+    }
+
+    #[test]
+    fn emit_float_literal_non_finite_uses_math() {
+        let mut nan = String::new();
+        let mut inf = String::new();
+        let mut ninf = String::new();
+        emit_expr(&mut nan, &Expr::FloatLit { value: f64::NAN, span: s() }, 0);
+        emit_expr(&mut inf, &Expr::FloatLit { value: f64::INFINITY, span: s() }, 0);
+        emit_expr(&mut ninf, &Expr::FloatLit { value: f64::NEG_INFINITY, span: s() }, 0);
+        assert_eq!(nan, "Value(math.NaN())");
+        assert_eq!(inf, "Value(math.Inf(1))");
+        assert_eq!(ninf, "Value(math.Inf(-1))");
+    }
+
+    #[test]
+    fn emit_logical_and_guards_rhs_with_truthy() {
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::LogicalAnd {
+                lhs: Box::new(Expr::BoolLit { value: true, span: s() }),
+                rhs: Box::new(Expr::IntLit { value: 5, span: s() }),
+                span: s(),
+            },
+            0,
+        );
+        // `and` yields rhs when lhs is truthy, else the lhs value.
+        assert_eq!(
+            out,
+            "func() Value { __l := Value(true); if _sir_truthy(__l) { return Value(int64(5)) } else { return __l } }()"
+        );
+    }
+
+    #[test]
+    fn emit_logical_or_returns_lhs_when_truthy() {
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::LogicalOr {
+                lhs: Box::new(Expr::BoolLit { value: false, span: s() }),
+                rhs: Box::new(Expr::IntLit { value: 7, span: s() }),
+                span: s(),
+            },
+            0,
+        );
+        assert_eq!(
+            out,
+            "func() Value { __l := Value(false); if _sir_truthy(__l) { return __l } else { return Value(int64(7)) } }()"
+        );
+    }
+
+    #[test]
+    fn emit_nested_short_circuit_uses_fresh_scopes() {
+        // Nested `and` inside `or` — each IIFE gets its own `__l`, so
+        // the inner func literal shadows cleanly (no name collision).
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::LogicalOr {
+                lhs: Box::new(Expr::LogicalAnd {
+                    lhs: Box::new(Expr::BoolLit { value: true, span: s() }),
+                    rhs: Box::new(Expr::IntLit { value: 1, span: s() }),
+                    span: s(),
+                }),
+                rhs: Box::new(Expr::IntLit { value: 2, span: s() }),
+                span: s(),
+            },
+            0,
+        );
+        assert_eq!(out.matches("__l :=").count(), 2);
+        assert!(out.starts_with("func() Value { __l := func() Value { __l :="));
+    }
+
+    #[test]
     fn emit_simple_function() {
         let body = Block {
             stmts: vec![],
@@ -683,6 +834,7 @@ mod tests {
         assert!(out.contains("package main"));
         assert!(out.contains("import ("));
         assert!(out.contains("\"fmt\""));
+        assert!(out.contains("\"math\""));
         assert!(out.contains("\"strconv\""));
         assert!(out.contains("func _sir_user_main() Value"));
         assert!(out.contains("func main()"));

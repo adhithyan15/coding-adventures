@@ -1,8 +1,9 @@
 //! Inlined Go runtime helpers — pasted verbatim into every artifact.
 //!
-//! Imports of `fmt` and `strconv` are required by the runtime; the
-//! emitter always emits them in the file header.  They are always
-//! used (the runtime block as a whole references both), so the Go
+//! Imports of `fmt`, `math`, and `strconv` are required by the runtime;
+//! the emitter always emits them in the file header.  They are always
+//! used (the runtime block as a whole references all three — `math` via
+//! the SIR16 float `NaN`/`Inf` checks in `_sir_format_float`), so the Go
 //! "unused import" rule is satisfied for every generated file.
 
 pub const RUNTIME: &str = r##"// ── inlined SIR runtime ────────────────────────────────────────
@@ -106,7 +107,52 @@ func _sir_as_int(v Value) int64 {
 	panic("expected int")
 }
 
+// ── numeric tower (SIR16 floats) ───────────────────────────────
+//
+// `Value` gains a `float64` arm.  Arithmetic stays on the integer
+// fast-path while EVERY operand is an integer (preserving exact int64
+// semantics, including the `*` wrapping below).  The moment ANY operand
+// is a float the whole fold promotes to float64 — matching the
+// "int op float ⇒ float" rule of Python/Ruby/JS.
+
+func _sir_is_float_val(v Value) bool {
+	_, ok := v.(float64)
+	return ok
+}
+
+func _sir_any_float(args []Value) bool {
+	for _, a := range args {
+		if _sir_is_float_val(a) {
+			return true
+		}
+	}
+	return false
+}
+
+// Coerce any number to float64 for the promoted arithmetic/comparison
+// paths.  Integers widen losslessly for magnitudes within ±2^53; beyond
+// that the all-integer fast paths keep exactness, so this widening only
+// runs once a float is genuinely in play.
+func _sir_as_float(v Value) float64 {
+	switch n := v.(type) {
+	case float64:
+		return n
+	case int64:
+		return float64(n)
+	case int:
+		return float64(n)
+	}
+	panic("expected number")
+}
+
 func _sir_plus(args []Value) Value {
+	if _sir_any_float(args) {
+		var total float64
+		for _, a := range args {
+			total += _sir_as_float(a)
+		}
+		return total
+	}
 	var total int64
 	for _, a := range args {
 		total += _sir_as_int(a)
@@ -117,6 +163,16 @@ func _sir_plus(args []Value) Value {
 func _sir_minus(args []Value) Value {
 	if len(args) == 0 {
 		return int64(0)
+	}
+	if _sir_any_float(args) {
+		if len(args) == 1 {
+			return -_sir_as_float(args[0])
+		}
+		acc := _sir_as_float(args[0])
+		for _, a := range args[1:] {
+			acc -= _sir_as_float(a)
+		}
+		return acc
 	}
 	if len(args) == 1 {
 		return -_sir_as_int(args[0])
@@ -129,6 +185,13 @@ func _sir_minus(args []Value) Value {
 }
 
 func _sir_times(args []Value) Value {
+	if _sir_any_float(args) {
+		acc := 1.0
+		for _, a := range args {
+			acc *= _sir_as_float(a)
+		}
+		return acc
+	}
 	var acc int64 = 1
 	for _, a := range args {
 		acc *= _sir_as_int(a)
@@ -139,6 +202,16 @@ func _sir_times(args []Value) Value {
 func _sir_divide(args []Value) Value {
 	if len(args) == 0 {
 		return int64(0)
+	}
+	if _sir_any_float(args) {
+		// Float division follows IEEE-754: `1.0 / 0.0` is `+Inf`
+		// rather than a panic.  Only the all-integer path keeps the
+		// historical divide-by-zero panic.
+		acc := _sir_as_float(args[0])
+		for _, a := range args[1:] {
+			acc /= _sir_as_float(a)
+		}
+		return acc
 	}
 	acc := _sir_as_int(args[0])
 	for _, a := range args[1:] {
@@ -162,15 +235,41 @@ func _sir_eq(args []Value) Value {
 			return as.Name == bs.Name
 		}
 	}
+	// Cross-representation numeric equality (`1 == 1.0`) holds,
+	// mirroring dynamic-language `==`.  Float/Float uses IEEE
+	// equality, so `NaN == NaN` is correctly `false`.  We route ANY
+	// number pair through float64 comparison; non-numbers fall back to
+	// Go's `==`.
+	if _sir_is_number_val(a) && _sir_is_number_val(b) {
+		return _sir_as_float(a) == _sir_as_float(b)
+	}
 	return a == b
 }
 
+func _sir_is_number_val(v Value) bool {
+	switch v.(type) {
+	case int64, int, float64:
+		return true
+	}
+	return false
+}
+
 func _sir_lt(args []Value) Value {
-	return _sir_as_int(args[0]) < _sir_as_int(args[1])
+	if ai, aok := args[0].(int64); aok {
+		if bi, bok := args[1].(int64); bok {
+			return ai < bi
+		}
+	}
+	return _sir_as_float(args[0]) < _sir_as_float(args[1])
 }
 
 func _sir_gt(args []Value) Value {
-	return _sir_as_int(args[0]) > _sir_as_int(args[1])
+	if ai, aok := args[0].(int64); aok {
+		if bi, bok := args[1].(int64); bok {
+			return ai > bi
+		}
+	}
+	return _sir_as_float(args[0]) > _sir_as_float(args[1])
 }
 
 func _sir_cons(args []Value) Value {
@@ -199,8 +298,10 @@ func _sir_is_pair(args []Value) Value {
 }
 
 func _sir_is_number(args []Value) Value {
+	// `number?` names the whole numeric tower — true for integers AND
+	// floats, not a single representation.
 	switch args[0].(type) {
-	case int64, int:
+	case int64, int, float64:
 		return true
 	}
 	return false
@@ -232,6 +333,9 @@ func _sir_format(v Value) string {
 	if n, ok := v.(int); ok {
 		return strconv.FormatInt(int64(n), 10)
 	}
+	if x, ok := v.(float64); ok {
+		return _sir_format_float(x)
+	}
 	if s, ok := v.(string); ok {
 		return s
 	}
@@ -245,6 +349,43 @@ func _sir_format(v Value) string {
 		return "<closure>"
 	}
 	return fmt.Sprintf("%v", v)
+}
+
+// Render a float so integral values keep a trailing `.0` (`3.0`, not
+// `3`) — making the printed form unambiguously a float, matching how
+// Python/Ruby and the Rust backend's `{:?}` render `3.0`.  Non-finite
+// values print as `NaN` / `inf` / `-inf` (mirroring the Rust backend).
+//
+//   | value | output |
+//   |-------|--------|
+//   | 3.0   | "3.0"  |  ← FormatFloat gives "3"; we append ".0"
+//   | 3.25  | "3.25" |  ← already has a "."
+//   | -7.5  | "-7.5" |
+//   | 1e20  | "1e+20"|  ← exponent form already unambiguous
+//   | NaN   | "NaN"  |
+//   | +Inf  | "inf"  |
+//   | -Inf  | "-inf" |
+func _sir_format_float(x float64) string {
+	if math.IsNaN(x) {
+		return "NaN"
+	}
+	if math.IsInf(x, 1) {
+		return "inf"
+	}
+	if math.IsInf(x, -1) {
+		return "-inf"
+	}
+	s := strconv.FormatFloat(x, 'g', -1, 64)
+	// If the shortest representation has no decimal point and no
+	// exponent, it looks like an integer — append ".0" to keep the
+	// float identity visible.
+	for i := 0; i < len(s); i++ {
+		c := s[i]
+		if c == '.' || c == 'e' || c == 'E' {
+			return s
+		}
+	}
+	return s + ".0"
 }
 
 func _sir_format_pair(p *Pair) string {
@@ -325,12 +466,25 @@ mod tests {
 
     #[test]
     fn runtime_uses_fmt_and_strconv() {
-        // The emitter always emits `import ("fmt"; "strconv")` so
-        // both must be referenced in the runtime to satisfy Go's
-        // unused-import rule.
+        // The emitter always emits `import ("fmt"; "math"; "strconv")`
+        // so all three must be referenced in the runtime to satisfy
+        // Go's unused-import rule.
         assert!(RUNTIME.contains("fmt.Println"));
         assert!(RUNTIME.contains("fmt.Sprintf"));
         assert!(RUNTIME.contains("strconv.FormatInt"));
+        assert!(RUNTIME.contains("strconv.FormatFloat"));
+        assert!(RUNTIME.contains("math.IsNaN"));
+        assert!(RUNTIME.contains("math.IsInf"));
+    }
+
+    #[test]
+    fn runtime_declares_float_helpers() {
+        // SIR16 floats: the value model accepts a `float64` arm, and
+        // the numeric helpers gain float coercion + a display path.
+        assert!(RUNTIME.contains("_sir_as_float"));
+        assert!(RUNTIME.contains("_sir_any_float"));
+        assert!(RUNTIME.contains("_sir_format_float"));
+        assert!(RUNTIME.contains("_sir_is_number_val"));
     }
 
     #[test]
