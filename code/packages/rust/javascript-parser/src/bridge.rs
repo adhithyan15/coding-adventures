@@ -1569,74 +1569,105 @@ fn convert_call_expression(node: &GrammarASTNode) -> Result<Expression, BridgeEr
         return Err(internal(node, "call_expression: no children"));
     }
 
-    let last = nodes.last().unwrap();
-    match last.rule_name.as_str() {
-        "arguments" => {
-            // A trailing `arguments` node means this is a call: `<callee>(args)`.
-            //
-            // For a simple call `f(x)` the grammar yields exactly two children:
-            //   [member_expression(f), arguments(x)]
-            // and the callee is just `nodes[0]`.
-            //
-            // For a CHAINED call like `f()()` or `f(1)(2)(3)` the parser
-            // flattens the left-recursion into a single call_expression node
-            // whose children are the base followed by ONE `arguments` node per
-            // call site:
-            //   [member_expression(f), arguments(()), arguments(())]
-            // The callee of the outermost call is therefore the call formed by
-            // the base plus every `arguments` node except the last. We rebuild
-            // that by folding left-to-right:
-            //   f            (base)
-            //   f()          (after first arguments)
-            //   f()()        (outer call, built from `last` below)
-            //
-            // GUARD: `node_children` strips Token children, so a `.`/`[` that
-            // appears between calls (e.g. `f().x()`) would be silently dropped,
-            // turning `f().x()` into `f()()` — a miscompile. We only fold when
-            // no member-access tokens are present at this level; otherwise we
-            // fall through to the unsupported path (sound: an error, never a
-            // wrong program). Pure call chains carry no such tokens.
-            //
-            // A well-formed call always has a callee, so there are at least two
-            // children (`<callee>` then `arguments`). Reject anything shorter
-            // with a clean error rather than indexing `nodes[0]` / slicing
-            // `nodes[1..len-1]` (which would underflow to `1..0` and panic) on a
-            // malformed node from untrusted source.
-            if nodes.len() < 2 {
-                return Err(internal(node, "call_expression: arguments without a callee"));
-            }
-            let mut callee = convert_expression(nodes[0])?;
-            for mid in &nodes[1..nodes.len() - 1] {
-                if mid.rule_name != "arguments" || has_token(node, ".") || has_token(node, "[") {
-                    return Err(unsupported(node));
-                }
-                let mid_args = convert_arguments(mid)?;
-                callee = Expression::CallExpression(CallExpression {
+    // Optional chaining (`a?.b`, `f?.()`) is Phase 2. Decline so the CLI
+    // falls back to WHITESPACE_ONLY rather than risk dropping the `?.`.
+    if has_token(node, "?.") {
+        return Err(unsupported(node));
+    }
+
+    // A `call_expression` node is a FLAT suffix chain: a base
+    // (`member_expression` / `primary_expression`) followed by any number of
+    // suffixes, in source order:
+    //   - `arguments`   → a call            `base(args)`
+    //   - `. NAME`      → dot member        `base.name`
+    //   - `[ expr ]`    → computed member   `base[expr]`
+    //
+    // For example the parser yields, for
+    //   `f().x`  : [member_expression(f), arguments(()), Token("."), Token("x")]
+    //   `f()[k]` : [member_expression(f), arguments(()), "[", expression(k), "]"]
+    //   `f()()`  : [member_expression(f), arguments(()), arguments(())]
+    //
+    // The earlier implementation inspected only the LAST child and dispatched
+    // the whole node to a single handler, so any suffix the chosen handler
+    // ignored was silently DROPPED — turning `f().x` into `f()` and `f()[k]`
+    // into `f[k]` (real miscompiles; the call or the property vanished). We
+    // instead fold EVERY suffix left-to-right onto the growing `base`,
+    // mirroring `convert_member_expression`'s member walk with the
+    // `arguments` (call) case added. This also subsumes the chained-call
+    // `f()()` fold. Any token we don't recognise here is rejected
+    // (fail-closed: an error feeds the WHITESPACE_ONLY fallback, never a
+    // wrong program).
+    let children = &node.children;
+    let mut base = match children.first() {
+        Some(ASTNodeOrToken::Node(n)) => convert_expression(n)?,
+        _ => return Err(internal(node, "call_expression: expected a base expression")),
+    };
+
+    let mut i = 1;
+    while i < children.len() {
+        match &children[i] {
+            // `(args)` — a call applied to the current base.
+            ASTNodeOrToken::Node(n) if n.rule_name == "arguments" => {
+                let args = convert_arguments(n)?;
+                base = Expression::CallExpression(CallExpression {
                     cv: None,
-                    callee: Box::new(callee),
-                    arguments: mid_args,
+                    callee: Box::new(base),
+                    arguments: args,
                 });
+                i += 1;
             }
-            let args = convert_arguments(last)?;
-            Ok(Expression::CallExpression(CallExpression {
-                cv: None,
-                callee: Box::new(callee),
-                arguments: args,
-            }))
-        }
-        _ if has_token(node, ".") => {
-            // Member access: obj.name
-            convert_member_expression(node)
-        }
-        _ if has_token(node, "[") => {
-            // Computed member access: obj[key]
-            convert_member_expression(node)
-        }
-        _ => {
-            // Optional chain — Phase 2.
-            Err(unsupported(node))
+            // `.NAME` — dot (non-computed) member access.
+            ASTNodeOrToken::Token(t) if t.value == "." => {
+                let prop_name = match children.get(i + 1) {
+                    Some(ASTNodeOrToken::Token(name)) => name.value.clone(),
+                    _ => return Err(internal(node, "call_expression.dot: missing property name")),
+                };
+                base = Expression::MemberExpression(MemberExpression {
+                    cv: None,
+                    object: Box::new(base),
+                    property: Box::new(Expression::Identifier(Identifier {
+                        cv: None,
+                        name: prop_name,
+                    })),
+                    computed: false,
+                });
+                i += 2; // consume DOT + NAME
+            }
+            // `[expr]` — computed member access.
+            ASTNodeOrToken::Token(t) if t.value == "[" => {
+                // The key is the next Node child; skip to it.
+                let key_node = children[i + 1..].iter().find_map(|c| match c {
+                    ASTNodeOrToken::Node(n) => Some(n),
+                    _ => None,
+                });
+                let key = match key_node {
+                    Some(n) => convert_expression(n)?,
+                    None => return Err(internal(node, "call_expression.computed: missing key")),
+                };
+                base = Expression::MemberExpression(MemberExpression {
+                    cv: None,
+                    object: Box::new(base),
+                    property: Box::new(key),
+                    computed: true,
+                });
+                // Advance past `[ … ]` to the matching RBRACKET.
+                i += 1;
+                while i < children.len() {
+                    let is_rbracket =
+                        matches!(&children[i], ASTNodeOrToken::Token(t) if t.value == "]");
+                    i += 1;
+                    if is_rbracket {
+                        break;
+                    }
+                }
+            }
+            // Anything else (tagged template, `new`/`super`, a stray token) is
+            // not yet representable — fail closed rather than drop it.
+            _ => return Err(unsupported(node)),
         }
     }
+
+    Ok(base)
 }
 
 fn convert_arguments(node: &GrammarASTNode) -> Result<Vec<Expression>, BridgeError> {
@@ -2866,6 +2897,73 @@ mod tests {
         };
         assert_eq!(c1.arguments.len(), 1); // (1)
         assert!(matches!(&*c1.callee, Expression::Identifier(id) if id.name == "f"));
+    }
+
+    #[test]
+    fn dot_member_on_call_result() {
+        // `f().x` — a dot member access on a CALL result. Regression: the
+        // bridge dispatched the whole call_expression node on its last child
+        // and dropped the trailing `.x`, miscompiling `f().x` into `f()`.
+        // The property read must survive: MemberExpression{ object: f(), .x }.
+        let m = match first_expr(&bridge_ok("f().x;")) {
+            Expression::MemberExpression(m) => m.clone(),
+            other => panic!("expected MemberExpression, got {other:?}"),
+        };
+        assert!(!m.computed);
+        assert!(matches!(&*m.property, Expression::Identifier(id) if id.name == "x"));
+        match &*m.object {
+            Expression::CallExpression(c) => {
+                assert_eq!(c.arguments.len(), 0);
+                assert!(matches!(&*c.callee, Expression::Identifier(id) if id.name == "f"));
+            }
+            other => panic!("expected the object to be the call `f()`, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn computed_member_on_call_result() {
+        // `f()[k]` — a computed member access on a CALL result. Regression:
+        // the bridge took the FIRST child as the base and skipped the
+        // `arguments` node, miscompiling `f()[k]` into `f[k]` (the call
+        // vanished). The object must be the call `f()`, key `k`, computed.
+        let m = match first_expr(&bridge_ok("f()[k];")) {
+            Expression::MemberExpression(m) => m.clone(),
+            other => panic!("expected MemberExpression, got {other:?}"),
+        };
+        assert!(m.computed);
+        assert!(matches!(&*m.property, Expression::Identifier(id) if id.name == "k"));
+        match &*m.object {
+            Expression::CallExpression(c) => {
+                assert_eq!(c.arguments.len(), 0);
+                assert!(matches!(&*c.callee, Expression::Identifier(id) if id.name == "f"));
+            }
+            other => panic!("expected the object to be the call `f()`, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn call_member_call_mixed_chain() {
+        // `f().x()` — call, then dot member, then call. The whole flat suffix
+        // chain must fold: CallExpression{ callee: (f()).x, args: [] }. Before
+        // the fix this bridged to `unsupported` (and fell back to passthrough);
+        // now it must produce the correctly nested AST.
+        let outer = match first_expr(&bridge_ok("f().x();")) {
+            Expression::CallExpression(c) => c.clone(),
+            other => panic!("expected outer CallExpression, got {other:?}"),
+        };
+        assert_eq!(outer.arguments.len(), 0);
+        let member = match &*outer.callee {
+            Expression::MemberExpression(m) => m.clone(),
+            other => panic!("expected callee to be member `f().x`, got {other:?}"),
+        };
+        assert!(!member.computed);
+        assert!(matches!(&*member.property, Expression::Identifier(id) if id.name == "x"));
+        match &*member.object {
+            Expression::CallExpression(c) => {
+                assert!(matches!(&*c.callee, Expression::Identifier(id) if id.name == "f"));
+            }
+            other => panic!("expected member object to be `f()`, got {other:?}"),
+        }
     }
 
     #[test]
