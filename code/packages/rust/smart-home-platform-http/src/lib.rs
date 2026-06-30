@@ -2384,7 +2384,12 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
         surface: "home_assistant",
         mutates_runtime: false,
         runtime_authorized: false,
-        query_params: &["filter_entity_id", "minimal_response", "room_id"],
+        query_params: &[
+            "end_time",
+            "filter_entity_id",
+            "minimal_response",
+            "room_id",
+        ],
     },
     ApiRouteDescriptor {
         method: "GET",
@@ -2770,7 +2775,10 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
             "event_type",
             "from_ms",
             "limit",
+            "observed_at_or_after_ms",
+            "received_at_or_after_ms",
             "room_id",
+            "sort",
             "to_ms",
         ],
     },
@@ -6011,7 +6019,8 @@ fn state_history_events<'a>(
         .map(device_event_type_from_label)
         .transpose()?;
     let room_id = query_string(request, "room_id");
-    let observed_at_or_after_ms = query_u64(request, "observed_at_or_after_ms")?;
+    let observed_at_or_after_ms = history_from_ms(request)?;
+    let observed_at_or_before_ms = history_to_ms(request)?;
     let received_at_or_after_ms = query_u64(request, "received_at_or_after_ms")?;
     let limit = query_limit(request, 100, 1_000)?;
 
@@ -6032,6 +6041,10 @@ fn state_history_events<'a>(
                 .is_none_or(|observed_at_ms| event.observed_at_ms >= observed_at_ms)
         })
         .filter(|event| {
+            observed_at_or_before_ms
+                .is_none_or(|observed_at_ms| event.observed_at_ms <= observed_at_ms)
+        })
+        .filter(|event| {
             received_at_or_after_ms
                 .is_none_or(|received_at_ms| event.received_at_ms >= received_at_ms)
         })
@@ -6046,6 +6059,21 @@ fn state_history_events<'a>(
 
 fn history_entity_filter<'a>(request: &'a WebRequest) -> Option<&'a str> {
     query_string(request, "entity_id").or_else(|| query_string(request, "filter_entity_id"))
+}
+
+fn history_from_ms(request: &WebRequest) -> Result<Option<u64>, ApiError> {
+    if let Some(start_time) = request.route_params.get("start_time") {
+        return parse_u64("start_time", start_time).map(Some);
+    }
+    query_u64(request, "from_ms")?.map_or_else(
+        || query_u64(request, "observed_at_or_after_ms"),
+        |from_ms| Ok(Some(from_ms)),
+    )
+}
+
+fn history_to_ms(request: &WebRequest) -> Result<Option<u64>, ApiError> {
+    query_u64(request, "to_ms")?
+        .map_or_else(|| query_u64(request, "end_time"), |to_ms| Ok(Some(to_ms)))
 }
 
 fn runtime_entity_id(runtime: &SmartHomeRuntime, value: &str) -> Result<EntityId, ApiError> {
@@ -7076,11 +7104,7 @@ fn query_string<'a>(request: &'a WebRequest, key: &str) -> Option<&'a str> {
 
 fn query_u64(request: &WebRequest, key: &str) -> Result<Option<u64>, ApiError> {
     query_string(request, key)
-        .map(|value| {
-            value
-                .parse::<u64>()
-                .map_err(|_| ApiError::bad_request(format!("{key} must be an unsigned integer")))
-        })
+        .map(|value| parse_u64(key, value))
         .transpose()
 }
 
@@ -7088,6 +7112,10 @@ fn route_u64(request: &WebRequest, key: &str) -> Result<u64, ApiError> {
     let Some(value) = request.route_params.get(key) else {
         return Err(ApiError::bad_request(format!("missing {key}")));
     };
+    parse_u64(key, value)
+}
+
+fn parse_u64(key: &str, value: &str) -> Result<u64, ApiError> {
     value
         .parse::<u64>()
         .map_err(|_| ApiError::bad_request(format!("{key} must be an unsigned integer")))
@@ -8542,7 +8570,7 @@ mod tests {
             r#""path":"/api/smart_home/capability_grants","category":"authorization","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["capability_id","entity_id","limit","principal_id","scope","sort","status"]"#
         ));
         assert!(catalog.contains(
-            r#""path":"/api/smart_home/state_history","category":"state_history","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["bridge_id","entity_id","event_type","from_ms","limit","room_id","to_ms"]"#
+            r#""path":"/api/smart_home/state_history","category":"state_history","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["bridge_id","entity_id","event_type","from_ms","limit","observed_at_or_after_ms","received_at_or_after_ms","room_id","sort","to_ms"]"#
         ));
         let catalog_json: JsonValue =
             serde_json::from_str(&catalog).expect("API catalog response is JSON");
@@ -9144,6 +9172,34 @@ mod tests {
         assert!(body.contains(r#""capability_id":"light.on_off""#));
         assert!(body.contains(r#""value":true"#));
 
+        let window_body = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/state_history?from_ms=2000&to_ms=2000&limit=5",
+            ))
+            .into(),
+        );
+        assert!(window_body.contains(r#""total_events":1"#));
+        assert!(window_body.contains(r#""event_id":"event-light-1-on""#));
+
+        let future_window_body = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/state_history?from_ms=2001&limit=5",
+            ))
+            .into(),
+        );
+        assert!(future_window_body.contains(r#""total_events":0"#));
+
+        let past_window_body = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/state_history?to_ms=1999&limit=5",
+            ))
+            .into(),
+        );
+        assert!(past_window_body.contains(r#""total_events":0"#));
+
         let room_body = response_body(
             app.handle(request(
                 "GET",
@@ -9241,6 +9297,24 @@ mod tests {
             .into(),
         );
         assert_eq!(period_body, body);
+
+        let future_period_body = response_body(
+            app.handle(request(
+                "GET",
+                "/api/history/period/2001?filter_entity_id=light.entity_light_1",
+            ))
+            .into(),
+        );
+        assert_eq!(future_period_body, "[]");
+
+        let ended_period_body = response_body(
+            app.handle(request(
+                "GET",
+                "/api/history/period/2000?filter_entity_id=light.entity_light_1&end_time=1999",
+            ))
+            .into(),
+        );
+        assert_eq!(ended_period_body, "[]");
     }
 
     #[test]

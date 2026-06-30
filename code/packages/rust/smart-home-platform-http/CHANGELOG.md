@@ -79,6 +79,8 @@ All notable changes to this package will be documented in this file.
   and runtime event panels through existing entity-aware activity routes.
 - Added a browser dashboard history event-type filter for reopening state
   history views scoped to one device event class from URL state.
+- Added state-history time-window filters so smart-home `from_ms`/`to_ms` and
+  Home Assistant period `start_time`/`end_time` requests share the same route.
 - Added fixture-controller launch help, smoke-test URLs, and example-level tests
   to keep the local controller startup path usable.
 - Added a machine-readable local-controller smoke plan route that lists safe
