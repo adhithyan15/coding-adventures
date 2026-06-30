@@ -94,7 +94,7 @@ pub fn check_frontend(frontend: &dyn MathFrontend, samples: &[&str]) -> Conforma
 /// Names of capabilities that `used` requires but `declared` did not advertise.
 fn over_emitted(used: Capabilities, declared: Capabilities) -> Vec<&'static str> {
     let mut v = Vec::new();
-    let pairs: [(&str, bool, bool); 12] = [
+    let pairs: [(&str, bool, bool); 13] = [
         ("fractions", used.fractions, declared.fractions),
         ("roots", used.roots, declared.roots),
         ("powers", used.powers, declared.powers),
@@ -107,6 +107,7 @@ fn over_emitted(used: Capabilities, declared: Capabilities) -> Vec<&'static str>
         ("plusminus", used.plusminus, declared.plusminus),
         ("binomials", used.binomials, declared.binomials),
         ("accents", used.accents, declared.accents),
+        ("oversets", used.oversets, declared.oversets),
     ];
     for (label, used_it, declared_it) in pairs {
         if used_it && !declared_it {
@@ -191,6 +192,11 @@ fn collect_used(e: &MathExpr, caps: &mut Capabilities) {
         MathExpr::Accent { body, .. } => {
             caps.accents = true;
             collect_used(body, caps);
+        }
+        MathExpr::Overset { over: a, base: b } | MathExpr::Underset { under: a, base: b } => {
+            caps.oversets = true;
+            collect_used(a, caps);
+            collect_used(b, caps);
         }
     }
 }
@@ -294,6 +300,45 @@ mod tests {
         let r = check_frontend(&AccentOverClaimer, &["xhat"]);
         assert!(!r.passed());
         assert!(r.issues.iter().any(|i| i.contains("accents")));
+    }
+
+    #[test]
+    fn emitting_overset_without_declaring_is_flagged() {
+        // A frontend that emits `\overset{a}{b}` (an Overset) but declares `none()` must be
+        // flagged for the `oversets` capability — the gate polices the new node too.
+        struct OversetOverClaimer;
+        impl MathFrontend for OversetOverClaimer {
+            fn name(&self) -> &str { "overset" }
+            fn parse(&self, _src: &str) -> Result<MathExpr, FrontendError> {
+                Ok(MathExpr::Overset {
+                    over: Box::new(MathExpr::Symbol("a".into())),
+                    base: Box::new(MathExpr::Symbol("b".into())),
+                })
+            }
+            fn capabilities(&self) -> Capabilities { Capabilities::none() }
+        }
+        let r = check_frontend(&OversetOverClaimer, &["aoverb"]);
+        assert!(!r.passed());
+        assert!(r.issues.iter().any(|i| i.contains("oversets")));
+    }
+
+    #[test]
+    fn declaring_oversets_admits_overset_and_underset() {
+        // Declaring `with_oversets()` makes emitting an Overset/Underset conforming.
+        struct OversetHonest;
+        impl MathFrontend for OversetHonest {
+            fn name(&self) -> &str { "overset-honest" }
+            fn parse(&self, src: &str) -> Result<MathExpr, FrontendError> {
+                let s = |n: &str| Box::new(MathExpr::Symbol(n.into()));
+                Ok(if src == "under" {
+                    MathExpr::Underset { under: s("a"), base: s("b") }
+                } else {
+                    MathExpr::Overset { over: s("a"), base: s("b") }
+                })
+            }
+            fn capabilities(&self) -> Capabilities { Capabilities::none().with_oversets() }
+        }
+        assert!(check_frontend(&OversetHonest, &["over", "under"]).passed());
     }
 
     #[test]

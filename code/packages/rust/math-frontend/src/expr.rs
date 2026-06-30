@@ -264,6 +264,17 @@ pub enum MathExpr {
     /// diacritic *over* `x`, semantically unlike the named function `hat(x)`, and a faithful
     /// renderer must reproduce the mark, not a function application.
     Accent { accent: String, body: Box<MathExpr> },
+    /// An arbitrary expression set **over** a base: `\overset{a}{b}`, `\stackrel{a}{R}`
+    /// (LaTeX), `overset(a)(b)` / `stackrel a b` (AsciiMath). Generalises [`MathExpr::Accent`]:
+    /// where an accent's mark is a fixed named diacritic, an `Overset`'s `over` is a *full
+    /// sub-expression* (`\xrightarrow{f}` style labels, a limit annotation, a chemical-reaction
+    /// condition over an arrow, …). Kept DISTINCT from `Pow`: the `over` sits *centered above*
+    /// the base, not as a superscript, and a faithful renderer must stack it, not raise it.
+    Overset { over: Box<MathExpr>, base: Box<MathExpr> },
+    /// An arbitrary expression set **under** a base: `\underset{a}{b}` (LaTeX),
+    /// `underset(a)(b)` (AsciiMath). The under-the-base twin of [`MathExpr::Overset`] —
+    /// distinct from `Subscript` for the same centered-vs-lowered reason.
+    Underset { under: Box<MathExpr>, base: Box<MathExpr> },
 }
 
 /// Drop a `MathExpr` **iteratively** so freeing a deeply-nested tree cannot overflow the
@@ -323,6 +334,10 @@ fn take_children(e: &mut MathExpr, out: &mut Vec<MathExpr>) {
         }
         MathExpr::Call { arg, .. } => take(arg, out),
         MathExpr::Accent { body, .. } => take(body, out),
+        MathExpr::Overset { over: a, base: b } | MathExpr::Underset { under: a, base: b } => {
+            take(a, out);
+            take(b, out);
+        }
         MathExpr::BigOp { lower, upper, body, .. } => {
             take_opt(lower, out);
             take_opt(upper, out);
@@ -367,6 +382,32 @@ mod tests {
         let mut e = MathExpr::Symbol("x".to_string());
         for _ in 0..300_000 {
             e = MathExpr::Accent { accent: "hat".to_string(), body: Box::new(e) };
+        }
+        drop(e);
+    }
+
+    #[test]
+    fn overset_underset_are_constructible_distinct_and_drop_deep() {
+        let s = |n: &str| Box::new(MathExpr::Symbol(n.to_string()));
+        let over = MathExpr::Overset { over: s("a"), base: s("R") };
+        let under = MathExpr::Underset { under: s("a"), base: s("R") };
+        // Equal to themselves; the two directions are distinct nodes.
+        assert_eq!(over, MathExpr::Overset { over: s("a"), base: s("R") });
+        assert_eq!(under, MathExpr::Underset { under: s("a"), base: s("R") });
+        assert_ne!(over, under);
+        // Argument order matters (annotation vs base are not interchangeable).
+        assert_ne!(over, MathExpr::Overset { over: s("R"), base: s("a") });
+        // Distinct from a Pow/Subscript with the same operands (centered, not raised/lowered).
+        assert_ne!(over, MathExpr::Bin(BinOp::Pow, s("R"), s("a")));
+        assert_ne!(under, MathExpr::Subscript(s("R"), s("a")));
+        // A deep Overset/Underset spine must free via the iterative Drop, not recurse.
+        let mut e = MathExpr::Symbol("x".to_string());
+        for i in 0..300_000 {
+            e = if i % 2 == 0 {
+                MathExpr::Overset { over: s("f"), base: Box::new(e) }
+            } else {
+                MathExpr::Underset { under: s("g"), base: Box::new(e) }
+            };
         }
         drop(e);
     }

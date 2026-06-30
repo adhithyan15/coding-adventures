@@ -66,6 +66,9 @@ pub struct Capabilities {
     pub binomials: bool,
     /// Emits diacritical accents ([`crate::MathExpr::Accent`]: `\hat{x}`, `\bar{y}`, `\vec{v}`, …).
     pub accents: bool,
+    /// Emits over/under-set annotations ([`crate::MathExpr::Overset`] / [`crate::MathExpr::Underset`]:
+    /// `\overset{a}{b}`, `\stackrel{a}{R}`, `\underset{a}{b}`).
+    pub oversets: bool,
 }
 
 impl Capabilities {
@@ -90,6 +93,7 @@ impl Capabilities {
             plusminus: true,
             binomials: true,
             accents: true,
+            oversets: true,
         }
     }
 
@@ -105,6 +109,7 @@ impl Capabilities {
     pub fn with_plusminus(mut self) -> Self { self.plusminus = true; self }
     pub fn with_binomials(mut self) -> Self { self.binomials = true; self }
     pub fn with_accents(mut self) -> Self { self.accents = true; self }
+    pub fn with_oversets(mut self) -> Self { self.oversets = true; self }
 }
 
 /// The contract every notation parser implements.
