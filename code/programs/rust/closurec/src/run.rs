@@ -6240,6 +6240,36 @@ mod tests {
     }
 
     #[test]
+    fn simple_exponentiation_operand_precedence() {
+        // `**` is right-associative and its base must bind tighter than unary
+        // (the grammar base is an UpdateExpression). A unary base therefore needs
+        // parens — `-a**2` is a SyntaxError; the correct form is `(-a)**2`. The
+        // emitter previously emitted the invalid `-a**2`. The right operand, by
+        // contrast, accepts the same precedence, so `a**b**c` needs no parens.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let simple = |src: &str| transform_source(src, &cfg).expect("ok");
+
+        // Unary base MUST be parenthesised (else invalid JS).
+        assert_eq!(simple("x=(-a)**2;"), "x=(-a)**2;");
+        assert_eq!(simple("x=(~a)**2;"), "x=(~a)**2;");
+        assert_eq!(simple("x=(!a)**2;"), "x=(!a)**2;");
+        // Lower-precedence base stays parenthesised.
+        assert_eq!(simple("x=(a||b)**2;"), "x=(a||b)**2;");
+        // Right-associative: same-precedence right needs NO parens (was
+        // over-parenthesised as `a**(b**c)`).
+        assert_eq!(simple("x=a**b**c;"), "x=a**b**c;");
+        // A unary RIGHT operand is legal without parens.
+        assert_eq!(simple("x=a**-b;"), "x=a**-b;");
+        assert_eq!(simple("x=a**b;"), "x=a**b;");
+    }
+
+    #[test]
     fn simple_member_and_call_object_keeps_required_parens() {
         // Regression: the emitter wrote a member-expression's object (and a
         // call's callee) at parent precedence 0, dropping the parentheses that

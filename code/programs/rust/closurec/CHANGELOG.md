@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.233.0] - 2026-06-30
+
+### Fixed — `**` operand precedence emitted invalid JS (miscompile)
+
+A unary base of `**` was emitted without its required parentheses — `(-a)**2`
+became `-a**2`, a `SyntaxError` (also `(~a)**2`, `(!a)**2`). And right-associativity
+was not modelled, so `a**b**c` was over-parenthesised to `a**(b**c)`. The emitter
+now parenthesises a unary/lower-precedence `**` base and leaves a same-precedence
+right operand bare (see `closure-emitter` 0.18.7). New end-to-end test
+`simple_exponentiation_operand_precedence`.
+
 ## [0.232.0] - 2026-06-30
 
 ### Fixed — member object / call callee lost required parens (miscompile)
