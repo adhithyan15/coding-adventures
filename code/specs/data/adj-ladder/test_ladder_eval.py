@@ -47,6 +47,7 @@ SELF_CONTAINED_RUNGS = (
     "rung7c_likelihood_ratios",
     "rung8_pharmacokinetics",
     "rung9_fractional_excretion",
+    "rung10_anion_gap",
 )
 
 

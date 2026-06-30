@@ -2,6 +2,30 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.37.0] — 2026-06-30
+
+### Added — rung 10: serum anion gap (acid–base)
+
+- **`rung10_anion_gap/items.json`** — **24 items** (`r10ag-01`..`r10ag-24`), the bedside acid–base
+  work-up. This is the **pure addition/subtraction** case of the quantitative-clinical band (rungs
+  8/9 were multiplication/division), so the new lever is signed arithmetic with no numeric literal.
+  From four stated serum electrolytes — Na, K, Cl, bicarbonate (all mEq/L) — compute the **serum
+  anion gap** (AG = Na − Cl − bicarb) or the **anion gap including potassium** (Na + K − Cl − bicarb).
+- Each item is a `compute_dimensioned` program (`observe` the four quantities + `let answer =
+  <formula>`); the **engine** carries the signed arithmetic via the existing `compute_dimensioned`
+  extractor — no harness/engine change, exactly as rungs 4/7/7b/7c/8/9.
+- **Contamination-safe:** every gap is a pure signed sum of the four observed quantities — no
+  structural constant (the "normal" gap of ~12 is a comparison, not part of the computation). The
+  variable names are deliberately **digit-free** (`bicarb`, not `hco3`): the contamination check
+  reads digit-runs out of identifiers, so a `3` inside a variable name would leak as the literal `3`
+  (the rung-8 lesson, where `c0` leaked a `0`).
+- **Distractors** are a tight family of signed sums over the same quantities — {AG, AG+K,
+  bicarbonate-sign-flipped, chloride-sign-flipped, bicarbonate-omitted} — so they are exactly the
+  sign-errors a student makes. The five option values are pairwise distinct for every physiologic
+  table (asserted at build); gold letter rotates A–E.
+- Engine **24/24** cached (zero wrong, zero abstain); contamination/ruff/pytest clean. Added
+  `rung10_anion_gap` to `SELF_CONTAINED_RUNGS`.
+
 ## [0.36.0] — 2026-06-30
 
 ### Added — rung 9: renal indices / fractional excretion (nephrology)
