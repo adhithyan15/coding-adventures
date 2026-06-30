@@ -83,10 +83,8 @@ fn compile_component(name: &str) -> (String, String, String) {
     let mll = root.join(format!("{name}.mll"));
     let msl = root.join(format!("{name}.dark.msl"));
 
-    let mil_src = fs::read_to_string(&mil)
-        .unwrap_or_else(|e| panic!("read {:?}: {e}", mil));
-    let mll_src = fs::read_to_string(&mll)
-        .unwrap_or_else(|e| panic!("read {:?}: {e}", mll));
+    let mil_src = fs::read_to_string(&mil).unwrap_or_else(|e| panic!("read {:?}: {e}", mil));
+    let mll_src = fs::read_to_string(&mll).unwrap_or_else(|e| panic!("read {:?}: {e}", mll));
     // .msl is optional — Column is metadata-only.
     let msl_src = fs::read_to_string(&msl).ok();
 
@@ -95,20 +93,14 @@ fn compile_component(name: &str) -> (String, String, String) {
         .unwrap_or_else(|errs| panic!("mosmodel {name}: {errs:?}"));
 
     // 2. moslayout (with interface validation)
-    let layout_out = moslayout_compiler::compile(
-        &mll_src,
-        Some(&mosmodel_out.descriptor_json),
-    )
-    .unwrap_or_else(|errs| panic!("moslayout {name}: {errs:?}"));
+    let layout_out = moslayout_compiler::compile(&mll_src, Some(&mosmodel_out.descriptor_json))
+        .unwrap_or_else(|errs| panic!("moslayout {name}: {errs:?}"));
 
     // 3. mosstyle (empty when there's no .dark.msl)
     let style_def = match msl_src {
         Some(src) => {
-            let style_out = mosstyle_compiler::compile(
-                &src,
-                Some(&layout_out.part_map_json),
-            )
-            .unwrap_or_else(|errs| panic!("mosstyle {name}: {errs:?}"));
+            let style_out = mosstyle_compiler::compile(&src, Some(&layout_out.part_map_json))
+                .unwrap_or_else(|errs| panic!("mosstyle {name}: {errs:?}"));
             style_out.def
         }
         None => mosstyle_compiler::StyleDef {
@@ -154,7 +146,10 @@ fn compile_component(name: &str) -> (String, String, String) {
 #[test]
 fn cell_component_lowers_to_xaml_without_error() {
     let (xaml, code_behind, events) = compile_component("Cell");
-    assert!(xaml.contains("<UserControl"), "Cell XAML missing UserControl root");
+    assert!(
+        xaml.contains("<UserControl"),
+        "Cell XAML missing UserControl root"
+    );
     assert!(
         code_behind.contains("public sealed partial class Cell : UserControl"),
         "Cell code-behind missing partial class"
@@ -229,11 +224,15 @@ fn grid_emits_for_view_models() {
     let mosmodel_out = mosmodel_compiler::compile(&mil_src).unwrap();
     let layout_out =
         moslayout_compiler::compile(&mll_src, Some(&mosmodel_out.descriptor_json)).unwrap();
-    let style_out =
-        mosstyle_compiler::compile(&msl_src, Some(&layout_out.part_map_json)).unwrap();
+    let style_out = mosstyle_compiler::compile(&msl_src, Some(&layout_out.part_map_json)).unwrap();
 
     let mut reg = mosaic_emit_xaml::ComponentRegistry::new();
-    reg.register("Cell", "grid", "using:Mosaic.Package.Grid", "mosaic-pkg-grid");
+    reg.register(
+        "Cell",
+        "grid",
+        "using:Mosaic.Package.Grid",
+        "mosaic-pkg-grid",
+    );
 
     let result = mosaic_emit_xaml::from_pipeline(
         &mosmodel_out.component,

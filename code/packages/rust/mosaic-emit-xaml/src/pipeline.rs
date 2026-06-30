@@ -521,6 +521,10 @@ struct ForBinding {
     /// transliteration in a follow-up PR and by debug introspection.
     #[allow(dead_code)]
     vm_class: String,
+    /// Code-behind property that projects the source list into row VMs,
+    /// when the source is a component slot. Template predicates can use
+    /// this to attach extra row-local state such as `IsSelected`.
+    projection_property: Option<String>,
 }
 
 /// A C# helper method that the emitter generates into the code-behind.
@@ -572,6 +576,20 @@ struct RowVm {
     /// matching column's fixed pixel width onto every cell, and the
     /// generated cell element binds `Width="{x:Bind Width}"`.
     has_width: bool,
+    /// True when a template-local predicate such as `i == selectedIndex`
+    /// is lowered into a row-local boolean instead of a page helper call.
+    has_is_selected: bool,
+}
+
+/// A code-behind property that projects a slot list into generated row VMs.
+#[derive(Debug, Clone)]
+struct RowProjection {
+    property_name: String,
+    source_path: String,
+    vm_class: String,
+    has_index: bool,
+    has_width: bool,
+    selected_index_path: Option<String>,
 }
 
 /// Mutable state threaded through the recursive XAML emission.
@@ -602,6 +620,9 @@ struct EmitContext<'a> {
     /// One `RowVm` per `For` block in the component. Becomes
     /// `XamlEmitResult::for_view_models`.
     row_vms: Vec<RowVm>,
+    /// Code-behind row-VM projections used as ItemsSource values for
+    /// slot-backed `For` templates.
+    row_projections: Vec<RowProjection>,
     /// Host* event-handler method bodies registered during the walk.
     /// Each `HostInput` / `HostButton` with bound emits adds one or
     /// more entries; the assembly step emits them inline in the
@@ -655,6 +676,7 @@ impl<'a> EmitContext<'a> {
             helpers: Vec::new(),
             needs_bool_to_vis: false,
             row_vms: Vec::new(),
+            row_projections: Vec::new(),
             host_handlers: Vec::new(),
             host_counter: 0,
             registry: None,
@@ -894,7 +916,18 @@ fn translate_xaml_value(key: &str, raw: &str) -> Option<String> {
 fn is_length_setter(setter: &str) -> bool {
     matches!(
         setter,
-        "FontSize" | "Height" | "Width" | "Padding" | "Margin" | "BorderThickness" | "CornerRadius"
+        "FontSize"
+            | "Height"
+            | "Width"
+            | "MaxHeight"
+            | "MaxWidth"
+            | "MinHeight"
+            | "MinWidth"
+            | "Padding"
+            | "Margin"
+            | "BorderThickness"
+            | "CornerRadius"
+            | "Spacing"
     )
 }
 
@@ -1031,14 +1064,20 @@ fn normalize_xaml_color_value(s: &str) -> String {
 fn css_property_to_xaml_setter(name: &str) -> Option<String> {
     match name {
         "background" => Some("Background".to_string()),
+        "background-color" => Some("Background".to_string()),
         "color" => Some("Foreground".to_string()),
         "font-family" => Some("FontFamily".to_string()),
         "font-size" => Some("FontSize".to_string()),
         "font-weight" => Some("FontWeight".to_string()),
+        "gap" => Some("Spacing".to_string()),
         "padding" => Some("Padding".to_string()),
         "margin" => Some("Margin".to_string()),
         "width" => Some("Width".to_string()),
         "height" => Some("Height".to_string()),
+        "max-width" => Some("MaxWidth".to_string()),
+        "max-height" => Some("MaxHeight".to_string()),
+        "min-width" => Some("MinWidth".to_string()),
+        "min-height" => Some("MinHeight".to_string()),
         "border-width" => Some("BorderThickness".to_string()),
         "border-color" => Some("BorderBrush".to_string()),
         // X1 fix: mosstyle's `border-radius` maps to WinUI's
@@ -1055,7 +1094,8 @@ fn css_property_to_xaml_setter(name: &str) -> Option<String> {
         // produced `TextAlign` â€” a property that doesn't exist â€” so the
         // setter was silently dropped by the markup compiler.
         "text-align" => Some("TextAlignment".to_string()),
-        // X5: CSS-only properties with NO WinUI analog. Returning `None`
+        // X5/X6: CSS-only or flex-only properties with NO direct WinUI
+        // attribute analog in the current lowering. Returning `None`
         // omits them entirely rather than emitting an invalid attribute
         // / `<Setter>` the markup compiler rejects.
         //
@@ -1071,11 +1111,18 @@ fn css_property_to_xaml_setter(name: &str) -> Option<String> {
         //                     an invalid literal.
         //   box-shadow      â€” WinUI shadows use `<ThemeShadow>` /
         //                     translation Z, not a CSS-shaped property.
-        "border-collapse" | "border-style" | "outline" | "text-decoration" | "box-shadow" => None,
-        // Anything else passes through PascalCased so we don't crash; the
-        // emitter prefers a stale-but-running output to a hard error in
-        // PR-1. A real CSS â†’ XAML completeness check lands later.
-        other => Some(kebab_to_pascal_case(other)),
+        //   align-items     — requires child-level alignment, not a
+        //                     property on StackPanel/Border/TextBlock.
+        //   justify-content — StackPanel has no space-between/around
+        //                     distribution property.
+        //   flex-wrap       — WinUI has no built-in WrapPanel in WinUI 3.
+        "align-items" | "border-collapse" | "border-style" | "box-shadow" | "flex-wrap"
+        | "justify-content" | "outline" | "text-decoration" => None,
+        // Unknown properties must not be PascalCased into fake WinUI
+        // setters. That path let Lattice/web layout names such as
+        // `gap` and `flex-wrap` leak into TextBlock styles and made
+        // XamlCompiler.exe fail with code 1 and no useful diagnostic.
+        _ => None,
     }
 }
 
@@ -1100,8 +1147,35 @@ fn is_container_style_attr(setter: &str) -> bool {
             | "Margin"
             | "Width"
             | "Height"
+            | "MaxWidth"
+            | "MaxHeight"
+            | "MinWidth"
+            | "MinHeight"
             | "HorizontalAlignment"
             | "VerticalAlignment"
+    )
+}
+
+fn is_stack_panel_style_attr(setter: &str) -> bool {
+    matches!(
+        setter,
+        "Spacing"
+            | "Margin"
+            | "Width"
+            | "Height"
+            | "MaxWidth"
+            | "MaxHeight"
+            | "MinWidth"
+            | "MinHeight"
+            | "HorizontalAlignment"
+            | "VerticalAlignment"
+    )
+}
+
+fn is_text_style_attr(setter: &str) -> bool {
+    matches!(
+        setter,
+        "Foreground" | "FontFamily" | "FontSize" | "FontWeight" | "TextAlignment"
     )
 }
 
@@ -1495,6 +1569,45 @@ fn emit_xaml_children(
     Ok(out)
 }
 
+fn emitted_content_child_count(children: &[LayoutNode]) -> usize {
+    let mut count = 0;
+    let mut i = 0;
+    while i < children.len() {
+        let child = &children[i];
+        if child.tag == "If" {
+            let has_else = children.get(i + 1).is_some_and(|next| next.tag == "Else");
+            count += if has_else { 2 } else { 1 };
+            i += if has_else { 2 } else { 1 };
+        } else {
+            count += 1;
+            i += 1;
+        }
+    }
+    count
+}
+
+/// Emit children for XAML hosts that accept exactly one content object.
+/// If Mosaic lowered the child list to multiple sibling elements, wrap
+/// them in a neutral vertical StackPanel instead of emitting invalid
+/// direct children under ContentControl, DataTemplate, Border, etc.
+fn emit_xaml_single_content_children(
+    children: &[LayoutNode],
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    if emitted_content_child_count(children) <= 1 {
+        return emit_xaml_children(children, indent, part_styles, ctx);
+    }
+
+    let pad = " ".repeat(indent);
+    let mut out = String::new();
+    writeln!(out, "{pad}<StackPanel Orientation=\"Vertical\">").unwrap();
+    out.push_str(&emit_xaml_children(children, indent + 4, part_styles, ctx)?);
+    writeln!(out, "{pad}</StackPanel>").unwrap();
+    Ok(out)
+}
+
 /// Build the optional `Style="..."` attribute fragment from a part name.
 /// Returns the full attribute (e.g. ` Background="#1e1e1e" FontSize="12"`)
 /// or an empty string when no style applies.
@@ -1597,11 +1710,48 @@ fn partition_box_style(
             container.push_str("=\"");
             container.push_str(&value);
             container.push('"');
-        } else {
+        } else if is_text_style_attr(&setter) {
             text.push((setter, value));
         }
     }
     (container, text)
+}
+
+fn partition_stack_panel_style(
+    part: Option<&str>,
+    part_styles: &PartStyleMap,
+) -> (String, String, Vec<(String, String)>) {
+    let frag = match part.and_then(|p| part_styles.get(p)) {
+        Some(f) => f.as_str(),
+        None => return (String::new(), String::new(), Vec::new()),
+    };
+    let mut wrapper = String::new();
+    let mut stack = String::new();
+    let mut text = Vec::new();
+    for (setter, value) in parse_style_fragment(frag) {
+        if setter == "Spacing" {
+            stack.push(' ');
+            stack.push_str(&setter);
+            stack.push_str("=\"");
+            stack.push_str(&value);
+            stack.push('"');
+        } else if is_container_style_attr(&setter) && !is_stack_panel_style_attr(&setter) {
+            wrapper.push(' ');
+            wrapper.push_str(&setter);
+            wrapper.push_str("=\"");
+            wrapper.push_str(&value);
+            wrapper.push('"');
+        } else if is_stack_panel_style_attr(&setter) {
+            stack.push(' ');
+            stack.push_str(&setter);
+            stack.push_str("=\"");
+            stack.push_str(&value);
+            stack.push('"');
+        } else if is_text_style_attr(&setter) {
+            text.push((setter, value));
+        }
+    }
+    (wrapper, stack, text)
 }
 
 // ---------------------------------------------------------------------
@@ -1632,16 +1782,16 @@ fn emit_stack_panel(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 4);
-    let (container_attrs, text_setters) =
-        partition_box_style(node.part_name.as_deref(), part_styles);
+    let (container_attrs, stack_attrs, text_setters) =
+        partition_stack_panel_style(node.part_name.as_deref(), part_styles);
     let mut out = if container_attrs.is_empty() && text_setters.is_empty() {
-        format!("{pad}<StackPanel Orientation=\"{orientation}\">\n")
+        format!("{pad}<StackPanel Orientation=\"{orientation}\"{stack_attrs}>\n")
     } else {
         let mut wrapped = format!("{pad}<Border{container_attrs}>\n");
         emit_text_style_resources(&mut wrapped, "Border", indent + 4, &text_setters);
         writeln!(
             wrapped,
-            "{inner_pad}<StackPanel Orientation=\"{orientation}\">"
+            "{inner_pad}<StackPanel Orientation=\"{orientation}\"{stack_attrs}>"
         )
         .unwrap();
         wrapped
@@ -1721,12 +1871,21 @@ fn emit_container(
 
     emit_text_style_resources(&mut out, element, indent + 4, &text_setters);
 
-    out.push_str(&emit_xaml_children(
-        &node.children,
-        indent + 4,
-        part_styles,
-        ctx,
-    )?);
+    if element == "Border" {
+        out.push_str(&emit_xaml_single_content_children(
+            &node.children,
+            indent + 4,
+            part_styles,
+            ctx,
+        )?);
+    } else {
+        out.push_str(&emit_xaml_children(
+            &node.children,
+            indent + 4,
+            part_styles,
+            ctx,
+        )?);
+    }
     writeln!(out, "{pad}</{element}>").unwrap();
     Ok(out)
 }
@@ -1985,6 +2144,11 @@ fn emit_code_behind(
         writeln!(out).unwrap();
     }
 
+    for projection in &ctx.row_projections {
+        out.push_str(&emit_row_projection_property(projection));
+        writeln!(out).unwrap();
+    }
+
     // The UI24 Dispatch event. Always emitted (even with zero emits) so
     // host code can subscribe uniformly.
     writeln!(
@@ -2076,6 +2240,45 @@ fn emit_dependency_property(
 }
 
 /// Translate a mosmodel slot type to its C# property type per spec Â§8.
+fn emit_row_projection_property(projection: &RowProjection) -> String {
+    let property_name = &projection.property_name;
+    let source_path = &projection.source_path;
+    let vm_class = &projection.vm_class;
+
+    let mut args = vec!["source[i]".to_string()];
+    if projection.has_index {
+        args.push("i".to_string());
+    }
+    if projection.has_width {
+        args.push("0".to_string());
+    }
+    if let Some(selected_index_path) = &projection.selected_index_path {
+        args.push(format!("i == {selected_index_path}"));
+    }
+    let ctor_args = args.join(", ");
+
+    let mut out = String::new();
+    writeln!(out, "    public IReadOnlyList<{vm_class}> {property_name}").unwrap();
+    writeln!(out, "    {{").unwrap();
+    writeln!(out, "        get").unwrap();
+    writeln!(out, "        {{").unwrap();
+    writeln!(out, "            var source = {source_path};").unwrap();
+    writeln!(out, "            var rows = new List<{vm_class}>();").unwrap();
+    writeln!(out, "            if (source is null) return rows;").unwrap();
+    writeln!(out, "            for (var i = 0; i < source.Count; i++)").unwrap();
+    writeln!(out, "            {{").unwrap();
+    writeln!(
+        out,
+        "                rows.Add(new {vm_class}({ctor_args}));"
+    )
+    .unwrap();
+    writeln!(out, "            }}").unwrap();
+    writeln!(out, "            return rows;").unwrap();
+    writeln!(out, "        }}").unwrap();
+    writeln!(out, "    }}").unwrap();
+    out
+}
+
 fn slot_type_to_csharp(t: &SlotType) -> Result<String, PipelineEmitError> {
     Ok(match t {
         SlotType::Text => "string".to_string(),
@@ -2307,84 +2510,85 @@ fn emit_for(
     // the inner `For (each: row, â€¦)`). GROUP C threads the colgroup
     // width onto that loop's value VM (a `double Width` field) so each
     // column renders at a fixed pixel width.
-    let (items_path, element_type, is_cell_loop) = match find_prop_value(node, "each") {
-        Some(LayoutPropValue::SlotRef(slot)) => {
-            let pascal = kebab_to_pascal_case(slot);
-            if !is_safe_identifier(&pascal) {
-                return Err(PipelineEmitError::UnsafeSlotName(pascal));
-            }
-            // Look up the slot's declared C# type to derive the element
-            // type. Slots are typed as `IReadOnlyList<X>` â†’ element is X.
-            let csharp_type = ctx
-                .slot_types
-                .get(slot.as_str())
-                .cloned()
-                .unwrap_or_else(|| "object".to_string());
-            let elem_type = inner_type_of_list(&csharp_type);
-            (pascal, elem_type, false)
-        }
-        Some(LayoutPropValue::Expr(expr_src)) => {
-            // Could be a for-bound name's member access, e.g.
-            // `row.cells`. Lower it through ExprLowerer.
-            match lower_expr_for_xbind(expr_src, ctx) {
-                ExprLowering::Bindable(path) => {
-                    // Without further type info we can't determine the
-                    // element type; default to `object` (the host's C#
-                    // compiler will catch any real mismatch).
-                    (path, "object".to_string(), false)
+    let (items_path, element_type, is_cell_loop, slot_backed_items_source) =
+        match find_prop_value(node, "each") {
+            Some(LayoutPropValue::SlotRef(slot)) => {
+                let pascal = ctx.slot_xbind_path(slot);
+                if !is_safe_identifier(&pascal) {
+                    return Err(PipelineEmitError::UnsafeSlotName(pascal));
                 }
-                ExprLowering::Helper(_) | ExprLowering::Unsupported(_) => {
-                    return Err(PipelineEmitError::UnsupportedExpression(format!(
-                        "For each: expression {expr_src:?} cannot be lowered to a binding path"
-                    )));
+                // Look up the slot's declared C# type to derive the element
+                // type. Slots are typed as `IReadOnlyList<X>` â†’ element is X.
+                let csharp_type = ctx
+                    .slot_types
+                    .get(slot.as_str())
+                    .cloned()
+                    .unwrap_or_else(|| "object".to_string());
+                let elem_type = inner_type_of_list(&csharp_type);
+                (pascal.clone(), elem_type, false, Some(pascal))
+            }
+            Some(LayoutPropValue::Expr(expr_src)) => {
+                // Could be a for-bound name's member access, e.g.
+                // `row.cells`. Lower it through ExprLowerer.
+                match lower_expr_for_xbind(expr_src, ctx) {
+                    ExprLowering::Bindable(path) => {
+                        // Without further type info we can't determine the
+                        // element type; default to `object` (the host's C#
+                        // compiler will catch any real mismatch).
+                        (path, "object".to_string(), false, None)
+                    }
+                    ExprLowering::Helper(_) | ExprLowering::Unsupported(_) => {
+                        return Err(PipelineEmitError::UnsupportedExpression(format!(
+                            "For each: expression {expr_src:?} cannot be lowered to a binding path"
+                        )));
+                    }
                 }
             }
-        }
-        // UI29 Â§3.4 â€” `each: <NAME>` where NAME is an enclosing For's
-        // binding. The moslayout validator has already verified the
-        // name is in scope. XAML's existing `ctx.for_scope` tracks the
-        // matching `ForBinding`, so we can look up its `element_type`
-        // for richer downstream binding info. If the name isn't found
-        // in the scope (shouldn't happen since the validator gates it),
-        // default to `object` the same way the Expr path does.
-        Some(LayoutPropValue::Keyword(name)) => {
-            let pascal = kebab_to_pascal_case(name);
-            if !is_safe_identifier(&pascal) {
-                return Err(PipelineEmitError::UnsafeSlotName(pascal));
+            // UI29 Â§3.4 â€” `each: <NAME>` where NAME is an enclosing For's
+            // binding. The moslayout validator has already verified the
+            // name is in scope. XAML's existing `ctx.for_scope` tracks the
+            // matching `ForBinding`, so we can look up its `element_type`
+            // for richer downstream binding info. If the name isn't found
+            // in the scope (shouldn't happen since the validator gates it),
+            // default to `object` the same way the Expr path does.
+            Some(LayoutPropValue::Keyword(name)) => {
+                let pascal = kebab_to_pascal_case(name);
+                if !is_safe_identifier(&pascal) {
+                    return Err(PipelineEmitError::UnsafeSlotName(pascal));
+                }
+                // GROUP B FIX (element-type peel). `each: <NAME>` where NAME
+                // is an enclosing `For`'s `as:` binding (UI29 Â§3.4 â€” the
+                // nested cell loop `For (each: row, as: v)`). The enclosing
+                // binding's `element_type` is the type of NAME *itself*
+                // (e.g. `row` is `IReadOnlyList<string>`). But THIS `For`
+                // iterates over NAME's elements, so each `as:` element is
+                // one level deeper â€” `v` is `string`, not the whole row
+                // list. We must peel exactly one `List<>` level.
+                //
+                // The pre-fix code used `fb.element_type` verbatim, so the
+                // inner value VM (`Grid_VVm`) typed its value field as
+                // `IReadOnlyList<string>`. The cell then bound
+                // `<TextBlock Text="{x:Bind V}"/>` â€” a `string` Text bound
+                // to a list â€” which BLOCKS `dotnet build`. Peeling one
+                // level types `V` as `string`, so the bind type-checks.
+                let outer_type = ctx
+                    .for_scope
+                    .iter()
+                    .rev()
+                    .find(|fb| fb.as_name == *name)
+                    .map(|fb| fb.element_type.clone())
+                    .unwrap_or_else(|| "object".to_string());
+                let elem_type = inner_type_of_list(&outer_type);
+                (pascal, elem_type, true, None)
             }
-            // GROUP B FIX (element-type peel). `each: <NAME>` where NAME
-            // is an enclosing `For`'s `as:` binding (UI29 Â§3.4 â€” the
-            // nested cell loop `For (each: row, as: v)`). The enclosing
-            // binding's `element_type` is the type of NAME *itself*
-            // (e.g. `row` is `IReadOnlyList<string>`). But THIS `For`
-            // iterates over NAME's elements, so each `as:` element is
-            // one level deeper â€” `v` is `string`, not the whole row
-            // list. We must peel exactly one `List<>` level.
-            //
-            // The pre-fix code used `fb.element_type` verbatim, so the
-            // inner value VM (`Grid_VVm`) typed its value field as
-            // `IReadOnlyList<string>`. The cell then bound
-            // `<TextBlock Text="{x:Bind V}"/>` â€” a `string` Text bound
-            // to a list â€” which BLOCKS `dotnet build`. Peeling one
-            // level types `V` as `string`, so the bind type-checks.
-            let outer_type = ctx
-                .for_scope
-                .iter()
-                .rev()
-                .find(|fb| fb.as_name == *name)
-                .map(|fb| fb.element_type.clone())
-                .unwrap_or_else(|| "object".to_string());
-            let elem_type = inner_type_of_list(&outer_type);
-            (pascal, elem_type, true)
-        }
-        _ => {
-            return Err(PipelineEmitError::UnsupportedPrimitive(
-                "For block must bind `each:` to a slot ref, an enclosing For binding, \
+            _ => {
+                return Err(PipelineEmitError::UnsupportedPrimitive(
+                    "For block must bind `each:` to a slot ref, an enclosing For binding, \
                  or an expression"
-                    .to_string(),
-            ));
-        }
-    };
+                        .to_string(),
+                ));
+            }
+        };
 
     // -- 3. Generate / register the RowVm --
     let vm_class = format!("{}_{}Vm", ctx.component_name, kebab_to_pascal_case(as_name));
@@ -2398,10 +2602,30 @@ fn emit_for(
         has_index,
         // GROUP C: only the per-column cell loop's VM carries `Width`.
         has_width: is_cell_loop,
+        has_is_selected: false,
     };
     if !ctx.row_vms.iter().any(|v| v.class_name == vm.class_name) {
         ctx.row_vms.push(vm);
     }
+
+    let projection_property = slot_backed_items_source.as_ref().map(|source| {
+        let prop = format!("{}Rows", vm_class.replace('_', ""));
+        if !ctx
+            .row_projections
+            .iter()
+            .any(|projection| projection.property_name == prop)
+        {
+            ctx.row_projections.push(RowProjection {
+                property_name: prop.clone(),
+                source_path: source.clone(),
+                vm_class: vm_class.clone(),
+                has_index,
+                has_width: is_cell_loop,
+                selected_index_path: None,
+            });
+        }
+        prop
+    });
 
     // -- 4. Push the binding into scope, walk the body, pop. --
     ctx.for_scope.push(ForBinding {
@@ -2409,8 +2633,10 @@ fn emit_for(
         index_name: index_name.map(String::from),
         element_type,
         vm_class: vm_class.clone(),
+        projection_property: projection_property.clone(),
     });
-    let mut body = emit_xaml_children(&node.children, indent + 12, part_styles, ctx)?;
+    let mut body =
+        emit_xaml_single_content_children(&node.children, indent + 12, part_styles, ctx)?;
     ctx.for_scope.pop();
 
     // GROUP C: bind the fixed per-column width onto the rendered cell.
@@ -2429,10 +2655,11 @@ fn emit_for(
     let pad2 = " ".repeat(indent + 4);
     let pad3 = " ".repeat(indent + 8);
     let style = part_style_attr(node, part_styles);
+    let items_source = projection_property.as_deref().unwrap_or(&items_path);
     let mut out = String::new();
     writeln!(
         out,
-        "{pad}<ItemsRepeater ItemsSource=\"{{x:Bind {items_path}}}\"{style}>"
+        "{pad}<ItemsRepeater ItemsSource=\"{{x:Bind {items_source}}}\"{style}>"
     )
     .unwrap();
     writeln!(out, "{pad2}<ItemsRepeater.ItemTemplate>").unwrap();
@@ -2528,13 +2755,19 @@ fn emit_if(
                 )));
             }
         }
-        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
-            ExprLowering::Bindable(path) => path,
-            ExprLowering::Helper(call) => call,
-            ExprLowering::Unsupported(reason) => {
-                return Err(PipelineEmitError::UnsupportedExpression(reason));
+        Some(LayoutPropValue::Expr(src)) => {
+            if let Some(path) = try_lower_for_template_predicate(src, ctx) {
+                path
+            } else {
+                match lower_expr_for_xbind(src, ctx) {
+                    ExprLowering::Bindable(path) => path,
+                    ExprLowering::Helper(call) => call,
+                    ExprLowering::Unsupported(reason) => {
+                        return Err(PipelineEmitError::UnsupportedExpression(reason));
+                    }
+                }
             }
-        },
+        }
         _ => {
             return Err(PipelineEmitError::UnsupportedPrimitive(
                 "If block missing required `when:` expression".to_string(),
@@ -2549,7 +2782,8 @@ fn emit_if(
     //    inside a single `<ContentControl>` with bound Visibility. --
     let pad = " ".repeat(indent);
     let pad2 = " ".repeat(indent + 4);
-    let then_body = emit_xaml_children(&if_node.children, indent + 4, part_styles, ctx)?;
+    let then_body =
+        emit_xaml_single_content_children(&if_node.children, indent + 4, part_styles, ctx)?;
 
     let mut out = String::new();
     writeln!(
@@ -2564,7 +2798,8 @@ fn emit_if(
     //    bound to the same expression with `ConverterParameter=invert`
     //    so the converter inverts the boolean. --
     if let Some(else_node) = else_node {
-        let else_body = emit_xaml_children(&else_node.children, indent + 4, part_styles, ctx)?;
+        let else_body =
+            emit_xaml_single_content_children(&else_node.children, indent + 4, part_styles, ctx)?;
         writeln!(
             out,
             "{pad}<ContentControl Visibility=\"{{x:Bind {when_path}, Converter={{StaticResource BoolToVisibilityConverter}}, ConverterParameter=invert}}\">"
@@ -2649,6 +2884,11 @@ fn emit_row_vm_source(_component: &str, vm: &RowVm, options: &EmitOptions) -> St
     // so the host must populate Width with the matching column's pixel
     // width when it builds the VM instances.
     let width_field = if vm.has_width { ", double Width" } else { "" };
+    let selected_field = if vm.has_is_selected {
+        ", bool IsSelected"
+    } else {
+        ""
+    };
     let mut out = String::new();
     writeln!(out, "// Auto-generated by mosaic-emit-xaml. Do not edit.").unwrap();
     writeln!(out, "namespace {ns};").unwrap();
@@ -2685,7 +2925,7 @@ fn emit_row_vm_source(_component: &str, vm: &RowVm, options: &EmitOptions) -> St
     }
     writeln!(
         out,
-        "public sealed record {class_name}({element_type} {element_property}{index_field}{width_field});"
+        "public sealed record {class_name}({element_type} {element_property}{index_field}{width_field}{selected_field});"
     )
     .unwrap();
     out
@@ -2766,6 +3006,7 @@ fn emit_csproj(_name: &str, options: &EmitOptions) -> String {
              <UseWinUI>true</UseWinUI>\n\
              <EnableMsixTooling>false</EnableMsixTooling>\n\
              <WindowsPackageType>None</WindowsPackageType>\n\
+             <EnableCoreMrtTooling>false</EnableCoreMrtTooling>\n\
              <Nullable>enable</Nullable>\n\
              <ImplicitUsings>enable</ImplicitUsings>\n\
              <LangVersion>latest</LangVersion>\n\
@@ -2782,13 +3023,9 @@ fn emit_csproj(_name: &str, options: &EmitOptions) -> String {
                   removed from the default graph. UseRidGraph=true restores\n\
                   support for them. -->\n\
              <UseRidGraph>true</UseRidGraph>\n\
-             <!-- Fix C1 mitigation: the AppxPackage / MrtCore.PriGen targets\n\
-                  ship with Visual Studio's MSBuild tasks, not the bare .NET SDK.\n\
-                  These two flags suppress most of the PRI/MSIX plumbing that\n\
-                  would otherwise fail on a SDK-only machine. The build still\n\
-                  emits one cosmetic MSB4062 error at the very end of the\n\
-                  packaging cleanup; ignore it. The .exe + dependencies are\n\
-                  produced before the failing target runs. -->\n\
+             <!-- Unpackaged WinUI does not need MrtCore PRI generation or MSIX\n\
+                  packaging targets for this host shell. Keeping them disabled\n\
+                  lets `dotnet build` work on SDK-only machines. -->\n\
              <AppxGeneratePriEnabled>false</AppxGeneratePriEnabled>\n\
              <EnableDefaultPriItems>false</EnableDefaultPriItems>\n\
            </PropertyGroup>\n\
@@ -3191,8 +3428,8 @@ fn build_dispatch_match(name: &str, emits: &[EmitDecl]) -> String {
             let pattern_args: Vec<String> = emit
                 .params
                 .iter()
-                .map(|p| kebab_to_pascal_case(&p.name))
-                .map(|n| n.to_lowercase())
+                .enumerate()
+                .map(|(idx, _)| format!("var payload{idx}"))
                 .collect();
             let pattern = pattern_args.join(", ");
             out.push_str(&format!(
@@ -3234,12 +3471,9 @@ fn emit_build_script(name: &str) -> String {
          # triple from the Mosaic sources (if mosaic-compile is on PATH), then runs\n\
          # `dotnet build`.\n\
          #\n\
-         # Known frictions:\n\
-         #   - On a bare .NET SDK (no Visual Studio Build Tools), `dotnet build` will\n\
-         #     end with one MSB4062 error about `Microsoft.Build.AppxPackage.RemovePayloadDuplicates`.\n\
-         #     The .exe and dependencies are produced anyway; ignore the error.\n\
-         #   - Without `<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>`,\n\
-         #     a system-wide install of the Windows App Runtime is required:\n\
+         # Prerequisite:\n\
+         #   - The generated project is framework-dependent, so a system-wide\n\
+         #     install of the Windows App Runtime is required to run it:\n\
          #         winget install Microsoft.WindowsAppRuntime.1.7\n\
          #\n\
          param([switch]$Clean, [switch]$Run)\n\
@@ -3255,8 +3489,10 @@ fn emit_build_script(name: &str) -> String {
          # self-contained mode rejects AnyCPU. The csproj's <Platforms>x64</Platforms>\n\
          # only declares the SET of platforms; the ACTIVE one comes from this arg.\n\
          dotnet build $proj -c Debug -p:Platform=x64 --nologo\n\
-         # `dotnet build` returns non-zero from the cosmetic MSB4062 even when the\n\
-         # outputs ARE produced. Ignore $LASTEXITCODE for that one specific case.\n\
+         $buildExitCode = $LASTEXITCODE\n\
+         if ($buildExitCode -ne 0) {{\n    \
+             exit $buildExitCode\n\
+         }}\n\
          \n\
          if ($Run) {{\n    \
              # x64 Debug bin path. .NET 9 puts the platform in the path\n    \
@@ -3298,14 +3534,11 @@ fn emit_project_readme(name: &str, shape: RootShape) -> String {
          ## Prerequisites\n\
          \n\
          1. **.NET 9.0 SDK** â€” `dotnet --list-sdks` should list one matching `9.0.*`.\n\
-         2. The Windows App Runtime bundles into the build output\n\
-            (`<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>`), so\n\
-            you don't need a system-wide install. If you switch to\n\
-            framework-dependent, run `winget install Microsoft.WindowsAppRuntime.1.7`.\n\
-         3. Optional but recommended: Visual Studio Build Tools 2022 with the UWP /\n\
-            WinUI workload. Without it, `dotnet build` emits one cosmetic MSB4062\n\
-            error from the AppxPackage MSBuild tasks â€” the .exe and dependencies\n\
-            still build correctly.\n\
+         2. The Windows App Runtime 1.7 installed system-wide:\n\
+            `winget install Microsoft.WindowsAppRuntime.1.7`.\n\
+         3. Visual Studio Build Tools 2022 is useful when opening the project in\n\
+            Visual Studio, but `.\\build.ps1` uses `dotnet build` and keeps the\n\
+            unpackaged MSIX / PRI tooling disabled.\n\
          \n\
          ## Build\n\
          \n\
@@ -3315,8 +3548,8 @@ fn emit_project_readme(name: &str, shape: RootShape) -> String {
          .\\build.ps1 -Clean     # deletes bin/ + obj/\n\
          ```\n\
          \n\
-         The build emits a fully self-contained .exe at\n\
-         `bin\\Debug\\net9.0-windows10.0.19041.0\\{name}.exe`. The native\n\
+         The build emits a framework-dependent .exe at\n\
+         `bin\\x64\\Debug\\net9.0-windows10.0.19041.0\\win-x64\\{name}.exe`. The native\n\
          WindowsAppRuntime DLLs are auto-flattened next to the .exe by an\n\
          MSBuild post-build target (see the project's `.csproj`).\n\
          \n\
@@ -3391,6 +3624,52 @@ enum ExprLowering {
     /// The expression couldn't be lowered. Carries a human-readable
     /// reason for the diagnostic.
     Unsupported(String),
+}
+
+fn try_lower_for_template_predicate(src: &str, ctx: &mut EmitContext<'_>) -> Option<String> {
+    let tokens = tokenise_expr(src.trim()).ok()?;
+    let selected_path = match tokens.as_slice() {
+        [ExprTok::Name(left), ExprTok::EqEq, ExprTok::Name(right)]
+            if ctx.lookup_for_index(left).is_some() =>
+        {
+            kebab_to_pascal_case(right)
+        }
+        [ExprTok::Name(left), ExprTok::EqEq, ExprTok::SlotPrefix, ExprTok::Name(right)]
+            if ctx.lookup_for_index(left).is_some() =>
+        {
+            ctx.slot_xbind_path(right)
+        }
+        [ExprTok::Name(left), ExprTok::EqEq, ExprTok::Name(right)]
+            if ctx.lookup_for_index(right).is_some() =>
+        {
+            kebab_to_pascal_case(left)
+        }
+        [ExprTok::SlotPrefix, ExprTok::Name(left), ExprTok::EqEq, ExprTok::Name(right)]
+            if ctx.lookup_for_index(right).is_some() =>
+        {
+            ctx.slot_xbind_path(left)
+        }
+        _ => return None,
+    };
+
+    let binding = ctx.for_scope.last()?;
+    let projection_property = binding.projection_property.clone()?;
+    if let Some(vm) = ctx
+        .row_vms
+        .iter_mut()
+        .find(|vm| vm.class_name == binding.vm_class)
+    {
+        vm.has_is_selected = true;
+    }
+    if let Some(projection) = ctx
+        .row_projections
+        .iter_mut()
+        .find(|projection| projection.property_name == projection_property)
+    {
+        projection.selected_index_path = Some(selected_path);
+        return Some("IsSelected".to_string());
+    }
+    None
 }
 
 /// Lower a raw expression source string to its WinUI 3 binding form.
@@ -4893,7 +5172,7 @@ fn emit_host_scroll(
     let mut out = format!(
         "{pad}<ScrollViewer VerticalScrollBarVisibility=\"{v_vis}\" HorizontalScrollBarVisibility=\"{h_vis}\"{style}>\n"
     );
-    out.push_str(&emit_xaml_children(
+    out.push_str(&emit_xaml_single_content_children(
         &node.children,
         indent + 4,
         part_styles,
@@ -5061,7 +5340,7 @@ fn emit_host_dialog(
         writeln!(out, "{pad}{c}").unwrap();
     }
     writeln!(out, "{pad}<{element}{attrs}{style}>").unwrap();
-    out.push_str(&emit_xaml_children(
+    out.push_str(&emit_xaml_single_content_children(
         &node.children,
         indent + 4,
         part_styles,
@@ -5113,7 +5392,7 @@ fn emit_host_dialog_as_root(
     for c in &comments {
         writeln!(out, "{}{c}", " ".repeat(indent)).unwrap();
     }
-    out.push_str(&emit_xaml_children(
+    out.push_str(&emit_xaml_single_content_children(
         &node.children,
         indent,
         part_styles,
@@ -6579,7 +6858,8 @@ mod tests {
         let r = compile(&c, &l, &empty_style("Grid"));
         assert!(r
             .xaml
-            .contains("<ItemsRepeater ItemsSource=\"{x:Bind Rows}\""));
+            .contains("<ItemsRepeater ItemsSource=\"{x:Bind GridRowVmRows}\""));
+        assert!(r.code_behind.contains("var source = Rows;"));
         // The For-generated RowVm should be in for_view_models.
         assert!(!r.for_view_models.is_empty());
     }
@@ -7851,13 +8131,20 @@ mod tests {
             ),
         );
         let r = compile(&c, &l, &empty_style("Grid"));
-        // ItemsRepeater bound to the slot.
+        // ItemsRepeater bound to the generated row-VM projection.
         assert!(
             r.xaml
-                .contains("<ItemsRepeater ItemsSource=\"{x:Bind Rows}\""),
+                .contains("<ItemsRepeater ItemsSource=\"{x:Bind GridRowVmRows}\""),
             "got:\n{}",
             r.xaml
         );
+        assert!(
+            r.code_behind
+                .contains("public IReadOnlyList<Grid_RowVm> GridRowVmRows"),
+            "got:\n{}",
+            r.code_behind
+        );
+        assert!(r.code_behind.contains("var source = Rows;"));
         // DataTemplate with the generated RowVm typed DataContext.
         assert!(
             r.xaml
@@ -8219,6 +8506,7 @@ mod tests {
             index_name: Some("r".to_string()),
             element_type: "string".to_string(),
             vm_class: "Foo_RowVm".to_string(),
+            projection_property: None,
         });
         let r = lower_expr_for_xbind("row == \"hello\"", &mut ctx);
         match r {
@@ -8356,9 +8644,10 @@ mod tests {
         o.emit_project = true;
         let r = from_pipeline(&c, &l, &s, None, &o).unwrap();
         let p = r.project.as_ref().expect("project populated");
-        // csproj has the WindowsAppSDK reference + the C1 mitigation.
+        // csproj has the WindowsAppSDK reference + unpackaged WinUI build switches.
         assert!(p.csproj.contains("Microsoft.WindowsAppSDK"));
         assert!(p.csproj.contains("AppxGeneratePriEnabled>false"));
+        assert!(p.csproj.contains("EnableCoreMrtTooling>false"));
         assert!(p.csproj.contains("UseRidGraph>true"));
         assert!(p.csproj.contains("FlattenNativeRuntimeDlls"));
         // App.xaml.cs references MainWindow.
@@ -8375,10 +8664,42 @@ mod tests {
         assert!(p.main_window_cs.contains("Greeting"));
         // build.ps1 passes -p:Platform=x64.
         assert!(p.build_script.contains("-p:Platform=x64"));
-        // README mentions the cosmetic MSB4062 error.
-        assert!(p.readme.contains("MSB4062") || p.readme.contains("Visual Studio Build Tools"));
+        assert!(p.build_script.contains("$buildExitCode = $LASTEXITCODE"));
+        assert!(p.build_script.contains("exit $buildExitCode"));
+        // README documents the framework-dependent runtime requirement.
+        assert!(p.readme.contains("Microsoft.WindowsAppRuntime.1.7"));
         // app.manifest declares DPI awareness.
         assert!(p.package_manifest.contains("PerMonitorV2"));
+    }
+
+    #[test]
+    fn project_dispatch_match_uses_keyword_safe_payload_patterns() {
+        let c = component(
+            "Foo",
+            vec![],
+            vec![emit(
+                "onToggle",
+                vec![param("checked", EmitPayloadType::Bool)],
+            )],
+        );
+        let l = layout_with_root("Foo", box_root());
+        let s = empty_style("Foo");
+        let mut o = opts();
+        o.emit_project = true;
+        let r = from_pipeline(&c, &l, &s, None, &o).unwrap();
+        let p = r.project.as_ref().expect("project populated");
+        assert!(
+            p.main_window_cs
+                .contains("case FooEvent.Toggle(var payload0) c:"),
+            "got:\n{}",
+            p.main_window_cs
+        );
+        assert!(
+            !p.main_window_cs
+                .contains("case FooEvent.Toggle(checked) c:"),
+            "payload keyword must not be emitted as a pattern variable, got:\n{}",
+            p.main_window_cs
+        );
     }
 
     /// Fix B1: for a UserControl-rooted component, the MainWindow
@@ -9661,6 +9982,260 @@ mod tests {
             !border_open_line.contains("FontWeight="),
             "Border tag must not carry FontWeight, line: {}",
             border_open_line
+        );
+    }
+
+    /// X6: Lattice/flex layout props must lower only where WinUI has a
+    /// native equivalent. `gap` becomes StackPanel.Spacing for Row/Column,
+    /// `max-width` becomes MaxWidth, and flex-only props are dropped instead
+    /// of leaking into a fake TextBlock style setter.
+    #[test]
+    fn row_lattice_layout_style_lowers_to_native_stackpanel_attrs() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Row".to_string(),
+                part_name: Some("toolbar".to_string()),
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("Title".to_string()),
+                    }],
+                    children: Vec::new(),
+                }],
+            },
+        );
+        let s = style_for_box(
+            "toolbar",
+            vec![
+                ("align-items", "center"),
+                ("background", "#0f172a"),
+                ("color", "#f8fafc"),
+                ("flex-wrap", "wrap"),
+                ("gap", "16"),
+                ("justify-content", "space-between"),
+                ("max-width", "980px"),
+                ("padding", "12"),
+            ],
+        );
+        let r = compile(&c, &l, &s);
+
+        assert!(
+            r.xaml.contains(
+                "<StackPanel Orientation=\"Horizontal\" Spacing=\"16\" MaxWidth=\"980\">"
+            ),
+            "expected Row gap/max-width to land on StackPanel, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("Background=\"#0f172a\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(r.xaml.contains("Padding=\"12\""), "got:\n{}", r.xaml);
+        assert!(
+            r.xaml
+                .contains("<Setter Property=\"Foreground\" Value=\"#f8fafc\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+        for invalid in [
+            "Property=\"Gap\"",
+            "Property=\"AlignItems\"",
+            "Property=\"FlexWrap\"",
+            "Property=\"JustifyContent\"",
+            "Value=\"980px\"",
+        ] {
+            assert!(
+                !r.xaml.contains(invalid),
+                "generated XAML must not contain {invalid}, got:\n{}",
+                r.xaml
+            );
+        }
+    }
+
+    #[test]
+    fn box_with_multiple_children_wraps_border_child_in_stackpanel() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("card".to_string()),
+                props: Vec::new(),
+                children: vec![
+                    LayoutNode {
+                        tag: "Text".to_string(),
+                        part_name: None,
+                        props: vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("One".to_string()),
+                        }],
+                        children: Vec::new(),
+                    },
+                    LayoutNode {
+                        tag: "Text".to_string(),
+                        part_name: None,
+                        props: vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("Two".to_string()),
+                        }],
+                        children: Vec::new(),
+                    },
+                ],
+            },
+        );
+        let s = style_for_box("card", vec![("background", "#111827"), ("padding", "8")]);
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml
+                .contains("<Border Background=\"#111827\" Padding=\"8\">"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<StackPanel Orientation=\"Vertical\">"),
+            "multi-child Border content must be wrapped, got:\n{}",
+            r.xaml
+        );
+        assert!(r.xaml.contains("Text=\"One\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Text=\"Two\""), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn if_branch_with_multiple_children_wraps_contentcontrol_child() {
+        let c = component("Foo", vec![slot("visible", SlotType::Bool, true)], vec![]);
+        let text = |value: &str| LayoutNode {
+            tag: "Text".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "content".to_string(),
+                value: LayoutPropValue::String(value.to_string()),
+            }],
+            children: Vec::new(),
+        };
+        let l = layout_with_root(
+            "Foo",
+            if_node(
+                LayoutPropValue::SlotRef("visible".to_string()),
+                vec![text("One"), text("Two")],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml
+                .contains("<ContentControl Visibility=\"{x:Bind Visible"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<StackPanel Orientation=\"Vertical\">"),
+            "ContentControl must have one child wrapper, got:\n{}",
+            r.xaml
+        );
+        assert!(r.xaml.contains("Text=\"One\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Text=\"Two\""), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn for_template_with_if_else_wraps_datatemplate_child() {
+        let c = component(
+            "Foo",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            for_node(
+                LayoutPropValue::SlotRef("items".to_string()),
+                "item",
+                None,
+                vec![
+                    if_node(LayoutPropValue::Expr("item == \"a\"".to_string()), vec![]),
+                    else_node(vec![]),
+                ],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("<DataTemplate x:DataType=\"local:Foo_ItemVm\">\n")
+                && r.xaml.contains(
+                    "<DataTemplate x:DataType=\"local:Foo_ItemVm\">\n                <StackPanel Orientation=\"Vertical\">"
+                ),
+            "DataTemplate must wrap multiple lowered children, got:\n{}",
+            r.xaml
+        );
+        assert_eq!(r.xaml.matches("<ContentControl").count(), 2);
+    }
+
+    #[test]
+    fn for_template_index_selected_predicate_lowers_to_row_vm_property() {
+        let c = component(
+            "Foo",
+            vec![
+                slot("items", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("selected-index", SlotType::Number, true),
+            ],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            for_node(
+                LayoutPropValue::SlotRef("items".to_string()),
+                "item",
+                Some("i"),
+                vec![
+                    if_node(
+                        LayoutPropValue::Expr("i == selectedIndex".to_string()),
+                        vec![],
+                    ),
+                    else_node(vec![]),
+                ],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml
+                .contains("<ItemsRepeater ItemsSource=\"{x:Bind FooItemVmRows}\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("Visibility=\"{x:Bind IsSelected, Converter="),
+            "template predicate must bind row-local IsSelected, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("Expr_"),
+            "template predicate must not call page helper from DataTemplate, got:\n{}",
+            r.xaml
+        );
+        let vm = r
+            .for_view_models
+            .iter()
+            .find(|file| file.filename == "Foo_ItemVm.cs")
+            .expect("row vm");
+        assert!(
+            vm.source.contains(
+                "public sealed record Foo_ItemVm(string Item, int Index, bool IsSelected);"
+            ),
+            "got:\n{}",
+            vm.source
+        );
+        assert!(
+            r.code_behind
+                .contains("rows.Add(new Foo_ItemVm(source[i], i, i == SelectedIndex));"),
+            "got:\n{}",
+            r.code_behind
         );
     }
 

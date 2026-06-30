@@ -1828,6 +1828,34 @@ fn native_project_shells_expose_engram_host_contract() {
     .expect("Sources/App/EngramApp.swift");
     assert_contains(&swift_nested_component, "struct EngramAppView: View");
 
+    let xaml_markup =
+        fs::read_to_string(tmp.path().join("xaml").join("EngramApp.xaml")).expect("EngramApp.xaml");
+    assert_contains(&xaml_markup, "Spacing=\"18\"");
+    assert_contains(&xaml_markup, "Spacing=\"16\"");
+    assert_contains(&xaml_markup, "MaxWidth=\"980\"");
+    assert_contains(
+        &xaml_markup,
+        "<ContentControl Visibility=\"{x:Bind AnswerVisible, Converter={StaticResource BoolToVisibilityConverter}}\">\n                                    <StackPanel Orientation=\"Vertical\">",
+    );
+    assert_contains(
+        &xaml_markup,
+        "<DataTemplate x:DataType=\"local:EngramApp_ItemVm\">\n                                                    <StackPanel Orientation=\"Vertical\">",
+    );
+    for invalid in [
+        "Property=\"Gap\"",
+        "Property=\"AlignItems\"",
+        "Property=\"FlexWrap\"",
+        "Property=\"JustifyContent\"",
+        "Value=\"980px\"",
+        "Value=\"760px\"",
+        "Value=\"960px\"",
+    ] {
+        assert!(
+            !xaml_markup.contains(invalid),
+            "Engram XAML must not contain invalid WinUI style fragment `{invalid}`:\n{xaml_markup}"
+        );
+    }
+
     let xaml_code_behind = fs::read_to_string(tmp.path().join("xaml").join("EngramApp.xaml.cs"))
         .expect("EngramApp.xaml.cs");
     assert_contains(
