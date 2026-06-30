@@ -2,6 +2,29 @@
 
 All notable changes to the AsciiMath pluggable frontend.
 
+## [0.7.0] — 2026-06-29
+
+### Added — ASM01 PR-3c (part 2): the `text(…)` keyword form
+
+- The tokenizer now recognizes **`text(…)`** — the parenthesised twin of the `"…"` literal — and
+  emits the *same* `TokenKind::Text` the quote form does. So `text(kg)` and `"kg"` lower to an
+  **identical** `MathExpr::Text("kg")`, and `5 text(kg)` == `5 "kg"`. **Zero ripple beyond the lexer**:
+  no new `TokenKind`, no parser change, no `Capabilities`/conformance change (the `text` capability
+  was already declared in PR-1).
+- Behaviour: the open paren must *immediately* follow `text` (no space). Inner parens **nest**, so
+  `text(f(x))` keeps its inner parens; an unterminated `text(` is a clean spanned error, never a panic.
+  `text` not immediately followed by `(` stays an ordinary identifier (a variable named `text`, or
+  `text (x)` with a space, is unchanged), and a longer word like `textual` is untouched. Byte-scanning
+  for the matching paren is UTF-8-safe (`(`/`)` never occur inside a multi-byte sequence), so non-ASCII
+  content slices without panicking.
+- Tests: tokenizer `text_keyword_form` (quote-equivalence, empty, nested parens, raw spaces/operators),
+  `text_without_immediate_paren_is_an_identifier`, `unterminated_text_keyword_is_an_error`; parser
+  `text_keyword_form_equals_quote_literal`. Conformance corpus gains `text(kg)`. 35 unit + doc tests
+  pass; clippy `-D warnings` clean.
+- Still **PR-3c remainder** (each its own follow-up): **longest-match** identifier scan (`sinx` →
+  `sin·x`, a deeper lexer change) and `stackrel`/`overset`/`underset` (need a neutral-AST node in
+  `math-frontend` — no `Overset`/`Underset` in `MathExpr` yet).
+
 ## [0.6.0] — 2026-06-29
 
 ### Added — ASM01 PR-3c (part 1): punctuation arrows `->` and `=>`

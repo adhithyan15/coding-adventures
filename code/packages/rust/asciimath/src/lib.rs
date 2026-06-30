@@ -243,6 +243,15 @@ mod tests {
     }
 
     #[test]
+    fn text_keyword_form_equals_quote_literal() {
+        // PR-3c: `text(…)` is the parenthesised twin of `"…"` — they lower identically.
+        assert_eq!(p("text(kg)"), MathExpr::Text("kg".to_string()));
+        assert_eq!(p("text(kg)"), p(r#""kg""#));
+        // Used in context: `5 text(kg)` is `5 · "kg"`, same as `5 "kg"`.
+        assert_eq!(p("5 text(kg)"), p(r#"5 "kg""#));
+    }
+
+    #[test]
     fn a_realistic_expression() {
         // x^2 + y^2 = r^2
         let lhs = b(BinOp::Add, b(BinOp::Pow, sym("x"), num(2)), b(BinOp::Pow, sym("y"), num(2)));
@@ -434,6 +443,7 @@ mod tests {
                 "a cup b",         // set operator as a symbol
                 "a -> b",          // punctuation arrow (PR-3c)
                 "x => y",          // punctuation double-arrow
+                "text(kg)",        // text(…) keyword form (PR-3c) — twin of "kg"
                 "1 +",   // error: trailing operator (span in range, not a panic)
                 "(x",    // error: missing close
                 "",      // error: empty

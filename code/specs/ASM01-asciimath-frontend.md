@@ -108,10 +108,16 @@ shapes for representative inputs.
   and emitted as the existing `rightarrow`/`implies` identifiers, so they route through the PR-3a
   symbol table and lower to `Symbol` (agreeing with the word forms). Tokenizer-only, zero ripple; the
   single-char `-`/`=` are unaffected (`a - b` = `Bin(Sub)`, `a = b` = `Rel(Eq)`).
+- **PR-3c part 2 (shipped, v0.7.0):** the **`text(…)` keyword form** alongside the `"…"` literal.
+  The tokenizer captures the raw bytes up to the matching close paren (parens nest) and emits the same
+  `TokenKind::Text`, so `text(kg)` and `"kg"` lower to an *identical* `MathExpr::Text` — tokenizer-only,
+  no parser/`Capabilities`/conformance change (the `text` capability shipped in PR-1). The open paren
+  must immediately follow `text`; otherwise `text` stays an ordinary identifier (a variable named
+  `text`, `text (x)` with a space, or `textual` are all unchanged). An unterminated `text(` is a clean
+  spanned error; byte-scanning for the matching paren is UTF-8-safe.
 - **PR-3c remainder** (each its own follow-up, structural): **longest-match tokenization** (so `sinx`
-  splits as `sin`·`x`, a deeper lexer change); `stackrel`, `overset`/`underset` (need a neutral-AST
-  node in `math-frontend` — there is no `Overset`/`Underset` in `MathExpr` yet); and the `text(…)`
-  keyword form alongside the `"…"` literal (needs lexer raw-capture between the parens).
+  splits as `sin`·`x`, a deeper lexer change); and `stackrel`, `overset`/`underset` (need a neutral-AST
+  node in `math-frontend` — there is no `Overset`/`Underset` in `MathExpr` yet).
 
 ## 6. Non-goals
 Evaluation, simplification, rendering — none are a frontend's job (PFE01 §7). Lowering
