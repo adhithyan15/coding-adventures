@@ -2,6 +2,30 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.32.0] — 2026-06-29
+
+### Added — rung 6c: clinical management as a minimum-cost regimen
+
+- New **`rung6c_formulary_cost/items.json`** (20 items, `r6c-01`..`r6c-20`): the **economics** half
+  of the therapy decision. Where rung 6b decides *can* a therapy be dosed (feasibility), rung 6c
+  decides **what is the cheapest** way to deliver an already-feasible therapy — rendered as a
+  **2-variable linear program**. Each item must meet a required daily amount by splitting it between a
+  **cheap** formulation that is **capped** (limited daily supply / coverage) and an **expensive**
+  formulation that is **uncapped**. The gold program declares two `symbol … : scalar`, one `constrain`
+  per bound, then `minimize <p_cheap> * cheap + <p_brand> * brand`; the **engine** solves the LP
+  (simplex) and returns the optimal value, read by the existing **`optimize_value`** extractor — **no
+  harness or engine change** (same machinery as `rung3_linear_optimization`).
+- The reasoning and the planted traps: the optimum **maxes the cheap form to its cap, then tops up
+  with the brand** (`p_cheap*C + p_brand*(R−C)`). A reasoner who **ignores the cap** under-budgets at
+  `p_cheap*R`; one who **reaches only for the brand** over-spends at `p_brand*R`. Both wrong totals are
+  planted as distractors, alongside `±(p_brand−p_cheap)` near-misses.
+- Twenty scenarios span antimicrobial, anticoagulant, endocrine, biologic, antiviral, oncologic, and
+  respiratory therapy. Every price and bound is stated **verbatim** in the stem (no-result-literal gate
+  holds); options are distinct dollar totals. Engine returns the correct optimum **20/20** in cached
+  mode, zero wrong.
+- Registered `rung6c_formulary_cost` in `SELF_CONTAINED_RUNGS` (test gate: cached-engine wrong==0,
+  contamination clean, items_json ≥20).
+
 ## [0.31.0] — 2026-06-29
 
 ### Added — rung 6b: clinical management as a dose-feasibility decision
