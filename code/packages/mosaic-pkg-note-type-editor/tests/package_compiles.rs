@@ -92,8 +92,24 @@ fn note_type_editor_frontend_sources_compile() {
             "name-placeholder",
             "fields-label",
             "field-labels",
+            "selected-field-index",
+            "field-name-label",
+            "field-name-value",
+            "field-name-placeholder",
+            "field-required-label",
+            "field-required-value",
             "templates-label",
             "template-labels",
+            "selected-template-index",
+            "template-name-label",
+            "template-name-value",
+            "template-name-placeholder",
+            "front-template-label",
+            "front-template-value",
+            "front-template-placeholder",
+            "back-template-label",
+            "back-template-value",
+            "back-template-placeholder",
             "stylesheet-label",
             "stylesheet-value",
             "stylesheet-placeholder",
@@ -109,7 +125,14 @@ fn note_type_editor_frontend_sources_compile() {
         emit_names,
         vec![
             "onSelectNoteType",
+            "onSelectField",
+            "onSelectTemplate",
             "onNameChange",
+            "onFieldNameChange",
+            "onFieldRequiredChange",
+            "onTemplateNameChange",
+            "onFrontTemplateChange",
+            "onBackTemplateChange",
             "onStylesheetChange",
             "onNewNoteType",
             "onSaveNoteType",
@@ -130,7 +153,27 @@ fn note_type_editor_layout_wires_model_editor() {
     assert!(source.contains("value : slot: name-value"));
     assert!(source.contains("onChange : emit: onNameChange"));
     assert!(source.contains("For ( each: slot: field-labels"));
+    assert!(source.contains("HostButton [ note-type-field-option ]"));
+    assert!(source.contains("onClick : emit: onSelectField"));
+    assert!(source.contains("HostInput [ note-type-field-name-input ]"));
+    assert!(source.contains("value : slot: field-name-value"));
+    assert!(source.contains("onChange : emit: onFieldNameChange"));
+    assert!(source.contains("HostCheckbox [ note-type-field-required-checkbox ]"));
+    assert!(source.contains("checked : slot: field-required-value"));
+    assert!(source.contains("onToggle : emit: onFieldRequiredChange"));
     assert!(source.contains("For ( each: slot: template-labels"));
+    assert!(source.contains("HostButton [ note-type-template-option ]"));
+    assert!(source.contains("onClick : emit: onSelectTemplate"));
+    assert!(source.contains("HostInput [ note-type-template-name-input ]"));
+    assert!(source.contains("value : slot: template-name-value"));
+    assert!(source.contains("onChange : emit: onTemplateNameChange"));
+    assert!(source.contains("HostInput [ note-type-front-template-input ]"));
+    assert!(source.contains("value : slot: front-template-value"));
+    assert!(source.contains("multiline : true"));
+    assert!(source.contains("onChange : emit: onFrontTemplateChange"));
+    assert!(source.contains("HostInput [ note-type-back-template-input ]"));
+    assert!(source.contains("value : slot: back-template-value"));
+    assert!(source.contains("onChange : emit: onBackTemplateChange"));
     assert!(source.contains("HostInput [ note-type-stylesheet-input ]"));
     assert!(source.contains("value : slot: stylesheet-value"));
     assert!(source.contains("onChange : emit: onStylesheetChange"));
@@ -160,7 +203,14 @@ fn note_type_editor_layout_wires_model_editor() {
         "note-type-name-input",
         "note-type-schema-summary",
         "note-type-field-list",
+        "note-type-field-option",
+        "note-type-field-name-input",
+        "note-type-field-required-checkbox",
         "note-type-template-list",
+        "note-type-template-option",
+        "note-type-template-name-input",
+        "note-type-front-template-input",
+        "note-type-back-template-input",
         "note-type-stylesheet-input",
         "note-type-new-button",
         "note-type-save-button",
@@ -207,6 +257,12 @@ fn note_type_editor_package_emitters_accept_model_editor_surface() {
         .expect("NoteTypeEditor HTML artifact should be readable");
     assert!(html.contains("data-mosaic-component=\"NoteTypeEditor\""));
     assert!(html.contains("data-on-change=\"onNameChange\""));
+    assert!(html.contains("data-on-change=\"onFieldNameChange\""));
+    assert!(html.contains("data-on-toggle=\"onFieldRequiredChange\""));
+    assert!(html.contains("data-on-click=\"onSelectTemplate\""));
+    assert!(html.contains("data-on-change=\"onTemplateNameChange\""));
+    assert!(html.contains("data-on-change=\"onFrontTemplateChange\""));
+    assert!(html.contains("data-on-change=\"onBackTemplateChange\""));
     assert!(html.contains("data-on-change=\"onStylesheetChange\""));
     assert!(html.contains("data-on-click=\"onSaveNoteType\""));
 }

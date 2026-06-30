@@ -115,16 +115,92 @@ style NoteTypeEditor {
     padding-top : 6 ;
   }
 
-  part note-type-field-label {
-    color         : "#e2e8f0" ;
-    font-size     : 13 ;
-    padding       : 5 ;
+  part note-type-field-option {
+    background    : "#1e293b" ;
+    border-width  : 1 ;
+    border-color  : "#475569" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    padding       : 6 ;
   }
 
-  part note-type-template-label {
-    color         : "#e2e8f0" ;
-    font-size     : 13 ;
-    padding       : 5 ;
+  part note-type-field-name-label {
+    color       : "#fde68a" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+    padding-top : 8 ;
+  }
+
+  part note-type-field-name-input {
+    background    : "#0f172a" ;
+    border-width  : 1 ;
+    border-color  : "#334155" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    padding       : 8 ;
+  }
+
+  part note-type-field-required-checkbox {
+    color       : "#e2e8f0" ;
+    font-size   : 13 ;
+    padding-top : 6 ;
+  }
+
+  part note-type-template-option {
+    background    : "#1e293b" ;
+    border-width  : 1 ;
+    border-color  : "#475569" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    padding       : 6 ;
+  }
+
+  part note-type-template-name-label {
+    color       : "#fca5a5" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+    padding-top : 8 ;
+  }
+
+  part note-type-template-name-input {
+    background    : "#0f172a" ;
+    border-width  : 1 ;
+    border-color  : "#334155" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    padding       : 8 ;
+  }
+
+  part note-type-front-template-label {
+    color       : "#fca5a5" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+    padding-top : 8 ;
+  }
+
+  part note-type-front-template-input {
+    background    : "#0f172a" ;
+    border-width  : 1 ;
+    border-color  : "#334155" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    padding       : 8 ;
+  }
+
+  part note-type-back-template-label {
+    color       : "#fca5a5" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+    padding-top : 8 ;
+  }
+
+  part note-type-back-template-input {
+    background    : "#0f172a" ;
+    border-width  : 1 ;
+    border-color  : "#334155" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    padding       : 8 ;
   }
 
   part note-type-stylesheet-label {
