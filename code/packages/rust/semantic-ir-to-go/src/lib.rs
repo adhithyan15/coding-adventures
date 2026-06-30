@@ -54,13 +54,22 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // re-bound name just emits `<name> = <value>` (the matching
     // `LetBinding` already declared it with `:=`).  `Loops` maps `While`
     // / `ForRange` / `ForEach` onto Go's native `for`; `ForEach` adds a
-    // `_sir_seq_iter` cons-list flattener to the runtime.  The two
-    // remaining v1 features (Sequences, Maps) stay *undeclared*, so a
-    // module using `SeqLit`/`MapLit`/`SeqSet`/`MapSet` is still rejected
-    // by the capability check before emit — keeping the `panic!`s in
-    // `emit.rs` for those nodes strictly unreachable until a later PR.
+    // `_sir_seq_iter` cons-list flattener to the runtime.
     Feature::MutableBindings,
     Feature::Loops,
+    // `Sequences` and `Maps` are the final two SIR16 (v1) features — with
+    // them the Go backend reaches **full SIR-v1 parity** (the fifth and
+    // last backend to do so).  Both add a shared-mutable value to the Go
+    // runtime: a `Seq` (pointer-backed `*[]Value`, so `SeqSet` mutates the
+    // very sequence the caller holds and aliasing bindings observe the
+    // write) and a `Map` (insertion-ordered assoc list keyed by the
+    // runtime's structural value-equality; missing key ⇒ `nil`).  With all
+    // six SIR16 features now declared, every SIR16 IR node has a real
+    // (non-panicking) emit path — the only remaining `panic!`s cover
+    // SIR17/18 nodes (classes/exceptions/str-concat) whose features stay
+    // unaccepted, so they remain strictly unreachable.
+    Feature::Sequences,
+    Feature::Maps,
 ];
 
 impl Backend for GoBackend {

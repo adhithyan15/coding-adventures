@@ -1,5 +1,76 @@
 # Changelog
 
+## 0.4.0 — SIR16 Sequences + Maps — completes Go v1 parity (A6)
+
+The final two SIR16 (v1) features land in the Go backend.  With them the
+Go backend accepts **all six** SIR16 features (Floats, ShortCircuit,
+MutableBindings, Loops, Sequences, Maps) — reaching **full SIR-v1
+parity**.  Go is the **fifth and last backend to reach v1**, completing
+the backend fleet (joining TypeScript, Rust, Python, and the others).
+Before this release a module using `SeqLit` / `SeqIndex` / `SeqLen` /
+`MapLit` / `MapGet` / `SeqSet` / `MapSet` was rejected at the capability
+check and those emit arms were unreachable `panic!`s; this release wires
+them up end-to-end.
+
+### Added
+
+- `Feature::Sequences` and `Feature::Maps` join the backend's
+  `ACCEPTED_FEATURES`, so a module declaring them is no longer rejected
+  by the capability check.
+- **Sequences** — the inlined Go runtime gains a `*Seq` value (a struct
+  `Seq{ Items []Value }` held by pointer).  The pointer is the crux: a
+  `SeqSet` (`xs[i] = v`) mutates the very sequence the caller holds, and
+  two bindings that alias the same literal observe each other's writes —
+  the reference semantics of a Python list / JS array.  Copying a `Value`
+  that holds a `*Seq` copies the handle, not the backing slice.
+  - `SeqLit` → `_sir_seq_lit([]Value{...})` builds a fresh shared seq.
+  - `SeqIndex` → `_sir_seq_index(seq, i)` (strict bounds; out-of-range
+    panics, like `car`/`cdr`).
+  - `SeqLen` → `_sir_seq_len(seq)` returns the element count as `int64`.
+  - `SeqSet` → `_ = _sir_seq_set(seq, i, v)` mutates in place (no
+    auto-grow; out-of-range panics).
+- **Maps** — the runtime gains a `*Map` value (a struct
+  `Map{ Entries []MapEntry }`, an *insertion-ordered* association list).
+  Go's native `map` can't key on an arbitrary `Value` (floats, closures,
+  nested seqs/maps aren't usable keys), so — mirroring the Rust backend —
+  keys are compared with the runtime's structural value-equality
+  (`_sir_value_eq`, a linear scan).  A missing key reads as `nil`.
+  - `MapLit` → `_sir_map_lit([]Value{keys...}, []Value{vals...})` (keys
+    and values emitted as two parallel slices since Go has no tuple
+    literal); last-write-wins on duplicate keys, first-seen order kept.
+  - `MapGet` → `_sir_map_get(map, key)` (missing key ⇒ `nil`).
+  - `MapSet` → `_ = _sir_map_set(map, key, v)` inserts (appends, order-
+    preserving) or overwrites in place.
+- **Structural value-equality** — `_sir_eq` now routes through a new
+  `_sir_value_eq` that handles the whole value tower (numbers cross-type,
+  symbols, pairs, and now seqs/maps element-wise / entry-wise, with
+  identical-handle short-circuit).  This is the single source of truth
+  shared by `=` and map-key lookup.
+- **ForEach reconciliation** — `_sir_seq_iter` (the A5 cons-list
+  flattener used by `ForEach`) now *also* snapshots a real `*Seq`, so
+  `for x in [1, 2, 3]` (a `SeqLit`) iterates end to end while
+  `ForEach`-over-cons-list keeps working.  A `*Seq` is copied element-wise
+  into a fresh `[]Value` so the loop body sees a stable view even if it
+  mutates the underlying sequence.
+- **Display** — `_sir_format` renders a seq as a bracketed list
+  (`[1, 2, 3]`) and a map as a brace-wrapped, insertion-ordered entry
+  list (`{a: 1, b: 2}`).
+- New integration test `tests/compile_and_run_seq_maps.rs` — hand-builds
+  a module that exercises a sequence (lit/index/len/set + aliasing), a
+  map (lit/get/set + missing-key ⇒ nil), and a `for x in [10,20,30]`
+  ForEach accumulation; emits Go, `go run`s it (gated on `go`
+  availability), and asserts stdout (`99 / 3 / 99 / 2 / 3 / nil / 60`).
+  This is the only check that catches Go's `:=`-vs-`=` and
+  unused-variable strictness.
+
+### Notes
+
+- `accepts_features` is now in lockstep with emit for **all six** SIR16
+  features: every declared feature has a real (non-panicking) emit path.
+  The only remaining `panic!` reject arms cover SIR17/18 nodes
+  (classes / module-defs / exceptions / `StrConcat`) whose features stay
+  unaccepted, so they remain strictly unreachable.
+
 ## 0.3.0 — SIR16 MutableBindings + Loops (A5)
 
 The next two SIR16 (v1) features land in the Go backend, mirroring the
