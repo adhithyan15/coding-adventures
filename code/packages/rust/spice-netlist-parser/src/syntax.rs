@@ -373,6 +373,41 @@ pub struct BerkeleyAppEditorStateSnapshot {
     pub diagnostics: Vec<BerkeleySyntaxDiagnostic>,
 }
 
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum BerkeleyAppHostPanelKind {
+    Source,
+    Diagnostics,
+    Analysis,
+    Table,
+    Waveform,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppHostPanel {
+    pub id: String,
+    pub kind: BerkeleyAppHostPanelKind,
+    pub title: String,
+    pub target: String,
+    pub enabled: bool,
+    pub active: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppHostSurface {
+    pub canonical_source: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub parsed: bool,
+    pub execution_available: bool,
+    pub editor_state: BerkeleyAppEditorStateSnapshot,
+    pub panel_count: usize,
+    pub active_panel: Option<BerkeleyAppHostPanel>,
+    pub panels: Vec<BerkeleyAppHostPanel>,
+    pub blocking_message: Option<String>,
+    pub diagnostics: Vec<BerkeleySyntaxDiagnostic>,
+}
+
 impl BerkeleyAppDeck {
     pub fn has_errors(&self) -> bool {
         self.diagnostics
@@ -513,6 +548,22 @@ impl BerkeleyAppDeck {
         Ok(editor_state_snapshot_from_session_state(
             self.run_session_state(None)?,
             persisted_state,
+        ))
+    }
+
+    pub fn host_surface(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppHostSurface {
+        host_surface_from_editor_state(self.editor_state_snapshot(persisted_state))
+    }
+
+    pub fn run_host_surface(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppHostSurface, AnalysisExecutionError> {
+        Ok(host_surface_from_editor_state(
+            self.run_editor_state_snapshot(persisted_state)?,
         ))
     }
 
@@ -789,6 +840,155 @@ fn resolve_active_editor_command<'a>(
         command.syntax_card_index == selected_syntax_card_index
             && command.kind == BerkeleyAppEditorActionKind::SelectAnalysis
     })
+}
+
+fn host_surface_from_editor_state(
+    editor_state: BerkeleyAppEditorStateSnapshot,
+) -> BerkeleyAppHostSurface {
+    let active_kind = active_host_panel_kind(&editor_state);
+    let selected_control = editor_state.selected_control.as_ref();
+    let table_enabled = selected_control.is_some_and(|control| control.table_available);
+    let waveform_enabled = selected_control.is_some_and(|control| control.waveform_available);
+    let diagnostics_enabled =
+        !editor_state.diagnostics.is_empty() || editor_state.blocking_message.is_some();
+    let analysis_enabled = editor_state.command_plan.command_count > 0;
+
+    let panels = vec![
+        host_panel(
+            BerkeleyAppHostPanelKind::Source,
+            "source",
+            "Source",
+            "source-editor",
+            true,
+            active_kind == BerkeleyAppHostPanelKind::Source,
+            None,
+        ),
+        host_panel(
+            BerkeleyAppHostPanelKind::Diagnostics,
+            "diagnostics",
+            "Diagnostics",
+            "diagnostics",
+            diagnostics_enabled,
+            active_kind == BerkeleyAppHostPanelKind::Diagnostics,
+            if diagnostics_enabled {
+                None
+            } else {
+                Some("deck has no diagnostics".to_string())
+            },
+        ),
+        host_panel(
+            BerkeleyAppHostPanelKind::Analysis,
+            "analysis",
+            "Analysis",
+            "analysis-controls",
+            analysis_enabled,
+            active_kind == BerkeleyAppHostPanelKind::Analysis,
+            if analysis_enabled {
+                None
+            } else {
+                Some("deck has no analysis controls".to_string())
+            },
+        ),
+        host_panel(
+            BerkeleyAppHostPanelKind::Table,
+            "table",
+            "Table",
+            "analysis-table",
+            table_enabled,
+            active_kind == BerkeleyAppHostPanelKind::Table,
+            if table_enabled {
+                None
+            } else {
+                host_panel_disabled_reason(&editor_state, BerkeleyAppEditorActionKind::InspectTable)
+            },
+        ),
+        host_panel(
+            BerkeleyAppHostPanelKind::Waveform,
+            "waveform",
+            "Waveform",
+            "analysis-waveform",
+            waveform_enabled,
+            active_kind == BerkeleyAppHostPanelKind::Waveform,
+            if waveform_enabled {
+                None
+            } else {
+                host_panel_disabled_reason(
+                    &editor_state,
+                    BerkeleyAppEditorActionKind::InspectWaveform,
+                )
+            },
+        ),
+    ];
+    let active_panel = panels.iter().find(|panel| panel.active).cloned();
+
+    BerkeleyAppHostSurface {
+        canonical_source: editor_state.canonical_source.clone(),
+        source_fingerprint: editor_state.source_fingerprint.clone(),
+        title: editor_state.title.clone(),
+        parsed: editor_state.parsed,
+        execution_available: editor_state.execution_available,
+        panel_count: panels.len(),
+        active_panel,
+        blocking_message: editor_state.blocking_message.clone(),
+        diagnostics: editor_state.diagnostics.clone(),
+        editor_state,
+        panels,
+    }
+}
+
+fn active_host_panel_kind(
+    editor_state: &BerkeleyAppEditorStateSnapshot,
+) -> BerkeleyAppHostPanelKind {
+    if editor_state.blocking_message.is_some() {
+        return BerkeleyAppHostPanelKind::Diagnostics;
+    }
+
+    match editor_state
+        .active_command
+        .as_ref()
+        .map(|command| command.target.as_str())
+    {
+        Some("analysis-table") => BerkeleyAppHostPanelKind::Table,
+        Some("analysis-waveform") => BerkeleyAppHostPanelKind::Waveform,
+        Some("analysis-selection") | Some("analysis-runner") => BerkeleyAppHostPanelKind::Analysis,
+        _ => BerkeleyAppHostPanelKind::Source,
+    }
+}
+
+fn host_panel(
+    kind: BerkeleyAppHostPanelKind,
+    id: &str,
+    title: &str,
+    target: &str,
+    enabled: bool,
+    active: bool,
+    disabled_reason: Option<String>,
+) -> BerkeleyAppHostPanel {
+    BerkeleyAppHostPanel {
+        id: id.to_string(),
+        kind,
+        title: title.to_string(),
+        target: target.to_string(),
+        enabled,
+        active,
+        disabled_reason: if enabled { None } else { disabled_reason },
+    }
+}
+
+fn host_panel_disabled_reason(
+    editor_state: &BerkeleyAppEditorStateSnapshot,
+    kind: BerkeleyAppEditorActionKind,
+) -> Option<String> {
+    let selected_syntax_card_index = editor_state.resolved_state.selected_syntax_card_index?;
+    editor_state
+        .command_plan
+        .commands
+        .iter()
+        .find(|command| {
+            command.syntax_card_index == selected_syntax_card_index && command.kind == kind
+        })
+        .and_then(|command| command.disabled_reason.clone())
+        .or_else(|| Some("selected analysis does not expose this panel".to_string()))
 }
 
 fn editor_command_from_control(
