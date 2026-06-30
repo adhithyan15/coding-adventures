@@ -228,6 +228,7 @@ members = [
     "math-frontend",
     "latex",
     "asciimath",
+    "unicode-math",
     "adjudication-ir",
     "llm-cache",
     "llm-gateway",
