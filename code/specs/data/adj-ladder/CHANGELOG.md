@@ -2,6 +2,33 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.35.0] — 2026-06-30
+
+### Added — rung 8: one-compartment pharmacokinetics (new quantitative clinical domain)
+
+- **`rung8_pharmacokinetics/items.json`** — **21 items** (`r8pk-01`..`r8pk-21`), a new quantitative
+  clinical domain that reuses the contamination-safe shape of the 2×2 biostatistics family
+  (rungs 7/7b/7c). The setup is a single IV bolus into a one-compartment model with three observed
+  quantities: dose **D** (mg), initial plasma concentration **C₀** (mg/L), and total area under the
+  concentration-time curve **AUC** (mg·h/L).
+- From the single one-compartment fact **AUC = C₀/kₑ**, the three bedside parameters fall out as
+  **pure ratios** of the observed quantities — exact, and needing no constant:
+  **Vd** (volume of distribution) = D/C₀, **CL** (clearance) = D/AUC, **kₑ** (elimination rate
+  constant) = C₀/AUC (= CL/Vd). **Half-life is deliberately excluded** — t½ = 0.693·Vd/CL would leak
+  the structural constant `0.693`, breaking the no-result-literals gate.
+- Each item is a `compute_dimensioned` program (`observe d/conc/auc` + `let answer = <formula>`);
+  the **engine** carries the division arithmetic via the existing `compute_dimensioned` extractor —
+  **no harness/engine change** (same machinery as rungs 4/7/7b/7c). The program variable for C₀ is
+  named `conc` (not `c0`) so no identifier smuggles a digit past the literal-leak check.
+- Contamination-safe by construction: every formula is a ratio of the three stated quantities with
+  **no structural constants**, so every program literal is grounded in the stem. The five options are
+  a tight family of ratios over the same quantities {Vd, CL, kₑ, inverted-CL = AUC/D,
+  inverted-Vd = C₀/D}, so the distractors are exactly the inversions students confuse (reading
+  AUC/dose for clearance, concentration/dose for volume). Gold letter rotates A–E; the five family
+  values are asserted pairwise-distinct per item at build time.
+- Registered in `test_ladder_eval.py::SELF_CONTAINED_RUNGS`; `contamination_check.py` clean,
+  `ruff` clean, engine selects **21/21** gold (cached arm-B: zero wrong, zero abstain).
+
 ## [0.34.0] — 2026-06-29
 
 ### Added — rung 6 batch 3: five-way differentials across broader specialties
