@@ -264,10 +264,15 @@ table_option      = "STRICT" | "WITHOUT" NAME ;
 # insensitive).  We don't model ROWID as a keyword because it is widely
 # used as a column name in SQLite (`SELECT rowid FROM t`); making it a
 # keyword would break those queries.
-col_def           = NAME [ col_type ] { col_constraint } ;
+col_def           = !("FOREIGN" "KEY") NAME [ col_type ] { col_constraint } ;
 # col_type is optional — SQLite allows typeless columns such as
 #   CREATE TABLE t (id, name, age)
 # When omitted the engine applies BLOB/TEXT affinity (the SQLite default).
+# The negative lookahead !("FOREIGN" "KEY") prevents col_def from greedily
+# consuming "FOREIGN" as a column name when the parser reaches a table-level
+# FOREIGN KEY constraint.  "FOREIGN" is a NAME token in the SQL lexer, so
+# without the lookahead it would be mistaken for a column name, leaving
+# "KEY(...) REFERENCES ..." stranded and causing a parse error.
 # col_type accepts simple names (INTEGER, TEXT) and parameterised types
 # (VARCHAR(8), DECIMAL(10,2)) — the length/precision arguments are parsed
 # but ignored; the engine uses SQLite's type-affinity rules internally.
