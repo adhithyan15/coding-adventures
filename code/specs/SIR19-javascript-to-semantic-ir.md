@@ -85,6 +85,43 @@ scope; the spread parts of the language we then reject at lowering).
 | `d[k]` / `d.k`                               | `MapGet { map: d, key: k }`                             |
 | `d[k] = v;` / `d.k = v;`                     | `MapSet`                                                |
 
+## Control flow (M3)
+
+**Implementation note (M3).**  `if`/`else`, `while`, the C-style `for`,
+and `for … of` are implemented as of crate `0.3.0`, along with bare
+`{ … }` blocks.  Details and the two deliberate divergences from a naive
+reading of the table above:
+
+- **`if` is an expression.**  The IR has no statement-level `if`; an `if`
+  *statement* lowers to `Stmt::ExprStmt` wrapping an `Expr::If`.  A
+  missing `else` gets a synthetic empty nil-valued `Block`.  Else-if
+  chains nest a further `Expr::If` in the outer `else_branch`'s tail
+  value.  `Expr::If` is **not** gated by any `Feature` (the validator
+  observes none), so a conditional adds nothing to the manifest.
+- **C-style `for` is accepted only for the canonical counting shape.**
+  Init `let i = <start>`, cond `i < <stop>` or `i <= <stop>` on the same
+  `i`, update `i = i + <step>` / `i += <step>` / `i++`.  `i <= <stop>` is
+  rewritten to the half-open `i < <stop> + 1` (the IR `ForRange` is
+  half-open, `stop` exclusive).  **Non-canonical** loops — a different
+  loop variable across clauses, a decrement (`i--`), a multiplicative
+  step (`i = i * 2`), a missing clause, or a multi-variable init — are
+  rejected with a positioned `JsLowerError` (deferred) rather than
+  mis-lowered.  This is a tightening of the bare table rows above: only
+  the counting form is in scope for v0.
+- **`for … of`** supports the single-identifier binding only;
+  destructuring is deferred.
+- **Scoping.**  The loop variable is bound into the loop body scope only
+  (visible inside, unresolved after); names bound inside any control-flow
+  body or bare block are block-scoped and do not leak outward — matching
+  the SIR validator's `LocalEnv` mark/rewind around each `Block` and each
+  loop body.
+- **Recursion bound.**  Statement-block nesting is capped at
+  `MAX_STMT_DEPTH = 256` (the twin of the M2 `MAX_EXPR_DEPTH`), so deeply
+  nested control flow yields a positioned error, not a stack overflow.
+
+Still deferred after M3: `switch`, `try`/`catch`, `do … while`, labeled
+statements, and `break`/`continue` (the IR has no early-exit node).
+
 ## let / const / var
 
 All three become a binding statement.  **Implementation note (M2):** the

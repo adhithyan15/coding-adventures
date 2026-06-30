@@ -27,11 +27,12 @@ We lower from the *generic* `GrammarASTNode`, **not** from the parser's
 typed-AST bridge (`javascript-parser/src/bridge.rs`). That is the
 contract SIR19 sets, matching how the Ruby and Twig frontends work.
 
-## Milestone status — M2 (variables, assignment, operators)
+## Milestone status — M3 (control flow)
 
-This is the second slice of SIR19. It implements literals (M1) **plus**
-variable references, bindings/assignment, and unary/binary operators.
-The supported subset:
+This is the third slice of SIR19. It implements literals (M1) and
+variables/operators (M2) **plus** control flow: `if`/`else`, `while`,
+the canonical counting C-style `for`, `for … of`, and bare `{ … }`
+blocks. The supported subset (M1 + M2 + M3):
 
 | JavaScript source           | SIR lowering                                  |
 |-----------------------------|-----------------------------------------------|
@@ -53,6 +54,38 @@ The supported subset:
 | `a \|\| b`                  | `LogicalOr` (short-circuit)                   |
 | `!a`                        | `BuiltinCall("not", [a])`                     |
 | `-a` (non-literal `a`)      | `BuiltinCall("neg", [a])`                     |
+| `if (c) { … } else { … }`   | `Expr::If { cond, then_branch, else_branch }` |
+| `if (c) {} else if (d) {}`  | nested `Expr::If` in the else branch          |
+| `while (c) { … }`           | `Stmt::While { cond, body }`                  |
+| `for (let i=0; i<n; i++) {…}` | `Stmt::ForRange { var, start, stop, step, body }` |
+| `for (const x of xs) { … }` | `Stmt::ForEach { var, iter, body }`           |
+| `{ … }` (bare block)        | `Expr::Block`                                 |
+
+### Control flow
+
+- **`if`/`else`** lowers to an `Expr::If` (the IR's conditional is an
+  expression, so a JS `if` *statement* is wrapped in an `ExprStmt`).
+  Branch bodies are `Block`s — a `{ … }` block or a single unbraced
+  statement. A missing `else` becomes a synthetic empty nil-valued block.
+  **Else-if chains** nest naturally: the parser puts another `if` inside
+  the `else`, producing a nested `Expr::If` in the outer else branch's
+  tail value.
+- **`while`** maps directly to `Stmt::While`.
+- **C-style `for`** maps to the half-open counting `Stmt::ForRange`
+  **only** when it matches the canonical shape: init `let i = <start>`,
+  condition `i < <stop>` or `i <= <stop>` (the latter rewritten half-open
+  to `<stop> + 1`), and update `i = i + <step>`, `i += <step>`, or `i++`.
+  Anything else (a different variable across clauses, a decrement, a
+  multiplicative step, a multi-variable init) is rejected with a
+  positioned "non-canonical `for`" error — never silently mangled.
+- **`for … of`** maps to `Stmt::ForEach` (single-identifier binding only;
+  destructuring is deferred).
+- **Scoping** matches the SIR validator: the loop variable is visible in
+  the loop body but unresolved after the loop, and a `let` bound inside
+  any control-flow body or bare block does not leak to the enclosing
+  scope. Statement-block nesting is bounded by `MAX_STMT_DEPTH = 256` so
+  deeply nested control flow yields an ordinary error, not a stack
+  overflow.
 
 ### Variables and scope
 
@@ -133,17 +166,20 @@ Every produced `Module`:
   `semantic_ir::validate` with no used-but-undeclared errors and no
   declared-but-unused warnings.
 
-## Out of scope for M2 (deferred)
+## Out of scope for M3 (deferred)
 
-Control flow, functions, collections, member access, and template
+Functions/closures (M4), collections and member access (M5), and template
 literals all currently return a `JsLowerError` describing what was
-rejected, with the offending node's position — as do the gaps within
-M2's own families (compound assignment, assignment to a member/index,
-multi-binding declarations, uninitialised bindings, bitwise/shift/
-exponentiation/nullish operators). The error sites are structured so
-later milestones slot their handling in at exactly the right place. See
-`CHANGELOG.md` for the milestone roadmap and the full
-SIR19 spec at [`code/specs/SIR19-javascript-to-semantic-ir.md`](../../../specs/SIR19-javascript-to-semantic-ir.md).
+rejected, with the offending node's position. So do the remaining
+control-flow constructs — `switch`, `try`/`catch`, `do … while`, labeled
+statements, and `break`/`continue` (the IR has no early-exit node) — and
+the gaps within M2's own families (compound assignment outside the
+loop-update position, assignment to a member/index, multi-binding
+declarations, uninitialised bindings, bitwise/shift/exponentiation/
+nullish operators). The error sites are structured so later milestones
+slot their handling in at exactly the right place. See `CHANGELOG.md` for
+the milestone roadmap and the full SIR19 spec at
+[`code/specs/SIR19-javascript-to-semantic-ir.md`](../../../specs/SIR19-javascript-to-semantic-ir.md).
 
 ## Testing
 

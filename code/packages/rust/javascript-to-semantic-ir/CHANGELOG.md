@@ -5,6 +5,98 @@ All notable changes to `javascript-to-semantic-ir` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## 0.3.0
+
+SIR19 milestone **M3 (control flow)** — builds on M2's variables and
+operators.  Adds `if`/`else`, `while`, the canonical counting C-style
+`for`, `for … of`, and bare `{ … }` blocks.
+
+### Added
+
+- **`if`/`else` → `Expr::If`.**  A JS `if` *statement* lowers to a
+  `Stmt::ExprStmt` wrapping an `Expr::If` (the IR's conditional is an
+  expression; there is no statement-level `if`).  The `then`/`else`
+  branches are `Block`s — either a `{ … }` block or a single unbraced
+  statement (`if (c) x = 1;`).  A missing `else` becomes a synthetic
+  empty nil-valued `Block`.  **Else-if chains** (`else if (…)`) fall out
+  of the grammar for free: the parser nests another `if_statement` inside
+  the `else` statement, so it recurses into a *nested* `Expr::If` living
+  in the outer `else_branch`'s tail value.  `Expr::If` is *not* gated by
+  any `Feature` in SIR v0 (the validator observes none), so no manifest
+  entry is added for conditionals.
+- **`while (c) { body }` → `Stmt::While`.**  Lowers the condition
+  expression and the body block.
+- **C-style `for` → `Stmt::ForRange`** — accepted **only** for the
+  canonical half-open counting shape, from which `var`/`start`/`stop`/
+  `step` are extracted:
+
+  - **init** must be `let i = <start>` (a single `let`/`const`/`var`
+    binding of one variable);
+  - **cond** must be `i < <stop>` or `i <= <stop>` on the *same* `i`
+    (`<=` is rewritten half-open by bumping `stop` to
+    `BuiltinCall("+", [stop, IntLit(1)])`);
+  - **update** must increment `i` by a constant `step` in one of
+    `i = i + <step>`, `i += <step>`, or `i++` (step `IntLit(1)`).
+
+  Any **non-canonical** loop — a different variable across clauses, a
+  decrement (`i--`), a multiplicative step (`i = i * 2`), a missing
+  clause, or a multi-variable init — is rejected with a positioned
+  `JsLowerError` (deferred) rather than silently mangled.
+- **`for (const x of xs) { body }` → `Stmt::ForEach { var: x, iter: xs }`.**
+  Only the single-identifier binding is supported; destructuring
+  (`for (const [a, b] of …)`) is deferred.
+- **Bare `{ … }` blocks** lower to `Expr::Block`; their statements run
+  for effect.
+- **Block-scoped names.**  Names bound inside any control-flow body or a
+  bare block are block-scoped: `declared_locals` is snapshotted before a
+  body and restored after, so an inner `let` does not leak outward.  This
+  mirrors the SIR validator, which marks/rewinds its `LocalEnv` around
+  each `Block`.  The **loop variable** is bound into the loop body scope
+  *only* (visible in the body, unresolved after the loop) — again
+  matching the validator.
+- **Manifest.**  `while`/`for`/`for-of` declare `Feature::Loops` (the
+  feature the validator observes for every loop statement); `if` declares
+  nothing.
+- **Bounded statement-block nesting.**  Control-flow bodies recurse with
+  `depth + 1`, capped at `MAX_STMT_DEPTH = 256` (the statement-side twin
+  of `MAX_EXPR_DEPTH`), so adversarial deep nesting yields an ordinary
+  positioned error rather than a stack-overflow abort.
+- 21 new unit tests (55 total): if/else with both branches, missing-else
+  synthetic block, else-if nesting, single-statement if body, comparison
+  conditions, `while`, all three C-`for` update forms (`i = i + s`,
+  `i++`, `i += s`), `<=` half-open stop bump, literal stop, three
+  non-canonical-`for` rejections (decrement, wrong cond variable,
+  multiplicative step), `for-of`, loop-var and for-of-var
+  non-leakage, block-scoped `let` non-leakage, bare block lowering,
+  nested control flow, and an all-forms validate round-trip.
+
+### Changed
+
+- Minor version bump `0.2.0 → 0.3.0` (additive, backward-compatible).
+- `lower_program` now delegates to a shared `lower_stmt_seq` routine that
+  also lowers `{ … }` block / control-flow bodies, threading a
+  statement-nesting `depth`.
+
+### Deferred
+
+Still **out of scope after M3** and returning a clear positioned
+`JsLowerError`:
+
+- **M4 — functions & closures:** `function` declarations, arrow
+  functions (`MakeClosure`), `return`, calls (`DirectCall` /
+  `IndirectCall`), `console.log` → `BuiltinCall("print", …)`.
+- **M5 — collections:** array literals (`SeqLit`), indexing
+  (`SeqIndex`), `.length` (`SeqLen`), object literals (`MapLit`),
+  member/`[]` access (`MapGet`).
+- **Other control-flow constructs:** `switch`, `try`/`catch`, `do … while`,
+  labeled statements, and `break`/`continue` (the IR has no early-exit
+  node) — all positioned `JsLowerError`.
+- **Within-M2 operator/assignment gaps** (compound assignment outside the
+  loop-update position, member/index assignment targets, multi-binding
+  declarations, uninitialised bindings, bitwise/shift/exponentiation/
+  nullish operators, other prefix unaries) and template literals,
+  non-decimal numeric forms — unchanged from M2.
+
 ## 0.2.0
 
 SIR19 milestone **M2 (variables, assignment, operators)** — builds on
