@@ -33,6 +33,19 @@ pub const RUNTIME: &str = r##"mod __sir {
         Float(f64),
         Bool(bool),
         Nil,
+        // ── DefaultParams (P2e) sentinel ──────────────────────────
+        // `Missing` marks an *omitted* positional argument at a call
+        // site (the `DirectCall` emitter pads omitted trailing slots
+        // with `missing()`).  A defaulted param's body-top prologue
+        // tests for it via `is_missing` and substitutes the param's
+        // default expression.  It is an internal sentinel — it should
+        // never be printed or compared by ordinary user code, because
+        // by the time a function body runs past its prologue every
+        // `Missing` has been replaced.  We still give it safe,
+        // defensive arms in `format`/`value_eq` so a leaked sentinel
+        // degrades gracefully instead of panicking (`<missing>`; equal
+        // only to another `Missing`).
+        Missing,
         Sym(Rc<str>),
         Str(Rc<str>),
         Pair(Rc<Pair>),
@@ -83,6 +96,23 @@ pub const RUNTIME: &str = r##"mod __sir {
             t.insert(name.to_string(), s.clone());
             Value::Sym(s)
         })
+    }
+
+    // ── DefaultParams (P2e) sentinel helpers ──────────────────────
+    //
+    // `missing()` constructs the omitted-argument sentinel; the
+    // `DirectCall` emitter appends one per trailing param the caller
+    // left off, so the emitted call is always full-arity.  `is_missing`
+    // is the predicate a defaulted param's prologue uses to decide
+    // whether to evaluate its default.  Both are trivial, but exposing
+    // them as named helpers keeps the emitter's output readable and the
+    // sentinel representation in one place.
+    pub fn missing() -> Value {
+        Value::Missing
+    }
+
+    pub fn is_missing(v: &Value) -> bool {
+        matches!(v, Value::Missing)
     }
 
     // ── global storage ────────────────────────────────────────────
@@ -318,6 +348,11 @@ pub const RUNTIME: &str = r##"mod __sir {
             Value::Bool(true) => "#t".to_string(),
             Value::Bool(false) => "#f".to_string(),
             Value::Nil => "nil".to_string(),
+            // Defensive: a `Missing` sentinel should be consumed by a
+            // defaulted param's prologue before any value is printed, so
+            // this arm is normally unreachable.  Render a visible
+            // placeholder rather than panicking if one ever leaks.
+            Value::Missing => "<missing>".to_string(),
             Value::Sym(s) => s.to_string(),
             Value::Str(s) => s.to_string(),
             Value::Pair(p) => format_pair_d(p, visited),
@@ -658,6 +693,12 @@ pub const RUNTIME: &str = r##"mod __sir {
             (Value::Float(x), Value::Int(y)) => *x == (*y as f64),
             (Value::Bool(x), Value::Bool(y)) => x == y,
             (Value::Nil, Value::Nil) => true,
+            // Defensive: the `Missing` sentinel is internal and should
+            // never reach a user-level comparison (a defaulted param's
+            // prologue replaces it before the body runs).  Give it a
+            // safe arm anyway: a `Missing` is equal only to another
+            // `Missing`, never to `Nil` or any real value.
+            (Value::Missing, Value::Missing) => true,
             (Value::Sym(x), Value::Sym(y)) => x == y,
             (Value::Str(x), Value::Str(y)) => **x == **y,
             (Value::Pair(x), Value::Pair(y)) => {

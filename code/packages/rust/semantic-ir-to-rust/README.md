@@ -65,6 +65,28 @@ arm — no reachable `panic!` remains for v1.  The remaining emit panics
 cover SIR17/18 nodes (classes, modules, try/catch, string interpolation,
 instance/class/const vars) whose features stay unaccepted.
 
+Accepts (P2e): `DefaultParams` — a `Param` may carry a `default`
+expression that runs when the caller omits that trailing argument.  Rust
+functions are fixed-arity over `__sir::Value` with no native defaults, so
+the backend uses a **runtime-mimic** strategy that preserves the
+language's **call-time, param-scope** semantics:
+
+- A `Value::Missing` sentinel marks an *omitted* positional argument,
+  with `__sir::missing()` (constructor) and `__sir::is_missing(&Value)`
+  (predicate) helpers.  `format` renders a stray `Missing` as `<missing>`
+  and `value_eq` treats it as equal only to another `Missing`.
+- Each defaulted param gets a **body-top prologue**
+  `let p = if __sir::is_missing(&p) { <default> } else { p };`.  Emitting
+  the default *inside the body* — in declaration order — is what gives the
+  call-time + param-scope rule: an earlier parameter is already bound, so
+  a default like `b = a + 1` resolves `a`.
+- A `DirectCall` that omits trailing defaulted arguments **pads** the
+  omitted positions with `__sir::missing()` so the emitted Rust call is
+  full-arity.  The callee's parameter count comes from the same
+  `FN_ARITY` table the closure emitter uses.
+
+Non-default behaviour is byte-for-byte unchanged.
+
 Rejects: `TailCalls` (Rust does not guarantee TCO), `Intrinsics`
 (empty whitelist in v0), and the SIR17/18 features above.
 
@@ -74,6 +96,7 @@ Rejects: `TailCalls` (Rust does not guarantee TCO), `Intrinsics`
 #[derive(Clone)]
 enum Value {
     Int(i64), Float(f64), Bool(bool), Nil,
+    Missing,                                 // P2e DefaultParams sentinel
     Sym(Rc<str>), Str(Rc<str>),
     Pair(Rc<Pair>),
     Closure(Rc<Closure>),
