@@ -27,13 +27,13 @@ We lower from the *generic* `GrammarASTNode`, **not** from the parser's
 typed-AST bridge (`javascript-parser/src/bridge.rs`). That is the
 contract SIR19 sets, matching how the Ruby and Twig frontends work.
 
-## Milestone status — M4 (functions, calls, closures)
+## Milestone status — M5 (collections: arrays & objects)
 
-This is the fourth slice of SIR19. It implements literals (M1),
-variables/operators (M2), and control flow (M3) **plus** functions:
-`function` declarations, arrow functions, tail-position `return`,
-function calls, and closures (`MakeClosure` + free-variable capture). The
-supported subset (M1 + M2 + M3 + M4):
+This is the fifth slice of SIR19. It implements literals (M1),
+variables/operators (M2), control flow (M3), and functions/closures (M4)
+**plus** collections: array literals, object literals, member / dot /
+subscript access (reads), and indexed / property assignment (writes). The
+supported subset (M1 + M2 + M3 + M4 + M5):
 
 | JavaScript source           | SIR lowering                                  |
 |-----------------------------|-----------------------------------------------|
@@ -69,6 +69,39 @@ supported subset (M1 + M2 + M3 + M4):
 | `f(1, 2)` (known function)  | `DirectCall { fn_name, args }`                |
 | `g(3)` (closure value)      | `IndirectCall { target, args }`               |
 | `console.log(x)`            | `BuiltinCall("print", [x])`                   |
+| `[1, 2, 3]`, `[]`           | `SeqLit { items }`                            |
+| `{ a: 1, "k": v }`, `{}`    | `MapLit { entries }` (id/string keys → string) |
+| `xs.length`                 | `SeqLen { seq }`                              |
+| `xs[i]` (non-string index)  | `SeqIndex { seq, index }`                     |
+| `obj.prop`, `obj["k"]`      | `MapGet { map, key }` (string key)            |
+| `xs[i] = v;`                | `Stmt::SeqSet { seq, index, value }`          |
+| `obj.prop = v;`, `obj["k"] = v;` | `Stmt::MapSet { map, key, value }`       |
+
+### Collections (M5)
+
+- **Array / object literals** become `SeqLit` / `MapLit`. Object keys —
+  identifier (`a:`) or quoted (`"k":`) — both lower to **string** map keys
+  (the JS quoting distinction is purely syntactic). A parenthesised
+  grouping is peeled, so `({a: 1})` lowers at statement start.
+- **The bracket-vs-dot disambiguation.** The IR has both sequences and
+  maps and is untyped here, so `x[i]` is structurally ambiguous. Per the
+  SIR19 collections table we resolve **by access shape and key kind**:
+  `.length` → `SeqLen`; every other `.prop` → `MapGet` (string key);
+  `obj["k"]` (string-literal subscript) → `MapGet`; `xs[i]` (any other
+  index) → `SeqIndex`. Assignment targets mirror this exactly.
+- **Flat member chains.** `grid[0][1]` / `a.b.c` parse as a *single*
+  `member_expression` with the accesses as a trailing token/node sequence;
+  we **fold them left iteratively** (no per-segment CST recursion). A
+  chained write `grid[0][1] = v` builds the receiver `grid[0]` via the read
+  path, then emits the final `SeqSet`/`MapSet`.
+- **Recursion safety (CWE-674).** Every element, property value, chain
+  receiver, and bracket index is lowered through the depth-bounded
+  `lower_expression` (`MAX_EXPR_DEPTH = 256`), so a deep `[[[[…]]]]`,
+  `{a:{b:…}}`, or `p.p.p…` tower is a positioned error, not a stack
+  overflow. The element/property/access iteration is non-recursive.
+- **Deferred:** spread, elisions, object shorthand, computed/numeric keys,
+  methods/getters/setters, `.length` assignment (a resize), and array
+  methods (`.map`/`.push`/… — need runtime-library support).
 
 ### Functions, calls, and closures
 
@@ -204,19 +237,21 @@ Every produced `Module`:
   `semantic_ir::validate` with no used-but-undeclared errors and no
   declared-but-unused warnings.
 
-## Out of scope for M4 (deferred)
+## Out of scope for M5 (deferred)
 
-Collections and member access (M5 — array/object literals, indexing,
-`.length`, member/`[]` access, and method calls other than
-`console.log`), classes / `this` / `new`, generators, `async`/`await`,
-default / rest parameters, destructuring, spread, and template literals
-all currently return a `JsLowerError` describing what was rejected, with
-the offending node's position. So do **early `return`** (non-tail), the
-remaining control-flow constructs (`switch`, `try`/`catch`, `do … while`,
-labeled statements, `break`/`continue`), and the gaps within the M2/M3
-operator/assignment families (compound assignment outside the loop-update
-position, member/index assignment targets, multi-binding declarations,
-uninitialised bindings, bitwise/shift/exponentiation/nullish operators).
+Method calls other than `console.log` and array methods (`.map`/`.push`/…,
+which need runtime-library support), spread (`[...xs]` / `{...o}`), array
+elisions, object shorthand / computed / numeric keys / methods / getters /
+setters, `.length` *assignment* (a resize with no IR node), classes /
+`this` / `new`, generators, `async`/`await`, default / rest parameters,
+destructuring, and template literals all currently return a `JsLowerError`
+describing what was rejected, with the offending node's position. So do
+**early `return`** (non-tail), the remaining control-flow constructs
+(`switch`, `try`/`catch`, `do … while`, labeled statements,
+`break`/`continue`), and the gaps within the M2/M3 operator/assignment
+families (compound assignment outside the loop-update position,
+multi-binding declarations, uninitialised bindings,
+bitwise/shift/exponentiation/nullish operators).
 The error sites are structured so later milestones slot their handling in
 at exactly the right place. See `CHANGELOG.md` for the milestone roadmap
 and the full SIR19 spec at

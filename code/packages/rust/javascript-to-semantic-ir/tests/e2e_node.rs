@@ -101,6 +101,48 @@ fn closure_adder_runs_in_node() {
 }
 
 #[test]
+fn array_sum_runs_in_node() {
+    if !node_available() {
+        eprintln!("skipping array_sum_runs_in_node: `node` not available");
+        return;
+    }
+    // M5 golden: build an array, index it, mutate an element, sum it with a
+    // counting `for` over `xs.length`.  Exercises SeqLit / SeqIndex / SeqLen
+    // / SeqSet end to end.
+    let out = run_via_node(
+        "array_sum",
+        "let xs = [1, 2, 3, 4]; \
+         xs[0] = 10; \
+         let total = 0; \
+         for (let i = 0; i < xs.length; i++) { total = total + xs[i]; } \
+         console.log(total);",
+    );
+    // [10, 2, 3, 4] sums to 19.
+    assert_eq!(out, "19");
+}
+
+#[test]
+fn object_get_set_runs_in_node() {
+    if !node_available() {
+        eprintln!("skipping object_get_set_runs_in_node: `node` not available");
+        return;
+    }
+    // M5 golden: build an object, read a property, set a property, read the
+    // updated value.  Exercises MapLit / MapGet / MapSet end to end.  Note
+    // we print individual values, not the Map itself (which `console.log`
+    // would render as `Map { … }`).
+    let out = run_via_node(
+        "object_get_set",
+        "let acct = {balance: 100, owner: \"ada\"}; \
+         acct.balance = acct.balance + 50; \
+         acct[\"bonus\"] = 5; \
+         console.log(acct.balance + acct[\"bonus\"]);",
+    );
+    // 100 + 50 + 5 = 155.
+    assert_eq!(out, "155");
+}
+
+#[test]
 fn mutual_recursion_runs_in_node() {
     if !node_available() {
         eprintln!("skipping mutual_recursion_runs_in_node: `node` not available");
