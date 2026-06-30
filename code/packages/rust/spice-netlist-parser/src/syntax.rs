@@ -29,6 +29,7 @@ pub const BERKELEY_APP_SHELL_EVENT_DASHBOARD_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_PACKAGE_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_CARDS_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_VIEW_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -73,6 +74,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-dashboard-package-json",
     "app-shell-dashboard-cards-json",
     "app-shell-dashboard-view-json",
+    "app-shell-dashboard-layout-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -1376,6 +1378,127 @@ impl BerkeleyAppShellDashboardView {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardLayoutRegion {
+    pub id: String,
+    pub role: String,
+    pub title: String,
+    pub card_ids: Vec<String>,
+    pub primary: bool,
+    pub visible: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardLayout {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub primary_card_id: Option<String>,
+    pub primary_region_id: Option<String>,
+    pub region_count: usize,
+    pub visible_region_count: usize,
+    pub card_count: usize,
+    pub visible_card_count: usize,
+    pub attention_card_count: usize,
+    pub metric_card_count: usize,
+    pub regions: Vec<BerkeleyAppShellDashboardLayoutRegion>,
+    pub package_capability_id: String,
+    pub dashboard_capability_id: String,
+    pub cards_capability_id: String,
+    pub view_capability_id: String,
+    pub layout_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardLayout {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_dashboard_cards(&BerkeleyAppShellDashboardCards::from_bootstrap_snapshot(
+            snapshot,
+        ))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dashboard_cards(&BerkeleyAppShellDashboardCards::from_shell_handoff(handoff))
+    }
+
+    pub fn from_dashboard_cards(cards: &BerkeleyAppShellDashboardCards) -> Self {
+        let view = BerkeleyAppShellDashboardView::from_dashboard_cards(cards);
+        let regions = ["status", "attention", "metrics"]
+            .iter()
+            .map(|role| {
+                let card_ids = cards
+                    .cards
+                    .iter()
+                    .filter(|card| card.section_id == *role)
+                    .map(|card| card.id.clone())
+                    .collect::<Vec<_>>();
+                let primary = card_ids
+                    .iter()
+                    .any(|card_id| Some(card_id) == view.primary_card_id.as_ref());
+                let visible = card_ids.iter().any(|card_id| {
+                    view.visible_card_ids
+                        .iter()
+                        .any(|visible_id| visible_id == card_id)
+                });
+                BerkeleyAppShellDashboardLayoutRegion {
+                    id: format!("dashboard.layout.{}", role),
+                    role: (*role).to_string(),
+                    title: match *role {
+                        "status" => "Status".to_string(),
+                        "attention" => "Attention".to_string(),
+                        "metrics" => "Metrics".to_string(),
+                        _ => (*role).to_string(),
+                    },
+                    card_ids,
+                    primary,
+                    visible,
+                }
+            })
+            .collect::<Vec<_>>();
+        let primary_region_id = regions
+            .iter()
+            .find(|region| region.primary)
+            .map(|region| region.id.clone());
+        let region_count = regions.len();
+        let visible_region_count = regions.iter().filter(|region| region.visible).count();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION,
+            package_name: view.package_name,
+            source_fingerprint: view.source_fingerprint,
+            title: view.title,
+            startup_route: view.startup_route,
+            ready: view.ready,
+            severity: view.severity,
+            attention_required: view.attention_required,
+            primary_card_id: view.primary_card_id,
+            primary_region_id,
+            region_count,
+            visible_region_count,
+            card_count: view.card_count,
+            visible_card_count: view.visible_card_count,
+            attention_card_count: view.attention_card_count,
+            metric_card_count: view.metric_card_count,
+            regions,
+            package_capability_id: view.package_capability_id,
+            dashboard_capability_id: view.dashboard_capability_id,
+            cards_capability_id: view.cards_capability_id,
+            view_capability_id: view.view_capability_id,
+            layout_capability_id: "app-shell-dashboard-layout-json".to_string(),
+            artifact_capability_count: view.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_layout_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BerkeleyAnalysisInventoryEntry {
     pub index: usize,
     pub directive: String,
@@ -2344,6 +2467,40 @@ impl BerkeleyAppDeck {
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self
             .run_app_shell_dashboard_view(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_layout(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardLayout {
+        BerkeleyAppShellDashboardLayout::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_layout(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardLayout, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellDashboardLayout::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_dashboard_layout_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_layout(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_dashboard_layout_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_layout(persisted_state)?
             .to_json())
     }
 
@@ -3327,6 +3484,53 @@ fn app_shell_dashboard_view_json_value(view: &BerkeleyAppShellDashboardView) -> 
         "cardsCapabilityId": &view.cards_capability_id,
         "viewCapabilityId": &view.view_capability_id,
         "artifactCapabilityCount": view.artifact_capability_count,
+    })
+}
+
+fn app_shell_dashboard_layout_json_value(
+    layout: &BerkeleyAppShellDashboardLayout,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": layout.schema_version,
+        "packageName": &layout.package_name,
+        "sourceFingerprint": &layout.source_fingerprint,
+        "title": &layout.title,
+        "startupRoute": &layout.startup_route,
+        "ready": layout.ready,
+        "severity": &layout.severity,
+        "attentionRequired": layout.attention_required,
+        "primaryCardId": &layout.primary_card_id,
+        "primaryRegionId": &layout.primary_region_id,
+        "regionCount": layout.region_count,
+        "visibleRegionCount": layout.visible_region_count,
+        "cardCount": layout.card_count,
+        "visibleCardCount": layout.visible_card_count,
+        "attentionCardCount": layout.attention_card_count,
+        "metricCardCount": layout.metric_card_count,
+        "regions": layout
+            .regions
+            .iter()
+            .map(app_shell_dashboard_layout_region_json_value)
+            .collect::<Vec<_>>(),
+        "packageCapabilityId": &layout.package_capability_id,
+        "dashboardCapabilityId": &layout.dashboard_capability_id,
+        "cardsCapabilityId": &layout.cards_capability_id,
+        "viewCapabilityId": &layout.view_capability_id,
+        "layoutCapabilityId": &layout.layout_capability_id,
+        "artifactCapabilityCount": layout.artifact_capability_count,
+    })
+}
+
+fn app_shell_dashboard_layout_region_json_value(
+    region: &BerkeleyAppShellDashboardLayoutRegion,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &region.id,
+        "role": &region.role,
+        "title": &region.title,
+        "cardIds": &region.card_ids,
+        "primary": region.primary,
+        "visible": region.visible,
     })
 }
 

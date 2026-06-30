@@ -187,6 +187,15 @@ let shell_dashboard_view_json = deck.run_app_shell_dashboard_view_json(
 )?;
 assert!(shell_dashboard_view_json.contains(r#""primaryCardTitle":"Startup status""#));
 assert!(shell_dashboard_view_json.contains(r#""viewCapabilityId":"app-shell-dashboard-view-json""#));
+
+let shell_dashboard_layout_json = deck.run_app_shell_dashboard_layout_json(
+    BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(3),
+        active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+    },
+)?;
+assert!(shell_dashboard_layout_json.contains(r#""primaryRegionId":"dashboard.layout.status""#));
+assert!(shell_dashboard_layout_json.contains(r#""layoutCapabilityId":"app-shell-dashboard-layout-json""#));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -253,7 +262,9 @@ flags, severity, and event IDs from the dashboard package so product hosts can
 render first-pass dashboard cards without interpreting section internals. Shell
 dashboard views summarize those cards into primary-card labels, visible card
 IDs, attention card IDs, metric card IDs, and capability metadata for hosts that
-only need the first-render dashboard routing contract. The
+only need the first-render dashboard routing contract. Shell dashboard layouts
+turn those card and view descriptors into stable status, attention, and metrics
+regions with primary and visible flags for first-render host composition. The
 grammar-backed parser generator and Python/TypeScript parity surfaces continue
 to mature.
 
