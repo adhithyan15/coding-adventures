@@ -442,6 +442,21 @@ fn app_package_emits_native_project_shells() {
             vec!["EngramApp.js", "index.js", "index.html", "README.md"],
         ),
         (
+            Backend::React,
+            "react",
+            vec![
+                "EngramApp.tsx",
+                "index.ts",
+                "package.json",
+                "vite.config.ts",
+                "index.html",
+                "tsconfig.json",
+                "src/main.tsx",
+                "src/engram-host.ts",
+                "README.md",
+            ],
+        ),
+        (
             Backend::Electron,
             "electron",
             vec![
@@ -456,6 +471,18 @@ fn app_package_emits_native_project_shells() {
                 "electron/main.ts",
                 "electron/preload.ts",
                 "README.md",
+            ],
+        ),
+        (
+            Backend::Flutter,
+            "flutter",
+            vec![
+                "EngramApp.dart",
+                "index.dart",
+                "pubspec.yaml",
+                "README.md",
+                "lib/main.dart",
+                "lib/mosaic_host.dart",
             ],
         ),
         (
