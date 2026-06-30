@@ -120,6 +120,7 @@ pub fn get_daily_study_limit_usage(
         .collect();
     let mut new_card_ids: HashSet<&str> = HashSet::new();
     let mut review_cards_seen = 0;
+    let imported_learning_review_ids = imported_anki_learning_review_ids(state);
 
     for review in &state.reviews {
         if review.reviewed_at < day_start || review.reviewed_at >= day_end {
@@ -129,7 +130,9 @@ pub fn get_daily_study_limit_usage(
             continue;
         }
 
-        if review.previous_progress.is_none() {
+        if review.previous_progress.is_none()
+            || imported_learning_review_ids.contains(review.id.as_str())
+        {
             new_card_ids.insert(review.card_id.as_str());
         } else {
             review_cards_seen += 1;
@@ -146,6 +149,22 @@ pub fn get_daily_study_limit_usage(
         remaining_new_cards: (options.new_cards_per_day as usize).saturating_sub(new_cards_seen),
         remaining_reviews: (options.reviews_per_day as usize).saturating_sub(review_cards_seen),
     }
+}
+
+fn imported_anki_learning_review_ids(state: &AppState) -> HashSet<&str> {
+    state
+        .external_sources
+        .iter()
+        .filter(|source| source.target == ExternalSourceTarget::Review)
+        .filter(|source| {
+            source
+                .data
+                .get("kind")
+                .and_then(|kind| kind.parse::<i64>().ok())
+                == Some(0)
+        })
+        .map(|source| source.target_id.as_str())
+        .collect()
 }
 
 pub fn build_session_queue_with_daily_limits(
@@ -534,6 +553,16 @@ mod tests {
         }
     }
 
+    fn anki_review_source(review_id: &str, kind: i64) -> ExternalSourceRecord {
+        ExternalSourceRecord {
+            target: ExternalSourceTarget::Review,
+            target_id: review_id.to_string(),
+            source: "anki-v11".to_string(),
+            original_id: Some(review_id.to_string()),
+            data: BTreeMap::from([("kind".to_string(), kind.to_string())]),
+        }
+    }
+
     #[test]
     fn session_queue_returns_due_cards_before_new_cards() {
         let cards = vec![
@@ -811,6 +840,47 @@ mod tests {
         let usage = get_daily_study_limit_usage(&state, "deck", NOW, NOW + 100, &options);
 
         assert_eq!(usage.deck_id, "deck");
+        assert_eq!(usage.new_cards_seen, 1);
+        assert_eq!(usage.review_cards_seen, 1);
+        assert_eq!(usage.remaining_new_cards, 2);
+        assert_eq!(usage.remaining_reviews, 1);
+    }
+
+    #[test]
+    fn daily_limit_usage_counts_imported_anki_learning_revlogs_as_new() {
+        let state = AppState {
+            cards: vec![
+                card("imported-learning", "deck", 1),
+                card("imported-review", "deck", 2),
+            ],
+            reviews: vec![
+                review(
+                    "learn-row",
+                    "imported-learning",
+                    NOW + 10,
+                    Some(progress("imported-learning", NOW - 100, 0)),
+                ),
+                review(
+                    "review-row",
+                    "imported-review",
+                    NOW + 20,
+                    Some(progress("imported-review", NOW - 100, 3)),
+                ),
+            ],
+            external_sources: vec![
+                anki_review_source("learn-row", 0),
+                anki_review_source("review-row", 1),
+            ],
+            ..AppState::default()
+        };
+        let options = DeckOptions {
+            new_cards_per_day: 3,
+            reviews_per_day: 2,
+            ..DeckOptions::default()
+        };
+
+        let usage = get_daily_study_limit_usage(&state, "deck", NOW, NOW + 100, &options);
+
         assert_eq!(usage.new_cards_seen, 1);
         assert_eq!(usage.review_cards_seen, 1);
         assert_eq!(usage.remaining_new_cards, 2);
