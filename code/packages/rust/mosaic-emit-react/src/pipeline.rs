@@ -3895,13 +3895,31 @@ fn build_inline_style_fragment(props: &[StyleProp]) -> String {
     let mut parts: Vec<String> = Vec::with_capacity(props.len());
     for p in props {
         let key = css_property_to_camel(&p.name);
+        parts.push(format!("{key}: {}", react_style_value_literal(&p.value)));
+    }
+    parts.join(", ")
+}
+
+/// Render a mosstyle value as a React inline-style literal.
+fn react_style_value_literal(value: &str) -> String {
+    let trimmed = value.trim();
+    if is_plain_number(trimmed) {
+        trimmed.to_string()
+    } else {
         // Escape any embedded double quotes in the value to keep the JSX
         // string literal well-formed. Real mosstyle values shouldn't
         // contain `"` but defensive coding here costs essentially nothing.
-        let escaped = p.value.replace('\\', "\\\\").replace('"', "\\\"");
-        parts.push(format!("{key}: \"{escaped}\""));
+        let escaped = value.replace('\\', "\\\\").replace('"', "\\\"");
+        format!("\"{escaped}\"")
     }
-    parts.join(", ")
+}
+
+fn is_plain_number(value: &str) -> bool {
+    !value.is_empty()
+        && value
+            .chars()
+            .all(|c| c.is_ascii_digit() || matches!(c, '+' | '-' | '.'))
+        && value.parse::<f64>().is_ok()
 }
 
 /// Convert a kebab-case CSS property name to its camelCase JS form.
@@ -4810,6 +4828,29 @@ mod tests {
         assert!(
             result.output.contains("fontSize: \"13px\""),
             "got:\n{}",
+            result.output
+        );
+    }
+
+    #[test]
+    fn unitless_mosstyle_numbers_emit_numeric_react_values() {
+        let m = component("X", vec![], vec![]);
+        let s = style_with_part(
+            "X",
+            "panel",
+            &[
+                ("padding", "8"),
+                ("font-size", "14"),
+                ("font-weight", "700"),
+                ("opacity", "0.75"),
+            ],
+        );
+        let l = box_root(Some("panel"));
+        let result = from_pipeline(&m, &l, &s).unwrap();
+        let expected = "style={{ padding: 8, fontSize: 14, fontWeight: 700, opacity: 0.75 }}";
+        assert!(
+            result.output.contains(expected),
+            "numeric mosstyle values should be emitted as React numbers, got:\n{}",
             result.output
         );
     }

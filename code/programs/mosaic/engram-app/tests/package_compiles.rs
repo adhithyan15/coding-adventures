@@ -666,6 +666,14 @@ fn native_project_shells_expose_engram_host_contract() {
     let html_host =
         fs::read_to_string(tmp.path().join("html").join("engram-host.mjs")).expect("html host");
     assert_contains(&html_host, "engram_engine.wasm");
+    assert_contains(
+        &html_host,
+        "const HOST_READY_EVENT = \"mosaic-host-ready\";",
+    );
+    assert_contains(
+        &html_host,
+        "window.dispatchEvent(new CustomEvent(HOST_READY_EVENT));",
+    );
 
     let webcomponent_index = fs::read_to_string(tmp.path().join("webcomponent").join("index.html"))
         .expect("webcomponent/index.html");
@@ -740,6 +748,14 @@ fn native_project_shells_expose_engram_host_contract() {
         fs::read_to_string(tmp.path().join("webcomponent").join("engram-host.mjs"))
             .expect("webcomponent host");
     assert_contains(&webcomponent_host, "engram_engine.wasm");
+    assert_contains(
+        &webcomponent_host,
+        "const HOST_READY_EVENT = \"mosaic-host-ready\";",
+    );
+    assert_contains(
+        &webcomponent_host,
+        "window.dispatchEvent(new CustomEvent(HOST_READY_EVENT));",
+    );
 
     let react_app = fs::read_to_string(tmp.path().join("react").join("src").join("main.tsx"))
         .expect("react/src/main.tsx");
@@ -835,6 +851,14 @@ fn native_project_shells_expose_engram_host_contract() {
             .expect("react host");
     assert_contains(&react_host, "installEngramMosaicHost");
     assert_contains(&react_host, "engram_engine.wasm");
+    assert_contains(
+        &react_host,
+        "const HOST_READY_EVENT = \"mosaic-host-ready\";",
+    );
+    assert_contains(
+        &react_host,
+        "window.dispatchEvent(new CustomEvent(HOST_READY_EVENT));",
+    );
     assert!(
         tmp.path()
             .join("react")

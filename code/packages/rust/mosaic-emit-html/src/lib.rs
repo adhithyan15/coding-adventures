@@ -47,8 +47,8 @@
 //! </html>
 //! ```
 
-use mosaic_vm::{EmitResult, MosaicRenderer, ResolvedProperty, ResolvedValue};
 use mosaic_analyzer::{MosaicSlot, MosaicType};
+use mosaic_vm::{EmitResult, MosaicRenderer, ResolvedProperty, ResolvedValue};
 
 // =====================================================================
 // New three-file pipeline entry point.
@@ -180,10 +180,7 @@ impl HtmlRenderer {
     ///
     /// - `fixtures` — a JSON object mapping slot names to values.
     /// - `css` — optional CSS string to inline in `<style>`.
-    pub fn new(
-        fixtures: serde_json::Map<String, serde_json::Value>,
-        css: Option<String>,
-    ) -> Self {
+    pub fn new(fixtures: serde_json::Map<String, serde_json::Value>, css: Option<String>) -> Self {
         Self {
             component_name: String::new(),
             slots: Vec::new(),
@@ -295,7 +292,14 @@ impl HtmlRenderer {
     /// `red" onmouseover="alert(1)` from breaking out of the attribute and
     /// injecting event handlers.
     fn build_style(&self, props: &[ResolvedProperty]) -> String {
-        let skip = ["content", "source", "a11y-label", "a11y-role", "a11y-hidden", "style"];
+        let skip = [
+            "content",
+            "source",
+            "a11y-label",
+            "a11y-role",
+            "a11y-hidden",
+            "style",
+        ];
         let entries: Vec<String> = props
             .iter()
             .filter(|p| !skip.contains(&p.name.as_str()))
@@ -434,14 +438,22 @@ impl HtmlRenderer {
                     .fixtures
                     .get(&headers_slot)
                     .and_then(|v| v.as_array())
-                    .map(|arr| arr.iter().map(|h| html_escape(&json_to_string(h))).collect())
+                    .map(|arr| {
+                        arr.iter()
+                            .map(|h| html_escape(&json_to_string(h)))
+                            .collect()
+                    })
                     .unwrap_or_else(|| vec![format!("[{headers_slot}]")]);
 
                 let rows: Vec<String> = self
                     .fixtures
                     .get(&rows_slot)
                     .and_then(|v| v.as_array())
-                    .map(|arr| arr.iter().map(|r| html_escape(&json_to_string(r))).collect())
+                    .map(|arr| {
+                        arr.iter()
+                            .map(|r| html_escape(&json_to_string(r)))
+                            .collect()
+                    })
                     .unwrap_or_else(|| vec![format!("[{rows_slot}]")]);
 
                 let style_attr = if extra_style.is_empty() {
@@ -450,10 +462,8 @@ impl HtmlRenderer {
                     format!(" style=\"{extra_style}\"")
                 };
 
-                let header_cells: String = headers
-                    .iter()
-                    .map(|h| format!("<th>{h}</th>"))
-                    .collect();
+                let header_cells: String =
+                    headers.iter().map(|h| format!("<th>{h}</th>")).collect();
                 let row_cells: String = rows
                     .iter()
                     .map(|r| format!("<tr><td>{r}</td></tr>"))
@@ -611,22 +621,24 @@ impl HtmlRenderer {
     /// - `item_name` — the loop variable name to bind during this pass.
     /// - `item` — the JSON value for this iteration's fixture item.
     /// - `events` — the recorded event log (cloned from recording state).
-    fn replay_events(
-        &mut self,
-        item_name: &str,
-        item: serde_json::Value,
-        events: &[EachEvent],
-    ) {
+    fn replay_events(&mut self, item_name: &str, item: serde_json::Value, events: &[EachEvent]) {
         self.loop_bindings.push((item_name.to_string(), Some(item)));
         for event in events {
             match event {
-                EachEvent::BeginNode { tag, is_primitive, props } => {
+                EachEvent::BeginNode {
+                    tag,
+                    is_primitive,
+                    props,
+                } => {
                     self.begin_node_inner(tag, *is_primitive, props);
                 }
                 EachEvent::EndNode { tag } => {
                     self.end_node_inner(tag);
                 }
-                EachEvent::RenderSlotChild { slot_name, slot_type } => {
+                EachEvent::RenderSlotChild {
+                    slot_name,
+                    slot_type,
+                } => {
                     self.render_slot_child_inner(slot_name, slot_type);
                 }
                 EachEvent::BeginWhen { slot_name } => {
@@ -635,7 +647,11 @@ impl HtmlRenderer {
                 EachEvent::EndWhen => {
                     self.end_when_inner();
                 }
-                EachEvent::BeginEach { slot_name, item_name: nested_name, element_type } => {
+                EachEvent::BeginEach {
+                    slot_name,
+                    item_name: nested_name,
+                    element_type,
+                } => {
                     // Nested each during replay: expand first item only (v1).
                     self.begin_each_inner(slot_name, nested_name, element_type);
                 }
@@ -946,8 +962,8 @@ fn format_div(style: &str, class: &str, props: &[ResolvedProperty]) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use mosaic_vm::MosaicVM;
     use mosaic_analyzer::analyze;
+    use mosaic_vm::MosaicVM;
     use serde_json::json;
 
     /// Build an `HtmlRenderer` with the given fixture JSON, run it on `src`.
@@ -971,7 +987,10 @@ mod tests {
     #[test]
     fn test_html_document_structure() {
         let out = emit(r#"component X { Box { } }"#);
-        assert!(out.starts_with("<!DOCTYPE html>"), "Expected DOCTYPE: {out}");
+        assert!(
+            out.starts_with("<!DOCTYPE html>"),
+            "Expected DOCTYPE: {out}"
+        );
         assert!(out.contains("<html lang=\"en\">"), "Expected <html>: {out}");
         assert!(out.contains("<head>"), "Expected <head>: {out}");
         assert!(out.contains("<body>"), "Expected <body>: {out}");
@@ -985,7 +1004,10 @@ mod tests {
     #[test]
     fn test_component_title() {
         let out = emit(r#"component ProfileCard { Box { } }"#);
-        assert!(out.contains("<title>Profile Card</title>"), "Expected title: {out}");
+        assert!(
+            out.contains("<title>Profile Card</title>"),
+            "Expected title: {out}"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -1045,10 +1067,7 @@ mod tests {
     #[test]
     fn test_text_content_placeholder() {
         let out = emit(r#"component Card { slot title: text; Text { content: @title; } }"#);
-        assert!(
-            out.contains("[slot: title]"),
-            "Expected placeholder: {out}"
-        );
+        assert!(out.contains("[slot: title]"), "Expected placeholder: {out}");
     }
 
     // -----------------------------------------------------------------------
@@ -1069,7 +1088,10 @@ mod tests {
             json!({"show": true}),
             None,
         );
-        assert!(out.contains("Visible"), "Expected body when show=true: {out}");
+        assert!(
+            out.contains("Visible"),
+            "Expected body when show=true: {out}"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -1090,7 +1112,10 @@ mod tests {
             json!({"show": false}),
             None,
         );
-        assert!(!out.contains("Hidden"), "Expected body suppressed when show=false: {out}");
+        assert!(
+            !out.contains("Hidden"),
+            "Expected body suppressed when show=false: {out}"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -1133,9 +1158,18 @@ mod tests {
             json!({"items": ["FirstItem", "SecondItem", "ThirdItem"]}),
             None,
         );
-        assert!(out.contains("FirstItem"), "Expected first fixture item: {out}");
-        assert!(out.contains("SecondItem"), "Expected second fixture item: {out}");
-        assert!(out.contains("ThirdItem"), "Expected third fixture item: {out}");
+        assert!(
+            out.contains("FirstItem"),
+            "Expected first fixture item: {out}"
+        );
+        assert!(
+            out.contains("SecondItem"),
+            "Expected second fixture item: {out}"
+        );
+        assert!(
+            out.contains("ThirdItem"),
+            "Expected third fixture item: {out}"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -1155,7 +1189,10 @@ mod tests {
             }"#,
         );
         // Without fixture, loop var resolves to [item] placeholder.
-        assert!(out.contains("[item]"), "Expected placeholder for loop var: {out}");
+        assert!(
+            out.contains("[item]"),
+            "Expected placeholder for loop var: {out}"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -1210,7 +1247,10 @@ mod tests {
     #[test]
     fn test_minimal_reset_emitted() {
         let out = emit(r#"component X { Box { } }"#);
-        assert!(out.contains("box-sizing: border-box"), "Expected reset CSS: {out}");
+        assert!(
+            out.contains("box-sizing: border-box"),
+            "Expected reset CSS: {out}"
+        );
     }
 
     // -----------------------------------------------------------------------

@@ -12,6 +12,7 @@ type HostedWindow = Window & {
 const WASM_URL = "/engram_engine.wasm";
 const DECK_ID_STORAGE_KEY = "engram.deckId";
 const HOST_INTENT_EVENT = "engram-host-intent";
+const HOST_READY_EVENT = "mosaic-host-ready";
 
 async function installEngramHost(): Promise<void> {
   const target = window as HostedWindow;
@@ -20,6 +21,7 @@ async function installEngramHost(): Promise<void> {
     typeof existing?.getProps === "function" &&
     typeof existing?.handleEvent === "function"
   ) {
+    announceHostReady();
     return;
   }
 
@@ -39,10 +41,15 @@ async function installEngramHost(): Promise<void> {
       );
     },
   });
+  announceHostReady();
 }
 
 function selectedDeckId(): string {
   return window.localStorage.getItem(DECK_ID_STORAGE_KEY) ?? "";
+}
+
+function announceHostReady(): void {
+  window.dispatchEvent(new CustomEvent(HOST_READY_EVENT));
 }
 
 void installEngramHost().catch((error: unknown) => {

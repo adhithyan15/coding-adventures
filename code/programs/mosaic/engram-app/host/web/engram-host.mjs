@@ -3,12 +3,14 @@ import { installEngramMosaicHost } from "./engram-mosaic-host-wasm.mjs";
 const WASM_URL = "./engram_engine.wasm";
 const DECK_ID_STORAGE_KEY = "engram.deckId";
 const HOST_INTENT_EVENT = "engram-host-intent";
+const HOST_READY_EVENT = "mosaic-host-ready";
 
 async function installEngramHost() {
   if (
     typeof window.mosaicHost?.getProps === "function" &&
     typeof window.mosaicHost?.handleEvent === "function"
   ) {
+    announceHostReady();
     return;
   }
 
@@ -28,10 +30,15 @@ async function installEngramHost() {
       );
     },
   });
+  announceHostReady();
 }
 
 function selectedDeckId() {
   return window.localStorage.getItem(DECK_ID_STORAGE_KEY) ?? "";
+}
+
+function announceHostReady() {
+  window.dispatchEvent(new CustomEvent(HOST_READY_EVENT));
 }
 
 void installEngramHost().catch(error => {
