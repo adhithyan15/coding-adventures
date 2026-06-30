@@ -32,6 +32,9 @@ pub fn emit_module(m: &Module) -> String {
             t.insert(f.name.clone(), f.params.len());
         }
     });
+    // Reset the loop-id counter so emission is deterministic across
+    // repeated `emit_module` calls (the determinism test relies on this).
+    LOOP_ID.with(|c| *c.borrow_mut() = 0);
 
     let mut out = String::new();
     emit_banner(&mut out, m);
@@ -176,14 +179,53 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 out.push('\n');
             }
         }
-        // SIR16 statement kinds — Go backend hasn't been extended.
-        Stmt::Assign { span, .. }
-        | Stmt::While { span, .. }
-        | Stmt::ForRange { span, .. }
-        | Stmt::ForEach { span, .. }
-        | Stmt::SeqSet { span, .. }
-        | Stmt::MapSet { span, .. } => {
-            panic!("go backend reached SIR16 statement at {} — capability check should have rejected it", span);
+        // ── SIR16 mutation (MutableBindings) ────────────────────────
+        // `Assign` re-binds an already-declared name.  Go has no
+        // const/mut distinction, so a Local/Param/Capture reassignment
+        // is just `<name> = <value>` (the matching `LetBinding`/param
+        // already declared the name with `:=` / as a parameter — no
+        // `let mut` pre-pass is needed the way the Rust backend needs
+        // one).  `Global` writes through the runtime global store.
+        // Instance/ClassVar/Const/Builtin scopes belong to SIR17
+        // features this backend does not accept, so they fall through to
+        // the panic guard below.
+        Stmt::Assign {
+            name,
+            scope: Scope::Local | Scope::Param | Scope::Capture,
+            value,
+            ..
+        } => {
+            let _ = write!(out, "{}{} = ", pad, sanitize_ident(name));
+            emit_expr(out, value, indent);
+            out.push('\n');
+        }
+        Stmt::Assign { name, scope: Scope::Global, value, .. } => {
+            let _ = write!(out, "{}_sir_globals[{}] = ", pad, quote_go_string(name));
+            emit_expr(out, value, indent);
+            out.push('\n');
+        }
+        // ── SIR16 loops (Loops) ─────────────────────────────────────
+        Stmt::While { cond, body, .. } => emit_while(out, cond, body, indent),
+        Stmt::ForRange { var, start, stop, step, body, .. } => {
+            emit_for_range(out, var, start, stop, step, body, indent)
+        }
+        Stmt::ForEach { var, iter, body, .. } => {
+            emit_for_each(out, var, iter, body, indent)
+        }
+        // ── SIR16 indexed assignment (Sequences/Maps) ───────────────
+        // `Feature::Sequences`/`Feature::Maps` are not accepted by this
+        // backend, so a module using `SeqSet`/`MapSet` is rejected at
+        // the capability check before emit.  Reaching these arms is a
+        // bug.
+        Stmt::SeqSet { span, .. } | Stmt::MapSet { span, .. } => {
+            panic!("go backend reached SIR16 Seq/Map statement at {} — capability check should have rejected it", span);
+        }
+        // An `Assign` to an Instance/ClassVar/Const/Builtin scope: those
+        // scopes belong to SIR17 features this backend does not accept
+        // (or, for Builtin, are never produced by any frontend), so a
+        // validated module never reaches here.
+        Stmt::Assign { span, .. } => {
+            panic!("go backend reached an Assign to an unsupported scope at {} — capability check should have rejected it", span);
         }
         // SIR17 (classes) — `Feature::Classes` is not accepted by
         // this backend, so a class-using module is rejected by the
@@ -471,11 +513,147 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
 }
 
 // ---------------------------------------------------------------------------
-// TLS arity table
+// SIR16 loops (Loops)
+// ---------------------------------------------------------------------------
+
+/// Emit a block in **statement context** — used for loop bodies, whose
+/// trailing value is discarded rather than returned.  Each statement is
+/// emitted in order; the block's trailing `value` is emitted as an
+/// expression statement (`_ = <value>`) so any side effect still fires,
+/// except a bare `nil` (the common "this block yields nothing" marker),
+/// which is dropped to keep the output clean and avoid a useless
+/// `_ = nil`.  Mirrors the Rust backend's `emit_block_as_stmts`.
+fn emit_block_as_stmts(out: &mut String, b: &Block, indent: usize) {
+    let pad = indent_str(indent);
+    for s in &b.stmts {
+        emit_stmt(out, s, indent);
+    }
+    if !matches!(b.value, Expr::NilLit { .. }) {
+        let _ = write!(out, "{}_ = ", pad);
+        emit_expr(out, &b.value, indent);
+        out.push('\n');
+    }
+}
+
+/// `for _sir_truthy(<cond>) { <body> }`.  Go uses `for` as its `while`;
+/// the test routes through SIR truthiness (only `false`/`nil` are falsy)
+/// — never Go's `bool` directly, since `cond` is a `Value`.
+fn emit_while(out: &mut String, cond: &Expr, body: &Block, indent: usize) {
+    let pad = indent_str(indent);
+    let _ = write!(out, "{}for _sir_truthy(", pad);
+    emit_expr(out, cond, indent);
+    out.push_str(") {\n");
+    emit_block_as_stmts(out, body, indent + 1);
+    let _ = writeln!(out, "{}}}", pad);
+}
+
+/// `for var in range(start, stop, step)` — half-open (`stop` exclusive).
+///
+/// `stop`/`step` are evaluated **once** into block-scoped `int64`
+/// temporaries (matching Python's `range`, where re-evaluating the bound
+/// each turn would be wrong), and the loop condition is direction-aware
+/// so a negative `step` counts down correctly.  The loop variable `var`
+/// is re-bound each iteration as a fresh `Value(int64(<n>))` so the body
+/// sees it through the normal `Value` model.  A defensive `_ = <var>`
+/// guard silences Go's strict unused-variable check when the body never
+/// references the loop variable.  Mirrors the Rust backend's bound
+/// caching, expressed with Go's native three-clause `for`:
+///
+/// ```text
+/// {
+///     __sir_stop_<id> := _sir_as_int(<stop>)
+///     __sir_step_<id> := _sir_as_int(<step>)
+///     for __sir_i_<id> := _sir_as_int(<start>); _sir_range_cont(__sir_i_<id>, __sir_stop_<id>, __sir_step_<id>); __sir_i_<id> += __sir_step_<id> {
+///         <var> := Value(int64(__sir_i_<id>))
+///         _ = <var>
+///         <body>
+///     }
+/// }
+/// ```
+fn emit_for_range(
+    out: &mut String,
+    var: &str,
+    start: &Expr,
+    stop: &Expr,
+    step: &Expr,
+    body: &Block,
+    indent: usize,
+) {
+    let id = fresh_loop_id();
+    let v = sanitize_ident(var);
+    let pad = indent_str(indent);
+    let inner = indent + 1;
+    let inner_pad = indent_str(inner);
+    let body_pad = indent_str(inner + 1);
+
+    // Open a block so the loop temporaries don't leak.
+    let _ = writeln!(out, "{}{{", pad);
+
+    let _ = write!(out, "{}__sir_stop_{} := _sir_as_int(", inner_pad, id);
+    emit_expr(out, stop, inner);
+    out.push_str(")\n");
+    let _ = write!(out, "{}__sir_step_{} := _sir_as_int(", inner_pad, id);
+    emit_expr(out, step, inner);
+    out.push_str(")\n");
+
+    let _ = write!(out, "{}for __sir_i_{} := _sir_as_int(", inner_pad, id);
+    emit_expr(out, start, inner);
+    out.push(')');
+    // Direction-aware continue condition: count up while step >= 0, down
+    // otherwise.  Routed through a tiny runtime helper so the emitted
+    // `for` header stays readable.
+    let _ = writeln!(
+        out,
+        "; _sir_range_cont(__sir_i_{id}, __sir_stop_{id}, __sir_step_{id}); __sir_i_{id} += __sir_step_{id} {{",
+        id = id
+    );
+    let _ = writeln!(out, "{}{} := Value(int64(__sir_i_{}))", body_pad, v, id);
+    let _ = writeln!(out, "{}_ = {}", body_pad, v);
+    emit_block_as_stmts(out, body, inner + 1);
+    let _ = writeln!(out, "{}}}", inner_pad);
+    let _ = writeln!(out, "{}}}", pad);
+}
+
+/// `for var in iter` — iterate a sequence value.  This backend has no
+/// dedicated `Seq` value yet (Sequences land in a later PR), so a
+/// sequence is the classic cons-list (a `Pair`-chain terminated by
+/// `nil`).  The runtime `_sir_seq_iter` helper flattens that chain into
+/// a `[]Value`; the loop binds each element to `var`.  A `_ = <var>`
+/// guard silences Go's unused-variable check when the body ignores the
+/// element.  Mirrors the Rust backend's `seq_iter` approach.
+fn emit_for_each(out: &mut String, var: &str, iter: &Expr, body: &Block, indent: usize) {
+    let pad = indent_str(indent);
+    let v = sanitize_ident(var);
+    let inner = indent + 1;
+    let inner_pad = indent_str(inner);
+    let _ = write!(out, "{}for _, {} := range _sir_seq_iter(", pad, v);
+    emit_expr(out, iter, indent);
+    out.push_str(") {\n");
+    let _ = writeln!(out, "{}_ = {}", inner_pad, v);
+    emit_block_as_stmts(out, body, inner);
+    let _ = writeln!(out, "{}}}", pad);
+}
+
+// ---------------------------------------------------------------------------
+// TLS arity table + loop counter
 // ---------------------------------------------------------------------------
 
 thread_local! {
     static FN_ARITY: RefCell<HashMap<String, usize>> = RefCell::new(HashMap::new());
+    /// Monotonic per-module loop counter — gives each emitted `ForRange`
+    /// a unique suffix so its `__sir_i_`/`__sir_stop_`/`__sir_step_`
+    /// temporaries never collide with a sibling or nested loop's.
+    static LOOP_ID: RefCell<u64> = const { RefCell::new(0) };
+}
+
+/// Allocate a fresh, module-unique loop id.
+fn fresh_loop_id() -> u64 {
+    LOOP_ID.with(|c| {
+        let mut c = c.borrow_mut();
+        let id = *c;
+        *c += 1;
+        id
+    })
 }
 
 // ---------------------------------------------------------------------------
@@ -774,6 +952,150 @@ mod tests {
         );
         assert_eq!(out.matches("__l :=").count(), 2);
         assert!(out.starts_with("func() Value { __l := func() Value { __l :="));
+    }
+
+    // ── SIR16 MutableBindings + Loops ──────────────────────────────
+
+    fn ilit(v: i64) -> Expr {
+        Expr::IntLit { value: v, span: s() }
+    }
+
+    fn nil_block() -> Block {
+        Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() }
+    }
+
+    #[test]
+    fn emit_assign_local_uses_plain_equals() {
+        // A reassignment of an already-declared local emits `=`, not
+        // `:=` — Go has no const/mut distinction so no pre-pass needed.
+        let mut out = String::new();
+        emit_stmt(
+            &mut out,
+            &Stmt::Assign {
+                name: "x".into(),
+                scope: Scope::Local,
+                value: ilit(7),
+                span: s(),
+            },
+            1,
+        );
+        assert_eq!(out, "\tx = Value(int64(7))\n");
+    }
+
+    #[test]
+    fn emit_assign_global_writes_store() {
+        let mut out = String::new();
+        emit_stmt(
+            &mut out,
+            &Stmt::Assign {
+                name: "g".into(),
+                scope: Scope::Global,
+                value: ilit(3),
+                span: s(),
+            },
+            1,
+        );
+        assert_eq!(out, "\t_sir_globals[\"g\"] = Value(int64(3))\n");
+    }
+
+    #[test]
+    fn emit_while_uses_for_with_truthy() {
+        let mut out = String::new();
+        emit_stmt(
+            &mut out,
+            &Stmt::While {
+                cond: Expr::BoolLit { value: true, span: s() },
+                body: nil_block(),
+                span: s(),
+            },
+            1,
+        );
+        assert!(out.starts_with("\tfor _sir_truthy(Value(true)) {\n"), "got: {out}");
+        // A nil block value emits no dangling `_ = nil`.
+        assert!(!out.contains("_ = Value(nil)"), "got: {out}");
+        assert!(out.trim_end().ends_with('}'));
+    }
+
+    #[test]
+    fn emit_for_range_caches_bounds_and_guards_var() {
+        // Reset the counter so the suffix is predictable in isolation.
+        LOOP_ID.with(|c| *c.borrow_mut() = 0);
+        let mut out = String::new();
+        emit_stmt(
+            &mut out,
+            &Stmt::ForRange {
+                var: "i".into(),
+                start: ilit(0),
+                stop: ilit(5),
+                step: ilit(1),
+                body: nil_block(),
+                span: s(),
+            },
+            1,
+        );
+        // Bounds cached into temps once.
+        assert!(out.contains("__sir_stop_0 := _sir_as_int(Value(int64(5)))"), "got: {out}");
+        assert!(out.contains("__sir_step_0 := _sir_as_int(Value(int64(1)))"), "got: {out}");
+        // Native three-clause for with direction-aware continue test.
+        assert!(
+            out.contains("for __sir_i_0 := _sir_as_int(Value(int64(0))); _sir_range_cont(__sir_i_0, __sir_stop_0, __sir_step_0); __sir_i_0 += __sir_step_0 {"),
+            "got: {out}"
+        );
+        // Loop var bound as a Value(int) and guarded against unused.
+        assert!(out.contains("i := Value(int64(__sir_i_0))"), "got: {out}");
+        assert!(out.contains("_ = i"), "got: {out}");
+    }
+
+    #[test]
+    fn emit_for_range_unique_ids_for_sibling_loops() {
+        LOOP_ID.with(|c| *c.borrow_mut() = 0);
+        let mk = || Stmt::ForRange {
+            var: "i".into(),
+            start: ilit(0),
+            stop: ilit(2),
+            step: ilit(1),
+            body: nil_block(),
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_stmt(&mut out, &mk(), 1);
+        emit_stmt(&mut out, &mk(), 1);
+        assert!(out.contains("__sir_i_0"), "got: {out}");
+        assert!(out.contains("__sir_i_1"), "got: {out}");
+    }
+
+    #[test]
+    fn emit_for_each_iterates_via_seq_iter() {
+        let mut out = String::new();
+        emit_stmt(
+            &mut out,
+            &Stmt::ForEach {
+                var: "x".into(),
+                iter: Expr::NilLit { span: s() },
+                body: nil_block(),
+                span: s(),
+            },
+            1,
+        );
+        assert!(out.contains("for _, x := range _sir_seq_iter(Value(nil)) {"), "got: {out}");
+        assert!(out.contains("_ = x"), "got: {out}");
+    }
+
+    #[test]
+    fn emit_loop_body_keeps_non_nil_value_as_stmt() {
+        // A loop body whose trailing value is non-nil emits `_ = <value>`
+        // so the side effect still fires in statement context.
+        let mut out = String::new();
+        emit_stmt(
+            &mut out,
+            &Stmt::While {
+                cond: Expr::BoolLit { value: false, span: s() },
+                body: Block { stmts: vec![], value: ilit(9), span: s() },
+                span: s(),
+            },
+            1,
+        );
+        assert!(out.contains("_ = Value(int64(9))"), "got: {out}");
     }
 
     #[test]

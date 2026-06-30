@@ -47,13 +47,20 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // `Floats` adds a `float64` arm to the Go runtime's `Value` plus
     // numeric promotion across the arithmetic/comparison helpers.
     // `ShortCircuit` is pure emit (a truthy-guarded IIFE over the
-    // existing `_sir_truthy` helper) and needs no runtime change.  The
-    // remaining v1 features (MutableBindings, Loops, Sequences, Maps)
-    // are *not* yet declared, so a module using them is still rejected
-    // by the capability check before emit — keeping the `panic!`s in
-    // `emit.rs` for those nodes strictly unreachable until later PRs.
+    // existing `_sir_truthy` helper) and needs no runtime change.
     Feature::Floats,
     Feature::ShortCircuit,
+    // `MutableBindings` is pure emit — Go has native reassignment, so a
+    // re-bound name just emits `<name> = <value>` (the matching
+    // `LetBinding` already declared it with `:=`).  `Loops` maps `While`
+    // / `ForRange` / `ForEach` onto Go's native `for`; `ForEach` adds a
+    // `_sir_seq_iter` cons-list flattener to the runtime.  The two
+    // remaining v1 features (Sequences, Maps) stay *undeclared*, so a
+    // module using `SeqLit`/`MapLit`/`SeqSet`/`MapSet` is still rejected
+    // by the capability check before emit — keeping the `panic!`s in
+    // `emit.rs` for those nodes strictly unreachable until a later PR.
+    Feature::MutableBindings,
+    Feature::Loops,
 ];
 
 impl Backend for GoBackend {

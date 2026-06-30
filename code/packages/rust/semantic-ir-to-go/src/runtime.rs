@@ -406,6 +406,46 @@ func _sir_format_pair(p *Pair) string {
 	return out + ")"
 }
 
+// ── SIR16 loops: ForRange continue test ────────────────────────
+//
+// Direction-aware half-open bound check for a `ForRange` counter.  With
+// a non-negative `step` the loop runs while `i < stop` (counting up);
+// with a negative `step` it runs while `i > stop` (counting down).  This
+// keeps the emitted three-clause `for` header readable while preserving
+// Python's `range` semantics for negative steps.
+func _sir_range_cont(i int64, stop int64, step int64) bool {
+	if step >= 0 {
+		return i < stop
+	}
+	return i > stop
+}
+
+// ── SIR16 loops: cons-list iteration (ForEach) ─────────────────
+//
+// `ForEach` iterates a "sequence" value.  This backend has no dedicated
+// `Seq` value yet (Sequences land in a later PR), so a sequence is the
+// classic cons-list: a `Pair`-chain whose final `cdr` is `nil`.  `nil`
+// itself is the empty sequence.  `_sir_seq_iter` flattens that chain
+// into a `[]Value` the `for ... range` loop can walk.  An improper list
+// (a non-`nil`, non-`Pair` tail) is a programming error and panics,
+// matching the strictness of `car`/`cdr` on a non-pair.
+func _sir_seq_iter(v Value) []Value {
+	out := []Value{}
+	cur := v
+	for {
+		if cur == nil {
+			break
+		}
+		if p, ok := cur.(*Pair); ok {
+			out = append(out, p.Car)
+			cur = p.Cdr
+			continue
+		}
+		panic("cannot iterate non-sequence: " + _sir_format(cur))
+	}
+	return out
+}
+
 func _sir_builtin_closure(name string) Value {
 	return &Closure{Fn: func(args []Value) Value {
 		return _sir_call_builtin_by_name(name, args)
@@ -485,6 +525,16 @@ mod tests {
         assert!(RUNTIME.contains("_sir_any_float"));
         assert!(RUNTIME.contains("_sir_format_float"));
         assert!(RUNTIME.contains("_sir_is_number_val"));
+    }
+
+    #[test]
+    fn runtime_declares_loop_helpers() {
+        // SIR16 Loops: ForRange needs `_sir_as_int` (already present for
+        // floats) + the direction-aware `_sir_range_cont`; ForEach needs
+        // the cons-list flattener `_sir_seq_iter`.
+        assert!(RUNTIME.contains("func _sir_range_cont(i int64, stop int64, step int64) bool"));
+        assert!(RUNTIME.contains("func _sir_seq_iter(v Value) []Value"));
+        assert!(RUNTIME.contains("_sir_as_int"));
     }
 
     #[test]
