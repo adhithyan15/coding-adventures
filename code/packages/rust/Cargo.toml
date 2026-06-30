@@ -371,6 +371,7 @@ members = [
     "sql-execution-engine",
     "sql-csv-source",
     "sql-backend",
+    "sql-planner",
     "ean-13",
     "epoll",
     "macos-job-backend-launchd-files",
