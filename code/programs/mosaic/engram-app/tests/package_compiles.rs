@@ -427,11 +427,24 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
     assert_contains(&html, "data-on-click=\"onNoteEditorCancel\"");
     assert_contains(&html, "data-on-click=\"onNoteTypeEditorSelectNoteType\"");
     assert_contains(&html, "data-on-click=\"onNoteTypeEditorSelectField\"");
+    assert_contains(&html, "data-on-click=\"onNoteTypeEditorSelectTemplate\"");
     assert_contains(&html, "data-on-change=\"onNoteTypeEditorNameChange\"");
     assert_contains(&html, "data-on-change=\"onNoteTypeEditorFieldNameChange\"");
     assert_contains(
         &html,
         "data-on-toggle=\"onNoteTypeEditorFieldRequiredChange\"",
+    );
+    assert_contains(
+        &html,
+        "data-on-change=\"onNoteTypeEditorTemplateNameChange\"",
+    );
+    assert_contains(
+        &html,
+        "data-on-change=\"onNoteTypeEditorFrontTemplateChange\"",
+    );
+    assert_contains(
+        &html,
+        "data-on-change=\"onNoteTypeEditorBackTemplateChange\"",
     );
     assert_contains(&html, "data-on-change=\"onNoteTypeEditorStylesheetChange\"");
     assert_contains(&html, "data-on-click=\"onNoteTypeEditorNewNoteType\"");
@@ -1939,6 +1952,22 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(
         &xaml_code_behind,
+        "public static readonly DependencyProperty NoteTypeEditorTemplateLabelsProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty NoteTypeEditorSelectedTemplateIndexProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty NoteTypeEditorFrontTemplateValueProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty NoteTypeEditorBackTemplateValueProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
         "public static readonly DependencyProperty AnswerVisibleProperty",
     );
     assert_contains(
@@ -2144,6 +2173,22 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_events,
         "public sealed record NoteEditorSelectDeck(double Index) : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record NoteTypeEditorSelectTemplate(double Index) : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record NoteTypeEditorTemplateNameChange(string Value) : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record NoteTypeEditorFrontTemplateChange(string Value) : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record NoteTypeEditorBackTemplateChange(string Value) : EngramAppEvent",
     );
     let xaml_main_window = fs::read_to_string(tmp.path().join("xaml").join("MainWindow.xaml.cs"))
         .expect("MainWindow.xaml.cs");

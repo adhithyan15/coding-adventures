@@ -75,11 +75,41 @@ layout NoteTypeEditor {
             )
             Column [ note-type-template-list ] {
               For ( each: slot: template-labels , as: template , index: template-index ) {
-                Text [ note-type-template-label ] (
-                  content : template
+                HostButton [ note-type-template-option ] (
+                  label : template ,
+                  onClick : emit: onSelectTemplate
                 )
               }
             }
+            Text [ note-type-template-name-label ] (
+              content : slot: template-name-label
+            )
+            HostInput [ note-type-template-name-input ] (
+              value : slot: template-name-value ,
+              placeholder : slot: template-name-placeholder ,
+              disabled : false ,
+              onChange : emit: onTemplateNameChange
+            )
+            Text [ note-type-front-template-label ] (
+              content : slot: front-template-label
+            )
+            HostInput [ note-type-front-template-input ] (
+              value : slot: front-template-value ,
+              placeholder : slot: front-template-placeholder ,
+              disabled : false ,
+              multiline : true ,
+              onChange : emit: onFrontTemplateChange
+            )
+            Text [ note-type-back-template-label ] (
+              content : slot: back-template-label
+            )
+            HostInput [ note-type-back-template-input ] (
+              value : slot: back-template-value ,
+              placeholder : slot: back-template-placeholder ,
+              disabled : false ,
+              multiline : true ,
+              onChange : emit: onBackTemplateChange
+            )
           }
         }
         Text [ note-type-stylesheet-label ] (

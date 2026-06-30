@@ -167,11 +167,15 @@ impl NoteEditorSessionState {
 struct NoteTypeEditorSessionState {
     selected_index: usize,
     selected_field_index: usize,
+    selected_template_index: usize,
     draft_note_type_id: Option<String>,
     draft_name: Option<String>,
     draft_stylesheet: Option<String>,
     draft_field_names: HashMap<String, String>,
     draft_field_required: HashMap<String, bool>,
+    draft_template_names: HashMap<String, String>,
+    draft_template_fronts: HashMap<String, String>,
+    draft_template_backs: HashMap<String, String>,
     draft_created_at: Option<u64>,
     draft_is_new: bool,
     confirm_delete: bool,
@@ -185,11 +189,15 @@ impl NoteTypeEditorSessionState {
     fn select_index(&mut self, index: usize) {
         self.selected_index = index;
         self.selected_field_index = 0;
+        self.selected_template_index = 0;
         self.draft_note_type_id = None;
         self.draft_name = None;
         self.draft_stylesheet = None;
         self.draft_field_names.clear();
         self.draft_field_required.clear();
+        self.draft_template_names.clear();
+        self.draft_template_fronts.clear();
+        self.draft_template_backs.clear();
         self.draft_created_at = None;
         self.draft_is_new = false;
         self.confirm_delete = false;
@@ -198,11 +206,15 @@ impl NoteTypeEditorSessionState {
     fn start_new(&mut self, now: u64) {
         self.selected_index = usize::MAX;
         self.selected_field_index = 0;
+        self.selected_template_index = 0;
         self.draft_note_type_id = Some(format!("note-type-{now}"));
         self.draft_name = Some("Basic".to_string());
         self.draft_stylesheet = Some(String::new());
         self.draft_field_names.clear();
         self.draft_field_required.clear();
+        self.draft_template_names.clear();
+        self.draft_template_fronts.clear();
+        self.draft_template_backs.clear();
         self.draft_created_at = Some(now);
         self.draft_is_new = true;
         self.confirm_delete = false;
@@ -215,6 +227,9 @@ impl NoteTypeEditorSessionState {
             self.draft_stylesheet = None;
             self.draft_field_names.clear();
             self.draft_field_required.clear();
+            self.draft_template_names.clear();
+            self.draft_template_fronts.clear();
+            self.draft_template_backs.clear();
             self.draft_created_at = None;
             self.draft_is_new = false;
             self.confirm_delete = false;
@@ -223,6 +238,11 @@ impl NoteTypeEditorSessionState {
 
     fn set_selected_field_index(&mut self, index: usize) {
         self.selected_field_index = index;
+        self.confirm_delete = false;
+    }
+
+    fn set_selected_template_index(&mut self, index: usize) {
+        self.selected_template_index = index;
         self.confirm_delete = false;
     }
 
@@ -249,6 +269,27 @@ impl NoteTypeEditorSessionState {
         self.confirm_delete = false;
         self.draft_field_required
             .insert(field_id.to_string(), required);
+    }
+
+    fn set_template_name(&mut self, note_type_id: &str, template_id: &str, value: String) {
+        self.ensure_selected_draft(note_type_id);
+        self.confirm_delete = false;
+        self.draft_template_names
+            .insert(template_id.to_string(), value);
+    }
+
+    fn set_template_front(&mut self, note_type_id: &str, template_id: &str, value: String) {
+        self.ensure_selected_draft(note_type_id);
+        self.confirm_delete = false;
+        self.draft_template_fronts
+            .insert(template_id.to_string(), value);
+    }
+
+    fn set_template_back(&mut self, note_type_id: &str, template_id: &str, value: String) {
+        self.ensure_selected_draft(note_type_id);
+        self.confirm_delete = false;
+        self.draft_template_backs
+            .insert(template_id.to_string(), value);
     }
 
     fn ask_delete_confirmation(&mut self) {
@@ -1086,6 +1127,16 @@ impl EngramSession {
                             "note type field",
                         )?);
                 }
+                EngramAppEvent::NoteTypeEditorSelectTemplate => {
+                    let value = parsed.number_value.ok_or_else(|| {
+                        "onNoteTypeEditorSelectTemplate is missing an index".to_string()
+                    })?;
+                    self.note_type_editor
+                        .set_selected_template_index(parse_nonnegative_index(
+                            value,
+                            "note type template",
+                        )?);
+                }
                 EngramAppEvent::NoteTypeEditorNameChange => {
                     let value = parsed.text_value.clone().ok_or_else(|| {
                         "onNoteTypeEditorNameChange is missing a value".to_string()
@@ -1127,6 +1178,51 @@ impl EngramSession {
                     })?;
                     self.note_type_editor
                         .set_field_required(&note_type_id, &field_id, required);
+                }
+                EngramAppEvent::NoteTypeEditorTemplateNameChange => {
+                    let value = parsed.text_value.clone().ok_or_else(|| {
+                        "onNoteTypeEditorTemplateNameChange is missing a value".to_string()
+                    })?;
+                    let (note_type_id, template_id) = note_type_editor_selected_template_id(
+                        &self.state,
+                        &self.note_type_editor,
+                        now,
+                    )
+                    .ok_or_else(|| {
+                        "cannot edit note type template without a selected template".to_string()
+                    })?;
+                    self.note_type_editor
+                        .set_template_name(&note_type_id, &template_id, value);
+                }
+                EngramAppEvent::NoteTypeEditorFrontTemplateChange => {
+                    let value = parsed.text_value.clone().ok_or_else(|| {
+                        "onNoteTypeEditorFrontTemplateChange is missing a value".to_string()
+                    })?;
+                    let (note_type_id, template_id) = note_type_editor_selected_template_id(
+                        &self.state,
+                        &self.note_type_editor,
+                        now,
+                    )
+                    .ok_or_else(|| {
+                        "cannot edit note type template without a selected template".to_string()
+                    })?;
+                    self.note_type_editor
+                        .set_template_front(&note_type_id, &template_id, value);
+                }
+                EngramAppEvent::NoteTypeEditorBackTemplateChange => {
+                    let value = parsed.text_value.clone().ok_or_else(|| {
+                        "onNoteTypeEditorBackTemplateChange is missing a value".to_string()
+                    })?;
+                    let (note_type_id, template_id) = note_type_editor_selected_template_id(
+                        &self.state,
+                        &self.note_type_editor,
+                        now,
+                    )
+                    .ok_or_else(|| {
+                        "cannot edit note type template without a selected template".to_string()
+                    })?;
+                    self.note_type_editor
+                        .set_template_back(&note_type_id, &template_id, value);
                 }
                 EngramAppEvent::NoteTypeEditorStylesheetChange => {
                     let value = parsed.text_value.clone().ok_or_else(|| {
@@ -2416,6 +2512,12 @@ fn insert_note_type_editor_props(
     let selected_field = selected_note_type
         .as_ref()
         .and_then(|note_type| selected_field_index.and_then(|index| note_type.fields.get(index)));
+    let selected_template_index = selected_note_type
+        .as_ref()
+        .and_then(|note_type| note_type_editor_selected_template_index(note_type, editor));
+    let selected_template = selected_note_type.as_ref().and_then(|note_type| {
+        selected_template_index.and_then(|index| note_type.templates.get(index))
+    });
     let field_labels = selected_note_type
         .as_ref()
         .map(|note_type| {
@@ -2529,6 +2631,58 @@ fn insert_note_type_editor_props(
     props.insert(
         "note-type-editor-template-labels".to_string(),
         json!(template_labels),
+    );
+    props.insert(
+        "note-type-editor-selected-template-index".to_string(),
+        json!(selected_template_index.unwrap_or(0)),
+    );
+    props.insert(
+        "note-type-editor-template-name-label".to_string(),
+        Value::String("Template name".to_string()),
+    );
+    props.insert(
+        "note-type-editor-template-name-value".to_string(),
+        Value::String(
+            selected_template
+                .map(|template| template.name.clone())
+                .unwrap_or_default(),
+        ),
+    );
+    props.insert(
+        "note-type-editor-template-name-placeholder".to_string(),
+        Value::String("Forward".to_string()),
+    );
+    props.insert(
+        "note-type-editor-front-template-label".to_string(),
+        Value::String("Front template".to_string()),
+    );
+    props.insert(
+        "note-type-editor-front-template-value".to_string(),
+        Value::String(
+            selected_template
+                .map(|template| template.front_template.clone())
+                .unwrap_or_default(),
+        ),
+    );
+    props.insert(
+        "note-type-editor-front-template-placeholder".to_string(),
+        Value::String("{{Front}}".to_string()),
+    );
+    props.insert(
+        "note-type-editor-back-template-label".to_string(),
+        Value::String("Back template".to_string()),
+    );
+    props.insert(
+        "note-type-editor-back-template-value".to_string(),
+        Value::String(
+            selected_template
+                .map(|template| template.back_template.clone())
+                .unwrap_or_default(),
+        ),
+    );
+    props.insert(
+        "note-type-editor-back-template-placeholder".to_string(),
+        Value::String("{{Back}}".to_string()),
     );
     props.insert(
         "note-type-editor-stylesheet-label".to_string(),
@@ -3803,6 +3957,17 @@ fn note_type_editor_selected_field_id(
     Some((note_type.id, field_id))
 }
 
+fn note_type_editor_selected_template_id(
+    state: &AppState,
+    editor: &NoteTypeEditorSessionState,
+    now: u64,
+) -> Option<(String, String)> {
+    let note_type = note_type_editor_selected_note_type(state, editor, now)?;
+    let template_index = note_type_editor_selected_template_index(&note_type, editor)?;
+    let template_id = note_type.templates.get(template_index)?.id.clone();
+    Some((note_type.id, template_id))
+}
+
 fn note_type_editor_selected_field_index(
     note_type: &engram_core::NoteType,
     editor: &NoteTypeEditorSessionState,
@@ -3811,6 +3976,21 @@ fn note_type_editor_selected_field_index(
         None
     } else {
         Some(editor.selected_field_index.min(note_type.fields.len() - 1))
+    }
+}
+
+fn note_type_editor_selected_template_index(
+    note_type: &engram_core::NoteType,
+    editor: &NoteTypeEditorSessionState,
+) -> Option<usize> {
+    if note_type.templates.is_empty() {
+        None
+    } else {
+        Some(
+            editor
+                .selected_template_index
+                .min(note_type.templates.len() - 1),
+        )
     }
 }
 
@@ -3843,6 +4023,17 @@ fn note_type_editor_selected_note_type(
         for field in &mut note_type.fields {
             if let Some(required) = editor.draft_field_required.get(field.id.as_str()) {
                 field.required = *required;
+            }
+        }
+        for template in &mut note_type.templates {
+            if let Some(name) = editor.draft_template_names.get(template.id.as_str()) {
+                template.name = name.clone();
+            }
+            if let Some(front) = editor.draft_template_fronts.get(template.id.as_str()) {
+                template.front_template = front.clone();
+            }
+            if let Some(back) = editor.draft_template_backs.get(template.id.as_str()) {
+                template.back_template = back.clone();
             }
         }
     }
@@ -3905,9 +4096,13 @@ enum EngramAppEvent {
     NoteEditorCancel,
     NoteTypeEditorSelectNoteType,
     NoteTypeEditorSelectField,
+    NoteTypeEditorSelectTemplate,
     NoteTypeEditorNameChange,
     NoteTypeEditorFieldNameChange,
     NoteTypeEditorFieldRequiredChange,
+    NoteTypeEditorTemplateNameChange,
+    NoteTypeEditorFrontTemplateChange,
+    NoteTypeEditorBackTemplateChange,
     NoteTypeEditorStylesheetChange,
     NoteTypeEditorNewNoteType,
     NoteTypeEditorSaveNoteType,
@@ -4034,9 +4229,13 @@ impl EngramAppEvent {
             Self::NoteEditorCancel => "onNoteEditorCancel",
             Self::NoteTypeEditorSelectNoteType => "onNoteTypeEditorSelectNoteType",
             Self::NoteTypeEditorSelectField => "onNoteTypeEditorSelectField",
+            Self::NoteTypeEditorSelectTemplate => "onNoteTypeEditorSelectTemplate",
             Self::NoteTypeEditorNameChange => "onNoteTypeEditorNameChange",
             Self::NoteTypeEditorFieldNameChange => "onNoteTypeEditorFieldNameChange",
             Self::NoteTypeEditorFieldRequiredChange => "onNoteTypeEditorFieldRequiredChange",
+            Self::NoteTypeEditorTemplateNameChange => "onNoteTypeEditorTemplateNameChange",
+            Self::NoteTypeEditorFrontTemplateChange => "onNoteTypeEditorFrontTemplateChange",
+            Self::NoteTypeEditorBackTemplateChange => "onNoteTypeEditorBackTemplateChange",
             Self::NoteTypeEditorStylesheetChange => "onNoteTypeEditorStylesheetChange",
             Self::NoteTypeEditorNewNoteType => "onNoteTypeEditorNewNoteType",
             Self::NoteTypeEditorSaveNoteType => "onNoteTypeEditorSaveNoteType",
@@ -4417,6 +4616,11 @@ fn parse_engram_app_event_name(
         "notetypeeditorselectfield"
         | "note-type-editor-select-field"
         | "note_type_editor_select_field" => parsed(EngramAppEvent::NoteTypeEditorSelectField),
+        "notetypeeditorselecttemplate"
+        | "note-type-editor-select-template"
+        | "note_type_editor_select_template" => {
+            parsed(EngramAppEvent::NoteTypeEditorSelectTemplate)
+        }
         "notetypeeditornamechange"
         | "note-type-editor-name-change"
         | "note_type_editor_name_change" => parsed(EngramAppEvent::NoteTypeEditorNameChange),
@@ -4429,6 +4633,21 @@ fn parse_engram_app_event_name(
         | "note-type-editor-field-required-change"
         | "note_type_editor_field_required_change" => {
             parsed(EngramAppEvent::NoteTypeEditorFieldRequiredChange)
+        }
+        "notetypeeditortemplatenamechange"
+        | "note-type-editor-template-name-change"
+        | "note_type_editor_template_name_change" => {
+            parsed(EngramAppEvent::NoteTypeEditorTemplateNameChange)
+        }
+        "notetypeeditorfronttemplatechange"
+        | "note-type-editor-front-template-change"
+        | "note_type_editor_front_template_change" => {
+            parsed(EngramAppEvent::NoteTypeEditorFrontTemplateChange)
+        }
+        "notetypeeditorbacktemplatechange"
+        | "note-type-editor-back-template-change"
+        | "note_type_editor_back_template_change" => {
+            parsed(EngramAppEvent::NoteTypeEditorBackTemplateChange)
         }
         "notetypeeditorstylesheetchange"
         | "note-type-editor-stylesheet-change"
@@ -8782,6 +9001,26 @@ mod tests {
             initial["props"]["note-type-editor-field-required-value"],
             true
         );
+        assert_eq!(
+            initial["props"]["note-type-editor-template-labels"],
+            json!(["1 Forward"])
+        );
+        assert_eq!(
+            initial["props"]["note-type-editor-selected-template-index"],
+            0
+        );
+        assert_eq!(
+            initial["props"]["note-type-editor-template-name-value"],
+            "Forward"
+        );
+        assert_eq!(
+            initial["props"]["note-type-editor-front-template-value"],
+            "{{Front}}"
+        );
+        assert_eq!(
+            initial["props"]["note-type-editor-back-template-value"],
+            "{{Back}}"
+        );
 
         let renamed: Value = serde_json::from_str(&session.handle_engram_app_event(
             r#"{"event":"onNoteTypeEditorNameChange","value":"Tamil Script"}"#,
@@ -8825,10 +9064,47 @@ mod tests {
             json!(["1 Prompt", "2 Back *"])
         );
 
+        let template_named: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onNoteTypeEditorTemplateNameChange","value":"Forward with hint"}"#,
+            "deck",
+            NOW + 4,
+        ))
+        .unwrap();
+        assert_eq!(
+            template_named["props"]["note-type-editor-template-name-value"],
+            "Forward with hint"
+        );
+        assert_eq!(
+            template_named["props"]["note-type-editor-template-labels"],
+            json!(["1 Forward with hint"])
+        );
+
+        let front_template: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onNoteTypeEditorFrontTemplateChange","value":"{{Prompt}}<br>{{hint:Back}}"}"#,
+            "deck",
+            NOW + 5,
+        ))
+        .unwrap();
+        assert_eq!(
+            front_template["props"]["note-type-editor-front-template-value"],
+            "{{Prompt}}<br>{{hint:Back}}"
+        );
+
+        let back_template: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onNoteTypeEditorBackTemplateChange","value":"{{FrontSide}}<hr>{{Back}}"}"#,
+            "deck",
+            NOW + 6,
+        ))
+        .unwrap();
+        assert_eq!(
+            back_template["props"]["note-type-editor-back-template-value"],
+            "{{FrontSide}}<hr>{{Back}}"
+        );
+
         let styled: Value = serde_json::from_str(&session.handle_engram_app_event(
             r#"{"event":"onNoteTypeEditorStylesheetChange","value":".card { color: teal; }"}"#,
             "deck",
-            NOW + 4,
+            NOW + 7,
         ))
         .unwrap();
         assert_eq!(
@@ -8839,7 +9115,7 @@ mod tests {
         let saved_existing: Value = serde_json::from_str(&session.handle_engram_app_event(
             "onNoteTypeEditorSaveNoteType",
             "deck",
-            NOW + 5,
+            NOW + 8,
         ))
         .unwrap();
         assert_eq!(saved_existing["ok"], true);
@@ -8854,7 +9130,7 @@ mod tests {
         );
         assert_eq!(
             saved_existing["state"]["noteTypes"][0]["updatedAt"],
-            NOW + 5
+            NOW + 8
         );
         assert_eq!(
             saved_existing["state"]["noteTypes"][0]["fields"][0]["name"],
@@ -8865,8 +9141,16 @@ mod tests {
             false
         );
         assert_eq!(
+            saved_existing["state"]["noteTypes"][0]["templates"][0]["name"],
+            "Forward with hint"
+        );
+        assert_eq!(
             saved_existing["state"]["noteTypes"][0]["templates"][0]["frontTemplate"],
-            "{{Prompt}}"
+            "{{Prompt}}<br>{{hint:Back}}"
+        );
+        assert_eq!(
+            saved_existing["state"]["noteTypes"][0]["templates"][0]["backTemplate"],
+            "{{FrontSide}}<hr>{{Back}}"
         );
         assert_eq!(
             saved_existing["state"]["noteTypes"][0]["templates"][0]["requiredFieldNames"],
@@ -8876,7 +9160,7 @@ mod tests {
         let new_draft: Value = serde_json::from_str(&session.handle_engram_app_event(
             "onAddNoteType",
             "deck",
-            NOW + 6,
+            NOW + 9,
         ))
         .unwrap();
         assert_eq!(new_draft["hostIntent"], Value::Null);
@@ -8890,13 +9174,13 @@ mod tests {
         );
         assert_eq!(
             new_draft["props"]["note-type-editor-note-type-id-value"],
-            "note-type-1700000000006"
+            "note-type-1700000000009"
         );
 
         let renamed_new: Value = serde_json::from_str(&session.handle_engram_app_event(
             r#"{"event":"onNoteTypeEditorNameChange","value":"Tamil Reverse"}"#,
             "deck",
-            NOW + 7,
+            NOW + 10,
         ))
         .unwrap();
         assert_eq!(
@@ -8907,13 +9191,13 @@ mod tests {
         let saved_new: Value = serde_json::from_str(&session.handle_engram_app_event(
             "onNoteTypeEditorSaveNoteType",
             "deck",
-            NOW + 8,
+            NOW + 11,
         ))
         .unwrap();
         assert_eq!(saved_new["state"]["noteTypes"].as_array().unwrap().len(), 2);
         assert_eq!(
             saved_new["state"]["noteTypes"][1]["id"],
-            "note-type-1700000000006"
+            "note-type-1700000000009"
         );
         assert_eq!(saved_new["state"]["noteTypes"][1]["name"], "Tamil Reverse");
         assert_eq!(
@@ -8924,13 +9208,13 @@ mod tests {
         serde_json::from_str::<Value>(&session.handle_engram_app_event(
             r#"{"event":"onNoteTypeEditorSelectNoteType","index":1}"#,
             "deck",
-            NOW + 9,
+            NOW + 12,
         ))
         .unwrap();
         let deleted_new: Value = serde_json::from_str(&session.handle_engram_app_event(
             "onNoteTypeEditorDeleteNoteType",
             "deck",
-            NOW + 10,
+            NOW + 13,
         ))
         .unwrap();
         assert_eq!(deleted_new["ok"], true);
@@ -8946,7 +9230,7 @@ mod tests {
         let deleted_new: Value = serde_json::from_str(&session.handle_engram_app_event(
             "onNoteTypeEditorDeleteNoteType",
             "deck",
-            NOW + 11,
+            NOW + 14,
         ))
         .unwrap();
         assert_eq!(
