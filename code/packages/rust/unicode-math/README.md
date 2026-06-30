@@ -20,6 +20,7 @@ ASCII syntax (AsciiMath), and raw Unicode.
 | `a₁`, `a₁²`, `a_i` | `Subscript` / `Pow(Subscript)` (Unicode glyph **or** ASCII `_`) |
 | `∑_(i=1)^n i`, `∫_a^b f`, `∏ x` | `BigOp { op, lower, upper, body }` (`∑ ∏ ∫ ∮ ∐`) |
 | `sin x`, `log(x)`, `arcsin x` | `Call { func, arg }` (named functions; longest-match, so `sinx` ⇒ `sin·x`) |
+| `[[a,b],[c,d]]` | `Matrix` (rows in `[…]` or `(…)`; `((a))` stays grouping) |
 | `1/2`, `½`, `⅔` | `Frac` (built-up **and** vulgar-fraction glyphs) |
 | `√x`, `∛x`, `∜x` | `Root { degree, radicand }` |
 | `a + b`, `a − b`, `a × b`, `a ⋅ b`, `a ÷ b` | `Bin(Add/Sub/Mul/Div)` |
@@ -55,7 +56,8 @@ dependency cycle); a consumer registers it.
 
 PR-1 covered numbers/symbols/scripts/fractions/roots/relations/±∓; **PR-2** adds the big operators
 `∑ ∏ ∫ ∮ ∐` (with optional bounds) and the explicit ASCII script operators `^`/`_`; **PR-3** adds
-**named functions** (`sin cos tan … ln log exp`, longest-match so `sinx` ⇒ `sin·x`). **Out of scope**
-(a clean spanned error, never a panic — tracked for PR-4): matrices and embedded `\text`. As in
-AsciiMath there are no multi-letter variables: a non-function letter run like `xy` is the product
-`x·y` (write distinct symbols, or use Greek/constant glyphs).
+**named functions** (`sin cos tan … ln log exp`, longest-match so `sinx` ⇒ `sin·x`); **PR-4** adds **matrices**
+`[[a,b],[c,d]]` — reaching **full parity with the AsciiMath frontend**. The only remaining
+AsciiMath construct, embedded `\text`, has no Unicode plain-math equivalent and is out of scope (a
+clean spanned error, never a panic). As in AsciiMath there are no multi-letter variables: a
+non-function letter run like `xy` is the product `x·y` (write distinct symbols, or use glyphs).

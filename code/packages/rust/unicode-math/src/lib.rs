@@ -21,8 +21,10 @@
 //! Unicode glyphs (`x²`, `a₁`, `x⁻¹`) or with the explicit ASCII operators `^`/`_` (`x^2` ≡ `x²`);
 //! the **big operators** `∑ ∏ ∫ ∮ ∐` with optional lower/upper bounds (PR-2, e.g. `∑_(i=1)^n i`);
 //! **named functions** `sin cos tan … ln log exp` applied to the next atom (PR-3, `sin x`, `log(x)`,
-//! `arcsin x` — longest-match, so `sinx` ⇒ `sin·x`); and the relations `= ≠ < ≤ > ≥ ≈ ≡`. Out of
-//! scope (a clean spanned error, never a panic), tracked for PR-4: matrices and `\text`.
+//! `arcsin x` — longest-match, so `sinx` ⇒ `sin·x`); the relations `= ≠ < ≤ > ≥ ≈ ≡`; and
+//! **matrices** `[[a,b],[c,d]]` (PR-4, rows in `[…]` or `(…)`). The only remaining gap vs the
+//! AsciiMath frontend is embedded `\text` (no Unicode equivalent) — an out-of-scope input is a
+//! clean spanned error, never a panic.
 //!
 //! ```
 //! use unicode_math::UnicodeMath;
@@ -76,6 +78,7 @@ impl MathFrontend for UnicodeMath {
             .with_plusminus()
             .with_big_operators()
             .with_functions()
+            .with_matrices()
     }
 }
 
@@ -237,6 +240,31 @@ mod tests {
         assert_eq!(p("xy"), b(BinOp::Mul, sym("x"), sym("y")));
     }
 
+    // ---- matrices (PR-4) -------------------------------------------------------
+    #[test]
+    fn matrices() {
+        // [[a,b],[c,d]] ⇒ Matrix of rows of cells, in source order.
+        assert_eq!(
+            p("[[a,b],[c,d]]"),
+            MathExpr::Matrix(vec![vec![sym("a"), sym("b")], vec![sym("c"), sym("d")]])
+        );
+        // cells are full expressions; `(…)` rows are accepted too.
+        assert_eq!(
+            p("((1,x²),(a+b,0))"),
+            MathExpr::Matrix(vec![
+                vec![num(1), b(BinOp::Pow, sym("x"), num(2))],
+                vec![b(BinOp::Add, sym("a"), sym("b")), num(0)],
+            ])
+        );
+        // a single row with several cells is a 1×n row vector.
+        assert_eq!(p("[[a,b,c]]"), MathExpr::Matrix(vec![vec![sym("a"), sym("b"), sym("c")]]));
+        // `((a))` / `[[a]]` are double grouping, NOT a 1×1 matrix.
+        assert_eq!(p("((a))"), sym("a"));
+        assert_eq!(p("[[a]]"), sym("a"));
+        // ragged rows are not a matrix → clean error, never a panic.
+        assert!(UnicodeMath.parse("[[a,b],[c]]").is_err());
+    }
+
     #[test]
     fn a_realistic_expression() {
         // x² + y² = r²
@@ -279,9 +307,9 @@ mod tests {
         assert!(c.fractions && c.roots && c.powers && c.relations && c.implicit_mul && c.plusminus);
         assert!(c.big_operators); // PR-2: ∑ ∏ ∫ ∮ ∐
         assert!(c.functions);     // PR-3: sin/cos/log/… → Call
-        // Still to come — declared off so the harness holds us honest.
-        assert!(!c.matrices && !c.text);
-        assert!(!c.binomials && !c.accents && !c.oversets);
+        assert!(c.matrices);      // PR-4: [[a,b],[c,d]]
+        // `text` is the last remaining gap (no Unicode equivalent); the rest are not AsciiMath's.
+        assert!(!c.text && !c.binomials && !c.accents && !c.oversets);
     }
 
     #[test]
@@ -310,6 +338,8 @@ mod tests {
                 "sin x",        // named function (PR-3)
                 "log(x) + 1",   // function with a grouped argument
                 "arcsin x",     // longest-match function name
+                "[[a,b],[c,d]]", // matrix (PR-4)
+                "[[a,b],[c]]",   // error: ragged matrix rows
                 "1 +",   // error: trailing operator
                 "(x",    // error: missing close
                 "∑",     // error: big operator with no body
