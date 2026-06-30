@@ -293,7 +293,24 @@ class SqlPlanner(private val schema: SchemaProvider) {
             plan = LogicalPlan.Having(plan, rHaving)
         }
 
-        // Step 4: PROJECT
+        // Step 4: DISTINCT
+        if (s.distinct) plan = LogicalPlan.Distinct(plan)
+
+        // Step 5: ORDER BY
+        if (s.orderBy.isNotEmpty()) {
+            val keys = s.orderBy.map { key ->
+                val r = tryResolveExpr(scope, key.keyExpr)
+                SortKey(r ?: key.keyExpr, key.direction, key.nullOrder)
+            }
+            plan = LogicalPlan.Sort(plan, keys)
+        }
+
+        // Step 6: LIMIT / OFFSET
+        if (s.limit != null) {
+            plan = LogicalPlan.Limit(plan, s.limit.count, s.limit.offset)
+        }
+
+        // Step 7: PROJECT (outermost — applied last so ORDER BY / LIMIT can see raw column refs)
         val projCols = s.columns.map { col ->
             when (col) {
                 is OutputColumn.Star -> OutputColumn.Star
@@ -306,23 +323,6 @@ class SqlPlanner(private val schema: SchemaProvider) {
             }
         }
         plan = LogicalPlan.Project(plan, projCols)
-
-        // Step 5: DISTINCT
-        if (s.distinct) plan = LogicalPlan.Distinct(plan)
-
-        // Step 6: ORDER BY
-        if (s.orderBy.isNotEmpty()) {
-            val keys = s.orderBy.map { key ->
-                val r = tryResolveExpr(scope, key.keyExpr)
-                SortKey(r ?: key.keyExpr, key.direction, key.nullOrder)
-            }
-            plan = LogicalPlan.Sort(plan, keys)
-        }
-
-        // Step 7: LIMIT / OFFSET
-        if (s.limit != null) {
-            plan = LogicalPlan.Limit(plan, s.limit.count, s.limit.offset)
-        }
 
         return plan
     }

@@ -12,6 +12,6 @@ All notable changes to `coding-adventures-sql-planner` (Kotlin) will be document
 - `SchemaProvider` interface and `InMemorySchemaProvider` implementation
 - `SqlPlanner.plan(Statement)` — transforms a single statement, throws on error
 - `SqlPlanner.planAll(List<Statement>)` — plans a list, failing on first error
-- 8-step bottom-up SELECT pipeline: Scan → Filter → Aggregate → Having → Project → Distinct → Sort → Limit
+- 8-step bottom-up SELECT pipeline: Scan → Filter → Aggregate → Having → Distinct → Sort → Limit → Project
 - Column resolution with scope tracking, alias support, and ambiguity detection
 - 50 unit tests; ≥80% line coverage (JaCoCo)
