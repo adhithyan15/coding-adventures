@@ -2,6 +2,27 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.230.0] - 2026-06-30
+
+### Fixed — array elisions (holes) dropped at SIMPLE/ADVANCED (miscompile)
+
+Sparse array literals lost their holes, changing the array's length and index
+membership:
+
+| input         | was        | now (correct) |
+|---------------|------------|---------------|
+| `f([1,,3])`   | `f([1,3])` | `f([1,,3])`   |
+| `f([,,])`     | `f([])`    | `f([,,])`     |
+| `f([1,,])`    | `f([1])`   | `f([1,,])`    |
+| `f([,1])`     | `f([1])`   | `f([,1])`     |
+| `f([1,,,2])`  | `f([1,2])` | `f([1,,,2])`  |
+| `f([1,2,3,])` | `f([1,2,3])` | `f([1,2,3])` (trailing comma, no hole) |
+
+Two-part fix: the bridge (`javascript-parser` 0.19.4) now walks the raw
+`element_list` children so the elision commas are visible and produces a `None`
+per hole; the emitter (`closure-emitter` 0.18.4) appends the extra comma a
+trailing hole needs. New end-to-end test `simple_array_elisions_preserved`.
+
 ## [0.229.0] - 2026-06-29
 
 ### Fixed — quoted object property keys miscompiled at SIMPLE/ADVANCED

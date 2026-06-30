@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.19.4] - 2026-06-30
+
+### Fixed — array elisions (holes) silently dropped (miscompile)
+
+`convert_array_literal` iterated `node_children(element_list)`, but
+`node_children` strips Token children — so the COMMA tokens that delimit array
+holes were invisible and every elision was dropped. `[1,,3]` (a length-3 array
+with a hole at index 1) became the length-2 dense array `[1,3]`. That is
+observable: `[1,,3].length === 3` and `1 in [1,,3] === false`, versus
+`[1,3].length === 2` and `1 in [1,3] === true`.
+
+The function now walks the RAW children of `element_list` and applies the
+standard elision rule: a comma seen while still "expecting an element" (at the
+start, or right after another comma) pushes a `None` hole; a single trailing
+comma after an element is not a hole (`[1,2,]` stays length 2). Spread elements
+(`[...x]`) still return `UnsupportedSyntax`. New test
+`array_elisions_become_holes_not_dropped` covers internal / leading / trailing /
+multiple / single-hole and trailing-comma shapes.
+
 ## [0.19.3] - 2026-06-29
 
 ### Fixed — object property keys parsed as bare identifiers (miscompile)

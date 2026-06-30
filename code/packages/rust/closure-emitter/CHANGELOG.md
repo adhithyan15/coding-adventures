@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.18.4] - 2026-06-30
+
+### Fixed — trailing array hole lost its comma (miscompile)
+
+`emit_array` wrote one separating comma *between* elements, so an array whose
+last element is a hole printed one comma short: `[Some(1), None]` became `[1,]`
+(length 1) instead of `[1,,]` (length 2). A trailing hole is semantically real
+(`[1,,].length === 2`), so the shortened output is a miscompile. The emitter now
+appends one extra comma when the last element is a hole, fixing `[1,,]`, `[,,]`
+(from `[None, None]`), `[,]` (from `[None]`), etc.; arrays ending in a real
+element are unchanged. Pairs with the bridge elision fix in `javascript-parser`
+0.19.4. New test `array_trailing_and_leading_holes_round_trip`.
+
 ## [0.18.3] - 2026-06-29
 
 ### Fixed — U+2028 / U+2029 emitted unescaped in string literals (invalid JS)

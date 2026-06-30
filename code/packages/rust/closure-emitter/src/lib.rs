@@ -1080,6 +1080,15 @@ impl<'a> Emitter<'a> {
                 }
             }
         }
+        // A TRAILING hole needs an extra comma. The loop writes one separating
+        // comma *between* elements, so `[Some(1), None]` would print as `[1,]` —
+        // but `[1,]` has length 1, whereas the source `[1,,]` has length 2 (a
+        // trailing hole). Emitting one more comma when the last element is a hole
+        // restores the count: `[1,,]`, `[,,]` (from `[None, None]`), etc. A
+        // trailing *element* (e.g. `[1,2]`) is unaffected.
+        if matches!(a.elements.last(), Some(None)) {
+            self.write_str(",");
+        }
         self.write_str("]");
     }
 
@@ -2307,6 +2316,38 @@ mod tests {
         let prog = program().with_body(vec![stmt(a)]);
         let out = emit_default(prog);
         assert_eq!(out.code, "[1,,3];");
+    }
+
+    /// Emit an ArrayExpression built from a hole-pattern (`'e'` = element `n`,
+    /// `'_'` = hole) and return the code without the trailing `;`.
+    fn emit_holes(pattern: &str) -> String {
+        let elements = pattern
+            .chars()
+            .map(|c| if c == 'e' { Some(num(1.0)) } else { None })
+            .collect();
+        let a = Expression::ArrayExpression(ArrayExpression { cv: None, elements });
+        emit_default(program().with_body(vec![stmt(a)]))
+            .code
+            .trim_end_matches(';')
+            .to_string()
+    }
+
+    #[test]
+    fn array_trailing_and_leading_holes_round_trip() {
+        // A TRAILING hole needs an extra comma: `[Some(1), None]` must print as
+        // `[1,,]` (length 2), NOT `[1,]` (length 1). Before the fix the emitter
+        // wrote only the separating comma and silently shortened the array.
+        assert_eq!(emit_holes("e_"), "[1,,]"); // trailing hole, length 2
+        assert_eq!(emit_holes("__"), "[,,]"); // two holes, length 2
+        assert_eq!(emit_holes("_"), "[,]"); // single hole, length 1
+        assert_eq!(emit_holes("_e"), "[,1]"); // leading hole, length 2
+        // Internal hole is unchanged by the trailing-hole fix (every element here
+        // is the literal `1`): `[1,,1]`, length 3.
+        assert_eq!(emit_holes("e_e"), "[1,,1]");
+        // No trailing hole → no extra comma.
+        assert_eq!(emit_holes("ee"), "[1,1]");
+        assert_eq!(emit_holes("e"), "[1]");
+        assert_eq!(emit_holes(""), "[]");
     }
 
     #[test]
