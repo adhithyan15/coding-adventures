@@ -22,6 +22,7 @@ mosaic-pkg-session-progress = "0.1.0"
 [host_assets]
 files = [
   { backend = "html", source = "host/web/engram-host.mjs", target = "engram-host.mjs" },
+  { backend = "webcomponent", source = "host/web/engram-host.mjs", target = "engram-host.mjs" },
   { backend = "react", source = "host/web/engram-host.ts", target = "src/engram-host.ts" },
   { backend = "react", source = "host/web/engram-mosaic-host-wasm.d.ts", target = "src/engram-mosaic-host-wasm.d.ts" },
   { backend = "electron", source = "host/electron/host.js", target = "electron/host.js" },

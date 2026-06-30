@@ -98,6 +98,12 @@ function Install-EngramHtmlHost {
     Copy-Item -LiteralPath $engramWasmLoader -Destination (Join-Path $HtmlRoot "engram-mosaic-host-wasm.mjs") -Force
 }
 
+function Install-EngramWebComponentHost {
+    param([Parameter(Mandatory = $true)][string]$WebComponentRoot)
+
+    Install-EngramHtmlHost -HtmlRoot $WebComponentRoot
+}
+
 function Install-EngramElectronHost {
     param([Parameter(Mandatory = $true)][string]$ElectronRoot)
 
@@ -325,6 +331,7 @@ foreach ($backend in $backends) {
 }
 
 Install-EngramHtmlHost -HtmlRoot (Join-Path $outputRoot "html")
+Install-EngramWebComponentHost -WebComponentRoot (Join-Path $outputRoot "webcomponent")
 Install-EngramReactHost -ReactRoot (Join-Path $outputRoot "react")
 Install-EngramElectronHost -ElectronRoot (Join-Path $outputRoot "electron")
 Install-EngramQtHost -QtRoot (Join-Path $outputRoot "qt")

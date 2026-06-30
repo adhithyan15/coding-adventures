@@ -690,8 +690,8 @@ fn emit_html_tree(
     // generic open/close walker below.
     // -----------------------------------------------------------------
     match node.tag.as_str() {
-        "HostInput" => return Ok(emit_host_input(node)),
-        "HostButton" => return Ok(emit_host_button(node, ctx)),
+        "HostInput" => return Ok(emit_host_input(node, part_styles)),
+        "HostButton" => return Ok(emit_host_button(node, ctx, part_styles)),
         "HostDialog" => return emit_host_dialog(node, ctx, part_styles),
 
         // UI29-2 — `HostCheckbox` and `HostRadio` lower to native
@@ -699,15 +699,15 @@ fn emit_html_tree(
         // `onchange` handlers that route through `this.getRootNode().
         // host.dispatch(...)` (the shadow-DOM-aware form used by the
         // other host primitives).
-        "HostCheckbox" => return Ok(emit_host_checkbox(node)),
-        "HostRadio" => return Ok(emit_host_radio(node)),
+        "HostCheckbox" => return Ok(emit_host_checkbox(node, part_styles)),
+        "HostRadio" => return Ok(emit_host_radio(node, part_styles)),
 
         // UI29-4 — `HostLink` → `<a href onclick>` with the same
         // `target="_blank"` + `rel="noopener noreferrer"` security
         // default the React and HTML backends ship. The onclick
         // handler reaches the Custom Element via
         // `this.getRootNode().host.dispatch(...)`.
-        "HostLink" => return Ok(emit_host_link(node, ctx)),
+        "HostLink" => return Ok(emit_host_link(node, ctx, part_styles)),
 
         // UI29-4 — `HostTooltip` wraps its child(ren) in `<span
         // title="${text}">…</span>`. Plain-text only in v1 per
@@ -718,7 +718,7 @@ fn emit_html_tree(
         // inputmode="numeric" ...>` with onchange wired through
         // `this.getRootNode().host.dispatch({type, value:
         // event.target.valueAsNumber})`.
-        "HostNumberInput" => return Ok(emit_host_number_input(node)),
+        "HostNumberInput" => return Ok(emit_host_number_input(node, part_styles)),
 
         "If" => return emit_if(node, None, ctx, part_styles),
         "For" => return emit_for(node, ctx, part_styles),
@@ -1186,8 +1186,9 @@ fn layout_value_to_js_expr(v: &LayoutPropValue) -> String {
 /// All inline handlers reach the host via `this.getRootNode().host`
 /// because in the shadow DOM `this` inside an inline handler is the
 /// element where the handler is declared, not the Custom Element.
-fn emit_host_input(node: &LayoutNode) -> String {
+fn emit_host_input(node: &LayoutNode, part_styles: &HashMap<String, String>) -> String {
     let mut attrs = String::from(r#"<input type="text""#);
+    attrs.push_str(&build_style_attr(node, "", part_styles));
 
     // value="${slot}"
     if let Some(slot) = find_slot_ref(node, "value") {
@@ -1266,8 +1267,13 @@ fn emit_host_input(node: &LayoutNode) -> String {
 /// `onTap:` emit (kernel-canonical) is renamed to the DOM-native
 /// `onclick` attribute. Like `HostInput`, the inline handler reaches
 /// the Custom Element via `this.getRootNode().host`.
-fn emit_host_button(node: &LayoutNode, ctx: &RenderCtx<'_>) -> String {
+fn emit_host_button(
+    node: &LayoutNode,
+    ctx: &RenderCtx<'_>,
+    part_styles: &HashMap<String, String>,
+) -> String {
     let mut attrs = String::new();
+    attrs.push_str(&build_style_attr(node, "", part_styles));
 
     // disabled — slot ref → `${slot ? 'disabled' : ''}` attribute
     // presence; literal `true` → bare `disabled`; `false` → omitted.
@@ -1410,8 +1416,9 @@ fn template_identifier_body(name: &str) -> String {
 /// === "true"` imperatively. The literal `indeterminate: true` keyword
 /// case gets the hardcoded `data-indeterminate="true"` so the same
 /// hydration pass sets the property on mount.
-fn emit_host_checkbox(node: &LayoutNode) -> String {
+fn emit_host_checkbox(node: &LayoutNode, part_styles: &HashMap<String, String>) -> String {
     let mut attrs = String::from(r#"<input type="checkbox""#);
+    attrs.push_str(&build_style_attr(node, "", part_styles));
 
     // checked — slot ref via template-literal conditional, keyword
     // literal via bare attribute presence.
@@ -1489,8 +1496,9 @@ fn emit_host_checkbox(node: &LayoutNode) -> String {
 ///   payload, and gates the dispatch on `event.target.checked` so
 ///   sibling-caused deselects don't fire `onSelect` ("this radio was
 ///   chosen" semantics, UI29-2 §2.2).
-fn emit_host_radio(node: &LayoutNode) -> String {
+fn emit_host_radio(node: &LayoutNode, part_styles: &HashMap<String, String>) -> String {
     let mut attrs = String::from(r#"<input type="radio""#);
+    attrs.push_str(&build_style_attr(node, "", part_styles));
 
     // name="group" or name="${slot}".
     if let Some(s) = find_string(node, "group") {
@@ -1590,8 +1598,13 @@ fn emit_host_radio(node: &LayoutNode) -> String {
 /// pair is emitted as a single literal string in one branch, so the
 /// two attributes can't be decoupled by future refactors. Same
 /// shape as the React and HTML backends ship.
-fn emit_host_link(node: &LayoutNode, ctx: &RenderCtx<'_>) -> String {
+fn emit_host_link(
+    node: &LayoutNode,
+    ctx: &RenderCtx<'_>,
+    part_styles: &HashMap<String, String>,
+) -> String {
     let mut attrs = String::new();
+    attrs.push_str(&build_style_attr(node, "", part_styles));
 
     // href= — string literal or `${slot}` template marker
     if let Some(s) = find_string(node, "href") {
@@ -1715,6 +1728,7 @@ fn emit_host_tooltip(
     part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
     let mut attrs = String::new();
+    attrs.push_str(&build_style_attr(node, "", part_styles));
 
     if let Some(s) = find_string(node, "text") {
         attrs.push_str(&format!(r#" title="{}""#, escape_html_attribute(s)));
@@ -1741,8 +1755,9 @@ fn emit_host_tooltip(
 /// numeric keyboard; the onchange handler dispatches with
 /// `event.target.valueAsNumber` (DOM standard numeric parser) to
 /// match the kernel-canonical `value: number` payload type.
-fn emit_host_number_input(node: &LayoutNode) -> String {
+fn emit_host_number_input(node: &LayoutNode, part_styles: &HashMap<String, String>) -> String {
     let mut attrs = String::from(r#"<input type="number" inputmode="numeric""#);
+    attrs.push_str(&build_style_attr(node, "", part_styles));
 
     // value: slot ref via template, or number literal as bare value
     if let Some(slot) = find_slot_ref(node, "value") {
@@ -3573,6 +3588,41 @@ mod tests {
                 r#"<button onclick="this.getRootNode().host.dispatch({type:'click'})">Save</button>"#
             ),
             "HostButton output does not match expected shape:\n{}",
+            r.output
+        );
+    }
+
+    #[test]
+    fn host_button_inlines_part_style() {
+        let m = component("Btn", vec![], vec![]);
+        let l = root_layout(
+            "Btn",
+            LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: Some("primary".to_string()),
+                props: vec![LayoutProp {
+                    name: "label".to_string(),
+                    value: LayoutPropValue::String("Save".to_string()),
+                }],
+                children: vec![],
+            },
+        );
+        let s = style_with_parts(
+            "Btn",
+            vec![part(
+                "primary",
+                vec![
+                    prop("background", "#f87171"),
+                    prop("border-radius", "6"),
+                ],
+                vec![],
+            )],
+        );
+        let r = from_pipeline(&m, &l, &s).unwrap();
+        assert!(
+            r.output
+                .contains(r#"<button style="background: #f87171; border-radius: 6">Save</button>"#),
+            "HostButton part style missing from special-path output:\n{}",
             r.output
         );
     }

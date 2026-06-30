@@ -97,6 +97,11 @@ fn manifest_declares_app_package_boundary() {
         })
         .collect::<BTreeSet<_>>();
     assert!(host_assets.contains(&("html", "host/web/engram-host.mjs", "engram-host.mjs")));
+    assert!(host_assets.contains(&(
+        "webcomponent",
+        "host/web/engram-host.mjs",
+        "engram-host.mjs"
+    )));
     assert!(host_assets.contains(&("react", "host/web/engram-host.ts", "src/engram-host.ts")));
     assert!(host_assets.contains(&("electron", "host/electron/host.js", "electron/host.js")));
     assert!(host_assets.contains(&("qt", "host/qt/MosaicHost.cpp", "MosaicHost.cpp")));
@@ -368,6 +373,7 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
     let tmp = tempfile::tempdir().expect("temp dist root");
     let backends = [
         (Backend::Html, "html/EngramApp.html"),
+        (Backend::WebComponent, "webcomponent/EngramApp.js"),
         (Backend::React, "react/EngramApp.tsx"),
         (Backend::Electron, "electron/EngramApp.tsx"),
         (Backend::SwiftUI, "swiftui/EngramApp.swift"),
@@ -429,6 +435,11 @@ fn app_package_emits_native_project_shells() {
             Backend::Html,
             "html",
             vec!["EngramApp.html", "index.html", "main.js", "README.md"],
+        ),
+        (
+            Backend::WebComponent,
+            "webcomponent",
+            vec!["EngramApp.js", "index.js", "index.html", "README.md"],
         ),
         (
             Backend::Electron,
@@ -524,6 +535,7 @@ fn native_project_shells_expose_engram_host_contract() {
     let tmp = tempfile::tempdir().expect("temp dist root");
     for backend in [
         Backend::Html,
+        Backend::WebComponent,
         Backend::React,
         Backend::Electron,
         Backend::Flutter,
@@ -588,6 +600,25 @@ fn native_project_shells_expose_engram_host_contract() {
     let html_host =
         fs::read_to_string(tmp.path().join("html").join("engram-host.mjs")).expect("html host");
     assert_contains(&html_host, "engram_engine.wasm");
+
+    let webcomponent_index = fs::read_to_string(tmp.path().join("webcomponent").join("index.html"))
+        .expect("webcomponent/index.html");
+    assert_contains(&webcomponent_index, "src=\"./engram-host.mjs\"");
+    assert_contains(&webcomponent_index, "src=\"./EngramApp.js\"");
+    assert_contains(&webcomponent_index, "<mos-engram-app></mos-engram-app>");
+    assert!(
+        webcomponent_index
+            .find("src=\"./engram-host.mjs\"")
+            .expect("webcomponent host script")
+            < webcomponent_index
+                .find("src=\"./EngramApp.js\"")
+                .expect("webcomponent component script"),
+        "WebComponent host adapter should load before generated EngramApp.js"
+    );
+    let webcomponent_host =
+        fs::read_to_string(tmp.path().join("webcomponent").join("engram-host.mjs"))
+            .expect("webcomponent host");
+    assert_contains(&webcomponent_host, "engram_engine.wasm");
 
     let react_app = fs::read_to_string(tmp.path().join("react").join("src").join("main.tsx"))
         .expect("react/src/main.tsx");
@@ -1909,6 +1940,7 @@ fn assert_dependency_styles_reach_all_backends(output_root: &Path) {
 
     for (backend, artifact) in [
         ("HTML", "html/EngramApp.html"),
+        ("WebComponent", "webcomponent/EngramApp.js"),
         ("React", "react/EngramApp.tsx"),
         ("Electron", "electron/EngramApp.tsx"),
         ("Qt", "qt/EngramApp.qml"),
@@ -1938,6 +1970,14 @@ fn assert_dependency_styles_reach_all_backends(output_root: &Path) {
     assert!(
         read_artifact(output_root, "html/EngramApp.html").contains("#f59e0b"),
         "DeckOptionsPanel dependency style should reach HTML artifact"
+    );
+    assert!(
+        read_artifact(output_root, "webcomponent/EngramApp.js").contains("#0891b2"),
+        "CollectionActions dependency style should reach WebComponent artifact"
+    );
+    assert!(
+        read_artifact(output_root, "webcomponent/EngramApp.js").contains("#f59e0b"),
+        "DeckOptionsPanel dependency style should reach WebComponent artifact"
     );
     assert!(
         read_artifact(output_root, "react/EngramApp.tsx").contains("#0891b2"),
@@ -2073,6 +2113,7 @@ fn source_tree_has_expected_shape() {
     let build_script =
         fs::read_to_string(package_root().join("scripts/build-all.ps1")).expect("build-all.ps1");
     assert_contains(&build_script, "Install-EngramHtmlHost");
+    assert_contains(&build_script, "Install-EngramWebComponentHost");
     assert_contains(&build_script, "Install-EngramXamlHost");
     assert_contains(&build_script, "Install-EngramQtHost");
     assert_contains(&build_script, "Install-EngramSwiftUIHost");

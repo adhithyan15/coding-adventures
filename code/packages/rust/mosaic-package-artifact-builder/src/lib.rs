@@ -536,7 +536,7 @@ fn activate_host_asset(
     target_rel: &Path,
 ) -> Result<(), BuildError> {
     match backend {
-        Backend::Html => activate_html_host_asset(backend_dir, target_rel),
+        Backend::Html | Backend::WebComponent => activate_html_host_asset(backend_dir, target_rel),
         Backend::React => activate_react_host_asset(backend_dir, target_rel),
         _ => Ok(()),
     }
@@ -561,9 +561,11 @@ fn activate_html_host_asset(backend_dir: &Path, target_rel: &Path) -> Result<(),
         return Ok(());
     }
 
-    let main_script_line = "  <script type=\"module\" src=\"./main.js\"></script>";
-    if let Some(main_at) = content.find(main_script_line) {
-        content.insert_str(main_at, &format!("{script_line}\n"));
+    let insertion_point = content
+        .find("  <script type=\"module\" src=\"./main.js\"></script>")
+        .or_else(|| content.find("  <script type=\"module\" src=\"./"));
+    if let Some(script_at) = insertion_point {
+        content.insert_str(script_at, &format!("{script_line}\n"));
         write_file(&index_path, content.as_bytes())?;
     } else if let Some(body_at) = content.find("</body>") {
         content.insert_str(body_at, &format!("{script_line}\n"));
