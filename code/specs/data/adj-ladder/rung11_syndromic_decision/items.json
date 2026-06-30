@@ -1,5 +1,5 @@
 {
-  "description": "ADJ-LADDER rung 11 \u2014 syndromic decision: the first rung that is BOTH a decision and genuinely multi-hop. Each item gives five equally-likely diagnoses; the engine must first DERIVE which clinical syndrome the patient satisfies (a `rule` head that fires only when BOTH of its findings are observed \u2014 the rung-3 mechanism), then RANK the diagnoses by posterior and pick the leader (the rung-6 decision_leader extractor). The fully-satisfied syndrome (likelihood L_syn) beats a rival supported by a single flashy finding (L_flash < L_syn) \u2014 the anchoring trap: the diagnosis is the one backed by the COMPLETE pattern, not the loudest lone clue. No engine/harness change (reuses rule + decision_leader); synthetic priors/LRs (the ladder is a capability benchmark, not the grounded CAS). Contamination-safe: every prior and LR is printed in the stem and the answer is a disease name, so no result literal leaks; gold rotates A\u2013E; every item's unique leader is asserted at build.",
+  "description": "ADJ-LADDER rung 11 \u2014 syndromic decision: the first rung that is BOTH a decision and genuinely multi-hop. Each item gives five equally-likely diagnoses; the engine must first DERIVE which clinical syndrome the patient satisfies (a `rule` head that fires only when BOTH of its findings are observed \u2014 the rung-3 mechanism), then RANK the diagnoses by posterior and pick the leader (the rung-6 decision_leader extractor). The fully-satisfied syndrome (likelihood L_syn) beats a rival supported by a single flashy finding (L_flash < L_syn) \u2014 the anchoring trap: the diagnosis is the one backed by the COMPLETE pattern, not the loudest lone clue. No engine/harness change (reuses rule + decision_leader); synthetic priors/LRs (the ladder is a capability benchmark, not the grounded CAS). Contamination-safe: every prior and LR is printed in the stem and the answer is a disease name, so no result literal leaks; gold rotates A\u2013E; every item's unique leader is asserted at build. Batch 2 adds the completeness-over-strength variant: a complete 3-finding triad competes against a rival whose 2-finding syndrome is only partially present (one finding observed) and is nominally STRONGER \u2014 yet the rival rule never fires, so the fully-satisfied triad wins. Pattern completeness, not nominal association strength, decides.",
   "items": [
     {
       "id": "r11sd-01",
@@ -432,6 +432,222 @@
         "E": "pheochromocytoma"
       },
       "gold_letter": "D"
+    },
+    {
+      "id": "r11sd-25",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete triad of fever, jaundice, and right-upper-quadrant pain raises the likelihood of ascending cholangitis 10-fold. The full syndrome of a positive Murphy sign with gallstones would raise acute cholecystitis 15-fold \u2014 a stronger association \u2014 but it requires both of its findings. The patient has fever, jaundice, and right-upper-quadrant pain, and a positive Murphy sign but not the rest of that syndrome. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for ascending_cholangitis\nprior 0.2 for acute_cholecystitis\nprior 0.2 for viral_hepatitis\nprior 0.2 for acute_pancreatitis\nprior 0.2 for liver_abscess\ncontributes 10 from charcot_triad to ascending_cholangitis\ncontributes 15 from cholecystitis_pattern to acute_cholecystitis\nrule { head: charcot_triad when: fever, jaundice, right_upper_quadrant_pain }\nrule { head: cholecystitis_pattern when: murphy_sign, gallstones_on_ultrasound }\nobserve fever\nobserve jaundice\nobserve right_upper_quadrant_pain\nobserve murphy_sign\n? ascending_cholangitis\n? acute_cholecystitis\n? viral_hepatitis\n? acute_pancreatitis\n? liver_abscess\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "acute_cholecystitis",
+        "B": "viral_hepatitis",
+        "C": "acute_pancreatitis",
+        "D": "liver_abscess",
+        "E": "ascending_cholangitis"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r11sd-26",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete triad of fever, jaundice, and right-upper-quadrant pain raises the likelihood of ascending cholangitis 12-fold. The full syndrome of a positive Murphy sign with gallstones would raise acute cholecystitis 18-fold \u2014 a stronger association \u2014 but it requires both of its findings. The patient has fever, jaundice, and right-upper-quadrant pain, and a positive Murphy sign but not the rest of that syndrome. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for ascending_cholangitis\nprior 0.2 for acute_cholecystitis\nprior 0.2 for viral_hepatitis\nprior 0.2 for acute_pancreatitis\nprior 0.2 for liver_abscess\ncontributes 12 from charcot_triad to ascending_cholangitis\ncontributes 18 from cholecystitis_pattern to acute_cholecystitis\nrule { head: charcot_triad when: fever, jaundice, right_upper_quadrant_pain }\nrule { head: cholecystitis_pattern when: murphy_sign, gallstones_on_ultrasound }\nobserve fever\nobserve jaundice\nobserve right_upper_quadrant_pain\nobserve murphy_sign\n? ascending_cholangitis\n? acute_cholecystitis\n? viral_hepatitis\n? acute_pancreatitis\n? liver_abscess\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "ascending_cholangitis",
+        "B": "acute_cholecystitis",
+        "C": "viral_hepatitis",
+        "D": "acute_pancreatitis",
+        "E": "liver_abscess"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r11sd-27",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete triad of hypotension, jugular venous distension, and muffled heart sounds raises the likelihood of cardiac tamponade 10-fold. The full syndrome of tracheal deviation with absent breath sounds would raise tension pneumothorax 15-fold \u2014 a stronger association \u2014 but it requires both of its findings. The patient has hypotension, jugular venous distension, and muffled heart sounds, and tracheal deviation but not the rest of that syndrome. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for cardiac_tamponade\nprior 0.2 for tension_pneumothorax\nprior 0.2 for massive_pulmonary_embolism\nprior 0.2 for cardiogenic_shock\nprior 0.2 for constrictive_pericarditis\ncontributes 10 from beck_triad to cardiac_tamponade\ncontributes 15 from tension_pneumothorax_pattern to tension_pneumothorax\nrule { head: beck_triad when: hypotension, jugular_venous_distension, muffled_heart_sounds }\nrule { head: tension_pneumothorax_pattern when: tracheal_deviation, absent_breath_sounds }\nobserve hypotension\nobserve jugular_venous_distension\nobserve muffled_heart_sounds\nobserve tracheal_deviation\n? cardiac_tamponade\n? tension_pneumothorax\n? massive_pulmonary_embolism\n? cardiogenic_shock\n? constrictive_pericarditis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "tension_pneumothorax",
+        "B": "cardiac_tamponade",
+        "C": "massive_pulmonary_embolism",
+        "D": "cardiogenic_shock",
+        "E": "constrictive_pericarditis"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r11sd-28",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete triad of hypotension, jugular venous distension, and muffled heart sounds raises the likelihood of cardiac tamponade 12-fold. The full syndrome of tracheal deviation with absent breath sounds would raise tension pneumothorax 18-fold \u2014 a stronger association \u2014 but it requires both of its findings. The patient has hypotension, jugular venous distension, and muffled heart sounds, and tracheal deviation but not the rest of that syndrome. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for cardiac_tamponade\nprior 0.2 for tension_pneumothorax\nprior 0.2 for massive_pulmonary_embolism\nprior 0.2 for cardiogenic_shock\nprior 0.2 for constrictive_pericarditis\ncontributes 12 from beck_triad to cardiac_tamponade\ncontributes 18 from tension_pneumothorax_pattern to tension_pneumothorax\nrule { head: beck_triad when: hypotension, jugular_venous_distension, muffled_heart_sounds }\nrule { head: tension_pneumothorax_pattern when: tracheal_deviation, absent_breath_sounds }\nobserve hypotension\nobserve jugular_venous_distension\nobserve muffled_heart_sounds\nobserve tracheal_deviation\n? cardiac_tamponade\n? tension_pneumothorax\n? massive_pulmonary_embolism\n? cardiogenic_shock\n? constrictive_pericarditis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "tension_pneumothorax",
+        "B": "massive_pulmonary_embolism",
+        "C": "cardiac_tamponade",
+        "D": "cardiogenic_shock",
+        "E": "constrictive_pericarditis"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r11sd-29",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete triad of hemolytic anemia, thrombocytopenia, and acute kidney injury raises the likelihood of hemolytic uremic syndrome 10-fold. The full syndrome of fever with fluctuating neurologic signs would raise thrombotic thrombocytopenic purpura 15-fold \u2014 a stronger association \u2014 but it requires both of its findings. The patient has hemolytic anemia, thrombocytopenia, and acute kidney injury, and fever but not the rest of that syndrome. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for hemolytic_uremic_syndrome\nprior 0.2 for thrombotic_thrombocytopenic_purpura\nprior 0.2 for disseminated_intravascular_coagulation\nprior 0.2 for immune_thrombocytopenia\nprior 0.2 for evans_syndrome\ncontributes 10 from hus_triad to hemolytic_uremic_syndrome\ncontributes 15 from ttp_pattern to thrombotic_thrombocytopenic_purpura\nrule { head: hus_triad when: hemolytic_anemia, thrombocytopenia, acute_kidney_injury }\nrule { head: ttp_pattern when: fever, fluctuating_neurologic_signs }\nobserve hemolytic_anemia\nobserve thrombocytopenia\nobserve acute_kidney_injury\nobserve fever\n? hemolytic_uremic_syndrome\n? thrombotic_thrombocytopenic_purpura\n? disseminated_intravascular_coagulation\n? immune_thrombocytopenia\n? evans_syndrome\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "thrombotic_thrombocytopenic_purpura",
+        "B": "disseminated_intravascular_coagulation",
+        "C": "immune_thrombocytopenia",
+        "D": "hemolytic_uremic_syndrome",
+        "E": "evans_syndrome"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r11sd-30",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete triad of hemolytic anemia, thrombocytopenia, and acute kidney injury raises the likelihood of hemolytic uremic syndrome 12-fold. The full syndrome of fever with fluctuating neurologic signs would raise thrombotic thrombocytopenic purpura 18-fold \u2014 a stronger association \u2014 but it requires both of its findings. The patient has hemolytic anemia, thrombocytopenia, and acute kidney injury, and fever but not the rest of that syndrome. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for hemolytic_uremic_syndrome\nprior 0.2 for thrombotic_thrombocytopenic_purpura\nprior 0.2 for disseminated_intravascular_coagulation\nprior 0.2 for immune_thrombocytopenia\nprior 0.2 for evans_syndrome\ncontributes 12 from hus_triad to hemolytic_uremic_syndrome\ncontributes 18 from ttp_pattern to thrombotic_thrombocytopenic_purpura\nrule { head: hus_triad when: hemolytic_anemia, thrombocytopenia, acute_kidney_injury }\nrule { head: ttp_pattern when: fever, fluctuating_neurologic_signs }\nobserve hemolytic_anemia\nobserve thrombocytopenia\nobserve acute_kidney_injury\nobserve fever\n? hemolytic_uremic_syndrome\n? thrombotic_thrombocytopenic_purpura\n? disseminated_intravascular_coagulation\n? immune_thrombocytopenia\n? evans_syndrome\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "thrombotic_thrombocytopenic_purpura",
+        "B": "disseminated_intravascular_coagulation",
+        "C": "immune_thrombocytopenia",
+        "D": "evans_syndrome",
+        "E": "hemolytic_uremic_syndrome"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r11sd-31",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete triad of hypertension, bradycardia, and an irregular respiratory pattern raises the likelihood of raised intracranial pressure 10-fold. The full syndrome of crossed sensory loss with vertigo would raise brainstem stroke 15-fold \u2014 a stronger association \u2014 but it requires both of its findings. The patient has hypertension, bradycardia, and an irregular respiratory pattern, and vertigo but not the rest of that syndrome. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for raised_intracranial_pressure\nprior 0.2 for brainstem_stroke\nprior 0.2 for hypertensive_emergency\nprior 0.2 for bacterial_meningitis\nprior 0.2 for subarachnoid_hemorrhage\ncontributes 10 from cushing_reflex to raised_intracranial_pressure\ncontributes 15 from brainstem_stroke_pattern to brainstem_stroke\nrule { head: cushing_reflex when: hypertension, bradycardia, irregular_respiration }\nrule { head: brainstem_stroke_pattern when: crossed_sensory_loss, vertigo }\nobserve hypertension\nobserve bradycardia\nobserve irregular_respiration\nobserve crossed_sensory_loss\n? raised_intracranial_pressure\n? brainstem_stroke\n? hypertensive_emergency\n? bacterial_meningitis\n? subarachnoid_hemorrhage\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "raised_intracranial_pressure",
+        "B": "brainstem_stroke",
+        "C": "hypertensive_emergency",
+        "D": "bacterial_meningitis",
+        "E": "subarachnoid_hemorrhage"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r11sd-32",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete triad of hypertension, bradycardia, and an irregular respiratory pattern raises the likelihood of raised intracranial pressure 12-fold. The full syndrome of crossed sensory loss with vertigo would raise brainstem stroke 18-fold \u2014 a stronger association \u2014 but it requires both of its findings. The patient has hypertension, bradycardia, and an irregular respiratory pattern, and vertigo but not the rest of that syndrome. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for raised_intracranial_pressure\nprior 0.2 for brainstem_stroke\nprior 0.2 for hypertensive_emergency\nprior 0.2 for bacterial_meningitis\nprior 0.2 for subarachnoid_hemorrhage\ncontributes 12 from cushing_reflex to raised_intracranial_pressure\ncontributes 18 from brainstem_stroke_pattern to brainstem_stroke\nrule { head: cushing_reflex when: hypertension, bradycardia, irregular_respiration }\nrule { head: brainstem_stroke_pattern when: crossed_sensory_loss, vertigo }\nobserve hypertension\nobserve bradycardia\nobserve irregular_respiration\nobserve crossed_sensory_loss\n? raised_intracranial_pressure\n? brainstem_stroke\n? hypertensive_emergency\n? bacterial_meningitis\n? subarachnoid_hemorrhage\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "brainstem_stroke",
+        "B": "raised_intracranial_pressure",
+        "C": "hypertensive_emergency",
+        "D": "bacterial_meningitis",
+        "E": "subarachnoid_hemorrhage"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r11sd-33",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete triad of conjunctivitis, urethritis, and an asymmetric oligoarthritis raises the likelihood of reactive arthritis 10-fold. The full syndrome of nail pitting with dactylitis would raise psoriatic arthritis 15-fold \u2014 a stronger association \u2014 but it requires both of its findings. The patient has conjunctivitis, urethritis, and an asymmetric oligoarthritis, and nail pitting but not the rest of that syndrome. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for reactive_arthritis\nprior 0.2 for psoriatic_arthritis\nprior 0.2 for ankylosing_spondylitis\nprior 0.2 for gouty_arthritis\nprior 0.2 for septic_arthritis\ncontributes 10 from reactive_arthritis_triad to reactive_arthritis\ncontributes 15 from psoriatic_pattern to psoriatic_arthritis\nrule { head: reactive_arthritis_triad when: conjunctivitis, urethritis, asymmetric_oligoarthritis }\nrule { head: psoriatic_pattern when: nail_pitting, dactylitis }\nobserve conjunctivitis\nobserve urethritis\nobserve asymmetric_oligoarthritis\nobserve nail_pitting\n? reactive_arthritis\n? psoriatic_arthritis\n? ankylosing_spondylitis\n? gouty_arthritis\n? septic_arthritis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "psoriatic_arthritis",
+        "B": "ankylosing_spondylitis",
+        "C": "reactive_arthritis",
+        "D": "gouty_arthritis",
+        "E": "septic_arthritis"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r11sd-34",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete triad of conjunctivitis, urethritis, and an asymmetric oligoarthritis raises the likelihood of reactive arthritis 12-fold. The full syndrome of nail pitting with dactylitis would raise psoriatic arthritis 18-fold \u2014 a stronger association \u2014 but it requires both of its findings. The patient has conjunctivitis, urethritis, and an asymmetric oligoarthritis, and nail pitting but not the rest of that syndrome. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for reactive_arthritis\nprior 0.2 for psoriatic_arthritis\nprior 0.2 for ankylosing_spondylitis\nprior 0.2 for gouty_arthritis\nprior 0.2 for septic_arthritis\ncontributes 12 from reactive_arthritis_triad to reactive_arthritis\ncontributes 18 from psoriatic_pattern to psoriatic_arthritis\nrule { head: reactive_arthritis_triad when: conjunctivitis, urethritis, asymmetric_oligoarthritis }\nrule { head: psoriatic_pattern when: nail_pitting, dactylitis }\nobserve conjunctivitis\nobserve urethritis\nobserve asymmetric_oligoarthritis\nobserve nail_pitting\n? reactive_arthritis\n? psoriatic_arthritis\n? ankylosing_spondylitis\n? gouty_arthritis\n? septic_arthritis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "psoriatic_arthritis",
+        "B": "ankylosing_spondylitis",
+        "C": "gouty_arthritis",
+        "D": "reactive_arthritis",
+        "E": "septic_arthritis"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r11sd-35",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete triad of ophthalmoplegia, gait ataxia, and confusion raises the likelihood of wernicke encephalopathy 10-fold. The full syndrome of limb dysmetria with nystagmus would raise cerebellar stroke 15-fold \u2014 a stronger association \u2014 but it requires both of its findings. The patient has ophthalmoplegia, gait ataxia, and confusion, and nystagmus but not the rest of that syndrome. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for wernicke_encephalopathy\nprior 0.2 for cerebellar_stroke\nprior 0.2 for normal_pressure_hydrocephalus\nprior 0.2 for vestibular_neuritis\nprior 0.2 for multiple_sclerosis\ncontributes 10 from wernicke_triad to wernicke_encephalopathy\ncontributes 15 from cerebellar_stroke_pattern to cerebellar_stroke\nrule { head: wernicke_triad when: ophthalmoplegia, gait_ataxia, confusion }\nrule { head: cerebellar_stroke_pattern when: limb_dysmetria, nystagmus }\nobserve ophthalmoplegia\nobserve gait_ataxia\nobserve confusion\nobserve limb_dysmetria\n? wernicke_encephalopathy\n? cerebellar_stroke\n? normal_pressure_hydrocephalus\n? vestibular_neuritis\n? multiple_sclerosis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "cerebellar_stroke",
+        "B": "normal_pressure_hydrocephalus",
+        "C": "vestibular_neuritis",
+        "D": "multiple_sclerosis",
+        "E": "wernicke_encephalopathy"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r11sd-36",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete triad of ophthalmoplegia, gait ataxia, and confusion raises the likelihood of wernicke encephalopathy 12-fold. The full syndrome of limb dysmetria with nystagmus would raise cerebellar stroke 18-fold \u2014 a stronger association \u2014 but it requires both of its findings. The patient has ophthalmoplegia, gait ataxia, and confusion, and nystagmus but not the rest of that syndrome. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for wernicke_encephalopathy\nprior 0.2 for cerebellar_stroke\nprior 0.2 for normal_pressure_hydrocephalus\nprior 0.2 for vestibular_neuritis\nprior 0.2 for multiple_sclerosis\ncontributes 12 from wernicke_triad to wernicke_encephalopathy\ncontributes 18 from cerebellar_stroke_pattern to cerebellar_stroke\nrule { head: wernicke_triad when: ophthalmoplegia, gait_ataxia, confusion }\nrule { head: cerebellar_stroke_pattern when: limb_dysmetria, nystagmus }\nobserve ophthalmoplegia\nobserve gait_ataxia\nobserve confusion\nobserve limb_dysmetria\n? wernicke_encephalopathy\n? cerebellar_stroke\n? normal_pressure_hydrocephalus\n? vestibular_neuritis\n? multiple_sclerosis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "wernicke_encephalopathy",
+        "B": "cerebellar_stroke",
+        "C": "normal_pressure_hydrocephalus",
+        "D": "vestibular_neuritis",
+        "E": "multiple_sclerosis"
+      },
+      "gold_letter": "A"
     }
   ]
 }

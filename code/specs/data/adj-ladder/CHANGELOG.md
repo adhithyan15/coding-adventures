@@ -2,6 +2,27 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.39.0] — 2026-06-30
+
+### Added — rung 11 batch 2: completeness over nominal strength
+
+- **`rung11_syndromic_decision/items.json` grows 24 → 36** (`r11sd-25`..`r11sd-36`): a second
+  decision family that deepens the "complete pattern wins" lesson and raises the bar from the
+  single-flashy-finding trap to a **partially-satisfied competing syndrome**.
+- Each item: a **3-finding gold triad** (a classic clinical triad — Charcot, Beck, the HUS triad,
+  the Cushing reflex, the reactive-arthritis triad, the Wernicke triad) whose `rule` fires only when
+  ALL three findings are observed, competing against a **rival 2-finding syndrome that is only
+  partially present** (one of its two findings observed → its rule never fires → it stays at its
+  prior). Crucially the rival's syndrome is **nominally STRONGER** (`L_rival` > `L_gold`): a reader
+  who assumes the half-seen rival pattern is "close enough" picks it, but the engine fires only the
+  fully-satisfied triad. **Pattern completeness, not nominal association strength, decides.**
+- Reuses the same machinery (multi-atom `rule` heads + `decision_leader`); **no engine/harness
+  change**. Confirms the engine treats a 3-atom rule body correctly (fires on all-three) and that a
+  rule with a missing premise contributes nothing.
+- Contamination-safe (every prior/LR in the stem; disease/finding identifiers digit-free); 6 triads
+  × 2 LR variants; gold rotates A–E; unique leader asserted at build. Engine **36/36** cached
+  (decision_leader selects every gold); contamination/ruff/pytest clean.
+
 ## [0.38.0] — 2026-06-30
 
 ### Added — rung 11: syndromic decision (decide + multi-hop)
