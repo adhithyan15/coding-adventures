@@ -34,6 +34,7 @@ from __future__ import annotations
 from sql_planner import (
     Aggregate,
     Begin,
+    Column,
     Commit,
     DerivedTable,
     Distinct,
@@ -48,12 +49,69 @@ from sql_planner import (
     Literal,
     LogicalPlan,
     Project,
+    ProjectionItem,
     Rollback,
     Scan,
     Sort,
     Union,
+    Wildcard,
 )
 from sql_planner.plan import Limit
+
+
+def _schema_from_items(items: tuple[ProjectionItem, ...]) -> tuple[str, ...]:
+    """Derive output column names from a Project's items.
+
+    This mirrors ``_schema_of`` / ``_projection_name`` in the codegen.  We
+    need it here so that ``Project(EmptyResult())`` can preserve the output
+    schema in the resulting ``EmptyResult``, even when the inner node was
+    produced by ``Limit(count=0)`` — which itself cannot know the projected
+    schema at the time it fires.
+
+    Rules (same as the codegen):
+    - If *any* item is a ``Wildcard`` the schema is unknown at optimise time
+      (it depends on the runtime table definition), so we return ``()``.
+    - ``alias`` takes precedence over the expression name.
+    - A plain ``Column`` reference contributes its column name.
+    - Anything else produces the empty string ``""`` as a placeholder; the
+      codegen will assign a positional name (``column_N``) at emit time, so
+      the exact string does not matter here — only whether it is non-empty.
+    """
+    for item in items:
+        if isinstance(item.expr, Wildcard):
+            return ()
+    result: list[str] = []
+    for item in items:
+        if item.alias is not None:
+            result.append(item.alias)
+        elif isinstance(item.expr, Column):
+            result.append(item.expr.col)
+        else:
+            result.append("")
+    return tuple(result)
+
+
+def _schema_of_plan(p: LogicalPlan) -> tuple[str, ...]:
+    """Walk a plan tree to derive the output column names.
+
+    Used when ``Limit(count=0)`` needs to produce an ``EmptyResult`` that
+    carries the correct column schema.  The ``inner`` plan at that point is
+    the non-eliminated subtree (e.g. ``Sort(Project(...))``).  We walk down
+    through ``Sort``, ``Distinct``, ``Limit``, and ``Having`` nodes (all of
+    which preserve their inner schema) until we reach a ``Project``.
+
+    Returns an empty tuple when the schema is unknowable (e.g. ``Wildcard``
+    in the projection, or a bare ``Scan`` without schema info).
+    """
+    match p:
+        case Project(items=items):
+            return _schema_from_items(items)
+        case Sort(input=inner) | Distinct(input=inner) | Having(input=inner) | Limit(input=inner):
+            return _schema_of_plan(inner)
+        case EmptyResult(columns=cols):
+            return cols
+        case _:
+            return ()
 
 
 class DeadCodeElimination:
@@ -84,7 +142,14 @@ def _eliminate(p: LogicalPlan) -> LogicalPlan:
         case Project(input=inner, items=items):
             inner = _eliminate(inner)
             if isinstance(inner, EmptyResult):
-                return EmptyResult(columns=inner.columns)
+                # Prefer the schema from inner.columns when the EmptyResult
+                # was already annotated (e.g. by a nested Project elimination).
+                # Fall back to deriving the schema from our own items when
+                # inner.columns is empty — which happens when LIMIT 0 produced
+                # a bare EmptyResult() before this Project had a chance to
+                # annotate it.
+                cols = inner.columns if inner.columns else _schema_from_items(items)
+                return EmptyResult(columns=cols)
             return Project(input=inner, items=items)
 
         case Sort(input=inner, keys=keys):
@@ -96,7 +161,13 @@ def _eliminate(p: LogicalPlan) -> LogicalPlan:
         case Limit(input=inner, count=c, offset=o):
             inner = _eliminate(inner)
             if c == 0:
-                return EmptyResult()
+                # Preserve the output schema so that cursor.description is
+                # correct even when the query returns zero rows.  We derive the
+                # schema from the inner plan rather than leaving it empty —
+                # without this the codegen emits SetResultSchema(()) and the
+                # PEP 249 cursor sees description=() instead of the expected
+                # column tuple.
+                return EmptyResult(columns=_schema_of_plan(inner))
             if isinstance(inner, EmptyResult):
                 return inner
             return Limit(input=inner, count=c, offset=o)
