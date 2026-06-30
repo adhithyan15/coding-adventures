@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add Berkeley SPICE app-deck shell dashboard cards for Mosaic first-render
+  hosts. `BerkeleyAppDeck::app_shell_dashboard_cards()`,
+  `run_app_shell_dashboard_cards()`, and their JSON helpers derive stable card
+  IDs, primary-card routing, attention flags, severities, and event IDs from the
+  shell dashboard package.
 - Add Berkeley SPICE app-deck shell dashboard packages for Mosaic WebAssembly
   and product hosts. `BerkeleyAppDeck::app_shell_dashboard_package()`,
   `run_app_shell_dashboard_package()`, and their JSON helpers combine the

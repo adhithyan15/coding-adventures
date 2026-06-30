@@ -169,6 +169,15 @@ let shell_dashboard_package_json = deck.run_app_shell_dashboard_package_json(
 )?;
 assert!(shell_dashboard_package_json.contains(r#""packageManifest":{"#));
 assert!(shell_dashboard_package_json.contains(r#""eventDashboard":{"#));
+
+let shell_dashboard_cards_json = deck.run_app_shell_dashboard_cards_json(
+    BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(3),
+        active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+    },
+)?;
+assert!(shell_dashboard_cards_json.contains(r#""primaryCardId":"dashboard.status""#));
+assert!(shell_dashboard_cards_json.contains(r#""cardsCapabilityId":"app-shell-dashboard-cards-json""#));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -230,8 +239,11 @@ attention, and metrics sections for first-render Mosaic dashboards. Shell
 dashboard packages combine the manifest and event dashboard into one compact
 schema-versioned payload for WebAssembly and product hosts that want a
 first-render dashboard without stitching package metadata to dashboard sections.
-The grammar-backed parser generator and Python/TypeScript parity surfaces
-continue to mature.
+Shell dashboard cards derive stable card IDs, primary-card routing, attention
+flags, severity, and event IDs from the dashboard package so product hosts can
+render first-pass dashboard cards without interpreting section internals. The
+grammar-backed parser generator and Python/TypeScript parity surfaces continue
+to mature.
 
 This parser supports `R`, `C`, `L`, `V`, `I`, `D`, `Q`, `M`, `G`, `E`, `F`, and
 `H` elements, `.model <name> D(...)` diode cards with `IS` and `VT`
