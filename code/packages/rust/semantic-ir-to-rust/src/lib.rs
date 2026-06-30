@@ -104,6 +104,20 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // (classes, modules, try/catch, str-concat, instance/class/const
     // vars, intrinsics) whose features stay unaccepted, so those arms
     // remain unreachable for any validated module.
+    //
+    // `DefaultParams` (P2e) lets a `Param` carry a `default` expression
+    // that runs when the caller omits that trailing argument.  Rust fns
+    // are fixed-arity over `__sir::Value` with no native defaults, so the
+    // backend uses a RUNTIME-MIMIC strategy: a `Value::Missing` sentinel
+    // marks an omitted argument, every defaulted param gets a body-top
+    // prologue (`let p = if is_missing(&p) { <default> } else { p };`)
+    // that evaluates the default *in the body* — where earlier params are
+    // already bound, giving call-time, param-scope semantics — and each
+    // `DirectCall` pads its omitted trailing positions with
+    // `__sir::missing()` so the emitted call is full-arity.  This needs no
+    // validator change (the core validator already permits omitting
+    // trailing defaulted args in a `DirectCall`).
+    Feature::DefaultParams,
 ];
 
 impl Backend for RustBackend {

@@ -1,5 +1,53 @@
 # Changelog
 
+## 0.5.0 — default-parameter emission (P2e)
+
+Adds `Feature::DefaultParams` support: a `Param` may now carry a
+`default` expression that runs when the caller omits that trailing
+argument.  Rust functions are fixed-arity over `__sir::Value` with no
+native default parameters, so the backend uses a **runtime-mimic**
+strategy built around a `Missing` sentinel — preserving the language's
+**call-time, param-scope** default semantics (a default expression is
+evaluated on each call that omits the argument, in body scope where
+*earlier* parameters are already bound, so `b = a + 1` resolves `a`).
+
+### Added
+
+- **`__sir::Value::Missing`** — a new sentinel variant marking an
+  *omitted* positional argument, plus **`__sir::missing()`** (constructor)
+  and **`__sir::is_missing(&Value)`** (predicate).  `Missing` is internal:
+  it is created only at call sites that drop a trailing argument and is
+  consumed by the callee's prologue before any value flows on.
+- **Defensive runtime arms** — `format` renders a stray `Missing` as
+  `<missing>` and `value_eq` treats `Missing` as equal only to another
+  `Missing` (never to `Nil` or a real value).  These should be
+  unreachable in well-formed programs but degrade gracefully instead of
+  panicking.
+- **Function-body default-param prologue** — for each defaulted param, in
+  declaration order, the emitter now writes
+  `let <name> = if __sir::is_missing(&<name>) { <default> } else { <name> };`
+  at the top of the function body.  Emitting the default *inside the body*
+  is what gives call-time + param-scope semantics.
+- **`DirectCall` caller padding** — a call that omits trailing defaulted
+  arguments now pads the omitted positions with `__sir::missing()` so the
+  emitted Rust call is full-arity.  The callee's full parameter count is
+  read from the existing `FN_ARITY` thread-local arity table (the same
+  table `MakeClosure` consults), keyed by the callee's SIR name.
+- **`Feature::DefaultParams`** added to `ACCEPTED_FEATURES`.
+
+### Tests
+
+- Unit tests for the emitted shape: the sentinel-guarded prologue (with a
+  default that references an earlier param), the padded full-arity call,
+  and the no-padding case for a fully-supplied call.
+- A `rustc` compile-and-run integration test
+  (`tests/compile_and_run_default_params.rs`): hand-builds
+  `f(a, b = a + 1) -> b`, prints `f(5)` then `f(5, 10)`, compiles the
+  emitted Rust with `rustc`, runs it, and asserts stdout `6` then `10`.
+
+Non-default behaviour is byte-for-byte unchanged — every existing test
+(floats, loops, seq/maps, cyclic) passes untouched.
+
 ## 0.4.1 — harden emitted runtime against cyclic Seq/Map
 
 `Value::Seq`/`Value::Map` are shared, *mutable* handles, so an emitted

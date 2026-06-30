@@ -146,6 +146,32 @@ fn emit_function(out: &mut String, f: &Function) {
     }
     out.push_str(") -> __sir::Value {\n");
 
+    // ── DefaultParams (P2e) prologue ───────────────────────────────
+    //
+    // Rust fns are fixed-arity, so every defaulted param is still a
+    // real parameter of type `__sir::Value`.  A caller that omits a
+    // trailing defaulted argument passes the `__sir::missing()`
+    // sentinel for it (see the `DirectCall` emitter).  We rebind each
+    // defaulted param at the very top of the body:
+    //
+    //   let <name> = if __sir::is_missing(&<name>) { <default> }
+    //                else { <name> };
+    //
+    // Emitting the default *here* — inside the body, in declaration
+    // order — is what gives the language-level semantics:
+    //   • call-time: the default expression evaluates on each call that
+    //     omits the argument, not once at definition time; and
+    //   • param-scope: an earlier param is already bound (as a plain
+    //     Rust binding) by the time a later param's default runs, so a
+    //     default like `b = a + 1` resolves `a` correctly.
+    //
+    // The `else { <name> }` branch moves the already-bound param value
+    // through unchanged (no clone needed — we shadow the binding).  A
+    // param with no default is left exactly as the fn signature bound
+    // it.  We emit prologue lines only for params that carry a default,
+    // so non-default functions are byte-for-byte unchanged.
+    emit_default_param_prologue(out, f, 1);
+
     // Pre-pass: any local that is later reassigned must bind with
     // `let mut`.  Scope is per-function — clear, populate, emit, clear.
     MUTABLE_NAMES.with(|m| {
@@ -158,6 +184,32 @@ fn emit_function(out: &mut String, f: &Function) {
 
     MUTABLE_NAMES.with(|m| m.borrow_mut().clear());
     out.push_str("}\n");
+}
+
+/// Emit the body-top prologue that resolves each defaulted parameter.
+///
+/// For every param carrying a `default`, in declaration order, emit:
+///
+/// ```text
+///     let <name> = if __sir::is_missing(&<name>) { <default> } else { <name> };
+/// ```
+///
+/// Params without a default emit nothing, so a function with no
+/// defaulted params produces byte-for-byte identical output to before
+/// this feature existed.  The default expression is lowered through the
+/// ordinary `emit_expr` path, so it sees the same scope resolution as
+/// any body expression — in particular a `VarRef` with `Param` scope to
+/// an *earlier* parameter resolves to that parameter's already-bound
+/// Rust identifier (`a.clone()`), which is exactly the param-scope rule.
+fn emit_default_param_prologue(out: &mut String, f: &Function, indent: usize) {
+    let pad = indent_str(indent);
+    for p in &f.params {
+        let Some(default) = &p.default else { continue };
+        let name = sanitize_ident(&p.name);
+        let _ = write!(out, "{}let {} = if __sir::is_missing(&{}) {{ ", pad, name, name);
+        emit_expr(out, default, indent);
+        let _ = writeln!(out, " }} else {{ {} }};", name);
+    }
 }
 
 /// Walk a block (recursing through nested blocks, loop bodies, and
@@ -442,6 +494,31 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         Expr::DirectCall { fn_name, args, .. } => {
             let _ = write!(out, "{}(", function_emit_name(fn_name));
             emit_args(out, args, indent);
+            // ── DefaultParams (P2e) caller padding ─────────────────
+            //
+            // The IR call may carry FEWER args than the callee declares
+            // (the validator allows omitting trailing defaulted params).
+            // Rust fns are fixed-arity, so we PAD the omitted trailing
+            // positions with the `__sir::missing()` sentinel — the
+            // callee's prologue then swaps each sentinel for that param's
+            // default.  The callee's full param count comes from the same
+            // `FN_ARITY` table that `MakeClosure` already consults; it is
+            // keyed by the function's SIR name (`fn_name`), not its
+            // emitted name.  A callee absent from the table (e.g. a
+            // builtin reached via DirectCall) yields `0`, so `saturating_
+            // sub` pads nothing and the call is emitted unchanged.
+            let arity = FN_ARITY.with(|t| t.borrow().get(fn_name).copied().unwrap_or(0));
+            let pad_count = arity.saturating_sub(args.len());
+            for i in 0..pad_count {
+                // A comma precedes every sentinel that is not the very
+                // first emitted argument: either real args were emitted
+                // (so the first sentinel still needs a separator), or a
+                // prior sentinel was emitted.
+                if !args.is_empty() || i > 0 {
+                    out.push_str(", ");
+                }
+                out.push_str("__sir::missing()");
+            }
             out.push(')');
         }
         Expr::IndirectCall { target, args, .. } => {
@@ -1506,6 +1583,184 @@ mod tests {
         emit_function(&mut out, &f);
         assert!(out.contains("fn id(x: __sir::Value) -> __sir::Value"));
         assert!(out.contains("x.clone()"));
+    }
+
+    // ── DefaultParams (P2e) ────────────────────────────────────────
+
+    /// A defaulted param emits a body-top prologue that tests the
+    /// `is_missing` sentinel and substitutes the default expression.
+    /// The default here references an *earlier* param (`b = a + 1`),
+    /// proving the prologue runs in body scope where `a` is bound.
+    #[test]
+    fn emit_default_param_prologue_shape() {
+        // f(a, b = a + 1) -> a + b
+        let body = Block {
+            stmts: vec![],
+            value: Expr::BuiltinCall {
+                name: "+".into(),
+                args: vec![
+                    Expr::VarRef { name: "a".into(), scope: Scope::Param, span: s() },
+                    Expr::VarRef { name: "b".into(), scope: Scope::Param, span: s() },
+                ],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            span: s(),
+        };
+        let default_b = Expr::BuiltinCall {
+            name: "+".into(),
+            args: vec![
+                Expr::VarRef { name: "a".into(), scope: Scope::Param, span: s() },
+                Expr::IntLit { value: 1, span: s() },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let f = Function {
+            name: "f".into(),
+            params: vec![
+                Param { name: "a".into(), kind: ParamKind::Required, sir_type: None, default: None, span: s() },
+                Param { name: "b".into(), kind: ParamKind::Required, sir_type: None, default: Some(Box::new(default_b)), span: s() },
+            ],
+            return_type: None,
+            captures: vec![],
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_function(&mut out, &f);
+        // Fixed-arity signature: BOTH params are still real parameters.
+        assert!(out.contains("fn f(a: __sir::Value, b: __sir::Value) -> __sir::Value"));
+        // `a` has no default → no prologue line for it.
+        assert!(!out.contains("is_missing(&a)"));
+        // `b` gets the sentinel-guarded prologue, with its default
+        // (`a + 1`) lowered in body scope.
+        assert!(
+            out.contains("let b = if __sir::is_missing(&b) { __sir::plus(vec![a.clone(), __sir::Value::Int(1i64)]) } else { b };"),
+            "missing/garbled default-param prologue; got:\n{out}"
+        );
+    }
+
+    /// A `DirectCall` that omits a trailing defaulted argument pads the
+    /// omitted slot with `__sir::missing()` so the emitted Rust call is
+    /// full-arity.  Padding count comes from the callee's `FN_ARITY`.
+    #[test]
+    fn emit_direct_call_pads_omitted_defaults() {
+        // Build a module with f(a, b = ...) so FN_ARITY[f] == 2, then a
+        // `main` whose body is `f(5)` — one arg short.
+        let default_b = Expr::IntLit { value: 99, span: s() };
+        let f = Function {
+            name: "f".into(),
+            params: vec![
+                Param { name: "a".into(), kind: ParamKind::Required, sir_type: None, default: None, span: s() },
+                Param { name: "b".into(), kind: ParamKind::Required, sir_type: None, default: Some(Box::new(default_b)), span: s() },
+            ],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::VarRef { name: "a".into(), scope: Scope::Param, span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let main = Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::DirectCall {
+                    fn_name: "f".into(),
+                    args: vec![Expr::IntLit { value: 5, span: s() }],
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let m = Module {
+            name: "demo".into(),
+            manifest: FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![f, main],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("test")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        };
+        let out = emit_module_with_arity_table(&m);
+        // One real arg + one padded sentinel → full-arity 2-arg call.
+        assert!(
+            out.contains("f(__sir::Value::Int(5i64), __sir::missing())"),
+            "expected padded full-arity call; got:\n{out}"
+        );
+    }
+
+    /// A fully-supplied `DirectCall` (no omitted args) pads nothing —
+    /// non-default call sites are byte-for-byte unchanged.
+    #[test]
+    fn emit_direct_call_no_padding_when_full() {
+        let f = Function {
+            name: "g".into(),
+            params: vec![
+                Param { name: "a".into(), kind: ParamKind::Required, sir_type: None, default: None, span: s() },
+                Param { name: "b".into(), kind: ParamKind::Required, sir_type: None, default: None, span: s() },
+            ],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::VarRef { name: "a".into(), scope: Scope::Param, span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let main = Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::DirectCall {
+                    fn_name: "g".into(),
+                    args: vec![
+                        Expr::IntLit { value: 1, span: s() },
+                        Expr::IntLit { value: 2, span: s() },
+                    ],
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let m = Module {
+            name: "demo".into(),
+            manifest: FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![f, main],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("test")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        };
+        let out = emit_module_with_arity_table(&m);
+        assert!(out.contains("g(__sir::Value::Int(1i64), __sir::Value::Int(2i64))"));
+        assert!(!out.contains("__sir::missing()"));
     }
 
     #[test]
