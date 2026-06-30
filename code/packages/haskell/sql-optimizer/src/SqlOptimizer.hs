@@ -27,6 +27,12 @@ module SqlOptimizer
       OptimizedPlan(..)
       -- * Pass machinery
     , Pass(..)
+      -- * Individual passes
+    , constantFolding
+    , predicatePushdown
+    , projectionPruning
+    , deadCodeElimination
+    , limitPushdown
       -- * Public API
     , lift
     , defaultPasses
