@@ -54,4 +54,7 @@ authored here: every edge reuses an already-grounded, spider+adversarially-gated
 each run in a temp dir (the two needed `*-edges.adj` copied beside the query), leaving the
 shipped `recall/` library untouched.
 
-First slice: **7/7 correct, `multihop_coverage` 1.0, zero model calls.**
+Slice 2: **15/15 correct, zero model calls** — 10 clue→disease→gene chains + 3 clue→disease→**inheritance**
+chains (proving the harness is generic over the second hop) + 2 **abstention** items (ungrounded clue ⇒
+must abstain). `multihop_coverage` 1.0 over the 13 answerable items; the scorer reports
+`abstained_correctly` and counts any binding on an abstention item as a fabrication (wrong).

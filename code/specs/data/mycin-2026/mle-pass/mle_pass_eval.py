@@ -118,17 +118,34 @@ def letter_for(item: dict, gene: str | None) -> str | None:
 
 
 def score(items: list[dict], cli: Path | None = None) -> dict:
-    """Run every item; return per-item outcomes and the aggregate scoreboard."""
-    results, correct, abstained, wrong, both_hops = [], 0, 0, 0, 0
+    """Run every item; return per-item outcomes and the aggregate scoreboard.
+
+    Two item kinds:
+      • answerable — gold the printed option matching the engine's binding; binding must
+        match `gold_letter` and (for defensibility) cite both hops;
+      • abstention (`expect_abstain`) — the chain is ungrounded, so the engine MUST bind
+        nothing: abstaining is CORRECT, binding any option is WRONG (a fabrication).
+    """
+    results, correct, abstained_ok, wrong, both_hops, answerable_correct = [], 0, 0, 0, 0, 0
     for item in items:
         r = run_item(item, cli=cli)
         picked = letter_for(item, r.binding)
-        if picked is None:
-            outcome = "abstained"
-            abstained += 1
+        if item.get("expect_abstain"):
+            # abstaining (no binding) is the correct, non-fabricating answer.
+            if r.binding is None:
+                outcome = "correct"
+                correct += 1
+                abstained_ok += 1
+            else:
+                outcome = "wrong"  # fabricated an answer for an ungrounded chain
+                wrong += 1
+        elif picked is None:
+            outcome = "abstained"  # an answerable item the engine failed to resolve
+            wrong += 1             # counts against us (it was answerable)
         elif picked == item["gold_letter"]:
             outcome = "correct"
             correct += 1
+            answerable_correct += 1
             if r.citations >= 2:
                 both_hops += 1
         else:
@@ -137,15 +154,15 @@ def score(items: list[dict], cli: Path | None = None) -> dict:
         results.append({
             "id": item["id"], "outcome": outcome, "picked": picked,
             "binding": r.binding, "citations": r.citations,
+            "expect_abstain": bool(item.get("expect_abstain")),
         })
-    total = len(items)
     return {
-        "total": total,
+        "total": len(items),
         "correct": correct,
-        "abstained": abstained,
+        "abstained_correctly": abstained_ok,
         "wrong": wrong,
-        # defensibility: of the correct answers, how many cite BOTH grounded hops.
-        "multihop_coverage": (both_hops / correct) if correct else 0.0,
+        # defensibility: of the correct ANSWERABLE items, how many cite BOTH grounded hops.
+        "multihop_coverage": (both_hops / answerable_correct) if answerable_correct else 0.0,
         "results": results,
     }
 
