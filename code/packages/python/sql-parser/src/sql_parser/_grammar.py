@@ -846,8 +846,16 @@ PARSER_GRAMMAR = ParserGrammar(
             name='col_def',
             body=
             Sequence(elements=[
+                NegativeLookahead(element=
+                    Sequence(elements=[
+                        Literal(value='FOREIGN'),
+                        Literal(value='KEY'),
+                    ]),
+                ),
                 RuleReference(name='NAME', is_token=True),
-                RuleReference(name='col_type', is_token=False),
+                Optional(element=
+                    RuleReference(name='col_type', is_token=False),
+                ),
                 Repetition(element=
                     RuleReference(name='col_constraint', is_token=False),
                 ),

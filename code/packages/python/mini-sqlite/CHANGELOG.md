@@ -1,5 +1,62 @@
 # Changelog
 
+## [2.29.0] - 2026-06-30
+
+### Added
+
+- **Level 1 conformance fixtures (17–24)** — eight new fixtures in
+  `code/specs/mini-sqlite-conformance/fixtures/` covering:
+
+  | # | Name | What it tests |
+  |---|------|---------------|
+  | 17 | null-aggregate-semantics | COUNT(\*)/COUNT(col) on empty tables; SUM/AVG/MIN/MAX → NULL; NULL-skipping |
+  | 18 | string-functions | LENGTH, UPPER, LOWER, SUBSTR, TRIM, LTRIM, RTRIM, REPLACE |
+  | 19 | math-functions | ABS (int/float/NULL), ROUND (0/2 decimals, half-away-from-zero) |
+  | 20 | limit-edge-cases | LIMIT 0, large OFFSET past end, LIMIT -1, LIMIT with OFFSET |
+  | 21 | distinct-aggregate | COUNT(DISTINCT v) with duplicates and NULLs |
+  | 22 | string-concat-null | `||` operator; NULL propagation; COALESCE with 2–3 arguments |
+  | 23 | null-in-order-by | NULL sort order (FIRST in ASC, LAST in DESC) and IS NOT NULL filter |
+  | 24 | having-aggregate | HAVING COUNT(\*) > N, HAVING SUM >= threshold, compound HAVING AND |
+
+  `manifest.json` updated to version `1.1.0` to reflect the new level.
+
+- **Parametrised conformance test runner** (`tests/test_conformance.py`) —
+  reads `manifest.json` and auto-generates one pytest test per fixture.
+  Supports all op types: `execute`, `executemany`, `query`, `expect_error`,
+  `commit`, `rollback`, `fetchone_test`, `fetchmany_test`, `fetchall_test`,
+  `fetchall_empty_test`, `connect_expect_error`.  Adding a new fixture JSON
+  and listing it in the manifest is sufficient to have it exercised.
+
+### Fixed
+
+- **`cursor.description` is now set correctly after `SELECT … LIMIT 0`**
+  (and any other zero-row SELECT).  PEP 249 requires `cursor.description`
+  to be a tuple of column-name seven-tuples after any DQL statement,
+  regardless of whether it returns rows.
+
+  Root cause: the cursor previously used `if result.columns:` to decide
+  whether the statement was a SELECT.  For `LIMIT 0` (and for any SELECT
+  that returns no rows) the optimizer produces an `EmptyResult` node; the
+  codegen emitted `SetResultSchema(columns=())` so `result.columns` was an
+  empty tuple — falsy — and the cursor wrongly took the DML/DDL branch,
+  setting `description = None`.
+
+  The fix spans two layers:
+
+  1. **`sql-optimizer` `DeadCodeElimination`** — `Limit(count=0)` now
+     produces `EmptyResult(columns=_schema_of_plan(inner))` so the column
+     schema is preserved through the optimizer.  A new `_schema_of_plan`
+     helper walks the inner plan to the nearest `Project` node.
+
+  2. **`cursor.py`** — the branch condition changed from `if result.columns:`
+     to `if result.rows_affected is None or result.columns:`.  This
+     correctly handles three cases:
+     - SELECT (rows_affected=None) — always a result set, even with 0 rows.
+     - DML + RETURNING (rows_affected≥1, columns non-empty) — exposed as a
+       result set, matching the real sqlite3 module's behaviour.
+     - DML/DDL without RETURNING (rows_affected≥1, columns=()) — treated as
+       a mutation with no result set.
+
 ## [2.28.0] - 2026-06-19
 
 ### Added

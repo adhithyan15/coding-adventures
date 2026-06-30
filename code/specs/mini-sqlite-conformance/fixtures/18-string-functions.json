@@ -1,0 +1,95 @@
+{
+  "id": "18-string-functions",
+  "description": "Built-in SQLite string scalar functions: LENGTH, UPPER, LOWER, SUBSTR, TRIM, LTRIM, RTRIM, REPLACE",
+  "level": 1,
+  "steps": [
+    {
+      "op": "query",
+      "sql": "SELECT LENGTH('hello') AS n",
+      "expected_columns": ["n"],
+      "expected_rows": [[5]]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT LENGTH('') AS n",
+      "expected_columns": ["n"],
+      "expected_rows": [[0]]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT UPPER('hello') AS u",
+      "expected_columns": ["u"],
+      "expected_rows": [["HELLO"]]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT LOWER('WORLD') AS l",
+      "expected_columns": ["l"],
+      "expected_rows": [["world"]]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT SUBSTR('hello', 2, 3) AS s",
+      "expected_columns": ["s"],
+      "expected_rows": [["ell"]],
+      "note": "SUBSTR is 1-indexed; position 2, length 3"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT SUBSTR('hello', 2) AS s",
+      "expected_columns": ["s"],
+      "expected_rows": [["ello"]],
+      "note": "SUBSTR with no length returns rest of string"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT TRIM('  hi  ') AS t",
+      "expected_columns": ["t"],
+      "expected_rows": [["hi"]]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT LTRIM('  hi  ') AS t",
+      "expected_columns": ["t"],
+      "expected_rows": [["hi  "]]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT RTRIM('  hi  ') AS t",
+      "expected_columns": ["t"],
+      "expected_rows": [["  hi"]]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT REPLACE('hello world', 'world', 'SQL') AS r",
+      "expected_columns": ["r"],
+      "expected_rows": [["hello SQL"]]
+    },
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE strings (id INTEGER, word TEXT)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO strings VALUES (1, 'alpha')"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO strings VALUES (2, 'Beta')"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO strings VALUES (3, 'GAMMA')"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT id, LOWER(word) AS lw, UPPER(word) AS uw, LENGTH(word) AS len FROM strings ORDER BY id",
+      "expected_columns": ["id", "lw", "uw", "len"],
+      "expected_rows": [
+        [1, "alpha", "ALPHA", 5],
+        [2, "beta", "BETA", 4],
+        [3, "gamma", "GAMMA", 5]
+      ]
+    }
+  ]
+}

@@ -188,7 +188,27 @@ class Cursor:
         # ensures schema changes are persisted even when no DML follows.
         self._connection._post_execute()  # noqa: SLF001
 
-        if result.columns:
+        if result.rows_affected is None or result.columns:
+            # Two cases both land here:
+            #
+            # 1. SELECT (rows_affected is None) — always has a result set,
+            #    even when it returns zero rows (e.g. SELECT … LIMIT 0).  PEP
+            #    249 requires cursor.description to be set for every DQL
+            #    statement regardless of row count.  The optimizer now
+            #    preserves column names on the EmptyResult it produces for
+            #    LIMIT 0, so result.columns is non-empty here.
+            #
+            # 2. DML with a RETURNING clause (rows_affected is not None but
+            #    result.columns is non-empty) — INSERT / UPDATE / DELETE
+            #    RETURNING acts like a SELECT for the caller.  We expose the
+            #    returned rows through description + fetchall(), exactly as
+            #    the real sqlite3 module does.
+            #
+            # We intentionally test ``result.columns`` *after* the optimizer
+            # fix that ensures SELECT LIMIT 0 carries column names.  Without
+            # that fix, a bare ``SELECT … LIMIT 0`` would yield columns=()
+            # and fall into the DML branch; with it, both conditions
+            # (rows_affected is None AND result.columns non-empty) hold.
             self.description = tuple(
                 (name, None, None, None, None, None, None) for name in result.columns
             )
@@ -196,7 +216,7 @@ class Cursor:
             self._row_iter = iter(self._rows)
             self.rowcount = len(self._rows)
         else:
-            # DML/DDL — no result set.
+            # DML/DDL without RETURNING — no result set.
             self.description = None
             self._rows = []
             self._row_iter = iter(())
