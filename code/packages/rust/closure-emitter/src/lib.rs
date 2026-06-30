@@ -950,7 +950,25 @@ impl<'a> Emitter<'a> {
         // `emit_expression_inner`.
         self.maybe_map(&b.cv);
         let my_prec = binary_prec(b.operator);
-        self.emit_expression_inner(&b.left, my_prec);
+        // Operand precedences. Almost every binary operator is LEFT-associative,
+        // so the left child accepts the same precedence (no parens for
+        // `a+b+c`) and the right child must be strictly higher (`a-(b-c)`).
+        //
+        // `**` (exponentiation) is the exception on BOTH counts:
+        //   • It is RIGHT-associative, so `a**b**c` is `a**(b**c)`: the RIGHT
+        //     child accepts the same precedence (no parens) and it is the LEFT
+        //     child that must be strictly higher.
+        //   • Its grammar base is an `UpdateExpression`, NOT a `UnaryExpression`
+        //     — `-a**2`, `~a**2`, `!a**2` are SYNTAX ERRORS. The base must
+        //     therefore bind tighter than unary, so we require `PREC_UNARY + 1`
+        //     on the left, which parenthesises a unary (or lower) base:
+        //     `(-a)**2`.
+        let (left_prec, right_prec) = if matches!(b.operator, BinaryOperator::Exp) {
+            (PREC_UNARY + 1, my_prec)
+        } else {
+            (my_prec, my_prec + 1)
+        };
+        self.emit_expression_inner(&b.left, left_prec);
         let op = binary_op_str(b.operator);
 
         // Word-shaped operators MUST keep a space on both sides or they fuse
@@ -960,7 +978,7 @@ impl<'a> Emitter<'a> {
             self.required_ws();
             self.write_str(op);
             self.required_ws();
-            self.emit_expression_inner(&b.right, my_prec + 1);
+            self.emit_expression_inner(&b.right, right_prec);
             return;
         }
 
@@ -991,7 +1009,7 @@ impl<'a> Emitter<'a> {
         if right_needs_space {
             self.write_str(" ");
         }
-        self.emit_expression_inner(&b.right, my_prec + 1);
+        self.emit_expression_inner(&b.right, right_prec);
     }
 
     fn emit_logical(&mut self, l: &LogicalExpression) {
@@ -1749,6 +1767,24 @@ mod tests {
             property: Box::new(ident(prop)),
             computed,
         })
+    }
+
+    #[test]
+    fn exponentiation_base_and_right_precedence() {
+        use BinaryOperator::*;
+        // `(-a)**2` — a unary base of `**` MUST be parenthesised; `-a**2` is a
+        // SyntaxError (the grammar base binds tighter than unary).
+        let neg_a = unary(UnaryOperator::Negate, ident("a"));
+        assert_eq!(emit_expr(binary(Exp, neg_a, num(2.0))), "(-a)**2;");
+        // `**` is right-associative: a `**` on the RIGHT needs no parens.
+        let b_pow_c = binary(Exp, ident("b"), ident("c"));
+        assert_eq!(emit_expr(binary(Exp, ident("a"), b_pow_c)), "a**b**c;");
+        // A `**` on the LEFT (left-grouped AST) DOES need parens.
+        let a_pow_b = binary(Exp, ident("a"), ident("b"));
+        assert_eq!(emit_expr(binary(Exp, a_pow_b, ident("c"))), "(a**b)**c;");
+        // A unary RIGHT operand is legal without parens (`a**-b`).
+        let neg_b = unary(UnaryOperator::Negate, ident("b"));
+        assert_eq!(emit_expr(binary(Exp, ident("a"), neg_b)), "a**-b;");
     }
 
     #[test]

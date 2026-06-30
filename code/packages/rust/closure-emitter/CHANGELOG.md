@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.18.7] - 2026-06-30
+
+### Fixed — `**` exponentiation operand precedence (invalid-JS miscompile)
+
+`emit_binary` emitted every operator's left child at `my_prec` and right child
+at `my_prec + 1` — correct for the left-associative operators, but wrong for
+`**`, which is right-associative AND whose grammar base is an `UpdateExpression`
+(it binds tighter than unary). Two bugs resulted:
+
+- **Invalid output.** A unary base printed without parentheses: `(-a)**2` became
+  `-a**2`, which is a `SyntaxError` in JavaScript (a unary operator may not be
+  the base of `**` without parens). Same for `(~a)**2`, `(!a)**2`.
+- **Over-parenthesisation.** Right-associativity was not modelled, so
+  `a**b**c` (which natively *is* `a**(b**c)`) printed as `a**(b**c)`.
+
+`**` now emits its left at `PREC_UNARY + 1` (parenthesising a unary/lower base —
+`(-a)**2`, `(a**b)**c`) and its right at `my_prec` (a same-precedence right needs
+no parens — `a**b**c`; a unary right is still legal bare — `a**-b`). All other
+operators are unchanged. New test `exponentiation_base_and_right_precedence`.
+
 ## [0.18.6] - 2026-06-30
 
 ### Fixed — member object / call callee lost its parentheses (miscompile)
