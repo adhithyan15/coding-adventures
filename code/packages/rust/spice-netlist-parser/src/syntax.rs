@@ -25,6 +25,7 @@ pub const BERKELEY_APP_SHELL_TELEMETRY_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_EVENT_LOG_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_EVENT_SUMMARY_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_EVENT_DIGEST_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_EVENT_DASHBOARD_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -65,6 +66,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-events-json",
     "app-shell-event-summary-json",
     "app-shell-event-digest-json",
+    "app-shell-event-dashboard-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -1001,6 +1003,106 @@ impl BerkeleyAppShellEventDigest {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellEventDashboardSection {
+    pub id: String,
+    pub title: String,
+    pub severity: String,
+    pub event_count: usize,
+    pub event_ids: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellEventDashboard {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub headline_event_id: Option<String>,
+    pub headline_message: String,
+    pub primary_action_id: Option<String>,
+    pub attention_required: bool,
+    pub section_count: usize,
+    pub sections: Vec<BerkeleyAppShellEventDashboardSection>,
+    pub event_count: usize,
+    pub diagnostic_count: usize,
+    pub repaired_state_count: usize,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellEventDashboard {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_event_log(&BerkeleyAppShellEventLog::from_bootstrap_snapshot(snapshot))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_event_log(&BerkeleyAppShellEventLog::from_shell_handoff(handoff))
+    }
+
+    pub fn from_event_log(event_log: &BerkeleyAppShellEventLog) -> Self {
+        Self::from_event_digest(&BerkeleyAppShellEventDigest::from_event_log(event_log))
+    }
+
+    pub fn from_event_digest(digest: &BerkeleyAppShellEventDigest) -> Self {
+        let status_event_ids = digest.headline_event_id.iter().cloned().collect::<Vec<_>>();
+        let sections = vec![
+            BerkeleyAppShellEventDashboardSection {
+                id: "status".to_string(),
+                title: "Startup status".to_string(),
+                severity: digest.severity.clone(),
+                event_count: status_event_ids.len(),
+                event_ids: status_event_ids,
+            },
+            BerkeleyAppShellEventDashboardSection {
+                id: "attention".to_string(),
+                title: "Attention".to_string(),
+                severity: if digest.attention_event_count > 0 {
+                    digest.severity.clone()
+                } else {
+                    "ready".to_string()
+                },
+                event_count: digest.attention_event_count,
+                event_ids: digest.attention_event_ids.clone(),
+            },
+            BerkeleyAppShellEventDashboardSection {
+                id: "metrics".to_string(),
+                title: "Metrics".to_string(),
+                severity: "info".to_string(),
+                event_count: digest.metric_event_count,
+                event_ids: digest.metric_event_ids.clone(),
+            },
+        ];
+        let section_count = sections.len();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_EVENT_DASHBOARD_SCHEMA_VERSION,
+            package_name: digest.package_name.clone(),
+            source_fingerprint: digest.source_fingerprint.clone(),
+            title: digest.title.clone(),
+            startup_route: digest.startup_route.clone(),
+            ready: digest.ready,
+            severity: digest.severity.clone(),
+            headline_event_id: digest.headline_event_id.clone(),
+            headline_message: digest.headline_message.clone(),
+            primary_action_id: digest.primary_action_id.clone(),
+            attention_required: digest.attention_event_count > 0,
+            section_count,
+            sections,
+            event_count: digest.event_count,
+            diagnostic_count: digest.diagnostic_count,
+            repaired_state_count: digest.repaired_state_count,
+            artifact_capability_count: digest.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_event_dashboard_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BerkeleyAnalysisInventoryEntry {
     pub index: usize,
     pub directive: String,
@@ -1834,6 +1936,40 @@ impl BerkeleyAppDeck {
         persisted_state: BerkeleyAppPersistedEditorState,
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self.run_app_shell_event_digest(persisted_state)?.to_json())
+    }
+
+    pub fn app_shell_event_dashboard(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellEventDashboard {
+        BerkeleyAppShellEventDashboard::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_event_dashboard(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellEventDashboard, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellEventDashboard::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_event_dashboard_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_event_dashboard(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_event_dashboard_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_event_dashboard(persisted_state)?
+            .to_json())
     }
 
     pub fn run_source_order(&self) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
@@ -2701,6 +2837,46 @@ fn app_shell_event_digest_json_value(digest: &BerkeleyAppShellEventDigest) -> se
         "diagnosticCount": digest.diagnostic_count,
         "repairedStateCount": digest.repaired_state_count,
         "artifactCapabilityCount": digest.artifact_capability_count,
+    })
+}
+
+fn app_shell_event_dashboard_json_value(
+    dashboard: &BerkeleyAppShellEventDashboard,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": dashboard.schema_version,
+        "packageName": &dashboard.package_name,
+        "sourceFingerprint": &dashboard.source_fingerprint,
+        "title": &dashboard.title,
+        "startupRoute": &dashboard.startup_route,
+        "ready": dashboard.ready,
+        "severity": &dashboard.severity,
+        "headlineEventId": &dashboard.headline_event_id,
+        "headlineMessage": &dashboard.headline_message,
+        "primaryActionId": &dashboard.primary_action_id,
+        "attentionRequired": dashboard.attention_required,
+        "sectionCount": dashboard.section_count,
+        "sections": dashboard
+            .sections
+            .iter()
+            .map(app_shell_event_dashboard_section_json_value)
+            .collect::<Vec<_>>(),
+        "eventCount": dashboard.event_count,
+        "diagnosticCount": dashboard.diagnostic_count,
+        "repairedStateCount": dashboard.repaired_state_count,
+        "artifactCapabilityCount": dashboard.artifact_capability_count,
+    })
+}
+
+fn app_shell_event_dashboard_section_json_value(
+    section: &BerkeleyAppShellEventDashboardSection,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &section.id,
+        "title": &section.title,
+        "severity": &section.severity,
+        "eventCount": section.event_count,
+        "eventIds": &section.event_ids,
     })
 }
 

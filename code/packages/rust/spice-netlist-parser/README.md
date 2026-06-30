@@ -151,6 +151,15 @@ let shell_event_digest_json = deck.run_app_shell_event_digest_json(
 )?;
 assert!(shell_event_digest_json.contains(r#""headlineEventId":"shell.status""#));
 assert!(shell_event_digest_json.contains(r#""metricEventCount":3"#));
+
+let shell_event_dashboard_json = deck.run_app_shell_event_dashboard_json(
+    BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(3),
+        active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+    },
+)?;
+assert!(shell_event_dashboard_json.contains(r#""sectionCount":3"#));
+assert!(shell_event_dashboard_json.contains(r#""attentionRequired":false"#));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -166,10 +175,10 @@ hosts can render editor state without owning simulator internals. It also
 derives stable per-analysis editor controls for selecting, running, and
 inspecting tables or waveforms with explicit disabled reasons, plus command
 plans with stable command IDs and target names for host menu or button wiring.
-Product shells can also consume compact shell event summaries and digests with
-stable event-kind, severity, diagnostic, repaired-state, capability,
-headline-event, attention-event, and metric-event fields without walking the
-full event stream.
+Product shells can also consume compact shell event summaries, digests, and
+dashboards with stable event-kind, severity, diagnostic, repaired-state,
+capability, headline-event, attention-event, metric-event, and dashboard-section
+fields without walking the full event stream.
 Persisted editor-state snapshots resolve saved selection and active-command IDs
 against the current deck, repairing stale UI state after source edits. Host
 surfaces turn those snapshots into stable source, diagnostics, analysis, table,
@@ -207,8 +216,10 @@ handoff into stable status, route, primary-action, diagnostic, repaired-state,
 and capability events so Mosaic and product shells can append startup streams
 without reinventing app-state traversal. Shell event digests condense those
 logs into one headline event plus attention and metric event ID lists for
-startup dashboards. The grammar-backed parser generator and Python/TypeScript
-parity surfaces continue to mature.
+startup dashboards. Shell event dashboards group the same digest into status,
+attention, and metrics sections for first-render Mosaic dashboards. The
+grammar-backed parser generator and Python/TypeScript parity surfaces continue
+to mature.
 
 This parser supports `R`, `C`, `L`, `V`, `I`, `D`, `Q`, `M`, `G`, `E`, `F`, and
 `H` elements, `.model <name> D(...)` diode cards with `IS` and `VT`
