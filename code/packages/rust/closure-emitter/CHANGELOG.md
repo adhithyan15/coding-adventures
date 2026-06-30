@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.18.1] - 2026-06-29
+
+### Fixed — negative zero (`-0`) lost its sign on emit (miscompile)
+
+`format_js_number` short-circuited every value equal to `0.0` to the string
+`"0"`. Because Rust's `-0.0 == 0.0` is `true`, negative zero took that path and
+emitted `0` — but `-0` is observably distinct from `0` in JavaScript
+(`1 / -0 === -Infinity` vs `1 / 0 === Infinity`; `Object.is(-0, 0) === false`),
+so dropping the sign is a **miscompile**. It surfaced through the constant-fold
+pass: `f(-0)`, `f(-(5-5))`, and `f(0 * -1)` all fold the argument to the
+negative-zero numeric literal `-0.0`, which the emitter then printed as `0`.
+
+The zero fast path now checks `is_sign_negative()` and emits `-0` for negative
+zero, `0` otherwise. `-0` is also the minimal correct representation. Positive
+zero and every other value are byte-identical to before — the blast radius is
+exactly negative zero. End-to-end: `f(-0);` → `f(-0);` (was `f(0);`), and
+`g(1/-0);` → `g(-Infinity);`.
+
 ## [0.18.0] - 2026-06-21
 
 ### Fixed — prefix-unary precedence and `--`/`++` token fusion

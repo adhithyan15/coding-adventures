@@ -1186,7 +1186,16 @@ fn format_js_number(n: f64) -> String {
         };
     }
     if n == 0.0 {
-        return "0".to_string();
+        // Negative zero must keep its sign: `-0` is observably distinct from
+        // `0` in JS (`1 / -0 === -Infinity`, `Object.is(-0, 0) === false`), so
+        // dropping the sign is a miscompile. Rust's `-0.0 == 0.0` is `true`, so
+        // we cannot rely on the equality alone — `is_sign_negative()` is what
+        // distinguishes the two zeros. `-0` is also the minimal correct form.
+        return if n.is_sign_negative() {
+            "-0".to_string()
+        } else {
+            "0".to_string()
+        };
     }
     let decimal = if n.fract() == 0.0 && n.abs() < 1e21 {
         format!("{}", n as i64)
@@ -1701,6 +1710,21 @@ mod tests {
         assert_eq!(emit_number_value(42.0), "42");
         assert_eq!(emit_number_value(100.0), "100"); // tie 3=3 → decimal
         assert_eq!(emit_number_value(-7.0), "-7");
+    }
+
+    #[test]
+    fn negative_zero_keeps_its_sign() {
+        // `-0` is observably distinct from `0` in JS (`1 / -0 === -Infinity`,
+        // `Object.is(-0, 0) === false`), so the emitter must NOT drop the sign.
+        // Rust's `-0.0 == 0.0` is `true`, which previously routed negative zero
+        // through the `== 0.0` fast path and printed `"0"` — a miscompile.
+        assert_eq!(format_js_number(-0.0), "-0");
+        assert_eq!(format_js_number(0.0), "0");
+        // Through the full emit path (synthetic NumericLiteral → emitted JS):
+        assert_eq!(emit_number_value(-0.0), "-0");
+        assert_eq!(emit_number_value(0.0), "0");
+        // `0.0 * -1.0` is negative zero in IEEE-754 / JS — also preserved.
+        assert_eq!(emit_number_value(0.0 * -1.0), "-0");
     }
 
     #[test]

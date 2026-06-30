@@ -48,6 +48,11 @@ const CORPUS: &[(&str, &str)] = &[
     ("3", "n:3"),
     ("1.5", "n:1.5"),
     ("-1", "n:-1"),
+    // Negative zero: promoted from KNOWN_DIVERGENCES once the emitter stopped
+    // flattening `-0` to `0` (closure-emitter 0.18.1). `-0` is observably
+    // distinct from `0` (`1/-0 === -Infinity`, `Object.is(-0,0) === false`), so
+    // the fold must preserve the sign — closurec now value-matches the oracle.
+    ("-0", "n:-0"),
     // ---- string methods ----
     (r#""abcd".slice(1,3)"#, "s:bc"),
     (r#""ab".repeat(3)"#, "s:ababab"),
@@ -80,9 +85,10 @@ const CORPUS: &[(&str, &str)] = &[
 /// `(source, true value, value closurec WRONGLY produces today)`.
 /// The test asserts the bug is still present; when fixed, promote to `CORPUS`.
 const KNOWN_DIVERGENCES: &[(&str, &str, &str)] = &[
-    // Pre-existing unary-minus fold flattens the `-0` literal to `0` (`var x=-0`
-    // emits `var x=0`). Tracked as its own fix task, independent of any fold.
-    ("-0", "n:-0", "n:0"),
+    // (empty) — the lone entry, the unary-minus `-0` → `0` flattening, was
+    // FIXED in closure-emitter 0.18.1 (the emitter no longer drops the sign of
+    // negative zero) and PROMOTED into CORPUS above. New divergences found by
+    // the harness or by hand land here until their fix; then they too promote.
 ];
 
 /// Optimize one source *expression* at SIMPLE and return the emitted output with
@@ -420,6 +426,7 @@ fn canonicalizer_self_test() {
     assert_eq!(canonicalize("-1").as_deref(), Some("n:-1"));
     assert_eq!(canonicalize("1.5").as_deref(), Some("n:1.5"));
     assert_eq!(canonicalize("0").as_deref(), Some("n:0"));
+    assert_eq!(canonicalize("-0").as_deref(), Some("n:-0"));
     assert_eq!(canonicalize(r#""bc""#).as_deref(), Some("s:bc"));
     assert_eq!(canonicalize("true").as_deref(), Some("b:true"));
     assert_eq!(canonicalize("false").as_deref(), Some("b:false"));
