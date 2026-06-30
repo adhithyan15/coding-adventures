@@ -1,0 +1,1 @@
+dotnet test tests/CodingAdventures.SqlOptimizer.Tests/CodingAdventures.SqlOptimizer.Tests.csproj --disable-build-servers /p:CollectCoverage=true "/p:Include=[CodingAdventures.SqlOptimizer]*" /p:Threshold=80 /p:ThresholdType=line
