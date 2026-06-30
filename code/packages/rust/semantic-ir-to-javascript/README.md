@@ -1,0 +1,179 @@
+# semantic-ir-to-javascript
+
+The **JavaScript backend** for the narrow-waist Semantic IR (SIR18) —
+the fifth target after TypeScript, Rust, Python, and Go.
+
+It consumes a [`semantic_ir::Module`](../semantic-ir) and emits a
+single **self-contained** `.js` file that runs directly under Node.js:
+
+```sh
+node out.js
+```
+
+No `npm install`, no `require()`, no `import` — the runtime helpers are
+pasted inline at the top of every artifact.
+
+## Where it sits in the stack
+
+```text
+  frontend            narrow waist            backend (this crate)
+┌───────────┐      ┌────────────────┐      ┌──────────────────────┐
+│ Twig / …  │ ───▶ │  semantic_ir   │ ───▶ │ semantic-ir-to-      │ ──▶ out.js
+│ (source)  │      │  ::Module      │      │ javascript           │
+└───────────┘      └────────────────┘      └──────────────────────┘
+```
+
+Any frontend that lowers to `semantic_ir::Module` (e.g.
+`twig-to-semantic-ir`) can target JavaScript through this crate. The IR
+is the contract; the backend never sees source syntax.
+
+## Pipeline
+
+`compile(&module)` runs four steps and returns a
+[`semantic_ir::Artifact`](../semantic-ir) (`filename`, `source`,
+`metadata`):
+
+1. **Validate** — `semantic_ir::validate`. Structural errors block
+   lowering.
+2. **Capability check** — every declared `Feature` must be in
+   `accepts_features()`; every intrinsic must be whitelisted (none are).
+3. **Reject tail-calls** — V8 does not reliably tail-call optimise.
+4. **Lower** — walk the IR, emit JavaScript (see `src/emit.rs`).
+
+```rust
+use semantic_ir_to_javascript::compile;
+
+let module = twig_to_semantic_ir::compile_source(
+    "(define (add a b) (+ a b))\n(print (add 1 2))",
+    "demo",
+)?;
+let artifact = compile(&module)?;       // artifact.source is runnable JS
+std::fs::write("demo.js", artifact.source)?;
+```
+
+Or via the `Backend` trait:
+
+```rust
+use semantic_ir::Backend;
+let artifact = semantic_ir_to_javascript::JavaScriptBackend::new().compile(&module)?;
+```
+
+## Capability declaration
+
+This first milestone accepts exactly the **v0 feature set** — the
+surface that the emitter knows how to lower today:
+
+| Accepted (v0)              | Rejected (deferred / unsupported)            |
+|----------------------------|----------------------------------------------|
+| `Closures`                 | `Floats`, `Sequences`, `Maps` (SIR16)        |
+| `Pairs`                    | `MutableBindings`, `Loops`, `ShortCircuit`   |
+| `Symbols`                  | `Classes`, `Modules`, `InstanceVars`, …      |
+| `Strings`                  | `Exceptions`, `StringInterpolation`          |
+| `DynamicTyping`            | `TailCalls` (V8 has no reliable TCO)         |
+| `OptionalTypeAnnotations`  | `Intrinsics` (empty whitelist)               |
+| `MutualRecursion`          |                                              |
+| `Globals`                  |                                              |
+
+`accepts_intrinsics()` is empty. The accept-set is deliberately matched
+to what `emit` handles, so a module using a deferred node is turned away
+*before* lowering rather than mis-compiled. Later milestones widen the
+set as the matching emit arms land.
+
+## Runtime shape (inlined `__Sir`)
+
+Every artifact pastes one fixed IIFE near the top:
+
+```js
+const __Sir = (() => {
+  "use strict";
+  class Sym { /* interned name */ }
+  class Pair { /* car / cdr */ }
+  class Closure { /* wraps a JS fn */ }
+  function intern(name) { /* one Sym per name */ }
+  function applyClosure(c, args) { /* invoke a Closure */ }
+  function truthy(v) { /* only false / null are falsy */ }
+  function format(v) { /* Lisp-ish display for print */ }
+  const builtins = { "+": …, "cons": …, "range": …, "print": … };
+  return { Sym, Pair, Closure, intern, applyClosure, truthy,
+           format, print, builtins, builtinClosure, callBuiltin };
+})();
+```
+
+The classic JavaScript module pattern: the classes, symbol table, and
+helpers are private to the arrow body; only the returned object escapes,
+bound to the single global `__Sir`. This mirrors the TypeScript
+backend's `namespace __Sir { … }` — minus the type annotations and the
+external package import.
+
+### Value model
+
+| SIR concept   | JavaScript representation                  |
+|---------------|--------------------------------------------|
+| `Int`/`Float` | native `number`                            |
+| `Bool`        | native `boolean`                           |
+| `Nil`         | `null`                                      |
+| `Symbol`      | `__Sir.Sym` instance (interned `.name`)    |
+| `Str`         | native `string`                            |
+| `Pair`        | `__Sir.Pair` instance (`car`/`cdr`)        |
+| `Closure`     | `__Sir.Closure` instance wrapping a JS fn  |
+
+### Builtin specialisation
+
+For idiomatic output, common builtins emit native JavaScript instead of
+a runtime call:
+
+- `+ - * / %` (2 args) → native infix `(a + b)`, …
+- `= != < > <= >=` (2 args) → `(a === b)`, `(a !== b)`, …
+- `not` (1 arg) → `(!__Sir.truthy(a))`; `neg` → `(-(a))`
+- `len` (1 arg) → `(a).length` (arrays and strings)
+- `print` (1 arg) → `__Sir.print(a)` (consistent stringification)
+
+A **variadic** operator (`(+ 1 2 3)` — more than two args) and any
+unrecognised builtin fall back to `__Sir.callBuiltin("+", […])`, so a new
+builtin runs without a backend change.
+
+## Output format
+
+- 2-space indentation, semicolons always (no ASI reliance).
+- `"use strict";` at the top (after the banner comment).
+- Banner comment naming the source module and language.
+- Trailing newline at end of file.
+- **Deterministic** — the same module always produces byte-identical
+  output (the runtime is fixed text; no iteration over unordered maps).
+
+A `Block` in **function-body** position emits a flat
+`{ stmts…; return value; }`; a `Block` in **expression** position emits
+an IIFE `(() => { stmts…; return value; })()` so its `let` bindings stay
+private. The module footer calls `_init()` (if present) then `main()`.
+
+## Identifier sanitisation
+
+JavaScript identifiers match `[A-Za-z_$][A-Za-z0-9_$]*` and must not be
+reserved words. SIR names can carry `?`, `!`, `-`, `+`, etc., so
+`sanitize_ident` rewrites anything that does not fit:
+
+| input        | output      | rule                              |
+|--------------|-------------|-----------------------------------|
+| `hello`      | `hello`     | already valid → unchanged         |
+| `class`      | `_$class`   | reserved word → `_$` prefix       |
+| `null?`      | `_$null_3f` | invalid char → `_$` + hex-encoded |
+| `""` (empty) | `_$empty`   | empty → sentinel                  |
+
+The `_$` prefix guarantees a legal leading character and avoids
+collisions between distinct invalid inputs (each non-`[A-Za-z0-9_$]`
+character hex-encodes to `_<codepoint>`).
+
+## Tests
+
+```sh
+cargo test -p semantic-ir-to-javascript
+```
+
+- Unit tests for `sanitize_ident`, string quoting, float formatting, and
+  every emit arm.
+- A determinism test (two compilations are byte-identical).
+- An end-to-end integration test (`tests/run_with_node.rs`) that lowers a
+  Twig program via `twig-to-semantic-ir`, emits JavaScript to a unique
+  temp file, **runs it with `node`**, and asserts stdout (add → `3`,
+  factorial → `120`, closure-adder → `8`). When `node` is not on PATH the
+  execution is skipped and the syntactic checks still run.
