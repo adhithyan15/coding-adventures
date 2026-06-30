@@ -43,6 +43,8 @@ All notable changes to this package will be documented in this file.
 - Added browser dashboard desired-state target controls for light on/off and
   brightness so the local controller can supervise intended state through the
   existing runtime-authorized native API.
+- Added URL-backed browser dashboard desired-state filters for entity,
+  requester, and capability scoping.
 - Added browser dashboard command-result and authorization-decision audit
   panels backed by the existing local-controller audit routes.
 - Added browser dashboard room, device, and bridge topology panels backed by

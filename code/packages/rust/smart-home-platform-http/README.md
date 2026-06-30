@@ -120,7 +120,8 @@ detail, desired-state target, state history, entity-scoped runtime events, and
 owning bridge command-result audit trail. The browser shell also exposes
 filters for room, entity domain/state/control status, device
 bridge/manufacturer/health, bridge integration/transport/health, capability
-catalog capability/commandability/observability, service catalog
+catalog capability/commandability/observability, desired-state
+entity/requester/capability, service catalog
 service/capability/target-entity/target-scene, API catalog
 surface/method/category/mutation/authorization, runtime event kind/activity
 entity, history event type, history bridge and observed/received time windows,
@@ -129,12 +130,12 @@ windows, command-result sequence windows, authorization outcome/principal, and
 capability-grant status/scope/principal,
 with server-backed room and topology scoping across inventory, state, history,
 event-log, and command-result panels plus server-backed capability catalog,
-service catalog, activity/history, command audit, authorization, and
-capability-grant scoping and local text search across the rendered dashboard
-rows. Those filter selections are mirrored into URL query parameters and
-restored on page load or browser navigation, so local-controller room, topology,
-capability, service, activity, history, audit, and grant-boundary views can be
-shared or reopened directly.
+desired-state supervision, service catalog, activity/history, command audit,
+authorization, and capability-grant scoping and local text search across the
+rendered dashboard rows. Those filter selections are mirrored into URL query
+parameters and restored on page load or browser navigation, so local-controller
+room, topology, capability, desired-state, service, activity, history, audit, and
+grant-boundary views can be shared or reopened directly.
 State-history routes also accept numeric observed-time windows through
 `from_ms`/`to_ms` or
 `observed_at_or_after_ms`/`observed_at_or_before_ms` on
