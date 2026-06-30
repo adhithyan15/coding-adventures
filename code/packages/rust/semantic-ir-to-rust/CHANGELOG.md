@@ -1,5 +1,42 @@
 # Changelog
 
+## 0.2.0 — SIR16 Floats + ShortCircuit
+
+The first two SIR-v1 (SIR16) features land in the Rust backend.  Until
+now `Floats` and `ShortCircuit` were undeclared and their IR nodes hit
+the `panic!` reject group; the TypeScript and Python backends already
+supported them, so this closes part of the cross-backend parity gap.
+
+### Added
+
+- `Feature::Floats` and `Feature::ShortCircuit` in the accepted-feature
+  set (`lib.rs`).
+- Runtime value model gains `Value::Float(f64)`.  The arithmetic helpers
+  (`plus`/`minus`/`times`/`divide`) stay on the exact i64 path while
+  every operand is an integer and promote the whole fold to f64 as soon
+  as any operand is a float (Python/Ruby/JS "int op float ⇒ float").
+  `number?` now covers floats, `=` is cross-representation (`1 == 1.0`
+  is true; `NaN == NaN` is false), and `<`/`>` compare numerically.
+- `Expr::FloatLit` emits a `Value::Float` literal — `{:?}` keeps the
+  trailing `.0` on integral values so the literal is never mistaken for
+  an `i64`; non-finite values use `f64::NAN`/`INFINITY`/`NEG_INFINITY`.
+- `Expr::LogicalAnd`/`Expr::LogicalOr` emit a truthy-guarded block
+  (`{ let __l = lhs; if truthy(&__l) { ... } else { ... } }`) that
+  evaluates the rhs only when the lhs decides — same semantics as the
+  TypeScript backend's truthy-guarded arrow IIFE.
+
+### Tests
+
+- `tests/compile_and_run_floats.rs`: an end-to-end proof that emits a
+  float + short-circuit module, compiles it with `rustc`, runs the
+  binary, and asserts its stdout.
+
+### Notes
+
+- The remaining four SIR16 features (MutableBindings, Loops, Sequences,
+  Maps) are still undeclared; their emit arms keep the `panic!`
+  (unreachable via the capability check) until later PRs extend them.
+
 ## 0.1.2 — SIR18 exhaustiveness (no behaviour change)
 
 semantic-ir 0.10.0 adds `Expr::StrConcat` (the SIR18 string-concat
