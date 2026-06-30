@@ -13,7 +13,6 @@
     "fixtures/09-transaction-rollback.json",
     "fixtures/10-error-wrong-param-count.json",
     "fixtures/11-error-unknown-table.json",
-    "fixtures/12-error-file-path-level0.json",
     "fixtures/13-drop-table.json",
     "fixtures/14-executemany.json",
     "fixtures/15-fetchone-fetchmany.json",

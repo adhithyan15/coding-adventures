@@ -104,9 +104,43 @@ def _normalise_row(row: tuple[Any, ...]) -> list[Any]:
 
 
 def _run_fixture(fixture_path: pathlib.Path) -> None:
-    """Execute all steps of a single fixture against a fresh connection."""
+    """Execute all steps of a single fixture against a fresh connection.
+
+    Fixtures that use ``connect_steps`` (top-level key) instead of ``steps``
+    exercise the connection-creation layer rather than statement execution.
+    Each ``connect_expect_error`` step in ``connect_steps`` calls
+    :func:`mini_sqlite.connect` with a given database path and asserts that
+    the expected exception is raised.  These fixtures create no persistent
+    connection — each step is fully self-contained.
+
+    Fixtures that use ``steps`` (the common case) open a single in-memory
+    connection and run all steps against it in sequence.
+    """
     data = json.loads(fixture_path.read_text(encoding="utf-8"))
     fixture_id = data["id"]
+
+    # ── connect_steps fixtures ────────────────────────────────────────────────
+    # These fixtures test connection-creation behaviour (e.g. rejecting file
+    # paths at Level 0).  They do NOT use a shared connection object.
+    if "connect_steps" in data:
+        connect_steps = data["connect_steps"]
+        for i, step in enumerate(connect_steps):
+            op = step["op"]
+            step_label = f"fixture={fixture_id!r} step={i} op={op!r}"
+            if op == "connect_expect_error":
+                db = step.get("database", ":memory:")
+                error_type_name = step["error_type"]
+                exc_class = _ERROR_MAP.get(error_type_name)
+                assert exc_class is not None, (
+                    f"{step_label}: unknown error_type {error_type_name!r}"
+                )
+                with pytest.raises(exc_class):
+                    mini_sqlite.connect(db)
+            else:
+                pytest.fail(f"{step_label}: unknown op in connect_steps {op!r}")
+        return  # connect_steps fixtures are fully handled above
+
+    # ── regular steps fixtures ────────────────────────────────────────────────
     steps = data["steps"]
 
     conn = mini_sqlite.connect(":memory:")
