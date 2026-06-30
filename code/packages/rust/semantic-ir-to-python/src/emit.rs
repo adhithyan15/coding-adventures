@@ -321,6 +321,16 @@ fn emit_function(out: &mut String, f: &Function) {
             ParamKind::Required => {}
         }
         out.push_str(&sanitize_ident(&p.name));
+        // P2c default parameters.  A defaulted param gets the *sentinel* as its
+        // native Python default — `name=_SIR_MISSING` — so callers may omit the
+        // trailing argument.  We deliberately do NOT emit `name=<expr>`: SIR
+        // defaults are call-time and may reference earlier params, which
+        // Python's def-time defaults cannot express (`def f(a, b=a)` is a
+        // NameError).  The real default is resolved in the body prologue below.
+        // (Only `Required` params carry a default; `*rest`/`**opts` never do.)
+        if p.kind == ParamKind::Required && p.default.is_some() {
+            out.push_str("=_SIR_MISSING");
+        }
     }
     out.push_str("):\n");
 
@@ -336,6 +346,32 @@ fn emit_function(out: &mut String, f: &Function) {
             let name = sanitize_ident(&p.name);
             let _ = writeln!(out, "{pad}{name} = list({name})");
         }
+    }
+
+    // P2c default-parameter resolve-prologue.  Emitted in *param order* so an
+    // earlier defaulted param is already resolved before a later default that
+    // references it.  Each defaulted param is `_SIR_MISSING` exactly when the
+    // caller omitted it; we then rebind it to its default expression, which is
+    // emitted through the ordinary expr path and runs *here in the body*, where
+    // earlier params are in scope — giving call-time, param-scoped semantics:
+    //
+    //     if <name> is _SIR_MISSING:
+    //         <name> = <default expr>
+    //
+    // A default expr may itself hoist nested defs (see `flush_hoist`), so each
+    // prologue entry is rendered into a scratch buffer, its hoists flushed
+    // before it, then appended — matching every other statement-emitting path.
+    let inner_pad = indent_str(2);
+    for p in &f.params {
+        let Some(default) = &p.default else { continue };
+        let name = sanitize_ident(&p.name);
+        let mut tmp = String::new();
+        let _ = writeln!(tmp, "{pad}if {name} is _SIR_MISSING:");
+        let _ = write!(tmp, "{inner_pad}{name} = ");
+        emit_expr(&mut tmp, default, 1);
+        tmp.push('\n');
+        flush_hoist(out);
+        out.push_str(&tmp);
     }
 
     emit_function_body(out, &f.body, 1);
@@ -1561,6 +1597,69 @@ mod tests {
         let mut out = String::new();
         emit_function(&mut out, &f);
         assert!(out.contains("def f(a, *rest, **opts):"), "got: {out}");
+    }
+
+    #[test]
+    fn emit_default_param_uses_sentinel_and_prologue() {
+        // P2c: `def f(a, b = a + 1); a + b; end`.  `b` is defaulted, so the
+        // signature must bind it to the sentinel (`b=_SIR_MISSING`) and the body
+        // must open with the resolve-prologue that rewrites a still-sentinel `b`
+        // to `a + 1` — emitted in the body, where the earlier param `a` is in
+        // scope (call-time, param-referencing default semantics).
+        let default_b = Expr::BuiltinCall {
+            name: "+".into(),
+            args: vec![
+                Expr::VarRef { name: "a".into(), scope: Scope::Param, span: s() },
+                Expr::IntLit { value: 1, span: s() },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let body = Block {
+            stmts: vec![],
+            value: Expr::BuiltinCall {
+                name: "+".into(),
+                args: vec![
+                    Expr::VarRef { name: "a".into(), scope: Scope::Param, span: s() },
+                    Expr::VarRef { name: "b".into(), scope: Scope::Param, span: s() },
+                ],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            span: s(),
+        };
+        let f = Function {
+            name: "f".into(),
+            params: vec![
+                Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+                Param {
+                    name: "b".into(),
+                    sir_type: None,
+                    kind: ParamKind::Required,
+                    default: Some(Box::new(default_b)),
+                    span: s(),
+                },
+            ],
+            return_type: None,
+            captures: vec![],
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_function(&mut out, &f);
+        // Signature: `a` plain, `b` defaulted to the sentinel.
+        assert!(out.contains("def f(a, b=_SIR_MISSING):"), "got:\n{out}");
+        // Prologue: sentinel check + rebind to the param-referencing default.
+        assert!(out.contains("    if b is _SIR_MISSING:"), "got:\n{out}");
+        assert!(out.contains("        b = _sir_plus(a, 1)"), "got:\n{out}");
+        // The prologue precedes the body's `return`.
+        let prologue_at = out.find("if b is _SIR_MISSING:").unwrap();
+        let return_at = out.find("return ").unwrap();
+        assert!(prologue_at < return_at, "prologue must precede return; got:\n{out}");
+        // A param with no default must NOT gain a sentinel default.
+        assert!(!out.contains("a=_SIR_MISSING"), "got:\n{out}");
     }
 
     #[test]

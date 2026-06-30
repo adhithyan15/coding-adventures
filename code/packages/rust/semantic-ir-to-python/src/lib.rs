@@ -49,6 +49,13 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::OptionalTypeAnnotations,
     Feature::MutualRecursion,
     Feature::Globals,
+    // P2c default parameters — emitted via the sentinel + body-prologue
+    // strategy (NOT Python's native def-time defaults, which cannot reference
+    // earlier params).  A defaulted param emits `name=_SIR_MISSING`; the
+    // function body opens with a resolve-prologue that, in param order,
+    // rewrites each still-sentinel param to its (call-time, param-scoped)
+    // default expression.  See `emit_function`.
+    Feature::DefaultParams,
     // SIR16 expression features — emitted natively (sequences → list,
     // maps → dict, short-circuit → truthy-guarded lambda, interpolation →
     // display-joined), per code/specs/sir-runtime.md.
@@ -282,6 +289,116 @@ mod tests {
         assert!(a.source.contains("a = list(a)"), "rest param must normalize to list; got:\n{}", a.source);
         if let Some(stdout) = run_emitted_python(&a.source) {
             assert_eq!(stdout, "3\n", "emitted python printed unexpected output");
+        }
+    }
+
+    #[test]
+    fn end_to_end_default_param_resolves_at_call_time_executes_py() {
+        // P2c discriminating execution-proof.  `def f(a, b)` where `b`'s default
+        // is `a + 1` — a *param-referencing* default that Python's native
+        // def-time defaults cannot express.  Two calls:
+        //   • `f(5)`     omits `b` → prologue resolves `b = a + 1 = 6`
+        //   • `f(5, 10)` passes `b` → prologue is skipped, `b = 10`
+        // so stdout must be `6` then `10`.  This proves the sentinel binds on
+        // omission, the prologue runs in body scope (sees `a`), and a supplied
+        // argument suppresses the default.
+        use semantic_ir::{Param, ParamKind, Scope, Stmt};
+
+        let default_b = Expr::BuiltinCall {
+            name: "+".into(),
+            args: vec![
+                Expr::VarRef { name: "a".into(), scope: Scope::Param, span: s() },
+                Expr::IntLit { value: 1, span: s() },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let f = Function {
+            name: "f".into(),
+            params: vec![
+                Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+                Param {
+                    name: "b".into(),
+                    sir_type: None,
+                    kind: ParamKind::Required,
+                    default: Some(Box::new(default_b)),
+                    span: s(),
+                },
+            ],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                // return b — so the printed value *is* the resolved default:
+                // f(5) → b defaults to a+1 = 6; f(5, 10) → b = 10.
+                value: Expr::VarRef { name: "b".into(), scope: Scope::Param, span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        // main: print(f(5)); print(f(5, 10))
+        let call_f = |args: Vec<Expr>| Expr::DirectCall {
+            fn_name: "f".into(),
+            args,
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let print_call = |inner: Expr| Stmt::ExprStmt {
+            expr: Expr::BuiltinCall {
+                name: "print".into(),
+                args: vec![inner],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            span: s(),
+        };
+        let main = Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![
+                    print_call(call_f(vec![Expr::IntLit { value: 5, span: s() }])),
+                    print_call(call_f(vec![
+                        Expr::IntLit { value: 5, span: s() },
+                        Expr::IntLit { value: 10, span: s() },
+                    ])),
+                ],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let m = Module {
+            name: "demo".into(),
+            manifest: FeatureManifest::from_features(&[
+                Feature::DefaultParams,
+                Feature::DynamicTyping,
+            ]),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![f, main],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("test")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        };
+        let a = compile(&m).expect("compile to python");
+        // Sentinel default + body prologue (the call-time, param-scoped shape).
+        assert!(a.source.contains("def f(a, b=_SIR_MISSING):"), "got:\n{}", a.source);
+        assert!(a.source.contains("    if b is _SIR_MISSING:"), "got:\n{}", a.source);
+        assert!(a.source.contains("        b = _sir_plus(a, 1)"), "got:\n{}", a.source);
+        // The omitting call passes only the present arg (no padding).
+        assert!(a.source.contains("f(5)"), "got:\n{}", a.source);
+        // Execution-proof via the PYTHONPATH-aware harness: 6 then 10.
+        if let Some(stdout) = run_emitted_python(&a.source) {
+            assert_eq!(stdout, "6\n10\n", "call-time default produced wrong output");
         }
     }
 

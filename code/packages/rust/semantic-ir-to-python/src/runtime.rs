@@ -107,6 +107,16 @@ from coding_adventures_sir_runtime_core import (
     sir_print as _sir_print,
     to_display as _sir_to_display,
 )
+
+# Default-parameter sentinel (P2c).  SIR defaults are *call-time* and may
+# reference *earlier* params, so Python's native def-time defaults are wrong
+# for our model.  Instead a defaulted param's native default is this unique
+# sentinel object: callers may omit the argument (it then binds the sentinel),
+# and the function body's resolve-prologue replaces any still-sentinel param
+# with its default expression — evaluated in the body, where earlier params
+# are already in scope.  A fresh `object()` is distinct from every real value
+# (including `None`), so it can never collide with a legitimate argument.
+_SIR_MISSING = object()
 "##;
 
 #[cfg(test)]
