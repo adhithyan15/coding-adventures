@@ -280,6 +280,20 @@ func _sir_eq(args []Value) Value {
 //   | both maps         | same handle, or entry-wise equal (in order) |
 //   | otherwise         | Go `==` (bool/nil/string/closure identity)  |
 func _sir_value_eq(a Value, b Value) bool {
+	// Cycle safety: two *distinct* cyclic structures (e.g. `xs[0]=xs`
+	// and `ys[0]=ys`, separate handles) would make a naive deep walk
+	// recurse forever — the same-pointer fast path only catches a value
+	// compared against *itself*.  We bound the walk co-inductively with a
+	// `pending` set of handle-pairs currently being compared: re-
+	// encountering a pair already in flight means we've closed a cycle in
+	// lock-step, so we treat that pair as equal (the standard co-inductive
+	// definition of bisimulation equality).  This terminates for *any*
+	// pair of finite-handle graphs.  The public signature is unchanged: it
+	// allocates a fresh `pending` set and delegates to the `_d` variant.
+	return _sir_value_eq_d(a, b, make(map[[2]Value]bool))
+}
+
+func _sir_value_eq_d(a Value, b Value, pending map[[2]Value]bool) bool {
 	if as, ok := a.(*Symbol); ok {
 		if bs, ok := b.(*Symbol); ok {
 			return as.Name == bs.Name
@@ -294,7 +308,7 @@ func _sir_value_eq(a Value, b Value) bool {
 	}
 	if ap, ok := a.(*Pair); ok {
 		if bp, ok := b.(*Pair); ok {
-			return _sir_value_eq(ap.Car, bp.Car) && _sir_value_eq(ap.Cdr, bp.Cdr)
+			return _sir_value_eq_d(ap.Car, bp.Car, pending) && _sir_value_eq_d(ap.Cdr, bp.Cdr, pending)
 		}
 		return false
 	}
@@ -311,15 +325,28 @@ func _sir_value_eq(a Value, b Value) bool {
 		if as == bs {
 			return true
 		}
+		// Already comparing this exact handle-pair higher up the stack ⇒
+		// we've matched in lock-step around a cycle.  Assume equal; a
+		// genuine difference is caught on a *non-cyclic* element
+		// elsewhere.  Key the pair on the boxed `Value`s so the two
+		// pointers compare by identity.
+		key := [2]Value{a, b}
+		if pending[key] {
+			return true
+		}
 		if len(as.Items) != len(bs.Items) {
 			return false
 		}
+		pending[key] = true
+		result := true
 		for i := range as.Items {
-			if !_sir_value_eq(as.Items[i], bs.Items[i]) {
-				return false
+			if !_sir_value_eq_d(as.Items[i], bs.Items[i], pending) {
+				result = false
+				break
 			}
 		}
-		return true
+		delete(pending, key)
+		return result
 	}
 	if am, ok := a.(*Map); ok {
 		bm, ok := b.(*Map)
@@ -329,16 +356,24 @@ func _sir_value_eq(a Value, b Value) bool {
 		if am == bm {
 			return true
 		}
+		key := [2]Value{a, b}
+		if pending[key] {
+			return true
+		}
 		if len(am.Entries) != len(bm.Entries) {
 			return false
 		}
+		pending[key] = true
+		result := true
 		for i := range am.Entries {
-			if !_sir_value_eq(am.Entries[i].Key, bm.Entries[i].Key) ||
-				!_sir_value_eq(am.Entries[i].Val, bm.Entries[i].Val) {
-				return false
+			if !_sir_value_eq_d(am.Entries[i].Key, bm.Entries[i].Key, pending) ||
+				!_sir_value_eq_d(am.Entries[i].Val, bm.Entries[i].Val, pending) {
+				result = false
+				break
 			}
 		}
-		return true
+		delete(pending, key)
+		return result
 	}
 	return a == b
 }
@@ -414,7 +449,34 @@ func _sir_print(args []Value) Value {
 	return nil
 }
 
+// ── format (cycle-safe) ────────────────────────────────────────
+//
+// `*Seq`/`*Map` are *shared, mutable* handles, so an emitted program
+// can build a cyclic structure (`xs = []; xs[0] = xs`).  A naive
+// structural walk would recurse forever and overflow the stack.  We
+// guard the recursion with a `visited` set of the Seq/Map *pointers*
+// currently on the active path: a handle is inserted on entry and
+// removed on exit.
+//
+// Keying on the pointer is idiomatic in Go — a `*Seq`/`*Map` boxed in
+// the `Value` (`interface{}`) compares by pointer identity, so it can be
+// used directly as a `map[Value]bool` key.  Two `Value`s alias the same
+// backing store iff they are the equal interface value (same dynamic
+// type + same pointer).
+//
+// Removing on exit (rather than leaving it set for the whole walk) is
+// deliberate — it means a value reached twice by two *sibling*
+// (non-cyclic) paths still prints in full both times; only a handle that
+// re-appears *within its own subtree* (a true cycle) is short-circuited
+// to a placeholder (`[...]` for a seq, `{...}` for a map).
+//
+// `_sir_format(Value) string` keeps its public signature: it allocates a
+// fresh visited set and delegates to the `_d` variant.
 func _sir_format(v Value) string {
+	return _sir_format_d(v, make(map[Value]bool))
+}
+
+func _sir_format_d(v Value, visited map[Value]bool) string {
 	if v == nil {
 		return "nil"
 	}
@@ -440,13 +502,27 @@ func _sir_format(v Value) string {
 		return s.Name
 	}
 	if p, ok := v.(*Pair); ok {
-		return _sir_format_pair(p)
+		return _sir_format_pair(p, visited)
 	}
 	if s, ok := v.(*Seq); ok {
-		return _sir_format_seq(s)
+		// Already on the active path ⇒ cycle.  Print a placeholder
+		// instead of recursing forever.
+		if visited[v] {
+			return "[...]"
+		}
+		visited[v] = true
+		out := _sir_format_seq(s, visited)
+		delete(visited, v)
+		return out
 	}
 	if m, ok := v.(*Map); ok {
-		return _sir_format_map(m)
+		if visited[v] {
+			return "{...}"
+		}
+		visited[v] = true
+		out := _sir_format_map(m, visited)
+		delete(visited, v)
+		return out
 	}
 	if _, ok := v.(*Closure); ok {
 		return "<closure>"
@@ -455,26 +531,26 @@ func _sir_format(v Value) string {
 }
 
 // Sequences print like a bracketed list: `[1, 2, 3]`.
-func _sir_format_seq(s *Seq) string {
+func _sir_format_seq(s *Seq, visited map[Value]bool) string {
 	out := "["
 	for i, item := range s.Items {
 		if i > 0 {
 			out += ", "
 		}
-		out += _sir_format(item)
+		out += _sir_format_d(item, visited)
 	}
 	return out + "]"
 }
 
 // Maps print like a brace-wrapped entry list in insertion order:
 // `{a: 1, b: 2}`.
-func _sir_format_map(m *Map) string {
+func _sir_format_map(m *Map, visited map[Value]bool) string {
 	out := "{"
 	for i, e := range m.Entries {
 		if i > 0 {
 			out += ", "
 		}
-		out += _sir_format(e.Key) + ": " + _sir_format(e.Val)
+		out += _sir_format_d(e.Key, visited) + ": " + _sir_format_d(e.Val, visited)
 	}
 	return out + "}"
 }
@@ -516,19 +592,23 @@ func _sir_format_float(x float64) string {
 	return s + ".0"
 }
 
-func _sir_format_pair(p *Pair) string {
-	out := "(" + _sir_format(p.Car)
+// `Pair`s are immutable (no shared mutable handle), so a pair-chain can
+// never form a cycle on its own.  It can, however, *contain* a cyclic
+// seq/map in a `car`/`cdr`, so we still thread `visited` through to the
+// element formatters.
+func _sir_format_pair(p *Pair, visited map[Value]bool) string {
+	out := "(" + _sir_format_d(p.Car, visited)
 	rest := p.Cdr
 	for {
 		if next, ok := rest.(*Pair); ok {
-			out += " " + _sir_format(next.Car)
+			out += " " + _sir_format_d(next.Car, visited)
 			rest = next.Cdr
 			continue
 		}
 		if rest == nil {
 			break
 		}
-		out += " . " + _sir_format(rest)
+		out += " . " + _sir_format_d(rest, visited)
 		break
 	}
 	return out + ")"
@@ -688,6 +768,14 @@ func _sir_map_set(mp Value, key Value, value Value) Value {
 // Shared insert-or-overwrite for `_sir_map_lit`/`_sir_map_set`: a new key
 // appends (preserving insertion order); an existing key (by
 // `_sir_value_eq`) overwrites in place without disturbing order.
+//
+// Cycle safety: unlike the Rust backend (whose `RefCell` would panic with
+// "already mutably borrowed" if `value_eq` re-entered the map being
+// mutated), Go has no aliasing-borrow check, so comparing a self-
+// referential key here is sound on its own.  The remaining hazard — a
+// cyclic key making `_sir_value_eq` recurse forever — is handled by that
+// function's co-inductive `pending` guard, so a self-referential key
+// (`d["self"] = d`) terminates.  No restructuring is needed here.
 func _sir_map_put(m *Map, key Value, value Value) {
 	for i := range m.Entries {
 		if _sir_value_eq(m.Entries[i].Key, key) {
@@ -833,6 +921,30 @@ mod tests {
     fn runtime_formats_seq_and_map() {
         assert!(RUNTIME.contains("func _sir_format_seq"));
         assert!(RUNTIME.contains("func _sir_format_map"));
+    }
+
+    #[test]
+    fn runtime_format_is_cycle_safe() {
+        // The public `_sir_format(Value) string` delegates to a
+        // visited-set variant that threads a `map[Value]bool` of the
+        // Seq/Map pointers currently on the active path, emitting a
+        // placeholder on re-entry (a true cycle) so a cyclic value
+        // terminates instead of overflowing the stack.
+        assert!(RUNTIME.contains("func _sir_format_d(v Value, visited map[Value]bool) string"));
+        assert!(RUNTIME.contains("return _sir_format_d(v, make(map[Value]bool))"));
+        assert!(RUNTIME.contains("\"[...]\""));
+        assert!(RUNTIME.contains("\"{...}\""));
+    }
+
+    #[test]
+    fn runtime_value_eq_is_cycle_safe() {
+        // `_sir_value_eq` keeps the same-pointer fast path and adds a
+        // co-inductive `pending` set of handle-pairs (`map[[2]Value]bool`)
+        // currently being compared, so two *distinct* cyclic structures
+        // terminate (lock-step cycle ⇒ equal).
+        assert!(RUNTIME.contains("func _sir_value_eq_d(a Value, b Value, pending map[[2]Value]bool) bool"));
+        assert!(RUNTIME.contains("return _sir_value_eq_d(a, b, make(map[[2]Value]bool))"));
+        assert!(RUNTIME.contains("key := [2]Value{a, b}"));
     }
 
     #[test]

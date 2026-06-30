@@ -1,5 +1,61 @@
 # Changelog
 
+## 0.4.1 — harden emitted Go runtime against cyclic Seq/Map
+
+`*Seq`/`*Map` are shared, *mutable* handles, so an emitted Go program can
+build a cyclic structure (`xs = [0]; xs[0] = xs`).  Before this release the
+emitted runtime walked such values structurally with no cycle protection,
+so a cyclic value would make **`_sir_format`** recurse forever and overflow
+the stack while printing, and make **`_sir_value_eq`** recurse forever when
+comparing two *distinct* cyclic structures (a self-cycle was already short-
+circuited by the same-pointer fast path, but distinct cyclic operands were
+not).  This mirrors the Rust backend's `0.4.1` cyclic-guard.
+
+This is a robustness fix only — the public runtime API and the printed form
+of every *non-cyclic* value are byte-identical (all existing tests pass
+unchanged).
+
+### Fixed
+
+- **`_sir_format` / `_sir_format_seq` / `_sir_format_map`** now thread a
+  visited-pointer set through a new `_sir_format_d(v, visited)` variant.
+  The set is a `map[Value]bool` keyed on the Seq/Map **pointer** — a
+  `*Seq`/`*Map` boxed in the `Value` (`interface{}`) compares by pointer
+  identity, the idiomatic Go way to key on handle identity.  A handle is
+  inserted on entry and removed on exit, so it is only "seen" along the
+  *current* path: a true cycle re-entering a handle within its own subtree
+  prints a placeholder (`[...]` for a seq, `{...}` for a map) and returns
+  instead of recursing, while a value reached twice by sibling (non-cyclic)
+  paths still prints in full.  `_sir_format_pair` threads the set too (a
+  pair can hold a cyclic seq/map).  The public `_sir_format(Value) string`
+  signature is unchanged — it allocates a fresh visited set and delegates.
+- **`_sir_value_eq`** keeps the same-pointer (`as == bs`) identity fast
+  path and adds a co-inductive `pending` set of handle-pairs currently
+  being compared (a `map[[2]Value]bool` keyed on the two boxed pointers)
+  via a new `_sir_value_eq_d(a, b, pending)` variant: re-encountering a
+  pair already in flight (a cycle matched in lock-step) is treated as
+  equal, bounding the deep comparison of two distinct cyclic operands so it
+  always terminates.
+- **`_sir_map_get` / `_sir_map_set` / `_sir_map_put`** need no
+  restructuring: Go has no `RefCell`-style aliasing-borrow check (the Rust
+  backend's "already mutably borrowed" panic on a self-referential key has
+  no Go analogue), and the remaining hazard — a cyclic key making
+  `_sir_value_eq` recurse forever — is now handled by that function's
+  co-inductive guard.  A comment on `_sir_map_put` records this.
+
+### Tests
+
+- New `tests/compile_and_run_cyclic.rs` integration test: hand-builds a
+  module that constructs a cyclic seq (`xs = [0]; xs[0] = xs; print(xs)`),
+  emits Go, `go run`s it (gated on `go` availability), and asserts the
+  program *terminates* and prints the `[[...]]` placeholder.  It also
+  checks that `_sir_value_eq` terminates on both a self-cyclic operand (via
+  the same-pointer fast path) and two *distinct* cyclic structures (via the
+  co-inductive guard), both `#t`.
+- Two new runtime unit tests assert the cycle-guard plumbing is present in
+  the emitted runtime string (`_sir_format_d` / `_sir_value_eq_d` and the
+  placeholder literals).
+
 ## 0.4.0 — SIR16 Sequences + Maps — completes Go v1 parity (A6)
 
 The final two SIR16 (v1) features land in the Go backend.  With them the
