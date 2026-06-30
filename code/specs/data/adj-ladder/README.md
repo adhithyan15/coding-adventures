@@ -200,6 +200,23 @@ including the fractional `LR < 1` values — is stated verbatim in the stem.
 Engine selects the combined-evidence leader **40/40 cached, zero wrong**. This realizes
 rung 6 of the ladder (ADJ-LADDER.md §5) — the on-ramp to the MLE apex.
 
+### Clinical management rung (rung 6b management, cached engine)
+
+`rung6b_management/` is the **therapy** half of the bridge: where rung 6 picks the *diagnosis*,
+rung 6b picks the *therapy*, framed as a scalar **feasibility** decision. Each item gives a drug's
+dose constraints — a therapeutic minimum it must clear, plus one or more ceilings (efficacy/toxicity
+maximum **and an organ-adjusted cap from the chart**: renal, hepatic, age, weight, blood-pressure,
+potassium). The gold program is `symbol dose : scalar`, one `constrain` per bound, then `check`; the
+**engine** intersects them (QF_LRA) and returns *feasible* or *infeasible*, read by the existing
+`check_outcome` extractor — **no harness or engine change** (the same machinery as
+`rung3_constraint_feasibility`). The reasoning and the trap: when an organ-adjusted cap falls **below**
+the therapeutic minimum the constraints conflict and the regimen is **infeasible** — the drug can't be
+dosed safely *and* effectively, so therapy must be switched; checking only "can I reach the
+therapeutic minimum?" (ignoring the chart cap) wrongly says feasible. Twenty scenarios (ten feasible,
+ten infeasible) across antimicrobials, anticoagulants, analgesics, antiarrhythmics, antiepileptics,
+endocrine, and oncologic therapy; every numeric bound is stated in the stem. Engine returns the
+correct feasibility **20/20 cached, zero wrong**. Realizes rung 6b of ADJ-LADDER.md §5.
+
 ## Layout
 
 ```
