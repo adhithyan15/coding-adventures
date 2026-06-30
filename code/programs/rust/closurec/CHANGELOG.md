@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.232.0] - 2026-06-30
+
+### Fixed — member object / call callee lost required parens (miscompile)
+
+At SIMPLE/ADVANCED, a parenthesised lower-precedence object of a member
+expression (or callee of a call) dropped its parentheses, changing semantics:
+`(a||b).c` became `a||b.c` (i.e. `a||(b.c)`); likewise `(a=b).c`, `(a?b:c).d`,
+`(a+b).c`, `(-a).b`, `(a||b)()`, `(a=b)(c)`. The emitter now writes the object /
+callee at `PREC_PRIMARY` so the parens survive while `a.b.c` / `f().x` / `a.b()`
+stay bare (see `closure-emitter` 0.18.6). New end-to-end test
+`simple_member_and_call_object_keeps_required_parens`.
+
 ## [0.231.0] - 2026-06-30
 
 ### Changed — binary/logical operators emit tight at SIMPLE/ADVANCED

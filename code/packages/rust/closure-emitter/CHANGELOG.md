@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.18.6] - 2026-06-30
+
+### Fixed — member object / call callee lost its parentheses (miscompile)
+
+`emit_member` emitted its object, and `emit_call` its callee, via
+`emit_expression` (parent precedence 0), which never parenthesises. A
+lower-precedence object/callee therefore dropped the parentheses that make it a
+unit, changing the parse:
+
+| input        | was         | now (correct) |
+|--------------|-------------|---------------|
+| `(a\|\|b).c`   | `a\|\|b.c` (= `a\|\|(b.c)`) | `(a\|\|b).c` |
+| `(a=b).c`    | `a=b.c`     | `(a=b).c`   |
+| `(a?b:c).d`  | `a?b:c.d`   | `(a?b:c).d` |
+| `(a+b).c`    | `a+b.c`     | `(a+b).c`   |
+| `(-a).b`     | `-a.b`      | `(-a).b`    |
+| `(a\|\|b)()`   | `a\|\|b()`    | `(a\|\|b)()`  |
+| `(a=b)(c)`   | `a=b(c)`    | `(a=b)(c)`  |
+
+Both now emit the object/callee at `PREC_PRIMARY`. Member and call expressions
+are themselves `PREC_PRIMARY`, so `a.b.c`, `f().x`, and `a.b()` stay
+parenthesis-free, while anything lower (binary, logical, unary, conditional,
+assignment, sequence) is wrapped. Computed member objects (`(a\|\|b)[c]`) are
+covered too. New emitter test
+`member_and_call_object_below_member_precedence_is_parenthesised`.
+
 ## [0.18.5] - 2026-06-30
 
 ### Changed — tighten binary/logical operator spacing in compact mode

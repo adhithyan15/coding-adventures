@@ -1081,7 +1081,13 @@ impl<'a> Emitter<'a> {
 
     fn emit_call(&mut self, c: &CallExpression) {
         self.maybe_map(&c.cv);
-        self.emit_expression(&c.callee);
+        // Same precedence requirement as `emit_member`'s object: the callee must
+        // bind at least as tightly as the call, or its parens are required.
+        // `emit_expression` (parent precedence 0) dropped them, so `(a||b)()`
+        // became `a||b()` (`a||(b())`) and `(a=b)(c)` became `a=b(c)` — both
+        // miscompiles. `PREC_PRIMARY` keeps `a.b()` / `f()()` paren-free and
+        // wraps any lower-precedence callee.
+        self.emit_expression_inner(&c.callee, PREC_PRIMARY);
         self.write_str("(");
         for (i, a) in c.arguments.iter().enumerate() {
             if i > 0 {
@@ -1095,7 +1101,15 @@ impl<'a> Emitter<'a> {
 
     fn emit_member(&mut self, m: &MemberExpression) {
         self.maybe_map(&m.cv);
-        self.emit_expression(&m.object);
+        // The object must bind at least as tightly as member access, or the
+        // parens that make it a unit are REQUIRED. Emitting it via
+        // `emit_expression` (parent precedence 0) dropped them — `(a||b).c`
+        // became `a||b.c` (i.e. `a||(b.c)`), a miscompile; likewise `(a+b).c`,
+        // `(a=b).c`, `(a?b:c).d`, `(-a).b`. Member/call are `PREC_PRIMARY`, so
+        // emitting the object at `PREC_PRIMARY` keeps `a.b.c` / `f().x`
+        // paren-free while wrapping anything lower (binary, logical, unary,
+        // conditional, assignment, sequence).
+        self.emit_expression_inner(&m.object, PREC_PRIMARY);
         if m.computed {
             self.write_str("[");
             self.emit_expression(&m.property);
@@ -1726,6 +1740,45 @@ mod tests {
             left: Box::new(left),
             right: Box::new(right),
         })
+    }
+
+    fn member(object: Expression, prop: &str, computed: bool) -> Expression {
+        Expression::MemberExpression(MemberExpression {
+            cv: None,
+            object: Box::new(object),
+            property: Box::new(ident(prop)),
+            computed,
+        })
+    }
+
+    #[test]
+    fn member_and_call_object_below_member_precedence_is_parenthesised() {
+        // `(a||b).c` — the object is a LogicalExpression (low precedence); the
+        // parens making it a unit are REQUIRED. Emitting the object at parent
+        // precedence 0 dropped them, yielding `a||b.c` (= `a||(b.c)`), a
+        // miscompile. The object is now emitted at PREC_PRIMARY.
+        let or = || {
+            Expression::LogicalExpression(LogicalExpression {
+                cv: None,
+                operator: LogicalOperator::Or,
+                left: Box::new(ident("a")),
+                right: Box::new(ident("b")),
+            })
+        };
+        assert_eq!(emit_expr(member(or(), "c", false)), "(a||b).c;");
+        assert_eq!(emit_expr(member(or(), "c", true)), "(a||b)[c];"); // computed
+        // A member object that is itself a member (PREC_PRIMARY) stays bare.
+        assert_eq!(
+            emit_expr(member(member(ident("a"), "b", false), "c", false)),
+            "a.b.c;"
+        );
+        // Call callee has the same requirement.
+        let call = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(or()),
+            arguments: Vec::new(),
+        });
+        assert_eq!(emit_expr(call), "(a||b)();");
     }
     fn unary(op: UnaryOperator, arg: Expression) -> Expression {
         Expression::UnaryExpression(UnaryExpression {
