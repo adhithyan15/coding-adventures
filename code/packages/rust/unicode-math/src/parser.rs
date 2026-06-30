@@ -22,7 +22,7 @@
 //!   parser stack.
 
 use crate::token::{tokenize, Token, TokenKind};
-use math_frontend::{BigOp, BinOp, FrontendError, MathExpr, Number, RelOp, UnaryOp};
+use math_frontend::{BigOp, BinOp, Func, FrontendError, MathExpr, Number, RelOp, UnaryOp};
 
 /// Maximum *nesting* depth before refusing with a spanned error (never overflow). Kept well
 /// below what would exhaust a test-thread stack so the guard fires before the stack does.
@@ -203,6 +203,7 @@ impl Parser<'_> {
             self.peek(),
             TokenKind::Num(_)
                 | TokenKind::Sym(_)
+                | TokenKind::Func(_)
                 | TokenKind::VulgarFrac(_, _)
                 | TokenKind::Sqrt
                 | TokenKind::RootN(_)
@@ -231,6 +232,12 @@ impl Parser<'_> {
             TokenKind::Sym(s) => {
                 self.advance();
                 Ok(MathExpr::Symbol(s))
+            }
+            TokenKind::Func(name) => {
+                // A named function applied to the next single atom (`sin x`, `log(x)`), the same
+                // "one atom argument" convention as roots — so `sin x + 1` is `(sin x) + 1`.
+                self.advance();
+                Ok(MathExpr::Call { func: func_of(&name), arg: Box::new(self.parse_atom()?) })
             }
             TokenKind::VulgarFrac(n, d) => {
                 self.advance();
@@ -299,6 +306,35 @@ impl Parser<'_> {
             }
             _ => Err(self.error_here("expected a closing bracket")),
         }
+    }
+}
+
+/// The neutral [`Func`] for a recognised function name. The tokenizer only emits names that
+/// [`crate::token`]'s `is_function` accepted, so `Other` is a defensive fallback (the closed
+/// variants below cover the whole accepted set, matching the AsciiMath frontend's `func_of`).
+fn func_of(name: &str) -> Func {
+    match name {
+        "sin" => Func::Sin,
+        "cos" => Func::Cos,
+        "tan" => Func::Tan,
+        "cot" => Func::Cot,
+        "sec" => Func::Sec,
+        "csc" => Func::Csc,
+        "arcsin" => Func::Asin,
+        "arccos" => Func::Acos,
+        "arctan" => Func::Atan,
+        "sinh" => Func::Sinh,
+        "cosh" => Func::Cosh,
+        "tanh" => Func::Tanh,
+        "ln" => Func::Ln,
+        "log" => Func::Log,
+        "exp" => Func::Exp,
+        "min" => Func::Min,
+        "max" => Func::Max,
+        "gcd" => Func::Gcd,
+        "lcm" => Func::Lcm,
+        "det" => Func::Det,
+        _ => Func::Other(name.to_string()),
     }
 }
 

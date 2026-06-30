@@ -148,8 +148,8 @@ frontend additionally ships notation-specific golden tests.
   (`x² + y² = r²`, `√x`, `½`, `π·α`, `a ≤ b`). A small crate implementing the trait; its Greek /
   constant glyphs canonicalize to the same `Symbol` names as AsciiMath, so the notations agree on
   one neutral string. Covers numbers/symbols/super-&-subscripts (Unicode glyphs *and* ASCII
-  `^`/`_`)/fractions/roots/relations/implicit-mul/±∓ and the big operators `∑ ∏ ∫ ∮ ∐` (PR-2);
-  named functions, matrices, and `\text` are PR-3.
+  `^`/`_`)/fractions/roots/relations/implicit-mul/±∓, the big operators `∑ ∏ ∫ ∮ ∐` (PR-2), and
+  named functions `sin cos … ln log exp` (PR-3, longest-match); matrices and `\text` are PR-4.
 - Future: `mathml`, MathJSON, content-MathML, spreadsheet formulae, … each a small crate
   implementing the trait. None require changes to consumers. **Three frontends now in (LaTeX,
   AsciiMath, Unicode), all feeding one neutral AST with zero consumer change** — the pluggability

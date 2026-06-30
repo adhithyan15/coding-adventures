@@ -2,6 +2,25 @@
 
 All notable changes to the unicode-math pluggable frontend.
 
+## [0.3.0] — 2026-06-30
+
+### Added — PR-3: named functions
+
+- **Named functions** in ASCII letter runs → `MathExpr::Call { func, arg }`: `sin cos tan cot sec
+  csc arcsin arccos arctan sinh cosh tanh ln log exp min max gcd lcm det`, applied to the next
+  single atom (`sin x`, `log(x)`, `arcsin x`; `sin x + 1` is `(sin x) + 1`). `capabilities()` now
+  declares `functions` (enforced by the conformance harness). The function set mirrors the
+  AsciiMath frontend's `func_of`, so the two notations name the same functions.
+- The tokenizer now scans a **maximal ASCII-letter run** and carves it by **greedy longest-match**
+  against the function table (`token::function_prefix_len`): a recognised name becomes one `Func`
+  token, any other leading letter a single `Sym` — so `sinx` ⇒ `sin`·`x`, `arcsin` is one function
+  (not `arc`·…), and a non-function run like `xy` is still the product `x·y` (single-letter
+  variables, unchanged). Runs are pure ASCII (Greek/constant glyphs are multi-byte, handled
+  separately), so the byte-offset spans stay char-boundary-safe.
+- 28 unit + 1 doc test pass (new `function_runs_split_longest_match`, `named_functions`; conformance
+  corpus gains `sin x`, `log(x) + 1`, `arcsin x`); clippy `-D warnings` clean;
+  `#![forbid(unsafe_code)]`. **Out of scope (PR-4):** matrices, `\text`.
+
 ## [0.2.0] — 2026-06-30
 
 ### Added — PR-2: big operators + explicit ASCII scripts
