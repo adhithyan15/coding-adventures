@@ -304,6 +304,10 @@ public sealed class ConstantFoldingPass : IPass
         {
             (UnaryOperator.Not, SqlExpr.Literal { Value: bool b }) =>
                 new SqlExpr.Literal(!b),
+            // Note: -long.MinValue silently wraps to long.MinValue in unchecked
+            // arithmetic (C# default). This mirrors the execution engine's behaviour
+            // and is not exploitable, but means constant-folded results respect
+            // two's-complement wraparound rather than SQL overflow errors.
             (UnaryOperator.Neg, SqlExpr.Literal { Value: long n }) =>
                 new SqlExpr.Literal(-n),
             (UnaryOperator.Neg, SqlExpr.Literal { Value: double d }) =>
@@ -621,8 +625,6 @@ public sealed class ProjectionPruningPass : IPass
     private static HashSet<string> CollectFromExprs(IEnumerable<SqlExpr> exprs)
     {
         var cols = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var e in exprs)
-            ConstantFoldingPass.FoldExpr(e); // ensure we recurse (fold is a no-op here)
         foreach (var e in exprs)
             Collect(e, cols);
         return cols;
