@@ -2,6 +2,30 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.34.0] — 2026-06-29
+
+### Added — rung 6 batch 3: five-way differentials across broader specialties
+
+- **`rung6_clinical_differential/items.json`** grows **40 → 60** (`r6-41`..`r6-60`): the difficulty
+  increment over batch 1 (three diagnoses) and batch 2 (four diagnoses + an "unknown" abstain slot) —
+  **five genuine competing diagnoses** (options A–E are all real dx, no abstain slot). Each item gives
+  five diagnoses at prior 0.2, three findings carrying a likelihood ratio per (finding, dx) pair, and
+  two observed findings; ADJ does the Bayesian combination (prior × ∏ observed LR) and the existing
+  **`decision_leader`** extractor reads the leader — **no harness or engine change**.
+- Item design (clean, medically-correct gold): the two **observed** findings are the classic
+  confirmatory pair for one diagnosis (LR 8 and 7 on the winner, **0.5 — argues-against** on every
+  rival); the third, **unobserved** finding is a high-LR "flashy" pointer to a rival — the anchoring
+  trap a careless reader would seize on. The winner's product (0.2·8·7) dominates every rival's
+  (0.2·0.5·0.5), so the leader is unique.
+- Specialties deliberately **broaden board coverage**: pediatrics, OB, psychiatry, emergency medicine,
+  endocrine, hematology, nephrology, dermatology, rheumatology, neurology, ID, cardiology, pulmonology,
+  GI, toxicology.
+- The gold answer letter is **rotated across A–E** by item index (the engine selects by label, so
+  position is irrelevant to scoring but the key is not a constant letter). Every prior and LR is stated
+  **verbatim** in the auto-generated stem (no-result-literal gate holds); options distinct. Engine
+  returns the correct leader **60/60** cached, zero wrong. (Same `SELF_CONTAINED_RUNGS` registration —
+  no test-tuple change.)
+
 ## [0.33.0] — 2026-06-29
 
 ### Added — rung 6c batch 2: three-tier formulary cost-minimization
