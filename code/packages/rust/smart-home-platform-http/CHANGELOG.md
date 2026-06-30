@@ -89,6 +89,8 @@ All notable changes to this package will be documented in this file.
   `observed_at_or_before_ms`.
 - Added sequence-window filtering for runtime event-log and command-result
   audit routes with `to_sequence`.
+- Added browser dashboard sequence-window filters for runtime event-log and
+  command-result audit views backed by URL state.
 - Added fixture-controller launch help, smoke-test URLs, and example-level tests
   to keep the local controller startup path usable.
 - Added a machine-readable local-controller smoke plan route that lists safe

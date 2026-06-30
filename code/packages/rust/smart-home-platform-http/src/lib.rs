@@ -389,6 +389,12 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
               <option value="supervision">Supervision</option>
             </select>
           </label>
+          <label>Event From
+            <input id="filter-event-from-sequence" data-dashboard-filter="event-from-sequence" type="number" min="0" step="1" inputmode="numeric">
+          </label>
+          <label>Event To
+            <input id="filter-event-to-sequence" data-dashboard-filter="event-to-sequence" type="number" min="0" step="1" inputmode="numeric">
+          </label>
           <label>Activity Entity
             <input id="filter-activity-entity" data-dashboard-filter="activity-entity" type="search" autocomplete="off">
           </label>
@@ -420,6 +426,12 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           </label>
           <label>Correlation
             <input id="filter-command-correlation" data-dashboard-filter="command-correlation" type="search" autocomplete="off">
+          </label>
+          <label>Command From
+            <input id="filter-command-from-sequence" data-dashboard-filter="command-from-sequence" type="number" min="0" step="1" inputmode="numeric">
+          </label>
+          <label>Command To
+            <input id="filter-command-to-sequence" data-dashboard-filter="command-to-sequence" type="number" min="0" step="1" inputmode="numeric">
           </label>
           <label>Authorization
             <select id="filter-authorization-outcome" data-dashboard-filter="authorization-outcome">
@@ -589,11 +601,15 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       filterAuthorizationPrincipal: document.querySelector("#filter-authorization-principal"),
       filterCommandBridge: document.querySelector("#filter-command-bridge"),
       filterCommandCorrelation: document.querySelector("#filter-command-correlation"),
+      filterCommandFromSequence: document.querySelector("#filter-command-from-sequence"),
       filterCommandId: document.querySelector("#filter-command-id"),
       filterCommandStatus: document.querySelector("#filter-command-status"),
+      filterCommandToSequence: document.querySelector("#filter-command-to-sequence"),
       filterControl: document.querySelector("#filter-control"),
       filterDomain: document.querySelector("#filter-domain"),
+      filterEventFromSequence: document.querySelector("#filter-event-from-sequence"),
       filterEventKind: document.querySelector("#filter-event-kind"),
+      filterEventToSequence: document.querySelector("#filter-event-to-sequence"),
       filterGrantPrincipal: document.querySelector("#filter-grant-principal"),
       filterGrantScope: document.querySelector("#filter-grant-scope"),
       filterGrantStatus: document.querySelector("#filter-grant-status"),
@@ -632,12 +648,16 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       ["state", els.filterState],
       ["control", els.filterControl],
       ["event_kind", els.filterEventKind],
+      ["event_from_sequence", els.filterEventFromSequence],
+      ["event_to_sequence", els.filterEventToSequence],
       ["activity_entity", els.filterActivityEntity],
       ["history_type", els.filterHistoryType],
       ["command_status", els.filterCommandStatus],
       ["command_id", els.filterCommandId],
       ["command_bridge", els.filterCommandBridge],
       ["command_correlation", els.filterCommandCorrelation],
+      ["command_from_sequence", els.filterCommandFromSequence],
+      ["command_to_sequence", els.filterCommandToSequence],
       ["authorization_outcome", els.filterAuthorizationOutcome],
       ["authorization_principal", els.filterAuthorizationPrincipal],
       ["grant_status", els.filterGrantStatus],
@@ -689,12 +709,16 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       state: els.filterState.value,
       control: els.filterControl.value,
       eventKind: els.filterEventKind.value,
+      eventFromSequence: els.filterEventFromSequence.value.trim(),
+      eventToSequence: els.filterEventToSequence.value.trim(),
       activityEntity: els.filterActivityEntity.value.trim(),
       historyType: els.filterHistoryType.value,
       commandStatus: els.filterCommandStatus.value,
       commandId: els.filterCommandId.value.trim(),
       commandBridge: els.filterCommandBridge.value.trim(),
       commandCorrelation: els.filterCommandCorrelation.value.trim(),
+      commandFromSequence: els.filterCommandFromSequence.value.trim(),
+      commandToSequence: els.filterCommandToSequence.value.trim(),
       authorizationOutcome: els.filterAuthorizationOutcome.value,
       authorizationPrincipal: els.filterAuthorizationPrincipal.value.trim(),
       grantStatus: els.filterGrantStatus.value,
@@ -1195,7 +1219,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
             limit: 12,
             kind: filters.eventKind,
             room_id: roomId,
-            entity_id: activityEntity
+            entity_id: activityEntity,
+            from_sequence: filters.eventFromSequence,
+            to_sequence: filters.eventToSequence
           })),
           json(queryUrl("/api/smart_home/command_results", {
             limit: 8,
@@ -1203,7 +1229,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
             status: filters.commandStatus,
             command_id: filters.commandId,
             bridge_id: filters.commandBridge,
-            correlation_id: filters.commandCorrelation
+            correlation_id: filters.commandCorrelation,
+            from_sequence: filters.commandFromSequence,
+            to_sequence: filters.commandToSequence
           })),
           json(queryUrl("/api/smart_home/authorization_decisions", {
             limit: 8,
@@ -7999,12 +8027,20 @@ mod tests {
             assert!(body.contains("data-dashboard-filter=\"domain\""));
             assert!(body.contains("data-dashboard-filter=\"activity-entity\""));
             assert!(body.contains("data-dashboard-filter=\"history-type\""));
+            assert!(body.contains("data-dashboard-filter=\"event-from-sequence\""));
+            assert!(body.contains("data-dashboard-filter=\"event-to-sequence\""));
             assert!(body.contains("data-dashboard-filter=\"command-status\""));
+            assert!(body.contains("data-dashboard-filter=\"command-from-sequence\""));
+            assert!(body.contains("data-dashboard-filter=\"command-to-sequence\""));
             assert!(body.contains("const FILTER_QUERY_PARAMS = ["));
             assert!(body.contains("[\"event_kind\", els.filterEventKind]"));
+            assert!(body.contains("[\"event_from_sequence\", els.filterEventFromSequence]"));
+            assert!(body.contains("[\"event_to_sequence\", els.filterEventToSequence]"));
             assert!(body.contains("[\"activity_entity\", els.filterActivityEntity]"));
             assert!(body.contains("[\"history_type\", els.filterHistoryType]"));
             assert!(body.contains("[\"command_status\", els.filterCommandStatus]"));
+            assert!(body.contains("[\"command_from_sequence\", els.filterCommandFromSequence]"));
+            assert!(body.contains("[\"command_to_sequence\", els.filterCommandToSequence]"));
             assert!(body.contains("restoreFiltersFromUrl()"));
             assert!(body.contains("window.history.replaceState(null, \"\", nextUrl)"));
             assert!(body.contains(
@@ -8031,9 +8067,13 @@ mod tests {
             );
             assert!(body.contains("json(\"/api/smart_home/bridges?limit=8\")"));
             assert!(body.contains("queryUrl(\"/api/smart_home/events\", {"));
+            assert!(body.contains("from_sequence: filters.eventFromSequence"));
+            assert!(body.contains("to_sequence: filters.eventToSequence"));
             assert!(body.contains("queryUrl(\"/api/smart_home/command_results\", {"));
             assert!(body.contains("room_id: roomId"));
             assert!(body.contains("status: filters.commandStatus"));
+            assert!(body.contains("from_sequence: filters.commandFromSequence"));
+            assert!(body.contains("to_sequence: filters.commandToSequence"));
             assert!(body.contains("queryUrl(\"/api/smart_home/authorization_decisions\", {"));
             assert!(body.contains("outcome: filters.authorizationOutcome"));
             assert!(body.contains("renderRoomOptions(rooms, filters.room)"));
@@ -9509,15 +9549,23 @@ mod tests {
         assert!(body.contains("data-dashboard-filter=\"authorization-principal\""));
         assert!(body.contains("data-dashboard-filter=\"activity-entity\""));
         assert!(body.contains("data-dashboard-filter=\"history-type\""));
+        assert!(body.contains("data-dashboard-filter=\"event-from-sequence\""));
+        assert!(body.contains("data-dashboard-filter=\"event-to-sequence\""));
         assert!(body.contains("data-dashboard-filter=\"command-id\""));
         assert!(body.contains("data-dashboard-filter=\"command-bridge\""));
         assert!(body.contains("data-dashboard-filter=\"command-correlation\""));
+        assert!(body.contains("data-dashboard-filter=\"command-from-sequence\""));
+        assert!(body.contains("data-dashboard-filter=\"command-to-sequence\""));
         assert!(body.contains("const FILTER_QUERY_PARAMS = ["));
+        assert!(body.contains("[\"event_from_sequence\", els.filterEventFromSequence]"));
+        assert!(body.contains("[\"event_to_sequence\", els.filterEventToSequence]"));
         assert!(body.contains("[\"activity_entity\", els.filterActivityEntity]"));
         assert!(body.contains("[\"history_type\", els.filterHistoryType]"));
         assert!(body.contains("[\"command_id\", els.filterCommandId]"));
         assert!(body.contains("[\"command_bridge\", els.filterCommandBridge]"));
         assert!(body.contains("[\"command_correlation\", els.filterCommandCorrelation]"));
+        assert!(body.contains("[\"command_from_sequence\", els.filterCommandFromSequence]"));
+        assert!(body.contains("[\"command_to_sequence\", els.filterCommandToSequence]"));
         assert!(body.contains("[\"authorization_principal\", els.filterAuthorizationPrincipal]"));
         assert!(body.contains("[\"grant_status\", els.filterGrantStatus]"));
         assert!(body.contains("window.addEventListener(\"popstate\""));
@@ -9528,6 +9576,8 @@ mod tests {
         assert!(body.contains("const historyType = filters.historyType || undefined"));
         assert!(body.contains("queryUrl(\"/api/smart_home/state_history\", {"));
         assert!(body.contains("queryUrl(\"/api/smart_home/events\", {"));
+        assert!(body.contains("from_sequence: filters.eventFromSequence"));
+        assert!(body.contains("to_sequence: filters.eventToSequence"));
         assert!(body.contains("entity_id: activityEntity"));
         assert!(body.contains("event_type: historyType"));
         assert!(body.matches("entity_id: activityEntity").count() >= 2);
@@ -9540,6 +9590,8 @@ mod tests {
         assert!(body.contains("command_id: filters.commandId"));
         assert!(body.contains("bridge_id: filters.commandBridge"));
         assert!(body.contains("correlation_id: filters.commandCorrelation"));
+        assert!(body.contains("from_sequence: filters.commandFromSequence"));
+        assert!(body.contains("to_sequence: filters.commandToSequence"));
         assert!(body.contains("queryUrl(\"/api/smart_home/authorization_decisions\", {"));
         assert!(body.contains("principal_id: filters.authorizationPrincipal"));
         assert!(body.contains("queryUrl(\"/api/smart_home/capability_grants\", {"));
