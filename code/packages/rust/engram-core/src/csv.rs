@@ -652,18 +652,47 @@ impl AnkiNoteImportKind {
             Self::Basic {
                 optional_reverse, ..
             } => {
-                let front_index = column_index(columns, "Front").ok_or_else(|| {
-                    csv_error(
-                        "Anki note TSV #columns must include Front and Back",
-                        Some(1),
+                let tag_index = tags_column.or_else(|| column_index(columns, "Tags"));
+                let (front_index, back_index, add_reverse_index) = if note_type_column.is_some() {
+                    let regular_columns = regular_column_indexes(
+                        columns.len(),
+                        tag_index,
+                        guid_column,
+                        deck_column,
+                        note_type_column,
+                    );
+                    let front_index = *regular_columns.first().ok_or_else(|| {
+                        csv_error(
+                            "Anki Basic note TSV must include at least two regular field columns",
+                            Some(1),
+                        )
+                    })?;
+                    let back_index = *regular_columns.get(1).ok_or_else(|| {
+                        csv_error(
+                            "Anki Basic note TSV must include at least two regular field columns",
+                            Some(1),
+                        )
+                    })?;
+                    (front_index, back_index, regular_columns.get(2).copied())
+                } else {
+                    let front_index = column_index(columns, "Front").ok_or_else(|| {
+                        csv_error(
+                            "Anki note TSV #columns must include Front and Back",
+                            Some(1),
+                        )
+                    })?;
+                    let back_index = column_index(columns, "Back").ok_or_else(|| {
+                        csv_error(
+                            "Anki note TSV #columns must include Front and Back",
+                            Some(1),
+                        )
+                    })?;
+                    (
+                        front_index,
+                        back_index,
+                        column_index(columns, "Add Reverse"),
                     )
-                })?;
-                let back_index = column_index(columns, "Back").ok_or_else(|| {
-                    csv_error(
-                        "Anki note TSV #columns must include Front and Back",
-                        Some(1),
-                    )
-                })?;
+                };
                 let mut field_columns = vec![
                     AnkiFieldColumn {
                         field_id: "front".to_string(),
@@ -677,7 +706,7 @@ impl AnkiNoteImportKind {
                     },
                 ];
                 if *optional_reverse {
-                    if let Some(add_reverse_index) = column_index(columns, "Add Reverse") {
+                    if let Some(add_reverse_index) = add_reverse_index {
                         field_columns.push(AnkiFieldColumn {
                             field_id: "add-reverse".to_string(),
                             field_name: "Add Reverse".to_string(),
@@ -687,22 +716,41 @@ impl AnkiNoteImportKind {
                 }
                 Ok(column_plan(
                     field_columns,
-                    tags_column.or_else(|| column_index(columns, "Tags")),
+                    tag_index,
                     guid_column,
                     deck_column,
                     note_type_column,
                 ))
             }
             Self::Cloze => {
-                let text_index = column_index(columns, "Text").ok_or_else(|| {
-                    csv_error("Anki Cloze TSV #columns must include Text", Some(1))
-                })?;
+                let tag_index = tags_column.or_else(|| column_index(columns, "Tags"));
+                let (text_index, extra_index) = if note_type_column.is_some() {
+                    let regular_columns = regular_column_indexes(
+                        columns.len(),
+                        tag_index,
+                        guid_column,
+                        deck_column,
+                        note_type_column,
+                    );
+                    let text_index = *regular_columns.first().ok_or_else(|| {
+                        csv_error(
+                            "Anki Cloze TSV must include at least one regular field column",
+                            Some(1),
+                        )
+                    })?;
+                    (text_index, regular_columns.get(1).copied())
+                } else {
+                    let text_index = column_index(columns, "Text").ok_or_else(|| {
+                        csv_error("Anki Cloze TSV #columns must include Text", Some(1))
+                    })?;
+                    (text_index, column_index(columns, "Extra"))
+                };
                 let mut field_columns = vec![AnkiFieldColumn {
                     field_id: "text".to_string(),
                     field_name: "Text".to_string(),
                     column_index: text_index,
                 }];
-                if let Some(extra_index) = column_index(columns, "Extra") {
+                if let Some(extra_index) = extra_index {
                     field_columns.push(AnkiFieldColumn {
                         field_id: "extra".to_string(),
                         field_name: "Extra".to_string(),
@@ -711,7 +759,7 @@ impl AnkiNoteImportKind {
                 }
                 Ok(column_plan(
                     field_columns,
-                    tags_column.or_else(|| column_index(columns, "Tags")),
+                    tag_index,
                     guid_column,
                     deck_column,
                     note_type_column,
@@ -752,6 +800,23 @@ fn column_plan(
         note_type_index,
         required_columns,
     }
+}
+
+fn regular_column_indexes(
+    column_count: usize,
+    tag_index: Option<usize>,
+    guid_index: Option<usize>,
+    deck_index: Option<usize>,
+    note_type_index: Option<usize>,
+) -> Vec<usize> {
+    (0..column_count)
+        .filter(|index| {
+            Some(*index) != tag_index
+                && Some(*index) != guid_index
+                && Some(*index) != deck_index
+                && Some(*index) != note_type_index
+        })
+        .collect()
 }
 
 fn matches_csv_header(fields: &[String], expected: &[&str]) -> bool {
@@ -1723,7 +1788,7 @@ mod tests {
             note_id_prefix: "note".to_string(),
             created_at: 456,
         };
-        let text = "#separator:tab\n#notetype column:3\n#columns:Front\tBack\tModel\nhola\thello\tBasic (type in the answer)\namma\tmother\tBasic (and reversed card)\n";
+        let text = "#separator:tab\n#notetype column:3\n#columns:Prompt\tAnswer\tModel\nhola\thello\tBasic (type in the answer)\namma\tmother\tBasic (and reversed card)\n";
 
         let imported = import_anki_notes_tsv(text, &options).unwrap();
 
@@ -1737,6 +1802,10 @@ mod tests {
         assert_eq!(imported.note_types[1].templates.len(), 2);
         assert_eq!(imported.notes[0].note_type_id, "basic-type-in-the-answer");
         assert_eq!(imported.notes[1].note_type_id, "basic-and-reversed-card");
+        assert_eq!(imported.notes[0].fields[0].field_id, "front");
+        assert_eq!(imported.notes[0].fields[0].value, "hola");
+        assert_eq!(imported.notes[0].fields[1].field_id, "back");
+        assert_eq!(imported.notes[0].fields[1].value, "hello");
         assert_eq!(imported.cards.len(), 3);
         assert_eq!(imported.cards[0].id, "note-1::forward");
         assert_eq!(imported.cards[0].front, "hola[type answer: Back]");

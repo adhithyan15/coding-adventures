@@ -8957,7 +8957,7 @@ mod tests {
     fn parse_anki_notes_tsv_preserves_note_type_column_models() {
         let session = EngramSession::new();
         let value: Value = serde_json::from_str(&session.parse_anki_notes_tsv(
-            "#separator:tab\n#notetype column:3\n#columns:Front\tBack\tModel\nhola\thello\tBasic (type in the answer)\namma\tmother\tBasic (and reversed card)\n",
+            "#separator:tab\n#notetype column:3\n#columns:Prompt\tAnswer\tModel\nhola\thello\tBasic (type in the answer)\namma\tmother\tBasic (and reversed card)\n",
             "deck",
             "",
             "",
@@ -8984,6 +8984,10 @@ mod tests {
             value["import"]["notes"][1]["noteTypeId"],
             "basic-and-reversed-card"
         );
+        assert_eq!(value["import"]["notes"][0]["fields"][0]["fieldId"], "front");
+        assert_eq!(value["import"]["notes"][0]["fields"][0]["value"], "hola");
+        assert_eq!(value["import"]["notes"][0]["fields"][1]["fieldId"], "back");
+        assert_eq!(value["import"]["notes"][0]["fields"][1]["value"], "hello");
         assert_eq!(value["import"]["cards"].as_array().unwrap().len(), 3);
     }
 
