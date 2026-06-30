@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <RootNamespace>CodingAdventures.SqlCodegen.FSharp</RootNamespace>
+    <AssemblyName>CodingAdventures.SqlCodegen.FSharp</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.SqlCodegen.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>F# bytecode code generator: transforms OptimizedPlan trees into stack-machine bytecode for the Mini-SQLite Level 1 pipeline.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="SqlCodegen.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../fsharp/sql-optimizer/CodingAdventures.SqlOptimizer.fsproj" />
+  </ItemGroup>
+</Project>

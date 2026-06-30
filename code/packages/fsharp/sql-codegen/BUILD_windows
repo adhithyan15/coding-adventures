@@ -1,0 +1,1 @@
+dotnet test tests/CodingAdventures.SqlCodegen.FSharp.Tests.fsproj --disable-build-servers /p:CollectCoverage=true "/p:Include=[CodingAdventures.SqlCodegen.FSharp]*" /p:Threshold=80 /p:ThresholdType=line
