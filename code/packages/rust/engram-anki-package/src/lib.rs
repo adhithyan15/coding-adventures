@@ -2724,13 +2724,19 @@ fn review_kind(export: &ExportModel, review: &Review, card_key: &str) -> i64 {
     if review_is_from_dynamic_deck(export, review, card_key) {
         return 3;
     }
-    match review
-        .resulting_progress
-        .as_ref()
-        .map(|progress| progress.state)
-    {
-        Some(CardState::Learning) => 0,
-        Some(CardState::Relearning) => 2,
+
+    if let Some(progress) = review.previous_progress.as_ref() {
+        return match progress.state {
+            CardState::Learning => 0,
+            CardState::Relearning => 2,
+            _ => 1,
+        };
+    }
+
+    match review.resulting_progress.as_ref() {
+        Some(progress) if progress.state == CardState::Learning => 0,
+        Some(progress) if progress.state == CardState::Relearning => 2,
+        Some(progress) if progress.state == CardState::Review && progress.times_seen <= 1 => 0,
         _ => 1,
     }
 }
@@ -5991,6 +5997,113 @@ CREATE TABLE graves (
                 "resched={resched} filtered reviews should export as Anki cram rows"
             );
         }
+    }
+
+    fn native_review_progress(
+        state: CardState,
+        interval: u32,
+        times_seen: u32,
+        times_correct: u32,
+        times_incorrect: u32,
+    ) -> CardProgress {
+        CardProgress {
+            card_id: "card".to_string(),
+            state,
+            interval,
+            ease_factor: 2.5,
+            next_due_at: 1_700_432_000_000,
+            learning_step_index: matches!(state, CardState::Learning | CardState::Relearning)
+                .then_some(0),
+            buried_until: None,
+            suspended_at: None,
+            times_seen,
+            times_correct,
+            times_incorrect,
+            last_seen_at: 1_700_000_005_000,
+            flag: None,
+            marked_at: None,
+        }
+    }
+
+    fn exported_native_review_kind(
+        previous_progress: Option<CardProgress>,
+        resulting_progress: CardProgress,
+        rating: Rating,
+    ) -> i64 {
+        let mut state = AppState::default();
+        state.decks.push(Deck {
+            id: "deck".to_string(),
+            name: "Spanish".to_string(),
+            description: String::new(),
+            created_at: 1_700_000_000_000,
+        });
+        state.cards.push(Card {
+            id: "card".to_string(),
+            deck_id: "deck".to_string(),
+            front: "hola".to_string(),
+            back: "hello".to_string(),
+            created_at: 1_700_000_000_000,
+            lineage: None,
+        });
+        state.card_progress.push(resulting_progress.clone());
+        state.sessions.push(Session {
+            id: "session".to_string(),
+            deck_id: "deck".to_string(),
+            status: SessionStatus::Completed,
+            started_at: 1_700_000_000_000,
+            ended_at: Some(1_700_000_005_000),
+            cards_reviewed: 1,
+            cards_correct: u32::from(rating != Rating::Again),
+        });
+        state.reviews.push(Review {
+            id: "1700000005000".to_string(),
+            session_id: "session".to_string(),
+            card_id: "card".to_string(),
+            rating,
+            reviewed_at: 1_700_000_005_000,
+            answer_time_ms: Some(987),
+            leech_event: None,
+            previous_progress,
+            resulting_progress: Some(resulting_progress),
+            previous_active_session: None,
+            sibling_progress_snapshots: Vec::new(),
+        });
+
+        let collection = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+        )
+        .unwrap();
+        collection.reviews[0].kind
+    }
+
+    #[test]
+    fn native_review_transitions_export_anki_revlog_kinds_from_starting_state() {
+        let new_graduation = native_review_progress(CardState::Review, 4, 1, 1, 0);
+        assert_eq!(
+            exported_native_review_kind(None, new_graduation, Rating::Easy),
+            0,
+            "a first native graduation review should export as an Anki learning row"
+        );
+
+        let previous_relearning = native_review_progress(CardState::Relearning, 0, 4, 2, 2);
+        let relearning_graduation = native_review_progress(CardState::Review, 3, 5, 3, 2);
+        assert_eq!(
+            exported_native_review_kind(
+                Some(previous_relearning),
+                relearning_graduation,
+                Rating::Good,
+            ),
+            2,
+            "a relearning step that graduates should export as an Anki relearning row"
+        );
+
+        let previous_review = native_review_progress(CardState::Review, 7, 5, 4, 1);
+        let review_lapse = native_review_progress(CardState::Relearning, 0, 6, 4, 2);
+        assert_eq!(
+            exported_native_review_kind(Some(previous_review), review_lapse, Rating::Again),
+            1,
+            "a review card that lapses should still export as an Anki review row"
+        );
     }
 
     #[test]
