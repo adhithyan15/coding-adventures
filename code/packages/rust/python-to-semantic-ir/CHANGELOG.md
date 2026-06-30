@@ -5,6 +5,94 @@ All notable changes to `python-to-semantic-ir` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to semantic versioning.
 
+## 0.4.0 — 2026-06-30
+
+Milestone **M4**: functions, calls, and closures — `def`, tail-position
+`return`, `lambda`, function calls, and free-variable-captured closures
+(SIR17 Python → Semantic IR frontend, B4).
+
+### Added
+
+- **`def f(params): suite` → a top-level `Function`.**  Lowering is now
+  **two-pass**: a first pass collects **every** function name (top-level
+  and nested `def`s) into a flat table, so calls — including *forward
+  references* and *mutual recursion* — resolve to `DirectCall` regardless
+  of textual order; the second pass lowers each body.  Parameters are in
+  scope as `Scope::Param`.  A `def` with parameters declares
+  `Feature::DynamicTyping` (the subset has no parameter annotations).
+- **`return` (tail position only).**  A function body is a `Block` whose
+  `value` IS the return value, so a **tail** `return expr` sets
+  `body.value = expr`; a bare tail `return` or falling off the end yields
+  `body.value = NilLit` (Python's implicit `None`).  A tail `if` whose
+  branches each end in a `return` (the canonical
+  `if c: return a else: return b` shape) is lowered with each branch in
+  *function-tail* position, so those returns become the branch values of
+  an `Expr::If`.  A **non-tail** (early) `return` — one nested in control
+  flow or followed by more statements — is **rejected** with a positioned
+  `PythonLowerError("early return not supported in v0 …")` pointing at the
+  offending `return`, per the SIR17 spec (the IR has no `Return` node).
+- **`lambda params: expr` → a synthesised top-level `Function` +
+  `Expr::MakeClosure`.**  Each lambda is gensym'd `__lambda_<N>`; the use
+  site emits a `MakeClosure` referencing it.
+- **Nested `def` → lifted to a top-level synthesised function** with the
+  same closure treatment as a lambda.  A **bare reference** to a nested
+  function's name yields a `MakeClosure` (re-threading its captures from
+  the currently visible enclosing values), so the closure can be
+  `return`ed / passed.
+- **Free-variable capture.**  For a lambda / nested `def`, the body's free
+  names (bare references minus the body's own params and locally assigned
+  names) that resolve to an **enclosing local / param / capture** become
+  `Capture`s — threaded through `MakeClosure` as `CaptureValue`s and
+  resolved inside the synthesised function as `Scope::Capture`.  Names that
+  resolve to a global / top-level function / builtin need **no** capture
+  (they are reachable directly).  Captures are emitted in deterministic
+  (alphabetical) order for reproducible output.
+- **Calls.**  `f(args)` lowers to `Expr::DirectCall` when `f` is a known
+  function name (and not shadowed by a same-named local value),
+  `Expr::BuiltinCall` for the builtins `print` / `len` / `range` (now a
+  general expression-position builtin, not only the `for`-header form),
+  and `Expr::IndirectCall` through a `VarRef` when `f` is a local / param /
+  captured **closure handle**.  Argument expressions are lowered eagerly.
+- **Manifest** now declares `Feature::Closures` whenever the module emits
+  a retained `MakeClosure`, an `IndirectCall`, or a function with
+  captures; and `Feature::MutualRecursion` when two top-level functions
+  transitively call each other (a 1-cycle — plain self-recursion — does
+  **not** count).  Bounded closure-body recursion reuses the
+  `MAX_BLOCK_DEPTH` / `MAX_EXPR_DEPTH` guards.
+- 25 new unit tests (82 total), including **executed end-to-end**
+  round-trips (Python → SIR → Python via the `semantic-ir-to-python`
+  backend, run with the system `python`, gated on availability): factorial
+  (recursion + tail if/else), fibonacci (while + mutation), a closure
+  adder, a capturing lambda, and mutual recursion.  Structural unit tests
+  cover `def`/params, tail-return vs no-return→nil, early-return rejection,
+  `DirectCall` vs `BuiltinCall` vs `IndirectCall`, forward-reference
+  resolution, lambda + capture, nested-def + capture, mutual-recursion
+  detection, default-parameter rejection, and a validator round-trip set.
+
+### Changed
+
+- `compile` / `compile_source` now lower `def` / `lambda` / `return` /
+  calls.  The module's function table holds user `def`s, synthesised
+  closure bodies (`__lambda_<N>`, lifted nested defs), and `main` (the
+  top-level statements).  The per-function name-resolution state is now a
+  `FunctionCtx` (params / captures / a local stack) rather than a single
+  shared declared-name stack, so each function resolves names in its own
+  scope.
+- Added a **dev-dependency** on `semantic-ir-to-python` for the executed
+  end-to-end tests.
+
+### Deferred
+
+Still out of scope after M4; each returns a clear positioned
+`PythonLowerError`:
+
+- **M5+** — sequences, maps, indexing and indexed assignment,
+  comprehensions.
+- Default / keyword arguments, `*args` / `**kwargs`, decorators, classes,
+  exceptions, generators, slicing, string methods, imports, `async`,
+  `global` / `nonlocal`, tuple / multi-target assignment, multi-level
+  capture chaining (capturing a variable two scopes up).
+
 ## 0.3.0 — 2026-06-30
 
 Milestone **M3**: control flow — `if` / `elif` / `else`, `while`, and

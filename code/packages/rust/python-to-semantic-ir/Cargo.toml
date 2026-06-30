@@ -1,6 +1,6 @@
 [package]
 name = "python-to-semantic-ir"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = "Python CST → narrow-waist Semantic IR (SIR17). Second frontend for the SIR10 narrow-waist IR."
 
@@ -11,3 +11,8 @@ coding-adventures-python-parser = { path = "../python-parser" }
 # whose leaf tokens are `lexer::token::Token`; we walk both directly.
 parser = { path = "../parser" }
 lexer = { path = "../lexer" }
+
+[dev-dependencies]
+# End-to-end round-trip tests lower Python → SIR → Python and execute
+# the emitted source with the system `python` (gated on availability).
+semantic-ir-to-python = { path = "../semantic-ir-to-python" }
