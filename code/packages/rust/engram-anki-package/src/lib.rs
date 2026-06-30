@@ -803,7 +803,8 @@ fn media_asset_matches_filename(asset: &MediaAssetRecord, filename: &str) -> boo
 
 fn collect_media_references_from_text(text: &str, references: &mut BTreeSet<String>) {
     collect_sound_markers(text, references);
-    collect_src_attributes(text, references);
+    collect_media_attributes(text, references);
+    collect_css_urls(text, references);
 }
 
 fn collect_sound_markers(text: &str, references: &mut BTreeSet<String>) {
@@ -818,18 +819,25 @@ fn collect_sound_markers(text: &str, references: &mut BTreeSet<String>) {
     }
 }
 
-fn collect_src_attributes(text: &str, references: &mut BTreeSet<String>) {
+fn collect_media_attributes(text: &str, references: &mut BTreeSet<String>) {
+    for attribute in ["src", "poster", "data", "srcset"] {
+        collect_media_attribute(text, attribute, references);
+    }
+}
+
+fn collect_media_attribute(text: &str, attribute: &str, references: &mut BTreeSet<String>) {
     let bytes = text.as_bytes();
+    let attribute_bytes = attribute.as_bytes();
     let mut index = 0;
-    while index + 3 <= bytes.len() {
-        if !bytes[index..index + 3].eq_ignore_ascii_case(b"src")
+    while index + attribute_bytes.len() <= bytes.len() {
+        if !bytes[index..index + attribute_bytes.len()].eq_ignore_ascii_case(attribute_bytes)
             || !is_html_attr_boundary(bytes.get(index.wrapping_sub(1)).copied())
         {
             index += 1;
             continue;
         }
 
-        let mut cursor = index + 3;
+        let mut cursor = index + attribute_bytes.len();
         while bytes
             .get(cursor)
             .is_some_and(|byte| byte.is_ascii_whitespace())
@@ -837,7 +845,7 @@ fn collect_src_attributes(text: &str, references: &mut BTreeSet<String>) {
             cursor += 1;
         }
         if bytes.get(cursor) != Some(&b'=') {
-            index += 3;
+            index += attribute_bytes.len();
             continue;
         }
         cursor += 1;
@@ -871,10 +879,71 @@ fn collect_src_attributes(text: &str, references: &mut BTreeSet<String>) {
         };
 
         if let Some(value) = text.get(value_start..value_end) {
-            maybe_insert_media_reference(value, references);
+            if attribute.eq_ignore_ascii_case("srcset") {
+                collect_srcset_references(value, references);
+            } else {
+                maybe_insert_media_reference(value, references);
+            }
         }
         index = cursor.saturating_add(1);
     }
+}
+
+fn collect_srcset_references(value: &str, references: &mut BTreeSet<String>) {
+    for candidate in value.split(',') {
+        if let Some(url) = candidate.split_whitespace().next() {
+            maybe_insert_media_reference(url, references);
+        }
+    }
+}
+
+fn collect_css_urls(text: &str, references: &mut BTreeSet<String>) {
+    let bytes = text.as_bytes();
+    let mut index = 0;
+    while index + 3 <= bytes.len() {
+        if !bytes[index..index + 3].eq_ignore_ascii_case(b"url")
+            || bytes
+                .get(index.wrapping_sub(1))
+                .is_some_and(|byte| byte.is_ascii_alphanumeric() || *byte == b'-' || *byte == b'_')
+        {
+            index += 1;
+            continue;
+        }
+
+        let mut cursor = index + 3;
+        while bytes
+            .get(cursor)
+            .is_some_and(|byte| byte.is_ascii_whitespace())
+        {
+            cursor += 1;
+        }
+        if bytes.get(cursor) != Some(&b'(') {
+            index += 3;
+            continue;
+        }
+        cursor += 1;
+        let value_start = cursor;
+        while bytes.get(cursor).is_some_and(|byte| *byte != b')') {
+            cursor += 1;
+        }
+        if let Some(value) = text.get(value_start..cursor) {
+            maybe_insert_media_reference(trim_wrapping_quotes(value), references);
+        }
+        index = cursor.saturating_add(1);
+    }
+}
+
+fn trim_wrapping_quotes(value: &str) -> &str {
+    let value = value.trim();
+    if value.len() >= 2 {
+        let bytes = value.as_bytes();
+        if (bytes[0] == b'"' && bytes[value.len() - 1] == b'"')
+            || (bytes[0] == b'\'' && bytes[value.len() - 1] == b'\'')
+        {
+            return &value[1..value.len() - 1];
+        }
+    }
+    value
 }
 
 fn is_html_attr_boundary(previous: Option<u8>) -> bool {
@@ -887,6 +956,7 @@ fn maybe_insert_media_reference(value: &str, references: &mut BTreeSet<String>) 
         || value.starts_with("http://")
         || value.starts_with("https://")
         || value.starts_with("data:")
+        || value.starts_with('#')
     {
         return;
     }
@@ -6170,7 +6240,7 @@ CREATE TABLE graves (
             fields: vec![NoteFieldValue {
                 field_id: "front".to_string(),
                 value:
-                    "[sound:audio/hola.mp3] <img SRC = \"images/caps.png\"> <img src=missing-unquoted.png> <img src=\"missing.png\">"
+                    "[sound:audio/hola.mp3] <img SRC = \"images/caps.png\"> <img src=missing-unquoted.png> <img src=\"missing.png\"> <video poster=\"video/poster.jpg\"></video> <source srcset=\"images/card@1x.png 1x, missing-srcset.png 2x\"> <object data='docs/root.pdf'></object> <div style=\"background-image:url(images/bg.png); mask:url(#fade)\"></div> <img src=\"data:image/png;base64,skip\">"
                         .to_string(),
             }],
             tags: Vec::new(),
@@ -6181,7 +6251,7 @@ CREATE TABLE graves (
             id: "card".to_string(),
             deck_id: "deck".to_string(),
             front: "<img data-src=\"ignored.png\"> <img Src='images/card.png'>".to_string(),
-            back: "<img src = https://example.com/remote.png>".to_string(),
+            back: "<style>.card{background:url('images/card-back.png')}</style> <img src = https://example.com/remote.png>".to_string(),
             created_at: 0,
             lineage: None,
         });
@@ -6210,6 +6280,36 @@ CREATE TABLE graves (
                 filename: Some("audio/unused.mp3".to_string()),
                 data: b"unused".to_vec(),
             },
+            MediaAssetRecord {
+                id: "poster".to_string(),
+                archive_name: "4".to_string(),
+                filename: Some("video/poster.jpg".to_string()),
+                data: b"poster".to_vec(),
+            },
+            MediaAssetRecord {
+                id: "srcset".to_string(),
+                archive_name: "5".to_string(),
+                filename: Some("images/card@1x.png".to_string()),
+                data: b"srcset".to_vec(),
+            },
+            MediaAssetRecord {
+                id: "doc".to_string(),
+                archive_name: "6".to_string(),
+                filename: Some("docs/root.pdf".to_string()),
+                data: b"doc".to_vec(),
+            },
+            MediaAssetRecord {
+                id: "bg".to_string(),
+                archive_name: "7".to_string(),
+                filename: Some("images/bg.png".to_string()),
+                data: b"bg".to_vec(),
+            },
+            MediaAssetRecord {
+                id: "back-bg".to_string(),
+                archive_name: "8".to_string(),
+                filename: Some("images/card-back.png".to_string()),
+                data: b"back".to_vec(),
+            },
         ];
 
         let analysis = analyze_engram_media_references(&state);
@@ -6218,19 +6318,25 @@ CREATE TABLE graves (
             analysis.referenced_filenames,
             vec![
                 "audio/hola.mp3",
+                "docs/root.pdf",
+                "images/bg.png",
                 "images/caps.png",
+                "images/card-back.png",
                 "images/card.png",
+                "images/card@1x.png",
+                "missing-srcset.png",
                 "missing-unquoted.png",
-                "missing.png"
+                "missing.png",
+                "video/poster.jpg"
             ]
         );
         assert_eq!(
             analysis.referenced_asset_ids,
-            vec!["audio", "caps", "image"]
+            vec!["audio", "caps", "image", "poster", "srcset", "doc", "bg", "back-bg"]
         );
         assert_eq!(
             analysis.missing_filenames,
-            vec!["missing-unquoted.png", "missing.png"]
+            vec!["missing-srcset.png", "missing-unquoted.png", "missing.png"]
         );
         assert_eq!(analysis.unreferenced_asset_ids, vec!["unused"]);
     }
