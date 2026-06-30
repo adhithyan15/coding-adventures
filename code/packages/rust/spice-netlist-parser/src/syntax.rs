@@ -20,6 +20,7 @@ pub const BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_LAUNCH_PLAN_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_STATUS_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -55,6 +56,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-launch-plan-json",
     "app-readiness-report-json",
     "app-shell-handoff-json",
+    "app-shell-status-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -489,6 +491,61 @@ impl BerkeleyAppShellHandoff {
 
     pub fn to_json(&self) -> String {
         app_shell_handoff_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellStatus {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub message: String,
+    pub entry_panel_id: Option<String>,
+    pub entry_target: Option<String>,
+    pub primary_action_id: Option<String>,
+    pub diagnostic_count: usize,
+    pub error_count: usize,
+    pub warning_count: usize,
+    pub note_count: usize,
+    pub blocking_message: Option<String>,
+}
+
+impl BerkeleyAppShellStatus {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_shell_handoff(&BerkeleyAppShellHandoff::from_bootstrap_snapshot(snapshot))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        let readiness = &handoff.readiness_report;
+        let severity = shell_status_severity(readiness).to_string();
+        let message = shell_status_message(readiness);
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_STATUS_SCHEMA_VERSION,
+            package_name: readiness.package_name.clone(),
+            source_fingerprint: readiness.source_fingerprint.clone(),
+            title: readiness.title.clone(),
+            startup_route: readiness.startup_route.clone(),
+            ready: readiness.ready,
+            severity,
+            message,
+            entry_panel_id: readiness.entry_panel_id.clone(),
+            entry_target: readiness.entry_target.clone(),
+            primary_action_id: readiness.primary_action_id.clone(),
+            diagnostic_count: readiness.diagnostic_count,
+            error_count: readiness.error_count,
+            warning_count: readiness.warning_count,
+            note_count: readiness.note_count,
+            blocking_message: readiness.blocking_message.clone(),
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_status_json_value(self).to_string()
     }
 }
 
@@ -1166,6 +1223,38 @@ impl BerkeleyAppDeck {
         persisted_state: BerkeleyAppPersistedEditorState,
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self.run_app_shell_handoff(persisted_state)?.to_json())
+    }
+
+    pub fn app_shell_status(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellStatus {
+        BerkeleyAppShellStatus::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_status(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellStatus, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellStatus::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_status_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_status(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_status_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self.run_app_shell_status(persisted_state)?.to_json())
     }
 
     pub fn run_source_order(&self) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
@@ -1913,6 +2002,54 @@ fn app_shell_handoff_json_value(handoff: &BerkeleyAppShellHandoff) -> serde_json
         "launchPlan": app_launch_plan_json_value(&handoff.launch_plan),
         "readinessReport": app_readiness_report_json_value(&handoff.readiness_report),
     })
+}
+
+fn app_shell_status_json_value(status: &BerkeleyAppShellStatus) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": status.schema_version,
+        "packageName": &status.package_name,
+        "sourceFingerprint": &status.source_fingerprint,
+        "title": &status.title,
+        "startupRoute": &status.startup_route,
+        "ready": status.ready,
+        "severity": &status.severity,
+        "message": &status.message,
+        "entryPanelId": &status.entry_panel_id,
+        "entryTarget": &status.entry_target,
+        "primaryActionId": &status.primary_action_id,
+        "diagnosticCount": status.diagnostic_count,
+        "errorCount": status.error_count,
+        "warningCount": status.warning_count,
+        "noteCount": status.note_count,
+        "blockingMessage": &status.blocking_message,
+    })
+}
+
+fn shell_status_severity(readiness: &BerkeleyAppReadinessReport) -> &'static str {
+    if readiness.error_count > 0 {
+        "error"
+    } else if readiness.warning_count > 0 {
+        "warning"
+    } else if !readiness.ready {
+        "blocked"
+    } else {
+        "ready"
+    }
+}
+
+fn shell_status_message(readiness: &BerkeleyAppReadinessReport) -> String {
+    if readiness.ready {
+        return readiness
+            .entry_panel_id
+            .as_deref()
+            .map(|panel_id| format!("Ready to launch {panel_id} panel"))
+            .unwrap_or_else(|| "Ready to launch Berkeley SPICE Mosaic app".to_string());
+    }
+
+    readiness
+        .blocking_message
+        .clone()
+        .unwrap_or_else(|| "Deck is blocked before launch".to_string())
 }
 
 fn manifest_strings(values: &[&str]) -> Vec<String> {
