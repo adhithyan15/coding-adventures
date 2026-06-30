@@ -97,6 +97,21 @@ Milestone **M4**: functions, calls, and closures — `def`, tail-position
   integration tests gate on a tool being present.  A non-zero exit from a
   *verified* Python 3 still fails the test (a real codegen bug must be
   caught).  Fixes a macOS-CI failure where `python` was absent / python2.
+- **`PYTHONPATH` for the end-to-end-emitted Python.**  The
+  `semantic-ir-to-python` backend's emitted code is **not** fully
+  self-contained — its runtime header imports the
+  `coding_adventures_sir_runtime_*` packages — so on a CI host with no
+  ambient install the program failed with
+  `ModuleNotFoundError: No module named 'coding_adventures_sir_runtime_core'`.
+  The e2e helper now sets `PYTHONPATH` (via `Command::env`) to each
+  runtime package's `src` dir, resolved from `CARGO_MANIFEST_DIR` as
+  `../../python/<pkg>/src` — the **same** approach the backend's own
+  execution tests use (`run_emitted_python`).  All runtime packages are
+  added (`core`, `pairs`, `oop`, `range`, `regex`, `exceptions`, `shell`)
+  so the tests are robust regardless of which features a program exercises.
+  Verified by running the e2e tests in a clean venv with **no** ambient
+  install (reproducing the runner): all 5 RUN and PASS purely via the
+  test-set `PYTHONPATH`.
 
 ### Changed
 

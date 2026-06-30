@@ -1300,6 +1300,39 @@ mod tests {
         })
     }
 
+    /// Build the `PYTHONPATH` the emitted program needs to import the SIR
+    /// runtime packages.
+    ///
+    /// The `semantic-ir-to-python` backend's emitted code is **not** fully
+    /// self-contained: its runtime header does
+    /// `from coding_adventures_sir_runtime_core import …` (and, depending
+    /// on the features used, `…_pairs` / `…_oop` / `…_range` / `…_regex` /
+    /// `…_exceptions` / `…_shell`).  Those packages live in the workspace
+    /// under `code/packages/python/<pkg>/src` (a src-layout package), so
+    /// they are not importable on a CI host that has no ambient install.
+    ///
+    /// This mirrors the backend's *own* execution tests (see
+    /// `semantic-ir-to-python/src/lib.rs::run_emitted_python`), which set
+    /// `PYTHONPATH` to each runtime package's `src` dir, resolved relative
+    /// to `CARGO_MANIFEST_DIR` as `../../python/<pkg>/src`.  Our crate sits
+    /// at the same depth (`code/packages/rust/python-to-semantic-ir`), so
+    /// the same relative path resolves.  We add **all** runtime packages so
+    /// the e2e tests are robust regardless of which features a program
+    /// exercises.
+    fn runtime_pythonpath() -> std::ffi::OsString {
+        let py_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../python");
+        std::env::join_paths([
+            py_root.join("sir-runtime-core/src"),
+            py_root.join("sir-runtime-pairs/src"),
+            py_root.join("sir-runtime-oop/src"),
+            py_root.join("sir-runtime-range/src"),
+            py_root.join("sir-runtime-regex/src"),
+            py_root.join("sir-runtime-exceptions/src"),
+            py_root.join("sir-runtime-shell/src"),
+        ])
+        .expect("join PYTHONPATH")
+    }
+
     /// Lower `src` → SIR → Python, execute it, and return trimmed stdout.
     /// Returns `None` when no working Python 3 interpreter is available —
     /// the test then **skips** (it does not fail), so CI hosts lacking a
@@ -1321,12 +1354,15 @@ mod tests {
         let artifact =
             semantic_ir_to_python::compile(&module).expect("emit python from SIR");
 
+        // The emitted code imports the SIR runtime packages — make them
+        // importable via PYTHONPATH (the runner has no ambient install).
         // Spawning the interpreter could still fail for an *environment*
         // reason (the exe vanished after the probe, a sandbox blocks
         // exec, …) — that is not a codegen bug, so skip rather than fail.
         let out = match std::process::Command::new(py)
             .arg("-c")
             .arg(&artifact.source)
+            .env("PYTHONPATH", runtime_pythonpath())
             .output()
         {
             Ok(out) => out,
