@@ -8908,6 +8908,29 @@ mod tests {
     }
 
     #[test]
+    fn parse_anki_notes_tsv_preserves_guid_sources() {
+        let session = EngramSession::new();
+        let value: Value = serde_json::from_str(&session.parse_anki_notes_tsv(
+            "#separator:tab\n#notetype:Basic\n#guid column:3\n#columns:Front\tBack\tStableGuid\nhola\thello\tguid-123\n",
+            "deck",
+            "",
+            "",
+            "note",
+            NOW,
+        ))
+        .unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(value["import"]["externalSources"][0]["target"], "note");
+        assert_eq!(value["import"]["externalSources"][0]["targetId"], "note-1");
+        assert_eq!(value["import"]["externalSources"][0]["source"], "anki-text");
+        assert_eq!(
+            value["import"]["externalSources"][0]["originalId"],
+            "guid-123"
+        );
+    }
+
+    #[test]
     fn parse_anki_notes_tsv_generates_cloze_model_and_cards() {
         let session = EngramSession::new();
         let value: Value = serde_json::from_str(&session.parse_anki_notes_tsv(

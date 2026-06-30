@@ -1,10 +1,11 @@
 use crate::model::{
-    Card, CardTemplate, FieldDef, Note, NoteFieldValue, NoteType, TemplateRequirementMode,
+    Card, CardTemplate, ExternalSourceRecord, ExternalSourceTarget, FieldDef, Note, NoteFieldValue,
+    NoteType, TemplateRequirementMode,
 };
 use crate::template::{generate_cards_for_note, materialize_generated_card};
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 
 const CARD_CSV_HEADER: [&str; 5] = ["id", "deckId", "front", "back", "createdAt"];
 const BASIC_CARD_CSV_HEADER: [&str; 2] = ["front", "back"];
@@ -44,6 +45,11 @@ pub struct AnkiNoteTsvImport {
     pub note_types: Vec<NoteType>,
     pub notes: Vec<Note>,
     pub cards: Vec<Card>,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Vec::is_empty")
+    )]
+    pub external_sources: Vec<ExternalSourceRecord>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -293,7 +299,8 @@ pub fn import_anki_notes_tsv(
     let columns = headers
         .columns
         .unwrap_or_else(|| import_kind.default_columns(&rows));
-    let column_plan = import_kind.column_plan(&columns, headers.tags_column)?;
+    let column_plan =
+        import_kind.column_plan(&columns, headers.tags_column, headers.guid_column)?;
     let note_type = import_kind.note_type(
         &note_type_id,
         &note_type_name,
@@ -303,6 +310,7 @@ pub fn import_anki_notes_tsv(
 
     let mut notes = Vec::new();
     let mut cards = Vec::new();
+    let mut external_sources = Vec::new();
 
     for (row, fields) in rows {
         if fields.len() < column_plan.required_columns {
@@ -339,6 +347,9 @@ pub fn import_anki_notes_tsv(
                 .iter()
                 .map(|generated| materialize_generated_card(generated, options.created_at)),
         );
+        if let Some(source) = note_guid_source_for_row(&note, &column_plan, &fields) {
+            external_sources.push(source);
+        }
         notes.push(note);
     }
 
@@ -346,6 +357,7 @@ pub fn import_anki_notes_tsv(
         note_types: vec![note_type],
         notes,
         cards,
+        external_sources,
     })
 }
 
@@ -355,6 +367,7 @@ struct AnkiTsvHeaders {
     columns: Option<Vec<String>>,
     tags: Vec<String>,
     tags_column: Option<usize>,
+    guid_column: Option<usize>,
 }
 
 impl AnkiTsvHeaders {
@@ -375,6 +388,11 @@ impl AnkiTsvHeaders {
 
         if let Some(tags_column) = first.strip_prefix("#tags column:") {
             self.tags_column = Some(parse_anki_header_column_index(tags_column, row)?);
+            return Ok(());
+        }
+
+        if let Some(guid_column) = first.strip_prefix("#guid column:") {
+            self.guid_column = Some(parse_anki_header_column_index(guid_column, row)?);
             return Ok(());
         }
 
@@ -405,6 +423,26 @@ fn note_tags_for_row(
     tags
 }
 
+fn note_guid_source_for_row(
+    note: &Note,
+    column_plan: &AnkiColumnPlan,
+    fields: &[String],
+) -> Option<ExternalSourceRecord> {
+    let guid = column_plan
+        .guid_index
+        .and_then(|index| fields.get(index))
+        .map(|guid| guid.trim())
+        .filter(|guid| !guid.is_empty())?;
+
+    Some(ExternalSourceRecord {
+        target: ExternalSourceTarget::Note,
+        target_id: note.id.clone(),
+        source: "anki-text".to_string(),
+        original_id: Some(guid.to_string()),
+        data: BTreeMap::from([("guid".to_string(), guid.to_string())]),
+    })
+}
+
 fn extend_unique_tags(tags: &mut Vec<String>, incoming: Vec<String>) {
     for tag in incoming {
         if !tags.iter().any(|existing| existing == &tag) {
@@ -424,6 +462,7 @@ enum AnkiNoteImportKind {
 struct AnkiColumnPlan {
     field_columns: Vec<AnkiFieldColumn>,
     tag_index: Option<usize>,
+    guid_index: Option<usize>,
     required_columns: usize,
 }
 
@@ -496,6 +535,7 @@ impl AnkiNoteImportKind {
         &self,
         columns: &[String],
         tags_column: Option<usize>,
+        guid_column: Option<usize>,
     ) -> Result<AnkiColumnPlan, CsvError> {
         match self {
             Self::Basic { .. } => {
@@ -525,6 +565,7 @@ impl AnkiNoteImportKind {
                         },
                     ],
                     tags_column.or_else(|| column_index(columns, "Tags")),
+                    guid_column,
                 ))
             }
             Self::Cloze => {
@@ -546,23 +587,30 @@ impl AnkiNoteImportKind {
                 Ok(column_plan(
                     field_columns,
                     tags_column.or_else(|| column_index(columns, "Tags")),
+                    guid_column,
                 ))
             }
-            Self::Custom => custom_column_plan(columns, tags_column),
+            Self::Custom => custom_column_plan(columns, tags_column, guid_column),
         }
     }
 }
 
-fn column_plan(field_columns: Vec<AnkiFieldColumn>, tag_index: Option<usize>) -> AnkiColumnPlan {
+fn column_plan(
+    field_columns: Vec<AnkiFieldColumn>,
+    tag_index: Option<usize>,
+    guid_index: Option<usize>,
+) -> AnkiColumnPlan {
     let required_columns = field_columns
         .iter()
         .map(|field| field.column_index)
         .chain(tag_index)
+        .chain(guid_index)
         .max()
         .map_or(0, |index| index + 1);
     AnkiColumnPlan {
         field_columns,
         tag_index,
+        guid_index,
         required_columns,
     }
 }
@@ -1002,13 +1050,14 @@ fn slugify_identifier(value: &str) -> String {
 fn custom_column_plan(
     columns: &[String],
     tags_column: Option<usize>,
+    guid_column: Option<usize>,
 ) -> Result<AnkiColumnPlan, CsvError> {
     let tag_index = tags_column.or_else(|| column_index(columns, "Tags"));
     let mut used_ids = BTreeSet::new();
     let mut field_columns = Vec::new();
 
     for (index, column) in columns.iter().enumerate() {
-        if Some(index) == tag_index {
+        if Some(index) == tag_index || Some(index) == guid_column {
             continue;
         }
         let field_name = custom_field_name(column, index);
@@ -1027,7 +1076,7 @@ fn custom_column_plan(
         ));
     }
 
-    Ok(column_plan(field_columns, tag_index))
+    Ok(column_plan(field_columns, tag_index, guid_column))
 }
 
 fn custom_field_name(column: &str, index: usize) -> String {
@@ -1380,6 +1429,55 @@ mod tests {
     }
 
     #[test]
+    fn anki_note_text_import_preserves_guid_column_sources() {
+        let text = "#separator:tab\n#notetype:Basic\n#guid column:3\n#columns:Front\tBack\tStableGuid\nhola\thello\tguid-123\n";
+        let options = AnkiNoteTsvImportOptions {
+            deck_id: "deck".to_string(),
+            note_type_id: String::new(),
+            note_type_name: String::new(),
+            note_id_prefix: "note".to_string(),
+            created_at: 456,
+        };
+
+        let imported = import_anki_notes_tsv(text, &options).unwrap();
+
+        assert_eq!(imported.notes[0].id, "note-1");
+        assert_eq!(imported.external_sources.len(), 1);
+        assert_eq!(
+            imported.external_sources[0].target,
+            ExternalSourceTarget::Note
+        );
+        assert_eq!(imported.external_sources[0].target_id, "note-1");
+        assert_eq!(imported.external_sources[0].source, "anki-text");
+        assert_eq!(
+            imported.external_sources[0].original_id.as_deref(),
+            Some("guid-123")
+        );
+        assert_eq!(
+            imported.external_sources[0]
+                .data
+                .get("guid")
+                .map(String::as_str),
+            Some("guid-123")
+        );
+
+        let custom_text = "#separator:tab\n#notetype:Vocabulary Story\n#guid column:3\n#columns:Word\tRoot\tStableGuid\nhablar\tfabl-\tguid-456\n";
+        let custom_imported = import_anki_notes_tsv(custom_text, &options).unwrap();
+        assert_eq!(
+            custom_imported.note_types[0]
+                .fields
+                .iter()
+                .map(|field| field.name.as_str())
+                .collect::<Vec<_>>(),
+            vec!["Word", "Root"]
+        );
+        assert_eq!(
+            custom_imported.external_sources[0].original_id.as_deref(),
+            Some("guid-456")
+        );
+    }
+
+    #[test]
     fn anki_note_tsv_import_creates_cloze_notes_and_cards() {
         let tsv = "#separator:tab\n#notetype:Cloze\n#columns:Text\tExtra\tTags\n\"A {{c1::root::base}} plus {{c2::suffix}}\"\tetymology\tgrammar spanish\n";
         let options = AnkiNoteTsvImportOptions {
@@ -1574,6 +1672,14 @@ mod tests {
         .unwrap_err();
         assert_eq!(tags_column_error.row, Some(2));
         assert!(tags_column_error.message.contains("positive column number"));
+
+        let guid_column_error = import_anki_notes_tsv(
+            "#separator:tab\n#guid column:not-a-number\n#columns:Front\tBack\tGuid\nfront\tback\tguid\n",
+            &options,
+        )
+        .unwrap_err();
+        assert_eq!(guid_column_error.row, Some(2));
+        assert!(guid_column_error.message.contains("positive column number"));
     }
 
     #[test]
