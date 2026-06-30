@@ -37,9 +37,32 @@ Accepts the full v0 feature set minus `TailCalls` (Go has no TCO) and
   immediately-invoked func literal that returns the operand value
   (`a and b ⇒ b` if `a` is truthy else `a`), evaluating the left side
   exactly once.
+- **`MutableBindings`** — `Assign` re-binds an already-declared name.
+  Go has no const/mut distinction, so a Local/Param/Capture reassignment
+  is just `<name> = <value>` (the matching `LetBinding`/param already
+  declared the name with `:=`).  No `let mut` pre-pass is needed the way
+  the Rust backend needs one.  A `Global` assignment writes through the
+  runtime global store.
+- **`Loops`** — maps SIR's three loop forms onto Go's native `for`:
+  - `While { cond, body }` → `for _sir_truthy(<cond>) { <body> }`
+    (Go's `for` is its `while`; the test routes through SIR truthiness).
+  - `ForRange { var, start, stop, step, body }` → a native three-clause
+    `for`.  `stop`/`step` are cached **once** into `int64` temporaries
+    (re-evaluating Python's `range` bounds each turn would be wrong);
+    the continue test is direction-aware via `_sir_range_cont`, so a
+    negative `step` counts down.  `var` is re-bound each iteration as a
+    fresh `Value(int64(...))`.
+  - `ForEach { var, iter, body }` → `for _, <var> := range _sir_seq_iter(<iter>)`.
+    The runtime `_sir_seq_iter` flattens a cons-list (a `Pair`-chain
+    ending in `nil`) into a `[]Value` (Sequences land in a later PR, so
+    a "sequence" is still the classic cons-list).
+  Loop bodies emit in statement context: a body's trailing non-`nil`
+  value becomes `_ = <value>` so side effects still fire, and every
+  introduced loop variable gets a `_ = <var>` guard so Go's strict
+  unused-variable rule never rejects a body that ignores it.
 
-The remaining four SIR16 features (`MutableBindings`, `Loops`,
-`Sequences`, `Maps`) are not yet declared and land in later PRs.
+The remaining two SIR16 features (`Sequences`, `Maps`) are not yet
+declared and land in a later PR.
 
 ## Value model
 

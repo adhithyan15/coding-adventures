@@ -1,5 +1,61 @@
 # Changelog
 
+## 0.3.0 — SIR16 MutableBindings + Loops (A5)
+
+The next two SIR16 (v1) features land in the Go backend, mirroring the
+merged Rust backend equivalent.  Before this release the Go backend
+accepted only `Floats` + `ShortCircuit`, so every `Assign` / `While` /
+`ForRange` / `ForEach` IR node hit a `panic!` reject arm.  This release
+wires up mutation and the three loop forms end-to-end onto Go's native
+`for`.
+
+### Added
+
+- `Feature::MutableBindings` and `Feature::Loops` join the backend's
+  `ACCEPTED_FEATURES`, so a module declaring them is no longer rejected
+  by the capability check.
+- **MutableBindings** — `Stmt::Assign` to a Local/Param/Capture emits a
+  plain `<name> = <value>`.  Go has no const/mut distinction, so unlike
+  the Rust backend (which needs a `let mut` pre-pass) reassignment just
+  works against the name already declared by the matching `LetBinding`
+  (`:=`) or parameter.  A `Global` assignment writes through the runtime
+  global store (`_sir_globals[<key>] = <value>`).
+- **Loops** — `Stmt::While` / `ForRange` / `ForEach` map onto Go's
+  native `for`:
+  - `While` → `for _sir_truthy(<cond>) { <body> }` (Go's `for` is its
+    `while`; the test routes through SIR truthiness, never Go `bool`).
+  - `ForRange` → a native three-clause `for` whose `stop`/`step` bounds
+    are cached **once** into `int64` temporaries (re-evaluating Python's
+    `range` bounds each turn would be wrong).  A direction-aware
+    continue test (`_sir_range_cont`) lets a negative `step` count down.
+    The loop variable is re-bound each turn as a fresh `Value(int64(…))`
+    and guarded with `_ = <var>` so an unused loop var still compiles.
+  - `ForEach` → `for _, <var> := range _sir_seq_iter(<iter>)`.  The new
+    runtime `_sir_seq_iter` flattens a cons-list (`Pair`-chain ending in
+    `nil`) into a `[]Value` (Sequences land in a later PR, so a
+    "sequence" is still the classic cons-list).
+- Loop bodies emit in statement context: a body's trailing non-`nil`
+  value becomes `_ = <value>` (so side effects fire), and introduced
+  loop variables get a `_ = <var>` guard — satisfying Go's strict
+  unused-variable rule even when the body ignores them.
+- New runtime helpers `_sir_range_cont` and `_sir_seq_iter`.  (`ForRange`
+  reuses the existing `_sir_as_int` from the Floats release for its
+  bound extraction.)
+- New integration test `tests/compile_and_run_loops.rs` — hand-builds a
+  module using a mutable accumulator, a `for`-range, and a `while`
+  countdown, emits Go, `go run`s it (gated on `go` availability), and
+  asserts stdout (`sum 0..5 = 10`, countdown to `0`, reassign to `99`).
+  This is the only check that catches Go's `:=`-vs-`=` and
+  unused-variable strictness.
+
+### Notes
+
+- Only two SIR16 features remain undeclared (`Sequences`, `Maps`); their
+  `SeqLit` / `MapLit` / `SeqSet` / `MapSet` nodes still hit `panic!`
+  reject arms, kept strictly unreachable by the capability check until a
+  later PR.  `accepts_features` stays in lockstep with emit: every
+  declared feature has a real (non-panicking) emit path.
+
 ## 0.2.0 — SIR16 Floats + ShortCircuit (A4)
 
 First two SIR16 (v1) features land in the Go backend, mirroring the
