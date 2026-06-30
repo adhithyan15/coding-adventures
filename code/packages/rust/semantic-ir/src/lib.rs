@@ -65,8 +65,8 @@ pub use limits::MAX_IR_DEPTH;
 pub use manifest::{Feature, FeatureManifest};
 pub use metadata::{Metadata, CURRENT_SIR_VERSION};
 pub use nodes::{
-    Block, Capture, CaptureValue, ExportName, Expr, Function, Global, Import, ImportName, Module,
-    Param, ParamKind, RescueClause, Scope, Stmt,
+    Block, Capture, CaptureValue, ExportName, Expr, Function, Global, Import, ImportName, MapEntry,
+    Module, Param, ParamKind, RescueClause, Scope, Stmt,
 };
 pub use span::Span;
 pub use text::{print_block, print_expr, print_function, print_module};

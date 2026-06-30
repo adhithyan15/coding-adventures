@@ -1006,11 +1006,9 @@ mod tests {
 
     #[test]
     fn builtin_calls_lower_to_builtin_call() {
-        for (src, name) in [
-            ("print(1)\n", "print"),
-            ("xs = 1\nlen(xs)\n", "len"),
-            ("range(5)\n", "range"),
-        ] {
+        // `len` is *not* here: as of M5 it lowers to the dedicated
+        // `SeqLen` node (see `len_lowers_to_seq_len`), not `BuiltinCall`.
+        for (src, name) in [("print(1)\n", "print"), ("range(5)\n", "range")] {
             let m = lower(src);
             match main_value(&m) {
                 Expr::BuiltinCall { name: got, .. } => assert_eq!(got, name, "for {src:?}"),
@@ -1227,10 +1225,337 @@ mod tests {
         assert!(err.message.contains("default"), "got: {}", err.message);
     }
 
+    // ══════════════════════════════════════════════════════════════════
+    // M5: collections — list & dict literals, subscript, len, set
+    // ══════════════════════════════════════════════════════════════════
+
+    // ── list literals → SeqLit ────────────────────────────────────────
+
     #[test]
-    fn list_literal_is_still_unsupported() {
-        let err = compile_source("xs = [1, 2, 3]\n", "t").expect_err("list rejected");
+    fn list_literal_lowers_to_seq_lit_and_sets_sequences_feature() {
+        let m = lower("[1, 2, 3]\n");
+        match main_value(&m) {
+            Expr::SeqLit { items, .. } => {
+                assert_eq!(items.len(), 3);
+                assert!(matches!(items[0], Expr::IntLit { value: 1, .. }));
+                assert!(matches!(items[2], Expr::IntLit { value: 3, .. }));
+            }
+            other => panic!("expected SeqLit, got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::Sequences));
+    }
+
+    #[test]
+    fn empty_list_lowers_to_empty_seq_lit() {
+        let m = lower("[]\n");
+        match main_value(&m) {
+            Expr::SeqLit { items, .. } => assert!(items.is_empty()),
+            other => panic!("expected empty SeqLit, got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::Sequences));
+    }
+
+    #[test]
+    fn nested_list_literal_lowers_recursively() {
+        let m = lower("[[1, 2], [3]]\n");
+        match main_value(&m) {
+            Expr::SeqLit { items, .. } => {
+                assert_eq!(items.len(), 2);
+                assert!(matches!(&items[0], Expr::SeqLit { items, .. } if items.len() == 2));
+                assert!(matches!(&items[1], Expr::SeqLit { items, .. } if items.len() == 1));
+            }
+            other => panic!("expected nested SeqLit, got {other:?}"),
+        }
+    }
+
+    // ── subscript: list index vs dict key disambiguation ──────────────
+
+    #[test]
+    fn integer_subscript_lowers_to_seq_index() {
+        let m = lower("xs = [1, 2]\nxs[0]\n");
+        match main_value(&m) {
+            Expr::SeqIndex { seq, index, .. } => {
+                assert!(matches!(**seq, Expr::VarRef { .. }));
+                assert!(matches!(**index, Expr::IntLit { value: 0, .. }));
+            }
+            other => panic!("expected SeqIndex, got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::Sequences));
+    }
+
+    #[test]
+    fn variable_subscript_lowers_to_seq_index() {
+        // A non-string-literal index (a variable) → SeqIndex by the
+        // disambiguation rule.
+        let m = lower("xs = [1, 2]\ni = 0\nxs[i]\n");
+        assert!(matches!(main_value(&m), Expr::SeqIndex { .. }));
+    }
+
+    #[test]
+    fn string_literal_subscript_lowers_to_map_get() {
+        let m = lower("d = {\"a\": 1}\nd[\"a\"]\n");
+        match main_value(&m) {
+            Expr::MapGet { map, key, .. } => {
+                assert!(matches!(**map, Expr::VarRef { .. }));
+                assert!(matches!(&**key, Expr::StrLit { value, .. } if value == "a"));
+            }
+            other => panic!("expected MapGet, got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::Maps));
+    }
+
+    #[test]
+    fn chained_subscript_folds_left_to_right() {
+        // `m[a][b]` — the inner `m[a]` is the base of the outer index.
+        // Both indices are variables → both SeqIndex.
+        let m = lower("m = [[1]]\na = 0\nb = 0\nm[a][b]\n");
+        match main_value(&m) {
+            Expr::SeqIndex { seq, .. } => {
+                assert!(matches!(**seq, Expr::SeqIndex { .. }), "outer wraps inner index");
+            }
+            other => panic!("expected nested SeqIndex, got {other:?}"),
+        }
+    }
+
+    // ── len(xs) → SeqLen ──────────────────────────────────────────────
+
+    #[test]
+    fn len_lowers_to_seq_len() {
+        let m = lower("xs = [1, 2, 3]\nlen(xs)\n");
+        match main_value(&m) {
+            Expr::SeqLen { seq, .. } => assert!(matches!(**seq, Expr::VarRef { .. })),
+            other => panic!("expected SeqLen, got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::Sequences));
+    }
+
+    #[test]
+    fn len_with_wrong_arity_is_rejected() {
+        let err =
+            compile_source("xs = [1]\nlen(xs, 2)\n", "t").expect_err("len arity rejected");
+        assert!(err.message.contains("len()"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn len_shadowed_by_local_is_an_indirect_call() {
+        // A local named `len` shadows the builtin → not SeqLen.
+        let m = lower("def f(len, xs):\n    return len(xs)\n");
+        let f = func(&m, "f");
+        assert!(
+            matches!(&f.body.value, Expr::IndirectCall { .. }),
+            "shadowed len should be an indirect call, got {:?}",
+            f.body.value
+        );
+    }
+
+    // ── dict literals → MapLit ────────────────────────────────────────
+
+    #[test]
+    fn dict_literal_lowers_to_map_lit_and_sets_maps_feature() {
+        let m = lower("{\"a\": 1, \"b\": 2}\n");
+        match main_value(&m) {
+            Expr::MapLit { entries, .. } => {
+                assert_eq!(entries.len(), 2);
+                assert!(matches!(&entries[0].key, Expr::StrLit { value, .. } if value == "a"));
+                assert!(matches!(entries[0].value, Expr::IntLit { value: 1, .. }));
+            }
+            other => panic!("expected MapLit, got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::Maps));
+    }
+
+    #[test]
+    fn empty_dict_lowers_to_empty_map_lit() {
+        let m = lower("{}\n");
+        match main_value(&m) {
+            Expr::MapLit { entries, .. } => assert!(entries.is_empty()),
+            other => panic!("expected empty MapLit, got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::Maps));
+    }
+
+    #[test]
+    fn nested_dict_literal_lowers_recursively() {
+        let m = lower("{\"a\": {\"b\": 1}}\n");
+        match main_value(&m) {
+            Expr::MapLit { entries, .. } => {
+                assert_eq!(entries.len(), 1);
+                assert!(matches!(&entries[0].value, Expr::MapLit { entries, .. } if entries.len() == 1));
+            }
+            other => panic!("expected nested MapLit, got {other:?}"),
+        }
+    }
+
+    // ── subscript assignment → SeqSet / MapSet ────────────────────────
+
+    #[test]
+    fn list_subscript_assignment_lowers_to_seq_set() {
+        let m = lower("xs = [1, 2]\nxs[0] = 9\n");
+        match &main_stmts(&m)[1] {
+            Stmt::SeqSet { seq, index, value, .. } => {
+                assert!(matches!(seq, Expr::VarRef { .. }));
+                assert!(matches!(index, Expr::IntLit { value: 0, .. }));
+                assert!(matches!(value, Expr::IntLit { value: 9, .. }));
+            }
+            other => panic!("expected SeqSet, got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::Sequences));
+    }
+
+    #[test]
+    fn dict_subscript_assignment_lowers_to_map_set() {
+        let m = lower("d = {}\nd[\"k\"] = 5\n");
+        match &main_stmts(&m)[1] {
+            Stmt::MapSet { map, key, value, .. } => {
+                assert!(matches!(map, Expr::VarRef { .. }));
+                assert!(matches!(key, Expr::StrLit { value, .. } if value == "k"));
+                assert!(matches!(value, Expr::IntLit { value: 5, .. }));
+            }
+            other => panic!("expected MapSet, got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::Maps));
+    }
+
+    #[test]
+    fn chained_subscript_assignment_uses_index_base() {
+        // `m[a][b] = v` — the assigned target is `[b]`; the base is `m[a]`.
+        let m = lower("m = [[0]]\na = 0\nb = 0\nm[a][b] = 7\n");
+        match main_stmts(&m).last().expect("a stmt") {
+            Stmt::SeqSet { seq, value, .. } => {
+                assert!(matches!(seq, Expr::SeqIndex { .. }), "base is the inner index");
+                assert!(matches!(value, Expr::IntLit { value: 7, .. }));
+            }
+            other => panic!("expected SeqSet with SeqIndex base, got {other:?}"),
+        }
+    }
+
+    // ── deferred collection forms stay rejected ───────────────────────
+
+    #[test]
+    fn set_literal_is_rejected() {
+        let err = compile_source("{1, 2, 3}\n", "t").expect_err("set rejected");
+        assert!(err.message.contains("set literal"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn list_comprehension_is_rejected() {
+        let err = compile_source("[x for x in xs]\n", "t").expect_err("comprehension rejected");
+        assert!(
+            err.message.contains("comprehension") || err.message.contains("unresolved"),
+            "got: {}",
+            err.message
+        );
+    }
+
+    #[test]
+    fn slice_subscript_is_rejected() {
+        // The Python parser has no slice grammar, so `xs[0:2]` is rejected
+        // at *parse* time (before lowering).  The lowerer's own `slicing`
+        // guard (`has_colon_token`) is defence-in-depth for any future
+        // grammar that admits the colon; either way the program is
+        // rejected, never mis-lowered.
+        let err = compile_source("xs = [1, 2, 3]\nxs[0:2]\n", "t").expect_err("slice rejected");
+        assert!(
+            err.message.contains("slicing") || err.message.contains("parse error"),
+            "got: {}",
+            err.message
+        );
+    }
+
+    #[test]
+    fn tuple_literal_is_still_unsupported() {
+        // A parenthesised tuple `(1, 2)` is a multi-element expression list
+        // — not an M5 collection — and stays deferred.
+        let err = compile_source("(1, 2)\n", "t").expect_err("tuple rejected");
         assert!(err.message.contains("unsupported"), "got: {}", err.message);
+    }
+
+    // ── deep-nesting regression: clean error, never overflow ──────────
+
+    #[test]
+    fn deep_list_tower_errors_cleanly_not_overflow() {
+        // `[[[…1…]]]` past MAX_EXPR_DEPTH must yield a positioned error,
+        // not a native stack overflow.
+        on_big_stack(|| {
+            let depth = 400usize;
+            let src = format!("{}1{}\n", "[".repeat(depth), "]".repeat(depth));
+            let err = compile_source(&src, "t")
+                .expect_err("deep list tower must be rejected, not crash");
+            assert!(
+                err.message.contains("too deep"),
+                "expected a positioned 'too deep' error, got: {}",
+                err.message
+            );
+        });
+    }
+
+    #[test]
+    fn deep_subscript_index_tower_errors_cleanly_not_overflow() {
+        // `xs[xs[xs[…]]]` — a tower of *index* expressions past
+        // MAX_EXPR_DEPTH must error cleanly.  Depth 300 just clears the
+        // 256 cap; the parser's cost on this backtracking-heavy form grows
+        // fast, so we stay close to the cap rather than 400.
+        on_big_stack(|| {
+            let depth = 300usize;
+            let mut src = String::from("xs = [0]\n");
+            src.push_str(&"xs[".repeat(depth));
+            src.push('0');
+            src.push_str(&"]".repeat(depth));
+            src.push('\n');
+            let err = compile_source(&src, "t")
+                .expect_err("deep subscript tower must be rejected, not crash");
+            assert!(
+                err.message.contains("too deep"),
+                "expected a positioned 'too deep' error, got: {}",
+                err.message
+            );
+        });
+    }
+
+    #[test]
+    fn deep_dict_value_tower_errors_cleanly_not_overflow() {
+        // `{"a": {"a": {…}}}` past MAX_EXPR_DEPTH must error cleanly.
+        // Depth 300 just clears the 256 cap (the parser's cost on this
+        // form grows fast, so we stay close to the cap rather than 400).
+        on_big_stack(|| {
+            let depth = 300usize;
+            let mut src = String::new();
+            src.push_str(&"{\"a\": ".repeat(depth));
+            src.push('1');
+            src.push_str(&"}".repeat(depth));
+            src.push('\n');
+            let err = compile_source(&src, "t")
+                .expect_err("deep dict tower must be rejected, not crash");
+            assert!(
+                err.message.contains("too deep"),
+                "expected a positioned 'too deep' error, got: {}",
+                err.message
+            );
+        });
+    }
+
+    // ── validator round-trip over M5 collection programs ──────────────
+
+    #[test]
+    fn m5_modules_pass_the_validator() {
+        for src in [
+            "xs = [1, 2, 3]\n",
+            "[]\n",
+            "{}\n",
+            "xs = [1, 2, 3]\nlen(xs)\n",
+            "xs = [10, 20]\nxs[0]\n",
+            "xs = [1, 2]\nxs[0] = 9\n",
+            "d = {\"a\": 1, \"b\": 2}\nd[\"a\"]\n",
+            "d = {}\nd[\"k\"] = 5\n",
+            "xs = [[1], [2]]\n",
+            "d = {\"x\": [1, 2], \"y\": [3]}\n",
+            // build, index, sum a list
+            "xs = [1, 2, 3]\ntotal = xs[0] + xs[1] + xs[2]\nprint(total)\n",
+        ] {
+            let m = lower(src);
+            let r = semantic_ir::validate(&m);
+            assert!(r.is_ok(), "module for {src:?} failed validation: {:?}", r.issues);
+        }
     }
 
     // ── validator round-trip over M4 programs ─────────────────────────
@@ -1380,7 +1705,14 @@ mod tests {
             String::from_utf8_lossy(&out.stderr),
             artifact.source
         );
-        Some(String::from_utf8_lossy(&out.stdout).trim().to_string())
+        // Normalise CRLF → LF so multi-line goldens are the same on
+        // Windows (where the interpreter writes `\r\n`) and Unix.
+        Some(
+            String::from_utf8_lossy(&out.stdout)
+                .replace("\r\n", "\n")
+                .trim()
+                .to_string(),
+        )
     }
 
     #[test]
@@ -1478,6 +1810,70 @@ print(is_even(10))
                 out == "True" || out == "#t",
                 "is_even(10) should be truthy, got {out:?}"
             );
+        }
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    // M5: end-to-end — collections lowered → SIR → Python → execute
+    // ══════════════════════════════════════════════════════════════════
+    //
+    // Same PYTHONPATH-aware runner as M4 (`run_roundtrip` resolves a real
+    // Python 3 and sets PYTHONPATH to the SIR runtime package `src` dirs,
+    // skipping cleanly when no interpreter is present).
+
+    #[test]
+    fn e2e_list_build_index_sum() {
+        // Build a list, index its elements, sum them, print the total.
+        let src = "\
+xs = [10, 20, 30]
+total = xs[0] + xs[1] + xs[2]
+print(total)
+print(len(xs))
+";
+        if let Some(out) = run_roundtrip(src) {
+            assert_eq!(out, "60\n3", "sum should be 60 and len 3");
+        }
+    }
+
+    #[test]
+    fn e2e_list_subscript_assignment() {
+        // Mutate a list element in place, then read it back.
+        let src = "\
+xs = [1, 2, 3]
+xs[1] = 99
+print(xs[1])
+";
+        if let Some(out) = run_roundtrip(src) {
+            assert_eq!(out, "99", "mutated element should be 99");
+        }
+    }
+
+    #[test]
+    fn e2e_dict_get_and_set() {
+        // Build a dict, read a key, set another key, read it back.
+        let src = "\
+d = {\"a\": 1, \"b\": 2}
+print(d[\"a\"])
+d[\"c\"] = 7
+print(d[\"c\"])
+";
+        if let Some(out) = run_roundtrip(src) {
+            assert_eq!(out, "1\n7", "dict get/set should print 1 then 7");
+        }
+    }
+
+    #[test]
+    fn e2e_list_sum_loop() {
+        // for-each over a list literal, accumulating a running total.
+        let src = "\
+total = 0
+for x in [1, 2, 3, 4]:
+    total = total + x
+
+print(total)
+";
+        if let Some(out) = run_roundtrip(src) {
+            assert_eq!(out, "10", "1+2+3+4 should print 10");
         }
     }
 }

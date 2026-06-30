@@ -1,5 +1,5 @@
 //! The lowering pass from `python_parser`'s generic
-//! [`GrammarASTNode`] CST → [`semantic_ir::Module`], **milestone M4**.
+//! [`GrammarASTNode`] CST → [`semantic_ir::Module`], **milestone M5**.
 //!
 //! # What M1 covered (still supported)
 //!
@@ -89,6 +89,59 @@
 //! `IndirectCall` is emitted, and `MutualRecursion` when two top-level
 //! functions call each other.
 //!
+//! # What M5 adds — collections (lists & dicts)
+//!
+//! M5 is the last big Python-frontend milestone — it turns the
+//! single-scalar IR into one that lowers real data programs:
+//!
+//! - **list display `[a, b, c]`** → [`Expr::SeqLit`] (the parser names
+//!   this `atom → list_expr [ "[", list_body?, "]" ]`; `list_body` is a
+//!   comma-separated run of `expression`s).  `[]` → an empty `SeqLit`.
+//! - **dict display `{k: v, ...}`** → [`Expr::MapLit`] over
+//!   [`semantic_ir::MapEntry`]s (parser: `atom → dict_or_set_expr [ "{",
+//!   dict_or_set_body?, "}" ]`, where `dict_or_set_body → dict_body` is a
+//!   comma-separated run of `dict_entry [ key, ":", value ]`).  `{}` → an
+//!   empty `MapLit`.  A **set** display (`{1, 2}`) parses to a
+//!   `dict_or_set_body` with *no* `dict_body` child — rejected (deferred).
+//! - **subscription `x[i]`** → either [`Expr::SeqIndex`] or
+//!   [`Expr::MapGet`], disambiguated by the index (see below).  The parser
+//!   names a subscript a *trailing `suffix`* on a `primary`:
+//!   `primary → atom suffix*`, where a subscript suffix is
+//!   `[ "[", subscript, "]" ]` (a call suffix is `[ "(", arguments?, ")" ]`).
+//!   Chained subscripts (`xs[i][j]`) are multiple suffixes, applied
+//!   left-to-right.
+//! - **`len(xs)`** → [`Expr::SeqLen`] (the SIR17 spec prefers the
+//!   dedicated `SeqLen` node over `BuiltinCall("len")` so backends can
+//!   emit native length access).  `len` with arity ≠ 1 is rejected.
+//! - **subscript assignment `x[i] = v`** → [`Stmt::SeqSet`] /
+//!   [`Stmt::MapSet`], mirroring the read-side disambiguation.
+//!
+//! ## Subscript disambiguation (list index vs dict key)
+//!
+//! Python uses one `[]` syntax for both list indexing and dict lookup; the
+//! SIR17 spec lists `xs[i] → SeqIndex` and `d[k] → MapGet` but leaves the
+//! *syntactic* rule that tells them apart open (the frontend has no type
+//! information).  Mirroring the JS sibling's cut-line, M5 uses a purely
+//! syntactic heuristic: **a string-literal index → `MapGet` / `MapSet`
+//! (a map key); any other index → `SeqIndex` / `SeqSet` (a list index).**
+//! This makes the canonical idioms (`xs[0]`, `d["name"]`) lower correctly;
+//! a dict keyed by a computed/integer key (`d[k]`, `counts[n]`) lowers as
+//! a sequence index, which the SIR runtime's duck-typed `[]` still
+//! executes correctly (both route through `__getitem__`/`__setitem__`).
+//! The choice only affects the manifest feature (`Sequences` vs `Maps`),
+//! not runtime behaviour.
+//!
+//! ## Still deferred (later milestones / runtime-library work)
+//!
+//! - list/dict **comprehensions** (`[x for x in xs]`)            → deferred
+//! - **slicing** (`xs[a:b]`, `xs[::2]`)                          → deferred
+//! - **tuple** / **set** literals (`(1, 2)`, `{1, 2}`)           → deferred
+//! - list/dict **methods** (`.append` / `.keys` / `.get` …) — these need
+//!   the SIR runtime-library per the project mandate                → deferred
+//! - **unpacking** (`a, b = xs`, `*rest`)                        → deferred
+//!
+//! Each deferred form yields a positioned [`PythonLowerError`].
+//!
 //! ## Free-variable analysis (how captures are computed)
 //!
 //! We scan the lambda/nested-`def` **body subtree of the CST** for bare
@@ -102,7 +155,8 @@
 //!
 //! ## Still deferred (later milestones)
 //!
-//! - collections (lists / dicts / indexing / comprehensions)  → M5+
+//! - collection *comprehensions* / *slicing* / *methods*      → deferred
+//!   (list & dict literals / index / `len` / subscript-assign land in M5)
 //! - `*args` / keyword & default arguments                    → deferred
 //! - decorators / classes / `with` / `try` / generators       → deferred
 //! - `global` / `nonlocal`, multi-target assignment           → deferred
@@ -117,8 +171,8 @@ use std::collections::HashSet;
 
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{
-    Block, Capture, CaptureValue, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata,
-    Module, Param, ParamKind, Scope, Span, Stmt,
+    Block, Capture, CaptureValue, EffectSet, Expr, Feature, FeatureManifest, Function, MapEntry,
+    Metadata, Module, Param, ParamKind, Scope, Span, Stmt,
 };
 
 /// Maximum expression-nesting depth the lowerer will descend before
@@ -201,6 +255,14 @@ pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, Pytho
 enum Lowered {
     Stmt(Box<Stmt>),
     Expr(Expr),
+}
+
+/// What a trailing `primary` `suffix` denotes (M5).  A `suffix` is one of
+/// a *call* (`( … )`), a *subscript* (`[ … ]`), or a deferred attribute
+/// access (`.x`) — classified by [`Lowerer::suffix_kind`].
+enum SuffixKind {
+    Call,
+    Subscript,
 }
 
 /// Per-function name-resolution context (M4).
@@ -692,10 +754,15 @@ impl Lowerer {
         let name = match self.target_name(target_node)? {
             Some(name) => name,
             None => {
+                // M5: a *subscript* target (`xs[i] = v` / `d[k] = v`)?
+                // Everything else (attribute, tuple-unpack, …) is deferred.
+                if let Some(stmt) = self.try_subscript_assign(assign, target_node, rhs_node, ctx)? {
+                    return Ok(Lowered::Stmt(Box::new(stmt)));
+                }
                 return Err(self.err_at(
                     target_node,
                     "unsupported: assignment target is not a bare name (deferred)".to_string(),
-                ))
+                ));
             }
         };
 
@@ -720,6 +787,81 @@ impl Lowerer {
                 value,
                 span,
             })))
+        }
+    }
+
+    /// M5: lower a **subscript assignment** `base[index] = rhs` into
+    /// [`Stmt::SeqSet`] (list) or [`Stmt::MapSet`] (map), mirroring the
+    /// read-side disambiguation (string-literal index → map).  Returns
+    /// `Ok(None)` when the LHS is *not* a subscript target (so the caller
+    /// reports the generic "not a bare name" deferral).
+    ///
+    /// The `base` is everything left of the final subscript: for
+    /// `xs[i] = v` it is `xs`; for a chained `m[a][b] = v` it is `m[a]`
+    /// (itself lowered as a `SeqIndex`/`MapGet` value).  The base is
+    /// lowered as an ordinary expression (it must resolve to a value in
+    /// scope), the final index/key and the RHS likewise.
+    fn try_subscript_assign(
+        &mut self,
+        assign: &GrammarASTNode,
+        target_node: &GrammarASTNode,
+        rhs_node: &GrammarASTNode,
+        ctx: &mut FunctionCtx,
+    ) -> Result<Option<Stmt>, PythonLowerError> {
+        // Peel the target expression to its `primary` (the rule that
+        // carries `atom suffix*`); a non-subscript target peels to a bare
+        // atom (no suffix) and is not ours.
+        let primary = match self.peel_to_primary(target_node) {
+            Some(p) => p,
+            None => return Ok(None),
+        };
+        let kids = child_nodes(primary);
+        let (atom, suffixes) = match kids.split_first() {
+            Some((atom, rest)) if !rest.is_empty() && rest[0].rule_name == "suffix" => {
+                (*atom, rest)
+            }
+            _ => return Ok(None),
+        };
+        // The *final* suffix must be the subscript being assigned.  Earlier
+        // suffixes (if any) form the base value `m[a]` / `g()`.
+        let (last, leading) = suffixes.split_last().expect("split_first left ≥ 1 suffix");
+        if !matches!(self.suffix_kind(last)?, SuffixKind::Subscript) {
+            // `f(x) = v` is not a valid assignment target.
+            return Err(self.err_at(
+                primary,
+                "unsupported: assignment to a call result (deferred)".to_string(),
+            ));
+        }
+
+        // Build the base value: the atom, with every leading suffix
+        // applied (calls / subscripts).  No leading suffix → the base is
+        // just the atom (`xs`).
+        let span = self.span_of(assign);
+        let mut base = self.lower_expr(atom, ctx)?;
+        for suffix in leading {
+            base = self.apply_value_suffix(base, suffix, ctx, 0, &span)?;
+        }
+
+        let index_node = self.subscript_index(last)?;
+        let index = self.lower_expr(index_node, ctx)?;
+        let value = self.lower_expr(rhs_node, ctx)?;
+
+        if is_str_lit(&index) {
+            self.observed.add(Feature::Maps);
+            Ok(Some(Stmt::MapSet {
+                map: base,
+                key: index,
+                value,
+                span,
+            }))
+        } else {
+            self.observed.add(Feature::Sequences);
+            Ok(Some(Stmt::SeqSet {
+                seq: base,
+                index,
+                value,
+                span,
+            }))
         }
     }
 
@@ -1922,11 +2064,17 @@ impl Lowerer {
                 }
             }
             "primary" => {
-                // A `primary` with a call `suffix` is a call expression.
-                if let Some(e) = self.try_call(node, ctx, depth)? {
+                // A `primary` with trailing `suffix`es is a call and/or
+                // subscript chain (`f(x)`, `xs[i]`, `xs[i][j]`, `g()[0]`).
+                if let Some(e) = self.try_primary_suffixes(node, ctx, depth)? {
                     return Ok(e);
                 }
             }
+            // M5: list display `[a, b, c]` → SeqLit.
+            "list_expr" => return self.lower_list_expr(node, ctx, depth),
+            // M5: dict display `{k: v, ...}` → MapLit (a set display is
+            // rejected inside this handler).
+            "dict_or_set_expr" => return self.lower_dict_or_set_expr(node, ctx, depth),
             _ => {}
         }
 
@@ -1947,46 +2095,127 @@ impl Lowerer {
         }
     }
 
-    /// `primary` with a trailing call `suffix` → a call expression.
-    /// Resolves the callee: a known function name → [`Expr::DirectCall`];
-    /// a builtin (`print`/`len`/`range`) → [`Expr::BuiltinCall`]; a
-    /// local/param/captured value → [`Expr::IndirectCall`] through that
-    /// `VarRef`.  Returns `Ok(None)` when the `primary` is not a call
-    /// (no `suffix`) so the generic peel handles it.
-    fn try_call(
+    /// `primary` with trailing `suffix`es → a call / subscript chain
+    /// (`f(x)`, `xs[i]`, `xs[i][j]`, `g()[0]`).  Returns `Ok(None)` when
+    /// the `primary` has no suffix (a bare atom) so the generic peel
+    /// handles it.
+    ///
+    /// The suffixes are applied **left to right** as a fold over an
+    /// accumulated [`Expr`].  The *first* suffix is special-cased because
+    /// the base is a bare `atom` (a name): a **call** there resolves with
+    /// the full name semantics (builtin / `DirectCall` / `IndirectCall`),
+    /// and a **`len(...)`** call is intercepted as [`Expr::SeqLen`].  Once
+    /// the accumulator is a *computed value*, a further call suffix is an
+    /// [`Expr::IndirectCall`] and a subscript suffix a `SeqIndex`/`MapGet`.
+    ///
+    /// Each suffix application is depth-bounded (it lowers the suffix's
+    /// argument/index expressions at `depth + 1`), so a pathological
+    /// subscript tower `xs[xs[xs[...]]]` (deep *index* expressions) fails
+    /// cleanly via [`MAX_EXPR_DEPTH`].
+    fn try_primary_suffixes(
         &mut self,
         node: &GrammarASTNode,
         ctx: &mut FunctionCtx,
         depth: usize,
     ) -> Result<Option<Expr>, PythonLowerError> {
         let kids = child_nodes(node);
-        let (callee, suffix) = match kids.as_slice() {
-            [callee, suffix] if suffix.rule_name == "suffix" => (*callee, *suffix),
+        // `primary → atom suffix*`.  No suffix → not our shape.
+        let (atom, suffixes) = match kids.split_first() {
+            Some((atom, rest)) if !rest.is_empty() && rest[0].rule_name == "suffix" => {
+                (*atom, rest)
+            }
             _ => return Ok(None),
         };
-        // Only a *call* suffix `( … )` — not indexing `[ … ]` or
-        // attribute `.x` (deferred).  A call suffix's first token is `(`.
-        let is_call = matches!(
-            suffix.children.first(),
-            Some(ASTNodeOrToken::Token(t)) if t.value == "("
-        );
-        if !is_call {
-            return Err(self.err_at(
-                suffix,
-                "unsupported: indexing / attribute access (deferred to a later milestone)"
-                    .to_string(),
-            ));
-        }
 
         let span = self.span_of(node);
 
-        // Lower the arguments first.
-        let arg_nodes = self.call_arguments(suffix);
-        let mut args = Vec::with_capacity(arg_nodes.len());
-        for a in &arg_nodes {
-            let e = self.single_arg_expr(a)?;
-            args.push(self.lower_expr_d(e, ctx, depth + 1)?);
+        // Apply the first suffix against the bare-name atom (call name
+        // semantics live here), then fold the rest over the result.
+        let mut acc = self.apply_first_suffix(atom, suffixes[0], ctx, depth, &span)?;
+        for suffix in &suffixes[1..] {
+            acc = self.apply_value_suffix(acc, suffix, ctx, depth, &span)?;
         }
+        Ok(Some(acc))
+    }
+
+    /// Apply the **first** trailing `suffix` to the bare-name `atom`.  A
+    /// call suffix resolves the callee with full name semantics
+    /// (builtin / `len`→`SeqLen` / `DirectCall` / `IndirectCall`); a
+    /// subscript suffix lowers the atom as a value first, then indexes it.
+    fn apply_first_suffix(
+        &mut self,
+        atom: &GrammarASTNode,
+        suffix: &GrammarASTNode,
+        ctx: &mut FunctionCtx,
+        depth: usize,
+        span: &Span,
+    ) -> Result<Expr, PythonLowerError> {
+        match self.suffix_kind(suffix)? {
+            SuffixKind::Call => self.lower_call_suffix(atom, suffix, ctx, depth, span),
+            SuffixKind::Subscript => {
+                let base = self.lower_expr_d(atom, ctx, depth + 1)?;
+                self.lower_subscript_suffix(base, suffix, ctx, depth, span)
+            }
+        }
+    }
+
+    /// Apply a trailing `suffix` to an already-computed value (a chained
+    /// suffix: `g()[0]`, `xs[i][j]`, `f(x)(y)`).  A call here is always an
+    /// [`Expr::IndirectCall`] (the value is a closure handle); a subscript
+    /// is a `SeqIndex`/`MapGet`.
+    fn apply_value_suffix(
+        &mut self,
+        base: Expr,
+        suffix: &GrammarASTNode,
+        ctx: &mut FunctionCtx,
+        depth: usize,
+        span: &Span,
+    ) -> Result<Expr, PythonLowerError> {
+        match self.suffix_kind(suffix)? {
+            SuffixKind::Call => {
+                let args = self.lower_call_args(suffix, ctx, depth)?;
+                self.observed.add(Feature::Closures);
+                Ok(Expr::IndirectCall {
+                    target: Box::new(base),
+                    args,
+                    effects: EffectSet::PURE,
+                    span: span.clone(),
+                })
+            }
+            SuffixKind::Subscript => {
+                self.lower_subscript_suffix(base, suffix, ctx, depth, span)
+            }
+        }
+    }
+
+    /// Classify a `suffix`: a call `( … )`, a subscript `[ … ]`, or a
+    /// deferred attribute access `.x`.
+    fn suffix_kind(&self, suffix: &GrammarASTNode) -> Result<SuffixKind, PythonLowerError> {
+        match suffix.children.first() {
+            Some(ASTNodeOrToken::Token(t)) if t.value == "(" => Ok(SuffixKind::Call),
+            Some(ASTNodeOrToken::Token(t)) if t.value == "[" => Ok(SuffixKind::Subscript),
+            _ => Err(self.err_at(
+                suffix,
+                "unsupported: attribute access / method call (deferred to a later milestone)"
+                    .to_string(),
+            )),
+        }
+    }
+
+    /// Lower a call `suffix` applied to a bare-name `callee` atom, with
+    /// full name semantics: a builtin (`print`/`range`) → `BuiltinCall`;
+    /// `len(x)` → the dedicated [`Expr::SeqLen`] node (SIR17 prefers it
+    /// over `BuiltinCall("len")`); a known function → `DirectCall`; a
+    /// local/param/capture value → `IndirectCall`.
+    fn lower_call_suffix(
+        &mut self,
+        callee: &GrammarASTNode,
+        suffix: &GrammarASTNode,
+        ctx: &mut FunctionCtx,
+        depth: usize,
+        span: &Span,
+    ) -> Result<Expr, PythonLowerError> {
+        let args = self.lower_call_args(suffix, ctx, depth)?;
 
         // The callee must be a bare name (no method calls in v0).
         let name = match self.target_name(callee)? {
@@ -1999,36 +2228,267 @@ impl Lowerer {
             }
         };
 
-        // Builtin?
-        if BUILTIN_CALLS.contains(&name.as_str()) {
-            return Ok(Some(Expr::BuiltinCall {
+        // `len(x)` → SeqLen (preferred over BuiltinCall("len")).  Arity
+        // must be exactly 1; a value of the same name in scope shadows the
+        // builtin (then it is an ordinary indirect call).
+        if name == "len" && !ctx.is_enclosing_value(&name) {
+            if args.len() != 1 {
+                return Err(self.err_at(
+                    suffix,
+                    format!("len() takes exactly 1 argument, got {}", args.len()),
+                ));
+            }
+            self.observed.add(Feature::Sequences);
+            return Ok(Expr::SeqLen {
+                seq: Box::new(args.into_iter().next().expect("arity checked == 1")),
+                span: span.clone(),
+            });
+        }
+
+        // Other builtins (`print` / `range`).
+        if BUILTIN_CALLS.contains(&name.as_str()) && !ctx.is_enclosing_value(&name) {
+            return Ok(Expr::BuiltinCall {
                 name,
                 args,
                 effects: EffectSet::PURE,
-                span,
-            }));
+                span: span.clone(),
+            });
         }
         // Known function (top-level or nested-lifted) → DirectCall, but
         // only if it is *not* shadowed by an enclosing value of the same
         // name (a local/param/capture closure handle wins).
         if self.function_names.contains(&name) && !ctx.is_enclosing_value(&name) {
-            return Ok(Some(Expr::DirectCall {
+            return Ok(Expr::DirectCall {
                 fn_name: name,
                 args,
                 effects: EffectSet::PURE,
-                span,
-            }));
+                span: span.clone(),
+            });
         }
         // Otherwise the name must be a value (closure handle) — resolve
         // it and emit an IndirectCall.
         let target = self.resolve_var_in(ctx, &name, span.clone())?;
         self.observed.add(Feature::Closures);
-        Ok(Some(Expr::IndirectCall {
+        Ok(Expr::IndirectCall {
             target: Box::new(target),
             args,
             effects: EffectSet::PURE,
+            span: span.clone(),
+        })
+    }
+
+    /// Lower the argument expressions of a call `suffix` (`( a, b, … )`).
+    fn lower_call_args(
+        &mut self,
+        suffix: &GrammarASTNode,
+        ctx: &mut FunctionCtx,
+        depth: usize,
+    ) -> Result<Vec<Expr>, PythonLowerError> {
+        let arg_nodes = self.call_arguments(suffix);
+        let mut args = Vec::with_capacity(arg_nodes.len());
+        for a in &arg_nodes {
+            let e = self.single_arg_expr(a)?;
+            args.push(self.lower_expr_d(e, ctx, depth + 1)?);
+        }
+        Ok(args)
+    }
+
+    /// Lower a subscript `suffix` (`[ index ]`) applied to `base`,
+    /// disambiguating list-index ([`Expr::SeqIndex`]) from dict-lookup
+    /// ([`Expr::MapGet`]) by the index: a **string-literal** index is a
+    /// map key; anything else is a sequence index (see the module-level
+    /// "Subscript disambiguation" note).  Slicing (`a:b`) is rejected.
+    fn lower_subscript_suffix(
+        &mut self,
+        base: Expr,
+        suffix: &GrammarASTNode,
+        ctx: &mut FunctionCtx,
+        depth: usize,
+        span: &Span,
+    ) -> Result<Expr, PythonLowerError> {
+        let index_node = self.subscript_index(suffix)?;
+        let index = self.lower_expr_d(index_node, ctx, depth + 1)?;
+        if is_str_lit(&index) {
+            self.observed.add(Feature::Maps);
+            Ok(Expr::MapGet {
+                map: Box::new(base),
+                key: Box::new(index),
+                span: span.clone(),
+            })
+        } else {
+            self.observed.add(Feature::Sequences);
+            Ok(Expr::SeqIndex {
+                seq: Box::new(base),
+                index: Box::new(index),
+                span: span.clone(),
+            })
+        }
+    }
+
+    /// Extract the single index `expression` from a subscript `suffix`
+    /// (`suffix → "[" subscript "]"`, `subscript → subscript_item →
+    /// expression`).  A *slice* (`a:b`, with a `Colon`) or multi-item
+    /// subscript is rejected (deferred).
+    fn subscript_index<'a>(
+        &self,
+        suffix: &'a GrammarASTNode,
+    ) -> Result<&'a GrammarASTNode, PythonLowerError> {
+        let subscript = self
+            .first_child_named(suffix, "subscript")
+            .ok_or_else(|| self.err_at(suffix, "malformed subscript".to_string()))?;
+        // A slice surfaces as a `Colon` token somewhere in the subscript
+        // (e.g. `xs[a:b]`); reject it explicitly as deferred.
+        if has_colon_token(subscript) {
+            return Err(self.err_at(
+                subscript,
+                "unsupported: slicing (deferred to a later milestone)".to_string(),
+            ));
+        }
+        let items: Vec<&GrammarASTNode> = child_nodes(subscript)
+            .into_iter()
+            .filter(|n| n.rule_name == "subscript_item")
+            .collect();
+        let item = match items.as_slice() {
+            [only] => *only,
+            _ => {
+                return Err(self.err_at(
+                    subscript,
+                    "unsupported: multi-element subscript (deferred)".to_string(),
+                ))
+            }
+        };
+        self.first_child_named(item, "expression").ok_or_else(|| {
+            self.err_at(item, "unsupported: non-expression subscript (deferred)".to_string())
+        })
+    }
+
+    /// Lower a list display `list_expr → "[" list_body? "]"` into
+    /// [`Expr::SeqLit`].  The elements live in `list_body` as a
+    /// comma-separated run of `expression`s; an empty list (`[]`) has no
+    /// `list_body` child.  A comprehension (`[x for x in xs]`) carries a
+    /// `for`/`comp_for` node instead — rejected as deferred.  Each element
+    /// is lowered at `depth + 1`, so a deep `[[[…]]]` tower fails cleanly.
+    fn lower_list_expr(
+        &mut self,
+        node: &GrammarASTNode,
+        ctx: &mut FunctionCtx,
+        depth: usize,
+    ) -> Result<Expr, PythonLowerError> {
+        let span = self.span_of(node);
+        let mut items = Vec::new();
+        if let Some(body) = self.first_child_named(node, "list_body") {
+            // A comprehension body carries a `comp_for` / `for`-bearing
+            // node rather than a plain expression run — reject it.
+            if self.is_comprehension_body(body) {
+                return Err(self.err_at(
+                    body,
+                    "unsupported: list comprehension (deferred to a later milestone)".to_string(),
+                ));
+            }
+            for el in child_nodes(body) {
+                if el.rule_name == "expression" {
+                    items.push(self.lower_expr_d(el, ctx, depth + 1)?);
+                } else {
+                    return Err(self.err_at(
+                        el,
+                        format!("unsupported list element `{}` (deferred)", el.rule_name),
+                    ));
+                }
+            }
+        }
+        self.observed.add(Feature::Sequences);
+        Ok(Expr::SeqLit { items, span })
+    }
+
+    /// Lower a dict display `dict_or_set_expr → "{" dict_or_set_body? "}"`
+    /// into [`Expr::MapLit`].  The body wraps a `dict_body` whose children
+    /// are `dict_entry [ key, ":", value ]` nodes (comma-separated).  An
+    /// empty `{}` has no body.  A **set** display (`{1, 2}`) parses to a
+    /// `dict_or_set_body` with no `dict_body` (a bare expression run) and is
+    /// rejected; a comprehension likewise.  Each key/value is lowered at
+    /// `depth + 1` so a deep `{a: {b: …}}` tower fails cleanly.
+    fn lower_dict_or_set_expr(
+        &mut self,
+        node: &GrammarASTNode,
+        ctx: &mut FunctionCtx,
+        depth: usize,
+    ) -> Result<Expr, PythonLowerError> {
+        let span = self.span_of(node);
+        let body = match self.first_child_named(node, "dict_or_set_body") {
+            // Empty `{}` is an empty map.
+            None => return Ok(self.empty_map(span)),
+            Some(b) => b,
+        };
+        let dict_body = match self.first_child_named(body, "dict_body") {
+            Some(db) => db,
+            // No `dict_body` ⇒ a *set* display (or set comprehension) —
+            // deferred (sets are not an SIR17 collection in v0).
+            None => {
+                return Err(self.err_at(
+                    body,
+                    "unsupported: set literal / comprehension (deferred to a later milestone)"
+                        .to_string(),
+                ))
+            }
+        };
+        if self.is_comprehension_body(dict_body) {
+            return Err(self.err_at(
+                dict_body,
+                "unsupported: dict comprehension (deferred to a later milestone)".to_string(),
+            ));
+        }
+        let mut entries = Vec::new();
+        for entry in child_nodes(dict_body) {
+            if entry.rule_name != "dict_entry" {
+                return Err(self.err_at(
+                    entry,
+                    format!("unsupported dict element `{}` (deferred)", entry.rule_name),
+                ));
+            }
+            // `dict_entry → key_expression ":" value_expression`.  A `**d`
+            // spread entry has no plain `[key, value]` expression pair.
+            let exprs: Vec<&GrammarASTNode> = child_nodes(entry)
+                .into_iter()
+                .filter(|n| n.rule_name == "expression")
+                .collect();
+            let (k, v) = match exprs.as_slice() {
+                [k, v] => (*k, *v),
+                _ => {
+                    return Err(self.err_at(
+                        entry,
+                        "unsupported: dict spread / non key-value entry (deferred)".to_string(),
+                    ))
+                }
+            };
+            let key = self.lower_expr_d(k, ctx, depth + 1)?;
+            let value = self.lower_expr_d(v, ctx, depth + 1)?;
+            entries.push(MapEntry { key, value });
+        }
+        self.observed.add(Feature::Maps);
+        Ok(Expr::MapLit { entries, span })
+    }
+
+    /// An empty [`Expr::MapLit`] (the lowering of `{}`).  Declares `Maps`.
+    fn empty_map(&mut self, span: Span) -> Expr {
+        self.observed.add(Feature::Maps);
+        Expr::MapLit {
+            entries: vec![],
             span,
-        }))
+        }
+    }
+
+    /// Does a list/dict body carry a comprehension (`for`/`comp_for`)
+    /// rather than a plain element run?  Best-effort: a comprehension's
+    /// CST contains a `comp_for` node or a `for` keyword token.
+    fn is_comprehension_body(&self, body: &GrammarASTNode) -> bool {
+        body.children.iter().any(|c| match c {
+            ASTNodeOrToken::Node(n) => {
+                n.rule_name == "comp_for" || n.rule_name.contains("comprehension")
+            }
+            ASTNodeOrToken::Token(t) => {
+                t.type_ == lexer::token::TokenType::Keyword && t.value == "for"
+            }
+        })
     }
 
     fn try_logical(
@@ -2516,6 +2976,24 @@ fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
 /// recognises under `arith` (`+`/`-`) and `term` (`*`/`/`/`%`)?
 fn is_arith_op(value: &str) -> bool {
     matches!(value, "+" | "-" | "*" | "/" | "%")
+}
+
+/// Is a lowered index expression a string literal?  This is the M5
+/// subscript-disambiguation predicate: a string-literal subscript index is
+/// treated as a **map key** (`MapGet`/`MapSet`); any other index is a
+/// **sequence index** (`SeqIndex`/`SeqSet`).  See the module-level
+/// "Subscript disambiguation" note for the rationale and its limits.
+fn is_str_lit(expr: &Expr) -> bool {
+    matches!(expr, Expr::StrLit { .. })
+}
+
+/// Does `node` carry a `Colon` token among its *direct* children?  Used to
+/// detect a slice subscript (`xs[a:b]`), which surfaces as a `Colon` token
+/// inside the `subscript` node and is rejected (deferred) in M5.
+fn has_colon_token(node: &GrammarASTNode) -> bool {
+    node.children.iter().any(|c| {
+        matches!(c, ASTNodeOrToken::Token(t) if t.type_ == lexer::token::TokenType::Colon)
+    })
 }
 
 /// An empty `Block` whose value is `NilLit`.

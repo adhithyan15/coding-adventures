@@ -5,6 +5,91 @@ All notable changes to `python-to-semantic-ir` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to semantic versioning.
 
+## 0.5.0 — 2026-06-30
+
+Milestone **M5**: collections — list & dict literals, indexing, `len`, and
+subscript assignment (SIR17 Python → Semantic IR frontend, B5).  This is
+the last big milestone for the Python frontend — it lowers real data
+programs.
+
+### Added
+
+- **List display `[a, b, c]` → `Expr::SeqLit`** (parser rule
+  `atom → list_expr [ "[", list_body?, "]" ]`; `list_body` is a
+  comma-separated run of `expression`s).  `[]` → an empty `SeqLit`.
+  Elements are lowered depth-bounded, so a deep `[[[…]]]` tower yields a
+  positioned error, never a stack overflow.
+- **Dict display `{k: v, ...}` → `Expr::MapLit`** over `MapEntry`s
+  (parser: `atom → dict_or_set_expr [ "{", dict_or_set_body?, "}" ]`,
+  `dict_or_set_body → dict_body` of `dict_entry [ key, ":", value ]`).
+  `{}` → an empty `MapLit`.
+- **Subscription `x[i]` → `Expr::SeqIndex` / `Expr::MapGet`.**  The parser
+  models a subscript as a trailing `suffix` on a `primary`
+  (`primary → atom suffix*`, subscript suffix `[ "[", subscript, "]" ]`).
+  Suffixes are folded **left-to-right**, so chained `xs[i][j]`, `g()[0]`,
+  and mixed call/subscript chains lower correctly.
+- **`len(xs)` → the dedicated `Expr::SeqLen` node** (SIR17 prefers it over
+  `BuiltinCall("len")` so backends can emit native length access).  Arity
+  must be exactly 1; a local/param named `len` shadows the builtin.
+- **Subscript assignment `x[i] = v` → `Stmt::SeqSet` / `Stmt::MapSet`**,
+  mirroring the read-side disambiguation.  Chained `m[a][b] = v` is
+  supported (the base `m[a]` lowers as a value, `[b]` is the assigned
+  index).
+- **Manifest** declares `Feature::Sequences` for any
+  `SeqLit`/`SeqIndex`/`SeqLen`/`SeqSet`, and `Feature::Maps` for any
+  `MapLit`/`MapGet`/`MapSet`.
+- **`MapEntry` is now re-exported** from the `semantic-ir` crate root
+  (`semantic_ir::MapEntry`) for use by frontends/backends.
+
+### Subscript disambiguation
+
+Python overloads `[]` for both list indexing and dict lookup, and the
+frontend has no type information.  The SIR17 spec lists `xs[i] → SeqIndex`
+and `d[k] → MapGet` but leaves the *syntactic* rule open.  M5 uses a
+purely syntactic heuristic (mirroring the JS sibling's cut-line): **a
+string-literal index → `MapGet`/`MapSet` (a map key); any other index →
+`SeqIndex`/`SeqSet` (a sequence index).**  The canonical idioms (`xs[0]`,
+`d["name"]`) lower correctly; the choice only affects the manifest feature
+(`Sequences` vs `Maps`), not runtime behaviour — the SIR runtime's
+duck-typed `[]` executes both via `__getitem__`/`__setitem__`.
+
+### Deferred (rejected with a positioned error)
+
+- List/dict **comprehensions** (`[x for x in xs]`, `{k: v for …}`).
+- **Slicing** (`xs[a:b]`) — also rejected by the parser, with the
+  lowerer's `has_colon_token` guard as defence-in-depth.
+- **Tuple** (`(1, 2)`) and **set** (`{1, 2}`) literals.
+- List/dict **methods** (`.append` / `.keys` / `.get` …) — these require
+  the SIR runtime-library per the project mandate.
+- **Unpacking** (`a, b = xs`).
+
+### Tests
+
+- A positive unit test per collection form (list/dict literal, empty,
+  nested), both subscript disambiguation directions, `len`→`SeqLen` (plus
+  wrong-arity and shadowing), and subscript assignment (`SeqSet`/`MapSet`,
+  chained).
+- Negative tests for every deferred form (set, comprehension, slice,
+  tuple).
+- **Deep-nesting regression tests** — a `[[[…]]]` list tower, an
+  `xs[xs[xs[…]]]` index tower, and a `{"a": {"a": …}}` dict tower each
+  exceed `MAX_EXPR_DEPTH` and must return a clean positioned error
+  (verified on a 64 MiB worker stack so the *lowerer's* guard, not the
+  parser's, is exercised).
+- `validate` round-trip over the M5 collection programs.
+- **End-to-end goldens** (Python → SIR → `semantic-ir-to-python` →
+  executed): build/index/sum a list, list subscript assignment, dict
+  get/set, and a for-each list sum.  These run through the existing
+  PYTHONPATH-aware helper (resolving a real Python 3 and pointing
+  `PYTHONPATH` at the SIR runtime package `src` dirs), and skip cleanly
+  when no interpreter is present.
+
+### Fixed
+
+- Updated the `Param` construction for the new `semantic_ir::Param.default`
+  field (added upstream), so the crate builds against the current
+  `semantic-ir`.
+
 ## 0.4.0 — 2026-06-30
 
 Milestone **M4**: functions, calls, and closures — `def`, tail-position
