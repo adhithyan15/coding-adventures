@@ -14,7 +14,8 @@ use spice_netlist_parser::{
     TfAnalysis, TranAnalysis, BERKELEY_APP_BOOTSTRAP_SCHEMA_VERSION,
     BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION, BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION,
     BERKELEY_APP_PACKAGE_NAME, BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM,
-    BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION,
+    BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION, BERKELEY_SPICE_GRAMMAR_NAME,
+    BERKELEY_SPICE_GRAMMAR_VERSION,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -2553,6 +2554,11 @@ fn berkeley_app_facade_exports_package_manifest_json() {
         .unwrap()
         .iter()
         .any(|capability| capability == "app-bootstrap-json"));
+    assert!(payload["artifactCapabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|capability| capability == "app-startup-summary-json"));
 }
 
 #[test]
@@ -2619,6 +2625,48 @@ C1 out 0 1p
         .unwrap()
         .iter()
         .any(|capability| capability == "app-bootstrap-json"));
+
+    let summary = app
+        .run_app_startup_summary(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("startup summary should execute");
+    assert_eq!(
+        summary.schema_version,
+        BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION
+    );
+    assert_eq!(summary.package_name, BERKELEY_APP_PACKAGE_NAME);
+    assert_eq!(
+        summary.source_fingerprint,
+        snapshot.host_surface.source_fingerprint
+    );
+    assert!(summary.ready);
+    assert!(summary.parsed);
+    assert!(summary.execution_available);
+    assert_eq!(summary.active_panel_id.as_deref(), Some("waveform"));
+    assert_eq!(summary.panel_count, 5);
+    assert_eq!(summary.diagnostic_count, 0);
+    assert!(!summary.selection_stale);
+    assert!(!summary.command_stale);
+
+    let summary_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_startup_summary_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap(),
+    )
+    .expect("startup summary JSON should parse");
+    assert_eq!(summary_payload["schemaVersion"], 1);
+    assert_eq!(summary_payload["packageName"], "berkeley-spice-mosaic-app");
+    assert_eq!(summary_payload["ready"], true);
+    assert_eq!(summary_payload["activePanelId"], "waveform");
+    assert_eq!(
+        summary_payload["resolvedActiveCommandId"],
+        "analysis.3.inspect-waveform"
+    );
+    assert_eq!(summary_payload["diagnosticCount"], 0);
 }
 
 #[test]
@@ -2661,6 +2709,33 @@ R1 in out
         payload["hostSurface"]["diagnostics"][0]["span"]["startLine"],
         3
     );
+
+    let summary = app.app_startup_summary(BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(2),
+        active_command_id: Some("analysis.2.run".to_string()),
+    });
+    assert_eq!(
+        summary.schema_version,
+        BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION
+    );
+    assert!(!summary.ready);
+    assert!(!summary.parsed);
+    assert!(!summary.execution_available);
+    assert_eq!(summary.active_panel_id.as_deref(), Some("diagnostics"));
+    assert_eq!(summary.diagnostic_count, 1);
+    assert!(summary.blocking_message.is_some());
+
+    let summary_payload: serde_json::Value = serde_json::from_str(&app.app_startup_summary_json(
+        BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        },
+    ))
+    .expect("blocked startup summary JSON should parse");
+    assert_eq!(summary_payload["ready"], false);
+    assert_eq!(summary_payload["activePanelId"], "diagnostics");
+    assert_eq!(summary_payload["diagnosticCount"], 1);
+    assert!(summary_payload["blockingMessage"].is_string());
 }
 
 #[test]

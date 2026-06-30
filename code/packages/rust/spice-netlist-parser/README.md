@@ -86,6 +86,12 @@ let bootstrap_json = deck.run_app_bootstrap_json(BerkeleyAppPersistedEditorState
 })?;
 assert!(bootstrap_json.contains(r#""packageManifest":{"#));
 assert!(bootstrap_json.contains(r#""hostSurface":{"#));
+
+let startup_summary_json = deck.run_app_startup_summary_json(BerkeleyAppPersistedEditorState {
+    selected_syntax_card_index: Some(3),
+    active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+})?;
+assert!(startup_summary_json.contains(r#""ready":true"#));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -116,8 +122,11 @@ Rust app/runtime entrypoint for Mosaic-backed UI work. App bootstrap snapshots
 combine that manifest with the schema-versioned host-surface wire export so
 WebAssembly and product shells can load one startup payload with package
 capabilities, repaired editor-state metadata, active panels, and diagnostics
-before taking ownership of the UI. The grammar-backed parser generator and
-Python/TypeScript parity surfaces continue to mature.
+before taking ownership of the UI. Startup summaries derive a compact ready /
+blocked route from the same bootstrap payload, including source fingerprint,
+active panel, repaired editor-state IDs, stale-state flags, diagnostic count,
+and blocking reason. The grammar-backed parser generator and Python/TypeScript
+parity surfaces continue to mature.
 
 This parser supports `R`, `C`, `L`, `V`, `I`, `D`, `Q`, `M`, `G`, `E`, `F`, and
 `H` elements, `.model <name> D(...)` diode cards with `IS` and `VT`
