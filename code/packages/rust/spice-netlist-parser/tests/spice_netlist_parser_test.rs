@@ -5,12 +5,12 @@ use spice_engine::{
 use spice_netlist_parser::{
     build_analysis_plan, parse_berkeley_app_deck, parse_berkeley_syntax, parse_netlist,
     parse_value, run_netlist, AcAnalysis, Analysis, AnalysisKind, AnalysisResult,
-    BerkeleyAppEditorActionKind, BerkeleyCardKind, BerkeleyDiagnosticSeverity,
-    BerkeleyGrammarMetadata, DcAnalysis, DistortionAnalysis, FourAnalysis, McAnalysis,
-    MeasureAnalysis, MeasureOperation, NetlistParseError, NoiseAnalysis, OpAnalysis, OptionValue,
-    OutputProbe, PlotAnalysis, PoleZeroAnalysis, PoleZeroKind, PrintAnalysis, ProbeAnalysis,
-    SaveAnalysis, SelectedOutputValue, SensAnalysis, TempAnalysis, TfAnalysis, TranAnalysis,
-    BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION,
+    BerkeleyAppEditorActionKind, BerkeleyAppPersistedEditorState, BerkeleyCardKind,
+    BerkeleyDiagnosticSeverity, BerkeleyGrammarMetadata, DcAnalysis, DistortionAnalysis,
+    FourAnalysis, McAnalysis, MeasureAnalysis, MeasureOperation, NetlistParseError, NoiseAnalysis,
+    OpAnalysis, OptionValue, OutputProbe, PlotAnalysis, PoleZeroAnalysis, PoleZeroKind,
+    PrintAnalysis, ProbeAnalysis, SaveAnalysis, SelectedOutputValue, SensAnalysis, TempAnalysis,
+    TfAnalysis, TranAnalysis, BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -2282,6 +2282,95 @@ R1 in out
         .as_deref()
         .unwrap()
         .contains("Berkeley SPICE app deck:"));
+}
+
+#[test]
+fn berkeley_app_facade_restores_persisted_editor_state_after_execution() {
+    let app = parse_berkeley_app_deck(
+        r#"
+* transient editor state
+V1 in 0 PULSE(0 1 0 1n 1n 1n 4n)
+R1 in out 1k
+C1 out 0 1p
+.tran 1n 3n
+.print tran V(out)
+.end
+"#,
+    );
+    let requested = BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(3),
+        active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+    };
+
+    let snapshot = app.run_editor_state_snapshot(requested.clone()).unwrap();
+
+    assert!(snapshot.parsed);
+    assert!(snapshot.execution_available);
+    assert_eq!(snapshot.requested_state, requested);
+    assert_eq!(
+        snapshot.resolved_state,
+        BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        }
+    );
+    assert!(!snapshot.selection_stale);
+    assert!(!snapshot.command_stale);
+    assert_eq!(snapshot.command_plan.command_count, 4);
+
+    let selected = snapshot.selected_control.as_ref().unwrap();
+    assert_eq!(selected.directive, ".tran");
+    assert!(selected.waveform_available);
+
+    let active = snapshot.active_command.as_ref().unwrap();
+    assert_eq!(active.id, "analysis.3.inspect-waveform");
+    assert_eq!(active.target, "analysis-waveform");
+    assert!(active.enabled);
+    assert!(active.selected);
+}
+
+#[test]
+fn berkeley_app_facade_repairs_stale_persisted_editor_state() {
+    let app = parse_berkeley_app_deck(
+        r#"
+* transient editor state
+V1 in 0 PULSE(0 1 0 1n 1n 1n 4n)
+R1 in out 1k
+C1 out 0 1p
+.tran 1n 3n
+.print tran V(out)
+.end
+"#,
+    );
+
+    let snapshot = app.editor_state_snapshot(BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(99),
+        active_command_id: Some("analysis.99.run".to_string()),
+    });
+
+    assert_eq!(
+        snapshot.resolved_state,
+        BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.select".to_string()),
+        }
+    );
+    assert!(snapshot.selection_stale);
+    assert!(snapshot.command_stale);
+    assert_eq!(
+        snapshot
+            .selected_control
+            .as_ref()
+            .unwrap()
+            .syntax_card_index,
+        3
+    );
+
+    let active = snapshot.active_command.as_ref().unwrap();
+    assert_eq!(active.kind, BerkeleyAppEditorActionKind::SelectAnalysis);
+    assert_eq!(active.target, "analysis-selection");
+    assert!(active.enabled);
+    assert!(active.selected);
 }
 
 #[test]

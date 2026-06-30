@@ -349,6 +349,30 @@ pub struct BerkeleyAppEditorCommandPlan {
     pub diagnostics: Vec<BerkeleySyntaxDiagnostic>,
 }
 
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct BerkeleyAppPersistedEditorState {
+    pub selected_syntax_card_index: Option<usize>,
+    pub active_command_id: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppEditorStateSnapshot {
+    pub canonical_source: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub parsed: bool,
+    pub execution_available: bool,
+    pub requested_state: BerkeleyAppPersistedEditorState,
+    pub resolved_state: BerkeleyAppPersistedEditorState,
+    pub selection_stale: bool,
+    pub command_stale: bool,
+    pub selected_control: Option<BerkeleyAppAnalysisControl>,
+    pub active_command: Option<BerkeleyAppEditorCommand>,
+    pub command_plan: BerkeleyAppEditorCommandPlan,
+    pub blocking_message: Option<String>,
+    pub diagnostics: Vec<BerkeleySyntaxDiagnostic>,
+}
+
 impl BerkeleyAppDeck {
     pub fn has_errors(&self) -> bool {
         self.diagnostics
@@ -472,6 +496,23 @@ impl BerkeleyAppDeck {
     ) -> Result<BerkeleyAppEditorCommandPlan, AnalysisExecutionError> {
         Ok(editor_command_plan_from_controls(
             &self.run_editor_controls(selected_syntax_card_index)?,
+        ))
+    }
+
+    pub fn editor_state_snapshot(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppEditorStateSnapshot {
+        editor_state_snapshot_from_session_state(self.session_state(None), persisted_state)
+    }
+
+    pub fn run_editor_state_snapshot(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppEditorStateSnapshot, AnalysisExecutionError> {
+        Ok(editor_state_snapshot_from_session_state(
+            self.run_session_state(None)?,
+            persisted_state,
         ))
     }
 
@@ -654,6 +695,100 @@ fn editor_command_plan_from_controls(
         blocking_message: controls.blocking_message.clone(),
         diagnostics: controls.diagnostics.clone(),
     }
+}
+
+fn editor_state_snapshot_from_session_state(
+    mut state: BerkeleyAppSessionState,
+    requested_state: BerkeleyAppPersistedEditorState,
+) -> BerkeleyAppEditorStateSnapshot {
+    let resolved_selection =
+        resolve_editor_selection(&state, requested_state.selected_syntax_card_index);
+    apply_session_selection(&mut state, resolved_selection);
+
+    let controls = editor_controls_from_session_state(&state);
+    let command_plan = editor_command_plan_from_controls(&controls);
+    let active_command = resolve_active_editor_command(
+        &command_plan,
+        resolved_selection,
+        requested_state.active_command_id.as_deref(),
+    )
+    .cloned();
+    let resolved_state = BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: resolved_selection,
+        active_command_id: active_command.as_ref().map(|command| command.id.clone()),
+    };
+    let selection_stale = requested_state.selected_syntax_card_index.is_some()
+        && requested_state.selected_syntax_card_index != resolved_state.selected_syntax_card_index;
+    let command_stale = requested_state.active_command_id.is_some()
+        && requested_state.active_command_id != resolved_state.active_command_id;
+
+    BerkeleyAppEditorStateSnapshot {
+        canonical_source: command_plan.canonical_source.clone(),
+        source_fingerprint: command_plan.source_fingerprint.clone(),
+        title: command_plan.title.clone(),
+        parsed: command_plan.parsed,
+        execution_available: command_plan.execution_available,
+        requested_state,
+        resolved_state,
+        selection_stale,
+        command_stale,
+        selected_control: controls.selected_control,
+        active_command,
+        blocking_message: command_plan.blocking_message.clone(),
+        diagnostics: command_plan.diagnostics.clone(),
+        command_plan,
+    }
+}
+
+fn resolve_editor_selection(
+    state: &BerkeleyAppSessionState,
+    requested_selection: Option<usize>,
+) -> Option<usize> {
+    if let Some(selection) = requested_selection {
+        if state
+            .analyses
+            .iter()
+            .any(|analysis| analysis.syntax_card_index == selection)
+        {
+            return Some(selection);
+        }
+    }
+    state
+        .analyses
+        .first()
+        .map(|analysis| analysis.syntax_card_index)
+}
+
+fn apply_session_selection(
+    state: &mut BerkeleyAppSessionState,
+    selected_syntax_card_index: Option<usize>,
+) {
+    state.selected_syntax_card_index = selected_syntax_card_index;
+    for analysis in &mut state.analyses {
+        analysis.selected = Some(analysis.syntax_card_index) == selected_syntax_card_index;
+    }
+    refresh_selected_session_analysis(state);
+}
+
+fn resolve_active_editor_command<'a>(
+    command_plan: &'a BerkeleyAppEditorCommandPlan,
+    selected_syntax_card_index: Option<usize>,
+    requested_command_id: Option<&str>,
+) -> Option<&'a BerkeleyAppEditorCommand> {
+    if let Some(command_id) = requested_command_id {
+        if let Some(command) = command_plan.commands.iter().find(|command| {
+            command.id == command_id
+                && Some(command.syntax_card_index) == selected_syntax_card_index
+        }) {
+            return Some(command);
+        }
+    }
+
+    let selected_syntax_card_index = selected_syntax_card_index?;
+    command_plan.commands.iter().find(|command| {
+        command.syntax_card_index == selected_syntax_card_index
+            && command.kind == BerkeleyAppEditorActionKind::SelectAnalysis
+    })
 }
 
 fn editor_command_from_control(
