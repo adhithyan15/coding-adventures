@@ -12,10 +12,10 @@ use std::panic::{catch_unwind, AssertUnwindSafe};
 use engram_core::{
     build_session_queue_for_state_with_options, build_session_queue_with_daily_limits,
     cards_in_deck_scope, create_engram_snapshot, deck_options_for_state,
-    export_cards_anki_basic_tsv, export_cards_csv, export_notes_anki_tsv, generate_cards_for_note,
-    get_active_session_progress, get_daily_study_limit_usage, get_deck_stats_for_state,
-    import_anki_basic_tsv, import_anki_notes_tsv, import_basic_cards_csv, import_cards_csv,
-    materialize_generated_card, merge_app_states, notes_in_deck_scope, reduce,
+    export_cards_anki_basic_tsv, export_cards_csv, export_notes_anki_tsv_with_context,
+    generate_cards_for_note, get_active_session_progress, get_daily_study_limit_usage,
+    get_deck_stats_for_state, import_anki_basic_tsv, import_anki_notes_tsv, import_basic_cards_csv,
+    import_cards_csv, materialize_generated_card, merge_app_states, notes_in_deck_scope, reduce,
     restore_engram_snapshot, search_cards as search_core_cards, search_cards_with_context,
     summarize_review_history, type_answer_matches, typed_answer_for_template,
     AnkiBasicTsvExportOptions, AnkiNoteTsvImport, AnkiNoteTsvImportOptions, AppState,
@@ -1166,7 +1166,13 @@ impl EngramSession {
             };
             Ok(ok_with(
                 "tsv",
-                &export_notes_anki_tsv(note_type, &notes, &options),
+                &export_notes_anki_tsv_with_context(
+                    note_type,
+                    &notes,
+                    &self.state.decks,
+                    &self.state.external_sources,
+                    &options,
+                ),
             ))
         })
     }
@@ -9029,26 +9035,34 @@ mod tests {
             "cardProgress": [],
             "sessions": [],
             "reviews": [],
+            "externalSources": [{
+                "target": "note",
+                "targetId": "note",
+                "source": "anki-text",
+                "originalId": "stable-guid",
+                "data": {"guid": "stable-guid"}
+            }],
             "activeSession": null
         }"#;
 
         session.load_snapshot(snapshot);
-        let exported: Value = serde_json::from_str(&session.export_anki_notes_tsv(
-            "basic",
-            "deck",
-            "Tamil::Script",
-            "",
-            false,
-        ))
+        let exported: Value = serde_json::from_str(
+            &session.export_anki_notes_tsv("basic", "deck", "Tamil", "", false),
+        )
         .unwrap();
 
         assert_eq!(exported["ok"], true);
         let tsv = exported["tsv"].as_str().unwrap();
-        assert!(tsv.starts_with(
-            "#separator:tab\n#html:false\n#notetype:Basic\n#deck:Tamil::Script\n#columns:Front\tBack\tTags\n"
+        assert!(
+            tsv.starts_with(
+                "#separator:tab\n#html:false\n#notetype:Basic\n#deck:Tamil\n#guid column:3\n#deck column:4\n#columns:Front\tBack\tGuid\tDeck\tTags\n"
+            ),
+            "got:\n{tsv}"
+        );
+        assert!(tsv.contains(
+            "\"letter\t\"\"a\"\"\"\t\"line one\nline two\"\tstable-guid\tTamil\ttamil script\n"
         ));
-        assert!(tsv.contains("\"letter\t\"\"a\"\"\"\t\"line one\nline two\"\ttamil script\n"));
-        assert!(tsv.contains("padi\tstudy\ttamil verb\n"));
+        assert!(tsv.contains("padi\tstudy\t\tTamil::Verbs\ttamil verb\n"));
     }
 
     #[test]

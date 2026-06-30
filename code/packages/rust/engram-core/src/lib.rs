@@ -20,9 +20,10 @@ mod snapshot;
 mod template;
 
 pub use csv::{
-    export_cards_anki_basic_tsv, export_cards_csv, export_notes_anki_tsv, import_anki_basic_tsv,
-    import_anki_notes_tsv, import_basic_cards_csv, import_cards_csv, AnkiBasicTsvExportOptions,
-    AnkiNoteTsvImport, AnkiNoteTsvImportOptions, BasicCardCsvImportOptions, CsvError,
+    export_cards_anki_basic_tsv, export_cards_csv, export_notes_anki_tsv,
+    export_notes_anki_tsv_with_context, import_anki_basic_tsv, import_anki_notes_tsv,
+    import_basic_cards_csv, import_cards_csv, AnkiBasicTsvExportOptions, AnkiNoteTsvImport,
+    AnkiNoteTsvImportOptions, BasicCardCsvImportOptions, CsvError,
 };
 pub use history::summarize_review_history;
 pub use merge::merge_app_states;

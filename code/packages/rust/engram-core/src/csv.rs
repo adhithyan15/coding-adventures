@@ -1,6 +1,6 @@
 use crate::model::{
-    Card, CardTemplate, ExternalSourceRecord, ExternalSourceTarget, FieldDef, Note, NoteFieldValue,
-    NoteType, TemplateRequirementMode,
+    Card, CardTemplate, Deck, ExternalSourceRecord, ExternalSourceTarget, FieldDef, Note,
+    NoteFieldValue, NoteType, TemplateRequirementMode,
 };
 use crate::template::{generate_cards_for_note, materialize_generated_card};
 #[cfg(feature = "serde")]
@@ -124,12 +124,36 @@ pub fn export_notes_anki_tsv(
     notes: &[Note],
     options: &AnkiBasicTsvExportOptions,
 ) -> String {
+    export_notes_anki_tsv_with_context(note_type, notes, &[], &[], options)
+}
+
+pub fn export_notes_anki_tsv_with_context(
+    note_type: &NoteType,
+    notes: &[Note],
+    decks: &[Deck],
+    external_sources: &[ExternalSourceRecord],
+    options: &AnkiBasicTsvExportOptions,
+) -> String {
     let mut output = String::new();
     let note_type_name = if options.note_type_name.trim().is_empty() {
         note_type.name.as_str()
     } else {
         options.note_type_name.as_str()
     };
+    let default_deck_name = options.deck_name.trim();
+    let deck_names = deck_names_by_id(decks);
+    let row_deck_names: Vec<String> = notes
+        .iter()
+        .map(|note| note_export_deck_name(note, &deck_names))
+        .collect();
+    let include_deck_column = !decks.is_empty()
+        && row_deck_names
+            .iter()
+            .any(|deck_name| deck_name != default_deck_name);
+    let note_guids = note_guids_by_id(external_sources);
+    let include_guid_column = notes.iter().any(|note| note_guids.contains_key(&note.id));
+    let guid_column = note_type.fields.len() + 1;
+    let deck_column = guid_column + usize::from(include_guid_column);
 
     if options.include_headers {
         output.push_str("#separator:tab\n");
@@ -144,6 +168,16 @@ pub fn export_notes_anki_tsv(
         output.push_str("#deck:");
         output.push_str(&header_value(&options.deck_name));
         output.push('\n');
+        if include_guid_column {
+            output.push_str("#guid column:");
+            output.push_str(&guid_column.to_string());
+            output.push('\n');
+        }
+        if include_deck_column {
+            output.push_str("#deck column:");
+            output.push_str(&deck_column.to_string());
+            output.push('\n');
+        }
         output.push_str("#columns:");
         for (index, field) in note_type.fields.iter().enumerate() {
             if index > 0 {
@@ -151,25 +185,89 @@ pub fn export_notes_anki_tsv(
             }
             write_tsv_field(&mut output, &field.name);
         }
+        if include_guid_column {
+            output.push('\t');
+            write_tsv_field(&mut output, "Guid");
+        }
+        if include_deck_column {
+            output.push('\t');
+            write_tsv_field(&mut output, "Deck");
+        }
         output.push_str("\tTags\n");
     }
 
-    for note in notes {
+    for (note, row_deck_name) in notes.iter().zip(row_deck_names.iter()) {
         let mut field_values = Vec::new();
         for field in &note_type.fields {
             let value = note
                 .fields
                 .iter()
                 .find(|candidate| candidate.field_id == field.id)
-                .map_or("", |field| field.value.as_str());
+                .map_or_else(String::new, |field| field.value.clone());
             field_values.push(value);
         }
+        if include_guid_column {
+            field_values.push(note_guids.get(&note.id).cloned().unwrap_or_default());
+        }
+        if include_deck_column {
+            field_values.push(row_deck_name.clone());
+        }
         let tags = note.tags.join(" ");
-        field_values.push(tags.as_str());
-        write_tsv_row(&mut output, &field_values);
+        field_values.push(tags);
+        let field_refs: Vec<&str> = field_values.iter().map(String::as_str).collect();
+        write_tsv_row(&mut output, &field_refs);
     }
 
     output
+}
+
+fn deck_names_by_id(decks: &[Deck]) -> BTreeMap<String, String> {
+    decks
+        .iter()
+        .map(|deck| {
+            let name = if deck.name.trim().is_empty() {
+                deck.id.clone()
+            } else {
+                deck.name.clone()
+            };
+            (deck.id.clone(), name)
+        })
+        .collect()
+}
+
+fn note_export_deck_name(note: &Note, deck_names: &BTreeMap<String, String>) -> String {
+    deck_names
+        .get(&note.deck_id)
+        .cloned()
+        .unwrap_or_else(|| note.deck_id.clone())
+}
+
+fn note_guids_by_id(external_sources: &[ExternalSourceRecord]) -> BTreeMap<String, String> {
+    let mut guids = BTreeMap::new();
+    for source in external_sources {
+        if source.target != ExternalSourceTarget::Note {
+            continue;
+        }
+        if !(source.source == "anki-text" || source.source.starts_with("anki-")) {
+            continue;
+        }
+        let Some(guid) = source_note_guid(source) else {
+            continue;
+        };
+        guids.entry(source.target_id.clone()).or_insert(guid);
+    }
+    guids
+}
+
+fn source_note_guid(source: &ExternalSourceRecord) -> Option<String> {
+    source
+        .data
+        .get("guid")
+        .map(|guid| guid.trim())
+        .filter(|guid| !guid.is_empty())
+        .or_else(|| source.original_id.as_deref().map(str::trim))
+        .filter(|guid| !guid.is_empty())
+        .map(str::to_string)
 }
 
 pub fn import_cards_csv(input: &str) -> Result<Vec<Card>, CsvError> {
@@ -2077,6 +2175,122 @@ mod tests {
         ));
         assert!(tsv.contains("letter-a\ta\ttamil script\n"));
         assert!(tsv.contains("\"hello\t\"\"friend\"\"\"\t\"line one\nline two\"\tspanish\n"));
+    }
+
+    #[test]
+    fn anki_note_tsv_export_can_round_trip_guid_and_deck_columns() {
+        let note_type = basic_note_type("basic", "Basic", 456, false, false, false);
+        let notes = vec![
+            Note {
+                id: "note-1".to_string(),
+                note_type_id: "basic".to_string(),
+                deck_id: "child".to_string(),
+                fields: vec![
+                    NoteFieldValue {
+                        field_id: "front".to_string(),
+                        value: "letter-a".to_string(),
+                    },
+                    NoteFieldValue {
+                        field_id: "back".to_string(),
+                        value: "a".to_string(),
+                    },
+                ],
+                tags: vec!["tamil".to_string(), "script".to_string()],
+                created_at: 456,
+                updated_at: 456,
+            },
+            Note {
+                id: "note-2".to_string(),
+                note_type_id: "basic".to_string(),
+                deck_id: "deck".to_string(),
+                fields: vec![
+                    NoteFieldValue {
+                        field_id: "front".to_string(),
+                        value: "amma".to_string(),
+                    },
+                    NoteFieldValue {
+                        field_id: "back".to_string(),
+                        value: "mother".to_string(),
+                    },
+                ],
+                tags: vec!["tamil".to_string(), "family".to_string()],
+                created_at: 456,
+                updated_at: 456,
+            },
+        ];
+        let decks = vec![
+            Deck {
+                id: "deck".to_string(),
+                name: "Tamil::Script".to_string(),
+                description: String::new(),
+                created_at: 456,
+            },
+            Deck {
+                id: "child".to_string(),
+                name: "Tamil::Verbs".to_string(),
+                description: String::new(),
+                created_at: 456,
+            },
+        ];
+        let external_sources = vec![
+            ExternalSourceRecord {
+                target: ExternalSourceTarget::Note,
+                target_id: "note-1".to_string(),
+                source: "anki-v11".to_string(),
+                original_id: Some("1000".to_string()),
+                data: BTreeMap::from([("guid".to_string(), "guid-1".to_string())]),
+            },
+            ExternalSourceRecord {
+                target: ExternalSourceTarget::Note,
+                target_id: "note-2".to_string(),
+                source: "anki-text".to_string(),
+                original_id: Some("guid-2".to_string()),
+                data: BTreeMap::new(),
+            },
+        ];
+        let options = AnkiBasicTsvExportOptions {
+            deck_name: "Tamil::Script".to_string(),
+            note_type_name: String::new(),
+            html: false,
+            include_headers: true,
+        };
+
+        let tsv = export_notes_anki_tsv_with_context(
+            &note_type,
+            &notes,
+            &decks,
+            &external_sources,
+            &options,
+        );
+
+        assert!(tsv.starts_with(
+            "#separator:tab\n#html:false\n#notetype:Basic\n#deck:Tamil::Script\n#guid column:3\n#deck column:4\n#columns:Front\tBack\tGuid\tDeck\tTags\n"
+        ));
+        assert!(tsv.contains("letter-a\ta\tguid-1\tTamil::Verbs\ttamil script\n"));
+        assert!(tsv.contains("amma\tmother\tguid-2\tTamil::Script\ttamil family\n"));
+
+        let imported = import_anki_notes_tsv(
+            &tsv,
+            &AnkiNoteTsvImportOptions {
+                deck_id: "fallback".to_string(),
+                note_type_id: "basic".to_string(),
+                note_type_name: String::new(),
+                note_id_prefix: "round".to_string(),
+                created_at: 789,
+            },
+        )
+        .unwrap();
+
+        assert_eq!(imported.notes[0].deck_id, "Tamil::Verbs");
+        assert_eq!(imported.notes[1].deck_id, "Tamil::Script");
+        assert_eq!(
+            imported
+                .external_sources
+                .iter()
+                .map(|source| source.original_id.as_deref())
+                .collect::<Vec<_>>(),
+            vec![Some("guid-1"), Some("guid-2")]
+        );
     }
 
     #[test]

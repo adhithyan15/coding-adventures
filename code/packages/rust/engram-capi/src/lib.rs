@@ -1520,7 +1520,7 @@ CREATE TABLE graves (
             let session = eg_session_new();
             let snapshot = cstr(
                 r#"{
-                    "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+                    "decks": [{"id":"deck","name":"Tamil::Script","description":"Script","createdAt":1700000000000}],
                     "noteTypes": [{
                         "id": "basic",
                         "name": "Basic",
