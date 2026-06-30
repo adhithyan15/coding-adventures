@@ -1,5 +1,34 @@
 # Changelog — mle-pass
 
+## [0.6.0] — 2026-06-30
+
+### Added — slice 6: a third hop-2 relation per disease, and three-hop abstention
+
+- Bank grows **38 → 40**, advancing the multi-hop spine in two distinct ways, both purely by
+  arranging already-grounded, spider+adversarially-gated facts (no edge grounded, renamed, or
+  authored — the no-human-authored rule):
+  - **`mh-39` — write-once-use-many at the hop-2 level.** `g6pd_deficiency` already answers
+    `gene_defect` (`mh-36`) and `inheritance` (`mh-38`); it now also answers a hematology
+    **`classic_finding`**: `heinz_bodies → g6pd_deficiency → bite_cells`, with hop 1 =
+    `histo-edges.adj seen_in` and hop 2 = a **third hop-2 library** (`anemia-edges.adj`). One
+    grounded disease id now feeds three distinct second relations across three libraries from two
+    different hop-1 findings — the strongest single-disease demonstration that the second hop is
+    fully generic over the relation/library.
+  - **`mh-40` — three-hop abstention.** A 3-hop question whose *ends* are grounded
+    (`leukocoria → retinoblastoma` is a real ophtho edge; `gram_stain` is a real relation) but whose
+    **interior join is ungrounded**: retinoblastoma is a tumour with no grounded causative organism,
+    so `causes(organism, retinoblastoma)` binds nothing and the chain cannot complete. The engine
+    MUST abstain rather than fabricate a Gram stain — extending the never-fabricate discipline to the
+    deepest chain (a partially-grounded multi-hop is still an abstention, not a guess).
+- Join-finder note: a systematic scan confirms `g6pd_deficiency` is today the **only** disease whose
+  id appears both as a finding-library object and as a knowledge-library subject, and that
+  `pseudomembranous_colitis` (slice 4, `mh-34`) remains the only finding→disease→organism bridge — so
+  the answerable cross-library surface is currently saturated; more lands for free as new ids are
+  grounded (spec §7).
+- Eval: **40/40 correct, 0 wrong, 4 correct abstentions, multihop_coverage 1.0** — every answerable
+  item cites all its hops' byte-provenance (`mh-39` cites 2, the 3-hop `mh-34` cites 3), zero model
+  calls.
+
 ## [0.5.0] — 2026-06-30
 
 ### Added — slice 5: two more clue→disease→{gene, inheritance} chains via cross-library id-joins

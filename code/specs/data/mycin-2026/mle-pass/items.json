@@ -1,5 +1,5 @@
 {
-  "description": "MLE-PASS multi-hop recall bank \u2014 TWO-HOP board questions answered purely from grounded edges with zero model calls. A clinical clue \u2192 disease (hop 1, an organ-system recall library) \u2192 answer (hop 2) is joined on the shared disease through an adj-lang rule body; the engine's SLD resolver returns the binding with BOTH hops' byte-provenance, and the harness maps it to the printed options. Slice 2 adds: more clue\u2192disease\u2192gene chains (derm, niemann-pick, pompe); a second relation as hop 2 \u2014 inheritance (clue\u2192disease\u2192inheritance pattern), proving the harness is generic over the second hop, not gene-specific; and an ABSTENTION sub-bank whose clue has no grounded hop-1 edge, which MUST abstain (never fabricate). Slice 3 adds the microbiology organism-ID chain (the original MYCIN domain) run in REVERSE: the clue is a disease, hop 1 is causes(organism, disease) traversed backwards to bind the causative organism, and hop 2 reads that organism's Gram stain or microscopic morphology \u2014 proving a two-hop chain need not run left to right through the edges, and that both hops can share one library. Nothing authored: every edge reuses an already-grounded, spider+adversarially-gated fact. Engine: every answerable item correct with both hops cited; every abstention item abstains; zero model calls.",
+  "description": "MLE-PASS multi-hop recall bank \u2014 TWO-HOP board questions answered purely from grounded edges with zero model calls. A clinical clue \u2192 disease (hop 1, an organ-system recall library) \u2192 answer (hop 2) is joined on the shared disease through an adj-lang rule body; the engine's SLD resolver returns the binding with BOTH hops' byte-provenance, and the harness maps it to the printed options. Slice 2 adds: more clue\u2192disease\u2192gene chains (derm, niemann-pick, pompe); a second relation as hop 2 \u2014 inheritance (clue\u2192disease\u2192inheritance pattern), proving the harness is generic over the second hop, not gene-specific; and an ABSTENTION sub-bank whose clue has no grounded hop-1 edge, which MUST abstain (never fabricate). Slice 3 adds the microbiology organism-ID chain (the original MYCIN domain) run in REVERSE: the clue is a disease, hop 1 is causes(organism, disease) traversed backwards to bind the causative organism, and hop 2 reads that organism's Gram stain or microscopic morphology \u2014 proving a two-hop chain need not run left to right through the edges, and that both hops can share one library. Slice 4 adds the first THREE-hop chain (finding \u2192 disease \u2192 organism \u2192 Gram stain). Slice 6 adds a third hop-2 relation off an already-chained disease (g6pd_deficiency now answers gene, inheritance, AND a hematology smear finding \u2014 write-once-use-many at the hop-2 level), and a THREE-hop abstention whose interior join is ungrounded (grounded ends, no causative organism) and so MUST abstain \u2014 the never-fabricate discipline extended to the deepest chain. Nothing authored: every edge reuses an already-grounded, spider+adversarially-gated fact. Engine: every answerable item correct with both hops cited; every abstention item abstains; zero model calls.",
   "items": [
     {
       "id": "mh-01",
@@ -705,6 +705,47 @@
         "E": "poorly_staining"
       },
       "gold_letter": "B"
+    },
+    {
+      "id": "mh-39",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has Heinz bodies on the peripheral blood smear. That finding points to a single disease; that disease has which other classic peripheral-smear finding?",
+      "hop1_lib": "histo-edges.adj",
+      "hop1_relation": "seen_in",
+      "hop2_lib": "anemia-edges.adj",
+      "hop2_relation": "classic_finding",
+      "clue": "heinz_bodies",
+      "expected": "bite_cells",
+      "options": {
+        "A": "bite_cells",
+        "B": "koilonychia",
+        "C": "ringed_sideroblasts",
+        "D": "spherocytes",
+        "E": "target_cells"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "mh-40",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has a white pupillary reflex (leukocoria). The disease it indicates is caused by an organism with which Gram-stain reaction? (If no causative organism is grounded, abstain.)",
+      "hop1_lib": "ophtho-edges.adj",
+      "hop1_relation": "eye_finding_indicates",
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "causes",
+      "hop2_reverse": true,
+      "hop3_lib": "micro-edges.adj",
+      "hop3_relation": "gram_stain",
+      "clue": "leukocoria",
+      "expected": null,
+      "expect_abstain": true,
+      "options": {
+        "A": "gram_positive",
+        "B": "gram_negative",
+        "C": "acid_fast",
+        "D": "gram_variable",
+        "E": "poorly_staining"
+      }
     },
     {
       "id": "mh-14",
