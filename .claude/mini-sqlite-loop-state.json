@@ -91,7 +91,7 @@
       "depends_on": ["fsharp-level1-sql-backend"],
       "branch": "mini-sqlite/fsharp-level1-sql-planner",
       "pr_number": 7036,
-      "notes": "PR open 2026-06-30. 52 tests, 83% coverage. Awaiting CI + merge."
+      "notes": "PR open 2026-06-30. 52 tests, 83% coverage. CI all green (ubuntu/macos/windows). Awaiting merge."
     },
     {
       "id": "fsharp-level1-sql-optimizer",
@@ -132,11 +132,11 @@
     {
       "id": "java-level1-sql-planner",
       "title": "Java sql-planner",
-      "status": "pending",
+      "status": "in-review",
       "depends_on": ["java-level1-sql-backend"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Port Python sql_planner to Java."
+      "branch": "mini-sqlite/java-level1-sql-planner",
+      "pr_number": 7045,
+      "notes": "PR open 2026-06-30. 50 tests (JaCoCo ≥80%). Java 21 sealed interfaces + records. Awaiting CI + merge."
     },
     {
       "id": "java-level1-sql-optimizer",
@@ -271,7 +271,7 @@
       "depends_on": ["csharp-level1-sql-backend"],
       "branch": "mini-sqlite/csharp-level1-sql-planner",
       "pr_number": 7041,
-      "notes": "PR open 2026-06-30. 40 tests, 89% coverage. Awaiting CI + merge."
+      "notes": "PR open 2026-06-30. 40 tests, 89% coverage. CI all green (ubuntu/macos/windows). Awaiting merge."
     },
     {
       "id": "csharp-level1-sql-optimizer",
