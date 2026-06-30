@@ -289,34 +289,36 @@ pub fn import_anki_notes_tsv(
                 options.note_type_name.clone()
             }
         });
-    let note_type_id = if options.note_type_id.trim().is_empty() {
-        default_note_type_id(&note_type_name)
-    } else {
-        options.note_type_id.clone()
-    };
-    let import_kind = AnkiNoteImportKind::from_note_type_name(&note_type_name);
     let header_tags = headers.tags.clone();
+    let default_import_kind = AnkiNoteImportKind::from_note_type_name(&note_type_name);
     let columns = headers
         .columns
-        .unwrap_or_else(|| import_kind.default_columns(&rows));
-    let column_plan = import_kind.column_plan(
-        &columns,
-        headers.tags_column,
-        headers.guid_column,
-        headers.deck_column,
-    )?;
-    let note_type = import_kind.note_type(
-        &note_type_id,
-        &note_type_name,
-        options.created_at,
-        &column_plan,
-    );
+        .clone()
+        .unwrap_or_else(|| default_import_kind.default_columns(&rows));
+    let use_note_type_column = headers.note_type_column.is_some();
 
+    let mut note_types = Vec::new();
+    let mut note_type_positions = BTreeMap::new();
     let mut notes = Vec::new();
     let mut cards = Vec::new();
     let mut external_sources = Vec::new();
 
     for (row, fields) in rows {
+        let row_note_type_name =
+            note_type_name_for_row(&note_type_name, headers.note_type_column, &fields);
+        let row_note_type_id = if use_note_type_column || options.note_type_id.trim().is_empty() {
+            default_note_type_id(&row_note_type_name)
+        } else {
+            options.note_type_id.clone()
+        };
+        let import_kind = AnkiNoteImportKind::from_note_type_name(&row_note_type_name);
+        let column_plan = import_kind.column_plan(
+            &columns,
+            headers.tags_column,
+            headers.guid_column,
+            headers.deck_column,
+            headers.note_type_column,
+        )?;
         if fields.len() < column_plan.required_columns {
             return Err(csv_error(
                 &format!(
@@ -328,6 +330,20 @@ pub fn import_anki_notes_tsv(
             ));
         }
 
+        let note_type_index = if let Some(index) = note_type_positions.get(&row_note_type_id) {
+            *index
+        } else {
+            let index = note_types.len();
+            note_types.push(import_kind.note_type(
+                &row_note_type_id,
+                &row_note_type_name,
+                options.created_at,
+                &column_plan,
+            ));
+            note_type_positions.insert(row_note_type_id.clone(), index);
+            index
+        };
+        let note_type = &note_types[note_type_index];
         let sequence = notes.len() + 1;
         let deck_id = note_deck_id_for_row(
             &options.deck_id,
@@ -364,7 +380,7 @@ pub fn import_anki_notes_tsv(
     }
 
     Ok(AnkiNoteTsvImport {
-        note_types: vec![note_type],
+        note_types,
         notes,
         cards,
         external_sources,
@@ -380,6 +396,7 @@ struct AnkiTsvHeaders {
     tags_column: Option<usize>,
     guid_column: Option<usize>,
     deck_column: Option<usize>,
+    note_type_column: Option<usize>,
 }
 
 impl AnkiTsvHeaders {
@@ -415,6 +432,11 @@ impl AnkiTsvHeaders {
 
         if let Some(deck_column) = first.strip_prefix("#deck column:") {
             self.deck_column = Some(parse_anki_header_column_index(deck_column, row)?);
+            return Ok(());
+        }
+
+        if let Some(note_type_column) = first.strip_prefix("#notetype column:") {
+            self.note_type_column = Some(parse_anki_header_column_index(note_type_column, row)?);
             return Ok(());
         }
 
@@ -485,6 +507,19 @@ fn note_deck_id_for_row(
         .to_string()
 }
 
+fn note_type_name_for_row(
+    fallback_note_type_name: &str,
+    note_type_column: Option<usize>,
+    fields: &[String],
+) -> String {
+    note_type_column
+        .and_then(|index| fields.get(index))
+        .map(|note_type| note_type.trim())
+        .filter(|note_type| !note_type.is_empty())
+        .unwrap_or(fallback_note_type_name)
+        .to_string()
+}
+
 fn extend_unique_tags(tags: &mut Vec<String>, incoming: Vec<String>) {
     for tag in incoming {
         if !tags.iter().any(|existing| existing == &tag) {
@@ -506,6 +541,7 @@ struct AnkiColumnPlan {
     tag_index: Option<usize>,
     guid_index: Option<usize>,
     deck_index: Option<usize>,
+    note_type_index: Option<usize>,
     required_columns: usize,
 }
 
@@ -580,6 +616,7 @@ impl AnkiNoteImportKind {
         tags_column: Option<usize>,
         guid_column: Option<usize>,
         deck_column: Option<usize>,
+        note_type_column: Option<usize>,
     ) -> Result<AnkiColumnPlan, CsvError> {
         match self {
             Self::Basic { .. } => {
@@ -611,6 +648,7 @@ impl AnkiNoteImportKind {
                     tags_column.or_else(|| column_index(columns, "Tags")),
                     guid_column,
                     deck_column,
+                    note_type_column,
                 ))
             }
             Self::Cloze => {
@@ -634,9 +672,16 @@ impl AnkiNoteImportKind {
                     tags_column.or_else(|| column_index(columns, "Tags")),
                     guid_column,
                     deck_column,
+                    note_type_column,
                 ))
             }
-            Self::Custom => custom_column_plan(columns, tags_column, guid_column, deck_column),
+            Self::Custom => custom_column_plan(
+                columns,
+                tags_column,
+                guid_column,
+                deck_column,
+                note_type_column,
+            ),
         }
     }
 }
@@ -646,6 +691,7 @@ fn column_plan(
     tag_index: Option<usize>,
     guid_index: Option<usize>,
     deck_index: Option<usize>,
+    note_type_index: Option<usize>,
 ) -> AnkiColumnPlan {
     let required_columns = field_columns
         .iter()
@@ -653,6 +699,7 @@ fn column_plan(
         .chain(tag_index)
         .chain(guid_index)
         .chain(deck_index)
+        .chain(note_type_index)
         .max()
         .map_or(0, |index| index + 1);
     AnkiColumnPlan {
@@ -660,6 +707,7 @@ fn column_plan(
         tag_index,
         guid_index,
         deck_index,
+        note_type_index,
         required_columns,
     }
 }
@@ -1101,13 +1149,18 @@ fn custom_column_plan(
     tags_column: Option<usize>,
     guid_column: Option<usize>,
     deck_column: Option<usize>,
+    note_type_column: Option<usize>,
 ) -> Result<AnkiColumnPlan, CsvError> {
     let tag_index = tags_column.or_else(|| column_index(columns, "Tags"));
     let mut used_ids = BTreeSet::new();
     let mut field_columns = Vec::new();
 
     for (index, column) in columns.iter().enumerate() {
-        if Some(index) == tag_index || Some(index) == guid_column || Some(index) == deck_column {
+        if Some(index) == tag_index
+            || Some(index) == guid_column
+            || Some(index) == deck_column
+            || Some(index) == note_type_column
+        {
             continue;
         }
         let field_name = custom_field_name(column, index);
@@ -1131,6 +1184,7 @@ fn custom_column_plan(
         tag_index,
         guid_column,
         deck_column,
+        note_type_column,
     ))
 }
 
@@ -1567,6 +1621,49 @@ mod tests {
     }
 
     #[test]
+    fn anki_note_text_import_honors_note_type_column_header() {
+        let options = AnkiNoteTsvImportOptions {
+            deck_id: "deck".to_string(),
+            note_type_id: String::new(),
+            note_type_name: String::new(),
+            note_id_prefix: "note".to_string(),
+            created_at: 456,
+        };
+        let text = "#separator:tab\n#notetype column:3\n#columns:Front\tBack\tModel\nhola\thello\tBasic (type in the answer)\namma\tmother\tBasic (and reversed card)\n";
+
+        let imported = import_anki_notes_tsv(text, &options).unwrap();
+
+        assert_eq!(imported.note_types.len(), 2);
+        assert_eq!(imported.note_types[0].id, "basic-type-in-the-answer");
+        assert_eq!(
+            imported.note_types[0].templates[0].front_template,
+            "{{Front}}{{type:Back}}"
+        );
+        assert_eq!(imported.note_types[1].id, "basic-and-reversed-card");
+        assert_eq!(imported.note_types[1].templates.len(), 2);
+        assert_eq!(imported.notes[0].note_type_id, "basic-type-in-the-answer");
+        assert_eq!(imported.notes[1].note_type_id, "basic-and-reversed-card");
+        assert_eq!(imported.cards.len(), 3);
+        assert_eq!(imported.cards[0].id, "note-1::forward");
+        assert_eq!(imported.cards[0].front, "hola[type answer: Back]");
+        assert_eq!(imported.cards[1].id, "note-2::forward");
+        assert_eq!(imported.cards[2].id, "note-2::reverse");
+
+        let custom_text = "#separator:tab\n#notetype column:3\n#columns:Word\tRoot\tModel\nhablar\tfabl-\tVocabulary Story\n";
+        let custom_imported = import_anki_notes_tsv(custom_text, &options).unwrap();
+        assert_eq!(custom_imported.note_types[0].id, "vocabulary-story");
+        assert_eq!(
+            custom_imported.note_types[0]
+                .fields
+                .iter()
+                .map(|field| field.name.as_str())
+                .collect::<Vec<_>>(),
+            vec!["Word", "Root"]
+        );
+        assert!(custom_imported.cards.is_empty());
+    }
+
+    #[test]
     fn anki_note_tsv_import_creates_cloze_notes_and_cards() {
         let tsv = "#separator:tab\n#notetype:Cloze\n#columns:Text\tExtra\tTags\n\"A {{c1::root::base}} plus {{c2::suffix}}\"\tetymology\tgrammar spanish\n";
         let options = AnkiNoteTsvImportOptions {
@@ -1777,6 +1874,16 @@ mod tests {
         .unwrap_err();
         assert_eq!(deck_column_error.row, Some(2));
         assert!(deck_column_error.message.contains("positive column number"));
+
+        let note_type_column_error = import_anki_notes_tsv(
+            "#separator:tab\n#notetype column:not-a-number\n#columns:Front\tBack\tModel\nfront\tback\tBasic\n",
+            &options,
+        )
+        .unwrap_err();
+        assert_eq!(note_type_column_error.row, Some(2));
+        assert!(note_type_column_error
+            .message
+            .contains("positive column number"));
     }
 
     #[test]

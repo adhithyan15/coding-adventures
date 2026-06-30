@@ -8931,6 +8931,40 @@ mod tests {
     }
 
     #[test]
+    fn parse_anki_notes_tsv_preserves_note_type_column_models() {
+        let session = EngramSession::new();
+        let value: Value = serde_json::from_str(&session.parse_anki_notes_tsv(
+            "#separator:tab\n#notetype column:3\n#columns:Front\tBack\tModel\nhola\thello\tBasic (type in the answer)\namma\tmother\tBasic (and reversed card)\n",
+            "deck",
+            "",
+            "",
+            "note",
+            NOW,
+        ))
+        .unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(value["import"]["noteTypes"].as_array().unwrap().len(), 2);
+        assert_eq!(
+            value["import"]["noteTypes"][0]["id"],
+            "basic-type-in-the-answer"
+        );
+        assert_eq!(
+            value["import"]["noteTypes"][1]["id"],
+            "basic-and-reversed-card"
+        );
+        assert_eq!(
+            value["import"]["notes"][0]["noteTypeId"],
+            "basic-type-in-the-answer"
+        );
+        assert_eq!(
+            value["import"]["notes"][1]["noteTypeId"],
+            "basic-and-reversed-card"
+        );
+        assert_eq!(value["import"]["cards"].as_array().unwrap().len(), 3);
+    }
+
+    #[test]
     fn parse_anki_notes_tsv_generates_cloze_model_and_cards() {
         let session = EngramSession::new();
         let value: Value = serde_json::from_str(&session.parse_anki_notes_tsv(

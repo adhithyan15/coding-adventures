@@ -212,9 +212,11 @@ each row's note tags, and `#tags column:N` can mark any one-based text column as
 the row's tag source. `#deck:` and `#deck column:N` populate imported note and
 generated-card deck IDs with the host-selected deck as a fallback.
 `#guid column:N` preserves Anki text GUIDs as `anki-text` note provenance
-records without changing generated Engram note IDs. Custom rows generate no
-cards until a real template is available because Anki text exports do not carry
-template definitions.
+records without changing generated Engram note IDs. `#notetype column:N` allows
+one text import to create multiple Basic, Basic-and-reversed, Basic
+type-in-answer, Cloze, or custom note models from row metadata. Custom rows
+generate no cards until a real template is available because Anki text exports
+do not carry template definitions.
 
 `get_active_session_progress` derives the shared review UI counters from
 `AppState`: total cards, one-based current position, remaining cards, reviewed
