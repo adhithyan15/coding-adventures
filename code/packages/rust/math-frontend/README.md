@@ -25,7 +25,7 @@ Adding a notation later is "register one more frontend" — zero consumer change
 
 | Piece | Role |
 |-------|------|
-| `MathExpr` (+ `Number`, `BinOp`, `Func`, `BigOp`, `RelOp`, …) | the notation-agnostic AST — includes `BinOp::PlusMinus`/`MinusPlus` (± / ∓), `MathExpr::Binom` (binomial coefficient), and `MathExpr::Accent { accent, body }` (diacritics `\hat{x}`/`\bar{y}`/`\vec{v}`, distinct from a function call) |
+| `MathExpr` (+ `Number`, `BinOp`, `Func`, `BigOp`, `RelOp`, …) | the notation-agnostic AST — includes `BinOp::PlusMinus`/`MinusPlus` (± / ∓), `MathExpr::Binom` (binomial coefficient), `MathExpr::Accent { accent, body }` (diacritics `\hat{x}`/`\bar{y}`/`\vec{v}`, distinct from a function call), and `MathExpr::Overset`/`Underset` (a full sub-expression stacked over/under a base — `\overset{a}{b}`/`\stackrel{a}{R}`/`\underset{a}{b}`, distinct from `Pow`/`Subscript`) |
 | `MathFrontend` | the contract a notation parser implements |
 | `FrontendError` / `Capabilities` | spanned errors; what a frontend can emit |
 | `FrontendRegistry` | look up a frontend by name and parse through it |
