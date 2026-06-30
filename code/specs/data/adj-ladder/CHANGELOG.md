@@ -2,6 +2,35 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.30.0] — 2026-06-29
+
+### Added — rung 6 batch 2: four-way differentials with likelihood ratios below 1
+
+- **`rung6_clinical_differential/items.json` grows 20 → 40** (new `r6-21`..`r6-40`). The second
+  batch adds two things batch 1 did not exercise:
+  - **Four** competing diagnoses per item (options A–D are all *scored*; E = unknown), versus
+    batch 1's three. The product the engine must carry is now over four hypotheses.
+  - **Likelihood ratios below 1**, which **argue *against*** a diagnosis: a finding with `LR < 1`
+    multiplies that diagnosis's running product *down*. So a "flashy" diagnosis carried by one
+    strong positive finding can be **demoted below a quieter rival** once a strong negative
+    (`LR < 1`) finding is taken into account — the engine does this automatically; a reasoner that
+    anchors on the single salient finding gets it wrong.
+- No harness or engine change: the gold programs still declare `prior`s, a
+  `contributes <LR> from <finding> to <dx>` for every (finding, diagnosis) pair (LRs may now be
+  fractional, e.g. `0.2`), and `observe` the present findings; the **engine** computes
+  prior × ∏ likelihood ratios and the existing **`decision_leader`** extractor reads the leader.
+- Stems are generated from the data, so every prior and every likelihood ratio — including the
+  fractional `LR < 1` values — appears verbatim (the no-result-literals gate holds); the five
+  options are distinct diagnosis labels. Batch 2 spans wide-complex tachycardia, RUQ pain, acute
+  vision loss, hypercalcemia, meningoencephalitis, AKI, microcytic anemia, pleural effusion,
+  monoarthritis, pediatric stridor, GI bleed, blistering dermatoses, adrenal disorders, dementia,
+  post-MI chest pain, infectious diarrhea, thrombocytopenia, solitary lung nodule, pelvic pain, and
+  toxic ingestions.
+- Gates: engine selects the combined-evidence leader **40/40** in cached mode (zero wrong);
+  contamination clean (distinct options, gold = engine selection, no result-literal leak,
+  self-contained); rung-6 + contamination + items_json pytest all green. Spec ADJ-LADDER.md §5
+  updated (rung 6 = batches 1 + 2).
+
 ## [0.29.0] — 2026-06-29
 
 ### Added — rung 6: clinical differential diagnosis (the clinical / MLE bridge)

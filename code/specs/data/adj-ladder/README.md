@@ -187,9 +187,17 @@ planted distractor wins on a single **flashy** finding alone (one huge LR, ~1 on
 rest). Anchoring on the salient finding — the classic board trap — takes the distractor;
 only carrying every likelihood ratio through the product lands the gold (e.g. *wheezing*
 LR 20 for COPD lures, but elevated BNP + orthopnea make **heart failure** the combined
-leader). Twenty real differentials span cardiology, pulmonology, GI, neurology, endocrine,
-ID, renal, MSK, and pediatrics; every prior and LR in the program is stated in the stem.
-Engine selects the combined-evidence leader **20/20 cached, zero wrong**. This realizes
+leader). **Batch 1** (`r6-01`..`r6-20`) is twenty three-way differentials with all
+likelihood ratios ≥ 1. **Batch 2** (`r6-21`..`r6-40`) raises the bar: **four** competing
+diagnoses (options A–D all scored, E = unknown) and likelihood ratios **below 1** that
+**argue *against*** a diagnosis — a finding with `LR < 1` multiplies that diagnosis's
+running product *down*, so a flashy diagnosis with one strong positive finding can be
+**demoted below a quieter rival** once a strong negative finding is carried through
+(the engine does this automatically; anchoring on the salient finding gets it wrong).
+Forty real differentials span cardiology, pulmonology, GI, neurology, endocrine, ID,
+renal, heme, MSK, derm, OB/gyn, tox, and pediatrics; every prior and LR in the program —
+including the fractional `LR < 1` values — is stated verbatim in the stem.
+Engine selects the combined-evidence leader **40/40 cached, zero wrong**. This realizes
 rung 6 of the ladder (ADJ-LADDER.md §5) — the on-ramp to the MLE apex.
 
 ## Layout

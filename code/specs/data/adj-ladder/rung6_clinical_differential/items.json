@@ -1,6 +1,6 @@
 {
   "rung": "rung6_clinical_differential",
-  "description": "Rung-6 clinical differential diagnosis \u2014 the clinical/MLE bridge. Each item is a board-style differential: three competing diagnoses with equal priors, three findings, and a likelihood ratio for every (finding, diagnosis) pair. The gold ADJ program declares the priors, a contributes-<LR>-from-<finding>-to-<diagnosis> for each pair, and observes every finding; the ENGINE multiplies the priors by all the likelihood ratios (Bayesian combination) and reports the leading diagnosis, read by the existing decision_leader extractor (no harness or engine change). The reasoning step beyond rung-3 single-finding decisions: the answer is the diagnosis that wins on the COMBINED evidence, while a deliberately planted distractor wins on a single FLASHY finding alone (one huge likelihood ratio, ~1 on the rest). A reasoner that anchors on the salient finding takes the distractor; only carrying every likelihood ratio through the product lands the gold (anchoring bias is the classic board trap). The stem is generated from the data so every prior and likelihood ratio in the program appears verbatim in the stem (no-result-literals gate holds); the five options are distinct diagnosis labels. Twenty real differentials across cardiology, pulmonology, GI, neurology, endocrine, ID, renal, MSK, and pediatrics. Engine selects the combined-evidence leader 20/20 in cached mode, zero wrong.",
+  "description": "Rung-6 clinical differential diagnosis \u2014 the clinical/MLE bridge. Each item is a board-style differential: three competing diagnoses with equal priors, three findings, and a likelihood ratio for every (finding, diagnosis) pair. The gold ADJ program declares the priors, a contributes-<LR>-from-<finding>-to-<diagnosis> for each pair, and observes every finding; the ENGINE multiplies the priors by all the likelihood ratios (Bayesian combination) and reports the leading diagnosis, read by the existing decision_leader extractor (no harness or engine change). The reasoning step beyond rung-3 single-finding decisions: the answer is the diagnosis that wins on the COMBINED evidence, while a deliberately planted distractor wins on a single FLASHY finding alone (one huge likelihood ratio, ~1 on the rest). A reasoner that anchors on the salient finding takes the distractor; only carrying every likelihood ratio through the product lands the gold (anchoring bias is the classic board trap). The stem is generated from the data so every prior and likelihood ratio in the program appears verbatim in the stem (no-result-literals gate holds); the five options are distinct diagnosis labels. Twenty real differentials across cardiology, pulmonology, GI, neurology, endocrine, ID, renal, MSK, and pediatrics. Engine selects the combined-evidence leader 20/20 in cached mode, zero wrong. BATCH 2 (r6-21..r6-40): twenty FOUR-way differentials (four scored diagnoses A-D, E=unknown) that add a new reasoning step \u2014 a likelihood ratio BELOW 1 ARGUES AGAINST a diagnosis (it multiplies that diagnosis's running product down). So a flashy diagnosis with one strong positive finding can be demoted below a quieter rival once a strong negative (LR<1) finding is carried through. The engine still does prior \u00d7 \u220f likelihood ratios over the observed findings; only the data and stem change. Batch 2 spans wide-complex tachycardia, RUQ pain, acute vision loss, hypercalcemia, meningoencephalitis, AKI, microcytic anemia, pleural effusion, monoarthritis, pediatric stridor, GI bleed, blistering dermatoses, adrenal disorders, dementia, post-MI chest pain, infectious diarrhea, thrombocytopenia, solitary lung nodule, pelvic pain, and toxic ingestions. Engine selects the combined-evidence leader 40/40 in cached mode, zero wrong.",
   "items": [
     {
       "id": "r6-01",
@@ -361,6 +361,366 @@
         "E": "temporal_arteritis"
       },
       "gold_letter": "E"
+    },
+    {
+      "id": "r6-21",
+      "qtype": "clinical_differential",
+      "stem": "Four diagnoses each start with prior 0.25: ventricular tachycardia, svt with aberrancy, atrial fibrillation, sinus tachycardia. av dissociation has likelihood ratio 8 for ventricular tachycardia, 0.5 for svt with aberrancy, 1 for atrial fibrillation, 1 for sinus tachycardia. regular rhythm has likelihood ratio 2 for ventricular tachycardia, 2 for svt with aberrancy, 0.2 for atrial fibrillation, 2 for sinus tachycardia. prior mi history has likelihood ratio 4 for ventricular tachycardia, 1 for svt with aberrancy, 1 for atrial fibrillation, 1 for sinus tachycardia. The patient has: av dissociation, regular rhythm, prior mi history. A likelihood ratio below 1 argues against that diagnosis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.25 for ventricular_tachycardia\nprior 0.25 for svt_with_aberrancy\nprior 0.25 for atrial_fibrillation\nprior 0.25 for sinus_tachycardia\ncontributes 8 from av_dissociation to ventricular_tachycardia\ncontributes 0.5 from av_dissociation to svt_with_aberrancy\ncontributes 1 from av_dissociation to atrial_fibrillation\ncontributes 1 from av_dissociation to sinus_tachycardia\ncontributes 2 from regular_rhythm to ventricular_tachycardia\ncontributes 2 from regular_rhythm to svt_with_aberrancy\ncontributes 0.2 from regular_rhythm to atrial_fibrillation\ncontributes 2 from regular_rhythm to sinus_tachycardia\ncontributes 4 from prior_mi_history to ventricular_tachycardia\ncontributes 1 from prior_mi_history to svt_with_aberrancy\ncontributes 1 from prior_mi_history to atrial_fibrillation\ncontributes 1 from prior_mi_history to sinus_tachycardia\nobserve av_dissociation\nobserve regular_rhythm\nobserve prior_mi_history\n? ventricular_tachycardia\n? svt_with_aberrancy\n? atrial_fibrillation\n? sinus_tachycardia\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "ventricular_tachycardia",
+        "B": "svt_with_aberrancy",
+        "C": "atrial_fibrillation",
+        "D": "sinus_tachycardia",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6-22",
+      "qtype": "clinical_differential",
+      "stem": "Four diagnoses each start with prior 0.25: acute cholecystitis, choledocholithiasis, acute pancreatitis, peptic ulcer disease. murphy sign has likelihood ratio 6 for acute cholecystitis, 2 for choledocholithiasis, 1 for acute pancreatitis, 1 for peptic ulcer disease. elevated bilirubin has likelihood ratio 1 for acute cholecystitis, 6 for choledocholithiasis, 2 for acute pancreatitis, 0.5 for peptic ulcer disease. elevated lipase has likelihood ratio 0.5 for acute cholecystitis, 2 for choledocholithiasis, 8 for acute pancreatitis, 1 for peptic ulcer disease. The patient has: murphy sign, elevated bilirubin. A likelihood ratio below 1 argues against that diagnosis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.25 for acute_cholecystitis\nprior 0.25 for choledocholithiasis\nprior 0.25 for acute_pancreatitis\nprior 0.25 for peptic_ulcer_disease\ncontributes 6 from murphy_sign to acute_cholecystitis\ncontributes 2 from murphy_sign to choledocholithiasis\ncontributes 1 from murphy_sign to acute_pancreatitis\ncontributes 1 from murphy_sign to peptic_ulcer_disease\ncontributes 1 from elevated_bilirubin to acute_cholecystitis\ncontributes 6 from elevated_bilirubin to choledocholithiasis\ncontributes 2 from elevated_bilirubin to acute_pancreatitis\ncontributes 0.5 from elevated_bilirubin to peptic_ulcer_disease\ncontributes 0.5 from elevated_lipase to acute_cholecystitis\ncontributes 2 from elevated_lipase to choledocholithiasis\ncontributes 8 from elevated_lipase to acute_pancreatitis\ncontributes 1 from elevated_lipase to peptic_ulcer_disease\nobserve murphy_sign\nobserve elevated_bilirubin\n? acute_cholecystitis\n? choledocholithiasis\n? acute_pancreatitis\n? peptic_ulcer_disease\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "acute_cholecystitis",
+        "B": "choledocholithiasis",
+        "C": "acute_pancreatitis",
+        "D": "peptic_ulcer_disease",
+        "E": "unknown"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6-23",
+      "qtype": "clinical_differential",
+      "stem": "Four diagnoses each start with prior 0.25: central retinal artery occlusion, optic neuritis, retinal detachment, giant cell arteritis. painless loss has likelihood ratio 4 for central retinal artery occlusion, 0.25 for optic neuritis, 3 for retinal detachment, 2 for giant cell arteritis. cherry red spot has likelihood ratio 8 for central retinal artery occlusion, 1 for optic neuritis, 1 for retinal detachment, 1 for giant cell arteritis. jaw claudication has likelihood ratio 1 for central retinal artery occlusion, 1 for optic neuritis, 1 for retinal detachment, 8 for giant cell arteritis. The patient has: painless loss, cherry red spot. A likelihood ratio below 1 argues against that diagnosis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.25 for central_retinal_artery_occlusion\nprior 0.25 for optic_neuritis\nprior 0.25 for retinal_detachment\nprior 0.25 for giant_cell_arteritis\ncontributes 4 from painless_loss to central_retinal_artery_occlusion\ncontributes 0.25 from painless_loss to optic_neuritis\ncontributes 3 from painless_loss to retinal_detachment\ncontributes 2 from painless_loss to giant_cell_arteritis\ncontributes 8 from cherry_red_spot to central_retinal_artery_occlusion\ncontributes 1 from cherry_red_spot to optic_neuritis\ncontributes 1 from cherry_red_spot to retinal_detachment\ncontributes 1 from cherry_red_spot to giant_cell_arteritis\ncontributes 1 from jaw_claudication to central_retinal_artery_occlusion\ncontributes 1 from jaw_claudication to optic_neuritis\ncontributes 1 from jaw_claudication to retinal_detachment\ncontributes 8 from jaw_claudication to giant_cell_arteritis\nobserve painless_loss\nobserve cherry_red_spot\n? central_retinal_artery_occlusion\n? optic_neuritis\n? retinal_detachment\n? giant_cell_arteritis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "central_retinal_artery_occlusion",
+        "B": "optic_neuritis",
+        "C": "retinal_detachment",
+        "D": "giant_cell_arteritis",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6-24",
+      "qtype": "clinical_differential",
+      "stem": "Four diagnoses each start with prior 0.25: primary hyperparathyroidism, malignancy hypercalcemia, sarcoidosis, milk alkali syndrome. elevated pth has likelihood ratio 8 for primary hyperparathyroidism, 0.2 for malignancy hypercalcemia, 0.5 for sarcoidosis, 0.5 for milk alkali syndrome. low phosphate has likelihood ratio 3 for primary hyperparathyroidism, 2 for malignancy hypercalcemia, 1 for sarcoidosis, 1 for milk alkali syndrome. weight loss has likelihood ratio 1 for primary hyperparathyroidism, 4 for malignancy hypercalcemia, 1 for sarcoidosis, 1 for milk alkali syndrome. The patient has: elevated pth, low phosphate, weight loss. A likelihood ratio below 1 argues against that diagnosis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.25 for primary_hyperparathyroidism\nprior 0.25 for malignancy_hypercalcemia\nprior 0.25 for sarcoidosis\nprior 0.25 for milk_alkali_syndrome\ncontributes 8 from elevated_pth to primary_hyperparathyroidism\ncontributes 0.2 from elevated_pth to malignancy_hypercalcemia\ncontributes 0.5 from elevated_pth to sarcoidosis\ncontributes 0.5 from elevated_pth to milk_alkali_syndrome\ncontributes 3 from low_phosphate to primary_hyperparathyroidism\ncontributes 2 from low_phosphate to malignancy_hypercalcemia\ncontributes 1 from low_phosphate to sarcoidosis\ncontributes 1 from low_phosphate to milk_alkali_syndrome\ncontributes 1 from weight_loss to primary_hyperparathyroidism\ncontributes 4 from weight_loss to malignancy_hypercalcemia\ncontributes 1 from weight_loss to sarcoidosis\ncontributes 1 from weight_loss to milk_alkali_syndrome\nobserve elevated_pth\nobserve low_phosphate\nobserve weight_loss\n? primary_hyperparathyroidism\n? malignancy_hypercalcemia\n? sarcoidosis\n? milk_alkali_syndrome\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "primary_hyperparathyroidism",
+        "B": "malignancy_hypercalcemia",
+        "C": "sarcoidosis",
+        "D": "milk_alkali_syndrome",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6-25",
+      "qtype": "clinical_differential",
+      "stem": "Four diagnoses each start with prior 0.25: herpes encephalitis, bacterial meningitis, viral meningitis, cerebral abscess. temporal lobe changes has likelihood ratio 8 for herpes encephalitis, 1 for bacterial meningitis, 0.5 for viral meningitis, 2 for cerebral abscess. csf lymphocytic has likelihood ratio 3 for herpes encephalitis, 0.2 for bacterial meningitis, 4 for viral meningitis, 1 for cerebral abscess. ring enhancing lesion has likelihood ratio 1 for herpes encephalitis, 1 for bacterial meningitis, 1 for viral meningitis, 8 for cerebral abscess. The patient has: temporal lobe changes, csf lymphocytic. A likelihood ratio below 1 argues against that diagnosis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.25 for herpes_encephalitis\nprior 0.25 for bacterial_meningitis\nprior 0.25 for viral_meningitis\nprior 0.25 for cerebral_abscess\ncontributes 8 from temporal_lobe_changes to herpes_encephalitis\ncontributes 1 from temporal_lobe_changes to bacterial_meningitis\ncontributes 0.5 from temporal_lobe_changes to viral_meningitis\ncontributes 2 from temporal_lobe_changes to cerebral_abscess\ncontributes 3 from csf_lymphocytic to herpes_encephalitis\ncontributes 0.2 from csf_lymphocytic to bacterial_meningitis\ncontributes 4 from csf_lymphocytic to viral_meningitis\ncontributes 1 from csf_lymphocytic to cerebral_abscess\ncontributes 1 from ring_enhancing_lesion to herpes_encephalitis\ncontributes 1 from ring_enhancing_lesion to bacterial_meningitis\ncontributes 1 from ring_enhancing_lesion to viral_meningitis\ncontributes 8 from ring_enhancing_lesion to cerebral_abscess\nobserve temporal_lobe_changes\nobserve csf_lymphocytic\n? herpes_encephalitis\n? bacterial_meningitis\n? viral_meningitis\n? cerebral_abscess\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "herpes_encephalitis",
+        "B": "bacterial_meningitis",
+        "C": "viral_meningitis",
+        "D": "cerebral_abscess",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6-26",
+      "qtype": "clinical_differential",
+      "stem": "Four diagnoses each start with prior 0.25: prerenal azotemia, acute tubular necrosis, postrenal obstruction, glomerulonephritis. muddy brown casts has likelihood ratio 0.5 for prerenal azotemia, 8 for acute tubular necrosis, 1 for postrenal obstruction, 1 for glomerulonephritis. high bun cr ratio has likelihood ratio 6 for prerenal azotemia, 0.5 for acute tubular necrosis, 2 for postrenal obstruction, 1 for glomerulonephritis. hydronephrosis has likelihood ratio 1 for prerenal azotemia, 1 for acute tubular necrosis, 8 for postrenal obstruction, 1 for glomerulonephritis. The patient has: muddy brown casts, high bun cr ratio. A likelihood ratio below 1 argues against that diagnosis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.25 for prerenal_azotemia\nprior 0.25 for acute_tubular_necrosis\nprior 0.25 for postrenal_obstruction\nprior 0.25 for glomerulonephritis\ncontributes 0.5 from muddy_brown_casts to prerenal_azotemia\ncontributes 8 from muddy_brown_casts to acute_tubular_necrosis\ncontributes 1 from muddy_brown_casts to postrenal_obstruction\ncontributes 1 from muddy_brown_casts to glomerulonephritis\ncontributes 6 from high_bun_cr_ratio to prerenal_azotemia\ncontributes 0.5 from high_bun_cr_ratio to acute_tubular_necrosis\ncontributes 2 from high_bun_cr_ratio to postrenal_obstruction\ncontributes 1 from high_bun_cr_ratio to glomerulonephritis\ncontributes 1 from hydronephrosis to prerenal_azotemia\ncontributes 1 from hydronephrosis to acute_tubular_necrosis\ncontributes 8 from hydronephrosis to postrenal_obstruction\ncontributes 1 from hydronephrosis to glomerulonephritis\nobserve muddy_brown_casts\nobserve high_bun_cr_ratio\n? prerenal_azotemia\n? acute_tubular_necrosis\n? postrenal_obstruction\n? glomerulonephritis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "prerenal_azotemia",
+        "B": "acute_tubular_necrosis",
+        "C": "postrenal_obstruction",
+        "D": "glomerulonephritis",
+        "E": "unknown"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6-27",
+      "qtype": "clinical_differential",
+      "stem": "Four diagnoses each start with prior 0.25: iron deficiency anemia, thalassemia trait, anemia of chronic disease, sideroblastic anemia. low ferritin has likelihood ratio 8 for iron deficiency anemia, 0.5 for thalassemia trait, 0.2 for anemia of chronic disease, 0.5 for sideroblastic anemia. high rdw has likelihood ratio 4 for iron deficiency anemia, 0.5 for thalassemia trait, 1 for anemia of chronic disease, 2 for sideroblastic anemia. normal rbc count has likelihood ratio 0.5 for iron deficiency anemia, 4 for thalassemia trait, 1 for anemia of chronic disease, 1 for sideroblastic anemia. The patient has: low ferritin, high rdw. A likelihood ratio below 1 argues against that diagnosis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.25 for iron_deficiency_anemia\nprior 0.25 for thalassemia_trait\nprior 0.25 for anemia_of_chronic_disease\nprior 0.25 for sideroblastic_anemia\ncontributes 8 from low_ferritin to iron_deficiency_anemia\ncontributes 0.5 from low_ferritin to thalassemia_trait\ncontributes 0.2 from low_ferritin to anemia_of_chronic_disease\ncontributes 0.5 from low_ferritin to sideroblastic_anemia\ncontributes 4 from high_rdw to iron_deficiency_anemia\ncontributes 0.5 from high_rdw to thalassemia_trait\ncontributes 1 from high_rdw to anemia_of_chronic_disease\ncontributes 2 from high_rdw to sideroblastic_anemia\ncontributes 0.5 from normal_rbc_count to iron_deficiency_anemia\ncontributes 4 from normal_rbc_count to thalassemia_trait\ncontributes 1 from normal_rbc_count to anemia_of_chronic_disease\ncontributes 1 from normal_rbc_count to sideroblastic_anemia\nobserve low_ferritin\nobserve high_rdw\n? iron_deficiency_anemia\n? thalassemia_trait\n? anemia_of_chronic_disease\n? sideroblastic_anemia\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "iron_deficiency_anemia",
+        "B": "thalassemia_trait",
+        "C": "anemia_of_chronic_disease",
+        "D": "sideroblastic_anemia",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6-28",
+      "qtype": "clinical_differential",
+      "stem": "Four diagnoses each start with prior 0.25: parapneumonic effusion, malignant effusion, tuberculous effusion, heart failure effusion. exudate lights has likelihood ratio 3 for parapneumonic effusion, 3 for malignant effusion, 3 for tuberculous effusion, 0.2 for heart failure effusion. low pleural glucose has likelihood ratio 6 for parapneumonic effusion, 2 for malignant effusion, 2 for tuberculous effusion, 1 for heart failure effusion. lymphocyte predominance has likelihood ratio 0.5 for parapneumonic effusion, 2 for malignant effusion, 6 for tuberculous effusion, 1 for heart failure effusion. The patient has: exudate lights, low pleural glucose. A likelihood ratio below 1 argues against that diagnosis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.25 for parapneumonic_effusion\nprior 0.25 for malignant_effusion\nprior 0.25 for tuberculous_effusion\nprior 0.25 for heart_failure_effusion\ncontributes 3 from exudate_lights to parapneumonic_effusion\ncontributes 3 from exudate_lights to malignant_effusion\ncontributes 3 from exudate_lights to tuberculous_effusion\ncontributes 0.2 from exudate_lights to heart_failure_effusion\ncontributes 6 from low_pleural_glucose to parapneumonic_effusion\ncontributes 2 from low_pleural_glucose to malignant_effusion\ncontributes 2 from low_pleural_glucose to tuberculous_effusion\ncontributes 1 from low_pleural_glucose to heart_failure_effusion\ncontributes 0.5 from lymphocyte_predominance to parapneumonic_effusion\ncontributes 2 from lymphocyte_predominance to malignant_effusion\ncontributes 6 from lymphocyte_predominance to tuberculous_effusion\ncontributes 1 from lymphocyte_predominance to heart_failure_effusion\nobserve exudate_lights\nobserve low_pleural_glucose\n? parapneumonic_effusion\n? malignant_effusion\n? tuberculous_effusion\n? heart_failure_effusion\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "parapneumonic_effusion",
+        "B": "malignant_effusion",
+        "C": "tuberculous_effusion",
+        "D": "heart_failure_effusion",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6-29",
+      "qtype": "clinical_differential",
+      "stem": "Four diagnoses each start with prior 0.25: septic arthritis, gout, pseudogout, reactive arthritis. negatively birefringent has likelihood ratio 1 for septic arthritis, 8 for gout, 0.25 for pseudogout, 1 for reactive arthritis. very high synovial wbc has likelihood ratio 6 for septic arthritis, 1 for gout, 1 for pseudogout, 0.5 for reactive arthritis. rhomboid crystals has likelihood ratio 1 for septic arthritis, 0.25 for gout, 8 for pseudogout, 1 for reactive arthritis. The patient has: negatively birefringent, very high synovial wbc. A likelihood ratio below 1 argues against that diagnosis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.25 for septic_arthritis\nprior 0.25 for gout\nprior 0.25 for pseudogout\nprior 0.25 for reactive_arthritis\ncontributes 1 from negatively_birefringent to septic_arthritis\ncontributes 8 from negatively_birefringent to gout\ncontributes 0.25 from negatively_birefringent to pseudogout\ncontributes 1 from negatively_birefringent to reactive_arthritis\ncontributes 6 from very_high_synovial_wbc to septic_arthritis\ncontributes 1 from very_high_synovial_wbc to gout\ncontributes 1 from very_high_synovial_wbc to pseudogout\ncontributes 0.5 from very_high_synovial_wbc to reactive_arthritis\ncontributes 1 from rhomboid_crystals to septic_arthritis\ncontributes 0.25 from rhomboid_crystals to gout\ncontributes 8 from rhomboid_crystals to pseudogout\ncontributes 1 from rhomboid_crystals to reactive_arthritis\nobserve negatively_birefringent\nobserve very_high_synovial_wbc\n? septic_arthritis\n? gout\n? pseudogout\n? reactive_arthritis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "septic_arthritis",
+        "B": "gout",
+        "C": "pseudogout",
+        "D": "reactive_arthritis",
+        "E": "unknown"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6-30",
+      "qtype": "clinical_differential",
+      "stem": "Four diagnoses each start with prior 0.25: croup, epiglottitis, bacterial tracheitis, foreign body aspiration. barking cough has likelihood ratio 6 for croup, 0.5 for epiglottitis, 1 for bacterial tracheitis, 1 for foreign body aspiration. drooling tripod has likelihood ratio 0.5 for croup, 8 for epiglottitis, 2 for bacterial tracheitis, 1 for foreign body aspiration. sudden onset choking has likelihood ratio 0.5 for croup, 1 for epiglottitis, 1 for bacterial tracheitis, 8 for foreign body aspiration. The patient has: barking cough, drooling tripod. A likelihood ratio below 1 argues against that diagnosis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.25 for croup\nprior 0.25 for epiglottitis\nprior 0.25 for bacterial_tracheitis\nprior 0.25 for foreign_body_aspiration\ncontributes 6 from barking_cough to croup\ncontributes 0.5 from barking_cough to epiglottitis\ncontributes 1 from barking_cough to bacterial_tracheitis\ncontributes 1 from barking_cough to foreign_body_aspiration\ncontributes 0.5 from drooling_tripod to croup\ncontributes 8 from drooling_tripod to epiglottitis\ncontributes 2 from drooling_tripod to bacterial_tracheitis\ncontributes 1 from drooling_tripod to foreign_body_aspiration\ncontributes 0.5 from sudden_onset_choking to croup\ncontributes 1 from sudden_onset_choking to epiglottitis\ncontributes 1 from sudden_onset_choking to bacterial_tracheitis\ncontributes 8 from sudden_onset_choking to foreign_body_aspiration\nobserve barking_cough\nobserve drooling_tripod\n? croup\n? epiglottitis\n? bacterial_tracheitis\n? foreign_body_aspiration\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "croup",
+        "B": "epiglottitis",
+        "C": "bacterial_tracheitis",
+        "D": "foreign_body_aspiration",
+        "E": "unknown"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6-31",
+      "qtype": "clinical_differential",
+      "stem": "Four diagnoses each start with prior 0.25: peptic ulcer bleed, esophageal varices, mallory weiss tear, gastritis. portal hypertension has likelihood ratio 1 for peptic ulcer bleed, 8 for esophageal varices, 0.5 for mallory weiss tear, 1 for gastritis. retching then blood has likelihood ratio 1 for peptic ulcer bleed, 0.5 for esophageal varices, 8 for mallory weiss tear, 1 for gastritis. nsaid use has likelihood ratio 6 for peptic ulcer bleed, 1 for esophageal varices, 1 for mallory weiss tear, 3 for gastritis. The patient has: portal hypertension, nsaid use. A likelihood ratio below 1 argues against that diagnosis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.25 for peptic_ulcer_bleed\nprior 0.25 for esophageal_varices\nprior 0.25 for mallory_weiss_tear\nprior 0.25 for gastritis\ncontributes 1 from portal_hypertension to peptic_ulcer_bleed\ncontributes 8 from portal_hypertension to esophageal_varices\ncontributes 0.5 from portal_hypertension to mallory_weiss_tear\ncontributes 1 from portal_hypertension to gastritis\ncontributes 1 from retching_then_blood to peptic_ulcer_bleed\ncontributes 0.5 from retching_then_blood to esophageal_varices\ncontributes 8 from retching_then_blood to mallory_weiss_tear\ncontributes 1 from retching_then_blood to gastritis\ncontributes 6 from nsaid_use to peptic_ulcer_bleed\ncontributes 1 from nsaid_use to esophageal_varices\ncontributes 1 from nsaid_use to mallory_weiss_tear\ncontributes 3 from nsaid_use to gastritis\nobserve portal_hypertension\nobserve nsaid_use\n? peptic_ulcer_bleed\n? esophageal_varices\n? mallory_weiss_tear\n? gastritis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "peptic_ulcer_bleed",
+        "B": "esophageal_varices",
+        "C": "mallory_weiss_tear",
+        "D": "gastritis",
+        "E": "unknown"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6-32",
+      "qtype": "clinical_differential",
+      "stem": "Four diagnoses each start with prior 0.25: bullous pemphigoid, pemphigus vulgaris, dermatitis herpetiformis, stevens johnson syndrome. oral mucosa involved has likelihood ratio 0.5 for bullous pemphigoid, 6 for pemphigus vulgaris, 1 for dermatitis herpetiformis, 4 for stevens johnson syndrome. positive nikolsky has likelihood ratio 0.25 for bullous pemphigoid, 8 for pemphigus vulgaris, 1 for dermatitis herpetiformis, 3 for stevens johnson syndrome. tense blisters has likelihood ratio 8 for bullous pemphigoid, 0.5 for pemphigus vulgaris, 1 for dermatitis herpetiformis, 1 for stevens johnson syndrome. The patient has: oral mucosa involved, positive nikolsky. A likelihood ratio below 1 argues against that diagnosis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.25 for bullous_pemphigoid\nprior 0.25 for pemphigus_vulgaris\nprior 0.25 for dermatitis_herpetiformis\nprior 0.25 for stevens_johnson_syndrome\ncontributes 0.5 from oral_mucosa_involved to bullous_pemphigoid\ncontributes 6 from oral_mucosa_involved to pemphigus_vulgaris\ncontributes 1 from oral_mucosa_involved to dermatitis_herpetiformis\ncontributes 4 from oral_mucosa_involved to stevens_johnson_syndrome\ncontributes 0.25 from positive_nikolsky to bullous_pemphigoid\ncontributes 8 from positive_nikolsky to pemphigus_vulgaris\ncontributes 1 from positive_nikolsky to dermatitis_herpetiformis\ncontributes 3 from positive_nikolsky to stevens_johnson_syndrome\ncontributes 8 from tense_blisters to bullous_pemphigoid\ncontributes 0.5 from tense_blisters to pemphigus_vulgaris\ncontributes 1 from tense_blisters to dermatitis_herpetiformis\ncontributes 1 from tense_blisters to stevens_johnson_syndrome\nobserve oral_mucosa_involved\nobserve positive_nikolsky\n? bullous_pemphigoid\n? pemphigus_vulgaris\n? dermatitis_herpetiformis\n? stevens_johnson_syndrome\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "bullous_pemphigoid",
+        "B": "pemphigus_vulgaris",
+        "C": "dermatitis_herpetiformis",
+        "D": "stevens_johnson_syndrome",
+        "E": "unknown"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6-33",
+      "qtype": "clinical_differential",
+      "stem": "Four diagnoses each start with prior 0.25: addison disease, cushing syndrome, pheochromocytoma, primary aldosteronism. hyperpigmentation has likelihood ratio 8 for addison disease, 0.5 for cushing syndrome, 1 for pheochromocytoma, 1 for primary aldosteronism. hyperkalemia has likelihood ratio 6 for addison disease, 0.5 for cushing syndrome, 1 for pheochromocytoma, 0.2 for primary aldosteronism. episodic hypertension has likelihood ratio 0.25 for addison disease, 1 for cushing syndrome, 8 for pheochromocytoma, 2 for primary aldosteronism. The patient has: hyperpigmentation, hyperkalemia. A likelihood ratio below 1 argues against that diagnosis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.25 for addison_disease\nprior 0.25 for cushing_syndrome\nprior 0.25 for pheochromocytoma\nprior 0.25 for primary_aldosteronism\ncontributes 8 from hyperpigmentation to addison_disease\ncontributes 0.5 from hyperpigmentation to cushing_syndrome\ncontributes 1 from hyperpigmentation to pheochromocytoma\ncontributes 1 from hyperpigmentation to primary_aldosteronism\ncontributes 6 from hyperkalemia to addison_disease\ncontributes 0.5 from hyperkalemia to cushing_syndrome\ncontributes 1 from hyperkalemia to pheochromocytoma\ncontributes 0.2 from hyperkalemia to primary_aldosteronism\ncontributes 0.25 from episodic_hypertension to addison_disease\ncontributes 1 from episodic_hypertension to cushing_syndrome\ncontributes 8 from episodic_hypertension to pheochromocytoma\ncontributes 2 from episodic_hypertension to primary_aldosteronism\nobserve hyperpigmentation\nobserve hyperkalemia\n? addison_disease\n? cushing_syndrome\n? pheochromocytoma\n? primary_aldosteronism\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "addison_disease",
+        "B": "cushing_syndrome",
+        "C": "pheochromocytoma",
+        "D": "primary_aldosteronism",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6-34",
+      "qtype": "clinical_differential",
+      "stem": "Four diagnoses each start with prior 0.25: alzheimer disease, vascular dementia, lewy body dementia, frontotemporal dementia. visual hallucinations has likelihood ratio 0.5 for alzheimer disease, 1 for vascular dementia, 10 for lewy body dementia, 1 for frontotemporal dementia. stepwise decline has likelihood ratio 0.5 for alzheimer disease, 8 for vascular dementia, 1 for lewy body dementia, 1 for frontotemporal dementia. early disinhibition has likelihood ratio 0.5 for alzheimer disease, 1 for vascular dementia, 1 for lewy body dementia, 8 for frontotemporal dementia. The patient has: visual hallucinations, stepwise decline. A likelihood ratio below 1 argues against that diagnosis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.25 for alzheimer_disease\nprior 0.25 for vascular_dementia\nprior 0.25 for lewy_body_dementia\nprior 0.25 for frontotemporal_dementia\ncontributes 0.5 from visual_hallucinations to alzheimer_disease\ncontributes 1 from visual_hallucinations to vascular_dementia\ncontributes 10 from visual_hallucinations to lewy_body_dementia\ncontributes 1 from visual_hallucinations to frontotemporal_dementia\ncontributes 0.5 from stepwise_decline to alzheimer_disease\ncontributes 8 from stepwise_decline to vascular_dementia\ncontributes 1 from stepwise_decline to lewy_body_dementia\ncontributes 1 from stepwise_decline to frontotemporal_dementia\ncontributes 0.5 from early_disinhibition to alzheimer_disease\ncontributes 1 from early_disinhibition to vascular_dementia\ncontributes 1 from early_disinhibition to lewy_body_dementia\ncontributes 8 from early_disinhibition to frontotemporal_dementia\nobserve visual_hallucinations\nobserve stepwise_decline\n? alzheimer_disease\n? vascular_dementia\n? lewy_body_dementia\n? frontotemporal_dementia\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "alzheimer_disease",
+        "B": "vascular_dementia",
+        "C": "lewy_body_dementia",
+        "D": "frontotemporal_dementia",
+        "E": "unknown"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r6-35",
+      "qtype": "clinical_differential",
+      "stem": "Four diagnoses each start with prior 0.25: acute pericarditis, reinfarction, pulmonary embolism, aortic dissection. pleuritic positional pain has likelihood ratio 6 for acute pericarditis, 0.5 for reinfarction, 2 for pulmonary embolism, 0.5 for aortic dissection. diffuse st elevation has likelihood ratio 8 for acute pericarditis, 0.5 for reinfarction, 1 for pulmonary embolism, 1 for aortic dissection. tearing back pain has likelihood ratio 0.5 for acute pericarditis, 1 for reinfarction, 1 for pulmonary embolism, 8 for aortic dissection. The patient has: pleuritic positional pain, diffuse st elevation. A likelihood ratio below 1 argues against that diagnosis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.25 for acute_pericarditis\nprior 0.25 for reinfarction\nprior 0.25 for pulmonary_embolism\nprior 0.25 for aortic_dissection\ncontributes 6 from pleuritic_positional_pain to acute_pericarditis\ncontributes 0.5 from pleuritic_positional_pain to reinfarction\ncontributes 2 from pleuritic_positional_pain to pulmonary_embolism\ncontributes 0.5 from pleuritic_positional_pain to aortic_dissection\ncontributes 8 from diffuse_st_elevation to acute_pericarditis\ncontributes 0.5 from diffuse_st_elevation to reinfarction\ncontributes 1 from diffuse_st_elevation to pulmonary_embolism\ncontributes 1 from diffuse_st_elevation to aortic_dissection\ncontributes 0.5 from tearing_back_pain to acute_pericarditis\ncontributes 1 from tearing_back_pain to reinfarction\ncontributes 1 from tearing_back_pain to pulmonary_embolism\ncontributes 8 from tearing_back_pain to aortic_dissection\nobserve pleuritic_positional_pain\nobserve diffuse_st_elevation\n? acute_pericarditis\n? reinfarction\n? pulmonary_embolism\n? aortic_dissection\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "acute_pericarditis",
+        "B": "reinfarction",
+        "C": "pulmonary_embolism",
+        "D": "aortic_dissection",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6-36",
+      "qtype": "clinical_differential",
+      "stem": "Four diagnoses each start with prior 0.25: c difficile colitis, viral gastroenteritis, giardiasis, ischemic colitis. recent antibiotics has likelihood ratio 8 for c difficile colitis, 0.5 for viral gastroenteritis, 1 for giardiasis, 1 for ischemic colitis. pseudomembranes has likelihood ratio 8 for c difficile colitis, 1 for viral gastroenteritis, 1 for giardiasis, 2 for ischemic colitis. camping freshwater has likelihood ratio 0.5 for c difficile colitis, 1 for viral gastroenteritis, 8 for giardiasis, 1 for ischemic colitis. The patient has: recent antibiotics, pseudomembranes. A likelihood ratio below 1 argues against that diagnosis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.25 for c_difficile_colitis\nprior 0.25 for viral_gastroenteritis\nprior 0.25 for giardiasis\nprior 0.25 for ischemic_colitis\ncontributes 8 from recent_antibiotics to c_difficile_colitis\ncontributes 0.5 from recent_antibiotics to viral_gastroenteritis\ncontributes 1 from recent_antibiotics to giardiasis\ncontributes 1 from recent_antibiotics to ischemic_colitis\ncontributes 8 from pseudomembranes to c_difficile_colitis\ncontributes 1 from pseudomembranes to viral_gastroenteritis\ncontributes 1 from pseudomembranes to giardiasis\ncontributes 2 from pseudomembranes to ischemic_colitis\ncontributes 0.5 from camping_freshwater to c_difficile_colitis\ncontributes 1 from camping_freshwater to viral_gastroenteritis\ncontributes 8 from camping_freshwater to giardiasis\ncontributes 1 from camping_freshwater to ischemic_colitis\nobserve recent_antibiotics\nobserve pseudomembranes\n? c_difficile_colitis\n? viral_gastroenteritis\n? giardiasis\n? ischemic_colitis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "c_difficile_colitis",
+        "B": "viral_gastroenteritis",
+        "C": "giardiasis",
+        "D": "ischemic_colitis",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6-37",
+      "qtype": "clinical_differential",
+      "stem": "Four diagnoses each start with prior 0.25: immune thrombocytopenia, ttp, heparin induced thrombocytopenia, dic. schistocytes has likelihood ratio 0.2 for immune thrombocytopenia, 8 for ttp, 1 for heparin induced thrombocytopenia, 4 for dic. normal coagulation panel has likelihood ratio 4 for immune thrombocytopenia, 2 for ttp, 2 for heparin induced thrombocytopenia, 0.2 for dic. recent heparin has likelihood ratio 0.5 for immune thrombocytopenia, 1 for ttp, 8 for heparin induced thrombocytopenia, 1 for dic. The patient has: schistocytes, normal coagulation panel. A likelihood ratio below 1 argues against that diagnosis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.25 for immune_thrombocytopenia\nprior 0.25 for ttp\nprior 0.25 for heparin_induced_thrombocytopenia\nprior 0.25 for dic\ncontributes 0.2 from schistocytes to immune_thrombocytopenia\ncontributes 8 from schistocytes to ttp\ncontributes 1 from schistocytes to heparin_induced_thrombocytopenia\ncontributes 4 from schistocytes to dic\ncontributes 4 from normal_coagulation_panel to immune_thrombocytopenia\ncontributes 2 from normal_coagulation_panel to ttp\ncontributes 2 from normal_coagulation_panel to heparin_induced_thrombocytopenia\ncontributes 0.2 from normal_coagulation_panel to dic\ncontributes 0.5 from recent_heparin to immune_thrombocytopenia\ncontributes 1 from recent_heparin to ttp\ncontributes 8 from recent_heparin to heparin_induced_thrombocytopenia\ncontributes 1 from recent_heparin to dic\nobserve schistocytes\nobserve normal_coagulation_panel\n? immune_thrombocytopenia\n? ttp\n? heparin_induced_thrombocytopenia\n? dic\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "immune_thrombocytopenia",
+        "B": "ttp",
+        "C": "heparin_induced_thrombocytopenia",
+        "D": "dic",
+        "E": "unknown"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6-38",
+      "qtype": "clinical_differential",
+      "stem": "Four diagnoses each start with prior 0.25: bronchogenic carcinoma, hamartoma, tuberculoma, pulmonary hamartoma calcified. spiculated margins has likelihood ratio 8 for bronchogenic carcinoma, 0.25 for hamartoma, 1 for tuberculoma, 0.25 for pulmonary hamartoma calcified. heavy smoking history has likelihood ratio 6 for bronchogenic carcinoma, 1 for hamartoma, 1 for tuberculoma, 1 for pulmonary hamartoma calcified. popcorn calcification has likelihood ratio 0.2 for bronchogenic carcinoma, 8 for hamartoma, 1 for tuberculoma, 4 for pulmonary hamartoma calcified. The patient has: spiculated margins, heavy smoking history. A likelihood ratio below 1 argues against that diagnosis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.25 for bronchogenic_carcinoma\nprior 0.25 for hamartoma\nprior 0.25 for tuberculoma\nprior 0.25 for pulmonary_hamartoma_calcified\ncontributes 8 from spiculated_margins to bronchogenic_carcinoma\ncontributes 0.25 from spiculated_margins to hamartoma\ncontributes 1 from spiculated_margins to tuberculoma\ncontributes 0.25 from spiculated_margins to pulmonary_hamartoma_calcified\ncontributes 6 from heavy_smoking_history to bronchogenic_carcinoma\ncontributes 1 from heavy_smoking_history to hamartoma\ncontributes 1 from heavy_smoking_history to tuberculoma\ncontributes 1 from heavy_smoking_history to pulmonary_hamartoma_calcified\ncontributes 0.2 from popcorn_calcification to bronchogenic_carcinoma\ncontributes 8 from popcorn_calcification to hamartoma\ncontributes 1 from popcorn_calcification to tuberculoma\ncontributes 4 from popcorn_calcification to pulmonary_hamartoma_calcified\nobserve spiculated_margins\nobserve heavy_smoking_history\n? bronchogenic_carcinoma\n? hamartoma\n? tuberculoma\n? pulmonary_hamartoma_calcified\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "bronchogenic_carcinoma",
+        "B": "hamartoma",
+        "C": "tuberculoma",
+        "D": "pulmonary_hamartoma_calcified",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6-39",
+      "qtype": "clinical_differential",
+      "stem": "Four diagnoses each start with prior 0.25: ectopic pregnancy, ovarian torsion, ruptured ovarian cyst, pelvic inflammatory disease. positive bhcg has likelihood ratio 8 for ectopic pregnancy, 0.5 for ovarian torsion, 1 for ruptured ovarian cyst, 0.5 for pelvic inflammatory disease. absent ovarian flow has likelihood ratio 1 for ectopic pregnancy, 8 for ovarian torsion, 1 for ruptured ovarian cyst, 0.5 for pelvic inflammatory disease. cervical motion tenderness has likelihood ratio 1 for ectopic pregnancy, 0.5 for ovarian torsion, 1 for ruptured ovarian cyst, 6 for pelvic inflammatory disease. The patient has: positive bhcg, absent ovarian flow. A likelihood ratio below 1 argues against that diagnosis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.25 for ectopic_pregnancy\nprior 0.25 for ovarian_torsion\nprior 0.25 for ruptured_ovarian_cyst\nprior 0.25 for pelvic_inflammatory_disease\ncontributes 8 from positive_bhcg to ectopic_pregnancy\ncontributes 0.5 from positive_bhcg to ovarian_torsion\ncontributes 1 from positive_bhcg to ruptured_ovarian_cyst\ncontributes 0.5 from positive_bhcg to pelvic_inflammatory_disease\ncontributes 1 from absent_ovarian_flow to ectopic_pregnancy\ncontributes 8 from absent_ovarian_flow to ovarian_torsion\ncontributes 1 from absent_ovarian_flow to ruptured_ovarian_cyst\ncontributes 0.5 from absent_ovarian_flow to pelvic_inflammatory_disease\ncontributes 1 from cervical_motion_tenderness to ectopic_pregnancy\ncontributes 0.5 from cervical_motion_tenderness to ovarian_torsion\ncontributes 1 from cervical_motion_tenderness to ruptured_ovarian_cyst\ncontributes 6 from cervical_motion_tenderness to pelvic_inflammatory_disease\nobserve positive_bhcg\nobserve absent_ovarian_flow\n? ectopic_pregnancy\n? ovarian_torsion\n? ruptured_ovarian_cyst\n? pelvic_inflammatory_disease\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "ectopic_pregnancy",
+        "B": "ovarian_torsion",
+        "C": "ruptured_ovarian_cyst",
+        "D": "pelvic_inflammatory_disease",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6-40",
+      "qtype": "clinical_differential",
+      "stem": "Four diagnoses each start with prior 0.25: opioid overdose, benzodiazepine overdose, salicylate toxicity, tricyclic overdose. pinpoint pupils has likelihood ratio 8 for opioid overdose, 0.5 for benzodiazepine overdose, 1 for salicylate toxicity, 0.25 for tricyclic overdose. respiratory depression has likelihood ratio 4 for opioid overdose, 3 for benzodiazepine overdose, 0.5 for salicylate toxicity, 1 for tricyclic overdose. wide qrs has likelihood ratio 0.5 for opioid overdose, 0.5 for benzodiazepine overdose, 1 for salicylate toxicity, 8 for tricyclic overdose. The patient has: pinpoint pupils, respiratory depression. A likelihood ratio below 1 argues against that diagnosis. Which diagnosis is most probable given all findings?",
+      "program": "prior 0.25 for opioid_overdose\nprior 0.25 for benzodiazepine_overdose\nprior 0.25 for salicylate_toxicity\nprior 0.25 for tricyclic_overdose\ncontributes 8 from pinpoint_pupils to opioid_overdose\ncontributes 0.5 from pinpoint_pupils to benzodiazepine_overdose\ncontributes 1 from pinpoint_pupils to salicylate_toxicity\ncontributes 0.25 from pinpoint_pupils to tricyclic_overdose\ncontributes 4 from respiratory_depression to opioid_overdose\ncontributes 3 from respiratory_depression to benzodiazepine_overdose\ncontributes 0.5 from respiratory_depression to salicylate_toxicity\ncontributes 1 from respiratory_depression to tricyclic_overdose\ncontributes 0.5 from wide_qrs to opioid_overdose\ncontributes 0.5 from wide_qrs to benzodiazepine_overdose\ncontributes 1 from wide_qrs to salicylate_toxicity\ncontributes 8 from wide_qrs to tricyclic_overdose\nobserve pinpoint_pupils\nobserve respiratory_depression\n? opioid_overdose\n? benzodiazepine_overdose\n? salicylate_toxicity\n? tricyclic_overdose\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "opioid_overdose",
+        "B": "benzodiazepine_overdose",
+        "C": "salicylate_toxicity",
+        "D": "tricyclic_overdose",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
     }
   ]
 }
