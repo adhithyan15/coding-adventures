@@ -61,6 +61,18 @@ let ast = parser.parse().unwrap();
 
 Produces generic AST nodes where each node has a rule name and a list of children (nested nodes or raw tokens).
 
+#### Recursion-depth guard
+
+The grammar-driven parser is recursive descent: nested rule references recurse
+once per nesting level. To keep pathological input (e.g. `((((…))))` or
+`[[[…]]]`) from overflowing the native call stack — an *uncatchable* process
+abort — the parser caps recursion depth at `DEFAULT_MAX_RULE_DEPTH` (128).
+Input that nests past the cap returns a normal, recoverable `GrammarParseError`
+("input nests deeper than the supported limit"), never a crash. The cap sits
+far above any real program's nesting (it is 2× the SIR frontends' source-level
+paren-depth limit), so every real input parses identically. Override it with
+`GrammarParser::new(tokens, grammar).with_max_depth(n)` if needed.
+
 ## Supported language subset
 
 The hand-written parser handles:
