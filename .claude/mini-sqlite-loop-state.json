@@ -141,11 +141,11 @@
     {
       "id": "java-level1-sql-optimizer",
       "title": "Java sql-optimizer",
-      "status": "pending",
+      "status": "in-review",
       "depends_on": ["java-level1-sql-planner"],
-      "branch": null,
+      "branch": "mini-sqlite/java-level1-sql-optimizer",
       "pr_number": null,
-      "notes": "Port Python sql_optimizer to Java."
+      "notes": "PR open 2026-06-30. 124 tests (JaCoCo ≥80%). 5 passes: ConstantFolding, PredicatePushdown, ProjectionPruning, DeadCodeElimination, LimitPushdown. Java 21 sealed interfaces + records."
     },
     {
       "id": "java-level1-sql-codegen",
