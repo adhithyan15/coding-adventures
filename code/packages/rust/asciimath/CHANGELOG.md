@@ -2,6 +2,28 @@
 
 All notable changes to the AsciiMath pluggable frontend.
 
+## [0.6.0] — 2026-06-29
+
+### Added — ASM01 PR-3c (part 1): punctuation arrows `->` and `=>`
+
+- The tokenizer now recognizes the punctuation arrows **`->`** and **`=>`** and emits them as the
+  *existing* symbol-table identifiers `rightarrow` / `implies` — so they flow through the PR-3a
+  symbol table and lower to `MathExpr::Symbol("rightarrow")` / `Symbol("implies")`, agreeing exactly
+  with the word forms `rarr` / `implies`. **Zero ripple**: only `token.rs` changes (two extra
+  byte-lookahead branches, mirroring the existing `-:`/`-=`/`<=`/`!=` multi-char operators); no new
+  `TokenKind`, no parser change, no `Capabilities`/conformance change.
+- The single-character forms are untouched: `a - b` is still `Bin(Sub)`, `a = b` is still `Rel(Eq)`.
+  A right-arrow inside a limit bound parses cleanly (`lim_(x -> 0) f` is a `BigOp`) — `x -> 0` is the
+  juxtaposition `x · → · 0`, not a `-`/`>` mishmash.
+- Tests: tokenizer `multi_char_operators` gains `->`/`=>` (and asserts `-`/`=` unaffected); new parser
+  `punctuation_arrows_lower_to_symbols` (arrow lowering, punctuation==word-form agreement, sub/rel
+  still intact, limit-bound parse). Conformance corpus gains `a -> b`, `x => y`. 31 unit + doc tests
+  pass; clippy `-D warnings` clean.
+- Still **PR-3c remainder** (each its own follow-up): **longest-match** identifier scan (`sinx` →
+  `sin·x`, a deeper lexer change), `stackrel`/`overset`/`underset` (need a neutral-AST node in
+  `math-frontend` — no `Overset`/`Underset` in `MathExpr` yet), and the `text(…)` keyword form (needs
+  lexer raw-capture between the parens).
+
 ## [0.5.0] — 2026-06-29
 
 ### Added — ASM01 PR-3b: bare-keyword spellings + two-letter short forms
