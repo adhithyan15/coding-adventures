@@ -9096,6 +9096,57 @@ mod tests {
     }
 
     #[test]
+    fn parse_anki_notes_tsv_honors_html_header() {
+        let session = EngramSession::new();
+        let plain: Value = serde_json::from_str(&session.parse_anki_notes_tsv(
+            "#separator:tab\n#html:false\n#notetype:Basic\n#columns:Front\tBack\n<b>hola</b>\t\"mother & aunt\"\n",
+            "deck",
+            "basic",
+            "Basic",
+            "note",
+            NOW,
+        ))
+        .unwrap();
+
+        assert_eq!(plain["ok"], true);
+        assert_eq!(
+            plain["import"]["notes"][0]["fields"][0]["value"],
+            "&lt;b&gt;hola&lt;/b&gt;"
+        );
+        assert_eq!(
+            plain["import"]["notes"][0]["fields"][1]["value"],
+            "mother &amp; aunt"
+        );
+        assert_eq!(
+            plain["import"]["cards"][0]["front"],
+            "&lt;b&gt;hola&lt;/b&gt;"
+        );
+        assert_eq!(plain["import"]["cards"][0]["back"], "mother &amp; aunt");
+
+        let html: Value = serde_json::from_str(&session.parse_anki_notes_tsv(
+            "#separator:tab\n#html:true\n#notetype:Basic\n#columns:Front\tBack\n<b>hola</b>\t\"mother & aunt\"\n",
+            "deck",
+            "basic",
+            "Basic",
+            "note",
+            NOW,
+        ))
+        .unwrap();
+
+        assert_eq!(html["ok"], true);
+        assert_eq!(
+            html["import"]["notes"][0]["fields"][0]["value"],
+            "<b>hola</b>"
+        );
+        assert_eq!(
+            html["import"]["notes"][0]["fields"][1]["value"],
+            "mother & aunt"
+        );
+        assert_eq!(html["import"]["cards"][0]["front"], "<b>hola</b>");
+        assert_eq!(html["import"]["cards"][0]["back"], "mother & aunt");
+    }
+
+    #[test]
     fn parse_anki_notes_tsv_preserves_basic_type_answer_template() {
         let session = EngramSession::new();
         let value: Value = serde_json::from_str(&session.parse_anki_notes_tsv(

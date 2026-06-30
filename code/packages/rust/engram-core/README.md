@@ -199,8 +199,10 @@ prefix options to create deterministic cards.
 `export_cards_anki_basic_tsv` and `import_anki_basic_tsv` cover Anki Basic
 front/back text files with import headers (`#separator`, `#html`, `#notetype`,
 `#deck`, and `#columns`) and quoted fields containing separators, newlines, or
-quotes. Named Anki separators include tab, comma, semicolon, pipe, colon, and
-space, plus single-character custom separators.
+quotes. `#html:false` imports field text as escaped plain text, while
+`#html:true` preserves markup in imported fields. Named Anki separators include
+tab, comma, semicolon, pipe, colon, and space, plus single-character custom
+separators.
 `import_anki_notes_tsv` and `export_notes_anki_tsv` use the note/template model
 instead: imported Basic rows produce `NoteType`, `Note`, and materialized
 lineage cards, Basic-and-reversed note types produce forward and reverse
@@ -217,7 +219,9 @@ records without changing generated Engram note IDs. `#notetype column:N` allows
 one text import to create multiple Basic, Basic-and-reversed, Basic
 type-in-answer, Cloze, or custom note models from row metadata. Custom rows
 generate no cards until a real template is available because Anki text exports
-do not carry template definitions.
+do not carry template definitions. Note-backed text import uses the same
+`#html:false` plain-text escaping and `#html:true` markup preservation as Basic
+front/back import.
 
 `get_active_session_progress` derives the shared review UI counters from
 `AppState`: total cards, one-based current position, remaining cards, reviewed

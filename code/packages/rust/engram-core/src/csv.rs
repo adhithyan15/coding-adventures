@@ -231,9 +231,16 @@ pub fn import_anki_basic_tsv(
 ) -> Result<Vec<Card>, CsvError> {
     let records = parse_anki_text_records(input)?;
     let mut cards = Vec::new();
+    let mut html = false;
 
     for (index, fields) in records.into_iter().enumerate() {
-        if is_blank_record(&fields) || fields.first().is_some_and(|field| field.starts_with('#')) {
+        if is_blank_record(&fields) {
+            continue;
+        }
+        if let Some(first) = fields.first().filter(|field| field.starts_with('#')) {
+            if let Some(value) = first.strip_prefix("#html:") {
+                html = parse_anki_header_bool(value, index + 1)?;
+            }
             continue;
         }
         if fields.len() < 2 {
@@ -250,8 +257,8 @@ pub fn import_anki_basic_tsv(
         cards.push(Card {
             id: generated_basic_card_id(&options.id_prefix, sequence),
             deck_id: options.deck_id.clone(),
-            front: fields[0].clone(),
-            back: fields[1].clone(),
+            front: anki_import_field_value(&fields[0], html),
+            back: anki_import_field_value(&fields[1], html),
             created_at: options.created_at,
             lineage: None,
         });
@@ -360,7 +367,10 @@ pub fn import_anki_notes_tsv(
                 .iter()
                 .map(|field| NoteFieldValue {
                     field_id: field.field_id.clone(),
-                    value: fields[field.column_index].clone(),
+                    value: anki_import_field_value(
+                        &fields[field.column_index],
+                        headers.html.unwrap_or(false),
+                    ),
                 })
                 .collect(),
             tags: note_tags_for_row(&header_tags, &column_plan, &fields),
@@ -392,6 +402,7 @@ struct AnkiTsvHeaders {
     note_type_name: Option<String>,
     deck_name: Option<String>,
     columns: Option<Vec<String>>,
+    html: Option<bool>,
     tags: Vec<String>,
     tags_column: Option<usize>,
     guid_column: Option<usize>,
@@ -412,6 +423,11 @@ impl AnkiTsvHeaders {
 
         if let Some(deck_name) = first.strip_prefix("#deck:") {
             self.deck_name = Some(deck_name.trim().to_string());
+            return Ok(());
+        }
+
+        if let Some(html) = first.strip_prefix("#html:") {
+            self.html = Some(parse_anki_header_bool(html, row)?);
             return Ok(());
         }
 
@@ -876,6 +892,27 @@ fn write_tsv_field(output: &mut String, field: &str) {
     }
 }
 
+fn anki_import_field_value(value: &str, html: bool) -> String {
+    if html {
+        value.to_string()
+    } else {
+        escape_html_text(value)
+    }
+}
+
+fn escape_html_text(value: &str) -> String {
+    let mut escaped = String::with_capacity(value.len());
+    for ch in value.chars() {
+        match ch {
+            '&' => escaped.push_str("&amp;"),
+            '<' => escaped.push_str("&lt;"),
+            '>' => escaped.push_str("&gt;"),
+            _ => escaped.push(ch),
+        }
+    }
+    escaped
+}
+
 fn header_value(value: &str) -> String {
     value.replace(['\r', '\n'], " ")
 }
@@ -936,6 +973,18 @@ fn parse_anki_header_column_index(value: &str, row: usize) -> Result<usize, CsvE
         ));
     }
     Ok(column - 1)
+}
+
+fn parse_anki_header_bool(value: &str, row: usize) -> Result<bool, CsvError> {
+    let trimmed = value.trim();
+    match trimmed.to_ascii_lowercase().as_str() {
+        "true" | "1" | "yes" => Ok(true),
+        "false" | "0" | "no" => Ok(false),
+        _ => Err(csv_error(
+            &format!("Anki #html header must be true or false: {trimmed}"),
+            Some(row),
+        )),
+    }
 }
 
 fn parse_delimited_records(
@@ -1486,6 +1535,31 @@ mod tests {
     }
 
     #[test]
+    fn anki_basic_tsv_import_honors_html_header() {
+        let options = BasicCardCsvImportOptions {
+            deck_id: "deck".to_string(),
+            id_prefix: "anki".to_string(),
+            created_at: 456,
+        };
+
+        let plain = import_anki_basic_tsv(
+            "#separator:tab\n#html:false\n#columns:Front\tBack\n<b>hola</b>\t\"mother & aunt\"\n",
+            &options,
+        )
+        .unwrap();
+        assert_eq!(plain[0].front, "&lt;b&gt;hola&lt;/b&gt;");
+        assert_eq!(plain[0].back, "mother &amp; aunt");
+
+        let html = import_anki_basic_tsv(
+            "#separator:tab\n#html:true\n#columns:Front\tBack\n<b>hola</b>\t\"mother & aunt\"\n",
+            &options,
+        )
+        .unwrap();
+        assert_eq!(html[0].front, "<b>hola</b>");
+        assert_eq!(html[0].back, "mother & aunt");
+    }
+
+    #[test]
     fn anki_basic_text_import_honors_separator_header() {
         let text = "#separator:comma\n#html:false\n#notetype:Basic\n#columns:Front,Back\n\"hello, friend\",hola\namma,mother\n";
         let options = BasicCardCsvImportOptions {
@@ -1553,6 +1627,37 @@ mod tests {
         assert_eq!(lineage.note_id, "anki-note-1");
         assert_eq!(lineage.note_type_id, "basic");
         assert_eq!(lineage.template_id, "forward");
+    }
+
+    #[test]
+    fn anki_note_text_import_honors_html_header() {
+        let options = AnkiNoteTsvImportOptions {
+            deck_id: "deck".to_string(),
+            note_type_id: "basic".to_string(),
+            note_type_name: "Basic".to_string(),
+            note_id_prefix: "note".to_string(),
+            created_at: 456,
+        };
+
+        let plain = import_anki_notes_tsv(
+            "#separator:tab\n#html:false\n#notetype:Basic\n#columns:Front\tBack\n<b>hola</b>\t\"mother & aunt\"\n",
+            &options,
+        )
+        .unwrap();
+        assert_eq!(plain.notes[0].fields[0].value, "&lt;b&gt;hola&lt;/b&gt;");
+        assert_eq!(plain.notes[0].fields[1].value, "mother &amp; aunt");
+        assert_eq!(plain.cards[0].front, "&lt;b&gt;hola&lt;/b&gt;");
+        assert_eq!(plain.cards[0].back, "mother &amp; aunt");
+
+        let html = import_anki_notes_tsv(
+            "#separator:tab\n#html:true\n#notetype:Basic\n#columns:Front\tBack\n<b>hola</b>\t\"mother & aunt\"\n",
+            &options,
+        )
+        .unwrap();
+        assert_eq!(html.notes[0].fields[0].value, "<b>hola</b>");
+        assert_eq!(html.notes[0].fields[1].value, "mother & aunt");
+        assert_eq!(html.cards[0].front, "<b>hola</b>");
+        assert_eq!(html.cards[0].back, "mother & aunt");
     }
 
     #[test]

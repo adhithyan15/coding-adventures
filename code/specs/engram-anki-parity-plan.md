@@ -132,7 +132,8 @@ Current reducer integration:
   Basic optional-reversed, and Basic type-in-answer rows as `NoteType`, `Note`,
   and generated lineage cards. The importer preserves Tags columns, `#tags:`
   headers, `#tags column:N`, `#deck:`, `#deck column:N`, `#guid column:N`, and
-  `#notetype column:N` through the JSON facade and C ABI.
+  `#notetype column:N` through the JSON facade and C ABI. `#html:false` imports
+  Anki text fields as escaped plain text, while `#html:true` preserves markup.
 - Note-backed Anki TSV import also supports Cloze rows with `Text`, optional
   `Extra`, and `Tags` columns, producing Cloze note models and cloze lineage
   cards through the JSON facade.
@@ -265,10 +266,11 @@ Formats:
   notes, generated cards, typed-answer prompts, conditional reverse cards, and
   tag metadata. The text importer honors named Anki separators including comma,
   semicolon, pipe, colon, and space, plus `#tags:`, `#tags column:N`, `#deck:`,
-  `#deck column:N`, `#guid column:N`, and `#notetype column:N`. Cloze TSV import
-  creates cloze note models and cards. Custom note-type TSV import now preserves
-  arbitrary field columns as notes without generated cards while excluding
-  special metadata columns. Richer custom note-template/media export remains.
+  `#deck column:N`, `#guid column:N`, `#notetype column:N`, and
+  `#html:true/false`. Cloze TSV import creates cloze note models and cards.
+  Custom note-type TSV import now preserves arbitrary field columns as notes
+  without generated cards while excluding special metadata columns. Richer
+  custom note-template/media export remains.
 - APKG import/export eventually, via a dedicated facade or package crate.
   `engram-anki-package` now provides the archive-inspection foundation for
   legacy and modern collection members plus legacy JSON media maps, and can
