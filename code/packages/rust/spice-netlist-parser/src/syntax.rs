@@ -24,6 +24,7 @@ pub const BERKELEY_APP_SHELL_STATUS_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_TELEMETRY_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_EVENT_LOG_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_EVENT_SUMMARY_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_EVENT_DIGEST_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -63,6 +64,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-telemetry-json",
     "app-shell-events-json",
     "app-shell-event-summary-json",
+    "app-shell-event-digest-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -907,6 +909,98 @@ impl BerkeleyAppShellEventSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellEventDigest {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub headline_event_id: Option<String>,
+    pub headline_message: String,
+    pub primary_action_id: Option<String>,
+    pub attention_event_count: usize,
+    pub attention_event_ids: Vec<String>,
+    pub metric_event_count: usize,
+    pub metric_event_ids: Vec<String>,
+    pub event_count: usize,
+    pub counted_event_total: usize,
+    pub diagnostic_count: usize,
+    pub repaired_state_count: usize,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellEventDigest {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_event_log(&BerkeleyAppShellEventLog::from_bootstrap_snapshot(snapshot))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_event_log(&BerkeleyAppShellEventLog::from_shell_handoff(handoff))
+    }
+
+    pub fn from_event_log(event_log: &BerkeleyAppShellEventLog) -> Self {
+        let summary = BerkeleyAppShellEventSummary::from_event_log(event_log);
+        let headline_event = summary
+            .status_event_id
+            .as_ref()
+            .and_then(|status_event_id| {
+                event_log
+                    .events
+                    .iter()
+                    .find(|event| event.id == *status_event_id)
+            });
+        let attention_event_ids = event_log
+            .events
+            .iter()
+            .filter(|event| matches!(event.severity.as_str(), "blocked" | "warning" | "error"))
+            .map(|event| event.id.clone())
+            .collect::<Vec<_>>();
+        let metric_event_ids = event_log
+            .events
+            .iter()
+            .filter(|event| event.count.is_some())
+            .map(|event| event.id.clone())
+            .collect::<Vec<_>>();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_EVENT_DIGEST_SCHEMA_VERSION,
+            package_name: summary.package_name,
+            source_fingerprint: summary.source_fingerprint,
+            title: summary.title,
+            startup_route: summary.startup_route,
+            ready: summary.ready,
+            severity: summary.severity,
+            headline_event_id: headline_event.map(|event| event.id.clone()),
+            headline_message: headline_event
+                .map(|event| event.message.clone())
+                .unwrap_or_else(|| {
+                    if event_log.ready {
+                        "Berkeley SPICE Mosaic app ready".to_string()
+                    } else {
+                        "Berkeley SPICE Mosaic app blocked".to_string()
+                    }
+                }),
+            primary_action_id: summary.primary_action_id,
+            attention_event_count: attention_event_ids.len(),
+            attention_event_ids,
+            metric_event_count: metric_event_ids.len(),
+            metric_event_ids,
+            event_count: summary.event_count,
+            counted_event_total: summary.counted_event_total,
+            diagnostic_count: summary.diagnostic_count,
+            repaired_state_count: summary.repaired_state_count,
+            artifact_capability_count: summary.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_event_digest_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BerkeleyAnalysisInventoryEntry {
     pub index: usize,
     pub directive: String,
@@ -1708,6 +1802,38 @@ impl BerkeleyAppDeck {
         persisted_state: BerkeleyAppPersistedEditorState,
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self.run_app_shell_event_summary(persisted_state)?.to_json())
+    }
+
+    pub fn app_shell_event_digest(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellEventDigest {
+        BerkeleyAppShellEventDigest::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_event_digest(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellEventDigest, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellEventDigest::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_event_digest_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_event_digest(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_event_digest_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self.run_app_shell_event_digest(persisted_state)?.to_json())
     }
 
     pub fn run_source_order(&self) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
@@ -2551,6 +2677,30 @@ fn app_shell_event_summary_json_value(summary: &BerkeleyAppShellEventSummary) ->
         "diagnosticCount": summary.diagnostic_count,
         "repairedStateCount": summary.repaired_state_count,
         "artifactCapabilityCount": summary.artifact_capability_count,
+    })
+}
+
+fn app_shell_event_digest_json_value(digest: &BerkeleyAppShellEventDigest) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": digest.schema_version,
+        "packageName": &digest.package_name,
+        "sourceFingerprint": &digest.source_fingerprint,
+        "title": &digest.title,
+        "startupRoute": &digest.startup_route,
+        "ready": digest.ready,
+        "severity": &digest.severity,
+        "headlineEventId": &digest.headline_event_id,
+        "headlineMessage": &digest.headline_message,
+        "primaryActionId": &digest.primary_action_id,
+        "attentionEventCount": digest.attention_event_count,
+        "attentionEventIds": &digest.attention_event_ids,
+        "metricEventCount": digest.metric_event_count,
+        "metricEventIds": &digest.metric_event_ids,
+        "eventCount": digest.event_count,
+        "countedEventTotal": digest.counted_event_total,
+        "diagnosticCount": digest.diagnostic_count,
+        "repairedStateCount": digest.repaired_state_count,
+        "artifactCapabilityCount": digest.artifact_capability_count,
     })
 }
 

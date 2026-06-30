@@ -14,11 +14,12 @@ use spice_netlist_parser::{
     TfAnalysis, TranAnalysis, BERKELEY_APP_BOOTSTRAP_SCHEMA_VERSION,
     BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION, BERKELEY_APP_LAUNCH_PLAN_SCHEMA_VERSION,
     BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION, BERKELEY_APP_PACKAGE_NAME,
-    BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION, BERKELEY_APP_SHELL_EVENT_LOG_SCHEMA_VERSION,
-    BERKELEY_APP_SHELL_EVENT_SUMMARY_SCHEMA_VERSION, BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION,
-    BERKELEY_APP_SHELL_STATUS_SCHEMA_VERSION, BERKELEY_APP_SHELL_TELEMETRY_SCHEMA_VERSION,
-    BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM, BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION,
-    BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION,
+    BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION, BERKELEY_APP_SHELL_EVENT_DIGEST_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_EVENT_LOG_SCHEMA_VERSION, BERKELEY_APP_SHELL_EVENT_SUMMARY_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION, BERKELEY_APP_SHELL_STATUS_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_TELEMETRY_SCHEMA_VERSION, BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM,
+    BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION, BERKELEY_SPICE_GRAMMAR_NAME,
+    BERKELEY_SPICE_GRAMMAR_VERSION,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -3072,6 +3073,71 @@ C1 out 0 1p
         shell_event_summary_payload["artifactCapabilityCount"].as_u64(),
         Some(handoff.package_manifest.artifact_capabilities.len() as u64)
     );
+
+    let shell_event_digest = app
+        .run_app_shell_event_digest(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("shell event digest should execute");
+    assert_eq!(
+        shell_event_digest.schema_version,
+        BERKELEY_APP_SHELL_EVENT_DIGEST_SCHEMA_VERSION
+    );
+    assert_eq!(shell_event_digest.package_name, BERKELEY_APP_PACKAGE_NAME);
+    assert!(shell_event_digest.ready);
+    assert_eq!(shell_event_digest.startup_route, "ready");
+    assert_eq!(shell_event_digest.severity, "ready");
+    assert_eq!(
+        shell_event_digest.headline_event_id.as_deref(),
+        Some("shell.status")
+    );
+    assert_eq!(
+        shell_event_digest.headline_message,
+        "Ready to launch waveform panel"
+    );
+    assert_eq!(
+        shell_event_digest.primary_action_id.as_deref(),
+        Some("launch.waveform")
+    );
+    assert_eq!(shell_event_digest.attention_event_count, 0);
+    assert!(shell_event_digest.attention_event_ids.is_empty());
+    assert_eq!(shell_event_digest.metric_event_count, 3);
+    assert_eq!(
+        shell_event_digest.metric_event_ids,
+        vec![
+            "shell.diagnostics".to_string(),
+            "shell.state".to_string(),
+            "shell.capabilities".to_string()
+        ]
+    );
+    assert_eq!(shell_event_digest.event_count, 6);
+    assert_eq!(
+        shell_event_digest.artifact_capability_count,
+        handoff.package_manifest.artifact_capabilities.len()
+    );
+
+    let shell_event_digest_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_event_digest_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap(),
+    )
+    .expect("shell event digest JSON should parse");
+    assert_eq!(shell_event_digest_payload["schemaVersion"], 1);
+    assert_eq!(shell_event_digest_payload["ready"], true);
+    assert_eq!(shell_event_digest_payload["severity"], "ready");
+    assert_eq!(
+        shell_event_digest_payload["headlineMessage"],
+        "Ready to launch waveform panel"
+    );
+    assert_eq!(shell_event_digest_payload["attentionEventCount"], 0);
+    assert_eq!(shell_event_digest_payload["metricEventCount"], 3);
+    assert_eq!(
+        shell_event_digest_payload["metricEventIds"][2],
+        "shell.capabilities"
+    );
 }
 
 #[test]
@@ -3484,6 +3550,71 @@ R1 in out
     assert_eq!(shell_event_summary_payload["diagnosticCount"], 1);
     assert_eq!(
         shell_event_summary_payload["primaryActionId"],
+        "launch.diagnostics"
+    );
+
+    let shell_event_digest = app.app_shell_event_digest(BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(2),
+        active_command_id: Some("analysis.2.run".to_string()),
+    });
+    assert_eq!(
+        shell_event_digest.schema_version,
+        BERKELEY_APP_SHELL_EVENT_DIGEST_SCHEMA_VERSION
+    );
+    assert!(!shell_event_digest.ready);
+    assert_eq!(shell_event_digest.startup_route, "blocked");
+    assert_eq!(shell_event_digest.severity, "error");
+    assert_eq!(
+        shell_event_digest.headline_event_id.as_deref(),
+        Some("shell.status")
+    );
+    assert_eq!(
+        shell_event_digest.primary_action_id.as_deref(),
+        Some("launch.diagnostics")
+    );
+    let mut expected_attention_event_ids = vec![
+        "shell.status".to_string(),
+        "shell.route.blocked".to_string(),
+        "shell.diagnostics".to_string(),
+    ];
+    if handoff.readiness_report.repaired_state {
+        expected_attention_event_ids.push("shell.state".to_string());
+    }
+    assert_eq!(
+        shell_event_digest.attention_event_count,
+        expected_attention_event_ids.len()
+    );
+    assert_eq!(
+        shell_event_digest.attention_event_ids,
+        expected_attention_event_ids
+    );
+    assert_eq!(shell_event_digest.metric_event_count, 3);
+    assert_eq!(shell_event_digest.diagnostic_count, 1);
+    assert_eq!(
+        shell_event_digest.artifact_capability_count,
+        handoff.package_manifest.artifact_capabilities.len()
+    );
+
+    let shell_event_digest_payload: serde_json::Value = serde_json::from_str(
+        &app.app_shell_event_digest_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        }),
+    )
+    .expect("blocked shell event digest JSON should parse");
+    assert_eq!(shell_event_digest_payload["ready"], false);
+    assert_eq!(shell_event_digest_payload["startupRoute"], "blocked");
+    assert_eq!(shell_event_digest_payload["severity"], "error");
+    assert_eq!(
+        shell_event_digest_payload["attentionEventCount"].as_u64(),
+        Some(shell_event_digest.attention_event_count as u64)
+    );
+    assert_eq!(
+        shell_event_digest_payload["attentionEventIds"][1],
+        "shell.route.blocked"
+    );
+    assert_eq!(
+        shell_event_digest_payload["primaryActionId"],
         "launch.diagnostics"
     );
 }
