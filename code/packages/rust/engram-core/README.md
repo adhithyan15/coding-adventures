@@ -199,7 +199,8 @@ prefix options to create deterministic cards.
 `export_cards_anki_basic_tsv` and `import_anki_basic_tsv` cover Anki Basic
 front/back text files with import headers (`#separator`, `#html`, `#notetype`,
 `#deck`, and `#columns`) and quoted fields containing separators, newlines, or
-quotes.
+quotes. Named Anki separators include tab, comma, semicolon, pipe, colon, and
+space, plus single-character custom separators.
 `import_anki_notes_tsv` and `export_notes_anki_tsv` use the note/template model
 instead: imported Basic rows produce `NoteType`, `Note`, and materialized
 lineage cards, Basic-and-reversed note types produce forward and reverse

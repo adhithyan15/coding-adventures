@@ -643,6 +643,8 @@ fn anki_separator_value(value: &str, row: usize) -> Result<char, CsvError> {
         "tab" | "\\t" => Ok('\t'),
         "comma" => Ok(','),
         "semicolon" => Ok(';'),
+        "pipe" => Ok('|'),
+        "colon" => Ok(':'),
         "space" => Ok(' '),
         _ if trimmed.chars().count() == 1 => Ok(trimmed.chars().next().unwrap()),
         _ => Err(csv_error(
@@ -1174,6 +1176,12 @@ mod tests {
         assert_eq!(cards[0].back, "hola");
         assert_eq!(cards[1].front, "amma");
         assert_eq!(cards[1].back, "mother");
+
+        let pipe_text =
+            "#separator:pipe\n#html:false\n#notetype:Basic\n#columns:Front|Back\nhej|hello\n";
+        let pipe_cards = import_anki_basic_tsv(pipe_text, &options).unwrap();
+        assert_eq!(pipe_cards[0].front, "hej");
+        assert_eq!(pipe_cards[0].back, "hello");
     }
 
     #[test]
@@ -1293,6 +1301,11 @@ mod tests {
         assert_eq!(imported.notes[0].fields[1].value, "hello");
         assert_eq!(imported.notes[0].tags, vec!["imported", "spanish", "latin"]);
         assert_eq!(imported.cards[0].front, "hola;salve");
+
+        let colon_text = "#separator:colon\n#notetype:Basic\n#columns:Front:Back\namma:mother\n";
+        let colon_imported = import_anki_notes_tsv(colon_text, &options).unwrap();
+        assert_eq!(colon_imported.notes[0].fields[0].value, "amma");
+        assert_eq!(colon_imported.notes[0].fields[1].value, "mother");
     }
 
     #[test]
