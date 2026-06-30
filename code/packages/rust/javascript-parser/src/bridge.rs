@@ -1333,9 +1333,24 @@ fn convert_unary_expression(node: &GrammarASTNode) -> Result<Expression, BridgeE
         .first()
         .ok_or_else(|| internal(node, "unary_expression: missing argument"))?;
     match op {
-        // No prefix operator token ⇒ this is the `postfix_expression`
-        // alternative; pass the single operand straight through.
-        None => convert_expression(arg_n),
+        // No RECOGNIZED prefix operator. Either this is the genuine
+        // `postfix_expression` pass-through alternative (just the operand), OR a
+        // prefix `++`/`--` whose token `unary_operator_from_str` deliberately
+        // does NOT map (an UpdateExpression is Phase 2, not in the Phase 1 AST).
+        // The two must be distinguished: a bare operand passes through, but a
+        // prefix update operator must be REJECTED — silently returning the
+        // operand drops the `++`/`--` (`++a` → `a`), a miscompile. Rejecting it
+        // makes closurec fall back to identity passthrough, exactly as the
+        // postfix `a++` form already does in `convert_postfix_expression`.
+        None => {
+            if has_token(node, "++") || has_token(node, "--") {
+                return Err(BridgeError::UnsupportedSyntax {
+                    rule: "UpdateExpression".to_string(),
+                    location: loc(node),
+                });
+            }
+            convert_expression(arg_n)
+        }
         Some(operator) => Ok(Expression::UnaryExpression(UnaryExpression {
             cv: None,
             operator,
@@ -2375,6 +2390,28 @@ mod tests {
             matches!(only_expr(&p), Expression::Identifier(_)),
             "pass-through operand must not gain a spurious UnaryExpression"
         );
+    }
+
+    #[test]
+    fn prefix_update_operators_are_rejected_not_dropped() {
+        // Prefix `++`/`--` (UpdateExpression) are not representable in the
+        // Phase-1 AST. They MUST be rejected — returning the bare operand would
+        // silently drop the operator (`++a` → `a`), a miscompile. Rejection lets
+        // closurec fall back to identity passthrough, matching the postfix
+        // `a++` form (which `convert_postfix_expression` already rejects).
+        assert!(bridge("++a;").is_err(), "prefix ++ must be rejected, not dropped");
+        assert!(bridge("--a;").is_err(), "prefix -- must be rejected, not dropped");
+        assert!(bridge("++a.b;").is_err(), "prefix ++ on member must be rejected");
+        // Genuine unary prefix operators are unaffected and still convert.
+        assert!(bridge("-a;").is_ok());
+        assert!(bridge("!a;").is_ok());
+        assert!(bridge("typeof a;").is_ok());
+        // Additive-with-unary-sign (`a + +b`, `a - -b`) must NOT be rejected:
+        // these are SEPARATE `+`/`-` tokens, never a single `++`/`--` token, so
+        // the shallow `has_token` check cannot false-positive on them. Pin this
+        // invariant against a future change to `has_token`'s search depth.
+        assert!(bridge("a + +b;").is_ok(), "additive + unary plus must convert");
+        assert!(bridge("a - -b;").is_ok(), "additive + unary minus must convert");
     }
 
     // -----------------------------------------------------------------------
