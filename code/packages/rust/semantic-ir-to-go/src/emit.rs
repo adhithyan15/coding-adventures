@@ -213,12 +213,26 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             emit_for_each(out, var, iter, body, indent)
         }
         // ── SIR16 indexed assignment (Sequences/Maps) ───────────────
-        // `Feature::Sequences`/`Feature::Maps` are not accepted by this
-        // backend, so a module using `SeqSet`/`MapSet` is rejected at
-        // the capability check before emit.  Reaching these arms is a
-        // bug.
-        Stmt::SeqSet { span, .. } | Stmt::MapSet { span, .. } => {
-            panic!("go backend reached SIR16 Seq/Map statement at {} — capability check should have rejected it", span);
+        // `seq[index] = value` mutates the shared backing slice in place
+        // via `_sir_seq_set`; the returned value is discarded (`_ = …`).
+        Stmt::SeqSet { seq, index, value, .. } => {
+            let _ = write!(out, "{}_ = _sir_seq_set(", pad);
+            emit_expr(out, seq, indent);
+            out.push_str(", ");
+            emit_expr(out, index, indent);
+            out.push_str(", ");
+            emit_expr(out, value, indent);
+            out.push_str(")\n");
+        }
+        // `map[key] = value` inserts/overwrites via `_sir_map_set`.
+        Stmt::MapSet { map, key, value, .. } => {
+            let _ = write!(out, "{}_ = _sir_map_set(", pad);
+            emit_expr(out, map, indent);
+            out.push_str(", ");
+            emit_expr(out, key, indent);
+            out.push_str(", ");
+            emit_expr(out, value, indent);
+            out.push_str(")\n");
         }
         // An `Assign` to an Instance/ClassVar/Const/Builtin scope: those
         // scopes belong to SIR17 features this backend does not accept
@@ -384,18 +398,65 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             emit_expr(out, rhs, indent);
             out.push_str(" } }()");
         }
-        // Remaining SIR16+ expression kinds — Go backend hasn't been
-        // extended to these yet (Sequences/Maps land in a later PR;
-        // `StrConcat` is SIR18 string interpolation).  Their features
-        // are undeclared, so the capability check rejects such modules
-        // before emit; reaching this arm is an internal bug.
-        Expr::SeqLit { span, .. }
-        | Expr::SeqIndex { span, .. }
-        | Expr::SeqLen { span, .. }
-        | Expr::MapLit { span, .. }
-        | Expr::MapGet { span, .. }
-        | Expr::StrConcat { span, .. } => {
-            panic!("go backend reached SIR16+ expression at {} — capability check should have rejected it", span);
+        // ── SIR16: sequences ───────────────────────────────────────
+        // `SeqLit` builds a fresh shared sequence from its items via the
+        // runtime `_sir_seq_lit` helper; `SeqIndex`/`SeqLen` read through
+        // `_sir_seq_index`/`_sir_seq_len`.  All keep the `Value` model —
+        // the seq is pointer-backed, so a `VarRef` to it copies the shared
+        // handle (and observes later `SeqSet` mutations).
+        Expr::SeqLit { items, .. } => {
+            out.push_str("_sir_seq_lit([]Value{");
+            emit_args(out, items, indent);
+            out.push_str("})");
+        }
+        Expr::SeqIndex { seq, index, .. } => {
+            out.push_str("_sir_seq_index(");
+            emit_expr(out, seq, indent);
+            out.push_str(", ");
+            emit_expr(out, index, indent);
+            out.push(')');
+        }
+        Expr::SeqLen { seq, .. } => {
+            out.push_str("_sir_seq_len(");
+            emit_expr(out, seq, indent);
+            out.push(')');
+        }
+        // ── SIR16: maps ────────────────────────────────────────────
+        // `MapLit` builds an insertion-ordered map from its `(key, value)`
+        // entries; the keys and values are emitted as two parallel
+        // `[]Value` slices so the runtime `_sir_map_lit` can zip them
+        // (Go has no tuple literal).  `MapGet` reads through `_sir_map_get`
+        // (missing key ⇒ `nil`).
+        Expr::MapLit { entries, .. } => {
+            out.push_str("_sir_map_lit([]Value{");
+            for (i, entry) in entries.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                emit_expr(out, &entry.key, indent);
+            }
+            out.push_str("}, []Value{");
+            for (i, entry) in entries.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                emit_expr(out, &entry.value, indent);
+            }
+            out.push_str("})");
+        }
+        Expr::MapGet { map, key, .. } => {
+            out.push_str("_sir_map_get(");
+            emit_expr(out, map, indent);
+            out.push_str(", ");
+            emit_expr(out, key, indent);
+            out.push(')');
+        }
+        // The only remaining unsupported expression is `StrConcat` (SIR18
+        // string interpolation).  Its feature is undeclared, so the
+        // capability check rejects such modules before emit; reaching this
+        // arm is an internal bug.
+        Expr::StrConcat { span, .. } => {
+            panic!("go backend reached SIR18 str-concat expression at {} — capability check should have rejected it", span);
         }
     }
 }
@@ -614,13 +675,14 @@ fn emit_for_range(
     let _ = writeln!(out, "{}}}", pad);
 }
 
-/// `for var in iter` — iterate a sequence value.  This backend has no
-/// dedicated `Seq` value yet (Sequences land in a later PR), so a
-/// sequence is the classic cons-list (a `Pair`-chain terminated by
-/// `nil`).  The runtime `_sir_seq_iter` helper flattens that chain into
-/// a `[]Value`; the loop binds each element to `var`.  A `_ = <var>`
-/// guard silences Go's unused-variable check when the body ignores the
-/// element.  Mirrors the Rust backend's `seq_iter` approach.
+/// `for var in iter` — iterate a sequence value.  The runtime
+/// `_sir_seq_iter` helper flattens the iterable into a `[]Value`,
+/// handling **both** sequence shapes uniformly: a real `*Seq`
+/// (`Feature::Sequences`, e.g. `for x in [1,2,3]`) is snapshotted
+/// element-wise, while the classic cons-list (a `Pair`-chain terminated
+/// by `nil`) is walked car-by-car.  The loop binds each element to `var`;
+/// a `_ = <var>` guard silences Go's unused-variable check when the body
+/// ignores the element.  Mirrors the Rust backend's `seq_iter` approach.
 fn emit_for_each(out: &mut String, var: &str, iter: &Expr, body: &Block, indent: usize) {
     let pad = indent_str(indent);
     let v = sanitize_ident(var);
@@ -1096,6 +1158,141 @@ mod tests {
             1,
         );
         assert!(out.contains("_ = Value(int64(9))"), "got: {out}");
+    }
+
+    // ── SIR16 Sequences + Maps ─────────────────────────────────────
+
+    #[test]
+    fn emit_seq_lit_builds_value_slice() {
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::SeqLit { items: vec![ilit(1), ilit(2), ilit(3)], span: s() },
+            0,
+        );
+        assert_eq!(
+            out,
+            "_sir_seq_lit([]Value{Value(int64(1)), Value(int64(2)), Value(int64(3))})"
+        );
+    }
+
+    #[test]
+    fn emit_empty_seq_lit() {
+        let mut out = String::new();
+        emit_expr(&mut out, &Expr::SeqLit { items: vec![], span: s() }, 0);
+        assert_eq!(out, "_sir_seq_lit([]Value{})");
+    }
+
+    #[test]
+    fn emit_seq_index_reads_element() {
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::SeqIndex {
+                seq: Box::new(var_local("xs")),
+                index: Box::new(ilit(0)),
+                span: s(),
+            },
+            0,
+        );
+        assert_eq!(out, "_sir_seq_index(xs, Value(int64(0)))");
+    }
+
+    #[test]
+    fn emit_seq_len_reads_length() {
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::SeqLen { seq: Box::new(var_local("xs")), span: s() },
+            0,
+        );
+        assert_eq!(out, "_sir_seq_len(xs)");
+    }
+
+    #[test]
+    fn emit_map_lit_splits_keys_and_values() {
+        // Keys and values are emitted as two parallel `[]Value` slices so
+        // the runtime can zip them (Go has no tuple literal).
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::MapLit {
+                entries: vec![
+                    semantic_ir::nodes::MapEntry {
+                        key: Expr::StrLit { value: "a".into(), span: s() },
+                        value: ilit(1),
+                    },
+                    semantic_ir::nodes::MapEntry {
+                        key: Expr::StrLit { value: "b".into(), span: s() },
+                        value: ilit(2),
+                    },
+                ],
+                span: s(),
+            },
+            0,
+        );
+        assert_eq!(
+            out,
+            "_sir_map_lit([]Value{Value(\"a\"), Value(\"b\")}, []Value{Value(int64(1)), Value(int64(2))})"
+        );
+    }
+
+    #[test]
+    fn emit_empty_map_lit() {
+        let mut out = String::new();
+        emit_expr(&mut out, &Expr::MapLit { entries: vec![], span: s() }, 0);
+        assert_eq!(out, "_sir_map_lit([]Value{}, []Value{})");
+    }
+
+    #[test]
+    fn emit_map_get_reads_value() {
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::MapGet {
+                map: Box::new(var_local("d")),
+                key: Box::new(Expr::StrLit { value: "k".into(), span: s() }),
+                span: s(),
+            },
+            0,
+        );
+        assert_eq!(out, "_sir_map_get(d, Value(\"k\"))");
+    }
+
+    #[test]
+    fn emit_seq_set_mutates_in_place() {
+        let mut out = String::new();
+        emit_stmt(
+            &mut out,
+            &Stmt::SeqSet {
+                seq: var_local("xs"),
+                index: ilit(0),
+                value: ilit(9),
+                span: s(),
+            },
+            1,
+        );
+        assert_eq!(out, "\t_ = _sir_seq_set(xs, Value(int64(0)), Value(int64(9)))\n");
+    }
+
+    #[test]
+    fn emit_map_set_inserts_or_overwrites() {
+        let mut out = String::new();
+        emit_stmt(
+            &mut out,
+            &Stmt::MapSet {
+                map: var_local("d"),
+                key: Expr::StrLit { value: "k".into(), span: s() },
+                value: ilit(1),
+                span: s(),
+            },
+            1,
+        );
+        assert_eq!(out, "\t_ = _sir_map_set(d, Value(\"k\"), Value(int64(1)))\n");
+    }
+
+    fn var_local(name: &str) -> Expr {
+        Expr::VarRef { name: name.into(), scope: Scope::Local, span: s() }
     }
 
     #[test]
