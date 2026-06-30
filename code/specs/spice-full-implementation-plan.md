@@ -33,15 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell handoff.
+1. Rust Berkeley Mosaic app shell status.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app shell handoffs and JSON helpers that package
-     the manifest, startup summary, launch plan, and readiness report into one
-     compact bootstrap envelope.
-   - Preserve package capabilities, route readiness, launch entry actions,
-     panel/action availability counts, diagnostic severity counts, repaired
-     persisted editor-state flags, and blocking reason so Mosaic, WebAssembly,
-     and product shells can start without walking the full host-surface export.
+   - Add schema-versioned Rust app shell statuses and JSON helpers that derive a
+     compact route, severity, status message, entry action, and diagnostic counts
+     from Berkeley app shell handoffs.
+   - Preserve package name, source fingerprint, ready/blocked route, entry panel
+     and primary action, diagnostic severity counts, and blocking reason so
+     Mosaic, WebAssembly, and product shells can render startup chrome and
+     telemetry without inspecting the full launch/readiness payload.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1573,6 +1573,18 @@ the Rust, Python, and TypeScript surfaces together.
      availability counts, diagnostic severity counts, repaired persisted
      editor-state flags, and blocking reason so Mosaic, WebAssembly, and product
      shells can gate startup and telemetry without walking every host panel.
+
+149. Rust Berkeley Mosaic app shell handoff.
+   - Status: completed in PR 7012.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell handoffs plus JSON helpers that package the manifest, startup
+     summary, launch plan, and readiness report into one compact bootstrap
+     envelope.
+   - The handoff preserves package capabilities, route readiness, launch entry
+     actions, panel/action availability counts, diagnostic severity counts,
+     repaired persisted editor-state flags, and blocking reason so Mosaic,
+     WebAssembly, and product shells can start without walking the full
+     host-surface export.
 
 ## Backlog
 

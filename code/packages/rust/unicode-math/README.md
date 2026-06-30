@@ -19,6 +19,7 @@ ASCII syntax (AsciiMath), and raw Unicode.
 | `x²`, `x⁻¹`, `x¹⁰`, `x^2` | `Bin(Pow)` (Unicode superscripts **or** the ASCII `^` operator) |
 | `a₁`, `a₁²`, `a_i` | `Subscript` / `Pow(Subscript)` (Unicode glyph **or** ASCII `_`) |
 | `∑_(i=1)^n i`, `∫_a^b f`, `∏ x` | `BigOp { op, lower, upper, body }` (`∑ ∏ ∫ ∮ ∐`) |
+| `sin x`, `log(x)`, `arcsin x` | `Call { func, arg }` (named functions; longest-match, so `sinx` ⇒ `sin·x`) |
 | `1/2`, `½`, `⅔` | `Frac` (built-up **and** vulgar-fraction glyphs) |
 | `√x`, `∛x`, `∜x` | `Root { degree, radicand }` |
 | `a + b`, `a − b`, `a × b`, `a ⋅ b`, `a ÷ b` | `Bin(Add/Sub/Mul/Div)` |
@@ -53,7 +54,8 @@ dependency cycle); a consumer registers it.
 ## Scope
 
 PR-1 covered numbers/symbols/scripts/fractions/roots/relations/±∓; **PR-2** adds the big operators
-`∑ ∏ ∫ ∮ ∐` (with optional bounds) and the explicit ASCII script operators `^`/`_`. **Out of scope**
-(a clean spanned error, never a panic — tracked for PR-3): named functions (`sin`, `log`), matrices,
-and embedded `\text`. As in AsciiMath there are no multi-letter variables: a letter run like `xy`
-is the product `x·y` (write distinct symbols, or use Greek/constant glyphs).
+`∑ ∏ ∫ ∮ ∐` (with optional bounds) and the explicit ASCII script operators `^`/`_`; **PR-3** adds
+**named functions** (`sin cos tan … ln log exp`, longest-match so `sinx` ⇒ `sin·x`). **Out of scope**
+(a clean spanned error, never a panic — tracked for PR-4): matrices and embedded `\text`. As in
+AsciiMath there are no multi-letter variables: a non-function letter run like `xy` is the product
+`x·y` (write distinct symbols, or use Greek/constant glyphs).

@@ -52,12 +52,15 @@ pub struct PythonLowerError {
 `compile_source` parses then lowers; both parse and lower failures are
 surfaced as `PythonLowerError`.
 
-## Milestone status — M1 (literals)
+## Milestone status — M2 (variables, assignment, operators)
 
-M1 is the crate skeleton plus **literal lowering**.  The whole program
-is wrapped in a synthesised `main` function whose block value is the
-program's final top-level expression (or `NilLit` for an empty
-program); earlier top-level expressions become `ExprStmt`s.
+The whole program is wrapped in a synthesised `main` function whose
+block value is the program's final top-level expression (or `NilLit`
+for an empty program, or when the last statement is an assignment);
+earlier top-level statements become `ExprStmt`s (bare expressions) or
+binding / `Assign` statements.
+
+### Literals (M1, still supported)
 
 | Python source        | SIR lowering            | Feature declared |
 |----------------------|-------------------------|------------------|
@@ -68,29 +71,66 @@ program); earlier top-level expressions become `ExprStmt`s.
 | `"hi"`, `'world'`    | `StrLit { value }`      | `Strings`        |
 
 `-7` / `-2.5` are constant-folded: a `factor( "-", numeric-literal )`
-becomes a negative literal.  Unary minus on a *non*-literal is
-deferred.
+becomes a negative literal.
 
-The manifest declares **exactly** the features observed (`Floats` only
-when a float literal appears, `Strings` only when a string appears), so
-a minimal int-only program declares no extra features.  Module metadata
-records `source_language = "python"` and
+### Variables & assignment (M2)
+
+| Python source                | SIR lowering                              | Feature declared   |
+|------------------------------|-------------------------------------------|--------------------|
+| `x` (bound earlier)          | `VarRef { name, scope: Local }`           | —                  |
+| `x` (not bound)              | error: `unresolved name `x``              | —                  |
+| `x = 1` (first occurrence)   | `LetStarBinding { name, value }`          | —                  |
+| `x = 2` (already declared)   | `Assign { name, scope: Local, value }`    | `MutableBindings`  |
+
+Assignment uses **first-occurrence detection** (per scope): the first
+`x = …` declares the name, later ones re-bind it.  The frontend emits
+`LetStarBinding` (sequential `let*`) for the declaration so a later
+RHS can see an earlier binding — `x = 1` then `y = x + 1` resolves `x`
+correctly.  The RHS is lowered before the name is declared, so `x = x`
+reports `x` as unresolved (matching Python's `NameError`).
+
+### Operators (M2)
+
+| Python source                | SIR lowering                              | Feature declared   |
+|------------------------------|-------------------------------------------|--------------------|
+| `a + b`, `a - b`             | `BuiltinCall("+" / "-", [a, b])`          | —                  |
+| `a * b`, `a / b`, `a % b`    | `BuiltinCall("*" / "/" / "%", [a, b])`    | —                  |
+| `a == b`, `a != b`           | `BuiltinCall("=" / "!=", [a, b])`         | —                  |
+| `a < b`, `>`, `<=`, `>=`     | `BuiltinCall("<" / ">" / "<=" / ">=", …)` | —                  |
+| `not x`                      | `BuiltinCall("not", [x])`                 | —                  |
+| `-x` (non-literal)           | `BuiltinCall("neg", [x])`                 | —                  |
+| `+x`                         | identity (operand returned unchanged)     | —                  |
+| `a and b`                    | `LogicalAnd { lhs, rhs }`                 | `ShortCircuit`     |
+| `a or b`                     | `LogicalOr { lhs, rhs }`                  | `ShortCircuit`     |
+
+Binary operators are left-associative and respect Python precedence
+(`a + b * c` → `a + (b * c)`).  `and` / `or` use the dedicated
+short-circuit nodes rather than `BuiltinCall`, so the right operand is
+not eagerly evaluated.  Operator lowering reuses M1's depth-tracked
+peel (`MAX_EXPR_DEPTH`): every recursive descent increments the depth
+counter, so pathologically deep input yields a clean `PythonLowerError`
+instead of a native stack overflow.
+
+The manifest declares **exactly** the features observed.  Module
+metadata records `source_language = "python"` and
 `sir_version = semantic_ir::CURRENT_SIR_VERSION`.  Every lowered module
 passes `semantic_ir::validate`.
 
 ### Deferred (later milestones)
 
-Everything past literals returns a clear `PythonLowerError`
-(`"unsupported in M1: <rule>"`) so later milestones slot in where the
-error is raised today:
+Everything past M2 returns a clear `PythonLowerError`
+(`"unsupported: <rule> (deferred …)"`) so later milestones slot in
+where the error is raised today:
 
-- variable references (`x`) and assignment (`x = 1`) — M2
-- arithmetic / comparison / boolean operators — M3
 - control flow (`if` / `while` / `for`) — M3
-- functions (`def`), lambdas, calls — M4
-- sequences, maps, indexing — M5
+- functions (`def`), lambdas, calls (`f(...)`, `print` / `len` /
+  `range`) — M3/M4
+- sequences, maps, indexing — M4/M5
+- multi-target / chained assignment, attribute / subscript targets,
+  bitwise operators, the power operator (`**`)
 - and the full SIR17 "out of scope" list (classes, exceptions,
-  generators, comprehensions, decorators, `with`, `async`, imports).
+  generators, comprehensions, decorators, `with`, `async`, imports,
+  `global` / `nonlocal`, f-strings).
 
 ## Testing & coverage
 
@@ -98,10 +138,12 @@ error is raised today:
 cargo test -p python-to-semantic-ir
 ```
 
-The suite has one positive test per literal kind (int, negative int,
-float, negative float, `True`, `False`, `None`, double- and
-single-quoted strings), top-level structure tests (empty program,
-multi-statement `ExprStmt` + value split, metadata, minimal manifest),
-a `validate` round-trip across every literal shape, and error-path
-tests (assignment, bare name, operator, parse error, error position).
-This exercises ≥ 90% of the M1 surface.
+The suite (35 tests) covers: one positive test per literal kind; the
+M2 operators (each arithmetic, comparison, unary, and logical form),
+left-associativity and precedence; variable resolution,
+let-then-reference, and let-vs-reassign first-occurrence; the
+short-circuit-node shape; top-level structure (empty program,
+`ExprStmt` + value split, metadata, minimal manifest); a `validate`
+round-trip across every literal and M2 construct; and error paths
+(unresolved name, self-reference, `global`, parse error, error
+position).  This exercises ≥ 90% of the M2 surface.

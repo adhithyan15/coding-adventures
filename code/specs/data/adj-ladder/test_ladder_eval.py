@@ -42,6 +42,7 @@ SELF_CONTAINED_RUNGS = (
     "rung6_clinical_differential",
     "rung6b_management",
     "rung6c_formulary_cost",
+    "rung7_risk_measures",
 )
 
 

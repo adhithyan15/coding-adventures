@@ -34,6 +34,9 @@ pub enum TokenKind {
     Num(String),
     /// A single variable letter, or the canonical name of a constant/Greek glyph (`"pi"`).
     Sym(String),
+    /// A named function recognised in an ASCII letter run — `"sin"`, `"log"`, `"exp"`, … The
+    /// parser maps it to [`math_frontend::Func`] and applies it to the following atom.
+    Func(String),
     /// A superscript run normalised to a plain numeral (`"2"`, `"-1"`) — becomes a power.
     Super(String),
     /// A subscript run normalised to a plain numeral (`"1"`) — becomes a subscript.
@@ -151,6 +154,35 @@ fn vulgar_fraction(c: char) -> Option<(&'static str, &'static str)> {
     })
 }
 
+/// Is `name` a recognised named function? The set mirrors the AsciiMath frontend's `func_of`
+/// table so the two notations name the same functions; the parser maps each to
+/// [`math_frontend::Func`]. (Single letters are never functions, so the shortest entry is `ln`.)
+fn is_function(name: &str) -> bool {
+    matches!(
+        name,
+        "sin" | "cos" | "tan" | "cot" | "sec" | "csc"
+            | "arcsin" | "arccos" | "arctan"
+            | "sinh" | "cosh" | "tanh"
+            | "ln" | "log" | "exp"
+            | "min" | "max" | "gcd" | "lcm" | "det"
+    )
+}
+
+/// The longest function name (in codepoints) that is a prefix of `chars[k..run_end]`, or `None`.
+/// Greedy longest-match (so `arcsin` wins over `arc`-then-letters, and `sin` is taken whole). The
+/// run is pure ASCII, so a codepoint count equals a byte count and the candidate slice is safe.
+fn function_prefix_len(chars: &[(usize, char)], k: usize, run_end: usize) -> Option<usize> {
+    const MAX_FN_LEN: usize = 6; // "arcsin" / "arccos" / "arctan"
+    let hi = (run_end - k).min(MAX_FN_LEN);
+    for len in (2..=hi).rev() {
+        let cand: String = chars[k..k + len].iter().map(|&(_, ch)| ch).collect();
+        if is_function(&cand) {
+            return Some(len);
+        }
+    }
+    None
+}
+
 /// Tokenize a unicode-math source string. Total and panic-free: returns the token list
 /// (terminated by [`TokenKind::Eof`]) or a single spanned [`FrontendError`].
 pub fn tokenize(src: &str) -> Result<Vec<Token>, FrontendError> {
@@ -204,6 +236,33 @@ pub fn tokenize(src: &str) -> Result<Vec<Token>, FrontendError> {
             i = j;
             continue;
         }
+        // ── ASCII letter runs → functions (longest-match) + single-letter variables ──────────
+        // A run of ASCII letters is scanned and carved by greedy longest-match against the
+        // function-name table: a recognised name (`sin`, `arcsin`, `log`, …) becomes one `Func`
+        // token; any other leading letter becomes a single `Sym` (so `xy` ⇒ `x·y`, the same
+        // single-letter-variable convention as before, and `sinx` ⇒ `sin`·`x`). Greek/constant
+        // glyphs are multi-byte and handled below, so a run here is pure ASCII — byte offsets
+        // from `char_indices` are char boundaries and slicing is panic-free.
+        if c.is_ascii_alphabetic() {
+            let mut run_end = i;
+            while matches!(chars.get(run_end), Some(&(_, ch)) if ch.is_ascii_alphabetic()) {
+                run_end += 1;
+            }
+            let mut k = i;
+            while k < run_end {
+                let s = chars[k].0;
+                if let Some(flen) = function_prefix_len(&chars, k, run_end) {
+                    let name: String = chars[k..k + flen].iter().map(|&(_, ch)| ch).collect();
+                    toks.push(Token { kind: TokenKind::Func(name), span: (s, end_of(k + flen)) });
+                    k += flen;
+                } else {
+                    toks.push(Token { kind: TokenKind::Sym(chars[k].1.to_string()), span: (s, end_of(k + 1)) });
+                    k += 1;
+                }
+            }
+            i = run_end;
+            continue;
+        }
         // ── single-codepoint tokens ──────────────────────────────────────────────────────────
         let one = (start, end_of(i + 1));
         if let Some((n, d)) = vulgar_fraction(c) {
@@ -217,7 +276,6 @@ pub fn tokenize(src: &str) -> Result<Vec<Token>, FrontendError> {
             continue;
         }
         let kind = match c {
-            'a'..='z' | 'A'..='Z' => TokenKind::Sym(c.to_string()),
             '+' => TokenKind::Plus,
             '-' | '−' => TokenKind::Minus,
             '×' | '⋅' | '*' => TokenKind::Times,
@@ -370,6 +428,24 @@ mod tests {
             TokenKind::Sym("x".into()), TokenKind::Caret, TokenKind::Num("2".into()), TokenKind::Eof,
         ]);
         assert_eq!(kinds("a_i")[1], TokenKind::Underscore);
+    }
+
+    #[test]
+    fn function_runs_split_longest_match() {
+        // PR-3: an ASCII letter run carves into functions + single-letter variables.
+        assert_eq!(kinds("sin"), vec![TokenKind::Func("sin".into()), TokenKind::Eof]);
+        assert_eq!(kinds("sinx"), vec![
+            TokenKind::Func("sin".into()), TokenKind::Sym("x".into()), TokenKind::Eof,
+        ]);
+        assert_eq!(kinds("arcsin")[0], TokenKind::Func("arcsin".into())); // longest wins
+        // a non-function run is single-letter variables (so `xy` ⇒ x·y, unchanged).
+        assert_eq!(kinds("xy"), vec![
+            TokenKind::Sym("x".into()), TokenKind::Sym("y".into()), TokenKind::Eof,
+        ]);
+        // sub-token spans are correct.
+        let t = tokenize("sinx").unwrap();
+        assert_eq!(t[0].span, (0, 3));
+        assert_eq!(t[1].span, (3, 4));
     }
 
     #[test]
