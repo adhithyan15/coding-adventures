@@ -319,6 +319,26 @@ fn emit_function(out: &mut String, f: &Function) {
             }
             ParamKind::Required | ParamKind::KwRest => {
                 let _ = write!(out, "{}: __Sir.Val", sanitize_ident(&p.name));
+                // P2b default parameters.  A SIR default is evaluated
+                // per-call in the callee's parameter scope and may reference
+                // EARLIER params — exactly TypeScript's native default-value
+                // semantics.  So we emit the default expression verbatim
+                // through the ordinary expression emitter (which renders an
+                // earlier param's `VarRef` as a plain identifier, valid in
+                // TS):  `name: __Sir.Val = <default>`.  The call side never
+                // pads omitted trailing args (the validator allows omitting
+                // them), so these native defaults are what fill them in.
+                //
+                // Only `Required` params carry a meaningful default: a `Rest`
+                // param matched the arm above, and a `KwRest` (`**opts`) has
+                // no default surface form, so its `default` (if any) is
+                // ignored here — consistent with the v0 object fallback.
+                if p.kind == ParamKind::Required {
+                    if let Some(default) = &p.default {
+                        out.push_str(" = ");
+                        emit_expr(out, default, 2);
+                    }
+                }
             }
         }
     }
@@ -1727,6 +1747,53 @@ mod tests {
         emit_function(&mut out, &f);
         assert!(out.contains("function id(x: __Sir.Val): __Sir.Val"));
         assert!(out.contains("return x;"));
+    }
+
+    #[test]
+    fn emit_default_param_referencing_earlier_param() {
+        // P2b: `def f(a, b = a + 1); b; end` → TS
+        // `function f(a: __Sir.Val, b: __Sir.Val = __Sir.add(a, 1)): __Sir.Val`.
+        // The default is inlined natively and references the EARLIER param
+        // `a` (valid TS), so omitted trailing args are filled at call time.
+        let default_b = Expr::BuiltinCall {
+            name: "+".into(),
+            args: vec![
+                Expr::VarRef { name: "a".into(), scope: Scope::Param, span: s() },
+                Expr::IntLit { value: 1, span: s() },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let f = Function {
+            name: "f".into(),
+            params: vec![
+                Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+                Param {
+                    name: "b".into(),
+                    sir_type: None,
+                    kind: ParamKind::Required,
+                    default: Some(Box::new(default_b)),
+                    span: s(),
+                },
+            ],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::VarRef { name: "b".into(), scope: Scope::Param, span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_function(&mut out, &f);
+        assert!(
+            out.contains("function f(a: __Sir.Val, b: __Sir.Val = __Sir.add(a, 1)): __Sir.Val"),
+            "got:\n{}",
+            out
+        );
     }
 
     #[test]
