@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 9 \u2014 renal indices from a paired urine/plasma chemistry (acute kidney injury work-up). From four stated quantities (urine Na, plasma Na, urine Cr, plasma Cr) compute the fractional excretion of sodium (FENa = (UNa*PCr)/(PNa*UCr), as a fraction), the renal failure index (RFI = (UNa*PCr)/UCr), or the urine-to-plasma creatinine ratio (UCr/PCr). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic and the harness matches the scalar to the printed options. Contamination-safe: every index is a pure ratio of products of the four observed quantities \u2014 no constant leaks (not even the *100 of the FENa percentage, since we ask for the fraction). The five options are a family of ratios over the same quantities, so the distractors are exactly the slips students make (inverting the fractional-excretion ratio; reading the sodium U/P ratio instead of the creatinine one).",
+  "items": [
+    {
+      "id": "r9fe-01",
+      "qtype": "renal_index",
+      "stem": "A patient being worked up for acute kidney injury has a urine sodium of 20 mEq/L, a plasma sodium of 140 mEq/L, a urine creatinine of 80 mg/dL, and a plasma creatinine of 2 mg/dL. What is the fractional excretion of sodium (FENa), expressed as a fraction?",
+      "program": "observe una(20)\nobserve pna(140)\nobserve ucr(80)\nobserve pcr(2)\nlet answer = (una * pcr) / (pna * ucr)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.0035714285714285713,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 280.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.14285714285714285,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r9fe-02",
+      "qtype": "renal_index",
+      "stem": "A patient being worked up for acute kidney injury has a urine sodium of 20 mEq/L, a plasma sodium of 140 mEq/L, a urine creatinine of 80 mg/dL, and a plasma creatinine of 2 mg/dL. What is the renal failure index (RFI)?",
+      "program": "observe una(20)\nobserve pna(140)\nobserve ucr(80)\nobserve pcr(2)\nlet answer = (una * pcr) / ucr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.0035714285714285713,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 280.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.14285714285714285,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r9fe-03",
+      "qtype": "renal_index",
+      "stem": "A patient being worked up for acute kidney injury has a urine sodium of 20 mEq/L, a plasma sodium of 140 mEq/L, a urine creatinine of 80 mg/dL, and a plasma creatinine of 2 mg/dL. What is the urine-to-plasma creatinine ratio?",
+      "program": "observe una(20)\nobserve pna(140)\nobserve ucr(80)\nobserve pcr(2)\nlet answer = ucr / pcr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.0035714285714285713,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 280.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.14285714285714285,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r9fe-04",
+      "qtype": "renal_index",
+      "stem": "A patient being worked up for acute kidney injury has a urine sodium of 40 mEq/L, a plasma sodium of 135 mEq/L, a urine creatinine of 100 mg/dL, and a plasma creatinine of 4 mg/dL. What is the fractional excretion of sodium (FENa), expressed as a fraction?",
+      "program": "observe una(40)\nobserve pna(135)\nobserve ucr(100)\nobserve pcr(4)\nlet answer = (una * pcr) / (pna * ucr)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 25.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 84.375,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.011851851851851851,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.2962962962962963,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r9fe-05",
+      "qtype": "renal_index",
+      "stem": "A patient being worked up for acute kidney injury has a urine sodium of 40 mEq/L, a plasma sodium of 135 mEq/L, a urine creatinine of 100 mg/dL, and a plasma creatinine of 4 mg/dL. What is the renal failure index (RFI)?",
+      "program": "observe una(40)\nobserve pna(135)\nobserve ucr(100)\nobserve pcr(4)\nlet answer = (una * pcr) / ucr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.011851851851851851,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 25.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 84.375,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.2962962962962963,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r9fe-06",
+      "qtype": "renal_index",
+      "stem": "A patient being worked up for acute kidney injury has a urine sodium of 40 mEq/L, a plasma sodium of 135 mEq/L, a urine creatinine of 100 mg/dL, and a plasma creatinine of 4 mg/dL. What is the urine-to-plasma creatinine ratio?",
+      "program": "observe una(40)\nobserve pna(135)\nobserve ucr(100)\nobserve pcr(4)\nlet answer = ucr / pcr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 25.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.011851851851851851,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 84.375,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.2962962962962963,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r9fe-07",
+      "qtype": "renal_index",
+      "stem": "A patient being worked up for acute kidney injury has a urine sodium of 10 mEq/L, a plasma sodium of 145 mEq/L, a urine creatinine of 60 mg/dL, and a plasma creatinine of 3 mg/dL. What is the fractional excretion of sodium (FENa), expressed as a fraction?",
+      "program": "observe una(10)\nobserve pna(145)\nobserve ucr(60)\nobserve pcr(3)\nlet answer = (una * pcr) / (pna * ucr)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.0034482758620689655,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 290.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.06896551724137931,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r9fe-08",
+      "qtype": "renal_index",
+      "stem": "A patient being worked up for acute kidney injury has a urine sodium of 10 mEq/L, a plasma sodium of 145 mEq/L, a urine creatinine of 60 mg/dL, and a plasma creatinine of 3 mg/dL. What is the renal failure index (RFI)?",
+      "program": "observe una(10)\nobserve pna(145)\nobserve ucr(60)\nobserve pcr(3)\nlet answer = (una * pcr) / ucr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.0034482758620689655,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 290.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.06896551724137931,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r9fe-09",
+      "qtype": "renal_index",
+      "stem": "A patient being worked up for acute kidney injury has a urine sodium of 10 mEq/L, a plasma sodium of 145 mEq/L, a urine creatinine of 60 mg/dL, and a plasma creatinine of 3 mg/dL. What is the urine-to-plasma creatinine ratio?",
+      "program": "observe una(10)\nobserve pna(145)\nobserve ucr(60)\nobserve pcr(3)\nlet answer = ucr / pcr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.0034482758620689655,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 290.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.06896551724137931,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r9fe-10",
+      "qtype": "renal_index",
+      "stem": "A patient being worked up for acute kidney injury has a urine sodium of 60 mEq/L, a plasma sodium of 138 mEq/L, a urine creatinine of 120 mg/dL, and a plasma creatinine of 5 mg/dL. What is the fractional excretion of sodium (FENa), expressed as a fraction?",
+      "program": "observe una(60)\nobserve pna(138)\nobserve ucr(120)\nobserve pcr(5)\nlet answer = (una * pcr) / (pna * ucr)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 55.2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.43478260869565216,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.018115942028985508,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r9fe-11",
+      "qtype": "renal_index",
+      "stem": "A patient being worked up for acute kidney injury has a urine sodium of 60 mEq/L, a plasma sodium of 138 mEq/L, a urine creatinine of 120 mg/dL, and a plasma creatinine of 5 mg/dL. What is the renal failure index (RFI)?",
+      "program": "observe una(60)\nobserve pna(138)\nobserve ucr(120)\nobserve pcr(5)\nlet answer = (una * pcr) / ucr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.018115942028985508,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 55.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.43478260869565216,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r9fe-12",
+      "qtype": "renal_index",
+      "stem": "A patient being worked up for acute kidney injury has a urine sodium of 60 mEq/L, a plasma sodium of 138 mEq/L, a urine creatinine of 120 mg/dL, and a plasma creatinine of 5 mg/dL. What is the urine-to-plasma creatinine ratio?",
+      "program": "observe una(60)\nobserve pna(138)\nobserve ucr(120)\nobserve pcr(5)\nlet answer = ucr / pcr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.018115942028985508,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 24.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 55.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.43478260869565216,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r9fe-13",
+      "qtype": "renal_index",
+      "stem": "A patient being worked up for acute kidney injury has a urine sodium of 15 mEq/L, a plasma sodium of 142 mEq/L, a urine creatinine of 90 mg/dL, and a plasma creatinine of 1.5 mg/dL. What is the fractional excretion of sodium (FENa), expressed as a fraction?",
+      "program": "observe una(15)\nobserve pna(142)\nobserve ucr(90)\nobserve pcr(1.5)\nlet answer = (una * pcr) / (pna * ucr)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.0017605633802816902,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 568.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.1056338028169014,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r9fe-14",
+      "qtype": "renal_index",
+      "stem": "A patient being worked up for acute kidney injury has a urine sodium of 15 mEq/L, a plasma sodium of 142 mEq/L, a urine creatinine of 90 mg/dL, and a plasma creatinine of 1.5 mg/dL. What is the renal failure index (RFI)?",
+      "program": "observe una(15)\nobserve pna(142)\nobserve ucr(90)\nobserve pcr(1.5)\nlet answer = (una * pcr) / ucr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.0017605633802816902,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 568.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.1056338028169014,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r9fe-15",
+      "qtype": "renal_index",
+      "stem": "A patient being worked up for acute kidney injury has a urine sodium of 15 mEq/L, a plasma sodium of 142 mEq/L, a urine creatinine of 90 mg/dL, and a plasma creatinine of 1.5 mg/dL. What is the urine-to-plasma creatinine ratio?",
+      "program": "observe una(15)\nobserve pna(142)\nobserve ucr(90)\nobserve pcr(1.5)\nlet answer = ucr / pcr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.0017605633802816902,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 568.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.1056338028169014,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 60.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r9fe-16",
+      "qtype": "renal_index",
+      "stem": "A patient being worked up for acute kidney injury has a urine sodium of 50 mEq/L, a plasma sodium of 130 mEq/L, a urine creatinine of 75 mg/dL, and a plasma creatinine of 2.5 mg/dL. What is the fractional excretion of sodium (FENa), expressed as a fraction?",
+      "program": "observe una(50)\nobserve pna(130)\nobserve ucr(75)\nobserve pcr(2.5)\nlet answer = (una * pcr) / (pna * ucr)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.01282051282051282,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 78.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.38461538461538464,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r9fe-17",
+      "qtype": "renal_index",
+      "stem": "A patient being worked up for acute kidney injury has a urine sodium of 50 mEq/L, a plasma sodium of 130 mEq/L, a urine creatinine of 75 mg/dL, and a plasma creatinine of 2.5 mg/dL. What is the renal failure index (RFI)?",
+      "program": "observe una(50)\nobserve pna(130)\nobserve ucr(75)\nobserve pcr(2.5)\nlet answer = (una * pcr) / ucr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.01282051282051282,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 78.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.38461538461538464,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r9fe-18",
+      "qtype": "renal_index",
+      "stem": "A patient being worked up for acute kidney injury has a urine sodium of 50 mEq/L, a plasma sodium of 130 mEq/L, a urine creatinine of 75 mg/dL, and a plasma creatinine of 2.5 mg/dL. What is the urine-to-plasma creatinine ratio?",
+      "program": "observe una(50)\nobserve pna(130)\nobserve ucr(75)\nobserve pcr(2.5)\nlet answer = ucr / pcr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.01282051282051282,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 78.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.38461538461538464,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r9fe-19",
+      "qtype": "renal_index",
+      "stem": "A patient being worked up for acute kidney injury has a urine sodium of 25 mEq/L, a plasma sodium of 136 mEq/L, a urine creatinine of 50 mg/dL, and a plasma creatinine of 4 mg/dL. What is the fractional excretion of sodium (FENa), expressed as a fraction?",
+      "program": "observe una(25)\nobserve pna(136)\nobserve ucr(50)\nobserve pcr(4)\nlet answer = (una * pcr) / (pna * ucr)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 68.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.014705882352941176,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.18382352941176472,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r9fe-20",
+      "qtype": "renal_index",
+      "stem": "A patient being worked up for acute kidney injury has a urine sodium of 25 mEq/L, a plasma sodium of 136 mEq/L, a urine creatinine of 50 mg/dL, and a plasma creatinine of 4 mg/dL. What is the renal failure index (RFI)?",
+      "program": "observe una(25)\nobserve pna(136)\nobserve ucr(50)\nobserve pcr(4)\nlet answer = (una * pcr) / ucr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.014705882352941176,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 68.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.18382352941176472,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r9fe-21",
+      "qtype": "renal_index",
+      "stem": "A patient being worked up for acute kidney injury has a urine sodium of 25 mEq/L, a plasma sodium of 136 mEq/L, a urine creatinine of 50 mg/dL, and a plasma creatinine of 4 mg/dL. What is the urine-to-plasma creatinine ratio?",
+      "program": "observe una(25)\nobserve pna(136)\nobserve ucr(50)\nobserve pcr(4)\nlet answer = ucr / pcr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.014705882352941176,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 68.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.18382352941176472,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

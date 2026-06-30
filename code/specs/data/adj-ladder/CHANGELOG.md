@@ -2,6 +2,35 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.36.0] — 2026-06-30
+
+### Added — rung 9: renal indices / fractional excretion (nephrology)
+
+- **`rung9_fractional_excretion/items.json`** — **21 items** (`r9fe-01`..`r9fe-21`), the
+  renal-indices work-up of acute kidney injury. Reuses the contamination-safe shape of the
+  biostatistics family (7/7b/7c) and the pharmacokinetics rung (8): a paired urine/plasma chemistry
+  gives four observed quantities — urine Na **UNa** (mEq/L), plasma Na **PNa** (mEq/L), urine Cr
+  **UCr** (mg/dL), plasma Cr **PCr** (mg/dL).
+- The three bedside indices are **pure ratios of products** of those four quantities — exact, and
+  needing no constant:
+  **FENa** (fractional excretion of sodium) = (UNa·PCr)/(PNa·UCr), **RFI** (renal failure index) =
+  (UNa·PCr)/UCr, **U/P-Cr** (urine-to-plasma creatinine ratio) = UCr/PCr. The textbook FENa carries
+  a `×100` only to render the fraction as a percent; we ask for the **fraction itself**, so not even
+  the 100 leaks past the no-result-literals gate.
+- Each item is a `compute_dimensioned` program (`observe una/pna/ucr/pcr` + `let answer = formula`);
+  the **engine** carries the multiply/divide arithmetic via the existing `compute_dimensioned`
+  extractor — **no harness/engine change** (same machinery as rungs 4/7/7b/7c/8). Identifiers are
+  digit-free so none smuggles a literal past the leak check; some `pcr` values are non-integer (e.g.
+  `1.5`, `2.5`) and the engine computes them exactly.
+- Contamination-safe by construction: every index is a ratio of products of the four stated
+  quantities with **no structural constants**, so every program literal is grounded in the stem. The
+  five options are a tight family of ratios over the same quantities {FENa, RFI, U/P-Cr,
+  inverted-FENa, U/P-Na}, so the distractors are exactly the slips students make (inverting the
+  fractional-excretion ratio; reading the sodium U/P ratio instead of the creatinine one). Gold
+  rotates A–E; the five family values are asserted pairwise-distinct per item at build time.
+- Registered in `test_ladder_eval.py::SELF_CONTAINED_RUNGS`; `contamination_check.py` clean,
+  `ruff` clean, engine selects **21/21** gold (cached arm-B: zero wrong, zero abstain).
+
 ## [0.35.0] — 2026-06-30
 
 ### Added — rung 8: one-compartment pharmacokinetics (new quantitative clinical domain)
