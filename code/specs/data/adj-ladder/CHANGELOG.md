@@ -2,6 +2,34 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.38.0] — 2026-06-30
+
+### Added — rung 11: syndromic decision (decide + multi-hop)
+
+- **`rung11_syndromic_decision/items.json`** — **24 items** (`r11sd-01`..`r11sd-24`), the first
+  rung that is BOTH a **decision** AND genuinely **multi-hop** — moving past the arithmetic band
+  (rungs 7–10) into compose-then-decide reasoning. It fuses two proven mechanisms with **no engine
+  or harness change**:
+  - rung-3's rule-derived compound finding — `rule { head: <syndrome> when: f_a, f_b }`, which fires
+    only when BOTH findings are observed (a missing half leaves it unfired, contributing nothing);
+  - rung-6's `decision_leader` extractor — ranks the candidate diseases by posterior and returns the
+    unique leader.
+- Each item gives **five equally-likely diagnoses**. The patient fully satisfies one disease's
+  two-finding syndrome (likelihood `L_syn`) and also shows a single **flashy** finding of a rival
+  (`L_flash` < `L_syn`). Posterior(gold) = 0.2·`L_syn` strictly exceeds posterior(rival) =
+  0.2·`L_flash` and every prior-only disease (0.2), so the engine selects the fully-satisfied
+  syndrome — while a reader who **anchors** on the lone flashy clue picks the rival. The diagnosis is
+  the one backed by the COMPLETE pattern, not the loudest single finding.
+- **Synthetic** priors/LRs (the ladder is a capability benchmark, not the grounded CAS, so authored
+  numbers are fine). **Contamination-safe:** the only program literals are the priors and LRs, all
+  printed in the stem, and the answer is a disease NAME — so no result literal leaks. Per the rung-8
+  digit-in-identifier lesson, all disease/finding identifiers are **digit-free** (`diabetes_mellitus`
+  / `cobalamin_deficiency`, not `type2` / `b12`), since the contamination check reads digit-runs out
+  of identifiers and a prior-only name not echoed in the stem would otherwise flag a leak.
+- 12 clinical syndromes × 2 LR variants; gold letter rotates A–E; every item's unique leader is
+  asserted at build. Engine **24/24** cached (decision_leader selects every gold); contamination /
+  ruff / pytest clean. Added `rung11_syndromic_decision` to `SELF_CONTAINED_RUNGS`.
+
 ## [0.37.0] — 2026-06-30
 
 ### Added — rung 10: serum anion gap (acid–base)
