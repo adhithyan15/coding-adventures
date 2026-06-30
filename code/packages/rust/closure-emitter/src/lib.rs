@@ -1330,7 +1330,21 @@ fn format_js_number(n: f64) -> String {
             "0".to_string()
         };
     }
-    let decimal = if n.fract() == 0.0 && n.abs() < 1e21 {
+    // Integral values get the `{}`-of-`i64` spelling (no trailing `.0`), but
+    // ONLY while they fit in an `i64`. `n as i64` is a SATURATING cast in Rust:
+    // any `f64` at or above `i64::MAX` clamps to `9223372036854775807` and any
+    // at or below `i64::MIN` clamps to `-9223372036854775808`. So an integral
+    // literal like `12345678901234567890` (≈1.2e19, well above 2^63) would be
+    // emitted as `9223372036854775807` — a different number entirely (a
+    // miscompile). The i64 range boundary is 2^63 = 9223372036854775808.0
+    // (note `i64::MAX` itself, 9223372036854775807, is not representable as an
+    // `f64` — the nearest `f64` is exactly 2^63). We therefore only take the
+    // i64 path when `|n| < 2^63`, where the cast is exact and lossless; larger
+    // integral values fall through to `n.to_string()`, which prints the
+    // shortest decimal that round-trips to the same `f64` (and the
+    // exponential candidate below still gets a chance to be shorter).
+    const I64_RANGE: f64 = 9_223_372_036_854_775_808.0; // 2^63
+    let decimal = if n.fract() == 0.0 && n.abs() < I64_RANGE {
         format!("{}", n as i64)
     } else {
         n.to_string()
@@ -2045,6 +2059,42 @@ mod tests {
         assert_eq!(emit_number_value(f64::NAN), "NaN");
         assert_eq!(emit_number_value(f64::INFINITY), "Infinity");
         assert_eq!(emit_number_value(f64::NEG_INFINITY), "-Infinity");
+    }
+
+    #[test]
+    fn number_large_integral_does_not_saturate_to_i64_bound() {
+        // Regression: an integral f64 in [2^63, 1e21) used to be emitted via a
+        // SATURATING `n as i64` cast, collapsing every such value to i64::MAX
+        // ("9223372036854775807") — and every large negative one to i64::MIN.
+        // That is a miscompile: the emitted literal denotes a different number.
+        // The emitted text must round-trip to the SAME f64 as the source and
+        // must never be the saturated constant.
+        for &v in &[
+            12_345_678_901_234_567_890.0_f64,  // ≈1.23e19, above 2^63
+            18_446_744_073_709_551_615.0_f64,  // 2^64 − 1, ≈1.84e19
+            1e20_f64,                          // integral, in [2^63, 1e21)
+            -12_345_678_901_234_567_890.0_f64, // negative side (was i64::MIN)
+        ] {
+            let s = emit_number_value(v);
+            assert_ne!(s, "9223372036854775807", "saturated to i64::MAX for {v}");
+            assert_ne!(s, "-9223372036854775808", "saturated to i64::MIN for {v}");
+            let back: f64 = s.parse().expect("emitted a parseable number literal");
+            assert_eq!(back, v, "emitted {s:?} does not round-trip to {v}");
+        }
+    }
+
+    #[test]
+    fn number_values_within_i64_range_keep_exact_integer_spelling() {
+        // Values that DO fit in i64 still take the lossless integer path
+        // (the cast is exact there), then the shorter of decimal/exponential
+        // wins as before.
+        assert_eq!(emit_number_value(123.0), "123");
+        assert_eq!(emit_number_value(100_000.0), "1E5");
+        // The largest representable integral f64 strictly below 2^63 casts
+        // exactly (no saturation) and round-trips.
+        let near = 9_223_372_036_854_774_784.0_f64; // 2^63 − 1024, representable
+        let s = emit_number_value(near);
+        assert_eq!(s.parse::<f64>().unwrap(), near);
     }
 
     #[test]

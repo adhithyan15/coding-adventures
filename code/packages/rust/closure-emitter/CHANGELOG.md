@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.18.8] - 2026-06-30
+
+### Fixed — large integer literals saturated to `i64::MAX`/`MIN` (miscompile)
+
+An integral numeric literal whose magnitude was at or above `2^63` but below
+`1e21` was emitted as the wrong number:
+
+```
+console.log(12345678901234567890)  →  console.log(9223372036854775807)
+a = 18446744073709551615           →  a = 9223372036854775807
+(negative counterparts)            →  -9223372036854775808
+```
+
+`format_js_number` chose the integer spelling with `format!("{}", n as i64)`
+guarded only by `n.abs() < 1e21`. But `n as i64` is a **saturating** cast in
+Rust: any `f64` ≥ `i64::MAX` clamps to `9223372036854775807` and any ≤
+`i64::MIN` clamps to `-9223372036854775808`. So every integral value in
+`[2^63, 1e21)` collapsed to the same i64 bound — a different number than the
+source (a real miscompile, not just a formatting nit).
+
+**Fix.** The i64 path is now guarded by `n.abs() < 2^63`
+(`9223372036854775808.0`), the exact range where `n as i64` is lossless.
+Integral values at or above `2^63` fall through to `n.to_string()`, which
+prints the shortest decimal that round-trips to the same `f64`; the
+exponential candidate is still compared so the shorter spelling wins
+(`1e20` → `1E20`). Values that fit in i64 are unaffected.
+
+Regression tests: `number_large_integral_does_not_saturate_to_i64_bound`
+(round-trip + not-saturated, both signs), `number_values_within_i64_range_keep_exact_integer_spelling`.
+
 ## [0.18.7] - 2026-06-30
 
 ### Fixed — `**` exponentiation operand precedence (invalid-JS miscompile)
