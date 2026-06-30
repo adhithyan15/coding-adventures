@@ -5,6 +5,66 @@ All notable changes to `semantic-ir-to-javascript` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.2.0 — D4 (completes SIR16 / v1 parity for the JS backend)
+
+Brings the JavaScript backend to **full SIR16 / v1 parity**: the six
+SIR16 features it previously deferred are now emitted and accepted.
+JavaScript supports all of them natively, so each lowering is direct.
+
+### Added
+
+- `accepts_features()` now declares the v0 surface **plus all of SIR16**:
+  `Floats`, `ShortCircuit`, `Sequences`, `Maps`, `MutableBindings`,
+  `Loops`. (`accepts_intrinsics()` stays empty.)
+- Emit arms for every SIR16 node:
+  - `Floats` — `FloatLit` emits a native `number` literal (already wired
+    in D1; the `Floats` capability is now accepted). `NaN`/`Infinity`/
+    `-Infinity` spelled out; integer-valued floats keep an explicit `.0`.
+  - `ShortCircuit` — `LogicalAnd`/`LogicalOr` emit a truthy-guarded arrow
+    IIFE (`((__l) => __Sir.truthy(__l) ? (rhs) : __l)(lhs)` for And, the
+    mirror for Or) so the rhs runs only when the lhs decides, routing the
+    test through `__Sir.truthy` (only `false`/`nil` are falsy).
+  - `Sequences` — `SeqLit` → `[…]`, `SeqIndex` → `(arr)[i]`, `SeqLen` →
+    `(arr).length`, `SeqSet` → `(arr)[i] = v;` (native arrays).
+  - `Maps` — `MapLit` → `new Map([[k, v], …])`, `MapGet` →
+    `((m).get(k) ?? null)` (missing key reads as nil), `MapSet` →
+    `(m).set(k, v);` (native `Map`, matching the TypeScript backend's
+    representation).
+  - `MutableBindings` — `Assign` (Local/Param/Capture/Global) → a plain
+    `name = value;` reassignment. `let` (never `const`) is already the
+    keyword for every binding, so no const→let pre-pass is needed (unlike
+    the Rust/TypeScript backends).
+  - `Loops` — `While` → `while (__Sir.truthy(cond)) { … }`; `ForRange` →
+    a direction-aware C-style `for` with `stop`/`step` evaluated once into
+    block-scoped `__sir_stop_N`/`__sir_step_N` temporaries (a per-module
+    monotonic counter keeps them deterministic); `ForEach` → `for (let x
+    of iter) { … }`.
+- `emit_block_as_stmts` helper for loop bodies (trailing value discarded;
+  a bare `nil` value is dropped).
+- Unit tests for every new emit arm (floats incl. specials, short-circuit
+  And/Or, seq build/index/len, map lit/get, assign, seq-set, map-set,
+  while, for-range incl. distinct nested temporaries, for-each).
+- Integration tests (`tests/run_with_node.rs`) that hand-build SIR16
+  modules, emit JavaScript, **run it under `node`**, and assert stdout:
+  float arithmetic promotion (`3.5`), short-circuit (rhs not evaluated),
+  `or` first-truthy (`7`), sequence build/index/len/set, map
+  build/get/set (incl. missing-key → nil), a `while` counter, a
+  for-range accumulator (and a descending step), for-each over a
+  sequence, and mutable reassignment (`42`).
+
+### Still deferred (rejected at the capability check)
+
+- String interpolation — `StrConcat` (`StringInterpolation`).
+- OOP & exceptions — `ClassDef`/`ModuleDef`/`SingletonClassDef`,
+  `TryCatch`, and the `Instance`/`ClassVar`/`Const` scopes (`Classes`,
+  `Modules`, `InstanceVars`, `ClassVars`, `Constants`, `Exceptions`).
+- `TailCalls` (V8 has no reliable TCO) and `Intrinsics` (empty
+  whitelist).
+
+The remaining `panic!` arms in `emit` cover only these unaccepted nodes,
+so they are defence-in-depth (unreachable for a capability-checked
+module), never reachable for an accepted feature.
+
 ## 0.1.0 — D1 (initial runnable core)
 
 The first slice of the SIR18 JavaScript backend: the v0 expression /

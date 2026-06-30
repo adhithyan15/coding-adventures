@@ -31,21 +31,22 @@
 //! Both paths return [`semantic_ir::Artifact`] with `filename`,
 //! `source` (the generated `.js`), and metadata.
 //!
-//! ## Capability declaration (this milestone)
+//! ## Capability declaration (this milestone, D4)
 //!
-//! This first slice accepts the **v0 feature set** and nothing more:
+//! This milestone accepts the **v0 feature set plus all of SIR16 / v1**:
 //!
-//! - `Closures`, `Pairs`, `Symbols`, `Strings`, `DynamicTyping`,
+//! - v0: `Closures`, `Pairs`, `Symbols`, `Strings`, `DynamicTyping`,
 //!   `OptionalTypeAnnotations`, `MutualRecursion`, `Globals`.
+//! - SIR16: `Floats`, `ShortCircuit`, `Sequences`, `Maps`,
+//!   `MutableBindings`, `Loops` — JavaScript supports all six natively,
+//!   so emit is direct (arrays, `Map`, `while`/`for`, reassignable `let`).
 //!
-//! It **rejects** everything else at the capability check — including
-//! the SIR16 collection/loop/short-circuit features, the SIR17 OOP and
-//! exception features, `TailCalls` (V8 does not reliably tail-call
-//! optimise), and `Intrinsics` (empty whitelist).  The accept-set is
-//! deliberately matched to exactly what [`emit`](crate::emit) lowers, so
-//! a module that uses a deferred node is turned away *before* lowering
-//! rather than producing wrong code.  Later milestones widen the set as
-//! the corresponding emit arms land.
+//! It **rejects** everything else at the capability check — the SIR17/18
+//! OOP, exception, and string-interpolation features, `TailCalls` (V8
+//! does not reliably tail-call optimise), and `Intrinsics` (empty
+//! whitelist).  The accept-set is deliberately matched to exactly what
+//! [`emit`](crate::emit) lowers, so a module that uses a deferred node is
+//! turned away *before* lowering rather than producing wrong code.
 //!
 //! See [SIR18](../../../specs/SIR18-semantic-ir-to-javascript.md) for the
 //! full per-node lowering rules.
@@ -80,16 +81,17 @@ impl Default for JavaScriptBackend {
     }
 }
 
-/// Features the JavaScript backend accepts in this milestone: exactly
-/// the v0 surface that [`emit`](crate::emit) knows how to lower.
+/// Features the JavaScript backend accepts in this milestone: the v0
+/// surface plus all of SIR16 / v1 — exactly what [`emit`](crate::emit)
+/// knows how to lower.
 ///
 /// `TailCalls` and `Intrinsics` are excluded deliberately (the former is
 /// fundamentally unsupported on V8; the latter has an empty whitelist).
-/// The SIR16 collection/loop/short-circuit features and the SIR17/18
-/// OOP/exception/interpolation features are excluded because their emit
-/// arms are deferred to a later milestone — a module that declares one
-/// is rejected here, never silently mis-compiled.
+/// The SIR17/18 OOP / exception / string-interpolation features are
+/// excluded because their emit arms are deferred — a module that declares
+/// one is rejected here, never silently mis-compiled.
 const ACCEPTED_FEATURES: &[Feature] = &[
+    // v0 surface.
     Feature::Closures,
     Feature::Pairs,
     Feature::Symbols,
@@ -98,6 +100,13 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::OptionalTypeAnnotations,
     Feature::MutualRecursion,
     Feature::Globals,
+    // SIR16 / v1 surface (all native in JavaScript).
+    Feature::Floats,
+    Feature::ShortCircuit,
+    Feature::Sequences,
+    Feature::Maps,
+    Feature::MutableBindings,
+    Feature::Loops,
 ];
 
 impl Backend for JavaScriptBackend {
@@ -235,11 +244,36 @@ mod tests {
     }
 
     #[test]
-    fn rejects_sir16_loops_feature() {
-        // A deferred feature must be turned away at the capability check.
+    fn accepts_sir16_loops_feature() {
+        // Loops are now part of the accepted SIR16 surface, so a module
+        // that merely declares the feature compiles.
         let mut m = minimal_module();
         m.manifest = FeatureManifest::from_features(&[Feature::Loops]);
-        let err = compile(&m).expect_err("loops rejected");
+        compile(&m).expect("loops accepted");
+    }
+
+    #[test]
+    fn accepts_all_sir16_features() {
+        // Every SIR16 / v1 feature is accepted as of D4.
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[
+            Feature::Floats,
+            Feature::ShortCircuit,
+            Feature::Sequences,
+            Feature::Maps,
+            Feature::MutableBindings,
+            Feature::Loops,
+        ]);
+        compile(&m).expect("all SIR16 features accepted");
+    }
+
+    #[test]
+    fn rejects_sir17_exceptions_feature() {
+        // A still-deferred SIR17 feature must be turned away at the
+        // capability check.
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[Feature::Exceptions]);
+        let err = compile(&m).expect_err("exceptions rejected");
         assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
     }
 
