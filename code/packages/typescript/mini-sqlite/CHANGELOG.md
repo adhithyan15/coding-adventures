@@ -1,6 +1,6 @@
 # Changelog - @coding-adventures/mini-sqlite
 
-## Unreleased
+## [0.1.1] - 2026-06-30
 
 ### Fixed
 - Removed `\s*;?\s*$` trailer from five DDL/DML parsing regexes; trailing
