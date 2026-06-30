@@ -20,8 +20,9 @@
 //! vulgar fractions `½ ⅓ ¼ …`; the roots `√`, `∛`, `∜`; super/subscripts written either as
 //! Unicode glyphs (`x²`, `a₁`, `x⁻¹`) or with the explicit ASCII operators `^`/`_` (`x^2` ≡ `x²`);
 //! the **big operators** `∑ ∏ ∫ ∮ ∐` with optional lower/upper bounds (PR-2, e.g. `∑_(i=1)^n i`);
-//! and the relations `= ≠ < ≤ > ≥ ≈ ≡`. Out of scope (a clean spanned error, never a panic),
-//! tracked for PR-3: named functions (`sin`, `log`), matrices, `\text`.
+//! **named functions** `sin cos tan … ln log exp` applied to the next atom (PR-3, `sin x`, `log(x)`,
+//! `arcsin x` — longest-match, so `sinx` ⇒ `sin·x`); and the relations `= ≠ < ≤ > ≥ ≈ ≡`. Out of
+//! scope (a clean spanned error, never a panic), tracked for PR-4: matrices and `\text`.
 //!
 //! ```
 //! use unicode_math::UnicodeMath;
@@ -74,6 +75,7 @@ impl MathFrontend for UnicodeMath {
             .with_implicit_mul()
             .with_plusminus()
             .with_big_operators()
+            .with_functions()
     }
 }
 
@@ -214,6 +216,27 @@ mod tests {
         assert_eq!(p("a_i"), MathExpr::Subscript(Box::new(sym("a")), Box::new(sym("i"))));
     }
 
+    // ---- named functions (PR-3) ------------------------------------------------
+    #[test]
+    fn named_functions() {
+        use math_frontend::Func;
+        // `sin x` — a function applied to the next atom.
+        assert_eq!(p("sin x"), MathExpr::Call { func: Func::Sin, arg: Box::new(sym("x")) });
+        // glued: `sinx` ⇒ sin·x splits to `sin` then `x` (longest-match), like AsciiMath.
+        assert_eq!(p("sinx"), p("sin x"));
+        // `log(x)` — grouped argument.
+        assert_eq!(p("log(x)"), MathExpr::Call { func: Func::Log, arg: Box::new(sym("x")) });
+        // longest-match: `arcsin` is one function, not `arc`·s·i·n.
+        assert_eq!(p("arcsin x"), MathExpr::Call { func: Func::Asin, arg: Box::new(sym("x")) });
+        // `sin x + 1` is `(sin x) + 1` (one-atom argument).
+        assert_eq!(
+            p("sin x + 1"),
+            b(BinOp::Add, MathExpr::Call { func: Func::Sin, arg: Box::new(sym("x")) }, num(1))
+        );
+        // a non-function letter run is still the product of single letters.
+        assert_eq!(p("xy"), b(BinOp::Mul, sym("x"), sym("y")));
+    }
+
     #[test]
     fn a_realistic_expression() {
         // x² + y² = r²
@@ -255,8 +278,9 @@ mod tests {
         let c = UnicodeMath.capabilities();
         assert!(c.fractions && c.roots && c.powers && c.relations && c.implicit_mul && c.plusminus);
         assert!(c.big_operators); // PR-2: ∑ ∏ ∫ ∮ ∐
-        // PR-3 still to come — declared off so the harness holds us honest.
-        assert!(!c.functions && !c.matrices && !c.text);
+        assert!(c.functions);     // PR-3: sin/cos/log/… → Call
+        // Still to come — declared off so the harness holds us honest.
+        assert!(!c.matrices && !c.text);
         assert!(!c.binomials && !c.accents && !c.oversets);
     }
 
@@ -283,6 +307,9 @@ mod tests {
                 "∫_a^b f",      // integral with bounds
                 "∏ x",          // big operator, bare body
                 "x^2",          // ASCII `^` ≡ Unicode `x²`
+                "sin x",        // named function (PR-3)
+                "log(x) + 1",   // function with a grouped argument
+                "arcsin x",     // longest-match function name
                 "1 +",   // error: trailing operator
                 "(x",    // error: missing close
                 "∑",     // error: big operator with no body
