@@ -1,0 +1,55 @@
+{
+  "id": "13-drop-table",
+  "description": "DROP TABLE and CREATE TABLE IF NOT EXISTS / DROP TABLE IF EXISTS",
+  "level": 0,
+  "steps": [
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE tmp (x)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO tmp VALUES (42)"
+    },
+    {
+      "op": "execute",
+      "sql": "DROP TABLE tmp"
+    },
+    {
+      "op": "expect_error",
+      "sql": "SELECT * FROM tmp",
+      "error_type": "OperationalError",
+      "note": "Table was dropped; query must fail"
+    },
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE IF NOT EXISTS log (msg)",
+      "note": "IF NOT EXISTS — creates the table"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO log VALUES ('hello')"
+    },
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE IF NOT EXISTS log (msg)",
+      "note": "IF NOT EXISTS — table already exists, must be a no-op (no error)"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT msg FROM log",
+      "expected_columns": ["msg"],
+      "expected_rows": [["hello"]],
+      "note": "Existing row must survive the second CREATE TABLE IF NOT EXISTS"
+    },
+    {
+      "op": "execute",
+      "sql": "DROP TABLE IF EXISTS log"
+    },
+    {
+      "op": "execute",
+      "sql": "DROP TABLE IF EXISTS log",
+      "note": "IF EXISTS — table already gone, must be a no-op (no error)"
+    }
+  ]
+}

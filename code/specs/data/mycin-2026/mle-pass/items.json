@@ -1,5 +1,5 @@
 {
-  "description": "MLE-PASS multi-hop recall bank \u2014 TWO-HOP board questions answered purely from grounded edges with zero model calls. A clinical clue \u2192 disease (hop 1, an organ-system recall library) \u2192 answer (hop 2) is joined on the shared disease through an adj-lang rule body; the engine's SLD resolver returns the binding with BOTH hops' byte-provenance, and the harness maps it to the printed options. Slice 2 adds: more clue\u2192disease\u2192gene chains (derm, niemann-pick, pompe); a second relation as hop 2 \u2014 inheritance (clue\u2192disease\u2192inheritance pattern), proving the harness is generic over the second hop, not gene-specific; and an ABSTENTION sub-bank whose clue has no grounded hop-1 edge, which MUST abstain (never fabricate). Nothing authored: every edge reuses an already-grounded, spider+adversarially-gated fact. Engine: every answerable item correct with both hops cited; every abstention item abstains; zero model calls.",
+  "description": "MLE-PASS multi-hop recall bank \u2014 TWO-HOP board questions answered purely from grounded edges with zero model calls. A clinical clue \u2192 disease (hop 1, an organ-system recall library) \u2192 answer (hop 2) is joined on the shared disease through an adj-lang rule body; the engine's SLD resolver returns the binding with BOTH hops' byte-provenance, and the harness maps it to the printed options. Slice 2 adds: more clue\u2192disease\u2192gene chains (derm, niemann-pick, pompe); a second relation as hop 2 \u2014 inheritance (clue\u2192disease\u2192inheritance pattern), proving the harness is generic over the second hop, not gene-specific; and an ABSTENTION sub-bank whose clue has no grounded hop-1 edge, which MUST abstain (never fabricate). Slice 3 adds the microbiology organism-ID chain (the original MYCIN domain) run in REVERSE: the clue is a disease, hop 1 is causes(organism, disease) traversed backwards to bind the causative organism, and hop 2 reads that organism's Gram stain or microscopic morphology \u2014 proving a two-hop chain need not run left to right through the edges, and that both hops can share one library. Nothing authored: every edge reuses an already-grounded, spider+adversarially-gated fact. Engine: every answerable item correct with both hops cited; every abstention item abstains; zero model calls.",
   "items": [
     {
       "id": "mh-01",
@@ -247,6 +247,306 @@
         "E": "mitochondrial"
       },
       "gold_letter": "C"
+    },
+    {
+      "id": "mh-16",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "cholera",
+      "stem": "A patient is diagnosed with cholera. The organism that causes it shows which Gram-stain reaction on microscopy?",
+      "expected": "gram_negative",
+      "options": {
+        "A": "gram_negative",
+        "B": "gram_positive",
+        "C": "acid_fast",
+        "D": "gram_variable",
+        "E": "poorly_staining"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "mh-17",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "gonorrhea",
+      "stem": "A patient is diagnosed with gonorrhea. The organism that causes it shows which Gram-stain reaction on microscopy?",
+      "expected": "gram_negative",
+      "options": {
+        "A": "gram_positive",
+        "B": "gram_negative",
+        "C": "acid_fast",
+        "D": "gram_variable",
+        "E": "poorly_staining"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "mh-18",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "pertussis",
+      "stem": "A patient is diagnosed with whooping cough (pertussis). The organism that causes it shows which Gram-stain reaction on microscopy?",
+      "expected": "gram_negative",
+      "options": {
+        "A": "gram_positive",
+        "B": "acid_fast",
+        "C": "gram_negative",
+        "D": "gram_variable",
+        "E": "poorly_staining"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "mh-19",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "anthrax",
+      "stem": "A patient is diagnosed with anthrax. The organism that causes it shows which Gram-stain reaction on microscopy?",
+      "expected": "gram_positive",
+      "options": {
+        "A": "gram_negative",
+        "B": "acid_fast",
+        "C": "gram_variable",
+        "D": "gram_positive",
+        "E": "poorly_staining"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "mh-20",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "listeriosis",
+      "stem": "A patient is diagnosed with listeriosis. The organism that causes it shows which Gram-stain reaction on microscopy?",
+      "expected": "gram_positive",
+      "options": {
+        "A": "gram_negative",
+        "B": "acid_fast",
+        "C": "gram_variable",
+        "D": "poorly_staining",
+        "E": "gram_positive"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "mh-21",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "pseudomembranous_colitis",
+      "stem": "A patient is diagnosed with pseudomembranous colitis. The organism that causes it shows which Gram-stain reaction on microscopy?",
+      "expected": "gram_positive",
+      "options": {
+        "A": "gram_positive",
+        "B": "gram_negative",
+        "C": "acid_fast",
+        "D": "gram_variable",
+        "E": "poorly_staining"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "mh-22",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "tetanus",
+      "stem": "A patient is diagnosed with tetanus. The organism that causes it shows which Gram-stain reaction on microscopy?",
+      "expected": "gram_positive",
+      "options": {
+        "A": "gram_negative",
+        "B": "gram_positive",
+        "C": "acid_fast",
+        "D": "gram_variable",
+        "E": "poorly_staining"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "mh-23",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "legionnaires_disease",
+      "stem": "A patient is diagnosed with Legionnaires disease. The organism that causes it shows which Gram-stain reaction on microscopy?",
+      "expected": "gram_negative",
+      "options": {
+        "A": "gram_positive",
+        "B": "acid_fast",
+        "C": "gram_negative",
+        "D": "gram_variable",
+        "E": "poorly_staining"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "mh-24",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "morphology",
+      "clue": "cholera",
+      "stem": "A patient is diagnosed with rice-water diarrhea of cholera. The organism that causes it has which microscopic morphology?",
+      "expected": "comma_shaped",
+      "options": {
+        "A": "cocci",
+        "B": "diplococci",
+        "C": "bacilli",
+        "D": "comma_shaped",
+        "E": "spiral"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "mh-25",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "morphology",
+      "clue": "peptic_ulcer_disease",
+      "stem": "A patient is diagnosed with Helicobacter peptic ulcer disease. The organism that causes it has which microscopic morphology?",
+      "expected": "spiral",
+      "options": {
+        "A": "cocci",
+        "B": "diplococci",
+        "C": "bacilli",
+        "D": "comma_shaped",
+        "E": "spiral"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "mh-26",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "morphology",
+      "clue": "gonorrhea",
+      "stem": "A patient is diagnosed with gonorrhea. The organism that causes it has which microscopic morphology?",
+      "expected": "diplococci",
+      "options": {
+        "A": "diplococci",
+        "B": "cocci",
+        "C": "bacilli",
+        "D": "comma_shaped",
+        "E": "spiral"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "mh-27",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "morphology",
+      "clue": "syphilis",
+      "stem": "A patient is diagnosed with syphilis. The organism that causes it has which microscopic morphology?",
+      "expected": "spirochete",
+      "options": {
+        "A": "cocci",
+        "B": "spirochete",
+        "C": "diplococci",
+        "D": "bacilli",
+        "E": "comma_shaped"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "mh-28",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "morphology",
+      "clue": "meningitis",
+      "stem": "A patient is diagnosed with meningococcal meningitis. The organism that causes it has which microscopic morphology?",
+      "expected": "diplococci",
+      "options": {
+        "A": "cocci",
+        "B": "bacilli",
+        "C": "diplococci",
+        "D": "comma_shaped",
+        "E": "spiral"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "mh-29",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "morphology",
+      "clue": "pertussis",
+      "stem": "A patient is diagnosed with whooping cough (pertussis). The organism that causes it has which microscopic morphology?",
+      "expected": "coccobacilli",
+      "options": {
+        "A": "cocci",
+        "B": "diplococci",
+        "C": "bacilli",
+        "D": "coccobacilli",
+        "E": "comma_shaped"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "mh-30",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "a_syndrome_with_no_grounded_organism",
+      "stem": "A patient has a syndrome whose causative organism is not in the grounded library. The organism that causes it shows which Gram-stain reaction on microscopy? (If the causative organism is not grounded, abstain.)",
+      "expected": null,
+      "expect_abstain": true,
+      "options": {
+        "A": "gram_positive",
+        "B": "gram_negative",
+        "C": "acid_fast",
+        "D": "gram_variable",
+        "E": "poorly_staining"
+      }
     },
     {
       "id": "mh-14",

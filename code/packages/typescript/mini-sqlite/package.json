@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/mini-sqlite",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Mini-SQLite facade for TypeScript backed by the SQL execution engine",
   "type": "module",
   "main": "src/index.ts",

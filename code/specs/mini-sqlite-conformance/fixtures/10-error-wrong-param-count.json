@@ -1,0 +1,37 @@
+{
+  "id": "10-error-wrong-param-count",
+  "description": "Wrong parameter count raises a ProgrammingError",
+  "level": 0,
+  "steps": [
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE t (a, b)"
+    },
+    {
+      "op": "expect_error",
+      "sql": "INSERT INTO t VALUES (?, ?)",
+      "params": [1],
+      "error_type": "ProgrammingError",
+      "note": "1 param provided but 2 placeholders — must raise ProgrammingError"
+    },
+    {
+      "op": "expect_error",
+      "sql": "INSERT INTO t VALUES (?, ?)",
+      "params": [1, 2, 3],
+      "error_type": "ProgrammingError",
+      "note": "3 params provided but 2 placeholders — must raise ProgrammingError"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO t VALUES (?, ?)",
+      "params": [10, 20]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT a, b FROM t",
+      "expected_columns": ["a", "b"],
+      "expected_rows": [[10, 20]],
+      "note": "Connection is still usable after the errors above"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "id": "02-qmark-binding-insert",
+  "description": "Qmark (?) parameter binding in INSERT and SELECT",
+  "level": 0,
+  "steps": [
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE products (id, name, price)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO products VALUES (?, ?, ?)",
+      "params": [1, "Widget", 9.99]
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO products VALUES (?, ?, ?)",
+      "params": [2, "Gadget", 24.99]
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO products VALUES (?, ?, ?)",
+      "params": [3, "Doohickey", 4.99]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT id, name FROM products WHERE price < ? ORDER BY id",
+      "params": [15],
+      "expected_columns": ["id", "name"],
+      "expected_rows": [
+        [1, "Widget"],
+        [3, "Doohickey"]
+      ]
+    }
+  ]
+}

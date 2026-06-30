@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Add Berkeley SPICE app-deck readiness reports for Mosaic product-shell
+  telemetry and startup gates. `BerkeleyAppDeck::app_readiness_report()`,
+  `run_app_readiness_report()`, and their JSON helpers summarize launch route,
+  panel/action availability, diagnostic severity counts, repaired state, and
+  blocking reasons from bootstrap snapshots.
+- Add Berkeley SPICE app-deck launch plans for Mosaic product-shell startup
+  routing. `BerkeleyAppDeck::app_launch_plan()`, `run_app_launch_plan()`, and
+  their JSON helpers derive ready/blocked entry panels, route targets, and panel
+  action descriptors from bootstrap snapshots.
 - Add Berkeley SPICE app-deck persisted editor-state snapshots for Mosaic host
   restoration. `BerkeleyAppDeck::editor_state_snapshot()` and
   `run_editor_state_snapshot()` now resolve saved selected-card and
