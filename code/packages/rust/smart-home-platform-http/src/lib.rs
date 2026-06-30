@@ -399,6 +399,12 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
               <option value="false">Command-only</option>
             </select>
           </label>
+          <label>Desired Entity
+            <input id="filter-desired-entity" data-dashboard-filter="desired-entity" type="search" autocomplete="off">
+          </label>
+          <label>Desired Requester
+            <input id="filter-desired-requested-by" data-dashboard-filter="desired-requested-by" type="search" autocomplete="off">
+          </label>
           <label>Device Bridge
             <input id="filter-device-bridge" data-dashboard-filter="device-bridge" type="search" autocomplete="off">
           </label>
@@ -751,6 +757,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       filterCapabilityId: document.querySelector("#filter-capability-id"),
       filterCapabilityObservable: document.querySelector("#filter-capability-observable"),
       filterControl: document.querySelector("#filter-control"),
+      filterDesiredEntity: document.querySelector("#filter-desired-entity"),
+      filterDesiredRequestedBy: document.querySelector("#filter-desired-requested-by"),
       filterDeviceBridge: document.querySelector("#filter-device-bridge"),
       filterDeviceHealth: document.querySelector("#filter-device-health"),
       filterDeviceManufacturer: document.querySelector("#filter-device-manufacturer"),
@@ -807,6 +815,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       ["capability_id", els.filterCapabilityId],
       ["capability_commandable", els.filterCapabilityCommandable],
       ["capability_observable", els.filterCapabilityObservable],
+      ["desired_entity", els.filterDesiredEntity],
+      ["desired_requested_by", els.filterDesiredRequestedBy],
       ["device_bridge", els.filterDeviceBridge],
       ["device_manufacturer", els.filterDeviceManufacturer],
       ["device_health", els.filterDeviceHealth],
@@ -891,6 +901,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       capabilityId: els.filterCapabilityId.value.trim(),
       capabilityCommandable: els.filterCapabilityCommandable.value,
       capabilityObservable: els.filterCapabilityObservable.value,
+      desiredEntity: els.filterDesiredEntity.value.trim(),
+      desiredRequestedBy: els.filterDesiredRequestedBy.value.trim(),
       deviceBridge: els.filterDeviceBridge.value.trim(),
       deviceManufacturer: els.filterDeviceManufacturer.value.trim(),
       deviceHealth: els.filterDeviceHealth.value,
@@ -1451,7 +1463,12 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           json(queryUrl("/api/smart_home/states", {limit: 24, domain: filters.domain, room_id: roomId, stale, capability_id: capabilityId})),
           json(queryUrl("/api/smart_home/states", {limit: 24, room_id: roomId, stale: true, capability_id: capabilityId})),
           json(queryUrl("/api/smart_home/scenes", {limit: 12, room_id: roomId})),
-          json(queryUrl("/api/smart_home/desired_states", {limit: 12})),
+          json(queryUrl("/api/smart_home/desired_states", {
+            limit: 12,
+            entity_id: filters.desiredEntity,
+            capability_id: capabilityId,
+            requested_by: filters.desiredRequestedBy
+          })),
           json(queryUrl("/api/smart_home/state_history", {
             limit: 12,
             room_id: roomId,
@@ -8312,6 +8329,8 @@ mod tests {
             assert!(body.contains("data-dashboard-filter=\"capability-id\""));
             assert!(body.contains("data-dashboard-filter=\"capability-commandable\""));
             assert!(body.contains("data-dashboard-filter=\"capability-observable\""));
+            assert!(body.contains("data-dashboard-filter=\"desired-entity\""));
+            assert!(body.contains("data-dashboard-filter=\"desired-requested-by\""));
             assert!(body.contains("data-dashboard-filter=\"device-bridge\""));
             assert!(body.contains("data-dashboard-filter=\"device-manufacturer\""));
             assert!(body.contains("data-dashboard-filter=\"device-health\""));
@@ -8348,6 +8367,8 @@ mod tests {
             assert!(body.contains("[\"capability_id\", els.filterCapabilityId]"));
             assert!(body.contains("[\"capability_commandable\", els.filterCapabilityCommandable]"));
             assert!(body.contains("[\"capability_observable\", els.filterCapabilityObservable]"));
+            assert!(body.contains("[\"desired_entity\", els.filterDesiredEntity]"));
+            assert!(body.contains("[\"desired_requested_by\", els.filterDesiredRequestedBy]"));
             assert!(body.contains("[\"device_bridge\", els.filterDeviceBridge]"));
             assert!(body.contains("[\"device_manufacturer\", els.filterDeviceManufacturer]"));
             assert!(body.contains("[\"device_health\", els.filterDeviceHealth]"));
@@ -8384,7 +8405,10 @@ mod tests {
             assert!(
                 body.contains("queryUrl(\"/api/smart_home/scenes\", {limit: 12, room_id: roomId})")
             );
-            assert!(body.contains("queryUrl(\"/api/smart_home/desired_states\", {limit: 12})"));
+            assert!(body.contains("queryUrl(\"/api/smart_home/desired_states\", {"));
+            assert!(body.contains("entity_id: filters.desiredEntity"));
+            assert!(body.contains("capability_id: capabilityId"));
+            assert!(body.contains("requested_by: filters.desiredRequestedBy"));
             assert!(body.contains("const activityEntity = filters.activityEntity || undefined"));
             assert!(body.contains("const historyType = filters.historyType || undefined"));
             assert!(body.contains("queryUrl(\"/api/smart_home/api\", {"));
@@ -9905,6 +9929,8 @@ mod tests {
         assert!(body.contains("data-dashboard-filter=\"capability-id\""));
         assert!(body.contains("data-dashboard-filter=\"capability-commandable\""));
         assert!(body.contains("data-dashboard-filter=\"capability-observable\""));
+        assert!(body.contains("data-dashboard-filter=\"desired-entity\""));
+        assert!(body.contains("data-dashboard-filter=\"desired-requested-by\""));
         assert!(body.contains("data-dashboard-filter=\"device-bridge\""));
         assert!(body.contains("data-dashboard-filter=\"device-manufacturer\""));
         assert!(body.contains("data-dashboard-filter=\"device-health\""));
@@ -9947,6 +9973,8 @@ mod tests {
         assert!(body.contains("[\"capability_id\", els.filterCapabilityId]"));
         assert!(body.contains("[\"capability_commandable\", els.filterCapabilityCommandable]"));
         assert!(body.contains("[\"capability_observable\", els.filterCapabilityObservable]"));
+        assert!(body.contains("[\"desired_entity\", els.filterDesiredEntity]"));
+        assert!(body.contains("[\"desired_requested_by\", els.filterDesiredRequestedBy]"));
         assert!(body.contains("[\"device_bridge\", els.filterDeviceBridge]"));
         assert!(body.contains("[\"device_manufacturer\", els.filterDeviceManufacturer]"));
         assert!(body.contains("[\"device_health\", els.filterDeviceHealth]"));
@@ -9976,7 +10004,10 @@ mod tests {
         assert!(body.contains("window.addEventListener(\"popstate\""));
         assert!(body.contains("window.history.replaceState(null, \"\", nextUrl)"));
         assert!(body.contains("queryUrl(\"/api/smart_home/scenes\", {limit: 12, room_id: roomId})"));
-        assert!(body.contains("queryUrl(\"/api/smart_home/desired_states\", {limit: 12})"));
+        assert!(body.contains("queryUrl(\"/api/smart_home/desired_states\", {"));
+        assert!(body.contains("entity_id: filters.desiredEntity"));
+        assert!(body.contains("capability_id: capabilityId"));
+        assert!(body.contains("requested_by: filters.desiredRequestedBy"));
         assert!(body.contains("queryUrl(\"/api/smart_home/api\", {"));
         assert!(body.contains("surface: filters.apiSurface"));
         assert!(body.contains("method: filters.apiMethod"));
