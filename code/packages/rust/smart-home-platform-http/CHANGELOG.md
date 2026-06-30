@@ -47,6 +47,8 @@ All notable changes to this package will be documented in this file.
   panels backed by the existing local-controller audit routes.
 - Added browser dashboard room, device, and bridge topology panels backed by
   the existing local-controller inventory routes.
+- Added URL-backed browser dashboard topology filters for device bridge,
+  manufacturer, health, and bridge integration, transport, and health.
 - Added a dashboard-ready room detail route and matching browser room inspect
   action.
 - Expanded the dashboard-ready room detail route with member devices, entities,

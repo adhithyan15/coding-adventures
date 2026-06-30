@@ -399,6 +399,54 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
               <option value="false">Command-only</option>
             </select>
           </label>
+          <label>Device Bridge
+            <input id="filter-device-bridge" data-dashboard-filter="device-bridge" type="search" autocomplete="off">
+          </label>
+          <label>Device Manufacturer
+            <input id="filter-device-manufacturer" data-dashboard-filter="device-manufacturer" type="search" autocomplete="off">
+          </label>
+          <label>Device Health
+            <select id="filter-device-health" data-dashboard-filter="device-health">
+              <option value="">All device health</option>
+              <option value="online">Online</option>
+              <option value="degraded">Degraded</option>
+              <option value="offline">Offline</option>
+              <option value="discoverable">Discoverable</option>
+              <option value="unpaired">Unpaired</option>
+              <option value="auth_failed">Auth failed</option>
+              <option value="unsupported">Unsupported</option>
+              <option value="removed">Removed</option>
+              <option value="unknown">Unknown</option>
+            </select>
+          </label>
+          <label>Bridge Integration
+            <input id="filter-bridge-integration" data-dashboard-filter="bridge-integration" type="search" autocomplete="off">
+          </label>
+          <label>Bridge Transport
+            <select id="filter-bridge-transport" data-dashboard-filter="bridge-transport">
+              <option value="">All transports</option>
+              <option value="lan_http">LAN HTTP</option>
+              <option value="mdns">mDNS</option>
+              <option value="serial">Serial</option>
+              <option value="ble">BLE</option>
+              <option value="cloud">Cloud</option>
+              <option value="local_process">Local process</option>
+            </select>
+          </label>
+          <label>Bridge Health
+            <select id="filter-bridge-health" data-dashboard-filter="bridge-health">
+              <option value="">All bridge health</option>
+              <option value="online">Online</option>
+              <option value="degraded">Degraded</option>
+              <option value="offline">Offline</option>
+              <option value="discoverable">Discoverable</option>
+              <option value="unpaired">Unpaired</option>
+              <option value="auth_failed">Auth failed</option>
+              <option value="unsupported">Unsupported</option>
+              <option value="removed">Removed</option>
+              <option value="unknown">Unknown</option>
+            </select>
+          </label>
           <label>Service Name
             <input id="filter-service-name" data-dashboard-filter="service-name" type="search" autocomplete="off">
           </label>
@@ -690,6 +738,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       filterApiSurface: document.querySelector("#filter-api-surface"),
       filterAuthorizationOutcome: document.querySelector("#filter-authorization-outcome"),
       filterAuthorizationPrincipal: document.querySelector("#filter-authorization-principal"),
+      filterBridgeHealth: document.querySelector("#filter-bridge-health"),
+      filterBridgeIntegration: document.querySelector("#filter-bridge-integration"),
+      filterBridgeTransport: document.querySelector("#filter-bridge-transport"),
       filterCommandBridge: document.querySelector("#filter-command-bridge"),
       filterCommandCorrelation: document.querySelector("#filter-command-correlation"),
       filterCommandFromSequence: document.querySelector("#filter-command-from-sequence"),
@@ -700,6 +751,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       filterCapabilityId: document.querySelector("#filter-capability-id"),
       filterCapabilityObservable: document.querySelector("#filter-capability-observable"),
       filterControl: document.querySelector("#filter-control"),
+      filterDeviceBridge: document.querySelector("#filter-device-bridge"),
+      filterDeviceHealth: document.querySelector("#filter-device-health"),
+      filterDeviceManufacturer: document.querySelector("#filter-device-manufacturer"),
       filterDomain: document.querySelector("#filter-domain"),
       filterEventFromSequence: document.querySelector("#filter-event-from-sequence"),
       filterEventKind: document.querySelector("#filter-event-kind"),
@@ -753,6 +807,12 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       ["capability_id", els.filterCapabilityId],
       ["capability_commandable", els.filterCapabilityCommandable],
       ["capability_observable", els.filterCapabilityObservable],
+      ["device_bridge", els.filterDeviceBridge],
+      ["device_manufacturer", els.filterDeviceManufacturer],
+      ["device_health", els.filterDeviceHealth],
+      ["bridge_integration", els.filterBridgeIntegration],
+      ["bridge_transport", els.filterBridgeTransport],
+      ["bridge_health", els.filterBridgeHealth],
       ["service_name", els.filterServiceName],
       ["service_capability", els.filterServiceCapability],
       ["service_entity", els.filterServiceEntity],
@@ -831,6 +891,12 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       capabilityId: els.filterCapabilityId.value.trim(),
       capabilityCommandable: els.filterCapabilityCommandable.value,
       capabilityObservable: els.filterCapabilityObservable.value,
+      deviceBridge: els.filterDeviceBridge.value.trim(),
+      deviceManufacturer: els.filterDeviceManufacturer.value.trim(),
+      deviceHealth: els.filterDeviceHealth.value,
+      bridgeIntegration: els.filterBridgeIntegration.value.trim(),
+      bridgeTransport: els.filterBridgeTransport.value,
+      bridgeHealth: els.filterBridgeHealth.value,
       serviceName: els.filterServiceName.value.trim(),
       serviceCapability: els.filterServiceCapability.value.trim(),
       serviceEntity: els.filterServiceEntity.value.trim(),
@@ -1420,8 +1486,19 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
             authorized: filters.apiAuthorized
           })),
           json("/api/smart_home/rooms?sort=scene_count"),
-          json(queryUrl("/api/smart_home/devices", {limit: 8, room_id: roomId})),
-          json("/api/smart_home/bridges?limit=8"),
+          json(queryUrl("/api/smart_home/devices", {
+            limit: 8,
+            room_id: roomId,
+            bridge_id: filters.deviceBridge,
+            manufacturer: filters.deviceManufacturer,
+            health: filters.deviceHealth
+          })),
+          json(queryUrl("/api/smart_home/bridges", {
+            limit: 8,
+            integration_id: filters.bridgeIntegration,
+            transport: filters.bridgeTransport,
+            health: filters.bridgeHealth
+          })),
           json(queryUrl("/api/smart_home/events", {
             limit: 12,
             kind: filters.eventKind,
@@ -8235,6 +8312,12 @@ mod tests {
             assert!(body.contains("data-dashboard-filter=\"capability-id\""));
             assert!(body.contains("data-dashboard-filter=\"capability-commandable\""));
             assert!(body.contains("data-dashboard-filter=\"capability-observable\""));
+            assert!(body.contains("data-dashboard-filter=\"device-bridge\""));
+            assert!(body.contains("data-dashboard-filter=\"device-manufacturer\""));
+            assert!(body.contains("data-dashboard-filter=\"device-health\""));
+            assert!(body.contains("data-dashboard-filter=\"bridge-integration\""));
+            assert!(body.contains("data-dashboard-filter=\"bridge-transport\""));
+            assert!(body.contains("data-dashboard-filter=\"bridge-health\""));
             assert!(body.contains("data-dashboard-filter=\"service-name\""));
             assert!(body.contains("data-dashboard-filter=\"service-capability\""));
             assert!(body.contains("data-dashboard-filter=\"service-entity\""));
@@ -8265,6 +8348,12 @@ mod tests {
             assert!(body.contains("[\"capability_id\", els.filterCapabilityId]"));
             assert!(body.contains("[\"capability_commandable\", els.filterCapabilityCommandable]"));
             assert!(body.contains("[\"capability_observable\", els.filterCapabilityObservable]"));
+            assert!(body.contains("[\"device_bridge\", els.filterDeviceBridge]"));
+            assert!(body.contains("[\"device_manufacturer\", els.filterDeviceManufacturer]"));
+            assert!(body.contains("[\"device_health\", els.filterDeviceHealth]"));
+            assert!(body.contains("[\"bridge_integration\", els.filterBridgeIntegration]"));
+            assert!(body.contains("[\"bridge_transport\", els.filterBridgeTransport]"));
+            assert!(body.contains("[\"bridge_health\", els.filterBridgeHealth]"));
             assert!(body.contains("[\"service_name\", els.filterServiceName]"));
             assert!(body.contains("[\"service_capability\", els.filterServiceCapability]"));
             assert!(body.contains("[\"service_entity\", els.filterServiceEntity]"));
@@ -8323,10 +8412,14 @@ mod tests {
             assert!(body.contains("commandable: filters.capabilityCommandable"));
             assert!(body.contains("observable: filters.capabilityObservable"));
             assert!(body.contains("json(\"/api/smart_home/rooms?sort=scene_count\")"));
-            assert!(
-                body.contains("queryUrl(\"/api/smart_home/devices\", {limit: 8, room_id: roomId})")
-            );
-            assert!(body.contains("json(\"/api/smart_home/bridges?limit=8\")"));
+            assert!(body.contains("queryUrl(\"/api/smart_home/devices\", {"));
+            assert!(body.contains("bridge_id: filters.deviceBridge"));
+            assert!(body.contains("manufacturer: filters.deviceManufacturer"));
+            assert!(body.contains("health: filters.deviceHealth"));
+            assert!(body.contains("queryUrl(\"/api/smart_home/bridges\", {"));
+            assert!(body.contains("integration_id: filters.bridgeIntegration"));
+            assert!(body.contains("transport: filters.bridgeTransport"));
+            assert!(body.contains("health: filters.bridgeHealth"));
             assert!(body.contains("queryUrl(\"/api/smart_home/events\", {"));
             assert!(body.contains("from_sequence: filters.eventFromSequence"));
             assert!(body.contains("to_sequence: filters.eventToSequence"));
@@ -9812,6 +9905,12 @@ mod tests {
         assert!(body.contains("data-dashboard-filter=\"capability-id\""));
         assert!(body.contains("data-dashboard-filter=\"capability-commandable\""));
         assert!(body.contains("data-dashboard-filter=\"capability-observable\""));
+        assert!(body.contains("data-dashboard-filter=\"device-bridge\""));
+        assert!(body.contains("data-dashboard-filter=\"device-manufacturer\""));
+        assert!(body.contains("data-dashboard-filter=\"device-health\""));
+        assert!(body.contains("data-dashboard-filter=\"bridge-integration\""));
+        assert!(body.contains("data-dashboard-filter=\"bridge-transport\""));
+        assert!(body.contains("data-dashboard-filter=\"bridge-health\""));
         assert!(body.contains("data-dashboard-filter=\"service-name\""));
         assert!(body.contains("data-dashboard-filter=\"service-capability\""));
         assert!(body.contains("data-dashboard-filter=\"service-entity\""));
@@ -9848,6 +9947,12 @@ mod tests {
         assert!(body.contains("[\"capability_id\", els.filterCapabilityId]"));
         assert!(body.contains("[\"capability_commandable\", els.filterCapabilityCommandable]"));
         assert!(body.contains("[\"capability_observable\", els.filterCapabilityObservable]"));
+        assert!(body.contains("[\"device_bridge\", els.filterDeviceBridge]"));
+        assert!(body.contains("[\"device_manufacturer\", els.filterDeviceManufacturer]"));
+        assert!(body.contains("[\"device_health\", els.filterDeviceHealth]"));
+        assert!(body.contains("[\"bridge_integration\", els.filterBridgeIntegration]"));
+        assert!(body.contains("[\"bridge_transport\", els.filterBridgeTransport]"));
+        assert!(body.contains("[\"bridge_health\", els.filterBridgeHealth]"));
         assert!(body.contains("[\"service_name\", els.filterServiceName]"));
         assert!(body.contains("[\"service_capability\", els.filterServiceCapability]"));
         assert!(body.contains("[\"service_entity\", els.filterServiceEntity]"));
@@ -9902,8 +10007,14 @@ mod tests {
         assert!(body.contains("commandable: filters.capabilityCommandable"));
         assert!(body.contains("observable: filters.capabilityObservable"));
         assert!(body.contains("json(\"/api/smart_home/rooms?sort=scene_count\")"));
-        assert!(body.contains("queryUrl(\"/api/smart_home/devices\", {limit: 8, room_id: roomId})"));
-        assert!(body.contains("json(\"/api/smart_home/bridges?limit=8\")"));
+        assert!(body.contains("queryUrl(\"/api/smart_home/devices\", {"));
+        assert!(body.contains("bridge_id: filters.deviceBridge"));
+        assert!(body.contains("manufacturer: filters.deviceManufacturer"));
+        assert!(body.contains("health: filters.deviceHealth"));
+        assert!(body.contains("queryUrl(\"/api/smart_home/bridges\", {"));
+        assert!(body.contains("integration_id: filters.bridgeIntegration"));
+        assert!(body.contains("transport: filters.bridgeTransport"));
+        assert!(body.contains("health: filters.bridgeHealth"));
         assert!(body.contains("queryUrl(\"/api/smart_home/command_results\", {"));
         assert!(body.contains("command_id: filters.commandId"));
         assert!(body.contains("bridge_id: filters.commandBridge"));
