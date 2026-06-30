@@ -198,7 +198,41 @@ pub fn tokenize(src: &str) -> Result<Vec<Token>, FrontendError> {
                 while j < bytes.len() && bytes[j].is_ascii_alphabetic() {
                     j += 1;
                 }
-                (TokenKind::Ident(src[start..j].to_string()), j)
+                // PR-3c: the `text(…)` keyword form — the parenthesised twin of the `"…"`
+                // literal. When the run is exactly `text` and an open paren *immediately*
+                // follows, capture the raw bytes up to the matching close paren and emit the
+                // same [`TokenKind::Text`] the `"…"` form does, so both spellings lower to an
+                // identical `MathExpr::Text` (no parser or capability change). Parens nest, so
+                // `text(f(x))` keeps its inner parens; a missing close paren is a clean error.
+                // `text` NOT immediately followed by `(` stays an ordinary identifier (so a
+                // variable named `text`, or `text` with a space before a group, is unchanged).
+                if &src[start..j] == "text" && bytes.get(j) == Some(&b'(') {
+                    let content_start = j + 1;
+                    let mut depth = 1usize;
+                    let mut k = content_start;
+                    while k < bytes.len() {
+                        match bytes[k] {
+                            b'(' => depth += 1,
+                            b')' => {
+                                depth -= 1;
+                                if depth == 0 {
+                                    break;
+                                }
+                            }
+                            _ => {}
+                        }
+                        k += 1;
+                    }
+                    if depth != 0 {
+                        return Err(err("unterminated text(...)", (start, bytes.len())));
+                    }
+                    // `(` and `)` are one-byte ASCII and never occur inside a multi-byte
+                    // UTF-8 sequence, so `content_start` and `k` are char boundaries — the
+                    // slice is panic-free even when the content is non-ASCII.
+                    (TokenKind::Text(src[content_start..k].to_string()), k + 1)
+                } else {
+                    (TokenKind::Ident(src[start..j].to_string()), j)
+                }
             }
             _ => {
                 // Unknown byte (includes any non-ASCII lead byte). Report a one-byte span;
@@ -264,6 +298,44 @@ mod tests {
     #[test]
     fn text_literal() {
         assert_eq!(kinds(r#""kg" "#)[0], TokenKind::Text("kg".into()));
+    }
+
+    #[test]
+    fn text_keyword_form() {
+        // PR-3c: `text(…)` is the parenthesised twin of `"…"` — same Text token.
+        assert_eq!(kinds("text(kg)")[0], TokenKind::Text("kg".into()));
+        assert_eq!(kinds(r#""kg""#)[0], kinds("text(kg)")[0]);
+        // Empty content is fine.
+        assert_eq!(kinds("text()")[0], TokenKind::Text("".into()));
+        // Inner parens nest and are preserved verbatim.
+        assert_eq!(kinds("text(f(x))")[0], TokenKind::Text("f(x)".into()));
+        // Spaces and arbitrary punctuation inside are raw.
+        assert_eq!(kinds("text(a + b)")[0], TokenKind::Text("a + b".into()));
+        // The closing paren is consumed (the token after is Eof here).
+        assert_eq!(kinds("text(kg)"), vec![TokenKind::Text("kg".into()), TokenKind::Eof]);
+    }
+
+    #[test]
+    fn text_without_immediate_paren_is_an_identifier() {
+        // No paren → ordinary identifier run (parser makes it a product of letters).
+        assert_eq!(kinds("text")[0], TokenKind::Ident("text".into()));
+        // A space before `(` means `text` is an identifier and `(` opens a group.
+        assert_eq!(kinds("text (x)"), vec![
+            TokenKind::Ident("text".into()),
+            TokenKind::LParen,
+            TokenKind::Ident("x".into()),
+            TokenKind::RParen,
+            TokenKind::Eof,
+        ]);
+        // A longer word starting with `text` is untouched.
+        assert_eq!(kinds("textual")[0], TokenKind::Ident("textual".into()));
+    }
+
+    #[test]
+    fn unterminated_text_keyword_is_an_error() {
+        let e = tokenize("text(oops").unwrap_err();
+        assert_eq!(e.frontend, "asciimath");
+        assert!(e.span.0 <= e.span.1);
     }
 
     #[test]

@@ -91,10 +91,14 @@ juxtaposition `i · ∈ · S`.)
 
 **PR-3c (part 1)** adds the punctuation arrows `->` → `Symbol("rightarrow")` and `=>` →
 `Symbol("implies")` — recognized in the tokenizer and routed through the PR-3a symbol table (so they
-agree with the word forms `rarr`/`implies`); `a - b` and `a = b` are unaffected. **Still to come**
-(each structural, its own PR): longest-match identifier scan (`sinx` → `sin·x`),
-`stackrel`/`overset`/`underset` (need a neutral-AST node), and the `text(…)` keyword form (needs lexer
-raw-capture).
+agree with the word forms `rarr`/`implies`); `a - b` and `a = b` are unaffected.
+
+**PR-3c (part 2)** adds the **`text(…)` keyword form** — the parenthesised twin of the `"…"` literal.
+The tokenizer captures the raw bytes up to the matching close paren (parens nest) and emits the same
+`Text` token, so `text(kg)` and `"kg"` lower to an *identical* `MathExpr::Text` (no parser/capability
+change). The open paren must immediately follow `text`; otherwise `text` is an ordinary identifier.
+**Still to come** (each structural, its own PR): longest-match identifier scan (`sinx` → `sin·x`) and
+`stackrel`/`overset`/`underset` (need a neutral-AST node).
 
 It is **total and panic-free**: every input returns `Ok(MathExpr)` or a spanned
 `FrontendError`. Recursion is depth-guarded (matrix nesting included); left-associative chains are
