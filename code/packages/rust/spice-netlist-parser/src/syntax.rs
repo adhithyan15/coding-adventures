@@ -27,6 +27,7 @@ pub const BERKELEY_APP_SHELL_EVENT_SUMMARY_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_EVENT_DIGEST_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_EVENT_DASHBOARD_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_PACKAGE_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_CARDS_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -69,6 +70,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-event-digest-json",
     "app-shell-event-dashboard-json",
     "app-shell-dashboard-package-json",
+    "app-shell-dashboard-cards-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -1165,6 +1167,105 @@ impl BerkeleyAppShellDashboardPackage {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardCard {
+    pub id: String,
+    pub section_id: String,
+    pub title: String,
+    pub severity: String,
+    pub event_count: usize,
+    pub event_ids: Vec<String>,
+    pub primary: bool,
+    pub attention: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardCards {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub card_count: usize,
+    pub primary_card_id: Option<String>,
+    pub cards: Vec<BerkeleyAppShellDashboardCard>,
+    pub package_capability_id: String,
+    pub dashboard_capability_id: String,
+    pub cards_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardCards {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_dashboard_package(&BerkeleyAppShellDashboardPackage::from_bootstrap_snapshot(
+            snapshot,
+        ))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dashboard_package(&BerkeleyAppShellDashboardPackage::from_shell_handoff(
+            handoff,
+        ))
+    }
+
+    pub fn from_dashboard_package(package: &BerkeleyAppShellDashboardPackage) -> Self {
+        let primary_section_id = if package.attention_required {
+            "attention"
+        } else {
+            "status"
+        };
+        let cards = package
+            .event_dashboard
+            .sections
+            .iter()
+            .map(|section| {
+                let primary = section.id == primary_section_id;
+                let attention = section.id == "attention" && package.attention_required;
+                BerkeleyAppShellDashboardCard {
+                    id: format!("dashboard.{}", section.id),
+                    section_id: section.id.clone(),
+                    title: section.title.clone(),
+                    severity: section.severity.clone(),
+                    event_count: section.event_count,
+                    event_ids: section.event_ids.clone(),
+                    primary,
+                    attention,
+                }
+            })
+            .collect::<Vec<_>>();
+        let primary_card_id = cards
+            .iter()
+            .find(|card| card.primary)
+            .map(|card| card.id.clone());
+        let card_count = cards.len();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_CARDS_SCHEMA_VERSION,
+            package_name: package.package_name.clone(),
+            source_fingerprint: package.source_fingerprint.clone(),
+            title: package.title.clone(),
+            startup_route: package.startup_route.clone(),
+            ready: package.ready,
+            severity: package.severity.clone(),
+            attention_required: package.attention_required,
+            card_count,
+            primary_card_id,
+            cards,
+            package_capability_id: package.package_capability_id.clone(),
+            dashboard_capability_id: package.dashboard_capability_id.clone(),
+            cards_capability_id: "app-shell-dashboard-cards-json".to_string(),
+            artifact_capability_count: package.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_cards_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BerkeleyAnalysisInventoryEntry {
     pub index: usize,
     pub directive: String,
@@ -2065,6 +2166,40 @@ impl BerkeleyAppDeck {
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self
             .run_app_shell_dashboard_package(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_cards(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardCards {
+        BerkeleyAppShellDashboardCards::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_cards(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardCards, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellDashboardCards::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_dashboard_cards_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_cards(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_dashboard_cards_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_cards(persisted_state)?
             .to_json())
     }
 
@@ -2994,6 +3129,45 @@ fn app_shell_dashboard_package_json_value(
         "packageCapabilityId": &package.package_capability_id,
         "packageManifest": app_package_manifest_json_value(&package.package_manifest),
         "eventDashboard": app_shell_event_dashboard_json_value(&package.event_dashboard),
+    })
+}
+
+fn app_shell_dashboard_cards_json_value(
+    cards: &BerkeleyAppShellDashboardCards,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": cards.schema_version,
+        "packageName": &cards.package_name,
+        "sourceFingerprint": &cards.source_fingerprint,
+        "title": &cards.title,
+        "startupRoute": &cards.startup_route,
+        "ready": cards.ready,
+        "severity": &cards.severity,
+        "attentionRequired": cards.attention_required,
+        "cardCount": cards.card_count,
+        "primaryCardId": &cards.primary_card_id,
+        "cards": cards
+            .cards
+            .iter()
+            .map(app_shell_dashboard_card_json_value)
+            .collect::<Vec<_>>(),
+        "packageCapabilityId": &cards.package_capability_id,
+        "dashboardCapabilityId": &cards.dashboard_capability_id,
+        "cardsCapabilityId": &cards.cards_capability_id,
+        "artifactCapabilityCount": cards.artifact_capability_count,
+    })
+}
+
+fn app_shell_dashboard_card_json_value(card: &BerkeleyAppShellDashboardCard) -> serde_json::Value {
+    serde_json::json!({
+        "id": &card.id,
+        "sectionId": &card.section_id,
+        "title": &card.title,
+        "severity": &card.severity,
+        "eventCount": card.event_count,
+        "eventIds": &card.event_ids,
+        "primary": card.primary,
+        "attention": card.attention,
     })
 }
 

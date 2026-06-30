@@ -33,16 +33,17 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard package.
+1. Rust Berkeley Mosaic app shell dashboard cards.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app shell dashboard packages and JSON helpers
-     that combine the Berkeley app package manifest with the first-render event
-     dashboard for WebAssembly and product hosts.
+   - Add schema-versioned Rust app shell dashboard card surfaces and JSON
+     helpers that derive stable product-render card descriptors from the
+     Berkeley app shell dashboard package.
    - Preserve package name, source fingerprint, ready/blocked route, status
-     severity, attention-required flag, section count, dashboard/package
-     capability IDs, advertised capability count, package manifest, and nested
-     dashboard payload so Mosaic, WebAssembly, and product shells can render
-     startup dashboards without stitching manifest and dashboard payloads.
+     severity, attention-required flag, card IDs, primary-card routing,
+     section IDs, card severities, event counts, event IDs, dashboard/package
+     capability IDs, and advertised capability count so Mosaic, WebAssembly,
+     and product shells can render startup dashboard cards without interpreting
+     section internals.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1660,6 +1661,19 @@ the Rust, Python, and TypeScript surfaces together.
      diagnostic count, repaired-state count, and advertised capability count so
      Mosaic, WebAssembly, and product shells can render startup dashboards
      without walking the full event stream.
+
+156. Rust Berkeley Mosaic app shell dashboard package.
+   - Status: completed in PR 7076.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell dashboard packages plus JSON helpers that combine the Berkeley
+     app package manifest with the first-render event dashboard for WebAssembly
+     and product hosts.
+   - The package payload preserves package name, source fingerprint,
+     ready/blocked route, status severity, attention-required flag, section
+     count, dashboard/package capability IDs, advertised capability count,
+     package manifest, and nested dashboard payload so Mosaic, WebAssembly, and
+     product shells can render startup dashboards without stitching manifest and
+     dashboard payloads.
 
 ## Backlog
 
