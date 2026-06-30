@@ -222,11 +222,11 @@
     {
       "id": "haskell-level1-sql-planner",
       "title": "Haskell sql-planner",
-      "status": "pending",
+      "status": "in-review",
       "depends_on": ["haskell-level1-sql-backend"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Port Python sql_planner to Haskell."
+      "branch": "mini-sqlite/haskell-level1-sql-planner",
+      "pr_number": 7048,
+      "notes": "PR open 2026-06-30. 47 hspec tests. Haskell ADTs, Either error style. Awaiting CI + merge."
     },
     {
       "id": "haskell-level1-sql-optimizer",
