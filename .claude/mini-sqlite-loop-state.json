@@ -150,11 +150,11 @@
     {
       "id": "java-level1-sql-codegen",
       "title": "Java sql-codegen",
-      "status": "pending",
+      "status": "in-review",
       "depends_on": ["java-level1-sql-optimizer"],
-      "branch": null,
+      "branch": "mini-sqlite/java-level1-sql-codegen",
       "pr_number": null,
-      "notes": "Port Python sql_codegen to Java."
+      "notes": "PR open 2026-06-30. 36 tests (JaCoCo ≥80%). Compiles OptimizedPlan → flat bytecode Program for SQL VM."
     },
     {
       "id": "java-level1-sql-vm",
