@@ -2,6 +2,28 @@
 
 All notable changes to the AsciiMath pluggable frontend.
 
+## [0.3.0] — 2026-06-29
+
+### Added — accents (PR-2b), now that `math-frontend` 0.4.0 has a neutral `Accent` node
+
+AsciiMath accents were deferred at PR-2 because the neutral AST had no way to represent them.
+`math-frontend` 0.4.0 added `MathExpr::Accent { accent, body }`, so this release emits it.
+
+- **`hat x`, `bar y` / `overline y`, `vec v`, `dot x`, `ddot x`, `tilde a`, `ul x` /
+  `underline x`** now lower to `MathExpr::Accent` — a mark *over* the body, distinct from a
+  named-function `Call`. Each accent keyword takes the next single atom as its body (the same
+  "one atom argument" convention as `sqrt`/functions), so `hat(x+y)` accents the whole group.
+  Synonyms normalise to one canonical name (`bar`/`overline`→`"bar"`, `ul`/`underline`→
+  `"underline"`), so two spellings of the same mark lower equal.
+- New `accent_of()` keyword table + a parse branch in `parse_ident_atom` (after function
+  application). `capabilities()` gains `.with_accents()` — now honest, and the shared
+  conformance harness enforces it.
+- Tests: `accents_lower_to_neutral_accent_node` (per-accent + synonym + group-body + distinct);
+  `name_and_capabilities_are_honest` asserts `accents`; conformance corpus gains `hat x + vec v`
+  and `bar(x+y)`. 28 tests pass; clippy `-D warnings` clean.
+- This completes the accents-unblock across **both** frontends (latex emitted `Accent` in
+  latex 0.13.0; AsciiMath now matches).
+
 ## [0.2.0] — 2026-06-29
 
 ### Added — ASM01 PR-2: breadth (matrices + big operators)

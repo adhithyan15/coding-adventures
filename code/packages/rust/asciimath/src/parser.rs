@@ -347,6 +347,15 @@ impl Parser<'_> {
             let arg = self.parse_atom()?;
             return Ok(MathExpr::Call { func, arg: Box::new(arg) });
         }
+        // Diacritical accent: `hat x`, `bar y`, `vec v`, `dot x`, `ddot x`, `tilde a`, `ul x`.
+        // The accented thing is the next single atom (same "one atom argument" convention as
+        // `sqrt`/functions), lowered to the neutral `MathExpr::Accent` — a mark OVER the body,
+        // distinct from a function `Call`. (Needs `math-frontend` >= 0.4.0's Accent node.)
+        if let Some(accent) = accent_of(word) {
+            self.advance();
+            let body = self.parse_atom()?;
+            return Ok(MathExpr::Accent { accent: accent.to_string(), body: Box::new(body) });
+        }
         match word {
             "sqrt" => {
                 self.advance();
@@ -406,6 +415,24 @@ fn rel_of(kind: &TokenKind) -> Option<RelOp> {
 }
 
 /// Map an identifier to a big operator, or `None`. `int`=∫, `oint`=∮, `prod`=∏, `coprod`=∐.
+/// Map an AsciiMath accent keyword to its canonical neutral accent name (the `accent` field of
+/// [`MathExpr::Accent`]), or `None` if `word` is not an accent. AsciiMath spells accents as
+/// prefix words taking one argument: `hat x`, `bar y`/`overline y`, `vec v`, `dot x`, `ddot x`,
+/// `tilde a`, `ul x`/`underline x`. We normalise synonyms to one canonical name so two spellings
+/// of the same mark lower equal.
+fn accent_of(word: &str) -> Option<&'static str> {
+    Some(match word {
+        "hat" => "hat",
+        "bar" | "overline" => "bar",
+        "ul" | "underline" => "underline",
+        "vec" => "vec",
+        "dot" => "dot",
+        "ddot" => "ddot",
+        "tilde" => "tilde",
+        _ => return None,
+    })
+}
+
 fn bigop_of(word: &str) -> Option<BigOp> {
     Some(match word {
         "sum" => BigOp::Sum,

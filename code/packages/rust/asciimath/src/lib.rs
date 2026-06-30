@@ -57,10 +57,11 @@ impl MathFrontend for AsciiMath {
     }
 
     fn capabilities(&self) -> Capabilities {
-        // PR-1 surface + PR-2 breadth (`matrices`, `big_operators`). `plusminus`/`binomials`
-        // are not part of AsciiMath's core spelling here, and there is no neutral `Accent`
-        // node yet, so accents stay out until math-frontend grows one. Declaring
-        // `implicit_mul` is a parser-behavior claim (juxtaposition ⇒ `Mul`) the goldens cover.
+        // PR-1 surface + PR-2 breadth (`matrices`, `big_operators`) + PR-2b `accents`
+        // (`hat x`/`bar y`/`vec v`/`dot x`/`ddot x`/`tilde a`/`ul x`, emitted as
+        // `MathExpr::Accent` since math-frontend 0.4.0 grew the node). `plusminus`/`binomials`
+        // are not part of AsciiMath's core spelling here. Declaring `implicit_mul` is a
+        // parser-behavior claim (juxtaposition ⇒ `Mul`) the goldens cover.
         Capabilities::none()
             .with_fractions()
             .with_roots()
@@ -71,6 +72,7 @@ impl MathFrontend for AsciiMath {
             .with_text()
             .with_matrices()
             .with_big_operators()
+            .with_accents()
     }
 }
 
@@ -299,7 +301,40 @@ mod tests {
         let c = AsciiMath.capabilities();
         assert!(c.fractions && c.roots && c.powers && c.functions && c.relations && c.text && c.implicit_mul);
         assert!(c.matrices && c.big_operators); // PR-2 breadth
+        assert!(c.accents); // PR-2b: hat/bar/vec/dot/ddot/tilde/ul
         assert!(!c.plusminus && !c.binomials); // not part of AsciiMath's core spelling
+    }
+
+    // ---- accents (PR-2b) -------------------------------------------------------
+    #[test]
+    fn accents_lower_to_neutral_accent_node() {
+        // Each accent keyword takes the next single atom as its body (the `sqrt x` form) and
+        // lowers to `MathExpr::Accent` — a mark OVER the body, distinct from a function `Call`.
+        assert_eq!(
+            p("hat x"),
+            MathExpr::Accent { accent: "hat".into(), body: Box::new(sym("x")) }
+        );
+        assert_eq!(
+            p("vec v"),
+            MathExpr::Accent { accent: "vec".into(), body: Box::new(sym("v")) }
+        );
+        // Synonyms normalise to one canonical name, so two spellings lower equal.
+        assert_eq!(p("bar y"), p("overline y"));
+        assert_eq!(p("ul x"), p("underline x"));
+        assert_eq!(
+            p("bar y"),
+            MathExpr::Accent { accent: "bar".into(), body: Box::new(sym("y")) }
+        );
+        // The accented body is still a full atom: `hat(x+y)` accents the parenthesised group.
+        assert_eq!(
+            p("hat(x+y)"),
+            MathExpr::Accent {
+                accent: "hat".into(),
+                body: Box::new(b(BinOp::Add, sym("x"), sym("y"))),
+            }
+        );
+        // An accent over x is NOT the symbol x.
+        assert_ne!(p("dot x"), sym("x"));
     }
 
     #[test]
@@ -321,6 +356,8 @@ mod tests {
                 "[[a,b],[c,d]]",   // matrix
                 "sum_(i=1)^n i",   // big operator with bounds
                 "int_a^b f",       // big operator, integral
+                "hat x + vec v",   // accents (PR-2b)
+                "bar(x+y)",        // accent over a group
                 "1 +",   // error: trailing operator (span in range, not a panic)
                 "(x",    // error: missing close
                 "",      // error: empty
