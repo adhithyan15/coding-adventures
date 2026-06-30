@@ -1,0 +1,1 @@
+dotnet test tests/CodingAdventures.SqlPlanner.Tests/CodingAdventures.SqlPlanner.Tests.csproj --disable-build-servers /p:CollectCoverage=true "/p:Include=[CodingAdventures.SqlPlanner]*" /p:Threshold=80 /p:ThresholdType=line
