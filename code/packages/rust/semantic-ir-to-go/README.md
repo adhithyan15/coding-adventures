@@ -24,6 +24,23 @@ let artifact = backend.compile(&sir_module)?;
 Accepts the full v0 feature set minus `TailCalls` (Go has no TCO) and
 `Intrinsics` (empty whitelist in v0).
 
+### SIR16 (v1) — added incrementally
+
+- **`Floats`** — the runtime `Value` gains a `float64` arm.  Arithmetic
+  stays on the exact int64 path while every operand is an integer and
+  promotes to `float64` once any operand is a float ("int op float ⇒
+  float").  `number?` covers floats; `=` is cross-type for numbers
+  (`1 == 1.0` is true, `NaN != NaN`); `<` / `>` compare numerically.
+  Float display keeps a trailing `.0` on integral floats (`3.0`, not
+  `3`) and prints non-finite values as `NaN` / `inf` / `-inf`.
+- **`ShortCircuit`** — `and` / `or` lower to a truthy-guarded
+  immediately-invoked func literal that returns the operand value
+  (`a and b ⇒ b` if `a` is truthy else `a`), evaluating the left side
+  exactly once.
+
+The remaining four SIR16 features (`MutableBindings`, `Loops`,
+`Sequences`, `Maps`) are not yet declared and land in later PRs.
+
 ## Value model
 
 ```go
