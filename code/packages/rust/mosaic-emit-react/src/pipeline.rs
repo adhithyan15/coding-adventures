@@ -431,9 +431,7 @@ fn build_fallback_props_object(slots: &[SlotDecl]) -> String {
 
 fn sample_ts_value_for_slot(slot: &SlotDecl) -> String {
     match &slot.default {
-        Some(SlotDefault::Text(value)) => {
-            format!("\"{}\"", escape_for_jsx_double_quoted(value))
-        }
+        Some(SlotDefault::Text(value)) => js_string_literal(value),
         Some(SlotDefault::Number(value)) if value.is_finite() => format!("{value}"),
         Some(SlotDefault::Number(_)) => "0".to_string(),
         Some(SlotDefault::Bool(value)) => value.to_string(),
@@ -1566,13 +1564,10 @@ fn emit_input_jsx(
     }
 
     // placeholder="text"  — string-literal moslayout prop (post-PR-H).
-    // Escaping: JSX double-quoted attributes require `\` and `"` escaped;
-    // newlines/tabs pass through as their literal characters.
+    // Escaping: simple strings stay as JSX quoted attributes; strings that
+    // need JavaScript escaping use JSX expression form.
     if let Some(s) = find_string_prop(node, "placeholder") {
-        attrs.push_str(&format!(
-            " placeholder=\"{}\"",
-            escape_for_jsx_double_quoted(s)
-        ));
+        attrs.push_str(&jsx_string_attr("placeholder", s));
     }
 
     // maxLength={N}
@@ -1704,10 +1699,7 @@ fn emit_host_input_jsx(
 
     // placeholder="text" — string-literal moslayout prop.
     if let Some(s) = find_string_prop(node, "placeholder") {
-        attrs.push_str(&format!(
-            " placeholder=\"{}\"",
-            escape_for_jsx_double_quoted(s)
-        ));
+        attrs.push_str(&jsx_string_attr("placeholder", s));
     }
 
     // onChange={e => dispatch({ type: "...", value: e.target.value })}
@@ -1867,7 +1859,7 @@ fn host_button_label_body(node: &LayoutNode) -> Result<String, PipelineEmitError
             // context (rare, but possible if the host wants Unicode).  We
             // reuse the double-quoted escaper for `\` and `"`, then wrap the
             // result as a string expression so HTML entities don't escape us.
-            Ok(format!("{{\"{}\"}}", escape_for_jsx_double_quoted(s)))
+            Ok(jsx_string_expr(s))
         }
         LayoutPropValue::SlotRef(slot) => {
             let camel = to_camel_case_first_lower(slot);
@@ -2329,7 +2321,7 @@ fn emit_host_checkbox_jsx(
     // to generate stable unique IDs and is the idiomatic React shape for
     // a single-line checkbox-with-text.
     let label_body: Option<String> = if let Some(s) = find_string_prop(node, "label") {
-        Some(format!("{{\"{}\"}}", escape_for_jsx_double_quoted(s)))
+        Some(jsx_string_expr(s))
     } else if let Some(slot) = find_slot_ref_prop(node, "label") {
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
@@ -2399,7 +2391,7 @@ fn emit_host_radio_jsx(
 
     // `name="group"` (string literal) or `name={group}` (slot ref).
     if let Some(g) = find_string_prop(node, "group") {
-        attrs.push_str(&format!(" name=\"{}\"", escape_for_jsx_double_quoted(g)));
+        attrs.push_str(&jsx_string_attr("name", g));
     } else if let Some(slot) = find_slot_ref_prop(node, "group") {
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
@@ -2408,7 +2400,7 @@ fn emit_host_radio_jsx(
 
     // `value="v"` (string literal) or `value={v}` (slot ref).
     if let Some(v) = find_string_prop(node, "value") {
-        attrs.push_str(&format!(" value=\"{}\"", escape_for_jsx_double_quoted(v)));
+        attrs.push_str(&jsx_string_attr("value", v));
     } else if let Some(slot) = find_slot_ref_prop(node, "value") {
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
@@ -2439,7 +2431,7 @@ fn emit_host_radio_jsx(
 
     // Optional `<label>` wrapping — same idiom as HostCheckbox.
     let label_body: Option<String> = if let Some(s) = find_string_prop(node, "label") {
-        Some(format!("{{\"{}\"}}", escape_for_jsx_double_quoted(s)))
+        Some(jsx_string_expr(s))
     } else if let Some(slot) = find_slot_ref_prop(node, "label") {
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
@@ -2505,8 +2497,8 @@ fn emit_host_link_jsx(
 
     // href= — string literal or slot ref.
     let href_expr: String = if let Some(s) = find_string_prop(node, "href") {
-        attrs.push_str(&format!(" href=\"{}\"", escape_for_jsx_double_quoted(s)));
-        format!("\"{}\"", escape_for_jsx_double_quoted(s))
+        attrs.push_str(&jsx_string_attr("href", s));
+        js_string_literal(s)
     } else if let Some(slot) = find_slot_ref_prop(node, "href") {
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
@@ -2549,7 +2541,7 @@ fn emit_host_link_jsx(
 
     // Body: label (string or slot) OR children.
     let label_body: Option<String> = if let Some(s) = find_string_prop(node, "label") {
-        Some(format!("{{\"{}\"}}", escape_for_jsx_double_quoted(s)))
+        Some(jsx_string_expr(s))
     } else if let Some(slot) = find_slot_ref_prop(node, "label") {
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
@@ -2663,7 +2655,7 @@ fn emit_host_tooltip_jsx(
 
     // title= — string literal or slot ref.
     if let Some(s) = find_string_prop(node, "text") {
-        attrs.push_str(&format!(" title=\"{}\"", escape_for_jsx_double_quoted(s)));
+        attrs.push_str(&jsx_string_attr("title", s));
     } else if let Some(slot) = find_slot_ref_prop(node, "text") {
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
@@ -2749,10 +2741,7 @@ fn emit_host_number_input_jsx(
 
     // placeholder.
     if let Some(s) = find_string_prop(node, "placeholder") {
-        attrs.push_str(&format!(
-            " placeholder=\"{}\"",
-            escape_for_jsx_double_quoted(s)
-        ));
+        attrs.push_str(&jsx_string_attr("placeholder", s));
     }
 
     // disabled.
@@ -3679,17 +3668,40 @@ fn find_string_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a str
     })
 }
 
-/// Escape a Rust `&str` for embedding inside a JSX double-quoted string
-/// attribute value. The only characters JSX requires escaped inside a
-/// `"..."` attribute are `"` (close the literal) and `\` (the escape
-/// character itself). Newlines / tabs are preserved as their literal
-/// characters because JSX double-quoted attributes accept them.
-fn escape_for_jsx_double_quoted(s: &str) -> String {
+fn jsx_string_attr(name: &str, value: &str) -> String {
+    if can_use_jsx_quoted_attr(value) {
+        format!(" {name}=\"{value}\"")
+    } else {
+        format!(" {name}={}", jsx_string_expr(value))
+    }
+}
+
+fn jsx_string_expr(value: &str) -> String {
+    format!("{{{}}}", js_string_literal(value))
+}
+
+fn js_string_literal(value: &str) -> String {
+    format!("\"{}\"", escape_for_js_string_literal(value))
+}
+
+fn can_use_jsx_quoted_attr(value: &str) -> bool {
+    value
+        .chars()
+        .all(|c| !matches!(c, '"' | '\\' | '\n' | '\r' | '\t'))
+}
+
+/// Escape a Rust `&str` for embedding inside a JavaScript double-quoted
+/// string literal. JSX expression attributes use this form for values that
+/// quoted JSX attributes cannot represent safely, such as embedded quotes.
+fn escape_for_js_string_literal(s: &str) -> String {
     let mut out = String::with_capacity(s.len());
     for c in s.chars() {
         match c {
             '\\' => out.push_str("\\\\"),
             '"' => out.push_str("\\\""),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
             other => out.push(other),
         }
     }
@@ -5161,8 +5173,9 @@ mod tests {
         );
     }
 
-    /// Double quotes and backslashes inside the placeholder string get
-    /// escaped so the generated JSX attribute stays well-formed.
+    /// Double quotes and backslashes inside the placeholder string switch
+    /// the generated JSX attribute to expression form so the TSX parser sees
+    /// a normal JavaScript string literal.
     #[test]
     fn input_placeholder_escapes_quotes_and_backslashes() {
         let m = component("X", vec![], vec![]);
@@ -5174,8 +5187,8 @@ mod tests {
         assert!(
             result
                 .output
-                .contains(r#"placeholder="say \"hi\" \\ then more""#),
-            "expected escaped placeholder attr, got:\n{}",
+                .contains(r#"placeholder={"say \"hi\" \\ then more"}"#),
+            "expected expression-form placeholder attr, got:\n{}",
             result.output
         );
     }
@@ -5725,6 +5738,23 @@ mod tests {
         assert!(
             result.output.contains("placeholder=\"Type a formula\""),
             "expected placeholder attr, got:\n{}",
+            result.output
+        );
+    }
+
+    #[test]
+    fn host_input_placeholder_with_quotes_uses_expression_attr() {
+        let m = component("X", vec![], vec![]);
+        let l = host_input_layout(vec![LayoutProp {
+            name: "placeholder".to_string(),
+            value: LayoutPropValue::String(r#"preset:"Default" -is:suspended"#.to_string()),
+        }]);
+        let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            result
+                .output
+                .contains(r#"placeholder={"preset:\"Default\" -is:suspended"}"#),
+            "expected expression-form placeholder attr, got:\n{}",
             result.output
         );
     }
