@@ -2628,10 +2628,133 @@ fn build_inline_css_fragment(props: &[StyleProp]) -> String {
         // that to `background-color` so the resulting HTML attribute is
         // canonical CSS, not mixed-case.
         let key = camel_to_kebab(&p.name);
-        let value = escape_html_attr(&p.value);
+        let value = normalize_css_value(&key, &p.value);
+        let value = escape_html_attr(&value);
         parts.push(format!("{key}: {value}"));
     }
     parts.join("; ")
+}
+
+fn normalize_css_value(property: &str, value: &str) -> String {
+    let trimmed = value.trim();
+    if is_plain_number(trimmed) && !is_zero(trimmed) && css_property_needs_px(property) {
+        format!("{trimmed}px")
+    } else {
+        value.to_string()
+    }
+}
+
+fn is_plain_number(value: &str) -> bool {
+    !value.is_empty()
+        && value
+            .chars()
+            .all(|c| c.is_ascii_digit() || matches!(c, '+' | '-' | '.'))
+        && value.parse::<f64>().is_ok()
+}
+
+fn is_zero(value: &str) -> bool {
+    value.parse::<f64>() == Ok(0.0)
+}
+
+fn css_property_needs_px(property: &str) -> bool {
+    matches!(
+        property,
+        "block-size"
+            | "border-block-end-width"
+            | "border-block-start-width"
+            | "border-bottom-left-radius"
+            | "border-bottom-right-radius"
+            | "border-bottom-width"
+            | "border-end-end-radius"
+            | "border-end-start-radius"
+            | "border-inline-end-width"
+            | "border-inline-start-width"
+            | "border-left-width"
+            | "border-radius"
+            | "border-right-width"
+            | "border-start-end-radius"
+            | "border-start-start-radius"
+            | "border-top-left-radius"
+            | "border-top-right-radius"
+            | "border-top-width"
+            | "border-width"
+            | "bottom"
+            | "column-gap"
+            | "column-width"
+            | "flex-basis"
+            | "font-size"
+            | "gap"
+            | "height"
+            | "inline-size"
+            | "inset"
+            | "inset-block"
+            | "inset-block-end"
+            | "inset-block-start"
+            | "inset-inline"
+            | "inset-inline-end"
+            | "inset-inline-start"
+            | "left"
+            | "letter-spacing"
+            | "margin"
+            | "margin-block"
+            | "margin-block-end"
+            | "margin-block-start"
+            | "margin-bottom"
+            | "margin-inline"
+            | "margin-inline-end"
+            | "margin-inline-start"
+            | "margin-left"
+            | "margin-right"
+            | "margin-top"
+            | "max-block-size"
+            | "max-height"
+            | "max-inline-size"
+            | "max-width"
+            | "min-block-size"
+            | "min-height"
+            | "min-inline-size"
+            | "min-width"
+            | "outline-offset"
+            | "outline-width"
+            | "padding"
+            | "padding-block"
+            | "padding-block-end"
+            | "padding-block-start"
+            | "padding-bottom"
+            | "padding-inline"
+            | "padding-inline-end"
+            | "padding-inline-start"
+            | "padding-left"
+            | "padding-right"
+            | "padding-top"
+            | "right"
+            | "row-gap"
+            | "scroll-margin"
+            | "scroll-margin-block"
+            | "scroll-margin-block-end"
+            | "scroll-margin-block-start"
+            | "scroll-margin-bottom"
+            | "scroll-margin-inline"
+            | "scroll-margin-inline-end"
+            | "scroll-margin-inline-start"
+            | "scroll-margin-left"
+            | "scroll-margin-right"
+            | "scroll-margin-top"
+            | "scroll-padding"
+            | "scroll-padding-block"
+            | "scroll-padding-block-end"
+            | "scroll-padding-block-start"
+            | "scroll-padding-bottom"
+            | "scroll-padding-inline"
+            | "scroll-padding-inline-end"
+            | "scroll-padding-inline-start"
+            | "scroll-padding-left"
+            | "scroll-padding-right"
+            | "scroll-padding-top"
+            | "top"
+            | "width"
+            | "word-spacing"
+    )
 }
 
 /// Concatenate two CSS declaration lists, semicolon-separated, dropping
@@ -3117,6 +3240,76 @@ mod tests {
     // 7. Kebab → CSS mapping: camelCase author input becomes kebab-case
     //    CSS, plain kebab-case input passes through unchanged.
     // ---------------------------------------------------------------
+    #[test]
+    fn unitless_mosstyle_numbers_gain_css_units_when_required() {
+        let style = StyleDef {
+            component_name: "Card".to_string(),
+            parts: vec![PartStyle {
+                name: "root".to_string(),
+                base: vec![
+                    StyleProp {
+                        name: "padding".to_string(),
+                        value: "8".to_string(),
+                    },
+                    StyleProp {
+                        name: "font-size".to_string(),
+                        value: "14".to_string(),
+                    },
+                    StyleProp {
+                        name: "font-weight".to_string(),
+                        value: "700".to_string(),
+                    },
+                    StyleProp {
+                        name: "opacity".to_string(),
+                        value: "0.75".to_string(),
+                    },
+                    StyleProp {
+                        name: "line-height".to_string(),
+                        value: "1.4".to_string(),
+                    },
+                    StyleProp {
+                        name: "border-radius".to_string(),
+                        value: "6".to_string(),
+                    },
+                    StyleProp {
+                        name: "padding-bottom".to_string(),
+                        value: "0".to_string(),
+                    },
+                ],
+                states: Vec::new(),
+            }],
+        };
+        let l = layout("Card", node_with_part("Box", "root"));
+        let result = from_pipeline(&component("Card", vec![]), &l, &style).expect("emit ok");
+        let out = result.output;
+
+        assert!(out.contains("padding: 8px"), "expected padding px:\n{out}");
+        assert!(
+            out.contains("font-size: 14px"),
+            "expected font-size px:\n{out}"
+        );
+        assert!(
+            out.contains("font-weight: 700"),
+            "font-weight must stay unitless:\n{out}"
+        );
+        assert!(
+            out.contains("opacity: 0.75"),
+            "opacity must stay unitless:\n{out}"
+        );
+        assert!(
+            out.contains("line-height: 1.4"),
+            "line-height must stay unitless:\n{out}"
+        );
+        assert!(
+            out.contains("border-radius: 6px"),
+            "expected border-radius px:\n{out}"
+        );
+        assert!(
+            out.contains("padding-bottom: 0"),
+            "zero lengths should remain valid unitless zero:\n{out}"
+        );
+    }
+
     #[test]
     fn camel_case_style_keys_normalise_to_kebab() {
         let style = StyleDef {

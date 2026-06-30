@@ -2,8 +2,10 @@
 
 style EngramApp {
   part app-shell {
-    background : "#101827" ;
-    padding    : 24 ;
+    background  : "#101827" ;
+    color       : "#f8fafc" ;
+    font-family : "system-ui, sans-serif" ;
+    padding     : 24 ;
   }
 
   part app-title {
