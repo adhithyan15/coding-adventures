@@ -1624,6 +1624,22 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(
         &xaml_code_behind,
+        "public static readonly DependencyProperty NoteEditorNoteTypeNamesProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty NoteEditorDeckNamesProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty NoteEditorSelectedNoteTypeIndexProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty NoteEditorSelectedDeckIndexProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
         "public static readonly DependencyProperty AnswerVisibleProperty",
     );
     assert_contains(
@@ -1789,6 +1805,14 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_events,
         "public sealed record BrowserRemoveTagSelected() : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record NoteEditorSelectNoteType(double Index) : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record NoteEditorSelectDeck(double Index) : EngramAppEvent",
     );
     let xaml_main_window = fs::read_to_string(tmp.path().join("xaml").join("MainWindow.xaml.cs"))
         .expect("MainWindow.xaml.cs");
