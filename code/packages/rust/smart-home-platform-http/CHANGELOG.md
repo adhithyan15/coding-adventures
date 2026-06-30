@@ -40,6 +40,8 @@ All notable changes to this package will be documented in this file.
   embedded dashboard shell is served over the repo TCP stack as it grows.
 - Added URL-backed browser dashboard service-catalog controls for service name,
   capability, target entity, and target scene filters.
+- Added URL-backed browser dashboard scene-catalog controls for scene scope and
+  target entity filters.
 - Added browser dashboard desired-state target controls for light on/off and
   brightness so the local controller can supervise intended state through the
   existing runtime-authorized native API.
