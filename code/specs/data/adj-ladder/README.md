@@ -231,8 +231,13 @@ the **engine** solves the LP (simplex) and returns the optimal value, read by th
 cap, then tops up with the brand** (`p_cheap*C + p_brand*(R−C)`); ignoring the cap **under-budgets**
 at `p_cheap*R`, reaching only for the brand **over-spends** at `p_brand*R` — both are planted
 distractors. Twenty scenarios across antimicrobial, anticoagulant, endocrine, biologic, antiviral,
-oncologic, and respiratory therapy; every price and bound is stated in the stem. Engine returns the
-correct optimum **20/20 cached, zero wrong**. Realizes rung 6c of ADJ-LADDER.md §5.
+oncologic, and respiratory therapy; every price and bound is stated in the stem. **Batch 2**
+(`r6c-21`..`r6c-40`, 40 items total) adds a **three-tier** split — a cheap capped formulation, a
+mid-priced capped formulation, and an uncapped brand (p1<p2<p3, C1+C2<R) — so the cost-minimizing fill
+must **order across three tiers** (`p1*C1 + p2*C2 + p3*(R−C1−C2)`); distractors are the wrong fill
+orders (skip the mid tier, skip the cheap tier, ignore the caps, reach only for the brand), and the
+gold letter is rotated A–E. Engine returns the correct optimum **40/40 cached, zero wrong**. Realizes
+rung 6c of ADJ-LADDER.md §5.
 
 ## Layout
 

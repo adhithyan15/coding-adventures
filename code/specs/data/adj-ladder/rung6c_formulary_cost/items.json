@@ -1,5 +1,5 @@
 {
-  "description": "Rung-6c clinical MANAGEMENT as a minimum-cost regimen \u2014 the economics half of the therapy decision, the step past rung-6b's dose-feasibility (CAN it be dosed) to WHAT IS THE CHEAPEST way to deliver an already-feasible therapy. Each item renders a formulary choice as a 2-variable linear program: a required daily amount must be met by splitting it between a CHEAP formulation that is capped (limited supply / coverage) and an EXPENSIVE formulation that is uncapped. The gold ADJ program declares two scalars, one constraint per bound, and a `minimize cost` objective; the ENGINE solves the LP (simplex) and returns the optimal value, read by the existing optimize_value extractor \u2014 no harness or engine change. The reasoning and the anchoring traps: maxing the cheap form to its cap then topping up with the brand is optimal (p_cheap*C + p_brand*(R-C)); a clinician who ignores the cap under-budgets at p_cheap*R, one who reaches only for the brand over-spends at p_brand*R. Twenty scenarios across antimicrobial, anticoagulant, endocrine, biologic, antiviral, oncologic, and respiratory therapy; every price and bound is stated verbatim in the stem (no-result-literal gate holds); options are distinct dollar totals. Engine returns the correct optimum 20/20 in cached mode, zero wrong.",
+  "description": "Rung-6c clinical MANAGEMENT as a minimum-cost regimen \u2014 the economics half of the therapy decision, the step past rung-6b's dose-feasibility (CAN it be dosed) to WHAT IS THE CHEAPEST way to deliver an already-feasible therapy. Each item renders a formulary choice as a 2-variable linear program: a required daily amount must be met by splitting it between a CHEAP formulation that is capped (limited supply / coverage) and an EXPENSIVE formulation that is uncapped. The gold ADJ program declares two scalars, one constraint per bound, and a `minimize cost` objective; the ENGINE solves the LP (simplex) and returns the optimal value, read by the existing optimize_value extractor \u2014 no harness or engine change. The reasoning and the anchoring traps: maxing the cheap form to its cap then topping up with the brand is optimal (p_cheap*C + p_brand*(R-C)); a clinician who ignores the cap under-budgets at p_cheap*R, one who reaches only for the brand over-spends at p_brand*R. Twenty scenarios across antimicrobial, anticoagulant, endocrine, biologic, antiviral, oncologic, and respiratory therapy; every price and bound is stated verbatim in the stem (no-result-literal gate holds); options are distinct dollar totals. Engine returns the correct optimum 20/20 in cached mode, zero wrong. Batch 2 (r6c-21..r6c-40; 40 items total) adds a THREE-tier split \u2014 a cheap capped formulation, a mid-priced capped formulation, and an uncapped brand (p1<p2<p3, C1+C2<R) \u2014 so the cost-minimizing fill must order across three tiers (cheap to its cap, then mid to its cap, then brand): gold = p1*C1 + p2*C2 + p3*(R-C1-C2); distractors are wrong fill orders (skip the mid tier, skip the cheap tier, ignore the caps, reach only for the brand). Engine 40/40 cached, zero wrong.",
   "items": [
     {
       "id": "r6c-01",
@@ -340,6 +340,346 @@
         "E": 2700
       },
       "gold_letter": "C"
+    },
+    {
+      "id": "r6c-21",
+      "qtype": "formulary_cost_minimization",
+      "stem": "A patient with MRSA bacteremia needs 100 mg/day of vancomycin. Three formulations are on the formulary: a cheap generic costs 2 per mg but only 40 mg/day are available per period; a mid-priced version costs 4 per mg with only 30 mg/day available; a brand costs 9 per mg with no supply limit. Each formulation can supply at least 0 of its units. Using all three as needed to reach the required 100 mg/day, what is the lowest total cost of the regimen?",
+      "program": "symbol cheap : scalar\nsymbol mid : scalar\nsymbol brand : scalar\nconstrain cheap + mid + brand >= 100\nconstrain cheap <= 40\nconstrain mid <= 30\nconstrain cheap >= 0\nconstrain mid >= 0\nconstrain brand >= 0\nminimize 2 * cheap + 4 * mid + 9 * brand\n",
+      "answer_from": {
+        "type": "optimize_value"
+      },
+      "options": {
+        "A": 470,
+        "B": 200,
+        "C": 620,
+        "D": 750,
+        "E": 900
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6c-22",
+      "qtype": "formulary_cost_minimization",
+      "stem": "A patient with atrial fibrillation needs 12 mg/day of apixaban. Three formulations are on the formulary: a cheap generic costs 1 per mg but only 4 mg/day are available per period; a mid-priced version costs 3 per mg with only 3 mg/day available; a brand costs 8 per mg with no supply limit. Each formulation can supply at least 0 of its units. Using all three as needed to reach the required 12 mg/day, what is the lowest total cost of the regimen?",
+      "program": "symbol cheap : scalar\nsymbol mid : scalar\nsymbol brand : scalar\nconstrain cheap + mid + brand >= 12\nconstrain cheap <= 4\nconstrain mid <= 3\nconstrain cheap >= 0\nconstrain mid >= 0\nconstrain brand >= 0\nminimize 1 * cheap + 3 * mid + 8 * brand\n",
+      "answer_from": {
+        "type": "optimize_value"
+      },
+      "options": {
+        "A": 12,
+        "B": 53,
+        "C": 68,
+        "D": 81,
+        "E": 96
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6c-23",
+      "qtype": "formulary_cost_minimization",
+      "stem": "A patient with type 2 diabetes needs 40 units/day of insulin glargine. Three formulations are on the formulary: a cheap generic costs 1 per units but only 20 units/day are available per period; a mid-priced version costs 2 per units with only 10 units/day available; a brand costs 5 per units with no supply limit. Each formulation can supply at least 0 of its units. Using all three as needed to reach the required 40 units/day, what is the lowest total cost of the regimen?",
+      "program": "symbol cheap : scalar\nsymbol mid : scalar\nsymbol brand : scalar\nconstrain cheap + mid + brand >= 40\nconstrain cheap <= 20\nconstrain mid <= 10\nconstrain cheap >= 0\nconstrain mid >= 0\nconstrain brand >= 0\nminimize 1 * cheap + 2 * mid + 5 * brand\n",
+      "answer_from": {
+        "type": "optimize_value"
+      },
+      "options": {
+        "A": 40,
+        "B": 120,
+        "C": 90,
+        "D": 170,
+        "E": 200
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r6c-24",
+      "qtype": "formulary_cost_minimization",
+      "stem": "A patient with rheumatoid arthritis needs 40 mg/week of adalimumab. Three formulations are on the formulary: a cheap generic costs 2 per mg but only 20 mg/week are available per period; a mid-priced version costs 5 per mg with only 10 mg/week available; a brand costs 9 per mg with no supply limit. Each formulation can supply at least 0 of its units. Using all three as needed to reach the required 40 mg/week, what is the lowest total cost of the regimen?",
+      "program": "symbol cheap : scalar\nsymbol mid : scalar\nsymbol brand : scalar\nconstrain cheap + mid + brand >= 40\nconstrain cheap <= 20\nconstrain mid <= 10\nconstrain cheap >= 0\nconstrain mid >= 0\nconstrain brand >= 0\nminimize 2 * cheap + 5 * mid + 9 * brand\n",
+      "answer_from": {
+        "type": "optimize_value"
+      },
+      "options": {
+        "A": 80,
+        "B": 220,
+        "C": 320,
+        "D": 180,
+        "E": 360
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r6c-25",
+      "qtype": "formulary_cost_minimization",
+      "stem": "A patient with hepatitis C needs 400 mg/day of sofosbuvir. Three formulations are on the formulary: a cheap generic costs 3 per mg but only 200 mg/day are available per period; a mid-priced version costs 6 per mg with only 100 mg/day available; a brand costs 10 per mg with no supply limit. Each formulation can supply at least 0 of its units. Using all three as needed to reach the required 400 mg/day, what is the lowest total cost of the regimen?",
+      "program": "symbol cheap : scalar\nsymbol mid : scalar\nsymbol brand : scalar\nconstrain cheap + mid + brand >= 400\nconstrain cheap <= 200\nconstrain mid <= 100\nconstrain cheap >= 0\nconstrain mid >= 0\nconstrain brand >= 0\nminimize 3 * cheap + 6 * mid + 10 * brand\n",
+      "answer_from": {
+        "type": "optimize_value"
+      },
+      "options": {
+        "A": 1200,
+        "B": 2600,
+        "C": 3600,
+        "D": 4000,
+        "E": 2200
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r6c-26",
+      "qtype": "formulary_cost_minimization",
+      "stem": "A patient with epilepsy needs 1500 mg/day of levetiracetam. Three formulations are on the formulary: a cheap generic costs 1 per mg but only 800 mg/day are available per period; a mid-priced version costs 2 per mg with only 400 mg/day available; a brand costs 5 per mg with no supply limit. Each formulation can supply at least 0 of its units. Using all three as needed to reach the required 1500 mg/day, what is the lowest total cost of the regimen?",
+      "program": "symbol cheap : scalar\nsymbol mid : scalar\nsymbol brand : scalar\nconstrain cheap + mid + brand >= 1500\nconstrain cheap <= 800\nconstrain mid <= 400\nconstrain cheap >= 0\nconstrain mid >= 0\nconstrain brand >= 0\nminimize 1 * cheap + 2 * mid + 5 * brand\n",
+      "answer_from": {
+        "type": "optimize_value"
+      },
+      "options": {
+        "A": 3100,
+        "B": 1500,
+        "C": 4300,
+        "D": 6300,
+        "E": 7500
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6c-27",
+      "qtype": "formulary_cost_minimization",
+      "stem": "A patient with hypothyroidism needs 150 mcg/day of levothyroxine. Three formulations are on the formulary: a cheap generic costs 1 per mcg but only 75 mcg/day are available per period; a mid-priced version costs 3 per mcg with only 50 mcg/day available; a brand costs 6 per mcg with no supply limit. Each formulation can supply at least 0 of its units. Using all three as needed to reach the required 150 mcg/day, what is the lowest total cost of the regimen?",
+      "program": "symbol cheap : scalar\nsymbol mid : scalar\nsymbol brand : scalar\nconstrain cheap + mid + brand >= 150\nconstrain cheap <= 75\nconstrain mid <= 50\nconstrain cheap >= 0\nconstrain mid >= 0\nconstrain brand >= 0\nminimize 1 * cheap + 3 * mid + 6 * brand\n",
+      "answer_from": {
+        "type": "optimize_value"
+      },
+      "options": {
+        "A": 150,
+        "B": 375,
+        "C": 525,
+        "D": 750,
+        "E": 900
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6c-28",
+      "qtype": "formulary_cost_minimization",
+      "stem": "A patient with heart failure needs 300 mg/day of sacubitril-valsartan. Three formulations are on the formulary: a cheap generic costs 2 per mg but only 100 mg/day are available per period; a mid-priced version costs 5 per mg with only 100 mg/day available; a brand costs 9 per mg with no supply limit. Each formulation can supply at least 0 of its units. Using all three as needed to reach the required 300 mg/day, what is the lowest total cost of the regimen?",
+      "program": "symbol cheap : scalar\nsymbol mid : scalar\nsymbol brand : scalar\nconstrain cheap + mid + brand >= 300\nconstrain cheap <= 100\nconstrain mid <= 100\nconstrain cheap >= 0\nconstrain mid >= 0\nconstrain brand >= 0\nminimize 2 * cheap + 5 * mid + 9 * brand\n",
+      "answer_from": {
+        "type": "optimize_value"
+      },
+      "options": {
+        "A": 600,
+        "B": 2000,
+        "C": 1600,
+        "D": 2300,
+        "E": 2700
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r6c-29",
+      "qtype": "formulary_cost_minimization",
+      "stem": "A patient with HIV needs 50 mg/day of dolutegravir. Three formulations are on the formulary: a cheap generic costs 2 per mg but only 20 mg/day are available per period; a mid-priced version costs 5 per mg with only 15 mg/day available; a brand costs 11 per mg with no supply limit. Each formulation can supply at least 0 of its units. Using all three as needed to reach the required 50 mg/day, what is the lowest total cost of the regimen?",
+      "program": "symbol cheap : scalar\nsymbol mid : scalar\nsymbol brand : scalar\nconstrain cheap + mid + brand >= 50\nconstrain cheap <= 20\nconstrain mid <= 15\nconstrain cheap >= 0\nconstrain mid >= 0\nconstrain brand >= 0\nminimize 2 * cheap + 5 * mid + 11 * brand\n",
+      "answer_from": {
+        "type": "optimize_value"
+      },
+      "options": {
+        "A": 100,
+        "B": 370,
+        "C": 460,
+        "D": 280,
+        "E": 550
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r6c-30",
+      "qtype": "formulary_cost_minimization",
+      "stem": "A patient with multiple myeloma needs 25 mg/day of lenalidomide. Three formulations are on the formulary: a cheap generic costs 4 per mg but only 10 mg/day are available per period; a mid-priced version costs 7 per mg with only 5 mg/day available; a brand costs 13 per mg with no supply limit. Each formulation can supply at least 0 of its units. Using all three as needed to reach the required 25 mg/day, what is the lowest total cost of the regimen?",
+      "program": "symbol cheap : scalar\nsymbol mid : scalar\nsymbol brand : scalar\nconstrain cheap + mid + brand >= 25\nconstrain cheap <= 10\nconstrain mid <= 5\nconstrain cheap >= 0\nconstrain mid >= 0\nconstrain brand >= 0\nminimize 4 * cheap + 7 * mid + 13 * brand\n",
+      "answer_from": {
+        "type": "optimize_value"
+      },
+      "options": {
+        "A": 100,
+        "B": 235,
+        "C": 295,
+        "D": 325,
+        "E": 205
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r6c-31",
+      "qtype": "formulary_cost_minimization",
+      "stem": "A patient with asthma needs 640 mcg/day of budesonide-formoterol. Three formulations are on the formulary: a cheap generic costs 1 per mcg but only 320 mcg/day are available per period; a mid-priced version costs 2 per mcg with only 160 mcg/day available; a brand costs 5 per mcg with no supply limit. Each formulation can supply at least 0 of its units. Using all three as needed to reach the required 640 mcg/day, what is the lowest total cost of the regimen?",
+      "program": "symbol cheap : scalar\nsymbol mid : scalar\nsymbol brand : scalar\nconstrain cheap + mid + brand >= 640\nconstrain cheap <= 320\nconstrain mid <= 160\nconstrain cheap >= 0\nconstrain mid >= 0\nconstrain brand >= 0\nminimize 1 * cheap + 2 * mid + 5 * brand\n",
+      "answer_from": {
+        "type": "optimize_value"
+      },
+      "options": {
+        "A": 1440,
+        "B": 640,
+        "C": 1920,
+        "D": 2720,
+        "E": 3200
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6c-32",
+      "qtype": "formulary_cost_minimization",
+      "stem": "A patient with deep vein thrombosis needs 20 mg/day of rivaroxaban. Three formulations are on the formulary: a cheap generic costs 1 per mg but only 8 mg/day are available per period; a mid-priced version costs 3 per mg with only 4 mg/day available; a brand costs 7 per mg with no supply limit. Each formulation can supply at least 0 of its units. Using all three as needed to reach the required 20 mg/day, what is the lowest total cost of the regimen?",
+      "program": "symbol cheap : scalar\nsymbol mid : scalar\nsymbol brand : scalar\nconstrain cheap + mid + brand >= 20\nconstrain cheap <= 8\nconstrain mid <= 4\nconstrain cheap >= 0\nconstrain mid >= 0\nconstrain brand >= 0\nminimize 1 * cheap + 3 * mid + 7 * brand\n",
+      "answer_from": {
+        "type": "optimize_value"
+      },
+      "options": {
+        "A": 20,
+        "B": 76,
+        "C": 92,
+        "D": 124,
+        "E": 140
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6c-33",
+      "qtype": "formulary_cost_minimization",
+      "stem": "A patient with hypertension needs 160 mg/day of amlodipine-valsartan. Three formulations are on the formulary: a cheap generic costs 1 per mg but only 80 mg/day are available per period; a mid-priced version costs 2 per mg with only 40 mg/day available; a brand costs 4 per mg with no supply limit. Each formulation can supply at least 0 of its units. Using all three as needed to reach the required 160 mg/day, what is the lowest total cost of the regimen?",
+      "program": "symbol cheap : scalar\nsymbol mid : scalar\nsymbol brand : scalar\nconstrain cheap + mid + brand >= 160\nconstrain cheap <= 80\nconstrain mid <= 40\nconstrain cheap >= 0\nconstrain mid >= 0\nconstrain brand >= 0\nminimize 1 * cheap + 2 * mid + 4 * brand\n",
+      "answer_from": {
+        "type": "optimize_value"
+      },
+      "options": {
+        "A": 160,
+        "B": 400,
+        "C": 320,
+        "D": 560,
+        "E": 640
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r6c-34",
+      "qtype": "formulary_cost_minimization",
+      "stem": "A patient with Crohn disease needs 130 mg/dose of ustekinumab. Three formulations are on the formulary: a cheap generic costs 4 per mg but only 60 mg/dose are available per period; a mid-priced version costs 7 per mg with only 30 mg/dose available; a brand costs 12 per mg with no supply limit. Each formulation can supply at least 0 of its units. Using all three as needed to reach the required 130 mg/dose, what is the lowest total cost of the regimen?",
+      "program": "symbol cheap : scalar\nsymbol mid : scalar\nsymbol brand : scalar\nconstrain cheap + mid + brand >= 130\nconstrain cheap <= 60\nconstrain mid <= 30\nconstrain cheap >= 0\nconstrain mid >= 0\nconstrain brand >= 0\nminimize 4 * cheap + 7 * mid + 12 * brand\n",
+      "answer_from": {
+        "type": "optimize_value"
+      },
+      "options": {
+        "A": 520,
+        "B": 1080,
+        "C": 1410,
+        "D": 930,
+        "E": 1560
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r6c-35",
+      "qtype": "formulary_cost_minimization",
+      "stem": "A patient with schizophrenia needs 150 mg/month of paliperidone. Three formulations are on the formulary: a cheap generic costs 2 per mg but only 60 mg/month are available per period; a mid-priced version costs 5 per mg with only 40 mg/month available; a brand costs 8 per mg with no supply limit. Each formulation can supply at least 0 of its units. Using all three as needed to reach the required 150 mg/month, what is the lowest total cost of the regimen?",
+      "program": "symbol cheap : scalar\nsymbol mid : scalar\nsymbol brand : scalar\nconstrain cheap + mid + brand >= 150\nconstrain cheap <= 60\nconstrain mid <= 40\nconstrain cheap >= 0\nconstrain mid >= 0\nconstrain brand >= 0\nminimize 2 * cheap + 5 * mid + 8 * brand\n",
+      "answer_from": {
+        "type": "optimize_value"
+      },
+      "options": {
+        "A": 300,
+        "B": 840,
+        "C": 1080,
+        "D": 1200,
+        "E": 720
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r6c-36",
+      "qtype": "formulary_cost_minimization",
+      "stem": "A patient with breast cancer needs 125 mg/day of palbociclib. Three formulations are on the formulary: a cheap generic costs 5 per mg but only 50 mg/day are available per period; a mid-priced version costs 9 per mg with only 25 mg/day available; a brand costs 14 per mg with no supply limit. Each formulation can supply at least 0 of its units. Using all three as needed to reach the required 125 mg/day, what is the lowest total cost of the regimen?",
+      "program": "symbol cheap : scalar\nsymbol mid : scalar\nsymbol brand : scalar\nconstrain cheap + mid + brand >= 125\nconstrain cheap <= 50\nconstrain mid <= 25\nconstrain cheap >= 0\nconstrain mid >= 0\nconstrain brand >= 0\nminimize 5 * cheap + 9 * mid + 14 * brand\n",
+      "answer_from": {
+        "type": "optimize_value"
+      },
+      "options": {
+        "A": 1175,
+        "B": 625,
+        "C": 1300,
+        "D": 1625,
+        "E": 1750
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6c-37",
+      "qtype": "formulary_cost_minimization",
+      "stem": "A patient with COPD needs 18 mcg/day of tiotropium. Three formulations are on the formulary: a cheap generic costs 2 per mcg but only 8 mcg/day are available per period; a mid-priced version costs 5 per mcg with only 4 mcg/day available; a brand costs 9 per mcg with no supply limit. Each formulation can supply at least 0 of its units. Using all three as needed to reach the required 18 mcg/day, what is the lowest total cost of the regimen?",
+      "program": "symbol cheap : scalar\nsymbol mid : scalar\nsymbol brand : scalar\nconstrain cheap + mid + brand >= 18\nconstrain cheap <= 8\nconstrain mid <= 4\nconstrain cheap >= 0\nconstrain mid >= 0\nconstrain brand >= 0\nminimize 2 * cheap + 5 * mid + 9 * brand\n",
+      "answer_from": {
+        "type": "optimize_value"
+      },
+      "options": {
+        "A": 36,
+        "B": 90,
+        "C": 106,
+        "D": 146,
+        "E": 162
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6c-38",
+      "qtype": "formulary_cost_minimization",
+      "stem": "A patient with gout needs 80 mg/day of febuxostat. Three formulations are on the formulary: a cheap generic costs 1 per mg but only 40 mg/day are available per period; a mid-priced version costs 2 per mg with only 20 mg/day available; a brand costs 5 per mg with no supply limit. Each formulation can supply at least 0 of its units. Using all three as needed to reach the required 80 mg/day, what is the lowest total cost of the regimen?",
+      "program": "symbol cheap : scalar\nsymbol mid : scalar\nsymbol brand : scalar\nconstrain cheap + mid + brand >= 80\nconstrain cheap <= 40\nconstrain mid <= 20\nconstrain cheap >= 0\nconstrain mid >= 0\nconstrain brand >= 0\nminimize 1 * cheap + 2 * mid + 5 * brand\n",
+      "answer_from": {
+        "type": "optimize_value"
+      },
+      "options": {
+        "A": 80,
+        "B": 240,
+        "C": 180,
+        "D": 340,
+        "E": 400
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r6c-39",
+      "qtype": "formulary_cost_minimization",
+      "stem": "A patient with pulmonary arterial hypertension needs 10 mg/day of ambrisentan. Three formulations are on the formulary: a cheap generic costs 3 per mg but only 4 mg/day are available per period; a mid-priced version costs 6 per mg with only 3 mg/day available; a brand costs 12 per mg with no supply limit. Each formulation can supply at least 0 of its units. Using all three as needed to reach the required 10 mg/day, what is the lowest total cost of the regimen?",
+      "program": "symbol cheap : scalar\nsymbol mid : scalar\nsymbol brand : scalar\nconstrain cheap + mid + brand >= 10\nconstrain cheap <= 4\nconstrain mid <= 3\nconstrain cheap >= 0\nconstrain mid >= 0\nconstrain brand >= 0\nminimize 3 * cheap + 6 * mid + 12 * brand\n",
+      "answer_from": {
+        "type": "optimize_value"
+      },
+      "options": {
+        "A": 30,
+        "B": 84,
+        "C": 102,
+        "D": 66,
+        "E": 120
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r6c-40",
+      "qtype": "formulary_cost_minimization",
+      "stem": "A patient with psoriasis needs 300 mg/dose of secukinumab. Three formulations are on the formulary: a cheap generic costs 3 per mg but only 150 mg/dose are available per period; a mid-priced version costs 6 per mg with only 75 mg/dose available; a brand costs 11 per mg with no supply limit. Each formulation can supply at least 0 of its units. Using all three as needed to reach the required 300 mg/dose, what is the lowest total cost of the regimen?",
+      "program": "symbol cheap : scalar\nsymbol mid : scalar\nsymbol brand : scalar\nconstrain cheap + mid + brand >= 300\nconstrain cheap <= 150\nconstrain mid <= 75\nconstrain cheap >= 0\nconstrain mid >= 0\nconstrain brand >= 0\nminimize 3 * cheap + 6 * mid + 11 * brand\n",
+      "answer_from": {
+        "type": "optimize_value"
+      },
+      "options": {
+        "A": 900,
+        "B": 2100,
+        "C": 2925,
+        "D": 3300,
+        "E": 1725
+      },
+      "gold_letter": "E"
     }
   ]
 }
