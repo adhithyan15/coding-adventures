@@ -33,15 +33,16 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell status.
+1. Rust Berkeley Mosaic app shell telemetry.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app shell statuses and JSON helpers that derive a
-     compact route, severity, status message, entry action, and diagnostic counts
-     from Berkeley app shell handoffs.
-   - Preserve package name, source fingerprint, ready/blocked route, entry panel
-     and primary action, diagnostic severity counts, and blocking reason so
-     Mosaic, WebAssembly, and product shells can render startup chrome and
-     telemetry without inspecting the full launch/readiness payload.
+   - Add schema-versioned Rust app shell telemetry and JSON helpers that derive
+     compact route, entry-action, availability, diagnostic, repaired-state, and
+     capability-count metrics from Berkeley app shell handoffs.
+   - Preserve package name, source fingerprint, ready/blocked route, severity,
+     status message, primary action, panel/action availability counts, diagnostic
+     severity counts, stale/repaired-state flags, and advertised capability count
+     so Mosaic, WebAssembly, and product shells can emit startup telemetry
+     without inspecting the full launch/readiness payload.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1585,6 +1586,17 @@ the Rust, Python, and TypeScript surfaces together.
      repaired persisted editor-state flags, and blocking reason so Mosaic,
      WebAssembly, and product shells can start without walking the full
      host-surface export.
+
+150. Rust Berkeley Mosaic app shell status.
+   - Status: completed in PR 7022.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell statuses plus JSON helpers that derive a compact route, severity,
+     status message, entry action, and diagnostic counts from shell handoffs.
+   - The status payload preserves package name, source fingerprint, ready/blocked
+     route, entry panel and primary action, diagnostic severity counts, and
+     blocking reason so Mosaic, WebAssembly, and product shells can render
+     startup chrome and telemetry without inspecting the full launch/readiness
+     payload.
 
 ## Backlog
 

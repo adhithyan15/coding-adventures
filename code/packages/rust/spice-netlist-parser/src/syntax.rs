@@ -21,6 +21,7 @@ pub const BERKELEY_APP_LAUNCH_PLAN_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_STATUS_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_TELEMETRY_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -57,6 +58,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-readiness-report-json",
     "app-shell-handoff-json",
     "app-shell-status-json",
+    "app-shell-telemetry-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -546,6 +548,76 @@ impl BerkeleyAppShellStatus {
 
     pub fn to_json(&self) -> String {
         app_shell_status_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellTelemetry {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub message: String,
+    pub entry_panel_id: Option<String>,
+    pub primary_action_id: Option<String>,
+    pub panel_count: usize,
+    pub enabled_panel_count: usize,
+    pub disabled_panel_count: usize,
+    pub action_count: usize,
+    pub enabled_action_count: usize,
+    pub disabled_action_count: usize,
+    pub diagnostic_count: usize,
+    pub error_count: usize,
+    pub warning_count: usize,
+    pub note_count: usize,
+    pub selection_stale: bool,
+    pub command_stale: bool,
+    pub repaired_state: bool,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellTelemetry {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_shell_handoff(&BerkeleyAppShellHandoff::from_bootstrap_snapshot(snapshot))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        let status = BerkeleyAppShellStatus::from_shell_handoff(handoff);
+        let readiness = &handoff.readiness_report;
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_TELEMETRY_SCHEMA_VERSION,
+            package_name: status.package_name,
+            source_fingerprint: status.source_fingerprint,
+            title: status.title,
+            startup_route: status.startup_route,
+            ready: status.ready,
+            severity: status.severity,
+            message: status.message,
+            entry_panel_id: status.entry_panel_id,
+            primary_action_id: status.primary_action_id,
+            panel_count: readiness.panel_count,
+            enabled_panel_count: readiness.enabled_panel_count,
+            disabled_panel_count: readiness.disabled_panel_count,
+            action_count: readiness.action_count,
+            enabled_action_count: readiness.enabled_action_count,
+            disabled_action_count: readiness.disabled_action_count,
+            diagnostic_count: readiness.diagnostic_count,
+            error_count: readiness.error_count,
+            warning_count: readiness.warning_count,
+            note_count: readiness.note_count,
+            selection_stale: readiness.selection_stale,
+            command_stale: readiness.command_stale,
+            repaired_state: readiness.repaired_state,
+            artifact_capability_count: handoff.package_manifest.artifact_capabilities.len(),
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_telemetry_json_value(self).to_string()
     }
 }
 
@@ -1255,6 +1327,38 @@ impl BerkeleyAppDeck {
         persisted_state: BerkeleyAppPersistedEditorState,
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self.run_app_shell_status(persisted_state)?.to_json())
+    }
+
+    pub fn app_shell_telemetry(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellTelemetry {
+        BerkeleyAppShellTelemetry::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_telemetry(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellTelemetry, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellTelemetry::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_telemetry_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_telemetry(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_telemetry_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self.run_app_shell_telemetry(persisted_state)?.to_json())
     }
 
     pub fn run_source_order(&self) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
@@ -2022,6 +2126,35 @@ fn app_shell_status_json_value(status: &BerkeleyAppShellStatus) -> serde_json::V
         "warningCount": status.warning_count,
         "noteCount": status.note_count,
         "blockingMessage": &status.blocking_message,
+    })
+}
+
+fn app_shell_telemetry_json_value(telemetry: &BerkeleyAppShellTelemetry) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": telemetry.schema_version,
+        "packageName": &telemetry.package_name,
+        "sourceFingerprint": &telemetry.source_fingerprint,
+        "title": &telemetry.title,
+        "startupRoute": &telemetry.startup_route,
+        "ready": telemetry.ready,
+        "severity": &telemetry.severity,
+        "message": &telemetry.message,
+        "entryPanelId": &telemetry.entry_panel_id,
+        "primaryActionId": &telemetry.primary_action_id,
+        "panelCount": telemetry.panel_count,
+        "enabledPanelCount": telemetry.enabled_panel_count,
+        "disabledPanelCount": telemetry.disabled_panel_count,
+        "actionCount": telemetry.action_count,
+        "enabledActionCount": telemetry.enabled_action_count,
+        "disabledActionCount": telemetry.disabled_action_count,
+        "diagnosticCount": telemetry.diagnostic_count,
+        "errorCount": telemetry.error_count,
+        "warningCount": telemetry.warning_count,
+        "noteCount": telemetry.note_count,
+        "selectionStale": telemetry.selection_stale,
+        "commandStale": telemetry.command_stale,
+        "repairedState": telemetry.repaired_state,
+        "artifactCapabilityCount": telemetry.artifact_capability_count,
     })
 }
 
