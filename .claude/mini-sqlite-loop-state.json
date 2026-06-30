@@ -177,11 +177,11 @@
     {
       "id": "kotlin-level1-sql-planner",
       "title": "Kotlin sql-planner",
-      "status": "pending",
+      "status": "in-review",
       "depends_on": ["kotlin-level1-sql-backend"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Port Python sql_planner to Kotlin."
+      "branch": "mini-sqlite/kotlin-level1-sql-planner",
+      "pr_number": 7047,
+      "notes": "PR open 2026-06-30. 50 tests (JaCoCo ≥80%). Kotlin sealed classes + data classes. Awaiting CI + merge."
     },
     {
       "id": "kotlin-level1-sql-optimizer",
