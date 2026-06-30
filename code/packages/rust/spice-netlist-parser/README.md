@@ -160,6 +160,15 @@ let shell_event_dashboard_json = deck.run_app_shell_event_dashboard_json(
 )?;
 assert!(shell_event_dashboard_json.contains(r#""sectionCount":3"#));
 assert!(shell_event_dashboard_json.contains(r#""attentionRequired":false"#));
+
+let shell_dashboard_package_json = deck.run_app_shell_dashboard_package_json(
+    BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(3),
+        active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+    },
+)?;
+assert!(shell_dashboard_package_json.contains(r#""packageManifest":{"#));
+assert!(shell_dashboard_package_json.contains(r#""eventDashboard":{"#));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -217,9 +226,12 @@ and capability events so Mosaic and product shells can append startup streams
 without reinventing app-state traversal. Shell event digests condense those
 logs into one headline event plus attention and metric event ID lists for
 startup dashboards. Shell event dashboards group the same digest into status,
-attention, and metrics sections for first-render Mosaic dashboards. The
-grammar-backed parser generator and Python/TypeScript parity surfaces continue
-to mature.
+attention, and metrics sections for first-render Mosaic dashboards. Shell
+dashboard packages combine the manifest and event dashboard into one compact
+schema-versioned payload for WebAssembly and product hosts that want a
+first-render dashboard without stitching package metadata to dashboard sections.
+The grammar-backed parser generator and Python/TypeScript parity surfaces
+continue to mature.
 
 This parser supports `R`, `C`, `L`, `V`, `I`, `D`, `Q`, `M`, `G`, `E`, `F`, and
 `H` elements, `.model <name> D(...)` diode cards with `IS` and `VT`

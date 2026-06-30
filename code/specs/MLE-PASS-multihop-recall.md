@@ -157,6 +157,31 @@ hop-1 libraries to the gene/inheritance chains (dermatology, histopathology), tw
 `g6pd`), and the `x_linked` pattern. Run-verified: **38/38 correct** (35 answerable, both hops cited,
 `multihop_coverage` 1.0; 3 abstained), zero model calls.
 
+## 6d. Slice 6 (shipped) — a third hop-2 relation per disease, and three-hop abstention
+The bank grew **38 → 40** with two distinct spine advances, both arranging only already-grounded facts.
+
+```
+heinz_bodies ──seen_in──▶ g6pd_deficiency ──classic_finding──▶ bite_cells          (histo + anemia)
+   g6pd_deficiency now answers THREE hop-2 relations across THREE libraries:
+   gene_defect→g6pd (genetics, mh-36) · inheritance→x_linked (genetics, mh-38) · classic_finding→bite_cells (anemia, mh-39)
+
+leukocoria ──eye_finding_indicates──▶ retinoblastoma ──causes?──▶ ⊥ ──gram_stain──▶ (abstain)   (mh-40)
+   ends grounded, interior join ungrounded (no causative organism) → engine MUST abstain
+```
+
+- **`mh-39` (write-once-use-many at the hop-2 level).** A systematic join-scan shows `g6pd_deficiency`
+  is the one disease id appearing both as a finding-library object and a knowledge-library subject; it
+  now answers a *third* second relation (hematology `classic_finding`) from a different hop-1 finding
+  (`heinz_bodies`, histo) into a third hop-2 library (`anemia-edges`). One grounded id, three relations,
+  three libraries — the strongest single-disease evidence the second hop is fully generic.
+- **`mh-40` (three-hop abstention).** The deepest negative test: a 3-hop whose ends are grounded but
+  whose interior join (`causes(organism, retinoblastoma)`) binds nothing, so the engine abstains rather
+  than fabricate a Gram stain. A partially-grounded multi-hop is still an abstention — never-fabricate
+  extended to the deepest chain.
+
+Run-verified: **40/40 correct** (36 answerable, every answerable item cites all its hops — the 3-hop
+`mh-34` cites 3, `mh-39` cites 2; `multihop_coverage` 1.0; 4 abstained), zero model calls.
+
 ## 7. Next
 The **three-hop harness now exists** (slice 4); the limit is grounded id-joins, not the engine.
 More 3-hops land for free once: (a) more finding→disease edges reach micro `causes` diseases

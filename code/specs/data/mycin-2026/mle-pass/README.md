@@ -106,3 +106,14 @@ and `heinz_bodies → g6pd_deficiency → g6pd / x_linked` (hop 1 = `histo-edges
 renamed, or authored — exactly the "land for free" the spec anticipated. (`heinz_bodies` also maps to
 `methemoglobinemia`, but only `g6pd_deficiency` carries the gene/inheritance edge, so the join binds a
 single answer — the second hop disambiguates.) `multihop_coverage` 1.0 over the 35 answerable items.
+
+Slice 6: **40/40 correct, zero model calls** — slice-5 plus two distinct spine advances, again with
+nothing grounded, renamed, or authored. (1) **A third hop-2 relation off one disease** (`mh-39`):
+`g6pd_deficiency` already answers gene and inheritance; it now also answers a hematology
+`classic_finding` — `heinz_bodies → g6pd_deficiency → bite_cells` (hop 2 = `anemia-edges`), so one
+grounded disease feeds three different second relations across three libraries (write-once-use-many at
+the hop-2 level). (2) **A three-hop abstention** (`mh-40`): `leukocoria → retinoblastoma → ? →
+gram_stain` — the ends are grounded but retinoblastoma has no grounded causative organism, so the
+interior join binds nothing and the engine MUST abstain rather than fabricate a Gram stain. A
+partially-grounded multi-hop is still an abstention, not a guess — the never-fabricate discipline at
+the deepest chain. `multihop_coverage` 1.0 over the 36 answerable items.

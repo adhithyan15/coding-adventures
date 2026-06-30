@@ -261,11 +261,64 @@
 //! nest of functions or calls becomes a positioned error, not a stack
 //! overflow.
 //!
-//! ### Deferred past M4
+//! ## Collections (M5 — learned by probing the parser)
 //!
-//! Collections / member-access / methods (M5), classes, `this`/`new`,
-//! generators / `async`/`await`, default / rest params, destructuring,
-//! spread, and template literals remain positioned errors.
+//! M5 adds **arrays** and **objects** plus member / subscript access.  The
+//! CST rule names and child layouts (precedence-wrapper layers elided):
+//!
+//! | JS source        | CST rule              | children                                                    |
+//! |------------------|-----------------------|-------------------------------------------------------------|
+//! | `[1, 2, 3]`      | `array_literal`       | `[LBracket, element_list, RBracket]`                        |
+//! | `[]`             | `array_literal`       | `[LBracket, element_list(empty), RBracket]`                 |
+//! | `{a: 1, "k": v}` | `object_literal`      | `[LBrace, property_definition*, (Comma), RBrace]`           |
+//! | `{}`             | `object_literal`      | `[LBrace, RBrace]`                                          |
+//! | `a:`/`"k":`      | `property_definition` | `[property_name(Name|String), Colon, assignment_expression]`|
+//! | `obj.prop`       | `member_expression`   | `[receiver, Dot, Name(prop)]`                               |
+//! | `xs[i]`/`obj["k"]`| `member_expression`  | `[receiver, LBracket, expression, RBracket]`                |
+//! | `({…})`          | `primary_expression`  | `[LParen, expression, RParen]` (grouping)                   |
+//!
+//! ### The bracket-vs-dot disambiguation (the M5 design decision)
+//!
+//! The IR has *both* sequences (`SeqLit`/`SeqIndex`/`SeqLen`/`SeqSet`) and
+//! maps (`MapLit`/`MapGet`/`MapSet`).  JS `x[i]` is structurally ambiguous —
+//! it could index either — and `x.prop` is unambiguously object access.  The
+//! IR is untyped at this layer, so we cannot infer the receiver's kind.  We
+//! follow the SIR19 collections table, which fixes:
+//!
+//! - `[…]` → `SeqLit`, `{…}` → `MapLit` (identifier and `"string"` keys both
+//!   lower to a **string** map key — the JS quoting distinction is syntactic);
+//! - `xs.length` → `SeqLen`; **every other** `.prop` (dot) → `MapGet` with a
+//!   string key;
+//! - `xs[i]` → `SeqIndex`, `d[k]`/`d.k` → `MapGet`.
+//!
+//! The only genuinely ambiguous *source* form is `x[<expr>]`.  We resolve it
+//! **by the index expression's kind**: a **string-literal** key
+//! (`obj["k"]`) → `MapGet` (treating a quoted subscript exactly like the
+//! equivalent dotted access `obj.k`); **any other** index (`xs[0]`, `xs[i]`,
+//! `xs[i + 1]`) → `SeqIndex`.  Assignment targets mirror this exactly:
+//! `obj.prop = v` / `obj["k"] = v` → `MapSet`, `xs[i] = v` → `SeqSet`.  This
+//! default is spec-sanctioned (the table is the authority); it is documented
+//! here and in the spec's collections section.
+//!
+//! ### Recursion bound
+//!
+//! Every M5 CST walk is depth-bounded.  Array elements, object-property
+//! values, member-chain receivers, and bracket indices are all lowered
+//! through [`lower_expression`](Lowerer::lower_expression) at `depth + 1`, so
+//! a pathological `[[[[…]]]]`, `{a:{b:{c:…}}}`, or `a.b.c.d…` tower past
+//! [`MAX_EXPR_DEPTH`] becomes a positioned [`JsLowerError`], never a native
+//! stack overflow (CWE-674).  The object-property and array-element *iteration*
+//! is strictly non-recursive (a `for` over direct children).
+//!
+//! ### Deferred past M5
+//!
+//! Spread (`[...xs]` / `{...o}`), array elisions (`[1, , 3]`), object
+//! shorthand (`{x}`), computed keys (`{[e]: v}`), numeric keys (`{0: v}`),
+//! object methods / getters / setters, `.length` *assignment* (a resize, with
+//! no IR node), array methods (`.map`/`.push`/… — these would need
+//! runtime-library support, per the project mandate), classes, `this`/`new`,
+//! generators / `async`/`await`, default / rest params, destructuring, and
+//! template literals all remain positioned errors.
 
 use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
@@ -2135,13 +2188,15 @@ impl Lowerer {
         self.lower_expression(expr_node, 0).map(Lowered::Expr)
     }
 
-    /// Lower a statement-level `assignment_expression` (`x = expr`).
+    /// Lower a statement-level `assignment_expression` (`x = expr`,
+    /// `xs[i] = expr`, `obj.prop = expr`).
     ///
     /// Shape: `assignment_expression[ left_hand_side_expression,
-    /// assignment_operator, assignment_expression ]`.  M2 supports only
-    /// the plain `=` operator on a bare identifier target; compound
-    /// assignment (`+=`, …) and assignment to a member/index
-    /// (`obj.x = …`, `xs[i] = …`) are deferred.
+    /// assignment_operator, assignment_expression ]`.  Only the plain `=`
+    /// operator is supported; compound assignment (`+=`, …) is deferred.  The
+    /// target may be a bare identifier (→ `Assign`) **or** (M5) a member /
+    /// subscript access (→ `SeqSet` / `MapSet`), disambiguated exactly as the
+    /// read side ([`lower_member_expression`](Self::lower_member_expression)).
     fn lower_assignment(&mut self, node: &GrammarASTNode) -> Result<Stmt, JsLowerError> {
         let span = self.span_of(node);
 
@@ -2169,12 +2224,19 @@ impl Lowerer {
             });
         }
 
+        // ── M5: member / subscript target → SeqSet / MapSet ─────────────
+        // Peel the LHS spine; a *branching* `member_expression` is an
+        // indexed/member assignment target (`xs[i] = v`, `obj.prop = v`).
+        let lhs_branch = peel_to_branch(lhs);
+        if lhs_branch.rule_name == "member_expression" {
+            return self.lower_member_assignment(lhs_branch, node, span);
+        }
+
         // The target must be a bare identifier.  Peel the LHS spine to
-        // its leaf token; anything that branches (member access, index)
-        // is deferred.
-        let target_tok = single_leaf_token(peel_to_branch(lhs)).ok_or_else(|| JsLowerError {
-            message: "assignment to a non-identifier target (member/index) is deferred past M2"
-                .to_string(),
+        // its leaf token; anything that branches (and isn't a member
+        // access, handled above) is deferred.
+        let target_tok = single_leaf_token(lhs_branch).ok_or_else(|| JsLowerError {
+            message: "assignment to a non-identifier target is deferred".to_string(),
             line: span.start_line,
             column: span.start_col,
         })?;
@@ -2214,6 +2276,140 @@ impl Lowerer {
                 value,
                 span,
             })
+        }
+    }
+
+    /// Lower an indexed / member assignment target (`xs[i] = v`,
+    /// `obj.prop = v`, `obj["k"] = v`, and chained `grid[0][1] = v`) to a
+    /// [`Stmt::SeqSet`] / [`Stmt::MapSet`].
+    ///
+    /// `member` is the branching `member_expression` LHS;
+    /// `assign_node.children[2]` is the RHS value.  Like the read side, the
+    /// chain is **flat** in the CST (`[receiver, access, access, …]`).  The
+    /// *final* access is the assignment site; every access *before* it builds
+    /// the receiver expression.  We split the children at the last access,
+    /// lower the receiver prefix as an ordinary `member_expression` read (so
+    /// `grid[0][1] = v` indexes `grid[0]` first), then emit the matching Set.
+    ///
+    /// The SeqSet-vs-MapSet choice mirrors the read side exactly: a dotted
+    /// target is always a map key (`.length` is read-only — assignment is a
+    /// resize the IR can't express, so it is deferred); a bracket target with
+    /// a string-literal key is a map key, any other bracket key a sequence
+    /// index.
+    fn lower_member_assignment(
+        &mut self,
+        member: &GrammarASTNode,
+        assign_node: &GrammarASTNode,
+        span: Span,
+    ) -> Result<Stmt, JsLowerError> {
+        // The RHS value (children[2] of the assignment).
+        let rhs = match &assign_node.children[2] {
+            ASTNodeOrToken::Node(n) => n,
+            ASTNodeOrToken::Token(_) => {
+                return Err(self.unsupported(assign_node, "assignment (token RHS)"))
+            }
+        };
+        let value = self.lower_expression(rhs, 0)?;
+
+        // Find where the *final* access starts (a `.` or `[` token).  Earlier
+        // children form the receiver prefix; the final access is the target.
+        let last_access = member
+            .children
+            .iter()
+            .rposition(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "." || t.value == "["))
+            .ok_or_else(|| self.unsupported(member, "assignment target (no access)"))?;
+
+        // The receiver is the member_expression truncated to everything
+        // before the final access; if that is a single node, lower it
+        // directly, otherwise re-wrap it as a `member_expression` and lower
+        // the prefix chain through the read path.
+        let recv = self.lower_member_prefix(member, last_access, &span)?;
+
+        match &member.children[last_access] {
+            // ── final `.name` access → MapSet (string key) ─────────────
+            ASTNodeOrToken::Token(t) if t.value == "." => {
+                let prop = match member.children.get(last_access + 1) {
+                    Some(ASTNodeOrToken::Token(p)) if matches!(p.type_, TokenType::Name) => {
+                        p.value.clone()
+                    }
+                    _ => return Err(self.unsupported(member, "assignment to non-name property")),
+                };
+                if prop == "length" {
+                    return Err(JsLowerError {
+                        message: "assignment to `.length` is deferred past M5 (no resize node)"
+                            .to_string(),
+                        line: span.start_line,
+                        column: span.start_col,
+                    });
+                }
+                self.features_used.add(Feature::Maps);
+                self.features_used.add(Feature::Strings);
+                Ok(Stmt::MapSet {
+                    map: recv,
+                    key: Expr::StrLit { value: prop, span: span.clone() },
+                    value,
+                    span,
+                })
+            }
+            // ── final `[index]` access → SeqSet / MapSet ───────────────
+            ASTNodeOrToken::Token(t) if t.value == "[" => {
+                let index_node = match member.children.get(last_access + 1) {
+                    Some(ASTNodeOrToken::Node(n)) => n,
+                    _ => return Err(self.unsupported(member, "subscript target (no index)")),
+                };
+                let index = self.lower_expression(index_node, 0)?;
+                if matches!(index, Expr::StrLit { .. }) {
+                    self.features_used.add(Feature::Maps);
+                    Ok(Stmt::MapSet { map: recv, key: index, value, span })
+                } else {
+                    self.features_used.add(Feature::Sequences);
+                    Ok(Stmt::SeqSet { seq: recv, index, value, span })
+                }
+            }
+            _ => Err(self.unsupported(member, "assignment target (unsupported access form)")),
+        }
+    }
+
+    /// Lower the *receiver prefix* of a flat `member_expression` assignment
+    /// target: everything before the access at `last_access`.  If the prefix
+    /// is just the bare receiver node (a simple `xs[i] = v` / `obj.p = v`),
+    /// lower that node directly; otherwise (a chained `grid[0][1] = v`)
+    /// re-wrap the prefix children as a `member_expression` and lower it
+    /// through the read path so the inner accesses fold correctly.
+    fn lower_member_prefix(
+        &mut self,
+        member: &GrammarASTNode,
+        last_access: usize,
+        _span: &Span,
+    ) -> Result<Expr, JsLowerError> {
+        let prefix = &member.children[..last_access];
+        // Count access tokens in the prefix; zero means the prefix is the
+        // bare receiver node (the common, single-access case).
+        let prefix_accesses = prefix
+            .iter()
+            .filter(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "." || t.value == "["))
+            .count();
+        let recv_node = prefix
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Node(n) => Some(n),
+                ASTNodeOrToken::Token(_) => None,
+            })
+            .ok_or_else(|| self.unsupported(member, "assignment target (no receiver)"))?;
+        if prefix_accesses == 0 {
+            self.lower_expression(recv_node, 0)
+        } else {
+            // Re-wrap the prefix as its own member_expression and lower it as
+            // a read (folds the inner `grid[0]` of `grid[0][1] = v`).
+            let inner = GrammarASTNode {
+                rule_name: "member_expression".to_string(),
+                children: prefix.to_vec(),
+                start_line: member.start_line,
+                start_column: member.start_column,
+                end_line: member.end_line,
+                end_column: member.end_column,
+            };
+            self.lower_member_expression(&inner, 0)
         }
     }
 
@@ -2305,9 +2501,289 @@ impl Lowerer {
             "arrow_function" => self.lower_arrow_function(node, depth),
             "call_expression" => self.lower_call_expression(node, depth),
 
-            // ── still unsupported (member access, collections, …) ───
+            // ── M5: collections ─────────────────────────────────────
+            // Array / object literals and member / subscript access.
+            "array_literal" => self.lower_array_literal(node, depth),
+            "object_literal" => self.lower_object_literal(node, depth),
+            "member_expression" => self.lower_member_expression(node, depth),
+
+            // ── M5: parenthesised expression ────────────────────────
+            // `( expr )` — the parser wraps a grouping in a branching
+            // `primary_expression[ (, expression, ) ]`.  This is how an
+            // object literal reaches value position at statement start
+            // (`({a: 1})`), and grouping in general.  Peel to the inner
+            // expression and lower it.
+            "primary_expression" if is_parenthesised(node) => {
+                let inner = child_node_named(node, "expression")
+                    .ok_or_else(|| self.unsupported(node, "parenthesised (no inner expr)"))?;
+                self.lower_expression(inner, depth + 1)
+            }
+
+            // ── still unsupported (classes, `this`, `new`, …) ───────
             other => Err(self.unsupported(node, other)),
         }
+    }
+
+    // -----------------------------------------------------------------------
+    // M5: collections — array / object literals, member / subscript access
+    // -----------------------------------------------------------------------
+
+    /// Lower an `array_literal` (`[ e0, e1, … ]`) to an [`Expr::SeqLit`].
+    ///
+    /// CST: `array_literal[ LBracket, element_list, RBracket ]`, where
+    /// `element_list` holds `assignment_expression` element nodes separated
+    /// by `Comma` tokens (empty for `[]`).  Each element is lowered with the
+    /// depth-bounded expression lowerer, so a nested `[[[…]]]` tower past
+    /// [`MAX_EXPR_DEPTH`] is a positioned error, not a stack overflow.
+    ///
+    /// Spread elements (`[...xs]`) and elisions (`[1, , 3]`) are deferred:
+    /// the former adds a `spread_element` child we don't model, the latter
+    /// a hole we'd have to invent a value for.
+    fn lower_array_literal(
+        &mut self,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Expr, JsLowerError> {
+        let span = self.span_of(node);
+        let mut items = Vec::new();
+        // The element nodes live under the `element_list` child (absent for
+        // some grammars when empty; the probe shows an empty `element_list`).
+        if let Some(list) = child_node_named(node, "element_list") {
+            for child in &list.children {
+                match child {
+                    ASTNodeOrToken::Node(n) => {
+                        // A `spread_element` (`...xs`) is the one element node
+                        // we cannot model as a plain item; reject it.
+                        if peel_to_branch(n).rule_name == "spread_element" {
+                            return Err(JsLowerError {
+                                message: "array spread (`[...xs]`) is deferred past M5"
+                                    .to_string(),
+                                line: span.start_line,
+                                column: span.start_col,
+                            });
+                        }
+                        items.push(self.lower_expression(n, depth + 1)?);
+                    }
+                    // Comma separators carry no element.
+                    ASTNodeOrToken::Token(_) => {}
+                }
+            }
+        }
+        self.features_used.add(Feature::Sequences);
+        Ok(Expr::SeqLit { items, span })
+    }
+
+    /// Lower an `object_literal` (`{ k0: v0, k1: v1, … }`) to an
+    /// [`Expr::MapLit`].
+    ///
+    /// CST: `object_literal[ LBrace, property_definition*, (Comma), RBrace ]`,
+    /// each `property_definition[ property_name, Colon, assignment_expression ]`
+    /// where `property_name` wraps a single `Name` token (identifier key
+    /// `a:`) or a `String` token (string key `"k":`).  Both lower to a
+    /// **string** map key (`StrLit`); the JS distinction between an
+    /// identifier and a quoted key is purely syntactic.
+    ///
+    /// Computed keys (`{ [e]: v }`), shorthand (`{ x }`), methods
+    /// (`{ f() {} }`), getters/setters, and spread (`{ ...o }`) are deferred —
+    /// each surfaces a `property_definition` shape we don't model.  Values are
+    /// lowered with the depth-bounded expression lowerer, so a nested
+    /// `{a:{b:{…}}}` tower past [`MAX_EXPR_DEPTH`] is a positioned error.
+    fn lower_object_literal(
+        &mut self,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Expr, JsLowerError> {
+        let span = self.span_of(node);
+        let mut entries = Vec::new();
+        for prop in children_nodes_named(node, "property_definition") {
+            // A simple `key: value` property has exactly a `property_name`,
+            // a `Colon`, and one expression value node.  Anything else
+            // (shorthand `{x}`, method `{f(){}}`, spread `{...o}`, computed
+            // `{[e]:v}`) is deferred.
+            let key = self.object_key(prop, &span)?;
+            let value_node = prop
+                .children
+                .iter()
+                .rev()
+                .find_map(|c| match c {
+                    ASTNodeOrToken::Node(n) => Some(n),
+                    ASTNodeOrToken::Token(_) => None,
+                })
+                .ok_or_else(|| JsLowerError {
+                    message: "object property without a value (shorthand / method) \
+                              is deferred past M5"
+                        .to_string(),
+                    line: span.start_line,
+                    column: span.start_col,
+                })?;
+            let value = self.lower_expression(value_node, depth + 1)?;
+            entries.push(semantic_ir::nodes::MapEntry { key, value });
+        }
+        self.features_used.add(Feature::Maps);
+        Ok(Expr::MapLit { entries, span })
+    }
+
+    /// Extract the string key of a `property_definition`, rejecting the
+    /// deferred key forms (computed `[e]`, shorthand, method, numeric).
+    fn object_key(
+        &mut self,
+        prop: &GrammarASTNode,
+        span: &Span,
+    ) -> Result<Expr, JsLowerError> {
+        let name_node = child_node_named(prop, "property_name").ok_or_else(|| JsLowerError {
+            message: "object property key form (computed / shorthand / method) \
+                      is deferred past M5"
+                .to_string(),
+            line: span.start_line,
+            column: span.start_col,
+        })?;
+        let tok = single_leaf_token(name_node).ok_or_else(|| JsLowerError {
+            message: "computed object key (`{ [e]: v }`) is deferred past M5".to_string(),
+            line: span.start_line,
+            column: span.start_col,
+        })?;
+        match tok.type_ {
+            // Identifier key `a:` and quoted key `"k":` both become a string
+            // key — the JS-level distinction is syntactic only.
+            TokenType::Name | TokenType::String => {
+                self.features_used.add(Feature::Strings);
+                Ok(Expr::StrLit {
+                    value: tok.value.clone(),
+                    span: self.span_of_token(tok),
+                })
+            }
+            // Numeric keys (`{ 0: v }`) would need integer-keyed maps we
+            // don't model in v0.
+            other => Err(JsLowerError {
+                message: format!(
+                    "object key token {other:?} is deferred past M5 (string / identifier keys only)"
+                ),
+                line: tok.line,
+                column: tok.column,
+            }),
+        }
+    }
+
+    /// Lower a *branching* `member_expression` — a dot member or a bracket
+    /// subscript — to the spec's collection node.
+    ///
+    /// The disambiguation (SIR19 collections table) is **by access shape and
+    /// key kind**, not by any value-type inference (the IR is untyped here):
+    ///
+    /// | JS access      | CST shape                                  | SIR node                         |
+    /// |----------------|--------------------------------------------|----------------------------------|
+    /// | `xs.length`    | `[obj, Dot, Name("length")]`               | `SeqLen { seq: obj }`            |
+    /// | `obj.prop`     | `[obj, Dot, Name(prop)]`                   | `MapGet { map: obj, key: "prop"}`|
+    /// | `obj["k"]`     | `[obj, LBracket, expr(String), RBracket]`  | `MapGet { map: obj, key: "k" }`  |
+    /// | `xs[i]`        | `[obj, LBracket, expr(non-string), RBracket]` | `SeqIndex { seq: obj, index: i}` |
+    ///
+    /// So: **dot access → `MapGet`** (string key), with the single special
+    /// case `.length` → `SeqLen`; **bracket access with a string-literal key
+    /// → `MapGet`** (mirroring dot's string key), and **bracket access with
+    /// any other key → `SeqIndex`**.  This default is spec-sanctioned (the
+    /// table fixes `xs[i]`→`SeqIndex`, `d[k]`/`d.k`→`MapGet`,
+    /// `xs.length`→`SeqLen`); the only genuinely ambiguous source form,
+    /// `x[<string-literal>]`, is routed to `MapGet` by treating a quoted key
+    /// the same as a dotted one.
+    ///
+    /// A multi-segment chain (`a.b.c`, `grid[0][1]`) is **left-associative**
+    /// and, crucially, **flat in the CST**: the parser emits a *single*
+    /// `member_expression` whose children are `[receiver, access, access, …]`
+    /// — e.g. `grid[0][1]` → `[grid, [, 0, ], [, 1, ]]` (7 children) and
+    /// `a.b.c` → `[a, ., b, ., c]` (5 children).  We therefore fold the
+    /// accesses left over the child sequence (no CST recursion), lowering only
+    /// the receiver and each index through the depth-bounded expression
+    /// lowerer.  The *fold* is iterative, so a long chain costs no native
+    /// stack; each lowered index/receiver still consumes the `MAX_EXPR_DEPTH`
+    /// budget, so a `a[b[c[…]]]` index tower is a positioned error.
+    fn lower_member_expression(
+        &mut self,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Expr, JsLowerError> {
+        let span = self.span_of(node);
+        // The receiver is the first child *node*; the trailing children are
+        // a flat sequence of `.name` or `[index]` accesses applied left to
+        // right.  We walk the children with a small cursor so both access
+        // shapes (and chains of them) fold uniformly.
+        let children = &node.children;
+        let first_idx = children
+            .iter()
+            .position(|c| matches!(c, ASTNodeOrToken::Node(_)))
+            .ok_or_else(|| self.unsupported(node, "member_expression (no receiver)"))?;
+        let recv_node = match &children[first_idx] {
+            ASTNodeOrToken::Node(n) => n,
+            ASTNodeOrToken::Token(_) => unreachable!("position found a Node"),
+        };
+        let mut acc = self.lower_expression(recv_node, depth + 1)?;
+
+        let mut i = first_idx + 1;
+        while i < children.len() {
+            match &children[i] {
+                // ── `.name` dot access ──────────────────────────────────
+                ASTNodeOrToken::Token(t) if t.value == "." => {
+                    // The next child is the property `Name` token.
+                    let prop = match children.get(i + 1) {
+                        Some(ASTNodeOrToken::Token(p)) if matches!(p.type_, TokenType::Name) => {
+                            p.value.clone()
+                        }
+                        _ => {
+                            return Err(self.unsupported(node, "member access (non-name property)"))
+                        }
+                    };
+                    i += 2;
+                    acc = if prop == "length" {
+                        // The one dotted property that is a sequence op.
+                        self.features_used.add(Feature::Sequences);
+                        Expr::SeqLen { seq: Box::new(acc), span: span.clone() }
+                    } else {
+                        self.features_used.add(Feature::Maps);
+                        self.features_used.add(Feature::Strings);
+                        Expr::MapGet {
+                            map: Box::new(acc),
+                            key: Box::new(Expr::StrLit {
+                                value: prop,
+                                span: span.clone(),
+                            }),
+                            span: span.clone(),
+                        }
+                    };
+                }
+                // ── `[index]` bracket access ────────────────────────────
+                ASTNodeOrToken::Token(t) if t.value == "[" => {
+                    // The next child is the index node (an `expression` for a
+                    // standalone subscript, or a bare precedence node in a
+                    // flat chain); the child after that is the `]` token.
+                    let index_node = match children.get(i + 1) {
+                        Some(ASTNodeOrToken::Node(n)) => n,
+                        _ => return Err(self.unsupported(node, "subscript (no index)")),
+                    };
+                    let index = self.lower_expression(index_node, depth + 1)?;
+                    i += 3; // skip `[`, index, `]`.
+                    // A *string-literal* key reads like object access → MapGet
+                    // (mirrors `obj.prop`); any other index → sequence index.
+                    acc = if matches!(index, Expr::StrLit { .. }) {
+                        self.features_used.add(Feature::Maps);
+                        Expr::MapGet {
+                            map: Box::new(acc),
+                            key: Box::new(index),
+                            span: span.clone(),
+                        }
+                    } else {
+                        self.features_used.add(Feature::Sequences);
+                        Expr::SeqIndex {
+                            seq: Box::new(acc),
+                            index: Box::new(index),
+                            span: span.clone(),
+                        }
+                    };
+                }
+                // Optional chaining `?.`, tagged templates, etc. are deferred.
+                _ => return Err(self.unsupported(node, "member_expression (unsupported access)")),
+            }
+        }
+
+        Ok(acc)
     }
 
     /// Lower a flat, left-associative binary chain to nested
@@ -2681,6 +3157,19 @@ fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
             ASTNodeOrToken::Token(_) => None,
         })
         .collect()
+}
+
+/// Is `node` a parenthesised grouping `( expression )` — the branching
+/// `primary_expression[ LParen, expression, RParen ]` the parser emits for
+/// `(e)`?  Used (M5) to peel a grouping that brought an object literal into
+/// value position at statement start (`({a: 1})`).
+fn is_parenthesised(node: &GrammarASTNode) -> bool {
+    node.rule_name == "primary_expression"
+        && node
+            .children
+            .first()
+            .map(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "("))
+            .unwrap_or(false)
 }
 
 /// Return the first direct child node of `node` whose `rule_name` is

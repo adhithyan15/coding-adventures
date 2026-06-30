@@ -156,8 +156,11 @@ frontend additionally ships notation-specific golden tests.
   that browsers and tools emit. A small crate with an XML-subset event lexer (attributes,
   namespace prefixes, the XML declaration, comments, and DOCTYPE all ignored) and an element-tree
   builder. PR-1 covers `<mn>`/`<mi>`/`<mtext>`/`<mo>`, `<mrow>` (operator precedence + implicit
-  multiplication + `(`…`)` fences), `<mfrac>`/`<msup>`/`<msub>`/`<msubsup>`/`<msqrt>`/`<mroot>`;
-  `<mtable>`, `<mover>`/`<munder>`, `<mfenced>`, and named-function recognition are PR-2.
+  multiplication + `(`…`)` fences), `<mfrac>`/`<msup>`/`<msub>`/`<msubsup>`/`<msqrt>`/`<mroot>`.
+  PR-2 adds `<mtable>`/`<mtr>`/`<mtd>` → `Matrix`, `<mover>`/`<munder>`/`<munderover>` →
+  `Overset`/`Underset` (an `<mo>` annotation in over/under position is read as a mark symbol), and
+  `<mfenced>` → `Group`. Named-function recognition (`<mi>sin</mi>` → `Call`) and `<mfenced>`
+  separator modelling are PR-3.
 - Future: MathJSON, content-MathML, spreadsheet formulae, … each a small crate implementing the
   trait. None require changes to consumers. **Four frontends now in (LaTeX, AsciiMath, Unicode,
   MathML), all feeding one neutral AST with zero consumer change** — the pluggability claim is

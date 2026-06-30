@@ -827,14 +827,19 @@ fn convert_variable_declarator(node: &GrammarASTNode) -> Result<VariableDeclarat
     // In both cases: first token or node is the binding name; optional
     // second node is the initializer expression.
 
-    // Find the NAME token (the binding identifier).
-    let id_name = node.children.iter().find_map(|c| match c {
-        ASTNodeOrToken::Token(t) if t.value != "=" => Some(t.value.clone()),
-        _ => None,
-    });
-    let id_name = id_name.ok_or_else(|| internal(node, "variable declarator: missing name"))?;
-
-    // Check for binding_pattern (destructuring) — not in Phase 1.
+    // Destructuring binding patterns (`var [a, b] = c`, `let {p, q} = o`,
+    // `const [x] = y`) are not yet supported by the typed bridge (Phase 2).
+    // DECLINE GRACEFULLY here — return `unsupported` so the CLI falls back to
+    // WHITESPACE_ONLY and still emits valid output (the same way spread,
+    // optional chaining, `new`, etc. are declined).
+    //
+    // This check MUST come before the NAME lookup below. A binding pattern is
+    // a `binding_pattern` *node* with no NAME *token* among the declarator's
+    // direct children, so the `find_map` yields `None` and the
+    // `ok_or_else(internal(...))` would abort the WHOLE compile with a hard
+    // error (`exit 2`) instead of declining. Previously this check sat AFTER
+    // that unwrap and was dead code for the destructuring case, so
+    // `var [a,b]=c;` / `let {p,q}=o;` failed to compile at SIMPLE/ADVANCED.
     for c in &node.children {
         if let ASTNodeOrToken::Node(n) = c {
             if n.rule_name == "binding_pattern" {
@@ -842,6 +847,13 @@ fn convert_variable_declarator(node: &GrammarASTNode) -> Result<VariableDeclarat
             }
         }
     }
+
+    // Find the NAME token (the binding identifier).
+    let id_name = node.children.iter().find_map(|c| match c {
+        ASTNodeOrToken::Token(t) if t.value != "=" => Some(t.value.clone()),
+        _ => None,
+    });
+    let id_name = id_name.ok_or_else(|| internal(node, "variable declarator: missing name"))?;
 
     // Find the initializer: the expression node child.
     let init = node_children(node).into_iter().next();
@@ -2790,6 +2802,23 @@ mod tests {
                 continue; // parse declined — sound fallback
             };
             let _ = grammar_to_program(&node, DEFAULT_ES_VERSION); // must not panic
+        }
+    }
+
+    #[test]
+    fn destructuring_declarations_decline_gracefully_not_hard_error() {
+        // `var [a,b]=c;`, `let {p,q}=o;`, `const [x]=y;` — destructuring binding
+        // patterns are Phase 2. The bridge must decline with `UnsupportedSyntax`
+        // (so the CLI falls back to WHITESPACE_ONLY and still emits valid JS),
+        // NOT raise an `Internal` error — which the CLI treats as a hard failure
+        // (`exit 2`, no output). Regression: the binding-pattern check sat after
+        // the NAME-token unwrap, so the unwrap fired `internal("missing name")`
+        // first and `var [a,b]=c;` failed to compile at SIMPLE/ADVANCED.
+        for src in ["var [a,b]=c;", "let {p,q}=o;", "const [x]=y;"] {
+            match bridge(src) {
+                Err(BridgeError::UnsupportedSyntax { .. }) => {} // graceful decline
+                other => panic!("expected UnsupportedSyntax for {src:?}, got {other:?}"),
+            }
         }
     }
 
