@@ -1,0 +1,1 @@
+dotnet test tests/CodingAdventures.SqlCodegen.Tests/CodingAdventures.SqlCodegen.Tests.csproj --disable-build-servers /p:CollectCoverage=true "/p:Include=[CodingAdventures.SqlCodegen]*" /p:Threshold=80 /p:ThresholdType=line
