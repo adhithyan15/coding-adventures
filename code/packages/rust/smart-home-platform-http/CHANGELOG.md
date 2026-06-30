@@ -77,6 +77,8 @@ All notable changes to this package will be documented in this file.
   id, and correlation id so audit views can be reopened from URL state.
 - Added a browser dashboard activity entity filter for scoping state history
   and runtime event panels through existing entity-aware activity routes.
+- Added a browser dashboard history event-type filter for reopening state
+  history views scoped to one device event class from URL state.
 - Added fixture-controller launch help, smoke-test URLs, and example-level tests
   to keep the local controller startup path usable.
 - Added a machine-readable local-controller smoke plan route that lists safe
