@@ -32,7 +32,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 |-------|----------|--------|
 | **L0 tokenizer** | catcode state machine → flat `Token` stream w/ byte spans | ✅ |
 | **L1 structural** | groups, `\cmd[opt]{arg}`, `\begin{env}…\end{env}`, text runs, raw math islands, `to_latex()` round-trip | ✅ |
-| **L2 math** | math AST (frac, binom, roots, scripts, big ops, functions, accents, `\left\right` fences, relations), precedence-climbing parser, `to_latex()` round-trip | ✅ |
+| **L2 math** | math AST (frac, binom, roots, scripts, big ops, functions, accents, `\left\right` fences, relations, `\overset`/`\underset`/`\stackrel` stacking and `\xrightarrow`-family extensible labelled arrows), precedence-climbing parser, `to_latex()` round-trip | ✅ |
 | **L3 environments** | math env family — `matrix`/`pmatrix`/`bmatrix`/`vmatrix`/`cases`/`aligned`/`align` plus `array`/`subarray` (mandatory `{col-spec}`) split on `&` and `\\` → `MathNode::Matrix`, round-trip; nesting + scripts | ✅ |
 | **L4 macros** | `\newcommand`/`\renewcommand`/`\providecommand` with positional `#1`..`#9`; bounded recursive expansion via `expand()` (L4a) | ✅ |
 | **L5 text breadth** | `\verb`/`verbatim` raw (L5a/b) + text accents `\'e`/`\c{c}` via `recognize_accents` (L5c) + sectioning/refs/preamble/font via `recognize_structure` (L5d) | ✅ |

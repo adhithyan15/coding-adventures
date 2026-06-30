@@ -646,6 +646,28 @@ mod tests {
     }
 
     #[test]
+    fn xrightarrow_lowers_as_overset_on_an_arrow_symbol() {
+        // A labelled arrow carries no dedicated neutral node — it reuses Overset/Underset
+        // (PFE01: presentation-equivalent forms collapse). `\xrightarrow{f}` lowers to exactly
+        // the same MathExpr as the explicit `\overset{f}{\rightarrow}`.
+        assert_eq!(m(r"\xrightarrow{f}"), m(r"\overset{f}{\rightarrow}"));
+        assert_eq!(
+            m(r"\xrightarrow{f}"),
+            MathExpr::Overset {
+                over: Box::new(MathExpr::Symbol("f".into())),
+                base: Box::new(MathExpr::Symbol("rightarrow".into())),
+            }
+        );
+        // The optional below-label lowers to the same Underset-over-Overset as the explicit form.
+        assert_eq!(
+            m(r"\xrightarrow[g]{f}"),
+            m(r"\underset{g}{\overset{f}{\rightarrow}}")
+        );
+        // Different commands keep distinct base arrows.
+        assert_ne!(m(r"\xrightarrow{f}"), m(r"\xleftarrow{f}"));
+    }
+
+    #[test]
     fn numbers_stay_exact_not_f64() {
         assert_eq!(m("0.1"), MathExpr::Number(Number::parse("0.1").unwrap()));
         // and the numerator of a fraction is an exact Number, not a float.
