@@ -5,6 +5,138 @@ All notable changes to `python-to-semantic-ir` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to semantic versioning.
 
+## 0.4.0 — 2026-06-30
+
+Milestone **M4**: functions, calls, and closures — `def`, tail-position
+`return`, `lambda`, function calls, and free-variable-captured closures
+(SIR17 Python → Semantic IR frontend, B4).
+
+### Added
+
+- **`def f(params): suite` → a top-level `Function`.**  Lowering is now
+  **two-pass**: a first pass collects **every** function name (top-level
+  and nested `def`s) into a flat table, so calls — including *forward
+  references* and *mutual recursion* — resolve to `DirectCall` regardless
+  of textual order; the second pass lowers each body.  Parameters are in
+  scope as `Scope::Param`.  A `def` with parameters declares
+  `Feature::DynamicTyping` (the subset has no parameter annotations).
+- **`return` (tail position only).**  A function body is a `Block` whose
+  `value` IS the return value, so a **tail** `return expr` sets
+  `body.value = expr`; a bare tail `return` or falling off the end yields
+  `body.value = NilLit` (Python's implicit `None`).  A tail `if` whose
+  branches each end in a `return` (the canonical
+  `if c: return a else: return b` shape) is lowered with each branch in
+  *function-tail* position, so those returns become the branch values of
+  an `Expr::If`.  A **non-tail** (early) `return` — one nested in control
+  flow or followed by more statements — is **rejected** with a positioned
+  `PythonLowerError("early return not supported in v0 …")` pointing at the
+  offending `return`, per the SIR17 spec (the IR has no `Return` node).
+- **`lambda params: expr` → a synthesised top-level `Function` +
+  `Expr::MakeClosure`.**  Each lambda is gensym'd `__lambda_<N>`; the use
+  site emits a `MakeClosure` referencing it.
+- **Nested `def` → lifted to a top-level synthesised function** with the
+  same closure treatment as a lambda.  A **bare reference** to a nested
+  function's name yields a `MakeClosure` (re-threading its captures from
+  the currently visible enclosing values), so the closure can be
+  `return`ed / passed.
+- **Free-variable capture.**  For a lambda / nested `def`, the body's free
+  names (bare references minus the body's own params and locally assigned
+  names) that resolve to an **enclosing local / param / capture** become
+  `Capture`s — threaded through `MakeClosure` as `CaptureValue`s and
+  resolved inside the synthesised function as `Scope::Capture`.  Names that
+  resolve to a global / top-level function / builtin need **no** capture
+  (they are reachable directly).  Captures are emitted in deterministic
+  (alphabetical) order for reproducible output.
+- **Calls.**  `f(args)` lowers to `Expr::DirectCall` when `f` is a known
+  function name (and not shadowed by a same-named local value),
+  `Expr::BuiltinCall` for the builtins `print` / `len` / `range` (now a
+  general expression-position builtin, not only the `for`-header form),
+  and `Expr::IndirectCall` through a `VarRef` when `f` is a local / param /
+  captured **closure handle**.  Argument expressions are lowered eagerly.
+- **Manifest** now declares `Feature::Closures` whenever the module emits
+  a retained `MakeClosure`, an `IndirectCall`, or a function with
+  captures; and `Feature::MutualRecursion` when two top-level functions
+  transitively call each other (a 1-cycle — plain self-recursion — does
+  **not** count).  Bounded closure-body recursion reuses the
+  `MAX_BLOCK_DEPTH` / `MAX_EXPR_DEPTH` guards.
+- 25 new unit tests (82 total), including **executed end-to-end**
+  round-trips (Python → SIR → Python via the `semantic-ir-to-python`
+  backend, run with the system `python`, gated on availability): factorial
+  (recursion + tail if/else), fibonacci (while + mutation), a closure
+  adder, a capturing lambda, and mutual recursion.  Structural unit tests
+  cover `def`/params, tail-return vs no-return→nil, early-return rejection,
+  `DirectCall` vs `BuiltinCall` vs `IndirectCall`, forward-reference
+  resolution, lambda + capture, nested-def + capture, mutual-recursion
+  detection, default-parameter rejection, and a validator round-trip set.
+
+### Fixed
+
+- **Depth-bounded the three M4 pre-lowering CST walks** so the public
+  `compile` cannot overflow the native (uncatchable) stack on a
+  pathologically deep input.  These walks run *before* the depth-guarded
+  lowering, so they previously bypassed the `MAX_BLOCK_DEPTH` /
+  `MAX_EXPR_DEPTH` guards:
+  - `collect_function_names` (pass-1 def-name collection) now threads a
+    block-nesting `depth` capped at `MAX_BLOCK_DEPTH`;
+  - `collect_free_names` (free-variable scan) and `walk_for_targets` /
+    `descendant_assign_targets` / `collect_suite_bound_names` (bound-name
+    scan) now thread an expression-nesting `depth` capped at
+    `MAX_EXPR_DEPTH`.
+  Each returns a clean positioned `PythonLowerError("… nesting too deep …")`
+  past the cap, mirroring the lowering guards.  Two regression tests
+  (84 total) build a 400-deep `def` tower and a 400-deep expression inside
+  a function body — run on an enlarged stack so the (separately unguarded)
+  parser survives to reach the lowerer — and assert a clean "too deep"
+  error rather than a crash.
+- **Robust Python 3 resolution in the end-to-end tests.**  The e2e helper
+  now resolves a *working Python 3* interpreter: it tries `python3` first,
+  then `python`, and for each requires `<exe> --version` to report
+  "Python 3.x" (checking both stdout and stderr).  When no Python 3 is
+  found — or the interpreter cannot be launched — the test **skips**
+  (eprintln + return) instead of panicking, mirroring how the other
+  integration tests gate on a tool being present.  A non-zero exit from a
+  *verified* Python 3 still fails the test (a real codegen bug must be
+  caught).  Fixes a macOS-CI failure where `python` was absent / python2.
+- **`PYTHONPATH` for the end-to-end-emitted Python.**  The
+  `semantic-ir-to-python` backend's emitted code is **not** fully
+  self-contained — its runtime header imports the
+  `coding_adventures_sir_runtime_*` packages — so on a CI host with no
+  ambient install the program failed with
+  `ModuleNotFoundError: No module named 'coding_adventures_sir_runtime_core'`.
+  The e2e helper now sets `PYTHONPATH` (via `Command::env`) to each
+  runtime package's `src` dir, resolved from `CARGO_MANIFEST_DIR` as
+  `../../python/<pkg>/src` — the **same** approach the backend's own
+  execution tests use (`run_emitted_python`).  All runtime packages are
+  added (`core`, `pairs`, `oop`, `range`, `regex`, `exceptions`, `shell`)
+  so the tests are robust regardless of which features a program exercises.
+  Verified by running the e2e tests in a clean venv with **no** ambient
+  install (reproducing the runner): all 5 RUN and PASS purely via the
+  test-set `PYTHONPATH`.
+
+### Changed
+
+- `compile` / `compile_source` now lower `def` / `lambda` / `return` /
+  calls.  The module's function table holds user `def`s, synthesised
+  closure bodies (`__lambda_<N>`, lifted nested defs), and `main` (the
+  top-level statements).  The per-function name-resolution state is now a
+  `FunctionCtx` (params / captures / a local stack) rather than a single
+  shared declared-name stack, so each function resolves names in its own
+  scope.
+- Added a **dev-dependency** on `semantic-ir-to-python` for the executed
+  end-to-end tests.
+
+### Deferred
+
+Still out of scope after M4; each returns a clear positioned
+`PythonLowerError`:
+
+- **M5+** — sequences, maps, indexing and indexed assignment,
+  comprehensions.
+- Default / keyword arguments, `*args` / `**kwargs`, decorators, classes,
+  exceptions, generators, slicing, string methods, imports, `async`,
+  `global` / `nonlocal`, tuple / multi-target assignment, multi-level
+  capture chaining (capturing a variable two scopes up).
+
 ## 0.3.0 — 2026-06-30
 
 Milestone **M3**: control flow — `if` / `elif` / `else`, `while`, and
