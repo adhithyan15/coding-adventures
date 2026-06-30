@@ -197,8 +197,15 @@ running product *down*, so a flashy diagnosis with one strong positive finding c
 Forty real differentials span cardiology, pulmonology, GI, neurology, endocrine, ID,
 renal, heme, MSK, derm, OB/gyn, tox, and pediatrics; every prior and LR in the program —
 including the fractional `LR < 1` values — is stated verbatim in the stem.
-Engine selects the combined-evidence leader **40/40 cached, zero wrong**. This realizes
-rung 6 of the ladder (ADJ-LADDER.md §5) — the on-ramp to the MLE apex.
+Engine selects the combined-evidence leader **40/40 cached, zero wrong**. **Batch 3**
+(`r6-41`..`r6-60`, 60 items total) steps up again to **five** genuine competing diagnoses
+(options A–E all real dx, no abstain slot) across broader specialties (peds, OB, psych, EM,
+endocrine, heme, nephro, derm, rheum, neuro, ID, cards, pulm, GI, tox): the two **observed**
+findings are the classic confirmatory pair for one diagnosis (LR 8 and 7 on the winner, 0.5
+argues-against on every rival), while a third **unobserved** finding is a flashy high-LR
+pointer to a rival — the anchoring trap. The gold answer letter is rotated A–E. Engine
+**60/60 cached, zero wrong**. This realizes rung 6 of the ladder (ADJ-LADDER.md §5) — the
+on-ramp to the MLE apex.
 
 ### Clinical management rung (rung 6b management, cached engine)
 
