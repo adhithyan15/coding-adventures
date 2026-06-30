@@ -265,7 +265,19 @@ super_args = LPAREN [ call_arg { COMMA call_arg } ] RPAREN
 # child, not a `param` node); the call-side `n(...)` marker carries the
 # forwarding semantics.
 params       = "..." | param { COMMA param } ;
-param        = [ "*" | "**" ] NAME ;
+# Phase P7 (Ruby 1.0) — optional/default parameters `name = expr`.
+#
+# A `param` may now carry a trailing `= expression` default value, e.g.
+# `def f(a = 1)` or `def f(a, b = a + 1)`.  The default is an ordinary
+# `expression`, which the PEG parser stops at the next COMMA / RPAREN
+# (the default `a + 1` does not greedily swallow a following `, c`
+# because `expression` itself never matches a bare comma list).  Ruby
+# defaults are evaluated at call time and may reference EARLIER params
+# (`def f(a, b = a)` is legal Ruby), so the SIR lowerer evaluates the
+# default subtree in the param scope.  Splat (`*rest`) and double-splat
+# (`**kwrest`) params never carry a default; the grammar is permissive
+# here and the lowerer attaches `Param.default` only to ordinary params.
+param        = [ "*" | "**" ] NAME [ EQUALS expression ] ;
 if_statement = "if" expression { !"else" !"elsif" !"end" statement } { elsif_clause } [ else_clause ] "end" ;
 elsif_clause = "elsif" expression { !"else" !"elsif" !"end" statement } ;
 else_clause  = "else" { !"end" statement } ;

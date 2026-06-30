@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.80.0] - 2026-06-30
+
+### Added (P7 — default / optional parameters in `param`)
+
+- The `param` rule now accepts an optional default value:
+  `param = [ "*" | "**" ] NAME [ EQUALS expression ] ;`. This makes
+  `def f(a = 1)`, `def f(a, b = a + 1)`, and `->(a = 1) { … }` parse — they
+  previously parse-panicked at the `=` because `param` had no default branch.
+  The default is an ordinary `expression`, which the PEG parser stops at the
+  next `COMMA` / `RPAREN`, so `def f(a, b = a + 1, c)` does not greedily
+  swallow `c`. Updated both `code/grammars/ruby.grammar` and the embedded
+  `src/_grammar.rs` (regenerated via `grammar-tools
+  generate-rust-compiled-grammars ruby-parser`). The `ruby-to-semantic-ir`
+  frontend lowers the default subtree into `Param.default`.
+- Cargo crate version bumped `0.1.0` → `0.2.0`.
+
 ## [0.79.0] - 2026-06-19
 
 ### Added (RB1 — trailing block on receiver/dotted method calls)
