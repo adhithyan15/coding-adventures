@@ -82,7 +82,7 @@ pub enum MathNode {
     Fenced { left: Delim, body: Box<MathNode>, right: Delim },   // \left( … \right)
     Group(Box<MathNode>), Text(String),
     Rel(RelOp, Box<MathNode>, Box<MathNode>),
-    Matrix { env: String, rows: Vec<Vec<MathNode>> },
+    Matrix { env: String, col_spec: Option<String>, rows: Vec<Vec<MathNode>> },
 }
 ```
 
@@ -132,14 +132,18 @@ is text-primary, which is a different mode model.)
 - **L3 — environment semantics.** Split into two sub-rungs:
   - **L3a (shipped) — math environment family.** The matrix family
     (`matrix`/`pmatrix`/`bmatrix`/`Bmatrix`/`vmatrix`/`Vmatrix`/`smallmatrix`), `cases`,
-    and the alignment environments (`aligned`/`gathered`/`align`/`align*`/`split`) parsed
-    inside math islands via `&` (columns) and `\\` (rows) → `MathNode::Matrix { env, rows }`,
-    with `to_latex` round-trip, nesting, and postfix scripts. Empty cells are a documented
-    limitation (spanned error). Implemented in the `latex` crate (math.rs).
-  - **L3b (later) — document-mode tables & lists.** Row/column structure for `tabular`/`array`
-    (which take a mandatory column-spec argument) and list environments
-    (`itemize`/`enumerate`/`description`) with `\item`, operating on the document `Node` tree.
-    Deferred because they need an extra column-spec field on the node; an unknown
+    the alignment environments (`aligned`/`gathered`/`align`/`align*`/`split`), and the general
+    **`array`/`subarray` grids** parsed inside math islands via `&` (columns) and `\\` (rows) →
+    `MathNode::Matrix { env, col_spec, rows }`, with `to_latex` round-trip, nesting, and postfix
+    scripts. `array`/`subarray` carry a **mandatory `{column-spec}` argument** (`\begin{array}{l|cr}`)
+    captured verbatim on `col_spec` (`None` for every other environment); the neutral lowering drops
+    it (alignment is presentation, PFE01 §2.2), so `array` ≡ `pmatrix` as `MathExpr::Matrix`. The
+    col-spec reader is brace-nesting-aware yet iterative (no stack-overflow on adversarial `{{{…`).
+    Empty cells, a missing col-spec, and an unterminated env are documented spanned errors.
+    Implemented in the `latex` crate (math.rs).
+  - **L3b (later) — document-mode tables & lists.** Row/column structure for the text-mode
+    `tabular` family and list environments (`itemize`/`enumerate`/`description`) with `\item`,
+    operating on the document `Node` tree. (Math-mode `array`/`subarray` shipped in L3a.) An unknown
     `\begin{…}` is rejected with a spanned error in the meantime, never mis-parsed.
 - **L4 — macros.** Split into sub-rungs:
   - **L4a (shipped) — positional macros.** `\newcommand`/`\renewcommand`/`\providecommand`

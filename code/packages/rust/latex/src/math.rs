@@ -122,17 +122,28 @@ pub enum MathNode {
     /// A relation: `a = b`, `x \le y`.
     Rel(MRelOp, Box<MathNode>, Box<MathNode>),
     /// A math environment with row/column structure (L3): the `matrix` family
-    /// (`matrix`/`pmatrix`/`bmatrix`/`vmatrix`/…), `cases`, and the alignment environments
-    /// (`aligned`/`align`). `rows` is a list of rows; each row is a list of cells, split on
-    /// `&` (columns) and `\\` (rows). `env` is the environment name verbatim (case-sensitive,
-    /// so `bmatrix` ≠ `Bmatrix`), which also fixes the delimiters when rendered.
+    /// (`matrix`/`pmatrix`/`bmatrix`/`vmatrix`/…), `cases`, the alignment environments
+    /// (`aligned`/`align`), and the general `array`/`subarray` grids. `rows` is a list of
+    /// rows; each row is a list of cells, split on `&` (columns) and `\\` (rows). `env` is the
+    /// environment name verbatim (case-sensitive, so `bmatrix` ≠ `Bmatrix`), which also fixes
+    /// the delimiters when rendered.
+    ///
+    /// `col_spec` is the **mandatory column-alignment argument** of `\begin{array}{…}` /
+    /// `\begin{subarray}{…}` — e.g. `"ccc"`, `"l|r"`, `"p{3cm}"` — captured verbatim so the
+    /// node round-trips (`to_latex` re-emits it). It is `None` for every other environment
+    /// (which take no such argument). Alignment is *presentation*: the neutral `MathExpr`
+    /// lowering drops `col_spec` entirely (an `array` and a `pmatrix` with the same cells lower
+    /// to the same `MathExpr::Matrix`), per PFE01 §2.2.
     ///
     /// ```text
     ///   \begin{pmatrix} a & b \\ c & d \end{pmatrix}
-    ///   → Matrix { env: "pmatrix", rows: [[a, b], [c, d]] }
+    ///   → Matrix { env: "pmatrix", col_spec: None,        rows: [[a, b], [c, d]] }
+    ///   \begin{array}{cc} a & b \\ c & d \end{array}
+    ///   → Matrix { env: "array",   col_spec: Some("cc"),  rows: [[a, b], [c, d]] }
     /// ```
     Matrix {
         env: String,
+        col_spec: Option<String>,
         rows: Vec<Vec<MathNode>>,
     },
 }
@@ -285,10 +296,11 @@ fn is_text(name: &str) -> bool {
     )
 }
 /// Math environments with `&`/`\\` row/column structure (L3). Case-sensitive — `bmatrix`
-/// (square brackets) and `Bmatrix` (braces) are different environments. The `array`/`tabular`
-/// family (which take a mandatory column-spec argument) and document-mode list environments
-/// are deliberately **not** here — they need an extra field on the node and arrive in a
-/// later layer; an unknown `\begin{…}` is rejected with a spanned error, never mis-parsed.
+/// (square brackets) and `Bmatrix` (braces) are different environments. The `array`/`subarray`
+/// grids take a **mandatory** column-spec argument (`\begin{array}{cc}`) — see
+/// [`env_takes_col_spec`]; it is stored on [`MathNode::Matrix::col_spec`]. The text-mode
+/// `tabular` family and document-mode list environments are deliberately **not** here; an
+/// unknown `\begin{…}` is rejected with a spanned error, never mis-parsed.
 fn is_math_env(name: &str) -> bool {
     matches!(
         name,
@@ -306,7 +318,16 @@ fn is_math_env(name: &str) -> bool {
             | "align"
             | "align*"
             | "split"
+            | "array"
+            | "subarray"
     )
+}
+
+/// Which math environments require the mandatory `{column-spec}` argument right after
+/// `\begin{…}`. `array` (`\begin{array}{l|cr} …`) and `subarray` (`\begin{subarray}{c} …`,
+/// used inside big-operator limits) do; every matrix/cases/alignment environment does not.
+fn env_takes_col_spec(name: &str) -> bool {
+    matches!(name, "array" | "subarray")
 }
 
 /// The `_lower` and `^upper` bound scripts captured for a big operator.
@@ -784,8 +805,74 @@ impl<'a> MathParser<'a> {
         if !is_math_env(&env) {
             return self.err(format!("unsupported environment: {env}"));
         }
+        // `array`/`subarray` carry a mandatory `{column-spec}` argument before the grid body.
+        let col_spec = if env_takes_col_spec(&env) {
+            Some(self.read_col_spec(&env)?)
+        } else {
+            None
+        };
         let rows = self.parse_env_rows(&env)?;
-        Ok(MathNode::Matrix { env, rows })
+        Ok(MathNode::Matrix { env, col_spec, rows })
+    }
+
+    /// Read the mandatory `{column-spec}` argument of `\begin{array}{…}` (and `subarray`).
+    /// The spec is captured as its literal text — column letters (`l`/`c`/`r`), `|` rules,
+    /// `p{3cm}` paragraph columns, `*{n}{…}` repeats, `@{…}`/`>{…}`/`<{…}` inserts — so the
+    /// node round-trips exactly; the neutral lowering drops it (alignment is presentation).
+    ///
+    /// Brace-nesting aware (so `p{3cm}` is captured whole) and **iterative**: a `depth`
+    /// counter over a flat loop, never recursion, so an adversarial `{{{{…` cannot overflow
+    /// the stack — it is bounded by the input length, like the rest of the tokenizer output.
+    fn read_col_spec(&mut self, env: &str) -> Result<String, ParseError> {
+        if !matches!(self.peek().kind, TokenKind::BeginGroup) {
+            return self.err(format!("expected '{{column-spec}}' after \\begin{{{env}}}"));
+        }
+        self.bump(); // opening {
+        let mut spec = String::new();
+        let mut depth = 1usize;
+        loop {
+            match self.peek().kind.clone() {
+                TokenKind::BeginGroup => {
+                    depth += 1;
+                    spec.push('{');
+                    self.bump();
+                }
+                TokenKind::EndGroup => {
+                    self.bump();
+                    depth -= 1;
+                    if depth == 0 {
+                        return Ok(spec);
+                    }
+                    spec.push('}');
+                }
+                TokenKind::Char(c) => {
+                    spec.push(c);
+                    self.bump();
+                }
+                TokenKind::Space => {
+                    spec.push(' ');
+                    self.bump();
+                }
+                // `>{\centering}` etc. embed control sequences in the spec; keep them verbatim.
+                TokenKind::ControlWord(w) => {
+                    spec.push('\\');
+                    spec.push_str(&w);
+                    spec.push(' '); // a control word needs a trailing space so it re-lexes whole
+                    self.bump();
+                }
+                TokenKind::ControlSymbol(c) => {
+                    spec.push('\\');
+                    spec.push(c);
+                    self.bump();
+                }
+                TokenKind::Eof => {
+                    return self.err(format!("unterminated column-spec in \\begin{{{env}}}"));
+                }
+                other => {
+                    return self.err(format!("unexpected token in column-spec: {other:?}"));
+                }
+            }
+        }
     }
 
     /// Read an environment name from the `{…}` after `\begin`/`\end`. Names are letters with
@@ -1051,10 +1138,16 @@ impl MathNode {
                 out.push_str(opstr);
                 Self::write_child(b, out, 2);
             }
-            MathNode::Matrix { env, rows } => {
+            MathNode::Matrix { env, col_spec, rows } => {
                 out.push_str("\\begin{");
                 out.push_str(env);
                 out.push('}');
+                // `array`/`subarray` re-emit their mandatory `{column-spec}` argument.
+                if let Some(spec) = col_spec {
+                    out.push('{');
+                    out.push_str(spec);
+                    out.push('}');
+                }
                 for (ri, row) in rows.iter().enumerate() {
                     if ri > 0 {
                         out.push_str(" \\\\ ");
@@ -1290,7 +1383,7 @@ mod tests {
     fn pmatrix_two_by_two() {
         let n = parse_math(r"\begin{pmatrix} a & b \\ c & d \end{pmatrix}").unwrap();
         match &n {
-            MathNode::Matrix { env, rows } => {
+            MathNode::Matrix { env, rows, .. } => {
                 assert_eq!(env.as_str(), "pmatrix");
                 assert_eq!(
                     rows,
@@ -1322,7 +1415,7 @@ mod tests {
         // \begin{cases} f & cond \\ g & cond \end{cases}
         let n = parse_math(r"\begin{cases} 1 & x > 0 \\ 0 & x \le 0 \end{cases}").unwrap();
         match &n {
-            MathNode::Matrix { env, rows } => {
+            MathNode::Matrix { env, rows, .. } => {
                 assert_eq!(env.as_str(), "cases");
                 assert_eq!(rows.len(), 2);
                 assert_eq!(rows[0].len(), 2);
@@ -1402,6 +1495,104 @@ mod tests {
         assert!(parse_math(r"\begin{matrix} & b \end{matrix}").is_err()); // empty cell (limitation)
         assert!(parse_math(r"\end{matrix}").is_err()); // stray \end
         assert!(parse_math(r"\begin matrix").is_err()); // missing { after \begin
+    }
+
+    // ---- L3: the `array` / `subarray` grids (mandatory column-spec) -------------
+
+    #[test]
+    fn array_captures_column_spec_and_cells() {
+        // \begin{array}{cc} a & b \\ c & d \end{array} — the {cc} is the alignment argument,
+        // captured on col_spec; the grid is the same shape as a pmatrix.
+        let n = parse_math(r"\begin{array}{cc} a & b \\ c & d \end{array}").unwrap();
+        match &n {
+            MathNode::Matrix { env, col_spec, rows } => {
+                assert_eq!(env.as_str(), "array");
+                assert_eq!(col_spec.as_deref(), Some("cc"));
+                assert_eq!(
+                    rows,
+                    &vec![vec![sym("a"), sym("b")], vec![sym("c"), sym("d")]]
+                );
+            }
+            other => panic!("expected Matrix, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn array_column_spec_keeps_rules_and_alignment_letters() {
+        // Vertical rules (`|`) and l/c/r letters are part of the spec and captured verbatim.
+        let n = parse_math(r"\begin{array}{l|cr} 1 & 2 & 3 \end{array}").unwrap();
+        match &n {
+            MathNode::Matrix { col_spec, rows, .. } => {
+                assert_eq!(col_spec.as_deref(), Some("l|cr"));
+                assert_eq!(rows, &vec![vec![num("1"), num("2"), num("3")]]);
+            }
+            other => panic!("expected Matrix, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn array_column_spec_handles_braced_groups() {
+        // `p{3cm}` is a paragraph column whose own `{…}` must be captured whole (nesting-aware).
+        let n = parse_math(r"\begin{array}{p{3cm}c} a & b \end{array}").unwrap();
+        match &n {
+            MathNode::Matrix { col_spec, .. } => {
+                assert_eq!(col_spec.as_deref(), Some("p{3cm}c"));
+            }
+            other => panic!("expected Matrix, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn subarray_takes_a_column_spec_too() {
+        // \begin{subarray}{c} … \end{subarray} (used inside big-operator limits).
+        let n = parse_math(r"\begin{subarray}{c} i \\ j \end{subarray}").unwrap();
+        match &n {
+            MathNode::Matrix { env, col_spec, rows } => {
+                assert_eq!(env.as_str(), "subarray");
+                assert_eq!(col_spec.as_deref(), Some("c"));
+                assert_eq!(rows, &vec![vec![sym("i")], vec![sym("j")]]);
+            }
+            other => panic!("expected Matrix, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn array_round_trips_through_to_latex() {
+        // parse → to_latex → parse must be a fixed point, col-spec and all.
+        for src in [
+            r"\begin{array}{cc} a & b \\ c & d \end{array}",
+            r"\begin{array}{l|cr} 1 & 2 & 3 \end{array}",
+            r"\begin{array}{p{3cm}c} a & b \end{array}",
+            r"\begin{subarray}{c} i \\ j \end{subarray}",
+        ] {
+            let once = parse_math(src).unwrap();
+            let twice = parse_math(&once.to_latex()).unwrap();
+            assert_eq!(once, twice, "round-trip changed the tree for {src:?}");
+        }
+    }
+
+    #[test]
+    fn matrix_family_still_has_no_column_spec() {
+        // Environments that take no alignment argument keep col_spec == None.
+        let n = parse_math(r"\begin{pmatrix} a \end{pmatrix}").unwrap();
+        assert!(matches!(n, MathNode::Matrix { col_spec: None, .. }));
+    }
+
+    #[test]
+    fn array_without_column_spec_is_a_spanned_error() {
+        // The `{col-spec}` argument is mandatory — its absence is a clean error, not a panic.
+        assert!(parse_math(r"\begin{array} a & b \end{array}").is_err());
+        assert!(parse_math(r"\begin{array}{cc} a & b").is_err()); // unterminated body
+        assert!(parse_math(r"\begin{array}{cc a \end{array}").is_err()); // unterminated col-spec
+    }
+
+    #[test]
+    fn deep_column_spec_braces_do_not_overflow() {
+        // An adversarial `{{{{…}}}}` inside the col-spec is captured by a flat depth counter,
+        // never recursion, so it cannot overflow the stack.
+        let spec = format!("{}{}", "{".repeat(20_000), "}".repeat(20_000));
+        let src = format!(r"\begin{{array}}{{{spec}}} a \end{{array}}");
+        assert!(parse_math(&src).is_ok());
     }
 
     // ---- deep-tree Drop safety -------------------------------------------------

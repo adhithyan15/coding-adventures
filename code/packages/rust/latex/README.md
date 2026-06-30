@@ -33,7 +33,7 @@ with a **text-mode-primary** mode stack (LaTeX starts in text mode; math is ente
 | **L0 tokenizer** | catcode state machine → flat `Token` stream w/ byte spans | ✅ |
 | **L1 structural** | groups, `\cmd[opt]{arg}`, `\begin{env}…\end{env}`, text runs, raw math islands, `to_latex()` round-trip | ✅ |
 | **L2 math** | math AST (frac, binom, roots, scripts, big ops, functions, accents, `\left\right` fences, relations), precedence-climbing parser, `to_latex()` round-trip | ✅ |
-| **L3 environments** | math env family — `matrix`/`pmatrix`/`bmatrix`/`vmatrix`/`cases`/`aligned`/`align` split on `&` and `\\` → `MathNode::Matrix`, round-trip; nesting + scripts | ✅ |
+| **L3 environments** | math env family — `matrix`/`pmatrix`/`bmatrix`/`vmatrix`/`cases`/`aligned`/`align` plus `array`/`subarray` (mandatory `{col-spec}`) split on `&` and `\\` → `MathNode::Matrix`, round-trip; nesting + scripts | ✅ |
 | **L4 macros** | `\newcommand`/`\renewcommand`/`\providecommand` with positional `#1`..`#9`; bounded recursive expansion via `expand()` (L4a) | ✅ |
 | **L5 text breadth** | `\verb`/`verbatim` raw (L5a/b) + text accents `\'e`/`\c{c}` via `recognize_accents` (L5c) + sectioning/refs/preamble/font via `recognize_structure` (L5d) | ✅ |
 | **L6 frontend** | `LatexMath` implements `math-frontend::MathFrontend` — lifts `MathNode` → neutral `MathExpr`; LaTeX is plugin #1 via `registry()` (default-on `frontend` feature) | ✅ |
@@ -76,25 +76,31 @@ assert!(matches!(area, MathNode::Bin(..)));   // π · r²  (implicit multiplica
 
 ### Environments (L3)
 
-The math environment family parses into `MathNode::Matrix { env, rows }` — `&` splits
-columns, `\\` splits rows. Supported: `matrix`/`pmatrix`/`bmatrix`/`Bmatrix`/`vmatrix`/
-`Vmatrix`/`smallmatrix`, `cases`, and the alignment environments (`aligned`/`align`/…).
-Cells hold arbitrary math, environments nest, and a matrix is an atom (so `…^2` attaches):
+The math environment family parses into `MathNode::Matrix { env, col_spec, rows }` — `&`
+splits columns, `\\` splits rows. Supported: `matrix`/`pmatrix`/`bmatrix`/`Bmatrix`/`vmatrix`/
+`Vmatrix`/`smallmatrix`, `cases`, the alignment environments (`aligned`/`align`/…), and the
+general `array`/`subarray` grids. Cells hold arbitrary math, environments nest, and a matrix
+is an atom (so `…^2` attaches):
 
 ```rust
 use latex::{parse_math, MathNode};
 
 let m = parse_math(r"\begin{pmatrix} a & b \\ c & d \end{pmatrix}").unwrap();
-if let MathNode::Matrix { env, rows } = &m {
+if let MathNode::Matrix { env, col_spec, rows } = &m {
     assert_eq!(env, "pmatrix");
+    assert_eq!(*col_spec, None);        // pmatrix takes no column-spec argument
     assert_eq!(rows.len(), 2);          // two rows
     assert_eq!(rows[0].len(), 2);       // two columns
 }
 assert_eq!(parse_math(&m.to_latex()).unwrap(), m);   // round-trips
 ```
 
-`array`/`tabular` (which take a column-spec argument) and document-mode list environments
-are a later layer; an unknown `\begin{…}` is rejected with a spanned error, never mis-parsed.
+`array` and `subarray` carry a **mandatory column-spec argument** — `\begin{array}{l|cr}` —
+captured verbatim on `col_spec` (`Some("l|cr")`) so the node round-trips. Alignment is
+presentation, so the neutral `MathExpr` lowering **drops** `col_spec`: an `array` and the
+equivalent `pmatrix` lower to the same `MathExpr::Matrix`. The text-mode `tabular` family and
+document-mode list environments are a later layer; an unknown `\begin{…}` (or an `array`
+missing its column-spec) is rejected with a spanned error, never mis-parsed.
 
 ### Macros (L4a)
 

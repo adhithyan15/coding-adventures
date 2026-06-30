@@ -2,6 +2,34 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.15.0] — 2026-06-30
+
+### Added — the `array` / `subarray` grids (mandatory column-spec)
+
+- The parser now accepts the general **`\begin{array}{cols} … \end{array}`** grid and its
+  big-operator-limit cousin **`\begin{subarray}{c} … \end{subarray}`** — the math environments that
+  carry a **mandatory column-alignment argument**. This was the documented gap in the matrix family
+  (`pmatrix`/`bmatrix`/`cases`/`aligned`/…, all of which take *no* argument): the comment on
+  `is_math_env` explicitly parked `array` for "a later layer" because it "need[s] an extra field on
+  the node." That field is now here.
+- New optional field **`MathNode::Matrix { col_spec: Option<String>, … }`**: the column spec is
+  captured **verbatim** (`"cc"`, `"l|cr"`, `"p{3cm}"`, `*{3}{c}`, `>{…}`/`<{…}`/`@{…}` inserts), so
+  the node **round-trips** exactly — `to_latex` re-emits `\begin{array}{<spec>}`. It is `None` for
+  every environment that takes no argument (a `pmatrix` is unchanged).
+- The neutral **lowering drops `col_spec`** (alignment is presentation, PFE01 §2.2): an `array` and
+  the equivalent `pmatrix` lower to the **same** `MathExpr::Matrix`. So consumers gain `array` for
+  free — no consumer change, no new neutral node, no capability change.
+- `read_col_spec` reads the `{…}` argument with a **flat `depth` counter, not recursion**, so it is
+  brace-nesting-aware (captures `p{3cm}` whole) yet an adversarial `{{{{…` cannot overflow the
+  stack (bounded by input length, like the rest of the tokenizer output). A missing or unterminated
+  col-spec is a clean **spanned error**, never a panic.
+- Tests (9 new): `array_captures_column_spec_and_cells`, `…_keeps_rules_and_alignment_letters`,
+  `…_handles_braced_groups`, `subarray_takes_a_column_spec_too`, `array_round_trips_through_to_latex`,
+  `matrix_family_still_has_no_column_spec`, `array_without_column_spec_is_a_spanned_error`,
+  `deep_column_spec_braces_do_not_overflow`, and frontend `array_lowers_dropping_column_spec`
+  (array ≡ pmatrix after lowering). 150 unit + doc tests pass; clippy `-D warnings` clean;
+  downstream `adj-lang` (the only consumer) 86 green.
+
 ## [0.14.0] — 2026-06-30
 
 ### Added — `\overset` / `\underset` / `\stackrel` → neutral `Overset` / `Underset`

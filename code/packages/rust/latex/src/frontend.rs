@@ -629,6 +629,23 @@ mod tests {
     }
 
     #[test]
+    fn array_lowers_dropping_column_spec() {
+        // The `{cc}` alignment argument is presentation (PFE01 §2.2) — the neutral lowering
+        // drops it, so an `array` lowers to the SAME MathExpr::Matrix as the equivalent
+        // pmatrix. Two source strings that mean the same math produce the same MathExpr.
+        let from_array = m(r"\begin{array}{cc} a & b \\ c & d \end{array}");
+        let from_pmatrix = m(r"\begin{pmatrix} a & b \\ c & d \end{pmatrix}");
+        assert_eq!(from_array, from_pmatrix);
+        match &from_array {
+            MathExpr::Matrix(rows) => {
+                assert_eq!(rows.len(), 2);
+                assert_eq!(rows[1][1], MathExpr::Symbol("d".into()));
+            }
+            other => panic!("expected Matrix, got {other:?}"),
+        }
+    }
+
+    #[test]
     fn numbers_stay_exact_not_f64() {
         assert_eq!(m("0.1"), MathExpr::Number(Number::parse("0.1").unwrap()));
         // and the numerator of a fraction is an exact Number, not a float.
