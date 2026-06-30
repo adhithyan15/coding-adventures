@@ -128,6 +128,9 @@ rendered dashboard rows. Those filter selections are mirrored into URL query
 parameters and restored on page load or browser navigation, so local-controller
 room, activity, history, audit, and
 grant-boundary views can be shared or reopened directly.
+State-history routes also accept numeric observed-time windows through
+`from_ms`/`to_ms` on `/api/smart_home/state_history` and
+`start_time`/`end_time` on Home Assistant period routes.
 
 ## Dependencies
 
