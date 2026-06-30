@@ -2,6 +2,27 @@
 
 All notable changes to the Presentation-MathML frontend crate.
 
+## [0.4.0] — 2026-06-30
+
+### Added — PR-4: comma-separated `<mfenced>` lists lower to `Sequence`
+
+- **`<mfenced>` with comma separators → `MathExpr::Sequence`.** A fence containing one or
+  more top-level `<mo>,</mo>` separators (e.g. `(a, b, c)`) now emits `Sequence([a, b, c])`,
+  preserving the list structure instead of folding the commas into a single row. Each
+  segment between commas is itself folded to one expression (so an item may be compound, e.g.
+  `(x+1, 2)`). The fence's `open`/`close`/`separators` attributes remain presentation and are
+  dropped, as before.
+- **A fence with NO commas is unchanged** — it still lowers to `Group` (an ordinary
+  parenthesised sub-expression). An empty segment (leading/trailing/doubled comma) is
+  malformed and reported as `empty MathML group`, so no list item is silently dropped.
+- **Capabilities** add `sequences` (requires `math-frontend` 0.6.0), kept honest by
+  `check_frontend` — the conformance corpus now includes a comma-separated `<mfenced>`.
+- Tests: comma-separated sequence, compound items in a sequence, two-item pair, plus the
+  retained no-comma → `Group` case.
+
+### Deferred to a later PR
+Semicolon separators and surfacing the fence's `open`/`close` delimiters as data.
+
 ## [0.3.0] — 2026-06-30
 
 ### Added — PR-3: named-function recognition (`<mi>sin</mi>` → `Call`)

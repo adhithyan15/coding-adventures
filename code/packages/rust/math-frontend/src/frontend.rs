@@ -69,6 +69,8 @@ pub struct Capabilities {
     /// Emits over/under-set annotations ([`crate::MathExpr::Overset`] / [`crate::MathExpr::Underset`]:
     /// `\overset{a}{b}`, `\stackrel{a}{R}`, `\underset{a}{b}`).
     pub oversets: bool,
+    /// Emits comma-separated sequences ([`crate::MathExpr::Sequence`]: fenced lists `(a, b, c)`).
+    pub sequences: bool,
 }
 
 impl Capabilities {
@@ -94,6 +96,7 @@ impl Capabilities {
             binomials: true,
             accents: true,
             oversets: true,
+            sequences: true,
         }
     }
 
@@ -110,6 +113,7 @@ impl Capabilities {
     pub fn with_binomials(mut self) -> Self { self.binomials = true; self }
     pub fn with_accents(mut self) -> Self { self.accents = true; self }
     pub fn with_oversets(mut self) -> Self { self.oversets = true; self }
+    pub fn with_sequences(mut self) -> Self { self.sequences = true; self }
 }
 
 /// The contract every notation parser implements.

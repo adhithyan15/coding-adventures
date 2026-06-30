@@ -2,6 +2,32 @@
 
 All notable changes to the pluggable parser-frontend framework.
 
+## [0.6.0] — 2026-06-30
+
+### Added — neutral `Sequence` node (comma-separated lists in fences)
+
+Comma-separated sequences in fence contexts (`(a, b, c)` — MathML `<mfenced>` with
+separators, coordinate tuples, argument lists) previously had **no faithful neutral
+representation**: a frontend had to drop the commas or model the list as implicit
+multiplication. This release adds the node so any frontend can lower a list honestly.
+**Additive**; no existing variant or API changed — the same shape as the `Overset` node in
+0.5.0.
+
+- **`MathExpr::Sequence(Vec<MathExpr>)`** — an ordered list of expressions separated by
+  commas. The items are preserved in source order; a faithful renderer shows them as a
+  delimited list, not a product. Kept **distinct from nested `Bin(Mul, …)`**: juxtaposition
+  is implicit multiplication, while a sequence is a deliberate list structure. An empty
+  sequence is not representable (a fence with no items is not a list).
+- `Capabilities` gains **`sequences`** (set by `all()`, with a `with_sequences()` builder)
+  and the conformance harness now polices it: a frontend that emits a `Sequence` but does
+  not declare `sequences` is flagged, exactly as for every other node-bearing capability.
+- The iterative `impl Drop for MathExpr` (heap worklist) gains an arm for the new node, so a
+  deep `Sequence` spine frees in O(1) stack depth — a 300 000-deep nesting drops in a test
+  without overflow.
+- Downstream unaffected: `latex`, `asciimath`, and the `adj-lang` adapter all build unchanged
+  (frontends only *construct* `MathExpr`). The `mathml` crate consumes the node in the same
+  release to emit comma-separated `<mfenced>` lists.
+
 ## [0.5.0] — 2026-06-29
 
 ### Added — neutral `Overset` / `Underset` nodes (unblock stacked annotations on every frontend)
