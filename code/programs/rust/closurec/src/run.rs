@@ -324,6 +324,14 @@ fn run_typed_pipeline(
     program: coding_adventures_javascript_ast::Program,
     status: &mut Option<String>,
     advanced: Option<AdvancedConfig>,
+    // CLOC27 P4 (D5): the run's real (enabled) CV log when
+    // `--correlation_vector` is on. The constant-fold pass `derive`s each
+    // folded literal from its leaf's source CvId against this log, so the
+    // sidecar records real per-token provenance for folds. `None` (the
+    // default / non-CV path) uses an internal disabled log — unchanged
+    // behaviour, and output bytes are identical either way since CV ids
+    // never influence folding or emission.
+    cv: Option<&mut coding_adventures_correlation_vector::CVLog>,
 ) -> Option<String> {
     use coding_adventures_closure_emitter::{emit, EmitOptions};
     use coding_adventures_closure_pass_constant_fold::ConstantFoldPass;
@@ -341,10 +349,17 @@ fn run_typed_pipeline(
     use coding_adventures_type_sidecar::Sidecar;
 
     let sidecar = Sidecar::new();
-    // The passes and emitter take a CV log, but SIMPLE's per-stage CV
-    // record is produced by the caller, not by the passes. A disabled
-    // log accepts contributions and drops them — zero overhead.
-    let mut pass_cv = CVLog::new(false);
+    // CLOC27 P4 (D5): the passes and emitter take a CV log. When CV is on the
+    // caller threads the run's REAL (enabled) log here, so the constant-fold
+    // pass `derive`s folded literals from their leaf source CvIds and the
+    // sidecar gains real per-token fold provenance. When CV is off we fall
+    // back to an internal disabled log that accepts contributions and drops
+    // them — zero overhead, byte-identical output.
+    let mut owned_disabled_cv = CVLog::new(false);
+    let pass_cv: &mut CVLog = match cv {
+        Some(log) => log,
+        None => &mut owned_disabled_cv,
+    };
 
     // The pipeline topo-sorts on each pass's `depends_on`, with
     // registration order as the tie-breaker between independent passes.
@@ -385,7 +400,7 @@ fn run_typed_pipeline(
         }
     }
 
-    let optimized = match pipeline.run(program, &sidecar, &mut pass_cv) {
+    let optimized = match pipeline.run(program, &sidecar, &mut *pass_cv) {
         Ok(out) => out.program,
         Err(e) => {
             *status = Some(format!("pass_error:{e}"));
@@ -399,7 +414,7 @@ fn run_typed_pipeline(
         source_map: false,
         ..Default::default()
     };
-    match emit(&optimized, &sidecar, &mut pass_cv, &opts) {
+    match emit(&optimized, &sidecar, &mut *pass_cv, &opts) {
         Ok(out) => {
             *status = Some("ok".to_string());
             Some(out.code)
@@ -423,6 +438,13 @@ pub fn transform_source_with_cv(
         // Empty slice is safe: out-of-bounds accesses are silently
         // skipped inside `whitespace_only_minify`.
         &[String],
+        // CLOC27 P4 (D5): the source-file display name (input path). On the
+        // SIMPLE/ADVANCED typed path with CV on, this is passed to
+        // `parse_javascript_typed_with_cv` as the per-token `Origin.source`,
+        // so a constant-folded literal can be traced back through the CV log
+        // to the source bytes it derived from. Unused on the WHITESPACE_ONLY
+        // / degrade paths.
+        &str,
     )>,
 ) -> Result<String, CompilerError> {
     let es_version = map_language_in_to_es_version(config);
@@ -462,7 +484,7 @@ pub fn transform_source_with_cv(
             // CLOC12.132: thread token_cv_ids into whitespace_only_minify
             // as a re-borrow so the log and file CV ID remain available
             // for the per-stage contribution block below.
-            let wo_cv = cv_pair.as_mut().map(|(log, id, ids)| {
+            let wo_cv = cv_pair.as_mut().map(|(log, id, ids, _file)| {
                 (
                     *log as &mut coding_adventures_correlation_vector::CVLog,
                     *id,
@@ -505,10 +527,25 @@ pub fn transform_source_with_cv(
         // property/global renaming, cross-module tree-shaking — layer on
         // here as they are implemented.
         CompilationLevel::Simple | CompilationLevel::Advanced => {
+            // CLOC27 P4 (D5): when --correlation_vector is on (the `cv` tuple
+            // is present), parse via `parse_javascript_typed_with_cv` so every
+            // token carries its source CvId into the bridge, where the leaf
+            // factory stamps it onto each literal (CLOC27 P2/P3). The 4th tuple
+            // element is the input file's display name, used as the per-token
+            // `Origin.source`. The non-CV path keeps the zero-overhead
+            // `parse_javascript_typed` and is byte-identical to before.
+            let parse_result = match cv_pair.as_mut() {
+                Some((log, _id, _ids, file)) => {
+                    coding_adventures_javascript_parser::parse_javascript_typed_with_cv(
+                        source, *file, es_version, *log,
+                    )
+                }
+                None => parse_javascript_typed(source, es_version),
+            };
             // Attempt the typed optimization path. `Some(code)` means
             // the full parse→bridge→passes→emit chain succeeded;
             // `None` means we should degrade to whitespace_only.
-            let optimized: Option<String> = match parse_javascript_typed(source, es_version) {
+            let optimized: Option<String> = match parse_result {
                 Err(parse_err) => {
                     // Malformed JS — grammar parser rejected it.
                     // Degrade; whitespace_only surfaces the real error.
@@ -530,7 +567,23 @@ pub fn transform_source_with_cv(
                             }),
                             _ => None,
                         };
-                        run_typed_pipeline(program, &mut simple_bridge_status, advanced)
+                        // CLOC27 P4 (D5): run the pass pipeline against the
+                        // run's REAL (enabled) CV log when CV is on, so the
+                        // constant-fold pass `derive`s each folded literal from
+                        // its leaf's source CvId — landing real per-token
+                        // provenance in the sidecar. With CV off this is `None`
+                        // and the pipeline uses an internal disabled log
+                        // (unchanged; output bytes are identical either way,
+                        // since CV ids never affect folding or emission).
+                        let pipe_cv = cv_pair.as_mut().map(|(log, _id, _ids, _file)| {
+                            *log as &mut coding_adventures_correlation_vector::CVLog
+                        });
+                        run_typed_pipeline(
+                            program,
+                            &mut simple_bridge_status,
+                            advanced,
+                            pipe_cv,
+                        )
                     }
                     Err(BridgeError::UnsupportedSyntax { rule, location }) => {
                         simple_bridge_status =
@@ -547,7 +600,7 @@ pub fn transform_source_with_cv(
                 Some(code) => code,
                 None => {
                     // Degrade path: emit via whitespace_only.
-                    let wo_cv = cv_pair.as_mut().map(|(log, id, ids)| {
+                    let wo_cv = cv_pair.as_mut().map(|(log, id, ids, _file)| {
                         (
                             *log as &mut coding_adventures_correlation_vector::CVLog,
                             *id,
@@ -565,7 +618,7 @@ pub fn transform_source_with_cv(
         CompilationLevel::Bundle | CompilationLevel::TranspileOnly => source.to_string(),
     };
 
-    if let Some((log, cv_id, _token_ids)) = cv_pair.as_mut() {
+    if let Some((log, cv_id, _token_ids, _file)) = cv_pair.as_mut() {
         let mut meta = std::collections::HashMap::new();
         let (tag, extras): (&str, Vec<(&str, serde_json::Value)>) =
             match config.compilation.level {
@@ -675,7 +728,7 @@ pub fn transform_source_with_cv(
     )
     .map_err(CompilerError::Define)?;
 
-    if let Some((log, cv_id, _token_ids)) = cv_pair.as_mut() {
+    if let Some((log, cv_id, _token_ids, _file)) = cv_pair.as_mut() {
         let mut meta = std::collections::HashMap::new();
         meta.insert(
             "input_byte_len".to_string(),
@@ -1332,11 +1385,16 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         // can tombstone gap-rule-dropped tokens (hoisted above the lex
         // block; empty if lex failed, which is safe — whitespace_only
         // skips out-of-bounds indices).
+        // CLOC27 P4 (D5): the input file's display name becomes the per-token
+        // `Origin.source` when the SIMPLE/ADVANCED typed path parses with CV on,
+        // so a folded literal traces back to the file (and line:col) it derived
+        // from. Bound here so it outlives the borrow inside the call.
+        let path_display = path.to_string_lossy();
         let transformed = match &cv_id {
             Some(id) => transform_source_with_cv(
                 &contents,
                 config,
-                Some((&mut cv_log, id.as_str(), &token_cv_ids)),
+                Some((&mut cv_log, id.as_str(), &token_cv_ids, path_display.as_ref())),
             )?,
             None => transform_source(&contents, config)?,
         };

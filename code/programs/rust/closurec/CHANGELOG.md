@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.228.0] - 2026-06-29
+
+### Added — per-fold CV provenance reaches the SIMPLE sidecar (CLOC27 P4 + P5)
+
+The headline "tracing" guarantee now holds end-to-end on the SIMPLE pipeline:
+running `report("abc".length);` at `--compilation_level SIMPLE
+--correlation_vector` emits `report(3);`, and the folded `3` is traceable
+through the correlation-vector sidecar back to the exact `"abc"` source span
+(line 1, column 8). Previously this lineage dead-ended — the pass pipeline ran
+against a *disabled, discarded* `CVLog` and the bridge leaves carried `cv:
+None`, so the sidecar recorded only coarse lex/file/pass-summary origins.
+
+- **D5 — wire the run's real CVLog on the SIMPLE cv-on path.**
+  `transform_source_with_cv` now, when `--correlation_vector` is set, parses via
+  `javascript_parser::parse_javascript_typed_with_cv` (so every leaf literal
+  carries its source token's CvId — CLOC27 P2/P3) and threads the run's real
+  enabled `CVLog` into `run_typed_pipeline`. The constant-fold pass therefore
+  `derive`s each folded literal from its leaf's source CvId, landing real
+  per-token provenance in the sidecar. The input file's display name is passed
+  as the per-token `Origin.source`, so a fold traces to `<file>:line:col`.
+- **Disabled path unchanged.** With CV off, `run_typed_pipeline` falls back to
+  an internal disabled `CVLog` and parsing uses the zero-overhead
+  `parse_javascript_typed` — byte-identical output, since CV ids never affect
+  folding or emission.
+- **Tests.** `cv_fold_provenance_gap` is FLIPPED from pinning the *absence* of
+  per-fold lineage to asserting its *presence* (per-token source-span origins
+  now appear, coexisting with the coarse origins) — that flip is the signal
+  tracing became real. New golden trace `cv_fold_trace` nails the exact link:
+  the folded `3` traces to the `"abc"` span at `1:8`.
+
 ## [0.227.0] - 2026-06-29
 
 ### Added — `advanced-bigpass` end-to-end ADVANCED proof (size + runtime equivalence)
