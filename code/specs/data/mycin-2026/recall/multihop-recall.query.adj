@@ -1,0 +1,47 @@
+% ============================================================================
+% multihop-recall.query.adj — worked TWO-HOP recall over the grounded libraries.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a two-step board question like
+% "a patient has leukocoria — the disease it indicates is caused by a mutation in which
+% gene?". It states no fact: it only `import`s grounded libraries and defines a chaining
+% RULE whose body joins two `relate` edges on the shared disease, then asks a binding
+% query. The native adj-lang engine resolves the join (SLD) and returns the gene binding
+% WITH the citing clause of EACH hop — so a two-hop answer is defended by two byte-stable
+% spans. All knowledge is in the imported libraries; none is here. (See MLE-PASS.md.)
+%
+% Run (from this directory so the sibling imports resolve):
+%     ../../../packages/rust/target/debug/adj-lang-cli multihop-recall.query.adj
+% ============================================================================
+
+import "ophtho-edges.adj"
+import "neuro-edges.adj"
+import "collagen-defect-edges.adj"
+import "enzyme-deficiency-edges.adj"
+import "genetics-edges.adj"
+
+% --- the chaining rules: clue -> disease -> gene, joined on the shared $D ---------------
+rule {
+    head: eye_finding_to_gene($F, $G)
+    when: eye_finding_indicates($F, $D), gene_defect($D, $G)
+}
+rule {
+    head: lesion_to_gene($S, $G)
+    when: lesion_causes($S, $D), gene_defect($D, $G)
+}
+rule {
+    head: collagen_defect_to_gene($T, $G)
+    when: defect_causes($T, $D), gene_defect($D, $G)
+}
+rule {
+    head: enzyme_deficiency_to_gene($E, $G)
+    when: enzyme_deficiency_disease($E, $D), gene_defect($D, $G)
+}
+
+% --- the two-hop binding queries (each returns the gene + both hops' provenance) --------
+? eye_finding_to_gene(leukocoria, $G)                  % expect rb1   (retinoblastoma)
+? eye_finding_to_gene(kayser_fleischer_rings, $G)      % expect atp7b (wilson_disease)
+? eye_finding_to_gene(superior_lens_dislocation, $G)   % expect fbn1  (marfan_syndrome)
+? lesion_to_gene(caudate_nucleus, $G)                  % expect htt   (huntington_disease)
+? collagen_defect_to_gene(type_i, $G)                  % expect col1a1 (osteogenesis_imperfecta)
+? enzyme_deficiency_to_gene(alpha_galactosidase_a, $G) % expect gla   (fabry_disease)
+? enzyme_deficiency_to_gene(glucocerebrosidase, $G)    % expect gba1  (gaucher_disease)

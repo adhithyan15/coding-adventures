@@ -1,0 +1,138 @@
+{
+  "description": "MLE-PASS multi-hop recall bank \u2014 TWO-HOP board questions answered purely from grounded edges with zero model calls. Each item chains a clinical clue \u2192 disease (hop 1, an organ-system recall library: ophtho / neuro / collagen / enzyme-deficiency) \u2192 gene (hop 2, the genetics library) by joining two grounded `relate` edges through a rule body (shared disease variable). The engine resolves the join (SLD) and returns the gene binding carrying BOTH hops' byte-provenance; the harness maps the binding to the printed gene options. Nothing is authored: every edge reuses an already-grounded, spider+adversarially-gated fact. This is the first slice of the MLE-PASS harness \u2014 the multi-hop reasoning step past the single-hop recall rungs, toward board coverage.",
+  "items": [
+    {
+      "id": "mh-01",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has a white pupillary reflex (leukocoria). That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "ophtho-edges.adj",
+      "hop1_relation": "eye_finding_indicates",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "leukocoria",
+      "expected": "rb1",
+      "options": {
+        "A": "rb1",
+        "B": "atp7b",
+        "C": "fbn1",
+        "D": "htt",
+        "E": "col1a1"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "mh-02",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has Kayser-Fleischer corneal rings. That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "ophtho-edges.adj",
+      "hop1_relation": "eye_finding_indicates",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "kayser_fleischer_rings",
+      "expected": "atp7b",
+      "options": {
+        "A": "rb1",
+        "B": "atp7b",
+        "C": "fbn1",
+        "D": "htt",
+        "E": "col1a1"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "mh-03",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has upward (superior) lens dislocation. That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "ophtho-edges.adj",
+      "hop1_relation": "eye_finding_indicates",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "superior_lens_dislocation",
+      "expected": "fbn1",
+      "options": {
+        "A": "rb1",
+        "B": "atp7b",
+        "C": "fbn1",
+        "D": "htt",
+        "E": "col1a1"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "mh-04",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has degeneration of the caudate nucleus. That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "neuro-edges.adj",
+      "hop1_relation": "lesion_causes",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "caudate_nucleus",
+      "expected": "htt",
+      "options": {
+        "A": "rb1",
+        "B": "atp7b",
+        "C": "fbn1",
+        "D": "htt",
+        "E": "col1a1"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "mh-05",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has a defect in type I collagen. That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "collagen-defect-edges.adj",
+      "hop1_relation": "defect_causes",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "type_i",
+      "expected": "col1a1",
+      "options": {
+        "A": "rb1",
+        "B": "atp7b",
+        "C": "fbn1",
+        "D": "htt",
+        "E": "col1a1"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "mh-06",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has deficiency of alpha-galactosidase A. That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "enzyme-deficiency-edges.adj",
+      "hop1_relation": "enzyme_deficiency_disease",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "alpha_galactosidase_a",
+      "expected": "gla",
+      "options": {
+        "A": "gla",
+        "B": "rb1",
+        "C": "atp7b",
+        "D": "fbn1",
+        "E": "htt"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "mh-07",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has deficiency of glucocerebrosidase. That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "enzyme-deficiency-edges.adj",
+      "hop1_relation": "enzyme_deficiency_disease",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "glucocerebrosidase",
+      "expected": "gba1",
+      "options": {
+        "A": "rb1",
+        "B": "gba1",
+        "C": "atp7b",
+        "D": "fbn1",
+        "E": "htt"
+      },
+      "gold_letter": "B"
+    }
+  ]
+}
