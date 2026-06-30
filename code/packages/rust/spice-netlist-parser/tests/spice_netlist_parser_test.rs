@@ -16,6 +16,7 @@ use spice_netlist_parser::{
     BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION, BERKELEY_APP_PACKAGE_NAME,
     BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_CARDS_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_PACKAGE_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_VIEW_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_EVENT_DASHBOARD_SCHEMA_VERSION,
@@ -3438,6 +3439,82 @@ C1 out 0 1p
         shell_dashboard_view_payload["viewCapabilityId"],
         "app-shell-dashboard-view-json"
     );
+
+    let shell_dashboard_layout = app
+        .run_app_shell_dashboard_layout(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("shell dashboard layout should execute");
+    assert_eq!(
+        shell_dashboard_layout.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION
+    );
+    assert!(shell_dashboard_layout.ready);
+    assert_eq!(
+        shell_dashboard_layout.primary_card_id.as_deref(),
+        Some("dashboard.status")
+    );
+    assert_eq!(
+        shell_dashboard_layout.primary_region_id.as_deref(),
+        Some("dashboard.layout.status")
+    );
+    assert_eq!(shell_dashboard_layout.region_count, 3);
+    assert_eq!(shell_dashboard_layout.visible_region_count, 2);
+    assert_eq!(
+        shell_dashboard_layout.visible_card_count,
+        shell_dashboard_view.visible_card_count
+    );
+    assert_eq!(shell_dashboard_layout.regions[0].role, "status");
+    assert!(shell_dashboard_layout.regions[0].primary);
+    assert!(shell_dashboard_layout.regions[0].visible);
+    assert_eq!(
+        shell_dashboard_layout.regions[0].card_ids,
+        vec!["dashboard.status".to_string()]
+    );
+    assert_eq!(shell_dashboard_layout.regions[1].role, "attention");
+    assert!(!shell_dashboard_layout.regions[1].primary);
+    assert!(!shell_dashboard_layout.regions[1].visible);
+    assert_eq!(
+        shell_dashboard_layout.regions[1].card_ids,
+        vec!["dashboard.attention".to_string()]
+    );
+    assert_eq!(shell_dashboard_layout.regions[2].role, "metrics");
+    assert!(shell_dashboard_layout.regions[2].visible);
+    assert_eq!(
+        shell_dashboard_layout.layout_capability_id,
+        "app-shell-dashboard-layout-json"
+    );
+    assert_eq!(
+        shell_dashboard_layout.view_capability_id,
+        shell_dashboard_view.view_capability_id
+    );
+
+    let shell_dashboard_layout_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_dashboard_layout_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap(),
+    )
+    .expect("shell dashboard layout JSON should parse");
+    assert_eq!(
+        shell_dashboard_layout_payload["primaryRegionId"],
+        "dashboard.layout.status"
+    );
+    assert_eq!(shell_dashboard_layout_payload["visibleRegionCount"], 2);
+    assert_eq!(
+        shell_dashboard_layout_payload["regions"][1]["visible"],
+        false
+    );
+    assert_eq!(
+        shell_dashboard_layout_payload["regions"][2]["role"],
+        "metrics"
+    );
+    assert_eq!(
+        shell_dashboard_layout_payload["layoutCapabilityId"],
+        "app-shell-dashboard-layout-json"
+    );
 }
 
 #[test]
@@ -4141,6 +4218,71 @@ R1 in out
     assert_eq!(
         shell_dashboard_view_payload["viewCapabilityId"],
         "app-shell-dashboard-view-json"
+    );
+
+    let shell_dashboard_layout = app.app_shell_dashboard_layout(BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(2),
+        active_command_id: Some("analysis.2.run".to_string()),
+    });
+    assert_eq!(
+        shell_dashboard_layout.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION
+    );
+    assert!(!shell_dashboard_layout.ready);
+    assert_eq!(
+        shell_dashboard_layout.primary_card_id.as_deref(),
+        Some("dashboard.attention")
+    );
+    assert_eq!(
+        shell_dashboard_layout.primary_region_id.as_deref(),
+        Some("dashboard.layout.attention")
+    );
+    assert_eq!(shell_dashboard_layout.region_count, 3);
+    assert_eq!(shell_dashboard_layout.visible_region_count, 3);
+    assert_eq!(
+        shell_dashboard_layout.attention_card_count,
+        shell_dashboard_view.attention_card_count
+    );
+    assert_eq!(shell_dashboard_layout.regions[0].role, "status");
+    assert!(shell_dashboard_layout.regions[0].visible);
+    assert!(!shell_dashboard_layout.regions[0].primary);
+    assert_eq!(shell_dashboard_layout.regions[1].role, "attention");
+    assert!(shell_dashboard_layout.regions[1].primary);
+    assert!(shell_dashboard_layout.regions[1].visible);
+    assert_eq!(
+        shell_dashboard_layout.regions[1].card_ids,
+        vec!["dashboard.attention".to_string()]
+    );
+    assert_eq!(shell_dashboard_layout.regions[2].role, "metrics");
+    assert!(shell_dashboard_layout.regions[2].visible);
+    assert_eq!(
+        shell_dashboard_layout.layout_capability_id,
+        "app-shell-dashboard-layout-json"
+    );
+
+    let shell_dashboard_layout_payload: serde_json::Value = serde_json::from_str(
+        &app.app_shell_dashboard_layout_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        }),
+    )
+    .expect("blocked shell dashboard layout JSON should parse");
+    assert_eq!(
+        shell_dashboard_layout_payload["primaryRegionId"],
+        "dashboard.layout.attention"
+    );
+    assert_eq!(shell_dashboard_layout_payload["visibleRegionCount"], 3);
+    assert_eq!(
+        shell_dashboard_layout_payload["regions"][1]["primary"],
+        true
+    );
+    assert_eq!(
+        shell_dashboard_layout_payload["regions"][1]["cardIds"][0],
+        "dashboard.attention"
+    );
+    assert_eq!(
+        shell_dashboard_layout_payload["layoutCapabilityId"],
+        "app-shell-dashboard-layout-json"
     );
 }
 
