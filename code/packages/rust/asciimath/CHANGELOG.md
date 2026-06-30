@@ -2,6 +2,32 @@
 
 All notable changes to the AsciiMath pluggable frontend.
 
+## [0.5.0] — 2026-06-29
+
+### Added — ASM01 PR-3b: bare-keyword spellings + two-letter short forms
+
+The second slice of PR-3, finishing the **symbol-table** surface (the structural items —
+longest-match, `stackrel`/`overset`/`underset`, `text(…)` — remain PR-3c). All additions are more
+`constant_of` entries lowering to `MathExpr::Symbol(canonical)`, so still **purely additive** (symbol
+emission is not a `Capabilities` flag; no consumer/conformance change).
+
+- **Bare English keywords** now lower to symbols: `in`, `and`, `or`, `not`. (PR-3a deliberately
+  deferred these because `in` also appears inside big-operator bounds like `sum_(i in S)`; verified
+  that mapping it to a symbol leaves such bounds parsing cleanly — `i in S` is the harmless
+  juxtaposition `i · ∈ · S`, the same shape the previous `i·n·…` product had.) There is no
+  `In`/`And` relation in the neutral `RelOp`, so a `Symbol` standing for the glyph is the faithful
+  representation.
+- **Two-letter short forms** fold onto the same canonical names as their PR-3a long forms:
+  `sub`→`subset`, `sube`→`subseteq`, `sup`→`supset`, `supe`→`supseteq`, `uu`→`union` (= `cup`),
+  `nn`→`intersection` (= `cap`), `AA`→`forall`, `EE`→`exists`.
+- Behaviour change worth noting: `p("in")` was `i · n` in 0.4.0 and is now `Symbol("in")`; the PR-3a
+  test that asserted the product form is updated accordingly. `x in RR` now parses as the
+  three-symbol juxtaposition `x · ∈ · ℝ`.
+- Tests: new `symbol_table_pr3b_bare_keywords_and_short_forms` (each keyword + short form, short/long
+  agreement, `x in RR` juxtaposition, and that `sum_(i in S) i` still parses as a `BigOp`). 30 unit
+  tests + doc-test pass; clippy `-D warnings` clean. Spec ASM01 §PR-3 updated (3a + 3b shipped; 3c =
+  longest-match + `stackrel`/`overset`/`underset` + `text(…)`).
+
 ## [0.4.0] — 2026-06-29
 
 ### Added — ASM01 PR-3a: the symbol table (greek, blackboard sets, arrows, set/logic ops)

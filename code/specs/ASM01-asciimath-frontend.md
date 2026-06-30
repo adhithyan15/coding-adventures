@@ -98,11 +98,15 @@ shapes for representative inputs.
   and misc. operators/decoration (`partial`, `nabla`/`grad`, `propto`, `perp`, `angle`, `deg`, the
   dots). Each lowers to `MathExpr::Symbol(canonical)`; symbol emission is not a `Capabilities` flag,
   so the table is purely additive (no consumer/conformance change).
-- **PR-3b:** the remainder — the bare English keyword spellings `in`/`and`/`or`/`not` (care needed:
-  `in` also appears inside big-operator bounds like `sum_(i in S)`), AsciiMath's two-letter short
-  forms (`sub`, `sup`, `uu`, `nn`, `AA`, `EE`), punctuation arrows (`->`, `=>`, a tokenizer concern),
-  **longest-match tokenization** (so `sinx` splits as `sin`·`x`), `stackrel`, `overset`/`underset`,
-  and the `text(…)` keyword form alongside the `"…"` literal.
+- **PR-3b (shipped, v0.5.0):** finished the symbol-table surface — the bare English keyword spellings
+  `in`/`and`/`or`/`not` (→ `Symbol`; verified safe inside big-operator bounds: `sum_(i in S)` parses
+  as the juxtaposition `i · ∈ · S`), and AsciiMath's two-letter short forms `sub`→`subset`,
+  `sube`→`subseteq`, `sup`→`supset`, `supe`→`supseteq`, `uu`→`union`, `nn`→`intersection`,
+  `AA`→`forall`, `EE`→`exists`. Still additive (no `Capabilities`/conformance change). Behaviour note:
+  `p("in")` changed from `i·n` to `Symbol("in")`.
+- **PR-3c:** the structural remainder (not table entries) — punctuation arrows (`->`, `=>`, a tokenizer
+  concern), **longest-match tokenization** (so `sinx` splits as `sin`·`x`), `stackrel`,
+  `overset`/`underset`, and the `text(…)` keyword form alongside the `"…"` literal.
 
 ## 6. Non-goals
 Evaluation, simplification, rendering — none are a frontend's job (PFE01 §7). Lowering

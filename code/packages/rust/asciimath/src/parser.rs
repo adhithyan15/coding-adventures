@@ -564,6 +564,24 @@ fn constant_of(word: &str) -> Option<&'static str> {
         "forall" => "forall",
         "exists" => "exists",
         "aleph" => "aleph",
+        // ── PR-3b: AsciiMath two-letter short forms + bare-keyword spellings ───────────────────
+        // The compact AsciiMath spellings of the set/logic operators above, plus the four English
+        // keywords. Like every other entry these lower to `Symbol` — there is no `In`/`Subset`
+        // relation in the neutral `RelOp`, so a symbol standing for the glyph is the faithful
+        // representation (and `i in S` is then the juxtaposition `i · ∈ · S`, which is harmless
+        // inside a big-operator bound like `sum_(i in S)` — no parse breakage).
+        "in" => "in",
+        "and" => "and",
+        "or" => "or",
+        "not" => "not",
+        "sub" => "subset",     // short form of `subset`
+        "sube" => "subseteq",  // short form of `subseteq`
+        "sup" => "supset",     // short form of `supset`
+        "supe" => "supseteq",  // short form of `supseteq`
+        "uu" => "union",       // short form of `cup`
+        "nn" => "intersection", // short form of `cap`
+        "AA" => "forall",      // ∀
+        "EE" => "exists",      // ∃
         // ── Misc. operators / relations / decoration ──────────────────────────────────────────
         "partial" => "partial",
         "nabla" | "grad" => "nabla",

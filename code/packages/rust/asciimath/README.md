@@ -82,9 +82,14 @@ a product of single letters (without it `Sigma` would parse as `S·i·g·m·a`).
 | `partial`, `nabla`/`grad`, `propto`, `perp`, `angle`, `deg`, `ldots`/`cdots`/`vdots`/`ddots`, `oo`/`infty` | `Symbol` (operators / decoration / infinity) |
 
 Symbol emission is *not* a declared capability, so this table is **purely additive** — no consumer or
-conformance change. **Deferred to PR-3b:** the bare keyword spellings `in`/`and`/`or`/`not`, the
-two-letter short forms (`sub`, `sup`, `uu`, `nn`, `AA`, `EE`), punctuation arrows (`->`, `=>`),
-longest-match identifier scan (`sinx` → `sin·x`), `stackrel`/`overset`/`underset`, and `text(…)`.
+conformance change.
+
+**PR-3b** completes the symbol surface: the bare keyword spellings `in`/`and`/`or`/`not` (→ symbols)
+and the two-letter short forms `sub`/`sube`/`sup`/`supe` (subset family), `uu`→`union`, `nn`→`intersection`,
+`AA`→`forall`, `EE`→`exists`. (`in` is safe inside big-operator bounds — `sum_(i in S)` parses as the
+juxtaposition `i · ∈ · S`.) **Still deferred to PR-3c** (structural, not table entries): punctuation
+arrows (`->`, `=>`), longest-match identifier scan (`sinx` → `sin·x`), `stackrel`/`overset`/`underset`,
+and the `text(…)` keyword form.
 
 It is **total and panic-free**: every input returns `Ok(MathExpr)` or a spanned
 `FrontendError`. Recursion is depth-guarded (matrix nesting included); left-associative chains are

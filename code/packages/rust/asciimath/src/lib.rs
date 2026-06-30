@@ -135,8 +135,31 @@ mod tests {
         assert_eq!(p("grad"), sym("nabla")); // alias folds to the same symbol
         // A symbol composes in ordinary expressions: `alpha + Omega`.
         assert_eq!(p("alpha + Omega"), b(BinOp::Add, sym("alpha"), sym("Omega")));
-        // Deferred bare keywords still parse (as a product / variable), no panic.
-        assert_eq!(p("in"), b(BinOp::Mul, sym("i"), sym("n")));
+    }
+
+    #[test]
+    fn symbol_table_pr3b_bare_keywords_and_short_forms() {
+        // PR-3b: the bare English keywords are now symbols (was `i·n` etc. in PR-3a).
+        assert_eq!(p("in"), sym("in"));
+        assert_eq!(p("and"), sym("and"));
+        assert_eq!(p("or"), sym("or"));
+        assert_eq!(p("not"), sym("not"));
+        // AsciiMath two-letter short forms fold onto the same canonical names as their long forms.
+        assert_eq!(p("sub"), sym("subset"));
+        assert_eq!(p("sube"), sym("subseteq"));
+        assert_eq!(p("sup"), sym("supset"));
+        assert_eq!(p("supe"), sym("supseteq"));
+        assert_eq!(p("uu"), sym("union")); // == p("cup")
+        assert_eq!(p("nn"), sym("intersection")); // == p("cap")
+        assert_eq!(p("AA"), sym("forall"));
+        assert_eq!(p("EE"), sym("exists"));
+        // `x in RR` is now three symbols juxtaposed (x · ∈ · ℝ) — no panic, composes cleanly.
+        assert_eq!(
+            p("x in RR"),
+            b(BinOp::Mul, b(BinOp::Mul, sym("x"), sym("in")), sym("reals"))
+        );
+        // Inside a big-operator bound the keyword is harmless (no parse breakage): `sum_(i in S) i`.
+        assert!(matches!(p("sum_(i in S) i"), MathExpr::BigOp { .. }));
     }
 
     // ---- operators & precedence ------------------------------------------------
