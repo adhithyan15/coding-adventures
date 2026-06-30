@@ -1,0 +1,5 @@
+{
+  "network": false,
+  "filesystem": false,
+  "subprocess": false
+}
