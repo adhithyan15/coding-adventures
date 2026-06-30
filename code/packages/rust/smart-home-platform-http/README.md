@@ -118,18 +118,20 @@ can be checked against the runtime policy boundary. Entity cards and state-gap
 rows also link to their current state, registry detail, desired-state target,
 state history, entity-scoped runtime events, and owning bridge command-result
 audit trail. The browser shell also exposes filters for
-room, entity domain/state/control status, API catalog
+room, entity domain/state/control status, service catalog
+service/capability/target-entity/target-scene, API catalog
 surface/method/category/mutation/authorization, runtime event
 kind/activity entity, history event type, history bridge and observed/received
 time windows, command-result status/id/bridge/correlation, runtime event-log
 sequence windows, command-result sequence windows, authorization
 outcome/principal, and capability-grant status/scope/principal,
 with server-backed room scoping across inventory, state, history, event-log,
-and command-result panels plus server-backed activity/history, command audit,
-authorization, and capability-grant scoping and local text search across the
-rendered dashboard rows. Those filter selections are mirrored into URL query
+and command-result panels plus server-backed service catalog,
+activity/history, command audit, authorization, and capability-grant scoping and
+local text search across the rendered dashboard rows. Those filter selections
+are mirrored into URL query
 parameters and restored on page load or browser navigation, so local-controller
-room, activity, history, audit, and
+room, service, activity, history, audit, and
 grant-boundary views can be shared or reopened directly.
 State-history routes also accept numeric observed-time windows through
 `from_ms`/`to_ms` or
@@ -188,6 +190,8 @@ curl 'http://127.0.0.1:8123/api/smart_home/states?domain=light&stale=true'
 curl 'http://127.0.0.1:8123/api/smart_home/states?room_id=kitchen&stale=true'
 curl 'http://127.0.0.1:8123/api/smart_home/states/light.entity_light_1'
 curl 'http://127.0.0.1:8123/api/smart_home/services?domain=light'
+curl 'http://127.0.0.1:8123/api/smart_home/services?domain=light&service=turn_on&entity_id=light.entity_light_1'
+curl 'http://127.0.0.1:8123/api/smart_home/services?capability_id=light.on_off'
 curl 'http://127.0.0.1:8123/api/smart_home/services/light/turn_on'
 curl 'http://127.0.0.1:8123/api/smart_home/entities?domain=light&commandable=true'
 curl 'http://127.0.0.1:8123/api/smart_home/entities?room_id=kitchen'

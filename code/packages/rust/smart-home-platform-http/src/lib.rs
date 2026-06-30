@@ -382,6 +382,18 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
               <option value="readonly">Read-only</option>
             </select>
           </label>
+          <label>Service Name
+            <input id="filter-service-name" data-dashboard-filter="service-name" type="search" autocomplete="off">
+          </label>
+          <label>Service Capability
+            <input id="filter-service-capability" data-dashboard-filter="service-capability" type="search" autocomplete="off">
+          </label>
+          <label>Service Entity
+            <input id="filter-service-entity" data-dashboard-filter="service-entity" type="search" autocomplete="off">
+          </label>
+          <label>Service Scene
+            <input id="filter-service-scene" data-dashboard-filter="service-scene" type="search" autocomplete="off">
+          </label>
           <label>API Surface
             <select id="filter-api-surface" data-dashboard-filter="api-surface">
               <option value="">All surfaces</option>
@@ -674,6 +686,10 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       filterHistoryType: document.querySelector("#filter-history-type"),
       filterRoom: document.querySelector("#filter-room"),
       filterSearch: document.querySelector("#filter-search"),
+      filterServiceCapability: document.querySelector("#filter-service-capability"),
+      filterServiceEntity: document.querySelector("#filter-service-entity"),
+      filterServiceName: document.querySelector("#filter-service-name"),
+      filterServiceScene: document.querySelector("#filter-service-scene"),
       filterState: document.querySelector("#filter-state"),
       gaps: document.querySelector("#gaps"),
       history: document.querySelector("#history"),
@@ -705,6 +721,10 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       ["domain", els.filterDomain],
       ["state", els.filterState],
       ["control", els.filterControl],
+      ["service_name", els.filterServiceName],
+      ["service_capability", els.filterServiceCapability],
+      ["service_entity", els.filterServiceEntity],
+      ["service_scene", els.filterServiceScene],
       ["api_surface", els.filterApiSurface],
       ["api_method", els.filterApiMethod],
       ["api_category", els.filterApiCategory],
@@ -776,6 +796,10 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       domain: els.filterDomain.value,
       state: els.filterState.value,
       control: els.filterControl.value,
+      serviceName: els.filterServiceName.value.trim(),
+      serviceCapability: els.filterServiceCapability.value.trim(),
+      serviceEntity: els.filterServiceEntity.value.trim(),
+      serviceScene: els.filterServiceScene.value.trim(),
       apiSurface: els.filterApiSurface.value,
       apiMethod: els.filterApiMethod.value,
       apiCategory: els.filterApiCategory.value.trim(),
@@ -1293,7 +1317,14 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
             received_at_or_after_ms: filters.historyReceivedFromMs,
             received_at_or_before_ms: filters.historyReceivedToMs
           })),
-          json("/api/smart_home/services?limit=8"),
+          json(queryUrl("/api/smart_home/services", {
+            limit: 8,
+            domain: filters.domain,
+            service: filters.serviceName,
+            capability_id: filters.serviceCapability,
+            entity_id: filters.serviceEntity,
+            scene_id: filters.serviceScene
+          })),
           json(queryUrl("/api/smart_home/api", {
             surface: filters.apiSurface,
             method: filters.apiMethod,
@@ -8114,6 +8145,10 @@ mod tests {
             assert!(body.contains("data-dashboard-filter=\"search\""));
             assert!(body.contains("data-dashboard-filter=\"room\""));
             assert!(body.contains("data-dashboard-filter=\"domain\""));
+            assert!(body.contains("data-dashboard-filter=\"service-name\""));
+            assert!(body.contains("data-dashboard-filter=\"service-capability\""));
+            assert!(body.contains("data-dashboard-filter=\"service-entity\""));
+            assert!(body.contains("data-dashboard-filter=\"service-scene\""));
             assert!(body.contains("data-dashboard-filter=\"api-surface\""));
             assert!(body.contains("data-dashboard-filter=\"api-method\""));
             assert!(body.contains("data-dashboard-filter=\"api-category\""));
@@ -8137,6 +8172,10 @@ mod tests {
             assert!(body.contains("[\"api_category\", els.filterApiCategory]"));
             assert!(body.contains("[\"api_mutating\", els.filterApiMutating]"));
             assert!(body.contains("[\"api_authorized\", els.filterApiAuthorized]"));
+            assert!(body.contains("[\"service_name\", els.filterServiceName]"));
+            assert!(body.contains("[\"service_capability\", els.filterServiceCapability]"));
+            assert!(body.contains("[\"service_entity\", els.filterServiceEntity]"));
+            assert!(body.contains("[\"service_scene\", els.filterServiceScene]"));
             assert!(body.contains("[\"event_kind\", els.filterEventKind]"));
             assert!(body.contains("[\"event_from_sequence\", els.filterEventFromSequence]"));
             assert!(body.contains("[\"event_to_sequence\", els.filterEventToSequence]"));
@@ -8181,7 +8220,11 @@ mod tests {
             assert!(body.contains("received_at_or_after_ms: filters.historyReceivedFromMs"));
             assert!(body.contains("received_at_or_before_ms: filters.historyReceivedToMs"));
             assert!(body.matches("entity_id: activityEntity").count() >= 2);
-            assert!(body.contains("json(\"/api/smart_home/services?limit=8\")"));
+            assert!(body.contains("queryUrl(\"/api/smart_home/services\", {"));
+            assert!(body.contains("service: filters.serviceName"));
+            assert!(body.contains("capability_id: filters.serviceCapability"));
+            assert!(body.contains("entity_id: filters.serviceEntity"));
+            assert!(body.contains("scene_id: filters.serviceScene"));
             assert!(body.contains("json(\"/api/smart_home/rooms?sort=scene_count\")"));
             assert!(
                 body.contains("queryUrl(\"/api/smart_home/devices\", {limit: 8, room_id: roomId})")
@@ -9664,6 +9707,10 @@ mod tests {
         assert!(body.contains("json(\"/api/smart_home/bootstrap\")"));
         assert!(body.contains("data-dashboard-filter=\"search\""));
         assert!(body.contains("data-dashboard-filter=\"room\""));
+        assert!(body.contains("data-dashboard-filter=\"service-name\""));
+        assert!(body.contains("data-dashboard-filter=\"service-capability\""));
+        assert!(body.contains("data-dashboard-filter=\"service-entity\""));
+        assert!(body.contains("data-dashboard-filter=\"service-scene\""));
         assert!(body.contains("data-dashboard-filter=\"api-surface\""));
         assert!(body.contains("data-dashboard-filter=\"api-method\""));
         assert!(body.contains("data-dashboard-filter=\"api-category\""));
@@ -9693,6 +9740,10 @@ mod tests {
         assert!(body.contains("[\"api_category\", els.filterApiCategory]"));
         assert!(body.contains("[\"api_mutating\", els.filterApiMutating]"));
         assert!(body.contains("[\"api_authorized\", els.filterApiAuthorized]"));
+        assert!(body.contains("[\"service_name\", els.filterServiceName]"));
+        assert!(body.contains("[\"service_capability\", els.filterServiceCapability]"));
+        assert!(body.contains("[\"service_entity\", els.filterServiceEntity]"));
+        assert!(body.contains("[\"service_scene\", els.filterServiceScene]"));
         assert!(body.contains("[\"event_from_sequence\", els.filterEventFromSequence]"));
         assert!(body.contains("[\"event_to_sequence\", els.filterEventToSequence]"));
         assert!(body.contains("[\"activity_entity\", els.filterActivityEntity]"));
@@ -9733,7 +9784,11 @@ mod tests {
         assert!(body.contains("received_at_or_after_ms: filters.historyReceivedFromMs"));
         assert!(body.contains("received_at_or_before_ms: filters.historyReceivedToMs"));
         assert!(body.matches("entity_id: activityEntity").count() >= 2);
-        assert!(body.contains("json(\"/api/smart_home/services?limit=8\")"));
+        assert!(body.contains("queryUrl(\"/api/smart_home/services\", {"));
+        assert!(body.contains("service: filters.serviceName"));
+        assert!(body.contains("capability_id: filters.serviceCapability"));
+        assert!(body.contains("entity_id: filters.serviceEntity"));
+        assert!(body.contains("scene_id: filters.serviceScene"));
         assert!(body.contains("json(\"/api/smart_home/rooms?sort=scene_count\")"));
         assert!(body.contains("queryUrl(\"/api/smart_home/devices\", {limit: 8, room_id: roomId})"));
         assert!(body.contains("json(\"/api/smart_home/bridges?limit=8\")"));

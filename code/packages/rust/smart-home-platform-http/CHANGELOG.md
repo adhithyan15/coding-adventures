@@ -34,6 +34,8 @@ All notable changes to this package will be documented in this file.
   service path.
 - Added browser dashboard service and authorized API catalog panels backed by
   the native local-controller discovery routes.
+- Added URL-backed browser dashboard service-catalog controls for service name,
+  capability, target entity, and target scene filters.
 - Added browser dashboard desired-state target controls for light on/off and
   brightness so the local controller can supervise intended state through the
   existing runtime-authorized native API.
