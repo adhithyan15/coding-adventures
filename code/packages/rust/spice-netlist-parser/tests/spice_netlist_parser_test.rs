@@ -15,6 +15,7 @@ use spice_netlist_parser::{
     BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION, BERKELEY_APP_LAUNCH_PLAN_SCHEMA_VERSION,
     BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION, BERKELEY_APP_PACKAGE_NAME,
     BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_DASHBOARD_PACKAGE_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_EVENT_DASHBOARD_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_EVENT_DIGEST_SCHEMA_VERSION, BERKELEY_APP_SHELL_EVENT_LOG_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_EVENT_SUMMARY_SCHEMA_VERSION, BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION,
@@ -2599,6 +2600,11 @@ fn berkeley_app_facade_exports_package_manifest_json() {
         .unwrap()
         .iter()
         .any(|capability| capability == "app-shell-event-summary-json"));
+    assert!(payload["artifactCapabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|capability| capability == "app-shell-dashboard-package-json"));
 }
 
 #[test]
@@ -3203,6 +3209,79 @@ C1 out 0 1p
         shell_event_dashboard_payload["sections"][2]["eventIds"][2],
         "shell.capabilities"
     );
+
+    let shell_dashboard_package = app
+        .run_app_shell_dashboard_package(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("shell dashboard package should execute");
+    assert_eq!(
+        shell_dashboard_package.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_PACKAGE_SCHEMA_VERSION
+    );
+    assert_eq!(
+        shell_dashboard_package.package_name,
+        BERKELEY_APP_PACKAGE_NAME
+    );
+    assert!(shell_dashboard_package.ready);
+    assert_eq!(shell_dashboard_package.startup_route, "ready");
+    assert_eq!(shell_dashboard_package.severity, "ready");
+    assert!(!shell_dashboard_package.attention_required);
+    assert_eq!(shell_dashboard_package.section_count, 3);
+    assert_eq!(
+        shell_dashboard_package.dashboard_capability_id,
+        "app-shell-event-dashboard-json"
+    );
+    assert_eq!(
+        shell_dashboard_package.package_capability_id,
+        "app-shell-dashboard-package-json"
+    );
+    assert_eq!(
+        shell_dashboard_package
+            .package_manifest
+            .artifact_capabilities
+            .iter()
+            .any(|capability| capability == &shell_dashboard_package.package_capability_id),
+        true
+    );
+    assert_eq!(
+        shell_dashboard_package.artifact_capability_count,
+        shell_dashboard_package
+            .package_manifest
+            .artifact_capabilities
+            .len()
+    );
+    assert_eq!(
+        shell_dashboard_package
+            .event_dashboard
+            .headline_event_id
+            .as_deref(),
+        Some("shell.status")
+    );
+
+    let shell_dashboard_package_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_dashboard_package_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap(),
+    )
+    .expect("shell dashboard package JSON should parse");
+    assert_eq!(shell_dashboard_package_payload["schemaVersion"], 1);
+    assert_eq!(shell_dashboard_package_payload["ready"], true);
+    assert_eq!(
+        shell_dashboard_package_payload["dashboardCapabilityId"],
+        "app-shell-event-dashboard-json"
+    );
+    assert_eq!(
+        shell_dashboard_package_payload["packageManifest"]["packageName"],
+        BERKELEY_APP_PACKAGE_NAME
+    );
+    assert_eq!(
+        shell_dashboard_package_payload["eventDashboard"]["sections"][0]["id"],
+        "status"
+    );
 }
 
 #[test]
@@ -3737,6 +3816,53 @@ R1 in out
     assert_eq!(
         shell_event_dashboard_payload["sections"][1]["eventIds"][0],
         "shell.status"
+    );
+
+    let shell_dashboard_package =
+        app.app_shell_dashboard_package(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        });
+    assert_eq!(
+        shell_dashboard_package.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_PACKAGE_SCHEMA_VERSION
+    );
+    assert!(!shell_dashboard_package.ready);
+    assert_eq!(shell_dashboard_package.startup_route, "blocked");
+    assert_eq!(shell_dashboard_package.severity, "error");
+    assert!(shell_dashboard_package.attention_required);
+    assert_eq!(shell_dashboard_package.section_count, 3);
+    assert_eq!(
+        shell_dashboard_package
+            .event_dashboard
+            .primary_action_id
+            .as_deref(),
+        Some("launch.diagnostics")
+    );
+    assert_eq!(
+        shell_dashboard_package.artifact_capability_count,
+        shell_dashboard_package
+            .package_manifest
+            .artifact_capabilities
+            .len()
+    );
+
+    let shell_dashboard_package_payload: serde_json::Value = serde_json::from_str(
+        &app.app_shell_dashboard_package_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        }),
+    )
+    .expect("blocked shell dashboard package JSON should parse");
+    assert_eq!(shell_dashboard_package_payload["ready"], false);
+    assert_eq!(shell_dashboard_package_payload["startupRoute"], "blocked");
+    assert_eq!(
+        shell_dashboard_package_payload["packageCapabilityId"],
+        "app-shell-dashboard-package-json"
+    );
+    assert_eq!(
+        shell_dashboard_package_payload["eventDashboard"]["attentionRequired"],
+        true
     );
 }
 

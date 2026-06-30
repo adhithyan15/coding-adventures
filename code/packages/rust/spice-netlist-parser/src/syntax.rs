@@ -26,6 +26,7 @@ pub const BERKELEY_APP_SHELL_EVENT_LOG_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_EVENT_SUMMARY_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_EVENT_DIGEST_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_EVENT_DASHBOARD_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_PACKAGE_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -67,6 +68,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-event-summary-json",
     "app-shell-event-digest-json",
     "app-shell-event-dashboard-json",
+    "app-shell-dashboard-package-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -1103,6 +1105,66 @@ impl BerkeleyAppShellEventDashboard {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardPackage {
+    pub schema_version: u32,
+    pub package_manifest: BerkeleyAppPackageManifest,
+    pub event_dashboard: BerkeleyAppShellEventDashboard,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub section_count: usize,
+    pub artifact_capability_count: usize,
+    pub dashboard_capability_id: String,
+    pub package_capability_id: String,
+}
+
+impl BerkeleyAppShellDashboardPackage {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_package_and_dashboard(
+            snapshot.package_manifest.clone(),
+            BerkeleyAppShellEventDashboard::from_bootstrap_snapshot(snapshot),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_package_and_dashboard(
+            handoff.package_manifest.clone(),
+            BerkeleyAppShellEventDashboard::from_shell_handoff(handoff),
+        )
+    }
+
+    fn from_package_and_dashboard(
+        package_manifest: BerkeleyAppPackageManifest,
+        event_dashboard: BerkeleyAppShellEventDashboard,
+    ) -> Self {
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_PACKAGE_SCHEMA_VERSION,
+            package_name: event_dashboard.package_name.clone(),
+            source_fingerprint: event_dashboard.source_fingerprint.clone(),
+            title: event_dashboard.title.clone(),
+            startup_route: event_dashboard.startup_route.clone(),
+            ready: event_dashboard.ready,
+            severity: event_dashboard.severity.clone(),
+            attention_required: event_dashboard.attention_required,
+            section_count: event_dashboard.section_count,
+            artifact_capability_count: package_manifest.artifact_capabilities.len(),
+            dashboard_capability_id: "app-shell-event-dashboard-json".to_string(),
+            package_capability_id: "app-shell-dashboard-package-json".to_string(),
+            package_manifest,
+            event_dashboard,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_package_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BerkeleyAnalysisInventoryEntry {
     pub index: usize,
     pub directive: String,
@@ -1969,6 +2031,40 @@ impl BerkeleyAppDeck {
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self
             .run_app_shell_event_dashboard(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_package(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardPackage {
+        BerkeleyAppShellDashboardPackage::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_package(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardPackage, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellDashboardPackage::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_dashboard_package_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_package(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_dashboard_package_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_package(persisted_state)?
             .to_json())
     }
 
@@ -2877,6 +2973,27 @@ fn app_shell_event_dashboard_section_json_value(
         "severity": &section.severity,
         "eventCount": section.event_count,
         "eventIds": &section.event_ids,
+    })
+}
+
+fn app_shell_dashboard_package_json_value(
+    package: &BerkeleyAppShellDashboardPackage,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": package.schema_version,
+        "packageName": &package.package_name,
+        "sourceFingerprint": &package.source_fingerprint,
+        "title": &package.title,
+        "startupRoute": &package.startup_route,
+        "ready": package.ready,
+        "severity": &package.severity,
+        "attentionRequired": package.attention_required,
+        "sectionCount": package.section_count,
+        "artifactCapabilityCount": package.artifact_capability_count,
+        "dashboardCapabilityId": &package.dashboard_capability_id,
+        "packageCapabilityId": &package.package_capability_id,
+        "packageManifest": app_package_manifest_json_value(&package.package_manifest),
+        "eventDashboard": app_shell_event_dashboard_json_value(&package.event_dashboard),
     })
 }
 
