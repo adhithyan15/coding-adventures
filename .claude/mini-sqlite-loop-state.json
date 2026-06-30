@@ -87,11 +87,11 @@
     {
       "id": "fsharp-level1-sql-planner",
       "title": "F# sql-planner",
-      "status": "in-review",
+      "status": "merged",
       "depends_on": ["fsharp-level1-sql-backend"],
       "branch": "mini-sqlite/fsharp-level1-sql-planner",
       "pr_number": 7036,
-      "notes": "PR open 2026-06-30. 52 tests, 83% coverage. CI all green (ubuntu/macos/windows). Awaiting merge."
+      "notes": "Merged 2026-06-30. PR #7036."
     },
     {
       "id": "fsharp-level1-sql-optimizer",
@@ -132,11 +132,11 @@
     {
       "id": "java-level1-sql-planner",
       "title": "Java sql-planner",
-      "status": "in-review",
+      "status": "merged",
       "depends_on": ["java-level1-sql-backend"],
       "branch": "mini-sqlite/java-level1-sql-planner",
       "pr_number": 7045,
-      "notes": "PR open 2026-06-30. 50 tests (JaCoCo ≥80%). Java 21 sealed interfaces + records. Awaiting CI + merge."
+      "notes": "Merged 2026-06-30. PR #7045."
     },
     {
       "id": "java-level1-sql-optimizer",
@@ -177,11 +177,11 @@
     {
       "id": "kotlin-level1-sql-planner",
       "title": "Kotlin sql-planner",
-      "status": "pending",
+      "status": "merged",
       "depends_on": ["kotlin-level1-sql-backend"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Port Python sql_planner to Kotlin."
+      "branch": "mini-sqlite/kotlin-level1-sql-planner",
+      "pr_number": 7047,
+      "notes": "Merged 2026-06-30. PR #7047."
     },
     {
       "id": "kotlin-level1-sql-optimizer",
@@ -222,11 +222,11 @@
     {
       "id": "haskell-level1-sql-planner",
       "title": "Haskell sql-planner",
-      "status": "pending",
+      "status": "in-review",
       "depends_on": ["haskell-level1-sql-backend"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Port Python sql_planner to Haskell."
+      "branch": "mini-sqlite/haskell-level1-sql-planner",
+      "pr_number": 7048,
+      "notes": "PR open 2026-06-30. 47 hspec tests. Fixed planSelect ordering + LiteralVal(..) export. CI all green. Awaiting merge."
     },
     {
       "id": "haskell-level1-sql-optimizer",
@@ -267,11 +267,11 @@
     {
       "id": "csharp-level1-sql-planner",
       "title": "C# sql-planner (Level 1 prerequisite)",
-      "status": "in-review",
+      "status": "merged",
       "depends_on": ["csharp-level1-sql-backend"],
       "branch": "mini-sqlite/csharp-level1-sql-planner",
       "pr_number": 7041,
-      "notes": "PR open 2026-06-30. 40 tests, 89% coverage. CI all green (ubuntu/macos/windows). Awaiting merge."
+      "notes": "Merged 2026-06-30. PR #7041."
     },
     {
       "id": "csharp-level1-sql-optimizer",
