@@ -1321,4 +1321,60 @@ mod tests {
         assert!(m.manifest.contains(Feature::Closures));
         assert!(m.manifest.contains(Feature::DynamicTyping));
     }
+
+    // ── M4: depth-bound regression (CWE-674 — no stack overflow) ────
+
+    use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
+
+    /// Build a synthetic [`GrammarASTNode`] with the given rule name and
+    /// children.  Spans are stamped so error positions are non-zero.
+    fn node(rule: &str, children: Vec<ASTNodeOrToken>) -> GrammarASTNode {
+        GrammarASTNode {
+            rule_name: rule.to_string(),
+            children,
+            start_line: Some(1),
+            start_column: Some(1),
+            end_line: Some(1),
+            end_column: Some(1),
+        }
+    }
+
+    /// Build a `block`-chain nested `n` levels deep, bottoming out at a
+    /// childless terminal node: `block[ block[ … block[ leaf ] … ] ]`.  The
+    /// depth guards trip while descending the chain, long before the leaf,
+    /// so it needs no real token.
+    fn nest_blocks(n: usize) -> GrammarASTNode {
+        let mut cur = node("primary_expression", Vec::new());
+        for _ in 0..n {
+            cur = node("block", vec![ASTNodeOrToken::Node(cur)]);
+        }
+        cur
+    }
+
+    #[test]
+    fn compile_rejects_deeply_nested_input_without_crashing() {
+        // A `program` whose body is a `block` tower far deeper than
+        // `MAX_STMT_DEPTH` (256).  We feed a *synthetic* CST straight into
+        // the public `compile`, bypassing the parser (whose own recursion is
+        // out of scope here), to prove that the pass-1
+        // `collect_function_names` walk — which runs *before* the
+        // depth-guarded lowering and is reachable from the public API —
+        // turns deep input into a clean positioned `JsLowerError` rather
+        // than overflowing the native stack (CWE-674).
+        //
+        // 600 > 256 trips the guard, yet is shallow enough that the test
+        // runs comfortably on the harness's default thread stack.
+        let body = node(
+            "source_element",
+            vec![ASTNodeOrToken::Node(nest_blocks(600))],
+        );
+        let program = node("program", vec![ASTNodeOrToken::Node(body)]);
+        let err = compile(&program, "deep")
+            .expect_err("a 600-deep block tower must be rejected, not crash");
+        assert!(
+            err.message.contains("deeper than the supported limit"),
+            "unexpected message: {}",
+            err.message
+        );
+    }
 }

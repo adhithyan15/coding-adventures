@@ -370,7 +370,9 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Js
     // defined later (forward reference) or refers to itself / a sibling
     // (recursion, mutual recursion).  Nested declarations are lifted to
     // top-level synthesised functions, so their names are module-wide too.
-    collect_function_names(program, &mut lw.function_names);
+    // Depth-bounded so an adversarially deep CST is a positioned error, not
+    // a stack overflow.
+    collect_function_names(program, &mut lw.function_names, 0)?;
 
     // ── Pass 2: lower bodies. ────────────────────────────────────────
     // `main` is the synthetic top-level scope frame (no params/captures);
@@ -1719,7 +1721,7 @@ impl Lowerer {
             // only place a `return` is legal is the final node (handled
             // below).  `reject_returns` walks for any stray `return`.
             if !is_last {
-                self.reject_returns(n)?;
+                self.reject_returns(n, depth)?;
                 match self.lower_source_element(n, depth)? {
                     Lowered::Stmt(s) => {
                         if let Some(prev) = tail.take() {
@@ -1840,7 +1842,15 @@ impl Lowerer {
     /// `arrow_function`: a `return` inside *those* belongs to the nested
     /// callable (it is checked when that callable's own body is lowered),
     /// not to the enclosing function.
-    fn reject_returns(&self, node: &GrammarASTNode) -> Result<(), JsLowerError> {
+    ///
+    /// This is a recursive CST walk run *before* the depth-guarded lowering,
+    /// so it carries its **own** [`MAX_STMT_DEPTH`] bound: a pathologically
+    /// deep statement subtree turns into a positioned error rather than a
+    /// native stack overflow (CWE-674).
+    fn reject_returns(&self, node: &GrammarASTNode, depth: usize) -> Result<(), JsLowerError> {
+        if depth > MAX_STMT_DEPTH {
+            return Err(self.too_deep_error(node));
+        }
         if node.rule_name == "return_statement" {
             return Err(self.early_return_error(node));
         }
@@ -1849,10 +1859,24 @@ impl Lowerer {
         }
         for child in &node.children {
             if let ASTNodeOrToken::Node(n) = child {
-                self.reject_returns(n)?;
+                self.reject_returns(n, depth + 1)?;
             }
         }
         Ok(())
+    }
+
+    /// The positioned "too deeply nested" error shared by the pre-lowering
+    /// recursive CST walks ([`reject_returns`](Self::reject_returns) and
+    /// [`collect_function_names`]).  Mirrors the message
+    /// [`check_stmt_depth`](Self::check_stmt_depth) emits.
+    fn too_deep_error(&self, node: &GrammarASTNode) -> JsLowerError {
+        JsLowerError {
+            message: format!(
+                "input nests deeper than the supported limit ({MAX_STMT_DEPTH})"
+            ),
+            line: node.start_line.unwrap_or(0),
+            column: node.start_column.unwrap_or(0),
+        }
     }
 
     /// Lower the value of a tail `return_statement`: its `expression` child,
@@ -2710,7 +2734,25 @@ fn function_decl_name(node: &GrammarASTNode) -> Option<String> {
 /// resolvable for `DirectCall`s and (mutual) recursion.  We recurse through
 /// the whole CST so a declaration buried inside a block / loop / another
 /// function is still discovered.
-fn collect_function_names(node: &GrammarASTNode, out: &mut HashSet<String>) {
+///
+/// This walk runs in [`compile`] *before* the depth-guarded lowering, so it
+/// carries its **own** [`MAX_STMT_DEPTH`] bound: a pathologically deep CST
+/// (thousands of nested blocks / functions) turns into a positioned error
+/// rather than a native stack overflow (CWE-674).
+fn collect_function_names(
+    node: &GrammarASTNode,
+    out: &mut HashSet<String>,
+    depth: usize,
+) -> Result<(), JsLowerError> {
+    if depth > MAX_STMT_DEPTH {
+        return Err(JsLowerError {
+            message: format!(
+                "input nests deeper than the supported limit ({MAX_STMT_DEPTH})"
+            ),
+            line: node.start_line.unwrap_or(0),
+            column: node.start_column.unwrap_or(0),
+        });
+    }
     if node.rule_name == "function_declaration" {
         if let Some(name) = function_decl_name(node) {
             out.insert(name);
@@ -2722,9 +2764,10 @@ fn collect_function_names(node: &GrammarASTNode, out: &mut HashSet<String>) {
     // to lift, so we keep descending into every child uniformly.
     for child in &node.children {
         if let ASTNodeOrToken::Node(n) = child {
-            collect_function_names(n, out);
+            collect_function_names(n, out, depth + 1)?;
         }
     }
+    Ok(())
 }
 
 /// If `callee` is a two-segment member access `obj.method` (the CST shape
@@ -2901,5 +2944,115 @@ fn collect_expr_callees(
             collect_expr_callees(rhs, names, self_name, out);
         }
         _ => {}
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Tests — depth bounds on the pre-lowering recursive CST walks (CWE-674)
+// ---------------------------------------------------------------------------
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// A synthetic node with a rule name and children, spans stamped.
+    fn node(rule: &str, children: Vec<ASTNodeOrToken>) -> GrammarASTNode {
+        GrammarASTNode {
+            rule_name: rule.to_string(),
+            children,
+            start_line: Some(1),
+            start_column: Some(1),
+            end_line: Some(1),
+            end_column: Some(1),
+        }
+    }
+
+    /// A `block`-chain nested `n` levels deep, bottoming out at a childless
+    /// terminal node.  The depth guards trip while descending, so no leaf
+    /// token is needed.
+    fn nest_blocks(n: usize) -> GrammarASTNode {
+        let mut cur = node("primary_expression", Vec::new());
+        for _ in 0..n {
+            cur = node("block", vec![ASTNodeOrToken::Node(cur)]);
+        }
+        cur
+    }
+
+    /// A bare `Lowerer` for exercising its private walks directly.
+    fn lowerer() -> Lowerer {
+        Lowerer {
+            file_name: "test".to_string(),
+            features_used: FeatureManifest::new(),
+            scopes: Vec::new(),
+            function_names: HashSet::new(),
+            user_functions: Vec::new(),
+            synthesised: Vec::new(),
+            lambda_counter: 0,
+        }
+    }
+
+    #[test]
+    fn collect_function_names_is_depth_bounded() {
+        // Pass-1 name collection over a tower far deeper than MAX_STMT_DEPTH
+        // must return a positioned error, not overflow the stack.
+        let deep = nest_blocks(MAX_STMT_DEPTH + 64);
+        let mut names = HashSet::new();
+        let err = collect_function_names(&deep, &mut names, 0)
+            .expect_err("deep tower must trip the pass-1 guard");
+        assert!(
+            err.message.contains("deeper than the supported limit"),
+            "unexpected message: {}",
+            err.message
+        );
+    }
+
+    #[test]
+    fn collect_function_names_accepts_shallow_input() {
+        // A shallow tree well within the bound resolves normally.
+        let shallow = node(
+            "function_declaration",
+            vec![ASTNodeOrToken::Token(Token {
+                type_: TokenType::Name,
+                value: "f".to_string(),
+                line: 1,
+                column: 1,
+                type_name: None,
+                flags: None,
+                cv: None,
+            })],
+        );
+        let mut names = HashSet::new();
+        collect_function_names(&shallow, &mut names, 0).expect("shallow input is fine");
+        assert!(names.contains("f"));
+    }
+
+    #[test]
+    fn reject_returns_is_depth_bounded() {
+        // The early-return detection walk over a tower far deeper than
+        // MAX_STMT_DEPTH must return a positioned error, not overflow the
+        // stack — isolated from pass-1 by calling it directly.
+        let deep = nest_blocks(MAX_STMT_DEPTH + 64);
+        let lw = lowerer();
+        let err = lw
+            .reject_returns(&deep, 0)
+            .expect_err("deep tower must trip the reject_returns guard");
+        assert!(
+            err.message.contains("deeper than the supported limit"),
+            "unexpected message: {}",
+            err.message
+        );
+    }
+
+    #[test]
+    fn reject_returns_finds_a_shallow_early_return() {
+        // Sanity: within the depth bound, a stray `return` is still rejected
+        // as an early return (not a depth error).
+        let ret = node("return_statement", Vec::new());
+        let wrapper = node("block", vec![ASTNodeOrToken::Node(ret)]);
+        let lw = lowerer();
+        let err = lw
+            .reject_returns(&wrapper, 0)
+            .expect_err("a nested return is an early return");
+        assert!(err.message.contains("early return"), "got: {}", err.message);
     }
 }

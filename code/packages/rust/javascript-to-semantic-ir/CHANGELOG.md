@@ -69,14 +69,23 @@ capture).
   `MAX_STMT_DEPTH = 256` guard (and operand recursion stays bounded by
   `MAX_EXPR_DEPTH`), so a pathologically deep nest of functions, calls, or
   tail `if`s yields a positioned error rather than a stack-overflow abort.
-- 26 new unit tests (81 total): function declaration shape, tail return,
+  The two **pre-lowering recursive CST walks** added in M4 —
+  `collect_function_names` (pass-1 name collection, run from `compile`
+  before the guarded lowering) and `reject_returns` (early-return
+  detection) — are likewise depth-bounded by `MAX_STMT_DEPTH`, closing a
+  CWE-674 unbounded-recursion / stack-overflow vector reachable from the
+  public `compile` on adversarially deep input.
+- 31 new unit tests (86 total): function declaration shape, tail return,
   no-return / bare-return → nil, empty body, early-return rejection
   (top-level and inside a non-tail `if`), tail `if`/`else` folding to
   `Expr::If`, `DirectCall`, forward-reference call, `IndirectCall`,
   `console.log` → print, zero-arg call, expression / block / no-param /
   bare-identifier arrows, capture (single and transitive), nested-function
   lift + capture, self-recursion vs mutual-recursion manifest, param /
-  unresolved-name resolution, deferred default-param and method-call, and
+  unresolved-name resolution, deferred default-param and method-call,
+  depth-bound regressions for both pre-lowering CST walks (deep towers
+  yield a clean "too deep" error, no crash — including a public-`compile`
+  integration test on a synthetic 600-deep tower), and
   a functions+closures validate round-trip.
 - **End-to-end `node` execution tests** (`tests/e2e_node.rs`, gated on
   `node` availability): factorial → `120`, fibonacci → `55`,
