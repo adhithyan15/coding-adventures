@@ -85,6 +85,29 @@ SIR-v1 parity**.  Go is the fifth and last backend to reach v1.
 With all six SIR16 features wired up, `accepts_features` is in lockstep
 with emit — every declared feature has a real (non-panicking) emit path.
 
+### SIR19 — default parameters (`DefaultParams`)
+
+Go has no native optional/default parameters and emitted functions are
+*fixed-arity* over `Value`, so default parameters use a **runtime-mimic**
+strategy built on a unique MISSING sentinel:
+
+- **Runtime sentinel.** A distinct `_missingMarker` struct and a single
+  shared `var _sir_missing Value = &_missingMarker{}`, with an exact
+  `_sir_is_missing(v Value) bool` (pointer-identity) predicate.  A program
+  cannot construct one (no IR node lowers to it).  `_sir_format` /
+  `_sir_value_eq` guard it defensively (a stray sentinel prints as
+  `<missing>`), so it never masquerades as a user value.
+- **Caller padding.** A `DirectCall` that omits trailing defaulted arguments
+  pads up to the callee's full param count (read from the module's function
+  table) with `_sir_missing` — `f(5)` for `f(a, b = …)` emits
+  `f(Value(int64(5)), _sir_missing)`.
+- **Callee prologue.** At the body top, each defaulted param gets a guard in
+  declaration order: `if _sir_is_missing(b) { b = <default expr> }`.  The
+  default runs **call-time, in param-scope** — a later default sees the
+  *earlier* params already bound (`def f(a, b = a + 1)` ⇒ `f(5)` yields
+  `b == 6`).  Reassigning a parameter is ordinary mutable-local Go, and the
+  guard "uses" the param, so Go's strict unused-variable rule is satisfied.
+
 ## Value model
 
 ```go

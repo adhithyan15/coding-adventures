@@ -70,6 +70,19 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // unaccepted, so they remain strictly unreachable.
     Feature::Sequences,
     Feature::Maps,
+    // ── SIR19 (P2f) — default parameters ───────────────────────────
+    // `DefaultParams` is a hybrid emit + runtime feature.  Go has no
+    // native optional/default parameters, so we use a RUNTIME-MIMIC
+    // strategy: a package-level MISSING sentinel (`_sir_missing`, a
+    // distinct `*_missingMarker`) flows through the ordinary `Value`
+    // channel.  A `DirectCall` that omits trailing defaulted arguments
+    // pads up to the callee's full (fixed) arity with the sentinel; the
+    // callee's body prologue replaces each sentinel with that param's
+    // default expression, evaluated where earlier params are already
+    // bound (call-time + param-scope).  `_sir_is_missing` tests the
+    // sentinel by pointer identity; `_sir_format`/`_sir_value_eq` handle
+    // it defensively so it never reaches user-visible output.
+    Feature::DefaultParams,
 ];
 
 impl Backend for GoBackend {

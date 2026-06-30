@@ -57,6 +57,35 @@ type Map struct {
 	Entries []MapEntry
 }
 
+// ── SIR19 default parameters: the MISSING sentinel ─────────────
+//
+// Emitted Go functions are *fixed-arity* over `Value` — Go has no native
+// optional/default parameters.  To mimic call-time defaults we route an
+// "argument not supplied" marker through the ordinary `Value` channel: a
+// unique, package-level sentinel value.  A caller that omits a trailing
+// defaulted argument PADS the call with `_sir_missing`; the callee's body
+// prologue tests each defaulted param with `_sir_is_missing` and, when it
+// finds the sentinel, evaluates that param's default expression in place
+// (where earlier params are already bound — call-time, param-scope
+// semantics).
+//
+// `_missingMarker` is a distinct, otherwise-empty struct type so the
+// sentinel can never be confused with any user value: a program cannot
+// construct a `*_missingMarker` itself (no IR node lowers to one), and
+// pointer identity makes the `_sir_is_missing` check exact.  `_sir_missing`
+// is the single shared instance boxed in a `Value`.
+type _missingMarker struct{}
+
+var _sir_missing Value = &_missingMarker{}
+
+// True iff `v` is the missing-argument sentinel.  Compared by pointer
+// identity (interface equality of the boxed `*_missingMarker`), so it is
+// exact and total — no user value matches.
+func _sir_is_missing(v Value) bool {
+	_, ok := v.(*_missingMarker)
+	return ok
+}
+
 var _sir_symbol_table = make(map[string]*Symbol)
 var _sir_globals = make(map[string]Value)
 
@@ -294,6 +323,14 @@ func _sir_value_eq(a Value, b Value) bool {
 }
 
 func _sir_value_eq_d(a Value, b Value, pending map[[2]Value]bool) bool {
+	// Defensive: the MISSING sentinel (SIR19 default params) never reaches
+	// `=` in a well-formed program (a defaulted param is replaced by its
+	// default before use).  Should one slip through, two sentinels are
+	// equal and a sentinel equals nothing else — handled here before the
+	// numeric/structural arms so it can never be mistaken for a value.
+	if _sir_is_missing(a) || _sir_is_missing(b) {
+		return _sir_is_missing(a) && _sir_is_missing(b)
+	}
 	if as, ok := a.(*Symbol); ok {
 		if bs, ok := b.(*Symbol); ok {
 			return as.Name == bs.Name
@@ -479,6 +516,14 @@ func _sir_format(v Value) string {
 func _sir_format_d(v Value, visited map[Value]bool) string {
 	if v == nil {
 		return "nil"
+	}
+	// Defensive: the MISSING sentinel (SIR19 default params) should never
+	// reach a print path — a defaulted param is always replaced by its
+	// default in the body prologue before any use.  Render it as a
+	// distinctive marker rather than the bare `&{}` Go would otherwise
+	// print, so a stray sentinel is obvious in output.
+	if _sir_is_missing(v) {
+		return "<missing>"
 	}
 	if b, ok := v.(bool); ok {
 		if b {
@@ -945,6 +990,25 @@ mod tests {
         assert!(RUNTIME.contains("func _sir_value_eq_d(a Value, b Value, pending map[[2]Value]bool) bool"));
         assert!(RUNTIME.contains("return _sir_value_eq_d(a, b, make(map[[2]Value]bool))"));
         assert!(RUNTIME.contains("key := [2]Value{a, b}"));
+    }
+
+    #[test]
+    fn runtime_declares_missing_sentinel_and_helper() {
+        // SIR19 default params: the runtime must carry a unique MISSING
+        // sentinel (a distinct `*_missingMarker` boxed in a `Value`) and an
+        // exact `_sir_is_missing` predicate.
+        assert!(RUNTIME.contains("type _missingMarker struct{}"));
+        assert!(RUNTIME.contains("var _sir_missing Value = &_missingMarker{}"));
+        assert!(RUNTIME.contains("func _sir_is_missing(v Value) bool"));
+    }
+
+    #[test]
+    fn runtime_handles_missing_in_format_and_eq() {
+        // The sentinel never normally prints or compares, but both paths
+        // guard it defensively so a stray sentinel can't masquerade as a
+        // user value.
+        assert!(RUNTIME.contains("\"<missing>\""));
+        assert!(RUNTIME.contains("if _sir_is_missing(a) || _sir_is_missing(b)"));
     }
 
     #[test]

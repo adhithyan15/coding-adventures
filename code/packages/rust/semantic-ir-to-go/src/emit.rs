@@ -124,9 +124,50 @@ fn emit_function(out: &mut String, f: &Function) {
     }
     out.push_str(") Value {\n");
 
+    emit_default_prologue(out, f, 1);
     emit_function_body(out, &f.body, 1);
 
     out.push_str("}\n");
+}
+
+/// Emit the **default-parameter prologue** (SIR19 default params).
+///
+/// Emitted Go functions are fixed-arity over `Value`, so a caller that
+/// omits a trailing defaulted argument pads the call with the `_sir_missing`
+/// sentinel (see `emit_args`/`emit_call_padding`).  At the *top* of the
+/// body, each defaulted parameter gets a guard — in declaration order, so a
+/// later default may reference an *earlier* param whose own default has
+/// already run (call-time + param-scope semantics):
+///
+/// ```text
+///   if _sir_is_missing(<name>) {
+///       <name> = <emitted default expr>
+///   }
+/// ```
+///
+/// The default expression is emitted exactly like any other expression and
+/// sees the parameter names as plain Go identifiers (a default's
+/// `VarRef{scope: Param}` lowers to the bare name — the same binding the Go
+/// signature introduced).  Reassigning a parameter is legal Go (parameters
+/// are ordinary mutable locals), so no `:=`/`_ =` dance is needed: the param
+/// is always "used" by the guard itself, so Go's unused-variable rule is
+/// satisfied even when the body never reads it.
+///
+/// Only params carrying a `default` emit a guard; a required param (or a
+/// `Rest`/`KwRest` variadic, which this backend does not accept) emits
+/// nothing.  Captures are never defaulted, so they are skipped entirely.
+fn emit_default_prologue(out: &mut String, f: &Function, indent: usize) {
+    let pad = indent_str(indent);
+    let body_pad = indent_str(indent + 1);
+    for p in &f.params {
+        let Some(default) = &p.default else { continue };
+        let name = sanitize_ident(&p.name);
+        let _ = writeln!(out, "{}if _sir_is_missing({}) {{", pad, name);
+        let _ = write!(out, "{}{} = ", body_pad, name);
+        emit_expr(out, default, indent + 1);
+        out.push('\n');
+        let _ = writeln!(out, "{}}}", pad);
+    }
 }
 
 fn function_emit_name(name: &str) -> String {
@@ -262,7 +303,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
     }
 }
 
-fn pick_global_set<'a>(e: &'a Expr) -> Option<(&'a str, &'a Expr)> {
+fn pick_global_set(e: &Expr) -> Option<(&str, &Expr)> {
     if let Expr::BuiltinCall { name, args, .. } = e {
         if name == "global_set" && args.len() == 2 {
             if let Expr::SymLit { name: gn, .. } = &args[0] {
@@ -310,7 +351,7 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             let _ = write!(out, "{}return ", pad2);
             emit_block_as_expr(out, then_branch, indent + 2);
             out.push('\n');
-            let _ = write!(out, "{}}}\n", pad);
+            let _ = writeln!(out, "{}}}", pad);
             let _ = write!(out, "{}return ", pad);
             emit_block_as_expr(out, else_branch, indent + 1);
             out.push('\n');
@@ -318,8 +359,27 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         }
         Expr::Block(b) => emit_block_as_expr(out, b, indent),
         Expr::DirectCall { fn_name, args, .. } => {
+            // ── SIR19 default params: caller-side padding ───────────────
+            // Emitted Go functions are fixed-arity, so a call that omits
+            // trailing defaulted arguments must PAD up to the callee's full
+            // param count with the `_sir_missing` sentinel.  The callee's
+            // body prologue (see `emit_default_prologue`) then swaps each
+            // sentinel for that param's default.  The full param count comes
+            // from the module's function table (`FN_ARITY`), which
+            // `emit_module` populated with every function's `params.len()`
+            // before walking bodies.  A validated module never *over*-
+            // supplies, so `pad` is the non-negative shortfall; an unknown
+            // callee (not in the table) pads nothing.
+            let full_arity = FN_ARITY.with(|t| t.borrow().get(fn_name).copied());
+            let pad = full_arity.map_or(0, |n| n.saturating_sub(args.len()));
             let _ = write!(out, "{}(", function_emit_name(fn_name));
             emit_args(out, args, indent);
+            for i in 0..pad {
+                if i > 0 || !args.is_empty() {
+                    out.push_str(", ");
+                }
+                out.push_str("_sir_missing");
+            }
             out.push(')');
         }
         Expr::IndirectCall { target, args, .. } => {
@@ -523,7 +583,7 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "global_set" => {
             // Two args, special signature.
             out.push_str("_sir_global_set(");
-            if args.len() >= 1 {
+            if !args.is_empty() {
                 emit_expr(out, &args[0], indent);
             }
             out.push_str(", ");
@@ -1320,6 +1380,120 @@ mod tests {
         emit_function(&mut out, &f);
         assert!(out.contains("func id(x Value) Value"));
         assert!(out.contains("return x"));
+    }
+
+    // ── SIR19 default parameters ───────────────────────────────────
+
+    /// `b = (+ a 1)` — a default that references the *earlier* param `a`,
+    /// exercising param-scope evaluation.
+    fn defaulted_fn() -> Function {
+        let plus = Expr::BuiltinCall {
+            name: "+".into(),
+            args: vec![
+                Expr::VarRef { name: "a".into(), scope: Scope::Param, span: s() },
+                Expr::IntLit { value: 1, span: s() },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        Function {
+            name: "f".into(),
+            params: vec![
+                Param { name: "a".into(), kind: ParamKind::Required, sir_type: None, default: None, span: s() },
+                Param { name: "b".into(), kind: ParamKind::Required, sir_type: None, default: Some(Box::new(plus)), span: s() },
+            ],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::BuiltinCall {
+                    name: "+".into(),
+                    args: vec![
+                        Expr::VarRef { name: "a".into(), scope: Scope::Param, span: s() },
+                        Expr::VarRef { name: "b".into(), scope: Scope::Param, span: s() },
+                    ],
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        }
+    }
+
+    #[test]
+    fn emit_function_emits_default_prologue() {
+        // The defaulted param gets a `if _sir_is_missing(...) { ... }` guard
+        // at the body top; the required param does not.  The default
+        // expression sees `a` as a plain Go identifier (param-scope).
+        let mut out = String::new();
+        emit_function(&mut out, &defaulted_fn());
+        assert!(out.contains("func f(a Value, b Value) Value"), "got: {out}");
+        assert!(out.contains("if _sir_is_missing(b) {"), "got: {out}");
+        assert!(out.contains("b = _sir_plus([]Value{a, Value(int64(1))})"), "got: {out}");
+        // `a` is required — no guard for it.
+        assert!(!out.contains("_sir_is_missing(a)"), "got: {out}");
+    }
+
+    #[test]
+    fn emit_direct_call_pads_omitted_defaults_with_sentinel() {
+        // A full-arity module: `f(a, b=a+1)` plus a `main` that calls
+        // `f(5)` (one arg omitted) and `f(5, 10)` (full).  Padding relies on
+        // the module's function table, so we go through `emit_module`.
+        let main = Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![
+                    Stmt::ExprStmt {
+                        expr: Expr::DirectCall {
+                            fn_name: "f".into(),
+                            args: vec![ilit(5)],
+                            effects: EffectSet::PURE,
+                            span: s(),
+                        },
+                        span: s(),
+                    },
+                    Stmt::ExprStmt {
+                        expr: Expr::DirectCall {
+                            fn_name: "f".into(),
+                            args: vec![ilit(5), ilit(10)],
+                            effects: EffectSet::PURE,
+                            span: s(),
+                        },
+                        span: s(),
+                    },
+                ],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let m = Module {
+            name: "demo".into(),
+            manifest: FeatureManifest::from_features(&[
+                semantic_ir::Feature::DefaultParams,
+            ]),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![defaulted_fn(), main],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("test")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        };
+        let out = emit_module(&m);
+        // `f(5)` pads the one omitted trailing arg with the sentinel.
+        assert!(out.contains("f(Value(int64(5)), _sir_missing)"), "got: {out}");
+        // `f(5, 10)` is full-arity — no padding.
+        assert!(out.contains("f(Value(int64(5)), Value(int64(10)))"), "got: {out}");
     }
 
     #[test]
