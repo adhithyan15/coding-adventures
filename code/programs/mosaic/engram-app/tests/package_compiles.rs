@@ -399,6 +399,8 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
     assert_contains(&html, "data-on-change=\"onBrowserTagEditChange\"");
     assert_contains(&html, "data-on-click=\"onBrowserAddTagSelected\"");
     assert_contains(&html, "data-on-click=\"onBrowserRemoveTagSelected\"");
+    assert_contains(&html, "data-on-click=\"onBrowserToggleFilter\"");
+    assert_contains(&html, "data-on-click=\"onBrowserSetFilter\"");
     assert_contains(&html, "data-on-click=\"onBrowserToggleFlagPicker\"");
     assert_contains(&html, "data-on-click=\"onBrowserSetFlagSelected\"");
     assert_contains(&html, "data-on-click=\"onNoteEditorSelectNoteType\"");
@@ -572,6 +574,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&html_main, "\"onBrowserTagEditChange\"");
     assert_contains(&html_main, "\"onBrowserAddTagSelected\"");
     assert_contains(&html_main, "\"onBrowserRemoveTagSelected\"");
+    assert_contains(&html_main, "\"onBrowserToggleFilter\"");
+    assert_contains(&html_main, "\"onBrowserSetFilter\"");
     assert_contains(&html_main, "\"onBrowserToggleFlagPicker\"");
     assert_contains(&html_main, "\"onBrowserSetFlagSelected\"");
     assert_contains(&html_main, "\"name\": \"index\"");
@@ -625,6 +629,12 @@ fn native_project_shells_expose_engram_host_contract() {
         "collectionNoteCountValue: \"Sample CollectionNoteCountValue\",",
     );
     assert_contains(&react_app, "browserQuery: \"Sample BrowserQuery\",");
+    assert_contains(
+        &react_app,
+        "browserFilterValue: \"Sample BrowserFilterValue\",",
+    );
+    assert_contains(&react_app, "browserFilterOptions: [],");
+    assert_contains(&react_app, "browserFilterOpen: false,");
     assert_contains(&react_app, "browserFlagValue: \"Sample BrowserFlagValue\",");
     assert_contains(&react_app, "browserFlagOptions: [],");
     assert_contains(&react_app, "browserFlagOpen: false,");
@@ -972,6 +982,11 @@ fn native_project_shells_expose_engram_host_contract() {
         &compose_app,
         "data class BrowserTagEditChange(val value: String)",
     );
+    assert_contains(&compose_app, "data object BrowserToggleFilter");
+    assert_contains(
+        &compose_app,
+        "data class BrowserSetFilter(val value: String)",
+    );
     assert_contains(&compose_app, "data object BrowserToggleFlagPicker");
     assert_contains(
         &compose_app,
@@ -1248,6 +1263,8 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(&qml, "signal browserSearch()");
     assert_contains(&qml, "signal browserSelectResult(real index)");
+    assert_contains(&qml, "signal browserToggleFilter()");
+    assert_contains(&qml, "signal browserSetFilter(string value)");
     assert_contains(&qml, "signal browserToggleFlagPicker()");
     assert_contains(&qml, "signal browserSetFlagSelected(string value)");
     assert_contains(&qml, "signal browserTagEditChange(string value)");
@@ -1308,6 +1325,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "case deleteNoteType");
     assert_contains(&swift, "case browserSearch");
     assert_contains(&swift, "case browserSelectResult");
+    assert_contains(&swift, "case browserToggleFilter");
+    assert_contains(&swift, "case browserSetFilter");
     assert_contains(&swift, "case browserToggleFlagPicker");
     assert_contains(&swift, "case browserSetFlagSelected");
     assert_contains(&swift, "case browserTagEditChange");
@@ -1341,6 +1360,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "let collectionLabel: String");
     assert_contains(&swift, "let collectionNoteCountValue: String");
     assert_contains(&swift, "let browserResults: [String]");
+    assert_contains(&swift, "let browserFilterValue: String");
+    assert_contains(&swift, "let browserFilterOptions: [String]");
     assert_contains(&swift, "let browserFlagValue: String");
     assert_contains(&swift, "let browserFlagOptions: [String]");
     assert_contains(&swift, "let browserFlagOpen: Bool");
@@ -1596,6 +1617,14 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(
         &xaml_code_behind,
+        "public static readonly DependencyProperty BrowserFilterValueProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty BrowserFilterOptionsProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
         "public static readonly DependencyProperty BrowserFlagValueProperty",
     );
     assert_contains(
@@ -1785,6 +1814,14 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_events,
         "public sealed record BrowserSelectResult(double Index) : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record BrowserToggleFilter() : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record BrowserSetFilter(string Value) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,

@@ -19,6 +19,26 @@ layout CardBrowser {
           onCommit : emit: onSearch
         )
       }
+      Column [ filter-column ] {
+        Text [ filter-label ] (
+          content : slot: filter-label
+        )
+        HostButton [ filter-toggle-button ] (
+          label : slot: filter-value ,
+          disabled : false ,
+          onClick : emit: onToggleFilter
+        )
+        If ( when: slot: filter-open ) {
+          Column [ filter-options-list ] {
+            For ( each: slot: filter-options , as: filter-option , index: i ) {
+              HostButton [ filter-option-button ] (
+                label : filter-option ,
+                onClick : emit: onSetFilter
+              )
+            }
+          }
+        }
+      }
       HostButton [ search-button ] (
         label : slot: search-label ,
         onClick : emit: onSearch

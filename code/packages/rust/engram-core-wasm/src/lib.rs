@@ -26,6 +26,16 @@ use serde::Deserialize;
 use serde_json::{json, Value};
 
 const DEFAULT_BROWSER_QUERY: &str = "is:due OR is:new";
+const BROWSER_FILTER_ALL: &str = "All";
+const BROWSER_FILTER_OPTIONS: [&str; 7] = [
+    BROWSER_FILTER_ALL,
+    "New",
+    "Due",
+    "Learning",
+    "Review",
+    "Suspended",
+    "Buried",
+];
 
 #[derive(Default)]
 pub struct EngramSession {
@@ -39,7 +49,9 @@ pub struct EngramSession {
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 struct BrowserSessionState {
     query: String,
+    filter: String,
     tag_edit: String,
+    filter_open: bool,
     flag_picker_open: bool,
     selected_index: usize,
 }
@@ -230,8 +242,30 @@ impl BrowserSessionState {
         }
     }
 
+    fn effective_query(&self) -> String {
+        compose_browser_filter_query(&self.query, self.active_filter())
+    }
+
+    fn active_filter(&self) -> &str {
+        normalize_browser_filter_label(&self.filter)
+    }
+
     fn set_query(&mut self, query: String) {
         self.query = query;
+        self.selected_index = 0;
+    }
+
+    fn toggle_filter(&mut self) {
+        self.filter_open = !self.filter_open;
+    }
+
+    fn close_filter(&mut self) {
+        self.filter_open = false;
+    }
+
+    fn set_filter(&mut self, value: String) {
+        self.filter = normalize_browser_filter_label(&value).to_string();
+        self.filter_open = false;
         self.selected_index = 0;
     }
 
@@ -419,7 +453,17 @@ impl EngramSession {
 
     pub fn engram_browser_props(&self, query: &str, now: u64) -> String {
         catch_json(|| {
-            match engram_browser_props_for_state(&self.state, query, now, 0, None, false) {
+            match engram_browser_props_for_state(
+                &self.state,
+                query,
+                &compose_browser_filter_query(query, BROWSER_FILTER_ALL),
+                BROWSER_FILTER_ALL,
+                now,
+                0,
+                None,
+                false,
+                false,
+            ) {
                 Ok(props) => Ok(ok_with("props", &props)),
                 Err(error) => Ok(error_json_with_token(&error.message, &error.token)),
             }
@@ -657,10 +701,21 @@ impl EngramSession {
                         self.browser.set_query(value);
                     }
                 }
+                EngramAppEvent::BrowserToggleFilter => {
+                    self.browser.toggle_filter();
+                }
+                EngramAppEvent::BrowserSetFilter => {
+                    let value = parsed
+                        .text_value
+                        .clone()
+                        .ok_or_else(|| "onBrowserSetFilter is missing a value".to_string())?;
+                    self.browser.set_filter(value);
+                }
                 EngramAppEvent::BrowserSearch => {
                     if let Some(value) = parsed.text_value.clone() {
                         self.browser.set_query(value);
                     }
+                    self.browser.close_filter();
                 }
                 EngramAppEvent::BrowserSelectResult => {
                     let value = parsed
@@ -1262,13 +1317,22 @@ fn engram_app_props_for_state(
     let browser_props = engram_browser_props_for_state(
         state,
         browser.active_query(),
+        &browser.effective_query(),
+        browser.active_filter(),
         now,
         browser.selected_index,
         Some(selected_deck_id.as_str()),
+        browser.filter_open,
         browser.flag_picker_open,
     )
     .unwrap_or_else(|_| {
-        fallback_browser_props_for_state(state, browser.selected_index, browser.flag_picker_open)
+        fallback_browser_props_for_state(
+            state,
+            browser.selected_index,
+            browser.active_filter(),
+            browser.filter_open,
+            browser.flag_picker_open,
+        )
     });
     let (current_value, remaining_value, correct_value, total_value, progress_label) =
         if let Some(progress) = &progress {
@@ -2107,17 +2171,21 @@ fn insert_note_type_editor_props(
 
 fn engram_browser_props_for_state(
     state: &AppState,
-    query: &str,
+    display_query: &str,
+    effective_query: &str,
+    filter: &str,
     now: u64,
     selected_index: usize,
     current_deck_id: Option<&str>,
+    filter_open: bool,
     flag_picker_open: bool,
 ) -> Result<Value, engram_core::SearchError> {
-    let query = normalize_browser_query(query);
+    let query = normalize_browser_query(display_query);
+    let effective_query = normalize_browser_query(effective_query);
     let results = if current_deck_id.is_some() {
         search_cards_with_context(
             state,
-            &query,
+            &effective_query,
             now,
             SearchContext {
                 current_deck_id,
@@ -2125,7 +2193,7 @@ fn engram_browser_props_for_state(
             },
         )?
     } else {
-        search_core_cards(state, &query, now)?
+        search_core_cards(state, &effective_query, now)?
     };
     let rows = results
         .iter()
@@ -2135,9 +2203,11 @@ fn engram_browser_props_for_state(
 
     Ok(browser_props_from_rows(
         query,
+        filter,
         rows,
         results.len(),
         selected_index,
+        filter_open,
         flag_picker_open,
     ))
 }
@@ -2145,6 +2215,8 @@ fn engram_browser_props_for_state(
 fn fallback_browser_props_for_state(
     state: &AppState,
     selected_index: usize,
+    filter: &str,
+    filter_open: bool,
     flag_picker_open: bool,
 ) -> Value {
     let rows = state
@@ -2155,9 +2227,11 @@ fn fallback_browser_props_for_state(
         .collect::<Vec<_>>();
     browser_props_from_rows(
         DEFAULT_BROWSER_QUERY.to_string(),
+        filter,
         rows,
         state.cards.len(),
         selected_index,
+        filter_open,
         flag_picker_open,
     )
 }
@@ -2171,11 +2245,49 @@ fn normalize_browser_query(query: &str) -> String {
     }
 }
 
+fn normalize_browser_filter_label(value: &str) -> &'static str {
+    match value.trim().to_ascii_lowercase().as_str() {
+        "new" | "is:new" => "New",
+        "due" | "is:due" => "Due",
+        "learn" | "learning" | "is:learn" | "is:learning" => "Learning",
+        "review" | "is:review" => "Review",
+        "suspended" | "suspend" | "is:suspended" => "Suspended",
+        "buried" | "bury" | "is:buried" => "Buried",
+        _ => BROWSER_FILTER_ALL,
+    }
+}
+
+fn browser_filter_clause(filter: &str) -> Option<&'static str> {
+    match normalize_browser_filter_label(filter) {
+        "New" => Some("is:new"),
+        "Due" => Some("is:due"),
+        "Learning" => Some("is:learn"),
+        "Review" => Some("is:review"),
+        "Suspended" => Some("is:suspended"),
+        "Buried" => Some("is:buried"),
+        _ => None,
+    }
+}
+
+fn compose_browser_filter_query(query: &str, filter: &str) -> String {
+    let query = query.trim();
+    let Some(clause) = browser_filter_clause(filter) else {
+        return normalize_browser_query(query);
+    };
+    if query.is_empty() {
+        clause.to_string()
+    } else {
+        format!("({query}) {clause}")
+    }
+}
+
 fn browser_props_from_rows(
     query: String,
+    filter: &str,
     rows: Vec<BrowserRow>,
     total_results: usize,
     requested_selected_index: usize,
+    filter_open: bool,
     flag_picker_open: bool,
 ) -> Value {
     let visible = rows.len();
@@ -2216,6 +2328,11 @@ fn browser_props_from_rows(
         "browser-query-label": "Search",
         "browser-query": query,
         "browser-query-placeholder": "deck:tamil tag:script is:due",
+        "browser-filter-label": "State",
+        "browser-filter-value": normalize_browser_filter_label(filter),
+        "browser-filter-options": BROWSER_FILTER_OPTIONS,
+        "browser-filter-placeholder": BROWSER_FILTER_ALL,
+        "browser-filter-open": filter_open,
         "browser-search-label": "Search",
         "browser-results-label": "Results",
         "browser-results-summary": summary,
@@ -2922,7 +3039,7 @@ fn browser_rows_for_state(
     now: u64,
     current_deck_id: Option<&str>,
 ) -> Option<Vec<BrowserRow>> {
-    let query = normalize_browser_query(browser.active_query());
+    let query = browser.effective_query();
     let results = if current_deck_id.is_some() {
         search_cards_with_context(
             state,
@@ -3117,6 +3234,8 @@ enum EngramAppEvent {
     DeckOptionsChange(DeckOptionField),
     Rate(Rating),
     BrowserQueryChange,
+    BrowserToggleFilter,
+    BrowserSetFilter,
     BrowserSearch,
     BrowserSelectResult,
     BrowserOpenSelected,
@@ -3235,6 +3354,8 @@ impl EngramAppEvent {
             Self::Rate(Rating::Good) => "onGood",
             Self::Rate(Rating::Easy) => "onEasy",
             Self::BrowserQueryChange => "onBrowserQueryChange",
+            Self::BrowserToggleFilter => "onBrowserToggleFilter",
+            Self::BrowserSetFilter => "onBrowserSetFilter",
             Self::BrowserSearch => "onBrowserSearch",
             Self::BrowserSelectResult => "onBrowserSelectResult",
             Self::BrowserOpenSelected => "onBrowserOpenSelected",
@@ -3531,6 +3652,12 @@ fn parse_engram_app_event_name(
         "easy" => parsed(EngramAppEvent::Rate(Rating::Easy)),
         "browserquerychange" | "browser-query-change" | "browser_query_change" => {
             parsed(EngramAppEvent::BrowserQueryChange)
+        }
+        "browsertogglefilter" | "browser-toggle-filter" | "browser_toggle_filter" => {
+            parsed(EngramAppEvent::BrowserToggleFilter)
+        }
+        "browsersetfilter" | "browser-set-filter" | "browser_set_filter" => {
+            parsed(EngramAppEvent::BrowserSetFilter)
         }
         "browsersearch" | "browser-search" | "browser_search" => {
             parsed(EngramAppEvent::BrowserSearch)
@@ -6124,6 +6251,21 @@ mod tests {
         );
         assert_eq!(value["props"]["browser-label"], "Card browser");
         assert_eq!(value["props"]["browser-query"], "is:due OR is:new");
+        assert_eq!(value["props"]["browser-filter-label"], "State");
+        assert_eq!(value["props"]["browser-filter-value"], "All");
+        assert_eq!(
+            value["props"]["browser-filter-options"],
+            json!([
+                "All",
+                "New",
+                "Due",
+                "Learning",
+                "Review",
+                "Suspended",
+                "Buried"
+            ])
+        );
+        assert_eq!(value["props"]["browser-filter-open"], false);
         assert_eq!(
             value["props"]["browser-results-summary"],
             "2 matching cards"
@@ -8569,6 +8711,84 @@ mod tests {
             empty_field_browser_props["props"]["browser-results-summary"],
             "No matching cards"
         );
+    }
+
+    #[test]
+    fn app_browser_state_filter_composes_with_query() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {"id":"due-card","deckId":"deck","front":"uyir vowel","back":"letter","createdAt":1700000000000},
+                {"id":"new-card","deckId":"deck","front":"mei consonant","back":"letter","createdAt":1700000000000}
+            ],
+            "cardProgress": [{
+                "cardId": "due-card",
+                "state": "review",
+                "interval": 1,
+                "easeFactor": 2.5,
+                "nextDueAt": 1699999999999,
+                "learningStepIndex": null,
+                "buriedUntil": null,
+                "suspendedAt": null,
+                "timesSeen": 1,
+                "timesCorrect": 1,
+                "timesIncorrect": 0,
+                "lastSeenAt": 1699913600000,
+                "flag": null,
+                "markedAt": null
+            }],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+
+        let opened: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onBrowserToggleFilter",
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(opened["ok"], true);
+        assert_eq!(opened["event"], "onBrowserToggleFilter");
+        assert_eq!(opened["props"]["browser-filter-open"], true);
+
+        let due: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onBrowserSetFilter","value":"Due"}"#,
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(due["ok"], true);
+        assert_eq!(due["event"], "onBrowserSetFilter");
+        assert_eq!(due["props"]["browser-filter-value"], "Due");
+        assert_eq!(due["props"]["browser-filter-open"], false);
+        assert_eq!(due["props"]["browser-result-card-ids"], json!(["due-card"]));
+
+        let query: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onBrowserQueryChange","value":"mei"}"#,
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(query["props"]["browser-filter-value"], "Due");
+        assert_eq!(
+            query["props"]["browser-results-summary"],
+            "No matching cards"
+        );
+
+        let new: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onBrowserSetFilter","value":"new"}"#,
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(new["props"]["browser-filter-value"], "New");
+        assert_eq!(new["props"]["browser-result-card-ids"], json!(["new-card"]));
     }
 
     #[test]

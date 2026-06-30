@@ -513,8 +513,9 @@ Status:
   need to bind to it.
 - Suspend card/note. Card-level core commands exist; note-level bulk behavior
   remains a browser/editor workflow.
-- Flag/mark card. Core and JSON facade support exists; web/native controls and
-  browser filters still need to bind to it.
+- Flag/mark card. Core, JSON facade, Mosaic review/browser controls, and
+  generated native/web host contracts now bind card marks, Anki-style flags,
+  and common browser state filters through the shared Rust event facade.
 - Review remaining counts. Core, JSON facade, and C ABI support exists via
   shared active-session progress counters; web/native controls still need to
   render it.

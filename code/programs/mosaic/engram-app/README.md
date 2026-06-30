@@ -73,6 +73,10 @@ editing, and save/delete/cancel controls.
 - The browser slots include stable result and selected-card metadata from the
   Rust core so emitted native/web hosts can wire actions to card IDs instead of
   display labels.
+- The browser state-filter slots and events expose common Anki search filters
+  (`All`, `New`, `Due`, `Learning`, `Review`, `Suspended`, and `Buried`) as a
+  target-neutral Mosaic dropdown while the Rust facade composes them with the
+  free-form search query.
 - The browser tag-edit slots and events are composed from
   `mosaic-pkg-card-browser` and route selected-card add/remove tag actions back
   into the shared Rust core, keeping Anki-style note tags available to every

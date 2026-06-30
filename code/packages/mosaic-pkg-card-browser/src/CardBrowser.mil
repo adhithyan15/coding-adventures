@@ -8,6 +8,11 @@ component CardBrowser {
   slot query-label : text ;
   slot query : text ;
   slot query-placeholder : text ;
+  slot filter-label : text ;
+  slot filter-value : text ;
+  slot filter-options : list<text> ;
+  slot filter-placeholder : text ;
+  slot filter-open : bool ;
   slot search-label : text ;
   slot results-label : text ;
   slot results-summary : text ;
@@ -39,6 +44,8 @@ component CardBrowser {
   slot remove-tag-label : text ;
 
   emit onQueryChange ( value : text ) ;
+  emit onToggleFilter ;
+  emit onSetFilter ( value : text ) ;
   emit onSearch ;
   emit onSelectResult ( index : number ) ;
   emit onOpenSelected ;

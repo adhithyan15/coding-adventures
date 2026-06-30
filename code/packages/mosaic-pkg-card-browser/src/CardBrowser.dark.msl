@@ -30,6 +30,43 @@ style CardBrowser {
     font-weight : 700 ;
   }
 
+  part filter-column {
+    padding : 2 ;
+  }
+
+  part filter-label {
+    color       : "#67e8f9" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part filter-toggle-button {
+    background    : "#0e7490" ;
+    border-width  : 1 ;
+    border-color  : "#155e75" ;
+    border-radius : 6 ;
+    color         : "#ecfeff" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part filter-options-list {
+    background    : "#0f172a" ;
+    border-width  : 1 ;
+    border-color  : "#155e75" ;
+    border-radius : 6 ;
+    padding       : 4 ;
+  }
+
+  part filter-option-button {
+    background    : "#164e63" ;
+    border-width  : 1 ;
+    border-color  : "#155e75" ;
+    border-radius : 6 ;
+    color         : "#ecfeff" ;
+    padding       : 6 ;
+  }
+
   part search-button {
     background    : "#2563eb" ;
     border-width  : 1 ;

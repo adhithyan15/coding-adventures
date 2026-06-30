@@ -90,6 +90,11 @@ fn card_browser_frontend_sources_compile() {
             "query-label",
             "query",
             "query-placeholder",
+            "filter-label",
+            "filter-value",
+            "filter-options",
+            "filter-placeholder",
+            "filter-open",
             "search-label",
             "results-label",
             "results-summary",
@@ -127,6 +132,8 @@ fn card_browser_frontend_sources_compile() {
         emit_names,
         vec![
             "onQueryChange",
+            "onToggleFilter",
+            "onSetFilter",
             "onSearch",
             "onSelectResult",
             "onOpenSelected",
@@ -150,6 +157,12 @@ fn card_browser_layout_wires_search_results_and_actions() {
     assert!(source.contains("value : slot: query"));
     assert!(source.contains("onChange : emit: onQueryChange"));
     assert!(source.contains("onCommit : emit: onSearch"));
+    assert!(source.contains("Column [ filter-column ]"));
+    assert!(source.contains("label : slot: filter-value"));
+    assert!(source.contains("onClick : emit: onToggleFilter"));
+    assert!(source.contains("For ( each: slot: filter-options"));
+    assert!(source.contains("label : filter-option"));
+    assert!(source.contains("onClick : emit: onSetFilter"));
     assert!(source.contains("pkg::mosaic-pkg-toolkit::ListGroup"));
     assert!(source.contains("items : slot: results"));
     assert!(source.contains("selected-index : slot: selected-index"));
@@ -189,6 +202,11 @@ fn card_browser_layout_wires_search_results_and_actions() {
     let style = read_source("CardBrowser.dark.msl");
     for part in [
         "browser-tag-row",
+        "filter-column",
+        "filter-label",
+        "filter-toggle-button",
+        "filter-options-list",
+        "filter-option-button",
         "browser-flag-row",
         "flag-picker-column",
         "flag-label",

@@ -107,6 +107,11 @@ component EngramApp {
   slot browser-query-label : text ;
   slot browser-query : text ;
   slot browser-query-placeholder : text ;
+  slot browser-filter-label : text ;
+  slot browser-filter-value : text ;
+  slot browser-filter-options : list<text> ;
+  slot browser-filter-placeholder : text ;
+  slot browser-filter-open : bool ;
   slot browser-search-label : text ;
   slot browser-results-label : text ;
   slot browser-results-summary : text ;
@@ -252,6 +257,8 @@ component EngramApp {
   emit onDeckOptionsBuryReviewSiblingsChange ( checked : bool ) ;
   emit onDeckOptionsBuryInterdayLearningSiblingsChange ( checked : bool ) ;
   emit onBrowserQueryChange ( value : text ) ;
+  emit onBrowserToggleFilter ;
+  emit onBrowserSetFilter ( value : text ) ;
   emit onBrowserSearch ;
   emit onBrowserSelectResult ( index : number ) ;
   emit onBrowserOpenSelected ;
