@@ -33,14 +33,14 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell event digest.
+1. Rust Berkeley Mosaic app shell event dashboard.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app shell event digests and JSON helpers that
-     derive a headline event, attention event IDs, metric event IDs, and
-     compact counts from Berkeley app shell event logs.
+   - Add schema-versioned Rust app shell event dashboards and JSON helpers that
+     group Berkeley app shell event digests into stable status, attention, and
+     metrics sections for first-render product dashboards.
    - Preserve package name, source fingerprint, ready/blocked route, status
-     severity, headline event/message, primary action, attention/metric event
-     IDs, event counts, counted totals, diagnostic count, repaired-state count,
+     severity, headline event/message, primary action, attention-required flag,
+     section descriptors, event count, diagnostic count, repaired-state count,
      and advertised capability count so Mosaic, WebAssembly, and product shells
      can render startup dashboards without walking the full event stream.
    - Keep this as a Rust-only app-substrate packaging slice over the public
@@ -1634,6 +1634,19 @@ the Rust, Python, and TypeScript surfaces together.
      event counts, counted totals, diagnostic count, repaired-state count, and
      advertised capability count so Mosaic, WebAssembly, and product shells can
      gate startup dashboards without walking the full event stream.
+
+154. Rust Berkeley Mosaic app shell event digest.
+   - Status: completed in PR 7060.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell event digests plus JSON helpers that derive a headline event,
+     attention event IDs, metric event IDs, and compact counts from Berkeley
+     app shell event logs.
+   - The digest payload preserves package name, source fingerprint,
+     ready/blocked route, status severity, headline event/message, primary
+     action, attention/metric event IDs, event counts, counted totals,
+     diagnostic count, repaired-state count, and advertised capability count so
+     Mosaic, WebAssembly, and product shells can render startup dashboards
+     without walking the full event stream.
 
 ## Backlog
 
