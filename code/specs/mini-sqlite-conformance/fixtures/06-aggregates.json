@@ -1,0 +1,67 @@
+{
+  "id": "06-aggregates",
+  "description": "Aggregate functions: COUNT, SUM, AVG, MIN, MAX",
+  "level": 0,
+  "steps": [
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE sales (region, amount)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO sales VALUES ('east', 100)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO sales VALUES ('east', 200)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO sales VALUES ('west', 150)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO sales VALUES ('west', 50)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO sales VALUES ('west', 300)"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT COUNT(*) AS n FROM sales",
+      "expected_columns": ["n"],
+      "expected_rows": [[5]]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT SUM(amount) AS total FROM sales",
+      "expected_columns": ["total"],
+      "expected_rows": [[800]]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT MIN(amount) AS lo, MAX(amount) AS hi FROM sales",
+      "expected_columns": ["lo", "hi"],
+      "expected_rows": [[50, 300]]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT region, SUM(amount) AS total FROM sales GROUP BY region ORDER BY region",
+      "expected_columns": ["region", "total"],
+      "expected_rows": [
+        ["east", 300],
+        ["west", 500]
+      ]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT region, COUNT(*) AS n FROM sales GROUP BY region HAVING COUNT(*) > 1 ORDER BY region",
+      "expected_columns": ["region", "n"],
+      "expected_rows": [
+        ["east", 2],
+        ["west", 3]
+      ]
+    }
+  ]
+}
