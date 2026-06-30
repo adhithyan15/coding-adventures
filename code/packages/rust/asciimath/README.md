@@ -53,9 +53,18 @@ second notation.
 
 `((a))` and `[[a]]` stay **grouping**, not a 1×1 matrix — a matrix must genuinely use commas
 (≥2 rows, or a row with ≥2 cells). Big-operator bounds (`_`/`^`) attach to the operator in either
-order; the body is the next atom (same convention as `sqrt`/functions). **Accents** (`hat x`, `vec x`)
-are not yet supported: the neutral `MathExpr` has no `Accent` node, so adding one to `math-frontend`
-is a prerequisite for an accents PR (see ASM01 §5).
+order; the body is the next atom (same convention as `sqrt`/functions).
+
+## PR-2b accents
+
+| AsciiMath | → neutral `MathExpr` |
+|-----------|----------------------|
+| `hat x`, `bar y` / `overline y`, `vec v`, `dot x`, `ddot x`, `tilde a`, `ul x` / `underline x` | `Accent { accent, body }` (a mark *over* the body, distinct from a function `Call`) |
+
+Each accent keyword takes the next single atom as its body (same convention as `sqrt`), so
+`hat(x+y)` accents the whole group. Synonyms normalise to one canonical name (`bar`/`overline`,
+`ul`/`underline`), so two spellings lower equal. Enabled by `math-frontend` 0.4.0's `MathExpr::Accent`
+node; `capabilities()` declares `accents` and the conformance harness enforces it.
 
 It is **total and panic-free**: every input returns `Ok(MathExpr)` or a spanned
 `FrontendError`. Recursion is depth-guarded (matrix nesting included); left-associative chains are

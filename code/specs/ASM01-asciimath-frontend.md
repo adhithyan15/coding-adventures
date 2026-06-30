@@ -85,10 +85,11 @@ shapes for representative inputs.
   `det[[…]]` binds the matrix); big operators `sum`/`prod`/`int`/`oint`/`coprod`/`lim` →
   `BigOp{op,lower,upper,body}` (optional `_`/`^` bounds either order, body = next atom). A new
   `Comma` token; `capabilities()` adds `matrices`+`big_operators`; matrix nesting is `MAX_DEPTH`-guarded.
-  **Accents deferred** — the neutral `MathExpr` has no `Accent` node; adding one to `math-frontend`
-  (with iterative-Drop + a `Capabilities::accents` flag) is the prerequisite, tracked as a follow-up.
-- **PR-2b (deferred):** accents (`hat`, `vec`, `bar`) once a neutral `Accent` node exists;
-  angle/invisible brackets `(: … :)`, `{: … :}`.
+- **PR-2b (shipped):** accents — `hat x`, `bar y`/`overline y`, `vec v`, `dot x`, `ddot x`,
+  `tilde a`, `ul x`/`underline x` → `MathExpr::Accent{accent, body}` (a mark over the body, distinct
+  from a function `Call`; body = next atom, like `sqrt`; synonyms normalise to one canonical name).
+  Enabled by `math-frontend` 0.4.0's neutral `Accent` node; `capabilities()` adds `accents` (enforced
+  by the conformance harness). Still deferred: angle/invisible brackets `(: … :)`, `{: … :}`.
 - **PR-3:** the full AsciiMath symbol table (greek, arrows, set/logic ops), longest-match
   tokenization (so `sinx` splits as `sin`·`x`), `stackrel`, `overset`/`underset`, and the
   `text(…)` keyword form alongside the `"…"` literal.
