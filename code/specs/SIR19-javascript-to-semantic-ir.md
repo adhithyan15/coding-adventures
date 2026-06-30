@@ -197,6 +197,60 @@ and `value = r`.
 declarations are not preserved.  v0 doesn't support `this` at all —
 no class support means no `this` cases worth modelling.
 
+## Collections (M5)
+
+**Implementation note (M5).**  Arrays, objects, member / dot / subscript
+access (reads), and indexed / property assignment (writes) are implemented
+as of crate `0.5.0`.  Details and the central design decision:
+
+- **Array literals → `SeqLit`** (`Feature::Sequences`); **object literals →
+  `MapLit`** (`Feature::Maps`).  Object keys are strings: an identifier key
+  (`a:`) and a quoted key (`"k":`) both lower to a `StrLit` map key — the JS
+  quoting distinction is purely syntactic.  Empty `[]`/`{}` lower to empty
+  `SeqLit`/`MapLit`.  A parenthesised grouping (`primary_expression[ (,
+  expression, ) ]`) is peeled, so `({a: 1})` lowers at statement start (the
+  source parens resolve the `{`-as-block ambiguity).
+
+- **The bracket-vs-dot disambiguation (the M5 decision).**  The IR has *both*
+  sequences and maps; JS `x[i]` is structurally ambiguous and the IR is
+  untyped at this layer, so the receiver's kind cannot be inferred.  The
+  coverage table above is the authority and fixes:
+  - `xs.length` → `SeqLen`; **every other** `.prop` (dot) → `MapGet` with a
+    string key;
+  - `xs[i]` → `SeqIndex`; `d[k]` / `d.k` → `MapGet`.
+
+  The only genuinely ambiguous *source* form is `x[<expr>]`.  The frontend
+  resolves it **by the index expression's kind**: a **string-literal** key
+  (`obj["k"]`) → `MapGet` (a quoted subscript reads exactly like the
+  equivalent dotted access `obj.k`); **any other** index (`xs[0]`, `xs[i]`,
+  `xs[i + 1]`) → `SeqIndex`.  Assignment targets mirror this exactly:
+  `obj.prop = v` / `obj["k"] = v` → `MapSet`, `xs[i] = v` → `SeqSet`.  This
+  default is spec-sanctioned (it is the only reading consistent with the
+  table's `xs[i]`→`SeqIndex` and `d[k]`→`MapGet` rows) and is documented in
+  the frontend's module docs.
+
+- **Flat member chains.**  The parser emits a *single* `member_expression`
+  whose children are the receiver followed by a flat token/node sequence of
+  accesses (`grid[0][1]` → `[grid, [, 0, ], [, 1, ]]`; `a.b.c` → `[a, ., b,
+  ., c]`).  The frontend folds the accesses **left, iteratively** — no
+  per-segment CST recursion — so `grid[0][1]` is `SeqIndex(SeqIndex(grid, 0),
+  1)` and `a.b.c` is `MapGet(MapGet(a, "b"), "c")`.  A chained write
+  `grid[0][1] = v` builds the receiver `grid[0]` through the read path, then
+  emits the final `SeqSet`/`MapSet`.
+
+- **Recursion bound (CWE-674).**  Every M5 CST walk is depth-bounded: array
+  elements, object-property values, member-chain receivers, and bracket
+  indices are all lowered through the depth-bounded expression lowerer
+  (`MAX_EXPR_DEPTH = 256`), and the element/property/access iteration is
+  strictly non-recursive.  A pathological `[[[[…]]]]`, `{a:{b:{c:…}}}`, or
+  `p.p.p…` tower yields a positioned `JsLowerError`, not a stack overflow.
+
+Deferred after M5: spread (`[...xs]` / `{...o}`), array elisions
+(`[1, , 3]`), object shorthand (`{x}`), computed keys (`{[e]: v}`), numeric
+keys, object methods / getters / setters, `.length` *assignment* (a resize
+with no IR node), and array methods (`.map`/`.push`/… — these would need
+runtime-library support per the project mandate).
+
 ## `var` hoisting
 
 JavaScript hoists `var` declarations to function scope.  In v0, the

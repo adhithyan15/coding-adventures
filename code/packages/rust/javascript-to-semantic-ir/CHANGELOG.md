@@ -5,6 +5,85 @@ All notable changes to `javascript-to-semantic-ir` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## 0.5.0
+
+SIR19 milestone **M5 (collections: arrays & objects)** — builds on M4's
+functions/closures.  Adds array literals, object literals, member / dot /
+subscript access (reads), and indexed / property assignment (writes).
+This is the last big data-manipulation milestone for the JS frontend.
+
+### Added
+
+- **Array literals → `SeqLit`.**  `[e0, e1, …]` (CST `array_literal[
+  LBracket, element_list, RBracket ]`) lowers each element through the
+  depth-bounded expression lowerer.  `[]` is an empty `SeqLit`.  Observes
+  `Feature::Sequences`.
+- **Object literals → `MapLit`.**  `{ a: 1, "k": v }` (CST `object_literal`
+  with `property_definition[ property_name, Colon, value ]` children) lowers
+  to a `MapLit`.  Identifier keys (`a:`) and quoted keys (`"k":`) **both**
+  become string map keys — the JS quoting distinction is syntactic.  `{}` is
+  an empty `MapLit`.  Observes `Feature::Maps`.  A parenthesised grouping
+  (`primary_expression[ (, expression, ) ]`) is now peeled, so `({a:1})` at
+  statement start lowers (the `{`-as-block ambiguity is resolved by the
+  source parens).
+- **Member / subscript reads.**  `xs.length` → `SeqLen`; every other
+  `obj.prop` (dot) → `MapGet` with a string key; `xs[i]` → `SeqIndex`;
+  `obj["k"]` (string-literal subscript) → `MapGet`.  Member chains are
+  **flat** in the CST (`grid[0][1]` is one `member_expression` with the
+  accesses as a trailing token/node sequence), so we **fold the accesses
+  left iteratively** — no per-segment CST recursion.
+- **Indexed / property assignment (writes).**  `xs[i] = v` → `SeqSet`;
+  `obj.prop = v` / `obj["k"] = v` → `MapSet`; chained `grid[0][1] = v`
+  builds the receiver (`grid[0]`) via the read path then emits the `SeqSet`.
+
+### The bracket-vs-dot disambiguation
+
+The IR has both sequences and maps; JS `x[i]` is structurally ambiguous and
+the IR is untyped at this layer.  Following the SIR19 collections table
+(the authority), we resolve it **by access shape and key kind**, not by
+value-type inference:
+
+- dot `.prop` → `MapGet` (string key), with the single special case
+  `.length` → `SeqLen`;
+- bracket with a **string-literal** key (`obj["k"]`) → `MapGet` (a quoted
+  subscript reads exactly like the equivalent dotted access);
+- bracket with **any other** key (`xs[0]`, `xs[i]`, `xs[i+1]`) → `SeqIndex`.
+
+Assignment targets mirror this exactly.  This default is spec-sanctioned
+and documented in both the module docs and the spec's collections section.
+
+### Recursion safety (CWE-674)
+
+Every new CST walk is depth-bounded.  Array elements, object-property
+values, member-chain receivers, and bracket indices are all lowered through
+`lower_expression` at `depth + 1`, capped by `MAX_EXPR_DEPTH = 256`; the
+element/property/access *iteration* is strictly non-recursive.  A
+pathological `[[[[…]]]]`, `{a:{b:{c:…}}}`, or `p.p.p…` tower yields a
+positioned `JsLowerError`, never a native stack overflow.  A regression test
+(`deeply_nested_member_chain_is_rejected_without_crashing`) feeds a
+600-deep member tower straight into `compile` and asserts a clean error.
+
+### Deferred past M5
+
+Spread (`[...xs]` / `{...o}`), array elisions (`[1, , 3]`), object shorthand
+(`{x}`), computed keys (`{[e]: v}`), numeric keys, object methods /
+getters / setters, `.length` *assignment* (a resize with no IR node), and
+array methods (`.map`/`.push`/… — these need runtime-library support per the
+project mandate), plus the existing M4 deferrals (classes, `this`/`new`,
+generators, `async`, destructuring, default/rest params, template literals).
+
+### Tests
+
+- Per-form lowering tests (array/object literals incl. empty + nested, the
+  SeqLen/SeqIndex/MapGet disambiguation, string-vs-numeric subscripts, dot
+  chains, all four write forms, chained writes), each with a
+  `semantic_ir::validate` round-trip.
+- The CWE-674 deep-member-chain regression test.
+- Two new `node` end-to-end goldens (gated on `node` availability):
+  `array_sum` (build/index/mutate/sum an array via a counting `for` over
+  `xs.length`) → `19`; `object_get_set` (build an object, get/set
+  properties) → `155`.
+
 ## 0.4.0
 
 SIR19 milestone **M4 (functions, calls, closures)** — builds on M3's

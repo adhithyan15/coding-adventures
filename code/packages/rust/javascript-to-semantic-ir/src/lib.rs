@@ -27,10 +27,21 @@
 //! not from the parser's typed-AST bridge — that's the contract SIR19
 //! sets, mirroring the Ruby and Twig frontends.
 //!
-//! ## Milestone status — M4 (functions, calls, closures)
+//! ## Milestone status — M5 (collections: arrays & objects)
 //!
-//! This build implements literals (M1), variables/operators (M2), and
-//! control flow (M3) **plus** functions (M4): `function` declarations →
+//! This build implements literals (M1), variables/operators (M2), control
+//! flow (M3), and functions/closures (M4) **plus** collections (M5):
+//! array literals → [`Expr::SeqLit`], object literals → [`Expr::MapLit`]
+//! (identifier and `"string"` keys both → string map keys), `xs.length`
+//! → [`Expr::SeqLen`], `obj.prop`/`obj["k"]` → [`Expr::MapGet`], `xs[i]`
+//! → [`Expr::SeqIndex`], and the matching write forms
+//! [`Stmt::SeqSet`]/[`Stmt::MapSet`].  The bracket-vs-dot disambiguation
+//! (`x[<string-literal>]`→map, `x[<other>]`→sequence, `.length`→`SeqLen`,
+//! other `.prop`→map) follows the SIR19 collections table; flat member
+//! chains (`grid[0][1]`) fold left iteratively.  See [`lower`] for the
+//! full collections design and the CWE-674 depth bounds.
+//!
+//! M4, unchanged: functions (M4): `function` declarations →
 //! top-level [`Function`](semantic_ir::Function)s, arrow functions and
 //! nested `function`s → [`Expr::MakeClosure`] over synthesised functions
 //! with free-variable [`Capture`](semantic_ir::Capture)s, tail-position
@@ -46,9 +57,8 @@
 //! C-style `for` → [`Stmt::ForRange`], `for … of` → [`Stmt::ForEach`], and
 //! bare `{ … }` blocks → [`Expr::Block`].  Non-canonical `for` loops, the
 //! remaining control-flow constructs
-//! (`switch`/`try`/`do-while`/labeled/`break`/`continue`), and collections
-//! / member access / classes / `this` (M5+) are positioned errors
-//! (deferred).
+//! (`switch`/`try`/`do-while`/labeled/`break`/`continue`), and classes /
+//! `this` / `new` (M6+) are positioned errors (deferred).
 //!
 //! The M1 + M2 lowerings, unchanged, are:
 //!
@@ -72,9 +82,10 @@
 //!   → `BuiltinCall("!=")` (strict normalisation — a documented semantic
 //!   change for the loose-equality coercion cases).
 //!
-//! All other syntax (collections, member access, methods beyond
-//! `console.log`, template literals, classes/`this`/`new`,
-//! generators/`async`, default/rest params, destructuring/spread, plus
+//! All other syntax (methods beyond `console.log`, array methods like
+//! `.map`/`.push`, spread/elisions, object shorthand/computed/numeric keys,
+//! `.length` assignment, template literals, classes/`this`/`new`,
+//! generators/`async`, default/rest params, destructuring, plus
 //! non-canonical `for`, early `return`, and the remaining control-flow
 //! constructs `switch`/`try`/`do-while`/labeled/`break`/`continue`) is
 //! **deferred** to later milestones and currently produces a clear
@@ -1349,6 +1360,345 @@ mod tests {
             cur = node("block", vec![ASTNodeOrToken::Node(cur)]);
         }
         cur
+    }
+
+    // ── M5: collections — arrays, objects, member/subscript access ─
+
+    /// Lower `src` whose tail value is a collection expression, returning it.
+    fn coll_value(src: &str) -> Expr {
+        let m = lower(src);
+        let r = semantic_ir::validate(&m);
+        assert!(r.is_ok(), "validation failed: {:?}", r.issues);
+        main_value(&m).clone()
+    }
+
+    #[test]
+    fn array_literal_lowers_to_seq_lit() {
+        let m = lower("[1, 2, 3];");
+        match main_value(&m) {
+            Expr::SeqLit { items, .. } => {
+                assert_eq!(items.len(), 3);
+                assert!(matches!(items[0], Expr::IntLit { value: 1, .. }));
+                assert!(matches!(items[2], Expr::IntLit { value: 3, .. }));
+            }
+            other => panic!("expected SeqLit, got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::Sequences));
+        assert_valid(&m);
+    }
+
+    #[test]
+    fn empty_array_is_empty_seq_lit() {
+        match coll_value("[];") {
+            Expr::SeqLit { items, .. } => assert!(items.is_empty()),
+            other => panic!("expected empty SeqLit, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn nested_array_literals() {
+        // `[[1], [2, 3]]` → SeqLit of two SeqLits.
+        match coll_value("[[1], [2, 3]];") {
+            Expr::SeqLit { items, .. } => {
+                assert_eq!(items.len(), 2);
+                assert!(matches!(&items[0], Expr::SeqLit { items, .. } if items.len() == 1));
+                assert!(matches!(&items[1], Expr::SeqLit { items, .. } if items.len() == 2));
+            }
+            other => panic!("expected nested SeqLit, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn object_literal_with_identifier_keys_lowers_to_map_lit() {
+        // Parenthesised so `{` is not read as a block at statement start.
+        let m = lower("({a: 1, b: 2});");
+        match main_value(&m) {
+            Expr::MapLit { entries, .. } => {
+                assert_eq!(entries.len(), 2);
+                assert!(matches!(&entries[0].key, Expr::StrLit { value, .. } if value == "a"));
+                assert!(matches!(&entries[0].value, Expr::IntLit { value: 1, .. }));
+                assert!(matches!(&entries[1].key, Expr::StrLit { value, .. } if value == "b"));
+            }
+            other => panic!("expected MapLit, got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::Maps));
+        assert_valid(&m);
+    }
+
+    #[test]
+    fn object_literal_in_binding_needs_no_parens() {
+        // In value position (not statement start) `{` is unambiguous.
+        let m = lower("let o = {a: 1}; o;");
+        let b = main_block(&m);
+        assert!(matches!(
+            &b.stmts[0],
+            Stmt::LetStarBinding { value: Expr::MapLit { .. }, .. }
+        ));
+        assert_valid(&m);
+    }
+
+    #[test]
+    fn object_literal_with_string_keys() {
+        match coll_value("let v = 0; ({\"k\": v});") {
+            Expr::MapLit { entries, .. } => {
+                assert!(matches!(&entries[0].key, Expr::StrLit { value, .. } if value == "k"));
+                assert!(matches!(&entries[0].value, Expr::VarRef { .. }));
+            }
+            other => panic!("expected MapLit, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn empty_object_is_empty_map_lit() {
+        match coll_value("({});") {
+            Expr::MapLit { entries, .. } => assert!(entries.is_empty()),
+            other => panic!("expected empty MapLit, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn array_length_lowers_to_seq_len() {
+        // `xs.length` → SeqLen (the one dotted property that is a sequence op).
+        match coll_value("let xs = [1, 2]; xs.length;") {
+            Expr::SeqLen { seq, .. } => {
+                assert!(matches!(&*seq, Expr::VarRef { name, .. } if name == "xs"));
+            }
+            other => panic!("expected SeqLen, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn numeric_subscript_lowers_to_seq_index() {
+        // `xs[0]` → SeqIndex (non-string index → sequence).
+        match coll_value("let xs = [9]; xs[0];") {
+            Expr::SeqIndex { seq, index, .. } => {
+                assert!(matches!(&*seq, Expr::VarRef { name, .. } if name == "xs"));
+                assert!(matches!(&*index, Expr::IntLit { value: 0, .. }));
+            }
+            other => panic!("expected SeqIndex, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn variable_subscript_lowers_to_seq_index() {
+        // `xs[i]` with a variable index is also a SeqIndex (not a string key).
+        match coll_value("let xs = [9]; let i = 0; xs[i];") {
+            Expr::SeqIndex { index, .. } => {
+                assert!(matches!(&*index, Expr::VarRef { name, .. } if name == "i"));
+            }
+            other => panic!("expected SeqIndex, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn dot_member_lowers_to_map_get() {
+        // `obj.prop` → MapGet with string key "prop".
+        match coll_value("let obj = {p: 1}; obj.p;") {
+            Expr::MapGet { map, key, .. } => {
+                assert!(matches!(&*map, Expr::VarRef { name, .. } if name == "obj"));
+                assert!(matches!(&*key, Expr::StrLit { value, .. } if value == "p"));
+            }
+            other => panic!("expected MapGet, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn string_subscript_lowers_to_map_get() {
+        // `obj["k"]` — a string-literal key → MapGet (mirrors `obj.k`).
+        match coll_value("let obj = {k: 1}; obj[\"k\"];") {
+            Expr::MapGet { map, key, .. } => {
+                assert!(matches!(&*map, Expr::VarRef { name, .. } if name == "obj"));
+                assert!(matches!(&*key, Expr::StrLit { value, .. } if value == "k"));
+            }
+            other => panic!("expected MapGet, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn seq_index_assignment_lowers_to_seq_set() {
+        // `xs[0] = 9;` → SeqSet.
+        let m = lower("let xs = [1]; xs[0] = 9;");
+        let b = main_block(&m);
+        let set = b.stmts.iter().find(|s| matches!(s, Stmt::SeqSet { .. }))
+            .expect("a SeqSet statement");
+        match set {
+            Stmt::SeqSet { seq, index, value, .. } => {
+                assert!(matches!(seq, Expr::VarRef { name, .. } if name == "xs"));
+                assert!(matches!(index, Expr::IntLit { value: 0, .. }));
+                assert!(matches!(value, Expr::IntLit { value: 9, .. }));
+            }
+            _ => unreachable!(),
+        }
+        assert!(m.manifest.contains(Feature::Sequences));
+        assert_valid(&m);
+    }
+
+    #[test]
+    fn dot_assignment_lowers_to_map_set() {
+        // `obj.prop = 5;` → MapSet with string key.
+        let m = lower("let obj = {p: 0}; obj.p = 5;");
+        let set = main_block(&m).stmts.iter().find(|s| matches!(s, Stmt::MapSet { .. }))
+            .expect("a MapSet statement");
+        match set {
+            Stmt::MapSet { map, key, value, .. } => {
+                assert!(matches!(map, Expr::VarRef { name, .. } if name == "obj"));
+                assert!(matches!(key, Expr::StrLit { value, .. } if value == "p"));
+                assert!(matches!(value, Expr::IntLit { value: 5, .. }));
+            }
+            _ => unreachable!(),
+        }
+        assert!(m.manifest.contains(Feature::Maps));
+        assert_valid(&m);
+    }
+
+    #[test]
+    fn string_subscript_assignment_lowers_to_map_set() {
+        // `obj["k"] = 5;` → MapSet.
+        let m = lower("let obj = {k: 0}; obj[\"k\"] = 5;");
+        assert!(main_block(&m).stmts.iter().any(|s| matches!(
+            s,
+            Stmt::MapSet { key: Expr::StrLit { value, .. }, .. } if value == "k"
+        )));
+        assert_valid(&m);
+    }
+
+    #[test]
+    fn numeric_subscript_assignment_is_seq_set_not_map_set() {
+        // Guard the disambiguation on the *assignment* side: `xs[i] = v`
+        // must be a SeqSet, never a MapSet.
+        let m = lower("let xs = [0]; let i = 0; xs[i] = 7;");
+        assert!(main_block(&m).stmts.iter().any(|s| matches!(s, Stmt::SeqSet { .. })));
+        assert!(!main_block(&m).stmts.iter().any(|s| matches!(s, Stmt::MapSet { .. })));
+        assert_valid(&m);
+    }
+
+    #[test]
+    fn nested_map_in_seq_validates() {
+        // A sequence of maps — exercise the manifest declaring both features.
+        let m = lower("let data = [{id: 1}, {id: 2}]; data[0];");
+        assert_valid(&m);
+        assert!(m.manifest.contains(Feature::Sequences));
+        assert!(m.manifest.contains(Feature::Maps));
+        let r = semantic_ir::validate(&m);
+        assert!(r.warnings().next().is_none(), "unexpected warnings");
+    }
+
+    #[test]
+    fn chained_subscript_left_associates() {
+        // `grid[0][1]` → SeqIndex(SeqIndex(grid, 0), 1).
+        match coll_value("let grid = [[1, 2]]; grid[0][1];") {
+            Expr::SeqIndex { seq, index, .. } => {
+                assert!(matches!(&*index, Expr::IntLit { value: 1, .. }));
+                assert!(matches!(&*seq, Expr::SeqIndex { .. }));
+            }
+            other => panic!("expected nested SeqIndex, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn chained_subscript_assignment_sets_innermost() {
+        // `grid[0][1] = 9;` → SeqSet whose seq is SeqIndex(grid, 0).
+        let m = lower("let grid = [[0, 0]]; grid[0][1] = 9;");
+        let set = main_block(&m).stmts.iter().find(|s| matches!(s, Stmt::SeqSet { .. }))
+            .expect("a SeqSet statement");
+        match set {
+            Stmt::SeqSet { seq, index, value, .. } => {
+                assert!(matches!(seq, Expr::SeqIndex { .. }));
+                assert!(matches!(index, Expr::IntLit { value: 1, .. }));
+                assert!(matches!(value, Expr::IntLit { value: 9, .. }));
+            }
+            _ => unreachable!(),
+        }
+        assert_valid(&m);
+    }
+
+    #[test]
+    fn dot_chain_lowers_to_nested_map_get() {
+        // `a.b.c` → MapGet(MapGet(a, "b"), "c").
+        match coll_value("let a = {b: {c: 1}}; a.b.c;") {
+            Expr::MapGet { map, key, .. } => {
+                assert!(matches!(&*key, Expr::StrLit { value, .. } if value == "c"));
+                assert!(matches!(&*map, Expr::MapGet { .. }));
+            }
+            other => panic!("expected nested MapGet, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn array_spread_is_deferred() {
+        let err = compile_source("let xs = [1]; [...xs];", "test")
+            .expect_err("array spread deferred");
+        assert!(err.message.contains("deferred"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn length_assignment_is_deferred() {
+        let err = compile_source("let xs = [1]; xs.length = 0;", "test")
+            .expect_err("length assignment deferred");
+        assert!(err.message.contains("deferred"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn computed_object_key_is_deferred() {
+        let err = compile_source("let k = \"x\"; ({[k]: 1});", "test")
+            .expect_err("computed key deferred");
+        assert!(err.message.contains("deferred"), "got: {}", err.message);
+    }
+
+    /// Build a `member_expression` dot-chain nested `n` levels deep
+    /// (`p.p.p…`) so the **expression** depth guard trips while lowering it.
+    fn nest_member(n: usize) -> GrammarASTNode {
+        use lexer::token::{Token, TokenType};
+        let tok = |type_: TokenType, value: &str| Token {
+            type_,
+            value: value.to_string(),
+            line: 1,
+            column: 1,
+            type_name: None,
+            flags: None,
+            cv: None,
+        };
+        // Each layer: member_expression[ inner, Dot, Name("p") ].
+        let mut cur = node(
+            "primary_expression",
+            vec![ASTNodeOrToken::Token(tok(TokenType::Name, "p"))],
+        );
+        for _ in 0..n {
+            cur = node(
+                "member_expression",
+                vec![
+                    ASTNodeOrToken::Node(cur),
+                    ASTNodeOrToken::Token(tok(TokenType::Dot, ".")),
+                    ASTNodeOrToken::Token(tok(TokenType::Name, "p")),
+                ],
+            );
+        }
+        cur
+    }
+
+    #[test]
+    fn deeply_nested_member_chain_is_rejected_without_crashing() {
+        // A `p.p.p…` chain far deeper than MAX_EXPR_DEPTH (256) must turn
+        // into a positioned error, not overflow the native stack (CWE-674).
+        // We build the member tower directly and lower it as the program's
+        // single expression statement via the public `compile`.
+        let expr = node("expression", vec![ASTNodeOrToken::Node(nest_member(600))]);
+        let stmt = node(
+            "expression_statement",
+            vec![ASTNodeOrToken::Node(expr)],
+        );
+        let body = node(
+            "source_element",
+            vec![ASTNodeOrToken::Node(node("statement", vec![ASTNodeOrToken::Node(stmt)]))],
+        );
+        let program = node("program", vec![ASTNodeOrToken::Node(body)]);
+        let err = compile(&program, "deep")
+            .expect_err("a 600-deep member chain must be rejected, not crash");
+        assert!(
+            err.message.contains("deeper than the supported limit"),
+            "unexpected message: {}",
+            err.message
+        );
     }
 
     #[test]
