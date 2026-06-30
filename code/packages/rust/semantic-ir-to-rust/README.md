@@ -35,8 +35,8 @@ Accepts (v0): `Closures`, `Pairs`, `Symbols`, `Strings`,
 `DynamicTyping`, `OptionalTypeAnnotations`, `MutualRecursion`,
 `Globals`.
 
-Accepts (SIR16 / v1, landing incrementally): `Floats`, `ShortCircuit`,
-`MutableBindings`, `Loops`.
+Accepts (SIR16 / v1 — **all six** features, full v1 parity): `Floats`,
+`ShortCircuit`, `MutableBindings`, `Loops`, `Sequences`, `Maps`.
 
 - `Floats` adds a `Value::Float(f64)` arm to the runtime value model with
   numeric promotion (`int op float ⇒ float`).
@@ -48,14 +48,25 @@ Accepts (SIR16 / v1, landing incrementally): `Floats`, `ShortCircuit`,
   (Local/Param/Capture) or a runtime `global_set` (Global).
 - `Loops` covers `while`, `for-range`, and `for-each`.  `while` and
   `for-range` route through SIR truthiness / cached `i64` bounds;
-  `for-each` iterates a cons-list (`Pair`-chain) via the runtime
-  `seq_iter` helper, so it needs no dedicated `Sequences` value yet.
+  `for-each` iterates via the runtime `seq_iter` helper, which now
+  snapshots a real `Value::Seq` **and** still walks the legacy cons-list
+  (`Pair`-chain) — so `for x in [1, 2, 3]` works end to end.
+- `Sequences` adds a shared, mutable `Value::Seq(Rc<RefCell<Vec<Value>>>)`.
+  `SeqLit`/`SeqIndex`/`SeqLen` lower to `seq_lit`/`seq_index`/`seq_len`;
+  the `SeqSet` statement mutates the backing vector via `seq_set`.
+- `Maps` adds a shared, mutable, insertion-ordered
+  `Value::Map(Rc<RefCell<Vec<(Value, Value)>>>)`.  `MapLit`/`MapGet`
+  lower to `map_lit`/`map_get`; `MapSet` mutates via `map_set`.  Keys
+  compare with the runtime's `value_eq` (so any value type is a key), and
+  a missing-key `MapGet` returns `Nil`.
 
-The other two v1 features (`Sequences`, `Maps`) are not yet accepted and
-are still rejected at the capability check.
+With all six SIR16 features accepted, every SIR16 IR node has a real emit
+arm — no reachable `panic!` remains for v1.  The remaining emit panics
+cover SIR17/18 nodes (classes, modules, try/catch, string interpolation,
+instance/class/const vars) whose features stay unaccepted.
 
 Rejects: `TailCalls` (Rust does not guarantee TCO), `Intrinsics`
-(empty whitelist in v0).
+(empty whitelist in v0), and the SIR17/18 features above.
 
 ## Value model
 
@@ -66,6 +77,8 @@ enum Value {
     Sym(Rc<str>), Str(Rc<str>),
     Pair(Rc<Pair>),
     Closure(Rc<Closure>),
+    Seq(Rc<RefCell<Vec<Value>>>),            // SIR16 Sequences
+    Map(Rc<RefCell<Vec<(Value, Value)>>>),   // SIR16 Maps (insertion-ordered)
 }
 ```
 
@@ -73,6 +86,9 @@ enum Value {
 - Closures wrap a `Box<dyn Fn(Vec<Value>) -> Value>` inside an `Rc`.
 - Symbols and strings are interned `Rc<str>` for cheap clones.
 - Globals live in a `thread_local!` `HashMap<String, Value>`.
+- Sequences and maps are `Rc<RefCell<…>>` so `SeqSet`/`MapSet` mutate the
+  shared value in place; maps key by `value_eq` (linear lookup) and keep
+  insertion order.
 
 ## `main` collision
 

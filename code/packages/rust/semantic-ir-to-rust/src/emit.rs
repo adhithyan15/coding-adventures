@@ -197,11 +197,22 @@ fn collect_stmt_assigned(s: &Stmt, out: &mut HashSet<String>) {
             collect_expr_assigned(iter, out);
             collect_assigned_locals(body, out);
         }
-        // Sequences/Maps and SIR17 nodes are rejected at the capability
-        // check for this backend; nothing reachable to collect.
-        Stmt::SeqSet { .. }
-        | Stmt::MapSet { .. }
-        | Stmt::ClassDef { .. }
+        // SIR16 Seq/Map indexed assignment: the target, index/key, and
+        // value sub-expressions can each hold a nested `Assign` (e.g.
+        // `xs[i] = (foo := 1)`), so recurse into all three.
+        Stmt::SeqSet { seq, index, value, .. } => {
+            collect_expr_assigned(seq, out);
+            collect_expr_assigned(index, out);
+            collect_expr_assigned(value, out);
+        }
+        Stmt::MapSet { map, key, value, .. } => {
+            collect_expr_assigned(map, out);
+            collect_expr_assigned(key, out);
+            collect_expr_assigned(value, out);
+        }
+        // SIR17 nodes are rejected at the capability check for this
+        // backend; nothing reachable to collect.
+        Stmt::ClassDef { .. }
         | Stmt::ModuleDef { .. }
         | Stmt::SingletonClassDef { .. }
         | Stmt::TryCatch { .. } => {}
@@ -236,8 +247,30 @@ fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
             collect_expr_assigned(lhs, out);
             collect_expr_assigned(rhs, out);
         }
-        // Leaves, and SIR16+ Seq/Map/StrConcat nodes (rejected before
-        // emit) — nothing nested that could hold a reachable `Assign`.
+        // SIR16 Seq/Map expressions: recurse into their sub-expressions,
+        // any of which could nest an `Assign`.
+        Expr::SeqLit { items, .. } => {
+            for item in items {
+                collect_expr_assigned(item, out);
+            }
+        }
+        Expr::SeqIndex { seq, index, .. } => {
+            collect_expr_assigned(seq, out);
+            collect_expr_assigned(index, out);
+        }
+        Expr::SeqLen { seq, .. } => collect_expr_assigned(seq, out),
+        Expr::MapLit { entries, .. } => {
+            for entry in entries {
+                collect_expr_assigned(&entry.key, out);
+                collect_expr_assigned(&entry.value, out);
+            }
+        }
+        Expr::MapGet { map, key, .. } => {
+            collect_expr_assigned(map, out);
+            collect_expr_assigned(key, out);
+        }
+        // Leaves, and the SIR18 `StrConcat` node (rejected before emit) —
+        // nothing nested that could hold a reachable `Assign`.
         Expr::IntLit { .. }
         | Expr::FloatLit { .. }
         | Expr::BoolLit { .. }
@@ -246,11 +279,6 @@ fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
         | Expr::StrLit { .. }
         | Expr::VarRef { .. }
         | Expr::Intrinsic { .. }
-        | Expr::SeqLit { .. }
-        | Expr::SeqIndex { .. }
-        | Expr::SeqLen { .. }
-        | Expr::MapLit { .. }
-        | Expr::MapGet { .. }
         | Expr::StrConcat { .. } => {}
     }
 }
@@ -335,11 +363,26 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             emit_for_each(out, var, iter, body, indent)
         }
         // ── SIR16 indexed assignment (Sequences/Maps) ───────────────
-        // `Feature::Sequences`/`Feature::Maps` are not accepted by this
-        // backend, so a module using `SeqSet`/`MapSet` is rejected at the
-        // capability check before emit.  Reaching these arms is a bug.
-        Stmt::SeqSet { span, .. } | Stmt::MapSet { span, .. } => {
-            panic!("rust backend reached SIR16 Seq/Map statement at {} — capability check should have rejected it", span);
+        // `seq[index] = value` mutates the shared backing vector in place
+        // via `seq_set`; the returned value is discarded (`let _ = …`).
+        Stmt::SeqSet { seq, index, value, .. } => {
+            let _ = write!(out, "{}let _ = __sir::seq_set(&(", pad);
+            emit_expr(out, seq, indent);
+            out.push_str("), &(");
+            emit_expr(out, index, indent);
+            out.push_str("), ");
+            emit_expr(out, value, indent);
+            out.push_str(");\n");
+        }
+        // `map[key] = value` inserts/overwrites via `map_set`.
+        Stmt::MapSet { map, key, value, .. } => {
+            let _ = write!(out, "{}let _ = __sir::map_set(&(", pad);
+            emit_expr(out, map, indent);
+            out.push_str("), ");
+            emit_expr(out, key, indent);
+            out.push_str(", ");
+            emit_expr(out, value, indent);
+            out.push_str(");\n");
         }
         // An `Assign` to an Instance/ClassVar/Const/Builtin scope: those
         // scopes belong to SIR17 features this backend does not accept
@@ -451,18 +494,58 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             emit_expr(out, rhs, indent);
             out.push_str(") } })");
         }
-        // Remaining SIR16+ expression kinds — Rust backend hasn't been
-        // extended to these yet (Sequences/Maps land in a later PR;
-        // `StrConcat` is SIR18 string interpolation).  Their features
-        // are undeclared, so the capability check rejects such modules
-        // before emit; reaching this arm is an internal bug.
-        Expr::SeqLit { span, .. }
-        | Expr::SeqIndex { span, .. }
-        | Expr::SeqLen { span, .. }
-        | Expr::MapLit { span, .. }
-        | Expr::MapGet { span, .. }
-        | Expr::StrConcat { span, .. } => {
-            panic!("rust backend reached SIR16+ expression at {} — capability check should have rejected it", span);
+        // ── SIR16: sequences ───────────────────────────────────────
+        // `SeqLit` builds a fresh shared sequence from its items via the
+        // runtime `seq_lit` helper; `SeqIndex`/`SeqLen` read through
+        // `seq_index`/`seq_len`.  All keep the `Value` model — the seq is
+        // boxed, so a `VarRef` to it clones the shared `Rc` handle.
+        Expr::SeqLit { items, .. } => {
+            out.push_str("__sir::seq_lit(vec![");
+            emit_args(out, items, indent);
+            out.push_str("])");
+        }
+        Expr::SeqIndex { seq, index, .. } => {
+            out.push_str("__sir::seq_index(&(");
+            emit_expr(out, seq, indent);
+            out.push_str("), &(");
+            emit_expr(out, index, indent);
+            out.push_str("))");
+        }
+        Expr::SeqLen { seq, .. } => {
+            out.push_str("__sir::seq_len(&(");
+            emit_expr(out, seq, indent);
+            out.push_str("))");
+        }
+        // ── SIR16: maps ────────────────────────────────────────────
+        // `MapLit` builds an insertion-ordered map from `(key, value)`
+        // pairs; `MapGet` reads through `map_get` (missing key ⇒ `Nil`).
+        Expr::MapLit { entries, .. } => {
+            out.push_str("__sir::map_lit(vec![");
+            for (i, entry) in entries.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                out.push('(');
+                emit_expr(out, &entry.key, indent);
+                out.push_str(", ");
+                emit_expr(out, &entry.value, indent);
+                out.push(')');
+            }
+            out.push_str("])");
+        }
+        Expr::MapGet { map, key, .. } => {
+            out.push_str("__sir::map_get(&(");
+            emit_expr(out, map, indent);
+            out.push_str("), &(");
+            emit_expr(out, key, indent);
+            out.push_str("))");
+        }
+        // The only remaining unsupported expression is `StrConcat`
+        // (SIR18 string interpolation).  Its feature is undeclared, so
+        // the capability check rejects such modules before emit; reaching
+        // this arm is an internal bug.
+        Expr::StrConcat { span, .. } => {
+            panic!("rust backend reached SIR18 str-concat expression at {} — capability check should have rejected it", span);
         }
     }
 }
@@ -835,7 +918,11 @@ fn emit_for_range(
 fn emit_for_each(out: &mut String, var: &str, iter: &Expr, body: &Block, indent: usize) {
     let pad = indent_str(indent);
     let v = sanitize_ident(var);
-    let _ = write!(out, "{}for {}: __sir::Value in __sir::seq_iter(&(", pad, v);
+    // No type annotation on the loop pattern: `for <pat>: T in ...` is not
+    // valid Rust (type ascription on a `for` binding is rejected).  The
+    // element type is already `__sir::Value` because `seq_iter` returns a
+    // `Vec<Value>`, so a plain `for <var> in ...` binds it correctly.
+    let _ = write!(out, "{}for {} in __sir::seq_iter(&(", pad, v);
     emit_expr(out, iter, indent);
     out.push_str(")) {\n");
     emit_block_as_stmts(out, body, indent + 1);
@@ -883,10 +970,27 @@ fn emit_stmt_inline(out: &mut String, s: &Stmt, indent: usize) {
         Stmt::ForEach { var, iter, body, .. } => {
             emit_for_each(out, var, iter, body, indent)
         }
-        // SIR16 Seq/Map indexed assignment — unaccepted features,
-        // rejected before emit.
-        Stmt::SeqSet { span, .. } | Stmt::MapSet { span, .. } => {
-            panic!("rust backend (inline) reached SIR16 Seq/Map statement at {} — capability check should have rejected it", span);
+        // SIR16 Seq/Map indexed assignment — compact (inline) rendering
+        // for a block-as-expression context.  Same `seq_set`/`map_set`
+        // helpers as the statement path, with a trailing space instead of
+        // a newline.
+        Stmt::SeqSet { seq, index, value, .. } => {
+            out.push_str("let _ = __sir::seq_set(&(");
+            emit_expr(out, seq, indent);
+            out.push_str("), &(");
+            emit_expr(out, index, indent);
+            out.push_str("), ");
+            emit_expr(out, value, indent);
+            out.push_str("); ");
+        }
+        Stmt::MapSet { map, key, value, .. } => {
+            out.push_str("let _ = __sir::map_set(&(");
+            emit_expr(out, map, indent);
+            out.push_str("), ");
+            emit_expr(out, key, indent);
+            out.push_str(", ");
+            emit_expr(out, value, indent);
+            out.push_str("); ");
         }
         Stmt::Assign { span, .. } => {
             panic!("rust backend (inline) reached an Assign to an unsupported scope at {} — capability check should have rejected it", span);
@@ -1664,7 +1768,7 @@ mod tests {
             },
             1,
         );
-        assert!(out.contains("for x: __sir::Value in __sir::seq_iter(&(xs.clone()))"), "got: {out}");
+        assert!(out.contains("for x in __sir::seq_iter(&(xs.clone()))"), "got: {out}");
     }
 
     #[test]
@@ -1684,5 +1788,222 @@ mod tests {
             1,
         );
         assert!(out.contains("let _ = i.clone();"), "got: {out}");
+    }
+
+    // ── SIR16 Sequences + Maps ─────────────────────────────────────
+
+    #[test]
+    fn emit_seq_lit_builds_via_seq_lit_helper() {
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::SeqLit { items: vec![int(1), int(2), int(3)], span: s() },
+            0,
+        );
+        assert_eq!(
+            out,
+            "__sir::seq_lit(vec![__sir::Value::Int(1i64), __sir::Value::Int(2i64), __sir::Value::Int(3i64)])"
+        );
+    }
+
+    #[test]
+    fn emit_seq_index_reads_through_seq_index() {
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::SeqIndex {
+                seq: Box::new(local("xs")),
+                index: Box::new(int(0)),
+                span: s(),
+            },
+            0,
+        );
+        assert_eq!(out, "__sir::seq_index(&(xs.clone()), &(__sir::Value::Int(0i64)))");
+    }
+
+    #[test]
+    fn emit_seq_len_reads_through_seq_len() {
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::SeqLen { seq: Box::new(local("xs")), span: s() },
+            0,
+        );
+        assert_eq!(out, "__sir::seq_len(&(xs.clone()))");
+    }
+
+    #[test]
+    fn emit_map_lit_builds_via_map_lit_helper() {
+        use semantic_ir::nodes::MapEntry;
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::MapLit {
+                entries: vec![
+                    MapEntry {
+                        key: Expr::StrLit { value: "a".into(), span: s() },
+                        value: int(1),
+                    },
+                    MapEntry {
+                        key: Expr::StrLit { value: "b".into(), span: s() },
+                        value: int(2),
+                    },
+                ],
+                span: s(),
+            },
+            0,
+        );
+        assert!(out.starts_with("__sir::map_lit(vec!["), "got: {out}");
+        assert!(out.contains("(__sir::Value::Str(::std::rc::Rc::from(\"a\")), __sir::Value::Int(1i64))"), "got: {out}");
+        assert!(out.contains("(__sir::Value::Str(::std::rc::Rc::from(\"b\")), __sir::Value::Int(2i64))"), "got: {out}");
+    }
+
+    #[test]
+    fn emit_map_get_reads_through_map_get() {
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::MapGet {
+                map: Box::new(local("d")),
+                key: Box::new(Expr::StrLit { value: "k".into(), span: s() }),
+                span: s(),
+            },
+            0,
+        );
+        assert_eq!(
+            out,
+            "__sir::map_get(&(d.clone()), &(__sir::Value::Str(::std::rc::Rc::from(\"k\"))))"
+        );
+    }
+
+    #[test]
+    fn emit_seq_set_mutates_via_seq_set() {
+        let mut out = String::new();
+        emit_stmt(
+            &mut out,
+            &Stmt::SeqSet {
+                seq: local("xs"),
+                index: int(1),
+                value: int(9),
+                span: s(),
+            },
+            1,
+        );
+        assert_eq!(
+            out,
+            "    let _ = __sir::seq_set(&(xs.clone()), &(__sir::Value::Int(1i64)), __sir::Value::Int(9i64));\n"
+        );
+    }
+
+    #[test]
+    fn emit_map_set_mutates_via_map_set() {
+        let mut out = String::new();
+        emit_stmt(
+            &mut out,
+            &Stmt::MapSet {
+                map: local("d"),
+                key: Expr::StrLit { value: "k".into(), span: s() },
+                value: int(7),
+                span: s(),
+            },
+            1,
+        );
+        assert_eq!(
+            out,
+            "    let _ = __sir::map_set(&(d.clone()), __sir::Value::Str(::std::rc::Rc::from(\"k\")), __sir::Value::Int(7i64));\n"
+        );
+    }
+
+    #[test]
+    fn emit_seq_set_inline_uses_trailing_space() {
+        // The block-as-expression (inline) path renders the same helper
+        // with a trailing space rather than a newline.
+        let mut out = String::new();
+        emit_stmt_inline(
+            &mut out,
+            &Stmt::SeqSet {
+                seq: local("xs"),
+                index: int(0),
+                value: int(1),
+                span: s(),
+            },
+            1,
+        );
+        assert_eq!(
+            out,
+            "let _ = __sir::seq_set(&(xs.clone()), &(__sir::Value::Int(0i64)), __sir::Value::Int(1i64)); "
+        );
+    }
+
+    #[test]
+    fn emit_map_set_inline_uses_trailing_space() {
+        let mut out = String::new();
+        emit_stmt_inline(
+            &mut out,
+            &Stmt::MapSet {
+                map: local("d"),
+                key: Expr::StrLit { value: "k".into(), span: s() },
+                value: int(2),
+                span: s(),
+            },
+            1,
+        );
+        assert_eq!(
+            out,
+            "let _ = __sir::map_set(&(d.clone()), __sir::Value::Str(::std::rc::Rc::from(\"k\")), __sir::Value::Int(2i64)); "
+        );
+    }
+
+    #[test]
+    fn for_each_over_seq_lit_uses_seq_iter() {
+        // ForEach reconciliation: a `for x in [1, 2, 3]` (SeqLit) lowers
+        // to `seq_iter` over the emitted `seq_lit(…)`, proving the two
+        // SIR16 features compose.
+        let mut out = String::new();
+        emit_stmt(
+            &mut out,
+            &Stmt::ForEach {
+                var: "x".into(),
+                iter: Expr::SeqLit { items: vec![int(1), int(2), int(3)], span: s() },
+                body: block(vec![], nil()),
+                span: s(),
+            },
+            1,
+        );
+        assert!(out.contains("for x in __sir::seq_iter(&(__sir::seq_lit(vec!["), "got: {out}");
+    }
+
+    #[test]
+    fn seq_set_value_marks_nested_assign_target_mutable() {
+        // A `LetBinding` reassigned inside a `SeqSet` value sub-expression
+        // must still be discovered by the mutable-name pre-pass.
+        let f = Function {
+            name: "f".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: block(
+                vec![
+                    Stmt::LetBinding { name: "acc".into(), sir_type: None, value: int(0), span: s() },
+                    Stmt::LetBinding { name: "xs".into(), sir_type: None, value: Expr::SeqLit { items: vec![int(0)], span: s() }, span: s() },
+                    Stmt::SeqSet {
+                        seq: local("xs"),
+                        index: int(0),
+                        value: Expr::Block(Box::new(block(
+                            vec![Stmt::Assign { name: "acc".into(), scope: Scope::Local, value: int(1), span: s() }],
+                            local("acc"),
+                        ))),
+                        span: s(),
+                    },
+                ],
+                nil(),
+            ),
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_function(&mut out, &f);
+        assert!(out.contains("let mut acc: __sir::Value = __sir::Value::Int(0i64);"), "got: {out}");
     }
 }
