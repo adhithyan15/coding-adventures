@@ -203,13 +203,13 @@ fn var_with_null_init() {
 
 /// Upstream `assertPrintSame("var x = true;")`.
 ///
-/// Boolean init. Pins that booleans emit as the keyword form (not
-/// `1`/`0`).
+/// Boolean init. Pins the Closure-style boolean shorthand: `true` emits as
+/// `!0` (value-exact, 2 chars vs 4). See `emit_boolean`.
 #[test]
 fn var_with_boolean_init() {
     assert_var_emits(
         var_decl_single(VarKind::Var, "x", Some(boolean(true))),
-        "var x=true;",
+        "var x=!0;",
     );
 }
 

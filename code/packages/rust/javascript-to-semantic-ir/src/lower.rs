@@ -1583,6 +1583,7 @@ impl Lowerer {
                     name: p.clone(),
                     sir_type: None,
                     kind: ParamKind::Required,
+                    default: None,
                     span: span.clone(),
                 })
                 .collect(),
@@ -1658,6 +1659,7 @@ impl Lowerer {
                     name: p.clone(),
                     sir_type: None,
                     kind: ParamKind::Required,
+                    default: None,
                     span: span.clone(),
                 })
                 .collect(),

@@ -205,6 +205,14 @@ impl<'m> ValidatorState<'m> {
         // Collect parameter and capture names; they must be unique
         // within their respective lists.
         let mut param_names: HashSet<String> = HashSet::new();
+        // `scope_so_far` accumulates the parameter names *preceding* the
+        // current one.  A default-value expression (`def f(a, b = a)`)
+        // may refer to earlier parameters but not to itself or to
+        // parameters declared later, so we validate each default against
+        // the set built up to that point.  Captures are unavailable in a
+        // default position, so we pass an empty capture set.
+        let mut scope_so_far: HashSet<String> = HashSet::new();
+        let no_captures: HashSet<String> = HashSet::new();
         for p in &f.params {
             if !param_names.insert(p.name.clone()) {
                 self.error(
@@ -217,6 +225,15 @@ impl<'m> ValidatorState<'m> {
             } else {
                 self.observed.add(Feature::DynamicTyping);
             }
+            // Default-value expression (SIR19): observe the feature and
+            // validate the expression as if it appeared in the function's
+            // parameter scope with the params declared so far in view.
+            if let Some(default) = &p.default {
+                self.observed.add(Feature::DefaultParams);
+                let mut env = LocalEnv::new(&scope_so_far, &no_captures);
+                self.check_expr(default, &mut env, 0);
+            }
+            scope_so_far.insert(p.name.clone());
         }
 
         // Variadic-parameter well-formedness (M3). A Ruby-faithful, v0-light
@@ -874,7 +891,7 @@ mod tests {
     }
 
     fn p(name: &str, kind: ParamKind) -> Param {
-        Param { name: name.into(), sir_type: None, kind, span: s() }
+        Param { name: name.into(), sir_type: None, kind, default: None, span: s() }
     }
 
     #[test]
@@ -921,6 +938,144 @@ mod tests {
         let r = validate(&m);
         assert!(!r.is_ok());
         assert!(r.errors().any(|i| i.message.contains("must precede the keyword-rest")));
+    }
+
+    /// SIR19: a parameter carrying a default-value expression validates
+    /// OK and causes the validator to observe `Feature::DefaultParams`.
+    #[test]
+    fn param_with_default_validates_and_observes_feature() {
+        // def f(a = 1) — one required param with a default literal `1`.
+        let mut m =
+            empty_module(FeatureManifest::from_features(&[
+                Feature::DynamicTyping,
+                Feature::DefaultParams,
+            ]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![Param {
+                name: "a".into(),
+                sir_type: None,
+                kind: ParamKind::Required,
+                default: Some(Box::new(Expr::IntLit { value: 1, span: s() })),
+                span: s(),
+            }],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    /// A default that uses an unsupported/undeclared feature (here a
+    /// `StrLit`, which declares `Feature::Strings`) is observed through
+    /// the default expression — proving the validator recurses into the
+    /// default like any other expression.
+    #[test]
+    fn default_expr_features_are_observed() {
+        // def f(a = "x") — manifest must declare Strings (from the default)
+        // as well as DefaultParams, or validation fails.
+        let mut m =
+            empty_module(FeatureManifest::from_features(&[
+                Feature::DynamicTyping,
+                Feature::DefaultParams,
+                Feature::Strings,
+            ]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![Param {
+                name: "a".into(),
+                sir_type: None,
+                kind: ParamKind::Required,
+                default: Some(Box::new(Expr::StrLit { value: "x".into(), span: s() })),
+                span: s(),
+            }],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    /// A default expression may reference an earlier parameter
+    /// (`def f(a, b = a)`); the validator resolves the `VarRef` against
+    /// the params declared so far.
+    #[test]
+    fn default_expr_may_reference_earlier_param() {
+        let mut m =
+            empty_module(FeatureManifest::from_features(&[
+                Feature::DynamicTyping,
+                Feature::DefaultParams,
+            ]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![
+                Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+                Param {
+                    name: "b".into(),
+                    sir_type: None,
+                    kind: ParamKind::Required,
+                    default: Some(Box::new(Expr::VarRef {
+                        name: "a".into(),
+                        scope: Scope::Param,
+                        span: s(),
+                    })),
+                    span: s(),
+                },
+            ],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    /// A default expression that references a *later* parameter is a
+    /// scope error — only params declared so far are in view.
+    #[test]
+    fn default_expr_cannot_reference_later_param() {
+        let mut m =
+            empty_module(FeatureManifest::from_features(&[
+                Feature::DynamicTyping,
+                Feature::DefaultParams,
+            ]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![
+                Param {
+                    name: "a".into(),
+                    sir_type: None,
+                    kind: ParamKind::Required,
+                    // references `b`, which is declared *after* `a`.
+                    default: Some(Box::new(Expr::VarRef {
+                        name: "b".into(),
+                        scope: Scope::Param,
+                        span: s(),
+                    })),
+                    span: s(),
+                },
+                Param { name: "b".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+            ],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected scope error for forward reference");
     }
 
     #[test]

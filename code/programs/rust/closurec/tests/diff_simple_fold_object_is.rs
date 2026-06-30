@@ -11,7 +11,7 @@
 //! At SIMPLE the fixture optimizes to:
 //!
 //! ```text
-//! var a=true;var b=false;var c=true;var d=false;var e=Object.is(NaN,NaN);report(a,b,c,d,e);
+//! var a=!0;var b=!1;var c=!0;var d=!1;var e=Object.is(NaN,NaN);report(a,b,c,d,e);
 //! ```
 
 use std::process::Command;
@@ -56,14 +56,14 @@ fn simple_fold_object_is_folds_same_value() {
     let out = Command::new(BINARY).args(read_flags()).output().expect("run closurec");
     let actual = String::from_utf8_lossy(&out.stdout);
 
-    assert!(actual.contains("a=true"), "Object.is(1,1) → true; got:\n{actual}");
+    assert!(actual.contains("a=!0"), "Object.is(1,1) → true; got:\n{actual}");
     assert!(
-        actual.contains("b=false"),
+        actual.contains("b=!1"),
         "Object.is(0,-0) → false (±0 SameValue, NOT ===); got:\n{actual}"
     );
-    assert!(actual.contains("c=true"), "Object.is(\"x\",\"x\") → true; got:\n{actual}");
+    assert!(actual.contains("c=!0"), "Object.is(\"x\",\"x\") → true; got:\n{actual}");
     assert!(
-        actual.contains("d=false"),
+        actual.contains("d=!1"),
         "Object.is(1,\"1\") → false (different Type); got:\n{actual}"
     );
     // `NaN` is the global identifier, not a literal — conservatively declined.

@@ -152,10 +152,16 @@ frontend additionally ships notation-specific golden tests.
   named functions `sin cos … ln log exp` (PR-3, longest-match), and matrices `[[a,b],[c,d]]`
   (PR-4) — **full parity with AsciiMath** (only embedded `\text`, which has no Unicode equivalent,
   is out of scope).
-- Future: `mathml`, MathJSON, content-MathML, spreadsheet formulae, … each a small crate
-  implementing the trait. None require changes to consumers. **Three frontends now in (LaTeX,
-  AsciiMath, Unicode), all feeding one neutral AST with zero consumer change** — the pluggability
-  claim is demonstrated, not just asserted.
+- `mathml` — the **fourth** frontend: Presentation MathML, the XML notation (`<math>…</math>`)
+  that browsers and tools emit. A small crate with an XML-subset event lexer (attributes,
+  namespace prefixes, the XML declaration, comments, and DOCTYPE all ignored) and an element-tree
+  builder. PR-1 covers `<mn>`/`<mi>`/`<mtext>`/`<mo>`, `<mrow>` (operator precedence + implicit
+  multiplication + `(`…`)` fences), `<mfrac>`/`<msup>`/`<msub>`/`<msubsup>`/`<msqrt>`/`<mroot>`;
+  `<mtable>`, `<mover>`/`<munder>`, `<mfenced>`, and named-function recognition are PR-2.
+- Future: MathJSON, content-MathML, spreadsheet formulae, … each a small crate implementing the
+  trait. None require changes to consumers. **Four frontends now in (LaTeX, AsciiMath, Unicode,
+  MathML), all feeding one neutral AST with zero consumer change** — the pluggability claim is
+  demonstrated, not just asserted.
 
 ## 7. Non-goals
 

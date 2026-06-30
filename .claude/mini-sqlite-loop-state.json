@@ -141,11 +141,11 @@
     {
       "id": "java-level1-sql-optimizer",
       "title": "Java sql-optimizer",
-      "status": "pending",
+      "status": "in-review",
       "depends_on": ["java-level1-sql-planner"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Port Python sql_optimizer to Java."
+      "branch": "mini-sqlite/java-level1-sql-optimizer",
+      "pr_number": 7073,
+      "notes": "PR open 2026-06-30. 124 tests (JaCoCo ≥80%). 5 passes: ConstantFolding, PredicatePushdown, ProjectionPruning, DeadCodeElimination, LimitPushdown. Java 21 sealed interfaces + records."
     },
     {
       "id": "java-level1-sql-codegen",
@@ -276,11 +276,11 @@
     {
       "id": "csharp-level1-sql-optimizer",
       "title": "C# sql-optimizer (Level 1 prerequisite)",
-      "status": "pending",
+      "status": "in-review",
       "depends_on": ["csharp-level1-sql-planner"],
-      "branch": null,
+      "branch": "mini-sqlite/csharp-level1-sql-optimizer",
       "pr_number": null,
-      "notes": "Port Python sql_optimizer to C#."
+      "notes": "PR open 2026-06-30. 5 passes (ConstantFolding, PredicatePushdown, ProjectionPruning, DeadCodeElimination, LimitPushdown). 121 xUnit tests. 85.85% line / 80.67% branch coverage. CI pending."
     },
     {
       "id": "csharp-level1-sql-codegen",

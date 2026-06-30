@@ -1,6 +1,6 @@
 //! # python-to-semantic-ir
 //!
-//! Python CST → narrow-waist Semantic IR (SIR17), **milestone M3**.
+//! Python CST → narrow-waist Semantic IR (SIR17), **milestone M4**.
 //!
 //! This is the second frontend for the SIR10 narrow-waist IR (after
 //! [`twig-to-semantic-ir`]).  It consumes the generic
@@ -28,28 +28,29 @@
 //! assert!(module.functions.iter().any(|f| f.name == "main"));
 //! ```
 //!
-//! ## M3 scope
+//! ## M4 scope
 //!
 //! M1 lowered **literals only**; M2 added variable references,
-//! assignment, and unary/binary operators.  M3 adds **control flow**,
-//! still wrapped in the synthesised `main` function:
+//! assignment, and unary/binary operators; M3 added **control flow**
+//! (`if`/`elif`/`else`, `while`, `for`).  M4 adds **functions, calls,
+//! and closures**:
 //!
-//! - **`if` / `elif` / `else`** → `Expr::If` (an `elif` chain folds
-//!   right-to-left into nested `If`s; a missing `else` yields an empty
-//!   nil-valued block).  Since `if` is a SIR *expression*, a trailing
-//!   `if` becomes the block value; otherwise it is a `Stmt::ExprStmt`;
-//! - **`while c: body`** → `Stmt::While { cond, body }`;
-//! - **`for x in range(...): body`** → `Stmt::ForRange` (1/2/3-arg
-//!   `range` mapped to `start`/`stop`/`step`; wrong arity rejected);
-//! - **`for x in <iter>: body`** → `Stmt::ForEach`.
+//! - **`def f(params): suite`** → a top-level `Function` named `f`.  A
+//!   two-pass design collects every function name first so calls (and
+//!   mutual recursion) resolve regardless of textual order.
+//! - **`return expr`** (tail position only) sets the function body's
+//!   block `value`; falling off the end yields `NilLit` (Python's
+//!   implicit `None`).  A **non-tail** (early) `return` is rejected with
+//!   a positioned error.
+//! - **`lambda params: expr`** and **nested `def`** are lifted to
+//!   top-level synthesised functions with computed **captures**, and the
+//!   definition site emits an `Expr::MakeClosure`.
+//! - **calls** `f(args)` → `DirectCall` (known function), `BuiltinCall`
+//!   (`print`/`len`/`range`), or `IndirectCall` (a closure value).
 //!
-//! Each loop / branch suite lowers to a `Block`; the loop variable is a
-//! `Scope::Local` bound inside the body only, and block-local bindings do
-//! not leak (matching the validator).  Loops declare `Feature::Loops`;
-//! `if` adds no feature.
-//!
-//! Functions/`def`/`lambda`, calls, and collections are deferred to
-//! later milestones; unhandled forms return a clear `PythonLowerError`.
+//! Collections / comprehensions / decorators / `*args` & default
+//! arguments are deferred to later milestones; unhandled forms return a
+//! clear `PythonLowerError`.
 //!
 //! See `code/specs/SIR17-python-to-semantic-ir.md` for the full
 //! lowering table and the deferred-form roadmap.
@@ -83,6 +84,14 @@ pub fn compile_source(
 mod tests {
     use super::*;
     use semantic_ir::{Expr, Feature, Scope, Stmt};
+
+    /// Find a function by name in a lowered module.
+    fn func<'a>(m: &'a semantic_ir::Module, name: &str) -> &'a semantic_ir::Function {
+        m.functions
+            .iter()
+            .find(|f| f.name == name)
+            .unwrap_or_else(|| panic!("function `{name}` exists"))
+    }
 
     /// Lower a snippet, asserting success, and return the module.
     fn lower(src: &str) -> semantic_ir::Module {
@@ -848,12 +857,6 @@ mod tests {
     // ── M3: deferred constructs stay rejected ─────────────────────────
 
     #[test]
-    fn def_is_still_unsupported() {
-        let err = compile_source("def f():\n    x = 1\n", "t").expect_err("def rejected");
-        assert!(err.message.contains("unsupported"), "got: {}", err.message);
-    }
-
-    #[test]
     fn with_statement_is_still_unsupported() {
         let err = compile_source("with a:\n    x = 1\n", "t").expect_err("with rejected");
         assert!(err.message.contains("unsupported"), "got: {}", err.message);
@@ -879,6 +882,602 @@ mod tests {
             let m = lower(src);
             let r = semantic_ir::validate(&m);
             assert!(r.is_ok(), "module for {src:?} failed validation: {:?}", r.issues);
+        }
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    // M4: functions, calls, closures
+    // ══════════════════════════════════════════════════════════════════
+
+    // ── def → top-level Function ──────────────────────────────────────
+
+    #[test]
+    fn def_lifts_to_top_level_function_with_params() {
+        let m = lower("def add(a, b):\n    return a + b\n");
+        let f = func(&m, "add");
+        assert_eq!(f.params.iter().map(|p| p.name.as_str()).collect::<Vec<_>>(), ["a", "b"]);
+        assert!(f.captures.is_empty());
+        // Tail `return a + b` → body value is the `+` builtin call.
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "+");
+                assert!(matches!(args[0], Expr::VarRef { scope: Scope::Param, .. }));
+                assert!(matches!(args[1], Expr::VarRef { scope: Scope::Param, .. }));
+            }
+            other => panic!("expected BuiltinCall(+), got {other:?}"),
+        }
+        // A def with params declares DynamicTyping (no annotations).
+        assert!(m.manifest.contains(Feature::DynamicTyping));
+        // `main` exists alongside.
+        assert!(m.functions.iter().any(|f| f.name == "main"));
+    }
+
+    #[test]
+    fn def_no_params_no_return_yields_nil_body() {
+        // Falling off the end with no `return` ⇒ implicit `None` (NilLit).
+        let m = lower("def g():\n    x = 1\n");
+        let f = func(&m, "g");
+        assert!(f.params.is_empty());
+        assert!(matches!(f.body.value, Expr::NilLit { .. }));
+        // The single assignment is a let* statement in the body.
+        assert!(matches!(&f.body.stmts[0], Stmt::LetStarBinding { name, .. } if name == "x"));
+    }
+
+    #[test]
+    fn def_bare_return_yields_nil_body() {
+        let m = lower("def h():\n    return\n");
+        let f = func(&m, "h");
+        assert!(matches!(f.body.value, Expr::NilLit { .. }));
+    }
+
+    #[test]
+    fn def_tail_return_value_is_block_value() {
+        let m = lower("def k():\n    return 42\n");
+        let f = func(&m, "k");
+        assert!(matches!(f.body.value, Expr::IntLit { value: 42, .. }));
+    }
+
+    #[test]
+    fn def_param_resolves_as_param_scope() {
+        let m = lower("def f(x):\n    return x\n");
+        let f = func(&m, "f");
+        assert!(matches!(f.body.value, Expr::VarRef { scope: Scope::Param, .. }));
+    }
+
+    #[test]
+    fn def_statements_then_tail_return() {
+        // A body with leading statements and a tail return.
+        let m = lower("def f(n):\n    x = n + 1\n    return x\n");
+        let f = func(&m, "f");
+        assert_eq!(f.body.stmts.len(), 1);
+        assert!(matches!(&f.body.stmts[0], Stmt::LetStarBinding { name, .. } if name == "x"));
+        assert!(matches!(&f.body.value, Expr::VarRef { name, scope: Scope::Local, .. } if name == "x"));
+    }
+
+    // ── early-return rejection ────────────────────────────────────────
+
+    #[test]
+    fn early_return_is_rejected_with_position() {
+        // A `return` that is not the final statement is an early return.
+        let err = compile_source("def f(x):\n    return x\n    y = 1\n", "t")
+            .expect_err("early return rejected");
+        assert!(
+            err.message.contains("early return"),
+            "got: {}",
+            err.message
+        );
+        assert_eq!(err.line, 2, "error points at the offending return");
+    }
+
+    #[test]
+    fn return_inside_if_branch_is_early_return() {
+        // A `return` nested inside an `if` branch is never the function
+        // tail — rejected.
+        let err = compile_source(
+            "def f(x):\n    if x:\n        return 1\n    return 2\n",
+            "t",
+        )
+        .expect_err("return-in-branch rejected");
+        assert!(err.message.contains("early return"), "got: {}", err.message);
+    }
+
+    // ── calls: DirectCall / BuiltinCall / IndirectCall ────────────────
+
+    #[test]
+    fn call_known_function_is_direct_call() {
+        let m = lower("def f(a):\n    return a\n\nf(1)\n");
+        match main_value(&m) {
+            Expr::DirectCall { fn_name, args, .. } => {
+                assert_eq!(fn_name, "f");
+                assert!(matches!(args[0], Expr::IntLit { value: 1, .. }));
+            }
+            other => panic!("expected DirectCall, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn call_forward_reference_resolves_via_two_pass() {
+        // `g` is called before it is defined — the name-collection pass
+        // makes this a DirectCall.
+        let m = lower("def f():\n    return g()\n\ndef g():\n    return 1\n");
+        let f = func(&m, "f");
+        assert!(matches!(&f.body.value, Expr::DirectCall { fn_name, .. } if fn_name == "g"));
+    }
+
+    #[test]
+    fn builtin_calls_lower_to_builtin_call() {
+        for (src, name) in [
+            ("print(1)\n", "print"),
+            ("xs = 1\nlen(xs)\n", "len"),
+            ("range(5)\n", "range"),
+        ] {
+            let m = lower(src);
+            match main_value(&m) {
+                Expr::BuiltinCall { name: got, .. } => assert_eq!(got, name, "for {src:?}"),
+                other => panic!("expected BuiltinCall({name}) for {src:?}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn call_through_local_value_is_indirect_call() {
+        // `f` is a captured/local closure handle (a parameter), so calling
+        // it is an IndirectCall through the value.
+        let m = lower("def apply(fn, x):\n    return fn(x)\n");
+        let f = func(&m, "apply");
+        match &f.body.value {
+            Expr::IndirectCall { target, args, .. } => {
+                assert!(matches!(&**target, Expr::VarRef { name, scope: Scope::Param, .. } if name == "fn"));
+                assert_eq!(args.len(), 1);
+            }
+            other => panic!("expected IndirectCall, got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::Closures));
+    }
+
+    // ── lambda + capture ──────────────────────────────────────────────
+
+    #[test]
+    fn lambda_lowers_to_make_closure_and_synthesised_function() {
+        let m = lower("f = lambda a: a + 1\n");
+        // A synthesised `__lambda_0` function exists.
+        let lam = func(&m, "__lambda_0");
+        assert_eq!(lam.params.iter().map(|p| p.name.as_str()).collect::<Vec<_>>(), ["a"]);
+        assert!(lam.captures.is_empty());
+        // The binding's value is a MakeClosure referencing it.
+        match &main_stmts(&m)[0] {
+            Stmt::LetStarBinding { value: Expr::MakeClosure { fn_name, captures, .. }, .. } => {
+                assert_eq!(fn_name, "__lambda_0");
+                assert!(captures.is_empty());
+            }
+            other => panic!("expected LetStarBinding(MakeClosure), got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::Closures));
+    }
+
+    #[test]
+    fn lambda_captures_enclosing_local() {
+        // `n` is a top-level local; the lambda body reads it → it is
+        // captured (Scope::Capture inside the synthesised function).
+        let m = lower("n = 10\nf = lambda x: x + n\n");
+        let lam = func(&m, "__lambda_0");
+        assert_eq!(lam.captures.iter().map(|c| c.name.as_str()).collect::<Vec<_>>(), ["n"]);
+        // Inside the body, `n` resolves as a capture, `x` as a param.
+        match &lam.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "+");
+                assert!(matches!(&args[0], Expr::VarRef { name, scope: Scope::Param, .. } if name == "x"));
+                assert!(matches!(&args[1], Expr::VarRef { name, scope: Scope::Capture, .. } if name == "n"));
+            }
+            other => panic!("expected BuiltinCall(+), got {other:?}"),
+        }
+        // The MakeClosure threads `n`'s enclosing value.
+        match &main_stmts(&m)[1] {
+            Stmt::LetStarBinding { value: Expr::MakeClosure { captures, .. }, .. } => {
+                assert_eq!(captures.len(), 1);
+                assert_eq!(captures[0].name, "n");
+                assert!(matches!(&captures[0].value, Expr::VarRef { name, scope: Scope::Local, .. } if name == "n"));
+            }
+            other => panic!("expected MakeClosure capturing n, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn lambda_does_not_capture_globals_or_functions() {
+        // A reference to a top-level function name inside a lambda is NOT
+        // a capture — it is reachable directly.
+        let m = lower("def g(y):\n    return y\n\nf = lambda x: g(x)\n");
+        let lam = func(&m, "__lambda_0");
+        assert!(lam.captures.is_empty(), "g should not be captured");
+        assert!(matches!(&lam.body.value, Expr::DirectCall { fn_name, .. } if fn_name == "g"));
+    }
+
+    // ── nested def + capture ──────────────────────────────────────────
+
+    #[test]
+    fn nested_def_captures_enclosing_param_and_returns_closure() {
+        // The canonical closure-adder: outer(n) returns inner, which
+        // captures n.
+        let m = lower(
+            "def outer(n):\n    def inner(x):\n        return x + n\n    return inner\n",
+        );
+        // `inner` is lifted to a top-level function capturing `n`.
+        let inner = func(&m, "inner");
+        assert_eq!(inner.captures.iter().map(|c| c.name.as_str()).collect::<Vec<_>>(), ["n"]);
+        match &inner.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "+");
+                assert!(matches!(&args[0], Expr::VarRef { scope: Scope::Param, .. }));
+                assert!(matches!(&args[1], Expr::VarRef { name, scope: Scope::Capture, .. } if name == "n"));
+            }
+            other => panic!("expected BuiltinCall(+), got {other:?}"),
+        }
+        // `outer`'s tail `return inner` is a MakeClosure threading `n`.
+        let outer = func(&m, "outer");
+        match &outer.body.value {
+            Expr::MakeClosure { fn_name, captures, .. } => {
+                assert_eq!(fn_name, "inner");
+                assert_eq!(captures.len(), 1);
+                assert_eq!(captures[0].name, "n");
+                assert!(matches!(&captures[0].value, Expr::VarRef { name, scope: Scope::Param, .. } if name == "n"));
+            }
+            other => panic!("expected MakeClosure(inner), got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::Closures));
+    }
+
+    // ── mutual recursion ──────────────────────────────────────────────
+
+    #[test]
+    fn mutual_recursion_sets_feature() {
+        let m = lower(
+            "def is_even(n):\n    return is_odd(n)\n\ndef is_odd(n):\n    return is_even(n)\n",
+        );
+        assert!(
+            m.manifest.contains(Feature::MutualRecursion),
+            "two functions calling each other ⇒ MutualRecursion"
+        );
+    }
+
+    #[test]
+    fn self_recursion_is_not_mutual_recursion() {
+        let m = lower("def fact(n):\n    return fact(n)\n");
+        assert!(
+            !m.manifest.contains(Feature::MutualRecursion),
+            "self-recursion alone is not mutual recursion"
+        );
+    }
+
+    // ── pre-lowering CST walks are depth-bounded (no native overflow) ──
+    //
+    // M4 added three CST walks that run *before* the depth-guarded
+    // lowering: pass-1 def-name collection (`collect_function_names`), the
+    // free-variable scan (`collect_free_names`), and the bound-name scan
+    // (`walk_for_targets`).  Each is now depth-bounded (block depth →
+    // MAX_BLOCK_DEPTH, expression depth → MAX_EXPR_DEPTH) so a
+    // pathologically deep input via the public `compile` yields a clean
+    // positioned `PythonLowerError` ("too deep") instead of overflowing
+    // the native (uncatchable) stack.
+    //
+    // The test runs on an enlarged stack so the *parser's* own
+    // (unguarded) recursive descent survives long enough for the lowerer
+    // to be reached — the guard under test is the lowerer's, not the
+    // parser's.  Depth 400 comfortably exceeds the 256-level caps while
+    // keeping construction / drop bounded.
+
+    /// Run `f` on a 64 MiB stack so the parser survives deep input and the
+    /// *lowering* depth guards are the ones exercised.
+    fn on_big_stack<F: FnOnce() + Send + 'static>(f: F) {
+        std::thread::Builder::new()
+            .stack_size(64 * 1024 * 1024)
+            .spawn(f)
+            .expect("spawn worker thread")
+            .join()
+            .expect("worker thread did not overflow / panic");
+    }
+
+    #[test]
+    fn deep_def_tower_errors_cleanly_not_overflow() {
+        // A tower of nested `def`s drives `collect_function_names`
+        // (pass 1) past MAX_BLOCK_DEPTH.
+        on_big_stack(|| {
+            let depth = 400usize;
+            let mut src = String::new();
+            for i in 0..depth {
+                let pad = "    ".repeat(i);
+                src.push_str(&format!("{pad}def f{i}():\n"));
+            }
+            let pad = "    ".repeat(depth);
+            src.push_str(&format!("{pad}return 1\n"));
+
+            let err = compile_source(&src, "t")
+                .expect_err("deep def tower must be rejected, not crash");
+            assert!(
+                err.message.contains("too deep"),
+                "expected a positioned 'too deep' error, got: {}",
+                err.message
+            );
+        });
+    }
+
+    #[test]
+    fn deep_expression_in_def_body_errors_cleanly_not_overflow() {
+        // A long unary-minus chain inside a function body drives the
+        // free-variable / bound-name scans (and the lowerer) past
+        // MAX_EXPR_DEPTH.
+        on_big_stack(|| {
+            let body = format!("{}x", "-".repeat(400));
+            let src = format!("x = 1\ndef g():\n    return {body}\n");
+            let err = compile_source(&src, "t")
+                .expect_err("deep expression must be rejected, not crash");
+            assert!(
+                err.message.contains("too deep"),
+                "expected a positioned 'too deep' error, got: {}",
+                err.message
+            );
+        });
+    }
+
+    // ── deferred constructs stay rejected ─────────────────────────────
+
+    #[test]
+    fn default_parameter_is_rejected() {
+        let err = compile_source("def f(a=1):\n    return a\n", "t")
+            .expect_err("default param rejected");
+        assert!(err.message.contains("default"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn list_literal_is_still_unsupported() {
+        let err = compile_source("xs = [1, 2, 3]\n", "t").expect_err("list rejected");
+        assert!(err.message.contains("unsupported"), "got: {}", err.message);
+    }
+
+    // ── validator round-trip over M4 programs ─────────────────────────
+
+    #[test]
+    fn m4_modules_pass_the_validator() {
+        for src in [
+            "def f():\n    return 1\n",
+            "def f(a, b):\n    return a + b\n",
+            "def g():\n    x = 1\n",
+            "def h():\n    return\n",
+            "def f(a):\n    return a\n\nf(1)\n",
+            "def f():\n    return g()\n\ndef g():\n    return 1\n",
+            "print(1)\n",
+            "f = lambda a: a + 1\n",
+            "n = 10\nf = lambda x: x + n\n",
+            "def apply(fn, x):\n    return fn(x)\n",
+            "def outer(n):\n    def inner(x):\n        return x + n\n    return inner\n",
+            "def is_even(n):\n    return is_odd(n)\n\ndef is_odd(n):\n    return is_even(n)\n",
+            // factorial (recursion + if/else tail)
+            "def fact(n):\n    if n < 2:\n        return 1\n    else:\n        return n * fact(n - 1)\n",
+            // fibonacci (while loop + mutation, tail return)
+            "def fib(n):\n    a = 0\n    b = 1\n    i = 0\n    while i < n:\n        t = a + b\n        a = b\n        b = t\n        i = i + 1\n    return a\n",
+        ] {
+            let m = lower(src);
+            let r = semantic_ir::validate(&m);
+            assert!(r.is_ok(), "module for {src:?} failed validation: {:?}", r.issues);
+        }
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    // M4: end-to-end — Python → SIR → Python → execute
+    // ══════════════════════════════════════════════════════════════════
+    //
+    // These tests close the loop: lower a golden Python program to SIR,
+    // emit *fresh* Python via the `semantic-ir-to-python` backend, run it
+    // with the system `python`, and assert on stdout.  They are gated on
+    // `python` being available so CI hosts without an interpreter still
+    // pass (the lowering + validate assertions above already cover
+    // correctness structurally; this is the behavioural confirmation).
+
+    /// Locate a working **Python 3** interpreter on `PATH`, or `None` if
+    /// none is available.
+    ///
+    /// CI hosts differ: on macOS runners `python` is often absent or is
+    /// python2 (the emitted code is Python 3), while Linux/Windows vary
+    /// between `python3` and `python`.  So we don't just check that an exe
+    /// launches — we run `<exe> --version` and require it to report
+    /// "Python 3.x".  `--version` writes to stdout on 3.4+ but historically
+    /// to stderr, so we check both streams.  Mirrors how the other
+    /// integration tests gate on a tool being present (rustc / go / node).
+    fn python3_exe() -> Option<&'static str> {
+        ["python3", "python"].into_iter().find(|cand| {
+            let Ok(out) = std::process::Command::new(cand).arg("--version").output() else {
+                return false; // exe not found / failed to launch
+            };
+            if !out.status.success() {
+                return false;
+            }
+            // Accept only an interpreter that reports a 3.x version.
+            let combined = format!(
+                "{}{}",
+                String::from_utf8_lossy(&out.stdout),
+                String::from_utf8_lossy(&out.stderr)
+            );
+            combined.trim().starts_with("Python 3")
+        })
+    }
+
+    /// Build the `PYTHONPATH` the emitted program needs to import the SIR
+    /// runtime packages.
+    ///
+    /// The `semantic-ir-to-python` backend's emitted code is **not** fully
+    /// self-contained: its runtime header does
+    /// `from coding_adventures_sir_runtime_core import …` (and, depending
+    /// on the features used, `…_pairs` / `…_oop` / `…_range` / `…_regex` /
+    /// `…_exceptions` / `…_shell`).  Those packages live in the workspace
+    /// under `code/packages/python/<pkg>/src` (a src-layout package), so
+    /// they are not importable on a CI host that has no ambient install.
+    ///
+    /// This mirrors the backend's *own* execution tests (see
+    /// `semantic-ir-to-python/src/lib.rs::run_emitted_python`), which set
+    /// `PYTHONPATH` to each runtime package's `src` dir, resolved relative
+    /// to `CARGO_MANIFEST_DIR` as `../../python/<pkg>/src`.  Our crate sits
+    /// at the same depth (`code/packages/rust/python-to-semantic-ir`), so
+    /// the same relative path resolves.  We add **all** runtime packages so
+    /// the e2e tests are robust regardless of which features a program
+    /// exercises.
+    fn runtime_pythonpath() -> std::ffi::OsString {
+        let py_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../python");
+        std::env::join_paths([
+            py_root.join("sir-runtime-core/src"),
+            py_root.join("sir-runtime-pairs/src"),
+            py_root.join("sir-runtime-oop/src"),
+            py_root.join("sir-runtime-range/src"),
+            py_root.join("sir-runtime-regex/src"),
+            py_root.join("sir-runtime-exceptions/src"),
+            py_root.join("sir-runtime-shell/src"),
+        ])
+        .expect("join PYTHONPATH")
+    }
+
+    /// Lower `src` → SIR → Python, execute it, and return trimmed stdout.
+    /// Returns `None` when no working Python 3 interpreter is available —
+    /// the test then **skips** (it does not fail), so CI hosts lacking a
+    /// Python 3 still pass.  The lowering + `validate` assertions above
+    /// already cover correctness structurally; this is the behavioural
+    /// confirmation, which a real codegen bug (wrong output) still fails.
+    fn run_roundtrip(src: &str) -> Option<String> {
+        let Some(py) = python3_exe() else {
+            eprintln!(
+                "skipping end-to-end execution: no working Python 3 interpreter on PATH"
+            );
+            return None;
+        };
+        let module = compile_source(src, "golden").expect("lowering succeeded");
+        // The lowered module must validate before we trust the emit.
+        let v = semantic_ir::validate(&module);
+        assert!(v.is_ok(), "golden module failed validation: {:?}", v.issues);
+
+        let artifact =
+            semantic_ir_to_python::compile(&module).expect("emit python from SIR");
+
+        // The emitted code imports the SIR runtime packages — make them
+        // importable via PYTHONPATH (the runner has no ambient install).
+        // Spawning the interpreter could still fail for an *environment*
+        // reason (the exe vanished after the probe, a sandbox blocks
+        // exec, …) — that is not a codegen bug, so skip rather than fail.
+        let out = match std::process::Command::new(py)
+            .arg("-c")
+            .arg(&artifact.source)
+            .env("PYTHONPATH", runtime_pythonpath())
+            .output()
+        {
+            Ok(out) => out,
+            Err(e) => {
+                eprintln!("skipping end-to-end execution: could not launch `{py}`: {e}");
+                return None;
+            }
+        };
+        // A non-zero exit from a *verified* Python 3 means the emitted
+        // program itself failed — a real codegen bug — so this stays a
+        // hard failure.
+        assert!(
+            out.status.success(),
+            "python execution failed:\nstderr:\n{}\n--- emitted ---\n{}",
+            String::from_utf8_lossy(&out.stderr),
+            artifact.source
+        );
+        Some(String::from_utf8_lossy(&out.stdout).trim().to_string())
+    }
+
+    #[test]
+    fn e2e_factorial() {
+        // Recursion + tail-position if/else (returns in both branches).
+        let src = "\
+def fact(n):
+    if n < 2:
+        return 1
+    else:
+        return n * fact(n - 1)
+
+print(fact(5))
+";
+        if let Some(out) = run_roundtrip(src) {
+            assert_eq!(out, "120", "factorial(5) should print 120");
+        }
+    }
+
+    #[test]
+    fn e2e_fibonacci() {
+        // While loop + mutation + tail return.
+        let src = "\
+def fib(n):
+    a = 0
+    b = 1
+    i = 0
+    while i < n:
+        t = a + b
+        a = b
+        b = t
+        i = i + 1
+    return a
+
+print(fib(10))
+";
+        if let Some(out) = run_roundtrip(src) {
+            assert_eq!(out, "55", "fib(10) should print 55");
+        }
+    }
+
+    #[test]
+    fn e2e_closure_adder() {
+        // A closure that captures its enclosing parameter `n`.
+        let src = "\
+def adder(n):
+    def add(x):
+        return x + n
+    return add
+
+a = adder(10)
+print(a(5))
+";
+        if let Some(out) = run_roundtrip(src) {
+            assert_eq!(out, "15", "adder(10)(5) should print 15");
+        }
+    }
+
+    #[test]
+    fn e2e_lambda_closure() {
+        // A lambda capturing an enclosing local, invoked indirectly.
+        let src = "\
+n = 100
+f = lambda x: x + n
+print(f(23))
+";
+        if let Some(out) = run_roundtrip(src) {
+            assert_eq!(out, "123", "lambda capturing n should print 123");
+        }
+    }
+
+    #[test]
+    fn e2e_mutual_recursion() {
+        // is_even / is_odd call each other.
+        let src = "\
+def is_even(n):
+    if n == 0:
+        return True
+    else:
+        return is_odd(n - 1)
+
+def is_odd(n):
+    if n == 0:
+        return False
+    else:
+        return is_even(n - 1)
+
+print(is_even(10))
+";
+        if let Some(out) = run_roundtrip(src) {
+            // The backend renders booleans in the SIR runtime's own
+            // display form (`#t`/`#f`), not Python's `True`/`False` — the
+            // value is what matters: `is_even(10)` is true.
+            assert!(
+                out == "True" || out == "#t",
+                "is_even(10) should be truthy, got {out:?}"
+            );
         }
     }
 }

@@ -1420,7 +1420,7 @@ mod tests {
     fn emit_simple_function_flat_body() {
         let f = fun(
             "id",
-            vec![Param { name: "x".into(), sir_type: None, kind: ParamKind::Required, span: s() }],
+            vec![Param { name: "x".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() }],
             Block {
                 stmts: vec![],
                 value: Expr::VarRef { name: "x".into(), scope: Scope::Param, span: s() },
@@ -1439,7 +1439,7 @@ mod tests {
     fn emit_rest_param_is_native_spread() {
         let f = fun(
             "f",
-            vec![Param { name: "rest".into(), sir_type: None, kind: ParamKind::Rest, span: s() }],
+            vec![Param { name: "rest".into(), sir_type: None, kind: ParamKind::Rest, default: None, span: s() }],
             Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
         );
         let mut out = String::new();

@@ -25,7 +25,7 @@ boolean literal:
 So the folded `expected.stdout` is:
 
 ```js
-var a=false;var b=true;var c=true;var d=false;var e=true;var f=Boolean(z);report(a,b,c,d,e,f);
+var a=!1;var b=!0;var c=!0;var d=!1;var e=!0;var f=Boolean(z);report(a,b,c,d,e,f);
 ```
 
 Only the **bare global identifier** folds — a member access like

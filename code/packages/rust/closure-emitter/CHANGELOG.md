@@ -2,6 +2,35 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.18.9] - 2026-06-30
+
+### Added — Closure-style boolean shorthand: `true` → `!0`, `false` → `!1`
+
+Boolean literals now minify to their negation-of-digit form, matching the
+Closure Compiler: `true` (4 chars) → `!0` (2), `false` (5) → `!1` (2).
+`!0 === true` and `!1 === false` in every context (`!` coerces to boolean and
+negates), so the rewrite is value-exact.
+
+**Precedence (soundness).** `!0` / `!1` are `UnaryExpression`s, which bind
+*looser* than member access, call, `new`, and tagged templates — so a naive
+`true.x` → `!0.x` would reparse as `!(0.x)`, a miscompile. To prevent that,
+`expr_prec` now tags `BooleanLiteral` at `PREC_UNARY` (exactly as the `void 0`
+`UndefinedLiteral` is already handled), so the existing precedence wrapper in
+`emit_expression_inner` inserts parentheses automatically where required:
+
+```
+true.toString()  →  (!0).toString()
+true()           →  (!0)()
+x = true         →  x=!0           (no parens needed)
+[true, false]    →  [!0,!1]
+a && true        →  a&&!0
+true == 1        →  !0==1          (unary binds tighter than ==)
+```
+
+Tests: `boolean_literals_minify_to_bang_zero_and_bang_one`,
+`boolean_as_member_object_is_parenthesized`, `boolean_in_binary_needs_no_parens`
+(and `unary_not_no_space` updated: `!true` → `!!0`).
+
 ## [0.18.8] - 2026-06-30
 
 ### Fixed — large integer literals saturated to `i64::MAX`/`MIN` (miscompile)

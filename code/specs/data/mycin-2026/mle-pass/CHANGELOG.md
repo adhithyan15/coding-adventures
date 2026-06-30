@@ -1,5 +1,28 @@
 # Changelog — mle-pass
 
+## [0.5.0] — 2026-06-30
+
+### Added — slice 5: two more clue→disease→{gene, inheritance} chains via cross-library id-joins
+
+- Bank grows **34 → 38**: two new diseases now chain end-to-end purely because a **finding-library
+  disease id already matches a `genetics-edges` disease id** — no edge was grounded, renamed, or
+  authored for this PR; the generator only arranges already-grounded, spider+adversarially-gated
+  facts (per the no-human-authored rule).
+  - **`cafe_au_lait_macules → neurofibromatosis_type_1 → nf1`** (gene, `mh-35`) and **→
+    `autosomal_dominant`** (inheritance, `mh-37`): hop 1 is `derm-edges.adj skin_finding_in`, joined
+    on the shared disease to `genetics-edges.adj`.
+  - **`heinz_bodies → g6pd_deficiency → g6pd`** (gene, `mh-36`) and **→ `x_linked`** (inheritance,
+    `mh-38`): hop 1 is `histo-edges.adj seen_in`. Note `heinz_bodies` also has a grounded edge to
+    `methemoglobinemia`, but only `g6pd_deficiency` has a `gene_defect`/`inheritance` edge, so the
+    conjunctive join disambiguates to a single answer — a demonstration that a multi-disease hop-1
+    finding is resolved by the second hop, not by guessing.
+- These reach **two new genes** (`nf1`, `g6pd`, added to `GENE_POOL`) and the **`x_linked`**
+  inheritance pattern (added to `INH_POOL`), and exercise **two new hop-1 libraries for the gene/
+  inheritance chains** (derm, histopathology) — widening the proof that the harness is generic over
+  the source library.
+- Eval: **38/38 correct, 0 wrong, 3 correct abstentions, multihop_coverage 1.0** — every answerable
+  item cites BOTH hops' byte-provenance, zero model calls.
+
 ## [0.4.0] — 2026-06-30
 
 ### Added — slice 4: a genuine THREE-relation chain (N-hop harness)

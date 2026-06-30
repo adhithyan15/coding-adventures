@@ -189,12 +189,14 @@ fn test_unary_not_emits_without_space() {
 }
 
 /// Upstream `assertPrintSame("true")` — boolean literal at statement
-/// position. Our emitter produces `true;` — bare boolean literal, no
-/// parens.
+/// position. Our emitter applies the Closure-style boolean shorthand,
+/// printing `true` as `!0` and `false` as `!1` (value-exact: `!0 === true`,
+/// `!1 === false`). `!0` / `!1` start with `!`, so there is no
+/// expression-statement / ASI pitfall at statement position.
 #[test]
 fn test_boolean_literal_at_statement_position() {
-    assert_emits(boolean(true), "true;");
-    assert_emits(boolean(false), "false;");
+    assert_emits(boolean(true), "!0;");
+    assert_emits(boolean(false), "!1;");
 }
 
 /// Upstream `assertPrintSame("0")`, `assertPrintSame("42")`, etc. —

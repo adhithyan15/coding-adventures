@@ -138,6 +138,25 @@ disease→organism→trait reasoning. Today only this disease bridges a finding 
 so more land for free as cross-library id-joins are grounded (§7). Run-verified: **34/34 correct**
 (31 answerable, `multihop_coverage` 1.0, the 3-hop citing 3 spans; 3 abstained), zero model calls.
 
+## 6c. Slice 5 (shipped) — two more chains from cross-library id-joins
+The bank grew **34 → 38**: two diseases now chain end-to-end *only* because a finding-library disease
+id already equals a `genetics-edges` disease id — nothing was grounded, renamed, or authored, exactly
+the "land for free" mechanism §7 anticipated.
+
+```
+cafe_au_lait_macules ──skin_finding_in──▶ neurofibromatosis_type_1 ──gene_defect──▶ nf1   (derm + genetics)
+                                              └──────────────────── inheritance ──▶ autosomal_dominant
+heinz_bodies ──seen_in──▶ g6pd_deficiency ──gene_defect──▶ g6pd                          (histo + genetics)
+                              └──────────── inheritance ──▶ x_linked
+```
+
+`heinz_bodies` also has a grounded edge to `methemoglobinemia`, but only `g6pd_deficiency` carries a
+`gene_defect`/`inheritance` edge, so the conjunctive join binds a **single** answer — the second hop
+disambiguates a multi-disease hop-1 finding, rather than the harness guessing. These add two new
+hop-1 libraries to the gene/inheritance chains (dermatology, histopathology), two genes (`nf1`,
+`g6pd`), and the `x_linked` pattern. Run-verified: **38/38 correct** (35 answerable, both hops cited,
+`multihop_coverage` 1.0; 3 abstained), zero model calls.
+
 ## 7. Next
 The **three-hop harness now exists** (slice 4); the limit is grounded id-joins, not the engine.
 More 3-hops land for free once: (a) more finding→disease edges reach micro `causes` diseases

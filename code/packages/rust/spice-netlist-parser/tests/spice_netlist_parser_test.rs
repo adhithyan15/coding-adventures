@@ -14,12 +14,13 @@ use spice_netlist_parser::{
     TfAnalysis, TranAnalysis, BERKELEY_APP_BOOTSTRAP_SCHEMA_VERSION,
     BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION, BERKELEY_APP_LAUNCH_PLAN_SCHEMA_VERSION,
     BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION, BERKELEY_APP_PACKAGE_NAME,
-    BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION, BERKELEY_APP_SHELL_EVENT_DIGEST_SCHEMA_VERSION,
-    BERKELEY_APP_SHELL_EVENT_LOG_SCHEMA_VERSION, BERKELEY_APP_SHELL_EVENT_SUMMARY_SCHEMA_VERSION,
-    BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION, BERKELEY_APP_SHELL_STATUS_SCHEMA_VERSION,
-    BERKELEY_APP_SHELL_TELEMETRY_SCHEMA_VERSION, BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM,
-    BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION, BERKELEY_SPICE_GRAMMAR_NAME,
-    BERKELEY_SPICE_GRAMMAR_VERSION,
+    BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_EVENT_DASHBOARD_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_EVENT_DIGEST_SCHEMA_VERSION, BERKELEY_APP_SHELL_EVENT_LOG_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_EVENT_SUMMARY_SCHEMA_VERSION, BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_STATUS_SCHEMA_VERSION, BERKELEY_APP_SHELL_TELEMETRY_SCHEMA_VERSION,
+    BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM, BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION,
+    BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -3138,6 +3139,70 @@ C1 out 0 1p
         shell_event_digest_payload["metricEventIds"][2],
         "shell.capabilities"
     );
+
+    let shell_event_dashboard = app
+        .run_app_shell_event_dashboard(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("shell event dashboard should execute");
+    assert_eq!(
+        shell_event_dashboard.schema_version,
+        BERKELEY_APP_SHELL_EVENT_DASHBOARD_SCHEMA_VERSION
+    );
+    assert_eq!(
+        shell_event_dashboard.package_name,
+        BERKELEY_APP_PACKAGE_NAME
+    );
+    assert!(shell_event_dashboard.ready);
+    assert_eq!(shell_event_dashboard.startup_route, "ready");
+    assert_eq!(shell_event_dashboard.severity, "ready");
+    assert_eq!(
+        shell_event_dashboard.headline_event_id.as_deref(),
+        Some("shell.status")
+    );
+    assert_eq!(
+        shell_event_dashboard.headline_message,
+        "Ready to launch waveform panel"
+    );
+    assert!(!shell_event_dashboard.attention_required);
+    assert_eq!(shell_event_dashboard.section_count, 3);
+    assert_eq!(shell_event_dashboard.sections[0].id, "status");
+    assert_eq!(shell_event_dashboard.sections[0].severity, "ready");
+    assert_eq!(
+        shell_event_dashboard.sections[0].event_ids,
+        vec!["shell.status".to_string()]
+    );
+    assert_eq!(shell_event_dashboard.sections[1].id, "attention");
+    assert_eq!(shell_event_dashboard.sections[1].event_count, 0);
+    assert_eq!(shell_event_dashboard.sections[1].severity, "ready");
+    assert_eq!(shell_event_dashboard.sections[2].id, "metrics");
+    assert_eq!(shell_event_dashboard.sections[2].event_count, 3);
+
+    let shell_event_dashboard_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_event_dashboard_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap(),
+    )
+    .expect("shell event dashboard JSON should parse");
+    assert_eq!(shell_event_dashboard_payload["schemaVersion"], 1);
+    assert_eq!(shell_event_dashboard_payload["ready"], true);
+    assert_eq!(
+        shell_event_dashboard_payload["headlineEventId"],
+        "shell.status"
+    );
+    assert_eq!(shell_event_dashboard_payload["attentionRequired"], false);
+    assert_eq!(shell_event_dashboard_payload["sectionCount"], 3);
+    assert_eq!(
+        shell_event_dashboard_payload["sections"][1]["id"],
+        "attention"
+    );
+    assert_eq!(
+        shell_event_dashboard_payload["sections"][2]["eventIds"][2],
+        "shell.capabilities"
+    );
 }
 
 #[test]
@@ -3616,6 +3681,62 @@ R1 in out
     assert_eq!(
         shell_event_digest_payload["primaryActionId"],
         "launch.diagnostics"
+    );
+
+    let shell_event_dashboard = app.app_shell_event_dashboard(BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(2),
+        active_command_id: Some("analysis.2.run".to_string()),
+    });
+    assert_eq!(
+        shell_event_dashboard.schema_version,
+        BERKELEY_APP_SHELL_EVENT_DASHBOARD_SCHEMA_VERSION
+    );
+    assert!(!shell_event_dashboard.ready);
+    assert_eq!(shell_event_dashboard.startup_route, "blocked");
+    assert_eq!(shell_event_dashboard.severity, "error");
+    assert_eq!(
+        shell_event_dashboard.headline_event_id.as_deref(),
+        Some("shell.status")
+    );
+    assert_eq!(
+        shell_event_dashboard.primary_action_id.as_deref(),
+        Some("launch.diagnostics")
+    );
+    assert!(shell_event_dashboard.attention_required);
+    assert_eq!(shell_event_dashboard.section_count, 3);
+    assert_eq!(shell_event_dashboard.sections[0].id, "status");
+    assert_eq!(shell_event_dashboard.sections[0].severity, "error");
+    assert_eq!(shell_event_dashboard.sections[1].id, "attention");
+    assert_eq!(shell_event_dashboard.sections[1].severity, "error");
+    assert_eq!(
+        shell_event_dashboard.sections[1].event_count,
+        shell_event_digest.attention_event_count
+    );
+    assert_eq!(
+        shell_event_dashboard.sections[1].event_ids,
+        shell_event_digest.attention_event_ids
+    );
+    assert_eq!(shell_event_dashboard.sections[2].id, "metrics");
+    assert_eq!(shell_event_dashboard.sections[2].event_count, 3);
+
+    let shell_event_dashboard_payload: serde_json::Value = serde_json::from_str(
+        &app.app_shell_event_dashboard_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        }),
+    )
+    .expect("blocked shell event dashboard JSON should parse");
+    assert_eq!(shell_event_dashboard_payload["ready"], false);
+    assert_eq!(shell_event_dashboard_payload["startupRoute"], "blocked");
+    assert_eq!(shell_event_dashboard_payload["severity"], "error");
+    assert_eq!(shell_event_dashboard_payload["attentionRequired"], true);
+    assert_eq!(
+        shell_event_dashboard_payload["sections"][1]["eventCount"].as_u64(),
+        Some(shell_event_digest.attention_event_count as u64)
+    );
+    assert_eq!(
+        shell_event_dashboard_payload["sections"][1]["eventIds"][0],
+        "shell.status"
     );
 }
 

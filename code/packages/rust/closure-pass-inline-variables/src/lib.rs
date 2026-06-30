@@ -1126,9 +1126,13 @@ mod tests {
 
     #[test]
     fn propagates_boolean_and_null_literals() {
+        // Booleans render via closure-emitter's Closure-style shorthand
+        // (`true` → `!0`); `null` is unchanged. The propagation itself — both
+        // the declaration and the propagated use carrying the literal — is
+        // what this test exercises.
         assert_eq!(
             propagate_source("const ON = true; const NONE = null; f(ON, NONE);"),
-            "const ON=true;const NONE=null;f(true,null);"
+            "const ON=!0;const NONE=null;f(!0,null);"
         );
     }
 

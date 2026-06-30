@@ -7,7 +7,7 @@ End-to-end oracle for string-literal substring-**predicate** folding at
 |------|------|
 | `flags.txt` | CLI args: `--compilation_level SIMPLE --js input/a.js` |
 | `input/a.js` | three calls: `"hello".startsWith("he")`, `.endsWith("xo")`, `.includes("ell")` |
-| `expected.stdout` | The folded output: `var a=true;var b=false;var c=true;report(a,b,c);` |
+| `expected.stdout` | The folded output: `var a=!0;var b=!1;var c=!0;report(a,b,c);` |
 
 The SIMPLE level runs the typed-AST optimization pipeline, whose `constant-fold`
 pass folds the single-argument `String#startsWith` / `endsWith` / `includes`

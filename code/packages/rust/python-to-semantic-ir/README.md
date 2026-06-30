@@ -52,14 +52,15 @@ pub struct PythonLowerError {
 `compile_source` parses then lowers; both parse and lower failures are
 surfaced as `PythonLowerError`.
 
-## Milestone status — M3 (control flow)
+## Milestone status — M4 (functions, calls, closures)
 
-The whole program is wrapped in a synthesised `main` function whose
+Top-level statements run inline in a synthesised `main` function whose
 block value is the program's final top-level expression (or `NilLit`
-for an empty program, or when the last statement is an assignment);
-earlier top-level statements become `ExprStmt`s (bare expressions) or
-binding / `Assign` / loop statements.  M3 adds `if` / `elif` / `else`,
-`while`, and `for` (`range` and iterables).
+for an empty program / a trailing assignment).  A `def` at any level is
+lifted to a **top-level `Function`** (the module gains a real function
+table); `lambda`s and nested `def`s are lifted to synthesised functions
+with computed captures.  M4 adds `def`, tail `return`, `lambda`,
+function calls, and closures, on top of M1–M3.
 
 ### Literals (M1, still supported)
 
@@ -147,6 +148,49 @@ lowering and validation agree.  Nested control flow is bounded by
 `MAX_BLOCK_DEPTH` (companion to `MAX_EXPR_DEPTH`), turning pathological
 nesting into a clean error rather than a native stack overflow.
 
+### Functions, calls & closures (M4)
+
+| Python source                          | SIR lowering                                          | Feature declared       |
+|----------------------------------------|-------------------------------------------------------|------------------------|
+| `def f(a, b): …`                       | top-level `Function { name f, params [a, b], body }`  | `DynamicTyping`†       |
+| `return expr` (tail)                   | function body `value = expr`                          | —                      |
+| `return` / no return (tail)            | function body `value = NilLit` (implicit `None`)      | —                      |
+| `return expr` (non-tail / early)       | **error** — "early return not supported in v0"        | —                      |
+| `lambda a: expr`                       | `MakeClosure { fn_name __lambda_N, captures }`        | `Closures`             |
+| nested `def` (returned / referenced)   | lifted `Function` + `MakeClosure` with captures       | `Closures`             |
+| `f(args)` — `f` a known function       | `DirectCall { fn_name f, args }`                      | —                      |
+| `f(args)` — `f` a closure value        | `IndirectCall { target VarRef, args }`                | `Closures`             |
+| `print(x)`, `len(x)`, `range(n)`       | `BuiltinCall("print" / "len" / "range", …)`           | —                      |
+| `is_even`/`is_odd` cross-calling       | (call-graph cycle of length ≥ 2)                      | `MutualRecursion`      |
+
+† a `def`/`lambda` with parameters declares `DynamicTyping` (the subset
+has no parameter annotations).
+
+**Two-pass design.**  A first pass collects **every** function name
+(top-level and nested) into a flat table, so a call to a function defined
+*later* in the file — and **mutual recursion** — resolve to `DirectCall`.
+The second pass lowers each body.
+
+**`return` is tail-only.**  A SIR function body is a `Block` whose `value`
+IS the return value, so a tail `return expr` sets that value (and a bare
+tail `return` / falling off the end yields `NilLit`).  A tail `if` whose
+branches each `return` (`if c: return a else: return b`) lowers with each
+branch in function-tail position, becoming an `Expr::If`.  A **non-tail**
+`return` (followed by more statements, or nested in a loop / non-tail
+branch) is rejected with a positioned error — the IR has no `Return`
+node, so early returns are deferred.
+
+**Closures & capture.**  A `lambda` / nested `def` is lifted to a fresh
+top-level function; its **free variables** (names the body reads that are
+not its own params / locals and that resolve to an *enclosing* local /
+param / capture) become `Capture`s, threaded through `MakeClosure` as
+`CaptureValue`s and resolved inside the body as `Scope::Capture`.  Names
+that resolve to a global / top-level function / builtin need **no**
+capture.  A bare reference to a function name yields a `MakeClosure`
+(re-threading its captures), so closures can be returned or passed.
+Capture order is deterministic (alphabetical).  Closure bodies reuse the
+`MAX_BLOCK_DEPTH` / `MAX_EXPR_DEPTH` guards, so recursion stays bounded.
+
 The manifest declares **exactly** the features observed.  Module
 metadata records `source_language = "python"` and
 `sir_version = semantic_ir::CURRENT_SIR_VERSION`.  Every lowered module
@@ -154,14 +198,11 @@ passes `semantic_ir::validate`.
 
 ### Deferred (later milestones)
 
-Everything past M3 returns a clear `PythonLowerError`
-(`"unsupported: <rule> (deferred …)"`) so later milestones slot in
-where the error is raised today:
+Everything past M4 returns a clear positioned `PythonLowerError`:
 
-- functions (`def`), lambdas, calls (`f(...)`, `print` / `len`
-  builtins; `range` is recognised only in `for` headers, not as a
-  general call yet) — M4
 - sequences, maps, indexing, comprehensions — M5
+- default / keyword arguments, `*args` / `**kwargs`, multi-level capture
+  chaining (capturing a variable two scopes up)
 - tuple / multi-target `for` (`for k, v in …`), multi-target / chained
   assignment, attribute / subscript targets, bitwise operators, the
   power operator (`**`)
@@ -175,17 +216,31 @@ where the error is raised today:
 cargo test -p python-to-semantic-ir
 ```
 
-The suite (57 tests) covers: one positive test per literal kind; the
-M2 operators (each arithmetic, comparison, unary, and logical form),
-left-associativity and precedence; variable resolution,
-let-then-reference, and let-vs-reassign first-occurrence; the
-short-circuit-node shape; the M3 control flow — `if` / `elif` / `else`
-nesting (incl. no-else and elif-without-else nil branches, trailing vs
-statement-position `if`), `while` (with body re-assignment), `for`-range
-at all three arities plus variable bounds and the zero-/four-arg arity
-errors, `for`-each, loop-variable and branch-local scope non-leakage,
-and nested control flow; top-level structure (empty program, `ExprStmt`
-+ value split, metadata, minimal manifest); a `validate` round-trip
-across every literal, M2, and M3 construct; and error paths (unresolved
-name, self-reference, `global`, `def` / `with` deferral, parse error,
-error position).  This exercises ≥ 90% of the M3 surface.
+The suite (82 tests) covers M1–M3 (literals; operators with
+left-associativity / precedence; variable resolution and first-occurrence
+assignment; short-circuit nodes; `if` / `elif` / `else`, `while`,
+`for`-range / `for`-each with block scoping) plus the M4 surface:
+
+- **functions** — `def` lifting with params (`Scope::Param`), tail-return
+  vs no-return→`NilLit`, body statements + tail return;
+- **early-return rejection** — a `return` followed by more statements, or
+  nested in an `if` branch, errors with a position;
+- **calls** — `DirectCall` (incl. forward references resolved by the
+  first pass), `BuiltinCall` (`print` / `len` / `range`), and
+  `IndirectCall` through a closure value;
+- **closures** — `lambda` → `MakeClosure` + synthesised function; capture
+  of an enclosing local; non-capture of globals / functions; nested-`def`
+  capture of an enclosing param with a returned closure;
+- **mutual recursion** detected (and self-recursion correctly *not*
+  flagged);
+- a `validate` round-trip across the M4 programs, and
+- **executed end-to-end** round-trips — factorial, fibonacci, a closure
+  adder, a capturing lambda, and mutual recursion are lowered to SIR,
+  re-emitted to Python via `semantic-ir-to-python`, and run with the
+  system `python` (gated on availability), asserting on stdout.
+
+```sh
+cargo test -p python-to-semantic-ir
+```
+
+This exercises ≥ 90% of the M4 surface.

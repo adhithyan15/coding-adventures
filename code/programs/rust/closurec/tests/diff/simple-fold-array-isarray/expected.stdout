@@ -1,1 +1,1 @@
-var a=true;var b=false;var c=false;var d=false;var e=false;var f=Array.isArray([1,2]);report(a,b,c,d,e,f);
+var a=!0;var b=!1;var c=!1;var d=!1;var e=!1;var f=Array.isArray([1,2]);report(a,b,c,d,e,f);

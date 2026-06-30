@@ -8,6 +8,7 @@ const TREE_CONSTRUCTION_SMOKE: &str = include_str!("fixtures/html5lib-tree-const
 const WHATWG_TABLE_AUDIT: &str = include_str!("fixtures/whatwg-table-audit.json");
 const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
     ("tests26-dat-1251", "cell-boundary"),
+    ("tricky01-dat-7", "row-group-boundary"),
     ("tricky01-dat-8", "cell-boundary"),
 ];
 

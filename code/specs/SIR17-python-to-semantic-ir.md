@@ -8,6 +8,10 @@ existing [`python-parser`](../packages/rust/python-parser/) crate and
 produces a `semantic_ir::Module`.  Implemented as the Rust crate
 `python-to-semantic-ir`.
 
+Milestones implemented: **M1** (literals), **M2** (variables /
+assignment / operators), **M3** (control flow), **M4** (functions,
+calls, closures).  Collections / maps (M5) remain deferred.
+
 ## Pipeline
 
 ```text
@@ -90,11 +94,24 @@ versions of this frontend may accept a version parameter.
 `for x in range(...)` rows above are realised in M3 by recognising a
 literal `range(...)` call *structurally inside the `for` header* and
 lowering it directly to `ForRange` (with arity 1/2/3 mapped to
-`start`/`stop`/`step`, and a `range` call of wrong arity rejected).
-`range` is **not** yet a general expression-position builtin — a bare
-`range(n)` outside a `for` header (the `BuiltinCall("range", …)` row)
-arrives with general call support in M4.  A non-`range` iterable lowers
-to `ForEach`.
+`start`/`stop`/`step`, and a `range` call of wrong arity rejected).  A
+non-`range` iterable lowers to `ForEach`.
+
+**Implementation note (M4 — functions, calls, closures):** the
+`def` / `lambda` / `return` / call / builtin rows above are realised in
+M4.  As of M4, `range` (alongside `print` / `len`) **is** a general
+expression-position `BuiltinCall` — a bare `range(n)` outside a `for`
+header now lowers, in addition to the M3 `for`-header form.  `def`
+lowering is **two-pass** (collect all function names first, then lower
+bodies) so forward references and mutual recursion resolve to
+`DirectCall`.  Nested `def`s and `lambda`s are lifted to top-level
+synthesised functions with computed captures; the `Function { name: f,
+params, body }` row for `def` carries `captures: []` for a top-level
+`def` and a non-empty capture list for a lifted nested `def`/`lambda`.
+A bare reference to a function name yields a `MakeClosure` (re-threading
+the function's captures from the currently visible enclosing values).
+`MutualRecursion` is declared when two top-level functions transitively
+call each other (a self-recursive 1-cycle does not count).
 
 ## Return statement
 
@@ -164,18 +181,12 @@ variables not in scope at the call site become `Capture`s.
 ## Top-level
 
 Top-level Python is a sequence of statements at module scope.  The
-frontend synthesises:
-
-- A `_init` function for top-level value assignments (`x = 1`,
-  `def f(): ...` — function defs at module scope also become entries
-  here).
-- A `main` function for the synthetic entry point.  In v0, Python
-  doesn't have a `main()` convention, so the SIR's `main` is just
-  "run all top-level expressions sequentially after `_init`".
-
-Actually for cleanliness, we use a different approach: all top-level
-statements run inline as part of `main`.  This matches Python's
-actual execution model.
+frontend runs **all top-level statements inline as part of `main`**
+(matching Python's actual execution model — there is no separate
+`_init` function and no `globals` table in v0; a top-level `x = 1`
+becomes a `LetStarBinding` local of `main`).  A module-level `def`
+becomes a top-level `Function` entry (lifted out of `main`'s body);
+`main` holds the remaining top-level statements.
 
 ```text
 SIR Module {
