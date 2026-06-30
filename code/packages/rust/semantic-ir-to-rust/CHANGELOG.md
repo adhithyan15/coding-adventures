@@ -1,5 +1,64 @@
 # Changelog
 
+## 0.3.0 — SIR16 MutableBindings + Loops
+
+The next two SIR-v1 (SIR16) features land in the Rust backend, matching
+the TypeScript backend's existing support.  Until now `MutableBindings`
+and `Loops` were undeclared and their IR nodes hit the `panic!` reject
+group; this PR replaces those arms with real emission.
+
+### Added
+
+- `Feature::MutableBindings` and `Feature::Loops` in the accepted-feature
+  set (`lib.rs`).
+- **MutableBindings**: a per-function pre-pass (`collect_assigned_locals`)
+  finds every name that is later the target of a `Stmt::Assign`.  A
+  `LetBinding` for such a name is emitted as `let mut` (immutable bindings
+  stay plain `let`), and `Stmt::Assign` then emits a bare
+  `<name> = <value>;` for Local/Param/Capture scopes.  A `Global`-scoped
+  assign writes through the runtime store
+  (`__sir::global_set(&__sir::intern("name"), value)`).  Mirrors the
+  TypeScript backend's `const`/`let` mutable-name tracking.
+- **Loops** — all three loop statements emit real Rust:
+  - `While { cond, body }` → `while __sir::truthy(&(<cond>)) { <body> }`,
+    routing the test through SIR truthiness (only `false`/`nil` are
+    falsy), never Rust's native `bool`.
+  - `ForRange { var, start, stop, step, body }` → a numeric loop that
+    caches `stop`/`step` into block-scoped `i64` temporaries (evaluated
+    once, like Python's `range`), with a direction-aware condition so a
+    negative `step` counts down.  The loop variable is rebound each
+    iteration as a fresh `__sir::Value::Int`.  Fresh per-loop temp ids
+    keep nested loops collision-free; the counter resets per module for
+    deterministic output.
+  - `ForEach { var, iter, body }` → `for <var> in __sir::seq_iter(&(<iter>))`.
+    This backend has no dedicated `Seq` value yet (Sequences land in a
+    later PR), so a "sequence" is the existing cons-list (`Pair`-chain
+    terminated by `Nil`); `seq_iter` flattens it into a `Vec<Value>`.
+    No `Feature::Sequences` runtime is required — the validator observes
+    only `Feature::Loops` for `ForEach`, so accepting `Loops` covers all
+    three loop forms with **no reachable `panic!`**.
+- Runtime helpers `as_int` (public face of `as_i64`, for the `ForRange`
+  bound temporaries) and `seq_iter` (cons-list → `Vec<Value>` for
+  `ForEach`).
+
+### Tests
+
+- `tests/compile_and_run_loops.rs`: an end-to-end proof that emits a
+  module using a `while` loop, two `for-range` accumulators, and mutable
+  reassignment, compiles it with `rustc`, runs the binary, and asserts
+  its stdout (`sum 0..5 = 10`, countdown ends at `0`, product `= 6`).
+- Unit tests for each new emit arm: bare/global assign, `let mut`
+  selection, while/truthy, for-range bound caching + int var binding +
+  direction-aware condition + nested fresh ids, and for-each via
+  `seq_iter`.
+
+### Notes
+
+- The remaining two SIR16 features (Sequences, Maps) are still
+  undeclared; their `SeqSet`/`MapSet` and Seq/Map expression emit arms
+  keep the `panic!` (unreachable via the capability check) until a later
+  PR extends them.
+
 ## 0.2.0 — SIR16 Floats + ShortCircuit
 
 The first two SIR-v1 (SIR16) features land in the Rust backend.  Until
