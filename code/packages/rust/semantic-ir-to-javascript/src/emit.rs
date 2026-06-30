@@ -169,6 +169,20 @@ fn emit_function(out: &mut String, f: &Function) {
             // yet, so in practice only `Required` is reached here.
             ParamKind::Required | ParamKind::KwRest => {
                 out.push_str(&sanitize_ident(&p.name));
+                // P2d: a defaulted param (`Param { default: Some(e) }`)
+                // becomes a native JS default parameter `name = <e>`.
+                //
+                // JavaScript's default-parameter semantics are *exactly*
+                // SIR's: the default expression is evaluated **at call
+                // time**, only when the argument is omitted, in **param
+                // scope** — so a later param's default may reference an
+                // earlier param by its bare name (valid JS, since earlier
+                // params are already in scope left-to-right).  No runtime
+                // helper is needed; the strategy is a direct native inline.
+                if let Some(default) = &p.default {
+                    out.push_str(" = ");
+                    emit_expr(out, default, 2);
+                }
             }
         }
     }
@@ -384,6 +398,12 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             out.push_str("))");
         }
         Expr::Block(b) => emit_block_as_expr(out, b, indent),
+        // A statically-known call.  P2d: the validator allows a caller to
+        // omit trailing defaulted args (arity ≥ `required_param_count`), so
+        // we emit ONLY the args that are present and do NOT pad — native JS
+        // default parameters (emitted on the callee in `emit_function`)
+        // fill the omitted trailing params at call time.  IndirectCall and
+        // closure defaults are unchanged / deferred.
         Expr::DirectCall { fn_name, args, .. } => {
             let _ = write!(out, "{}(", sanitize_ident(fn_name));
             emit_args(out, args, indent);
@@ -1445,6 +1465,54 @@ mod tests {
         let mut out = String::new();
         emit_function(&mut out, &f);
         assert!(out.contains("function f(...rest) {"), "got {out}");
+    }
+
+    #[test]
+    fn emit_defaulted_param_is_native_js_default() {
+        // P2d: `f(a, b = a + 1)` emits `function f(a, b = (a + 1)) {`.
+        // The default is a native JS default param referencing the earlier
+        // param `a` by name (legal — earlier params are in scope).
+        let default = bc(
+            "+",
+            vec![
+                Expr::VarRef { name: "a".into(), scope: Scope::Param, span: s() },
+                int(1),
+            ],
+        );
+        let f = fun(
+            "f",
+            vec![
+                Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+                Param {
+                    name: "b".into(),
+                    sir_type: None,
+                    kind: ParamKind::Required,
+                    default: Some(Box::new(default)),
+                    span: s(),
+                },
+            ],
+            Block {
+                stmts: vec![],
+                value: Expr::VarRef { name: "b".into(), scope: Scope::Param, span: s() },
+                span: s(),
+            },
+        );
+        let mut out = String::new();
+        emit_function(&mut out, &f);
+        assert!(out.contains("function f(a, b = (a + 1)) {"), "got {out}");
+    }
+
+    #[test]
+    fn emit_direct_call_omitting_defaulted_arg_does_not_pad() {
+        // P2d: a DirectCall that supplies fewer args than params emits ONLY
+        // the present args — native JS defaults fill the rest, no padding.
+        let dc = Expr::DirectCall {
+            fn_name: "f".into(),
+            args: vec![int(5)],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        assert_eq!(emit_e(&dc), "f(5)");
     }
 
     #[test]
