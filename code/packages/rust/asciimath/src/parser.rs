@@ -434,6 +434,33 @@ fn rel_of(kind: &TokenKind) -> Option<RelOp> {
     })
 }
 
+/// Does `word` name a multi-letter keyword the parser treats specially — a named function
+/// (`sin`), big operator (`sum`), accent (`hat`), constant/symbol (`pi`), one of the structural
+/// words `sqrt`/`root`/`overset`/`stackrel`/`underset`, or a multiplicative operator word
+/// (`xx`/`cdot`/`div`)?
+///
+/// This is the **single source of truth** for "is this a keyword", reused by the tokenizer's
+/// longest-match scan ([`crate::token`]) so a glued run like `sinx` splits as `sin`·`x` and
+/// `pir` as `pi`·`r` (AsciiMath's greedy rule), instead of the letter product `s·i·n·x`. It
+/// delegates to the very same lookup tables the parser dispatches on, so the two can never
+/// drift apart — adding a function/symbol here is automatic.
+///
+/// The operator words `xx`/`cdot`/`div` MUST be listed: the scan takes the longest keyword at
+/// the *start* of a run, so without `cdot` here the word `cdot` would find no keyword prefix,
+/// peel its leading `c`, and then mis-split the trailing `dot` as the accent — `cdot` ⇒
+/// `c·hat-less dot`. Listing them makes the scan take `cdot`/`xx`/`div` whole (the parser then
+/// reads them as the operator they are). The bare `text` word is intentionally *absent*: the
+/// `text(…)` form is a tokenizer concern, and a lone `text` contains no keyword segment, so it
+/// already stays one identifier. Single letters are never keywords, so the tokenizer only ever
+/// calls this with length ≥ 2.
+pub(crate) fn is_keyword(word: &str) -> bool {
+    func_of(word).is_some()
+        || bigop_of(word).is_some()
+        || accent_of(word).is_some()
+        || constant_of(word).is_some()
+        || matches!(word, "sqrt" | "root" | "overset" | "stackrel" | "underset" | "xx" | "cdot" | "div")
+}
+
 /// Map an identifier to a big operator, or `None`. `int`=∫, `oint`=∮, `prod`=∏, `coprod`=∐.
 /// Map an AsciiMath accent keyword to its canonical neutral accent name (the `accent` field of
 /// [`MathExpr::Accent`]), or `None` if `word` is not an accent. AsciiMath spells accents as

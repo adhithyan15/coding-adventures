@@ -761,9 +761,13 @@ fn read_component_source(pkg: &str, comp: &str, path: &Path) -> Result<String, L
 }
 
 fn build_binding_map(call_props: &[LayoutProp]) -> HashMap<String, LayoutPropValue> {
-    let mut bindings = HashMap::with_capacity(call_props.len());
+    let mut bindings = HashMap::with_capacity(call_props.len() * 2);
     for prop in call_props {
         bindings.insert(prop.name.clone(), prop.value.clone());
+        let camel = to_camel_case_first_lower(&prop.name);
+        if camel != prop.name {
+            bindings.insert(camel, prop.value.clone());
+        }
     }
     bindings
 }
@@ -781,12 +785,138 @@ fn rewrite_bindings(node: &mut LayoutNode, bindings: &HashMap<String, LayoutProp
                     prop.value = value.clone();
                 }
             }
+            LayoutPropValue::Expr(text) => {
+                let rewritten = rewrite_expression_bindings(text, bindings);
+                if rewritten != *text {
+                    prop.value = LayoutPropValue::Expr(rewritten);
+                }
+            }
             _ => {}
         }
     }
     for child in &mut node.children {
         rewrite_bindings(child, bindings);
     }
+}
+
+fn rewrite_expression_bindings(expr: &str, bindings: &HashMap<String, LayoutPropValue>) -> String {
+    let mut out = String::with_capacity(expr.len());
+    let bytes = expr.as_bytes();
+    let mut i = 0;
+    let mut prev_non_ws: Option<u8> = None;
+
+    while i < bytes.len() {
+        let b = bytes[i];
+        if b == b'"' {
+            let start = i;
+            i += 1;
+            let mut escaped = false;
+            while i < bytes.len() {
+                let c = bytes[i];
+                i += 1;
+                if escaped {
+                    escaped = false;
+                    continue;
+                }
+                if c == b'\\' {
+                    escaped = true;
+                    continue;
+                }
+                if c == b'"' {
+                    break;
+                }
+            }
+            out.push_str(&expr[start..i]);
+            prev_non_ws = Some(b'"');
+            continue;
+        }
+
+        if is_identifier_start(b) {
+            let start = i;
+            i += 1;
+            while i < bytes.len() && is_identifier_continue(bytes[i]) {
+                i += 1;
+            }
+            let ident = &expr[start..i];
+            if prev_non_ws != Some(b'.') {
+                if let Some(value) = bindings.get(ident) {
+                    out.push_str(&layout_prop_value_as_expression(value));
+                } else {
+                    out.push_str(ident);
+                }
+            } else {
+                out.push_str(ident);
+            }
+            prev_non_ws = Some(bytes[i - 1]);
+            continue;
+        }
+
+        out.push(b as char);
+        if !b.is_ascii_whitespace() {
+            prev_non_ws = Some(b);
+        }
+        i += 1;
+    }
+
+    out
+}
+
+fn layout_prop_value_as_expression(value: &LayoutPropValue) -> String {
+    match value {
+        LayoutPropValue::SlotRef(name) => to_camel_case_first_lower(name),
+        LayoutPropValue::EmitRef(name) => to_camel_case_first_lower(name),
+        LayoutPropValue::Keyword(name) => to_camel_case_first_lower(name),
+        LayoutPropValue::Number(n) => n.to_string(),
+        LayoutPropValue::String(s) => js_string_literal(s),
+        LayoutPropValue::Expr(text) => format!("( {text} )"),
+    }
+}
+
+fn js_string_literal(value: &str) -> String {
+    let mut out = String::with_capacity(value.len() + 2);
+    out.push('"');
+    for ch in value.chars() {
+        match ch {
+            '\\' => out.push_str("\\\\"),
+            '"' => out.push_str("\\\""),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            _ => out.push(ch),
+        }
+    }
+    out.push('"');
+    out
+}
+
+fn is_identifier_start(b: u8) -> bool {
+    b == b'_' || b.is_ascii_alphabetic()
+}
+
+fn is_identifier_continue(b: u8) -> bool {
+    is_identifier_start(b) || b.is_ascii_digit()
+}
+
+fn to_camel_case_first_lower(s: &str) -> String {
+    let mut out = String::new();
+    let mut cap_next = false;
+    let mut first = true;
+    for ch in s.chars() {
+        if ch == '-' {
+            cap_next = true;
+            continue;
+        }
+        if first {
+            out.push(ch.to_ascii_lowercase());
+            first = false;
+        } else if cap_next {
+            out.push(ch.to_ascii_uppercase());
+            cap_next = false;
+        } else {
+            out.push(ch);
+        }
+    }
+    out
 }
 
 fn qualify_local_refs(node: &mut LayoutNode, pkg: &str, pkg_exports: &[String]) {
@@ -1308,6 +1438,78 @@ version = "1"
                     && prop.value == LayoutPropValue::EmitRef("outer-click".to_string())
             }),
             "emit binding should be rewritten to the consumer emit"
+        );
+    }
+
+    #[test]
+    fn layout_inliner_rewrites_expression_binding_identifiers() {
+        let tmp = TempDir::new().unwrap();
+        let pkgs = tmp.path().join("packages");
+        fs::create_dir_all(&pkgs).unwrap();
+        let mini = make_pkg(
+            &pkgs,
+            "mosaic-pkg-selector",
+            "mosaic-pkg-selector",
+            &["Selector"],
+        );
+        write_component(
+            &mini,
+            "Selector",
+            r#"component Selector {
+  slot selected-index : number ;
+  slot label : text ;
+}"#,
+            r#"layout Selector {
+  If ( when: selectedIndex == 0 ) {
+    Text [ selected-label ] ( slot: label )
+  }
+}"#,
+        );
+
+        let resolver = LayoutPackageResolver::new(vec![pkgs]);
+        let mut layout = consumer_layout(
+            r#"layout Demo {
+  pkg::mosaic-pkg-selector::Selector (
+    selected-index : slot: browser-selected-index ,
+    label : slot: outer-label
+  )
+}"#,
+        );
+
+        resolver.resolve(&mut layout).expect("layout resolves");
+
+        assert_eq!(layout.root.tag, "If");
+        assert!(
+            layout.root.props.iter().any(|prop| {
+                prop.name == "when"
+                    && prop.value == LayoutPropValue::Expr("browserSelectedIndex == 0".to_string())
+            }),
+            "expression binding should be rewritten to the consumer slot: {:#?}",
+            layout.root.props
+        );
+        assert!(
+            layout.root.children[0].props.iter().any(|prop| {
+                prop.name == "slot"
+                    && prop.value == LayoutPropValue::SlotRef("outer-label".to_string())
+            }),
+            "nested direct slot binding should still be rewritten"
+        );
+    }
+
+    #[test]
+    fn expression_binding_rewrite_skips_member_names_and_strings() {
+        let mut bindings = HashMap::new();
+        bindings.insert(
+            "selectedIndex".to_string(),
+            LayoutPropValue::SlotRef("browser-selected-index".to_string()),
+        );
+
+        assert_eq!(
+            rewrite_expression_bindings(
+                r#"i == selectedIndex && item.selectedIndex != "selectedIndex""#,
+                &bindings
+            ),
+            r#"i == browserSelectedIndex && item.selectedIndex != "selectedIndex""#
         );
     }
 

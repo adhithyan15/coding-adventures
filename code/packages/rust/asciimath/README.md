@@ -31,6 +31,7 @@ second notation.
 | `42`, `3.14`, `6.022e23` | `Number` (exact — never `f64`) |
 | `x`, `pi`, `alpha` | `Symbol` |
 | `xy` | `x · y` (implicit product of single letters, the AsciiMath rule) |
+| `sinx`, `pir` | `sin x` / `pi · r` (greedy longest-match splits glued keywords, the AsciiMath rule) |
 | `a + b`, `a - b`, `a*b`, `a xx b`, `a -: b` | `Bin(Add/Sub/Mul/Div)` |
 | `a b` (juxtaposition) | `Bin(Mul)` (implicit multiplication) |
 | `1/2` | `Frac` |
@@ -102,8 +103,16 @@ change). The open paren must immediately follow `text`; otherwise `text` is an o
 `stackrel(a)(b)` → `MathExpr::Overset { over, base }`; `underset(a)(b)` → `MathExpr::Underset
 { under, base }` (two atoms, annotation then base, like `root(n)(x)`; the paren-free `stackrel a b`
 works too). A centered mark over/under the base, **distinct from `Pow`/`Subscript`**; enabled by
-math-frontend 0.5.0's neutral node, `capabilities()` declares `oversets`. **Still to come**: the
-longest-match identifier scan (`sinx` → `sin·x`, a deeper lexer change).
+math-frontend 0.5.0's neutral node, `capabilities()` declares `oversets`.
+
+**PR-3c (part 4, the last remainder)** adds the **greedy longest-match identifier scan**. A maximal
+letter run is carved into tokens by repeatedly taking the longest known-keyword prefix — AsciiMath's
+rule — so `sinx` ⇒ `sin x`, `pir` ⇒ `pi · r`, `inta` ⇒ `int · a` (longest wins: `int` over `in`). A
+stretch with no keyword stays one identifier, so `xy` is unchanged. The keyword set is the parser's
+own lookup tables (a single `is_keyword`, so the lexer and parser can't drift); the operator words
+`xx`/`cdot`/`div` are in it so they are taken whole (otherwise `cdot` would mis-split on the accent
+`dot`). As in real AsciiMath, a multi-letter *variable* that collides with a keyword (e.g. `pi`)
+must be spaced or quoted — there are no unquoted multi-letter variables in AsciiMath.
 
 It is **total and panic-free**: every input returns `Ok(MathExpr)` or a spanned
 `FrontendError`. Recursion is depth-guarded (matrix nesting included); left-associative chains are

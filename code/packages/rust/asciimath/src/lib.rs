@@ -220,6 +220,25 @@ mod tests {
     }
 
     #[test]
+    fn glued_function_name_splits_longest_match() {
+        // The last PR-3c remainder: a function glued to its argument now reads as `sin x`
+        // (AsciiMath's greedy longest-match), NOT the letter product s·i·n·x.
+        assert_eq!(p("sinx"), MathExpr::Call { func: Func::Sin, arg: Box::new(sym("x")) });
+        assert_eq!(p("sinx"), p("sin x")); // the glued and spaced forms now agree
+        // A constant glued to a variable: `pir` ⇒ pi·r (not p·i·r).
+        assert_eq!(p("pir"), b(BinOp::Mul, sym("pi"), sym("r")));
+        // `2pir` is the area-ish juxtaposition 2·pi·r.
+        assert_eq!(p("2pir"), b(BinOp::Mul, b(BinOp::Mul, num(2), sym("pi")), sym("r")));
+        // A glued power keeps AsciiMath's "argument is one atom" reading: `sinx^2` ⇒ (sin x)^2.
+        assert_eq!(
+            p("sinx^2"),
+            b(BinOp::Pow, MathExpr::Call { func: Func::Sin, arg: Box::new(sym("x")) }, num(2))
+        );
+        // A keyword-free run is unchanged — still the product of its single letters.
+        assert_eq!(p("xy"), b(BinOp::Mul, sym("x"), sym("y")));
+    }
+
+    #[test]
     fn roots_and_functions() {
         let sqrt_x = MathExpr::Root { degree: None, radicand: Box::new(sym("x")) };
         assert_eq!(p("sqrt(x)"), sqrt_x);
