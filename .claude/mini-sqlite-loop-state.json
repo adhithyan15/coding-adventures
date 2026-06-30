@@ -231,11 +231,11 @@
     {
       "id": "haskell-level1-sql-optimizer",
       "title": "Haskell sql-optimizer",
-      "status": "pending",
+      "status": "in-review",
       "depends_on": ["haskell-level1-sql-planner"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Port Python sql_optimizer to Haskell."
+      "branch": "mini-sqlite/haskell-level1-sql-optimizer",
+      "pr_number": 7090,
+      "notes": "PR open 2026-06-30. 47 hspec tests, 5-pass optimizer (ConstantFolding, PredicatePushdown, ProjectionPruning, DeadCodeElimination, LimitPushdown). OptimizedPlan ADT + EmptyResult sentinel. Awaiting CI + merge."
     },
     {
       "id": "haskell-level1-sql-codegen",
