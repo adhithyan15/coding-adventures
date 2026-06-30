@@ -15,9 +15,9 @@ use spice_netlist_parser::{
     BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION, BERKELEY_APP_LAUNCH_PLAN_SCHEMA_VERSION,
     BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION, BERKELEY_APP_PACKAGE_NAME,
     BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION, BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION,
-    BERKELEY_APP_SHELL_STATUS_SCHEMA_VERSION, BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM,
-    BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION, BERKELEY_SPICE_GRAMMAR_NAME,
-    BERKELEY_SPICE_GRAMMAR_VERSION,
+    BERKELEY_APP_SHELL_STATUS_SCHEMA_VERSION, BERKELEY_APP_SHELL_TELEMETRY_SCHEMA_VERSION,
+    BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM, BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION,
+    BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -2581,6 +2581,11 @@ fn berkeley_app_facade_exports_package_manifest_json() {
         .unwrap()
         .iter()
         .any(|capability| capability == "app-shell-status-json"));
+    assert!(payload["artifactCapabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|capability| capability == "app-shell-telemetry-json"));
 }
 
 #[test]
@@ -2871,6 +2876,58 @@ C1 out 0 1p
     assert_eq!(shell_status_payload["entryPanelId"], "waveform");
     assert_eq!(shell_status_payload["primaryActionId"], "launch.waveform");
     assert_eq!(shell_status_payload["errorCount"], 0);
+
+    let shell_telemetry = app
+        .run_app_shell_telemetry(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("shell telemetry should execute");
+    assert_eq!(
+        shell_telemetry.schema_version,
+        BERKELEY_APP_SHELL_TELEMETRY_SCHEMA_VERSION
+    );
+    assert_eq!(shell_telemetry.package_name, BERKELEY_APP_PACKAGE_NAME);
+    assert!(shell_telemetry.ready);
+    assert_eq!(shell_telemetry.startup_route, "ready");
+    assert_eq!(shell_telemetry.severity, "ready");
+    assert_eq!(shell_telemetry.message, "Ready to launch waveform panel");
+    assert_eq!(
+        shell_telemetry.primary_action_id.as_deref(),
+        Some("launch.waveform")
+    );
+    assert_eq!(shell_telemetry.panel_count, 5);
+    assert_eq!(shell_telemetry.enabled_panel_count, 4);
+    assert_eq!(shell_telemetry.disabled_panel_count, 1);
+    assert_eq!(shell_telemetry.action_count, 5);
+    assert_eq!(shell_telemetry.enabled_action_count, 4);
+    assert_eq!(shell_telemetry.disabled_action_count, 1);
+    assert_eq!(shell_telemetry.error_count, 0);
+    assert!(!shell_telemetry.repaired_state);
+    assert_eq!(
+        shell_telemetry.artifact_capability_count,
+        handoff.package_manifest.artifact_capabilities.len()
+    );
+
+    let shell_telemetry_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_telemetry_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap(),
+    )
+    .expect("shell telemetry JSON should parse");
+    assert_eq!(shell_telemetry_payload["schemaVersion"], 1);
+    assert_eq!(shell_telemetry_payload["ready"], true);
+    assert_eq!(shell_telemetry_payload["severity"], "ready");
+    assert_eq!(shell_telemetry_payload["panelCount"], 5);
+    assert_eq!(shell_telemetry_payload["enabledPanelCount"], 4);
+    assert_eq!(shell_telemetry_payload["disabledActionCount"], 1);
+    assert_eq!(shell_telemetry_payload["repairedState"], false);
+    assert_eq!(
+        shell_telemetry_payload["artifactCapabilityCount"].as_u64(),
+        Some(handoff.package_manifest.artifact_capabilities.len() as u64)
+    );
 }
 
 #[test]
@@ -3093,6 +3150,54 @@ R1 in out
     );
     assert_eq!(shell_status_payload["errorCount"], 1);
     assert!(shell_status_payload["message"].is_string());
+
+    let shell_telemetry = app.app_shell_telemetry(BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(2),
+        active_command_id: Some("analysis.2.run".to_string()),
+    });
+    assert_eq!(
+        shell_telemetry.schema_version,
+        BERKELEY_APP_SHELL_TELEMETRY_SCHEMA_VERSION
+    );
+    assert!(!shell_telemetry.ready);
+    assert_eq!(shell_telemetry.startup_route, "blocked");
+    assert_eq!(shell_telemetry.severity, "error");
+    assert_eq!(
+        shell_telemetry.primary_action_id.as_deref(),
+        Some("launch.diagnostics")
+    );
+    assert_eq!(shell_telemetry.panel_count, 5);
+    assert_eq!(shell_telemetry.enabled_panel_count, 3);
+    assert_eq!(shell_telemetry.disabled_panel_count, 2);
+    assert_eq!(shell_telemetry.action_count, 5);
+    assert_eq!(shell_telemetry.enabled_action_count, 3);
+    assert_eq!(shell_telemetry.disabled_action_count, 2);
+    assert_eq!(shell_telemetry.diagnostic_count, 1);
+    assert_eq!(shell_telemetry.error_count, 1);
+    assert_eq!(
+        shell_telemetry.repaired_state,
+        handoff.readiness_report.repaired_state
+    );
+    assert_eq!(
+        shell_telemetry.artifact_capability_count,
+        handoff.package_manifest.artifact_capabilities.len()
+    );
+
+    let shell_telemetry_payload: serde_json::Value = serde_json::from_str(
+        &app.app_shell_telemetry_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        }),
+    )
+    .expect("blocked shell telemetry JSON should parse");
+    assert_eq!(shell_telemetry_payload["ready"], false);
+    assert_eq!(shell_telemetry_payload["startupRoute"], "blocked");
+    assert_eq!(shell_telemetry_payload["severity"], "error");
+    assert_eq!(shell_telemetry_payload["panelCount"], 5);
+    assert_eq!(shell_telemetry_payload["enabledPanelCount"], 3);
+    assert_eq!(shell_telemetry_payload["disabledActionCount"], 2);
+    assert_eq!(shell_telemetry_payload["diagnosticCount"], 1);
+    assert_eq!(shell_telemetry_payload["errorCount"], 1);
 }
 
 #[test]
