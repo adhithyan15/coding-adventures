@@ -235,6 +235,14 @@ is text-primary, which is a different mode model.)
   postfix raised script). The L6 lowering and `to_latex` therefore need **zero change**; round-trips
   through `to_latex`, and a missing mandatory body is a spanned error, never a panic.
 
+  **Stretchy over-arrow accents (latex 0.18.0):** `\overrightarrow{body}` / `\overleftarrow{body}` /
+  `\overleftrightarrow{body}` / `\overrightharpoonup` / `\overleftharpoonup` — an arrow drawn over a
+  (possibly multi-token) body, e.g. `\overrightarrow{AB}`; distinct from `\vec` (a fixed single-glyph
+  accent). Same desugaring as the over-brace — **no new node**: it lowers onto the existing `Overset`
+  node over the plain arrow symbol, so `\overrightarrow{AB}` ≡ `\overset{\rightarrow}{AB}` and the L6
+  lowering needs zero change. Round-trips through `to_latex`; a missing mandatory body is a spanned
+  error, never a panic.
+
 **Asymptote (documented in README, not built):** runtime `\catcode`, `\expandafter`/
 `\noexpand`/`\csname`, arbitrary `\if…` programming, external `\input`/`\include`. Hit →
 `Unsupported { construct, span }`.

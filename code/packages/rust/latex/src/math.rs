@@ -325,6 +325,23 @@ fn xarrow_base(name: &str) -> Option<&'static str> {
 const OVERBRACE: &str = "\u{23DE}";
 const UNDERBRACE: &str = "\u{23DF}";
 
+/// The stretchy over-arrow accents `\overrightarrow` / `\overleftarrow` / `\overleftrightarrow`
+/// (and harpoon variants) draw an arrow OVER their argument — exactly an annotation stacked on the
+/// body, so they lower onto the existing `Overset` node over the plain arrow symbol, like the
+/// xarrows and `\overbrace`. Distinct from `\vec` (a fixed single-glyph accent): these stretch over
+/// a multi-token body, e.g. `\overrightarrow{AB}`. Returns the base arrow's control-word name (so
+/// `overrightarrow` → `rightarrow`, round-tripping through `to_latex` as `\rightarrow`).
+fn over_arrow_base(name: &str) -> Option<&'static str> {
+    Some(match name {
+        "overrightarrow" => "rightarrow",
+        "overleftarrow" => "leftarrow",
+        "overleftrightarrow" => "leftrightarrow",
+        "overrightharpoonup" => "rightharpoonup",
+        "overleftharpoonup" => "leftharpoonup",
+        _ => return None,
+    })
+}
+
 /// Math environments with `&`/`\\` row/column structure (L3). Case-sensitive — `bmatrix`
 /// (square brackets) and `Bmatrix` (braces) are different environments. The `array`/`subarray`
 /// grids take a **mandatory** column-spec argument (`\begin{array}{cc}`) — see
@@ -730,6 +747,19 @@ impl<'a> MathParser<'a> {
                 return Ok(MathNode::Underset { under: Box::new(label), base: Box::new(braced) });
             }
             return Ok(braced);
+        }
+        // `\overrightarrow{body}` / `\overleftarrow{body}` / … — a stretchy arrow drawn OVER the
+        // body. One mandatory `{body}` group; we lower to `Overset { over: <arrow>, base: body }`,
+        // reusing the same machinery as `\overbrace` (see `over_arrow_base`), so the neutral frontend
+        // lowering needs no change: `\overrightarrow{AB}` lowers identically to
+        // `\overset{\rightarrow}{AB}`.
+        if let Some(arrow) = over_arrow_base(name) {
+            self.bump();
+            let body = self.read_arg()?;
+            return Ok(MathNode::Overset {
+                over: Box::new(MathNode::Sym(arrow.to_string())),
+                base: Box::new(body),
+            });
         }
         // `\xrightarrow[below]{above}` and friends — an extensible/labelled arrow. The optional
         // `[below]` group sits under the arrow, the mandatory `{above}` group over it. We lower to
@@ -1861,6 +1891,62 @@ mod tests {
         // no argument is a clean error, never a panic.
         assert!(parse_math(r"\overbrace").is_err());
         assert!(parse_math(r"\underbrace").is_err());
+    }
+
+    // ---- stretchy over-arrow accents (\overrightarrow & friends) ----------------
+
+    #[test]
+    fn overrightarrow_is_the_arrow_set_over_the_body() {
+        // `\overrightarrow{AB}` ≡ a `\rightarrow` set OVER the body `AB`.
+        let n = parse_math(r"\overrightarrow{AB}").unwrap();
+        match &n {
+            MathNode::Overset { over, base } => {
+                assert_eq!(**over, sym("rightarrow"));
+                // `AB` is implicit multiplication A·B
+                assert!(matches!(**base, MathNode::Bin(MBinOp::Mul, ..)));
+            }
+            other => panic!("expected Overset, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn over_arrows_use_their_own_base_arrow() {
+        // Each command maps to its own base arrow symbol.
+        for (src, arrow) in [
+            (r"\overleftarrow{v}", "leftarrow"),
+            (r"\overleftrightarrow{w}", "leftrightarrow"),
+            (r"\overrightharpoonup{p}", "rightharpoonup"),
+        ] {
+            match &parse_math(src).unwrap() {
+                MathNode::Overset { over, .. } => assert_eq!(**over, sym(arrow), "{src}"),
+                other => panic!("expected Overset for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn over_arrow_in_context_chains_with_neighbours() {
+        // An over-arrow group is an atom, so it sits inline: `\overrightarrow{F} = m a`.
+        let n = parse_math(r"\overrightarrow{F} = m a").unwrap();
+        assert!(matches!(n, MathNode::Rel(..)));
+        assert!(n.to_latex().contains(r"\overset"));
+        assert!(n.to_latex().contains(r"\rightarrow"));
+    }
+
+    #[test]
+    fn over_arrow_round_trips_through_to_latex() {
+        // parse → to_latex → parse is a fixed point (surface normalises to \overset).
+        for src in [r"\overrightarrow{AB}", r"\overleftarrow{x}", r"\overleftrightarrow{PQ}"] {
+            let once = parse_math(src).unwrap();
+            let twice = parse_math(&once.to_latex()).unwrap();
+            assert_eq!(once, twice, "round-trip changed the tree for {src:?}");
+        }
+    }
+
+    #[test]
+    fn over_arrow_missing_mandatory_body_is_a_spanned_error() {
+        // The `{body}` is mandatory; a trailing command with no argument is a clean error.
+        assert!(parse_math(r"\overrightarrow").is_err());
     }
 
     // ---- deep-tree Drop safety -------------------------------------------------

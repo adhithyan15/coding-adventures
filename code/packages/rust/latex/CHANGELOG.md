@@ -2,6 +2,23 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.18.0] — 2026-06-30
+
+### Added — stretchy over-arrow accents (`\overrightarrow` & friends)
+
+- The parser now accepts the stretchy over-arrow accents `\overrightarrow`, `\overleftarrow`,
+  `\overleftrightarrow`, `\overrightharpoonup`, `\overleftharpoonup` — an arrow drawn **over** a
+  (possibly multi-token) body, e.g. `\overrightarrow{AB}`. Distinct from `\vec` (a fixed
+  single-glyph accent over one symbol). As with `\overbrace` and the xarrows, there is **no new AST
+  node**: an over-arrow is an annotation stacked on the body, so it lowers onto the existing
+  `Overset` node over the plain arrow symbol — `\overrightarrow{AB}` → `Overset { over: →, base: AB }`,
+  identical to `\overset{\rightarrow}{AB}`.
+- Reuses the existing `Overset` `to_latex` and neutral-frontend lowering, so **no frontend change**;
+  round-trips through `to_latex` (surface normalises to `\overset`). 5 new tests (parse, per-arrow
+  base, in-context, round-trip, missing-body error); the `{body}` is mandatory and its absence is a
+  clean spanned error, never a panic.
+- `latex` 0.17.0 → 0.18.0.
+
 ## [0.17.0] — 2026-06-30
 
 ### Added — horizontal braces (`\overbrace` / `\underbrace`)
