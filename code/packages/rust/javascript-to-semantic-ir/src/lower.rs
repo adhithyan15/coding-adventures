@@ -1,6 +1,6 @@
 //! JavaScript `GrammarASTNode` (CST) → `semantic_ir::Module` lowering.
 //!
-//! # What this file does (milestones M1 + M2)
+//! # What this file does (milestones M1 + M2 + M3)
 //!
 //! The [`javascript-parser`](coding_adventures_javascript_parser) crate
 //! hands us a *concrete syntax tree* (CST): a [`GrammarASTNode`] whose
@@ -111,6 +111,76 @@
 //! writes "LetBinding" generically for both kinds; this divergence is
 //! noted there.)  `const` vs `let` vs `var` are not distinguished in v0
 //! (the IR models no immutability constraint).
+//!
+//! ## Control flow (M3 — learned by probing the parser)
+//!
+//! M3 adds the four counting/branching control-flow shapes.  The CST
+//! rule names and child layouts (precedence-wrapper layers elided):
+//!
+//! | JS source                                   | CST rule           | children                                                                     |
+//! |---------------------------------------------|--------------------|------------------------------------------------------------------------------|
+//! | `if (c) S`                                  | `if_statement`     | `[Kw("if"), (, expression, ), statement]`                                    |
+//! | `if (c) S else T`                           | `if_statement`     | `[…, statement, Kw("else"), statement]`                                      |
+//! | `while (c) S`                               | `while_statement`  | `[Kw("while"), (, expression, ), statement]`                                 |
+//! | `for (let i=0; c; u) S`                     | `for_statement`    | `[Kw("for"), (, Kw("let"), binding_list, ;, expr(cond), ;, expr(update), ), statement]` |
+//! | `for (const x of xs) S`                     | `for_of_statement` | `[Kw("for"), (, Kw("const"), binding_element, Name("of"), assignment_expression, ), statement]` |
+//! | `{ S1; S2; }`                               | `block`            | `[{, statement*, }]`                                                          |
+//!
+//! ### `if` → [`Expr::If`]
+//!
+//! The IR's conditional is an *expression* ([`Expr::If`]) with `then_branch`
+//! and `else_branch` [`Block`]s — there is no statement-level `if`.  So a JS
+//! `if` *statement* lowers to a `Stmt::ExprStmt` wrapping an `Expr::If`.  A
+//! missing `else` becomes a synthetic nil-valued empty `Block`.  An
+//! **else-if chain** (`else if (…)`) is just the grammar nesting another
+//! `if_statement` inside the `else` `statement`, so it recurses naturally
+//! into a *nested* `Expr::If` living in the outer `else_branch`'s tail value.
+//!
+//! ### `while` → [`Stmt::While`]
+//!
+//! Direct: lower the condition expression and the body block.
+//!
+//! ### C-style `for` → [`Stmt::ForRange`] (canonical counting loops only)
+//!
+//! The IR has no general three-clause `for`; it has a half-open counting
+//! [`Stmt::ForRange`] (`for var in range(start, stop, step)`).  We accept a
+//! C-style `for` **only** when it matches the canonical counting shape and
+//! extract `var`/`start`/`stop`/`step`:
+//!
+//! - **init** must be `let i = <start>` (a single `lexical_binding`/`var`
+//!   declaration binding `i` to the start expression).
+//! - **cond** must be `i < <stop>` or `i <= <stop>` on the *same* `i`.
+//!   `<=` is rewritten to a half-open `<` by bumping the stop to
+//!   `<stop> + 1` (`BuiltinCall("+", [stop, IntLit(1)])`).
+//! - **update** must increment `i` by a constant `step` in one of:
+//!   `i = i + <step>`, `i += <step>`, or `i++` (step = 1).
+//!
+//! Anything else — a different loop variable across clauses, a decrementing
+//! or multiplicative update, a missing clause, a multi-binding init — is a
+//! *non-canonical* loop we cannot faithfully represent as a `ForRange`, so
+//! it is a positioned [`JsLowerError`] (deferred), never silently mangled.
+//!
+//! ### `for … of` → [`Stmt::ForEach`]
+//!
+//! `for (const x of xs)` binds `x` over the iterable `xs`.  Only the
+//! single-identifier binding form is supported (destructuring is deferred).
+//!
+//! ### Block scoping
+//!
+//! A `{ … }` block and every control-flow body lower to a [`Block`].  Names
+//! bound *inside* a body are block-scoped: we snapshot `declared_locals`
+//! before lowering a body and restore it afterwards, so an inner `let` does
+//! not leak to the enclosing scope.  This mirrors the SIR validator, which
+//! marks/rewinds its `LocalEnv` around each `Block` and around a loop's
+//! body (with the loop variable added only for that body).  The loop
+//! variable is likewise bound into the body scope only.
+//!
+//! ### Recursion bound
+//!
+//! Statement-block nesting is bounded by [`MAX_STMT_DEPTH`] exactly as
+//! operator recursion is bounded by [`MAX_EXPR_DEPTH`]: each nested body is
+//! lowered with `depth + 1`, and an over-deep nest becomes an ordinary
+//! positioned error rather than a stack overflow.
 
 use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
@@ -161,6 +231,19 @@ impl std::error::Error for JsLowerError {}
 /// this budget — only genuine operand recursion does).
 const MAX_EXPR_DEPTH: usize = 256;
 
+/// Hard ceiling on *statement-block* nesting depth (M3).
+///
+/// Each control-flow body (`if`/`while`/`for` body, or a bare `{ … }`
+/// block) is lowered by a recursive call that descends with `depth + 1`.
+/// Deeply nested control flow — thousands of `if (c) { if (c) { … } }` —
+/// could otherwise drive that recursion deep enough to overflow the thread
+/// stack (an uncatchable abort, i.e. a DoS for any host compiling untrusted
+/// source).  We cap the nesting and turn an over-deep tree into an ordinary
+/// positioned error.  The limit is generous: real JavaScript almost never
+/// nests blocks past a handful of levels.  This is the statement-side twin
+/// of [`MAX_EXPR_DEPTH`].
+const MAX_STMT_DEPTH: usize = 256;
+
 // ---------------------------------------------------------------------------
 // Entry point
 // ---------------------------------------------------------------------------
@@ -174,8 +257,10 @@ const MAX_EXPR_DEPTH: usize = 256;
 ///
 /// M2 admits literal expression statements, `let`/`const`/`var`
 /// bindings, re-assignments, variable references, and unary/binary
-/// operators.  Any other statement or expression shape produces a
-/// [`JsLowerError`] (see module docs).
+/// operators.  M3 adds control flow: `if`/`else`, `while`, the canonical
+/// counting C-style `for`, `for … of`, and bare `{ … }` blocks.  Any
+/// other statement or expression shape produces a [`JsLowerError`] (see
+/// module docs).
 pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, JsLowerError> {
     if program.rule_name != "program" {
         return Err(JsLowerError {
@@ -290,16 +375,44 @@ impl Lowerer {
     /// hence unobservable, so we drop them.  An empty program yields a
     /// `NilLit` value.
     fn lower_program(&mut self, program: &GrammarASTNode) -> Result<Block, JsLowerError> {
+        // The top-level statement sequence is `program`'s children, each a
+        // `source_element` wrapping one `statement`.  Lowering it is exactly
+        // lowering a statement list — the same routine used for `{ … }`
+        // block bodies — at depth 0.
+        self.lower_stmt_seq(&program.children, self.span_of(program), 0)
+    }
+
+    /// Lower a slice of CST children that are statement-bearing nodes into a
+    /// single [`Block`] (statements then a tail value).
+    ///
+    /// This is the shared workhorse for the top-level program body and every
+    /// `{ … }` block / control-flow body.  Each child is lowered to a
+    /// [`Lowered`]:
+    ///
+    /// - a [`Lowered::Stmt`] is pushed onto `stmts` (flushing any pending
+    ///   bare-expression value as an `ExprStmt` first, so evaluation order
+    ///   and side effects are preserved);
+    /// - a [`Lowered::Expr`] becomes the *candidate* tail value, superseding
+    ///   any earlier pure bare-expression value.
+    ///
+    /// The final candidate tail value becomes `Block.value`; an empty
+    /// sequence yields a `NilLit` tail (matching SIR's "every block produces
+    /// a value" rule).  `block_span` stamps the resulting `Block`.
+    fn lower_stmt_seq(
+        &mut self,
+        children: &[ASTNodeOrToken],
+        block_span: Span,
+        depth: usize,
+    ) -> Result<Block, JsLowerError> {
         let mut stmts: Vec<Stmt> = Vec::new();
         // The most recent bare-expression value seen.  Whatever it holds
         // at the end becomes the block's tail value.
         let mut tail: Option<Expr> = None;
 
-        for child in &program.children {
+        for child in children {
             match child {
                 ASTNodeOrToken::Node(n) => {
-                    // A `source_element` wraps a `statement`; descend.
-                    match self.lower_source_element(n)? {
+                    match self.lower_source_element(n, depth)? {
                         Lowered::Stmt(s) => {
                             // A statement makes any pending tail
                             // expression unobservable as a *value*, but it
@@ -319,51 +432,546 @@ impl Lowerer {
                         }
                     }
                 }
-                // Stray tokens directly under `program` (there should be
-                // none for well-formed input) are ignored.
+                // Stray tokens (the `{`/`}` of a block, the `source_element`
+                // separators, etc.) carry no statement; skip them.
                 ASTNodeOrToken::Token(_) => {}
             }
         }
 
         let value = tail.unwrap_or(Expr::NilLit {
-            span: self.span_of(program),
+            span: block_span.clone(),
         });
 
         Ok(Block {
             stmts,
             value,
-            span: self.span_of(program),
+            span: block_span,
         })
     }
 
-    /// Lower one `source_element` (top-level item) to a [`Lowered`].
-    fn lower_source_element(&mut self, node: &GrammarASTNode) -> Result<Lowered, JsLowerError> {
+    /// Lower one statement-bearing item (a `source_element`, a `statement`
+    /// wrapper, or a concrete statement node) to a [`Lowered`].
+    ///
+    /// `depth` bounds control-flow body nesting (see [`MAX_STMT_DEPTH`]); a
+    /// nested body recurses with `depth + 1`.
+    fn lower_source_element(
+        &mut self,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Lowered, JsLowerError> {
         // `source_element` → `statement` → `<concrete statement>`.
         // Descend through the single-child wrappers until we reach a
         // statement we recognise.
-        let stmt = single_child_node(node).unwrap_or(node);
-        match stmt.rule_name.as_str() {
-            "statement" => {
-                let inner = single_child_node(stmt).unwrap_or(stmt);
-                self.lower_statement_inner(inner)
-            }
-            "expression_statement" => self.lower_expression_statement(stmt),
-            "lexical_declaration" => self.lower_lexical_declaration(stmt).map(|s| Lowered::Stmt(Box::new(s))),
-            "variable_statement" => self.lower_variable_statement(stmt).map(|s| Lowered::Stmt(Box::new(s))),
-            other => Err(self.unsupported(stmt, other)),
+        let inner = single_child_node(node).unwrap_or(node);
+        match inner.rule_name.as_str() {
+            // `source_element` and `statement` are both single-child
+            // wrappers; recurse through them to the concrete statement.
+            "statement" => self.lower_source_element(inner, depth),
+            other => self.lower_statement_inner(inner, other, depth),
         }
     }
 
-    /// Lower the node *inside* a `statement` wrapper.
-    fn lower_statement_inner(&mut self, node: &GrammarASTNode) -> Result<Lowered, JsLowerError> {
-        match node.rule_name.as_str() {
+    /// Lower a concrete statement node, dispatching on its `rule_name`.
+    fn lower_statement_inner(
+        &mut self,
+        node: &GrammarASTNode,
+        rule_name: &str,
+        depth: usize,
+    ) -> Result<Lowered, JsLowerError> {
+        match rule_name {
             "expression_statement" => self.lower_expression_statement(node),
-            "lexical_declaration" => self.lower_lexical_declaration(node).map(|s| Lowered::Stmt(Box::new(s))),
-            "variable_statement" => self.lower_variable_statement(node).map(|s| Lowered::Stmt(Box::new(s))),
-            // deferred to M3+: if_statement, iteration_statement,
-            // function_declaration, return_statement, block, …
+            "lexical_declaration" => self
+                .lower_lexical_declaration(node)
+                .map(|s| Lowered::Stmt(Box::new(s))),
+            "variable_statement" => self
+                .lower_variable_statement(node)
+                .map(|s| Lowered::Stmt(Box::new(s))),
+            // ── M3: control flow ────────────────────────────────────
+            "if_statement" => self.lower_if(node, depth).map(Lowered::Expr),
+            "while_statement" => self
+                .lower_while(node, depth)
+                .map(|s| Lowered::Stmt(Box::new(s))),
+            "for_statement" => self
+                .lower_for(node, depth)
+                .map(|s| Lowered::Stmt(Box::new(s))),
+            "for_of_statement" => self
+                .lower_for_of(node, depth)
+                .map(|s| Lowered::Stmt(Box::new(s))),
+            "block" => self.lower_block(node, depth).map(|b| {
+                // A bare `{ … }` block is a value-producing expression in
+                // SIR (`Expr::Block`); at statement position its tail value
+                // is unobservable but its statements run for effect.
+                Lowered::Expr(Expr::Block(Box::new(b)))
+            }),
+            // deferred to a later milestone: function_declaration,
+            // return_statement, switch, try, do-while, labeled, …
             other => Err(self.unsupported(node, other)),
         }
+    }
+
+    // -----------------------------------------------------------------------
+    // M3: control-flow lowering
+    // -----------------------------------------------------------------------
+
+    /// Lower an `if_statement` to an [`Expr::If`].
+    ///
+    /// CST (probed): `[Kw("if"), (, expression, ), statement]` with no else,
+    /// or `[…, statement, Kw("else"), statement]` with one.  The `then`/
+    /// `else` `statement`s are each a block body (a `{ … }` block or a
+    /// single statement).  A missing `else` becomes a synthetic empty
+    /// nil-valued [`Block`].  An `else if` chain is the grammar nesting
+    /// another `if_statement` inside the else `statement`, so it recurses
+    /// into a nested `Expr::If` automatically.
+    fn lower_if(&mut self, node: &GrammarASTNode, depth: usize) -> Result<Expr, JsLowerError> {
+        self.check_stmt_depth(node, depth)?;
+        let span = self.span_of(node);
+
+        // Collect the direct child *nodes* in order: [cond_expr, then_stmt]
+        // or [cond_expr, then_stmt, else_stmt].  The `if`/`else` keywords,
+        // parens, etc. are tokens we skip.
+        let nodes = child_nodes(node);
+        let cond_node = nodes.first().ok_or_else(|| self.unsupported(node, "if (no condition)"))?;
+        let then_node = nodes.get(1).ok_or_else(|| self.unsupported(node, "if (no then branch)"))?;
+
+        let cond = self.lower_expression(cond_node, 0)?;
+        let then_branch = self.lower_body(then_node, depth)?;
+        let else_branch = match nodes.get(2) {
+            Some(else_node) => self.lower_body(else_node, depth)?,
+            // No `else`: an empty, nil-valued block.
+            None => Block {
+                stmts: Vec::new(),
+                value: Expr::NilLit { span: span.clone() },
+                span: span.clone(),
+            },
+        };
+
+        Ok(Expr::If {
+            cond: Box::new(cond),
+            then_branch: Box::new(then_branch),
+            else_branch: Box::new(else_branch),
+            span,
+        })
+    }
+
+    /// Lower a `while_statement` to a [`Stmt::While`].
+    ///
+    /// CST: `[Kw("while"), (, expression, ), statement]`.
+    fn lower_while(&mut self, node: &GrammarASTNode, depth: usize) -> Result<Stmt, JsLowerError> {
+        self.check_stmt_depth(node, depth)?;
+        let span = self.span_of(node);
+        let nodes = child_nodes(node);
+        let cond_node = nodes.first().ok_or_else(|| self.unsupported(node, "while (no condition)"))?;
+        let body_node = nodes.get(1).ok_or_else(|| self.unsupported(node, "while (no body)"))?;
+
+        let cond = self.lower_expression(cond_node, 0)?;
+        let body = self.lower_body(body_node, depth)?;
+        // The validator observes `Feature::Loops` for every loop statement;
+        // declare it so the manifest matches the body exactly.
+        self.features_used.add(Feature::Loops);
+        Ok(Stmt::While { cond, body, span })
+    }
+
+    /// Lower a `for_of_statement` to a [`Stmt::ForEach`].
+    ///
+    /// CST: `[Kw("for"), (, Kw("let|const|var"), binding_element,
+    /// Name("of"), assignment_expression(iter), ), statement]`.  Only the
+    /// single-identifier binding (`for (const x of xs)`) is supported;
+    /// destructuring (`for (const [a, b] of …)`) is deferred.  The loop
+    /// variable `x` is bound into the body scope only.
+    fn lower_for_of(&mut self, node: &GrammarASTNode, depth: usize) -> Result<Stmt, JsLowerError> {
+        self.check_stmt_depth(node, depth)?;
+        let span = self.span_of(node);
+
+        // The binding name lives in the `binding_element`'s single Name
+        // token.  Anything else (a destructuring pattern) is deferred.
+        let binding = child_node_named(node, "binding_element")
+            .ok_or_else(|| self.unsupported(node, "for-of (no binding_element)"))?;
+        let var_tok = single_leaf_token(binding)
+            .filter(|t| matches!(t.type_, TokenType::Name))
+            .ok_or_else(|| JsLowerError {
+                message: "for-of destructuring binding is deferred (only `for (const x of …)`)"
+                    .to_string(),
+                line: span.start_line,
+                column: span.start_col,
+            })?;
+        let var = var_tok.value.clone();
+
+        // The iterable is the `assignment_expression` child — the only
+        // expression-shaped node (the `binding_element` is the binding).
+        let iter_node = child_node_named(node, "assignment_expression")
+            .ok_or_else(|| self.unsupported(node, "for-of (no iterable)"))?;
+        let iter = self.lower_expression(iter_node, 0)?;
+
+        let body = self.lower_loop_body_scoped(&var, node, depth)?;
+        self.features_used.add(Feature::Loops);
+        Ok(Stmt::ForEach { var, iter, body, span })
+    }
+
+    /// Lower a canonical C-style `for_statement` to a [`Stmt::ForRange`].
+    ///
+    /// CST: `[Kw("for"), (, Kw("let"), binding_list, ;, expr(cond), ;,
+    /// expr(update), ), statement]`.  We accept **only** the canonical
+    /// counting shape (see module docs):
+    ///
+    ///   * init `let i = <start>` (single binding of `i`),
+    ///   * cond `i < <stop>` or `i <= <stop>` on the same `i`,
+    ///   * update `i = i + <step>`, `i += <step>`, or `i++` (step 1).
+    ///
+    /// `<=` is rewritten half-open by bumping `stop` to `stop + 1`.  Any
+    /// non-canonical shape is a positioned [`JsLowerError`] (deferred).
+    fn lower_for(&mut self, node: &GrammarASTNode, depth: usize) -> Result<Stmt, JsLowerError> {
+        self.check_stmt_depth(node, depth)?;
+        let span = self.span_of(node);
+
+        // The non-canonical bail-out, factored so every rejection carries
+        // the loop's position and a uniform "deferred" message.
+        let reject = |why: &str| JsLowerError {
+            message: format!(
+                "non-canonical C-style `for` ({why}) is deferred; only the counting form \
+                 `for (let i = <start>; i < <stop>; i++/i += <step>)` is supported"
+            ),
+            line: span.start_line,
+            column: span.start_col,
+        };
+
+        // ── init: `let i = <start>` ─────────────────────────────────────
+        // The init clause is a `binding_list` (for `let`/`const`) sitting
+        // directly under the `for_statement` (the probe shows it is *not*
+        // wrapped in a `lexical_declaration` here — the `let` keyword and
+        // `binding_list` are direct children).  `var` would surface a
+        // `variable_declaration_list` instead; we accept either.
+        let (loop_var, start) = self.extract_for_init(node).ok_or_else(|| {
+            reject("init is not a single `let i = <start>` binding")
+        })?;
+
+        // ── cond: `i < <stop>` / `i <= <stop>` ──────────────────────────
+        // The condition is the first `expression` child after the init's
+        // terminating `;`.  We need the *branching* relational node.
+        let cond_expr = self
+            .for_clause_expr(node, 0)
+            .ok_or_else(|| reject("missing condition clause"))?;
+        let stop = self.extract_for_cond(cond_expr, &loop_var).ok_or_else(|| {
+            reject("condition is not `i < <stop>` or `i <= <stop>` on the loop variable")
+        })?;
+
+        // ── update: `i = i + <step>` / `i += <step>` / `i++` ────────────
+        let update_expr = self
+            .for_clause_expr(node, 1)
+            .ok_or_else(|| reject("missing update clause"))?;
+        let step = self.extract_for_step(update_expr, &loop_var).ok_or_else(|| {
+            reject("update is not an increment of the loop variable by a constant step")
+        })?;
+
+        // ── body (loop variable scoped into it) ─────────────────────────
+        let body = self.lower_loop_body_scoped(&loop_var, node, depth)?;
+
+        self.features_used.add(Feature::Loops);
+        Ok(Stmt::ForRange {
+            var: loop_var,
+            start,
+            stop,
+            step,
+            body,
+            span,
+        })
+    }
+
+    /// Extract `(var, start_expr)` from a C-`for` init clause, or `None` if
+    /// it is not a single `let|const|var i = <start>` binding.
+    fn extract_for_init(&mut self, for_node: &GrammarASTNode) -> Option<(String, Expr)> {
+        // `let`/`const` → `binding_list[ lexical_binding[ Name, =, init ] ]`.
+        // `var`         → `variable_declaration_list[ variable_declaration ]`.
+        let (list_name, binding_name) =
+            if child_node_named(for_node, "binding_list").is_some() {
+                ("binding_list", "lexical_binding")
+            } else {
+                ("variable_declaration_list", "variable_declaration")
+            };
+        let list = child_node_named(for_node, list_name)?;
+        let bindings = children_nodes_named(list, binding_name);
+        if bindings.len() != 1 {
+            return None; // multi-variable init is non-canonical.
+        }
+        let binding = bindings[0];
+        let name_tok = binding.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t),
+            _ => None,
+        })?;
+        let init_node = binding.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Node(n) => Some(n),
+            ASTNodeOrToken::Token(_) => None,
+        })?;
+        let start = self.lower_expression(init_node, 0).ok()?;
+        Some((name_tok.value.clone(), start))
+    }
+
+    /// Return the `n`-th `expression` clause node under a `for_statement`
+    /// (cond = 0, update = 1).  These are the `expression` rule nodes that
+    /// sit between the clause-separating `;`/`)` tokens.
+    fn for_clause_expr<'a>(
+        &self,
+        for_node: &'a GrammarASTNode,
+        n: usize,
+    ) -> Option<&'a GrammarASTNode> {
+        for_node
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(node) if node.rule_name == "expression" => Some(node),
+                _ => None,
+            })
+            .nth(n)
+    }
+
+    /// Extract the `stop` expression from a canonical loop condition.
+    ///
+    /// Accepts `i < S` (→ `S`) and `i <= S` (→ half-open `S + 1`), where the
+    /// left operand is exactly the loop variable `var`.  Returns `None` for
+    /// any other comparison (wrong variable, `>`/`>=`, RHS-anchored, …).
+    fn extract_for_cond(
+        &mut self,
+        cond_node: &GrammarASTNode,
+        var: &str,
+    ) -> Option<Expr> {
+        // Peel to the branching `relational_expression`: `[lhs, op, rhs]`.
+        let branch = peel_to_branch(cond_node);
+        if branch.rule_name != "relational_expression" || branch.children.len() != 3 {
+            return None;
+        }
+        // children = [lhs_node, op_token, rhs_node].
+        let lhs = match &branch.children[0] {
+            ASTNodeOrToken::Node(n) => n,
+            _ => return None,
+        };
+        let op = match &branch.children[1] {
+            ASTNodeOrToken::Token(t) => t.value.as_str(),
+            _ => return None,
+        };
+        let rhs = match &branch.children[2] {
+            ASTNodeOrToken::Node(n) => n,
+            _ => return None,
+        };
+        // LHS must be exactly the loop variable.
+        let lhs_tok = single_leaf_token(lhs)?;
+        if !matches!(lhs_tok.type_, TokenType::Name) || lhs_tok.value != var {
+            return None;
+        }
+        let stop = self.lower_expression(rhs, 0).ok()?;
+        match op {
+            "<" => Some(stop),
+            "<=" => {
+                // Half-open rewrite: `i <= S` ⇔ `i < S + 1`.
+                let span = stop.span().clone();
+                Some(Expr::BuiltinCall {
+                    name: "+".to_string(),
+                    args: vec![stop, Expr::IntLit { value: 1, span: span.clone() }],
+                    effects: EffectSet::PURE,
+                    span,
+                })
+            }
+            _ => None,
+        }
+    }
+
+    /// Extract the `step` expression from a canonical loop update clause.
+    ///
+    /// Accepts (on the loop variable `var`):
+    ///
+    ///   * `i++`           → `IntLit(1)` (postfix increment),
+    ///   * `i += <step>`   → `<step>`,
+    ///   * `i = i + <step>`→ `<step>`.
+    ///
+    /// Returns `None` for decrements, `*=`, a different variable, etc.
+    fn extract_for_step(
+        &mut self,
+        update_node: &GrammarASTNode,
+        var: &str,
+    ) -> Option<Expr> {
+        let branch = peel_to_branch(update_node);
+        match branch.rule_name.as_str() {
+            // ── `i++` : postfix_expression[ lhs, Name("++") ] ───────────
+            "postfix_expression" => {
+                let nodes = child_nodes(branch);
+                let target = nodes.first()?;
+                let t = single_leaf_token(target)?;
+                if !matches!(t.type_, TokenType::Name) || t.value != var {
+                    return None;
+                }
+                // The operator token must be `++` (reject `i--`).
+                let op_ok = branch.children.iter().any(|c| {
+                    matches!(c, ASTNodeOrToken::Token(tok) if tok.value == "++")
+                });
+                if !op_ok {
+                    return None;
+                }
+                Some(Expr::IntLit { value: 1, span: self.span_of(branch) })
+            }
+            // ── `i += s` or `i = i + s` :
+            //    assignment_expression[ lhs, op, rhs ] ─────────────────
+            "assignment_expression" if branch.children.len() == 3 => {
+                let lhs = match &branch.children[0] {
+                    ASTNodeOrToken::Node(n) => n,
+                    _ => return None,
+                };
+                let lhs_tok = single_leaf_token(lhs)?;
+                if !matches!(lhs_tok.type_, TokenType::Name) || lhs_tok.value != var {
+                    return None;
+                }
+                // The assignment operator value (`=`, `+=`, …).
+                let op = match &branch.children[1] {
+                    ASTNodeOrToken::Node(n) => single_leaf_token(n)?.value.clone(),
+                    ASTNodeOrToken::Token(t) => t.value.clone(),
+                };
+                let rhs = match &branch.children[2] {
+                    ASTNodeOrToken::Node(n) => n,
+                    _ => return None,
+                };
+                match op.as_str() {
+                    // `i += s` → step is `s`.
+                    "+=" => self.lower_expression(rhs, 0).ok(),
+                    // `i = i + s` → the RHS must be `i + s`; step is `s`.
+                    "=" => self.extract_plus_step(rhs, var),
+                    _ => None,
+                }
+            }
+            _ => None,
+        }
+    }
+
+    /// From an RHS shaped `i + <step>` (an `additive_expression` whose left
+    /// operand is the loop variable and whose single operator is `+`),
+    /// extract `<step>`.  Returns `None` for anything else (e.g. `i - 1`,
+    /// `i * 2`, `s + i`).
+    fn extract_plus_step(&mut self, rhs: &GrammarASTNode, var: &str) -> Option<Expr> {
+        let branch = peel_to_branch(rhs);
+        // `i + s` is one `additive_expression` with children
+        // `[i_node, Plus, s_node]`.
+        if branch.rule_name != "additive_expression" || branch.children.len() != 3 {
+            return None;
+        }
+        let lhs = match &branch.children[0] {
+            ASTNodeOrToken::Node(n) => n,
+            _ => return None,
+        };
+        let op = match &branch.children[1] {
+            ASTNodeOrToken::Token(t) => t.value.as_str(),
+            _ => return None,
+        };
+        if op != "+" {
+            return None;
+        }
+        let lhs_tok = single_leaf_token(lhs)?;
+        if !matches!(lhs_tok.type_, TokenType::Name) || lhs_tok.value != var {
+            return None;
+        }
+        let step_node = match &branch.children[2] {
+            ASTNodeOrToken::Node(n) => n,
+            _ => return None,
+        };
+        self.lower_expression(step_node, 0).ok()
+    }
+
+    // -----------------------------------------------------------------------
+    // M3: shared body / block helpers
+    // -----------------------------------------------------------------------
+
+    /// Lower a control-flow *body* `statement` (an `if`/`while` branch or a
+    /// `for` body) into a [`Block`].
+    ///
+    /// The body is either a `{ … }` block (→ its statement sequence) or a
+    /// single statement (→ a one-item block).  Either way names bound inside
+    /// it are block-scoped: we snapshot `declared_locals` before lowering
+    /// and restore it after, so an inner `let` does not leak outward.
+    fn lower_body(
+        &mut self,
+        body_stmt: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Block, JsLowerError> {
+        let saved = self.declared_locals.clone();
+        let result = self.lower_body_inner(body_stmt, depth);
+        // Restore the outer scope regardless of success so a partially
+        // mutated set never leaks (defensive; on `Err` we abort anyway).
+        self.declared_locals = saved;
+        result
+    }
+
+    /// Lower a loop body with `loop_var` bound into the body scope only.
+    ///
+    /// Mirrors the validator, which adds the loop variable to its `LocalEnv`
+    /// for the body and rewinds afterwards.  The variable must resolve to a
+    /// `Scope::Local` `VarRef` inside the body but be invisible after the
+    /// loop.  We add it to `declared_locals` over the body and then restore
+    /// the snapshot (which excludes it).
+    fn lower_loop_body_scoped(
+        &mut self,
+        loop_var: &str,
+        for_node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Block, JsLowerError> {
+        let body_stmt = self
+            .loop_body_node(for_node)
+            .ok_or_else(|| self.unsupported(for_node, "loop (no body)"))?;
+        let saved = self.declared_locals.clone();
+        self.declared_locals.insert(loop_var.to_string());
+        let result = self.lower_body_inner(body_stmt, depth);
+        self.declared_locals = saved;
+        result
+    }
+
+    /// The body `statement` of a loop is its **last** direct child node
+    /// (after the header tokens / clause expressions).
+    fn loop_body_node<'a>(&self, for_node: &'a GrammarASTNode) -> Option<&'a GrammarASTNode> {
+        child_nodes(for_node).into_iter().next_back()
+    }
+
+    /// Inner body-lowering shared by [`lower_body`] and
+    /// [`lower_loop_body_scoped`] (which own the scope save/restore).
+    fn lower_body_inner(
+        &mut self,
+        body_stmt: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Block, JsLowerError> {
+        // Descend the `statement` wrapper to the concrete body node.
+        let inner = single_child_node(body_stmt).unwrap_or(body_stmt);
+        if inner.rule_name == "block" {
+            return self.lower_block(inner, depth);
+        }
+        // A single (unbraced) statement body, e.g. `if (c) x = 1;`.  Lower
+        // the one statement and fold it into a one-element `Block`, reusing
+        // the same Stmt/Expr → (stmts, tail) routing as a block.
+        let span = self.span_of(body_stmt);
+        let mut stmts: Vec<Stmt> = Vec::new();
+        let value = match self.lower_source_element(body_stmt, depth + 1)? {
+            Lowered::Stmt(s) => {
+                stmts.push(*s);
+                Expr::NilLit { span: span.clone() }
+            }
+            Lowered::Expr(e) => e,
+        };
+        Ok(Block { stmts, value, span })
+    }
+
+    /// Lower a `block` (`{ stmt* }`) into a [`Block`].  The `{`/`}` tokens
+    /// are skipped by [`lower_stmt_seq`].  Recurses with `depth + 1` so the
+    /// nesting guard catches pathological depth.
+    fn lower_block(&mut self, node: &GrammarASTNode, depth: usize) -> Result<Block, JsLowerError> {
+        self.check_stmt_depth(node, depth)?;
+        let span = self.span_of(node);
+        self.lower_stmt_seq(&node.children, span, depth + 1)
+    }
+
+    /// Enforce the [`MAX_STMT_DEPTH`] nesting bound; error if exceeded.
+    fn check_stmt_depth(&self, node: &GrammarASTNode, depth: usize) -> Result<(), JsLowerError> {
+        if depth > MAX_STMT_DEPTH {
+            return Err(JsLowerError {
+                message: format!(
+                    "control-flow nests deeper than the supported limit ({MAX_STMT_DEPTH})"
+                ),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            });
+        }
+        Ok(())
     }
 
     // -----------------------------------------------------------------------
@@ -980,7 +1588,7 @@ impl Lowerer {
     fn unsupported(&self, node: &GrammarASTNode, what: &str) -> JsLowerError {
         JsLowerError {
             message: format!(
-                "`{what}` is out of scope for M2; deferred to a later milestone"
+                "`{what}` is out of scope for this milestone; deferred to a later one"
             ),
             line: node.start_line.unwrap_or(0),
             column: node.start_column.unwrap_or(0),
@@ -1048,6 +1656,21 @@ fn peel_to_branch(node: &GrammarASTNode) -> &GrammarASTNode {
 /// token.  Returns `None` if the bottom node branches.
 fn single_leaf_token(node: &GrammarASTNode) -> Option<&Token> {
     peel_to_branch(node).token()
+}
+
+/// Return every direct child of `node` that is a *node* (dropping the
+/// interleaved tokens), in source order.  Used by the control-flow lowerers
+/// to read a statement's operand nodes positionally — e.g. an
+/// `if_statement`'s `[cond, then, else]` or a loop's trailing body node —
+/// without having to thread past the keyword/paren tokens.
+fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
+    node.children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Node(n) => Some(n),
+            ASTNodeOrToken::Token(_) => None,
+        })
+        .collect()
 }
 
 /// Return the first direct child node of `node` whose `rule_name` is

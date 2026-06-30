@@ -1,8 +1,8 @@
 [package]
 name = "javascript-to-semantic-ir"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "JavaScript (GrammarASTNode CST) → narrow-waist Semantic IR. SIR19 frontend, milestone M2 (variables, assignment, operators)."
+description = "JavaScript (GrammarASTNode CST) → narrow-waist Semantic IR. SIR19 frontend, milestone M3 (control flow: if/while/for/for-of)."
 
 [dependencies]
 coding-adventures-javascript-parser = { path = "../javascript-parser" }

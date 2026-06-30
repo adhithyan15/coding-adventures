@@ -27,9 +27,19 @@
 //! not from the parser's typed-AST bridge — that's the contract SIR19
 //! sets, mirroring the Ruby and Twig frontends.
 //!
-//! ## Milestone status — M2 (variables, assignment, operators)
+//! ## Milestone status — M3 (control flow)
 //!
-//! This build implements literals (M1) **plus**:
+//! This build implements literals (M1) and variables/operators (M2)
+//! **plus** control flow (M3): `if`/`else` → [`Expr::If`] (nested in the
+//! else branch for else-if chains), `while` → [`Stmt::While`], the
+//! canonical counting C-style `for` → [`Stmt::ForRange`], `for … of` →
+//! [`Stmt::ForEach`], and bare `{ … }` blocks → [`Expr::Block`].  Loop
+//! variables are scoped into the body only; statement-block nesting is
+//! depth-bounded.  Non-canonical `for` loops, and all other control-flow
+//! constructs (`switch`/`try`/`do-while`/labeled/`break`/`continue`), are
+//! positioned errors (deferred).
+//!
+//! The M1 + M2 lowerings, unchanged, are:
 //!
 //! - JS number → [`IntLit`](semantic_ir::Expr::IntLit) when the literal
 //!   text is an integer (no `.`/exponent), else
@@ -51,10 +61,12 @@
 //!   → `BuiltinCall("!=")` (strict normalisation — a documented semantic
 //!   change for the loose-equality coercion cases).
 //!
-//! All other syntax (control flow, functions, collections, member
-//! access, template literals) is **deferred** to later milestones and
-//! currently produces a clear [`JsLowerError`].  See the crate
-//! `CHANGELOG.md` "Deferred" section for the roadmap.
+//! All other syntax (functions, collections, member access, template
+//! literals, plus non-canonical `for` and the remaining control-flow
+//! constructs `switch`/`try`/`do-while`/labeled/`break`/`continue`) is
+//! **deferred** to later milestones and currently produces a clear
+//! [`JsLowerError`].  See the crate `CHANGELOG.md` "Deferred" section for
+//! the roadmap.
 //!
 //! ## Public API
 //!
@@ -542,5 +554,378 @@ mod tests {
         let got = extract_line_col("Parse error at 3:7: something");
         assert_eq!(got, Some((3, 7)));
         assert_eq!(extract_line_col("no position here"), None);
+    }
+
+    // ── M3: control flow — if / while / for / for-of ───────────────
+
+    use semantic_ir::Block;
+
+    /// Find the single `Expr::If` that a top-level `if` statement lowers to.
+    /// An `if` statement becomes a `Stmt::ExprStmt { expr: Expr::If, .. }`
+    /// in `main`'s body (it produces no observable tail value at the top
+    /// level), so we dig it out of the first statement.
+    fn first_if(m: &semantic_ir::Module) -> &Expr {
+        let b = main_block(m);
+        match b.stmts.first() {
+            Some(Stmt::ExprStmt { expr: e @ Expr::If { .. }, .. }) => e,
+            // Or, when `if` is the *only* item, it may be the tail value.
+            _ => match &b.value {
+                e @ Expr::If { .. } => e,
+                other => panic!("expected Expr::If, got stmts={:?} value={other:?}", b.stmts),
+            },
+        }
+    }
+
+    /// Pull a block's only `ExprStmt`-wrapped assignment target name, used
+    /// to sanity-check which branch body we are looking at.
+    fn block_only_assign_name(b: &Block) -> Option<&str> {
+        b.stmts.iter().find_map(|s| match s {
+            Stmt::Assign { name, .. } | Stmt::LetStarBinding { name, .. } => Some(name.as_str()),
+            _ => None,
+        })
+    }
+
+    #[test]
+    fn if_else_lowers_to_expr_if_with_both_branches() {
+        let m = lower("let c = true; let x = 0; if (c) { x = 1; } else { x = 2; }");
+        assert_valid(&m);
+        match first_if(&m) {
+            Expr::If { cond, then_branch, else_branch, .. } => {
+                assert!(matches!(**cond, Expr::VarRef { .. }));
+                // then-branch assigns x = 1
+                assert!(matches!(
+                    then_branch.stmts.first(),
+                    Some(Stmt::Assign { .. })
+                ));
+                assert!(matches!(
+                    else_branch.stmts.first(),
+                    Some(Stmt::Assign { .. })
+                ));
+            }
+            other => panic!("expected If, got {other:?}"),
+        }
+        // NB: `Expr::If` is not gated by any `Feature` in SIR v0 — the
+        // validator observes no feature for a conditional — so we
+        // deliberately do *not* assert a manifest entry here.
+    }
+
+    #[test]
+    fn if_without_else_gets_empty_nil_else_branch() {
+        let m = lower("let c = true; let x = 0; if (c) { x = 1; }");
+        assert_valid(&m);
+        match first_if(&m) {
+            Expr::If { then_branch, else_branch, .. } => {
+                assert!(matches!(then_branch.stmts.first(), Some(Stmt::Assign { .. })));
+                // Synthetic empty else: no stmts, nil value.
+                assert!(else_branch.stmts.is_empty());
+                assert!(matches!(else_branch.value, Expr::NilLit { .. }));
+            }
+            other => panic!("expected If, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn else_if_chain_nests_if_in_else_branch() {
+        // `if (a) {} else if (b) {} else {}` → outer If whose else_branch's
+        // tail value is a nested If.
+        let m = lower(
+            "let a = true; let b = false; let x = 0; \
+             if (a) { x = 1; } else if (b) { x = 2; } else { x = 3; }",
+        );
+        assert_valid(&m);
+        match first_if(&m) {
+            Expr::If { else_branch, .. } => {
+                // The else branch holds the nested `if` as its tail value.
+                match &else_branch.value {
+                    Expr::If { then_branch, else_branch: inner_else, .. } => {
+                        assert_eq!(block_only_assign_name(then_branch), Some("x"));
+                        // Final `else { x = 3; }`.
+                        assert!(matches!(
+                            inner_else.stmts.first(),
+                            Some(Stmt::Assign { .. })
+                        ));
+                    }
+                    other => panic!("expected nested If in else, got {other:?}"),
+                }
+            }
+            other => panic!("expected If, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn single_statement_if_body_needs_no_braces() {
+        // `if (c) x = 1;` — an unbraced single-statement body.
+        let m = lower("let c = true; let x = 0; if (c) x = 1;");
+        assert_valid(&m);
+        match first_if(&m) {
+            Expr::If { then_branch, .. } => {
+                assert!(matches!(then_branch.stmts.first(), Some(Stmt::Assign { .. })));
+            }
+            other => panic!("expected If, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn while_loop_lowers_to_stmt_while() {
+        let m = lower("let c = true; let x = 0; while (c) { x = 1; }");
+        assert_valid(&m);
+        let b = main_block(&m);
+        let w = b.stmts.iter().find(|s| matches!(s, Stmt::While { .. }))
+            .expect("a While statement");
+        match w {
+            Stmt::While { cond, body, .. } => {
+                assert!(matches!(cond, Expr::VarRef { .. }));
+                assert!(matches!(body.stmts.first(), Some(Stmt::Assign { .. })));
+            }
+            _ => unreachable!(),
+        }
+        assert!(m.manifest.contains(Feature::Loops));
+    }
+
+    /// Locate the single `ForRange` in `main`.
+    fn first_for_range(m: &semantic_ir::Module) -> &Stmt {
+        main_block(m)
+            .stmts
+            .iter()
+            .find(|s| matches!(s, Stmt::ForRange { .. }))
+            .expect("a ForRange statement")
+    }
+
+    #[test]
+    fn c_for_with_explicit_assign_update_lowers_to_for_range() {
+        // `for (let i = 0; i < n; i = i + 1)` → ForRange(i, 0, n, 1).
+        let m = lower("let n = 10; let s = 0; for (let i = 0; i < n; i = i + 1) { s = s + i; }");
+        assert_valid(&m);
+        match first_for_range(&m) {
+            Stmt::ForRange { var, start, stop, step, body, .. } => {
+                assert_eq!(var, "i");
+                assert!(matches!(start, Expr::IntLit { value: 0, .. }));
+                assert!(matches!(stop, Expr::VarRef { name, .. } if name == "n"));
+                assert!(matches!(step, Expr::IntLit { value: 1, .. }));
+                // Body references both `s` (outer) and `i` (loop var).
+                assert!(matches!(body.stmts.first(), Some(Stmt::Assign { .. })));
+            }
+            _ => unreachable!(),
+        }
+        assert!(m.manifest.contains(Feature::Loops));
+    }
+
+    #[test]
+    fn c_for_with_postfix_increment_update() {
+        // `i++` update → step IntLit(1).
+        let m = lower("let n = 5; let s = 0; for (let i = 0; i < n; i++) { s = s + i; }");
+        assert_valid(&m);
+        match first_for_range(&m) {
+            Stmt::ForRange { var, step, .. } => {
+                assert_eq!(var, "i");
+                assert!(matches!(step, Expr::IntLit { value: 1, .. }));
+            }
+            _ => unreachable!(),
+        }
+    }
+
+    #[test]
+    fn c_for_with_compound_plus_assign_step() {
+        // `i += 2` update → step IntLit(2).
+        let m = lower("let n = 9; let s = 0; for (let i = 0; i < n; i += 2) { s = s + i; }");
+        assert_valid(&m);
+        match first_for_range(&m) {
+            Stmt::ForRange { step, .. } => {
+                assert!(matches!(step, Expr::IntLit { value: 2, .. }));
+            }
+            _ => unreachable!(),
+        }
+    }
+
+    #[test]
+    fn c_for_with_le_condition_bumps_stop_half_open() {
+        // `i <= n` ⇒ half-open `n + 1`.
+        let m = lower("let n = 4; let s = 0; for (let i = 0; i <= n; i++) { s = s + i; }");
+        assert_valid(&m);
+        match first_for_range(&m) {
+            Stmt::ForRange { stop, .. } => match stop {
+                Expr::BuiltinCall { name, args, .. } => {
+                    assert_eq!(name, "+");
+                    assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "n"));
+                    assert!(matches!(&args[1], Expr::IntLit { value: 1, .. }));
+                }
+                other => panic!("expected n+1 stop, got {other:?}"),
+            },
+            _ => unreachable!(),
+        }
+    }
+
+    #[test]
+    fn c_for_with_literal_stop() {
+        // `for (let i = 0; i < 10; i++)` — stop is a literal.
+        let m = lower("let s = 0; for (let i = 0; i < 10; i++) { s = s + i; }");
+        assert_valid(&m);
+        match first_for_range(&m) {
+            Stmt::ForRange { start, stop, step, .. } => {
+                assert!(matches!(start, Expr::IntLit { value: 0, .. }));
+                assert!(matches!(stop, Expr::IntLit { value: 10, .. }));
+                assert!(matches!(step, Expr::IntLit { value: 1, .. }));
+            }
+            _ => unreachable!(),
+        }
+    }
+
+    #[test]
+    fn non_canonical_for_decrement_is_rejected() {
+        // `i--` is a decrement; we can't represent it as a half-open
+        // counting ForRange, so it's a positioned deferral error.
+        let err = compile_source(
+            "let n = 5; for (let i = n; i > 0; i--) { n = n; }",
+            "test",
+        )
+        .expect_err("decrementing for must be rejected");
+        assert!(
+            err.message.contains("non-canonical"),
+            "unexpected message: {}",
+            err.message
+        );
+    }
+
+    #[test]
+    fn non_canonical_for_wrong_cond_variable_is_rejected() {
+        // Condition references a different variable than the loop var.
+        let err = compile_source(
+            "let n = 5; let j = 0; for (let i = 0; j < n; i++) { n = n; }",
+            "test",
+        )
+        .expect_err("mismatched condition variable must be rejected");
+        assert!(err.message.contains("non-canonical"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn non_canonical_for_multiplicative_step_is_rejected() {
+        // `i = i * 2` is not an additive increment.
+        let err = compile_source(
+            "let n = 64; for (let i = 1; i < n; i = i * 2) { n = n; }",
+            "test",
+        )
+        .expect_err("multiplicative step must be rejected");
+        assert!(err.message.contains("non-canonical"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn for_of_lowers_to_for_each() {
+        // `for (const x of xs) { p = x; }` → ForEach { var: x, iter: xs }.
+        // NB: collection literals are deferred past M3, so the iterable
+        // `xs` is bound to a placeholder scalar.  The lowering is
+        // structural — it does not typecheck the iterable — so `for-of`
+        // over a `VarRef` lowers regardless of the bound value's shape.
+        let m = lower("let xs = 0; let p = 0; for (const x of xs) { p = x; }");
+        assert_valid(&m);
+        let fe = main_block(&m).stmts.iter()
+            .find(|s| matches!(s, Stmt::ForEach { .. }))
+            .expect("a ForEach statement");
+        match fe {
+            Stmt::ForEach { var, iter, body, .. } => {
+                assert_eq!(var, "x");
+                assert!(matches!(iter, Expr::VarRef { name, .. } if name == "xs"));
+                // Body assigns p = x (x resolves to the loop var).
+                assert!(matches!(body.stmts.first(), Some(Stmt::Assign { .. })));
+            }
+            _ => unreachable!(),
+        }
+        assert!(m.manifest.contains(Feature::Loops));
+    }
+
+    #[test]
+    fn loop_variable_is_not_visible_after_the_loop() {
+        // `i` is in scope inside the for body but unresolved afterwards.
+        let err = compile_source(
+            "let n = 3; let s = 0; for (let i = 0; i < n; i++) { s = s + i; } i;",
+            "test",
+        )
+        .expect_err("loop var must not leak past the loop");
+        assert!(
+            err.message.contains("unresolved name"),
+            "unexpected message: {}",
+            err.message
+        );
+    }
+
+    #[test]
+    fn for_of_variable_is_not_visible_after_the_loop() {
+        let err = compile_source(
+            "let xs = 0; let p = 0; for (const x of xs) { p = x; } x;",
+            "test",
+        )
+        .expect_err("for-of var must not leak");
+        assert!(err.message.contains("unresolved name"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn block_scoped_let_does_not_leak_to_outer_scope() {
+        // A `let` inside an if-body is block-scoped: referencing it after
+        // the `if` is an unresolved-name error.
+        let err = compile_source(
+            "let c = true; if (c) { let inner = 1; inner; } inner;",
+            "test",
+        )
+        .expect_err("block-scoped let must not leak");
+        assert!(err.message.contains("unresolved name"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn bare_block_statement_lowers_and_scopes() {
+        // A bare `{ … }` block runs its statements; an inner binding is
+        // scoped to the block.
+        let m = lower("let x = 0; { x = 1; }");
+        assert_valid(&m);
+        // The block's inner `x = 1` is an Assign to the outer x.
+        let has_block = main_block(&m).stmts.iter().any(|s| {
+            matches!(s, Stmt::ExprStmt { expr: Expr::Block(_), .. })
+        }) || matches!(&main_block(&m).value, Expr::Block(_));
+        assert!(has_block, "expected an Expr::Block somewhere in main");
+    }
+
+    #[test]
+    fn nested_control_flow_validates() {
+        // while containing an if containing a for — exercise nesting and
+        // the shared body/scoping machinery end to end.
+        let m = lower(
+            "let n = 5; let s = 0; let go = true; \
+             while (go) { \
+               if (s < n) { for (let i = 0; i < n; i++) { s = s + i; } } else { go = false; } \
+             }",
+        );
+        assert_valid(&m);
+        assert!(m.manifest.contains(Feature::Loops));
+        // The outer statement is a While.
+        assert!(main_block(&m).stmts.iter().any(|s| matches!(s, Stmt::While { .. })));
+    }
+
+    #[test]
+    fn if_condition_can_be_a_comparison() {
+        // The condition is a relational BuiltinCall, not just a var-ref.
+        let m = lower("let a = 1; let b = 2; let x = 0; if (a < b) { x = 1; }");
+        assert_valid(&m);
+        match first_if(&m) {
+            Expr::If { cond, .. } => {
+                assert!(matches!(**cond, Expr::BuiltinCall { .. }));
+            }
+            other => panic!("expected If, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn control_flow_round_trips_through_validation() {
+        // A small program mixing all four control-flow forms validates and
+        // declares exactly the observed features (no spurious warnings).
+        // Collection literals are deferred, so `xs` is a placeholder scalar.
+        let m = lower(
+            "let xs = 0; let total = 0; \
+             for (const x of xs) { total = total + x; } \
+             let i = 0; while (i < 3) { i = i + 1; } \
+             for (let k = 0; k < 3; k++) { total = total + k; } \
+             if (total > 0) { total = total; } else { total = 0; }",
+        );
+        assert_valid(&m);
+        let r = semantic_ir::validate(&m);
+        assert!(r.warnings().next().is_none(), "unexpected warnings");
+        assert!(m.manifest.contains(Feature::Loops));
     }
 }
