@@ -2,6 +2,50 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.12.0 — Param default values (core IR representation; behavior-neutral)
+
+Adds the IR representation for **default parameter values** — the `1` in
+Ruby `def f(a = 1)` and the Python / JavaScript equivalents. Previously a
+parameter had no place to carry its default, so frontends silently dropped
+it. This is **PR 1 of a sequence**: the IR can now *represent* a default,
+the whole workspace still compiles, and **all existing behavior is
+unchanged** (no frontend produces a default yet, and no backend emits one
+yet). Backend emission and frontend lowering land in follow-up PRs.
+
+### Added
+
+- `Param.default: Option<Box<Expr>>` — `None` for an ordinary parameter;
+  `Some(expr)` for `name = expr`. Boxed to keep `Param` a fixed size despite
+  the recursive `Param → Expr → Function → Param` cycle (a default
+  expression may contain a closure whose own params have defaults).
+- `Feature::DefaultParams` (text name `default-params`) — observed by the
+  validator whenever any param carries a default. **Not yet accepted by any
+  backend**, so a default-using module is correctly rejected by the
+  capability check until each backend gains support (intended).
+- Validator: when a param has a default it observes `Feature::DefaultParams`
+  and recursively validates the default `Expr` against the parameters
+  declared *so far* (a default may reference an earlier param but not a
+  later one).
+- Walker: `walk_function_default` now visits each param's default
+  expression before the body, so passes that walk the IR see them.
+- Text printer: a param with a default renders an extra `(default <expr>)`
+  clause — `(a any (default (int 1)))` — while defaultless params keep the
+  original `(name type)` shape, so existing modules print unchanged.
+- Unit tests: default validates + observes the feature, default-expr
+  features are observed, a default may reference an earlier param (and may
+  not reference a later one), the walker visits the default expr, and the
+  printer renders the default clause.
+
+### Changed
+
+- `Param` now derives only `PartialEq` (not `Eq`): it holds an `Expr`, which
+  contains an `f64` (`FloatLit`) and so cannot be `Eq` — consistent with
+  `Expr` / `Block`.
+- Every literal `Param { … }` construction across the SIR backends
+  (typescript/rust/python/go/javascript) and the twig/ruby frontends now
+  sets `default: None`. This is a mechanical addition; backends read params
+  by field access, so the new field does not affect their behavior.
+
 ## 0.11.0 — SIR19: variadic parameter kinds (`Param.kind` / `ParamKind`) (M3)
 
 Closes the def-side variadic limitation: previously a splat parameter

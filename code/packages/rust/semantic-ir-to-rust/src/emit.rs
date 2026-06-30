@@ -1494,7 +1494,7 @@ mod tests {
         };
         let f = Function {
             name: "id".into(),
-            params: vec![Param { name: "x".into(), kind: ParamKind::Required, sir_type: None, span: s() }],
+            params: vec![Param { name: "x".into(), kind: ParamKind::Required, sir_type: None, default: None, span: s() }],
             return_type: None,
             captures: vec![],
             body,

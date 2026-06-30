@@ -141,13 +141,35 @@ pub enum ParamKind {
 }
 
 /// A function parameter.
-#[derive(Debug, Clone, PartialEq, Eq)]
+///
+/// The optional `default` carries a parameter's default-value
+/// expression, e.g. the `1` in Ruby `def f(a = 1)` (and the Python /
+/// JS equivalents).  `None` means an ordinary parameter with no
+/// default; `Some(expr)` means the parameter binds to `expr` when the
+/// caller omits the corresponding argument.
+///
+/// The default is boxed (`Option<Box<Expr>>`) to break the otherwise
+/// infinitely-sized recursive type `Param → Expr → Function → Param`:
+/// a default expression may contain a closure whose own parameters may
+/// themselves have defaults.  `Box` puts the `Expr` behind a pointer so
+/// the struct has a fixed size.
+///
+/// Note: because `Expr` contains an `f64` (`FloatLit`) it cannot derive
+/// `Eq`, so neither can `Param` once it holds an `Expr`.  `Param`
+/// therefore derives only `PartialEq` (structural equality is still
+/// available; total `Eq` is not — consistent with `Expr`/`Block`).
+#[derive(Debug, Clone, PartialEq)]
 pub struct Param {
     pub name: String,
     pub sir_type: Option<SirType>,
     /// The binding kind (`Required` by default; `Rest`/`KwRest` for the
     /// `*rest`/`**opts` variadic forms — M3).
     pub kind: ParamKind,
+    /// The default-value expression, if any.  `None` for an ordinary
+    /// parameter; `Some(expr)` for `name = expr` (Ruby/Python/JS).
+    /// Boxed to keep `Param` a fixed size despite the `Param → Expr →
+    /// Function → Param` cycle.
+    pub default: Option<Box<Expr>>,
     pub span: Span,
 }
 

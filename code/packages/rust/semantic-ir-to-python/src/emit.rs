@@ -1526,7 +1526,7 @@ mod tests {
         };
         let f = Function {
             name: "id".into(),
-            params: vec![Param { name: "x".into(), sir_type: None, kind: ParamKind::Required, span: s() }],
+            params: vec![Param { name: "x".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() }],
             return_type: None,
             captures: vec![],
             body,
@@ -1547,9 +1547,9 @@ mod tests {
         let f = Function {
             name: "f".into(),
             params: vec![
-                Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, span: s() },
-                Param { name: "rest".into(), sir_type: None, kind: ParamKind::Rest, span: s() },
-                Param { name: "opts".into(), sir_type: None, kind: ParamKind::KwRest, span: s() },
+                Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+                Param { name: "rest".into(), sir_type: None, kind: ParamKind::Rest, default: None, span: s() },
+                Param { name: "opts".into(), sir_type: None, kind: ParamKind::KwRest, default: None, span: s() },
             ],
             return_type: None,
             captures: vec![],
