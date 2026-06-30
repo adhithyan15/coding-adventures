@@ -40,7 +40,7 @@ pub use queue::{
     deck_options_for_state, get_daily_study_limit_usage, get_deck_stats, get_deck_stats_for_state,
     is_deck_caught_up, notes_in_deck_scope,
 };
-pub use reducer::{reduce, EngramCommand};
+pub use reducer::{empty_filtered_deck, rebuild_filtered_deck, reduce, EngramCommand};
 pub use scheduler::schedule_review;
 pub use search::{
     search_cards, search_cards_with_context, CardSearchResult, SearchContext, SearchError,

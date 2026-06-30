@@ -36,6 +36,15 @@ char *eg_build_queue_with_daily_limits(
     const char *deck_options_json
 );
 char *eg_deck_stats(EgSession *session, const char *deck_id, uint64_t now);
+char *eg_empty_filtered_deck(EgSession *session, const char *deck_id);
+char *eg_rebuild_filtered_deck(
+    EgSession *session,
+    const char *deck_id,
+    const char *query,
+    size_t limit,
+    uint8_t reschedule,
+    uint64_t rebuilt_at
+);
 char *eg_session_progress(EgSession *session);
 char *eg_engram_app_props(EgSession *session, const char *deck_id, uint64_t now);
 char *eg_engram_browser_props(EgSession *session, const char *query, uint64_t now);

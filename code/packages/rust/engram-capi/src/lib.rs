@@ -156,6 +156,35 @@ pub unsafe extern "C" fn eg_deck_stats(
 }
 
 /// # Safety
+/// `session` must be valid; `deck_id` must be null or a valid C string.
+#[no_mangle]
+pub unsafe extern "C" fn eg_empty_filtered_deck(
+    session: *mut EgSession,
+    deck_id: *const c_char,
+) -> *mut c_char {
+    let deck_id = read_cstr(deck_id);
+    with_session(session, |session| session.empty_filtered_deck(&deck_id))
+}
+
+/// # Safety
+/// `session` must be valid; strings must be null or valid C strings.
+#[no_mangle]
+pub unsafe extern "C" fn eg_rebuild_filtered_deck(
+    session: *mut EgSession,
+    deck_id: *const c_char,
+    query: *const c_char,
+    limit: usize,
+    reschedule: u8,
+    rebuilt_at: u64,
+) -> *mut c_char {
+    let deck_id = read_cstr(deck_id);
+    let query = read_cstr(query);
+    with_session(session, |session| {
+        session.rebuild_filtered_deck(&deck_id, &query, limit, reschedule != 0, rebuilt_at)
+    })
+}
+
+/// # Safety
 /// `session` must be a valid session pointer.
 #[no_mangle]
 pub unsafe extern "C" fn eg_session_progress(session: *mut EgSession) -> *mut c_char {
@@ -2229,6 +2258,50 @@ CREATE TABLE graves (
             assert!(history.contains(r#""history":{"#));
             assert!(history.contains(r#""totalReviews":1"#));
             assert!(history.contains(r#""easy":1"#));
+
+            eg_session_free(session);
+        }
+    }
+
+    #[test]
+    fn c_abi_rebuilds_and_empties_filtered_decks() {
+        unsafe {
+            let session = eg_session_new();
+            let snapshot = cstr(
+                r#"{
+                    "decks": [
+                        {"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000},
+                        {"id":"filtered","name":"Filtered::Today","description":"Custom study","createdAt":1700000000000}
+                    ],
+                    "noteTypes": [],
+                    "notes": [],
+                    "cards": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+                    "cardProgress": [],
+                    "sessions": [],
+                    "reviews": [],
+                    "activeSession": null
+                }"#,
+            );
+            let loaded = take(eg_load_snapshot(session, snapshot.as_ptr()));
+            assert!(loaded.contains(r#""ok":true"#), "{loaded}");
+
+            let deck = cstr("filtered");
+            let query = cstr("deck:Tamil");
+            let rebuilt = take(eg_rebuild_filtered_deck(
+                session,
+                deck.as_ptr(),
+                query.as_ptr(),
+                5,
+                0,
+                NOW,
+            ));
+            assert!(rebuilt.contains(r#""ok":true"#), "{rebuilt}");
+            assert!(rebuilt.contains(r#""deckId":"filtered""#), "{rebuilt}");
+            assert!(rebuilt.contains(r#""originalDeckId":"deck""#), "{rebuilt}");
+
+            let emptied = take(eg_empty_filtered_deck(session, deck.as_ptr()));
+            assert!(emptied.contains(r#""ok":true"#), "{emptied}");
+            assert!(emptied.contains(r#""deckId":"deck""#), "{emptied}");
 
             eg_session_free(session);
         }

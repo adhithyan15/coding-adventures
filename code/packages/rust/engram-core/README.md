@@ -107,6 +107,13 @@ restores both the previous progress and the previous note tags.
 Imported Anki filtered decks with `resched=false` are treated as preview-style
 sessions: the review is logged and session counters advance, but card progress,
 leech handling, and sibling burying are left unchanged.
+`rebuild_filtered_deck` and `empty_filtered_deck` provide the shared custom
+study primitive for hosts: rebuild materializes an Anki-browser search into a
+temporary filtered deck while recording each card's original deck, and empty
+restores those cards back to their original decks while clearing temporary
+membership metadata. The C and WASM facades expose the same operations so web,
+Electron, Qt, XAML, SwiftUI, and other Mosaic hosts can call the core behavior
+without reimplementing filtered-deck membership.
 Deleting imported decks, notes, or cards now preserves generic
 `ExternalSourceTarget::Deleted` tombstones with the original source ID, so
 package boundaries such as APKG can emit deletion markers without teaching the
@@ -136,7 +143,8 @@ including review/day-learning scheduler days and learning queue seconds.
 state-aware queue builders use the same positions when ordering imported new
 cards for study.
 For imported filtered-deck cards, `deck:` also matches the preserved original
-deck ID/name.
+deck ID/name; native filtered-deck cards use the same behavior when their
+temporary membership records store an original Engram deck key.
 Imported Anki card-row metrics also power `prop:ivl`, `prop:reps`,
 `prop:lapses`, and `prop:ease` searches when preserved source data is present.
 When the shared reducer locally rates, buries, suspends, unburies, unsuspends,

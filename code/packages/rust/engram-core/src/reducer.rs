@@ -7,11 +7,13 @@ use crate::model::{
 };
 use crate::queue::is_new_progress_overlay;
 use crate::scheduler::schedule_review;
+use crate::search::{search_cards, SearchError};
 use crate::sm2::{INITIAL_EASE_FACTOR, ONE_DAY_MS};
 use crate::template::{
     generate_cards_for_note, materialize_generated_card, rename_note_type_field,
 };
 
+const ANKI_V11_SOURCE: &str = "anki-v11";
 const CARD_SCHEDULING_SOURCE_KEYS: &[&str] = &[
     "kind",
     "queue",
@@ -47,6 +49,17 @@ pub enum EngramCommand {
     SetDeckOptions {
         deck_id: String,
         options: DeckOptions,
+    },
+    EmptyFilteredDeck {
+        deck_id: String,
+    },
+    RebuildFilteredDeck {
+        deck_id: String,
+        search: String,
+        limit: usize,
+        card_ids: Vec<String>,
+        reschedule: bool,
+        rebuilt_at: u64,
     },
     DeleteDeck {
         deck_id: String,
@@ -247,6 +260,17 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             }
             next
         }
+        EngramCommand::EmptyFilteredDeck { deck_id } => empty_filtered_deck(state, &deck_id),
+        EngramCommand::RebuildFilteredDeck {
+            deck_id,
+            search,
+            limit,
+            card_ids,
+            reschedule,
+            rebuilt_at,
+        } => rebuild_filtered_deck_from_card_ids(
+            state, &deck_id, &search, limit, &card_ids, reschedule, rebuilt_at,
+        ),
         EngramCommand::DeleteDeck { deck_id } => {
             let card_ids: Vec<String> = state
                 .cards
@@ -788,6 +812,188 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             next.active_session = None;
             next
         }
+    }
+}
+
+pub fn empty_filtered_deck(state: &AppState, deck_id: &str) -> AppState {
+    let mut next = state.clone();
+    let mut restored_card_ids = Vec::new();
+
+    for card in &mut next.cards {
+        if card.deck_id != deck_id {
+            continue;
+        }
+        let Some(original_deck_id) = original_deck_id_for_card_source(state, &card.id) else {
+            continue;
+        };
+        if original_deck_id == deck_id
+            || !state.decks.iter().any(|deck| deck.id == original_deck_id)
+        {
+            continue;
+        }
+        card.deck_id = original_deck_id;
+        restored_card_ids.push(card.id.clone());
+    }
+
+    for card_id in &restored_card_ids {
+        clear_filtered_card_source(&mut next, card_id);
+    }
+    clear_active_session_for_cards(&mut next, deck_id, &restored_card_ids);
+    next
+}
+
+pub fn rebuild_filtered_deck(
+    state: &AppState,
+    deck_id: &str,
+    search: &str,
+    limit: usize,
+    reschedule: bool,
+    rebuilt_at: u64,
+) -> Result<AppState, SearchError> {
+    let emptied = empty_filtered_deck(state, deck_id);
+    let card_ids = search_cards(&emptied, search, rebuilt_at)?
+        .into_iter()
+        .take(limit)
+        .map(|result| result.card.id)
+        .collect::<Vec<_>>();
+
+    Ok(rebuild_filtered_deck_from_card_ids(
+        &emptied, deck_id, search, limit, &card_ids, reschedule, rebuilt_at,
+    ))
+}
+
+fn rebuild_filtered_deck_from_card_ids(
+    state: &AppState,
+    deck_id: &str,
+    search: &str,
+    limit: usize,
+    card_ids: &[String],
+    reschedule: bool,
+    rebuilt_at: u64,
+) -> AppState {
+    let mut next = empty_filtered_deck(state, deck_id);
+    upsert_filtered_deck_source(&mut next, deck_id, search, limit, reschedule, rebuilt_at);
+
+    let mut moved_card_ids = Vec::new();
+    for card_id in card_ids {
+        if moved_card_ids.iter().any(|existing| existing == card_id) {
+            continue;
+        }
+        if moved_card_ids.len() >= limit {
+            break;
+        }
+        let Some(card_index) = next.cards.iter().position(|card| card.id == *card_id) else {
+            continue;
+        };
+        if next.cards[card_index].deck_id == deck_id {
+            continue;
+        }
+        let original_deck_id = next.cards[card_index].deck_id.clone();
+        next.cards[card_index].deck_id = deck_id.to_string();
+        upsert_filtered_card_source(&mut next, card_id, &original_deck_id);
+        moved_card_ids.push(card_id.clone());
+    }
+
+    clear_active_session_for_cards(&mut next, deck_id, &moved_card_ids);
+    next
+}
+
+fn original_deck_id_for_card_source(state: &AppState, card_id: &str) -> Option<String> {
+    state
+        .external_sources
+        .iter()
+        .find(|source| {
+            source.source == ANKI_V11_SOURCE
+                && source.target == ExternalSourceTarget::Card
+                && source.target_id == card_id
+        })
+        .and_then(|source| source.data.get("originalDeckId"))
+        .map(|deck_id| deck_id.trim())
+        .filter(|deck_id| !deck_id.is_empty() && *deck_id != "0")
+        .map(str::to_string)
+}
+
+fn upsert_filtered_deck_source(
+    state: &mut AppState,
+    deck_id: &str,
+    search: &str,
+    limit: usize,
+    reschedule: bool,
+    rebuilt_at: u64,
+) {
+    let source = ensure_external_source(
+        &mut state.external_sources,
+        ExternalSourceTarget::Deck,
+        deck_id,
+    );
+    source.data.insert("dyn".to_string(), "1".to_string());
+    source
+        .data
+        .insert("resched".to_string(), reschedule.to_string());
+    source.data.insert("search".to_string(), search.to_string());
+    source.data.insert("limit".to_string(), limit.to_string());
+    source.data.insert("order".to_string(), "0".to_string());
+    source
+        .data
+        .insert("rebuiltAt".to_string(), rebuilt_at.to_string());
+}
+
+fn upsert_filtered_card_source(state: &mut AppState, card_id: &str, original_deck_id: &str) {
+    let source = ensure_external_source(
+        &mut state.external_sources,
+        ExternalSourceTarget::Card,
+        card_id,
+    );
+    source
+        .data
+        .insert("originalDeckId".to_string(), original_deck_id.to_string());
+}
+
+fn clear_filtered_card_source(state: &mut AppState, card_id: &str) {
+    if let Some(index) = state.external_sources.iter().position(|source| {
+        source.source == ANKI_V11_SOURCE
+            && source.target == ExternalSourceTarget::Card
+            && source.target_id == card_id
+    }) {
+        let source = &mut state.external_sources[index];
+        source.data.remove("originalDeckId");
+        source.data.remove("originalDue");
+        if source.original_id.is_none() && source.data.is_empty() {
+            state.external_sources.remove(index);
+        }
+    }
+}
+
+fn ensure_external_source<'a>(
+    sources: &'a mut Vec<ExternalSourceRecord>,
+    target: ExternalSourceTarget,
+    target_id: &str,
+) -> &'a mut ExternalSourceRecord {
+    if let Some(index) = sources.iter().position(|source| {
+        source.source == ANKI_V11_SOURCE && source.target == target && source.target_id == target_id
+    }) {
+        return &mut sources[index];
+    }
+
+    sources.push(ExternalSourceRecord {
+        target,
+        target_id: target_id.to_string(),
+        source: ANKI_V11_SOURCE.to_string(),
+        original_id: None,
+        data: BTreeMap::new(),
+    });
+    sources.last_mut().expect("just pushed external source")
+}
+
+fn clear_active_session_for_cards(state: &mut AppState, deck_id: &str, card_ids: &[String]) {
+    if state.active_session.as_ref().is_some_and(|session| {
+        session.deck_id == deck_id
+            || session
+                .queue
+                .iter()
+                .any(|card| card_ids.iter().any(|card_id| card_id == &card.id))
+    }) {
+        state.active_session = None;
     }
 }
 
@@ -2796,6 +3002,165 @@ mod tests {
         assert!(undone.reviews.is_empty());
         assert_eq!(undone.sessions[0].cards_reviewed, 0);
         assert_eq!(undone.sessions[0].cards_correct, 0);
+    }
+
+    #[test]
+    fn rebuild_filtered_deck_moves_search_matches_and_empty_restores_them() {
+        let mut due = card("due");
+        due.front = "hola".to_string();
+        let mut future = card("future");
+        future.front = "manana".to_string();
+        let mut other = card("other");
+        other.deck_id = "other".to_string();
+        other.front = "bonjour".to_string();
+
+        let mut due_progress = progress("due");
+        due_progress.next_due_at = NOW - 1;
+        let mut future_progress = progress("future");
+        future_progress.next_due_at = NOW + ONE_DAY_MS;
+
+        let state = AppState {
+            decks: vec![
+                Deck {
+                    id: "deck".to_string(),
+                    name: "Spanish".to_string(),
+                    description: String::new(),
+                    created_at: NOW,
+                },
+                Deck {
+                    id: "other".to_string(),
+                    name: "French".to_string(),
+                    description: String::new(),
+                    created_at: NOW,
+                },
+                Deck {
+                    id: "filtered".to_string(),
+                    name: "Custom Study".to_string(),
+                    description: String::new(),
+                    created_at: NOW,
+                },
+            ],
+            cards: vec![due.clone(), future, other],
+            card_progress: vec![due_progress, future_progress],
+            active_session: Some(ActiveSessionState {
+                session_id: "active".to_string(),
+                deck_id: "deck".to_string(),
+                queue: vec![due],
+                current_index: 0,
+                current_card_started_at: Some(NOW),
+                revealed: false,
+            }),
+            ..AppState::default()
+        };
+
+        let rebuilt =
+            rebuild_filtered_deck(&state, "filtered", "deck:Spanish is:due", 1, false, NOW)
+                .unwrap();
+
+        assert_eq!(
+            rebuilt
+                .cards
+                .iter()
+                .find(|card| card.id == "due")
+                .map(|card| card.deck_id.as_str()),
+            Some("filtered")
+        );
+        assert_eq!(
+            rebuilt
+                .cards
+                .iter()
+                .find(|card| card.id == "future")
+                .map(|card| card.deck_id.as_str()),
+            Some("deck")
+        );
+        assert!(rebuilt.active_session.is_none());
+
+        let deck_source = rebuilt
+            .external_sources
+            .iter()
+            .find(|source| source.target == ExternalSourceTarget::Deck)
+            .unwrap();
+        assert_eq!(deck_source.source, "anki-v11");
+        assert_eq!(deck_source.target_id, "filtered");
+        assert_eq!(deck_source.data.get("dyn").map(String::as_str), Some("1"));
+        assert_eq!(
+            deck_source.data.get("resched").map(String::as_str),
+            Some("false")
+        );
+        assert_eq!(
+            deck_source.data.get("search").map(String::as_str),
+            Some("deck:Spanish is:due")
+        );
+        assert_eq!(deck_source.data.get("limit").map(String::as_str), Some("1"));
+
+        let card_source = rebuilt
+            .external_sources
+            .iter()
+            .find(|source| source.target == ExternalSourceTarget::Card)
+            .unwrap();
+        assert_eq!(card_source.target_id, "due");
+        assert_eq!(
+            card_source.data.get("originalDeckId").map(String::as_str),
+            Some("deck")
+        );
+
+        let emptied = empty_filtered_deck(&rebuilt, "filtered");
+        assert_eq!(
+            emptied
+                .cards
+                .iter()
+                .find(|card| card.id == "due")
+                .map(|card| card.deck_id.as_str()),
+            Some("deck")
+        );
+        assert!(!emptied
+            .external_sources
+            .iter()
+            .any(|source| source.target == ExternalSourceTarget::Card));
+    }
+
+    #[test]
+    fn empty_filtered_deck_preserves_non_membership_card_source_metadata() {
+        let mut filtered_card = card("card");
+        filtered_card.deck_id = "filtered".to_string();
+        let state = AppState {
+            decks: vec![
+                Deck {
+                    id: "deck".to_string(),
+                    name: "Spanish".to_string(),
+                    description: String::new(),
+                    created_at: NOW,
+                },
+                Deck {
+                    id: "filtered".to_string(),
+                    name: "Preview".to_string(),
+                    description: String::new(),
+                    created_at: NOW,
+                },
+            ],
+            cards: vec![filtered_card],
+            external_sources: vec![anki_card_source(
+                "card",
+                &[
+                    ("originalDeckId", "deck"),
+                    ("originalDue", "42"),
+                    ("flags", "4"),
+                ],
+            )],
+            ..AppState::default()
+        };
+
+        let emptied = empty_filtered_deck(&state, "filtered");
+
+        assert_eq!(emptied.cards[0].deck_id, "deck");
+        let source = emptied
+            .external_sources
+            .iter()
+            .find(|source| source.target == ExternalSourceTarget::Card)
+            .unwrap();
+        assert_eq!(source.data.get("flags").map(String::as_str), Some("4"));
+        assert!(!source.data.contains_key("originalDeckId"));
+        assert!(!source.data.contains_key("originalDue"));
     }
 
     #[test]

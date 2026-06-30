@@ -1916,21 +1916,33 @@ fn imported_original_deck_matches(
     let Some(original_deck_id) = imported_anki_original_deck_id(card_sources) else {
         return false;
     };
-    let original_deck_id = original_deck_id.to_string();
     metadata
         .decks_by_original_id
-        .get(original_deck_id.as_str())
+        .get(original_deck_id)
         .is_some_and(|decks| {
             decks.iter().any(|deck| {
                 anki_hierarchical_name_matches(term, &deck.id)
                     || anki_hierarchical_name_matches(term, &deck.name)
             })
         })
+        || metadata
+            .decks_by_id
+            .get(original_deck_id)
+            .is_some_and(|deck| {
+                anki_hierarchical_name_matches(term, &deck.id)
+                    || anki_hierarchical_name_matches(term, &deck.name)
+            })
 }
 
-fn imported_anki_original_deck_id(card_sources: &[&ExternalSourceRecord]) -> Option<i64> {
+fn imported_anki_original_deck_id<'a>(
+    card_sources: &'a [&'a ExternalSourceRecord],
+) -> Option<&'a str> {
     card_sources.iter().find_map(|source| {
-        source_i64_from_data(source, "originalDeckId").filter(|deck_id| *deck_id != 0)
+        source
+            .data
+            .get("originalDeckId")
+            .map(|deck_id| deck_id.trim())
+            .filter(|deck_id| !deck_id.is_empty() && *deck_id != "0")
     })
 }
 
@@ -1968,10 +1980,9 @@ fn imported_original_deck_preset_matches(
     let Some(original_deck_id) = imported_anki_original_deck_id(card_sources) else {
         return false;
     };
-    let original_deck_id = original_deck_id.to_string();
     metadata
         .decks_by_original_id
-        .get(original_deck_id.as_str())
+        .get(original_deck_id)
         .is_some_and(|decks| {
             decks.iter().any(|deck| {
                 metadata
@@ -1987,6 +1998,22 @@ fn imported_original_deck_preset_matches(
                             || preset_candidate_matches(term, &deck.name)))
             })
         })
+        || metadata
+            .decks_by_id
+            .get(original_deck_id)
+            .is_some_and(|deck| {
+                metadata
+                    .deck_preset_names_by_id
+                    .get(deck.id.as_str())
+                    .is_some_and(|names| {
+                        names
+                            .iter()
+                            .any(|name| preset_candidate_matches(term, name))
+                    })
+                    || (metadata.deck_option_deck_ids.contains(deck.id.as_str())
+                        && (preset_candidate_matches(term, &deck.id)
+                            || preset_candidate_matches(term, &deck.name)))
+            })
 }
 
 fn preset_candidate_matches(term: &str, candidate: &str) -> bool {
@@ -2124,6 +2151,13 @@ fn deck_id_matches(
                 || source_i64_from_data(source, "originalDeckId").is_some_and(|deck_id| {
                     deck_id != 0 && id_filter_matches(filter, &deck_id.to_string())
                 })
+                || source
+                    .data
+                    .get("originalDeckId")
+                    .map(|deck_id| deck_id.trim())
+                    .is_some_and(|deck_id| {
+                        !deck_id.is_empty() && deck_id != "0" && id_filter_matches(filter, deck_id)
+                    })
         })
 }
 
@@ -4734,6 +4768,45 @@ mod tests {
         );
         assert_eq!(ids_for("card:2"), vec!["tagged-note::reverse"]);
         assert_eq!(ids_for("flag:0 card:2"), vec!["tagged-note::reverse"]);
+    }
+
+    #[test]
+    fn native_filtered_deck_original_key_matches_deck_and_did_filters() {
+        let state = AppState {
+            decks: vec![
+                deck("regular", "Regular"),
+                deck("filtered-deck", "Cram Session"),
+            ],
+            cards: vec![card("card", "filtered-deck", "front", "back")],
+            external_sources: vec![
+                ExternalSourceRecord {
+                    target: ExternalSourceTarget::Deck,
+                    target_id: "filtered-deck".to_string(),
+                    source: "anki-v11".to_string(),
+                    original_id: None,
+                    data: BTreeMap::from([("dyn".to_string(), "1".to_string())]),
+                },
+                ExternalSourceRecord {
+                    target: ExternalSourceTarget::Card,
+                    target_id: "card".to_string(),
+                    source: "anki-v11".to_string(),
+                    original_id: None,
+                    data: BTreeMap::from([("originalDeckId".to_string(), "regular".to_string())]),
+                },
+            ],
+            ..AppState::default()
+        };
+        let ids_for = |query: &str| {
+            search_cards(&state, query, NOW)
+                .unwrap()
+                .into_iter()
+                .map(|result| result.card.id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids_for("deck:filtered"), vec!["card"]);
+        assert_eq!(ids_for("deck:Regular"), vec!["card"]);
+        assert_eq!(ids_for("did:regular"), vec!["card"]);
     }
 
     #[test]

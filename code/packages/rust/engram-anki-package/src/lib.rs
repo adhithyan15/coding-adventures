@@ -1816,7 +1816,7 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
                     scheduling.lapses,
                     scheduling.left,
                     source_i64(source, "originalDue").unwrap_or_default(),
-                    source_i64(source, "originalDeckId").unwrap_or_default(),
+                    export_original_deck_id(export, source),
                     scheduling.flags,
                     source_string(source, "data").unwrap_or_default(),
                 ],
@@ -1904,9 +1904,8 @@ fn export_decks_json(export: &ExportModel) -> Value {
     let mut object = serde_json::Map::new();
     for deck in &export.decks {
         let id = export.deck_ids[&deck.key];
-        let mut deck_json =
-            anki_source_json(export, ExternalSourceTarget::Deck, &deck.key, "rawJson")
-                .unwrap_or_else(|| serde_json::json!({}));
+        let source = anki_source(export, ExternalSourceTarget::Deck, &deck.key);
+        let mut deck_json = source_json(source, "rawJson").unwrap_or_else(|| serde_json::json!({}));
         let deck_object = ensure_json_object(&mut deck_json);
         deck_object.insert("id".to_string(), Value::Number(id.into()));
         deck_object.insert("name".to_string(), Value::String(deck.name.clone()));
@@ -1932,9 +1931,35 @@ fn export_decks_json(export: &ExportModel) -> Value {
         deck_object
             .entry("extendRev".to_string())
             .or_insert_with(|| Value::Number(50_i64.into()));
+        merge_dynamic_deck_source_json(deck_object, source);
         object.insert(id.to_string(), deck_json);
     }
     Value::Object(object)
+}
+
+fn merge_dynamic_deck_source_json(
+    deck_object: &mut serde_json::Map<String, Value>,
+    source: Option<&ExternalSourceRecord>,
+) {
+    if let Some(dyn_value) = source_i64(source, "dyn") {
+        deck_object.insert("dyn".to_string(), Value::Number(dyn_value.into()));
+    }
+    if let Some(reschedule) = source_bool(source, "resched") {
+        deck_object.insert("resched".to_string(), Value::Bool(reschedule));
+    }
+    let Some(search) = source_string(source, "search") else {
+        return;
+    };
+    let limit = source_i64(source, "limit").unwrap_or_default();
+    let order = source_i64(source, "order").unwrap_or_default();
+    deck_object.insert(
+        "terms".to_string(),
+        Value::Array(vec![Value::Array(vec![
+            Value::String(search),
+            Value::Number(limit.into()),
+            Value::Number(order.into()),
+        ])]),
+    );
 }
 
 fn export_note_types_json(export: &ExportModel) -> Value {
@@ -2444,10 +2469,37 @@ fn source_i64(source: Option<&ExternalSourceRecord>, key: &str) -> Option<i64> {
         .and_then(|value| value.parse().ok())
 }
 
+fn source_bool(source: Option<&ExternalSourceRecord>, key: &str) -> Option<bool> {
+    let value = source.and_then(|source| source.data.get(key))?.trim();
+    if value.eq_ignore_ascii_case("true") || value == "1" {
+        Some(true)
+    } else if value.eq_ignore_ascii_case("false") || value == "0" {
+        Some(false)
+    } else {
+        None
+    }
+}
+
 fn source_json(source: Option<&ExternalSourceRecord>, key: &str) -> Option<Value> {
     source
         .and_then(|source| source.data.get(key))
         .and_then(|value| serde_json::from_str(value).ok())
+}
+
+fn export_original_deck_id(export: &ExportModel, source: Option<&ExternalSourceRecord>) -> i64 {
+    let Some(original_deck_id) = source.and_then(|source| source.data.get("originalDeckId")) else {
+        return 0;
+    };
+    let original_deck_id = original_deck_id.trim();
+    if original_deck_id.is_empty() || original_deck_id == "0" {
+        return 0;
+    }
+    original_deck_id
+        .parse::<i64>()
+        .ok()
+        .filter(|deck_id| *deck_id != 0)
+        .or_else(|| export.deck_ids.get(original_deck_id).copied())
+        .unwrap_or_default()
 }
 
 fn export_note_sort_field(
@@ -6018,6 +6070,75 @@ CREATE TABLE graves (
                 "resched={resched} filtered reviews should export as Anki cram rows"
             );
         }
+    }
+
+    #[test]
+    fn native_filtered_deck_source_keys_export_dynamic_deck_json_and_original_deck_ids() {
+        let mut state = AppState::default();
+        state.decks.push(Deck {
+            id: "spanish".to_string(),
+            name: "Spanish".to_string(),
+            description: String::new(),
+            created_at: 1_700_000_000_000,
+        });
+        state.decks.push(Deck {
+            id: "filtered".to_string(),
+            name: "Filtered::Today".to_string(),
+            description: "Custom study".to_string(),
+            created_at: 1_700_000_000_000,
+        });
+        state.cards.push(Card {
+            id: "card".to_string(),
+            deck_id: "filtered".to_string(),
+            front: "hola".to_string(),
+            back: "hello".to_string(),
+            created_at: 1_700_000_000_000,
+            lineage: None,
+        });
+        state.external_sources.push(ExternalSourceRecord {
+            target: ExternalSourceTarget::Deck,
+            target_id: "filtered".to_string(),
+            source: ANKI_V11_SOURCE.to_string(),
+            original_id: None,
+            data: BTreeMap::from([
+                ("dyn".to_string(), "1".to_string()),
+                ("resched".to_string(), "false".to_string()),
+                ("search".to_string(), "deck:Spanish is:due".to_string()),
+                ("limit".to_string(), "10".to_string()),
+                ("order".to_string(), "0".to_string()),
+            ]),
+        });
+        state.external_sources.push(ExternalSourceRecord {
+            target: ExternalSourceTarget::Card,
+            target_id: "card".to_string(),
+            source: ANKI_V11_SOURCE.to_string(),
+            original_id: None,
+            data: BTreeMap::from([("originalDeckId".to_string(), "spanish".to_string())]),
+        });
+
+        let collection = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+        )
+        .unwrap();
+
+        let filtered_deck = collection
+            .decks
+            .iter()
+            .find(|deck| deck.name == "Filtered::Today")
+            .unwrap();
+        assert_eq!(filtered_deck.raw["dyn"], 1);
+        assert_eq!(filtered_deck.raw["resched"], false);
+        assert_eq!(filtered_deck.raw["terms"][0][0], "deck:Spanish is:due");
+        assert_eq!(filtered_deck.raw["terms"][0][1], 10);
+
+        let original_deck_id = collection
+            .decks
+            .iter()
+            .find(|deck| deck.name == "Spanish")
+            .map(|deck| deck.id)
+            .unwrap();
+        assert_eq!(collection.cards[0].deck_id, filtered_deck.id);
+        assert_eq!(collection.cards[0].original_deck_id, original_deck_id);
     }
 
     fn native_review_progress(

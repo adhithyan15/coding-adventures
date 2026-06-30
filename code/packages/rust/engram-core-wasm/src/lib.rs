@@ -12,11 +12,12 @@ use std::panic::{catch_unwind, AssertUnwindSafe};
 use engram_core::{
     build_session_queue_for_state_with_options, build_session_queue_with_daily_limits,
     cards_in_deck_scope, create_engram_snapshot, deck_options_for_state,
-    export_cards_anki_basic_tsv, export_cards_csv, export_notes_anki_tsv_with_context,
-    generate_cards_for_note, get_active_session_progress, get_daily_study_limit_usage,
-    get_deck_stats_for_state, import_anki_basic_tsv, import_anki_notes_tsv, import_basic_cards_csv,
-    import_cards_csv, materialize_generated_card, merge_app_states, notes_in_deck_scope, reduce,
-    restore_engram_snapshot, search_cards as search_core_cards, search_cards_with_context,
+    empty_filtered_deck as empty_core_filtered_deck, export_cards_anki_basic_tsv, export_cards_csv,
+    export_notes_anki_tsv_with_context, generate_cards_for_note, get_active_session_progress,
+    get_daily_study_limit_usage, get_deck_stats_for_state, import_anki_basic_tsv,
+    import_anki_notes_tsv, import_basic_cards_csv, import_cards_csv, materialize_generated_card,
+    merge_app_states, notes_in_deck_scope, rebuild_filtered_deck as rebuild_core_filtered_deck,
+    reduce, restore_engram_snapshot, search_cards as search_core_cards, search_cards_with_context,
     summarize_review_history, type_answer_matches, typed_answer_for_template,
     AnkiBasicTsvExportOptions, AnkiNoteTsvImport, AnkiNoteTsvImportOptions, AppState,
     BasicCardCsvImportOptions, Card, CardFlag, CardLineage, CardProgress, CardSearchResult,
@@ -427,6 +428,35 @@ impl EngramSession {
                     "averageEaseFactor": stats.average_ease_factor,
                 }),
             ))
+        })
+    }
+
+    pub fn empty_filtered_deck(&mut self, deck_id: &str) -> String {
+        catch_json(|| {
+            self.state = empty_core_filtered_deck(&self.state, deck_id);
+            Ok(ok_with("state", &self.state))
+        })
+    }
+
+    pub fn rebuild_filtered_deck(
+        &mut self,
+        deck_id: &str,
+        search: &str,
+        limit: usize,
+        reschedule: bool,
+        rebuilt_at: u64,
+    ) -> String {
+        catch_json(|| {
+            self.state = rebuild_core_filtered_deck(
+                &self.state,
+                deck_id,
+                search,
+                limit,
+                reschedule,
+                rebuilt_at,
+            )
+            .map_err(|error| error.message)?;
+            Ok(ok_with("state", &self.state))
         })
     }
 
@@ -5050,6 +5080,60 @@ mod tests {
         assert_eq!(
             value["state"]["deckOptions"][0]["options"]["buryReviewSiblings"],
             true
+        );
+    }
+
+    #[test]
+    fn filtered_deck_facade_methods_rebuild_and_empty_shared_state() {
+        let mut session = EngramSession::new();
+        session.load_snapshot(
+            r#"{
+                "decks": [
+                    {"id": "spanish", "name": "Spanish", "description": "", "createdAt": 1700000000000},
+                    {"id": "filtered", "name": "Filtered::Today", "description": "Custom study", "createdAt": 1700000000000}
+                ],
+                "noteTypes": [],
+                "notes": [],
+                "cards": [
+                    {"id": "card", "deckId": "spanish", "front": "hola", "back": "hello", "createdAt": 1700000000000}
+                ],
+                "cardProgress": [],
+                "sessions": [],
+                "reviews": [],
+                "deckOptions": [],
+                "externalSources": [],
+                "mediaAssets": [],
+                "activeSession": null
+            }"#,
+        );
+
+        let rebuilt: Value = serde_json::from_str(&session.rebuild_filtered_deck(
+            "filtered",
+            "deck:Spanish",
+            10,
+            false,
+            NOW,
+        ))
+        .unwrap();
+
+        assert_eq!(rebuilt["ok"], true);
+        assert_eq!(rebuilt["state"]["cards"][0]["deckId"], "filtered");
+        assert_eq!(rebuilt["state"]["externalSources"][0]["data"]["dyn"], "1");
+        assert_eq!(
+            rebuilt["state"]["externalSources"][1]["data"]["originalDeckId"],
+            "spanish"
+        );
+
+        let emptied: Value =
+            serde_json::from_str(&session.empty_filtered_deck("filtered")).unwrap();
+        assert_eq!(emptied["ok"], true);
+        assert_eq!(emptied["state"]["cards"][0]["deckId"], "spanish");
+        assert_eq!(
+            emptied["state"]["externalSources"]
+                .as_array()
+                .unwrap()
+                .len(),
+            1
         );
     }
 
