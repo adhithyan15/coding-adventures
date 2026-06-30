@@ -118,11 +118,12 @@ can be checked against the runtime policy boundary. Entity cards and state-gap
 rows also link to their current state, registry detail, desired-state target,
 state history, entity-scoped runtime events, and owning bridge command-result
 audit trail. The browser shell also exposes filters for
-room, entity domain/state/control status, runtime event kind/activity entity,
-history event type, history bridge and observed/received time windows,
-command-result status/id/bridge/correlation, runtime event-log sequence
-windows, command-result sequence windows, authorization outcome/principal, and
-capability-grant status/scope/principal,
+room, entity domain/state/control status, API catalog
+surface/method/category/mutation/authorization, runtime event
+kind/activity entity, history event type, history bridge and observed/received
+time windows, command-result status/id/bridge/correlation, runtime event-log
+sequence windows, command-result sequence windows, authorization
+outcome/principal, and capability-grant status/scope/principal,
 with server-backed room scoping across inventory, state, history, event-log,
 and command-result panels plus server-backed activity/history, command audit,
 authorization, and capability-grant scoping and local text search across the

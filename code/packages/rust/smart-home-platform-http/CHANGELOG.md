@@ -93,6 +93,8 @@ All notable changes to this package will be documented in this file.
   command-result audit views backed by URL state.
 - Added browser dashboard state-history bridge and observed/received time-window
   filters backed by URL state.
+- Added browser dashboard API catalog filters for route surface, method,
+  category, mutation, and runtime authorization.
 - Added fixture-controller launch help, smoke-test URLs, and example-level tests
   to keep the local controller startup path usable.
 - Added a machine-readable local-controller smoke plan route that lists safe
