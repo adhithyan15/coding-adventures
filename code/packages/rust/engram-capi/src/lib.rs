@@ -681,10 +681,18 @@ fn merge_media_assets(
             }
             Some(_) => {
                 let original_id = asset.id.clone();
-                let unique = next_unique_media_suffix(target, &asset.id);
+                let unique = next_unique_media_suffix(target, &asset.id, &asset.archive_name);
                 asset.id = format!("{}-merge-{unique}", asset.id);
                 asset.archive_name = format!("{}-merge-{unique}", asset.archive_name);
                 id_remaps.insert(original_id, asset.id.clone());
+                target.push(asset);
+            }
+            None if target
+                .iter()
+                .any(|existing| existing.archive_name == asset.archive_name) =>
+            {
+                let unique = next_unique_media_suffix(target, &asset.id, &asset.archive_name);
+                asset.archive_name = format!("{}-merge-{unique}", asset.archive_name);
                 target.push(asset);
             }
             None => target.push(asset),
@@ -693,12 +701,16 @@ fn merge_media_assets(
     id_remaps
 }
 
-fn next_unique_media_suffix(target: &[MediaAssetRecord], base_id: &str) -> usize {
+fn next_unique_media_suffix(
+    target: &[MediaAssetRecord],
+    base_id: &str,
+    base_archive_name: &str,
+) -> usize {
     let mut suffix = 1;
-    while target
-        .iter()
-        .any(|asset| asset.id == format!("{base_id}-merge-{suffix}"))
-    {
+    while target.iter().any(|asset| {
+        asset.id == format!("{base_id}-merge-{suffix}")
+            || asset.archive_name == format!("{base_archive_name}-merge-{suffix}")
+    }) {
         suffix += 1;
     }
     suffix
@@ -1192,7 +1204,8 @@ CREATE TABLE graves (
                         "data":{"filename":"audio/local.mp3"}
                     }],
                     "mediaAssets": [
-                        {"id":"anki-media:0","archiveName":"0","filename":"audio/local.mp3","data":[108,111,99,97,108]}
+                        {"id":"anki-media:0","archiveName":"0","filename":"audio/local.mp3","data":[108,111,99,97,108]},
+                        {"id":"local-image","archiveName":"1","filename":"images/local.png","data":[108,111,99,97,108]}
                     ],
                     "activeSession": null
                 }"#,
@@ -1228,11 +1241,18 @@ CREATE TABLE graves (
             assert!(media_assets.iter().any(|asset| {
                 asset["id"] == "anki-media:0" && asset["filename"] == "audio/local.mp3"
             }));
+            assert!(media_assets
+                .iter()
+                .any(|asset| { asset["id"] == "local-image" && asset["archiveName"] == "1" }));
             assert!(media_assets.iter().any(|asset| {
-                asset["id"] == "anki-media:0-merge-1" && asset["filename"] == "audio/hola.mp3"
+                asset["id"] == "anki-media:0-merge-1"
+                    && asset["archiveName"] == "0-merge-1"
+                    && asset["filename"] == "audio/hola.mp3"
             }));
             assert!(media_assets.iter().any(|asset| {
-                asset["id"] == "anki-media:1" && asset["filename"] == "images/card.png"
+                asset["id"] == "anki-media:1"
+                    && asset["archiveName"] == "1-merge-1"
+                    && asset["filename"] == "images/card.png"
             }));
             let external_sources = merged["state"]["externalSources"].as_array().unwrap();
             assert!(external_sources.iter().any(|source| {
