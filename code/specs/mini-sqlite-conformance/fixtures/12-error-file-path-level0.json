@@ -1,0 +1,24 @@
+{
+  "id": "12-error-file-path-level0",
+  "description": "File-backed connections raise NotSupportedError at Level 0",
+  "level": 0,
+  "connect_steps": [
+    {
+      "op": "connect_expect_error",
+      "database": "app.db",
+      "error_type": "NotSupportedError",
+      "note": "Level 0 implementations must reject file paths with NotSupportedError"
+    },
+    {
+      "op": "connect_expect_error",
+      "database": "/tmp/test.db",
+      "error_type": "NotSupportedError"
+    },
+    {
+      "op": "connect_expect_error",
+      "database": "relative/path/db.sqlite",
+      "error_type": "NotSupportedError"
+    }
+  ],
+  "note": "Only connect(:memory:) is supported at Level 0. All other database paths must be rejected."
+}

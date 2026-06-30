@@ -1,0 +1,48 @@
+{
+  "id": "08-transaction-commit",
+  "description": "COMMIT makes changes visible on the same connection",
+  "level": 0,
+  "steps": [
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE accounts (owner, balance)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO accounts VALUES ('alice', 1000)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO accounts VALUES ('bob', 500)"
+    },
+    {
+      "op": "commit"
+    },
+    {
+      "op": "execute",
+      "sql": "UPDATE accounts SET balance = 900 WHERE owner = 'alice'"
+    },
+    {
+      "op": "execute",
+      "sql": "UPDATE accounts SET balance = 600 WHERE owner = 'bob'"
+    },
+    {
+      "op": "commit"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT owner, balance FROM accounts ORDER BY owner",
+      "expected_columns": ["owner", "balance"],
+      "expected_rows": [
+        ["alice", 900],
+        ["bob", 600]
+      ]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT SUM(balance) AS total FROM accounts",
+      "expected_columns": ["total"],
+      "expected_rows": [[1500]]
+    }
+  ]
+}
