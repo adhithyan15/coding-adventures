@@ -1,0 +1,437 @@
+{
+  "description": "ADJ-LADDER rung 11 \u2014 syndromic decision: the first rung that is BOTH a decision and genuinely multi-hop. Each item gives five equally-likely diagnoses; the engine must first DERIVE which clinical syndrome the patient satisfies (a `rule` head that fires only when BOTH of its findings are observed \u2014 the rung-3 mechanism), then RANK the diagnoses by posterior and pick the leader (the rung-6 decision_leader extractor). The fully-satisfied syndrome (likelihood L_syn) beats a rival supported by a single flashy finding (L_flash < L_syn) \u2014 the anchoring trap: the diagnosis is the one backed by the COMPLETE pattern, not the loudest lone clue. No engine/harness change (reuses rule + decision_leader); synthetic priors/LRs (the ladder is a capability benchmark, not the grounded CAS). Contamination-safe: every prior and LR is printed in the stem and the answer is a disease name, so no result literal leaks; gold rotates A\u2013E; every item's unique leader is asserted at build.",
+  "items": [
+    {
+      "id": "r11sd-01",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of Gottron papules and a heliotrope rash raises the likelihood of dermatomyositis 12-fold, while a malar rash alone raises the likelihood of systemic lupus 6-fold. The patient has Gottron papules and a heliotrope rash, and also a malar rash. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for dermatomyositis\nprior 0.2 for systemic_lupus\nprior 0.2 for psoriasis\nprior 0.2 for rosacea\nprior 0.2 for contact_dermatitis\ncontributes 12 from dermatomyositis_pattern to dermatomyositis\ncontributes 6 from malar_rash to systemic_lupus\nrule { head: dermatomyositis_pattern when: gottron_papules, heliotrope_rash }\nobserve gottron_papules\nobserve heliotrope_rash\nobserve malar_rash\n? dermatomyositis\n? systemic_lupus\n? psoriasis\n? rosacea\n? contact_dermatitis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "dermatomyositis",
+        "B": "systemic_lupus",
+        "C": "psoriasis",
+        "D": "rosacea",
+        "E": "contact_dermatitis"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r11sd-02",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of Gottron papules and a heliotrope rash raises the likelihood of dermatomyositis 15-fold, while a malar rash alone raises the likelihood of systemic lupus 8-fold. The patient has Gottron papules and a heliotrope rash, and also a malar rash. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for dermatomyositis\nprior 0.2 for systemic_lupus\nprior 0.2 for psoriasis\nprior 0.2 for rosacea\nprior 0.2 for contact_dermatitis\ncontributes 15 from dermatomyositis_pattern to dermatomyositis\ncontributes 8 from malar_rash to systemic_lupus\nrule { head: dermatomyositis_pattern when: gottron_papules, heliotrope_rash }\nobserve gottron_papules\nobserve heliotrope_rash\nobserve malar_rash\n? dermatomyositis\n? systemic_lupus\n? psoriasis\n? rosacea\n? contact_dermatitis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "systemic_lupus",
+        "B": "dermatomyositis",
+        "C": "psoriasis",
+        "D": "rosacea",
+        "E": "contact_dermatitis"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r11sd-03",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of Janeway lesions and Roth spots raises the likelihood of infective endocarditis 12-fold, while a migratory polyarthritis alone raises the likelihood of rheumatic fever 6-fold. The patient has Janeway lesions and Roth spots, and also a migratory polyarthritis. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for infective_endocarditis\nprior 0.2 for rheumatic_fever\nprior 0.2 for pericarditis\nprior 0.2 for myocarditis\nprior 0.2 for atrial_myxoma\ncontributes 12 from infective_endocarditis_pattern to infective_endocarditis\ncontributes 6 from migratory_polyarthritis to rheumatic_fever\nrule { head: infective_endocarditis_pattern when: janeway_lesions, roth_spots }\nobserve janeway_lesions\nobserve roth_spots\nobserve migratory_polyarthritis\n? infective_endocarditis\n? rheumatic_fever\n? pericarditis\n? myocarditis\n? atrial_myxoma\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "rheumatic_fever",
+        "B": "pericarditis",
+        "C": "infective_endocarditis",
+        "D": "myocarditis",
+        "E": "atrial_myxoma"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r11sd-04",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of Janeway lesions and Roth spots raises the likelihood of infective endocarditis 15-fold, while a migratory polyarthritis alone raises the likelihood of rheumatic fever 8-fold. The patient has Janeway lesions and Roth spots, and also a migratory polyarthritis. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for infective_endocarditis\nprior 0.2 for rheumatic_fever\nprior 0.2 for pericarditis\nprior 0.2 for myocarditis\nprior 0.2 for atrial_myxoma\ncontributes 15 from infective_endocarditis_pattern to infective_endocarditis\ncontributes 8 from migratory_polyarthritis to rheumatic_fever\nrule { head: infective_endocarditis_pattern when: janeway_lesions, roth_spots }\nobserve janeway_lesions\nobserve roth_spots\nobserve migratory_polyarthritis\n? infective_endocarditis\n? rheumatic_fever\n? pericarditis\n? myocarditis\n? atrial_myxoma\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "rheumatic_fever",
+        "B": "pericarditis",
+        "C": "myocarditis",
+        "D": "infective_endocarditis",
+        "E": "atrial_myxoma"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r11sd-05",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of bronze skin and a restrictive cardiomyopathy raises the likelihood of hereditary hemochromatosis 12-fold, while polyuria alone raises the likelihood of diabetes mellitus 6-fold. The patient has bronze skin and a restrictive cardiomyopathy, and also polyuria. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for hereditary_hemochromatosis\nprior 0.2 for diabetes_mellitus\nprior 0.2 for wilson_disease\nprior 0.2 for addison_disease\nprior 0.2 for porphyria\ncontributes 12 from hemochromatosis_pattern to hereditary_hemochromatosis\ncontributes 6 from polyuria to diabetes_mellitus\nrule { head: hemochromatosis_pattern when: bronze_skin, restrictive_cardiomyopathy }\nobserve bronze_skin\nobserve restrictive_cardiomyopathy\nobserve polyuria\n? hereditary_hemochromatosis\n? diabetes_mellitus\n? wilson_disease\n? addison_disease\n? porphyria\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "diabetes_mellitus",
+        "B": "wilson_disease",
+        "C": "addison_disease",
+        "D": "porphyria",
+        "E": "hereditary_hemochromatosis"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r11sd-06",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of bronze skin and a restrictive cardiomyopathy raises the likelihood of hereditary hemochromatosis 15-fold, while polyuria alone raises the likelihood of diabetes mellitus 8-fold. The patient has bronze skin and a restrictive cardiomyopathy, and also polyuria. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for hereditary_hemochromatosis\nprior 0.2 for diabetes_mellitus\nprior 0.2 for wilson_disease\nprior 0.2 for addison_disease\nprior 0.2 for porphyria\ncontributes 15 from hemochromatosis_pattern to hereditary_hemochromatosis\ncontributes 8 from polyuria to diabetes_mellitus\nrule { head: hemochromatosis_pattern when: bronze_skin, restrictive_cardiomyopathy }\nobserve bronze_skin\nobserve restrictive_cardiomyopathy\nobserve polyuria\n? hereditary_hemochromatosis\n? diabetes_mellitus\n? wilson_disease\n? addison_disease\n? porphyria\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "hereditary_hemochromatosis",
+        "B": "diabetes_mellitus",
+        "C": "wilson_disease",
+        "D": "addison_disease",
+        "E": "porphyria"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r11sd-07",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of ash-leaf macules and facial angiofibromas raises the likelihood of tuberous sclerosis 12-fold, while caf\u00e9-au-lait spots alone raises the likelihood of neurofibromatosis 6-fold. The patient has ash-leaf macules and facial angiofibromas, and also caf\u00e9-au-lait spots. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for tuberous_sclerosis\nprior 0.2 for neurofibromatosis\nprior 0.2 for sturge_weber\nprior 0.2 for von_hippel_lindau\nprior 0.2 for ataxia_telangiectasia\ncontributes 12 from tuberous_sclerosis_pattern to tuberous_sclerosis\ncontributes 6 from cafe_au_lait_spots to neurofibromatosis\nrule { head: tuberous_sclerosis_pattern when: ash_leaf_macules, facial_angiofibromas }\nobserve ash_leaf_macules\nobserve facial_angiofibromas\nobserve cafe_au_lait_spots\n? tuberous_sclerosis\n? neurofibromatosis\n? sturge_weber\n? von_hippel_lindau\n? ataxia_telangiectasia\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "neurofibromatosis",
+        "B": "tuberous_sclerosis",
+        "C": "sturge_weber",
+        "D": "von_hippel_lindau",
+        "E": "ataxia_telangiectasia"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r11sd-08",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of ash-leaf macules and facial angiofibromas raises the likelihood of tuberous sclerosis 15-fold, while caf\u00e9-au-lait spots alone raises the likelihood of neurofibromatosis 8-fold. The patient has ash-leaf macules and facial angiofibromas, and also caf\u00e9-au-lait spots. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for tuberous_sclerosis\nprior 0.2 for neurofibromatosis\nprior 0.2 for sturge_weber\nprior 0.2 for von_hippel_lindau\nprior 0.2 for ataxia_telangiectasia\ncontributes 15 from tuberous_sclerosis_pattern to tuberous_sclerosis\ncontributes 8 from cafe_au_lait_spots to neurofibromatosis\nrule { head: tuberous_sclerosis_pattern when: ash_leaf_macules, facial_angiofibromas }\nobserve ash_leaf_macules\nobserve facial_angiofibromas\nobserve cafe_au_lait_spots\n? tuberous_sclerosis\n? neurofibromatosis\n? sturge_weber\n? von_hippel_lindau\n? ataxia_telangiectasia\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "neurofibromatosis",
+        "B": "sturge_weber",
+        "C": "tuberous_sclerosis",
+        "D": "von_hippel_lindau",
+        "E": "ataxia_telangiectasia"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r11sd-09",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of clonus and hyperreflexia raises the likelihood of serotonin syndrome 12-fold, while lead-pipe rigidity alone raises the likelihood of neuroleptic malignant syndrome 6-fold. The patient has clonus and hyperreflexia, and also lead-pipe rigidity. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for serotonin_syndrome\nprior 0.2 for neuroleptic_malignant_syndrome\nprior 0.2 for malignant_hyperthermia\nprior 0.2 for anticholinergic_toxicity\nprior 0.2 for thyroid_storm\ncontributes 12 from serotonin_syndrome_pattern to serotonin_syndrome\ncontributes 6 from lead_pipe_rigidity to neuroleptic_malignant_syndrome\nrule { head: serotonin_syndrome_pattern when: clonus, hyperreflexia }\nobserve clonus\nobserve hyperreflexia\nobserve lead_pipe_rigidity\n? serotonin_syndrome\n? neuroleptic_malignant_syndrome\n? malignant_hyperthermia\n? anticholinergic_toxicity\n? thyroid_storm\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "neuroleptic_malignant_syndrome",
+        "B": "malignant_hyperthermia",
+        "C": "anticholinergic_toxicity",
+        "D": "serotonin_syndrome",
+        "E": "thyroid_storm"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r11sd-10",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of clonus and hyperreflexia raises the likelihood of serotonin syndrome 15-fold, while lead-pipe rigidity alone raises the likelihood of neuroleptic malignant syndrome 8-fold. The patient has clonus and hyperreflexia, and also lead-pipe rigidity. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for serotonin_syndrome\nprior 0.2 for neuroleptic_malignant_syndrome\nprior 0.2 for malignant_hyperthermia\nprior 0.2 for anticholinergic_toxicity\nprior 0.2 for thyroid_storm\ncontributes 15 from serotonin_syndrome_pattern to serotonin_syndrome\ncontributes 8 from lead_pipe_rigidity to neuroleptic_malignant_syndrome\nrule { head: serotonin_syndrome_pattern when: clonus, hyperreflexia }\nobserve clonus\nobserve hyperreflexia\nobserve lead_pipe_rigidity\n? serotonin_syndrome\n? neuroleptic_malignant_syndrome\n? malignant_hyperthermia\n? anticholinergic_toxicity\n? thyroid_storm\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "neuroleptic_malignant_syndrome",
+        "B": "malignant_hyperthermia",
+        "C": "anticholinergic_toxicity",
+        "D": "thyroid_storm",
+        "E": "serotonin_syndrome"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r11sd-11",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of a strawberry tongue and cervical lymphadenopathy raises the likelihood of kawasaki disease 12-fold, while a sandpaper rash alone raises the likelihood of scarlet fever 6-fold. The patient has a strawberry tongue and cervical lymphadenopathy, and also a sandpaper rash. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for kawasaki_disease\nprior 0.2 for scarlet_fever\nprior 0.2 for measles\nprior 0.2 for stevens_johnson\nprior 0.2 for toxic_shock_syndrome\ncontributes 12 from kawasaki_pattern to kawasaki_disease\ncontributes 6 from sandpaper_rash to scarlet_fever\nrule { head: kawasaki_pattern when: strawberry_tongue, cervical_lymphadenopathy }\nobserve strawberry_tongue\nobserve cervical_lymphadenopathy\nobserve sandpaper_rash\n? kawasaki_disease\n? scarlet_fever\n? measles\n? stevens_johnson\n? toxic_shock_syndrome\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "kawasaki_disease",
+        "B": "scarlet_fever",
+        "C": "measles",
+        "D": "stevens_johnson",
+        "E": "toxic_shock_syndrome"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r11sd-12",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of a strawberry tongue and cervical lymphadenopathy raises the likelihood of kawasaki disease 15-fold, while a sandpaper rash alone raises the likelihood of scarlet fever 8-fold. The patient has a strawberry tongue and cervical lymphadenopathy, and also a sandpaper rash. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for kawasaki_disease\nprior 0.2 for scarlet_fever\nprior 0.2 for measles\nprior 0.2 for stevens_johnson\nprior 0.2 for toxic_shock_syndrome\ncontributes 15 from kawasaki_pattern to kawasaki_disease\ncontributes 8 from sandpaper_rash to scarlet_fever\nrule { head: kawasaki_pattern when: strawberry_tongue, cervical_lymphadenopathy }\nobserve strawberry_tongue\nobserve cervical_lymphadenopathy\nobserve sandpaper_rash\n? kawasaki_disease\n? scarlet_fever\n? measles\n? stevens_johnson\n? toxic_shock_syndrome\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "scarlet_fever",
+        "B": "kawasaki_disease",
+        "C": "measles",
+        "D": "stevens_johnson",
+        "E": "toxic_shock_syndrome"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r11sd-13",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of skin hyperpigmentation with hyponatremia and hyperkalemia raises the likelihood of addison disease 12-fold, while cold intolerance alone raises the likelihood of hypothyroidism 6-fold. The patient has skin hyperpigmentation with hyponatremia and hyperkalemia, and also cold intolerance. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for addison_disease\nprior 0.2 for hypothyroidism\nprior 0.2 for cushing_syndrome\nprior 0.2 for conn_syndrome\nprior 0.2 for pheochromocytoma\ncontributes 12 from addison_pattern to addison_disease\ncontributes 6 from cold_intolerance to hypothyroidism\nrule { head: addison_pattern when: skin_hyperpigmentation, hyponatremia_hyperkalemia }\nobserve skin_hyperpigmentation\nobserve hyponatremia_hyperkalemia\nobserve cold_intolerance\n? addison_disease\n? hypothyroidism\n? cushing_syndrome\n? conn_syndrome\n? pheochromocytoma\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "hypothyroidism",
+        "B": "cushing_syndrome",
+        "C": "addison_disease",
+        "D": "conn_syndrome",
+        "E": "pheochromocytoma"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r11sd-14",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of skin hyperpigmentation with hyponatremia and hyperkalemia raises the likelihood of addison disease 15-fold, while cold intolerance alone raises the likelihood of hypothyroidism 8-fold. The patient has skin hyperpigmentation with hyponatremia and hyperkalemia, and also cold intolerance. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for addison_disease\nprior 0.2 for hypothyroidism\nprior 0.2 for cushing_syndrome\nprior 0.2 for conn_syndrome\nprior 0.2 for pheochromocytoma\ncontributes 15 from addison_pattern to addison_disease\ncontributes 8 from cold_intolerance to hypothyroidism\nrule { head: addison_pattern when: skin_hyperpigmentation, hyponatremia_hyperkalemia }\nobserve skin_hyperpigmentation\nobserve hyponatremia_hyperkalemia\nobserve cold_intolerance\n? addison_disease\n? hypothyroidism\n? cushing_syndrome\n? conn_syndrome\n? pheochromocytoma\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "hypothyroidism",
+        "B": "cushing_syndrome",
+        "C": "conn_syndrome",
+        "D": "addison_disease",
+        "E": "pheochromocytoma"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r11sd-15",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of exophthalmos and pretibial myxedema raises the likelihood of graves disease 12-fold, while heat intolerance alone raises the likelihood of toxic multinodular goiter 6-fold. The patient has exophthalmos and pretibial myxedema, and also heat intolerance. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for graves_disease\nprior 0.2 for toxic_multinodular_goiter\nprior 0.2 for hashimoto_thyroiditis\nprior 0.2 for thyroid_adenoma\nprior 0.2 for subacute_thyroiditis\ncontributes 12 from hyperthyroid_pattern to graves_disease\ncontributes 6 from heat_intolerance to toxic_multinodular_goiter\nrule { head: hyperthyroid_pattern when: exophthalmos, pretibial_myxedema }\nobserve exophthalmos\nobserve pretibial_myxedema\nobserve heat_intolerance\n? graves_disease\n? toxic_multinodular_goiter\n? hashimoto_thyroiditis\n? thyroid_adenoma\n? subacute_thyroiditis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "toxic_multinodular_goiter",
+        "B": "hashimoto_thyroiditis",
+        "C": "thyroid_adenoma",
+        "D": "subacute_thyroiditis",
+        "E": "graves_disease"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r11sd-16",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of exophthalmos and pretibial myxedema raises the likelihood of graves disease 15-fold, while heat intolerance alone raises the likelihood of toxic multinodular goiter 8-fold. The patient has exophthalmos and pretibial myxedema, and also heat intolerance. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for graves_disease\nprior 0.2 for toxic_multinodular_goiter\nprior 0.2 for hashimoto_thyroiditis\nprior 0.2 for thyroid_adenoma\nprior 0.2 for subacute_thyroiditis\ncontributes 15 from hyperthyroid_pattern to graves_disease\ncontributes 8 from heat_intolerance to toxic_multinodular_goiter\nrule { head: hyperthyroid_pattern when: exophthalmos, pretibial_myxedema }\nobserve exophthalmos\nobserve pretibial_myxedema\nobserve heat_intolerance\n? graves_disease\n? toxic_multinodular_goiter\n? hashimoto_thyroiditis\n? thyroid_adenoma\n? subacute_thyroiditis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "graves_disease",
+        "B": "toxic_multinodular_goiter",
+        "C": "hashimoto_thyroiditis",
+        "D": "thyroid_adenoma",
+        "E": "subacute_thyroiditis"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r11sd-17",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of ophthalmoplegia and gait ataxia raises the likelihood of wernicke encephalopathy 12-fold, while dysmetria alone raises the likelihood of cerebellar stroke 6-fold. The patient has ophthalmoplegia and gait ataxia, and also dysmetria. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for wernicke_encephalopathy\nprior 0.2 for cerebellar_stroke\nprior 0.2 for normal_pressure_hydrocephalus\nprior 0.2 for vestibular_neuritis\nprior 0.2 for cobalamin_deficiency\ncontributes 12 from wernicke_pattern to wernicke_encephalopathy\ncontributes 6 from dysmetria to cerebellar_stroke\nrule { head: wernicke_pattern when: ophthalmoplegia, gait_ataxia }\nobserve ophthalmoplegia\nobserve gait_ataxia\nobserve dysmetria\n? wernicke_encephalopathy\n? cerebellar_stroke\n? normal_pressure_hydrocephalus\n? vestibular_neuritis\n? cobalamin_deficiency\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "cerebellar_stroke",
+        "B": "wernicke_encephalopathy",
+        "C": "normal_pressure_hydrocephalus",
+        "D": "vestibular_neuritis",
+        "E": "cobalamin_deficiency"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r11sd-18",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of ophthalmoplegia and gait ataxia raises the likelihood of wernicke encephalopathy 15-fold, while dysmetria alone raises the likelihood of cerebellar stroke 8-fold. The patient has ophthalmoplegia and gait ataxia, and also dysmetria. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for wernicke_encephalopathy\nprior 0.2 for cerebellar_stroke\nprior 0.2 for normal_pressure_hydrocephalus\nprior 0.2 for vestibular_neuritis\nprior 0.2 for cobalamin_deficiency\ncontributes 15 from wernicke_pattern to wernicke_encephalopathy\ncontributes 8 from dysmetria to cerebellar_stroke\nrule { head: wernicke_pattern when: ophthalmoplegia, gait_ataxia }\nobserve ophthalmoplegia\nobserve gait_ataxia\nobserve dysmetria\n? wernicke_encephalopathy\n? cerebellar_stroke\n? normal_pressure_hydrocephalus\n? vestibular_neuritis\n? cobalamin_deficiency\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "cerebellar_stroke",
+        "B": "normal_pressure_hydrocephalus",
+        "C": "wernicke_encephalopathy",
+        "D": "vestibular_neuritis",
+        "E": "cobalamin_deficiency"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r11sd-19",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of palpable purpura with abdominal pain and arthralgia raises the likelihood of henoch schonlein purpura 12-fold, while petechiae alone raises the likelihood of immune thrombocytopenia 6-fold. The patient has palpable purpura with abdominal pain and arthralgia, and also petechiae. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for henoch_schonlein_purpura\nprior 0.2 for immune_thrombocytopenia\nprior 0.2 for hemolytic_uremic_syndrome\nprior 0.2 for meningococcemia\nprior 0.2 for polyarteritis_nodosa\ncontributes 12 from hsp_pattern to henoch_schonlein_purpura\ncontributes 6 from petechiae to immune_thrombocytopenia\nrule { head: hsp_pattern when: palpable_purpura, abdominal_pain_with_arthralgia }\nobserve palpable_purpura\nobserve abdominal_pain_with_arthralgia\nobserve petechiae\n? henoch_schonlein_purpura\n? immune_thrombocytopenia\n? hemolytic_uremic_syndrome\n? meningococcemia\n? polyarteritis_nodosa\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "immune_thrombocytopenia",
+        "B": "hemolytic_uremic_syndrome",
+        "C": "meningococcemia",
+        "D": "henoch_schonlein_purpura",
+        "E": "polyarteritis_nodosa"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r11sd-20",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of palpable purpura with abdominal pain and arthralgia raises the likelihood of henoch schonlein purpura 15-fold, while petechiae alone raises the likelihood of immune thrombocytopenia 8-fold. The patient has palpable purpura with abdominal pain and arthralgia, and also petechiae. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for henoch_schonlein_purpura\nprior 0.2 for immune_thrombocytopenia\nprior 0.2 for hemolytic_uremic_syndrome\nprior 0.2 for meningococcemia\nprior 0.2 for polyarteritis_nodosa\ncontributes 15 from hsp_pattern to henoch_schonlein_purpura\ncontributes 8 from petechiae to immune_thrombocytopenia\nrule { head: hsp_pattern when: palpable_purpura, abdominal_pain_with_arthralgia }\nobserve palpable_purpura\nobserve abdominal_pain_with_arthralgia\nobserve petechiae\n? henoch_schonlein_purpura\n? immune_thrombocytopenia\n? hemolytic_uremic_syndrome\n? meningococcemia\n? polyarteritis_nodosa\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "immune_thrombocytopenia",
+        "B": "hemolytic_uremic_syndrome",
+        "C": "meningococcemia",
+        "D": "polyarteritis_nodosa",
+        "E": "henoch_schonlein_purpura"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r11sd-21",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of moon facies and purple abdominal striae raises the likelihood of cushing syndrome 12-fold, while central obesity alone raises the likelihood of metabolic syndrome 6-fold. The patient has moon facies and purple abdominal striae, and also central obesity. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for cushing_syndrome\nprior 0.2 for metabolic_syndrome\nprior 0.2 for acromegaly\nprior 0.2 for hypothyroidism\nprior 0.2 for polycystic_ovary_syndrome\ncontributes 12 from cushing_pattern to cushing_syndrome\ncontributes 6 from central_obesity to metabolic_syndrome\nrule { head: cushing_pattern when: moon_facies, purple_abdominal_striae }\nobserve moon_facies\nobserve purple_abdominal_striae\nobserve central_obesity\n? cushing_syndrome\n? metabolic_syndrome\n? acromegaly\n? hypothyroidism\n? polycystic_ovary_syndrome\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "cushing_syndrome",
+        "B": "metabolic_syndrome",
+        "C": "acromegaly",
+        "D": "hypothyroidism",
+        "E": "polycystic_ovary_syndrome"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r11sd-22",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of moon facies and purple abdominal striae raises the likelihood of cushing syndrome 15-fold, while central obesity alone raises the likelihood of metabolic syndrome 8-fold. The patient has moon facies and purple abdominal striae, and also central obesity. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for cushing_syndrome\nprior 0.2 for metabolic_syndrome\nprior 0.2 for acromegaly\nprior 0.2 for hypothyroidism\nprior 0.2 for polycystic_ovary_syndrome\ncontributes 15 from cushing_pattern to cushing_syndrome\ncontributes 8 from central_obesity to metabolic_syndrome\nrule { head: cushing_pattern when: moon_facies, purple_abdominal_striae }\nobserve moon_facies\nobserve purple_abdominal_striae\nobserve central_obesity\n? cushing_syndrome\n? metabolic_syndrome\n? acromegaly\n? hypothyroidism\n? polycystic_ovary_syndrome\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "metabolic_syndrome",
+        "B": "cushing_syndrome",
+        "C": "acromegaly",
+        "D": "hypothyroidism",
+        "E": "polycystic_ovary_syndrome"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r11sd-23",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of episodic flushing and secretory diarrhea raises the likelihood of carcinoid syndrome 12-fold, while watery diarrhea alone raises the likelihood of vipoma 6-fold. The patient has episodic flushing and secretory diarrhea, and also watery diarrhea. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for carcinoid_syndrome\nprior 0.2 for vipoma\nprior 0.2 for zollinger_ellison\nprior 0.2 for mastocytosis\nprior 0.2 for pheochromocytoma\ncontributes 12 from carcinoid_pattern to carcinoid_syndrome\ncontributes 6 from watery_diarrhea to vipoma\nrule { head: carcinoid_pattern when: episodic_flushing, secretory_diarrhea }\nobserve episodic_flushing\nobserve secretory_diarrhea\nobserve watery_diarrhea\n? carcinoid_syndrome\n? vipoma\n? zollinger_ellison\n? mastocytosis\n? pheochromocytoma\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "vipoma",
+        "B": "zollinger_ellison",
+        "C": "carcinoid_syndrome",
+        "D": "mastocytosis",
+        "E": "pheochromocytoma"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r11sd-24",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The complete syndrome of episodic flushing and secretory diarrhea raises the likelihood of carcinoid syndrome 15-fold, while watery diarrhea alone raises the likelihood of vipoma 8-fold. The patient has episodic flushing and secretory diarrhea, and also watery diarrhea. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for carcinoid_syndrome\nprior 0.2 for vipoma\nprior 0.2 for zollinger_ellison\nprior 0.2 for mastocytosis\nprior 0.2 for pheochromocytoma\ncontributes 15 from carcinoid_pattern to carcinoid_syndrome\ncontributes 8 from watery_diarrhea to vipoma\nrule { head: carcinoid_pattern when: episodic_flushing, secretory_diarrhea }\nobserve episodic_flushing\nobserve secretory_diarrhea\nobserve watery_diarrhea\n? carcinoid_syndrome\n? vipoma\n? zollinger_ellison\n? mastocytosis\n? pheochromocytoma\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "vipoma",
+        "B": "zollinger_ellison",
+        "C": "mastocytosis",
+        "D": "carcinoid_syndrome",
+        "E": "pheochromocytoma"
+      },
+      "gold_letter": "D"
+    }
+  ]
+}
