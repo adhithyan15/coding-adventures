@@ -1,5 +1,28 @@
 # Changelog — mle-pass
 
+## [0.4.0] — 2026-06-30
+
+### Added — slice 4: a genuine THREE-relation chain (N-hop harness)
+
+- Bank grows **30 → 34**: three more `disease → organism → Gram stain` chains
+  (community-acquired pneumonia, streptococcal pharyngitis, Klebsiella pneumonia), and — the
+  headline — the first **three-relation** chain:
+  `pseudomembranes →(gi biopsy) pseudomembranous_colitis →(causes⁻¹) C. difficile →(gram_stain) gram_positive`,
+  joined on TWO shared interior entities (the disease **and** the organism), every hop
+  byte-provenanced (the engine returns **3** citing clauses).
+- `build_query` now threads an **arbitrary chain** over `$X → $D → $E → … → $A`, each hop forward
+  or reverse, driven by optional `hop3_relation`/`hop3_lib`/`hop3_reverse` fields (and the existing
+  per-hop reverse). The 2-hop output is **unchanged** (middle var stays `$D`), so slices 1–3 items
+  and tests are unaffected; `run_item` copies the third library too. No new model calls, no new sink.
+- The bank ships **one** three-hop chain because today only `pseudomembranous_colitis` bridges a
+  finding library to a micro `causes` disease — but the **harness supports any 3-hop**, so more land
+  for free as cross-library id-joins are grounded (spec §7 documents the frontier honestly, incl.
+  the `antidote_for` agent-vs-poisoning id mismatch that blocks a treatment hop).
+- Worked artifact gains a `biopsy_to_gram` three-relation rule (20 in-place queries, all bound; the
+  3-hop cites 3 spans). Tests: `test_three_hop_chain_is_a_three_subgoal_join`,
+  `test_three_hop_chain_cites_all_three_hops`. Run-verified: **34/34 correct** (31 answerable,
+  `multihop_coverage` 1.0; 3 abstained), zero model calls. 8 pytest pass; ruff clean.
+
 ## [0.3.0] — 2026-06-30
 
 ### Added — slice 3: the microbiology organism-ID chain, run in reverse

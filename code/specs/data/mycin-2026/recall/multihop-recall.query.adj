@@ -20,6 +20,7 @@ import "enzyme-deficiency-edges.adj"
 import "derm-edges.adj"
 import "genetics-edges.adj"
 import "micro-edges.adj"
+import "gi-edges.adj"
 
 % --- the chaining rules: clue -> disease -> gene, joined on the shared $D ---------------
 rule {
@@ -64,6 +65,13 @@ rule {
     head: disease_to_morphology($Dis, $Shape)
     when: causes($O, $Dis), morphology($O, $Shape)
 }
+% --- a genuine THREE-relation chain: finding -> disease -> (causative) organism -> Gram stain.
+%     Joined on BOTH the shared disease $Dis AND the shared organism $O — the deepest CPU-bound
+%     chain here, every hop byte-provenanced. (`causes` is traversed in reverse to bind $O.)
+rule {
+    head: biopsy_to_gram($F, $Stain)
+    when: biopsy_finding_in($F, $Dis), causes($O, $Dis), gram_stain($O, $Stain)
+}
 
 % --- the two-hop binding queries (each returns the gene + both hops' provenance) --------
 ? eye_finding_to_gene(leukocoria, $G)                  % expect rb1   (retinoblastoma)
@@ -89,3 +97,6 @@ rule {
 ? disease_to_morphology(peptic_ulcer_disease, $Shape)  % expect spiral (helicobacter_pylori)
 ? disease_to_morphology(gonorrhea, $Shape)             % expect diplococci (neisseria_gonorrhoeae)
 ? disease_to_morphology(syphilis, $Shape)              % expect spirochete (treponema_pallidum)
+
+% --- three-hop: biopsy finding -> disease -> causative organism -> Gram stain ---------------
+? biopsy_to_gram(pseudomembranes, $Stain)              % expect gram_positive (c.diff via pseudomembranous_colitis)

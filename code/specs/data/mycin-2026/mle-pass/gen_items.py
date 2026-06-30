@@ -80,6 +80,10 @@ MICRO_CHAINS = [
     ("mh-27", "syphilis", "morphology", "spirochete", "syphilis"),
     ("mh-28", "meningitis", "morphology", "diplococci", "meningococcal meningitis"),
     ("mh-29", "pertussis", "morphology", "coccobacilli", "whooping cough (pertussis)"),
+    # slice 4 — more disease → organism → Gram stain coverage
+    ("mh-31", "community_acquired_pneumonia", "gram_stain", "gram_positive", "community-acquired pneumonia"),
+    ("mh-32", "pharyngitis", "gram_stain", "gram_positive", "streptococcal pharyngitis"),
+    ("mh-33", "pneumonia", "gram_stain", "gram_negative", "Klebsiella pneumonia"),
     # abstention — a disease whose causative organism is NOT grounded: MUST abstain.
     ("mh-30", "a_syndrome_with_no_grounded_organism", "gram_stain", None,
      "a syndrome whose causative organism is not in the grounded library"),
@@ -165,6 +169,22 @@ def build():
                 "expected": answer, "options": options, "gold_letter": gold,
             })
         items.append(item)
+    # --- a genuine THREE-relation chain (slice 4): clue → disease → organism → trait ---------
+    # pseudomembranes (biopsy) → pseudomembranous_colitis → (reverse causes) C. difficile →
+    # gram_positive. Three grounded edges across two libraries, joined on the shared disease AND
+    # the shared organism — the deepest CPU-bound chain in the bank, all byte-provenanced. (Today
+    # only this disease bridges a finding library to a micro `causes` disease; the harness now
+    # supports any 3-hop, so more land for free as cross-library id-joins are grounded — spec §7.)
+    items.append({
+        "id": "mh-34", "qtype": "multi_hop_recall",
+        "stem": "A colonic biopsy shows pseudomembranes. The disease this indicates is caused by "
+                "an organism with which Gram-stain reaction?",
+        "hop1_lib": "gi-edges.adj", "hop1_relation": "biopsy_finding_in",
+        "hop2_lib": "micro-edges.adj", "hop2_relation": "causes", "hop2_reverse": True,
+        "hop3_lib": "micro-edges.adj", "hop3_relation": "gram_stain",
+        "clue": "pseudomembranes", "expected": "gram_positive",
+        **dict(zip(("options", "gold_letter"), options_for("gram_positive", GRAM_POOL, 1))),
+    })
     # --- abstention (ungrounded clue: MUST abstain) ---
     for (iid, clue, lib, rel, hop2_rel, hop2_lib, pool, phrase) in ABSTAIN:
         # plausible distractors, but NO correct answer is reachable (the chain is ungrounded).

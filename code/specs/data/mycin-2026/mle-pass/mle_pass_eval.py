@@ -78,20 +78,37 @@ def build_query(item: dict) -> str:
     Either way the join variable `$D` is what hop2 consumes (`rel2($D, $A)`), so the engine's
     SLD resolver does the join regardless of argument order — relations are bidirectional.
 
-    Imports are de-duplicated: when both hops draw on the same library (e.g. microbiology's
+    Chain length. Two hops by default; a third hop is added when the item carries `hop3_relation`
+    (with `hop3_lib`, optional `hop3_reverse`). The hops are threaded over the chain variables
+    `$X` (clue) → `$D` → `$E` → … → `$A` (answer), so an N-hop question is one rule whose body is
+    N subgoals joined on the shared interior entities — e.g. the three-hop
+    `pseudomembranes → pseudomembranous_colitis → C. difficile → gram_positive`:
+
+        when: biopsy_finding_in($X, $D), causes($E, $D), gram_stain($E, $A)
+
+    Imports are de-duplicated: when several hops draw on the same library (e.g. microbiology's
     `causes` and `gram_stain` both live in `micro-edges.adj`) it is imported once.
     """
-    libs = [item["hop1_lib"]]
-    if item["hop2_lib"] not in libs:
-        libs.append(item["hop2_lib"])
-    imports = "".join(f'import "{lib}"\n' for lib in libs)
-    hop1 = (f'{item["hop1_relation"]}($D, $X)' if item.get("hop1_reverse")
-            else f'{item["hop1_relation"]}($X, $D)')
+    # (lib, relation, reverse?) for each hop in order; hop 3 is optional.
+    hops = [
+        (item["hop1_lib"], item["hop1_relation"], item.get("hop1_reverse")),
+        (item["hop2_lib"], item["hop2_relation"], item.get("hop2_reverse")),
+    ]
+    if item.get("hop3_relation"):
+        hops.append((item["hop3_lib"], item["hop3_relation"], item.get("hop3_reverse")))
+    imports = "".join(f'import "{lib}"\n' for lib in dict.fromkeys(lib for lib, _, _ in hops))
+    # Chain variables: clue, one interior entity per join, then the answer.
+    chain = ["$X", *["$D", "$E", "$F"][: len(hops) - 1], "$A"]
+    subgoals = []
+    for i, (_, rel, reverse) in enumerate(hops):
+        a, b = chain[i], chain[i + 1]
+        # A reverse hop puts the incoming variable in the relation's SECOND argument.
+        subgoals.append(f"{rel}({b}, {a})" if reverse else f"{rel}({a}, {b})")
     return (
         imports
         + "rule {\n"
         "    head: clue_to_answer($X, $A)\n"
-        f'    when: {hop1}, {item["hop2_relation"]}($D, $A)\n'
+        f'    when: {", ".join(subgoals)}\n'
         "}\n"
         f'? clue_to_answer({item["clue"]}, $A)\n'
     )
@@ -115,7 +132,10 @@ def run_item(item: dict, cli: Path | None = None) -> RunResult:
         # filename (no path separators / parent refs) — a structural guard so a library name
         # can only ever name a file directly inside recall/, never path-traverse out of it,
         # regardless of where items.json comes from.
-        for lib in dict.fromkeys((item["hop1_lib"], item["hop2_lib"])):
+        libs = [item["hop1_lib"], item["hop2_lib"]]
+        if item.get("hop3_lib"):
+            libs.append(item["hop3_lib"])
+        for lib in dict.fromkeys(libs):
             if "/" in lib or "\\" in lib or ".." in lib:
                 raise ValueError(f"library name must be a bare filename, got {lib!r}")
             shutil.copy(RECALL / lib, tdp / lib)

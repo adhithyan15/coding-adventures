@@ -1,7 +1,8 @@
 # MLE-PASS — multi-hop recall (the two-hop reasoning step)
 
-**Status:** Slices 1–3 shipped. Harness + worked artifact + 30-item bank, run-verified
-(gene / inheritance / microbiology-trait hops + abstention; forward and reverse hop 1).
+**Status:** Slices 1–4 shipped. Harness + worked artifact + 34-item bank, run-verified
+(gene / inheritance / microbiology-trait hops + abstention; forward and reverse hop 1; a genuine
+three-relation chain — the harness now threads an arbitrary N-hop join).
 **Author:** autonomous loop, 2026-06-29.
 
 ## 1. Why
@@ -113,10 +114,36 @@ pattern, a Gram stain, …, depending on hop 2). Run-verified: **30/30 correct**
 `multihop_coverage` 1.0; 3 abstained correctly), zero model calls. The worked artifact gains
 `disease_to_gram` / `disease_to_morphology` rules (19 in-place queries, all bound, both hops cited).
 
+## 6b. Slice 4 (shipped) — a genuine THREE-relation chain
+The bank grew **30 → 34**: three more `disease → organism → Gram stain` chains, and — the headline —
+the first **three-relation** chain, joined on TWO shared interior entities:
+
+```
+pseudomembranes ──biopsy_finding_in──▶ pseudomembranous_colitis ──causes⁻¹──▶ C. difficile ──gram_stain──▶ gram_positive
+   (gi-edges)                                       (micro-edges, reverse)              (micro-edges)
+```
+
+`build_query` now threads an arbitrary chain over `$X → $D → $E → … → $A` (each hop forward or
+reverse), so an N-hop question is one rule with N subgoals:
+
+```adj
+when: biopsy_finding_in($X, $D), causes($E, $D), gram_stain($E, $A)
+```
+
+The middle `causes` hop is reversed (binds the organism `$E` from the disease `$D`); the answer
+carries **all three** hops' byte-provenance (the engine returns 3 citing clauses). This is the
+deepest CPU-bound derivation in the bank — a model only names `pseudomembranes`; the engine does the
+disease→organism→trait reasoning. Today only this disease bridges a finding library to a micro
+`causes` disease, so the bank ships one three-hop chain — but the **harness now supports any 3-hop**,
+so more land for free as cross-library id-joins are grounded (§7). Run-verified: **34/34 correct**
+(31 answerable, `multihop_coverage` 1.0, the 3-hop citing 3 spans; 3 abstained), zero model calls.
+
 ## 7. Next
-More chains as id joins are grounded (histo/cardio → genetics; disease → *treatment* and
-disease → *mechanism* hops). A genuine **three-relation** forward chain (`A→B→C→D`) awaits a
-grounded relation that *chains off* a hop-2 answer (today no edge starts from a gene, substrate,
-or trait), or an id-consistency pass (e.g. the enzyme-deficiency disease ids `gaucher_disease`
-do not yet match the lysosomal `accumulates` ids `gaucher`). A `decision`-style multi-hop where
-the engine ranks among several reachable answers.
+The **three-hop harness now exists** (slice 4); the limit is grounded id-joins, not the engine.
+More 3-hops land for free once: (a) more finding→disease edges reach micro `causes` diseases
+(today only `pseudomembranous_colitis` does); (b) a relation *chains off* a hop-2 answer — today no
+edge starts from a gene, substrate, or trait; (c) an id-consistency pass aligns near-miss ids (the
+enzyme-deficiency disease ids `gaucher_disease` do not yet match the lysosomal `accumulates` ids
+`gaucher`), best shipped as its own regrounding PR. Also: disease → *treatment* / *mechanism* hops
+(blocked by the agent-vs-poisoning-condition id mismatch in `antidote_for`), and a `decision`-style
+multi-hop where the engine ranks among several reachable answers.
