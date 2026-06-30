@@ -60,11 +60,15 @@ Atoms:
   - the **operator words** `xx cdot div`; otherwise
   - a **bare run**: a single letter → `Symbol(c)`; a multi-letter unknown run →
     the implicit product of its single-letter `Symbol`s (`xy` ⇒ `x·y`, the AsciiMath rule).
+    A *glued* run is first carved by the tokenizer's **greedy longest-match** against the
+    keyword set (§5 PR-3c), so `sinx` ⇒ `sin`·`x` and `pir` ⇒ `pi`·`r` before this step ever
+    sees them; only the keyword-free remainder reaches the letter-product rule.
 - **Group** — `( … )`, `[ … ]`, `{ … }` → `Group` (delimiter style dropped; meaning kept).
 - **Text** — `"…"` → `Text`. (The `text(…)` keyword form is PR-2.)
 
 ### 3.1 Deliberate PR-1 limitations (documented, widened in §5)
-Function names need a token boundary (`sin x`, `sin(x)`, not `sinx`). No matrices, big
+~~Function names need a token boundary (`sin x`, `sin(x)`, not `sinx`).~~ **Lifted in PR-3c**:
+the tokenizer now longest-matches, so `sinx` reads as `sin x` (§5). No matrices, big
 operators, accents, or angle brackets yet. `/` binds the adjacent *simple* expressions
 (AsciiMath's `S/S`), so `a b/c` is `a·(b/c)`; this is the AsciiMath grammar's intent and is
 documented. None of these are *wrong* outputs — they are a smaller covered surface, declared
@@ -122,8 +126,13 @@ shapes for representative inputs.
   `Pow`/`Subscript`; enabled by `math-frontend` 0.5.0's neutral `Overset`/`Underset` node (added in the
   prerequisite PR, the same staging as the `Accent` node → accent emission). `capabilities()` adds
   `oversets`, enforced by the conformance harness.
-- **PR-3c remainder** (its own follow-up, structural): **longest-match tokenization** (so `sinx`
-  splits as `sin`·`x`, a deeper lexer change).
+- **PR-3c remainder — DONE** (asciimath 0.9.0): **greedy longest-match tokenization**. A maximal
+  letter run is carved into tokens by repeatedly taking the longest known-keyword prefix, so
+  `sinx` ⇒ `sin`·`x`, `pir` ⇒ `pi`·`r`, `inta` ⇒ `int`·`a` (longest wins: `int` over `in`); a
+  keyword-free stretch stays one identifier (`xy` is unchanged). The keyword set is the parser's
+  own lookup tables (one `is_keyword`, no drift). The operator words `xx`/`cdot`/`div` are part of
+  that set so they are taken whole (else `cdot` would mis-split on the accent `dot`). Like real
+  AsciiMath, a multi-letter *variable* that collides with a keyword must be quoted or spaced.
 
 ## 6. Non-goals
 Evaluation, simplification, rendering — none are a frontend's job (PFE01 §7). Lowering
