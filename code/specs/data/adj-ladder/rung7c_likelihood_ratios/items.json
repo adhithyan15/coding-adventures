@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 7c \u2014 likelihood ratios from a 2\u00d72 table (the third biostatistics batch; completes the diagnostic-table family begun in rung-7b). From four stated cell counts (TP/FN/FP/TN) compute the positive likelihood ratio (LR+), negative likelihood ratio (LR\u2212), or diagnostic odds ratio (DOR). Each item is a compute_dimensioned program (observe the counts, let answer = formula); the ADJ engine carries the arithmetic and the harness matches the scalar to the printed options. Contamination-safe: each ratio is written in its raw-count, division-only form \u2014 algebraically identical to the textbook sens/(1\u2212spec) forms but using ONLY the four stated counts, so not even the constant 1 leaks. The five options are a family of LR-type ratios over the same table, so the distractors are exactly the inversions students confuse (false-positive rate on top; flipped odds ratio).",
+  "items": [
+    {
+      "id": "r7lr-01",
+      "qtype": "diagnostic_likelihood_ratio",
+      "stem": "A diagnostic test yields 90 true positives, 10 false negatives, 20 false positives, and 80 true negatives. What is the test's positive likelihood ratio (LR+)?",
+      "program": "observe tp(90)\nobserve fn(10)\nobserve fp(20)\nobserve tn(80)\nlet answer = (tp / (tp + fn)) / (fp / (fp + tn))\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.125,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.22222222222222224,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.027777777777777776,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r7lr-02",
+      "qtype": "diagnostic_likelihood_ratio",
+      "stem": "A diagnostic test yields 90 true positives, 10 false negatives, 20 false positives, and 80 true negatives. What is the test's negative likelihood ratio (LR\u2212)?",
+      "program": "observe tp(90)\nobserve fn(10)\nobserve fp(20)\nobserve tn(80)\nlet answer = (fn / (tp + fn)) / (tn / (fp + tn))\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.125,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.22222222222222224,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.027777777777777776,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r7lr-03",
+      "qtype": "diagnostic_likelihood_ratio",
+      "stem": "A diagnostic test yields 90 true positives, 10 false negatives, 20 false positives, and 80 true negatives. What is the test's diagnostic odds ratio (DOR)?",
+      "program": "observe tp(90)\nobserve fn(10)\nobserve fp(20)\nobserve tn(80)\nlet answer = (tp / fp) / (fn / tn)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.125,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.22222222222222224,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.027777777777777776,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r7lr-04",
+      "qtype": "diagnostic_likelihood_ratio",
+      "stem": "A diagnostic test yields 80 true positives, 20 false negatives, 10 false positives, and 90 true negatives. What is the test's positive likelihood ratio (LR+)?",
+      "program": "observe tp(80)\nobserve fn(20)\nobserve fp(10)\nobserve tn(90)\nlet answer = (tp / (tp + fn)) / (fp / (fp + tn))\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.22222222222222224,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 36.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.125,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.027777777777777776,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r7lr-05",
+      "qtype": "diagnostic_likelihood_ratio",
+      "stem": "A diagnostic test yields 80 true positives, 20 false negatives, 10 false positives, and 90 true negatives. What is the test's negative likelihood ratio (LR\u2212)?",
+      "program": "observe tp(80)\nobserve fn(20)\nobserve fp(10)\nobserve tn(90)\nlet answer = (fn / (tp + fn)) / (tn / (fp + tn))\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 36.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.125,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.027777777777777776,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.22222222222222224,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r7lr-06",
+      "qtype": "diagnostic_likelihood_ratio",
+      "stem": "A diagnostic test yields 80 true positives, 20 false negatives, 10 false positives, and 90 true negatives. What is the test's diagnostic odds ratio (DOR)?",
+      "program": "observe tp(80)\nobserve fn(20)\nobserve fp(10)\nobserve tn(90)\nlet answer = (tp / fp) / (fn / tn)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 36.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.22222222222222224,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.125,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.027777777777777776,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r7lr-07",
+      "qtype": "diagnostic_likelihood_ratio",
+      "stem": "A diagnostic test yields 60 true positives, 40 false negatives, 30 false positives, and 70 true negatives. What is the test's positive likelihood ratio (LR+)?",
+      "program": "observe tp(60)\nobserve fn(40)\nobserve fp(30)\nobserve tn(70)\nlet answer = (tp / (tp + fn)) / (fp / (fp + tn))\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.5714285714285715,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.2857142857142857,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r7lr-08",
+      "qtype": "diagnostic_likelihood_ratio",
+      "stem": "A diagnostic test yields 60 true positives, 40 false negatives, 30 false positives, and 70 true negatives. What is the test's negative likelihood ratio (LR\u2212)?",
+      "program": "observe tp(60)\nobserve fn(40)\nobserve fp(30)\nobserve tn(70)\nlet answer = (fn / (tp + fn)) / (tn / (fp + tn))\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.5714285714285715,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.2857142857142857,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r7lr-09",
+      "qtype": "diagnostic_likelihood_ratio",
+      "stem": "A diagnostic test yields 60 true positives, 40 false negatives, 30 false positives, and 70 true negatives. What is the test's diagnostic odds ratio (DOR)?",
+      "program": "observe tp(60)\nobserve fn(40)\nobserve fp(30)\nobserve tn(70)\nlet answer = (tp / fp) / (fn / tn)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5714285714285715,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.2857142857142857,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r7lr-10",
+      "qtype": "diagnostic_likelihood_ratio",
+      "stem": "A diagnostic test yields 45 true positives, 5 false negatives, 15 false positives, and 35 true negatives. What is the test's positive likelihood ratio (LR+)?",
+      "program": "observe tp(45)\nobserve fn(5)\nobserve fp(15)\nobserve tn(35)\nlet answer = (tp / (tp + fn)) / (fp / (fp + tn))\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.14285714285714288,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 21.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.047619047619047616,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r7lr-11",
+      "qtype": "diagnostic_likelihood_ratio",
+      "stem": "A diagnostic test yields 45 true positives, 5 false negatives, 15 false positives, and 35 true negatives. What is the test's negative likelihood ratio (LR\u2212)?",
+      "program": "observe tp(45)\nobserve fn(5)\nobserve fp(15)\nobserve tn(35)\nlet answer = (fn / (tp + fn)) / (tn / (fp + tn))\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.14285714285714288,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 21.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.047619047619047616,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r7lr-12",
+      "qtype": "diagnostic_likelihood_ratio",
+      "stem": "A diagnostic test yields 45 true positives, 5 false negatives, 15 false positives, and 35 true negatives. What is the test's diagnostic odds ratio (DOR)?",
+      "program": "observe tp(45)\nobserve fn(5)\nobserve fp(15)\nobserve tn(35)\nlet answer = (tp / fp) / (fn / tn)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 21.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.14285714285714288,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.047619047619047616,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r7lr-13",
+      "qtype": "diagnostic_likelihood_ratio",
+      "stem": "A diagnostic test yields 70 true positives, 30 false negatives, 20 false positives, and 80 true negatives. What is the test's positive likelihood ratio (LR+)?",
+      "program": "observe tp(70)\nobserve fn(30)\nobserve fp(20)\nobserve tn(80)\nlet answer = (tp / (tp + fn)) / (fp / (fp + tn))\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.37499999999999994,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.333333333333334,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.4999999999999996,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.28571428571428575,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.10714285714285714,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r7lr-14",
+      "qtype": "diagnostic_likelihood_ratio",
+      "stem": "A diagnostic test yields 70 true positives, 30 false negatives, 20 false positives, and 80 true negatives. What is the test's negative likelihood ratio (LR\u2212)?",
+      "program": "observe tp(70)\nobserve fn(30)\nobserve fp(20)\nobserve tn(80)\nlet answer = (fn / (tp + fn)) / (tn / (fp + tn))\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.4999999999999996,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.333333333333334,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.28571428571428575,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.37499999999999994,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.10714285714285714,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r7lr-15",
+      "qtype": "diagnostic_likelihood_ratio",
+      "stem": "A diagnostic test yields 70 true positives, 30 false negatives, 20 false positives, and 80 true negatives. What is the test's diagnostic odds ratio (DOR)?",
+      "program": "observe tp(70)\nobserve fn(30)\nobserve fp(20)\nobserve tn(80)\nlet answer = (tp / fp) / (fn / tn)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.4999999999999996,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.37499999999999994,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.28571428571428575,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.10714285714285714,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r7lr-16",
+      "qtype": "diagnostic_likelihood_ratio",
+      "stem": "A diagnostic test yields 50 true positives, 50 false negatives, 25 false positives, and 75 true negatives. What is the test's positive likelihood ratio (LR+)?",
+      "program": "observe tp(50)\nobserve fn(50)\nobserve fp(25)\nobserve tn(75)\nlet answer = (tp / (tp + fn)) / (fp / (fp + tn))\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r7lr-17",
+      "qtype": "diagnostic_likelihood_ratio",
+      "stem": "A diagnostic test yields 50 true positives, 50 false negatives, 25 false positives, and 75 true negatives. What is the test's negative likelihood ratio (LR\u2212)?",
+      "program": "observe tp(50)\nobserve fn(50)\nobserve fp(25)\nobserve tn(75)\nlet answer = (fn / (tp + fn)) / (tn / (fp + tn))\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r7lr-18",
+      "qtype": "diagnostic_likelihood_ratio",
+      "stem": "A diagnostic test yields 50 true positives, 50 false negatives, 25 false positives, and 75 true negatives. What is the test's diagnostic odds ratio (DOR)?",
+      "program": "observe tp(50)\nobserve fn(50)\nobserve fp(25)\nobserve tn(75)\nlet answer = (tp / fp) / (fn / tn)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r7lr-19",
+      "qtype": "diagnostic_likelihood_ratio",
+      "stem": "A diagnostic test yields 88 true positives, 12 false negatives, 22 false positives, and 78 true negatives. What is the test's positive likelihood ratio (LR+)?",
+      "program": "observe tp(88)\nobserve fn(12)\nobserve fp(22)\nobserve tn(78)\nlet answer = (tp / (tp + fn)) / (fp / (fp + tn))\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.15384615384615383,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 26.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.038461538461538464,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r7lr-20",
+      "qtype": "diagnostic_likelihood_ratio",
+      "stem": "A diagnostic test yields 88 true positives, 12 false negatives, 22 false positives, and 78 true negatives. What is the test's negative likelihood ratio (LR\u2212)?",
+      "program": "observe tp(88)\nobserve fn(12)\nobserve fp(22)\nobserve tn(78)\nlet answer = (fn / (tp + fn)) / (tn / (fp + tn))\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 26.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.038461538461538464,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.15384615384615383,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r7lr-21",
+      "qtype": "diagnostic_likelihood_ratio",
+      "stem": "A diagnostic test yields 88 true positives, 12 false negatives, 22 false positives, and 78 true negatives. What is the test's diagnostic odds ratio (DOR)?",
+      "program": "observe tp(88)\nobserve fn(12)\nobserve fp(22)\nobserve tn(78)\nlet answer = (tp / fp) / (fn / tn)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 26.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.15384615384615383,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.038461538461538464,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
