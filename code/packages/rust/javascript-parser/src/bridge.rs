@@ -1887,24 +1887,65 @@ fn convert_primary_token(t: &Token, ctx: &GrammarASTNode) -> Result<Expression, 
 
 fn convert_array_literal(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     // array_literal = LBRACKET [ element_list ] RBRACKET ;
-    // element_list = [ ELLIPSIS ] assignment_expression { COMMA [ ELLIPSIS ] assignment_expression }
-    let nodes = node_children(node);
-    let mut elements = Vec::new();
-    for n in nodes {
+    // element_list  = [ ELLIPSIS ] assignment_expression
+    //                 { COMMA [ ELLIPSIS ] assignment_expression } [ COMMA ] ;
+    //
+    // ELISIONS (array holes). A comma that is NOT preceded by an element since
+    // the previous comma (or the start) marks a HOLE: `[1,,3]` is `[1, <hole>, 3]`
+    // of length 3, NOT `[1, 3]` of length 2. The distinction is observable —
+    // `[1,,3].length === 3` and `1 in [1,,3] === false`, whereas `[1,3].length
+    // === 2` and `1 in [1,3] === true` — so dropping a hole is a miscompile.
+    //
+    // The grammar keeps every comma as a Token child of `element_list`, but
+    // `node_children` strips Token children, so the previous implementation
+    // (which iterated `node_children`) never saw the commas and silently dropped
+    // every hole. We therefore walk the RAW children of `element_list` here.
+    //
+    // `expect_element` is true at the start and immediately after each comma. A
+    // comma seen while it is still true means the slot before that comma was
+    // empty → push a hole. A lone *trailing* comma after an element is NOT a hole
+    // (`[1,2,]` is length 2): the loop simply ends with `expect_element == true`
+    // and pushes nothing more.
+    let mut elements: Vec<Option<Expression>> = Vec::new();
+    for n in node_children(node) {
         match n.rule_name.as_str() {
             "element_list" => {
-                for elem_n in node_children(n) {
-                    if has_token(elem_n, "...") {
-                        return Err(BridgeError::UnsupportedSyntax {
-                            rule: "SpreadElement".to_string(),
-                            location: loc(elem_n),
-                        });
+                let mut expect_element = true;
+                for c in &n.children {
+                    match c {
+                        ASTNodeOrToken::Token(t) if t.value == "," => {
+                            if expect_element {
+                                elements.push(None);
+                            }
+                            expect_element = true;
+                        }
+                        // A spread `[...x]` is not supported (Phase 2); the
+                        // ELLIPSIS may appear either as a sibling token here or
+                        // nested inside the element node (handled below).
+                        ASTNodeOrToken::Token(t) if t.value == "..." => {
+                            return Err(BridgeError::UnsupportedSyntax {
+                                rule: "SpreadElement".to_string(),
+                                location: loc(n),
+                            });
+                        }
+                        ASTNodeOrToken::Token(_) => { /* stray token: ignore */ }
+                        ASTNodeOrToken::Node(elem) => {
+                            if has_token(elem, "...") {
+                                return Err(BridgeError::UnsupportedSyntax {
+                                    rule: "SpreadElement".to_string(),
+                                    location: loc(elem),
+                                });
+                            }
+                            let child =
+                                node_children(elem).into_iter().next().unwrap_or(elem);
+                            elements.push(Some(convert_expression(child)?));
+                            expect_element = false;
+                        }
                     }
-                    let child = node_children(elem_n).into_iter().next()
-                        .unwrap_or(elem_n);
-                    elements.push(Some(convert_expression(child)?));
                 }
             }
+            // Single-element array with no `element_list` wrapper — no commas, so
+            // no holes are possible.
             r if r.contains("expression") => {
                 elements.push(Some(convert_expression(n)?));
             }
@@ -2167,6 +2208,7 @@ mod tests {
     fn bridge_ok(src: &str) -> Program {
         bridge(src).unwrap_or_else(|e| panic!("bridge failed for {:?}: {e}", src))
     }
+
 
     // -----------------------------------------------------------------------
     // Empty program
@@ -2860,6 +2902,37 @@ mod tests {
             Expression::ObjectExpression(o) => o.properties[0].key.clone(),
             other => panic!("expected ObjectExpression, got {other:?}"),
         }
+    }
+
+    /// The array-literal expression's elements rendered as a compact
+    /// hole-pattern string: `e` for a present element, `_` for a hole.
+    fn array_hole_pattern(src: &str) -> String {
+        match first_expr(&bridge_ok(src)) {
+            Expression::ArrayExpression(a) => a
+                .elements
+                .iter()
+                .map(|e| if e.is_some() { 'e' } else { '_' })
+                .collect(),
+            other => panic!("expected ArrayExpression, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn array_elisions_become_holes_not_dropped() {
+        // Regression: `convert_array_literal` iterated `node_children`, which
+        // strips the COMMA tokens, so every elision (hole) was silently dropped —
+        // `[1,,3]` became a length-2 dense array. Holes must survive as `None`.
+        assert_eq!(array_hole_pattern("[1,,3];"), "e_e"); // length 3, hole at 1
+        assert_eq!(array_hole_pattern("[,,];"), "__"); // two leading holes, length 2
+        assert_eq!(array_hole_pattern("[1,,];"), "e_"); // trailing hole, length 2
+        assert_eq!(array_hole_pattern("[,1];"), "_e"); // leading hole, length 2
+        assert_eq!(array_hole_pattern("[1,,,2];"), "e__e"); // two holes, length 4
+        assert_eq!(array_hole_pattern("[,];"), "_"); // single hole, length 1
+        // A *trailing comma* after an element is not a hole.
+        assert_eq!(array_hole_pattern("[1,2,3,];"), "eee"); // length 3
+        assert_eq!(array_hole_pattern("[1,2,3];"), "eee");
+        assert_eq!(array_hole_pattern("[1];"), "e");
+        assert_eq!(array_hole_pattern("[];"), "");
     }
 
     #[test]

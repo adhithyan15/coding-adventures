@@ -6187,6 +6187,30 @@ mod tests {
     }
 
     #[test]
+    fn simple_array_elisions_preserved() {
+        // End-to-end regression: array holes used to be dropped at the bridge,
+        // changing the array's length and index membership (a miscompile). They
+        // must survive SIMPLE minification byte-for-byte.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let simple = |src: &str| transform_source(src, &cfg).expect("ok");
+
+        assert_eq!(simple("f([1,,3]);"), "f([1,,3]);"); // internal hole, len 3
+        assert_eq!(simple("f([,,]);"), "f([,,]);"); // two holes, len 2
+        assert_eq!(simple("f([1,,]);"), "f([1,,]);"); // trailing hole, len 2
+        assert_eq!(simple("f([,1]);"), "f([,1]);"); // leading hole, len 2
+        assert_eq!(simple("f([1,,,2]);"), "f([1,,,2]);"); // two holes, len 4
+        // A trailing comma after an element is NOT a hole — it is dropped.
+        assert_eq!(simple("f([1,2,3,]);"), "f([1,2,3]);");
+        assert_eq!(simple("f([1,2,3]);"), "f([1,2,3]);");
+    }
+
+    #[test]
     fn simple_object_string_keys_quote_handling() {
         // End-to-end regression for the property-key miscompile: the bridge used
         // to emit EVERY quoted object key as a bare identifier from un-decoded
