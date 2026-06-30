@@ -13,6 +13,7 @@ use engram_anki_package::{
     read_v11_collection_as_engram_state, write_legacy_apkg_from_engram_state,
     write_modern_apkg_from_engram_state,
 };
+use engram_core::{AppState, ExternalSourceRecord, MediaAssetRecord};
 use engram_core_wasm::EngramSession;
 use serde_json::{json, Value};
 
@@ -510,6 +511,23 @@ unsafe fn read_ffi_bytes<'a>(data: *const u8, data_len: usize) -> Result<&'a [u8
     }
 }
 
+/// # Safety
+/// `session` must be valid; `data`/`data_len` must describe APKG bytes.
+#[no_mangle]
+pub unsafe extern "C" fn eg_merge_anki_apkg(
+    session: *mut EgSession,
+    data: *const u8,
+    data_len: usize,
+) -> *mut c_char {
+    if session.is_null() {
+        return ptr::null_mut();
+    }
+    match read_ffi_bytes(data, data_len) {
+        Ok(bytes) => into_cstr(merge_anki_apkg_json(&mut (*session).inner, bytes)),
+        Err(error) => into_cstr(error_json(&error)),
+    }
+}
+
 unsafe fn with_session(
     session: *mut EgSession,
     run: impl FnOnce(&mut EngramSession) -> String,
@@ -552,6 +570,106 @@ fn import_anki_apkg_json(session: &mut EngramSession, bytes: &[u8]) -> String {
         },
         Err(error) => error_json(&error.message),
     }
+}
+
+fn merge_anki_apkg_json(session: &mut EngramSession, bytes: &[u8]) -> String {
+    match read_v11_collection_as_engram_state(bytes) {
+        Ok(imported) => load_merged_state(session, imported),
+        Err(error) => error_json(&error.message),
+    }
+}
+
+fn load_merged_state(session: &mut EngramSession, imported: AppState) -> String {
+    let merged = merge_app_states(session.state(), imported);
+    match serde_json::to_string(&merged) {
+        Ok(snapshot_json) => session.load_snapshot(&snapshot_json),
+        Err(error) => error_json(&format!("failed to serialize merged Anki state: {error}")),
+    }
+}
+
+fn merge_app_states(current: &AppState, imported: AppState) -> AppState {
+    let mut merged = current.clone();
+    upsert_by(&mut merged.decks, imported.decks, |deck| deck.id.clone());
+    upsert_by(&mut merged.note_types, imported.note_types, |note_type| {
+        note_type.id.clone()
+    });
+    upsert_by(&mut merged.notes, imported.notes, |note| note.id.clone());
+    upsert_by(&mut merged.cards, imported.cards, |card| card.id.clone());
+    upsert_by(
+        &mut merged.card_progress,
+        imported.card_progress,
+        |progress| progress.card_id.clone(),
+    );
+    upsert_by(&mut merged.sessions, imported.sessions, |session| {
+        session.id.clone()
+    });
+    upsert_by(&mut merged.reviews, imported.reviews, |review| {
+        review.id.clone()
+    });
+    upsert_by(&mut merged.deck_options, imported.deck_options, |preset| {
+        preset.deck_id.clone()
+    });
+    upsert_by(
+        &mut merged.external_sources,
+        imported.external_sources,
+        external_source_merge_key,
+    );
+    merge_media_assets(&mut merged.media_assets, imported.media_assets);
+    if imported.active_session.is_some() {
+        merged.active_session = imported.active_session;
+    }
+    merged
+}
+
+fn upsert_by<T>(target: &mut Vec<T>, incoming: Vec<T>, key: impl Fn(&T) -> String) {
+    for item in incoming {
+        let item_key = key(&item);
+        if let Some(existing) = target.iter_mut().find(|existing| key(existing) == item_key) {
+            *existing = item;
+        } else {
+            target.push(item);
+        }
+    }
+}
+
+fn external_source_merge_key(source: &ExternalSourceRecord) -> String {
+    format!(
+        "{:?}\u{1f}{}\u{1f}{}\u{1f}{}",
+        source.target,
+        source.target_id,
+        source.source,
+        source.original_id.as_deref().unwrap_or_default()
+    )
+}
+
+fn merge_media_assets(target: &mut Vec<MediaAssetRecord>, incoming: Vec<MediaAssetRecord>) {
+    for mut asset in incoming {
+        match target.iter().position(|existing| existing.id == asset.id) {
+            Some(index)
+                if target[index].filename == asset.filename && target[index].data == asset.data =>
+            {
+                target[index] = asset;
+            }
+            Some(_) => {
+                let unique = next_unique_media_suffix(target, &asset.id);
+                asset.id = format!("{}-merge-{unique}", asset.id);
+                asset.archive_name = format!("{}-merge-{unique}", asset.archive_name);
+                target.push(asset);
+            }
+            None => target.push(asset),
+        }
+    }
+}
+
+fn next_unique_media_suffix(target: &[MediaAssetRecord], base_id: &str) -> usize {
+    let mut suffix = 1;
+    while target
+        .iter()
+        .any(|asset| asset.id == format!("{base_id}-merge-{suffix}"))
+    {
+        suffix += 1;
+    }
+    suffix
 }
 
 fn export_anki_apkg_json(session: &EngramSession) -> String {
@@ -1015,6 +1133,69 @@ CREATE TABLE graves (
                 inspected["manifest"]["media"]["mapping"]["0"],
                 "audio/hola.mp3"
             );
+
+            eg_session_free(session);
+        }
+    }
+
+    #[test]
+    fn c_abi_merges_anki_apkg_state_without_replacing_local_state() {
+        unsafe {
+            let session = eg_session_new();
+            let local_snapshot = cstr(
+                r#"{
+                    "decks": [{"id":"local","name":"Tamil","description":"Script","createdAt":1700000000000}],
+                    "noteTypes": [],
+                    "notes": [],
+                    "cards": [{"id":"local-card","deckId":"local","front":"amma","back":"mother","createdAt":1700000000000}],
+                    "cardProgress": [],
+                    "sessions": [],
+                    "reviews": [],
+                    "deckOptions": [],
+                    "externalSources": [],
+                    "mediaAssets": [
+                        {"id":"anki-media:0","archiveName":"0","filename":"audio/local.mp3","data":[108,111,99,97,108]}
+                    ],
+                    "activeSession": null
+                }"#,
+            );
+            let loaded = take(eg_load_snapshot(session, local_snapshot.as_ptr()));
+            let loaded: Value = serde_json::from_str(&loaded).unwrap();
+            assert_eq!(loaded["ok"], true);
+
+            let apkg = v11_apkg_fixture();
+            let merged = take(eg_merge_anki_apkg(session, apkg.as_ptr(), apkg.len()));
+            let merged: Value = serde_json::from_str(&merged).unwrap();
+            assert_eq!(merged["ok"], true);
+
+            let deck_ids = merged["state"]["decks"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|deck| deck["id"].as_str().unwrap().to_string())
+                .collect::<Vec<_>>();
+            assert!(deck_ids.contains(&"local".to_string()));
+            assert!(deck_ids.contains(&"2".to_string()));
+
+            let card_ids = merged["state"]["cards"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|card| card["id"].as_str().unwrap().to_string())
+                .collect::<Vec<_>>();
+            assert!(card_ids.contains(&"local-card".to_string()));
+            assert!(card_ids.contains(&"2000".to_string()));
+
+            let media_assets = merged["state"]["mediaAssets"].as_array().unwrap();
+            assert!(media_assets.iter().any(|asset| {
+                asset["id"] == "anki-media:0" && asset["filename"] == "audio/local.mp3"
+            }));
+            assert!(media_assets.iter().any(|asset| {
+                asset["id"] == "anki-media:0-merge-1" && asset["filename"] == "audio/hola.mp3"
+            }));
+            assert!(media_assets.iter().any(|asset| {
+                asset["id"] == "anki-media:1" && asset["filename"] == "images/card.png"
+            }));
 
             eg_session_free(session);
         }

@@ -111,6 +111,7 @@ char *eg_read_anki_apkg_media(
 );
 char *eg_parse_anki_apkg(EgSession *session, const uint8_t *data, size_t data_len);
 char *eg_import_anki_apkg(EgSession *session, const uint8_t *data, size_t data_len);
+char *eg_merge_anki_apkg(EgSession *session, const uint8_t *data, size_t data_len);
 
 #ifdef __cplusplus
 }
