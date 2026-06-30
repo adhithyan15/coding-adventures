@@ -88,6 +88,15 @@ Milestone **M4**: functions, calls, and closures — `def`, tail-position
   a function body — run on an enlarged stack so the (separately unguarded)
   parser survives to reach the lowerer — and assert a clean "too deep"
   error rather than a crash.
+- **Robust Python 3 resolution in the end-to-end tests.**  The e2e helper
+  now resolves a *working Python 3* interpreter: it tries `python3` first,
+  then `python`, and for each requires `<exe> --version` to report
+  "Python 3.x" (checking both stdout and stderr).  When no Python 3 is
+  found — or the interpreter cannot be launched — the test **skips**
+  (eprintln + return) instead of panicking, mirroring how the other
+  integration tests gate on a tool being present.  A non-zero exit from a
+  *verified* Python 3 still fails the test (a real codegen bug must be
+  caught).  Fixes a macOS-CI failure where `python` was absent / python2.
 
 ### Changed
 

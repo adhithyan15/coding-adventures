@@ -1272,21 +1272,47 @@ mod tests {
     // pass (the lowering + validate assertions above already cover
     // correctness structurally; this is the behavioural confirmation).
 
-    /// Locate a Python interpreter, or `None` if none is on `PATH`.
-    fn python_exe() -> Option<&'static str> {
+    /// Locate a working **Python 3** interpreter on `PATH`, or `None` if
+    /// none is available.
+    ///
+    /// CI hosts differ: on macOS runners `python` is often absent or is
+    /// python2 (the emitted code is Python 3), while Linux/Windows vary
+    /// between `python3` and `python`.  So we don't just check that an exe
+    /// launches — we run `<exe> --version` and require it to report
+    /// "Python 3.x".  `--version` writes to stdout on 3.4+ but historically
+    /// to stderr, so we check both streams.  Mirrors how the other
+    /// integration tests gate on a tool being present (rustc / go / node).
+    fn python3_exe() -> Option<&'static str> {
         ["python3", "python"].into_iter().find(|cand| {
-            std::process::Command::new(cand)
-                .arg("--version")
-                .output()
-                .map(|o| o.status.success())
-                .unwrap_or(false)
+            let Ok(out) = std::process::Command::new(cand).arg("--version").output() else {
+                return false; // exe not found / failed to launch
+            };
+            if !out.status.success() {
+                return false;
+            }
+            // Accept only an interpreter that reports a 3.x version.
+            let combined = format!(
+                "{}{}",
+                String::from_utf8_lossy(&out.stdout),
+                String::from_utf8_lossy(&out.stderr)
+            );
+            combined.trim().starts_with("Python 3")
         })
     }
 
     /// Lower `src` → SIR → Python, execute it, and return trimmed stdout.
-    /// Returns `None` when no interpreter is available (test should skip).
+    /// Returns `None` when no working Python 3 interpreter is available —
+    /// the test then **skips** (it does not fail), so CI hosts lacking a
+    /// Python 3 still pass.  The lowering + `validate` assertions above
+    /// already cover correctness structurally; this is the behavioural
+    /// confirmation, which a real codegen bug (wrong output) still fails.
     fn run_roundtrip(src: &str) -> Option<String> {
-        let py = python_exe()?;
+        let Some(py) = python3_exe() else {
+            eprintln!(
+                "skipping end-to-end execution: no working Python 3 interpreter on PATH"
+            );
+            return None;
+        };
         let module = compile_source(src, "golden").expect("lowering succeeded");
         // The lowered module must validate before we trust the emit.
         let v = semantic_ir::validate(&module);
@@ -1295,11 +1321,23 @@ mod tests {
         let artifact =
             semantic_ir_to_python::compile(&module).expect("emit python from SIR");
 
-        let out = std::process::Command::new(py)
+        // Spawning the interpreter could still fail for an *environment*
+        // reason (the exe vanished after the probe, a sandbox blocks
+        // exec, …) — that is not a codegen bug, so skip rather than fail.
+        let out = match std::process::Command::new(py)
             .arg("-c")
             .arg(&artifact.source)
             .output()
-            .expect("python ran");
+        {
+            Ok(out) => out,
+            Err(e) => {
+                eprintln!("skipping end-to-end execution: could not launch `{py}`: {e}");
+                return None;
+            }
+        };
+        // A non-zero exit from a *verified* Python 3 means the emitted
+        // program itself failed — a real codegen bug — so this stays a
+        // hard failure.
         assert!(
             out.status.success(),
             "python execution failed:\nstderr:\n{}\n--- emitted ---\n{}",
