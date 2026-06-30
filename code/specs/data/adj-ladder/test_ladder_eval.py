@@ -40,6 +40,7 @@ SELF_CONTAINED_RUNGS = (
     "rung4_products",
     "rung5_multistep",
     "rung6_clinical_differential",
+    "rung6b_management",
 )
 
 

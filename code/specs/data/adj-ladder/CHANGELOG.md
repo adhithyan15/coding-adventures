@@ -2,6 +2,31 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.31.0] — 2026-06-29
+
+### Added — rung 6b: clinical management as a dose-feasibility decision
+
+- New **`rung6b_management/items.json`** (20 items, `r6b-01`..`r6b-20`): the **therapy** half of the
+  clinical/MLE bridge. Where rung 6 picks the *diagnosis*, rung 6b picks the *therapy* — rendered as a
+  scalar **feasibility** decision. Each item states a drug's dose constraints: a therapeutic minimum it
+  must clear, and one or more ceilings it must stay under (efficacy/toxicity maximum **plus an
+  organ-adjusted cap from the chart** — renal, hepatic, age, weight, blood-pressure, or
+  potassium safety). The gold program is `symbol dose : scalar`, one `constrain` per bound, then
+  `check`; the **engine** intersects the constraints (QF_LRA linear feasibility) and returns
+  feasible / infeasible, read by the existing **`check_outcome`** extractor — **no harness or engine
+  change** (same machinery as `rung3_constraint_feasibility`).
+- The reasoning and the planted trap: when an **organ-adjusted cap falls below the therapeutic
+  minimum**, the constraints conflict and the regimen is **infeasible** — the drug cannot be dosed
+  safely *and* effectively for this patient, so therapy must be switched. A reasoner that checks only
+  whether the therapeutic minimum is reachable (ignoring the chart cap) wrongly calls it feasible.
+  Ten feasible, ten infeasible, across antimicrobials, anticoagulants, analgesics, antiarrhythmics,
+  antiepileptics, endocrine, and oncologic therapy.
+- Every numeric bound is stated verbatim in the stem (no-result-literals gate holds); options are the
+  distinct constraint outcomes (feasible / infeasible / unbounded / optimal / unknown). Engine returns
+  the correct feasibility **20/20 cached, zero wrong**. `SELF_CONTAINED_RUNGS` gains
+  `rung6b_management`; contamination + items_json + rung gates green (44 passed). Spec ADJ-LADDER.md
+  §5 updated (rung 6b inserted as the management rung).
+
 ## [0.30.0] — 2026-06-29
 
 ### Added — rung 6 batch 2: four-way differentials with likelihood ratios below 1
