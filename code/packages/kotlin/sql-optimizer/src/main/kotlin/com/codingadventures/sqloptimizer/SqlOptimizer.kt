@@ -329,33 +329,39 @@ object PredicatePushdownPass : Pass {
             is OptimizedPlan.Project ->
                 OptimizedPlan.Project(pushFilter(predicate, input.input), input.columns)
 
-            // Inner join: split conjuncts to left, right, or keep on the join
-            is OptimizedPlan.Join when input.kind == JoinKind.INNER -> {
-                val leftAlias  = tableAliasOf(input.left)
-                val rightAlias = tableAliasOf(input.right)
-                val (leftConj, rightConj, keep) = partitionConjuncts(conjuncts, leftAlias, rightAlias)
-                val newLeft  = if (leftConj.isEmpty())  input.left  else pushFilter(conjoin(leftConj),  input.left)
-                val newRight = if (rightConj.isEmpty()) input.right else pushFilter(conjoin(rightConj), input.right)
-                val join = OptimizedPlan.Join(newLeft, newRight, input.kind, input.condition)
-                if (keep.isEmpty()) join else OptimizedPlan.Filter(join, conjoin(keep))
-            }
+            // Join: push conjuncts based on join kind
+            is OptimizedPlan.Join -> when (input.kind) {
+                // Inner join: split conjuncts to left, right, or keep on the join
+                JoinKind.INNER -> {
+                    val leftAlias  = tableAliasOf(input.left)
+                    val rightAlias = tableAliasOf(input.right)
+                    val (leftConj, rightConj, keep) = partitionConjuncts(conjuncts, leftAlias, rightAlias)
+                    val newLeft  = if (leftConj.isEmpty())  input.left  else pushFilter(conjoin(leftConj),  input.left)
+                    val newRight = if (rightConj.isEmpty()) input.right else pushFilter(conjoin(rightConj), input.right)
+                    val join = OptimizedPlan.Join(newLeft, newRight, input.kind, input.condition)
+                    if (keep.isEmpty()) join else OptimizedPlan.Filter(join, conjoin(keep))
+                }
 
-            // Left join: push left-only conjuncts to left side; keep everything else
-            is OptimizedPlan.Join when input.kind == JoinKind.LEFT -> {
-                val leftAlias = tableAliasOf(input.left)
-                val (leftConj, keep) = conjuncts.partition { refsOnlyTable(it, leftAlias) }
-                val newLeft = if (leftConj.isEmpty()) input.left else pushFilter(conjoin(leftConj), input.left)
-                val join = OptimizedPlan.Join(newLeft, input.right, input.kind, input.condition)
-                if (keep.isEmpty()) join else OptimizedPlan.Filter(join, conjoin(keep))
-            }
+                // Left join: push left-only conjuncts to left side; keep everything else
+                JoinKind.LEFT -> {
+                    val leftAlias = tableAliasOf(input.left)
+                    val (leftConj, keep) = conjuncts.partition { refsOnlyTable(it, leftAlias) }
+                    val newLeft = if (leftConj.isEmpty()) input.left else pushFilter(conjoin(leftConj), input.left)
+                    val join = OptimizedPlan.Join(newLeft, input.right, input.kind, input.condition)
+                    if (keep.isEmpty()) join else OptimizedPlan.Filter(join, conjoin(keep))
+                }
 
-            // Right join: push right-only conjuncts to right side; keep everything else
-            is OptimizedPlan.Join when input.kind == JoinKind.RIGHT -> {
-                val rightAlias = tableAliasOf(input.right)
-                val (rightConj, keep) = conjuncts.partition { refsOnlyTable(it, rightAlias) }
-                val newRight = if (rightConj.isEmpty()) input.right else pushFilter(conjoin(rightConj), input.right)
-                val join = OptimizedPlan.Join(input.left, newRight, input.kind, input.condition)
-                if (keep.isEmpty()) join else OptimizedPlan.Filter(join, conjoin(keep))
+                // Right join: push right-only conjuncts to right side; keep everything else
+                JoinKind.RIGHT -> {
+                    val rightAlias = tableAliasOf(input.right)
+                    val (rightConj, keep) = conjuncts.partition { refsOnlyTable(it, rightAlias) }
+                    val newRight = if (rightConj.isEmpty()) input.right else pushFilter(conjoin(rightConj), input.right)
+                    val join = OptimizedPlan.Join(input.left, newRight, input.kind, input.condition)
+                    if (keep.isEmpty()) join else OptimizedPlan.Filter(join, conjoin(keep))
+                }
+
+                // Full/Cross joins: no safe pushdown — keep filter above
+                else -> OptimizedPlan.Filter(input, predicate)
             }
 
             // Stop at Aggregate, Limit, Scan, EmptyResult, DML
@@ -440,11 +446,12 @@ object PredicatePushdownPass : Pass {
 //
 // Wildcard (SELECT *) disables pruning for that branch — all columns are needed.
 
+// ColRef: (table alias or null, column name). Top-level because typealias is not
+// supported inside objects in Kotlin.
+private typealias ColRef = Pair<String?, String>
+
 object ProjectionPruningPass : Pass {
     override val name = "ProjectionPruning"
-
-    // Pair<table alias or null, column name>
-    private typealias ColRef = Pair<String?, String>
 
     override fun apply(plan: OptimizedPlan): OptimizedPlan = prunePlan(plan, null)
 
