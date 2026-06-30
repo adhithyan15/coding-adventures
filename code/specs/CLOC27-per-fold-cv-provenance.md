@@ -145,9 +145,18 @@ source token's CvId, whose `Origin` is the source span.
 
 In `closurec/src/run.rs` (`transform_source_with_cv`, ~line 511), when
 `--correlation_vector` is set, parse via `parse_javascript_typed_with_cv` with
-the run's real (enabled) `CVLog`. The fold pass already runs against that log;
-its `fork_cv` now `derive`s the folded literal from a leaf id that has a real
-source `Origin`, so the chain reaches the source. The non-CV path is unchanged.
+the run's real (enabled) `CVLog`, so the bridged leaves carry source CvIds.
+
+**Implementation note (divergence, as shipped):** the spec originally assumed
+"the fold pass already runs against that log." It did not — `run_typed_pipeline`
+created its own *disabled, discarded* `CVLog` (`pass_cv`) and ran the pass
+pipeline + emitter against it, so a fold's `derive` was a no-op. D5 as shipped
+therefore *also* threads the run's real log into `run_typed_pipeline` (new
+`cv: Option<&mut CVLog>` parameter): `Some(log)` on the CV-on path, so the
+constant-fold `derive`s the folded literal from its leaf's real-`Origin` CvId
+and the chain reaches the source; `None` falls back to an internal disabled log
+(byte-identical, zero overhead). The input file's display name is threaded as
+the per-token `Origin.source`. The non-CV path is unchanged.
 
 ## Soundness & zero-behaviour-change
 

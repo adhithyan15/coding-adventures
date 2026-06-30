@@ -41,9 +41,11 @@ use std::sync::atomic::{AtomicU64, Ordering};
 const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 
 /// Run closurec at SIMPLE with `--correlation_vector` on `src` and return the
-/// parsed sidecar JSON. Uses a unique temp dir per call (no predictable shared
-/// path; safe under parallel `cargo test`).
-fn run_cv_sidecar(src: &str) -> serde_json::Value {
+/// parsed sidecar JSON together with the input file's path string (the string
+/// the parser's CV tokenizer uses as each token's `Origin.source`, so the test
+/// can match per-token source-span origins). Uses a unique temp dir per call
+/// (no predictable shared path; safe under parallel `cargo test`).
+fn run_cv_sidecar(src: &str) -> (serde_json::Value, String) {
     static SEQ: AtomicU64 = AtomicU64::new(0);
     let dir = std::env::temp_dir().join(format!(
         "closurec_cvgap_{}_{}",
@@ -79,8 +81,9 @@ fn run_cv_sidecar(src: &str) -> serde_json::Value {
     let text = std::fs::read_to_string(&cv_path)
         .unwrap_or_else(|e| panic!("read sidecar {}: {e}", cv_path.display()));
     let json: serde_json::Value = serde_json::from_str(&text).expect("parse sidecar JSON");
+    let input_path = input.to_string_lossy().into_owned();
     let _ = std::fs::remove_dir_all(&dir);
-    json
+    (json, input_path)
 }
 
 /// Lex/file-level origin sources — the only ones the SIMPLE trace currently
@@ -93,20 +96,41 @@ const LEX_FILE_ORIGINS: &[&str] = &[
     "concatenated_combined_source",
 ];
 
+/// True iff `loc` looks like a per-token `line:col` span (both 1-based ints) —
+/// the location the parser's CV tokenizer stamps on each token's `Origin`.
+/// Distinguishes a real source-span origin from the coarse `0:0` program-root
+/// / file-level locations.
+fn is_line_col(loc: &str) -> bool {
+    matches!(loc.split_once(':'), Some((l, c))
+        if !l.is_empty() && !c.is_empty()
+        && l.bytes().all(|b| b.is_ascii_digit())
+        && c.bytes().all(|b| b.is_ascii_digit()))
+}
+
 #[test]
-fn constant_fold_runs_but_sidecar_has_no_per_fold_provenance() {
+fn constant_fold_records_per_token_source_provenance() {
     // `"abc".length` folds to `3`; `report(...)` keeps it referenced so the
     // value survives remove-unused-vars/treeshake and the fold is real.
-    let j = run_cv_sidecar("report(\"abc\".length);\n");
+    let (j, input_path) = run_cv_sidecar("report(\"abc\".length);\n");
     let entries = j["entries"].as_object().expect("sidecar `entries` object");
     assert!(!entries.is_empty(), "sidecar should have entries");
 
     // (1) The constant-fold pass ran — recorded in the coarse simple_v2 summary.
     let mut saw_constant_fold_pass = false;
     let mut origin_sources: std::collections::BTreeSet<String> = std::collections::BTreeSet::new();
+    // (2) Per-token source-span origins — minted by the parser's CV tokenizer
+    // (CLOC27 P2/P3), `Origin.source == <input path>`, `location == line:col`.
+    // Their presence is the signal that per-fold provenance now reaches the
+    // sidecar: every leaf literal (and thus every literal a fold derives from)
+    // carries a CvId whose root Origin is the source span it came from.
+    let mut per_token_span_origins = 0usize;
     for (_id, e) in entries {
         if let Some(src) = e["origin"]["source"].as_str() {
             origin_sources.insert(src.to_string());
+            let loc = e["origin"]["location"].as_str().unwrap_or("");
+            if src == input_path && is_line_col(loc) {
+                per_token_span_origins += 1;
+            }
         }
         for c in e["contributions"].as_array().into_iter().flatten() {
             if c["tag"].as_str() == Some("simple_v2") {
@@ -124,16 +148,28 @@ fn constant_fold_runs_but_sidecar_has_no_per_fold_provenance() {
          origins seen: {origin_sources:?}",
     );
 
-    // (2) THE GAP: no per-fold provenance. Every entry origin is lex/file-level;
-    // the folded `3` is not traced to the `"abc".length` source bytes.
-    let unexpected: Vec<&String> = origin_sources
-        .iter()
-        .filter(|s| !LEX_FILE_ORIGINS.contains(&s.as_str()))
-        .collect();
+    // (2) TRACING IS REAL (CLOC27): the gap has been closed. Per-token
+    // source-span origins now appear in the sidecar — the leaf literals the
+    // constant-fold derives from carry CvIds rooted at the `"abc".length`
+    // source bytes (source == the input file, location == a `line:col` span),
+    // not the coarse lex/file-level origins that were the only ones present
+    // before. (The lex/file-level origins in `LEX_FILE_ORIGINS` still appear
+    // alongside them; this asserts the *addition* of true per-token lineage.)
     assert!(
-        unexpected.is_empty(),
-        "GAP CHARACTERIZATION no longer holds — found non-lex/file origin source(s) {unexpected:?}. \
-         If per-fold CV provenance was wired through the SIMPLE bridge, UPDATE this test to assert \
-         the folded literal's lineage to its source-byte span instead. origins seen: {origin_sources:?}",
+        per_token_span_origins > 0,
+        "expected at least one per-token source-span origin (source == {input_path:?}, \
+         location == line:col) proving per-fold provenance reaches the sidecar; \
+         origins seen: {origin_sources:?}",
+    );
+
+    // The coarse lex/file-level origins still coexist — per-token provenance was
+    // *added* to the trace, not substituted for the file/pass-summary records.
+    let has_lex_file = origin_sources
+        .iter()
+        .any(|s| LEX_FILE_ORIGINS.contains(&s.as_str()));
+    assert!(
+        has_lex_file,
+        "coarse lex/file origins ({LEX_FILE_ORIGINS:?}) should still be present alongside \
+         the per-token spans; origins seen: {origin_sources:?}",
     );
 }
