@@ -2,6 +2,47 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.19.7] - 2026-06-30
+
+### Fixed — member access on a call result was silently dropped (miscompile)
+
+A member access applied to a call result lost part of the expression:
+
+```
+f().x     →  f()       (the `.x` property read vanished)
+f()[k]    →  f[k]      (the call `()` vanished — wrong object entirely)
+g(f().x)  →  g(f())    (same drop, nested in an argument)
+```
+
+Both are real miscompiles: the emitted program reads a different value (or
+calls nothing at all) compared to the source.
+
+**Cause.** The grammar parses a `call_expression` as a FLAT suffix chain — a
+base (`member_expression` / `primary_expression`) followed by any mix of
+`arguments` (a call), `. NAME` (dot member) and `[ expr ]` (computed member)
+suffixes, in source order. For example `f().x` parses to
+`[member_expression(f), arguments(()), Token("."), Token("x")]`. The bridge,
+however, inspected only the LAST child and dispatched the whole node to a
+single handler:
+
+- when the last child was `arguments` it built the call and ignored any
+  trailing `.NAME` / `[expr]` tokens (`f().x` → `f()`);
+- when the last child was a member suffix it delegated to
+  `convert_member_expression`, which took the FIRST child as the base and
+  skipped the intervening `arguments` node (`f()[k]` → `f[k]`).
+
+**Fix.** `convert_call_expression` now folds EVERY suffix left-to-right onto
+the growing base — `arguments` → `CallExpression`, `.NAME` → non-computed
+`MemberExpression`, `[expr]` → computed `MemberExpression` — mirroring the
+member-suffix walk in `convert_member_expression`. This also subsumes the
+chained-call `f()()` fold added in 0.19.6. Optional chaining (`?.`) and any
+unrecognised suffix token are rejected (fail-closed: a bridge error feeds the
+CLI's WHITESPACE_ONLY fallback, never a wrong program).
+
+Regression tests: `dot_member_on_call_result`, `computed_member_on_call_result`,
+`call_member_call_mixed_chain` (plus the existing `chained_call_expression` /
+`triple_chained_call_with_args`, which still pass).
+
 ## [0.19.6] - 2026-06-30
 
 ### Fixed — chained calls `f()()` raised a bridge internal error
