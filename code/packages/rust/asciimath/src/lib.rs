@@ -111,6 +111,34 @@ mod tests {
         assert_eq!(p("oo"), sym("infinity"));
     }
 
+    #[test]
+    fn symbol_table_covers_greek_sets_arrows_and_operators() {
+        // Lowercase Greek (incl. one added in PR-3a) and a variant glyph.
+        assert_eq!(p("omicron"), sym("omicron"));
+        assert_eq!(p("varepsilon"), sym("varepsilon"));
+        // Uppercase Greek is a single symbol, NOT a product of its letters.
+        assert_eq!(p("Sigma"), sym("Sigma"));
+        assert_eq!(p("Omega"), sym("Omega"));
+        assert_ne!(p("Sigma"), b(BinOp::Mul, sym("S"), sym("i"))); // not S·i·g·m·a
+        // Blackboard number sets canonicalize to words.
+        assert_eq!(p("RR"), sym("reals"));
+        assert_eq!(p("ZZ"), sym("integers"));
+        // Arrows: the short AsciiMath spelling and the long name agree.
+        assert_eq!(p("rarr"), sym("rightarrow"));
+        assert_eq!(p("rightarrow"), sym("rightarrow"));
+        // Set / logic operators and a few misc. operators.
+        assert_eq!(p("cup"), sym("union"));
+        assert_eq!(p("cap"), sym("intersection"));
+        assert_eq!(p("subseteq"), sym("subseteq"));
+        assert_eq!(p("forall"), sym("forall"));
+        assert_eq!(p("nabla"), sym("nabla"));
+        assert_eq!(p("grad"), sym("nabla")); // alias folds to the same symbol
+        // A symbol composes in ordinary expressions: `alpha + Omega`.
+        assert_eq!(p("alpha + Omega"), b(BinOp::Add, sym("alpha"), sym("Omega")));
+        // Deferred bare keywords still parse (as a product / variable), no panic.
+        assert_eq!(p("in"), b(BinOp::Mul, sym("i"), sym("n")));
+    }
+
     // ---- operators & precedence ------------------------------------------------
     #[test]
     fn add_and_implicit_mul() {
@@ -358,6 +386,9 @@ mod tests {
                 "int_a^b f",       // big operator, integral
                 "hat x + vec v",   // accents (PR-2b)
                 "bar(x+y)",        // accent over a group
+                "alpha + Omega",   // greek symbols (PR-3a symbol table)
+                "x in RR",         // blackboard set + (deferred) bare keyword, no panic
+                "a cup b",         // set operator as a symbol
                 "1 +",   // error: trailing operator (span in range, not a panic)
                 "(x",    // error: missing close
                 "",      // error: empty
