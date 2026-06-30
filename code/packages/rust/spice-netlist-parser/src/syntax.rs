@@ -30,6 +30,7 @@ pub const BERKELEY_APP_SHELL_DASHBOARD_PACKAGE_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_CARDS_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_VIEW_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_NAVIGATION_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -75,6 +76,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-dashboard-cards-json",
     "app-shell-dashboard-view-json",
     "app-shell-dashboard-layout-json",
+    "app-shell-dashboard-navigation-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -1499,6 +1501,125 @@ impl BerkeleyAppShellDashboardLayout {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardNavigationItem {
+    pub id: String,
+    pub region_id: String,
+    pub role: String,
+    pub label: String,
+    pub card_ids: Vec<String>,
+    pub active: bool,
+    pub visible: bool,
+    pub enabled: bool,
+    pub badge_count: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardNavigation {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub primary_card_id: Option<String>,
+    pub primary_region_id: Option<String>,
+    pub active_item_id: Option<String>,
+    pub item_count: usize,
+    pub visible_item_count: usize,
+    pub enabled_item_count: usize,
+    pub region_count: usize,
+    pub visible_region_count: usize,
+    pub card_count: usize,
+    pub visible_card_count: usize,
+    pub attention_card_count: usize,
+    pub metric_card_count: usize,
+    pub items: Vec<BerkeleyAppShellDashboardNavigationItem>,
+    pub package_capability_id: String,
+    pub dashboard_capability_id: String,
+    pub cards_capability_id: String,
+    pub view_capability_id: String,
+    pub layout_capability_id: String,
+    pub navigation_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardNavigation {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_dashboard_layout(&BerkeleyAppShellDashboardLayout::from_bootstrap_snapshot(
+            snapshot,
+        ))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dashboard_layout(&BerkeleyAppShellDashboardLayout::from_shell_handoff(
+            handoff,
+        ))
+    }
+
+    pub fn from_dashboard_layout(layout: &BerkeleyAppShellDashboardLayout) -> Self {
+        let items = layout
+            .regions
+            .iter()
+            .map(|region| BerkeleyAppShellDashboardNavigationItem {
+                id: format!("dashboard.nav.{}", region.role),
+                region_id: region.id.clone(),
+                role: region.role.clone(),
+                label: region.title.clone(),
+                card_ids: region.card_ids.clone(),
+                active: region.primary,
+                visible: region.visible,
+                enabled: region.visible,
+                badge_count: region.card_ids.len(),
+            })
+            .collect::<Vec<_>>();
+        let active_item_id = items
+            .iter()
+            .find(|item| item.active)
+            .map(|item| item.id.clone());
+        let item_count = items.len();
+        let visible_item_count = items.iter().filter(|item| item.visible).count();
+        let enabled_item_count = items.iter().filter(|item| item.enabled).count();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_NAVIGATION_SCHEMA_VERSION,
+            package_name: layout.package_name.clone(),
+            source_fingerprint: layout.source_fingerprint.clone(),
+            title: layout.title.clone(),
+            startup_route: layout.startup_route.clone(),
+            ready: layout.ready,
+            severity: layout.severity.clone(),
+            attention_required: layout.attention_required,
+            primary_card_id: layout.primary_card_id.clone(),
+            primary_region_id: layout.primary_region_id.clone(),
+            active_item_id,
+            item_count,
+            visible_item_count,
+            enabled_item_count,
+            region_count: layout.region_count,
+            visible_region_count: layout.visible_region_count,
+            card_count: layout.card_count,
+            visible_card_count: layout.visible_card_count,
+            attention_card_count: layout.attention_card_count,
+            metric_card_count: layout.metric_card_count,
+            items,
+            package_capability_id: layout.package_capability_id.clone(),
+            dashboard_capability_id: layout.dashboard_capability_id.clone(),
+            cards_capability_id: layout.cards_capability_id.clone(),
+            view_capability_id: layout.view_capability_id.clone(),
+            layout_capability_id: layout.layout_capability_id.clone(),
+            navigation_capability_id: "app-shell-dashboard-navigation-json".to_string(),
+            artifact_capability_count: layout.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_navigation_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BerkeleyAnalysisInventoryEntry {
     pub index: usize,
     pub directive: String,
@@ -2501,6 +2622,43 @@ impl BerkeleyAppDeck {
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self
             .run_app_shell_dashboard_layout(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_navigation(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardNavigation {
+        BerkeleyAppShellDashboardNavigation::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_navigation(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardNavigation, AnalysisExecutionError> {
+        Ok(
+            BerkeleyAppShellDashboardNavigation::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_navigation_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_navigation(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_navigation_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_navigation(persisted_state)?
             .to_json())
     }
 
@@ -3531,6 +3689,61 @@ fn app_shell_dashboard_layout_region_json_value(
         "cardIds": &region.card_ids,
         "primary": region.primary,
         "visible": region.visible,
+    })
+}
+
+fn app_shell_dashboard_navigation_json_value(
+    navigation: &BerkeleyAppShellDashboardNavigation,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": navigation.schema_version,
+        "packageName": &navigation.package_name,
+        "sourceFingerprint": &navigation.source_fingerprint,
+        "title": &navigation.title,
+        "startupRoute": &navigation.startup_route,
+        "ready": navigation.ready,
+        "severity": &navigation.severity,
+        "attentionRequired": navigation.attention_required,
+        "primaryCardId": &navigation.primary_card_id,
+        "primaryRegionId": &navigation.primary_region_id,
+        "activeItemId": &navigation.active_item_id,
+        "itemCount": navigation.item_count,
+        "visibleItemCount": navigation.visible_item_count,
+        "enabledItemCount": navigation.enabled_item_count,
+        "regionCount": navigation.region_count,
+        "visibleRegionCount": navigation.visible_region_count,
+        "cardCount": navigation.card_count,
+        "visibleCardCount": navigation.visible_card_count,
+        "attentionCardCount": navigation.attention_card_count,
+        "metricCardCount": navigation.metric_card_count,
+        "items": navigation
+            .items
+            .iter()
+            .map(app_shell_dashboard_navigation_item_json_value)
+            .collect::<Vec<_>>(),
+        "packageCapabilityId": &navigation.package_capability_id,
+        "dashboardCapabilityId": &navigation.dashboard_capability_id,
+        "cardsCapabilityId": &navigation.cards_capability_id,
+        "viewCapabilityId": &navigation.view_capability_id,
+        "layoutCapabilityId": &navigation.layout_capability_id,
+        "navigationCapabilityId": &navigation.navigation_capability_id,
+        "artifactCapabilityCount": navigation.artifact_capability_count,
+    })
+}
+
+fn app_shell_dashboard_navigation_item_json_value(
+    item: &BerkeleyAppShellDashboardNavigationItem,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &item.id,
+        "regionId": &item.region_id,
+        "role": &item.role,
+        "label": &item.label,
+        "cardIds": &item.card_ids,
+        "active": item.active,
+        "visible": item.visible,
+        "enabled": item.enabled,
+        "badgeCount": item.badge_count,
     })
 }
 

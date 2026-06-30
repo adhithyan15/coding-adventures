@@ -17,6 +17,7 @@ use spice_netlist_parser::{
     BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_CARDS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_DASHBOARD_NAVIGATION_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_PACKAGE_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_VIEW_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_EVENT_DASHBOARD_SCHEMA_VERSION,
@@ -3515,6 +3516,78 @@ C1 out 0 1p
         shell_dashboard_layout_payload["layoutCapabilityId"],
         "app-shell-dashboard-layout-json"
     );
+
+    let shell_dashboard_navigation = app
+        .run_app_shell_dashboard_navigation(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("shell dashboard navigation should execute");
+    assert_eq!(
+        shell_dashboard_navigation.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_NAVIGATION_SCHEMA_VERSION
+    );
+    assert!(shell_dashboard_navigation.ready);
+    assert_eq!(
+        shell_dashboard_navigation.active_item_id.as_deref(),
+        Some("dashboard.nav.status")
+    );
+    assert_eq!(
+        shell_dashboard_navigation.primary_region_id.as_deref(),
+        shell_dashboard_layout.primary_region_id.as_deref()
+    );
+    assert_eq!(shell_dashboard_navigation.item_count, 3);
+    assert_eq!(shell_dashboard_navigation.visible_item_count, 2);
+    assert_eq!(shell_dashboard_navigation.enabled_item_count, 2);
+    assert_eq!(
+        shell_dashboard_navigation.items[0].id,
+        "dashboard.nav.status"
+    );
+    assert_eq!(
+        shell_dashboard_navigation.items[0].region_id,
+        "dashboard.layout.status"
+    );
+    assert!(shell_dashboard_navigation.items[0].active);
+    assert!(shell_dashboard_navigation.items[0].enabled);
+    assert_eq!(shell_dashboard_navigation.items[1].role, "attention");
+    assert!(!shell_dashboard_navigation.items[1].visible);
+    assert!(!shell_dashboard_navigation.items[1].enabled);
+    assert_eq!(shell_dashboard_navigation.items[2].label, "Metrics");
+    assert_eq!(shell_dashboard_navigation.items[2].badge_count, 1);
+    assert_eq!(
+        shell_dashboard_navigation.navigation_capability_id,
+        "app-shell-dashboard-navigation-json"
+    );
+    assert_eq!(
+        shell_dashboard_navigation.layout_capability_id,
+        shell_dashboard_layout.layout_capability_id
+    );
+
+    let shell_dashboard_navigation_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_dashboard_navigation_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap(),
+    )
+    .expect("shell dashboard navigation JSON should parse");
+    assert_eq!(
+        shell_dashboard_navigation_payload["activeItemId"],
+        "dashboard.nav.status"
+    );
+    assert_eq!(shell_dashboard_navigation_payload["visibleItemCount"], 2);
+    assert_eq!(
+        shell_dashboard_navigation_payload["items"][1]["enabled"],
+        false
+    );
+    assert_eq!(
+        shell_dashboard_navigation_payload["items"][2]["label"],
+        "Metrics"
+    );
+    assert_eq!(
+        shell_dashboard_navigation_payload["navigationCapabilityId"],
+        "app-shell-dashboard-navigation-json"
+    );
 }
 
 #[test]
@@ -4283,6 +4356,71 @@ R1 in out
     assert_eq!(
         shell_dashboard_layout_payload["layoutCapabilityId"],
         "app-shell-dashboard-layout-json"
+    );
+
+    let shell_dashboard_navigation =
+        app.app_shell_dashboard_navigation(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        });
+    assert_eq!(
+        shell_dashboard_navigation.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_NAVIGATION_SCHEMA_VERSION
+    );
+    assert!(!shell_dashboard_navigation.ready);
+    assert_eq!(
+        shell_dashboard_navigation.active_item_id.as_deref(),
+        Some("dashboard.nav.attention")
+    );
+    assert_eq!(
+        shell_dashboard_navigation.primary_region_id.as_deref(),
+        Some("dashboard.layout.attention")
+    );
+    assert_eq!(shell_dashboard_navigation.item_count, 3);
+    assert_eq!(shell_dashboard_navigation.visible_item_count, 3);
+    assert_eq!(shell_dashboard_navigation.enabled_item_count, 3);
+    assert_eq!(shell_dashboard_navigation.items[0].role, "status");
+    assert!(!shell_dashboard_navigation.items[0].active);
+    assert!(shell_dashboard_navigation.items[0].enabled);
+    assert_eq!(
+        shell_dashboard_navigation.items[1].id,
+        "dashboard.nav.attention"
+    );
+    assert!(shell_dashboard_navigation.items[1].active);
+    assert!(shell_dashboard_navigation.items[1].visible);
+    assert!(shell_dashboard_navigation.items[1].enabled);
+    assert_eq!(
+        shell_dashboard_navigation.items[1].card_ids,
+        vec!["dashboard.attention".to_string()]
+    );
+    assert_eq!(
+        shell_dashboard_navigation.navigation_capability_id,
+        "app-shell-dashboard-navigation-json"
+    );
+
+    let shell_dashboard_navigation_payload: serde_json::Value = serde_json::from_str(
+        &app.app_shell_dashboard_navigation_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        }),
+    )
+    .expect("blocked shell dashboard navigation JSON should parse");
+    assert_eq!(
+        shell_dashboard_navigation_payload["activeItemId"],
+        "dashboard.nav.attention"
+    );
+    assert_eq!(shell_dashboard_navigation_payload["enabledItemCount"], 3);
+    assert_eq!(
+        shell_dashboard_navigation_payload["items"][1]["active"],
+        true
+    );
+    assert_eq!(
+        shell_dashboard_navigation_payload["items"][1]["regionId"],
+        "dashboard.layout.attention"
+    );
+    assert_eq!(
+        shell_dashboard_navigation_payload["navigationCapabilityId"],
+        "app-shell-dashboard-navigation-json"
     );
 }
 

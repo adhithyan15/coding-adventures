@@ -196,6 +196,15 @@ let shell_dashboard_layout_json = deck.run_app_shell_dashboard_layout_json(
 )?;
 assert!(shell_dashboard_layout_json.contains(r#""primaryRegionId":"dashboard.layout.status""#));
 assert!(shell_dashboard_layout_json.contains(r#""layoutCapabilityId":"app-shell-dashboard-layout-json""#));
+
+let shell_dashboard_navigation_json = deck.run_app_shell_dashboard_navigation_json(
+    BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(3),
+        active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+    },
+)?;
+assert!(shell_dashboard_navigation_json.contains(r#""activeItemId":"dashboard.nav.status""#));
+assert!(shell_dashboard_navigation_json.contains(r#""navigationCapabilityId":"app-shell-dashboard-navigation-json""#));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -264,7 +273,10 @@ dashboard views summarize those cards into primary-card labels, visible card
 IDs, attention card IDs, metric card IDs, and capability metadata for hosts that
 only need the first-render dashboard routing contract. Shell dashboard layouts
 turn those card and view descriptors into stable status, attention, and metrics
-regions with primary and visible flags for first-render host composition. The
+regions with primary and visible flags for first-render host composition. Shell
+dashboard navigation derives stable status, attention, and metrics
+navigation items with active, visible, enabled, and badge-count metadata from
+those layout regions. The
 grammar-backed parser generator and Python/TypeScript parity surfaces continue
 to mature.
 
