@@ -18,6 +18,7 @@ pub const BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_BOOTSTRAP_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_LAUNCH_PLAN_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -51,6 +52,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-bootstrap-json",
     "app-startup-summary-json",
     "app-launch-plan-json",
+    "app-readiness-report-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -359,6 +361,107 @@ impl BerkeleyAppLaunchPlan {
 
     pub fn to_json(&self) -> String {
         app_launch_plan_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppReadinessReport {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub parsed: bool,
+    pub execution_available: bool,
+    pub entry_panel_id: Option<String>,
+    pub entry_target: Option<String>,
+    pub primary_action_id: Option<String>,
+    pub primary_action_enabled: bool,
+    pub panel_count: usize,
+    pub enabled_panel_count: usize,
+    pub disabled_panel_count: usize,
+    pub action_count: usize,
+    pub enabled_action_count: usize,
+    pub disabled_action_count: usize,
+    pub diagnostic_count: usize,
+    pub error_count: usize,
+    pub warning_count: usize,
+    pub note_count: usize,
+    pub selection_stale: bool,
+    pub command_stale: bool,
+    pub repaired_state: bool,
+    pub blocking_message: Option<String>,
+}
+
+impl BerkeleyAppReadinessReport {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        let host_surface = &snapshot.host_surface;
+        let launch_plan = BerkeleyAppLaunchPlan::from_bootstrap_snapshot(snapshot);
+        let enabled_panel_count = host_surface
+            .panels
+            .iter()
+            .filter(|panel| panel.enabled)
+            .count();
+        let primary_action = launch_plan.actions.iter().find(|action| action.primary);
+        let primary_action_id = primary_action.map(|action| action.id.clone());
+        let primary_action_enabled = primary_action.is_some_and(|action| action.enabled);
+        let enabled_action_count = launch_plan
+            .actions
+            .iter()
+            .filter(|action| action.enabled)
+            .count();
+        let error_count = host_surface
+            .diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.severity == "error")
+            .count();
+        let warning_count = host_surface
+            .diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.severity == "warning")
+            .count();
+        let note_count = host_surface
+            .diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.severity == "note")
+            .count();
+        let repaired_state = launch_plan.selection_stale || launch_plan.command_stale;
+
+        Self {
+            schema_version: BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION,
+            package_name: launch_plan.package_name,
+            source_fingerprint: launch_plan.source_fingerprint,
+            title: launch_plan.title,
+            startup_route: launch_plan.startup_route,
+            ready: launch_plan.ready,
+            parsed: host_surface.parsed,
+            execution_available: host_surface.execution_available,
+            entry_panel_id: launch_plan.entry_panel_id,
+            entry_target: launch_plan.entry_target,
+            primary_action_id,
+            primary_action_enabled,
+            panel_count: host_surface.panel_count,
+            enabled_panel_count,
+            disabled_panel_count: host_surface.panel_count.saturating_sub(enabled_panel_count),
+            action_count: launch_plan.action_count,
+            enabled_action_count,
+            disabled_action_count: launch_plan
+                .action_count
+                .saturating_sub(enabled_action_count),
+            diagnostic_count: host_surface.diagnostics.len(),
+            error_count,
+            warning_count,
+            note_count,
+            selection_stale: launch_plan.selection_stale,
+            command_stale: launch_plan.command_stale,
+            repaired_state,
+            blocking_message: launch_plan.blocking_message,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_readiness_report_json_value(self).to_string()
     }
 }
 
@@ -972,6 +1075,38 @@ impl BerkeleyAppDeck {
         persisted_state: BerkeleyAppPersistedEditorState,
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self.run_app_launch_plan(persisted_state)?.to_json())
+    }
+
+    pub fn app_readiness_report(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppReadinessReport {
+        BerkeleyAppReadinessReport::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_readiness_report(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppReadinessReport, AnalysisExecutionError> {
+        Ok(BerkeleyAppReadinessReport::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_readiness_report_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_readiness_report(persisted_state).to_json()
+    }
+
+    pub fn run_app_readiness_report_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self.run_app_readiness_report(persisted_state)?.to_json())
     }
 
     pub fn run_source_order(&self) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
@@ -1677,6 +1812,37 @@ fn app_launch_action_json_value(action: &BerkeleyAppLaunchAction) -> serde_json:
         "enabled": action.enabled,
         "primary": action.primary,
         "disabledReason": &action.disabled_reason,
+    })
+}
+
+fn app_readiness_report_json_value(report: &BerkeleyAppReadinessReport) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": report.schema_version,
+        "packageName": &report.package_name,
+        "sourceFingerprint": &report.source_fingerprint,
+        "title": &report.title,
+        "startupRoute": &report.startup_route,
+        "ready": report.ready,
+        "parsed": report.parsed,
+        "executionAvailable": report.execution_available,
+        "entryPanelId": &report.entry_panel_id,
+        "entryTarget": &report.entry_target,
+        "primaryActionId": &report.primary_action_id,
+        "primaryActionEnabled": report.primary_action_enabled,
+        "panelCount": report.panel_count,
+        "enabledPanelCount": report.enabled_panel_count,
+        "disabledPanelCount": report.disabled_panel_count,
+        "actionCount": report.action_count,
+        "enabledActionCount": report.enabled_action_count,
+        "disabledActionCount": report.disabled_action_count,
+        "diagnosticCount": report.diagnostic_count,
+        "errorCount": report.error_count,
+        "warningCount": report.warning_count,
+        "noteCount": report.note_count,
+        "selectionStale": report.selection_stale,
+        "commandStale": report.command_stale,
+        "repairedState": report.repaired_state,
+        "blockingMessage": &report.blocking_message,
     })
 }
 
