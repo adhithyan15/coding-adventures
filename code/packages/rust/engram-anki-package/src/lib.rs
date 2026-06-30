@@ -346,12 +346,13 @@ pub fn read_media_file(data: &[u8], archive_name: &str) -> Result<ResolvedMediaF
     let media = manifest
         .media_files
         .into_iter()
-        .find(|media| media.archive_name == archive_name)
+        .find(|media| media_matches_archive_name(media, archive_name))
         .ok_or_else(|| apkg_error(format!("media file '{archive_name}' not found")))?;
-    let data = reader.read_by_name(&media.archive_name).map_err(|err| {
+    let payload_archive_name = media_payload_archive_name(&media);
+    let data = reader.read_by_name(&payload_archive_name).map_err(|err| {
         apkg_error(format!(
-            "failed to read media file '{}': {err}",
-            media.archive_name
+            "failed to read media file '{}' from archive member '{}': {err}",
+            media.archive_name, payload_archive_name
         ))
     })?;
     let data = decode_package_payload(collection.format, "media file", &data)?;
@@ -373,10 +374,11 @@ pub fn read_media_files(data: &[u8]) -> Result<Vec<ResolvedMediaFile>, ApkgError
         .media_files
         .into_iter()
         .map(|media| {
-            let data = reader.read_by_name(&media.archive_name).map_err(|err| {
+            let payload_archive_name = media_payload_archive_name(&media);
+            let data = reader.read_by_name(&payload_archive_name).map_err(|err| {
                 apkg_error(format!(
-                    "failed to read media file '{}': {err}",
-                    media.archive_name
+                    "failed to read media file '{}' from archive member '{}': {err}",
+                    media.archive_name, payload_archive_name
                 ))
             })?;
             let data = decode_package_payload(collection.format, "media file", &data)?;
@@ -387,6 +389,20 @@ pub fn read_media_files(data: &[u8]) -> Result<Vec<ResolvedMediaFile>, ApkgError
             })
         })
         .collect()
+}
+
+fn media_matches_archive_name(media: &MediaFile, archive_name: &str) -> bool {
+    media.archive_name == archive_name
+        || media
+            .legacy_zip_filename
+            .is_some_and(|legacy| archive_name == legacy.to_string())
+}
+
+fn media_payload_archive_name(media: &MediaFile) -> String {
+    media
+        .legacy_zip_filename
+        .map(|legacy| legacy.to_string())
+        .unwrap_or_else(|| media.archive_name.clone())
 }
 
 pub fn write_legacy_apkg(collection_anki2: &[u8], media_assets: &[MediaAsset<'_>]) -> Vec<u8> {
@@ -4069,15 +4085,19 @@ fn modern_media_manifest(reader: &ZipReader<'_>) -> Result<MediaManifest, ApkgEr
         .filter(|entry| !entry.is_directory && !is_reserved_entry(&entry.name))
         .map(|entry| (entry.name.as_str(), entry.compressed_size))
         .collect();
-    let mut mapped_archive_names = BTreeSet::new();
+    let mut mapped_payload_archive_names = BTreeSet::new();
 
     for (index, entry) in entries.entries.into_iter().enumerate() {
         let archive_name = index.to_string();
+        let payload_archive_name = entry
+            .legacy_zip_filename
+            .map(|legacy| legacy.to_string())
+            .unwrap_or_else(|| archive_name.clone());
         manifest
             .mapping
             .insert(archive_name.clone(), entry.name.clone());
-        mapped_archive_names.insert(archive_name.clone());
-        if let Some(archive_entry) = archive_entries.get(archive_name.as_str()) {
+        mapped_payload_archive_names.insert(payload_archive_name.clone());
+        if let Some(archive_entry) = archive_entries.get(payload_archive_name.as_str()) {
             manifest.media_files.push(MediaFile {
                 archive_name,
                 filename: Some(entry.name),
@@ -4092,7 +4112,7 @@ fn modern_media_manifest(reader: &ZipReader<'_>) -> Result<MediaManifest, ApkgEr
     }
 
     for archive_name in archive_entries.keys() {
-        if !mapped_archive_names.contains(*archive_name) {
+        if !mapped_payload_archive_names.contains(*archive_name) {
             manifest.unmapped_files.push((*archive_name).to_string());
         }
     }
@@ -5992,6 +6012,66 @@ CREATE TABLE graves (
             state.media_assets[0].filename.as_deref(),
             Some("audio/hola.mp3")
         );
+        assert_eq!(state.media_assets[0].data, b"mp3");
+    }
+
+    #[test]
+    fn reads_modern_media_payloads_via_legacy_zip_filename() {
+        let mut writer = ZipWriter::new();
+        let mut meta = Vec::new();
+        PackageMetadataProto {
+            version: PackageVersionProto::Latest as i32,
+        }
+        .encode(&mut meta)
+        .unwrap();
+        writer.add_file(META, &meta, false);
+        writer.add_file(
+            SQLITE_21B_COLLECTION,
+            &zstd_encode(&v11_sqlite_collection_bytes()),
+            false,
+        );
+        writer.add_file(LEGACY_COLLECTION, b"dummy legacy collection", false);
+
+        let media_entries = MediaEntriesProto {
+            entries: vec![MediaEntryProto {
+                name: "audio/hola.mp3".to_string(),
+                size: 3,
+                sha1: sum1(b"mp3").to_vec(),
+                legacy_zip_filename: Some(7),
+            }],
+        };
+        let mut media_map = Vec::new();
+        media_entries.encode(&mut media_map).unwrap();
+        writer.add_file(MEDIA_MAP, &zstd_encode(&media_map), false);
+        writer.add_file("7", &zstd_encode(b"mp3"), false);
+        let apkg = writer.finish();
+
+        let manifest = inspect_apkg(&apkg).unwrap();
+        assert_eq!(manifest.media.mapping["0"], "audio/hola.mp3");
+        assert!(manifest.media.missing_files.is_empty());
+        assert!(manifest.media.unmapped_files.is_empty());
+        assert_eq!(manifest.media.media_files[0].archive_name, "0");
+        assert_eq!(manifest.media.media_files[0].legacy_zip_filename, Some(7));
+
+        let media_files = read_media_files(&apkg).unwrap();
+        assert_eq!(
+            media_files,
+            vec![ResolvedMediaFile {
+                archive_name: "0".to_string(),
+                filename: Some("audio/hola.mp3".to_string()),
+                data: b"mp3".to_vec(),
+            }]
+        );
+
+        let logical = read_media_file(&apkg, "0").unwrap();
+        assert_eq!(logical.data, b"mp3");
+        let legacy = read_media_file(&apkg, "7").unwrap();
+        assert_eq!(legacy.archive_name, "0");
+        assert_eq!(legacy.data, b"mp3");
+
+        let state = read_v11_collection_as_engram_state(&apkg).unwrap();
+        assert_eq!(state.media_assets.len(), 1);
+        assert_eq!(state.media_assets[0].archive_name, "0");
         assert_eq!(state.media_assets[0].data, b"mp3");
     }
 
