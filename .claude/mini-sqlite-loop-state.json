@@ -186,11 +186,11 @@
     {
       "id": "kotlin-level1-sql-optimizer",
       "title": "Kotlin sql-optimizer",
-      "status": "pending",
+      "status": "in-review",
       "depends_on": ["kotlin-level1-sql-planner"],
-      "branch": null,
+      "branch": "mini-sqlite/kotlin-level1-sql-optimizer",
       "pr_number": null,
-      "notes": "Port Python sql_optimizer to Kotlin."
+      "notes": "PR open 2026-06-30. 42 tests, JaCoCo ≥80%. OptimizedPlan sealed class + 5 passes (ConstantFolding, PredicatePushdown, ProjectionPruning, DeadCodeElimination, LimitPushdown). Awaiting CI + merge."
     },
     {
       "id": "kotlin-level1-sql-codegen",
