@@ -17,6 +17,7 @@ use spice_netlist_parser::{
     BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_CARDS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_PACKAGE_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_DASHBOARD_VIEW_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_EVENT_DASHBOARD_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_EVENT_DIGEST_SCHEMA_VERSION, BERKELEY_APP_SHELL_EVENT_LOG_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_EVENT_SUMMARY_SCHEMA_VERSION, BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION,
@@ -3359,6 +3360,84 @@ C1 out 0 1p
         shell_dashboard_cards_payload["cardsCapabilityId"],
         "app-shell-dashboard-cards-json"
     );
+
+    let shell_dashboard_view = app
+        .run_app_shell_dashboard_view(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("shell dashboard view should execute");
+    assert_eq!(
+        shell_dashboard_view.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_VIEW_SCHEMA_VERSION
+    );
+    assert_eq!(shell_dashboard_view.ready, shell_dashboard_cards.ready);
+    assert_eq!(
+        shell_dashboard_view.primary_card_id.as_deref(),
+        Some("dashboard.status")
+    );
+    assert_eq!(
+        shell_dashboard_view.primary_card_title.as_deref(),
+        Some("Startup status")
+    );
+    assert_eq!(shell_dashboard_view.card_count, 3);
+    assert_eq!(shell_dashboard_view.visible_card_count, 2);
+    assert_eq!(shell_dashboard_view.attention_card_count, 0);
+    assert_eq!(shell_dashboard_view.metric_card_count, 1);
+    assert_eq!(
+        shell_dashboard_view.card_ids,
+        vec![
+            "dashboard.status".to_string(),
+            "dashboard.attention".to_string(),
+            "dashboard.metrics".to_string()
+        ]
+    );
+    assert_eq!(
+        shell_dashboard_view.visible_card_ids,
+        vec![
+            "dashboard.status".to_string(),
+            "dashboard.metrics".to_string()
+        ]
+    );
+    assert!(shell_dashboard_view.attention_card_ids.is_empty());
+    assert_eq!(
+        shell_dashboard_view.metric_card_ids,
+        vec!["dashboard.metrics".to_string()]
+    );
+    assert_eq!(
+        shell_dashboard_view.cards_capability_id,
+        shell_dashboard_cards.cards_capability_id
+    );
+    assert_eq!(
+        shell_dashboard_view.view_capability_id,
+        "app-shell-dashboard-view-json"
+    );
+    assert_eq!(
+        shell_dashboard_view.artifact_capability_count,
+        shell_dashboard_cards.artifact_capability_count
+    );
+
+    let shell_dashboard_view_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_dashboard_view_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap(),
+    )
+    .expect("shell dashboard view JSON should parse");
+    assert_eq!(shell_dashboard_view_payload["schemaVersion"], 1);
+    assert_eq!(
+        shell_dashboard_view_payload["primaryCardTitle"],
+        "Startup status"
+    );
+    assert_eq!(
+        shell_dashboard_view_payload["visibleCardIds"][1],
+        "dashboard.metrics"
+    );
+    assert_eq!(
+        shell_dashboard_view_payload["viewCapabilityId"],
+        "app-shell-dashboard-view-json"
+    );
 }
 
 #[test]
@@ -3993,6 +4072,75 @@ R1 in out
     assert_eq!(
         shell_dashboard_cards_payload["cards"][1]["eventIds"][0],
         "shell.status"
+    );
+
+    let shell_dashboard_view = app.app_shell_dashboard_view(BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(2),
+        active_command_id: Some("analysis.2.run".to_string()),
+    });
+    assert_eq!(
+        shell_dashboard_view.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_VIEW_SCHEMA_VERSION
+    );
+    assert!(!shell_dashboard_view.ready);
+    assert_eq!(shell_dashboard_view.startup_route, "blocked");
+    assert_eq!(
+        shell_dashboard_view.primary_card_id.as_deref(),
+        Some("dashboard.attention")
+    );
+    assert_eq!(
+        shell_dashboard_view.primary_card_title.as_deref(),
+        Some("Attention")
+    );
+    assert_eq!(shell_dashboard_view.card_count, 3);
+    assert_eq!(shell_dashboard_view.visible_card_count, 3);
+    assert_eq!(shell_dashboard_view.attention_card_count, 1);
+    assert_eq!(shell_dashboard_view.metric_card_count, 1);
+    assert_eq!(
+        shell_dashboard_view.card_ids,
+        vec![
+            "dashboard.status".to_string(),
+            "dashboard.attention".to_string(),
+            "dashboard.metrics".to_string()
+        ]
+    );
+    assert_eq!(
+        shell_dashboard_view.attention_card_ids,
+        vec!["dashboard.attention".to_string()]
+    );
+    assert_eq!(
+        shell_dashboard_view.metric_card_ids,
+        vec!["dashboard.metrics".to_string()]
+    );
+    assert_eq!(
+        shell_dashboard_view.cards_capability_id,
+        shell_dashboard_cards.cards_capability_id
+    );
+    assert_eq!(
+        shell_dashboard_view.view_capability_id,
+        "app-shell-dashboard-view-json"
+    );
+
+    let shell_dashboard_view_payload: serde_json::Value = serde_json::from_str(
+        &app.app_shell_dashboard_view_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        }),
+    )
+    .expect("blocked shell dashboard view JSON should parse");
+    assert_eq!(shell_dashboard_view_payload["ready"], false);
+    assert_eq!(
+        shell_dashboard_view_payload["primaryCardId"],
+        "dashboard.attention"
+    );
+    assert_eq!(shell_dashboard_view_payload["attentionCardCount"], 1);
+    assert_eq!(
+        shell_dashboard_view_payload["attentionCardIds"][0],
+        "dashboard.attention"
+    );
+    assert_eq!(
+        shell_dashboard_view_payload["viewCapabilityId"],
+        "app-shell-dashboard-view-json"
     );
 }
 

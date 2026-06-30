@@ -33,17 +33,17 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard cards.
+1. Rust Berkeley Mosaic app shell dashboard view.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app shell dashboard card surfaces and JSON
-     helpers that derive stable product-render card descriptors from the
-     Berkeley app shell dashboard package.
+   - Add schema-versioned Rust app shell dashboard view surfaces and JSON
+     helpers that summarize product-render card descriptors into a compact
+     first-render dashboard contract.
    - Preserve package name, source fingerprint, ready/blocked route, status
-     severity, attention-required flag, card IDs, primary-card routing,
-     section IDs, card severities, event counts, event IDs, dashboard/package
-     capability IDs, and advertised capability count so Mosaic, WebAssembly,
-     and product shells can render startup dashboard cards without interpreting
-     section internals.
+     severity, attention-required flag, card IDs, visible card IDs,
+     primary-card routing and labels, attention-card IDs, metric-card IDs,
+     dashboard/package/card/view capability IDs, and advertised capability
+     count so Mosaic, WebAssembly, and product shells can render startup
+     dashboard views without interpreting card internals.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1674,6 +1674,19 @@ the Rust, Python, and TypeScript surfaces together.
      package manifest, and nested dashboard payload so Mosaic, WebAssembly, and
      product shells can render startup dashboards without stitching manifest and
      dashboard payloads.
+
+157. Rust Berkeley Mosaic app shell dashboard cards.
+   - Status: completed in PR 7087.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell dashboard cards plus JSON helpers that derive stable
+     product-render card descriptors from the Berkeley app shell dashboard
+     package.
+   - The card payload preserves package name, source fingerprint,
+     ready/blocked route, status severity, attention-required flag, card IDs,
+     primary-card routing, section IDs, card severities, event counts, event
+     IDs, dashboard/package/card capability IDs, and advertised capability
+     count so Mosaic, WebAssembly, and product shells can render startup
+     dashboard cards without interpreting section internals.
 
 ## Backlog
 
