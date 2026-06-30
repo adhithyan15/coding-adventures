@@ -14,9 +14,9 @@ use spice_netlist_parser::{
     TfAnalysis, TranAnalysis, BERKELEY_APP_BOOTSTRAP_SCHEMA_VERSION,
     BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION, BERKELEY_APP_LAUNCH_PLAN_SCHEMA_VERSION,
     BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION, BERKELEY_APP_PACKAGE_NAME,
-    BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION, BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM,
-    BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION, BERKELEY_SPICE_GRAMMAR_NAME,
-    BERKELEY_SPICE_GRAMMAR_VERSION,
+    BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION, BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION,
+    BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM, BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION,
+    BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -2570,6 +2570,11 @@ fn berkeley_app_facade_exports_package_manifest_json() {
         .unwrap()
         .iter()
         .any(|capability| capability == "app-readiness-report-json"));
+    assert!(payload["artifactCapabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|capability| capability == "app-shell-handoff-json"));
 }
 
 #[test]
@@ -2781,6 +2786,44 @@ C1 out 0 1p
     assert_eq!(readiness_payload["enabledActionCount"], 4);
     assert_eq!(readiness_payload["errorCount"], 0);
     assert_eq!(readiness_payload["repairedState"], false);
+
+    let handoff = app
+        .run_app_shell_handoff(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("shell handoff should execute");
+    assert_eq!(
+        handoff.schema_version,
+        BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION
+    );
+    assert_eq!(
+        handoff.package_manifest.package_name,
+        BERKELEY_APP_PACKAGE_NAME
+    );
+    assert!(handoff.startup_summary.ready);
+    assert_eq!(
+        handoff.launch_plan.entry_panel_id.as_deref(),
+        Some("waveform")
+    );
+    assert_eq!(handoff.readiness_report.error_count, 0);
+
+    let handoff_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_handoff_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap(),
+    )
+    .expect("shell handoff JSON should parse");
+    assert_eq!(handoff_payload["schemaVersion"], 1);
+    assert_eq!(
+        handoff_payload["packageManifest"]["packageName"],
+        "berkeley-spice-mosaic-app"
+    );
+    assert_eq!(handoff_payload["startupSummary"]["ready"], true);
+    assert_eq!(handoff_payload["launchPlan"]["entryPanelId"], "waveform");
+    assert_eq!(handoff_payload["readinessReport"]["errorCount"], 0);
 }
 
 #[test]
@@ -2936,6 +2979,34 @@ R1 in out
     assert_eq!(readiness_payload["enabledActionCount"], 3);
     assert_eq!(readiness_payload["errorCount"], 1);
     assert!(readiness_payload["blockingMessage"].is_string());
+
+    let handoff = app.app_shell_handoff(BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(2),
+        active_command_id: Some("analysis.2.run".to_string()),
+    });
+    assert_eq!(
+        handoff.schema_version,
+        BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION
+    );
+    assert!(!handoff.startup_summary.ready);
+    assert_eq!(
+        handoff.launch_plan.entry_panel_id.as_deref(),
+        Some("diagnostics")
+    );
+    assert_eq!(handoff.readiness_report.error_count, 1);
+    assert!(handoff.readiness_report.blocking_message.is_some());
+
+    let handoff_payload: serde_json::Value = serde_json::from_str(&app.app_shell_handoff_json(
+        BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        },
+    ))
+    .expect("blocked shell handoff JSON should parse");
+    assert_eq!(handoff_payload["startupSummary"]["ready"], false);
+    assert_eq!(handoff_payload["launchPlan"]["entryPanelId"], "diagnostics");
+    assert_eq!(handoff_payload["readinessReport"]["errorCount"], 1);
+    assert!(handoff_payload["readinessReport"]["blockingMessage"].is_string());
 }
 
 #[test]

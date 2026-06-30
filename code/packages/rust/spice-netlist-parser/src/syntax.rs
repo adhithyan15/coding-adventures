@@ -19,6 +19,7 @@ pub const BERKELEY_APP_BOOTSTRAP_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_LAUNCH_PLAN_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -53,6 +54,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-startup-summary-json",
     "app-launch-plan-json",
     "app-readiness-report-json",
+    "app-shell-handoff-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -462,6 +464,31 @@ impl BerkeleyAppReadinessReport {
 
     pub fn to_json(&self) -> String {
         app_readiness_report_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellHandoff {
+    pub schema_version: u32,
+    pub package_manifest: BerkeleyAppPackageManifest,
+    pub startup_summary: BerkeleyAppStartupSummary,
+    pub launch_plan: BerkeleyAppLaunchPlan,
+    pub readiness_report: BerkeleyAppReadinessReport,
+}
+
+impl BerkeleyAppShellHandoff {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self {
+            schema_version: BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION,
+            package_manifest: snapshot.package_manifest.clone(),
+            startup_summary: BerkeleyAppStartupSummary::from_bootstrap_snapshot(snapshot),
+            launch_plan: BerkeleyAppLaunchPlan::from_bootstrap_snapshot(snapshot),
+            readiness_report: BerkeleyAppReadinessReport::from_bootstrap_snapshot(snapshot),
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_handoff_json_value(self).to_string()
     }
 }
 
@@ -1107,6 +1134,38 @@ impl BerkeleyAppDeck {
         persisted_state: BerkeleyAppPersistedEditorState,
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self.run_app_readiness_report(persisted_state)?.to_json())
+    }
+
+    pub fn app_shell_handoff(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellHandoff {
+        BerkeleyAppShellHandoff::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_handoff(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellHandoff, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellHandoff::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_handoff_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_handoff(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_handoff_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self.run_app_shell_handoff(persisted_state)?.to_json())
     }
 
     pub fn run_source_order(&self) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
@@ -1843,6 +1902,16 @@ fn app_readiness_report_json_value(report: &BerkeleyAppReadinessReport) -> serde
         "commandStale": report.command_stale,
         "repairedState": report.repaired_state,
         "blockingMessage": &report.blocking_message,
+    })
+}
+
+fn app_shell_handoff_json_value(handoff: &BerkeleyAppShellHandoff) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": handoff.schema_version,
+        "packageManifest": app_package_manifest_json_value(&handoff.package_manifest),
+        "startupSummary": app_startup_summary_json_value(&handoff.startup_summary),
+        "launchPlan": app_launch_plan_json_value(&handoff.launch_plan),
+        "readinessReport": app_readiness_report_json_value(&handoff.readiness_report),
     })
 }
 
