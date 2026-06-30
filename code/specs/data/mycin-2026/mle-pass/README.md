@@ -98,3 +98,11 @@ first genuine **three-relation** chain (`pseudomembranes → pseudomembranous_co
 gram_positive`), joined on two shared interior entities, the answer citing all three hops. The bank
 ships one 3-hop today (only that disease bridges a finding library to a micro `causes` disease), but
 the harness supports any N-hop — more land for free as cross-library id-joins are grounded.
+
+Slice 5: **38/38 correct, zero model calls** — slice-4 plus four more clue→disease→{gene,
+inheritance} chains landed PURELY by cross-library id-joins that are already grounded:
+`cafe_au_lait_macules → neurofibromatosis_type_1 → nf1 / autosomal_dominant` (hop 1 = `derm-edges`)
+and `heinz_bodies → g6pd_deficiency → g6pd / x_linked` (hop 1 = `histo-edges`). Nothing was grounded,
+renamed, or authored — exactly the "land for free" the spec anticipated. (`heinz_bodies` also maps to
+`methemoglobinemia`, but only `g6pd_deficiency` carries the gene/inheritance edge, so the join binds a
+single answer — the second hop disambiguates.) `multihop_coverage` 1.0 over the 35 answerable items.

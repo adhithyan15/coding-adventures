@@ -40,9 +40,17 @@ GENE_CHAINS = [
      "niemann_pick_disease", "smpd1", "deficiency of sphingomyelinase", "a mutation in which gene"),
     ("mh-10", "acid_alpha_glucosidase", "enzyme-deficiency-edges.adj", "enzyme_deficiency_disease",
      "pompe_disease", "gaa", "deficiency of acid alpha-glucosidase", "a mutation in which gene"),
+    # slice 5 — two more clue→disease→gene chains landed PURELY by cross-library id-joins that are
+    # already grounded: a derm skin-finding and a histopathology smear finding, each whose disease
+    # id already matches a genetics `gene_defect` disease id. Nothing new was grounded.
+    ("mh-35", "cafe_au_lait_macules", "derm-edges.adj", "skin_finding_in",
+     "neurofibromatosis_type_1", "nf1", "café-au-lait macules", "a mutation in which gene"),
+    ("mh-36", "heinz_bodies", "histo-edges.adj", "seen_in",
+     "g6pd_deficiency", "g6pd", "Heinz bodies on the peripheral blood smear", "a mutation in which gene"),
 ]
 GENE_POOL = ["rb1", "atp7b", "fbn1", "htt", "col1a1", "gla", "gba1", "hexa", "cftr",
-             "dmpk", "fmr1", "pah", "hfe", "ube3a", "fxn", "tsc1_tsc2", "smpd1", "gaa"]
+             "dmpk", "fmr1", "pah", "hfe", "ube3a", "fxn", "tsc1_tsc2", "smpd1", "gaa",
+             "nf1", "g6pd"]
 
 # hop 2 = inheritance (a different second relation; answer is a transmission pattern)
 INH_CHAINS = [
@@ -52,9 +60,15 @@ INH_CHAINS = [
      "wilson_disease", "autosomal_recessive", "Kayser-Fleischer corneal rings"),
     ("mh-13", "superior_lens_dislocation", "ophtho-edges.adj", "eye_finding_indicates",
      "marfan_syndrome", "autosomal_dominant", "upward (superior) lens dislocation"),
+    # slice 5 — the same two new cross-library joins, this time with hop 2 = inheritance, proving
+    # one finding library feeds BOTH second relations off the shared disease id.
+    ("mh-37", "cafe_au_lait_macules", "derm-edges.adj", "skin_finding_in",
+     "neurofibromatosis_type_1", "autosomal_dominant", "café-au-lait macules"),
+    ("mh-38", "heinz_bodies", "histo-edges.adj", "seen_in",
+     "g6pd_deficiency", "x_linked", "Heinz bodies on the peripheral blood smear"),
 ]
 INH_POOL = ["autosomal_dominant", "autosomal_recessive", "x_linked_recessive",
-            "x_linked_dominant", "mitochondrial"]
+            "x_linked_dominant", "x_linked", "mitochondrial"]
 
 # slice 3 — microbiology organism-ID chain (the original MYCIN domain), run in REVERSE:
 # the clue is a *disease*, hop 1 is `causes(organism, disease)` traversed backwards to bind the
