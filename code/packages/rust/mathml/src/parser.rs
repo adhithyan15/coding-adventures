@@ -11,7 +11,7 @@
 //! yields a clean error rather than a stack overflow, and the neutral `MathExpr` it returns drops
 //! iteratively (math-frontend ≥ 0.3.0), so teardown is panic-free at any depth too.
 
-use math_frontend::{BinOp, FrontendError, MathExpr, Number, RelOp, UnaryOp};
+use math_frontend::{BinOp, Func, FrontendError, MathExpr, Number, RelOp, UnaryOp};
 
 /// Maximum element/fence nesting depth. Presentation MathML for real formulae is shallow (a few
 /// dozen levels at most); a pathologically deep `<mrow><mrow>…` or `(((…` is rejected with a spanned
@@ -840,6 +840,36 @@ impl RowParser {
     }
 
     fn parse_atom(&mut self) -> Result<MathExpr, FrontendError> {
+        // Named-function application. A function name arrives as a `<mi>` → `Symbol` operand (e.g.
+        // `<mi>sin</mi>`), typically with an invisible `<mo>&ApplyFunction;</mo>` before its argument
+        // that lowering already dropped — so the function symbol sits directly adjacent to its
+        // argument. We recognise `sin x`, `cos(θ)`, `ln 2`, … → `Call { func, arg }`.
+        //
+        // The run of leading function names is collected ITERATIVELY, then folded onto the base atom
+        // right-to-left, so `sin cos x` → `Call(sin, Call(cos, x))`. This deliberately does NOT
+        // recurse per function: a flat run of N `<mi>sin</mi>` lives at one nesting level, and a
+        // recursive folder would grow the stack with N and overflow on a long run (the same hazard
+        // the iterative unary collector avoids). A function name NOT followed by an operand is a
+        // plain symbol (`sin` alone is the variable/symbol `sin`, not an empty application).
+        let mut funcs: Vec<Func> = Vec::new();
+        while let Some(RowTok::Operand(MathExpr::Symbol(name))) = self.toks.get(self.pos) {
+            if func_of(name).is_some() && matches!(self.toks.get(self.pos + 1), Some(RowTok::Operand(_))) {
+                let f = func_of(name).unwrap();
+                self.pos += 1;
+                funcs.push(f);
+            } else {
+                break;
+            }
+        }
+        let mut atom = self.take_operand()?;
+        for f in funcs.into_iter().rev() {
+            atom = MathExpr::Call { func: f, arg: Box::new(atom) };
+        }
+        Ok(atom)
+    }
+
+    /// Extract the operand at the cursor (the base of an atom), erroring on an operator or end.
+    fn take_operand(&mut self) -> Result<MathExpr, FrontendError> {
         match self.toks.get(self.pos) {
             Some(RowTok::Operand(_)) => {
                 // Take ownership of the operand by swapping in a placeholder.
@@ -857,6 +887,36 @@ impl RowParser {
             None => err("unexpected end of MathML row", self.span),
         }
     }
+}
+
+/// Map a `<mi>` identifier to a known mathematical function, or `None` if it is an ordinary symbol.
+/// The recognised set matches the other frontends (`unicode-math`, `asciimath`) so the four
+/// notations agree on one neutral `Func`. Only these exact spellings are functions — a one-letter
+/// variable like `s` stays a `Symbol`, never a function.
+fn func_of(name: &str) -> Option<Func> {
+    Some(match name {
+        "sin" => Func::Sin,
+        "cos" => Func::Cos,
+        "tan" => Func::Tan,
+        "cot" => Func::Cot,
+        "sec" => Func::Sec,
+        "csc" => Func::Csc,
+        "arcsin" => Func::Asin,
+        "arccos" => Func::Acos,
+        "arctan" => Func::Atan,
+        "sinh" => Func::Sinh,
+        "cosh" => Func::Cosh,
+        "tanh" => Func::Tanh,
+        "ln" => Func::Ln,
+        "log" => Func::Log,
+        "exp" => Func::Exp,
+        "min" => Func::Min,
+        "max" => Func::Max,
+        "gcd" => Func::Gcd,
+        "lcm" => Func::Lcm,
+        "det" => Func::Det,
+        _ => return None,
+    })
 }
 
 /// The crate entry point: parse a Presentation-MathML string into the neutral [`MathExpr`].

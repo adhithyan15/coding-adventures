@@ -29,16 +29,19 @@ tree.
 | `<munderover>b u o</munderover>` | `Underset { under: u, base: Overset { over: o, base: b } }` (PR-2) |
 | `<mfenced>…</mfenced>` | `Group` over the folded contents (PR-2) |
 | `<mtable><mtr><mtd>…</mtd></mtr></mtable>` | `Matrix(rows × cells)` (PR-2) |
+| `<mi>sin</mi> … x` (applied) | `Call { func: Sin, arg: x }` (PR-3) |
 
 `<math>`, `<mstyle>`, and `<mpadded>` are **transparent** wrappers (their children join the
 surrounding row). Attributes, namespace prefixes (`m:math` ≡ `math`), the XML declaration,
 comments, and DOCTYPE are ignored. Operator entity spellings (`&times;`, `&le;`, `&#xD7;`, …)
 decode to the same operators as their literal glyphs. In `<mover>`/`<munder>` position an operator
 glyph (`<mo>^</mo>`, `<mo>‾</mo>`, `<mo>→</mo>`) is read as an **annotation symbol**, not an infix
-operator — so `<mover><mi>x</mi><mo>^</mo></mover>` is "x with a hat".
+operator — so `<mover><mi>x</mi><mo>^</mo></mover>` is "x with a hat". An `<mi>` whose name is a known
+function (sin, cos, ln, …) **applied to an argument** becomes a `Call`; the same name with no argument
+stays a plain `Symbol`.
 
-Deferred to PR-3: named-function recognition (`<mi>sin</mi>` → `Call`) and `<mfenced>` separator
-modelling (today a fence's contents fold as one row).
+Deferred to PR-4: `<mfenced>` separator modelling (a comma-separated `(a, b)` list) — needs a neutral
+*list* node the AST does not yet have; today a fence's contents fold as one row.
 
 ## Contract
 
