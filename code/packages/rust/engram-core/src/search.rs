@@ -2579,17 +2579,19 @@ fn property_matches(
         }),
         CardProperty::Position => imported_new_card_position(progress, card_sources)
             .is_some_and(|position| compare_number(position as f64, filter.operator, filter.value)),
-        CardProperty::Stability => imported_fsrs_variable(card_sources, "s")
+        CardProperty::Stability => progress
+            .and_then(|progress| progress.fsrs_stability)
+            .or_else(|| imported_fsrs_variable(card_sources, "s"))
             .is_some_and(|actual| compare_number(actual, filter.operator, filter.value)),
-        CardProperty::Difficulty => {
-            imported_fsrs_variable(card_sources, "d").is_some_and(|actual| {
+        CardProperty::Difficulty => progress
+            .and_then(|progress| progress.fsrs_difficulty)
+            .or_else(|| imported_fsrs_variable(card_sources, "d"))
+            .is_some_and(|actual| {
                 compare_number(actual, filter.operator, filter.value * 9.0 + 1.0)
-            })
-        }
-        CardProperty::Retrievability => {
-            imported_fsrs_retrievability(progress, card_sources, metadata, now)
-                .is_some_and(|actual| compare_number(actual, filter.operator, filter.value))
-        }
+            }),
+        CardProperty::Retrievability => native_fsrs_retrievability(progress, now)
+            .or_else(|| imported_fsrs_retrievability(progress, card_sources, metadata, now))
+            .is_some_and(|actual| compare_number(actual, filter.operator, filter.value)),
     }
 }
 
@@ -2607,6 +2609,27 @@ fn imported_fsrs_variable(card_sources: &[&ExternalSourceRecord], key: &str) -> 
     card_sources
         .iter()
         .find_map(|source| card_data_number(source, key))
+}
+
+fn native_fsrs_retrievability(progress: Option<&CardProgress>, now: u64) -> Option<f64> {
+    let progress = progress?;
+    if is_new_progress_overlay(progress) {
+        return None;
+    }
+    let stability = progress.fsrs_stability?;
+    let difficulty = progress.fsrs_difficulty?;
+    if !(stability.is_finite() && stability > 0.0 && difficulty.is_finite()) {
+        return None;
+    }
+    let elapsed_days = now.saturating_sub(progress.last_seen_at) as f32 / MS_PER_DAY as f32;
+    Some(f64::from(fsrs::current_retrievability(
+        fsrs::MemoryState {
+            stability: stability as f32,
+            difficulty: difficulty as f32,
+        },
+        elapsed_days,
+        fsrs::FSRS6_DEFAULT_DECAY,
+    )))
 }
 
 fn imported_fsrs_retrievability(
@@ -3033,6 +3056,8 @@ mod tests {
             times_correct: 1,
             times_incorrect: 0,
             last_seen_at: NOW - ONE_DAY_MS,
+            fsrs_stability: None,
+            fsrs_difficulty: None,
             flag: None,
             marked_at: None,
         }
@@ -3052,6 +3077,8 @@ mod tests {
             times_correct: 0,
             times_incorrect: 0,
             last_seen_at: NOW,
+            fsrs_stability: None,
+            fsrs_difficulty: None,
             flag: Some(CardFlag::Red),
             marked_at: Some(NOW),
         }
@@ -4992,6 +5019,10 @@ mod tests {
             original_id: Some(card_id.to_string()),
             data: BTreeMap::from([("data".to_string(), data.to_string())]),
         };
+        let mut native_progress = progress("native", CardState::Review, NOW);
+        native_progress.fsrs_stability = Some(6.0);
+        native_progress.fsrs_difficulty = Some(7.3);
+        native_progress.last_seen_at = NOW - ONE_DAY_MS;
         let state = AppState {
             decks: vec![deck("tamil", "Tamil")],
             cards: vec![
@@ -5002,6 +5033,7 @@ mod tests {
             card_progress: vec![
                 progress("stable", CardState::Review, NOW),
                 progress("difficult", CardState::Review, NOW),
+                native_progress,
             ],
             external_sources: vec![
                 anki_card_data(
@@ -5026,9 +5058,15 @@ mod tests {
 
         assert_eq!(ids_for("prop:s>10"), vec!["stable"]);
         assert_eq!(ids_for("prop:stability<=2"), vec!["difficult"]);
+        assert_eq!(ids_for("prop:stability=6"), vec!["native"]);
         assert_eq!(ids_for("prop:d=0.5"), vec!["stable"]);
+        assert_eq!(ids_for("prop:difficulty=0.7"), vec!["native"]);
         assert_eq!(ids_for("prop:difficulty>0.7"), vec!["difficult"]);
         assert_eq!(ids_for("prop:r>0.98"), vec!["stable"]);
+        assert_eq!(
+            ids_for("prop:retrievability>0.95"),
+            vec!["stable", "native"]
+        );
         assert_eq!(ids_for("prop:retrievability<0.91"), vec!["difficult"]);
         assert!(ids_for("prop:s=0").is_empty());
         assert!(ids_for("prop:r=1").is_empty());

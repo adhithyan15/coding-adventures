@@ -23,6 +23,8 @@ pub fn create_initial_progress(
         times_correct: 0,
         times_incorrect: 0,
         last_seen_at: now,
+        fsrs_stability: None,
+        fsrs_difficulty: None,
         flag: None,
         marked_at: None,
     };
@@ -66,6 +68,8 @@ pub fn update_card_progress(progress: &CardProgress, rating: Rating, now: u64) -
         times_correct: progress.times_correct + u32::from(is_correct),
         times_incorrect: progress.times_incorrect + u32::from(!is_correct),
         last_seen_at: now,
+        fsrs_stability: progress.fsrs_stability,
+        fsrs_difficulty: progress.fsrs_difficulty,
         flag: progress.flag,
         marked_at: progress.marked_at,
     }
@@ -91,6 +95,8 @@ mod tests {
             times_correct: 0,
             times_incorrect: 0,
             last_seen_at: 0,
+            fsrs_stability: None,
+            fsrs_difficulty: None,
             flag: None,
             marked_at: None,
         }

@@ -58,6 +58,10 @@ Deck options also carry Anki-style initial ease factor, maximum interval,
 review interval modifier, hard interval multiplier, easy bonus multiplier,
 leech threshold, and leech action settings, so hosts can keep deck-specific
 scheduler tuning in the shared Rust core.
+When a deck option preset supplies a valid 21-value FSRS parameter vector, the
+same scheduler records FSRS stability/difficulty on card progress and uses FSRS
+intervals for review cards and cards graduating into review. Decks without valid
+FSRS parameters keep the existing Anki-style SM-2-compatible scheduling path.
 `EngramCommand::SetDeckOptions` inserts or replaces a stored deck option preset,
 letting settings screens update the same options that queue building and
 `RateCard` use.
@@ -149,6 +153,7 @@ filters. Imported Anki card custom data can be searched with
 `prop:rated` accepts Anki-style answer-button suffixes such as
 `prop:rated<-7:again`; imported Anki FSRS card data powers stability,
 difficulty, and retrievability searches with `prop:s`, `prop:d`, and `prop:r`.
+Native Engram FSRS progress uses those same browser filters when present.
 Imported Anki revlog metadata powers manual reschedule searches with `resched:`
 and `prop:resched`; imported Anki queue metadata also powers
 `is:buried-manually` and `is:buried-sibling`; relearning cards match both

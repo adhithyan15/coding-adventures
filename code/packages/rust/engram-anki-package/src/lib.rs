@@ -3421,6 +3421,15 @@ fn map_v11_card_progress(
         .get(&card.id)
         .copied()
         .unwrap_or_else(|| anki_seconds_to_millis(card.modified_at));
+    let card_data = serde_json::from_str::<Value>(&card.data).ok();
+    let fsrs_stability = card_data
+        .as_ref()
+        .and_then(|data| json_path_f64(data, &["s"]))
+        .filter(|value| value.is_finite() && *value > 0.0);
+    let fsrs_difficulty = card_data
+        .as_ref()
+        .and_then(|data| json_path_f64(data, &["d"]))
+        .filter(|value| value.is_finite());
 
     Some(CardProgress {
         card_id: card.id.to_string(),
@@ -3443,6 +3452,8 @@ fn map_v11_card_progress(
         times_correct: i64_to_u32(card.repetitions.saturating_sub(card.lapses)),
         times_incorrect: i64_to_u32(card.lapses),
         last_seen_at,
+        fsrs_stability,
+        fsrs_difficulty,
         flag,
         marked_at,
     })
@@ -3481,6 +3492,8 @@ fn new_card_metadata_overlay(
         times_correct: 0,
         times_incorrect: 0,
         last_seen_at: timestamp,
+        fsrs_stability: None,
+        fsrs_difficulty: None,
         flag,
         marked_at,
     }
@@ -3542,6 +3555,8 @@ fn v11_review_progress_snapshot(
         times_correct: u32::from(after_review && review.ease != 1),
         times_incorrect: incorrect,
         last_seen_at: timestamp,
+        fsrs_stability: None,
+        fsrs_difficulty: None,
         flag: None,
         marked_at: None,
     }
@@ -4464,7 +4479,7 @@ CREATE TABLE graves (
                         0_i64,
                         0_i64,
                         4_i64,
-                        ""
+                        r#"{"s":6.25,"d":7.3}"#
                     ],
                 )
                 .unwrap();
@@ -4750,6 +4765,8 @@ CREATE TABLE graves (
         assert_eq!(progress.times_correct, 2);
         assert_eq!(progress.times_incorrect, 1);
         assert_eq!(progress.last_seen_at, 3000);
+        assert_eq!(progress.fsrs_stability, Some(6.25));
+        assert_eq!(progress.fsrs_difficulty, Some(7.3));
         assert_eq!(progress.flag, Some(CardFlag::Blue));
 
         assert_eq!(state.reviews.len(), 1);
@@ -5820,6 +5837,8 @@ CREATE TABLE graves (
                 times_correct: 2,
                 times_incorrect: 1,
                 last_seen_at: 1_700_000_030_000,
+                fsrs_stability: None,
+                fsrs_difficulty: None,
                 flag: Some(CardFlag::Blue),
                 marked_at: None,
             }],
@@ -5922,6 +5941,8 @@ CREATE TABLE graves (
                 times_correct: 2,
                 times_incorrect: 0,
                 last_seen_at: 1_700_000_000_000,
+                fsrs_stability: None,
+                fsrs_difficulty: None,
                 flag: None,
                 marked_at: None,
             };
@@ -6020,6 +6041,8 @@ CREATE TABLE graves (
             times_correct,
             times_incorrect,
             last_seen_at: 1_700_000_005_000,
+            fsrs_stability: None,
+            fsrs_difficulty: None,
             flag: None,
             marked_at: None,
         }

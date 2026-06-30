@@ -201,6 +201,16 @@ pub struct CardProgress {
         feature = "serde",
         serde(default, skip_serializing_if = "Option::is_none")
     )]
+    pub fsrs_stability: Option<f64>,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub fsrs_difficulty: Option<f64>,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
     pub flag: Option<CardFlag>,
     #[cfg_attr(
         feature = "serde",

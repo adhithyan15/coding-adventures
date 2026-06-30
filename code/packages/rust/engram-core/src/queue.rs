@@ -494,6 +494,8 @@ mod tests {
             times_correct: 1,
             times_incorrect: 0,
             last_seen_at: NOW - 10,
+            fsrs_stability: None,
+            fsrs_difficulty: None,
             flag: None,
             marked_at: None,
         }
@@ -513,6 +515,8 @@ mod tests {
             times_correct: 0,
             times_incorrect: 0,
             last_seen_at: NOW,
+            fsrs_stability: None,
+            fsrs_difficulty: None,
             flag: Some(crate::model::CardFlag::Red),
             marked_at: Some(NOW),
         }

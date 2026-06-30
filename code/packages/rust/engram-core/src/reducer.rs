@@ -1684,6 +1684,8 @@ fn ensure_progress_overlay(
         times_correct: 0,
         times_incorrect: 0,
         last_seen_at: created_at,
+        fsrs_stability: None,
+        fsrs_difficulty: None,
         flag: None,
         marked_at: None,
     });
@@ -1793,6 +1795,8 @@ mod tests {
             times_correct: 1,
             times_incorrect: 0,
             last_seen_at: NOW - ONE_DAY_MS,
+            fsrs_stability: None,
+            fsrs_difficulty: None,
             flag: None,
             marked_at: None,
         }
@@ -2861,6 +2865,62 @@ mod tests {
 
         assert_eq!(next.card_progress[0].state, CardState::Learning);
         assert_eq!(next.card_progress[0].ease_factor, 2.8);
+    }
+
+    #[test]
+    fn rate_card_with_options_honors_fsrs_parameters_on_graduation() {
+        let mut state = AppState::default();
+        state.cards.push(card("card"));
+        state = reduce(
+            &state,
+            EngramCommand::StartSession {
+                session_id: "session".to_string(),
+                deck_id: "deck".to_string(),
+                queue: vec![card("card")],
+                started_at: NOW,
+            },
+        );
+        let deck_options = DeckOptions {
+            learning_steps_minutes: vec![1],
+            graduating_interval_days: 99,
+            fsrs_parameters: fsrs::DEFAULT_PARAMETERS
+                .iter()
+                .map(|value| f64::from(*value))
+                .collect(),
+            ..DeckOptions::default()
+        };
+
+        let next = reduce(
+            &state,
+            EngramCommand::RateCardWithOptions {
+                review_id: "review".to_string(),
+                session_id: "session".to_string(),
+                card_id: "card".to_string(),
+                rating: Rating::Good,
+                reviewed_at: NOW,
+                deck_options,
+            },
+        );
+
+        let progress = &next.card_progress[0];
+        assert_eq!(progress.state, CardState::Review);
+        assert_ne!(progress.interval, 99);
+        assert!(progress.fsrs_stability.is_some_and(|value| value > 0.0));
+        assert!(progress.fsrs_difficulty.is_some_and(|value| value > 0.0));
+        assert_eq!(
+            next.reviews[0]
+                .resulting_progress
+                .as_ref()
+                .and_then(|progress| progress.fsrs_stability),
+            progress.fsrs_stability
+        );
+        assert_eq!(
+            next.reviews[0]
+                .resulting_progress
+                .as_ref()
+                .and_then(|progress| progress.fsrs_difficulty),
+            progress.fsrs_difficulty
+        );
     }
 
     #[test]
