@@ -368,9 +368,9 @@ public final class SqlPlanner {
     private static SqlExpr resolveExpr(List<ScopeEntry> scope, SqlExpr expr) {
         return switch (expr) {
             case SqlExpr.Column(var tbl, var col) -> resolveColumn(scope, tbl, col);
-            case SqlExpr.Literal _,
-                 SqlExpr.Wildcard _,
-                 SqlExpr.AggExpr _ -> expr;
+            case SqlExpr.Literal ignored -> expr;
+            case SqlExpr.Wildcard ignored -> expr;
+            case SqlExpr.AggExpr ignored -> expr;
             case SqlExpr.BinaryOp(var op, var l, var r) ->
                 new SqlExpr.BinaryOp(op, resolveExpr(scope, l), resolveExpr(scope, r));
             case SqlExpr.UnaryOp(var op, var operand) ->
@@ -408,17 +408,17 @@ public final class SqlPlanner {
 
     private static boolean containsAggExpr(SqlExpr e) {
         return switch (e) {
-            case SqlExpr.AggExpr _ -> true;
-            case SqlExpr.BinaryOp(_, var l, var r) -> containsAggExpr(l) || containsAggExpr(r);
-            case SqlExpr.UnaryOp(_, var op)         -> containsAggExpr(op);
-            case SqlExpr.FuncCall(_, var args)       -> args.stream().anyMatch(SqlPlanner::containsAggExpr);
-            case SqlExpr.IsNull(var op)             -> containsAggExpr(op);
-            case SqlExpr.IsNotNull(var op)          -> containsAggExpr(op);
+            case SqlExpr.AggExpr ignored            -> true;
+            case SqlExpr.BinaryOp(var op2, var l, var r) -> containsAggExpr(l) || containsAggExpr(r);
+            case SqlExpr.UnaryOp(var op2, var op)   -> containsAggExpr(op);
+            case SqlExpr.FuncCall(var nm, var args)  -> args.stream().anyMatch(SqlPlanner::containsAggExpr);
+            case SqlExpr.IsNull(var op)              -> containsAggExpr(op);
+            case SqlExpr.IsNotNull(var op)           -> containsAggExpr(op);
             case SqlExpr.Between(var v, var lo, var hi) -> containsAggExpr(v) || containsAggExpr(lo) || containsAggExpr(hi);
             case SqlExpr.In(var v, var items)        -> containsAggExpr(v) || items.stream().anyMatch(SqlPlanner::containsAggExpr);
             case SqlExpr.NotIn(var v, var items)     -> containsAggExpr(v) || items.stream().anyMatch(SqlPlanner::containsAggExpr);
-            case SqlExpr.Like(var v, _)             -> containsAggExpr(v);
-            case SqlExpr.NotLike(var v, _)          -> containsAggExpr(v);
+            case SqlExpr.Like(var v, var pat2)       -> containsAggExpr(v);
+            case SqlExpr.NotLike(var v, var pat2)    -> containsAggExpr(v);
             default -> false;
         };
     }
@@ -435,16 +435,16 @@ public final class SqlPlanner {
         switch (e) {
             case SqlExpr.AggExpr(var func, var arg, var distinct) ->
                 out.add(new AggregateItem(func, arg, "_agg" + counter[0]++, distinct));
-            case SqlExpr.BinaryOp(_, var l, var r) -> { walkAgg(l, out, counter); walkAgg(r, out, counter); }
-            case SqlExpr.UnaryOp(_, var op)         -> walkAgg(op, out, counter);
-            case SqlExpr.FuncCall(_, var args)       -> args.forEach(a -> walkAgg(a, out, counter));
-            case SqlExpr.IsNull(var op)             -> walkAgg(op, out, counter);
-            case SqlExpr.IsNotNull(var op)          -> walkAgg(op, out, counter);
+            case SqlExpr.BinaryOp(var op2, var l, var r) -> { walkAgg(l, out, counter); walkAgg(r, out, counter); }
+            case SqlExpr.UnaryOp(var op2, var op)   -> walkAgg(op, out, counter);
+            case SqlExpr.FuncCall(var nm, var args)  -> args.forEach(a -> walkAgg(a, out, counter));
+            case SqlExpr.IsNull(var op)              -> walkAgg(op, out, counter);
+            case SqlExpr.IsNotNull(var op)           -> walkAgg(op, out, counter);
             case SqlExpr.Between(var v, var lo, var hi) -> { walkAgg(v, out, counter); walkAgg(lo, out, counter); walkAgg(hi, out, counter); }
             case SqlExpr.In(var v, var items)        -> { walkAgg(v, out, counter); items.forEach(i -> walkAgg(i, out, counter)); }
             case SqlExpr.NotIn(var v, var items)     -> { walkAgg(v, out, counter); items.forEach(i -> walkAgg(i, out, counter)); }
-            case SqlExpr.Like(var v, _)             -> walkAgg(v, out, counter);
-            case SqlExpr.NotLike(var v, _)          -> walkAgg(v, out, counter);
+            case SqlExpr.Like(var v, var pat2)       -> walkAgg(v, out, counter);
+            case SqlExpr.NotLike(var v, var pat2)    -> walkAgg(v, out, counter);
             default -> {} // Literal, Column, Wildcard — no agg inside
         }
     }
