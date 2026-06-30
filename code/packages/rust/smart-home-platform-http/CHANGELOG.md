@@ -75,6 +75,8 @@ All notable changes to this package will be documented in this file.
   views can be scoped to one local API caller from the dashboard URL.
 - Added browser dashboard command-result identity filters for command id, bridge
   id, and correlation id so audit views can be reopened from URL state.
+- Added a browser dashboard activity entity filter for scoping state history
+  and runtime event panels through existing entity-aware activity routes.
 - Added fixture-controller launch help, smoke-test URLs, and example-level tests
   to keep the local controller startup path usable.
 - Added a machine-readable local-controller smoke plan route that lists safe
