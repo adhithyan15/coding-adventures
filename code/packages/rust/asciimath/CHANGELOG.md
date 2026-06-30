@@ -2,6 +2,34 @@
 
 All notable changes to the AsciiMath pluggable frontend.
 
+## [0.9.0] — 2026-06-30
+
+### Added — ASM01 PR-3c (the last remainder): greedy longest-match identifier scan
+
+- The tokenizer now carves a maximal letter run into tokens by **greedy longest-match** against
+  the known-keyword set — AsciiMath's actual rule — so a glued run reads the way a human does:
+  **`sinx` ⇒ `sin x`**, **`pir` ⇒ `pi · r`**, **`inta` ⇒ `int · a`** (longest wins: `int` over
+  `in`), **`2pir` ⇒ `2 · pi · r`**, **`sinx^2` ⇒ `(sin x)^2`**. This lifts the PR-1 limitation
+  ("function names need a token boundary: `sin x`, not `sinx`" — ASM01 §3.1).
+- A stretch with **no** keyword stays a single identifier, so the existing letter-product rule is
+  unchanged: **`xy` ⇒ `x · y`**, `text` ⇒ one `Ident`. Sub-tokens carry correct source sub-spans.
+- The keyword set is the parser's **own** lookup tables behind a single `parser::is_keyword`, so the
+  lexer and parser **cannot drift** — adding a function/symbol is automatic. The operator words
+  `xx`/`cdot`/`div` are part of that set so the scan takes them whole; without `cdot` there, the
+  run `cdot` would peel its `c` and mis-split the trailing `dot` as the accent. As in real AsciiMath,
+  a multi-letter *variable* that collides with a keyword (e.g. `pi`) must be spaced or quoted.
+- The prefix search is capped at `MAX_KEYWORD_LEN` (14, the longest keyword `leftrightarrow`), so the
+  scan is **linear** in run length — without the cap a long keyword-free run (`aaa…a`) would be O(R²).
+  A guard test (`keyword_cap_covers_the_longest_keyword`) pins the constant to the real maximum so it
+  can't silently truncate a keyword if a longer one is ever added.
+- **No new node, capability, or consumer change** — purely a tokenizer-boundary refinement; every
+  existing golden, the conformance corpus, and round-trips are unaffected. Tests: tokenizer
+  `longest_match_splits_glued_keywords` / `keyword_free_run_stays_one_identifier` /
+  `keyword_cap_covers_the_longest_keyword`, parser `glued_function_name_splits_longest_match`. 41 unit
+  + 1 doc test pass; clippy `-D warnings` clean; `/security-review` passed (linear-time cap added).
+- This completes the ASM01 PR-3c remainder list; the AsciiMath frontend now matches AsciiMath's
+  greedy tokenization in full.
+
 ## [0.8.0] — 2026-06-29
 
 ### Added — ASM01 PR-3c (part 3): over/under-set emission
@@ -19,7 +47,7 @@ All notable changes to the AsciiMath pluggable frontend.
 - Tests: parser `oversets_lower_to_neutral_overset_underset_nodes` (overset/underset/stackrel,
   paren-free form, group annotation, distinct-from-Pow). 36 unit + doc tests pass; clippy
   `-D warnings` clean. Mirrors how accent emission (0.3.0) followed the `Accent` node.
-- Still **PR-3c remainder**: longest-match identifier scan (`sinx` → `sin·x`, a deeper lexer change).
+- Still **PR-3c remainder** (done in 0.9.0): longest-match identifier scan (`sinx` → `sin·x`).
 
 ## [0.7.0] — 2026-06-29
 
