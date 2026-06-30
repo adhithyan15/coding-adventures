@@ -505,6 +505,7 @@ members = [
     "python-bridge",
     "python-lexer",
     "python-parser",
+    "python-to-semantic-ir",
     "reed-solomon",
     "register-vm",
     "repl",
