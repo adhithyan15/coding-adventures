@@ -320,6 +320,35 @@ pub struct BerkeleyAppEditorControls {
     pub diagnostics: Vec<BerkeleySyntaxDiagnostic>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppEditorCommand {
+    pub id: String,
+    pub kind: BerkeleyAppEditorActionKind,
+    pub syntax_card_index: usize,
+    pub directive: String,
+    pub analysis: String,
+    pub span: SourceSpan,
+    pub target: String,
+    pub label: String,
+    pub enabled: bool,
+    pub selected: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppEditorCommandPlan {
+    pub canonical_source: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub parsed: bool,
+    pub execution_available: bool,
+    pub selected_syntax_card_index: Option<usize>,
+    pub command_count: usize,
+    pub commands: Vec<BerkeleyAppEditorCommand>,
+    pub blocking_message: Option<String>,
+    pub diagnostics: Vec<BerkeleySyntaxDiagnostic>,
+}
+
 impl BerkeleyAppDeck {
     pub fn has_errors(&self) -> bool {
         self.diagnostics
@@ -427,6 +456,22 @@ impl BerkeleyAppDeck {
     ) -> Result<BerkeleyAppEditorControls, AnalysisExecutionError> {
         Ok(editor_controls_from_session_state(
             &self.run_session_state(selected_syntax_card_index)?,
+        ))
+    }
+
+    pub fn editor_command_plan(
+        &self,
+        selected_syntax_card_index: Option<usize>,
+    ) -> BerkeleyAppEditorCommandPlan {
+        editor_command_plan_from_controls(&self.editor_controls(selected_syntax_card_index))
+    }
+
+    pub fn run_editor_command_plan(
+        &self,
+        selected_syntax_card_index: Option<usize>,
+    ) -> Result<BerkeleyAppEditorCommandPlan, AnalysisExecutionError> {
+        Ok(editor_command_plan_from_controls(
+            &self.run_editor_controls(selected_syntax_card_index)?,
         ))
     }
 
@@ -580,6 +625,79 @@ fn editor_controls_from_session_state(
         controls,
         blocking_message: state.blocking_message.clone(),
         diagnostics: state.diagnostics.clone(),
+    }
+}
+
+fn editor_command_plan_from_controls(
+    controls: &BerkeleyAppEditorControls,
+) -> BerkeleyAppEditorCommandPlan {
+    let commands = controls
+        .controls
+        .iter()
+        .flat_map(|control| {
+            control
+                .actions
+                .iter()
+                .map(|action| editor_command_from_control(control, action))
+        })
+        .collect::<Vec<_>>();
+
+    BerkeleyAppEditorCommandPlan {
+        canonical_source: controls.canonical_source.clone(),
+        source_fingerprint: controls.source_fingerprint.clone(),
+        title: controls.title.clone(),
+        parsed: controls.parsed,
+        execution_available: controls.execution_available,
+        selected_syntax_card_index: controls.selected_syntax_card_index,
+        command_count: commands.len(),
+        commands,
+        blocking_message: controls.blocking_message.clone(),
+        diagnostics: controls.diagnostics.clone(),
+    }
+}
+
+fn editor_command_from_control(
+    control: &BerkeleyAppAnalysisControl,
+    action: &BerkeleyAppEditorAction,
+) -> BerkeleyAppEditorCommand {
+    BerkeleyAppEditorCommand {
+        id: editor_command_id(control.syntax_card_index, action.kind),
+        kind: action.kind,
+        syntax_card_index: control.syntax_card_index,
+        directive: control.directive.clone(),
+        analysis: control.analysis.clone(),
+        span: control.span,
+        target: editor_command_target(action.kind).to_string(),
+        label: action.label.clone(),
+        enabled: action.enabled,
+        selected: control.selected,
+        disabled_reason: action.disabled_reason.clone(),
+    }
+}
+
+fn editor_command_id(syntax_card_index: usize, kind: BerkeleyAppEditorActionKind) -> String {
+    format!(
+        "analysis.{}.{}",
+        syntax_card_index,
+        editor_command_slug(kind)
+    )
+}
+
+fn editor_command_slug(kind: BerkeleyAppEditorActionKind) -> &'static str {
+    match kind {
+        BerkeleyAppEditorActionKind::SelectAnalysis => "select",
+        BerkeleyAppEditorActionKind::RunAnalysis => "run",
+        BerkeleyAppEditorActionKind::InspectTable => "inspect-table",
+        BerkeleyAppEditorActionKind::InspectWaveform => "inspect-waveform",
+    }
+}
+
+fn editor_command_target(kind: BerkeleyAppEditorActionKind) -> &'static str {
+    match kind {
+        BerkeleyAppEditorActionKind::SelectAnalysis => "analysis-selection",
+        BerkeleyAppEditorActionKind::RunAnalysis => "analysis-runner",
+        BerkeleyAppEditorActionKind::InspectTable => "analysis-table",
+        BerkeleyAppEditorActionKind::InspectWaveform => "analysis-waveform",
     }
 }
 
