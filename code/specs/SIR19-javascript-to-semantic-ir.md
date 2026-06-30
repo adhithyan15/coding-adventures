@@ -87,8 +87,19 @@ scope; the spread parts of the language we then reject at lowering).
 
 ## let / const / var
 
-All three become `LetBinding`.  The frontend doesn't preserve the
-distinction in v0 — the IR doesn't model immutability constraints, and
+All three become a binding statement.  **Implementation note (M2):** the
+frontend emits `Stmt::LetStarBinding` (sequential `let*`), **not**
+`Stmt::LetBinding`.  The coverage table above writes "LetBinding"
+generically, but the SIR validator treats a run of consecutive
+`LetBinding`s as a *parallel* group whose right-hand sides may not see
+one another, whereas JS `let`/`const`/`var` are sequentially scoped — a
+plain `let x = 1; const y = x + 1;` must validate.  `let*`'s sequential
+semantics match JS exactly, so it is the correct lowering for ordered
+top-level declarations.
+
+The frontend doesn't preserve the
+`let`/`const`/`var` distinction in v0 — the IR doesn't model immutability
+constraints, and
 JS's runtime treats `const` as advisory anyway.  A subsequent
 re-assignment to a `const`-declared name in source is **silently
 accepted** by the frontend (no error); the round-tripped Python or
