@@ -11,6 +11,7 @@ use std::sync::Arc;
 use web_core::WebServer;
 
 const DEFAULT_BIND_ADDR: &str = "127.0.0.1:8123";
+const DASHBOARD_PENDING_WRITE_BYTES: usize = 256 * 1024;
 const USAGE: &str = "Usage: cargo run -p smart-home-platform-http --example hue_fixture_controller -- [BIND_ADDR]\n       cargo run -p smart-home-platform-http --example hue_fixture_controller -- --bind 127.0.0.1:8123";
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -25,6 +26,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     .with_now_ms(5_000)
     .grant_local_full_access("hue-fixture-controller", 1_000);
     let app = Arc::new(home_assistant_runtime_web_app(runtime));
+    let options = dashboard_server_options();
 
     #[cfg(any(
         target_os = "macos",
@@ -33,17 +35,23 @@ fn main() -> Result<(), Box<dyn Error>> {
         target_os = "netbsd",
         target_os = "dragonfly"
     ))]
-    let mut server = WebServer::bind_kqueue(&bind_addr, HttpServerOptions::default(), app)?;
+    let mut server = WebServer::bind_kqueue(&bind_addr, options, app)?;
 
     #[cfg(target_os = "linux")]
-    let mut server = WebServer::bind_epoll(&bind_addr, HttpServerOptions::default(), app)?;
+    let mut server = WebServer::bind_epoll(&bind_addr, options, app)?;
 
     #[cfg(target_os = "windows")]
-    let mut server = WebServer::bind_windows(&bind_addr, HttpServerOptions::default(), app)?;
+    let mut server = WebServer::bind_windows(&bind_addr, options, app)?;
 
     println!("{}", launch_guide(server.local_addr()));
     server.serve()?;
     Ok(())
+}
+
+fn dashboard_server_options() -> HttpServerOptions {
+    let mut options = HttpServerOptions::default();
+    options.tcp.max_pending_write_bytes = DASHBOARD_PENDING_WRITE_BYTES;
+    options
 }
 
 fn bind_addr_from_args(
