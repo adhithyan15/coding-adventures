@@ -1572,13 +1572,51 @@ fn convert_call_expression(node: &GrammarASTNode) -> Result<Expression, BridgeEr
     let last = nodes.last().unwrap();
     match last.rule_name.as_str() {
         "arguments" => {
-            // f(args) — callee is everything before arguments
-            let callee = if nodes.len() == 2 {
-                convert_expression(nodes[0])?
-            } else {
-                // Recursive: re-interpret all but last as call_expression
-                convert_expression(nodes[nodes.len() - 2])?
-            };
+            // A trailing `arguments` node means this is a call: `<callee>(args)`.
+            //
+            // For a simple call `f(x)` the grammar yields exactly two children:
+            //   [member_expression(f), arguments(x)]
+            // and the callee is just `nodes[0]`.
+            //
+            // For a CHAINED call like `f()()` or `f(1)(2)(3)` the parser
+            // flattens the left-recursion into a single call_expression node
+            // whose children are the base followed by ONE `arguments` node per
+            // call site:
+            //   [member_expression(f), arguments(()), arguments(())]
+            // The callee of the outermost call is therefore the call formed by
+            // the base plus every `arguments` node except the last. We rebuild
+            // that by folding left-to-right:
+            //   f            (base)
+            //   f()          (after first arguments)
+            //   f()()        (outer call, built from `last` below)
+            //
+            // GUARD: `node_children` strips Token children, so a `.`/`[` that
+            // appears between calls (e.g. `f().x()`) would be silently dropped,
+            // turning `f().x()` into `f()()` — a miscompile. We only fold when
+            // no member-access tokens are present at this level; otherwise we
+            // fall through to the unsupported path (sound: an error, never a
+            // wrong program). Pure call chains carry no such tokens.
+            //
+            // A well-formed call always has a callee, so there are at least two
+            // children (`<callee>` then `arguments`). Reject anything shorter
+            // with a clean error rather than indexing `nodes[0]` / slicing
+            // `nodes[1..len-1]` (which would underflow to `1..0` and panic) on a
+            // malformed node from untrusted source.
+            if nodes.len() < 2 {
+                return Err(internal(node, "call_expression: arguments without a callee"));
+            }
+            let mut callee = convert_expression(nodes[0])?;
+            for mid in &nodes[1..nodes.len() - 1] {
+                if mid.rule_name != "arguments" || has_token(node, ".") || has_token(node, "[") {
+                    return Err(unsupported(node));
+                }
+                let mid_args = convert_arguments(mid)?;
+                callee = Expression::CallExpression(CallExpression {
+                    cv: None,
+                    callee: Box::new(callee),
+                    arguments: mid_args,
+                });
+            }
             let args = convert_arguments(last)?;
             Ok(Expression::CallExpression(CallExpression {
                 cv: None,
@@ -2785,6 +2823,49 @@ mod tests {
             }
             _ => panic!("expected call expression"),
         }
+    }
+
+    #[test]
+    fn chained_call_expression() {
+        // `f()()` — the callee of the OUTER call is itself the call `f()`.
+        // Regression: the parser flattens chained left-recursive calls into a
+        // single call_expression node `[member_expression(f), arguments, arguments]`,
+        // and the bridge previously tried to convert the inner `arguments` node
+        // as an expression, raising "unknown expression rule 'arguments'".
+        let outer = match first_expr(&bridge_ok("f()();")) {
+            Expression::CallExpression(c) => c.clone(),
+            other => panic!("expected CallExpression, got {other:?}"),
+        };
+        assert_eq!(outer.arguments.len(), 0);
+        match &*outer.callee {
+            Expression::CallExpression(inner) => {
+                assert_eq!(inner.arguments.len(), 0);
+                assert!(matches!(&*inner.callee, Expression::Identifier(id) if id.name == "f"));
+            }
+            other => panic!("expected inner CallExpression, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn triple_chained_call_with_args() {
+        // `f(1)(2)(3)` folds left-to-right: ((f(1))(2))(3). Verify the nesting
+        // and that each call site keeps its own single argument.
+        let c3 = match first_expr(&bridge_ok("f(1)(2)(3);")) {
+            Expression::CallExpression(c) => c.clone(),
+            other => panic!("expected CallExpression, got {other:?}"),
+        };
+        assert_eq!(c3.arguments.len(), 1); // (3)
+        let c2 = match &*c3.callee {
+            Expression::CallExpression(c) => c.clone(),
+            other => panic!("expected CallExpression, got {other:?}"),
+        };
+        assert_eq!(c2.arguments.len(), 1); // (2)
+        let c1 = match &*c2.callee {
+            Expression::CallExpression(c) => c.clone(),
+            other => panic!("expected CallExpression, got {other:?}"),
+        };
+        assert_eq!(c1.arguments.len(), 1); // (1)
+        assert!(matches!(&*c1.callee, Expression::Identifier(id) if id.name == "f"));
     }
 
     #[test]
