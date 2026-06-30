@@ -30,7 +30,7 @@ fn excel_on_token(token: &Token, ctx: &mut LexerContext) {
             line: token.line,
             column: token.column,
             type_name: Some("FUNCTION_NAME".to_string()),
-            flags: None,
+            flags: None, cv: None,
         });
         return;
     }
@@ -43,7 +43,7 @@ fn excel_on_token(token: &Token, ctx: &mut LexerContext) {
             line: token.line,
             column: token.column,
             type_name: Some("TABLE_NAME".to_string()),
-            flags: None,
+            flags: None, cv: None,
         });
     }
 }

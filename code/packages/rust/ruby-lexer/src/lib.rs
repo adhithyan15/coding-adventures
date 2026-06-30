@@ -406,7 +406,7 @@ impl RubyLexer {
                 line,
                 column,
                 type_name: None,
-                flags: None,
+                flags: None, cv: None,
             };
         }
     }
@@ -596,7 +596,7 @@ impl RubyLexer {
                     line: span_line,
                     column: span_col,
                     type_name: None,
-                    flags: None,
+                    flags: None, cv: None,
                 };
             }
             i += 1;
@@ -680,7 +680,7 @@ impl RubyLexer {
                     line: span_line,
                     column: span_col,
                     type_name: None,
-                    flags: None,
+                    flags: None, cv: None,
                 };
                 // Don't advance i — the scientific-notation suffix
                 // (if any) may follow.
@@ -724,7 +724,7 @@ impl RubyLexer {
                     line: span_line,
                     column: span_col,
                     type_name: None,
-                    flags: None,
+                    flags: None, cv: None,
                 };
                 // Don't advance — the signed-exponent step below
                 // might still match (unlikely but harmless).
@@ -794,7 +794,7 @@ impl RubyLexer {
                     line: span_line,
                     column: span_col,
                     type_name: None,
-                    flags: None,
+                    flags: None, cv: None,
                 };
             } else {
                 i += 1;
@@ -878,7 +878,7 @@ impl RubyLexer {
                         line: span_line,
                         column: span_col,
                         type_name: None,
-                        flags: None,
+                        flags: None, cv: None,
                     };
                     // Don't advance — three-`>` sequences (e.g. `a>>>b`,
                     // which is illegal in Ruby anyway) get correctly
@@ -985,7 +985,7 @@ impl RubyLexer {
                     line: span_line,
                     column: span_col,
                     type_name: None,
-                    flags: None,
+                    flags: None, cv: None,
                 };
                 // Don't advance — chained compounds are illegal but
                 // the next iteration's guard will handle it cleanly.
@@ -1128,7 +1128,7 @@ impl RubyLexer {
                     line: span_line,
                     column: span_col,
                     type_name: None,
-                    flags: None,
+                    flags: None, cv: None,
                 };
             }
             i += 1;
@@ -1169,7 +1169,7 @@ impl RubyLexer {
                     line: span_line,
                     column: span_col,
                     type_name: None,
-                    flags: None,
+                    flags: None, cv: None,
                 };
             }
             i += 1;
@@ -1202,7 +1202,7 @@ impl RubyLexer {
                     line: span_line,
                     column: span_col,
                     type_name: None,
-                    flags: None,
+                    flags: None, cv: None,
                 };
             }
             i += 1;
@@ -1297,7 +1297,7 @@ impl RubyLexer {
                     line: span_line,
                     column: span_col,
                     type_name: None,
-                    flags: None,
+                    flags: None, cv: None,
                 };
             }
             i += 1;
@@ -1353,7 +1353,7 @@ impl RubyLexer {
                     line: span_line,
                     column: span_col,
                     type_name: None,
-                    flags: None,
+                    flags: None, cv: None,
                 };
             }
             i += 1;
@@ -1740,7 +1740,7 @@ impl RubyLexer {
             line: self.token_start_line,
             column: self.token_start_column,
             type_name: None,
-            flags: None,
+            flags: None, cv: None,
         });
         self.whitespace_before_token.push(had_ws);
         // Reset start position so the next immediate-emit token

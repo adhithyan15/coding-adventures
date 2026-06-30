@@ -2,6 +2,20 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.7.0] — 2026-06-29 — `Token` carries an optional correlation-vector id (CLOC27 P1)
+
+`Token` gains a `pub cv: Option<String>` field — the correlation-vector id of
+the source token, defaulting to `None`. This is the first slice of CLOC27
+(per-fold CV provenance): the CV-aware tokenizer will populate it so the id can
+ride the token through the parser into the typed AST, where the bridge stamps it
+onto leaf literals — letting an optimizer fold trace its output back to source
+bytes.
+
+No behaviour change: every construction site sets `cv: None`, so a token with no
+id behaves exactly as before, and nothing reads the field yet. The id is a plain
+`String` (not the `CvId` alias) so this low-level crate takes on no dependency on
+`correlation-vector`. All 131 lexer tests pass unchanged.
+
 ## [0.6.0] — 2026-06-21 — `GrammarLexer` sets `TOKEN_PRECEDED_BY_NEWLINE`
 
 `GrammarLexer` now sets the `TOKEN_PRECEDED_BY_NEWLINE` flag on a token when a
