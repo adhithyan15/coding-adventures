@@ -33,15 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app readiness report.
+1. Rust Berkeley Mosaic app shell handoff.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app readiness reports and JSON helpers that
-     summarize startup route health from Berkeley app bootstrap payloads.
-   - Preserve package name, source fingerprint, startup route, parsed/execution
-     availability, entry panel/action, panel/action availability counts,
-     diagnostic severity counts, repaired persisted editor-state flags, and
-     blocking reason so Mosaic, WebAssembly, and product shells can gate startup
-     and telemetry without walking every host panel.
+   - Add schema-versioned Rust app shell handoffs and JSON helpers that package
+     the manifest, startup summary, launch plan, and readiness report into one
+     compact bootstrap envelope.
+   - Preserve package capabilities, route readiness, launch entry actions,
+     panel/action availability counts, diagnostic severity counts, repaired
+     persisted editor-state flags, and blocking reason so Mosaic, WebAssembly,
+     and product shells can start without walking the full host-surface export.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1562,6 +1562,17 @@ the Rust, Python, and TypeScript surfaces together.
      stale-state flags, panel action descriptors, diagnostic count, and blocking
      reason so Mosaic, WebAssembly, and product shells can launch the correct
      surface without walking every host panel.
+
+148. Rust Berkeley Mosaic app readiness report.
+   - Status: completed in PR 7005.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app readiness reports plus JSON helpers that summarize startup route health
+     from Berkeley app bootstrap payloads.
+   - The report preserves package name, source fingerprint, startup route,
+     parsed/execution availability, entry panel/action, panel/action
+     availability counts, diagnostic severity counts, repaired persisted
+     editor-state flags, and blocking reason so Mosaic, WebAssembly, and product
+     shells can gate startup and telemetry without walking every host panel.
 
 ## Backlog
 
