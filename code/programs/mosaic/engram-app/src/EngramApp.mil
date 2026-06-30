@@ -195,6 +195,12 @@ component EngramApp {
   slot note-type-editor-name-placeholder : text ;
   slot note-type-editor-fields-label : text ;
   slot note-type-editor-field-labels : list<text> ;
+  slot note-type-editor-selected-field-index : number ;
+  slot note-type-editor-field-name-label : text ;
+  slot note-type-editor-field-name-value : text ;
+  slot note-type-editor-field-name-placeholder : text ;
+  slot note-type-editor-field-required-label : text ;
+  slot note-type-editor-field-required-value : bool ;
   slot note-type-editor-templates-label : text ;
   slot note-type-editor-template-labels : list<text> ;
   slot note-type-editor-stylesheet-label : text ;
@@ -303,7 +309,10 @@ component EngramApp {
   emit onNoteEditorDeleteNote ;
   emit onNoteEditorCancel ;
   emit onNoteTypeEditorSelectNoteType ( index : number ) ;
+  emit onNoteTypeEditorSelectField ( index : number ) ;
   emit onNoteTypeEditorNameChange ( value : text ) ;
+  emit onNoteTypeEditorFieldNameChange ( value : text ) ;
+  emit onNoteTypeEditorFieldRequiredChange ( checked : bool ) ;
   emit onNoteTypeEditorStylesheetChange ( value : text ) ;
   emit onNoteTypeEditorNewNoteType ;
   emit onNoteTypeEditorSaveNoteType ;

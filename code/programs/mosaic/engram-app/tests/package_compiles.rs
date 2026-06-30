@@ -426,7 +426,13 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
     assert_contains(&html, "data-on-click=\"onNoteEditorDeleteNote\"");
     assert_contains(&html, "data-on-click=\"onNoteEditorCancel\"");
     assert_contains(&html, "data-on-click=\"onNoteTypeEditorSelectNoteType\"");
+    assert_contains(&html, "data-on-click=\"onNoteTypeEditorSelectField\"");
     assert_contains(&html, "data-on-change=\"onNoteTypeEditorNameChange\"");
+    assert_contains(&html, "data-on-change=\"onNoteTypeEditorFieldNameChange\"");
+    assert_contains(
+        &html,
+        "data-on-toggle=\"onNoteTypeEditorFieldRequiredChange\"",
+    );
     assert_contains(&html, "data-on-change=\"onNoteTypeEditorStylesheetChange\"");
     assert_contains(&html, "data-on-click=\"onNoteTypeEditorNewNoteType\"");
     assert_contains(&html, "data-on-click=\"onNoteTypeEditorSaveNoteType\"");

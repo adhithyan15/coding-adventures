@@ -15,6 +15,12 @@ component NoteTypeEditor {
   slot name-placeholder : text ;
   slot fields-label : text ;
   slot field-labels : list<text> ;
+  slot selected-field-index : number ;
+  slot field-name-label : text ;
+  slot field-name-value : text ;
+  slot field-name-placeholder : text ;
+  slot field-required-label : text ;
+  slot field-required-value : bool ;
   slot templates-label : text ;
   slot template-labels : list<text> ;
   slot stylesheet-label : text ;
@@ -26,7 +32,10 @@ component NoteTypeEditor {
   slot cancel-label : text ;
 
   emit onSelectNoteType ( index : number ) ;
+  emit onSelectField ( index : number ) ;
   emit onNameChange ( value : text ) ;
+  emit onFieldNameChange ( value : text ) ;
+  emit onFieldRequiredChange ( checked : bool ) ;
   emit onStylesheetChange ( value : text ) ;
   emit onNewNoteType ;
   emit onSaveNoteType ;

@@ -46,11 +46,28 @@ layout NoteTypeEditor {
             )
             Column [ note-type-field-list ] {
               For ( each: slot: field-labels , as: field , index: field-index ) {
-                Text [ note-type-field-label ] (
-                  content : field
+                HostButton [ note-type-field-option ] (
+                  label : field ,
+                  onClick : emit: onSelectField
                 )
               }
             }
+            Text [ note-type-field-name-label ] (
+              content : slot: field-name-label
+            )
+            HostInput [ note-type-field-name-input ] (
+              value : slot: field-name-value ,
+              placeholder : slot: field-name-placeholder ,
+              disabled : false ,
+              onChange : emit: onFieldNameChange
+            )
+            HostCheckbox [ note-type-field-required-checkbox ] (
+              label : slot: field-required-label ,
+              checked : slot: field-required-value ,
+              disabled : false ,
+              indeterminate : false ,
+              onToggle : emit: onFieldRequiredChange
+            )
           }
           Column [ template-summary-column ] {
             Text [ note-type-templates-label ] (
