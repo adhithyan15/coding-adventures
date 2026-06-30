@@ -14,6 +14,10 @@
 use std::path::PathBuf;
 use std::process::Command;
 
+use semantic_ir::nodes::MapEntry;
+use semantic_ir::{
+    Block, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Scope, Span, Stmt,
+};
 use semantic_ir_to_javascript::compile;
 
 /// Is a working `node` on PATH?
@@ -23,6 +27,91 @@ fn node_available() -> bool {
         .output()
         .map(|o| o.status.success())
         .unwrap_or(false)
+}
+
+// ── hand-built SIR helpers ─────────────────────────────────────────────
+//
+// The Twig frontend is a Lisp dialect and does not yet produce the SIR16
+// nodes (sequences, maps, loops, mutation, short-circuit), so the SIR16
+// behaviour tests construct SIR modules directly.  Each helper keeps the
+// call sites in the tests terse.
+
+fn sp() -> Span {
+    Span::synthetic()
+}
+
+fn int(v: i64) -> Expr {
+    Expr::IntLit { value: v, span: sp() }
+}
+
+fn float(v: f64) -> Expr {
+    Expr::FloatLit { value: v, span: sp() }
+}
+
+fn local(name: &str) -> Expr {
+    Expr::VarRef { name: name.into(), scope: Scope::Local, span: sp() }
+}
+
+fn bc(name: &str, args: Vec<Expr>) -> Expr {
+    Expr::BuiltinCall { name: name.into(), args, effects: EffectSet::PURE, span: sp() }
+}
+
+fn print(arg: Expr) -> Stmt {
+    Stmt::ExprStmt { expr: bc("print", vec![arg]), span: sp() }
+}
+
+fn let_(name: &str, value: Expr) -> Stmt {
+    Stmt::LetBinding { name: name.into(), sir_type: None, value, span: sp() }
+}
+
+/// Wrap a `main` function (the `stmts` run for effect, `value` is its
+/// return) into a complete, SIR16-flagged module ready for `compile`.
+fn module_with_main(stmts: Vec<Stmt>, value: Expr, features: &[Feature]) -> Module {
+    Module {
+        name: "sir16".into(),
+        manifest: FeatureManifest::from_features(features),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts, value, span: sp() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: sp(),
+        }],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    }
+}
+
+/// Compile a hand-built module, run it under `node`, and return stdout
+/// (trailing newlines trimmed).  Returns `None` when Node is unavailable.
+fn run_module(module: &Module, tag: &str) -> Option<String> {
+    let artifact = compile(module).expect("compile to javascript");
+    if !node_available() {
+        eprintln!("note: `node` unavailable — skipping execution for `{tag}`");
+        return None;
+    }
+    let mut path: PathBuf = std::env::temp_dir();
+    path.push(format!("sir_js_{}_{}.js", tag, std::process::id()));
+    std::fs::write(&path, &artifact.source).expect("write temp js");
+    let output = Command::new("node").arg(&path).output().expect("spawn node");
+    let _ = std::fs::remove_file(&path);
+    assert!(
+        output.status.success(),
+        "node exited non-zero for `{tag}`:\nstdout: {}\nstderr: {}\nsource:\n{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr),
+        artifact.source,
+    );
+    let stdout = String::from_utf8(output.stdout).expect("utf8 stdout");
+    Some(stdout.trim_end_matches(['\n', '\r']).to_string())
 }
 
 /// Compile Twig `src` to a `.js` file in a unique temp path, run it with
@@ -89,5 +178,265 @@ fn closure_adder_program_prints_eight() {
     let out = emit_and_run(src, "closprog", "closure");
     if let Some(stdout) = out {
         assert_eq!(stdout, "8", "expected add5(3) = 8");
+    }
+}
+
+// ── SIR16 behaviour tests (hand-built modules) ─────────────────────────
+
+#[test]
+fn floats_arithmetic_promotion_prints_3_5() {
+    // print(1 + 2.5) → 3.5 (int/float mix promotes to float natively).
+    let module = module_with_main(
+        vec![print(bc("+", vec![int(1), float(2.5)]))],
+        Expr::NilLit { span: sp() },
+        &[Feature::Floats],
+    );
+    if let Some(stdout) = run_module(&module, "floats") {
+        assert_eq!(stdout, "3.5");
+    }
+}
+
+#[test]
+fn short_circuit_does_not_evaluate_rhs() {
+    // (false && <print "boom">) must NOT print "boom"; the whole
+    // expression prints #f.  Routing through truthy keeps `false` falsy.
+    let and = Expr::LogicalAnd {
+        lhs: Box::new(Expr::BoolLit { value: false, span: sp() }),
+        rhs: Box::new(Expr::Block(Box::new(Block {
+            stmts: vec![print(Expr::StrLit { value: "boom".into(), span: sp() })],
+            value: int(99),
+            span: sp(),
+        }))),
+        span: sp(),
+    };
+    let module = module_with_main(
+        vec![print(and)],
+        Expr::NilLit { span: sp() },
+        &[Feature::ShortCircuit, Feature::Strings],
+    );
+    if let Some(stdout) = run_module(&module, "shortcircuit") {
+        // Only `#f` printed — the rhs block (which would print "boom")
+        // never ran.
+        assert_eq!(stdout, "#f", "rhs must not be evaluated");
+    }
+}
+
+#[test]
+fn short_circuit_or_returns_first_truthy() {
+    // (false || 7) → 7.
+    let or = Expr::LogicalOr {
+        lhs: Box::new(Expr::BoolLit { value: false, span: sp() }),
+        rhs: Box::new(int(7)),
+        span: sp(),
+    };
+    let module = module_with_main(
+        vec![print(or)],
+        Expr::NilLit { span: sp() },
+        &[Feature::ShortCircuit],
+    );
+    if let Some(stdout) = run_module(&module, "or") {
+        assert_eq!(stdout, "7");
+    }
+}
+
+#[test]
+fn sequence_build_index_len_set() {
+    // let xs = [10, 20, 30];
+    // xs[1] = 99;
+    // print(xs[1]); print(len(xs));   → 99 then 3
+    let stmts = vec![
+        let_("xs", Expr::SeqLit { items: vec![int(10), int(20), int(30)], span: sp() }),
+        Stmt::SeqSet { seq: local("xs"), index: int(1), value: int(99), span: sp() },
+        print(Expr::SeqIndex {
+            seq: Box::new(local("xs")),
+            index: Box::new(int(1)),
+            span: sp(),
+        }),
+        print(Expr::SeqLen { seq: Box::new(local("xs")), span: sp() }),
+    ];
+    let module = module_with_main(stmts, Expr::NilLit { span: sp() }, &[Feature::Sequences]);
+    if let Some(stdout) = run_module(&module, "sequence") {
+        assert_eq!(stdout, "99\n3");
+    }
+}
+
+#[test]
+fn map_build_get_set() {
+    // let m = {"a": 1};
+    // m["b"] = 2;
+    // print(m["a"]); print(m["b"]); print(m["missing"]);  → 1, 2, nil
+    let stmts = vec![
+        let_(
+            "m",
+            Expr::MapLit {
+                entries: vec![MapEntry {
+                    key: Expr::StrLit { value: "a".into(), span: sp() },
+                    value: int(1),
+                }],
+                span: sp(),
+            },
+        ),
+        Stmt::MapSet {
+            map: local("m"),
+            key: Expr::StrLit { value: "b".into(), span: sp() },
+            value: int(2),
+            span: sp(),
+        },
+        print(Expr::MapGet {
+            map: Box::new(local("m")),
+            key: Box::new(Expr::StrLit { value: "a".into(), span: sp() }),
+            span: sp(),
+        }),
+        print(Expr::MapGet {
+            map: Box::new(local("m")),
+            key: Box::new(Expr::StrLit { value: "b".into(), span: sp() }),
+            span: sp(),
+        }),
+        print(Expr::MapGet {
+            map: Box::new(local("m")),
+            key: Box::new(Expr::StrLit { value: "missing".into(), span: sp() }),
+            span: sp(),
+        }),
+    ];
+    let module =
+        module_with_main(stmts, Expr::NilLit { span: sp() }, &[Feature::Maps, Feature::Strings]);
+    if let Some(stdout) = run_module(&module, "map") {
+        // A missing key reads as nil (`null` → "nil" via format).
+        assert_eq!(stdout, "1\n2\nnil");
+    }
+}
+
+#[test]
+fn while_loop_counts_to_three() {
+    // let i = 0; while (i < 3) { print(i); i = i + 1; }  → 0,1,2
+    let stmts = vec![
+        let_("i", int(0)),
+        Stmt::While {
+            cond: bc("<", vec![local("i"), int(3)]),
+            body: Block {
+                stmts: vec![
+                    print(local("i")),
+                    Stmt::Assign {
+                        name: "i".into(),
+                        scope: Scope::Local,
+                        value: bc("+", vec![local("i"), int(1)]),
+                        span: sp(),
+                    },
+                ],
+                value: Expr::NilLit { span: sp() },
+                span: sp(),
+            },
+            span: sp(),
+        },
+    ];
+    let module = module_with_main(
+        stmts,
+        Expr::NilLit { span: sp() },
+        &[Feature::Loops, Feature::MutableBindings],
+    );
+    if let Some(stdout) = run_module(&module, "while") {
+        assert_eq!(stdout, "0\n1\n2");
+    }
+}
+
+#[test]
+fn for_range_accumulator_sums_to_ten() {
+    // let sum = 0; for i in range(0, 5, 1) { sum = sum + i; }  print(sum) → 10
+    let stmts = vec![
+        let_("sum", int(0)),
+        Stmt::ForRange {
+            var: "i".into(),
+            start: int(0),
+            stop: int(5),
+            step: int(1),
+            body: Block {
+                stmts: vec![Stmt::Assign {
+                    name: "sum".into(),
+                    scope: Scope::Local,
+                    value: bc("+", vec![local("sum"), local("i")]),
+                    span: sp(),
+                }],
+                value: Expr::NilLit { span: sp() },
+                span: sp(),
+            },
+            span: sp(),
+        },
+        print(local("sum")),
+    ];
+    let module = module_with_main(
+        stmts,
+        Expr::NilLit { span: sp() },
+        &[Feature::Loops, Feature::MutableBindings],
+    );
+    if let Some(stdout) = run_module(&module, "forrange") {
+        assert_eq!(stdout, "10");
+    }
+}
+
+#[test]
+fn for_range_descending_step_counts_down() {
+    // for i in range(3, 0, -1) { print(i); }  → 3,2,1
+    let stmts = vec![Stmt::ForRange {
+        var: "i".into(),
+        start: int(3),
+        stop: int(0),
+        step: int(-1),
+        body: Block {
+            stmts: vec![print(local("i"))],
+            value: Expr::NilLit { span: sp() },
+            span: sp(),
+        },
+        span: sp(),
+    }];
+    let module = module_with_main(stmts, Expr::NilLit { span: sp() }, &[Feature::Loops]);
+    if let Some(stdout) = run_module(&module, "forrangedown") {
+        assert_eq!(stdout, "3\n2\n1");
+    }
+}
+
+#[test]
+fn for_each_over_sequence() {
+    // for x in [4, 5, 6] { print(x); }  → 4,5,6
+    let stmts = vec![Stmt::ForEach {
+        var: "x".into(),
+        iter: Expr::SeqLit { items: vec![int(4), int(5), int(6)], span: sp() },
+        body: Block {
+            stmts: vec![print(local("x"))],
+            value: Expr::NilLit { span: sp() },
+            span: sp(),
+        },
+        span: sp(),
+    }];
+    let module = module_with_main(
+        stmts,
+        Expr::NilLit { span: sp() },
+        &[Feature::Loops, Feature::Sequences],
+    );
+    if let Some(stdout) = run_module(&module, "foreach") {
+        assert_eq!(stdout, "4\n5\n6");
+    }
+}
+
+#[test]
+fn mutable_reassignment_updates_binding() {
+    // let x = 1; x = 2; x = x + 40; print(x);  → 42
+    let stmts = vec![
+        let_("x", int(1)),
+        Stmt::Assign { name: "x".into(), scope: Scope::Local, value: int(2), span: sp() },
+        Stmt::Assign {
+            name: "x".into(),
+            scope: Scope::Local,
+            value: bc("+", vec![local("x"), int(40)]),
+            span: sp(),
+        },
+        print(local("x")),
+    ];
+    let module = module_with_main(
+        stmts,
+        Expr::NilLit { span: sp() },
+        &[Feature::MutableBindings],
+    );
+    if let Some(stdout) = run_module(&module, "mutable") {
+        assert_eq!(stdout, "42");
     }
 }

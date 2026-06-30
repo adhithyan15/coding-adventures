@@ -25,28 +25,65 @@
 //! - `MakeClosure` becomes `new __Sir.Closure((..._a) => fn(caps…, ..._a))`,
 //!   prepending the captured values ahead of the call's runtime args.
 //!
-//! ## Deferred nodes (this milestone)
+//! ## SIR16 nodes (this milestone, D4)
 //!
-//! Collections (`SeqLit`/`MapLit`/index/get/len), loops (`While`/
-//! `ForRange`/`ForEach`), indexed mutation (`SeqSet`/`MapSet`), mutable
-//! `Assign`, short-circuit (`LogicalAnd`/`LogicalOr`), string
-//! interpolation (`StrConcat`), and the OOP/exception scopes are **not
-//! emitted yet**.  Their `Feature`s are absent from the backend's
+//! As of D4 the emitter covers the **full SIR16 / v1 surface**, all of
+//! which JavaScript supports natively:
+//!
+//! - Floats (`FloatLit`) — native `number` (`NaN`/`Infinity` spelled out).
+//! - Short-circuit (`LogicalAnd`/`LogicalOr`) — a truthy-guarded arrow
+//!   IIFE so the rhs runs only when the lhs decides, routing the test
+//!   through `__Sir.truthy` (only `false`/`nil` are falsy).
+//! - Sequences (`SeqLit`/`SeqIndex`/`SeqLen`, `SeqSet`) — native arrays
+//!   (`[…]`, `a[i]`, `a.length`, `a[i] = v`).
+//! - Maps (`MapLit`/`MapGet`, `MapSet`) — native `Map` (`new Map([[k, v]])`,
+//!   `.get(k) ?? null`, `.set(k, v)`).
+//! - Mutable bindings (`Assign`) — a plain reassignment; `let` (not
+//!   `const`) is already the keyword for every binding, so no pre-pass is
+//!   needed (unlike the Rust/TypeScript backends).
+//! - Loops (`While`/`ForRange`/`ForEach`) — native `while`/`for`/
+//!   `for…of`, with the `while`/`for-range` tests routed through
+//!   `__Sir.truthy` and a direction-aware, once-evaluated `for-range`.
+//!
+//! ## Deferred nodes (still rejected at the capability check)
+//!
+//! String interpolation (`StrConcat`) and the SIR17/18 OOP/exception
+//! scopes (`ClassDef`/`ModuleDef`/`SingletonClassDef`, `TryCatch`, the
+//! `Instance`/`ClassVar`/`Const` scopes) and `Intrinsic` are **not
+//! emitted**.  Their `Feature`s are absent from the backend's
 //! `accepts_features()` list, so a module that uses them is rejected at
 //! the capability check *before* lowering — the `panic!` arms below are
 //! defence-in-depth that fire only on a backend bug (the accept-set
 //! drifting out of sync with what `emit` handles), never on user input.
 
+use std::cell::Cell;
 use std::fmt::Write;
 
 use semantic_ir::{Block, Expr, Function, Global, Module, ParamKind, Scope, Stmt};
 
 use crate::runtime::RUNTIME;
 
+thread_local! {
+    /// Monotonic counter for synthesised loop temporaries (the
+    /// once-evaluated `__sir_stop`/`__sir_step` bounds of a `ForRange`).
+    /// Reset at the start of every `emit_module` so output stays
+    /// deterministic regardless of how many modules a process compiles.
+    static LOOP_COUNTER: Cell<usize> = const { Cell::new(0) };
+}
+
+fn fresh_loop_id() -> usize {
+    LOOP_COUNTER.with(|c| {
+        let n = c.get();
+        c.set(n + 1);
+        n
+    })
+}
+
 /// Emit a SIR module as JavaScript source.  The caller is responsible
 /// for prior validation and capability checks; this function assumes
 /// the module is valid and uses only accepted features.
 pub fn emit_module(m: &Module) -> String {
+    LOOP_COUNTER.with(|c| c.set(0));
     let mut out = String::new();
     emit_banner(&mut out, m);
     // Strict mode goes first (after the banner comment) so the whole
@@ -163,9 +200,10 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         // `let <name> = <value>;`.  Both `let` and `let*` bindings emit
         // a JS `let` — the lowerer already ordered `let*`'s sequential
         // dependencies, so a top-down emission is faithful.  We use
-        // `let` (not `const`) uniformly: this milestone does not accept
-        // mutable bindings, but a future `Assign` over a `let`-bound
-        // name must still type-check, and `let` is the safe default.
+        // `let` (not `const`) uniformly so a later `Assign` over the same
+        // name reassigns a mutable binding (the `MutableBindings` feature)
+        // without any const→let pre-pass — JS `let` is reassignable, so
+        // unlike the Rust/TypeScript backends this backend needs none.
         Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } => {
             let _ = write!(out, "{}let {} = ", pad, sanitize_ident(name));
             emit_expr(out, value, indent);
@@ -184,29 +222,107 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 out.push_str(";\n");
             }
         }
+        // ── SIR16: mutation (MutableBindings) ───────────────────────
+        // `Assign` re-binds an already-declared name.  Local/Param/
+        // Capture/Global all resolve to a bare identifier in JS (globals
+        // are module-level `let`s), so a plain reassignment is faithful.
+        // The Instance/ClassVar/Const scopes are SIR17 features this
+        // backend does not accept, so they fall through to the panic guard.
+        Stmt::Assign {
+            name,
+            scope: Scope::Local | Scope::Param | Scope::Capture | Scope::Global,
+            value,
+            ..
+        } => {
+            let _ = write!(out, "{}{} = ", pad, sanitize_ident(name));
+            emit_expr(out, value, indent);
+            out.push_str(";\n");
+        }
+        Stmt::Assign { scope, span, .. } => {
+            panic!(
+                "javascript backend reached a deferred `Assign` scope `{}` at {span} — not accepted yet",
+                scope.name()
+            );
+        }
+        // ── SIR16: loops (Loops) ────────────────────────────────────
+        // `while (truthy(cond)) { body }` — the test routes through SIR
+        // truthiness (only `false`/`nil` are falsy), never JS truthiness.
+        Stmt::While { cond, body, .. } => {
+            out.push_str(&pad);
+            out.push_str("while (__Sir.truthy(");
+            emit_expr(out, cond, indent);
+            out.push_str(")) {\n");
+            emit_block_as_stmts(out, body, indent + 2);
+            let _ = writeln!(out, "{pad}}}");
+        }
+        // `for (var = start; …; var += step) { body }` — half-open
+        // (`stop` exclusive).  `stop`/`step` are evaluated ONCE into
+        // block-scoped temporaries (matching Python's `range`), and the
+        // loop condition is direction-aware so a negative `step` counts
+        // down correctly.  JS has one numeric type, so no casts are
+        // needed (unlike the TypeScript backend's `as number`).
+        Stmt::ForRange { var, start, stop, step, body, .. } => {
+            let id = fresh_loop_id();
+            let v = sanitize_ident(var);
+            let inner = indent + 2;
+            let inner_pad = " ".repeat(inner);
+            // Open a block so the temporaries don't leak.
+            let _ = writeln!(out, "{pad}{{");
+            let _ = write!(out, "{inner_pad}let {v} = ");
+            emit_expr(out, start, inner);
+            out.push_str(";\n");
+            let _ = write!(out, "{inner_pad}const __sir_stop_{id} = ");
+            emit_expr(out, stop, inner);
+            out.push_str(";\n");
+            let _ = write!(out, "{inner_pad}const __sir_step_{id} = ");
+            emit_expr(out, step, inner);
+            out.push_str(";\n");
+            let _ = writeln!(
+                out,
+                "{inner_pad}while (__sir_step_{id} >= 0 ? {v} < __sir_stop_{id} : {v} > __sir_stop_{id}) {{"
+            );
+            emit_block_as_stmts(out, body, inner + 2);
+            let _ = writeln!(out, "{}{v} = {v} + __sir_step_{id};", " ".repeat(inner + 2));
+            let _ = writeln!(out, "{inner_pad}}}");
+            let _ = writeln!(out, "{pad}}}");
+        }
+        // `for (const var of iter) { body }` — iterate a Seq.  `let` is
+        // used so a body that reassigns the loop variable still works.
+        Stmt::ForEach { var, iter, body, .. } => {
+            let _ = write!(out, "{}for (let {} of ", pad, sanitize_ident(var));
+            emit_expr(out, iter, indent);
+            out.push_str(") {\n");
+            emit_block_as_stmts(out, body, indent + 2);
+            let _ = writeln!(out, "{pad}}}");
+        }
+        // ── SIR16: indexed assignment (Sequences / Maps) ────────────
+        // `seq[index] = value;` — native array element write.
+        Stmt::SeqSet { seq, index, value, .. } => {
+            out.push_str(&pad);
+            out.push('(');
+            emit_expr(out, seq, indent);
+            out.push_str(")[");
+            emit_expr(out, index, indent);
+            out.push_str("] = ");
+            emit_expr(out, value, indent);
+            out.push_str(";\n");
+        }
+        // `map.set(key, value);` — native `Map.set`.
+        Stmt::MapSet { map, key, value, .. } => {
+            out.push_str(&pad);
+            out.push('(');
+            emit_expr(out, map, indent);
+            out.push_str(").set(");
+            emit_expr(out, key, indent);
+            out.push_str(", ");
+            emit_expr(out, value, indent);
+            out.push_str(");\n");
+        }
         // ── Deferred (rejected at the capability check) ────────────
-        // The following statement kinds belong to SIR16/17 features this
-        // backend does not yet accept.  Reaching them means the
-        // accept-set drifted out of sync with `emit`; fail loudly rather
-        // than emit silently-wrong code.
-        Stmt::Assign { span, .. } => {
-            panic!("javascript backend reached a deferred `Assign` at {span} — not accepted yet");
-        }
-        Stmt::While { span, .. } => {
-            panic!("javascript backend reached a deferred `While` at {span} — not accepted yet");
-        }
-        Stmt::ForRange { span, .. } => {
-            panic!("javascript backend reached a deferred `ForRange` at {span} — not accepted yet");
-        }
-        Stmt::ForEach { span, .. } => {
-            panic!("javascript backend reached a deferred `ForEach` at {span} — not accepted yet");
-        }
-        Stmt::SeqSet { span, .. } => {
-            panic!("javascript backend reached a deferred `SeqSet` at {span} — not accepted yet");
-        }
-        Stmt::MapSet { span, .. } => {
-            panic!("javascript backend reached a deferred `MapSet` at {span} — not accepted yet");
-        }
+        // The following statement kinds belong to SIR17/18 features this
+        // backend does not accept.  Reaching them means the accept-set
+        // drifted out of sync with `emit`; fail loudly rather than emit
+        // silently-wrong code.
         Stmt::ClassDef { span, .. }
         | Stmt::ModuleDef { span, .. }
         | Stmt::SingletonClassDef { span, .. } => {
@@ -293,16 +409,71 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             }
             out.push_str("..._a))");
         }
+        // ── SIR16: sequences (Sequences) — native arrays ──────────────
+        Expr::SeqLit { items, .. } => {
+            out.push('[');
+            emit_args(out, items, indent);
+            out.push(']');
+        }
+        Expr::SeqIndex { seq, index, .. } => {
+            out.push('(');
+            emit_expr(out, seq, indent);
+            out.push_str(")[");
+            emit_expr(out, index, indent);
+            out.push(']');
+        }
+        Expr::SeqLen { seq, .. } => {
+            out.push('(');
+            emit_expr(out, seq, indent);
+            out.push_str(").length");
+        }
+        // ── SIR16: maps (Maps) — native `Map` ─────────────────────────
+        Expr::MapLit { entries, .. } => {
+            out.push_str("new Map([");
+            for (i, entry) in entries.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                out.push('[');
+                emit_expr(out, &entry.key, indent);
+                out.push_str(", ");
+                emit_expr(out, &entry.value, indent);
+                out.push(']');
+            }
+            out.push_str("])");
+        }
+        // `map.get(key) ?? null` — a missing key reads as nil (`null`),
+        // matching the spec's target-defined miss behaviour.
+        Expr::MapGet { map, key, .. } => {
+            out.push_str("((");
+            emit_expr(out, map, indent);
+            out.push_str(").get(");
+            emit_expr(out, key, indent);
+            out.push_str(") ?? null)");
+        }
+        // ── SIR16: short-circuit (ShortCircuit) ───────────────────────
+        // An arrow IIFE keeps the rhs unevaluated until the lhs decides,
+        // routing the test through SIR truthiness (only `false`/`nil` are
+        // falsy — not `0`/`""`).  The param `__l` gives each occurrence
+        // its own scope, so nested `&&`/`||` never collide.
+        Expr::LogicalAnd { lhs, rhs, .. } => {
+            out.push_str("((__l) => __Sir.truthy(__l) ? (");
+            emit_expr(out, rhs, indent);
+            out.push_str(") : __l)(");
+            emit_expr(out, lhs, indent);
+            out.push(')');
+        }
+        Expr::LogicalOr { lhs, rhs, .. } => {
+            out.push_str("((__l) => __Sir.truthy(__l) ? __l : (");
+            emit_expr(out, rhs, indent);
+            out.push_str("))(");
+            emit_expr(out, lhs, indent);
+            out.push(')');
+        }
         // ── Deferred expression kinds (rejected at capability check) ──
-        Expr::SeqLit { span, .. }
-        | Expr::SeqIndex { span, .. }
-        | Expr::SeqLen { span, .. }
-        | Expr::MapLit { span, .. }
-        | Expr::MapGet { span, .. }
-        | Expr::LogicalAnd { span, .. }
-        | Expr::LogicalOr { span, .. }
-        | Expr::StrConcat { span, .. } => {
-            panic!("javascript backend reached a deferred expression at {span} — not accepted yet");
+        // `StrConcat` (SIR18 string interpolation) is not accepted yet.
+        Expr::StrConcat { span, .. } => {
+            panic!("javascript backend reached a deferred `StrConcat` at {span} — not accepted yet");
         }
         Expr::Intrinsic { name, span, .. } => {
             // The v0 backend accepts no intrinsics; `check_module`
@@ -463,6 +634,24 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
     out.push_str(";\n");
     let opad = " ".repeat(indent);
     let _ = write!(out, "{opad}}})()");
+}
+
+/// Emit a block in **statement context** — used for loop bodies, whose
+/// trailing value is discarded rather than returned.  Each statement is
+/// emitted in order; the block's trailing `value` is emitted as an
+/// expression statement so any side effect still fires, except a bare
+/// `nil` (the common "this block yields nothing" marker), which is
+/// dropped to keep the output clean.
+fn emit_block_as_stmts(out: &mut String, b: &Block, indent: usize) {
+    for s in &b.stmts {
+        emit_stmt(out, s, indent);
+    }
+    if !matches!(b.value, Expr::NilLit { .. }) {
+        let pad = " ".repeat(indent);
+        out.push_str(&pad);
+        emit_expr(out, &b.value, indent);
+        out.push_str(";\n");
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -923,6 +1112,249 @@ mod tests {
         assert!(out.contains("let x = 1;"));
         assert!(out.contains("return x;"));
         assert!(out.trim_end().ends_with("})()"));
+    }
+
+    // ── SIR16 expressions ─────────────────────────────────────────
+
+    fn var(name: &str) -> Expr {
+        Expr::VarRef { name: name.into(), scope: Scope::Local, span: s() }
+    }
+
+    fn int(v: i64) -> Expr {
+        Expr::IntLit { value: v, span: s() }
+    }
+
+    #[test]
+    fn emit_float_lit_decimal_and_specials() {
+        assert_eq!(emit_e(&Expr::FloatLit { value: 3.0, span: s() }), "3.0");
+        assert_eq!(emit_e(&Expr::FloatLit { value: 2.5, span: s() }), "2.5");
+        assert_eq!(emit_e(&Expr::FloatLit { value: f64::INFINITY, span: s() }), "Infinity");
+        assert_eq!(
+            emit_e(&Expr::FloatLit { value: f64::NEG_INFINITY, span: s() }),
+            "-Infinity"
+        );
+        assert_eq!(emit_e(&Expr::FloatLit { value: f64::NAN, span: s() }), "NaN");
+    }
+
+    #[test]
+    fn emit_seq_lit_is_native_array() {
+        let seq = Expr::SeqLit { items: vec![int(1), int(2), int(3)], span: s() };
+        assert_eq!(emit_e(&seq), "[1, 2, 3]");
+        let empty = Expr::SeqLit { items: vec![], span: s() };
+        assert_eq!(emit_e(&empty), "[]");
+    }
+
+    #[test]
+    fn emit_seq_index_is_native_subscript() {
+        let e = Expr::SeqIndex {
+            seq: Box::new(var("xs")),
+            index: Box::new(int(0)),
+            span: s(),
+        };
+        assert_eq!(emit_e(&e), "(xs)[0]");
+    }
+
+    #[test]
+    fn emit_seq_len_is_native_length() {
+        let e = Expr::SeqLen { seq: Box::new(var("xs")), span: s() };
+        assert_eq!(emit_e(&e), "(xs).length");
+    }
+
+    #[test]
+    fn emit_map_lit_is_native_map() {
+        let e = Expr::MapLit {
+            entries: vec![
+                semantic_ir::nodes::MapEntry {
+                    key: Expr::StrLit { value: "a".into(), span: s() },
+                    value: int(1),
+                },
+                semantic_ir::nodes::MapEntry {
+                    key: Expr::StrLit { value: "b".into(), span: s() },
+                    value: int(2),
+                },
+            ],
+            span: s(),
+        };
+        assert_eq!(emit_e(&e), r#"new Map([["a", 1], ["b", 2]])"#);
+        let empty = Expr::MapLit { entries: vec![], span: s() };
+        assert_eq!(emit_e(&empty), "new Map([])");
+    }
+
+    #[test]
+    fn emit_map_get_uses_get_with_nil_default() {
+        let e = Expr::MapGet {
+            map: Box::new(var("d")),
+            key: Box::new(Expr::StrLit { value: "k".into(), span: s() }),
+            span: s(),
+        };
+        assert_eq!(emit_e(&e), r#"((d).get("k") ?? null)"#);
+    }
+
+    #[test]
+    fn emit_logical_and_short_circuits_via_truthy() {
+        let e = Expr::LogicalAnd {
+            lhs: Box::new(var("a")),
+            rhs: Box::new(var("b")),
+            span: s(),
+        };
+        assert_eq!(emit_e(&e), "((__l) => __Sir.truthy(__l) ? (b) : __l)(a)");
+    }
+
+    #[test]
+    fn emit_logical_or_short_circuits_via_truthy() {
+        let e = Expr::LogicalOr {
+            lhs: Box::new(var("a")),
+            rhs: Box::new(var("b")),
+            span: s(),
+        };
+        assert_eq!(emit_e(&e), "((__l) => __Sir.truthy(__l) ? __l : (b))(a)");
+    }
+
+    // ── SIR16 statements ──────────────────────────────────────────
+
+    fn emit_s(st: &Stmt) -> String {
+        let mut out = String::new();
+        emit_stmt(&mut out, st, 0);
+        out
+    }
+
+    #[test]
+    fn emit_assign_is_bare_reassignment() {
+        for scope in [Scope::Local, Scope::Param, Scope::Capture, Scope::Global] {
+            let st = Stmt::Assign {
+                name: "x".into(),
+                scope,
+                value: int(7),
+                span: s(),
+            };
+            assert_eq!(emit_s(&st), "x = 7;\n");
+        }
+    }
+
+    #[test]
+    fn emit_seq_set_is_native_element_write() {
+        let st = Stmt::SeqSet {
+            seq: var("xs"),
+            index: int(0),
+            value: int(9),
+            span: s(),
+        };
+        assert_eq!(emit_s(&st), "(xs)[0] = 9;\n");
+    }
+
+    #[test]
+    fn emit_map_set_is_native_map_set() {
+        let st = Stmt::MapSet {
+            map: var("d"),
+            key: Expr::StrLit { value: "k".into(), span: s() },
+            value: int(1),
+            span: s(),
+        };
+        assert_eq!(emit_s(&st), r#"(d).set("k", 1);"#.to_string() + "\n");
+    }
+
+    #[test]
+    fn emit_while_routes_cond_through_truthy() {
+        let st = Stmt::While {
+            cond: Expr::BuiltinCall {
+                name: "<".into(),
+                args: vec![var("i"), int(3)],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            body: Block {
+                stmts: vec![Stmt::Assign {
+                    name: "i".into(),
+                    scope: Scope::Local,
+                    value: Expr::BuiltinCall {
+                        name: "+".into(),
+                        args: vec![var("i"), int(1)],
+                        effects: EffectSet::PURE,
+                        span: s(),
+                    },
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        };
+        let out = emit_s(&st);
+        assert!(out.starts_with("while (__Sir.truthy((i < 3))) {\n"), "got {out}");
+        assert!(out.contains("i = (i + 1);"));
+        // The trailing nil body value is dropped.
+        assert!(!out.contains("null;"), "got {out}");
+        assert!(out.trim_end().ends_with('}'));
+    }
+
+    #[test]
+    fn emit_for_range_is_direction_aware_c_style() {
+        // Reset the counter so the temporary names are predictable.
+        LOOP_COUNTER.with(|c| c.set(0));
+        let st = Stmt::ForRange {
+            var: "i".into(),
+            start: int(0),
+            stop: int(5),
+            step: int(1),
+            body: Block {
+                stmts: vec![Stmt::ExprStmt {
+                    expr: bc("print", vec![var("i")]),
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        };
+        let out = emit_s(&st);
+        assert!(out.contains("let i = 0;"), "got {out}");
+        assert!(out.contains("const __sir_stop_0 = 5;"), "got {out}");
+        assert!(out.contains("const __sir_step_0 = 1;"), "got {out}");
+        assert!(
+            out.contains("while (__sir_step_0 >= 0 ? i < __sir_stop_0 : i > __sir_stop_0) {"),
+            "got {out}"
+        );
+        assert!(out.contains("__Sir.print(i);"), "got {out}");
+        assert!(out.contains("i = i + __sir_step_0;"), "got {out}");
+    }
+
+    #[test]
+    fn emit_for_each_is_for_of() {
+        let st = Stmt::ForEach {
+            var: "x".into(),
+            iter: var("xs"),
+            body: Block {
+                stmts: vec![Stmt::ExprStmt {
+                    expr: bc("print", vec![var("x")]),
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        };
+        let out = emit_s(&st);
+        assert!(out.starts_with("for (let x of xs) {\n"), "got {out}");
+        assert!(out.contains("__Sir.print(x);"), "got {out}");
+    }
+
+    #[test]
+    fn emit_nested_loop_temporaries_are_distinct() {
+        // Two for-ranges in one module must get distinct temp ids so the
+        // emitted code is well-formed (no shadow collision).
+        LOOP_COUNTER.with(|c| c.set(0));
+        let mk = || Stmt::ForRange {
+            var: "i".into(),
+            start: int(0),
+            stop: int(2),
+            step: int(1),
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            span: s(),
+        };
+        let a = emit_s(&mk());
+        let b = emit_s(&mk());
+        assert!(a.contains("__sir_stop_0"), "got {a}");
+        assert!(b.contains("__sir_stop_1"), "got {b}");
     }
 
     // ── statements ────────────────────────────────────────────────

@@ -60,24 +60,48 @@ let artifact = semantic_ir_to_javascript::JavaScriptBackend::new().compile(&modu
 
 ## Capability declaration
 
-This first milestone accepts exactly the **v0 feature set** — the
-surface that the emitter knows how to lower today:
+This backend accepts the **v0 feature set plus all of SIR16 / v1** — the
+surface the emitter lowers today. JavaScript supports every SIR16 feature
+natively (arrays, `Map`, `while`/`for`, reassignable `let`), so each
+lowering is direct.
 
-| Accepted (v0)              | Rejected (deferred / unsupported)            |
+| Accepted (v0 + SIR16)      | Rejected (deferred / unsupported)            |
 |----------------------------|----------------------------------------------|
-| `Closures`                 | `Floats`, `Sequences`, `Maps` (SIR16)        |
-| `Pairs`                    | `MutableBindings`, `Loops`, `ShortCircuit`   |
-| `Symbols`                  | `Classes`, `Modules`, `InstanceVars`, …      |
-| `Strings`                  | `Exceptions`, `StringInterpolation`          |
-| `DynamicTyping`            | `TailCalls` (V8 has no reliable TCO)         |
-| `OptionalTypeAnnotations`  | `Intrinsics` (empty whitelist)               |
+| `Closures`                 | `Classes`, `Modules`, `InstanceVars` (SIR17) |
+| `Pairs`                    | `ClassVars`, `Constants`, `Exceptions`       |
+| `Symbols`                  | `StringInterpolation` (`StrConcat`, SIR18)   |
+| `Strings`                  | `TailCalls` (V8 has no reliable TCO)         |
+| `DynamicTyping`            | `Intrinsics` (empty whitelist)               |
+| `OptionalTypeAnnotations`  |                                              |
 | `MutualRecursion`          |                                              |
 | `Globals`                  |                                              |
+| `Floats` (SIR16)           |                                              |
+| `ShortCircuit` (SIR16)     |                                              |
+| `Sequences` (SIR16)        |                                              |
+| `Maps` (SIR16)             |                                              |
+| `MutableBindings` (SIR16)  |                                              |
+| `Loops` (SIR16)            |                                              |
 
 `accepts_intrinsics()` is empty. The accept-set is deliberately matched
 to what `emit` handles, so a module using a deferred node is turned away
-*before* lowering rather than mis-compiled. Later milestones widen the
-set as the matching emit arms land.
+*before* lowering rather than mis-compiled — and every accepted feature
+has a real emit arm (the residual `panic!` guards cover only the
+rejected SIR17/18 nodes).
+
+### SIR16 lowering at a glance
+
+| SIR16 node                       | JavaScript emitted                              |
+|----------------------------------|-------------------------------------------------|
+| `FloatLit`                       | native `number` (`NaN`/`Infinity` spelled out)  |
+| `LogicalAnd` / `LogicalOr`       | `((__l) => __Sir.truthy(__l) ? … : …)(lhs)`     |
+| `SeqLit` / `SeqIndex` / `SeqLen` | `[…]` / `(a)[i]` / `(a).length`                 |
+| `SeqSet`                         | `(a)[i] = v;`                                    |
+| `MapLit` / `MapGet`              | `new Map([[k, v]])` / `((m).get(k) ?? null)`    |
+| `MapSet`                         | `(m).set(k, v);`                                |
+| `Assign`                         | `name = value;` (`let` bindings are mutable)    |
+| `While`                          | `while (__Sir.truthy(cond)) { … }`              |
+| `ForRange`                       | direction-aware C-style `for` (bounds once)     |
+| `ForEach`                        | `for (let x of iter) { … }`                     |
 
 ## Runtime shape (inlined `__Sir`)
 
@@ -172,8 +196,12 @@ cargo test -p semantic-ir-to-javascript
 - Unit tests for `sanitize_ident`, string quoting, float formatting, and
   every emit arm.
 - A determinism test (two compilations are byte-identical).
-- An end-to-end integration test (`tests/run_with_node.rs`) that lowers a
-  Twig program via `twig-to-semantic-ir`, emits JavaScript to a unique
-  temp file, **runs it with `node`**, and asserts stdout (add → `3`,
-  factorial → `120`, closure-adder → `8`). When `node` is not on PATH the
-  execution is skipped and the syntactic checks still run.
+- End-to-end integration tests (`tests/run_with_node.rs`) that emit
+  JavaScript to a unique temp file, **run it with `node`**, and assert
+  stdout. Twig-lowered programs cover the v0 core (add → `3`, factorial →
+  `120`, closure-adder → `8`); hand-built SIR16 modules cover float
+  arithmetic promotion (`3.5`), short-circuit (rhs not evaluated), seq
+  build/index/len/set, map build/get/set (missing key → nil), a `while`
+  counter, a for-range accumulator (and a descending step), for-each, and
+  mutable reassignment (`42`). When `node` is not on PATH the execution is
+  skipped and the syntactic checks still run.
