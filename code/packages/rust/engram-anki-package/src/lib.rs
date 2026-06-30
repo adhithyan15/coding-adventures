@@ -2595,7 +2595,15 @@ fn learning_queue_and_due(
     collection_created_at_days: i64,
     source: Option<&ExternalSourceRecord>,
 ) -> (i64, i64) {
-    let queue = preserved_source_queue(source, &[1, 3], 1);
+    let queue = source_i64(source, "queue")
+        .filter(|queue| matches!(*queue, 1 | 3))
+        .unwrap_or_else(|| {
+            if progress.next_due_at.saturating_sub(progress.last_seen_at) >= ONE_DAY_MS {
+                3
+            } else {
+                1
+            }
+        });
     let due = if queue == 3 {
         millis_to_anki_due_day(collection_created_at_days, progress.next_due_at)
     } else {
@@ -4919,6 +4927,43 @@ CREATE TABLE graves (
         assert_eq!(day_relearning_export.cards[0].kind, 3);
         assert_eq!(day_relearning_export.cards[0].queue, 3);
         assert_eq!(day_relearning_export.cards[0].due, 44);
+    }
+
+    #[test]
+    fn exports_native_learning_due_after_one_day_as_interday_queue() {
+        let collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        let mut state = v11_collection_to_engram_state(&collection).unwrap();
+        state.external_sources.retain(|source| {
+            !(source.target == ExternalSourceTarget::Card && source.target_id == "2000")
+        });
+
+        let reviewed_at = (19_000 + 42) * ONE_DAY_MS;
+        let progress = &mut state.card_progress[0];
+        progress.state = CardState::Learning;
+        progress.interval = 0;
+        progress.learning_step_index = Some(1);
+        progress.last_seen_at = reviewed_at;
+        progress.next_due_at = reviewed_at + 10 * 60 * 1000;
+
+        let intraday_export = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(intraday_export.cards[0].kind, 1);
+        assert_eq!(intraday_export.cards[0].queue, 1);
+        assert_eq!(
+            intraday_export.cards[0].due,
+            i64::try_from((reviewed_at + 10 * 60 * 1000) / 1000).unwrap()
+        );
+
+        state.card_progress[0].next_due_at = reviewed_at + ONE_DAY_MS;
+        let interday_export = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(interday_export.cards[0].kind, 1);
+        assert_eq!(interday_export.cards[0].queue, 3);
+        assert_eq!(interday_export.cards[0].due, 43);
     }
 
     #[test]

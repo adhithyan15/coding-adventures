@@ -298,6 +298,9 @@ Next APKG SQLite milestone:
   map into `engram-core::AppState`.
 - V11 due values now preserve Anki's distinction between intraday learning
   timestamps and collection-day-based review/day-learning due dates.
+  Engram-native learning/relearning progress due at least one day after the
+  last review now exports as Anki interday learning queue `3` instead of being
+  flattened to intraday queue `1`.
 - Card flags on new V11 cards now import as metadata-only progress overlays;
   shared queue, stats, and search logic still treat those cards as new while
   preserving their flag filters.
