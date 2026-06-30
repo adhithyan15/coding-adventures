@@ -2679,6 +2679,7 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
             "limit",
             "room_id",
             "sort",
+            "to_sequence",
         ],
     },
     ApiRouteDescriptor {
@@ -2706,6 +2707,7 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
             "room_id",
             "sort",
             "status",
+            "to_sequence",
         ],
     },
     ApiRouteDescriptor {
@@ -5593,6 +5595,9 @@ fn runtime_event_query(request: &WebRequest) -> Result<RuntimeEventQuery, ApiErr
             query_u64(request, "from_sequence")?.unwrap_or(0),
         ))
         .with_limit(query_limit(request, 50, 500)?);
+    if let Some(to_sequence) = query_u64(request, "to_sequence")? {
+        query = query.to_sequence(to_sequence);
+    }
 
     if query_string(request, "sort").is_some_and(|sort| sort == "desc") {
         query = query.sorted_by(RuntimeEventSort::SequenceDesc);
@@ -5622,6 +5627,9 @@ fn runtime_command_result_query(
         ))
         .sorted_by(RuntimeCommandResultSort::SequenceDesc)
         .with_limit(query_limit(request, 50, 500)?);
+    if let Some(to_sequence) = query_u64(request, "to_sequence")? {
+        query = query.to_sequence(to_sequence);
+    }
     if let Some(status) = query_string(request, "status") {
         query = query.with_status(command_status_from_label(status)?);
     }
@@ -8237,6 +8245,25 @@ mod tests {
             by_correlation_id.contains(&format!(r#""correlation_id":"{command_correlation_id}""#))
         );
 
+        let command_sequence_window = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/command_results?from_sequence=0&to_sequence=0&limit=5",
+            ))
+            .into(),
+        );
+        assert!(command_sequence_window.contains(r#""total_results":1"#));
+        assert!(command_sequence_window.contains(r#""sequence":0"#));
+
+        let empty_command_sequence_window = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/command_results?from_sequence=1&to_sequence=1&limit=5",
+            ))
+            .into(),
+        );
+        assert!(empty_command_sequence_window.contains(r#""total_results":0"#));
+
         let unknown_command = response_body(
             app.handle(request(
                 "GET",
@@ -8265,6 +8292,25 @@ mod tests {
         );
         assert!(events.contains(r#""command_results":1"#));
         assert!(events.contains(r#""kind":"command_result""#));
+
+        let event_sequence_window = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/events?kind=commands&from_sequence=0&to_sequence=0&limit=5",
+            ))
+            .into(),
+        );
+        assert!(event_sequence_window.contains(r#""total_events":1"#));
+        assert!(event_sequence_window.contains(r#""sequence":0"#));
+
+        let empty_event_sequence_window = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/events?kind=commands&from_sequence=1&to_sequence=1&limit=5",
+            ))
+            .into(),
+        );
+        assert!(empty_event_sequence_window.contains(r#""total_events":0"#));
 
         let missing_room_events = response_body(
             app.handle(request(
@@ -8575,10 +8621,10 @@ mod tests {
             r#""path":"/api/smart_home/states","category":"states","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["capability_id","confidence","domain","has_state","kind","limit","room_id","source","stale"]"#
         ));
         assert!(catalog.contains(
-            r#""path":"/api/smart_home/events","category":"events","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["entity_id","from_sequence","kind","limit","room_id","sort"]"#
+            r#""path":"/api/smart_home/events","category":"events","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["entity_id","from_sequence","kind","limit","room_id","sort","to_sequence"]"#
         ));
         assert!(catalog.contains(
-            r#""path":"/api/smart_home/command_results","category":"command_results","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["bridge_id","command_id","correlation_id","from_sequence","limit","room_id","sort","status"]"#
+            r#""path":"/api/smart_home/command_results","category":"command_results","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["bridge_id","command_id","correlation_id","from_sequence","limit","room_id","sort","status","to_sequence"]"#
         ));
         assert!(catalog.contains(
             r#""path":"/api/smart_home/capability_grants","category":"authorization","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["capability_id","entity_id","limit","principal_id","scope","sort","status"]"#

@@ -416,6 +416,11 @@ impl RuntimeEventBus {
             .iter()
             .enumerate()
             .skip(start)
+            .filter(|(index, _)| {
+                query
+                    .to_sequence
+                    .is_none_or(|to_sequence| *index as u64 <= to_sequence)
+            })
             .filter(|(_, event)| {
                 query
                     .filter
@@ -926,6 +931,7 @@ pub struct RuntimeCommandResultQuery {
     pub correlation_id: Option<CorrelationId>,
     pub statuses: Vec<CommandStatus>,
     pub from_checkpoint: RuntimeEventCheckpoint,
+    pub to_sequence: Option<u64>,
     pub sort: RuntimeCommandResultSort,
     pub limit: Option<usize>,
 }
@@ -960,6 +966,11 @@ impl RuntimeCommandResultQuery {
         self
     }
 
+    pub fn to_sequence(mut self, sequence: u64) -> Self {
+        self.to_sequence = Some(sequence);
+        self
+    }
+
     pub fn sorted_by(mut self, sort: RuntimeCommandResultSort) -> Self {
         self.sort = sort;
         self
@@ -979,6 +990,7 @@ impl Default for RuntimeCommandResultQuery {
             correlation_id: None,
             statuses: Vec::new(),
             from_checkpoint: RuntimeEventCheckpoint::start(),
+            to_sequence: None,
             sort: RuntimeCommandResultSort::default(),
             limit: None,
         }
@@ -1091,6 +1103,7 @@ impl RuntimeCommandResultSummary {
 pub struct RuntimeEventQuery {
     pub filter: Option<RuntimeEventFilter>,
     pub from_checkpoint: RuntimeEventCheckpoint,
+    pub to_sequence: Option<u64>,
     pub sort: RuntimeEventSort,
     pub limit: Option<usize>,
 }
@@ -1110,6 +1123,11 @@ impl RuntimeEventQuery {
         self
     }
 
+    pub fn to_sequence(mut self, sequence: u64) -> Self {
+        self.to_sequence = Some(sequence);
+        self
+    }
+
     pub fn sorted_by(mut self, sort: RuntimeEventSort) -> Self {
         self.sort = sort;
         self
@@ -1126,6 +1144,7 @@ impl Default for RuntimeEventQuery {
         Self {
             filter: None,
             from_checkpoint: RuntimeEventCheckpoint::start(),
+            to_sequence: None,
             sort: RuntimeEventSort::default(),
             limit: None,
         }
@@ -4518,9 +4537,12 @@ impl SmartHomeRuntime {
             return Vec::new();
         }
 
-        let event_query = RuntimeEventQuery::new()
+        let mut event_query = RuntimeEventQuery::new()
             .matching(RuntimeEventFilter::Commands)
             .from_checkpoint(query.from_checkpoint);
+        if let Some(sequence) = query.to_sequence {
+            event_query = event_query.to_sequence(sequence);
+        }
         let mut results = self
             .event_bus
             .query_events(&event_query)
@@ -6906,6 +6928,18 @@ mod tests {
         assert_eq!(newest_bridge_events[0].sequence, 2);
         assert_eq!(newest_bridge_events[0].next_checkpoint.next_sequence(), 3);
 
+        let early_events = bus.query_events(&RuntimeEventQuery::new().to_sequence(1));
+        assert_eq!(early_events.len(), 2);
+        assert_eq!(early_events[0].sequence, 0);
+        assert_eq!(early_events[1].sequence, 1);
+
+        let empty_window = bus.query_events(
+            &RuntimeEventQuery::new()
+                .from_checkpoint(RuntimeEventCheckpoint::from_next_sequence(2))
+                .to_sequence(1),
+        );
+        assert!(empty_window.is_empty());
+
         let backlogs = bus.query_subscriptions(
             &RuntimeSubscriptionQuery::new()
                 .matching(bridge_one)
@@ -6980,6 +7014,15 @@ mod tests {
             RuntimeEventCheckpoint::from_next_sequence(6)
         );
 
+        let early_summary = bus.event_log_summary(&RuntimeEventQuery::new().to_sequence(2));
+        assert_eq!(early_summary.total_events, 3);
+        assert_eq!(early_summary.first_sequence, Some(0));
+        assert_eq!(early_summary.latest_sequence, Some(2));
+        assert_eq!(
+            early_summary.next_checkpoint,
+            RuntimeEventCheckpoint::from_next_sequence(3)
+        );
+
         let empty = bus.event_log_summary(&RuntimeEventQuery::new().with_limit(0));
         assert_eq!(empty, RuntimeEventLogSummary::empty());
         assert!(!empty.has_events());
@@ -7022,6 +7065,22 @@ mod tests {
             newest_failure[0].result.command_id,
             CommandId::trusted("cmd-failed")
         );
+
+        let first_result =
+            runtime.query_command_results(&RuntimeCommandResultQuery::new().to_sequence(0));
+        assert_eq!(first_result.len(), 1);
+        assert_eq!(first_result[0].sequence, 0);
+        assert_eq!(
+            first_result[0].result.command_id,
+            CommandId::trusted("cmd-accepted")
+        );
+
+        let empty_window = runtime.query_command_results(
+            &RuntimeCommandResultQuery::new()
+                .from_checkpoint(RuntimeEventCheckpoint::from_next_sequence(1))
+                .to_sequence(0),
+        );
+        assert!(empty_window.is_empty());
 
         let summary = runtime.command_result_summary(
             &RuntimeCommandResultQuery::new()

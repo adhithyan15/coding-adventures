@@ -135,6 +135,9 @@ State-history routes also accept numeric observed-time windows through
 period routes, and can scope runtime history to a single bridge through
 `bridge_id`. Runtime history can also be bounded by ingestion time with
 `received_at_or_after_ms` and `received_at_or_before_ms`.
+Runtime event-log and command-result audit routes accept sequence windows with
+`from_sequence` and `to_sequence`, allowing local-controller activity panels to
+reopen bounded replay slices without fetching the full audit tail.
 
 ## Dependencies
 
