@@ -717,6 +717,9 @@ fn plan_select(
 /// Returns `(table_name, Option<alias>)`.
 fn extract_table_ref(table_ref: &GrammarASTNode) -> (String, Option<String>) {
     // Try to find a `table_name` child node first.
+    // If no name token is found, we return an empty string.  The caller
+    // immediately validates the table against the schema, so an empty string
+    // will produce `PlanError::UnknownTable("")` — a visible, safe error.
     let table_name = if let Some(tn) = find_node(table_ref, "table_name") {
         first_name_token(tn).unwrap_or_default()
     } else {
@@ -1397,7 +1400,38 @@ fn extract_drop_table_name(stmt: &GrammarASTNode) -> Result<String, PlanError> {
 // Expression planner
 // ===========================================================================
 
+/// Maximum allowed expression nesting depth.
+///
+/// SQL expressions are recursive (parenthesized sub-expressions, NOT NOT NOT ...),
+/// so a deeply-nested adversarial input could overflow the call stack.  We cap
+/// recursion at this depth and return an error rather than crash.
+///
+/// 512 levels is far beyond any reasonable SQL expression; the SQL grammar's
+/// longest chain is expr→or→and→not→comparison→additive→multiplicative→unary→primary
+/// (9 levels per expression atom), so 512 accommodates ~55 levels of explicit
+/// parenthesization.
+const MAX_EXPR_DEPTH: usize = 512;
+
+// Thread-local recursion depth counter for expression planning.
+//
+// Using a thread-local avoids threading a `depth` parameter through every
+// function signature while still providing stack-overflow protection.
+// The counter is reset to 0 at the start of each top-level `plan_expression`
+// call (which is called from all clause planners).
+//
+// Safety: `std::cell::Cell` is not `Sync`, so this is safe for single-threaded
+// and multi-threaded use alike — each thread has its own copy.
+use std::cell::Cell;
+thread_local! {
+    static EXPR_DEPTH: Cell<usize> = const { Cell::new(0) };
+}
+
 /// Plan any expression-level AST node into a [`SqlExpr`].
+///
+/// Protects against stack overflow from adversarially deep expression nesting
+/// (e.g., `((((... 10,000 levels ... 1 ...))))`) by tracking recursion depth
+/// via a thread-local counter.  Returns [`PlanError::UnsupportedStatement`]
+/// when the depth limit is exceeded.
 ///
 /// The grammar's expression hierarchy (from lowest to highest precedence):
 ///
@@ -1420,6 +1454,27 @@ fn extract_drop_table_name(stmt: &GrammarASTNode) -> Result<String, PlanError> {
 /// 1. Has a single child → pass through to the child.
 /// 2. Has multiple operands separated by operators → build a `BinaryOp` chain.
 fn plan_expression(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
+    // Increment depth counter; decrement on exit (RAII via a guard struct).
+    let depth = EXPR_DEPTH.with(|c| {
+        let d = c.get();
+        c.set(d + 1);
+        d
+    });
+    // Ensure the counter is decremented even on early return.
+    struct DepthGuard;
+    impl Drop for DepthGuard {
+        fn drop(&mut self) {
+            EXPR_DEPTH.with(|c| c.set(c.get().saturating_sub(1)));
+        }
+    }
+    let _guard = DepthGuard;
+
+    if depth >= MAX_EXPR_DEPTH {
+        return Err(PlanError::UnsupportedStatement(
+            "expression nesting depth limit exceeded (max 512 levels)".to_string(),
+        ));
+    }
+
     match node.rule_name.as_str() {
         // Passthrough rules — they just delegate to their child.
         "expr" => plan_expr_rule(node),
