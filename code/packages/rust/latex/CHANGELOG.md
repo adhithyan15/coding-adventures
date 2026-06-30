@@ -2,6 +2,28 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.17.0] — 2026-06-30
+
+### Added — horizontal braces (`\overbrace` / `\underbrace`)
+
+- The parser now accepts `\overbrace{body}` and `\underbrace{body}` — a horizontal brace drawn over
+  or under the body, optionally labelled by a trailing `^{label}` (overbrace) / `_{label}`
+  (underbrace) that sits over/under the brace. As with the extensible arrows, there is **no new AST
+  node**: a brace is exactly an annotation stacked on the body, so it lowers onto the existing
+  `Overset`/`Underset` nodes over the Unicode brace glyph (`⏞` U+23DE / `⏟` U+23DF):
+  - `\overbrace{a+b}` → `Overset { over: ⏞, base: a+b }`
+  - `\overbrace{x+y}^{n}` → `Overset { over: n, base: Overset { over: ⏞, base: x+y } }` (label over
+    brace over body); `\underbrace{a}_{k}` is the under-side twin.
+- The optional label is consumed inside the brace parse (peeking for `^`/`_`) so it stacks centered
+  on the brace, mirroring how the xarrows consume their `[below]`/`{above}` labels — rather than
+  being attached as an ordinary raised/lowered script by the postfix mechanism.
+- Reuses the existing `Overset`/`Underset` `to_latex` and neutral-frontend lowering, so **no
+  frontend change**: `\overbrace`/`\underbrace` reach the neutral `MathExpr::Overset`/`Underset` for
+  free. Round-trips through `to_latex` (the surface normalises to `\overset`/`\underset`, which
+  re-parse to the identical tree). 7 new tests (parse, labelled, in-context, round-trip, missing-body
+  error); the `{body}` is mandatory and its absence is a clean spanned error, never a panic.
+- `latex` 0.16.0 → 0.17.0.
+
 ## [0.16.0] — 2026-06-30
 
 ### Added — extensible / labelled arrows (`\xrightarrow` & friends)

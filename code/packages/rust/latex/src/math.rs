@@ -318,6 +318,13 @@ fn xarrow_base(name: &str) -> Option<&'static str> {
         _ => return None,
     })
 }
+/// The horizontal-brace glyphs `\overbrace` / `\underbrace` lower onto (U+23DE TOP CURLY BRACKET /
+/// U+23DF BOTTOM CURLY BRACKET) — the standard Unicode over/under-brace, carried as a plain `Sym`
+/// so the existing `Overset`/`Underset` machinery (and its `to_latex`/frontend lowering) needs no
+/// change. See the `\overbrace`/`\underbrace` branch in [`Parser::parse_command`].
+const OVERBRACE: &str = "\u{23DE}";
+const UNDERBRACE: &str = "\u{23DF}";
+
 /// Math environments with `&`/`\\` row/column structure (L3). Case-sensitive — `bmatrix`
 /// (square brackets) and `Bmatrix` (braces) are different environments. The `array`/`subarray`
 /// grids take a **mandatory** column-spec argument (`\begin{array}{cc}`) — see
@@ -689,6 +696,40 @@ impl<'a> MathParser<'a> {
             let under = self.read_arg()?;
             let base = self.read_arg()?;
             return Ok(MathNode::Underset { under: Box::new(under), base: Box::new(base) });
+        }
+        // `\overbrace{body}` / `\underbrace{body}` — a horizontal brace drawn over/under the body,
+        // optionally labelled by a trailing `^{label}` (overbrace) / `_{label}` (underbrace) that
+        // sits over/under the brace. We lower to the existing Overset/Underset nodes on the brace
+        // glyph (⏞ U+23DE / ⏟ U+23DF), reusing the same machinery as `\overset` and the xarrows, so
+        // the neutral frontend lowering needs no change. `\overbrace{x}` → `Overset{⏞, x}`;
+        // `\overbrace{x}^{n}` → `Overset{n, Overset{⏞, x}}` (label over brace over body).
+        if name == "overbrace" {
+            self.bump();
+            let body = self.read_arg()?;
+            let braced = MathNode::Overset {
+                over: Box::new(MathNode::Sym(OVERBRACE.to_string())),
+                base: Box::new(body),
+            };
+            if matches!(self.peek().kind, TokenKind::Superscript) {
+                self.bump();
+                let label = self.parse_script_arg()?;
+                return Ok(MathNode::Overset { over: Box::new(label), base: Box::new(braced) });
+            }
+            return Ok(braced);
+        }
+        if name == "underbrace" {
+            self.bump();
+            let body = self.read_arg()?;
+            let braced = MathNode::Underset {
+                under: Box::new(MathNode::Sym(UNDERBRACE.to_string())),
+                base: Box::new(body),
+            };
+            if matches!(self.peek().kind, TokenKind::Subscript) {
+                self.bump();
+                let label = self.parse_script_arg()?;
+                return Ok(MathNode::Underset { under: Box::new(label), base: Box::new(braced) });
+            }
+            return Ok(braced);
         }
         // `\xrightarrow[below]{above}` and friends — an extensible/labelled arrow. The optional
         // `[below]` group sits under the arrow, the mandatory `{above}` group over it. We lower to
@@ -1729,6 +1770,97 @@ mod tests {
         assert!(parse_math(r"\xrightarrow").is_err());
         assert!(parse_math(r"\xrightarrow[n]").is_err()); // optional present, mandatory missing
         assert!(parse_math(r"\xrightarrow[n{f}").is_err()); // unterminated optional label
+    }
+
+    // ---- horizontal braces (\overbrace / \underbrace) --------------------------
+
+    #[test]
+    fn overbrace_is_the_brace_glyph_set_over_the_body() {
+        // `\overbrace{a+b}` ≡ the over-brace glyph set OVER the body.
+        let n = parse_math(r"\overbrace{a+b}").unwrap();
+        match &n {
+            MathNode::Overset { over, base } => {
+                assert_eq!(**over, sym(OVERBRACE));
+                assert!(matches!(**base, MathNode::Bin(MBinOp::Add, ..)));
+            }
+            other => panic!("expected Overset, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn underbrace_is_the_brace_glyph_set_under_the_body() {
+        let n = parse_math(r"\underbrace{x}").unwrap();
+        assert_eq!(
+            n,
+            MathNode::Underset {
+                under: Box::new(sym(UNDERBRACE)),
+                base: Box::new(sym("x")),
+            }
+        );
+    }
+
+    #[test]
+    fn overbrace_label_stacks_over_the_brace() {
+        // `\overbrace{x+y}^{n}` → the label `n` sits over the brace, which sits over the body:
+        // Overset { over: n, base: Overset { over: ⏞, base: x+y } }.
+        let n = parse_math(r"\overbrace{x+y}^{n}").unwrap();
+        match &n {
+            MathNode::Overset { over, base } => {
+                assert_eq!(**over, sym("n"));
+                match &**base {
+                    MathNode::Overset { over: brace, base: body } => {
+                        assert_eq!(**brace, sym(OVERBRACE));
+                        assert!(matches!(**body, MathNode::Bin(MBinOp::Add, ..)));
+                    }
+                    other => panic!("expected inner Overset on the brace, got {other:?}"),
+                }
+            }
+            other => panic!("expected Overset, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn underbrace_label_stacks_under_the_brace() {
+        // `\underbrace{a}_{k}` → Underset { under: k, base: Underset { under: ⏟, base: a } }.
+        let n = parse_math(r"\underbrace{a}_{k}").unwrap();
+        match &n {
+            MathNode::Underset { under, base } => {
+                assert_eq!(**under, sym("k"));
+                assert!(matches!(**base, MathNode::Underset { .. }));
+            }
+            other => panic!("expected Underset, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn brace_in_context_chains_with_neighbours() {
+        // A brace group is an atom, so it sits inline: `1 + \underbrace{x+y}_{s}`.
+        let n = parse_math(r"1 + \underbrace{x+y}_{s}").unwrap();
+        assert!(matches!(n, MathNode::Bin(MBinOp::Add, ..)));
+        assert!(n.to_latex().contains(r"\underset"));
+    }
+
+    #[test]
+    fn brace_round_trips_through_to_latex() {
+        // parse → to_latex → parse is a fixed point (the surface normalises to \overset/\underset).
+        for src in [
+            r"\overbrace{a+b}",
+            r"\underbrace{x}",
+            r"\overbrace{x+y}^{n}",
+            r"\underbrace{a+b+c}_{k}",
+        ] {
+            let once = parse_math(src).unwrap();
+            let twice = parse_math(&once.to_latex()).unwrap();
+            assert_eq!(once, twice, "round-trip changed the tree for {src:?}");
+        }
+    }
+
+    #[test]
+    fn brace_missing_mandatory_body_is_a_spanned_error() {
+        // The `{body}` group is mandatory (LaTeX would take the next atom); a trailing command with
+        // no argument is a clean error, never a panic.
+        assert!(parse_math(r"\overbrace").is_err());
+        assert!(parse_math(r"\underbrace").is_err());
     }
 
     // ---- deep-tree Drop safety -------------------------------------------------

@@ -225,6 +225,16 @@ is text-primary, which is a different mode model.)
   `to_latex` normalises to the `\overset`/`\underset` form (a round-trip fixed point); a missing
   mandatory label is a spanned error, never a panic.
 
+  **Horizontal braces (latex 0.17.0):** `\overbrace{body}` / `\underbrace{body}` — a brace drawn
+  over/under the body, optionally labelled by a trailing `^{label}` (overbrace) / `_{label}`
+  (underbrace) that sits over/under the brace. Same desugaring as the arrows — **no new node**: a
+  brace is an annotation stacked on the body, lowering onto the existing `Overset`/`Underset` nodes
+  over the Unicode brace glyph (`⏞` U+23DE / `⏟` U+23DF). `\overbrace{a+b}` → `Overset { over: ⏞,
+  base: a+b }`; `\overbrace{x+y}^{n}` → `Overset { over: n, base: Overset { over: ⏞, base: x+y } }`
+  (the optional label is consumed inside the brace parse so it stacks centered on the brace, not as a
+  postfix raised script). The L6 lowering and `to_latex` therefore need **zero change**; round-trips
+  through `to_latex`, and a missing mandatory body is a spanned error, never a panic.
+
 **Asymptote (documented in README, not built):** runtime `\catcode`, `\expandafter`/
 `\noexpand`/`\csname`, arbitrary `\if…` programming, external `\input`/`\include`. Hit →
 `Unsupported { construct, span }`.
