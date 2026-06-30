@@ -172,6 +172,26 @@ Reuses the `compute_dimensioned` harness **unchanged** (it reads the final `answ
 no engine or harness change — pure new data exercising deeper `let`-chaining the engine
 already supports. Engine selects **20/20 cached, zero wrong, zero unit mismatches**.
 
+### Clinical differential rung (rung 6 clinical_differential, cached engine)
+
+`rung6_clinical_differential/` is the **clinical / MLE bridge** — the first rung whose
+content is board-style diagnosis. Each item is a *differential*: three competing diagnoses
+with equal `prior`s, three findings, and a likelihood ratio for every (finding, diagnosis)
+pair. The gold program states the priors, a `contributes <LR> from <finding> to <dx>` for
+each pair, and `observe`s every finding; the **engine** multiplies the priors by all the
+likelihood ratios (Bayesian combination) and reports the leading diagnosis — read by the
+existing `decision_leader` extractor, so **no harness or engine change**. The reasoning
+step beyond rung-3's single-finding decisions is *combining* evidence: the answer is the
+diagnosis that wins on the **product of all** likelihood ratios, while a deliberately
+planted distractor wins on a single **flashy** finding alone (one huge LR, ~1 on the
+rest). Anchoring on the salient finding — the classic board trap — takes the distractor;
+only carrying every likelihood ratio through the product lands the gold (e.g. *wheezing*
+LR 20 for COPD lures, but elevated BNP + orthopnea make **heart failure** the combined
+leader). Twenty real differentials span cardiology, pulmonology, GI, neurology, endocrine,
+ID, renal, MSK, and pediatrics; every prior and LR in the program is stated in the stem.
+Engine selects the combined-evidence leader **20/20 cached, zero wrong**. This realizes
+rung 6 of the ladder (ADJ-LADDER.md §5) — the on-ramp to the MLE apex.
+
 ## Layout
 
 ```
