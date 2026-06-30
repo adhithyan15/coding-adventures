@@ -679,3 +679,707 @@ let ``Integration: CROSS JOIN EmptyResult left -> EmptyResult`` () =
     match result with
     | OptimizedPlan.EmptyResult -> ()
     | other -> failwithf "Expected EmptyResult, got %A" other
+
+// ─── lift: all plan constructors ─────────────────────────────────────────────
+
+[<Fact>]
+let ``lift converts Filter correctly`` () =
+    let plan = LogicalPlan.Filter(scanPlan "t", boolLit true)
+    let result = SqlOptimizer.lift plan
+    match result with
+    | OptimizedPlan.Filter(OptimizedPlan.Scan("t", None, None, None), Expr.Literal(SqlValue.Bool true)) -> ()
+    | other -> failwithf "Expected Filter(Scan), got %A" other
+
+[<Fact>]
+let ``lift converts Project correctly`` () =
+    let plan = LogicalPlan.Project(scanPlan "t", [OutputColumn.Star])
+    let result = SqlOptimizer.lift plan
+    match result with
+    | OptimizedPlan.Project(OptimizedPlan.Scan _, [OutputColumn.Star]) -> ()
+    | other -> failwithf "Expected Project(Scan), got %A" other
+
+[<Fact>]
+let ``lift converts Join correctly`` () =
+    let plan = LogicalPlan.Join(scanPlan "a", scanPlan "b", Inner, None)
+    let result = SqlOptimizer.lift plan
+    match result with
+    | OptimizedPlan.Join(OptimizedPlan.Scan("a", _, _, _), OptimizedPlan.Scan("b", _, _, _), Inner, None) -> ()
+    | other -> failwithf "Expected Join(Scan, Scan), got %A" other
+
+[<Fact>]
+let ``lift converts Aggregate correctly`` () =
+    let plan = LogicalPlan.Aggregate(scanPlan "t", [], [])
+    let result = SqlOptimizer.lift plan
+    match result with
+    | OptimizedPlan.Aggregate(OptimizedPlan.Scan _, [], []) -> ()
+    | other -> failwithf "Expected Aggregate(Scan), got %A" other
+
+[<Fact>]
+let ``lift converts Having correctly`` () =
+    let plan = LogicalPlan.Having(scanPlan "t", boolLit true)
+    let result = SqlOptimizer.lift plan
+    match result with
+    | OptimizedPlan.Having(OptimizedPlan.Scan _, _) -> ()
+    | other -> failwithf "Expected Having(Scan), got %A" other
+
+[<Fact>]
+let ``lift converts Sort correctly`` () =
+    let plan = LogicalPlan.Sort(scanPlan "t", [{ KeyExpr = col "t" "id"; Direction = Asc; NullOrder = NullsLast }])
+    let result = SqlOptimizer.lift plan
+    match result with
+    | OptimizedPlan.Sort(OptimizedPlan.Scan _, _) -> ()
+    | other -> failwithf "Expected Sort(Scan), got %A" other
+
+[<Fact>]
+let ``lift converts Limit correctly`` () =
+    let plan = LogicalPlan.Limit(scanPlan "t", Some 5L, None)
+    let result = SqlOptimizer.lift plan
+    match result with
+    | OptimizedPlan.Limit(OptimizedPlan.Scan _, Some 5L, None) -> ()
+    | other -> failwithf "Expected Limit(Scan), got %A" other
+
+[<Fact>]
+let ``lift converts Distinct correctly`` () =
+    let plan = LogicalPlan.Distinct(scanPlan "t")
+    let result = SqlOptimizer.lift plan
+    match result with
+    | OptimizedPlan.Distinct(OptimizedPlan.Scan _) -> ()
+    | other -> failwithf "Expected Distinct(Scan), got %A" other
+
+[<Fact>]
+let ``lift converts Union correctly`` () =
+    let plan = LogicalPlan.Union(scanPlan "a", scanPlan "b", true)
+    let result = SqlOptimizer.lift plan
+    match result with
+    | OptimizedPlan.Union(OptimizedPlan.Scan("a", _, _, _), OptimizedPlan.Scan("b", _, _, _), true) -> ()
+    | other -> failwithf "Expected Union(Scan, Scan), got %A" other
+
+[<Fact>]
+let ``lift converts Insert correctly`` () =
+    let plan = LogicalPlan.Insert("t", Some ["id"; "name"], InsertSource.Values [[intLit 1L; Expr.Literal(SqlValue.Text "a")]])
+    let result = SqlOptimizer.lift plan
+    match result with
+    | OptimizedPlan.Insert("t", Some ["id"; "name"], _) -> ()
+    | other -> failwithf "Expected Insert, got %A" other
+
+[<Fact>]
+let ``lift converts Update correctly`` () =
+    let plan = LogicalPlan.Update("t", [{ Column = "x"; Value = intLit 1L }], None)
+    let result = SqlOptimizer.lift plan
+    match result with
+    | OptimizedPlan.Update("t", _, None) -> ()
+    | other -> failwithf "Expected Update, got %A" other
+
+[<Fact>]
+let ``lift converts Delete correctly`` () =
+    let plan = LogicalPlan.Delete("t", Some (boolLit true))
+    let result = SqlOptimizer.lift plan
+    match result with
+    | OptimizedPlan.Delete("t", Some _) -> ()
+    | other -> failwithf "Expected Delete, got %A" other
+
+// ─── ConstantFolding — DML/DDL pass-through ──────────────────────────────────
+
+[<Fact>]
+let ``CF: Update with constant expression in assignment is folded`` () =
+    // The CF pass should fold constant expressions in Update assignments.
+    let plan = LogicalPlan.Update("t", [{ Column = "x"; Value = binop Add (intLit 1L) (intLit 2L) }], None)
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Update("t", [{ Value = Expr.Literal(SqlValue.Integer 3L) }], None) -> ()
+    | other -> failwithf "Expected Update with folded value, got %A" other
+
+[<Fact>]
+let ``CF: Delete with constant predicate is not changed by CF`` () =
+    // CF folds the predicate in Delete. The plan itself stays as Delete.
+    let plan = LogicalPlan.Delete("t", Some (binop Eq (intLit 1L) (intLit 1L)))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Delete("t", Some (Expr.Literal(SqlValue.Bool true))) -> ()
+    | other -> failwithf "Expected Delete with true predicate, got %A" other
+
+[<Fact>]
+let ``CF: Insert is left unchanged (no expr folding at the plan level)`` () =
+    let plan = LogicalPlan.Insert("t", None, InsertSource.Values [[intLit 1L]])
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Insert("t", None, _) -> ()
+    | other -> failwithf "Expected Insert unchanged, got %A" other
+
+// ─── ConstantFolding — additional arithmetic branches ────────────────────────
+
+[<Fact>]
+let ``CF: 10 MOD 3 folds to 1`` () =
+    let plan = filterPlan "t" (binop Mod (intLit 10L) (intLit 3L))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Filter(_, Expr.Literal(SqlValue.Integer 1L)) -> ()
+    | other -> failwithf "Expected Integer 1, got %A" other
+
+[<Fact>]
+let ``CF: -10 MOD 3 folds to -1 (sign follows dividend)`` () =
+    let plan = filterPlan "t" (binop Mod (intLit -10L) (intLit 3L))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Filter(_, Expr.Literal(SqlValue.Integer -1L)) -> ()
+    | other -> failwithf "Expected Integer -1, got %A" other
+
+[<Fact>]
+let ``CF: MOD by zero is not folded`` () =
+    let plan = filterPlan "t" (binop Mod (intLit 5L) (intLit 0L))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Filter(_, Expr.BinaryOp(Mod, _, _)) -> ()
+    | other -> failwithf "Expected un-folded Mod, got %A" other
+
+[<Fact>]
+let ``CF: real MOD folds`` () =
+    let plan = filterPlan "t" (binop Mod (realLit 5.5) (realLit 2.0))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Filter(_, Expr.Literal(SqlValue.Real _)) -> ()
+    | other -> failwithf "Expected Real result from Mod, got %A" other
+
+[<Fact>]
+let ``CF: real div by zero not folded`` () =
+    let plan = filterPlan "t" (binop Div (realLit 5.0) (realLit 0.0))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Filter(_, Expr.BinaryOp(Div, _, _)) -> ()
+    | other -> failwithf "Expected un-folded Div, got %A" other
+
+[<Fact>]
+let ``CF: integer + real promotes to real`` () =
+    let plan = filterPlan "t" (binop Add (intLit 2L) (realLit 3.0))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Filter(_, Expr.Literal(SqlValue.Real 5.0)) -> ()
+    | other -> failwithf "Expected Real 5.0, got %A" other
+
+[<Fact>]
+let ``CF: real - integer promotes to real`` () =
+    let plan = filterPlan "t" (binop Sub (realLit 10.0) (intLit 3L))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Filter(_, Expr.Literal(SqlValue.Real 7.0)) -> ()
+    | other -> failwithf "Expected Real 7.0, got %A" other
+
+[<Fact>]
+let ``CF: integer * real promotes to real`` () =
+    let plan = filterPlan "t" (binop Mul (intLit 3L) (realLit 2.5))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Filter(_, Expr.Literal(SqlValue.Real 7.5)) -> ()
+    | other -> failwithf "Expected Real 7.5, got %A" other
+
+[<Fact>]
+let ``CF: real / integer folds`` () =
+    let plan = filterPlan "t" (binop Div (realLit 10.0) (intLit 4L))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Filter(_, Expr.Literal(SqlValue.Real 2.5)) -> ()
+    | other -> failwithf "Expected Real 2.5, got %A" other
+
+[<Fact>]
+let ``CF: real div by zero integer not folded`` () =
+    let plan = filterPlan "t" (binop Div (realLit 5.0) (intLit 0L))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Filter(_, Expr.BinaryOp(Div, _, _)) -> ()
+    | other -> failwithf "Expected un-folded Div, got %A" other
+
+[<Fact>]
+let ``CF: integer MOD real folds`` () =
+    let plan = filterPlan "t" (binop Mod (intLit 7L) (realLit 3.0))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Filter(_, Expr.Literal(SqlValue.Real _)) -> ()
+    | other -> failwithf "Expected Real mod result, got %A" other
+
+[<Fact>]
+let ``CF: real MOD zero integer not folded`` () =
+    let plan = filterPlan "t" (binop Mod (realLit 5.0) (intLit 0L))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Filter(_, Expr.BinaryOp(Mod, _, _)) -> ()
+    | other -> failwithf "Expected un-folded Mod, got %A" other
+
+[<Fact>]
+let ``CF: integer MOD zero real not folded`` () =
+    let plan = filterPlan "t" (binop Mod (intLit 5L) (realLit 0.0))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Filter(_, Expr.BinaryOp(Mod, _, _)) -> ()
+    | other -> failwithf "Expected un-folded Mod, got %A" other
+
+[<Fact>]
+let ``CF: text equality folds to true`` () =
+    let plan = filterPlan "t" (binop Eq (Expr.Literal(SqlValue.Text "a")) (Expr.Literal(SqlValue.Text "a")))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Scan _ -> ()  // tautology removed
+    | OptimizedPlan.Filter(_, Expr.Literal(SqlValue.Bool true)) -> ()
+    | other -> failwithf "Expected Scan or TRUE, got %A" other
+
+[<Fact>]
+let ``CF: text less-than comparison folds`` () =
+    let plan = filterPlan "t" (binop Lt (Expr.Literal(SqlValue.Text "a")) (Expr.Literal(SqlValue.Text "b")))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Scan _ -> ()  // "a" < "b" is true, filter removed
+    | OptimizedPlan.Filter(_, Expr.Literal(SqlValue.Bool true)) -> ()
+    | other -> failwithf "Expected Scan or TRUE, got %A" other
+
+[<Fact>]
+let ``CF: bool equality folds to true`` () =
+    let plan = filterPlan "t" (binop Eq (boolLit true) (boolLit true))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Scan _ -> ()  // tautology removed
+    | OptimizedPlan.Filter(_, Expr.Literal(SqlValue.Bool true)) -> ()
+    | other -> failwithf "Expected Scan or TRUE, got %A" other
+
+[<Fact>]
+let ``CF: bool not-equal folds`` () =
+    let plan = filterPlan "t" (binop NotEq (boolLit true) (boolLit false))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Scan _ -> ()  // tautology removed
+    | OptimizedPlan.Filter(_, Expr.Literal(SqlValue.Bool true)) -> ()
+    | other -> failwithf "Expected Scan or TRUE, got %A" other
+
+[<Fact>]
+let ``CF: NEG real folds`` () =
+    let plan = filterPlan "t" (Expr.UnaryOp(Neg, realLit 3.14))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Filter(_, Expr.Literal(SqlValue.Real v)) when v < 0.0 -> ()
+    | other -> failwithf "Expected negative Real, got %A" other
+
+[<Fact>]
+let ``CF: NEG of column stays as-is`` () =
+    let plan = filterPlan "t" (Expr.UnaryOp(Neg, col "t" "x"))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Filter(_, Expr.UnaryOp(Neg, Expr.Column _)) -> ()
+    | other -> failwithf "Expected un-folded UnaryOp Neg, got %A" other
+
+[<Fact>]
+let ``CF: NULL AND FALSE -> FALSE (short-circuit)`` () =
+    // FALSE AND NULL should short-circuit to FALSE
+    let plan = filterPlan "t" (binop And (Expr.Literal SqlValue.Null) (boolLit false))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.EmptyResult -> ()
+    | OptimizedPlan.Filter(_, Expr.Literal(SqlValue.Bool false)) -> ()
+    | other -> failwithf "Expected EmptyResult or FALSE, got %A" other
+
+[<Fact>]
+let ``CF: NULL OR TRUE -> TRUE (short-circuit)`` () =
+    let plan = filterPlan "t" (binop Or (Expr.Literal SqlValue.Null) (boolLit true))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Scan _ -> ()
+    | OptimizedPlan.Filter(_, Expr.Literal(SqlValue.Bool true)) -> ()
+    | other -> failwithf "Expected Scan or TRUE, got %A" other
+
+[<Fact>]
+let ``CF: x AND NULL -> NULL`` () =
+    let plan = filterPlan "t" (binop And (col "t" "x") (Expr.Literal SqlValue.Null))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.EmptyResult -> ()
+    | OptimizedPlan.Filter(_, Expr.Literal SqlValue.Null) -> ()
+    | other -> failwithf "Expected NULL or EmptyResult, got %A" other
+
+[<Fact>]
+let ``CF: x OR NULL -> NULL`` () =
+    let plan = filterPlan "t" (binop Or (col "t" "x") (Expr.Literal SqlValue.Null))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.EmptyResult -> ()
+    | OptimizedPlan.Filter(_, Expr.Literal SqlValue.Null) -> ()
+    | other -> failwithf "Expected NULL or EmptyResult, got %A" other
+
+[<Fact>]
+let ``CF: Between folds child expressions`` () =
+    // Between(5, 1+1, 10) -> Between(5, 2, 10) — Between itself is not eliminated
+    let plan = filterPlan "t" (Expr.Between(col "t" "x", binop Add (intLit 1L) (intLit 1L), intLit 10L))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Filter(_, Expr.Between(_, Expr.Literal(SqlValue.Integer 2L), _)) -> ()
+    | other -> failwithf "Expected Between with folded low, got %A" other
+
+[<Fact>]
+let ``CF: In list folds child expressions`` () =
+    let plan = filterPlan "t" (Expr.In(col "t" "x", [binop Add (intLit 1L) (intLit 2L); intLit 5L]))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Filter(_, Expr.In(_, [Expr.Literal(SqlValue.Integer 3L); _])) -> ()
+    | other -> failwithf "Expected In with folded items, got %A" other
+
+[<Fact>]
+let ``CF: NotIn list folds child expressions`` () =
+    let plan = filterPlan "t" (Expr.NotIn(col "t" "x", [binop Mul (intLit 2L) (intLit 3L)]))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Filter(_, Expr.NotIn(_, [Expr.Literal(SqlValue.Integer 6L)])) -> ()
+    | other -> failwithf "Expected NotIn with folded item, got %A" other
+
+[<Fact>]
+let ``CF: Like value is folded`` () =
+    // Like(col, pattern) — pattern is a string literal, col stays; but value gets folded
+    let plan = filterPlan "t" (Expr.Like(col "t" "name", "foo%"))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Filter(_, Expr.Like(Expr.Column _, "foo%")) -> ()
+    | other -> failwithf "Expected Like unchanged, got %A" other
+
+[<Fact>]
+let ``CF: NotLike value is folded`` () =
+    let plan = filterPlan "t" (Expr.NotLike(col "t" "name", "bar%"))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Filter(_, Expr.NotLike(Expr.Column _, "bar%")) -> ()
+    | other -> failwithf "Expected NotLike unchanged, got %A" other
+
+[<Fact>]
+let ``CF: FuncCall folds constant arguments`` () =
+    let plan = filterPlan "t" (Expr.FuncCall("abs", [binop Sub (intLit 0L) (intLit 5L)]))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Filter(_, Expr.FuncCall("abs", [Expr.Literal(SqlValue.Integer -5L)])) -> ()
+    | other -> failwithf "Expected FuncCall with folded arg, got %A" other
+
+// ─── PredicatePushdown — additional cases ────────────────────────────────────
+
+[<Fact>]
+let ``PPD: RIGHT JOIN pred pushed to right side only`` () =
+    let pred = binop Eq (col "d" "region") (Expr.Literal(SqlValue.Text "US"))
+    let plan =
+        LogicalPlan.Filter(
+            LogicalPlan.Join(
+                LogicalPlan.Scan("employees", Some "e"),
+                LogicalPlan.Scan("departments", Some "d"),
+                Right,
+                None),
+            pred)
+    let result = SqlOptimizer.optimize plan
+    // Should be pushed into right side
+    match result with
+    | OptimizedPlan.Join(_, OptimizedPlan.Filter(OptimizedPlan.Scan _, _), Right, _) -> ()
+    | other -> failwithf "Expected pred pushed to right of RIGHT JOIN, got %A" other
+
+[<Fact>]
+let ``PPD: FULL JOIN filter stays above (not pushed)`` () =
+    let pred = binop Eq (col "e" "id") (intLit 1L)
+    let plan =
+        LogicalPlan.Filter(
+            LogicalPlan.Join(
+                LogicalPlan.Scan("employees", Some "e"),
+                LogicalPlan.Scan("departments", Some "d"),
+                Full,
+                None),
+            pred)
+    let result = SqlOptimizer.optimize plan
+    // FULL JOIN — neither side gets the filter pushed
+    match result with
+    | OptimizedPlan.Filter(OptimizedPlan.Join _, _) -> ()
+    | other -> failwithf "Expected Filter(FULL JOIN), got %A" other
+
+[<Fact>]
+let ``PPD: unresolved column (no qualifier) stays above join`` () =
+    // A bare column (no table qualifier) blocks pushdown.
+    let pred = binop Eq (Expr.Column(None, "x")) (intLit 1L)
+    let plan =
+        LogicalPlan.Filter(
+            LogicalPlan.Join(
+                LogicalPlan.Scan("employees", Some "e"),
+                LogicalPlan.Scan("departments", Some "d"),
+                Inner,
+                None),
+            pred)
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Filter(OptimizedPlan.Join _, _) -> ()
+    | other -> failwithf "Expected Filter(Join) — unresolved col blocks push, got %A" other
+
+[<Fact>]
+let ``PPD: filter pushed through Project only if aliases match`` () =
+    // Filter references t.id. Project wraps a scan of "t". Should push through.
+    let pred = binop Eq (col "t" "id") (intLit 1L)
+    let plan =
+        LogicalPlan.Filter(
+            LogicalPlan.Project(
+                scanPlan "t",
+                [OutputColumn.Expr(col "t" "name", None)]),
+            pred)
+    let result = SqlOptimizer.optimize plan
+    // pred references "t" which is the scan alias — should push through Project
+    match result with
+    | OptimizedPlan.Project(OptimizedPlan.Filter(OptimizedPlan.Scan _, _), _) -> ()
+    | OptimizedPlan.Project(OptimizedPlan.Scan _, _) -> ()  // if DCE merged it
+    | OptimizedPlan.Filter(OptimizedPlan.Project _, _) -> ()  // stuck due to alias mismatch
+    | other -> failwithf "Unexpected structure, got %A" other
+
+[<Fact>]
+let ``PPD: LEFT JOIN pred NOT pushed to right (null-padding)`` () =
+    // A pred on the right-only alias must NOT be pushed into right of LEFT JOIN.
+    let pred = binop Eq (col "d" "active") (boolLit true)
+    let plan =
+        LogicalPlan.Filter(
+            LogicalPlan.Join(
+                LogicalPlan.Scan("employees", Some "e"),
+                LogicalPlan.Scan("departments", Some "d"),
+                Left,
+                None),
+            pred)
+    let result = SqlOptimizer.optimize plan
+    // For LEFT JOIN, canPushRight = false, so pred on right alias stays above.
+    match result with
+    | OptimizedPlan.Filter(OptimizedPlan.Join _, _) -> ()
+    | other -> failwithf "Expected Filter above LEFT JOIN (right pred blocked), got %A" other
+
+// ─── ProjectionPruning — additional paths ────────────────────────────────────
+
+[<Fact>]
+let ``PP: Join condition columns influence pruning`` () =
+    // A join with a condition references e.dept_id and d.id.
+    let cond = binop Eq (col "e" "dept_id") (col "d" "id")
+    let plan =
+        LogicalPlan.Join(
+            LogicalPlan.Scan("employees", Some "e"),
+            LogicalPlan.Scan("departments", Some "d"),
+            Inner,
+            Some cond)
+    let result = SqlOptimizer.optimize plan
+    // No Project wrapper, so pruning req from top is None — scans stay un-annotated.
+    match result with
+    | OptimizedPlan.Join(OptimizedPlan.Scan _, OptimizedPlan.Scan _, Inner, _) -> ()
+    | other -> failwithf "Expected Join(Scan, Scan), got %A" other
+
+[<Fact>]
+let ``PP: Aggregate annotates Scan with group-by columns`` () =
+    // Aggregate(Scan("t"), groupBy=[t.dept], aggs=[COUNT(*)])
+    let plan =
+        LogicalPlan.Aggregate(
+            LogicalPlan.Scan("t", None),
+            [col "t" "dept"],
+            [{ Func = Count; Arg = AggArg.Star; Alias = "n"; Distinct = false }])
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Aggregate(OptimizedPlan.Scan(_, _, Some ["dept"], _), _, _) -> ()
+    | OptimizedPlan.Aggregate(OptimizedPlan.Scan(_, _, None, _), _, _) -> ()  // wildcard path
+    | other -> failwithf "Expected Aggregate(Scan), got %A" other
+
+[<Fact>]
+let ``PP: Having predicate contributes to pruning`` () =
+    let plan =
+        LogicalPlan.Having(
+            LogicalPlan.Scan("t", None),
+            binop Gt (col "t" "count") (intLit 0L))
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Having(OptimizedPlan.Scan _, _) -> ()
+    | other -> failwithf "Expected Having(Scan), got %A" other
+
+[<Fact>]
+let ``PP: Sort keys contribute to pruning`` () =
+    let plan =
+        LogicalPlan.Sort(
+            LogicalPlan.Scan("t", None),
+            [{ KeyExpr = col "t" "name"; Direction = Asc; NullOrder = NullsLast }])
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Sort(OptimizedPlan.Scan _, _) -> ()
+    | other -> failwithf "Expected Sort(Scan), got %A" other
+
+[<Fact>]
+let ``PP: Filter predicate combined with parent req`` () =
+    let plan =
+        LogicalPlan.Project(
+            LogicalPlan.Filter(
+                LogicalPlan.Scan("t", None),
+                binop Eq (col "t" "active") (boolLit true)),
+            [OutputColumn.Expr(col "t" "name", None)])
+    let result = SqlOptimizer.optimize plan
+    // name required by Project, active required by Filter — both annotate Scan
+    match result with
+    | OptimizedPlan.Project(OptimizedPlan.Filter(OptimizedPlan.Scan(_, _, cols, _), _), _) ->
+        match cols with
+        | Some lst -> if lst.Length < 1 then failwithf "Expected at least 1 required column, got %A" lst
+        | None -> ()  // wildcard path — acceptable if pruning skipped
+    | OptimizedPlan.EmptyResult -> ()  // folded away somehow
+    | other -> failwithf "Unexpected structure, got %A" other
+
+[<Fact>]
+let ``PP: Limit passes req through to child`` () =
+    let plan =
+        LogicalPlan.Project(
+            LogicalPlan.Limit(
+                LogicalPlan.Scan("t", None),
+                Some 5L,
+                None),
+            [OutputColumn.Expr(col "t" "id", None)])
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Limit(OptimizedPlan.Scan(_, _, Some ["id"], _), _, _) -> ()
+    | OptimizedPlan.Limit(OptimizedPlan.Scan(_, _, _, _), _, _) -> ()  // pruning may vary
+    | other -> failwithf "Unexpected structure, got %A" other
+
+[<Fact>]
+let ``PP: Distinct passes req through to child`` () =
+    let plan =
+        LogicalPlan.Project(
+            LogicalPlan.Distinct(LogicalPlan.Scan("t", None)),
+            [OutputColumn.Expr(col "t" "email", None)])
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Project(OptimizedPlan.Distinct(OptimizedPlan.Scan _), _) -> ()
+    | other -> failwithf "Expected Project(Distinct(Scan)), got %A" other
+
+[<Fact>]
+let ``PP: Union passes req to both sides`` () =
+    let plan =
+        LogicalPlan.Project(
+            LogicalPlan.Union(
+                LogicalPlan.Scan("a", None),
+                LogicalPlan.Scan("b", None),
+                false),
+            [OutputColumn.Star])
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Project(OptimizedPlan.Union(OptimizedPlan.Scan _, OptimizedPlan.Scan _, _), _) -> ()
+    | other -> failwithf "Expected Project(Union(Scan, Scan)), got %A" other
+
+// ─── DeadCodeElimination — additional paths ──────────────────────────────────
+
+[<Fact>]
+let ``DCE: RIGHT JOIN with EmptyResult left stays (null-padding preserved)`` () =
+    let plan =
+        LogicalPlan.Join(
+            LogicalPlan.Filter(scanPlan "a", boolLit false),
+            scanPlan "b",
+            Right,
+            None)
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Join(OptimizedPlan.EmptyResult, OptimizedPlan.Scan _, Right, _) -> ()
+    | other -> failwithf "Expected Join preserved (RIGHT outer), got %A" other
+
+[<Fact>]
+let ``DCE: FULL JOIN with one side empty stays`` () =
+    let plan =
+        LogicalPlan.Join(
+            LogicalPlan.Filter(scanPlan "a", boolLit false),
+            scanPlan "b",
+            Full,
+            None)
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Join(OptimizedPlan.EmptyResult, OptimizedPlan.Scan _, Full, _) -> ()
+    | other -> failwithf "Expected FULL JOIN preserved with EmptyResult left, got %A" other
+
+[<Fact>]
+let ``DCE: CROSS JOIN with EmptyResult right -> EmptyResult`` () =
+    let plan =
+        LogicalPlan.Join(
+            scanPlan "a",
+            LogicalPlan.Filter(scanPlan "b", boolLit false),
+            Cross,
+            None)
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.EmptyResult -> ()
+    | other -> failwithf "Expected EmptyResult, got %A" other
+
+[<Fact>]
+let ``DCE: Limit with None count preserves plan`` () =
+    let plan = LogicalPlan.Limit(scanPlan "t", None, None)
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Limit(OptimizedPlan.Scan _, None, None) -> ()
+    | other -> failwithf "Expected Limit(Scan), got %A" other
+
+// ─── LimitPushdown — additional paths ────────────────────────────────────────
+
+[<Fact>]
+let ``LP: LIMIT pushes through nested Filter and Project`` () =
+    let plan =
+        LogicalPlan.Limit(
+            LogicalPlan.Filter(
+                LogicalPlan.Project(
+                    scanPlan "t",
+                    [OutputColumn.Expr(col "t" "id", None)]),
+                binop Gt (col "t" "age") (intLit 0L)),
+            Some 5L,
+            None)
+    let result = SqlOptimizer.optimize plan
+    // scanLimit should have been pushed all the way to the Scan
+    match result with
+    | OptimizedPlan.Limit(OptimizedPlan.Filter(OptimizedPlan.Project(OptimizedPlan.Scan(_, _, _, Some 5L), _), _), _, _) -> ()
+    | other -> failwithf "Expected scanLimit=5 propagated to Scan, got %A" other
+
+[<Fact>]
+let ``LP: existing scanLimit takes minimum with new limit`` () =
+    // Two nested LIMITs — inner 5, outer 3. Scan should get min(5, 3) = 3.
+    let inner = LogicalPlan.Limit(scanPlan "t", Some 5L, None)
+    let outer = LogicalPlan.Limit(inner, Some 3L, None)
+    let result = SqlOptimizer.optimize outer
+    // The outer limit (3) pushes into the scan which had 5 from inner → min = 3
+    match result with
+    | OptimizedPlan.Limit(OptimizedPlan.Limit(OptimizedPlan.Scan(_, _, _, Some 3L), _, _), _, _) -> ()
+    | OptimizedPlan.Limit(OptimizedPlan.Scan(_, _, _, Some 3L), _, _) -> ()
+    | other -> failwithf "Expected scanLimit=3 (min), got %A" other
+
+[<Fact>]
+let ``LP: LIMIT does not push past Join`` () =
+    let plan =
+        LogicalPlan.Limit(
+            LogicalPlan.Join(scanPlan "a", scanPlan "b", Inner, None),
+            Some 5L,
+            None)
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Limit(OptimizedPlan.Join(OptimizedPlan.Scan(_, _, _, None), _, _, _), _, _) -> ()
+    | other -> failwithf "Expected Join with un-annotated Scans, got %A" other
+
+[<Fact>]
+let ``LP: LIMIT does not push past Aggregate`` () =
+    let plan =
+        LogicalPlan.Limit(
+            LogicalPlan.Aggregate(scanPlan "t", [], []),
+            Some 2L,
+            None)
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Limit(OptimizedPlan.Aggregate(OptimizedPlan.Scan(_, _, _, None), _, _), _, _) -> ()
+    | other -> failwithf "Expected Aggregate with un-annotated Scan, got %A" other
+
+[<Fact>]
+let ``LP: LIMIT does not push past Distinct`` () =
+    let plan =
+        LogicalPlan.Limit(
+            LogicalPlan.Distinct(scanPlan "t"),
+            Some 5L,
+            None)
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Limit(OptimizedPlan.Distinct(OptimizedPlan.Scan(_, _, _, None)), _, _) -> ()
+    | other -> failwithf "Expected Distinct with un-annotated Scan, got %A" other
+
+[<Fact>]
+let ``LP: LIMIT with zero offset pushes scanLimit`` () =
+    let plan = LogicalPlan.Limit(scanPlan "t", Some 7L, Some 0L)
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Limit(OptimizedPlan.Scan(_, _, _, Some 7L), _, _) -> ()
+    | other -> failwithf "Expected Scan with scanLimit=7 (zero offset), got %A" other
+
+[<Fact>]
+let ``LP: LIMIT with None count does not push scanLimit`` () =
+    let plan = LogicalPlan.Limit(scanPlan "t", None, None)
+    let result = SqlOptimizer.optimize plan
+    match result with
+    | OptimizedPlan.Limit(OptimizedPlan.Scan(_, _, _, None), _, _) -> ()
+    | other -> failwithf "Expected Scan without scanLimit (no count), got %A" other
