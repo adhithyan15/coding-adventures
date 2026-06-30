@@ -382,6 +382,23 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
               <option value="readonly">Read-only</option>
             </select>
           </label>
+          <label>Capability ID
+            <input id="filter-capability-id" data-dashboard-filter="capability-id" type="search" autocomplete="off">
+          </label>
+          <label>Capability Command
+            <select id="filter-capability-commandable" data-dashboard-filter="capability-commandable">
+              <option value="">All capabilities</option>
+              <option value="true">Commandable</option>
+              <option value="false">Read-only</option>
+            </select>
+          </label>
+          <label>Capability Observation
+            <select id="filter-capability-observable" data-dashboard-filter="capability-observable">
+              <option value="">All observation</option>
+              <option value="true">Observable</option>
+              <option value="false">Command-only</option>
+            </select>
+          </label>
           <label>Service Name
             <input id="filter-service-name" data-dashboard-filter="service-name" type="search" autocomplete="off">
           </label>
@@ -562,6 +579,13 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         <div id="entities" class="cards"></div>
       </div>
       <div class="panel">
+        <div class="row">
+          <h2>Capabilities</h2>
+          <span id="capability-count" class="muted"></span>
+        </div>
+        <div id="capabilities" class="cards"></div>
+      </div>
+      <div class="panel">
         <h2>Desired State</h2>
         <table>
           <thead>
@@ -645,6 +669,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       activity: document.querySelector("#activity"),
       authorizationDecisions: document.querySelector("#authorization-decisions"),
       bridges: document.querySelector("#bridges"),
+      capabilities: document.querySelector("#capabilities"),
+      capabilityCount: document.querySelector("#capability-count"),
       capabilityGrants: document.querySelector("#capability-grants"),
       checks: document.querySelector("#checks"),
       commandResults: document.querySelector("#command-results"),
@@ -670,6 +696,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       filterCommandId: document.querySelector("#filter-command-id"),
       filterCommandStatus: document.querySelector("#filter-command-status"),
       filterCommandToSequence: document.querySelector("#filter-command-to-sequence"),
+      filterCapabilityCommandable: document.querySelector("#filter-capability-commandable"),
+      filterCapabilityId: document.querySelector("#filter-capability-id"),
+      filterCapabilityObservable: document.querySelector("#filter-capability-observable"),
       filterControl: document.querySelector("#filter-control"),
       filterDomain: document.querySelector("#filter-domain"),
       filterEventFromSequence: document.querySelector("#filter-event-from-sequence"),
@@ -721,6 +750,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       ["domain", els.filterDomain],
       ["state", els.filterState],
       ["control", els.filterControl],
+      ["capability_id", els.filterCapabilityId],
+      ["capability_commandable", els.filterCapabilityCommandable],
+      ["capability_observable", els.filterCapabilityObservable],
       ["service_name", els.filterServiceName],
       ["service_capability", els.filterServiceCapability],
       ["service_entity", els.filterServiceEntity],
@@ -796,6 +828,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       domain: els.filterDomain.value,
       state: els.filterState.value,
       control: els.filterControl.value,
+      capabilityId: els.filterCapabilityId.value.trim(),
+      capabilityCommandable: els.filterCapabilityCommandable.value,
+      capabilityObservable: els.filterCapabilityObservable.value,
       serviceName: els.filterServiceName.value.trim(),
       serviceCapability: els.filterServiceCapability.value.trim(),
       serviceEntity: els.filterServiceEntity.value.trim(),
@@ -949,6 +984,12 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         ? `/api/smart_home/services/${encodeURIComponent(domain)}/${encodeURIComponent(serviceName)}`
         : "/api/smart_home/services";
     };
+    const capabilityDetailUrl = (capability) =>
+      `/api/smart_home/capabilities?capability_id=${encodeURIComponent(capability.capability_id)}`;
+    const capabilityServicesUrl = (capability) =>
+      `/api/smart_home/services?capability_id=${encodeURIComponent(capability.capability_id)}`;
+    const capabilityEntitiesUrl = (capability) =>
+      `/api/smart_home/entities?capability_id=${encodeURIComponent(capability.capability_id)}`;
     const roomDetailUrl = (room) =>
       `/api/smart_home/rooms/${encodeURIComponent(room.room_id)}`;
     const capabilityGrantDetailUrl = (grant) =>
@@ -1159,6 +1200,43 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       }).join("") || `<p class="muted">No matching entities</p>`;
     };
 
+    const renderCapabilities = (catalog) => {
+      const capabilities = catalog.capabilities || [];
+      const total = catalog.summary?.total_capabilities || capabilities.length;
+      els.capabilityCount.textContent = countLabel(capabilities.length, total, "capabilities");
+      els.capabilities.innerHTML = capabilities.map((capability) => {
+        const range = [capability.min, capability.max]
+          .filter((value) => value !== null && value !== undefined)
+          .join("..");
+        const meta = [
+          capability.value_kind,
+          capability.unit,
+          range ? `range ${range}` : ""
+        ].filter(Boolean).join(" | ");
+        const domains = (capability.domains || []).join(", ") || "no domains";
+        const kinds = (capability.entity_kinds || []).join(", ") || "no entity kinds";
+        const serviceCount = capability.service_count || (capability.service_ids || []).length;
+        const status = capability.commandable ? "ready" : capability.observable ? "ok" : "attention";
+        const mode = capability.commandable ? "command" : capability.observable ? "observe" : "catalog";
+        return `
+          <article class="entity-card">
+            <div class="row" style="justify-content: space-between;">
+              <h3>${capability.capability_id}</h3>
+              <span class="${statusClass(status)}">${mode}</span>
+            </div>
+            <p class="muted">${meta || capability.mode}</p>
+            <p>${capability.entity_count} entities | ${capability.device_count} devices | ${serviceCount} services</p>
+            <p class="muted">${domains} | ${kinds}</p>
+            <div class="actions row">
+              ${inspectButton(capabilityDetailUrl(capability), "capability catalog")}
+              ${inspectButton(capabilityServicesUrl(capability), "capability services", "Services")}
+              ${inspectButton(capabilityEntitiesUrl(capability), "capability entities", "Entities")}
+            </div>
+          </article>
+        `;
+      }).join("") || `<p class="muted">No matching capabilities</p>`;
+    };
+
     const renderDesiredStates = (desiredStates, filters) => {
       const targets = filterRows(desiredStates.desired_states || [], filters);
       els.desired.innerHTML = targets.map((target) => `
@@ -1281,6 +1359,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       const roomId = filters.room || undefined;
       const activityEntity = filters.activityEntity || undefined;
       const historyType = filters.historyType || undefined;
+      const capabilityId = filters.capabilityId || undefined;
       try {
         const [
           bootstrap,
@@ -1291,6 +1370,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           desiredStates,
           history,
           services,
+          capabilities,
           routes,
           rooms,
           devices,
@@ -1302,8 +1382,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         ] = await Promise.all([
           json("/api/smart_home/bootstrap"),
           json("/api/smart_home/readiness"),
-          json(queryUrl("/api/smart_home/states", {limit: 24, domain: filters.domain, room_id: roomId, stale})),
-          json(queryUrl("/api/smart_home/states", {limit: 24, room_id: roomId, stale: true})),
+          json(queryUrl("/api/smart_home/states", {limit: 24, domain: filters.domain, room_id: roomId, stale, capability_id: capabilityId})),
+          json(queryUrl("/api/smart_home/states", {limit: 24, room_id: roomId, stale: true, capability_id: capabilityId})),
           json(queryUrl("/api/smart_home/scenes", {limit: 12, room_id: roomId})),
           json(queryUrl("/api/smart_home/desired_states", {limit: 12})),
           json(queryUrl("/api/smart_home/state_history", {
@@ -1324,6 +1404,13 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
             capability_id: filters.serviceCapability,
             entity_id: filters.serviceEntity,
             scene_id: filters.serviceScene
+          })),
+          json(queryUrl("/api/smart_home/capabilities", {
+            limit: 12,
+            domain: filters.domain,
+            capability_id: filters.capabilityId,
+            commandable: filters.capabilityCommandable,
+            observable: filters.capabilityObservable
           })),
           json(queryUrl("/api/smart_home/api", {
             surface: filters.apiSurface,
@@ -1393,6 +1480,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         renderBridges(bridges);
         renderScenes(scenes);
         renderEntities(states, filters);
+        renderCapabilities(capabilities);
         renderDesiredStates(desiredStates, filters);
         renderGaps(stateGaps, filters);
         renderHistory(history, filters);
@@ -7898,6 +7986,14 @@ mod tests {
     use tcp_runtime::{ConnectionId, TcpConnectionInfo};
     use web_core::WebServer;
 
+    const DASHBOARD_PENDING_WRITE_BYTES: usize = 256 * 1024;
+
+    fn dashboard_server_options() -> HttpServerOptions {
+        let mut options = HttpServerOptions::default();
+        options.tcp.max_pending_write_bytes = DASHBOARD_PENDING_WRITE_BYTES;
+        options
+    }
+
     fn request(method: &str, target: &str) -> HttpRequest {
         request_with_body(method, target, "")
     }
@@ -8004,28 +8100,19 @@ mod tests {
             target_os = "netbsd",
             target_os = "dragonfly"
         ))]
-        let mut server = WebServer::bind_kqueue(
-            "127.0.0.1:0",
-            HttpServerOptions::default(),
-            Arc::clone(&app),
-        )
-        .expect("bind kqueue");
+        let mut server =
+            WebServer::bind_kqueue("127.0.0.1:0", dashboard_server_options(), Arc::clone(&app))
+                .expect("bind kqueue");
 
         #[cfg(target_os = "linux")]
-        let mut server = WebServer::bind_epoll(
-            "127.0.0.1:0",
-            HttpServerOptions::default(),
-            Arc::clone(&app),
-        )
-        .expect("bind epoll");
+        let mut server =
+            WebServer::bind_epoll("127.0.0.1:0", dashboard_server_options(), Arc::clone(&app))
+                .expect("bind epoll");
 
         #[cfg(target_os = "windows")]
-        let mut server = WebServer::bind_windows(
-            "127.0.0.1:0",
-            HttpServerOptions::default(),
-            Arc::clone(&app),
-        )
-        .expect("bind windows");
+        let mut server =
+            WebServer::bind_windows("127.0.0.1:0", dashboard_server_options(), Arc::clone(&app))
+                .expect("bind windows");
 
         let port = server.local_addr().port();
         let stop = server.stop_handle();
@@ -8145,6 +8232,9 @@ mod tests {
             assert!(body.contains("data-dashboard-filter=\"search\""));
             assert!(body.contains("data-dashboard-filter=\"room\""));
             assert!(body.contains("data-dashboard-filter=\"domain\""));
+            assert!(body.contains("data-dashboard-filter=\"capability-id\""));
+            assert!(body.contains("data-dashboard-filter=\"capability-commandable\""));
+            assert!(body.contains("data-dashboard-filter=\"capability-observable\""));
             assert!(body.contains("data-dashboard-filter=\"service-name\""));
             assert!(body.contains("data-dashboard-filter=\"service-capability\""));
             assert!(body.contains("data-dashboard-filter=\"service-entity\""));
@@ -8172,6 +8262,9 @@ mod tests {
             assert!(body.contains("[\"api_category\", els.filterApiCategory]"));
             assert!(body.contains("[\"api_mutating\", els.filterApiMutating]"));
             assert!(body.contains("[\"api_authorized\", els.filterApiAuthorized]"));
+            assert!(body.contains("[\"capability_id\", els.filterCapabilityId]"));
+            assert!(body.contains("[\"capability_commandable\", els.filterCapabilityCommandable]"));
+            assert!(body.contains("[\"capability_observable\", els.filterCapabilityObservable]"));
             assert!(body.contains("[\"service_name\", els.filterServiceName]"));
             assert!(body.contains("[\"service_capability\", els.filterServiceCapability]"));
             assert!(body.contains("[\"service_entity\", els.filterServiceEntity]"));
@@ -8194,10 +8287,10 @@ mod tests {
             assert!(body.contains("restoreFiltersFromUrl()"));
             assert!(body.contains("window.history.replaceState(null, \"\", nextUrl)"));
             assert!(body.contains(
-                "queryUrl(\"/api/smart_home/states\", {limit: 24, domain: filters.domain, room_id: roomId, stale})"
+                "queryUrl(\"/api/smart_home/states\", {limit: 24, domain: filters.domain, room_id: roomId, stale, capability_id: capabilityId})"
             ));
             assert!(body.contains(
-                "queryUrl(\"/api/smart_home/states\", {limit: 24, room_id: roomId, stale: true})"
+                "queryUrl(\"/api/smart_home/states\", {limit: 24, room_id: roomId, stale: true, capability_id: capabilityId})"
             ));
             assert!(
                 body.contains("queryUrl(\"/api/smart_home/scenes\", {limit: 12, room_id: roomId})")
@@ -8225,6 +8318,10 @@ mod tests {
             assert!(body.contains("capability_id: filters.serviceCapability"));
             assert!(body.contains("entity_id: filters.serviceEntity"));
             assert!(body.contains("scene_id: filters.serviceScene"));
+            assert!(body.contains("queryUrl(\"/api/smart_home/capabilities\", {"));
+            assert!(body.contains("capability_id: filters.capabilityId"));
+            assert!(body.contains("commandable: filters.capabilityCommandable"));
+            assert!(body.contains("observable: filters.capabilityObservable"));
             assert!(body.contains("json(\"/api/smart_home/rooms?sort=scene_count\")"));
             assert!(
                 body.contains("queryUrl(\"/api/smart_home/devices\", {limit: 8, room_id: roomId})")
@@ -8242,7 +8339,12 @@ mod tests {
             assert!(body.contains("outcome: filters.authorizationOutcome"));
             assert!(body.contains("renderRoomOptions(rooms, filters.room)"));
             assert!(body.contains("entityMatchesFilters(filters, entity)"));
+            assert!(body.contains("renderCapabilities(capabilities)"));
             assert!(body.contains("filterRows(history.events || [], filters)"));
+            assert!(body.contains("id=\"capabilities\""));
+            assert!(body.contains("capabilityDetailUrl(capability)"));
+            assert!(body.contains("capabilityServicesUrl(capability)"));
+            assert!(body.contains("capabilityEntitiesUrl(capability)"));
             assert!(body.contains("<tbody id=\"events\"></tbody>"));
             assert!(body.contains("id=\"detail-body\""));
             assert!(body.contains("renderDetail(label, url, response.status, response.ok, body)"));
@@ -9707,6 +9809,9 @@ mod tests {
         assert!(body.contains("json(\"/api/smart_home/bootstrap\")"));
         assert!(body.contains("data-dashboard-filter=\"search\""));
         assert!(body.contains("data-dashboard-filter=\"room\""));
+        assert!(body.contains("data-dashboard-filter=\"capability-id\""));
+        assert!(body.contains("data-dashboard-filter=\"capability-commandable\""));
+        assert!(body.contains("data-dashboard-filter=\"capability-observable\""));
         assert!(body.contains("data-dashboard-filter=\"service-name\""));
         assert!(body.contains("data-dashboard-filter=\"service-capability\""));
         assert!(body.contains("data-dashboard-filter=\"service-entity\""));
@@ -9740,6 +9845,9 @@ mod tests {
         assert!(body.contains("[\"api_category\", els.filterApiCategory]"));
         assert!(body.contains("[\"api_mutating\", els.filterApiMutating]"));
         assert!(body.contains("[\"api_authorized\", els.filterApiAuthorized]"));
+        assert!(body.contains("[\"capability_id\", els.filterCapabilityId]"));
+        assert!(body.contains("[\"capability_commandable\", els.filterCapabilityCommandable]"));
+        assert!(body.contains("[\"capability_observable\", els.filterCapabilityObservable]"));
         assert!(body.contains("[\"service_name\", els.filterServiceName]"));
         assert!(body.contains("[\"service_capability\", els.filterServiceCapability]"));
         assert!(body.contains("[\"service_entity\", els.filterServiceEntity]"));
@@ -9789,6 +9897,10 @@ mod tests {
         assert!(body.contains("capability_id: filters.serviceCapability"));
         assert!(body.contains("entity_id: filters.serviceEntity"));
         assert!(body.contains("scene_id: filters.serviceScene"));
+        assert!(body.contains("queryUrl(\"/api/smart_home/capabilities\", {"));
+        assert!(body.contains("capability_id: filters.capabilityId"));
+        assert!(body.contains("commandable: filters.capabilityCommandable"));
+        assert!(body.contains("observable: filters.capabilityObservable"));
         assert!(body.contains("json(\"/api/smart_home/rooms?sort=scene_count\")"));
         assert!(body.contains("queryUrl(\"/api/smart_home/devices\", {limit: 8, room_id: roomId})"));
         assert!(body.contains("json(\"/api/smart_home/bridges?limit=8\")"));
@@ -9804,6 +9916,9 @@ mod tests {
         assert!(body.contains("id=\"detail-body\""));
         assert!(body.contains("renderDetail(label, url, response.status, response.ok, body)"));
         assert!(body.contains("id=\"capability-grants\""));
+        assert!(body.contains("id=\"capabilities\""));
+        assert!(body.contains("renderCapabilities(capabilities)"));
+        assert!(body.contains("capabilityDetailUrl(capability)"));
         assert!(body.contains("renderCapabilityGrants(capabilityGrants, filters)"));
         assert!(body.contains("principalCapabilityGrantsUrl(record.principal_id)"));
         assert!(body.contains("capabilityGrantDetailUrl(grant)"));
