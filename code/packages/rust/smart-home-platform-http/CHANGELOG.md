@@ -81,6 +81,8 @@ All notable changes to this package will be documented in this file.
   history views scoped to one device event class from URL state.
 - Added state-history time-window filters so smart-home `from_ms`/`to_ms` and
   Home Assistant period `start_time`/`end_time` requests share the same route.
+- Added state-history bridge filtering so `bridge_id` route-catalog entries are
+  enforced by the runtime history query.
 - Added fixture-controller launch help, smoke-test URLs, and example-level tests
   to keep the local controller startup path usable.
 - Added a machine-readable local-controller smoke plan route that lists safe
