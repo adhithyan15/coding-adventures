@@ -23,6 +23,7 @@ pub const BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_STATUS_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_TELEMETRY_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_EVENT_LOG_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_EVENT_SUMMARY_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -61,6 +62,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-status-json",
     "app-shell-telemetry-json",
     "app-shell-events-json",
+    "app-shell-event-summary-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -769,6 +771,138 @@ impl BerkeleyAppShellEventLog {
 
     pub fn to_json(&self) -> String {
         app_shell_event_log_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellEventSummary {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub status_event_id: Option<String>,
+    pub primary_action_id: Option<String>,
+    pub event_count: usize,
+    pub status_event_count: usize,
+    pub route_event_count: usize,
+    pub action_event_count: usize,
+    pub diagnostic_event_count: usize,
+    pub state_event_count: usize,
+    pub capability_event_count: usize,
+    pub ready_event_count: usize,
+    pub blocked_event_count: usize,
+    pub info_event_count: usize,
+    pub warning_event_count: usize,
+    pub error_event_count: usize,
+    pub counted_event_total: usize,
+    pub diagnostic_count: usize,
+    pub repaired_state_count: usize,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellEventSummary {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_event_log(&BerkeleyAppShellEventLog::from_bootstrap_snapshot(snapshot))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_event_log(&BerkeleyAppShellEventLog::from_shell_handoff(handoff))
+    }
+
+    pub fn from_event_log(event_log: &BerkeleyAppShellEventLog) -> Self {
+        let status_event = event_log.events.iter().find(|event| event.kind == "status");
+        let action_event = event_log.events.iter().find(|event| event.kind == "action");
+        let diagnostic_event = event_log
+            .events
+            .iter()
+            .find(|event| event.id == "shell.diagnostics");
+        let state_event = event_log
+            .events
+            .iter()
+            .find(|event| event.id == "shell.state");
+        let capability_event = event_log
+            .events
+            .iter()
+            .find(|event| event.id == "shell.capabilities");
+
+        let mut status_event_count = 0;
+        let mut route_event_count = 0;
+        let mut action_event_count = 0;
+        let mut diagnostic_event_count = 0;
+        let mut state_event_count = 0;
+        let mut capability_event_count = 0;
+        let mut ready_event_count = 0;
+        let mut blocked_event_count = 0;
+        let mut info_event_count = 0;
+        let mut warning_event_count = 0;
+        let mut error_event_count = 0;
+        let mut counted_event_total = 0;
+
+        for event in &event_log.events {
+            match event.kind.as_str() {
+                "status" => status_event_count += 1,
+                "route" => route_event_count += 1,
+                "action" => action_event_count += 1,
+                "diagnostics" => diagnostic_event_count += 1,
+                "state" => state_event_count += 1,
+                "capability" => capability_event_count += 1,
+                _ => {}
+            }
+
+            match event.severity.as_str() {
+                "ready" => ready_event_count += 1,
+                "blocked" => blocked_event_count += 1,
+                "info" => info_event_count += 1,
+                "warning" => warning_event_count += 1,
+                "error" => error_event_count += 1,
+                _ => {}
+            }
+
+            counted_event_total += event.count.unwrap_or(0);
+        }
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_EVENT_SUMMARY_SCHEMA_VERSION,
+            package_name: event_log.package_name.clone(),
+            source_fingerprint: event_log.source_fingerprint.clone(),
+            title: event_log.title.clone(),
+            startup_route: event_log.startup_route.clone(),
+            ready: event_log.ready,
+            severity: status_event
+                .map(|event| event.severity.clone())
+                .unwrap_or_else(|| {
+                    if event_log.ready {
+                        "ready".to_string()
+                    } else {
+                        "blocked".to_string()
+                    }
+                }),
+            status_event_id: status_event.map(|event| event.id.clone()),
+            primary_action_id: action_event.and_then(|event| event.action_id.clone()),
+            event_count: event_log.event_count,
+            status_event_count,
+            route_event_count,
+            action_event_count,
+            diagnostic_event_count,
+            state_event_count,
+            capability_event_count,
+            ready_event_count,
+            blocked_event_count,
+            info_event_count,
+            warning_event_count,
+            error_event_count,
+            counted_event_total,
+            diagnostic_count: diagnostic_event.and_then(|event| event.count).unwrap_or(0),
+            repaired_state_count: state_event.and_then(|event| event.count).unwrap_or(0),
+            artifact_capability_count: capability_event.and_then(|event| event.count).unwrap_or(0),
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_event_summary_json_value(self).to_string()
     }
 }
 
@@ -1542,6 +1676,38 @@ impl BerkeleyAppDeck {
         persisted_state: BerkeleyAppPersistedEditorState,
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self.run_app_shell_event_log(persisted_state)?.to_json())
+    }
+
+    pub fn app_shell_event_summary(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellEventSummary {
+        BerkeleyAppShellEventSummary::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_event_summary(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellEventSummary, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellEventSummary::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_event_summary_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_event_summary(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_event_summary_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self.run_app_shell_event_summary(persisted_state)?.to_json())
     }
 
     pub fn run_source_order(&self) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
@@ -2355,6 +2521,36 @@ fn app_shell_event_log_json_value(event_log: &BerkeleyAppShellEventLog) -> serde
             .iter()
             .map(app_shell_event_json_value)
             .collect::<Vec<_>>(),
+    })
+}
+
+fn app_shell_event_summary_json_value(summary: &BerkeleyAppShellEventSummary) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": summary.schema_version,
+        "packageName": &summary.package_name,
+        "sourceFingerprint": &summary.source_fingerprint,
+        "title": &summary.title,
+        "startupRoute": &summary.startup_route,
+        "ready": summary.ready,
+        "severity": &summary.severity,
+        "statusEventId": &summary.status_event_id,
+        "primaryActionId": &summary.primary_action_id,
+        "eventCount": summary.event_count,
+        "statusEventCount": summary.status_event_count,
+        "routeEventCount": summary.route_event_count,
+        "actionEventCount": summary.action_event_count,
+        "diagnosticEventCount": summary.diagnostic_event_count,
+        "stateEventCount": summary.state_event_count,
+        "capabilityEventCount": summary.capability_event_count,
+        "readyEventCount": summary.ready_event_count,
+        "blockedEventCount": summary.blocked_event_count,
+        "infoEventCount": summary.info_event_count,
+        "warningEventCount": summary.warning_event_count,
+        "errorEventCount": summary.error_event_count,
+        "countedEventTotal": summary.counted_event_total,
+        "diagnosticCount": summary.diagnostic_count,
+        "repairedStateCount": summary.repaired_state_count,
+        "artifactCapabilityCount": summary.artifact_capability_count,
     })
 }
 
