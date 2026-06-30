@@ -204,12 +204,13 @@ space, plus single-character custom separators.
 `import_anki_notes_tsv` and `export_notes_anki_tsv` use the note/template model
 instead: imported Basic rows produce `NoteType`, `Note`, and materialized
 lineage cards, Basic-and-reversed note types produce forward and reverse
-sibling cards, Basic type-in-answer note types preserve `{{type:Back}}` typed
-answer prompts, and Cloze rows produce cloze note models plus one generated
-card per cloze ordinal. Custom note-type rows preserve arbitrary field columns
-and Anki's Tags column as note data; imported `#tags:` headers are merged into
-each row's note tags, and `#tags column:N` can mark any one-based text column as
-the row's tag source. `#deck:` and `#deck column:N` populate imported note and
+sibling cards, Basic optional-reversed note types honor Anki's `Add Reverse`
+field, Basic type-in-answer note types preserve `{{type:Back}}` typed answer
+prompts, and Cloze rows produce cloze note models plus one generated card per
+cloze ordinal. Custom note-type rows preserve arbitrary field columns and
+Anki's Tags column as note data; imported `#tags:` headers are merged into each
+row's note tags, and `#tags column:N` can mark any one-based text column as the
+row's tag source. `#deck:` and `#deck column:N` populate imported note and
 generated-card deck IDs with the host-selected deck as a fallback.
 `#guid column:N` preserves Anki text GUIDs as `anki-text` note provenance
 records without changing generated Engram note IDs. `#notetype column:N` allows

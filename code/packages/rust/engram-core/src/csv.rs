@@ -530,7 +530,11 @@ fn extend_unique_tags(tags: &mut Vec<String>, incoming: Vec<String>) {
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum AnkiNoteImportKind {
-    Basic { reverse: bool, type_answer: bool },
+    Basic {
+        reverse: bool,
+        optional_reverse: bool,
+        type_answer: bool,
+    },
     Cloze,
     Custom,
 }
@@ -559,6 +563,7 @@ impl AnkiNoteImportKind {
         } else if is_basic_note_type(note_type_name) {
             Self::Basic {
                 reverse: is_basic_and_reversed(note_type_name),
+                optional_reverse: is_basic_optional_reversed(note_type_name),
                 type_answer: is_basic_type_answer(note_type_name),
             }
         } else {
@@ -576,8 +581,16 @@ impl AnkiNoteImportKind {
         match self {
             Self::Basic {
                 reverse,
+                optional_reverse,
                 type_answer,
-            } => basic_note_type(id, name, created_at, *reverse, *type_answer),
+            } => basic_note_type(
+                id,
+                name,
+                created_at,
+                *reverse,
+                *optional_reverse,
+                *type_answer,
+            ),
             Self::Cloze => cloze_note_type(id, name, created_at),
             Self::Custom => custom_note_type(id, name, created_at, column_plan),
         }
@@ -585,8 +598,25 @@ impl AnkiNoteImportKind {
 
     fn default_columns(&self, rows: &[(usize, Vec<String>)]) -> Vec<String> {
         match self {
-            Self::Basic { .. } => {
-                if rows.first().is_some_and(|(_, fields)| fields.len() >= 3) {
+            Self::Basic {
+                optional_reverse, ..
+            } => {
+                if *optional_reverse {
+                    match rows.first().map(|(_, fields)| fields.len()).unwrap_or(0) {
+                        len if len >= 4 => vec![
+                            "Front".to_string(),
+                            "Back".to_string(),
+                            "Add Reverse".to_string(),
+                            "Tags".to_string(),
+                        ],
+                        len if len >= 3 => vec![
+                            "Front".to_string(),
+                            "Back".to_string(),
+                            "Add Reverse".to_string(),
+                        ],
+                        _ => vec!["Front".to_string(), "Back".to_string()],
+                    }
+                } else if rows.first().is_some_and(|(_, fields)| fields.len() >= 3) {
                     vec!["Front".to_string(), "Back".to_string(), "Tags".to_string()]
                 } else {
                     vec!["Front".to_string(), "Back".to_string()]
@@ -619,7 +649,9 @@ impl AnkiNoteImportKind {
         note_type_column: Option<usize>,
     ) -> Result<AnkiColumnPlan, CsvError> {
         match self {
-            Self::Basic { .. } => {
+            Self::Basic {
+                optional_reverse, ..
+            } => {
                 let front_index = column_index(columns, "Front").ok_or_else(|| {
                     csv_error(
                         "Anki note TSV #columns must include Front and Back",
@@ -632,19 +664,29 @@ impl AnkiNoteImportKind {
                         Some(1),
                     )
                 })?;
+                let mut field_columns = vec![
+                    AnkiFieldColumn {
+                        field_id: "front".to_string(),
+                        field_name: "Front".to_string(),
+                        column_index: front_index,
+                    },
+                    AnkiFieldColumn {
+                        field_id: "back".to_string(),
+                        field_name: "Back".to_string(),
+                        column_index: back_index,
+                    },
+                ];
+                if *optional_reverse {
+                    if let Some(add_reverse_index) = column_index(columns, "Add Reverse") {
+                        field_columns.push(AnkiFieldColumn {
+                            field_id: "add-reverse".to_string(),
+                            field_name: "Add Reverse".to_string(),
+                            column_index: add_reverse_index,
+                        });
+                    }
+                }
                 Ok(column_plan(
-                    vec![
-                        AnkiFieldColumn {
-                            field_id: "front".to_string(),
-                            field_name: "Front".to_string(),
-                            column_index: front_index,
-                        },
-                        AnkiFieldColumn {
-                            field_id: "back".to_string(),
-                            field_name: "Back".to_string(),
-                            column_index: back_index,
-                        },
-                    ],
+                    field_columns,
                     tags_column.or_else(|| column_index(columns, "Tags")),
                     guid_column,
                     deck_column,
@@ -995,6 +1037,7 @@ fn basic_note_type(
     name: &str,
     created_at: u64,
     reverse: bool,
+    optional_reverse: bool,
     type_answer: bool,
 ) -> NoteType {
     let mut templates = vec![CardTemplate {
@@ -1023,29 +1066,47 @@ fn basic_note_type(
             front_template: "{{Back}}".to_string(),
             back_template: "{{Front}}".to_string(),
             deck_id: None,
-            required_field_names: vec!["Front".to_string(), "Back".to_string()],
+            required_field_names: if optional_reverse {
+                vec![
+                    "Front".to_string(),
+                    "Back".to_string(),
+                    "Add Reverse".to_string(),
+                ]
+            } else {
+                vec!["Front".to_string(), "Back".to_string()]
+            },
             requirement_mode: TemplateRequirementMode::All,
             ordinal: 1,
+        });
+    }
+
+    let mut fields = vec![
+        FieldDef {
+            id: "front".to_string(),
+            name: "Front".to_string(),
+            required: true,
+            ordinal: 0,
+        },
+        FieldDef {
+            id: "back".to_string(),
+            name: "Back".to_string(),
+            required: true,
+            ordinal: 1,
+        },
+    ];
+    if optional_reverse {
+        fields.push(FieldDef {
+            id: "add-reverse".to_string(),
+            name: "Add Reverse".to_string(),
+            required: false,
+            ordinal: 2,
         });
     }
 
     NoteType {
         id: id.to_string(),
         name: name.to_string(),
-        fields: vec![
-            FieldDef {
-                id: "front".to_string(),
-                name: "Front".to_string(),
-                required: true,
-                ordinal: 0,
-            },
-            FieldDef {
-                id: "back".to_string(),
-                name: "Back".to_string(),
-                required: true,
-                ordinal: 1,
-            },
-        ],
+        fields,
         templates,
         stylesheet: None,
         created_at,
@@ -1228,6 +1289,12 @@ fn unique_custom_field_id(
 fn is_basic_and_reversed(note_type_name: &str) -> bool {
     let normalized = note_type_name.to_ascii_lowercase();
     normalized.contains("reversed") || normalized.contains("reverse")
+}
+
+fn is_basic_optional_reversed(note_type_name: &str) -> bool {
+    let normalized = note_type_name.to_ascii_lowercase();
+    normalized.contains("optional")
+        && (normalized.contains("reversed") || normalized.contains("reverse"))
 }
 
 fn is_basic_type_answer(note_type_name: &str) -> bool {
@@ -1446,6 +1513,33 @@ mod tests {
             imported.cards[1].lineage.as_ref().unwrap().note_id,
             "note-1"
         );
+    }
+
+    #[test]
+    fn anki_note_tsv_import_honors_optional_reversed_cards() {
+        let tsv = "#separator:tab\n#notetype:Basic (optional reversed card)\n#columns:Front\tBack\tAdd Reverse\tTags\nhola\thello\ty\tspanish\namma\tmother\t\ttamil\n";
+        let options = AnkiNoteTsvImportOptions {
+            deck_id: "deck".to_string(),
+            note_type_id: String::new(),
+            note_type_name: String::new(),
+            note_id_prefix: "note".to_string(),
+            created_at: 456,
+        };
+
+        let imported = import_anki_notes_tsv(tsv, &options).unwrap();
+
+        assert_eq!(imported.note_types[0].fields[2].id, "add-reverse");
+        assert_eq!(imported.note_types[0].fields[2].name, "Add Reverse");
+        assert_eq!(
+            imported.note_types[0].templates[1].required_field_names,
+            vec!["Front", "Back", "Add Reverse"]
+        );
+        assert_eq!(imported.notes[0].fields[2].value, "y");
+        assert_eq!(imported.notes[1].fields[2].value, "");
+        assert_eq!(imported.cards.len(), 3);
+        assert_eq!(imported.cards[0].id, "note-1::forward");
+        assert_eq!(imported.cards[1].id, "note-1::reverse");
+        assert_eq!(imported.cards[2].id, "note-2::forward");
     }
 
     #[test]
@@ -1756,7 +1850,7 @@ mod tests {
 
     #[test]
     fn anki_note_tsv_export_writes_fields_tags_and_headers() {
-        let note_type = basic_note_type("basic", "Basic", 456, false, false);
+        let note_type = basic_note_type("basic", "Basic", 456, false, false, false);
         let notes = vec![
             Note {
                 id: "note-1".to_string(),

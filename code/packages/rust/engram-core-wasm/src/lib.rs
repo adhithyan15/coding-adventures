@@ -8908,6 +8908,29 @@ mod tests {
     }
 
     #[test]
+    fn parse_anki_notes_tsv_honors_optional_reversed_cards() {
+        let session = EngramSession::new();
+        let value: Value = serde_json::from_str(&session.parse_anki_notes_tsv(
+            "#separator:tab\n#notetype:Basic (optional reversed card)\n#columns:Front\tBack\tAdd Reverse\tTags\nhola\thello\ty\tspanish\namma\tmother\t\ttamil\n",
+            "deck",
+            "",
+            "",
+            "note",
+            NOW,
+        ))
+        .unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(
+            value["import"]["noteTypes"][0]["fields"][2]["id"],
+            "add-reverse"
+        );
+        assert_eq!(value["import"]["cards"].as_array().unwrap().len(), 3);
+        assert_eq!(value["import"]["cards"][1]["id"], "note-1::reverse");
+        assert_eq!(value["import"]["cards"][2]["id"], "note-2::forward");
+    }
+
+    #[test]
     fn parse_anki_notes_tsv_preserves_guid_sources() {
         let session = EngramSession::new();
         let value: Value = serde_json::from_str(&session.parse_anki_notes_tsv(
