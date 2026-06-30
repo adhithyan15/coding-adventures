@@ -192,6 +192,44 @@
       "gold_letter": "E"
     },
     {
+      "id": "mh-35",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has caf\u00e9-au-lait macules. That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "derm-edges.adj",
+      "hop1_relation": "skin_finding_in",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "cafe_au_lait_macules",
+      "expected": "nf1",
+      "options": {
+        "A": "nf1",
+        "B": "rb1",
+        "C": "atp7b",
+        "D": "fbn1",
+        "E": "htt"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "mh-36",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has Heinz bodies on the peripheral blood smear. That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "histo-edges.adj",
+      "hop1_relation": "seen_in",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "heinz_bodies",
+      "expected": "g6pd",
+      "options": {
+        "A": "rb1",
+        "B": "g6pd",
+        "C": "atp7b",
+        "D": "fbn1",
+        "E": "htt"
+      },
+      "gold_letter": "B"
+    },
+    {
       "id": "mh-11",
       "qtype": "multi_hop_recall",
       "stem": "A patient has degeneration of the caudate nucleus. That finding points to a single disease; that disease is inherited in which pattern?",
@@ -206,7 +244,7 @@
         "B": "autosomal_recessive",
         "C": "x_linked_recessive",
         "D": "x_linked_dominant",
-        "E": "mitochondrial"
+        "E": "x_linked"
       },
       "gold_letter": "A"
     },
@@ -225,7 +263,7 @@
         "B": "autosomal_recessive",
         "C": "x_linked_recessive",
         "D": "x_linked_dominant",
-        "E": "mitochondrial"
+        "E": "x_linked"
       },
       "gold_letter": "B"
     },
@@ -244,9 +282,47 @@
         "B": "x_linked_recessive",
         "C": "autosomal_dominant",
         "D": "x_linked_dominant",
-        "E": "mitochondrial"
+        "E": "x_linked"
       },
       "gold_letter": "C"
+    },
+    {
+      "id": "mh-37",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has caf\u00e9-au-lait macules. That finding points to a single disease; that disease is inherited in which pattern?",
+      "hop1_lib": "derm-edges.adj",
+      "hop1_relation": "skin_finding_in",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "inheritance",
+      "clue": "cafe_au_lait_macules",
+      "expected": "autosomal_dominant",
+      "options": {
+        "A": "autosomal_recessive",
+        "B": "x_linked_recessive",
+        "C": "x_linked_dominant",
+        "D": "autosomal_dominant",
+        "E": "x_linked"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "mh-38",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has Heinz bodies on the peripheral blood smear. That finding points to a single disease; that disease is inherited in which pattern?",
+      "hop1_lib": "histo-edges.adj",
+      "hop1_relation": "seen_in",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "inheritance",
+      "clue": "heinz_bodies",
+      "expected": "x_linked",
+      "options": {
+        "A": "autosomal_dominant",
+        "B": "autosomal_recessive",
+        "C": "x_linked_recessive",
+        "D": "x_linked_dominant",
+        "E": "x_linked"
+      },
+      "gold_letter": "E"
     },
     {
       "id": "mh-16",
