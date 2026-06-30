@@ -382,6 +382,39 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
               <option value="readonly">Read-only</option>
             </select>
           </label>
+          <label>API Surface
+            <select id="filter-api-surface" data-dashboard-filter="api-surface">
+              <option value="">All surfaces</option>
+              <option value="smart_home">Smart home</option>
+              <option value="home_assistant">Home Assistant</option>
+              <option value="browser">Browser</option>
+            </select>
+          </label>
+          <label>API Method
+            <select id="filter-api-method" data-dashboard-filter="api-method">
+              <option value="">All methods</option>
+              <option value="GET">GET</option>
+              <option value="POST">POST</option>
+              <option value="DELETE">DELETE</option>
+            </select>
+          </label>
+          <label>API Category
+            <input id="filter-api-category" data-dashboard-filter="api-category" type="search" autocomplete="off">
+          </label>
+          <label>API Mutation
+            <select id="filter-api-mutating" data-dashboard-filter="api-mutating">
+              <option value="">All routes</option>
+              <option value="false">Read-only</option>
+              <option value="true">Mutating</option>
+            </select>
+          </label>
+          <label>API Authorization
+            <select id="filter-api-authorized" data-dashboard-filter="api-authorized">
+              <option value="">All authorization</option>
+              <option value="true">Runtime authorized</option>
+              <option value="false">Not runtime authorized</option>
+            </select>
+          </label>
           <label>Events
             <select id="filter-event-kind" data-dashboard-filter="event-kind">
               <option value="">All events</option>
@@ -612,6 +645,11 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       entities: document.querySelector("#entities"),
       events: document.querySelector("#events"),
       filterActivityEntity: document.querySelector("#filter-activity-entity"),
+      filterApiAuthorized: document.querySelector("#filter-api-authorized"),
+      filterApiCategory: document.querySelector("#filter-api-category"),
+      filterApiMethod: document.querySelector("#filter-api-method"),
+      filterApiMutating: document.querySelector("#filter-api-mutating"),
+      filterApiSurface: document.querySelector("#filter-api-surface"),
       filterAuthorizationOutcome: document.querySelector("#filter-authorization-outcome"),
       filterAuthorizationPrincipal: document.querySelector("#filter-authorization-principal"),
       filterCommandBridge: document.querySelector("#filter-command-bridge"),
@@ -667,6 +705,11 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       ["domain", els.filterDomain],
       ["state", els.filterState],
       ["control", els.filterControl],
+      ["api_surface", els.filterApiSurface],
+      ["api_method", els.filterApiMethod],
+      ["api_category", els.filterApiCategory],
+      ["api_mutating", els.filterApiMutating],
+      ["api_authorized", els.filterApiAuthorized],
       ["event_kind", els.filterEventKind],
       ["event_from_sequence", els.filterEventFromSequence],
       ["event_to_sequence", els.filterEventToSequence],
@@ -733,6 +776,11 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       domain: els.filterDomain.value,
       state: els.filterState.value,
       control: els.filterControl.value,
+      apiSurface: els.filterApiSurface.value,
+      apiMethod: els.filterApiMethod.value,
+      apiCategory: els.filterApiCategory.value.trim(),
+      apiMutating: els.filterApiMutating.value,
+      apiAuthorized: els.filterApiAuthorized.value,
       eventKind: els.filterEventKind.value,
       eventFromSequence: els.filterEventFromSequence.value.trim(),
       eventToSequence: els.filterEventToSequence.value.trim(),
@@ -1246,7 +1294,13 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
             received_at_or_before_ms: filters.historyReceivedToMs
           })),
           json("/api/smart_home/services?limit=8"),
-          json("/api/smart_home/api?mutating=true&authorized=true"),
+          json(queryUrl("/api/smart_home/api", {
+            surface: filters.apiSurface,
+            method: filters.apiMethod,
+            category: filters.apiCategory,
+            mutating: filters.apiMutating,
+            authorized: filters.apiAuthorized
+          })),
           json("/api/smart_home/rooms?sort=scene_count"),
           json(queryUrl("/api/smart_home/devices", {limit: 8, room_id: roomId})),
           json("/api/smart_home/bridges?limit=8"),
@@ -8060,6 +8114,11 @@ mod tests {
             assert!(body.contains("data-dashboard-filter=\"search\""));
             assert!(body.contains("data-dashboard-filter=\"room\""));
             assert!(body.contains("data-dashboard-filter=\"domain\""));
+            assert!(body.contains("data-dashboard-filter=\"api-surface\""));
+            assert!(body.contains("data-dashboard-filter=\"api-method\""));
+            assert!(body.contains("data-dashboard-filter=\"api-category\""));
+            assert!(body.contains("data-dashboard-filter=\"api-mutating\""));
+            assert!(body.contains("data-dashboard-filter=\"api-authorized\""));
             assert!(body.contains("data-dashboard-filter=\"activity-entity\""));
             assert!(body.contains("data-dashboard-filter=\"history-type\""));
             assert!(body.contains("data-dashboard-filter=\"history-bridge\""));
@@ -8073,6 +8132,11 @@ mod tests {
             assert!(body.contains("data-dashboard-filter=\"command-from-sequence\""));
             assert!(body.contains("data-dashboard-filter=\"command-to-sequence\""));
             assert!(body.contains("const FILTER_QUERY_PARAMS = ["));
+            assert!(body.contains("[\"api_surface\", els.filterApiSurface]"));
+            assert!(body.contains("[\"api_method\", els.filterApiMethod]"));
+            assert!(body.contains("[\"api_category\", els.filterApiCategory]"));
+            assert!(body.contains("[\"api_mutating\", els.filterApiMutating]"));
+            assert!(body.contains("[\"api_authorized\", els.filterApiAuthorized]"));
             assert!(body.contains("[\"event_kind\", els.filterEventKind]"));
             assert!(body.contains("[\"event_from_sequence\", els.filterEventFromSequence]"));
             assert!(body.contains("[\"event_to_sequence\", els.filterEventToSequence]"));
@@ -8102,6 +8166,12 @@ mod tests {
             assert!(body.contains("queryUrl(\"/api/smart_home/desired_states\", {limit: 12})"));
             assert!(body.contains("const activityEntity = filters.activityEntity || undefined"));
             assert!(body.contains("const historyType = filters.historyType || undefined"));
+            assert!(body.contains("queryUrl(\"/api/smart_home/api\", {"));
+            assert!(body.contains("surface: filters.apiSurface"));
+            assert!(body.contains("method: filters.apiMethod"));
+            assert!(body.contains("category: filters.apiCategory"));
+            assert!(body.contains("mutating: filters.apiMutating"));
+            assert!(body.contains("authorized: filters.apiAuthorized"));
             assert!(body.contains("queryUrl(\"/api/smart_home/state_history\", {"));
             assert!(body.contains("entity_id: activityEntity"));
             assert!(body.contains("event_type: historyType"));
@@ -8112,7 +8182,6 @@ mod tests {
             assert!(body.contains("received_at_or_before_ms: filters.historyReceivedToMs"));
             assert!(body.matches("entity_id: activityEntity").count() >= 2);
             assert!(body.contains("json(\"/api/smart_home/services?limit=8\")"));
-            assert!(body.contains("json(\"/api/smart_home/api?mutating=true&authorized=true\")"));
             assert!(body.contains("json(\"/api/smart_home/rooms?sort=scene_count\")"));
             assert!(
                 body.contains("queryUrl(\"/api/smart_home/devices\", {limit: 8, room_id: roomId})")
@@ -9595,6 +9664,11 @@ mod tests {
         assert!(body.contains("json(\"/api/smart_home/bootstrap\")"));
         assert!(body.contains("data-dashboard-filter=\"search\""));
         assert!(body.contains("data-dashboard-filter=\"room\""));
+        assert!(body.contains("data-dashboard-filter=\"api-surface\""));
+        assert!(body.contains("data-dashboard-filter=\"api-method\""));
+        assert!(body.contains("data-dashboard-filter=\"api-category\""));
+        assert!(body.contains("data-dashboard-filter=\"api-mutating\""));
+        assert!(body.contains("data-dashboard-filter=\"api-authorized\""));
         assert!(body.contains("data-dashboard-filter=\"grant-status\""));
         assert!(body.contains("data-dashboard-filter=\"grant-scope\""));
         assert!(body.contains("data-dashboard-filter=\"grant-principal\""));
@@ -9614,6 +9688,11 @@ mod tests {
         assert!(body.contains("data-dashboard-filter=\"command-from-sequence\""));
         assert!(body.contains("data-dashboard-filter=\"command-to-sequence\""));
         assert!(body.contains("const FILTER_QUERY_PARAMS = ["));
+        assert!(body.contains("[\"api_surface\", els.filterApiSurface]"));
+        assert!(body.contains("[\"api_method\", els.filterApiMethod]"));
+        assert!(body.contains("[\"api_category\", els.filterApiCategory]"));
+        assert!(body.contains("[\"api_mutating\", els.filterApiMutating]"));
+        assert!(body.contains("[\"api_authorized\", els.filterApiAuthorized]"));
         assert!(body.contains("[\"event_from_sequence\", els.filterEventFromSequence]"));
         assert!(body.contains("[\"event_to_sequence\", els.filterEventToSequence]"));
         assert!(body.contains("[\"activity_entity\", els.filterActivityEntity]"));
@@ -9634,6 +9713,12 @@ mod tests {
         assert!(body.contains("window.history.replaceState(null, \"\", nextUrl)"));
         assert!(body.contains("queryUrl(\"/api/smart_home/scenes\", {limit: 12, room_id: roomId})"));
         assert!(body.contains("queryUrl(\"/api/smart_home/desired_states\", {limit: 12})"));
+        assert!(body.contains("queryUrl(\"/api/smart_home/api\", {"));
+        assert!(body.contains("surface: filters.apiSurface"));
+        assert!(body.contains("method: filters.apiMethod"));
+        assert!(body.contains("category: filters.apiCategory"));
+        assert!(body.contains("mutating: filters.apiMutating"));
+        assert!(body.contains("authorized: filters.apiAuthorized"));
         assert!(body.contains("const activityEntity = filters.activityEntity || undefined"));
         assert!(body.contains("const historyType = filters.historyType || undefined"));
         assert!(body.contains("queryUrl(\"/api/smart_home/state_history\", {"));
@@ -9649,7 +9734,6 @@ mod tests {
         assert!(body.contains("received_at_or_before_ms: filters.historyReceivedToMs"));
         assert!(body.matches("entity_id: activityEntity").count() >= 2);
         assert!(body.contains("json(\"/api/smart_home/services?limit=8\")"));
-        assert!(body.contains("json(\"/api/smart_home/api?mutating=true&authorized=true\")"));
         assert!(body.contains("json(\"/api/smart_home/rooms?sort=scene_count\")"));
         assert!(body.contains("queryUrl(\"/api/smart_home/devices\", {limit: 8, room_id: roomId})"));
         assert!(body.contains("json(\"/api/smart_home/bridges?limit=8\")"));
