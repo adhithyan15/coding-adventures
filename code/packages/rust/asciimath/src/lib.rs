@@ -162,6 +162,26 @@ mod tests {
         assert!(matches!(p("sum_(i in S) i"), MathExpr::BigOp { .. }));
     }
 
+    #[test]
+    fn punctuation_arrows_lower_to_symbols() {
+        // PR-3c: `->` and `=>` tokenize to the symbol-table identifiers, so they lower to the same
+        // Symbol as the word forms `rarr`/`implies` — `a -> b` is the juxtaposition `a · → · b`.
+        assert_eq!(
+            p("a -> b"),
+            b(BinOp::Mul, b(BinOp::Mul, sym("a"), sym("rightarrow")), sym("b"))
+        );
+        assert_eq!(p("a -> b"), p("a rarr b")); // punctuation and word forms agree
+        assert_eq!(
+            p("a => b"),
+            b(BinOp::Mul, b(BinOp::Mul, sym("a"), sym("implies")), sym("b"))
+        );
+        // Single-char `-` / `=` are unaffected: subtraction and relation still parse as before.
+        assert_eq!(p("a - b"), b(BinOp::Sub, sym("a"), sym("b")));
+        assert!(matches!(p("a = b"), MathExpr::Rel(RelOp::Eq, _, _)));
+        // A right-arrow inside a limit bound parses (no `-`/`>` breakage): `lim_(x -> 0) f`.
+        assert!(matches!(p("lim_(x -> 0) f"), MathExpr::BigOp { .. }));
+    }
+
     // ---- operators & precedence ------------------------------------------------
     #[test]
     fn add_and_implicit_mul() {
@@ -412,6 +432,8 @@ mod tests {
                 "alpha + Omega",   // greek symbols (PR-3a symbol table)
                 "x in RR",         // blackboard set + (deferred) bare keyword, no panic
                 "a cup b",         // set operator as a symbol
+                "a -> b",          // punctuation arrow (PR-3c)
+                "x => y",          // punctuation double-arrow
                 "1 +",   // error: trailing operator (span in range, not a panic)
                 "(x",    // error: missing close
                 "",      // error: empty

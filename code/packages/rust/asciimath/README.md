@@ -87,9 +87,14 @@ conformance change.
 **PR-3b** completes the symbol surface: the bare keyword spellings `in`/`and`/`or`/`not` (→ symbols)
 and the two-letter short forms `sub`/`sube`/`sup`/`supe` (subset family), `uu`→`union`, `nn`→`intersection`,
 `AA`→`forall`, `EE`→`exists`. (`in` is safe inside big-operator bounds — `sum_(i in S)` parses as the
-juxtaposition `i · ∈ · S`.) **Still deferred to PR-3c** (structural, not table entries): punctuation
-arrows (`->`, `=>`), longest-match identifier scan (`sinx` → `sin·x`), `stackrel`/`overset`/`underset`,
-and the `text(…)` keyword form.
+juxtaposition `i · ∈ · S`.)
+
+**PR-3c (part 1)** adds the punctuation arrows `->` → `Symbol("rightarrow")` and `=>` →
+`Symbol("implies")` — recognized in the tokenizer and routed through the PR-3a symbol table (so they
+agree with the word forms `rarr`/`implies`); `a - b` and `a = b` are unaffected. **Still to come**
+(each structural, its own PR): longest-match identifier scan (`sinx` → `sin·x`),
+`stackrel`/`overset`/`underset` (need a neutral-AST node), and the `text(…)` keyword form (needs lexer
+raw-capture).
 
 It is **total and panic-free**: every input returns `Ok(MathExpr)` or a spanned
 `FrontendError`. Recursion is depth-guarded (matrix nesting included); left-associative chains are

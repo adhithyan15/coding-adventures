@@ -139,13 +139,21 @@ pub fn tokenize(src: &str) -> Result<Vec<Token>, FrontendError> {
             b'-' => match next {
                 Some(b':') => (TokenKind::Div, i + 2),
                 Some(b'=') => (TokenKind::Equiv, i + 2),
+                // Punctuation arrow `->`: emit the same identifier the word form `rarr` does, so it
+                // flows through the existing symbol table (PR-3a) and lowers to `Symbol("rightarrow")`.
+                // No new token kind, no parser change. (`a->b` ⇒ `a · → · b`; `lim_(x->0)` unaffected.)
+                Some(b'>') => (TokenKind::Ident("rightarrow".to_string()), i + 2),
                 _ => (TokenKind::Minus, i + 1),
             },
             b'*' => (TokenKind::Star, if next == Some(b'*') { i + 2 } else { i + 1 }),
             b'/' => (TokenKind::Slash, i + 1),
             b'^' => (TokenKind::Caret, i + 1),
             b'_' => (TokenKind::Underscore, i + 1),
-            b'=' => (TokenKind::Eq, i + 1),
+            b'=' => match next {
+                // Punctuation double-arrow `=>` → the `implies` identifier (PR-3a symbol table).
+                Some(b'>') => (TokenKind::Ident("implies".to_string()), i + 2),
+                _ => (TokenKind::Eq, i + 1),
+            },
             b'!' => match next {
                 Some(b'=') => (TokenKind::Ne, i + 2),
                 _ => return Err(err("unexpected '!' (did you mean '!='?)", (start, start + 1))),
@@ -236,6 +244,12 @@ mod tests {
         assert_eq!(kinds("a ~~ b")[1], TokenKind::Approx);
         assert_eq!(kinds("a -= b")[1], TokenKind::Equiv);
         assert_eq!(kinds("a ** b")[1], TokenKind::Star);
+        // PR-3c: punctuation arrows tokenize as the symbol-table identifiers (not `-`/`>`/`=`).
+        assert_eq!(kinds("a -> b")[1], TokenKind::Ident("rightarrow".into()));
+        assert_eq!(kinds("a => b")[1], TokenKind::Ident("implies".into()));
+        // The single-char forms are unaffected.
+        assert_eq!(kinds("a - b")[1], TokenKind::Minus);
+        assert_eq!(kinds("a = b")[1], TokenKind::Eq);
     }
 
     #[test]

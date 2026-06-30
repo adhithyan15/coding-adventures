@@ -104,9 +104,14 @@ shapes for representative inputs.
   `sube`→`subseteq`, `sup`→`supset`, `supe`→`supseteq`, `uu`→`union`, `nn`→`intersection`,
   `AA`→`forall`, `EE`→`exists`. Still additive (no `Capabilities`/conformance change). Behaviour note:
   `p("in")` changed from `i·n` to `Symbol("in")`.
-- **PR-3c:** the structural remainder (not table entries) — punctuation arrows (`->`, `=>`, a tokenizer
-  concern), **longest-match tokenization** (so `sinx` splits as `sin`·`x`), `stackrel`,
-  `overset`/`underset`, and the `text(…)` keyword form alongside the `"…"` literal.
+- **PR-3c part 1 (shipped, v0.6.0):** punctuation arrows `->` and `=>` — recognized in the tokenizer
+  and emitted as the existing `rightarrow`/`implies` identifiers, so they route through the PR-3a
+  symbol table and lower to `Symbol` (agreeing with the word forms). Tokenizer-only, zero ripple; the
+  single-char `-`/`=` are unaffected (`a - b` = `Bin(Sub)`, `a = b` = `Rel(Eq)`).
+- **PR-3c remainder** (each its own follow-up, structural): **longest-match tokenization** (so `sinx`
+  splits as `sin`·`x`, a deeper lexer change); `stackrel`, `overset`/`underset` (need a neutral-AST
+  node in `math-frontend` — there is no `Overset`/`Underset` in `MathExpr` yet); and the `text(…)`
+  keyword form alongside the `"…"` literal (needs lexer raw-capture between the parens).
 
 ## 6. Non-goals
 Evaluation, simplification, rendering — none are a frontend's job (PFE01 §7). Lowering
