@@ -277,7 +277,37 @@ pub const RUNTIME: &str = r##"mod __sir {
     }
 
     // ── format ────────────────────────────────────────────────────
+    //
+    // Cycle safety.  `Value::Seq`/`Value::Map` are *shared, mutable*
+    // handles, so an emitted program can build a cyclic structure
+    // (`xs = []; xs[0] = xs`).  A naive structural walk would recurse
+    // forever and blow the stack.  We guard the recursion with a
+    // `visited` set of the `Rc` handle addresses *currently on the
+    // active path*: a handle is inserted on entry and removed on exit.
+    //
+    // Removing on exit (rather than leaving it set for the whole walk)
+    // is deliberate — it means a value reached twice by two *sibling*
+    // (non-cyclic) paths still prints in full both times; only a handle
+    // that re-appears *within its own subtree* (a true cycle) is
+    // short-circuited to a placeholder (`[...]` for a seq, `{...}` for a
+    // map).  See `handle_id` for how a stable per-handle key is derived.
     pub fn format(v: &Value) -> String {
+        let mut visited: std::collections::HashSet<usize> = std::collections::HashSet::new();
+        format_d(v, &mut visited)
+    }
+
+    // A stable identity for a shared handle: the address of the
+    // `RefCell` the `Rc` points at, narrowed to a plain `usize`.  Two
+    // `Value`s alias the same backing store iff their `handle_id`s match.
+    fn seq_handle_id(items: &Rc<RefCell<Vec<Value>>>) -> usize {
+        Rc::as_ptr(items) as *const () as usize
+    }
+
+    fn map_handle_id(entries: &Rc<RefCell<Vec<(Value, Value)>>>) -> usize {
+        Rc::as_ptr(entries) as *const () as usize
+    }
+
+    fn format_d(v: &Value, visited: &mut std::collections::HashSet<usize>) -> String {
         match v {
             Value::Int(n) => n.to_string(),
             // `{:?}` keeps a trailing `.0` on integral floats (`3.0`,
@@ -290,39 +320,60 @@ pub const RUNTIME: &str = r##"mod __sir {
             Value::Nil => "nil".to_string(),
             Value::Sym(s) => s.to_string(),
             Value::Str(s) => s.to_string(),
-            Value::Pair(p) => format_pair(p),
+            Value::Pair(p) => format_pair_d(p, visited),
             Value::Closure(_) => "<closure>".to_string(),
             // Sequences print like a bracketed list: `[1, 2, 3]`.
-            Value::Seq(items) => format_seq(&items.borrow()),
+            Value::Seq(items) => {
+                let id = seq_handle_id(items);
+                if !visited.insert(id) {
+                    // Already on the active path ⇒ cycle.  Print a
+                    // placeholder instead of recursing forever.
+                    return "[...]".to_string();
+                }
+                let out = format_seq_d(&items.borrow(), visited);
+                visited.remove(&id);
+                out
+            }
             // Maps print like a brace-wrapped entry list in insertion
             // order: `{a: 1, b: 2}`.
-            Value::Map(entries) => format_map(&entries.borrow()),
+            Value::Map(entries) => {
+                let id = map_handle_id(entries);
+                if !visited.insert(id) {
+                    return "{...}".to_string();
+                }
+                let out = format_map_d(&entries.borrow(), visited);
+                visited.remove(&id);
+                out
+            }
         }
     }
 
-    fn format_seq(items: &[Value]) -> String {
+    fn format_seq_d(items: &[Value], visited: &mut std::collections::HashSet<usize>) -> String {
         let mut out = String::new();
         out.push('[');
         for (i, item) in items.iter().enumerate() {
             if i > 0 {
                 out.push_str(", ");
             }
-            out.push_str(&format(item));
+            out.push_str(&format_d(item, visited));
         }
         out.push(']');
         out
     }
 
-    fn format_map(entries: &[(Value, Value)]) -> String {
+    fn format_map_d(
+        entries: &[(Value, Value)],
+        visited: &mut std::collections::HashSet<usize>,
+    ) -> String {
         let mut out = String::new();
         out.push('{');
         for (i, (k, v)) in entries.iter().enumerate() {
             if i > 0 {
                 out.push_str(", ");
             }
-            out.push_str(&format(k));
+            out.push_str(&format_d(k, visited));
             out.push_str(": ");
-            out.push_str(&format(v));
+            out.push_str(&format_d(v, visited));
         }
         out.push('}');
         out
@@ -338,22 +389,26 @@ pub const RUNTIME: &str = r##"mod __sir {
         }
     }
 
-    fn format_pair(p: &Pair) -> String {
+    // `Pair`s are immutable (no shared `RefCell`), so a pair-chain can
+    // never form a cycle on its own.  It can, however, *contain* a
+    // cyclic seq/map in a `car`/`cdr`, so we still thread `visited`
+    // through to the element formatters.
+    fn format_pair_d(p: &Pair, visited: &mut std::collections::HashSet<usize>) -> String {
         let mut out = String::new();
         out.push('(');
-        out.push_str(&format(&p.car));
+        out.push_str(&format_d(&p.car, visited));
         let mut rest = p.cdr.clone();
         loop {
             match rest {
                 Value::Pair(inner) => {
                     out.push(' ');
-                    out.push_str(&format(&inner.car));
+                    out.push_str(&format_d(&inner.car, visited));
                     rest = inner.cdr.clone();
                 }
                 Value::Nil => break,
                 other => {
                     out.push_str(" . ");
-                    out.push_str(&format(&other));
+                    out.push_str(&format_d(&other, visited));
                     break;
                 }
             }
@@ -475,12 +530,19 @@ pub const RUNTIME: &str = r##"mod __sir {
     // mirroring object/dict literal semantics) while keeping first-seen
     // insertion order.
     pub fn map_lit(entries: Vec<(Value, Value)>) -> Value {
+        // `store` is a plain local `Vec` (not yet wrapped in the shared
+        // `Rc<RefCell<…>>`), so the `value_eq` key comparisons below
+        // cannot collide with a borrow of the map under construction —
+        // even for a self-referential key, which can only be an *already
+        // built* map handle, never this not-yet-published `store`.
         let mut store: Vec<(Value, Value)> = Vec::with_capacity(entries.len());
         for (k, v) in entries {
-            if let Some(slot) = store.iter_mut().find(|(ek, _)| value_eq(ek, &k)) {
-                slot.1 = v;
-            } else {
-                store.push((k, v));
+            // Resolve the slot index without holding any iterator borrow
+            // across the (recursive) `value_eq` call.
+            let found = store.iter().position(|(ek, _)| value_eq(ek, &k));
+            match found {
+                Some(i) => store[i].1 = v,
+                None => store.push((k, v)),
             }
         }
         Value::Map(Rc::new(RefCell::new(store)))
@@ -492,12 +554,22 @@ pub const RUNTIME: &str = r##"mod __sir {
     // backend's `?? null`).
     pub fn map_get(map: &Value, key: &Value) -> Value {
         match map {
-            Value::Map(entries) => entries
-                .borrow()
-                .iter()
-                .find(|(k, _)| value_eq(k, key))
-                .map(|(_, v)| v.clone())
-                .unwrap_or(Value::Nil),
+            Value::Map(entries) => {
+                // Snapshot the entries (a shallow `Rc`-handle clone per
+                // value) and drop the borrow *before* running `value_eq`.
+                // A self-referential key would otherwise re-enter this
+                // same cell while it's still borrowed; `value_eq` on a
+                // cyclic value can deep-walk, so we must not hold a borrow
+                // across it.  (A shared borrow would tolerate a nested
+                // shared re-borrow, but scoping it is clearer and keeps
+                // `map_get`/`map_set`/`map_lit` uniform.)
+                let snapshot = entries.borrow().clone();
+                snapshot
+                    .iter()
+                    .find(|(k, _)| value_eq(k, key))
+                    .map(|(_, v)| v.clone())
+                    .unwrap_or(Value::Nil)
+            }
             other => panic!("map-get on non-map: {}", format(other)),
         }
     }
@@ -509,11 +581,22 @@ pub const RUNTIME: &str = r##"mod __sir {
     pub fn map_set(map: &Value, key: Value, value: Value) -> Value {
         match map {
             Value::Map(entries) => {
+                // Find the matching slot *without* holding a `borrow_mut`
+                // across `value_eq`: take a short shared borrow, snapshot
+                // the keys, drop it, then compare.  A self-referential key
+                // (`d["self"] = d` then looking it up) would otherwise
+                // re-borrow this very cell inside `value_eq` and panic with
+                // "already mutably borrowed".  Resolving to an *index*
+                // first lets us re-borrow mutably only for the write.
+                let index = {
+                    let keys: Vec<Value> =
+                        entries.borrow().iter().map(|(k, _)| k.clone()).collect();
+                    keys.iter().position(|k| value_eq(k, &key))
+                };
                 let mut entries = entries.borrow_mut();
-                if let Some(slot) = entries.iter_mut().find(|(k, _)| value_eq(k, &key)) {
-                    slot.1 = value.clone();
-                } else {
-                    entries.push((key, value.clone()));
+                match index {
+                    Some(i) => entries[i].1 = value.clone(),
+                    None => entries.push((key, value.clone())),
                 }
                 value
             }
@@ -545,7 +628,26 @@ pub const RUNTIME: &str = r##"mod __sir {
         args.iter().any(|v| matches!(v, Value::Float(_)))
     }
 
+    // Public structural equality.  Cycle safety: two *distinct* cyclic
+    // structures (e.g. `xs[0]=xs` and `ys[0]=ys`, separate handles) would
+    // make a naive deep walk recurse forever, because the `Rc::ptr_eq`
+    // fast path only catches a value compared against *itself*.  We bound
+    // the walk co-inductively with a `pending` set of handle-pairs
+    // currently being compared: re-encountering a pair already in flight
+    // means we've closed a cycle in lock-step, so we treat that pair as
+    // equal (the standard co-inductive definition of bisimulation
+    // equality).  This terminates for *any* pair of finite-handle graphs.
     fn value_eq(a: &Value, b: &Value) -> bool {
+        let mut pending: std::collections::HashSet<(usize, usize)> =
+            std::collections::HashSet::new();
+        value_eq_d(a, b, &mut pending)
+    }
+
+    fn value_eq_d(
+        a: &Value,
+        b: &Value,
+        pending: &mut std::collections::HashSet<(usize, usize)>,
+    ) -> bool {
         match (a, b) {
             (Value::Int(x), Value::Int(y)) => x == y,
             // Cross-representation numeric equality (`1 == 1.0`) holds,
@@ -559,7 +661,7 @@ pub const RUNTIME: &str = r##"mod __sir {
             (Value::Sym(x), Value::Sym(y)) => x == y,
             (Value::Str(x), Value::Str(y)) => **x == **y,
             (Value::Pair(x), Value::Pair(y)) => {
-                value_eq(&x.car, &y.car) && value_eq(&x.cdr, &y.cdr)
+                value_eq_d(&x.car, &y.car, pending) && value_eq_d(&x.cdr, &y.cdr, pending)
             }
             // Sequences and maps compare *structurally* (element-wise),
             // matching how `Pair` compares — `[1, 2] = [1, 2]` is true,
@@ -570,20 +672,44 @@ pub const RUNTIME: &str = r##"mod __sir {
             // because `map_lit`/`map_set` keep a canonical first-seen
             // order, so equal maps built the same way share that order.
             (Value::Seq(x), Value::Seq(y)) => {
-                Rc::ptr_eq(x, y) || {
-                    let (xb, yb) = (x.borrow(), y.borrow());
-                    xb.len() == yb.len()
-                        && xb.iter().zip(yb.iter()).all(|(a, b)| value_eq(a, b))
+                if Rc::ptr_eq(x, y) {
+                    return true;
                 }
+                let pair = (seq_handle_id(x), seq_handle_id(y));
+                // Already comparing this exact handle-pair higher up the
+                // stack ⇒ we've matched in lock-step around a cycle.
+                // Assume equal; if the structures genuinely differ it will
+                // be caught on a *non-cyclic* element elsewhere.
+                if !pending.insert(pair) {
+                    return true;
+                }
+                // Snapshot the operands before recursing so we never hold
+                // a `RefCell` borrow across the recursive `value_eq_d`
+                // calls (a self-referential element would otherwise try to
+                // re-borrow the same cell and panic).
+                let xs = x.borrow().clone();
+                let ys = y.borrow().clone();
+                let result = xs.len() == ys.len()
+                    && xs.iter().zip(ys.iter()).all(|(a, b)| value_eq_d(a, b, pending));
+                pending.remove(&pair);
+                result
             }
             (Value::Map(x), Value::Map(y)) => {
-                Rc::ptr_eq(x, y) || {
-                    let (xb, yb) = (x.borrow(), y.borrow());
-                    xb.len() == yb.len()
-                        && xb.iter().zip(yb.iter()).all(|((ak, av), (bk, bv))| {
-                            value_eq(ak, bk) && value_eq(av, bv)
-                        })
+                if Rc::ptr_eq(x, y) {
+                    return true;
                 }
+                let pair = (map_handle_id(x), map_handle_id(y));
+                if !pending.insert(pair) {
+                    return true;
+                }
+                let xs = x.borrow().clone();
+                let ys = y.borrow().clone();
+                let result = xs.len() == ys.len()
+                    && xs.iter().zip(ys.iter()).all(|((ak, av), (bk, bv))| {
+                        value_eq_d(ak, bk, pending) && value_eq_d(av, bv, pending)
+                    });
+                pending.remove(&pair);
+                result
             }
             _ => false,
         }

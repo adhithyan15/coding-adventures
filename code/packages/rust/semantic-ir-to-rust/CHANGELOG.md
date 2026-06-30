@@ -1,5 +1,54 @@
 # Changelog
 
+## 0.4.1 — harden emitted runtime against cyclic Seq/Map
+
+`Value::Seq`/`Value::Map` are shared, *mutable* handles, so an emitted
+program can build a cyclic structure (`xs = []; xs[0] = xs`).  Before this
+release the emitted runtime walked such values structurally with no cycle
+protection, so a cyclic value could:
+
+- **`format`** — recurse forever and overflow the stack while printing.
+- **`value_eq`** — recurse forever when comparing two *distinct* cyclic
+  structures (a self-cycle was already short-circuited by the `Rc::ptr_eq`
+  fast path, but distinct cyclic operands were not).
+- **`map_get`/`map_set`/`map_lit`** — hit a `RefCell` "already mutably
+  borrowed" panic when a self-referential key was compared while the map's
+  entries were `borrow_mut`'d.
+
+This is a robustness fix only — the public runtime API and the printed
+form of every *non-cyclic* value are byte-identical (all existing tests
+pass unchanged).
+
+### Fixed
+
+- **`format` / `format_seq` / `format_map`** now thread a visited-pointer
+  set (`HashSet<usize>` of each Seq/Map `Rc` handle address).  A handle is
+  inserted on entry and removed on exit, so it is only "seen" along the
+  *current* path: a true cycle re-entering a handle within its own subtree
+  prints a placeholder (`[...]` for a seq, `{...}` for a map) and returns
+  instead of recursing, while a value reached twice by sibling
+  (non-cyclic) paths still prints in full.  `format_pair` threads the set
+  too (a pair can hold a cyclic seq/map).
+- **`value_eq`** keeps the `Rc::ptr_eq` identity fast path and adds a
+  co-inductive `pending` set of handle-pairs currently being compared:
+  re-encountering a pair already in flight (a cycle matched in lock-step)
+  is treated as equal, bounding the deep comparison of two distinct cyclic
+  operands so it always terminates.
+- **`map_get` / `map_set` / `map_lit`** no longer call `value_eq` while
+  holding a borrow on the same map's entries: each snapshots/collects the
+  comparison inputs and resolves to an *index* before taking the borrow it
+  needs for the read/write, so a self-referential key can no longer trigger
+  an "already borrowed" panic.
+
+### Tests
+
+- New `tests/compile_and_run_cyclic.rs` integration test: hand-builds a
+  module that constructs a cyclic seq (`xs = [0]; xs[0] = xs; print(xs)`),
+  emits Rust, compiles it with `rustc`, runs it, and asserts the program
+  *terminates* and prints the `[...]` placeholder.  It also checks that
+  `value_eq` terminates on both a self-cyclic operand (via `ptr_eq`) and
+  two *distinct* cyclic structures (via the co-inductive guard).
+
 ## 0.4.0 — SIR16 Sequences + Maps (completes SIR16 / v1 parity)
 
 The final two SIR-v1 (SIR16) features land in the Rust backend.  With
