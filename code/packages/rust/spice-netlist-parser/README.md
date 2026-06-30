@@ -58,6 +58,9 @@ assert!(command_plan
     .commands
     .iter()
     .any(|command| command.id == "analysis.3.inspect-waveform" && command.enabled));
+
+let view = deck.run_editor_state_snapshot(Default::default())?;
+assert_eq!(view.resolved_state.selected_syntax_card_index, Some(3));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -73,9 +76,10 @@ hosts can render editor state without owning simulator internals. It also
 derives stable per-analysis editor controls for selecting, running, and
 inspecting tables or waveforms with explicit disabled reasons, plus command
 plans with stable command IDs and target names for host menu or button wiring.
-It is the Rust app/runtime entrypoint for Mosaic-backed UI work while the
-grammar-backed parser generator and Python/TypeScript parity surfaces continue
-to mature.
+Persisted editor-state snapshots resolve saved selection and active-command IDs
+against the current deck, repairing stale UI state after source edits. It is the
+Rust app/runtime entrypoint for Mosaic-backed UI work while the grammar-backed
+parser generator and Python/TypeScript parity surfaces continue to mature.
 
 This parser supports `R`, `C`, `L`, `V`, `I`, `D`, `Q`, `M`, `G`, `E`, `F`, and
 `H` elements, `.model <name> D(...)` diode cards with `IS` and `VT`

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add Berkeley SPICE app-deck persisted editor-state snapshots for Mosaic host
+  restoration. `BerkeleyAppDeck::editor_state_snapshot()` and
+  `run_editor_state_snapshot()` now resolve saved selected-card and
+  active-command IDs against the current deck, including stale-state repair
+  flags.
 - Add Berkeley SPICE app-deck editor command plans for Mosaic host wiring.
   `BerkeleyAppDeck::editor_command_plan()` and `run_editor_command_plan()` now
   expose stable per-analysis command IDs, action kinds, targets, enabled states,

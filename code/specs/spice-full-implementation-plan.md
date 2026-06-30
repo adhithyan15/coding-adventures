@@ -33,14 +33,14 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic editor command plans.
+1. Rust Berkeley Mosaic persisted editor state.
    - Status: current PR completion candidate.
    - Expand the Rust `spice-netlist-parser` Berkeley app facade from
-     deterministic editor controls into stable command descriptors for Mosaic
-     host menu, toolbar, and panel wiring.
-   - Expose per-analysis command IDs, action kinds, target names, enabled
-     states, and disabled reasons so hosts can dispatch select/run/table/
-     waveform actions without reinterpreting labels or parser internals.
+     stable command descriptors into persisted editor-state restoration for
+     Mosaic host UI sessions.
+   - Resolve saved selected-card and active-command IDs against the current
+     deck, including stale-state repair flags, so hosts can restore selection
+     after source edits without duplicating parser or simulator internals.
    - Keep this as a Rust-only app-substrate acceleration slice over the public
      parser contract and existing engine deck artifacts; Python and TypeScript
      parser parity was completed separately and should remain aligned when
@@ -1484,6 +1484,15 @@ the Rust, Python, and TypeScript surfaces together.
      can render parser and execution status without duplicating simulator
      internals.
 
+140. Rust Berkeley Mosaic editor command plans.
+   - Status: completed in PR 6954.
+   - Rust `spice-netlist-parser` Berkeley app-deck command plans now expose
+     per-analysis command IDs, action kinds, target names, enabled states, and
+     disabled reasons for Mosaic host menu, toolbar, and panel wiring.
+   - The slice keeps command descriptors derived from editor controls so hosts
+     can dispatch select/run/table/waveform actions without reinterpreting
+     labels or parser internals.
+
 ## Backlog
 
 1. Grammar-backed parser and app facade.
@@ -1491,8 +1500,8 @@ the Rust, Python, and TypeScript surfaces together.
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
    - Continue expanding the Rust Mosaic app facade beyond the initial
-     card-indexed result artifacts toward persisted UI state and host
-     integration backed by the same public parser contract.
+     card-indexed result artifacts toward host integration backed by the same
+     public parser contract.
 
 2. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis

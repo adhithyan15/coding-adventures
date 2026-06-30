@@ -18,12 +18,12 @@ pub use syntax::{
     parse_berkeley_app_deck, parse_berkeley_syntax, BerkeleyAnalysisInventoryEntry,
     BerkeleyAppAnalysisArtifact, BerkeleyAppAnalysisControl, BerkeleyAppDeck,
     BerkeleyAppEditorAction, BerkeleyAppEditorActionKind, BerkeleyAppEditorCommand,
-    BerkeleyAppEditorCommandPlan, BerkeleyAppEditorControls, BerkeleyAppExecution,
-    BerkeleyAppSessionAnalysis, BerkeleyAppSessionState, BerkeleyAppWaveformPoint,
-    BerkeleyAppWaveformSeries, BerkeleyCardKind, BerkeleyDiagnosticSeverity,
-    BerkeleyGrammarMetadata, BerkeleyLogicalCard, BerkeleySyntaxDeck, BerkeleySyntaxDiagnostic,
-    BerkeleySyntaxToken, SourceSpan, BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION,
-    BERKELEY_SPICE_PARSER_GRAMMAR, BERKELEY_SPICE_TOKEN_GRAMMAR,
+    BerkeleyAppEditorCommandPlan, BerkeleyAppEditorControls, BerkeleyAppEditorStateSnapshot,
+    BerkeleyAppExecution, BerkeleyAppPersistedEditorState, BerkeleyAppSessionAnalysis,
+    BerkeleyAppSessionState, BerkeleyAppWaveformPoint, BerkeleyAppWaveformSeries, BerkeleyCardKind,
+    BerkeleyDiagnosticSeverity, BerkeleyGrammarMetadata, BerkeleyLogicalCard, BerkeleySyntaxDeck,
+    BerkeleySyntaxDiagnostic, BerkeleySyntaxToken, SourceSpan, BERKELEY_SPICE_GRAMMAR_NAME,
+    BERKELEY_SPICE_GRAMMAR_VERSION, BERKELEY_SPICE_PARSER_GRAMMAR, BERKELEY_SPICE_TOKEN_GRAMMAR,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq)]
