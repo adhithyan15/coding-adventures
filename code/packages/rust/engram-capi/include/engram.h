@@ -109,18 +109,30 @@ char *eg_merge_anki_notes_tsv(
     uint64_t created_at
 );
 char *eg_export_anki_apkg(EgSession *session);
+char *eg_export_anki_package(EgSession *session);
 char *eg_export_anki_apkg_modern(EgSession *session);
+char *eg_export_anki_package_modern(EgSession *session);
 char *eg_analyze_media_references(EgSession *session);
 char *eg_inspect_anki_apkg(EgSession *session, const uint8_t *data, size_t data_len);
+char *eg_inspect_anki_package(EgSession *session, const uint8_t *data, size_t data_len);
 char *eg_read_anki_apkg_media(
     EgSession *session,
     const uint8_t *data,
     size_t data_len,
     const char *archive_name
 );
+char *eg_read_anki_package_media(
+    EgSession *session,
+    const uint8_t *data,
+    size_t data_len,
+    const char *archive_name
+);
 char *eg_parse_anki_apkg(EgSession *session, const uint8_t *data, size_t data_len);
+char *eg_parse_anki_package(EgSession *session, const uint8_t *data, size_t data_len);
 char *eg_import_anki_apkg(EgSession *session, const uint8_t *data, size_t data_len);
+char *eg_import_anki_package(EgSession *session, const uint8_t *data, size_t data_len);
 char *eg_merge_anki_apkg(EgSession *session, const uint8_t *data, size_t data_len);
+char *eg_merge_anki_package(EgSession *session, const uint8_t *data, size_t data_len);
 
 #ifdef __cplusplus
 }

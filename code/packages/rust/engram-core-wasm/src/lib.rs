@@ -2642,6 +2642,7 @@ fn host_intent_for_event(
             "deckId": selected_deck,
             "createdAt": now,
             "extension": ".apkg",
+            "extensions": [".apkg", ".colpkg"],
         })),
         EngramAppEvent::BrowserOpenSelected => {
             let selection = browser_selected_card_details(
@@ -7181,6 +7182,10 @@ mod tests {
             serde_json::from_str(&session.handle_engram_app_event("onExportAnki", "deck", NOW))
                 .unwrap();
         assert_eq!(export["hostIntent"]["extension"], ".apkg");
+        assert_eq!(
+            export["hostIntent"]["extensions"],
+            json!([".apkg", ".colpkg"])
+        );
 
         let add_note: Value =
             serde_json::from_str(&session.handle_engram_app_event("onAddNote", "deck", NOW))

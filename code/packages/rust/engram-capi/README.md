@@ -58,6 +58,10 @@ byte-slice APIs support legacy `collection.anki2` / `collection.anki21`
 packages and modern `collection.anki21b` envelopes by decoding Anki's `meta`
 protobuf plus zstd-compressed collection/media payloads before the shared
 SQLite import path runs.
+Native shells can also call the package-neutral `eg_parse_anki_package`,
+`eg_import_anki_package`, `eg_merge_anki_package`,
+`eg_inspect_anki_package`, and `eg_read_anki_package_media` aliases when they
+accept both `.apkg` and `.colpkg` file extensions.
 When an imported media payload conflicts with an existing Engram media ID or
 archive name, merge keeps both payloads by assigning deterministic `-merge-N`
 names; ID remaps also retarget the imported media provenance record to the new
@@ -68,6 +72,8 @@ APKG. `eg_export_anki_apkg_modern` writes the same state in a modern
 Both return package bytes as a JSON byte array under `apkg`, keeping the native
 ABI string-shaped while target-specific shells decide how to save or share the
 bytes.
+`eg_export_anki_package` and `eg_export_anki_package_modern` are neutral aliases
+for those export paths.
 `eg_inspect_anki_apkg` returns collection/media manifest JSON, and
 `eg_read_anki_apkg_media` reads one archived media payload by archive name for
 native import flows that need to copy audio or images alongside imported cards.
