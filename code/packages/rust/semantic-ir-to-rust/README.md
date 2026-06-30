@@ -31,8 +31,17 @@ let artifact = backend.compile(&sir_module)?;
 
 ## Capability declaration
 
-Accepts: `Closures`, `Pairs`, `Symbols`, `Strings`, `DynamicTyping`,
-`OptionalTypeAnnotations`, `MutualRecursion`, `Globals`.
+Accepts (v0): `Closures`, `Pairs`, `Symbols`, `Strings`,
+`DynamicTyping`, `OptionalTypeAnnotations`, `MutualRecursion`,
+`Globals`.
+
+Accepts (SIR16 / v1, landing incrementally): `Floats`, `ShortCircuit`.
+The float path adds a `Value::Float(f64)` arm to the runtime value
+model with numeric promotion (`int op float ⇒ float`); short-circuit
+`&&`/`||` emit a truthy-guarded block so the rhs is evaluated only when
+the lhs decides.  The other four v1 features (`MutableBindings`,
+`Loops`, `Sequences`, `Maps`) are not yet accepted and are still
+rejected at the capability check.
 
 Rejects: `TailCalls` (Rust does not guarantee TCO), `Intrinsics`
 (empty whitelist in v0).
@@ -42,7 +51,7 @@ Rejects: `TailCalls` (Rust does not guarantee TCO), `Intrinsics`
 ```rust
 #[derive(Clone)]
 enum Value {
-    Int(i64), Bool(bool), Nil,
+    Int(i64), Float(f64), Bool(bool), Nil,
     Sym(Rc<str>), Str(Rc<str>),
     Pair(Rc<Pair>),
     Closure(Rc<Closure>),

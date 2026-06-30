@@ -253,15 +253,46 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 name, span
             );
         }
-        // SIR16 expression kinds — Rust backend hasn't been extended.
-        Expr::FloatLit { span, .. }
-        | Expr::SeqLit { span, .. }
+        // ── SIR16: floats ──────────────────────────────────────────
+        // Emit a `Value::Float` constructor.  `{:?}` renders an f64 as
+        // a round-trippable decimal that is *also* a valid Rust float
+        // literal — crucially it keeps the trailing `.0` on integral
+        // values (`3.0`, not `3`), so the literal can never be mistaken
+        // for an `i64`.  Non-finite values have no literal spelling, so
+        // we route them through the `f64::` associated constants.
+        Expr::FloatLit { value, .. } => emit_float_literal(out, *value),
+        // ── SIR16: short-circuit logical ───────────────────────────
+        // A block with a fresh `__l` binding evaluates `lhs` exactly
+        // once, then decides whether to evaluate `rhs` — routing the
+        // test through SIR truthiness (only `false`/`nil` are falsy).
+        // `and` yields `rhs` when `lhs` is truthy else `lhs`; `or` is
+        // the mirror.  The `__l` binding is block-scoped, so nested
+        // `&&`/`||` shadow cleanly and never collide.  Matches the
+        // TypeScript backend's truthy-guarded arrow IIFE semantics.
+        Expr::LogicalAnd { lhs, rhs, .. } => {
+            out.push_str("({ let __l = (");
+            emit_expr(out, lhs, indent);
+            out.push_str("); if __sir::truthy(&__l) { (");
+            emit_expr(out, rhs, indent);
+            out.push_str(") } else { __l } })");
+        }
+        Expr::LogicalOr { lhs, rhs, .. } => {
+            out.push_str("({ let __l = (");
+            emit_expr(out, lhs, indent);
+            out.push_str("); if __sir::truthy(&__l) { __l } else { (");
+            emit_expr(out, rhs, indent);
+            out.push_str(") } })");
+        }
+        // Remaining SIR16+ expression kinds — Rust backend hasn't been
+        // extended to these yet (Sequences/Maps land in a later PR;
+        // `StrConcat` is SIR18 string interpolation).  Their features
+        // are undeclared, so the capability check rejects such modules
+        // before emit; reaching this arm is an internal bug.
+        Expr::SeqLit { span, .. }
         | Expr::SeqIndex { span, .. }
         | Expr::SeqLen { span, .. }
         | Expr::MapLit { span, .. }
         | Expr::MapGet { span, .. }
-        | Expr::LogicalAnd { span, .. }
-        | Expr::LogicalOr { span, .. }
         | Expr::StrConcat { span, .. } => {
             panic!("rust backend reached SIR16+ expression at {} — capability check should have rejected it", span);
         }
@@ -558,6 +589,34 @@ fn emit_stmt_inline(out: &mut String, s: &Stmt, indent: usize) {
 
 fn indent_str(level: usize) -> String {
     "    ".repeat(level)
+}
+
+/// Emit a SIR float literal as a `__sir::Value::Float(<rust-f64>)`.
+///
+/// Truth table for the spelling we choose:
+///
+/// | SIR value        | Rust literal emitted        | Why                       |
+/// |------------------|-----------------------------|---------------------------|
+/// | `3.0`            | `3.0f64`                    | `{:?}` keeps the `.0`     |
+/// | `3.14`           | `3.14f64`                   | round-trippable decimal   |
+/// | `-7.5`           | `-7.5f64`                   | sign preserved            |
+/// | `NaN`            | `f64::NAN`                  | no literal spelling exists |
+/// | `+∞`             | `f64::INFINITY`             | ditto                     |
+/// | `-∞`             | `f64::NEG_INFINITY`         | ditto                     |
+///
+/// Using `{:?}` (Debug) rather than `{}` (Display) is deliberate:
+/// Display renders `3.0_f64` as `"3"`, which would compile as an
+/// `i64` mismatch; Debug renders `"3.0"`, an unambiguous float.
+fn emit_float_literal(out: &mut String, value: f64) {
+    if value.is_finite() {
+        let _ = write!(out, "__sir::Value::Float({:?}f64)", value);
+    } else if value.is_nan() {
+        out.push_str("__sir::Value::Float(f64::NAN)");
+    } else if value > 0.0 {
+        out.push_str("__sir::Value::Float(f64::INFINITY)");
+    } else {
+        out.push_str("__sir::Value::Float(f64::NEG_INFINITY)");
+    }
 }
 
 /// Sanitize a SIR identifier for Rust.
@@ -898,6 +957,98 @@ mod tests {
             0,
         );
         assert_eq!(out, "__sir::apply_closure(&(f.clone()), vec![__sir::Value::Int(5i64)])");
+    }
+
+    #[test]
+    fn emit_float_literal_keeps_trailing_zero() {
+        // Integral floats must render with `.0` so the literal is an
+        // f64, never an i64.
+        let mut out = String::new();
+        emit_expr(&mut out, &Expr::FloatLit { value: 3.0, span: s() }, 0);
+        assert_eq!(out, "__sir::Value::Float(3.0f64)");
+    }
+
+    #[test]
+    fn emit_float_literal_fractional_and_negative() {
+        let mut a = String::new();
+        let mut b = String::new();
+        emit_expr(&mut a, &Expr::FloatLit { value: 3.25, span: s() }, 0);
+        emit_expr(&mut b, &Expr::FloatLit { value: -7.5, span: s() }, 0);
+        assert_eq!(a, "__sir::Value::Float(3.25f64)");
+        assert_eq!(b, "__sir::Value::Float(-7.5f64)");
+    }
+
+    #[test]
+    fn emit_float_literal_non_finite_uses_constants() {
+        let mut nan = String::new();
+        let mut inf = String::new();
+        let mut ninf = String::new();
+        emit_expr(&mut nan, &Expr::FloatLit { value: f64::NAN, span: s() }, 0);
+        emit_expr(&mut inf, &Expr::FloatLit { value: f64::INFINITY, span: s() }, 0);
+        emit_expr(&mut ninf, &Expr::FloatLit { value: f64::NEG_INFINITY, span: s() }, 0);
+        assert_eq!(nan, "__sir::Value::Float(f64::NAN)");
+        assert_eq!(inf, "__sir::Value::Float(f64::INFINITY)");
+        assert_eq!(ninf, "__sir::Value::Float(f64::NEG_INFINITY)");
+    }
+
+    #[test]
+    fn emit_logical_and_guards_rhs_with_truthy() {
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::LogicalAnd {
+                lhs: Box::new(Expr::BoolLit { value: true, span: s() }),
+                rhs: Box::new(Expr::IntLit { value: 5, span: s() }),
+                span: s(),
+            },
+            0,
+        );
+        // `and` yields rhs when lhs is truthy, else the lhs value.
+        assert_eq!(
+            out,
+            "({ let __l = (__sir::Value::Bool(true)); if __sir::truthy(&__l) { (__sir::Value::Int(5i64)) } else { __l } })"
+        );
+    }
+
+    #[test]
+    fn emit_logical_or_returns_lhs_when_truthy() {
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::LogicalOr {
+                lhs: Box::new(Expr::BoolLit { value: false, span: s() }),
+                rhs: Box::new(Expr::IntLit { value: 7, span: s() }),
+                span: s(),
+            },
+            0,
+        );
+        assert_eq!(
+            out,
+            "({ let __l = (__sir::Value::Bool(false)); if __sir::truthy(&__l) { __l } else { (__sir::Value::Int(7i64)) } })"
+        );
+    }
+
+    #[test]
+    fn emit_nested_short_circuit_uses_fresh_scopes() {
+        // Nested `&&` inside `||` — each gets its own block-scoped __l,
+        // so shadowing keeps them independent (no name collision).
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::LogicalOr {
+                lhs: Box::new(Expr::LogicalAnd {
+                    lhs: Box::new(Expr::BoolLit { value: true, span: s() }),
+                    rhs: Box::new(Expr::IntLit { value: 1, span: s() }),
+                    span: s(),
+                }),
+                rhs: Box::new(Expr::IntLit { value: 2, span: s() }),
+                span: s(),
+            },
+            0,
+        );
+        // Two independent `let __l` bindings, properly nested.
+        assert_eq!(out.matches("let __l =").count(), 2);
+        assert!(out.starts_with("({ let __l = (({ let __l ="));
     }
 
     #[test]

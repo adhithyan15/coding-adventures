@@ -62,6 +62,17 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::OptionalTypeAnnotations,
     Feature::MutualRecursion,
     Feature::Globals,
+    // ── SIR16 (v1) — added incrementally ───────────────────────────
+    // `Floats` adds a `Value::Float(f64)` arm to the runtime value
+    // model plus numeric promotion across the arithmetic helpers.
+    // `ShortCircuit` is pure emit (a guarded block over the existing
+    // `truthy` helper) and needs no runtime change.  The remaining v1
+    // features (MutableBindings, Loops, Sequences, Maps) are *not* yet
+    // declared, so a module using them is still rejected by the
+    // capability check before emit — keeping the `panic!`s in `emit.rs`
+    // strictly unreachable until those features land in later PRs.
+    Feature::Floats,
+    Feature::ShortCircuit,
 ];
 
 impl Backend for RustBackend {
