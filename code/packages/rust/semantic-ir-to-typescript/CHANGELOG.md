@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.2.0 — default-parameter emission (P2b)
+
+Default parameters now lower to TypeScript-native defaults. A `Param` whose new
+SIR `default` field is `Some(expr)` emits `name: __Sir.Val = <default>`, where
+`<default>` is the default expression run through the ordinary expression
+emitter. So `def f(a, b = a + 1); b; end` emits
+`function f(a: __Sir.Val, b: __Sir.Val = __Sir.add(a, 1)): __Sir.Val`.
+
+- **Why native is exact.** A SIR default is conceptually evaluated per call in
+  the callee's *parameter scope* and may reference *earlier* parameters.
+  TypeScript's own default-value parameters have precisely these semantics
+  (later defaults see earlier params; defaults run at call time when the
+  argument is omitted), so the lowering is a direct inline — no runtime helper,
+  no desugaring.
+- **No call-site padding.** The core validator now lets a `DirectCall` omit
+  trailing defaulted arguments. The emitter simply emits the arguments present
+  (`f(5)` stays one argument); TS native defaults fill the omitted trailing
+  parameters. `f(5, 10)` still passes both. `IndirectCall` is unchanged
+  (closures-with-defaults deferred).
+- **Capability.** `Feature::DefaultParams` is added to `ACCEPTED_FEATURES`, so a
+  default-using module passes the backend's feature check.
+- **Scope of `default`.** Only a `Required` parameter emits a default; a `Rest`
+  (`...rest`) parameter has none, and a `KwRest` (`**opts`) keeps its v0 object
+  fallback with no default surface form.
+- **Version.** Minor bump `0.1.x → 0.2.0` (Cargo manifest); the changelog
+  realigns onto the manifest version here.
+
 ## 0.1.22 — case-equality `case_eq` emission (M5)
 
 A `case_eq` builtin (emitted by a `when` clause for range/regex/literal

@@ -106,6 +106,14 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // object, `raise`, and ordered rescue-clause class matching come from
     // `@coding-adventures/sir-runtime-exceptions`.  Per code/specs/sir-runtime.md.
     Feature::Exceptions,
+    // P2b default parameters — a param with `default = Some(expr)`.  Emitted
+    // as a TypeScript-native default (`name: __Sir.Val = <expr>`).  The
+    // call-time / param-scope semantics of a SIR default — evaluated per call
+    // in the callee's parameter scope, free to reference EARLIER params —
+    // line up exactly with TS native defaults, so the lowering is a direct
+    // inline (no runtime helper, no call-site padding).  Per
+    // code/specs/sir-runtime.md.
+    Feature::DefaultParams,
 ];
 
 impl Backend for TypeScriptBackend {
@@ -1198,6 +1206,148 @@ mod tests {
         assert!(a.source.contains("\"method\""), "got:\n{}", a.source);
         assert!(!a.source.contains("__method__"), "operand was rendered; got:\n{}", a.source);
         assert!(!a.source.contains("\"foo\""), "operand was rendered; got:\n{}", a.source);
+    }
+
+    // ─── P2b default parameters → TS-native defaults ────────────────────────
+
+    /// Build a module exercising default parameters end-to-end:
+    ///
+    /// ```text
+    /// def f(a, b = a + 1)   # b's default REFERENCES the earlier param a
+    ///   b
+    /// end
+    /// def main
+    ///   f(5)        # omits b → native default fills it (b = a + 1 = 6)
+    ///   f(5, 10)    # passes b explicitly
+    /// end
+    /// ```
+    ///
+    /// The default expression is the canonical "references an earlier param"
+    /// form: `BuiltinCall("+", [VarRef{a, Param}, IntLit 1])`, which the TS
+    /// backend renders through its ordinary builtin lowering as
+    /// `__Sir.add(a, 1)`.
+    fn default_params_module() -> Module {
+        use semantic_ir::{Param, ParamKind, Scope};
+        let default_b = Expr::BuiltinCall {
+            name: "+".into(),
+            args: vec![
+                Expr::VarRef { name: "a".into(), scope: Scope::Param, span: s() },
+                Expr::IntLit { value: 1, span: s() },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let f = Function {
+            name: "f".into(),
+            params: vec![
+                Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+                Param {
+                    name: "b".into(),
+                    sir_type: None,
+                    kind: ParamKind::Required,
+                    default: Some(Box::new(default_b)),
+                    span: s(),
+                },
+            ],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::VarRef { name: "b".into(), scope: Scope::Param, span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        // main calls f(5) (b omitted) and f(5, 10) (b supplied).
+        let call_one = Expr::DirectCall {
+            fn_name: "f".into(),
+            args: vec![Expr::IntLit { value: 5, span: s() }],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let call_two = Expr::DirectCall {
+            fn_name: "f".into(),
+            args: vec![
+                Expr::IntLit { value: 5, span: s() },
+                Expr::IntLit { value: 10, span: s() },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let main = Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![semantic_ir::Stmt::ExprStmt { expr: call_one, span: s() }],
+                value: call_two,
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        Module {
+            name: "demo".into(),
+            manifest: FeatureManifest::from_features(&[
+                Feature::DefaultParams,
+                Feature::DynamicTyping,
+            ]),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![f, main],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("test")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        }
+    }
+
+    #[test]
+    fn default_param_referencing_earlier_param_emits_native_ts_default() {
+        // Capability: the module declares DefaultParams, so it must pass the
+        // backend's feature check rather than be rejected.
+        let m = default_params_module();
+        let a = compile(&m).expect("default-using module must compile");
+        let src = &a.source;
+        // The param `b` carries a TS-native default in the param position,
+        // and that default references the EARLIER param `a` by name —
+        // exactly the call-time / param-scope semantics SIR specifies.
+        assert!(
+            src.contains("function f(a: __Sir.Val, b: __Sir.Val = __Sir.add(a, 1)): __Sir.Val"),
+            "expected a native default referencing the earlier param; got:\n{}",
+            src
+        );
+        // The param `a` (no default) is unchanged — no `= ` after it.
+        assert!(
+            src.contains("function f(a: __Sir.Val, b"),
+            "param without a default must be unchanged; got:\n{}",
+            src
+        );
+    }
+
+    #[test]
+    fn default_param_partial_and_full_calls_emit_present_args_only() {
+        // The 1-arg call `f(5)` omits the trailing defaulted `b`; TS native
+        // defaults fill it.  No padding, no placeholder for the omitted arg.
+        // The 2-arg call `f(5, 10)` passes both.
+        let m = default_params_module();
+        let a = compile(&m).expect("compile");
+        let src = &a.source;
+        assert!(
+            src.contains("f(5)"),
+            "partial call must emit one arg (omitting the defaulted trailing param); got:\n{}",
+            src
+        );
+        assert!(
+            src.contains("f(5, 10)"),
+            "full call must emit both args; got:\n{}",
+            src
+        );
     }
 
     #[test]
