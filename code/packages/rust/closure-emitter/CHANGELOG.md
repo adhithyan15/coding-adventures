@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.18.5] - 2026-06-30
+
+### Changed — tighten binary/logical operator spacing in compact mode
+
+`emit_binary` and `emit_logical` previously wrote a space on **both** sides of
+every operator unconditionally, so compact output carried needless bytes —
+`a + b`, `a && b`, `a << b`, `a === b` — diverging from upstream Closure's
+`a+b`. Symbolic operators are now emitted tight in compact mode (a space appears
+only in `pretty` mode), matching upstream's `assertPrint("2 + 3", "2+3")`.
+
+Two carve-outs keep this sound:
+
+- **Word operators** `in` / `instanceof` still get a mandatory space on both
+  sides — `1 in obj`, not `1inobj`.
+- **Additive `+` / `-`** keep one minimal space at a seam where the operand
+  would otherwise fuse the pair into the increment/decrement token: `a + (+b)`
+  emits `a+ +b`, never `a++b` (which reparses as `a++ b`); likewise `a - (-b)` →
+  `a- -b`. No other symbolic operator can fuse (no operand begins or ends with
+  `<`,`>`,`&`,`|`,`*`,`/`,`%`,`^`,`=`, and `++`/`--` are not representable unary
+  operators), so they de-space unconditionally. The right-seam check reuses the
+  existing `arg_starts_with_sign` helper (which is parenthesisation-aware: a
+  wrapped operand leads with `(` and so needs no guard).
+
+New tests cover tight symbolic output, retained word-operator spaces, and the
+`a+ +b` / `a- -b` / negative-literal / mixed-sign (`a+-b`) hazard matrix.
+
 ## [0.18.4] - 2026-06-30
 
 ### Fixed — trailing array hole lost its comma (miscompile)

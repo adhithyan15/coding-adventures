@@ -147,10 +147,9 @@ fn test_no_trailing_comma_in_empty_array_literal() {
 /// longer wraps `ExpressionStatement` bodies in parens except for the
 /// leading-token-ambiguous `ObjectExpression` case.
 ///
-/// Our output is now `2 + 3;` — byte-equivalent to upstream's pretty-
-/// printed form. Upstream's minified output `2+3;` (no whitespace
-/// around the operator) will be matched when pretty/minify toggles get
-/// wired up in a follow-up.
+/// Our (compact) output is now `2+3;` — byte-identical to upstream's
+/// minified `assertPrint("2 + 3", "2+3")`. Symbolic binary operators are
+/// emitted tight in compact mode; a space appears only in `pretty` mode.
 #[test]
 fn test_binary_addition_emits_without_outer_parens() {
     let e = Expression::BinaryExpression(BinaryExpression {
@@ -159,7 +158,7 @@ fn test_binary_addition_emits_without_outer_parens() {
         left: Box::new(num(2.0)),
         right: Box::new(num(3.0)),
     });
-    assert_emits(e, "2 + 3;");
+    assert_emits(e, "2+3;");
 }
 
 /// Same shape for string concatenation: `\"a\" + \"b\";` without outer
@@ -172,7 +171,7 @@ fn test_string_concat_emits_without_outer_parens() {
         left: Box::new(string("a")),
         right: Box::new(string("b")),
     });
-    assert_emits(e, "\"a\" + \"b\";");
+    assert_emits(e, "\"a\"+\"b\";");
 }
 
 /// Upstream `assertPrintSame("!x")` — unary-not on identifier, no

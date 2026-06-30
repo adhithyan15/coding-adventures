@@ -951,22 +951,63 @@ impl<'a> Emitter<'a> {
         self.maybe_map(&b.cv);
         let my_prec = binary_prec(b.operator);
         self.emit_expression_inner(&b.left, my_prec);
-        // Binary operators always get spaces in our output —
-        // makes `1 in obj` and `a instanceof b` unambiguous even
-        // in minified mode.
-        self.required_ws();
-        self.write_str(binary_op_str(b.operator));
-        self.required_ws();
+        let op = binary_op_str(b.operator);
+
+        // Word-shaped operators MUST keep a space on both sides or they fuse
+        // with their operands into a single identifier (`1 in obj`, not `1inobj`;
+        // `a instanceof b`, not `ainstanceofb`).
+        if matches!(b.operator, BinaryOperator::In | BinaryOperator::InstanceOf) {
+            self.required_ws();
+            self.write_str(op);
+            self.required_ws();
+            self.emit_expression_inner(&b.right, my_prec + 1);
+            return;
+        }
+
+        // Every other (symbolic) operator is emitted tight in compact mode
+        // (`a+b`, `a&&b`, `a<<b`, `a===b`) — a space only in `pretty` mode. The
+        // ONLY token-merge hazard is the additive operators `+` / `-`: if the
+        // left operand already ends with the same sign, or the right operand
+        // begins with it, dropping the space fuses the pair into the
+        // increment/decrement token — `a+ +b` would become `a++b` (parsed
+        // `a++ b`), a MISCOMPILE. No other operator can fuse: no operand begins
+        // or ends with `<`,`>`,`&`,`|`,`*`,`/`,`%`,`^`,`=` in a way that forms a
+        // different token, and the right operand can never lead with `*` or `/`
+        // (so `/` cannot start a `/*`//`//` comment), since `++`/`--` are not
+        // representable unary operators here. We guard both seams for `+`/`-`.
+        let sign = match b.operator {
+            BinaryOperator::Add => Some('+'),
+            BinaryOperator::Sub => Some('-'),
+            _ => None,
+        };
+        let left_needs_space =
+            self.opts.pretty || sign.is_some_and(|sc| self.out.ends_with(sc));
+        if left_needs_space {
+            self.write_str(" ");
+        }
+        self.write_str(op);
+        let right_needs_space =
+            self.opts.pretty || sign.is_some_and(|sc| arg_starts_with_sign(&b.right, sc));
+        if right_needs_space {
+            self.write_str(" ");
+        }
         self.emit_expression_inner(&b.right, my_prec + 1);
     }
 
     fn emit_logical(&mut self, l: &LogicalExpression) {
+        // `&&` / `||` / `??` are symbolic and carry no token-merge hazard (no
+        // operand begins or ends with `&`, `|`, or `?`), so they emit tight in
+        // compact mode and spaced only in `pretty` mode.
         self.maybe_map(&l.cv);
         let my_prec = logical_prec(l.operator);
         self.emit_expression_inner(&l.left, my_prec);
-        self.required_ws();
+        if self.opts.pretty {
+            self.write_str(" ");
+        }
         self.write_str(logical_op_str(l.operator));
-        self.required_ws();
+        if self.opts.pretty {
+            self.write_str(" ");
+        }
         self.emit_expression_inner(&l.right, my_prec + 1);
     }
 
@@ -1695,6 +1736,67 @@ mod tests {
         })
     }
 
+    #[test]
+    fn binary_operators_emit_tight_in_compact_mode() {
+        use BinaryOperator::*;
+        // Symbolic operators carry no space in compact mode.
+        assert_eq!(emit_expr(binary(Add, ident("a"), ident("b"))), "a+b;");
+        assert_eq!(emit_expr(binary(Mul, ident("a"), ident("b"))), "a*b;");
+        assert_eq!(emit_expr(binary(StrictEq, ident("a"), ident("b"))), "a===b;");
+        assert_eq!(emit_expr(binary(LeftShift, ident("a"), ident("b"))), "a<<b;");
+        assert_eq!(emit_expr(binary(BitOr, ident("a"), ident("b"))), "a|b;");
+        assert_eq!(emit_expr(binary(Exp, ident("a"), ident("b"))), "a**b;");
+    }
+
+    #[test]
+    fn logical_operators_emit_tight_in_compact_mode() {
+        use LogicalOperator::*;
+        let logical = |op, l, r| {
+            Expression::LogicalExpression(LogicalExpression {
+                cv: None,
+                operator: op,
+                left: Box::new(l),
+                right: Box::new(r),
+            })
+        };
+        assert_eq!(emit_expr(logical(And, ident("a"), ident("b"))), "a&&b;");
+        assert_eq!(emit_expr(logical(Or, ident("a"), ident("b"))), "a||b;");
+    }
+
+    #[test]
+    fn word_operators_keep_their_spaces() {
+        use BinaryOperator::*;
+        // `in` / `instanceof` MUST stay spaced or they fuse into one identifier.
+        assert_eq!(emit_expr(binary(In, ident("a"), ident("b"))), "a in b;");
+        assert_eq!(
+            emit_expr(binary(InstanceOf, ident("a"), ident("b"))),
+            "a instanceof b;"
+        );
+    }
+
+    #[test]
+    fn additive_sign_hazard_keeps_a_minimal_space() {
+        use BinaryOperator::*;
+        // `a + (+b)` must NOT tighten to `a++b` (which parses as `a++ b`); the
+        // right seam keeps one space. The left seam still tightens: `a+ +b`.
+        assert_eq!(
+            emit_expr(binary(Add, ident("a"), unary(UnaryOperator::Plus, ident("b")))),
+            "a+ +b;"
+        );
+        // Likewise `a - (-b)` must not become `a--b`.
+        assert_eq!(
+            emit_expr(binary(Sub, ident("a"), unary(UnaryOperator::Negate, ident("b")))),
+            "a- -b;"
+        );
+        // A negative numeric literal on the right is the same hazard.
+        assert_eq!(emit_expr(binary(Sub, ident("a"), num(-1.0))), "a- -1;");
+        // Mixed signs do NOT fuse, so no space is needed: `a+-b` = `a + (-b)`.
+        assert_eq!(
+            emit_expr(binary(Add, ident("a"), unary(UnaryOperator::Negate, ident("b")))),
+            "a+-b;"
+        );
+    }
+
     fn emit_default(prog: Program) -> EmitOutput {
         let sidecar = Sidecar::new();
         let mut cv = CVLog::new(true);
@@ -1746,7 +1848,7 @@ mod tests {
         });
         let prog = program().with_body(vec![stmt(e)]);
         let out = emit_default(prog);
-        assert_eq!(out.code, "2 + 3;");
+        assert_eq!(out.code, "2+3;");
     }
 
     // ---- quote-choice (gap-026, CLOC12.11) -----------------
@@ -1912,7 +2014,7 @@ mod tests {
         });
         let prog = program().with_body(vec![stmt(e)]);
         let out = emit_default(prog);
-        assert_eq!(out.code, "\"foo\" + \"bar\";");
+        assert_eq!(out.code, "\"foo\"+\"bar\";");
     }
 
     #[test]
@@ -1952,19 +2054,19 @@ mod tests {
     fn not_over_equality_parenthesises() {
         // `!(a == b)` must NOT print `!a == b` (which reparses as `(!a) == b`).
         let e = unary(UnaryOperator::Not, binary(BinaryOperator::Eq, ident("a"), ident("b")));
-        assert_eq!(emit_expr(e), "!(a == b);");
+        assert_eq!(emit_expr(e), "!(a==b);");
     }
 
     #[test]
     fn negate_over_addition_parenthesises() {
         let e = unary(UnaryOperator::Negate, binary(BinaryOperator::Add, ident("a"), ident("b")));
-        assert_eq!(emit_expr(e), "-(a + b);");
+        assert_eq!(emit_expr(e), "-(a+b);");
     }
 
     #[test]
     fn bitnot_over_bitor_parenthesises() {
         let e = unary(UnaryOperator::BitNot, binary(BinaryOperator::BitOr, ident("a"), ident("b")));
-        assert_eq!(emit_expr(e), "~(a | b);");
+        assert_eq!(emit_expr(e), "~(a|b);");
     }
 
     #[test]
@@ -2016,7 +2118,7 @@ mod tests {
             unary(UnaryOperator::Negate, ident("x")),
             ident("y"),
         );
-        assert_eq!(emit_expr(e), "-x * y;");
+        assert_eq!(emit_expr(e), "-x*y;");
     }
 
     // ---- variable + function declarations -------------------
@@ -2506,7 +2608,7 @@ mod tests {
         });
         let prog = untraced_program().with_body(vec![stmt(e)]);
         let out = emit_default(prog);
-        assert_eq!(out.code, "2 + 3;");
+        assert_eq!(out.code, "2+3;");
     }
 
     // ---- END-TO-END: pipeline produces real output ----------
