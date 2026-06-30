@@ -3,7 +3,7 @@
 -- Transforms a Statement into a LogicalPlan tree using an 8-step bottom-up
 -- SELECT pipeline:
 --
---   Scan → Filter → Aggregate → Having → Project → Distinct → Sort → Limit
+--   Scan → Filter → Aggregate → Having → Distinct → Sort → Limit → Project
 --
 -- No I/O, no database connections — pure functional data transformation.
 -- Errors are reported via Either PlanError LogicalPlan (consistent with
@@ -408,14 +408,10 @@ planSelect schema s@(SelectStmt {}) = do
             let rh = maybe h id (tryResolveExpr scope h)
             in Right (Having afterAgg rh)
 
-    -- Step 4: PROJECT
-    projCols <- mapM (resolveOutputCol scope needsAgg) (stmtColumns s)
-    let afterProject = Project afterHaving projCols
+    -- Step 4: DISTINCT
+    let afterDistinct = if stmtDistinct s then Distinct afterHaving else afterHaving
 
-    -- Step 5: DISTINCT
-    let afterDistinct = if stmtDistinct s then Distinct afterProject else afterProject
-
-    -- Step 6: ORDER BY
+    -- Step 5: ORDER BY
     let resolveKey k =
             let rk = maybe (sortExpr k) id (tryResolveExpr scope (sortExpr k))
             in k { sortExpr = rk }
@@ -423,12 +419,14 @@ planSelect schema s@(SelectStmt {}) = do
             then afterDistinct
             else Sort afterDistinct (map resolveKey (stmtOrderBy s))
 
-    -- Step 7: LIMIT / OFFSET
+    -- Step 6: LIMIT / OFFSET
     let afterLimit = case stmtLimit s of
             Nothing -> afterSort
             Just lc -> Limit afterSort (limitCount lc) (limitOffset lc)
 
-    return afterLimit
+    -- Step 7: PROJECT (outermost — applied last so ORDER BY / LIMIT can see raw column refs)
+    projCols <- mapM (resolveOutputCol scope needsAgg) (stmtColumns s)
+    return (Project afterLimit projCols)
 planSelect _ _ = Left (UnsupportedStatement "planSelect called on non-SELECT")
 
 resolveOutputCol :: [ScopeEntry] -> Bool -> OutputColumn -> Either PlanError OutputColumn
