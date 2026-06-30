@@ -66,13 +66,27 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // `Floats` adds a `Value::Float(f64)` arm to the runtime value
     // model plus numeric promotion across the arithmetic helpers.
     // `ShortCircuit` is pure emit (a guarded block over the existing
-    // `truthy` helper) and needs no runtime change.  The remaining v1
-    // features (MutableBindings, Loops, Sequences, Maps) are *not* yet
-    // declared, so a module using them is still rejected by the
-    // capability check before emit — keeping the `panic!`s in `emit.rs`
-    // strictly unreachable until those features land in later PRs.
+    // `truthy` helper) and needs no runtime change.
     Feature::Floats,
     Feature::ShortCircuit,
+    // `MutableBindings` lets a `LetBinding` be re-targeted by a later
+    // `Assign`.  The emitter runs a per-function pre-pass to find every
+    // reassigned name and declares those bindings `let mut` (immutable
+    // bindings stay plain `let`); the `Assign` arm then emits a bare
+    // `<name> = <value>;`.
+    Feature::MutableBindings,
+    // `Loops` covers `While`, `ForRange`, and `ForEach`.  All three emit
+    // real Rust loops (see `emit.rs`); `ForEach` iterates a cons-list via
+    // the runtime `seq_iter` helper (no `Sequences` runtime needed — the
+    // existing `Pair` value model carries the list).  Because every loop
+    // statement now emits without panic, accepting `Loops` keeps the
+    // capability check and emit coverage consistent.
+    Feature::Loops,
+    // The remaining two v1 features (Sequences, Maps) are *not* yet
+    // declared, so a module using a `SeqLit`/`MapLit` (etc.) is still
+    // rejected by the capability check before emit — keeping the
+    // `SeqSet`/`MapSet` and Seq/Map expression `panic!`s in `emit.rs`
+    // strictly unreachable until those features land in a later PR.
 ];
 
 impl Backend for RustBackend {

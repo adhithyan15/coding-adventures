@@ -1,0 +1,324 @@
+//! # semantic-ir-to-javascript
+//!
+//! Fifth backend for the narrow-waist Semantic IR (after TypeScript,
+//! Rust, Python, Go) — emits **self-contained** JavaScript from a
+//! [`semantic_ir::Module`].
+//!
+//! "Self-contained" means every produced `.js` file pastes the runtime
+//! helpers inline (a `__Sir` IIFE; see [`runtime`]).  There is no
+//! `require()`, no `import`, and no `npm install`: the file runs
+//! directly via `node <file>.js`.  This is the key contrast with the
+//! TypeScript backend, which imports a published
+//! `@coding-adventures/sir-runtime-*` package and carries type
+//! annotations.  Strip the annotations, inline the runtime, and the two
+//! emitters are otherwise the same shape.
+//!
+//! ## Public API
+//!
+//! ```ignore
+//! use semantic_ir_to_javascript::{compile, JavaScriptBackend};
+//! use semantic_ir::Backend;
+//!
+//! let module = /* a semantic_ir::Module from any frontend */;
+//!
+//! // Direct entry point:
+//! let artifact = compile(&module)?;
+//!
+//! // Or via the Backend trait:
+//! let artifact = JavaScriptBackend::new().compile(&module)?;
+//! ```
+//!
+//! Both paths return [`semantic_ir::Artifact`] with `filename`,
+//! `source` (the generated `.js`), and metadata.
+//!
+//! ## Capability declaration (this milestone)
+//!
+//! This first slice accepts the **v0 feature set** and nothing more:
+//!
+//! - `Closures`, `Pairs`, `Symbols`, `Strings`, `DynamicTyping`,
+//!   `OptionalTypeAnnotations`, `MutualRecursion`, `Globals`.
+//!
+//! It **rejects** everything else at the capability check — including
+//! the SIR16 collection/loop/short-circuit features, the SIR17 OOP and
+//! exception features, `TailCalls` (V8 does not reliably tail-call
+//! optimise), and `Intrinsics` (empty whitelist).  The accept-set is
+//! deliberately matched to exactly what [`emit`](crate::emit) lowers, so
+//! a module that uses a deferred node is turned away *before* lowering
+//! rather than producing wrong code.  Later milestones widen the set as
+//! the corresponding emit arms land.
+//!
+//! See [SIR18](../../../specs/SIR18-semantic-ir-to-javascript.md) for the
+//! full per-node lowering rules.
+
+mod emit;
+mod runtime;
+
+use semantic_ir::{
+    Artifact, ArtifactMetadata, Backend, BackendError, BackendErrorKind, Feature, Module,
+};
+
+pub use emit::sanitize_ident;
+
+/// Convenience entry point: validates the module, runs the capability
+/// checks, rejects unsupported features, and lowers to JavaScript.
+pub fn compile(module: &Module) -> Result<Artifact, BackendError> {
+    JavaScriptBackend::new().compile(module)
+}
+
+/// The v0 JavaScript backend.
+pub struct JavaScriptBackend;
+
+impl JavaScriptBackend {
+    pub fn new() -> Self {
+        Self
+    }
+}
+
+impl Default for JavaScriptBackend {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+/// Features the JavaScript backend accepts in this milestone: exactly
+/// the v0 surface that [`emit`](crate::emit) knows how to lower.
+///
+/// `TailCalls` and `Intrinsics` are excluded deliberately (the former is
+/// fundamentally unsupported on V8; the latter has an empty whitelist).
+/// The SIR16 collection/loop/short-circuit features and the SIR17/18
+/// OOP/exception/interpolation features are excluded because their emit
+/// arms are deferred to a later milestone — a module that declares one
+/// is rejected here, never silently mis-compiled.
+const ACCEPTED_FEATURES: &[Feature] = &[
+    Feature::Closures,
+    Feature::Pairs,
+    Feature::Symbols,
+    Feature::Strings,
+    Feature::DynamicTyping,
+    Feature::OptionalTypeAnnotations,
+    Feature::MutualRecursion,
+    Feature::Globals,
+];
+
+impl Backend for JavaScriptBackend {
+    fn target_tag(&self) -> &'static str {
+        "javascript"
+    }
+
+    fn accepts_features(&self) -> &'static [Feature] {
+        ACCEPTED_FEATURES
+    }
+
+    fn accepts_intrinsics(&self) -> &'static [&'static str] {
+        &[]
+    }
+
+    fn compile(&self, module: &Module) -> Result<Artifact, BackendError> {
+        // 1. Validate at the SIR boundary.  Lowering assumes the module
+        //    is structurally well-formed.  A non-ok validation result
+        //    that carries an error-severity issue blocks lowering;
+        //    warnings-only results pass through.
+        let r = semantic_ir::validate(module);
+        if let Some(e) = r.errors().next().cloned() {
+            return Err(BackendError {
+                kind: BackendErrorKind::InvalidModule,
+                message: format!("module failed validation: {}", e.message),
+                span: e.span,
+            });
+        }
+
+        // 2. Capability check: every declared feature must be accepted,
+        //    and every intrinsic must be whitelisted (none are).
+        if let Some(e) = self.check_module(module).into_iter().next() {
+            return Err(e);
+        }
+
+        // 3. Tail-calls are fundamentally unsupported on V8.  The
+        //    capability check in step 2 already rejects them (TailCalls
+        //    is not in the accept-set), but keep an explicit, clearer
+        //    error in case the accept-set ever changes.
+        if module.manifest.contains(Feature::TailCalls) {
+            return Err(BackendError {
+                kind: BackendErrorKind::UnsupportedFeature,
+                message: "javascript backend cannot satisfy `tail-calls` feature".into(),
+                span: module.span.clone(),
+            });
+        }
+
+        // 4. Lower.
+        let source = emit::emit_module(module);
+        let metadata = ArtifactMetadata {
+            bytes: source.len(),
+            line_count: source.lines().count(),
+            ..Default::default()
+        };
+
+        Ok(Artifact {
+            filename: format!("{}.js", module.name.replace('/', "_")),
+            source,
+            metadata,
+        })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use semantic_ir::{
+        Block, EffectSet, Expr, FeatureManifest, Function, Metadata, Span, Stmt,
+    };
+
+    fn s() -> Span {
+        Span::synthetic()
+    }
+
+    /// A minimal module: `main` returns 42.
+    fn minimal_module() -> Module {
+        Module {
+            name: "demo".into(),
+            manifest: FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![Function {
+                name: "main".into(),
+                params: vec![],
+                return_type: None,
+                captures: vec![],
+                body: Block {
+                    stmts: vec![],
+                    value: Expr::IntLit { value: 42, span: s() },
+                    span: s(),
+                },
+                effects: EffectSet::PURE,
+                metadata: Metadata::new(),
+                span: s(),
+            }],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("twig")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        }
+    }
+
+    #[test]
+    fn target_tag_is_javascript() {
+        assert_eq!(JavaScriptBackend::new().target_tag(), "javascript");
+    }
+
+    #[test]
+    fn compiles_minimal_module() {
+        let a = compile(&minimal_module()).expect("compile");
+        assert!(a.source.contains("function main() {"));
+        assert!(a.source.contains("return 42;"));
+        assert!(a.source.contains("\"use strict\";"));
+        assert!(a.filename.ends_with(".js"));
+        assert_eq!(a.filename, "demo.js");
+        assert!(a.metadata.bytes > 0);
+        assert!(a.metadata.line_count > 0);
+    }
+
+    #[test]
+    fn module_filename_sanitised() {
+        let mut m = minimal_module();
+        m.name = "compiler/lexer".into();
+        let a = compile(&m).expect("compile");
+        assert_eq!(a.filename, "compiler_lexer.js");
+    }
+
+    #[test]
+    fn rejects_tail_calls_feature() {
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[Feature::TailCalls]);
+        let err = compile(&m).expect_err("tail calls rejected");
+        assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
+    }
+
+    #[test]
+    fn rejects_sir16_loops_feature() {
+        // A deferred feature must be turned away at the capability check.
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[Feature::Loops]);
+        let err = compile(&m).expect_err("loops rejected");
+        assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
+    }
+
+    #[test]
+    fn rejects_intrinsic_node() {
+        use semantic_ir::SirType;
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[Feature::Intrinsics]);
+        let main = m.functions.iter_mut().find(|f| f.name == "main").unwrap();
+        main.body.stmts.push(Stmt::ExprStmt {
+            expr: Expr::Intrinsic {
+                targets: vec!["javascript".into()],
+                name: "raw_js".into(),
+                args: vec![],
+                return_type: SirType::Any,
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            span: s(),
+        });
+        let err = compile(&m).expect_err("intrinsic rejected");
+        assert!(
+            err.kind == BackendErrorKind::UnsupportedFeature
+                || err.kind == BackendErrorKind::UnsupportedIntrinsic
+        );
+    }
+
+    #[test]
+    fn end_to_end_from_twig_source() {
+        let module = twig_to_semantic_ir::compile_source(
+            "(define (add a b) (+ a b))\n(print (add 1 2))",
+            "demo",
+        )
+        .expect("lower");
+        let a = compile(&module).expect("compile");
+        assert!(a.source.contains("function add(a, b) {"), "got:\n{}", a.source);
+        // Native infix arithmetic.
+        assert!(a.source.contains("return (a + b);"), "got:\n{}", a.source);
+        // Top-level print of a direct call.
+        assert!(a.source.contains("__Sir.print(add(1, 2))"), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn end_to_end_closure_program() {
+        let module = twig_to_semantic_ir::compile_source(
+            "(define (adder n) (lambda (x) (+ x n)))\n(define add5 (adder 5))\n(print (add5 3))",
+            "demo",
+        )
+        .expect("lower");
+        let a = compile(&module).expect("compile");
+        // A synthesised lambda function is emitted.
+        assert!(a.source.contains("function __lambda_0("), "got:\n{}", a.source);
+        // MakeClosure → a `new __Sir.Closure`.
+        assert!(a.source.contains("new __Sir.Closure"), "got:\n{}", a.source);
+        // `add5` is a module global, initialised in `_init`.
+        assert!(a.source.contains("let add5 = null;"), "got:\n{}", a.source);
+        assert!(a.source.contains("_init();"), "got:\n{}", a.source);
+        // The indirect call to the closure routes through applyClosure.
+        assert!(a.source.contains("__Sir.applyClosure"), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn factorial_program_emits() {
+        let src = "(define (fact n) (if (= n 0) 1 (* n (fact (- n 1)))))\n(print (fact 5))";
+        let module = twig_to_semantic_ir::compile_source(src, "fact").expect("lower");
+        let a = compile(&module).expect("compile");
+        // The `if` lowers through the truthy ternary.
+        assert!(a.source.contains("__Sir.truthy"), "got:\n{}", a.source);
+        // Native comparison and recursive direct call.
+        assert!(a.source.contains("(n === 0)"), "got:\n{}", a.source);
+        assert!(a.source.contains("fact("), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn output_is_deterministic() {
+        let module =
+            twig_to_semantic_ir::compile_source("(define (id x) x)\n(id 7)", "demo").expect("lower");
+        let a = compile(&module).expect("compile");
+        let b = compile(&module).expect("compile again");
+        assert_eq!(a.source, b.source);
+    }
+}

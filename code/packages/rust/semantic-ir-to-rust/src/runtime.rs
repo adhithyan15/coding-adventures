@@ -310,6 +310,39 @@ pub const RUNTIME: &str = r##"mod __sir {
         out
     }
 
+    // ── loop support (SIR16 Loops) ────────────────────────────────
+    //
+    // `as_int` exposes the integer extraction the `ForRange` emitter
+    // needs for its `start`/`stop`/`step` bounds: these must be raw
+    // `i64`s for the numeric loop counter, not boxed `Value`s.  It is
+    // simply the public face of `as_i64` (which stays private for the
+    // arithmetic helpers).
+    pub fn as_int(v: &Value) -> i64 {
+        as_i64(v)
+    }
+
+    // `seq_iter` flattens a sequence value into a `Vec<Value>` for a
+    // `ForEach` loop.  This backend has no dedicated `Seq` value yet, so
+    // a "sequence" is the classic cons-list: a `Pair`-chain whose final
+    // `cdr` is `Nil`.  `Nil` itself is the empty sequence.  An improper
+    // list (a non-`Nil`, non-`Pair` tail) is a programming error and
+    // panics, matching the strictness of `car`/`cdr` on a non-pair.
+    pub fn seq_iter(v: &Value) -> Vec<Value> {
+        let mut out = Vec::new();
+        let mut cur = v.clone();
+        loop {
+            match cur {
+                Value::Nil => break,
+                Value::Pair(p) => {
+                    out.push(p.car.clone());
+                    cur = p.cdr.clone();
+                }
+                other => panic!("cannot iterate non-sequence: {}", format(&other)),
+            }
+        }
+        out
+    }
+
     // ── helpers ───────────────────────────────────────────────────
     fn as_i64(v: &Value) -> i64 {
         match v {
@@ -452,5 +485,13 @@ mod tests {
         assert!(RUNTIME.contains("thread_local!"));
         assert!(RUNTIME.contains("static GLOBALS"));
         assert!(RUNTIME.contains("static SYMBOL_TABLE"));
+    }
+
+    #[test]
+    fn runtime_declares_loop_helpers() {
+        // SIR16 Loops: ForRange needs an integer bound extractor
+        // (`as_int`), ForEach needs cons-list iteration (`seq_iter`).
+        assert!(RUNTIME.contains("pub fn as_int"));
+        assert!(RUNTIME.contains("pub fn seq_iter"));
     }
 }

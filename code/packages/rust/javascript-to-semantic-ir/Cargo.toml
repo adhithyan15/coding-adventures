@@ -1,0 +1,11 @@
+[package]
+name = "javascript-to-semantic-ir"
+version = "0.1.0"
+edition = "2021"
+description = "JavaScript (GrammarASTNode CST) → narrow-waist Semantic IR. SIR19 frontend, milestone M1 (literals)."
+
+[dependencies]
+coding-adventures-javascript-parser = { path = "../javascript-parser" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+semantic-ir = { path = "../semantic-ir" }

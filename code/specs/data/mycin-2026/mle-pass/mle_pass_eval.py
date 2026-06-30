@@ -3,23 +3,26 @@ the CPU from grounded edges, with ZERO model calls.
 
 The reasoning step past single-hop recall: a board question like "leukocoria points to a
 disease caused by a mutation in which gene?" needs TWO grounded hops —
-  hop 1  clue → disease     (an organ-system recall library: ophtho / neuro / collagen / …)
-  hop 2  disease → gene     (the genetics library)
-joined on the shared disease. We express the join as an adj-lang **rule body** and let the
-engine's SLD resolver do it:
+  hop 1  clue → middle entity   (an organ-system recall library: ophtho / neuro / micro / …)
+  hop 2  middle entity → answer (gene / inheritance pattern / Gram stain / morphology / …)
+joined on the shared middle entity. We express the join as an adj-lang **rule body** and let
+the engine's SLD resolver do it:
 
     import "<hop1 library>"
-    import "genetics-edges.adj"
+    import "<hop2 library>"
     rule {
-        head: clue_to_gene($X, $G)
-        when: <hop1 relation>($X, $D), gene_defect($D, $G)
+        head: clue_to_answer($X, $A)
+        when: <hop1 relation>($X, $D), <hop2 relation>($D, $A)
     }
-    ? clue_to_gene(<clue>, $G)
+    ? clue_to_answer(<clue>, $A)
 
-The engine returns the `$G` binding and — crucially — the citing clause of EACH hop, so a
+The engine returns the `$A` binding and — crucially — the citing clause of EACH hop, so a
 correct answer is defended by both spans (multi-hop byte-provenance). The harness reads the
-binding, maps it to the printed gene option, and scores correct / abstain / wrong. It never
-asks a model anything; all knowledge lives in the imported grounded libraries.
+binding, maps it to the printed option, and scores correct / abstain / wrong. It never asks a
+model anything; all knowledge lives in the imported grounded libraries. Hop 1 may run in
+reverse (`"hop1_reverse"`) when the clue is the relation's second argument — e.g. microbiology
+`causes(organism, disease)`, where the *disease* is the clue and the *organism* is the middle
+entity whose Gram stain / morphology is the answer (the original MYCIN organism-ID chain).
 
 Defensibility metric: `multihop_coverage` = fraction of CORRECT answers that cite BOTH hops
 (≥2 authoritative citing clauses). That is the number a future grounding PR moves, and the
@@ -63,15 +66,34 @@ _CLI = _find_cli()
 
 def build_query(item: dict) -> str:
     """The two-hop join program for one item: import both libraries, define the chaining
-    rule (hop1 relation × gene_defect, joined on the disease), and ask the binding query."""
+    rule (hop1 relation joined to hop2 relation on the shared middle entity `$D`), and ask the
+    binding query. The answer variable is `$A` (it may be a gene, an inheritance pattern, a
+    Gram stain, …, depending on the hop2 relation).
+
+    Hop-1 direction. By default the clue is hop1's FIRST argument and the middle entity its
+    second: `rel1($X, $D)` (e.g. `eye_finding_indicates(clue, disease)`). Some chains run the
+    other way: the clue is hop1's SECOND argument and the middle entity its first — e.g.
+    `causes(organism, disease)`, where the clue is the *disease* and the middle entity is the
+    *organism* to be found. Setting `"hop1_reverse": true` emits `rel1($D, $X)` for that case.
+    Either way the join variable `$D` is what hop2 consumes (`rel2($D, $A)`), so the engine's
+    SLD resolver does the join regardless of argument order — relations are bidirectional.
+
+    Imports are de-duplicated: when both hops draw on the same library (e.g. microbiology's
+    `causes` and `gram_stain` both live in `micro-edges.adj`) it is imported once.
+    """
+    libs = [item["hop1_lib"]]
+    if item["hop2_lib"] not in libs:
+        libs.append(item["hop2_lib"])
+    imports = "".join(f'import "{lib}"\n' for lib in libs)
+    hop1 = (f'{item["hop1_relation"]}($D, $X)' if item.get("hop1_reverse")
+            else f'{item["hop1_relation"]}($X, $D)')
     return (
-        f'import "{item["hop1_lib"]}"\n'
-        f'import "{item["hop2_lib"]}"\n'
-        "rule {\n"
-        "    head: clue_to_gene($X, $G)\n"
-        f'    when: {item["hop1_relation"]}($X, $D), {item["hop2_relation"]}($D, $G)\n'
+        imports
+        + "rule {\n"
+        "    head: clue_to_answer($X, $A)\n"
+        f'    when: {hop1}, {item["hop2_relation"]}($D, $A)\n'
         "}\n"
-        f'? clue_to_gene({item["clue"]}, $G)\n'
+        f'? clue_to_answer({item["clue"]}, $A)\n'
     )
 
 
@@ -88,11 +110,12 @@ def run_item(item: dict, cli: Path | None = None) -> RunResult:
         raise RuntimeError("adj-lang-cli not built (cargo build -p adj-lang-cli)")
     with tempfile.TemporaryDirectory() as td:
         tdp = Path(td)
-        # Copy the two grounded libraries beside the query so sibling imports resolve.
-        # Each must be a BARE filename (no path separators / parent refs) — a structural
-        # guard so a library name can only ever name a file directly inside recall/, never
-        # path-traverse out of it, regardless of where items.json comes from.
-        for lib in (item["hop1_lib"], item["hop2_lib"]):
+        # Copy the grounded libraries beside the query so sibling imports resolve (deduped —
+        # a chain whose two hops share one library copies it once). Each must be a BARE
+        # filename (no path separators / parent refs) — a structural guard so a library name
+        # can only ever name a file directly inside recall/, never path-traverse out of it,
+        # regardless of where items.json comes from.
+        for lib in dict.fromkeys((item["hop1_lib"], item["hop2_lib"])):
             if "/" in lib or "\\" in lib or ".." in lib:
                 raise ValueError(f"library name must be a bare filename, got {lib!r}")
             shutil.copy(RECALL / lib, tdp / lib)
@@ -104,7 +127,7 @@ def run_item(item: dict, cli: Path | None = None) -> RunResult:
     if not recall or not recall[0].get("answers"):
         return RunResult(binding=None, citations=0)
     ans = recall[0]["answers"][0]
-    return RunResult(binding=ans["bindings"].get("G"), citations=len(ans.get("citations", [])))
+    return RunResult(binding=ans["bindings"].get("A"), citations=len(ans.get("citations", [])))
 
 
 def letter_for(item: dict, gene: str | None) -> str | None:

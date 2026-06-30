@@ -35,13 +35,24 @@ Accepts (v0): `Closures`, `Pairs`, `Symbols`, `Strings`,
 `DynamicTyping`, `OptionalTypeAnnotations`, `MutualRecursion`,
 `Globals`.
 
-Accepts (SIR16 / v1, landing incrementally): `Floats`, `ShortCircuit`.
-The float path adds a `Value::Float(f64)` arm to the runtime value
-model with numeric promotion (`int op float ⇒ float`); short-circuit
-`&&`/`||` emit a truthy-guarded block so the rhs is evaluated only when
-the lhs decides.  The other four v1 features (`MutableBindings`,
-`Loops`, `Sequences`, `Maps`) are not yet accepted and are still
-rejected at the capability check.
+Accepts (SIR16 / v1, landing incrementally): `Floats`, `ShortCircuit`,
+`MutableBindings`, `Loops`.
+
+- `Floats` adds a `Value::Float(f64)` arm to the runtime value model with
+  numeric promotion (`int op float ⇒ float`).
+- `ShortCircuit` `&&`/`||` emit a truthy-guarded block so the rhs is
+  evaluated only when the lhs decides.
+- `MutableBindings` lets a `let`-binding be re-targeted by a later
+  assignment: a per-function pre-pass declares every reassigned name
+  `let mut`, and the assignment emits a bare `<name> = <value>;`
+  (Local/Param/Capture) or a runtime `global_set` (Global).
+- `Loops` covers `while`, `for-range`, and `for-each`.  `while` and
+  `for-range` route through SIR truthiness / cached `i64` bounds;
+  `for-each` iterates a cons-list (`Pair`-chain) via the runtime
+  `seq_iter` helper, so it needs no dedicated `Sequences` value yet.
+
+The other two v1 features (`Sequences`, `Maps`) are not yet accepted and
+are still rejected at the capability check.
 
 Rejects: `TailCalls` (Rust does not guarantee TCO), `Intrinsics`
 (empty whitelist in v0).

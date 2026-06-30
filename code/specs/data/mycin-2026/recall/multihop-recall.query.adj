@@ -19,6 +19,7 @@ import "collagen-defect-edges.adj"
 import "enzyme-deficiency-edges.adj"
 import "derm-edges.adj"
 import "genetics-edges.adj"
+import "micro-edges.adj"
 
 % --- the chaining rules: clue -> disease -> gene, joined on the shared $D ---------------
 rule {
@@ -50,6 +51,19 @@ rule {
     head: eye_finding_to_inheritance($F, $P)
     when: eye_finding_indicates($F, $D), inheritance($D, $P)
 }
+% --- a REVERSE first hop: disease -> (causative organism) -> trait. `causes(organism, disease)`
+%     is traversed backwards (the disease is the clue, bound to the SECOND argument; the organism
+%     $O is the shared join), then the organism's Gram stain / morphology is read. The engine's
+%     SLD resolver joins on $O regardless of argument order — relations are bidirectional. This is
+%     the original MYCIN organism-identification chain, and both hops live in one library.
+rule {
+    head: disease_to_gram($Dis, $Stain)
+    when: causes($O, $Dis), gram_stain($O, $Stain)
+}
+rule {
+    head: disease_to_morphology($Dis, $Shape)
+    when: causes($O, $Dis), morphology($O, $Shape)
+}
 
 % --- the two-hop binding queries (each returns the gene + both hops' provenance) --------
 ? eye_finding_to_gene(leukocoria, $G)                  % expect rb1   (retinoblastoma)
@@ -67,3 +81,11 @@ rule {
 ? lesion_to_inheritance(caudate_nucleus, $P)           % expect autosomal_dominant (huntington)
 ? eye_finding_to_inheritance(kayser_fleischer_rings, $P) % expect autosomal_recessive (wilson)
 ? eye_finding_to_inheritance(superior_lens_dislocation, $P) % expect autosomal_dominant (marfan)
+
+% --- reverse first hop: disease -> causative organism -> Gram stain / morphology ------------
+? disease_to_gram(cholera, $Stain)                     % expect gram_negative (vibrio_cholerae)
+? disease_to_gram(anthrax, $Stain)                     % expect gram_positive (bacillus_anthracis)
+? disease_to_morphology(cholera, $Shape)               % expect comma_shaped (vibrio_cholerae)
+? disease_to_morphology(peptic_ulcer_disease, $Shape)  % expect spiral (helicobacter_pylori)
+? disease_to_morphology(gonorrhea, $Shape)             % expect diplococci (neisseria_gonorrhoeae)
+? disease_to_morphology(syphilis, $Shape)              % expect spirochete (treponema_pallidum)

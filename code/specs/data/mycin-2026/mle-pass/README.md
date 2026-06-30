@@ -42,19 +42,38 @@ variable, so a two-hop question is one rule + one binding query:
 import "ophtho-edges.adj"
 import "genetics-edges.adj"
 rule {
-    head: clue_to_gene($X, $G)
-    when: eye_finding_indicates($X, $D), gene_defect($D, $G)   % join on $D
+    head: clue_to_answer($X, $A)
+    when: eye_finding_indicates($X, $D), gene_defect($D, $A)   % join on $D
 }
-? clue_to_gene(leukocoria, $G)   % → rb1, with both hops cited
+? clue_to_answer(leukocoria, $A)   % → rb1, with both hops cited
 ```
 
-The engine returns the gene binding **and** the citing clause of each hop. Nothing is
+The engine returns the binding **and** the citing clause of each hop. Nothing is
 authored here: every edge reuses an already-grounded, spider+adversarially-gated fact
 (`../recall/`). Because adj-lang imports may not escape their directory, the harness assembles
-each run in a temp dir (the two needed `*-edges.adj` copied beside the query), leaving the
-shipped `recall/` library untouched.
+each run in a temp dir (the needed `*-edges.adj` copied beside the query, de-duplicated),
+leaving the shipped `recall/` library untouched.
 
-Slice 2: **15/15 correct, zero model calls** — 10 clue→disease→gene chains + 3 clue→disease→**inheritance**
-chains (proving the harness is generic over the second hop) + 2 **abstention** items (ungrounded clue ⇒
-must abstain). `multihop_coverage` 1.0 over the 13 answerable items; the scorer reports
+### Hop 1 can run in reverse
+
+Some chains run "backwards". The grounded edge is `causes(organism, disease)`, so to answer
+"disease X — what is its causative organism's Gram stain?" the clue is the *second* argument
+and the organism is the middle entity. Setting `"hop1_reverse": true` emits the hop-1 subgoal
+as `rel1($D, $X)` (join var first), and the engine's SLD resolver joins on `$D` either way —
+relations are bidirectional, so a two-hop chain need not run left-to-right:
+
+```adj
+import "micro-edges.adj"          % both hops live here → imported once
+rule {
+    head: clue_to_answer($X, $A)
+    when: causes($D, $X), gram_stain($D, $A)   % $X = disease (clue), $D = organism (join)
+}
+? clue_to_answer(cholera, $A)     % → gram_negative (vibrio_cholerae), both hops cited
+```
+
+Slice 3: **30/30 correct, zero model calls** — slice-2's 13 gene/inheritance chains + 14
+microbiology organism-ID chains (8 `disease → organism → Gram stain`, 6 `→ morphology`, run in
+reverse — the original MYCIN domain) + 3 **abstention** items (ungrounded clue/disease ⇒ must
+abstain). `multihop_coverage` 1.0 over the 27 answerable items; the scorer reports
 `abstained_correctly` and counts any binding on an abstention item as a fabrication (wrong).
+The answer variable is `$A` (gene / inheritance pattern / Gram stain / morphology, per hop 2).
