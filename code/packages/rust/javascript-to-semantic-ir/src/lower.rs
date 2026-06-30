@@ -1,6 +1,6 @@
 //! JavaScript `GrammarASTNode` (CST) → `semantic_ir::Module` lowering.
 //!
-//! # What this file does (milestones M1 + M2 + M3)
+//! # What this file does (milestones M1 + M2 + M3 + M4)
 //!
 //! The [`javascript-parser`](coding_adventures_javascript_parser) crate
 //! hands us a *concrete syntax tree* (CST): a [`GrammarASTNode`] whose
@@ -181,12 +181,97 @@
 //! operator recursion is bounded by [`MAX_EXPR_DEPTH`]: each nested body is
 //! lowered with `depth + 1`, and an over-deep nest becomes an ordinary
 //! positioned error rather than a stack overflow.
+//!
+//! ## Functions, calls, closures (M4 — learned by probing the parser)
+//!
+//! M4 adds **functions** (declarations + arrows), **calls**, and
+//! **closures**.  The CST rule names and child layouts (precedence-wrapper
+//! layers elided):
+//!
+//! | JS source                       | CST rule               | children                                                                          |
+//! |---------------------------------|------------------------|-----------------------------------------------------------------------------------|
+//! | `function f(a, b) { … }`        | `function_declaration` | `[Kw("function"), Name(f), (, formal_parameters, ), {, function_body, }]`          |
+//! | `function g() { … }`            | `function_declaration` | `[Kw("function"), Name(g), (, ), {, function_body, }]` (no `formal_parameters`)    |
+//! | `a` / `a, b`                    | `formal_parameters`    | `[formal_parameter, (, formal_parameter)*]`, each `formal_parameter[ Name ]`       |
+//! | `{ … }` (fn body)               | `function_body`        | `[source_element*]` (possibly empty)                                              |
+//! | `return e;`                     | `return_statement`     | `[Kw("return"), expression, ;]` (or `[Kw("return"), ;]` for bare `return;`)        |
+//! | `(a) => e` / `a => e`           | `arrow_function`       | `[arrow_parameters, Name("=>"), concise_body]`                                     |
+//! | `(a)` / `()` / `a`              | `arrow_parameters`     | `[(, formal_parameters?, )]` **or** a bare `[Name]` for `a => …`                   |
+//! | `=> e`                          | `concise_body`         | `[assignment_expression]` (expression body)                                       |
+//! | `=> { … }`                      | `concise_body`         | `[{, function_body, }]` (block body)                                               |
+//! | `f(1, 2)`                       | `call_expression`      | `[callee(member_expression), arguments]`                                           |
+//! | `console.log(x)`                | `call_expression`      | `[member_expression[ console, ., log ], arguments]`                                |
+//! | `(1, 2)`                        | `arguments`            | `[(, argument_list?, )]`, `argument_list[ assignment_expression (, …)* ]`          |
+//!
+//! ### Two-pass function collection
+//!
+//! Before lowering any body we walk the program collecting **every**
+//! `function_declaration` name (top-level and nested) into
+//! `function_names`.  This lets a call resolve to a `DirectCall` even when
+//! the callee is defined *after* the call site (forward reference) and lets
+//! mutual recursion (`isEven`/`isOdd`) work.  Nested function names are
+//! global too: a nested `function inner` is lifted to a top-level
+//! synthesised `Function`, so its name must be visible module-wide.
+//!
+//! ### `return` (tail-position only)
+//!
+//! The IR has no early-return node; a `Function`/closure body is a `Block`
+//! whose `value` is the returned expression.  We accept a `return` **only**
+//! in tail position — the last statement of the body.  `return expr` sets
+//! `body.value = expr`; a body with no `return` (or a bare `return;`) gets
+//! `body.value = NilLit`.  A `return` anywhere *other* than the final
+//! statement is a positioned [`JsLowerError`] ("early return not supported
+//! in v0").
+//!
+//! ### Arrow functions and nested functions → `MakeClosure`
+//!
+//! An arrow function or a *nested* `function` declaration is lifted to a
+//! synthesised top-level `Function` with a gensym'd name (`__lambda_<N>`
+//! for arrows, the source name for nested declarations) plus a
+//! [`MakeClosure`](Expr::MakeClosure) at the source position.  Its free
+//! variables — body references that resolve to an *enclosing* function's
+//! local / param / capture, and are not params/locals of the closure
+//! itself, nor module functions/globals/builtins — become
+//! [`Capture`]s on the synthesised `Function` (resolved as
+//! [`Scope::Capture`] inside the body) and [`CaptureValue`]s on the
+//! `MakeClosure` (resolved in the *enclosing* scope).  Capture discovery is
+//! **on-resolve**: we lower the body inside a fresh scope frame and, each
+//! time a name resolves to an enclosing frame, record it as a capture.
+//!
+//! An expression-bodied arrow (`x => x + 1`) yields a `Block` with no
+//! statements and `value = x + 1`; a block-bodied arrow / nested function
+//! follows the same tail-`return` rule as a top-level function.
+//!
+//! ### Calls → `DirectCall` / `IndirectCall` / `BuiltinCall`
+//!
+//! `f(args)` dispatches on the callee:
+//!   * a known top-level/synthesised `function` name → [`DirectCall`];
+//!   * `console.log(x)` (and the M1–M3 builtin map) → [`BuiltinCall`];
+//!   * any other callee that resolves to a *value* (a local/param/captured
+//!     closure handle) → [`IndirectCall`] on that value.
+//!
+//! Member-call methods other than `console.log`, and calling a
+//! non-identifier callee, are deferred (M5).
+//!
+//! ### Recursion bound
+//!
+//! Closure/function-body nesting reuses [`MAX_STMT_DEPTH`] (the body is a
+//! statement sequence lowered at the caller's `depth + 1`) and operand
+//! recursion stays bounded by [`MAX_EXPR_DEPTH`], so a pathologically deep
+//! nest of functions or calls becomes a positioned error, not a stack
+//! overflow.
+//!
+//! ### Deferred past M4
+//!
+//! Collections / member-access / methods (M5), classes, `this`/`new`,
+//! generators / `async`/`await`, default / rest params, destructuring,
+//! spread, and template literals remain positioned errors.
 
 use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{
-    Block, EffectSet, ExportName, Expr, Feature, FeatureManifest, Function, Metadata, Module,
-    Scope, Span, Stmt, CURRENT_SIR_VERSION,
+    Block, Capture, CaptureValue, Effect, EffectSet, ExportName, Expr, Feature, FeatureManifest,
+    Function, Metadata, Module, Param, ParamKind, Scope, Span, Stmt, CURRENT_SIR_VERSION,
 };
 use std::collections::HashSet;
 
@@ -273,9 +358,23 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Js
     let mut lw = Lowerer {
         file_name: module_name.to_string(),
         features_used: FeatureManifest::new(),
-        declared_locals: HashSet::new(),
+        scopes: Vec::new(),
+        function_names: HashSet::new(),
+        user_functions: Vec::new(),
+        synthesised: Vec::new(),
+        lambda_counter: 0,
     };
 
+    // ── Pass 1: collect every `function` name (top-level and nested) ──
+    // so a call can resolve to a `DirectCall` even when the callee is
+    // defined later (forward reference) or refers to itself / a sibling
+    // (recursion, mutual recursion).  Nested declarations are lifted to
+    // top-level synthesised functions, so their names are module-wide too.
+    collect_function_names(program, &mut lw.function_names);
+
+    // ── Pass 2: lower bodies. ────────────────────────────────────────
+    // `main` is the synthetic top-level scope frame (no params/captures);
+    // its locals accumulate as we lower the top-level statement sequence.
     let block = lw.lower_program(program)?;
 
     // Every JS source becomes a synthetic `main` whose body is the
@@ -294,6 +393,51 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Js
         span: lw.span_of(program),
     };
 
+    // The module's public surface is `main` plus every user-visible
+    // top-level `function` (a module-scoped `function f` in JS is the
+    // analog of `def f` at Python module scope).  Capture the names *before*
+    // the function vectors are moved into the table below.
+    let mut exports = vec![ExportName {
+        name: "main".to_string(),
+        span: Span::synthetic(),
+    }];
+    for name in lw.top_level_function_names_in_order() {
+        exports.push(ExportName {
+            name,
+            span: Span::synthetic(),
+        });
+    }
+
+    // Assemble the function table: synthesised closure bodies first, then
+    // the user's top-level `function` declarations, then `main` last.
+    // Order is cosmetic — the validator resolves names against the whole
+    // set — but keeping `main` last mirrors the sibling frontends.
+    let mut functions: Vec<Function> =
+        Vec::with_capacity(lw.synthesised.len() + lw.user_functions.len() + 1);
+    functions.append(&mut lw.synthesised);
+    functions.append(&mut lw.user_functions);
+    functions.push(main);
+
+    // Manifest fixup: `MutualRecursion`.  The validator never *observes*
+    // this feature (there is no node for it), so we must declare it
+    // ourselves — and only when it is genuinely present, otherwise the
+    // validator reports a spurious "declared but unused" warning.  We
+    // detect a real cycle in the static call graph of the user/synthesised
+    // functions (see `has_mutual_recursion`).
+    if has_mutual_recursion(&functions) {
+        lw.features_used.add(Feature::MutualRecursion);
+    }
+    // `DynamicTyping`: any function with an untyped param (every JS param
+    // is untyped in v0) makes the validator observe `DynamicTyping`, so we
+    // must declare it to match.  `main` has no params; a user `function`
+    // or arrow with ≥1 param does.
+    if functions
+        .iter()
+        .any(|f| f.params.iter().any(|p| p.sir_type.is_none()))
+    {
+        lw.features_used.add(Feature::DynamicTyping);
+    }
+
     // Materialise the manifest in a stable order.  The SIR validator
     // requires the manifest to *exactly* match what the body uses:
     // used-but-undeclared is an error, declared-but-unused a warning.
@@ -309,13 +453,8 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Js
         name: module_name.to_string(),
         manifest,
         imports: Vec::new(),
-        // `main` is the conventional entry point — exporting it lets SIR
-        // backends recognise it as such.
-        exports: vec![ExportName {
-            name: "main".to_string(),
-            span: Span::synthetic(),
-        }],
-        functions: vec![main],
+        exports,
+        functions,
         globals: Vec::new(),
         metadata,
         span: lw.span_of(program),
@@ -326,6 +465,48 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Js
 // Lowerer — the small amount of mutable state M2 needs
 // ---------------------------------------------------------------------------
 
+/// One lexical *function frame* on the scope stack.
+///
+/// The bottom frame is the synthetic `main`; each arrow / nested
+/// `function` pushes a new frame while its body is lowered.  Resolution
+/// (`resolve_name`) walks the stack top-down: the current frame's
+/// `locals`/`params`, then `captures`, then — for a name found in an
+/// *enclosing* frame — a capture is recorded on the current closure.
+struct FnScope {
+    /// Parameter names of this function (empty for `main`).
+    params: HashSet<String>,
+    /// Capture names discovered so far for this closure body (empty for
+    /// `main` and for top-level `function` declarations, which capture
+    /// nothing — they see only globals/functions/builtins).
+    captures: HashSet<String>,
+    /// `let`/`const`/`var`-bound names visible at this point, in source
+    /// order of first binding.  Used both for resolution and (via the
+    /// snapshot/restore dance) block scoping.
+    locals: HashSet<String>,
+    /// Whether this frame is a *closure* frame (an arrow or a nested
+    /// `function`).  Only closure frames accumulate captures; `main` and
+    /// top-level declarations are not closures.  When a name resolves to a
+    /// frame *below* a closure frame, every intervening closure frame must
+    /// capture it (transitive capture).
+    is_closure: bool,
+    /// Capture values to attach to this closure's `MakeClosure`, paired by
+    /// name with `captures`.  Each is the resolution of the captured name
+    /// in the *enclosing* scope, computed when the capture is first seen.
+    capture_values: Vec<CaptureValue>,
+}
+
+impl FnScope {
+    fn new(params: HashSet<String>, is_closure: bool) -> Self {
+        FnScope {
+            params,
+            captures: HashSet::new(),
+            locals: HashSet::new(),
+            is_closure,
+            capture_values: Vec::new(),
+        }
+    }
+}
+
 struct Lowerer {
     /// Logical filename stamped into every [`Span`].  We use the module
     /// name because the parser CST doesn't carry the original path.
@@ -333,12 +514,24 @@ struct Lowerer {
     /// Features accumulated as we lower.  `FeatureManifest::add` is
     /// idempotent, so repeated `StrLit`s add `Strings` exactly once.
     features_used: FeatureManifest,
-    /// Names already bound in `main`'s top-level scope.  Drives the
-    /// binding-vs-assignment choice (first sighting binds, later
-    /// sightings re-assign) and lets a bare identifier resolve to a
-    /// `Scope::Local` `VarRef`.  M2 has a single flat scope (no nested
-    /// functions yet), so one set suffices.
-    declared_locals: HashSet<String>,
+    /// The lexical function-frame stack (see [`FnScope`]).  The bottom is
+    /// `main`; arrows and nested `function`s push/pop frames around their
+    /// bodies.  Resolution walks it top-down.
+    scopes: Vec<FnScope>,
+    /// Every `function` name (top-level + nested) collected in pass 1, so
+    /// a call resolves to a `DirectCall` regardless of source order and
+    /// recursion / mutual recursion works.
+    function_names: HashSet<String>,
+    /// User-written top-level `function` declarations, lowered.  Kept
+    /// separate from `main` and from the synthesised closures so the
+    /// module's function table and export list can be assembled in a
+    /// stable order.
+    user_functions: Vec<Function>,
+    /// Synthesised closure-body functions — one per arrow function and one
+    /// per *nested* `function` declaration.  Referenced by `MakeClosure`.
+    synthesised: Vec<Function>,
+    /// Gensym counter for synthesised arrow names (`__lambda_<N>`).
+    lambda_counter: usize,
 }
 
 impl Lowerer {
@@ -375,11 +568,173 @@ impl Lowerer {
     /// hence unobservable, so we drop them.  An empty program yields a
     /// `NilLit` value.
     fn lower_program(&mut self, program: &GrammarASTNode) -> Result<Block, JsLowerError> {
+        // Push the synthetic `main` frame: no params, no captures, not a
+        // closure.  Top-level `let`/`const`/`var` become its locals.
+        self.scopes.push(FnScope::new(HashSet::new(), false));
         // The top-level statement sequence is `program`'s children, each a
         // `source_element` wrapping one `statement`.  Lowering it is exactly
         // lowering a statement list — the same routine used for `{ … }`
         // block bodies — at depth 0.
-        self.lower_stmt_seq(&program.children, self.span_of(program), 0)
+        let result = self.lower_stmt_seq(&program.children, self.span_of(program), 0);
+        self.scopes.pop();
+        result
+    }
+
+    // -----------------------------------------------------------------------
+    // Scope stack helpers (M4)
+    // -----------------------------------------------------------------------
+
+    /// The current (innermost) function frame.  There is always at least
+    /// one frame (`main`) while a body is being lowered.
+    fn cur(&mut self) -> &mut FnScope {
+        self.scopes
+            .last_mut()
+            .expect("scope stack is non-empty during lowering")
+    }
+
+    /// Is `name` a local already bound in the *current* frame?  Drives the
+    /// binding-vs-assignment choice (first sighting binds, later
+    /// re-assigns) at the current lexical level.
+    fn is_current_local(&self, name: &str) -> bool {
+        self.scopes
+            .last()
+            .map(|s| s.locals.contains(name))
+            .unwrap_or(false)
+    }
+
+    /// Record a `let`/`const`/`var` binding in the current frame.
+    fn declare_local(&mut self, name: &str) {
+        self.cur().locals.insert(name.to_string());
+    }
+
+    /// Resolve a bare identifier to a [`Scope`]d [`VarRef`], discovering
+    /// captures along the way.
+    ///
+    /// We walk the scope stack from the innermost frame outward:
+    ///
+    /// - a hit in the **current** frame's locals/params → `Local`/`Param`;
+    /// - a hit in a frame's already-recorded captures → `Capture`;
+    /// - a hit in an **enclosing** frame's locals/params → a *free
+    ///   variable*.  Every closure frame between the use site and the
+    ///   defining frame must capture it (transitive capture): we add the
+    ///   name to each such frame's `captures` and, for the innermost
+    ///   closure frame, record a `CaptureValue` resolving the name in the
+    ///   enclosing scope.  The reference itself becomes `Capture`.
+    ///
+    /// Names not found in any frame fall through to the caller (which tries
+    /// `undefined`, then module functions/globals/builtins, then errors).
+    fn resolve_local_chain(&mut self, name: &str, span: &Span) -> Option<Expr> {
+        let n = self.scopes.len();
+        // Find the frame that *defines* `name` (as local/param/capture),
+        // searching innermost-first.
+        let mut def_idx: Option<(usize, Scope)> = None;
+        for i in (0..n).rev() {
+            let f = &self.scopes[i];
+            if f.locals.contains(name) {
+                def_idx = Some((i, Scope::Local));
+                break;
+            }
+            if f.params.contains(name) {
+                def_idx = Some((i, Scope::Param));
+                break;
+            }
+            if f.captures.contains(name) {
+                def_idx = Some((i, Scope::Capture));
+                break;
+            }
+        }
+        let (def_i, def_scope) = def_idx?;
+        let cur_i = n - 1;
+
+        if def_i == cur_i {
+            // Defined right here — a plain reference.
+            return Some(Expr::VarRef {
+                name: name.to_string(),
+                scope: def_scope,
+                span: span.clone(),
+            });
+        }
+
+        // Defined in an *enclosing* frame: this is a free variable.  Each
+        // closure frame strictly above the defining frame must capture it.
+        // We thread the capture *value* outward: in the defining frame the
+        // value is a direct reference (Local/Param/Capture there); each
+        // closure frame then captures from the frame just below it.
+        //
+        // Walk from def_i+1 up to cur_i; for every closure frame, ensure it
+        // captures `name` (recording a CaptureValue that references the
+        // name as it is seen *one frame down*).
+        for i in (def_i + 1)..=cur_i {
+            if !self.scopes[i].is_closure {
+                continue;
+            }
+            if self.scopes[i].captures.contains(name) {
+                continue; // already captured by this frame.
+            }
+            // The value of the capture, as resolved in frame i-1.  Frame
+            // i-1 is the defining frame or an inner closure that already
+            // captured it.
+            let below = &self.scopes[i - 1];
+            let below_scope = if below.locals.contains(name) {
+                Scope::Local
+            } else if below.params.contains(name) {
+                Scope::Param
+            } else {
+                // Must be a capture of the frame below (already inserted on
+                // a prior iteration, or the defining frame was a closure).
+                Scope::Capture
+            };
+            let value = Expr::VarRef {
+                name: name.to_string(),
+                scope: below_scope,
+                span: span.clone(),
+            };
+            self.scopes[i].captures.insert(name.to_string());
+            self.scopes[i].capture_values.push(CaptureValue {
+                name: name.to_string(),
+                value,
+            });
+        }
+
+        // Inside the current (closure) frame the reference is a capture.
+        Some(Expr::VarRef {
+            name: name.to_string(),
+            scope: Scope::Capture,
+            span: span.clone(),
+        })
+    }
+
+    /// Resolve an identifier in *value* position to a [`VarRef`].
+    ///
+    /// Order: scope chain (local/param/capture, possibly recording a
+    /// capture) → a top-level/synthesised `function` name used as a value
+    /// (`Scope::Global`, which the validator resolves against the function
+    /// table) → positioned "unresolved name" error.
+    fn resolve_name(
+        &mut self,
+        name: &str,
+        span: Span,
+        line: usize,
+        column: usize,
+    ) -> Result<Expr, JsLowerError> {
+        if let Some(e) = self.resolve_local_chain(name, &span) {
+            return Ok(e);
+        }
+        if self.function_names.contains(name) {
+            // A function name referenced as a value (e.g. `return inner;`
+            // or `let g = f;`).  The validator accepts `Scope::Global` for
+            // a name in the function table.
+            return Ok(Expr::VarRef {
+                name: name.to_string(),
+                scope: Scope::Global,
+                span,
+            });
+        }
+        Err(JsLowerError {
+            message: format!("unresolved name reference `{name}`"),
+            line,
+            column,
+        })
     }
 
     /// Lower a slice of CST children that are statement-bearing nodes into a
@@ -503,9 +858,27 @@ impl Lowerer {
                 // is unobservable but its statements run for effect.
                 Lowered::Expr(Expr::Block(Box::new(b)))
             }),
-            // deferred to a later milestone: function_declaration,
-            // return_statement, switch, try, do-while, labeled, …
+            // ── M4: functions ───────────────────────────────────────
+            "function_declaration" => self.lower_function_declaration(node, depth),
+            // A `return` outside a function body is invalid JS; inside one
+            // it is handled positionally by `lower_function_body` (only the
+            // tail statement may be a `return`).  Reaching it here means it
+            // was *not* in tail position → reject with the spec's message.
+            "return_statement" => Err(self.early_return_error(node)),
+            // deferred to a later milestone: switch, try, do-while,
+            // labeled, break/continue, …
             other => Err(self.unsupported(node, other)),
+        }
+    }
+
+    /// The positioned "early return" error (SIR19 "Return statement").
+    fn early_return_error(&self, node: &GrammarASTNode) -> JsLowerError {
+        JsLowerError {
+            message: "early return not supported in v0 (only a trailing tail-position \
+                      `return` is accepted)"
+                .to_string(),
+            line: node.start_line.unwrap_or(0),
+            column: node.start_column.unwrap_or(0),
         }
     }
 
@@ -887,11 +1260,11 @@ impl Lowerer {
         body_stmt: &GrammarASTNode,
         depth: usize,
     ) -> Result<Block, JsLowerError> {
-        let saved = self.declared_locals.clone();
+        let saved = self.cur().locals.clone();
         let result = self.lower_body_inner(body_stmt, depth);
         // Restore the outer scope regardless of success so a partially
         // mutated set never leaks (defensive; on `Err` we abort anyway).
-        self.declared_locals = saved;
+        self.cur().locals = saved;
         result
     }
 
@@ -911,10 +1284,10 @@ impl Lowerer {
         let body_stmt = self
             .loop_body_node(for_node)
             .ok_or_else(|| self.unsupported(for_node, "loop (no body)"))?;
-        let saved = self.declared_locals.clone();
-        self.declared_locals.insert(loop_var.to_string());
+        let saved = self.cur().locals.clone();
+        self.cur().locals.insert(loop_var.to_string());
         let result = self.lower_body_inner(body_stmt, depth);
-        self.declared_locals = saved;
+        self.cur().locals = saved;
         result
     }
 
@@ -972,6 +1345,610 @@ impl Lowerer {
             });
         }
         Ok(())
+    }
+
+    // -----------------------------------------------------------------------
+    // M4: functions, arrows, return, calls
+    // -----------------------------------------------------------------------
+
+    /// Lower a `function_declaration`.
+    ///
+    /// At **top level** (the `main` frame) the function is a user-visible
+    /// `Function` with no captures — its body sees only its params, its own
+    /// locals, and module functions/globals/builtins.  When **nested**
+    /// inside another function, it is lifted to a top-level *synthesised*
+    /// `Function` whose free variables are captured, and the declaration
+    /// site binds the function's name as a `let*` to a `MakeClosure`
+    /// referencing it (so it can be returned / called indirectly and so its
+    /// name resolves locally).
+    fn lower_function_declaration(
+        &mut self,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Lowered, JsLowerError> {
+        self.check_stmt_depth(node, depth)?;
+        let name = function_decl_name(node)
+            .ok_or_else(|| self.unsupported(node, "function_declaration (no name)"))?;
+        let params = self.formal_param_names(node)?;
+        let body_node = child_node_named(node, "function_body");
+
+        // A *nested* declaration (we're inside a function frame deeper than
+        // `main`) is a closure: lift + capture, and bind the name locally.
+        let nested = self.scopes.len() > 1;
+
+        let (lowered_fn, captures) =
+            self.lower_callable_body(&name, &params, body_node, node, depth, nested)?;
+
+        if nested {
+            // Synthesised closure body; bind `name` locally to a closure.
+            let span = self.span_of(node);
+            let make = Expr::MakeClosure {
+                fn_name: name.clone(),
+                captures,
+                span: span.clone(),
+            };
+            self.synthesised.push(lowered_fn);
+            // The name becomes a local of the enclosing frame so later
+            // references (`return inner;`) resolve and so a sibling can
+            // call it.  First sighting binds; a redeclare re-assigns.
+            let stmt = if self.is_current_local(&name) {
+                self.features_used.add(Feature::MutableBindings);
+                Stmt::Assign { name, scope: Scope::Local, value: make, span }
+            } else {
+                self.declare_local(&name);
+                Stmt::LetStarBinding { name, sir_type: None, value: make, span }
+            };
+            Ok(Lowered::Stmt(Box::new(stmt)))
+        } else {
+            // Top-level user function: it lives in the module function
+            // table, not in `main`'s body.  It contributes no statement and
+            // no tail value — emit a nil expression that the block builder
+            // discards (a pure literal is superseded by any real value, and
+            // dropped at the end of the block otherwise).
+            self.user_functions.push(lowered_fn);
+            Ok(Lowered::Expr(Expr::NilLit { span: self.span_of(node) }))
+        }
+    }
+
+    /// Lower an `arrow_function` to a [`MakeClosure`] over a synthesised
+    /// `__lambda_<N>` `Function`.
+    ///
+    /// CST: `[arrow_parameters, Name("=>"), concise_body]`.  The
+    /// `concise_body` is either an expression (1 child) — the closure body
+    /// is a `Block` with no statements and that expression as its value —
+    /// or a `{ … }` block (3 children) following the same tail-`return`
+    /// rule as a `function` body.
+    fn lower_arrow_function(
+        &mut self,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Expr, JsLowerError> {
+        self.check_stmt_depth(node, depth)?;
+        let span = self.span_of(node);
+        let params = self.arrow_param_names(node)?;
+        let concise = child_node_named(node, "concise_body")
+            .ok_or_else(|| self.unsupported(node, "arrow_function (no body)"))?;
+
+        let fn_name = self.fresh_lambda_name();
+        let (lowered_fn, captures) =
+            self.lower_arrow_callable(&fn_name, &params, concise, node, depth)?;
+        self.synthesised.push(lowered_fn);
+
+        Ok(Expr::MakeClosure {
+            fn_name,
+            captures,
+            span,
+        })
+    }
+
+    /// Lower a `call_expression` (`callee(args)`).
+    ///
+    /// CST: `[callee, arguments]`.  Dispatch on the callee:
+    ///   * a bare identifier that names a module `function` → `DirectCall`;
+    ///   * `console.log(x)` → `BuiltinCall("print", [x])`;
+    ///   * a bare identifier resolving to a closure *value* (local / param /
+    ///     capture) → `IndirectCall` on that value.
+    ///
+    /// Other member-call methods and non-identifier callees are deferred.
+    fn lower_call_expression(
+        &mut self,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Expr, JsLowerError> {
+        let span = self.span_of(node);
+        let nodes = child_nodes(node);
+        let callee = nodes
+            .first()
+            .ok_or_else(|| self.unsupported(node, "call_expression (no callee)"))?;
+        let args_node = child_node_named(node, "arguments")
+            .ok_or_else(|| self.unsupported(node, "call_expression (no arguments)"))?;
+        let arg_exprs = self.lower_arguments(args_node, depth)?;
+
+        // `console.log(...)` → builtin print.  Detect the two-segment
+        // member callee `member_expression[ console, ., log ]`.
+        if let Some((obj, method)) = member_callee_parts(callee) {
+            if obj == "console" && method == "log" {
+                // `print` may print; mark the effect so backends emit it.
+                return Ok(Expr::BuiltinCall {
+                    name: "print".to_string(),
+                    args: arg_exprs,
+                    effects: EffectSet::PURE.with(Effect::MayPrint),
+                    span,
+                });
+            }
+            return Err(JsLowerError {
+                message: format!(
+                    "method call `{obj}.{method}(…)` is deferred past M4 (only \
+                     `console.log` is supported)"
+                ),
+                line: span.start_line,
+                column: span.start_col,
+            });
+        }
+
+        // A bare-identifier callee.
+        if let Some(tok) = single_leaf_token(callee) {
+            if matches!(tok.type_, TokenType::Name) {
+                let fname = tok.value.clone();
+                // Known module function → DirectCall (recursion / forward
+                // reference / mutual recursion all resolve here).
+                if self.function_names.contains(&fname) {
+                    return Ok(Expr::DirectCall {
+                        fn_name: fname,
+                        args: arg_exprs,
+                        effects: EffectSet::PURE,
+                        span,
+                    });
+                }
+                // Otherwise it must resolve to a *value* (a closure handle
+                // bound to a local / param / capture) → IndirectCall.
+                let target =
+                    self.resolve_name(&fname, span.clone(), tok.line, tok.column)?;
+                self.features_used.add(Feature::Closures);
+                return Ok(Expr::IndirectCall {
+                    target: Box::new(target),
+                    args: arg_exprs,
+                    effects: EffectSet::PURE,
+                    span,
+                });
+            }
+        }
+
+        // A computed / non-identifier callee (`(f())(x)`, `xs[0](y)`, …) is
+        // deferred — those entail member access / collections (M5).
+        Err(JsLowerError {
+            message: "call of a non-identifier callee is deferred past M4".to_string(),
+            line: span.start_line,
+            column: span.start_col,
+        })
+    }
+
+    /// Lower the `arguments` node (`( argument_list? )`) into a `Vec<Expr>`.
+    fn lower_arguments(
+        &mut self,
+        args_node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Vec<Expr>, JsLowerError> {
+        // No `argument_list` child → a zero-argument call `f()`.
+        let list = match child_node_named(args_node, "argument_list") {
+            Some(l) => l,
+            None => return Ok(Vec::new()),
+        };
+        let mut out = Vec::new();
+        for child in &list.children {
+            if let ASTNodeOrToken::Node(n) = child {
+                out.push(self.lower_expression(n, depth + 1)?);
+            }
+            // Comma tokens are skipped.
+        }
+        Ok(out)
+    }
+
+    /// Shared core for lowering a *named* callable (top-level or nested
+    /// `function` declaration) to a `Function` plus its `MakeClosure`
+    /// captures (empty for a top-level function).
+    ///
+    /// Pushes a fresh scope frame (params + closure-ness), lowers the body
+    /// with the tail-`return` rule, pops the frame, and returns the
+    /// synthesised `Function` and the captures discovered while lowering.
+    fn lower_callable_body(
+        &mut self,
+        name: &str,
+        params: &[String],
+        body_node: Option<&GrammarASTNode>,
+        decl_node: &GrammarASTNode,
+        depth: usize,
+        is_closure: bool,
+    ) -> Result<(Function, Vec<CaptureValue>), JsLowerError> {
+        let span = self.span_of(decl_node);
+        self.scopes
+            .push(FnScope::new(params.iter().cloned().collect(), is_closure));
+
+        // Lower the function body's statement sequence with the tail-return
+        // rule.  An absent / empty body yields a nil-valued block.
+        let body_children: &[ASTNodeOrToken] =
+            body_node.map(|b| b.children.as_slice()).unwrap_or(&[]);
+        let body_result = self.lower_function_body(body_children, span.clone(), depth + 1);
+
+        let frame = self.scopes.pop().expect("pushed a frame");
+        let body = body_result?;
+
+        let function = Function {
+            name: name.to_string(),
+            params: params
+                .iter()
+                .map(|p| Param {
+                    name: p.clone(),
+                    sir_type: None,
+                    kind: ParamKind::Required,
+                    span: span.clone(),
+                })
+                .collect(),
+            return_type: None,
+            captures: frame
+                .captures
+                .iter()
+                .map(|n| Capture { name: n.clone(), sir_type: None })
+                .collect(),
+            body,
+            // A closure body may allocate; a plain top-level function is
+            // pure unless its body says otherwise.  We keep it simple and
+            // mark closures `MayAllocate` (matching the twig reference).
+            effects: if is_closure {
+                EffectSet::PURE.with(Effect::MayAllocate)
+            } else {
+                EffectSet::PURE
+            },
+            metadata: Metadata::new(),
+            span: span.clone(),
+        };
+        if is_closure {
+            self.features_used.add(Feature::Closures);
+        }
+        Ok((function, frame.capture_values))
+    }
+
+    /// Like [`lower_callable_body`] but for an arrow's `concise_body`,
+    /// which may be a bare expression (no statements, expression is the
+    /// tail value) or a `{ … }` block.
+    fn lower_arrow_callable(
+        &mut self,
+        name: &str,
+        params: &[String],
+        concise: &GrammarASTNode,
+        arrow_node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<(Function, Vec<CaptureValue>), JsLowerError> {
+        let span = self.span_of(arrow_node);
+        self.scopes
+            .push(FnScope::new(params.iter().cloned().collect(), true));
+
+        // Expression body: `concise_body` has a single expression child and
+        // no `{`.  Block body: it wraps a `function_body` between braces.
+        let result = (|| -> Result<Block, JsLowerError> {
+            if let Some(fb) = child_node_named(concise, "function_body") {
+                // Block-bodied arrow → same tail-return rule as a function.
+                self.lower_function_body(&fb.children, span.clone(), depth + 1)
+            } else {
+                // Expression-bodied arrow → a statement-free block whose
+                // value is the expression.
+                let expr_node = concise
+                    .children
+                    .iter()
+                    .find_map(|c| match c {
+                        ASTNodeOrToken::Node(n) => Some(n),
+                        ASTNodeOrToken::Token(_) => None,
+                    })
+                    .ok_or_else(|| self.unsupported(concise, "arrow concise body"))?;
+                let value = self.lower_expression(expr_node, depth + 1)?;
+                Ok(Block { stmts: Vec::new(), value, span: span.clone() })
+            }
+        })();
+
+        let frame = self.scopes.pop().expect("pushed a frame");
+        let body = result?;
+
+        let function = Function {
+            name: name.to_string(),
+            params: params
+                .iter()
+                .map(|p| Param {
+                    name: p.clone(),
+                    sir_type: None,
+                    kind: ParamKind::Required,
+                    span: span.clone(),
+                })
+                .collect(),
+            return_type: None,
+            captures: frame
+                .captures
+                .iter()
+                .map(|n| Capture { name: n.clone(), sir_type: None })
+                .collect(),
+            body,
+            effects: EffectSet::PURE.with(Effect::MayAllocate),
+            metadata: Metadata::new(),
+            span,
+        };
+        self.features_used.add(Feature::Closures);
+        Ok((function, frame.capture_values))
+    }
+
+    /// Lower a function/closure body's statement sequence into a [`Block`],
+    /// applying the **tail-position `return`** rule (SIR19 "Return").
+    ///
+    /// A `return` is in *tail position* iff it is the body's last statement
+    /// — or, recursively, the last statement of a branch of a tail-position
+    /// `if`.  This admits the natural guard-via-`if`/`else` recursion shape
+    /// (`if (base) { return b; } else { return rec; }` as the body's last
+    /// statement) without an early-return node, while still rejecting a
+    /// genuine early `return` (one followed by more statements).
+    ///
+    /// - tail `return expr;` → `block.value = expr`;
+    /// - tail bare `return;` → `block.value = NilLit`;
+    /// - no `return` → `block.value = NilLit` (or the trailing bare
+    ///   expression's value, like the top-level block builder);
+    /// - a `return` not in tail position → an "early return"
+    ///   [`JsLowerError`].
+    fn lower_function_body(
+        &mut self,
+        children: &[ASTNodeOrToken],
+        block_span: Span,
+        depth: usize,
+    ) -> Result<Block, JsLowerError> {
+        // Split into the leading statements and the final statement-bearing
+        // node (the only position where a `return` / returning `if` is
+        // allowed).
+        let node_idxs: Vec<usize> = children
+            .iter()
+            .enumerate()
+            .filter_map(|(i, c)| matches!(c, ASTNodeOrToken::Node(_)).then_some(i))
+            .collect();
+        let last_idx = node_idxs.last().copied();
+
+        let mut stmts: Vec<Stmt> = Vec::new();
+        let mut tail: Option<Expr> = None;
+
+        for (i, child) in children.iter().enumerate() {
+            let n = match child {
+                ASTNodeOrToken::Node(n) => n,
+                ASTNodeOrToken::Token(_) => continue,
+            };
+            let is_last = Some(i) == last_idx;
+            // A non-final statement must not contain a tail return; the
+            // only place a `return` is legal is the final node (handled
+            // below).  `reject_returns` walks for any stray `return`.
+            if !is_last {
+                self.reject_returns(n)?;
+                match self.lower_source_element(n, depth)? {
+                    Lowered::Stmt(s) => {
+                        if let Some(prev) = tail.take() {
+                            let span = prev.span().clone();
+                            stmts.push(Stmt::ExprStmt { expr: prev, span });
+                        }
+                        stmts.push(*s);
+                    }
+                    Lowered::Expr(e) => tail = Some(e),
+                }
+                continue;
+            }
+
+            // Final node: lower it in tail position.  A `return` / returning
+            // `if` / nested `block` becomes the block value; an ordinary
+            // trailing statement is pushed (nil tail), an ordinary trailing
+            // expression is the value.
+            if let Some(prev) = tail.take() {
+                let span = prev.span().clone();
+                stmts.push(Stmt::ExprStmt { expr: prev, span });
+            }
+            let concrete = concrete_statement(n);
+            match concrete.rule_name.as_str() {
+                "return_statement" => {
+                    tail = Some(self.lower_return_value(concrete)?);
+                }
+                "if_statement" => {
+                    tail = Some(self.lower_tail_if(concrete, depth)?);
+                }
+                "block" => {
+                    self.check_stmt_depth(concrete, depth)?;
+                    let span = self.span_of(concrete);
+                    let saved = self.cur().locals.clone();
+                    let nested =
+                        self.lower_function_body(&concrete.children, span, depth + 1);
+                    self.cur().locals = saved;
+                    tail = Some(Expr::Block(Box::new(nested?)));
+                }
+                _ => match self.lower_source_element(n, depth)? {
+                    Lowered::Stmt(s) => stmts.push(*s),
+                    Lowered::Expr(e) => tail = Some(e),
+                },
+            }
+        }
+
+        let value = tail.unwrap_or(Expr::NilLit { span: block_span.clone() });
+        Ok(Block { stmts, value, span: block_span })
+    }
+
+    /// Lower a *tail-position* `if_statement` to an [`Expr::If`] whose
+    /// branch values come from recursively tail-lowering each branch.  A
+    /// missing `else` yields a nil-valued else block.
+    fn lower_tail_if(
+        &mut self,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Expr, JsLowerError> {
+        self.check_stmt_depth(node, depth)?;
+        let span = self.span_of(node);
+        let nodes = child_nodes(node);
+        let cond_node = nodes
+            .first()
+            .ok_or_else(|| self.unsupported(node, "if (no condition)"))?;
+        let then_node = nodes
+            .get(1)
+            .ok_or_else(|| self.unsupported(node, "if (no then branch)"))?;
+        let cond = self.lower_expression(cond_node, 0)?;
+        let then_branch = self.tail_branch_block(then_node, depth)?;
+        let else_branch = match nodes.get(2) {
+            Some(else_node) => self.tail_branch_block(else_node, depth)?,
+            None => Block {
+                stmts: Vec::new(),
+                value: Expr::NilLit { span: span.clone() },
+                span: span.clone(),
+            },
+        };
+        Ok(Expr::If {
+            cond: Box::new(cond),
+            then_branch: Box::new(then_branch),
+            else_branch: Box::new(else_branch),
+            span,
+        })
+    }
+
+    /// Lower an `if`-branch statement (a `{ … }` block or a single
+    /// statement) as a *tail* body — so a `return` inside the branch
+    /// becomes the branch block's value.  Names bound inside are
+    /// block-scoped (snapshot/restore the current frame's locals).
+    fn tail_branch_block(
+        &mut self,
+        branch_stmt: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Block, JsLowerError> {
+        let saved = self.cur().locals.clone();
+        let inner = concrete_statement(branch_stmt);
+        let span = self.span_of(branch_stmt);
+        let result = if inner.rule_name == "block" {
+            self.check_stmt_depth(inner, depth)
+                .and_then(|()| self.lower_function_body(&inner.children, span, depth + 1))
+        } else {
+            // A single (unbraced) branch statement, e.g. `if (c) return 1;`.
+            // Wrap the one statement as a one-item tail body.
+            self.lower_function_body(
+                std::slice::from_ref(&ASTNodeOrToken::Node(branch_stmt.clone())),
+                span,
+                depth + 1,
+            )
+        };
+        self.cur().locals = saved;
+        result
+    }
+
+    /// Reject any `return_statement` anywhere inside `node` (used for the
+    /// non-final statements of a function body: a `return` there is a
+    /// genuine early return, unsupported in v0).
+    ///
+    /// We do **not** descend into a nested `function_declaration` or
+    /// `arrow_function`: a `return` inside *those* belongs to the nested
+    /// callable (it is checked when that callable's own body is lowered),
+    /// not to the enclosing function.
+    fn reject_returns(&self, node: &GrammarASTNode) -> Result<(), JsLowerError> {
+        if node.rule_name == "return_statement" {
+            return Err(self.early_return_error(node));
+        }
+        if matches!(node.rule_name.as_str(), "function_declaration" | "arrow_function") {
+            return Ok(());
+        }
+        for child in &node.children {
+            if let ASTNodeOrToken::Node(n) = child {
+                self.reject_returns(n)?;
+            }
+        }
+        Ok(())
+    }
+
+    /// Lower the value of a tail `return_statement`: its `expression` child,
+    /// or `NilLit` for a bare `return;`.
+    fn lower_return_value(&mut self, ret: &GrammarASTNode) -> Result<Expr, JsLowerError> {
+        match child_node_named(ret, "expression") {
+            Some(e) => self.lower_expression(e, 0),
+            None => Ok(Expr::NilLit { span: self.span_of(ret) }),
+        }
+    }
+
+    /// Extract a `function_declaration`'s formal parameter names, rejecting
+    /// the deferred parameter forms (default / rest / destructuring).
+    fn formal_param_names(
+        &self,
+        decl_node: &GrammarASTNode,
+    ) -> Result<Vec<String>, JsLowerError> {
+        match child_node_named(decl_node, "formal_parameters") {
+            None => Ok(Vec::new()), // zero-parameter function.
+            Some(fp) => self.simple_param_names(fp, decl_node),
+        }
+    }
+
+    /// Extract an `arrow_function`'s parameter names.  The `arrow_parameters`
+    /// node is either `[(, formal_parameters?, )]` or a bare `[Name]` (for
+    /// `a => …`).
+    fn arrow_param_names(
+        &self,
+        arrow_node: &GrammarASTNode,
+    ) -> Result<Vec<String>, JsLowerError> {
+        let ap = child_node_named(arrow_node, "arrow_parameters")
+            .ok_or_else(|| self.unsupported(arrow_node, "arrow_function (no parameters)"))?;
+        // Bare single-identifier form: `a => …`.
+        if let Some(tok) = ap.token() {
+            if matches!(tok.type_, TokenType::Name) {
+                return Ok(vec![tok.value.clone()]);
+            }
+        }
+        match child_node_named(ap, "formal_parameters") {
+            None => Ok(Vec::new()), // `() => …`.
+            Some(fp) => self.simple_param_names(fp, arrow_node),
+        }
+    }
+
+    /// Extract simple positional parameter names from a `formal_parameters`
+    /// node, rejecting any non-trivial `formal_parameter` (a default value,
+    /// rest `...`, or a destructuring pattern) as deferred.
+    fn simple_param_names(
+        &self,
+        fp: &GrammarASTNode,
+        ctx_node: &GrammarASTNode,
+    ) -> Result<Vec<String>, JsLowerError> {
+        let mut names = Vec::new();
+        for param in children_nodes_named(fp, "formal_parameter") {
+            // A simple parameter is exactly one `Name` token; anything else
+            // (default `= v`, rest `...r`, destructuring `{a}`/`[a]`) means
+            // extra children we don't model in v0.
+            let toks: Vec<&Token> = param
+                .children
+                .iter()
+                .filter_map(|c| match c {
+                    ASTNodeOrToken::Token(t) => Some(t),
+                    ASTNodeOrToken::Node(_) => None,
+                })
+                .collect();
+            let has_node_child =
+                param.children.iter().any(|c| matches!(c, ASTNodeOrToken::Node(_)));
+            match (toks.as_slice(), has_node_child) {
+                ([only], false) if matches!(only.type_, TokenType::Name) => {
+                    names.push(only.value.clone());
+                }
+                _ => {
+                    return Err(JsLowerError {
+                        message: "default / rest / destructuring parameters are deferred \
+                                  past M4 (only simple positional params supported)"
+                            .to_string(),
+                        line: ctx_node.start_line.unwrap_or(0),
+                        column: ctx_node.start_column.unwrap_or(0),
+                    });
+                }
+            }
+        }
+        Ok(names)
+    }
+
+    /// A fresh synthesised arrow-function name (`__lambda_<N>`).
+    fn fresh_lambda_name(&mut self) -> String {
+        let name = format!("__lambda_{}", self.lambda_counter);
+        self.lambda_counter += 1;
+        name
+    }
+
+    /// Names of the user's *top-level* `function` declarations, in the
+    /// order they were lowered (used to build the module export list).
+    fn top_level_function_names_in_order(&self) -> Vec<String> {
+        self.user_functions.iter().map(|f| f.name.clone()).collect()
     }
 
     // -----------------------------------------------------------------------
@@ -1072,7 +2049,7 @@ impl Lowerer {
         // already-declared name (legal for `var`, a redeclare error for
         // `let`/`const` in real JS but we don't enforce that) becomes an
         // `Assign` to keep validation honest.
-        if self.declared_locals.contains(&name) {
+        if self.is_current_local(&name) {
             self.features_used.add(Feature::MutableBindings);
             Ok(Stmt::Assign {
                 name,
@@ -1081,7 +2058,7 @@ impl Lowerer {
                 span,
             })
         } else {
-            self.declared_locals.insert(name.clone());
+            self.declare_local(&name);
             // Sequential `let*` (not parallel `let`): see module docs.
             Ok(Stmt::LetStarBinding {
                 name,
@@ -1188,26 +2165,40 @@ impl Lowerer {
         };
         let value = self.lower_expression(rhs, 0)?;
 
-        // First sighting of a never-declared name via bare `x = …`
-        // creates a top-level binding (JS implicitly creates a global on
-        // assignment without a declarator).  A subsequent `x = …`
-        // re-assigns.
-        if self.declared_locals.contains(&name) {
+        // Re-assignment to a name already in scope keeps its scope tag:
+        //   * a current-frame local        → `Assign { scope: Local }`
+        //   * the current frame's param    → `Assign { scope: Param }`
+        //   * a captured outer variable    → `Assign { scope: Capture }`
+        // First sighting of a never-declared name via bare `x = …` creates
+        // a binding in the current frame (JS implicitly creates a binding
+        // on assignment without a declarator).
+        if let Some(scope) = self.assign_target_scope(&name, &span) {
             self.features_used.add(Feature::MutableBindings);
             Ok(Stmt::Assign {
                 name,
-                scope: Scope::Local,
+                scope,
                 value,
                 span,
             })
         } else {
-            self.declared_locals.insert(name.clone());
+            self.declare_local(&name);
             Ok(Stmt::LetStarBinding {
                 name,
                 sir_type: None,
                 value,
                 span,
             })
+        }
+    }
+
+    /// The [`Scope`] tag for re-assigning an *already in-scope* name, or
+    /// `None` if the name is not yet bound anywhere on the stack (so the
+    /// assignment should create a fresh binding).  Resolving the name also
+    /// records any capture needed to reach an enclosing binding.
+    fn assign_target_scope(&mut self, name: &str, span: &Span) -> Option<Scope> {
+        match self.resolve_local_chain(name, span) {
+            Some(Expr::VarRef { scope, .. }) => Some(scope),
+            _ => None,
         }
     }
 
@@ -1284,7 +2275,11 @@ impl Lowerer {
             // children = [op_token, operand]
             "unary_expression" => self.lower_unary(node, depth),
 
-            // ── still unsupported in M2 (calls, member access, …) ───
+            // ── M4: arrow functions and calls ───────────────────────
+            "arrow_function" => self.lower_arrow_function(node, depth),
+            "call_expression" => self.lower_call_expression(node, depth),
+
+            // ── still unsupported (member access, collections, …) ───
             other => Err(self.unsupported(node, other)),
         }
     }
@@ -1511,23 +2506,12 @@ impl Lowerer {
             // JS null/undefined distinction is intentionally lost in v0).
             TokenType::Name if tok.value == "undefined" => Ok(Expr::NilLit { span }),
             // Any other identifier is a variable reference.  Resolve it
-            // against the declared-locals set; an undeclared name is a
-            // positioned "unresolved name" error (SIR19 "Error model").
-            TokenType::Name => {
-                if self.declared_locals.contains(&tok.value) {
-                    Ok(Expr::VarRef {
-                        name: tok.value.clone(),
-                        scope: Scope::Local,
-                        span,
-                    })
-                } else {
-                    Err(JsLowerError {
-                        message: format!("unresolved name reference `{}`", tok.value),
-                        line: tok.line,
-                        column: tok.column,
-                    })
-                }
-            }
+            // against the scope chain (local/param/capture), then against
+            // module functions (a `function f` used as a *value* — e.g.
+            // `return inner;` — is a `Scope::Global` reference the
+            // validator accepts).  An undeclared name is a positioned
+            // "unresolved name" error (SIR19 "Error model").
+            TokenType::Name => self.resolve_name(&tok.value, span, tok.line, tok.column),
 
             other => Err(JsLowerError {
                 message: format!("unsupported token {other:?} in expression position"),
@@ -1691,4 +2675,231 @@ fn children_nodes_named<'a>(node: &'a GrammarASTNode, name: &str) -> Vec<&'a Gra
             _ => None,
         })
         .collect()
+}
+
+// ---------------------------------------------------------------------------
+// M4 free helpers
+// ---------------------------------------------------------------------------
+
+/// Descend `source_element` / `statement` single-child wrappers to the
+/// concrete statement node (the one whose `rule_name` is a real statement
+/// kind like `return_statement` / `if_statement` / `block`).
+fn concrete_statement(node: &GrammarASTNode) -> &GrammarASTNode {
+    let inner = single_child_node(node).unwrap_or(node);
+    if inner.rule_name == "statement" || inner.rule_name == "source_element" {
+        concrete_statement(inner)
+    } else {
+        inner
+    }
+}
+
+/// The declared name of a `function_declaration`: its first `Name` token
+/// (the one right after the `function` keyword).
+fn function_decl_name(node: &GrammarASTNode) -> Option<String> {
+    node.children.iter().find_map(|c| match c {
+        ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t.value.clone()),
+        _ => None,
+    })
+}
+
+/// Pass-1 collector: gather **every** `function_declaration` name in the
+/// program — top-level *and* nested — into `out`.
+///
+/// Both top-level and nested declarations end up as module-level
+/// `Function`s (nested ones are lifted), so every name must be globally
+/// resolvable for `DirectCall`s and (mutual) recursion.  We recurse through
+/// the whole CST so a declaration buried inside a block / loop / another
+/// function is still discovered.
+fn collect_function_names(node: &GrammarASTNode, out: &mut HashSet<String>) {
+    if node.rule_name == "function_declaration" {
+        if let Some(name) = function_decl_name(node) {
+            out.insert(name);
+        }
+    }
+    // Note: we deliberately do *not* descend into `arrow_function` bodies to
+    // collect names — arrows have no declaration name, and a `function`
+    // declaration nested inside an arrow body is still a declaration we want
+    // to lift, so we keep descending into every child uniformly.
+    for child in &node.children {
+        if let ASTNodeOrToken::Node(n) = child {
+            collect_function_names(n, out);
+        }
+    }
+}
+
+/// If `callee` is a two-segment member access `obj.method` (the CST shape
+/// `member_expression[ primary(obj), Dot, Name(method) ]`), return
+/// `(obj, method)`.  Returns `None` for a bare identifier or a deeper /
+/// computed member chain.
+fn member_callee_parts(callee: &GrammarASTNode) -> Option<(String, String)> {
+    // Peel precedence wrappers down to the branching node; a member access
+    // branches at `member_expression` with `[obj, Dot, Name]`.
+    let branch = peel_to_branch(callee);
+    if branch.rule_name != "member_expression" {
+        return None;
+    }
+    // children = [obj_node, Dot, Name(method)].
+    if branch.children.len() != 3 {
+        return None;
+    }
+    let obj_node = match &branch.children[0] {
+        ASTNodeOrToken::Node(n) => n,
+        _ => return None,
+    };
+    let is_dot = matches!(&branch.children[1], ASTNodeOrToken::Token(t) if t.value == ".");
+    if !is_dot {
+        return None;
+    }
+    let method = match &branch.children[2] {
+        ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => t.value.clone(),
+        _ => return None,
+    };
+    let obj = single_leaf_token(obj_node)
+        .filter(|t| matches!(t.type_, TokenType::Name))?
+        .value
+        .clone();
+    Some((obj, method))
+}
+
+/// Detect *genuine* mutual recursion: a cycle of length ≥ 2 in the static
+/// call graph of the module's functions.
+///
+/// The SIR validator never *observes* `Feature::MutualRecursion` (there is
+/// no node for it), so a frontend that over-declares it triggers a
+/// "declared but unused" warning.  We therefore declare it only when a real
+/// cycle exists — `f` calls `g` and `g` (transitively) calls `f`.  A
+/// function calling only itself (direct self-recursion) is **not** mutual
+/// recursion and is excluded.
+fn has_mutual_recursion(functions: &[Function]) -> bool {
+    use std::collections::HashMap;
+    // Map each function name to the set of function names it directly
+    // `DirectCall`s (ignoring self-calls for the cycle search below — a
+    // self-loop is single-function recursion, not mutual).
+    let names: HashSet<&str> = functions.iter().map(|f| f.name.as_str()).collect();
+    let mut edges: HashMap<&str, HashSet<String>> = HashMap::new();
+    for f in functions {
+        let mut callees = HashSet::new();
+        collect_direct_callees(&f.body, &names, &f.name, &mut callees);
+        edges.insert(f.name.as_str(), callees);
+    }
+    // A mutual-recursion cycle exists iff some pair `a → b` and `b →* a`.
+    // We do a DFS from each node and look for a back-edge to a *different*
+    // start node that can also reach back.  Simpler: detect any cycle of
+    // length ≥ 2 via reachability — `a` reaches `b` and `b` reaches `a`
+    // with `a != b`.
+    let node_list: Vec<&str> = functions.iter().map(|f| f.name.as_str()).collect();
+    let reaches = |start: &str| -> HashSet<String> {
+        let mut seen = HashSet::new();
+        let mut stack = vec![start.to_string()];
+        while let Some(cur) = stack.pop() {
+            if let Some(cs) = edges.get(cur.as_str()) {
+                for c in cs {
+                    if seen.insert(c.clone()) {
+                        stack.push(c.clone());
+                    }
+                }
+            }
+        }
+        seen
+    };
+    for a in &node_list {
+        let ra = reaches(a);
+        for b in &ra {
+            if b.as_str() != *a && reaches(b).contains(*a) {
+                return true;
+            }
+        }
+    }
+    false
+}
+
+/// Collect the names this block `DirectCall`s (excluding `self_name`), into
+/// `out`.  Walks every nested expression/statement.
+fn collect_direct_callees(
+    block: &Block,
+    names: &HashSet<&str>,
+    self_name: &str,
+    out: &mut HashSet<String>,
+) {
+    for s in &block.stmts {
+        collect_stmt_callees(s, names, self_name, out);
+    }
+    collect_expr_callees(&block.value, names, self_name, out);
+}
+
+fn collect_stmt_callees(
+    stmt: &Stmt,
+    names: &HashSet<&str>,
+    self_name: &str,
+    out: &mut HashSet<String>,
+) {
+    match stmt {
+        Stmt::LetBinding { value, .. }
+        | Stmt::LetStarBinding { value, .. }
+        | Stmt::Assign { value, .. }
+        | Stmt::ExprStmt { expr: value, .. } => {
+            collect_expr_callees(value, names, self_name, out)
+        }
+        Stmt::While { cond, body, .. } => {
+            collect_expr_callees(cond, names, self_name, out);
+            collect_direct_callees(body, names, self_name, out);
+        }
+        Stmt::ForRange { start, stop, step, body, .. } => {
+            collect_expr_callees(start, names, self_name, out);
+            collect_expr_callees(stop, names, self_name, out);
+            collect_expr_callees(step, names, self_name, out);
+            collect_direct_callees(body, names, self_name, out);
+        }
+        Stmt::ForEach { iter, body, .. } => {
+            collect_expr_callees(iter, names, self_name, out);
+            collect_direct_callees(body, names, self_name, out);
+        }
+        // Other statement kinds carry no DirectCall the JS frontend emits.
+        _ => {}
+    }
+}
+
+fn collect_expr_callees(
+    expr: &Expr,
+    names: &HashSet<&str>,
+    self_name: &str,
+    out: &mut HashSet<String>,
+) {
+    match expr {
+        Expr::DirectCall { fn_name, args, .. } => {
+            if fn_name != self_name && names.contains(fn_name.as_str()) {
+                out.insert(fn_name.clone());
+            }
+            for a in args {
+                collect_expr_callees(a, names, self_name, out);
+            }
+        }
+        Expr::IndirectCall { target, args, .. } => {
+            collect_expr_callees(target, names, self_name, out);
+            for a in args {
+                collect_expr_callees(a, names, self_name, out);
+            }
+        }
+        Expr::BuiltinCall { args, .. } => {
+            for a in args {
+                collect_expr_callees(a, names, self_name, out);
+            }
+        }
+        Expr::MakeClosure { captures, .. } => {
+            for c in captures {
+                collect_expr_callees(&c.value, names, self_name, out);
+            }
+        }
+        Expr::If { cond, then_branch, else_branch, .. } => {
+            collect_expr_callees(cond, names, self_name, out);
+            collect_direct_callees(then_branch, names, self_name, out);
+            collect_direct_callees(else_branch, names, self_name, out);
+        }
+        Expr::Block(b) => collect_direct_callees(b, names, self_name, out),
+        Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+            collect_expr_callees(lhs, names, self_name, out);
+            collect_expr_callees(rhs, names, self_name, out);
+        }
+        _ => {}
+    }
 }

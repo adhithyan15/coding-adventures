@@ -5,6 +5,127 @@ All notable changes to `javascript-to-semantic-ir` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## 0.4.0
+
+SIR19 milestone **M4 (functions, calls, closures)** — builds on M3's
+control flow.  Adds `function` declarations, arrow functions, tail
+`return`, function calls, and closures (`MakeClosure` + free-variable
+capture).
+
+### Added
+
+- **`function` declarations → `Function`.**  A two-pass design: pass 1
+  walks the whole CST collecting **every** `function` name (top-level and
+  nested) so a call resolves to a `DirectCall` regardless of source order
+  — forward references and (mutual) recursion all work.  Pass 2 lowers
+  `function f(params){body}` to a top-level `Function { name, params,
+  captures: [], body }`.  Params are simple positional names; default /
+  rest / destructuring params are deferred.
+- **Tail-position `return`.**  The IR has no early-return node, so a
+  function/closure body is a `Block` whose `value` is the returned
+  expression.  A `return` is accepted **only** in tail position — the
+  body's last statement, or (recursively) the last statement of a branch
+  of a tail-position `if`.  This admits the natural guard-via-`if`/`else`
+  recursion shape (`if (base) { return b; } else { return rec; }`) while
+  rejecting a genuine early `return` (one followed by more statements)
+  with a positioned "early return not supported in v0" `JsLowerError`.  A
+  body with no `return` (or a bare `return;`) yields `value = NilLit`.
+- **Arrow functions → `MakeClosure`.**  `(params) => expr` and
+  `(params) => { stmts; return r; }` (and the bare `a => …` and `() => …`
+  forms) lift to a gensym'd top-level `__lambda_<N>` `Function` plus an
+  `Expr::MakeClosure` at the source position.  An expression-bodied arrow
+  has the expression as the block value; a block-bodied arrow follows the
+  same tail-`return` rule as a function.
+- **Nested `function` declarations → lifted closures.**  A `function`
+  nested inside another function is lifted to a top-level synthesised
+  `Function` (keeping its source name) and bound locally to a
+  `MakeClosure`, so it can be returned / called indirectly and referenced
+  by name.
+- **Free-variable capture (on-resolve).**  A closure body is lowered
+  inside a fresh scope frame; each name that resolves to an *enclosing*
+  frame's local/param/capture (and is not a param/local of the closure,
+  nor a module function/global/builtin) becomes a `Capture` on the
+  synthesised `Function` (resolved as `Scope::Capture` inside the body)
+  and a `CaptureValue` on the `MakeClosure` (resolved in the enclosing
+  scope).  Captures thread **transitively** through nested closures.
+- **Calls → `DirectCall` / `IndirectCall` / `BuiltinCall`.**  `f(args)`
+  dispatches on the callee: a known module `function` name → `DirectCall`;
+  `console.log(x)` → `BuiltinCall("print", [x])` (with the `MayPrint`
+  effect); any other identifier that resolves to a closure *value*
+  (local / param / capture) → `IndirectCall` on that value.  Zero-arg and
+  multi-arg calls both lower.  Method calls other than `console.log` and
+  non-identifier callees are deferred.
+- **Manifest.**  Arrows / nested functions and `IndirectCall` declare
+  `Feature::Closures`; an untyped param anywhere declares
+  `Feature::DynamicTyping`; a genuine ≥2-cycle in the static call graph
+  declares `Feature::MutualRecursion` (the validator has no node that
+  *observes* mutual recursion, so it is frontend-declared — and only when
+  a real cycle exists, to avoid a spurious "declared but unused"
+  warning).  Pure self-recursion is **not** mutual recursion.
+- **Exports.**  Every user-visible top-level `function` is exported
+  alongside `main` (a module-scoped `function f` in JS is the analog of a
+  Python module-level `def`).
+- **Recursion bound.**  Function/closure/`if` body nesting reuses the
+  `MAX_STMT_DEPTH = 256` guard (and operand recursion stays bounded by
+  `MAX_EXPR_DEPTH`), so a pathologically deep nest of functions, calls, or
+  tail `if`s yields a positioned error rather than a stack-overflow abort.
+- 26 new unit tests (81 total): function declaration shape, tail return,
+  no-return / bare-return → nil, empty body, early-return rejection
+  (top-level and inside a non-tail `if`), tail `if`/`else` folding to
+  `Expr::If`, `DirectCall`, forward-reference call, `IndirectCall`,
+  `console.log` → print, zero-arg call, expression / block / no-param /
+  bare-identifier arrows, capture (single and transitive), nested-function
+  lift + capture, self-recursion vs mutual-recursion manifest, param /
+  unresolved-name resolution, deferred default-param and method-call, and
+  a functions+closures validate round-trip.
+- **End-to-end `node` execution tests** (`tests/e2e_node.rs`, gated on
+  `node` availability): factorial → `120`, fibonacci → `55`,
+  closure-adder → `8`, mutual-recursion `isEven(10)` → `#t`, each lowered
+  JS → SIR, emitted back to JavaScript with the merged
+  `semantic-ir-to-javascript` backend (a new dev-dependency), and
+  **executed with `node`**.
+
+### Changed
+
+- Minor version bump `0.3.0 → 0.4.0` (additive, backward-compatible).
+- The lowerer's single flat `declared_locals` set is replaced by a
+  **scope-frame stack** (`FnScope` per function: params, captures, locals)
+  so name resolution can distinguish `Local` / `Param` / `Capture` and
+  discover free variables across function boundaries.  M1–M3 behaviour is
+  preserved (`main` is the bottom frame; top-level bindings are its
+  locals).
+- Re-assignment now preserves the target's resolved scope (`Assign` to a
+  `Param` / `Capture`, not only `Local`).
+
+### Spec sync
+
+- Matches SIR19 "Return statement", "Arrow functions vs `function`
+  declarations", "Closures", and the function/call coverage rows.  One
+  refinement over a literal reading of the spec's "trailing `return`":
+  a `return` is also accepted as the tail of a branch of a *tail* `if`,
+  which is what makes the guard-style recursive goldens (factorial /
+  fibonacci) expressible without an early-return node.  The spec's
+  "Manifest computation = same trigger map as SIR17" is honoured, with
+  `MutualRecursion` declared only on a genuine call-graph cycle.
+
+### Deferred
+
+Still **out of scope after M4** and returning a clear positioned
+`JsLowerError`:
+
+- **M5 — collections:** array literals (`SeqLit`), indexing (`SeqIndex`),
+  `.length` (`SeqLen`), object literals (`MapLit`), member / `[]` access
+  (`MapGet`), and method calls other than `console.log`.
+- **Classes / `this` / `new`**, generators, `async`/`await`, default /
+  rest parameters, destructuring, spread, and template literals.
+- **Early `return`** mid-function (non-tail) — rejected, awaiting a
+  control-flow lift in a future version.
+- The remaining within-M2/M3 gaps (compound assignment outside the
+  loop-update position, member/index assignment targets, multi-binding
+  declarations, uninitialised bindings, bitwise/shift/exponentiation/
+  nullish operators, other prefix unaries, non-decimal numeric forms,
+  `switch`/`try`/`do-while`/labeled/`break`/`continue`) — unchanged.
+
 ## 0.3.0
 
 SIR19 milestone **M3 (control flow)** — builds on M2's variables and
