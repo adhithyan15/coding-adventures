@@ -2,6 +2,78 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.13.0 — Default-param call-arity semantics (P2a; behavior-neutral)
+
+Defines the **call-arity rule for default parameters** so a `DirectCall`
+to a known function may omit trailing arguments whose params carry
+defaults. This is **PR 2a of the default-params sequence**: P1 added the
+`Param.default` representation; this PR adds the *semantics layer* (query
+API + validation) that the per-backend default-filling emission (follow-up
+PRs) builds on. No frontend emits a defaulted call yet and no backend fills
+a default yet, so **all existing behavior is unchanged** — every existing
+valid module uses exact arity, which the new rule always accepts.
+
+### Evaluation model (documented in SIR10)
+
+Call-time, parameter-scope (Ruby/JS semantics): a default expression is
+conceptually evaluated when the call runs, in the callee's parameter scope,
+and may reference *earlier* params (validated as before). It is **not** a
+caller-side or definition-time constant.
+
+### Added
+
+- `Function::required_param_count(&self) -> usize` — the call-arity floor:
+  the length of the leading run of plain positional params that have no
+  default. The first defaulted param (or a `*rest`/`**opts`/synthetic block
+  param) ends the run.
+- `Function::missing_defaults(&self, n_args: usize) -> &[Param]` — the
+  trailing params at positions `n_args..len` that a caller omitted. For a
+  call the validator accepted, every returned param carries a default, so a
+  backend can emit each one's default unconditionally. Clamps on
+  over-supply (never panics).
+- Validator: `DirectCall` to a **known** function is now arity-checked. With
+  R = `required_param_count()` and M = total param count, the call is valid
+  iff `R <= args.len() <= M`. Omitting a trailing defaulted arg is OK;
+  omitting a required arg (`args.len() < R`) or over-supplying
+  (`args.len() > M`) is an error.
+- Validator: **defaults must be trailing** — a no-default `Required` param
+  may not follow a defaulted `Required` param (a "hole" like
+  `def f(a = 1, b)`). This makes the `missing_defaults` guarantee true by
+  construction: every param it returns carries a default, so a backend that
+  unwraps `param.default` cannot panic. The synthetic `__sir_block__` param
+  is exempt. Error message: "required parameter `b` may not follow a
+  defaulted parameter (defaults must be trailing)".
+- Unit tests (13): exact arity valid; omitting a trailing default valid;
+  omitting all defaults valid; omitting a required arg errors; too many args
+  errors; default-less callee keeps exact arity; variadic callee skips the
+  check; block-passing call (trailing `MakeClosure`) skips the check; splat
+  call skips the check; the `required_param_count` / `missing_defaults`
+  helpers return the right params; a hole fails validation with the
+  trailing-defaults message; trailing-defaults functions validate; a block
+  param after a defaulted param is exempt.
+
+### Deferred / scoped
+
+- **IndirectCall** (calling a closure value) keeps its prior behavior — the
+  target's params are not known statically, so default-arity resolution is
+  deferred. Documented in SIR10.
+- **Ruby's required-after-optional** form (`def f(a = 1, b)`, a "hole") is a
+  deferred v0 limitation — rejected by the trailing-defaults rule above.
+  Documented in SIR10.
+- The strict arity check is **skipped** when the callee is variadic
+  (`*rest`/`**opts`) or carries the synthetic trailing block param, or when
+  any argument is not statically one positional value — a splat
+  (`splat`/`double_splat`), argument forwarding (`forward_args`), block-pass
+  (`block_pass`), or an implicit Ruby block handle (`MakeClosure`) appended
+  to the arg list. These call-position lowerings (produced by the Ruby
+  frontend) have no statically meaningful `args.len()`; checking them is
+  deferred. This is what keeps the change behavior-neutral for the existing
+  frontends.
+
+### Changed
+
+- `Cargo.toml`: minor version bump `0.2.0` → `0.3.0`.
+
 ## 0.12.0 — Param default values (core IR representation; behavior-neutral)
 
 Adds the IR representation for **default parameter values** — the `1` in
