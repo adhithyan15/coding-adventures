@@ -2186,6 +2186,105 @@ R1 in out
 }
 
 #[test]
+fn berkeley_app_facade_exports_editor_command_plan_after_execution() {
+    let app = parse_berkeley_app_deck(
+        r#"
+* transient editor commands
+V1 in 0 PULSE(0 1 0 1n 1n 1n 4n)
+R1 in out 1k
+C1 out 0 1p
+.tran 1n 3n
+.print tran V(out)
+.end
+"#,
+    );
+
+    let plan = app.run_editor_command_plan(Some(3)).unwrap();
+
+    assert!(plan.parsed);
+    assert!(plan.execution_available);
+    assert_eq!(plan.selected_syntax_card_index, Some(3));
+    assert_eq!(plan.command_count, 4);
+    assert_eq!(
+        plan.commands
+            .iter()
+            .map(|command| command.id.as_str())
+            .collect::<Vec<_>>(),
+        vec![
+            "analysis.3.select",
+            "analysis.3.run",
+            "analysis.3.inspect-table",
+            "analysis.3.inspect-waveform",
+        ]
+    );
+
+    let waveform = plan
+        .commands
+        .iter()
+        .find(|command| command.id == "analysis.3.inspect-waveform")
+        .unwrap();
+    assert_eq!(waveform.kind, BerkeleyAppEditorActionKind::InspectWaveform);
+    assert_eq!(waveform.syntax_card_index, 3);
+    assert_eq!(waveform.directive, ".tran");
+    assert_eq!(waveform.analysis, "tran");
+    assert_eq!(waveform.target, "analysis-waveform");
+    assert_eq!(waveform.label, "Inspect .tran waveform");
+    assert!(waveform.enabled);
+    assert!(waveform.selected);
+    assert_eq!(waveform.disabled_reason, None);
+}
+
+#[test]
+fn berkeley_app_facade_editor_command_plan_preserves_disabled_reasons() {
+    let app = parse_berkeley_app_deck(
+        r#"
+* transient editor commands
+V1 in 0 PULSE(0 1 0 1n 1n 1n 4n)
+R1 in out 1k
+C1 out 0 1p
+.tran 1n 3n
+.print tran V(out)
+.end
+"#,
+    );
+
+    let plan = app.editor_command_plan(Some(3));
+    let table = plan
+        .commands
+        .iter()
+        .find(|command| command.id == "analysis.3.inspect-table")
+        .unwrap();
+    assert!(!table.enabled);
+    assert_eq!(table.target, "analysis-table");
+    assert_eq!(
+        table.disabled_reason.as_deref(),
+        Some("run deck artifacts to populate analysis table")
+    );
+
+    let blocked = parse_berkeley_app_deck(
+        r#"
+V1 in 0 DC 1
+R1 in out
+.op
+.end
+"#,
+    );
+    let plan = blocked.editor_command_plan(Some(2));
+    let run = plan
+        .commands
+        .iter()
+        .find(|command| command.id == "analysis.2.run")
+        .unwrap();
+    assert!(!run.enabled);
+    assert_eq!(run.target, "analysis-runner");
+    assert!(run
+        .disabled_reason
+        .as_deref()
+        .unwrap()
+        .contains("Berkeley SPICE app deck:"));
+}
+
+#[test]
 fn berkeley_app_facade_session_state_reports_blocked_decks() {
     let app = parse_berkeley_app_deck(
         r#"
