@@ -128,9 +128,11 @@ Current reducer integration:
   facade and C ABI.
 - `import_anki_basic_tsv` parses Anki Basic front/back text files with headers
   and quoted fields, and is exposed through the JSON facade and C ABI.
-- Note-backed Anki TSV import/export now supports Basic and Basic-and-reversed
-  rows as `NoteType`, `Note`, and generated lineage cards, including Tags
-  column preservation through the JSON facade and C ABI.
+- Note-backed Anki TSV import/export now supports Basic, Basic-and-reversed,
+  Basic optional-reversed, and Basic type-in-answer rows as `NoteType`, `Note`,
+  and generated lineage cards. The importer preserves Tags columns, `#tags:`
+  headers, `#tags column:N`, `#deck:`, `#deck column:N`, `#guid column:N`, and
+  `#notetype column:N` through the JSON facade and C ABI.
 - Note-backed Anki TSV import also supports Cloze rows with `Text`, optional
   `Extra`, and `Tags` columns, producing Cloze note models and cloze lineage
   cards through the JSON facade.
@@ -258,11 +260,15 @@ Formats:
 - CSV deck import/export. Initial Rust support exists for full card CSV
   round-trips and simpler generated-ID `front,back` imports.
 - Anki TSV text compatibility. Basic front/back import/export exists in core,
-  JSON facade, and C ABI; note-backed Basic and Basic-and-reversed TSV
-  import/export now creates notes, generated cards, and tag metadata. Cloze TSV
-  import creates cloze note models and cards. Custom note-type TSV import now
-  preserves arbitrary field columns as notes without generated cards. Richer
-  custom note-template/media export remains.
+  JSON facade, and C ABI; note-backed Basic, Basic-and-reversed, Basic
+  optional-reversed, and Basic type-in-answer TSV import/export now creates
+  notes, generated cards, typed-answer prompts, conditional reverse cards, and
+  tag metadata. The text importer honors named Anki separators including comma,
+  semicolon, pipe, colon, and space, plus `#tags:`, `#tags column:N`, `#deck:`,
+  `#deck column:N`, `#guid column:N`, and `#notetype column:N`. Cloze TSV import
+  creates cloze note models and cards. Custom note-type TSV import now preserves
+  arbitrary field columns as notes without generated cards while excluding
+  special metadata columns. Richer custom note-template/media export remains.
 - APKG import/export eventually, via a dedicated facade or package crate.
   `engram-anki-package` now provides the archive-inspection foundation for
   legacy and modern collection members plus legacy JSON media maps, and can
