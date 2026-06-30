@@ -2,6 +2,27 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.13.0] — 2026-06-29
+
+### Changed — accents lower to the neutral `MathExpr::Accent` (no longer faked as a function call)
+
+The L6 adapter previously lowered a diacritical accent (`\hat{x}`, `\bar{y}`, `\vec{v}`,
+`\tilde{a}`, `\dot{x}`, …) to `MathExpr::Call { func: Func::Other(kind), arg }` — a *function
+application*, which is the wrong meaning: `\hat{x}` is a mark *over* `x`, not `hat(x)`. Now that
+`math-frontend` 0.4.0 provides a neutral **`MathExpr::Accent { accent, body }`** node, the adapter
+emits it faithfully.
+
+- `lower()`'s `MathNode::Accent { kind, body }` arm now pushes a new `Build::Accent(kind)` work step
+  (instead of `Build::Call(Func::Other(kind))`); its assembler pops the lowered body and produces
+  `MathExpr::Accent { accent: kind, body }`. Still inside the iterative trampoline — O(1) call-frame
+  depth, stack-safe on deep accent nests.
+- `capabilities()` stays `Capabilities::all()` — now **honestly** includes `accents`, which the
+  shared conformance harness (math-frontend 0.4.0) enforces (emitting an Accent requires declaring it).
+- Test `accent_is_a_named_unary` becomes `accent_lowers_to_neutral_accent_node` (asserts `\hat{x}` →
+  `Accent{accent:"hat", x}` and `\vec{v}` → `Accent{accent:"vec", v}`). Tests pass; downstream
+  `adj-lang` green (its adapter's catch-all routes an Accent to "unsupported ADJ arithmetic", since a
+  diacritic is not computable — behavior unchanged). clippy `-D warnings` clean.
+
 ## [0.12.0] — 2026-06-29
 
 ### Fixed — deep `MathNode` trees now drop without overflowing the stack
