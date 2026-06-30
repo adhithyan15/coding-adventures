@@ -10,6 +10,7 @@ const WHATWG_FORM_INTERACTIVE_AUDIT: &str =
 const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
     ("tests26-dat-1251", "interactive-formatting"),
     ("tricky01-dat-8", "interactive-formatting"),
+    ("tricky01-dat-9", "interactive-formatting"),
 ];
 
 #[derive(Debug, Deserialize)]
