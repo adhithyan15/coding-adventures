@@ -33,16 +33,16 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell event dashboard.
+1. Rust Berkeley Mosaic app shell dashboard package.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app shell event dashboards and JSON helpers that
-     group Berkeley app shell event digests into stable status, attention, and
-     metrics sections for first-render product dashboards.
+   - Add schema-versioned Rust app shell dashboard packages and JSON helpers
+     that combine the Berkeley app package manifest with the first-render event
+     dashboard for WebAssembly and product hosts.
    - Preserve package name, source fingerprint, ready/blocked route, status
-     severity, headline event/message, primary action, attention-required flag,
-     section descriptors, event count, diagnostic count, repaired-state count,
-     and advertised capability count so Mosaic, WebAssembly, and product shells
-     can render startup dashboards without walking the full event stream.
+     severity, attention-required flag, section count, dashboard/package
+     capability IDs, advertised capability count, package manifest, and nested
+     dashboard payload so Mosaic, WebAssembly, and product shells can render
+     startup dashboards without stitching manifest and dashboard payloads.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1644,6 +1644,19 @@ the Rust, Python, and TypeScript surfaces together.
    - The digest payload preserves package name, source fingerprint,
      ready/blocked route, status severity, headline event/message, primary
      action, attention/metric event IDs, event counts, counted totals,
+     diagnostic count, repaired-state count, and advertised capability count so
+     Mosaic, WebAssembly, and product shells can render startup dashboards
+     without walking the full event stream.
+
+155. Rust Berkeley Mosaic app shell event dashboard.
+   - Status: completed in PR 7068.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell event dashboards plus JSON helpers that group Berkeley app shell
+     event digests into stable status, attention, and metrics sections for
+     first-render product dashboards.
+   - The dashboard payload preserves package name, source fingerprint,
+     ready/blocked route, status severity, headline event/message, primary
+     action, attention-required flag, section descriptors, event count,
      diagnostic count, repaired-state count, and advertised capability count so
      Mosaic, WebAssembly, and product shells can render startup dashboards
      without walking the full event stream.
