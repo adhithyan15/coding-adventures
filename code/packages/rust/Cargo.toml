@@ -510,6 +510,7 @@ members = [
     "repl",
     "ruby-bridge",
     "ruby-to-semantic-ir",
+    "javascript-to-semantic-ir",
     "scytale-cipher",
     "sha256",
     "sha512",
