@@ -1700,11 +1700,28 @@ fn convert_argument(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
             location: loc(node),
         });
     }
-    let n = node_children(node)
-        .into_iter()
-        .next()
-        .ok_or_else(|| internal(node, "argument: missing expression"))?;
-    convert_expression(n)
+    // The parser collapses the single-alternative `argument` production, so the
+    // node we receive here IS the `assignment_expression` itself. For an
+    // assignment argument like `f(x = 1)` that node's children are
+    //   [left_hand_side_expression(x), assignment_operator(=), assignment_expression(1)]
+    // The previous implementation unwrapped to `node_children().next()` — the
+    // FIRST child — which grabbed only the LHS `x` and silently dropped
+    // `= 1`, miscompiling `f(x=1)` into `f(x)` (and `f(x+=1)` into `f(x)`,
+    // `f(x=y=1)` into `f(x)`, …). We must convert the WHOLE node, so the
+    // assignment is preserved by `convert_assignment_expression`.
+    //
+    // If a future grammar revision reintroduces an explicit `argument` wrapper
+    // node (rather than the collapsed assignment_expression), unwrap it to its
+    // sole child first; otherwise convert the node directly.
+    let target = if node.rule_name == "argument" {
+        node_children(node)
+            .into_iter()
+            .next()
+            .ok_or_else(|| internal(node, "argument: missing expression"))?
+    } else {
+        node
+    };
+    convert_expression(target)
 }
 
 // -------------------------------------------------------------------------
@@ -2020,9 +2037,16 @@ fn convert_array_literal(node: &GrammarASTNode) -> Result<Expression, BridgeErro
                                     location: loc(elem),
                                 });
                             }
-                            let child =
-                                node_children(elem).into_iter().next().unwrap_or(elem);
-                            elements.push(Some(convert_expression(child)?));
+                            // `elem` is the `assignment_expression` for this
+                            // slot. Convert it WHOLE: the previous code unwrapped
+                            // to `node_children(elem).next()`, which for an
+                            // assignment element grabbed only the LHS and dropped
+                            // `= rhs`, miscompiling `[x=1]` into `[x]` (and
+                            // `[a=1,b]` into `[a,b]`). `convert_expression`
+                            // dispatches `assignment_expression` correctly for
+                            // both the plain (`[x]`) and assignment (`[x=1]`)
+                            // cases.
+                            elements.push(Some(convert_expression(elem)?));
                             expect_element = false;
                         }
                     }
@@ -3110,6 +3134,72 @@ mod tests {
             )) => &es.expression,
             _ => panic!("expected an expression statement"),
         }
+    }
+
+    #[test]
+    fn assignment_expression_as_call_argument_is_not_dropped() {
+        // Regression: `convert_argument` unwrapped to the FIRST child of the
+        // (collapsed) `assignment_expression` argument node, grabbing only the
+        // LHS and dropping `= rhs` — miscompiling `f(x=1)` into `f(x)`. The
+        // argument must bridge to a whole AssignmentExpression.
+        let call = match first_expr(&bridge_ok("f(x=1);")) {
+            Expression::CallExpression(c) => c.clone(),
+            other => panic!("expected CallExpression, got {other:?}"),
+        };
+        assert_eq!(call.arguments.len(), 1);
+        match &call.arguments[0] {
+            Expression::AssignmentExpression(a) => {
+                assert!(matches!(a.operator, AssignmentOperator::Eq));
+                assert!(matches!(&a.left, AssignmentTarget::Identifier(id) if id.name == "x"));
+            }
+            other => panic!("expected the argument to be an assignment `x=1`, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn compound_and_chained_assignment_arguments_survive() {
+        // `f(x+=1)` must keep the compound operator; `f(x=y=1)` must keep the
+        // nested assignment. Both previously collapsed to `f(x)`.
+        match first_expr(&bridge_ok("f(x+=1);")) {
+            Expression::CallExpression(c) => match &c.arguments[0] {
+                Expression::AssignmentExpression(a) => {
+                    assert!(matches!(a.operator, AssignmentOperator::AddEq));
+                }
+                other => panic!("expected `x+=1` assignment arg, got {other:?}"),
+            },
+            other => panic!("expected CallExpression, got {other:?}"),
+        }
+        match first_expr(&bridge_ok("f(x=y=1);")) {
+            Expression::CallExpression(c) => match &c.arguments[0] {
+                // outer `x = (y = 1)` — the right side is itself an assignment.
+                Expression::AssignmentExpression(a) => {
+                    assert!(matches!(&*a.right, Expression::AssignmentExpression(_)));
+                }
+                other => panic!("expected nested assignment arg, got {other:?}"),
+            },
+            other => panic!("expected CallExpression, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn assignment_expression_as_array_element_is_not_dropped() {
+        // Regression: `convert_array_literal` unwrapped each element to its
+        // first child, dropping `= rhs` — `[x=1]` became `[x]`. The element
+        // must bridge to a whole AssignmentExpression; a following plain
+        // element (`[a=1,b]`) must still bridge normally.
+        let arr = match first_expr(&bridge_ok("[a=1,b];")) {
+            Expression::ArrayExpression(a) => a.clone(),
+            other => panic!("expected ArrayExpression, got {other:?}"),
+        };
+        assert_eq!(arr.elements.len(), 2);
+        match &arr.elements[0] {
+            Some(Expression::AssignmentExpression(a)) => {
+                assert!(matches!(a.operator, AssignmentOperator::Eq));
+                assert!(matches!(&a.left, AssignmentTarget::Identifier(id) if id.name == "a"));
+            }
+            other => panic!("expected element 0 to be assignment `a=1`, got {other:?}"),
+        }
+        assert!(matches!(&arr.elements[1], Some(Expression::Identifier(id)) if id.name == "b"));
     }
 
     /// The first property's key of an object-literal expression statement.
