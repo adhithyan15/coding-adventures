@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.SqlOptimizer.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>F# logical query optimizer: 5 optimization passes over LogicalPlan trees for the Mini-SQLite Level 1 pipeline.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="SqlOptimizer.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../sql-planner/CodingAdventures.SqlPlanner.fsproj" />
+  </ItemGroup>
+</Project>

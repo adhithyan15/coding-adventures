@@ -96,11 +96,11 @@
     {
       "id": "fsharp-level1-sql-optimizer",
       "title": "F# sql-optimizer",
-      "status": "pending",
+      "status": "in-review",
       "depends_on": ["fsharp-level1-sql-planner"],
-      "branch": null,
+      "branch": "mini-sqlite/fsharp-level1-sql-optimizer",
       "pr_number": null,
-      "notes": "Port Python sql_optimizer to F#."
+      "notes": "PR open 2026-06-30. 60 tests, 5-pass optimizer. Awaiting CI + merge."
     },
     {
       "id": "fsharp-level1-sql-codegen",
