@@ -58,6 +58,7 @@ struct NoteEditorSessionState {
     draft_deck_id: Option<String>,
     draft_created_at: Option<u64>,
     draft_is_new: bool,
+    confirm_delete: bool,
     draft_fields: HashMap<String, String>,
     draft_tags: Option<String>,
 }
@@ -74,6 +75,7 @@ impl NoteEditorSessionState {
             self.draft_deck_id = None;
             self.draft_created_at = None;
             self.draft_is_new = false;
+            self.confirm_delete = false;
             self.draft_fields.clear();
             self.draft_tags = None;
         }
@@ -86,33 +88,43 @@ impl NoteEditorSessionState {
         self.draft_deck_id = (!deck_id.is_empty()).then_some(deck_id);
         self.draft_created_at = Some(now);
         self.draft_is_new = true;
+        self.confirm_delete = false;
         self.draft_fields.clear();
         self.draft_tags = Some(String::new());
     }
 
     fn set_selected_field_index(&mut self, index: usize) {
         self.selected_field_index = index;
+        self.confirm_delete = false;
     }
 
     fn set_note_type(&mut self, note_id: &str, note_type_id: String) {
         self.reset_for_note_if_needed(note_id);
         self.draft_note_type_id = Some(note_type_id);
+        self.confirm_delete = false;
         self.draft_fields.clear();
     }
 
     fn set_deck(&mut self, note_id: &str, deck_id: String) {
         self.reset_for_note_if_needed(note_id);
         self.draft_deck_id = Some(deck_id);
+        self.confirm_delete = false;
     }
 
     fn set_field_value(&mut self, note_id: &str, field_id: &str, value: String) {
         self.reset_for_note_if_needed(note_id);
+        self.confirm_delete = false;
         self.draft_fields.insert(field_id.to_string(), value);
     }
 
     fn set_tags(&mut self, note_id: &str, value: String) {
         self.reset_for_note_if_needed(note_id);
+        self.confirm_delete = false;
         self.draft_tags = Some(value);
+    }
+
+    fn ask_delete_confirmation(&mut self) {
+        self.confirm_delete = true;
     }
 
     fn reset_for_note_if_needed(&mut self, note_id: &str) {
@@ -130,6 +142,7 @@ struct NoteTypeEditorSessionState {
     draft_stylesheet: Option<String>,
     draft_created_at: Option<u64>,
     draft_is_new: bool,
+    confirm_delete: bool,
 }
 
 impl NoteTypeEditorSessionState {
@@ -144,6 +157,7 @@ impl NoteTypeEditorSessionState {
         self.draft_stylesheet = None;
         self.draft_created_at = None;
         self.draft_is_new = false;
+        self.confirm_delete = false;
     }
 
     fn start_new(&mut self, now: u64) {
@@ -153,6 +167,7 @@ impl NoteTypeEditorSessionState {
         self.draft_stylesheet = Some(String::new());
         self.draft_created_at = Some(now);
         self.draft_is_new = true;
+        self.confirm_delete = false;
     }
 
     fn ensure_selected_draft(&mut self, note_type_id: &str) {
@@ -162,17 +177,24 @@ impl NoteTypeEditorSessionState {
             self.draft_stylesheet = None;
             self.draft_created_at = None;
             self.draft_is_new = false;
+            self.confirm_delete = false;
         }
     }
 
     fn set_name(&mut self, note_type_id: &str, value: String) {
         self.ensure_selected_draft(note_type_id);
+        self.confirm_delete = false;
         self.draft_name = Some(value);
     }
 
     fn set_stylesheet(&mut self, note_type_id: &str, value: String) {
         self.ensure_selected_draft(note_type_id);
+        self.confirm_delete = false;
         self.draft_stylesheet = Some(value);
+    }
+
+    fn ask_delete_confirmation(&mut self) {
+        self.confirm_delete = true;
     }
 }
 
@@ -763,6 +785,8 @@ impl EngramSession {
                 EngramAppEvent::NoteEditorDeleteNote => {
                     if self.editor.draft_is_new {
                         self.editor.reset();
+                    } else if !self.editor.confirm_delete {
+                        self.editor.ask_delete_confirmation();
                     } else {
                         let selection = note_editor_selection(
                             &self.state,
@@ -842,7 +866,11 @@ impl EngramSession {
                             .ok_or_else(|| {
                                 "cannot delete note type without a selected note type".to_string()
                             })?;
-                    if self
+                    if self.note_type_editor.draft_is_new {
+                        self.note_type_editor.reset();
+                    } else if !self.note_type_editor.confirm_delete {
+                        self.note_type_editor.ask_delete_confirmation();
+                    } else if self
                         .state
                         .note_types
                         .iter()
@@ -852,8 +880,8 @@ impl EngramSession {
                             &self.state,
                             engram_core::EngramCommand::DeleteNoteType { note_type_id },
                         );
+                        self.note_type_editor.reset();
                     }
-                    self.note_type_editor.reset();
                 }
                 EngramAppEvent::NoteTypeEditorCancel => {
                     self.note_type_editor.reset();
@@ -1914,6 +1942,8 @@ fn insert_note_editor_props(
         "note-editor-delete-label".to_string(),
         Value::String(if editor.draft_is_new {
             "Discard draft".to_string()
+        } else if editor.confirm_delete {
+            "Confirm delete".to_string()
         } else {
             "Delete note".to_string()
         }),
@@ -2061,7 +2091,13 @@ fn insert_note_type_editor_props(
     );
     props.insert(
         "note-type-editor-delete-label".to_string(),
-        Value::String("Delete type".to_string()),
+        Value::String(if editor.draft_is_new {
+            "Discard type".to_string()
+        } else if editor.confirm_delete {
+            "Confirm delete".to_string()
+        } else {
+            "Delete type".to_string()
+        }),
     );
     props.insert(
         "note-type-editor-cancel-label".to_string(),
@@ -7239,6 +7275,33 @@ mod tests {
                     && card["front"] == "aaa"
                     && card["back"] == "letter-aa"
             }));
+
+        let confirm_delete: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onNoteEditorDeleteNote",
+            "deck",
+            NOW + 5,
+        ))
+        .unwrap();
+        assert_eq!(confirm_delete["ok"], true);
+        assert_eq!(confirm_delete["event"], "onNoteEditorDeleteNote");
+        assert_eq!(
+            confirm_delete["props"]["note-editor-delete-label"],
+            "Confirm delete"
+        );
+        assert_eq!(
+            confirm_delete["state"]["notes"].as_array().unwrap().len(),
+            1
+        );
+
+        let deleted: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onNoteEditorDeleteNote",
+            "deck",
+            NOW + 6,
+        ))
+        .unwrap();
+        assert_eq!(deleted["ok"], true);
+        assert!(deleted["state"]["notes"].as_array().unwrap().is_empty());
+        assert!(deleted["state"]["cards"].as_array().unwrap().is_empty());
     }
 
     #[test]
@@ -7705,6 +7768,22 @@ mod tests {
             "onNoteTypeEditorDeleteNoteType",
             "deck",
             NOW + 8,
+        ))
+        .unwrap();
+        assert_eq!(deleted_new["ok"], true);
+        assert_eq!(
+            deleted_new["props"]["note-type-editor-delete-label"],
+            "Confirm delete"
+        );
+        assert_eq!(
+            deleted_new["state"]["noteTypes"].as_array().unwrap().len(),
+            2
+        );
+
+        let deleted_new: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onNoteTypeEditorDeleteNoteType",
+            "deck",
+            NOW + 9,
         ))
         .unwrap();
         assert_eq!(

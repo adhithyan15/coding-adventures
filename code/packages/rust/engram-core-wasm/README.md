@@ -185,6 +185,8 @@ The mounted Mosaic note editor uses the same reducer path through
 `onNoteEditorTagsChange`, `onNoteEditorSaveNote`, `onNoteEditorDeleteNote`, and
 `onNoteEditorCancel`, deriving existing-note edits from the shared browser
 selection and new-note edits from the shared draft opened by `onAddNote`.
+Mounted editor delete actions use shared two-click confirmation props before
+removing persisted notes or note types; unsaved note drafts discard immediately.
 The mounted Mosaic note-type editor follows the same pattern through
 `onNoteTypeEditorSelectNoteType`, `onNoteTypeEditorNameChange`,
 `onNoteTypeEditorStylesheetChange`, `onNoteTypeEditorNewNoteType`,
