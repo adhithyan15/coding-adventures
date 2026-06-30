@@ -1,5 +1,66 @@
 # Changelog
 
+## 0.5.0 — SIR19 default parameters (P2f) via missing-sentinel runtime-mimic
+
+Adds `Feature::DefaultParams` to the Go backend's accepted set.  Go has no
+native optional/default parameters and emitted functions are *fixed-arity*
+over `Value`, so the backend uses a **runtime-mimic** strategy: a unique
+package-level MISSING sentinel flows through the ordinary `Value` channel.
+
+Semantics are **call-time, param-scope**: a default expression is evaluated
+each call, in the callee, where the *earlier* parameters are already bound
+(so a later default may reference an earlier param — `def f(a, b = a + 1)`).
+
+### Added
+
+- **Runtime MISSING sentinel.**  A distinct, otherwise-empty `_missingMarker`
+  struct type plus the single shared instance `var _sir_missing Value =
+  &_missingMarker{}`.  A program can never construct one itself (no IR node
+  lowers to it), so pointer identity makes the new
+  `func _sir_is_missing(v Value) bool` predicate exact and total.
+- **Caller-side padding.**  A `DirectCall` that omits trailing defaulted
+  arguments pads the call up to the callee's full (fixed) param count with
+  `_sir_missing`, e.g. `f(5)` for `f(a, b = …)` emits
+  `f(Value(int64(5)), _sir_missing)`.  The full param count comes from the
+  module's function table (`FN_ARITY`, populated by `emit_module` before any
+  body is walked).
+- **Callee body prologue.**  Each defaulted parameter gets a guard at the top
+  of the function body, in declaration order:
+  `if _sir_is_missing(<name>) { <name> = <emitted default expr> }`.  Ordering
+  is what makes a later default see an earlier param's already-resolved
+  value.  Reassigning a parameter is ordinary Go (parameters are mutable
+  locals) and the guard itself "uses" the param, so Go's strict
+  unused-variable rule is satisfied even when the body never reads it.
+
+### Changed
+
+- **`_sir_format` / `_sir_value_eq`** defensively handle the sentinel — it
+  never reaches a print or `=` path in a well-formed program (a defaulted
+  param is always replaced before use), but `_sir_format` renders a stray
+  sentinel as `<missing>` and `_sir_value_eq` treats two sentinels as equal
+  and a sentinel as equal to nothing else, so it can never masquerade as a
+  user value.
+
+### Tested
+
+- Unit tests assert the emitted shape: the body prologue (`if
+  _sir_is_missing(b) { b = _sir_plus([]Value{a, Value(int64(1))}) }`), that a
+  required param emits no guard, and that `DirectCall` padding appends the
+  right number of sentinels.  Runtime tests assert the sentinel type, the
+  `_sir_is_missing` helper, and the defensive format/eq guards.
+- New `go run` integration test (`compile_and_run_default_params.rs`):
+  module `f(a, b = a + 1)` returning `b`, `main` prints `f(5)` then
+  `f(5, 10)`; the emitted Go is compiled and run under the real Go toolchain
+  and stdout is asserted to be `6` then `10` (the default ran and saw
+  `a = 5`; a supplied argument suppressed it).  The four existing `go run`
+  tests (floats / loops / seq+maps / cyclic) still pass.
+
+### Housekeeping
+
+- Fixed three pre-existing `clippy` lints in `emit.rs` (a `write!`-with-
+  trailing-newline, a needless lifetime on `pick_global_set`, and a
+  `len() >= 1`) so the crate is clippy-clean under `--all-targets`.
+
 ## 0.4.1 — harden emitted Go runtime against cyclic Seq/Map
 
 `*Seq`/`*Map` are shared, *mutable* handles, so an emitted Go program can
