@@ -99,6 +99,15 @@ char *eg_parse_anki_notes_tsv(
     const char *note_id_prefix,
     uint64_t created_at
 );
+char *eg_merge_anki_notes_tsv(
+    EgSession *session,
+    const char *tsv,
+    const char *deck_id,
+    const char *note_type_id,
+    const char *note_type_name,
+    const char *note_id_prefix,
+    uint64_t created_at
+);
 char *eg_export_anki_apkg(EgSession *session);
 char *eg_export_anki_apkg_modern(EgSession *session);
 char *eg_analyze_media_references(EgSession *session);

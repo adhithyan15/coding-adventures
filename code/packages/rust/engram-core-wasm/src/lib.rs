@@ -15,12 +15,13 @@ use engram_core::{
     export_cards_anki_basic_tsv, export_cards_csv, export_notes_anki_tsv, generate_cards_for_note,
     get_active_session_progress, get_daily_study_limit_usage, get_deck_stats_for_state,
     import_anki_basic_tsv, import_anki_notes_tsv, import_basic_cards_csv, import_cards_csv,
-    materialize_generated_card, notes_in_deck_scope, reduce, restore_engram_snapshot,
-    search_cards as search_core_cards, search_cards_with_context, summarize_review_history,
-    type_answer_matches, typed_answer_for_template, AnkiBasicTsvExportOptions,
-    AnkiNoteTsvImportOptions, AppState, BasicCardCsvImportOptions, Card, CardFlag, CardLineage,
-    CardProgress, CardSearchResult, CardState, ClozeRenderSide, DeckOptions, EngramSnapshot,
-    LeechAction, MediaAssetRecord, Note, NoteFieldValue, Rating, SearchContext, TypeAnswerSpec,
+    materialize_generated_card, merge_app_states, notes_in_deck_scope, reduce,
+    restore_engram_snapshot, search_cards as search_core_cards, search_cards_with_context,
+    summarize_review_history, type_answer_matches, typed_answer_for_template,
+    AnkiBasicTsvExportOptions, AnkiNoteTsvImport, AnkiNoteTsvImportOptions, AppState,
+    BasicCardCsvImportOptions, Card, CardFlag, CardLineage, CardProgress, CardSearchResult,
+    CardState, ClozeRenderSide, DeckOptions, EngramSnapshot, LeechAction, MediaAssetRecord, Note,
+    NoteFieldValue, Rating, SearchContext, TypeAnswerSpec,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -1239,6 +1240,48 @@ impl EngramSession {
                 Err(error) => Ok(error_json_with_row(&error.message, error.row)),
             }
         })
+    }
+
+    pub fn merge_anki_notes_tsv(
+        &mut self,
+        tsv: &str,
+        deck_id: &str,
+        note_type_id: &str,
+        note_type_name: &str,
+        note_id_prefix: &str,
+        created_at: u64,
+    ) -> String {
+        catch_json(|| {
+            let options = AnkiNoteTsvImportOptions {
+                deck_id: deck_id.to_string(),
+                note_type_id: note_type_id.to_string(),
+                note_type_name: note_type_name.to_string(),
+                note_id_prefix: note_id_prefix.to_string(),
+                created_at,
+            };
+            match import_anki_notes_tsv(tsv, &options) {
+                Ok(imported) => {
+                    let imported_state = app_state_from_anki_note_tsv_import(imported);
+                    self.state = merge_app_states(&self.state, imported_state);
+                    self.browser = BrowserSessionState::default();
+                    self.review = ReviewSessionState::default();
+                    self.editor = NoteEditorSessionState::default();
+                    self.note_type_editor = NoteTypeEditorSessionState::default();
+                    Ok(ok_with("state", &self.state))
+                }
+                Err(error) => Ok(error_json_with_row(&error.message, error.row)),
+            }
+        })
+    }
+}
+
+fn app_state_from_anki_note_tsv_import(imported: AnkiNoteTsvImport) -> AppState {
+    AppState {
+        note_types: imported.note_types,
+        notes: imported.notes,
+        cards: imported.cards,
+        external_sources: imported.external_sources,
+        ..AppState::default()
     }
 }
 
@@ -9093,6 +9136,55 @@ mod tests {
 
         assert_eq!(error["ok"], false);
         assert_eq!(error["row"], 1);
+    }
+
+    #[test]
+    fn merge_anki_notes_tsv_merges_note_model_and_cards_into_session() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Spanish","description":"Words","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [{"id":"local-card","deckId":"deck","front":"amma","back":"mother","createdAt":1700000000000}],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+        session.load_snapshot(snapshot);
+
+        let value: Value = serde_json::from_str(&session.merge_anki_notes_tsv(
+            "#separator:tab\n#notetype:Basic (and reversed card)\n#guid column:3\n#columns:Front\tBack\tGuid\nhola\thello\tguid-123\n",
+            "deck",
+            "basic-reversed",
+            "",
+            "note",
+            NOW,
+        ))
+        .unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(value["state"]["noteTypes"][0]["id"], "basic-reversed");
+        assert_eq!(value["state"]["notes"][0]["id"], "note-1");
+        let card_ids = value["state"]["cards"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|card| card["id"].as_str().unwrap())
+            .collect::<Vec<_>>();
+        assert!(card_ids.contains(&"local-card"));
+        assert!(card_ids.contains(&"note-1::forward"));
+        assert!(card_ids.contains(&"note-1::reverse"));
+        assert!(value["state"]["externalSources"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|source| {
+                source["target"] == "note"
+                    && source["targetId"] == "note-1"
+                    && source["source"] == "anki-text"
+                    && source["originalId"] == "guid-123"
+            }));
     }
 
     #[test]

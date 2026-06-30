@@ -4,7 +4,6 @@
 //! NUL-terminated UTF-8 strings. All string results are allocated by Rust and
 //! must be released with `eg_string_free`.
 
-use std::collections::HashMap;
 use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 use std::ptr;
@@ -14,7 +13,7 @@ use engram_anki_package::{
     read_v11_collection_as_engram_state, write_legacy_apkg_from_engram_state,
     write_modern_apkg_from_engram_state,
 };
-use engram_core::{AppState, ExternalSourceRecord, ExternalSourceTarget, MediaAssetRecord};
+use engram_core::{merge_app_states, AppState};
 use engram_core_wasm::EngramSession;
 use serde_json::{json, Value};
 
@@ -393,6 +392,35 @@ pub unsafe extern "C" fn eg_parse_anki_notes_tsv(
 }
 
 /// # Safety
+/// `session` must be valid; string arguments must be null or valid C strings.
+#[no_mangle]
+pub unsafe extern "C" fn eg_merge_anki_notes_tsv(
+    session: *mut EgSession,
+    tsv: *const c_char,
+    deck_id: *const c_char,
+    note_type_id: *const c_char,
+    note_type_name: *const c_char,
+    note_id_prefix: *const c_char,
+    created_at: u64,
+) -> *mut c_char {
+    let tsv = read_cstr(tsv);
+    let deck_id = read_cstr(deck_id);
+    let note_type_id = read_cstr(note_type_id);
+    let note_type_name = read_cstr(note_type_name);
+    let note_id_prefix = read_cstr(note_id_prefix);
+    with_session(session, |session| {
+        session.merge_anki_notes_tsv(
+            &tsv,
+            &deck_id,
+            &note_type_id,
+            &note_type_name,
+            &note_id_prefix,
+            created_at,
+        )
+    })
+}
+
+/// # Safety
 /// `session` must be a valid session pointer.
 #[no_mangle]
 pub unsafe extern "C" fn eg_export_anki_apkg(session: *mut EgSession) -> *mut c_char {
@@ -586,169 +614,6 @@ fn load_merged_state(session: &mut EngramSession, imported: AppState) -> String 
         Ok(snapshot_json) => session.load_snapshot(&snapshot_json),
         Err(error) => error_json(&format!("failed to serialize merged Anki state: {error}")),
     }
-}
-
-fn merge_app_states(current: &AppState, imported: AppState) -> AppState {
-    let mut merged = current.clone();
-    let mut imported_external_sources = imported.external_sources;
-    upsert_by(&mut merged.decks, imported.decks, |deck| deck.id.clone());
-    upsert_by(&mut merged.note_types, imported.note_types, |note_type| {
-        note_type.id.clone()
-    });
-    upsert_by(&mut merged.notes, imported.notes, |note| note.id.clone());
-    upsert_by(&mut merged.cards, imported.cards, |card| card.id.clone());
-    upsert_by(
-        &mut merged.card_progress,
-        imported.card_progress,
-        |progress| progress.card_id.clone(),
-    );
-    upsert_by(&mut merged.sessions, imported.sessions, |session| {
-        session.id.clone()
-    });
-    upsert_by(&mut merged.reviews, imported.reviews, |review| {
-        review.id.clone()
-    });
-    upsert_by(&mut merged.deck_options, imported.deck_options, |preset| {
-        preset.deck_id.clone()
-    });
-    let media_remaps = merge_media_assets(&mut merged.media_assets, imported.media_assets);
-    retarget_external_sources(
-        &mut imported_external_sources,
-        ExternalSourceTarget::Media,
-        &media_remaps.ids,
-    );
-    retarget_media_archive_names(&mut imported_external_sources, &media_remaps.archive_names);
-    upsert_by(
-        &mut merged.external_sources,
-        imported_external_sources,
-        external_source_merge_key,
-    );
-    if let Some(active_session) = imported.active_session {
-        merged.active_session = Some(active_session);
-    }
-    merged
-}
-
-fn upsert_by<T>(target: &mut Vec<T>, incoming: Vec<T>, key: impl Fn(&T) -> String) {
-    for item in incoming {
-        let item_key = key(&item);
-        if let Some(existing) = target.iter_mut().find(|existing| key(existing) == item_key) {
-            *existing = item;
-        } else {
-            target.push(item);
-        }
-    }
-}
-
-fn external_source_merge_key(source: &ExternalSourceRecord) -> String {
-    format!(
-        "{:?}\u{1f}{}\u{1f}{}\u{1f}{}",
-        source.target,
-        source.target_id,
-        source.source,
-        source.original_id.as_deref().unwrap_or_default()
-    )
-}
-
-fn retarget_external_sources(
-    sources: &mut [ExternalSourceRecord],
-    target: ExternalSourceTarget,
-    id_remaps: &HashMap<String, String>,
-) {
-    if id_remaps.is_empty() {
-        return;
-    }
-
-    for source in sources {
-        if source.target == target {
-            if let Some(next_id) = id_remaps.get(&source.target_id) {
-                source.target_id = next_id.clone();
-            }
-        }
-    }
-}
-
-fn retarget_media_archive_names(
-    sources: &mut [ExternalSourceRecord],
-    archive_name_remaps: &HashMap<String, String>,
-) {
-    if archive_name_remaps.is_empty() {
-        return;
-    }
-
-    for source in sources {
-        if source.target != ExternalSourceTarget::Media {
-            continue;
-        }
-        if let Some(archive_name) = source.data.get_mut("archiveName") {
-            if let Some(next_archive_name) = archive_name_remaps.get(archive_name) {
-                *archive_name = next_archive_name.clone();
-            }
-        }
-    }
-}
-
-#[derive(Default)]
-struct MediaMergeRemaps {
-    ids: HashMap<String, String>,
-    archive_names: HashMap<String, String>,
-}
-
-fn merge_media_assets(
-    target: &mut Vec<MediaAssetRecord>,
-    incoming: Vec<MediaAssetRecord>,
-) -> MediaMergeRemaps {
-    let mut remaps = MediaMergeRemaps::default();
-    for mut asset in incoming {
-        match target.iter().position(|existing| existing.id == asset.id) {
-            Some(index)
-                if target[index].filename == asset.filename && target[index].data == asset.data =>
-            {
-                target[index] = asset;
-            }
-            Some(_) => {
-                let original_id = asset.id.clone();
-                let original_archive_name = asset.archive_name.clone();
-                let unique = next_unique_media_suffix(target, &asset.id, &asset.archive_name);
-                asset.id = format!("{}-merge-{unique}", asset.id);
-                asset.archive_name = format!("{}-merge-{unique}", asset.archive_name);
-                remaps.ids.insert(original_id, asset.id.clone());
-                remaps
-                    .archive_names
-                    .insert(original_archive_name, asset.archive_name.clone());
-                target.push(asset);
-            }
-            None if target
-                .iter()
-                .any(|existing| existing.archive_name == asset.archive_name) =>
-            {
-                let original_archive_name = asset.archive_name.clone();
-                let unique = next_unique_media_suffix(target, &asset.id, &asset.archive_name);
-                asset.archive_name = format!("{}-merge-{unique}", asset.archive_name);
-                remaps
-                    .archive_names
-                    .insert(original_archive_name, asset.archive_name.clone());
-                target.push(asset);
-            }
-            None => target.push(asset),
-        }
-    }
-    remaps
-}
-
-fn next_unique_media_suffix(
-    target: &[MediaAssetRecord],
-    base_id: &str,
-    base_archive_name: &str,
-) -> usize {
-    let mut suffix = 1;
-    while target.iter().any(|asset| {
-        asset.id == format!("{base_id}-merge-{suffix}")
-            || asset.archive_name == format!("{base_archive_name}-merge-{suffix}")
-    }) {
-        suffix += 1;
-    }
-    suffix
 }
 
 fn export_anki_apkg_json(session: &EngramSession) -> String {
@@ -1604,6 +1469,46 @@ CREATE TABLE graves (
             assert!(note_imported.contains(r#""id":"basic-reversed""#));
             assert!(note_imported.contains(r#""id":"note-1::forward""#));
             assert!(note_imported.contains(r#""id":"note-1::reverse""#));
+
+            let merged_notes = cstr(
+                "#separator:tab\n#notetype:Basic (and reversed card)\n#guid column:3\n#columns:Front\tBack\tGuid\nhola\thello\tguid-123\n",
+            );
+            let merged = take(eg_merge_anki_notes_tsv(
+                session,
+                merged_notes.as_ptr(),
+                deck_id.as_ptr(),
+                cstr("basic-reversed").as_ptr(),
+                cstr("").as_ptr(),
+                cstr("merged-note").as_ptr(),
+                NOW,
+            ));
+            let merged: Value = serde_json::from_str(&merged).unwrap();
+            assert_eq!(merged["ok"], true);
+            assert!(merged["state"]["cards"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|card| { card["id"] == "card" }));
+            assert!(merged["state"]["cards"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|card| { card["id"] == "merged-note-1::forward" }));
+            assert!(merged["state"]["cards"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|card| { card["id"] == "merged-note-1::reverse" }));
+            assert!(merged["state"]["externalSources"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|source| {
+                    source["target"] == "note"
+                        && source["targetId"] == "merged-note-1"
+                        && source["source"] == "anki-text"
+                        && source["originalId"] == "guid-123"
+                }));
 
             eg_session_free(session);
         }
