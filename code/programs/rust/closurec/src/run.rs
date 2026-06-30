@@ -6240,6 +6240,37 @@ mod tests {
     }
 
     #[test]
+    fn simple_member_and_call_object_keeps_required_parens() {
+        // Regression: the emitter wrote a member-expression's object (and a
+        // call's callee) at parent precedence 0, dropping the parentheses that
+        // make a lower-precedence object a unit — `(a||b).c` became `a||b.c`
+        // (`a||(b.c)`), a miscompile. The object/callee is now emitted at
+        // PREC_PRIMARY, so the parens survive while plain `a.b.c` stays bare.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let simple = |src: &str| transform_source(src, &cfg).expect("ok");
+
+        // Member object: lower-precedence objects must keep their parens.
+        assert_eq!(simple("x=(a||b).c;"), "x=(a||b).c;");
+        assert_eq!(simple("x=(a+b).c;"), "x=(a+b).c;");
+        assert_eq!(simple("x=(a?b:c).d;"), "x=(a?b:c).d;");
+        assert_eq!(simple("x=(-a).b;"), "x=(-a).b;");
+        assert_eq!(simple("x=(a||b)[c];"), "x=(a||b)[c];"); // computed member too
+        // Call callee: same requirement.
+        assert_eq!(simple("x=(a||b)();"), "x=(a||b)();");
+        assert_eq!(simple("x=(-a).b();"), "x=(-a).b();");
+        // High-precedence objects/callees stay paren-free.
+        assert_eq!(simple("a.b.c;"), "a.b.c;");
+        assert_eq!(simple("a.b();"), "a.b();");
+        assert_eq!(simple("x=a.b;"), "x=a.b;");
+    }
+
+    #[test]
     fn simple_object_string_keys_quote_handling() {
         // End-to-end regression for the property-key miscompile: the bridge used
         // to emit EVERY quoted object key as a bare identifier from un-decoded
