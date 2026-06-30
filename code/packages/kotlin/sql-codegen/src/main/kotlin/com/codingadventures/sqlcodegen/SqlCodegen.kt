@@ -1034,16 +1034,18 @@ object SqlCodegen {
         out.add(Instruction.Label(innerLoop))
         out.add(Instruction.AdvanceCursor(rightScan?.alias, innerEnd))
 
-        // Condition (if any).
-        if (plan.condition != null) {
-            emitExpr(plan.condition, out)
+        // Condition (if any).  Capture into a local val so Kotlin's smart-cast
+        // works across the cross-module property boundary.
+        val joinCondition = plan.condition
+        if (joinCondition != null) {
+            emitExpr(joinCondition, out)
             out.add(Instruction.JumpIfFalse(contLabel))
         }
 
         out.add(Instruction.BeginRow)
         out.add(Instruction.EmitRow)
 
-        if (plan.condition != null) {
+        if (joinCondition != null) {
             out.add(Instruction.Label(contLabel))
         }
         out.add(Instruction.Jump(innerLoop))
@@ -1102,7 +1104,7 @@ object SqlCodegen {
         out: MutableList<Instruction>,
         lc: LabelCounter
     ) {
-        @Suppress("UNUSED_PARAMETER") val _ = lc  // lc unused here; suppress warning
+        @Suppress("UNUSED_PARAMETER") val _unused = lc  // lc unused here; suppress warning
         for (row in plan.values) {
             for (expr in row) {
                 emitExpr(expr, out)
@@ -1145,8 +1147,11 @@ object SqlCodegen {
         out.add(Instruction.Label(loopLabel))
         out.add(Instruction.AdvanceCursor(null, endLabel))
 
-        if (plan.predicate != null) {
-            emitExpr(plan.predicate, out)
+        // Capture predicate into a local val to allow smart-cast across
+        // cross-module property boundaries.
+        val updatePredicate = plan.predicate
+        if (updatePredicate != null) {
+            emitExpr(updatePredicate, out)
             out.add(Instruction.JumpIfFalse(skipLabel))
         }
 
@@ -1155,7 +1160,7 @@ object SqlCodegen {
         }
         out.add(Instruction.UpdateRows(plan.table))
 
-        if (plan.predicate != null) {
+        if (updatePredicate != null) {
             out.add(Instruction.Label(skipLabel))
         }
         out.add(Instruction.Jump(loopLabel))
@@ -1186,14 +1191,17 @@ object SqlCodegen {
         out.add(Instruction.Label(loopLabel))
         out.add(Instruction.AdvanceCursor(null, endLabel))
 
-        if (plan.predicate != null) {
-            emitExpr(plan.predicate, out)
+        // Capture predicate into a local val to allow smart-cast across
+        // cross-module property boundaries.
+        val deletePredicate = plan.predicate
+        if (deletePredicate != null) {
+            emitExpr(deletePredicate, out)
             out.add(Instruction.JumpIfFalse(skipLabel))
         }
 
         out.add(Instruction.DeleteRows(plan.table))
 
-        if (plan.predicate != null) {
+        if (deletePredicate != null) {
             out.add(Instruction.Label(skipLabel))
         }
         out.add(Instruction.Jump(loopLabel))
@@ -1226,7 +1234,7 @@ object SqlCodegen {
     private fun compileEmptyResult(out: MutableList<Instruction>) {
         // Nothing to emit — the Halt in compile() terminates the program.
         // The result buffer is empty by default, giving an empty result set.
-        @Suppress("UNUSED_PARAMETER") val _ = out
+        @Suppress("UNUSED_PARAMETER") val _unused = out
     }
 
     // ── Expression compilation ────────────────────────────────────────────────
