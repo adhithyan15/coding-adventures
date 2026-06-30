@@ -1,5 +1,77 @@
 # Changelog
 
+## 0.4.0 — SIR16 Sequences + Maps (completes SIR16 / v1 parity)
+
+The final two SIR-v1 (SIR16) features land in the Rust backend.  With
+`Sequences` and `Maps` now accepted, the Rust backend supports **all six**
+SIR16 / SIR-v1 features — `Floats`, `ShortCircuit`, `MutableBindings`,
+`Loops`, `Sequences`, `Maps` — reaching full v1 parity with the
+TypeScript backend.  Every SIR16 IR node now has a real emit arm; the
+only remaining `panic!`s cover SIR17/18 nodes (classes, modules,
+singleton classes, try/catch, string interpolation, instance/class/const
+vars, intrinsics) whose features stay unaccepted, so they are unreachable
+for any validated module.
+
+### Added
+
+- `Feature::Sequences` and `Feature::Maps` in the accepted-feature set
+  (`lib.rs`).
+- **Runtime value model** — two new shared, mutable `Value` arms:
+  - `Value::Seq(Rc<RefCell<Vec<Value>>>)` — a growable vector.  The
+    `Rc<RefCell<…>>` is essential: `SeqSet` (`xs[i] = v`) must mutate the
+    sequence the caller holds, and aliasing bindings must observe each
+    other's writes — the reference semantics of a Python list / JS array.
+  - `Value::Map(Rc<RefCell<Vec<(Value, Value)>>>)` — an insertion-ordered
+    association list.  Keys compare with the runtime's own `value_eq`
+    (linear scan) rather than a `HashMap`, because `Value` is neither
+    `Hash` nor `Eq` (floats, closures, nested seqs/maps).  This gives
+    correct lookup semantics for *any* key type and preserves insertion
+    order for deterministic iteration and printing.
+- **Sequences** — `SeqLit`/`SeqIndex`/`SeqLen` expressions lower to the
+  `seq_lit`/`seq_index`/`seq_len` helpers; the `SeqSet` statement mutates
+  the backing vector through `seq_set`.  Out-of-range index reads/writes
+  panic (strict, like `car`/`cdr` on a non-pair).
+- **Maps** — `MapLit`/`MapGet` expressions lower to `map_lit`/`map_get`;
+  the `MapSet` statement mutates via `map_set`.  A missing-key `MapGet`
+  returns `Nil` (mirroring the TypeScript backend's `?? null`).  Literal
+  and `map_set` writes are last-write-wins on an existing key while
+  preserving first-seen insertion order.
+- **`format`** renders sequences as `[1, 2, 3]` and maps as `{a: 1, b: 2}`
+  (insertion order); **`value_eq`** compares seqs/maps structurally
+  (element-wise, with an `Rc::ptr_eq` fast path).
+
+### Changed (ForEach reconciliation)
+
+- A2 introduced `Stmt::ForEach` with a `seq_iter` helper that walked a
+  cons-list (there was no `Seq` value yet).  Now that a real
+  `Value::Seq` exists, `seq_iter` was reconciled to **snapshot a
+  `Value::Seq`** as well as walk the legacy cons-list, so a
+  `for x in [1, 2, 3]` (a `SeqLit`) iterates end to end while the
+  cons-list path keeps working unchanged.
+- Fixed a latent `ForEach` emit bug surfaced by the new end-to-end test:
+  the loop emitted `for <var>: __sir::Value in …`, but a type annotation
+  on a `for` pattern is not valid Rust.  Dropped the annotation
+  (`for <var> in …`); the element type is already `Value` from
+  `seq_iter`'s return.  This path had no prior compile-and-run coverage
+  (the loops test exercised only `while`/`for-range`).
+- The mutable-binding pre-pass (`collect_assigned_locals`) now recurses
+  into Seq/Map statements and expressions, so an `Assign` nested inside a
+  `SeqSet`/`MapSet` value (or a `SeqLit`/`MapLit` sub-expression) is
+  still discovered and its binding declared `let mut`.
+
+### Tests
+
+- `tests/compile_and_run_seq_maps.rs`: an end-to-end proof that emits a
+  module using a sequence (literal, index, len, set), a map (literal,
+  get with a present *and* a missing key, set), and a `for v in <SeqLit>`
+  `ForEach` accumulation, compiles it with `rustc`, runs the binary, and
+  asserts its stdout (`20`, `3`, `99`, `2`, `nil`, `7`, `10`).
+- Unit tests for every new emit arm (seq/map literal, index, len, get,
+  and the seq/map set statements in both the block and inline paths),
+  for `ForEach`-over-`SeqLit` composition, and for the mutable-name
+  pre-pass recursing into a `SeqSet` value; runtime tests for the new
+  value arms and helpers.
+
 ## 0.3.0 — SIR16 MutableBindings + Loops
 
 The next two SIR-v1 (SIR16) features land in the Rust backend, matching

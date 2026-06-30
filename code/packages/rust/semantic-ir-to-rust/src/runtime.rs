@@ -37,6 +37,25 @@ pub const RUNTIME: &str = r##"mod __sir {
         Str(Rc<str>),
         Pair(Rc<Pair>),
         Closure(Rc<Closure>),
+        // ── SIR16 sequences ───────────────────────────────────────
+        // A growable, *mutably shared* vector.  `Rc<RefCell<…>>` is the
+        // crux: `SeqSet` (`xs[i] = v`) must mutate the very sequence the
+        // caller holds, and two bindings that alias the same literal must
+        // see each other's writes — exactly the reference semantics of a
+        // Python list or JS array.  Cloning a `Value::Seq` clones the
+        // `Rc` (a shared handle), not the backing `Vec`.
+        Seq(Rc<RefCell<Vec<Value>>>),
+        // ── SIR16 maps ────────────────────────────────────────────
+        // An *insertion-ordered* association list.  We key by `Value`
+        // using the runtime's own `value_eq` (linear scan) rather than a
+        // `HashMap`, because our `Value` is neither `Hash` nor `Eq`
+        // (floats, closures, nested seqs/maps).  `value_eq` already
+        // defines structural equality across the whole tower, so a
+        // `Vec<(Value, Value)>` gives correct `MapGet`/`MapSet` semantics
+        // — including missing-key ⇒ `Nil` — for *any* key type, and
+        // preserves insertion order for deterministic iteration/printing.
+        // Shared + mutable via `Rc<RefCell<…>>`, same as `Seq`.
+        Map(Rc<RefCell<Vec<(Value, Value)>>>),
     }
 
     pub struct Pair {
@@ -273,7 +292,40 @@ pub const RUNTIME: &str = r##"mod __sir {
             Value::Str(s) => s.to_string(),
             Value::Pair(p) => format_pair(p),
             Value::Closure(_) => "<closure>".to_string(),
+            // Sequences print like a bracketed list: `[1, 2, 3]`.
+            Value::Seq(items) => format_seq(&items.borrow()),
+            // Maps print like a brace-wrapped entry list in insertion
+            // order: `{a: 1, b: 2}`.
+            Value::Map(entries) => format_map(&entries.borrow()),
         }
+    }
+
+    fn format_seq(items: &[Value]) -> String {
+        let mut out = String::new();
+        out.push('[');
+        for (i, item) in items.iter().enumerate() {
+            if i > 0 {
+                out.push_str(", ");
+            }
+            out.push_str(&format(item));
+        }
+        out.push(']');
+        out
+    }
+
+    fn format_map(entries: &[(Value, Value)]) -> String {
+        let mut out = String::new();
+        out.push('{');
+        for (i, (k, v)) in entries.iter().enumerate() {
+            if i > 0 {
+                out.push_str(", ");
+            }
+            out.push_str(&format(k));
+            out.push_str(": ");
+            out.push_str(&format(v));
+        }
+        out.push('}');
+        out
     }
 
     fn format_float(x: f64) -> String {
@@ -322,12 +374,25 @@ pub const RUNTIME: &str = r##"mod __sir {
     }
 
     // `seq_iter` flattens a sequence value into a `Vec<Value>` for a
-    // `ForEach` loop.  This backend has no dedicated `Seq` value yet, so
-    // a "sequence" is the classic cons-list: a `Pair`-chain whose final
-    // `cdr` is `Nil`.  `Nil` itself is the empty sequence.  An improper
-    // list (a non-`Nil`, non-`Pair` tail) is a programming error and
-    // panics, matching the strictness of `car`/`cdr` on a non-pair.
+    // `ForEach` loop.  SIR16 introduced two distinct "sequence" shapes
+    // this backend must iterate uniformly:
+    //
+    //   * `Value::Seq(vec)` — the real `Sequences` value (a `SeqLit`,
+    //     `[1, 2, 3]`).  Cloned element-wise so the loop body sees stable
+    //     snapshots even if it mutates the underlying sequence.
+    //   * the classic cons-list — a `Pair`-chain ending in `Nil` (what
+    //     `cons`/`car`/`cdr` build).  `Nil` itself is the empty sequence.
+    //
+    // Keeping both keeps A2's `ForEach`-over-cons-list working while
+    // making `for x in [1, 2, 3]` (a `SeqLit`) iterate end to end.  An
+    // improper list (a non-`Nil`, non-`Pair` tail) is a programming error
+    // and panics, matching the strictness of `car`/`cdr` on a non-pair.
     pub fn seq_iter(v: &Value) -> Vec<Value> {
+        // A real sequence: snapshot its current elements.
+        if let Value::Seq(items) = v {
+            return items.borrow().clone();
+        }
+        // Otherwise treat it as a cons-list.
         let mut out = Vec::new();
         let mut cur = v.clone();
         loop {
@@ -341,6 +406,119 @@ pub const RUNTIME: &str = r##"mod __sir {
             }
         }
         out
+    }
+
+    // ── sequence ops (SIR16 Sequences) ────────────────────────────
+    //
+    // A `Value::Seq` wraps a shared, mutable `Vec<Value>`.  These helpers
+    // are the lowering targets for `SeqLit`/`SeqIndex`/`SeqLen`/`SeqSet`.
+
+    // `seq_lit([a, b, ...])` constructs a fresh sequence from its items.
+    pub fn seq_lit(items: Vec<Value>) -> Value {
+        Value::Seq(Rc::new(RefCell::new(items)))
+    }
+
+    // `seq_index(seq, i)` reads `seq[i]`.  The index is taken as an
+    // integer; a negative or out-of-range index panics (sequences are
+    // strict, like `car`/`cdr`), matching SIR's "0-indexed, bounds are
+    // target-defined" — we choose to define out-of-bounds as a panic.
+    pub fn seq_index(seq: &Value, index: &Value) -> Value {
+        match seq {
+            Value::Seq(items) => {
+                let i = as_i64(index);
+                let items = items.borrow();
+                if i < 0 || (i as usize) >= items.len() {
+                    panic!("sequence index out of range: {} (len {})", i, items.len());
+                }
+                items[i as usize].clone()
+            }
+            other => panic!("seq-index on non-sequence: {}", format(other)),
+        }
+    }
+
+    // `seq_len(seq)` returns the element count as an `Int`.
+    pub fn seq_len(seq: &Value) -> Value {
+        match seq {
+            Value::Seq(items) => Value::Int(items.borrow().len() as i64),
+            other => panic!("seq-len on non-sequence: {}", format(other)),
+        }
+    }
+
+    // `seq_set(seq, i, value)` writes `seq[i] = value`, mutating the
+    // shared backing vector in place.  Out-of-range writes panic (we do
+    // not auto-grow, matching the index read's strictness).
+    pub fn seq_set(seq: &Value, index: &Value, value: Value) -> Value {
+        match seq {
+            Value::Seq(items) => {
+                let i = as_i64(index);
+                let mut items = items.borrow_mut();
+                if i < 0 || (i as usize) >= items.len() {
+                    panic!("sequence index out of range: {} (len {})", i, items.len());
+                }
+                items[i as usize] = value.clone();
+                value
+            }
+            other => panic!("seq-set on non-sequence: {}", format(other)),
+        }
+    }
+
+    // ── map ops (SIR16 Maps) ──────────────────────────────────────
+    //
+    // A `Value::Map` wraps a shared, mutable, insertion-ordered
+    // `Vec<(Value, Value)>`.  Lookups use `value_eq` for key comparison,
+    // so any value type (including a float, string, or symbol) can be a
+    // key with the same structural-equality semantics as `=`.
+
+    // `map_lit([(k0, v0), (k1, v1), ...])` builds a fresh map.  Later
+    // entries with a key equal to an earlier one overwrite in place, so
+    // the literal `{a: 1, a: 2}` yields `{a: 2}` (last-write-wins,
+    // mirroring object/dict literal semantics) while keeping first-seen
+    // insertion order.
+    pub fn map_lit(entries: Vec<(Value, Value)>) -> Value {
+        let mut store: Vec<(Value, Value)> = Vec::with_capacity(entries.len());
+        for (k, v) in entries {
+            if let Some(slot) = store.iter_mut().find(|(ek, _)| value_eq(ek, &k)) {
+                slot.1 = v;
+            } else {
+                store.push((k, v));
+            }
+        }
+        Value::Map(Rc::new(RefCell::new(store)))
+    }
+
+    // `map_get(map, key)` reads `map[key]`, returning the associated
+    // value or `Nil` when the key is absent (SIR's target-defined
+    // missing-key behaviour — we choose `Nil`, mirroring the TypeScript
+    // backend's `?? null`).
+    pub fn map_get(map: &Value, key: &Value) -> Value {
+        match map {
+            Value::Map(entries) => entries
+                .borrow()
+                .iter()
+                .find(|(k, _)| value_eq(k, key))
+                .map(|(_, v)| v.clone())
+                .unwrap_or(Value::Nil),
+            other => panic!("map-get on non-map: {}", format(other)),
+        }
+    }
+
+    // `map_set(map, key, value)` inserts or overwrites `map[key]`,
+    // mutating the shared backing store.  A new key appends (preserving
+    // insertion order); an existing key (by `value_eq`) overwrites in
+    // place without disturbing order.
+    pub fn map_set(map: &Value, key: Value, value: Value) -> Value {
+        match map {
+            Value::Map(entries) => {
+                let mut entries = entries.borrow_mut();
+                if let Some(slot) = entries.iter_mut().find(|(k, _)| value_eq(k, &key)) {
+                    slot.1 = value.clone();
+                } else {
+                    entries.push((key, value.clone()));
+                }
+                value
+            }
+            other => panic!("map-set on non-map: {}", format(other)),
+        }
     }
 
     // ── helpers ───────────────────────────────────────────────────
@@ -382,6 +560,30 @@ pub const RUNTIME: &str = r##"mod __sir {
             (Value::Str(x), Value::Str(y)) => **x == **y,
             (Value::Pair(x), Value::Pair(y)) => {
                 value_eq(&x.car, &y.car) && value_eq(&x.cdr, &y.cdr)
+            }
+            // Sequences and maps compare *structurally* (element-wise),
+            // matching how `Pair` compares — `[1, 2] = [1, 2]` is true,
+            // and two maps are equal when they hold equal entries in the
+            // same insertion order.  Identical `Rc` handles short-circuit
+            // to `true` without a deep walk.  Comparing two maps element-
+            // wise (rather than as unordered sets) is sufficient here
+            // because `map_lit`/`map_set` keep a canonical first-seen
+            // order, so equal maps built the same way share that order.
+            (Value::Seq(x), Value::Seq(y)) => {
+                Rc::ptr_eq(x, y) || {
+                    let (xb, yb) = (x.borrow(), y.borrow());
+                    xb.len() == yb.len()
+                        && xb.iter().zip(yb.iter()).all(|(a, b)| value_eq(a, b))
+                }
+            }
+            (Value::Map(x), Value::Map(y)) => {
+                Rc::ptr_eq(x, y) || {
+                    let (xb, yb) = (x.borrow(), y.borrow());
+                    xb.len() == yb.len()
+                        && xb.iter().zip(yb.iter()).all(|((ak, av), (bk, bv))| {
+                            value_eq(ak, bk) && value_eq(av, bv)
+                        })
+                }
             }
             _ => false,
         }
@@ -493,5 +695,27 @@ mod tests {
         // (`as_int`), ForEach needs cons-list iteration (`seq_iter`).
         assert!(RUNTIME.contains("pub fn as_int"));
         assert!(RUNTIME.contains("pub fn seq_iter"));
+    }
+
+    #[test]
+    fn runtime_declares_seq_and_map_value_and_helpers() {
+        // SIR16 Sequences + Maps: the value model gains shared, mutable
+        // `Seq`/`Map` arms and the lowering helpers for each IR node.
+        assert!(RUNTIME.contains("Seq(Rc<RefCell<Vec<Value>>>)"));
+        assert!(RUNTIME.contains("Map(Rc<RefCell<Vec<(Value, Value)>>>)"));
+        for helper in &[
+            "pub fn seq_lit", "pub fn seq_index", "pub fn seq_len",
+            "pub fn seq_set", "pub fn map_lit", "pub fn map_get",
+            "pub fn map_set",
+        ] {
+            assert!(RUNTIME.contains(helper), "runtime missing `{}`", helper);
+        }
+    }
+
+    #[test]
+    fn runtime_seq_iter_handles_real_seq() {
+        // ForEach reconciliation: `seq_iter` must snapshot a `Value::Seq`
+        // (the new real sequence) as well as walk a cons-list.
+        assert!(RUNTIME.contains("if let Value::Seq(items) = v"));
     }
 }

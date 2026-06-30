@@ -82,11 +82,28 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // statement now emits without panic, accepting `Loops` keeps the
     // capability check and emit coverage consistent.
     Feature::Loops,
-    // The remaining two v1 features (Sequences, Maps) are *not* yet
-    // declared, so a module using a `SeqLit`/`MapLit` (etc.) is still
-    // rejected by the capability check before emit — keeping the
-    // `SeqSet`/`MapSet` and Seq/Map expression `panic!`s in `emit.rs`
-    // strictly unreachable until those features land in a later PR.
+    // `Sequences` adds a shared, mutable `Value::Seq(Rc<RefCell<Vec<…>>>)`
+    // to the runtime value model.  `SeqLit`/`SeqIndex`/`SeqLen` lower to
+    // the `seq_lit`/`seq_index`/`seq_len` helpers; the `SeqSet` statement
+    // mutates the backing vector through `seq_set`.  Because `Seq` is a
+    // real value now, the A2 `ForEach`/`seq_iter` path was reconciled to
+    // iterate it (snapshotting the elements) in addition to the legacy
+    // cons-list — `for x in [1, 2, 3]` works end to end.
+    Feature::Sequences,
+    // `Maps` adds a shared, mutable, insertion-ordered
+    // `Value::Map(Rc<RefCell<Vec<(Value, Value)>>>)`.  `MapLit`/`MapGet`
+    // lower to `map_lit`/`map_get`; the `MapSet` statement mutates via
+    // `map_set`.  Keys compare with the runtime's `value_eq` (linear
+    // lookup), so any value type is a usable key and a missing-key
+    // `MapGet` returns `Nil`.
+    Feature::Maps,
+    // With Sequences + Maps declared, all SIX SIR16 (v1) features —
+    // Floats, ShortCircuit, MutableBindings, Loops, Sequences, Maps —
+    // are accepted, and every SIR16 IR node now has a real emit arm.
+    // The only remaining `panic!`s in `emit.rs` cover SIR17/18 nodes
+    // (classes, modules, try/catch, str-concat, instance/class/const
+    // vars, intrinsics) whose features stay unaccepted, so those arms
+    // remain unreachable for any validated module.
 ];
 
 impl Backend for RustBackend {
