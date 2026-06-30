@@ -11,7 +11,7 @@ depends on the neutral `MathExpr`, never on a concrete notation, so supporting M
 language, a terse linear notation, a Unicode-symbol notation, and an XML tree) all lower to one
 tree.
 
-## What it covers (PR-1)
+## What it covers
 
 | MathML | neutral `MathExpr` |
 |--------|--------------------|
@@ -25,14 +25,20 @@ tree.
 | `<msub>b s</msub>` | `Subscript(b, s)` |
 | `<msubsup>b s e</msubsup>` | `Bin(Pow, Subscript(b, s), e)` |
 | `<msqrt>x</msqrt>` / `<mroot>x n</mroot>` | `Root` (degree `None` / `Some(n)`) |
+| `<mover>b a</mover>` / `<munder>b a</munder>` | `Overset { over: a, base: b }` / `Underset { under: a, base: b }` (PR-2) |
+| `<munderover>b u o</munderover>` | `Underset { under: u, base: Overset { over: o, base: b } }` (PR-2) |
+| `<mfenced>…</mfenced>` | `Group` over the folded contents (PR-2) |
+| `<mtable><mtr><mtd>…</mtd></mtr></mtable>` | `Matrix(rows × cells)` (PR-2) |
 
 `<math>`, `<mstyle>`, and `<mpadded>` are **transparent** wrappers (their children join the
 surrounding row). Attributes, namespace prefixes (`m:math` ≡ `math`), the XML declaration,
 comments, and DOCTYPE are ignored. Operator entity spellings (`&times;`, `&le;`, `&#xD7;`, …)
-decode to the same operators as their literal glyphs.
+decode to the same operators as their literal glyphs. In `<mover>`/`<munder>` position an operator
+glyph (`<mo>^</mo>`, `<mo>‾</mo>`, `<mo>→</mo>`) is read as an **annotation symbol**, not an infix
+operator — so `<mover><mi>x</mi><mo>^</mo></mover>` is "x with a hat".
 
-Deferred to PR-2: `<mtable>`/`<mtr>`/`<mtd>` → `Matrix`, `<mover>`/`<munder>` → over/under-sets,
-`<mfenced>`, and named-function recognition (`<mi>sin</mi>` → `Call`).
+Deferred to PR-3: named-function recognition (`<mi>sin</mi>` → `Call`) and `<mfenced>` separator
+modelling (today a fence's contents fold as one row).
 
 ## Contract
 
