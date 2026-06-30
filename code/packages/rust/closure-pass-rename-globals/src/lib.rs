@@ -1124,7 +1124,7 @@ mod tests {
         // local); it gets the next free name `b`.
         assert_eq!(
             rename_source("function topName() { return 0; } function g() { var a = 1; return a + topName(); }"),
-            "function b(){return 0};function g(){var a=1;return a + b()};"
+            "function b(){return 0};function g(){var a=1;return a+b()};"
         );
     }
 

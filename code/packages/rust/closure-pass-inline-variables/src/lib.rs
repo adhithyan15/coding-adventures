@@ -1112,7 +1112,7 @@ mod tests {
     fn propagates_const_into_expression() {
         assert_eq!(
             propagate_source("const RATE = 2; total(base * RATE);"),
-            "const RATE=2;total(base * 2);"
+            "const RATE=2;total(base*2);"
         );
     }
 

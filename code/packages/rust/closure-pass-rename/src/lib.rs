@@ -1315,7 +1315,7 @@ mod tests {
         // a short name, at both the declaration and every use site.
         assert_eq!(
             rename_source("function f(longName) { return longName + 1; }"),
-            "function f(a){return a + 1};"
+            "function f(a){return a+1};"
         );
     }
 
@@ -1368,7 +1368,7 @@ mod tests {
     fn renames_multiple_params_distinctly() {
         assert_eq!(
             rename_source("function f(first, second) { return first * second; }"),
-            "function f(a,b){return a * b};"
+            "function f(a,b){return a*b};"
         );
     }
 
@@ -1445,7 +1445,7 @@ mod tests {
         // next free name `b`.
         assert_eq!(
             rename_source("function f(longName) { return a + longName; }"),
-            "function f(b){return a + b};"
+            "function f(b){return a+b};"
         );
     }
 
@@ -1456,9 +1456,9 @@ mod tests {
         // grammar, so this exercises nested-block uses via `return`.)
         assert_eq!(
             rename_source(
-                "function f(counter) { if (counter > 0) { return counter; } return 0; }"
+                "function f(counter) { if (counter>0) { return counter; } return 0; }"
             ),
-            "function f(a){if(a > 0){return a}return 0};"
+            "function f(a){if(a>0){return a}return 0};"
         );
     }
 
@@ -1468,7 +1468,7 @@ mod tests {
         // shrink it, so nothing changes.
         assert_eq!(
             rename_source("function f(x) { return x + 1; }"),
-            "function f(x){return x + 1};"
+            "function f(x){return x+1};"
         );
     }
 
@@ -1480,7 +1480,7 @@ mod tests {
         // declaration and its use are both rewritten.
         assert_eq!(
             rename_source("function f() { var counter = 0; return counter + 1; }"),
-            "function f(){var a=0;return a + 1};"
+            "function f(){var a=0;return a+1};"
         );
     }
 
@@ -1488,7 +1488,7 @@ mod tests {
     fn renames_local_const_and_let() {
         assert_eq!(
             rename_source("function f() { const total = 1; let partial = 2; return total + partial; }"),
-            "function f(){const a=1;let b=2;return a + b};"
+            "function f(){const a=1;let b=2;return a+b};"
         );
     }
 
@@ -1498,7 +1498,7 @@ mod tests {
         // declaration order (param first).
         assert_eq!(
             rename_source("function f(input) { var doubled = input * 2; return doubled; }"),
-            "function f(a){var b=a * 2;return b};"
+            "function f(a){var b=a*2;return b};"
         );
     }
 
@@ -1526,9 +1526,9 @@ mod tests {
         // expression there.)
         assert_eq!(
             rename_source(
-                "function f() { for (var index = 0; index < 3; ) { sink(index); } }"
+                "function f() { for (var index = 0; index<3; ) { sink(index); } }"
             ),
-            "function f(){for(var a=0;a < 3;){sink(a)}};"
+            "function f(){for(var a=0;a<3;){sink(a)}};"
         );
     }
 
@@ -1578,6 +1578,6 @@ mod tests {
             ..Default::default()
         };
         let out = emit(&prog, &Sidecar::new(), &mut cv, &opts).expect("emit").code;
-        assert_eq!(out, "function f(){var counter=0;return counter + 1};");
+        assert_eq!(out, "function f(){var counter=0;return counter+1};");
     }
 }
