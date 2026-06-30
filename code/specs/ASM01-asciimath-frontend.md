@@ -115,9 +115,15 @@ shapes for representative inputs.
   must immediately follow `text`; otherwise `text` stays an ordinary identifier (a variable named
   `text`, `text (x)` with a space, or `textual` are all unchanged). An unterminated `text(` is a clean
   spanned error; byte-scanning for the matching paren is UTF-8-safe.
-- **PR-3c remainder** (each its own follow-up, structural): **longest-match tokenization** (so `sinx`
-  splits as `sin`·`x`, a deeper lexer change); and `stackrel`, `overset`/`underset` (need a neutral-AST
-  node in `math-frontend` — there is no `Overset`/`Underset` in `MathExpr` yet).
+- **PR-3c part 3 (shipped, v0.8.0):** over/under-set **emission** — `overset(a)(b)` and the LaTeX
+  synonym `stackrel(a)(b)` → `MathExpr::Overset{over,base}`; `underset(a)(b)` → `MathExpr::Underset
+  {under,base}`. Each keyword takes two atoms (annotation then base, the `root(n)(x)` convention; the
+  paren-free `stackrel a b` form works too). A centered mark over/under the base, distinct from
+  `Pow`/`Subscript`; enabled by `math-frontend` 0.5.0's neutral `Overset`/`Underset` node (added in the
+  prerequisite PR, the same staging as the `Accent` node → accent emission). `capabilities()` adds
+  `oversets`, enforced by the conformance harness.
+- **PR-3c remainder** (its own follow-up, structural): **longest-match tokenization** (so `sinx`
+  splits as `sin`·`x`, a deeper lexer change).
 
 ## 6. Non-goals
 Evaluation, simplification, rendering — none are a frontend's job (PFE01 §7). Lowering

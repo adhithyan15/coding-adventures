@@ -59,7 +59,9 @@ impl MathFrontend for AsciiMath {
     fn capabilities(&self) -> Capabilities {
         // PR-1 surface + PR-2 breadth (`matrices`, `big_operators`) + PR-2b `accents`
         // (`hat x`/`bar y`/`vec v`/`dot x`/`ddot x`/`tilde a`/`ul x`, emitted as
-        // `MathExpr::Accent` since math-frontend 0.4.0 grew the node). `plusminus`/`binomials`
+        // `MathExpr::Accent` since math-frontend 0.4.0 grew the node) + `oversets`
+        // (`overset(a)(b)`/`stackrel(a)(b)`/`underset(a)(b)`, emitted as
+        // `MathExpr::Overset`/`Underset` since math-frontend 0.5.0). `plusminus`/`binomials`
         // are not part of AsciiMath's core spelling here. Declaring `implicit_mul` is a
         // parser-behavior claim (juxtaposition ⇒ `Mul`) the goldens cover.
         Capabilities::none()
@@ -73,6 +75,7 @@ impl MathFrontend for AsciiMath {
             .with_matrices()
             .with_big_operators()
             .with_accents()
+            .with_oversets()
     }
 }
 
@@ -417,6 +420,40 @@ mod tests {
         assert_ne!(p("dot x"), sym("x"));
     }
 
+    // ---- over/under-sets (PR-3c emitter) ---------------------------------------
+    #[test]
+    fn oversets_lower_to_neutral_overset_underset_nodes() {
+        // `overset(a)(b)` / `stackrel(a)(b)` set an annotation OVER a base; `underset(a)(b)`
+        // sets it under. Two atoms (annotation, base) lowered to MathExpr::Overset/Underset —
+        // a centered mark, distinct from Pow/Subscript.
+        assert_eq!(
+            p("overset(a)(b)"),
+            MathExpr::Overset { over: Box::new(sym("a")), base: Box::new(sym("b")) }
+        );
+        assert_eq!(
+            p("underset(a)(b)"),
+            MathExpr::Underset { under: Box::new(sym("a")), base: Box::new(sym("b")) }
+        );
+        // `stackrel` is the LaTeX synonym for the over-set form → identical to `overset`.
+        assert_eq!(p("stackrel(a)(b)"), p("overset(a)(b)"));
+        // The paren-free `stackrel a b` form works too (two atoms).
+        assert_eq!(
+            p("stackrel a b"),
+            MathExpr::Overset { over: Box::new(sym("a")), base: Box::new(sym("b")) }
+        );
+        // Each argument is a full atom: the annotation can be a group expression.
+        assert_eq!(
+            p("overset(a+c)(R)"),
+            MathExpr::Overset {
+                over: Box::new(b(BinOp::Add, sym("a"), sym("c"))),
+                base: Box::new(sym("R")),
+            }
+        );
+        // Over and under are distinct nodes; an overset is not a Pow.
+        assert_ne!(p("overset(a)(b)"), p("underset(a)(b)"));
+        assert_ne!(p("overset(a)(b)"), p("b^a"));
+    }
+
     #[test]
     fn conforms_to_the_shared_harness() {
         let report = check_frontend(
@@ -444,6 +481,8 @@ mod tests {
                 "a -> b",          // punctuation arrow (PR-3c)
                 "x => y",          // punctuation double-arrow
                 "text(kg)",        // text(…) keyword form (PR-3c) — twin of "kg"
+                "overset(a)(b)",   // over-set annotation (PR-3c emitter) → MathExpr::Overset
+                "underset(a)(b)",  // under-set annotation → MathExpr::Underset
                 "1 +",   // error: trailing operator (span in range, not a panic)
                 "(x",    // error: missing close
                 "",      // error: empty

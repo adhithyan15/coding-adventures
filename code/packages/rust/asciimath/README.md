@@ -97,8 +97,13 @@ agree with the word forms `rarr`/`implies`); `a - b` and `a = b` are unaffected.
 The tokenizer captures the raw bytes up to the matching close paren (parens nest) and emits the same
 `Text` token, so `text(kg)` and `"kg"` lower to an *identical* `MathExpr::Text` (no parser/capability
 change). The open paren must immediately follow `text`; otherwise `text` is an ordinary identifier.
-**Still to come** (each structural, its own PR): longest-match identifier scan (`sinx` → `sin·x`) and
-`stackrel`/`overset`/`underset` (need a neutral-AST node).
+
+**PR-3c (part 3)** adds **over/under-set emission**: `overset(a)(b)` and its LaTeX synonym
+`stackrel(a)(b)` → `MathExpr::Overset { over, base }`; `underset(a)(b)` → `MathExpr::Underset
+{ under, base }` (two atoms, annotation then base, like `root(n)(x)`; the paren-free `stackrel a b`
+works too). A centered mark over/under the base, **distinct from `Pow`/`Subscript`**; enabled by
+math-frontend 0.5.0's neutral node, `capabilities()` declares `oversets`. **Still to come**: the
+longest-match identifier scan (`sinx` → `sin·x`, a deeper lexer change).
 
 It is **total and panic-free**: every input returns `Ok(MathExpr)` or a spanned
 `FrontendError`. Recursion is depth-guarded (matrix nesting included); left-associative chains are

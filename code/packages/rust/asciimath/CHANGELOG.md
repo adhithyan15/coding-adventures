@@ -2,6 +2,25 @@
 
 All notable changes to the AsciiMath pluggable frontend.
 
+## [0.8.0] — 2026-06-29
+
+### Added — ASM01 PR-3c (part 3): over/under-set emission
+
+- AsciiMath now **emits** the neutral `MathExpr::Overset` / `MathExpr::Underset` nodes
+  (math-frontend 0.5.0): **`overset(a)(b)`** and its LaTeX synonym **`stackrel(a)(b)`** →
+  `Overset { over: a, base: b }`; **`underset(a)(b)`** → `Underset { under: a, base: b }`. Each
+  keyword takes **two atoms** (annotation then base, the same convention as `root(n)(x)`), so the
+  paren-free `stackrel a b` form works too and the annotation may be a full group expression
+  (`overset(a+c)(R)`). This realizes the stacked-annotation half of the PR-3c remainder, now that
+  the neutral node exists.
+- Semantics: a centered mark **over/under** the base, **distinct from `Pow`/`Subscript`** (raised /
+  lowered) — a faithful renderer must stack it. `capabilities()` adds **`oversets`**, enforced by the
+  conformance harness; the corpus gains `overset(a)(b)` and `underset(a)(b)`.
+- Tests: parser `oversets_lower_to_neutral_overset_underset_nodes` (overset/underset/stackrel,
+  paren-free form, group annotation, distinct-from-Pow). 36 unit + doc tests pass; clippy
+  `-D warnings` clean. Mirrors how accent emission (0.3.0) followed the `Accent` node.
+- Still **PR-3c remainder**: longest-match identifier scan (`sinx` → `sin·x`, a deeper lexer change).
+
 ## [0.7.0] — 2026-06-29
 
 ### Added — ASM01 PR-3c (part 2): the `text(…)` keyword form
