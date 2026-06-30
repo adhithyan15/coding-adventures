@@ -1,0 +1,17 @@
+@echo off
+rem BUILD_windows — sql-planner (Windows)
+rem
+rem Installs leaf-to-root: lexer → sql-lexer → parser → grammar-tools → sql-backend
+rem   → sql-parser → sql-planner (this package)
+
+set CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=rust-lld
+
+pushd %~dp0..
+
+cargo build --package coding-adventures-sql-planner
+if errorlevel 1 exit /b 1
+
+cargo test --package coding-adventures-sql-planner
+if errorlevel 1 exit /b 1
+
+popd
