@@ -2,6 +2,46 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.19.8] - 2026-06-30
+
+### Fixed — assignment expression as a call argument / array element was dropped (miscompile)
+
+An assignment used as a call argument or array element lost its operator and
+right-hand side, leaving only the assignment target:
+
+```
+f(x = 1)      →  f(x)        (assignment vanished; arg is now `x`, not `1`)
+g(a, b = 2, c)→  g(a, b, c)
+f(x += 1)     →  f(x)        (compound assignment vanished)
+f(x = y = 1)  →  f(x)        (chained assignment vanished)
+[x = 1]       →  [x]
+[a = 1, b]    →  [a, b]
+```
+
+These are real miscompiles: the assignment's side effect is erased and the
+expression's value changes (`f(x=1)` passes `1`; `f(x)` passes whatever `x`
+already held).
+
+**Cause.** The parser collapses the single-alternative `argument` /
+element production, so the node reaching `convert_argument` (and the array
+element loop in `convert_array_literal`) IS the `assignment_expression`
+itself, whose children for `x = 1` are
+`[left_hand_side_expression(x), assignment_operator(=), assignment_expression(1)]`.
+Both call sites unwrapped to `node_children(node).next()` — the FIRST child —
+grabbing only the LHS and discarding `= rhs`. (`convert_assignment_expression`
+itself was already correct; it simply was never reached.)
+
+**Fix.** Both sites now convert the WHOLE node via `convert_expression`, which
+dispatches `assignment_expression` to `convert_assignment_expression`,
+preserving the assignment. `convert_argument` still unwraps an explicit
+`argument` wrapper node if a future grammar revision produces one, and the
+spread (`...x`) guard is unchanged. Plain (non-assignment) arguments and
+elements, and array holes (`[1,,3]`), are unaffected.
+
+Regression tests: `assignment_expression_as_call_argument_is_not_dropped`,
+`compound_and_chained_assignment_arguments_survive`,
+`assignment_expression_as_array_element_is_not_dropped`.
+
 ## [0.19.7] - 2026-06-30
 
 ### Fixed — member access on a call result was silently dropped (miscompile)
