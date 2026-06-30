@@ -55,10 +55,22 @@ const ANKI_QUEUE_REVIEW: i64 = 2;
 pub struct EngramSession {
     state: AppState,
     selected_deck_id: Option<String>,
+    active_screen: EngramAppScreen,
     browser: BrowserSessionState,
     review: ReviewSessionState,
     editor: NoteEditorSessionState,
     note_type_editor: NoteTypeEditorSessionState,
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+enum EngramAppScreen {
+    #[default]
+    Decks,
+    Study,
+    Browse,
+    Add,
+    Stats,
+    Options,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -628,6 +640,7 @@ impl EngramSession {
                 deck_id,
                 self.selected_deck_id.as_deref(),
                 now,
+                self.active_screen,
                 &self.browser,
                 &self.review,
                 &self.editor,
@@ -661,6 +674,9 @@ impl EngramSession {
             let parsed = parse_engram_app_event(event)?;
             let selected_deck_context = self.selected_deck_id(deck_id);
             match parsed.kind {
+                EngramAppEvent::ShowScreen(screen) => {
+                    self.active_screen = screen;
+                }
                 EngramAppEvent::SelectDeck => {
                     if let Some(value) = parsed.number_value {
                         self.set_selected_deck_index(value)?;
@@ -1315,6 +1331,7 @@ impl EngramSession {
                 }
                 EngramAppEvent::AddNoteType => {
                     self.note_type_editor.start_new(now);
+                    self.active_screen = EngramAppScreen::Options;
                 }
                 EngramAppEvent::AddNote => {
                     let selected_deck = self.selected_deck_id(deck_id);
@@ -1330,6 +1347,7 @@ impl EngramSession {
                         selected_deck,
                         now,
                     );
+                    self.active_screen = EngramAppScreen::Add;
                 }
                 EngramAppEvent::BrowserEditSelected => {
                     if let Some(card_id) = parsed.card_id.as_deref() {
@@ -1356,6 +1374,7 @@ impl EngramSession {
                         self.editor.reset_for_note(&selection.note_id);
                         self.editor.set_selected_field_index(0);
                     }
+                    self.active_screen = EngramAppScreen::Add;
                 }
                 EngramAppEvent::BrowserOpenSelected
                 | EngramAppEvent::ImportAnki
@@ -1375,6 +1394,7 @@ impl EngramSession {
                 deck_id,
                 self.selected_deck_id.as_deref(),
                 now,
+                self.active_screen,
                 &self.browser,
                 &self.review,
                 &self.editor,
@@ -1638,6 +1658,7 @@ fn engram_app_props_for_state(
     deck_id: &str,
     selected_deck_override: Option<&str>,
     now: u64,
+    active_screen: EngramAppScreen,
     browser: &BrowserSessionState,
     review: &ReviewSessionState,
     editor: &NoteEditorSessionState,
@@ -1762,6 +1783,12 @@ fn engram_app_props_for_state(
 
     let mut props = json!({
         "app-title": "Engram",
+        "show-decks-screen": active_screen == EngramAppScreen::Decks,
+        "show-study-screen": active_screen == EngramAppScreen::Study,
+        "show-browse-screen": active_screen == EngramAppScreen::Browse,
+        "show-add-screen": active_screen == EngramAppScreen::Add,
+        "show-stats-screen": active_screen == EngramAppScreen::Stats,
+        "show-options-screen": active_screen == EngramAppScreen::Options,
         "deck-name": deck_name,
         "deck-list-label": "Decks",
         "deck-names": deck_names,
@@ -4057,6 +4084,7 @@ fn note_type_from_editor_selection(
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum EngramAppEvent {
+    ShowScreen(EngramAppScreen),
     SelectDeck,
     Reveal,
     Undo,
@@ -4121,6 +4149,12 @@ enum EngramAppEvent {
 impl EngramAppEvent {
     fn canonical_name(self) -> &'static str {
         match self {
+            Self::ShowScreen(EngramAppScreen::Decks) => "onShowDecks",
+            Self::ShowScreen(EngramAppScreen::Study) => "onShowStudy",
+            Self::ShowScreen(EngramAppScreen::Browse) => "onShowBrowse",
+            Self::ShowScreen(EngramAppScreen::Add) => "onShowAdd",
+            Self::ShowScreen(EngramAppScreen::Stats) => "onShowStats",
+            Self::ShowScreen(EngramAppScreen::Options) => "onShowOptions",
             Self::SelectDeck => "onSelectDeck",
             Self::Reveal => "onReveal",
             Self::Undo => "onUndo",
@@ -4366,6 +4400,24 @@ fn parse_engram_app_event_name(
         ))
     };
     match lowered.strip_prefix("on").unwrap_or(&lowered) {
+        "showdecks" | "show-decks" | "show_decks" | "decks" => {
+            parsed(EngramAppEvent::ShowScreen(EngramAppScreen::Decks))
+        }
+        "showstudy" | "show-study" | "show_study" | "study" => {
+            parsed(EngramAppEvent::ShowScreen(EngramAppScreen::Study))
+        }
+        "showbrowse" | "show-browse" | "show_browse" | "browse" => {
+            parsed(EngramAppEvent::ShowScreen(EngramAppScreen::Browse))
+        }
+        "showadd" | "show-add" | "show_add" | "addscreen" | "add-screen" | "add_screen" => {
+            parsed(EngramAppEvent::ShowScreen(EngramAppScreen::Add))
+        }
+        "showstats" | "show-stats" | "show_stats" | "stats" => {
+            parsed(EngramAppEvent::ShowScreen(EngramAppScreen::Stats))
+        }
+        "showoptions" | "show-options" | "show_options" | "options" => {
+            parsed(EngramAppEvent::ShowScreen(EngramAppScreen::Options))
+        }
         "selectdeck" | "select-deck" | "select_deck" | "deckselect" | "deck-select"
         | "deck_select" => parsed(EngramAppEvent::SelectDeck),
         "reveal" => parsed(EngramAppEvent::Reveal),
@@ -7192,6 +7244,12 @@ mod tests {
 
         assert_eq!(value["ok"], true);
         assert_eq!(value["props"]["app-title"], "Engram");
+        assert_eq!(value["props"]["show-decks-screen"], true);
+        assert_eq!(value["props"]["show-study-screen"], false);
+        assert_eq!(value["props"]["show-browse-screen"], false);
+        assert_eq!(value["props"]["show-add-screen"], false);
+        assert_eq!(value["props"]["show-stats-screen"], false);
+        assert_eq!(value["props"]["show-options-screen"], false);
         assert_eq!(value["props"]["deck-name"], "Tamil");
         assert_eq!(value["props"]["deck-total-value"], "2");
         assert_eq!(value["props"]["deck-new-value"], "2");
@@ -7359,6 +7417,45 @@ mod tests {
         );
         assert_eq!(value["props"]["action-suspend-card-label"], "Suspend");
         assert_eq!(value["props"]["action-mark-label"], "Mark");
+    }
+
+    #[test]
+    fn engram_app_screen_events_drive_single_visible_surface() {
+        let mut session = EngramSession::new();
+
+        let initial: Value = serde_json::from_str(&session.engram_app_props("", NOW)).unwrap();
+        assert_eq!(initial["props"]["show-decks-screen"], true);
+        assert_eq!(initial["props"]["show-browse-screen"], false);
+
+        let browse: Value =
+            serde_json::from_str(&session.handle_engram_app_event("onShowBrowse", "", NOW))
+                .unwrap();
+        assert_eq!(browse["ok"], true);
+        assert_eq!(browse["event"], "onShowBrowse");
+        assert_eq!(browse["props"]["show-decks-screen"], false);
+        assert_eq!(browse["props"]["show-browse-screen"], true);
+        assert_eq!(browse["props"]["show-add-screen"], false);
+
+        let study: Value =
+            serde_json::from_str(&session.handle_engram_app_event("show-study", "", NOW + 1))
+                .unwrap();
+        assert_eq!(study["event"], "onShowStudy");
+        assert_eq!(study["props"]["show-study-screen"], true);
+        assert_eq!(study["props"]["show-browse-screen"], false);
+
+        let add: Value =
+            serde_json::from_str(&session.handle_engram_app_event("onAddNote", "", NOW + 2))
+                .unwrap();
+        assert_eq!(add["event"], "onAddNote");
+        assert_eq!(add["props"]["show-add-screen"], true);
+        assert_eq!(add["props"]["show-study-screen"], false);
+
+        let options: Value =
+            serde_json::from_str(&session.handle_engram_app_event("onAddNoteType", "", NOW + 3))
+                .unwrap();
+        assert_eq!(options["event"], "onAddNoteType");
+        assert_eq!(options["props"]["show-options-screen"], true);
+        assert_eq!(options["props"]["show-add-screen"], false);
     }
 
     #[test]

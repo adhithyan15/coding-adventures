@@ -6,6 +6,12 @@
 
 component EngramApp {
   slot app-title : text ;
+  slot show-decks-screen : bool = true ;
+  slot show-study-screen : bool = false ;
+  slot show-browse-screen : bool = false ;
+  slot show-add-screen : bool = false ;
+  slot show-stats-screen : bool = false ;
+  slot show-options-screen : bool = false ;
   slot deck-name : text ;
   slot deck-list-label : text ;
   slot deck-names : list<text> ;
@@ -250,6 +256,12 @@ component EngramApp {
   slot action-suspend-card-label : text ;
   slot action-mark-label : text ;
 
+  emit onShowDecks ;
+  emit onShowStudy ;
+  emit onShowBrowse ;
+  emit onShowAdd ;
+  emit onShowStats ;
+  emit onShowOptions ;
   emit onReveal ;
   emit onSelectDeck ( value : text ) ;
   emit onAgain ;
