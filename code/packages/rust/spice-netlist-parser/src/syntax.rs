@@ -22,6 +22,7 @@ pub const BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_STATUS_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_TELEMETRY_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_EVENT_LOG_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -59,6 +60,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-handoff-json",
     "app-shell-status-json",
     "app-shell-telemetry-json",
+    "app-shell-events-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -618,6 +620,155 @@ impl BerkeleyAppShellTelemetry {
 
     pub fn to_json(&self) -> String {
         app_shell_telemetry_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellEvent {
+    pub id: String,
+    pub kind: String,
+    pub severity: String,
+    pub message: String,
+    pub panel_id: Option<String>,
+    pub action_id: Option<String>,
+    pub count: Option<usize>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellEventLog {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub event_count: usize,
+    pub events: Vec<BerkeleyAppShellEvent>,
+}
+
+impl BerkeleyAppShellEventLog {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_shell_handoff(&BerkeleyAppShellHandoff::from_bootstrap_snapshot(snapshot))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        let status = BerkeleyAppShellStatus::from_shell_handoff(handoff);
+        let telemetry = BerkeleyAppShellTelemetry::from_shell_handoff(handoff);
+        let readiness = &handoff.readiness_report;
+        let primary_action_enabled = readiness.primary_action_enabled;
+        let repaired_state_count = if readiness.repaired_state { 1 } else { 0 };
+        let diagnostics_severity = if readiness.error_count > 0 {
+            "error"
+        } else if readiness.warning_count > 0 {
+            "warning"
+        } else {
+            "info"
+        };
+        let state_severity = if readiness.repaired_state {
+            "warning"
+        } else {
+            "info"
+        };
+
+        let events = vec![
+            BerkeleyAppShellEvent {
+                id: "shell.status".to_string(),
+                kind: "status".to_string(),
+                severity: status.severity.clone(),
+                message: status.message.clone(),
+                panel_id: status.entry_panel_id.clone(),
+                action_id: status.primary_action_id.clone(),
+                count: None,
+            },
+            BerkeleyAppShellEvent {
+                id: format!("shell.route.{}", status.startup_route),
+                kind: "route".to_string(),
+                severity: status.severity.clone(),
+                message: if status.ready {
+                    "Ready startup route selected".to_string()
+                } else {
+                    "Blocked startup route selected".to_string()
+                },
+                panel_id: status.entry_panel_id.clone(),
+                action_id: status.primary_action_id.clone(),
+                count: None,
+            },
+            BerkeleyAppShellEvent {
+                id: "shell.action.primary".to_string(),
+                kind: "action".to_string(),
+                severity: if primary_action_enabled {
+                    "ready".to_string()
+                } else {
+                    "blocked".to_string()
+                },
+                message: match &status.primary_action_id {
+                    Some(action_id) if primary_action_enabled => {
+                        format!("Primary action {action_id} enabled")
+                    }
+                    Some(action_id) => format!("Primary action {action_id} disabled"),
+                    None => "No primary action available".to_string(),
+                },
+                panel_id: status.entry_panel_id.clone(),
+                action_id: status.primary_action_id.clone(),
+                count: None,
+            },
+            BerkeleyAppShellEvent {
+                id: "shell.diagnostics".to_string(),
+                kind: "diagnostics".to_string(),
+                severity: diagnostics_severity.to_string(),
+                message: format!(
+                    "{} diagnostics: {} errors, {} warnings, {} notes",
+                    readiness.diagnostic_count,
+                    readiness.error_count,
+                    readiness.warning_count,
+                    readiness.note_count
+                ),
+                panel_id: None,
+                action_id: None,
+                count: Some(readiness.diagnostic_count),
+            },
+            BerkeleyAppShellEvent {
+                id: "shell.state".to_string(),
+                kind: "state".to_string(),
+                severity: state_severity.to_string(),
+                message: if readiness.repaired_state {
+                    "Persisted editor state repaired".to_string()
+                } else {
+                    "Persisted editor state current".to_string()
+                },
+                panel_id: readiness.entry_panel_id.clone(),
+                action_id: readiness.primary_action_id.clone(),
+                count: Some(repaired_state_count),
+            },
+            BerkeleyAppShellEvent {
+                id: "shell.capabilities".to_string(),
+                kind: "capability".to_string(),
+                severity: "info".to_string(),
+                message: format!(
+                    "{} artifact capabilities advertised",
+                    telemetry.artifact_capability_count
+                ),
+                panel_id: None,
+                action_id: None,
+                count: Some(telemetry.artifact_capability_count),
+            },
+        ];
+
+        let event_count = events.len();
+        Self {
+            schema_version: BERKELEY_APP_SHELL_EVENT_LOG_SCHEMA_VERSION,
+            package_name: status.package_name,
+            source_fingerprint: status.source_fingerprint,
+            title: status.title,
+            startup_route: status.startup_route,
+            ready: status.ready,
+            event_count,
+            events,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_event_log_json_value(self).to_string()
     }
 }
 
@@ -1359,6 +1510,38 @@ impl BerkeleyAppDeck {
         persisted_state: BerkeleyAppPersistedEditorState,
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self.run_app_shell_telemetry(persisted_state)?.to_json())
+    }
+
+    pub fn app_shell_event_log(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellEventLog {
+        BerkeleyAppShellEventLog::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_event_log(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellEventLog, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellEventLog::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_event_log_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_event_log(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_event_log_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self.run_app_shell_event_log(persisted_state)?.to_json())
     }
 
     pub fn run_source_order(&self) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
@@ -2155,6 +2338,35 @@ fn app_shell_telemetry_json_value(telemetry: &BerkeleyAppShellTelemetry) -> serd
         "commandStale": telemetry.command_stale,
         "repairedState": telemetry.repaired_state,
         "artifactCapabilityCount": telemetry.artifact_capability_count,
+    })
+}
+
+fn app_shell_event_log_json_value(event_log: &BerkeleyAppShellEventLog) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": event_log.schema_version,
+        "packageName": &event_log.package_name,
+        "sourceFingerprint": &event_log.source_fingerprint,
+        "title": &event_log.title,
+        "startupRoute": &event_log.startup_route,
+        "ready": event_log.ready,
+        "eventCount": event_log.event_count,
+        "events": event_log
+            .events
+            .iter()
+            .map(app_shell_event_json_value)
+            .collect::<Vec<_>>(),
+    })
+}
+
+fn app_shell_event_json_value(event: &BerkeleyAppShellEvent) -> serde_json::Value {
+    serde_json::json!({
+        "id": &event.id,
+        "kind": &event.kind,
+        "severity": &event.severity,
+        "message": &event.message,
+        "panelId": &event.panel_id,
+        "actionId": &event.action_id,
+        "count": event.count,
     })
 }
 

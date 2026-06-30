@@ -126,6 +126,13 @@ let shell_telemetry_json = deck.run_app_shell_telemetry_json(BerkeleyAppPersiste
 })?;
 assert!(shell_telemetry_json.contains(r#""enabledPanelCount":4"#));
 assert!(shell_telemetry_json.contains(r#""artifactCapabilityCount":"#));
+
+let shell_events_json = deck.run_app_shell_event_log_json(BerkeleyAppPersistedEditorState {
+    selected_syntax_card_index: Some(3),
+    active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+})?;
+assert!(shell_events_json.contains(r#""eventCount":6"#));
+assert!(shell_events_json.contains(r#""id":"shell.status""#));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -173,8 +180,11 @@ handoff so product shells can render startup chrome and telemetry without
 inspecting every launch/readiness field. Shell telemetry adds compact startup
 metrics for route, severity, entry action, panel/action availability,
 diagnostic counts, repaired-state flags, and advertised capability count without
-requiring hosts to parse the full shell handoff. The grammar-backed parser
-generator and Python/TypeScript parity surfaces continue to mature.
+requiring hosts to parse the full shell handoff. Shell event logs turn the same
+handoff into stable status, route, primary-action, diagnostic, repaired-state,
+and capability events so Mosaic and product shells can append startup streams
+without reinventing app-state traversal. The grammar-backed parser generator
+and Python/TypeScript parity surfaces continue to mature.
 
 This parser supports `R`, `C`, `L`, `V`, `I`, `D`, `Q`, `M`, `G`, `E`, `F`, and
 `H` elements, `.model <name> D(...)` diode cards with `IS` and `VT`
