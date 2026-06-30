@@ -15,19 +15,21 @@ use spice_engine::{
 mod syntax;
 
 pub use syntax::{
-    parse_berkeley_app_deck, parse_berkeley_syntax, BerkeleyAnalysisInventoryEntry,
-    BerkeleyAppAnalysisArtifact, BerkeleyAppAnalysisControl, BerkeleyAppDeck,
-    BerkeleyAppEditorAction, BerkeleyAppEditorActionKind, BerkeleyAppEditorCommand,
-    BerkeleyAppEditorCommandPlan, BerkeleyAppEditorControls, BerkeleyAppEditorStateSnapshot,
-    BerkeleyAppExecution, BerkeleyAppHostDiagnosticWire, BerkeleyAppHostPanel,
-    BerkeleyAppHostPanelKind, BerkeleyAppHostPanelWire, BerkeleyAppHostSpanWire,
-    BerkeleyAppHostSurface, BerkeleyAppHostSurfaceWire, BerkeleyAppPersistedEditorState,
+    berkeley_app_package_manifest, berkeley_app_package_manifest_json, parse_berkeley_app_deck,
+    parse_berkeley_syntax, BerkeleyAnalysisInventoryEntry, BerkeleyAppAnalysisArtifact,
+    BerkeleyAppAnalysisControl, BerkeleyAppDeck, BerkeleyAppEditorAction,
+    BerkeleyAppEditorActionKind, BerkeleyAppEditorCommand, BerkeleyAppEditorCommandPlan,
+    BerkeleyAppEditorControls, BerkeleyAppEditorStateSnapshot, BerkeleyAppExecution,
+    BerkeleyAppHostDiagnosticWire, BerkeleyAppHostPanel, BerkeleyAppHostPanelKind,
+    BerkeleyAppHostPanelWire, BerkeleyAppHostSpanWire, BerkeleyAppHostSurface,
+    BerkeleyAppHostSurfaceWire, BerkeleyAppPackageManifest, BerkeleyAppPersistedEditorState,
     BerkeleyAppSessionAnalysis, BerkeleyAppSessionState, BerkeleyAppWaveformPoint,
     BerkeleyAppWaveformSeries, BerkeleyCardKind, BerkeleyDiagnosticSeverity,
     BerkeleyGrammarMetadata, BerkeleyLogicalCard, BerkeleySyntaxDeck, BerkeleySyntaxDiagnostic,
     BerkeleySyntaxToken, SourceSpan, BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION,
-    BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION, BERKELEY_SPICE_PARSER_GRAMMAR,
-    BERKELEY_SPICE_TOKEN_GRAMMAR,
+    BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION, BERKELEY_APP_PACKAGE_NAME,
+    BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM, BERKELEY_SPICE_GRAMMAR_NAME,
+    BERKELEY_SPICE_GRAMMAR_VERSION, BERKELEY_SPICE_PARSER_GRAMMAR, BERKELEY_SPICE_TOKEN_GRAMMAR,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq)]

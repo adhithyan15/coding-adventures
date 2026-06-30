@@ -14,6 +14,44 @@ pub const BERKELEY_SPICE_TOKEN_GRAMMAR: &str =
 pub const BERKELEY_SPICE_PARSER_GRAMMAR: &str =
     include_str!("../../../../grammars/spice/berkeley.grammar");
 pub const BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
+pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
+
+const BERKELEY_APP_HOST_PANEL_KINDS: &[&str] =
+    &["source", "diagnostics", "analysis", "table", "waveform"];
+const BERKELEY_APP_EDITOR_ACTION_KINDS: &[&str] = &[
+    "select-analysis",
+    "run-analysis",
+    "inspect-table",
+    "inspect-waveform",
+];
+const BERKELEY_APP_COMMAND_TARGETS: &[&str] = &[
+    "analysis-selection",
+    "analysis-runner",
+    "analysis-table",
+    "analysis-waveform",
+];
+const BERKELEY_APP_RUNNABLE_ANALYSIS_DIRECTIVES: &[&str] = &[".op", ".dc", ".ac", ".tran"];
+const BERKELEY_APP_ARTIFACT_ANALYSIS_DIRECTIVES: &[&str] =
+    &[".op", ".dc", ".ac", ".tran", ".tf", ".sens", ".noise"];
+const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
+    "canonical-source",
+    "analysis-inventory",
+    "source-fingerprint",
+    "session-state",
+    "editor-controls",
+    "editor-command-plan",
+    "persisted-editor-state",
+    "host-surface",
+    "host-surface-wire-json",
+    "result-tables",
+    "waveform-series",
+    "run-artifacts",
+    "output-plan-artifacts",
+    "rawfile-artifacts",
+    "wrdata-artifacts",
+];
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct SourceSpan {
@@ -132,6 +170,49 @@ impl BerkeleyGrammarMetadata {
             parser_grammar: BERKELEY_SPICE_PARSER_GRAMMAR,
         }
     }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppPackageManifest {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub grammar_name: String,
+    pub grammar_version: u32,
+    pub host_surface_wire_schema_version: u32,
+    pub source_fingerprint_algorithm: String,
+    pub host_panel_kinds: Vec<String>,
+    pub editor_action_kinds: Vec<String>,
+    pub command_targets: Vec<String>,
+    pub runnable_analysis_directives: Vec<String>,
+    pub artifact_analysis_directives: Vec<String>,
+    pub artifact_capabilities: Vec<String>,
+}
+
+impl BerkeleyAppPackageManifest {
+    pub fn to_json(&self) -> String {
+        app_package_manifest_json_value(self).to_string()
+    }
+}
+
+pub fn berkeley_app_package_manifest() -> BerkeleyAppPackageManifest {
+    BerkeleyAppPackageManifest {
+        schema_version: BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION,
+        package_name: BERKELEY_APP_PACKAGE_NAME.to_string(),
+        grammar_name: BERKELEY_SPICE_GRAMMAR_NAME.to_string(),
+        grammar_version: BERKELEY_SPICE_GRAMMAR_VERSION,
+        host_surface_wire_schema_version: BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION,
+        source_fingerprint_algorithm: BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM.to_string(),
+        host_panel_kinds: manifest_strings(BERKELEY_APP_HOST_PANEL_KINDS),
+        editor_action_kinds: manifest_strings(BERKELEY_APP_EDITOR_ACTION_KINDS),
+        command_targets: manifest_strings(BERKELEY_APP_COMMAND_TARGETS),
+        runnable_analysis_directives: manifest_strings(BERKELEY_APP_RUNNABLE_ANALYSIS_DIRECTIVES),
+        artifact_analysis_directives: manifest_strings(BERKELEY_APP_ARTIFACT_ANALYSIS_DIRECTIVES),
+        artifact_capabilities: manifest_strings(BERKELEY_APP_ARTIFACT_CAPABILITIES),
+    }
+}
+
+pub fn berkeley_app_package_manifest_json() -> String {
+    berkeley_app_package_manifest().to_json()
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1229,6 +1310,27 @@ fn host_span_wire_json_value(span: &BerkeleyAppHostSpanWire) -> serde_json::Valu
         "endLine": span.end_line,
         "endColumn": span.end_column,
     })
+}
+
+fn app_package_manifest_json_value(manifest: &BerkeleyAppPackageManifest) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": manifest.schema_version,
+        "packageName": &manifest.package_name,
+        "grammarName": &manifest.grammar_name,
+        "grammarVersion": manifest.grammar_version,
+        "hostSurfaceWireSchemaVersion": manifest.host_surface_wire_schema_version,
+        "sourceFingerprintAlgorithm": &manifest.source_fingerprint_algorithm,
+        "hostPanelKinds": &manifest.host_panel_kinds,
+        "editorActionKinds": &manifest.editor_action_kinds,
+        "commandTargets": &manifest.command_targets,
+        "runnableAnalysisDirectives": &manifest.runnable_analysis_directives,
+        "artifactAnalysisDirectives": &manifest.artifact_analysis_directives,
+        "artifactCapabilities": &manifest.artifact_capabilities,
+    })
+}
+
+fn manifest_strings(values: &[&str]) -> Vec<String> {
+    values.iter().map(|value| value.to_string()).collect()
 }
 
 fn editor_command_from_control(

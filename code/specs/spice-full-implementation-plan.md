@@ -33,18 +33,16 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic host wire export.
+1. Rust Berkeley Mosaic app package manifest.
    - Status: current PR completion candidate.
-   - Expand the Rust `spice-netlist-parser` Berkeley app facade from
-     host-facing panel descriptors into schema-versioned wire snapshots for
-     Mosaic packaging and WebAssembly embedding.
-   - Expose stable JSON helpers with lower-case panel kinds, diagnostic
-     severities, active-panel IDs, repaired persisted editor-state metadata, and
-     the same source / diagnostics / analysis / table / waveform panel contract
-     so product shells can consume the surface without Rust struct coupling.
-   - Keep this as a Rust-only app-substrate acceleration slice over the public
-     parser contract and existing engine deck artifacts; Python and TypeScript
-     parser parity was completed separately and should remain aligned when
+   - Add a Rust `spice-netlist-parser` Berkeley app package manifest for Mosaic
+     packaging, WebAssembly embedding, and product-shell capability discovery.
+   - Expose schema-versioned native and JSON helpers that advertise the Berkeley
+     grammar version, host-surface wire schema, source-fingerprint algorithm,
+     panel kinds, editor action kinds, command targets, runnable analysis
+     directives, and artifact capabilities before a host opens a deck.
+   - Keep this as a Rust-only app-substrate packaging slice over the public
+     parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
 
 ## Completed Slices
@@ -1512,6 +1510,16 @@ the Rust, Python, and TypeScript surfaces together.
    - The slice keeps panel routing derived from persisted editor-state
      snapshots so Mosaic shells can wire UI regions without duplicating parser
      or simulator internals.
+
+143. Rust Berkeley Mosaic host wire export.
+   - Status: completed in PR 6965.
+   - Rust `spice-netlist-parser` Berkeley app host-surface wire snapshots now
+     expose schema-versioned native and JSON surfaces for Mosaic packaging and
+     WebAssembly embedding.
+   - The wire export flattens panel descriptors, diagnostics, active-panel IDs,
+     repaired persisted editor-state metadata, and lower-case panel /
+     diagnostic kinds so product shells can consume the app surface without
+     Rust struct coupling.
 
 ## Backlog
 
