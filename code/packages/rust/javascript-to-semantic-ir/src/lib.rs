@@ -27,9 +27,9 @@
 //! not from the parser's typed-AST bridge — that's the contract SIR19
 //! sets, mirroring the Ruby and Twig frontends.
 //!
-//! ## Milestone status — M1 (literals)
+//! ## Milestone status — M2 (variables, assignment, operators)
 //!
-//! This build implements **literal lowering only**:
+//! This build implements literals (M1) **plus**:
 //!
 //! - JS number → [`IntLit`](semantic_ir::Expr::IntLit) when the literal
 //!   text is an integer (no `.`/exponent), else
@@ -38,10 +38,22 @@
 //! - `null` **and** `undefined` → [`NilLit`](semantic_ir::Expr::NilLit)
 //!   (the JS distinction is intentionally lost in v0).
 //! - string → [`StrLit`](semantic_ir::Expr::StrLit).
+//! - variable reference → [`VarRef`](semantic_ir::Expr::VarRef) with a
+//!   resolved [`Scope`](semantic_ir::Scope) (M2 has one flat scope, so
+//!   `Scope::Local`); an undeclared name is a positioned error.
+//! - `let`/`const`/`var x = e;` → a sequential binding statement
+//!   ([`Stmt::LetStarBinding`](semantic_ir::Stmt::LetStarBinding));
+//!   re-assignment `x = e;` → [`Stmt::Assign`](semantic_ir::Stmt::Assign).
+//! - arithmetic / comparison operators → `BuiltinCall`; `&&`/`||` →
+//!   short-circuit [`LogicalAnd`](semantic_ir::Expr::LogicalAnd) /
+//!   [`LogicalOr`](semantic_ir::Expr::LogicalOr); unary `!`→`not`,
+//!   `-`→`neg`; both `==`/`===` → `BuiltinCall("=")` and both `!=`/`!==`
+//!   → `BuiltinCall("!=")` (strict normalisation — a documented semantic
+//!   change for the loose-equality coercion cases).
 //!
-//! All other syntax (variables, operators, control flow, functions,
-//! collections, template literals) is **deferred** to later milestones
-//! and currently produces a clear [`JsLowerError`].  See the crate
+//! All other syntax (control flow, functions, collections, member
+//! access, template literals) is **deferred** to later milestones and
+//! currently produces a clear [`JsLowerError`].  See the crate
 //! `CHANGELOG.md` "Deferred" section for the roadmap.
 //!
 //! ## Public API
@@ -266,28 +278,254 @@ mod tests {
         assert!(r.warnings().next().is_none(), "unexpected warnings");
     }
 
-    // ── error paths ────────────────────────────────────────────────
+    // ── M2: variables, binding, assignment ─────────────────────────
+
+    use semantic_ir::{Scope, Stmt};
+
+    /// Fetch the `main` function's body block.
+    fn main_block(m: &semantic_ir::Module) -> &semantic_ir::Block {
+        &m.functions
+            .iter()
+            .find(|f| f.name == "main")
+            .expect("main function present")
+            .body
+    }
 
     #[test]
-    fn operator_expression_is_rejected_in_m1() {
-        // `1 + 2` is a non-literal expression ⇒ out of M1 scope.
-        let err = compile_source("1 + 2;", "test").expect_err("should reject operators");
+    fn let_binding_emits_let_star_and_resolves_reference() {
+        // `let x = 1; x;` → one binding stmt, tail value a local var-ref.
+        let m = lower("let x = 1; x;");
+        let b = main_block(&m);
+        assert_eq!(b.stmts.len(), 1);
+        match &b.stmts[0] {
+            Stmt::LetStarBinding { name, value, .. } => {
+                assert_eq!(name, "x");
+                assert!(matches!(value, Expr::IntLit { value: 1, .. }));
+            }
+            other => panic!("expected LetStarBinding, got {other:?}"),
+        }
+        match &b.value {
+            Expr::VarRef { name, scope: Scope::Local, .. } => assert_eq!(name, "x"),
+            other => panic!("expected local VarRef, got {other:?}"),
+        }
+        assert_valid(&m);
+    }
+
+    #[test]
+    fn const_and_var_both_lower_to_bindings() {
+        let m = lower("const a = 1; var b = 2;");
+        let b = main_block(&m);
+        assert_eq!(b.stmts.len(), 2);
+        assert!(matches!(&b.stmts[0], Stmt::LetStarBinding { name, .. } if name == "a"));
+        assert!(matches!(&b.stmts[1], Stmt::LetStarBinding { name, .. } if name == "b"));
+        assert_valid(&m);
+    }
+
+    #[test]
+    fn cross_referencing_consecutive_bindings_validate() {
+        // The parallel-`let` trap: `const y = x + 1` references the prior
+        // `x`.  Sequential `let*` makes this validate.
+        let m = lower("let x = 1; const y = x + 1; y;");
+        assert_valid(&m);
+        assert!(matches!(main_block(&m).value, Expr::VarRef { .. }));
+    }
+
+    #[test]
+    fn reassignment_emits_assign_after_binding() {
+        // `let x = 1; x = 2;` — second is a re-assignment, not a binding.
+        let m = lower("let x = 1; x = 2;");
+        let b = main_block(&m);
+        assert_eq!(b.stmts.len(), 2);
+        assert!(matches!(&b.stmts[0], Stmt::LetStarBinding { .. }));
+        match &b.stmts[1] {
+            Stmt::Assign { name, scope: Scope::Local, value, .. } => {
+                assert_eq!(name, "x");
+                assert!(matches!(value, Expr::IntLit { value: 2, .. }));
+            }
+            other => panic!("expected Assign, got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::MutableBindings));
+        assert_valid(&m);
+    }
+
+    #[test]
+    fn first_bare_assignment_creates_a_binding() {
+        // `x = 5; x;` — no declarator, first sighting still binds (JS
+        // implicitly creates the global); the reference then resolves.
+        let m = lower("x = 5; x;");
+        let b = main_block(&m);
+        assert!(matches!(&b.stmts[0], Stmt::LetStarBinding { name, .. } if name == "x"));
+        assert!(matches!(&b.value, Expr::VarRef { .. }));
+        assert_valid(&m);
+    }
+
+    #[test]
+    fn unresolved_name_is_a_positioned_error() {
+        let err = compile_source("nope;", "test").expect_err("should reject unknown name");
         assert!(
-            err.message.contains("out of scope") || err.message.contains("M1"),
+            err.message.contains("unresolved name"),
             "unexpected message: {}",
             err.message
         );
     }
 
+    // ── M2: binary operators → BuiltinCall ─────────────────────────
+
+    /// Lower `let a = 1; let b = 2; <op>;` and return the tail-value
+    /// `BuiltinCall` name, asserting the module validates.
+    fn binop_name(src_op: &str) -> String {
+        let m = lower(&format!("let a = 1; let b = 2; {src_op};"));
+        assert_valid(&m);
+        match &main_block(&m).value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(args.len(), 2, "binary op must have 2 args");
+                name.clone()
+            }
+            other => panic!("expected BuiltinCall for `{src_op}`, got {other:?}"),
+        }
+    }
+
     #[test]
-    fn bare_identifier_reference_is_rejected_in_m1() {
-        // A variable reference (not `undefined`) is deferred to M2.
-        let err = compile_source("x;", "test").expect_err("should reject var refs");
-        assert!(
-            err.message.contains("variable reference") || err.message.contains("out of scope"),
-            "unexpected message: {}",
-            err.message
-        );
+    fn arithmetic_operators_lower_to_builtins() {
+        assert_eq!(binop_name("a + b"), "+");
+        assert_eq!(binop_name("a - b"), "-");
+        assert_eq!(binop_name("a * b"), "*");
+        assert_eq!(binop_name("a / b"), "/");
+        assert_eq!(binop_name("a % b"), "%");
+    }
+
+    #[test]
+    fn comparison_operators_lower_to_builtins() {
+        assert_eq!(binop_name("a < b"), "<");
+        assert_eq!(binop_name("a > b"), ">");
+        assert_eq!(binop_name("a <= b"), "<=");
+        assert_eq!(binop_name("a >= b"), ">=");
+    }
+
+    #[test]
+    fn equality_is_normalised_to_strict() {
+        // Both loose and strict equality collapse to the SIR `=`/`!=`.
+        assert_eq!(binop_name("a == b"), "=");
+        assert_eq!(binop_name("a === b"), "=");
+        assert_eq!(binop_name("a != b"), "!=");
+        assert_eq!(binop_name("a !== b"), "!=");
+    }
+
+    #[test]
+    fn left_associative_chain_folds_left() {
+        // `a + b + a` → BuiltinCall("+", [BuiltinCall("+", [a, b]), a]).
+        let m = lower("let a = 1; let b = 2; a + b + a;");
+        assert_valid(&m);
+        match &main_block(&m).value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "+");
+                assert!(matches!(&args[0], Expr::BuiltinCall { name, .. } if name == "+"));
+                assert!(matches!(&args[1], Expr::VarRef { .. }));
+            }
+            other => panic!("expected nested BuiltinCall, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn precedence_is_preserved_by_the_cst() {
+        // `a + b * a` must nest the `*` inside the `+`'s second arg.
+        let m = lower("let a = 1; let b = 2; a + b * a;");
+        assert_valid(&m);
+        match &main_block(&m).value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "+");
+                assert!(matches!(&args[1], Expr::BuiltinCall { name, .. } if name == "*"));
+            }
+            other => panic!("expected `+` at root, got {other:?}"),
+        }
+    }
+
+    // ── M2: logical short-circuit ──────────────────────────────────
+
+    #[test]
+    fn logical_and_is_a_short_circuit_node() {
+        let m = lower("let a = 1; let b = 2; a && b;");
+        assert!(matches!(main_block(&m).value, Expr::LogicalAnd { .. }));
+        assert!(m.manifest.contains(Feature::ShortCircuit));
+        assert_valid(&m);
+    }
+
+    #[test]
+    fn logical_or_is_a_short_circuit_node() {
+        let m = lower("let a = 1; let b = 2; a || b;");
+        assert!(matches!(main_block(&m).value, Expr::LogicalOr { .. }));
+        assert!(m.manifest.contains(Feature::ShortCircuit));
+        assert_valid(&m);
+    }
+
+    #[test]
+    fn logical_operators_are_not_builtins() {
+        // Guard against a regression that lowers `&&` to BuiltinCall.
+        let m = lower("let a = 1; let b = 2; a && b;");
+        assert!(!matches!(main_block(&m).value, Expr::BuiltinCall { .. }));
+    }
+
+    // ── M2: unary operators ────────────────────────────────────────
+
+    #[test]
+    fn unary_not_lowers_to_builtin_not() {
+        let m = lower("let c = true; !c;");
+        match &main_block(&m).value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "not");
+                assert_eq!(args.len(), 1);
+            }
+            other => panic!("expected BuiltinCall(not), got {other:?}"),
+        }
+        assert_valid(&m);
+    }
+
+    #[test]
+    fn unary_minus_on_variable_lowers_to_neg() {
+        let m = lower("let d = 1; -d;");
+        match &main_block(&m).value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "neg");
+                assert!(matches!(&args[0], Expr::VarRef { .. }));
+            }
+            other => panic!("expected BuiltinCall(neg), got {other:?}"),
+        }
+        assert_valid(&m);
+    }
+
+    #[test]
+    fn unary_minus_on_literal_is_constant_folded() {
+        // `-5` folds to IntLit(-5); `-3.25` to FloatLit(-3.25).
+        let m = lower("-5;");
+        assert!(matches!(main_value(&m), Expr::IntLit { value: -5, .. }));
+        assert_valid(&m);
+
+        let m = lower("-3.25;");
+        match main_value(&m) {
+            Expr::FloatLit { value, .. } => assert!((value + 3.25).abs() < 1e-12),
+            other => panic!("expected FloatLit(-3.25), got {other:?}"),
+        }
+    }
+
+    // ── M2: structural / round-trip ────────────────────────────────
+
+    #[test]
+    fn operators_add_no_features_but_validate() {
+        // A pure arithmetic program declares no Strings/Floats/etc.
+        let m = lower("let a = 1; let b = 2; a + b;");
+        assert!(!m.manifest.contains(Feature::ShortCircuit));
+        assert!(!m.manifest.contains(Feature::MutableBindings));
+        assert_valid(&m);
+        let r = semantic_ir::validate(&m);
+        assert!(r.warnings().next().is_none(), "unexpected warnings");
+    }
+
+    #[test]
+    fn mixed_program_validates_round_trip() {
+        let m = lower("let x = 10; let y = x * 2; x = y + 1; x >= y && y != 0;");
+        assert_valid(&m);
+        assert!(m.manifest.contains(Feature::ShortCircuit));
+        assert!(m.manifest.contains(Feature::MutableBindings));
     }
 
     #[test]
