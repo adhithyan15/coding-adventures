@@ -1554,6 +1554,16 @@ fn native_project_shells_expose_engram_host_contract() {
     let swift_package = fs::read_to_string(tmp.path().join("swiftui").join("Package.swift"))
         .expect("Package.swift");
     assert_contains(&swift_package, "platforms: [.macOS(.v13), .iOS(.v16)]");
+    let swift_readme =
+        fs::read_to_string(tmp.path().join("swiftui").join("README.md")).expect("swift README");
+    assert_contains(&swift_readme, "SwiftUI macOS and iOS-ready shell");
+    assert_contains(&swift_readme, "## Run on macOS");
+    assert_contains(&swift_readme, "## Use from iOS");
+    assert_contains(&swift_readme, "Sources/App/EngramApp.swift");
+    assert!(
+        !swift_readme.contains("mv EngramApp.swift"),
+        "SwiftUI README should not ask package users to move the component"
+    );
     let swift_nested_component = fs::read_to_string(
         tmp.path()
             .join("swiftui")
