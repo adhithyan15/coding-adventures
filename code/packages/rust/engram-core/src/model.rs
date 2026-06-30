@@ -395,6 +395,7 @@ pub enum ExternalSourceTarget {
     Note,
     Card,
     Review,
+    Media,
     Session,
     Deleted,
 }

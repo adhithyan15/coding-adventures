@@ -58,6 +58,10 @@ byte-slice APIs support legacy `collection.anki2` / `collection.anki21`
 packages and modern `collection.anki21b` envelopes by decoding Anki's `meta`
 protobuf plus zstd-compressed collection/media payloads before the shared
 SQLite import path runs.
+When an imported media payload conflicts with an existing Engram media ID,
+merge keeps both payloads by assigning the imported asset a deterministic
+`-merge-N` ID and retargeting the imported media provenance record to that new
+ID.
 `eg_export_anki_apkg` writes the current session as a deterministic legacy/V11
 APKG. `eg_export_anki_apkg_modern` writes the same state in a modern
 `collection.anki21b` envelope with zstd-compressed collection/media payloads.

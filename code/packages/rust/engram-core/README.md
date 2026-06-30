@@ -78,6 +78,9 @@ Media commands such as `UpsertMediaAsset`, `DeleteMediaAsset`, and
 every shell one deterministic place to copy newly attached media, replace
 imported payloads, or prune unreferenced assets after a host-side media analysis
 pass.
+Media payloads can also carry `ExternalSourceTarget::Media` records so package
+importers can preserve their archive-level provenance without making shell code
+package-aware.
 Tag commands such as `AddNoteTags`, `RemoveNoteTags`, `AddCardTags`, and
 `RemoveCardTags` mutate note-owned tags through the shared reducer. The card
 forms resolve lineaged cards back to their notes, matching Anki's tag model

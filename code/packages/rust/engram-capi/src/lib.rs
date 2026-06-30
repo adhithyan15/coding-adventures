@@ -4,6 +4,7 @@
 //! NUL-terminated UTF-8 strings. All string results are allocated by Rust and
 //! must be released with `eg_string_free`.
 
+use std::collections::HashMap;
 use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 use std::ptr;
@@ -13,7 +14,7 @@ use engram_anki_package::{
     read_v11_collection_as_engram_state, write_legacy_apkg_from_engram_state,
     write_modern_apkg_from_engram_state,
 };
-use engram_core::{AppState, ExternalSourceRecord, MediaAssetRecord};
+use engram_core::{AppState, ExternalSourceRecord, ExternalSourceTarget, MediaAssetRecord};
 use engram_core_wasm::EngramSession;
 use serde_json::{json, Value};
 
@@ -589,6 +590,7 @@ fn load_merged_state(session: &mut EngramSession, imported: AppState) -> String 
 
 fn merge_app_states(current: &AppState, imported: AppState) -> AppState {
     let mut merged = current.clone();
+    let mut imported_external_sources = imported.external_sources;
     upsert_by(&mut merged.decks, imported.decks, |deck| deck.id.clone());
     upsert_by(&mut merged.note_types, imported.note_types, |note_type| {
         note_type.id.clone()
@@ -609,14 +611,19 @@ fn merge_app_states(current: &AppState, imported: AppState) -> AppState {
     upsert_by(&mut merged.deck_options, imported.deck_options, |preset| {
         preset.deck_id.clone()
     });
+    let media_id_remaps = merge_media_assets(&mut merged.media_assets, imported.media_assets);
+    retarget_external_sources(
+        &mut imported_external_sources,
+        ExternalSourceTarget::Media,
+        &media_id_remaps,
+    );
     upsert_by(
         &mut merged.external_sources,
-        imported.external_sources,
+        imported_external_sources,
         external_source_merge_key,
     );
-    merge_media_assets(&mut merged.media_assets, imported.media_assets);
-    if imported.active_session.is_some() {
-        merged.active_session = imported.active_session;
+    if let Some(active_session) = imported.active_session {
+        merged.active_session = Some(active_session);
     }
     merged
 }
@@ -642,7 +649,29 @@ fn external_source_merge_key(source: &ExternalSourceRecord) -> String {
     )
 }
 
-fn merge_media_assets(target: &mut Vec<MediaAssetRecord>, incoming: Vec<MediaAssetRecord>) {
+fn retarget_external_sources(
+    sources: &mut [ExternalSourceRecord],
+    target: ExternalSourceTarget,
+    id_remaps: &HashMap<String, String>,
+) {
+    if id_remaps.is_empty() {
+        return;
+    }
+
+    for source in sources {
+        if source.target == target {
+            if let Some(next_id) = id_remaps.get(&source.target_id) {
+                source.target_id = next_id.clone();
+            }
+        }
+    }
+}
+
+fn merge_media_assets(
+    target: &mut Vec<MediaAssetRecord>,
+    incoming: Vec<MediaAssetRecord>,
+) -> HashMap<String, String> {
+    let mut id_remaps = HashMap::new();
     for mut asset in incoming {
         match target.iter().position(|existing| existing.id == asset.id) {
             Some(index)
@@ -651,14 +680,17 @@ fn merge_media_assets(target: &mut Vec<MediaAssetRecord>, incoming: Vec<MediaAss
                 target[index] = asset;
             }
             Some(_) => {
+                let original_id = asset.id.clone();
                 let unique = next_unique_media_suffix(target, &asset.id);
                 asset.id = format!("{}-merge-{unique}", asset.id);
                 asset.archive_name = format!("{}-merge-{unique}", asset.archive_name);
+                id_remaps.insert(original_id, asset.id.clone());
                 target.push(asset);
             }
             None => target.push(asset),
         }
     }
+    id_remaps
 }
 
 fn next_unique_media_suffix(target: &[MediaAssetRecord], base_id: &str) -> usize {
@@ -1152,7 +1184,13 @@ CREATE TABLE graves (
                     "sessions": [],
                     "reviews": [],
                     "deckOptions": [],
-                    "externalSources": [],
+                    "externalSources": [{
+                        "target":"media",
+                        "targetId":"anki-media:0",
+                        "source":"local-fixture",
+                        "originalId":"0",
+                        "data":{"filename":"audio/local.mp3"}
+                    }],
                     "mediaAssets": [
                         {"id":"anki-media:0","archiveName":"0","filename":"audio/local.mp3","data":[108,111,99,97,108]}
                     ],
@@ -1195,6 +1233,27 @@ CREATE TABLE graves (
             }));
             assert!(media_assets.iter().any(|asset| {
                 asset["id"] == "anki-media:1" && asset["filename"] == "images/card.png"
+            }));
+            let external_sources = merged["state"]["externalSources"].as_array().unwrap();
+            assert!(external_sources.iter().any(|source| {
+                source["target"] == "media"
+                    && source["targetId"] == "anki-media:0"
+                    && source["source"] == "local-fixture"
+                    && source["data"]["filename"] == "audio/local.mp3"
+            }));
+            assert!(external_sources.iter().any(|source| {
+                source["target"] == "media"
+                    && source["targetId"] == "anki-media:0-merge-1"
+                    && source["source"] == "anki-v11"
+                    && source["originalId"] == "0"
+                    && source["data"]["filename"] == "audio/hola.mp3"
+            }));
+            assert!(external_sources.iter().any(|source| {
+                source["target"] == "media"
+                    && source["targetId"] == "anki-media:1"
+                    && source["source"] == "anki-v11"
+                    && source["originalId"] == "1"
+                    && source["data"]["filename"] == "images/card.png"
             }));
 
             eg_session_free(session);

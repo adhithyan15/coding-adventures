@@ -40,6 +40,10 @@ zstd-decompressing the collection payload before parsing.
 Modern media manifest inspection exposes each protobuf entry's SHA-1 digest as
 lowercase hex and preserves `legacyZipFilename` when Anki includes it, so native
 hosts can verify imported payloads without re-parsing the protobuf map.
+Imported APKG media assets also receive `ExternalSourceTarget::Media`
+provenance records with the original archive member and logical filename, so
+merge/import flows can preserve where audio and image payloads came from even
+when Engram has to rename an internal media asset ID.
 
 The export path preserves numeric Anki IDs when Engram state came from Anki,
 allocates deterministic numeric IDs for Engram-native rows, writes decks,

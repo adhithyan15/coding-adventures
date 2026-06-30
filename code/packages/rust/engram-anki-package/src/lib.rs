@@ -570,10 +570,14 @@ pub fn parse_v11_collection_bytes(bytes: &[u8]) -> Result<AnkiV11Collection, Apk
 pub fn read_v11_collection_as_engram_state(data: &[u8]) -> Result<AppState, ApkgError> {
     let collection = read_v11_collection(data)?;
     let mut state = v11_collection_to_engram_state(&collection)?;
-    state.media_assets = read_media_files(data)?
+    let media_assets: Vec<MediaAssetRecord> = read_media_files(data)?
         .into_iter()
         .map(media_asset_record_from_resolved)
         .collect();
+    state
+        .external_sources
+        .extend(v11_media_external_sources(&media_assets));
+    state.media_assets = media_assets;
     Ok(state)
 }
 
@@ -743,6 +747,25 @@ fn media_asset_record_from_resolved(media: ResolvedMediaFile) -> MediaAssetRecor
         filename: media.filename,
         data: media.data,
     }
+}
+
+fn v11_media_external_sources(media_assets: &[MediaAssetRecord]) -> Vec<ExternalSourceRecord> {
+    media_assets
+        .iter()
+        .map(|asset| {
+            let mut data = BTreeMap::new();
+            insert_string(&mut data, "archiveName", &asset.archive_name);
+            if let Some(filename) = asset.filename.as_deref() {
+                insert_string(&mut data, "filename", filename);
+            }
+            source_record(
+                ExternalSourceTarget::Media,
+                asset.id.clone(),
+                Some(asset.archive_name.clone()),
+                data,
+            )
+        })
+        .collect()
 }
 
 pub fn analyze_engram_media_references(state: &AppState) -> EngramMediaReferenceAnalysis {
@@ -5606,6 +5629,13 @@ CREATE TABLE graves (
                 && source.data.get("originalDue").map(String::as_str) == Some("42")
                 && source.data.get("data").map(String::as_str) == Some("filtered-card")
         }));
+        assert!(state.external_sources.iter().any(|source| {
+            source.source == ANKI_V11_SOURCE
+                && source.target == ExternalSourceTarget::Media
+                && source.target_id == "anki-media:0"
+                && source.original_id.as_deref() == Some("0")
+                && source.data.get("filename").map(String::as_str) == Some("audio/hola.mp3")
+        }));
 
         let media_analysis = analyze_engram_media_references(&state);
         assert_eq!(
@@ -6171,6 +6201,14 @@ CREATE TABLE graves (
             Some("audio/hola.mp3")
         );
         assert_eq!(state.media_assets[0].data, b"mp3");
+        assert!(state.external_sources.iter().any(|source| {
+            source.source == ANKI_V11_SOURCE
+                && source.target == ExternalSourceTarget::Media
+                && source.target_id == "anki-media:0"
+                && source.original_id.as_deref() == Some("0")
+                && source.data.get("archiveName").map(String::as_str) == Some("0")
+                && source.data.get("filename").map(String::as_str) == Some("audio/hola.mp3")
+        }));
 
         let exported = write_legacy_apkg_from_engram_state(&state, &[]).unwrap();
         let manifest = inspect_apkg(&exported).unwrap();
