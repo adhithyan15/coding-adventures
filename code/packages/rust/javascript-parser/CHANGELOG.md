@@ -2,6 +2,41 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.19.2] - 2026-06-29
+
+### Added — propagate per-token CvIds to the bridge (CLOC27 P2 + P3)
+
+Closes the gap where constant-fold provenance dead-ended at the bridge
+boundary: leaf literals in the typed AST carried `cv: None`, so a folded `3`
+from `"abc".length` derived from *nothing* and the sidecar never tied it back
+to the `"abc".length` source span. The CvIds already existed (minted per token
+by `tokenize_javascript_with_cv`) — they were simply discarded before the
+parser. This release stops discarding them and stamps them onto the leaves.
+
+- **D2 — stop stripping the CvId before the parser.** `parse_javascript_with_cv`
+  previously did `cv_tokens.into_iter().map(|t| t.token)`, dropping each token's
+  CvId; it now sets `cv: Some(t.cv)` on the token via struct-update, so the id
+  rides through the parser into the `GrammarASTNode` the bridge walks. The
+  parser does not inspect `cv`, so this is transparent to it.
+- **D3 — `parse_javascript_typed_with_cv`.** New CV-carrying twin of
+  `parse_javascript_typed`: routes through the CV tokenizer (D2) and runs the
+  identical Phase-1 ASI parse, returning a `GrammarASTNode` whose tokens carry
+  CvIds. This is the typed-AST feeder the SIMPLE `--correlation_vector` path
+  will use (CLOC27 D5/P4). The plain `parse_javascript_typed` stays the
+  zero-overhead default.
+- **D4 — stamp the leaf in `convert_primary_token`.** The bridge's sole
+  leaf-literal factory replaces its nine `cv: None` returns
+  (`NullLiteral`, `UndefinedLiteral`, `BooleanLiteral`×2, `BigIntLiteral`,
+  `NumericLiteral`, `StringLiteral`, `Identifier`×2) with `cv: t.cv.clone()`.
+  When the token carries no id (the non-CV path), this is `None` —
+  **byte-identical to today**, so every existing test passes unchanged. When CV
+  is on, the leaf now carries its source token's CvId, whose `Origin` is the
+  source span.
+
+No emitter change and no minting in the bridge: CvIds never appear in emitted
+JS, and the bridge stays a pure `GrammarASTNode → Program` transform that only
+*copies* an id that already exists. The disabled (non-CV) path is unchanged.
+
 ## [0.19.1] - 2026-06-29
 
 ### Changed — adapt to `lexer::Token` gaining a `cv` field (CLOC27 P1)

@@ -1826,10 +1826,10 @@ fn convert_primary_token(t: &Token, ctx: &GrammarASTNode) -> Result<Expression, 
             rule: "ThisExpression".to_string(),
             location: loc(ctx),
         }),
-        "null" => return Ok(Expression::NullLiteral(NullLiteral { cv: None })),
-        "undefined" => return Ok(Expression::UndefinedLiteral(UndefinedLiteral { cv: None })),
-        "true" => return Ok(Expression::BooleanLiteral(BooleanLiteral { cv: None, value: true })),
-        "false" => return Ok(Expression::BooleanLiteral(BooleanLiteral { cv: None, value: false })),
+        "null" => return Ok(Expression::NullLiteral(NullLiteral { cv: t.cv.clone() })),
+        "undefined" => return Ok(Expression::UndefinedLiteral(UndefinedLiteral { cv: t.cv.clone() })),
+        "true" => return Ok(Expression::BooleanLiteral(BooleanLiteral { cv: t.cv.clone(), value: true })),
+        "false" => return Ok(Expression::BooleanLiteral(BooleanLiteral { cv: t.cv.clone(), value: false })),
         _ => {}
     }
 
@@ -1837,7 +1837,7 @@ fn convert_primary_token(t: &Token, ctx: &GrammarASTNode) -> Result<Expression, 
     if t.type_name.as_deref() == Some("BIGINT") {
         let raw = t.value.clone();
         let value = raw.trim_end_matches('n').to_string();
-        return Ok(Expression::BigIntLiteral(BigIntLiteral { cv: None, value, raw }));
+        return Ok(Expression::BigIntLiteral(BigIntLiteral { cv: t.cv.clone(), value, raw }));
     }
 
     // Standard terminal types via the type_ discriminant.
@@ -1850,7 +1850,7 @@ fn convert_primary_token(t: &Token, ctx: &GrammarASTNode) -> Result<Expression, 
                 }
             })?;
             return Ok(Expression::NumericLiteral(NumericLiteral {
-                cv: None,
+                cv: t.cv.clone(),
                 value: val,
                 raw: t.value.clone(),
             }));
@@ -1858,11 +1858,11 @@ fn convert_primary_token(t: &Token, ctx: &GrammarASTNode) -> Result<Expression, 
         TokenType::String => {
             let raw = t.value.clone();
             let value = unquote_string(&raw);
-            return Ok(Expression::StringLiteral(StringLiteral { cv: None, value, raw }));
+            return Ok(Expression::StringLiteral(StringLiteral { cv: t.cv.clone(), value, raw }));
         }
         TokenType::Name => {
             // Plain identifier (variable name or non-keyword reference).
-            return Ok(Expression::Identifier(Identifier { cv: None, name: t.value.clone() }));
+            return Ok(Expression::Identifier(Identifier { cv: t.cv.clone(), name: t.value.clone() }));
         }
         TokenType::Keyword => {
             // Context keyword used as an expression (e.g. `undefined` is not
@@ -1878,7 +1878,7 @@ fn convert_primary_token(t: &Token, ctx: &GrammarASTNode) -> Result<Expression, 
 
     // Fallback: treat as identifier (catches edge cases like regex literals
     // that look like punctuation in some grammars).
-    Ok(Expression::Identifier(Identifier { cv: None, name: t.value.clone() }))
+    Ok(Expression::Identifier(Identifier { cv: t.cv.clone(), name: t.value.clone() }))
 }
 
 // =========================================================================
