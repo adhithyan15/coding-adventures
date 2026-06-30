@@ -43,6 +43,7 @@ SELF_CONTAINED_RUNGS = (
     "rung6b_management",
     "rung6c_formulary_cost",
     "rung7_risk_measures",
+    "rung7b_diagnostic_tests",
 )
 
 
