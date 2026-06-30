@@ -1,0 +1,30 @@
+cabal-version: 3.0
+name:          sql-optimizer
+version:       0.1.0
+synopsis:      Haskell logical query optimizer for Mini-SQLite Level 1
+description:
+    5-pass optimizer over LogicalPlan trees produced by sql-planner.
+    Passes: constant folding, predicate pushdown, projection pruning,
+    dead code elimination, and limit pushdown.
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  SqlOptimizer
+    build-depends:    base >=4.14
+                    , sql-planner
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    SqlOptimizerSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , sql-optimizer
+                    , sql-planner
+                    , hspec == 2.*
+    default-language: Haskell2010

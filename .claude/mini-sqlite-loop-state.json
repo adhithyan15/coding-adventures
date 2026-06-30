@@ -231,11 +231,11 @@
     {
       "id": "haskell-level1-sql-optimizer",
       "title": "Haskell sql-optimizer",
-      "status": "pending",
+      "status": "in-review",
       "depends_on": ["haskell-level1-sql-planner"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Port Python sql_optimizer to Haskell."
+      "branch": "mini-sqlite/haskell-level1-sql-optimizer",
+      "pr_number": 7090,
+      "notes": "PR open 2026-06-30. 47 hspec tests, 5-pass optimizer (ConstantFolding, PredicatePushdown, ProjectionPruning, DeadCodeElimination, LimitPushdown). OptimizedPlan ADT + EmptyResult sentinel. Awaiting CI + merge."
     },
     {
       "id": "haskell-level1-sql-codegen",
@@ -308,6 +308,60 @@
       "branch": null,
       "pr_number": null,
       "notes": "Wire C# mini-sqlite to use the full sql-backend/planner/optimizer/codegen/vm pipeline."
+    },
+    {
+      "id": "rust-level1-sql-planner",
+      "title": "Rust sql-planner (Level 1 prerequisite)",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Rust already has sql-lexer, sql-parser, sql-backend. sql-planner converts AST to LogicalPlan. Rust workspace: code/packages/rust/. Reference: Python sql-planner."
+    },
+    {
+      "id": "rust-level1-sql-optimizer",
+      "title": "Rust sql-optimizer (Level 1 prerequisite)",
+      "status": "pending",
+      "depends_on": ["rust-level1-sql-planner"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "5 optimization passes: ConstantFolding, PredicatePushdown, ProjectionPruning, DeadCodeElimination, LimitPushdown."
+    },
+    {
+      "id": "rust-level1-sql-codegen",
+      "title": "Rust sql-codegen (Level 1 prerequisite)",
+      "status": "pending",
+      "depends_on": ["rust-level1-sql-optimizer"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Compiles OptimizedPlan to bytecode Program. Reference: Python sql-codegen, code/specs/sql-codegen.md."
+    },
+    {
+      "id": "rust-level1-sql-vm",
+      "title": "Rust sql-vm (Level 1 prerequisite)",
+      "status": "pending",
+      "depends_on": ["rust-level1-sql-codegen"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Stack-machine VM executing bytecode against sql-backend. Reference: Python sql-vm, code/specs/sql-vm.md."
+    },
+    {
+      "id": "rust-level1-graduate",
+      "title": "Graduate Rust mini-sqlite to Level 1",
+      "status": "pending",
+      "depends_on": ["rust-level1-sql-vm"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Wire Rust mini-sqlite to use full Level 1 pipeline. Replace sql-execution-engine with sql-planner+optimizer+codegen+vm."
+    },
+    {
+      "id": "sqlite-conformance-expansion",
+      "title": "Expand conformance test fixtures (SQLite test suite inspired)",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Port SQLite test suite scenarios to JSON conformance fixtures. Cover: NULL semantics, three-valued logic, type affinity, aggregate edge cases, DISTINCT, HAVING, subqueries, CASE, COALESCE, string/math functions, ORDER BY NULL handling, LIMIT edge cases, JOIN variants, UNION/INTERSECT/EXCEPT. Run against all language implementations."
     }
   ]
 }
