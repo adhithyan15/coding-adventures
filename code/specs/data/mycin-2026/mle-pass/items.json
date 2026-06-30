@@ -1,5 +1,5 @@
 {
-  "description": "MLE-PASS multi-hop recall bank \u2014 TWO-HOP board questions answered purely from grounded edges with zero model calls. Each item chains a clinical clue \u2192 disease (hop 1, an organ-system recall library: ophtho / neuro / collagen / enzyme-deficiency) \u2192 gene (hop 2, the genetics library) by joining two grounded `relate` edges through a rule body (shared disease variable). The engine resolves the join (SLD) and returns the gene binding carrying BOTH hops' byte-provenance; the harness maps the binding to the printed gene options. Nothing is authored: every edge reuses an already-grounded, spider+adversarially-gated fact. This is the first slice of the MLE-PASS harness \u2014 the multi-hop reasoning step past the single-hop recall rungs, toward board coverage.",
+  "description": "MLE-PASS multi-hop recall bank \u2014 TWO-HOP board questions answered purely from grounded edges with zero model calls. A clinical clue \u2192 disease (hop 1, an organ-system recall library) \u2192 answer (hop 2) is joined on the shared disease through an adj-lang rule body; the engine's SLD resolver returns the binding with BOTH hops' byte-provenance, and the harness maps it to the printed options. Slice 2 adds: more clue\u2192disease\u2192gene chains (derm, niemann-pick, pompe); a second relation as hop 2 \u2014 inheritance (clue\u2192disease\u2192inheritance pattern), proving the harness is generic over the second hop, not gene-specific; and an ABSTENTION sub-bank whose clue has no grounded hop-1 edge, which MUST abstain (never fabricate). Nothing authored: every edge reuses an already-grounded, spider+adversarially-gated fact. Engine: every answerable item correct with both hops cited; every abstention item abstains; zero model calls.",
   "items": [
     {
       "id": "mh-01",
@@ -133,6 +133,158 @@
         "E": "htt"
       },
       "gold_letter": "B"
+    },
+    {
+      "id": "mh-08",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has ash-leaf (hypopigmented) macules. That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "derm-edges.adj",
+      "hop1_relation": "skin_finding_in",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "ash_leaf_spots",
+      "expected": "tsc1_tsc2",
+      "options": {
+        "A": "rb1",
+        "B": "atp7b",
+        "C": "tsc1_tsc2",
+        "D": "fbn1",
+        "E": "htt"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "mh-09",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has deficiency of sphingomyelinase. That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "enzyme-deficiency-edges.adj",
+      "hop1_relation": "enzyme_deficiency_disease",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "sphingomyelinase",
+      "expected": "smpd1",
+      "options": {
+        "A": "rb1",
+        "B": "atp7b",
+        "C": "fbn1",
+        "D": "smpd1",
+        "E": "htt"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "mh-10",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has deficiency of acid alpha-glucosidase. That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "enzyme-deficiency-edges.adj",
+      "hop1_relation": "enzyme_deficiency_disease",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "acid_alpha_glucosidase",
+      "expected": "gaa",
+      "options": {
+        "A": "rb1",
+        "B": "atp7b",
+        "C": "fbn1",
+        "D": "htt",
+        "E": "gaa"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "mh-11",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has degeneration of the caudate nucleus. That finding points to a single disease; that disease is inherited in which pattern?",
+      "hop1_lib": "neuro-edges.adj",
+      "hop1_relation": "lesion_causes",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "inheritance",
+      "clue": "caudate_nucleus",
+      "expected": "autosomal_dominant",
+      "options": {
+        "A": "autosomal_dominant",
+        "B": "autosomal_recessive",
+        "C": "x_linked_recessive",
+        "D": "x_linked_dominant",
+        "E": "mitochondrial"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "mh-12",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has Kayser-Fleischer corneal rings. That finding points to a single disease; that disease is inherited in which pattern?",
+      "hop1_lib": "ophtho-edges.adj",
+      "hop1_relation": "eye_finding_indicates",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "inheritance",
+      "clue": "kayser_fleischer_rings",
+      "expected": "autosomal_recessive",
+      "options": {
+        "A": "autosomal_dominant",
+        "B": "autosomal_recessive",
+        "C": "x_linked_recessive",
+        "D": "x_linked_dominant",
+        "E": "mitochondrial"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "mh-13",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has upward (superior) lens dislocation. That finding points to a single disease; that disease is inherited in which pattern?",
+      "hop1_lib": "ophtho-edges.adj",
+      "hop1_relation": "eye_finding_indicates",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "inheritance",
+      "clue": "superior_lens_dislocation",
+      "expected": "autosomal_dominant",
+      "options": {
+        "A": "autosomal_recessive",
+        "B": "x_linked_recessive",
+        "C": "autosomal_dominant",
+        "D": "x_linked_dominant",
+        "E": "mitochondrial"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "mh-14",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has an eye finding not in the grounded library. The disease it indicates is caused by a mutation in which gene? (If the chain is not grounded, abstain.)",
+      "hop1_lib": "ophtho-edges.adj",
+      "hop1_relation": "eye_finding_indicates",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "a_clue_with_no_grounded_eye_edge",
+      "expected": null,
+      "expect_abstain": true,
+      "options": {
+        "A": "rb1",
+        "B": "atp7b",
+        "C": "fbn1",
+        "D": "htt",
+        "E": "col1a1"
+      }
+    },
+    {
+      "id": "mh-15",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has a neuro lesion not in the grounded library. The disease it indicates is caused by a mutation in which gene? (If the chain is not grounded, abstain.)",
+      "hop1_lib": "neuro-edges.adj",
+      "hop1_relation": "lesion_causes",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "a_lesion_with_no_grounded_edge",
+      "expected": null,
+      "expect_abstain": true,
+      "options": {
+        "A": "rb1",
+        "B": "atp7b",
+        "C": "fbn1",
+        "D": "htt",
+        "E": "col1a1"
+      }
     }
   ]
 }

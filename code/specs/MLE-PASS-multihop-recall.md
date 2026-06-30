@@ -78,7 +78,16 @@ The bank grows as more cross-library id joins are grounded — no new harness wo
 defensibility number a future grounding PR moves, and the proof of a real two-hop derivation.
 First slice: **7/7 correct, coverage 1.0, zero model calls.**
 
-## 5. Next
-More chains as id joins are grounded (derm/histo/cardio → genetics; disease → *treatment* and
-disease → *mechanism* hops); a third hop (clue → disease → drug → contraindication); and an
-abstention bank (clues whose chain is ungrounded, which must abstain).
+## 5. Slice 2 (shipped)
+The bank grew **7 → 15**: more `gene_defect` chains (derm `ash_leaf_spots → tuberous_sclerosis →
+TSC1/TSC2`; Niemann-Pick → SMPD1; Pompe → GAA — 10 gene chains over 5 hop-1 libraries); a **second
+hop-2 relation, `inheritance`** (clue → disease → inheritance pattern), proving the harness is generic
+over the second relation, not gene-specific; and an **abstention sub-bank** whose clue has no grounded
+hop-1 edge — the engine binds nothing and the scorer counts abstaining as correct, a binding as a
+fabrication. `score()` reports `abstained_correctly`; `multihop_coverage` is over correct *answerable*
+items. Run-verified: 15/15 correct (13 answerable, coverage 1.0; 2 abstained), zero model calls.
+
+## 6. Next
+More chains as id joins are grounded (histo/cardio → genetics; disease → *treatment* and
+disease → *mechanism* hops); a third hop (clue → disease → drug → contraindication); a `decision`-style
+multi-hop where the engine ranks among several reachable answers.
