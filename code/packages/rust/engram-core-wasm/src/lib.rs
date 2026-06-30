@@ -54,6 +54,10 @@ struct ReviewSessionState {
 struct NoteEditorSessionState {
     selected_field_index: usize,
     draft_note_id: Option<String>,
+    draft_note_type_id: Option<String>,
+    draft_deck_id: Option<String>,
+    draft_created_at: Option<u64>,
+    draft_is_new: bool,
     draft_fields: HashMap<String, String>,
     draft_tags: Option<String>,
 }
@@ -66,23 +70,55 @@ impl NoteEditorSessionState {
     fn reset_for_note(&mut self, note_id: &str) {
         if self.draft_note_id.as_deref() != Some(note_id) {
             self.draft_note_id = Some(note_id.to_string());
+            self.draft_note_type_id = None;
+            self.draft_deck_id = None;
+            self.draft_created_at = None;
+            self.draft_is_new = false;
             self.draft_fields.clear();
             self.draft_tags = None;
         }
+    }
+
+    fn start_new(&mut self, note_id: String, note_type_id: String, deck_id: String, now: u64) {
+        self.selected_field_index = 0;
+        self.draft_note_id = Some(note_id);
+        self.draft_note_type_id = (!note_type_id.is_empty()).then_some(note_type_id);
+        self.draft_deck_id = (!deck_id.is_empty()).then_some(deck_id);
+        self.draft_created_at = Some(now);
+        self.draft_is_new = true;
+        self.draft_fields.clear();
+        self.draft_tags = Some(String::new());
     }
 
     fn set_selected_field_index(&mut self, index: usize) {
         self.selected_field_index = index;
     }
 
+    fn set_note_type(&mut self, note_id: &str, note_type_id: String) {
+        self.reset_for_note_if_needed(note_id);
+        self.draft_note_type_id = Some(note_type_id);
+        self.draft_fields.clear();
+    }
+
+    fn set_deck(&mut self, note_id: &str, deck_id: String) {
+        self.reset_for_note_if_needed(note_id);
+        self.draft_deck_id = Some(deck_id);
+    }
+
     fn set_field_value(&mut self, note_id: &str, field_id: &str, value: String) {
-        self.reset_for_note(note_id);
+        self.reset_for_note_if_needed(note_id);
         self.draft_fields.insert(field_id.to_string(), value);
     }
 
     fn set_tags(&mut self, note_id: &str, value: String) {
-        self.reset_for_note(note_id);
+        self.reset_for_note_if_needed(note_id);
         self.draft_tags = Some(value);
+    }
+
+    fn reset_for_note_if_needed(&mut self, note_id: &str) {
+        if self.draft_note_id.as_deref() != Some(note_id) {
+            self.reset_for_note(note_id);
+        }
     }
 }
 
@@ -611,6 +647,55 @@ impl EngramSession {
                     self.browser.set_selected_index(value)?;
                     self.editor.reset();
                 }
+                EngramAppEvent::NoteEditorSelectNoteType => {
+                    let value = parsed.number_value.ok_or_else(|| {
+                        "onNoteEditorSelectNoteType is missing an index".to_string()
+                    })?;
+                    let index = parse_nonnegative_index(value, "note type")?;
+                    let note_type_id = self
+                        .state
+                        .note_types
+                        .get(index)
+                        .map(|note_type| note_type.id.clone())
+                        .ok_or_else(|| "cannot select missing note type".to_string())?;
+                    let selection = note_editor_selection(
+                        &self.state,
+                        &self.browser,
+                        &self.editor,
+                        None,
+                        now,
+                        Some(selected_deck_context.as_str()),
+                    );
+                    if selection.note_id.is_empty() {
+                        return Err("cannot select note type without a note draft".to_string());
+                    }
+                    self.editor.set_note_type(&selection.note_id, note_type_id);
+                    self.editor.set_selected_field_index(0);
+                }
+                EngramAppEvent::NoteEditorSelectDeck => {
+                    let value = parsed
+                        .number_value
+                        .ok_or_else(|| "onNoteEditorSelectDeck is missing an index".to_string())?;
+                    let index = parse_nonnegative_index(value, "deck")?;
+                    let deck_id = self
+                        .state
+                        .decks
+                        .get(index)
+                        .map(|deck| deck.id.clone())
+                        .ok_or_else(|| "cannot select missing deck".to_string())?;
+                    let selection = note_editor_selection(
+                        &self.state,
+                        &self.browser,
+                        &self.editor,
+                        None,
+                        now,
+                        Some(selected_deck_context.as_str()),
+                    );
+                    if selection.note_id.is_empty() {
+                        return Err("cannot select deck without a note draft".to_string());
+                    }
+                    self.editor.set_deck(&selection.note_id, deck_id);
+                }
                 EngramAppEvent::NoteEditorSelectField => {
                     let value = parsed
                         .number_value
@@ -622,9 +707,10 @@ impl EngramSession {
                     let value = parsed.text_value.clone().ok_or_else(|| {
                         "onNoteEditorFieldValueChange is missing a value".to_string()
                     })?;
-                    let selection = browser_selected_card_details(
+                    let selection = note_editor_selection(
                         &self.state,
                         &self.browser,
+                        &self.editor,
                         None,
                         now,
                         Some(selected_deck_context.as_str()),
@@ -641,9 +727,10 @@ impl EngramSession {
                         .text_value
                         .clone()
                         .ok_or_else(|| "onNoteEditorTagsChange is missing a value".to_string())?;
-                    let selection = browser_selected_card_details(
+                    let selection = note_editor_selection(
                         &self.state,
                         &self.browser,
+                        &self.editor,
                         None,
                         now,
                         Some(selected_deck_context.as_str()),
@@ -654,9 +741,10 @@ impl EngramSession {
                     self.editor.set_tags(&selection.note_id, value);
                 }
                 EngramAppEvent::NoteEditorSaveNote => {
-                    let selection = browser_selected_card_details(
+                    let selection = note_editor_selection(
                         &self.state,
                         &self.browser,
+                        &self.editor,
                         None,
                         now,
                         Some(selected_deck_context.as_str()),
@@ -673,23 +761,28 @@ impl EngramSession {
                     self.editor.reset();
                 }
                 EngramAppEvent::NoteEditorDeleteNote => {
-                    let selection = browser_selected_card_details(
-                        &self.state,
-                        &self.browser,
-                        None,
-                        now,
-                        Some(selected_deck_context.as_str()),
-                    );
-                    if selection.note_id.is_empty() {
-                        return Err("cannot delete note without a selected note".to_string());
+                    if self.editor.draft_is_new {
+                        self.editor.reset();
+                    } else {
+                        let selection = note_editor_selection(
+                            &self.state,
+                            &self.browser,
+                            &self.editor,
+                            None,
+                            now,
+                            Some(selected_deck_context.as_str()),
+                        );
+                        if selection.note_id.is_empty() {
+                            return Err("cannot delete note without a selected note".to_string());
+                        }
+                        self.state = reduce(
+                            &self.state,
+                            engram_core::EngramCommand::DeleteNote {
+                                note_id: selection.note_id,
+                            },
+                        );
+                        self.editor.reset();
                     }
-                    self.state = reduce(
-                        &self.state,
-                        engram_core::EngramCommand::DeleteNote {
-                            note_id: selection.note_id,
-                        },
-                    );
-                    self.editor.reset();
                 }
                 EngramAppEvent::NoteEditorCancel => {
                     self.editor.reset();
@@ -804,6 +897,21 @@ impl EngramSession {
                 EngramAppEvent::AddNoteType => {
                     self.note_type_editor.start_new(now);
                 }
+                EngramAppEvent::AddNote => {
+                    let selected_deck = selected_deck_id(&self.state, deck_id);
+                    let note_type_id = self
+                        .state
+                        .note_types
+                        .first()
+                        .map(|note_type| note_type.id.clone())
+                        .unwrap_or_default();
+                    self.editor.start_new(
+                        unique_note_id(&self.state, now),
+                        note_type_id,
+                        selected_deck,
+                        now,
+                    );
+                }
                 EngramAppEvent::BrowserEditSelected => {
                     if let Some(card_id) = parsed.card_id.as_deref() {
                         if !select_browser_card_id(
@@ -832,8 +940,7 @@ impl EngramSession {
                 }
                 EngramAppEvent::BrowserOpenSelected
                 | EngramAppEvent::ImportAnki
-                | EngramAppEvent::ExportAnki
-                | EngramAppEvent::AddNote => {}
+                | EngramAppEvent::ExportAnki => {}
             }
 
             let host_intent =
@@ -1629,6 +1736,13 @@ fn format_optional_timestamp(timestamp: Option<u64>) -> String {
         .unwrap_or_else(|| "Never".to_string())
 }
 
+fn index_of_id<T>(items: &[T], selected_id: &str, id_for: impl Fn(&T) -> &str) -> Option<usize> {
+    if selected_id.is_empty() {
+        return None;
+    }
+    items.iter().position(|item| id_for(item) == selected_id)
+}
+
 fn insert_note_editor_props(
     props: &mut serde_json::Map<String, Value>,
     state: &AppState,
@@ -1637,7 +1751,31 @@ fn insert_note_editor_props(
     now: u64,
     current_deck_id: Option<&str>,
 ) {
-    let selection = browser_selected_card_details(state, browser, None, now, current_deck_id);
+    let selection = note_editor_selection(state, browser, editor, None, now, current_deck_id);
+    let note_type_names = state
+        .note_types
+        .iter()
+        .map(|note_type| note_type.name.clone())
+        .collect::<Vec<_>>();
+    let deck_names = state
+        .decks
+        .iter()
+        .map(|deck| {
+            if deck.name.trim().is_empty() {
+                deck.id.clone()
+            } else {
+                deck.name.clone()
+            }
+        })
+        .collect::<Vec<_>>();
+    let selected_note_type_index = index_of_id(
+        &state.note_types,
+        selection.note_type_id.as_str(),
+        |note_type| note_type.id.as_str(),
+    );
+    let selected_deck_index = index_of_id(&state.decks, selection.deck_id.as_str(), |deck| {
+        deck.id.as_str()
+    });
     let field_labels = selection
         .fields
         .iter()
@@ -1676,7 +1814,11 @@ fn insert_note_editor_props(
 
     props.insert(
         "note-editor-label".to_string(),
-        Value::String("Note editor".to_string()),
+        Value::String(if editor.draft_is_new {
+            "Add note".to_string()
+        } else {
+            "Note editor".to_string()
+        }),
     );
     props.insert(
         "note-editor-note-id-label".to_string(),
@@ -1695,12 +1837,33 @@ fn insert_note_editor_props(
         Value::String(selection.note_type_name.clone()),
     );
     props.insert(
+        "note-editor-note-type-options-label".to_string(),
+        Value::String("Note types".to_string()),
+    );
+    props.insert(
+        "note-editor-note-type-names".to_string(),
+        json!(note_type_names),
+    );
+    props.insert(
+        "note-editor-selected-note-type-index".to_string(),
+        selected_note_type_index.map_or(Value::from(-1), |index| Value::from(index as i64)),
+    );
+    props.insert(
         "note-editor-deck-label".to_string(),
         Value::String("Deck".to_string()),
     );
     props.insert(
         "note-editor-deck-value".to_string(),
         Value::String(selection.deck_name.clone()),
+    );
+    props.insert(
+        "note-editor-deck-options-label".to_string(),
+        Value::String("Decks".to_string()),
+    );
+    props.insert("note-editor-deck-names".to_string(), json!(deck_names));
+    props.insert(
+        "note-editor-selected-deck-index".to_string(),
+        selected_deck_index.map_or(Value::from(-1), |index| Value::from(index as i64)),
     );
     props.insert(
         "note-editor-fields-label".to_string(),
@@ -1749,7 +1912,11 @@ fn insert_note_editor_props(
     );
     props.insert(
         "note-editor-delete-label".to_string(),
-        Value::String("Delete note".to_string()),
+        Value::String(if editor.draft_is_new {
+            "Discard draft".to_string()
+        } else {
+            "Delete note".to_string()
+        }),
     );
     props.insert(
         "note-editor-cancel-label".to_string(),
@@ -2131,6 +2298,22 @@ fn selected_deck_id(state: &AppState, deck_id: &str) -> String {
         .unwrap_or_default()
 }
 
+fn unique_note_id(state: &AppState, now: u64) -> String {
+    let base = format!("note-{now}");
+    if state.notes.iter().all(|note| note.id != base) {
+        return base;
+    }
+
+    let mut suffix = 1_u32;
+    loop {
+        let candidate = format!("{base}-{suffix}");
+        if state.notes.iter().all(|note| note.id != candidate) {
+            return candidate;
+        }
+        suffix += 1;
+    }
+}
+
 fn active_type_answer_spec(state: &AppState, card: &Card) -> Option<TypeAnswerSpec> {
     let lineage = card.lineage.as_ref()?;
     let note = state.notes.iter().find(|note| note.id == lineage.note_id)?;
@@ -2275,7 +2458,7 @@ fn host_intent_for_event(
             ))
         }
         EngramAppEvent::BrowserEditSelected => None,
-        EngramAppEvent::AddNote => Some(add_note_host_intent(event, state, &selected_deck, now)),
+        EngramAppEvent::AddNote => None,
         EngramAppEvent::SaveNote => None,
         EngramAppEvent::AddNoteType => None,
         EngramAppEvent::SaveNoteType => None,
@@ -2291,29 +2474,6 @@ fn host_intent_for_event(
         EngramAppEvent::DeleteNoteType => Some(base("deleteNoteType")),
         _ => None,
     }
-}
-
-fn add_note_host_intent(event: EngramAppEvent, state: &AppState, deck_id: &str, now: u64) -> Value {
-    json!({
-        "type": "addNote",
-        "event": event.canonical_name(),
-        "deckId": deck_id,
-        "deckName": deck_name_for_id(state, deck_id),
-        "createdAt": now,
-        "defaultDeckId": deck_id,
-        "defaultNoteTypeId": state.note_types.first().map(|note_type| note_type.id.as_str()).unwrap_or(""),
-        "decks": state.decks,
-        "noteTypes": state.note_types,
-    })
-}
-
-fn deck_name_for_id(state: &AppState, deck_id: &str) -> String {
-    state
-        .decks
-        .iter()
-        .find(|deck| deck.id == deck_id)
-        .map(|deck| deck.name.clone())
-        .unwrap_or_default()
 }
 
 fn default_note_type_model(now: u64) -> engram_core::NoteType {
@@ -2503,10 +2663,84 @@ fn browser_selected_card_details(
         .unwrap_or_default()
 }
 
+fn note_editor_selection(
+    state: &AppState,
+    browser: &BrowserSessionState,
+    editor: &NoteEditorSessionState,
+    explicit_card_id: Option<&str>,
+    now: u64,
+    current_deck_id: Option<&str>,
+) -> BrowserSelection {
+    if editor.draft_is_new {
+        return new_note_editor_selection(state, editor, now, current_deck_id);
+    }
+
+    let selection =
+        browser_selected_card_details(state, browser, explicit_card_id, now, current_deck_id);
+    apply_note_editor_draft_overrides(state, selection, editor)
+}
+
+fn new_note_editor_selection(
+    state: &AppState,
+    editor: &NoteEditorSessionState,
+    now: u64,
+    current_deck_id: Option<&str>,
+) -> BrowserSelection {
+    let note_id = editor
+        .draft_note_id
+        .clone()
+        .unwrap_or_else(|| unique_note_id(state, now));
+    let note_type_id = editor
+        .draft_note_type_id
+        .clone()
+        .or_else(|| {
+            state
+                .note_types
+                .first()
+                .map(|note_type| note_type.id.clone())
+        })
+        .unwrap_or_default();
+    let deck_id = editor
+        .draft_deck_id
+        .clone()
+        .or_else(|| current_deck_id.map(str::to_string))
+        .or_else(|| state.decks.first().map(|deck| deck.id.clone()))
+        .unwrap_or_default();
+
+    enrich_browser_selection(
+        state,
+        BrowserSelection {
+            note_id,
+            note_type_id,
+            deck_id,
+            ..BrowserSelection::default()
+        },
+    )
+}
+
+fn apply_note_editor_draft_overrides(
+    state: &AppState,
+    mut selection: BrowserSelection,
+    editor: &NoteEditorSessionState,
+) -> BrowserSelection {
+    if editor.draft_note_id.as_deref() != Some(selection.note_id.as_str()) {
+        return selection;
+    }
+    if let Some(note_type_id) = editor.draft_note_type_id.as_ref() {
+        selection.note_type_id = note_type_id.clone();
+    }
+    if let Some(deck_id) = editor.draft_deck_id.as_ref() {
+        selection.deck_id = deck_id.clone();
+    }
+    enrich_browser_selection(state, selection)
+}
+
 fn enrich_browser_selection(state: &AppState, mut selection: BrowserSelection) -> BrowserSelection {
     let card = state.cards.iter().find(|card| card.id == selection.card_id);
     if let Some(card) = card {
-        selection.deck_id = card.deck_id.clone();
+        if selection.deck_id.is_empty() {
+            selection.deck_id = card.deck_id.clone();
+        }
         selection.card_front = card.front.clone();
         selection.card_back = card.back.clone();
         if let Some(lineage) = card.lineage.as_ref() {
@@ -2561,28 +2795,29 @@ fn enrich_browser_selection(state: &AppState, mut selection: BrowserSelection) -
             selection.template_ordinal = Some(template.ordinal);
         }
 
-        if let Some(note) = note {
-            let values_by_field_id = note
-                .fields
-                .iter()
-                .map(|field| (field.field_id.as_str(), field.value.as_str()))
-                .collect::<HashMap<_, _>>();
-            selection.fields = note_type
-                .fields
-                .iter()
-                .map(|field| BrowserSelectionField {
-                    id: field.id.clone(),
-                    name: field.name.clone(),
-                    value: values_by_field_id
-                        .get(field.id.as_str())
-                        .copied()
-                        .unwrap_or_default()
-                        .to_string(),
-                    required: field.required,
-                    ordinal: field.ordinal,
-                })
-                .collect();
-        }
+        let values_by_field_id = note
+            .map(|note| {
+                note.fields
+                    .iter()
+                    .map(|field| (field.field_id.as_str(), field.value.as_str()))
+                    .collect::<HashMap<_, _>>()
+            })
+            .unwrap_or_default();
+        selection.fields = note_type
+            .fields
+            .iter()
+            .map(|field| BrowserSelectionField {
+                id: field.id.clone(),
+                name: field.name.clone(),
+                value: values_by_field_id
+                    .get(field.id.as_str())
+                    .copied()
+                    .unwrap_or_default()
+                    .to_string(),
+                required: field.required,
+                ordinal: field.ordinal,
+            })
+            .collect();
     } else if let Some(note) = note {
         selection.fields = note
             .fields
@@ -2710,6 +2945,13 @@ fn note_from_editor_selection(
             .map(|note| note.note_type_id.clone())
             .ok_or_else(|| "selected note has no note type".to_string())?
     };
+    if !state
+        .note_types
+        .iter()
+        .any(|note_type| note_type.id == note_type_id)
+    {
+        return Err("selected note type does not exist".to_string());
+    }
     let deck_id = if !selection.deck_id.is_empty() {
         selection.deck_id.clone()
     } else {
@@ -2756,7 +2998,10 @@ fn note_from_editor_selection(
         deck_id,
         fields,
         tags,
-        created_at: existing_note.map(|note| note.created_at).unwrap_or(now),
+        created_at: existing_note
+            .map(|note| note.created_at)
+            .or(editor.draft_created_at)
+            .unwrap_or(now),
         updated_at: now,
     })
 }
@@ -2847,6 +3092,8 @@ enum EngramAppEvent {
     BrowserTagEditChange,
     BrowserAddTagSelected,
     BrowserRemoveTagSelected,
+    NoteEditorSelectNoteType,
+    NoteEditorSelectDeck,
     NoteEditorSelectField,
     NoteEditorFieldValueChange,
     NoteEditorTagsChange,
@@ -2963,6 +3210,8 @@ impl EngramAppEvent {
             Self::BrowserTagEditChange => "onBrowserTagEditChange",
             Self::BrowserAddTagSelected => "onBrowserAddTagSelected",
             Self::BrowserRemoveTagSelected => "onBrowserRemoveTagSelected",
+            Self::NoteEditorSelectNoteType => "onNoteEditorSelectNoteType",
+            Self::NoteEditorSelectDeck => "onNoteEditorSelectDeck",
             Self::NoteEditorSelectField => "onNoteEditorSelectField",
             Self::NoteEditorFieldValueChange => "onNoteEditorFieldValueChange",
             Self::NoteEditorTagsChange => "onNoteEditorTagsChange",
@@ -3283,6 +3532,12 @@ fn parse_engram_app_event_name(
         "browserremovetagselected"
         | "browser-remove-tag-selected"
         | "browser_remove_tag_selected" => parsed(EngramAppEvent::BrowserRemoveTagSelected),
+        "noteeditorselectnotetype"
+        | "note-editor-select-note-type"
+        | "note_editor_select_note_type" => parsed(EngramAppEvent::NoteEditorSelectNoteType),
+        "noteeditorselectdeck" | "note-editor-select-deck" | "note_editor_select_deck" => {
+            parsed(EngramAppEvent::NoteEditorSelectDeck)
+        }
         "noteeditorselectfield" | "note-editor-select-field" | "note_editor_select_field" => {
             parsed(EngramAppEvent::NoteEditorSelectField)
         }
@@ -6607,7 +6862,6 @@ mod tests {
         for (event, canonical, intent_type) in [
             ("onImportAnki", "onImportAnki", "importAnki"),
             ("export-anki", "onExportAnki", "exportAnki"),
-            ("add-note", "onAddNote", "addNote"),
             ("delete-note", "onDeleteNote", "deleteNote"),
             ("delete-note-type", "onDeleteNoteType", "deleteNoteType"),
         ] {
@@ -6637,15 +6891,29 @@ mod tests {
         let add_note: Value =
             serde_json::from_str(&session.handle_engram_app_event("onAddNote", "deck", NOW))
                 .unwrap();
-        assert_eq!(add_note["hostIntent"]["type"], "addNote");
-        assert_eq!(add_note["hostIntent"]["deckName"], "Tamil");
-        assert_eq!(add_note["hostIntent"]["defaultDeckId"], "deck");
-        assert_eq!(add_note["hostIntent"]["defaultNoteTypeId"], "basic");
-        assert_eq!(add_note["hostIntent"]["decks"][0]["name"], "Tamil");
+        assert_eq!(add_note["ok"], true);
+        assert_eq!(add_note["event"], "onAddNote");
+        assert_eq!(add_note["hostIntent"], Value::Null);
+        assert_eq!(add_note["props"]["note-editor-label"], "Add note");
         assert_eq!(
-            add_note["hostIntent"]["noteTypes"][0]["fields"][0]["name"],
-            "Front"
+            add_note["props"]["note-editor-note-id-value"],
+            "note-1700000000000"
         );
+        assert_eq!(
+            add_note["props"]["note-editor-note-type-names"],
+            json!(["Basic"])
+        );
+        assert_eq!(add_note["props"]["note-editor-selected-note-type-index"], 0);
+        assert_eq!(
+            add_note["props"]["note-editor-deck-names"],
+            json!(["Tamil"])
+        );
+        assert_eq!(add_note["props"]["note-editor-selected-deck-index"], 0);
+        assert_eq!(
+            add_note["props"]["note-editor-field-labels"],
+            json!(["Front *", "Back *"])
+        );
+        assert_eq!(add_note["props"]["note-editor-selected-field-value"], "");
 
         let add_note_type: Value =
             serde_json::from_str(&session.handle_engram_app_event("onAddNoteType", "deck", NOW))
@@ -6970,6 +7238,185 @@ mod tests {
                 card["id"] == "note::reverse"
                     && card["front"] == "aaa"
                     && card["back"] == "letter-aa"
+            }));
+    }
+
+    #[test]
+    fn handle_engram_app_add_note_uses_shared_note_editor_draft() {
+        let mut session = EngramSession::new();
+        session.load_snapshot(
+            r#"{
+                "decks": [
+                    {"id":"tamil","name":"Tamil","description":"Script","createdAt":1700000000000},
+                    {"id":"spanish","name":"Spanish","description":"Words","createdAt":1700000000000}
+                ],
+                "noteTypes": [
+                    {
+                        "id": "basic",
+                        "name": "Basic",
+                        "fields": [
+                            {"id": "front", "name": "Front", "required": true, "ordinal": 0},
+                            {"id": "back", "name": "Back", "required": true, "ordinal": 1}
+                        ],
+                        "templates": [{
+                            "id": "forward",
+                            "name": "Forward",
+                            "frontTemplate": "{{Front}}",
+                            "backTemplate": "{{Back}}",
+                            "requiredFieldNames": ["Front"],
+                            "ordinal": 0
+                        }],
+                        "createdAt": 1700000000000,
+                        "updatedAt": 1700000000000
+                    },
+                    {
+                        "id": "spanish-basic",
+                        "name": "Spanish basic",
+                        "fields": [
+                            {"id": "prompt", "name": "Prompt", "required": true, "ordinal": 0},
+                            {"id": "answer", "name": "Answer", "required": true, "ordinal": 1}
+                        ],
+                        "templates": [{
+                            "id": "forward",
+                            "name": "Forward",
+                            "frontTemplate": "{{Prompt}}",
+                            "backTemplate": "{{Answer}}",
+                            "requiredFieldNames": ["Prompt"],
+                            "ordinal": 0
+                        }],
+                        "createdAt": 1700000000000,
+                        "updatedAt": 1700000000000
+                    }
+                ],
+                "notes": [],
+                "cards": [],
+                "cardProgress": [],
+                "sessions": [],
+                "reviews": [],
+                "activeSession": null
+            }"#,
+        );
+
+        let draft: Value =
+            serde_json::from_str(&session.handle_engram_app_event("onAddNote", "tamil", NOW))
+                .unwrap();
+        assert_eq!(draft["ok"], true);
+        assert_eq!(draft["hostIntent"], Value::Null);
+        assert_eq!(draft["props"]["note-editor-label"], "Add note");
+        assert_eq!(
+            draft["props"]["note-editor-note-type-names"],
+            json!(["Basic", "Spanish basic"])
+        );
+        assert_eq!(
+            draft["props"]["note-editor-field-labels"],
+            json!(["Front *", "Back *"])
+        );
+        assert_eq!(draft["props"]["note-editor-selected-deck-index"], 0);
+
+        let selected_model: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onNoteEditorSelectNoteType","index":1}"#,
+            "tamil",
+            NOW + 1,
+        ))
+        .unwrap();
+        assert_eq!(selected_model["ok"], true);
+        assert_eq!(
+            selected_model["props"]["note-editor-note-type-value"],
+            "Spanish basic"
+        );
+        assert_eq!(
+            selected_model["props"]["note-editor-field-labels"],
+            json!(["Prompt *", "Answer *"])
+        );
+
+        let selected_deck: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onNoteEditorSelectDeck","index":1}"#,
+            "tamil",
+            NOW + 2,
+        ))
+        .unwrap();
+        assert_eq!(selected_deck["ok"], true);
+        assert_eq!(selected_deck["props"]["note-editor-deck-value"], "Spanish");
+        assert_eq!(selected_deck["props"]["note-editor-selected-deck-index"], 1);
+
+        let edited_prompt: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onNoteEditorFieldValueChange","value":"hola"}"#,
+            "tamil",
+            NOW + 3,
+        ))
+        .unwrap();
+        assert_eq!(
+            edited_prompt["props"]["note-editor-selected-field-value"],
+            "hola"
+        );
+
+        let selected_answer: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onNoteEditorSelectField","index":1}"#,
+            "tamil",
+            NOW + 4,
+        ))
+        .unwrap();
+        assert_eq!(
+            selected_answer["props"]["note-editor-selected-field-label"],
+            "Answer"
+        );
+
+        let edited_answer: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onNoteEditorFieldValueChange","value":"hello"}"#,
+            "tamil",
+            NOW + 5,
+        ))
+        .unwrap();
+        assert_eq!(
+            edited_answer["props"]["note-editor-selected-field-value"],
+            "hello"
+        );
+
+        let tagged: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onNoteEditorTagsChange","value":"spanish etymology spanish"}"#,
+            "tamil",
+            NOW + 6,
+        ))
+        .unwrap();
+        assert_eq!(
+            tagged["props"]["note-editor-tags-value"],
+            "spanish etymology spanish"
+        );
+
+        let saved: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onNoteEditorSaveNote",
+            "tamil",
+            NOW + 7,
+        ))
+        .unwrap();
+        assert_eq!(saved["ok"], true);
+        assert_eq!(saved["hostIntent"], Value::Null);
+        assert_eq!(saved["state"]["notes"].as_array().unwrap().len(), 1);
+        assert_eq!(saved["state"]["notes"][0]["id"], "note-1700000000000");
+        assert_eq!(saved["state"]["notes"][0]["noteTypeId"], "spanish-basic");
+        assert_eq!(saved["state"]["notes"][0]["deckId"], "spanish");
+        assert_eq!(saved["state"]["notes"][0]["createdAt"], NOW);
+        assert_eq!(saved["state"]["notes"][0]["updatedAt"], NOW + 7);
+        assert_eq!(
+            saved["state"]["notes"][0]["fields"],
+            json!([
+                {"fieldId": "prompt", "value": "hola"},
+                {"fieldId": "answer", "value": "hello"}
+            ])
+        );
+        assert_eq!(
+            saved["state"]["notes"][0]["tags"],
+            json!(["spanish", "etymology"])
+        );
+        assert!(saved["state"]["cards"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|card| {
+                card["id"] == "note-1700000000000::forward"
+                    && card["deckId"] == "spanish"
+                    && card["front"] == "hola"
+                    && card["back"] == "hello"
             }));
     }
 

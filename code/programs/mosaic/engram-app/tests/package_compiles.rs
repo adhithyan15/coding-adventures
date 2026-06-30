@@ -401,6 +401,8 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
     assert_contains(&html, "data-on-click=\"onBrowserRemoveTagSelected\"");
     assert_contains(&html, "data-on-click=\"onBrowserToggleFlagPicker\"");
     assert_contains(&html, "data-on-click=\"onBrowserSetFlagSelected\"");
+    assert_contains(&html, "data-on-click=\"onNoteEditorSelectNoteType\"");
+    assert_contains(&html, "data-on-click=\"onNoteEditorSelectDeck\"");
     assert_contains(&html, "data-on-click=\"onNoteEditorSelectField\"");
     assert_contains(&html, "data-on-change=\"onNoteEditorFieldValueChange\"");
     assert_contains(&html, "data-on-change=\"onNoteEditorTagsChange\"");
@@ -1218,6 +1220,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "signal addNoteType()");
     assert_contains(&qml, "signal deleteNote()");
     assert_contains(&qml, "signal deleteNoteType()");
+    assert_contains(&qml, "signal noteEditorSelectNoteType(real index)");
+    assert_contains(&qml, "signal noteEditorSelectDeck(real index)");
     assert_contains(&qml, "signal deckOptionsLearningStepsChange(string value)");
     assert_contains(
         &qml,
@@ -1309,6 +1313,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "case browserTagEditChange");
     assert_contains(&swift, "case browserAddTagSelected");
     assert_contains(&swift, "case browserRemoveTagSelected");
+    assert_contains(&swift, "case noteEditorSelectNoteType");
+    assert_contains(&swift, "case noteEditorSelectDeck");
     assert_contains(&swift, "var mosaicName: String");
     assert_contains(&swift, "var mosaicEnvelope: [String: Any]");
     assert_contains(&swift, "struct EngramAppView: View");
@@ -1342,6 +1348,10 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "let browserAddTagLabel: String");
     assert_contains(&swift, "let browserResultCardIds: [String]");
     assert_contains(&swift, "let browserSelectedCardId: String");
+    assert_contains(&swift, "let noteEditorNoteTypeNames: [String]");
+    assert_contains(&swift, "let noteEditorDeckNames: [String]");
+    assert_contains(&swift, "let noteEditorSelectedNoteTypeIndex: Double");
+    assert_contains(&swift, "let noteEditorSelectedDeckIndex: Double");
     assert_contains(&swift, "let answerVisible: Bool");
     assert_contains(&swift, "let typeAnswerActive: Bool");
     assert_contains(&swift, "let typeAnswerValue: String");

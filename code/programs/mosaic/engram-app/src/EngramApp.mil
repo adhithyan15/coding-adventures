@@ -141,8 +141,14 @@ component EngramApp {
   slot note-editor-note-id-value : text ;
   slot note-editor-note-type-label : text ;
   slot note-editor-note-type-value : text ;
+  slot note-editor-note-type-options-label : text ;
+  slot note-editor-note-type-names : list<text> ;
+  slot note-editor-selected-note-type-index : number ;
   slot note-editor-deck-label : text ;
   slot note-editor-deck-value : text ;
+  slot note-editor-deck-options-label : text ;
+  slot note-editor-deck-names : list<text> ;
+  slot note-editor-selected-deck-index : number ;
   slot note-editor-fields-label : text ;
   slot note-editor-field-labels : list<text> ;
   slot note-editor-selected-field-index : number ;
@@ -257,6 +263,8 @@ component EngramApp {
   emit onBrowserTagEditChange ( value : text ) ;
   emit onBrowserAddTagSelected ;
   emit onBrowserRemoveTagSelected ;
+  emit onNoteEditorSelectNoteType ( index : number ) ;
+  emit onNoteEditorSelectDeck ( index : number ) ;
   emit onNoteEditorSelectField ( index : number ) ;
   emit onNoteEditorFieldValueChange ( value : text ) ;
   emit onNoteEditorTagsChange ( value : text ) ;

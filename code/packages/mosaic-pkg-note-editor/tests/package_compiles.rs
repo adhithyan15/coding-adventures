@@ -84,8 +84,14 @@ fn note_editor_frontend_sources_compile() {
             "note-id-value",
             "note-type-label",
             "note-type-value",
+            "note-type-options-label",
+            "note-type-names",
+            "selected-note-type-index",
             "deck-label",
             "deck-value",
+            "deck-options-label",
+            "deck-names",
+            "selected-deck-index",
             "fields-label",
             "field-labels",
             "selected-field-index",
@@ -105,6 +111,8 @@ fn note_editor_frontend_sources_compile() {
     assert_eq!(
         emit_names,
         vec![
+            "onSelectNoteType",
+            "onSelectDeck",
             "onSelectField",
             "onFieldValueChange",
             "onTagsChange",
@@ -119,6 +127,12 @@ fn note_editor_frontend_sources_compile() {
 fn note_editor_layout_wires_focused_field_editor() {
     let source = read_source("NoteEditor.mll");
 
+    assert!(source.contains("For ( each: slot: note-type-names"));
+    assert!(source.contains("HostButton [ note-editor-note-type-option ]"));
+    assert!(source.contains("onClick : emit: onSelectNoteType"));
+    assert!(source.contains("For ( each: slot: deck-names"));
+    assert!(source.contains("HostButton [ note-editor-deck-option ]"));
+    assert!(source.contains("onClick : emit: onSelectDeck"));
     assert!(source.contains("For ( each: slot: field-labels"));
     assert!(source.contains("HostButton [ note-field-option ]"));
     assert!(source.contains("onClick : emit: onSelectField"));
@@ -148,6 +162,13 @@ fn note_editor_layout_wires_focused_field_editor() {
     for part in [
         "note-editor",
         "note-metadata",
+        "note-choice-row",
+        "note-editor-note-type-list-column",
+        "note-editor-note-type-list",
+        "note-editor-note-type-option",
+        "note-editor-deck-list-column",
+        "note-editor-deck-list",
+        "note-editor-deck-option",
         "field-list-column",
         "note-field-list",
         "note-field-option",

@@ -1933,12 +1933,37 @@ CREATE TABLE graves (
             assert_eq!(edit_intent["props"]["note-editor-note-id-value"], "");
             assert_eq!(edit_intent["props"]["note-editor-selected-field-value"], "");
 
+            let add_note = cstr("onAddNote");
+            let add_note_response = take(eg_handle_engram_app_event(
+                session,
+                add_note.as_ptr(),
+                deck_id.as_ptr(),
+                NOW + 11,
+            ));
+            let add_note_response: Value = serde_json::from_str(&add_note_response).unwrap();
+            assert_eq!(add_note_response["ok"], true);
+            assert_eq!(add_note_response["event"], "onAddNote");
+            assert_eq!(add_note_response["hostIntent"], Value::Null);
+            assert_eq!(add_note_response["props"]["note-editor-label"], "Add note");
+            assert_eq!(
+                add_note_response["props"]["note-editor-note-id-value"],
+                "note-1700000000011"
+            );
+            assert_eq!(
+                add_note_response["props"]["note-editor-note-type-names"],
+                json!([])
+            );
+            assert_eq!(
+                add_note_response["props"]["note-editor-field-labels"],
+                json!([])
+            );
+
             let deck_option = cstr(r#"{"type":"deckOptionsMaximumIntervalChange","value":90}"#);
             let deck_option_changed = take(eg_handle_engram_app_event(
                 session,
                 deck_option.as_ptr(),
                 deck_id.as_ptr(),
-                NOW + 11,
+                NOW + 12,
             ));
             let deck_option_changed: Value = serde_json::from_str(&deck_option_changed).unwrap();
             assert_eq!(deck_option_changed["ok"], true);
@@ -1961,7 +1986,7 @@ CREATE TABLE graves (
                 session,
                 learning_steps.as_ptr(),
                 deck_id.as_ptr(),
-                NOW + 12,
+                NOW + 13,
             ));
             let learning_steps_changed: Value =
                 serde_json::from_str(&learning_steps_changed).unwrap();

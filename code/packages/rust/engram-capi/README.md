@@ -41,7 +41,9 @@ flow; it also accepts browser row events such as
 `hostIntent` object so SwiftUI, XAML, Qt, and Electron shells can perform
 native file dialogs or viewer navigation without forking Engram's business
 logic. `onBrowserEditSelected` hydrates the shared Mosaic note editor through
-props instead. Event handling returns updated state and refreshed Mosaic props.
+props instead, and `onAddNote` starts the same shared note editor draft rather
+than asking each native shell to own a custom add-note modal. Event handling
+returns updated state and refreshed Mosaic props.
 `eg_review_history` mirrors `EngramSession::review_history()` for native stats
 views that need deck-scoped review-log summaries over a timestamp range.
 `eg_daily_limit_usage` and `eg_build_queue_with_daily_limits` expose the shared

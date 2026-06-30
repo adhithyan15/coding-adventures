@@ -68,6 +68,56 @@ style NoteEditor {
     font-weight : 600 ;
   }
 
+  part note-choice-row {
+    padding-bottom : 12 ;
+  }
+
+  part note-editor-note-type-list-column {
+    padding : 2 ;
+  }
+
+  part note-editor-deck-list-column {
+    padding : 2 ;
+  }
+
+  part note-editor-note-type-options-label {
+    color       : "#93c5fd" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part note-editor-deck-options-label {
+    color       : "#93c5fd" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part note-editor-note-type-list {
+    padding-top : 6 ;
+  }
+
+  part note-editor-deck-list {
+    padding-top : 6 ;
+  }
+
+  part note-editor-note-type-option {
+    background    : "#1e293b" ;
+    border-width  : 1 ;
+    border-color  : "#475569" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    padding       : 8 ;
+  }
+
+  part note-editor-deck-option {
+    background    : "#1e293b" ;
+    border-width  : 1 ;
+    border-color  : "#475569" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    padding       : 8 ;
+  }
+
   part editor-body {
     padding-bottom : 12 ;
   }

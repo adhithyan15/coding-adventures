@@ -105,10 +105,10 @@ replace imported payloads, or prune unreferenced media IDs without a separate
 platform reducer.
 
 `handle_engram_app_event` returns updated props for generated Mosaic shells.
-Events that require host APIs, including browser open, Anki package
-import/export, and note payload creation, include a `hostIntent` payload so each
-platform can open files, save APKG bytes, or present native dialogs without
-forking the generated interface. Browser open host intents include the selected
+Events that require host APIs, including browser open and Anki package
+import/export, include a `hostIntent` payload so each platform can open files,
+save APKG bytes, or present native dialogs without forking the generated
+interface. Browser open host intents include the selected
 card IDs, deck name, rendered front/back, note type, template metadata, tags,
 scheduling `state`, and note field values when available. Browser edit now
 hydrates the shared Mosaic note editor instead of asking each host to launch a
@@ -166,12 +166,12 @@ FSRS deck option events use the same generated shape:
 Collection workflow events such as `onImportAnki`, `onExportAnki`, `onAddNote`,
 `onAddNoteType`, `onDeleteNote`, and `onDeleteNoteType` round-trip through the
 same event parser as host intents so generated shells share one UI contract
-while file picking, dialogs, and concrete note payloads stay host-owned.
-`onAddNote` host intents include the selected deck name, all decks, available
-note types, and default deck/note-type IDs so native shells can open an editor
-without re-querying shared state. `onAddNoteType` now starts the shared
-Mosaic note-type editor draft in the core facade instead of requiring each host
-to open its own model dialog.
+while file picking and dialogs stay host-owned. `onAddNote` now starts a shared
+Mosaic note-editor draft in the core facade, including deck and note-type
+selection props, so HTML, Electron, SwiftUI, XAML, Qt, Flutter, and Compose do
+not need a platform-specific add-note modal. `onAddNoteType` similarly starts
+the shared Mosaic note-type editor draft instead of requiring each host to open
+its own model dialog.
 Host editors can post `onSaveNote` with a top-level or nested `note` payload
 containing `noteId`, `noteTypeId`, `deckId`, `fields`, and `tags`; field updates
 may be an array of `{ id|fieldId|name, value }` objects or a name/id keyed
@@ -180,9 +180,11 @@ object. The shared reducer upserts the note and rematerializes generated cards.
 deletes through the shared reducer only when the event carries an explicit
 `noteId` or `selectedCardId`.
 The mounted Mosaic note editor uses the same reducer path through
-`onNoteEditorSelectField`, `onNoteEditorFieldValueChange`, `onNoteEditorTagsChange`,
-`onNoteEditorSaveNote`, `onNoteEditorDeleteNote`, and `onNoteEditorCancel`,
-deriving its editable note from the shared browser selection.
+`onNoteEditorSelectNoteType`, `onNoteEditorSelectDeck`,
+`onNoteEditorSelectField`, `onNoteEditorFieldValueChange`,
+`onNoteEditorTagsChange`, `onNoteEditorSaveNote`, `onNoteEditorDeleteNote`, and
+`onNoteEditorCancel`, deriving existing-note edits from the shared browser
+selection and new-note edits from the shared draft opened by `onAddNote`.
 The mounted Mosaic note-type editor follows the same pattern through
 `onNoteTypeEditorSelectNoteType`, `onNoteTypeEditorNameChange`,
 `onNoteTypeEditorStylesheetChange`, `onNoteTypeEditorNewNoteType`,

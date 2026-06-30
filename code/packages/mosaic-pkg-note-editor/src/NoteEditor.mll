@@ -31,6 +31,34 @@ layout NoteEditor {
         )
       }
     }
+    Row [ note-choice-row ] {
+      Column [ note-editor-note-type-list-column ] {
+        Text [ note-editor-note-type-options-label ] (
+          content : slot: note-type-options-label
+        )
+        Column [ note-editor-note-type-list ] {
+          For ( each: slot: note-type-names , as: note-type , index: note-type-index ) {
+            HostButton [ note-editor-note-type-option ] (
+              label : note-type ,
+              onClick : emit: onSelectNoteType
+            )
+          }
+        }
+      }
+      Column [ note-editor-deck-list-column ] {
+        Text [ note-editor-deck-options-label ] (
+          content : slot: deck-options-label
+        )
+        Column [ note-editor-deck-list ] {
+          For ( each: slot: deck-names , as: deck , index: deck-index ) {
+            HostButton [ note-editor-deck-option ] (
+              label : deck ,
+              onClick : emit: onSelectDeck
+            )
+          }
+        }
+      }
+    }
     Row [ editor-body ] {
       Column [ field-list-column ] {
         Text [ fields-label ] (
