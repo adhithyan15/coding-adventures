@@ -52,15 +52,16 @@ pub struct PythonLowerError {
 `compile_source` parses then lowers; both parse and lower failures are
 surfaced as `PythonLowerError`.
 
-## Milestone status — M4 (functions, calls, closures)
+## Milestone status — M5 (collections)
 
 Top-level statements run inline in a synthesised `main` function whose
 block value is the program's final top-level expression (or `NilLit`
 for an empty program / a trailing assignment).  A `def` at any level is
 lifted to a **top-level `Function`** (the module gains a real function
 table); `lambda`s and nested `def`s are lifted to synthesised functions
-with computed captures.  M4 adds `def`, tail `return`, `lambda`,
-function calls, and closures, on top of M1–M3.
+with computed captures.  M5 adds **collections** — list & dict literals,
+indexing (`x[i]`), `len`, and subscript assignment — on top of M1–M4
+(`def`, tail `return`, `lambda`, calls, closures).
 
 ### Literals (M1, still supported)
 
@@ -191,6 +192,38 @@ capture.  A bare reference to a function name yields a `MakeClosure`
 Capture order is deterministic (alphabetical).  Closure bodies reuse the
 `MAX_BLOCK_DEPTH` / `MAX_EXPR_DEPTH` guards, so recursion stays bounded.
 
+### Collections (M5)
+
+| Python source              | SIR lowering                                  | Feature declared |
+|----------------------------|-----------------------------------------------|------------------|
+| `[a, b, c]`, `[]`          | `SeqLit { items }`                            | `Sequences`      |
+| `xs[i]` (non-string index) | `SeqIndex { seq, index }`                     | `Sequences`      |
+| `xs[i] = v`                | `SeqSet { seq, index, value }`                | `Sequences`      |
+| `len(xs)`                  | `SeqLen { seq }`†                             | `Sequences`      |
+| `{"a": 1, "b": 2}`, `{}`   | `MapLit { entries }`                          | `Maps`           |
+| `d["k"]` (string index)    | `MapGet { map, key }`                         | `Maps`           |
+| `d["k"] = v`               | `MapSet { map, key, value }`                  | `Maps`           |
+
+† `len` lowers to the dedicated `SeqLen` node (preferred over
+`BuiltinCall("len")` so backends can emit native length access); arity
+must be exactly 1, and a local/param named `len` shadows the builtin.
+
+**Subscript disambiguation.**  Python overloads `[]` for both list
+indexing and dict lookup, and the frontend has no types.  The rule is
+purely syntactic: a **string-literal** index is a *map key*
+(`MapGet` / `MapSet`); any other index is a *sequence index*
+(`SeqIndex` / `SeqSet`).  So `xs[0]` and `d["name"]` lower as expected,
+while `d[k]` / `counts[n]` (a variable / integer key) lower as a sequence
+index.  The choice only affects the manifest feature (`Sequences` vs
+`Maps`) — the SIR runtime's duck-typed `[]` executes both identically.
+
+**Suffix folding.**  A `primary` is `atom suffix*`; trailing call /
+subscript suffixes fold **left-to-right**, so `xs[i][j]`, `g()[0]`, and
+mixed chains lower correctly.  Every element / index / key is lowered
+depth-bounded (`MAX_EXPR_DEPTH`), so a deep `[[[…]]]` / `{a:{b:…}}` /
+`xs[xs[xs[…]]]` tower returns a clean positioned error rather than
+overflowing the stack.
+
 The manifest declares **exactly** the features observed.  Module
 metadata records `source_language = "python"` and
 `sir_version = semantic_ir::CURRENT_SIR_VERSION`.  Every lowered module
@@ -198,14 +231,16 @@ passes `semantic_ir::validate`.
 
 ### Deferred (later milestones)
 
-Everything past M4 returns a clear positioned `PythonLowerError`:
+Everything past M5 returns a clear positioned `PythonLowerError`:
 
-- sequences, maps, indexing, comprehensions — M5
+- list / dict **comprehensions**, **slicing** (`xs[a:b]`), **tuple** /
+  **set** literals, and list/dict **methods** (`.append` / `.keys` /
+  `.get` — these need the SIR runtime-library)
 - default / keyword arguments, `*args` / `**kwargs`, multi-level capture
   chaining (capturing a variable two scopes up)
 - tuple / multi-target `for` (`for k, v in …`), multi-target / chained
-  assignment, attribute / subscript targets, bitwise operators, the
-  power operator (`**`)
+  assignment, attribute targets, bitwise operators, the power operator
+  (`**`)
 - and the full SIR17 "out of scope" list (classes, exceptions,
   generators, decorators, `with` / `try`, `async`, imports,
   `global` / `nonlocal`, f-strings).

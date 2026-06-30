@@ -113,6 +113,32 @@ the function's captures from the currently visible enclosing values).
 `MutualRecursion` is declared when two top-level functions transitively
 call each other (a self-recursive 1-cycle does not count).
 
+**Implementation note (M5 — collections):** the `[...]` / `xs[i]` /
+`xs[i] = v` / `{k: v}` / `d[k]` / `d[k] = v` rows above are realised in
+M5, and `len(x)` is **refined**: it lowers to the dedicated `SeqLen` node
+(not `BuiltinCall("len")`) so backends can emit native length access, per
+the `SeqLen` node's own documentation (`len` arity must be exactly 1, and
+a local/param named `len` shadows the builtin → an indirect call).  The
+parser models a list display as `atom → list_expr`, a dict display as
+`atom → dict_or_set_expr → dict_or_set_body → dict_body` (a set display
+has *no* `dict_body` and is rejected), and a subscript as a trailing
+`suffix` on a `primary` (`primary → atom suffix*`); chained suffixes
+(`xs[i][j]`, `g()[0]`) fold left-to-right.
+
+*Subscript disambiguation.*  Python overloads `[]` for list indexing and
+dict lookup and the frontend has no type information, so this spec's
+`xs[i] → SeqIndex` / `d[k] → MapGet` rows are realised by a purely
+**syntactic** heuristic (matching the JS sibling): a **string-literal**
+index lowers to `MapGet` / `MapSet` (a map key); **any other** index
+lowers to `SeqIndex` / `SeqSet` (a sequence index).  This makes the
+canonical idioms (`xs[0]`, `d["name"]`) correct; a dict keyed by a
+variable / integer (`d[k]`, `counts[n]`) lowers as a sequence index,
+which the SIR runtime's duck-typed `[]` still executes correctly (both
+route through `__getitem__` / `__setitem__`).  The choice affects only the
+manifest feature (`Sequences` vs `Maps`), never runtime behaviour.
+Comprehensions, slicing (`xs[a:b]`), tuple / set literals, list/dict
+methods, and unpacking remain deferred (positioned errors).
+
 ## Return statement
 
 Python's `return` is a statement in the AST.  The SIR doesn't have a
