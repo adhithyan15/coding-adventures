@@ -105,14 +105,14 @@ replace imported payloads, or prune unreferenced media IDs without a separate
 platform reducer.
 
 `handle_engram_app_event` returns updated props for generated Mosaic shells.
-Events that require host APIs, including browser open/edit, Anki package
-import/export, and note/note-type dialogs, include a `hostIntent` payload so
-each platform can open files, save APKG bytes, or present native dialogs without
-forking the generated interface.
-Browser open/edit host intents include the selected card IDs, deck name,
-rendered front/back, note type, template metadata, tags, scheduling `state`, and
-note field values when available, allowing native hosts to open the same
-note/card editor from the shared browser selection.
+Events that require host APIs, including browser open, Anki package
+import/export, and note payload creation, include a `hostIntent` payload so each
+platform can open files, save APKG bytes, or present native dialogs without
+forking the generated interface. Browser open host intents include the selected
+card IDs, deck name, rendered front/back, note type, template metadata, tags,
+scheduling `state`, and note field values when available. Browser edit now
+hydrates the shared Mosaic note editor instead of asking each host to launch a
+separate editor.
 
 `search_cards` exposes the shared browser-query engine. It returns
 `{ ok: true, results }` for valid queries and `{ ok: false, error, token }` for
@@ -144,10 +144,12 @@ open/edit/mark/suspend browser actions use that selected row when no explicit
 card ID is provided. `onBrowserToggleFlagPicker` opens or closes the generated
 flag picker, and `onBrowserSetFlagSelected` accepts `none`, `0`, or an Anki flag
 name/number (`red` through `purple`, `1` through `7`) before routing to the
-shared `setCardFlag` reducer path. Open/edit actions return selected card,
-note, note-type, template, tag, rendered card, and editable field metadata in
-their host intents. This keeps HTML, Electron, SwiftUI, XAML, Qt, and other
-Mosaic hosts on the same browser-selection contract.
+shared `setCardFlag` reducer path. Open actions return selected card, note,
+note-type, template, tag, rendered card, and editable field metadata in their
+host intents. Edit actions select the same browser row and hydrate
+`mosaic-pkg-note-editor` through shared props. This keeps HTML, Electron,
+SwiftUI, XAML, Qt, and other Mosaic hosts on the same browser-selection
+contract.
 Deck option controls use the generated event shape, for example
 `{"type":"deckOptionsNewCardsChange","value":12}` for numeric fields or
 `{"type":"deckOptionsLearningStepsChange","value":"1, 10"}` for step-list

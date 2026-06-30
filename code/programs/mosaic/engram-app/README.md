@@ -80,9 +80,10 @@ editing, and save/delete/cancel controls.
 - The browser flag slots and events expose Anki card flags from the shared
   search/progress model and route selected-card flag changes through
   `EngramCommand::SetCardFlag`.
-- Browser open/edit host intents also carry selected note, template, and
-  scheduling-state metadata so host editors can be launched without re-querying
-  or duplicating browser selection logic.
+- Browser open host intents carry selected note, template, and scheduling-state
+  metadata for host-owned viewers. Browser edit hydrates the shared
+  `mosaic-pkg-note-editor` surface without re-querying or duplicating browser
+  selection logic.
 - The collection slots expose note, note-type, and media counts plus shared
   Anki import/export and note workflow intents for host shells.
 - The deck option slots expose the selected deck's shared scheduler settings,

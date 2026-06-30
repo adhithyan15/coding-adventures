@@ -1748,8 +1748,9 @@ CREATE TABLE graves (
             let edit_intent: Value = serde_json::from_str(&edit_intent).unwrap();
             assert_eq!(edit_intent["ok"], true);
             assert_eq!(edit_intent["event"], "onBrowserEditSelected");
-            assert_eq!(edit_intent["hostIntent"]["type"], "editCard");
-            assert_eq!(edit_intent["hostIntent"]["cardId"], "other");
+            assert_eq!(edit_intent["hostIntent"], Value::Null);
+            assert_eq!(edit_intent["props"]["note-editor-note-id-value"], "");
+            assert_eq!(edit_intent["props"]["note-editor-selected-field-value"], "");
 
             let deck_option = cstr(r#"{"type":"deckOptionsMaximumIntervalChange","value":90}"#);
             let deck_option_changed = take(eg_handle_engram_app_event(

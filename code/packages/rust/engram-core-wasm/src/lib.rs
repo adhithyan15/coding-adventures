@@ -804,8 +804,33 @@ impl EngramSession {
                 EngramAppEvent::AddNoteType => {
                     self.note_type_editor.start_new(now);
                 }
+                EngramAppEvent::BrowserEditSelected => {
+                    if let Some(card_id) = parsed.card_id.as_deref() {
+                        if !select_browser_card_id(
+                            &self.state,
+                            &mut self.browser,
+                            card_id,
+                            now,
+                            Some(selected_deck_context.as_str()),
+                        ) {
+                            self.browser.set_query(format!("cid:{card_id}"));
+                        }
+                    }
+                    let selection = browser_selected_card_details(
+                        &self.state,
+                        &self.browser,
+                        parsed.card_id.as_deref(),
+                        now,
+                        Some(selected_deck_context.as_str()),
+                    );
+                    if selection.note_id.is_empty() {
+                        self.editor.reset();
+                    } else {
+                        self.editor.reset_for_note(&selection.note_id);
+                        self.editor.set_selected_field_index(0);
+                    }
+                }
                 EngramAppEvent::BrowserOpenSelected
-                | EngramAppEvent::BrowserEditSelected
                 | EngramAppEvent::ImportAnki
                 | EngramAppEvent::ExportAnki
                 | EngramAppEvent::AddNote => {}
@@ -2249,22 +2274,7 @@ fn host_intent_for_event(
                 selection,
             ))
         }
-        EngramAppEvent::BrowserEditSelected => {
-            let selection = browser_selected_card_details(
-                state,
-                browser,
-                parsed.card_id.as_deref(),
-                now,
-                Some(selected_deck.as_str()),
-            );
-            Some(browser_card_host_intent(
-                "editCard",
-                event,
-                selected_deck,
-                now,
-                selection,
-            ))
-        }
+        EngramAppEvent::BrowserEditSelected => None,
         EngramAppEvent::AddNote => Some(add_note_host_intent(event, state, &selected_deck, now)),
         EngramAppEvent::SaveNote => None,
         EngramAppEvent::AddNoteType => None,
@@ -2604,6 +2614,43 @@ fn selected_browser_row(
     now: u64,
     current_deck_id: Option<&str>,
 ) -> Option<BrowserRow> {
+    let rows = browser_rows_for_state(state, browser, now, current_deck_id)?;
+    if rows.is_empty() {
+        None
+    } else {
+        rows.get(browser.selected_index.min(rows.len() - 1))
+            .cloned()
+    }
+}
+
+fn select_browser_card_id(
+    state: &AppState,
+    browser: &mut BrowserSessionState,
+    card_id: &str,
+    now: u64,
+    current_deck_id: Option<&str>,
+) -> bool {
+    let Some(rows) = browser_rows_for_state(state, browser, now, current_deck_id) else {
+        return false;
+    };
+    if let Some((index, _)) = rows
+        .iter()
+        .enumerate()
+        .find(|(_, row)| row.card_id == card_id)
+    {
+        browser.selected_index = index;
+        true
+    } else {
+        false
+    }
+}
+
+fn browser_rows_for_state(
+    state: &AppState,
+    browser: &BrowserSessionState,
+    now: u64,
+    current_deck_id: Option<&str>,
+) -> Option<Vec<BrowserRow>> {
     let query = normalize_browser_query(browser.active_query());
     let results = if current_deck_id.is_some() {
         search_cards_with_context(
@@ -2618,18 +2665,12 @@ fn selected_browser_row(
     } else {
         search_core_cards(state, &query, now)
     };
-    results.ok().and_then(|results| {
-        let rows = results
+    results.ok().map(|results| {
+        results
             .iter()
             .take(20)
             .map(|result| BrowserRow::from_search_result(result, now))
-            .collect::<Vec<_>>();
-        if rows.is_empty() {
-            None
-        } else {
-            rows.get(browser.selected_index.min(rows.len() - 1))
-                .cloned()
-        }
+            .collect()
     })
 }
 
@@ -6319,20 +6360,16 @@ mod tests {
         ))
         .unwrap();
         assert_eq!(edit["ok"], true);
-        assert_eq!(edit["hostIntent"]["type"], "editCard");
-        assert_eq!(edit["hostIntent"]["cardId"], "other");
-        assert_eq!(edit["hostIntent"]["noteId"], "note");
-        assert_eq!(edit["hostIntent"]["noteTypeId"], "basic");
-        assert_eq!(edit["hostIntent"]["noteTypeName"], "Basic");
-        assert_eq!(edit["hostIntent"]["templateId"], "reverse");
-        assert_eq!(edit["hostIntent"]["templateName"], "Reverse");
-        assert_eq!(edit["hostIntent"]["templateOrdinal"], 1);
-        assert_eq!(edit["hostIntent"]["cardFront"], "letter-aa");
-        assert_eq!(edit["hostIntent"]["cardBack"], "aa");
-        assert_eq!(edit["hostIntent"]["tags"], json!(["tamil"]));
-        assert_eq!(edit["hostIntent"]["fields"][1]["name"], "Back");
-        assert_eq!(edit["hostIntent"]["fields"][1]["value"], "aa");
-        assert_eq!(edit["hostIntent"]["state"], "new");
+        assert_eq!(edit["hostIntent"], Value::Null);
+        assert_eq!(edit["props"]["note-editor-note-id-value"], "note");
+        assert_eq!(edit["props"]["note-editor-note-type-value"], "Basic");
+        assert_eq!(edit["props"]["note-editor-selected-field-index"], 0);
+        assert_eq!(edit["props"]["note-editor-selected-field-label"], "Front");
+        assert_eq!(
+            edit["props"]["note-editor-selected-field-value"],
+            "letter-aa"
+        );
+        assert_eq!(edit["props"]["note-editor-tags-value"], "tamil");
 
         let tag_draft: Value = serde_json::from_str(&session.handle_engram_app_event(
             r#"{"event":"onBrowserTagEditChange","value":"script grammar"}"#,
@@ -6480,8 +6517,13 @@ mod tests {
         ))
         .unwrap();
         assert_eq!(explicit_edit["ok"], true);
-        assert_eq!(explicit_edit["hostIntent"]["type"], "editCard");
-        assert_eq!(explicit_edit["hostIntent"]["cardId"], "card");
+        assert_eq!(explicit_edit["hostIntent"], Value::Null);
+        assert_eq!(explicit_edit["props"]["browser-selected-card-id"], "card");
+        assert_eq!(explicit_edit["props"]["note-editor-note-id-value"], "");
+        assert_eq!(
+            explicit_edit["props"]["note-editor-selected-field-value"],
+            ""
+        );
 
         let query_change: Value = serde_json::from_str(&session.handle_engram_app_event(
             r#"{"event":"onBrowserQueryChange","value":"cid:other"}"#,
