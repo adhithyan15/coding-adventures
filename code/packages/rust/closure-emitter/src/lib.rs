@@ -1090,25 +1090,38 @@ impl<'a> Emitter<'a> {
     }
 
     fn emit_conditional(&mut self, c: &ConditionalExpression) {
-        // Conditional is right-associative with precedence PREC_CONDITIONAL.
-        // - test:        must bind tighter than conditional itself
-        // - consequent:  assignment-precedence in ESTree, here we use
-        //                conditional-precedence (close enough for
-        //                Phase 1 without SequenceExpression)
-        // - alternate:   right-associative, so accepts conditional
-        //                precedence on the right
-        // Outer wrap (if any) is the caller's responsibility — see
-        // `emit_expression_inner`.
+        // `cond ? consequent : alternate`. The ECMAScript grammar is
+        //   ConditionalExpression :
+        //     ShortCircuitExpression ? AssignmentExpression : AssignmentExpression
+        // so BOTH branches are full AssignmentExpressions and need NO parens
+        // around an assignment or a nested conditional. The `?`/`:` punctuation
+        // delimits them, so `a ? b = 1 : c = 2` reparses identically to
+        // `a ? (b=1) : (c=2)` and `a ? b ? c : d : e` to `a ? (b?c:d) : e`.
+        //
+        // We therefore emit both branches at `PREC_ASSIGNMENT` — the lowest
+        // precedence in our expression set (there is no SequenceExpression in
+        // the AST, so nothing binds looser) — which means the precedence
+        // wrapper never adds parens to a branch. Previously the consequent was
+        // emitted at `PREC_CONDITIONAL + 1` and the alternate at
+        // `PREC_CONDITIONAL`, so an assignment branch (`a?b=1:c`) was needlessly
+        // parenthesised (`a?(b=1):c`).
+        //
+        // The TEST is different: it is a `ShortCircuitExpression`, which does
+        // NOT include assignment or conditional, so a test that IS an
+        // assignment or conditional MUST keep its parens — `a=1?b:c` parses as
+        // `a=(1?b:c)`, not `(a=1)?b:c`. Emitting the test at
+        // `PREC_CONDITIONAL + 1` keeps `(a=1)?b:c` / `(a?b:c)?d:e` correctly
+        // wrapped.
         self.maybe_map(&c.cv);
         self.emit_expression_inner(&c.test, PREC_CONDITIONAL + 1);
         self.pretty_ws();
         self.write_str("?");
         self.pretty_ws();
-        self.emit_expression_inner(&c.consequent, PREC_CONDITIONAL + 1);
+        self.emit_expression_inner(&c.consequent, PREC_ASSIGNMENT);
         self.pretty_ws();
         self.write_str(":");
         self.pretty_ws();
-        self.emit_expression_inner(&c.alternate, PREC_CONDITIONAL);
+        self.emit_expression_inner(&c.alternate, PREC_ASSIGNMENT);
     }
 
     fn emit_call(&mut self, c: &CallExpression) {
@@ -2190,6 +2203,51 @@ mod tests {
         // so `!true` emits as `!!0` — still demonstrating that the prefix `!`
         // abuts its operand with no space. `!!0 === !true === false`.
         assert_eq!(out.code, "!!0;");
+    }
+
+    /// `<name> <op> <rhs>` assignment expression helper.
+    fn assign(name: &str, op: AssignmentOperator, rhs: Expression) -> Expression {
+        Expression::AssignmentExpression(AssignmentExpression {
+            cv: None,
+            operator: op,
+            left: AssignmentTarget::Identifier(Identifier { cv: None, name: name.to_string() }),
+            right: Box::new(rhs),
+        })
+    }
+
+    fn conditional(test: Expression, cons: Expression, alt: Expression) -> Expression {
+        Expression::ConditionalExpression(ConditionalExpression {
+            cv: None,
+            test: Box::new(test),
+            consequent: Box::new(cons),
+            alternate: Box::new(alt),
+        })
+    }
+
+    #[test]
+    fn conditional_branches_do_not_parenthesize_assignments() {
+        // `a ? b=1 : c=2` — both branches are AssignmentExpressions, which the
+        // conditional grammar allows unparenthesised. Regression: the emitter
+        // emitted the consequent/alternate at conditional precedence and wrapped
+        // them, producing `a?(b=1):(c=2)`.
+        let e = conditional(
+            ident("a"),
+            assign("b", AssignmentOperator::Eq, num(1.0)),
+            assign("c", AssignmentOperator::Eq, num(2.0)),
+        );
+        let out = emit_default(program().with_body(vec![stmt(e)]));
+        assert_eq!(out.code, "a?b=1:c=2;");
+    }
+
+    #[test]
+    fn conditional_test_assignment_stays_parenthesized() {
+        // `(a=1) ? b : c` — the TEST is a ShortCircuitExpression, which does
+        // NOT include assignment, so the parens are REQUIRED: `a=1?b:c` parses
+        // as `a=(1?b:c)`. This must survive (it is the soundness guard for the
+        // branch de-parenthesisation above).
+        let e = conditional(assign("a", AssignmentOperator::Eq, num(1.0)), ident("b"), ident("c"));
+        let out = emit_default(program().with_body(vec![stmt(e)]));
+        assert_eq!(out.code, "(a=1)?b:c;");
     }
 
     #[test]
