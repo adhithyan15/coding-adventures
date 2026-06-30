@@ -500,5 +500,8 @@ passSpec = do
 
     it "P4: passApply is callable on identity plan" $ do
         let scan = OptScan "users" Nothing Nothing Nothing
-        -- Apply every pass to a bare Scan; none should error
-        mapM_ (\p -> let _ = passApply p scan in return ()) defaultPasses
+            -- Apply every pass to a bare Scan; none should error.
+            -- Collect results into a list so passApply is forced for each
+            -- pass and the IO () type of 'shouldBe' resolves unambiguously.
+            results = map (\p -> passApply p scan) defaultPasses
+        length results `shouldBe` 5
