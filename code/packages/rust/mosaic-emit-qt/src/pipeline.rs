@@ -2860,12 +2860,12 @@ fn emit_for_qml(
 
     let model_expr = find_each_expression(node).unwrap_or_else(|| "[]".to_string());
     let as_name = find_keyword_prop(node, "as")
+        .map(to_camel_case_first_lower)
         .filter(|s| is_safe_identifier(s))
-        .unwrap_or("item")
-        .to_string();
+        .unwrap_or_else(|| "item".to_string());
     let index_name = find_keyword_prop(node, "index")
-        .filter(|s| is_safe_identifier(s))
-        .map(str::to_string);
+        .map(to_camel_case_first_lower)
+        .filter(|s| is_safe_identifier(s));
 
     let mut out = String::new();
     writeln!(out, "{pad}Repeater {{").unwrap();
@@ -4419,6 +4419,72 @@ mod tests {
         assert!(
             r.output.contains("text: item"),
             "expected HostButton label to use For item binding, got:\n{}",
+            r.output
+        );
+    }
+
+    #[test]
+    fn host_button_inside_kebab_named_for_camel_cases_payload_bindings() {
+        let m = component(
+            "NoteEditor",
+            vec![slot(
+                "note-type-names",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit_decl(
+                "onSelectNoteType",
+                vec![param("index", EmitPayloadType::Number)],
+            )],
+        );
+        let l = LayoutDef {
+            component_name: "NoteEditor".to_string(),
+            root: LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "For".to_string(),
+                    part_name: None,
+                    props: vec![
+                        lp(
+                            "each",
+                            LayoutPropValue::SlotRef("note-type-names".to_string()),
+                        ),
+                        lp("as", LayoutPropValue::Keyword("note-type".to_string())),
+                        lp(
+                            "index",
+                            LayoutPropValue::Keyword("note-type-index".to_string()),
+                        ),
+                    ],
+                    children: vec![LayoutNode {
+                        tag: "HostButton".to_string(),
+                        part_name: None,
+                        props: vec![
+                            lp("label", LayoutPropValue::Keyword("note-type".to_string())),
+                            lp(
+                                "onClick",
+                                LayoutPropValue::EmitRef("onSelectNoteType".to_string()),
+                            ),
+                        ],
+                        children: Vec::new(),
+                    }],
+                }],
+            },
+        };
+
+        let r = from_pipeline(&m, &l, &empty_style("NoteEditor")).unwrap();
+        assert!(r.output.contains("property var noteType: modelData"));
+        assert!(r.output.contains("property int noteTypeIndex: index"));
+        assert!(
+            r.output
+                .contains("onClicked: selectNoteType(noteTypeIndex)"),
+            "expected HostButton to dispatch camelCased index payload, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("text: noteType"),
+            "expected HostButton label to use camelCased item binding, got:\n{}",
             r.output
         );
     }

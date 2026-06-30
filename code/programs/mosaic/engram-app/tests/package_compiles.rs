@@ -1429,6 +1429,20 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "signal deleteNoteType()");
     assert_contains(&qml, "signal noteEditorSelectNoteType(real index)");
     assert_contains(&qml, "signal noteEditorSelectDeck(real index)");
+    assert_contains(&qml, "property int noteTypeIndex: index");
+    assert_contains(&qml, "property int deckIndex: index");
+    assert_contains(&qml, "property int fieldIndex: index");
+    assert_contains(&qml, "onClicked: noteEditorSelectNoteType(noteTypeIndex)");
+    assert_contains(&qml, "onClicked: noteEditorSelectDeck(deckIndex)");
+    assert_contains(&qml, "onClicked: noteEditorSelectField(fieldIndex)");
+    assert_contains(
+        &qml,
+        "onClicked: noteTypeEditorSelectNoteType(noteTypeIndex)",
+    );
+    assert!(
+        !qml.contains("invoking parameterless"),
+        "Qt shell should preserve For-loop row payloads for generated selection events"
+    );
     assert_contains(&qml, "signal deckOptionsLearningStepsChange(string value)");
     assert_contains(
         &qml,
