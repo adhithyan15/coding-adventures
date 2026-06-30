@@ -4,12 +4,13 @@ use spice_engine::{
 };
 use spice_netlist_parser::{
     build_analysis_plan, parse_berkeley_app_deck, parse_berkeley_syntax, parse_netlist,
-    parse_value, run_netlist, AcAnalysis, Analysis, AnalysisKind, AnalysisResult, BerkeleyCardKind,
-    BerkeleyDiagnosticSeverity, BerkeleyGrammarMetadata, DcAnalysis, DistortionAnalysis,
-    FourAnalysis, McAnalysis, MeasureAnalysis, MeasureOperation, NetlistParseError, NoiseAnalysis,
-    OpAnalysis, OptionValue, OutputProbe, PlotAnalysis, PoleZeroAnalysis, PoleZeroKind,
-    PrintAnalysis, ProbeAnalysis, SaveAnalysis, SelectedOutputValue, SensAnalysis, TempAnalysis,
-    TfAnalysis, TranAnalysis, BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION,
+    parse_value, run_netlist, AcAnalysis, Analysis, AnalysisKind, AnalysisResult,
+    BerkeleyAppEditorActionKind, BerkeleyCardKind, BerkeleyDiagnosticSeverity,
+    BerkeleyGrammarMetadata, DcAnalysis, DistortionAnalysis, FourAnalysis, McAnalysis,
+    MeasureAnalysis, MeasureOperation, NetlistParseError, NoiseAnalysis, OpAnalysis, OptionValue,
+    OutputProbe, PlotAnalysis, PoleZeroAnalysis, PoleZeroKind, PrintAnalysis, ProbeAnalysis,
+    SaveAnalysis, SelectedOutputValue, SensAnalysis, TempAnalysis, TfAnalysis, TranAnalysis,
+    BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -2073,6 +2074,115 @@ C1 out 0 1p
     assert_eq!(selected.waveform_series_count, Some(1));
     assert_eq!(selected.table_row_count, Some(3));
     assert_eq!(selected.output_probes, vec!["V(out)"]);
+}
+
+#[test]
+fn berkeley_app_facade_exports_editor_controls_after_execution() {
+    let app = parse_berkeley_app_deck(
+        r#"
+* transient editor controls
+V1 in 0 PULSE(0 1 0 1n 1n 1n 4n)
+R1 in out 1k
+C1 out 0 1p
+.tran 1n 3n
+.print tran V(out)
+.end
+"#,
+    );
+
+    let controls = app.run_editor_controls(Some(3)).unwrap();
+
+    assert!(controls.parsed);
+    assert!(controls.execution_available);
+    assert_eq!(controls.control_count, 1);
+    assert_eq!(controls.selected_syntax_card_index, Some(3));
+    assert_eq!(controls.source_fingerprint.len(), 16);
+
+    let selected = controls.selected_control.as_ref().unwrap();
+    assert_eq!(selected.syntax_card_index, 3);
+    assert_eq!(selected.directive, ".tran");
+    assert!(selected.selected);
+    assert!(selected.runnable);
+    assert!(selected.artifact_supported);
+    assert!(selected.execution_available);
+    assert!(selected.table_available);
+    assert!(selected.waveform_available);
+    assert_eq!(selected.action_count, 4);
+
+    let action = |kind| {
+        selected
+            .actions
+            .iter()
+            .find(|action| action.kind == kind)
+            .unwrap()
+    };
+    assert_eq!(
+        action(BerkeleyAppEditorActionKind::SelectAnalysis).label,
+        "Select .tran"
+    );
+    assert!(action(BerkeleyAppEditorActionKind::RunAnalysis).enabled);
+    assert!(action(BerkeleyAppEditorActionKind::InspectTable).enabled);
+    assert!(action(BerkeleyAppEditorActionKind::InspectWaveform).enabled);
+}
+
+#[test]
+fn berkeley_app_facade_editor_controls_explain_disabled_actions() {
+    let app = parse_berkeley_app_deck(
+        r#"
+* transient editor controls
+V1 in 0 PULSE(0 1 0 1n 1n 1n 4n)
+R1 in out 1k
+C1 out 0 1p
+.tran 1n 3n
+.print tran V(out)
+.end
+"#,
+    );
+
+    let controls = app.editor_controls(Some(3));
+    let selected = controls.selected_control.as_ref().unwrap();
+    let table = selected
+        .actions
+        .iter()
+        .find(|action| action.kind == BerkeleyAppEditorActionKind::InspectTable)
+        .unwrap();
+    let waveform = selected
+        .actions
+        .iter()
+        .find(|action| action.kind == BerkeleyAppEditorActionKind::InspectWaveform)
+        .unwrap();
+    assert!(!table.enabled);
+    assert_eq!(
+        table.disabled_reason.as_deref(),
+        Some("run deck artifacts to populate analysis table")
+    );
+    assert!(!waveform.enabled);
+    assert_eq!(
+        waveform.disabled_reason.as_deref(),
+        Some("run deck artifacts to populate waveform series")
+    );
+
+    let blocked = parse_berkeley_app_deck(
+        r#"
+V1 in 0 DC 1
+R1 in out
+.op
+.end
+"#,
+    );
+    let controls = blocked.editor_controls(Some(2));
+    let selected = controls.selected_control.as_ref().unwrap();
+    let run = selected
+        .actions
+        .iter()
+        .find(|action| action.kind == BerkeleyAppEditorActionKind::RunAnalysis)
+        .unwrap();
+    assert!(!run.enabled);
+    assert!(run
+        .disabled_reason
+        .as_deref()
+        .unwrap()
+        .contains("Berkeley SPICE app deck:"));
 }
 
 #[test]

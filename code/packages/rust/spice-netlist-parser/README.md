@@ -49,6 +49,9 @@ assert_eq!(execution.analyses[0].waveform_series[0].x_column, "Index");
 let session = deck.run_session_state(Some(3))?;
 assert!(session.execution_available);
 assert_eq!(session.selected_waveform_series_count, Some(1));
+
+let controls = deck.run_editor_controls(Some(3))?;
+assert!(controls.selected_control.unwrap().waveform_available);
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -60,9 +63,11 @@ execution layer, and numeric waveform series derived from result tables for
 Mosaic plot surfaces. It also exposes app session snapshots with deterministic
 source fingerprints, selected-analysis state, run/blocked status, diagnostics,
 table columns, output probes, and selected waveform availability so Mosaic UI
-hosts can render editor controls without owning simulator internals. It is the
-Rust app/runtime entrypoint for Mosaic-backed UI work while the grammar-backed
-parser generator and Python/TypeScript parity surfaces continue to mature.
+hosts can render editor state without owning simulator internals. It also
+derives stable per-analysis editor controls for selecting, running, and
+inspecting tables or waveforms with explicit disabled reasons. It is the Rust
+app/runtime entrypoint for Mosaic-backed UI work while the grammar-backed parser
+generator and Python/TypeScript parity surfaces continue to mature.
 
 This parser supports `R`, `C`, `L`, `V`, `I`, `D`, `Q`, `M`, `G`, `E`, `F`, and
 `H` elements, `.model <name> D(...)` diode cards with `IS` and `VT`
