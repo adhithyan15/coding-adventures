@@ -289,6 +289,7 @@ pub fn import_anki_notes_tsv(
         options.note_type_id.clone()
     };
     let import_kind = AnkiNoteImportKind::from_note_type_name(&note_type_name);
+    let header_tags = headers.tags.clone();
     let columns = headers
         .columns
         .unwrap_or_else(|| import_kind.default_columns(&rows));
@@ -328,10 +329,7 @@ pub fn import_anki_notes_tsv(
                     value: fields[field.column_index].clone(),
                 })
                 .collect(),
-            tags: column_plan
-                .tag_index
-                .and_then(|index| fields.get(index))
-                .map_or_else(Vec::new, |tags| split_anki_tags(tags)),
+            tags: note_tags_for_row(&header_tags, &column_plan, &fields),
             created_at: options.created_at,
             updated_at: options.created_at,
         };
@@ -355,6 +353,7 @@ pub fn import_anki_notes_tsv(
 struct AnkiTsvHeaders {
     note_type_name: Option<String>,
     columns: Option<Vec<String>>,
+    tags: Vec<String>,
 }
 
 impl AnkiTsvHeaders {
@@ -368,11 +367,40 @@ impl AnkiTsvHeaders {
             return;
         }
 
+        if let Some(tags) = first.strip_prefix("#tags:") {
+            self.tags = split_anki_tags(tags);
+            return;
+        }
+
         if let Some(first_column) = first.strip_prefix("#columns:") {
             let mut columns = Vec::with_capacity(fields.len());
             columns.push(first_column.trim().to_string());
             columns.extend(fields.iter().skip(1).map(|field| field.trim().to_string()));
             self.columns = Some(columns);
+        }
+    }
+}
+
+fn note_tags_for_row(
+    header_tags: &[String],
+    column_plan: &AnkiColumnPlan,
+    fields: &[String],
+) -> Vec<String> {
+    let mut tags = header_tags.to_vec();
+    if let Some(row_tags) = column_plan
+        .tag_index
+        .and_then(|index| fields.get(index))
+        .map(|tags| split_anki_tags(tags))
+    {
+        extend_unique_tags(&mut tags, row_tags);
+    }
+    tags
+}
+
+fn extend_unique_tags(tags: &mut Vec<String>, incoming: Vec<String>) {
+    for tag in incoming {
+        if !tags.iter().any(|existing| existing == &tag) {
+            tags.push(tag);
         }
     }
 }
@@ -1198,7 +1226,7 @@ mod tests {
 
     #[test]
     fn anki_note_text_import_honors_separator_header() {
-        let text = "#separator:semicolon\n#notetype:Basic\n#columns:Front;Back;Tags\n\"hola;salve\";hello;spanish latin\n";
+        let text = "#separator:semicolon\n#notetype:Basic\n#tags:imported spanish\n#columns:Front;Back;Tags\n\"hola;salve\";hello;spanish latin\n";
         let options = AnkiNoteTsvImportOptions {
             deck_id: "deck".to_string(),
             note_type_id: String::new(),
@@ -1212,7 +1240,7 @@ mod tests {
         assert_eq!(imported.notes.len(), 1);
         assert_eq!(imported.notes[0].fields[0].value, "hola;salve");
         assert_eq!(imported.notes[0].fields[1].value, "hello");
-        assert_eq!(imported.notes[0].tags, vec!["spanish", "latin"]);
+        assert_eq!(imported.notes[0].tags, vec!["imported", "spanish", "latin"]);
         assert_eq!(imported.cards[0].front, "hola;salve");
     }
 
