@@ -1568,6 +1568,13 @@ fn escape_str_sq(s: &str) -> String {
             '\n' => out.push_str("\\n"),
             '\r' => out.push_str("\\r"),
             '\t' => out.push_str("\\t"),
+            // U+2028 LINE SEPARATOR / U+2029 PARAGRAPH SEPARATOR: these are
+            // line terminators in ECMAScript, so before ES2019 an UNESCAPED one
+            // inside a string literal is a SyntaxError. They sit above 0x20, so
+            // the control-char arm below does not catch them — escape explicitly.
+            // (See `escape_ascii_only`, which already escapes them as non-ASCII.)
+            '\u{2028}' => out.push_str("\\u2028"),
+            '\u{2029}' => out.push_str("\\u2029"),
             c if (c as u32) < 0x20 => out.push_str(&format!("\\u{:04X}", c as u32)),
             c => out.push(c),
         }
@@ -1587,6 +1594,13 @@ fn escape_str_dq(s: &str) -> String {
             '\n' => out.push_str("\\n"),
             '\r' => out.push_str("\\r"),
             '\t' => out.push_str("\\t"),
+            // U+2028 LINE SEPARATOR / U+2029 PARAGRAPH SEPARATOR: line
+            // terminators in ECMAScript, so an UNESCAPED one inside a string
+            // literal is a SyntaxError before ES2019. They are above 0x20, so the
+            // control-char arm below misses them — escape explicitly. (Mirrors
+            // `escape_ascii_only`, which already escapes them as non-ASCII.)
+            '\u{2028}' => out.push_str("\\u2028"),
+            '\u{2029}' => out.push_str("\\u2029"),
             c if (c as u32) < 0x20 => out.push_str(&format!("\\u{:04X}", c as u32)),
             c => out.push(c),
         }
@@ -1737,6 +1751,34 @@ mod tests {
             raw: String::new(),
         });
         emit_default(program().with_body(vec![stmt(s)])).code
+    }
+
+    #[test]
+    fn line_and_paragraph_separators_are_escaped() {
+        // U+2028 (LINE SEPARATOR) and U+2029 (PARAGRAPH SEPARATOR) are
+        // ECMAScript line terminators. An UNESCAPED one inside a string literal
+        // is a SyntaxError before ES2019, so the emitter must escape them even in
+        // the default (non-`ascii_only`) mode. Double-quoted path:
+        assert_eq!(emit_string_value("a\u{2028}b"), "\"a\\u2028b\";");
+        assert_eq!(emit_string_value("a\u{2029}b"), "\"a\\u2029b\";");
+        // Single-quoted path (value has more `"` than `'`, so single quotes are
+        // chosen) escapes them too.
+        assert_eq!(emit_string_value("\"\u{2028}"), "'\"\\u2028';");
+        // `ascii_only` mode already escaped them (as non-ASCII) — confirm it
+        // still produces the same ` ` form, not a `\u{...}` or raw byte.
+        let s = Expression::StringLiteral(StringLiteral {
+            cv: None,
+            value: "a\u{2029}b".to_string(),
+            raw: String::new(),
+        });
+        let out = emit_with(
+            program().with_body(vec![stmt(s)]),
+            EmitOptions {
+                ascii_only: true,
+                ..Default::default()
+            },
+        );
+        assert_eq!(out.code, "\"a\\u2029b\";");
     }
 
     // ---- number shortest-form (gap-025, CLOC12.12) ---------

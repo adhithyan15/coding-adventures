@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.18.3] - 2026-06-29
+
+### Fixed — U+2028 / U+2029 emitted unescaped in string literals (invalid JS)
+
+The default (non-`ascii_only`) string escapers `escape_str_dq` / `escape_str_sq`
+only escaped control characters below `0x20`, so they passed U+2028 (LINE
+SEPARATOR) and U+2029 (PARAGRAPH SEPARATOR) through verbatim. Those two
+codepoints are ECMAScript **line terminators**, and before ES2019 an unescaped
+one inside a string literal is a `SyntaxError` — so a source string containing
+either character could be minified into invalid output. (The `ascii_only`
+escaper already escaped them as non-ASCII; only the default path was affected.)
+
+Both escapers now emit ` ` / ` ` explicitly. New test
+`line_and_paragraph_separators_are_escaped` covers the double-quoted,
+single-quoted, and `ascii_only` paths. Flagged during the security review of the
+property-key fix (0.18.2) as a pre-existing latent miscompile.
+
 ## [0.18.2] - 2026-06-29
 
 ### Added — sound quote-stripping for string object-property keys
