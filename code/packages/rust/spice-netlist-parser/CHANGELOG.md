@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add Berkeley SPICE app-deck shell statuses for Mosaic startup chrome and
+  telemetry. `BerkeleyAppDeck::app_shell_status()`,
+  `run_app_shell_status()`, and their JSON helpers derive a compact route,
+  severity, message, entry action, and diagnostic counts from the shell handoff.
 - Add Berkeley SPICE app-deck shell handoffs for Mosaic WebAssembly and
   product-shell startup. `BerkeleyAppDeck::app_shell_handoff()`,
   `run_app_shell_handoff()`, and their JSON helpers combine the package

@@ -112,6 +112,13 @@ let shell_handoff_json = deck.run_app_shell_handoff_json(BerkeleyAppPersistedEdi
 })?;
 assert!(shell_handoff_json.contains(r#""packageManifest":{"#));
 assert!(shell_handoff_json.contains(r#""readinessReport":{"#));
+
+let shell_status_json = deck.run_app_shell_status_json(BerkeleyAppPersistedEditorState {
+    selected_syntax_card_index: Some(3),
+    active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+})?;
+assert!(shell_status_json.contains(r#""severity":"ready""#));
+assert!(shell_status_json.contains(r#""message":"Ready to launch waveform panel""#));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -153,9 +160,11 @@ startup path with panel/action availability counts, diagnostic severity counts,
 repaired-state flags, and blocking reasons for product-shell telemetry and
 readiness gates. Shell handoffs package the manifest, startup summary, launch
 plan, and readiness report into one compact JSON envelope for WebAssembly and
-product shells that do not need the full host-surface export during startup. The
-grammar-backed parser generator and Python/TypeScript parity surfaces continue
-to mature.
+product shells that do not need the full host-surface export during startup.
+Shell statuses derive a compact route, severity, and status message from the
+handoff so product shells can render startup chrome and telemetry without
+inspecting every launch/readiness field. The grammar-backed parser generator and
+Python/TypeScript parity surfaces continue to mature.
 
 This parser supports `R`, `C`, `L`, `V`, `I`, `D`, `Q`, `M`, `G`, `E`, `F`, and
 `H` elements, `.model <name> D(...)` diode cards with `IS` and `VT`

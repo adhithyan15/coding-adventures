@@ -15,8 +15,9 @@ use spice_netlist_parser::{
     BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION, BERKELEY_APP_LAUNCH_PLAN_SCHEMA_VERSION,
     BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION, BERKELEY_APP_PACKAGE_NAME,
     BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION, BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION,
-    BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM, BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION,
-    BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION,
+    BERKELEY_APP_SHELL_STATUS_SCHEMA_VERSION, BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM,
+    BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION, BERKELEY_SPICE_GRAMMAR_NAME,
+    BERKELEY_SPICE_GRAMMAR_VERSION,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -2575,6 +2576,11 @@ fn berkeley_app_facade_exports_package_manifest_json() {
         .unwrap()
         .iter()
         .any(|capability| capability == "app-shell-handoff-json"));
+    assert!(payload["artifactCapabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|capability| capability == "app-shell-status-json"));
 }
 
 #[test]
@@ -2824,6 +2830,47 @@ C1 out 0 1p
     assert_eq!(handoff_payload["startupSummary"]["ready"], true);
     assert_eq!(handoff_payload["launchPlan"]["entryPanelId"], "waveform");
     assert_eq!(handoff_payload["readinessReport"]["errorCount"], 0);
+
+    let shell_status = app
+        .run_app_shell_status(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("shell status should execute");
+    assert_eq!(
+        shell_status.schema_version,
+        BERKELEY_APP_SHELL_STATUS_SCHEMA_VERSION
+    );
+    assert_eq!(shell_status.package_name, BERKELEY_APP_PACKAGE_NAME);
+    assert!(shell_status.ready);
+    assert_eq!(shell_status.startup_route, "ready");
+    assert_eq!(shell_status.severity, "ready");
+    assert_eq!(shell_status.message, "Ready to launch waveform panel");
+    assert_eq!(shell_status.entry_panel_id.as_deref(), Some("waveform"));
+    assert_eq!(
+        shell_status.primary_action_id.as_deref(),
+        Some("launch.waveform")
+    );
+    assert_eq!(shell_status.error_count, 0);
+
+    let shell_status_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_status_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap(),
+    )
+    .expect("shell status JSON should parse");
+    assert_eq!(shell_status_payload["schemaVersion"], 1);
+    assert_eq!(shell_status_payload["ready"], true);
+    assert_eq!(shell_status_payload["severity"], "ready");
+    assert_eq!(
+        shell_status_payload["message"],
+        "Ready to launch waveform panel"
+    );
+    assert_eq!(shell_status_payload["entryPanelId"], "waveform");
+    assert_eq!(shell_status_payload["primaryActionId"], "launch.waveform");
+    assert_eq!(shell_status_payload["errorCount"], 0);
 }
 
 #[test]
@@ -3007,6 +3054,45 @@ R1 in out
     assert_eq!(handoff_payload["launchPlan"]["entryPanelId"], "diagnostics");
     assert_eq!(handoff_payload["readinessReport"]["errorCount"], 1);
     assert!(handoff_payload["readinessReport"]["blockingMessage"].is_string());
+
+    let shell_status = app.app_shell_status(BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(2),
+        active_command_id: Some("analysis.2.run".to_string()),
+    });
+    assert_eq!(
+        shell_status.schema_version,
+        BERKELEY_APP_SHELL_STATUS_SCHEMA_VERSION
+    );
+    assert!(!shell_status.ready);
+    assert_eq!(shell_status.startup_route, "blocked");
+    assert_eq!(shell_status.severity, "error");
+    assert_eq!(shell_status.entry_panel_id.as_deref(), Some("diagnostics"));
+    assert_eq!(
+        shell_status.primary_action_id.as_deref(),
+        Some("launch.diagnostics")
+    );
+    assert_eq!(shell_status.error_count, 1);
+    assert_eq!(
+        shell_status.blocking_message.as_deref(),
+        Some(shell_status.message.as_str())
+    );
+
+    let shell_status_payload: serde_json::Value =
+        serde_json::from_str(&app.app_shell_status_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        }))
+        .expect("blocked shell status JSON should parse");
+    assert_eq!(shell_status_payload["ready"], false);
+    assert_eq!(shell_status_payload["startupRoute"], "blocked");
+    assert_eq!(shell_status_payload["severity"], "error");
+    assert_eq!(shell_status_payload["entryPanelId"], "diagnostics");
+    assert_eq!(
+        shell_status_payload["primaryActionId"],
+        "launch.diagnostics"
+    );
+    assert_eq!(shell_status_payload["errorCount"], 1);
+    assert!(shell_status_payload["message"].is_string());
 }
 
 #[test]
