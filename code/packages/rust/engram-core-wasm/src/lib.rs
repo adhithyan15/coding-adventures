@@ -22,7 +22,8 @@ use engram_core::{
     type_answer_matches, typed_answer_for_template, AnkiBasicTsvExportOptions, AnkiNoteTsvImport,
     AnkiNoteTsvImportOptions, AppState, BasicCardCsvImportOptions, Card, CardFlag, CardLineage,
     CardProgress, CardSearchResult, CardState, ClozeRenderSide, DeckOptions, EngramSnapshot,
-    LeechAction, MediaAssetRecord, Note, NoteFieldValue, Rating, SearchContext, TypeAnswerSpec,
+    ExternalSourceRecord, ExternalSourceTarget, LeechAction, MediaAssetRecord, Note,
+    NoteFieldValue, Rating, SearchContext, TypeAnswerSpec,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -39,6 +40,15 @@ const BROWSER_FILTER_OPTIONS: [&str; 7] = [
     "Suspended",
     "Buried",
 ];
+const ANKI_TYPE_NEW: i64 = 0;
+const ANKI_TYPE_LEARN: i64 = 1;
+const ANKI_TYPE_REVIEW: i64 = 2;
+const ANKI_TYPE_RELEARN: i64 = 3;
+const ANKI_QUEUE_SCHED_BURIED: i64 = -3;
+const ANKI_QUEUE_USER_BURIED: i64 = -2;
+const ANKI_QUEUE_SUSPENDED: i64 = -1;
+const ANKI_QUEUE_NEW: i64 = 0;
+const ANKI_QUEUE_REVIEW: i64 = 2;
 
 #[derive(Default)]
 pub struct EngramSession {
@@ -2483,10 +2493,21 @@ fn engram_browser_props_for_state(
     } else {
         search_core_cards(state, &effective_query, now)?
     };
+    let card_sources_by_id = browser_card_sources_by_id(state);
+    let collection_created_at_days = browser_collection_created_at_days(state);
     let rows = results
         .iter()
         .take(20)
-        .map(|result| BrowserRow::from_search_result(result, now))
+        .map(|result| {
+            BrowserRow::from_search_result(
+                result,
+                now,
+                card_sources_by_id
+                    .get(result.card.id.as_str())
+                    .map_or(&[] as &[&ExternalSourceRecord], Vec::as_slice),
+                collection_created_at_days,
+            )
+        })
         .collect::<Vec<_>>();
 
     Ok(browser_props_from_rows(
@@ -2507,11 +2528,23 @@ fn fallback_browser_props_for_state(
     filter_open: bool,
     flag_picker_open: bool,
 ) -> Value {
+    let card_sources_by_id = browser_card_sources_by_id(state);
+    let collection_created_at_days = browser_collection_created_at_days(state);
     let rows = state
         .cards
         .iter()
         .take(20)
-        .map(|card| BrowserRow::from_card(card, None, 0))
+        .map(|card| {
+            BrowserRow::from_card(
+                card,
+                None,
+                0,
+                card_sources_by_id
+                    .get(card.id.as_str())
+                    .map_or(&[] as &[&ExternalSourceRecord], Vec::as_slice),
+                collection_created_at_days,
+            )
+        })
         .collect::<Vec<_>>();
     browser_props_from_rows(
         DEFAULT_BROWSER_QUERY.to_string(),
@@ -2659,11 +2692,28 @@ struct BrowserRow {
 }
 
 impl BrowserRow {
-    fn from_search_result(result: &CardSearchResult, now: u64) -> Self {
-        Self::from_card(&result.card, result.progress.as_ref(), now)
+    fn from_search_result(
+        result: &CardSearchResult,
+        now: u64,
+        card_sources: &[&ExternalSourceRecord],
+        collection_created_at_days: Option<i64>,
+    ) -> Self {
+        Self::from_card(
+            &result.card,
+            result.progress.as_ref(),
+            now,
+            card_sources,
+            collection_created_at_days,
+        )
     }
 
-    fn from_card(card: &Card, progress: Option<&CardProgress>, now: u64) -> Self {
+    fn from_card(
+        card: &Card,
+        progress: Option<&CardProgress>,
+        now: u64,
+        card_sources: &[&ExternalSourceRecord],
+        collection_created_at_days: Option<i64>,
+    ) -> Self {
         let lineage = card.lineage.as_ref();
         let fallback_lineage = card.id.split_once("::");
         Self {
@@ -2677,8 +2727,9 @@ impl BrowserRow {
                 .map(|lineage| lineage.template_id.clone())
                 .or_else(|| fallback_lineage.map(|(_, template_id)| template_id.to_string()))
                 .unwrap_or_default(),
-            state: browser_card_state(progress, now).to_string(),
-            flag: browser_card_flag(progress).to_string(),
+            state: browser_card_state(progress, card_sources, collection_created_at_days, now)
+                .to_string(),
+            flag: browser_card_flag(progress, card_sources).to_string(),
         }
     }
 }
@@ -2687,7 +2738,20 @@ fn format_browser_card_row(card: &Card) -> String {
     format!("{} -> {}", card.front, card.back)
 }
 
-fn browser_card_state(progress: Option<&CardProgress>, now: u64) -> &'static str {
+fn browser_card_state(
+    progress: Option<&CardProgress>,
+    card_sources: &[&ExternalSourceRecord],
+    collection_created_at_days: Option<i64>,
+    now: u64,
+) -> &'static str {
+    if progress.map_or(true, browser_progress_is_new_overlay) {
+        if let Some(state) =
+            imported_anki_browser_card_state(card_sources, collection_created_at_days, now)
+        {
+            return state;
+        }
+    }
+
     let Some(progress) = progress else {
         return "new";
     };
@@ -2708,11 +2772,126 @@ fn browser_card_state(progress: Option<&CardProgress>, now: u64) -> &'static str
     }
 }
 
-fn browser_card_flag(progress: Option<&CardProgress>) -> &'static str {
-    progress
-        .and_then(|progress| progress.flag)
-        .map(card_flag_label)
+fn browser_progress_is_new_overlay(progress: &CardProgress) -> bool {
+    progress.state == CardState::Review
+        && progress.interval == 0
+        && progress.learning_step_index.is_none()
+        && progress.buried_until.is_none()
+        && progress.suspended_at.is_none()
+        && progress.times_seen == 0
+        && progress.times_correct == 0
+        && progress.times_incorrect == 0
+}
+
+fn browser_card_flag(
+    progress: Option<&CardProgress>,
+    card_sources: &[&ExternalSourceRecord],
+) -> &'static str {
+    imported_anki_browser_card_flag(card_sources)
+        .or_else(|| {
+            progress
+                .and_then(|progress| progress.flag)
+                .map(card_flag_label)
+        })
         .unwrap_or("none")
+}
+
+fn browser_card_sources_by_id<'a>(
+    state: &'a AppState,
+) -> HashMap<&'a str, Vec<&'a ExternalSourceRecord>> {
+    let mut sources_by_id: HashMap<&str, Vec<&ExternalSourceRecord>> = HashMap::new();
+    for source in &state.external_sources {
+        if source.target == ExternalSourceTarget::Card && source.source == "anki-v11" {
+            sources_by_id
+                .entry(source.target_id.as_str())
+                .or_default()
+                .push(source);
+        }
+    }
+    sources_by_id
+}
+
+fn browser_collection_created_at_days(state: &AppState) -> Option<i64> {
+    state
+        .external_sources
+        .iter()
+        .find(|source| source.target == ExternalSourceTarget::Collection)
+        .and_then(|source| browser_source_i64(source, "createdAtDays"))
+}
+
+fn imported_anki_browser_card_state(
+    card_sources: &[&ExternalSourceRecord],
+    collection_created_at_days: Option<i64>,
+    now: u64,
+) -> Option<&'static str> {
+    card_sources.iter().find_map(|source| {
+        let kind = browser_source_i64(source, "kind")?;
+        let queue = browser_source_i64(source, "queue")?;
+        if queue == ANKI_QUEUE_SUSPENDED {
+            return Some("suspended");
+        }
+        if matches!(queue, ANKI_QUEUE_USER_BURIED | ANKI_QUEUE_SCHED_BURIED) {
+            return Some("buried");
+        }
+        if kind == ANKI_TYPE_NEW && queue == ANKI_QUEUE_NEW {
+            return Some("new");
+        }
+
+        match kind {
+            ANKI_TYPE_LEARN => Some("learning"),
+            ANKI_TYPE_RELEARN => Some("relearning"),
+            ANKI_TYPE_REVIEW => {
+                if imported_anki_browser_review_is_due(source, collection_created_at_days, now)
+                    .unwrap_or(false)
+                {
+                    Some("due")
+                } else {
+                    Some("review")
+                }
+            }
+            _ => None,
+        }
+    })
+}
+
+fn imported_anki_browser_review_is_due(
+    source: &ExternalSourceRecord,
+    collection_created_at_days: Option<i64>,
+    now: u64,
+) -> Option<bool> {
+    if browser_source_i64(source, "queue")? != ANKI_QUEUE_REVIEW {
+        return None;
+    }
+    let due = browser_source_i64(source, "originalDue")
+        .filter(|due| *due != 0)
+        .or_else(|| browser_source_i64(source, "due"))?;
+    let today = i64::try_from(now / engram_core::ONE_DAY_MS)
+        .ok()?
+        .saturating_sub(collection_created_at_days?);
+    Some(due <= today)
+}
+
+fn imported_anki_browser_card_flag(card_sources: &[&ExternalSourceRecord]) -> Option<&'static str> {
+    card_sources
+        .iter()
+        .find_map(|source| browser_source_i64(source, "flags").map(anki_browser_card_flag_label))
+}
+
+fn anki_browser_card_flag_label(flags: i64) -> &'static str {
+    match flags & 0b111 {
+        1 => "red",
+        2 => "orange",
+        3 => "green",
+        4 => "blue",
+        5 => "pink",
+        6 => "turquoise",
+        7 => "purple",
+        _ => "none",
+    }
+}
+
+fn browser_source_i64(source: &ExternalSourceRecord, key: &str) -> Option<i64> {
+    source.data.get(key)?.parse().ok()
 }
 
 fn card_flag_label(flag: CardFlag) -> &'static str {
@@ -3055,6 +3234,8 @@ fn browser_selected_card_details(
     now: u64,
     current_deck_id: Option<&str>,
 ) -> BrowserSelection {
+    let card_sources_by_id = browser_card_sources_by_id(state);
+    let collection_created_at_days = browser_collection_created_at_days(state);
     if let Some(card_id) = explicit_card_id.filter(|card_id| !card_id.trim().is_empty()) {
         let row = state
             .cards
@@ -3068,6 +3249,10 @@ fn browser_selected_card_details(
                         .iter()
                         .find(|progress| progress.card_id == card.id),
                     now,
+                    card_sources_by_id
+                        .get(card.id.as_str())
+                        .map_or(&[] as &[&ExternalSourceRecord], Vec::as_slice),
+                    collection_created_at_days,
                 )
             });
         let selection = row
@@ -3095,9 +3280,16 @@ fn browser_selected_card_details(
                 search_core_cards(state, DEFAULT_BROWSER_QUERY, now)
             };
             results.ok().and_then(|results| {
-                results
-                    .first()
-                    .map(|result| BrowserRow::from_search_result(result, now))
+                results.first().map(|result| {
+                    BrowserRow::from_search_result(
+                        result,
+                        now,
+                        card_sources_by_id
+                            .get(result.card.id.as_str())
+                            .map_or(&[] as &[&ExternalSourceRecord], Vec::as_slice),
+                        collection_created_at_days,
+                    )
+                })
             })
         })
         .or_else(|| {
@@ -3109,6 +3301,10 @@ fn browser_selected_card_details(
                         .iter()
                         .find(|progress| progress.card_id == card.id),
                     now,
+                    card_sources_by_id
+                        .get(card.id.as_str())
+                        .map_or(&[] as &[&ExternalSourceRecord], Vec::as_slice),
+                    collection_created_at_days,
                 )
             })
         })
@@ -3355,10 +3551,21 @@ fn browser_rows_for_state(
         search_core_cards(state, &query, now)
     };
     results.ok().map(|results| {
+        let card_sources_by_id = browser_card_sources_by_id(state);
+        let collection_created_at_days = browser_collection_created_at_days(state);
         results
             .iter()
             .take(20)
-            .map(|result| BrowserRow::from_search_result(result, now))
+            .map(|result| {
+                BrowserRow::from_search_result(
+                    result,
+                    now,
+                    card_sources_by_id
+                        .get(result.card.id.as_str())
+                        .map_or(&[] as &[&ExternalSourceRecord], Vec::as_slice),
+                    collection_created_at_days,
+                )
+            })
             .collect()
     })
 }
@@ -9250,6 +9457,64 @@ mod tests {
             empty_field_browser_props["props"]["browser-results-summary"],
             "No matching cards"
         );
+    }
+
+    #[test]
+    fn browser_props_label_imported_anki_state_and_flags() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {"id":"review-due","deckId":"deck","front":"due","back":"d","createdAt":1700000000000},
+                {"id":"suspended","deckId":"deck","front":"suspended","back":"s","createdAt":1700000000001}
+            ],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "externalSources": [
+                {
+                    "target":"collection",
+                    "targetId":"collection",
+                    "source":"anki-v11",
+                    "originalId":"1",
+                    "data":{"createdAtDays":"19475"}
+                },
+                {
+                    "target":"card",
+                    "targetId":"review-due",
+                    "source":"anki-v11",
+                    "originalId":"review-due",
+                    "data":{"kind":"2","queue":"2","due":"200","flags":"4"}
+                },
+                {
+                    "target":"card",
+                    "targetId":"suspended",
+                    "source":"anki-v11",
+                    "originalId":"suspended",
+                    "data":{"kind":"2","queue":"-1","due":"200","flags":"1"}
+                }
+            ],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        let due_props: Value =
+            serde_json::from_str(&session.engram_browser_props("cid:review-due", NOW)).unwrap();
+        assert_eq!(due_props["ok"], true);
+        assert_eq!(due_props["props"]["browser-result-states"], json!(["due"]));
+        assert_eq!(due_props["props"]["browser-result-flags"], json!(["blue"]));
+        assert_eq!(due_props["props"]["browser-selected-state"], "due");
+        assert_eq!(due_props["props"]["browser-selected-flag"], "blue");
+
+        let suspended_props: Value =
+            serde_json::from_str(&session.engram_browser_props("cid:suspended", NOW)).unwrap();
+        assert_eq!(
+            suspended_props["props"]["browser-selected-state"],
+            "suspended"
+        );
+        assert_eq!(suspended_props["props"]["browser-selected-flag"], "red");
     }
 
     #[test]
