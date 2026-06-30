@@ -24,13 +24,14 @@ pub use syntax::{
     BerkeleyAppHostPanelKind, BerkeleyAppHostPanelWire, BerkeleyAppHostSpanWire,
     BerkeleyAppHostSurface, BerkeleyAppHostSurfaceWire, BerkeleyAppPackageManifest,
     BerkeleyAppPersistedEditorState, BerkeleyAppSessionAnalysis, BerkeleyAppSessionState,
-    BerkeleyAppWaveformPoint, BerkeleyAppWaveformSeries, BerkeleyCardKind,
-    BerkeleyDiagnosticSeverity, BerkeleyGrammarMetadata, BerkeleyLogicalCard, BerkeleySyntaxDeck,
-    BerkeleySyntaxDiagnostic, BerkeleySyntaxToken, SourceSpan,
+    BerkeleyAppStartupSummary, BerkeleyAppWaveformPoint, BerkeleyAppWaveformSeries,
+    BerkeleyCardKind, BerkeleyDiagnosticSeverity, BerkeleyGrammarMetadata, BerkeleyLogicalCard,
+    BerkeleySyntaxDeck, BerkeleySyntaxDiagnostic, BerkeleySyntaxToken, SourceSpan,
     BERKELEY_APP_BOOTSTRAP_SCHEMA_VERSION, BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION,
     BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION, BERKELEY_APP_PACKAGE_NAME,
-    BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM, BERKELEY_SPICE_GRAMMAR_NAME,
-    BERKELEY_SPICE_GRAMMAR_VERSION, BERKELEY_SPICE_PARSER_GRAMMAR, BERKELEY_SPICE_TOKEN_GRAMMAR,
+    BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM, BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION,
+    BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION, BERKELEY_SPICE_PARSER_GRAMMAR,
+    BERKELEY_SPICE_TOKEN_GRAMMAR,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq)]

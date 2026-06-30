@@ -16,6 +16,7 @@ pub const BERKELEY_SPICE_PARSER_GRAMMAR: &str =
 pub const BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_BOOTSTRAP_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -47,6 +48,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "host-surface",
     "host-surface-wire-json",
     "app-bootstrap-json",
+    "app-startup-summary-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -227,6 +229,56 @@ pub struct BerkeleyAppBootstrapSnapshot {
 impl BerkeleyAppBootstrapSnapshot {
     pub fn to_json(&self) -> String {
         app_bootstrap_snapshot_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppStartupSummary {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub parsed: bool,
+    pub execution_available: bool,
+    pub ready: bool,
+    pub requested_selected_syntax_card_index: Option<usize>,
+    pub requested_active_command_id: Option<String>,
+    pub resolved_selected_syntax_card_index: Option<usize>,
+    pub resolved_active_command_id: Option<String>,
+    pub selection_stale: bool,
+    pub command_stale: bool,
+    pub panel_count: usize,
+    pub active_panel_id: Option<String>,
+    pub diagnostic_count: usize,
+    pub blocking_message: Option<String>,
+}
+
+impl BerkeleyAppStartupSummary {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        let host_surface = &snapshot.host_surface;
+        Self {
+            schema_version: BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION,
+            package_name: snapshot.package_manifest.package_name.clone(),
+            source_fingerprint: host_surface.source_fingerprint.clone(),
+            title: host_surface.title.clone(),
+            parsed: host_surface.parsed,
+            execution_available: host_surface.execution_available,
+            ready: host_surface.parsed && host_surface.execution_available,
+            requested_selected_syntax_card_index: host_surface.requested_selected_syntax_card_index,
+            requested_active_command_id: host_surface.requested_active_command_id.clone(),
+            resolved_selected_syntax_card_index: host_surface.resolved_selected_syntax_card_index,
+            resolved_active_command_id: host_surface.resolved_active_command_id.clone(),
+            selection_stale: host_surface.selection_stale,
+            command_stale: host_surface.command_stale,
+            panel_count: host_surface.panel_count,
+            active_panel_id: host_surface.active_panel_id.clone(),
+            diagnostic_count: host_surface.diagnostics.len(),
+            blocking_message: host_surface.blocking_message.clone(),
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_startup_summary_json_value(self).to_string()
     }
 }
 
@@ -779,6 +831,38 @@ impl BerkeleyAppDeck {
         persisted_state: BerkeleyAppPersistedEditorState,
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self.run_app_bootstrap_snapshot(persisted_state)?.to_json())
+    }
+
+    pub fn app_startup_summary(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppStartupSummary {
+        BerkeleyAppStartupSummary::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_startup_summary(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppStartupSummary, AnalysisExecutionError> {
+        Ok(BerkeleyAppStartupSummary::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_startup_summary_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_startup_summary(persisted_state).to_json()
+    }
+
+    pub fn run_app_startup_summary_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self.run_app_startup_summary(persisted_state)?.to_json())
     }
 
     pub fn run_source_order(&self) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
@@ -1382,6 +1466,28 @@ fn app_bootstrap_snapshot_json_value(snapshot: &BerkeleyAppBootstrapSnapshot) ->
         "schemaVersion": snapshot.schema_version,
         "packageManifest": app_package_manifest_json_value(&snapshot.package_manifest),
         "hostSurface": host_surface_wire_json_value(&snapshot.host_surface),
+    })
+}
+
+fn app_startup_summary_json_value(summary: &BerkeleyAppStartupSummary) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": summary.schema_version,
+        "packageName": &summary.package_name,
+        "sourceFingerprint": &summary.source_fingerprint,
+        "title": &summary.title,
+        "parsed": summary.parsed,
+        "executionAvailable": summary.execution_available,
+        "ready": summary.ready,
+        "requestedSelectedSyntaxCardIndex": summary.requested_selected_syntax_card_index,
+        "requestedActiveCommandId": &summary.requested_active_command_id,
+        "resolvedSelectedSyntaxCardIndex": summary.resolved_selected_syntax_card_index,
+        "resolvedActiveCommandId": &summary.resolved_active_command_id,
+        "selectionStale": summary.selection_stale,
+        "commandStale": summary.command_stale,
+        "panelCount": summary.panel_count,
+        "activePanelId": &summary.active_panel_id,
+        "diagnosticCount": summary.diagnostic_count,
+        "blockingMessage": &summary.blocking_message,
     })
 }
 

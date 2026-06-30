@@ -33,14 +33,14 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app bootstrap snapshot.
+1. Rust Berkeley Mosaic app startup summary.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app bootstrap snapshots and JSON helpers that
-     combine the Berkeley package manifest with deck-specific host-surface wire
-     exports for Mosaic, WebAssembly, and product-shell startup.
-   - Expose run and non-run helpers that preserve blocked-deck diagnostics,
-     repaired persisted editor-state metadata, active panels, and package
-     capabilities in one startup envelope.
+   - Add schema-versioned Rust app startup summaries and JSON helpers that
+     derive a compact ready/blocked route from Berkeley app bootstrap payloads.
+   - Preserve package name, source fingerprint, repaired persisted editor-state
+     IDs, stale-state flags, active panel, diagnostic count, and blocking
+     reason so Mosaic, WebAssembly, and product shells can make startup routing
+     decisions without walking every host panel.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1530,6 +1530,16 @@ the Rust, Python, and TypeScript surfaces together.
      schema, source-fingerprint algorithm, panel kinds, editor action kinds,
      command targets, runnable analysis directives, and artifact capabilities
      before a host opens a deck.
+
+145. Rust Berkeley Mosaic app bootstrap snapshot.
+   - Status: completed in PR 6980.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app bootstrap snapshots plus JSON helpers that combine the static package
+     manifest with deck-specific host-surface wire exports.
+   - The bootstrap payload preserves blocked-deck diagnostics, repaired
+     persisted editor-state metadata, active panels, package capabilities, and
+     run availability in one startup envelope for Mosaic, WebAssembly, and
+     product-shell startup.
 
 ## Backlog
 
