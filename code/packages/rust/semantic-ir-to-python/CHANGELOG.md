@@ -1,5 +1,42 @@
 # Changelog
 
+## 0.2.0 — default-parameter emission via sentinel + body prologue (P2c)
+
+The backend now accepts `Feature::DefaultParams` and lowers default parameters.
+
+SIR defaults are **call-time** and may reference **earlier params** (e.g. a
+default of `a + 1`), which Python's native def-time defaults cannot express —
+`def f(a, b=a)` raises `NameError`, and even a constant default would evaluate
+once at definition time, not per call. So native default syntax is wrong for
+this model. Instead:
+
+- **Sentinel.** The core runtime header now defines a module-level
+  `_SIR_MISSING = object()` — a unique value distinct from every real argument
+  (including `None`).
+- **Signature.** A defaulted param emits `name=_SIR_MISSING` (its native Python
+  default is the sentinel), so callers may omit the trailing argument.
+- **Resolve-prologue.** The function body opens with, in **param order**, one
+  guard per defaulted param:
+
+  ```python
+  if name is _SIR_MISSING:
+      name = <default expr>
+  ```
+
+  The default expression is emitted through the ordinary expr path and runs in
+  the body, where earlier params are already bound — giving call-time,
+  param-scoped semantics correctly. Param order guarantees an earlier defaulted
+  param is resolved before a later default that references it.
+- **Calls.** `DirectCall` is unchanged: it emits only the arguments present (no
+  padding). An omitted trailing defaulted argument leaves the param bound to the
+  sentinel, which the prologue then resolves. `IndirectCall`/closure defaults
+  are deferred.
+
+Execution-proof (via the PYTHONPATH-aware `run_emitted_python` harness):
+`def f(a, b)` with `b`'s default `a + 1`, returning `b`; `print(f(5))` prints
+`6` (default resolved against the earlier param) and `print(f(5, 10))` prints
+`10` (supplied argument suppresses the default).
+
 ## 0.1.23 — case-equality `case_eq` emission (M5)
 
 A `case_eq` builtin (emitted by a `when` clause for range/regex/literal
