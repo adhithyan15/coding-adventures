@@ -11,10 +11,10 @@ use spice_netlist_parser::{
     FourAnalysis, McAnalysis, MeasureAnalysis, MeasureOperation, NetlistParseError, NoiseAnalysis,
     OpAnalysis, OptionValue, OutputProbe, PlotAnalysis, PoleZeroAnalysis, PoleZeroKind,
     PrintAnalysis, ProbeAnalysis, SaveAnalysis, SelectedOutputValue, SensAnalysis, TempAnalysis,
-    TfAnalysis, TranAnalysis, BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION,
-    BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION, BERKELEY_APP_PACKAGE_NAME,
-    BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM, BERKELEY_SPICE_GRAMMAR_NAME,
-    BERKELEY_SPICE_GRAMMAR_VERSION,
+    TfAnalysis, TranAnalysis, BERKELEY_APP_BOOTSTRAP_SCHEMA_VERSION,
+    BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION, BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION,
+    BERKELEY_APP_PACKAGE_NAME, BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM,
+    BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -2548,6 +2548,119 @@ fn berkeley_app_facade_exports_package_manifest_json() {
         .unwrap()
         .iter()
         .any(|capability| capability == "source-fingerprint"));
+    assert!(payload["artifactCapabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|capability| capability == "app-bootstrap-json"));
+}
+
+#[test]
+fn berkeley_app_facade_exports_bootstrap_json_after_execution() {
+    let app = parse_berkeley_app_deck(
+        r#"
+* transient bootstrap
+V1 in 0 PULSE(0 1 0 1n 1n 1n 4n)
+R1 in out 1k
+C1 out 0 1p
+.tran 1n 3n
+.print tran V(out)
+.end
+"#,
+    );
+
+    let requested_state = BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(3),
+        active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+    };
+    let snapshot = app
+        .run_app_bootstrap_snapshot(requested_state.clone())
+        .expect("bootstrap snapshot should execute");
+
+    assert_eq!(
+        snapshot.schema_version,
+        BERKELEY_APP_BOOTSTRAP_SCHEMA_VERSION
+    );
+    assert_eq!(
+        snapshot.package_manifest.package_name,
+        BERKELEY_APP_PACKAGE_NAME
+    );
+    assert_eq!(
+        snapshot.package_manifest.host_surface_wire_schema_version,
+        BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION
+    );
+    assert_eq!(
+        snapshot.host_surface.active_panel_id.as_deref(),
+        Some("waveform")
+    );
+    assert!(snapshot.host_surface.execution_available);
+    assert_eq!(snapshot.host_surface.panel_count, 5);
+
+    let payload: serde_json::Value =
+        serde_json::from_str(&app.run_app_bootstrap_json(requested_state).unwrap())
+            .expect("bootstrap JSON should parse");
+    assert_eq!(payload["schemaVersion"], 1);
+    assert_eq!(
+        payload["packageManifest"]["packageName"],
+        "berkeley-spice-mosaic-app"
+    );
+    assert_eq!(
+        payload["packageManifest"]["hostSurfaceWireSchemaVersion"],
+        BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION
+    );
+    assert_eq!(payload["hostSurface"]["activePanelId"], "waveform");
+    assert_eq!(
+        payload["hostSurface"]["panels"][4]["target"],
+        "analysis-waveform"
+    );
+    assert_eq!(payload["hostSurface"]["panels"][4]["enabled"], true);
+    assert!(payload["packageManifest"]["artifactCapabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|capability| capability == "app-bootstrap-json"));
+}
+
+#[test]
+fn berkeley_app_facade_bootstrap_json_preserves_blocked_deck_diagnostics() {
+    let app = parse_berkeley_app_deck(
+        r#"
+V1 in 0 DC 1
+R1 in out
+.op
+.end
+"#,
+    );
+
+    let requested_state = BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(2),
+        active_command_id: Some("analysis.2.run".to_string()),
+    };
+    let snapshot = app.app_bootstrap_snapshot(requested_state.clone());
+
+    assert_eq!(
+        snapshot.schema_version,
+        BERKELEY_APP_BOOTSTRAP_SCHEMA_VERSION
+    );
+    assert!(!snapshot.host_surface.parsed);
+    assert_eq!(
+        snapshot.host_surface.active_panel_id.as_deref(),
+        Some("diagnostics")
+    );
+    assert_eq!(snapshot.host_surface.diagnostics[0].severity, "error");
+
+    let payload: serde_json::Value = serde_json::from_str(&app.app_bootstrap_json(requested_state))
+        .expect("blocked bootstrap JSON should parse");
+    assert_eq!(payload["packageManifest"]["schemaVersion"], 1);
+    assert_eq!(payload["hostSurface"]["activePanelId"], "diagnostics");
+    assert_eq!(
+        payload["hostSurface"]["diagnostics"][0]["severity"],
+        "error"
+    );
+    assert_eq!(
+        payload["hostSurface"]["diagnostics"][0]["span"]["startLine"],
+        3
+    );
 }
 
 #[test]

@@ -15,6 +15,7 @@ pub const BERKELEY_SPICE_PARSER_GRAMMAR: &str =
     include_str!("../../../../grammars/spice/berkeley.grammar");
 pub const BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_BOOTSTRAP_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -45,6 +46,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "persisted-editor-state",
     "host-surface",
     "host-surface-wire-json",
+    "app-bootstrap-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -213,6 +215,19 @@ pub fn berkeley_app_package_manifest() -> BerkeleyAppPackageManifest {
 
 pub fn berkeley_app_package_manifest_json() -> String {
     berkeley_app_package_manifest().to_json()
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppBootstrapSnapshot {
+    pub schema_version: u32,
+    pub package_manifest: BerkeleyAppPackageManifest,
+    pub host_surface: BerkeleyAppHostSurfaceWire,
+}
+
+impl BerkeleyAppBootstrapSnapshot {
+    pub fn to_json(&self) -> String {
+        app_bootstrap_snapshot_json_value(self).to_string()
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -731,6 +746,39 @@ impl BerkeleyAppDeck {
         persisted_state: BerkeleyAppPersistedEditorState,
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self.run_host_surface_wire(persisted_state)?.to_json())
+    }
+
+    pub fn app_bootstrap_snapshot(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppBootstrapSnapshot {
+        BerkeleyAppBootstrapSnapshot {
+            schema_version: BERKELEY_APP_BOOTSTRAP_SCHEMA_VERSION,
+            package_manifest: berkeley_app_package_manifest(),
+            host_surface: self.host_surface_wire(persisted_state),
+        }
+    }
+
+    pub fn run_app_bootstrap_snapshot(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppBootstrapSnapshot, AnalysisExecutionError> {
+        Ok(BerkeleyAppBootstrapSnapshot {
+            schema_version: BERKELEY_APP_BOOTSTRAP_SCHEMA_VERSION,
+            package_manifest: berkeley_app_package_manifest(),
+            host_surface: self.run_host_surface_wire(persisted_state)?,
+        })
+    }
+
+    pub fn app_bootstrap_json(&self, persisted_state: BerkeleyAppPersistedEditorState) -> String {
+        self.app_bootstrap_snapshot(persisted_state).to_json()
+    }
+
+    pub fn run_app_bootstrap_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self.run_app_bootstrap_snapshot(persisted_state)?.to_json())
     }
 
     pub fn run_source_order(&self) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
@@ -1326,6 +1374,14 @@ fn app_package_manifest_json_value(manifest: &BerkeleyAppPackageManifest) -> ser
         "runnableAnalysisDirectives": &manifest.runnable_analysis_directives,
         "artifactAnalysisDirectives": &manifest.artifact_analysis_directives,
         "artifactCapabilities": &manifest.artifact_capabilities,
+    })
+}
+
+fn app_bootstrap_snapshot_json_value(snapshot: &BerkeleyAppBootstrapSnapshot) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": snapshot.schema_version,
+        "packageManifest": app_package_manifest_json_value(&snapshot.package_manifest),
+        "hostSurface": host_surface_wire_json_value(&snapshot.host_surface),
     })
 }
 

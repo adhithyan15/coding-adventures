@@ -79,6 +79,13 @@ assert!(host_wire_json.contains(r#""activePanelId":"waveform""#));
 
 let package_manifest_json = berkeley_app_package_manifest_json();
 assert!(package_manifest_json.contains(r#""packageName":"berkeley-spice-mosaic-app""#));
+
+let bootstrap_json = deck.run_app_bootstrap_json(BerkeleyAppPersistedEditorState {
+    selected_syntax_card_index: Some(3),
+    active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+})?;
+assert!(bootstrap_json.contains(r#""packageManifest":{"#));
+assert!(bootstrap_json.contains(r#""hostSurface":{"#));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -105,8 +112,12 @@ product-shell embedding. The static package manifest advertises the Berkeley
 grammar version, host-surface wire schema, panel kinds, command targets,
 runnable analysis directives, and artifact capabilities so Mosaic and
 WebAssembly hosts can negotiate the app package before opening a deck. It is the
-Rust app/runtime entrypoint for Mosaic-backed UI work while the grammar-backed
-parser generator and Python/TypeScript parity surfaces continue to mature.
+Rust app/runtime entrypoint for Mosaic-backed UI work. App bootstrap snapshots
+combine that manifest with the schema-versioned host-surface wire export so
+WebAssembly and product shells can load one startup payload with package
+capabilities, repaired editor-state metadata, active panels, and diagnostics
+before taking ownership of the UI. The grammar-backed parser generator and
+Python/TypeScript parity surfaces continue to mature.
 
 This parser supports `R`, `C`, `L`, `V`, `I`, `D`, `Q`, `M`, `G`, `E`, `F`, and
 `H` elements, `.model <name> D(...)` diode cards with `IS` and `VT`
