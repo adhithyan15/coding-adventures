@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.19.5] - 2026-06-30
+
+### Fixed — prefix `++` / `--` silently dropped (miscompile)
+
+`convert_unary_expression` recognises prefix operators by mapping the operator
+token through `unary_operator_from_str`, which intentionally returns `None` for
+anything that is not a real unary operator (`- + ! ~ typeof void delete`). A
+prefix `++` / `--` token also maps to `None`, so it fell into the
+`postfix_expression` pass-through arm and the bridge returned the bare operand —
+`++a` became `a`, dropping the increment. That is a **miscompile** at
+SIMPLE/ADVANCED (`++a` and `a` are different programs: the former increments `a`
+and evaluates to `a+1`).
+
+A prefix `++`/`--` is now REJECTED with `UnsupportedSyntax("UpdateExpression")`,
+exactly as the postfix `a++` form already is in `convert_postfix_expression`.
+closurec then falls back to identity passthrough, emitting `++a` verbatim —
+unminified but correct. (Full `UpdateExpression` support, prefix and postfix, is
+a separate Phase-2 item; this change only closes the soundness hole.) New test
+`prefix_update_operators_are_rejected_not_dropped`.
+
 ## [0.19.4] - 2026-06-30
 
 ### Fixed — array elisions (holes) silently dropped (miscompile)
