@@ -69,6 +69,26 @@ Milestone **M4**: functions, calls, and closures — `def`, tail-position
   resolution, lambda + capture, nested-def + capture, mutual-recursion
   detection, default-parameter rejection, and a validator round-trip set.
 
+### Fixed
+
+- **Depth-bounded the three M4 pre-lowering CST walks** so the public
+  `compile` cannot overflow the native (uncatchable) stack on a
+  pathologically deep input.  These walks run *before* the depth-guarded
+  lowering, so they previously bypassed the `MAX_BLOCK_DEPTH` /
+  `MAX_EXPR_DEPTH` guards:
+  - `collect_function_names` (pass-1 def-name collection) now threads a
+    block-nesting `depth` capped at `MAX_BLOCK_DEPTH`;
+  - `collect_free_names` (free-variable scan) and `walk_for_targets` /
+    `descendant_assign_targets` / `collect_suite_bound_names` (bound-name
+    scan) now thread an expression-nesting `depth` capped at
+    `MAX_EXPR_DEPTH`.
+  Each returns a clean positioned `PythonLowerError("… nesting too deep …")`
+  past the cap, mirroring the lowering guards.  Two regression tests
+  (84 total) build a 400-deep `def` tower and a 400-deep expression inside
+  a function body — run on an enlarged stack so the (separately unguarded)
+  parser survives to reach the lowerer — and assert a clean "too deep"
+  error rather than a crash.
+
 ### Changed
 
 - `compile` / `compile_source` now lower `def` / `lambda` / `return` /

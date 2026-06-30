@@ -336,7 +336,7 @@ impl Lowerer {
         // ── Pass 1: collect all function names (top-level + nested). ──
         for child in &file.children {
             if let ASTNodeOrToken::Node(stmt) = child {
-                self.collect_function_names(stmt)?;
+                self.collect_function_names(stmt, 0)?;
             }
         }
 
@@ -435,7 +435,23 @@ impl Lowerer {
     /// same flat table.  `lambda` names are *not* collected here — they
     /// are gensym'd on the fly during lowering (a lambda has no source
     /// name to forward-reference).
-    fn collect_function_names(&mut self, stmt: &GrammarASTNode) -> Result<(), PythonLowerError> {
+    ///
+    /// `depth` bounds the *suite-nesting* recursion: this pass-1 walk runs
+    /// **before** the depth-guarded lowering, so a pathological tower of
+    /// nested `def`s (or compounds) would otherwise overflow the native
+    /// (uncatchable) stack here.  Past [`MAX_BLOCK_DEPTH`] we return a
+    /// clean positioned `PythonLowerError`, mirroring the lowering guard.
+    fn collect_function_names(
+        &mut self,
+        stmt: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<(), PythonLowerError> {
+        if depth > MAX_BLOCK_DEPTH {
+            return Err(self.err_at(
+                stmt,
+                format!("control-flow nesting too deep (exceeds {MAX_BLOCK_DEPTH} levels)"),
+            ));
+        }
         // Only `statement` nodes carry defs; recurse structurally.
         if let Some(def) = self.as_def_stmt(stmt) {
             let name = self.def_name(def)?;
@@ -445,7 +461,7 @@ impl Lowerer {
                 for child in &suite.children {
                     if let ASTNodeOrToken::Node(inner) = child {
                         if inner.rule_name == "statement" {
-                            self.collect_function_names(inner)?;
+                            self.collect_function_names(inner, depth + 1)?;
                         }
                     }
                 }
@@ -460,7 +476,7 @@ impl Lowerer {
                 for child in &suite.children {
                     if let ASTNodeOrToken::Node(inner) = child {
                         if inner.rule_name == "statement" {
-                            self.collect_function_names(inner)?;
+                            self.collect_function_names(inner, depth + 1)?;
                         }
                     }
                 }
@@ -1158,7 +1174,7 @@ impl Lowerer {
         let bound: HashSet<String> = params.iter().cloned().collect();
         let mut free = Vec::new();
         let mut seen = HashSet::new();
-        self.collect_free_names(body_expr, &bound, &mut free, &mut seen);
+        self.collect_free_names(body_expr, &bound, &mut free, &mut seen, 0)?;
 
         let (captures, capture_values) =
             self.resolve_captures(&free, enclosing, &span)?;
@@ -1231,10 +1247,10 @@ impl Lowerer {
         // Names bound *within* the body — the params plus every name the
         // body assigns / `for`-binds — are body-local, not captures.
         let mut bound: HashSet<String> = params.iter().cloned().collect();
-        self.collect_suite_bound_names(suite, &mut bound);
+        self.collect_suite_bound_names(suite, &mut bound)?;
         let mut free = Vec::new();
         let mut seen = HashSet::new();
-        self.collect_free_names(suite, &bound, &mut free, &mut seen);
+        self.collect_free_names(suite, &bound, &mut free, &mut seen, 0)?;
 
         let (captures, capture_values) = self.resolve_captures(&free, enclosing, &span)?;
 
@@ -1375,26 +1391,36 @@ impl Lowerer {
     /// so the free-variable scan treats body-local assignments as bound
     /// rather than as captures.  Bare `x = …` targets are collected;
     /// nested-`def` names too (they shadow).
-    fn collect_suite_bound_names(&self, suite: &GrammarASTNode, bound: &mut HashSet<String>) {
+    fn collect_suite_bound_names(
+        &self,
+        suite: &GrammarASTNode,
+        bound: &mut HashSet<String>,
+    ) -> Result<(), PythonLowerError> {
         for child in &suite.children {
             if let ASTNodeOrToken::Node(stmt) = child {
-                self.collect_stmt_bound_names(stmt, bound);
+                self.collect_stmt_bound_names(stmt, bound)?;
             }
         }
+        Ok(())
     }
 
-    fn collect_stmt_bound_names(&self, stmt: &GrammarASTNode, bound: &mut HashSet<String>) {
+    fn collect_stmt_bound_names(
+        &self,
+        stmt: &GrammarASTNode,
+        bound: &mut HashSet<String>,
+    ) -> Result<(), PythonLowerError> {
         // assignment target?
         if let Some(def) = self.as_def_stmt(stmt) {
             if let Ok(n) = self.def_name(def) {
                 bound.insert(n);
             }
-            return;
+            return Ok(());
         }
         // `for x in …:` binds `x`; descend into suites of compounds.
-        for n in self.descendant_assign_targets(stmt) {
+        for n in self.descendant_assign_targets(stmt)? {
             bound.insert(n);
         }
+        Ok(())
     }
 
     /// Collect assignment targets and `for`-loop variables anywhere
@@ -1403,13 +1429,34 @@ impl Lowerer {
     /// *reduces* captures, and a missing capture would surface as a
     /// validator error, so a name we fail to collect here cannot silently
     /// corrupt output.
-    fn descendant_assign_targets(&self, stmt: &GrammarASTNode) -> Vec<String> {
+    fn descendant_assign_targets(
+        &self,
+        stmt: &GrammarASTNode,
+    ) -> Result<Vec<String>, PythonLowerError> {
         let mut out = Vec::new();
-        self.walk_for_targets(stmt, &mut out);
-        out
+        self.walk_for_targets(stmt, &mut out, 0)?;
+        Ok(out)
     }
 
-    fn walk_for_targets(&self, node: &GrammarASTNode, out: &mut Vec<String>) {
+    /// Recursively scan `node`'s subtree for assignment / `for`-target
+    /// names.  This is a pre-lowering walk (it feeds free-variable
+    /// analysis before the depth-guarded lowering runs), so it bounds its
+    /// own recursion: it descends into *every* node child, so its depth
+    /// tracks the *expression* nesting depth and is capped at
+    /// [`MAX_EXPR_DEPTH`] — past which it returns a clean positioned error
+    /// rather than overflowing the native stack.
+    fn walk_for_targets(
+        &self,
+        node: &GrammarASTNode,
+        out: &mut Vec<String>,
+        depth: usize,
+    ) -> Result<(), PythonLowerError> {
+        if depth > MAX_EXPR_DEPTH {
+            return Err(self.err_at(
+                node,
+                format!("expression nesting too deep (exceeds {MAX_EXPR_DEPTH} levels)"),
+            ));
+        }
         match node.rule_name.as_str() {
             "assign_stmt" => {
                 // First expression_list is the LHS; if there's an
@@ -1441,9 +1488,10 @@ impl Lowerer {
         }
         for child in &node.children {
             if let ASTNodeOrToken::Node(n) = child {
-                self.walk_for_targets(n, out);
+                self.walk_for_targets(n, out, depth + 1)?;
             }
         }
+        Ok(())
     }
 
     /// Collect free `Name` references in a CST subtree: every bare `Name`
@@ -1455,13 +1503,27 @@ impl Lowerer {
     /// names that escape to *this* scope still surface (capture chaining
     /// at one level: an inner lambda referencing an outer-outer local is a
     /// documented v0 cut-line, but a single level works).
+    ///
+    /// `depth` bounds this pre-lowering walk's recursion.  Like the
+    /// expression lowerer, it descends into *every* node child, so its
+    /// depth tracks the *expression* nesting depth and is capped at
+    /// [`MAX_EXPR_DEPTH`]; past the cap we return a clean positioned
+    /// `PythonLowerError` instead of overflowing the native (uncatchable)
+    /// stack on a pathologically deep input via the public `compile`.
     fn collect_free_names(
         &self,
         node: &GrammarASTNode,
         bound: &HashSet<String>,
         free: &mut Vec<String>,
         seen: &mut HashSet<String>,
-    ) {
+        depth: usize,
+    ) -> Result<(), PythonLowerError> {
+        if depth > MAX_EXPR_DEPTH {
+            return Err(self.err_at(
+                node,
+                format!("expression nesting too deep (exceeds {MAX_EXPR_DEPTH} levels)"),
+            ));
+        }
         // A nested lambda binds its params; descend with them added.
         if node.rule_name == "lambda_expr" {
             let mut inner = bound.clone();
@@ -1471,9 +1533,9 @@ impl Lowerer {
                 }
             }
             if let Some(body) = self.first_child_named(node, "expression") {
-                self.collect_free_names(body, &inner, free, seen);
+                self.collect_free_names(body, &inner, free, seen, depth + 1)?;
             }
-            return;
+            return Ok(());
         }
         // A nested def binds its name + params; descend into its suite
         // with those added.
@@ -1488,10 +1550,10 @@ impl Lowerer {
                 }
             }
             if let Some(suite) = self.first_child_named(node, "suite") {
-                self.collect_suite_bound_names(suite, &mut inner);
-                self.collect_free_names(suite, &inner, free, seen);
+                self.collect_suite_bound_names(suite, &mut inner)?;
+                self.collect_free_names(suite, &inner, free, seen, depth + 1)?;
             }
-            return;
+            return Ok(());
         }
 
         // A bare `Name` token (no type_name) is a reference.
@@ -1502,14 +1564,15 @@ impl Lowerer {
                     free.push(name.clone());
                 }
             }
-            return;
+            return Ok(());
         }
 
         for child in &node.children {
             if let ASTNodeOrToken::Node(n) = child {
-                self.collect_free_names(n, bound, free, seen);
+                self.collect_free_names(n, bound, free, seen, depth + 1)?;
             }
         }
+        Ok(())
     }
 
     // -------------------------------------------------------------------

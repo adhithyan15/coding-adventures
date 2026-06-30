@@ -1148,6 +1148,76 @@ mod tests {
         );
     }
 
+    // ── pre-lowering CST walks are depth-bounded (no native overflow) ──
+    //
+    // M4 added three CST walks that run *before* the depth-guarded
+    // lowering: pass-1 def-name collection (`collect_function_names`), the
+    // free-variable scan (`collect_free_names`), and the bound-name scan
+    // (`walk_for_targets`).  Each is now depth-bounded (block depth →
+    // MAX_BLOCK_DEPTH, expression depth → MAX_EXPR_DEPTH) so a
+    // pathologically deep input via the public `compile` yields a clean
+    // positioned `PythonLowerError` ("too deep") instead of overflowing
+    // the native (uncatchable) stack.
+    //
+    // The test runs on an enlarged stack so the *parser's* own
+    // (unguarded) recursive descent survives long enough for the lowerer
+    // to be reached — the guard under test is the lowerer's, not the
+    // parser's.  Depth 400 comfortably exceeds the 256-level caps while
+    // keeping construction / drop bounded.
+
+    /// Run `f` on a 64 MiB stack so the parser survives deep input and the
+    /// *lowering* depth guards are the ones exercised.
+    fn on_big_stack<F: FnOnce() + Send + 'static>(f: F) {
+        std::thread::Builder::new()
+            .stack_size(64 * 1024 * 1024)
+            .spawn(f)
+            .expect("spawn worker thread")
+            .join()
+            .expect("worker thread did not overflow / panic");
+    }
+
+    #[test]
+    fn deep_def_tower_errors_cleanly_not_overflow() {
+        // A tower of nested `def`s drives `collect_function_names`
+        // (pass 1) past MAX_BLOCK_DEPTH.
+        on_big_stack(|| {
+            let depth = 400usize;
+            let mut src = String::new();
+            for i in 0..depth {
+                let pad = "    ".repeat(i);
+                src.push_str(&format!("{pad}def f{i}():\n"));
+            }
+            let pad = "    ".repeat(depth);
+            src.push_str(&format!("{pad}return 1\n"));
+
+            let err = compile_source(&src, "t")
+                .expect_err("deep def tower must be rejected, not crash");
+            assert!(
+                err.message.contains("too deep"),
+                "expected a positioned 'too deep' error, got: {}",
+                err.message
+            );
+        });
+    }
+
+    #[test]
+    fn deep_expression_in_def_body_errors_cleanly_not_overflow() {
+        // A long unary-minus chain inside a function body drives the
+        // free-variable / bound-name scans (and the lowerer) past
+        // MAX_EXPR_DEPTH.
+        on_big_stack(|| {
+            let body = format!("{}x", "-".repeat(400));
+            let src = format!("x = 1\ndef g():\n    return {body}\n");
+            let err = compile_source(&src, "t")
+                .expect_err("deep expression must be rejected, not crash");
+            assert!(
+                err.message.contains("too deep"),
+                "expected a positioned 'too deep' error, got: {}",
+                err.message
+            );
+        });
+    }
+
     // ── deferred constructs stay rejected ─────────────────────────────
 
     #[test]
