@@ -2777,6 +2777,7 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
             "limit",
             "observed_at_or_after_ms",
             "received_at_or_after_ms",
+            "received_at_or_before_ms",
             "room_id",
             "sort",
             "to_ms",
@@ -6023,6 +6024,7 @@ fn state_history_events<'a>(
     let observed_at_or_after_ms = history_from_ms(request)?;
     let observed_at_or_before_ms = history_to_ms(request)?;
     let received_at_or_after_ms = query_u64(request, "received_at_or_after_ms")?;
+    let received_at_or_before_ms = query_u64(request, "received_at_or_before_ms")?;
     let limit = query_limit(request, 100, 1_000)?;
 
     let mut events = runtime
@@ -6049,6 +6051,10 @@ fn state_history_events<'a>(
         .filter(|event| {
             received_at_or_after_ms
                 .is_none_or(|received_at_ms| event.received_at_ms >= received_at_ms)
+        })
+        .filter(|event| {
+            received_at_or_before_ms
+                .is_none_or(|received_at_ms| event.received_at_ms <= received_at_ms)
         })
         .collect::<Vec<_>>();
 
@@ -8572,7 +8578,7 @@ mod tests {
             r#""path":"/api/smart_home/capability_grants","category":"authorization","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["capability_id","entity_id","limit","principal_id","scope","sort","status"]"#
         ));
         assert!(catalog.contains(
-            r#""path":"/api/smart_home/state_history","category":"state_history","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["bridge_id","entity_id","event_type","from_ms","limit","observed_at_or_after_ms","received_at_or_after_ms","room_id","sort","to_ms"]"#
+            r#""path":"/api/smart_home/state_history","category":"state_history","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["bridge_id","entity_id","event_type","from_ms","limit","observed_at_or_after_ms","received_at_or_after_ms","received_at_or_before_ms","room_id","sort","to_ms"]"#
         ));
         let catalog_json: JsonValue =
             serde_json::from_str(&catalog).expect("API catalog response is JSON");
@@ -9201,6 +9207,34 @@ mod tests {
             .into(),
         );
         assert!(past_window_body.contains(r#""total_events":0"#));
+
+        let received_window_body = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/state_history?received_at_or_after_ms=2010&received_at_or_before_ms=2010&limit=5",
+            ))
+            .into(),
+        );
+        assert!(received_window_body.contains(r#""total_events":1"#));
+        assert!(received_window_body.contains(r#""event_id":"event-light-1-on""#));
+
+        let future_received_window_body = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/state_history?received_at_or_after_ms=2011&limit=5",
+            ))
+            .into(),
+        );
+        assert!(future_received_window_body.contains(r#""total_events":0"#));
+
+        let past_received_window_body = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/state_history?received_at_or_before_ms=2009&limit=5",
+            ))
+            .into(),
+        );
+        assert!(past_received_window_body.contains(r#""total_events":0"#));
 
         let bridge_body = response_body(
             app.handle(request(
