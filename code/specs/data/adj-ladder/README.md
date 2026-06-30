@@ -217,6 +217,23 @@ ten infeasible) across antimicrobials, anticoagulants, analgesics, antiarrhythmi
 endocrine, and oncologic therapy; every numeric bound is stated in the stem. Engine returns the
 correct feasibility **20/20 cached, zero wrong**. Realizes rung 6b of ADJ-LADDER.md §5.
 
+### Clinical management rung (rung 6c formulary cost, cached engine)
+
+`rung6c_formulary_cost/` is the **economics** half of the therapy decision: where rung 6b decides
+*can* a therapy be dosed (feasibility), rung 6c decides **what is the cheapest** way to deliver an
+already-feasible therapy — rendered as a **2-variable linear program**. Each item must meet a required
+daily amount by splitting it between a **cheap** formulation that is **capped** (limited daily supply /
+coverage) and an **expensive** formulation that is **uncapped**. The gold program declares two
+`symbol … : scalar`, one `constrain` per bound, then `minimize <p_cheap> * cheap + <p_brand> * brand`;
+the **engine** solves the LP (simplex) and returns the optimal value, read by the existing
+`optimize_value` extractor — **no harness or engine change** (the same machinery as
+`rung3_linear_optimization`). The reasoning and the traps: the optimum **maxes the cheap form to its
+cap, then tops up with the brand** (`p_cheap*C + p_brand*(R−C)`); ignoring the cap **under-budgets**
+at `p_cheap*R`, reaching only for the brand **over-spends** at `p_brand*R` — both are planted
+distractors. Twenty scenarios across antimicrobial, anticoagulant, endocrine, biologic, antiviral,
+oncologic, and respiratory therapy; every price and bound is stated in the stem. Engine returns the
+correct optimum **20/20 cached, zero wrong**. Realizes rung 6c of ADJ-LADDER.md §5.
+
 ## Layout
 
 ```
