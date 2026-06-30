@@ -80,6 +80,9 @@ pub enum TokenKind {
     Big(String),
     LParen,
     RParen,
+    /// `,` — cell/row separator inside a matrix (`[[a,b],[c,d]]`). Outside a matrix the parser
+    /// has no use for it and reports a clean error, never a panic.
+    Comma,
     LBracket,
     RBracket,
     LBrace,
@@ -303,6 +306,7 @@ pub fn tokenize(src: &str) -> Result<Vec<Token>, FrontendError> {
             '≡' => TokenKind::Equiv,
             '(' => TokenKind::LParen,
             ')' => TokenKind::RParen,
+            ',' => TokenKind::Comma,
             '[' => TokenKind::LBracket,
             ']' => TokenKind::RBracket,
             '{' => TokenKind::LBrace,

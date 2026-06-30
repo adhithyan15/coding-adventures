@@ -50,6 +50,11 @@ impl Parser<'_> {
         self.toks.get(self.pos).map(|t| &t.kind).unwrap_or(&TokenKind::Eof)
     }
 
+    /// The token `n` positions ahead (0 == current). Used for the matrix two-token lookahead.
+    fn peek_nth(&self, n: usize) -> &TokenKind {
+        self.toks.get(self.pos + n).map(|t| &t.kind).unwrap_or(&TokenKind::Eof)
+    }
+
     fn span_here(&self) -> (usize, usize) {
         self.toks.get(self.pos).or_else(|| self.toks.last()).map(|t| t.span).unwrap_or((0, 0))
     }
@@ -289,7 +294,18 @@ impl Parser<'_> {
                 let body = self.parse_atom()?;
                 Ok(MathExpr::BigOp { op, lower, upper, body: Box::new(body) })
             }
-            TokenKind::LParen | TokenKind::LBracket | TokenKind::LBrace => self.parse_group(),
+            TokenKind::LBracket | TokenKind::LParen => {
+                // Two-token lookahead decides matrix vs group before consuming anything (so the
+                // parse is single-pass, no backtracking): an outer bracket immediately followed by
+                // another opening bracket is the matrix shape `[[…` / `((…`; everything else is
+                // ordinary grouping. (Same rule as the AsciiMath frontend.)
+                if matches!(self.peek_nth(1), TokenKind::LBracket | TokenKind::LParen) {
+                    self.parse_matrix()
+                } else {
+                    self.parse_group()
+                }
+            }
+            TokenKind::LBrace => self.parse_group(),
             _ => Err(self.error_here("expected a number, symbol, root, big operator, or '('")),
         }
     }
@@ -306,6 +322,59 @@ impl Parser<'_> {
             }
             _ => Err(self.error_here("expected a closing bracket")),
         }
+    }
+
+    /// A matrix `[[a,b],[c,d]]` (rows may use `[…]` or `(…)`), positioned at the outer opening
+    /// bracket which is known to be followed by a row-opening bracket. Single-pass and committed:
+    /// a malformed shape returns a spanned error (never backtracks, never panics). A 1×1 result
+    /// (`((a))`, `[[a]]`) is *grouping* — the single cell is returned unwrapped; a genuine matrix
+    /// has ≥2 rows or a row with ≥2 cells. (Mirrors the AsciiMath frontend.)
+    fn parse_matrix(&mut self) -> Result<MathExpr, FrontendError> {
+        self.enter()?; // charge the matrix nesting level (paired exit below)
+        let result = self.parse_matrix_inner();
+        self.exit();
+        result
+    }
+
+    fn parse_matrix_inner(&mut self) -> Result<MathExpr, FrontendError> {
+        self.advance(); // outer opening bracket
+        let mut rows: Vec<Vec<MathExpr>> = Vec::new();
+        loop {
+            match self.peek() {
+                TokenKind::LBracket | TokenKind::LParen => self.advance(),
+                _ => return Err(self.error_here("expected a bracketed matrix row")),
+            }
+            let mut cells = vec![self.parse_relation()?];
+            while matches!(self.peek(), TokenKind::Comma) {
+                self.advance();
+                cells.push(self.parse_relation()?);
+            }
+            match self.peek() {
+                TokenKind::RBracket | TokenKind::RParen => self.advance(),
+                _ => return Err(self.error_here("expected a closing bracket for the matrix row")),
+            }
+            rows.push(cells);
+            match self.peek() {
+                TokenKind::Comma => {
+                    self.advance();
+                    continue;
+                }
+                TokenKind::RBracket | TokenKind::RParen => {
+                    self.advance(); // outer closing bracket
+                    break;
+                }
+                _ => return Err(self.error_here("expected ',' or a closing bracket in the matrix")),
+            }
+        }
+        let width = rows[0].len();
+        if rows.iter().any(|r| r.len() != width) {
+            return Err(self.error_here("matrix rows must all have the same length"));
+        }
+        if rows.len() == 1 && width == 1 {
+            // `((a))` / `[[a]]` is double grouping, not a 1×1 matrix — unwrap the single cell.
+            return Ok(rows.into_iter().next().and_then(|r| r.into_iter().next()).expect("1×1"));
+        }
+        Ok(MathExpr::Matrix(rows))
     }
 }
 

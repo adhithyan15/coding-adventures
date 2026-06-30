@@ -2,6 +2,23 @@
 
 All notable changes to the unicode-math pluggable frontend.
 
+## [0.4.0] — 2026-06-30
+
+### Added — PR-4: matrices (full parity with AsciiMath)
+
+- **Matrices** `[[a,b],[c,d]]` → `MathExpr::Matrix` (rows of cells, in source order); rows may use
+  `[…]` or `(…)`, cells are full expressions, and a 1×n single row is a row vector. A `Comma` token
+  is added; the parser uses a two-token lookahead (an outer bracket immediately followed by another
+  opening bracket ⇒ matrix, else a group), so `((a))` / `[[a]]` stay double *grouping* (unwrapped),
+  a genuine matrix needs ≥2 rows or a row with ≥2 cells, and ragged rows are a clean spanned error.
+  Mirrors the AsciiMath frontend's `parse_matrix` exactly (the matrix nesting level is `MAX_DEPTH`
+  -charged, so adversarial `[[[[…` fails cleanly, never overflows). `capabilities()` declares `matrices`.
+- This brings unicode-math to **full parity with the AsciiMath frontend** (the only remaining
+  AsciiMath construct, embedded `\text`, has no Unicode plain-math equivalent and is intentionally
+  out of scope).
+- 29 unit + 1 doc test pass (new `matrices`; conformance corpus gains `[[a,b],[c,d]]` and the ragged
+  `[[a,b],[c]]` error case); clippy `-D warnings` clean; `#![forbid(unsafe_code)]`.
+
 ## [0.3.0] — 2026-06-30
 
 ### Added — PR-3: named functions
