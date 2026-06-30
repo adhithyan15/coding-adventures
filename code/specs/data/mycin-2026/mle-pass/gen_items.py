@@ -56,6 +56,43 @@ INH_CHAINS = [
 INH_POOL = ["autosomal_dominant", "autosomal_recessive", "x_linked_recessive",
             "x_linked_dominant", "mitochondrial"]
 
+# slice 3 — microbiology organism-ID chain (the original MYCIN domain), run in REVERSE:
+# the clue is a *disease*, hop 1 is `causes(organism, disease)` traversed backwards to bind the
+# causative organism (the middle entity), and hop 2 reads that organism's Gram stain or
+# microscopic morphology. Both relations live in micro-edges.adj (imports de-dupe). This
+# exercises the harness's `hop1_reverse` capability — a relation joined on its FIRST argument —
+# and proves a two-hop chain need not run "left to right" through the edges.
+# (id, disease, hop2_relation, answer | None for abstain, clue_phrase)
+MICRO_CHAINS = [
+    # disease → causative organism → Gram stain
+    ("mh-16", "cholera", "gram_stain", "gram_negative", "cholera"),
+    ("mh-17", "gonorrhea", "gram_stain", "gram_negative", "gonorrhea"),
+    ("mh-18", "pertussis", "gram_stain", "gram_negative", "whooping cough (pertussis)"),
+    ("mh-19", "anthrax", "gram_stain", "gram_positive", "anthrax"),
+    ("mh-20", "listeriosis", "gram_stain", "gram_positive", "listeriosis"),
+    ("mh-21", "pseudomembranous_colitis", "gram_stain", "gram_positive", "pseudomembranous colitis"),
+    ("mh-22", "tetanus", "gram_stain", "gram_positive", "tetanus"),
+    ("mh-23", "legionnaires_disease", "gram_stain", "gram_negative", "Legionnaires disease"),
+    # disease → causative organism → microscopic morphology
+    ("mh-24", "cholera", "morphology", "comma_shaped", "rice-water diarrhea of cholera"),
+    ("mh-25", "peptic_ulcer_disease", "morphology", "spiral", "Helicobacter peptic ulcer disease"),
+    ("mh-26", "gonorrhea", "morphology", "diplococci", "gonorrhea"),
+    ("mh-27", "syphilis", "morphology", "spirochete", "syphilis"),
+    ("mh-28", "meningitis", "morphology", "diplococci", "meningococcal meningitis"),
+    ("mh-29", "pertussis", "morphology", "coccobacilli", "whooping cough (pertussis)"),
+    # abstention — a disease whose causative organism is NOT grounded: MUST abstain.
+    ("mh-30", "a_syndrome_with_no_grounded_organism", "gram_stain", None,
+     "a syndrome whose causative organism is not in the grounded library"),
+]
+GRAM_POOL = ["gram_positive", "gram_negative", "acid_fast", "gram_variable", "poorly_staining"]
+MORPH_POOL = ["cocci", "diplococci", "bacilli", "comma_shaped", "spiral", "spirochete",
+              "coccobacilli"]
+MICRO_POOLS = {"gram_stain": GRAM_POOL, "morphology": MORPH_POOL}
+MICRO_TAIL = {
+    "gram_stain": "shows which Gram-stain reaction on microscopy",
+    "morphology": "has which microscopic morphology",
+}
+
 # abstention — real rule shape, ungrounded clue: the engine binds nothing → MUST abstain.
 ABSTAIN = [
     ("mh-14", "a_clue_with_no_grounded_eye_edge", "ophtho-edges.adj", "eye_finding_indicates",
@@ -103,6 +140,31 @@ def build():
             "hop2_lib": "genetics-edges.adj", "hop2_relation": "inheritance",
             "clue": clue, "expected": patt, "options": options, "gold_letter": gold,
         })
+    # --- microbiology organism-ID chain (slice 3): reverse hop1 + Gram stain / morphology ---
+    for idx, (iid, disease, hop2_rel, answer, phrase) in enumerate(MICRO_CHAINS):
+        pool = MICRO_POOLS[hop2_rel]
+        item = {
+            "id": iid, "qtype": "multi_hop_recall",
+            "hop1_lib": "micro-edges.adj", "hop1_relation": "causes", "hop1_reverse": True,
+            "hop2_lib": "micro-edges.adj", "hop2_relation": hop2_rel,
+            "clue": disease,
+        }
+        if answer is None:
+            # ungrounded disease — no causative organism is grounded, so the chain MUST abstain.
+            item.update({
+                "stem": f"A patient has {phrase}. The organism that causes it {MICRO_TAIL[hop2_rel]}? "
+                        f"(If the causative organism is not grounded, abstain.)",
+                "expected": None, "expect_abstain": True,
+                "options": {LETTERS[i]: pool[i] for i in range(5)},
+            })
+        else:
+            options, gold = options_for(answer, pool, idx)
+            item.update({
+                "stem": f"A patient is diagnosed with {phrase}. The organism that causes it "
+                        f"{MICRO_TAIL[hop2_rel]}?",
+                "expected": answer, "options": options, "gold_letter": gold,
+            })
+        items.append(item)
     # --- abstention (ungrounded clue: MUST abstain) ---
     for (iid, clue, lib, rel, hop2_rel, hop2_lib, pool, phrase) in ABSTAIN:
         # plausible distractors, but NO correct answer is reachable (the chain is ungrounded).
@@ -126,9 +188,14 @@ def build():
             "relation as hop 2 — inheritance (clue→disease→inheritance pattern), proving the "
             "harness is generic over the second hop, not gene-specific; and an ABSTENTION "
             "sub-bank whose clue has no grounded hop-1 edge, which MUST abstain (never "
-            "fabricate). Nothing authored: every edge reuses an already-grounded, "
-            "spider+adversarially-gated fact. Engine: every answerable item correct with both "
-            "hops cited; every abstention item abstains; zero model calls."
+            "fabricate). Slice 3 adds the microbiology organism-ID chain (the original MYCIN "
+            "domain) run in REVERSE: the clue is a disease, hop 1 is causes(organism, disease) "
+            "traversed backwards to bind the causative organism, and hop 2 reads that organism's "
+            "Gram stain or microscopic morphology — proving a two-hop chain need not run left to "
+            "right through the edges, and that both hops can share one library. Nothing authored: "
+            "every edge reuses an already-grounded, spider+adversarially-gated fact. Engine: every "
+            "answerable item correct with both hops cited; every abstention item abstains; zero "
+            "model calls."
         ),
         "items": items,
     }

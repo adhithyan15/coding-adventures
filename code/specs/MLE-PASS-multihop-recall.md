@@ -1,6 +1,7 @@
 # MLE-PASS — multi-hop recall (the two-hop reasoning step)
 
-**Status:** First slice shipped. Harness + worked artifact + 7-item bank, run-verified.
+**Status:** Slices 1–3 shipped. Harness + worked artifact + 30-item bank, run-verified
+(gene / inheritance / microbiology-trait hops + abstention; forward and reverse hop 1).
 **Author:** autonomous loop, 2026-06-29.
 
 ## 1. Why
@@ -87,7 +88,35 @@ hop-1 edge — the engine binds nothing and the scorer counts abstaining as corr
 fabrication. `score()` reports `abstained_correctly`; `multihop_coverage` is over correct *answerable*
 items. Run-verified: 15/15 correct (13 answerable, coverage 1.0; 2 abstained), zero model calls.
 
-## 6. Next
+## 6. Slice 3 (shipped) — the microbiology organism-ID chain, run in reverse
+The bank grew **15 → 30**, adding the original **MYCIN** reasoning chain: from a *disease*,
+find the **causative organism**, then read that organism's **Gram stain** or **microscopic
+morphology**. The twist is direction. The grounded edge is `causes(organism, disease)`, so the
+clue (the disease) is its **second** argument and the organism is the middle entity. The harness
+gained a generic **`hop1_reverse`** flag: hop 1's subgoal is emitted as `rel1($D, $X)` (join var
+first, clue second) instead of `rel1($X, $D)`, and the engine's SLD resolver joins on `$D`
+regardless of argument order — relations are bidirectional. Both hops live in one library
+(`micro-edges.adj`), so imports are de-duplicated.
+
+```adj
+import "micro-edges.adj"
+rule {
+    head: clue_to_answer($X, $A)
+    when: causes($D, $X), gram_stain($D, $A)   % $X = disease (clue), $D = organism (join)
+}
+? clue_to_answer(cholera, $A)   % engine binds $A = gram_negative, cites BOTH hops
+```
+
+14 answerable micro chains (8 Gram stain, 6 morphology) plus a micro abstention item whose disease
+has no grounded causative organism. The answer variable is now `$A` (it is a gene, an inheritance
+pattern, a Gram stain, …, depending on hop 2). Run-verified: **30/30 correct** (27 answerable,
+`multihop_coverage` 1.0; 3 abstained correctly), zero model calls. The worked artifact gains
+`disease_to_gram` / `disease_to_morphology` rules (19 in-place queries, all bound, both hops cited).
+
+## 7. Next
 More chains as id joins are grounded (histo/cardio → genetics; disease → *treatment* and
-disease → *mechanism* hops); a third hop (clue → disease → drug → contraindication); a `decision`-style
-multi-hop where the engine ranks among several reachable answers.
+disease → *mechanism* hops). A genuine **three-relation** forward chain (`A→B→C→D`) awaits a
+grounded relation that *chains off* a hop-2 answer (today no edge starts from a gene, substrate,
+or trait), or an id-consistency pass (e.g. the enzyme-deficiency disease ids `gaucher_disease`
+do not yet match the lysosomal `accumulates` ids `gaucher`). A `decision`-style multi-hop where
+the engine ranks among several reachable answers.

@@ -15,7 +15,7 @@ HERE = Path(__file__).resolve().parent
 
 def test_items_bank_is_well_formed():
     items = mp.load_items()
-    assert len(items) >= 15
+    assert len(items) >= 30
     seen = set()
     answerable = 0
     for it in items:
@@ -41,16 +41,33 @@ def test_items_bank_is_well_formed():
 def test_bank_exercises_multiple_hop2_relations_and_abstention():
     items = mp.load_items()
     hop2 = {it["hop2_relation"] for it in items}
-    assert {"gene_defect", "inheritance"} <= hop2  # generic over the second hop
-    assert any(it.get("expect_abstain") for it in items)  # an abstention sub-bank exists
+    # generic over the second hop: genes, inheritance, and microbiology traits all appear.
+    assert {"gene_defect", "inheritance", "gram_stain", "morphology"} <= hop2
+    assert any(it.get("expect_abstain") for it in items)   # an abstention sub-bank exists
+    assert any(it.get("hop1_reverse") for it in items)     # a reverse-hop1 chain exists
 
 
 def test_build_query_shape():
     item = mp.load_items()[0]
     q = mp.build_query(item)
-    assert q.count("import ") == 2          # both grounded libraries
+    assert q.count("import ") == 2          # two distinct grounded libraries
     assert "rule {" in q and "when:" in q   # the joining rule body
-    assert q.strip().endswith("$G)")        # the binding query
+    assert q.strip().endswith("$A)")        # the binding query (answer variable)
+
+
+def test_reverse_hop1_and_import_dedup():
+    # A reverse-hop1 micro item: clue is the relation's SECOND arg, and both hops share one
+    # library, so it is imported exactly once and the hop1 subgoal binds the join var first.
+    micro = next(it for it in mp.load_items() if it.get("hop1_reverse"))
+    assert micro["hop1_lib"] == micro["hop2_lib"]
+    q = mp.build_query(micro)
+    assert q.count("import ") == 1                                 # de-duplicated
+    assert f'{micro["hop1_relation"]}($D, $X)' in q                # reverse: join var first
+    assert f'{micro["hop2_relation"]}($D, $A)' in q                # hop2 consumes the join var
+    # A forward item still places the clue first.
+    fwd = next(it for it in mp.load_items() if not it.get("hop1_reverse")
+               and not it.get("expect_abstain"))
+    assert f'{fwd["hop1_relation"]}($X, $D)' in mp.build_query(fwd)
 
 
 @pytest.mark.skipif(mp._CLI is None, reason="adj-lang-cli not built")

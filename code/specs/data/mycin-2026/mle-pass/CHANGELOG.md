@@ -1,5 +1,29 @@
 # Changelog — mle-pass
 
+## [0.3.0] — 2026-06-30
+
+### Added — slice 3: the microbiology organism-ID chain, run in reverse
+
+- Bank grows **15 → 30** items, adding the original **MYCIN** reasoning chain: from a *disease*,
+  bind the **causative organism**, then read that organism's **Gram stain** or **microscopic
+  morphology** (`disease → organism → trait`). 14 answerable micro chains (8 Gram stain, 6
+  morphology) + a micro abstention item whose disease has no grounded causative organism.
+- New generic harness capability **`hop1_reverse`**: the grounded edge is `causes(organism,
+  disease)`, so the clue (disease) is its *second* argument. When `hop1_reverse` is set, hop 1's
+  subgoal is emitted as `rel1($D, $X)` (join var first, clue second) instead of `rel1($X, $D)`;
+  the engine's SLD resolver joins on `$D` regardless of argument order — **relations are
+  bidirectional**, so a two-hop chain need not run left-to-right through the edges.
+- `build_query` now **de-duplicates imports** (micro's `causes` and `gram_stain`/`morphology`
+  share `micro-edges.adj`, imported once) and the answer variable is generalised `$G` → `$A`
+  (it may be a gene, inheritance pattern, Gram stain, or morphology depending on hop 2);
+  `run_item` reads the `A` binding. No new model calls, no new sink.
+- Worked artifact gains `disease_to_gram` / `disease_to_morphology` reverse-join rules (now 19
+  in-place queries, all bound, both hops cited). Tests: `test_reverse_hop1_and_import_dedup`;
+  `test_bank_exercises_multiple_hop2_relations_and_abstention` now also requires `gram_stain`,
+  `morphology`, and a reverse-hop1 item. Run-verified: **30/30 correct** (27 answerable, coverage
+  1.0; 3 abstained correctly), zero model calls. 6 pytest pass; ruff clean.
+- Nothing authored: every edge reuses an already-grounded, spider+adversarially-gated micro fact.
+
 ## [0.2.0] — 2026-06-30
 
 ### Added — slice 2: more chains, a second hop-2 relation, and an abstention sub-bank
