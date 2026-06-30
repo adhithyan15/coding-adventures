@@ -1302,14 +1302,106 @@ mod tests {
     }
 
     #[test]
-    fn default_parameter_is_deferred() {
-        let err = compile_source("function f(a = 1) { return a; }", "test")
-            .expect_err("default params deferred");
+    fn default_parameter_literal_lowers_to_param_default() {
+        // `function f(a = 1)` → a single `Param` whose `default` is the
+        // lowered initializer `IntLit 1`.  Observes `Feature::DefaultParams`.
+        let m = lower("function f(a = 1) { return a; }");
+        assert_valid(&m);
+        let f = func(&m, "f");
+        assert_eq!(f.params.len(), 1);
+        let p = &f.params[0];
+        assert_eq!(p.name, "a");
         assert!(
-            err.message.contains("deferred") || err.message.contains("default"),
-            "got: {}",
-            err.message
+            matches!(p.default.as_deref(), Some(Expr::IntLit { value: 1, .. })),
+            "expected default IntLit 1, got {:?}",
+            p.default
         );
+        assert!(m.manifest.contains(Feature::DefaultParams));
+    }
+
+    #[test]
+    fn plain_parameter_has_no_default() {
+        // A parameter with no initializer keeps `default: None`, and a
+        // function with only plain params does *not* declare DefaultParams.
+        let m = lower("function f(a) { return a; }");
+        assert_valid(&m);
+        assert!(func(&m, "f").params[0].default.is_none());
+        assert!(!m.manifest.contains(Feature::DefaultParams));
+    }
+
+    #[test]
+    fn default_parameter_may_reference_earlier_param() {
+        // `function f(a, b = a + 1)` — the default for `b` is lowered in
+        // param scope, so it references `a` as a `Scope::Param` VarRef.
+        // This is the JS call-time / param-scope rule, which matches the SIR
+        // `Param.default` model exactly.
+        let m = lower("function f(a, b = a + 1) { return b; }");
+        assert_valid(&m);
+        let f = func(&m, "f");
+        assert_eq!(f.params.len(), 2);
+        assert!(f.params[0].default.is_none(), "`a` has no default");
+        // `b`'s default is `a + 1` → BuiltinCall("+", [VarRef(a, Param), IntLit 1]).
+        match f.params[1].default.as_deref() {
+            Some(Expr::BuiltinCall { name, args, .. }) if name == "+" => {
+                assert!(
+                    matches!(&args[0], Expr::VarRef { scope: Scope::Param, name, .. } if name == "a"),
+                    "default must reference earlier param `a`, got {:?}",
+                    args[0]
+                );
+                assert!(matches!(&args[1], Expr::IntLit { value: 1, .. }));
+            }
+            other => panic!("expected `a + 1` default, got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::DefaultParams));
+    }
+
+    #[test]
+    fn arrow_default_parameter_lowers_to_param_default() {
+        // Arrow functions take defaults too: `(a = 1) => a`.
+        let m = lower("let g = (a = 1) => a; g();");
+        assert_valid(&m);
+        let lambda = func(&m, "__lambda_0");
+        assert!(
+            matches!(lambda.params[0].default.as_deref(), Some(Expr::IntLit { value: 1, .. })),
+            "expected arrow default IntLit 1, got {:?}",
+            lambda.params[0].default
+        );
+        assert!(m.manifest.contains(Feature::DefaultParams));
+    }
+
+    #[test]
+    fn partial_call_omitting_defaulted_arg_lowers_present_args_only() {
+        // `f(5)` against `function f(a, b = a + 1)` is a *partial* call: the
+        // `DirectCall` carries only the present argument (`5`); the omitted
+        // `b` is filled by its default at the call site.  The validator
+        // permits a partial call when the trailing params have defaults.
+        let m = lower("function f(a, b = a + 1) { return b; } console.log(f(5));");
+        assert_valid(&m);
+        // The top-level `console.log(f(5))` wraps a DirectCall with one arg.
+        fn find_direct_call(e: &Expr) -> Option<&Expr> {
+            match e {
+                Expr::BuiltinCall { args, .. } => args.iter().find_map(find_direct_call),
+                Expr::DirectCall { .. } => Some(e),
+                _ => None,
+            }
+        }
+        let call = find_direct_call(main_value(&m)).expect("a DirectCall to `f`");
+        match call {
+            Expr::DirectCall { fn_name, args, .. } => {
+                assert_eq!(fn_name, "f");
+                assert_eq!(args.len(), 1, "only the present arg is lowered (partial call)");
+                assert!(matches!(&args[0], Expr::IntLit { value: 5, .. }));
+            }
+            other => panic!("expected DirectCall, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn rest_parameter_still_deferred() {
+        // Defaults are now supported, but rest `...args` stays deferred.
+        let err = compile_source("function f(...args) { return args; }", "test")
+            .expect_err("rest params still deferred");
+        assert!(err.message.contains("deferred"), "got: {}", err.message);
     }
 
     #[test]

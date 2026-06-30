@@ -123,9 +123,21 @@ supported subset (M1 + M2 + M3 + M4 + M5):
   Captures thread transitively through nested closures.
 - **Calls** dispatch on the callee: a known module `function` →
   `DirectCall`; `console.log(x)` → `BuiltinCall("print", …)`; any other
-  identifier resolving to a closure value → `IndirectCall`.
+  identifier resolving to a closure value → `IndirectCall`. A call may omit
+  trailing defaulted arguments (`f(5)` against `function f(a, b = a + 1)`):
+  it lowers to a **partial** `DirectCall` carrying only the present args,
+  with the default filled at the call site (the validator permits this).
+- **Default parameters.** A defaulted formal `name = <expr>` (both in
+  `function` declarations and arrow functions) lowers to
+  `Param { default: Some(<lowered expr>) }`. JS defaults are *call-time* and
+  may reference *earlier* params (`function f(a, b = a + 1)`), so each
+  default is lowered **inside the function frame** — a reference to an
+  earlier param resolves as `Scope::Param`, matching the SIR `Param.default`
+  model exactly. Declares `Feature::DefaultParams` (plus any feature the
+  default expression uses). Rest `...args` and destructuring stay deferred.
 - **Manifest.** Closures declare `Feature::Closures`; untyped params
-  declare `Feature::DynamicTyping`; a genuine call-graph cycle declares
+  declare `Feature::DynamicTyping`; a defaulted param declares
+  `Feature::DefaultParams`; a genuine call-graph cycle declares
   `Feature::MutualRecursion` (self-recursion alone does not).
 
 ### Control flow
@@ -243,8 +255,9 @@ Method calls other than `console.log` and array methods (`.map`/`.push`/…,
 which need runtime-library support), spread (`[...xs]` / `{...o}`), array
 elisions, object shorthand / computed / numeric keys / methods / getters /
 setters, `.length` *assignment* (a resize with no IR node), classes /
-`this` / `new`, generators, `async`/`await`, default / rest parameters,
-destructuring, and template literals all currently return a `JsLowerError`
+`this` / `new`, generators, `async`/`await`, **rest** parameters
+(`...args`), destructuring, and template literals all currently return a
+`JsLowerError`
 describing what was rejected, with the offending node's position. So do
 **early `return`** (non-tail), the remaining control-flow constructs
 (`switch`, `try`/`catch`, `do … while`, labeled statements,

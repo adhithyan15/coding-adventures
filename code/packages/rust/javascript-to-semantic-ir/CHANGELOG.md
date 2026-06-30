@@ -5,6 +5,65 @@ All notable changes to `javascript-to-semantic-ir` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## 0.6.0
+
+**Default parameters (P9).**  The frontend now *produces* default
+parameters: a defaulted formal `name = <expr>` lowers to a
+`Param { default: Some(<lowered expr>) }`.  Previously M4 deferred any
+parameter with an initializer; this wires defaults all the way through, for
+both `function` declarations and arrow functions.  The core IR and all five
+backends already supported `Param.default`; this completes the JavaScript
+front of that work.
+
+### Added
+
+- **Default-parameter lowering.**  A `formal_parameter` with the CST shape
+  `[Name, "=", <assignment_expression>]` lowers to a `Param` whose `default`
+  is the lowered initializer.  A plain `[Name]` keeps `default: None`.  This
+  applies to `function f(a = 1) { … }` and to arrow functions
+  `(a = 1) => …`.  Observes `Feature::DefaultParams` (and any feature the
+  default expression itself uses, e.g. `Strings` for `a = "x"`).
+- **Call-time, param-scope semantics.**  JS defaults are evaluated at the
+  call site and may reference *earlier* parameters
+  (`function f(a, b = a + 1)`).  We lower each default **inside the function
+  frame** (after the param scope is pushed), so a reference to an earlier
+  param resolves as a `Scope::Param` `VarRef` — exactly the SIR
+  `Param.default` model the validator and every backend already assume.
+- **Partial calls.**  A call that omits a defaulted argument (`f(5)` against
+  `function f(a, b = a + 1)`) lowers to a `DirectCall` carrying *only the
+  present arguments*; the omitted parameter is filled by its default at the
+  call site.  The SIR validator permits such partial calls when the trailing
+  params have defaults.
+- **e2e (node).**  New `default_params_run_in_node` test lowers
+  `function f(a, b = a + 1) { … } console.log(f(5)); console.log(f(5, 10));`
+  → SIR → JavaScript (via the `semantic-ir-to-javascript` dev-dep) → `node`,
+  asserting `6` then `10` — proving call-time evaluation and param-scope
+  resolution end to end.
+
+### Changed
+
+- **Block builder keeps effectful superseded tail expressions.**  When a
+  bare-expression statement is superseded as a block's tail value by a later
+  expression, it is now flushed as an `ExprStmt` **iff it may have a side
+  effect** (a `print`, a call, …) rather than always being dropped as pure.
+  This fixes a latent bug where two consecutive `console.log(...)`
+  statements at the same block level lost all but the last.  A new
+  conservative `expr_may_have_effects` helper drives the decision (literals,
+  var-refs, and pure operators over pure operands are still dropped).
+
+### Rejected (still deferred)
+
+- Rest `...args` and destructuring (`{a}` / `[a]`) parameters remain
+  deferred — defaults are the only previously-deferred param form now
+  supported.  The deferral message was updated accordingly.
+
+### Safety
+
+- The default initializer is an ordinary expression, lowered through the
+  existing `MAX_EXPR_DEPTH`-bounded `lower_expression`, so a pathologically
+  deep default becomes a positioned error rather than a native stack
+  overflow (CWE-674).  No new unbounded CST walk was introduced.
+
 ## 0.5.0
 
 SIR19 milestone **M5 (collections: arrays & objects)** — builds on M4's

@@ -317,8 +317,20 @@
 //! object methods / getters / setters, `.length` *assignment* (a resize, with
 //! no IR node), array methods (`.map`/`.push`/… — these would need
 //! runtime-library support, per the project mandate), classes, `this`/`new`,
-//! generators / `async`/`await`, default / rest params, destructuring, and
-//! template literals all remain positioned errors.
+//! generators / `async`/`await`, **rest** params (`...args`),
+//! destructuring, and template literals all remain positioned errors.
+//!
+//! ### Default parameters (P9, post-M5)
+//!
+//! A defaulted formal `name = <expr>` (in both `function` declarations and
+//! arrow functions) lowers to `Param { default: Some(<lowered expr>) }`.
+//! JS defaults are **call-time** and may reference **earlier** params
+//! (`function f(a, b = a + 1)`), so the initializer is lowered *inside* the
+//! function frame (after the params are in scope) — a reference to an
+//! earlier param resolves as `Scope::Param`, which is exactly the SIR
+//! `Param.default` model.  A call omitting a defaulted argument (`f(5)`)
+//! lowers to a **partial** `DirectCall` carrying only the present args.
+//! Observes `Feature::DefaultParams`.  Rest and destructuring stay deferred.
 
 use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
@@ -527,6 +539,16 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Js
 /// (`resolve_name`) walks the stack top-down: the current frame's
 /// `locals`/`params`, then `captures`, then — for a name found in an
 /// *enclosing* frame — a capture is recorded on the current closure.
+/// A single formal parameter extracted from the CST, before it is lowered
+/// into a [`Param`].  `default` borrows the initializer expression node (the
+/// `assignment_expression` after `=`) so it can be lowered **inside** the
+/// function frame — JS defaults are call-time and may reference earlier
+/// params, so they must be lowered with the params in scope.
+struct FormalParamSpec<'a> {
+    name: String,
+    default: Option<&'a GrammarASTNode>,
+}
+
 struct FnScope {
     /// Parameter names of this function (empty for `main`).
     params: HashSet<String>,
@@ -835,9 +857,22 @@ impl Lowerer {
                             stmts.push(*s);
                         }
                         Lowered::Expr(e) => {
-                            // A new bare expression supersedes the prior
-                            // one as the candidate tail value; the prior
-                            // one, being pure, is dropped.
+                            // A new bare expression supersedes the prior one
+                            // as the candidate tail value.  The prior one is
+                            // no longer observable *as a value*, but if it may
+                            // have a side effect (e.g. `console.log(...)` →
+                            // an effectful `print`, or a call) it must still
+                            // run — flush it as an `ExprStmt`.  A provably
+                            // pure prior (a literal, a var-ref, arithmetic on
+                            // pure operands) is simply dropped.  Without this,
+                            // two consecutive `console.log(...)` statements
+                            // would lose all but the last.
+                            if let Some(prev) = tail.take() {
+                                if expr_may_have_effects(&prev) {
+                                    let span = prev.span().clone();
+                                    stmts.push(Stmt::ExprStmt { expr: prev, span });
+                                }
+                            }
                             tail = Some(e);
                         }
                     }
@@ -1424,7 +1459,7 @@ impl Lowerer {
         self.check_stmt_depth(node, depth)?;
         let name = function_decl_name(node)
             .ok_or_else(|| self.unsupported(node, "function_declaration (no name)"))?;
-        let params = self.formal_param_names(node)?;
+        let params = self.formal_param_specs(node)?;
         let body_node = child_node_named(node, "function_body");
 
         // A *nested* declaration (we're inside a function frame deeper than
@@ -1480,7 +1515,7 @@ impl Lowerer {
     ) -> Result<Expr, JsLowerError> {
         self.check_stmt_depth(node, depth)?;
         let span = self.span_of(node);
-        let params = self.arrow_param_names(node)?;
+        let params = self.arrow_param_specs(node)?;
         let concise = child_node_named(node, "concise_body")
             .ok_or_else(|| self.unsupported(node, "arrow_function (no body)"))?;
 
@@ -1609,15 +1644,22 @@ impl Lowerer {
     fn lower_callable_body(
         &mut self,
         name: &str,
-        params: &[String],
+        params: &[FormalParamSpec],
         body_node: Option<&GrammarASTNode>,
         decl_node: &GrammarASTNode,
         depth: usize,
         is_closure: bool,
     ) -> Result<(Function, Vec<CaptureValue>), JsLowerError> {
         let span = self.span_of(decl_node);
-        self.scopes
-            .push(FnScope::new(params.iter().cloned().collect(), is_closure));
+        self.scopes.push(FnScope::new(
+            params.iter().map(|p| p.name.clone()).collect(),
+            is_closure,
+        ));
+
+        // Lower the default initializers **inside** the freshly pushed frame
+        // (so a default may reference earlier params), then the body.  We do
+        // defaults before the body, but both see the same param frame.
+        let params_result = self.lower_param_specs(params, depth, &span);
 
         // Lower the function body's statement sequence with the tail-return
         // rule.  An absent / empty body yields a nil-valued block.
@@ -1626,20 +1668,12 @@ impl Lowerer {
         let body_result = self.lower_function_body(body_children, span.clone(), depth + 1);
 
         let frame = self.scopes.pop().expect("pushed a frame");
+        let lowered_params = params_result?;
         let body = body_result?;
 
         let function = Function {
             name: name.to_string(),
-            params: params
-                .iter()
-                .map(|p| Param {
-                    name: p.clone(),
-                    sir_type: None,
-                    kind: ParamKind::Required,
-                    default: None,
-                    span: span.clone(),
-                })
-                .collect(),
+            params: lowered_params,
             return_type: None,
             captures: frame
                 .captures
@@ -1670,14 +1704,20 @@ impl Lowerer {
     fn lower_arrow_callable(
         &mut self,
         name: &str,
-        params: &[String],
+        params: &[FormalParamSpec],
         concise: &GrammarASTNode,
         arrow_node: &GrammarASTNode,
         depth: usize,
     ) -> Result<(Function, Vec<CaptureValue>), JsLowerError> {
         let span = self.span_of(arrow_node);
-        self.scopes
-            .push(FnScope::new(params.iter().cloned().collect(), true));
+        self.scopes.push(FnScope::new(
+            params.iter().map(|p| p.name.clone()).collect(),
+            true,
+        ));
+
+        // Lower default initializers inside the frame (may reference earlier
+        // params), then the concise body.
+        let params_result = self.lower_param_specs(params, depth, &span);
 
         // Expression body: `concise_body` has a single expression child and
         // no `{`.  Block body: it wraps a `function_body` between braces.
@@ -1702,20 +1742,12 @@ impl Lowerer {
         })();
 
         let frame = self.scopes.pop().expect("pushed a frame");
+        let lowered_params = params_result?;
         let body = result?;
 
         let function = Function {
             name: name.to_string(),
-            params: params
-                .iter()
-                .map(|p| Param {
-                    name: p.clone(),
-                    sir_type: None,
-                    kind: ParamKind::Required,
-                    default: None,
-                    span: span.clone(),
-                })
-                .collect(),
+            params: lowered_params,
             return_type: None,
             captures: frame
                 .captures
@@ -1729,6 +1761,55 @@ impl Lowerer {
         };
         self.features_used.add(Feature::Closures);
         Ok((function, frame.capture_values))
+    }
+
+    /// Lower a run of [`FormalParamSpec`]s into [`Param`]s, lowering each
+    /// default initializer with the function frame already on the scope
+    /// stack.
+    ///
+    /// **Call-time & param-scope semantics.** In JavaScript a default is
+    /// evaluated at call time and may read *earlier* parameters
+    /// (`function f(a, b = a + 1)`).  Because the whole param frame is
+    /// already pushed by the caller before this runs, lowering the default
+    /// as an ordinary expression makes a reference to `a` resolve as a
+    /// `Scope::Param` `VarRef` — exactly the SIR model (the IR validator and
+    /// every backend treat `Param.default` as evaluated in param scope).
+    ///
+    /// **Depth bound.** The initializer is an ordinary expression node, so
+    /// it is lowered through [`lower_expression`], which is bounded by
+    /// [`MAX_EXPR_DEPTH`] (a pathologically deep default becomes a positioned
+    /// error, never a native stack overflow — CWE-674).  We start it at
+    /// `depth + 1` so a default nested inside a deep function still counts
+    /// against the same budget.
+    ///
+    /// A parameter that carries a default makes the module observe
+    /// [`Feature::DefaultParams`]; the validator independently observes the
+    /// same feature off the `default = Some(_)` slot, so the declared and
+    /// observed manifests agree.
+    fn lower_param_specs(
+        &mut self,
+        params: &[FormalParamSpec],
+        depth: usize,
+        span: &Span,
+    ) -> Result<Vec<Param>, JsLowerError> {
+        let mut out = Vec::with_capacity(params.len());
+        for spec in params {
+            let default = match spec.default {
+                None => None,
+                Some(expr_node) => {
+                    self.features_used.add(Feature::DefaultParams);
+                    Some(Box::new(self.lower_expression(expr_node, depth + 1)?))
+                }
+            };
+            out.push(Param {
+                name: spec.name.clone(),
+                sir_type: None,
+                kind: ParamKind::Required,
+                default,
+                span: span.clone(),
+            });
+        }
+        Ok(out)
     }
 
     /// Lower a function/closure body's statement sequence into a [`Block`],
@@ -1943,78 +2024,98 @@ impl Lowerer {
         }
     }
 
-    /// Extract a `function_declaration`'s formal parameter names, rejecting
-    /// the deferred parameter forms (default / rest / destructuring).
-    fn formal_param_names(
+    /// Extract a `function_declaration`'s formal parameters as
+    /// [`FormalParamSpec`]s (name + optional default-initialiser CST node).
+    /// Rest `...r` / destructuring `{a}`/`[a]` stay deferred.
+    fn formal_param_specs<'a>(
         &self,
-        decl_node: &GrammarASTNode,
-    ) -> Result<Vec<String>, JsLowerError> {
+        decl_node: &'a GrammarASTNode,
+    ) -> Result<Vec<FormalParamSpec<'a>>, JsLowerError> {
         match child_node_named(decl_node, "formal_parameters") {
             None => Ok(Vec::new()), // zero-parameter function.
-            Some(fp) => self.simple_param_names(fp, decl_node),
+            Some(fp) => self.param_specs(fp, decl_node),
         }
     }
 
-    /// Extract an `arrow_function`'s parameter names.  The `arrow_parameters`
-    /// node is either `[(, formal_parameters?, )]` or a bare `[Name]` (for
-    /// `a => …`).
-    fn arrow_param_names(
+    /// Extract an `arrow_function`'s parameters as [`FormalParamSpec`]s.  The
+    /// `arrow_parameters` node is either `[(, formal_parameters?, )]` or a
+    /// bare `[Name]` (for `a => …`, which can carry no default).
+    fn arrow_param_specs<'a>(
         &self,
-        arrow_node: &GrammarASTNode,
-    ) -> Result<Vec<String>, JsLowerError> {
+        arrow_node: &'a GrammarASTNode,
+    ) -> Result<Vec<FormalParamSpec<'a>>, JsLowerError> {
         let ap = child_node_named(arrow_node, "arrow_parameters")
             .ok_or_else(|| self.unsupported(arrow_node, "arrow_function (no parameters)"))?;
-        // Bare single-identifier form: `a => …`.
+        // Bare single-identifier form: `a => …` (no parens, no default).
         if let Some(tok) = ap.token() {
             if matches!(tok.type_, TokenType::Name) {
-                return Ok(vec![tok.value.clone()]);
+                return Ok(vec![FormalParamSpec { name: tok.value.clone(), default: None }]);
             }
         }
         match child_node_named(ap, "formal_parameters") {
             None => Ok(Vec::new()), // `() => …`.
-            Some(fp) => self.simple_param_names(fp, arrow_node),
+            Some(fp) => self.param_specs(fp, arrow_node),
         }
     }
 
-    /// Extract simple positional parameter names from a `formal_parameters`
-    /// node, rejecting any non-trivial `formal_parameter` (a default value,
-    /// rest `...`, or a destructuring pattern) as deferred.
-    fn simple_param_names(
+    /// Extract positional parameter specs from a `formal_parameters` node.
+    ///
+    /// Two `formal_parameter` shapes are accepted (see the probed CST in the
+    /// module header):
+    ///
+    /// - `[Name]` — a plain positional parameter; `default: None`.
+    /// - `[Name, "=", <assignment_expression>]` — a **default** parameter;
+    ///   `default: Some(<expr node>)`.  The initializer is an ordinary
+    ///   expression node, lowered later **inside the function frame** (so it
+    ///   may reference earlier params, matching JS call-time semantics) by
+    ///   the depth-bounded [`lower_expression`].
+    ///
+    /// Any other shape — rest `...r`, a destructuring pattern `{a}`/`[a]`
+    /// (which introduces a child *node* in the binding position rather than a
+    /// leading `Name` token) — stays deferred.
+    fn param_specs<'a>(
         &self,
-        fp: &GrammarASTNode,
+        fp: &'a GrammarASTNode,
         ctx_node: &GrammarASTNode,
-    ) -> Result<Vec<String>, JsLowerError> {
-        let mut names = Vec::new();
+    ) -> Result<Vec<FormalParamSpec<'a>>, JsLowerError> {
+        let mut specs = Vec::new();
         for param in children_nodes_named(fp, "formal_parameter") {
-            // A simple parameter is exactly one `Name` token; anything else
-            // (default `= v`, rest `...r`, destructuring `{a}`/`[a]`) means
-            // extra children we don't model in v0.
-            let toks: Vec<&Token> = param
-                .children
-                .iter()
-                .filter_map(|c| match c {
-                    ASTNodeOrToken::Token(t) => Some(t),
-                    ASTNodeOrToken::Node(_) => None,
-                })
-                .collect();
-            let has_node_child =
-                param.children.iter().any(|c| matches!(c, ASTNodeOrToken::Node(_)));
-            match (toks.as_slice(), has_node_child) {
-                ([only], false) if matches!(only.type_, TokenType::Name) => {
-                    names.push(only.value.clone());
+            // The binding must be a *single leading `Name` token* (rejecting
+            // destructuring, whose binding is a node, and rest, whose first
+            // token is `...`).
+            let name = match param.children.first() {
+                Some(ASTNodeOrToken::Token(t)) if matches!(t.type_, TokenType::Name) => {
+                    t.value.clone()
                 }
-                _ => {
-                    return Err(JsLowerError {
-                        message: "default / rest / destructuring parameters are deferred \
-                                  past M4 (only simple positional params supported)"
-                            .to_string(),
-                        line: ctx_node.start_line.unwrap_or(0),
-                        column: ctx_node.start_column.unwrap_or(0),
-                    });
+                _ => return Err(self.deferred_param(ctx_node)),
+            };
+            // Classify the remaining children:
+            //   - none                      → plain param (`a`)
+            //   - [Equals, <expr-node>]     → default param (`a = expr`)
+            //   - anything else             → deferred
+            let default = match &param.children[1..] {
+                [] => None,
+                [ASTNodeOrToken::Token(eq), ASTNodeOrToken::Node(expr)]
+                    if eq.value == "=" =>
+                {
+                    Some(expr)
                 }
-            }
+                _ => return Err(self.deferred_param(ctx_node)),
+            };
+            specs.push(FormalParamSpec { name, default });
         }
-        Ok(names)
+        Ok(specs)
+    }
+
+    /// The positioned "deferred parameter form" error (rest / destructuring).
+    fn deferred_param(&self, ctx_node: &GrammarASTNode) -> JsLowerError {
+        JsLowerError {
+            message: "rest / destructuring parameters are deferred past M4 \
+                      (simple positional and default params supported)"
+                .to_string(),
+            line: ctx_node.start_line.unwrap_or(0),
+            column: ctx_node.start_column.unwrap_or(0),
+        }
     }
 
     /// A fresh synthesised arrow-function name (`__lambda_<N>`).
@@ -3105,6 +3206,73 @@ enum Lowered {
 // ---------------------------------------------------------------------------
 // Free helpers
 // ---------------------------------------------------------------------------
+
+/// Conservatively decide whether evaluating `expr` may have an observable
+/// side effect (printing, mutation, allocation, or *any* call whose callee
+/// could).  Used by the block builder to decide whether a bare-expression
+/// statement that is *superseded* as a tail value must still be flushed as
+/// an `ExprStmt` (it may run for effect) or can be dropped (it's pure).
+///
+/// This is deliberately **conservative**: when in doubt we answer `true`
+/// (keep the statement).  Dropping a side-effecting expression is a
+/// correctness bug; keeping a pure one is at most a harmless dead `ExprStmt`
+/// that later passes can elide.
+///
+/// Pure (droppable) forms are the literals, a variable reference, and the
+/// pure operators over pure operands.  Everything that *calls* (a
+/// `DirectCall` / `IndirectCall` / `BuiltinCall` such as `print`) or builds
+/// a closure is treated as potentially effectful.
+fn expr_may_have_effects(expr: &Expr) -> bool {
+    match expr {
+        // Provably pure leaves.
+        Expr::IntLit { .. }
+        | Expr::FloatLit { .. }
+        | Expr::BoolLit { .. }
+        | Expr::NilLit { .. }
+        | Expr::SymLit { .. }
+        | Expr::StrLit { .. }
+        | Expr::VarRef { .. } => false,
+
+        // Pure iff every operand is pure.
+        Expr::StrConcat { parts, .. } => parts.iter().any(expr_may_have_effects),
+        Expr::SeqLit { items, .. } => items.iter().any(expr_may_have_effects),
+        Expr::SeqLen { seq, .. } => expr_may_have_effects(seq),
+        Expr::SeqIndex { seq, index, .. } => {
+            expr_may_have_effects(seq) || expr_may_have_effects(index)
+        }
+        Expr::MapGet { map, key, .. } => {
+            expr_may_have_effects(map) || expr_may_have_effects(key)
+        }
+        Expr::MapLit { entries, .. } => entries
+            .iter()
+            .any(|e| expr_may_have_effects(&e.key) || expr_may_have_effects(&e.value)),
+        Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+            expr_may_have_effects(lhs) || expr_may_have_effects(rhs)
+        }
+        Expr::If { cond, then_branch, else_branch, .. } => {
+            expr_may_have_effects(cond)
+                || block_may_have_effects(then_branch)
+                || block_may_have_effects(else_branch)
+        }
+        Expr::Block(b) => block_may_have_effects(b),
+
+        // Calls, closures, and intrinsics may do anything → keep.
+        Expr::DirectCall { .. }
+        | Expr::IndirectCall { .. }
+        | Expr::BuiltinCall { .. }
+        | Expr::MakeClosure { .. }
+        | Expr::Intrinsic { .. } => true,
+    }
+}
+
+/// A block may have an effect if any of its statements does, or if its tail
+/// value expression does.  Any statement at all (`let*`, `assign`, an
+/// `ExprStmt` we only keep *because* it had an effect, a loop, …) is treated
+/// as effectful — the block builder never emits a statement for a provably
+/// pure dropped value.
+fn block_may_have_effects(block: &Block) -> bool {
+    !block.stmts.is_empty() || expr_may_have_effects(&block.value)
+}
 
 /// If `node` has exactly one child and that child is a nested node,
 /// return it.  This is the workhorse for descending the CST's precedence
