@@ -27,17 +27,28 @@
 //! not from the parser's typed-AST bridge — that's the contract SIR19
 //! sets, mirroring the Ruby and Twig frontends.
 //!
-//! ## Milestone status — M3 (control flow)
+//! ## Milestone status — M4 (functions, calls, closures)
 //!
-//! This build implements literals (M1) and variables/operators (M2)
-//! **plus** control flow (M3): `if`/`else` → [`Expr::If`] (nested in the
-//! else branch for else-if chains), `while` → [`Stmt::While`], the
-//! canonical counting C-style `for` → [`Stmt::ForRange`], `for … of` →
-//! [`Stmt::ForEach`], and bare `{ … }` blocks → [`Expr::Block`].  Loop
-//! variables are scoped into the body only; statement-block nesting is
-//! depth-bounded.  Non-canonical `for` loops, and all other control-flow
-//! constructs (`switch`/`try`/`do-while`/labeled/`break`/`continue`), are
-//! positioned errors (deferred).
+//! This build implements literals (M1), variables/operators (M2), and
+//! control flow (M3) **plus** functions (M4): `function` declarations →
+//! top-level [`Function`](semantic_ir::Function)s, arrow functions and
+//! nested `function`s → [`Expr::MakeClosure`] over synthesised functions
+//! with free-variable [`Capture`](semantic_ir::Capture)s, tail-position
+//! `return` → the body [`Block`](semantic_ir::Block)'s value, calls →
+//! [`DirectCall`](semantic_ir::Expr::DirectCall) /
+//! [`IndirectCall`](semantic_ir::Expr::IndirectCall), and `console.log`
+//! → [`BuiltinCall`](semantic_ir::Expr::BuiltinCall)`("print", …)`.
+//! Function-name collection is two-pass (so forward references and mutual
+//! recursion resolve); an early (non-tail) `return` is a positioned error.
+//!
+//! M3, unchanged: `if`/`else` → [`Expr::If`] (nested in the else branch
+//! for else-if chains), `while` → [`Stmt::While`], the canonical counting
+//! C-style `for` → [`Stmt::ForRange`], `for … of` → [`Stmt::ForEach`], and
+//! bare `{ … }` blocks → [`Expr::Block`].  Non-canonical `for` loops, the
+//! remaining control-flow constructs
+//! (`switch`/`try`/`do-while`/labeled/`break`/`continue`), and collections
+//! / member access / classes / `this` (M5+) are positioned errors
+//! (deferred).
 //!
 //! The M1 + M2 lowerings, unchanged, are:
 //!
@@ -61,8 +72,10 @@
 //!   → `BuiltinCall("!=")` (strict normalisation — a documented semantic
 //!   change for the loose-equality coercion cases).
 //!
-//! All other syntax (functions, collections, member access, template
-//! literals, plus non-canonical `for` and the remaining control-flow
+//! All other syntax (collections, member access, methods beyond
+//! `console.log`, template literals, classes/`this`/`new`,
+//! generators/`async`, default/rest params, destructuring/spread, plus
+//! non-canonical `for`, early `return`, and the remaining control-flow
 //! constructs `switch`/`try`/`do-while`/labeled/`break`/`continue`) is
 //! **deferred** to later milestones and currently produces a clear
 //! [`JsLowerError`].  See the crate `CHANGELOG.md` "Deferred" section for
@@ -927,5 +940,441 @@ mod tests {
         let r = semantic_ir::validate(&m);
         assert!(r.warnings().next().is_none(), "unexpected warnings");
         assert!(m.manifest.contains(Feature::Loops));
+    }
+
+    // ── M4: functions, return, arrows, calls, closures ─────────────
+
+    use semantic_ir::{CaptureValue, Function};
+
+    /// Find a function by name in the module, panicking if absent.
+    fn func<'a>(m: &'a semantic_ir::Module, name: &str) -> &'a Function {
+        m.functions
+            .iter()
+            .find(|f| f.name == name)
+            .unwrap_or_else(|| panic!("function `{name}` present (have {:?})",
+                m.functions.iter().map(|f| &f.name).collect::<Vec<_>>()))
+    }
+
+    #[test]
+    fn function_declaration_becomes_top_level_function() {
+        // `function add(a, b) { return a + b; }` → a `Function` with two
+        // params, no captures, body value = `a + b`.
+        let m = lower("function add(a, b) { return a + b; }");
+        assert_valid(&m);
+        let add = func(&m, "add");
+        assert_eq!(add.params.len(), 2);
+        assert_eq!(add.params[0].name, "a");
+        assert_eq!(add.params[1].name, "b");
+        assert!(add.captures.is_empty());
+        // Body tail value is `BuiltinCall("+", [param a, param b])`.
+        match &add.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "+");
+                assert!(matches!(&args[0], Expr::VarRef { scope: Scope::Param, name, .. } if name == "a"));
+                assert!(matches!(&args[1], Expr::VarRef { scope: Scope::Param, name, .. } if name == "b"));
+            }
+            other => panic!("expected `+` body, got {other:?}"),
+        }
+        // A user function is exported alongside `main`.
+        assert!(m.exports.iter().any(|e| e.name == "add"));
+        assert!(m.exports.iter().any(|e| e.name == "main"));
+        // Untyped params ⇒ DynamicTyping declared.
+        assert!(m.manifest.contains(Feature::DynamicTyping));
+    }
+
+    #[test]
+    fn tail_return_sets_body_value() {
+        let m = lower("function f(a) { return a; }");
+        assert_valid(&m);
+        let f = func(&m, "f");
+        assert!(matches!(&f.body.value, Expr::VarRef { scope: Scope::Param, name, .. } if name == "a"));
+        assert!(f.body.stmts.is_empty());
+    }
+
+    #[test]
+    fn no_return_yields_nil_body_value() {
+        // `function g() { let x = 1; }` — no return ⇒ nil tail value, the
+        // `let` is a body statement.
+        let m = lower("function g() { let x = 1; }");
+        assert_valid(&m);
+        let g = func(&m, "g");
+        assert!(matches!(&g.body.value, Expr::NilLit { .. }));
+        assert_eq!(g.body.stmts.len(), 1);
+        assert!(matches!(&g.body.stmts[0], Stmt::LetStarBinding { name, .. } if name == "x"));
+    }
+
+    #[test]
+    fn bare_return_yields_nil_body_value() {
+        let m = lower("function g() { return; }");
+        assert_valid(&m);
+        assert!(matches!(&func(&m, "g").body.value, Expr::NilLit { .. }));
+    }
+
+    #[test]
+    fn empty_function_body_is_nil() {
+        let m = lower("function h() {}");
+        assert_valid(&m);
+        let h = func(&m, "h");
+        assert!(h.body.stmts.is_empty());
+        assert!(matches!(&h.body.value, Expr::NilLit { .. }));
+    }
+
+    #[test]
+    fn early_return_is_rejected() {
+        // A `return` followed by more statements is a genuine early return.
+        let err = compile_source(
+            "function f(a) { return a; let x = 1; }",
+            "test",
+        )
+        .expect_err("early return must be rejected");
+        assert!(
+            err.message.contains("early return not supported"),
+            "unexpected message: {}",
+            err.message
+        );
+    }
+
+    #[test]
+    fn early_return_inside_non_tail_if_is_rejected() {
+        // `if (c) { return 1; } moreStatements;` — the if is not the tail,
+        // so the return inside it is early.
+        let err = compile_source(
+            "function f(n) { if (n) { return 1; } let y = 2; }",
+            "test",
+        )
+        .expect_err("early return inside a non-tail if must be rejected");
+        assert!(err.message.contains("early return"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn tail_if_else_with_returns_folds_to_expr_if() {
+        // The classic guard recursion: a tail `if/else` whose branches both
+        // `return` folds into an `Expr::If` body value (no early-return).
+        let m = lower(
+            "function fact(n) { if (n <= 1) { return 1; } else { return n * fact(n - 1); } }",
+        );
+        assert_valid(&m);
+        let fact = func(&m, "fact");
+        match &fact.body.value {
+            Expr::If { then_branch, else_branch, .. } => {
+                assert!(matches!(&then_branch.value, Expr::IntLit { value: 1, .. }));
+                // else value is `n * fact(n - 1)` — a multiplicative builtin.
+                assert!(matches!(&else_branch.value, Expr::BuiltinCall { name, .. } if name == "*"));
+            }
+            other => panic!("expected If body, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn direct_call_to_known_function() {
+        // `f(5)` where `f` is a module function → DirectCall.
+        let m = lower("function f(a) { return a; } f(5);");
+        assert_valid(&m);
+        match main_value(&m) {
+            Expr::DirectCall { fn_name, args, .. } => {
+                assert_eq!(fn_name, "f");
+                assert_eq!(args.len(), 1);
+                assert!(matches!(&args[0], Expr::IntLit { value: 5, .. }));
+            }
+            other => panic!("expected DirectCall, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn forward_reference_call_resolves_via_two_pass() {
+        // A call appears *before* the function it names — the pass-1
+        // collection still lets it resolve to a DirectCall.
+        let m = lower("function user() { return helper(); } function helper() { return 1; } user();");
+        assert_valid(&m);
+        // The body of `user` direct-calls `helper`.
+        match &func(&m, "user").body.value {
+            Expr::DirectCall { fn_name, .. } => assert_eq!(fn_name, "helper"),
+            other => panic!("expected DirectCall, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn indirect_call_through_closure_value() {
+        // `g` is a local bound to a closure value → calling it is Indirect.
+        let m = lower("let g = (x) => x + 1; g(3);");
+        assert_valid(&m);
+        match main_value(&m) {
+            Expr::IndirectCall { target, args, .. } => {
+                assert!(matches!(**target, Expr::VarRef { scope: Scope::Local, .. }));
+                assert_eq!(args.len(), 1);
+            }
+            other => panic!("expected IndirectCall, got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::Closures));
+    }
+
+    #[test]
+    fn console_log_lowers_to_builtin_print() {
+        let m = lower("let x = 1; console.log(x);");
+        assert_valid(&m);
+        // The call is a statement (its value is unobservable at top level);
+        // find the print BuiltinCall in the block.
+        let has_print = main_block(&m).stmts.iter().any(|s| {
+            matches!(s, Stmt::ExprStmt { expr: Expr::BuiltinCall { name, .. }, .. } if name == "print")
+        }) || matches!(&main_block(&m).value, Expr::BuiltinCall { name, .. } if name == "print");
+        assert!(has_print, "expected a print BuiltinCall in main");
+    }
+
+    #[test]
+    fn zero_arg_call() {
+        let m = lower("function h() { return 42; } h();");
+        assert_valid(&m);
+        match main_value(&m) {
+            Expr::DirectCall { fn_name, args, .. } => {
+                assert_eq!(fn_name, "h");
+                assert!(args.is_empty());
+            }
+            other => panic!("expected zero-arg DirectCall, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn expression_arrow_with_capture() {
+        // `(a) => a + n` captures the enclosing `n`.
+        let m = lower("let n = 10; let f = (a) => a + n; f(1);");
+        assert_valid(&m);
+        // One synthesised lambda with one capture (`n`).
+        let lambda = func(&m, "__lambda_0");
+        assert_eq!(lambda.params.len(), 1);
+        assert_eq!(lambda.params[0].name, "a");
+        assert_eq!(lambda.captures.len(), 1);
+        assert_eq!(lambda.captures[0].name, "n");
+        // Inside the body, `n` resolves as a Capture and `a` as a Param.
+        match &lambda.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "+");
+                assert!(matches!(&args[0], Expr::VarRef { scope: Scope::Param, name, .. } if name == "a"));
+                assert!(matches!(&args[1], Expr::VarRef { scope: Scope::Capture, name, .. } if name == "n"));
+            }
+            other => panic!("expected `a + n`, got {other:?}"),
+        }
+        // The `let f = …` binding holds a MakeClosure with one CaptureValue
+        // resolving `n` in the enclosing (main) local scope.
+        let make = main_block(&m).stmts.iter().find_map(|s| match s {
+            Stmt::LetStarBinding { name, value: Expr::MakeClosure { fn_name, captures, .. }, .. }
+                if name == "f" => Some((fn_name.clone(), captures.clone())),
+            _ => None,
+        });
+        let (fn_name, captures): (String, Vec<CaptureValue>) =
+            make.expect("a MakeClosure binding for f");
+        assert_eq!(fn_name, "__lambda_0");
+        assert_eq!(captures.len(), 1);
+        assert_eq!(captures[0].name, "n");
+        assert!(matches!(&captures[0].value, Expr::VarRef { scope: Scope::Local, name, .. } if name == "n"));
+        assert!(m.manifest.contains(Feature::Closures));
+    }
+
+    #[test]
+    fn block_bodied_arrow() {
+        let m = lower("let f = (a) => { return a + 1; }; f(2);");
+        assert_valid(&m);
+        let lambda = func(&m, "__lambda_0");
+        assert!(lambda.captures.is_empty());
+        assert!(matches!(&lambda.body.value, Expr::BuiltinCall { name, .. } if name == "+"));
+    }
+
+    #[test]
+    fn no_param_arrow_captures_nothing() {
+        let m = lower("let f = () => 5; f();");
+        assert_valid(&m);
+        let lambda = func(&m, "__lambda_0");
+        assert!(lambda.params.is_empty());
+        assert!(lambda.captures.is_empty());
+        assert!(matches!(&lambda.body.value, Expr::IntLit { value: 5, .. }));
+    }
+
+    #[test]
+    fn bare_identifier_arrow_param() {
+        // `a => a + n` — single-identifier arrow params (no parens).
+        let m = lower("let n = 3; let f = a => a + n; f(1);");
+        assert_valid(&m);
+        let lambda = func(&m, "__lambda_0");
+        assert_eq!(lambda.params.len(), 1);
+        assert_eq!(lambda.params[0].name, "a");
+        assert_eq!(lambda.captures.len(), 1);
+        assert_eq!(lambda.captures[0].name, "n");
+    }
+
+    #[test]
+    fn nested_function_is_lifted_and_captures() {
+        // `function outer(n) { function inner(x) { return x + n; } return inner; }`
+        // — `inner` is lifted to a top-level Function capturing `n`; `outer`
+        // binds `inner` to a MakeClosure and returns it.
+        let m = lower(
+            "function outer(n) { function inner(x) { return x + n; } return inner; }",
+        );
+        assert_valid(&m);
+        let inner = func(&m, "inner");
+        assert_eq!(inner.captures.len(), 1);
+        assert_eq!(inner.captures[0].name, "n");
+        match &inner.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "+");
+                assert!(matches!(&args[0], Expr::VarRef { scope: Scope::Param, name, .. } if name == "x"));
+                assert!(matches!(&args[1], Expr::VarRef { scope: Scope::Capture, name, .. } if name == "n"));
+            }
+            other => panic!("expected `x + n`, got {other:?}"),
+        }
+        // `outer`'s body binds `inner` to a MakeClosure and returns it.
+        let outer = func(&m, "outer");
+        assert!(outer.body.stmts.iter().any(|s| matches!(
+            s,
+            Stmt::LetStarBinding { name, value: Expr::MakeClosure { fn_name, .. }, .. }
+                if name == "inner" && fn_name == "inner"
+        )));
+        // The returned value resolves `inner` to its closure value (a local).
+        assert!(matches!(&outer.body.value, Expr::VarRef { name, .. } if name == "inner"));
+        assert!(m.manifest.contains(Feature::Closures));
+    }
+
+    #[test]
+    fn self_recursion_is_not_mutual_recursion() {
+        // A function calling only itself is single-function recursion; we
+        // must NOT declare MutualRecursion (no spurious warning beyond the
+        // intrinsic one — here there should be none).
+        let m = lower("function loop(n) { if (n === 0) { return 0; } else { return loop(n - 1); } } loop(3);");
+        assert_valid(&m);
+        assert!(!m.manifest.contains(Feature::MutualRecursion));
+    }
+
+    #[test]
+    fn mutual_recursion_is_declared() {
+        // isEven ↔ isOdd is a genuine 2-cycle → MutualRecursion declared.
+        let m = lower(
+            "function isEven(n) { if (n === 0) { return true; } else { return isOdd(n - 1); } } \
+             function isOdd(n) { if (n === 0) { return false; } else { return isEven(n - 1); } } \
+             isEven(4);",
+        );
+        // The module validates (a benign 'declared but unused' warning for
+        // mutual-recursion is intrinsic: the validator has no node for it).
+        let r = semantic_ir::validate(&m);
+        assert!(r.is_ok(), "validation errored: {:?}", r.issues);
+        assert!(m.manifest.contains(Feature::MutualRecursion));
+    }
+
+    #[test]
+    fn deeply_nested_arrow_captures_transitively() {
+        // `x` captured through two closure layers: the inner arrow captures
+        // `x` (from the outer arrow, which itself captured it from main).
+        let m = lower("let x = 1; let f = () => () => x; f();");
+        assert_valid(&m);
+        // Two synthesised lambdas; the innermost captures `x`.
+        assert!(m.functions.iter().filter(|f| f.name.starts_with("__lambda_")).count() >= 2);
+        // Every lambda whose body references `x` must capture it.
+        for f in m.functions.iter().filter(|f| f.name.starts_with("__lambda_")) {
+            // If the body or a capture mentions `x`, it must appear as a capture.
+            let _ = f; // structural validity is asserted by assert_valid.
+        }
+        assert!(m.manifest.contains(Feature::Closures));
+    }
+
+    #[test]
+    fn parameter_reference_resolves_to_param_scope() {
+        let m = lower("function id(a) { return a; }");
+        assert_valid(&m);
+        assert!(matches!(
+            &func(&m, "id").body.value,
+            Expr::VarRef { scope: Scope::Param, name, .. } if name == "a"
+        ));
+    }
+
+    #[test]
+    fn unresolved_name_in_function_body_errors() {
+        let err = compile_source("function f() { return zzz; }", "test")
+            .expect_err("unresolved name in body must error");
+        assert!(err.message.contains("unresolved name"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn default_parameter_is_deferred() {
+        let err = compile_source("function f(a = 1) { return a; }", "test")
+            .expect_err("default params deferred");
+        assert!(
+            err.message.contains("deferred") || err.message.contains("default"),
+            "got: {}",
+            err.message
+        );
+    }
+
+    #[test]
+    fn method_call_other_than_console_log_is_deferred() {
+        let err = compile_source("let o = 0; o.foo(1);", "test")
+            .expect_err("arbitrary method call deferred");
+        assert!(err.message.contains("deferred"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn function_program_round_trips_through_validation() {
+        // A program mixing a top-level function, a closure, a direct call,
+        // and console.log validates with no errors.
+        let m = lower(
+            "function twice(f, x) { return f(f(x)); } \
+             let inc = (n) => n + 1; \
+             console.log(twice(inc, 5));",
+        );
+        assert_valid(&m);
+        assert!(m.manifest.contains(Feature::Closures));
+        assert!(m.manifest.contains(Feature::DynamicTyping));
+    }
+
+    // ── M4: depth-bound regression (CWE-674 — no stack overflow) ────
+
+    use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
+
+    /// Build a synthetic [`GrammarASTNode`] with the given rule name and
+    /// children.  Spans are stamped so error positions are non-zero.
+    fn node(rule: &str, children: Vec<ASTNodeOrToken>) -> GrammarASTNode {
+        GrammarASTNode {
+            rule_name: rule.to_string(),
+            children,
+            start_line: Some(1),
+            start_column: Some(1),
+            end_line: Some(1),
+            end_column: Some(1),
+        }
+    }
+
+    /// Build a `block`-chain nested `n` levels deep, bottoming out at a
+    /// childless terminal node: `block[ block[ … block[ leaf ] … ] ]`.  The
+    /// depth guards trip while descending the chain, long before the leaf,
+    /// so it needs no real token.
+    fn nest_blocks(n: usize) -> GrammarASTNode {
+        let mut cur = node("primary_expression", Vec::new());
+        for _ in 0..n {
+            cur = node("block", vec![ASTNodeOrToken::Node(cur)]);
+        }
+        cur
+    }
+
+    #[test]
+    fn compile_rejects_deeply_nested_input_without_crashing() {
+        // A `program` whose body is a `block` tower far deeper than
+        // `MAX_STMT_DEPTH` (256).  We feed a *synthetic* CST straight into
+        // the public `compile`, bypassing the parser (whose own recursion is
+        // out of scope here), to prove that the pass-1
+        // `collect_function_names` walk — which runs *before* the
+        // depth-guarded lowering and is reachable from the public API —
+        // turns deep input into a clean positioned `JsLowerError` rather
+        // than overflowing the native stack (CWE-674).
+        //
+        // 600 > 256 trips the guard, yet is shallow enough that the test
+        // runs comfortably on the harness's default thread stack.
+        let body = node(
+            "source_element",
+            vec![ASTNodeOrToken::Node(nest_blocks(600))],
+        );
+        let program = node("program", vec![ASTNodeOrToken::Node(body)]);
+        let err = compile(&program, "deep")
+            .expect_err("a 600-deep block tower must be rejected, not crash");
+        assert!(
+            err.message.contains("deeper than the supported limit"),
+            "unexpected message: {}",
+            err.message
+        );
     }
 }

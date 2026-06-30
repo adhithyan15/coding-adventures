@@ -174,6 +174,17 @@ the IR doesn't have an early-return node — every function body is a
 
 Future: lift to a control-flow shape.
 
+**Implementation note (M4).**  Implemented as of crate `0.4.0`.  One
+refinement over a literal reading of "single trailing `return`": a
+`return` is in *tail position* — and therefore accepted — when it is the
+body's last statement **or**, recursively, the last statement of a branch
+of a tail-position `if`.  A tail `if (c) { return a; } else { return b; }`
+folds into an `Expr::If` whose branch values are the returns.  This admits
+the natural guard-style recursion shape (factorial / fibonacci goldens)
+without an early-return node, while a `return` that is followed by more
+statements — the genuinely *early* case — is still rejected with a
+positioned `JsLowerError` ("early return not supported in v0").
+
 ## Arrow functions vs `function` declarations
 
 Both lower to the same shape.  Arrow function with non-block body
@@ -209,9 +220,29 @@ Same model as SIR11 / SIR17.  Arrow functions and inner `function`s
 have their free variables computed; those become `Capture`s on the
 synthesised `Function`.
 
+**Implementation note (M4).**  Implemented as of crate `0.4.0`.  Free
+variables are discovered **on resolve**: a closure body is lowered inside
+a fresh scope frame, and each name that resolves to an *enclosing* frame's
+local/param/capture (and is not a param/local of the closure, nor a module
+function/global/builtin) is recorded as a `Capture` (resolved as
+`Scope::Capture` inside the body) with a matching `CaptureValue` on the
+`MakeClosure` (resolved in the enclosing scope).  Captures thread
+**transitively** through nested closures.  Arrow functions get gensym'd
+`__lambda_<N>` names; nested `function` declarations keep their source
+name (lifted to top level) and are bound locally to a `MakeClosure`.
+
 ## Manifest computation
 
 Same trigger map as SIR17 (Python).
+
+**Implementation note (M4).**  The SIR validator has no node it can use to
+*observe* `Feature::MutualRecursion`, so the frontend declares it itself —
+but **only** when a genuine cycle of length ≥ 2 exists in the static call
+graph (detected over the lowered `DirectCall`s).  Pure self-recursion is
+not mutual recursion.  This keeps the declared manifest honest and avoids a
+spurious "declared but unused" validator warning.  `Feature::Closures` is
+declared for any arrow / nested function / `IndirectCall`;
+`Feature::DynamicTyping` for any untyped param (every JS param in v0).
 
 ## Error model
 

@@ -27,12 +27,13 @@ We lower from the *generic* `GrammarASTNode`, **not** from the parser's
 typed-AST bridge (`javascript-parser/src/bridge.rs`). That is the
 contract SIR19 sets, matching how the Ruby and Twig frontends work.
 
-## Milestone status — M3 (control flow)
+## Milestone status — M4 (functions, calls, closures)
 
-This is the third slice of SIR19. It implements literals (M1) and
-variables/operators (M2) **plus** control flow: `if`/`else`, `while`,
-the canonical counting C-style `for`, `for … of`, and bare `{ … }`
-blocks. The supported subset (M1 + M2 + M3):
+This is the fourth slice of SIR19. It implements literals (M1),
+variables/operators (M2), and control flow (M3) **plus** functions:
+`function` declarations, arrow functions, tail-position `return`,
+function calls, and closures (`MakeClosure` + free-variable capture). The
+supported subset (M1 + M2 + M3 + M4):
 
 | JavaScript source           | SIR lowering                                  |
 |-----------------------------|-----------------------------------------------|
@@ -60,6 +61,39 @@ blocks. The supported subset (M1 + M2 + M3):
 | `for (let i=0; i<n; i++) {…}` | `Stmt::ForRange { var, start, stop, step, body }` |
 | `for (const x of xs) { … }` | `Stmt::ForEach { var, iter, body }`           |
 | `{ … }` (bare block)        | `Expr::Block`                                 |
+| `function f(a, b) { … }`    | top-level `Function { name, params, body }`   |
+| `return expr;` (tail only)  | `body.value = expr` (no return → `NilLit`)    |
+| `(a) => a + 1`, `a => …`, `() => …` | `MakeClosure` over a synthesised `__lambda_<N>` |
+| `(a) => { …; return r; }`   | same (block body, tail `return`)              |
+| nested `function inner(){…}` | lifted `Function` + local `MakeClosure` binding |
+| `f(1, 2)` (known function)  | `DirectCall { fn_name, args }`                |
+| `g(3)` (closure value)      | `IndirectCall { target, args }`               |
+| `console.log(x)`            | `BuiltinCall("print", [x])`                   |
+
+### Functions, calls, and closures
+
+- **`function` declarations** become top-level `Function`s. A two-pass
+  design collects every function name (including nested ones) first, so a
+  call can resolve to a `DirectCall` even for a forward reference or a
+  (mutually) recursive callee.
+- **Tail `return`.** A body is a `Block` whose `value` is the return.
+  `return` is accepted only in tail position — the body's last statement,
+  or the last statement of a branch of a tail `if` (so guard-style
+  `if (base) { return b; } else { return rec; }` recursion works). An
+  early `return` (one followed by more statements) is a positioned error;
+  a body with no `return` yields a `NilLit` value.
+- **Arrow functions and nested `function`s** lift to synthesised
+  top-level `Function`s referenced by `Expr::MakeClosure`. Their free
+  variables — references resolving to an enclosing function's
+  local/param/capture — become `Capture`s (resolved as `Scope::Capture`
+  inside the body) with matching `CaptureValue`s on the `MakeClosure`.
+  Captures thread transitively through nested closures.
+- **Calls** dispatch on the callee: a known module `function` →
+  `DirectCall`; `console.log(x)` → `BuiltinCall("print", …)`; any other
+  identifier resolving to a closure value → `IndirectCall`.
+- **Manifest.** Closures declare `Feature::Closures`; untyped params
+  declare `Feature::DynamicTyping`; a genuine call-graph cycle declares
+  `Feature::MutualRecursion` (self-recursion alone does not).
 
 ### Control flow
 
@@ -89,13 +123,17 @@ blocks. The supported subset (M1 + M2 + M3):
 
 ### Variables and scope
 
-M2 has a single flat scope: everything lives inside the synthetic
-`main`, so a declared name resolves to `Scope::Local`. The lowerer
-tracks declared names in source order — the first sighting of `x`
-(`let`/`const`/`var x = …`, or a bare `x = …` with no prior binding)
-emits a binding; a subsequent `x = …` emits an `Assign`
-(`Feature::MutableBindings`). A reference to a name that was never
-declared is a positioned "unresolved name reference" error.
+Name resolution walks a **scope-frame stack** (one `FnScope` per
+function, holding its params, captures, and locals). Top-level bindings
+live in the synthetic `main` frame and resolve to `Scope::Local`; inside
+a function a param resolves to `Scope::Param`, and a reference to an
+enclosing frame's binding resolves to `Scope::Capture` (recording the
+capture on the closure). The lowerer tracks declared names in source
+order — the first sighting of `x` (`let`/`const`/`var x = …`, or a bare
+`x = …` with no prior binding) emits a binding; a subsequent `x = …`
+emits an `Assign` (`Feature::MutableBindings`) preserving the resolved
+scope. A reference to a name that was never declared (and is not a module
+function) is a positioned "unresolved name reference" error.
 
 ### Bindings: `LetStarBinding`, not `LetBinding`
 
@@ -166,19 +204,22 @@ Every produced `Module`:
   `semantic_ir::validate` with no used-but-undeclared errors and no
   declared-but-unused warnings.
 
-## Out of scope for M3 (deferred)
+## Out of scope for M4 (deferred)
 
-Functions/closures (M4), collections and member access (M5), and template
-literals all currently return a `JsLowerError` describing what was
-rejected, with the offending node's position. So do the remaining
-control-flow constructs — `switch`, `try`/`catch`, `do … while`, labeled
-statements, and `break`/`continue` (the IR has no early-exit node) — and
-the gaps within M2's own families (compound assignment outside the
-loop-update position, assignment to a member/index, multi-binding
-declarations, uninitialised bindings, bitwise/shift/exponentiation/
-nullish operators). The error sites are structured so later milestones
-slot their handling in at exactly the right place. See `CHANGELOG.md` for
-the milestone roadmap and the full SIR19 spec at
+Collections and member access (M5 — array/object literals, indexing,
+`.length`, member/`[]` access, and method calls other than
+`console.log`), classes / `this` / `new`, generators, `async`/`await`,
+default / rest parameters, destructuring, spread, and template literals
+all currently return a `JsLowerError` describing what was rejected, with
+the offending node's position. So do **early `return`** (non-tail), the
+remaining control-flow constructs (`switch`, `try`/`catch`, `do … while`,
+labeled statements, `break`/`continue`), and the gaps within the M2/M3
+operator/assignment families (compound assignment outside the loop-update
+position, member/index assignment targets, multi-binding declarations,
+uninitialised bindings, bitwise/shift/exponentiation/nullish operators).
+The error sites are structured so later milestones slot their handling in
+at exactly the right place. See `CHANGELOG.md` for the milestone roadmap
+and the full SIR19 spec at
 [`code/specs/SIR19-javascript-to-semantic-ir.md`](../../../specs/SIR19-javascript-to-semantic-ir.md).
 
 ## Testing
@@ -192,3 +233,9 @@ On Windows, prefix with the LLD linker:
 ```sh
 CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=rust-lld cargo test -p javascript-to-semantic-ir
 ```
+
+The suite includes **end-to-end `node` execution tests**
+(`tests/e2e_node.rs`, gated on `node` being on `PATH`): each golden
+program (factorial, fibonacci, closure-adder, mutual recursion) is lowered
+to SIR, emitted back to JavaScript with the `semantic-ir-to-javascript`
+backend, and run with `node` to confirm its output.
