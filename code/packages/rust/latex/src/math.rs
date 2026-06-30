@@ -85,6 +85,10 @@ pub enum MathNode {
     Frac(Box<MathNode>, Box<MathNode>),
     /// `\binom{A}{B}`.
     Binom(Box<MathNode>, Box<MathNode>),
+    /// `\overset{over}{base}` / `\stackrel{over}{base}` — an annotation centered OVER the base.
+    Overset { over: Box<MathNode>, base: Box<MathNode> },
+    /// `\underset{under}{base}` — an annotation centered UNDER the base.
+    Underset { under: Box<MathNode>, base: Box<MathNode> },
     /// `\sqrt[n]{x}` (`degree` is `None` for a square root).
     Root {
         degree: Option<Box<MathNode>>,
@@ -174,6 +178,10 @@ fn take_children(n: &mut MathNode, out: &mut Vec<MathNode>) {
     match n {
         MathNode::Num(_) | MathNode::Sym(_) | MathNode::Text(_) => {}
         MathNode::Bin(_, a, b) | MathNode::Frac(a, b) | MathNode::Binom(a, b) | MathNode::Rel(_, a, b) => {
+            take(a, out);
+            take(b, out);
+        }
+        MathNode::Overset { over: a, base: b } | MathNode::Underset { under: a, base: b } => {
             take(a, out);
             take(b, out);
         }
@@ -623,6 +631,21 @@ impl<'a> MathParser<'a> {
             let b = self.read_arg()?;
             return Ok(MathNode::Binom(Box::new(a), Box::new(b)));
         }
+        // `\overset{over}{base}` / `\stackrel{over}{base}` — annotation OVER base;
+        // `\underset{under}{base}` — annotation UNDER base. Two mandatory args, the
+        // annotation first then the base (amsmath order), like `\frac`/`\binom`.
+        if name == "overset" || name == "stackrel" {
+            self.bump();
+            let over = self.read_arg()?;
+            let base = self.read_arg()?;
+            return Ok(MathNode::Overset { over: Box::new(over), base: Box::new(base) });
+        }
+        if name == "underset" {
+            self.bump();
+            let under = self.read_arg()?;
+            let base = self.read_arg()?;
+            return Ok(MathNode::Underset { under: Box::new(under), base: Box::new(base) });
+        }
         if name == "sqrt" {
             self.bump();
             let degree = if matches!(self.peek().kind, TokenKind::Char('[')) {
@@ -845,7 +868,7 @@ fn prec(n: &MathNode) -> u8 {
         MathNode::Bin(MBinOp::Mul | MBinOp::Div, ..) => 3,
         MathNode::Unary(..) => 4,
         MathNode::Bin(MBinOp::Pow, ..) | MathNode::Script { .. } => 5,
-        _ => 6, // atoms: Num, Sym, Frac, Root, Fenced, Call, BigOp, Accent, Binom, Text
+        _ => 6, // atoms: Num, Sym, Frac, Root, Fenced, Call, BigOp, Accent, Binom, Overset/Underset, Text
     }
 }
 
@@ -921,6 +944,20 @@ impl MathNode {
                 a.write(out, 0);
                 out.push_str("}{");
                 b.write(out, 0);
+                out.push('}');
+            }
+            MathNode::Overset { over, base } => {
+                out.push_str("\\overset{");
+                over.write(out, 0);
+                out.push_str("}{");
+                base.write(out, 0);
+                out.push('}');
+            }
+            MathNode::Underset { under, base } => {
+                out.push_str("\\underset{");
+                under.write(out, 0);
+                out.push_str("}{");
+                base.write(out, 0);
                 out.push('}');
             }
             MathNode::Root { degree, radicand } => {
@@ -1053,6 +1090,26 @@ mod tests {
         let r = a.to_latex();
         let b = parse_math(&r).expect("re-parse");
         assert_eq!(a, b, "round-trip: {src:?} -> {r:?}");
+    }
+
+    #[test]
+    fn overset_underset_parse_and_round_trip() {
+        // Two mandatory args (annotation then base); `\stackrel` is the over-set synonym.
+        assert!(matches!(
+            parse_math(r"\overset{a}{R}").unwrap(),
+            MathNode::Overset { .. }
+        ));
+        assert!(matches!(
+            parse_math(r"\underset{a}{R}").unwrap(),
+            MathNode::Underset { .. }
+        ));
+        assert!(matches!(
+            parse_math(r"\stackrel{a}{R}").unwrap(),
+            MathNode::Overset { .. }
+        ));
+        round_trips(r"\overset{a}{R}");
+        round_trips(r"\underset{x+1}{y}");
+        round_trips(r"a + \overset{\ast}{b}");
     }
 
     #[test]
