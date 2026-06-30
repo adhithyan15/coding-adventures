@@ -33,7 +33,7 @@ shadowable free identifier).
 - `expected.stdout` — the byte-exact SIMPLE output:
 
   ```text
-  var a=true;var b=false;var c=true;var d=false;var e=Number.isSafeInteger(x);report(a,b,c,d,e);
+  var a=!0;var b=!1;var c=!0;var d=!1;var e=Number.isSafeInteger(x);report(a,b,c,d,e);
   ```
 
 The integration test `tests/diff_simple_fold_number_issafeinteger.rs` runs the

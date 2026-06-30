@@ -9,7 +9,7 @@
 //! At SIMPLE the fixture optimizes to:
 //!
 //! ```text
-//! var a=true;var b=false;var c=true;var d=true;var e=false;var f=false;var g=false;report(a,b,c,d,e,f,g);
+//! var a=!0;var b=!1;var c=!0;var d=!0;var e=!1;var f=!1;var g=!1;report(a,b,c,d,e,f,g);
 //! ```
 
 use std::process::Command;
@@ -61,13 +61,13 @@ fn simple_fold_number_static_folds_to_booleans() {
         .expect("run closurec");
     let actual = String::from_utf8_lossy(&out.stdout);
 
-    assert!(actual.contains("a=true"), "Number.isInteger(42) → true; got:\n{actual}");
-    assert!(actual.contains("b=false"), "Number.isInteger(3.5) → false; got:\n{actual}");
-    assert!(actual.contains("c=true"), "Number.isInteger(1e21) → true (integer-valued); got:\n{actual}");
-    assert!(actual.contains("d=true"), "Number.isFinite(42) → true; got:\n{actual}");
-    assert!(actual.contains("e=false"), "Number.isNaN(42) → false; got:\n{actual}");
-    assert!(actual.contains("f=false"), "Number.isInteger(\"42\") → false (no coercion); got:\n{actual}");
-    assert!(actual.contains("g=false"), "Number.isFinite(null) → false; got:\n{actual}");
+    assert!(actual.contains("a=!0"), "Number.isInteger(42) → true; got:\n{actual}");
+    assert!(actual.contains("b=!1"), "Number.isInteger(3.5) → false; got:\n{actual}");
+    assert!(actual.contains("c=!0"), "Number.isInteger(1e21) → true (integer-valued); got:\n{actual}");
+    assert!(actual.contains("d=!0"), "Number.isFinite(42) → true; got:\n{actual}");
+    assert!(actual.contains("e=!1"), "Number.isNaN(42) → false; got:\n{actual}");
+    assert!(actual.contains("f=!1"), "Number.isInteger(\"42\") → false (no coercion); got:\n{actual}");
+    assert!(actual.contains("g=!1"), "Number.isFinite(null) → false; got:\n{actual}");
 }
 
 /// Regression guard: the output must be the SIMPLE typed pipeline, not the

@@ -31,10 +31,12 @@ runtime.
 - `flags.txt` — CLI flags (`--compilation_level SIMPLE --js input/a.js`).
 - `input/a.js` — six `var` bindings flowing into `report(...)` so each stays
   referenced past remove-unused-vars and the fold is observable.
-- `expected.stdout` — the byte-exact SIMPLE output:
+- `expected.stdout` — the byte-exact SIMPLE output. The fold produces boolean
+  `true`/`false`, which the emitter prints in its Closure-style shorthand as
+  `!0`/`!1` (value-exact: `!0 === true`, `!1 === false`):
 
   ```text
-  var a=true;var b=false;var c=false;var d=false;var e=false;var f=Array.isArray([1,2]);report(a,b,c,d,e,f);
+  var a=!0;var b=!1;var c=!1;var d=!1;var e=!1;var f=Array.isArray([1,2]);report(a,b,c,d,e,f);
   ```
 
 The integration test `tests/diff_simple_fold_array_isarray.rs` runs the binary
