@@ -1,6 +1,6 @@
 //! # python-to-semantic-ir
 //!
-//! Python CST → narrow-waist Semantic IR (SIR17), **milestone M2**.
+//! Python CST → narrow-waist Semantic IR (SIR17), **milestone M3**.
 //!
 //! This is the second frontend for the SIR10 narrow-waist IR (after
 //! [`twig-to-semantic-ir`]).  It consumes the generic
@@ -28,24 +28,28 @@
 //! assert!(module.functions.iter().any(|f| f.name == "main"));
 //! ```
 //!
-//! ## M2 scope
+//! ## M3 scope
 //!
-//! M1 lowered **literals only**.  M2 adds, still wrapped in a
-//! synthesised `main` function:
+//! M1 lowered **literals only**; M2 added variable references,
+//! assignment, and unary/binary operators.  M3 adds **control flow**,
+//! still wrapped in the synthesised `main` function:
 //!
-//! - **variable references** — a bare `x` becomes a `VarRef` whose
-//!   `scope` is resolved (`Local` when bound, error otherwise);
-//! - **assignment** — `x = expr` is *first-occurrence* detected: the
-//!   first binding of a name declares it (`LetStarBinding`), a later
-//!   assignment re-binds it (`Assign`);
-//! - **operators** — arithmetic (`+ - * / %`) and comparison
-//!   (`== != < > <= >=`) lower to `BuiltinCall`; unary `not`/`-` to
-//!   `BuiltinCall("not"/"neg")` (with `-<literal>` constant-folded);
-//!   `and`/`or` to the short-circuit `LogicalAnd`/`LogicalOr` nodes.
+//! - **`if` / `elif` / `else`** → `Expr::If` (an `elif` chain folds
+//!   right-to-left into nested `If`s; a missing `else` yields an empty
+//!   nil-valued block).  Since `if` is a SIR *expression*, a trailing
+//!   `if` becomes the block value; otherwise it is a `Stmt::ExprStmt`;
+//! - **`while c: body`** → `Stmt::While { cond, body }`;
+//! - **`for x in range(...): body`** → `Stmt::ForRange` (1/2/3-arg
+//!   `range` mapped to `start`/`stop`/`step`; wrong arity rejected);
+//! - **`for x in <iter>: body`** → `Stmt::ForEach`.
 //!
-//! Control flow, functions/`def`/`lambda`, calls, and collections are
-//! deferred to later milestones; unhandled forms return a clear
-//! `PythonLowerError`.
+//! Each loop / branch suite lowers to a `Block`; the loop variable is a
+//! `Scope::Local` bound inside the body only, and block-local bindings do
+//! not leak (matching the validator).  Loops declare `Feature::Loops`;
+//! `if` adds no feature.
+//!
+//! Functions/`def`/`lambda`, calls, and collections are deferred to
+//! later milestones; unhandled forms return a clear `PythonLowerError`.
 //!
 //! See `code/specs/SIR17-python-to-semantic-ir.md` for the full
 //! lowering table and the deferred-form roadmap.
@@ -536,5 +540,345 @@ mod tests {
         let err = compile_source("x = 1\nzzz\n", "t").unwrap_err();
         assert_eq!(err.line, 2, "got {}:{}", err.line, err.column);
         assert!(err.column >= 1);
+    }
+
+    // ── M3: control flow — if / elif / else ───────────────────────────
+
+    #[test]
+    fn trailing_if_becomes_block_value_with_both_branches() {
+        // `if c: 1 else: 2` is the last (and only executable) statement, so
+        // the `If` expression is `main`'s block value.
+        let m = lower("c = True\nif c:\n    1\nelse:\n    2\n");
+        match main_value(&m) {
+            Expr::If { cond, then_branch, else_branch, .. } => {
+                assert!(matches!(**cond, Expr::VarRef { scope: Scope::Local, .. }));
+                assert!(matches!(then_branch.value, Expr::IntLit { value: 1, .. }));
+                assert!(matches!(else_branch.value, Expr::IntLit { value: 2, .. }));
+            }
+            other => panic!("expected If, got {other:?}"),
+        }
+        // `if` is a SIR v0 construct — it adds no manifest feature.
+        assert!(!m.manifest.contains(Feature::Loops));
+    }
+
+    #[test]
+    fn if_without_else_synthesizes_nil_else_branch() {
+        let m = lower("c = True\nif c:\n    1\n");
+        match main_value(&m) {
+            Expr::If { then_branch, else_branch, .. } => {
+                assert!(matches!(then_branch.value, Expr::IntLit { value: 1, .. }));
+                // No `else` in source → empty block whose value is NilLit.
+                assert!(else_branch.stmts.is_empty());
+                assert!(matches!(else_branch.value, Expr::NilLit { .. }));
+            }
+            other => panic!("expected If, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn elif_chain_nests_if_in_else_branch() {
+        // if c: x=1 elif d: x=2 else: x=3
+        //   ⇒ If(c){ then:[x=1], else: Block{ If(d){ then:[x=2], else:[x=3] } } }
+        let m = lower(
+            "c = True\nd = False\nif c:\n    x = 1\nelif d:\n    x = 2\nelse:\n    x = 3\n",
+        );
+        let outer = main_value(&m);
+        match outer {
+            Expr::If { cond, then_branch, else_branch, .. } => {
+                assert!(matches!(&**cond, Expr::VarRef { name, .. } if name == "c"));
+                // then-branch binds x = 1.
+                assert!(matches!(
+                    &then_branch.stmts[0],
+                    Stmt::LetStarBinding { value: Expr::IntLit { value: 1, .. }, .. }
+                ));
+                // else-branch is a block whose *value* is the nested elif If.
+                assert!(else_branch.stmts.is_empty());
+                match &else_branch.value {
+                    Expr::If { cond, then_branch, else_branch, .. } => {
+                        assert!(matches!(&**cond, Expr::VarRef { name, .. } if name == "d"));
+                        assert!(matches!(
+                            &then_branch.stmts[0],
+                            Stmt::LetStarBinding { value: Expr::IntLit { value: 2, .. }, .. }
+                        ));
+                        // Final else binds x = 3.
+                        assert!(matches!(
+                            &else_branch.stmts[0],
+                            Stmt::LetStarBinding { value: Expr::IntLit { value: 3, .. }, .. }
+                        ));
+                    }
+                    other => panic!("expected nested If for elif, got {other:?}"),
+                }
+            }
+            other => panic!("expected outer If, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn elif_without_else_nests_if_with_nil_else() {
+        // if c: x=1 elif d: x=2   (no trailing else)
+        let m = lower("c = True\nd = False\nif c:\n    x = 1\nelif d:\n    x = 2\n");
+        match main_value(&m) {
+            Expr::If { else_branch, .. } => match &else_branch.value {
+                Expr::If { else_branch: inner_else, .. } => {
+                    // The innermost else is the synthesized nil branch.
+                    assert!(inner_else.stmts.is_empty());
+                    assert!(matches!(inner_else.value, Expr::NilLit { .. }));
+                }
+                other => panic!("expected nested elif If, got {other:?}"),
+            },
+            other => panic!("expected If, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn if_as_statement_with_trailing_value_becomes_exprstmt() {
+        // An `if` followed by a later bare expression is in *statement*
+        // position, so it becomes an `ExprStmt` wrapping the `If`.
+        let m = lower("c = True\nif c:\n    1\n42\n");
+        let stmts = main_stmts(&m);
+        // last stmt is the ExprStmt(If …); the block value is IntLit(42).
+        assert!(matches!(main_value(&m), Expr::IntLit { value: 42, .. }));
+        assert!(stmts
+            .iter()
+            .any(|s| matches!(s, Stmt::ExprStmt { expr: Expr::If { .. }, .. })));
+    }
+
+    // ── M3: while ─────────────────────────────────────────────────────
+
+    #[test]
+    fn while_lowers_to_while_stmt_and_sets_loops_feature() {
+        let m = lower("c = True\nwhile c:\n    x = 1\n");
+        match &main_stmts(&m)[1] {
+            Stmt::While { cond, body, .. } => {
+                assert!(matches!(cond, Expr::VarRef { scope: Scope::Local, .. }));
+                assert!(matches!(
+                    &body.stmts[0],
+                    Stmt::LetStarBinding { name, .. } if name == "x"
+                ));
+            }
+            other => panic!("expected While, got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::Loops));
+    }
+
+    #[test]
+    fn while_body_can_reassign_outer_local() {
+        // `x` is bound before the loop; a `x = x + 1` inside re-assigns it.
+        let m = lower("x = 0\nc = True\nwhile c:\n    x = x + 1\n");
+        match &main_stmts(&m)[2] {
+            Stmt::While { body, .. } => {
+                assert!(matches!(&body.stmts[0], Stmt::Assign { name, .. } if name == "x"));
+            }
+            other => panic!("expected While, got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::MutableBindings));
+    }
+
+    // ── M3: for-range (all three arities) ─────────────────────────────
+
+    #[test]
+    fn for_range_one_arg_defaults_start_zero_step_one() {
+        let m = lower("for i in range(5):\n    s = i\n");
+        match &main_stmts(&m)[0] {
+            Stmt::ForRange { var, start, stop, step, body, .. } => {
+                assert_eq!(var, "i");
+                assert!(matches!(start, Expr::IntLit { value: 0, .. }));
+                assert!(matches!(stop, Expr::IntLit { value: 5, .. }));
+                assert!(matches!(step, Expr::IntLit { value: 1, .. }));
+                // Inside the body, `i` resolves as a Local (the loop var).
+                assert!(matches!(
+                    &body.stmts[0],
+                    Stmt::LetStarBinding { value: Expr::VarRef { scope: Scope::Local, .. }, .. }
+                ));
+            }
+            other => panic!("expected ForRange, got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::Loops));
+    }
+
+    #[test]
+    fn for_range_two_args_sets_start_and_stop_step_one() {
+        let m = lower("for i in range(2, 9):\n    s = i\n");
+        match &main_stmts(&m)[0] {
+            Stmt::ForRange { start, stop, step, .. } => {
+                assert!(matches!(start, Expr::IntLit { value: 2, .. }));
+                assert!(matches!(stop, Expr::IntLit { value: 9, .. }));
+                assert!(matches!(step, Expr::IntLit { value: 1, .. }));
+            }
+            other => panic!("expected ForRange, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn for_range_three_args_sets_all_three() {
+        let m = lower("for i in range(2, 10, 3):\n    s = i\n");
+        match &main_stmts(&m)[0] {
+            Stmt::ForRange { start, stop, step, .. } => {
+                assert!(matches!(start, Expr::IntLit { value: 2, .. }));
+                assert!(matches!(stop, Expr::IntLit { value: 10, .. }));
+                assert!(matches!(step, Expr::IntLit { value: 3, .. }));
+            }
+            other => panic!("expected ForRange, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn for_range_accepts_variable_bounds() {
+        // `range(a, b)` with non-literal bounds lowers them as VarRefs.
+        let m = lower("a = 1\nb = 10\nfor i in range(a, b):\n    s = i\n");
+        match &main_stmts(&m)[2] {
+            Stmt::ForRange { start, stop, .. } => {
+                assert!(matches!(start, Expr::VarRef { name, .. } if name == "a"));
+                assert!(matches!(stop, Expr::VarRef { name, .. } if name == "b"));
+            }
+            other => panic!("expected ForRange, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn for_range_zero_args_is_rejected() {
+        let err = compile_source("for i in range():\n    s = i\n", "t")
+            .expect_err("range() rejected");
+        assert!(
+            err.message.contains("range") && err.message.contains("arity"),
+            "got: {}",
+            err.message
+        );
+    }
+
+    #[test]
+    fn for_range_four_args_is_rejected() {
+        let err = compile_source("for i in range(1, 2, 3, 4):\n    s = i\n", "t")
+            .expect_err("range(...,4) rejected");
+        assert!(err.message.contains("arity"), "got: {}", err.message);
+    }
+
+    // ── M3: for-each ──────────────────────────────────────────────────
+
+    #[test]
+    fn for_each_over_iterable_lowers_to_foreach() {
+        let m = lower("xs = 1\nfor x in xs:\n    p = x\n");
+        match &main_stmts(&m)[1] {
+            Stmt::ForEach { var, iter, body, .. } => {
+                assert_eq!(var, "x");
+                assert!(matches!(iter, Expr::VarRef { name, .. } if name == "xs"));
+                // `x` resolves as a Local inside the body.
+                assert!(matches!(
+                    &body.stmts[0],
+                    Stmt::LetStarBinding { value: Expr::VarRef { scope: Scope::Local, .. }, .. }
+                ));
+            }
+            other => panic!("expected ForEach, got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::Loops));
+    }
+
+    #[test]
+    fn for_each_iterable_resolved_before_loop_var_bound() {
+        // The iterable `x` here is a *pre-existing* local, distinct from the
+        // loop var `x` shadowing it inside the body — but the iterable must
+        // resolve against the outer scope (it does, because we classify and
+        // lower the iterable before binding the loop var).
+        let m = lower("x = 1\nfor x in x:\n    p = x\n");
+        match &main_stmts(&m)[1] {
+            Stmt::ForEach { iter, .. } => {
+                assert!(matches!(iter, Expr::VarRef { name, scope: Scope::Local, .. } if name == "x"));
+            }
+            other => panic!("expected ForEach, got {other:?}"),
+        }
+    }
+
+    // ── M3: loop-variable scoping ─────────────────────────────────────
+
+    #[test]
+    fn loop_var_does_not_leak_past_the_loop() {
+        // `i` is bound only inside the for body; referencing it afterwards
+        // is an unresolved-name error (the scope is rewound on body exit).
+        let err = compile_source("for i in range(3):\n    s = i\ni\n", "t")
+            .expect_err("leaked loop var rejected");
+        assert!(
+            err.message.contains("unresolved name `i`"),
+            "got: {}",
+            err.message
+        );
+    }
+
+    #[test]
+    fn name_bound_inside_branch_does_not_leak_past_if() {
+        // `y` is first-bound inside the then-branch; a later top-level
+        // reference must be unresolved (branch scope is rewound).
+        let err = compile_source("c = True\nif c:\n    y = 1\ny\n", "t")
+            .expect_err("leaked branch local rejected");
+        assert!(
+            err.message.contains("unresolved name `y`"),
+            "got: {}",
+            err.message
+        );
+    }
+
+    // ── M3: nested control flow ───────────────────────────────────────
+
+    #[test]
+    fn nested_if_inside_while_lowers_and_validates() {
+        let m = lower("c = True\nwhile c:\n    if c:\n        x = 1\n");
+        match &main_stmts(&m)[1] {
+            Stmt::While { body, .. } => {
+                // The body's value is the nested `If` (a trailing if-suite).
+                assert!(matches!(body.value, Expr::If { .. }));
+            }
+            other => panic!("expected While, got {other:?}"),
+        }
+        assert!(semantic_ir::validate(&m).is_ok());
+    }
+
+    #[test]
+    fn for_inside_for_lowers_and_validates() {
+        let m = lower("for i in range(3):\n    for j in range(3):\n        s = i\n");
+        match &main_stmts(&m)[0] {
+            Stmt::ForRange { var, body, .. } => {
+                assert_eq!(var, "i");
+                // The inner for is the trailing statement of the outer body.
+                assert!(body.stmts.iter().any(|s| matches!(s, Stmt::ForRange { var, .. } if var == "j")));
+            }
+            other => panic!("expected outer ForRange, got {other:?}"),
+        }
+        assert!(semantic_ir::validate(&m).is_ok());
+    }
+
+    // ── M3: deferred constructs stay rejected ─────────────────────────
+
+    #[test]
+    fn def_is_still_unsupported() {
+        let err = compile_source("def f():\n    x = 1\n", "t").expect_err("def rejected");
+        assert!(err.message.contains("unsupported"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn with_statement_is_still_unsupported() {
+        let err = compile_source("with a:\n    x = 1\n", "t").expect_err("with rejected");
+        assert!(err.message.contains("unsupported"), "got: {}", err.message);
+    }
+
+    // ── M3: validator round-trip over control-flow programs ───────────
+
+    #[test]
+    fn control_flow_modules_pass_the_validator() {
+        for src in [
+            "c = True\nif c:\n    x = 1\n",
+            "c = True\nif c:\n    x = 1\nelse:\n    x = 2\n",
+            "c = True\nd = False\nif c:\n    x = 1\nelif d:\n    x = 2\nelse:\n    x = 3\n",
+            "c = True\nwhile c:\n    x = 1\n",
+            "x = 0\nc = True\nwhile c:\n    x = x + 1\n",
+            "for i in range(5):\n    s = i\n",
+            "for i in range(2, 9):\n    s = i\n",
+            "for i in range(2, 10, 3):\n    s = i\n",
+            "xs = 1\nfor x in xs:\n    p = x\n",
+            "c = True\nwhile c:\n    if c:\n        x = 1\n",
+            "for i in range(3):\n    for j in range(3):\n        s = i\n",
+        ] {
+            let m = lower(src);
+            let r = semantic_ir::validate(&m);
+            assert!(r.is_ok(), "module for {src:?} failed validation: {:?}", r.issues);
+        }
     }
 }

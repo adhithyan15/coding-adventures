@@ -5,6 +5,87 @@ All notable changes to `python-to-semantic-ir` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to semantic versioning.
 
+## 0.3.0 — 2026-06-30
+
+Milestone **M3**: control flow — `if` / `elif` / `else`, `while`, and
+`for` (`range` and iterables) (SIR17 Python → Semantic IR frontend, B3).
+
+### Added
+
+- **`if` / `elif` / `else`.**  The parser flattens the whole construct
+  into a single `if_stmt` whose children are an ordered token+node stream
+  (`if` cond `:` suite, then zero or more `elif` cond `:` suite, then an
+  optional `else` `:` suite).  We collect the `(cond, suite)` clauses plus
+  the optional `else` suite, then fold **right-to-left** so each `elif`
+  becomes the `else_branch` of the clause before it:
+  `if c1: B1 elif c2: B2 else: B3` ⇒
+  `If { c1, B1, else: If { c2, B2, else: B3 } }`.  An absent `else` becomes
+  an empty `else_branch` block whose value is `NilLit` (SIR requires both
+  branches; the false path yields nil, matching Python).  Each suite lowers
+  to a `Block`.  Because Python's `if` is a statement but SIR models it as
+  an `Expr::If`, a **trailing** `if` becomes `main`'s (or an enclosing
+  suite's) block *value*; an `if` in non-tail position becomes a
+  `Stmt::ExprStmt` wrapping the `If`.  `if` adds **no** manifest feature
+  (it is a SIR v0 construct).
+- **`while c: body`** → `Stmt::While { cond, body }`, declaring
+  `Feature::Loops`.
+- **`for x in range(...): body`** → `Stmt::ForRange { var, start, stop,
+  step, body }`, recognising the literal `range(...)` call and mapping its
+  arity: `range(n)` → start `0`, stop `n`, step `1`; `range(a, b)` →
+  start `a`, stop `b`, step `1`; `range(a, b, c)` → all three.  A `range`
+  call with zero or more than three arguments is rejected with a positioned
+  "range with wrong arity" error.  Bounds may be arbitrary expressions
+  (literals or variable references), not just literals.
+- **`for x in <iterable>: body`** → `Stmt::ForEach { var, iter, body }`
+  for any non-`range` iterable.  The iterable is lowered in the
+  *enclosing* scope (before the loop variable is bound), matching the
+  validator.
+- **Loop-variable + block scoping.**  The lowerer's declared-name table
+  is now a **stack** (was a flat `HashSet`) with `mark()`/`rewind()`,
+  mirroring the SIR validator's `LocalEnv`.  A loop variable (`i` / `x`)
+  is bound as a `Scope::Local` **inside the body only**; a name first
+  bound inside a loop or `if`-branch body does **not** leak past the
+  block.  This keeps the names the lowerer resolves and the names the
+  validator accepts in lock-step, so every lowered module still
+  round-trips through `semantic_ir::validate`.
+- **Bounded block recursion.**  A new `MAX_BLOCK_DEPTH` guard (companion
+  to `MAX_EXPR_DEPTH`) caps statement-block nesting, so a pathological
+  tower of nested loops / `if`s fails with a clean positioned
+  `PythonLowerError` instead of a native (uncatchable) stack overflow.
+- **Manifest** now declares `Feature::Loops` whenever the module emits a
+  `While` / `ForRange` / `ForEach`, keeping the declared manifest exactly
+  matched to what the module emits.
+- 22 new unit tests (57 total): if / elif / else nesting (including
+  no-else and elif-without-else nil branches, trailing-value vs
+  statement-position `if`), `while` (with body re-assignment), `for`-range
+  at all three arities plus variable bounds and the zero-/four-arg arity
+  errors, `for`-each (including iterable-resolved-before-loop-var),
+  loop-variable and branch-local scope non-leakage, nested control flow
+  (`if` in `while`, `for` in `for`), still-deferred `def` / `with`, and an
+  extended validator round-trip set over control-flow programs.
+
+### Changed
+
+- `compile` / `compile_source` now accept the M3 control-flow constructs;
+  a `statement` may now wrap a `compound_stmt` (`if_stmt` / `while_stmt` /
+  `for_stmt`) in addition to a `simple_stmt`.  Suites are lowered into
+  `Block`s via a shared `lower_suite` helper.
+
+### Deferred
+
+Still out of scope after M3; each returns a clear
+`PythonLowerError("unsupported: <rule> (deferred …)")` at the exact site a
+later milestone will handle it:
+
+- **M4+** — `def` functions, `lambda` / closures, calls (`f(...)`,
+  `print` / `len` builtins; `range` is recognised only in `for` headers,
+  not as a general call yet).
+- **M5+** — sequences, maps, indexing and indexed assignment,
+  comprehensions.
+- Tuple / multi-target `for` (`for k, v in …`), `with` / `try`, classes,
+  exceptions, generators, decorators, slicing, default/keyword args,
+  string methods, imports, `async`, `global` / `nonlocal`, f-strings.
+
 ## 0.2.0 — 2026-06-30
 
 Milestone **M2**: variable references, assignment, and unary/binary

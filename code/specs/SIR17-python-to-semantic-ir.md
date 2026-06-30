@@ -86,6 +86,16 @@ versions of this frontend may accept a version parameter.
 | `d[k]`                                 | `MapGet { map: d, key: k }`                                 |
 | `d[k] = v`                             | `MapSet { map: d, key: k, value: v }`                       |
 
+**Implementation note (M3 — `range` in `for` headers):** the
+`for x in range(...)` rows above are realised in M3 by recognising a
+literal `range(...)` call *structurally inside the `for` header* and
+lowering it directly to `ForRange` (with arity 1/2/3 mapped to
+`start`/`stop`/`step`, and a `range` call of wrong arity rejected).
+`range` is **not** yet a general expression-position builtin — a bare
+`range(n)` outside a `for` header (the `BuiltinCall("range", …)` row)
+arrives with general call support in M4.  A non-`range` iterable lowers
+to `ForEach`.
+
 ## Return statement
 
 Python's `return` is a statement in the AST.  The SIR doesn't have a
@@ -119,6 +129,17 @@ creates a local if `x` isn't already defined elsewhere in scope.
 The frontend implements first-occurrence detection: the first
 `assign(x, value)` in a function declares it, subsequent ones emit
 `Assign`.  The same rule applies inside loops.
+
+**Implementation note (M3 — block scoping):** as of M3 the frontend's
+declared-name table is a **stack** (mark/rewind) mirroring the SIR
+validator's `LocalEnv`, not a flat per-function set.  A loop variable
+(`for i in …` / `for x in …`) and any name first bound inside a loop or
+`if`-branch suite are scoped to that block only and do **not** leak past
+it — exactly how the validator's `check_block` scopes them.  This keeps
+the names the lowerer resolves and the names the validator accepts in
+lock-step, so every lowered module round-trips through `validate`.  (A
+future milestone may relax this to Python's looser "loop var survives the
+loop" rule once the validator models it.)
 
 **Implementation note (M2):** the first-occurrence *declaration* emits
 a `LetStarBinding` (sequential `let*`), **not** a `LetBinding`.  The
