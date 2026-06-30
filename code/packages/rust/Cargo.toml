@@ -229,6 +229,7 @@ members = [
     "latex",
     "asciimath",
     "unicode-math",
+    "mathml",
     "adjudication-ir",
     "llm-cache",
     "llm-gateway",
