@@ -273,6 +273,53 @@ pub struct BerkeleyAppSessionState {
     pub analyses: Vec<BerkeleyAppSessionAnalysis>,
 }
 
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum BerkeleyAppEditorActionKind {
+    SelectAnalysis,
+    RunAnalysis,
+    InspectTable,
+    InspectWaveform,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppEditorAction {
+    pub kind: BerkeleyAppEditorActionKind,
+    pub label: String,
+    pub enabled: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppAnalysisControl {
+    pub syntax_card_index: usize,
+    pub directive: String,
+    pub analysis: String,
+    pub span: SourceSpan,
+    pub selected: bool,
+    pub runnable: bool,
+    pub artifact_supported: bool,
+    pub execution_available: bool,
+    pub table_available: bool,
+    pub waveform_available: bool,
+    pub action_count: usize,
+    pub actions: Vec<BerkeleyAppEditorAction>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppEditorControls {
+    pub canonical_source: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub parsed: bool,
+    pub execution_available: bool,
+    pub selected_syntax_card_index: Option<usize>,
+    pub selected_control: Option<BerkeleyAppAnalysisControl>,
+    pub control_count: usize,
+    pub controls: Vec<BerkeleyAppAnalysisControl>,
+    pub blocking_message: Option<String>,
+    pub diagnostics: Vec<BerkeleySyntaxDiagnostic>,
+}
+
 impl BerkeleyAppDeck {
     pub fn has_errors(&self) -> bool {
         self.diagnostics
@@ -365,6 +412,22 @@ impl BerkeleyAppDeck {
         }
         refresh_selected_session_analysis(&mut state);
         Ok(state)
+    }
+
+    pub fn editor_controls(
+        &self,
+        selected_syntax_card_index: Option<usize>,
+    ) -> BerkeleyAppEditorControls {
+        editor_controls_from_session_state(&self.session_state(selected_syntax_card_index))
+    }
+
+    pub fn run_editor_controls(
+        &self,
+        selected_syntax_card_index: Option<usize>,
+    ) -> Result<BerkeleyAppEditorControls, AnalysisExecutionError> {
+        Ok(editor_controls_from_session_state(
+            &self.run_session_state(selected_syntax_card_index)?,
+        ))
     }
 
     pub fn run_source_order(&self) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
@@ -492,6 +555,138 @@ impl BerkeleyAppDeck {
             .unwrap_or_else(|| {
                 "Berkeley SPICE app deck did not produce a parsed netlist".to_string()
             })
+    }
+}
+
+fn editor_controls_from_session_state(
+    state: &BerkeleyAppSessionState,
+) -> BerkeleyAppEditorControls {
+    let controls = state
+        .analyses
+        .iter()
+        .map(|analysis| analysis_control_from_session_state(state, analysis))
+        .collect::<Vec<_>>();
+    let selected_control = controls.iter().find(|control| control.selected).cloned();
+
+    BerkeleyAppEditorControls {
+        canonical_source: state.canonical_source.clone(),
+        source_fingerprint: state.source_fingerprint.clone(),
+        title: state.title.clone(),
+        parsed: state.parsed,
+        execution_available: state.execution_available,
+        selected_syntax_card_index: state.selected_syntax_card_index,
+        selected_control,
+        control_count: controls.len(),
+        controls,
+        blocking_message: state.blocking_message.clone(),
+        diagnostics: state.diagnostics.clone(),
+    }
+}
+
+fn analysis_control_from_session_state(
+    state: &BerkeleyAppSessionState,
+    analysis: &BerkeleyAppSessionAnalysis,
+) -> BerkeleyAppAnalysisControl {
+    let table_available = analysis.execution_available && analysis.table_row_count.is_some();
+    let waveform_available =
+        analysis.execution_available && analysis.waveform_series_count.unwrap_or(0) > 0;
+    let actions = vec![
+        BerkeleyAppEditorAction {
+            kind: BerkeleyAppEditorActionKind::SelectAnalysis,
+            label: format!("Select {}", analysis.directive),
+            enabled: true,
+            disabled_reason: None,
+        },
+        editor_action(
+            BerkeleyAppEditorActionKind::RunAnalysis,
+            format!("Run {}", analysis.directive),
+            state.parsed && analysis.runnable,
+            run_action_disabled_reason(state, analysis),
+        ),
+        editor_action(
+            BerkeleyAppEditorActionKind::InspectTable,
+            format!("Inspect {} table", analysis.directive),
+            table_available,
+            table_action_disabled_reason(state, analysis),
+        ),
+        editor_action(
+            BerkeleyAppEditorActionKind::InspectWaveform,
+            format!("Inspect {} waveform", analysis.directive),
+            waveform_available,
+            waveform_action_disabled_reason(state, analysis),
+        ),
+    ];
+
+    BerkeleyAppAnalysisControl {
+        syntax_card_index: analysis.syntax_card_index,
+        directive: analysis.directive.clone(),
+        analysis: analysis.analysis.clone(),
+        span: analysis.span,
+        selected: analysis.selected,
+        runnable: analysis.runnable,
+        artifact_supported: analysis.artifact_supported,
+        execution_available: analysis.execution_available,
+        table_available,
+        waveform_available,
+        action_count: actions.len(),
+        actions,
+    }
+}
+
+fn editor_action(
+    kind: BerkeleyAppEditorActionKind,
+    label: String,
+    enabled: bool,
+    disabled_reason: Option<String>,
+) -> BerkeleyAppEditorAction {
+    BerkeleyAppEditorAction {
+        kind,
+        label,
+        enabled,
+        disabled_reason: if enabled { None } else { disabled_reason },
+    }
+}
+
+fn run_action_disabled_reason(
+    state: &BerkeleyAppSessionState,
+    analysis: &BerkeleyAppSessionAnalysis,
+) -> Option<String> {
+    if !state.parsed {
+        state.blocking_message.clone()
+    } else if !analysis.runnable {
+        Some("analysis is not runnable from the app facade".to_string())
+    } else {
+        None
+    }
+}
+
+fn table_action_disabled_reason(
+    state: &BerkeleyAppSessionState,
+    analysis: &BerkeleyAppSessionAnalysis,
+) -> Option<String> {
+    if !state.parsed {
+        state.blocking_message.clone()
+    } else if !analysis.artifact_supported {
+        Some("analysis artifacts are not supported".to_string())
+    } else if !analysis.execution_available {
+        Some("run deck artifacts to populate analysis table".to_string())
+    } else {
+        Some("analysis did not produce a result table".to_string())
+    }
+}
+
+fn waveform_action_disabled_reason(
+    state: &BerkeleyAppSessionState,
+    analysis: &BerkeleyAppSessionAnalysis,
+) -> Option<String> {
+    if !state.parsed {
+        state.blocking_message.clone()
+    } else if !analysis.artifact_supported {
+        Some("analysis artifacts are not supported".to_string())
+    } else if !analysis.execution_available {
+        Some("run deck artifacts to populate waveform series".to_string())
+    } else {
+        Some("analysis has no waveform series".to_string())
     }
 }
 
