@@ -5,12 +5,13 @@ use spice_engine::{
 use spice_netlist_parser::{
     build_analysis_plan, parse_berkeley_app_deck, parse_berkeley_syntax, parse_netlist,
     parse_value, run_netlist, AcAnalysis, Analysis, AnalysisKind, AnalysisResult,
-    BerkeleyAppEditorActionKind, BerkeleyAppPersistedEditorState, BerkeleyCardKind,
-    BerkeleyDiagnosticSeverity, BerkeleyGrammarMetadata, DcAnalysis, DistortionAnalysis,
-    FourAnalysis, McAnalysis, MeasureAnalysis, MeasureOperation, NetlistParseError, NoiseAnalysis,
-    OpAnalysis, OptionValue, OutputProbe, PlotAnalysis, PoleZeroAnalysis, PoleZeroKind,
-    PrintAnalysis, ProbeAnalysis, SaveAnalysis, SelectedOutputValue, SensAnalysis, TempAnalysis,
-    TfAnalysis, TranAnalysis, BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION,
+    BerkeleyAppEditorActionKind, BerkeleyAppHostPanelKind, BerkeleyAppPersistedEditorState,
+    BerkeleyCardKind, BerkeleyDiagnosticSeverity, BerkeleyGrammarMetadata, DcAnalysis,
+    DistortionAnalysis, FourAnalysis, McAnalysis, MeasureAnalysis, MeasureOperation,
+    NetlistParseError, NoiseAnalysis, OpAnalysis, OptionValue, OutputProbe, PlotAnalysis,
+    PoleZeroAnalysis, PoleZeroKind, PrintAnalysis, ProbeAnalysis, SaveAnalysis,
+    SelectedOutputValue, SensAnalysis, TempAnalysis, TfAnalysis, TranAnalysis,
+    BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -2371,6 +2372,107 @@ C1 out 0 1p
     assert_eq!(active.target, "analysis-selection");
     assert!(active.enabled);
     assert!(active.selected);
+}
+
+#[test]
+fn berkeley_app_facade_exports_host_surface_panels_after_execution() {
+    let app = parse_berkeley_app_deck(
+        r#"
+* transient host surface
+V1 in 0 PULSE(0 1 0 1n 1n 1n 4n)
+R1 in out 1k
+C1 out 0 1p
+.tran 1n 3n
+.print tran V(out)
+.end
+"#,
+    );
+
+    let surface = app
+        .run_host_surface(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap();
+
+    assert!(surface.parsed);
+    assert!(surface.execution_available);
+    assert_eq!(surface.panel_count, 5);
+    assert_eq!(
+        surface.active_panel.as_ref().unwrap().kind,
+        BerkeleyAppHostPanelKind::Waveform
+    );
+    assert_eq!(
+        surface
+            .panels
+            .iter()
+            .map(|panel| panel.id.as_str())
+            .collect::<Vec<_>>(),
+        vec!["source", "diagnostics", "analysis", "table", "waveform"]
+    );
+
+    let waveform = surface
+        .panels
+        .iter()
+        .find(|panel| panel.kind == BerkeleyAppHostPanelKind::Waveform)
+        .unwrap();
+    assert_eq!(waveform.target, "analysis-waveform");
+    assert!(waveform.enabled);
+    assert!(waveform.active);
+    assert_eq!(waveform.disabled_reason, None);
+
+    let table = surface
+        .panels
+        .iter()
+        .find(|panel| panel.kind == BerkeleyAppHostPanelKind::Table)
+        .unwrap();
+    assert!(table.enabled);
+    assert!(!table.active);
+}
+
+#[test]
+fn berkeley_app_facade_host_surface_routes_blocked_decks_to_diagnostics() {
+    let app = parse_berkeley_app_deck(
+        r#"
+V1 in 0 DC 1
+R1 in out
+.op
+.end
+"#,
+    );
+
+    let surface = app.host_surface(BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(2),
+        active_command_id: Some("analysis.2.run".to_string()),
+    });
+
+    assert!(!surface.parsed);
+    assert!(!surface.execution_available);
+    assert_eq!(
+        surface.active_panel.as_ref().unwrap().kind,
+        BerkeleyAppHostPanelKind::Diagnostics
+    );
+
+    let diagnostics = surface
+        .panels
+        .iter()
+        .find(|panel| panel.kind == BerkeleyAppHostPanelKind::Diagnostics)
+        .unwrap();
+    assert!(diagnostics.enabled);
+    assert!(diagnostics.active);
+    assert_eq!(diagnostics.disabled_reason, None);
+
+    let table = surface
+        .panels
+        .iter()
+        .find(|panel| panel.kind == BerkeleyAppHostPanelKind::Table)
+        .unwrap();
+    assert!(!table.enabled);
+    assert!(table
+        .disabled_reason
+        .as_deref()
+        .unwrap()
+        .contains("Berkeley SPICE app deck:"));
 }
 
 #[test]

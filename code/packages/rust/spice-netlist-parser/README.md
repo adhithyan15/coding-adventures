@@ -26,7 +26,9 @@ For editor, Mosaic, and parser-generator frontends, the crate also exposes the
 same facade directly:
 
 ```rust
-use spice_netlist_parser::{parse_berkeley_app_deck, BerkeleyCardKind};
+use spice_netlist_parser::{
+    parse_berkeley_app_deck, BerkeleyAppPersistedEditorState, BerkeleyCardKind,
+};
 
 let deck = parse_berkeley_app_deck(r#"
 * divider
@@ -61,6 +63,12 @@ assert!(command_plan
 
 let view = deck.run_editor_state_snapshot(Default::default())?;
 assert_eq!(view.resolved_state.selected_syntax_card_index, Some(3));
+
+let host = deck.run_host_surface(BerkeleyAppPersistedEditorState {
+    selected_syntax_card_index: Some(3),
+    active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+})?;
+assert_eq!(host.active_panel.unwrap().id, "waveform");
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -77,7 +85,10 @@ derives stable per-analysis editor controls for selecting, running, and
 inspecting tables or waveforms with explicit disabled reasons, plus command
 plans with stable command IDs and target names for host menu or button wiring.
 Persisted editor-state snapshots resolve saved selection and active-command IDs
-against the current deck, repairing stale UI state after source edits. It is the
+against the current deck, repairing stale UI state after source edits. Host
+surfaces turn those snapshots into stable source, diagnostics, analysis, table,
+and waveform panel descriptors with explicit targets, enabled states, active
+state, and disabled reasons for Mosaic shell integration. It is the
 Rust app/runtime entrypoint for Mosaic-backed UI work while the grammar-backed
 parser generator and Python/TypeScript parity surfaces continue to mature.
 
