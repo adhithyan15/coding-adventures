@@ -439,7 +439,13 @@ fn app_package_emits_native_project_shells() {
         (
             Backend::WebComponent,
             "webcomponent",
-            vec!["EngramApp.js", "index.js", "index.html", "README.md"],
+            vec![
+                "EngramApp.js",
+                "index.js",
+                "index.html",
+                "main.js",
+                "README.md",
+            ],
         ),
         (
             Backend::React,
@@ -632,6 +638,7 @@ fn native_project_shells_expose_engram_host_contract() {
         .expect("webcomponent/index.html");
     assert_contains(&webcomponent_index, "src=\"./engram-host.mjs\"");
     assert_contains(&webcomponent_index, "src=\"./EngramApp.js\"");
+    assert_contains(&webcomponent_index, "src=\"./main.js\"");
     assert_contains(&webcomponent_index, "<mos-engram-app></mos-engram-app>");
     assert!(
         webcomponent_index
@@ -641,6 +648,47 @@ fn native_project_shells_expose_engram_host_contract() {
                 .find("src=\"./EngramApp.js\"")
                 .expect("webcomponent component script"),
         "WebComponent host adapter should load before generated EngramApp.js"
+    );
+    assert!(
+        webcomponent_index
+            .find("src=\"./EngramApp.js\"")
+            .expect("webcomponent component script")
+            < webcomponent_index
+                .find("src=\"./main.js\"")
+                .expect("webcomponent main script"),
+        "WebComponent runtime should load after generated EngramApp.js"
+    );
+    let webcomponent_main = fs::read_to_string(tmp.path().join("webcomponent").join("main.js"))
+        .expect("webcomponent/main.js");
+    assert_contains(&webcomponent_main, "const componentName = \"EngramApp\";");
+    assert_contains(&webcomponent_main, "const customTag = \"mos-engram-app\";");
+    assert_contains(
+        &webcomponent_main,
+        "window.mosaicHost?.getProps?.({ component: componentName })",
+    );
+    assert_contains(
+        &webcomponent_main,
+        "window.mosaicHost?.handleEvent?.({ component: componentName, event })",
+    );
+    assert_contains(
+        &webcomponent_main,
+        "root.setAttribute(slot.name, serializeSlotValue(value, slot.type));",
+    );
+    assert_contains(
+        &webcomponent_main,
+        "root.addEventListener(`mosaic:${eventName}`",
+    );
+    assert_contains(
+        &webcomponent_main,
+        "{ name: \"browser-results\", prop: \"browserResults\", type: \"list\", fallback: [] }",
+    );
+    assert_contains(
+        &webcomponent_main,
+        "{ name: \"answer-visible\", prop: \"answerVisible\", type: \"bool\", fallback: false }",
+    );
+    assert_contains(
+        &webcomponent_main,
+        "new CustomEvent(MOSAIC_HOST_INTENT_EVENT",
     );
     let webcomponent_host =
         fs::read_to_string(tmp.path().join("webcomponent").join("engram-host.mjs"))

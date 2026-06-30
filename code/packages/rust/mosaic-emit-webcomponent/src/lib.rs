@@ -76,8 +76,8 @@
 //! | Icon    | `<span class="icon">`                      |
 //! | Grid    | `<table>` with slot-driven thead/tbody     |
 
-use mosaic_vm::{EmitResult, MosaicRenderer, ResolvedProperty, ResolvedValue};
 use mosaic_analyzer::{MosaicSlot, MosaicType};
+use mosaic_vm::{EmitResult, MosaicRenderer, ResolvedProperty, ResolvedValue};
 
 // =====================================================================
 // New three-file pipeline entry point.
@@ -218,7 +218,14 @@ impl WebComponentRenderer {
 
     /// Build an inline style string from resolved properties, skipping semantics.
     fn build_style(props: &[ResolvedProperty]) -> String {
-        let skip = ["content", "source", "a11y-label", "a11y-role", "a11y-hidden", "style"];
+        let skip = [
+            "content",
+            "source",
+            "a11y-label",
+            "a11y-role",
+            "a11y-hidden",
+            "style",
+        ];
         let entries: Vec<String> = props
             .iter()
             .filter(|p| !skip.contains(&p.name.as_str()))
@@ -533,7 +540,11 @@ impl MosaicRenderer for WebComponentRenderer {
         };
 
         // Get direct text content for Text nodes.
-        let content = if is_primitive { Self::get_content(tag, props) } else { None };
+        let content = if is_primitive {
+            Self::get_content(tag, props)
+        } else {
+            None
+        };
 
         // Push the opening tag as a Raw fragment into the *parent* frame (or root),
         // then push a new frame for this element's children.
@@ -696,7 +707,9 @@ fn resolved_value_to_css(v: &ResolvedValue) -> String {
             }
         }
         ResolvedValue::Bool(b) => b.to_string(),
-        ResolvedValue::SlotRef { name, is_loop_var, .. } => {
+        ResolvedValue::SlotRef {
+            name, is_loop_var, ..
+        } => {
             // Security: wrap all slot values with _escape() to prevent CSS injection
             // (e.g. `; behavior:url(evil)` or `</style>` break-out in style attributes).
             if *is_loop_var {
@@ -725,7 +738,9 @@ fn resolved_value_to_css(v: &ResolvedValue) -> String {
 fn resolved_value_to_html_content(v: &ResolvedValue) -> String {
     match v {
         ResolvedValue::String(s) => s.clone(),
-        ResolvedValue::SlotRef { name, is_loop_var, .. } => {
+        ResolvedValue::SlotRef {
+            name, is_loop_var, ..
+        } => {
             if *is_loop_var {
                 // Safe: loop variables are pre-escaped by the EachOpen serializer.
                 format!("${{{name}}}")
@@ -790,9 +805,15 @@ fn format_html_div(style: &str, class: &str, props: &[ResolvedProperty]) -> Stri
     // Accessibility attributes.
     for p in props {
         match p.name.as_str() {
-            "a11y-label" => attrs.push(format!("aria-label=\"{}\"", resolved_value_to_css(&p.value))),
+            "a11y-label" => attrs.push(format!(
+                "aria-label=\"{}\"",
+                resolved_value_to_css(&p.value)
+            )),
             "a11y-role" => attrs.push(format!("role=\"{}\"", resolved_value_to_css(&p.value))),
-            "a11y-hidden" => attrs.push(format!("aria-hidden=\"{}\"", resolved_value_to_css(&p.value))),
+            "a11y-hidden" => attrs.push(format!(
+                "aria-hidden=\"{}\"",
+                resolved_value_to_css(&p.value)
+            )),
             _ => {}
         }
     }
@@ -810,8 +831,8 @@ fn format_html_div(style: &str, class: &str, props: &[ResolvedProperty]) -> Stri
 #[cfg(test)]
 mod tests {
     use super::*;
-    use mosaic_vm::MosaicVM;
     use mosaic_analyzer::analyze;
+    use mosaic_vm::MosaicVM;
 
     fn emit(src: &str) -> String {
         let file = analyze(src).unwrap();
@@ -826,7 +847,10 @@ mod tests {
     #[test]
     fn test_class_declaration() {
         let out = emit(r#"component Button { Box { } }"#);
-        assert!(out.contains("class Button extends HTMLElement"), "Missing class: {out}");
+        assert!(
+            out.contains("class Button extends HTMLElement"),
+            "Missing class: {out}"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -849,8 +873,14 @@ mod tests {
     #[test]
     fn test_observed_attributes() {
         let out = emit(r#"component Label { slot title: text; Text { content: @title; } }"#);
-        assert!(out.contains("observedAttributes"), "Missing observedAttributes");
-        assert!(out.contains("'title'"), "Missing scalar slot in observedAttributes: {out}");
+        assert!(
+            out.contains("observedAttributes"),
+            "Missing observedAttributes"
+        );
+        assert!(
+            out.contains("'title'"),
+            "Missing scalar slot in observedAttributes: {out}"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -859,16 +889,24 @@ mod tests {
 
     #[test]
     fn test_observed_excludes_list() {
-        let out = emit(r#"
+        let out = emit(
+            r#"
           component ItemList {
             slot items: list<text>;
             slot title: text;
             Column { }
           }
-        "#);
+        "#,
+        );
         // 'title' (text, scalar) must be observed; 'items' (list) must not.
-        assert!(out.contains("'title'"), "Expected 'title' in observedAttributes: {out}");
-        assert!(!out.contains("'items'"), "List slot 'items' must NOT be in observedAttributes: {out}");
+        assert!(
+            out.contains("'title'"),
+            "Expected 'title' in observedAttributes: {out}"
+        );
+        assert!(
+            !out.contains("'items'"),
+            "List slot 'items' must NOT be in observedAttributes: {out}"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -889,7 +927,10 @@ mod tests {
     fn test_render_method() {
         let out = emit(r#"component X { Box { } }"#);
         assert!(out.contains("_render()"), "Missing _render method: {out}");
-        assert!(out.contains("shadowRoot.innerHTML"), "Missing shadowRoot.innerHTML: {out}");
+        assert!(
+            out.contains("shadowRoot.innerHTML"),
+            "Missing shadowRoot.innerHTML: {out}"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -925,7 +966,10 @@ mod tests {
     #[test]
     fn test_slot_child_element() {
         let out = emit(r#"component Container { slot header: node; Column { @header; } }"#);
-        assert!(out.contains("<slot name=\"header\">"), "Expected <slot name=\"header\">: {out}");
+        assert!(
+            out.contains("<slot name=\"header\">"),
+            "Expected <slot name=\"header\">: {out}"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -934,7 +978,8 @@ mod tests {
 
     #[test]
     fn test_when_ternary() {
-        let out = emit(r#"
+        let out = emit(
+            r#"
           component Cond {
             slot show: bool;
             Column {
@@ -943,12 +988,22 @@ mod tests {
               }
             }
           }
-        "#);
+        "#,
+        );
         // Must contain a JS ternary expression, not a <template> tag.
         assert!(out.contains("? `"), "Expected ternary operator: {out}");
-        assert!(out.contains(": ''}"), "Expected ternary false branch: {out}");
-        assert!(!out.contains("data-when"), "Must NOT contain data-when: {out}");
-        assert!(!out.contains("<template"), "Must NOT contain <template>: {out}");
+        assert!(
+            out.contains(": ''}"),
+            "Expected ternary false branch: {out}"
+        );
+        assert!(
+            !out.contains("data-when"),
+            "Must NOT contain data-when: {out}"
+        );
+        assert!(
+            !out.contains("<template"),
+            "Must NOT contain <template>: {out}"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -958,7 +1013,8 @@ mod tests {
 
     #[test]
     fn test_each_map() {
-        let out = emit(r#"
+        let out = emit(
+            r#"
           component List {
             slot items: list<text>;
             Column {
@@ -967,12 +1023,19 @@ mod tests {
               }
             }
           }
-        "#);
+        "#,
+        );
         // Must contain .map() call, not <template data-each>.
         assert!(out.contains(".map("), "Expected .map(): {out}");
         assert!(out.contains(".join('')}"), "Expected .join('')}}: {out}");
-        assert!(!out.contains("data-each"), "Must NOT contain data-each: {out}");
-        assert!(!out.contains("<template"), "Must NOT contain <template>: {out}");
+        assert!(
+            !out.contains("data-each"),
+            "Must NOT contain data-each: {out}"
+        );
+        assert!(
+            !out.contains("<template"),
+            "Must NOT contain <template>: {out}"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -981,13 +1044,15 @@ mod tests {
 
     #[test]
     fn test_grid_table() {
-        let out = emit(r#"
+        let out = emit(
+            r#"
           component DataTable {
             slot headers: list<text>;
             slot rows: list<text>;
             Grid { headers: @headers; rows: @rows; }
           }
-        "#);
+        "#,
+        );
         assert!(out.contains("<table"), "Expected <table: {out}");
         assert!(out.contains("<thead"), "Expected <thead: {out}");
         assert!(out.contains("<tbody"), "Expected <tbody: {out}");
@@ -1001,7 +1066,8 @@ mod tests {
 
     #[test]
     fn test_backing_fields() {
-        let out = emit(r#"
+        let out = emit(
+            r#"
           component Widget {
             slot title: text;
             slot count: number;
@@ -1009,13 +1075,26 @@ mod tests {
             slot items: list<text>;
             Column { }
           }
-        "#);
+        "#,
+        );
         // Text/number/bool slots get scalar backing fields.
-        assert!(out.contains("this._title = ''"), "Expected _title init: {out}");
-        assert!(out.contains("this._count = 0"), "Expected _count init: {out}");
-        assert!(out.contains("this._visible = false"), "Expected _visible init: {out}");
+        assert!(
+            out.contains("this._title = ''"),
+            "Expected _title init: {out}"
+        );
+        assert!(
+            out.contains("this._count = 0"),
+            "Expected _count init: {out}"
+        );
+        assert!(
+            out.contains("this._visible = false"),
+            "Expected _visible init: {out}"
+        );
         // List slot gets an array backing field.
-        assert!(out.contains("this._items = []"), "Expected _items init: {out}");
+        assert!(
+            out.contains("this._items = []"),
+            "Expected _items init: {out}"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -1024,14 +1103,19 @@ mod tests {
 
     #[test]
     fn test_list_setter() {
-        let out = emit(r#"
+        let out = emit(
+            r#"
           component Widget {
             slot items: list<text>;
             Column { }
           }
-        "#);
+        "#,
+        );
         assert!(out.contains("set items(val)"), "Expected setter: {out}");
-        assert!(out.contains("this._items = val ?? []"), "Expected null guard: {out}");
+        assert!(
+            out.contains("this._items = val ?? []"),
+            "Expected null guard: {out}"
+        );
     }
 
     // -----------------------------------------------------------------------

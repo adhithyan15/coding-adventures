@@ -561,9 +561,7 @@ fn activate_html_host_asset(backend_dir: &Path, target_rel: &Path) -> Result<(),
         return Ok(());
     }
 
-    let insertion_point = content
-        .find("  <script type=\"module\" src=\"./main.js\"></script>")
-        .or_else(|| content.find("  <script type=\"module\" src=\"./"));
+    let insertion_point = content.find("  <script type=\"module\" src=\"./");
     if let Some(script_at) = insertion_point {
         content.insert_str(script_at, &format!("{script_line}\n"));
         write_file(&index_path, content.as_bytes())?;
@@ -867,8 +865,9 @@ fn emit_project_shell(
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
             if let Some(proj) = r.project {
-                let flat: [(&str, &str); 2] = [
+                let flat: [(&str, &str); 3] = [
                     ("index.html", &proj.index_html),
+                    ("main.js", &proj.main_js),
                     ("README.md", &proj.readme),
                 ];
                 for (rel, body) in flat {
@@ -3818,7 +3817,10 @@ version = "1"
                 ],
             ),
             (Backend::Html, vec!["index.html", "main.js", "README.md"]),
-            (Backend::WebComponent, vec!["index.html", "README.md"]),
+            (
+                Backend::WebComponent,
+                vec!["index.html", "main.js", "README.md"],
+            ),
             (
                 Backend::Flutter,
                 vec![
