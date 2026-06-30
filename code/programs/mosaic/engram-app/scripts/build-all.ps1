@@ -129,25 +129,6 @@ function Install-EngramQtHost {
     Copy-Item -LiteralPath $engramCapiLibrary -Destination (Join-Path $QtRoot $nativeLibraryName) -Force
 }
 
-function Add-EngramXamlNativeContent {
-    param(
-        [Parameter(Mandatory = $true)][string]$CsprojPath,
-        [Parameter(Mandatory = $true)][string]$NativeLibraryName
-    )
-
-    if (-not (Test-Path -LiteralPath $CsprojPath)) {
-        return
-    }
-    $content = Get-Content -LiteralPath $CsprojPath -Raw
-    $includeLine = "<Content Include=""$NativeLibraryName"" CopyToOutputDirectory=""PreserveNewest"" />"
-    if ($content.Contains($includeLine)) {
-        return
-    }
-    $itemGroup = "  <ItemGroup>`r`n    $includeLine`r`n  </ItemGroup>`r`n"
-    $content = $content.Replace("</Project>", "$itemGroup</Project>")
-    Write-Utf8NoBom -Path $CsprojPath -Content $content
-}
-
 function Install-EngramXamlHost {
     param([Parameter(Mandatory = $true)][string]$XamlRoot)
 
@@ -159,11 +140,6 @@ function Install-EngramXamlHost {
     }
 
     Copy-Item -LiteralPath $engramCapiLibrary -Destination (Join-Path $XamlRoot $nativeLibraryName) -Force
-
-    $csproj = Get-ChildItem -LiteralPath $XamlRoot -Filter "*.csproj" | Select-Object -First 1
-    if ($null -ne $csproj) {
-        Add-EngramXamlNativeContent -CsprojPath $csproj.FullName -NativeLibraryName $nativeLibraryName
-    }
 }
 
 function Add-EngramSwiftUIPackageBridge {
