@@ -1057,12 +1057,30 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
         "array_literal" => convert_array_literal(node),
         "object_literal" => convert_object_literal(node),
 
-        // ES2015+ unsupported in Phase 1
-        "arrow_function" | "async_arrow_function" | "yield_expression"
-        | "await_expression" | "generator_expression" | "async_function_expression"
-        | "async_generator_expression" | "class_expression"
-        | "template_literal" | "tagged_template_expression"
-        | "new_target_expression" | "import_meta_expression" => Err(unsupported(node)),
+        // Function-valued and ES2015+ expression forms the typed bridge does
+        // not yet represent (Phase 2). DECLINE GRACEFULLY (`UnsupportedSyntax`
+        // → the CLI falls back to WHITESPACE_ONLY and still emits valid JS).
+        //
+        // `function_expression` MUST be here alongside its siblings
+        // (`generator_expression`, `async_function_expression`, …): a plain
+        // function expression in value position — an IIFE `(function(){})()`,
+        // an assigned function `x = function(){}`, a callback
+        // `f(function(){})` — is extremely common, and without this entry it
+        // fell through to the `InternalError` arm below, aborting the whole
+        // compile (`exit 2`, no output) on valid input.
+        "function_expression"
+        | "arrow_function"
+        | "async_arrow_function"
+        | "yield_expression"
+        | "await_expression"
+        | "generator_expression"
+        | "async_function_expression"
+        | "async_generator_expression"
+        | "class_expression"
+        | "template_literal"
+        | "tagged_template_expression"
+        | "new_target_expression"
+        | "import_meta_expression" => Err(unsupported(node)),
 
         other => Err(BridgeError::InternalError {
             msg: format!("unknown expression rule '{other}'"),
@@ -2815,6 +2833,28 @@ mod tests {
         // the NAME-token unwrap, so the unwrap fired `internal("missing name")`
         // first and `var [a,b]=c;` failed to compile at SIMPLE/ADVANCED.
         for src in ["var [a,b]=c;", "let {p,q}=o;", "const [x]=y;"] {
+            match bridge(src) {
+                Err(BridgeError::UnsupportedSyntax { .. }) => {} // graceful decline
+                other => panic!("expected UnsupportedSyntax for {src:?}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn function_expressions_decline_gracefully_not_hard_error() {
+        // A `function` expression in value position — an IIFE, an assigned
+        // function, a callback argument — is Phase 2. It must decline with
+        // `UnsupportedSyntax` (→ WHITESPACE_ONLY fallback, valid output), NOT
+        // raise an `Internal` error (a hard `exit 2` compile abort).
+        // Regression: `function_expression` was missing from the unsupported
+        // list in `convert_expression`, so it fell through to the
+        // `InternalError` catch-all and `(function(){})();` failed to compile.
+        for src in [
+            "(function(){})();",
+            "x=function(){};",
+            "f(function(){});",
+            "var g=function h(){};",
+        ] {
             match bridge(src) {
                 Err(BridgeError::UnsupportedSyntax { .. }) => {} // graceful decline
                 other => panic!("expected UnsupportedSyntax for {src:?}, got {other:?}"),
