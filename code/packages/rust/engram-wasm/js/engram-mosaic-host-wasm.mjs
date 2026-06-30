@@ -9,7 +9,7 @@
 export function createEngramEngine(wasmBytes, options = {}) {
   const module =
     wasmBytes instanceof WebAssembly.Module ? wasmBytes : new WebAssembly.Module(wasmBytes);
-  const instance = new WebAssembly.Instance(module, {});
+  const instance = new WebAssembly.Instance(module, options.importObject ?? defaultWasmImports());
   const ex = instance.exports;
   const enc = new TextEncoder();
   const dec = new TextDecoder();
@@ -136,6 +136,20 @@ export function createEngramEngine(wasmBytes, options = {}) {
           return response;
         },
       }),
+  };
+}
+
+function defaultWasmImports() {
+  return {
+    __wbindgen_placeholder__: {
+      __wbindgen_describe() {},
+    },
+    __wbindgen_externref_xform__: {
+      __wbindgen_externref_table_set_null() {},
+      __wbindgen_externref_table_grow() {
+        return -1;
+      },
+    },
   };
 }
 

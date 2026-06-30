@@ -618,6 +618,8 @@ fn native_project_shells_expose_engram_host_contract() {
         "window.mosaicHost.handleEvent({ component: componentName, event })",
     );
     assert_contains(&html_main, "const componentName = \"EngramApp\";");
+    assert_contains(&html_main, "\"deckNames\": []");
+    assert_contains(&html_main, "\"onSelectDeck\"");
     assert_contains(&html_main, "\"browserResults\": []");
     assert_contains(&html_main, "\"answerVisible\": false");
     assert_contains(&html_main, "\"typeAnswerActive\": false");
@@ -691,6 +693,11 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(
         &webcomponent_main,
+        "{ name: \"deck-names\", prop: \"deckNames\", type: \"list\", fallback: [] }",
+    );
+    assert_contains(&webcomponent_main, "\"selectDeck\"");
+    assert_contains(
+        &webcomponent_main,
         "{ name: \"browser-results\", prop: \"browserResults\", type: \"list\", fallback: [] }",
     );
     assert_contains(
@@ -719,6 +726,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&react_app, "import \"./engram-host\";");
     assert_contains(&react_app, "const fallbackProps = {");
     assert_contains(&react_app, "appTitle: \"Sample AppTitle\",");
+    assert_contains(&react_app, "deckListLabel: \"Sample DeckListLabel\",");
+    assert_contains(&react_app, "deckNames: [],");
     assert_contains(
         &react_app,
         "deckOptionsSettingsLabel: \"Sample DeckOptionsSettingsLabel\",",
@@ -819,6 +828,8 @@ fn native_project_shells_expose_engram_host_contract() {
         .expect("electron/src/main.tsx");
     assert_contains(&electron_app, "const fallbackProps = {");
     assert_contains(&electron_app, "appTitle: \"Sample AppTitle\",");
+    assert_contains(&electron_app, "deckListLabel: \"Sample DeckListLabel\",");
+    assert_contains(&electron_app, "deckNames: [],");
     assert_contains(
         &electron_app,
         "deckOptionsSettingsLabel: \"Sample DeckOptionsSettingsLabel\",",
@@ -952,6 +963,14 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &flutter_app,
         "appTitle: mosaicString(_hostProps, \"app-title\", \"Sample AppTitle\"),",
+    );
+    assert_contains(
+        &flutter_app,
+        "deckListLabel: mosaicString(_hostProps, \"deck-list-label\", \"Sample DeckListLabel\"),",
+    );
+    assert_contains(
+        &flutter_app,
+        "deckNames: mosaicStringList(_hostProps, \"deck-names\"),",
     );
     assert_contains(
         &flutter_app,
@@ -1091,6 +1110,7 @@ fn native_project_shells_expose_engram_host_contract() {
         &compose_app,
         "override val mosaicName: String = \"onImportAnki\"",
     );
+    assert_contains(&compose_app, "data class SelectDeck(val value: String)");
     assert_contains(
         &compose_app,
         "data class DeckOptionsNewCardsChange(val value: Double)",
@@ -1152,6 +1172,7 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&compose_app, "@Composable");
     assert_contains(&compose_app, "fun EngramApp(");
     assert_contains(&compose_app, "appTitle: String,");
+    assert_contains(&compose_app, "deckNames: List<String>,");
     assert_contains(&compose_app, "deckOptionsSettingsLabel: String,");
     assert_contains(&compose_app, "deckOptionsLearningStepsValue: String,");
     assert_contains(&compose_app, "deckOptionsNewCardsValue: Double,");
@@ -1200,6 +1221,10 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &compose_main,
         "appTitle = mosaicString(hostProps, \"app-title\", \"Sample AppTitle\"),",
+    );
+    assert_contains(
+        &compose_main,
+        "deckNames = mosaicStringList(hostProps, \"deck-names\"),",
     );
     assert_contains(
         &compose_main,
@@ -1334,6 +1359,7 @@ fn native_project_shells_expose_engram_host_contract() {
     let qml =
         fs::read_to_string(tmp.path().join("qt").join("EngramApp.qml")).expect("EngramApp.qml");
     assert_contains(&qml, "property string appTitle");
+    assert_contains(&qml, "property var deckNames");
     assert_contains(&qml, "property string deckOptionsSettingsLabel");
     assert_contains(&qml, "property string deckOptionsLearningStepsValue");
     assert_contains(&qml, "property string deckOptionsRelearningStepsValue");
@@ -1364,6 +1390,7 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "property bool typeAnswerActive");
     assert_contains(&qml, "property string typeAnswerValue");
     assert_contains(&qml, "signal reveal()");
+    assert_contains(&qml, "signal selectDeck(string value)");
     assert_contains(&qml, "signal typeAnswerChange(string value)");
     assert_contains(&qml, "signal again()");
     assert_contains(&qml, "signal hard()");
@@ -1390,6 +1417,10 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &qml,
         "onImportAnki: mosaicEvent({ \"event\": \"onImportAnki\" })",
+    );
+    assert_contains(
+        &qml,
+        "onSelectDeck: mosaicEvent({ \"event\": \"onSelectDeck\", \"value\": value })",
     );
     assert_contains(&qml, "signal exportAnki()");
     assert_contains(&qml, "signal addNote()");
@@ -1458,6 +1489,7 @@ fn native_project_shells_expose_engram_host_contract() {
     let swift = fs::read_to_string(tmp.path().join("swiftui").join("EngramApp.swift"))
         .expect("EngramApp.swift");
     assert_contains(&swift, "enum EngramAppEvent {");
+    assert_contains(&swift, "case selectDeck");
     assert_contains(&swift, "case reveal");
     assert_contains(&swift, "case again");
     assert_contains(&swift, "case hard");
@@ -1499,6 +1531,7 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&swift, "var mosaicEnvelope: [String: Any]");
     assert_contains(&swift, "struct EngramAppView: View");
     assert_contains(&swift, "let appTitle: String");
+    assert_contains(&swift, "let deckNames: [String]");
     assert_contains(&swift, "let deckOptionsSettingsLabel: String");
     assert_contains(&swift, "let deckOptionsLearningStepsValue: String");
     assert_contains(&swift, "let deckOptionsRelearningStepsValue: String");
@@ -1551,6 +1584,10 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &swift_app,
         "appTitle: MosaicHostValue.string(host.props, \"app-title\", fallback: \"Sample AppTitle\"),",
+    );
+    assert_contains(
+        &swift_app,
+        "deckNames: MosaicHostValue.stringList(host.props, \"deck-names\", fallback: []),",
     );
     assert_contains(
         &swift_app,
@@ -1717,6 +1754,10 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_code_behind,
         "public static readonly DependencyProperty AppTitleProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty DeckNamesProperty",
     );
     assert_contains(
         &xaml_code_behind,
@@ -1889,6 +1930,10 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_events,
         "public sealed record Reveal() : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record SelectDeck(string Value) : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,
