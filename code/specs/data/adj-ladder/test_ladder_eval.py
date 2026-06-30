@@ -49,6 +49,7 @@ SELF_CONTAINED_RUNGS = (
     "rung9_fractional_excretion",
     "rung10_anion_gap",
     "rung11_syndromic_decision",
+    "rung12_threshold_decision",
 )
 
 
