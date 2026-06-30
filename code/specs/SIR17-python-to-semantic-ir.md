@@ -60,7 +60,7 @@ versions of this frontend may accept a version parameter.
 | `None`                                 | `NilLit`                                                    |
 | `"hello"`, `'world'`                   | `StrLit { value }`                                          |
 | `name` (reference)                     | `VarRef { name, scope }` with resolved scope                |
-| `x = 1`                                | `LetBinding` (first time) or `Assign` (subsequent)          |
+| `x = 1`                                | `LetStarBinding` (first time) or `Assign` (subsequent)      |
 | `x + y`, `x - y`, `x * y`, `x / y`     | `BuiltinCall("+" / "-" / "*" / "/", [...])`                 |
 | `x % y`                                | `BuiltinCall("%", [x, y])`                                  |
 | `-x`                                   | `BuiltinCall("neg", [x])`                                   |
@@ -117,8 +117,19 @@ Same model as Twig (SIR11):
 Python lacks an explicit declaration syntax for locals — `x = 1`
 creates a local if `x` isn't already defined elsewhere in scope.
 The frontend implements first-occurrence detection: the first
-`assign(x, value)` in a function emits `LetBinding`, subsequent ones
-emit `Assign`.  The same rule applies inside loops.
+`assign(x, value)` in a function declares it, subsequent ones emit
+`Assign`.  The same rule applies inside loops.
+
+**Implementation note (M2):** the first-occurrence *declaration* emits
+a `LetStarBinding` (sequential `let*`), **not** a `LetBinding`.  The
+SIR validator treats a run of consecutive `LetBinding`s as a *parallel*
+group whose right-hand sides are all evaluated in the scope *before*
+the group, so a later binding cannot reference an earlier one
+(`x = 1` then `y = x + 1` would fail to resolve `x`).  `let*` has the
+sequential semantics Python's top-to-bottom execution requires.  The
+RHS is lowered before the name is added to the declared set, so a
+self-referential first binding (`x = x`) correctly reports `x` as
+unresolved.
 
 `global x` and `nonlocal x` declarations are **out of scope** in v0
 — the frontend rejects them.
