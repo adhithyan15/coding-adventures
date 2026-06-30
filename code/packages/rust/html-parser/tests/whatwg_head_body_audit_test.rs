@@ -8,6 +8,7 @@ const TREE_CONSTRUCTION_SMOKE: &str = include_str!("fixtures/html5lib-tree-const
 const WHATWG_HEAD_BODY_AUDIT: &str = include_str!("fixtures/whatwg-head-body-audit.json");
 const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
     ("scripted-adoption01-dat-1", "head-text-mode"),
+    ("scripted-webkit01-dat-1", "head-text-mode"),
     ("tests26-dat-1251", "body-boundary"),
     ("tricky01-dat-3", "body-boundary"),
 ];
