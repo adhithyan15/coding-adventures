@@ -611,12 +611,13 @@ fn merge_app_states(current: &AppState, imported: AppState) -> AppState {
     upsert_by(&mut merged.deck_options, imported.deck_options, |preset| {
         preset.deck_id.clone()
     });
-    let media_id_remaps = merge_media_assets(&mut merged.media_assets, imported.media_assets);
+    let media_remaps = merge_media_assets(&mut merged.media_assets, imported.media_assets);
     retarget_external_sources(
         &mut imported_external_sources,
         ExternalSourceTarget::Media,
-        &media_id_remaps,
+        &media_remaps.ids,
     );
+    retarget_media_archive_names(&mut imported_external_sources, &media_remaps.archive_names);
     upsert_by(
         &mut merged.external_sources,
         imported_external_sources,
@@ -667,11 +668,37 @@ fn retarget_external_sources(
     }
 }
 
+fn retarget_media_archive_names(
+    sources: &mut [ExternalSourceRecord],
+    archive_name_remaps: &HashMap<String, String>,
+) {
+    if archive_name_remaps.is_empty() {
+        return;
+    }
+
+    for source in sources {
+        if source.target != ExternalSourceTarget::Media {
+            continue;
+        }
+        if let Some(archive_name) = source.data.get_mut("archiveName") {
+            if let Some(next_archive_name) = archive_name_remaps.get(archive_name) {
+                *archive_name = next_archive_name.clone();
+            }
+        }
+    }
+}
+
+#[derive(Default)]
+struct MediaMergeRemaps {
+    ids: HashMap<String, String>,
+    archive_names: HashMap<String, String>,
+}
+
 fn merge_media_assets(
     target: &mut Vec<MediaAssetRecord>,
     incoming: Vec<MediaAssetRecord>,
-) -> HashMap<String, String> {
-    let mut id_remaps = HashMap::new();
+) -> MediaMergeRemaps {
+    let mut remaps = MediaMergeRemaps::default();
     for mut asset in incoming {
         match target.iter().position(|existing| existing.id == asset.id) {
             Some(index)
@@ -681,24 +708,32 @@ fn merge_media_assets(
             }
             Some(_) => {
                 let original_id = asset.id.clone();
+                let original_archive_name = asset.archive_name.clone();
                 let unique = next_unique_media_suffix(target, &asset.id, &asset.archive_name);
                 asset.id = format!("{}-merge-{unique}", asset.id);
                 asset.archive_name = format!("{}-merge-{unique}", asset.archive_name);
-                id_remaps.insert(original_id, asset.id.clone());
+                remaps.ids.insert(original_id, asset.id.clone());
+                remaps
+                    .archive_names
+                    .insert(original_archive_name, asset.archive_name.clone());
                 target.push(asset);
             }
             None if target
                 .iter()
                 .any(|existing| existing.archive_name == asset.archive_name) =>
             {
+                let original_archive_name = asset.archive_name.clone();
                 let unique = next_unique_media_suffix(target, &asset.id, &asset.archive_name);
                 asset.archive_name = format!("{}-merge-{unique}", asset.archive_name);
+                remaps
+                    .archive_names
+                    .insert(original_archive_name, asset.archive_name.clone());
                 target.push(asset);
             }
             None => target.push(asset),
         }
     }
-    id_remaps
+    remaps
 }
 
 fn next_unique_media_suffix(
@@ -1266,6 +1301,7 @@ CREATE TABLE graves (
                     && source["targetId"] == "anki-media:0-merge-1"
                     && source["source"] == "anki-v11"
                     && source["originalId"] == "0"
+                    && source["data"]["archiveName"] == "0-merge-1"
                     && source["data"]["filename"] == "audio/hola.mp3"
             }));
             assert!(external_sources.iter().any(|source| {
@@ -1273,6 +1309,7 @@ CREATE TABLE graves (
                     && source["targetId"] == "anki-media:1"
                     && source["source"] == "anki-v11"
                     && source["originalId"] == "1"
+                    && source["data"]["archiveName"] == "1-merge-1"
                     && source["data"]["filename"] == "images/card.png"
             }));
 
