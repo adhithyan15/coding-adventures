@@ -267,7 +267,7 @@ pub fn import_anki_notes_tsv(
             continue;
         }
         if fields.first().is_some_and(|field| field.starts_with('#')) {
-            headers.read_header(&fields);
+            headers.read_header(&fields, index + 1)?;
             continue;
         }
         rows.push((index + 1, fields));
@@ -293,7 +293,7 @@ pub fn import_anki_notes_tsv(
     let columns = headers
         .columns
         .unwrap_or_else(|| import_kind.default_columns(&rows));
-    let column_plan = import_kind.column_plan(&columns)?;
+    let column_plan = import_kind.column_plan(&columns, headers.tags_column)?;
     let note_type = import_kind.note_type(
         &note_type_id,
         &note_type_name,
@@ -354,22 +354,28 @@ struct AnkiTsvHeaders {
     note_type_name: Option<String>,
     columns: Option<Vec<String>>,
     tags: Vec<String>,
+    tags_column: Option<usize>,
 }
 
 impl AnkiTsvHeaders {
-    fn read_header(&mut self, fields: &[String]) {
+    fn read_header(&mut self, fields: &[String], row: usize) -> Result<(), CsvError> {
         let Some(first) = fields.first() else {
-            return;
+            return Ok(());
         };
 
         if let Some(note_type_name) = first.strip_prefix("#notetype:") {
             self.note_type_name = Some(note_type_name.trim().to_string());
-            return;
+            return Ok(());
         }
 
         if let Some(tags) = first.strip_prefix("#tags:") {
             self.tags = split_anki_tags(tags);
-            return;
+            return Ok(());
+        }
+
+        if let Some(tags_column) = first.strip_prefix("#tags column:") {
+            self.tags_column = Some(parse_anki_header_column_index(tags_column, row)?);
+            return Ok(());
         }
 
         if let Some(first_column) = first.strip_prefix("#columns:") {
@@ -378,6 +384,8 @@ impl AnkiTsvHeaders {
             columns.extend(fields.iter().skip(1).map(|field| field.trim().to_string()));
             self.columns = Some(columns);
         }
+
+        Ok(())
     }
 }
 
@@ -484,7 +492,11 @@ impl AnkiNoteImportKind {
         }
     }
 
-    fn column_plan(&self, columns: &[String]) -> Result<AnkiColumnPlan, CsvError> {
+    fn column_plan(
+        &self,
+        columns: &[String],
+        tags_column: Option<usize>,
+    ) -> Result<AnkiColumnPlan, CsvError> {
         match self {
             Self::Basic { .. } => {
                 let front_index = column_index(columns, "Front").ok_or_else(|| {
@@ -512,7 +524,7 @@ impl AnkiNoteImportKind {
                             column_index: back_index,
                         },
                     ],
-                    column_index(columns, "Tags"),
+                    tags_column.or_else(|| column_index(columns, "Tags")),
                 ))
             }
             Self::Cloze => {
@@ -531,9 +543,12 @@ impl AnkiNoteImportKind {
                         column_index: extra_index,
                     });
                 }
-                Ok(column_plan(field_columns, column_index(columns, "Tags")))
+                Ok(column_plan(
+                    field_columns,
+                    tags_column.or_else(|| column_index(columns, "Tags")),
+                ))
             }
-            Self::Custom => custom_column_plan(columns),
+            Self::Custom => custom_column_plan(columns, tags_column),
         }
     }
 }
@@ -652,6 +667,23 @@ fn anki_separator_value(value: &str, row: usize) -> Result<char, CsvError> {
             Some(row),
         )),
     }
+}
+
+fn parse_anki_header_column_index(value: &str, row: usize) -> Result<usize, CsvError> {
+    let trimmed = value.trim();
+    let column = trimmed.parse::<usize>().map_err(|_| {
+        csv_error(
+            &format!("Anki special column header must use a positive column number: {trimmed}"),
+            Some(row),
+        )
+    })?;
+    if column == 0 {
+        return Err(csv_error(
+            "Anki special column header must use a positive column number",
+            Some(row),
+        ));
+    }
+    Ok(column - 1)
 }
 
 fn parse_delimited_records(
@@ -967,8 +999,11 @@ fn slugify_identifier(value: &str) -> String {
     id
 }
 
-fn custom_column_plan(columns: &[String]) -> Result<AnkiColumnPlan, CsvError> {
-    let tag_index = column_index(columns, "Tags");
+fn custom_column_plan(
+    columns: &[String],
+    tags_column: Option<usize>,
+) -> Result<AnkiColumnPlan, CsvError> {
+    let tag_index = tags_column.or_else(|| column_index(columns, "Tags"));
     let mut used_ids = BTreeSet::new();
     let mut field_columns = Vec::new();
 
@@ -1309,6 +1344,42 @@ mod tests {
     }
 
     #[test]
+    fn anki_note_text_import_honors_tags_column_header() {
+        let text = "#separator:tab\n#notetype:Basic\n#tags:global\n#tags column:3\n#columns:Front\tBack\tLabels\nhola\thello\tspanish common\n";
+        let options = AnkiNoteTsvImportOptions {
+            deck_id: "deck".to_string(),
+            note_type_id: String::new(),
+            note_type_name: String::new(),
+            note_id_prefix: "note".to_string(),
+            created_at: 456,
+        };
+
+        let imported = import_anki_notes_tsv(text, &options).unwrap();
+
+        assert_eq!(imported.notes[0].tags, vec!["global", "spanish", "common"]);
+        assert_eq!(
+            imported.notes[0]
+                .fields
+                .iter()
+                .map(|field| field.field_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["front", "back"]
+        );
+
+        let custom_text = "#separator:tab\n#notetype:Vocabulary Story\n#tags column:4\n#columns:Word\tRoot\tCognate\tLabels\nhablar\tfabl-\tfable\tspanish latin\n";
+        let custom_imported = import_anki_notes_tsv(custom_text, &options).unwrap();
+        assert_eq!(custom_imported.notes[0].tags, vec!["spanish", "latin"]);
+        assert_eq!(
+            custom_imported.note_types[0]
+                .fields
+                .iter()
+                .map(|field| field.name.as_str())
+                .collect::<Vec<_>>(),
+            vec!["Word", "Root", "Cognate"]
+        );
+    }
+
+    #[test]
     fn anki_note_tsv_import_creates_cloze_notes_and_cards() {
         let tsv = "#separator:tab\n#notetype:Cloze\n#columns:Text\tExtra\tTags\n\"A {{c1::root::base}} plus {{c2::suffix}}\"\tetymology\tgrammar spanish\n";
         let options = AnkiNoteTsvImportOptions {
@@ -1495,6 +1566,14 @@ mod tests {
         .unwrap_err();
         assert_eq!(custom_error.row, Some(1));
         assert!(custom_error.message.contains("at least one note field"));
+
+        let tags_column_error = import_anki_notes_tsv(
+            "#separator:tab\n#tags column:0\n#columns:Front\tBack\tLabels\nfront\tback\ttag\n",
+            &options,
+        )
+        .unwrap_err();
+        assert_eq!(tags_column_error.row, Some(2));
+        assert!(tags_column_error.message.contains("positive column number"));
     }
 
     #[test]

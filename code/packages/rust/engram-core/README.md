@@ -208,7 +208,8 @@ sibling cards, Basic type-in-answer note types preserve `{{type:Back}}` typed
 answer prompts, and Cloze rows produce cloze note models plus one generated
 card per cloze ordinal. Custom note-type rows preserve arbitrary field columns
 and Anki's Tags column as note data; imported `#tags:` headers are merged into
-each row's note tags. Custom rows generate no cards until a real template is
+each row's note tags, and `#tags column:N` can mark any one-based text column as
+the row's tag source. Custom rows generate no cards until a real template is
 available because Anki text exports do not carry template definitions.
 
 `get_active_session_progress` derives the shared review UI counters from
