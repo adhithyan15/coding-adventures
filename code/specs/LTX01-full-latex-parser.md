@@ -214,6 +214,17 @@ is text-primary, which is a different mode model.)
   the base, distinct from `Pow`/`Subscript`. `to_latex` round-trips both; `capabilities()` already
   advertises `oversets` via `all()`. The LaTeX-side twin of the asciimath over/under-set emitter.
 
+  **Extensible / labelled arrows (latex 0.16.0):** the amsmath stretching-arrow family —
+  `\xrightarrow`, `\xleftarrow`, `\xleftrightarrow`, `\xRightarrow`, `\xLeftarrow`, `\xmapsto`,
+  `\xhookrightarrow`, `\xhookleftarrow` — parses with a **mandatory `{above}` group** and an
+  **optional `[below]` group** (`\xrightarrow[g]{f}`). No new node: a labelled arrow IS an
+  annotation stacked on the plain arrow symbol, so it desugars onto the existing `Overset`/`Underset`
+  nodes — `\xrightarrow{f}` → `Overset { over: f, base: \rightarrow }`, `\xrightarrow[g]{f}` →
+  `Underset { under: g, base: Overset { … } }`. The L6 lowering therefore needs **zero change**
+  (`\xrightarrow{f}` lowers to the identical `MathExpr::Overset` as `\overset{f}{\rightarrow}`).
+  `to_latex` normalises to the `\overset`/`\underset` form (a round-trip fixed point); a missing
+  mandatory label is a spanned error, never a panic.
+
 **Asymptote (documented in README, not built):** runtime `\catcode`, `\expandafter`/
 `\noexpand`/`\csname`, arbitrary `\if…` programming, external `\input`/`\include`. Hit →
 `Unsupported { construct, span }`.

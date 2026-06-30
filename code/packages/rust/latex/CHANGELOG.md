@@ -2,6 +2,26 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.16.0] — 2026-06-30
+
+### Added — extensible / labelled arrows (`\xrightarrow` & friends)
+
+- The parser now accepts the amsmath **extensible arrows** that carry a stretching label:
+  `\xrightarrow`, `\xleftarrow`, `\xleftrightarrow`, `\xRightarrow`, `\xLeftarrow`, `\xmapsto`,
+  `\xhookrightarrow`, `\xhookleftarrow`. Each takes a **mandatory `{above}` group** (the label set
+  over the arrow) and an **optional `[below]` group** (a second label set under it) — the same
+  argument shape as in real LaTeX, e.g. `\xrightarrow[\text{below}]{f}`.
+- **No new AST node.** A labelled arrow is *exactly* an annotation stacked on the plain arrow
+  symbol, so it lowers onto the existing `Overset`/`Underset` nodes: `\xrightarrow{f}` →
+  `Overset { over: f, base: \rightarrow }`, and `\xrightarrow[g]{f}` →
+  `Underset { under: g, base: Overset { over: f, base: \rightarrow } }`. Because nothing new is
+  introduced, the neutral **`MathFrontend` lowering needs zero change** — `\xrightarrow{f}` lowers
+  to the identical `MathExpr::Overset` as the explicit `\overset{f}{\rightarrow}`.
+- The surface normalises through `to_latex()` to the equivalent `\overset`/`\underset` form, which
+  re-parses to the identical tree (round-trip is a fixed point). A missing mandatory `{above}`
+  label, or an unterminated optional `[below]` label, is a **spanned `ParseError`, never a panic**.
+- 8 new parser tests (`math.rs`) + 1 neutral-lowering test (`frontend.rs`).
+
 ## [0.15.0] — 2026-06-30
 
 ### Added — the `array` / `subarray` grids (mandatory column-spec)

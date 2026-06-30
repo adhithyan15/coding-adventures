@@ -295,6 +295,29 @@ fn is_text(name: &str) -> bool {
             | "mathbb" | "operatorname"
     )
 }
+/// An amsmath **extensible / labelled arrow** (`\xrightarrow`, `\xleftarrow`, …). These take a
+/// label that stretches the arrow: a mandatory `{above}` group and an optional `[below]` group.
+/// We have no dedicated arrow node and don't need one — a labelled arrow is *exactly* an
+/// annotation stacked over (and optionally under) the corresponding plain arrow symbol, so we
+/// lower `\xrightarrow{f}` to `Overset { over: f, base: → }` and `\xrightarrow[g]{f}` to
+/// `Underset { under: g, base: Overset { over: f, base: → } }`, reusing the existing
+/// `Overset`/`Underset` nodes. The neutral frontend lowering therefore needs no change.
+///
+/// Returns the **base arrow symbol's control-word name** (so `xrightarrow` → `rightarrow`,
+/// which round-trips through `to_latex` as `\rightarrow`).
+fn xarrow_base(name: &str) -> Option<&'static str> {
+    Some(match name {
+        "xrightarrow" => "rightarrow",
+        "xleftarrow" => "leftarrow",
+        "xleftrightarrow" => "leftrightarrow",
+        "xRightarrow" => "Rightarrow",
+        "xLeftarrow" => "Leftarrow",
+        "xmapsto" => "mapsto",
+        "xhookrightarrow" => "hookrightarrow",
+        "xhookleftarrow" => "hookleftarrow",
+        _ => return None,
+    })
+}
 /// Math environments with `&`/`\\` row/column structure (L3). Case-sensitive — `bmatrix`
 /// (square brackets) and `Bmatrix` (braces) are different environments. The `array`/`subarray`
 /// grids take a **mandatory** column-spec argument (`\begin{array}{cc}`) — see
@@ -666,6 +689,33 @@ impl<'a> MathParser<'a> {
             let under = self.read_arg()?;
             let base = self.read_arg()?;
             return Ok(MathNode::Underset { under: Box::new(under), base: Box::new(base) });
+        }
+        // `\xrightarrow[below]{above}` and friends — an extensible/labelled arrow. The optional
+        // `[below]` group sits under the arrow, the mandatory `{above}` group over it. We lower to
+        // the existing Overset/Underset nodes stacked on the plain arrow symbol (see `xarrow_base`).
+        if let Some(arrow) = xarrow_base(name) {
+            self.bump();
+            let below = if matches!(self.peek().kind, TokenKind::Char('[')) {
+                self.bump(); // [
+                let b = self.parse_relation()?;
+                if !matches!(self.peek().kind, TokenKind::Char(']')) {
+                    return self.err(format!("expected ']' for \\{name} subscript label"));
+                }
+                self.bump(); // ]
+                Some(Box::new(b))
+            } else {
+                None
+            };
+            let above = self.read_arg()?;
+            let arrow_node = MathNode::Sym(arrow.to_string());
+            let over = MathNode::Overset {
+                over: Box::new(above),
+                base: Box::new(arrow_node),
+            };
+            return Ok(match below {
+                Some(under) => MathNode::Underset { under, base: Box::new(over) },
+                None => over,
+            });
         }
         if name == "sqrt" {
             self.bump();
@@ -1593,6 +1643,92 @@ mod tests {
         let spec = format!("{}{}", "{".repeat(20_000), "}".repeat(20_000));
         let src = format!(r"\begin{{array}}{{{spec}}} a \end{{array}}");
         assert!(parse_math(&src).is_ok());
+    }
+
+    // ---- extensible / labelled arrows (\xrightarrow & friends) -----------------
+
+    #[test]
+    fn xrightarrow_label_is_overset_on_the_arrow() {
+        // `\xrightarrow{f}` ≡ the label `f` set OVER a plain `\rightarrow`.
+        let n = parse_math(r"\xrightarrow{f}").unwrap();
+        assert_eq!(
+            n,
+            MathNode::Overset {
+                over: Box::new(sym("f")),
+                base: Box::new(sym("rightarrow")),
+            }
+        );
+    }
+
+    #[test]
+    fn xleftarrow_uses_the_left_arrow_base() {
+        // Each command maps to its own base arrow symbol.
+        let n = parse_math(r"\xleftarrow{g}").unwrap();
+        match &n {
+            MathNode::Overset { base, .. } => assert_eq!(**base, sym("leftarrow")),
+            other => panic!("expected Overset, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn xrightarrow_optional_below_label_is_an_underset() {
+        // `\xrightarrow[below]{above}` stacks `above` over the arrow AND `below` under the whole
+        // thing → Underset { under: below, base: Overset { over: above, base: → } }.
+        let n = parse_math(r"\xrightarrow[n]{f + g}").unwrap();
+        match &n {
+            MathNode::Underset { under, base } => {
+                assert_eq!(**under, sym("n"));
+                assert!(matches!(**base, MathNode::Overset { .. }));
+            }
+            other => panic!("expected Underset over Overset, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn xarrow_label_can_be_a_multitoken_group() {
+        // The `{above}` group is a full sub-expression, not a single token.
+        let n = parse_math(r"\xrightarrow{a + b}").unwrap();
+        match &n {
+            MathNode::Overset { over, .. } => {
+                assert!(matches!(**over, MathNode::Bin(MBinOp::Add, ..)));
+            }
+            other => panic!("expected Overset, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn xarrow_in_context_chains_with_neighbours() {
+        // A labelled arrow is an atom, so it sits inline between operands: `A \xrightarrow{f} B`.
+        let n = parse_math(r"A \xrightarrow{f} B").unwrap();
+        // Implicit-multiplication chain: A · (arrow) · B — just assert it parses to a Bin tree
+        // containing the Overset arrow somewhere.
+        assert!(n.to_latex().contains(r"\overset"));
+        assert!(n.to_latex().contains(r"\rightarrow"));
+    }
+
+    #[test]
+    fn xarrow_round_trips_through_to_latex() {
+        // parse → to_latex → parse is a fixed point (the surface normalises to \overset/\underset,
+        // which re-parse to the identical tree).
+        for src in [
+            r"\xrightarrow{f}",
+            r"\xleftarrow{g}",
+            r"\xrightarrow[m]{n}",
+            r"\xLeftarrow{p}",
+            r"\xmapsto{\phi}",
+        ] {
+            let once = parse_math(src).unwrap();
+            let twice = parse_math(&once.to_latex()).unwrap();
+            assert_eq!(once, twice, "round-trip changed the tree for {src:?}");
+        }
+    }
+
+    #[test]
+    fn xarrow_missing_mandatory_label_is_a_spanned_error() {
+        // The `{above}` group is mandatory — its absence is a clean error, never a panic.
+        assert!(parse_math(r"\xrightarrow").is_err());
+        assert!(parse_math(r"\xrightarrow[n]").is_err()); // optional present, mandatory missing
+        assert!(parse_math(r"\xrightarrow[n{f}").is_err()); // unterminated optional label
     }
 
     // ---- deep-tree Drop safety -------------------------------------------------
