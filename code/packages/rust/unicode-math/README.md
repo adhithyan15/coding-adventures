@@ -16,8 +16,9 @@ ASCII syntax (AsciiMath), and raw Unicode.
 | `42`, `3.14`, `6.022e23` | `Number` (exact — never `f64`) |
 | `x`, `π`, `Σ`, `∞` | `Symbol` (`π`→`pi`, `Σ`→`Sigma`, `∞`→`infinity`) |
 | `xy`, `2x`, `πα` | `Bin(Mul)` (juxtaposition ⇒ implicit `·`) |
-| `x²`, `x⁻¹`, `x¹⁰` | `Bin(Pow)` (Unicode superscripts) |
-| `a₁`, `a₁²` | `Subscript` / `Pow(Subscript)` |
+| `x²`, `x⁻¹`, `x¹⁰`, `x^2` | `Bin(Pow)` (Unicode superscripts **or** the ASCII `^` operator) |
+| `a₁`, `a₁²`, `a_i` | `Subscript` / `Pow(Subscript)` (Unicode glyph **or** ASCII `_`) |
+| `∑_(i=1)^n i`, `∫_a^b f`, `∏ x` | `BigOp { op, lower, upper, body }` (`∑ ∏ ∫ ∮ ∐`) |
 | `1/2`, `½`, `⅔` | `Frac` (built-up **and** vulgar-fraction glyphs) |
 | `√x`, `∛x`, `∜x` | `Root { degree, radicand }` |
 | `a + b`, `a − b`, `a × b`, `a ⋅ b`, `a ÷ b` | `Bin(Add/Sub/Mul/Div)` |
@@ -51,7 +52,8 @@ dependency cycle); a consumer registers it.
 
 ## Scope
 
-PR-1 covers the surface in the table above. **Out of scope** (a clean spanned error, never a
-panic — tracked for PR-2): big operators (`∑ ∏ ∫`), named functions (`sin`, `log`), matrices,
-and embedded `\text`. As in AsciiMath there are no multi-letter variables: a letter run like
-`xy` is the product `x·y` (write distinct symbols, or use Greek/constant glyphs).
+PR-1 covered numbers/symbols/scripts/fractions/roots/relations/±∓; **PR-2** adds the big operators
+`∑ ∏ ∫ ∮ ∐` (with optional bounds) and the explicit ASCII script operators `^`/`_`. **Out of scope**
+(a clean spanned error, never a panic — tracked for PR-3): named functions (`sin`, `log`), matrices,
+and embedded `\text`. As in AsciiMath there are no multi-letter variables: a letter run like `xy`
+is the product `x·y` (write distinct symbols, or use Greek/constant glyphs).

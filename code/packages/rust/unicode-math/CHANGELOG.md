@@ -2,6 +2,26 @@
 
 All notable changes to the unicode-math pluggable frontend.
 
+## [0.2.0] — 2026-06-30
+
+### Added — PR-2: big operators + explicit ASCII scripts
+
+- **Big operators** `∑ ∏ ∫ ∮ ∐` → `MathExpr::BigOp { op, lower, upper, body }`, with optional
+  lower/upper bounds and a one-atom body (the same "one atom argument" rule as roots, so `∑ x + 1`
+  is `(∑ x) + 1`). `capabilities()` now declares `big_operators` (enforced by the conformance harness).
+- **Explicit ASCII script operators** `^` and `_` — the twins of the Unicode superscript/subscript
+  glyphs, so `x^2` ≡ `x²` and `a_i` parses as a subscript. These also express big-operator bounds:
+  `∑_(i=1)^n i` → `BigOp{Sum, lower:(i=1), upper:n, body:i}`, `∫_a^b f`. Bounds may equally be written
+  with a Unicode sub/superscript glyph (a numeral). A big operator with no body is a clean spanned
+  error (never a panic), exactly as before.
+- Tokenizer gains the five big-operator glyphs (carrying their canonical `BigOp` name) plus `Caret`
+  /`Underscore` tokens; the parser maps them via `bigop_of` and extends `parse_script` + the
+  big-operator atom with the bound loop (mirroring the AsciiMath frontend). `MAX_DEPTH`, the
+  loop-built chains, and `#![forbid(unsafe_code)]` are unchanged.
+- 26 unit + 1 doc test pass (new `big_operators_and_explicit_scripts`, `big_operators_with_bounds`,
+  `ascii_scripts_match_unicode_glyphs`; conformance corpus gains `∑_(i=1)^n i`, `∫_a^b f`, `∏ x`,
+  `x^2`); clippy `-D warnings` clean. **Out of scope (PR-3):** named functions, matrices, `\text`.
+
 ## [0.1.0] — 2026-06-30
 
 ### Added — PFE01 frontend #3: a Unicode plain-math reader

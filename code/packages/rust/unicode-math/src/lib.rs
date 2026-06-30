@@ -14,12 +14,14 @@
 //! [`capabilities`](MathFrontend::capabilities) match what it emits — enforced by the shared
 //! `check_frontend` harness).
 //!
-//! ## What it covers (PR-1)
+//! ## What it covers
 //! Numbers (exact); single-letter variables and Greek/constant glyphs (`π`→`pi`, `Σ`→`Sigma`,
 //! `∞`→`infinity`); `+ − × ⋅ ÷ ±  ∓` and juxtaposition (implicit `·`); built-up `a/b` and the
-//! vulgar fractions `½ ⅓ ¼ …`; the roots `√`, `∛`, `∜`; Unicode super/subscripts (`x²`, `a₁`,
-//! `x⁻¹`); and the relations `= ≠ < ≤ > ≥ ≈ ≡`. Out of scope for PR-1 (a clean spanned error,
-//! never a panic), tracked for PR-2: big operators (`∑ ∏ ∫`), named functions, matrices, `\text`.
+//! vulgar fractions `½ ⅓ ¼ …`; the roots `√`, `∛`, `∜`; super/subscripts written either as
+//! Unicode glyphs (`x²`, `a₁`, `x⁻¹`) or with the explicit ASCII operators `^`/`_` (`x^2` ≡ `x²`);
+//! the **big operators** `∑ ∏ ∫ ∮ ∐` with optional lower/upper bounds (PR-2, e.g. `∑_(i=1)^n i`);
+//! and the relations `= ≠ < ≤ > ≥ ≈ ≡`. Out of scope (a clean spanned error, never a panic),
+//! tracked for PR-3: named functions (`sin`, `log`), matrices, `\text`.
 //!
 //! ```
 //! use unicode_math::UnicodeMath;
@@ -59,10 +61,11 @@ impl MathFrontend for UnicodeMath {
     }
 
     fn capabilities(&self) -> Capabilities {
-        // PR-1 surface. `fractions` covers both `a/b` and the vulgar-fraction glyphs; `powers`
-        // covers Unicode superscripts; `plusminus` covers `±`/`∓`. `functions`, `big_operators`,
-        // `matrices`, and `text` are PR-2 — declared OFF so the conformance harness holds us
-        // honest. (Subscripts need no flag: `Subscript` is not a gated capability.)
+        // `fractions` covers both `a/b` and the vulgar-fraction glyphs; `powers` covers Unicode
+        // superscripts and the ASCII `^` operator; `plusminus` covers `±`/`∓`; `big_operators`
+        // covers `∑ ∏ ∫ ∮ ∐` (PR-2). `functions`, `matrices`, and `text` are PR-3 — declared OFF
+        // so the conformance harness holds us honest. (Subscripts need no flag: `Subscript` is
+        // not a gated capability.)
         Capabilities::none()
             .with_fractions()
             .with_roots()
@@ -70,6 +73,7 @@ impl MathFrontend for UnicodeMath {
             .with_relations()
             .with_implicit_mul()
             .with_plusminus()
+            .with_big_operators()
     }
 }
 
@@ -170,6 +174,46 @@ mod tests {
         assert_eq!(p("a ≥ b"), MathExpr::Rel(RelOp::Ge, Box::new(sym("a")), Box::new(sym("b"))));
     }
 
+    // ---- big operators + explicit scripts (PR-2) -------------------------------
+    #[test]
+    fn big_operators_with_bounds() {
+        use math_frontend::BigOp;
+        // ∑_(i=1)^n i ⇒ BigOp{Sum, lower:(i=1), upper:n, body:i}
+        let lower = MathExpr::Rel(RelOp::Eq, Box::new(sym("i")), Box::new(num(1)));
+        assert_eq!(
+            p("∑_(i=1)^n i"),
+            MathExpr::BigOp {
+                op: BigOp::Sum,
+                lower: Some(Box::new(lower)),
+                upper: Some(Box::new(sym("n"))),
+                body: Box::new(sym("i")),
+            }
+        );
+        // ∫_a^b f — integral with both bounds.
+        assert_eq!(
+            p("∫_a^b f"),
+            MathExpr::BigOp {
+                op: BigOp::Int,
+                lower: Some(Box::new(sym("a"))),
+                upper: Some(Box::new(sym("b"))),
+                body: Box::new(sym("f")),
+            }
+        );
+        // ∏ x — bare body, no bounds.
+        assert_eq!(
+            p("∏ x"),
+            MathExpr::BigOp { op: BigOp::Prod, lower: None, upper: None, body: Box::new(sym("x")) }
+        );
+    }
+
+    #[test]
+    fn ascii_scripts_match_unicode_glyphs() {
+        // The explicit ASCII `^`/`_` operators are twins of the Unicode super/subscript glyphs.
+        assert_eq!(p("x^2"), p("x²"));
+        assert_eq!(p("x^2"), b(BinOp::Pow, sym("x"), num(2)));
+        assert_eq!(p("a_i"), MathExpr::Subscript(Box::new(sym("a")), Box::new(sym("i"))));
+    }
+
     #[test]
     fn a_realistic_expression() {
         // x² + y² = r²
@@ -210,8 +254,9 @@ mod tests {
         assert_eq!(UnicodeMath.name(), "unicode-math");
         let c = UnicodeMath.capabilities();
         assert!(c.fractions && c.roots && c.powers && c.relations && c.implicit_mul && c.plusminus);
-        // PR-1 does NOT do these yet — declared off so the harness holds us honest.
-        assert!(!c.functions && !c.big_operators && !c.matrices && !c.text);
+        assert!(c.big_operators); // PR-2: ∑ ∏ ∫ ∮ ∐
+        // PR-3 still to come — declared off so the harness holds us honest.
+        assert!(!c.functions && !c.matrices && !c.text);
         assert!(!c.binomials && !c.accents && !c.oversets);
     }
 
@@ -234,9 +279,13 @@ mod tests {
                 "a ∓ b",
                 "(a + b)/(c − d)",
                 "x⁻¹",
+                "∑_(i=1)^n i",  // big operator with ASCII-script bounds (PR-2)
+                "∫_a^b f",      // integral with bounds
+                "∏ x",          // big operator, bare body
+                "x^2",          // ASCII `^` ≡ Unicode `x²`
                 "1 +",   // error: trailing operator
                 "(x",    // error: missing close
-                "∑",     // error: out-of-scope glyph (PR-2)
+                "∑",     // error: big operator with no body
                 "",      // error: empty
             ],
         );
