@@ -1597,7 +1597,7 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
                     source_i64(source, "originalDue").unwrap_or_default(),
                     export_original_deck_id(export, source),
                     scheduling.flags,
-                    source_string(source, "data").unwrap_or_default(),
+                    export_card_data(progress, source),
                 ],
             )
             .map_err(|err| apkg_error(format!("failed to write Anki card {}: {err}", card.key)))?;
@@ -2263,6 +2263,37 @@ fn source_json(source: Option<&ExternalSourceRecord>, key: &str) -> Option<Value
     source
         .and_then(|source| source.data.get(key))
         .and_then(|value| serde_json::from_str(value).ok())
+}
+
+fn export_card_data(
+    progress: Option<&CardProgress>,
+    source: Option<&ExternalSourceRecord>,
+) -> String {
+    let Some(progress) = progress else {
+        return source_string(source, "data").unwrap_or_default();
+    };
+    let fsrs_stability = progress
+        .fsrs_stability
+        .filter(|value| value.is_finite() && *value > 0.0);
+    let fsrs_difficulty = progress.fsrs_difficulty.filter(|value| value.is_finite());
+    if fsrs_stability.is_none() && fsrs_difficulty.is_none() {
+        return source_string(source, "data").unwrap_or_default();
+    }
+
+    let mut data = source_string(source, "data")
+        .and_then(|raw| serde_json::from_str::<Value>(&raw).ok())
+        .and_then(|value| match value {
+            Value::Object(data) => Some(data),
+            _ => None,
+        })
+        .unwrap_or_default();
+    if let Some(value) = fsrs_stability.and_then(serde_json::Number::from_f64) {
+        data.insert("s".to_string(), Value::Number(value));
+    }
+    if let Some(value) = fsrs_difficulty.and_then(serde_json::Number::from_f64) {
+        data.insert("d".to_string(), Value::Number(value));
+    }
+    Value::Object(data).to_string()
 }
 
 fn export_original_deck_id(export: &ExportModel, source: Option<&ExternalSourceRecord>) -> i64 {
@@ -5260,6 +5291,30 @@ CREATE TABLE graves (
     }
 
     #[test]
+    fn exports_current_fsrs_memory_into_v11_card_data() {
+        let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        collection.cards[0].data =
+            serde_json::json!({ "s": 1.25, "d": 2.5, "cd": { "source": "kept" } }).to_string();
+        let mut state = v11_collection_to_engram_state(&collection).unwrap();
+        state.card_progress[0].fsrs_stability = Some(9.5);
+        state.card_progress[0].fsrs_difficulty = Some(4.25);
+
+        let exported = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+        )
+        .unwrap();
+        let card_data = serde_json::from_str::<Value>(&exported.cards[0].data).unwrap();
+
+        assert_eq!(card_data["s"], serde_json::json!(9.5));
+        assert_eq!(card_data["d"], serde_json::json!(4.25));
+        assert_eq!(card_data["cd"]["source"], "kept");
+
+        let reimported = v11_collection_to_engram_state(&exported).unwrap();
+        assert_eq!(reimported.card_progress[0].fsrs_stability, Some(9.5));
+        assert_eq!(reimported.card_progress[0].fsrs_difficulty, Some(4.25));
+    }
+
+    #[test]
     fn exports_graves_for_deleted_imported_notes_and_cards() {
         let collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
         let state = v11_collection_to_engram_state(&collection).unwrap();
@@ -5668,8 +5723,8 @@ CREATE TABLE graves (
                 times_correct: 2,
                 times_incorrect: 1,
                 last_seen_at: 1_700_000_030_000,
-                fsrs_stability: None,
-                fsrs_difficulty: None,
+                fsrs_stability: Some(6.5),
+                fsrs_difficulty: Some(7.25),
                 flag: Some(CardFlag::Blue),
                 marked_at: None,
             }],
@@ -5715,6 +5770,9 @@ CREATE TABLE graves (
         assert_eq!(collection.cards[0].interval, 7);
         assert_eq!(collection.cards[0].factor, 2500);
         assert_eq!(collection.cards[0].flags, 4);
+        let card_data = serde_json::from_str::<Value>(&collection.cards[0].data).unwrap();
+        assert_eq!(card_data["s"], serde_json::json!(6.5));
+        assert_eq!(card_data["d"], serde_json::json!(7.25));
         assert_eq!(collection.reviews[0].card_id, 2000);
         assert_eq!(collection.reviews[0].ease, 3);
         assert_eq!(collection.reviews[0].time, 12_345);
@@ -5735,6 +5793,8 @@ CREATE TABLE graves (
         assert_eq!(imported.cards[0].front, "hola");
         assert_eq!(imported.cards[0].back, "hello");
         assert_eq!(imported.card_progress[0].interval, 7);
+        assert_eq!(imported.card_progress[0].fsrs_stability, Some(6.5));
+        assert_eq!(imported.card_progress[0].fsrs_difficulty, Some(7.25));
         assert_eq!(imported.card_progress[0].flag, Some(CardFlag::Blue));
         assert_eq!(imported.reviews[0].answer_time_ms, Some(12_345));
     }
