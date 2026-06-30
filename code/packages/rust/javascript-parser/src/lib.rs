@@ -104,6 +104,44 @@ pub fn parse_javascript_typed(
     asi::parse_with_asi(tokens, version).map_err(|e| format!("JavaScript parse failed: {e}"))
 }
 
+/// CV-carrying twin of [`parse_javascript_typed`] (CLOC27 D3).
+///
+/// Routes through the correlation-vector tokenizer
+/// ([`tokenize_javascript_with_cv`]) so every token carries its own CvId
+/// (CLOC27 D2), then runs the identical Phase-1 ASI parse. The returned
+/// `GrammarASTNode` therefore holds tokens whose `cv` is `Some(..)`, and the
+/// bridge's leaf factory (`convert_primary_token`) stamps that id onto each
+/// leaf literal — giving the SIMPLE optimization path real per-token source
+/// provenance for its constant folds.
+///
+/// This is the entry the SIMPLE `--correlation_vector` path uses (CLOC27 D5);
+/// the plain [`parse_javascript_typed`] stays the zero-overhead default and is
+/// byte-identical to today on the non-CV path.
+///
+/// Unlike [`parse_javascript_with_cv`], this does *not* mint a program-root CV
+/// or append a "constructed" contribution: it is the typed-AST feeder for the
+/// optimizer, whose own passes (constant-fold) own the downstream CV records.
+pub fn parse_javascript_typed_with_cv(
+    source: &str,
+    source_file: &str,
+    version: EsVersion,
+    cv: &mut CVLog,
+) -> Result<GrammarASTNode, String> {
+    // Tokenize with CV plumbing, then stamp each token's CvId onto the token
+    // (CLOC27 D2) so it rides through the parser to the bridge unchanged.
+    let cv_tokens = tokenize_javascript_with_cv(source, source_file, version, cv)?;
+    let tokens: Vec<lexer::token::Token> = cv_tokens
+        .into_iter()
+        .map(|t| lexer::token::Token {
+            cv: Some(t.cv),
+            ..t.token
+        })
+        .collect();
+    // Identical Phase-1 ASI parse to `parse_javascript_typed` — only the token
+    // source differs (CV-stamped). See [`asi`].
+    asi::parse_with_asi(tokens, version).map_err(|e| format!("JavaScript parse failed: {e}"))
+}
+
 /// A parsed program paired with the correlation-vector ID assigned to its
 /// root by [`parse_javascript_with_cv`].
 ///
@@ -146,7 +184,19 @@ pub fn parse_javascript_with_cv(
     // 1. Tokenize with CV plumbing.
     let cv_tokens = tokenize_javascript_with_cv(source, source_file, version, cv)?;
     let token_cv_ids: Vec<String> = cv_tokens.iter().map(|t| t.cv.clone()).collect();
-    let tokens: Vec<lexer::token::Token> = cv_tokens.into_iter().map(|t| t.token).collect();
+    // CLOC27 D2: stamp each token's CvId onto the token itself instead of
+    // discarding it. The parser copies tokens into `GrammarASTNode` children
+    // unchanged, so the id rides through to the bridge's leaf factory
+    // (`convert_primary_token`), where it becomes the leaf literal's `cv`.
+    // Previously this stripped the id (`.map(|t| t.token)`), leaving every leaf
+    // with `cv: None` and dead-ending fold provenance at the bridge boundary.
+    let tokens: Vec<lexer::token::Token> = cv_tokens
+        .into_iter()
+        .map(|t| lexer::token::Token {
+            cv: Some(t.cv),
+            ..t.token
+        })
+        .collect();
 
     // 2. Parse via the existing GrammarParser.
     let grammar = _grammar::parser_grammar(version.as_str())
