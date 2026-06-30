@@ -7,8 +7,10 @@ use std::collections::{BTreeMap, HashMap};
 const TREE_CONSTRUCTION_SMOKE: &str = include_str!("fixtures/html5lib-tree-construction-smoke.dat");
 const WHATWG_FORM_INTERACTIVE_AUDIT: &str =
     include_str!("fixtures/whatwg-form-interactive-audit.json");
-const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] =
-    &[("tricky01-dat-8", "interactive-formatting")];
+const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
+    ("tests26-dat-1251", "interactive-formatting"),
+    ("tricky01-dat-8", "interactive-formatting"),
+];
 
 #[derive(Debug, Deserialize)]
 struct FormInteractiveAuditSuite {
