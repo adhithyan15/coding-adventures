@@ -2776,6 +2776,7 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
             "from_ms",
             "limit",
             "observed_at_or_after_ms",
+            "observed_at_or_before_ms",
             "received_at_or_after_ms",
             "received_at_or_before_ms",
             "room_id",
@@ -6080,8 +6081,13 @@ fn history_from_ms(request: &WebRequest) -> Result<Option<u64>, ApiError> {
 }
 
 fn history_to_ms(request: &WebRequest) -> Result<Option<u64>, ApiError> {
-    query_u64(request, "to_ms")?
-        .map_or_else(|| query_u64(request, "end_time"), |to_ms| Ok(Some(to_ms)))
+    if let Some(to_ms) = query_u64(request, "to_ms")? {
+        return Ok(Some(to_ms));
+    }
+    if let Some(end_time) = query_u64(request, "end_time")? {
+        return Ok(Some(end_time));
+    }
+    query_u64(request, "observed_at_or_before_ms")
 }
 
 fn runtime_entity_id(runtime: &SmartHomeRuntime, value: &str) -> Result<EntityId, ApiError> {
@@ -8578,7 +8584,7 @@ mod tests {
             r#""path":"/api/smart_home/capability_grants","category":"authorization","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["capability_id","entity_id","limit","principal_id","scope","sort","status"]"#
         ));
         assert!(catalog.contains(
-            r#""path":"/api/smart_home/state_history","category":"state_history","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["bridge_id","entity_id","event_type","from_ms","limit","observed_at_or_after_ms","received_at_or_after_ms","received_at_or_before_ms","room_id","sort","to_ms"]"#
+            r#""path":"/api/smart_home/state_history","category":"state_history","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["bridge_id","entity_id","event_type","from_ms","limit","observed_at_or_after_ms","observed_at_or_before_ms","received_at_or_after_ms","received_at_or_before_ms","room_id","sort","to_ms"]"#
         ));
         let catalog_json: JsonValue =
             serde_json::from_str(&catalog).expect("API catalog response is JSON");
@@ -9207,6 +9213,25 @@ mod tests {
             .into(),
         );
         assert!(past_window_body.contains(r#""total_events":0"#));
+
+        let observed_window_body = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/state_history?observed_at_or_after_ms=2000&observed_at_or_before_ms=2000&limit=5",
+            ))
+            .into(),
+        );
+        assert!(observed_window_body.contains(r#""total_events":1"#));
+        assert!(observed_window_body.contains(r#""event_id":"event-light-1-on""#));
+
+        let past_observed_window_body = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/state_history?observed_at_or_before_ms=1999&limit=5",
+            ))
+            .into(),
+        );
+        assert!(past_observed_window_body.contains(r#""total_events":0"#));
 
         let received_window_body = response_body(
             app.handle(request(
