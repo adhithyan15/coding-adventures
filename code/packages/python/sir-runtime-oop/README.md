@@ -51,7 +51,9 @@ the **non-block `Array`** surface — `length`/`size`/`count`, `first`/`last`,
 `include?`, `index`, `push`/`<<`/`pop`/`shift`/`unshift`, `reverse`, `sort`,
 `min`/`max`/`sum`, `uniq`/`flatten`/`compact`, `empty?`, `to_a` — and the
 **universal `Object`** methods `nil?`, `==`, `!=`, `equal?`, `respond_to?`,
-`freeze`/`frozen?`, `dup`/`clone`, `itself`, `to_a`; and (item **M1b**)
+`freeze`/`frozen?`, `dup`/`clone`, `itself`, `to_a`, plus the **Kernel
+flow-control** group `send`/`__send__`/`public_send`, `tap`, `then`/`yield_self`
+(item **M6**); and (item **M1b**)
 **block-taking `Array`/`Enumerable`** methods `each`, `each_with_index`,
 `map`/`collect`, `select`/`filter`, `reject`, `reduce`/`inject`, `find`/`detect`,
 `flat_map`, `any?`/`all?`/`none?` — a trailing `Closure` block is applied via
@@ -78,6 +80,24 @@ backend emits a `&:sym` block-pass on a dispatched call as
 method on its first argument (the rest forwarded), through `call_method`, so an
 unknown method still bottoms out at `nil`. Operator symbols (`&:+`) are native
 arithmetic, not in the dispatch catalog — a documented v0 boundary.
+
+### Kernel flow-control + boolean operators (item **M6**)
+
+The universal-catalog completion the spec's v0 surface called for:
+
+- **`send`/`__send__`/`public_send`** — dynamic dispatch. `x.send(:upcase)` is
+  exactly `x.upcase`; the first argument names the method (a `Symbol` or string),
+  the rest forward unchanged, and a trailing block survives — so
+  `[1, 2].send(:each) { |x| … }` works. An empty arg list bottoms out at `nil`.
+- **`tap`** — yields the receiver to the block for a side effect, returns the
+  **receiver** (`[1,2,3].tap { |a| log(a) }` → `[1,2,3]`).
+- **`then`/`yield_self`** — yields the receiver, returns the **block's result**
+  (`5.then { |x| x * 2 }` → `10`). Block-less `tap`/`then` return the receiver
+  (the v0 Enumerator-less floor).
+- **Boolean `&` / `|` / `^`** on `true`/`false` — Ruby's *eager*
+  (non-short-circuit) logical operators, distinct from the lazy `&&`/`||`
+  keywords; the operand is coerced by Ruby truthiness, so `true & nil == false`
+  and `false | 0 == true`.
 
 ## Honest v0 limitation
 

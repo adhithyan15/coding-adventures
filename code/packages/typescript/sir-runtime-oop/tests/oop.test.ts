@@ -676,3 +676,72 @@ describe("case-equality (M5)", () => {
     expect(caseEq("a", "a")).toBe(true);
   });
 });
+
+describe("Kernel flow-control + boolean operators (M6)", () => {
+  it("send routes to a named method (string or Symbol)", () => {
+    expect(callMethod("hello", "send", "upcase")).toBe("HELLO");
+    expect(callMethod([3, 1, 2], "send", "sort")).toEqual([1, 2, 3]);
+    // A Symbol method name (interned) routes identically.
+    expect(callMethod("hi", "send", intern("upcase"))).toBe("HI");
+    // `__send__` is the alias used when `send` itself is shadowed in real Ruby.
+    expect(callMethod("hi", "__send__", "reverse")).toBe("ih");
+    // Sanity: plain dispatch of a non-send method is unaffected.
+    expect(callMethod("__send__", "size")).toBe(8);
+  });
+
+  it("send forwards arguments and a trailing block", () => {
+    expect(callMethod("a,b,c", "send", "split", ",")).toEqual(["a", "b", "c"]);
+    const seen: Val[] = [];
+    callMethod([1, 2], "send", "each", new Closure((x: Val) => seen.push(x)));
+    expect(seen).toEqual([1, 2]);
+  });
+
+  it("a user-defined send override wins (resolution order #2)", () => {
+    defineMethod("send", () => "overridden");
+    expect(callMethod("x", "send", "upcase")).toBe("overridden");
+  });
+
+  it("send without a method name is nil", () => {
+    expect(callMethod("x", "send")).toBeNull();
+  });
+
+  it("tap yields the receiver and returns it", () => {
+    const captured: Val[] = [];
+    const result = callMethod([1, 2, 3], "tap", new Closure((x: Val) => captured.push(x)));
+    expect(captured).toEqual([[1, 2, 3]]);
+    expect(result).toEqual([1, 2, 3]);
+    // Block-less tap returns the receiver (v0 floor).
+    expect(callMethod(42, "tap")).toBe(42);
+  });
+
+  it("then/yield_self returns the block result", () => {
+    expect(callMethod(5, "then", new Closure((x: Val) => x * 2))).toBe(10);
+    expect(callMethod("hi", "yield_self", new Closure((s: Val) => s + "!"))).toBe("hi!");
+    // Block-less then returns the receiver.
+    expect(callMethod(7, "then")).toBe(7);
+  });
+
+  it("boolean & | ^ are eager logical operators", () => {
+    expect(callMethod(true, "&", true)).toBe(true);
+    expect(callMethod(true, "&", false)).toBe(false);
+    expect(callMethod(false, "|", true)).toBe(true);
+    expect(callMethod(true, "^", true)).toBe(false);
+    expect(callMethod(true, "^", false)).toBe(true);
+    // Ruby truthiness on the argument: null is falsy, 0/"" are truthy.
+    expect(callMethod(true, "&", null)).toBe(false);
+    expect(callMethod(false, "|", 0)).toBe(true);
+    expect(callMethod(false, "|", "")).toBe(true);
+  });
+
+  it("respond_to? is honest for the Kernel + boolean surface", () => {
+    expect(callMethod(1, "respond_to?", "tap")).toBe(true);
+    expect(callMethod("x", "respond_to?", "then")).toBe(true);
+    expect(callMethod([], "respond_to?", "send")).toBe(true);
+    expect(callMethod(true, "respond_to?", "&")).toBe(true);
+    // A non-bool receiver does not respond to the boolean operators.
+    expect(callMethod(5, "respond_to?", "^")).toBe(false);
+    // An out-of-catalog name is still both null and respond_to? == false.
+    expect(callMethod(true, "nonexistent_method")).toBeNull();
+    expect(callMethod(true, "respond_to?", "nonexistent_method")).toBe(false);
+  });
+});
