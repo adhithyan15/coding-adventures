@@ -107,6 +107,12 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::Maps,
     Feature::MutableBindings,
     Feature::Loops,
+    // P2d: default parameters — JavaScript native default params have
+    // exactly SIR's call-time, param-scope semantics, so `emit` lowers a
+    // `Param { default: Some(_) }` to a native `name = <default>` and a
+    // short DirectCall to the bare args (defaults fill omitted trailing
+    // params).  See `emit_function` / `emit_expr`'s `DirectCall` arm.
+    Feature::DefaultParams,
 ];
 
 impl Backend for JavaScriptBackend {

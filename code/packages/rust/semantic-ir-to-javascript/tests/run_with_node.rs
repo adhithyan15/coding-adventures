@@ -417,6 +417,130 @@ fn for_each_over_sequence() {
     }
 }
 
+// ── P2d: default parameters (hand-built module) ────────────────────────
+
+#[test]
+fn default_param_is_call_time_and_param_scoped() {
+    // The discriminating test for P2d.  Build a module with:
+    //
+    //   function f(a, b = a + 1) { return a + b; }
+    //   function main() { print(f(5)); print(f(5, 10)); }
+    //
+    // and run it under node.  `f(5)` omits `b`, so the native JS default
+    // fires: `b = a + 1 = 6`, and `f` returns `a + b = 5 + 6 = 11`?  No —
+    // the test prints `b` itself, not `a + b`: the body returns `b` so the
+    // call's *value* is the bound `b`.  We use that to read the default
+    // directly:
+    //
+    //   f(5)      → b defaults to a + 1 = 6   → prints 6
+    //   f(5, 10)  → b is supplied as 10       → prints 10
+    //
+    // Printing 6 then 10 proves the default is (a) evaluated at call time
+    // — it depends on the actual argument `a = 5`, not on a compile-time
+    // constant — AND (b) evaluated in param scope, since it references the
+    // earlier param `a` by name.
+    use semantic_ir::Param;
+
+    fn param(name: &str) -> Param {
+        Param {
+            name: name.into(),
+            sir_type: None,
+            kind: semantic_ir::ParamKind::Required,
+            default: None,
+            span: sp(),
+        }
+    }
+
+    fn param_ref(name: &str) -> Expr {
+        Expr::VarRef { name: name.into(), scope: Scope::Param, span: sp() }
+    }
+
+    // b's default = (a + 1), referencing the earlier param `a`.
+    let b_default = bc("+", vec![param_ref("a"), int(1)]);
+
+    let f = Function {
+        name: "f".into(),
+        params: vec![
+            param("a"),
+            Param {
+                name: "b".into(),
+                sir_type: None,
+                kind: semantic_ir::ParamKind::Required,
+                default: Some(Box::new(b_default)),
+                span: sp(),
+            },
+        ],
+        return_type: None,
+        captures: vec![],
+        // Body returns `b` so the printed value IS the (possibly defaulted)
+        // second parameter.
+        body: Block { stmts: vec![], value: param_ref("b"), span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+
+    let call_one_arg = Expr::DirectCall {
+        fn_name: "f".into(),
+        args: vec![int(5)],
+        effects: EffectSet::PURE,
+        span: sp(),
+    };
+    let call_two_args = Expr::DirectCall {
+        fn_name: "f".into(),
+        args: vec![int(5), int(10)],
+        effects: EffectSet::PURE,
+        span: sp(),
+    };
+
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: vec![print(call_one_arg), print(call_two_args)],
+            value: Expr::NilLit { span: sp() },
+            span: sp(),
+        },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+
+    let module = Module {
+        name: "defaultparams".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::DefaultParams,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![f, main],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+
+    // Shape check first (runs even without node): the emitted callee carries
+    // a native JS default referencing the earlier param, and the one-arg
+    // call is NOT padded.
+    let artifact = compile(&module).expect("compile to javascript");
+    assert!(
+        artifact.source.contains("function f(a, b = (a + 1)) {"),
+        "expected native JS default param, got:\n{}",
+        artifact.source
+    );
+    assert!(artifact.source.contains("__Sir.print(f(5))"), "got:\n{}", artifact.source);
+    assert!(artifact.source.contains("__Sir.print(f(5, 10))"), "got:\n{}", artifact.source);
+
+    if let Some(stdout) = run_module(&module, "defaultparams") {
+        assert_eq!(stdout, "6\n10", "f(5) must default b to a+1=6; f(5,10) must use 10");
+    }
+}
+
 #[test]
 fn mutable_reassignment_updates_binding() {
     // let x = 1; x = 2; x = x + 40; print(x);  → 42

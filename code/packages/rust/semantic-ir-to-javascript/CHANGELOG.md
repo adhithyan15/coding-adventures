@@ -5,6 +5,39 @@ All notable changes to `semantic-ir-to-javascript` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.3.0 — P2d (default-parameter emission)
+
+Adds **default parameters** to the JavaScript backend.  JavaScript's
+native default-parameter feature has *exactly* SIR's semantics — the
+default expression is evaluated **at call time**, only when the argument
+is omitted, in **param scope** (so a later default may reference an
+earlier parameter by name).  The lowering is therefore a direct native
+inline: no runtime helper, no call-site padding.
+
+### Added
+
+- `accepts_features()` now declares `DefaultParams`.
+- Emit: a `Param { default: Some(expr) }` lowers to a native JS default
+  parameter `name = <emitted default>`.  The default expression is
+  emitted with the ordinary `emit_expr`, so a default that references an
+  earlier parameter (`VarRef { scope: Param }`) becomes a bare name —
+  valid JavaScript, since earlier params are in scope left-to-right.
+  `Rest`/`KwRest` params are unchanged; `IndirectCall` and closure
+  defaults are unchanged / deferred.
+- `DirectCall` documented and confirmed to emit **only the args present**
+  — the SIR validator allows omitting trailing defaulted args (arity ≥
+  `required_param_count`), and native JS defaults fill the omitted
+  trailing params at call time.  No padding is inserted.
+- Unit tests: `f(a, b = a + 1)` emits `function f(a, b = (a + 1)) {`; a
+  short `DirectCall` (`f(5)`) is not padded.
+- Integration test (`tests/run_with_node.rs`,
+  `default_param_is_call_time_and_param_scoped`): hand-builds a module
+  with `f(a, b = a + 1)` returning `b` and a `main` that calls
+  `print(f(5))` then `print(f(5, 10))`, emits JavaScript, **runs it under
+  `node`**, and asserts stdout `6` then `10` — proving the default is
+  evaluated at call time (depends on the actual `a = 5`) and in param
+  scope (references the earlier param `a`).
+
 ## 0.2.0 — D4 (completes SIR16 / v1 parity for the JS backend)
 
 Brings the JavaScript backend to **full SIR16 / v1 parity**: the six

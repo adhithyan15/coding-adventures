@@ -81,6 +81,7 @@ lowering is direct.
 | `Maps` (SIR16)             |                                              |
 | `MutableBindings` (SIR16)  |                                              |
 | `Loops` (SIR16)            |                                              |
+| `DefaultParams` (P2d)      |                                              |
 
 `accepts_intrinsics()` is empty. The accept-set is deliberately matched
 to what `emit` handles, so a module using a deferred node is turned away
@@ -102,6 +103,26 @@ rejected SIR17/18 nodes).
 | `While`                          | `while (__Sir.truthy(cond)) { … }`              |
 | `ForRange`                       | direction-aware C-style `for` (bounds once)     |
 | `ForEach`                        | `for (let x of iter) { … }`                     |
+
+### Default parameters (P2d)
+
+A `Param` carrying `default: Some(expr)` lowers to a **native JS default
+parameter** — `function f(a, b = <expr>) { … }` — because JavaScript's
+default-parameter semantics are exactly SIR's:
+
+- **Call-time**: the default runs each call, only when the argument is
+  omitted (not a compile-time constant baked in once).
+- **Param scope**: a later default may reference an earlier parameter by
+  name. SIR emits such a reference as `VarRef { scope: Param }` → a bare
+  identifier, which is in scope left-to-right in a JS parameter list.
+
+There is no call-site padding: the SIR validator allows a caller to omit
+trailing defaulted args (arity ≥ `required_param_count`), so a
+`DirectCall` emits **only the args present** and the native defaults fill
+the omitted trailing params. For example, `f(a, b = a + 1)` emits
+`function f(a, b = (a + 1)) { … }`; `f(5)` calls it with one arg and
+`b` binds to `6` at call time. (`IndirectCall` / closure defaults are
+unchanged / deferred.)
 
 ## Runtime shape (inlined `__Sir`)
 
