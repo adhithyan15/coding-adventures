@@ -100,6 +100,58 @@ SCENARIOS = [
 # (L_syn, L_flash) with L_syn > L_flash > 1.
 VARIANTS = [(12, 6), (15, 8)]
 
+# --- batch 2: completeness over nominal strength ------------------------------------------------
+# A 3-finding GOLD syndrome (a classic clinical triad) competes against a RIVAL whose 2-finding
+# syndrome is only PARTIALLY present — one of its two findings is observed, so the rival rule never
+# fires and contributes nothing, leaving the rival at its prior. Crucially the rival's syndrome is
+# nominally STRONGER (L_rival > L_gold): a reader who assumes the half-seen rival pattern is "close
+# enough" picks it, but pattern completeness — not nominal strength — decides. The engine fires only
+# the fully-satisfied gold triad. Three prior-only diseases fill the five options.
+# (gold_syndrome, gold, (f1, f2, f3), rival_syndrome, rival, (g1, g2_unobserved), [2 prior-only],
+#  triad_phrase, rival_phrase, partial_phrase)
+THREE_FINDING_SCENARIOS = [
+    ("charcot_triad", "ascending_cholangitis",
+     ("fever", "jaundice", "right_upper_quadrant_pain"),
+     "cholecystitis_pattern", "acute_cholecystitis", ("murphy_sign", "gallstones_on_ultrasound"),
+     ["viral_hepatitis", "acute_pancreatitis", "liver_abscess"],
+     "fever, jaundice, and right-upper-quadrant pain", "a positive Murphy sign with gallstones",
+     "a positive Murphy sign"),
+    ("beck_triad", "cardiac_tamponade",
+     ("hypotension", "jugular_venous_distension", "muffled_heart_sounds"),
+     "tension_pneumothorax_pattern", "tension_pneumothorax",
+     ("tracheal_deviation", "absent_breath_sounds"),
+     ["massive_pulmonary_embolism", "cardiogenic_shock", "constrictive_pericarditis"],
+     "hypotension, jugular venous distension, and muffled heart sounds",
+     "tracheal deviation with absent breath sounds", "tracheal deviation"),
+    ("hus_triad", "hemolytic_uremic_syndrome",
+     ("hemolytic_anemia", "thrombocytopenia", "acute_kidney_injury"),
+     "ttp_pattern", "thrombotic_thrombocytopenic_purpura", ("fever", "fluctuating_neurologic_signs"),
+     ["disseminated_intravascular_coagulation", "immune_thrombocytopenia", "evans_syndrome"],
+     "hemolytic anemia, thrombocytopenia, and acute kidney injury",
+     "fever with fluctuating neurologic signs", "fever"),
+    ("cushing_reflex", "raised_intracranial_pressure",
+     ("hypertension", "bradycardia", "irregular_respiration"),
+     "brainstem_stroke_pattern", "brainstem_stroke", ("crossed_sensory_loss", "vertigo"),
+     ["hypertensive_emergency", "bacterial_meningitis", "subarachnoid_hemorrhage"],
+     "hypertension, bradycardia, and an irregular respiratory pattern",
+     "crossed sensory loss with vertigo", "vertigo"),
+    ("reactive_arthritis_triad", "reactive_arthritis",
+     ("conjunctivitis", "urethritis", "asymmetric_oligoarthritis"),
+     "psoriatic_pattern", "psoriatic_arthritis", ("nail_pitting", "dactylitis"),
+     ["ankylosing_spondylitis", "gouty_arthritis", "septic_arthritis"],
+     "conjunctivitis, urethritis, and an asymmetric oligoarthritis", "nail pitting with dactylitis",
+     "nail pitting"),
+    ("wernicke_triad", "wernicke_encephalopathy",
+     ("ophthalmoplegia", "gait_ataxia", "confusion"),
+     "cerebellar_stroke_pattern", "cerebellar_stroke", ("limb_dysmetria", "nystagmus"),
+     ["normal_pressure_hydrocephalus", "vestibular_neuritis", "multiple_sclerosis"],
+     "ophthalmoplegia, gait ataxia, and confusion", "limb dysmetria with nystagmus",
+     "nystagmus"),
+]
+# (L_gold, L_rival) with L_rival > L_gold > 1: the rival's FULL syndrome is nominally stronger, but
+# it is incomplete so it never fires; the gold triad (which IS complete) wins regardless.
+VARIANTS3 = [(10, 15), (12, 18)]
+
 
 def build():
     items = []
@@ -154,6 +206,62 @@ def build():
                 "gold_letter": LETTERS[gold_pos],
             })
             idx += 1
+    # --- batch 2: a complete 3-finding triad beats a nominally-stronger but INCOMPLETE rival -----
+    for scen in THREE_FINDING_SCENARIOS:
+        (gold_syn, gold, (f1, f2, f3), rival_syn, rival, (g1, g2), priors_only,
+         triad_phrase, rival_phrase, partial_phrase) = scen
+        for (l_gold, l_rival) in VARIANTS3:
+            diseases = [gold, rival, *priors_only]  # five distinct diseases
+            assert len(set(diseases)) == 5, diseases
+            prior = "0.2"
+            # gold's triad is fully observed → fires (×l_gold). The rival's 2-finding syndrome has
+            # only g1 observed (g2 absent) → does NOT fire → stays at prior. Others stay at prior.
+            posterior = {d: 0.2 for d in diseases}
+            posterior[gold] = 0.2 * l_gold
+            leader = max(posterior, key=posterior.get)
+            assert leader == gold, (gold, posterior)
+            assert sum(1 for d in diseases if posterior[d] == posterior[gold]) == 1, scen
+            assert l_rival > l_gold > 1, scen  # rival nominally stronger, yet incomplete → loses
+
+            gold_pos = idx % 5
+            opts = [d for d in diseases if d != gold]
+            opts.insert(gold_pos, gold)
+            opts = opts[:5]
+            if opts[gold_pos] != gold:
+                opts[gold_pos] = gold
+            assert len(set(opts)) == 5, opts
+            options = {LETTERS[i]: opts[i] for i in range(5)}
+
+            prog = (
+                "".join(f"prior {prior} for {d}\n" for d in diseases)
+                + f"contributes {l_gold} from {gold_syn} to {gold}\n"
+                + f"contributes {l_rival} from {rival_syn} to {rival}\n"
+                + f"rule {{ head: {gold_syn} when: {f1}, {f2}, {f3} }}\n"
+                + f"rule {{ head: {rival_syn} when: {g1}, {g2} }}\n"
+                + f"observe {f1}\n"
+                + f"observe {f2}\n"
+                + f"observe {f3}\n"
+                + f"observe {g1}\n"  # only ONE of the rival syndrome's two findings → it never fires
+                + "".join(f"? {d}\n" for d in diseases)
+            )
+            stem = (
+                f"Five diagnoses are equally likely a priori (each prior {prior}). The complete triad "
+                f"of {triad_phrase} raises the likelihood of {gold.replace('_', ' ')} {l_gold}-fold. "
+                f"The full syndrome of {rival_phrase} would raise {rival.replace('_', ' ')} "
+                f"{l_rival}-fold — a stronger association — but it requires both of its findings. The "
+                f"patient has {triad_phrase}, and {partial_phrase} but not the rest of that syndrome. "
+                f"Which single diagnosis is most likely?"
+            )
+            items.append({
+                "id": f"r11sd-{idx + 1:02d}",
+                "qtype": "syndromic_decision",
+                "stem": stem,
+                "program": prog,
+                "answer_from": {"type": "decision_leader", "structural_weights": False},
+                "options": options,
+                "gold_letter": LETTERS[gold_pos],
+            })
+            idx += 1
     return {
         "description": (
             "ADJ-LADDER rung 11 — syndromic decision: the first rung that is BOTH a decision and "
@@ -167,7 +275,11 @@ def build():
             "decision_leader); synthetic priors/LRs (the ladder is a capability benchmark, not the "
             "grounded CAS). Contamination-safe: every prior and LR is printed in the stem and the "
             "answer is a disease name, so no result literal leaks; gold rotates A–E; every item's "
-            "unique leader is asserted at build."
+            "unique leader is asserted at build. Batch 2 adds the completeness-over-strength variant: "
+            "a complete 3-finding triad competes against a rival whose 2-finding syndrome is only "
+            "partially present (one finding observed) and is nominally STRONGER — yet the rival rule "
+            "never fires, so the fully-satisfied triad wins. Pattern completeness, not nominal "
+            "association strength, decides."
         ),
         "items": items,
     }
