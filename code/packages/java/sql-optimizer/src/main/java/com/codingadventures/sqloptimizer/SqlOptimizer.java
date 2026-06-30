@@ -503,8 +503,18 @@ public final class SqlOptimizer {
         private static int compareValues(Object a, Object b) {
             if (a instanceof Number na && b instanceof Number nb)
                 return Double.compare(na.doubleValue(), nb.doubleValue());
-            if (a instanceof Comparable ca)
+            if (a instanceof Comparable ca) {
+                // Guard against mixed-type comparison (e.g. String vs Long): the
+                // unchecked cast inside compareTo would throw ClassCastException
+                // with an opaque message.  We detect the mismatch early and
+                // report it clearly.
+                if (!a.getClass().isInstance(b))
+                    throw new IllegalArgumentException(
+                        "Cannot compare values of different types: "
+                        + a.getClass().getSimpleName() + " vs "
+                        + b.getClass().getSimpleName());
                 return ca.compareTo(b);
+            }
             throw new IllegalArgumentException("Cannot compare " + a + " with " + b);
         }
 
