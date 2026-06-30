@@ -17,7 +17,8 @@ public static class MosaicHost
     private const string NativeLibrary = "engram_capi";
     private static readonly object SessionLock = new();
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
-    private static IntPtr Session = Native.eg_session_new();
+    private static IntPtr Session = IntPtr.Zero;
+    private static string? LoadError;
 
     public static event EventHandler<MosaicHostIntent>? HostIntentReceived;
 
@@ -32,9 +33,23 @@ public static class MosaicHost
     {
         lock (SessionLock)
         {
-            var json = Native.TakeString(
-                Native.eg_engram_app_props(RequireSession(), CurrentDeckId(), CurrentTimeMillis()));
-            return ApplyPropsFromJson(component, json, "Status: Engram host props loaded");
+            if (!TryGetSession(out var session, out var unavailable))
+            {
+                return HostUnavailable(unavailable);
+            }
+
+            try
+            {
+                var json = Native.TakeString(
+                    Native.eg_engram_app_props(session, CurrentDeckId(), CurrentTimeMillis()));
+                return ApplyPropsFromJson(component, json, "Status: Engram host props loaded");
+            }
+            catch (Exception ex) when (IsNativeAvailabilityFailure(ex))
+            {
+                LoadError = Describe(ex);
+                Session = IntPtr.Zero;
+                return HostUnavailable(LoadError);
+            }
         }
     }
 
@@ -43,17 +58,31 @@ public static class MosaicHost
         var envelope = JsonSerializer.Serialize(ev.MosaicEnvelope, JsonOptions);
         lock (SessionLock)
         {
-            var json = Native.TakeString(
-                Native.eg_handle_engram_app_event(
-                    RequireSession(),
-                    envelope,
-                    CurrentDeckId(),
-                    CurrentTimeMillis()));
-            using var document = JsonDocument.Parse(json);
-            return ApplyPropsFromRoot(
-                component,
-                document.RootElement,
-                $"Status: Engram host handled {ev.MosaicName}");
+            if (!TryGetSession(out var session, out var unavailable))
+            {
+                return HostUnavailable(unavailable);
+            }
+
+            try
+            {
+                var json = Native.TakeString(
+                    Native.eg_handle_engram_app_event(
+                        session,
+                        envelope,
+                        CurrentDeckId(),
+                        CurrentTimeMillis()));
+                using var document = JsonDocument.Parse(json);
+                return ApplyPropsFromRoot(
+                    component,
+                    document.RootElement,
+                    $"Status: Engram host handled {ev.MosaicName}");
+            }
+            catch (Exception ex) when (IsNativeAvailabilityFailure(ex))
+            {
+                LoadError = Describe(ex);
+                Session = IntPtr.Zero;
+                return HostUnavailable(LoadError);
+            }
         }
     }
 
@@ -214,14 +243,63 @@ public static class MosaicHost
         return (ulong)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
     }
 
-    private static IntPtr RequireSession()
+    private static bool TryGetSession(out IntPtr session, out string unavailable)
     {
-        if (Session == IntPtr.Zero)
+        if (Session != IntPtr.Zero)
         {
-            throw new InvalidOperationException("Engram native session could not be created.");
+            session = Session;
+            unavailable = "";
+            return true;
         }
 
-        return Session;
+        if (LoadError is not null)
+        {
+            session = IntPtr.Zero;
+            unavailable = LoadError;
+            return false;
+        }
+
+        try
+        {
+            Session = Native.eg_session_new();
+        }
+        catch (Exception ex) when (IsNativeAvailabilityFailure(ex))
+        {
+            LoadError = Describe(ex);
+            session = IntPtr.Zero;
+            unavailable = LoadError;
+            return false;
+        }
+
+        if (Session == IntPtr.Zero)
+        {
+            LoadError = "eg_session_new returned null";
+            session = IntPtr.Zero;
+            unavailable = LoadError;
+            return false;
+        }
+
+        session = Session;
+        unavailable = "";
+        return true;
+    }
+
+    private static MosaicHostResult HostUnavailable(string reason)
+    {
+        return new MosaicHostResult($"Status: Engram native host unavailable: {reason}");
+    }
+
+    private static bool IsNativeAvailabilityFailure(Exception ex)
+    {
+        return ex is DllNotFoundException
+            or EntryPointNotFoundException
+            or BadImageFormatException
+            or MarshalDirectiveException;
+    }
+
+    private static string Describe(Exception ex)
+    {
+        return $"{ex.GetType().Name}: {ex.Message}";
     }
 
     private static void FreeSession()
@@ -233,7 +311,14 @@ public static class MosaicHost
                 return;
             }
 
-            Native.eg_session_free(Session);
+            try
+            {
+                Native.eg_session_free(Session);
+            }
+            catch (Exception ex) when (IsNativeAvailabilityFailure(ex))
+            {
+                LoadError = Describe(ex);
+            }
             Session = IntPtr.Zero;
         }
     }

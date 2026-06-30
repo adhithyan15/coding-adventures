@@ -2262,6 +2262,10 @@ fn native_project_shells_expose_engram_host_contract() {
         tmp.path().join("xaml").join("MosaicHost.cs").exists(),
         "xaml host adapter should be installed from manifest assets"
     );
+    let xaml_csproj = fs::read_to_string(tmp.path().join("xaml").join("EngramApp.csproj"))
+        .expect("xaml/EngramApp.csproj");
+    assert_contains(&xaml_csproj, "CopyMosaicNativeHostLibraries");
+    assert_contains(&xaml_csproj, "$(MSBuildProjectDirectory)\\*.dll");
     assert_contains(&xaml_main_window, "Status: sample props loaded");
 
     let capi_header = fs::read_to_string(
@@ -2449,6 +2453,13 @@ fn source_tree_has_expected_shape() {
     assert_contains(&xaml_host, "public sealed record MosaicHostResult");
     assert_contains(&xaml_host, "HostIntentReceived");
     assert_contains(&xaml_host, "LastHostIntent");
+    assert_contains(&xaml_host, "private static IntPtr Session = IntPtr.Zero");
+    assert_contains(&xaml_host, "TryGetSession");
+    assert_contains(&xaml_host, "Engram native host unavailable");
+    assert!(
+        !xaml_host.contains("private static IntPtr Session = Native.eg_session_new()"),
+        "xaml host template must not load the native library from a static field initializer"
+    );
 
     let swiftui_host = fs::read_to_string(package_root().join("host/swiftui/MosaicHost.swift"))
         .expect("swiftui host template");
@@ -2505,4 +2516,8 @@ fn source_tree_has_expected_shape() {
     assert_contains(&build_script, "module CEngram");
     assert_contains(&build_script, "libengram_capi.a");
     assert_contains(&build_script, "engram_capi.dll");
+    assert!(
+        !build_script.contains("Add-EngramXamlNativeContent"),
+        "XAML native library copying should be owned by the generated project"
+    );
 }
