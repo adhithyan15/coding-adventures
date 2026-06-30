@@ -356,6 +356,26 @@ impl Parser<'_> {
             let body = self.parse_atom()?;
             return Ok(MathExpr::Accent { accent: accent.to_string(), body: Box::new(body) });
         }
+        // Over/under-set annotations: `overset(a)(b)`/`stackrel(a)(b)` and `underset(a)(b)`
+        // (also the paren-free `stackrel a b` form). TWO atoms — the annotation then the base —
+        // lowered to the neutral `MathExpr::Overset`/`Underset` (a sub-expression centered OVER /
+        // UNDER the base, distinct from `Pow`/`Subscript`). Needs `math-frontend` >= 0.5.0.
+        // `stackrel` is LaTeX's name for the over-set form; AsciiMath accepts it as a synonym.
+        match word {
+            "overset" | "stackrel" => {
+                self.advance();
+                let over = self.parse_atom()?;
+                let base = self.parse_atom()?;
+                return Ok(MathExpr::Overset { over: Box::new(over), base: Box::new(base) });
+            }
+            "underset" => {
+                self.advance();
+                let under = self.parse_atom()?;
+                let base = self.parse_atom()?;
+                return Ok(MathExpr::Underset { under: Box::new(under), base: Box::new(base) });
+            }
+            _ => {}
+        }
         match word {
             "sqrt" => {
                 self.advance();
