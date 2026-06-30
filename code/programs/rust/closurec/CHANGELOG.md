@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.229.0] - 2026-06-29
+
+### Fixed — quoted object property keys miscompiled at SIMPLE/ADVANCED
+
+Every quoted object-literal key was emitted as a bare identifier built from the
+key's un-decoded text, because the bridge recognised STRING/NUMBER keys via the
+wrong token field. That produced invalid or semantically-different output:
+
+| input                  | was                         | now (correct)        |
+|------------------------|-----------------------------|----------------------|
+| `f({"a-b":1})`         | `f({a-b:1})` — SyntaxError   | `f({"a-b":1})`       |
+| `f({"a b":1})`         | `f({a b:1})` — SyntaxError   | `f({"a b":1})`       |
+| `f({"x\ty":1})`        | `f({x\ty:1})` — invalid      | `f({"x\ty":1})`      |
+| `f({"__proto__":1})`   | `f({__proto__:1})` — proto setter | `f({"__proto__":1})` |
+| `f(Object.entries({"x\ty":1}))` | `f([["x\\ty",1]])` — double-escaped | `f([["x\ty",1]])` |
+| `f({"abc":1})`         | `f({abc:1})`                | `f({abc:1})` (kept) |
+
+The fix spans three crates: the bridge (`javascript-parser` 0.19.3) now parses
+keys via `t.type_` and decodes them; the emitter (`closure-emitter` 0.18.2)
+drops a key's quotes only when its decoded value is a valid identifier and not
+`__proto__`; and the `Object.keys` fold (`closure-pass-constant-fold` 0.76.0)
+drops its now-unnecessary escaped-key decline. New end-to-end test
+`simple_object_string_keys_quote_handling` locks the behaviour.
+
 ## [0.228.0] - 2026-06-29
 
 ### Added — per-fold CV provenance reaches the SIMPLE sidecar (CLOC27 P4 + P5)

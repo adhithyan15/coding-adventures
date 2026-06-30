@@ -6187,6 +6187,37 @@ mod tests {
     }
 
     #[test]
+    fn simple_object_string_keys_quote_handling() {
+        // End-to-end regression for the property-key miscompile: the bridge used
+        // to emit EVERY quoted object key as a bare identifier from un-decoded
+        // text. Now a quoted key drops its quotes ONLY when its decoded value is a
+        // valid identifier and is not `__proto__`; otherwise it stays a string.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let simple = |src: &str| transform_source(src, &cfg).expect("ok");
+
+        // Valid identifier → quotes dropped (the minification we keep).
+        assert_eq!(simple("f({\"abc\":1});"), "f({abc:1});");
+        // Reserved words are legal property names → also shortened.
+        assert_eq!(simple("f({\"if\":1});"), "f({if:1});");
+        // Non-identifier keys MUST stay quoted (bare would be invalid JS / a
+        // different key).
+        assert_eq!(simple("f({\"a-b\":1});"), "f({\"a-b\":1});");
+        assert_eq!(simple("f({\"a b\":1});"), "f({\"a b\":1});");
+        assert_eq!(simple("f({\"123\":1});"), "f({\"123\":1});");
+        // Escapes decode then re-escape correctly (single, not double, backslash).
+        assert_eq!(simple("f({\"x\\ty\":1});"), "f({\"x\\ty\":1});");
+        // `__proto__` stays quoted: the bare form is the prototype setter — a
+        // DIFFERENT object — so dropping the quotes would change semantics.
+        assert_eq!(simple("f({\"__proto__\":1});"), "f({\"__proto__\":1});");
+    }
+
+    #[test]
     fn simple_rename_whitespace_only_keeps_param_names() {
         // Companion — the SAME input under WHITESPACE_ONLY keeps the full
         // parameter name, proving the renaming is the SIMPLE pipeline's.

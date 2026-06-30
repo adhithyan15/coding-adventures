@@ -2,6 +2,31 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.19.3] - 2026-06-29
+
+### Fixed — object property keys parsed as bare identifiers (miscompile)
+
+`convert_property_key` matched on `t.type_name` to recognise STRING and NUMBER
+keys, but ordinary terminals carry their kind in the `t.type_` discriminant —
+`type_name` is `None` for them (only special tokens like BIGINT set it). So
+every STRING/NUMBER key fell through to the NAME fallback and became a bare
+`PropertyKey::Identifier` built from the **un-decoded** token text. Downstream
+that emitted invalid or wrong code:
+
+| source            | was            | now (correct)     |
+|-------------------|----------------|-------------------|
+| `{"a-b": 1}`      | `{a-b:1}` ✗ SyntaxError | `{"a-b":1}` |
+| `{"a b": 1}`      | `{a b:1}` ✗ SyntaxError | `{"a b":1}` |
+| `{"x\ty": 1}`     | `{x\ty:1}` ✗ stray escape | `{"x\ty":1}` |
+| `{"__proto__":1}` | `{__proto__:1}` ✗ **proto setter** | `{"__proto__":1}` |
+| `{"abc": 1}`      | `{abc:1}`      | `{abc:1}` (unchanged) |
+
+The function now switches on `t.type_`, mirroring `convert_primary_token`, and
+decodes string keys via `unquote_string` so a key's `value` holds the real
+(decoded) property name. The quote-vs-bare emission choice is made soundly in
+the emitter. New bridge tests assert the key node kinds (StringLiteral /
+NumericLiteral / Identifier) for each shape, including `__proto__`.
+
 ## [0.19.2] - 2026-06-29
 
 ### Added — propagate per-token CvIds to the bridge (CLOC27 P2 + P3)

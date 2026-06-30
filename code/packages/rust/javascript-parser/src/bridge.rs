@@ -1980,6 +1980,28 @@ fn convert_property_definition(node: &GrammarASTNode) -> Result<Property, Bridge
 
 fn convert_property_key(node: &GrammarASTNode) -> Result<PropertyKey, BridgeError> {
     // property_name = NAME | STRING | NUMBER | LBRACKET assignment_expression RBRACKET
+    //
+    // CRITICAL — the terminal token *kind* (NAME / NUMBER / STRING) lives in the
+    // `t.type_` discriminant, NOT in `t.type_name`. `type_name` is `None` for
+    // these ordinary terminals and is only populated for special tokens such as
+    // BIGINT (see `convert_primary_token`'s contract note above). An earlier
+    // version of this function matched on `t.type_name`, so a STRING or NUMBER
+    // key NEVER matched and fell straight through to the NAME fallback below —
+    // emitting EVERY quoted key as a BARE identifier built from the un-decoded
+    // token text. Concretely that miscompiled:
+    //
+    //   {"a-b":1}        →  {a-b:1}        // SyntaxError: `-` not in an ident
+    //   {"a b":1}        →  {a b:1}        // SyntaxError: space not in an ident
+    //   {"x\ty":1}       →  {x\ty:1}       // SyntaxError: stray escape chars
+    //   {"__proto__":1}  →  {__proto__:1}  // WORSE: own property silently became
+    //                                      // the prototype setter — a DIFFERENT
+    //                                      // object at runtime.
+    //
+    // We now switch on `t.type_`, exactly mirroring `convert_primary_token`, and
+    // decode string keys through `unquote_string` so the key's `value` holds the
+    // real property name. The quote-vs-bare *emission* choice is then made
+    // soundly in the emitter (`emit_property_key`), which only drops the quotes
+    // when the decoded name is a valid identifier (and never for `__proto__`).
     if has_token(node, "[") {
         return Err(BridgeError::UnsupportedSyntax {
             rule: "ComputedPropertyKey".to_string(),
@@ -1988,25 +2010,33 @@ fn convert_property_key(node: &GrammarASTNode) -> Result<PropertyKey, BridgeErro
     }
     for c in &node.children {
         if let ASTNodeOrToken::Token(t) = c {
-            if let Some(ref tn) = t.type_name {
-                match tn.as_str() {
-                    "STRING" => {
-                        let raw = t.value.clone();
-                        let value = unquote_string(&raw);
-                        return Ok(PropertyKey::StringLiteral(
-                            coding_adventures_javascript_ast::expression::StringLiteral { cv: None, value, raw }
-                        ));
-                    }
-                    "NUMBER" => {
-                        let val: f64 = parse_js_number(&t.value).unwrap_or(0.0);
-                        return Ok(PropertyKey::NumericLiteral(
-                            coding_adventures_javascript_ast::expression::NumericLiteral { cv: None, value: val, raw: t.value.clone() }
-                        ));
-                    }
-                    _ => {}
+            match t.type_ {
+                TokenType::String => {
+                    let raw = t.value.clone();
+                    let value = unquote_string(&raw);
+                    return Ok(PropertyKey::StringLiteral(
+                        coding_adventures_javascript_ast::expression::StringLiteral { cv: None, value, raw },
+                    ));
+                }
+                TokenType::Number => {
+                    let val: f64 = parse_js_number(&t.value).unwrap_or(0.0);
+                    return Ok(PropertyKey::NumericLiteral(
+                        coding_adventures_javascript_ast::expression::NumericLiteral {
+                            cv: None,
+                            value: val,
+                            raw: t.value.clone(),
+                        },
+                    ));
+                }
+                // NAME / KEYWORD (reserved words ARE legal property names, e.g.
+                // `{if: 1}`) and any other terminal: a bare identifier key.
+                _ => {
+                    return Ok(PropertyKey::Identifier(Identifier {
+                        cv: None,
+                        name: t.value.clone(),
+                    }));
                 }
             }
-            return Ok(PropertyKey::Identifier(Identifier { cv: None, name: t.value.clone() }));
         }
     }
     Err(internal(node, "property_name: no key token"))
@@ -2821,6 +2851,61 @@ mod tests {
                 coding_adventures_javascript_ast::statement::TaggedStatement::ExpressionStatement(es),
             )) => &es.expression,
             _ => panic!("expected an expression statement"),
+        }
+    }
+
+    /// The first property's key of an object-literal expression statement.
+    fn first_object_key(src: &str) -> PropertyKey {
+        match first_expr(&bridge_ok(src)) {
+            Expression::ObjectExpression(o) => o.properties[0].key.clone(),
+            other => panic!("expected ObjectExpression, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn object_string_key_is_string_literal_not_identifier() {
+        // Regression: STRING/NUMBER token kinds live in `t.type_`, not
+        // `t.type_name`. The old code matched `type_name` and so turned EVERY
+        // quoted key into a bare `Identifier` built from un-decoded text. A
+        // quoted key must parse to a decoded `StringLiteral`.
+        match first_object_key("({\"abc\": 1});") {
+            PropertyKey::StringLiteral(s) => assert_eq!(s.value, "abc"),
+            other => panic!("expected StringLiteral key, got {other:?}"),
+        }
+        // A non-identifier key (would be invalid JS if emitted bare).
+        match first_object_key("({\"a-b\": 1});") {
+            PropertyKey::StringLiteral(s) => assert_eq!(s.value, "a-b"),
+            other => panic!("expected StringLiteral key, got {other:?}"),
+        }
+        // Escapes are DECODED into the value (`\t` → a real tab), so downstream
+        // emission/folding sees the true property name.
+        match first_object_key("({\"x\\ty\": 1});") {
+            PropertyKey::StringLiteral(s) => assert_eq!(s.value, "x\ty"),
+            other => panic!("expected StringLiteral key, got {other:?}"),
+        }
+        // `__proto__` as a quoted key is an ordinary own property — it must stay
+        // a StringLiteral so the emitter keeps it quoted (not the proto setter).
+        match first_object_key("({\"__proto__\": 1});") {
+            PropertyKey::StringLiteral(s) => assert_eq!(s.value, "__proto__"),
+            other => panic!("expected StringLiteral key, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn object_numeric_key_is_numeric_literal() {
+        match first_object_key("({1: 2});") {
+            PropertyKey::NumericLiteral(n) => assert_eq!(n.value, 1.0),
+            other => panic!("expected NumericLiteral key, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn object_bare_name_key_is_identifier() {
+        // A genuine bare identifier key stays an Identifier (incl. reserved
+        // words, which are legal property names).
+        match first_object_key("({abc: 1});") {
+            PropertyKey::Identifier(i) => assert_eq!(i.name, "abc"),
+            other => panic!("expected Identifier key, got {other:?}"),
         }
     }
 

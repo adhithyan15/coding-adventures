@@ -4652,23 +4652,14 @@ fn fold_object_keys_names(properties: &[Property]) -> Option<Vec<Expression>> {
             PropertyKey::NumericLiteral(n) => format_js_number(n.value),
             PropertyKey::Expression(_) => return None, // computed
         };
-        // Soundness for KEYS THAT CONTAIN AN ESCAPE.
-        //
-        // A `PropertyKey::StringLiteral`'s `value` in this codebase holds the
-        // RAW, un-decoded inner text of the source quotes — e.g. the source key
-        // `"a\"b"` (whose actual property name is `a"b`) is stored as the four
-        // characters `a\"b`. Copying that verbatim into a fresh string literal
-        // and re-emitting it would re-escape the backslash, yielding a DIFFERENT
-        // name (`a\"b`) than the one `Object.keys` returns (`a"b`) — a miscompile.
-        // A backslash is the unambiguous marker of such an escape sequence, so we
-        // DECLINE any key that contains one. (Clean identifier-, number-, and
-        // escape-free string keys — the overwhelmingly common case — still fold;
-        // declining is always safe.) The proper fix is to decode property-key
-        // string values at the bridge, which also affects the sibling
-        // `Object.entries` / `Object.fromEntries` folds and is tracked separately.
-        if key_string.contains('\\') {
-            return None;
-        }
+        // NOTE (previously: a `contains('\\')` decline guarded against escapes).
+        // A `PropertyKey::StringLiteral`'s `value` now holds the DECODED property
+        // name — the bridge runs `unquote_string` on every string key — so the
+        // source key `"a\"b"` arrives here as the three characters `a"b`. The
+        // re-escape below (`replace('\\', "\\\\").replace('"', "\\\"")`) turns
+        // that back into the correct source form, so escaped keys fold soundly and
+        // no longer need to be declined. This matches the sibling
+        // `fold_object_entries_pairs`, which already had no such guard.
         // A non-computed `{__proto__: v}` is the §B.3.1 prototype setter, not an
         // own property, so `Object.keys` would not enumerate it — decline.
         if key_string == "__proto__" {
@@ -9014,12 +9005,14 @@ mod tests {
     }
 
     #[test]
-    fn object_keys_escaped_string_key_does_not_fold() {
-        // A string key whose raw value carries a backslash escape (here the source
-        // `"a\"b"`, stored raw as `a\"b`) must DECLINE: copying the raw value would
-        // re-escape it and emit a different name than `Object.keys` returns. Clean
-        // keys still fold; this guards the escape case until property-key values
-        // are decoded at the bridge.
+    fn object_keys_escaped_string_key_folds_with_decoded_value() {
+        // Property-key string values are now DECODED at the bridge, so the source
+        // key `"a\"b"` arrives here as the three characters `a"b` (the real
+        // property name). The fold copies that decoded value into a fresh string
+        // literal whose emission re-escapes it correctly, so escaped keys fold
+        // soundly — they no longer need the old `contains('\\')` decline. (Before
+        // the bridge decode, the value held the raw `a\"b` and re-escaping it
+        // produced the WRONG name, which is why this case used to be declined.)
         let c = object_static_call(
             "keys",
             object_lit(vec![Property {
@@ -9027,7 +9020,7 @@ mod tests {
                 kind: PropertyKind::Init,
                 key: PropertyKey::StringLiteral(StringLiteral {
                     cv: None,
-                    value: "a\\\"b".to_string(), // raw inner text: a \ " b
+                    value: "a\"b".to_string(), // decoded property name: a " b
                     raw: "\"a\\\"b\"".to_string(),
                 }),
                 value: Box::new(num(1.0, None)),
@@ -9037,8 +9030,14 @@ mod tests {
             }]),
         );
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
-        assert!(!changed, "escaped string key must not fold");
-        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        assert!(changed, "escaped string key folds with its decoded value");
+        match extract_expr(&out) {
+            Expression::ArrayExpression(a) => {
+                assert_eq!(a.elements.len(), 1);
+                assert_key_string(a.elements[0].as_ref().unwrap(), "a\"b");
+            }
+            other => panic!("expected array of key strings; got {:?}", other),
+        }
     }
 
     #[test]

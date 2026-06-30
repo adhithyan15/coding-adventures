@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.76.0] - 2026-06-29
+
+### Changed — `Object.keys` now folds escaped string keys (bridge decode)
+
+`fold_object_keys_names` carried a `key_string.contains('\\')` decline that
+guarded against the old bug where a `PropertyKey::StringLiteral`'s `value` held
+RAW, un-decoded source text — re-escaping it would have produced a different
+name than `Object.keys` returns. The bridge now decodes property-key string
+values (see `javascript-parser` 0.19.3), so `value` holds the true property
+name and the existing re-escape produces the correct source form. The decline
+is therefore removed: `Object.keys({"a\"b": 1})` now folds to `["a\"b"]` instead
+of being left as a call. This brings `Object.keys` in line with its sibling
+`Object.entries` fold, which never had the guard. The stale soundness comment is
+updated, and the `object_keys_escaped_string_key_does_not_fold` test is
+repurposed to assert the now-correct fold.
+
 ## [0.75.0] - 2026-06-29
 
 ### Added — fold static `Object.keys({k: v, …})` → array of key string literals
