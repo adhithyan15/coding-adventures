@@ -27,7 +27,8 @@ same facade directly:
 
 ```rust
 use spice_netlist_parser::{
-    parse_berkeley_app_deck, BerkeleyAppPersistedEditorState, BerkeleyCardKind,
+    berkeley_app_package_manifest_json, parse_berkeley_app_deck,
+    BerkeleyAppPersistedEditorState, BerkeleyCardKind,
 };
 
 let deck = parse_berkeley_app_deck(r#"
@@ -75,6 +76,9 @@ let host_wire_json = deck.run_host_surface_wire_json(BerkeleyAppPersistedEditorS
     active_command_id: Some("analysis.3.inspect-waveform".to_string()),
 })?;
 assert!(host_wire_json.contains(r#""activePanelId":"waveform""#));
+
+let package_manifest_json = berkeley_app_package_manifest_json();
+assert!(package_manifest_json.contains(r#""packageName":"berkeley-spice-mosaic-app""#));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -97,7 +101,10 @@ and waveform panel descriptors with explicit targets, enabled states, active
 state, and disabled reasons for Mosaic shell integration. Host-surface wire
 exports flatten the same contract into schema-versioned JSON with repaired
 selection metadata and lower-case panel / diagnostic kinds for WebAssembly and
-product-shell embedding. It is the
+product-shell embedding. The static package manifest advertises the Berkeley
+grammar version, host-surface wire schema, panel kinds, command targets,
+runnable analysis directives, and artifact capabilities so Mosaic and
+WebAssembly hosts can negotiate the app package before opening a deck. It is the
 Rust app/runtime entrypoint for Mosaic-backed UI work while the grammar-backed
 parser generator and Python/TypeScript parity surfaces continue to mature.
 
