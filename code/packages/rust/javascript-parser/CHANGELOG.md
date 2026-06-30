@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.19.10] - 2026-06-30
+
+### Fixed — function expressions (IIFEs etc.) aborted the compile
+
+A `function` expression in value position made the bridge raise an `Internal`
+error, which the CLI treats as a hard failure (`exit 2`, no JS output):
+
+```
+(function(){})();     →  bridge internal error: unknown expression rule 'function_expression'
+x = function(){};     →  (same)
+f(function(){ … });   →  (same)
+```
+
+IIFEs, assigned function expressions, and function callbacks are extremely
+common, valid JavaScript. Like arrow functions, generator/async function
+expressions, and class expressions — all of which already decline gracefully —
+a plain function expression is a Phase 2 feature that should DECLINE with
+`UnsupportedSyntax` (so the CLI falls back to WHITESPACE_ONLY and still emits
+valid output), never abort.
+
+**Cause.** `convert_expression`'s "ES2015+ unsupported" arm listed
+`generator_expression`, `async_function_expression`, `arrow_function`,
+`class_expression`, … but **omitted** the plain `function_expression`, so it
+fell through to the `InternalError` catch-all.
+
+**Fix.** Added `"function_expression"` to that decline list, alongside its
+siblings. `(function(){})();` / `x=function(){}` / `f(function(){})` now
+round-trip through the WHITESPACE_ONLY fallback (`exit 0`) instead of aborting.
+
+Regression test: `function_expressions_decline_gracefully_not_hard_error`.
+
 ## [0.19.9] - 2026-06-30
 
 ### Fixed — destructuring declarations aborted the compile instead of declining
