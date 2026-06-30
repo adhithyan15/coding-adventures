@@ -14,10 +14,11 @@ use spice_netlist_parser::{
     TfAnalysis, TranAnalysis, BERKELEY_APP_BOOTSTRAP_SCHEMA_VERSION,
     BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION, BERKELEY_APP_LAUNCH_PLAN_SCHEMA_VERSION,
     BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION, BERKELEY_APP_PACKAGE_NAME,
-    BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION, BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION,
-    BERKELEY_APP_SHELL_STATUS_SCHEMA_VERSION, BERKELEY_APP_SHELL_TELEMETRY_SCHEMA_VERSION,
-    BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM, BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION,
-    BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION,
+    BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION, BERKELEY_APP_SHELL_EVENT_LOG_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION, BERKELEY_APP_SHELL_STATUS_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_TELEMETRY_SCHEMA_VERSION, BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM,
+    BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION, BERKELEY_SPICE_GRAMMAR_NAME,
+    BERKELEY_SPICE_GRAMMAR_VERSION,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -2586,6 +2587,11 @@ fn berkeley_app_facade_exports_package_manifest_json() {
         .unwrap()
         .iter()
         .any(|capability| capability == "app-shell-telemetry-json"));
+    assert!(payload["artifactCapabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|capability| capability == "app-shell-events-json"));
 }
 
 #[test]
@@ -2928,6 +2934,70 @@ C1 out 0 1p
         shell_telemetry_payload["artifactCapabilityCount"].as_u64(),
         Some(handoff.package_manifest.artifact_capabilities.len() as u64)
     );
+
+    let shell_events = app
+        .run_app_shell_event_log(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("shell event log should execute");
+    assert_eq!(
+        shell_events.schema_version,
+        BERKELEY_APP_SHELL_EVENT_LOG_SCHEMA_VERSION
+    );
+    assert_eq!(shell_events.package_name, BERKELEY_APP_PACKAGE_NAME);
+    assert!(shell_events.ready);
+    assert_eq!(shell_events.startup_route, "ready");
+    assert_eq!(shell_events.event_count, 6);
+    assert_eq!(shell_events.events[0].id, "shell.status");
+    assert_eq!(shell_events.events[0].kind, "status");
+    assert_eq!(shell_events.events[0].severity, "ready");
+    assert_eq!(shell_events.events[0].panel_id.as_deref(), Some("waveform"));
+    assert_eq!(
+        shell_events.events[0].action_id.as_deref(),
+        Some("launch.waveform")
+    );
+    assert_eq!(shell_events.events[1].id, "shell.route.ready");
+    assert_eq!(shell_events.events[2].id, "shell.action.primary");
+    assert_eq!(
+        shell_events.events[2].action_id.as_deref(),
+        Some("launch.waveform")
+    );
+    assert_eq!(shell_events.events[3].id, "shell.diagnostics");
+    assert_eq!(shell_events.events[3].severity, "info");
+    assert_eq!(shell_events.events[3].count, Some(0));
+    assert_eq!(shell_events.events[4].id, "shell.state");
+    assert_eq!(shell_events.events[4].severity, "info");
+    assert_eq!(shell_events.events[4].count, Some(0));
+    assert_eq!(shell_events.events[5].id, "shell.capabilities");
+    assert_eq!(
+        shell_events.events[5].count,
+        Some(handoff.package_manifest.artifact_capabilities.len())
+    );
+
+    let shell_events_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_event_log_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap(),
+    )
+    .expect("shell event log JSON should parse");
+    assert_eq!(shell_events_payload["schemaVersion"], 1);
+    assert_eq!(shell_events_payload["ready"], true);
+    assert_eq!(shell_events_payload["startupRoute"], "ready");
+    assert_eq!(shell_events_payload["eventCount"], 6);
+    assert_eq!(shell_events_payload["events"][0]["id"], "shell.status");
+    assert_eq!(shell_events_payload["events"][0]["severity"], "ready");
+    assert_eq!(
+        shell_events_payload["events"][2]["actionId"],
+        "launch.waveform"
+    );
+    assert_eq!(shell_events_payload["events"][3]["count"], 0);
+    assert_eq!(
+        shell_events_payload["events"][5]["count"].as_u64(),
+        Some(handoff.package_manifest.artifact_capabilities.len() as u64)
+    );
 }
 
 #[test]
@@ -3198,6 +3268,63 @@ R1 in out
     assert_eq!(shell_telemetry_payload["disabledActionCount"], 2);
     assert_eq!(shell_telemetry_payload["diagnosticCount"], 1);
     assert_eq!(shell_telemetry_payload["errorCount"], 1);
+
+    let shell_events = app.app_shell_event_log(BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(2),
+        active_command_id: Some("analysis.2.run".to_string()),
+    });
+    assert_eq!(
+        shell_events.schema_version,
+        BERKELEY_APP_SHELL_EVENT_LOG_SCHEMA_VERSION
+    );
+    assert!(!shell_events.ready);
+    assert_eq!(shell_events.startup_route, "blocked");
+    assert_eq!(shell_events.event_count, 6);
+    assert_eq!(shell_events.events[0].id, "shell.status");
+    assert_eq!(shell_events.events[0].severity, "error");
+    assert_eq!(
+        shell_events.events[0].action_id.as_deref(),
+        Some("launch.diagnostics")
+    );
+    assert_eq!(shell_events.events[1].id, "shell.route.blocked");
+    assert_eq!(shell_events.events[2].id, "shell.action.primary");
+    assert_eq!(
+        shell_events.events[2].action_id.as_deref(),
+        Some("launch.diagnostics")
+    );
+    assert_eq!(shell_events.events[3].id, "shell.diagnostics");
+    assert_eq!(shell_events.events[3].severity, "error");
+    assert_eq!(shell_events.events[3].count, Some(1));
+    assert_eq!(shell_events.events[4].id, "shell.state");
+    assert_eq!(
+        shell_events.events[4].count,
+        Some(if handoff.readiness_report.repaired_state {
+            1
+        } else {
+            0
+        })
+    );
+
+    let shell_events_payload: serde_json::Value = serde_json::from_str(
+        &app.app_shell_event_log_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        }),
+    )
+    .expect("blocked shell event log JSON should parse");
+    assert_eq!(shell_events_payload["ready"], false);
+    assert_eq!(shell_events_payload["startupRoute"], "blocked");
+    assert_eq!(shell_events_payload["eventCount"], 6);
+    assert_eq!(shell_events_payload["events"][0]["severity"], "error");
+    assert_eq!(
+        shell_events_payload["events"][1]["id"],
+        "shell.route.blocked"
+    );
+    assert_eq!(
+        shell_events_payload["events"][2]["actionId"],
+        "launch.diagnostics"
+    );
+    assert_eq!(shell_events_payload["events"][3]["count"], 1);
 }
 
 #[test]

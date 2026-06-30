@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add Berkeley SPICE app-deck shell event logs for Mosaic product-shell startup
+  streams. `BerkeleyAppDeck::app_shell_event_log()`,
+  `run_app_shell_event_log()`, and their JSON helpers derive stable status,
+  route, primary-action, diagnostic, repaired-state, and capability events from
+  shell handoffs.
 - Add Berkeley SPICE app-deck shell telemetry for Mosaic startup metrics.
   `BerkeleyAppDeck::app_shell_telemetry()`, `run_app_shell_telemetry()`, and
   their JSON helpers derive compact route, entry-action, availability,

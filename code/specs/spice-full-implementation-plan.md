@@ -33,16 +33,16 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell telemetry.
+1. Rust Berkeley Mosaic app shell event log.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app shell telemetry and JSON helpers that derive
-     compact route, entry-action, availability, diagnostic, repaired-state, and
-     capability-count metrics from Berkeley app shell handoffs.
-   - Preserve package name, source fingerprint, ready/blocked route, severity,
-     status message, primary action, panel/action availability counts, diagnostic
-     severity counts, stale/repaired-state flags, and advertised capability count
-     so Mosaic, WebAssembly, and product shells can emit startup telemetry
-     without inspecting the full launch/readiness payload.
+   - Add schema-versioned Rust app shell event logs and JSON helpers that derive
+     stable status, route, primary-action, diagnostic, repaired-state, and
+     capability events from Berkeley app shell handoffs.
+   - Preserve package name, source fingerprint, ready/blocked route, event
+     severity, status messages, primary action, diagnostic counts, repaired-state
+     count, and advertised capability count so Mosaic, WebAssembly, and product
+     shells can append startup event streams without inspecting the full
+     launch/readiness payload.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1597,6 +1597,19 @@ the Rust, Python, and TypeScript surfaces together.
      blocking reason so Mosaic, WebAssembly, and product shells can render
      startup chrome and telemetry without inspecting the full launch/readiness
      payload.
+
+151. Rust Berkeley Mosaic app shell telemetry.
+   - Status: completed in PR 7032.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell telemetry plus JSON helpers that derive compact route,
+     entry-action, availability, diagnostic, repaired-state, and capability-count
+     metrics from shell handoffs.
+   - The telemetry payload preserves package name, source fingerprint,
+     ready/blocked route, severity, status message, primary action, panel/action
+     availability counts, diagnostic severity counts, stale/repaired-state
+     flags, and advertised capability count so Mosaic, WebAssembly, and product
+     shells can emit startup telemetry without inspecting the full
+     launch/readiness payload.
 
 ## Backlog
 
