@@ -203,6 +203,13 @@ is text-primary, which is a different mode model.)
   Every LaTeX math construct the grammar parses now has a faithful neutral counterpart — no
   honest-error islands remain. This rung **completes the LTX01 ladder (L0–L6).**
 
+  **Over/under-set emission (latex 0.14.0):** `\overset{a}{b}`, `\stackrel{a}{b}` (amsmath's
+  over-set synonym), and `\underset{a}{b}` parse to new `MathNode::Overset`/`Underset` (two
+  mandatory args, annotation then base) and the L6 lower emits the neutral
+  `MathExpr::Overset`/`Underset` (added in `math-frontend` 0.5.0) — a centered annotation over/under
+  the base, distinct from `Pow`/`Subscript`. `to_latex` round-trips both; `capabilities()` already
+  advertises `oversets` via `all()`. The LaTeX-side twin of the asciimath over/under-set emitter.
+
 **Asymptote (documented in README, not built):** runtime `\catcode`, `\expandafter`/
 `\noexpand`/`\csname`, arbitrary `\if…` programming, external `\input`/`\include`. Hit →
 `Unsupported { construct, span }`.

@@ -2,6 +2,23 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.14.0] — 2026-06-30
+
+### Added — `\overset` / `\underset` / `\stackrel` → neutral `Overset` / `Underset`
+
+- The parser recognizes **`\overset{over}{base}`**, **`\stackrel{over}{base}`** (amsmath's name
+  for the over-set form), and **`\underset{under}{base}`** — two mandatory args (annotation then
+  base, the `\frac`/`\binom` shape) — as new `MathNode::Overset` / `MathNode::Underset`, and the L6
+  lower emits the neutral **`MathExpr::Overset` / `MathExpr::Underset`** (math-frontend 0.5.0). A
+  centered annotation **over/under** the base, **distinct from `Pow`/`Subscript`** (`b^a` / `b_a`).
+  This is the LaTeX-side twin of the asciimath over/under-set emitter.
+- `to_latex` round-trips both nodes (`parse_math(node.to_latex()) == node`); the iterative
+  `take_children` (deep-Drop guard) handles their two children; both stay atoms in the precedence
+  table. The lower runs in the existing work-stack trampoline (no new recursion). `capabilities()`
+  already advertises `oversets` via `all()`, so emission is conforming with no capability change.
+- Tests: parser `overset_underset_parse_and_round_trip`, lower `overset_underset_lower_to_neutral_nodes`
+  (overset/underset/stackrel, distinct-from-Pow). 141 unit + doc tests pass; clippy `-D warnings` clean.
+
 ## [0.13.0] — 2026-06-29
 
 ### Changed — accents lower to the neutral `MathExpr::Accent` (no longer faked as a function call)

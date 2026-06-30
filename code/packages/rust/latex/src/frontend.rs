@@ -90,6 +90,8 @@ enum Build {
     Unary(UnaryOp),
     Frac,
     Binom,
+    Overset,
+    Underset,
     Root { has_degree: bool },
     Script { has_sub: bool, has_sup: bool },
     Call(Func),
@@ -159,6 +161,21 @@ fn lower(root: MathNode, span: (usize, usize)) -> Result<MathExpr, FrontendError
                     work.push(Task::Build(Build::Binom));
                     work.push(Task::Node(y));
                     work.push(Task::Node(x));
+                }
+                // `\overset{over}{base}` / `\stackrel` → neutral Overset; `\underset` → Underset.
+                // A centered annotation over/under the base, distinct from Pow/Subscript.
+                // (Needs `math-frontend` ≥ 0.5.0's Overset/Underset nodes.)
+                MathNode::Overset { over, base } => {
+                    let (over, base) = (take_box(over), take_box(base));
+                    work.push(Task::Build(Build::Overset));
+                    work.push(Task::Node(base));
+                    work.push(Task::Node(over));
+                }
+                MathNode::Underset { under, base } => {
+                    let (under, base) = (take_box(under), take_box(base));
+                    work.push(Task::Build(Build::Underset));
+                    work.push(Task::Node(base));
+                    work.push(Task::Node(under));
                 }
                 MathNode::Bin(op, x, y) => {
                     let bop = lower_binop(*op);
@@ -293,6 +310,16 @@ fn lower(root: MathNode, span: (usize, usize)) -> Result<MathExpr, FrontendError
                     let k = pop!();
                     let n = pop!();
                     vals.push(MathExpr::Binom(Box::new(n), Box::new(k)));
+                }
+                Build::Overset => {
+                    let base = pop!();
+                    let over = pop!();
+                    vals.push(MathExpr::Overset { over: Box::new(over), base: Box::new(base) });
+                }
+                Build::Underset => {
+                    let base = pop!();
+                    let under = pop!();
+                    vals.push(MathExpr::Underset { under: Box::new(under), base: Box::new(base) });
                 }
                 Build::Root { has_degree } => {
                     let radicand = pop!();
@@ -562,6 +589,31 @@ mod tests {
             m(r"\vec{v}"),
             MathExpr::Accent { accent: "vec".into(), body: Box::new(MathExpr::Symbol("v".into())) }
         );
+    }
+
+    #[test]
+    fn overset_underset_lower_to_neutral_nodes() {
+        // `\overset{a}{b}` / `\stackrel{a}{b}` → a centered over the b; `\underset{a}{b}` under it.
+        // Distinct from Pow/Subscript (which `b^a` / `b_a` produce). Both args lower recursively.
+        assert_eq!(
+            m(r"\overset{a}{R}"),
+            MathExpr::Overset {
+                over: Box::new(MathExpr::Symbol("a".into())),
+                base: Box::new(MathExpr::Symbol("R".into())),
+            }
+        );
+        assert_eq!(
+            m(r"\underset{a}{R}"),
+            MathExpr::Underset {
+                under: Box::new(MathExpr::Symbol("a".into())),
+                base: Box::new(MathExpr::Symbol("R".into())),
+            }
+        );
+        // `\stackrel` is amsmath's name for the over-set form → identical lowering.
+        assert_eq!(m(r"\stackrel{a}{R}"), m(r"\overset{a}{R}"));
+        // Distinct from a superscript and from each other.
+        assert_ne!(m(r"\overset{a}{R}"), m(r"R^{a}"));
+        assert_ne!(m(r"\overset{a}{R}"), m(r"\underset{a}{R}"));
     }
 
     #[test]
