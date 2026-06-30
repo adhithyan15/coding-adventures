@@ -1,0 +1,90 @@
+{
+  "id": "17-null-aggregate-semantics",
+  "description": "NULL handling in aggregate functions: empty table behaviour, COUNT(NULL), SUM(NULL)",
+  "level": 1,
+  "steps": [
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE empty_t (val INTEGER)"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT COUNT(*) AS cnt FROM empty_t",
+      "expected_columns": ["cnt"],
+      "expected_rows": [[0]],
+      "note": "COUNT(*) on empty table returns 0, not NULL"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT COUNT(val) AS cnt FROM empty_t",
+      "expected_columns": ["cnt"],
+      "expected_rows": [[0]],
+      "note": "COUNT(col) on empty table returns 0, not NULL"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT SUM(val) AS s FROM empty_t",
+      "expected_columns": ["s"],
+      "expected_rows": [[null]],
+      "note": "SUM on empty table returns NULL (SQLite rule)"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT AVG(val) AS a FROM empty_t",
+      "expected_columns": ["a"],
+      "expected_rows": [[null]],
+      "note": "AVG on empty table returns NULL (SQLite rule)"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT MIN(val) AS mn FROM empty_t",
+      "expected_columns": ["mn"],
+      "expected_rows": [[null]],
+      "note": "MIN on empty table returns NULL (SQLite rule)"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT MAX(val) AS mx FROM empty_t",
+      "expected_columns": ["mx"],
+      "expected_rows": [[null]],
+      "note": "MAX on empty table returns NULL (SQLite rule)"
+    },
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE nulls_t (x INTEGER)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO nulls_t VALUES (NULL)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO nulls_t VALUES (1)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO nulls_t VALUES (2)"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT COUNT(x) AS cnt FROM nulls_t",
+      "expected_columns": ["cnt"],
+      "expected_rows": [[2]],
+      "note": "COUNT(col) skips NULLs — only 2 non-NULL values"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT COUNT(*) AS cnt FROM nulls_t",
+      "expected_columns": ["cnt"],
+      "expected_rows": [[3]],
+      "note": "COUNT(*) counts all rows including NULLs"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT SUM(x) AS s FROM nulls_t",
+      "expected_columns": ["s"],
+      "expected_rows": [[3]],
+      "note": "SUM ignores NULLs: 1 + 2 = 3"
+    }
+  ]
+}

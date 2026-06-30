@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "description": "Level 0 mini-sqlite conformance fixture suite",
+  "version": "1.1.0",
+  "description": "mini-sqlite conformance fixture suite — Level 0 (fixtures 01–16) and Level 1 (fixtures 17–24)",
   "fixtures": [
     "fixtures/01-create-select.json",
     "fixtures/02-qmark-binding-insert.json",
@@ -17,7 +17,15 @@
     "fixtures/13-drop-table.json",
     "fixtures/14-executemany.json",
     "fixtures/15-fetchone-fetchmany.json",
-    "fixtures/16-null-handling.json"
+    "fixtures/16-null-handling.json",
+    "fixtures/17-null-aggregate-semantics.json",
+    "fixtures/18-string-functions.json",
+    "fixtures/19-math-functions.json",
+    "fixtures/20-limit-edge-cases.json",
+    "fixtures/21-distinct-aggregate.json",
+    "fixtures/22-string-concat-null.json",
+    "fixtures/23-null-in-order-by.json",
+    "fixtures/24-having-aggregate.json"
   ],
   "op_types": {
     "execute": "Call connection.execute(sql, params?) — no result expected",
