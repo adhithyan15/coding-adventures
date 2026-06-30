@@ -9,7 +9,7 @@
 //! At SIMPLE the fixture optimizes to:
 //!
 //! ```text
-//! var a=false;var b=true;var c=true;var d=false;var e=true;var f=Boolean(z);report(a,b,c,d,e,f);
+//! var a=!1;var b=!0;var c=!0;var d=!1;var e=!0;var f=Boolean(z);report(a,b,c,d,e,f);
 //! ```
 
 use std::process::Command;
@@ -61,11 +61,11 @@ fn simple_fold_boolean_folds_to_boolean_literals() {
         .expect("run closurec");
     let actual = String::from_utf8_lossy(&out.stdout);
 
-    assert!(actual.contains("a=false"), "Boolean(\"\") → false; got:\n{actual}");
-    assert!(actual.contains("b=true"), "Boolean(\"x\") → true; got:\n{actual}");
-    assert!(actual.contains("c=true"), "Boolean(\"0\") → true (non-empty); got:\n{actual}");
-    assert!(actual.contains("d=false"), "Boolean(0) → false; got:\n{actual}");
-    assert!(actual.contains("e=true"), "Boolean(1) → true; got:\n{actual}");
+    assert!(actual.contains("a=!1"), "Boolean(\"\") → false; got:\n{actual}");
+    assert!(actual.contains("b=!0"), "Boolean(\"x\") → true; got:\n{actual}");
+    assert!(actual.contains("c=!0"), "Boolean(\"0\") → true (non-empty); got:\n{actual}");
+    assert!(actual.contains("d=!1"), "Boolean(0) → false; got:\n{actual}");
+    assert!(actual.contains("e=!0"), "Boolean(1) → true; got:\n{actual}");
     // `Boolean(z)` needs the runtime value of `z` — the call must survive.
     assert!(
         actual.contains("f=Boolean(z)"),

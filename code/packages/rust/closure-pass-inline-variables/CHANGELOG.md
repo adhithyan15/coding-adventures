@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline-variables` crate will be documented in this file.
 
+## [0.6.1] - 2026-06-30
+
+### Changed — test sync for closure-emitter boolean shorthand
+
+`closure-emitter` 0.18.9 now minifies `true`/`false` to `!0`/`!1`. The
+`propagates_boolean_and_null_literals` golden-output test was updated to
+expect the new rendering (`const ON=!0;const NONE=null;f(!0,null);`). No
+behavior change in this crate — the propagation logic is unchanged.
+
 ## [0.6.0] - 2026-06-20
 
 ### Added — CLOC23: variable inlining inside `for`-`of`

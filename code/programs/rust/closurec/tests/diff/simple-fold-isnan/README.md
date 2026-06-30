@@ -40,7 +40,7 @@ compiler's canonical literal form (`true` / `false`).
 - `expected.stdout` — the byte-exact SIMPLE output:
 
   ```text
-  var a=true;var b=false;var c=false;var d=true;var e=false;var f=false;var g=true;report(a,b,c,d,e,f,g);
+  var a=!0;var b=!1;var c=!1;var d=!0;var e=!1;var f=!1;var g=!0;report(a,b,c,d,e,f,g);
   ```
 
 The integration test `tests/diff_simple_fold_isnan.rs` runs the binary against

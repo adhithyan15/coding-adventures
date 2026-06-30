@@ -8,7 +8,7 @@
 //! At SIMPLE the fixture optimizes to:
 //!
 //! ```text
-//! var a=true;var b=false;var c=true;report(a,b,c);
+//! var a=!0;var b=!1;var c=!0;report(a,b,c);
 //! ```
 
 use std::process::Command;
@@ -59,9 +59,9 @@ fn simple_fold_strpred_folds_to_boolean_literals() {
         .expect("run closurec");
     let actual = String::from_utf8_lossy(&out.stdout);
 
-    assert!(actual.contains("a=true"), "startsWith should fold to true; got:\n{actual}");
-    assert!(actual.contains("b=false"), "endsWith should fold to false; got:\n{actual}");
-    assert!(actual.contains("c=true"), "includes should fold to true; got:\n{actual}");
+    assert!(actual.contains("a=!0"), "startsWith should fold to true; got:\n{actual}");
+    assert!(actual.contains("b=!1"), "endsWith should fold to false; got:\n{actual}");
+    assert!(actual.contains("c=!0"), "includes should fold to true; got:\n{actual}");
     for method in ["startsWith", "endsWith", "includes"] {
         assert!(
             !actual.contains(method),

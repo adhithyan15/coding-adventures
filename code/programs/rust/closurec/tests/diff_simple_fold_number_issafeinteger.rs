@@ -9,7 +9,7 @@
 //! At SIMPLE the fixture optimizes to:
 //!
 //! ```text
-//! var a=true;var b=false;var c=true;var d=false;var e=Number.isSafeInteger(x);report(a,b,c,d,e);
+//! var a=!0;var b=!1;var c=!0;var d=!1;var e=Number.isSafeInteger(x);report(a,b,c,d,e);
 //! ```
 
 use std::process::Command;
@@ -56,14 +56,14 @@ fn simple_fold_number_issafeinteger_classifies_literals() {
     let out = Command::new(BINARY).args(read_flags()).output().expect("run closurec");
     let actual = String::from_utf8_lossy(&out.stdout);
 
-    assert!(actual.contains("a=true"), "isSafeInteger(7) → true; got:\n{actual}");
-    assert!(actual.contains("b=false"), "isSafeInteger(3.5) → false; got:\n{actual}");
+    assert!(actual.contains("a=!0"), "isSafeInteger(7) → true; got:\n{actual}");
+    assert!(actual.contains("b=!1"), "isSafeInteger(3.5) → false; got:\n{actual}");
     assert!(
-        actual.contains("c=true"),
+        actual.contains("c=!0"),
         "isSafeInteger(9007199254740991) → true (MAX_SAFE_INTEGER); got:\n{actual}"
     );
     assert!(
-        actual.contains("d=false"),
+        actual.contains("d=!1"),
         "isSafeInteger(9007199254740992) → false (2^53, past safe range); got:\n{actual}"
     );
     // The identifier argument is NOT folded — the call must remain.

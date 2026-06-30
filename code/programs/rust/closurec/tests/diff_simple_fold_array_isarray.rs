@@ -9,8 +9,11 @@
 //! At SIMPLE the fixture optimizes to:
 //!
 //! ```text
-//! var a=true;var b=false;var c=false;var d=false;var e=false;var f=Array.isArray([1,2]);report(a,b,c,d,e,f);
+//! var a=!0;var b=!1;var c=!1;var d=!1;var e=!1;var f=Array.isArray([1,2]);report(a,b,c,d,e,f);
 //! ```
+//!
+//! (booleans render via the emitter's Closure-style shorthand: the fold still
+//! produces `true`/`false`, which the emitter prints as `!0`/`!1`.)
 
 use std::process::Command;
 
@@ -61,11 +64,13 @@ fn simple_fold_array_isarray_folds_to_booleans() {
         .expect("run closurec");
     let actual = String::from_utf8_lossy(&out.stdout);
 
-    assert!(actual.contains("a=true"), "Array.isArray([]) → true; got:\n{actual}");
-    assert!(actual.contains("b=false"), "Array.isArray({{}}) → false; got:\n{actual}");
-    assert!(actual.contains("c=false"), "Array.isArray(\"x\") → false; got:\n{actual}");
-    assert!(actual.contains("d=false"), "Array.isArray(42) → false; got:\n{actual}");
-    assert!(actual.contains("e=false"), "Array.isArray(null) → false; got:\n{actual}");
+    // Folded booleans render via the emitter's Closure-style shorthand:
+    // `true`→`!0`, `false`→`!1` (value-exact).
+    assert!(actual.contains("a=!0"), "Array.isArray([]) → true (!0); got:\n{actual}");
+    assert!(actual.contains("b=!1"), "Array.isArray({{}}) → false (!1); got:\n{actual}");
+    assert!(actual.contains("c=!1"), "Array.isArray(\"x\") → false (!1); got:\n{actual}");
+    assert!(actual.contains("d=!1"), "Array.isArray(42) → false (!1); got:\n{actual}");
+    assert!(actual.contains("e=!1"), "Array.isArray(null) → false (!1); got:\n{actual}");
     // The non-empty array literal is NOT folded — the call must remain.
     assert!(
         actual.contains("f=Array.isArray([1,2])"),

@@ -10,7 +10,7 @@
 //! At SIMPLE the fixture optimizes to:
 //!
 //! ```text
-//! var a=true;var b=false;var c=false;var d=true;var e=false;var f=false;var g=true;report(a,b,c,d,e,f,g);
+//! var a=!0;var b=!1;var c=!1;var d=!0;var e=!1;var f=!1;var g=!0;report(a,b,c,d,e,f,g);
 //! ```
 
 use std::process::Command;
@@ -62,13 +62,13 @@ fn simple_fold_isnan_folds_to_booleans() {
         .expect("run closurec");
     let actual = String::from_utf8_lossy(&out.stdout);
 
-    assert!(actual.contains("a=true"), "isNaN(\"abc\") → true; got:\n{actual}");
-    assert!(actual.contains("b=false"), "isNaN(\"42\") → false; got:\n{actual}");
-    assert!(actual.contains("c=false"), "isNaN(\" \") → false (ToNumber(\" \")=+0); got:\n{actual}");
-    assert!(actual.contains("d=true"), "isFinite(\"1e3\") → true; got:\n{actual}");
-    assert!(actual.contains("e=false"), "isFinite(\"Infinity\") → false; got:\n{actual}");
-    assert!(actual.contains("f=false"), "isFinite(\"abc\") → false; got:\n{actual}");
-    assert!(actual.contains("g=true"), "isFinite(0) → true; got:\n{actual}");
+    assert!(actual.contains("a=!0"), "isNaN(\"abc\") → true; got:\n{actual}");
+    assert!(actual.contains("b=!1"), "isNaN(\"42\") → false; got:\n{actual}");
+    assert!(actual.contains("c=!1"), "isNaN(\" \") → false (ToNumber(\" \")=+0); got:\n{actual}");
+    assert!(actual.contains("d=!0"), "isFinite(\"1e3\") → true; got:\n{actual}");
+    assert!(actual.contains("e=!1"), "isFinite(\"Infinity\") → false; got:\n{actual}");
+    assert!(actual.contains("f=!1"), "isFinite(\"abc\") → false; got:\n{actual}");
+    assert!(actual.contains("g=!0"), "isFinite(0) → true; got:\n{actual}");
 }
 
 /// Regression guard: the output must be the SIMPLE typed pipeline, not the

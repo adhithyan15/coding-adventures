@@ -902,7 +902,21 @@ impl<'a> Emitter<'a> {
 
     fn emit_boolean(&mut self, b: &BooleanLiteral) {
         self.maybe_map(&b.cv);
-        self.write_str(if b.value { "true" } else { "false" });
+        // Closure-style minification: `true` (4 chars) → `!0` (2), `false`
+        // (5) → `!1` (2). `!0` evaluates to `true` and `!1` to `false` in
+        // every context (`!` coerces its operand to a boolean and negates;
+        // `!0 === true`, `!1 === false`), so the substitution is value-exact.
+        //
+        // PRECEDENCE: `!0` / `!1` are UnaryExpressions, NOT primaries, so they
+        // bind LOOSER than member access, call, `new`, and tagged templates.
+        // Emitting `true.x` naively as `!0.x` would reparse as `!(0.x)` — a
+        // miscompile. We avoid this WITHOUT any local paren logic here:
+        // `expr_prec` tags `BooleanLiteral` at `PREC_UNARY` (exactly like the
+        // `void 0` UndefinedLiteral case), so `emit_expression_inner` inserts
+        // the needed parens automatically in higher-precedence parents —
+        // `(!0).x`, `(!0)()`, `new (!1)` — while leaving the common cases
+        // (`x=!0`, `[!0]`, `f(!0)`, `a&&!0`, `return!0`) paren-free.
+        self.write_str(if b.value { "!0" } else { "!1" });
     }
 
     fn emit_null(&mut self, n: &NullLiteral) {
@@ -1447,7 +1461,6 @@ fn expr_prec(e: &Expression) -> u8 {
         Expression::Identifier(_)
         | Expression::NumericLiteral(_)
         | Expression::StringLiteral(_)
-        | Expression::BooleanLiteral(_)
         | Expression::NullLiteral(_)
         | Expression::BigIntLiteral(_)
         | Expression::ArrayExpression(_)
@@ -1456,6 +1469,13 @@ fn expr_prec(e: &Expression) -> u8 {
         | Expression::MemberExpression(_) => PREC_PRIMARY,
 
         Expression::UnaryExpression(_) => PREC_UNARY,
+        // `true`/`false` are emitted as `!0`/`!1` (see `emit_boolean`), which
+        // are UnaryExpressions — precedence `PREC_UNARY`, NOT primary. Tagging
+        // them here is what makes `emit_expression_inner` parenthesise them in
+        // member/call/new parents (`(!0).x`, `(!0)()`), exactly as it does for
+        // the `void 0` UndefinedLiteral below. Without this they would emit as
+        // `!0.x` (parsed `!(0.x)`) — a miscompile.
+        Expression::BooleanLiteral(_) => PREC_UNARY,
         // `void 0` is a UnaryExpression in disguise (CLOC12.16):
         // its precedence is unary, not primary, so that contexts
         // like `(void 0).x` and `(void 0)()` insert the necessary
@@ -2166,7 +2186,38 @@ mod tests {
         });
         let prog = program().with_body(vec![stmt(e)]);
         let out = emit_default(prog);
-        assert_eq!(out.code, "!true;");
+        // The `true` operand is itself minified to `!0` (see `emit_boolean`),
+        // so `!true` emits as `!!0` — still demonstrating that the prefix `!`
+        // abuts its operand with no space. `!!0 === !true === false`.
+        assert_eq!(out.code, "!!0;");
+    }
+
+    #[test]
+    fn boolean_literals_minify_to_bang_zero_and_bang_one() {
+        // Closure-style: `true` → `!0`, `false` → `!1` (value-exact, shorter).
+        let t = emit_default(program().with_body(vec![stmt(boolean(true))]));
+        assert_eq!(t.code, "!0;");
+        let f = emit_default(program().with_body(vec![stmt(boolean(false))]));
+        assert_eq!(f.code, "!1;");
+    }
+
+    #[test]
+    fn boolean_as_member_object_is_parenthesized() {
+        // `true.x` must NOT emit as `!0.x` (which reparses as `!(0.x)`); the
+        // boolean is precedence `PREC_UNARY`, so the member-object emit wraps
+        // it: `(!0).x`. This is the soundness guard for the `!0`/`!1` rewrite.
+        let e = member(boolean(true), "x", false);
+        let out = emit_default(program().with_body(vec![stmt(e)]));
+        assert_eq!(out.code, "(!0).x;");
+    }
+
+    #[test]
+    fn boolean_in_binary_needs_no_parens() {
+        // Unary precedence (14) is higher than equality (`==`), so `true==1`
+        // emits as `!0==1` with no parens — `!0==1` parses as `(!0)==1`.
+        let e = binary(BinaryOperator::Eq, boolean(true), ident("a"));
+        let out = emit_default(program().with_body(vec![stmt(e)]));
+        assert_eq!(out.code, "!0==a;");
     }
 
     #[test]
