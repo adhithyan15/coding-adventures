@@ -6086,6 +6086,71 @@ mod tests {
     }
 
     #[test]
+    fn build_queue_uses_imported_anki_review_schedules() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {"id":"native-new","deckId":"deck","front":"native","back":"n","createdAt":1700000000000},
+                {"id":"review-due","deckId":"deck","front":"due","back":"d","createdAt":1700000000001},
+                {"id":"review-future","deckId":"deck","front":"future","back":"f","createdAt":1700000000002}
+            ],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "deckOptions": [{
+                "deckId": "deck",
+                "options": {
+                    "newCardsPerDay": 1,
+                    "reviewsPerDay": 2,
+                    "learningStepsMinutes": [1, 10],
+                    "relearningStepsMinutes": [10],
+                    "graduatingIntervalDays": 1,
+                    "easyIntervalDays": 4,
+                    "lapseIntervalMultiplier": 0.0
+                }
+            }],
+            "externalSources": [
+                {
+                    "target":"collection",
+                    "targetId":"collection",
+                    "source":"anki-v11",
+                    "originalId":"1",
+                    "data":{"createdAtDays":"19475"}
+                },
+                {
+                    "target":"card",
+                    "targetId":"review-due",
+                    "source":"anki-v11",
+                    "originalId":"review-due",
+                    "data":{"kind":"2","queue":"2","due":"200","interval":"7","factor":"2500"}
+                },
+                {
+                    "target":"card",
+                    "targetId":"review-future",
+                    "source":"anki-v11",
+                    "originalId":"review-future",
+                    "data":{"kind":"2","queue":"2","due":"203","interval":"30","factor":"2500"}
+                }
+            ],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+        let value: Value = serde_json::from_str(&session.build_queue("deck", NOW)).unwrap();
+        let ids: Vec<_> = value["queue"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|card| card["id"].as_str().unwrap())
+            .collect();
+
+        assert_eq!(ids, vec!["review-due", "native-new"]);
+    }
+
+    #[test]
     fn parent_deck_queue_and_stats_include_child_decks() {
         let mut session = EngramSession::new();
         let snapshot = r#"{

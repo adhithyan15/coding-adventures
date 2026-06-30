@@ -4,9 +4,19 @@ use crate::model::{
     AppState, Card, CardProgress, CardState, DailyStudyLimitUsage, Deck, DeckOptions, DeckStats,
     ExternalSourceRecord, ExternalSourceTarget, Note,
 };
+use crate::sm2::{INITIAL_EASE_FACTOR, ONE_DAY_MS};
 
 pub const SESSION_SIZE: usize = 20;
 pub const MAX_NEW_PER_SESSION: usize = 7;
+const ANKI_TYPE_NEW: i64 = 0;
+const ANKI_QUEUE_SCHED_BURIED: i64 = -3;
+const ANKI_QUEUE_USER_BURIED: i64 = -2;
+const ANKI_QUEUE_SUSPENDED: i64 = -1;
+const ANKI_QUEUE_NEW: i64 = 0;
+const ANKI_QUEUE_LEARN: i64 = 1;
+const ANKI_QUEUE_REVIEW: i64 = 2;
+const ANKI_QUEUE_DAY_LEARN: i64 = 3;
+const ANKI_QUEUE_PREVIEW_REPEAT: i64 = 4;
 
 pub fn build_session_queue(
     all_cards: &[Card],
@@ -23,6 +33,7 @@ pub fn build_session_queue(
         SESSION_SIZE,
         MAX_NEW_PER_SESSION,
         SESSION_SIZE,
+        None,
         None,
     )
 }
@@ -48,6 +59,7 @@ pub fn build_session_queue_with_options(
         max_new,
         max_reviews,
         None,
+        None,
     )
 }
 
@@ -62,6 +74,7 @@ pub fn build_session_queue_for_state_with_options(
     let session_size = (max_new + max_reviews).max(1);
     let deck_ids = deck_ids_in_scope(state, deck_id);
     let new_card_positions = imported_new_card_positions(state);
+    let imported_schedules = imported_anki_card_schedules(state);
 
     build_session_queue_with_limits(
         &state.cards,
@@ -72,6 +85,7 @@ pub fn build_session_queue_for_state_with_options(
         max_new,
         max_reviews,
         Some(&new_card_positions),
+        Some(&imported_schedules),
     )
 }
 
@@ -179,6 +193,7 @@ pub fn build_session_queue_with_daily_limits(
     let session_size = (usage.remaining_new_cards + usage.remaining_reviews).max(1);
     let deck_ids = deck_ids_in_scope(state, deck_id);
     let new_card_positions = imported_new_card_positions(state);
+    let imported_schedules = imported_anki_card_schedules(state);
 
     build_session_queue_with_limits(
         &state.cards,
@@ -189,6 +204,7 @@ pub fn build_session_queue_with_daily_limits(
         usage.remaining_new_cards,
         usage.remaining_reviews,
         Some(&new_card_positions),
+        Some(&imported_schedules),
     )
 }
 
@@ -201,6 +217,7 @@ fn build_session_queue_with_limits(
     max_new: usize,
     max_reviews: usize,
     new_card_positions: Option<&HashMap<&str, i64>>,
+    imported_schedules: Option<&HashMap<&str, ImportedAnkiSchedule>>,
 ) -> Vec<Card> {
     let progress_by_card: HashMap<&str, &CardProgress> = all_progress
         .iter()
@@ -211,18 +228,17 @@ fn build_session_queue_with_limits(
         .iter()
         .filter(|card| deck_ids.contains(card.deck_id.as_str()))
         .filter(|card| {
-            progress_by_card
-                .get(card.id.as_str())
-                .is_some_and(|progress| is_reviewable(progress, now))
+            let progress = progress_by_card.get(card.id.as_str()).copied();
+            let imported = imported_schedules.and_then(|schedules| schedules.get(card.id.as_str()));
+            effective_is_reviewable(progress, imported, now)
         })
         .cloned()
         .collect();
 
     due_cards.sort_by_key(|card| {
-        progress_by_card
-            .get(card.id.as_str())
-            .map(|progress| progress.next_due_at)
-            .unwrap_or(u64::MAX)
+        let progress = progress_by_card.get(card.id.as_str()).copied();
+        let imported = imported_schedules.and_then(|schedules| schedules.get(card.id.as_str()));
+        effective_next_due_at(progress, imported).unwrap_or(u64::MAX)
     });
 
     let mut new_cards: Vec<(usize, Card)> = all_cards
@@ -230,9 +246,9 @@ fn build_session_queue_with_limits(
         .enumerate()
         .filter(|(_, card)| deck_ids.contains(card.deck_id.as_str()))
         .filter(|(_, card)| {
-            progress_by_card
-                .get(card.id.as_str())
-                .map_or(true, |progress| is_new_progress_overlay(progress))
+            let progress = progress_by_card.get(card.id.as_str()).copied();
+            let imported = imported_schedules.and_then(|schedules| schedules.get(card.id.as_str()));
+            effective_is_new(progress, imported)
         })
         .map(|(index, card)| (index, card.clone()))
         .collect();
@@ -262,6 +278,40 @@ fn build_session_queue_with_limits(
         .collect()
 }
 
+fn effective_is_reviewable(
+    progress: Option<&CardProgress>,
+    imported: Option<&ImportedAnkiSchedule>,
+    now: u64,
+) -> bool {
+    if progress.is_some_and(|progress| !is_new_progress_overlay(progress)) {
+        return progress.is_some_and(|progress| is_reviewable(progress, now));
+    }
+
+    imported.is_some_and(|schedule| schedule.is_reviewable(now))
+}
+
+fn effective_next_due_at(
+    progress: Option<&CardProgress>,
+    imported: Option<&ImportedAnkiSchedule>,
+) -> Option<u64> {
+    if let Some(progress) = progress.filter(|progress| !is_new_progress_overlay(progress)) {
+        return Some(progress.next_due_at);
+    }
+
+    imported.and_then(|schedule| schedule.due_at)
+}
+
+fn effective_is_new(
+    progress: Option<&CardProgress>,
+    imported: Option<&ImportedAnkiSchedule>,
+) -> bool {
+    if progress.is_some_and(|progress| !is_new_progress_overlay(progress)) {
+        return false;
+    }
+
+    imported.map_or(true, ImportedAnkiSchedule::is_new)
+}
+
 fn imported_new_card_positions(state: &AppState) -> HashMap<&str, i64> {
     state
         .external_sources
@@ -285,6 +335,115 @@ fn imported_new_card_position(source: &ExternalSourceRecord) -> Option<i64> {
 
 fn source_data_i64(source: &ExternalSourceRecord, key: &str) -> Option<i64> {
     source.data.get(key)?.parse().ok()
+}
+
+fn collection_created_at_days(state: &AppState) -> Option<i64> {
+    state
+        .external_sources
+        .iter()
+        .find(|source| source.target == ExternalSourceTarget::Collection)
+        .and_then(|source| source_data_i64(source, "createdAtDays"))
+}
+
+fn imported_anki_card_schedules(state: &AppState) -> HashMap<&str, ImportedAnkiSchedule> {
+    let collection_created_at_days = collection_created_at_days(state);
+    state
+        .external_sources
+        .iter()
+        .filter(|source| source.target == ExternalSourceTarget::Card)
+        .filter(|source| source.source == "anki-v11")
+        .filter_map(|source| {
+            ImportedAnkiSchedule::from_source(source, collection_created_at_days)
+                .map(|schedule| (source.target_id.as_str(), schedule))
+        })
+        .collect()
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+struct ImportedAnkiSchedule {
+    kind: i64,
+    queue: i64,
+    interval: u32,
+    ease_factor: f64,
+    due_at: Option<u64>,
+}
+
+impl ImportedAnkiSchedule {
+    fn from_source(
+        source: &ExternalSourceRecord,
+        collection_created_at_days: Option<i64>,
+    ) -> Option<Self> {
+        let kind = source_data_i64(source, "kind")?;
+        let queue = source_data_i64(source, "queue")?;
+        let due = source_data_i64(source, "originalDue")
+            .filter(|due| *due != 0)
+            .or_else(|| source_data_i64(source, "due"));
+        let due_at = imported_anki_due_at(queue, due, collection_created_at_days);
+        let interval = source_data_i64(source, "interval")
+            .and_then(|interval| u32::try_from(interval.max(0)).ok())
+            .unwrap_or_default();
+        let ease_factor = source_data_i64(source, "factor")
+            .filter(|factor| *factor > 0)
+            .map(|factor| factor as f64 / 1000.0)
+            .unwrap_or(INITIAL_EASE_FACTOR);
+
+        Some(Self {
+            kind,
+            queue,
+            interval,
+            ease_factor,
+            due_at,
+        })
+    }
+
+    fn is_new(&self) -> bool {
+        self.kind == ANKI_TYPE_NEW && self.queue == ANKI_QUEUE_NEW
+    }
+
+    fn is_suspended(&self) -> bool {
+        self.queue == ANKI_QUEUE_SUSPENDED
+    }
+
+    fn is_currently_buried(&self, now: u64) -> bool {
+        matches!(self.queue, ANKI_QUEUE_USER_BURIED | ANKI_QUEUE_SCHED_BURIED)
+            && !self.due_at.is_some_and(|due_at| due_at <= now)
+    }
+
+    fn is_reviewable(&self, now: u64) -> bool {
+        if self.is_new() || self.is_suspended() || self.is_currently_buried(now) {
+            return false;
+        }
+
+        matches!(
+            self.queue,
+            ANKI_QUEUE_LEARN
+                | ANKI_QUEUE_REVIEW
+                | ANKI_QUEUE_DAY_LEARN
+                | ANKI_QUEUE_PREVIEW_REPEAT
+                | ANKI_QUEUE_USER_BURIED
+                | ANKI_QUEUE_SCHED_BURIED
+        ) && self.due_at.is_some_and(|due_at| due_at <= now)
+    }
+}
+
+fn imported_anki_due_at(
+    queue: i64,
+    due: Option<i64>,
+    collection_created_at_days: Option<i64>,
+) -> Option<u64> {
+    let due = due?;
+    match queue {
+        ANKI_QUEUE_LEARN | ANKI_QUEUE_PREVIEW_REPEAT => u64::try_from(due).ok()?.checked_mul(1000),
+        ANKI_QUEUE_REVIEW
+        | ANKI_QUEUE_DAY_LEARN
+        | ANKI_QUEUE_USER_BURIED
+        | ANKI_QUEUE_SCHED_BURIED
+        | ANKI_QUEUE_SUSPENDED => {
+            let day = collection_created_at_days?.saturating_add(due);
+            u64::try_from(day).ok()?.checked_mul(ONE_DAY_MS)
+        }
+        _ => None,
+    }
 }
 
 pub(crate) fn deck_ids_in_scope<'a>(state: &'a AppState, deck_id: &'a str) -> HashSet<&'a str> {
@@ -367,12 +526,19 @@ pub fn get_deck_stats(
     now: u64,
 ) -> DeckStats {
     let deck_ids = HashSet::from([deck_id]);
-    get_deck_stats_for_deck_ids(all_cards, all_progress, &deck_ids, now)
+    get_deck_stats_for_deck_ids(all_cards, all_progress, &deck_ids, now, None)
 }
 
 pub fn get_deck_stats_for_state(state: &AppState, deck_id: &str, now: u64) -> DeckStats {
     let deck_ids = deck_ids_in_scope(state, deck_id);
-    get_deck_stats_for_deck_ids(&state.cards, &state.card_progress, &deck_ids, now)
+    let imported_schedules = imported_anki_card_schedules(state);
+    get_deck_stats_for_deck_ids(
+        &state.cards,
+        &state.card_progress,
+        &deck_ids,
+        now,
+        Some(&imported_schedules),
+    )
 }
 
 fn get_deck_stats_for_deck_ids(
@@ -380,6 +546,7 @@ fn get_deck_stats_for_deck_ids(
     all_progress: &[CardProgress],
     deck_ids: &HashSet<&str>,
     now: u64,
+    imported_schedules: Option<&HashMap<&str, ImportedAnkiSchedule>>,
 ) -> DeckStats {
     let progress_by_card: HashMap<&str, &CardProgress> = all_progress
         .iter()
@@ -397,17 +564,35 @@ fn get_deck_stats_for_deck_ids(
         average_ease_factor: 0.0,
     };
     let mut ease_sum = 0.0;
-    let mut ease_count = 0;
+    let mut ease_count = 0_u32;
 
     for card in all_cards
         .iter()
         .filter(|card| deck_ids.contains(card.deck_id.as_str()))
     {
         stats.total += 1;
-        match progress_by_card.get(card.id.as_str()) {
+        let progress = progress_by_card.get(card.id.as_str()).copied();
+        let imported = imported_schedules.and_then(|schedules| schedules.get(card.id.as_str()));
+        match progress {
             Some(progress) => {
-                if is_new_progress_overlay(progress) {
+                if is_new_progress_overlay(progress)
+                    && imported.is_none_or(|schedule| schedule.is_new())
+                {
                     stats.new_count += 1;
+                    continue;
+                }
+                if is_new_progress_overlay(progress) {
+                    let Some(imported) = imported else {
+                        stats.new_count += 1;
+                        continue;
+                    };
+                    record_imported_schedule_stats(
+                        imported,
+                        now,
+                        &mut stats,
+                        &mut ease_sum,
+                        &mut ease_count,
+                    );
                     continue;
                 }
                 if is_suspended(progress) {
@@ -428,6 +613,16 @@ fn get_deck_stats_for_deck_ids(
                 ease_count += 1;
             }
             None => {
+                if let Some(imported) = imported {
+                    record_imported_schedule_stats(
+                        imported,
+                        now,
+                        &mut stats,
+                        &mut ease_sum,
+                        &mut ease_count,
+                    );
+                    continue;
+                }
                 stats.new_count += 1;
             }
         }
@@ -438,6 +633,36 @@ fn get_deck_stats_for_deck_ids(
     }
 
     stats
+}
+
+fn record_imported_schedule_stats(
+    schedule: &ImportedAnkiSchedule,
+    now: u64,
+    stats: &mut DeckStats,
+    ease_sum: &mut f64,
+    ease_count: &mut u32,
+) {
+    if schedule.is_new() {
+        stats.new_count += 1;
+        return;
+    }
+
+    if schedule.is_suspended() {
+        stats.suspended_count += 1;
+    }
+    if schedule.is_currently_buried(now) {
+        stats.buried_count += 1;
+    }
+    if schedule.interval > 21 {
+        stats.mastered_count += 1;
+    } else {
+        stats.learning_count += 1;
+    }
+    if schedule.is_reviewable(now) {
+        stats.due_count += 1;
+    }
+    *ease_sum += schedule.ease_factor;
+    *ease_count += 1;
 }
 
 #[cfg(test)]
@@ -554,6 +779,31 @@ mod tests {
                 ("queue".to_string(), queue.to_string()),
                 ("due".to_string(), due.to_string()),
             ]),
+        }
+    }
+
+    fn anki_card_source_with_metrics(
+        card_id: &str,
+        kind: i64,
+        queue: i64,
+        due: i64,
+        interval: i64,
+    ) -> ExternalSourceRecord {
+        let mut source = anki_card_source(card_id, kind, queue, due);
+        source
+            .data
+            .insert("interval".to_string(), interval.to_string());
+        source.data.insert("factor".to_string(), "2500".to_string());
+        source
+    }
+
+    fn anki_collection_source(created_at_days: i64) -> ExternalSourceRecord {
+        ExternalSourceRecord {
+            target: ExternalSourceTarget::Collection,
+            target_id: "collection".to_string(),
+            source: "anki-v11".to_string(),
+            original_id: Some("1".to_string()),
+            data: BTreeMap::from([("createdAtDays".to_string(), created_at_days.to_string())]),
         }
     }
 
@@ -757,6 +1007,52 @@ mod tests {
         let ids: Vec<_> = queue.iter().map(|card| card.id.as_str()).collect();
 
         assert_eq!(ids, vec!["due", "anki-early", "anki-late", "native-new"]);
+    }
+
+    #[test]
+    fn state_queue_and_stats_use_imported_anki_schedules_without_native_progress() {
+        let today = 200_i64;
+        let created_at_days = (NOW / ONE_DAY_MS) as i64 - today;
+        let now_secs = (NOW / 1000) as i64;
+        let state = AppState {
+            decks: vec![deck("deck", "Tamil")],
+            cards: vec![
+                card("native-new", "deck", 1),
+                card("review-due", "deck", 2),
+                card("review-future", "deck", 3),
+                card("learning-due", "deck", 4),
+                card("suspended", "deck", 5),
+                card("buried", "deck", 6),
+            ],
+            external_sources: vec![
+                anki_collection_source(created_at_days),
+                anki_card_source_with_metrics("review-due", 2, 2, today, 7),
+                anki_card_source_with_metrics("review-future", 2, 2, today + 3, 30),
+                anki_card_source_with_metrics("learning-due", 1, 1, now_secs - 60, 0),
+                anki_card_source_with_metrics("suspended", 2, -1, today, 0),
+                anki_card_source_with_metrics("buried", 2, -2, today + 1, 0),
+            ],
+            ..AppState::default()
+        };
+        let options = DeckOptions {
+            new_cards_per_day: 1,
+            reviews_per_day: 4,
+            ..DeckOptions::default()
+        };
+
+        let queue = build_session_queue_for_state_with_options(&state, "deck", NOW, &options);
+        let ids: Vec<_> = queue.iter().map(|card| card.id.as_str()).collect();
+        assert_eq!(ids, vec!["review-due", "learning-due", "native-new"]);
+
+        let stats = get_deck_stats_for_state(&state, "deck", NOW);
+        assert_eq!(stats.total, 6);
+        assert_eq!(stats.new_count, 1);
+        assert_eq!(stats.learning_count, 4);
+        assert_eq!(stats.mastered_count, 1);
+        assert_eq!(stats.due_count, 2);
+        assert_eq!(stats.suspended_count, 1);
+        assert_eq!(stats.buried_count, 1);
+        assert_eq!(stats.average_ease_factor, 2.5);
     }
 
     #[test]
