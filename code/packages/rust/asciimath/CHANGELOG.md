@@ -2,6 +2,45 @@
 
 All notable changes to the AsciiMath pluggable frontend.
 
+## [0.4.0] — 2026-06-29
+
+### Added — ASM01 PR-3a: the symbol table (greek, blackboard sets, arrows, set/logic ops)
+
+The first slice of PR-3. `constant_of` grows from a 22-entry Greek-plus-infinity table into a
+proper **AsciiMath symbol table** — the fixed dictionary of multi-letter words that name *one*
+mathematical glyph rather than a product of single-letter variables (without it, `Sigma` would
+parse as `S·i·g·m·a` under the implicit-product rule). Every entry lowers to a
+`MathExpr::Symbol(canonical_name)`. Added:
+
+- **Greek** — completed the lowercase alphabet (`omicron`, `upsilon`) and the variant glyphs
+  (`varepsilon`, `vartheta`, `varpi`, `varrho`, `varsigma`, `varphi`); added the eleven
+  visually-distinct **uppercase** letters AsciiMath capitalizes (`Gamma Delta Theta Lambda Xi Pi
+  Sigma Upsilon Phi Psi Omega`).
+- **Blackboard number sets** — `NN ZZ QQ RR CC` → `naturals integers rationals reals complexes`.
+- **Arrows** (word forms) — `rarr`/`rightarrow`, `larr`/`leftarrow`, `harr`/`leftrightarrow`,
+  `uarr`/`uparrow`, `darr`/`downarrow`, plus `implies`, `iff`, `mapsto`.
+- **Set / logic** — `notin`, `subset`, `subseteq`, `supset`, `supseteq`, `cup`→`union`,
+  `cap`→`intersection`, `emptyset`, `forall`, `exists`, `aleph`.
+- **Misc. operators / decoration** — `partial`, `nabla`/`grad`, `propto`/`prop`, `perp`, `angle`,
+  `deg`→`degree`, and the dots `ldots cdots vdots ddots`.
+
+Naming convention is documented inline: lowercase Greek verbatim, uppercase Greek capitalized,
+number sets as words, arrows/set-ops as familiar TeX-ish long names — so two notations for the same
+glyph can later agree on a single `Symbol` string. **Purely additive**: symbol emission is not a
+declared `Capabilities` flag, so no consumer or conformance change; latex/adj-lang are unaffected.
+
+**Deferred to PR-3b** (documented in `constant_of` and the ASM01 spec): the bare English keyword
+spellings `in`/`and`/`or`/`not` (they need care — `in` also appears inside big-operator bounds like
+`sum_(i in S)`), AsciiMath's two-letter short forms (`sub`, `sup`, `uu`, `nn`, `AA`, `EE`),
+punctuation arrows (`->`, `=>`, tokenizer concern), longest-match identifier scan (`sinx` → `sin·x`),
+`stackrel`/`overset`/`underset`, and the `text(…)` keyword form.
+
+- Tests: `symbol_table_covers_greek_sets_arrows_and_operators` (greek lower/variant/upper, sets,
+  arrow short+long agreement, set/logic ops, alias folding, composition in a larger expression, and
+  that a deferred bare keyword like `in` still parses as a product without panic). Conformance corpus
+  gains `alpha + Omega`, `x in RR`, `a cup b`. 29 unit tests + doc-test pass; clippy `-D warnings`
+  clean. Spec ASM01 §PR-3 split into PR-3a (this) + PR-3b.
+
 ## [0.3.0] — 2026-06-29
 
 ### Added — accents (PR-2b), now that `math-frontend` 0.4.0 has a neutral `Accent` node

@@ -90,9 +90,19 @@ shapes for representative inputs.
   from a function `Call`; body = next atom, like `sqrt`; synonyms normalise to one canonical name).
   Enabled by `math-frontend` 0.4.0's neutral `Accent` node; `capabilities()` adds `accents` (enforced
   by the conformance harness). Still deferred: angle/invisible brackets `(: … :)`, `{: … :}`.
-- **PR-3:** the full AsciiMath symbol table (greek, arrows, set/logic ops), longest-match
-  tokenization (so `sinx` splits as `sin`·`x`), `stackrel`, `overset`/`underset`, and the
-  `text(…)` keyword form alongside the `"…"` literal.
+- **PR-3a (shipped, v0.4.0):** the AsciiMath **symbol table** — completed lowercase Greek + variant
+  glyphs, the visually-distinct uppercase Greek (`Gamma`…`Omega`), the blackboard number sets
+  (`NN ZZ QQ RR CC` → `naturals`…`complexes`), arrow word-forms (`rarr`/`rightarrow`, `larr`, `harr`,
+  `uarr`, `darr`, `implies`, `iff`, `mapsto`), set/logic operators (`notin`, `subset`, `subseteq`,
+  `supset`, `supseteq`, `cup`→`union`, `cap`→`intersection`, `emptyset`, `forall`, `exists`, `aleph`),
+  and misc. operators/decoration (`partial`, `nabla`/`grad`, `propto`, `perp`, `angle`, `deg`, the
+  dots). Each lowers to `MathExpr::Symbol(canonical)`; symbol emission is not a `Capabilities` flag,
+  so the table is purely additive (no consumer/conformance change).
+- **PR-3b:** the remainder — the bare English keyword spellings `in`/`and`/`or`/`not` (care needed:
+  `in` also appears inside big-operator bounds like `sum_(i in S)`), AsciiMath's two-letter short
+  forms (`sub`, `sup`, `uu`, `nn`, `AA`, `EE`), punctuation arrows (`->`, `=>`, a tokenizer concern),
+  **longest-match tokenization** (so `sinx` splits as `sin`·`x`), `stackrel`, `overset`/`underset`,
+  and the `text(…)` keyword form alongside the `"…"` literal.
 
 ## 6. Non-goals
 Evaluation, simplification, rendering — none are a frontend's job (PFE01 §7). Lowering

@@ -66,6 +66,26 @@ Each accent keyword takes the next single atom as its body (same convention as `
 `ul`/`underline`), so two spellings lower equal. Enabled by `math-frontend` 0.4.0's `MathExpr::Accent`
 node; `capabilities()` declares `accents` and the conformance harness enforces it.
 
+## PR-3a symbol table (greek, sets, arrows, set/logic)
+
+The **symbol table** is the fixed dictionary of multi-letter words that name *one* glyph rather than
+a product of single letters (without it `Sigma` would parse as `S·i·g·m·a`). Every entry lowers to
+`MathExpr::Symbol(canonical)`.
+
+| AsciiMath | → neutral `MathExpr` |
+|-----------|----------------------|
+| `alpha` … `omega`, `omicron`, `varepsilon`/`vartheta`/`varphi`/… | `Symbol` (lowercase Greek + variants) |
+| `Gamma Delta Theta Lambda Xi Pi Sigma Upsilon Phi Psi Omega` | `Symbol` (uppercase Greek) |
+| `NN ZZ QQ RR CC` | `Symbol("naturals" / "integers" / "rationals" / "reals" / "complexes")` |
+| `rarr`/`rightarrow`, `larr`, `harr`, `uarr`, `darr`, `implies`, `iff`, `mapsto` | `Symbol` (arrows) |
+| `notin subset subseteq supset supseteq cup cap emptyset forall exists aleph` | `Symbol` (`cup`→`union`, `cap`→`intersection`) |
+| `partial`, `nabla`/`grad`, `propto`, `perp`, `angle`, `deg`, `ldots`/`cdots`/`vdots`/`ddots`, `oo`/`infty` | `Symbol` (operators / decoration / infinity) |
+
+Symbol emission is *not* a declared capability, so this table is **purely additive** — no consumer or
+conformance change. **Deferred to PR-3b:** the bare keyword spellings `in`/`and`/`or`/`not`, the
+two-letter short forms (`sub`, `sup`, `uu`, `nn`, `AA`, `EE`), punctuation arrows (`->`, `=>`),
+longest-match identifier scan (`sinx` → `sin·x`), `stackrel`/`overset`/`underset`, and `text(…)`.
+
 It is **total and panic-free**: every input returns `Ok(MathExpr)` or a spanned
 `FrontendError`. Recursion is depth-guarded (matrix nesting included); left-associative chains are
 built with loops, so neither deep nesting nor long chains overflow the parser.

@@ -473,12 +473,27 @@ fn func_of(word: &str) -> Option<Func> {
 }
 
 /// Map an identifier to a canonical constant/symbol name, or `None` for an ordinary variable.
-/// Greek names are kept verbatim; `oo`/`infty` canonicalize to `infinity`.
+///
+/// This is the AsciiMath **symbol table**: a fixed dictionary of multi-letter words that name a
+/// single mathematical glyph rather than a product of single-letter variables. (Without it, `pi`
+/// would parse as `p · i` under the implicit-product rule — see [`parse_ident_atom`].) Every entry
+/// lowers to a [`MathExpr::Symbol`] carrying the canonical name; symbol emission is *not* a
+/// declared [`Capabilities`] flag, so growing this table is purely additive — no consumer or
+/// conformance change.
+///
+/// Naming convention: lowercase Greek is kept verbatim (`alpha`); uppercase Greek is capitalized
+/// (`Sigma`); the blackboard number sets get word names (`reals`); arrows and set/logic operators
+/// use their familiar TeX-ish long names (`rightarrow`, `subseteq`, `forall`) so that two notations
+/// for the same glyph can later agree on one `Symbol` string. `oo`/`infty` canonicalize to
+/// `infinity`.
+///
+/// Deferred to PR-3b (documented in the ASM01 spec): the bare English keyword spellings `in`, `and`,
+/// `or`, `not` (they need care — e.g. `in` also appears inside big-operator bounds such as
+/// `sum_(i in S)`), AsciiMath's two-letter short forms (`sub`, `sup`, `uu`, `nn`, `AA`, `EE`), and
+/// punctuation arrows (`->`, `=>`) which are a tokenizer concern, not an identifier word.
 fn constant_of(word: &str) -> Option<&'static str> {
     Some(match word {
-        "pi" => "pi",
-        "tau" => "tau",
-        "theta" => "theta",
+        // ── Greek, lowercase ──────────────────────────────────────────────────────────────────
         "alpha" => "alpha",
         "beta" => "beta",
         "gamma" => "gamma",
@@ -486,18 +501,81 @@ fn constant_of(word: &str) -> Option<&'static str> {
         "epsilon" => "epsilon",
         "zeta" => "zeta",
         "eta" => "eta",
+        "theta" => "theta",
         "iota" => "iota",
         "kappa" => "kappa",
         "lambda" => "lambda",
         "mu" => "mu",
         "nu" => "nu",
         "xi" => "xi",
+        "omicron" => "omicron",
+        "pi" => "pi",
         "rho" => "rho",
         "sigma" => "sigma",
+        "tau" => "tau",
+        "upsilon" => "upsilon",
         "phi" => "phi",
         "chi" => "chi",
         "psi" => "psi",
         "omega" => "omega",
+        // Variant glyphs are distinct symbols, kept under their `var…` names.
+        "varepsilon" => "varepsilon",
+        "vartheta" => "vartheta",
+        "varpi" => "varpi",
+        "varrho" => "varrho",
+        "varsigma" => "varsigma",
+        "varphi" => "varphi",
+        // ── Greek, uppercase (only the visually-distinct letters AsciiMath spells capitalized) ──
+        "Gamma" => "Gamma",
+        "Delta" => "Delta",
+        "Theta" => "Theta",
+        "Lambda" => "Lambda",
+        "Xi" => "Xi",
+        "Pi" => "Pi",
+        "Sigma" => "Sigma",
+        "Upsilon" => "Upsilon",
+        "Phi" => "Phi",
+        "Psi" => "Psi",
+        "Omega" => "Omega",
+        // ── Blackboard number sets ────────────────────────────────────────────────────────────
+        "NN" => "naturals",
+        "ZZ" => "integers",
+        "QQ" => "rationals",
+        "RR" => "reals",
+        "CC" => "complexes",
+        // ── Arrows (word forms; punctuation arrows are deferred to the tokenizer) ──────────────
+        "rarr" | "rightarrow" => "rightarrow",
+        "larr" | "leftarrow" => "leftarrow",
+        "harr" | "leftrightarrow" => "leftrightarrow",
+        "uarr" | "uparrow" => "uparrow",
+        "darr" | "downarrow" => "downarrow",
+        "implies" => "implies",
+        "iff" => "iff",
+        "mapsto" => "mapsto",
+        // ── Set / logic operators (long names; bare keywords deferred to PR-3b) ────────────────
+        "notin" => "notin",
+        "subset" => "subset",
+        "subseteq" => "subseteq",
+        "supset" => "supset",
+        "supseteq" => "supseteq",
+        "cup" => "union",
+        "cap" => "intersection",
+        "emptyset" => "emptyset",
+        "forall" => "forall",
+        "exists" => "exists",
+        "aleph" => "aleph",
+        // ── Misc. operators / relations / decoration ──────────────────────────────────────────
+        "partial" => "partial",
+        "nabla" | "grad" => "nabla",
+        "propto" | "prop" => "propto",
+        "perp" => "perp",
+        "angle" => "angle",
+        "deg" => "degree",
+        "ldots" => "ldots",
+        "cdots" => "cdots",
+        "vdots" => "vdots",
+        "ddots" => "ddots",
+        // ── Infinity ──────────────────────────────────────────────────────────────────────────
         "oo" | "infty" => "infinity",
         _ => return None,
     })
