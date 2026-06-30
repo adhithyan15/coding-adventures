@@ -2431,6 +2431,62 @@ C1 out 0 1p
 }
 
 #[test]
+fn berkeley_app_facade_exports_host_surface_wire_json_after_execution() {
+    let app = parse_berkeley_app_deck(
+        r#"
+* transient host surface
+V1 in 0 PULSE(0 1 0 1n 1n 1n 4n)
+R1 in out 1k
+C1 out 0 1p
+.tran 1n 3n
+.print tran V(out)
+.end
+"#,
+    );
+
+    let requested_state = BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(3),
+        active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+    };
+    let wire = app.run_host_surface_wire(requested_state.clone()).unwrap();
+
+    assert_eq!(wire.schema_version, 1);
+    assert!(wire.parsed);
+    assert!(wire.execution_available);
+    assert_eq!(wire.requested_selected_syntax_card_index, Some(3));
+    assert_eq!(
+        wire.requested_active_command_id.as_deref(),
+        Some("analysis.3.inspect-waveform")
+    );
+    assert_eq!(wire.resolved_selected_syntax_card_index, Some(3));
+    assert_eq!(
+        wire.resolved_active_command_id.as_deref(),
+        Some("analysis.3.inspect-waveform")
+    );
+    assert!(!wire.selection_stale);
+    assert!(!wire.command_stale);
+    assert_eq!(wire.panel_count, 5);
+    assert_eq!(wire.active_panel_id.as_deref(), Some("waveform"));
+    assert_eq!(
+        wire.panels
+            .iter()
+            .map(|panel| panel.kind.as_str())
+            .collect::<Vec<_>>(),
+        vec!["source", "diagnostics", "analysis", "table", "waveform"]
+    );
+
+    let payload: serde_json::Value =
+        serde_json::from_str(&app.run_host_surface_wire_json(requested_state).unwrap()).unwrap();
+    assert_eq!(payload["schemaVersion"], 1);
+    assert_eq!(payload["activePanelId"], "waveform");
+    assert_eq!(payload["panels"][4]["kind"], "waveform");
+    assert_eq!(payload["panels"][4]["target"], "analysis-waveform");
+    assert_eq!(payload["panels"][4]["enabled"], true);
+    assert_eq!(payload["panels"][4]["active"], true);
+    assert!(payload["diagnostics"].as_array().unwrap().is_empty());
+}
+
+#[test]
 fn berkeley_app_facade_host_surface_routes_blocked_decks_to_diagnostics() {
     let app = parse_berkeley_app_deck(
         r#"
@@ -2471,6 +2527,49 @@ R1 in out
     assert!(table
         .disabled_reason
         .as_deref()
+        .unwrap()
+        .contains("Berkeley SPICE app deck:"));
+}
+
+#[test]
+fn berkeley_app_facade_host_surface_wire_json_preserves_blocked_diagnostics() {
+    let app = parse_berkeley_app_deck(
+        r#"
+V1 in 0 DC 1
+R1 in out
+.op
+.end
+"#,
+    );
+
+    let requested_state = BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(2),
+        active_command_id: Some("analysis.2.run".to_string()),
+    };
+    let wire = app.host_surface_wire(requested_state.clone());
+
+    assert!(!wire.parsed);
+    assert!(!wire.execution_available);
+    assert_eq!(wire.active_panel_id.as_deref(), Some("diagnostics"));
+    assert_eq!(
+        wire.resolved_active_command_id.as_deref(),
+        Some("analysis.2.run")
+    );
+    assert_eq!(wire.diagnostics[0].severity, "error");
+    assert_eq!(wire.diagnostics[0].span.as_ref().unwrap().start_line, 3);
+    assert!(wire
+        .blocking_message
+        .as_deref()
+        .unwrap()
+        .contains("Berkeley SPICE app deck:"));
+
+    let payload: serde_json::Value =
+        serde_json::from_str(&app.host_surface_wire_json(requested_state)).unwrap();
+    assert_eq!(payload["activePanelId"], "diagnostics");
+    assert_eq!(payload["diagnostics"][0]["severity"], "error");
+    assert_eq!(payload["diagnostics"][0]["span"]["startLine"], 3);
+    assert!(payload["panels"][3]["disabledReason"]
+        .as_str()
         .unwrap()
         .contains("Berkeley SPICE app deck:"));
 }

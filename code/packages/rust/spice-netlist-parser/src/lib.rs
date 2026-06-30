@@ -19,12 +19,15 @@ pub use syntax::{
     BerkeleyAppAnalysisArtifact, BerkeleyAppAnalysisControl, BerkeleyAppDeck,
     BerkeleyAppEditorAction, BerkeleyAppEditorActionKind, BerkeleyAppEditorCommand,
     BerkeleyAppEditorCommandPlan, BerkeleyAppEditorControls, BerkeleyAppEditorStateSnapshot,
-    BerkeleyAppExecution, BerkeleyAppHostPanel, BerkeleyAppHostPanelKind, BerkeleyAppHostSurface,
-    BerkeleyAppPersistedEditorState, BerkeleyAppSessionAnalysis, BerkeleyAppSessionState,
-    BerkeleyAppWaveformPoint, BerkeleyAppWaveformSeries, BerkeleyCardKind,
-    BerkeleyDiagnosticSeverity, BerkeleyGrammarMetadata, BerkeleyLogicalCard, BerkeleySyntaxDeck,
-    BerkeleySyntaxDiagnostic, BerkeleySyntaxToken, SourceSpan, BERKELEY_SPICE_GRAMMAR_NAME,
-    BERKELEY_SPICE_GRAMMAR_VERSION, BERKELEY_SPICE_PARSER_GRAMMAR, BERKELEY_SPICE_TOKEN_GRAMMAR,
+    BerkeleyAppExecution, BerkeleyAppHostDiagnosticWire, BerkeleyAppHostPanel,
+    BerkeleyAppHostPanelKind, BerkeleyAppHostPanelWire, BerkeleyAppHostSpanWire,
+    BerkeleyAppHostSurface, BerkeleyAppHostSurfaceWire, BerkeleyAppPersistedEditorState,
+    BerkeleyAppSessionAnalysis, BerkeleyAppSessionState, BerkeleyAppWaveformPoint,
+    BerkeleyAppWaveformSeries, BerkeleyCardKind, BerkeleyDiagnosticSeverity,
+    BerkeleyGrammarMetadata, BerkeleyLogicalCard, BerkeleySyntaxDeck, BerkeleySyntaxDiagnostic,
+    BerkeleySyntaxToken, SourceSpan, BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION,
+    BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION, BERKELEY_SPICE_PARSER_GRAMMAR,
+    BERKELEY_SPICE_TOKEN_GRAMMAR,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq)]

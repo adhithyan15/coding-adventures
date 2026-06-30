@@ -69,6 +69,12 @@ let host = deck.run_host_surface(BerkeleyAppPersistedEditorState {
     active_command_id: Some("analysis.3.inspect-waveform".to_string()),
 })?;
 assert_eq!(host.active_panel.unwrap().id, "waveform");
+
+let host_wire_json = deck.run_host_surface_wire_json(BerkeleyAppPersistedEditorState {
+    selected_syntax_card_index: Some(3),
+    active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+})?;
+assert!(host_wire_json.contains(r#""activePanelId":"waveform""#));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -88,7 +94,10 @@ Persisted editor-state snapshots resolve saved selection and active-command IDs
 against the current deck, repairing stale UI state after source edits. Host
 surfaces turn those snapshots into stable source, diagnostics, analysis, table,
 and waveform panel descriptors with explicit targets, enabled states, active
-state, and disabled reasons for Mosaic shell integration. It is the
+state, and disabled reasons for Mosaic shell integration. Host-surface wire
+exports flatten the same contract into schema-versioned JSON with repaired
+selection metadata and lower-case panel / diagnostic kinds for WebAssembly and
+product-shell embedding. It is the
 Rust app/runtime entrypoint for Mosaic-backed UI work while the grammar-backed
 parser generator and Python/TypeScript parity surfaces continue to mature.
 

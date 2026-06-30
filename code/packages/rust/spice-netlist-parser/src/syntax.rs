@@ -13,6 +13,7 @@ pub const BERKELEY_SPICE_TOKEN_GRAMMAR: &str =
     include_str!("../../../../grammars/spice/berkeley.tokens");
 pub const BERKELEY_SPICE_PARSER_GRAMMAR: &str =
     include_str!("../../../../grammars/spice/berkeley.grammar");
+pub const BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION: u32 = 1;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct SourceSpan {
@@ -408,6 +409,60 @@ pub struct BerkeleyAppHostSurface {
     pub diagnostics: Vec<BerkeleySyntaxDiagnostic>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppHostSpanWire {
+    pub start_line: usize,
+    pub start_column: usize,
+    pub end_line: usize,
+    pub end_column: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppHostDiagnosticWire {
+    pub code: String,
+    pub severity: String,
+    pub message: String,
+    pub span: Option<BerkeleyAppHostSpanWire>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppHostPanelWire {
+    pub id: String,
+    pub kind: String,
+    pub title: String,
+    pub target: String,
+    pub enabled: bool,
+    pub active: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppHostSurfaceWire {
+    pub schema_version: u32,
+    pub canonical_source: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub parsed: bool,
+    pub execution_available: bool,
+    pub requested_selected_syntax_card_index: Option<usize>,
+    pub requested_active_command_id: Option<String>,
+    pub resolved_selected_syntax_card_index: Option<usize>,
+    pub resolved_active_command_id: Option<String>,
+    pub selection_stale: bool,
+    pub command_stale: bool,
+    pub panel_count: usize,
+    pub active_panel_id: Option<String>,
+    pub panels: Vec<BerkeleyAppHostPanelWire>,
+    pub blocking_message: Option<String>,
+    pub diagnostics: Vec<BerkeleyAppHostDiagnosticWire>,
+}
+
+impl BerkeleyAppHostSurfaceWire {
+    pub fn to_json(&self) -> String {
+        host_surface_wire_json_value(self).to_string()
+    }
+}
+
 impl BerkeleyAppDeck {
     pub fn has_errors(&self) -> bool {
         self.diagnostics
@@ -565,6 +620,36 @@ impl BerkeleyAppDeck {
         Ok(host_surface_from_editor_state(
             self.run_editor_state_snapshot(persisted_state)?,
         ))
+    }
+
+    pub fn host_surface_wire(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppHostSurfaceWire {
+        BerkeleyAppHostSurfaceWire::from(self.host_surface(persisted_state))
+    }
+
+    pub fn run_host_surface_wire(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppHostSurfaceWire, AnalysisExecutionError> {
+        Ok(BerkeleyAppHostSurfaceWire::from(
+            self.run_host_surface(persisted_state)?,
+        ))
+    }
+
+    pub fn host_surface_wire_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.host_surface_wire(persisted_state).to_json()
+    }
+
+    pub fn run_host_surface_wire_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self.run_host_surface_wire(persisted_state)?.to_json())
     }
 
     pub fn run_source_order(&self) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
@@ -989,6 +1074,161 @@ fn host_panel_disabled_reason(
         })
         .and_then(|command| command.disabled_reason.clone())
         .or_else(|| Some("selected analysis does not expose this panel".to_string()))
+}
+
+impl From<BerkeleyAppHostSurface> for BerkeleyAppHostSurfaceWire {
+    fn from(surface: BerkeleyAppHostSurface) -> Self {
+        let active_panel_id = surface.active_panel.as_ref().map(|panel| panel.id.clone());
+        let requested_state = surface.editor_state.requested_state.clone();
+        let resolved_state = surface.editor_state.resolved_state.clone();
+
+        Self {
+            schema_version: BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION,
+            canonical_source: surface.canonical_source,
+            source_fingerprint: surface.source_fingerprint,
+            title: surface.title,
+            parsed: surface.parsed,
+            execution_available: surface.execution_available,
+            requested_selected_syntax_card_index: requested_state.selected_syntax_card_index,
+            requested_active_command_id: requested_state.active_command_id,
+            resolved_selected_syntax_card_index: resolved_state.selected_syntax_card_index,
+            resolved_active_command_id: resolved_state.active_command_id,
+            selection_stale: surface.editor_state.selection_stale,
+            command_stale: surface.editor_state.command_stale,
+            panel_count: surface.panel_count,
+            active_panel_id,
+            panels: surface
+                .panels
+                .into_iter()
+                .map(BerkeleyAppHostPanelWire::from)
+                .collect(),
+            blocking_message: surface.blocking_message,
+            diagnostics: surface
+                .diagnostics
+                .into_iter()
+                .map(BerkeleyAppHostDiagnosticWire::from)
+                .collect(),
+        }
+    }
+}
+
+impl From<BerkeleyAppHostPanel> for BerkeleyAppHostPanelWire {
+    fn from(panel: BerkeleyAppHostPanel) -> Self {
+        Self {
+            id: panel.id,
+            kind: host_panel_kind_wire(panel.kind).to_string(),
+            title: panel.title,
+            target: panel.target,
+            enabled: panel.enabled,
+            active: panel.active,
+            disabled_reason: panel.disabled_reason,
+        }
+    }
+}
+
+impl From<BerkeleySyntaxDiagnostic> for BerkeleyAppHostDiagnosticWire {
+    fn from(diagnostic: BerkeleySyntaxDiagnostic) -> Self {
+        Self {
+            code: diagnostic.code,
+            severity: diagnostic_severity_wire(diagnostic.severity).to_string(),
+            message: diagnostic.message,
+            span: diagnostic.span.map(BerkeleyAppHostSpanWire::from),
+        }
+    }
+}
+
+impl From<SourceSpan> for BerkeleyAppHostSpanWire {
+    fn from(span: SourceSpan) -> Self {
+        Self {
+            start_line: span.start_line,
+            start_column: span.start_column,
+            end_line: span.end_line,
+            end_column: span.end_column,
+        }
+    }
+}
+
+fn host_panel_kind_wire(kind: BerkeleyAppHostPanelKind) -> &'static str {
+    match kind {
+        BerkeleyAppHostPanelKind::Source => "source",
+        BerkeleyAppHostPanelKind::Diagnostics => "diagnostics",
+        BerkeleyAppHostPanelKind::Analysis => "analysis",
+        BerkeleyAppHostPanelKind::Table => "table",
+        BerkeleyAppHostPanelKind::Waveform => "waveform",
+    }
+}
+
+fn diagnostic_severity_wire(severity: BerkeleyDiagnosticSeverity) -> &'static str {
+    match severity {
+        BerkeleyDiagnosticSeverity::Error => "error",
+        BerkeleyDiagnosticSeverity::Warning => "warning",
+        BerkeleyDiagnosticSeverity::Note => "note",
+    }
+}
+
+fn host_surface_wire_json_value(wire: &BerkeleyAppHostSurfaceWire) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": wire.schema_version,
+        "canonicalSource": &wire.canonical_source,
+        "sourceFingerprint": &wire.source_fingerprint,
+        "title": &wire.title,
+        "parsed": wire.parsed,
+        "executionAvailable": wire.execution_available,
+        "requestedSelectedSyntaxCardIndex": wire.requested_selected_syntax_card_index,
+        "requestedActiveCommandId": &wire.requested_active_command_id,
+        "resolvedSelectedSyntaxCardIndex": wire.resolved_selected_syntax_card_index,
+        "resolvedActiveCommandId": &wire.resolved_active_command_id,
+        "selectionStale": wire.selection_stale,
+        "commandStale": wire.command_stale,
+        "panelCount": wire.panel_count,
+        "activePanelId": &wire.active_panel_id,
+        "panels": wire
+            .panels
+            .iter()
+            .map(host_panel_wire_json_value)
+            .collect::<Vec<_>>(),
+        "blockingMessage": &wire.blocking_message,
+        "diagnostics": wire
+            .diagnostics
+            .iter()
+            .map(host_diagnostic_wire_json_value)
+            .collect::<Vec<_>>(),
+    })
+}
+
+fn host_panel_wire_json_value(panel: &BerkeleyAppHostPanelWire) -> serde_json::Value {
+    serde_json::json!({
+        "id": &panel.id,
+        "kind": &panel.kind,
+        "title": &panel.title,
+        "target": &panel.target,
+        "enabled": panel.enabled,
+        "active": panel.active,
+        "disabledReason": &panel.disabled_reason,
+    })
+}
+
+fn host_diagnostic_wire_json_value(
+    diagnostic: &BerkeleyAppHostDiagnosticWire,
+) -> serde_json::Value {
+    serde_json::json!({
+        "code": &diagnostic.code,
+        "severity": &diagnostic.severity,
+        "message": &diagnostic.message,
+        "span": diagnostic
+            .span
+            .as_ref()
+            .map(host_span_wire_json_value),
+    })
+}
+
+fn host_span_wire_json_value(span: &BerkeleyAppHostSpanWire) -> serde_json::Value {
+    serde_json::json!({
+        "startLine": span.start_line,
+        "startColumn": span.start_column,
+        "endLine": span.end_line,
+        "endColumn": span.end_column,
+    })
 }
 
 fn editor_command_from_control(

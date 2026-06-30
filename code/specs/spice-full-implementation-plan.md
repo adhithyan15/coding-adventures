@@ -33,15 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic host surface.
+1. Rust Berkeley Mosaic host wire export.
    - Status: current PR completion candidate.
    - Expand the Rust `spice-netlist-parser` Berkeley app facade from
-     persisted editor-state snapshots into host-facing panel descriptors for
-     Mosaic shell integration.
-   - Expose stable source, diagnostics, analysis, table, and waveform panels
-     with panel IDs, kind tags, target names, enabled states, active state, and
-     disabled reasons so hosts can wire UI regions without duplicating parser or
-     simulator internals.
+     host-facing panel descriptors into schema-versioned wire snapshots for
+     Mosaic packaging and WebAssembly embedding.
+   - Expose stable JSON helpers with lower-case panel kinds, diagnostic
+     severities, active-panel IDs, repaired persisted editor-state metadata, and
+     the same source / diagnostics / analysis / table / waveform panel contract
+     so product shells can consume the surface without Rust struct coupling.
    - Keep this as a Rust-only app-substrate acceleration slice over the public
      parser contract and existing engine deck artifacts; Python and TypeScript
      parser parity was completed separately and should remain aligned when
@@ -1501,6 +1501,16 @@ the Rust, Python, and TypeScript surfaces together.
      stale-state repair flags for source edits.
    - The slice keeps persisted UI state derived from command descriptors and
      app session state so hosts can restore selection without duplicating parser
+     or simulator internals.
+
+142. Rust Berkeley Mosaic host surface.
+   - Status: completed in PR 6961.
+   - Rust `spice-netlist-parser` Berkeley app-deck host surfaces now expose
+     stable source, diagnostics, analysis, table, and waveform panel
+     descriptors with panel IDs, kind tags, target names, enabled states, active
+     state, and disabled reasons.
+   - The slice keeps panel routing derived from persisted editor-state
+     snapshots so Mosaic shells can wire UI regions without duplicating parser
      or simulator internals.
 
 ## Backlog
