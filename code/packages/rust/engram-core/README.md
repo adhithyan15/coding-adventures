@@ -80,7 +80,8 @@ imported payloads, or prune unreferenced assets after a host-side media analysis
 pass.
 Media payloads can also carry `ExternalSourceTarget::Media` records so package
 importers can preserve their archive-level provenance without making shell code
-package-aware.
+package-aware. Media delete/prune commands clear those media provenance records
+with the asset, preventing stale package-source links after host cleanup flows.
 Tag commands such as `AddNoteTags`, `RemoveNoteTags`, `AddCardTags`, and
 `RemoveCardTags` mutate note-owned tags through the shared reducer. The card
 forms resolve lineaged cards back to their notes, matching Anki's tag model

@@ -4950,6 +4950,73 @@ mod tests {
     }
 
     #[test]
+    fn dispatch_media_delete_commands_prune_media_source_records() {
+        let mut session = EngramSession::new();
+        let loaded: Value = serde_json::from_str(&session.load_snapshot(
+            r#"{
+                "decks": [],
+                "noteTypes": [],
+                "notes": [],
+                "cards": [],
+                "cardProgress": [],
+                "sessions": [],
+                "reviews": [],
+                "deckOptions": [],
+                "externalSources": [
+                    {"target":"media","targetId":"anki-media:0","source":"anki-v11","originalId":"0","data":{}},
+                    {"target":"media","targetId":"anki-media:1","source":"anki-v11","originalId":"1","data":{}},
+                    {"target":"note","targetId":"note","source":"anki-v11","originalId":"10","data":{}}
+                ],
+                "mediaAssets": [
+                    {"id":"anki-media:0","archiveName":"0","filename":"audio/hola.mp3","data":[109,112,51]},
+                    {"id":"anki-media:1","archiveName":"1","filename":"images/card.png","data":[112,110,103]}
+                ],
+                "activeSession": null
+            }"#,
+        ))
+        .unwrap();
+        assert_eq!(loaded["ok"], true);
+
+        let value: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "deleteMediaAssets",
+                "assetIds": ["anki-media:1", "missing"]
+            }"#,
+        ))
+        .unwrap();
+        assert_eq!(value["state"]["mediaAssets"].as_array().unwrap().len(), 1);
+        assert!(value["state"]["externalSources"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|source| { source["target"] == "media" && source["targetId"] == "anki-media:0" }));
+        assert!(!value["state"]["externalSources"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|source| { source["target"] == "media" && source["targetId"] == "anki-media:1" }));
+
+        let value: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "deleteMediaAsset",
+                "assetId": "anki-media:0"
+            }"#,
+        ))
+        .unwrap();
+        assert!(value["state"]["mediaAssets"].as_array().unwrap().is_empty());
+        assert!(!value["state"]["externalSources"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|source| source["target"] == "media"));
+        assert!(value["state"]["externalSources"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|source| source["target"] == "note" && source["targetId"] == "note"));
+    }
+
+    #[test]
     fn dispatch_rename_note_type_field_migrates_templates() {
         let mut session = EngramSession::new();
         session.load_snapshot(

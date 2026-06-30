@@ -442,24 +442,38 @@ pub fn reduce(state: &AppState, command: EngramCommand) -> AppState {
             }
             next
         }
-        EngramCommand::DeleteMediaAsset { asset_id } => AppState {
-            media_assets: state
+        EngramCommand::DeleteMediaAsset { asset_id } => {
+            let mut next = state.clone();
+            next.media_assets = state
                 .media_assets
                 .iter()
                 .filter(|asset| asset.id != asset_id)
                 .cloned()
-                .collect(),
-            ..state.clone()
-        },
-        EngramCommand::DeleteMediaAssets { asset_ids } => AppState {
-            media_assets: state
+                .collect();
+            next.external_sources = without_external_source_target(
+                &next.external_sources,
+                ExternalSourceTarget::Media,
+                &asset_id,
+            );
+            next
+        }
+        EngramCommand::DeleteMediaAssets { asset_ids } => {
+            let mut next = state.clone();
+            next.media_assets = state
                 .media_assets
                 .iter()
                 .filter(|asset| !asset_ids.contains(&asset.id))
                 .cloned()
-                .collect(),
-            ..state.clone()
-        },
+                .collect();
+            for asset_id in asset_ids {
+                next.external_sources = without_external_source_target(
+                    &next.external_sources,
+                    ExternalSourceTarget::Media,
+                    &asset_id,
+                );
+            }
+            next
+        }
         EngramCommand::CreateCard {
             id,
             deck_id,
@@ -1914,6 +1928,29 @@ mod tests {
         );
         assert_eq!(state.media_assets[0].data, b"mp3-v2");
         assert_eq!(state.media_assets[1], image);
+        state.external_sources = vec![
+            ExternalSourceRecord {
+                target: ExternalSourceTarget::Media,
+                target_id: "media:audio".to_string(),
+                source: "anki-v11".to_string(),
+                original_id: Some("0".to_string()),
+                data: BTreeMap::new(),
+            },
+            ExternalSourceRecord {
+                target: ExternalSourceTarget::Media,
+                target_id: "media:image".to_string(),
+                source: "anki-v11".to_string(),
+                original_id: Some("1".to_string()),
+                data: BTreeMap::new(),
+            },
+            ExternalSourceRecord {
+                target: ExternalSourceTarget::Note,
+                target_id: "note".to_string(),
+                source: "anki-v11".to_string(),
+                original_id: Some("10".to_string()),
+                data: BTreeMap::new(),
+            },
+        ];
 
         state = reduce(
             &state,
@@ -1923,6 +1960,15 @@ mod tests {
         );
         assert_eq!(state.media_assets.len(), 1);
         assert_eq!(state.media_assets[0].id, "media:audio");
+        assert!(state.external_sources.iter().any(|source| {
+            source.target == ExternalSourceTarget::Media && source.target_id == "media:audio"
+        }));
+        assert!(!state.external_sources.iter().any(|source| {
+            source.target == ExternalSourceTarget::Media && source.target_id == "media:image"
+        }));
+        assert!(state.external_sources.iter().any(|source| {
+            source.target == ExternalSourceTarget::Note && source.target_id == "note"
+        }));
 
         let state = reduce(
             &state,
@@ -1931,6 +1977,13 @@ mod tests {
             },
         );
         assert!(state.media_assets.is_empty());
+        assert!(!state
+            .external_sources
+            .iter()
+            .any(|source| source.target == ExternalSourceTarget::Media));
+        assert!(state.external_sources.iter().any(|source| {
+            source.target == ExternalSourceTarget::Note && source.target_id == "note"
+        }));
     }
 
     #[test]
