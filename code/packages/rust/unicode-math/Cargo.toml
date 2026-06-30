@@ -1,0 +1,11 @@
+[package]
+name = "unicode-math"
+version = "0.1.0"
+edition = "2021"
+description = "A Unicode plain-math parser that implements the math-frontend MathFrontend trait: turns the math people and models actually type (x² + y² = r², √x, ½, π·α, a ≤ b) into the neutral MathExpr AST. The third pluggable frontend after LaTeX and AsciiMath (see PFE01). Total, panic-free, spanned errors."
+license = "MIT"
+
+[dependencies]
+# The neutral framework: MathExpr + the MathFrontend trait + the conformance harness.
+# This is a frontend, so the dependency is mandatory.
+math-frontend = { path = "../math-frontend" }

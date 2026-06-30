@@ -143,8 +143,16 @@ frontend additionally ships notation-specific golden tests.
 - `latex` — the first frontend (full LaTeX; see [LTX01](LTX01-full-latex-parser.md)). It is
   a standalone full-LaTeX parser in its own right and *also* implements `MathFrontend` via a
   thin adapter (math nodes of its document AST → `MathExpr`).
-- Future: `asciimath`, `mathml`, `unicode-math`, … each a small crate implementing the
-  trait. None require changes to consumers.
+- `asciimath` — the second frontend (terse ASCII math; see [ASM01](ASM01-asciimath-frontend.md)).
+- `unicode-math` — the **third** frontend: Unicode plain math as people and models type it
+  (`x² + y² = r²`, `√x`, `½`, `π·α`, `a ≤ b`). A small crate implementing the trait; its Greek /
+  constant glyphs canonicalize to the same `Symbol` names as AsciiMath, so the notations agree on
+  one neutral string. PR-1 covers numbers/symbols/super-&-subscripts/fractions/roots/relations
+  /implicit-mul/±∓; big operators, named functions, matrices, and `\text` are PR-2.
+- Future: `mathml`, MathJSON, content-MathML, spreadsheet formulae, … each a small crate
+  implementing the trait. None require changes to consumers. **Three frontends now in (LaTeX,
+  AsciiMath, Unicode), all feeding one neutral AST with zero consumer change** — the pluggability
+  claim is demonstrated, not just asserted.
 
 ## 7. Non-goals
 
