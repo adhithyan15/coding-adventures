@@ -26,6 +26,7 @@ use std::fmt;
 /// | `Globals`                  | any top-level value `define`          |
 /// | `Intrinsics`               | any `Intrinsic` node                  |
 /// | `StringInterpolation`      | an `Expr::StrConcat` node             |
+/// | `DefaultParams`            | a param with `default = Some(_)`      |
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Feature {
     Closures,
@@ -86,6 +87,16 @@ pub enum Feature {
     /// concatenation natively, so the two capabilities are tracked
     /// separately.
     StringInterpolation,
+    // ── SIR19 (parameter defaults) ───────────────────────────────────
+    /// At least one function parameter carries a default-value
+    /// expression (`Param::default = Some(_)`, e.g. Ruby `def f(a = 1)`
+    /// and the Python / JS equivalents).  This is the core-IR
+    /// representation only: it is observed by the validator when any
+    /// param has a default, and is NOT yet accepted by any backend, so a
+    /// default-using module is correctly rejected by the capability
+    /// check until each backend gains support.  Emission (backends) and
+    /// lowering (frontends) land in follow-up PRs.
+    DefaultParams,
 }
 
 impl Feature {
@@ -114,6 +125,7 @@ impl Feature {
         Feature::Constants,
         Feature::Exceptions,
         Feature::StringInterpolation,
+        Feature::DefaultParams,
     ];
 
     /// Kebab-case name for the SIR text format.
@@ -142,6 +154,7 @@ impl Feature {
             Feature::Constants => "constants",
             Feature::Exceptions => "exceptions",
             Feature::StringInterpolation => "string-interpolation",
+            Feature::DefaultParams => "default-params",
         }
     }
 

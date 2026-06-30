@@ -77,8 +77,16 @@ pub fn walk_module_default<V: Visitor>(v: &mut V, m: &Module) {
     }
 }
 
-/// Default walk for a function: visits the body block.
+/// Default walk for a function: visits each parameter's default-value
+/// expression (if any) and then the body block.  Visiting defaults
+/// before the body keeps source-ish order (`def f(a = <expr>) …`) and
+/// ensures passes that walk the IR observe the default expressions.
 pub fn walk_function_default<V: Visitor>(v: &mut V, f: &Function) {
+    for p in &f.params {
+        if let Some(default) = &p.default {
+            v.visit_expr(default);
+        }
+    }
     v.visit_block(&f.body);
 }
 
@@ -367,6 +375,46 @@ mod tests {
         let mut c = Counter { builtins: 0, ints: 0 };
         c.visit_module(&m);
         assert_eq!(c.ints, 1);  // the literal 5 in the let RHS
+    }
+
+    #[test]
+    fn visitor_visits_param_default_expr() {
+        // def f(a = 7) { nil } — the walker should visit the default
+        // expression `7`, so the IntLit counter sees it.
+        let body = Block {
+            stmts: vec![],
+            value: Expr::NilLit { span: s() },
+            span: s(),
+        };
+        let f = Function {
+            name: "f".into(),
+            params: vec![Param {
+                name: "a".into(),
+                sir_type: None,
+                kind: ParamKind::Required,
+                default: Some(Box::new(Expr::IntLit { value: 7, span: s() })),
+                span: s(),
+            }],
+            return_type: None,
+            captures: vec![],
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let m = Module {
+            name: "m".into(),
+            manifest: FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![f],
+            globals: vec![],
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let mut c = Counter { builtins: 0, ints: 0 };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 1, "walker should visit the default-value expression");
     }
 
     #[test]

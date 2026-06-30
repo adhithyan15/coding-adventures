@@ -108,7 +108,18 @@ fn print_function_indented(out: &mut String, f: &Function, indent: usize) {
             ParamKind::Rest => "*",
             ParamKind::KwRest => "**",
         };
-        let _ = write!(out, "({}{} {})", prefix, p.name, type_or_any(p.sir_type.as_ref()));
+        // A parameter with a default-value expression (SIR19) renders an
+        // extra `(default <expr>)` clause inside the param form, e.g.
+        // `(a any (default (int 1)))`.  Params with no default keep the
+        // original `(name type)` shape, so existing modules round-trip
+        // unchanged.
+        if let Some(default) = &p.default {
+            let _ = write!(out, "({}{} {} (default ", prefix, p.name, type_or_any(p.sir_type.as_ref()));
+            print_expr_inline_depth(out, default, 0);
+            out.push_str("))");
+        } else {
+            let _ = write!(out, "({}{} {})", prefix, p.name, type_or_any(p.sir_type.as_ref()));
+        }
     }
     let _ = write!(out, ") {}", type_or_any(f.return_type.as_ref()));
     if !f.captures.is_empty() {
@@ -695,8 +706,8 @@ mod tests {
         let f = Function {
             name: "add".into(),
             params: vec![
-                Param { name: "x".into(), sir_type: None, kind: ParamKind::Required, span: s() },
-                Param { name: "y".into(), sir_type: None, kind: ParamKind::Required, span: s() },
+                Param { name: "x".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+                Param { name: "y".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
             ],
             return_type: None,
             captures: vec![],
@@ -726,9 +737,9 @@ mod tests {
         let f = Function {
             name: "f".into(),
             params: vec![
-                Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, span: s() },
-                Param { name: "rest".into(), sir_type: None, kind: ParamKind::Rest, span: s() },
-                Param { name: "opts".into(), sir_type: None, kind: ParamKind::KwRest, span: s() },
+                Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+                Param { name: "rest".into(), sir_type: None, kind: ParamKind::Rest, default: None, span: s() },
+                Param { name: "opts".into(), sir_type: None, kind: ParamKind::KwRest, default: None, span: s() },
             ],
             return_type: None,
             captures: vec![],
@@ -744,6 +755,46 @@ mod tests {
         let text = print_module(&m);
         assert!(
             text.contains("(function f ((a any) (*rest any) (**opts any)) any"),
+            "got: {text}"
+        );
+    }
+
+    #[test]
+    fn print_param_default_renders_default_clause() {
+        // SIR19: `def f(a = 1)` — the param carries a default literal.
+        // The printer renders an extra `(default (int 1))` clause inside
+        // the param form, while a defaultless param keeps `(name type)`.
+        let body = Block {
+            stmts: vec![],
+            value: Expr::NilLit { span: s() },
+            span: s(),
+        };
+        let f = Function {
+            name: "f".into(),
+            params: vec![
+                Param {
+                    name: "a".into(),
+                    sir_type: None,
+                    kind: ParamKind::Required,
+                    default: Some(Box::new(Expr::IntLit { value: 1, span: s() })),
+                    span: s(),
+                },
+                Param { name: "b".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+            ],
+            return_type: None,
+            captures: vec![],
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let m = module_with(
+            vec![f],
+            FeatureManifest::from_features(&[Feature::DynamicTyping, Feature::DefaultParams]),
+        );
+        let text = print_module(&m);
+        assert!(
+            text.contains("(function f ((a any (default (int 1))) (b any)) any"),
             "got: {text}"
         );
     }

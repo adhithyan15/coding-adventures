@@ -115,6 +115,7 @@ mod smoke {
                 name: "x".into(),
                 sir_type: None,
                 kind: ParamKind::Required,
+                default: None,
                 span: Span::synthetic(),
             }],
             return_type: None,

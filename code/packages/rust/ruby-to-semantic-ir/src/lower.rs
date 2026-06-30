@@ -3052,6 +3052,7 @@ impl Lowerer {
                 name: BLOCK_PARAM_NAME.to_string(),
                 sir_type: None,
                 kind: ParamKind::Required,
+                default: None,
                 span,
             });
             // The synthesized parameter is untyped (`sir_type: None`),
@@ -3991,6 +3992,7 @@ impl Lowerer {
                                     name: t.value.clone(),
                                     sir_type: None,
                                     kind: kind.unwrap_or(ParamKind::Required),
+                                    default: None,
                                     span: self.span_of_token(t),
                                 })
                             }
@@ -4133,6 +4135,7 @@ impl Lowerer {
                                     name: t.value.clone(),
                                     sir_type: None,
                                     kind: kind.unwrap_or(ParamKind::Required),
+                                    default: None,
                                     span: self.span_of_token(t),
                                 })
                             }
@@ -5764,6 +5767,7 @@ impl Lowerer {
                                 name: t.value.clone(),
                                 sir_type: None,
                                 kind: ParamKind::Required,
+                                default: None,
                                 span: self.span_of_token(t),
                             });
                         }
@@ -5789,6 +5793,7 @@ impl Lowerer {
                         name: format!("_{n}"),
                         sir_type: None,
                         kind: ParamKind::Required,
+                        default: None,
                         span: self.span_of(inner),
                     });
                 }
@@ -5802,6 +5807,7 @@ impl Lowerer {
                     name: "it".to_string(),
                     sir_type: None,
                     kind: ParamKind::Required,
+                    default: None,
                     span: self.span_of(inner),
                 });
             }
@@ -6116,6 +6122,7 @@ impl Lowerer {
                                     name: t.value.clone(),
                                     sir_type: None,
                                     kind: kind.unwrap_or(ParamKind::Required),
+                                    default: None,
                                     span: self.span_of_token(t),
                                 })
                             }
