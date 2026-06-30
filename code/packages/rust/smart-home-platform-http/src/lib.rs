@@ -392,6 +392,17 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           <label>Activity Entity
             <input id="filter-activity-entity" data-dashboard-filter="activity-entity" type="search" autocomplete="off">
           </label>
+          <label>History Type
+            <select id="filter-history-type" data-dashboard-filter="history-type">
+              <option value="">All history</option>
+              <option value="discovered">Discovered</option>
+              <option value="updated">Updated</option>
+              <option value="removed">Removed</option>
+              <option value="unavailable">Unavailable</option>
+              <option value="error">Error</option>
+              <option value="health">Health</option>
+            </select>
+          </label>
           <label>Commands
             <select id="filter-command-status" data-dashboard-filter="command-status">
               <option value="">All commands</option>
@@ -586,6 +597,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       filterGrantPrincipal: document.querySelector("#filter-grant-principal"),
       filterGrantScope: document.querySelector("#filter-grant-scope"),
       filterGrantStatus: document.querySelector("#filter-grant-status"),
+      filterHistoryType: document.querySelector("#filter-history-type"),
       filterRoom: document.querySelector("#filter-room"),
       filterSearch: document.querySelector("#filter-search"),
       filterState: document.querySelector("#filter-state"),
@@ -621,6 +633,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       ["control", els.filterControl],
       ["event_kind", els.filterEventKind],
       ["activity_entity", els.filterActivityEntity],
+      ["history_type", els.filterHistoryType],
       ["command_status", els.filterCommandStatus],
       ["command_id", els.filterCommandId],
       ["command_bridge", els.filterCommandBridge],
@@ -677,6 +690,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       control: els.filterControl.value,
       eventKind: els.filterEventKind.value,
       activityEntity: els.filterActivityEntity.value.trim(),
+      historyType: els.filterHistoryType.value,
       commandStatus: els.filterCommandStatus.value,
       commandId: els.filterCommandId.value.trim(),
       commandBridge: els.filterCommandBridge.value.trim(),
@@ -1140,6 +1154,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           : undefined;
       const roomId = filters.room || undefined;
       const activityEntity = filters.activityEntity || undefined;
+      const historyType = filters.historyType || undefined;
       try {
         const [
           bootstrap,
@@ -1168,7 +1183,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           json(queryUrl("/api/smart_home/state_history", {
             limit: 12,
             room_id: roomId,
-            entity_id: activityEntity
+            entity_id: activityEntity,
+            event_type: historyType
           })),
           json("/api/smart_home/services?limit=8"),
           json("/api/smart_home/api?mutating=true&authorized=true"),
@@ -7932,10 +7948,12 @@ mod tests {
             assert!(body.contains("data-dashboard-filter=\"room\""));
             assert!(body.contains("data-dashboard-filter=\"domain\""));
             assert!(body.contains("data-dashboard-filter=\"activity-entity\""));
+            assert!(body.contains("data-dashboard-filter=\"history-type\""));
             assert!(body.contains("data-dashboard-filter=\"command-status\""));
             assert!(body.contains("const FILTER_QUERY_PARAMS = ["));
             assert!(body.contains("[\"event_kind\", els.filterEventKind]"));
             assert!(body.contains("[\"activity_entity\", els.filterActivityEntity]"));
+            assert!(body.contains("[\"history_type\", els.filterHistoryType]"));
             assert!(body.contains("[\"command_status\", els.filterCommandStatus]"));
             assert!(body.contains("restoreFiltersFromUrl()"));
             assert!(body.contains("window.history.replaceState(null, \"\", nextUrl)"));
@@ -7950,8 +7968,10 @@ mod tests {
             );
             assert!(body.contains("queryUrl(\"/api/smart_home/desired_states\", {limit: 12})"));
             assert!(body.contains("const activityEntity = filters.activityEntity || undefined"));
+            assert!(body.contains("const historyType = filters.historyType || undefined"));
             assert!(body.contains("queryUrl(\"/api/smart_home/state_history\", {"));
             assert!(body.contains("entity_id: activityEntity"));
+            assert!(body.contains("event_type: historyType"));
             assert!(body.matches("entity_id: activityEntity").count() >= 2);
             assert!(body.contains("json(\"/api/smart_home/services?limit=8\")"));
             assert!(body.contains("json(\"/api/smart_home/api?mutating=true&authorized=true\")"));
@@ -9288,11 +9308,13 @@ mod tests {
         assert!(body.contains("data-dashboard-filter=\"grant-principal\""));
         assert!(body.contains("data-dashboard-filter=\"authorization-principal\""));
         assert!(body.contains("data-dashboard-filter=\"activity-entity\""));
+        assert!(body.contains("data-dashboard-filter=\"history-type\""));
         assert!(body.contains("data-dashboard-filter=\"command-id\""));
         assert!(body.contains("data-dashboard-filter=\"command-bridge\""));
         assert!(body.contains("data-dashboard-filter=\"command-correlation\""));
         assert!(body.contains("const FILTER_QUERY_PARAMS = ["));
         assert!(body.contains("[\"activity_entity\", els.filterActivityEntity]"));
+        assert!(body.contains("[\"history_type\", els.filterHistoryType]"));
         assert!(body.contains("[\"command_id\", els.filterCommandId]"));
         assert!(body.contains("[\"command_bridge\", els.filterCommandBridge]"));
         assert!(body.contains("[\"command_correlation\", els.filterCommandCorrelation]"));
@@ -9303,9 +9325,11 @@ mod tests {
         assert!(body.contains("queryUrl(\"/api/smart_home/scenes\", {limit: 12, room_id: roomId})"));
         assert!(body.contains("queryUrl(\"/api/smart_home/desired_states\", {limit: 12})"));
         assert!(body.contains("const activityEntity = filters.activityEntity || undefined"));
+        assert!(body.contains("const historyType = filters.historyType || undefined"));
         assert!(body.contains("queryUrl(\"/api/smart_home/state_history\", {"));
         assert!(body.contains("queryUrl(\"/api/smart_home/events\", {"));
         assert!(body.contains("entity_id: activityEntity"));
+        assert!(body.contains("event_type: historyType"));
         assert!(body.matches("entity_id: activityEntity").count() >= 2);
         assert!(body.contains("json(\"/api/smart_home/services?limit=8\")"));
         assert!(body.contains("json(\"/api/smart_home/api?mutating=true&authorized=true\")"));
