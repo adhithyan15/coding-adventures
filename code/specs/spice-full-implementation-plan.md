@@ -33,14 +33,14 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app package manifest.
+1. Rust Berkeley Mosaic app bootstrap snapshot.
    - Status: current PR completion candidate.
-   - Add a Rust `spice-netlist-parser` Berkeley app package manifest for Mosaic
-     packaging, WebAssembly embedding, and product-shell capability discovery.
-   - Expose schema-versioned native and JSON helpers that advertise the Berkeley
-     grammar version, host-surface wire schema, source-fingerprint algorithm,
-     panel kinds, editor action kinds, command targets, runnable analysis
-     directives, and artifact capabilities before a host opens a deck.
+   - Add schema-versioned Rust app bootstrap snapshots and JSON helpers that
+     combine the Berkeley package manifest with deck-specific host-surface wire
+     exports for Mosaic, WebAssembly, and product-shell startup.
+   - Expose run and non-run helpers that preserve blocked-deck diagnostics,
+     repaired persisted editor-state metadata, active panels, and package
+     capabilities in one startup envelope.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1520,6 +1520,16 @@ the Rust, Python, and TypeScript surfaces together.
      repaired persisted editor-state metadata, and lower-case panel /
      diagnostic kinds so product shells can consume the app surface without
      Rust struct coupling.
+
+144. Rust Berkeley Mosaic app package manifest.
+   - Status: completed in PR 6971.
+   - Rust `spice-netlist-parser` now exposes a schema-versioned Berkeley Mosaic
+     app package manifest plus JSON helper for WebAssembly and product-shell
+     capability discovery.
+   - The manifest advertises the Berkeley grammar version, host-surface wire
+     schema, source-fingerprint algorithm, panel kinds, editor action kinds,
+     command targets, runnable analysis directives, and artifact capabilities
+     before a host opens a deck.
 
 ## Backlog
 
