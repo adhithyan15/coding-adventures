@@ -99,6 +99,12 @@ let launch_plan_json = deck.run_app_launch_plan_json(BerkeleyAppPersistedEditorS
 })?;
 assert!(launch_plan_json.contains(r#""startupRoute":"ready""#));
 assert!(launch_plan_json.contains(r#""entryPanelId":"waveform""#));
+
+let readiness_report_json = deck.run_app_readiness_report_json(BerkeleyAppPersistedEditorState {
+    selected_syntax_card_index: Some(3),
+    active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+})?;
+assert!(readiness_report_json.contains(r#""errorCount":0"#));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -135,8 +141,11 @@ active panel, repaired editor-state IDs, stale-state flags, diagnostic count,
 and blocking reason. Launch plans derive product-shell entry actions from the
 bootstrap payload, including a primary entry panel, target, route status, and
 panel action descriptors so hosts can start on the right Mosaic surface without
-walking the full host-surface export. The grammar-backed parser generator and
-Python/TypeScript parity surfaces continue to mature.
+walking the full host-surface export. Readiness reports summarize the same
+startup path with panel/action availability counts, diagnostic severity counts,
+repaired-state flags, and blocking reasons for product-shell telemetry and
+readiness gates. The grammar-backed parser generator and Python/TypeScript
+parity surfaces continue to mature.
 
 This parser supports `R`, `C`, `L`, `V`, `I`, `D`, `Q`, `M`, `G`, `E`, `F`, and
 `H` elements, `.model <name> D(...)` diode cards with `IS` and `VT`

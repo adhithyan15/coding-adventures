@@ -33,16 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app launch plan.
+1. Rust Berkeley Mosaic app readiness report.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app launch plans and JSON helpers that derive
-     ready/blocked product-shell entry actions from Berkeley app bootstrap
-     payloads.
-   - Preserve package name, source fingerprint, startup route, primary entry
-     panel, entry target, repaired persisted editor-state IDs, stale-state
-     flags, panel action descriptors, diagnostic count, and blocking reason so
-     Mosaic, WebAssembly, and product shells can launch the correct surface
-     without walking every host panel.
+   - Add schema-versioned Rust app readiness reports and JSON helpers that
+     summarize startup route health from Berkeley app bootstrap payloads.
+   - Preserve package name, source fingerprint, startup route, parsed/execution
+     availability, entry panel/action, panel/action availability counts,
+     diagnostic severity counts, repaired persisted editor-state flags, and
+     blocking reason so Mosaic, WebAssembly, and product shells can gate startup
+     and telemetry without walking every host panel.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1552,6 +1551,17 @@ the Rust, Python, and TypeScript surfaces together.
      persisted editor-state IDs, stale-state flags, active panel, diagnostic
      count, and blocking reason so Mosaic, WebAssembly, and product shells can
      make startup routing decisions without walking every host panel.
+
+147. Rust Berkeley Mosaic app launch plan.
+   - Status: completed in PR 6995.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app launch plans plus JSON helpers that derive ready/blocked product-shell
+     entry actions from bootstrap payloads.
+   - The launch plan preserves package name, source fingerprint, startup route,
+     primary entry panel, entry target, repaired persisted editor-state IDs,
+     stale-state flags, panel action descriptors, diagnostic count, and blocking
+     reason so Mosaic, WebAssembly, and product shells can launch the correct
+     surface without walking every host panel.
 
 ## Backlog
 

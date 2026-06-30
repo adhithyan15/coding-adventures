@@ -14,8 +14,9 @@ use spice_netlist_parser::{
     TfAnalysis, TranAnalysis, BERKELEY_APP_BOOTSTRAP_SCHEMA_VERSION,
     BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION, BERKELEY_APP_LAUNCH_PLAN_SCHEMA_VERSION,
     BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION, BERKELEY_APP_PACKAGE_NAME,
-    BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM, BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION,
-    BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION,
+    BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION, BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM,
+    BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION, BERKELEY_SPICE_GRAMMAR_NAME,
+    BERKELEY_SPICE_GRAMMAR_VERSION,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -2564,6 +2565,11 @@ fn berkeley_app_facade_exports_package_manifest_json() {
         .unwrap()
         .iter()
         .any(|capability| capability == "app-launch-plan-json"));
+    assert!(payload["artifactCapabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|capability| capability == "app-readiness-report-json"));
 }
 
 #[test]
@@ -2724,6 +2730,57 @@ C1 out 0 1p
     assert_eq!(launch_payload["actions"][4]["id"], "launch.waveform");
     assert_eq!(launch_payload["actions"][4]["primary"], true);
     assert_eq!(launch_payload["actions"][4]["enabled"], true);
+
+    let readiness_report = app
+        .run_app_readiness_report(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("readiness report should execute");
+    assert_eq!(
+        readiness_report.schema_version,
+        BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION
+    );
+    assert_eq!(readiness_report.package_name, BERKELEY_APP_PACKAGE_NAME);
+    assert_eq!(readiness_report.startup_route, "ready");
+    assert!(readiness_report.ready);
+    assert!(readiness_report.parsed);
+    assert!(readiness_report.execution_available);
+    assert_eq!(readiness_report.entry_panel_id.as_deref(), Some("waveform"));
+    assert_eq!(
+        readiness_report.primary_action_id.as_deref(),
+        Some("launch.waveform")
+    );
+    assert!(readiness_report.primary_action_enabled);
+    assert_eq!(readiness_report.panel_count, 5);
+    assert_eq!(readiness_report.enabled_panel_count, 4);
+    assert_eq!(readiness_report.disabled_panel_count, 1);
+    assert_eq!(readiness_report.action_count, 5);
+    assert_eq!(readiness_report.enabled_action_count, 4);
+    assert_eq!(readiness_report.disabled_action_count, 1);
+    assert_eq!(readiness_report.diagnostic_count, 0);
+    assert_eq!(readiness_report.error_count, 0);
+    assert_eq!(readiness_report.warning_count, 0);
+    assert_eq!(readiness_report.note_count, 0);
+    assert!(!readiness_report.repaired_state);
+
+    let readiness_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_readiness_report_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap(),
+    )
+    .expect("readiness report JSON should parse");
+    assert_eq!(readiness_payload["schemaVersion"], 1);
+    assert_eq!(readiness_payload["startupRoute"], "ready");
+    assert_eq!(readiness_payload["entryPanelId"], "waveform");
+    assert_eq!(readiness_payload["primaryActionId"], "launch.waveform");
+    assert_eq!(readiness_payload["enabledPanelCount"], 4);
+    assert_eq!(readiness_payload["disabledPanelCount"], 1);
+    assert_eq!(readiness_payload["enabledActionCount"], 4);
+    assert_eq!(readiness_payload["errorCount"], 0);
+    assert_eq!(readiness_payload["repairedState"], false);
 }
 
 #[test]
@@ -2830,6 +2887,55 @@ R1 in out
     assert_eq!(launch_payload["actions"][1]["id"], "launch.diagnostics");
     assert_eq!(launch_payload["actions"][1]["primary"], true);
     assert_eq!(launch_payload["diagnosticCount"], 1);
+
+    let readiness_report = app.app_readiness_report(BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(2),
+        active_command_id: Some("analysis.2.run".to_string()),
+    });
+    assert_eq!(
+        readiness_report.schema_version,
+        BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION
+    );
+    assert_eq!(readiness_report.startup_route, "blocked");
+    assert!(!readiness_report.ready);
+    assert!(!readiness_report.parsed);
+    assert!(!readiness_report.execution_available);
+    assert_eq!(
+        readiness_report.entry_panel_id.as_deref(),
+        Some("diagnostics")
+    );
+    assert_eq!(
+        readiness_report.primary_action_id.as_deref(),
+        Some("launch.diagnostics")
+    );
+    assert!(readiness_report.primary_action_enabled);
+    assert_eq!(readiness_report.panel_count, 5);
+    assert_eq!(readiness_report.enabled_panel_count, 3);
+    assert_eq!(readiness_report.disabled_panel_count, 2);
+    assert_eq!(readiness_report.action_count, 5);
+    assert_eq!(readiness_report.enabled_action_count, 3);
+    assert_eq!(readiness_report.disabled_action_count, 2);
+    assert_eq!(readiness_report.diagnostic_count, 1);
+    assert_eq!(readiness_report.error_count, 1);
+    assert_eq!(readiness_report.warning_count, 0);
+    assert_eq!(readiness_report.note_count, 0);
+    assert!(readiness_report.blocking_message.is_some());
+
+    let readiness_payload: serde_json::Value = serde_json::from_str(
+        &app.app_readiness_report_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        }),
+    )
+    .expect("blocked readiness report JSON should parse");
+    assert_eq!(readiness_payload["startupRoute"], "blocked");
+    assert_eq!(readiness_payload["entryPanelId"], "diagnostics");
+    assert_eq!(readiness_payload["primaryActionId"], "launch.diagnostics");
+    assert_eq!(readiness_payload["enabledPanelCount"], 3);
+    assert_eq!(readiness_payload["disabledPanelCount"], 2);
+    assert_eq!(readiness_payload["enabledActionCount"], 3);
+    assert_eq!(readiness_payload["errorCount"], 1);
+    assert!(readiness_payload["blockingMessage"].is_string());
 }
 
 #[test]
