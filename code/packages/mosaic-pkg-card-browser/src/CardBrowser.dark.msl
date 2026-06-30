@@ -159,6 +159,71 @@ style CardBrowser {
     padding       : 8 ;
   }
 
+  part custom-study-row {
+    background     : "#111827" ;
+    border-width   : 1 ;
+    border-color   : "#475569" ;
+    border-radius  : 6 ;
+    padding        : 10 ;
+    padding-top    : 10 ;
+    padding-bottom : 10 ;
+  }
+
+  part custom-study-limit-column {
+    padding : 2 ;
+  }
+
+  part custom-study-label {
+    color       : "#f0abfc" ;
+    font-size   : 11 ;
+    font-weight : 800 ;
+  }
+
+  part custom-study-limit-label {
+    color       : "#cbd5e1" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part custom-study-limit-input {
+    background    : "#0f172a" ;
+    border-width  : 1 ;
+    border-color  : "#475569" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    padding       : 8 ;
+  }
+
+  part custom-study-reschedule-column {
+    padding : 8 ;
+  }
+
+  part custom-study-reschedule-checkbox {
+    color       : "#e2e8f0" ;
+    font-size   : 12 ;
+    font-weight : 700 ;
+  }
+
+  part rebuild-filtered-deck-button {
+    background    : "#7c3aed" ;
+    border-width  : 1 ;
+    border-color  : "#6d28d9" ;
+    border-radius : 6 ;
+    color         : "#ffffff" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part empty-filtered-deck-button {
+    background    : "#334155" ;
+    border-width  : 1 ;
+    border-color  : "#64748b" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
   part open-button {
     background    : "#334155" ;
     border-width  : 1 ;

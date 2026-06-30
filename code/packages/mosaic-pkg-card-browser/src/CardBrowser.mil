@@ -42,6 +42,13 @@ component CardBrowser {
   slot tag-edit-placeholder : text ;
   slot add-tag-label : text ;
   slot remove-tag-label : text ;
+  slot custom-study-label : text ;
+  slot custom-study-limit-label : text ;
+  slot custom-study-limit-value : number ;
+  slot custom-study-reschedule-label : text ;
+  slot custom-study-reschedule-value : bool ;
+  slot custom-study-rebuild-label : text ;
+  slot custom-study-empty-label : text ;
 
   emit onQueryChange ( value : text ) ;
   emit onToggleFilter ;
@@ -57,4 +64,8 @@ component CardBrowser {
   emit onTagEditChange ( value : text ) ;
   emit onAddTagSelected ;
   emit onRemoveTagSelected ;
+  emit onCustomStudyLimitChange ( value : number ) ;
+  emit onCustomStudyRescheduleChange ( checked : bool ) ;
+  emit onRebuildFilteredDeck ;
+  emit onEmptyFilteredDeck ;
 }

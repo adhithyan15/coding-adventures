@@ -187,6 +187,13 @@ layout EngramApp {
         tag-edit-placeholder : slot: browser-tag-edit-placeholder ,
         add-tag-label : slot: browser-add-tag-label ,
         remove-tag-label : slot: browser-remove-tag-label ,
+        custom-study-label : slot: browser-custom-study-label ,
+        custom-study-limit-label : slot: browser-custom-study-limit-label ,
+        custom-study-limit-value : slot: browser-custom-study-limit-value ,
+        custom-study-reschedule-label : slot: browser-custom-study-reschedule-label ,
+        custom-study-reschedule-value : slot: browser-custom-study-reschedule-value ,
+        custom-study-rebuild-label : slot: browser-custom-study-rebuild-label ,
+        custom-study-empty-label : slot: browser-custom-study-empty-label ,
         onQueryChange : emit: onBrowserQueryChange ,
         onToggleFilter : emit: onBrowserToggleFilter ,
         onSetFilter : emit: onBrowserSetFilter ,
@@ -200,7 +207,11 @@ layout EngramApp {
         onSetFlagSelected : emit: onBrowserSetFlagSelected ,
         onTagEditChange : emit: onBrowserTagEditChange ,
         onAddTagSelected : emit: onBrowserAddTagSelected ,
-        onRemoveTagSelected : emit: onBrowserRemoveTagSelected
+        onRemoveTagSelected : emit: onBrowserRemoveTagSelected ,
+        onCustomStudyLimitChange : emit: onBrowserCustomStudyLimitChange ,
+        onCustomStudyRescheduleChange : emit: onBrowserCustomStudyRescheduleChange ,
+        onRebuildFilteredDeck : emit: onBrowserRebuildFilteredDeck ,
+        onEmptyFilteredDeck : emit: onBrowserEmptyFilteredDeck
       )
     }
     Box [ note-editor-region ] {

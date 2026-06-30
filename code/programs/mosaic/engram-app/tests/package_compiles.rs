@@ -405,6 +405,13 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
     assert_contains(&html, "data-on-change=\"onBrowserTagEditChange\"");
     assert_contains(&html, "data-on-click=\"onBrowserAddTagSelected\"");
     assert_contains(&html, "data-on-click=\"onBrowserRemoveTagSelected\"");
+    assert_contains(&html, "data-on-change=\"onBrowserCustomStudyLimitChange\"");
+    assert_contains(
+        &html,
+        "data-on-toggle=\"onBrowserCustomStudyRescheduleChange\"",
+    );
+    assert_contains(&html, "data-on-click=\"onBrowserRebuildFilteredDeck\"");
+    assert_contains(&html, "data-on-click=\"onBrowserEmptyFilteredDeck\"");
     assert_contains(&html, "data-on-click=\"onBrowserToggleFilter\"");
     assert_contains(&html, "data-on-click=\"onBrowserSetFilter\"");
     assert_contains(&html, "data-on-click=\"onBrowserToggleFlagPicker\"");
@@ -619,6 +626,10 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&html_main, "\"onBrowserTagEditChange\"");
     assert_contains(&html_main, "\"onBrowserAddTagSelected\"");
     assert_contains(&html_main, "\"onBrowserRemoveTagSelected\"");
+    assert_contains(&html_main, "\"onBrowserCustomStudyLimitChange\"");
+    assert_contains(&html_main, "\"onBrowserCustomStudyRescheduleChange\"");
+    assert_contains(&html_main, "\"onBrowserRebuildFilteredDeck\"");
+    assert_contains(&html_main, "\"onBrowserEmptyFilteredDeck\"");
     assert_contains(&html_main, "\"onBrowserToggleFilter\"");
     assert_contains(&html_main, "\"onBrowserSetFilter\"");
     assert_contains(&html_main, "\"onBrowserToggleFlagPicker\"");
@@ -681,6 +692,14 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &webcomponent_main,
         "{ name: \"browser-results\", prop: \"browserResults\", type: \"list\", fallback: [] }",
+    );
+    assert_contains(
+        &webcomponent_main,
+        "{ name: \"browser-custom-study-limit-value\", prop: \"browserCustomStudyLimitValue\", type: \"number\", fallback: 0 }",
+    );
+    assert_contains(
+        &webcomponent_main,
+        "{ name: \"browser-custom-study-reschedule-value\", prop: \"browserCustomStudyRescheduleValue\", type: \"bool\", fallback: false }",
     );
     assert_contains(
         &webcomponent_main,
@@ -748,6 +767,12 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &react_app,
         "browserAddTagLabel: \"Sample BrowserAddTagLabel\",",
+    );
+    assert_contains(&react_app, "browserCustomStudyLimitValue: 0,");
+    assert_contains(&react_app, "browserCustomStudyRescheduleValue: false,");
+    assert_contains(
+        &react_app,
+        "browserCustomStudyRebuildLabel: \"Sample BrowserCustomStudyRebuildLabel\",",
     );
     assert_contains(&react_app, "browserResults: [],");
     assert_contains(&react_app, "browserResultCardIds: [],");
@@ -837,6 +862,8 @@ fn native_project_shells_expose_engram_host_contract() {
         &electron_app,
         "browserRemoveTagLabel: \"Sample BrowserRemoveTagLabel\",",
     );
+    assert_contains(&electron_app, "browserCustomStudyLimitValue: 0,");
+    assert_contains(&electron_app, "browserCustomStudyRescheduleValue: false,");
     assert_contains(&electron_app, "browserResults: [],");
     assert_contains(&electron_app, "browserResultCardIds: [],");
     assert_contains(
@@ -992,6 +1019,14 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(
         &flutter_app,
+        "browserCustomStudyLimitValue: mosaicDouble(_hostProps, \"browser-custom-study-limit-value\", 0.0),",
+    );
+    assert_contains(
+        &flutter_app,
+        "browserCustomStudyRescheduleValue: mosaicBoolean(_hostProps, \"browser-custom-study-reschedule-value\", false),",
+    );
+    assert_contains(
+        &flutter_app,
         "browserResults: mosaicStringList(_hostProps, \"browser-results\"),",
     );
     assert_contains(
@@ -1104,6 +1139,16 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(&compose_app, "data object BrowserAddTagSelected");
     assert_contains(&compose_app, "data object BrowserRemoveTagSelected");
+    assert_contains(
+        &compose_app,
+        "data class BrowserCustomStudyLimitChange(val value: Double)",
+    );
+    assert_contains(
+        &compose_app,
+        "data class BrowserCustomStudyRescheduleChange(val checked: Boolean)",
+    );
+    assert_contains(&compose_app, "data object BrowserRebuildFilteredDeck");
+    assert_contains(&compose_app, "data object BrowserEmptyFilteredDeck");
     assert_contains(&compose_app, "@Composable");
     assert_contains(&compose_app, "fun EngramApp(");
     assert_contains(&compose_app, "appTitle: String,");
@@ -1123,6 +1168,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&compose_app, "browserFlagOpen: Boolean,");
     assert_contains(&compose_app, "browserTagEdit: String,");
     assert_contains(&compose_app, "browserAddTagLabel: String,");
+    assert_contains(&compose_app, "browserCustomStudyLimitValue: Double,");
+    assert_contains(&compose_app, "browserCustomStudyRescheduleValue: Boolean,");
     assert_contains(&compose_app, "browserResults: List<String>,");
     assert_contains(&compose_app, "browserResultCardIds: List<String>,");
     assert_contains(&compose_app, "browserSelectedCardId: String,");
@@ -1217,6 +1264,14 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &compose_main,
         "browserRemoveTagLabel = mosaicString(hostProps, \"browser-remove-tag-label\", \"Sample BrowserRemoveTagLabel\"),",
+    );
+    assert_contains(
+        &compose_main,
+        "browserCustomStudyLimitValue = mosaicDouble(hostProps, \"browser-custom-study-limit-value\", 0.0),",
+    );
+    assert_contains(
+        &compose_main,
+        "browserCustomStudyRescheduleValue = mosaicBoolean(hostProps, \"browser-custom-study-reschedule-value\", false),",
     );
     assert_contains(
         &compose_main,
@@ -1571,6 +1626,14 @@ fn native_project_shells_expose_engram_host_contract() {
     );
     assert_contains(
         &swift_app,
+        "browserCustomStudyLimitValue: MosaicHostValue.double(host.props, \"browser-custom-study-limit-value\", fallback: 0),",
+    );
+    assert_contains(
+        &swift_app,
+        "browserCustomStudyRescheduleValue: MosaicHostValue.bool(host.props, \"browser-custom-study-reschedule-value\", fallback: false),",
+    );
+    assert_contains(
+        &swift_app,
         "browserResults: MosaicHostValue.stringList(host.props, \"browser-results\", fallback: []),",
     );
     assert_contains(
@@ -1758,6 +1821,14 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_code_behind,
         "public static readonly DependencyProperty BrowserAddTagLabelProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty BrowserCustomStudyLimitValueProperty",
+    );
+    assert_contains(
+        &xaml_code_behind,
+        "public static readonly DependencyProperty BrowserCustomStudyRescheduleValueProperty",
     );
     assert_contains(
         &xaml_code_behind,
@@ -1958,6 +2029,22 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_events,
         "public sealed record BrowserRemoveTagSelected() : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record BrowserCustomStudyLimitChange(double Value) : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record BrowserCustomStudyRescheduleChange(bool Checked) : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record BrowserRebuildFilteredDeck() : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record BrowserEmptyFilteredDeck() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,

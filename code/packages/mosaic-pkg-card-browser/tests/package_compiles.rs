@@ -124,6 +124,13 @@ fn card_browser_frontend_sources_compile() {
             "tag-edit-placeholder",
             "add-tag-label",
             "remove-tag-label",
+            "custom-study-label",
+            "custom-study-limit-label",
+            "custom-study-limit-value",
+            "custom-study-reschedule-label",
+            "custom-study-reschedule-value",
+            "custom-study-rebuild-label",
+            "custom-study-empty-label",
         ]
     );
 
@@ -145,6 +152,10 @@ fn card_browser_frontend_sources_compile() {
             "onTagEditChange",
             "onAddTagSelected",
             "onRemoveTagSelected",
+            "onCustomStudyLimitChange",
+            "onCustomStudyRescheduleChange",
+            "onRebuildFilteredDeck",
+            "onEmptyFilteredDeck",
         ]
     );
 }
@@ -180,6 +191,14 @@ fn card_browser_layout_wires_search_results_and_actions() {
     assert!(source.contains("value : slot: tag-edit"));
     assert!(source.contains("placeholder : slot: tag-edit-placeholder"));
     assert!(source.contains("onChange : emit: onTagEditChange"));
+    assert!(source.contains("Row [ custom-study-row ]"));
+    assert!(source.contains("HostNumberInput [ custom-study-limit-input ]"));
+    assert!(source.contains("value : slot: custom-study-limit-value"));
+    assert!(source.contains("onChange : emit: onCustomStudyLimitChange"));
+    assert!(source.contains("HostCheckbox [ custom-study-reschedule-checkbox ]"));
+    assert!(source.contains("label : slot: custom-study-reschedule-label"));
+    assert!(source.contains("checked : slot: custom-study-reschedule-value"));
+    assert!(source.contains("onToggle : emit: onCustomStudyRescheduleChange"));
 
     for (label, emit) in [
         ("open-label", "onOpenSelected"),
@@ -188,6 +207,8 @@ fn card_browser_layout_wires_search_results_and_actions() {
         ("mark-label", "onToggleMarkSelected"),
         ("add-tag-label", "onAddTagSelected"),
         ("remove-tag-label", "onRemoveTagSelected"),
+        ("custom-study-rebuild-label", "onRebuildFilteredDeck"),
+        ("custom-study-empty-label", "onEmptyFilteredDeck"),
     ] {
         assert!(
             source.contains(&format!("label : slot: {label}")),
@@ -216,6 +237,15 @@ fn card_browser_layout_wires_search_results_and_actions() {
         "tag-edit-input",
         "add-tag-button",
         "remove-tag-button",
+        "custom-study-row",
+        "custom-study-limit-column",
+        "custom-study-label",
+        "custom-study-limit-label",
+        "custom-study-limit-input",
+        "custom-study-reschedule-column",
+        "custom-study-reschedule-checkbox",
+        "rebuild-filtered-deck-button",
+        "empty-filtered-deck-button",
     ] {
         assert!(
             style.contains(&format!("part {part}")),

@@ -141,6 +141,13 @@ component EngramApp {
   slot browser-tag-edit-placeholder : text ;
   slot browser-add-tag-label : text ;
   slot browser-remove-tag-label : text ;
+  slot browser-custom-study-label : text ;
+  slot browser-custom-study-limit-label : text ;
+  slot browser-custom-study-limit-value : number ;
+  slot browser-custom-study-reschedule-label : text ;
+  slot browser-custom-study-reschedule-value : bool ;
+  slot browser-custom-study-rebuild-label : text ;
+  slot browser-custom-study-empty-label : text ;
   slot note-editor-label : text ;
   slot note-editor-note-id-label : text ;
   slot note-editor-note-id-value : text ;
@@ -270,6 +277,10 @@ component EngramApp {
   emit onBrowserTagEditChange ( value : text ) ;
   emit onBrowserAddTagSelected ;
   emit onBrowserRemoveTagSelected ;
+  emit onBrowserCustomStudyLimitChange ( value : number ) ;
+  emit onBrowserCustomStudyRescheduleChange ( checked : bool ) ;
+  emit onBrowserRebuildFilteredDeck ;
+  emit onBrowserEmptyFilteredDeck ;
   emit onNoteEditorSelectNoteType ( index : number ) ;
   emit onNoteEditorSelectDeck ( index : number ) ;
   emit onNoteEditorSelectField ( index : number ) ;

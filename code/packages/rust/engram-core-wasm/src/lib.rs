@@ -28,6 +28,7 @@ use serde::Deserialize;
 use serde_json::{json, Value};
 
 const DEFAULT_BROWSER_QUERY: &str = "is:due OR is:new";
+const DEFAULT_CUSTOM_STUDY_LIMIT: usize = 100;
 const BROWSER_FILTER_ALL: &str = "All";
 const BROWSER_FILTER_OPTIONS: [&str; 7] = [
     BROWSER_FILTER_ALL,
@@ -48,7 +49,7 @@ pub struct EngramSession {
     note_type_editor: NoteTypeEditorSessionState,
 }
 
-#[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 struct BrowserSessionState {
     query: String,
     filter: String,
@@ -56,6 +57,8 @@ struct BrowserSessionState {
     filter_open: bool,
     flag_picker_open: bool,
     selected_index: usize,
+    custom_study_limit: usize,
+    custom_study_reschedule: bool,
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -234,6 +237,21 @@ impl ReviewSessionState {
     }
 }
 
+impl Default for BrowserSessionState {
+    fn default() -> Self {
+        Self {
+            query: String::new(),
+            filter: String::new(),
+            tag_edit: String::new(),
+            filter_open: false,
+            flag_picker_open: false,
+            selected_index: 0,
+            custom_study_limit: DEFAULT_CUSTOM_STUDY_LIMIT,
+            custom_study_reschedule: true,
+        }
+    }
+}
+
 impl BrowserSessionState {
     fn active_query(&self) -> &str {
         let query = self.query.trim();
@@ -299,6 +317,24 @@ impl BrowserSessionState {
         }
         self.selected_index = value.round() as usize;
         Ok(())
+    }
+
+    fn set_custom_study_limit(&mut self, value: f64) -> Result<(), String> {
+        if !value.is_finite() {
+            return Err("custom study card limit must be a finite number".to_string());
+        }
+        if value < 0.0 {
+            return Err("custom study card limit must be non-negative".to_string());
+        }
+        if value > usize::MAX as f64 {
+            return Err("custom study card limit is too large".to_string());
+        }
+        self.custom_study_limit = value.round() as usize;
+        Ok(())
+    }
+
+    fn set_custom_study_reschedule(&mut self, checked: bool) {
+        self.custom_study_reschedule = checked;
     }
 }
 
@@ -726,6 +762,43 @@ impl EngramSession {
                             updated_at: now,
                         },
                     );
+                }
+                EngramAppEvent::BrowserCustomStudyLimitChange => {
+                    let value = parsed.number_value.ok_or_else(|| {
+                        "onBrowserCustomStudyLimitChange is missing a numeric value".to_string()
+                    })?;
+                    self.browser.set_custom_study_limit(value)?;
+                }
+                EngramAppEvent::BrowserCustomStudyRescheduleChange => {
+                    let checked = parsed.bool_value.ok_or_else(|| {
+                        "onBrowserCustomStudyRescheduleChange is missing a checked value"
+                            .to_string()
+                    })?;
+                    self.browser.set_custom_study_reschedule(checked);
+                }
+                EngramAppEvent::BrowserRebuildFilteredDeck => {
+                    if selected_deck_context.is_empty() {
+                        return Err("cannot rebuild filtered deck without a deck".to_string());
+                    }
+                    self.state = rebuild_core_filtered_deck(
+                        &self.state,
+                        &selected_deck_context,
+                        &self.browser.effective_query(),
+                        self.browser.custom_study_limit,
+                        self.browser.custom_study_reschedule,
+                        now,
+                    )
+                    .map_err(|err| err.message.to_string())?;
+                    self.browser.selected_index = 0;
+                    self.editor.reset();
+                }
+                EngramAppEvent::BrowserEmptyFilteredDeck => {
+                    if selected_deck_context.is_empty() {
+                        return Err("cannot empty filtered deck without a deck".to_string());
+                    }
+                    self.state = empty_core_filtered_deck(&self.state, &selected_deck_context);
+                    self.browser.selected_index = 0;
+                    self.editor.reset();
                 }
                 EngramAppEvent::BrowserQueryChange => {
                     if let Some(value) = parsed.text_value.clone() {
@@ -1862,6 +1935,34 @@ fn engram_app_props_for_state(
     props_object.insert(
         "browser-remove-tag-label".to_string(),
         Value::String("Remove tag".to_string()),
+    );
+    props_object.insert(
+        "browser-custom-study-label".to_string(),
+        Value::String("Custom study".to_string()),
+    );
+    props_object.insert(
+        "browser-custom-study-limit-label".to_string(),
+        Value::String("Cards".to_string()),
+    );
+    props_object.insert(
+        "browser-custom-study-limit-value".to_string(),
+        Value::from(browser.custom_study_limit as u64),
+    );
+    props_object.insert(
+        "browser-custom-study-reschedule-label".to_string(),
+        Value::String("Reschedule reviews".to_string()),
+    );
+    props_object.insert(
+        "browser-custom-study-reschedule-value".to_string(),
+        Value::Bool(browser.custom_study_reschedule),
+    );
+    props_object.insert(
+        "browser-custom-study-rebuild-label".to_string(),
+        Value::String("Rebuild".to_string()),
+    );
+    props_object.insert(
+        "browser-custom-study-empty-label".to_string(),
+        Value::String("Empty".to_string()),
     );
     insert_note_editor_props(
         props_object,
@@ -3327,6 +3428,10 @@ enum EngramAppEvent {
     BrowserTagEditChange,
     BrowserAddTagSelected,
     BrowserRemoveTagSelected,
+    BrowserCustomStudyLimitChange,
+    BrowserCustomStudyRescheduleChange,
+    BrowserRebuildFilteredDeck,
+    BrowserEmptyFilteredDeck,
     NoteEditorSelectNoteType,
     NoteEditorSelectDeck,
     NoteEditorSelectField,
@@ -3447,6 +3552,10 @@ impl EngramAppEvent {
             Self::BrowserTagEditChange => "onBrowserTagEditChange",
             Self::BrowserAddTagSelected => "onBrowserAddTagSelected",
             Self::BrowserRemoveTagSelected => "onBrowserRemoveTagSelected",
+            Self::BrowserCustomStudyLimitChange => "onBrowserCustomStudyLimitChange",
+            Self::BrowserCustomStudyRescheduleChange => "onBrowserCustomStudyRescheduleChange",
+            Self::BrowserRebuildFilteredDeck => "onBrowserRebuildFilteredDeck",
+            Self::BrowserEmptyFilteredDeck => "onBrowserEmptyFilteredDeck",
             Self::NoteEditorSelectNoteType => "onNoteEditorSelectNoteType",
             Self::NoteEditorSelectDeck => "onNoteEditorSelectDeck",
             Self::NoteEditorSelectField => "onNoteEditorSelectField",
@@ -3775,6 +3884,28 @@ fn parse_engram_app_event_name(
         "browserremovetagselected"
         | "browser-remove-tag-selected"
         | "browser_remove_tag_selected" => parsed(EngramAppEvent::BrowserRemoveTagSelected),
+        "browsercustomstudylimitchange"
+        | "browser-custom-study-limit-change"
+        | "browser_custom_study_limit_change" => {
+            parsed(EngramAppEvent::BrowserCustomStudyLimitChange)
+        }
+        "browsercustomstudyreschedulechange"
+        | "browser-custom-study-reschedule-change"
+        | "browser_custom_study_reschedule_change" => {
+            parsed(EngramAppEvent::BrowserCustomStudyRescheduleChange)
+        }
+        "browserrebuildfiltereddeck"
+        | "browser-rebuild-filtered-deck"
+        | "browser_rebuild_filtered_deck"
+        | "browserrebuildcustomstudy"
+        | "browser-rebuild-custom-study"
+        | "browser_rebuild_custom_study" => parsed(EngramAppEvent::BrowserRebuildFilteredDeck),
+        "browseremptyfiltereddeck"
+        | "browser-empty-filtered-deck"
+        | "browser_empty_filtered_deck"
+        | "browseremptycustomstudy"
+        | "browser-empty-custom-study"
+        | "browser_empty_custom_study" => parsed(EngramAppEvent::BrowserEmptyFilteredDeck),
         "noteeditorselectnotetype"
         | "note-editor-select-note-type"
         | "note_editor_select_note_type" => parsed(EngramAppEvent::NoteEditorSelectNoteType),
@@ -8927,6 +9058,127 @@ mod tests {
         .unwrap();
         assert_eq!(new["props"]["browser-filter-value"], "New");
         assert_eq!(new["props"]["browser-result-card-ids"], json!(["new-card"]));
+    }
+
+    #[test]
+    fn app_browser_custom_study_events_rebuild_and_empty_filtered_deck() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [
+                {"id":"source","name":"Spanish","description":"Words","createdAt":1700000000000},
+                {"id":"filtered","name":"Custom Study","description":"Filtered deck","createdAt":1700000000000}
+            ],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {"id":"card-one","deckId":"source","front":"madre","back":"mother","createdAt":1700000000000},
+                {"id":"card-two","deckId":"source","front":"padre","back":"father","createdAt":1700000000000}
+            ],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "deckOptions": [],
+            "externalSources": [],
+            "mediaAssets": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+
+        let initial: Value = serde_json::from_str(&session.engram_app_props("filtered", NOW))
+            .expect("initial props should parse");
+        assert_eq!(
+            initial["props"]["browser-custom-study-limit-value"],
+            json!(DEFAULT_CUSTOM_STUDY_LIMIT)
+        );
+        assert_eq!(
+            initial["props"]["browser-custom-study-reschedule-value"],
+            true
+        );
+
+        let limited: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onBrowserCustomStudyLimitChange","value":1}"#,
+            "filtered",
+            NOW + 1,
+        ))
+        .unwrap();
+        assert_eq!(limited["ok"], true);
+        assert_eq!(
+            limited["props"]["browser-custom-study-limit-value"],
+            json!(1)
+        );
+
+        let reschedule: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onBrowserCustomStudyRescheduleChange","checked":false}"#,
+            "filtered",
+            NOW + 2,
+        ))
+        .unwrap();
+        assert_eq!(reschedule["ok"], true);
+        assert_eq!(
+            reschedule["props"]["browser-custom-study-reschedule-value"],
+            false
+        );
+
+        serde_json::from_str::<Value>(&session.handle_engram_app_event(
+            r#"{"event":"onBrowserQueryChange","value":"deck:source"}"#,
+            "filtered",
+            NOW + 3,
+        ))
+        .unwrap();
+        let rebuilt: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "browser-rebuild-custom-study",
+            "filtered",
+            NOW + 4,
+        ))
+        .unwrap();
+
+        assert_eq!(rebuilt["ok"], true);
+        assert_eq!(rebuilt["event"], "onBrowserRebuildFilteredDeck");
+        let cards = rebuilt["state"]["cards"].as_array().unwrap();
+        assert_eq!(
+            cards.iter().find(|card| card["id"] == "card-one").unwrap()["deckId"],
+            "filtered"
+        );
+        assert_eq!(
+            cards.iter().find(|card| card["id"] == "card-two").unwrap()["deckId"],
+            "source"
+        );
+
+        let sources = rebuilt["state"]["externalSources"].as_array().unwrap();
+        let deck_source = sources
+            .iter()
+            .find(|source| source["target"] == "deck" && source["targetId"] == "filtered")
+            .expect("filtered deck source should be tracked");
+        assert_eq!(deck_source["data"]["dyn"], "1");
+        assert_eq!(deck_source["data"]["search"], "deck:source");
+        assert_eq!(deck_source["data"]["limit"], "1");
+        assert_eq!(deck_source["data"]["resched"], "false");
+        assert_eq!(deck_source["data"]["rebuiltAt"], (NOW + 4).to_string());
+        let card_source = sources
+            .iter()
+            .find(|source| source["target"] == "card" && source["targetId"] == "card-one")
+            .expect("moved card source should keep original deck");
+        assert_eq!(card_source["data"]["originalDeckId"], "source");
+
+        let emptied: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onBrowserEmptyFilteredDeck",
+            "filtered",
+            NOW + 5,
+        ))
+        .unwrap();
+        assert_eq!(emptied["ok"], true);
+        assert_eq!(emptied["event"], "onBrowserEmptyFilteredDeck");
+        assert!(emptied["state"]["cards"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .all(|card| card["deckId"] == "source"));
+        assert!(!emptied["state"]["externalSources"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|source| source["target"] == "card"));
     }
 
     #[test]

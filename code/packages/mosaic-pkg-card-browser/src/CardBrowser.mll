@@ -95,6 +95,39 @@ layout CardBrowser {
         onClick : emit: onRemoveTagSelected
       )
     }
+    Row [ custom-study-row ] {
+      Column [ custom-study-limit-column ] {
+        Text [ custom-study-label ] (
+          content : slot: custom-study-label
+        )
+        Text [ custom-study-limit-label ] (
+          content : slot: custom-study-limit-label
+        )
+        HostNumberInput [ custom-study-limit-input ] (
+          value : slot: custom-study-limit-value ,
+          placeholder : "100" ,
+          disabled : false ,
+          onChange : emit: onCustomStudyLimitChange
+        )
+      }
+      Column [ custom-study-reschedule-column ] {
+        HostCheckbox [ custom-study-reschedule-checkbox ] (
+          label : slot: custom-study-reschedule-label ,
+          checked : slot: custom-study-reschedule-value ,
+          disabled : false ,
+          indeterminate : false ,
+          onToggle : emit: onCustomStudyRescheduleChange
+        )
+      }
+      HostButton [ rebuild-filtered-deck-button ] (
+        label : slot: custom-study-rebuild-label ,
+        onClick : emit: onRebuildFilteredDeck
+      )
+      HostButton [ empty-filtered-deck-button ] (
+        label : slot: custom-study-empty-label ,
+        onClick : emit: onEmptyFilteredDeck
+      )
+    }
     Row [ browser-actions ] {
       HostButton [ open-button ] (
         label : slot: open-label ,
