@@ -2,6 +2,34 @@
 
 All notable changes to the Presentation-MathML frontend crate.
 
+## [0.3.0] — 2026-06-30
+
+### Added — PR-3: named-function recognition (`<mi>sin</mi>` → `Call`)
+
+- **Applied named functions → `MathExpr::Call`.** A function name arrives as a `<mi>` identifier
+  (e.g. `<mi>sin</mi>`), usually with an invisible `<mo>&ApplyFunction;</mo>` before its argument
+  that lowering already drops — so the function symbol sits directly adjacent to its argument. The
+  row folder now recognises `sin x`, `cos(θ)`, `ln 2`, `log(x)`, … → `Call { func, arg }`, with the
+  same recognised set (sin/cos/tan/cot/sec/csc, arc*, *h, ln/log/exp, min/max/gcd/lcm/det) and
+  neutral `Func` values as the `unicode-math` and `asciimath` frontends — so all four notations agree
+  on one tree.
+- **Semantics:** the function takes ONE atom as its argument, then ordinary precedence resumes —
+  `sin x y` → `(sin x)·y`. Nested names fold right — `sin cos x` → `Call(sin, Call(cos, x))`. A
+  function name NOT followed by an operand is a plain `Symbol` (`sin` alone is the symbol `sin`,
+  never an empty application); a one-letter variable is never a function.
+- **Capabilities** add `functions`, kept honest by `check_frontend` (the conformance corpus now
+  includes `sin x`).
+- **Stack-safety regression** per the iterative-collection lesson: the leading run of function names
+  is collected then folded (not recursed per name), so a *flat* 100 000-`<mi>sin</mi>` run parses
+  (and the deep `Call` chain drops) without a stack overflow.
+- 41 unit tests + doctest (was 35): applied function (with and without `&ApplyFunction;`), one-atom
+  argument + implicit-mul, nested folding, bare-name-as-symbol, one-letter-not-a-function, and the
+  long-run stack-safety test.
+
+### Deferred to PR-4
+`<mfenced>` separator modelling (a comma-separated `(a, b)` list) — needs a neutral *list* node the
+AST does not yet have; today a fence's contents fold as one row.
+
 ## [0.2.0] — 2026-06-30
 
 ### Added — PR-2: tables, over/under-sets, and fences (structural breadth)

@@ -69,7 +69,8 @@ impl MathFrontend for MathMl {
         // `Pow`), relations (`<mo>=`/`<` …), implicit multiplication (adjacent operands in a row),
         // text (`<mtext>`), and ± / ∓ (`<mo>±`). Subscripts are core (not a capability flag).
         // PR-2 adds matrices (`<mtable>`) and over/under-sets (`<mover>`/`<munder>`/`<munderover>`);
-        // `<mfenced>` lowers to `Group` (core). Named functions (`<mi>sin</mi>` → Call) are PR-3.
+        // `<mfenced>` lowers to `Group` (core). PR-3 adds named-function recognition (`<mi>sin</mi>`
+        // applied to an argument → `Call`).
         Capabilities::none()
             .with_fractions()
             .with_roots()
@@ -80,6 +81,7 @@ impl MathFrontend for MathMl {
             .with_plusminus()
             .with_matrices()
             .with_oversets()
+            .with_functions()
     }
 }
 
@@ -394,6 +396,65 @@ mod tests {
         assert!(MathMl.parse(&wide).is_ok(), "wide table should parse, not abort");
     }
 
+    // ---- PR-3: named-function recognition -------------------------------------
+    fn call(f: Func, arg: MathExpr) -> MathExpr {
+        MathExpr::Call { func: f, arg: Box::new(arg) }
+    }
+
+    #[test]
+    fn applied_function_becomes_a_call() {
+        // <mi>sin</mi> applied (invisible ApplyFunction dropped) to x → Call(Sin, x).
+        assert_eq!(
+            p("<math><mi>sin</mi><mo>&ApplyFunction;</mo><mi>x</mi></math>"),
+            call(Func::Sin, sym("x"))
+        );
+        // Bare juxtaposition (no ApplyFunction) works too — same neutral tree.
+        assert_eq!(p("<math><mi>cos</mi><mi>x</mi></math>"), call(Func::Cos, sym("x")));
+        // ln of a number; log of a fenced group.
+        assert_eq!(p("<math><mi>ln</mi><mn>2</mn></math>"), call(Func::Ln, num(2)));
+        assert_eq!(
+            p("<math><mi>log</mi><mo>(</mo><mi>x</mi><mo>)</mo></math>"),
+            call(Func::Log, MathExpr::Group(Box::new(sym("x"))))
+        );
+    }
+
+    #[test]
+    fn function_argument_is_one_atom_then_implicit_mul() {
+        // sin x y → (sin x) · y : the function takes ONE atom, then juxtaposition multiplies.
+        let e = p("<math><mi>sin</mi><mi>x</mi><mi>y</mi></math>");
+        assert_eq!(e, b(BinOp::Mul, call(Func::Sin, sym("x")), sym("y")));
+    }
+
+    #[test]
+    fn nested_functions_fold_right() {
+        // sin cos x → Call(Sin, Call(Cos, x)).
+        let e = p("<math><mi>sin</mi><mi>cos</mi><mi>x</mi></math>");
+        assert_eq!(e, call(Func::Sin, call(Func::Cos, sym("x"))));
+    }
+
+    #[test]
+    fn function_name_alone_is_a_plain_symbol() {
+        // No argument → `sin` is just a symbol, not an empty application.
+        assert_eq!(p("<mi>sin</mi>"), sym("sin"));
+        // and at the end of a row.
+        assert_eq!(p("<math><mn>2</mn><mi>sin</mi></math>"), b(BinOp::Mul, num(2), sym("sin")));
+    }
+
+    #[test]
+    fn one_letter_variable_is_never_a_function() {
+        // A single-letter identifier that happens to start a function name stays a symbol.
+        assert_eq!(p("<math><mi>s</mi><mi>x</mi></math>"), b(BinOp::Mul, sym("s"), sym("x")));
+    }
+
+    #[test]
+    fn long_function_run_does_not_overflow() {
+        // A flat run of applied function names lives at ONE nesting level; the function folder is
+        // iterative (collect-then-fold, like the unary collector), so even 100k `<mi>sin</mi>`
+        // followed by an argument parses (and the deep Call chain drops) without a stack overflow.
+        let run = format!("<math>{}<mn>1</mn></math>", "<mi>sin</mi>".repeat(100_000));
+        assert!(MathMl.parse(&run).is_ok(), "long function run should parse, not abort");
+    }
+
     // ---- registry --------------------------------------------------------------
     #[test]
     fn registry_registers_under_its_name() {
@@ -420,6 +481,7 @@ mod tests {
             "<munder><mi>lim</mi><mi>n</mi></munder>",
             "<mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd></mtr></mtable>",
             "<mfenced><mrow><mi>x</mi><mo>+</mo><mn>1</mn></mrow></mfenced>",
+            "<math><mi>sin</mi><mi>x</mi></math>",
         ];
         let report = check_frontend(&MathMl, &samples);
         assert!(report.passed(), "conformance violations: {report:?}");
