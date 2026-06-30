@@ -932,3 +932,20 @@ emits cross-function `call`s, use a backend whose `compile` returns `None`
 (defer-to-interpreter) so nothing is stubbed. When a JIT test passes locally but
 fails on CI with missing output, suspect eager-compilation of FullyTyped
 functions to no-op binaries.
+
+## Java: unnamed variables/patterns (`_`) are a preview feature in Java 21
+
+Using `_` as a variable binding in switch pattern cases — e.g.
+`case Foo _` (type pattern) or `case Foo(_, var x)` (record component) —
+triggers: `error: unnamed variables are a preview feature and are disabled
+by default`. This is JEP 443, which was **preview in Java 21** and only
+finalized in Java 22. The CI runners target Java 21 (`java-version: '21'`
+in setup-java), so all such patterns fail on ubuntu/macos. Windows may
+pass if a newer JDK happens to be in PATH.
+
+Fix: replace every `_` pattern binding with an explicit named variable
+(e.g. `ignored`, `op2`, `nm`, `pat2`). No behaviour change — the compiler
+allows unused variables in switch arms without error.
+
+Record patterns (`case Foo(var x, var y) ->`) and type patterns with named
+bindings (`case Foo bar ->`) ARE finalized in Java 21 and compile cleanly.
