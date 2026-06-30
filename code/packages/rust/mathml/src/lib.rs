@@ -68,7 +68,8 @@ impl MathFrontend for MathMl {
         // PR-1 surface: fractions (`<mfrac>`), roots (`<msqrt>`/`<mroot>`), powers (`<msup>` →
         // `Pow`), relations (`<mo>=`/`<` …), implicit multiplication (adjacent operands in a row),
         // text (`<mtext>`), and ± / ∓ (`<mo>±`). Subscripts are core (not a capability flag).
-        // Functions, matrices, accents, and over/under-sets are PR-2.
+        // PR-2 adds matrices (`<mtable>`) and over/under-sets (`<mover>`/`<munder>`/`<munderover>`);
+        // `<mfenced>` lowers to `Group` (core). Named functions (`<mi>sin</mi>` → Call) are PR-3.
         Capabilities::none()
             .with_fractions()
             .with_roots()
@@ -77,6 +78,8 @@ impl MathFrontend for MathMl {
             .with_implicit_mul()
             .with_text()
             .with_plusminus()
+            .with_matrices()
+            .with_oversets()
     }
 }
 
@@ -311,6 +314,86 @@ mod tests {
         assert!(MathMl.parse(&deep).is_err());
     }
 
+    // ---- PR-2: over/under-sets, fences, tables --------------------------------
+    fn overset(over: MathExpr, base: MathExpr) -> MathExpr {
+        MathExpr::Overset { over: Box::new(over), base: Box::new(base) }
+    }
+    fn underset(under: MathExpr, base: MathExpr) -> MathExpr {
+        MathExpr::Underset { under: Box::new(under), base: Box::new(base) }
+    }
+
+    #[test]
+    fn mover_stacks_annotation_over_base() {
+        // <mover>x ^</mover> → Overset{ over: ^, base: x }  (base first in MathML order). The hat
+        // glyph arrives as an <mo>; in over-position it is an annotation symbol, not an infix op.
+        assert_eq!(p("<mover><mi>x</mi><mo>^</mo></mover>"), overset(sym("^"), sym("x")));
+    }
+
+    #[test]
+    fn munder_stacks_annotation_under_base() {
+        // <munder>lim 0</munder> with a symbolic annotation.
+        assert_eq!(p("<munder><mi>lim</mi><mi>n</mi></munder>"), underset(sym("n"), sym("lim")));
+    }
+
+    #[test]
+    fn munderover_nests_under_outside_over() {
+        // <munderover>base under over</munderover> → Underset{ under, base: Overset{ over, base } }.
+        let e = p("<munderover><mi>S</mi><mi>a</mi><mi>b</mi></munderover>");
+        assert_eq!(e, underset(sym("a"), overset(sym("b"), sym("S"))));
+    }
+
+    #[test]
+    fn mfenced_lowers_to_group() {
+        // <mfenced><mrow>x + 1</mrow></mfenced> → Group(Add(x,1)).
+        let e = p("<mfenced><mrow><mi>x</mi><mo>+</mo><mn>1</mn></mrow></mfenced>");
+        assert_eq!(e, MathExpr::Group(Box::new(b(BinOp::Add, sym("x"), num(1)))));
+    }
+
+    #[test]
+    fn mtable_is_a_matrix_of_rows_and_cells() {
+        // 2×2 table → Matrix([[1,2],[3,4]]).
+        let e = p(concat!(
+            "<mtable>",
+            "<mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd></mtr>",
+            "<mtr><mtd><mn>3</mn></mtd><mtd><mn>4</mn></mtd></mtr>",
+            "</mtable>"
+        ));
+        assert_eq!(e, MathExpr::Matrix(vec![vec![num(1), num(2)], vec![num(3), num(4)]]));
+    }
+
+    #[test]
+    fn mtable_cell_folds_a_full_expression() {
+        // A cell may hold a whole expression, not just an atom.
+        let e = p("<mtable><mtr><mtd><mn>1</mn><mo>+</mo><mn>2</mn></mtd></mtr></mtable>");
+        assert_eq!(e, MathExpr::Matrix(vec![vec![b(BinOp::Add, num(1), num(2))]]));
+    }
+
+    #[test]
+    fn mtable_rejects_non_mtr_children() {
+        // Only <mtr> may appear directly inside <mtable>; a stray cell is a spanned error.
+        assert!(MathMl.parse("<mtable><mtd><mn>1</mn></mtd></mtable>").is_err());
+        // and inside a row, only <mtd>.
+        assert!(MathMl.parse("<mtable><mtr><mn>1</mn></mtr></mtable>").is_err());
+        // unclosed table / row are spanned errors, not panics.
+        assert!(MathMl.parse("<mtable><mtr><mtd><mn>1</mn></mtd></mtr>").is_err());
+    }
+
+    #[test]
+    fn mover_arity_is_enforced() {
+        // <mover> needs exactly two children.
+        assert!(MathMl.parse("<mover><mi>x</mi></mover>").is_err());
+        assert!(MathMl.parse("<munderover><mi>x</mi><mi>a</mi></munderover>").is_err());
+    }
+
+    #[test]
+    fn wide_table_does_not_overflow() {
+        // A FLAT run of many rows/cells lives at shallow nesting; structural parsing is iterative,
+        // so a 50k-row table parses (and the Matrix drops) without a stack overflow / abort.
+        let row = "<mtr><mtd><mn>1</mn></mtd></mtr>";
+        let wide = format!("<mtable>{}</mtable>", row.repeat(50_000));
+        assert!(MathMl.parse(&wide).is_ok(), "wide table should parse, not abort");
+    }
+
     // ---- registry --------------------------------------------------------------
     #[test]
     fn registry_registers_under_its_name() {
@@ -333,6 +416,10 @@ mod tests {
             "<math><mn>2</mn><mi>x</mi></math>",
             "<mtext>kg</mtext>",
             "<math><mn>1</mn><mo>±</mo><mn>2</mn></math>",
+            "<mover><mi>x</mi><mo>^</mo></mover>",
+            "<munder><mi>lim</mi><mi>n</mi></munder>",
+            "<mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd></mtr></mtable>",
+            "<mfenced><mrow><mi>x</mi><mo>+</mo><mn>1</mn></mrow></mfenced>",
         ];
         let report = check_frontend(&MathMl, &samples);
         assert!(report.passed(), "conformance violations: {report:?}");

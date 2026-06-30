@@ -436,11 +436,110 @@ impl Parser {
                 let subbed = MathExpr::Subscript(Box::new(base), Box::new(sub));
                 Ok(Child::Expr(MathExpr::Bin(BinOp::Pow, Box::new(subbed), Box::new(sup))))
             }
+            // `<mover>base over</mover>` → annotation stacked over the base (drops the `accent`
+            // attribute, which we ignore — a generic Overset). `<munder>base under</munder>` →
+            // Underset. `<munderover>base under over</munderover>` → both, under-most outside.
+            "mover" => {
+                let args = self.read_n_script_args(name, 2, depth)?;
+                let mut it = args.into_iter();
+                let base = it.next().unwrap();
+                let over = it.next().unwrap();
+                Ok(Child::Expr(MathExpr::Overset { over: Box::new(over), base: Box::new(base) }))
+            }
+            "munder" => {
+                let args = self.read_n_script_args(name, 2, depth)?;
+                let mut it = args.into_iter();
+                let base = it.next().unwrap();
+                let under = it.next().unwrap();
+                Ok(Child::Expr(MathExpr::Underset { under: Box::new(under), base: Box::new(base) }))
+            }
+            "munderover" => {
+                let args = self.read_n_script_args(name, 3, depth)?;
+                let mut it = args.into_iter();
+                let base = it.next().unwrap();
+                let under = it.next().unwrap();
+                let over = it.next().unwrap();
+                let overset = MathExpr::Overset { over: Box::new(over), base: Box::new(base) };
+                Ok(Child::Expr(MathExpr::Underset { under: Box::new(under), base: Box::new(overset) }))
+            }
+            // `<mfenced>…</mfenced>` — a parenthesised group. We model the fence as a `Group` over
+            // the folded contents (its `open`/`close`/`separators` attributes are presentation,
+            // dropped like all attributes); a comma-separated list folds as one row (PR-2 limit).
+            "mfenced" => {
+                let kids = self.parse_row_children(name, depth)?;
+                let inner = fold_row(kids, span, depth)?;
+                Ok(Child::Expr(MathExpr::Group(Box::new(inner))))
+            }
+            // `<mtable>` of `<mtr>` rows of `<mtd>` cells → MathExpr::Matrix (delimiter style is
+            // not part of MathML's mtable, so nothing to drop). Parsed structurally below.
+            "mtable" => self.build_mtable(depth),
             other => {
                 // Unknown element: consume its subtree so the lexer stays balanced, then report
                 // it honestly rather than silently dropping content.
                 let _ = self.parse_row_children(name, depth);
                 err(format!("unsupported MathML element <{other}>"), span)
+            }
+        }
+    }
+
+    /// Parse a `<mtable>` body: a sequence of `<mtr>` rows, each a sequence of `<mtd>` cells, into
+    /// `MathExpr::Matrix`. Stray non-`mtr` content (or non-`mtd` inside a row) is a spanned error.
+    fn build_mtable(&mut self, depth: usize) -> Result<Child, FrontendError> {
+        if depth > MAX_DEPTH {
+            return err("MathML nested too deeply", self.current_span());
+        }
+        let mut rows: Vec<Vec<MathExpr>> = Vec::new();
+        loop {
+            match self.peek() {
+                None => return err("unclosed <mtable> (expected </mtable>)", (0, self.src_len)),
+                Some(Event::End { name, .. }) if name == "mtable" => {
+                    self.pos += 1;
+                    break;
+                }
+                Some(Event::Start { name, self_closing, .. }) if name == "mtr" => {
+                    let self_closing = *self_closing;
+                    self.pos += 1;
+                    let cells = if self_closing { Vec::new() } else { self.build_mtr_cells(depth + 1)? };
+                    rows.push(cells);
+                }
+                _ => {
+                    let span = self.current_span();
+                    return err("<mtable> may contain only <mtr> rows", span);
+                }
+            }
+        }
+        Ok(Child::Expr(MathExpr::Matrix(rows)))
+    }
+
+    /// Parse one `<mtr>` row: its `<mtd>` cells (each a folded row), up to `</mtr>`.
+    fn build_mtr_cells(&mut self, depth: usize) -> Result<Vec<MathExpr>, FrontendError> {
+        let mut cells: Vec<MathExpr> = Vec::new();
+        loop {
+            match self.peek() {
+                None => return err("unclosed <mtr> (expected </mtr>)", (0, self.src_len)),
+                Some(Event::End { name, .. }) if name == "mtr" => {
+                    self.pos += 1;
+                    return Ok(cells);
+                }
+                Some(Event::Start { name, self_closing, span }) if name == "mtd" => {
+                    let self_closing = *self_closing;
+                    let span = *span;
+                    self.pos += 1;
+                    if self_closing {
+                        cells.push(MathExpr::Symbol(String::new())); // an empty cell
+                    } else {
+                        let kids = self.parse_row_children("mtd", depth + 1)?;
+                        if kids.is_empty() {
+                            cells.push(MathExpr::Symbol(String::new()));
+                        } else {
+                            cells.push(fold_row(kids, span, depth + 1)?);
+                        }
+                    }
+                }
+                _ => {
+                    let span = self.current_span();
+                    return err("<mtr> may contain only <mtd> cells", span);
+                }
             }
         }
     }
@@ -460,6 +559,29 @@ impl Parser {
                         (0, self.src_len),
                     )
                 }
+            }
+        }
+        if args.len() != n {
+            return err(
+                format!("<{name}> expects {n} arguments, got {}", args.len()),
+                (0, self.src_len),
+            );
+        }
+        Ok(args)
+    }
+
+    /// Like [`read_n_args`](Self::read_n_args), but an operator-glyph child (`<mo>^</mo>`,
+    /// `<mo>‾</mo>`, `<mo>→</mo>`, `<mo>⏞</mo>`) is accepted as an annotation *symbol* rather than
+    /// rejected. In over/under-script position a glyph is a mark stacked on the base, not an infix
+    /// operator — so `<mover><mi>x</mi><mo>^</mo></mover>` is a legitimate "x with a hat". Used by
+    /// `<mover>`/`<munder>`/`<munderover>`.
+    fn read_n_script_args(&mut self, name: &str, n: usize, depth: usize) -> Result<Vec<MathExpr>, FrontendError> {
+        let kids = self.parse_row_children(name, depth)?;
+        let mut args = Vec::with_capacity(kids.len());
+        for c in kids {
+            match c {
+                Child::Expr(e) => args.push(e),
+                Child::Op(s) => args.push(MathExpr::Symbol(s)),
             }
         }
         if args.len() != n {
