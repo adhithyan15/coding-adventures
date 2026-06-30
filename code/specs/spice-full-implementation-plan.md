@@ -33,14 +33,16 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app startup summary.
+1. Rust Berkeley Mosaic app launch plan.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app startup summaries and JSON helpers that
-     derive a compact ready/blocked route from Berkeley app bootstrap payloads.
-   - Preserve package name, source fingerprint, repaired persisted editor-state
-     IDs, stale-state flags, active panel, diagnostic count, and blocking
-     reason so Mosaic, WebAssembly, and product shells can make startup routing
-     decisions without walking every host panel.
+   - Add schema-versioned Rust app launch plans and JSON helpers that derive
+     ready/blocked product-shell entry actions from Berkeley app bootstrap
+     payloads.
+   - Preserve package name, source fingerprint, startup route, primary entry
+     panel, entry target, repaired persisted editor-state IDs, stale-state
+     flags, panel action descriptors, diagnostic count, and blocking reason so
+     Mosaic, WebAssembly, and product shells can launch the correct surface
+     without walking every host panel.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1540,6 +1542,16 @@ the Rust, Python, and TypeScript surfaces together.
      persisted editor-state metadata, active panels, package capabilities, and
      run availability in one startup envelope for Mosaic, WebAssembly, and
      product-shell startup.
+
+146. Rust Berkeley Mosaic app startup summary.
+   - Status: completed in PR 6988.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app startup summaries plus JSON helpers that derive compact ready/blocked
+     startup routes from bootstrap payloads.
+   - The summary preserves package name, source fingerprint, repaired
+     persisted editor-state IDs, stale-state flags, active panel, diagnostic
+     count, and blocking reason so Mosaic, WebAssembly, and product shells can
+     make startup routing decisions without walking every host panel.
 
 ## Backlog
 
