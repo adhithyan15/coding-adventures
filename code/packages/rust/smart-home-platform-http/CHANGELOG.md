@@ -85,6 +85,8 @@ All notable changes to this package will be documented in this file.
   enforced by the runtime history query.
 - Added received-time upper-bound filtering for state history with
   `received_at_or_before_ms`.
+- Added observed-time upper-bound filtering for state history with
+  `observed_at_or_before_ms`.
 - Added fixture-controller launch help, smoke-test URLs, and example-level tests
   to keep the local controller startup path usable.
 - Added a machine-readable local-controller smoke plan route that lists safe
