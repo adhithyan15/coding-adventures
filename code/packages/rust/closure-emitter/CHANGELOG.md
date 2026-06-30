@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.18.10] - 2026-06-30
+
+### Changed — drop needless parens around assignments in conditional branches
+
+`emit_conditional` parenthesised an assignment in the consequent or alternate
+of a `? :`:
+
+```
+a ? b = 1 : c = 2   →  a?(b=1):(c=2)     (now: a?b=1:c=2)
+cond ? x += 1 : y   →  cond?(x+=1):y     (now: cond?x+=1:y)
+```
+
+The ECMAScript grammar is
+`ConditionalExpression : ShortCircuitExpression ? AssignmentExpression : AssignmentExpression`,
+so both branches are full `AssignmentExpression`s and need no parentheses —
+the `?`/`:` punctuation delimits them. The consequent was being emitted at
+`PREC_CONDITIONAL + 1` and the alternate at `PREC_CONDITIONAL`, both higher
+than assignment precedence, so the wrapper added parens. Both branches now
+emit at `PREC_ASSIGNMENT` (the precedence floor of the expression set — there
+is no `SequenceExpression` in the AST), so an assignment or nested conditional
+branch is never wrapped (`a?b?c:d:e` instead of `a?(b?c:d):e`).
+
+**Soundness.** The TEST is unchanged — it is a `ShortCircuitExpression`, which
+does NOT include assignment or conditional, so a test that is itself an
+assignment keeps its required parens: `(a=1)?b:c` (without them, `a=1?b:c`
+parses as `a=(1?b:c)`).
+
+Tests: `conditional_branches_do_not_parenthesize_assignments`,
+`conditional_test_assignment_stays_parenthesized`.
+
 ## [0.18.9] - 2026-06-30
 
 ### Added — Closure-style boolean shorthand: `true` → `!0`, `false` → `!1`
