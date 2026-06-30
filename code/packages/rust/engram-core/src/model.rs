@@ -61,6 +61,11 @@ pub struct CardTemplate {
     pub name: String,
     pub front_template: String,
     pub back_template: String,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub deck_id: Option<String>,
     pub required_field_names: Vec<String>,
     #[cfg_attr(
         feature = "serde",
@@ -93,6 +98,11 @@ pub struct NoteType {
     pub name: String,
     pub fields: Vec<FieldDef>,
     pub templates: Vec<CardTemplate>,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub stylesheet: Option<String>,
     pub created_at: u64,
     pub updated_at: u64,
 }
@@ -162,6 +172,15 @@ pub enum CardFlag {
     Purple,
 }
 
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub enum LeechAction {
+    Suspend,
+    #[default]
+    TagOnly,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
@@ -178,6 +197,16 @@ pub struct CardProgress {
     pub times_correct: u32,
     pub times_incorrect: u32,
     pub last_seen_at: u64,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub fsrs_stability: Option<f64>,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub fsrs_difficulty: Option<f64>,
     #[cfg_attr(
         feature = "serde",
         serde(default, skip_serializing_if = "Option::is_none")
@@ -238,6 +267,23 @@ pub struct CardProgressSnapshot {
     pub resulting_progress: Option<CardProgress>,
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct LeechEvent {
+    pub action: LeechAction,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub note_id: Option<String>,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub previous_note_tags: Option<Vec<String>>,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
@@ -247,6 +293,16 @@ pub struct Review {
     pub card_id: String,
     pub rating: Rating,
     pub reviewed_at: u64,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub answer_time_ms: Option<u32>,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub leech_event: Option<LeechEvent>,
     #[cfg_attr(
         feature = "serde",
         serde(default, skip_serializing_if = "Option::is_none")
@@ -315,6 +371,11 @@ pub struct ActiveSessionState {
     pub deck_id: String,
     pub queue: Vec<Card>,
     pub current_index: usize,
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub current_card_started_at: Option<u64>,
     pub revealed: bool,
 }
 
@@ -344,7 +405,9 @@ pub enum ExternalSourceTarget {
     Note,
     Card,
     Review,
+    Media,
     Session,
+    Deleted,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -390,14 +453,23 @@ pub struct DeckOptions {
     pub relearning_steps_minutes: Vec<u32>,
     pub graduating_interval_days: u32,
     pub easy_interval_days: u32,
+    pub initial_ease_factor: f64,
     pub maximum_interval_days: u32,
     pub review_interval_modifier: f64,
     pub hard_interval_multiplier: f64,
     pub easy_bonus_multiplier: f64,
     pub lapse_interval_multiplier: f64,
+    pub leech_threshold: u32,
+    pub leech_action: LeechAction,
     pub bury_new_siblings: bool,
     pub bury_review_siblings: bool,
     pub bury_interday_learning_siblings: bool,
+    pub desired_retention: f64,
+    pub fsrs_parameters: Vec<f64>,
+    pub fsrs_parameter_search: String,
+    pub ignore_review_history_before: String,
+    pub historical_retention: f64,
+    pub easy_days_percentages: Vec<f64>,
 }
 
 impl Default for DeckOptions {
@@ -409,14 +481,23 @@ impl Default for DeckOptions {
             relearning_steps_minutes: vec![10],
             graduating_interval_days: 1,
             easy_interval_days: 4,
+            initial_ease_factor: 2.5,
             maximum_interval_days: 36_500,
             review_interval_modifier: 1.0,
             hard_interval_multiplier: 1.2,
             easy_bonus_multiplier: 1.3,
             lapse_interval_multiplier: 0.0,
+            leech_threshold: 8,
+            leech_action: LeechAction::TagOnly,
             bury_new_siblings: true,
             bury_review_siblings: true,
             bury_interday_learning_siblings: true,
+            desired_retention: 0.9,
+            fsrs_parameters: Vec::new(),
+            fsrs_parameter_search: String::new(),
+            ignore_review_history_before: String::new(),
+            historical_retention: 0.9,
+            easy_days_percentages: vec![1.0; 7],
         }
     }
 }

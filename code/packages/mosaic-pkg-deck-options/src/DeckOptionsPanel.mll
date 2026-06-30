@@ -89,6 +89,17 @@ layout DeckOptionsPanel {
       }
     }
     Row [ review-factor-options ] {
+      Column [ initial-ease-field ] {
+        Text [ initial-ease-label ] (
+          content : slot: initial-ease-label
+        )
+        HostNumberInput [ initial-ease-input ] (
+          value : slot: initial-ease-value ,
+          placeholder : "2.5" ,
+          disabled : false ,
+          onChange : emit: onInitialEaseChange
+        )
+      }
       Column [ interval-modifier-field ] {
         Text [ interval-modifier-label ] (
           content : slot: interval-modifier-label
@@ -132,6 +143,112 @@ layout DeckOptionsPanel {
           disabled : false ,
           onChange : emit: onLapseMultiplierChange
         )
+      }
+    }
+    Row [ fsrs-options ] {
+      Column [ desired-retention-field ] {
+        Text [ desired-retention-label ] (
+          content : slot: desired-retention-label
+        )
+        HostNumberInput [ desired-retention-input ] (
+          value : slot: desired-retention-value ,
+          placeholder : "0.90" ,
+          disabled : false ,
+          onChange : emit: onDesiredRetentionChange
+        )
+      }
+      Column [ historical-retention-field ] {
+        Text [ historical-retention-label ] (
+          content : slot: historical-retention-label
+        )
+        HostNumberInput [ historical-retention-input ] (
+          value : slot: historical-retention-value ,
+          placeholder : "0.90" ,
+          disabled : false ,
+          onChange : emit: onHistoricalRetentionChange
+        )
+      }
+      Column [ fsrs-parameters-field ] {
+        Text [ fsrs-parameters-label ] (
+          content : slot: fsrs-parameters-label
+        )
+        HostInput [ fsrs-parameters-input ] (
+          value : slot: fsrs-parameters-value ,
+          placeholder : "0.1, 1.2, 2.3" ,
+          disabled : false ,
+          onChange : emit: onFsrsParametersChange
+        )
+      }
+    }
+    Row [ fsrs-filter-options ] {
+      Column [ fsrs-search-field ] {
+        Text [ fsrs-search-label ] (
+          content : slot: fsrs-search-label
+        )
+        HostInput [ fsrs-search-input ] (
+          value : slot: fsrs-search-value ,
+          placeholder : "preset:\"Default\" -is:suspended" ,
+          disabled : false ,
+          onChange : emit: onFsrsSearchChange
+        )
+      }
+      Column [ ignore-review-history-before-field ] {
+        Text [ ignore-review-history-before-label ] (
+          content : slot: ignore-review-history-before-label
+        )
+        HostInput [ ignore-review-history-before-input ] (
+          value : slot: ignore-review-history-before-value ,
+          placeholder : "2024-01-02" ,
+          disabled : false ,
+          onChange : emit: onIgnoreReviewHistoryBeforeChange
+        )
+      }
+      Column [ easy-days-percentages-field ] {
+        Text [ easy-days-percentages-label ] (
+          content : slot: easy-days-percentages-label
+        )
+        HostInput [ easy-days-percentages-input ] (
+          value : slot: easy-days-percentages-value ,
+          placeholder : "1, 1, 1, 1, 1, 1, 1" ,
+          disabled : false ,
+          onChange : emit: onEasyDaysPercentagesChange
+        )
+      }
+    }
+    Row [ leech-options ] {
+      Column [ leech-threshold-field ] {
+        Text [ leech-threshold-label ] (
+          content : slot: leech-threshold-label
+        )
+        HostNumberInput [ leech-threshold-input ] (
+          value : slot: leech-threshold-value ,
+          placeholder : "8" ,
+          disabled : false ,
+          onChange : emit: onLeechThresholdChange
+        )
+      }
+      Column [ leech-action-field ] {
+        Text [ leech-action-label ] (
+          content : slot: leech-action-label
+        )
+        Row [ leech-action-choices ] {
+          HostRadio [ leech-action-suspend-radio ] (
+            label : slot: leech-action-suspend-label ,
+            checked : slot: leech-action-suspend-value ,
+            value : "suspend" ,
+            group : "deck-options-leech-action" ,
+            disabled : false ,
+            onSelect : emit: onLeechActionChange
+          )
+          HostRadio [ leech-action-tag-only-radio ] (
+            label : slot: leech-action-tag-only-label ,
+            checked : slot: leech-action-tag-only-value ,
+            value : "tag-only" ,
+            group : "deck-options-leech-action" ,
+            disabled : false ,
+            onSelect : emit: onLeechActionChange
+          )
+        }
       }
     }
     Row [ sibling-bury-options ] {

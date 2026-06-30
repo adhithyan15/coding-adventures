@@ -779,7 +779,10 @@ fn build_style_fragment(props: &[mosstyle_compiler::StyleProp]) -> String {
 }
 
 fn upsert_style_attr(attrs: &mut Vec<(String, String)>, key: String, value: String) {
-    if let Some((_, existing)) = attrs.iter_mut().find(|(existing_key, _)| *existing_key == key) {
+    if let Some((_, existing)) = attrs
+        .iter_mut()
+        .find(|(existing_key, _)| *existing_key == key)
+    {
         *existing = value;
     } else {
         attrs.push((key, value));
@@ -3034,8 +3037,9 @@ fn build_optional_host_helpers(name: &str, namespace: &str) -> String {
              if (method is null) {{ return null; }}\n        \
              try\n        \
              {{\n            \
-                 return method.Invoke(null, new object[] {{ component }}) as string\n                \
-                     ?? \"Status: Mosaic host props loaded\";\n        \
+                 return CoerceMosaicHostResult(\n                \
+                     method.Invoke(null, new object[] {{ component }}),\n                \
+                     \"Status: Mosaic host props loaded\");\n        \
              }}\n        \
              catch (System.Reflection.TargetInvocationException ex) when (ex.InnerException is not null)\n        \
              {{\n            \
@@ -3053,8 +3057,9 @@ fn build_optional_host_helpers(name: &str, namespace: &str) -> String {
              if (method is null) {{ return null; }}\n        \
              try\n        \
              {{\n            \
-                 return method.Invoke(null, new object[] {{ component, ev }}) as string\n                \
-                     ?? $\"Status: Mosaic host handled {{ev.MosaicName}}\";\n        \
+                 return CoerceMosaicHostResult(\n                \
+                     method.Invoke(null, new object[] {{ component, ev }}),\n                \
+                     $\"Status: Mosaic host handled {{ev.MosaicName}}\");\n        \
              }}\n        \
              catch (System.Reflection.TargetInvocationException ex) when (ex.InnerException is not null)\n        \
              {{\n            \
@@ -3064,6 +3069,16 @@ fn build_optional_host_helpers(name: &str, namespace: &str) -> String {
              {{\n            \
                  return $\"Mosaic host failed: {{ex.GetType().Name}}: {{ex.Message}}\";\n        \
              }}\n    \
+         }}\n\
+         \n    \
+         private static string CoerceMosaicHostResult(object? result, string fallbackStatus)\n    \
+         {{\n        \
+             if (result is null) {{ return fallbackStatus; }}\n        \
+             if (result is string status) {{ return status; }}\n        \
+             var statusProperty = result.GetType().GetProperty(\n            \
+                 \"Status\",\n            \
+                 System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);\n        \
+             return statusProperty?.GetValue(result) as string ?? fallbackStatus;\n    \
          }}\n\
          \n    \
          private static System.Reflection.MethodInfo? FindMosaicHostMethod(string methodName, params System.Type[] parameterTypes)\n    \
@@ -4173,7 +4188,9 @@ fn emit_host_button(
     }
 
     // onClick â†’ Click handler
-    if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onClick") {
+    if let Some(LayoutPropValue::EmitRef(emit_name)) =
+        find_prop_value(node, "onClick").or_else(|| find_prop_value(node, "onTap"))
+    {
         let handler = format!("{x_name}_Click");
         let emit_case = strip_on_prefix(emit_name);
         let case_pascal = kebab_to_pascal_case(&emit_case);
@@ -4256,6 +4273,45 @@ fn host_button_click_payload_expr(emit_name: &str, ctx: &EmitContext<'_>) -> Opt
 /// case only fires `Indeterminate` when the user clicks through to the
 /// third state, which is a UX choice the host can drive via the
 /// `indeterminate:` slot. v1 ignores `Indeterminate` events.)
+fn host_link_click_payload_expr(
+    emit_name: &str,
+    node: &LayoutNode,
+    ctx: &EmitContext<'_>,
+) -> Option<String> {
+    let params = ctx.emit_payloads.get(emit_name)?;
+    if params.is_empty() {
+        return None;
+    }
+    if params.len() != 1 {
+        return None;
+    }
+
+    let (param_name, param_type) = &params[0];
+    if param_name == "href" && param_type == "string" {
+        return Some(host_link_href_payload_expr(node));
+    }
+    if let Some(expr) = host_button_click_payload_expr(emit_name, ctx) {
+        return Some(expr);
+    }
+    if param_type == "string" {
+        return Some(host_link_href_payload_expr(node));
+    }
+    None
+}
+
+fn host_link_href_payload_expr(node: &LayoutNode) -> String {
+    match find_prop_value(node, "href") {
+        Some(LayoutPropValue::String(s)) => {
+            format!("\"{}\"", escape_csharp_string(s))
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let pascal = kebab_to_pascal_case(slot);
+            format!("this.{pascal}")
+        }
+        _ => "\"\"".to_string(),
+    }
+}
+
 fn emit_host_checkbox(
     node: &LayoutNode,
     indent: usize,
@@ -4597,6 +4653,16 @@ fn emit_host_link(
         Some(LayoutPropValue::String(s)) => {
             content_attr.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(s)));
         }
+        Some(LayoutPropValue::Keyword(k)) => {
+            if ctx.lookup_for_binding(k).is_some() {
+                let pascal = kebab_to_pascal_case(k);
+                content_attr.push_str(&format!(" Content=\"{{x:Bind {pascal}}}\""));
+            } else if ctx.lookup_for_index(k).is_some() {
+                content_attr.push_str(" Content=\"{x:Bind Index}\"");
+            } else {
+                content_attr.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(k)));
+            }
+        }
         _ => {
             // No label â€” fall back to href as the visible text.
             if let Some(LayoutPropValue::String(s)) = find_prop_value(node, "href") {
@@ -4612,18 +4678,14 @@ fn emit_host_link(
             let handler = format!("{x_name}_Click");
             let case_pascal = kebab_to_pascal_case(&strip_on_prefix(emit_name));
             let component = ctx.component_name;
-            let href_arg: String = match find_prop_value(node, "href") {
-                Some(LayoutPropValue::String(s)) => {
-                    format!("\"{}\"", escape_csharp_string(s))
-                }
-                Some(LayoutPropValue::SlotRef(slot)) => {
-                    let pascal = kebab_to_pascal_case(slot);
-                    format!("this.{pascal}")
-                }
-                _ => "\"\"".to_string(),
-            };
+            let event_ctor =
+                if let Some(payload_expr) = host_link_click_payload_expr(emit_name, node, ctx) {
+                    format!("new {component}Event.{case_pascal}({payload_expr})")
+                } else {
+                    format!("new {component}Event.{case_pascal}()")
+                };
             let body = format!(
-                "    private void {handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, new {component}Event.{case_pascal}({href_arg}));\n    }}"
+                "    private void {handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, {event_ctor});\n    }}"
             );
             ctx.add_host_handler(HostHandler {
                 name: handler.clone(),
@@ -7563,6 +7625,33 @@ mod tests {
     // â”€â”€ HostScroll â”€â”€
 
     #[test]
+    fn host_button_on_tap_alias_emits_dispatch_handler() {
+        let c = component("Foo", vec![], vec![emit("onSubmit", vec![])]);
+        let l = layout_with_root(
+            "Foo",
+            host_button_node(
+                Some("submit"),
+                vec![LayoutProp {
+                    name: "onTap".to_string(),
+                    value: LayoutPropValue::EmitRef("onSubmit".to_string()),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("Click=\"Submit_Click\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.code_behind.contains("private void Submit_Click"),
+            "got:\n{}",
+            r.code_behind
+        );
+        assert!(r.code_behind.contains("FooEvent.Submit()"));
+    }
+
+    #[test]
     fn host_scroll_default_direction_is_vertical() {
         let c = component("Foo", vec![], vec![]);
         let l = layout_with_root("Foo", host_scroll_node(None, Vec::new()));
@@ -8279,6 +8368,7 @@ mod tests {
         // MainWindow.xaml.cs can optionally delegate props/events to an
         // app-provided MosaicHost without requiring one to compile.
         assert!(p.main_window_cs.contains("TryApplyMosaicHostProps"));
+        assert!(p.main_window_cs.contains("CoerceMosaicHostResult"));
         assert!(p.main_window_cs.contains("FindMosaicHostMethod"));
         assert!(p.main_window_cs.contains("Mosaic.Generated.MosaicHost"));
         // MainWindow constructor pre-populates the Greeting slot stub.
@@ -9157,7 +9247,69 @@ mod tests {
         );
     }
 
-    /// UI29-4 XAML test 3 â€” `HostTooltip` wraps its child in a
+    /// UI29-4 XAML test 3 â€” a link inside an indexed `For` dispatches
+    /// the row index and binds the row item as its label.
+    #[test]
+    fn host_link_inside_indexed_for_dispatches_index_payload() {
+        let c = component(
+            "Nav",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit(
+                "onSelect",
+                vec![param("index", EmitPayloadType::Number)],
+            )],
+        );
+        let l = layout_with_root(
+            "Nav",
+            for_node(
+                LayoutPropValue::SlotRef("items".to_string()),
+                "item",
+                Some("i"),
+                vec![LayoutNode {
+                    tag: "HostLink".to_string(),
+                    part_name: None,
+                    props: vec![
+                        LayoutProp {
+                            name: "href".to_string(),
+                            value: LayoutPropValue::String("#".to_string()),
+                        },
+                        LayoutProp {
+                            name: "label".to_string(),
+                            value: LayoutPropValue::Keyword("item".to_string()),
+                        },
+                        LayoutProp {
+                            name: "external".to_string(),
+                            value: LayoutPropValue::Keyword("false".to_string()),
+                        },
+                        LayoutProp {
+                            name: "onActivate".to_string(),
+                            value: LayoutPropValue::EmitRef("onSelect".to_string()),
+                        },
+                    ],
+                    children: Vec::new(),
+                }],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Nav"));
+        assert!(
+            r.xaml.contains("Content=\"{x:Bind Item}\""),
+            "expected HostLink label to bind For item, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.code_behind.contains(
+                "new NavEvent.Select((sender as Microsoft.UI.Xaml.FrameworkElement)?.DataContext is Nav_ItemVm row ? (double)row.Index : -1.0)"
+            ),
+            "expected HostLink to dispatch For index payload, got:\n{}",
+            r.code_behind
+        );
+    }
+
+    /// UI29-4 XAML test 4 â€” `HostTooltip` wraps its child in a
     /// `Border` with the `ToolTipService.ToolTip` attached property.
     #[test]
     fn host_tooltip_wraps_child_in_border_with_tooltip_service() {
@@ -9603,10 +9755,7 @@ mod tests {
             name: "padding-bottom".to_string(),
             value: "14px".to_string(),
         }]);
-        assert!(
-            bottom.contains("Padding=\"0,0,0,14\""),
-            "got:\n{bottom}"
-        );
+        assert!(bottom.contains("Padding=\"0,0,0,14\""), "got:\n{bottom}");
         assert!(
             !bottom.contains("PaddingBottom"),
             "PaddingBottom is not a WinUI property, got:\n{bottom}"
@@ -9616,10 +9765,7 @@ mod tests {
             name: "padding-top".to_string(),
             value: "16".to_string(),
         }]);
-        assert!(
-            top.contains("Padding=\"0,16,0,0\""),
-            "got:\n{top}"
-        );
+        assert!(top.contains("Padding=\"0,16,0,0\""), "got:\n{top}");
     }
 
     #[test]
@@ -9642,13 +9788,11 @@ mod tests {
                 }],
             },
         );
-        let s = style_for_box(
-            "shell",
-            vec![("background", "#101827"), ("padding", "24")],
-        );
+        let s = style_for_box("shell", vec![("background", "#101827"), ("padding", "24")]);
         let r = compile(&c, &l, &s);
         assert!(
-            r.xaml.contains("<Border Background=\"#101827\" Padding=\"24\">"),
+            r.xaml
+                .contains("<Border Background=\"#101827\" Padding=\"24\">"),
             "got:\n{}",
             r.xaml
         );

@@ -1,0 +1,11 @@
+[package]
+name = "mosaic-pkg-note-editor"
+version = "0.1.0"
+description = "Reusable focused note editor component for Engram-style note fields and tags"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["NoteEditor"]
+
+[kernel]
+version = "1"

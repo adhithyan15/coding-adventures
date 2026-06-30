@@ -139,6 +139,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "mosaic-emit-compose"
+version = "0.1.0"
+dependencies = [
+ "moslayout-compiler",
+ "mosmodel-compiler",
+ "mosstyle-compiler",
+]
+
+[[package]]
 name = "mosaic-emit-flutter"
 version = "0.2.0"
 dependencies = [
@@ -235,6 +244,7 @@ dependencies = [
 name = "mosaic-package-artifact-builder"
 version = "0.1.0"
 dependencies = [
+ "mosaic-emit-compose",
  "mosaic-emit-flutter",
  "mosaic-emit-html",
  "mosaic-emit-qt",

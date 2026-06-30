@@ -10,13 +10,15 @@ use std::fmt;
 use std::io::Cursor;
 
 use coding_adventures_sha1::sum1;
+pub use engram_core::EngramMediaReferenceAnalysis;
+
 use engram_core::{
-    render_cloze_template, render_cloze_template_with_front_side, render_template,
-    render_template_with_front_side, template_references_cloze, AppState, Card, CardFlag,
-    CardLineage, CardProgress, CardState, CardTemplate, ClozeRenderSide, Deck, DeckOptions,
-    DeckOptionsPreset, ExternalSourceRecord, ExternalSourceTarget, FieldDef, MediaAssetRecord,
-    Note, NoteFieldValue, NoteType, Rating, Review, Session, SessionStatus,
-    TemplateRequirementMode, INITIAL_EASE_FACTOR, ONE_DAY_MS,
+    analyze_media_references, render_cloze_template, render_cloze_template_with_front_side,
+    render_template, render_template_with_front_side, template_references_cloze, AppState, Card,
+    CardFlag, CardLineage, CardProgress, CardState, CardTemplate, ClozeRenderSide, Deck,
+    DeckOptions, DeckOptionsPreset, ExternalSourceRecord, ExternalSourceTarget, FieldDef,
+    LeechAction, MediaAssetRecord, Note, NoteFieldValue, NoteType, Rating, Review, Session,
+    SessionStatus, TemplateRequirementMode, INITIAL_EASE_FACTOR, ONE_DAY_MS,
 };
 use prost::Message;
 use rusqlite::{Connection, OpenFlags};
@@ -159,15 +161,6 @@ pub struct ApkgError {
 pub struct MediaAsset<'a> {
     pub filename: &'a str,
     pub data: &'a [u8],
-}
-
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct EngramMediaReferenceAnalysis {
-    pub referenced_filenames: Vec<String>,
-    pub referenced_asset_ids: Vec<String>,
-    pub missing_filenames: Vec<String>,
-    pub unreferenced_asset_ids: Vec<String>,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -346,12 +339,13 @@ pub fn read_media_file(data: &[u8], archive_name: &str) -> Result<ResolvedMediaF
     let media = manifest
         .media_files
         .into_iter()
-        .find(|media| media.archive_name == archive_name)
+        .find(|media| media_matches_archive_name(media, archive_name))
         .ok_or_else(|| apkg_error(format!("media file '{archive_name}' not found")))?;
-    let data = reader.read_by_name(&media.archive_name).map_err(|err| {
+    let payload_archive_name = media_payload_archive_name(&media);
+    let data = reader.read_by_name(&payload_archive_name).map_err(|err| {
         apkg_error(format!(
-            "failed to read media file '{}': {err}",
-            media.archive_name
+            "failed to read media file '{}' from archive member '{}': {err}",
+            media.archive_name, payload_archive_name
         ))
     })?;
     let data = decode_package_payload(collection.format, "media file", &data)?;
@@ -373,10 +367,11 @@ pub fn read_media_files(data: &[u8]) -> Result<Vec<ResolvedMediaFile>, ApkgError
         .media_files
         .into_iter()
         .map(|media| {
-            let data = reader.read_by_name(&media.archive_name).map_err(|err| {
+            let payload_archive_name = media_payload_archive_name(&media);
+            let data = reader.read_by_name(&payload_archive_name).map_err(|err| {
                 apkg_error(format!(
-                    "failed to read media file '{}': {err}",
-                    media.archive_name
+                    "failed to read media file '{}' from archive member '{}': {err}",
+                    media.archive_name, payload_archive_name
                 ))
             })?;
             let data = decode_package_payload(collection.format, "media file", &data)?;
@@ -387,6 +382,20 @@ pub fn read_media_files(data: &[u8]) -> Result<Vec<ResolvedMediaFile>, ApkgError
             })
         })
         .collect()
+}
+
+fn media_matches_archive_name(media: &MediaFile, archive_name: &str) -> bool {
+    media.archive_name == archive_name
+        || media
+            .legacy_zip_filename
+            .is_some_and(|legacy| archive_name == legacy.to_string())
+}
+
+fn media_payload_archive_name(media: &MediaFile) -> String {
+    media
+        .legacy_zip_filename
+        .map(|legacy| legacy.to_string())
+        .unwrap_or_else(|| media.archive_name.clone())
 }
 
 pub fn write_legacy_apkg(collection_anki2: &[u8], media_assets: &[MediaAsset<'_>]) -> Vec<u8> {
@@ -554,10 +563,14 @@ pub fn parse_v11_collection_bytes(bytes: &[u8]) -> Result<AnkiV11Collection, Apk
 pub fn read_v11_collection_as_engram_state(data: &[u8]) -> Result<AppState, ApkgError> {
     let collection = read_v11_collection(data)?;
     let mut state = v11_collection_to_engram_state(&collection)?;
-    state.media_assets = read_media_files(data)?
+    let media_assets: Vec<MediaAssetRecord> = read_media_files(data)?
         .into_iter()
         .map(media_asset_record_from_resolved)
         .collect();
+    state
+        .external_sources
+        .extend(v11_media_external_sources(&media_assets));
+    state.media_assets = media_assets;
     Ok(state)
 }
 
@@ -659,6 +672,17 @@ pub fn v11_collection_to_engram_state(
         .filter_map(|note| anki_marked_at_for_note(note).map(|marked_at| (note.id, marked_at)))
         .collect::<BTreeMap<_, _>>();
     let last_reviewed_at_by_card = last_reviewed_at_by_card(&collection.reviews);
+    let deck_options = v11_deck_options(collection);
+    let deck_options_by_deck_id: HashMap<i64, &DeckOptions> = deck_options
+        .iter()
+        .filter_map(|preset| {
+            preset
+                .deck_id
+                .parse::<i64>()
+                .ok()
+                .map(|deck_id| (deck_id, &preset.options))
+        })
+        .collect();
     let card_progress = collection
         .cards
         .iter()
@@ -668,6 +692,7 @@ pub fn v11_collection_to_engram_state(
                 collection.metadata.created_at_days,
                 &marked_at_by_note_id,
                 &last_reviewed_at_by_card,
+                deck_options_by_deck_id.get(&card.deck_id).copied(),
             )
         })
         .collect::<Vec<_>>();
@@ -691,7 +716,6 @@ pub fn v11_collection_to_engram_state(
         })
         .collect::<Vec<_>>();
     let sessions = synthetic_import_sessions(&reviews, &deck_by_card_id, &default_deck_id);
-    let deck_options = v11_deck_options(collection);
     let external_sources = v11_external_sources(collection)?;
 
     Ok(AppState {
@@ -718,152 +742,27 @@ fn media_asset_record_from_resolved(media: ResolvedMediaFile) -> MediaAssetRecor
     }
 }
 
+fn v11_media_external_sources(media_assets: &[MediaAssetRecord]) -> Vec<ExternalSourceRecord> {
+    media_assets
+        .iter()
+        .map(|asset| {
+            let mut data = BTreeMap::new();
+            insert_string(&mut data, "archiveName", &asset.archive_name);
+            if let Some(filename) = asset.filename.as_deref() {
+                insert_string(&mut data, "filename", filename);
+            }
+            source_record(
+                ExternalSourceTarget::Media,
+                asset.id.clone(),
+                Some(asset.archive_name.clone()),
+                data,
+            )
+        })
+        .collect()
+}
+
 pub fn analyze_engram_media_references(state: &AppState) -> EngramMediaReferenceAnalysis {
-    let mut referenced = BTreeSet::new();
-    for note in &state.notes {
-        for field in &note.fields {
-            collect_media_references_from_text(&field.value, &mut referenced);
-        }
-    }
-    for card in &state.cards {
-        collect_media_references_from_text(&card.front, &mut referenced);
-        collect_media_references_from_text(&card.back, &mut referenced);
-    }
-
-    let referenced_filenames = referenced.iter().cloned().collect::<Vec<_>>();
-    let referenced_asset_ids = state
-        .media_assets
-        .iter()
-        .filter(|asset| {
-            referenced
-                .iter()
-                .any(|filename| media_asset_matches_filename(asset, filename))
-        })
-        .map(|asset| asset.id.clone())
-        .collect::<Vec<_>>();
-    let unreferenced_asset_ids = state
-        .media_assets
-        .iter()
-        .filter(|asset| {
-            !referenced
-                .iter()
-                .any(|filename| media_asset_matches_filename(asset, filename))
-        })
-        .map(|asset| asset.id.clone())
-        .collect::<Vec<_>>();
-    let missing_filenames = referenced
-        .iter()
-        .filter(|filename| {
-            !state
-                .media_assets
-                .iter()
-                .any(|asset| media_asset_matches_filename(asset, filename))
-        })
-        .cloned()
-        .collect();
-
-    EngramMediaReferenceAnalysis {
-        referenced_filenames,
-        referenced_asset_ids,
-        missing_filenames,
-        unreferenced_asset_ids,
-    }
-}
-
-fn media_asset_matches_filename(asset: &MediaAssetRecord, filename: &str) -> bool {
-    asset.filename.as_deref() == Some(filename) || asset.archive_name == filename
-}
-
-fn collect_media_references_from_text(text: &str, references: &mut BTreeSet<String>) {
-    collect_sound_markers(text, references);
-    collect_src_attributes(text, references);
-}
-
-fn collect_sound_markers(text: &str, references: &mut BTreeSet<String>) {
-    let mut rest = text;
-    while let Some(start) = rest.find("[sound:") {
-        rest = &rest[start + "[sound:".len()..];
-        let Some(end) = rest.find(']') else {
-            break;
-        };
-        maybe_insert_media_reference(&rest[..end], references);
-        rest = &rest[end + 1..];
-    }
-}
-
-fn collect_src_attributes(text: &str, references: &mut BTreeSet<String>) {
-    let bytes = text.as_bytes();
-    let mut index = 0;
-    while index + 3 <= bytes.len() {
-        if !bytes[index..index + 3].eq_ignore_ascii_case(b"src")
-            || !is_html_attr_boundary(bytes.get(index.wrapping_sub(1)).copied())
-        {
-            index += 1;
-            continue;
-        }
-
-        let mut cursor = index + 3;
-        while bytes
-            .get(cursor)
-            .is_some_and(|byte| byte.is_ascii_whitespace())
-        {
-            cursor += 1;
-        }
-        if bytes.get(cursor) != Some(&b'=') {
-            index += 3;
-            continue;
-        }
-        cursor += 1;
-        while bytes
-            .get(cursor)
-            .is_some_and(|byte| byte.is_ascii_whitespace())
-        {
-            cursor += 1;
-        }
-
-        let Some(first) = bytes.get(cursor).copied() else {
-            break;
-        };
-        let (value_start, value_end) = if first == b'"' || first == b'\'' {
-            cursor += 1;
-            let terminator = first;
-            let start = cursor;
-            while bytes.get(cursor).is_some_and(|byte| *byte != terminator) {
-                cursor += 1;
-            }
-            (start, cursor)
-        } else {
-            let start = cursor;
-            while bytes
-                .get(cursor)
-                .is_some_and(|byte| !byte.is_ascii_whitespace() && *byte != b'>')
-            {
-                cursor += 1;
-            }
-            (start, cursor)
-        };
-
-        if let Some(value) = text.get(value_start..value_end) {
-            maybe_insert_media_reference(value, references);
-        }
-        index = cursor.saturating_add(1);
-    }
-}
-
-fn is_html_attr_boundary(previous: Option<u8>) -> bool {
-    previous.is_none_or(|byte| byte.is_ascii_whitespace() || byte == b'<')
-}
-
-fn maybe_insert_media_reference(value: &str, references: &mut BTreeSet<String>) {
-    let value = value.trim();
-    if value.is_empty()
-        || value.starts_with("http://")
-        || value.starts_with("https://")
-        || value.starts_with("data:")
-    {
-        return;
-    }
-    references.insert(value.to_string());
+    analyze_media_references(state)
 }
 
 fn v11_deck_options(collection: &AnkiV11Collection) -> Vec<DeckOptionsPreset> {
@@ -910,9 +809,22 @@ fn v11_options_for_deck(deck: &AnkiV11Deck, deck_config: &Value) -> DeckOptions 
                 options.easy_interval_days = (*easy).max(options.graduating_interval_days);
             }
         }
+        if let Some(initial_factor) = json_path_f64(config, &["new", "initialFactor"]) {
+            options.initial_ease_factor =
+                normalized_anki_ease_factor(initial_factor, options.initial_ease_factor);
+        }
         if let Some(multiplier) = json_path_f64(config, &["lapse", "mult"]) {
             options.lapse_interval_multiplier =
                 normalized_anki_multiplier(multiplier, options.lapse_interval_multiplier);
+        }
+        options.leech_threshold =
+            json_path_u32(config, &["lapse", "leechFails"]).unwrap_or(options.leech_threshold);
+        if let Some(action) = json_path_i64(config, &["lapse", "leechAction"]) {
+            options.leech_action = match action {
+                0 => LeechAction::Suspend,
+                1 => LeechAction::TagOnly,
+                _ => options.leech_action,
+            };
         }
         if let Some(max_interval) = json_path_u32(config, &["rev", "maxIvl"]) {
             options.maximum_interval_days = max_interval.max(1);
@@ -929,9 +841,44 @@ fn v11_options_for_deck(deck: &AnkiV11Deck, deck_config: &Value) -> DeckOptions 
             options.easy_bonus_multiplier =
                 normalized_anki_multiplier(multiplier, options.easy_bonus_multiplier);
         }
+        if let Some(desired_retention) = json_path_f64(config, &["desiredRetention"]) {
+            options.desired_retention =
+                normalized_retention(desired_retention, options.desired_retention);
+        }
+        options.fsrs_parameters = json_path_f64_array(config, &["fsrsParams6"])
+            .filter(|parameters| !parameters.is_empty())
+            .or_else(|| {
+                json_path_f64_array(config, &["fsrsParams5"])
+                    .filter(|parameters| !parameters.is_empty())
+            })
+            .or_else(|| {
+                json_path_f64_array(config, &["fsrsWeights"])
+                    .filter(|parameters| !parameters.is_empty())
+            })
+            .unwrap_or(options.fsrs_parameters);
+        options.fsrs_parameter_search =
+            json_path_string(config, &["weightSearch"]).unwrap_or(options.fsrs_parameter_search);
+        options.ignore_review_history_before =
+            json_path_string(config, &["ignoreRevlogsBeforeDate"])
+                .unwrap_or(options.ignore_review_history_before);
+        if let Some(historical_retention) = json_path_f64(config, &["sm2Retention"]) {
+            options.historical_retention =
+                normalized_retention(historical_retention, options.historical_retention);
+        }
+        options.easy_days_percentages = json_path_f64_array(config, &["easyDaysPercentages"])
+            .filter(|values| !values.is_empty())
+            .unwrap_or(options.easy_days_percentages);
     }
 
     options
+}
+
+fn normalized_retention(value: f64, fallback: f64) -> f64 {
+    if value.is_finite() && value > 0.0 && value <= 1.0 {
+        value
+    } else {
+        fallback
+    }
 }
 
 fn normalized_anki_multiplier(value: f64, fallback: f64) -> f64 {
@@ -940,6 +887,17 @@ fn normalized_anki_multiplier(value: f64, fallback: f64) -> f64 {
     }
     if value > 10.0 {
         value / 100.0
+    } else {
+        value
+    }
+}
+
+fn normalized_anki_ease_factor(value: f64, fallback: f64) -> f64 {
+    if !value.is_finite() || value <= 0.0 {
+        return fallback;
+    }
+    if value > 100.0 {
+        value / 1000.0
     } else {
         value
     }
@@ -1012,12 +970,27 @@ fn v11_external_sources(
 
     for deck in &collection.decks {
         let mut data = BTreeMap::new();
+        let config_id = json_i64(&deck.raw, "conf").unwrap_or(1);
+        insert_i64(&mut data, "configId", config_id);
+        if let Some(name) = collection
+            .metadata
+            .deck_config
+            .get(config_id.to_string())
+            .or_else(|| collection.metadata.deck_config.get("1"))
+            .and_then(|config| config.get("name"))
+            .and_then(Value::as_str)
+        {
+            insert_string(&mut data, "configName", name);
+        }
         insert_json(&mut data, "rawJson", &deck.raw, "Anki deck JSON")?;
         insert_i64(
             &mut data,
             "dyn",
             deck.raw.get("dyn").and_then(Value::as_i64).unwrap_or(0),
         );
+        if let Some(resched) = deck.raw.get("resched").and_then(Value::as_bool) {
+            insert_string(&mut data, "resched", if resched { "true" } else { "false" });
+        }
         sources.push(source_record(
             ExternalSourceTarget::Deck,
             deck.id.to_string(),
@@ -1173,6 +1146,7 @@ struct ExportNoteType {
     kind: i64,
     fields: Vec<FieldDef>,
     templates: Vec<CardTemplate>,
+    stylesheet: Option<String>,
     created_at: u64,
     updated_at: u64,
 }
@@ -1205,6 +1179,7 @@ struct ExportModel {
     notes: Vec<ExportNote>,
     cards: Vec<ExportCard>,
     reviews: Vec<Review>,
+    session_deck_by_id: HashMap<String, String>,
     progress_by_card: HashMap<String, CardProgress>,
     deck_options: Vec<DeckOptionsPreset>,
     deck_ids: BTreeMap<String, i64>,
@@ -1290,6 +1265,7 @@ impl ExportModel {
                 kind: note_type_kind(note_type),
                 fields: note_type.fields.clone(),
                 templates: note_type.templates.clone(),
+                stylesheet: note_type.stylesheet.clone(),
                 created_at: note_type.created_at,
                 updated_at: note_type.updated_at,
             })
@@ -1379,6 +1355,22 @@ impl ExportModel {
         }
 
         let computed_created_at_days = export_created_at_days(state, &decks, &notes, &cards);
+        let mut session_deck_by_id: HashMap<String, String> = state
+            .sessions
+            .iter()
+            .map(|session| {
+                (
+                    session.id.clone(),
+                    fallback_deck_key(&session.deck_id, &default_deck_key),
+                )
+            })
+            .collect();
+        if let Some(active_session) = &state.active_session {
+            session_deck_by_id.insert(
+                active_session.session_id.clone(),
+                fallback_deck_key(&active_session.deck_id, &default_deck_key),
+            );
+        }
         let created_at_days = state
             .external_sources
             .iter()
@@ -1406,6 +1398,7 @@ impl ExportModel {
             notes,
             cards,
             reviews: state.reviews.clone(),
+            session_deck_by_id,
             progress_by_card,
             deck_options: state.deck_options.clone(),
             deck_ids,
@@ -1571,7 +1564,18 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
     for (index, card) in export.cards.iter().enumerate() {
         let progress = export.progress_by_card.get(&card.key);
         let source = anki_source(export, ExternalSourceTarget::Card, &card.key);
-        let scheduling = export_card_scheduling(progress, export.created_at_days, index, source);
+        let deck_options = export
+            .deck_options
+            .iter()
+            .find(|preset| preset.deck_id == card.deck_key)
+            .map(|preset| &preset.options);
+        let scheduling = export_card_scheduling(
+            progress,
+            export.created_at_days,
+            index,
+            source,
+            deck_options,
+        );
         connection
             .execute(
                 "INSERT INTO cards VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18)",
@@ -1591,9 +1595,9 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
                     scheduling.lapses,
                     scheduling.left,
                     source_i64(source, "originalDue").unwrap_or_default(),
-                    source_i64(source, "originalDeckId").unwrap_or_default(),
+                    export_original_deck_id(export, source),
                     scheduling.flags,
-                    source_string(source, "data").unwrap_or_default(),
+                    export_card_data(progress, source),
                 ],
             )
             .map_err(|err| apkg_error(format!("failed to write Anki card {}: {err}", card.key)))?;
@@ -1601,13 +1605,18 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
 
     let mut used_review_ids = BTreeSet::new();
     for review in &export.reviews {
-        let Some(card_id) = export.card_ids.get(&review.card_id) else {
-            return Err(apkg_error(format!(
-                "Engram review {} references missing card {}",
-                review.id, review.card_id
-            )));
-        };
         let source = anki_source(export, ExternalSourceTarget::Review, &review.id);
+        let card_id = export
+            .card_ids
+            .get(&review.card_id)
+            .copied()
+            .or_else(|| source_i64(source, "cardId"))
+            .ok_or_else(|| {
+                apkg_error(format!(
+                    "Engram review {} references missing card {}",
+                    review.id, review.card_id
+                ))
+            })?;
         let review_id = unique_review_id(review, &mut used_review_ids);
         connection
             .execute(
@@ -1638,8 +1647,14 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
                             .map(progress_factor_to_anki)
                             .unwrap_or((INITIAL_EASE_FACTOR * 1000.0).round() as i64)
                     }),
-                    source_i64(source, "time").unwrap_or_default(),
-                    source_i64(source, "kind").unwrap_or_else(|| review_kind(review)),
+                    source_i64(source, "time")
+                        .or_else(|| review.answer_time_ms.map(i64::from))
+                        .unwrap_or_default(),
+                    source_i64(source, "kind").unwrap_or_else(|| review_kind(
+                        export,
+                        review,
+                        &review.card_id
+                    )),
                 ],
             )
             .map_err(|err| {
@@ -1668,9 +1683,8 @@ fn export_decks_json(export: &ExportModel) -> Value {
     let mut object = serde_json::Map::new();
     for deck in &export.decks {
         let id = export.deck_ids[&deck.key];
-        let mut deck_json =
-            anki_source_json(export, ExternalSourceTarget::Deck, &deck.key, "rawJson")
-                .unwrap_or_else(|| serde_json::json!({}));
+        let source = anki_source(export, ExternalSourceTarget::Deck, &deck.key);
+        let mut deck_json = source_json(source, "rawJson").unwrap_or_else(|| serde_json::json!({}));
         let deck_object = ensure_json_object(&mut deck_json);
         deck_object.insert("id".to_string(), Value::Number(id.into()));
         deck_object.insert("name".to_string(), Value::String(deck.name.clone()));
@@ -1696,9 +1710,35 @@ fn export_decks_json(export: &ExportModel) -> Value {
         deck_object
             .entry("extendRev".to_string())
             .or_insert_with(|| Value::Number(50_i64.into()));
+        merge_dynamic_deck_source_json(deck_object, source);
         object.insert(id.to_string(), deck_json);
     }
     Value::Object(object)
+}
+
+fn merge_dynamic_deck_source_json(
+    deck_object: &mut serde_json::Map<String, Value>,
+    source: Option<&ExternalSourceRecord>,
+) {
+    if let Some(dyn_value) = source_i64(source, "dyn") {
+        deck_object.insert("dyn".to_string(), Value::Number(dyn_value.into()));
+    }
+    if let Some(reschedule) = source_bool(source, "resched") {
+        deck_object.insert("resched".to_string(), Value::Bool(reschedule));
+    }
+    let Some(search) = source_string(source, "search") else {
+        return;
+    };
+    let limit = source_i64(source, "limit").unwrap_or_default();
+    let order = source_i64(source, "order").unwrap_or_default();
+    deck_object.insert(
+        "terms".to_string(),
+        Value::Array(vec![Value::Array(vec![
+            Value::String(search),
+            Value::Number(limit.into()),
+            Value::Number(order.into()),
+        ])]),
+    );
 }
 
 fn export_note_types_json(export: &ExportModel) -> Value {
@@ -1715,7 +1755,8 @@ fn export_note_types_json(export: &ExportModel) -> Value {
         let raw_fields = model_json.get("flds").cloned().unwrap_or(Value::Null);
         let raw_templates = model_json.get("tmpls").cloned().unwrap_or(Value::Null);
         let fields = export_note_type_fields_json(note_type, &raw_fields);
-        let templates = export_note_type_templates_json(note_type, &raw_templates);
+        let templates =
+            export_note_type_templates_json(note_type, &raw_templates, &export.deck_ids);
         let requirements = export_note_type_requirements_json(note_type);
         let model_object = ensure_json_object(&mut model_json);
         model_object.insert("id".to_string(), Value::Number(id.into()));
@@ -1733,12 +1774,16 @@ fn export_note_types_json(export: &ExportModel) -> Value {
             .entry("sortf".to_string())
             .or_insert_with(|| Value::Number(0_i64.into()));
         model_object.entry("did".to_string()).or_insert(Value::Null);
-        model_object.entry("css".to_string()).or_insert_with(|| {
-            Value::String(
-                ".card { font-family: arial; font-size: 20px; text-align: center; color: black; background-color: white; }"
-                    .to_string(),
-            )
-        });
+        if let Some(stylesheet) = &note_type.stylesheet {
+            model_object.insert("css".to_string(), Value::String(stylesheet.clone()));
+        } else {
+            model_object.entry("css".to_string()).or_insert_with(|| {
+                Value::String(
+                    ".card { font-family: arial; font-size: 20px; text-align: center; color: black; background-color: white; }"
+                        .to_string(),
+                )
+            });
+        }
         model_object
             .entry("latexPre".to_string())
             .or_insert_with(|| Value::String("\\documentclass[12pt]{article}".to_string()));
@@ -1806,9 +1851,40 @@ fn export_collection_deck_config_json(export: &ExportModel) -> Value {
 }
 
 fn export_collection_graves(export: &ExportModel) -> Vec<AnkiV11Grave> {
-    export_collection_json(export, "gravesJson")
+    let mut graves: Vec<AnkiV11Grave> = export_collection_json(export, "gravesJson")
         .and_then(|value| serde_json::from_value(value).ok())
-        .unwrap_or_default()
+        .unwrap_or_default();
+    let mut seen = graves
+        .iter()
+        .map(|grave| (grave.kind, grave.object_id))
+        .collect::<BTreeSet<_>>();
+
+    for source in &export.external_sources {
+        if let Some(grave) = deleted_source_grave(source) {
+            if seen.insert((grave.kind, grave.object_id)) {
+                graves.push(grave);
+            }
+        }
+    }
+
+    graves
+}
+
+fn deleted_source_grave(source: &ExternalSourceRecord) -> Option<AnkiV11Grave> {
+    if source.source != ANKI_V11_SOURCE || source.target != ExternalSourceTarget::Deleted {
+        return None;
+    }
+    let kind = match source.data.get("deletedTarget")?.as_str() {
+        "card" => 0,
+        "note" => 1,
+        "deck" => 2,
+        _ => return None,
+    };
+    Some(AnkiV11Grave {
+        update_sequence_number: source_i64(Some(source), "updateSequenceNumber").unwrap_or(-1),
+        object_id: source.original_id.as_deref()?.parse::<i64>().ok()?,
+        kind,
+    })
 }
 
 fn export_collection_i64(export: &ExportModel, key: &str) -> Option<i64> {
@@ -1877,6 +1953,15 @@ fn merge_deck_options_json(
             Value::Number(i64::from(options.easy_interval_days).into()),
         ]),
     );
+    new_object.insert(
+        "initialFactor".to_string(),
+        Value::Number(
+            ((finite_positive(options.initial_ease_factor, INITIAL_EASE_FACTOR) * 1000.0)
+                .round()
+                .clamp(0.0, i64::MAX as f64) as i64)
+                .into(),
+        ),
+    );
     object.insert("new".to_string(), new_section);
 
     let mut review_section = object
@@ -1929,10 +2014,44 @@ fn merge_deck_options_json(
         "mult".to_string(),
         json_f64_or(options.lapse_interval_multiplier, 0.0),
     );
+    lapse_object.insert(
+        "leechFails".to_string(),
+        Value::Number(i64::from(options.leech_threshold).into()),
+    );
+    lapse_object.insert(
+        "leechAction".to_string(),
+        Value::Number(leech_action_to_anki(options.leech_action).into()),
+    );
     object.insert("lapse".to_string(), lapse_section);
     object.insert(
         "buryInterdayLearning".to_string(),
         Value::Bool(options.bury_interday_learning_siblings),
+    );
+    object.insert(
+        "desiredRetention".to_string(),
+        json_f64_or(options.desired_retention, 0.9),
+    );
+    if !options.fsrs_parameters.is_empty() {
+        object.insert(
+            "fsrsParams6".to_string(),
+            json_f64_array_or(&options.fsrs_parameters),
+        );
+    }
+    object.insert(
+        "weightSearch".to_string(),
+        Value::String(options.fsrs_parameter_search.clone()),
+    );
+    object.insert(
+        "ignoreRevlogsBeforeDate".to_string(),
+        Value::String(options.ignore_review_history_before.clone()),
+    );
+    object.insert(
+        "sm2Retention".to_string(),
+        json_f64_or(options.historical_retention, 0.9),
+    );
+    object.insert(
+        "easyDaysPercentages".to_string(),
+        json_f64_array_or(&options.easy_days_percentages),
     );
 }
 
@@ -1941,6 +2060,31 @@ fn json_f64_or(value: f64, fallback: f64) -> Value {
     serde_json::Number::from_f64(normalized)
         .map(Value::Number)
         .unwrap_or_else(|| Value::Number(0_i64.into()))
+}
+
+fn json_f64_array_or(values: &[f64]) -> Value {
+    Value::Array(
+        values
+            .iter()
+            .filter(|value| value.is_finite())
+            .map(|value| json_f64_or(*value, 0.0))
+            .collect(),
+    )
+}
+
+fn finite_positive(value: f64, fallback: f64) -> f64 {
+    if value.is_finite() && value > 0.0 {
+        value
+    } else {
+        fallback
+    }
+}
+
+fn leech_action_to_anki(action: LeechAction) -> i64 {
+    match action {
+        LeechAction::Suspend => 0,
+        LeechAction::TagOnly => 1,
+    }
 }
 
 fn export_note_type_fields_json(note_type: &ExportNoteType, raw_fields: &Value) -> Vec<Value> {
@@ -1980,6 +2124,7 @@ fn export_note_type_fields_json(note_type: &ExportNoteType, raw_fields: &Value) 
 fn export_note_type_templates_json(
     note_type: &ExportNoteType,
     raw_templates: &Value,
+    deck_ids: &BTreeMap<String, i64>,
 ) -> Vec<Value> {
     let raw_by_ordinal = raw_values_by_ordinal(raw_templates);
     let mut templates = note_type.templates.clone();
@@ -1999,7 +2144,12 @@ fn export_note_type_templates_json(
             );
             object.insert("qfmt".to_string(), Value::String(template.front_template));
             object.insert("afmt".to_string(), Value::String(template.back_template));
-            object.entry("did".to_string()).or_insert(Value::Null);
+            object.insert(
+                "did".to_string(),
+                export_template_deck_id(template.deck_id.as_deref(), deck_ids)
+                    .map(|deck_id| Value::Number(deck_id.into()))
+                    .unwrap_or(Value::Null),
+            );
             object
                 .entry("bqfmt".to_string())
                 .or_insert_with(|| Value::String(String::new()));
@@ -2009,6 +2159,15 @@ fn export_note_type_templates_json(
             template_json
         })
         .collect()
+}
+
+fn export_template_deck_id(deck_id: Option<&str>, deck_ids: &BTreeMap<String, i64>) -> Option<i64> {
+    let deck_id = deck_id?;
+    deck_ids
+        .get(deck_id)
+        .copied()
+        .or_else(|| deck_id.parse::<i64>().ok())
+        .filter(|deck_id| *deck_id > 0)
 }
 
 fn export_note_type_requirements_json(note_type: &ExportNoteType) -> Vec<Value> {
@@ -2089,10 +2248,68 @@ fn source_i64(source: Option<&ExternalSourceRecord>, key: &str) -> Option<i64> {
         .and_then(|value| value.parse().ok())
 }
 
+fn source_bool(source: Option<&ExternalSourceRecord>, key: &str) -> Option<bool> {
+    let value = source.and_then(|source| source.data.get(key))?.trim();
+    if value.eq_ignore_ascii_case("true") || value == "1" {
+        Some(true)
+    } else if value.eq_ignore_ascii_case("false") || value == "0" {
+        Some(false)
+    } else {
+        None
+    }
+}
+
 fn source_json(source: Option<&ExternalSourceRecord>, key: &str) -> Option<Value> {
     source
         .and_then(|source| source.data.get(key))
         .and_then(|value| serde_json::from_str(value).ok())
+}
+
+fn export_card_data(
+    progress: Option<&CardProgress>,
+    source: Option<&ExternalSourceRecord>,
+) -> String {
+    let Some(progress) = progress else {
+        return source_string(source, "data").unwrap_or_default();
+    };
+    let fsrs_stability = progress
+        .fsrs_stability
+        .filter(|value| value.is_finite() && *value > 0.0);
+    let fsrs_difficulty = progress.fsrs_difficulty.filter(|value| value.is_finite());
+    if fsrs_stability.is_none() && fsrs_difficulty.is_none() {
+        return source_string(source, "data").unwrap_or_default();
+    }
+
+    let mut data = source_string(source, "data")
+        .and_then(|raw| serde_json::from_str::<Value>(&raw).ok())
+        .and_then(|value| match value {
+            Value::Object(data) => Some(data),
+            _ => None,
+        })
+        .unwrap_or_default();
+    if let Some(value) = fsrs_stability.and_then(serde_json::Number::from_f64) {
+        data.insert("s".to_string(), Value::Number(value));
+    }
+    if let Some(value) = fsrs_difficulty.and_then(serde_json::Number::from_f64) {
+        data.insert("d".to_string(), Value::Number(value));
+    }
+    Value::Object(data).to_string()
+}
+
+fn export_original_deck_id(export: &ExportModel, source: Option<&ExternalSourceRecord>) -> i64 {
+    let Some(original_deck_id) = source.and_then(|source| source.data.get("originalDeckId")) else {
+        return 0;
+    };
+    let original_deck_id = original_deck_id.trim();
+    if original_deck_id.is_empty() || original_deck_id == "0" {
+        return 0;
+    }
+    original_deck_id
+        .parse::<i64>()
+        .ok()
+        .filter(|deck_id| *deck_id != 0)
+        .or_else(|| export.deck_ids.get(original_deck_id).copied())
+        .unwrap_or_default()
 }
 
 fn export_note_sort_field(
@@ -2154,6 +2371,7 @@ fn export_card_scheduling(
     collection_created_at_days: i64,
     index: usize,
     source: Option<&ExternalSourceRecord>,
+    deck_options: Option<&DeckOptions>,
 ) -> ExportCardScheduling {
     let Some(progress) = progress else {
         return ExportCardScheduling {
@@ -2161,8 +2379,12 @@ fn export_card_scheduling(
             queue: source_i64(source, "queue").unwrap_or(0),
             due: source_i64(source, "due").unwrap_or(index.saturating_add(1) as i64),
             interval: source_i64(source, "interval").unwrap_or(0),
-            factor: source_i64(source, "factor")
-                .unwrap_or((INITIAL_EASE_FACTOR * 1000.0).round() as i64),
+            factor: source_i64(source, "factor").unwrap_or_else(|| {
+                let initial_ease = deck_options
+                    .map(|options| options.initial_ease_factor)
+                    .unwrap_or(INITIAL_EASE_FACTOR);
+                (finite_positive(initial_ease, INITIAL_EASE_FACTOR) * 1000.0).round() as i64
+            }),
             repetitions: source_i64(source, "repetitions").unwrap_or(0),
             lapses: source_i64(source, "lapses").unwrap_or(0),
             left: source_i64(source, "left").unwrap_or(0),
@@ -2188,8 +2410,14 @@ fn export_card_scheduling(
     }
 
     let (kind, queue, due) = match progress.state {
-        CardState::Learning => (1, 1, millis_to_anki_seconds(progress.next_due_at).max(1)),
-        CardState::Relearning => (3, 1, millis_to_anki_seconds(progress.next_due_at).max(1)),
+        CardState::Learning => {
+            let (queue, due) = learning_queue_and_due(progress, collection_created_at_days, source);
+            (1, queue, due)
+        }
+        CardState::Relearning => {
+            let (queue, due) = learning_queue_and_due(progress, collection_created_at_days, source);
+            (3, queue, due)
+        }
         CardState::Suspended => (
             review_or_new_kind(progress),
             preserved_source_queue(source, &[-1], -1),
@@ -2215,15 +2443,68 @@ fn export_card_scheduling(
         factor: progress_factor_to_anki(progress),
         repetitions: i64::from(progress.times_seen),
         lapses: i64::from(progress.times_incorrect),
-        left: progress
-            .learning_step_index
-            .map(i64::from)
-            .unwrap_or_else(|| source_i64(source, "left").unwrap_or_default()),
+        left: learning_step_index_to_anki_left(progress, source, deck_options),
         flags: progress
             .flag
             .map(card_flag_to_anki)
             .or_else(|| source_i64(source, "flags"))
             .unwrap_or_default(),
+    }
+}
+
+fn learning_queue_and_due(
+    progress: &CardProgress,
+    collection_created_at_days: i64,
+    source: Option<&ExternalSourceRecord>,
+) -> (i64, i64) {
+    let queue = source_i64(source, "queue")
+        .filter(|queue| matches!(*queue, 1 | 3))
+        .unwrap_or_else(|| {
+            if progress.next_due_at.saturating_sub(progress.last_seen_at) >= ONE_DAY_MS {
+                3
+            } else {
+                1
+            }
+        });
+    let due = if queue == 3 {
+        millis_to_anki_due_day(collection_created_at_days, progress.next_due_at)
+    } else {
+        millis_to_anki_seconds(progress.next_due_at).max(1)
+    };
+    (queue, due)
+}
+
+fn learning_step_index_to_anki_left(
+    progress: &CardProgress,
+    source: Option<&ExternalSourceRecord>,
+    deck_options: Option<&DeckOptions>,
+) -> i64 {
+    let Some(step_index) = progress.learning_step_index else {
+        return source_i64(source, "left").unwrap_or_default();
+    };
+    let step_count = learning_step_count_for_state(progress.state, deck_options);
+    if step_count == 0 {
+        return 0;
+    }
+
+    let clamped_index = (step_index as usize).min(step_count.saturating_sub(1));
+    let remaining = step_count.saturating_sub(clamped_index) as i64;
+    let learning_today = source_i64(source, "left")
+        .filter(|left| *left > 0)
+        .map(|left| (left / 1000) * 1000)
+        .unwrap_or_default();
+    learning_today + remaining
+}
+
+fn learning_step_count_for_state(state: CardState, deck_options: Option<&DeckOptions>) -> usize {
+    match state {
+        CardState::Learning => deck_options
+            .map(|options| options.learning_steps_minutes.len())
+            .unwrap_or_else(|| DeckOptions::default().learning_steps_minutes.len()),
+        CardState::Relearning => deck_options
+            .map(|options| options.relearning_steps_minutes.len())
+            .unwrap_or_else(|| DeckOptions::default().relearning_steps_minutes.len()),
+        _ => 0,
     }
 }
 
@@ -2301,16 +2582,54 @@ fn rating_to_v11_ease(rating: Rating) -> i64 {
     }
 }
 
-fn review_kind(review: &Review) -> i64 {
-    match review
-        .resulting_progress
-        .as_ref()
-        .map(|progress| progress.state)
-    {
-        Some(CardState::Learning) => 0,
-        Some(CardState::Relearning) => 2,
+fn review_kind(export: &ExportModel, review: &Review, card_key: &str) -> i64 {
+    if review_is_from_dynamic_deck(export, review, card_key) {
+        return 3;
+    }
+
+    if let Some(progress) = review.previous_progress.as_ref() {
+        return match progress.state {
+            CardState::Learning => 0,
+            CardState::Relearning => 2,
+            _ => 1,
+        };
+    }
+
+    match review.resulting_progress.as_ref() {
+        Some(progress) if progress.state == CardState::Learning => 0,
+        Some(progress) if progress.state == CardState::Relearning => 2,
+        Some(progress) if progress.state == CardState::Review && progress.times_seen <= 1 => 0,
         _ => 1,
     }
+}
+
+fn review_is_from_dynamic_deck(export: &ExportModel, review: &Review, card_key: &str) -> bool {
+    let deck_key = export
+        .session_deck_by_id
+        .get(&review.session_id)
+        .map(String::as_str)
+        .or_else(|| {
+            review
+                .previous_active_session
+                .as_ref()
+                .map(|session| session.deck_id.as_str())
+        })
+        .or_else(|| {
+            export
+                .cards
+                .iter()
+                .find(|card| card.key == card_key)
+                .map(|card| card.deck_key.as_str())
+        });
+    deck_key.is_some_and(|deck_key| is_dynamic_anki_deck(export, deck_key))
+}
+
+fn is_dynamic_anki_deck(export: &ExportModel, deck_key: &str) -> bool {
+    let source = anki_source(export, ExternalSourceTarget::Deck, deck_key);
+    source_i64(source, "dyn").is_some_and(|dyn_value| dyn_value != 0)
+        || source_json(source, "rawJson")
+            .and_then(|raw| json_i64(&raw, "dyn"))
+            .is_some_and(|dyn_value| dyn_value != 0)
 }
 
 fn unique_review_id(review: &Review, used: &mut BTreeSet<i64>) -> i64 {
@@ -2420,10 +2739,12 @@ fn synthetic_basic_note_type() -> ExportNoteType {
             name: "Card 1".to_string(),
             front_template: "{{Front}}".to_string(),
             back_template: "{{Back}}".to_string(),
+            deck_id: None,
             required_field_names: vec!["Front".to_string()],
             requirement_mode: TemplateRequirementMode::All,
             ordinal: 0,
         }],
+        stylesheet: None,
         created_at: 0,
         updated_at: 0,
     }
@@ -2559,6 +2880,10 @@ fn map_v11_note_type(note_type: &AnkiV11NoteType) -> NoteType {
                 name: template.name.clone(),
                 front_template: template.question_format.clone(),
                 back_template: template.answer_format.clone(),
+                deck_id: template
+                    .deck_id
+                    .filter(|deck_id| *deck_id > 0)
+                    .map(|deck_id| deck_id.to_string()),
                 required_field_names: requirement.field_names,
                 requirement_mode: requirement.mode,
                 ordinal: i64_to_u32(template.ordinal),
@@ -2571,6 +2896,7 @@ fn map_v11_note_type(note_type: &AnkiV11NoteType) -> NoteType {
         name: note_type.name.clone(),
         fields,
         templates,
+        stylesheet: (!note_type.css.trim().is_empty()).then(|| note_type.css.clone()),
         created_at: 0,
         updated_at: 0,
     }
@@ -2753,16 +3079,6 @@ fn map_v11_card(
             card.id, note.note_type_id
         ))
     })?;
-    let template = note_type
-        .templates
-        .iter()
-        .find(|template| template.ordinal == i64_to_u32(card.ordinal))
-        .ok_or_else(|| {
-            apkg_error(format!(
-                "Anki card {} references missing template ordinal {}",
-                card.id, card.ordinal
-            ))
-        })?;
     let anki_note_type = anki_note_types_by_id
         .get(&card_note_type_id(note))
         .ok_or_else(|| {
@@ -2771,6 +3087,7 @@ fn map_v11_card(
                 card.id, note.note_type_id
             ))
         })?;
+    let template = template_for_v11_card(card, note_type, anki_note_type)?;
     let mut field_values = field_value_map(note, anki_note_type);
     insert_anki_special_template_values(
         &mut field_values,
@@ -2820,6 +3137,42 @@ fn map_v11_card(
             cloze_ordinal,
         }),
     })
+}
+
+fn template_for_v11_card<'a>(
+    card: &AnkiV11Card,
+    note_type: &'a NoteType,
+    anki_note_type: &AnkiV11NoteType,
+) -> Result<&'a CardTemplate, ApkgError> {
+    if anki_note_type.kind == 1 {
+        return note_type
+            .templates
+            .iter()
+            .find(|template| template.ordinal == 0)
+            .or_else(|| {
+                note_type.templates.iter().find(|template| {
+                    template_references_cloze(&template.front_template, &template.back_template)
+                })
+            })
+            .or_else(|| note_type.templates.first())
+            .ok_or_else(|| {
+                apkg_error(format!(
+                    "Anki cloze card {} references note type {} without templates",
+                    card.id, note_type.id
+                ))
+            });
+    }
+
+    note_type
+        .templates
+        .iter()
+        .find(|template| template.ordinal == i64_to_u32(card.ordinal))
+        .ok_or_else(|| {
+            apkg_error(format!(
+                "Anki card {} references missing template ordinal {}",
+                card.id, card.ordinal
+            ))
+        })
 }
 
 fn field_value_map(note: &Note, note_type: &AnkiV11NoteType) -> HashMap<String, String> {
@@ -2903,6 +3256,7 @@ fn map_v11_card_progress(
     collection_created_at_days: i64,
     marked_at_by_note_id: &BTreeMap<i64, u64>,
     last_reviewed_at_by_card: &BTreeMap<i64, u64>,
+    deck_options: Option<&DeckOptions>,
 ) -> Option<CardProgress> {
     let flag = anki_card_flag(card.flags);
     let marked_at = marked_at_by_note_id.get(&card.note_id).copied();
@@ -2929,6 +3283,15 @@ fn map_v11_card_progress(
         .get(&card.id)
         .copied()
         .unwrap_or_else(|| anki_seconds_to_millis(card.modified_at));
+    let card_data = serde_json::from_str::<Value>(&card.data).ok();
+    let fsrs_stability = card_data
+        .as_ref()
+        .and_then(|data| json_path_f64(data, &["s"]))
+        .filter(|value| value.is_finite() && *value > 0.0);
+    let fsrs_difficulty = card_data
+        .as_ref()
+        .and_then(|data| json_path_f64(data, &["d"]))
+        .filter(|value| value.is_finite());
 
     Some(CardProgress {
         card_id: card.id.to_string(),
@@ -2940,13 +3303,10 @@ fn map_v11_card_progress(
             INITIAL_EASE_FACTOR
         },
         next_due_at,
-        learning_step_index: if matches!(state, CardState::Learning | CardState::Relearning)
-            && card.left > 0
-        {
-            Some(i64_to_u32(card.left))
-        } else {
-            None
-        },
+        learning_step_index: anki_left_to_learning_step_index(
+            card.left,
+            learning_step_count_for_state(state, deck_options),
+        ),
         buried_until: (state == CardState::Buried).then_some(next_due_at),
         suspended_at: (state == CardState::Suspended)
             .then_some(anki_seconds_to_millis(card.modified_at)),
@@ -2954,9 +3314,25 @@ fn map_v11_card_progress(
         times_correct: i64_to_u32(card.repetitions.saturating_sub(card.lapses)),
         times_incorrect: i64_to_u32(card.lapses),
         last_seen_at,
+        fsrs_stability,
+        fsrs_difficulty,
         flag,
         marked_at,
     })
+}
+
+fn anki_left_to_learning_step_index(left: i64, step_count: usize) -> Option<u32> {
+    if step_count == 0 {
+        return None;
+    }
+    let remaining = left.rem_euclid(1000) as usize;
+    if remaining == 0 {
+        return None;
+    }
+    let index = step_count
+        .saturating_sub(remaining)
+        .min(step_count.saturating_sub(1));
+    Some(index as u32)
 }
 
 fn new_card_metadata_overlay(
@@ -2978,6 +3354,8 @@ fn new_card_metadata_overlay(
         times_correct: 0,
         times_incorrect: 0,
         last_seen_at: timestamp,
+        fsrs_stability: None,
+        fsrs_difficulty: None,
         flag,
         marked_at,
     }
@@ -2997,6 +3375,8 @@ fn map_v11_review(review: &AnkiV11Review, deck_id: &str) -> Review {
         card_id: review.card_id.to_string(),
         rating: rating_from_v11_ease(review.ease),
         reviewed_at: i64_to_u64(review.id),
+        answer_time_ms: (review.time > 0).then(|| i64_to_u32(review.time)),
+        leech_event: None,
         previous_progress: Some(v11_review_progress_snapshot(
             review,
             review.last_interval,
@@ -3037,6 +3417,8 @@ fn v11_review_progress_snapshot(
         times_correct: u32::from(after_review && review.ease != 1),
         times_incorrect: incorrect,
         last_seen_at: timestamp,
+        fsrs_stability: None,
+        fsrs_difficulty: None,
         flag: None,
         marked_at: None,
     }
@@ -3418,12 +3800,34 @@ fn json_path_u32(value: &Value, path: &[&str]) -> Option<u32> {
     json_path(value, path).and_then(value_to_u32)
 }
 
+fn json_path_i64(value: &Value, path: &[&str]) -> Option<i64> {
+    json_path(value, path).and_then(Value::as_i64)
+}
+
 fn json_path_f64(value: &Value, path: &[&str]) -> Option<f64> {
     json_path(value, path).and_then(Value::as_f64)
 }
 
+fn json_path_string(value: &Value, path: &[&str]) -> Option<String> {
+    json_path(value, path)
+        .and_then(Value::as_str)
+        .map(str::to_string)
+}
+
 fn json_path_bool(value: &Value, path: &[&str]) -> Option<bool> {
     json_path(value, path).and_then(value_to_bool)
+}
+
+fn json_path_f64_array(value: &Value, path: &[&str]) -> Option<Vec<f64>> {
+    json_path(value, path).and_then(|value| {
+        value.as_array().map(|values| {
+            values
+                .iter()
+                .filter_map(Value::as_f64)
+                .filter(|value| value.is_finite())
+                .collect()
+        })
+    })
 }
 
 fn json_path_u32_array(value: &Value, path: &[&str]) -> Option<Vec<u32>> {
@@ -3665,15 +4069,19 @@ fn modern_media_manifest(reader: &ZipReader<'_>) -> Result<MediaManifest, ApkgEr
         .filter(|entry| !entry.is_directory && !is_reserved_entry(&entry.name))
         .map(|entry| (entry.name.as_str(), entry.compressed_size))
         .collect();
-    let mut mapped_archive_names = BTreeSet::new();
+    let mut mapped_payload_archive_names = BTreeSet::new();
 
     for (index, entry) in entries.entries.into_iter().enumerate() {
         let archive_name = index.to_string();
+        let payload_archive_name = entry
+            .legacy_zip_filename
+            .map(|legacy| legacy.to_string())
+            .unwrap_or_else(|| archive_name.clone());
         manifest
             .mapping
             .insert(archive_name.clone(), entry.name.clone());
-        mapped_archive_names.insert(archive_name.clone());
-        if let Some(archive_entry) = archive_entries.get(archive_name.as_str()) {
+        mapped_payload_archive_names.insert(payload_archive_name.clone());
+        if let Some(archive_entry) = archive_entries.get(payload_archive_name.as_str()) {
             manifest.media_files.push(MediaFile {
                 archive_name,
                 filename: Some(entry.name),
@@ -3688,7 +4096,7 @@ fn modern_media_manifest(reader: &ZipReader<'_>) -> Result<MediaManifest, ApkgEr
     }
 
     for archive_name in archive_entries.keys() {
-        if !mapped_archive_names.contains(*archive_name) {
+        if !mapped_payload_archive_names.contains(*archive_name) {
             manifest.unmapped_files.push((*archive_name).to_string());
         }
     }
@@ -3884,9 +4292,9 @@ CREATE TABLE graves (
                             "1": {
                                 "id": 1,
                                 "name": "Default",
-                                "new": {"perDay": 12, "bury": false, "delays": [3, 12], "ints": [2, 5]},
+                                "new": {"perDay": 12, "bury": false, "delays": [3, 12], "ints": [2, 5], "initialFactor": 2800},
                                 "rev": {"perDay": 80, "bury": false, "maxIvl": 90, "ivlFct": 0.75, "hardFactor": 1.4, "ease4": 1.6},
-                                "lapse": {"delays": [20], "mult": 0.5},
+                                "lapse": {"delays": [20], "mult": 0.5, "leechFails": 6, "leechAction": 0},
                                 "buryInterdayLearning": false
                             }
                         }"#,
@@ -3933,7 +4341,7 @@ CREATE TABLE graves (
                         0_i64,
                         0_i64,
                         4_i64,
-                        ""
+                        r#"{"s":6.25,"d":7.3}"#
                     ],
                 )
                 .unwrap();
@@ -4123,6 +4531,7 @@ CREATE TABLE graves (
         assert_eq!(collection.reviews[0].card_id, 2000);
         assert_eq!(collection.reviews[0].ease, 3);
         assert_eq!(collection.reviews[0].last_interval, 3);
+        assert_eq!(collection.reviews[0].time, 12_000);
 
         assert_eq!(collection.graves.len(), 1);
         assert_eq!(collection.graves[0].object_id, 999);
@@ -4155,14 +4564,30 @@ CREATE TABLE graves (
         assert_eq!(options.relearning_steps_minutes, vec![20]);
         assert_eq!(options.graduating_interval_days, 2);
         assert_eq!(options.easy_interval_days, 5);
+        assert_eq!(options.initial_ease_factor, 2.8);
         assert_eq!(options.maximum_interval_days, 90);
         assert_eq!(options.review_interval_modifier, 0.75);
         assert_eq!(options.hard_interval_multiplier, 1.4);
         assert_eq!(options.easy_bonus_multiplier, 1.6);
         assert_eq!(options.lapse_interval_multiplier, 0.5);
+        assert_eq!(options.leech_threshold, 6);
+        assert_eq!(options.leech_action, LeechAction::Suspend);
         assert!(!options.bury_new_siblings);
         assert!(!options.bury_review_siblings);
         assert!(!options.bury_interday_learning_siblings);
+        let deck_source = state
+            .external_sources
+            .iter()
+            .find(|source| source.target == ExternalSourceTarget::Deck && source.target_id == "2")
+            .unwrap();
+        assert_eq!(
+            deck_source.data.get("configId").map(String::as_str),
+            Some("1")
+        );
+        assert_eq!(
+            deck_source.data.get("configName").map(String::as_str),
+            Some("Default")
+        );
 
         assert_eq!(state.note_types.len(), 1);
         let note_type = &state.note_types[0];
@@ -4170,6 +4595,7 @@ CREATE TABLE graves (
         assert_eq!(note_type.fields[0].id, "100:field:0");
         assert_eq!(note_type.fields[0].name, "Front");
         assert_eq!(note_type.templates[0].id, "100:template:0");
+        assert_eq!(note_type.templates[0].deck_id.as_deref(), Some("2"));
 
         assert_eq!(state.notes.len(), 1);
         let note = &state.notes[0];
@@ -4201,6 +4627,8 @@ CREATE TABLE graves (
         assert_eq!(progress.times_correct, 2);
         assert_eq!(progress.times_incorrect, 1);
         assert_eq!(progress.last_seen_at, 3000);
+        assert_eq!(progress.fsrs_stability, Some(6.25));
+        assert_eq!(progress.fsrs_difficulty, Some(7.3));
         assert_eq!(progress.flag, Some(CardFlag::Blue));
 
         assert_eq!(state.reviews.len(), 1);
@@ -4208,6 +4636,7 @@ CREATE TABLE graves (
         assert_eq!(state.reviews[0].session_id, "anki-import:2");
         assert_eq!(state.reviews[0].rating, Rating::Good);
         assert_eq!(state.reviews[0].reviewed_at, 3000);
+        assert_eq!(state.reviews[0].answer_time_ms, Some(12_000));
         let previous = state.reviews[0].previous_progress.as_ref().unwrap();
         assert_eq!(previous.card_id, "2000");
         assert_eq!(previous.interval, 3);
@@ -4230,11 +4659,20 @@ CREATE TABLE graves (
             exported.metadata.deck_config["2"]["new"]["delays"],
             serde_json::json!([3, 12])
         );
+        assert_eq!(
+            exported.metadata.deck_config["2"]["new"]["initialFactor"],
+            2800
+        );
         assert_eq!(exported.metadata.deck_config["2"]["rev"]["maxIvl"], 90);
         assert_eq!(exported.metadata.deck_config["2"]["rev"]["ivlFct"], 0.75);
         assert_eq!(exported.metadata.deck_config["2"]["rev"]["hardFactor"], 1.4);
         assert_eq!(exported.metadata.deck_config["2"]["rev"]["ease4"], 1.6);
         assert_eq!(exported.metadata.deck_config["2"]["lapse"]["mult"], 0.5);
+        assert_eq!(exported.metadata.deck_config["2"]["lapse"]["leechFails"], 6);
+        assert_eq!(
+            exported.metadata.deck_config["2"]["lapse"]["leechAction"],
+            0
+        );
         assert_eq!(exported.metadata.deck_config["2"]["new"]["bury"], false);
         assert_eq!(exported.metadata.deck_config["2"]["rev"]["bury"], false);
         assert_eq!(
@@ -4248,6 +4686,68 @@ CREATE TABLE graves (
         assert_eq!(state.sessions[0].status, SessionStatus::Completed);
         assert_eq!(state.sessions[0].cards_reviewed, 1);
         assert_eq!(state.sessions[0].cards_correct, 1);
+    }
+
+    #[test]
+    fn imports_and_exports_v11_fsrs_deck_options() {
+        let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        collection.metadata.deck_config = serde_json::json!({
+            "1": {
+                "id": 1,
+                "name": "FSRS preset",
+                "new": {"perDay": 12, "delays": [3, 12], "ints": [2, 5], "initialFactor": 2800},
+                "rev": {"perDay": 80, "maxIvl": 90, "ivlFct": 0.75, "hardFactor": 1.4, "ease4": 1.6},
+                "lapse": {"delays": [20], "mult": 0.5, "leechFails": 6, "leechAction": 0},
+                "desiredRetention": 0.92,
+                "fsrsParams6": [0.1, 1.2, 2.3],
+                "weightSearch": "preset:\"FSRS preset\" -is:suspended",
+                "ignoreRevlogsBeforeDate": "2024-01-02",
+                "sm2Retention": 0.86,
+                "easyDaysPercentages": [1.0, 0.9, 0.8, 1.1, 1.2, 1.0, 0.95]
+            }
+        });
+
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+        let options = state
+            .deck_options
+            .iter()
+            .find(|preset| preset.deck_id == "2")
+            .map(|preset| &preset.options)
+            .expect("Spanish deck should have imported deck options");
+
+        assert_eq!(options.desired_retention, 0.92);
+        assert_eq!(options.fsrs_parameters, vec![0.1, 1.2, 2.3]);
+        assert_eq!(
+            options.fsrs_parameter_search,
+            "preset:\"FSRS preset\" -is:suspended"
+        );
+        assert_eq!(options.ignore_review_history_before, "2024-01-02");
+        assert_eq!(options.historical_retention, 0.86);
+        assert_eq!(
+            options.easy_days_percentages,
+            vec![1.0, 0.9, 0.8, 1.1, 1.2, 1.0, 0.95]
+        );
+
+        let exported = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+        )
+        .unwrap();
+        let deck = exported.decks.iter().find(|deck| deck.id == 2).unwrap();
+        let config_id = deck.raw["conf"].as_i64().unwrap();
+        let config = &exported.metadata.deck_config[config_id.to_string()];
+
+        assert_eq!(config["desiredRetention"], 0.92);
+        assert_eq!(config["fsrsParams6"], serde_json::json!([0.1, 1.2, 2.3]));
+        assert_eq!(
+            config["weightSearch"],
+            "preset:\"FSRS preset\" -is:suspended"
+        );
+        assert_eq!(config["ignoreRevlogsBeforeDate"], "2024-01-02");
+        assert_eq!(config["sm2Retention"], 0.86);
+        assert_eq!(
+            config["easyDaysPercentages"],
+            serde_json::json!([1.0, 0.9, 0.8, 1.1, 1.2, 1.0, 0.95])
+        );
     }
 
     #[test]
@@ -4284,6 +4784,121 @@ CREATE TABLE graves (
             day_learning_state.card_progress[0].next_due_at,
             (19_000 + 43) * ONE_DAY_MS
         );
+        let day_learning_export = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&day_learning_state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(day_learning_export.cards[0].kind, 1);
+        assert_eq!(day_learning_export.cards[0].queue, 3);
+        assert_eq!(day_learning_export.cards[0].due, 43);
+
+        let mut day_relearning = collection.clone();
+        day_relearning.cards[0].kind = 3;
+        day_relearning.cards[0].queue = 3;
+        day_relearning.cards[0].due = 44;
+        let day_relearning_state = v11_collection_to_engram_state(&day_relearning).unwrap();
+        assert_eq!(
+            day_relearning_state.card_progress[0].state,
+            CardState::Relearning
+        );
+        assert_eq!(
+            day_relearning_state.card_progress[0].next_due_at,
+            (19_000 + 44) * ONE_DAY_MS
+        );
+        let day_relearning_export = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&day_relearning_state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(day_relearning_export.cards[0].kind, 3);
+        assert_eq!(day_relearning_export.cards[0].queue, 3);
+        assert_eq!(day_relearning_export.cards[0].due, 44);
+    }
+
+    #[test]
+    fn exports_native_learning_due_after_one_day_as_interday_queue() {
+        let collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        let mut state = v11_collection_to_engram_state(&collection).unwrap();
+        state.external_sources.retain(|source| {
+            !(source.target == ExternalSourceTarget::Card && source.target_id == "2000")
+        });
+
+        let reviewed_at = (19_000 + 42) * ONE_DAY_MS;
+        let progress = &mut state.card_progress[0];
+        progress.state = CardState::Learning;
+        progress.interval = 0;
+        progress.learning_step_index = Some(1);
+        progress.last_seen_at = reviewed_at;
+        progress.next_due_at = reviewed_at + 10 * 60 * 1000;
+
+        let intraday_export = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(intraday_export.cards[0].kind, 1);
+        assert_eq!(intraday_export.cards[0].queue, 1);
+        assert_eq!(
+            intraday_export.cards[0].due,
+            i64::try_from((reviewed_at + 10 * 60 * 1000) / 1000).unwrap()
+        );
+
+        state.card_progress[0].next_due_at = reviewed_at + ONE_DAY_MS;
+        let interday_export = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(interday_export.cards[0].kind, 1);
+        assert_eq!(interday_export.cards[0].queue, 3);
+        assert_eq!(interday_export.cards[0].due, 43);
+    }
+
+    #[test]
+    fn maps_v11_learning_left_as_remaining_steps_and_preserves_packed_today_count() {
+        let collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+
+        let mut first_step = collection.clone();
+        first_step.cards[0].kind = 1;
+        first_step.cards[0].queue = 1;
+        first_step.cards[0].due = 1_700_000_300;
+        first_step.cards[0].left = 2;
+        let first_step_state = v11_collection_to_engram_state(&first_step).unwrap();
+        assert_eq!(
+            first_step_state.card_progress[0].learning_step_index,
+            Some(0)
+        );
+        let first_step_export = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&first_step_state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(first_step_export.cards[0].left, 2);
+
+        let mut second_step = collection.clone();
+        second_step.cards[0].kind = 1;
+        second_step.cards[0].queue = 1;
+        second_step.cards[0].due = 1_700_000_300;
+        second_step.cards[0].left = 1;
+        let second_step_state = v11_collection_to_engram_state(&second_step).unwrap();
+        assert_eq!(
+            second_step_state.card_progress[0].learning_step_index,
+            Some(1)
+        );
+        let second_step_export = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&second_step_state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(second_step_export.cards[0].left, 1);
+
+        let mut packed_today = first_step;
+        packed_today.cards[0].left = 1002;
+        let packed_today_state = v11_collection_to_engram_state(&packed_today).unwrap();
+        assert_eq!(
+            packed_today_state.card_progress[0].learning_step_index,
+            Some(0)
+        );
+        let packed_today_export = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&packed_today_state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(packed_today_export.cards[0].left, 1002);
     }
 
     #[test]
@@ -4359,7 +4974,8 @@ CREATE TABLE graves (
             vec!["Front"]
         );
         assert_eq!(state.cards[0].front, "hola");
-        assert_eq!(state.cards[0].back, "hola<hr>hello");
+        assert_eq!(state.cards[0].back, "hola<hr>[show hint: Back]");
+        assert!(!state.cards[0].back.contains(">hello"));
     }
 
     #[test]
@@ -4381,6 +4997,39 @@ CREATE TABLE graves (
             state.cards[0].front,
             "script root|Basic|Spanish::Latin|Latin|Card 1|flag3|2000"
         );
+    }
+
+    #[test]
+    fn maps_v11_template_deck_override_into_regenerated_cards() {
+        let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        collection.decks.push(AnkiV11Deck {
+            id: 3,
+            name: "Spanish::Reverse".to_string(),
+            description: "Template override deck".to_string(),
+            raw: serde_json::json!({
+                "id": 3,
+                "name": "Spanish::Reverse",
+                "desc": "Template override deck"
+            }),
+        });
+        collection.note_types[0].templates[0].deck_id = Some(3);
+        collection.note_types[0].raw["tmpls"][0]["did"] = serde_json::json!(3);
+
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+        let template = &state.note_types[0].templates[0];
+        let generated = engram_core::generate_cards_for_note(&state.note_types[0], &state.notes[0]);
+
+        assert_eq!(state.notes[0].deck_id, "2");
+        assert_eq!(state.cards[0].deck_id, "2");
+        assert_eq!(template.deck_id.as_deref(), Some("3"));
+        assert_eq!(generated[0].deck_id, "3");
+
+        let exported = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(exported.note_types[0].templates[0].deck_id, Some(3));
+        assert_eq!(exported.note_types[0].raw["tmpls"][0]["did"], 3);
     }
 
     #[test]
@@ -4541,6 +5190,7 @@ CREATE TABLE graves (
                 }
             ]
         });
+        collection.note_types[0].css = ".card { color: teal; }".to_string();
         collection.notes[0].guid = "stable-guid".to_string();
         collection.notes[0].modified_at = 1_700_006_666;
         collection.notes[0].update_sequence_number = 17;
@@ -4567,6 +5217,10 @@ CREATE TABLE graves (
         }];
 
         let state = v11_collection_to_engram_state(&collection).unwrap();
+        assert_eq!(
+            state.note_types[0].stylesheet.as_deref(),
+            Some(".card { color: teal; }")
+        );
         assert!(state.external_sources.iter().any(|source| {
             source.source == ANKI_V11_SOURCE
                 && source.target == ExternalSourceTarget::NoteType
@@ -4637,6 +5291,102 @@ CREATE TABLE graves (
     }
 
     #[test]
+    fn exports_current_fsrs_memory_into_v11_card_data() {
+        let mut collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        collection.cards[0].data =
+            serde_json::json!({ "s": 1.25, "d": 2.5, "cd": { "source": "kept" } }).to_string();
+        let mut state = v11_collection_to_engram_state(&collection).unwrap();
+        state.card_progress[0].fsrs_stability = Some(9.5);
+        state.card_progress[0].fsrs_difficulty = Some(4.25);
+
+        let exported = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+        )
+        .unwrap();
+        let card_data = serde_json::from_str::<Value>(&exported.cards[0].data).unwrap();
+
+        assert_eq!(card_data["s"], serde_json::json!(9.5));
+        assert_eq!(card_data["d"], serde_json::json!(4.25));
+        assert_eq!(card_data["cd"]["source"], "kept");
+
+        let reimported = v11_collection_to_engram_state(&exported).unwrap();
+        assert_eq!(reimported.card_progress[0].fsrs_stability, Some(9.5));
+        assert_eq!(reimported.card_progress[0].fsrs_difficulty, Some(4.25));
+    }
+
+    #[test]
+    fn exports_graves_for_deleted_imported_notes_and_cards() {
+        let collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+
+        let deleted = engram_core::reduce(
+            &state,
+            engram_core::EngramCommand::DeleteNote {
+                note_id: "1000".to_string(),
+            },
+        );
+
+        assert!(deleted.notes.is_empty());
+        assert!(deleted.cards.is_empty());
+        assert!(deleted.external_sources.iter().any(|source| {
+            source.target == ExternalSourceTarget::Deleted
+                && source.original_id.as_deref() == Some("1000")
+                && source.data.get("deletedTarget").map(String::as_str) == Some("note")
+        }));
+        assert!(deleted.external_sources.iter().any(|source| {
+            source.target == ExternalSourceTarget::Deleted
+                && source.original_id.as_deref() == Some("2000")
+                && source.data.get("deletedTarget").map(String::as_str) == Some("card")
+        }));
+
+        let exported = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&deleted).unwrap(),
+        )
+        .unwrap();
+
+        assert!(exported
+            .graves
+            .iter()
+            .any(|grave| grave.object_id == 1000 && grave.kind == 1));
+        assert!(exported
+            .graves
+            .iter()
+            .any(|grave| grave.object_id == 2000 && grave.kind == 0));
+        assert_eq!(exported.reviews.len(), 1);
+        assert_eq!(exported.reviews[0].card_id, 2000);
+    }
+
+    #[test]
+    fn exports_graves_for_deleted_imported_decks() {
+        let collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+
+        let deleted = engram_core::reduce(
+            &state,
+            engram_core::EngramCommand::DeleteDeck {
+                deck_id: "2".to_string(),
+            },
+        );
+
+        assert!(deleted.decks.iter().all(|deck| deck.id != "2"));
+        assert!(deleted.external_sources.iter().any(|source| {
+            source.target == ExternalSourceTarget::Deleted
+                && source.original_id.as_deref() == Some("2")
+                && source.data.get("deletedTarget").map(String::as_str) == Some("deck")
+        }));
+
+        let exported = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&deleted).unwrap(),
+        )
+        .unwrap();
+
+        assert!(exported
+            .graves
+            .iter()
+            .any(|grave| grave.object_id == 2 && grave.kind == 2));
+    }
+
+    #[test]
     fn maps_v11_cloze_cards_into_rendered_engram_cards() {
         let collection = AnkiV11Collection {
             metadata: AnkiV11CollectionMetadata {
@@ -4690,34 +5440,56 @@ CREATE TABLE graves (
                 update_sequence_number: -1,
                 tags: vec!["roots".to_string()],
                 field_values: vec![
-                    "The word {{c1::night::old root}} travels.".to_string(),
+                    "The word {{c1::night::old root}} meets {{c2::nox::Latin}}.".to_string(),
                     "Proto-Indo-European stories go here.".to_string(),
                 ],
-                sort_field: "The word night travels.".to_string(),
+                sort_field: "The word night meets nox.".to_string(),
                 checksum: 0,
                 flags: 0,
                 data: String::new(),
             }],
-            cards: vec![AnkiV11Card {
-                id: 2000,
-                note_id: 1000,
-                deck_id: 1,
-                ordinal: 0,
-                modified_at: 1_700_000_020,
-                update_sequence_number: -1,
-                kind: 0,
-                queue: 0,
-                due: 0,
-                interval: 0,
-                factor: 0,
-                repetitions: 0,
-                lapses: 0,
-                left: 0,
-                original_due: 0,
-                original_deck_id: 0,
-                flags: 0,
-                data: String::new(),
-            }],
+            cards: vec![
+                AnkiV11Card {
+                    id: 2000,
+                    note_id: 1000,
+                    deck_id: 1,
+                    ordinal: 0,
+                    modified_at: 1_700_000_020,
+                    update_sequence_number: -1,
+                    kind: 0,
+                    queue: 0,
+                    due: 0,
+                    interval: 0,
+                    factor: 0,
+                    repetitions: 0,
+                    lapses: 0,
+                    left: 0,
+                    original_due: 0,
+                    original_deck_id: 0,
+                    flags: 0,
+                    data: String::new(),
+                },
+                AnkiV11Card {
+                    id: 2001,
+                    note_id: 1000,
+                    deck_id: 1,
+                    ordinal: 1,
+                    modified_at: 1_700_000_021,
+                    update_sequence_number: -1,
+                    kind: 0,
+                    queue: 0,
+                    due: 1,
+                    interval: 0,
+                    factor: 0,
+                    repetitions: 0,
+                    lapses: 0,
+                    left: 0,
+                    original_due: 0,
+                    original_deck_id: 0,
+                    flags: 0,
+                    data: String::new(),
+                },
+            ],
             reviews: Vec::new(),
             graves: Vec::new(),
         };
@@ -4728,13 +5500,24 @@ CREATE TABLE graves (
             state.note_types[0].templates[0].required_field_names,
             vec!["Text"]
         );
-        assert_eq!(state.cards[0].front, "The word [old root] travels.");
+        assert_eq!(state.cards[0].front, "[type answer: Text]");
         assert_eq!(
             state.cards[0].back,
-            "The word [old root] travels.<hr>The word night travels.<br>Proto-Indo-European stories go here."
+            "[type answer: Text]<hr>The word night meets nox.<br>Proto-Indo-European stories go here."
         );
-        let lineage = state.cards[0].lineage.as_ref().unwrap();
-        assert_eq!(lineage.cloze_ordinal, Some(1));
+        assert_eq!(state.cards[1].front, "[type answer: Text]");
+        assert_eq!(
+            state.cards[1].back,
+            "[type answer: Text]<hr>The word night meets nox.<br>Proto-Indo-European stories go here."
+        );
+        let first_lineage = state.cards[0].lineage.as_ref().unwrap();
+        assert_eq!(first_lineage.template_id, "100:template:0");
+        assert_eq!(first_lineage.ordinal, 0);
+        assert_eq!(first_lineage.cloze_ordinal, Some(1));
+        let second_lineage = state.cards[1].lineage.as_ref().unwrap();
+        assert_eq!(second_lineage.template_id, "100:template:0");
+        assert_eq!(second_lineage.ordinal, 1);
+        assert_eq!(second_lineage.cloze_ordinal, Some(2));
         assert!(state.card_progress.is_empty());
 
         let exported = parse_v11_collection_bytes(
@@ -4742,6 +5525,8 @@ CREATE TABLE graves (
         )
         .unwrap();
         assert_eq!(exported.note_types[0].kind, 1);
+        assert_eq!(exported.cards[0].ordinal, 0);
+        assert_eq!(exported.cards[1].ordinal, 1);
     }
 
     #[test]
@@ -4788,6 +5573,7 @@ CREATE TABLE graves (
                 && source.target == ExternalSourceTarget::Deck
                 && source.target_id == "3"
                 && source.data.get("dyn").map(String::as_str) == Some("1")
+                && source.data.get("resched").map(String::as_str) == Some("true")
         }));
         assert!(state.external_sources.iter().any(|source| {
             source.source == ANKI_V11_SOURCE
@@ -4796,6 +5582,13 @@ CREATE TABLE graves (
                 && source.data.get("originalDeckId").map(String::as_str) == Some("2")
                 && source.data.get("originalDue").map(String::as_str) == Some("42")
                 && source.data.get("data").map(String::as_str) == Some("filtered-card")
+        }));
+        assert!(state.external_sources.iter().any(|source| {
+            source.source == ANKI_V11_SOURCE
+                && source.target == ExternalSourceTarget::Media
+                && source.target_id == "anki-media:0"
+                && source.original_id.as_deref() == Some("0")
+                && source.data.get("filename").map(String::as_str) == Some("audio/hola.mp3")
         }));
 
         let media_analysis = analyze_engram_media_references(&state);
@@ -4876,10 +5669,12 @@ CREATE TABLE graves (
                     name: "Card 1".to_string(),
                     front_template: "{{Front}}".to_string(),
                     back_template: "{{Back}}".to_string(),
+                    deck_id: Some("2".to_string()),
                     required_field_names: vec!["Front".to_string(), "Back".to_string()],
                     requirement_mode: TemplateRequirementMode::Any,
                     ordinal: 0,
                 }],
+                stylesheet: Some(".card { color: navy; }".to_string()),
                 created_at: 1_641_600_000_000,
                 updated_at: 1_641_600_000_000,
             }],
@@ -4928,6 +5723,8 @@ CREATE TABLE graves (
                 times_correct: 2,
                 times_incorrect: 1,
                 last_seen_at: 1_700_000_030_000,
+                fsrs_stability: Some(6.5),
+                fsrs_difficulty: Some(7.25),
                 flag: Some(CardFlag::Blue),
                 marked_at: None,
             }],
@@ -4938,6 +5735,8 @@ CREATE TABLE graves (
                 card_id: "2000".to_string(),
                 rating: Rating::Good,
                 reviewed_at: 1_700_000_030_000,
+                answer_time_ms: Some(12_345),
+                leech_event: None,
                 previous_progress: None,
                 resulting_progress: None,
                 previous_active_session: None,
@@ -4957,6 +5756,9 @@ CREATE TABLE graves (
         assert_eq!(collection.decks[0].id, 2);
         assert_eq!(collection.decks[0].name, "Spanish::Latin");
         assert_eq!(collection.note_types[0].id, 100);
+        assert_eq!(collection.note_types[0].css, ".card { color: navy; }");
+        assert_eq!(collection.note_types[0].templates[0].deck_id, Some(2));
+        assert_eq!(collection.note_types[0].raw["tmpls"][0]["did"], 2);
         assert_eq!(
             collection.note_types[0].raw["req"],
             serde_json::json!([[0, "any", [0, 1]]])
@@ -4968,18 +5770,323 @@ CREATE TABLE graves (
         assert_eq!(collection.cards[0].interval, 7);
         assert_eq!(collection.cards[0].factor, 2500);
         assert_eq!(collection.cards[0].flags, 4);
+        let card_data = serde_json::from_str::<Value>(&collection.cards[0].data).unwrap();
+        assert_eq!(card_data["s"], serde_json::json!(6.5));
+        assert_eq!(card_data["d"], serde_json::json!(7.25));
         assert_eq!(collection.reviews[0].card_id, 2000);
         assert_eq!(collection.reviews[0].ease, 3);
+        assert_eq!(collection.reviews[0].time, 12_345);
 
         let apkg = write_legacy_apkg_from_engram_state(&state, &[]).unwrap();
         let imported = read_v11_collection_as_engram_state(&apkg).unwrap();
 
         assert_eq!(imported.decks[0].name, "Spanish::Latin");
+        assert_eq!(
+            imported.note_types[0].templates[0].deck_id.as_deref(),
+            Some("2")
+        );
+        assert_eq!(
+            imported.note_types[0].stylesheet.as_deref(),
+            Some(".card { color: navy; }")
+        );
         assert_eq!(imported.notes[0].fields[0].value, "hola");
         assert_eq!(imported.cards[0].front, "hola");
         assert_eq!(imported.cards[0].back, "hello");
         assert_eq!(imported.card_progress[0].interval, 7);
+        assert_eq!(imported.card_progress[0].fsrs_stability, Some(6.5));
+        assert_eq!(imported.card_progress[0].fsrs_difficulty, Some(7.25));
         assert_eq!(imported.card_progress[0].flag, Some(CardFlag::Blue));
+        assert_eq!(imported.reviews[0].answer_time_ms, Some(12_345));
+    }
+
+    #[test]
+    fn native_filtered_deck_reviews_export_as_cram_revlog_kind() {
+        for resched in [true, false] {
+            let mut deck_source_data = BTreeMap::new();
+            deck_source_data.insert("dyn".to_string(), "1".to_string());
+            deck_source_data.insert("resched".to_string(), resched.to_string());
+            deck_source_data.insert(
+                "rawJson".to_string(),
+                serde_json::json!({
+                    "id": 3,
+                    "name": "Filtered::Today",
+                    "desc": "Custom study",
+                    "dyn": 1,
+                    "conf": 1,
+                    "terms": [["deck:Spanish", 10, 0]],
+                    "resched": resched,
+                })
+                .to_string(),
+            );
+
+            let previous_progress = CardProgress {
+                card_id: "card".to_string(),
+                state: CardState::Review,
+                interval: 2,
+                ease_factor: 2.5,
+                next_due_at: 1_700_086_400_000,
+                learning_step_index: None,
+                buried_until: None,
+                suspended_at: None,
+                times_seen: 2,
+                times_correct: 2,
+                times_incorrect: 0,
+                last_seen_at: 1_700_000_000_000,
+                fsrs_stability: None,
+                fsrs_difficulty: None,
+                flag: None,
+                marked_at: None,
+            };
+            let resulting_progress = CardProgress {
+                interval: 5,
+                next_due_at: 1_700_432_000_000,
+                times_seen: 3,
+                times_correct: 3,
+                last_seen_at: 1_700_000_005_000,
+                ..previous_progress.clone()
+            };
+
+            let mut state = AppState::default();
+            state.decks.push(Deck {
+                id: "filtered".to_string(),
+                name: "Filtered::Today".to_string(),
+                description: "Custom study".to_string(),
+                created_at: 1_700_000_000_000,
+            });
+            state.cards.push(Card {
+                id: "card".to_string(),
+                deck_id: "filtered".to_string(),
+                front: "hola".to_string(),
+                back: "hello".to_string(),
+                created_at: 1_700_000_000_000,
+                lineage: None,
+            });
+            state.card_progress.push(resulting_progress.clone());
+            state.sessions.push(Session {
+                id: "filtered-session".to_string(),
+                deck_id: "filtered".to_string(),
+                status: SessionStatus::Completed,
+                started_at: 1_700_000_000_000,
+                ended_at: Some(1_700_000_005_000),
+                cards_reviewed: 1,
+                cards_correct: 1,
+            });
+            state.reviews.push(Review {
+                id: "1700000005000".to_string(),
+                session_id: "filtered-session".to_string(),
+                card_id: "card".to_string(),
+                rating: Rating::Good,
+                reviewed_at: 1_700_000_005_000,
+                answer_time_ms: Some(987),
+                leech_event: None,
+                previous_progress: Some(previous_progress),
+                resulting_progress: Some(resulting_progress),
+                previous_active_session: None,
+                sibling_progress_snapshots: Vec::new(),
+            });
+            state.external_sources.push(ExternalSourceRecord {
+                target: ExternalSourceTarget::Deck,
+                target_id: "filtered".to_string(),
+                source: ANKI_V11_SOURCE.to_string(),
+                original_id: Some("3".to_string()),
+                data: deck_source_data,
+            });
+
+            let collection = parse_v11_collection_bytes(
+                &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+            )
+            .unwrap();
+
+            let filtered_deck = collection
+                .decks
+                .iter()
+                .find(|deck| deck.name == "Filtered::Today")
+                .unwrap();
+            assert_eq!(filtered_deck.raw["dyn"], 1);
+            assert_eq!(filtered_deck.raw["resched"], resched);
+            assert_eq!(
+                collection.reviews[0].kind, 3,
+                "resched={resched} filtered reviews should export as Anki cram rows"
+            );
+        }
+    }
+
+    #[test]
+    fn native_filtered_deck_source_keys_export_dynamic_deck_json_and_original_deck_ids() {
+        let mut state = AppState::default();
+        state.decks.push(Deck {
+            id: "spanish".to_string(),
+            name: "Spanish".to_string(),
+            description: String::new(),
+            created_at: 1_700_000_000_000,
+        });
+        state.decks.push(Deck {
+            id: "filtered".to_string(),
+            name: "Filtered::Today".to_string(),
+            description: "Custom study".to_string(),
+            created_at: 1_700_000_000_000,
+        });
+        state.cards.push(Card {
+            id: "card".to_string(),
+            deck_id: "filtered".to_string(),
+            front: "hola".to_string(),
+            back: "hello".to_string(),
+            created_at: 1_700_000_000_000,
+            lineage: None,
+        });
+        state.external_sources.push(ExternalSourceRecord {
+            target: ExternalSourceTarget::Deck,
+            target_id: "filtered".to_string(),
+            source: ANKI_V11_SOURCE.to_string(),
+            original_id: None,
+            data: BTreeMap::from([
+                ("dyn".to_string(), "1".to_string()),
+                ("resched".to_string(), "false".to_string()),
+                ("search".to_string(), "deck:Spanish is:due".to_string()),
+                ("limit".to_string(), "10".to_string()),
+                ("order".to_string(), "0".to_string()),
+            ]),
+        });
+        state.external_sources.push(ExternalSourceRecord {
+            target: ExternalSourceTarget::Card,
+            target_id: "card".to_string(),
+            source: ANKI_V11_SOURCE.to_string(),
+            original_id: None,
+            data: BTreeMap::from([("originalDeckId".to_string(), "spanish".to_string())]),
+        });
+
+        let collection = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+        )
+        .unwrap();
+
+        let filtered_deck = collection
+            .decks
+            .iter()
+            .find(|deck| deck.name == "Filtered::Today")
+            .unwrap();
+        assert_eq!(filtered_deck.raw["dyn"], 1);
+        assert_eq!(filtered_deck.raw["resched"], false);
+        assert_eq!(filtered_deck.raw["terms"][0][0], "deck:Spanish is:due");
+        assert_eq!(filtered_deck.raw["terms"][0][1], 10);
+
+        let original_deck_id = collection
+            .decks
+            .iter()
+            .find(|deck| deck.name == "Spanish")
+            .map(|deck| deck.id)
+            .unwrap();
+        assert_eq!(collection.cards[0].deck_id, filtered_deck.id);
+        assert_eq!(collection.cards[0].original_deck_id, original_deck_id);
+    }
+
+    fn native_review_progress(
+        state: CardState,
+        interval: u32,
+        times_seen: u32,
+        times_correct: u32,
+        times_incorrect: u32,
+    ) -> CardProgress {
+        CardProgress {
+            card_id: "card".to_string(),
+            state,
+            interval,
+            ease_factor: 2.5,
+            next_due_at: 1_700_432_000_000,
+            learning_step_index: matches!(state, CardState::Learning | CardState::Relearning)
+                .then_some(0),
+            buried_until: None,
+            suspended_at: None,
+            times_seen,
+            times_correct,
+            times_incorrect,
+            last_seen_at: 1_700_000_005_000,
+            fsrs_stability: None,
+            fsrs_difficulty: None,
+            flag: None,
+            marked_at: None,
+        }
+    }
+
+    fn exported_native_review_kind(
+        previous_progress: Option<CardProgress>,
+        resulting_progress: CardProgress,
+        rating: Rating,
+    ) -> i64 {
+        let mut state = AppState::default();
+        state.decks.push(Deck {
+            id: "deck".to_string(),
+            name: "Spanish".to_string(),
+            description: String::new(),
+            created_at: 1_700_000_000_000,
+        });
+        state.cards.push(Card {
+            id: "card".to_string(),
+            deck_id: "deck".to_string(),
+            front: "hola".to_string(),
+            back: "hello".to_string(),
+            created_at: 1_700_000_000_000,
+            lineage: None,
+        });
+        state.card_progress.push(resulting_progress.clone());
+        state.sessions.push(Session {
+            id: "session".to_string(),
+            deck_id: "deck".to_string(),
+            status: SessionStatus::Completed,
+            started_at: 1_700_000_000_000,
+            ended_at: Some(1_700_000_005_000),
+            cards_reviewed: 1,
+            cards_correct: u32::from(rating != Rating::Again),
+        });
+        state.reviews.push(Review {
+            id: "1700000005000".to_string(),
+            session_id: "session".to_string(),
+            card_id: "card".to_string(),
+            rating,
+            reviewed_at: 1_700_000_005_000,
+            answer_time_ms: Some(987),
+            leech_event: None,
+            previous_progress,
+            resulting_progress: Some(resulting_progress),
+            previous_active_session: None,
+            sibling_progress_snapshots: Vec::new(),
+        });
+
+        let collection = parse_v11_collection_bytes(
+            &write_v11_collection_bytes_from_engram_state(&state).unwrap(),
+        )
+        .unwrap();
+        collection.reviews[0].kind
+    }
+
+    #[test]
+    fn native_review_transitions_export_anki_revlog_kinds_from_starting_state() {
+        let new_graduation = native_review_progress(CardState::Review, 4, 1, 1, 0);
+        assert_eq!(
+            exported_native_review_kind(None, new_graduation, Rating::Easy),
+            0,
+            "a first native graduation review should export as an Anki learning row"
+        );
+
+        let previous_relearning = native_review_progress(CardState::Relearning, 0, 4, 2, 2);
+        let relearning_graduation = native_review_progress(CardState::Review, 3, 5, 3, 2);
+        assert_eq!(
+            exported_native_review_kind(
+                Some(previous_relearning),
+                relearning_graduation,
+                Rating::Good,
+            ),
+            2,
+            "a relearning step that graduates should export as an Anki relearning row"
+        );
+
+        let previous_review = native_review_progress(CardState::Review, 7, 5, 4, 1);
+        let review_lapse = native_review_progress(CardState::Relearning, 0, 6, 4, 2);
+        assert_eq!(
+            exported_native_review_kind(Some(previous_review), review_lapse, Rating::Again),
+            1,
+            "a review card that lapses should still export as an Anki review row"
+        );
     }
 
     #[test]
@@ -5150,6 +6257,66 @@ CREATE TABLE graves (
     }
 
     #[test]
+    fn reads_modern_media_payloads_via_legacy_zip_filename() {
+        let mut writer = ZipWriter::new();
+        let mut meta = Vec::new();
+        PackageMetadataProto {
+            version: PackageVersionProto::Latest as i32,
+        }
+        .encode(&mut meta)
+        .unwrap();
+        writer.add_file(META, &meta, false);
+        writer.add_file(
+            SQLITE_21B_COLLECTION,
+            &zstd_encode(&v11_sqlite_collection_bytes()),
+            false,
+        );
+        writer.add_file(LEGACY_COLLECTION, b"dummy legacy collection", false);
+
+        let media_entries = MediaEntriesProto {
+            entries: vec![MediaEntryProto {
+                name: "audio/hola.mp3".to_string(),
+                size: 3,
+                sha1: sum1(b"mp3").to_vec(),
+                legacy_zip_filename: Some(7),
+            }],
+        };
+        let mut media_map = Vec::new();
+        media_entries.encode(&mut media_map).unwrap();
+        writer.add_file(MEDIA_MAP, &zstd_encode(&media_map), false);
+        writer.add_file("7", &zstd_encode(b"mp3"), false);
+        let apkg = writer.finish();
+
+        let manifest = inspect_apkg(&apkg).unwrap();
+        assert_eq!(manifest.media.mapping["0"], "audio/hola.mp3");
+        assert!(manifest.media.missing_files.is_empty());
+        assert!(manifest.media.unmapped_files.is_empty());
+        assert_eq!(manifest.media.media_files[0].archive_name, "0");
+        assert_eq!(manifest.media.media_files[0].legacy_zip_filename, Some(7));
+
+        let media_files = read_media_files(&apkg).unwrap();
+        assert_eq!(
+            media_files,
+            vec![ResolvedMediaFile {
+                archive_name: "0".to_string(),
+                filename: Some("audio/hola.mp3".to_string()),
+                data: b"mp3".to_vec(),
+            }]
+        );
+
+        let logical = read_media_file(&apkg, "0").unwrap();
+        assert_eq!(logical.data, b"mp3");
+        let legacy = read_media_file(&apkg, "7").unwrap();
+        assert_eq!(legacy.archive_name, "0");
+        assert_eq!(legacy.data, b"mp3");
+
+        let state = read_v11_collection_as_engram_state(&apkg).unwrap();
+        assert_eq!(state.media_assets.len(), 1);
+        assert_eq!(state.media_assets[0].archive_name, "0");
+        assert_eq!(state.media_assets[0].data, b"mp3");
+    }
+
+    #[test]
     fn imports_and_exports_state_media_assets() {
         let sqlite = v11_sqlite_collection_bytes();
         let apkg = write_legacy_apkg(
@@ -5175,6 +6342,14 @@ CREATE TABLE graves (
             Some("audio/hola.mp3")
         );
         assert_eq!(state.media_assets[0].data, b"mp3");
+        assert!(state.external_sources.iter().any(|source| {
+            source.source == ANKI_V11_SOURCE
+                && source.target == ExternalSourceTarget::Media
+                && source.target_id == "anki-media:0"
+                && source.original_id.as_deref() == Some("0")
+                && source.data.get("archiveName").map(String::as_str) == Some("0")
+                && source.data.get("filename").map(String::as_str) == Some("audio/hola.mp3")
+        }));
 
         let exported = write_legacy_apkg_from_engram_state(&state, &[]).unwrap();
         let manifest = inspect_apkg(&exported).unwrap();
@@ -5244,7 +6419,7 @@ CREATE TABLE graves (
             fields: vec![NoteFieldValue {
                 field_id: "front".to_string(),
                 value:
-                    "[sound:audio/hola.mp3] <img SRC = \"images/caps.png\"> <img src=missing-unquoted.png> <img src=\"missing.png\">"
+                    "[sound:audio/hola.mp3] <img SRC = \"images/caps.png\"> <img src=missing-unquoted.png> <img src=\"missing.png\"> <video poster=\"video/poster.jpg\"></video> <source srcset=\"images/card@1x.png 1x, missing-srcset.png 2x\"> <object data='docs/root.pdf'></object> <div style=\"background-image:url(images/bg.png); mask:url(#fade)\"></div> <img src=\"data:image/png;base64,skip\">"
                         .to_string(),
             }],
             tags: Vec::new(),
@@ -5255,7 +6430,7 @@ CREATE TABLE graves (
             id: "card".to_string(),
             deck_id: "deck".to_string(),
             front: "<img data-src=\"ignored.png\"> <img Src='images/card.png'>".to_string(),
-            back: "<img src = https://example.com/remote.png>".to_string(),
+            back: "<style>.card{background:url('images/card-back.png')}</style> <img src = https://example.com/remote.png>".to_string(),
             created_at: 0,
             lineage: None,
         });
@@ -5284,6 +6459,36 @@ CREATE TABLE graves (
                 filename: Some("audio/unused.mp3".to_string()),
                 data: b"unused".to_vec(),
             },
+            MediaAssetRecord {
+                id: "poster".to_string(),
+                archive_name: "4".to_string(),
+                filename: Some("video/poster.jpg".to_string()),
+                data: b"poster".to_vec(),
+            },
+            MediaAssetRecord {
+                id: "srcset".to_string(),
+                archive_name: "5".to_string(),
+                filename: Some("images/card@1x.png".to_string()),
+                data: b"srcset".to_vec(),
+            },
+            MediaAssetRecord {
+                id: "doc".to_string(),
+                archive_name: "6".to_string(),
+                filename: Some("docs/root.pdf".to_string()),
+                data: b"doc".to_vec(),
+            },
+            MediaAssetRecord {
+                id: "bg".to_string(),
+                archive_name: "7".to_string(),
+                filename: Some("images/bg.png".to_string()),
+                data: b"bg".to_vec(),
+            },
+            MediaAssetRecord {
+                id: "back-bg".to_string(),
+                archive_name: "8".to_string(),
+                filename: Some("images/card-back.png".to_string()),
+                data: b"back".to_vec(),
+            },
         ];
 
         let analysis = analyze_engram_media_references(&state);
@@ -5292,19 +6497,25 @@ CREATE TABLE graves (
             analysis.referenced_filenames,
             vec![
                 "audio/hola.mp3",
+                "docs/root.pdf",
+                "images/bg.png",
                 "images/caps.png",
+                "images/card-back.png",
                 "images/card.png",
+                "images/card@1x.png",
+                "missing-srcset.png",
                 "missing-unquoted.png",
-                "missing.png"
+                "missing.png",
+                "video/poster.jpg"
             ]
         );
         assert_eq!(
             analysis.referenced_asset_ids,
-            vec!["audio", "caps", "image"]
+            vec!["audio", "caps", "image", "poster", "srcset", "doc", "bg", "back-bg"]
         );
         assert_eq!(
             analysis.missing_filenames,
-            vec!["missing-unquoted.png", "missing.png"]
+            vec!["missing-srcset.png", "missing-unquoted.png", "missing.png"]
         );
         assert_eq!(analysis.unreferenced_asset_ids, vec!["unused"]);
     }

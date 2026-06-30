@@ -8,6 +8,10 @@ using System.Text.Json;
 
 namespace Mosaic.Generated;
 
+public sealed record MosaicHostIntent(string Type, string Json);
+
+public sealed record MosaicHostResult(string Status, MosaicHostIntent? HostIntent = null);
+
 public static class MosaicHost
 {
     private const string NativeLibrary = "engram_capi";
@@ -15,12 +19,16 @@ public static class MosaicHost
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private static IntPtr Session = Native.eg_session_new();
 
+    public static event EventHandler<MosaicHostIntent>? HostIntentReceived;
+
+    public static MosaicHostIntent? LastHostIntent { get; private set; }
+
     static MosaicHost()
     {
         AppDomain.CurrentDomain.ProcessExit += (_, _) => FreeSession();
     }
 
-    public static string ApplyProps(EngramApp component)
+    public static MosaicHostResult ApplyProps(EngramApp component)
     {
         lock (SessionLock)
         {
@@ -30,7 +38,7 @@ public static class MosaicHost
         }
     }
 
-    public static string HandleEvent(EngramApp component, EngramAppEvent ev)
+    public static MosaicHostResult HandleEvent(EngramApp component, EngramAppEvent ev)
     {
         var envelope = JsonSerializer.Serialize(ev.MosaicEnvelope, JsonOptions);
         lock (SessionLock)
@@ -42,39 +50,37 @@ public static class MosaicHost
                     CurrentDeckId(),
                     CurrentTimeMillis()));
             using var document = JsonDocument.Parse(json);
-            var status = ApplyPropsFromRoot(
+            return ApplyPropsFromRoot(
                 component,
                 document.RootElement,
                 $"Status: Engram host handled {ev.MosaicName}");
-
-            if (TryHostIntentSummary(document.RootElement, out var intentSummary))
-            {
-                return $"{status}; {intentSummary}";
-            }
-
-            return status;
         }
     }
 
-    private static string ApplyPropsFromJson(EngramApp component, string json, string successStatus)
+    private static MosaicHostResult ApplyPropsFromJson(
+        EngramApp component,
+        string json,
+        string successStatus)
     {
         using var document = JsonDocument.Parse(json);
         return ApplyPropsFromRoot(component, document.RootElement, successStatus);
     }
 
-    private static string ApplyPropsFromRoot(
+    private static MosaicHostResult ApplyPropsFromRoot(
         EngramApp component,
         JsonElement root,
         string successStatus)
     {
         if (root.TryGetProperty("ok", out var ok) && ok.ValueKind == JsonValueKind.False)
         {
-            return $"Status: Engram host error: {JsonString(root, "error", "unknown error")}";
+            return new MosaicHostResult(
+                $"Status: Engram host error: {JsonString(root, "error", "unknown error")}");
         }
 
+        var hostIntent = CaptureHostIntent(root);
         if (!root.TryGetProperty("props", out var props) || props.ValueKind != JsonValueKind.Object)
         {
-            return successStatus;
+            return WithHostIntentStatus(successStatus, hostIntent);
         }
 
         var applied = 0;
@@ -86,7 +92,7 @@ public static class MosaicHost
             }
         }
 
-        return $"{successStatus} ({applied} props)";
+        return WithHostIntentStatus($"{successStatus} ({applied} props)", hostIntent);
     }
 
     private static bool TryApplySlot(EngramApp component, string slotName, JsonElement value)
@@ -149,17 +155,27 @@ public static class MosaicHost
         return JsonSerializer.Deserialize(value.GetRawText(), targetType, JsonOptions);
     }
 
-    private static bool TryHostIntentSummary(JsonElement root, out string summary)
+    private static MosaicHostResult WithHostIntentStatus(
+        string status,
+        MosaicHostIntent? hostIntent)
     {
-        summary = "";
+        return hostIntent is null
+            ? new MosaicHostResult(status)
+            : new MosaicHostResult($"{status}; host intent: {hostIntent.Type}", hostIntent);
+    }
+
+    private static MosaicHostIntent? CaptureHostIntent(JsonElement root)
+    {
         if (!root.TryGetProperty("hostIntent", out var intent) || intent.ValueKind != JsonValueKind.Object)
         {
-            return false;
+            return null;
         }
 
         var type = JsonString(intent, "type", "host intent");
-        summary = $"host intent: {type}";
-        return true;
+        var hostIntent = new MosaicHostIntent(type, intent.GetRawText());
+        LastHostIntent = hostIntent;
+        HostIntentReceived?.Invoke(null, hostIntent);
+        return hostIntent;
     }
 
     private static string JsonString(JsonElement root, string property, string fallback)

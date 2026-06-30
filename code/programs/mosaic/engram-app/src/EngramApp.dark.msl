@@ -33,6 +33,14 @@ style EngramApp {
     padding-bottom : 14 ;
   }
 
+  part note-editor-region {
+    padding-bottom : 14 ;
+  }
+
+  part note-type-editor-region {
+    padding-bottom : 14 ;
+  }
+
   part review-region {
     padding-top : 16 ;
     padding : 4 ;

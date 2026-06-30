@@ -13,6 +13,7 @@ use engram_anki_package::{
     read_v11_collection_as_engram_state, write_legacy_apkg_from_engram_state,
     write_modern_apkg_from_engram_state,
 };
+use engram_core::{merge_app_states, AppState};
 use engram_core_wasm::EngramSession;
 use serde_json::{json, Value};
 
@@ -152,6 +153,35 @@ pub unsafe extern "C" fn eg_deck_stats(
 ) -> *mut c_char {
     let deck_id = read_cstr(deck_id);
     with_session(session, |session| session.deck_stats(&deck_id, now))
+}
+
+/// # Safety
+/// `session` must be valid; `deck_id` must be null or a valid C string.
+#[no_mangle]
+pub unsafe extern "C" fn eg_empty_filtered_deck(
+    session: *mut EgSession,
+    deck_id: *const c_char,
+) -> *mut c_char {
+    let deck_id = read_cstr(deck_id);
+    with_session(session, |session| session.empty_filtered_deck(&deck_id))
+}
+
+/// # Safety
+/// `session` must be valid; strings must be null or valid C strings.
+#[no_mangle]
+pub unsafe extern "C" fn eg_rebuild_filtered_deck(
+    session: *mut EgSession,
+    deck_id: *const c_char,
+    query: *const c_char,
+    limit: usize,
+    reschedule: u8,
+    rebuilt_at: u64,
+) -> *mut c_char {
+    let deck_id = read_cstr(deck_id);
+    let query = read_cstr(query);
+    with_session(session, |session| {
+        session.rebuild_filtered_deck(&deck_id, &query, limit, reschedule != 0, rebuilt_at)
+    })
 }
 
 /// # Safety
@@ -391,6 +421,35 @@ pub unsafe extern "C" fn eg_parse_anki_notes_tsv(
 }
 
 /// # Safety
+/// `session` must be valid; string arguments must be null or valid C strings.
+#[no_mangle]
+pub unsafe extern "C" fn eg_merge_anki_notes_tsv(
+    session: *mut EgSession,
+    tsv: *const c_char,
+    deck_id: *const c_char,
+    note_type_id: *const c_char,
+    note_type_name: *const c_char,
+    note_id_prefix: *const c_char,
+    created_at: u64,
+) -> *mut c_char {
+    let tsv = read_cstr(tsv);
+    let deck_id = read_cstr(deck_id);
+    let note_type_id = read_cstr(note_type_id);
+    let note_type_name = read_cstr(note_type_name);
+    let note_id_prefix = read_cstr(note_id_prefix);
+    with_session(session, |session| {
+        session.merge_anki_notes_tsv(
+            &tsv,
+            &deck_id,
+            &note_type_id,
+            &note_type_name,
+            &note_id_prefix,
+            created_at,
+        )
+    })
+}
+
+/// # Safety
 /// `session` must be a valid session pointer.
 #[no_mangle]
 pub unsafe extern "C" fn eg_export_anki_apkg(session: *mut EgSession) -> *mut c_char {
@@ -403,11 +462,25 @@ pub unsafe extern "C" fn eg_export_anki_apkg(session: *mut EgSession) -> *mut c_
 /// # Safety
 /// `session` must be a valid session pointer.
 #[no_mangle]
+pub unsafe extern "C" fn eg_export_anki_package(session: *mut EgSession) -> *mut c_char {
+    unsafe { eg_export_anki_apkg(session) }
+}
+
+/// # Safety
+/// `session` must be a valid session pointer.
+#[no_mangle]
 pub unsafe extern "C" fn eg_export_anki_apkg_modern(session: *mut EgSession) -> *mut c_char {
     if session.is_null() {
         return ptr::null_mut();
     }
     into_cstr(export_modern_anki_apkg_json(&(*session).inner))
+}
+
+/// # Safety
+/// `session` must be a valid session pointer.
+#[no_mangle]
+pub unsafe extern "C" fn eg_export_anki_package_modern(session: *mut EgSession) -> *mut c_char {
+    unsafe { eg_export_anki_apkg_modern(session) }
 }
 
 /// # Safety
@@ -438,6 +511,17 @@ pub unsafe extern "C" fn eg_inspect_anki_apkg(
 }
 
 /// # Safety
+/// `session` must be valid; `data` must point to `data_len` Anki package bytes.
+#[no_mangle]
+pub unsafe extern "C" fn eg_inspect_anki_package(
+    session: *mut EgSession,
+    data: *const u8,
+    data_len: usize,
+) -> *mut c_char {
+    unsafe { eg_inspect_anki_apkg(session, data, data_len) }
+}
+
+/// # Safety
 /// `session` must be valid; `data` must point to `data_len` APKG bytes;
 /// `archive_name` must be null or a valid C string.
 #[no_mangle]
@@ -458,6 +542,19 @@ pub unsafe extern "C" fn eg_read_anki_apkg_media(
 }
 
 /// # Safety
+/// `session` must be valid; `data` must point to `data_len` Anki package bytes;
+/// `archive_name` must be null or a valid C string.
+#[no_mangle]
+pub unsafe extern "C" fn eg_read_anki_package_media(
+    session: *mut EgSession,
+    data: *const u8,
+    data_len: usize,
+    archive_name: *const c_char,
+) -> *mut c_char {
+    unsafe { eg_read_anki_apkg_media(session, data, data_len, archive_name) }
+}
+
+/// # Safety
 /// `session` must be valid; `data` must point to `data_len` APKG bytes.
 #[no_mangle]
 pub unsafe extern "C" fn eg_parse_anki_apkg(
@@ -472,6 +569,17 @@ pub unsafe extern "C" fn eg_parse_anki_apkg(
         Ok(bytes) => parse_anki_apkg_json(bytes),
         Err(message) => error_json(&message),
     })
+}
+
+/// # Safety
+/// `session` must be valid; `data` must point to `data_len` Anki package bytes.
+#[no_mangle]
+pub unsafe extern "C" fn eg_parse_anki_package(
+    session: *mut EgSession,
+    data: *const u8,
+    data_len: usize,
+) -> *mut c_char {
+    unsafe { eg_parse_anki_apkg(session, data, data_len) }
 }
 
 /// # Safety
@@ -491,6 +599,17 @@ pub unsafe extern "C" fn eg_import_anki_apkg(
     })
 }
 
+/// # Safety
+/// `session` must be valid; `data` must point to `data_len` Anki package bytes.
+#[no_mangle]
+pub unsafe extern "C" fn eg_import_anki_package(
+    session: *mut EgSession,
+    data: *const u8,
+    data_len: usize,
+) -> *mut c_char {
+    unsafe { eg_import_anki_apkg(session, data, data_len) }
+}
+
 unsafe fn read_cstr(value: *const c_char) -> String {
     if value.is_null() {
         return String::new();
@@ -508,6 +627,34 @@ unsafe fn read_ffi_bytes<'a>(data: *const u8, data_len: usize) -> Result<&'a [u8
     } else {
         Ok(std::slice::from_raw_parts(data, data_len))
     }
+}
+
+/// # Safety
+/// `session` must be valid; `data`/`data_len` must describe APKG bytes.
+#[no_mangle]
+pub unsafe extern "C" fn eg_merge_anki_apkg(
+    session: *mut EgSession,
+    data: *const u8,
+    data_len: usize,
+) -> *mut c_char {
+    if session.is_null() {
+        return ptr::null_mut();
+    }
+    match read_ffi_bytes(data, data_len) {
+        Ok(bytes) => into_cstr(merge_anki_apkg_json(&mut (*session).inner, bytes)),
+        Err(error) => into_cstr(error_json(&error)),
+    }
+}
+
+/// # Safety
+/// `session` must be valid; `data`/`data_len` must describe Anki package bytes.
+#[no_mangle]
+pub unsafe extern "C" fn eg_merge_anki_package(
+    session: *mut EgSession,
+    data: *const u8,
+    data_len: usize,
+) -> *mut c_char {
+    unsafe { eg_merge_anki_apkg(session, data, data_len) }
 }
 
 unsafe fn with_session(
@@ -551,6 +698,21 @@ fn import_anki_apkg_json(session: &mut EngramSession, bytes: &[u8]) -> String {
             Err(error) => error_json(&format!("failed to serialize imported Anki state: {error}")),
         },
         Err(error) => error_json(&error.message),
+    }
+}
+
+fn merge_anki_apkg_json(session: &mut EngramSession, bytes: &[u8]) -> String {
+    match read_v11_collection_as_engram_state(bytes) {
+        Ok(imported) => load_merged_state(session, imported),
+        Err(error) => error_json(&error.message),
+    }
+}
+
+fn load_merged_state(session: &mut EngramSession, imported: AppState) -> String {
+    let merged = merge_app_states(session.state(), imported);
+    match serde_json::to_string(&merged) {
+        Ok(snapshot_json) => session.load_snapshot(&snapshot_json),
+        Err(error) => error_json(&format!("failed to serialize merged Anki state: {error}")),
     }
 }
 
@@ -892,6 +1054,69 @@ CREATE TABLE graves (
     }
 
     #[test]
+    fn c_abi_dispatches_shared_tag_commands() {
+        unsafe {
+            let session = eg_session_new();
+            let snapshot = cstr(
+                r#"{
+                    "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+                    "noteTypes": [],
+                    "notes": [{
+                        "id": "note",
+                        "noteTypeId": "basic",
+                        "deckId": "deck",
+                        "fields": [{"fieldId": "front", "value": "amma"}],
+                        "tags": ["tamil"],
+                        "createdAt": 1700000000000,
+                        "updatedAt": 1700000000000
+                    }],
+                    "cards": [{
+                        "id": "note::forward",
+                        "deckId": "deck",
+                        "front": "amma",
+                        "back": "mother",
+                        "createdAt": 1700000000000,
+                        "lineage": {
+                            "noteId": "note",
+                            "noteTypeId": "basic",
+                            "templateId": "forward",
+                            "ordinal": 0
+                        }
+                    }],
+                    "cardProgress": [],
+                    "sessions": [],
+                    "reviews": [],
+                    "activeSession": null
+                }"#,
+            );
+            take(eg_load_snapshot(session, snapshot.as_ptr()));
+
+            let command = cstr(
+                r#"{
+                    "type": "addCardTags",
+                    "cardIds": ["note::forward"],
+                    "tags": ["script tamil"],
+                    "updatedAt": 1700000000001
+                }"#,
+            );
+            let result = take(eg_dispatch(session, command.as_ptr()));
+            let result: Value = serde_json::from_str(&result).unwrap();
+
+            assert_eq!(result["ok"], true);
+            assert_eq!(
+                result["state"]["notes"][0]["tags"],
+                json!(["tamil", "script"])
+            );
+            assert_eq!(
+                result["state"]["notes"][0]["updatedAt"],
+                1_700_000_000_001_u64
+            );
+
+            eg_session_free(session);
+        }
+    }
+
+    #[test]
     fn c_abi_parses_and_imports_anki_apkg_state() {
         unsafe {
             let session = eg_session_new();
@@ -952,6 +1177,106 @@ CREATE TABLE graves (
                 inspected["manifest"]["media"]["mapping"]["0"],
                 "audio/hola.mp3"
             );
+
+            eg_session_free(session);
+        }
+    }
+
+    #[test]
+    fn c_abi_merges_anki_apkg_state_without_replacing_local_state() {
+        unsafe {
+            let session = eg_session_new();
+            let local_snapshot = cstr(
+                r#"{
+                    "decks": [{"id":"local","name":"Tamil","description":"Script","createdAt":1700000000000}],
+                    "noteTypes": [],
+                    "notes": [],
+                    "cards": [{"id":"local-card","deckId":"local","front":"amma","back":"mother","createdAt":1700000000000}],
+                    "cardProgress": [],
+                    "sessions": [],
+                    "reviews": [],
+                    "deckOptions": [],
+                    "externalSources": [{
+                        "target":"media",
+                        "targetId":"anki-media:0",
+                        "source":"local-fixture",
+                        "originalId":"0",
+                        "data":{"filename":"audio/local.mp3"}
+                    }],
+                    "mediaAssets": [
+                        {"id":"anki-media:0","archiveName":"0","filename":"audio/local.mp3","data":[108,111,99,97,108]},
+                        {"id":"local-image","archiveName":"1","filename":"images/local.png","data":[108,111,99,97,108]}
+                    ],
+                    "activeSession": null
+                }"#,
+            );
+            let loaded = take(eg_load_snapshot(session, local_snapshot.as_ptr()));
+            let loaded: Value = serde_json::from_str(&loaded).unwrap();
+            assert_eq!(loaded["ok"], true);
+
+            let apkg = v11_apkg_fixture();
+            let merged = take(eg_merge_anki_apkg(session, apkg.as_ptr(), apkg.len()));
+            let merged: Value = serde_json::from_str(&merged).unwrap();
+            assert_eq!(merged["ok"], true);
+
+            let deck_ids = merged["state"]["decks"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|deck| deck["id"].as_str().unwrap().to_string())
+                .collect::<Vec<_>>();
+            assert!(deck_ids.contains(&"local".to_string()));
+            assert!(deck_ids.contains(&"2".to_string()));
+
+            let card_ids = merged["state"]["cards"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|card| card["id"].as_str().unwrap().to_string())
+                .collect::<Vec<_>>();
+            assert!(card_ids.contains(&"local-card".to_string()));
+            assert!(card_ids.contains(&"2000".to_string()));
+
+            let media_assets = merged["state"]["mediaAssets"].as_array().unwrap();
+            assert!(media_assets.iter().any(|asset| {
+                asset["id"] == "anki-media:0" && asset["filename"] == "audio/local.mp3"
+            }));
+            assert!(media_assets
+                .iter()
+                .any(|asset| { asset["id"] == "local-image" && asset["archiveName"] == "1" }));
+            assert!(media_assets.iter().any(|asset| {
+                asset["id"] == "anki-media:0-merge-1"
+                    && asset["archiveName"] == "0-merge-1"
+                    && asset["filename"] == "audio/hola.mp3"
+            }));
+            assert!(media_assets.iter().any(|asset| {
+                asset["id"] == "anki-media:1"
+                    && asset["archiveName"] == "1-merge-1"
+                    && asset["filename"] == "images/card.png"
+            }));
+            let external_sources = merged["state"]["externalSources"].as_array().unwrap();
+            assert!(external_sources.iter().any(|source| {
+                source["target"] == "media"
+                    && source["targetId"] == "anki-media:0"
+                    && source["source"] == "local-fixture"
+                    && source["data"]["filename"] == "audio/local.mp3"
+            }));
+            assert!(external_sources.iter().any(|source| {
+                source["target"] == "media"
+                    && source["targetId"] == "anki-media:0-merge-1"
+                    && source["source"] == "anki-v11"
+                    && source["originalId"] == "0"
+                    && source["data"]["archiveName"] == "0-merge-1"
+                    && source["data"]["filename"] == "audio/hola.mp3"
+            }));
+            assert!(external_sources.iter().any(|source| {
+                source["target"] == "media"
+                    && source["targetId"] == "anki-media:1"
+                    && source["source"] == "anki-v11"
+                    && source["originalId"] == "1"
+                    && source["data"]["archiveName"] == "1-merge-1"
+                    && source["data"]["filename"] == "images/card.png"
+            }));
 
             eg_session_free(session);
         }
@@ -1105,6 +1430,61 @@ CREATE TABLE graves (
     }
 
     #[test]
+    fn c_abi_anki_package_aliases_match_apkg_surface() {
+        unsafe {
+            let session = eg_session_new();
+            let apkg = v11_apkg_fixture();
+
+            let inspected = take(eg_inspect_anki_package(session, apkg.as_ptr(), apkg.len()));
+            let inspected: Value = serde_json::from_str(&inspected).unwrap();
+            assert_eq!(inspected["ok"], true);
+            assert_eq!(
+                inspected["manifest"]["collection"]["name"],
+                "collection.anki2"
+            );
+
+            let parsed = take(eg_parse_anki_package(session, apkg.as_ptr(), apkg.len()));
+            let parsed: Value = serde_json::from_str(&parsed).unwrap();
+            assert_eq!(parsed["ok"], true);
+            assert_eq!(parsed["state"]["cards"][0]["front"], "hola");
+            assert_eq!(parsed["state"]["cards"][0]["back"], "hello");
+
+            let imported = take(eg_import_anki_package(session, apkg.as_ptr(), apkg.len()));
+            let imported: Value = serde_json::from_str(&imported).unwrap();
+            assert_eq!(imported["ok"], true);
+            assert_eq!(imported["state"]["cards"][0]["id"], "2000");
+
+            let exported = take(eg_export_anki_package(session));
+            let exported: Value = serde_json::from_str(&exported).unwrap();
+            assert_eq!(exported["ok"], true);
+            assert!(exported["apkg"].as_array().unwrap().len() > 0);
+
+            let modern_exported = take(eg_export_anki_package_modern(session));
+            let modern_exported: Value = serde_json::from_str(&modern_exported).unwrap();
+            assert_eq!(modern_exported["ok"], true);
+            assert!(modern_exported["apkg"].as_array().unwrap().len() > 0);
+
+            let media_apkg = media_apkg_fixture();
+            let archive_name = cstr("0");
+            let media = take(eg_read_anki_package_media(
+                session,
+                media_apkg.as_ptr(),
+                media_apkg.len(),
+                archive_name.as_ptr(),
+            ));
+            let media: Value = serde_json::from_str(&media).unwrap();
+            assert_eq!(media["ok"], true);
+            assert_eq!(media["media"]["filename"], "audio/hola.mp3");
+
+            let merged = take(eg_merge_anki_package(session, apkg.as_ptr(), apkg.len()));
+            let merged: Value = serde_json::from_str(&merged).unwrap();
+            assert_eq!(merged["ok"], true);
+
+            eg_session_free(session);
+        }
+    }
+
+    #[test]
     fn c_abi_analyzes_state_media_references() {
         unsafe {
             let session = eg_session_new();
@@ -1245,6 +1625,46 @@ CREATE TABLE graves (
             assert!(note_imported.contains(r#""id":"note-1::forward""#));
             assert!(note_imported.contains(r#""id":"note-1::reverse""#));
 
+            let merged_notes = cstr(
+                "#separator:tab\n#notetype:Basic (and reversed card)\n#guid column:3\n#columns:Front\tBack\tGuid\nhola\thello\tguid-123\n",
+            );
+            let merged = take(eg_merge_anki_notes_tsv(
+                session,
+                merged_notes.as_ptr(),
+                deck_id.as_ptr(),
+                cstr("basic-reversed").as_ptr(),
+                cstr("").as_ptr(),
+                cstr("merged-note").as_ptr(),
+                NOW,
+            ));
+            let merged: Value = serde_json::from_str(&merged).unwrap();
+            assert_eq!(merged["ok"], true);
+            assert!(merged["state"]["cards"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|card| { card["id"] == "card" }));
+            assert!(merged["state"]["cards"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|card| { card["id"] == "merged-note-1::forward" }));
+            assert!(merged["state"]["cards"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|card| { card["id"] == "merged-note-1::reverse" }));
+            assert!(merged["state"]["externalSources"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|source| {
+                    source["target"] == "note"
+                        && source["targetId"] == "merged-note-1"
+                        && source["source"] == "anki-text"
+                        && source["originalId"] == "guid-123"
+                }));
+
             eg_session_free(session);
         }
     }
@@ -1255,7 +1675,7 @@ CREATE TABLE graves (
             let session = eg_session_new();
             let snapshot = cstr(
                 r#"{
-                    "decks": [{"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000}],
+                    "decks": [{"id":"deck","name":"Tamil::Script","description":"Script","createdAt":1700000000000}],
                     "noteTypes": [{
                         "id": "basic",
                         "name": "Basic",
@@ -1661,6 +2081,10 @@ CREATE TABLE graves (
             assert_eq!(export_intent["event"], "onExportAnki");
             assert_eq!(export_intent["hostIntent"]["type"], "exportAnki");
             assert_eq!(export_intent["hostIntent"]["extension"], ".apkg");
+            assert_eq!(
+                export_intent["hostIntent"]["extensions"],
+                json!([".apkg", ".colpkg"])
+            );
 
             let browser_open = cstr("onBrowserOpenSelected");
             let open_intent = take(eg_handle_engram_app_event(
@@ -1685,15 +2109,41 @@ CREATE TABLE graves (
             let edit_intent: Value = serde_json::from_str(&edit_intent).unwrap();
             assert_eq!(edit_intent["ok"], true);
             assert_eq!(edit_intent["event"], "onBrowserEditSelected");
-            assert_eq!(edit_intent["hostIntent"]["type"], "editCard");
-            assert_eq!(edit_intent["hostIntent"]["cardId"], "other");
+            assert_eq!(edit_intent["hostIntent"], Value::Null);
+            assert_eq!(edit_intent["props"]["note-editor-note-id-value"], "");
+            assert_eq!(edit_intent["props"]["note-editor-selected-field-value"], "");
+
+            let add_note = cstr("onAddNote");
+            let add_note_response = take(eg_handle_engram_app_event(
+                session,
+                add_note.as_ptr(),
+                deck_id.as_ptr(),
+                NOW + 11,
+            ));
+            let add_note_response: Value = serde_json::from_str(&add_note_response).unwrap();
+            assert_eq!(add_note_response["ok"], true);
+            assert_eq!(add_note_response["event"], "onAddNote");
+            assert_eq!(add_note_response["hostIntent"], Value::Null);
+            assert_eq!(add_note_response["props"]["note-editor-label"], "Add note");
+            assert_eq!(
+                add_note_response["props"]["note-editor-note-id-value"],
+                "note-1700000000011"
+            );
+            assert_eq!(
+                add_note_response["props"]["note-editor-note-type-names"],
+                json!([])
+            );
+            assert_eq!(
+                add_note_response["props"]["note-editor-field-labels"],
+                json!([])
+            );
 
             let deck_option = cstr(r#"{"type":"deckOptionsMaximumIntervalChange","value":90}"#);
             let deck_option_changed = take(eg_handle_engram_app_event(
                 session,
                 deck_option.as_ptr(),
                 deck_id.as_ptr(),
-                NOW + 11,
+                NOW + 12,
             ));
             let deck_option_changed: Value = serde_json::from_str(&deck_option_changed).unwrap();
             assert_eq!(deck_option_changed["ok"], true);
@@ -1716,7 +2166,7 @@ CREATE TABLE graves (
                 session,
                 learning_steps.as_ptr(),
                 deck_id.as_ptr(),
-                NOW + 12,
+                NOW + 13,
             ));
             let learning_steps_changed: Value =
                 serde_json::from_str(&learning_steps_changed).unwrap();
@@ -1808,6 +2258,50 @@ CREATE TABLE graves (
             assert!(history.contains(r#""history":{"#));
             assert!(history.contains(r#""totalReviews":1"#));
             assert!(history.contains(r#""easy":1"#));
+
+            eg_session_free(session);
+        }
+    }
+
+    #[test]
+    fn c_abi_rebuilds_and_empties_filtered_decks() {
+        unsafe {
+            let session = eg_session_new();
+            let snapshot = cstr(
+                r#"{
+                    "decks": [
+                        {"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000},
+                        {"id":"filtered","name":"Filtered::Today","description":"Custom study","createdAt":1700000000000}
+                    ],
+                    "noteTypes": [],
+                    "notes": [],
+                    "cards": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+                    "cardProgress": [],
+                    "sessions": [],
+                    "reviews": [],
+                    "activeSession": null
+                }"#,
+            );
+            let loaded = take(eg_load_snapshot(session, snapshot.as_ptr()));
+            assert!(loaded.contains(r#""ok":true"#), "{loaded}");
+
+            let deck = cstr("filtered");
+            let query = cstr("deck:Tamil");
+            let rebuilt = take(eg_rebuild_filtered_deck(
+                session,
+                deck.as_ptr(),
+                query.as_ptr(),
+                5,
+                0,
+                NOW,
+            ));
+            assert!(rebuilt.contains(r#""ok":true"#), "{rebuilt}");
+            assert!(rebuilt.contains(r#""deckId":"filtered""#), "{rebuilt}");
+            assert!(rebuilt.contains(r#""originalDeckId":"deck""#), "{rebuilt}");
+
+            let emptied = take(eg_empty_filtered_deck(session, deck.as_ptr()));
+            assert!(emptied.contains(r#""ok":true"#), "{emptied}");
+            assert!(emptied.contains(r#""deckId":"deck""#), "{emptied}");
 
             eg_session_free(session);
         }

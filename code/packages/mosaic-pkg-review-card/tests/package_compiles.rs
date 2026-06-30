@@ -92,6 +92,13 @@ fn review_card_frontend_sources_compile() {
             "answer-label",
             "answer",
             "answer-visible",
+            "type-answer-active",
+            "type-answer-label",
+            "type-answer-value",
+            "type-answer-placeholder",
+            "type-answer-comparison-label",
+            "type-answer-comparison-value",
+            "type-answer-correct",
             "progress-label",
         ]
     );
@@ -99,7 +106,14 @@ fn review_card_frontend_sources_compile() {
     let emit_names: Vec<&str> = component.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(
         emit_names,
-        vec!["onReveal", "onAgain", "onHard", "onGood", "onEasy"]
+        vec![
+            "onReveal",
+            "onTypeAnswerChange",
+            "onAgain",
+            "onHard",
+            "onGood",
+            "onEasy"
+        ]
     );
 }
 
@@ -108,6 +122,9 @@ fn review_card_layout_keeps_review_interaction_semantics() {
     let source = read_source("ReviewCard.mll");
 
     assert!(source.contains("If ( when: slot: answer-visible )"));
+    assert!(source.contains("If ( when: slot: type-answer-active )"));
+    assert!(source.contains("HostInput [ type-answer-input ]"));
+    assert!(source.contains("onChange : emit: onTypeAnswerChange"));
     assert!(source.contains("HostButton [ reveal-button ]"));
     assert!(source.contains("onClick : emit: onReveal"));
     assert!(source.contains("pkg::mosaic-pkg-rating-controls::RatingControls"));

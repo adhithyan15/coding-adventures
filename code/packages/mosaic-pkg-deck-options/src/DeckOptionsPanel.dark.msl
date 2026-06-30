@@ -31,6 +31,18 @@ style DeckOptionsPanel {
     padding-bottom : 10 ;
   }
 
+  part fsrs-options {
+    padding-bottom : 10 ;
+  }
+
+  part fsrs-filter-options {
+    padding-bottom : 10 ;
+  }
+
+  part leech-options {
+    padding-bottom : 10 ;
+  }
+
   part sibling-bury-options {
     padding-bottom : 4 ;
   }
@@ -63,6 +75,10 @@ style DeckOptionsPanel {
     padding : 6 ;
   }
 
+  part initial-ease-field {
+    padding : 6 ;
+  }
+
   part interval-modifier-field {
     padding : 6 ;
   }
@@ -77,6 +93,42 @@ style DeckOptionsPanel {
 
   part lapse-multiplier-field {
     padding : 6 ;
+  }
+
+  part leech-threshold-field {
+    padding : 6 ;
+  }
+
+  part desired-retention-field {
+    padding : 6 ;
+  }
+
+  part historical-retention-field {
+    padding : 6 ;
+  }
+
+  part fsrs-parameters-field {
+    padding : 6 ;
+  }
+
+  part fsrs-search-field {
+    padding : 6 ;
+  }
+
+  part ignore-review-history-before-field {
+    padding : 6 ;
+  }
+
+  part easy-days-percentages-field {
+    padding : 6 ;
+  }
+
+  part leech-action-field {
+    padding : 6 ;
+  }
+
+  part leech-action-choices {
+    padding-top : 4 ;
   }
 
   part bury-new-siblings-field {
@@ -161,6 +213,16 @@ style DeckOptionsPanel {
     font-size : 14 ;
   }
 
+  part initial-ease-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#1e293b" ;
+    color : "#f1f5f9" ;
+    border-width : 1 ;
+    border-color : "#475569" ;
+    font-size : 14 ;
+  }
+
   part interval-modifier-input {
     padding : 8 ;
     border-radius : 4 ;
@@ -192,6 +254,76 @@ style DeckOptionsPanel {
   }
 
   part lapse-multiplier-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#1e293b" ;
+    color : "#f1f5f9" ;
+    border-width : 1 ;
+    border-color : "#475569" ;
+    font-size : 14 ;
+  }
+
+  part leech-threshold-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#1e293b" ;
+    color : "#f1f5f9" ;
+    border-width : 1 ;
+    border-color : "#475569" ;
+    font-size : 14 ;
+  }
+
+  part desired-retention-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#1e293b" ;
+    color : "#f1f5f9" ;
+    border-width : 1 ;
+    border-color : "#475569" ;
+    font-size : 14 ;
+  }
+
+  part historical-retention-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#1e293b" ;
+    color : "#f1f5f9" ;
+    border-width : 1 ;
+    border-color : "#475569" ;
+    font-size : 14 ;
+  }
+
+  part fsrs-parameters-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#1e293b" ;
+    color : "#f1f5f9" ;
+    border-width : 1 ;
+    border-color : "#475569" ;
+    font-size : 14 ;
+  }
+
+  part fsrs-search-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#1e293b" ;
+    color : "#f1f5f9" ;
+    border-width : 1 ;
+    border-color : "#475569" ;
+    font-size : 14 ;
+  }
+
+  part ignore-review-history-before-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#1e293b" ;
+    color : "#f1f5f9" ;
+    border-width : 1 ;
+    border-color : "#475569" ;
+    font-size : 14 ;
+  }
+
+  part easy-days-percentages-input {
     padding : 8 ;
     border-radius : 4 ;
     background : "#1e293b" ;
@@ -250,6 +382,13 @@ style DeckOptionsPanel {
     padding-bottom : 4 ;
   }
 
+  part initial-ease-label {
+    color : "#c7d2fe" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
   part interval-modifier-label {
     color : "#bae6fd" ;
     font-size : 12 ;
@@ -276,6 +415,74 @@ style DeckOptionsPanel {
     font-size : 12 ;
     font-weight : 700 ;
     padding-bottom : 4 ;
+  }
+
+  part leech-threshold-label {
+    color : "#fda4af" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part desired-retention-label {
+    color : "#bfdbfe" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part historical-retention-label {
+    color : "#d9f99d" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part fsrs-parameters-label {
+    color : "#fed7aa" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part fsrs-search-label {
+    color : "#a5f3fc" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part ignore-review-history-before-label {
+    color : "#e9d5ff" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part easy-days-percentages-label {
+    color : "#fecdd3" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part leech-action-label {
+    color : "#f0abfc" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part leech-action-suspend-radio {
+    color : "#fecdd3" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+  }
+
+  part leech-action-tag-only-radio {
+    color : "#e9d5ff" ;
+    font-size : 12 ;
+    font-weight : 700 ;
   }
 
   part bury-new-siblings-checkbox {

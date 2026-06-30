@@ -90,6 +90,11 @@ fn card_browser_frontend_sources_compile() {
             "query-label",
             "query",
             "query-placeholder",
+            "filter-label",
+            "filter-value",
+            "filter-options",
+            "filter-placeholder",
+            "filter-open",
             "search-label",
             "results-label",
             "results-summary",
@@ -98,15 +103,34 @@ fn card_browser_frontend_sources_compile() {
             "result-note-ids",
             "result-template-ids",
             "result-states",
+            "result-flags",
             "selected-index",
             "selected-card-id",
             "selected-note-id",
             "selected-template-id",
             "selected-state",
+            "selected-flag",
             "open-label",
             "edit-label",
             "suspend-label",
             "mark-label",
+            "flag-label",
+            "flag-value",
+            "flag-options",
+            "flag-placeholder",
+            "flag-open",
+            "tag-edit-label",
+            "tag-edit",
+            "tag-edit-placeholder",
+            "add-tag-label",
+            "remove-tag-label",
+            "custom-study-label",
+            "custom-study-limit-label",
+            "custom-study-limit-value",
+            "custom-study-reschedule-label",
+            "custom-study-reschedule-value",
+            "custom-study-rebuild-label",
+            "custom-study-empty-label",
         ]
     );
 
@@ -115,12 +139,23 @@ fn card_browser_frontend_sources_compile() {
         emit_names,
         vec![
             "onQueryChange",
+            "onToggleFilter",
+            "onSetFilter",
             "onSearch",
             "onSelectResult",
             "onOpenSelected",
             "onEditSelected",
             "onToggleSuspendSelected",
             "onToggleMarkSelected",
+            "onToggleFlagPicker",
+            "onSetFlagSelected",
+            "onTagEditChange",
+            "onAddTagSelected",
+            "onRemoveTagSelected",
+            "onCustomStudyLimitChange",
+            "onCustomStudyRescheduleChange",
+            "onRebuildFilteredDeck",
+            "onEmptyFilteredDeck",
         ]
     );
 }
@@ -133,16 +168,47 @@ fn card_browser_layout_wires_search_results_and_actions() {
     assert!(source.contains("value : slot: query"));
     assert!(source.contains("onChange : emit: onQueryChange"));
     assert!(source.contains("onCommit : emit: onSearch"));
+    assert!(source.contains("Column [ filter-column ]"));
+    assert!(source.contains("label : slot: filter-value"));
+    assert!(source.contains("onClick : emit: onToggleFilter"));
+    assert!(source.contains("For ( each: slot: filter-options"));
+    assert!(source.contains("label : filter-option"));
+    assert!(source.contains("onClick : emit: onSetFilter"));
     assert!(source.contains("pkg::mosaic-pkg-toolkit::ListGroup"));
     assert!(source.contains("items : slot: results"));
     assert!(source.contains("selected-index : slot: selected-index"));
     assert!(source.contains("onSelect : emit: onSelectResult"));
+    assert!(source.contains("Row [ browser-flag-row ]"));
+    assert!(source.contains("pkg::mosaic-pkg-toolkit::Select"));
+    assert!(source.contains("value : slot: flag-value"));
+    assert!(source.contains("options : slot: flag-options"));
+    assert!(source.contains("placeholder : slot: flag-placeholder"));
+    assert!(source.contains("open : slot: flag-open"));
+    assert!(source.contains("onToggle : emit: onToggleFlagPicker"));
+    assert!(source.contains("onChange : emit: onSetFlagSelected"));
+    assert!(source.contains("Row [ browser-tag-row ]"));
+    assert!(source.contains("HostInput [ tag-edit-input ]"));
+    assert!(source.contains("value : slot: tag-edit"));
+    assert!(source.contains("placeholder : slot: tag-edit-placeholder"));
+    assert!(source.contains("onChange : emit: onTagEditChange"));
+    assert!(source.contains("Row [ custom-study-row ]"));
+    assert!(source.contains("HostNumberInput [ custom-study-limit-input ]"));
+    assert!(source.contains("value : slot: custom-study-limit-value"));
+    assert!(source.contains("onChange : emit: onCustomStudyLimitChange"));
+    assert!(source.contains("HostCheckbox [ custom-study-reschedule-checkbox ]"));
+    assert!(source.contains("label : slot: custom-study-reschedule-label"));
+    assert!(source.contains("checked : slot: custom-study-reschedule-value"));
+    assert!(source.contains("onToggle : emit: onCustomStudyRescheduleChange"));
 
     for (label, emit) in [
         ("open-label", "onOpenSelected"),
         ("edit-label", "onEditSelected"),
         ("suspend-label", "onToggleSuspendSelected"),
         ("mark-label", "onToggleMarkSelected"),
+        ("add-tag-label", "onAddTagSelected"),
+        ("remove-tag-label", "onRemoveTagSelected"),
+        ("custom-study-rebuild-label", "onRebuildFilteredDeck"),
+        ("custom-study-empty-label", "onEmptyFilteredDeck"),
     ] {
         assert!(
             source.contains(&format!("label : slot: {label}")),
@@ -151,6 +217,39 @@ fn card_browser_layout_wires_search_results_and_actions() {
         assert!(
             source.contains(&format!("onClick : emit: {emit}")),
             "CardBrowser.mll must wire {emit}"
+        );
+    }
+
+    let style = read_source("CardBrowser.dark.msl");
+    for part in [
+        "browser-tag-row",
+        "filter-column",
+        "filter-label",
+        "filter-toggle-button",
+        "filter-options-list",
+        "filter-option-button",
+        "browser-flag-row",
+        "flag-picker-column",
+        "flag-label",
+        "selected-flag-label",
+        "tag-edit-column",
+        "tag-edit-label",
+        "tag-edit-input",
+        "add-tag-button",
+        "remove-tag-button",
+        "custom-study-row",
+        "custom-study-limit-column",
+        "custom-study-label",
+        "custom-study-limit-label",
+        "custom-study-limit-input",
+        "custom-study-reschedule-column",
+        "custom-study-reschedule-checkbox",
+        "rebuild-filtered-deck-button",
+        "empty-filtered-deck-button",
+    ] {
+        assert!(
+            style.contains(&format!("part {part}")),
+            "CardBrowser.dark.msl must style {part}"
         );
     }
 }
@@ -165,6 +264,7 @@ fn card_browser_package_emitters_all_accept_nested_toolkit_controls() {
         (Backend::Qt, "qt/CardBrowser.qml"),
         (Backend::Xaml, "xaml/CardBrowser.xaml"),
         (Backend::Flutter, "flutter/CardBrowser.dart"),
+        (Backend::Compose, "compose/CardBrowser.kt"),
     ];
 
     for (backend, expected_artifact) in backends {

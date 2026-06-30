@@ -124,6 +124,37 @@ pub unsafe extern "C" fn get_deck_stats(deck_ptr: *const u8, deck_len: usize, no
     pack(SESSION.with(|session| session.borrow().deck_stats(&deck_id, now)))
 }
 
+/// # Safety
+/// `deck_ptr` must point to `deck_len` readable bytes, or be null with a zero
+/// length.
+#[no_mangle]
+pub unsafe extern "C" fn empty_filtered_deck(deck_ptr: *const u8, deck_len: usize) -> *mut u8 {
+    let deck_id = unsafe { read_input(deck_ptr, deck_len) };
+    pack(SESSION.with(|session| session.borrow_mut().empty_filtered_deck(&deck_id)))
+}
+
+/// # Safety
+/// The deck and query `(ptr, len)` pairs must point to readable bytes, or be
+/// null with zero length.
+#[no_mangle]
+pub unsafe extern "C" fn rebuild_filtered_deck(
+    deck_ptr: *const u8,
+    deck_len: usize,
+    query_ptr: *const u8,
+    query_len: usize,
+    limit: usize,
+    reschedule: bool,
+    rebuilt_at: u64,
+) -> *mut u8 {
+    let deck_id = unsafe { read_input(deck_ptr, deck_len) };
+    let query = unsafe { read_input(query_ptr, query_len) };
+    pack(SESSION.with(|session| {
+        session
+            .borrow_mut()
+            .rebuild_filtered_deck(&deck_id, &query, limit, reschedule, rebuilt_at)
+    }))
+}
+
 #[no_mangle]
 pub extern "C" fn session_progress() -> *mut u8 {
     pack(SESSION.with(|session| session.borrow().session_progress()))
@@ -242,6 +273,27 @@ mod tests {
         take(out)
     }
 
+    fn call_rebuild_filtered_deck(
+        deck_id: &str,
+        query: &str,
+        limit: usize,
+        reschedule: bool,
+        rebuilt_at: u64,
+    ) -> String {
+        let (deck_ptr, deck_len) = put(deck_id);
+        let (query_ptr, query_len) = put(query);
+        let out = unsafe {
+            rebuild_filtered_deck(
+                deck_ptr, deck_len, query_ptr, query_len, limit, reschedule, rebuilt_at,
+            )
+        };
+        unsafe {
+            dealloc(deck_ptr, deck_len);
+            dealloc(query_ptr, query_len);
+        }
+        take(out)
+    }
+
     fn load_fixture() {
         reset();
         let snapshot = r#"{
@@ -293,6 +345,35 @@ mod tests {
             props.contains(r#""browser-result-card-ids":["card"]"#),
             "{props}"
         );
+    }
+
+    #[test]
+    fn abi_filtered_deck_exports_rebuild_and_empty() {
+        reset();
+        let snapshot = r#"{
+            "decks": [
+                {"id":"deck","name":"Tamil","description":"Script","createdAt":1700000000000},
+                {"id":"filtered","name":"Filtered::Today","description":"Custom study","createdAt":1700000000000}
+            ],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [{"id":"card","deckId":"deck","front":"letter-a","back":"a","createdAt":1700000000000}],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+        let loaded = call_str1(load_snapshot, snapshot);
+        assert!(loaded.contains(r#""ok":true"#), "{loaded}");
+
+        let rebuilt = call_rebuild_filtered_deck("filtered", "deck:Tamil", 5, false, NOW);
+        assert!(rebuilt.contains(r#""ok":true"#), "{rebuilt}");
+        assert!(rebuilt.contains(r#""deckId":"filtered""#), "{rebuilt}");
+        assert!(rebuilt.contains(r#""originalDeckId":"deck""#), "{rebuilt}");
+
+        let emptied = call_str1(empty_filtered_deck, "filtered");
+        assert!(emptied.contains(r#""ok":true"#), "{emptied}");
+        assert!(emptied.contains(r#""deckId":"deck""#), "{emptied}");
     }
 
     #[test]

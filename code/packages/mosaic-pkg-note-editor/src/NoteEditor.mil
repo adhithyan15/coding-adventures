@@ -1,0 +1,42 @@
+// NoteEditor.mil - reusable note-editing surface.
+//
+// The shared Engram core owns durable note payload assembly. This component
+// exposes the portable deck/model choice, focused field edit, tags, and
+// commit/delete/cancel contract.
+
+component NoteEditor {
+  slot editor-label : text ;
+  slot note-id-label : text ;
+  slot note-id-value : text ;
+  slot note-type-label : text ;
+  slot note-type-value : text ;
+  slot note-type-options-label : text ;
+  slot note-type-names : list<text> ;
+  slot selected-note-type-index : number ;
+  slot deck-label : text ;
+  slot deck-value : text ;
+  slot deck-options-label : text ;
+  slot deck-names : list<text> ;
+  slot selected-deck-index : number ;
+  slot fields-label : text ;
+  slot field-labels : list<text> ;
+  slot selected-field-index : number ;
+  slot selected-field-label : text ;
+  slot selected-field-value : text ;
+  slot selected-field-placeholder : text ;
+  slot tags-label : text ;
+  slot tags-value : text ;
+  slot tags-placeholder : text ;
+  slot save-label : text ;
+  slot delete-label : text ;
+  slot cancel-label : text ;
+
+  emit onSelectNoteType ( index : number ) ;
+  emit onSelectDeck ( index : number ) ;
+  emit onSelectField ( index : number ) ;
+  emit onFieldValueChange ( value : text ) ;
+  emit onTagsChange ( value : text ) ;
+  emit onSaveNote ;
+  emit onDeleteNote ;
+  emit onCancel ;
+}

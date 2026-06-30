@@ -63,6 +63,7 @@ mod tests {
                 deck_id: "deck".to_string(),
                 queue,
                 current_index,
+                current_card_started_at: None,
                 revealed,
             }),
             ..AppState::default()
