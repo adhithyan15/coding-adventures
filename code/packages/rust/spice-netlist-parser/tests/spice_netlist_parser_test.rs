@@ -15,10 +15,10 @@ use spice_netlist_parser::{
     BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION, BERKELEY_APP_LAUNCH_PLAN_SCHEMA_VERSION,
     BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION, BERKELEY_APP_PACKAGE_NAME,
     BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION, BERKELEY_APP_SHELL_EVENT_LOG_SCHEMA_VERSION,
-    BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION, BERKELEY_APP_SHELL_STATUS_SCHEMA_VERSION,
-    BERKELEY_APP_SHELL_TELEMETRY_SCHEMA_VERSION, BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM,
-    BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION, BERKELEY_SPICE_GRAMMAR_NAME,
-    BERKELEY_SPICE_GRAMMAR_VERSION,
+    BERKELEY_APP_SHELL_EVENT_SUMMARY_SCHEMA_VERSION, BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_STATUS_SCHEMA_VERSION, BERKELEY_APP_SHELL_TELEMETRY_SCHEMA_VERSION,
+    BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM, BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION,
+    BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -2592,6 +2592,11 @@ fn berkeley_app_facade_exports_package_manifest_json() {
         .unwrap()
         .iter()
         .any(|capability| capability == "app-shell-events-json"));
+    assert!(payload["artifactCapabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|capability| capability == "app-shell-event-summary-json"));
 }
 
 #[test]
@@ -2998,6 +3003,75 @@ C1 out 0 1p
         shell_events_payload["events"][5]["count"].as_u64(),
         Some(handoff.package_manifest.artifact_capabilities.len() as u64)
     );
+
+    let shell_event_summary = app
+        .run_app_shell_event_summary(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("shell event summary should execute");
+    assert_eq!(
+        shell_event_summary.schema_version,
+        BERKELEY_APP_SHELL_EVENT_SUMMARY_SCHEMA_VERSION
+    );
+    assert_eq!(shell_event_summary.package_name, BERKELEY_APP_PACKAGE_NAME);
+    assert!(shell_event_summary.ready);
+    assert_eq!(shell_event_summary.startup_route, "ready");
+    assert_eq!(shell_event_summary.severity, "ready");
+    assert_eq!(
+        shell_event_summary.status_event_id.as_deref(),
+        Some("shell.status")
+    );
+    assert_eq!(
+        shell_event_summary.primary_action_id.as_deref(),
+        Some("launch.waveform")
+    );
+    assert_eq!(shell_event_summary.event_count, 6);
+    assert_eq!(shell_event_summary.status_event_count, 1);
+    assert_eq!(shell_event_summary.route_event_count, 1);
+    assert_eq!(shell_event_summary.action_event_count, 1);
+    assert_eq!(shell_event_summary.diagnostic_event_count, 1);
+    assert_eq!(shell_event_summary.state_event_count, 1);
+    assert_eq!(shell_event_summary.capability_event_count, 1);
+    assert_eq!(shell_event_summary.ready_event_count, 3);
+    assert_eq!(shell_event_summary.blocked_event_count, 0);
+    assert_eq!(shell_event_summary.info_event_count, 3);
+    assert_eq!(shell_event_summary.warning_event_count, 0);
+    assert_eq!(shell_event_summary.error_event_count, 0);
+    assert_eq!(
+        shell_event_summary.counted_event_total,
+        handoff.package_manifest.artifact_capabilities.len()
+    );
+    assert_eq!(shell_event_summary.diagnostic_count, 0);
+    assert_eq!(shell_event_summary.repaired_state_count, 0);
+    assert_eq!(
+        shell_event_summary.artifact_capability_count,
+        handoff.package_manifest.artifact_capabilities.len()
+    );
+
+    let shell_event_summary_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_event_summary_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap(),
+    )
+    .expect("shell event summary JSON should parse");
+    assert_eq!(shell_event_summary_payload["schemaVersion"], 1);
+    assert_eq!(shell_event_summary_payload["ready"], true);
+    assert_eq!(shell_event_summary_payload["severity"], "ready");
+    assert_eq!(shell_event_summary_payload["eventCount"], 6);
+    assert_eq!(shell_event_summary_payload["readyEventCount"], 3);
+    assert_eq!(shell_event_summary_payload["infoEventCount"], 3);
+    assert_eq!(shell_event_summary_payload["diagnosticCount"], 0);
+    assert_eq!(
+        shell_event_summary_payload["primaryActionId"],
+        "launch.waveform"
+    );
+    assert_eq!(
+        shell_event_summary_payload["artifactCapabilityCount"].as_u64(),
+        Some(handoff.package_manifest.artifact_capabilities.len() as u64)
+    );
 }
 
 #[test]
@@ -3325,6 +3399,93 @@ R1 in out
         "launch.diagnostics"
     );
     assert_eq!(shell_events_payload["events"][3]["count"], 1);
+
+    let shell_event_summary = app.app_shell_event_summary(BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(2),
+        active_command_id: Some("analysis.2.run".to_string()),
+    });
+    assert_eq!(
+        shell_event_summary.schema_version,
+        BERKELEY_APP_SHELL_EVENT_SUMMARY_SCHEMA_VERSION
+    );
+    assert!(!shell_event_summary.ready);
+    assert_eq!(shell_event_summary.startup_route, "blocked");
+    assert_eq!(shell_event_summary.severity, "error");
+    assert_eq!(
+        shell_event_summary.primary_action_id.as_deref(),
+        Some("launch.diagnostics")
+    );
+    assert_eq!(shell_event_summary.event_count, 6);
+    assert_eq!(
+        shell_event_summary.ready_event_count,
+        if handoff.readiness_report.primary_action_enabled {
+            1
+        } else {
+            0
+        }
+    );
+    assert_eq!(
+        shell_event_summary.blocked_event_count,
+        if handoff.readiness_report.primary_action_enabled {
+            0
+        } else {
+            1
+        }
+    );
+    assert_eq!(
+        shell_event_summary.info_event_count,
+        if handoff.readiness_report.repaired_state {
+            1
+        } else {
+            2
+        }
+    );
+    assert_eq!(
+        shell_event_summary.warning_event_count,
+        if handoff.readiness_report.repaired_state {
+            1
+        } else {
+            0
+        }
+    );
+    assert_eq!(shell_event_summary.error_event_count, 3);
+    assert_eq!(shell_event_summary.diagnostic_count, 1);
+    assert_eq!(
+        shell_event_summary.repaired_state_count,
+        if handoff.readiness_report.repaired_state {
+            1
+        } else {
+            0
+        }
+    );
+    assert_eq!(
+        shell_event_summary.artifact_capability_count,
+        handoff.package_manifest.artifact_capabilities.len()
+    );
+
+    let shell_event_summary_payload: serde_json::Value = serde_json::from_str(
+        &app.app_shell_event_summary_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        }),
+    )
+    .expect("blocked shell event summary JSON should parse");
+    assert_eq!(shell_event_summary_payload["ready"], false);
+    assert_eq!(shell_event_summary_payload["startupRoute"], "blocked");
+    assert_eq!(shell_event_summary_payload["severity"], "error");
+    assert_eq!(
+        shell_event_summary_payload["blockedEventCount"].as_u64(),
+        Some(if handoff.readiness_report.primary_action_enabled {
+            0
+        } else {
+            1
+        })
+    );
+    assert_eq!(shell_event_summary_payload["diagnosticCount"], 1);
+    assert_eq!(
+        shell_event_summary_payload["primaryActionId"],
+        "launch.diagnostics"
+    );
 }
 
 #[test]

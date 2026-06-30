@@ -33,16 +33,16 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell event log.
+1. Rust Berkeley Mosaic app shell event summary.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app shell event logs and JSON helpers that derive
-     stable status, route, primary-action, diagnostic, repaired-state, and
-     capability events from Berkeley app shell handoffs.
-   - Preserve package name, source fingerprint, ready/blocked route, event
-     severity, status messages, primary action, diagnostic counts, repaired-state
-     count, and advertised capability count so Mosaic, WebAssembly, and product
-     shells can append startup event streams without inspecting the full
-     launch/readiness payload.
+   - Add schema-versioned Rust app shell event summaries and JSON helpers that
+     derive compact event-kind, severity, diagnostic, repaired-state, and
+     capability counts from Berkeley app shell event logs.
+   - Preserve package name, source fingerprint, ready/blocked route, status
+     severity, status event ID, primary action, event counts, counted totals,
+     diagnostic count, repaired-state count, and advertised capability count so
+     Mosaic, WebAssembly, and product shells can gate startup dashboards without
+     walking the full event stream.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1610,6 +1610,18 @@ the Rust, Python, and TypeScript surfaces together.
      flags, and advertised capability count so Mosaic, WebAssembly, and product
      shells can emit startup telemetry without inspecting the full
      launch/readiness payload.
+
+152. Rust Berkeley Mosaic app shell event log.
+   - Status: completed in PR 7042.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell event logs plus JSON helpers that derive stable status, route,
+     primary-action, diagnostic, repaired-state, and capability events from
+     shell handoffs.
+   - The event log preserves package name, source fingerprint, ready/blocked
+     route, event severity, status messages, primary action, diagnostic counts,
+     repaired-state count, and advertised capability count so Mosaic,
+     WebAssembly, and product shells can append startup event streams without
+     inspecting the full launch/readiness payload.
 
 ## Backlog
 

@@ -133,6 +133,15 @@ let shell_events_json = deck.run_app_shell_event_log_json(BerkeleyAppPersistedEd
 })?;
 assert!(shell_events_json.contains(r#""eventCount":6"#));
 assert!(shell_events_json.contains(r#""id":"shell.status""#));
+
+let shell_event_summary_json = deck.run_app_shell_event_summary_json(
+    BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(3),
+        active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+    },
+)?;
+assert!(shell_event_summary_json.contains(r#""readyEventCount":3"#));
+assert!(shell_event_summary_json.contains(r#""artifactCapabilityCount":"#));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -148,6 +157,9 @@ hosts can render editor state without owning simulator internals. It also
 derives stable per-analysis editor controls for selecting, running, and
 inspecting tables or waveforms with explicit disabled reasons, plus command
 plans with stable command IDs and target names for host menu or button wiring.
+Product shells can also consume compact shell event summaries with stable
+event-kind, severity, diagnostic, repaired-state, and capability counts without
+walking the full event stream.
 Persisted editor-state snapshots resolve saved selection and active-command IDs
 against the current deck, repairing stale UI state after source edits. Host
 surfaces turn those snapshots into stable source, diagnostics, analysis, table,
