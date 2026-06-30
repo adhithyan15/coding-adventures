@@ -1,0 +1,13 @@
+[package]
+name = "python-to-semantic-ir"
+version = "0.1.0"
+edition = "2021"
+description = "Python CST → narrow-waist Semantic IR (SIR17). Second frontend for the SIR10 narrow-waist IR."
+
+[dependencies]
+semantic-ir = { path = "../semantic-ir" }
+coding-adventures-python-parser = { path = "../python-parser" }
+# The parser emits a generic `parser::grammar_parser::GrammarASTNode`
+# whose leaf tokens are `lexer::token::Token`; we walk both directly.
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
