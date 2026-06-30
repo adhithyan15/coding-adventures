@@ -126,7 +126,7 @@ class SqlCodegenTest {
     }
 
     @Test
-    fun `Scan loop structure: OpenScan before Label before AdvanceCursor before Jump before CloseScan`() {
+    fun `Scan loop structure -- OpenScan before Label before AdvanceCursor before Jump before CloseScan`() {
         val program = SqlCodegen.compile(scan("t"))
         val instrs = program.instructions
         val openIdx  = instrs.indexOfFirst { it is Instruction.OpenScan }
@@ -165,7 +165,7 @@ class SqlCodegenTest {
     }
 
     @Test
-    fun `Filter over Scan: BinaryOpInstr has correct operator`() {
+    fun `Filter over Scan -- BinaryOpInstr has correct operator`() {
         val predicate = binOp(BinaryOperator.EQ, col("status"), lit("active"))
         val plan = filter(scan("users"), predicate)
         val program = SqlCodegen.compile(plan)
