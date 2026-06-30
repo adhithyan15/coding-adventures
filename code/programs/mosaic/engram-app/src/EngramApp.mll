@@ -9,6 +9,8 @@ layout EngramApp {
       pkg::mosaic-pkg-deck-stats::DeckStatsPanel (
         deck-label : slot: deck-stats-label ,
         deck-name : slot: deck-name ,
+        deck-list-label : slot: deck-list-label ,
+        deck-names : slot: deck-names ,
         total-label : slot: deck-total-label ,
         total-value : slot: deck-total-value ,
         new-label : slot: deck-new-label ,
@@ -18,7 +20,8 @@ layout EngramApp {
         learning-label : slot: deck-learning-label ,
         learning-value : slot: deck-learning-value ,
         hidden-label : slot: deck-hidden-label ,
-        hidden-value : slot: deck-hidden-value
+        hidden-value : slot: deck-hidden-value ,
+        onSelectDeck : emit: onSelectDeck
       )
     }
     Box [ deck-options-region ] {

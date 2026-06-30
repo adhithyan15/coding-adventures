@@ -7,6 +7,8 @@
 component EngramApp {
   slot app-title : text ;
   slot deck-name : text ;
+  slot deck-list-label : text ;
+  slot deck-names : list<text> ;
   slot deck-stats-label : text ;
   slot deck-total-label : text ;
   slot deck-total-value : text ;
@@ -224,6 +226,7 @@ component EngramApp {
   slot action-mark-label : text ;
 
   emit onReveal ;
+  emit onSelectDeck ( value : text ) ;
   emit onAgain ;
   emit onHard ;
   emit onGood ;

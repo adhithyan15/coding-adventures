@@ -43,6 +43,7 @@ const BROWSER_FILTER_OPTIONS: [&str; 7] = [
 #[derive(Default)]
 pub struct EngramSession {
     state: AppState,
+    selected_deck_id: Option<String>,
     browser: BrowserSessionState,
     review: ReviewSessionState,
     editor: NoteEditorSessionState,
@@ -347,6 +348,39 @@ impl EngramSession {
         &self.state
     }
 
+    fn selected_deck_id(&self, deck_id: &str) -> String {
+        selected_deck_id_with_override(&self.state, deck_id, self.selected_deck_id.as_deref())
+    }
+
+    fn set_selected_deck_index(&mut self, value: f64) -> Result<(), String> {
+        let index = parse_nonnegative_index(value, "deck")?;
+        let deck_id = self
+            .state
+            .decks
+            .get(index)
+            .map(|deck| deck.id.clone())
+            .ok_or_else(|| "cannot select missing deck".to_string())?;
+        self.selected_deck_id = Some(deck_id);
+        self.browser.selected_index = 0;
+        self.editor.reset();
+        Ok(())
+    }
+
+    fn set_selected_deck_value(&mut self, value: &str) -> Result<(), String> {
+        let value = value.trim();
+        let deck_id = self
+            .state
+            .decks
+            .iter()
+            .find(|deck| deck.id == value || deck.name == value)
+            .map(|deck| deck.id.clone())
+            .ok_or_else(|| "cannot select missing deck".to_string())?;
+        self.selected_deck_id = Some(deck_id);
+        self.browser.selected_index = 0;
+        self.editor.reset();
+        Ok(())
+    }
+
     pub fn snapshot(&self) -> String {
         ok_with("state", &self.state)
     }
@@ -356,6 +390,7 @@ impl EngramSession {
             let state: AppState = serde_json::from_str(snapshot_json)
                 .map_err(|err| format!("invalid snapshot: {err}"))?;
             self.state = state;
+            self.selected_deck_id = None;
             self.browser = BrowserSessionState::default();
             self.review = ReviewSessionState::default();
             self.editor = NoteEditorSessionState::default();
@@ -377,6 +412,7 @@ impl EngramSession {
                 .map_err(|err| format!("invalid backup: {err}"))?;
             self.state =
                 restore_engram_snapshot(snapshot).map_err(|err| err.message.to_string())?;
+            self.selected_deck_id = None;
             self.browser = BrowserSessionState::default();
             self.review = ReviewSessionState::default();
             self.editor = NoteEditorSessionState::default();
@@ -393,6 +429,7 @@ impl EngramSession {
             let command = command.into_core_command();
             self.state = reduce(&self.state, command);
             if resets_browser {
+                self.selected_deck_id = None;
                 self.browser = BrowserSessionState::default();
                 self.review = ReviewSessionState::default();
                 self.editor = NoteEditorSessionState::default();
@@ -508,6 +545,7 @@ impl EngramSession {
             let props = engram_app_props_for_state(
                 &self.state,
                 deck_id,
+                self.selected_deck_id.as_deref(),
                 now,
                 &self.browser,
                 &self.review,
@@ -540,8 +578,17 @@ impl EngramSession {
     pub fn handle_engram_app_event(&mut self, event: &str, deck_id: &str, now: u64) -> String {
         catch_json(|| {
             let parsed = parse_engram_app_event(event)?;
-            let selected_deck_context = selected_deck_id(&self.state, deck_id);
+            let selected_deck_context = self.selected_deck_id(deck_id);
             match parsed.kind {
+                EngramAppEvent::SelectDeck => {
+                    if let Some(value) = parsed.number_value {
+                        self.set_selected_deck_index(value)?;
+                    } else if let Some(value) = parsed.text_value.as_deref() {
+                        self.set_selected_deck_value(value)?;
+                    } else {
+                        return Err("onSelectDeck is missing a deck value".to_string());
+                    }
+                }
                 EngramAppEvent::Reveal => {
                     self.state = reduce(&self.state, engram_core::EngramCommand::RevealCurrentCard);
                 }
@@ -590,7 +637,7 @@ impl EngramSession {
                     self.review.set_typed_answer(card_id, value);
                 }
                 EngramAppEvent::DeckOptionsChange(field) => {
-                    let selected_deck_id = selected_deck_id(&self.state, deck_id);
+                    let selected_deck_id = selected_deck_context.clone();
                     if selected_deck_id.is_empty() {
                         return Err("cannot update deck options without a deck".to_string());
                     }
@@ -1085,7 +1132,7 @@ impl EngramSession {
                     self.note_type_editor.start_new(now);
                 }
                 EngramAppEvent::AddNote => {
-                    let selected_deck = selected_deck_id(&self.state, deck_id);
+                    let selected_deck = self.selected_deck_id(deck_id);
                     let note_type_id = self
                         .state
                         .note_types
@@ -1130,11 +1177,18 @@ impl EngramSession {
                 | EngramAppEvent::ExportAnki => {}
             }
 
-            let host_intent =
-                host_intent_for_event(&parsed, &self.state, deck_id, now, &self.browser);
+            let host_intent = host_intent_for_event(
+                &parsed,
+                &self.state,
+                deck_id,
+                self.selected_deck_id.as_deref(),
+                now,
+                &self.browser,
+            );
             let props = engram_app_props_for_state(
                 &self.state,
                 deck_id,
+                self.selected_deck_id.as_deref(),
                 now,
                 &self.browser,
                 &self.review,
@@ -1397,13 +1451,14 @@ fn app_state_from_anki_note_tsv_import(imported: AnkiNoteTsvImport) -> AppState 
 fn engram_app_props_for_state(
     state: &AppState,
     deck_id: &str,
+    selected_deck_override: Option<&str>,
     now: u64,
     browser: &BrowserSessionState,
     review: &ReviewSessionState,
     editor: &NoteEditorSessionState,
     note_type_editor: &NoteTypeEditorSessionState,
 ) -> Value {
-    let selected_deck_id = selected_deck_id(state, deck_id);
+    let selected_deck_id = selected_deck_id_with_override(state, deck_id, selected_deck_override);
     let deck = state.decks.iter().find(|deck| deck.id == selected_deck_id);
     let deck_name = deck
         .map(|deck| deck.name.clone())
@@ -1466,6 +1521,17 @@ fn engram_app_props_for_state(
         "Mark"
     };
     let hidden_count = stats.suspended_count + stats.buried_count;
+    let deck_names = state
+        .decks
+        .iter()
+        .map(|deck| {
+            if deck.name.trim().is_empty() {
+                deck.id.clone()
+            } else {
+                deck.name.clone()
+            }
+        })
+        .collect::<Vec<_>>();
     let browser_props = engram_browser_props_for_state(
         state,
         browser.active_query(),
@@ -1511,6 +1577,8 @@ fn engram_app_props_for_state(
     let mut props = json!({
         "app-title": "Engram",
         "deck-name": deck_name,
+        "deck-list-label": "Decks",
+        "deck-names": deck_names,
         "deck-stats-label": "Deck stats",
         "deck-total-label": "Total",
         "deck-total-value": stats.total.to_string(),
@@ -2619,9 +2687,20 @@ fn card_flag_label(flag: CardFlag) -> &'static str {
     }
 }
 
-fn selected_deck_id(state: &AppState, deck_id: &str) -> String {
+fn selected_deck_id_with_override(
+    state: &AppState,
+    deck_id: &str,
+    selected_deck_override: Option<&str>,
+) -> String {
     if !deck_id.is_empty() {
         return deck_id.to_string();
+    }
+    if let Some(selected_deck_id) = selected_deck_override
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .filter(|selected| state.decks.iter().any(|deck| deck.id == *selected))
+    {
+        return selected_deck_id.to_string();
     }
     state
         .active_session
@@ -2745,11 +2824,12 @@ fn host_intent_for_event(
     parsed: &ParsedEngramAppEvent,
     state: &AppState,
     deck_id: &str,
+    selected_deck_override: Option<&str>,
     now: u64,
     browser: &BrowserSessionState,
 ) -> Option<Value> {
     let event = parsed.kind;
-    let selected_deck = selected_deck_id(state, deck_id);
+    let selected_deck = selected_deck_id_with_override(state, deck_id, selected_deck_override);
     let base = |intent_type: &str| {
         json!({
             "type": intent_type,
@@ -3405,6 +3485,7 @@ fn note_type_from_editor_selection(
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum EngramAppEvent {
+    SelectDeck,
     Reveal,
     Undo,
     BuryCard,
@@ -3460,6 +3541,7 @@ enum EngramAppEvent {
 impl EngramAppEvent {
     fn canonical_name(self) -> &'static str {
         match self {
+            Self::SelectDeck => "onSelectDeck",
             Self::Reveal => "onReveal",
             Self::Undo => "onUndo",
             Self::BuryCard => "onBuryCard",
@@ -3696,6 +3778,8 @@ fn parse_engram_app_event_name(
         ))
     };
     match lowered.strip_prefix("on").unwrap_or(&lowered) {
+        "selectdeck" | "select-deck" | "select_deck" | "deckselect" | "deck-select"
+        | "deck_select" => parsed(EngramAppEvent::SelectDeck),
         "reveal" => parsed(EngramAppEvent::Reveal),
         "undo" => parsed(EngramAppEvent::Undo),
         "burycard" | "bury-card" | "bury_card" => parsed(EngramAppEvent::BuryCard),
@@ -9240,6 +9324,60 @@ mod tests {
         .unwrap();
         assert_eq!(open_intent["ok"], true);
         assert_eq!(open_intent["hostIntent"]["cardId"], "spanish-card");
+    }
+
+    #[test]
+    fn app_select_deck_event_updates_shared_deck_context() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [
+                {"id":"tamil","name":"Tamil","description":"Script","createdAt":1700000000000},
+                {"id":"spanish","name":"Spanish","description":"Words","createdAt":1700000000000}
+            ],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {"id":"tamil-card-a","deckId":"tamil","front":"amma","back":"mother","createdAt":1700000000000},
+                {"id":"tamil-card-b","deckId":"tamil","front":"appa","back":"father","createdAt":1700000000000},
+                {"id":"spanish-card","deckId":"spanish","front":"madre","back":"mother","createdAt":1700000000000}
+            ],
+            "cardProgress": [],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+
+        let initial: Value = serde_json::from_str(&session.engram_app_props("", NOW)).unwrap();
+        assert_eq!(initial["props"]["deck-name"], "Tamil");
+        assert_eq!(initial["props"]["deck-names"], json!(["Tamil", "Spanish"]));
+        assert_eq!(initial["props"]["deck-total-value"], "2");
+
+        let selected: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onSelectDeck","value":"Spanish"}"#,
+            "",
+            NOW + 1,
+        ))
+        .unwrap();
+        assert_eq!(selected["ok"], true);
+        assert_eq!(selected["event"], "onSelectDeck");
+        assert_eq!(selected["props"]["deck-name"], "Spanish");
+        assert_eq!(selected["props"]["deck-total-value"], "1");
+
+        let persisted: Value =
+            serde_json::from_str(&session.engram_app_props("", NOW + 2)).unwrap();
+        assert_eq!(persisted["props"]["deck-name"], "Spanish");
+
+        let import_intent: Value =
+            serde_json::from_str(&session.handle_engram_app_event("onImportAnki", "", NOW + 3))
+                .unwrap();
+        assert_eq!(import_intent["hostIntent"]["deckId"], "spanish");
+
+        let explicit_tamil: Value =
+            serde_json::from_str(&session.engram_app_props("tamil", NOW + 4)).unwrap();
+        assert_eq!(explicit_tamil["props"]["deck-name"], "Tamil");
+        assert_eq!(explicit_tamil["props"]["deck-total-value"], "2");
     }
 
     #[test]
