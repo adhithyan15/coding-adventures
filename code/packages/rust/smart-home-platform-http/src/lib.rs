@@ -6018,6 +6018,7 @@ fn state_history_events<'a>(
     let event_type = query_string(request, "event_type")
         .map(device_event_type_from_label)
         .transpose()?;
+    let bridge_id = query_string(request, "bridge_id");
     let room_id = query_string(request, "room_id");
     let observed_at_or_after_ms = history_from_ms(request)?;
     let observed_at_or_before_ms = history_to_ms(request)?;
@@ -6032,6 +6033,7 @@ fn state_history_events<'a>(
                 .as_ref()
                 .is_none_or(|entity_id| event.entity_id.as_ref() == Some(entity_id))
         })
+        .filter(|event| bridge_id.is_none_or(|bridge_id| event.bridge_id.as_str() == bridge_id))
         .filter(|event| {
             room_id.is_none_or(|room_id| device_event_matches_room(runtime, event, room_id))
         })
@@ -9199,6 +9201,25 @@ mod tests {
             .into(),
         );
         assert!(past_window_body.contains(r#""total_events":0"#));
+
+        let bridge_body = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/state_history?bridge_id=bridge-1&limit=5",
+            ))
+            .into(),
+        );
+        assert!(bridge_body.contains(r#""total_events":1"#));
+        assert!(bridge_body.contains(r#""event_id":"event-light-1-on""#));
+
+        let missing_bridge_body = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/state_history?bridge_id=bridge-2&limit=5",
+            ))
+            .into(),
+        );
+        assert!(missing_bridge_body.contains(r#""total_events":0"#));
 
         let room_body = response_body(
             app.handle(request(
