@@ -111,12 +111,39 @@ MICRO_TAIL = {
     "morphology": "has which microscopic morphology",
 }
 
+# slice 6 — a THIRD second-relation off an already-chained disease, proving write-once-use-many at
+# the hop-2 level: g6pd_deficiency already answers `gene_defect` (mh-36) and `inheritance` (mh-38);
+# here the SAME middle disease answers a hematology `classic_finding` (the peripheral-smear sign),
+# joined from a DIFFERENT hop-1 finding (Heinz bodies, histo) into a DIFFERENT hop-2 library
+# (anemia). One grounded disease id, now feeding three distinct second relations across three
+# libraries — nothing newly grounded. (id, clue, hop1_lib, hop1_rel, disease, hop2_lib, hop2_rel,
+# answer, pool, clue_phrase, tail)
+SMEAR_POOL = ["bite_cells", "koilonychia", "ringed_sideroblasts", "spherocytes", "target_cells"]
+SMEAR_CHAINS = [
+    ("mh-39", "heinz_bodies", "histo-edges.adj", "seen_in", "g6pd_deficiency",
+     "anemia-edges.adj", "classic_finding", "bite_cells", SMEAR_POOL,
+     "Heinz bodies on the peripheral blood smear",
+     "has which other classic peripheral-smear finding"),
+]
+
 # abstention — real rule shape, ungrounded clue: the engine binds nothing → MUST abstain.
 ABSTAIN = [
     ("mh-14", "a_clue_with_no_grounded_eye_edge", "ophtho-edges.adj", "eye_finding_indicates",
      "gene_defect", "genetics-edges.adj", GENE_POOL, "an eye finding not in the grounded library"),
     ("mh-15", "a_lesion_with_no_grounded_edge", "neuro-edges.adj", "lesion_causes",
      "gene_defect", "genetics-edges.adj", GENE_POOL, "a neuro lesion not in the grounded library"),
+]
+
+# slice 6 — a THREE-hop ABSTENTION: hops 1 AND 3 are grounded shapes, but the chain BREAKS at the
+# interior join (hop 2). The clue → disease edge is real (leukocoria → retinoblastoma, ophtho), and
+# `gram_stain` is a real relation, but retinoblastoma is a tumour with NO grounded causative
+# organism — so `causes(organism, retinoblastoma)` binds nothing and the 3-hop derivation cannot
+# complete. The engine MUST abstain rather than fabricate a Gram stain. This extends the
+# never-fabricate discipline to the deepest chain: a partially-grounded multi-hop is still an
+# abstention. (id, clue, hop1_lib, hop1_rel, clue_phrase)
+THREE_HOP_ABSTAIN = [
+    ("mh-40", "leukocoria", "ophtho-edges.adj", "eye_finding_indicates",
+     "a white pupillary reflex (leukocoria)"),
 ]
 
 LETTERS = ["A", "B", "C", "D", "E"]
@@ -199,6 +226,30 @@ def build():
         "clue": "pseudomembranes", "expected": "gram_positive",
         **dict(zip(("options", "gold_letter"), options_for("gram_positive", GRAM_POOL, 1))),
     })
+    # --- smear chains (slice 6): a third hop-2 relation off an already-chained disease ---------
+    for idx, (iid, clue, lib, rel, disease, hop2_lib, hop2_rel, answer, pool, phrase, tail) \
+            in enumerate(SMEAR_CHAINS):
+        options, gold = options_for(answer, pool, idx)
+        items.append({
+            "id": iid, "qtype": "multi_hop_recall",
+            "stem": f"A patient has {phrase}. That finding points to a single disease; "
+                    f"that disease {tail}?",
+            "hop1_lib": lib, "hop1_relation": rel,
+            "hop2_lib": hop2_lib, "hop2_relation": hop2_rel,
+            "clue": clue, "expected": answer, "options": options, "gold_letter": gold,
+        })
+    # --- three-hop abstention (slice 6): grounded ends, ungrounded interior join → MUST abstain --
+    for (iid, clue, lib, rel, phrase) in THREE_HOP_ABSTAIN:
+        items.append({
+            "id": iid, "qtype": "multi_hop_recall",
+            "stem": f"A patient has {phrase}. The disease it indicates is caused by an organism "
+                    f"with which Gram-stain reaction? (If no causative organism is grounded, abstain.)",
+            "hop1_lib": lib, "hop1_relation": rel,
+            "hop2_lib": "micro-edges.adj", "hop2_relation": "causes", "hop2_reverse": True,
+            "hop3_lib": "micro-edges.adj", "hop3_relation": "gram_stain",
+            "clue": clue, "expected": None, "expect_abstain": True,
+            "options": {LETTERS[i]: GRAM_POOL[i] for i in range(5)},
+        })
     # --- abstention (ungrounded clue: MUST abstain) ---
     for (iid, clue, lib, rel, hop2_rel, hop2_lib, pool, phrase) in ABSTAIN:
         # plausible distractors, but NO correct answer is reachable (the chain is ungrounded).
@@ -226,7 +277,13 @@ def build():
             "domain) run in REVERSE: the clue is a disease, hop 1 is causes(organism, disease) "
             "traversed backwards to bind the causative organism, and hop 2 reads that organism's "
             "Gram stain or microscopic morphology — proving a two-hop chain need not run left to "
-            "right through the edges, and that both hops can share one library. Nothing authored: "
+            "right through the edges, and that both hops can share one library. Slice 4 adds the "
+            "first THREE-hop chain (finding → disease → organism → Gram stain). Slice 6 adds a "
+            "third hop-2 relation off an already-chained disease (g6pd_deficiency now answers gene, "
+            "inheritance, AND a hematology smear finding — write-once-use-many at the hop-2 level), "
+            "and a THREE-hop abstention whose interior join is ungrounded (grounded ends, no "
+            "causative organism) and so MUST abstain — the never-fabricate discipline extended to "
+            "the deepest chain. Nothing authored: "
             "every edge reuses an already-grounded, spider+adversarially-gated fact. Engine: every "
             "answerable item correct with both hops cited; every abstention item abstains; zero "
             "model calls."
