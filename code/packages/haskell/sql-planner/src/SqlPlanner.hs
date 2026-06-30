@@ -26,6 +26,7 @@ module SqlPlanner
       -- * Aggregate argument
     , AggArg(..)
       -- * Scalar expressions
+    , LiteralVal(..)
     , SqlExpr(..)
       -- * Output column
     , OutputColumn(..)
