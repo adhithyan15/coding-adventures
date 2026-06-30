@@ -147,8 +147,9 @@ frontend additionally ships notation-specific golden tests.
 - `unicode-math` — the **third** frontend: Unicode plain math as people and models type it
   (`x² + y² = r²`, `√x`, `½`, `π·α`, `a ≤ b`). A small crate implementing the trait; its Greek /
   constant glyphs canonicalize to the same `Symbol` names as AsciiMath, so the notations agree on
-  one neutral string. PR-1 covers numbers/symbols/super-&-subscripts/fractions/roots/relations
-  /implicit-mul/±∓; big operators, named functions, matrices, and `\text` are PR-2.
+  one neutral string. Covers numbers/symbols/super-&-subscripts (Unicode glyphs *and* ASCII
+  `^`/`_`)/fractions/roots/relations/implicit-mul/±∓ and the big operators `∑ ∏ ∫ ∮ ∐` (PR-2);
+  named functions, matrices, and `\text` are PR-3.
 - Future: `mathml`, MathJSON, content-MathML, spreadsheet formulae, … each a small crate
   implementing the trait. None require changes to consumers. **Three frontends now in (LaTeX,
   AsciiMath, Unicode), all feeding one neutral AST with zero consumer change** — the pluggability

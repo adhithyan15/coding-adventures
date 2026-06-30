@@ -22,7 +22,7 @@
 //!   parser stack.
 
 use crate::token::{tokenize, Token, TokenKind};
-use math_frontend::{BinOp, FrontendError, MathExpr, Number, RelOp, UnaryOp};
+use math_frontend::{BigOp, BinOp, FrontendError, MathExpr, Number, RelOp, UnaryOp};
 
 /// Maximum *nesting* depth before refusing with a spanned error (never overflow). Kept well
 /// below what would exhaust a test-thread stack so the guard fires before the stack does.
@@ -161,14 +161,30 @@ impl Parser<'_> {
 
     fn parse_script(&mut self) -> Result<MathExpr, FrontendError> {
         let mut base = self.parse_atom()?;
-        // subscript then superscript (`a₁²` ⇒ (a₁)²), each at most once — the natural reading.
-        if let TokenKind::Sub(s) = self.peek().clone() {
-            self.advance();
-            base = MathExpr::Subscript(Box::new(base), Box::new(self.numeral(&s)?));
+        // Subscript then superscript (`a₁²` ⇒ (a₁)²), each at most once — the natural reading.
+        // Either form is accepted: a Unicode glyph run (a numeral, e.g. `₁`/`²`) or the explicit
+        // ASCII operator (`_`/`^`) whose operand is the next single atom (`a_i`, `x^2` ≡ `x²`).
+        match self.peek().clone() {
+            TokenKind::Sub(s) => {
+                self.advance();
+                base = MathExpr::Subscript(Box::new(base), Box::new(self.numeral(&s)?));
+            }
+            TokenKind::Underscore => {
+                self.advance();
+                base = MathExpr::Subscript(Box::new(base), Box::new(self.parse_atom()?));
+            }
+            _ => {}
         }
-        if let TokenKind::Super(s) = self.peek().clone() {
-            self.advance();
-            base = MathExpr::Bin(BinOp::Pow, Box::new(base), Box::new(self.numeral(&s)?));
+        match self.peek().clone() {
+            TokenKind::Super(s) => {
+                self.advance();
+                base = MathExpr::Bin(BinOp::Pow, Box::new(base), Box::new(self.numeral(&s)?));
+            }
+            TokenKind::Caret => {
+                self.advance();
+                base = MathExpr::Bin(BinOp::Pow, Box::new(base), Box::new(self.parse_atom()?));
+            }
+            _ => {}
         }
         Ok(base)
     }
@@ -190,6 +206,7 @@ impl Parser<'_> {
                 | TokenKind::VulgarFrac(_, _)
                 | TokenKind::Sqrt
                 | TokenKind::RootN(_)
+                | TokenKind::Big(_)
                 | TokenKind::LParen
                 | TokenKind::LBracket
                 | TokenKind::LBrace
@@ -230,8 +247,43 @@ impl Parser<'_> {
                     radicand: Box::new(self.parse_atom()?),
                 })
             }
+            TokenKind::Big(name) => {
+                // A big operator (`∑ ∏ ∫ ∮ ∐`) with optional lower/upper bounds and a body.
+                // Bounds attach to the operator itself (consumed here, before parse_script sees
+                // any script), written either with ASCII `_`/`^` (a full atom each, so
+                // `∑_(i=1)^n`) or with a Unicode sub/superscript glyph (a numeral). The body is
+                // the next single atom — the same "one atom argument" rule used by roots, so
+                // `∑ x + 1` is `(∑ x) + 1`.
+                self.advance();
+                let op = bigop_of(&name);
+                let mut lower: Option<Box<MathExpr>> = None;
+                let mut upper: Option<Box<MathExpr>> = None;
+                loop {
+                    match self.peek().clone() {
+                        TokenKind::Underscore if lower.is_none() => {
+                            self.advance();
+                            lower = Some(Box::new(self.parse_atom()?));
+                        }
+                        TokenKind::Sub(s) if lower.is_none() => {
+                            self.advance();
+                            lower = Some(Box::new(self.numeral(&s)?));
+                        }
+                        TokenKind::Caret if upper.is_none() => {
+                            self.advance();
+                            upper = Some(Box::new(self.parse_atom()?));
+                        }
+                        TokenKind::Super(s) if upper.is_none() => {
+                            self.advance();
+                            upper = Some(Box::new(self.numeral(&s)?));
+                        }
+                        _ => break,
+                    }
+                }
+                let body = self.parse_atom()?;
+                Ok(MathExpr::BigOp { op, lower, upper, body: Box::new(body) })
+            }
             TokenKind::LParen | TokenKind::LBracket | TokenKind::LBrace => self.parse_group(),
-            _ => Err(self.error_here("expected a number, symbol, root, or '('")),
+            _ => Err(self.error_here("expected a number, symbol, root, big operator, or '('")),
         }
     }
 
@@ -247,6 +299,19 @@ impl Parser<'_> {
             }
             _ => Err(self.error_here("expected a closing bracket")),
         }
+    }
+}
+
+/// The neutral [`BigOp`] for a big-operator glyph's canonical name. The tokenizer only ever
+/// emits the five known names, so `Other` is a defensive fallback (never reached in practice).
+fn bigop_of(name: &str) -> BigOp {
+    match name {
+        "sum" => BigOp::Sum,
+        "prod" => BigOp::Prod,
+        "int" => BigOp::Int,
+        "oint" => BigOp::Oint,
+        "coprod" => BigOp::Coprod,
+        _ => BigOp::Other(name.to_string()),
     }
 }
 

@@ -67,6 +67,14 @@ pub enum TokenKind {
     Approx,
     /// `≡` — identically equal.
     Equiv,
+    /// `^` — explicit superscript / power operator (the ASCII twin of the Unicode superscript
+    /// glyphs, so `x^2` ≡ `x²`; needed for big-operator upper bounds like `∑_(i=1)^n`).
+    Caret,
+    /// `_` — explicit subscript operator (`a_i`; big-operator lower bounds).
+    Underscore,
+    /// A big operator glyph — `∑ ∏ ∫ ∮ ∐` — carrying its canonical [`BigOp`] name
+    /// (`"sum"`, `"prod"`, `"int"`, `"oint"`, `"coprod"`).
+    Big(String),
     LParen,
     RParen,
     LBracket,
@@ -220,6 +228,13 @@ pub fn tokenize(src: &str) -> Result<Vec<Token>, FrontendError> {
             '√' => TokenKind::Sqrt,
             '∛' => TokenKind::RootN(3),
             '∜' => TokenKind::RootN(4),
+            '^' => TokenKind::Caret,
+            '_' => TokenKind::Underscore,
+            '∑' => TokenKind::Big("sum".into()),
+            '∏' => TokenKind::Big("prod".into()),
+            '∫' => TokenKind::Big("int".into()),
+            '∮' => TokenKind::Big("oint".into()),
+            '∐' => TokenKind::Big("coprod".into()),
             '=' => TokenKind::Eq,
             '≠' => TokenKind::Ne,
             '<' => TokenKind::Lt,
@@ -345,10 +360,23 @@ mod tests {
     }
 
     #[test]
+    fn big_operators_and_explicit_scripts() {
+        // PR-2: big-operator glyphs carry their canonical BigOp name.
+        assert_eq!(kinds("∑")[0], TokenKind::Big("sum".into()));
+        assert_eq!(kinds("∏")[0], TokenKind::Big("prod".into()));
+        assert_eq!(kinds("∫")[0], TokenKind::Big("int".into()));
+        // ASCII `^`/`_` are explicit script operators (twins of the Unicode glyphs).
+        assert_eq!(kinds("x^2"), vec![
+            TokenKind::Sym("x".into()), TokenKind::Caret, TokenKind::Num("2".into()), TokenKind::Eof,
+        ]);
+        assert_eq!(kinds("a_i")[1], TokenKind::Underscore);
+    }
+
+    #[test]
     fn errors_are_spanned_not_panics() {
-        // An out-of-scope glyph (∑ is PR-2) is a clean spanned error, never a panic.
-        let e = tokenize("∑").unwrap_err();
+        // An out-of-scope glyph (⊗ is not handled) is a clean spanned error, never a panic.
+        let e = tokenize("⊗").unwrap_err();
         assert_eq!(e.frontend, "unicode-math");
-        assert!(e.span.0 <= e.span.1 && e.span.1 <= "∑".len());
+        assert!(e.span.0 <= e.span.1 && e.span.1 <= "⊗".len());
     }
 }
