@@ -124,6 +124,69 @@ pub struct Function {
     pub span: Span,
 }
 
+impl Function {
+    /// Number of *required* leading parameters — the call-arity floor.
+    ///
+    /// SIR adopts a Ruby/JS default-parameter model (SIR10 "Default
+    /// parameters and call arity"): a default may be omitted by the
+    /// caller, but only from the **trailing** edge of the positional
+    /// list.  So the required count is the length of the longest leading
+    /// run of plain positional params that have **no** default.  The
+    /// first defaulted param (or the first `*rest` / `**opts` variadic,
+    /// or the synthetic trailing block param) ends that run.
+    ///
+    /// ```text
+    ///   def f(a, b, c = 1, d = 2)   →  required_param_count() == 2
+    ///   def g(a, b)                 →  required_param_count() == 2
+    ///   def h(a = 1, b = 2)         →  required_param_count() == 0
+    /// ```
+    ///
+    /// Worked reasoning for the first example: `a` and `b` have no
+    /// default, so the leading required run is `[a, b]` (length 2); `c`
+    /// has a default and terminates the run.  A caller must therefore
+    /// pass at least 2 positional arguments.
+    ///
+    /// Note: only an unbroken *leading* run counts.  A required param
+    /// that follows a defaulted one (a "hole", e.g. `def f(a = 1, b)`)
+    /// does **not** extend the required count — the validator forbids a
+    /// caller from omitting `a` while passing `b`, so `b` is not freely
+    /// omissible and `a` is not freely required.  Such a definition is
+    /// legal (the callee always receives a `b`), but its arity floor is
+    /// the leading run length (here `0`); the trailing-default rule in
+    /// [`Self::missing_defaults`] handles the rest.
+    pub fn required_param_count(&self) -> usize {
+        self.params
+            .iter()
+            .take_while(|p| p.kind == ParamKind::Required && p.default.is_none())
+            .count()
+    }
+
+    /// The trailing parameters a caller has **omitted** when it supplies
+    /// `n_args` positional arguments — i.e. the params at positions
+    /// `n_args .. params.len()`.
+    ///
+    /// Backends use this to know which trailing params they must fill
+    /// with their default expressions at the call site (the per-backend
+    /// default-param emission, a follow-up PR).  For a call the validator
+    /// has accepted, every returned param is guaranteed to carry a
+    /// `default` (that is precisely the arity rule), so a backend can
+    /// emit each one's default unconditionally.
+    ///
+    /// ```text
+    ///   f = def f(a, b, c = 1, d = 2)
+    ///   f.missing_defaults(4)  →  []            // all args passed
+    ///   f.missing_defaults(3)  →  [d]           // d omitted
+    ///   f.missing_defaults(2)  →  [c, d]        // c, d omitted
+    /// ```
+    ///
+    /// If `n_args >= params.len()` the slice is empty.  The method never
+    /// panics on over-supply: it clamps to the param count.
+    pub fn missing_defaults(&self, n_args: usize) -> &[Param] {
+        let n = n_args.min(self.params.len());
+        &self.params[n..]
+    }
+}
+
 /// How a parameter binds its arguments (M3 — see
 /// `code/specs/sir-variadic-params.md`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]

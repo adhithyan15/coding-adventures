@@ -15,7 +15,7 @@ use crate::limits::MAX_IR_DEPTH;
 use crate::manifest::{Feature, FeatureManifest};
 use crate::nodes::*;
 use crate::span::Span;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::fmt;
 
 /// A validator finding (error or warning) with a source position.
@@ -79,6 +79,57 @@ pub fn validate(module: &Module) -> ValidationResult {
 // Internal validator state
 // ---------------------------------------------------------------------------
 
+/// Pre-computed call-arity profile of a known top-level function,
+/// cached by [`ValidatorState`] so each `DirectCall` arity check is a
+/// constant-time map lookup rather than a re-scan of the callee's
+/// params.
+///
+/// `min` is [`Function::required_param_count`] (the leading run of
+/// no-default plain positionals); `max` is the total positional param
+/// count.  `variadic` records whether the callee has a `*rest`/`**opts`
+/// param or the synthetic trailing block param (`__sir_block__`) — when
+/// set, the strict bounds are not enforced (deferred; see the
+/// `DirectCall` arm of `check_expr`).
+#[derive(Debug, Clone, Copy)]
+struct FnArity {
+    min: usize,
+    max: usize,
+    variadic: bool,
+}
+
+/// `true` iff every argument in a call contributes exactly one positional
+/// value — i.e. the call has no splat/forwarding expansion and no implicit
+/// block handle appended to the argument list.  Only such "plain" calls
+/// have a statically meaningful `args.len()`, so the strict default-param
+/// arity bounds (SIR10) are applied to them alone.
+///
+/// The dynamic-arity argument shapes we exclude, all produced by the Ruby
+/// frontend's call-position lowerings, are:
+///   - `BuiltinCall("splat", …)`        — `f(*arr)` expands `arr` in place
+///   - `BuiltinCall("double_splat", …)` — `f(**hsh)` expands `hsh`
+///   - `BuiltinCall("forward_args", …)` — `f(...)` argument forwarding
+///   - `BuiltinCall("block_pass", …)`   — `f(&blk)` block-pass
+///   - `MakeClosure { … }`              — an implicit block (`f(x) { … }`)
+///     appended as a trailing positional argument even when the callee
+///     does not declare a block param.
+///
+/// Encountering any of these means the static argument count cannot be
+/// compared against the declared parameter count, so the caller skips the
+/// arity check (deferred — see the `DirectCall` arm of `check_expr`).
+fn args_are_plain(args: &[Expr]) -> bool {
+    !args.iter().any(|a| match a {
+        // An implicit block handle appended to the call (`f(x) { … }`).
+        Expr::MakeClosure { .. } => true,
+        // Splat / forwarding / block-pass markers expand to an unknown
+        // number of positional values.
+        Expr::BuiltinCall { name, .. } => matches!(
+            name.as_str(),
+            "splat" | "double_splat" | "forward_args" | "block_pass"
+        ),
+        _ => false,
+    })
+}
+
 struct ValidatorState<'m> {
     module: &'m Module,
     result: ValidationResult,
@@ -88,6 +139,15 @@ struct ValidatorState<'m> {
     /// All function names declared in this module.  Used to validate
     /// `DirectCall` targets and to detect duplicates.
     function_names: HashSet<String>,
+    /// Map from function name to its `(required_param_count, total_param_count,
+    /// has_variadic_or_synthetic)` arity profile, used to check
+    /// `DirectCall` arity (SIR10 default-param call-arity rule).  Built
+    /// once in `collect_top_level_names` so the per-call check is O(1).
+    /// `has_variadic_or_synthetic` is `true` when the callee has a
+    /// `*rest`/`**opts` param or the synthetic trailing block param — in
+    /// that case the strict upper-bound / required check is skipped
+    /// (deferred to a later phase; see the DirectCall arm).
+    fn_arity: HashMap<String, FnArity>,
     /// All global names declared in this module.
     global_names: HashSet<String>,
     /// `true` once a depth-overflow error has been recorded for
@@ -102,6 +162,7 @@ impl<'m> ValidatorState<'m> {
             result: ValidationResult::default(),
             observed: FeatureManifest::new(),
             function_names: HashSet::new(),
+            fn_arity: HashMap::new(),
             global_names: HashSet::new(),
             depth_overflow_reported: false,
         }
@@ -177,6 +238,21 @@ impl<'m> ValidatorState<'m> {
                     &f.span,
                 );
             }
+            // Cache the call-arity profile (SIR10 default-param call-arity
+            // rule).  `variadic` is set when the callee carries a
+            // `*rest`/`**opts` param or the synthetic trailing block param
+            // (`__sir_block__`); in that case the strict bounds are not
+            // enforced at the call site (deferred — see the `DirectCall`
+            // arm).  A duplicate name keeps the first profile, matching how
+            // `function_names` reports-but-keeps the first binding.
+            let variadic = f.params.iter().any(|p| {
+                p.kind != ParamKind::Required || p.name == "__sir_block__"
+            });
+            self.fn_arity.entry(f.name.clone()).or_insert(FnArity {
+                min: f.required_param_count(),
+                max: f.params.len(),
+                variadic,
+            });
         }
         for g in &self.module.globals {
             if !self.global_names.insert(g.name.clone()) {
@@ -294,6 +370,43 @@ impl<'m> ValidatorState<'m> {
                         );
                     }
                 }
+            }
+        }
+
+        // Defaults must be **trailing** (SIR10 default-param call-arity rule).
+        // A "hole" — a no-default `Required` param that follows a defaulted
+        // `Required` param, e.g. `def f(a = 1, b)` — is rejected.  Why:
+        //
+        //   - The call-arity rule lets a caller omit trailing defaulted args,
+        //     so `required_param_count()` counts only the *leading* no-default
+        //     run.  For a hole that count stops at the first default (here 0),
+        //     so the validator would accept `f()` / `f(0)`.
+        //   - But `missing_defaults(n)` then returns params that include the
+        //     trailing no-default `b`, breaking its documented guarantee that
+        //     "every returned param carries a default" — a backend that
+        //     unwraps `b.default` to fill it would panic.
+        //
+        // Enforcing "trailing defaults only" makes that guarantee true by
+        // construction.  It matches Python and JavaScript exactly and the
+        // common Ruby case; Ruby's required-after-optional form
+        // (`def f(a = 1, b)`) is a DEFERRED v0 limitation.  The synthetic
+        // trailing block param (`__sir_block__`) is always a no-default
+        // `Required` appended last, so it is exempt.
+        let mut defaulted_seen = false;
+        for p in &f.params {
+            if p.kind != ParamKind::Required || p.name == "__sir_block__" {
+                continue;
+            }
+            if p.default.is_some() {
+                defaulted_seen = true;
+            } else if defaulted_seen {
+                self.error(
+                    format!(
+                        "required parameter `{}` may not follow a defaulted parameter (defaults must be trailing)",
+                        p.name
+                    ),
+                    &p.span,
+                );
             }
         }
 
@@ -544,7 +657,56 @@ impl<'m> ValidatorState<'m> {
             }
             Expr::Block(b) => self.check_block(b, env, depth + 1),
             Expr::DirectCall { fn_name, args, .. } => {
-                if !self.function_names.contains(fn_name) {
+                if let Some(arity) = self.fn_arity.get(fn_name).copied() {
+                    // SIR10 default-param call-arity rule.  Let R be the
+                    // callee's required (leading no-default) param count and
+                    // M its total param count.  A DirectCall is arity-valid
+                    // iff R <= args.len() <= M; the omitted trailing params
+                    // (positions args.len()..M) are then exactly the ones
+                    // that carry defaults, so the backend can fill them.
+                    //
+                    // The strict R/M bounds only make sense when every
+                    // argument contributes exactly one positional value.  We
+                    // therefore skip the check entirely in two situations:
+                    //
+                    //   (a) the callee is variadic (`*rest`/`**opts`) or
+                    //       carries the synthetic trailing block param — the
+                    //       upper bound is then open / the block param is
+                    //       supplied by the lowerer, not positionally; and
+                    //   (b) the call carries an argument whose positional
+                    //       count is not statically 1 — a splat / double-splat
+                    //       / argument-forwarding marker (which expands to an
+                    //       unknown number of values) or an implicit Ruby
+                    //       block handle appended to the arg list (a trailing
+                    //       `MakeClosure`, or a `block_pass`/`block_given`
+                    //       marker).  Counting `args.len()` against the
+                    //       declared params would be meaningless there.
+                    //
+                    // This keeps v0 scope tight (plain positional callees with
+                    // trailing defaults) and is deliberately behaviour-neutral
+                    // for every existing frontend lowering, which relied on the
+                    // validator never checking DirectCall arity at all.
+                    if !arity.variadic && args_are_plain(args) {
+                        let n = args.len();
+                        if n < arity.min {
+                            self.error(
+                                format!(
+                                    "direct call to `{}` passes {} argument(s) but {} required",
+                                    fn_name, n, arity.min
+                                ),
+                                e.span(),
+                            );
+                        } else if n > arity.max {
+                            self.error(
+                                format!(
+                                    "direct call to `{}` passes {} argument(s) but the function takes at most {}",
+                                    fn_name, n, arity.max
+                                ),
+                                e.span(),
+                            );
+                        }
+                    }
+                } else {
                     self.error(
                         format!("direct call to unknown function `{}`", fn_name),
                         e.span(),
@@ -1076,6 +1238,361 @@ mod tests {
         });
         let r = validate(&m);
         assert!(!r.is_ok(), "expected scope error for forward reference");
+    }
+
+    // ── SIR10 default-param call-arity (P2a) ───────────────────────────
+    //
+    // Helpers and tests for the rule: a DirectCall to a known function is
+    // arity-valid iff R <= args.len() <= M, where R is the callee's
+    // required (leading no-default) param count and M is its total param
+    // count.  Omitting a trailing defaulted arg is OK; omitting a required
+    // arg or over-supplying is an error.
+
+    /// A param with an integer-literal default (`name = 1`).
+    fn p_default(name: &str) -> Param {
+        Param {
+            name: name.into(),
+            sir_type: None,
+            kind: ParamKind::Required,
+            default: Some(Box::new(Expr::IntLit { value: 1, span: s() })),
+            span: s(),
+        }
+    }
+
+    /// Build a two-function module: a callee `f` with `callee_params`, and
+    /// a caller `g` whose body is `f(<n_args> int literals>)` via a
+    /// `DirectCall`.  The manifest declares `DefaultParams` so a defaulted
+    /// callee passes the manifest check.
+    fn module_calling_f(callee_params: Vec<Param>, n_args: usize) -> Module {
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::DynamicTyping,
+            Feature::DefaultParams,
+        ]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: callee_params,
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let args: Vec<Expr> = (0..n_args)
+            .map(|i| Expr::IntLit { value: i as i64, span: s() })
+            .collect();
+        m.functions.push(Function {
+            name: "g".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::DirectCall {
+                    fn_name: "f".into(),
+                    args,
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    #[test]
+    fn direct_call_exact_arity_is_valid() {
+        // def f(a, b = 1); f(0, 1) — R=1, M=2, args=2 → R<=2<=M.
+        let m = module_calling_f(vec![p("a", ParamKind::Required), p_default("b")], 2);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn direct_call_omitting_trailing_default_is_valid() {
+        // def f(a, b = 1); f(0) — omit the trailing defaulted `b`. R=1,
+        // M=2, args=1 → R<=1<=M, and the omitted param (`b`) has a default.
+        let m = module_calling_f(vec![p("a", ParamKind::Required), p_default("b")], 1);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn direct_call_omitting_all_defaults_is_valid() {
+        // def f(a = 1, b = 1); f() — both params defaulted, R=0, M=2,
+        // args=0 → 0<=0<=2.
+        let m = module_calling_f(vec![p_default("a"), p_default("b")], 0);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn direct_call_omitting_required_arg_is_error() {
+        // def f(a, b = 1); f() — omits the *required* `a`. R=1, args=0 →
+        // 0 < R → error.
+        let m = module_calling_f(vec![p("a", ParamKind::Required), p_default("b")], 0);
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors().any(|i| i.message.contains("required")),
+            "expected a 'required' arity error, got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn direct_call_too_many_args_is_error() {
+        // def f(a, b = 1); f(0, 1, 2) — three args but M=2. args > M → error.
+        let m = module_calling_f(vec![p("a", ParamKind::Required), p_default("b")], 3);
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors().any(|i| i.message.contains("at most")),
+            "expected an 'at most' arity error, got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn direct_call_to_no_default_function_still_requires_exact_arity() {
+        // Behaviour-neutral check: a default-less callee `def f(a, b)` keeps
+        // exact-arity semantics — f(0) is now an error (R=M=2), f(0,1) is ok.
+        let short = module_calling_f(
+            vec![p("a", ParamKind::Required), p("b", ParamKind::Required)],
+            1,
+        );
+        assert!(!validate(&short).is_ok(), "f(0) for def f(a,b) must error");
+        let exact = module_calling_f(
+            vec![p("a", ParamKind::Required), p("b", ParamKind::Required)],
+            2,
+        );
+        assert!(
+            validate(&exact).is_ok(),
+            "f(0,1) for def f(a,b) must validate"
+        );
+    }
+
+    #[test]
+    fn direct_call_to_variadic_callee_skips_strict_bounds() {
+        // def f(a, *rest); f(0,1,2,3) — a `*rest` removes the upper bound,
+        // so over-supply relative to the positional count is accepted
+        // (strict bounds are deferred for variadic callees).
+        let m = module_calling_f(
+            vec![p("a", ParamKind::Required), p("rest", ParamKind::Rest)],
+            4,
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok for variadic callee, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn direct_call_with_trailing_block_handle_skips_arity_check() {
+        // Ruby block-passing convention: `helper(2) { … }` lowers to a
+        // DirectCall whose args are [2, MakeClosure(__block_0)] — i.e. one
+        // extra trailing block handle is appended even though `helper`'s
+        // declared params do NOT include a block param.  The static arg
+        // count (2) exceeds M (1), but because the trailing arg is an
+        // implicit block handle the strict bounds are skipped — this must
+        // still validate (behaviour-neutral for the Ruby frontend).
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::DynamicTyping,
+            Feature::Closures,
+        ]));
+        m.functions.push(Function {
+            name: "helper".into(),
+            params: vec![p("x", ParamKind::Required)],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        // The hoisted block fn (so MakeClosure references a known function).
+        m.functions.push(Function {
+            name: "__block_0".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m.functions.push(Function {
+            name: "outer".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::DirectCall {
+                    fn_name: "helper".into(),
+                    args: vec![
+                        Expr::IntLit { value: 2, span: s() },
+                        Expr::MakeClosure {
+                            fn_name: "__block_0".into(),
+                            captures: vec![],
+                            span: s(),
+                        },
+                    ],
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "block-passing call must validate, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn direct_call_with_splat_arg_skips_arity_check() {
+        // `helper(*arr)` → DirectCall(helper, [BuiltinCall("splat", [arr])]).
+        // A splat expands to an unknown count, so even though args.len()==1
+        // and helper takes 2 required params, the arity check is skipped.
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::DynamicTyping]));
+        m.functions.push(Function {
+            name: "helper".into(),
+            params: vec![p("a", ParamKind::Required), p("b", ParamKind::Required)],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m.functions.push(Function {
+            name: "g".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::DirectCall {
+                    fn_name: "helper".into(),
+                    args: vec![Expr::BuiltinCall {
+                        name: "splat".into(),
+                        args: vec![Expr::NilLit { span: s() }],
+                        effects: EffectSet::PURE,
+                        span: s(),
+                    }],
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "splat call must validate, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn required_param_count_helper() {
+        // def f(a, b, c = 1, d = 1) → required_param_count() == 2.
+        let f = Function {
+            name: "f".into(),
+            params: vec![
+                p("a", ParamKind::Required),
+                p("b", ParamKind::Required),
+                p_default("c"),
+                p_default("d"),
+            ],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        assert_eq!(f.required_param_count(), 2);
+        // missing_defaults: the trailing params a caller omits.
+        assert_eq!(f.missing_defaults(4).len(), 0);
+        let omitted_one = f.missing_defaults(3);
+        assert_eq!(omitted_one.len(), 1);
+        assert_eq!(omitted_one[0].name, "d");
+        let omitted_two = f.missing_defaults(2);
+        assert_eq!(omitted_two.len(), 2);
+        assert_eq!(omitted_two[0].name, "c");
+        assert_eq!(omitted_two[1].name, "d");
+        // Over-supply clamps rather than panicking.
+        assert_eq!(f.missing_defaults(99).len(), 0);
+    }
+
+    /// Build a single-function module `def f(<params>)` with a nil body and
+    /// a manifest declaring DynamicTyping + DefaultParams — for exercising
+    /// the trailing-defaults-only rule.
+    fn module_with_default_params(params: Vec<Param>) -> Module {
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::DynamicTyping,
+            Feature::DefaultParams,
+        ]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params,
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    #[test]
+    fn required_after_defaulted_param_is_a_hole_error() {
+        // def f(a = 1, b) — `b` is a required param following a defaulted
+        // one.  This "hole" is rejected so `missing_defaults` only ever
+        // returns params that carry a default.
+        let m = module_with_default_params(vec![p_default("a"), p("b", ParamKind::Required)]);
+        let r = validate(&m);
+        assert!(!r.is_ok(), "a hole must fail validation");
+        assert!(
+            r.errors().any(|i| i
+                .message
+                .contains("may not follow a defaulted parameter")),
+            "expected the trailing-defaults error, got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn trailing_defaults_validate() {
+        // def f(a, b = 1, c = 2) — all defaults are trailing; valid.
+        let m = module_with_default_params(vec![
+            p("a", ParamKind::Required),
+            p_default("b"),
+            p_default("c"),
+        ]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "trailing defaults must validate, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn block_param_after_defaulted_param_is_exempt() {
+        // def f(a = 1) { yield } → params [a=1, __sir_block__].  The
+        // synthetic block param is a no-default Required appended last, so
+        // it must NOT trip the trailing-defaults rule.
+        let m = module_with_default_params(vec![
+            p_default("a"),
+            p("__sir_block__", ParamKind::Required),
+        ]);
+        let r = validate(&m);
+        assert!(
+            r.is_ok(),
+            "block param after a default must be exempt, got {:?}",
+            r.issues
+        );
     }
 
     #[test]
