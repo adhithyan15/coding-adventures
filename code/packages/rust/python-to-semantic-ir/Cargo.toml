@@ -1,6 +1,6 @@
 [package]
 name = "python-to-semantic-ir"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "Python CST → narrow-waist Semantic IR (SIR17). Second frontend for the SIR10 narrow-waist IR."
 

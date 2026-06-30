@@ -52,13 +52,14 @@ pub struct PythonLowerError {
 `compile_source` parses then lowers; both parse and lower failures are
 surfaced as `PythonLowerError`.
 
-## Milestone status — M2 (variables, assignment, operators)
+## Milestone status — M3 (control flow)
 
 The whole program is wrapped in a synthesised `main` function whose
 block value is the program's final top-level expression (or `NilLit`
 for an empty program, or when the last statement is an assignment);
 earlier top-level statements become `ExprStmt`s (bare expressions) or
-binding / `Assign` statements.
+binding / `Assign` / loop statements.  M3 adds `if` / `elif` / `else`,
+`while`, and `for` (`range` and iterables).
 
 ### Literals (M1, still supported)
 
@@ -111,6 +112,41 @@ peel (`MAX_EXPR_DEPTH`): every recursive descent increments the depth
 counter, so pathologically deep input yields a clean `PythonLowerError`
 instead of a native stack overflow.
 
+### Control flow (M3)
+
+| Python source                          | SIR lowering                                          | Feature declared |
+|----------------------------------------|-------------------------------------------------------|------------------|
+| `if c: …`                              | `If { cond, then, else: nil-block }`                  | —                |
+| `if c: … else: …`                      | `If { cond, then, else }`                             | —                |
+| `if c: … elif d: … else: …`            | `If { c, …, else: If { d, …, else } }` (nested)       | —                |
+| `while c: body`                        | `While { cond, body }`                                | `Loops`          |
+| `for i in range(n): body`              | `ForRange { var, start 0, stop n, step 1, body }`     | `Loops`          |
+| `for i in range(a, b): body`           | `ForRange { var, start a, stop b, step 1, body }`     | `Loops`          |
+| `for i in range(a, b, c): body`        | `ForRange { var, start a, stop b, step c, body }`     | `Loops`          |
+| `for x in xs: body`                    | `ForEach { var, iter xs, body }`                      | `Loops`          |
+
+`if` is modelled as a SIR **expression** (`Expr::If`), so a *trailing*
+`if` becomes its enclosing block's value, while an `if` in non-tail
+position becomes a `Stmt::ExprStmt` wrapping the `If`.  An `elif` chain
+folds right-to-left into nested `If`s (each `elif` is the `else_branch`
+of the clause before it); a missing `else` synthesises an empty block
+whose value is `NilLit`.  `if` declares **no** feature — it is a SIR v0
+construct.
+
+Each loop / branch **suite** lowers to a `Block` (statements then a
+value).  A `for` header's `range(...)` is recognised structurally and
+its arity mapped to `(start, stop, step)`; `range` with zero or more
+than three arguments is rejected ("range with wrong arity").  Any other
+iterable becomes a `ForEach`.
+
+**Scoping.**  The loop variable (`i` / `x`) is a `Scope::Local` bound
+**inside the body only**, and a name first bound inside a loop or
+`if`-branch body does **not** leak past the block — the lowerer's
+declared-name table is a stack mirroring the validator's `LocalEnv`, so
+lowering and validation agree.  Nested control flow is bounded by
+`MAX_BLOCK_DEPTH` (companion to `MAX_EXPR_DEPTH`), turning pathological
+nesting into a clean error rather than a native stack overflow.
+
 The manifest declares **exactly** the features observed.  Module
 metadata records `source_language = "python"` and
 `sir_version = semantic_ir::CURRENT_SIR_VERSION`.  Every lowered module
@@ -118,18 +154,19 @@ passes `semantic_ir::validate`.
 
 ### Deferred (later milestones)
 
-Everything past M2 returns a clear `PythonLowerError`
+Everything past M3 returns a clear `PythonLowerError`
 (`"unsupported: <rule> (deferred …)"`) so later milestones slot in
 where the error is raised today:
 
-- control flow (`if` / `while` / `for`) — M3
-- functions (`def`), lambdas, calls (`f(...)`, `print` / `len` /
-  `range`) — M3/M4
-- sequences, maps, indexing — M4/M5
-- multi-target / chained assignment, attribute / subscript targets,
-  bitwise operators, the power operator (`**`)
+- functions (`def`), lambdas, calls (`f(...)`, `print` / `len`
+  builtins; `range` is recognised only in `for` headers, not as a
+  general call yet) — M4
+- sequences, maps, indexing, comprehensions — M5
+- tuple / multi-target `for` (`for k, v in …`), multi-target / chained
+  assignment, attribute / subscript targets, bitwise operators, the
+  power operator (`**`)
 - and the full SIR17 "out of scope" list (classes, exceptions,
-  generators, comprehensions, decorators, `with`, `async`, imports,
+  generators, decorators, `with` / `try`, `async`, imports,
   `global` / `nonlocal`, f-strings).
 
 ## Testing & coverage
@@ -138,12 +175,17 @@ where the error is raised today:
 cargo test -p python-to-semantic-ir
 ```
 
-The suite (35 tests) covers: one positive test per literal kind; the
+The suite (57 tests) covers: one positive test per literal kind; the
 M2 operators (each arithmetic, comparison, unary, and logical form),
 left-associativity and precedence; variable resolution,
 let-then-reference, and let-vs-reassign first-occurrence; the
-short-circuit-node shape; top-level structure (empty program,
-`ExprStmt` + value split, metadata, minimal manifest); a `validate`
-round-trip across every literal and M2 construct; and error paths
-(unresolved name, self-reference, `global`, parse error, error
-position).  This exercises ≥ 90% of the M2 surface.
+short-circuit-node shape; the M3 control flow — `if` / `elif` / `else`
+nesting (incl. no-else and elif-without-else nil branches, trailing vs
+statement-position `if`), `while` (with body re-assignment), `for`-range
+at all three arities plus variable bounds and the zero-/four-arg arity
+errors, `for`-each, loop-variable and branch-local scope non-leakage,
+and nested control flow; top-level structure (empty program, `ExprStmt`
++ value split, metadata, minimal manifest); a `validate` round-trip
+across every literal, M2, and M3 construct; and error paths (unresolved
+name, self-reference, `global`, `def` / `with` deferral, parse error,
+error position).  This exercises ≥ 90% of the M3 surface.

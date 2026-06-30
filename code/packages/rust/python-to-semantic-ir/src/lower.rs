@@ -1,5 +1,5 @@
 //! The lowering pass from `python_parser`'s generic
-//! [`GrammarASTNode`] CST → [`semantic_ir::Module`], **milestone M2**.
+//! [`GrammarASTNode`] CST → [`semantic_ir::Module`], **milestone M3**.
 //!
 //! # What M1 covered (still supported)
 //!
@@ -82,12 +82,34 @@
 //! non-literal operand (`-x`) we now emit `BuiltinCall("neg", [x])`
 //! instead of erroring.
 //!
+//! # What M3 adds
+//!
+//! M3 adds **control flow**.  A `statement` may now wrap a
+//! `compound_stmt` (`if_stmt` / `while_stmt` / `for_stmt`) in addition to
+//! a `simple_stmt`:
+//!
+//! - `if_stmt` — the parser flattens `if`/`elif`/`else` into one node; we
+//!   collect the `(cond, suite)` clauses + optional `else`, then fold
+//!   right-to-left into nested [`Expr::If`].  A trailing `if` becomes the
+//!   block value; otherwise it is wrapped as a `Stmt::ExprStmt`.
+//! - `while_stmt` → [`Stmt::While`].
+//! - `for_stmt` → [`Stmt::ForRange`] when the iterable is a literal
+//!   `range(...)` call (arity 1/2/3 → `start`/`stop`/`step`), else
+//!   [`Stmt::ForEach`].
+//!
+//! Each suite lowers to a [`Block`] via [`Lowerer::lower_suite`].  The
+//! lowerer's declared-name table became a **stack** (was a `HashSet`) so
+//! block-local names — including the loop variable — are scoped exactly
+//! as the SIR validator scopes them (`mark`/`rewind`), keeping lowering
+//! and validation in lock-step.  A `MAX_BLOCK_DEPTH` guard bounds nested
+//! control-flow recursion.
+//!
 //! ## Still deferred (later milestones)
 //!
-//! - calls / functions / `def` / `lambda`                → M3+
-//! - control flow (`if` / `while` / `for`)               → M3+
-//! - collections (lists / dicts / indexing)              → M3+
-//! - `global` / `nonlocal`, multi-target assignment      → deferred
+//! - calls / functions / `def` / `lambda`                → M4+
+//! - collections (lists / dicts / indexing)              → M5+
+//! - tuple `for` targets, `with` / `try`, `global` /
+//!   `nonlocal`, multi-target assignment                 → deferred
 //!
 //! Unhandled rules produce a clear `PythonLowerError` rather than
 //! silently dropping source, so later milestones can slot their
@@ -97,7 +119,6 @@ use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{
     Block, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Scope, Span, Stmt,
 };
-use std::collections::HashSet;
 
 /// Maximum expression-nesting depth the lowerer will descend before
 /// bailing with an error.  The expression-precedence chain is ~20 levels
@@ -108,6 +129,15 @@ use std::collections::HashSet;
 /// clean `PythonLowerError` instead of a native stack overflow (which
 /// aborts unrecoverably and cannot be caught in Rust).
 const MAX_EXPR_DEPTH: usize = 256;
+
+/// Maximum *statement-block* nesting depth (M3).  Each `if` / `while` /
+/// `for` body re-enters [`Lowerer::lower_suite`] one level deeper, so a
+/// pathological tower of `while c:\n while c:\n …` would recurse without
+/// bound.  Mirroring [`MAX_EXPR_DEPTH`]'s role for expressions, this cap
+/// turns deeply nested control flow into a clean positioned
+/// `PythonLowerError` instead of a native (uncatchable) stack overflow.
+/// It is generous: real source nests a handful of levels, far below this.
+const MAX_BLOCK_DEPTH: usize = 256;
 
 // ---------------------------------------------------------------------------
 // Public error type
@@ -170,11 +200,22 @@ struct Lowerer {
     /// Features observed while lowering, used to build the manifest so
     /// it declares *exactly* what the module emits.
     observed: FeatureManifest,
-    /// Names already bound in the current (module / `main`) scope.  Drives
+    /// Names bound in the scope chain *so far*, as a stack (M3).  Drives
     /// first-occurrence detection: the first `x = …` declares (`LetStar`),
-    /// later `x = …` re-assign (`Assign`), and a `VarRef` to a name in
-    /// this set resolves as `Scope::Local`.
-    declared: HashSet<String>,
+    /// a later `x = …` re-assigns (`Assign`), and a `VarRef` to a name in
+    /// this stack resolves as `Scope::Local`.
+    ///
+    /// Why a stack rather than a flat `HashSet` (M2's design)?  M3 adds
+    /// nested statement *blocks* — loop and `if`-branch bodies.  The SIR
+    /// validator scopes block-local names with `mark()`/`rewind()`: a name
+    /// bound inside a loop body (or the loop variable itself) is **not**
+    /// visible once the body ends.  We mirror that exactly here with
+    /// [`Self::scope_mark`] / [`Self::scope_rewind`] so the names the
+    /// lowerer resolves and the names the validator accepts stay in
+    /// lock-step — otherwise a lowered module could fail its own
+    /// round-trip validation.  Membership is by linear scan (scopes are
+    /// tiny in practice), matching the validator's `LocalEnv`.
+    declared: Vec<String>,
 }
 
 impl Lowerer {
@@ -182,8 +223,34 @@ impl Lowerer {
         Self {
             module_name: module_name.to_string(),
             observed: FeatureManifest::new(),
-            declared: HashSet::new(),
+            declared: Vec::new(),
         }
+    }
+
+    // -------------------------------------------------------------------
+    // scope stack (M3): mirror the validator's `LocalEnv` mark/rewind so
+    // block-local bindings (loop vars, names first-bound inside a body)
+    // do not leak past the block — exactly as the validator scopes them.
+    // -------------------------------------------------------------------
+
+    /// Is `name` bound somewhere in the current scope chain?
+    fn is_declared(&self, name: &str) -> bool {
+        self.declared.iter().any(|n| n == name)
+    }
+
+    /// Bind `name` in the current (innermost) scope.
+    fn declare(&mut self, name: String) {
+        self.declared.push(name);
+    }
+
+    /// Remember the current scope depth before entering a nested block.
+    fn scope_mark(&self) -> usize {
+        self.declared.len()
+    }
+
+    /// Drop every name bound since `mark`, leaving the enclosing scope.
+    fn scope_rewind(&mut self, mark: usize) {
+        self.declared.truncate(mark);
     }
 
     // -------------------------------------------------------------------
@@ -214,7 +281,7 @@ impl Lowerer {
         let mut items: Vec<Lowered> = Vec::new();
         for child in &file.children {
             if let ASTNodeOrToken::Node(stmt) = child {
-                items.push(self.lower_statement(stmt)?);
+                items.push(self.lower_statement(stmt, 0)?);
             }
             // Token children at file level are stray NEWLINEs — ignore.
         }
@@ -275,20 +342,69 @@ impl Lowerer {
     }
 
     // -------------------------------------------------------------------
-    // statement → assignment or expression
+    // statement → assignment, expression, or compound (if/while/for)
     // -------------------------------------------------------------------
 
-    /// Lower a top-level `statement`.
+    /// Lower a `statement`.
     ///
-    /// The supported shapes are an *assignment* (`x = expr`) and a bare
-    /// *expression statement*.  Compound statements (`if`/`def`/`for`),
-    /// `global`/`nonlocal`, imports, etc. take a different `small_stmt`
-    /// branch (e.g. `global_stmt`) and are rejected with a clear
-    /// "unsupported" error.
-    fn lower_statement(&mut self, stmt: &GrammarASTNode) -> Result<Lowered, PythonLowerError> {
-        // Descend the fixed statement spine:
-        //   statement → simple_stmt → small_stmt → assign_stmt
-        let simple = self.expect_single_named(stmt, "statement", &["simple_stmt"])?;
+    /// A `statement` wraps exactly one of:
+    ///
+    /// - a `simple_stmt` — an *assignment* (`x = expr`) or a bare
+    ///   *expression statement*; or
+    /// - a `compound_stmt` — control flow (`if` / `while` / `for`), added
+    ///   in M3.
+    ///
+    /// `def` / `class` / `with` / `try` also arrive as `compound_stmt`
+    /// children and are still rejected with a clear "unsupported" error;
+    /// `global` / `nonlocal` take a different `small_stmt` branch and are
+    /// likewise rejected.
+    ///
+    /// `depth` is the statement-block nesting depth — top-level statements
+    /// are depth 0; each loop / `if`-branch body recurses one level deeper.
+    /// It bounds [`MAX_BLOCK_DEPTH`] so pathologically nested control flow
+    /// fails cleanly instead of overflowing the native stack.
+    fn lower_statement(
+        &mut self,
+        stmt: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Lowered, PythonLowerError> {
+        if depth > MAX_BLOCK_DEPTH {
+            return Err(self.err_at(
+                stmt,
+                format!("control-flow nesting too deep (exceeds {MAX_BLOCK_DEPTH} levels)"),
+            ));
+        }
+        if stmt.rule_name != "statement" {
+            return Err(self.err_at(
+                stmt,
+                format!("expected `statement`, got `{}`", stmt.rule_name),
+            ));
+        }
+
+        // `statement` has a single node child: either `simple_stmt` or
+        // (M3) `compound_stmt`.
+        let inner = match child_nodes(stmt).as_slice() {
+            [only] => *only,
+            _ => {
+                return Err(self.err_at(
+                    stmt,
+                    "unsupported: statement with multiple parts (deferred)".to_string(),
+                ))
+            }
+        };
+        match inner.rule_name.as_str() {
+            "simple_stmt" => self.lower_simple_stmt(inner),
+            "compound_stmt" => self.lower_compound_stmt(inner, depth),
+            other => Err(self.err_at(
+                inner,
+                format!("unsupported: {other} (deferred to a later milestone)"),
+            )),
+        }
+    }
+
+    /// Lower a `simple_stmt` — an assignment or a bare expression.
+    fn lower_simple_stmt(&mut self, simple: &GrammarASTNode) -> Result<Lowered, PythonLowerError> {
+        // Descend the fixed spine: simple_stmt → small_stmt → assign_stmt.
         let small = self.expect_single_named(simple, "simple_stmt", &["small_stmt"])?;
         let assign = self.expect_single_named(small, "small_stmt", &["assign_stmt"])?;
 
@@ -354,7 +470,7 @@ impl Lowerer {
         let value = self.lower_expr(rhs_node)?;
         let span = self.span_of(assign);
 
-        if self.declared.contains(&name) {
+        if self.is_declared(&name) {
             // Re-assignment to an already-declared local.  Emitting an
             // `Assign` means the module mutates a binding, so declare the
             // feature (the validator also observes it; declaring it here
@@ -369,7 +485,7 @@ impl Lowerer {
         } else {
             // First occurrence: declare via sequential `let*` so later
             // statements (and later RHS) can see it.
-            self.declared.insert(name.clone());
+            self.declare(name.clone());
             Ok(Lowered::Stmt(Box::new(Stmt::LetStarBinding {
                 name,
                 sir_type: None,
@@ -410,6 +526,461 @@ impl Lowerer {
                 _ => return Ok(None),
             }
         }
+    }
+
+    // -------------------------------------------------------------------
+    // compound statements (M3): if / while / for
+    // -------------------------------------------------------------------
+
+    /// Lower a `compound_stmt` — control flow.  A `compound_stmt` wraps a
+    /// single rule node: `if_stmt`, `while_stmt`, or `for_stmt` (M3).
+    /// `def` / `class_def` / `with_stmt` / `try_stmt` also surface here and
+    /// are deferred to later milestones with a clear error.
+    ///
+    /// `if` lowers to an [`Expr::If`] returned as a [`Lowered::Expr`], so a
+    /// trailing `if` can become the block *value* (Python's `if` is a
+    /// statement, but SIR models it as an expression — see [`Self::lower_if`]).
+    /// `while` / `for` are pure statements ([`Lowered::Stmt`]).
+    fn lower_compound_stmt(
+        &mut self,
+        compound: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Lowered, PythonLowerError> {
+        let inner = match child_nodes(compound).as_slice() {
+            [only] => *only,
+            _ => {
+                return Err(self.err_at(
+                    compound,
+                    "unsupported: compound statement with multiple parts (deferred)".to_string(),
+                ))
+            }
+        };
+        match inner.rule_name.as_str() {
+            "if_stmt" => Ok(Lowered::Expr(self.lower_if(inner, depth)?)),
+            "while_stmt" => Ok(Lowered::Stmt(Box::new(self.lower_while(inner, depth)?))),
+            "for_stmt" => Ok(Lowered::Stmt(Box::new(self.lower_for(inner, depth)?))),
+            other => Err(self.err_at(
+                inner,
+                format!("unsupported: {other} (deferred to a later milestone)"),
+            )),
+        }
+    }
+
+    /// Lower an `if_stmt` into a nested chain of [`Expr::If`].
+    ///
+    /// The parser flattens the whole `if` / `elif` / `else` construct into
+    /// **one** `if_stmt` node whose children are an ordered token+node
+    /// stream:
+    ///
+    /// ```text
+    /// if_stmt:
+    ///   KW "if"   expression  ":"  suite          ← the leading clause
+    ///   KW "elif" expression  ":"  suite          ← zero or more elif clauses
+    ///   …
+    ///   KW "else" ":"  suite                       ← optional trailing else
+    /// ```
+    ///
+    /// We walk that stream into a list of `(cond, suite)` clauses plus an
+    /// optional `else` suite, then fold it **right-to-left** so each `elif`
+    /// becomes the `else_branch` of the clause before it:
+    ///
+    /// ```text
+    /// if c1: B1 elif c2: B2 else: B3
+    ///   ⇒ If { c1, B1, else: If { c2, B2, else: B3 } }
+    /// ```
+    ///
+    /// A missing `else` becomes an empty `else_branch` block whose value is
+    /// `NilLit` (SIR requires both branches; an `if` with no `else` yields
+    /// nil on the false path, matching Python where the suite simply does
+    /// not run).  `if` adds no manifest feature — it is a SIR v0 construct.
+    fn lower_if(&mut self, if_stmt: &GrammarASTNode, depth: usize) -> Result<Expr, PythonLowerError> {
+        // Each clause is a guard expression paired with its suite; `else`
+        // (if present) is a bare suite with no guard.
+        struct Clause<'a> {
+            cond: &'a GrammarASTNode,
+            suite: &'a GrammarASTNode,
+        }
+        let mut clauses: Vec<Clause> = Vec::new();
+        let mut else_suite: Option<&GrammarASTNode> = None;
+
+        // Walk the flat child stream.  A keyword token (`if`/`elif`/`else`)
+        // opens a clause; the next `expression` is its guard (absent for
+        // `else`); the next `suite` is its body.
+        let mut pending_cond: Option<&GrammarASTNode> = None;
+        let mut in_else = false;
+        for child in &if_stmt.children {
+            match child {
+                ASTNodeOrToken::Token(t)
+                    if t.type_ == lexer::token::TokenType::Keyword
+                        && (t.value == "if" || t.value == "elif") =>
+                {
+                    in_else = false;
+                }
+                ASTNodeOrToken::Token(t)
+                    if t.type_ == lexer::token::TokenType::Keyword && t.value == "else" =>
+                {
+                    in_else = true;
+                }
+                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => {
+                    pending_cond = Some(n);
+                }
+                ASTNodeOrToken::Node(n) if n.rule_name == "suite" => {
+                    if in_else {
+                        else_suite = Some(n);
+                    } else {
+                        let cond = pending_cond.take().ok_or_else(|| {
+                            self.err_at(n, "malformed if: clause has no condition".to_string())
+                        })?;
+                        clauses.push(Clause { cond, suite: n });
+                    }
+                }
+                // Other tokens (`:`) and any stray nodes are ignored.
+                _ => {}
+            }
+        }
+
+        if clauses.is_empty() {
+            return Err(self.err_at(if_stmt, "malformed if: no clauses".to_string()));
+        }
+
+        let if_span = self.span_of(if_stmt);
+
+        // Build the final `else` block first (it is the deepest branch).
+        let mut else_branch: Block = match else_suite {
+            Some(s) => self.lower_suite(s, depth + 1)?,
+            None => empty_block(if_span.clone()),
+        };
+
+        // Fold clauses right-to-left so earlier `elif`s wrap later ones.
+        for clause in clauses.into_iter().rev() {
+            let cond = self.lower_expr(clause.cond)?;
+            let then_branch = self.lower_suite(clause.suite, depth + 1)?;
+            let span = cond.span().clone();
+            let folded = Expr::If {
+                cond: Box::new(cond),
+                then_branch: Box::new(then_branch),
+                else_branch: Box::new(else_branch),
+                span,
+            };
+            // The just-built `If` becomes the else-branch of the next
+            // (outer) clause: wrap it in a one-value block.
+            else_branch = value_block(folded);
+        }
+
+        // After the fold, `else_branch` is a block whose value is the
+        // outermost `If`.  Unwrap it back to the bare `If` expression.
+        match else_branch.value {
+            Expr::If { .. } => Ok(else_branch.value),
+            other => Ok(other),
+        }
+    }
+
+    /// Lower a `while_stmt` into [`Stmt::While`].
+    ///
+    /// `while_stmt` children: `KW "while"`, `expression` (the condition),
+    /// `:`, `suite` (the body).  The body is lowered into a [`Block`]; the
+    /// loop adds [`Feature::Loops`].
+    fn lower_while(
+        &mut self,
+        while_stmt: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Stmt, PythonLowerError> {
+        let cond_node = self
+            .first_child_named(while_stmt, "expression")
+            .ok_or_else(|| self.err_at(while_stmt, "malformed while: no condition".to_string()))?;
+        let suite = self
+            .first_child_named(while_stmt, "suite")
+            .ok_or_else(|| self.err_at(while_stmt, "malformed while: no body".to_string()))?;
+
+        let cond = self.lower_expr(cond_node)?;
+        let body = self.lower_suite(suite, depth + 1)?;
+        self.observed.add(Feature::Loops);
+        Ok(Stmt::While {
+            cond,
+            body,
+            span: self.span_of(while_stmt),
+        })
+    }
+
+    /// Lower a `for_stmt` into either [`Stmt::ForRange`] (when the iterable
+    /// is a literal `range(...)` call) or [`Stmt::ForEach`] (any other
+    /// iterable).
+    ///
+    /// `for_stmt` children: `KW "for"`, `target_list` (the loop var(s)),
+    /// `KW "in"`, `expression_list` (the iterable), `:`, `suite` (body).
+    ///
+    /// M3 supports exactly one bare-name target (`for i in …`).  Tuple
+    /// targets (`for k, v in …`) are deferred.  The loop variable is bound
+    /// **inside the body's scope only** (mirroring the validator): we push
+    /// a scope mark, declare the var, lower the body, then rewind.
+    fn lower_for(&mut self, for_stmt: &GrammarASTNode, depth: usize) -> Result<Stmt, PythonLowerError> {
+        let target_list = self
+            .first_child_named(for_stmt, "target_list")
+            .ok_or_else(|| self.err_at(for_stmt, "malformed for: no target".to_string()))?;
+        let iter_list = self
+            .first_child_named(for_stmt, "expression_list")
+            .ok_or_else(|| self.err_at(for_stmt, "malformed for: no iterable".to_string()))?;
+        let suite = self
+            .first_child_named(for_stmt, "suite")
+            .ok_or_else(|| self.err_at(for_stmt, "malformed for: no body".to_string()))?;
+
+        // The target must be a single bare name.  `target_list` holds one
+        // or more `target` nodes; we accept exactly one whose leaf is a
+        // `Name`.
+        let targets = child_nodes(target_list);
+        let var = match targets.as_slice() {
+            [one] => match self.target_name(one)? {
+                Some(name) => name,
+                None => {
+                    return Err(self.err_at(
+                        one,
+                        "unsupported: for-loop target is not a bare name (deferred)".to_string(),
+                    ))
+                }
+            },
+            _ => {
+                return Err(self.err_at(
+                    target_list,
+                    "unsupported: tuple for-loop target (deferred)".to_string(),
+                ))
+            }
+        };
+
+        // The iterable is the single expression in `expression_list`.
+        let iter_expr_node = self.single_expr(iter_list)?;
+        let span = self.span_of(for_stmt);
+
+        // Is the iterable a literal `range(...)` call?  If so, lower to
+        // `ForRange`; otherwise lower the iterable expression and emit
+        // `ForEach`.  We classify *before* binding the loop var because the
+        // iterable is evaluated in the *enclosing* scope (the loop var is
+        // not yet in scope), exactly as the validator checks it.
+        let range = self.try_range_call(iter_expr_node)?;
+
+        self.observed.add(Feature::Loops);
+
+        match range {
+            Some((start, stop, step)) => {
+                // Bind the loop var inside the body's scope only.
+                let mark = self.scope_mark();
+                self.declare(var.clone());
+                let body = self.lower_suite_no_mark(suite, depth + 1)?;
+                self.scope_rewind(mark);
+                Ok(Stmt::ForRange {
+                    var,
+                    start,
+                    stop,
+                    step,
+                    body,
+                    span,
+                })
+            }
+            None => {
+                let iter = self.lower_expr(iter_expr_node)?;
+                let mark = self.scope_mark();
+                self.declare(var.clone());
+                let body = self.lower_suite_no_mark(suite, depth + 1)?;
+                self.scope_rewind(mark);
+                Ok(Stmt::ForEach {
+                    var,
+                    iter,
+                    body,
+                    span,
+                })
+            }
+        }
+    }
+
+    /// Recognise a literal `range(...)` call and lower its arguments into
+    /// `(start, stop, step)` expressions per Python's `range` arities:
+    ///
+    /// | call form            | start | stop | step |
+    /// |----------------------|-------|------|------|
+    /// | `range(n)`           | `0`   | `n`  | `1`  |
+    /// | `range(a, b)`        | `a`   | `b`  | `1`  |
+    /// | `range(a, b, c)`     | `a`   | `b`  | `c`  |
+    ///
+    /// Returns `Ok(None)` when the iterable is *not* a `range(...)` call
+    /// (so the caller falls back to `ForEach`).  A `range` call with zero
+    /// arguments or more than three is rejected (`range` requires 1–3 args).
+    fn try_range_call(
+        &mut self,
+        iter: &GrammarASTNode,
+    ) -> Result<Option<(Expr, Expr, Expr)>, PythonLowerError> {
+        // Peel single-child wrappers down to the `primary` that carries the
+        // `atom`(Name) + `suffix`(call) shape.
+        let primary = match self.peel_to_primary(iter) {
+            Some(p) => p,
+            None => return Ok(None),
+        };
+
+        // A call `primary` is `atom suffix` where `suffix` is `( args )`.
+        let kids = child_nodes(primary);
+        let (callee, suffix) = match kids.as_slice() {
+            [callee, suffix] if suffix.rule_name == "suffix" => (*callee, *suffix),
+            _ => return Ok(None),
+        };
+
+        // The callee must be the bare name `range`.
+        match self.target_name(callee)? {
+            Some(name) if name == "range" => {}
+            _ => return Ok(None),
+        }
+
+        // Collect the call's `argument` nodes (commas are tokens).
+        let suffix_kids = child_nodes(suffix);
+        let args: Vec<&GrammarASTNode> = suffix_kids
+            .into_iter()
+            .filter(|n| n.rule_name == "arguments")
+            .flat_map(child_nodes)
+            .filter(|n| n.rule_name == "argument")
+            .collect();
+
+        let span = self.span_of(primary);
+        let int = |v: i64| Expr::IntLit { value: v, span: span.clone() };
+
+        // One `argument` wraps one `expression`; lower it.
+        let arg_expr = |me: &mut Self, a: &GrammarASTNode| -> Result<Expr, PythonLowerError> {
+            let expr = me.single_arg_expr(a)?;
+            me.lower_expr(expr)
+        };
+
+        match args.as_slice() {
+            [n] => {
+                let stop = arg_expr(self, n)?;
+                Ok(Some((int(0), stop, int(1))))
+            }
+            [a, b] => {
+                let start = arg_expr(self, a)?;
+                let stop = arg_expr(self, b)?;
+                Ok(Some((start, stop, int(1))))
+            }
+            [a, b, c] => {
+                let start = arg_expr(self, a)?;
+                let stop = arg_expr(self, b)?;
+                let step = arg_expr(self, c)?;
+                Ok(Some((start, stop, step)))
+            }
+            other => Err(self.err_at(
+                primary,
+                format!(
+                    "range() takes 1 to 3 arguments, got {} (range with wrong arity)",
+                    other.len()
+                ),
+            )),
+        }
+    }
+
+    /// Peel an expression node down to the `primary` rule (the level that
+    /// carries call/index/attribute suffixes), following single-child
+    /// wrappers.  Returns `None` if no `primary` with a non-trivial shape
+    /// is reached (e.g. a bare name peels past `primary` to its `atom`).
+    fn peel_to_primary<'a>(&self, node: &'a GrammarASTNode) -> Option<&'a GrammarASTNode> {
+        let mut cur = node;
+        let mut depth = 0usize;
+        loop {
+            if depth > MAX_EXPR_DEPTH {
+                return None;
+            }
+            if cur.rule_name == "primary" {
+                return Some(cur);
+            }
+            match child_nodes(cur).as_slice() {
+                [only] if cur.children.len() == 1 => {
+                    cur = only;
+                    depth += 1;
+                }
+                _ => return None,
+            }
+        }
+    }
+
+    /// An `argument` node wraps a single `expression`; return it.
+    fn single_arg_expr<'a>(
+        &self,
+        arg: &'a GrammarASTNode,
+    ) -> Result<&'a GrammarASTNode, PythonLowerError> {
+        child_nodes(arg)
+            .into_iter()
+            .find(|n| n.rule_name == "expression")
+            .ok_or_else(|| self.err_at(arg, "malformed call argument".to_string()))
+    }
+
+    /// Lower a `suite` (an indented statement block) into a [`Block`].
+    ///
+    /// A `suite` is `Newline Indent statement+ Dedent`.  Each `statement`
+    /// lowers via [`Self::lower_statement`] (so nested control flow works).
+    /// Block-value semantics mirror `main`'s top level: the trailing item,
+    /// **if it is a bare expression**, becomes the block's value; everything
+    /// before becomes a `Stmt` (bare expressions become `ExprStmt`s).  A
+    /// suite ending in an assignment / loop yields a `NilLit` value.
+    ///
+    /// This variant introduces its own scope mark/rewind so names bound
+    /// inside the suite do not leak to the enclosing scope (matching the
+    /// validator's `check_block`).
+    fn lower_suite(&mut self, suite: &GrammarASTNode, depth: usize) -> Result<Block, PythonLowerError> {
+        let mark = self.scope_mark();
+        let block = self.lower_suite_no_mark(suite, depth)?;
+        self.scope_rewind(mark);
+        Ok(block)
+    }
+
+    /// Like [`Self::lower_suite`] but **without** pushing/popping a scope
+    /// mark — the caller manages scope (used by `for`, which must bind the
+    /// loop variable across the body in the *same* scope frame, then rewind
+    /// once afterwards).
+    fn lower_suite_no_mark(
+        &mut self,
+        suite: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Block, PythonLowerError> {
+        if suite.rule_name != "suite" {
+            return Err(self.err_at(
+                suite,
+                format!("expected `suite`, got `{}`", suite.rule_name),
+            ));
+        }
+
+        let mut items: Vec<Lowered> = Vec::new();
+        for child in &suite.children {
+            if let ASTNodeOrToken::Node(stmt) = child {
+                if stmt.rule_name == "statement" {
+                    items.push(self.lower_statement(stmt, depth)?);
+                }
+            }
+            // Token children (Newline / Indent / Dedent) are ignored.
+        }
+
+        let span = self.span_of(suite);
+
+        let value = match items.last() {
+            Some(Lowered::Expr(_)) => match items.pop() {
+                Some(Lowered::Expr(e)) => e,
+                _ => unreachable!("just matched Expr"),
+            },
+            _ => Expr::NilLit { span: span.clone() },
+        };
+        let stmts: Vec<Stmt> = items
+            .into_iter()
+            .map(|item| match item {
+                Lowered::Stmt(s) => *s,
+                Lowered::Expr(expr) => {
+                    let s = expr.span().clone();
+                    Stmt::ExprStmt { expr, span: s }
+                }
+            })
+            .collect();
+
+        Ok(Block { stmts, value, span })
+    }
+
+    /// First *node* child of `node` whose `rule_name == name`.
+    fn first_child_named<'a>(
+        &self,
+        node: &'a GrammarASTNode,
+        name: &str,
+    ) -> Option<&'a GrammarASTNode> {
+        child_nodes(node).into_iter().find(|n| n.rule_name == name)
     }
 
     // -------------------------------------------------------------------
@@ -855,19 +1426,19 @@ impl Lowerer {
 
     /// Resolve a bare name reference to a scoped `VarRef`.
     ///
-    /// M2 scope model (per SIR17): the only binding form so far is a
-    /// top-level assignment, which becomes a *local* of `main`.  So a name
-    /// bound earlier resolves as `Scope::Local`; an unbound name is an
-    /// error (Python raises `NameError` at runtime, and we have no
-    /// builtins wired up in M2 — `print`/`len`/`range` arrive with calls
-    /// in M3).
+    /// Scope model (per SIR17): the binding forms so far are a top-level
+    /// (or block-level) assignment and a `for` loop variable, both of
+    /// which become *locals*.  A name bound earlier in the current scope
+    /// chain resolves as `Scope::Local`; an unbound name is an error
+    /// (Python raises `NameError` at runtime, and we have no builtins
+    /// wired up yet — `print`/`len` arrive with calls in M4).
     fn resolve_var(
         &mut self,
         node: &GrammarASTNode,
         name: &str,
         span: Span,
     ) -> Result<Expr, PythonLowerError> {
-        if self.declared.contains(name) {
+        if self.is_declared(name) {
             Ok(Expr::VarRef {
                 name: name.to_string(),
                 scope: Scope::Local,
@@ -983,4 +1554,27 @@ fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
 /// recognises under `arith` (`+`/`-`) and `term` (`*`/`/`/`%`)?
 fn is_arith_op(value: &str) -> bool {
     matches!(value, "+" | "-" | "*" | "/" | "%")
+}
+
+/// An empty `Block` whose value is `NilLit` — used for an absent `else`
+/// branch (SIR's `If` always carries both branches; a missing `else`
+/// yields nil on the false path, matching Python's "the suite just doesn't
+/// run").
+fn empty_block(span: Span) -> Block {
+    Block {
+        stmts: vec![],
+        value: Expr::NilLit { span: span.clone() },
+        span,
+    }
+}
+
+/// A `Block` with no statements whose value is `expr` — used to nest one
+/// `If` as the `else_branch` of another (an `elif` chain).
+fn value_block(expr: Expr) -> Block {
+    let span = expr.span().clone();
+    Block {
+        stmts: vec![],
+        value: expr,
+        span,
+    }
 }
