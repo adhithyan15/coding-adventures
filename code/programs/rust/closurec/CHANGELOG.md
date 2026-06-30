@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.231.0] - 2026-06-30
+
+### Changed — binary/logical operators emit tight at SIMPLE/ADVANCED
+
+Minified output no longer pads symbolic operators with spaces: `x=a + b;`
+becomes `x=a+b;`, `a && b` → `a&&b`, `a << b` → `a<<b`, `a === b` → `a===b`,
+matching upstream Closure and the existing WHITESPACE_ONLY path. `in` /
+`instanceof` keep their mandatory spaces, and the additive `+`/`-` sign hazard
+keeps one space where needed (`a+ +b`, not `a++b`). See `closure-emitter`
+0.18.5 for the full rule. Diff fixtures and the ADVANCED big-pass golden are
+regenerated to the tighter output; new end-to-end test
+`simple_binary_operator_spacing`.
+
 ## [0.230.0] - 2026-06-30
 
 ### Fixed — array elisions (holes) dropped at SIMPLE/ADVANCED (miscompile)

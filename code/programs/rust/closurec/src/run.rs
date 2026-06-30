@@ -6162,7 +6162,7 @@ mod tests {
             &cfg,
         )
         .expect("ok");
-        assert_eq!(out, "function f(a){return a + 1};f(5);sink(f);");
+        assert_eq!(out, "function f(a){return a+1};f(5);sink(f);");
     }
 
     #[test]
@@ -6184,6 +6184,35 @@ mod tests {
         )
         .expect("ok");
         assert_eq!(out, "function f(a){return a.longName};f(x);sink(f);");
+    }
+
+    #[test]
+    fn simple_binary_operator_spacing() {
+        // Symbolic binary/logical operators emit tight in compact mode (matching
+        // upstream Closure), word operators keep their spaces, and the additive
+        // sign hazard keeps the one space it needs to avoid an `++`/`--` merge.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let simple = |src: &str| transform_source(src, &cfg).expect("ok");
+
+        assert_eq!(simple("x=a+b*c;"), "x=a+b*c;");
+        assert_eq!(simple("x=a&&b;"), "x=a&&b;");
+        assert_eq!(simple("x=a<<b;"), "x=a<<b;");
+        assert_eq!(simple("x=a===b;"), "x=a===b;");
+        // Word operators MUST keep spaces.
+        assert_eq!(simple("x=a instanceof b;"), "x=a instanceof b;");
+        assert_eq!(simple("x=a in b;"), "x=a in b;");
+        // Sign hazard: `a+ +b` must NOT become `a++b`.
+        assert_eq!(simple("x=a+ +b;"), "x=a+ +b;");
+        assert_eq!(simple("x=a- -b;"), "x=a- -b;");
+        // Parenthesisation is unaffected (precedence still correct).
+        assert_eq!(simple("x=a-(b-c);"), "x=a-(b-c);");
+        assert_eq!(simple("x=(a||b)&&c;"), "x=(a||b)&&c;");
     }
 
     #[test]
@@ -6276,7 +6305,7 @@ mod tests {
             },
         )
         .expect("ok");
-        assert_eq!(advanced, "function f(a){return a + 1};f(5);sink(f);");
+        assert_eq!(advanced, "function f(a){return a+1};f(5);sink(f);");
         assert_ne!(advanced, src, "ADVANCED must no longer be an identity no-op");
     }
 
@@ -6543,7 +6572,7 @@ mod tests {
         let out =
             transform_source("const RATE = 2; total(base * RATE); margin(RATE + 1);", &cfg)
                 .expect("ok");
-        assert_eq!(out, "total(base * 2);margin(3);");
+        assert_eq!(out, "total(base*2);margin(3);");
     }
 
     #[test]

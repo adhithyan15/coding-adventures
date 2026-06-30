@@ -2,9 +2,9 @@
 //!
 //! End-to-end oracle for the **negation-push** optimization in
 //! `closure-pass-constant-fold` (upstream Closure's
-//! `PeepholeMinimizeConditions`): `!(a == b)` → `a != b`,
-//! `!(a === b)` → `a !== b`. Sound for the four (in)equality operators only —
-//! relational operators are NOT inverted because `!(a < b)` ≠ `a >= b` when an
+//! `PeepholeMinimizeConditions`): `!(a == b)` → `a!=b`,
+//! `!(a === b)` → `a!==b`. Sound for the four (in)equality operators only —
+//! relational operators are NOT inverted because `!(a<b)` ≠ `a >= b` when an
 //! operand is `NaN`.
 //!
 //! At SIMPLE the fixture optimizes to:
@@ -62,21 +62,21 @@ fn simple_negation_fold_pushes_equality_but_not_relational() {
     let actual = String::from_utf8_lossy(&out.stdout);
 
     assert!(
-        actual.contains("a != b"),
-        "`!(a == b)` should push to `a != b`; got:\n{actual}",
+        actual.contains("a!=b"),
+        "`!(a == b)` should push to `a!=b`; got:\n{actual}",
     );
     assert!(
-        actual.contains("a !== b"),
-        "`!(a === b)` should push to `a !== b`; got:\n{actual}",
+        actual.contains("a!==b"),
+        "`!(a === b)` should push to `a!==b`; got:\n{actual}",
     );
     // Relational stays negated — never rewritten to `a >= b` (NaN-unsafe).
     assert!(
-        actual.contains("!(a < b)"),
-        "`!(a < b)` must survive verbatim (NaN-safety); got:\n{actual}",
+        actual.contains("!(a<b)"),
+        "`!(a<b)` must survive verbatim (NaN-safety); got:\n{actual}",
     );
     assert!(
         !actual.contains("a >= b"),
-        "`!(a < b)` must NOT become `a >= b`; got:\n{actual}",
+        "`!(a<b)` must NOT become `a >= b`; got:\n{actual}",
     );
 }
 

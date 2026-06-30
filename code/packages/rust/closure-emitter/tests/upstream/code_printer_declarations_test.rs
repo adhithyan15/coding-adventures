@@ -233,7 +233,7 @@ fn var_with_binary_init() {
     });
     assert_var_emits(
         var_decl_single(VarKind::Var, "x", Some(init)),
-        "var x=a + b;",
+        "var x=a+b;",
     );
 }
 
