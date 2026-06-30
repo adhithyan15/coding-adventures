@@ -8,6 +8,7 @@ const TREE_CONSTRUCTION_SMOKE: &str = include_str!("fixtures/html5lib-tree-const
 const WHATWG_PARAGRAPH_AUDIT: &str = include_str!("fixtures/whatwg-paragraph-audit.json");
 const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
     ("scripted-adoption01-dat-1", "paragraph-text-mode-boundary"),
+    ("scripted-ark-dat-1", "paragraph-text-mode-boundary"),
     ("tricky01-dat-3", "paragraph-formatting-boundary"),
     ("tricky01-dat-8", "paragraph-table-boundary"),
 ];
