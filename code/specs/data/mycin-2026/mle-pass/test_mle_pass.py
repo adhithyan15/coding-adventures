@@ -70,6 +70,25 @@ def test_reverse_hop1_and_import_dedup():
     assert f'{fwd["hop1_relation"]}($X, $D)' in mp.build_query(fwd)
 
 
+def test_three_hop_chain_is_a_three_subgoal_join():
+    # A genuine three-relation chain: clue → disease → organism → trait. build_query threads it
+    # over $X → $D → $E → $A as three joined subgoals (the middle `causes` hop runs in reverse).
+    three = next((it for it in mp.load_items() if it.get("hop3_relation")), None)
+    assert three is not None, "slice 4 ships at least one three-hop item"
+    q = mp.build_query(three)
+    assert three["hop1_relation"] in q and three["hop2_relation"] in q and three["hop3_relation"] in q
+    assert "$D" in q and "$E" in q          # two interior join variables ⇒ three hops
+    assert q.count("import ") <= 3          # gi-edges + micro-edges (deduped) ⇒ 2 here
+
+
+@pytest.mark.skipif(mp._CLI is None, reason="adj-lang-cli not built")
+def test_three_hop_chain_cites_all_three_hops():
+    three = next(it for it in mp.load_items() if it.get("hop3_relation"))
+    r = mp.run_item(three)
+    assert r.binding == three["expected"]   # engine resolves the full chain
+    assert r.citations >= 3                 # all THREE grounded hops are byte-provenanced
+
+
 @pytest.mark.skipif(mp._CLI is None, reason="adj-lang-cli not built")
 def test_engine_solves_every_item_with_both_hops_cited():
     board = mp.score(mp.load_items())

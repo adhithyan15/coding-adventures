@@ -529,6 +529,66 @@
       "gold_letter": "D"
     },
     {
+      "id": "mh-31",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "community_acquired_pneumonia",
+      "stem": "A patient is diagnosed with community-acquired pneumonia. The organism that causes it shows which Gram-stain reaction on microscopy?",
+      "expected": "gram_positive",
+      "options": {
+        "A": "gram_negative",
+        "B": "acid_fast",
+        "C": "gram_variable",
+        "D": "poorly_staining",
+        "E": "gram_positive"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "mh-32",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "pharyngitis",
+      "stem": "A patient is diagnosed with streptococcal pharyngitis. The organism that causes it shows which Gram-stain reaction on microscopy?",
+      "expected": "gram_positive",
+      "options": {
+        "A": "gram_positive",
+        "B": "gram_negative",
+        "C": "acid_fast",
+        "D": "gram_variable",
+        "E": "poorly_staining"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "mh-33",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "pneumonia",
+      "stem": "A patient is diagnosed with Klebsiella pneumonia. The organism that causes it shows which Gram-stain reaction on microscopy?",
+      "expected": "gram_negative",
+      "options": {
+        "A": "gram_positive",
+        "B": "gram_negative",
+        "C": "acid_fast",
+        "D": "gram_variable",
+        "E": "poorly_staining"
+      },
+      "gold_letter": "B"
+    },
+    {
       "id": "mh-30",
       "qtype": "multi_hop_recall",
       "hop1_lib": "micro-edges.adj",
@@ -547,6 +607,28 @@
         "D": "gram_variable",
         "E": "poorly_staining"
       }
+    },
+    {
+      "id": "mh-34",
+      "qtype": "multi_hop_recall",
+      "stem": "A colonic biopsy shows pseudomembranes. The disease this indicates is caused by an organism with which Gram-stain reaction?",
+      "hop1_lib": "gi-edges.adj",
+      "hop1_relation": "biopsy_finding_in",
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "causes",
+      "hop2_reverse": true,
+      "hop3_lib": "micro-edges.adj",
+      "hop3_relation": "gram_stain",
+      "clue": "pseudomembranes",
+      "expected": "gram_positive",
+      "options": {
+        "A": "gram_negative",
+        "B": "gram_positive",
+        "C": "acid_fast",
+        "D": "gram_variable",
+        "E": "poorly_staining"
+      },
+      "gold_letter": "B"
     },
     {
       "id": "mh-14",

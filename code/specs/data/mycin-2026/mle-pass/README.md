@@ -77,3 +77,24 @@ reverse — the original MYCIN domain) + 3 **abstention** items (ungrounded clue
 abstain). `multihop_coverage` 1.0 over the 27 answerable items; the scorer reports
 `abstained_correctly` and counts any binding on an abstention item as a fabrication (wrong).
 The answer variable is `$A` (gene / inheritance pattern / Gram stain / morphology, per hop 2).
+
+### Three hops
+
+`build_query` threads an **arbitrary chain** `$X → $D → $E → … → $A` (each hop forward or
+reverse), so a three-relation question is one rule with three joined subgoals:
+
+```adj
+import "gi-edges.adj"
+import "micro-edges.adj"
+rule {
+    head: clue_to_answer($X, $A)
+    when: biopsy_finding_in($X, $D), causes($E, $D), gram_stain($E, $A)   % join on $D and $E
+}
+? clue_to_answer(pseudomembranes, $A)   % → gram_positive (C. difficile via pseudomembranous_colitis), 3 hops cited
+```
+
+Slice 4: **34/34 correct, zero model calls** — slice-3 plus three more Gram-stain chains and the
+first genuine **three-relation** chain (`pseudomembranes → pseudomembranous_colitis → C. difficile →
+gram_positive`), joined on two shared interior entities, the answer citing all three hops. The bank
+ships one 3-hop today (only that disease bridges a finding library to a micro `causes` disease), but
+the harness supports any N-hop — more land for free as cross-library id-joins are grounded.
