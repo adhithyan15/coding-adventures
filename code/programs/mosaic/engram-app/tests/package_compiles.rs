@@ -1963,6 +1963,18 @@ fn assert_dependency_styles_reach_all_backends(output_root: &Path) {
             "{component} dependency style {needle} should reach Flutter artifact"
         );
     }
+
+    let compose = read_artifact(output_root, "compose/EngramApp.kt");
+    for (component, hex) in hex_sentinels {
+        let needle = format!(
+            "Color(0xFF{})",
+            hex.trim_start_matches('#').to_ascii_uppercase()
+        );
+        assert!(
+            compose.contains(&needle),
+            "{component} dependency style {needle} should reach Compose artifact"
+        );
+    }
     assert!(
         read_artifact(output_root, "html/EngramApp.html").contains("#0891b2"),
         "CollectionActions dependency style should reach HTML artifact"
@@ -2002,6 +2014,14 @@ fn assert_dependency_styles_reach_all_backends(output_root: &Path) {
     assert!(
         read_artifact(output_root, "xaml/EngramApp.xaml").contains("#f59e0b"),
         "DeckOptionsPanel dependency style should reach XAML artifact"
+    );
+    assert!(
+        compose.contains("Color(0xFF0891B2)"),
+        "CollectionActions dependency style should reach Compose artifact"
+    );
+    assert!(
+        compose.contains("Color(0xFFF59E0B)"),
+        "DeckOptionsPanel dependency style should reach Compose artifact"
     );
 
     let swift = read_artifact(output_root, "swiftui/EngramApp.swift");
