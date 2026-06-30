@@ -502,7 +502,25 @@ public final class SqlPlanner {
             plan = new LogicalPlan.Having(plan, rHaving);
         }
 
-        // Step 4: PROJECT
+        // Step 4: DISTINCT
+        if (s.distinct()) plan = new LogicalPlan.Distinct(plan);
+
+        // Step 5: ORDER BY
+        if (!s.orderBy().isEmpty()) {
+            var keys = new ArrayList<SortKey>();
+            for (var key : s.orderBy()) {
+                var r = tryResolveExpr(scope, key.keyExpr());
+                keys.add(new SortKey(r != null ? r : key.keyExpr(), key.direction(), key.nullOrder()));
+            }
+            plan = new LogicalPlan.Sort(plan, keys);
+        }
+
+        // Step 6: LIMIT / OFFSET
+        if (s.limit() != null) {
+            plan = new LogicalPlan.Limit(plan, s.limit().count(), s.limit().offset());
+        }
+
+        // Step 7: PROJECT (outermost — applied last so ORDER BY / LIMIT can see raw column refs)
         var projCols = new ArrayList<OutputColumn>();
         for (var c : s.columns()) {
             if (c instanceof OutputColumn.Star) {
@@ -518,24 +536,6 @@ public final class SqlPlanner {
             }
         }
         plan = new LogicalPlan.Project(plan, projCols);
-
-        // Step 5: DISTINCT
-        if (s.distinct()) plan = new LogicalPlan.Distinct(plan);
-
-        // Step 6: ORDER BY
-        if (!s.orderBy().isEmpty()) {
-            var keys = new ArrayList<SortKey>();
-            for (var key : s.orderBy()) {
-                var r = tryResolveExpr(scope, key.keyExpr());
-                keys.add(new SortKey(r != null ? r : key.keyExpr(), key.direction(), key.nullOrder()));
-            }
-            plan = new LogicalPlan.Sort(plan, keys);
-        }
-
-        // Step 7: LIMIT / OFFSET
-        if (s.limit() != null) {
-            plan = new LogicalPlan.Limit(plan, s.limit().count(), s.limit().offset());
-        }
 
         return plan;
     }
