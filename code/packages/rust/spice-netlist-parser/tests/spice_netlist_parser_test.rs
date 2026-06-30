@@ -12,10 +12,10 @@ use spice_netlist_parser::{
     OpAnalysis, OptionValue, OutputProbe, PlotAnalysis, PoleZeroAnalysis, PoleZeroKind,
     PrintAnalysis, ProbeAnalysis, SaveAnalysis, SelectedOutputValue, SensAnalysis, TempAnalysis,
     TfAnalysis, TranAnalysis, BERKELEY_APP_BOOTSTRAP_SCHEMA_VERSION,
-    BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION, BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION,
-    BERKELEY_APP_PACKAGE_NAME, BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM,
-    BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION, BERKELEY_SPICE_GRAMMAR_NAME,
-    BERKELEY_SPICE_GRAMMAR_VERSION,
+    BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION, BERKELEY_APP_LAUNCH_PLAN_SCHEMA_VERSION,
+    BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION, BERKELEY_APP_PACKAGE_NAME,
+    BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM, BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION,
+    BERKELEY_SPICE_GRAMMAR_NAME, BERKELEY_SPICE_GRAMMAR_VERSION,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -2559,6 +2559,11 @@ fn berkeley_app_facade_exports_package_manifest_json() {
         .unwrap()
         .iter()
         .any(|capability| capability == "app-startup-summary-json"));
+    assert!(payload["artifactCapabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|capability| capability == "app-launch-plan-json"));
 }
 
 #[test]
@@ -2667,6 +2672,58 @@ C1 out 0 1p
         "analysis.3.inspect-waveform"
     );
     assert_eq!(summary_payload["diagnosticCount"], 0);
+
+    let launch_plan = app
+        .run_app_launch_plan(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("launch plan should execute");
+    assert_eq!(
+        launch_plan.schema_version,
+        BERKELEY_APP_LAUNCH_PLAN_SCHEMA_VERSION
+    );
+    assert_eq!(launch_plan.package_name, BERKELEY_APP_PACKAGE_NAME);
+    assert_eq!(launch_plan.startup_route, "ready");
+    assert!(launch_plan.ready);
+    assert_eq!(launch_plan.entry_panel_id.as_deref(), Some("waveform"));
+    assert_eq!(launch_plan.entry_panel_kind.as_deref(), Some("waveform"));
+    assert_eq!(
+        launch_plan.entry_target.as_deref(),
+        Some("analysis-waveform")
+    );
+    assert_eq!(
+        launch_plan.resolved_active_command_id.as_deref(),
+        Some("analysis.3.inspect-waveform")
+    );
+    assert_eq!(launch_plan.action_count, 5);
+    let primary_action = launch_plan
+        .actions
+        .iter()
+        .find(|action| action.primary)
+        .expect("launch plan should expose one primary action");
+    assert_eq!(primary_action.id, "launch.waveform");
+    assert_eq!(primary_action.panel_id, "waveform");
+    assert_eq!(primary_action.target, "analysis-waveform");
+    assert!(primary_action.enabled);
+
+    let launch_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_launch_plan_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap(),
+    )
+    .expect("launch plan JSON should parse");
+    assert_eq!(launch_payload["schemaVersion"], 1);
+    assert_eq!(launch_payload["startupRoute"], "ready");
+    assert_eq!(launch_payload["entryPanelId"], "waveform");
+    assert_eq!(launch_payload["entryPanelKind"], "waveform");
+    assert_eq!(launch_payload["entryTarget"], "analysis-waveform");
+    assert_eq!(launch_payload["actionCount"], 5);
+    assert_eq!(launch_payload["actions"][4]["id"], "launch.waveform");
+    assert_eq!(launch_payload["actions"][4]["primary"], true);
+    assert_eq!(launch_payload["actions"][4]["enabled"], true);
 }
 
 #[test]
@@ -2736,6 +2793,43 @@ R1 in out
     assert_eq!(summary_payload["activePanelId"], "diagnostics");
     assert_eq!(summary_payload["diagnosticCount"], 1);
     assert!(summary_payload["blockingMessage"].is_string());
+
+    let launch_plan = app.app_launch_plan(BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(2),
+        active_command_id: Some("analysis.2.run".to_string()),
+    });
+    assert_eq!(
+        launch_plan.schema_version,
+        BERKELEY_APP_LAUNCH_PLAN_SCHEMA_VERSION
+    );
+    assert_eq!(launch_plan.startup_route, "blocked");
+    assert!(!launch_plan.ready);
+    assert_eq!(launch_plan.entry_panel_id.as_deref(), Some("diagnostics"));
+    assert_eq!(launch_plan.entry_panel_kind.as_deref(), Some("diagnostics"));
+    assert_eq!(launch_plan.entry_target.as_deref(), Some("diagnostics"));
+    assert_eq!(launch_plan.diagnostic_count, 1);
+    assert!(launch_plan.blocking_message.is_some());
+    let primary_action = launch_plan
+        .actions
+        .iter()
+        .find(|action| action.primary)
+        .expect("blocked launch plan should expose diagnostics as primary");
+    assert_eq!(primary_action.id, "launch.diagnostics");
+    assert_eq!(primary_action.panel_id, "diagnostics");
+    assert!(primary_action.enabled);
+
+    let launch_payload: serde_json::Value =
+        serde_json::from_str(&app.app_launch_plan_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        }))
+        .expect("blocked launch plan JSON should parse");
+    assert_eq!(launch_payload["startupRoute"], "blocked");
+    assert_eq!(launch_payload["entryPanelId"], "diagnostics");
+    assert_eq!(launch_payload["entryTarget"], "diagnostics");
+    assert_eq!(launch_payload["actions"][1]["id"], "launch.diagnostics");
+    assert_eq!(launch_payload["actions"][1]["primary"], true);
+    assert_eq!(launch_payload["diagnosticCount"], 1);
 }
 
 #[test]
