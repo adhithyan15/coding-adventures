@@ -197,9 +197,9 @@ format with the header `id,deckId,front,back,createdAt`. `import_basic_cards_csv
 accepts simpler `front,back` rows and uses host-supplied deck/timestamp/ID
 prefix options to create deterministic cards.
 `export_cards_anki_basic_tsv` and `import_anki_basic_tsv` cover Anki Basic
-front/back text files with import headers (`#separator:tab`, `#html`,
-`#notetype`, `#deck`, and `#columns`) and quoted fields containing tabs,
-newlines, or quotes.
+front/back text files with import headers (`#separator`, `#html`, `#notetype`,
+`#deck`, and `#columns`) and quoted fields containing separators, newlines, or
+quotes.
 `import_anki_notes_tsv` and `export_notes_anki_tsv` use the note/template model
 instead: imported Basic rows produce `NoteType`, `Note`, and materialized
 lineage cards, Basic-and-reversed note types produce forward and reverse

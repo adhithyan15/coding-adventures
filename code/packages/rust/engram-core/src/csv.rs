@@ -223,7 +223,7 @@ pub fn import_anki_basic_tsv(
     input: &str,
     options: &BasicCardCsvImportOptions,
 ) -> Result<Vec<Card>, CsvError> {
-    let records = parse_tsv_records(input)?;
+    let records = parse_anki_text_records(input)?;
     let mut cards = Vec::new();
 
     for (index, fields) in records.into_iter().enumerate() {
@@ -258,7 +258,7 @@ pub fn import_anki_notes_tsv(
     input: &str,
     options: &AnkiNoteTsvImportOptions,
 ) -> Result<AnkiNoteTsvImport, CsvError> {
-    let records = parse_tsv_records(input)?;
+    let records = parse_anki_text_records(input)?;
     let mut headers = AnkiTsvHeaders::default();
     let mut rows = Vec::new();
 
@@ -585,8 +585,39 @@ fn parse_csv_records(input: &str) -> Result<Vec<Vec<String>>, CsvError> {
     parse_delimited_records(input, ',', "CSV")
 }
 
-fn parse_tsv_records(input: &str) -> Result<Vec<Vec<String>>, CsvError> {
-    parse_delimited_records(input, '\t', "TSV")
+fn parse_anki_text_records(input: &str) -> Result<Vec<Vec<String>>, CsvError> {
+    let delimiter = anki_text_delimiter(input)?;
+    parse_delimited_records(input, delimiter, "Anki text")
+}
+
+fn anki_text_delimiter(input: &str) -> Result<char, CsvError> {
+    for (index, line) in input.lines().enumerate() {
+        let trimmed = line.trim_start_matches('\u{feff}').trim();
+        if trimmed.is_empty() {
+            continue;
+        }
+        let Some(value) = trimmed.strip_prefix("#separator:") else {
+            break;
+        };
+        return anki_separator_value(value, index + 1);
+    }
+    Ok('\t')
+}
+
+fn anki_separator_value(value: &str, row: usize) -> Result<char, CsvError> {
+    let trimmed = value.trim();
+    let normalized = trimmed.to_ascii_lowercase();
+    match normalized.as_str() {
+        "tab" | "\\t" => Ok('\t'),
+        "comma" => Ok(','),
+        "semicolon" => Ok(';'),
+        "space" => Ok(' '),
+        _ if trimmed.chars().count() == 1 => Ok(trimmed.chars().next().unwrap()),
+        _ => Err(csv_error(
+            &format!("unsupported Anki #separator value: {trimmed}"),
+            Some(row),
+        )),
+    }
 }
 
 fn parse_delimited_records(
@@ -1077,6 +1108,24 @@ mod tests {
     }
 
     #[test]
+    fn anki_basic_text_import_honors_separator_header() {
+        let text = "#separator:comma\n#html:false\n#notetype:Basic\n#columns:Front,Back\n\"hello, friend\",hola\namma,mother\n";
+        let options = BasicCardCsvImportOptions {
+            deck_id: "deck".to_string(),
+            id_prefix: "anki".to_string(),
+            created_at: 456,
+        };
+
+        let cards = import_anki_basic_tsv(text, &options).unwrap();
+
+        assert_eq!(cards.len(), 2);
+        assert_eq!(cards[0].front, "hello, friend");
+        assert_eq!(cards[0].back, "hola");
+        assert_eq!(cards[1].front, "amma");
+        assert_eq!(cards[1].back, "mother");
+    }
+
+    #[test]
     fn anki_basic_tsv_import_reports_short_rows() {
         let options = BasicCardCsvImportOptions {
             deck_id: "deck".to_string(),
@@ -1145,6 +1194,26 @@ mod tests {
             imported.cards[1].lineage.as_ref().unwrap().note_id,
             "note-1"
         );
+    }
+
+    #[test]
+    fn anki_note_text_import_honors_separator_header() {
+        let text = "#separator:semicolon\n#notetype:Basic\n#columns:Front;Back;Tags\n\"hola;salve\";hello;spanish latin\n";
+        let options = AnkiNoteTsvImportOptions {
+            deck_id: "deck".to_string(),
+            note_type_id: String::new(),
+            note_type_name: String::new(),
+            note_id_prefix: "note".to_string(),
+            created_at: 456,
+        };
+
+        let imported = import_anki_notes_tsv(text, &options).unwrap();
+
+        assert_eq!(imported.notes.len(), 1);
+        assert_eq!(imported.notes[0].fields[0].value, "hola;salve");
+        assert_eq!(imported.notes[0].fields[1].value, "hello");
+        assert_eq!(imported.notes[0].tags, vec!["spanish", "latin"]);
+        assert_eq!(imported.cards[0].front, "hola;salve");
     }
 
     #[test]
