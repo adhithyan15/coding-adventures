@@ -46,9 +46,17 @@
 //!   top-level synthesised functions with computed **captures**, and the
 //!   definition site emits an `Expr::MakeClosure`.
 //! - **calls** `f(args)` → `DirectCall` (known function), `BuiltinCall`
-//!   (`print`/`len`/`range`), or `IndirectCall` (a closure value).
+//!   (`print`/`len`/`range`), or `IndirectCall` (a closure value).  A call
+//!   that omits a defaulted argument lowers to a *partial* `DirectCall`.
+//! - **positional default parameters** (P8) — `def f(a, b=10)` lowers the
+//!   default expression into `Param.default = Some(..)` (declaring
+//!   `Feature::DefaultParams`).  Python evaluates defaults at *def time* in
+//!   the enclosing scope; the IR's `Param.default` is a call-time superset,
+//!   so a *mutable* default (`def f(x=[])`) is re-evaluated per call — a
+//!   documented v0 choice.  A default referencing another parameter is a
+//!   Python `NameError` and is not supported.
 //!
-//! Collections / comprehensions / decorators / `*args` & default
+//! Collections / comprehensions / decorators / `*args` & **keyword**
 //! arguments are deferred to later milestones; unhandled forms return a
 //! clear `PythonLowerError`.
 //!
@@ -1216,13 +1224,72 @@ mod tests {
         });
     }
 
-    // ── deferred constructs stay rejected ─────────────────────────────
+    // ── default parameters (P8) ───────────────────────────────────────
+    //
+    // NOTE: this block replaces the former `default_parameter_is_rejected`
+    // test.  M4 originally *rejected* a default value with a positioned
+    // "unsupported: default parameter value (deferred)" error; the core IR
+    // and all five backends now model `Param.default`, so the frontend
+    // **produces** it.  See the crate README for the def-time-vs-call-time
+    // semantic note (mutable defaults become call-time-evaluated under the
+    // IR model — a documented v0 choice).
 
     #[test]
-    fn default_parameter_is_rejected() {
-        let err = compile_source("def f(a=1):\n    return a\n", "t")
-            .expect_err("default param rejected");
-        assert!(err.message.contains("default"), "got: {}", err.message);
+    fn default_parameter_lowers_to_param_default() {
+        // `b = 10` must produce `Param { default: Some(IntLit 10) }`; the
+        // plain `a` keeps `default: None`.
+        let m = lower("def f(a, b=10):\n    return a + b\n");
+        let f = func(&m, "f");
+        assert_eq!(f.params.len(), 2);
+        assert_eq!(f.params[0].name, "a");
+        assert!(f.params[0].default.is_none(), "plain param keeps None");
+        assert_eq!(f.params[1].name, "b");
+        match f.params[1].default.as_deref() {
+            Some(Expr::IntLit { value, .. }) => assert_eq!(*value, 10),
+            other => panic!("expected b's default = IntLit(10), got {other:?}"),
+        }
+        // A default declares the DefaultParams feature in the manifest.
+        assert!(
+            m.manifest.contains(Feature::DefaultParams),
+            "a default parameter must declare DefaultParams"
+        );
+    }
+
+    #[test]
+    fn default_parameter_module_validates() {
+        // The lowered module (defaulted callee + a full call) round-trips
+        // through the validator.
+        let m = lower("def f(a, b=10):\n    return a + b\n\nf(5, 100)\n");
+        let v = semantic_ir::validate(&m);
+        assert!(v.is_ok(), "module with default param must validate: {:?}", v.issues);
+    }
+
+    #[test]
+    fn call_omitting_defaulted_arg_lowers_to_partial_directcall() {
+        // `f(5)` omits the defaulted `b`; the frontend lowers only the args
+        // *present* — a partial `DirectCall` with a single argument (the
+        // validator permits this because `b` has a default).
+        let m = lower("def f(a, b=10):\n    return a + b\n\nf(5)\n");
+        // Find the `f(5)` call in main's statements/value.
+        let call = main_value(&m);
+        match call {
+            Expr::DirectCall { fn_name, args, .. } => {
+                assert_eq!(fn_name, "f");
+                assert_eq!(args.len(), 1, "only the present arg is lowered");
+                assert!(matches!(args[0], Expr::IntLit { value: 5, .. }));
+            }
+            // `f(5)` as an expression-statement may sit in stmts; fall back.
+            _ => {
+                let found = main_stmts(&m).iter().any(|s| matches!(
+                    s,
+                    Stmt::ExprStmt { expr: Expr::DirectCall { fn_name, args, .. }, .. }
+                        if fn_name == "f" && args.len() == 1
+                ));
+                assert!(found, "expected a partial f(5) DirectCall, got {call:?}");
+            }
+        }
+        let v = semantic_ir::validate(&m);
+        assert!(v.is_ok(), "partial call must validate: {:?}", v.issues);
     }
 
     // ══════════════════════════════════════════════════════════════════
@@ -1768,6 +1835,24 @@ print(a(5))
 ";
         if let Some(out) = run_roundtrip(src) {
             assert_eq!(out, "15", "adder(10)(5) should print 15");
+        }
+    }
+
+    #[test]
+    fn e2e_default_parameter() {
+        // A defaulted parameter exercised both ways: `f(5)` omits the
+        // default (b ← 10 → 15) and `f(5, 100)` overrides it (→ 105).
+        // This is the P8 acceptance check — lower → SIR → emit Python →
+        // run → assert stdout, via the PYTHONPATH-aware harness.
+        let src = "\
+def f(a, b=10):
+    return a + b
+
+print(f(5))
+print(f(5, 100))
+";
+        if let Some(out) = run_roundtrip(src) {
+            assert_eq!(out, "15\n105", "f(5)=15 then f(5,100)=105");
         }
     }
 
