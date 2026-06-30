@@ -1144,7 +1144,33 @@ impl<'a> Emitter<'a> {
     fn emit_property_key(&mut self, k: &PropertyKey) {
         match k {
             PropertyKey::Identifier(i) => self.emit_identifier(i),
-            PropertyKey::StringLiteral(s) => self.emit_string(s),
+            PropertyKey::StringLiteral(s) => {
+                // Quote-stripping minification, matching Closure's CodePrinter:
+                // a string key whose DECODED value is a valid identifier name may
+                // drop its quotes — `{"abc":1}` → `{abc:1}`. This is sound only
+                // under two carve-outs, both required:
+                //
+                //   • Non-identifier values MUST stay quoted, or the output is
+                //     invalid / a different key:
+                //       "a-b" → {a-b:1}  (SyntaxError)
+                //       "a b" → {a b:1}  (SyntaxError)
+                //       "x\ty"→ {x\ty:1} (SyntaxError)
+                //       "1"   → {1:1}    (a numeric key, not the string "1")
+                //     `is_identifier_name` (ASCII-only) rejects every one of
+                //     these, so they route to `emit_string` and keep their quotes.
+                //
+                //   • `"__proto__"` MUST stay quoted even though it IS a valid
+                //     identifier: the bare form `{__proto__: v}` is the prototype
+                //     setter (B.3.1), whereas the quoted `{"__proto__": v}` is an
+                //     ordinary own property. Dropping the quotes there would
+                //     change runtime semantics, so it is explicitly excluded.
+                if is_identifier_name(&s.value) && s.value != "__proto__" {
+                    self.maybe_map(&s.cv);
+                    self.write_str(&s.value);
+                } else {
+                    self.emit_string(s);
+                }
+            }
             PropertyKey::NumericLiteral(n) => self.emit_numeric(n),
             PropertyKey::Expression(e) => {
                 self.write_str("[");
@@ -1158,6 +1184,31 @@ impl<'a> Emitter<'a> {
 // =====================================================================
 // Helpers — operator strings, number formatting, string escaping
 // =====================================================================
+
+/// True when `s` is a valid ECMAScript identifier *name* in the ASCII subset:
+/// a leading `A–Z a–z _ $` followed by zero or more `A–Z a–z 0–9 _ $`. Used by
+/// `emit_property_key` to decide whether a quoted object key may be emitted bare
+/// (`{"abc":1}` → `{abc:1}`).
+///
+/// We deliberately stay ASCII-only: a Unicode identifier key is always sound to
+/// keep as a quoted string literal, so excluding it only forgoes a size win, it
+/// never breaks output. Reserved words ARE legal property names (`{if: 1}`), so
+/// they are intentionally NOT excluded here — the one name that needs special
+/// handling, `__proto__`, is excluded at the call site because its bare form has
+/// different semantics. (This mirrors the identically-named helper in
+/// `closure-pass-constant-fold`; the two crates do not share a utility module.)
+///
+///   "abc"  → true      "a-b" → false (`-`)        "1ab" → false (digit lead)
+///   "_$x"  → true      "a b" → false (space)       ""    → false (empty)
+///   "if"   → true      "x\ty"→ false (`\`,`t` ok but `\` is not ident char)
+fn is_identifier_name(s: &str) -> bool {
+    let mut chars = s.chars();
+    match chars.next() {
+        Some(c) if c.is_ascii_alphabetic() || c == '_' || c == '$' => {}
+        _ => return false,
+    }
+    chars.all(|c| c.is_ascii_alphanumeric() || c == '_' || c == '$')
+}
 
 /// JavaScript-style number rendering — matches `String(x)` so
 /// emitted output round-trips numerically. CLOC12.12 / gap-025:
@@ -2251,6 +2302,67 @@ mod tests {
         let prog = program().with_body(vec![stmt(o)]);
         let out = emit_default(prog);
         assert_eq!(out.code, "({a:1,b:2});");
+    }
+
+    // ---- property-key quote stripping (emit_property_key) ----
+    //
+    // A `PropertyKey::StringLiteral` key drops its quotes ONLY when the decoded
+    // `value` is a valid identifier name and is not `__proto__`. Everything else
+    // stays quoted. These guard against the regression where every quoted object
+    // key was emitted as a bare identifier (a miscompile for non-ident and
+    // `__proto__` keys).
+
+    /// Build the single-property object `{<string-key>: 1}` as an expression.
+    fn obj_one_string_key(value: &str) -> Expression {
+        Expression::ObjectExpression(ObjectExpression {
+            cv: None,
+            properties: vec![Property {
+                cv: None,
+                kind: PropertyKind::Init,
+                key: PropertyKey::StringLiteral(StringLiteral {
+                    cv: None,
+                    value: value.to_string(),
+                    // `raw` is unused by `emit_string` (it re-escapes from
+                    // `value`), so a placeholder is fine here.
+                    raw: String::new(),
+                }),
+                value: Box::new(num(1.0)),
+                computed: false,
+                shorthand: false,
+                method: false,
+            }],
+        })
+    }
+
+    #[test]
+    fn string_key_valid_identifier_drops_quotes() {
+        // {"abc": 1} → {abc:1}  — the common minification.
+        assert_eq!(emit_expr(obj_one_string_key("abc")), "({abc:1});");
+        // Leading `_`/`$` and reserved words are valid identifier *names*.
+        assert_eq!(emit_expr(obj_one_string_key("_$x")), "({_$x:1});");
+        assert_eq!(emit_expr(obj_one_string_key("if")), "({if:1});");
+    }
+
+    #[test]
+    fn string_key_non_identifier_stays_quoted() {
+        // Hyphen, space, and leading digit are NOT identifier chars — emitting
+        // any of these bare would be a SyntaxError or a different (numeric) key.
+        assert_eq!(emit_expr(obj_one_string_key("a-b")), "({\"a-b\":1});");
+        assert_eq!(emit_expr(obj_one_string_key("a b")), "({\"a b\":1});");
+        assert_eq!(emit_expr(obj_one_string_key("123")), "({\"123\":1});");
+        // A control char (tab) in the value re-escapes through `emit_string`.
+        assert_eq!(emit_expr(obj_one_string_key("x\ty")), "({\"x\\ty\":1});");
+    }
+
+    #[test]
+    fn string_key_proto_stays_quoted() {
+        // `__proto__` IS a valid identifier name, but the bare form
+        // `{__proto__: v}` is the prototype setter — a DIFFERENT object — so the
+        // quoted own-property key must NOT be stripped.
+        assert_eq!(
+            emit_expr(obj_one_string_key("__proto__")),
+            "({\"__proto__\":1});"
+        );
     }
 
     // ---- ascii_only -----------------------------------------

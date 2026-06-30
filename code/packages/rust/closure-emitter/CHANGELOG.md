@@ -2,6 +2,27 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.18.2] - 2026-06-29
+
+### Added — sound quote-stripping for string object-property keys
+
+`emit_property_key` now drops the quotes on a `PropertyKey::StringLiteral` —
+`{"abc":1}` → `{abc:1}`, matching Closure's CodePrinter — but **only** when the
+decoded `value` is a valid ASCII identifier name (new private `is_identifier_name`
+helper) and is not `__proto__`. The two carve-outs are what make it sound:
+
+- Non-identifier values stay quoted: `"a-b"`, `"a b"`, and `"x\ty"` would be
+  syntax errors bare, and `"1"` would become a numeric key.
+- `"__proto__"` stays quoted: the bare form `{__proto__: v}` is the §B.3.1
+  prototype setter, a *different* object from the own property `{"__proto__": v}`.
+
+Previously the emitter relied on the bridge to pre-decide the key node kind; the
+bridge bug (see `javascript-parser` 0.19.3) meant every quoted key arrived as an
+`Identifier` and was emitted bare regardless of validity. With the bridge now
+producing faithful `StringLiteral` keys, this is the single place that decides
+quote-vs-bare. New tests cover identifier, hyphen, space, leading-digit, tab,
+reserved-word, and `__proto__` keys.
+
 ## [0.18.1] - 2026-06-29
 
 ### Fixed — negative zero (`-0`) lost its sign on emit (miscompile)
