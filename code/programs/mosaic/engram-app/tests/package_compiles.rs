@@ -401,6 +401,7 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
 
     let html = read_artifact(tmp.path(), "html/EngramApp.html");
     assert_contains(&html, "data-on-click=\"onImportAnki\"");
+    assert_contains(&html, "data-on-click=\"onPruneUnusedMedia\"");
     assert_contains(&html, "data-on-commit=\"onBrowserSearch\"");
     assert_contains(&html, "data-on-change=\"onBrowserTagEditChange\"");
     assert_contains(&html, "data-on-click=\"onBrowserAddTagSelected\"");
@@ -1108,6 +1109,10 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&compose_app, "data object ImportAnki : EngramAppEvent()");
     assert_contains(
         &compose_app,
+        "data object PruneUnusedMedia : EngramAppEvent()",
+    );
+    assert_contains(
+        &compose_app,
         "override val mosaicName: String = \"onImportAnki\"",
     );
     assert_contains(&compose_app, "data class SelectDeck(val value: String)");
@@ -1402,6 +1407,7 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "signal suspendCard()");
     assert_contains(&qml, "signal toggleMark()");
     assert_contains(&qml, "signal importAnki()");
+    assert_contains(&qml, "signal pruneUnusedMedia()");
     assert_contains(&qml, "signal mosaicEvent(var event)");
     assert_contains(&qml, "id: mosaicRoot");
     assert_contains(&qml, "property var mosaicHost: null");
@@ -1417,6 +1423,10 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &qml,
         "onImportAnki: mosaicEvent({ \"event\": \"onImportAnki\" })",
+    );
+    assert_contains(
+        &qml,
+        "onPruneUnusedMedia: mosaicEvent({ \"event\": \"onPruneUnusedMedia\" })",
     );
     assert_contains(
         &qml,
@@ -1650,6 +1660,18 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &swift_app,
         "collectionImportLabel: MosaicHostValue.string(host.props, \"collection-import-label\", fallback: \"Sample CollectionImportLabel\"),",
+    );
+    assert_contains(
+        &swift_app,
+        "collectionMissingMediaFilenames: MosaicHostValue.stringList(host.props, \"collection-missing-media-filenames\", fallback: []),",
+    );
+    assert_contains(
+        &swift_app,
+        "collectionUnusedMediaAssetIds: MosaicHostValue.stringList(host.props, \"collection-unused-media-asset-ids\", fallback: []),",
+    );
+    assert_contains(
+        &swift_app,
+        "collectionPruneUnusedMediaLabel: MosaicHostValue.string(host.props, \"collection-prune-unused-media-label\", fallback: \"Sample CollectionPruneUnusedMediaLabel\"),",
     );
     assert_contains(
         &swift_app,
@@ -2036,6 +2058,10 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &xaml_events,
         "public sealed record ExportAnki() : EngramAppEvent",
+    );
+    assert_contains(
+        &xaml_events,
+        "public sealed record PruneUnusedMedia() : EngramAppEvent",
     );
     assert_contains(
         &xaml_events,

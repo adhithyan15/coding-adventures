@@ -99,6 +99,15 @@ component EngramApp {
   slot collection-note-type-count-value : text ;
   slot collection-media-count-label : text ;
   slot collection-media-count-value : text ;
+  slot collection-referenced-media-label : text ;
+  slot collection-referenced-media-value : text ;
+  slot collection-missing-media-label : text ;
+  slot collection-missing-media-value : text ;
+  slot collection-missing-media-filenames : list<text> ;
+  slot collection-unused-media-label : text ;
+  slot collection-unused-media-value : text ;
+  slot collection-unused-media-asset-ids : list<text> ;
+  slot collection-prune-unused-media-label : text ;
   slot collection-import-label : text ;
   slot collection-export-label : text ;
   slot collection-add-note-label : text ;
@@ -239,6 +248,7 @@ component EngramApp {
   emit onToggleMark ;
   emit onImportAnki ;
   emit onExportAnki ;
+  emit onPruneUnusedMedia ;
   emit onAddNote ;
   emit onAddNoteType ;
   emit onDeleteNote ;

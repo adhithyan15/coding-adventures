@@ -11,6 +11,15 @@ component CollectionActions {
   slot note-type-count-value : text ;
   slot media-count-label : text ;
   slot media-count-value : text ;
+  slot referenced-media-label : text ;
+  slot referenced-media-value : text ;
+  slot missing-media-label : text ;
+  slot missing-media-value : text ;
+  slot missing-media-filenames : list<text> ;
+  slot unused-media-label : text ;
+  slot unused-media-value : text ;
+  slot unused-media-asset-ids : list<text> ;
+  slot prune-unused-media-label : text ;
   slot import-label : text ;
   slot export-label : text ;
   slot add-note-label : text ;
@@ -20,6 +29,7 @@ component CollectionActions {
 
   emit onImportAnki ;
   emit onExportAnki ;
+  emit onPruneUnusedMedia ;
   emit onAddNote ;
   emit onAddNoteType ;
   emit onDeleteNote ;

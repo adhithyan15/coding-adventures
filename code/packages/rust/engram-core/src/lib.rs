@@ -8,6 +8,7 @@
 
 mod csv;
 mod history;
+mod media;
 mod merge;
 mod model;
 mod queue;
@@ -26,6 +27,7 @@ pub use csv::{
     AnkiNoteTsvImportOptions, BasicCardCsvImportOptions, CsvError,
 };
 pub use history::summarize_review_history;
+pub use media::{analyze_media_references, EngramMediaReferenceAnalysis};
 pub use merge::merge_app_states;
 pub use model::{
     ActiveSessionState, AppState, Card, CardFlag, CardLineage, CardProgress, CardProgressSnapshot,

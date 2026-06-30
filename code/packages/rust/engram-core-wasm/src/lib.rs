@@ -10,19 +10,19 @@ use std::collections::HashMap;
 use std::panic::{catch_unwind, AssertUnwindSafe};
 
 use engram_core::{
-    build_session_queue_for_state_with_options, build_session_queue_with_daily_limits,
-    cards_in_deck_scope, create_engram_snapshot, deck_options_for_state,
-    empty_filtered_deck as empty_core_filtered_deck, export_cards_anki_basic_tsv, export_cards_csv,
-    export_notes_anki_tsv_with_context, generate_cards_for_note, get_active_session_progress,
-    get_daily_study_limit_usage, get_deck_stats_for_state, import_anki_basic_tsv,
-    import_anki_notes_tsv, import_basic_cards_csv, import_cards_csv, materialize_generated_card,
-    merge_app_states, notes_in_deck_scope, rebuild_filtered_deck as rebuild_core_filtered_deck,
-    reduce, restore_engram_snapshot, search_cards as search_core_cards, search_cards_with_context,
-    summarize_review_history, type_answer_matches, typed_answer_for_template,
-    AnkiBasicTsvExportOptions, AnkiNoteTsvImport, AnkiNoteTsvImportOptions, AppState,
-    BasicCardCsvImportOptions, Card, CardFlag, CardLineage, CardProgress, CardSearchResult,
-    CardState, ClozeRenderSide, DeckOptions, EngramSnapshot, LeechAction, MediaAssetRecord, Note,
-    NoteFieldValue, Rating, SearchContext, TypeAnswerSpec,
+    analyze_media_references, build_session_queue_for_state_with_options,
+    build_session_queue_with_daily_limits, cards_in_deck_scope, create_engram_snapshot,
+    deck_options_for_state, empty_filtered_deck as empty_core_filtered_deck,
+    export_cards_anki_basic_tsv, export_cards_csv, export_notes_anki_tsv_with_context,
+    generate_cards_for_note, get_active_session_progress, get_daily_study_limit_usage,
+    get_deck_stats_for_state, import_anki_basic_tsv, import_anki_notes_tsv, import_basic_cards_csv,
+    import_cards_csv, materialize_generated_card, merge_app_states, notes_in_deck_scope,
+    rebuild_filtered_deck as rebuild_core_filtered_deck, reduce, restore_engram_snapshot,
+    search_cards as search_core_cards, search_cards_with_context, summarize_review_history,
+    type_answer_matches, typed_answer_for_template, AnkiBasicTsvExportOptions, AnkiNoteTsvImport,
+    AnkiNoteTsvImportOptions, AppState, BasicCardCsvImportOptions, Card, CardFlag, CardLineage,
+    CardProgress, CardSearchResult, CardState, ClozeRenderSide, DeckOptions, EngramSnapshot,
+    LeechAction, MediaAssetRecord, Note, NoteFieldValue, Rating, SearchContext, TypeAnswerSpec,
 };
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -847,6 +847,15 @@ impl EngramSession {
                     self.browser.selected_index = 0;
                     self.editor.reset();
                 }
+                EngramAppEvent::PruneUnusedMedia => {
+                    let asset_ids = analyze_media_references(&self.state).unreferenced_asset_ids;
+                    if !asset_ids.is_empty() {
+                        self.state = reduce(
+                            &self.state,
+                            engram_core::EngramCommand::DeleteMediaAssets { asset_ids },
+                        );
+                    }
+                }
                 EngramAppEvent::BrowserQueryChange => {
                     if let Some(value) = parsed.text_value.clone() {
                         self.browser.set_query(value);
@@ -1521,6 +1530,7 @@ fn engram_app_props_for_state(
         "Mark"
     };
     let hidden_count = stats.suspended_count + stats.buried_count;
+    let media_analysis = analyze_media_references(state);
     let deck_names = state
         .decks
         .iter()
@@ -1671,6 +1681,28 @@ fn engram_app_props_for_state(
             "collection-media-count-value",
             state.media_assets.len().to_string(),
         );
+        insert_prop(
+            "collection-referenced-media-label",
+            "Referenced".to_string(),
+        );
+        insert_prop(
+            "collection-referenced-media-value",
+            media_analysis.referenced_filenames.len().to_string(),
+        );
+        insert_prop("collection-missing-media-label", "Missing".to_string());
+        insert_prop(
+            "collection-missing-media-value",
+            media_analysis.missing_filenames.len().to_string(),
+        );
+        insert_prop("collection-unused-media-label", "Unused".to_string());
+        insert_prop(
+            "collection-unused-media-value",
+            media_analysis.unreferenced_asset_ids.len().to_string(),
+        );
+        insert_prop(
+            "collection-prune-unused-media-label",
+            "Prune unused media".to_string(),
+        );
         insert_prop("collection-import-label", "Import Anki".to_string());
         insert_prop("collection-export-label", "Export Anki".to_string());
         insert_prop("collection-add-note-label", "Add note".to_string());
@@ -1684,6 +1716,14 @@ fn engram_app_props_for_state(
             "Delete note type".to_string(),
         );
     }
+    props_object.insert(
+        "collection-missing-media-filenames".to_string(),
+        serde_json::to_value(&media_analysis.missing_filenames).unwrap_or(Value::Null),
+    );
+    props_object.insert(
+        "collection-unused-media-asset-ids".to_string(),
+        serde_json::to_value(&media_analysis.unreferenced_asset_ids).unwrap_or(Value::Null),
+    );
     {
         props_object.insert(
             "deck-options-settings-label".to_string(),
@@ -3513,6 +3553,7 @@ enum EngramAppEvent {
     BrowserCustomStudyRescheduleChange,
     BrowserRebuildFilteredDeck,
     BrowserEmptyFilteredDeck,
+    PruneUnusedMedia,
     NoteEditorSelectNoteType,
     NoteEditorSelectDeck,
     NoteEditorSelectField,
@@ -3638,6 +3679,7 @@ impl EngramAppEvent {
             Self::BrowserCustomStudyRescheduleChange => "onBrowserCustomStudyRescheduleChange",
             Self::BrowserRebuildFilteredDeck => "onBrowserRebuildFilteredDeck",
             Self::BrowserEmptyFilteredDeck => "onBrowserEmptyFilteredDeck",
+            Self::PruneUnusedMedia => "onPruneUnusedMedia",
             Self::NoteEditorSelectNoteType => "onNoteEditorSelectNoteType",
             Self::NoteEditorSelectDeck => "onNoteEditorSelectDeck",
             Self::NoteEditorSelectField => "onNoteEditorSelectField",
@@ -3990,6 +4032,12 @@ fn parse_engram_app_event_name(
         | "browseremptycustomstudy"
         | "browser-empty-custom-study"
         | "browser_empty_custom_study" => parsed(EngramAppEvent::BrowserEmptyFilteredDeck),
+        "pruneunusedmedia"
+        | "prune-unused-media"
+        | "prune_unused_media"
+        | "collectionpruneunusedmedia"
+        | "collection-prune-unused-media"
+        | "collection_prune_unused_media" => parsed(EngramAppEvent::PruneUnusedMedia),
         "noteeditorselectnotetype"
         | "note-editor-select-note-type"
         | "note_editor_select_note_type" => parsed(EngramAppEvent::NoteEditorSelectNoteType),
@@ -6583,6 +6631,21 @@ mod tests {
         assert_eq!(value["props"]["collection-note-count-value"], "1");
         assert_eq!(value["props"]["collection-note-type-count-value"], "1");
         assert_eq!(value["props"]["collection-media-count-value"], "1");
+        assert_eq!(value["props"]["collection-referenced-media-value"], "0");
+        assert_eq!(value["props"]["collection-missing-media-value"], "0");
+        assert_eq!(
+            value["props"]["collection-missing-media-filenames"],
+            json!([])
+        );
+        assert_eq!(value["props"]["collection-unused-media-value"], "1");
+        assert_eq!(
+            value["props"]["collection-unused-media-asset-ids"],
+            json!(["media:0"])
+        );
+        assert_eq!(
+            value["props"]["collection-prune-unused-media-label"],
+            "Prune unused media"
+        );
         assert_eq!(value["props"]["collection-import-label"], "Import Anki");
         assert_eq!(value["props"]["collection-export-label"], "Export Anki");
         assert_eq!(value["props"]["collection-add-note-label"], "Add note");
@@ -6652,6 +6715,64 @@ mod tests {
         );
         assert_eq!(value["props"]["action-suspend-card-label"], "Suspend");
         assert_eq!(value["props"]["action-mark-label"], "Mark");
+    }
+
+    #[test]
+    fn engram_app_prunes_unused_media_assets_from_shared_state() {
+        let mut session = EngramSession::new();
+        let snapshot = r#"{
+            "decks": [{"id":"deck","name":"Spanish","description":"Media","createdAt":1700000000000}],
+            "noteTypes": [],
+            "notes": [],
+            "cards": [
+                {
+                    "id":"card",
+                    "deckId":"deck",
+                    "front":"hola [sound:audio/hola.mp3] <img src=\"missing.png\">",
+                    "back":"hello",
+                    "createdAt":1700000000000
+                }
+            ],
+            "cardProgress": [],
+            "mediaAssets": [
+                {"id":"media:audio","archiveName":"0","filename":"audio/hola.mp3","data":[109,112,51]},
+                {"id":"media:unused","archiveName":"1","filename":"unused.png","data":[112,110,103]}
+            ],
+            "sessions": [],
+            "reviews": [],
+            "activeSession": null
+        }"#;
+
+        session.load_snapshot(snapshot);
+
+        let pruned: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onPruneUnusedMedia",
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+
+        assert_eq!(pruned["ok"], true);
+        assert_eq!(pruned["event"], "onPruneUnusedMedia");
+        assert_eq!(pruned["hostIntent"], Value::Null);
+        assert_eq!(
+            pruned["state"]["mediaAssets"],
+            json!([
+                {"id":"media:audio","archiveName":"0","filename":"audio/hola.mp3","data":[109,112,51]}
+            ])
+        );
+        assert_eq!(pruned["props"]["collection-media-count-value"], "1");
+        assert_eq!(pruned["props"]["collection-referenced-media-value"], "2");
+        assert_eq!(pruned["props"]["collection-unused-media-value"], "0");
+        assert_eq!(
+            pruned["props"]["collection-unused-media-asset-ids"],
+            json!([])
+        );
+        assert_eq!(pruned["props"]["collection-missing-media-value"], "1");
+        assert_eq!(
+            pruned["props"]["collection-missing-media-filenames"],
+            json!(["missing.png"])
+        );
     }
 
     #[test]
