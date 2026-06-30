@@ -2,6 +2,41 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.19.6] - 2026-06-30
+
+### Fixed — chained calls `f()()` raised a bridge internal error
+
+A chained call such as `f()()` or `f(1)(2)(3)` raised
+`bridge internal error: arguments: unknown expression rule 'arguments'`,
+so any program containing one failed to compile.
+
+The grammar models calls with left recursion
+(`call_expression = call_expression arguments`), and the parser flattens a
+chain of call sites into a **single** `call_expression` node whose children
+are the base followed by one `arguments` node per call site:
+
+```
+f()()   →  call_expression[ member_expression(f), arguments(()), arguments(()) ]
+```
+
+`convert_call_expression` derived the callee of the outer call by converting
+the *second-to-last* child directly — for a 3-child chain that child is the
+inner `arguments` node, not an expression, so `convert_expression` fell through
+to its catch-all and reported the rule name `arguments`.
+
+The callee is now rebuilt by folding the leading `arguments` nodes
+left-to-right into nested `CallExpression`s
+(`f` → `f()` → `f()()`), with the final `arguments` node forming the outer
+call. A guard keeps this sound: because `node_children` strips `Token`
+children, a `.`/`[` member access appearing between calls would be invisible
+to the fold, so when such a token is present at this level we fall through to
+the existing unsupported-syntax path (an error) rather than risk silently
+turning `f().x()` into `f()()`. Pure call chains carry no such tokens and now
+round-trip correctly; interleaved member/call forms continue to nest into
+their own sub-nodes and are unaffected.
+
+Regression tests: `chained_call_expression`, `triple_chained_call_with_args`.
+
 ## [0.19.5] - 2026-06-30
 
 ### Fixed — prefix `++` / `--` silently dropped (miscompile)
