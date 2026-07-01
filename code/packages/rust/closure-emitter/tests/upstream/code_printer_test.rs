@@ -217,43 +217,92 @@ fn test_string_literal_at_statement_position() {
     assert_emits(string("a"), "\"a\";");
 }
 
-/// Upstream tests cover number formatting like
-/// `assertPrint("1000000000", "1E9")` — using `1E9` exponential
-/// notation as shorter. Our emitter formats `1000000000` as
-/// `1000000000` (no exponent collapse).
+/// Upstream `testNumericKeys` / `testExponents`-style shortest-form
+/// number printing: the emitter picks whichever of the decimal or the
+/// uppercase-`E` exponential spelling is shorter (ties → decimal).
+///
+/// gap-025 RESOLVED — `format_js_number` in `closure-emitter` now does
+/// this (see CLOC12-gaps.md CLOC12.138). This was previously an
+/// `#[ignore]` placeholder; it is now an active conformance test.
 #[test]
-#[ignore = "blocked on gap-025: number-formatting (shortest-form / exponential) not implemented"]
 fn test_number_formatting_shortest_form() {
-    // assertPrint("1000000000", "1E9");
-    // Belongs in a future emitter-numeric-formatter slice.
+    // Exponential is strictly shorter → collapse (uppercase E, no `+`).
+    assert_emits(num(1_000_000_000.0), "1E9;"); // decimal 10 vs "1E9" 3
+    assert_emits(num(1_000_000.0), "1E6;"); //     decimal 7  vs "1E6" 3
+    assert_emits(num(1e21), "1E21;"); //           beyond i64, expo wins
+    // Tie or decimal-shorter → keep decimal.
+    assert_emits(num(100.0), "100;"); //           "100" 3 vs "1E2" 3 → tie→decimal
+    assert_emits(num(0.5), "0.5;"); //             "0.5" 3 vs "5E-1" 4 → decimal
+    // Negative zero must keep its sign (`1/-0 === -Infinity`).
+    assert_emits(num(-0.0), "-0;");
 }
 
 /// Upstream `testStringQuoteChoice`-style — pick the quote that
-/// minimises escapes:
+/// minimises escapes: when the value contains more `"` than `'`, the
+/// single-quote spelling is shorter (no escaping of the inner `"`).
 ///
-///   assertPrint("var x = \"single 'quote'\";", "var x='single \\'quote\\''");
-///   assertPrint("var x = \"a\\nb\";", "var x=\"a\\nb\"");
-///
-/// Our emitter always uses double quotes and doesn't switch to
-/// single. Gap-026.
+/// gap-026 RESOLVED — `emit_string` now does this (CLOC12-gaps.md
+/// CLOC12.138). Previously an `#[ignore]` placeholder; now active.
 #[test]
-#[ignore = "blocked on gap-026: quote-choice optimisation not implemented"]
 fn test_string_quote_choice_minimises_escapes() {
-    // Belongs in a future emitter-string-escape slice.
+    // More `"` than `'` → single-quote form (inner `"` need no escape).
+    assert_emits(string("she said \"hi\""), "'she said \"hi\"';");
+    // `'` present, no `"` → default double-quote form (tie/dq-not-more).
+    assert_emits(string("o'malley"), "\"o'malley\";");
+    // No quotes at all → default double.
+    assert_emits(string("plain"), "\"plain\";");
 }
 
 /// Upstream `testOperatorPrecedence`-style — when a higher-precedence
 /// operator contains a lower-precedence subexpression, the
-/// subexpression needs parens to preserve evaluation order:
+/// subexpression needs parens to preserve evaluation order.
 ///
-///   assertPrint("(a+b)*c", "(a+b)*c");
-///   assertPrint("a*(b+c)", "a*(b+c)");
-///
-/// Our emitter doesn't model operator precedence — it doesn't emit
-/// inner parens, and it wraps the outer expression in parens
-/// unconditionally. Filed as gap-027.
+/// gap-027 RESOLVED — the emitter now models operator precedence and
+/// inserts exactly the parens needed (CLOC12-gaps.md CLOC12.138).
+/// Previously an `#[ignore]` placeholder; now active.
 #[test]
-#[ignore = "blocked on gap-027: precedence-aware paren insertion not implemented"]
 fn test_operator_precedence_inserts_inner_parens() {
-    // Would assert that `a * (b + c)` emits with the inner parens.
+    // `a * (b + c)` — `+` is lower precedence than `*`, so the right
+    // operand needs parens to preserve evaluation order.
+    let a_times_b_plus_c = Expression::BinaryExpression(BinaryExpression {
+        cv: None,
+        operator: BinaryOperator::Mul,
+        left: Box::new(ident("a")),
+        right: Box::new(Expression::BinaryExpression(BinaryExpression {
+            cv: None,
+            operator: BinaryOperator::Add,
+            left: Box::new(ident("b")),
+            right: Box::new(ident("c")),
+        })),
+    });
+    assert_emits(a_times_b_plus_c, "a*(b+c);");
+
+    // `(a + b) * c` — the SAME associativity note: `a + b` (lower prec)
+    // on the left of `*` also needs parens.
+    let a_plus_b_times_c = Expression::BinaryExpression(BinaryExpression {
+        cv: None,
+        operator: BinaryOperator::Mul,
+        left: Box::new(Expression::BinaryExpression(BinaryExpression {
+            cv: None,
+            operator: BinaryOperator::Add,
+            left: Box::new(ident("a")),
+            right: Box::new(ident("b")),
+        })),
+        right: Box::new(ident("c")),
+    });
+    assert_emits(a_plus_b_times_c, "(a+b)*c;");
+
+    // `a + b * c` — `*` binds tighter, so NO parens are needed.
+    let a_plus_b_times_c_noparen = Expression::BinaryExpression(BinaryExpression {
+        cv: None,
+        operator: BinaryOperator::Add,
+        left: Box::new(ident("a")),
+        right: Box::new(Expression::BinaryExpression(BinaryExpression {
+            cv: None,
+            operator: BinaryOperator::Mul,
+            left: Box::new(ident("b")),
+            right: Box::new(ident("c")),
+        })),
+    });
+    assert_emits(a_plus_b_times_c_noparen, "a+b*c;");
 }
