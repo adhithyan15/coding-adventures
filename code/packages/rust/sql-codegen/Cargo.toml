@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-sql-codegen"
+version = "0.1.0"
+edition = "2021"
+description = "Bytecode code generator for the Mini-SQLite SQL processing pipeline"
+license = "MIT"
+
+[dependencies]
+coding-adventures-sql-optimizer = { path = "../sql-optimizer" }
+coding-adventures-sql-planner = { path = "../sql-planner" }
+coding-adventures-sql-backend = { path = "../sql-backend" }
