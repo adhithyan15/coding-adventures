@@ -2,6 +2,32 @@
 
 All notable changes to the Presentation-MathML frontend crate.
 
+## [0.6.0] — 2026-07-01
+
+### Added — adopt the neutral `Fenced` node (fence delimiters as data)
+
+The `mathml` frontend now lowers a **single-body** `<mfenced>` to the neutral
+**`MathExpr::Fenced { open, body, close }`** (added to `math-frontend` 0.7.0 and first adopted by
+the `latex` frontend), carrying **which** delimiters bracketed the group instead of dropping them.
+Previously a bare `<mfenced>` folded to `Group`, which records only *that* a sub-expression was
+fenced — so `<mfenced open="|" close="|">x</mfenced>` (an absolute value / norm) was indistinguishable
+from `<mfenced>x</mfenced>` (a parenthesised group). Now the `open`/`close` attributes are preserved.
+
+- A single-body `<mfenced>` → `Fenced` with its `open`/`close` delimiters. A bare `<mfenced>` with no
+  attributes uses MathML's own defaults `(` / `)`; custom brackets (`open="["`, `open="{"`,
+  `open="⟨"`, `open="|"`, an omitted `.`) are carried verbatim. **Comma / semicolon lists are
+  unchanged** — they still lower to `Sequence` (which drops the delimiters; carrying them on the list
+  shape is a later slice of the fence arc).
+- The lexer still discards attributes as presentation, so the `<mfenced>` handler **re-reads** its
+  `open`/`close` off the start-tag's byte span via a new `tag_attr` helper (the `Parser` now keeps the
+  source bytes). Entity references in a delimiter value (`&lang;` → ⟨, `&#x2308;` → ⌈) are decoded
+  through the same entity table as character data.
+- `Capabilities::fenced_delimiters` is now declared (`with_fenced_delimiters()`), so the conformance
+  harness polices the newly-emitted node — a frontend emitting `Fenced` without declaring it is flagged.
+- +4 tests (default `(`/`)`, custom `[`/`]`, `|`/`|` absolute value, entity-decoded `⌈`/`⌉`);
+  the previous `mfenced_without_commas_lowers_to_group` test becomes `…_lowers_to_fenced`. Downstream
+  consumers (`latex`, `asciimath`, `unicode-math`, `adj-lang`, `adj-lang-cli`) build and pass unchanged.
+
 ## [0.5.0] — 2026-06-30
 
 ### Added — PR-5: semicolon-separated `<mfenced>` lowers to rows
