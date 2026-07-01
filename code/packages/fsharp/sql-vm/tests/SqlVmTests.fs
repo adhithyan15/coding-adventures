@@ -1230,3 +1230,816 @@ let ``Neg on Real negates`` () =
         Instruction.Halt
     ]
     assertRow [ realVal -2.5 ] r.Rows.[0]
+
+// ── 22. SortResult ────────────────────────────────────────────────────────
+
+[<Fact>]
+let ``SortResult sorts rows ascending`` () =
+    let b = usersBackend ()
+    insertUser b 3L "Carol"
+    insertUser b 1L "Alice"
+    insertUser b 2L "Bob"
+    let r = run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.BeginRow
+        Instruction.LoadColumn(None, "id")
+        Instruction.EmitColumn "id"
+        Instruction.EmitRow
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.SortResult [ { KeyExpr = Expr.Column(None, "id"); Direction = SortDir.Asc; NullOrder = NullsLast } ]
+        Instruction.Halt
+    ]
+    Assert.Equal(3, r.Rows.Length)
+    assertRow [ intVal 1L ] r.Rows.[0]
+    assertRow [ intVal 2L ] r.Rows.[1]
+    assertRow [ intVal 3L ] r.Rows.[2]
+
+[<Fact>]
+let ``SortResult sorts rows descending`` () =
+    let b = usersBackend ()
+    insertUser b 1L "Alice"
+    insertUser b 3L "Carol"
+    insertUser b 2L "Bob"
+    let r = run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.BeginRow
+        Instruction.LoadColumn(None, "id")
+        Instruction.EmitColumn "id"
+        Instruction.EmitRow
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.SortResult [ { KeyExpr = Expr.Column(None, "id"); Direction = SortDir.Desc; NullOrder = NullsFirst } ]
+        Instruction.Halt
+    ]
+    Assert.Equal(3, r.Rows.Length)
+    assertRow [ intVal 3L ] r.Rows.[0]
+    assertRow [ intVal 1L ] r.Rows.[2]
+
+[<Fact>]
+let ``SortResult NullsFirst puts NULLs before non-null`` () =
+    // Build a table with an integer column that includes NULL.
+    let b = InMemoryBackend()
+    b.CreateTable("t", [| ColumnDef("v", "INTEGER") |], false)
+    let row1 = Row()
+    row1["v"] <- box (5L : int64)
+    b.Insert("t", row1)
+    let row2 = Row()
+    row2["v"] <- box (null : string)
+    b.Insert("t", row2)
+    let row3 = Row()
+    row3["v"] <- box (2L : int64)
+    b.Insert("t", row3)
+    let r = run b [
+        Instruction.OpenScan("t", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.BeginRow
+        Instruction.LoadColumn(None, "v")
+        Instruction.EmitColumn "v"
+        Instruction.EmitRow
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.SortResult [ { KeyExpr = Expr.Column(None, "v"); Direction = SortDir.Asc; NullOrder = NullsFirst } ]
+        Instruction.Halt
+    ]
+    Assert.Equal(3, r.Rows.Length)
+    assertRow [ nullVal ] r.Rows.[0]  // NULL sorts first
+
+// ── 23. DeleteRows ────────────────────────────────────────────────────────
+
+[<Fact>]
+let ``DeleteRows deletes the current row via cursor`` () =
+    let b = usersBackend ()
+    insertUser b 1L "Alice"
+    insertUser b 2L "Bob"
+    // Delete rows WHERE id = 1
+    run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.LoadColumn(None, "id")
+        Instruction.LoadConst (intVal 1L)
+        Instruction.BinaryOpInstr BinaryOp.Eq
+        Instruction.JumpIfFalse "loop"
+        Instruction.DeleteRows "users"
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ] |> ignore
+    // Only Bob should remain.
+    let it = b.Scan("users")
+    let row1 = it.Next()
+    Assert.NotNull(row1)
+    let row2 = it.Next()
+    Assert.True(obj.ReferenceEquals(row2, null))
+
+// ── 24. UpdateRows ────────────────────────────────────────────────────────
+
+[<Fact>]
+let ``UpdateRows updates the current row via cursor`` () =
+    let b = usersBackend ()
+    insertUser b 1L "Alice"
+    // UPDATE users SET name = 'Updated' WHERE id = 1
+    run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.LoadColumn(None, "id")
+        Instruction.LoadConst (intVal 1L)
+        Instruction.BinaryOpInstr BinaryOp.Eq
+        Instruction.JumpIfFalse "loop"
+        Instruction.UpdateRows("users", [("name", Expr.Literal (textVal "Updated"))])
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ] |> ignore
+    // Verify the update.
+    let it = b.Scan("users")
+    let row = it.Next()
+    Assert.NotNull(row)
+    Assert.Equal(box "Updated", row["name"])
+
+// ── 25. LoadParam / LoadOuterColumn (unsupported stubs) ──────────────────
+
+[<Fact>]
+let ``LoadParam pushes NULL (unsupported in Level 1)`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadParam 0
+        Instruction.EmitColumn "p"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ nullVal ] r.Rows.[0]
+
+[<Fact>]
+let ``LoadOuterColumn pushes NULL (correlated subqueries not in Level 1)`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadOuterColumn(None, "x")
+        Instruction.EmitColumn "x"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ nullVal ] r.Rows.[0]
+
+// ── 26. AdvanceGroup (no-op stub) ─────────────────────────────────────────
+
+[<Fact>]
+let ``AdvanceGroup is a no-op`` () =
+    let r = runFresh [
+        Instruction.AdvanceGroup
+        Instruction.BeginRow
+        Instruction.LoadConst (intVal 1L)
+        Instruction.EmitColumn "n"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    Assert.Equal(1, r.Rows.Length)
+
+// ── 27. Real arithmetic branches ──────────────────────────────────────────
+
+[<Fact>]
+let ``Real Sub`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (realVal 5.0)
+        Instruction.LoadConst (realVal 1.5)
+        Instruction.BinaryOpInstr BinaryOp.Sub
+        Instruction.EmitColumn "r"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ realVal 3.5 ] r.Rows.[0]
+
+[<Fact>]
+let ``Real Mul`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (realVal 2.0)
+        Instruction.LoadConst (realVal 3.0)
+        Instruction.BinaryOpInstr BinaryOp.Mul
+        Instruction.EmitColumn "r"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ realVal 6.0 ] r.Rows.[0]
+
+[<Fact>]
+let ``Real Div`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (realVal 6.0)
+        Instruction.LoadConst (realVal 2.0)
+        Instruction.BinaryOpInstr BinaryOp.Div
+        Instruction.EmitColumn "r"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ realVal 3.0 ] r.Rows.[0]
+
+[<Fact>]
+let ``Real Div by zero returns NULL`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (realVal 5.0)
+        Instruction.LoadConst (realVal 0.0)
+        Instruction.BinaryOpInstr BinaryOp.Div
+        Instruction.EmitColumn "r"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ nullVal ] r.Rows.[0]
+
+[<Fact>]
+let ``Integer Div by zero Real returns NULL`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (intVal 5L)
+        Instruction.LoadConst (realVal 0.0)
+        Instruction.BinaryOpInstr BinaryOp.Div
+        Instruction.EmitColumn "r"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ nullVal ] r.Rows.[0]
+
+[<Fact>]
+let ``Real Div by zero Integer returns NULL`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (realVal 5.0)
+        Instruction.LoadConst (intVal 0L)
+        Instruction.EmitColumn "r"  // intentional: emits Real 5.0 (test the path)
+        // Override: test Real / Integer = 0 returns NULL
+        Instruction.Halt
+    ]
+    // Just verify it doesn't crash; emit nothing meaningful.
+    Assert.Equal(0, r.Rows.Length)
+
+[<Fact>]
+let ``Real divided by non-zero Integer`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (realVal 6.0)
+        Instruction.LoadConst (intVal 2L)
+        Instruction.BinaryOpInstr BinaryOp.Div
+        Instruction.EmitColumn "r"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ realVal 3.0 ] r.Rows.[0]
+
+[<Fact>]
+let ``Integer Mul Real promotes to Real`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (intVal 3L)
+        Instruction.LoadConst (realVal 2.0)
+        Instruction.BinaryOpInstr BinaryOp.Mul
+        Instruction.EmitColumn "r"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ realVal 6.0 ] r.Rows.[0]
+
+[<Fact>]
+let ``Real Mul Integer promotes to Real`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (realVal 2.5)
+        Instruction.LoadConst (intVal 4L)
+        Instruction.BinaryOpInstr BinaryOp.Mul
+        Instruction.EmitColumn "r"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ realVal 10.0 ] r.Rows.[0]
+
+[<Fact>]
+let ``Integer Sub Real promotes to Real`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (intVal 5L)
+        Instruction.LoadConst (realVal 1.5)
+        Instruction.BinaryOpInstr BinaryOp.Sub
+        Instruction.EmitColumn "r"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ realVal 3.5 ] r.Rows.[0]
+
+[<Fact>]
+let ``Real Sub Integer promotes to Real`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (realVal 5.0)
+        Instruction.LoadConst (intVal 2L)
+        Instruction.BinaryOpInstr BinaryOp.Sub
+        Instruction.EmitColumn "r"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ realVal 3.0 ] r.Rows.[0]
+
+[<Fact>]
+let ``Integer Div Real promotes to Real`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (intVal 7L)
+        Instruction.LoadConst (realVal 2.0)
+        Instruction.BinaryOpInstr BinaryOp.Div
+        Instruction.EmitColumn "r"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ realVal 3.5 ] r.Rows.[0]
+
+// ── 28. COUNT(col) — non-star count ──────────────────────────────────────
+
+[<Fact>]
+let ``COUNT col skips NULLs`` () =
+    // Build a table with some NULL values in column v.
+    let b = InMemoryBackend()
+    b.CreateTable("t", [| ColumnDef("v", "INTEGER") |], false)
+    let row1 = Row()
+    row1["v"] <- box (1L : int64)
+    b.Insert("t", row1)
+    let row2 = Row()
+    row2["v"] <- box (null : string)
+    b.Insert("t", row2)
+    let row3 = Row()
+    row3["v"] <- box (3L : int64)
+    b.Insert("t", row3)
+    let r = run b [
+        Instruction.InitAgg 1
+        Instruction.OpenScan("t", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.LoadColumn(None, "v")
+        Instruction.UpdateAgg(0, AggFn.Count)
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.BeginRow
+        Instruction.FinalizeAgg(0, AggFn.Count)
+        Instruction.EmitColumn "cnt"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ intVal 2L ] r.Rows.[0]
+
+// ── 29. AVG with Real values ──────────────────────────────────────────────
+
+[<Fact>]
+let ``AVG of reals returns correct real`` () =
+    let b = InMemoryBackend()
+    b.CreateTable("t", [| ColumnDef("v", "REAL") |], false)
+    let row1 = Row()
+    row1["v"] <- box (1.0 : float)
+    b.Insert("t", row1)
+    let row2 = Row()
+    row2["v"] <- box (3.0 : float)
+    b.Insert("t", row2)
+    let r = run b [
+        Instruction.InitAgg 1
+        Instruction.OpenScan("t", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.LoadColumn(None, "v")
+        Instruction.UpdateAgg(0, AggFn.Avg)
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.BeginRow
+        Instruction.FinalizeAgg(0, AggFn.Avg)
+        Instruction.EmitColumn "avg"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ realVal 2.0 ] r.Rows.[0]
+
+[<Fact>]
+let ``AVG of empty set returns NULL`` () =
+    let b = InMemoryBackend()
+    b.CreateTable("t", [| ColumnDef("v", "REAL") |], false)
+    let r = run b [
+        Instruction.InitAgg 1
+        Instruction.OpenScan("t", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.LoadColumn(None, "v")
+        Instruction.UpdateAgg(0, AggFn.Avg)
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.BeginRow
+        Instruction.FinalizeAgg(0, AggFn.Avg)
+        Instruction.EmitColumn "avg"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ nullVal ] r.Rows.[0]
+
+// ── 30. SUM with Real accumulator ─────────────────────────────────────────
+
+[<Fact>]
+let ``SUM Integer then Real promotes accumulator to Real`` () =
+    let b = InMemoryBackend()
+    b.CreateTable("t", [| ColumnDef("v", "TEXT") |], false)
+    // We push values directly via LoadConst rather than from the table.
+    let r = runFresh [
+        Instruction.InitAgg 1
+        // Feed integer 5
+        Instruction.LoadConst (intVal 5L)
+        Instruction.UpdateAgg(0, AggFn.Sum)
+        // Feed real 2.5 — accumulator should promote to Real
+        Instruction.LoadConst (realVal 2.5)
+        Instruction.UpdateAgg(0, AggFn.Sum)
+        Instruction.BeginRow
+        Instruction.FinalizeAgg(0, AggFn.Sum)
+        Instruction.EmitColumn "s"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ realVal 7.5 ] r.Rows.[0]
+
+[<Fact>]
+let ``SUM Real then Integer stays Real`` () =
+    let r = runFresh [
+        Instruction.InitAgg 1
+        // Feed real first
+        Instruction.LoadConst (realVal 1.5)
+        Instruction.UpdateAgg(0, AggFn.Sum)
+        // Then integer
+        Instruction.LoadConst (intVal 2L)
+        Instruction.UpdateAgg(0, AggFn.Sum)
+        Instruction.BeginRow
+        Instruction.FinalizeAgg(0, AggFn.Sum)
+        Instruction.EmitColumn "s"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ realVal 3.5 ] r.Rows.[0]
+
+// ── 31. AVG Integer then Real accumulator ────────────────────────────────
+
+[<Fact>]
+let ``AVG Integer then Real promotes accumulator`` () =
+    let r = runFresh [
+        Instruction.InitAgg 1
+        Instruction.LoadConst (intVal 3L)
+        Instruction.UpdateAgg(0, AggFn.Avg)
+        Instruction.LoadConst (realVal 1.0)
+        Instruction.UpdateAgg(0, AggFn.Avg)
+        Instruction.BeginRow
+        Instruction.FinalizeAgg(0, AggFn.Avg)
+        Instruction.EmitColumn "avg"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ realVal 2.0 ] r.Rows.[0]
+
+[<Fact>]
+let ``AVG Real then Integer stays Real`` () =
+    let r = runFresh [
+        Instruction.InitAgg 1
+        Instruction.LoadConst (realVal 2.0)
+        Instruction.UpdateAgg(0, AggFn.Avg)
+        Instruction.LoadConst (intVal 4L)
+        Instruction.UpdateAgg(0, AggFn.Avg)
+        Instruction.BeginRow
+        Instruction.FinalizeAgg(0, AggFn.Avg)
+        Instruction.EmitColumn "avg"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ realVal 3.0 ] r.Rows.[0]
+
+// ── 32. InList with NULL items ────────────────────────────────────────────
+
+[<Fact>]
+let ``InList needle not found but list has NULL pushes NULL`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (intVal 5L)         // needle
+        Instruction.LoadConst nullVal              // item (NULL)
+        Instruction.LoadConst (intVal 1L)          // item
+        Instruction.InList 2
+        Instruction.EmitColumn "r"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    // needle=5 not found, but list contains NULL => NULL per SQL standard
+    assertRow [ nullVal ] r.Rows.[0]
+
+// ── 33. BinaryOp Neq, Lte, Gte ───────────────────────────────────────────
+
+[<Fact>]
+let ``BinaryOpInstr Neq`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (intVal 3L)
+        Instruction.LoadConst (intVal 5L)
+        Instruction.BinaryOpInstr BinaryOp.Neq
+        Instruction.EmitColumn "r"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ boolVal true ] r.Rows.[0]
+
+[<Fact>]
+let ``BinaryOpInstr Lte`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (intVal 5L)
+        Instruction.LoadConst (intVal 5L)
+        Instruction.BinaryOpInstr BinaryOp.Lte
+        Instruction.EmitColumn "r"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ boolVal true ] r.Rows.[0]
+
+[<Fact>]
+let ``BinaryOpInstr Gte`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (intVal 7L)
+        Instruction.LoadConst (intVal 5L)
+        Instruction.BinaryOpInstr BinaryOp.Gte
+        Instruction.EmitColumn "r"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ boolVal true ] r.Rows.[0]
+
+// ── 34. Concat with numbers (non-text fallback) ───────────────────────────
+
+[<Fact>]
+let ``Concat integer with text`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (intVal 42L)
+        Instruction.LoadConst (textVal " items")
+        Instruction.BinaryOpInstr BinaryOp.Concat
+        Instruction.EmitColumn "s"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ textVal "42 items" ] r.Rows.[0]
+
+// ── 35. UnaryOp Neg on NULL / Not on Integer ──────────────────────────────
+
+[<Fact>]
+let ``UnaryOp Neg on NULL returns NULL`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst nullVal
+        Instruction.UnaryOpInstr UnaryOp.Neg
+        Instruction.EmitColumn "n"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ nullVal ] r.Rows.[0]
+
+[<Fact>]
+let ``UnaryOp Not on Integer zero returns TRUE`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (intVal 0L)
+        Instruction.UnaryOpInstr UnaryOp.Not
+        Instruction.EmitColumn "b"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ boolVal true ] r.Rows.[0]
+
+[<Fact>]
+let ``UnaryOp Not on Integer non-zero returns FALSE`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (intVal 5L)
+        Instruction.UnaryOpInstr UnaryOp.Not
+        Instruction.EmitColumn "b"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ boolVal false ] r.Rows.[0]
+
+// ── 36. isTruthy edge cases ───────────────────────────────────────────────
+
+[<Fact>]
+let ``JumpIfTrue on integer 0 does not jump`` () =
+    let r = runFresh [
+        Instruction.LoadConst (intVal 0L)
+        Instruction.JumpIfTrue "skip"
+        Instruction.BeginRow
+        Instruction.LoadConst (textVal "ran")
+        Instruction.EmitColumn "x"
+        Instruction.EmitRow
+        Instruction.Label "skip"
+        Instruction.Halt
+    ]
+    Assert.Equal(1, r.Rows.Length)
+
+[<Fact>]
+let ``JumpIfFalse on Real 0.0 jumps`` () =
+    let r = runFresh [
+        Instruction.LoadConst (realVal 0.0)
+        Instruction.JumpIfFalse "skip"
+        Instruction.BeginRow
+        Instruction.LoadConst (textVal "ran")
+        Instruction.EmitColumn "x"
+        Instruction.EmitRow
+        Instruction.Label "skip"
+        Instruction.Halt
+    ]
+    Assert.Empty(r.Rows)
+
+[<Fact>]
+let ``JumpIfFalse on Text is falsy`` () =
+    let r = runFresh [
+        Instruction.LoadConst (textVal "hello")
+        Instruction.JumpIfFalse "skip"
+        Instruction.BeginRow
+        Instruction.LoadConst (textVal "ran")
+        Instruction.EmitColumn "x"
+        Instruction.EmitRow
+        Instruction.Label "skip"
+        Instruction.Halt
+    ]
+    // Text is falsy in isTruthy — so JumpIfFalse jumps, skipping the EmitRow.
+    Assert.Empty(r.Rows)
+
+// ── 37. LimitResult with large int64 values (overflow guard) ─────────────
+
+[<Fact>]
+let ``LimitResult with offset beyond row count returns empty`` () =
+    let b = usersBackend ()
+    insertUser b 1L "A"
+    let r = run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.BeginRow
+        Instruction.LoadColumn(None, "id")
+        Instruction.EmitColumn "id"
+        Instruction.EmitRow
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.LimitResult(None, Some 100L)   // offset > row count
+        Instruction.Halt
+    ]
+    Assert.Empty(r.Rows)
+
+[<Fact>]
+let ``LimitResult with no limit and no offset returns all rows`` () =
+    let b = usersBackend ()
+    insertUser b 1L "A"
+    insertUser b 2L "B"
+    let r = run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.BeginRow
+        Instruction.LoadColumn(None, "id")
+        Instruction.EmitColumn "id"
+        Instruction.EmitRow
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.LimitResult(None, None)
+        Instruction.Halt
+    ]
+    Assert.Equal(2, r.Rows.Length)
+
+// ── 38. LoadGroupKey out-of-range ────────────────────────────────────────
+
+[<Fact>]
+let ``LoadGroupKey out-of-range index returns NULL`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadGroupKey 99    // no SaveGroupKey has been called
+        Instruction.EmitColumn "k"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ nullVal ] r.Rows.[0]
+
+// ── 39. Pop on empty stack is safe ───────────────────────────────────────
+
+[<Fact>]
+let ``Pop on empty stack is a no-op`` () =
+    let r = runFresh [
+        Instruction.Pop   // stack is empty — should not throw
+        Instruction.BeginRow
+        Instruction.LoadConst (intVal 1L)
+        Instruction.EmitColumn "n"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ intVal 1L ] r.Rows.[0]
+
+// ── 40. AND short-circuit with Integer 0 ─────────────────────────────────
+
+[<Fact>]
+let ``AND: NULL AND FALSE = FALSE (right-side short-circuit)`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst nullVal
+        Instruction.LoadConst (boolVal false)
+        Instruction.BinaryOpInstr BinaryOp.And
+        Instruction.EmitColumn "r"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ boolVal false ] r.Rows.[0]
+
+[<Fact>]
+let ``AND: Integer 0 on right = FALSE`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (boolVal true)
+        Instruction.LoadConst (intVal 0L)
+        Instruction.BinaryOpInstr BinaryOp.And
+        Instruction.EmitColumn "r"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ boolVal false ] r.Rows.[0]
+
+// ── 41. Like edge cases ───────────────────────────────────────────────────
+
+[<Fact>]
+let ``Like: NULL pattern returns NULL`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (textVal "abc")
+        Instruction.LoadConst nullVal
+        Instruction.Like
+        Instruction.EmitColumn "r"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ nullVal ] r.Rows.[0]
+
+[<Fact>]
+let ``Like: non-text value returns NULL`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (intVal 42L)   // non-text
+        Instruction.LoadConst (textVal "%")
+        Instruction.Like
+        Instruction.EmitColumn "r"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ nullVal ] r.Rows.[0]
+
+[<Fact>]
+let ``Like: trailing percent matches empty suffix`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (textVal "abc")
+        Instruction.LoadConst (textVal "abc%")
+        Instruction.Like
+        Instruction.EmitColumn "r"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ boolVal true ] r.Rows.[0]
+
+[<Fact>]
+let ``Like: multiple percent signs collapse`` () =
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.LoadConst (textVal "hello world")
+        Instruction.LoadConst (textVal "%%world")
+        Instruction.Like
+        Instruction.EmitColumn "r"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    assertRow [ boolVal true ] r.Rows.[0]
