@@ -1,5 +1,71 @@
 # Changelog
 
+## 0.7.0
+
+### Added
+
+- **Collection-method dispatch + runtime catalog (C5).**  The Go backend now
+  EXECUTES `recv.meth(args…)` end to end.  A method call reaches the backend as
+  `BuiltinCall("__method__", [recv, StrLit("meth"), …args])`; previously it fell
+  through to the generic `_sir_call_builtin_by_name` fallback, which has no
+  method-dispatch arm — so any collection method failed at runtime.  Now:
+  - **Emit** (`emit.rs`): a `"__method__"` case in `emit_builtin_call` lowers the
+    dispatch to `_sir_call_method(recv, "name", []Value{…args})`.  A trailing
+    block (`MakeClosure`) rides in as the last `[]Value` element; a `&:sym` /
+    `&proc` block-pass that survives on the dispatch is converted via
+    `try_emit_block_pass` (`_sir_sym_to_proc(intern("sym"))` for `&:sym`, the
+    proc verbatim otherwise).  A `Const`-scoped class operand on a class
+    predicate (`x.is_a?(Integer)`) is passed as its name string.
+  - **Runtime** (`runtime.rs`): a new inlined `_sir_call_method(recv, name, args)`
+    implements the collection-method catalog by an **explicit type-switch +
+    method-name switch** (Array `*Seq` / Hash `*Map` / String / Numeric / Symbol),
+    **ported from the Python/TS `sir-runtime-oop` reference for behavioural
+    parity** (same method names, same semantics).  Implemented:
+    - **Array**: `length`/`size`/`count`, `first`, `last`, `empty?`, `include?`,
+      `index`, `push`/`append`, `<<`, `pop`, `shift`, `reverse`, `sort`, `join`,
+      `to_a`, plus block methods `each`, `map`/`collect`, `select`/`filter`,
+      `reject`, `reduce`/`inject`, `find`/`detect`, `any?`, `all?`, `none?`.
+    - **Hash**: `keys`, `values`, `has_key?`/`key?`/`include?`/`member?`,
+      `has_value?`/`value?`, `size`/`length`, `empty?`, plus block methods `each`/
+      `each_pair`, `map`, `select`/`filter`, `reject`.
+    - **String**: `length`/`size`, `upcase`, `downcase`, `reverse`, `strip`/
+      `lstrip`/`rstrip`, `empty?`, `include?`, `start_with?`, `end_with?`, `split`,
+      `chars`, `to_i`, `to_f`, `to_sym`.
+    - **Numeric**: `abs`, `to_i`, `to_f`, `even?`, `odd?`, `zero?`, `positive?`,
+      `negative?`, `succ`/`next`, `pred`, plus the block method `times`.
+    - **Symbol**: `to_s`, `to_sym`, `length`/`size`, `upcase`, `downcase`,
+      `empty?`.
+    - **Universal** (every receiver): `nil?`, `==`, `!=`, `class`, `to_s`,
+      `itself`.
+    - **`Symbol#to_proc`** (`_sir_sym_to_proc`): `&:sym` becomes a `*Closure`
+      that re-enters dispatch on its first argument, so `map(&:to_s)` behaves
+      exactly like `map { |x| x.to_s }`.
+  - **Security (the C3 RCE lesson)**: dispatch is ONLY through the explicit
+    catalog switches — there is **no reflection** on the raw method name, no
+    dynamic Go method/field lookup.  The catalog switch IS the allowlist.  An
+    unknown method on a known receiver falls through to `_sir_method_unknown`,
+    which panics with a controlled `undefined method '<name>' for <Class>`
+    message — a surfaced runtime error, never arbitrary behaviour.
+  - **Capability gate** (`lib.rs`): a **pure** collection-method module (a
+    `__method__` dispatch with NO class features) is now proven accepted.  This
+    needs no gate change and no new `Feature` variant (the deferred C1
+    `MethodDispatch` is not required): the validator observes no feature for
+    `__method__`, so such a module carries only its receiver/argument features
+    (`Sequences`/`Strings`/`Closures`/`Symbols`/`Maps`/`DynamicTyping`), all
+    already accepted — while class-bearing modules stay rejected
+    (`Feature::Classes` is not accepted).  The runtime catalog is the real gate.
+  - Adds `sort` + `strings` to the emitted import block (the runtime catalog
+    always references both).
+  - Tests: emitted-shape unit tests (dispatch call shape, block/`&:sym` shapes,
+    class-predicate name-string, catalog present in the preamble); acceptance
+    tests (pure dispatch accepted, classes still rejected); and an
+    **execution-proof** integration test (`compile_and_run_coll_methods.rs`) that
+    runs `.map`/`.select`/`.length`/`.reduce`/`.join`/`.sort`/`.reverse`/
+    `.upcase`/`.split`/`.even?`/`.abs`/`.keys`/`&:to_s` through real `go run` and
+    diffs stdout against the Python/TS reference values, plus a proof that an
+    unknown method (`[1].bogus_xyz`) exits non-zero with the controlled
+    "undefined method" message.
+
 ## Unreleased
 
 ### Fixed

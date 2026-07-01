@@ -61,7 +61,7 @@ pub fn emit_module(m: &Module) -> String {
     let mut out = String::new();
     emit_banner(&mut out, m);
     out.push_str("package main\n\n");
-    out.push_str("import (\n\t\"fmt\"\n\t\"math\"\n\t\"strconv\"\n)\n\n");
+    out.push_str("import (\n\t\"fmt\"\n\t\"math\"\n\t\"sort\"\n\t\"strconv\"\n\t\"strings\"\n)\n\n");
     // Suppress unused-import linter complaints if a tiny module
     // happens not to reference them (the runtime always does, so
     // we're fine — but blank-import the packages defensively in
@@ -698,7 +698,95 @@ fn emit_direct_call(out: &mut String, fn_name: &str, args: &[Expr], indent: usiz
     out.push(')');
 }
 
+/// Emit a `&:sym` / `&proc` block-pass argument that survived to a dispatched
+/// call (`recv.map(&:to_s)` / `recv.each(&p)`).
+///
+/// The Ruby→SIR frontend wraps `&expr` as `BuiltinCall("block_pass", [inner])`.
+/// At an *ordinary* `DirectCall` the frontend already unwraps it, but on a
+/// `__method__` dispatch envelope the envelope survives, so the backend must
+/// handle it here (mirroring the TypeScript backend's `try_emit_block_pass`):
+///
+///   * `&:sym`  → `inner` is a `SymLit`; a Symbol has no `Fn`, so it cannot be
+///     applied as a block directly.  We convert it with `_sir_sym_to_proc(sym)`,
+///     the Go analogue of Ruby's `Symbol#to_proc`: the resulting `*Closure`
+///     calls the named method on its first argument (so `map(&:to_s)` behaves
+///     exactly like `map { |x| x.to_s }`).
+///   * `&proc` → `inner` is already a closure `Value`; emit it verbatim (the
+///     proc *is* the block).
+///
+/// Returns `true` when it consumed a `block_pass` envelope (so the caller does
+/// not also `emit_expr` it).  A malformed envelope (not exactly one operand) is
+/// left for the generic path.
+fn try_emit_block_pass(out: &mut String, a: &Expr, indent: usize) -> bool {
+    if let Expr::BuiltinCall { name, args, .. } = a {
+        if name == "block_pass" && args.len() == 1 {
+            if let Expr::SymLit { .. } = &args[0] {
+                out.push_str("_sir_sym_to_proc(");
+                emit_expr(out, &args[0], indent);
+                out.push(')');
+            } else {
+                emit_expr(out, &args[0], indent);
+            }
+            return true;
+        }
+    }
+    false
+}
+
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {
+    // ── Collection-method dispatch (C5) ────────────────────────────
+    //
+    // The Ruby→SIR frontend lowers every `recv.meth(args…)` /
+    // `recv.meth { … }` to `BuiltinCall("__method__", [recv,
+    // StrLit("meth"), …args])` — the receiver at `args[0]`, the method
+    // NAME always a `StrLit` at `args[1]`, call args following, and an
+    // optional trailing block surviving as a `MakeClosure` (or a
+    // `block_pass` envelope for `&:sym` / `&proc`).
+    //
+    // We route this to the runtime's `_sir_call_method(recv, "name",
+    // []Value{…})`, an EXPLICIT type-switch + method-name-switch catalog
+    // (Array/Hash/String/Numeric/Symbol) ported from the Python/TS
+    // reference runtime for behavioural parity.  Dispatch is *never*
+    // reflective on the raw name — the catalog switch IS the allowlist
+    // (the C3 RCE lesson), so an unknown method name fails cleanly rather
+    // than resolving to arbitrary behaviour.
+    //
+    // A trailing block (`MakeClosure` → a `*Closure` `Value`, or a
+    // `block_pass` `&:sym` → a `_sir_sym_to_proc` `Value`) rides in as the
+    // last element of the `[]Value` args; the runtime's block-taking
+    // methods detect a trailing `*Closure` and apply it via `_sir_apply`.
+    if name == "__method__" && args.len() >= 2 {
+        if let Expr::StrLit { value: meth, .. } = &args[1] {
+            out.push_str("_sir_call_method(");
+            emit_expr(out, &args[0], indent);
+            let _ = write!(out, ", {}, []Value{{", quote_go_string(meth));
+            // Class-predicate methods (`is_a?`/`kind_of?`/`instance_of?`)
+            // take a class OPERAND that arrives `Const`-scoped (e.g.
+            // `Integer`); there is no runtime binding for a built-in class
+            // name, so pass it as its name STRING — matching how the
+            // Python/TS backends feed the predicate.
+            let is_class_pred =
+                matches!(meth.as_str(), "is_a?" | "kind_of?" | "instance_of?");
+            for (i, a) in args[2..].iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                match a {
+                    Expr::VarRef { name: cn, scope: Scope::Const, .. }
+                        if is_class_pred && i == 0 =>
+                    {
+                        let _ = write!(out, "Value({})", quote_go_string(cn));
+                    }
+                    // A `&:sym` / `&proc` block argument on the dispatched
+                    // call survives as a `block_pass` envelope.
+                    _ if try_emit_block_pass(out, a, indent) => {}
+                    _ => emit_expr(out, a, indent),
+                }
+            }
+            out.push_str("})");
+            return;
+        }
+    }
     // All variadic-ish builtins in the Go runtime take []Value and
     // return Value.  Same calling shape for fixed-arity ones to keep
     // the emitter simple.
@@ -1877,5 +1965,102 @@ mod tests {
         assert!(out.contains("func _sir_user_main() Value"));
         assert!(out.contains("func main()"));
         assert!(out.contains("_sir_user_main()"));
+    }
+
+    // ── C5: collection-method dispatch emission ────────────────────
+
+    fn method_call(recv: Expr, name: &str, extra: Vec<Expr>) -> Expr {
+        let mut args = vec![recv, Expr::StrLit { value: name.into(), span: s() }];
+        args.extend(extra);
+        Expr::BuiltinCall { name: "__method__".into(), args, effects: EffectSet::PURE, span: s() }
+    }
+
+    #[test]
+    fn method_dispatch_emits_call_method() {
+        // `[1,2,3].length` → `_sir_call_method(<seq>, "length", []Value{})`.
+        let recv = Expr::SeqLit {
+            items: vec![
+                Expr::IntLit { value: 1, span: s() },
+                Expr::IntLit { value: 2, span: s() },
+                Expr::IntLit { value: 3, span: s() },
+            ],
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_expr(&mut out, &method_call(recv, "length", vec![]), 0);
+        assert!(
+            out.starts_with("_sir_call_method(_sir_seq_lit("),
+            "unexpected emit: {out}"
+        );
+        assert!(out.contains(r#", "length", []Value{}"#), "unexpected emit: {out}");
+    }
+
+    #[test]
+    fn method_dispatch_with_arg_emits_arg_in_slice() {
+        // `xs.push(4)` → the arg rides inside the []Value slice.
+        let recv = Expr::VarRef { name: "xs".into(), scope: Scope::Local, span: s() };
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &method_call(recv, "push", vec![Expr::IntLit { value: 4, span: s() }]),
+            0,
+        );
+        assert_eq!(out, r#"_sir_call_method(xs, "push", []Value{Value(int64(4))})"#);
+    }
+
+    #[test]
+    fn method_dispatch_block_rides_as_trailing_closure_arg() {
+        // `xs.map { |x| x }` — the block is a MakeClosure; it must land as
+        // the trailing element of the []Value args so the runtime peels it.
+        FN_ARITY.with(|t| t.borrow_mut().insert("__lam".into(), 1));
+        let recv = Expr::VarRef { name: "xs".into(), scope: Scope::Local, span: s() };
+        let block = Expr::MakeClosure { fn_name: "__lam".into(), captures: vec![], span: s() };
+        let mut out = String::new();
+        emit_expr(&mut out, &method_call(recv, "map", vec![block]), 0);
+        FN_ARITY.with(|t| t.borrow_mut().clear());
+        assert!(out.starts_with(r#"_sir_call_method(xs, "map", []Value{_sir_make_closure("#));
+    }
+
+    #[test]
+    fn method_dispatch_sym_block_pass_emits_sym_to_proc() {
+        // `xs.map(&:to_s)` — block_pass(SymLit) survives to the dispatch and
+        // must convert via `_sir_sym_to_proc`.
+        let recv = Expr::VarRef { name: "xs".into(), scope: Scope::Local, span: s() };
+        let bp = Expr::BuiltinCall {
+            name: "block_pass".into(),
+            args: vec![Expr::SymLit { name: "to_s".into(), span: s() }],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_expr(&mut out, &method_call(recv, "map", vec![bp]), 0);
+        assert_eq!(
+            out,
+            r#"_sir_call_method(xs, "map", []Value{_sir_sym_to_proc(_sir_intern("to_s"))})"#
+        );
+    }
+
+    #[test]
+    fn method_dispatch_class_predicate_passes_const_as_name_string() {
+        // `x.is_a?(Integer)` — the Const class operand becomes a name string.
+        let recv = Expr::VarRef { name: "x".into(), scope: Scope::Local, span: s() };
+        let cls = Expr::VarRef { name: "Integer".into(), scope: Scope::Const, span: s() };
+        let mut out = String::new();
+        emit_expr(&mut out, &method_call(recv, "is_a?", vec![cls]), 0);
+        assert_eq!(out, r#"_sir_call_method(x, "is_a?", []Value{Value("Integer")})"#);
+    }
+
+    #[test]
+    fn runtime_preamble_carries_catalog() {
+        // The dispatch helper + catalog entry points must be present in the
+        // inlined runtime of every emitted program.
+        assert!(RUNTIME.contains("func _sir_call_method(recv Value, name string, args []Value) Value"));
+        assert!(RUNTIME.contains("func _sir_sym_to_proc(sym Value) Value"));
+        assert!(RUNTIME.contains("func _sir_array_method("));
+        assert!(RUNTIME.contains("func _sir_hash_method("));
+        assert!(RUNTIME.contains("func _sir_string_method("));
+        assert!(RUNTIME.contains("func _sir_numeric_method("));
+        assert!(RUNTIME.contains("func _sir_symbol_method("));
+        assert!(RUNTIME.contains("undefined method"));
     }
 }
