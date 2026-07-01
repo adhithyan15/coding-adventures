@@ -916,6 +916,11 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
         MathExpr::Number(n) => number_to_lit(n, source),
         MathExpr::Symbol(name) => Ok(ExprAst::Ref(name.clone())),
         MathExpr::Group(inner) => latex_math_to_expr_ast(inner, source),
+        // A delimited group (`(x)`, `[x]`, `|x|`) unwraps the same as a plain group for arithmetic
+        // lowering — the fence delimiters are presentation, not an operation. (latex now lowers a
+        // single-body fence to `Fenced` carrying its delimiters instead of the delimiter-less
+        // `Group`; this arm keeps the arithmetic meaning identical.)
+        MathExpr::Fenced { body, .. } => latex_math_to_expr_ast(body, source),
         MathExpr::Unary(UnaryOp::Pos, inner) => latex_math_to_expr_ast(inner, source),
         MathExpr::Unary(UnaryOp::Neg, inner) => Ok(ExprAst::Bin(
             ArithOp::Sub,
