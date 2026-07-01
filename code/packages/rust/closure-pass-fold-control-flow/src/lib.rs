@@ -66,6 +66,7 @@ use coding_adventures_javascript_ast::{
     DoWhileStatement, VariableDeclarator, WhileStatement,
 };
 use serde_json::json;
+use std::collections::HashMap;
 
 /// `Pass::depends_on` value. CLOC06 canonical order pins
 /// constant-fold first so we see folded literals as branch
@@ -152,14 +153,97 @@ impl FoldState<'_> {
                 .into_iter()
                 .collect(),
             };
-            // Keep the cv handle threaded for future invariants.
-            let _ = self.cv;
             self.contributions.push(contribution);
         }
     }
 
+    /// Record a fold that *eliminates* one or more branches — and
+    /// tombstone each discarded node's own CV entry.
+    ///
+    /// [`record_fold`](Self::record_fold) logs a summary
+    /// `Contribution` against the container (the `if` / `while` /
+    /// ternary being folded). But when the pass folds
+    /// `if (true) A else B` to `A`, the whole `B` branch *disappears* —
+    /// and the container is not what vanished, `B` is. This method
+    /// additionally marks each discarded node's CV entry with a
+    /// `DeletionRecord` via [`CVLog::delete`], so a
+    /// `--correlation_vector` consumer that later asks "what happened to
+    /// the code that used to be here?" gets a definite answer —
+    /// *fold-control-flow eliminated it, because `<reason>`* — instead
+    /// of the branch silently vanishing from the provenance graph. This
+    /// mirrors the deletion provenance the DCE pass records for the
+    /// statements *it* drops.
+    ///
+    /// `delete` is a no-op when the log is disabled (production
+    /// default), so this costs nothing off the `--correlation_vector`
+    /// path. Rewrites that *preserve* both branches (`if→ternary`,
+    /// De Morgan swaps, `if→&&`) must NOT call this — nothing was
+    /// discarded there — and keep using plain `record_fold`.
+    fn record_fold_deleting(
+        &mut self,
+        parent: &Option<String>,
+        discarded: &[Option<String>],
+        tag: &str,
+        before: &str,
+        after: &str,
+    ) {
+        for cv_id in discarded.iter().flatten() {
+            let mut meta: HashMap<String, serde_json::Value> = HashMap::new();
+            if let Some(parent_cv) = parent {
+                meta.insert("container_cv".to_string(), json!(parent_cv));
+            }
+            self.cv.delete(cv_id, "fold-control-flow", tag, meta);
+        }
+        // Keep the container-level summary contribution so existing
+        // history/stats/tests that look for this tag still observe the
+        // fold at the enclosing node.
+        self.record_fold(parent, tag, before, after);
+    }
+
     fn visit(&mut self) {
         self.nodes_touched += 1;
+    }
+}
+
+/// Fetch a statement's own correlation-vector id, if it carries one.
+///
+/// The branch-elimination sites need the *discarded* branch's CV id —
+/// not just the enclosing `if` / `while`'s — so they can tombstone the
+/// exact code that vanished (see [`FoldState::record_fold_deleting`]).
+/// Every AST node struct carries an `Option<CvId>`; this unwraps the
+/// `Statement` → `TaggedStatement` nesting to reach it. A
+/// [`Statement::Declaration`] returns `None`: a declaration is never the
+/// discarded arm of a folded conditional in the sites wired here.
+fn statement_cv(stmt: &Statement) -> Option<String> {
+    match stmt {
+        Statement::Tagged(t) => tagged_statement_cv(t),
+        Statement::Declaration(_) => None,
+    }
+}
+
+/// The `TaggedStatement` arm of [`statement_cv`]. Exhaustive on purpose
+/// (no `_` wildcard): a new statement kind added upstream fails to
+/// compile here rather than silently losing provenance.
+fn tagged_statement_cv(t: &TaggedStatement) -> Option<String> {
+    use TaggedStatement::*;
+    match t {
+        ExpressionStatement(s) => s.cv.clone(),
+        BlockStatement(s) => s.cv.clone(),
+        IfStatement(s) => s.cv.clone(),
+        WhileStatement(s) => s.cv.clone(),
+        DoWhileStatement(s) => s.cv.clone(),
+        ForStatement(s) => s.cv.clone(),
+        ForInStatement(s) => s.cv.clone(),
+        ForOfStatement(s) => s.cv.clone(),
+        ReturnStatement(s) => s.cv.clone(),
+        BreakStatement(s) => s.cv.clone(),
+        ContinueStatement(s) => s.cv.clone(),
+        LabeledStatement(s) => s.cv.clone(),
+        ThrowStatement(s) => s.cv.clone(),
+        SwitchStatement(s) => s.cv.clone(),
+        TryStatement(s) => s.cv.clone(),
+        EmptyStatement(s) => s.cv.clone(),
+        DebuggerStatement(s) => s.cv.clone(),
     }
 }
 
@@ -594,8 +678,12 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
 
     match literal_truthy(&test) {
         Some(true) => {
-            st.record_fold(
+            // The `alternate` branch is statically unreachable and is
+            // discarded — tombstone it so its span stays auditable.
+            let discarded = [alternate.as_ref().and_then(statement_cv)];
+            st.record_fold_deleting(
                 &s.cv,
+                &discarded,
                 "folded-branch",
                 "if (<truthy literal>) { … } else { … }",
                 "{ consequent }",
@@ -603,8 +691,12 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
             consequent
         }
         Some(false) => {
-            st.record_fold(
+            // The `consequent` branch is statically unreachable and is
+            // discarded — tombstone it so its span stays auditable.
+            let discarded = [statement_cv(&consequent)];
+            st.record_fold_deleting(
                 &s.cv,
+                &discarded,
                 "folded-branch",
                 "if (<falsy literal>) { … } else { … }",
                 "{ alternate }",
@@ -863,8 +955,12 @@ fn fold_while_statement(s: &WhileStatement, st: &mut FoldState) -> Statement {
     let body = fold_statement(&s.body, st);
     match literal_truthy(&test) {
         Some(false) => {
-            st.record_fold(
+            // A `while (false)` loop never runs — its body is discarded.
+            // Tombstone the body so its span stays auditable.
+            let discarded = [statement_cv(&body)];
+            st.record_fold_deleting(
                 &s.cv,
+                &discarded,
                 "folded-branch",
                 "while (<falsy literal>) { … }",
                 ";",
@@ -1446,6 +1542,142 @@ mod tests {
             panic!("expected Statement; got {:?}", &prog.body[0]);
         };
         s
+    }
+
+    // ---------------- CV deletion provenance (#89) -------------
+    //
+    // Mirror the production pipeline: the lexer/parser `create` a CV
+    // entry per node and stamp its id onto the AST. So here we `create`
+    // the discarded branch's entry FIRST, stamp its id onto the node,
+    // then run the pass — otherwise `cv.delete` has no entry to
+    // tombstone and the assertion would be vacuous. Property under test:
+    // when fold-control-flow *eliminates* a branch, that branch's CV
+    // entry survives in the log with `DeletionRecord{source:
+    // "fold-control-flow", reason:"folded-branch"}`, so "what happened
+    // to this code?" stays answerable.
+
+    /// Like [`run_pass`] but threads the caller's CV log through so its
+    /// `DeletionRecord`s can be inspected after the pass returns.
+    fn run_capturing_cv(prog: &Program, cv: &mut CVLog) -> Program {
+        let sidecar = Sidecar::new();
+        let ctx = PassContext {
+            program: prog,
+            sidecar: &sidecar,
+            cv,
+        };
+        FoldControlFlowPass::new()
+            .run(ctx)
+            .expect("pass should succeed")
+            .program
+    }
+
+    #[test]
+    fn if_true_tombstones_discarded_alternate() {
+        // `if (true) kept; else dead;` → `kept;` — the `dead` alternate
+        // is eliminated and must be tombstoned.
+        let mut log = CVLog::new(true);
+        let alt_id = log.create(None);
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: Some("if.1".to_string()),
+            test: boolean(true, None),
+            consequent: Box::new(expr_stmt(ident("kept"), None)),
+            alternate: Some(Box::new(expr_stmt(ident("dead"), Some(alt_id.as_str())))),
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+
+        let _out = run_capturing_cv(&prog, &mut log);
+
+        let del = log
+            .get(&alt_id)
+            .unwrap()
+            .deleted
+            .as_ref()
+            .expect("the discarded `else` branch must be tombstoned");
+        assert_eq!(del.source, "fold-control-flow");
+        assert_eq!(del.reason, "folded-branch");
+        assert_eq!(
+            del.meta.get("container_cv").and_then(|v| v.as_str()),
+            Some("if.1"),
+            "tombstone should record the enclosing `if`'s cv"
+        );
+    }
+
+    #[test]
+    fn if_false_tombstones_discarded_consequent() {
+        // `if (false) dead; else kept;` → `kept;` — the `dead`
+        // consequent is eliminated and must be tombstoned.
+        let mut log = CVLog::new(true);
+        let cons_id = log.create(None);
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: Some("if.2".to_string()),
+            test: boolean(false, None),
+            consequent: Box::new(expr_stmt(ident("dead"), Some(cons_id.as_str()))),
+            alternate: Some(Box::new(expr_stmt(ident("kept"), None))),
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+
+        let _out = run_capturing_cv(&prog, &mut log);
+
+        let del = log
+            .get(&cons_id)
+            .unwrap()
+            .deleted
+            .as_ref()
+            .expect("the discarded `then` branch must be tombstoned");
+        assert_eq!(del.reason, "folded-branch");
+    }
+
+    #[test]
+    fn while_false_tombstones_discarded_body() {
+        // `while (false) body;` → `;` — the loop never runs, so its body
+        // is eliminated and must be tombstoned.
+        let mut log = CVLog::new(true);
+        let body_id = log.create(None);
+        let w = Statement::while_statement(WhileStatement {
+            cv: Some("w.1".to_string()),
+            test: boolean(false, None),
+            body: Box::new(expr_stmt(ident("body"), Some(body_id.as_str()))),
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(w)]);
+
+        let _out = run_capturing_cv(&prog, &mut log);
+
+        let del = log
+            .get(&body_id)
+            .unwrap()
+            .deleted
+            .as_ref()
+            .expect("the eliminated `while (false)` body must be tombstoned");
+        assert_eq!(del.reason, "folded-branch");
+    }
+
+    #[test]
+    fn ternary_rewrite_does_not_tombstone_preserved_arms() {
+        // `if (x) foo(); else bar();` → `x ? foo() : bar();` — both arms
+        // are PRESERVED inside the ternary (a rewrite, not a deletion),
+        // so neither is tombstoned. This pins `record_fold_deleting` to
+        // genuine eliminations and off the rewrite paths.
+        let mut log = CVLog::new(true);
+        let c_id = log.create(None);
+        let a_id = log.create(None);
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: Some("if.3".to_string()),
+            test: ident("x"), // non-literal → the if→ternary rewrite path
+            consequent: Box::new(expr_stmt(ident("foo"), Some(c_id.as_str()))),
+            alternate: Some(Box::new(expr_stmt(ident("bar"), Some(a_id.as_str())))),
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+
+        let _out = run_capturing_cv(&prog, &mut log);
+
+        assert!(
+            log.get(&c_id).unwrap().deleted.is_none(),
+            "the consequent is preserved in the ternary, not discarded"
+        );
+        assert!(
+            log.get(&a_id).unwrap().deleted.is_none(),
+            "the alternate is preserved in the ternary, not discarded"
+        );
     }
 
     // ---------------- metadata + identity ---------------------
