@@ -2,6 +2,34 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.22.0] - 2026-06-30
+
+### Added — CV provenance for inlining (#89)
+
+The pass now records an `inlined` correlation-vector contribution for every
+function it dissolves, carrying `{name, sites}` — the original source name of
+the helper and how many call sites its body was substituted into. Inlining
+otherwise erases all trace of a helper: its declaration becomes unreferenced
+(later removed) and its body is copied into each caller, so the minified output
+has no record that a `helper(x)` call ever existed. These contributions let a
+`--correlation_vector` consumer map inlined code back to the helper it came
+from.
+
+- All three inlining phases report: the expression inliner (`sites` = the call
+  count it rewrote) and both statement-helper inliners (single-use, so
+  `sites: 1`).
+- Records are emitted in program (source) order, one per inlined function, so
+  the contribution list is deterministic run to run.
+- Attached at the program root — a coarse name→site-count *table*. Per-output-
+  span tagging (each substituted body's own CV id) needs the log threaded
+  through the clone-and-substitute recursion and is a documented follow-up,
+  mirroring the rename passes' coarse-table-first approach.
+- Emitted JS is byte-identical: contributions are pure metadata. Verified by
+  the full closurec end-to-end suite (685 tests) plus the pass-pipeline suite.
+
+Three new unit tests cover a single-use inline (`sites: 1`), a multi-use inline
+(`sites: 2`), and the no-inline case (empty table).
+
 ## [0.21.0] - 2026-06-30
 
 ### Added — CLOC12 upstream test port (`InlineFunctionsTest`)

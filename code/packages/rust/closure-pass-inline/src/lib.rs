@@ -123,6 +123,8 @@ use std::collections::{HashMap, HashSet};
 use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
 };
+use coding_adventures_correlation_vector::Contribution;
+use serde_json::json;
 use coding_adventures_javascript_ast::statement::{ReturnStatement, TaggedStatement};
 use coding_adventures_javascript_ast::{
     AssignmentExpression, AssignmentOperator, AssignmentTarget, BindingTarget, BlockStatement,
@@ -196,11 +198,44 @@ impl Pass for InlinePass {
         // untouched (`changed = false`, `nodes_touched = 1`).
         let mut program = ctx.program.clone();
         let mut nodes_touched: u32 = 1; // the program root
-        let changed = inline_program(&mut program, &mut nodes_touched);
+        let mut inlined: Vec<InlineRecord> = Vec::new();
+        let changed = inline_program(&mut program, &mut nodes_touched, &mut inlined);
+
+        // CV provenance (#89): record every function we inlined as an
+        // `inlined` contribution carrying `{name, sites}` — the original
+        // source name of the helper and how many call sites its body was
+        // substituted into. Inlining *dissolves* a function: its
+        // declaration becomes unreferenced (later removed) and its body is
+        // copied into each caller, so without this record the minified
+        // output has no trace that a `helper(x)` call ever existed. The
+        // pipeline attaches these to the program-root CV entry, so a
+        // `--correlation_vector` consumer can map inlined code back to the
+        // helper it came from. Records come out in program (source) order,
+        // one per inlined function, so the emitted list is deterministic
+        // run to run.
+        //
+        // This is the inline *table* (name → site-count), attached at the
+        // program root. Tagging each substituted body's OWN CV id
+        // (per-output-span provenance) needs the log threaded through the
+        // clone-and-substitute recursion and is a documented follow-up,
+        // mirroring the rename passes' coarse-table-first approach.
+        let contributions: Vec<Contribution> = inlined
+            .into_iter()
+            .map(|rec| Contribution {
+                source: "inline".to_string(),
+                tag: "inlined".to_string(),
+                meta: [
+                    ("name".to_string(), json!(rec.name)),
+                    ("sites".to_string(), json!(rec.sites)),
+                ]
+                .into_iter()
+                .collect(),
+            })
+            .collect();
 
         Ok(PassOutput {
             program,
-            contributions: Vec::new(),
+            contributions,
             changed,
             diagnostics: Vec::new(),
             stats: PassStats { nodes_touched },
@@ -221,10 +256,25 @@ struct InlineCandidate {
     return_expr: Expression,
 }
 
+/// One inlining *event* for CV provenance (#89): the original source name of
+/// a function whose body was substituted into its call site(s), and how many
+/// sites were rewritten. `run` turns each record into an `inlined`
+/// contribution `{name, sites}`. The expression inliner (Phase 3) may rewrite
+/// several sites at once; the statement-helper inliners (Phases 4 and 5) each
+/// fire on a single-use helper, so their `sites` is always 1.
+struct InlineRecord {
+    name: String,
+    sites: usize,
+}
+
 /// Walk the whole program and inline every qualifying top-level
 /// function (single-use always; multi-use under the size budget).
 /// Returns whether anything changed.
-fn inline_program(program: &mut Program, nodes_touched: &mut u32) -> bool {
+fn inline_program(
+    program: &mut Program,
+    nodes_touched: &mut u32,
+    inlined: &mut Vec<InlineRecord>,
+) -> bool {
     // Phase 1 — count how many times each *name* is declared as a
     // binding anywhere in the program (function names, parameters,
     // and `var`/`let`/`const` targets). A candidate's name must be
@@ -287,6 +337,13 @@ fn inline_program(program: &mut Program, nodes_touched: &mut u32) -> bool {
         }
         if inline_all_calls(program, cand) {
             changed = true;
+            // CV: the body was substituted into all `tally.uses` call sites
+            // (gate above guarantees `uses == inlinable`), after which the
+            // declaration is unreferenced.
+            inlined.push(InlineRecord {
+                name: cand.name.clone(),
+                sites: tally.uses,
+            });
         }
     }
 
@@ -300,7 +357,7 @@ fn inline_program(program: &mut Program, nodes_touched: &mut u32) -> bool {
     // a multi-statement void body), so neither perturbs the other's
     // candidate set, and the declaration-count map stays valid (inlining
     // removes call sites, never declarations).
-    changed |= inline_void_statement_helpers(program, &decl_counts, nodes_touched);
+    changed |= inline_void_statement_helpers(program, &decl_counts, nodes_touched, inlined);
 
     // Phase 5 — CLOC15 PR-3/PR-5: inline a single-use multi-statement helper
     // whose RESULT IS USED, by hoisting its body before the enclosing
@@ -316,7 +373,7 @@ fn inline_program(program: &mut Program, nodes_touched: &mut u32) -> bool {
     // evaluation. See [`inline_valued_statement_helpers`]. Runs after Phase 4
     // because the void pass consumes the discarded-statement uses first, so
     // this pass only ever sees the value-position use.
-    changed |= inline_valued_statement_helpers(program, &decl_counts, nodes_touched);
+    changed |= inline_valued_statement_helpers(program, &decl_counts, nodes_touched, inlined);
 
     changed
 }
@@ -1414,6 +1471,7 @@ fn inline_void_statement_helpers(
     program: &mut Program,
     decl_counts: &HashMap<String, usize>,
     nodes_touched: &mut u32,
+    inlined: &mut Vec<InlineRecord>,
 ) -> bool {
     // Collect candidates from the top-level function declarations (top
     // level only, mirroring the expression inliner: no enclosing scope to
@@ -1458,6 +1516,12 @@ fn inline_void_statement_helpers(
         }
         if splice_void_call_program(program, cand, &mut avoid, nodes_touched) {
             changed = true;
+            // CV: exactly one call site (the `uses == 1 && arity_calls == 1`
+            // gate above), spliced in as statements.
+            inlined.push(InlineRecord {
+                name: cand.name.clone(),
+                sites: 1,
+            });
         }
     }
     changed
@@ -2375,6 +2439,7 @@ fn inline_valued_statement_helpers(
     program: &mut Program,
     decl_counts: &HashMap<String, usize>,
     nodes_touched: &mut u32,
+    inlined: &mut Vec<InlineRecord>,
 ) -> bool {
     // Candidates share PR-1/PR-2's body shape (straight-line + optional tail
     // return), but here the tail `return E` MUST be present with an argument
@@ -2405,6 +2470,11 @@ fn inline_valued_statement_helpers(
         }
         if splice_valued_call_program(program, cand, &mut avoid, nodes_touched) {
             changed = true;
+            // CV: exactly one call site (gate above), value-captured.
+            inlined.push(InlineRecord {
+                name: cand.name.clone(),
+                sites: 1,
+            });
         }
     }
     changed
@@ -3328,7 +3398,7 @@ mod tests {
     use coding_adventures_closure_emitter::{emit, EmitOptions};
     use coding_adventures_closure_pass_constant_fold::ConstantFoldPass;
     use coding_adventures_closure_pass_pipeline::{PassContext, PassPipeline, PipelineOutput};
-    use coding_adventures_correlation_vector::CVLog;
+    use coding_adventures_correlation_vector::{CVLog, Contribution};
     use coding_adventures_javascript_ast::{Program, SourceType};
     use coding_adventures_javascript_parser::{bridge, parse_javascript_typed};
     use coding_adventures_javascript_tokens::EsVersion;
@@ -3365,6 +3435,66 @@ mod tests {
         emit(&out.program, &sidecar, &mut cv2, &opts)
             .expect("emit")
             .code
+    }
+
+    /// Parse `src`, bridge, run `InlinePass`, and return its CV
+    /// contributions — the `inlined` table (#89 provenance).
+    fn inline_contributions(src: &str) -> Vec<Contribution> {
+        let es = EsVersion::Es2025;
+        let node = parse_javascript_typed(src, es).expect("parse");
+        let prog = bridge::grammar_to_program(&node, es).expect("bridge");
+        let pass = InlinePass::new();
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(true);
+        pass.run(PassContext {
+            program: &prog,
+            sidecar: &sidecar,
+            cv: &mut cv,
+        })
+        .expect("inline")
+        .contributions
+    }
+
+    // ----- CV provenance (#89): `inlined` contributions -----
+
+    #[test]
+    fn single_use_expression_inline_records_one_site() {
+        // `id` is inlined at its lone call site; the record names it with
+        // `sites: 1`.
+        let contribs = inline_contributions("function id(x){return x;} id(7);");
+        assert_eq!(contribs.len(), 1, "one inlined function; got {contribs:?}");
+        let c = &contribs[0];
+        assert_eq!(c.source, "inline");
+        assert_eq!(c.tag, "inlined");
+        assert_eq!(c.meta.get("name").and_then(|v| v.as_str()), Some("id"));
+        assert_eq!(c.meta.get("sites").and_then(|v| v.as_u64()), Some(1));
+    }
+
+    #[test]
+    fn multi_use_expression_inline_records_site_count() {
+        // A tiny body used twice is inlined at BOTH sites under the size
+        // budget; `sites` reflects the count.
+        let contribs = inline_contributions("function d(x){return x+x;} d(1); d(2);");
+        assert_eq!(contribs.len(), 1, "one inlined function; got {contribs:?}");
+        assert_eq!(
+            contribs[0].meta.get("name").and_then(|v| v.as_str()),
+            Some("d")
+        );
+        assert_eq!(
+            contribs[0].meta.get("sites").and_then(|v| v.as_u64()),
+            Some(2)
+        );
+    }
+
+    #[test]
+    fn no_inline_emits_no_contributions() {
+        // `g(f)` passes `f` as a value — not an inlinable call — so nothing
+        // is inlined and the table is empty.
+        let contribs = inline_contributions("function f(x){return x;} g(f);");
+        assert!(
+            contribs.is_empty(),
+            "expected no contributions; got {contribs:?}"
+        );
     }
 
     // ----- metadata contract -----
