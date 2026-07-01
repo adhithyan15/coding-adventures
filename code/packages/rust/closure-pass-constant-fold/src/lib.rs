@@ -134,26 +134,62 @@ impl Pass for ConstantFoldPass {
     }
 
     fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
-        let mut state = FoldState {
-            cv: ctx.cv,
-            contributions: Vec::new(),
-            changed: false,
-            nodes_touched: 0,
-        };
-
-        let new_program = fold_program(ctx.program, &mut state);
+        // `fold_program` is a recursive bottom-up tree walk: `fold_binary`
+        // folds `b.left`/`b.right`, each of which may be another binary node,
+        // once per operator. A deeply left-nested operator chain — the shape
+        // the bridge builds for flat source like `1+1+…+1` (thousands of
+        // terms) — therefore recurses once per operator and, past a few
+        // thousand levels, overflows the caller's ordinary ~2 MiB stack. That
+        // is an *uncatchable* abort, and closurec runs this pass over
+        // *untrusted* JS, so it must not be crashable by pathological input.
+        //
+        // Run the recursive fold on a large-stack worker (mirrors the emitter,
+        // `coding-adventures-closure-emitter`). Output is *identical* to the
+        // caller-thread fold — deep chains still collapse fully (`1+1+…` → one
+        // number); only the stack size differs. `std::thread::scope` lets the
+        // worker borrow `ctx.program`/`ctx.cv` without `'static`.
+        let program = ctx.program;
+        let cv = ctx.cv;
+        let (new_program, contributions, changed, nodes_touched) = std::thread::scope(|scope| {
+            std::thread::Builder::new()
+                .stack_size(FOLD_STACK_SIZE)
+                .spawn_scoped(scope, move || {
+                    let mut state = FoldState {
+                        cv,
+                        contributions: Vec::new(),
+                        changed: false,
+                        nodes_touched: 0,
+                    };
+                    let new_program = fold_program(program, &mut state);
+                    (
+                        new_program,
+                        state.contributions,
+                        state.changed,
+                        state.nodes_touched,
+                    )
+                })
+                .expect("failed to spawn constant-fold worker thread")
+                .join()
+                .expect("constant-fold worker thread panicked")
+        });
 
         Ok(PassOutput {
             program: new_program,
-            contributions: state.contributions,
-            changed: state.changed,
+            contributions,
+            changed,
             diagnostics: Vec::new(),
-            stats: PassStats {
-                nodes_touched: state.nodes_touched,
-            },
+            stats: PassStats { nodes_touched },
         })
     }
 }
+
+/// Stack size for the constant-fold worker thread (see [`ConstantFoldPass::run`]).
+///
+/// 64 MiB holds well over 100 000 levels of the light per-operator fold frame —
+/// far beyond any real expression, and beyond the ~20 000-deep adversarial
+/// inputs that motivated this — while costing nothing for real code (pages
+/// fault in lazily). Matches the emitter's `EMIT_STACK_SIZE`.
+const FOLD_STACK_SIZE: usize = 64 * 1024 * 1024;
 
 // =====================================================================
 // FoldState — mutable bookkeeping threaded through the recursive walk
@@ -5026,6 +5062,53 @@ mod tests {
             panic!("expected a single expression statement, got {:?}", item);
         };
         &es.expression
+    }
+
+    // ------------------- deep-chain DoS regression -------------------
+
+    /// A very deep left-nested operator chain — the shape the bridge builds
+    /// for flat source like `1+1+…+1` (tens of thousands of terms) — must fold
+    /// without overflowing the native stack. The bottom-up `fold_binary` walk
+    /// recurses once per operator; on the caller's ordinary ~2 MiB stack this
+    /// used to overflow (an uncatchable abort). The large-stack worker
+    /// (`FOLD_STACK_SIZE`) absorbs the recursion and still folds the whole
+    /// chain to a single number.
+    #[test]
+    fn deeply_nested_binary_chain_folds_without_stack_overflow() {
+        const N: usize = 20_000;
+        let mut expr = num(1.0, None);
+        for _ in 0..N {
+            expr = Expression::BinaryExpression(BinaryExpression {
+                cv: None,
+                operator: BinaryOperator::Add,
+                left: Box::new(expr),
+                right: Box::new(num(1.0, None)),
+            });
+        }
+        let prog = program_with_expr(expr, false);
+        // `fold_program` runs its recursion on the 64 MiB `FOLD_STACK_SIZE`
+        // worker, so this depth folds fine even though the test runs on cargo's
+        // ~2 MiB thread. Without the worker, `fold_binary`'s per-operator
+        // recursion overflows here — so a regression re-breaks this test. The
+        // 20 000-deep *input* AST's own recursive `Drop` would ALSO overflow
+        // this small thread (orthogonal), so we run the pass by reference and
+        // `forget` the input; the shallow folded output drops fine.
+        let pass = ConstantFoldPass::new();
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(true);
+        let out = pass
+            .run(PassContext {
+                program: &prog,
+                sidecar: &sidecar,
+                cv: &mut cv,
+            })
+            .expect("pass should succeed");
+        assert!(out.changed, "the deep chain must fold");
+        match extract_expr(&out.program) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, (N + 1) as f64),
+            other => panic!("expected a single folded number, got {other:?}"),
+        }
+        std::mem::forget(prog);
     }
 
     // ------------------- metadata + identity tests -------------------

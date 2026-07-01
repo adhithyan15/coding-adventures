@@ -138,26 +138,61 @@ impl std::error::Error for EmitError {}
 /// `_sidecar` and the typing on `cv` (mutable so the future
 /// source-map encoder can consult it) are kept in the signature
 /// for forward-compat with the source-map v2 work.
+/// Stack size for the emitter worker thread (see [`emit`]).
+///
+/// The emitter is a recursive-descent tree walk: `emit_expression_inner`
+/// → `emit_binary`/`emit_logical` → `emit_expression_inner` on the left
+/// operand, once per operator. A deeply left-nested operator chain — the
+/// shape the bridge builds for flat source like `1+1+…+1` (thousands of
+/// terms) — therefore recurses once per operator. Past a few thousand
+/// levels this overflows the caller's ordinary ~2 MiB stack, which is an
+/// **uncatchable** `SIGSEGV`/abort: it kills the whole process, so a
+/// `Result`-returning API cannot report it. closurec feeds *untrusted* JS
+/// here, so it must not be crashable by pathological input.
+///
+/// 64 MiB holds well over 100 000 levels of this light per-operator frame —
+/// far beyond any hand-written expression, and beyond the ~20 000-deep
+/// adversarial inputs that motivated this — while costing nothing for real
+/// code (the thread reserves address space lazily; only touched pages fault
+/// in). Emission is otherwise **byte-identical** to running on the caller's
+/// stack; only the stack size differs.
+const EMIT_STACK_SIZE: usize = 64 * 1024 * 1024;
+
 pub fn emit(
     program: &Program,
     _sidecar: &Sidecar,
     cv: &mut CVLog,
     opts: &EmitOptions,
 ) -> Result<EmitOutput, EmitError> {
-    let mut emitter = Emitter::new(opts);
-    emitter.emit_program(program);
+    // Run the recursive emission on a large-stack worker so deep (but valid)
+    // ASTs emit without overflowing the native stack. `std::thread::scope`
+    // lets the worker borrow `program`/`opts` without `'static`; we hand back
+    // the owned `out` string and source-map builder and finish the (shallow)
+    // source-map serialisation on the caller thread, where `cv` lives.
+    let (out, source_map_builder) = std::thread::scope(|scope| {
+        std::thread::Builder::new()
+            .stack_size(EMIT_STACK_SIZE)
+            .spawn_scoped(scope, || {
+                let mut emitter = Emitter::new(opts);
+                emitter.emit_program(program);
+                (emitter.out, emitter.source_map)
+            })
+            .expect("failed to spawn emitter worker thread")
+            .join()
+            .expect("emitter worker thread panicked")
+    });
 
     let source_map = if opts.source_map {
         // Build the source map. Even when no mappings were
         // accumulated (untraced input), this produces a valid
         // v3 blob with empty mappings.
-        Some(emitter.source_map.build(cv).to_json())
+        Some(source_map_builder.build(cv).to_json())
     } else {
         None
     };
 
     Ok(EmitOutput {
-        code: emitter.out,
+        code: out,
         source_map,
         contributions: Vec::new(),
     })
@@ -3133,6 +3168,47 @@ mod tests {
 
     fn emit_expr(e: Expression) -> String {
         emit_default(program().with_body(vec![stmt(e)])).code
+    }
+
+    /// A very deep left-nested operator chain — the shape the bridge builds for
+    /// flat source like `1+1+…+1` (tens of thousands of terms) — must emit
+    /// without overflowing the native stack. `emit_binary` recurses on `b.left`
+    /// once per operator; on the caller's ordinary ~2 MiB stack this used to
+    /// overflow (an uncatchable abort). Emission now runs on a large-stack
+    /// worker (`EMIT_STACK_SIZE`), so arbitrarily deep valid ASTs emit fine —
+    /// output is byte-identical to shallow emission, just with headroom.
+    #[test]
+    fn deeply_nested_binary_chain_emits_without_stack_overflow() {
+        const N: usize = 20_000;
+        let mut e = num(1.0);
+        for _ in 0..N {
+            e = Expression::BinaryExpression(BinaryExpression {
+                cv: None,
+                operator: BinaryOperator::Add,
+                left: Box::new(e),
+                right: Box::new(num(1.0)),
+            });
+        }
+        let prog = program().with_body(vec![stmt(e)]);
+        // `emit` runs its recursion on the 64 MiB `EMIT_STACK_SIZE` worker, so
+        // this depth emits fine even though the test itself runs on cargo's
+        // ~2 MiB thread. Two caveats make this a *precise* regression test:
+        //   • Without the worker, `emit_binary`'s per-operator recursion
+        //     overflows here — so a regression re-breaks this test.
+        //   • The 20 000-deep AST's own recursive `Drop` (walking the Box
+        //     spine) would ALSO overflow this small thread — an orthogonal
+        //     concern, out of scope here — so we `forget` it rather than let
+        //     Drop mask the emit result. The process exits right after.
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(true);
+        let out = emit(&prog, &sidecar, &mut cv, &EmitOptions::default())
+            .expect("emit should succeed")
+            .code;
+        // `1+1+…+1;` — N `+` operators joining N+1 ones, terminated by `;`.
+        assert_eq!(out.matches('+').count(), N, "one `+` per operator");
+        assert!(out.starts_with("1+1+1"), "left-to-right compact emit");
+        assert!(out.ends_with(';'));
+        std::mem::forget(prog);
     }
 
     #[test]

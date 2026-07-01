@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.77.0] - 2026-06-30
+
+### Fixed — deep operator chains no longer overflow the native stack (DoS)
+
+`fold_binary` folds `b.left`/`b.right` bottom-up, recursing once per operator.
+A deeply left-nested chain — the shape the bridge builds for flat source like
+`1+1+…+1` (tens of thousands of terms) — recursed once per operator and, past a
+few thousand levels, overflowed the caller's ordinary ~2 MiB stack: an
+*uncatchable* abort on *untrusted* input. This is the stage that overflowed
+*first* on the SIMPLE pipeline (before the emitter).
+
+`ConstantFoldPass::run` now runs `fold_program` on a 64 MiB worker thread
+(`FOLD_STACK_SIZE`) via `std::thread::scope` (borrows the program without
+`'static`). Output is **identical** to before — deep chains still collapse
+fully (`1+1+…+1` → a single number); only the stack size differs — so every
+existing fold is unchanged. Regression test folds a 20 000-deep `+` chain to a
+single `NumericLiteral` without crashing. Mirrors the emitter's
+`EMIT_STACK_SIZE` hardening (`coding-adventures-closure-emitter` 0.18.11).
+
 ## [0.76.0] - 2026-06-29
 
 ### Changed — `Object.keys` now folds escaped string keys (bridge decode)
