@@ -278,6 +278,39 @@ observable effect. Reachable only since the CLOC17 grammar fix made
 assignment-expression statements parse. Composes with local alpha-renaming and
 PR-4a per-argument temps.
 
+## Correlation-vector provenance (#89)
+
+Inlining *dissolves* a function: its declaration becomes unreferenced (the
+remove-unused-vars / treeshake passes delete it) and its body is copied into
+each caller. After that the minified output has no trace that a `helper(x)`
+call ever existed — the exact kind of provenance loss the correlation vector
+exists to prevent.
+
+So the pass records one `inlined` contribution per function it dissolves,
+carrying the helper's original source name and the number of call sites its
+body replaced:
+
+```text
+function id(x){return x;} id(7);
+  → contribution { source: "inline", tag: "inlined", meta: { name: "id", sites: 1 } }
+
+function d(x){return x+x;} d(1); d(2);
+  → contribution { …, meta: { name: "d", sites: 2 } }   // both sites, under the size budget
+```
+
+All three inlining phases report — the expression inliner (`sites` = the number
+of call sites it rewrote) and both statement-helper inliners (single-use, so
+`sites: 1`). Records come out in program (source) order, one per inlined
+function, so the list is deterministic run to run. The pipeline attaches them
+to the program-root CV entry, where a `--correlation_vector` consumer can read
+them back to map inlined code to the helper it came from.
+
+This is the inline *table* (name → site-count). Tagging each substituted body's
+own CV id — per-output-span provenance — needs the log threaded through the
+clone-and-substitute recursion and is a documented follow-up, mirroring the
+rename passes' coarse-table-first approach. Contributions are pure metadata: the
+emitted JS is byte-identical with or without the CV log enabled.
+
 ## Where this pass sits
 
 CLOC06 §"Canonical pass set" pins:
