@@ -44,6 +44,10 @@ pub enum TokenKind {
     Text(String),
     Plus,
     Minus,
+    /// `+-` — plus-or-minus (the AsciiMath spelling of `±`, the pair {a+b, a−b}).
+    PlusMinus,
+    /// `-+` — minus-or-plus (`∓`, the opposite pairing {a−b, a+b}).
+    MinusPlus,
     /// `*` (and `**`) — multiplication.
     Star,
     /// `/` — built-up fraction.
@@ -239,10 +243,17 @@ pub fn tokenize(src: &str) -> Result<Vec<Token>, FrontendError> {
 
         let next = bytes.get(i + 1).copied();
         let (kind, end) = match c {
-            b'+' => (TokenKind::Plus, i + 1),
+            // `+-` is the AsciiMath spelling of `±`; a bare `+` stays addition. (Contiguous only,
+            // so `a + -b` is still add-then-unary-minus.)
+            b'+' => match next {
+                Some(b'-') => (TokenKind::PlusMinus, i + 2),
+                _ => (TokenKind::Plus, i + 1),
+            },
             b'-' => match next {
                 Some(b':') => (TokenKind::Div, i + 2),
                 Some(b'=') => (TokenKind::Equiv, i + 2),
+                // `-+` is the AsciiMath spelling of `∓` (minus-or-plus).
+                Some(b'+') => (TokenKind::MinusPlus, i + 2),
                 // Punctuation arrow `->`: emit the same identifier the word form `rarr` does, so it
                 // flows through the existing symbol table (PR-3a) and lowers to `Symbol("rightarrow")`.
                 // No new token kind, no parser change. (`a->b` ⇒ `a · → · b`; `lim_(x->0)` unaffected.)

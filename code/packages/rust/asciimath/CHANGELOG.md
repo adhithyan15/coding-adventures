@@ -2,6 +2,22 @@
 
 All notable changes to the AsciiMath pluggable frontend.
 
+## [0.12.0] — 2026-07-01
+
+### Added — plus-or-minus (`+-` → ±, `-+` → ∓)
+
+The frontend now reads the AsciiMath plus-or-minus spellings and lowers them to the same neutral
+`BinOp::PlusMinus` / `BinOp::MinusPlus` the `latex` (`\pm`/`\mp`) and `unicode-math` (`±`/`∓`)
+frontends emit — so a consumer that already lowers those binops gets the AsciiMath spelling for free.
+
+- The tokenizer emits `TokenKind::PlusMinus` for a **contiguous** `+-` and `TokenKind::MinusPlus` for
+  `-+`; the parser handles them in the additive loop at the same precedence as `+`/`-`
+  (`a +- b + c` ⇒ `(a ± b) + c`).
+- A bare `+`/`-` is unchanged, and `a + -b` (add-then-unary-minus, with a space) still parses as
+  before — only the contiguous two-character sequences are the ± / ∓ operators.
+- `Capabilities::plusminus` is now declared (`with_plusminus()`); the shared `check_frontend` harness
+  enforces the honesty. Verified across the full frontend + adj-lang + adj-lang-cli consumer suite.
+
 ## [0.11.0] — 2026-06-30
 
 ### Added — semicolon-separated fences lower to rows (third Sequence frontend to get rows)

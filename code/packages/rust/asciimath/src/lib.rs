@@ -14,7 +14,7 @@
 //! the shared `check_frontend` harness).
 //!
 //! ## What it covers (PR-1)
-//! Numbers (exact), variables/constants, `+ - * / ^ _`, juxtaposition (implicit `·`),
+//! Numbers (exact), variables/constants, `+ - * / ^ _` (plus `+-`/`-+` → ±/∓), juxtaposition (implicit `·`),
 //! `a/b` fractions, `sqrt`/`root(n)(x)`, named functions, relations, grouping, and `"text"`.
 //! Matrices and big operators (`sum`/`prod`/`int`) are PR-2 (ASM01 §5).
 //!
@@ -63,9 +63,10 @@ impl MathFrontend for AsciiMath {
         // (`overset(a)(b)`/`stackrel(a)(b)`/`underset(a)(b)`, emitted as
         // `MathExpr::Overset`/`Underset` since math-frontend 0.5.0) + `sequences`
         // (a comma-separated fence `(a, b, c)` → `MathExpr::Sequence` since math-frontend
-        // 0.6.0). `plusminus`/`binomials` are not part of AsciiMath's core spelling here.
-        // Declaring `implicit_mul` is a parser-behavior claim (juxtaposition ⇒ `Mul`) the
-        // goldens cover.
+        // 0.6.0) + `plusminus` (`+-`/`-+` → `BinOp::PlusMinus`/`MinusPlus`, the AsciiMath spelling
+        // of `±`/`∓`, matching the latex/unicode-math frontends). `binomials` is not part of
+        // AsciiMath's core spelling here. Declaring `implicit_mul` is a parser-behavior claim
+        // (juxtaposition ⇒ `Mul`) the goldens cover.
         Capabilities::none()
             .with_fractions()
             .with_roots()
@@ -79,6 +80,7 @@ impl MathFrontend for AsciiMath {
             .with_accents()
             .with_oversets()
             .with_sequences()
+            .with_plusminus()
     }
 }
 
@@ -186,6 +188,27 @@ mod tests {
         assert!(matches!(p("a = b"), MathExpr::Rel(RelOp::Eq, _, _)));
         // A right-arrow inside a limit bound parses (no `-`/`>` breakage): `lim_(x -> 0) f`.
         assert!(matches!(p("lim_(x -> 0) f"), MathExpr::BigOp { .. }));
+    }
+
+    // ---- plus-or-minus ---------------------------------------------------------
+    #[test]
+    fn plus_minus_and_minus_plus() {
+        // `+-` / `-+` are the AsciiMath spellings of ± / ∓, lowering to the same neutral BinOp the
+        // latex (`\pm`/`\mp`) and unicode-math (`±`/`∓`) frontends emit.
+        assert_eq!(p("a +- b"), b(BinOp::PlusMinus, sym("a"), sym("b")));
+        assert_eq!(p("a -+ b"), b(BinOp::MinusPlus, sym("a"), sym("b")));
+        assert_eq!(p("a+-b"), b(BinOp::PlusMinus, sym("a"), sym("b"))); // contiguous, no spaces
+        // Same additive precedence as `+`: `a +- b + c` ⇒ (a ± b) + c.
+        assert_eq!(
+            p("a +- b + c"),
+            b(BinOp::Add, b(BinOp::PlusMinus, sym("a"), sym("b")), sym("c"))
+        );
+        // A bare `+` / `-` and `a + -b` (add-then-unary-minus) are unaffected.
+        assert_eq!(p("a + b"), b(BinOp::Add, sym("a"), sym("b")));
+        assert_eq!(
+            p("a + -b"),
+            b(BinOp::Add, sym("a"), MathExpr::Unary(UnaryOp::Neg, Box::new(sym("b"))))
+        );
     }
 
     // ---- operators & precedence ------------------------------------------------
@@ -480,7 +503,8 @@ mod tests {
         assert!(c.matrices && c.big_operators); // PR-2 breadth
         assert!(c.accents); // PR-2b: hat/bar/vec/dot/ddot/tilde/ul
         assert!(c.oversets && c.sequences); // overset/underset + comma-separated fence → Sequence
-        assert!(!c.plusminus && !c.binomials); // not part of AsciiMath's core spelling
+        assert!(c.plusminus); // `+-`/`-+` → ±/∓
+        assert!(!c.binomials); // not part of AsciiMath's core spelling here
     }
 
     // ---- accents (PR-2b) -------------------------------------------------------
@@ -579,6 +603,8 @@ mod tests {
                 "overset(a)(b)",   // over-set annotation (PR-3c emitter) → MathExpr::Overset
                 "underset(a)(b)",  // under-set annotation → MathExpr::Underset
                 "(a,b,c)",         // comma-separated fence → MathExpr::Sequence
+                "a +- b",          // plus-or-minus → BinOp::PlusMinus (±)
+                "x -+ y",          // minus-or-plus → BinOp::MinusPlus (∓)
                 "1 +",   // error: trailing operator (span in range, not a panic)
                 "(x",    // error: missing close
                 "",      // error: empty
