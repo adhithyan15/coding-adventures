@@ -24,6 +24,7 @@ use spice_netlist_parser::{
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TABS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANELS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARDS_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTIONS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SUMMARY_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION,
@@ -5028,6 +5029,114 @@ C1 out 0 1p
             ["dispatchQueueLaneTabPanelCardsCapabilityId"],
         "app-shell-dashboard-dispatch-queue-lane-tab-panel-cards-json"
     );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panel_card_actions = app
+        .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_actions(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(3),
+                active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+            },
+        )
+        .expect("shell dashboard dispatch queue lane tab panel card actions should execute");
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTIONS_SCHEMA_VERSION
+    );
+    assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.ready);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions
+            .active_panel_card_action_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab-panel-card-action.queued")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions
+            .attention_panel_card_action_id
+            .as_deref(),
+        None
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.panel_card_action_count,
+        3
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.enabled_panel_card_action_count,
+        2
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.disabled_panel_card_action_count,
+        1
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.empty_panel_card_action_count,
+        1
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.panel_card_actions[0].id,
+        "dashboard.dispatch-queue-lane-tab-panel-card-action.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.panel_card_actions[0]
+            .panel_card_id,
+        "dashboard.dispatch-queue-lane-tab-panel-card.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.panel_card_actions[0].label,
+        "Open queued dispatches"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.panel_card_actions[0].target,
+        "dashboard.dispatch-queue-lane-tab-panel-card.queued"
+    );
+    assert!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.panel_card_actions[0].enabled
+    );
+    assert!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.panel_card_actions[0].primary
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.panel_card_actions[2]
+            .disabled_reason
+            .as_deref(),
+        Some("No attention dispatches")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions
+            .dispatch_queue_lane_tab_panel_card_actions_capability_id,
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-actions-json"
+    );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panel_card_actions_payload: serde_json::Value =
+        serde_json::from_str(
+            &app.run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_actions_json(
+                BerkeleyAppPersistedEditorState {
+                    selected_syntax_card_index: Some(3),
+                    active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+                },
+            )
+            .unwrap(),
+        )
+        .expect("shell dashboard dispatch queue lane tab panel card actions JSON should parse");
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions_payload
+            ["activePanelCardActionId"],
+        "dashboard.dispatch-queue-lane-tab-panel-card-action.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions_payload["panelCardActions"][0]
+            ["label"],
+        "Open queued dispatches"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions_payload["panelCardActions"][2]
+            ["disabledReason"],
+        "No attention dispatches"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions_payload
+            ["dispatchQueueLaneTabPanelCardActionsCapabilityId"],
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-actions-json"
+    );
 }
 
 #[test]
@@ -7101,6 +7210,106 @@ R1 in out
         shell_dashboard_dispatch_queue_lane_tab_panel_cards_payload
             ["dispatchQueueLaneTabPanelCardsCapabilityId"],
         "app-shell-dashboard-dispatch-queue-lane-tab-panel-cards-json"
+    );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panel_card_actions = app
+        .app_shell_dashboard_dispatch_queue_lane_tab_panel_card_actions(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(2),
+                active_command_id: Some("analysis.2.run".to_string()),
+            },
+        );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTIONS_SCHEMA_VERSION
+    );
+    assert!(!shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.ready);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions
+            .active_panel_card_action_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab-panel-card-action.attention")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions
+            .attention_panel_card_action_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab-panel-card-action.attention")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.panel_card_action_count,
+        3
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.enabled_panel_card_action_count,
+        2
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.disabled_panel_card_action_count,
+        1
+    );
+    assert!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.panel_card_actions[2].active
+    );
+    assert!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.panel_card_actions[2].attention
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.panel_card_actions[1].label,
+        "View blocked dispatches"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.panel_card_actions[1]
+            .disabled_reason
+            .as_deref(),
+        Some("No blocked dispatches")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions.panel_card_actions[2].label,
+        "Open attention dispatches"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions
+            .dispatch_queue_lane_tab_panel_card_actions_capability_id,
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-actions-json"
+    );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panel_card_actions_payload: serde_json::Value =
+        serde_json::from_str(
+            &app.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_actions_json(
+                BerkeleyAppPersistedEditorState {
+                    selected_syntax_card_index: Some(2),
+                    active_command_id: Some("analysis.2.run".to_string()),
+                },
+            ),
+        )
+        .expect(
+            "blocked shell dashboard dispatch queue lane tab panel card actions JSON should parse",
+        );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions_payload
+            ["activePanelCardActionId"],
+        "dashboard.dispatch-queue-lane-tab-panel-card-action.attention"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions_payload
+            ["attentionPanelCardActionId"],
+        "dashboard.dispatch-queue-lane-tab-panel-card-action.attention"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions_payload["panelCardActions"][1]
+            ["disabledReason"],
+        "No blocked dispatches"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions_payload["panelCardActions"][2]
+            ["label"],
+        "Open attention dispatches"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_actions_payload
+            ["dispatchQueueLaneTabPanelCardActionsCapabilityId"],
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-actions-json"
     );
 }
 
