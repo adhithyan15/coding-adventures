@@ -52,7 +52,7 @@ pub struct PythonLowerError {
 `compile_source` parses then lowers; both parse and lower failures are
 surfaced as `PythonLowerError`.
 
-## Milestone status — M5 (collections)
+## Milestone status — M5 (collections) + C2 (method calls)
 
 Top-level statements run inline in a synthesised `main` function whose
 block value is the program's final top-level expression (or `NilLit`
@@ -61,7 +61,9 @@ lifted to a **top-level `Function`** (the module gains a real function
 table); `lambda`s and nested `def`s are lifted to synthesised functions
 with computed captures.  M5 adds **collections** — list & dict literals,
 indexing (`x[i]`), `len`, and subscript assignment — on top of M1–M4
-(`def`, tail `return`, `lambda`, calls, closures).
+(`def`, tail `return`, `lambda`, calls, closures).  **C2** adds **method
+calls** — `recv.method(args…)` → `__method__` dispatch through
+`sir-runtime-oop` (`.append`, `.map`, `.keys`, `.upper`, …).
 
 ### Literals (M1, still supported)
 
@@ -276,13 +278,48 @@ metadata records `source_language = "python"` and
 `sir_version = semantic_ir::CURRENT_SIR_VERSION`.  Every lowered module
 passes `semantic_ir::validate`.
 
+### Method calls (C2)
+
+A **method call** `recv.method(args…)` lowers to the shared SIR
+method-dispatch envelope:
+
+| Python source            | SIR lowering                                                   | Feature declared |
+|--------------------------|---------------------------------------------------------------|------------------|
+| `lst.append(x)`          | `BuiltinCall("__method__", [lst, "append", x])`               | `Strings`        |
+| `d.keys()`               | `BuiltinCall("__method__", [d, "keys"])`                      | `Strings`        |
+| `s.upper()`              | `BuiltinCall("__method__", [s, "upper"])`                    | `Strings`        |
+| `xs.map(f).filter(g)`    | nested `__method__` dispatch (outer receiver = inner dispatch) | `Strings`        |
+| `xs.map(lambda x: x)`    | dispatch whose trailing arg is a `MakeClosure`                | `Strings`, `Closures` |
+
+The **receiver is always `args[0]`**, the **method name is always a
+`StrLit` at `args[1]`**, and the call's own arguments follow.  This is
+exactly the convention the Ruby frontend emits (`fold_one_dot_call`) and
+exactly what the Python/TS backends already decode and route through
+`sir-runtime-oop`'s `call_method` (50+ collection methods), so **no core
+IR node, backend change, or new feature flag is required** — the envelope
+is a plain `BuiltinCall` and its only feature is `Strings` (the synthetic
+method-name literal).  A `MethodDispatch` feature is deliberately *not*
+invented (that is a later Phase-2 milestone).
+
+A callable argument is just another argument: Python has no trailing-block
+syntax, so a lambda (`lst.sort(key=lambda x: -x)`) or a bare closure name
+(`xs.map(f)`) lowers through the ordinary call-arg path; the runtime
+detects the trailing `Closure` and applies it as the block.
+
+**Grammar shape.**  A method call is *two* trailing suffixes on a
+`primary` — an attribute suffix (`.method`) immediately followed by a call
+suffix (`(args)`).  The suffix fold looks ahead one slot: an attribute
+followed by a call consumes both and dispatches; a bare attribute (no
+following call) stays deferred.
+
 ### Deferred (later milestones)
 
-Everything past M5 returns a clear positioned `PythonLowerError`:
+Everything past M5 / C2 returns a clear positioned `PythonLowerError`:
 
 - list / dict **comprehensions**, **slicing** (`xs[a:b]`), **tuple** /
-  **set** literals, and list/dict **methods** (`.append` / `.keys` /
-  `.get` — these need the SIR runtime-library)
+  **set** literals, and **attribute access as a value** (`obj.x` *not*
+  followed by a call — method **calls** land in C2, but an attribute
+  *read* has no v0 lowering)
 - `*args` / `**kwargs` (positional-rest / keyword-rest params — `Rest` /
   `KwRest` are not yet modelled by this crate), multi-level capture chaining
   (capturing a variable two scopes up) — note **positional default

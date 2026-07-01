@@ -7,6 +7,63 @@ All notable changes to `python-to-semantic-ir` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to semantic versioning.
 
+## 0.8.0 — 2026-07-01
+
+**C2 (collection methods)**: lower Python **method calls** to the shared
+SIR method-dispatch envelope.  Previously every `<expr>.<name>(...)` was
+deferred to a positioned error; now `recv.method(args…)` lowers to
+
+```text
+BuiltinCall { name: "__method__",
+              args: [ recv, StrLit("method"), arg1, arg2, … ] }
+```
+
+— the **receiver at `args[0]`**, the **method name always a `StrLit` at
+`args[1]`**, call args trailing.  This is exactly the convention the Ruby
+frontend already emits (`fold_one_dot_call`) and exactly what the Python/TS
+backends already decode and route through `sir-runtime-oop`'s `call_method`
+(50+ collection methods).  No core IR node, backend change, or new feature
+flag is introduced: the envelope is a plain `BuiltinCall` the validator
+already accepts, and its only feature is `Feature::Strings` (the synthetic
+method-name literal), matching the Ruby frontend.  A `MethodDispatch`
+feature is deliberately **not** invented — that is a later (Phase-2)
+milestone.
+
+### Added
+
+- **Method calls** — any `<expr>.<name>(<args>)` lowers to the
+  `__method__` dispatch envelope: `lst.append(x)`, `lst.pop()`, `d.keys()`,
+  `d.get(k)`, `s.upper()`, `s.split()`, `lst.count(x)`, chained calls
+  (`xs.map(f).filter(g)` → nested dispatch), etc.  The grammar spells a
+  method call as **two** trailing `suffix`es on a `primary` — an attribute
+  suffix (`.method`) immediately followed by a call suffix (`(args)`) — so
+  the suffix fold in `try_primary_suffixes` now **looks ahead**: an
+  attribute suffix followed by a call consumes both and produces the
+  dispatch; the receiver is the accumulated value (or, for a leading
+  attribute, the bare atom lowered as a value).
+- **Higher-order arguments** — a callable argument is just another argument.
+  Python has no trailing-block syntax, so a lambda (`lst.sort(key=lambda x:
+  -x)`) or a bare closure name (`xs.map(f)`) lowers through the ordinary
+  `lower_call_args` path (a lambda becomes an `Expr::MakeClosure`) and lands
+  in the dispatch args; the backend/runtime detects a trailing `Closure` and
+  applies it as the block.
+- **Execution proofs** — new e2e round-trips (Python → SIR → Python →
+  execute, gated on a real Python 3): `xs.append(4); print(len(xs))` → `4`,
+  and a `xs.map(dbl)` doubling-then-summing proof → `12`, both running the
+  `__method__` dispatch through `sir-runtime-oop`.  Plus lowering-assertion
+  tests (envelope shape, zero-arg dispatch, chained/nested dispatch, lambda
+  arg → `MakeClosure`) and `validate` round-trips over `append`/`keys`/
+  `upper`/`count` programs.
+
+### Deferred (unchanged)
+
+- **Attribute access as a value** — a bare `obj.x` **not** followed by a
+  call (an attribute *read*) has no v0 lowering and remains a positioned
+  error (`"attribute access as a value (deferred to a later milestone)"`).
+  This PR is deliberately scoped to method **calls**; attribute-as-value is
+  a separate concern (there is no receiver-getter dispatch in the runtime
+  catalog to route it to yet).
+
 ## 0.7.0 — 2026-06-30
 
 **KW8**: produce **keyword parameters & keyword arguments**.  Python's
