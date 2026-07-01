@@ -983,6 +983,46 @@ historical context with status `RESOLVED` and a link to the fix PR.
   - gap-044b states the correct fix: an explicit mode stack in `GrammarLexer`
     (push template mode on `${`, pop on matching `}`).
 
+## CLOC12.136 — port `RemoveUnusedCodeTest` into `closure-pass-remove-unused-vars`
+
+- **Status:** port landed; 11 active `#[test]`s pass, 6 `#[ignore]` gaps opened.
+- **What it is:** the fourth CLOC12 upstream port, covering the unused-binding
+  removal that `RemoveUnusedCode` (formerly `RemoveUnusedVarsTest`) performs.
+  `closure-pass-remove-unused-vars/tests/upstream/remove_unused_vars_test.rs`
+  pins the provably-sound core our `RemoveUnusedVarsPass` implements today:
+  GLOBAL-scope `var`/`let`/`const` bindings that are unreferenced and have a
+  pure initializer (literal, bare identifier, or none) are removed; multi-
+  declarator declarations are split to keep the survivors; impure initializers
+  keep the binding. All 11 active cases pass — the port confirms the pass is
+  sound on its covered surface and adds canonical upstream coverage. No live
+  defect surfaced this round.
+- **New gaps** (upstream behaviors our narrow pass does not cover yet; each has
+  an executable `#[ignore = "blocked on gap-NNN"]` placeholder that goes live
+  when the gap closes):
+  - **gap-121** — function-local unused-var removal. The pass restricts removal
+    to `ScopeId::GLOBAL`; nested-scope name handling is a follow-up (the scope
+    analyzer surfaces the bindings but the apply step only matches top-level
+    `program.body` names).
+  - **gap-122** — unused function-declaration removal. `Function`-kind bindings
+    are filtered out at the eligibility scan; dropping an unreferenced
+    `function g(){}` is the treeshake pass's job, not this one.
+  - **gap-123** — unused function-parameter removal (`function f(a,b){return a}`
+    → drop trailing `b`). `Param`-kind bindings are skipped; needs arity-aware
+    param analysis.
+  - **gap-124** — side-effect extraction: `var a = f();` (a unused) should
+    become a bare `f();`, preserving the initializer's effect while dropping
+    the binding. We conservatively keep the whole binding (the purity gate
+    refuses to delete a call initializer). Needs the initializer lifted to an
+    `ExpressionStatement` in the apply step.
+  - **gap-125** — self-referential dead binding: `var a = function(){a()};`
+    with no external use should be removed. A naive use-count sees `a`
+    referenced by its own body and keeps it; needs reference-cycle detection
+    (SCC over the binding→reference graph).
+  - **gap-126** — assignment-only dead var: `var a; a = 1;` (never read) should
+    be removed. The analyzer counts the `a = 1` write as a reference, so `a`
+    survives; needs write-vs-read reference classification so pure writes to an
+    otherwise-unread binding don't keep it alive.
+
 ## CLOC12.137 — port `InlineFunctionsTest` into `closure-pass-inline`
 
 - **Status:** port landed; 7 active `#[test]`s pass, 6 `#[ignore]` gaps opened.
