@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-pass-rename"
-version = "0.10.0"
+version = "0.11.0"
 edition = "2021"
 description = "Variable renaming pass for the Closure Compiler clone. Per CLOC06's canonical pass set. Replaces non-exported binding names with shorter identifiers to reduce output size while preserving externally-visible names and semantics."
 
@@ -18,3 +18,10 @@ coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
 # actual AST shape the parser produces (not hand-built ASTs).
 coding-adventures-javascript-parser = { path = "../javascript-parser" }
 coding-adventures-closure-emitter = { path = "../closure-emitter" }
+
+# Upstream-test ports live under `tests/upstream/`; Cargo only
+# auto-discovers `tests/*.rs` one level deep, so each ported file needs
+# an explicit `[[test]]` entry. Per CLOC12.01 §3.
+[[test]]
+name = "upstream_rename_vars"
+path = "tests/upstream/rename_vars_test.rs"

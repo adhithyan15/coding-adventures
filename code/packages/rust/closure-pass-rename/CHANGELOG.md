@@ -2,6 +2,35 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename` crate will be documented in this file.
 
+## [0.11.0] - 2026-07-01
+
+### Added — upstream `RenameVarsTest.java` conformance port (#88, CLOC12.145)
+
+The **first** CLOC12 upstream-test port into this crate. New file
+`tests/upstream/rename_vars_test.rs` (registered as the `upstream_rename_vars`
+test target) reshapes upstream `RenameVarsTest.java` onto our surface, driving
+the **real** source → `grammar_to_program` bridge → `RenamePass` → `emit`
+roundtrip — the exact chain closurec's SIMPLE level uses — so each case is
+`assert_eq!(rename(src), expected)` on emitted JS.
+
+- **12 active `#[test]`s pass on the first run** (no new rename defect): leaf
+  parameter and local `var`/`let`/`const` renaming at declaration + every use
+  site; multiple params distinct; param+local together; reserved-name
+  avoidance (a fresh short name never captures a referenced free global);
+  property access and non-computed object keys never renamed; computed member
+  index renamed; single-char names left alone; and two soundness guards (catch
+  bindings reserved, and a name declared twice is skipped).
+- **4 `#[ignore = "blocked on gap-NNN"]` placeholders** pin the whole-program
+  `RenameVars` behaviors closurec deliberately splits out or defers —
+  gap-144 (globals, owned by `rename-globals`), gap-145 (non-leaf function
+  params), gap-146 (function declaration names), gap-147 (frequency-biased
+  name allocation). Each is pinned to `code/specs/CLOC12-gaps.md`.
+
+This is a **test-only** change: no `src/` file is touched, so there is no
+emitter/pass ripple into downstream consumers. Scaffolding files
+`tests/upstream/{UPSTREAM_SHA,ATTRIBUTION.md}` were added per the CLOC12 port
+convention.
+
 ## [0.10.0] - 2026-06-30
 
 ### Added — correlation-vector rename provenance (#89)

@@ -1239,3 +1239,49 @@ historical context with status `RESOLVED` and a link to the fix PR.
   value of two `"` prints `"\"\""`, not single-quoted).
 - **No `#[ignore]` placeholders.** The ASCII-only `\uXXXX` escaping that the
   CLOC12.143 port noted as a follow-up is now covered here.
+
+## CLOC12.145 — RenameVars port (rename)
+
+- **What it is:** the twelfth CLOC12 upstream port and the **first** into
+  `closure-pass-rename`. New file `tests/upstream/rename_vars_test.rs`,
+  registered as the `upstream_rename_vars` test target, ported from upstream
+  `RenameVarsTest.java`. Unlike the hand-built-AST ports, it drives the real
+  source → `grammar_to_program` bridge → `RenamePass` → `emit` roundtrip (the
+  crate already carries `javascript-parser` + `closure-emitter` dev-deps), so
+  each case is `assert_eq!(rename(src), expected)` on emitted JS.
+- **12 active `#[test]`s pass on the first run** (no new rename bug): leaf
+  local `var`/`let`/`const` and parameter renaming at declaration + use sites,
+  multiple params distinct, param+local together, reserved-name avoidance
+  (fresh name never captures a referenced free global), property access and
+  non-computed object keys never renamed, computed member index renamed,
+  single-char names left alone, and two soundness guards (catch bindings
+  reserved; a name declared twice is skipped).
+- **4 `#[ignore]` placeholders** pin the whole-program `RenameVars` behaviors
+  closurec deliberately does not do in this pass — see gap-144 … gap-147.
+
+### gap-144 — RenamePass does not rename global variables
+
+Upstream `RenameVars` (`testRenameGlobals`) shortens top-level bindings in the
+same sweep as locals. closurec **splits** the responsibility: global renaming
+lives in the separate `rename-globals` pass (ADVANCED only), so `RenamePass`
+leaves a top-level `var longName` untouched. Placeholder:
+`rename_global_var`.
+
+### gap-145 — non-leaf (nesting) function params not renamed
+
+`RenamePass` only renames **leaf** functions (no nested function). Upstream
+renames every scope. A parameter of a function that contains a nested function
+is left verbatim today. Placeholder: `rename_non_leaf_function_param`.
+
+### gap-146 — function declaration names not renamed
+
+Upstream shortens the function *name* itself (`function longName(){}` →
+`function a(){}`). closurec preserves declaration names (they may be externally
+referenced; renaming them belongs to `rename-globals` with export awareness).
+Placeholder: `rename_function_declaration_name`.
+
+### gap-147 — name allocation is declaration-order, not frequency-biased
+
+Upstream's generator (`testBias*`) hands the shortest name to the
+most-referenced variable to improve gzip. `RenamePass` allocates fresh names in
+declaration order. Placeholder: `frequency_biased_name_allocation`.
