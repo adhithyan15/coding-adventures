@@ -101,7 +101,10 @@
 //! and sidecar-driven purity (to reach `const x = pureCall()`) are
 //! follow-ups; "keep" is always the safe answer in the meantime.
 
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
+
+use coding_adventures_correlation_vector::Contribution;
+use serde_json::json;
 
 use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
@@ -168,19 +171,21 @@ fn is_removable_init(init: &Option<Expression>) -> bool {
 fn prune_var_decl(
     var_decl: &VariableDeclaration,
     dead: &HashSet<String>,
-) -> (Option<VariableDeclaration>, usize) {
+) -> (Option<VariableDeclaration>, Vec<(Option<String>, String)>) {
     let mut kept = Vec::with_capacity(var_decl.declarations.len());
-    let mut removed = 0usize;
+    // Each removed declarator's own CV id (if any) plus its name — so
+    // the caller can tombstone the exact binding that vanished.
+    let mut removed: Vec<(Option<String>, String)> = Vec::new();
     for declarator in &var_decl.declarations {
         let BindingTarget::Identifier(id) = &declarator.id;
         if dead.contains(&id.name) && is_removable_init(&declarator.init) {
-            removed += 1;
+            removed.push((declarator.cv.clone(), id.name.clone()));
         } else {
             kept.push(declarator.clone());
         }
     }
-    if removed == 0 {
-        (Some(var_decl.clone()), 0)
+    if removed.is_empty() {
+        (Some(var_decl.clone()), removed)
     } else if kept.is_empty() {
         (None, removed)
     } else {
@@ -387,6 +392,9 @@ impl Pass for RemoveUnusedVarsPass {
         // declarators dead, some live) is straightforward.
         let mut new_body: Vec<ProgramItem> = Vec::with_capacity(ctx.program.body.len());
         let mut removed_count: usize = 0;
+        // Each removed binding's own CV id + name, captured before the
+        // declarator is dropped, so it can be tombstoned below.
+        let mut all_removed: Vec<(Option<String>, String)> = Vec::new();
         for item in &ctx.program.body {
             // A top-level `var/let/const` can reach us in TWO shapes:
             //
@@ -405,34 +413,73 @@ impl Pass for RemoveUnusedVarsPass {
             // and re-wrap the survivors in whichever shape they arrived.
             match item {
                 ProgramItem::Declaration(Declaration::VariableDeclaration(var_decl)) => {
-                    let (pruned, n) = prune_var_decl(var_decl, &dead_names);
-                    removed_count += n;
-                    if n == 0 {
+                    let (pruned, removed) = prune_var_decl(var_decl, &dead_names);
+                    removed_count += removed.len();
+                    if removed.is_empty() {
                         new_body.push(item.clone());
-                    } else if let Some(survivors) = pruned {
-                        new_body.push(ProgramItem::Declaration(
-                            Declaration::VariableDeclaration(survivors),
-                        ));
+                    } else {
+                        all_removed.extend(removed);
+                        if let Some(survivors) = pruned {
+                            new_body.push(ProgramItem::Declaration(
+                                Declaration::VariableDeclaration(survivors),
+                            ));
+                        }
+                        // pruned == None → whole declaration dropped.
                     }
-                    // pruned == None → whole declaration dropped.
                 }
                 ProgramItem::Statement(Statement::Declaration(
                     Declaration::VariableDeclaration(var_decl),
                 )) => {
-                    let (pruned, n) = prune_var_decl(var_decl, &dead_names);
-                    removed_count += n;
-                    if n == 0 {
+                    let (pruned, removed) = prune_var_decl(var_decl, &dead_names);
+                    removed_count += removed.len();
+                    if removed.is_empty() {
                         new_body.push(item.clone());
-                    } else if let Some(survivors) = pruned {
-                        new_body.push(ProgramItem::Statement(Statement::Declaration(
-                            Declaration::VariableDeclaration(survivors),
-                        )));
+                    } else {
+                        all_removed.extend(removed);
+                        if let Some(survivors) = pruned {
+                            new_body.push(ProgramItem::Statement(Statement::Declaration(
+                                Declaration::VariableDeclaration(survivors),
+                            )));
+                        }
                     }
                 }
                 // Function declarations (Function-kind bindings are
                 // filtered out at step 2 — treeshake's job) and every
                 // other statement pass through untouched.
                 _ => new_body.push(item.clone()),
+            }
+        }
+
+        // Deletion provenance (#89). Like DCE and treeshake, this pass
+        // must not delete a binding silently — each removed declarator's
+        // own CV entry is tombstoned with a `DeletionRecord` via
+        // `CVLog::delete`, so a `--correlation_vector` consumer asking
+        // "what happened to `const foo`?" gets a definite answer:
+        // *remove-unused-vars removed it because it was unreferenced.*
+        // `delete` is a no-op when the log is disabled (production
+        // default), so this costs nothing off that path. We also emit one
+        // summary `Contribution` against the program root.
+        let mut contributions: Vec<Contribution> = Vec::new();
+        if !all_removed.is_empty() {
+            for (cv_id, name) in &all_removed {
+                if let Some(id) = cv_id {
+                    let mut meta: HashMap<String, serde_json::Value> = HashMap::new();
+                    meta.insert("name".to_string(), json!(name));
+                    ctx.cv
+                        .delete(id, "remove-unused-vars", "removed-unused-binding", meta);
+                }
+            }
+            if let Some(prog_cv) = &ctx.program.cv {
+                contributions.push(Contribution {
+                    source: "remove-unused-vars".to_string(),
+                    tag: "removed-unused-binding".to_string(),
+                    meta: [
+                        ("removed".to_string(), json!(all_removed.len())),
+                        ("parent_cv".to_string(), json!(prog_cv)),
+                    ]
+                    .into_iter()
+                    .collect(),
+                });
             }
         }
 
@@ -444,7 +491,7 @@ impl Pass for RemoveUnusedVarsPass {
 
         Ok(PassOutput {
             program: new_program,
-            contributions: Vec::new(),
+            contributions,
             changed,
             diagnostics: Vec::new(),
             stats: PassStats {
@@ -807,6 +854,104 @@ mod tests {
             cv: &mut cv,
         };
         pass.run(ctx).expect("pass ran")
+    }
+
+    // -----------------------------------------------------------------
+    // CV deletion provenance (#89).
+    //
+    // Mirror the pipeline: the lexer/parser `create` a CV entry per node
+    // and stamp its id onto the AST. So we `create` the declarator's
+    // entry FIRST, stamp its id, then run the pass — otherwise
+    // `cv.delete` has no entry to tombstone and the assertion would be
+    // vacuous. Property: a removed binding's CV entry survives with a
+    // `DeletionRecord{source:"remove-unused-vars"}`.
+    // -----------------------------------------------------------------
+
+    /// A Statement-wrapped `let <name> = 1;` whose declarator's CV id is
+    /// freshly created in `log`.
+    fn traced_var(log: &mut CVLog, name: &str) -> (ProgramItem, String) {
+        let id = log.create(None);
+        let item = ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(
+            VariableDeclaration {
+                cv: None,
+                kind: VarKind::Let,
+                declarations: vec![VariableDeclarator {
+                    cv: Some(id.clone()),
+                    id: BindingTarget::Identifier(ident(name)),
+                    init: Some(Expression::NumericLiteral(NumericLiteral {
+                        cv: None,
+                        value: 1.0,
+                        raw: "1".to_string(),
+                    })),
+                }],
+            },
+        )));
+        (item, id)
+    }
+
+    fn run_capturing_cv(
+        prog: &Program,
+        cv: &mut CVLog,
+    ) -> coding_adventures_closure_pass_pipeline::PassOutput {
+        let sidecar = Sidecar::new();
+        let ctx = coding_adventures_closure_pass_pipeline::PassContext {
+            program: prog,
+            sidecar: &sidecar,
+            cv,
+        };
+        RemoveUnusedVarsPass::new().run(ctx).expect("pass ran")
+    }
+
+    #[test]
+    fn removed_binding_is_tombstoned() {
+        // `let dead = 1;` — unreferenced global with a pure initializer →
+        // removed, so its CV entry must be tombstoned.
+        let mut log = CVLog::new(true);
+        let (dead, dead_cv) = traced_var(&mut log, "dead");
+        let prog = program_with(vec![dead]);
+
+        let out = run_capturing_cv(&prog, &mut log);
+
+        assert!(out.changed);
+        let del = log
+            .get(&dead_cv)
+            .unwrap()
+            .deleted
+            .as_ref()
+            .expect("a removed binding must be tombstoned");
+        assert_eq!(del.source, "remove-unused-vars");
+        assert_eq!(del.reason, "removed-unused-binding");
+        assert_eq!(del.meta.get("name").and_then(|v| v.as_str()), Some("dead"));
+    }
+
+    #[test]
+    fn referenced_binding_is_not_tombstoned() {
+        // `let keep = 1; keep;` — the read keeps `keep` alive, so it is
+        // neither removed nor tombstoned.
+        let mut log = CVLog::new(true);
+        let (keep, keep_cv) = traced_var(&mut log, "keep");
+        let prog = program_with(vec![keep, use_stmt("keep")]);
+
+        let out = run_capturing_cv(&prog, &mut log);
+
+        assert!(!out.changed, "a referenced binding must survive");
+        assert!(
+            log.get(&keep_cv).unwrap().deleted.is_none(),
+            "a surviving binding must NOT be tombstoned"
+        );
+    }
+
+    #[test]
+    fn disabled_log_still_removes_without_panicking() {
+        // With CV disabled, `delete` is a no-op; the pass must still
+        // remove the dead binding and never panic on the missing entry.
+        let mut log = CVLog::new(false);
+        let (dead, _cv) = traced_var(&mut log, "dead");
+        let prog = program_with(vec![dead]);
+
+        let out = run_capturing_cv(&prog, &mut log);
+
+        assert!(out.changed);
     }
 
     #[test]

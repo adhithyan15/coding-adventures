@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-closure-pass-remove-unused-vars` crate will be documented in this file.
 
+## [0.6.0] - 2026-06-30
+
+### Added — correlation-vector deletion provenance (#89)
+
+Like DCE and treeshake, this pass deletes bindings — and must not do so silently.
+Before, `run()` returned `contributions: Vec::new()` and never touched the CV log,
+so a removed `const foo = 1;` vanished from the provenance graph. Now each removed
+declarator's own CV entry is **tombstoned** with a `DeletionRecord` via
+`CVLog::delete(cv_id, "remove-unused-vars", "removed-unused-binding", meta)` (meta
+carries the binding `name`), plus one summary `Contribution` against the program
+root.
+
+`prune_var_decl` now returns the removed declarators' `(cv_id, name)` pairs
+(instead of just a count), and `run` captures them across both program-item shapes
+(bare `Declaration` and Statement-wrapped) and tombstones each.
+
+- **Byte-for-byte identical program output** — the same declarators are removed;
+  only the CV log gains the deletion records + summary contribution. All existing
+  output tests unchanged.
+- **Zero cost off the hot path** — `delete` is a no-op when the log is disabled
+  (production default). The no-removal case still returns empty
+  contributions / `changed = false`.
+- Three new tests: a removed binding is tombstoned with `source ==
+  "remove-unused-vars"` + the right reason/name; a **referenced** binding (kept
+  alive by a use) is NOT tombstoned; a disabled log still removes without
+  panicking. Crate version 0.5.0 → 0.6.0.
+
+**Scope / follow-up.** Function-local binding removal (gap-121) is still out of
+scope for the pass itself; when it lands, its removals should tombstone the same
+way.
+
 ## [0.5.0] - 2026-06-30
 
 ### Added — CLOC12 upstream test port (`RemoveUnusedCodeTest`)
