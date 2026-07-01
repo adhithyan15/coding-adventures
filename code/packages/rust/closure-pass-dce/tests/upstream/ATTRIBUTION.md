@@ -13,6 +13,17 @@ under the Apache License, Version 2.0:
     - blob SHA at port time: `db5fe5af7e3dcba58560a0338c315d262dfbc04a`
     - tracked commit: see `UPSTREAM_SHA`
 
+- `unreachable_code_elimination_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/UnreachableCodeEliminationTest.java`
+    - tracked commit: see `UPSTREAM_SHA`
+    - Pins the block-level reachability cleanup `DcePass` performs today
+      (drop-after-`return`/`throw`, empty-statement removal, nested-block
+      recursion, and the hoisting-soundness *decline* when a dead tail
+      carries a `var`/`function`). Upstream's full CFG-based analysis —
+      code after an `if`-both-branches-terminate (gap-151) and after
+      `break`/`continue` in a general loop block (gap-152) — is pinned as
+      `#[ignore]` placeholders.
+
 ## Translation notes
 
 This is the **second** port under CLOC12 (after

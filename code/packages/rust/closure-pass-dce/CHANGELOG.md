@@ -2,6 +2,38 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.17.0] - 2026-07-01
+
+### Added — upstream `UnreachableCodeEliminationTest.java` conformance port (#88, CLOC12.148)
+
+The **second** CLOC12 upstream-test port into this crate (alongside the
+`PeepholeRemoveDeadCode` port). New file
+`tests/upstream/unreachable_code_elimination_test.rs` (registered as the
+`upstream_unreachable_code_elimination` test target) reshapes upstream
+`UnreachableCodeEliminationTest.java` onto our typed-AST surface — built by
+hand via the same helper style as the sibling port — asserting the surviving
+function-body statements after running only `DcePass`.
+
+- **8 active `#[test]`s pass on the first run** (no new DCE defect):
+  drop-single/multiple statements after `return`, drop after `throw`, keep
+  reachable code before the terminator, bare `return` unchanged, empty-statement
+  removal, dead-code cleanup inside a nested (`if`-consequent) block, and the
+  hoisting-soundness *decline* — a dead tail carrying a `var` is kept verbatim
+  (declining to truncate is never a miscompile).
+- **2 `#[ignore = "blocked on gap-NNN"]` placeholders** pin the CFG-based
+  reachability upstream does that this pass does not — gap-151 (code after an
+  `if` whose every branch terminates) and gap-152 (code after `break`/`continue`
+  in a general loop block; ours only treats them as terminators in switch
+  cases). Each is pinned to `code/specs/CLOC12-gaps.md`.
+
+Notably the nested-block case surfaced (and now documents) the interaction with
+the existing block-flattening step: a bare `{ return }` block flattens into its
+parent, so the port wraps the nested block in an `if`-consequent to test
+interior cleanup in isolation.
+
+This is a **test-only** change: no `src/` file is touched, so there is no
+ripple into downstream consumers. Bumps the crate 0.16.0 → 0.17.0.
+
 ## [0.16.0] - 2026-06-30
 
 ### Added — correlation-vector deletion provenance (#89, full CV tracing)

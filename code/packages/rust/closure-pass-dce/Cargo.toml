@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-pass-dce"
-version = "0.16.0"
+version = "0.17.0"
 edition = "2021"
 description = "Dead-code elimination pass for the Closure Compiler clone. Per CLOC06's canonical pass set. Drops code after definite-terminator statements and removes EmptyStatement noise."
 
@@ -22,3 +22,7 @@ coding-adventures-closure-pass-fold-control-flow = { path = "../closure-pass-fol
 [[test]]
 name = "upstream_peephole_remove_dead_code"
 path = "tests/upstream/peephole_remove_dead_code_test.rs"
+
+[[test]]
+name = "upstream_unreachable_code_elimination"
+path = "tests/upstream/unreachable_code_elimination_test.rs"
