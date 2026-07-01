@@ -357,6 +357,19 @@ assert!(shell_dashboard_dispatch_queue_lane_tab_panels_json
 assert!(shell_dashboard_dispatch_queue_lane_tab_panels_json.contains(
     r#""dispatchQueueLaneTabPanelsCapabilityId":"app-shell-dashboard-dispatch-queue-lane-tab-panels-json""#
 ));
+
+let shell_dashboard_dispatch_queue_lane_tab_panel_cards_json =
+    deck.run_app_shell_dashboard_dispatch_queue_lane_tab_panel_cards_json(
+        BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        },
+    )?;
+assert!(shell_dashboard_dispatch_queue_lane_tab_panel_cards_json
+    .contains(r#""activePanelCardId":"dashboard.dispatch-queue-lane-tab-panel-card.queued""#));
+assert!(shell_dashboard_dispatch_queue_lane_tab_panel_cards_json.contains(
+    r#""dispatchQueueLaneTabPanelCardsCapabilityId":"app-shell-dashboard-dispatch-queue-lane-tab-panel-cards-json""#
+));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -394,6 +407,10 @@ lane-tab capability metadata.
 Dashboard dispatch queue lane tab panels project those tabs into stable panel
 descriptors with active/attention panel IDs, enabled, disabled, and empty panel
 counts, and lane-tab-panel capability metadata.
+Dashboard dispatch queue lane tab panel cards project those panels into compact
+card descriptors with active/attention card IDs, enabled, disabled, and empty
+card counts, summaries, badge counts, and lane-tab-panel-card capability
+metadata.
 Persisted editor-state snapshots resolve saved selection and active-command IDs
 against the current deck, repairing stale UI state after source edits. Host
 surfaces turn those snapshots into stable source, diagnostics, analysis, table,
