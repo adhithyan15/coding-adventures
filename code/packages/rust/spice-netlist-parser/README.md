@@ -214,6 +214,17 @@ let shell_dashboard_routes_json = deck.run_app_shell_dashboard_routes_json(
 )?;
 assert!(shell_dashboard_routes_json.contains(r#""activeRoutePath":"/dashboard/status""#));
 assert!(shell_dashboard_routes_json.contains(r#""routesCapabilityId":"app-shell-dashboard-routes-json""#));
+
+let shell_dashboard_breadcrumbs_json = deck.run_app_shell_dashboard_breadcrumbs_json(
+    BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(3),
+        active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+    },
+)?;
+assert!(shell_dashboard_breadcrumbs_json
+    .contains(r#""activeBreadcrumbId":"dashboard.breadcrumb.status""#));
+assert!(shell_dashboard_breadcrumbs_json
+    .contains(r#""breadcrumbsCapabilityId":"app-shell-dashboard-breadcrumbs-json""#));
 ```
 
 The facade preserves normalized logical cards, source spans, token names

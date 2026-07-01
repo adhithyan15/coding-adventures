@@ -33,21 +33,23 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard routes.
+1. Rust Berkeley Mosaic app shell dashboard breadcrumbs.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app shell dashboard route-map surfaces and JSON
-     helpers that derive stable route IDs, paths, active/default route
-     selection, and router metadata from dashboard navigation items for a
-     compact first-render product-shell routing contract.
+   - Add schema-versioned Rust app shell dashboard breadcrumb surfaces and JSON
+     helpers that derive stable breadcrumb IDs, positions, active/default
+     breadcrumb selection, and route metadata from dashboard routes for a
+     compact first-render product-shell breadcrumb contract.
    - Preserve package name, source fingerprint, ready/blocked route, status
      severity, attention-required flag, primary-card routing, primary-region
-     routing, active-item routing, active/default route routing, route IDs,
-     labels, roles, paths, item IDs, region IDs, region card IDs,
-     active/default/visible/enabled flags, visible and enabled route counts,
-     badge counts, dashboard/package/card/view/layout/navigation/routes
+     routing, active-item routing, active/default route routing,
+     active/default breadcrumb routing, breadcrumb IDs, labels, roles, paths,
+     positions, route IDs, item IDs, region IDs, region card IDs,
+     active/default/visible/enabled flags, visible and enabled route and
+     breadcrumb counts, badge counts,
+     dashboard/package/card/view/layout/navigation/routes/breadcrumbs
      capability IDs, and advertised capability count so Mosaic, WebAssembly,
-     and product shells can install startup dashboard routes without
-     interpreting navigation internals.
+     and product shells can render startup dashboard breadcrumbs without
+     interpreting route internals.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1734,6 +1736,24 @@ the Rust, Python, and TypeScript surfaces together.
      counts, dashboard/package/card/view/layout/navigation capability IDs, and
      advertised capability count so Mosaic, WebAssembly, and product shells can
      render startup dashboard navigation without interpreting layout internals.
+
+161. Rust Berkeley Mosaic app shell dashboard routes.
+   - Status: completed in PR 7125.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell dashboard route-map surfaces plus JSON helpers that derive
+     stable route IDs, paths, active/default route selection, and router
+     metadata from dashboard navigation items for a compact first-render
+     product-shell routing contract.
+   - The route payload preserves package name, source fingerprint,
+     ready/blocked route, status severity, attention-required flag,
+     primary-card routing, primary-region routing, active-item routing,
+     active/default route routing, route IDs, labels, roles, paths, item IDs,
+     region IDs, region card IDs, active/default/visible/enabled flags, visible
+     and enabled route counts, badge counts,
+     dashboard/package/card/view/layout/navigation/routes capability IDs, and
+     advertised capability count so Mosaic, WebAssembly, and product shells can
+     install startup dashboard routes without interpreting navigation
+     internals.
 
 ## Backlog
 
