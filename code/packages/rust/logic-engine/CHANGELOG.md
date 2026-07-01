@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.27.0] - 2026-07-01 — native `^` power operator (`ComputeOp::Pow`)
+
+### Added
+
+- `ComputeOp::Pow` — a native exponentiation operator, `base ^ exponent`, in the
+  `compute` formula IR. Unlike the additive/multiplicative ops it is **not** a
+  symmetric dimensional combine: the exponent must be dimensionless (`Scalar`),
+  and the result dimension is the *base* raised to the exponent — `x^0 = Scalar`
+  (dimensionless), `x^1 = x`, `x^2 = x·x` — computed by folding through the
+  multiplicative algebra so it matches an expanded `x*x*…` chain exactly, but as
+  a single derivation node (audit symbol `^`). This is what makes a LaTeX `x^n`
+  (adj-lang's `latex "…"` surface) computable as one node rather than the
+  parse-time repeated-multiplication expansion the adapter used, and lays the
+  groundwork for lifting that expansion's integer-exponent cap.
+- `Dimension::pow(exponent)` — the dimensional rule for a power: a scalar base is
+  closed under any exponent; a dimensioned base needs a non-negative integer
+  exponent (then it folds `x·x·…`), and a fractional/negative power of a
+  dimensioned base (a √dollars, a 1/dollars) is a `DimError::Mismatch` rather
+  than a silently-wrong tag. `Date` bases are rejected (reuses `combine`).
+- `ExactRational::powi(exp)` — exact non-negative-integer powers by repeated
+  multiplication so `(3/2)^2 = 9/4` keeps its exact sidecar. Bounded by
+  `MAX_EXACT_POW = 1024` (an algorithmic-DoS guard: a pathological
+  `base^{10^18}` can't spin the loop — the `f64` magnitude stays authoritative).
+
+### Notes
+
+- Purely additive. `ComputeOp::Pow` overflowing `f64` (`10^400`) is a clean
+  `ComputeError::NonFinite`, never a silent `inf`. Downstream consumers that
+  match `ComputeOp` (the `adj-constraint-solver` linear/polynomial recognisers)
+  already have catch-all arms, so a `Pow` term is treated as non-linear (→
+  `Unknown`) without any change on their side.
+
 ## [0.26.0] - 2026-06-29 — expose derived dimensioned bindings
 
 ### Added
