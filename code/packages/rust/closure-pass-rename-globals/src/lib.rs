@@ -68,7 +68,9 @@ use std::collections::{HashMap, HashSet};
 use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
 };
+use coding_adventures_correlation_vector::Contribution;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
+use serde_json::json;
 use coding_adventures_javascript_ast::{
     AssignmentTarget, BindingTarget, Declaration, Expression, ForInit, FunctionParam, Program,
     ProgramItem, PropertyKey, Statement, VariableDeclaration,
@@ -136,11 +138,39 @@ impl Pass for RenameGlobalsPass {
     fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
         let mut program = ctx.program.clone();
         let mut nodes_touched: u32 = 1; // the program root
-        let changed = rename_globals(&mut program, &self.do_not_rename, &mut nodes_touched);
+        let (changed, renames) =
+            rename_globals(&mut program, &self.do_not_rename, &mut nodes_touched);
+
+        // CV provenance (#89): record every global rename as a `renamed`
+        // contribution carrying `{from, to}`. The pipeline attaches these
+        // to the program-root CV entry, so a `--correlation_vector`
+        // consumer can map a minified global (`a`) back to its original
+        // source name (`longName`) — provenance that rename otherwise
+        // erased. Emitted only when the log is enabled matters at the
+        // pipeline layer; here we always build the (cheap) list.
+        //
+        // This is the rename *table* (name → name), attached at the
+        // program root. Attaching a contribution to each renamed
+        // identifier's OWN CV id (per-output-span provenance) needs the
+        // log threaded through the `rename_apply_*` recursion and is a
+        // documented follow-up.
+        let contributions: Vec<Contribution> = renames
+            .into_iter()
+            .map(|(from, to)| Contribution {
+                source: "rename-globals".to_string(),
+                tag: "renamed".to_string(),
+                meta: [
+                    ("from".to_string(), json!(from)),
+                    ("to".to_string(), json!(to)),
+                ]
+                .into_iter()
+                .collect(),
+            })
+            .collect();
 
         Ok(PassOutput {
             program,
-            contributions: Vec::new(),
+            contributions,
             changed,
             diagnostics: Vec::new(),
             stats: PassStats { nodes_touched },
@@ -154,11 +184,17 @@ impl Pass for RenameGlobalsPass {
 
 /// Rename qualifying top-level bindings to fresh short names. Returns
 /// whether anything changed.
+/// Renames qualifying top-level bindings to fresh short names.
+///
+/// Returns `(changed, renames)` where `renames` is the applied rename
+/// table as `(from, to)` pairs sorted by original name (deterministic
+/// order for stable CV provenance). `renames` is empty exactly when
+/// `changed` is `false`.
 fn rename_globals(
     program: &mut Program,
     do_not_rename: &HashSet<String>,
     nodes_touched: &mut u32,
-) -> bool {
+) -> (bool, Vec<(String, String)>) {
     // 1. Declaration counts across the whole program (the shadow guard).
     let mut decl_counts: HashMap<String, usize> = HashMap::new();
     count_decl_names_program(program, &mut decl_counts, nodes_touched);
@@ -226,14 +262,20 @@ fn rename_globals(
     }
 
     if map.is_empty() {
-        return false;
+        return (false, Vec::new());
     }
 
     // 5. Apply: rewrite declarations + every use across the whole program.
     for item in &mut program.body {
         rename_apply_item(item, &map);
     }
-    true
+
+    // The rename table drives CV provenance (#89). Sort by original name
+    // so the emitted contributions are deterministic run to run.
+    let mut renames: Vec<(String, String)> =
+        map.into_iter().map(|(from, to)| (from, to)).collect();
+    renames.sort();
+    (true, renames)
 }
 
 /// Generates `a`, `b`, …, `z`, `aa`, `ab`, … skipping reserved words and
@@ -971,6 +1013,70 @@ mod tests {
 
     fn rename_source(src: &str) -> String {
         rename_source_with(src, &[])
+    }
+
+    /// Run the pass and return its CV contributions (the rename table).
+    fn rename_contributions(src: &str) -> Vec<Contribution> {
+        let es = EsVersion::Es2025;
+        let node = parse_javascript_typed(src, es).expect("parse");
+        let prog = bridge::grammar_to_program(&node, es).expect("bridge");
+        let pass = RenameGlobalsPass::with_no_externs();
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(true);
+        pass.run(PassContext {
+            program: &prog,
+            sidecar: &sidecar,
+            cv: &mut cv,
+        })
+        .expect("rename-globals")
+        .contributions
+    }
+
+    // ----- CV provenance (#89) -----
+
+    #[test]
+    fn emits_renamed_contribution_per_global() {
+        // `function longName(){} longName();` — `longName` (declared once,
+        // len>1, referenced) is renamed; the pass records a `renamed`
+        // contribution mapping the original name to its short form.
+        let contribs = rename_contributions("function longName(){} longName();");
+        let renamed: Vec<_> = contribs
+            .iter()
+            .filter(|c| c.source == "rename-globals" && c.tag == "renamed")
+            .collect();
+        assert_eq!(
+            renamed.len(),
+            1,
+            "expected exactly one renamed contribution; got {:?}",
+            contribs
+        );
+        let c = renamed[0];
+        assert_eq!(
+            c.meta.get("from").and_then(|v| v.as_str()),
+            Some("longName")
+        );
+        let to = c
+            .meta
+            .get("to")
+            .and_then(|v| v.as_str())
+            .expect("`to` present");
+        assert!(
+            to.len() < "longName".len(),
+            "renamed to a shorter name; got {:?}",
+            to
+        );
+    }
+
+    #[test]
+    fn no_contributions_when_nothing_renamed() {
+        // `x();` — `x` is a free global (used, not declared here), so
+        // there is nothing to rename and no contribution is emitted.
+        let contribs = rename_contributions("x();");
+        assert!(
+            contribs.is_empty(),
+            "expected no contributions; got {:?}",
+            contribs
+        );
     }
 
     // ----- metadata contract -----

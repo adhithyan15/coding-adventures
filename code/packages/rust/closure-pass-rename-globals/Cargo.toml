@@ -1,16 +1,17 @@
 [package]
 name = "coding-adventures-closure-pass-rename-globals"
-version = "0.6.0"
+version = "0.7.0"
 edition = "2021"
 description = "Aggressive top-level (global) renaming pass for the Closure Compiler clone — the ADVANCED-level complement to closure-pass-rename. Shortens program-private top-level names, gated by an externs do-not-rename boundary."
 
 [dependencies]
 coding-adventures-closure-pass-pipeline = { path = "../closure-pass-pipeline" }
 coding-adventures-javascript-ast = { path = "../javascript-ast" }
+coding_adventures_correlation_vector = { path = "../correlation-vector" }
+serde_json = "1"
 
 [dev-dependencies]
 coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
 coding-adventures-javascript-parser = { path = "../javascript-parser" }
 coding-adventures-closure-emitter = { path = "../closure-emitter" }
 coding-adventures-type-sidecar = { path = "../type-sidecar" }
-coding_adventures_correlation_vector = { path = "../correlation-vector" }

@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-globals` crate will be documented in this file.
 
+## [0.7.0] - 2026-06-30
+
+### Added — correlation-vector rename provenance (#89)
+
+Renaming is a transformation, not a deletion, so — unlike DCE / fold-control-flow
+/ treeshake, which *tombstone* removed nodes — this pass now records each global
+rename as a `renamed` **contribution** carrying `{from, to}`. Before, the pass
+returned `contributions: Vec::new()` and never touched the CV log, so renaming
+silently erased the link between a minified global (`a`) and its original name
+(`longName`): a `--correlation_vector` consumer had no way to recover it.
+
+`rename_globals` now returns its applied rename table (`(from, to)` pairs, sorted
+by original name for deterministic output) alongside the `changed` flag, and
+`run` maps each pair to a `Contribution{source:"rename-globals", tag:"renamed",
+meta:{from, to}}`. The pipeline attaches these to the program-root CV entry
+(`cv.contribute(prog_cv, …)`), so the rename table becomes queryable provenance.
+
+- **Byte-for-byte identical program output** — the renames applied are exactly
+  as before; only the returned `contributions` list is now populated. All 16
+  existing output tests are unchanged.
+- Two new tests: a renamed global emits one `renamed` contribution with the
+  right `from`/shorter `to`; a program with nothing to rename emits none.
+- `correlation-vector` moved from dev- to regular dependency; `serde_json` added
+  (for `Contribution.meta`). Crate version 0.6.0 → 0.7.0.
+
+**Scope / follow-up.** This attaches the rename *table* at the program root.
+Per-output-span provenance — contributing to each renamed identifier's *own* CV
+id — needs the log threaded through the `rename_apply_*` recursion and is a
+documented follow-up.
+
 ## [0.6.0] - 2026-06-20
 
 ### Added — CLOC23: global renaming across `for`-`of`
