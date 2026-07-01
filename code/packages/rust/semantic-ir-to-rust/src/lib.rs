@@ -546,6 +546,18 @@ fn const_ref_in_expr(e: &Expr) -> Option<BackendError> {
         Expr::MapGet { map, key, .. } => {
             const_ref_in_expr(map).or_else(|| const_ref_in_expr(key))
         }
+        // A closure's captured values are ordinary expressions emitted at the
+        // capture site — a `Const` VarRef hiding in a capture would otherwise
+        // slip past this gate and reach the `Scope::Const` emit panic (a
+        // reachable backend DoS on a validated module).  Walk each capture.
+        Expr::MakeClosure { captures, .. } => {
+            for c in captures {
+                if let Some(err) = const_ref_in_expr(&c.value) {
+                    return Some(err);
+                }
+            }
+            None
+        }
         // Leaf / already-supported expressions carry no nested Const.
         _ => None,
     }
@@ -999,6 +1011,44 @@ mod tests {
         };
         let err = compile(&exc_module(vec![stmt], &[Feature::Constants]))
             .expect_err("bare const ref rejected");
+        assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
+        assert!(err.message.contains("constant reference"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn rejects_const_reference_hidden_in_closure_capture() {
+        // Regression: a `Const` VarRef buried in a `MakeClosure` capture must be
+        // rejected by the capability gate, NOT reach the `Scope::Const` emit
+        // panic (a reachable backend DoS on a validated, feature-consistent
+        // module — `Closures` + `Constants` are both accepted).
+        let stmt = Stmt::LetBinding {
+            name: "f".into(),
+            sir_type: None,
+            value: Expr::MakeClosure {
+                fn_name: "lam".into(),
+                captures: vec![semantic_ir::CaptureValue {
+                    name: "c".into(),
+                    value: Expr::VarRef { name: "PI".into(), scope: Scope::Const, span: s() },
+                }],
+                span: s(),
+            },
+            span: s(),
+        };
+        // A real `lam` target so the module VALIDATES (else it fails earlier as
+        // InvalidModule and never reaches the backend const-ref gate).
+        let mut m = exc_module(vec![stmt], &[Feature::Constants, Feature::Closures]);
+        m.functions.push(Function {
+            name: "lam".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![semantic_ir::Capture { name: "c".into(), sir_type: None }],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let err = compile(&m)
+            .expect_err("const ref in closure capture must be rejected, not panic");
         assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
         assert!(err.message.contains("constant reference"), "got: {}", err.message);
     }
