@@ -57,3 +57,20 @@ comparisons or anything where the typechecker is uncertain.
 
 Plus `coding-adventures-javascript-tokens` as a dev-dependency for
 `EsVersion` in tests.
+
+## Upstream conformance tests
+
+`tests/upstream/` ports Google Closure Compiler tests (Apache-2.0; see
+`ATTRIBUTION.md` and `UPSTREAM_SHA`), per the CLOC12 test-port convention:
+
+- `peephole_fold_constants_test.rs` — `PeepholeFoldConstantsTest` (binary/unary
+  constant folding).
+- `peephole_replace_known_methods_test.rs` — `PeepholeReplaceKnownMethodsTest`.
+  Pins the String-method folds this pass performs (indexOf, lastIndexOf, case
+  conversion, slice, substring, substr, charAt, charCodeAt, repeat, trim,
+  includes/startsWith/endsWith) and records the upstream folds it does not yet
+  perform — `Math.abs`/`floor`/`ceil`/`round`, `Array#join`, and `String#concat`
+  with coerced non-string args — as `#[ignore = "blocked on gap-NNN"]`
+  placeholders tied to `code/specs/CLOC12-gaps.md` (gap-141 … gap-143). Run with
+  `cargo test --test upstream_peephole_replace_known_methods` (add
+  `-- --include-ignored` to list the pending gaps).

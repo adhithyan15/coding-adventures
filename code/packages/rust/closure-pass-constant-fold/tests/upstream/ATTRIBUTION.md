@@ -12,6 +12,15 @@ under the Apache License, Version 2.0:
     - upstream: `test/com/google/javascript/jscomp/PeepholeFoldConstantsTest.java`
     - blob SHA at port time: `c67ab886ec14fe2ce9d70b5336ba38108c7152c2`
     - tracked commit: see `UPSTREAM_SHA`
+- `peephole_replace_known_methods_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/PeepholeReplaceKnownMethodsTest.java`
+    - tracked commit: see `UPSTREAM_SHA`
+    - Covers the String-method folds our `ConstantFoldPass` performs today
+      (indexOf, lastIndexOf, case conversion, slice, substring, substr, charAt,
+      charCodeAt, repeat, trim, includes/startsWith/endsWith). Upstream folds we
+      do not perform yet — `Math.abs`/`floor`/`ceil`/`round`, `Array#join`, and
+      `String#concat` with coerced non-string args — are `#[ignore]` placeholders
+      pinned to gap-141 … gap-143.
 
 ## Translation notes
 

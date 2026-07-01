@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-pass-constant-fold"
-version = "0.77.0"
+version = "0.78.0"
 edition = "2021"
 description = "Constant-folding optimization pass for the Closure Compiler clone. Per CLOC06's canonical pass set. Folds compile-time-evaluable expressions like `2 + 3 → 5`."
 
@@ -21,3 +21,7 @@ coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
 [[test]]
 name = "upstream_peephole_fold_constants"
 path = "tests/upstream/peephole_fold_constants_test.rs"
+
+[[test]]
+name = "upstream_peephole_replace_known_methods"
+path = "tests/upstream/peephole_replace_known_methods_test.rs"

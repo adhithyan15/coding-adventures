@@ -2,6 +2,31 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.78.0] - 2026-07-01
+
+### Added — CLOC12 upstream test port (`PeepholeReplaceKnownMethodsTest`)
+
+Ported the applicable cases from Google Closure Compiler's
+`PeepholeReplaceKnownMethodsTest.java` into
+`tests/upstream/peephole_replace_known_methods_test.rs` — the eighth CLOC12 port
+and the second into this crate (alongside the `PeepholeFoldConstants` port). It
+drives the same AST-builder surface as the sibling port (the crate keeps a
+minimal dev-dependency set) and pins the String-method folds this pass performs
+today.
+
+- **10 active `#[test]`s pass**: `indexOf`, `lastIndexOf`, case conversion,
+  `slice`, `substring`, `substr`, `charAt`, `charCodeAt`, `repeat`, `trim`, the
+  boolean `includes`/`startsWith`/`endsWith`, and the decline on a non-constant
+  receiver.
+- **No new closurec bug** — every fold matched on the first run.
+- **3 `#[ignore = "blocked on gap-NNN"]` placeholders** for upstream folds this
+  pass does not perform: `Math.abs`/`floor`/`ceil`/`round` (gap-141),
+  `Array.prototype.join` on array literals (gap-142), and `String#concat` with
+  coerced non-string args (gap-143). Pinned to `code/specs/CLOC12-gaps.md`
+  §CLOC12.141; run with `--include-ignored` to track progress as they close.
+
+No library code changed — this release is test coverage plus docs.
+
 ## [0.77.0] - 2026-06-30
 
 ### Fixed — deep operator chains no longer overflow the native stack (DoS)

@@ -1146,3 +1146,25 @@ historical context with status `RESOLVED` and a link to the fix PR.
   - **gap-140** — **cross-module shared rename map**: upstream can keep a
     property rename stable across separately-compiled modules via a shared map;
     our single-program pass has no such map.
+
+## CLOC12.141 — port `PeepholeReplaceKnownMethodsTest` into `closure-pass-constant-fold`
+
+- **Status:** port landed; 10 active `#[test]`s pass, 3 `#[ignore]` gaps opened.
+- **What it is:** the eighth CLOC12 upstream port and the second into
+  `closure-pass-constant-fold` (alongside the `PeepholeFoldConstants` port). It
+  drives the crate's AST-builder surface (the pass keeps a minimal
+  dev-dependency set, so — like the sibling port — cases are hand-built call
+  expressions, not source strings) and pins the String-method folds our
+  `ConstantFoldPass` performs today: `indexOf`, `lastIndexOf`, case conversion,
+  `slice`, `substring`, `substr`, `charAt`, `charCodeAt`, `repeat`, `trim`, and
+  the boolean `includes`/`startsWith`/`endsWith`, plus the decline on a
+  non-constant receiver. All 10 active cases pass on the first run.
+- **No new closurec bug surfaced** — every fold matched the pass exactly.
+- **New gaps** (executable `#[ignore = "blocked on gap-NNN"]` placeholders):
+  - **gap-141** — fold `Math.abs`/`floor`/`ceil`/`round` on numeric literals.
+    Our pass folds only `Math.max`/`Math.min` today.
+  - **gap-142** — fold `Array.prototype.join` on an array literal of constants
+    (`[a,b,c].join("-")` → `"a-b-c"`). Our pass folds String methods but not
+    Array#join.
+  - **gap-143** — fold `String#concat` with **non-string (coerced) args**
+    (`"x".concat(1, 2)` → `"x12"`). Our concat fold handles string args only.
