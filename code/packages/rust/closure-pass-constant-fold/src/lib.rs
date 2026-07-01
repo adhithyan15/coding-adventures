@@ -1829,6 +1829,53 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                     }
                 }
 
+                // ---- Math.abs/floor/ceil/round(n) → numeric literal ----
+                //
+                // The single-argument numeric `Math` methods (ECMAScript
+                // §21.3.2) each map one finite input to one output:
+                //
+                //   Math.abs(-5)    → 5        Math.floor(4.7)  → 4
+                //   Math.ceil(4.2)  → 5        Math.round(2.5)  → 3
+                //
+                // We fold ONLY when the sole argument is a numeric literal (so no
+                // ToNumber side effect) and the bare-global premise holds (a
+                // literal `Math.<m>(...)` callee, never a shadowed `m.abs(...)`).
+                // Extra arguments are declined (`arguments.len() == 1`): JS ignores
+                // them, but keeping the fold to the exact-arity case keeps the
+                // reasoning airtight.
+                //
+                // **Negative-zero care (mirrors Math.max/min).** `-0` has no
+                // numeric-literal token, so any result that is negative zero — or
+                // any zero-magnitude result from a *negative* input, where JS
+                // yields `-0` (e.g. `Math.ceil(-0.4)` → -0, `Math.round(-0.4)` →
+                // -0) — is DECLINED. Leaving the call intact is always safe. All
+                // finite literal inputs produce finite outputs, so the
+                // `is_finite` check is defense-in-depth.
+                if obj.name == "Math"
+                    && matches!(prop.name.as_str(), "abs" | "floor" | "ceil" | "round")
+                    && arguments.len() == 1
+                {
+                    if let Expression::NumericLiteral(n) = &arguments[0] {
+                        let x = n.value;
+                        let result = match prop.name.as_str() {
+                            "abs" => x.abs(),
+                            "floor" => x.floor(),
+                            "ceil" => x.ceil(),
+                            "round" => js_math_round(x),
+                            _ => unreachable!("matches! guard limits the method set"),
+                        };
+                        let neg_zero_result = result == 0.0
+                            && (result.is_sign_negative() || x.is_sign_negative());
+                        if result.is_finite() && !neg_zero_result {
+                            let parent = c.cv.clone();
+                            let before = format!("Math.{}({})", prop.name, x);
+                            let after = format_js_number(result);
+                            let new_cv = st.fork_cv(&parent, &before, &after);
+                            return stamp_literal_cv(FoldedLiteral::Number(result), new_cv);
+                        }
+                    }
+                }
+
                 // ---- Object.fromEntries([[k, v], …]) → object literal ----
                 //
                 // `Object.fromEntries` (ECMAScript §20.1.2.7) is the inverse of
@@ -4550,6 +4597,26 @@ fn literal_nullish(expr: &Expression) -> Option<bool> {
         | Expression::NumericLiteral(_)
         | Expression::StringLiteral(_) => Some(false),
         _ => None,
+    }
+}
+
+/// Evaluate `Math.round(x)` per ECMAScript §21.3.2.28. JS rounds half **toward
+/// +Infinity** (`Math.round(2.5) === 3`, `Math.round(-2.5) === -2`), whereas
+/// Rust's [`f64::round`] rounds half **away from zero** (`(-2.5).round() ==
+/// -3.0`). The two agree everywhere EXCEPT at an exact `.5` fraction on a
+/// negative value, so we special-case that: at a half, take the `+Inf`-ward
+/// neighbour (`floor + 1`, i.e. `ceil` of a non-integer). For every other input
+/// Rust's round-to-nearest already matches JS — including the fp-pathological
+/// `0.49999999999999994`, which rounds to `0.0` in both. The `-0` result that
+/// `Math.round(-0.5)` produces is filtered by the caller's negative-zero decline.
+fn js_math_round(x: f64) -> f64 {
+    if !x.is_finite() {
+        return x;
+    }
+    if x - x.floor() == 0.5 {
+        x.floor() + 1.0
+    } else {
+        x.round()
     }
 }
 
@@ -9578,11 +9645,102 @@ mod tests {
 
     #[test]
     fn math_other_methods_do_not_fold() {
-        // Only max/min are modelled; e.g. Math.pow(2, 3) is left alone.
+        // pow is not among the modelled methods (max/min/abs/floor/ceil/round);
+        // e.g. Math.pow(2, 3) is left alone.
         let c = math_call("pow", vec![num(2.0, None), num(3.0, None)]);
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "Math.pow(2, 3) is not modelled and must not fold");
         assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    // ------------------- Math.abs/floor/ceil/round (unary) -----------
+
+    #[test]
+    fn fold_math_unary_basic() {
+        assert_eq!(folded_number(math_call("abs", vec![num(-5.0, None)])), 5.0);
+        assert_eq!(folded_number(math_call("abs", vec![num(5.0, None)])), 5.0);
+        assert_eq!(folded_number(math_call("floor", vec![num(4.7, None)])), 4.0);
+        assert_eq!(folded_number(math_call("floor", vec![num(-4.2, None)])), -5.0);
+        assert_eq!(folded_number(math_call("ceil", vec![num(4.2, None)])), 5.0);
+        assert_eq!(folded_number(math_call("ceil", vec![num(-4.7, None)])), -4.0);
+    }
+
+    #[test]
+    fn fold_math_round_half_toward_positive_infinity() {
+        // JS Math.round rounds a half toward +Infinity (NOT away from zero).
+        assert_eq!(folded_number(math_call("round", vec![num(2.5, None)])), 3.0);
+        assert_eq!(folded_number(math_call("round", vec![num(-2.5, None)])), -2.0);
+        assert_eq!(folded_number(math_call("round", vec![num(2.4, None)])), 2.0);
+        assert_eq!(folded_number(math_call("round", vec![num(2.6, None)])), 3.0);
+        // The fp-pathological input rounds to 0 in both Rust and JS.
+        assert_eq!(
+            folded_number(math_call("round", vec![num(0.499_999_999_999_999_94, None)])),
+            0.0
+        );
+    }
+
+    #[test]
+    fn math_unary_negative_zero_result_does_not_fold() {
+        // Results that are (or, from a negative input, would be) -0 have no
+        // faithful numeric-literal spelling, so they DECLINE:
+        //   Math.ceil(-0.4)  === -0   Math.round(-0.4) === -0
+        //   Math.round(-0.5) === -0   Math.floor(-0.0) === -0   Math.abs(-0) === +0*
+        // (*abs(-0) is +0 and would be representable, but the conservative
+        // negative-input-zero guard declines it too — always safe.)
+        let cases = [
+            math_call("ceil", vec![num(-0.4, None)]),
+            math_call("round", vec![num(-0.4, None)]),
+            math_call("round", vec![num(-0.5, None)]),
+            math_call("floor", vec![num(-0.0, None)]),
+        ];
+        for c in cases {
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "a -0 result must not fold (no -0 literal spelling)");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn math_unary_non_literal_or_wrong_arity_does_not_fold() {
+        for method in ["abs", "floor", "ceil", "round"] {
+            // Non-literal argument.
+            let c = math_call(method, vec![ident("x")]);
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "Math.{method}(x) must not fold");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+
+            // Wrong arity (zero or two args) declines — we fold only arity 1.
+            for args in [vec![], vec![num(1.0, None), num(2.0, None)]] {
+                let c = math_call(method, args);
+                let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+                assert!(!changed, "Math.{method} with != 1 arg must not fold");
+                assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+            }
+        }
+    }
+
+    #[test]
+    fn math_unary_on_non_global_receiver_does_not_fold() {
+        // Only the bare global `Math` folds; `m.abs(-1)` is left alone.
+        let c = Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(ident("m"), "abs")),
+            arguments: vec![num(-1.0, None)],
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+        assert!(!changed, "m.abs(-1) must not fold");
+        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+    }
+
+    #[test]
+    fn js_math_round_matches_ecmascript_semantics() {
+        // Direct helper checks: half toward +Inf, and Rust-vs-JS agreement.
+        assert_eq!(js_math_round(2.5), 3.0);
+        assert_eq!(js_math_round(-2.5), -2.0);
+        assert_eq!(js_math_round(0.5), 1.0);
+        assert_eq!(js_math_round(1.4), 1.0);
+        assert_eq!(js_math_round(1.6), 2.0);
+        assert_eq!(js_math_round(-1.6), -2.0);
     }
 
     #[test]
