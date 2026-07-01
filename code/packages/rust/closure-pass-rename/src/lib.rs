@@ -87,6 +87,8 @@ use std::collections::{HashMap, HashSet};
 use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
 };
+use coding_adventures_correlation_vector::Contribution;
+use serde_json::json;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
     AssignmentTarget, BindingTarget, BlockStatement, Declaration, Expression, ForInit,
@@ -161,11 +163,45 @@ impl Pass for RenamePass {
         // visible).
         let mut program = ctx.program.clone();
         let mut nodes_touched: u32 = 1; // the program root
-        let changed = rename_program(&mut program, &mut nodes_touched);
+        let mut renames: Vec<LocalRename> = Vec::new();
+        let changed = rename_program(&mut program, &mut nodes_touched, &mut renames);
+
+        // CV provenance (#89): record every local α-rename as a `renamed`
+        // contribution carrying `{scope, from, to}` — the enclosing leaf
+        // function's name, the original binding name, and its short form.
+        // Renaming is a transformation, not a deletion, so (like the
+        // rename-globals / rename-properties passes) we contribute a
+        // `renamed` record rather than a tombstone. The `scope` qualifier
+        // matters here in a way it does not for globals: local short names
+        // are allocated fresh *per function*, so the same `to` (`a`) recurs
+        // across functions — `scope` is what lets a `--correlation_vector`
+        // consumer map a minified local back to the right original binding.
+        // Records come out in (function source order, then binding
+        // declaration order) so the emitted list is deterministic run to
+        // run; program output is byte-for-byte unchanged.
+        //
+        // This is the rename *table*; per-output-span provenance
+        // (contributing to each renamed identifier's own CV id) needs the log
+        // threaded through `rewrite_uses_block`, a documented follow-up that
+        // mirrors the other rename passes.
+        let contributions: Vec<Contribution> = renames
+            .into_iter()
+            .map(|r| Contribution {
+                source: "rename".to_string(),
+                tag: "renamed".to_string(),
+                meta: [
+                    ("scope".to_string(), json!(r.scope)),
+                    ("from".to_string(), json!(r.from)),
+                    ("to".to_string(), json!(r.to)),
+                ]
+                .into_iter()
+                .collect(),
+            })
+            .collect();
 
         Ok(PassOutput {
             program,
-            contributions: Vec::new(),
+            contributions,
             changed,
             diagnostics: Vec::new(),
             stats: PassStats { nodes_touched },
@@ -222,16 +258,30 @@ const RESERVED: &[&str] = &[
     "do", "if", "in", "of", "as", "is", "or", // 2-letter keywords/contextual
 ];
 
+/// One local α-rename for CV provenance (#89): the enclosing leaf
+/// function's name, the original binding name, and its short form. `run`
+/// turns each into a `renamed` contribution `{scope, from, to}`.
+struct LocalRename {
+    scope: String,
+    from: String,
+    to: String,
+}
+
 /// Walk the whole program and rename leaf-function parameters in place.
 /// Returns whether anything changed. `nodes_touched` is bumped per
-/// statement visited for the scheduler's cost accounting.
-fn rename_program(program: &mut Program, nodes_touched: &mut u32) -> bool {
+/// statement visited for the scheduler's cost accounting. `renames`
+/// accumulates each α-rename for CV provenance.
+fn rename_program(
+    program: &mut Program,
+    nodes_touched: &mut u32,
+    renames: &mut Vec<LocalRename>,
+) -> bool {
     let mut changed = false;
     for item in &mut program.body {
         if let ProgramItem::Declaration(Declaration::FunctionDeclaration(fd)) = item {
-            changed |= process_function(fd, nodes_touched);
+            changed |= process_function(fd, nodes_touched, renames);
         } else if let ProgramItem::Statement(stmt) = item {
-            changed |= process_stmt(stmt, nodes_touched);
+            changed |= process_stmt(stmt, nodes_touched, renames);
         }
     }
     changed
@@ -240,56 +290,64 @@ fn rename_program(program: &mut Program, nodes_touched: &mut u32) -> bool {
 /// Process one statement: recurse to find function declarations (which
 /// may be nested in blocks / `if` / loops / `switch`), and rename the
 /// parameters of any leaf function found.
-fn process_stmt(stmt: &mut Statement, nodes_touched: &mut u32) -> bool {
+fn process_stmt(
+    stmt: &mut Statement,
+    nodes_touched: &mut u32,
+    renames: &mut Vec<LocalRename>,
+) -> bool {
     *nodes_touched += 1;
     match stmt {
         Statement::Declaration(Declaration::FunctionDeclaration(fd)) => {
-            process_function(fd, nodes_touched)
+            process_function(fd, nodes_touched, renames)
         }
         Statement::Declaration(Declaration::VariableDeclaration(_)) => false,
-        Statement::Tagged(t) => process_tagged(t, nodes_touched),
+        Statement::Tagged(t) => process_tagged(t, nodes_touched, renames),
     }
 }
 
 /// Recurse into a tagged statement's child statements to find nested
 /// function declarations. (No renaming happens here directly — that is
 /// driven from [`process_function`].)
-fn process_tagged(t: &mut TaggedStatement, nodes_touched: &mut u32) -> bool {
+fn process_tagged(
+    t: &mut TaggedStatement,
+    nodes_touched: &mut u32,
+    renames: &mut Vec<LocalRename>,
+) -> bool {
     let mut changed = false;
     match t {
         TaggedStatement::BlockStatement(b) => {
             for s in &mut b.body {
-                changed |= process_stmt(s, nodes_touched);
+                changed |= process_stmt(s, nodes_touched, renames);
             }
         }
         TaggedStatement::IfStatement(is) => {
-            changed |= process_stmt(&mut is.consequent, nodes_touched);
+            changed |= process_stmt(&mut is.consequent, nodes_touched, renames);
             if let Some(alt) = &mut is.alternate {
-                changed |= process_stmt(alt, nodes_touched);
+                changed |= process_stmt(alt, nodes_touched, renames);
             }
         }
         TaggedStatement::WhileStatement(ws) => {
-            changed |= process_stmt(&mut ws.body, nodes_touched);
+            changed |= process_stmt(&mut ws.body, nodes_touched, renames);
         }
         TaggedStatement::DoWhileStatement(ds) => {
-            changed |= process_stmt(&mut ds.body, nodes_touched);
+            changed |= process_stmt(&mut ds.body, nodes_touched, renames);
         }
         TaggedStatement::ForStatement(fs) => {
-            changed |= process_stmt(&mut fs.body, nodes_touched);
+            changed |= process_stmt(&mut fs.body, nodes_touched, renames);
         }
         TaggedStatement::ForInStatement(fs) => {
-            changed |= process_stmt(&mut fs.body, nodes_touched);
+            changed |= process_stmt(&mut fs.body, nodes_touched, renames);
         }
         TaggedStatement::ForOfStatement(fs) => {
-            changed |= process_stmt(&mut fs.body, nodes_touched);
+            changed |= process_stmt(&mut fs.body, nodes_touched, renames);
         }
         TaggedStatement::LabeledStatement(ls) => {
-            changed |= process_stmt(&mut ls.body, nodes_touched);
+            changed |= process_stmt(&mut ls.body, nodes_touched, renames);
         }
         TaggedStatement::SwitchStatement(ss) => {
             for case in &mut ss.cases {
                 for s in &mut case.consequent {
-                    changed |= process_stmt(s, nodes_touched);
+                    changed |= process_stmt(s, nodes_touched, renames);
                 }
             }
         }
@@ -298,16 +356,16 @@ fn process_tagged(t: &mut TaggedStatement, nodes_touched: &mut u32) -> bool {
             // functions inside try/catch/finally are processed. The catch
             // `param` is preserved.
             for s in &mut ts.block.body {
-                changed |= process_stmt(s, nodes_touched);
+                changed |= process_stmt(s, nodes_touched, renames);
             }
             if let Some(h) = &mut ts.handler {
                 for s in &mut h.body.body {
-                    changed |= process_stmt(s, nodes_touched);
+                    changed |= process_stmt(s, nodes_touched, renames);
                 }
             }
             if let Some(f) = &mut ts.finalizer {
                 for s in &mut f.body {
-                    changed |= process_stmt(s, nodes_touched);
+                    changed |= process_stmt(s, nodes_touched, renames);
                 }
             }
         }
@@ -324,16 +382,20 @@ fn process_tagged(t: &mut TaggedStatement, nodes_touched: &mut u32) -> bool {
 
 /// Recurse into a function's nested functions, then — if it is a leaf —
 /// rename its renameable parameters.
-fn process_function(fd: &mut FunctionDeclaration, nodes_touched: &mut u32) -> bool {
+fn process_function(
+    fd: &mut FunctionDeclaration,
+    nodes_touched: &mut u32,
+    renames: &mut Vec<LocalRename>,
+) -> bool {
     // First handle any nested functions inside the body.
     let mut changed = false;
     for s in &mut fd.body.body {
-        changed |= process_stmt(s, nodes_touched);
+        changed |= process_stmt(s, nodes_touched, renames);
     }
     // A leaf function (no nested function declarations) is eligible for
     // parameter renaming.
     if !block_has_function(&fd.body) {
-        changed |= rename_leaf_bindings(fd);
+        changed |= rename_leaf_bindings(fd, renames);
     }
     changed
 }
@@ -428,7 +490,7 @@ fn stmt_has_function(stmt: &Statement) -> bool {
 /// two block-scoped `let x` in sibling blocks, …) could have *distinct*
 /// bindings whose uses we cannot tell apart without full scope resolution,
 /// so we conservatively skip it entirely.
-fn rename_leaf_bindings(fd: &mut FunctionDeclaration) -> bool {
+fn rename_leaf_bindings(fd: &mut FunctionDeclaration, renames: &mut Vec<LocalRename>) -> bool {
     // The declared names, in deterministic source order (params first,
     // then body declarators), WITH duplicates — each tagged with whether
     // its *scope* makes it safe to rename:
@@ -492,6 +554,21 @@ fn rename_leaf_bindings(fd: &mut FunctionDeclaration) -> bool {
 
     if map.is_empty() {
         return false;
+    }
+
+    // CV provenance (#89): record each decided rename, qualified by the
+    // enclosing function's name so a consumer can disambiguate local short
+    // names that recur across functions. Sorted by original name so the
+    // emitted contribution order is deterministic regardless of `HashMap`
+    // iteration order.
+    let mut sorted: Vec<(&String, &String)> = map.iter().collect();
+    sorted.sort_by(|a, b| a.0.cmp(b.0));
+    for (from, to) in sorted {
+        renames.push(LocalRename {
+            scope: fd.id.name.clone(),
+            from: from.clone(),
+            to: to.clone(),
+        });
     }
 
     // Apply: rewrite the parameter declarations …
@@ -1158,7 +1235,7 @@ mod tests {
     use super::*;
     use coding_adventures_closure_emitter::{emit, EmitOptions};
     use coding_adventures_closure_pass_pipeline::{PassContext, PassPipeline, PipelineOutput};
-    use coding_adventures_correlation_vector::CVLog;
+    use coding_adventures_correlation_vector::{CVLog, Contribution};
     use coding_adventures_javascript_ast::{Program, SourceType};
     use coding_adventures_javascript_parser::{bridge, parse_javascript_typed};
     use coding_adventures_javascript_tokens::EsVersion;
@@ -1195,6 +1272,76 @@ mod tests {
         emit(&out.program, &sidecar, &mut cv2, &opts)
             .expect("emit")
             .code
+    }
+
+    /// Parse `src`, bridge, run `RenamePass`, and return its CV
+    /// contributions — the local-rename table (#89 provenance).
+    fn rename_contributions(src: &str) -> Vec<Contribution> {
+        let es = EsVersion::Es2025;
+        let node = parse_javascript_typed(src, es).expect("parse");
+        let prog = bridge::grammar_to_program(&node, es).expect("bridge");
+        let pass = RenamePass::new();
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(true);
+        pass.run(PassContext {
+            program: &prog,
+            sidecar: &sidecar,
+            cv: &mut cv,
+        })
+        .expect("rename")
+        .contributions
+    }
+
+    // ----- CV provenance (#89): `renamed` contributions -----
+
+    #[test]
+    fn emits_renamed_contribution_for_local() {
+        // `longParam` is the sole param of leaf `f`; renaming it to `a`
+        // records a `renamed` contribution scoped to `f`.
+        let contribs = rename_contributions("function f(longParam) { return longParam; } f(1);");
+        let renamed: Vec<_> = contribs
+            .iter()
+            .filter(|c| c.source == "rename" && c.tag == "renamed")
+            .collect();
+        assert_eq!(renamed.len(), 1, "one local renamed; got {contribs:?}");
+        let c = renamed[0];
+        assert_eq!(c.meta.get("scope").and_then(|v| v.as_str()), Some("f"));
+        assert_eq!(
+            c.meta.get("from").and_then(|v| v.as_str()),
+            Some("longParam")
+        );
+        let to = c.meta.get("to").and_then(|v| v.as_str()).expect("`to`");
+        assert!(to.len() < "longParam".len(), "shorter; got {to:?}");
+    }
+
+    #[test]
+    fn scope_qualifier_distinguishes_same_name_in_two_functions() {
+        // The same original name `longX` in two leaf functions both become
+        // `a`; the `scope` qualifier keeps the two records distinct.
+        let contribs = rename_contributions(
+            "function f(longX) { return longX; } function g(longX) { return longX; } f(1); g(2);",
+        );
+        let renamed: Vec<_> = contribs
+            .iter()
+            .filter(|c| c.source == "rename" && c.tag == "renamed")
+            .collect();
+        assert_eq!(renamed.len(), 2, "one per function; got {contribs:?}");
+        let scopes: Vec<_> = renamed
+            .iter()
+            .filter_map(|c| c.meta.get("scope").and_then(|v| v.as_str()))
+            .collect();
+        assert!(scopes.contains(&"f") && scopes.contains(&"g"), "got {scopes:?}");
+        // Both map the same original name to the same fresh short name.
+        for c in &renamed {
+            assert_eq!(c.meta.get("from").and_then(|v| v.as_str()), Some("longX"));
+        }
+    }
+
+    #[test]
+    fn no_rename_emits_no_contributions() {
+        // Only a single-char param — already minimal, nothing renamed.
+        let contribs = rename_contributions("function f(x) { return x; } f(1);");
+        assert!(contribs.is_empty(), "expected none; got {contribs:?}");
     }
 
     #[test]

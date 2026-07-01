@@ -67,6 +67,30 @@ attribute and AST export markers to build the do-not-rename set.
   Broader renaming (locals, non-leaf scopes, module-private top-level
   names) is future work on the same walker.
 
+## Rename provenance (correlation vector, #89)
+
+Renaming is a transformation, not a deletion, so — like the `rename-globals`
+and `rename-properties` passes — this pass records each local α-rename as a
+`renamed` **contribution** carrying `{scope, from, to}`:
+
+```text
+function f(longParam) { return longParam; }
+  → contribution { source: "rename", tag: "renamed",
+                   meta: { scope: "f", from: "longParam", to: "a" } }
+```
+
+The `scope` qualifier is what makes local provenance usable. Unlike globals,
+local short names are allocated *fresh per function*, so the same `to` (`a`)
+recurs across functions — without `scope`, a minified `a` could not be traced
+back to the right original binding. Records emit in `(function source order,
+then binding order, ties by original name)`, so the list is deterministic run
+to run, and the pipeline attaches them to the program-root CV entry.
+
+Program output is byte-for-byte unchanged (contributions are pure metadata).
+Per-output-span provenance — contributing to each renamed identifier's own CV
+id — needs the log threaded through `rewrite_uses_block`, a documented
+follow-up shared with the other rename passes.
+
 ## Where this pass sits
 
 CLOC06 §"Canonical pass set" pins:
