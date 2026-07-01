@@ -300,30 +300,62 @@ impl Parser<'_> {
         Ok(MathExpr::Matrix(rows))
     }
 
-    /// A bracketed group. With NO commas, parentheses are *grouping only* — the delimiter style
-    /// is dropped and the inner expression is returned directly (so `sqrt(x)` ≡ `sqrt x` and
-    /// `(1)/(2)` ≡ `1/2`). With one or more top-level commas, the fence is a LIST — `(a, b, c)`
-    /// → `MathExpr::Sequence([a, b, c])` — so the commas are preserved as list structure (a
-    /// coordinate tuple, an argument list) rather than rejected. Each item is a full relation.
-    /// Any closing bracket is accepted (AsciiMath treats them loosely). Note the matrix shape
-    /// `((a,b),(c,d))` is handled earlier by `parse_matrix` (an outer bracket immediately
-    /// followed by another opening bracket); this path sees only single-fence groups/lists.
+    /// A bracketed group. Three shapes, decided by the top-level separators:
+    ///
+    ///   * NO separator → parentheses are *grouping only* — the delimiter style is dropped and the
+    ///     inner expression is returned directly (so `sqrt(x)` ≡ `sqrt x` and `(1)/(2)` ≡ `1/2`).
+    ///   * `,` only → a flat LIST `(a, b, c)` → `MathExpr::Sequence([a, b, c])` (a coordinate tuple,
+    ///     an argument list), preserving the commas as list structure.
+    ///   * any `;` → ROWS. Semicolons are the row separator and commas the within-row (column)
+    ///     separator — the classic fenced-matrix reading `(a, b; c, d)` →
+    ///     `Sequence([Sequence([a, b]), Sequence([c, d])])`. A row with no comma is a single
+    ///     relation, so a semicolon-only fence `(a; b; c)` — a column vector — collapses to the same
+    ///     flat `Sequence([a, b, c])` as a comma list (no row has a second column); a ragged fence
+    ///     `(a; b, c)` stays faithful as `Sequence([a, Sequence([b, c])])`. Mirrors the LaTeX and
+    ///     MathML fence reading exactly.
+    ///
+    /// Each item is a full relation. Any closing bracket is accepted (AsciiMath treats them
+    /// loosely). Note the matrix shape `((a,b),(c,d))` is handled earlier by `parse_matrix` (an
+    /// outer bracket immediately followed by another opening bracket); this path sees only
+    /// single-fence groups/lists. The separator loops are bounded over `parse_relation` (each item
+    /// already depth-charged), never recursion, so a wide fence cannot overflow the stack; a
+    /// trailing/doubled separator leaves a non-atom before the next `parse_relation`, which returns
+    /// a clean spanned error.
     fn parse_group(&mut self) -> Result<MathExpr, FrontendError> {
         self.advance(); // opening bracket
-        let first = self.parse_relation()?;
-        let expr = if matches!(self.peek(), TokenKind::Comma) {
-            // Comma-separated list → Sequence. Mirrors the matrix row's cell loop: a bounded
-            // loop over `parse_relation` (each item already depth-charged), never recursion, so
-            // a wide `(a, b, …, z)` cannot overflow the stack. A trailing/doubled comma leaves a
-            // non-atom before the next `parse_relation`, which returns a clean spanned error.
-            let mut items = vec![first];
-            while matches!(self.peek(), TokenKind::Comma) {
-                self.advance();
-                items.push(self.parse_relation()?);
-            }
+        // Parse the fence body as a sequence of relations, recording the separator (`,` or `;`)
+        // that follows each one; `seps[i]` follows `items[i]`, so `seps.len() == items.len() - 1`.
+        let mut items = vec![self.parse_relation()?];
+        let mut seps: Vec<TokenKind> = Vec::new();
+        while matches!(self.peek(), TokenKind::Comma | TokenKind::Semicolon) {
+            seps.push(self.peek().clone());
+            self.advance();
+            items.push(self.parse_relation()?);
+        }
+        let expr = if seps.is_empty() {
+            // Grouping only.
+            items.pop().expect("one item")
+        } else if !seps.iter().any(|s| matches!(s, TokenKind::Semicolon)) {
+            // Comma-only: a flat list.
             MathExpr::Sequence(items)
         } else {
-            first
+            // Semicolons present: split into rows at each `;`, folding each row's comma-separated
+            // columns into an inner Sequence (a single-column row folds to that one relation).
+            let mut rows: Vec<MathExpr> = Vec::new();
+            let mut current: Vec<MathExpr> = Vec::new();
+            for (i, item) in items.into_iter().enumerate() {
+                current.push(item);
+                let ends_row = i >= seps.len() || matches!(seps[i], TokenKind::Semicolon);
+                if ends_row {
+                    if current.len() == 1 {
+                        rows.push(current.pop().expect("one column"));
+                    } else {
+                        rows.push(MathExpr::Sequence(std::mem::take(&mut current)));
+                    }
+                    current.clear();
+                }
+            }
+            MathExpr::Sequence(rows)
         };
         match self.peek() {
             TokenKind::RParen | TokenKind::RBracket | TokenKind::RBrace => {

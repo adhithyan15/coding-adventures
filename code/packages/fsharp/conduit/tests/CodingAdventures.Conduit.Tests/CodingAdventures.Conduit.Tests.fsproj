@@ -16,4 +16,13 @@
     <ProjectReference Include="../../CodingAdventures.Conduit.fsproj" />
     <Compile Include="ConduitTests.fs" />
   </ItemGroup>
+
+  <!-- Serialize test collections: several test classes bind real HTTP servers
+       (ServerLifecycleTests) alongside the E2E fixture. Running those collections
+       concurrently put multiple conduit-capi servers + reactor threads under CPU
+       contention in one process, which flaked the E2E requests (~40% of cold
+       runs). Serial collections make the suite deterministic. -->
+  <ItemGroup>
+    <None Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

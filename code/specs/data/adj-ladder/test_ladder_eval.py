@@ -52,6 +52,7 @@ SELF_CONTAINED_RUNGS = (
     "rung12_threshold_decision",
     "rung13_transtubular_gradient",
     "rung14_indeterminate_decision",
+    "rung15_fractional_excretion_urea",
 )
 
 

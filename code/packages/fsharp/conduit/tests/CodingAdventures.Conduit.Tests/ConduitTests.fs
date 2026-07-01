@@ -283,24 +283,19 @@ type ServerFixture() =
     do
         server.ServeBackground()
 
-        // Wait for conduit-capi's Tokio accept-loop to be live.
+        // Wait for the conduit-capi reactor to be live before sending requests.
+        // (conduit-capi runs `embeddable-http-server`'s single inline reactor on
+        // one background OS thread — NOT a Tokio pool; `IsRunning` flips true as
+        // soon as conduit_server_serve_background spawns that thread.)
         //
-        // conduit-capi uses a Tokio async runtime (Rust) with an OS-level thread
-        // pool. `IsRunning` is set by the F# side as soon as
-        // conduit_server_serve_background returns, but the Tokio accept-loop and
-        // worker threads initialise in parallel. Polling until IsRunning ensures
-        // test requests are not sent before the accept-loop is up.
-        //
-        // KNOWN RACE: the first managed-code call from each fresh Tokio worker
-        // thread incurs a one-time .NET thread-context setup cost. If a test is
-        // the very first caller on a given thread it can receive a wrong HTTP
-        // status before that setup completes. This manifests as intermittent
-        // failures (≈ 40% of cold back-to-back runs) in BeforeFilter,
-        // Post_EchoReflectsBody, and similar tests. The root cause is inside
-        // conduit-capi; no .NET-side warmup probe reliably eliminates it without
-        // introducing worse races (Rust panics, partial test runs). In CI the
-        // test suite runs once with a cold-start Tokio, which has a lower failure
-        // rate than hot-loop re-runs on the same binary.
+        // NB: the ~40% "cold run" flake this fixture used to hit was NOT a
+        // conduit-capi thread-init race (an earlier comment here blamed a
+        // non-existent "Tokio worker pool"). The real cause was xUnit running this
+        // E2E collection *concurrently* with the server-binding ServerLifecycleTests
+        // collection: multiple conduit-capi servers + reactor threads competing for
+        // CPU in one process starved this fixture's early requests and desynced
+        // responses. `xunit.runner.json` (parallelizeTestCollections: false) now
+        // serialises the collections, which makes the suite deterministic.
         let rdy = DateTime.UtcNow.AddSeconds 5.0
         while not server.IsRunning && DateTime.UtcNow < rdy do
             System.Threading.Thread.Sleep 2

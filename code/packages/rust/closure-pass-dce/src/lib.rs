@@ -81,6 +81,7 @@ use coding_adventures_javascript_ast::{
     DoWhileStatement, VariableDeclaration, VariableDeclarator, WhileStatement,
 };
 use serde_json::json;
+use std::collections::HashMap;
 
 /// `Pass::depends_on` value. Per CLOC06 canonical order:
 /// `constant-fold → fold-control-flow → dce → ...`. We declare
@@ -170,11 +171,55 @@ impl DceState<'_> {
                 .into_iter()
                 .collect(),
             };
-            // Threaded `cv` reserved for future CV-invariant
-            // bookkeeping the same way fold-control-flow does it.
-            let _ = self.cv;
             self.contributions.push(contribution);
         }
+    }
+
+    /// Record a genuine *deletion* of one or more nodes.
+    ///
+    /// [`record`](Self::record) logs a summary [`Contribution`]
+    /// against the *container* — "dce dropped N statements here." But
+    /// the container is not what disappeared: the individual removed
+    /// nodes are. This method additionally *tombstones* each removed
+    /// node's own CV entry with a `DeletionRecord` (via
+    /// [`CVLog::delete`]), so a `--correlation_vector` consumer that
+    /// later asks "what happened to the span at 42:3-42:19?" gets a
+    /// definite answer — *dce removed it, because `<reason>`* — instead
+    /// of the span silently vanishing from the provenance graph. A
+    /// minifier that drops code without a trace is unauditable; one
+    /// that tombstones every removal can always be asked to justify
+    /// itself. That audit trail is the entire reason the correlation
+    /// vector exists.
+    ///
+    /// When the log is disabled (production default) `delete` is a
+    /// no-op, so this costs nothing on the hot path — the tombstones
+    /// only materialise under `--correlation_vector`.
+    ///
+    /// Note what does NOT call this: `block-flattened` *moves* a nested
+    /// block's statements up one scope level, it does not delete them,
+    /// so those nodes must stay live in the CV log and keep only their
+    /// summary contribution.
+    fn record_deletion(
+        &mut self,
+        removed: &[Option<String>],
+        container: &Option<String>,
+        reason: &str,
+        before: &str,
+        after: &str,
+    ) {
+        // Tombstone each removed node individually. `flatten()` skips
+        // the `None`s (untraced nodes — nothing to attribute to).
+        for cv_id in removed.iter().flatten() {
+            let mut meta: HashMap<String, serde_json::Value> = HashMap::new();
+            if let Some(container_cv) = container {
+                meta.insert("container_cv".to_string(), json!(container_cv));
+            }
+            self.cv.delete(cv_id, "dce", reason, meta);
+        }
+        // Keep the container-level summary contribution so existing
+        // history/stats/tests that look for this tag still observe the
+        // removal at the enclosing node.
+        self.record(container, reason, before, after);
     }
 
     fn visit(&mut self) {
@@ -227,10 +272,18 @@ fn dce_program(prog: &Program, st: &mut DceState) -> Program {
     // because this pass never runs at WHITESPACE_ONLY, `debugger` survives
     // there, matching upstream Closure exactly. See `is_debugger_statement`.
     let before_debugger_drop = new_body.len();
+    // Capture the removed items' CV ids *before* `retain` drops them,
+    // so `record_deletion` can tombstone each vanished span.
+    let removed_debugger_cvs: Vec<Option<String>> = new_body
+        .iter()
+        .filter(|item| is_debugger_program_item(item))
+        .map(program_item_cv)
+        .collect();
     new_body.retain(|item| !is_debugger_program_item(item));
     let dropped_debuggers = before_debugger_drop - new_body.len();
     if dropped_debuggers > 0 {
-        st.record(
+        st.record_deletion(
+            &removed_debugger_cvs,
             &prog.cv,
             "removed-debugger",
             &format!("program with {} top-level items", before_debugger_drop),
@@ -418,8 +471,13 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
                     let original_len = case.consequent.len();
                     let dropped = original_len - (term_idx + 1);
                     if dropped > 0 {
+                        let removed_cvs: Vec<Option<String>> = case.consequent[term_idx + 1..]
+                            .iter()
+                            .map(statement_cv)
+                            .collect();
                         case.consequent.truncate(term_idx + 1);
-                        st.record(
+                        st.record_deletion(
+                            &removed_cvs,
                             &case.cv,
                             "removed-dead-code-in-case",
                             &format!("case with {} statements", original_len),
@@ -665,8 +723,13 @@ fn dce_block_statement(b: &BlockStatement, st: &mut DceState) -> BlockStatement 
     if let Some(terminator_idx) = working.iter().position(is_terminator) {
         let dropped = original_len - (terminator_idx + 1);
         if dropped > 0 && tail_is_safe_to_truncate(&working[terminator_idx + 1..]) {
+            let removed_cvs: Vec<Option<String>> = working[terminator_idx + 1..]
+                .iter()
+                .map(statement_cv)
+                .collect();
             working.truncate(terminator_idx + 1);
-            st.record(
+            st.record_deletion(
+                &removed_cvs,
                 &b.cv,
                 "removed-dead-code",
                 &format!("block with {} statements", original_len),
@@ -680,10 +743,16 @@ fn dce_block_statement(b: &BlockStatement, st: &mut DceState) -> BlockStatement 
 
     // Drop EmptyStatements.
     let before_empty_drop = working.len();
+    let removed_empty_cvs: Vec<Option<String>> = working
+        .iter()
+        .filter(|s| is_empty_statement(s))
+        .map(statement_cv)
+        .collect();
     working.retain(|s| !is_empty_statement(s));
     let dropped_empties = before_empty_drop - working.len();
     if dropped_empties > 0 {
-        st.record(
+        st.record_deletion(
+            &removed_empty_cvs,
             &b.cv,
             "removed-empty-statement",
             &format!("block with {} statements", before_empty_drop),
@@ -703,10 +772,16 @@ fn dce_block_statement(b: &BlockStatement, st: &mut DceState) -> BlockStatement 
     // brace-less `if (c) debugger;` consequent) is left intact — see
     // `dce_tagged_statement`'s leaf arm.
     let before_debugger_drop = working.len();
+    let removed_debugger_cvs: Vec<Option<String>> = working
+        .iter()
+        .filter(|s| is_debugger_statement(s))
+        .map(statement_cv)
+        .collect();
     working.retain(|s| !is_debugger_statement(s));
     let dropped_debuggers = before_debugger_drop - working.len();
     if dropped_debuggers > 0 {
-        st.record(
+        st.record_deletion(
+            &removed_debugger_cvs,
             &b.cv,
             "removed-debugger",
             &format!("block with {} statements", before_debugger_drop),
@@ -970,6 +1045,66 @@ fn is_debugger_statement(stmt: &Statement) -> bool {
 /// `dce_program` needs this thin wrapper over [`is_debugger_statement`].
 fn is_debugger_program_item(item: &ProgramItem) -> bool {
     matches!(item, ProgramItem::Statement(s) if is_debugger_statement(s))
+}
+
+/// Fetch a statement's own correlation-vector id, if it carries one.
+///
+/// DCE's deletion sites need the *removed* node's CV id — not just the
+/// enclosing container's — so they can tombstone the exact span that
+/// vanished (see [`DceState::record_deletion`]). Every AST node struct
+/// carries an `Option<CvId>`; this unwraps the `Statement` →
+/// `TaggedStatement` nesting to reach it.
+///
+/// A [`Statement::Declaration`] returns `None`, and that is correct
+/// rather than lossy: DCE's removal sites never drop a `var` / `function`
+/// declaration. The dead-tail truncate is gated on
+/// `tail_is_safe_to_truncate`, whose whitelist excludes both (they
+/// hoist, so removing them could break earlier code), and the empty /
+/// debugger sweeps only ever match those two leaf kinds. So there is no
+/// declaration deletion here to attribute in the first place.
+fn statement_cv(stmt: &Statement) -> Option<String> {
+    match stmt {
+        Statement::Tagged(t) => tagged_statement_cv(t),
+        Statement::Declaration(_) => None,
+    }
+}
+
+/// The `TaggedStatement` arm of [`statement_cv`]. Every variant carries a
+/// `cv: Option<CvId>`; we clone it out. Kept as an exhaustive match (no
+/// `_` wildcard) on purpose: if a new statement kind is added upstream,
+/// this fails to compile and forces a conscious decision here rather than
+/// silently dropping the new kind's provenance.
+fn tagged_statement_cv(t: &TaggedStatement) -> Option<String> {
+    use TaggedStatement::*;
+    match t {
+        ExpressionStatement(s) => s.cv.clone(),
+        BlockStatement(s) => s.cv.clone(),
+        IfStatement(s) => s.cv.clone(),
+        WhileStatement(s) => s.cv.clone(),
+        DoWhileStatement(s) => s.cv.clone(),
+        ForStatement(s) => s.cv.clone(),
+        ForInStatement(s) => s.cv.clone(),
+        ForOfStatement(s) => s.cv.clone(),
+        ReturnStatement(s) => s.cv.clone(),
+        BreakStatement(s) => s.cv.clone(),
+        ContinueStatement(s) => s.cv.clone(),
+        LabeledStatement(s) => s.cv.clone(),
+        ThrowStatement(s) => s.cv.clone(),
+        SwitchStatement(s) => s.cv.clone(),
+        TryStatement(s) => s.cv.clone(),
+        EmptyStatement(s) => s.cv.clone(),
+        DebuggerStatement(s) => s.cv.clone(),
+    }
+}
+
+/// Top-level analogue of [`statement_cv`] for a `ProgramItem`. Only the
+/// `Statement` arm can be a `debugger;` (the sole top-level deletion), so
+/// a `Declaration` item falls through to `None`.
+fn program_item_cv(item: &ProgramItem) -> Option<String> {
+    match item {
+        ProgramItem::Statement(s) => statement_cv(s),
+        ProgramItem::Declaration(_) => None,
+    }
 }
 
 // =====================================================================
@@ -1256,6 +1391,185 @@ mod tests {
             panic!("expected a FunctionDeclaration at body[0]");
         };
         &f.body
+    }
+
+    // ---------------- CV deletion provenance (#89) -------------
+    //
+    // These mirror the production pipeline: the lexer/parser `create`
+    // a CV entry per node and stamp its id onto the AST. So here we
+    // `create` the entry FIRST, stamp the returned id onto the node,
+    // then run the pass — otherwise `cv.delete` has no entry to
+    // tombstone and the assertion would be vacuous. The property under
+    // test: when DCE removes a node, that node's CV entry survives in
+    // the log carrying a `DeletionRecord{source:"dce", reason:<tag>}`,
+    // so "what happened to this span?" is always answerable.
+
+    /// Like [`run_pass`] but threads the caller's CV log through so its
+    /// `DeletionRecord`s can be inspected after the pass returns.
+    fn run_pass_capturing_cv(prog: &Program, cv: &mut CVLog) -> Program {
+        let sidecar = Sidecar::new();
+        let ctx = PassContext {
+            program: prog,
+            sidecar: &sidecar,
+            cv,
+        };
+        DcePass::new()
+            .run(ctx)
+            .expect("pass should succeed")
+            .program
+    }
+
+    /// A traced `ExpressionStatement` whose CV id is freshly created in
+    /// `log` (so an entry exists for a later `delete` to tombstone).
+    fn traced_expr_stmt(log: &mut CVLog, name: &str) -> (Statement, String) {
+        let id = log.create(None);
+        let stmt = Statement::expression_statement(ExpressionStatement {
+            cv: Some(id.clone()),
+            expression: ident(name),
+        });
+        (stmt, id)
+    }
+
+    /// A traced `debugger;` whose CV id is freshly created in `log`.
+    fn traced_debugger(log: &mut CVLog) -> (Statement, String) {
+        let id = log.create(None);
+        let stmt = Statement::debugger_statement(
+            coding_adventures_javascript_ast::DebuggerStatement {
+                cv: Some(id.clone()),
+            },
+        );
+        (stmt, id)
+    }
+
+    #[test]
+    fn dead_code_removal_tombstones_each_removed_node() {
+        // { x; return; y; z; } — `y` and `z` are unreachable. Each must
+        // be tombstoned by dce, not silently dropped.
+        let mut log = CVLog::new(true);
+        let (dead_y, y_id) = traced_expr_stmt(&mut log, "y");
+        let (dead_z, z_id) = traced_expr_stmt(&mut log, "z");
+        let body = vec![expr_stmt(ident("x")), return_stmt(), dead_y, dead_z];
+        let prog = program_with_function(body, Some("block.1"));
+
+        let _out = run_pass_capturing_cv(&prog, &mut log);
+
+        for (id, label) in [(&y_id, "y"), (&z_id, "z")] {
+            let entry = log
+                .get(id)
+                .expect("a removed node must remain in the CV log as a tombstone");
+            let del = entry
+                .deleted
+                .as_ref()
+                .unwrap_or_else(|| panic!("dead statement `{label}` must be tombstoned"));
+            assert_eq!(del.source, "dce");
+            assert_eq!(del.reason, "removed-dead-code");
+            assert_eq!(
+                del.meta.get("container_cv").and_then(|v| v.as_str()),
+                Some("block.1"),
+                "tombstone should record the enclosing container's cv"
+            );
+        }
+    }
+
+    #[test]
+    fn block_debugger_removal_tombstones_the_statement() {
+        let mut log = CVLog::new(true);
+        let (dbg, dbg_id) = traced_debugger(&mut log);
+        let prog = program_with_function(vec![expr_stmt(ident("keep")), dbg], Some("block.7"));
+
+        let _out = run_pass_capturing_cv(&prog, &mut log);
+
+        let del = log
+            .get(&dbg_id)
+            .unwrap()
+            .deleted
+            .as_ref()
+            .expect("a stripped debugger must be tombstoned");
+        assert_eq!(del.source, "dce");
+        assert_eq!(del.reason, "removed-debugger");
+    }
+
+    #[test]
+    fn empty_statement_removal_tombstones_the_statement() {
+        let mut log = CVLog::new(true);
+        let empty_id = log.create(None);
+        let empty = Statement::empty_statement(EmptyStatement {
+            cv: Some(empty_id.clone()),
+        });
+        let prog = program_with_function(vec![expr_stmt(ident("keep")), empty], Some("block.9"));
+
+        let _out = run_pass_capturing_cv(&prog, &mut log);
+
+        let del = log
+            .get(&empty_id)
+            .unwrap()
+            .deleted
+            .as_ref()
+            .expect("a swept empty statement must be tombstoned");
+        assert_eq!(del.reason, "removed-empty-statement");
+    }
+
+    #[test]
+    fn top_level_debugger_removal_tombstones_the_statement() {
+        // The program-body sweep is a separate code path from the
+        // block-body sweep, so it gets its own tombstone test.
+        let mut log = CVLog::new(true);
+        let (dbg, dbg_id) = traced_debugger(&mut log);
+        let prog = program().with_body(vec![ProgramItem::Statement(dbg)]);
+
+        let _out = run_pass_capturing_cv(&prog, &mut log);
+
+        let del = log
+            .get(&dbg_id)
+            .unwrap()
+            .deleted
+            .as_ref()
+            .expect("a stripped top-level debugger must be tombstoned");
+        assert_eq!(del.reason, "removed-debugger");
+    }
+
+    #[test]
+    fn block_flatten_does_not_tombstone_moved_statements() {
+        // { { a; } keep; } → { a; keep; }. Flattening MOVES `a` up one
+        // scope level — it is not deleted — so `a` must stay live in the
+        // CV log with no `DeletionRecord`. This is the invariant that
+        // keeps `block-flattened` off the `record_deletion` path.
+        let mut log = CVLog::new(true);
+        let (moved_a, a_id) = traced_expr_stmt(&mut log, "a");
+        let inner = Statement::block_statement(BlockStatement {
+            cv: Some("inner".to_string()),
+            body: vec![moved_a],
+        });
+        let body = vec![inner, expr_stmt(ident("keep"))];
+        let prog = program_with_function(body, Some("outer"));
+
+        let _out = run_pass_capturing_cv(&prog, &mut log);
+
+        assert!(
+            log.get(&a_id)
+                .expect("moved node must remain in the CV log")
+                .deleted
+                .is_none(),
+            "a flattened (moved) statement must NOT be tombstoned"
+        );
+    }
+
+    #[test]
+    fn disabled_log_still_removes_code_without_panicking() {
+        // With CV disabled, `delete` is a no-op; the pass must still
+        // strip the debugger and never panic on the missing entry.
+        let mut log = CVLog::new(false);
+        let (dbg, _dbg_id) = traced_debugger(&mut log);
+        let prog = program_with_function(vec![expr_stmt(ident("keep")), dbg], Some("b"));
+
+        let out = run_pass_capturing_cv(&prog, &mut log);
+
+        let block = extract_function_body(&out);
+        assert_eq!(
+            block.body.len(),
+            1,
+            "debugger must still be stripped under a disabled CV log"
+        );
     }
 
     // ---------------- metadata + identity ---------------------
