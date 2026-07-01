@@ -4,15 +4,64 @@ All notable changes to `python-to-semantic-ir` are documented here.
 
 ## Unreleased
 
-### Changed
-
-- Compile-compat stub arm for the new core `semantic-ir` variant
-  `Expr::KeywordArg` (KW1) — the callee-collection pass recurses into the
-  keyword arg's inner `value`. Real keyword-argument lowering is pending
-  KW2–KW8.
-
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to semantic versioning.
+
+## 0.7.0 — 2026-06-30
+
+**KW8**: produce **keyword parameters & keyword arguments**.  Python's
+keyword-only parameters (`def f(a, *, x, y=1)`) now lower to
+`Param { kind: ParamKind::Keyword, .. }`, and keyword arguments at a call
+site (`f(1, y=2)`) lower to `Expr::KeywordArg { name, value }`.  This
+completes the frontend half of the [`sir-keyword-params`](../../../specs/sir-keyword-params.md)
+cascade for Python: the core (KW1) and the Python backend (KW2) already
+landed on `main`, so a keyword-using Python program now round-trips
+Python → SIR → Python and executes.
+
+### Added
+
+- **Keyword-only parameters** — a parameter that follows a bare `*` in a
+  `def` signature (`def f(a, *, x, y=1)`) is *keyword-only* and lowers to
+  `Param { kind: ParamKind::Keyword, .. }`.  Required-vs-optional rides on
+  the existing `default` field, exactly as it does for positional
+  optionals: `x` (no default) → `Keyword` + `default: None` (a **required**
+  keyword); `y=1` → `Keyword` + `default: Some(IntLit(1))` (an **optional**
+  keyword).  Positional params *before* the `*` keep `ParamKind::Required`.
+  The `*` boundary is not hunted for as a token — the parser already models
+  it *structurally*: keyword-only params are `param_with_default` children
+  of a nested `star_params` node, whereas positional params are direct
+  children of `parameter_list`.  `def_param_specs` walks both, stamping the
+  kind by nesting.
+- **Keyword arguments** — an explicit `name=value` call argument
+  (`f(1, y=2)`) lowers to `Expr::KeywordArg { name, value }`, appended to
+  the call's `args` vec **after** the positionals (the core IR models
+  keyword args as trailing `args` elements, not a parallel `kwargs` field).
+  The `NAME EQUALS expression` argument shape is detected by its leading
+  `NAME` + `EQUALS` tokens, so a `**dict` double-splat (which names no
+  single parameter) is never mistaken for a keyword argument and keeps its
+  existing treatment.
+- **`Feature::KeywordParams`** is declared in the manifest whenever any
+  keyword parameter *or* keyword argument is produced — matching what the
+  validator observes (mirrors the `DefaultParams` declaration).
+- Tests: lowering assertions (`def f(a, *, x, y=1)` → the exact
+  `[Required a, Keyword x/None, Keyword y/Some(1)]` param vector; `f(x=1)` →
+  `KeywordArg{name:"x"}`; a positional+keyword mix preserving order),
+  validator round-trips (a supplied required keyword validates; an **omitted
+  required keyword** is rejected), rejection of the out-of-subset `*args`
+  and `**kwargs` rest params, and an **execution-proof** e2e
+  (`e2e_keyword_parameter`) — `def greet(greeting, *, name="world")` run via
+  `python3` prints `world` (default) then `ada` (override).
+
+### Changed
+
+- The internal `def`-parameter spec threaded through `lower_def` →
+  `lower_callable` → `push_function` grew from `(name, Option<Expr>)` to
+  `(name, ParamKind, Option<Expr>)` (aliased `ParamSpec`) so a parameter's
+  keyword-only-ness reaches `Param.kind`.  `param_spec` now binds a default
+  only to the `expression` that follows an `=` token (previously it bound
+  any child node), hardening it against a would-be type-annotation child.
+- Compile-compat stub arm for the core `Expr::KeywordArg` variant (added in
+  KW1) is now a real lowering path on the call side.
 
 ## 0.6.0 — 2026-06-30
 

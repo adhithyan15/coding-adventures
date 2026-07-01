@@ -157,7 +157,9 @@
 //!
 //! - collection *comprehensions* / *slicing* / *methods*      → deferred
 //!   (list & dict literals / index / `len` / subscript-assign land in M5)
-//! - `*args` / keyword & default arguments                    → deferred
+//! - `*args` / `**kwargs` rest parameters                      → deferred
+//!   (positional/keyword **default** params land in P8; keyword-only
+//!   params & keyword args land in KW8)
 //! - decorators / classes / `with` / `try` / generators       → deferred
 //! - `global` / `nonlocal`, multi-target assignment           → deferred
 //!
@@ -199,6 +201,14 @@ const MAX_BLOCK_DEPTH: usize = 256;
 /// is also recognised structurally inside `for` headers (M3); here it is
 /// a general expression-position builtin (`range(n)` outside a `for`).
 const BUILTIN_CALLS: &[&str] = &["print", "len", "range"];
+
+/// One extracted `def`-parameter spec: its name, its [`ParamKind`]
+/// (`Required` for a positional param, `Keyword` for a keyword-only one
+/// after the `*` boundary), and the still-unlowered CST node of its
+/// default value (`Some` for an optional param, `None` for a required
+/// one).  The default is borrowed from the `def` CST (lifetime `'a`) and
+/// lowered by the caller in the enclosing scope.
+type ParamSpec<'a> = (String, ParamKind, Option<&'a GrammarASTNode>);
 
 // ---------------------------------------------------------------------------
 // Public error type
@@ -1244,9 +1254,13 @@ impl Lowerer {
         // The bounded `lower_expr_in` reuses the `MAX_EXPR_DEPTH`-capped
         // expression walk, so a pathologically deep default fails cleanly.
         let specs = self.def_param_specs(def)?;
-        let mut params: Vec<(String, Option<Expr>)> = Vec::with_capacity(specs.len());
+        let mut params: Vec<(String, ParamKind, Option<Expr>)> = Vec::with_capacity(specs.len());
         let mut any_default = false;
-        for (pname, default_node) in specs {
+        let mut any_keyword = false;
+        for (pname, kind, default_node) in specs {
+            if kind == ParamKind::Keyword {
+                any_keyword = true;
+            }
             let default = match default_node {
                 Some(node) => {
                     any_default = true;
@@ -1254,13 +1268,19 @@ impl Lowerer {
                 }
                 None => None,
             };
-            params.push((pname, default));
+            params.push((pname, kind, default));
         }
         if any_default {
             // A `Param.default = Some(_)` is exactly what the validator
             // observes as `DefaultParams`; declare it here so the manifest
             // matches.
             self.observed.add(Feature::DefaultParams);
+        }
+        if any_keyword {
+            // A `Param.kind == Keyword` is exactly what the validator
+            // observes as `KeywordParams`; declare it so the manifest
+            // matches (mirrors the `DefaultParams` line above).
+            self.observed.add(Feature::KeywordParams);
         }
         let suite = self
             .first_child_named(def, "suite")
@@ -1270,14 +1290,49 @@ impl Lowerer {
         self.lower_callable(&name, &params, suite, enclosing, depth, span)
     }
 
-    /// Extract a `def_stmt`'s parameters as `(name, optional default-value
-    /// CST node)` pairs.
+    /// Extract a `def_stmt`'s parameters as `(name, kind, optional
+    /// default-value CST node)` triples.
     ///
-    /// A *plain* positional parameter (`a`) yields `(name, None)`.  A
-    /// *defaulted* one (`b = 10`) yields `(name, Some(<expression node>))`
-    /// — the `param_with_default` node carries an extra `=` token and an
+    /// A *plain* positional parameter (`a`) yields
+    /// `(name, ParamKind::Required, None)`.  A *defaulted* one (`b = 10`)
+    /// yields `(name, ParamKind::Required, Some(<expression node>))` — the
+    /// `param_with_default` node carries an extra `=` token and an
     /// `expression` child, which the caller lowers (in the **enclosing**
     /// scope) into the IR's `Param.default`.
+    ///
+    /// ## The keyword-only `*` boundary (KW8)
+    ///
+    /// Python's grammar splits a parameter list at a bare `*` (or `*args`):
+    /// every parameter that follows is **keyword-only** — it can only be
+    /// supplied by name at the call site.  The parser models this split
+    /// structurally: positional params are `param_with_default` children of
+    /// `parameter_list` **directly**, while the keyword-only params live as
+    /// `param_with_default` children of a nested **`star_params`** node
+    /// (`* [NAME] (, param_with_default)*  [, double_star_param]`).  So the
+    /// `*`-boundary is not a token we hunt for — it is *the tree shape*:
+    ///
+    /// ```text
+    ///   def f(a, *, x, y=1):
+    ///   parameter_list
+    ///     param_with_default(a)          ← positional  → Required
+    ///     star_params
+    ///       *                            ← the boundary marker
+    ///       param_with_default(x)        ← keyword-only → Keyword, default None
+    ///       param_with_default(y=1)      ← keyword-only → Keyword, default Some(1)
+    /// ```
+    ///
+    /// We therefore emit `ParamKind::Required` for every `param_with_default`
+    /// that is a *direct* child of `parameter_list`, and `ParamKind::Keyword`
+    /// for every `param_with_default` nested inside a `star_params`.  A
+    /// keyword param with no default (`x`) is a **required** keyword; one
+    /// with a default (`y=1`) is an **optional** keyword — the required-ness
+    /// rides entirely on the `default` field, exactly as it does for
+    /// positional optionals (there is no separate "is-required" flag).
+    ///
+    /// The `*args` positional-rest name and the `**kwargs` keyword-rest that
+    /// may bracket the keyword-only region are outside the KW8 subset (the
+    /// crate does not yet model `Rest`/`KwRest` params) and are rejected
+    /// with a positioned error rather than silently dropped.
     ///
     /// ## Python def-time semantics vs. the IR's call-time model
     ///
@@ -1294,23 +1349,97 @@ impl Lowerer {
     fn def_param_specs<'a>(
         &self,
         def: &'a GrammarASTNode,
-    ) -> Result<Vec<(String, Option<&'a GrammarASTNode>)>, PythonLowerError> {
+    ) -> Result<Vec<ParamSpec<'a>>, PythonLowerError> {
         let parameters = match self.first_child_named(def, "parameters") {
             Some(p) => p,
             None => return Ok(vec![]), // `def f():` — no params.
         };
-        // `parameters → parameter_list → param_with_default+`.
+        // `parameters → parameter_list → param_with_default+ [star_params]`.
         let list = self
             .first_child_named(parameters, "parameter_list")
             .unwrap_or(parameters);
         let mut specs = Vec::new();
-        for pwd in child_nodes(list) {
-            if pwd.rule_name != "param_with_default" {
-                continue;
+        for child in child_nodes(list) {
+            match child.rule_name.as_str() {
+                // Positional param (before any `*`): Required.
+                "param_with_default" => {
+                    let (name, default) = self.param_spec(child)?;
+                    specs.push((name, ParamKind::Required, default));
+                }
+                // Everything after a bare `*` / `*args` is keyword-only.
+                // The `star_params` node holds the boundary `*`, an
+                // optional `*args` NAME, the keyword-only params, and an
+                // optional `**kwargs`.
+                "star_params" => self.collect_keyword_only_params(child, &mut specs)?,
+                // `slash_params` (positional-only `/`) is not in the KW8
+                // subset — reject rather than mis-lower its params.
+                "slash_params" => {
+                    return Err(self.err_at(
+                        child,
+                        "unsupported: positional-only `/` parameters (deferred)".to_string(),
+                    ))
+                }
+                // A top-level `**kwargs` (no preceding `*`) — KwRest is not
+                // modelled by this crate yet.
+                "double_star_param" => {
+                    return Err(self.err_at(
+                        child,
+                        "unsupported: **kwargs keyword-rest parameter (deferred)".to_string(),
+                    ))
+                }
+                _ => {}
             }
-            specs.push(self.param_spec(pwd)?);
         }
         Ok(specs)
+    }
+
+    /// Harvest the keyword-only parameters out of a `star_params` node,
+    /// appending `(name, ParamKind::Keyword, default)` for each.
+    ///
+    /// A `star_params` looks like `* [NAME] (, param_with_default)* [, **kw]`.
+    /// The leading `*` is the keyword-only boundary; an optional bare NAME
+    /// immediately after it is the `*args` positional-rest, which this crate
+    /// does not yet model — its presence is rejected.  Any nested
+    /// `double_star_param` (`**kwargs`) is likewise rejected.  Every
+    /// `param_with_default` **inside** this node is keyword-only, so it maps
+    /// to `ParamKind::Keyword` (required if it has no default, optional if
+    /// it does).
+    fn collect_keyword_only_params<'a>(
+        &self,
+        star: &'a GrammarASTNode,
+        specs: &mut Vec<ParamSpec<'a>>,
+    ) -> Result<(), PythonLowerError> {
+        for child in &star.children {
+            match child {
+                // A bare NAME token directly under `star_params` is the
+                // `*args` rest name (`def f(*args, x): …`).  Rest params are
+                // outside the KW8 subset.
+                ASTNodeOrToken::Token(t)
+                    if matches!(t.type_, lexer::token::TokenType::Name)
+                        && t.type_name.is_none() =>
+                {
+                    return Err(self.err_at(
+                        star,
+                        "unsupported: *args positional-rest parameter (deferred)".to_string(),
+                    ))
+                }
+                ASTNodeOrToken::Token(_) => {} // `*` / `,` separators.
+                ASTNodeOrToken::Node(n) => match n.rule_name.as_str() {
+                    "param_with_default" => {
+                        let (name, default) = self.param_spec(n)?;
+                        specs.push((name, ParamKind::Keyword, default));
+                    }
+                    "double_star_param" => {
+                        return Err(self.err_at(
+                            n,
+                            "unsupported: **kwargs keyword-rest parameter (deferred)".to_string(),
+                        ))
+                    }
+                    _ => {}
+                },
+            }
+        }
+        Ok(())
     }
 
     /// Extract one parameter's `(name, optional default node)` from a
@@ -1320,14 +1449,22 @@ impl Lowerer {
     ///   - plain `a`     → `[NAME]`                       → `(name, None)`
     ///   - default `b=1` → `[NAME, EQUALS, expression]`   → `(name, Some(expr))`
     ///
-    /// Only positional defaults are modelled here; keyword-only markers and
-    /// `*args` / `**kwargs` never reach this rule in the M5 subset.
+    /// This is `ParamKind`-agnostic: the caller stamps `Required` (a direct
+    /// `parameter_list` child) or `Keyword` (nested in `star_params`) onto
+    /// the result.  A type-annotation `COLON expression` (`def f(a: int)`)
+    /// is not in the subset, but were one present its `expression` child
+    /// would be mistaken for a default — so we bind `default` only to the
+    /// `expression` that follows an `EQUALS` token.
     fn param_spec<'a>(
         &self,
         pwd: &'a GrammarASTNode,
     ) -> Result<(String, Option<&'a GrammarASTNode>), PythonLowerError> {
         let mut name: Option<String> = None;
         let mut default: Option<&GrammarASTNode> = None;
+        // Only the `expression` that follows an `=` is a default.  We track
+        // whether the last token seen was `=` so a (subset-external) type
+        // annotation `NAME : expression` could never be mistaken for one.
+        let mut seen_equals = false;
         for child in &pwd.children {
             match child {
                 ASTNodeOrToken::Token(t) => {
@@ -1336,14 +1473,16 @@ impl Lowerer {
                         && name.is_none()
                     {
                         name = Some(t.value.clone());
+                    } else if matches!(t.type_, lexer::token::TokenType::Equals) {
+                        seen_equals = true;
                     }
-                    // The `=` token is the marker only; the value that
-                    // follows is the `expression` node captured below.
                 }
-                // The default-value `expression` node (present only for a
-                // `name = expr` parameter).
+                // The default-value `expression` node — present only once an
+                // `=` has been seen (`name = expr`).
                 ASTNodeOrToken::Node(n) => {
-                    default = Some(n);
+                    if seen_equals {
+                        default = Some(n);
+                    }
                 }
             }
         }
@@ -1388,10 +1527,13 @@ impl Lowerer {
             value,
             span: span.clone(),
         };
-        // Lambdas in the M5 subset never carry defaults (rejected in
-        // `lambda_params`), so every param maps to `(name, None)`.
-        let lambda_params: Vec<(String, Option<Expr>)> =
-            params.iter().map(|n| (n.clone(), None)).collect();
+        // Lambdas in the M5 subset never carry defaults or keyword-only
+        // markers (both rejected in `lambda_params`), so every param maps to
+        // `(name, Required, None)`.
+        let lambda_params: Vec<(String, ParamKind, Option<Expr>)> = params
+            .iter()
+            .map(|n| (n.clone(), ParamKind::Required, None))
+            .collect();
         self.push_function(&fn_name, &lambda_params, &captures, body, span.clone());
 
         // A lambda always yields a retained closure value.
@@ -1442,7 +1584,7 @@ impl Lowerer {
     fn lower_callable(
         &mut self,
         name: &str,
-        params: &[(String, Option<Expr>)],
+        params: &[(String, ParamKind, Option<Expr>)],
         suite: &GrammarASTNode,
         enclosing: &mut FunctionCtx,
         depth: usize,
@@ -1454,7 +1596,7 @@ impl Lowerer {
         // a default expression sees the *enclosing* scope (it was already
         // lowered there by the caller), so it never contributes to the
         // body's free/bound sets here.
-        let mut bound: HashSet<String> = params.iter().map(|(n, _)| n.clone()).collect();
+        let mut bound: HashSet<String> = params.iter().map(|(n, _, _)| n.clone()).collect();
         self.collect_suite_bound_names(suite, &mut bound)?;
         let mut free = Vec::new();
         let mut seen = HashSet::new();
@@ -1464,7 +1606,7 @@ impl Lowerer {
 
         // ── Lower the body in the function's own context. ──
         let mut inner = FunctionCtx::new(
-            params.iter().map(|(n, _)| n.clone()).collect(),
+            params.iter().map(|(n, _, _)| n.clone()).collect(),
             captures.iter().cloned().collect(),
         );
         let body = self.lower_function_suite(suite, &mut inner, depth + 1)?;
@@ -1479,7 +1621,7 @@ impl Lowerer {
     fn push_function(
         &mut self,
         name: &str,
-        params: &[(String, Option<Expr>)],
+        params: &[(String, ParamKind, Option<Expr>)],
         captures: &[String],
         body: Block,
         span: Span,
@@ -1503,14 +1645,17 @@ impl Lowerer {
             name: name.to_string(),
             params: params
                 .iter()
-                .map(|(pname, default)| Param {
+                .map(|(pname, kind, default)| Param {
                     name: pname.clone(),
                     sir_type: None,
-                    // A defaulted positional param keeps `Required` kind —
-                    // `ParamKind` distinguishes only `Required`/`Rest`/
-                    // `KwRest`; the presence of a default lives in
-                    // `default`, not the kind.
-                    kind: ParamKind::Required,
+                    // The `kind` is decided by the parameter's position
+                    // relative to the keyword-only `*` boundary: `Required`
+                    // for a positional param (a direct `parameter_list`
+                    // child) and `Keyword` for a keyword-only one (nested in
+                    // `star_params`).  Required-vs-optional does NOT ride on
+                    // the kind — it rides on `default` (a positional or
+                    // keyword param with `default: Some(_)` is optional).
+                    kind: *kind,
                     default: default.clone().map(Box::new),
                     span: span.clone(),
                 })
@@ -1758,12 +1903,14 @@ impl Lowerer {
                 inner.insert(n);
             }
             if let Ok(specs) = self.def_param_specs(node) {
-                for (pname, default_node) in specs {
+                for (pname, _kind, default_node) in specs {
                     // A *default expression* is evaluated in the **enclosing**
                     // scope (Python def-time semantics), so any name it
                     // references is free against the *outer* `bound` set — not
                     // shadowed by the params.  Collect those before adding the
-                    // param itself to `inner`.
+                    // param itself to `inner`.  The keyword-only `_kind` does
+                    // not affect free-variable analysis (a keyword param binds
+                    // its name in the body exactly as a positional one does).
                     if let Some(default) = default_node {
                         self.collect_free_names(default, bound, free, seen, depth + 1)?;
                     }
@@ -2356,6 +2503,37 @@ impl Lowerer {
     }
 
     /// Lower the argument expressions of a call `suffix` (`( a, b, … )`).
+    ///
+    /// ## Keyword arguments (KW8) — `f(1, y=2)`
+    ///
+    /// The grammar gives an `argument` node one of four shapes; the two that
+    /// matter here are
+    ///
+    /// ```text
+    ///   argument → expression                 (a POSITIONAL argument)
+    ///   argument → NAME EQUALS expression      (a KEYWORD argument: `y=2`)
+    /// ```
+    ///
+    /// A positional argument lowers to its bare `Expr` (unchanged from
+    /// before).  A keyword argument lowers to an [`Expr::KeywordArg`] wrapper
+    /// `{ name, value }` that carries the parameter *name* alongside the
+    /// lowered value, and is appended to the same `args` vec — the core IR
+    /// models keyword arguments as ordinary `args` elements that trail the
+    /// positionals (the validator enforces the trailing rule), rather than a
+    /// parallel `kwargs` field.  Whenever any keyword argument is produced we
+    /// declare [`Feature::KeywordParams`] so the manifest matches what the
+    /// validator observes.
+    ///
+    /// ## Keyword arg vs. `**dict` splat — a deliberate distinction
+    ///
+    /// Only the explicit `NAME = value` spelling becomes a `KeywordArg`.  The
+    /// grammar's other two `argument` forms — `STAR expression` (`*seq`) and
+    /// `DOUBLE_STAR expression` (`**dict`, keyword-rest splat) — are NOT
+    /// keyword arguments: `**dict` names no single parameter, it unpacks a
+    /// mapping.  Those splat forms keep their existing (subset-external)
+    /// treatment via [`Self::single_arg_expr`], which returns the inner
+    /// `expression`; we detect the `NAME EQUALS` shape *first* by the leading
+    /// NAME + `=` tokens so a `**dict` never masquerades as a keyword arg.
     fn lower_call_args(
         &mut self,
         suffix: &GrammarASTNode,
@@ -2365,10 +2543,63 @@ impl Lowerer {
         let arg_nodes = self.call_arguments(suffix);
         let mut args = Vec::with_capacity(arg_nodes.len());
         for a in &arg_nodes {
-            let e = self.single_arg_expr(a)?;
-            args.push(self.lower_expr_d(e, ctx, depth + 1)?);
+            match self.keyword_arg_name(a) {
+                // `NAME = expression` → a keyword argument.
+                Some(kw_name) => {
+                    let value_node = self.single_arg_expr(a)?;
+                    let value = self.lower_expr_d(value_node, ctx, depth + 1)?;
+                    let span = self.span_of(a);
+                    self.observed.add(Feature::KeywordParams);
+                    args.push(Expr::KeywordArg {
+                        name: kw_name,
+                        value: Box::new(value),
+                        span,
+                    });
+                }
+                // A bare positional argument (or a `*`/`**` splat, whose
+                // token is dropped by `single_arg_expr` — unchanged v0).
+                None => {
+                    let e = self.single_arg_expr(a)?;
+                    args.push(self.lower_expr_d(e, ctx, depth + 1)?);
+                }
+            }
         }
         Ok(args)
+    }
+
+    /// If this `argument` node is the keyword form `NAME EQUALS expression`,
+    /// return the keyword name; otherwise `None`.
+    ///
+    /// The CST for `y=2` is `argument[ NAME("y"), EQUALS, expression ]`.  We
+    /// require **both** a leading bare `NAME` token and an `EQUALS` token so
+    /// that neither a positional `expression` (whose first descendant may be
+    /// a NAME atom, but which has no `EQUALS` *token child of the argument*)
+    /// nor a `**dict` splat (a `DOUBLE_STAR` token, no `EQUALS`) is ever
+    /// mistaken for a keyword argument.
+    fn keyword_arg_name(&self, arg: &GrammarASTNode) -> Option<String> {
+        let mut name: Option<String> = None;
+        let mut has_equals = false;
+        for child in &arg.children {
+            match child {
+                ASTNodeOrToken::Token(t)
+                    if matches!(t.type_, lexer::token::TokenType::Name)
+                        && t.type_name.is_none()
+                        && name.is_none() =>
+                {
+                    name = Some(t.value.clone());
+                }
+                ASTNodeOrToken::Token(t)
+                    if matches!(t.type_, lexer::token::TokenType::Equals) =>
+                {
+                    has_equals = true;
+                }
+                _ => {}
+            }
+        }
+        match (name, has_equals) {
+            (Some(n), true) => Some(n),
+            _ => None,
+        }
     }
 
     /// Lower a subscript `suffix` (`[ index ]`) applied to `base`,
