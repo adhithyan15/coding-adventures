@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.21.0] - 2026-07-01 — `\sqrt{x}` in `latex "…"` (lowers to `x ^ 0.5`)
+
+### Added
+
+- The `latex "…"` adapter now accepts a **square root** `\sqrt{x}` (a
+  `MathExpr::Root` with no explicit degree), lowering it to `x ^ 0.5` on the
+  native `ComputeOp::Pow` (adj-lang 0.20.0 / logic-engine 0.27.0). No new engine
+  op: the power engine computes `√9 = 3` for a dimensionless (`Scalar`) base and
+  cleanly rejects a dimensioned base (a `√dollars` has no representable
+  half-dimension — a `DimensionMismatch`, not a silently-wrong number).
+
+### Notes
+
+- An **nth root** `\sqrt[n]{x}` (a `Root` with an explicit degree) is still
+  unsupported — its `1/n` exponent needs a dedicated non-integer path — and
+  falls through to the existing `UnsupportedLatexMath` error. A square-root
+  constraint (`constrain latex "$\sqrt{x} = 3$"`) is non-polynomial (a
+  fractional exponent), so the solver treats it as `Unknown`, as before.
+
 ## [0.20.0] - 2026-07-01 — native `^` power in `latex "…"` (emit `ComputeOp::Pow`)
 
 ### Changed

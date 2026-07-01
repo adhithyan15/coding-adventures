@@ -1758,6 +1758,34 @@ contributes 1000000 from answer == 60 to correct
     }
 
     #[test]
+    fn native_latex_square_root_computes() {
+        // `\sqrt{9}` lowers to `9 ^ 0.5` (reusing ComputeOp::Pow) and computes 3
+        // for a dimensionless base.
+        let d = crate::compile_and_decide(
+            "let answer = latex \"$\\sqrt{9}$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 3 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_latex_square_root_of_an_observed_scalar_computes() {
+        // `\sqrt{x}` over an observed dimensionless value: √16 = 4.
+        let d = crate::compile_and_decide(
+            "observe x(16)\n\
+             let answer = latex \"$\\sqrt{x}$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 4 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
     fn all_relational_operators_parse() {
         for (src, want) in [
             ("constrain a >= 1", crate::ast::RelOp::Ge),

@@ -947,6 +947,20 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
                 Box::new(ExprAst::Lit(n)),
             ))
         }
+        // A square root `\sqrt{x}` (a `Root` with no explicit degree) lowers to
+        // `x ^ 0.5`, reusing the native `ComputeOp::Pow`. The engine computes it
+        // for a dimensionless (Scalar) base — `√9 = 3` — and cleanly rejects a
+        // dimensioned base (a `√dollars` has no representable half-dimension), so
+        // no new engine op is needed. An nth root `\sqrt[n]{x}` (degree present)
+        // is a later slice: its `1/n` exponent needs its own non-integer path.
+        MathExpr::Root {
+            degree: None,
+            radicand,
+        } => Ok(ExprAst::Bin(
+            ArithOp::Pow,
+            Box::new(latex_math_to_expr_ast(radicand, source)?),
+            Box::new(ExprAst::Lit(0.5)),
+        )),
         MathExpr::Rel(_, _, _) => Err(AdapterError::UnsupportedLatexMath {
             source: source.to_string(),
             detail: "relation-valued LaTeX is only valid in `constrain latex`".into(),
