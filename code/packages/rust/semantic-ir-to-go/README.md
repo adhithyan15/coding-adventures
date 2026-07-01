@@ -108,6 +108,35 @@ strategy built on a unique MISSING sentinel:
   `b == 6`).  Reassigning a parameter is ordinary mutable-local Go, and the
   guard "uses" the param, so Go's strict unused-variable rule is satisfied.
 
+### KW6 — keyword parameters & arguments (`KeywordParams`)
+
+Go has **no** native keyword arguments, so — like the Rust backend — this
+backend resolves keywords to positions **statically at emit time** (a
+`DirectCall`'s callee signature is known), producing a plain positional Go
+call. No runtime library is added; the SIR19 sentinel/prologue machinery
+above is reused unchanged.
+
+- **Def side.** A `ParamKind::Keyword` param emits as an ordinary positional
+  Go parameter in declared order. An *optional* keyword (`Keyword` +
+  `default: Some`) fills its default via the same prologue guard as a
+  positional default.
+- **Call side.** For each callee param slot in declared order: a leading
+  positional arg fills it; a `KeywordArg` whose name matches fills it
+  (regardless of source order); an omitted *optional* slot is padded with
+  `_sir_missing` (the prologue supplies the default). A *required* keyword
+  left out is a validation error, so it never reaches emit.
+
+Worked example — `def greet(greeting:, name: "world")`:
+
+```text
+  greet(greeting: "hi")              →  greet("hi", _sir_missing)   // name → "world"
+  greet(greeting: "hi", name: "ada") →  greet("hi", "ada")
+  greet(name: "ada", greeting: "hi") →  greet("hi", "ada")         // matched by name
+```
+
+Indirect/closure keyword calls are **deferred** (spec §Out of scope): the
+callee signature is not statically known, and the frontends do not emit them.
+
 ## Value model
 
 ```go
