@@ -43,6 +43,7 @@ pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SUMMARY_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_DIGEST_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANES_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TABS_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -101,6 +102,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-dashboard-dispatch-queue-summary-json",
     "app-shell-dashboard-dispatch-queue-digest-json",
     "app-shell-dashboard-dispatch-queue-lanes-json",
+    "app-shell-dashboard-dispatch-queue-lane-tabs-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -4064,6 +4066,130 @@ impl BerkeleyAppShellDashboardDispatchQueueLanes {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTab {
+    pub id: String,
+    pub lane_id: String,
+    pub title: String,
+    pub queue_state: String,
+    pub severity: String,
+    pub dispatch_queue_item_count: usize,
+    pub selected: bool,
+    pub default_dispatch: bool,
+    pub active: bool,
+    pub attention: bool,
+    pub disabled: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabs {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub active_lane_id: Option<String>,
+    pub active_tab_id: Option<String>,
+    pub attention_lane_id: Option<String>,
+    pub attention_tab_id: Option<String>,
+    pub lane_count: usize,
+    pub tab_count: usize,
+    pub enabled_tab_count: usize,
+    pub disabled_tab_count: usize,
+    pub tabs: Vec<BerkeleyAppShellDashboardDispatchQueueLaneTab>,
+    pub dispatch_queue_capability_id: String,
+    pub dispatch_queue_summary_capability_id: String,
+    pub dispatch_queue_digest_capability_id: String,
+    pub dispatch_queue_lanes_capability_id: String,
+    pub dispatch_queue_lane_tabs_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabs {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_lanes(
+            &BerkeleyAppShellDashboardDispatchQueueLanes::from_bootstrap_snapshot(snapshot),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_lanes(&BerkeleyAppShellDashboardDispatchQueueLanes::from_shell_handoff(handoff))
+    }
+
+    pub fn from_lanes(lanes: &BerkeleyAppShellDashboardDispatchQueueLanes) -> Self {
+        let tabs = lanes
+            .lanes
+            .iter()
+            .map(|lane| {
+                let tab_id_suffix = lane
+                    .id
+                    .strip_prefix("dashboard.dispatch-queue-lane.")
+                    .unwrap_or(lane.queue_state.as_str());
+                BerkeleyAppShellDashboardDispatchQueueLaneTab {
+                    id: format!("dashboard.dispatch-queue-lane-tab.{tab_id_suffix}"),
+                    lane_id: lane.id.clone(),
+                    title: lane.title.clone(),
+                    queue_state: lane.queue_state.clone(),
+                    severity: lane.severity.clone(),
+                    dispatch_queue_item_count: lane.dispatch_queue_item_count,
+                    selected: lane.selected,
+                    default_dispatch: lane.default_dispatch,
+                    active: lanes.active_lane_id.as_deref() == Some(lane.id.as_str()),
+                    attention: lane.attention,
+                    disabled: lane.dispatch_queue_item_count == 0,
+                }
+            })
+            .collect::<Vec<_>>();
+        let active_tab_id = tabs.iter().find(|tab| tab.active).map(|tab| tab.id.clone());
+        let attention_tab_id = lanes
+            .attention_lane_id
+            .as_ref()
+            .and_then(|attention_lane_id| {
+                tabs.iter()
+                    .find(|tab| tab.lane_id == attention_lane_id.as_str())
+                    .map(|tab| tab.id.clone())
+            });
+        let enabled_tab_count = tabs.iter().filter(|tab| !tab.disabled).count();
+        let disabled_tab_count = tabs.len().saturating_sub(enabled_tab_count);
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TABS_SCHEMA_VERSION,
+            package_name: lanes.package_name.clone(),
+            source_fingerprint: lanes.source_fingerprint.clone(),
+            title: lanes.title.clone(),
+            startup_route: lanes.startup_route.clone(),
+            ready: lanes.ready,
+            severity: lanes.severity.clone(),
+            attention_required: lanes.attention_required,
+            active_lane_id: lanes.active_lane_id.clone(),
+            active_tab_id,
+            attention_lane_id: lanes.attention_lane_id.clone(),
+            attention_tab_id,
+            lane_count: lanes.lane_count,
+            tab_count: tabs.len(),
+            enabled_tab_count,
+            disabled_tab_count,
+            tabs,
+            dispatch_queue_capability_id: lanes.dispatch_queue_capability_id.clone(),
+            dispatch_queue_summary_capability_id: lanes
+                .dispatch_queue_summary_capability_id
+                .clone(),
+            dispatch_queue_digest_capability_id: lanes.dispatch_queue_digest_capability_id.clone(),
+            dispatch_queue_lanes_capability_id: lanes.dispatch_queue_lanes_capability_id.clone(),
+            dispatch_queue_lane_tabs_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tabs-json".to_string(),
+            artifact_capability_count: lanes.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tabs_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BerkeleyAnalysisInventoryEntry {
     pub index: usize,
     pub directive: String,
@@ -5539,6 +5665,43 @@ impl BerkeleyAppDeck {
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self
             .run_app_shell_dashboard_dispatch_queue_lanes(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tabs(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabs {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabs::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tabs(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardDispatchQueueLaneTabs, AnalysisExecutionError> {
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabs::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tabs_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tabs(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tabs_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tabs(persisted_state)?
             .to_json())
     }
 
@@ -7929,6 +8092,58 @@ fn app_shell_dashboard_dispatch_queue_lane_json_value(
         "defaultDispatch": lane.default_dispatch,
         "primary": lane.primary,
         "attention": lane.attention,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tabs_json_value(
+    tabs: &BerkeleyAppShellDashboardDispatchQueueLaneTabs,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": tabs.schema_version,
+        "packageName": &tabs.package_name,
+        "sourceFingerprint": &tabs.source_fingerprint,
+        "title": &tabs.title,
+        "startupRoute": &tabs.startup_route,
+        "ready": tabs.ready,
+        "severity": &tabs.severity,
+        "attentionRequired": tabs.attention_required,
+        "activeLaneId": &tabs.active_lane_id,
+        "activeTabId": &tabs.active_tab_id,
+        "attentionLaneId": &tabs.attention_lane_id,
+        "attentionTabId": &tabs.attention_tab_id,
+        "laneCount": tabs.lane_count,
+        "tabCount": tabs.tab_count,
+        "enabledTabCount": tabs.enabled_tab_count,
+        "disabledTabCount": tabs.disabled_tab_count,
+        "tabs": tabs
+            .tabs
+            .iter()
+            .map(app_shell_dashboard_dispatch_queue_lane_tab_json_value)
+            .collect::<Vec<_>>(),
+        "dispatchQueueCapabilityId": &tabs.dispatch_queue_capability_id,
+        "dispatchQueueSummaryCapabilityId": &tabs.dispatch_queue_summary_capability_id,
+        "dispatchQueueDigestCapabilityId": &tabs.dispatch_queue_digest_capability_id,
+        "dispatchQueueLanesCapabilityId": &tabs.dispatch_queue_lanes_capability_id,
+        "dispatchQueueLaneTabsCapabilityId": &tabs.dispatch_queue_lane_tabs_capability_id,
+        "artifactCapabilityCount": tabs.artifact_capability_count,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_json_value(
+    tab: &BerkeleyAppShellDashboardDispatchQueueLaneTab,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &tab.id,
+        "laneId": &tab.lane_id,
+        "title": &tab.title,
+        "queueState": &tab.queue_state,
+        "severity": &tab.severity,
+        "dispatchQueueItemCount": tab.dispatch_queue_item_count,
+        "selected": tab.selected,
+        "defaultDispatch": tab.default_dispatch,
+        "active": tab.active,
+        "attention": tab.attention,
+        "disabled": tab.disabled,
     })
 }
 

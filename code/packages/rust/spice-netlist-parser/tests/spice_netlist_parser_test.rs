@@ -21,6 +21,7 @@ use spice_netlist_parser::{
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_EVENTS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_DIGEST_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANES_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TABS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SUMMARY_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION,
@@ -4745,6 +4746,90 @@ C1 out 0 1p
         shell_dashboard_dispatch_queue_lanes_payload["dispatchQueueLanesCapabilityId"],
         "app-shell-dashboard-dispatch-queue-lanes-json"
     );
+
+    let shell_dashboard_dispatch_queue_lane_tabs = app
+        .run_app_shell_dashboard_dispatch_queue_lane_tabs(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("shell dashboard dispatch queue lane tabs should execute");
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TABS_SCHEMA_VERSION
+    );
+    assert!(shell_dashboard_dispatch_queue_lane_tabs.ready);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs
+            .active_lane_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane.queued")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs
+            .active_tab_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab.queued")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs
+            .attention_tab_id
+            .as_deref(),
+        None
+    );
+    assert_eq!(shell_dashboard_dispatch_queue_lane_tabs.lane_count, 3);
+    assert_eq!(shell_dashboard_dispatch_queue_lane_tabs.tab_count, 3);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs.enabled_tab_count,
+        2
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs.disabled_tab_count,
+        1
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs.tabs[0].id,
+        "dashboard.dispatch-queue-lane-tab.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs.tabs[0].lane_id,
+        "dashboard.dispatch-queue-lane.queued"
+    );
+    assert!(shell_dashboard_dispatch_queue_lane_tabs.tabs[0].active);
+    assert!(shell_dashboard_dispatch_queue_lane_tabs.tabs[0].selected);
+    assert!(shell_dashboard_dispatch_queue_lane_tabs.tabs[0].default_dispatch);
+    assert!(!shell_dashboard_dispatch_queue_lane_tabs.tabs[2].attention);
+    assert!(shell_dashboard_dispatch_queue_lane_tabs.tabs[2].disabled);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs.dispatch_queue_lane_tabs_capability_id,
+        "app-shell-dashboard-dispatch-queue-lane-tabs-json"
+    );
+
+    let shell_dashboard_dispatch_queue_lane_tabs_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_dashboard_dispatch_queue_lane_tabs_json(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(3),
+                active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+            },
+        )
+        .unwrap(),
+    )
+    .expect("shell dashboard dispatch queue lane tabs JSON should parse");
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs_payload["activeTabId"],
+        "dashboard.dispatch-queue-lane-tab.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs_payload["tabs"][0]["laneId"],
+        "dashboard.dispatch-queue-lane.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs_payload["tabs"][2]["disabled"],
+        true
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs_payload["dispatchQueueLaneTabsCapabilityId"],
+        "app-shell-dashboard-dispatch-queue-lane-tabs-json"
+    );
 }
 
 #[test]
@@ -6577,6 +6662,75 @@ R1 in out
     assert_eq!(
         shell_dashboard_dispatch_queue_lanes_payload["dispatchQueueLanesCapabilityId"],
         "app-shell-dashboard-dispatch-queue-lanes-json"
+    );
+
+    let shell_dashboard_dispatch_queue_lane_tabs = app
+        .app_shell_dashboard_dispatch_queue_lane_tabs(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        });
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TABS_SCHEMA_VERSION
+    );
+    assert!(!shell_dashboard_dispatch_queue_lane_tabs.ready);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs
+            .active_tab_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab.attention")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs
+            .attention_tab_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab.attention")
+    );
+    assert_eq!(shell_dashboard_dispatch_queue_lane_tabs.tab_count, 3);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs.enabled_tab_count,
+        2
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs.disabled_tab_count,
+        1
+    );
+    assert!(shell_dashboard_dispatch_queue_lane_tabs.tabs[2].active);
+    assert!(shell_dashboard_dispatch_queue_lane_tabs.tabs[2].attention);
+    assert!(shell_dashboard_dispatch_queue_lane_tabs.tabs[2].selected);
+    assert!(shell_dashboard_dispatch_queue_lane_tabs.tabs[2].default_dispatch);
+    assert!(shell_dashboard_dispatch_queue_lane_tabs.tabs[1].disabled);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs.dispatch_queue_lane_tabs_capability_id,
+        "app-shell-dashboard-dispatch-queue-lane-tabs-json"
+    );
+
+    let shell_dashboard_dispatch_queue_lane_tabs_payload: serde_json::Value = serde_json::from_str(
+        &app.app_shell_dashboard_dispatch_queue_lane_tabs_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        }),
+    )
+    .expect("blocked shell dashboard dispatch queue lane tabs JSON should parse");
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs_payload["activeTabId"],
+        "dashboard.dispatch-queue-lane-tab.attention"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs_payload["attentionTabId"],
+        "dashboard.dispatch-queue-lane-tab.attention"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs_payload["tabs"][1]["disabled"],
+        true
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs_payload["tabs"][2]["attention"],
+        true
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tabs_payload["dispatchQueueLaneTabsCapabilityId"],
+        "app-shell-dashboard-dispatch-queue-lane-tabs-json"
     );
 }
 
