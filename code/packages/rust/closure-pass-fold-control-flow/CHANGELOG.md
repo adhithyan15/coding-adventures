@@ -2,6 +2,50 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.15.0] - 2026-06-30
+
+### Added — correlation-vector deletion provenance for eliminated branches (#89)
+
+Following the deletion-provenance work merged for the DCE pass, this pass now
+records *why a branch disappeared* in the correlation-vector log. Before, the
+pass received the shared `CVLog` but discarded it (`let _ = self.cv`), pushing
+only a coarse summary `Contribution` against the enclosing `if`/`while`. So a
+`--correlation_vector` consumer that asked "what happened to the code that used
+to be in this branch?" got no answer — the eliminated branch simply vanished
+from the provenance graph.
+
+Each **constant-condition branch/loop elimination** now tombstones the
+discarded branch's own CV entry via `CVLog::delete(cv_id, "fold-control-flow",
+"folded-branch", meta)`:
+
+- `if (true)  A else B` → `A` — **B** (the `else` branch) is tombstoned;
+- `if (false) A else B` → `B` — **A** (the `then` branch) is tombstoned;
+- `while (false) BODY`  → `;` — **BODY** is tombstoned.
+
+`meta` carries the enclosing node's `container_cv`. New helper
+`FoldState::record_fold_deleting` (tombstone + keep the summary contribution)
+and `statement_cv`/`tagged_statement_cv` (exhaustive match — a new statement
+kind fails to compile rather than silently losing provenance).
+
+Rewrites that **preserve** both branches deliberately do NOT tombstone —
+`if→ternary`, `if→&&`, and the De Morgan swaps keep their content (just
+restructured), so they keep plain `record_fold`. A regression test pins that a
+ternary rewrite tombstones neither arm.
+
+Byte-for-byte identical AST output: the same branches are folded and the same
+summary contributions emitted; only the CV log gains deletion records.
+`delete` is a no-op when the log is disabled (production default), so zero cost
+off the `--correlation_vector` path. Four new tests. Crate 0.14.0 → 0.15.0.
+
+### Scope / follow-up
+
+Two further elimination sites still emit only a summary contribution and are
+left for a follow-up: the block-level dead-code-after-terminator drop
+(`removed-dead-code` — the same behavior the DCE pass already tombstones), and
+the constant-condition **ternary** collapse (`cond ? c : a` with a literal
+`cond`), whose discarded arm is an `Expression` and needs an `expression_cv`
+helper.
+
 ## [0.14.0] - 2026-06-20
 
 ### Added — CLOC25: drop a redundant `else` after a terminating consequent
