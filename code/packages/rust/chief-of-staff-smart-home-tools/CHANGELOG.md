@@ -4,6 +4,9 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added `smart_home.get_controller_handoff_summary`, a Chief-facing read tool
+  that summarizes Home Assistant-style controller readiness from existing D23
+  runtime and platform primitives without owning smart-home state.
 - Added D18D handlers for Chief-visible smart-home runtime maintenance handoff
   reconciliation checkpoints:
   `smart_home.list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations`
