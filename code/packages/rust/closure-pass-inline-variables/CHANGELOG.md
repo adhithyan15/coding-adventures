@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline-variables` crate will be documented in this file.
 
+## [0.8.0] - 2026-07-01
+
+### Added — upstream `InlineVariablesTest.java` conformance port (#88, CLOC12.146)
+
+The **first** CLOC12 upstream-test port into this crate. New file
+`tests/upstream/inline_variables_test.rs` (registered as the
+`upstream_inline_variables` test target) reshapes upstream
+`InlineVariablesTest.java` onto our surface, driving the **real** source →
+`grammar_to_program` bridge → `InlineVariablesPass` → `emit` roundtrip, so each
+case is `assert_eq!(propagate(src), expected)` on emitted JS.
+
+- **13 active `#[test]`s pass on the first run** (no new propagation defect):
+  single-use const-literal propagation, propagation into a larger expression,
+  a short literal duplicated across multiple sites, boolean/null literals, the
+  multi-use size budget (a long literal is declined at multiple sites but
+  propagated at a single site), `let`/`var` never propagated, non-literal
+  initializers declined, the shadowed-name guard, property names never
+  replaced while computed member indices are, and two TDZ soundness cases
+  (inert-prefix propagates; code-before-declaration declines).
+- **3 `#[ignore = "blocked on gap-NNN"]` placeholders** pin the whole-program
+  `InlineVariables` behaviors closurec does not do in this pass —
+  gap-148 (single-assignment `let`/`var` inlining), gap-149 (identifier-alias
+  initializers), gap-150 (removing the dead `const` husk, which
+  `remove-unused-vars` owns). Each is pinned to `code/specs/CLOC12-gaps.md`.
+
+This is a **test-only** change: no `src/` file is touched, so there is no
+ripple into downstream consumers. Scaffolding files
+`tests/upstream/{UPSTREAM_SHA,ATTRIBUTION.md}` were added per the CLOC12 port
+convention.
+
 ## [0.7.0] - 2026-07-01
 
 ### Added — CV provenance for constant propagation (#89)
