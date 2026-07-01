@@ -41,6 +41,11 @@ pub enum TokenKind {
     Super(String),
     /// A subscript run normalised to a plain numeral (`"1"`) — becomes a subscript.
     Sub(String),
+    /// A combining diacritic that sits OVER the preceding atom — `x̂` (hat), `v⃗` (vec), `x̄` (bar),
+    /// `x̃` (tilde), `ẋ` (dot), `ẍ` (ddot). Carries the canonical accent name (`"hat"`, `"vec"`, …)
+    /// matching the LaTeX/MathML frontends, so `x̂` and `\hat{x}` lower to the same
+    /// [`math_frontend::MathExpr::Accent`]. Postfix: the parser attaches it to the atom just parsed.
+    Accent(String),
     /// A vulgar-fraction glyph already split into `(numerator, denominator)` numerals.
     VulgarFrac(String, String),
     Plus,
@@ -140,6 +145,23 @@ fn subscript_char(c: char) -> Option<char> {
         '₀' => '0', '₁' => '1', '₂' => '2', '₃' => '3', '₄' => '4',
         '₅' => '5', '₆' => '6', '₇' => '7', '₈' => '8', '₉' => '9',
         '₊' => '+', '₋' => '-',
+        _ => return None,
+    })
+}
+
+/// Map a Unicode **combining diacritic** to its canonical accent name, or `None`. A combining mark
+/// follows the base character it decorates (`x` + U+0302 renders as `x̂`), so the scanner emits it as
+/// a standalone `Accent` token the parser attaches to the preceding atom. The names match the LaTeX
+/// accent commands (`\hat`, `\vec`, …) and MathML `<mover>` accents, so every notation lowers to the
+/// same neutral [`math_frontend::MathExpr::Accent`] — write once, read everywhere.
+fn accent_name(c: char) -> Option<&'static str> {
+    Some(match c {
+        '\u{0302}' => "hat",    // ◌̂  combining circumflex accent → \hat
+        '\u{0303}' => "tilde",  // ◌̃  combining tilde            → \tilde
+        '\u{0304}' => "bar",    // ◌̄  combining macron           → \bar
+        '\u{0307}' => "dot",    // ◌̇  combining dot above        → \dot
+        '\u{0308}' => "ddot",   // ◌̈  combining diaeresis        → \ddot
+        '\u{20D7}' => "vec",    // ◌⃗  combining right arrow above → \vec
         _ => return None,
     })
 }
@@ -275,6 +297,12 @@ pub fn tokenize(src: &str) -> Result<Vec<Token>, FrontendError> {
         }
         if let Some(name) = constant_glyph(c) {
             toks.push(Token { kind: TokenKind::Sym(name.into()), span: one });
+            i += 1;
+            continue;
+        }
+        // ── combining diacritic → an accent over the preceding atom ──────────────────────────────
+        if let Some(name) = accent_name(c) {
+            toks.push(Token { kind: TokenKind::Accent(name.into()), span: one });
             i += 1;
             continue;
         }

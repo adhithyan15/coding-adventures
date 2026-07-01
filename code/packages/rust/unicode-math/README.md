@@ -57,7 +57,9 @@ dependency cycle); a consumer registers it.
 PR-1 covered numbers/symbols/scripts/fractions/roots/relations/±∓; **PR-2** adds the big operators
 `∑ ∏ ∫ ∮ ∐` (with optional bounds) and the explicit ASCII script operators `^`/`_`; **PR-3** adds
 **named functions** (`sin cos tan … ln log exp`, longest-match so `sinx` ⇒ `sin·x`); **PR-4** adds **matrices**
-`[[a,b],[c,d]]` — reaching **full parity with the AsciiMath frontend**. The only remaining
-AsciiMath construct, embedded `\text`, has no Unicode plain-math equivalent and is out of scope (a
-clean spanned error, never a panic). As in AsciiMath there are no multi-letter variables: a
-non-function letter run like `xy` is the product `x·y` (write distinct symbols, or use glyphs).
+`[[a,b],[c,d]]`; and **accents** — Unicode combining diacritics over the preceding glyph, `x̂` (hat),
+`v⃗` (vec), `x̄` (bar), `x̃` (tilde), `ẋ` (dot), `ẍ` (ddot) — lowering to the same `MathExpr::Accent`
+as LaTeX `\hat{x}` and MathML `<mover>`. The accent binds tighter than scripts, so `x̂²` is `(x̂)²`.
+The only remaining AsciiMath construct, embedded `\text`, has no Unicode plain-math equivalent and is
+out of scope (a clean spanned error, never a panic). As in AsciiMath there are no multi-letter
+variables: a non-function letter run like `xy` is the product `x·y` (write distinct symbols, or use glyphs).

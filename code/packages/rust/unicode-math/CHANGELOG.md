@@ -2,6 +2,24 @@
 
 All notable changes to the unicode-math pluggable frontend.
 
+## [0.5.0] — 2026-07-01
+
+### Added — accents (Unicode combining diacritics)
+
+The frontend now reads a **combining diacritic** over the preceding glyph and lowers it to the
+neutral **`MathExpr::Accent`** — the same node LaTeX `\hat{x}` and MathML `<mover>` produce, with
+matching accent names, so a consumer that already lowers `Accent` gets Unicode accents for free.
+
+- `x̂` (U+0302) → `Accent("hat", x)`, `v⃗` (U+20D7) → `Accent("vec", v)`, `x̄` (U+0304) → `bar`,
+  `x̃` (U+0303) → `tilde`, `ẋ` (U+0307) → `dot`, `ẍ` (U+0308) → `ddot`. Names match the LaTeX
+  accent commands and the AsciiMath frontend, keeping one neutral spelling across notations.
+- The tokenizer emits a standalone `TokenKind::Accent(name)`; the parser attaches it **postfix** to
+  the atom just parsed, binding tighter than sub/superscripts and operators — `x̂²` ⇒ `(x̂)²`,
+  `x̂ + y` ⇒ `Accent(hat, x) + y`. Stacked marks are supported via a loop (no recursion).
+- A combining mark with no preceding base is a clean spanned error, never a panic (totality holds).
+- `Capabilities::accents` is now declared (`with_accents()`), bringing unicode-math to accent parity
+  with latex/mathml/asciimath; the shared `check_frontend` harness enforces the honesty.
+
 ## [0.4.0] — 2026-06-30
 
 ### Added — PR-4: matrices (full parity with AsciiMath)

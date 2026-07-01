@@ -166,6 +166,13 @@ impl Parser<'_> {
 
     fn parse_script(&mut self) -> Result<MathExpr, FrontendError> {
         let mut base = self.parse_atom()?;
+        // A combining diacritic follows its base glyph (`x` + U+0302 renders `x̂`), so it attaches
+        // POSTFIX to the atom just parsed — `x̂` ⇒ Accent("hat", x). A loop allows stacked marks
+        // (`x̂̄`), and binding TIGHTER than scripts gives the natural reading `x̂²` ⇒ (x̂)².
+        while let TokenKind::Accent(name) = self.peek().clone() {
+            self.advance();
+            base = MathExpr::Accent { accent: name, body: Box::new(base) };
+        }
         // Subscript then superscript (`a₁²` ⇒ (a₁)²), each at most once — the natural reading.
         // Either form is accepted: a Unicode glyph run (a numeral, e.g. `₁`/`²`) or the explicit
         // ASCII operator (`_`/`^`) whose operand is the next single atom (`a_i`, `x^2` ≡ `x²`).
