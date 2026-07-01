@@ -1161,11 +1161,14 @@ historical context with status `RESOLVED` and a link to the fix PR.
   non-constant receiver. All 10 active cases pass on the first run.
 - **No new closurec bug surfaced** — every fold matched the pass exactly.
 - **New gaps** (executable `#[ignore = "blocked on gap-NNN"]` placeholders):
-  - **gap-141** — fold `Math.abs`/`floor`/`ceil`/`round` on numeric literals.
-    Our pass folds only `Math.max`/`Math.min` today.
-  - **gap-142** — fold `Array.prototype.join` on an array literal of constants
-    (`[a,b,c].join("-")` → `"a-b-c"`). Our pass folds String methods but not
-    Array#join.
+  - **gap-141** — ~~fold `Math.abs`/`floor`/`ceil`/`round` on numeric
+    literals~~ **RESOLVED** (constant-fold 0.79.0, PR #7217; folds all four
+    with round-half-toward-`+Infinity` and negative-zero declines). The
+    `folds_math_unary_methods` placeholder is now an **active** conformance
+    test (also covers `ceil`/`round`) as of constant-fold 0.80.0.
+  - **gap-142** *(still open)* — fold `Array.prototype.join` on an array literal
+    of constants (`[a,b,c].join("-")` → `"a-b-c"`). Our pass folds String
+    methods but not Array#join.
   - **gap-143** — fold `String#concat` with **non-string (coerced) args**
     (`"x".concat(1, 2)` → `"x12"`). Our concat fold handles string args only.
 

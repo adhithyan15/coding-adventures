@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.80.0] - 2026-07-01
+
+### Test — activate the gap-141 upstream placeholder (#88, CLOC12.141)
+
+`folds_math_unary_methods` in
+`tests/upstream/peephole_replace_known_methods_test.rs` was an
+`#[ignore = "blocked on gap-141"]` placeholder pinning upstream's
+`Math.abs`/`floor`/`ceil`/`round` folds. gap-141 shipped in 0.79.0 (#7217), so
+the placeholder is now an **active** conformance test — and it gained `ceil`
+(`Math.ceil(4.2)` → `5`) and `round` (`Math.round(2.5)` → `3`, half toward
+`+Infinity`) assertions alongside the original `abs`/`floor` cases. The port's
+module header and `CLOC12-gaps.md` §CLOC12.141 are updated to mark gap-141
+RESOLVED; gaps 142 (`Array#join`) and 143 (`String#concat` coercion) remain the
+two `#[ignore]` placeholders.
+
+No library code changed — this release is test coverage plus docs.
+
 ## [0.79.0] - 2026-07-01
 
 ### Added — fold the unary numeric `Math` methods (closes gap-141)

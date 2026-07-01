@@ -7,9 +7,10 @@
 //! Upstream `PeepholeReplaceKnownMethods` folds calls to well-known,
 //! side-effect-free String / Array / Math methods on constant receivers
 //! (`"abcdef".indexOf("cd")` → `2`). Our `ConstantFoldPass` implements a large
-//! slice of the String methods and the numeric `Math.max`/`Math.min`; this port
-//! pins those and records the upstream behaviors we do not fold yet as
-//! `#[ignore = "blocked on gap-NNN"]` placeholders.
+//! slice of the String methods and the numeric `Math` methods (`max`/`min` and
+//! the unary `abs`/`floor`/`ceil`/`round`); this port pins those and records the
+//! upstream behaviors we do not fold yet as `#[ignore = "blocked on gap-NNN"]`
+//! placeholders.
 //!
 //! Built on the same AST-builder surface as the sibling
 //! `peephole_fold_constants_test.rs` port (closurec has no public
@@ -208,13 +209,20 @@ fn does_not_fold_on_non_constant_receiver() {
 // Each is pinned to a gap in code/specs/CLOC12-gaps.md.
 // ===================================================================
 
-/// Upstream folds `Math.abs`/`floor`/`ceil`/`round` on numeric literals. Our
-/// pass folds only `Math.max`/`Math.min` today.
+/// Upstream folds `Math.abs`/`floor`/`ceil`/`round` on a single numeric
+/// literal. gap-141 RESOLVED (CLOC12.141) — our pass now folds all four
+/// alongside the pre-existing `Math.max`/`Math.min`. Previously an
+/// `#[ignore]` placeholder; now an active conformance test.
+///
+/// `Math.round` follows ECMAScript §21.3.2.28 (round-half-toward-`+Infinity`),
+/// so `Math.round(2.5)` is `3`. The negative-zero declines (`Math.ceil(-0.4)`
+/// etc.) are exercised in the pass's own unit tests, not here.
 #[test]
-#[ignore = "blocked on gap-141: constant-fold does not fold Math.abs/floor/ceil/round"]
 fn folds_math_unary_methods() {
     assert_num(call(ident("Math"), "abs", vec![n(-5.0)]), 5.0);
     assert_num(call(ident("Math"), "floor", vec![n(4.7)]), 4.0);
+    assert_num(call(ident("Math"), "ceil", vec![n(4.2)]), 5.0);
+    assert_num(call(ident("Math"), "round", vec![n(2.5)]), 3.0);
 }
 
 /// Upstream folds `[a,b,c].join(sep)` on an array literal of constants. Our
