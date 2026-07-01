@@ -2,6 +2,17 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.2] - 2026-07-01
+
+### Fixed
+
+- **Ambiguous `Column` name (GHC compile error)**: `MiniSqlite` defines its own
+  `Column` record type for cursor descriptions.  The unqualified `SqlExpr(..)`
+  import also brought in `SqlPlanner.Column` (the `SqlExpr` constructor), making
+  every occurrence ambiguous.  Fixed by listing the `SqlExpr` constructors
+  explicitly — omitting `Column` — and using the qualified alias `P.Column` at
+  the four sites that construct or pattern-match on `SqlPlanner.Column`.
+
 ## [0.2.1] - 2026-07-01
 
 ### Security

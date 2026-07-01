@@ -91,7 +91,9 @@ import SqlPlanner
     , LimitClause(..)
     , SortKey(..)
     , AggregateItem(..)
-    , SqlExpr(..)
+    , SqlExpr( Literal, BinaryOp, UnaryOp, FuncCall
+             , IsNull, IsNotNull, Between, InExpr, NotInExpr
+             , Like, NotLike, Wildcard, AggExpr )
     , LiteralVal(..)
     , BinaryOperator(..)
     , UnaryOperator(..)
@@ -513,7 +515,7 @@ evalRowExpr :: SqlExpr -> Map.Map String SqlValue -> SqlValue
 evalRowExpr expr row = case expr of
     Literal Nothing    -> SqlNull
     Literal (Just lv)  -> litToSqlValue lv
-    Column _tbl col    ->
+    P.Column _tbl col    ->
         fromMaybe SqlNull (Map.lookup (map toLower col) rowLower)
       where
         rowLower = Map.fromList [(map toLower k, v) | (k, v) <- Map.toList row]
@@ -605,7 +607,7 @@ evalScalarSelect cols =
 
 -- | Derive a display name for an expression (used when no AS alias given).
 exprName :: SqlExpr -> String
-exprName (Column _ col)         = col
+exprName (P.Column _ col)       = col
 exprName (Literal (Just (LitText t))) = t
 exprName (FuncCall f _)         = map toLower f
 exprName _                      = "expr"
@@ -1527,10 +1529,10 @@ parseAtom toks = case toks of
     (TStar : rest) -> pure (Wildcard, rest)
     -- Qualified column: table.column
     (TWord tbl : TDot : TWord col : rest) ->
-        pure (Column (Just (map toLower tbl)) (map toLower col), rest)
+        pure (P.Column (Just (map toLower tbl)) (map toLower col), rest)
     -- Bare identifier / keyword-as-identifier
     (TWord w : rest) ->
-        pure (Column Nothing (map toLower w), rest)
+        pure (P.Column Nothing (map toLower w), rest)
     [] -> Left (mkErr "OperationalError" "unexpected end of expression")
     _  -> Left (mkErr "OperationalError" ("unexpected token in expression: " ++ show (head toks)))
 
