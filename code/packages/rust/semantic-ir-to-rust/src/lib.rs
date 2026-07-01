@@ -28,8 +28,8 @@ mod emit;
 mod runtime;
 
 use semantic_ir::{
-    Artifact, ArtifactMetadata, Backend, BackendError, BackendErrorKind, Feature, Module,
-    ParamKind,
+    Artifact, ArtifactMetadata, Backend, BackendError, BackendErrorKind, Expr, Feature, Module,
+    ParamKind, Scope, Stmt,
 };
 
 pub use emit::sanitize_ident;
@@ -149,6 +149,31 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // reorder — so accepting the feature keeps the capability check and
     // emit coverage consistent.
     Feature::KeywordParams,
+    // ── SIR17 (E4) — exceptions ────────────────────────────────────
+    // `Exceptions` lowers `Stmt::TryCatch` to a `std::panic::catch_unwind`
+    // region and `raise` to a `panic_any(SirError{…})`, with a runtime
+    // `rescue_matches` over a built-in + user ancestry table (see
+    // `runtime.rs`).  All emit is localized to the `raise`/`TryCatch`
+    // arms; every other node is unchanged.
+    Feature::Exceptions,
+    // `Classes` is accepted ONLY to permit the narrow exception-subclass
+    // declaration `class MyErr < StandardError; end`, whose sole purpose
+    // is to contribute an ancestry edge to the exception matcher (threaded
+    // at init by `emit_ancestry_registration`).  The Ruby frontend hoists
+    // method `def`s to top-level `Function`s, so an accepted class body is
+    // EMPTY; a class carrying executable state (instance/class vars,
+    // constants, or any other statement in its body) is rejected cleanly
+    // by `reject_stateful_class` below — NEVER mis-emitted.  This mirrors
+    // the E1 JS-review soundness argument: the ClassDef is pure metadata.
+    Feature::Classes,
+    // `Constants` is accepted ONLY because a `raise MyErr` names its class
+    // via a `Scope::Const` VarRef (the Ruby frontend's lowering), which
+    // sets `Feature::Constants` in the manifest.  The emitter LIFTS that
+    // Const class name to a string literal in the `raise` arm — it never
+    // reads a runtime constant.  Any OTHER `Const` reference (a genuine
+    // constant read/assign this backend cannot lower) is rejected cleanly
+    // by `reject_const_ref` below, keeping this acceptance sound.
+    Feature::Constants,
 ];
 
 impl Backend for RustBackend {
@@ -191,6 +216,19 @@ impl Backend for RustBackend {
         //     resolution (this backend's whole keyword strategy) requires
         //     FIXED arity — see `reject_keyword_with_variadic`.
         if let Some(e) = reject_keyword_with_variadic(module) {
+            return Err(e);
+        }
+
+        // 2c. Exception-feature soundness gates (E4).  `Feature::Classes`
+        //     and `Feature::Constants` are accepted ONLY for the narrow
+        //     exception use case (an exception-subclass declaration and a
+        //     `raise MyErr` class name), so reject anything broader that
+        //     the emitter genuinely cannot lower — BEFORE emit, so those
+        //     emit paths are true internal-bug guards, not DoS surfaces.
+        if let Some(e) = reject_stateful_class(module) {
+            return Err(e);
+        }
+        if let Some(e) = reject_const_ref(module) {
             return Err(e);
         }
 
@@ -275,11 +313,261 @@ fn reject_keyword_with_variadic(module: &Module) -> Option<BackendError> {
     None
 }
 
+/// Reject a `Stmt::ClassDef` whose body is **non-empty** (E4 soundness).
+///
+/// `Feature::Classes` is accepted only for the exception-subclass idiom
+/// `class MyErr < StandardError; end`, whose body is empty because the Ruby
+/// frontend hoists method `def`s to top-level `Function`s.  A NON-empty body
+/// carries executable class state (constant / class-variable assigns, or any
+/// other statement) that this backend has no object model to emit — so we
+/// reject it cleanly HERE rather than letting emit produce nonsense (or reach
+/// a panic for a nested unsupported node).  This keeps the ClassDef emit arm a
+/// pure ancestry-metadata path.
+///
+/// Returns `Some(err)` for the FIRST offending class (fail-fast), else `None`.
+fn reject_stateful_class(module: &Module) -> Option<BackendError> {
+    for func in &module.functions {
+        if let Some(e) = stateful_class_in_stmts(&func.body.stmts) {
+            return Some(e);
+        }
+    }
+    None
+}
+
+fn stateful_class_in_stmts(stmts: &[Stmt]) -> Option<BackendError> {
+    for s in stmts {
+        match s {
+            Stmt::ClassDef { name, body, span, .. } => {
+                if !body.is_empty() {
+                    return Some(BackendError {
+                        kind: BackendErrorKind::UnsupportedFeature,
+                        message: format!(
+                            "rust backend accepts only empty-body (exception-subclass) \
+                             class declarations; class `{name}` has a non-empty body \
+                             (class state / methods are out of scope for this backend)"
+                        ),
+                        span: span.clone(),
+                    });
+                }
+            }
+            // Recurse into nested statement lists so a stateful class nested
+            // in a try/rescue/ensure or module body is still caught.
+            Stmt::ModuleDef { body, .. } | Stmt::SingletonClassDef { body, .. } => {
+                if let Some(e) = stateful_class_in_stmts(body) {
+                    return Some(e);
+                }
+            }
+            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+                if let Some(e) = stateful_class_in_stmts(body) {
+                    return Some(e);
+                }
+                for r in rescues {
+                    if let Some(e) = stateful_class_in_stmts(&r.body) {
+                        return Some(e);
+                    }
+                }
+                if let Some(ens) = ensure_body {
+                    if let Some(e) = stateful_class_in_stmts(ens) {
+                        return Some(e);
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+    None
+}
+
+/// Reject any `Scope::Const` reference the backend cannot lower (E4
+/// soundness).
+///
+/// `Feature::Constants` is accepted only because `raise MyErr` names its
+/// exception class through a `Scope::Const` VarRef, which the `raise` emit
+/// arm LIFTS to a string literal (never a runtime constant read).  Every
+/// OTHER `Const` reference — a `Const` VarRef that is not a raise class name,
+/// or an `Assign`/`ExprStmt` to a `Const` — has no backend lowering and would
+/// otherwise reach the `emit_var_ref` `Scope::Const` panic on validated input
+/// (a DoS).  We reject such modules cleanly here.
+///
+/// The ALLOWED shape is exactly `BuiltinCall("raise", [VarRef{Const}, …])`
+/// with the Const as the first argument; we walk every expression and flag a
+/// `Const` VarRef found in any other position.
+///
+/// Returns `Some(err)` for the FIRST offending reference, else `None`.
+fn reject_const_ref(module: &Module) -> Option<BackendError> {
+    for func in &module.functions {
+        if let Some(e) = const_ref_in_stmts(&func.body.stmts) {
+            return Some(e);
+        }
+        if let Some(e) = const_ref_in_expr(&func.body.value) {
+            return Some(e);
+        }
+    }
+    None
+}
+
+fn const_ref_in_stmts(stmts: &[Stmt]) -> Option<BackendError> {
+    for s in stmts {
+        if let Some(e) = const_ref_in_stmt(s) {
+            return Some(e);
+        }
+    }
+    None
+}
+
+fn const_ref_in_stmt(s: &Stmt) -> Option<BackendError> {
+    match s {
+        Stmt::LetBinding { value, .. }
+        | Stmt::LetStarBinding { value, .. }
+        | Stmt::ExprStmt { expr: value, .. } => const_ref_in_expr(value),
+        Stmt::Assign { scope: Scope::Const, span, .. } => Some(unsupported_const(span.clone())),
+        Stmt::Assign { value, .. } => const_ref_in_expr(value),
+        Stmt::While { cond, body, .. } => {
+            const_ref_in_expr(cond).or_else(|| const_ref_in_block(body))
+        }
+        Stmt::ForRange { start, stop, step, body, .. } => const_ref_in_expr(start)
+            .or_else(|| const_ref_in_expr(stop))
+            .or_else(|| const_ref_in_expr(step))
+            .or_else(|| const_ref_in_block(body)),
+        Stmt::ForEach { iter, body, .. } => {
+            const_ref_in_expr(iter).or_else(|| const_ref_in_block(body))
+        }
+        Stmt::SeqSet { seq, index, value, .. } => const_ref_in_expr(seq)
+            .or_else(|| const_ref_in_expr(index))
+            .or_else(|| const_ref_in_expr(value)),
+        Stmt::MapSet { map, key, value, .. } => const_ref_in_expr(map)
+            .or_else(|| const_ref_in_expr(key))
+            .or_else(|| const_ref_in_expr(value)),
+        Stmt::ClassDef { body, .. }
+        | Stmt::ModuleDef { body, .. }
+        | Stmt::SingletonClassDef { body, .. } => const_ref_in_stmts(body),
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            if let Some(e) = const_ref_in_stmts(body) {
+                return Some(e);
+            }
+            for r in rescues {
+                if let Some(e) = const_ref_in_stmts(&r.body) {
+                    return Some(e);
+                }
+            }
+            if let Some(ens) = ensure_body {
+                if let Some(e) = const_ref_in_stmts(ens) {
+                    return Some(e);
+                }
+            }
+            None
+        }
+    }
+}
+
+fn const_ref_in_block(b: &semantic_ir::Block) -> Option<BackendError> {
+    const_ref_in_stmts(&b.stmts).or_else(|| const_ref_in_expr(&b.value))
+}
+
+fn const_ref_in_expr(e: &Expr) -> Option<BackendError> {
+    match e {
+        // A `Const` VarRef standing alone (not a raise class name) cannot be
+        // lowered — flag it.
+        Expr::VarRef { scope: Scope::Const, span, .. } => Some(unsupported_const(span.clone())),
+        // `raise` is the ONE allowed home for a `Const`: its first argument
+        // may be a `Const` class name (lifted to a string).  Skip that slot;
+        // still scan the remaining arguments (the message expression, etc.).
+        Expr::BuiltinCall { name, args, .. } if name == "raise" => {
+            let skip_first = matches!(
+                args.first(),
+                Some(Expr::VarRef { scope: Scope::Const, .. })
+            );
+            let start = if skip_first { 1 } else { 0 };
+            for a in &args[start.min(args.len())..] {
+                if let Some(err) = const_ref_in_expr(a) {
+                    return Some(err);
+                }
+            }
+            None
+        }
+        Expr::BuiltinCall { args, .. } | Expr::DirectCall { args, .. } => {
+            for a in args {
+                if let Some(err) = const_ref_in_expr(a) {
+                    return Some(err);
+                }
+            }
+            None
+        }
+        Expr::IndirectCall { target, args, .. } => {
+            if let Some(err) = const_ref_in_expr(target) {
+                return Some(err);
+            }
+            for a in args {
+                if let Some(err) = const_ref_in_expr(a) {
+                    return Some(err);
+                }
+            }
+            None
+        }
+        Expr::Intrinsic { args, .. } => {
+            for a in args {
+                if let Some(err) = const_ref_in_expr(a) {
+                    return Some(err);
+                }
+            }
+            None
+        }
+        Expr::If { cond, then_branch, else_branch, .. } => const_ref_in_expr(cond)
+            .or_else(|| const_ref_in_block(then_branch))
+            .or_else(|| const_ref_in_block(else_branch)),
+        Expr::Block(b) => const_ref_in_block(b),
+        Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+            const_ref_in_expr(lhs).or_else(|| const_ref_in_expr(rhs))
+        }
+        Expr::KeywordArg { value, .. } => const_ref_in_expr(value),
+        Expr::SeqLit { items, .. } | Expr::StrConcat { parts: items, .. } => {
+            for it in items {
+                if let Some(err) = const_ref_in_expr(it) {
+                    return Some(err);
+                }
+            }
+            None
+        }
+        Expr::SeqIndex { seq, index, .. } => {
+            const_ref_in_expr(seq).or_else(|| const_ref_in_expr(index))
+        }
+        Expr::SeqLen { seq, .. } => const_ref_in_expr(seq),
+        Expr::MapLit { entries, .. } => {
+            for entry in entries {
+                if let Some(err) = const_ref_in_expr(&entry.key) {
+                    return Some(err);
+                }
+                if let Some(err) = const_ref_in_expr(&entry.value) {
+                    return Some(err);
+                }
+            }
+            None
+        }
+        Expr::MapGet { map, key, .. } => {
+            const_ref_in_expr(map).or_else(|| const_ref_in_expr(key))
+        }
+        // Leaf / already-supported expressions carry no nested Const.
+        _ => None,
+    }
+}
+
+fn unsupported_const(span: semantic_ir::Span) -> BackendError {
+    BackendError {
+        kind: BackendErrorKind::UnsupportedFeature,
+        message: "rust backend cannot lower a constant reference; the only \
+                  accepted `Const` is an exception class name in `raise Foo` \
+                  (lifted to a string literal)"
+            .into(),
+        span,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use semantic_ir::{
-        Block, EffectSet, Expr, FeatureManifest, Function, Metadata, Param, Scope, Span,
+        Block, EffectSet, Expr, FeatureManifest, Function, Metadata, Param, RescueClause, Scope,
+        Span, Stmt,
     };
 
     fn s() -> Span {
@@ -610,5 +898,116 @@ mod tests {
         let m = kw_module(vec![f, main]);
         let a = compile(&m).expect("keyword-only module should still compile");
         assert!(a.source.contains("fn greet("));
+    }
+
+    // ── E4: exception feature acceptance + soundness gates ─────────
+
+    fn exc_module(stmts: Vec<Stmt>, features: &[Feature]) -> Module {
+        let mut m = minimal_module();
+        m.functions[0].body = Block {
+            stmts,
+            value: Expr::NilLit { span: s() },
+            span: s(),
+        };
+        let mut feats = vec![Feature::Exceptions, Feature::Strings];
+        feats.extend_from_slice(features);
+        m.manifest = FeatureManifest::from_features(&feats);
+        m
+    }
+
+    fn raise_stmt(cls: &str) -> Stmt {
+        Stmt::ExprStmt {
+            expr: Expr::BuiltinCall {
+                name: "raise".into(),
+                args: vec![
+                    Expr::VarRef { name: cls.into(), scope: Scope::Const, span: s() },
+                    Expr::StrLit { value: "m".into(), span: s() },
+                ],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            span: s(),
+        }
+    }
+
+    #[test]
+    fn accepts_exceptions_and_emits_try_catch() {
+        let tc = Stmt::TryCatch {
+            body: vec![raise_stmt("ArgumentError")],
+            rescues: vec![RescueClause {
+                exception_types: vec!["StandardError".into()],
+                binding: Some("e".into()),
+                body: vec![],
+                span: s(),
+            }],
+            ensure_body: None,
+            span: s(),
+        };
+        let a = compile(&exc_module(vec![tc], &[Feature::Constants])).expect("exceptions accepted");
+        assert!(a.source.contains("std::panic::catch_unwind"), "got:\n{}", a.source);
+        assert!(
+            a.source.contains(r#"__sir::raise("ArgumentError", "#),
+            "got:\n{}",
+            a.source
+        );
+        assert!(a.source.contains("__sir::install_panic_hook();"), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn accepts_exception_subclass_class_def_and_registers_ancestry() {
+        let cd = Stmt::ClassDef {
+            name: "MyErr".into(),
+            superclass: Some("StandardError".into()),
+            body: vec![],
+            span: s(),
+        };
+        let a = compile(&exc_module(vec![cd], &[Feature::Classes]))
+            .expect("empty-body exception subclass accepted");
+        assert!(
+            a.source.contains(r#"__sir::register_ancestry(&[("MyErr", "StandardError")]);"#),
+            "got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn rejects_stateful_class_body() {
+        // A class whose body carries an executable statement is out of scope.
+        let cd = Stmt::ClassDef {
+            name: "Widget".into(),
+            superclass: None,
+            body: vec![Stmt::ExprStmt {
+                expr: Expr::IntLit { value: 1, span: s() },
+                span: s(),
+            }],
+            span: s(),
+        };
+        let err = compile(&exc_module(vec![cd], &[Feature::Classes]))
+            .expect_err("stateful class rejected");
+        assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
+        assert!(err.message.contains("non-empty body"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn rejects_non_raise_const_reference() {
+        // A `Const` VarRef that is NOT a raise class name has no lowering.
+        let stmt = Stmt::LetBinding {
+            name: "x".into(),
+            sir_type: None,
+            value: Expr::VarRef { name: "PI".into(), scope: Scope::Const, span: s() },
+            span: s(),
+        };
+        let err = compile(&exc_module(vec![stmt], &[Feature::Constants]))
+            .expect_err("bare const ref rejected");
+        assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
+        assert!(err.message.contains("constant reference"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn allows_const_only_as_raise_class_name() {
+        // `raise Foo, "m"` — the Const is the class name → allowed.
+        let a = compile(&exc_module(vec![raise_stmt("Foo")], &[Feature::Constants]))
+            .expect("raise-class-name const is allowed");
+        assert!(a.source.contains(r#"__sir::raise("Foo", "#), "got:\n{}", a.source);
     }
 }

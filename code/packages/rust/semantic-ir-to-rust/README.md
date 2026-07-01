@@ -62,8 +62,10 @@ Accepts (SIR16 / v1 — **all six** features, full v1 parity): `Floats`,
 
 With all six SIR16 features accepted, every SIR16 IR node has a real emit
 arm — no reachable `panic!` remains for v1.  The remaining emit panics
-cover SIR17/18 nodes (classes, modules, try/catch, string interpolation,
-instance/class/const vars) whose features stay unaccepted.
+cover SIR17/18 nodes (modules, string interpolation, instance/class vars,
+non-exception constant refs) whose features stay unaccepted; `try/catch`
+and exception-subclass `class` declarations are now accepted (see
+**Exceptions (E4)** below).
 
 Accepts (P2e): `DefaultParams` — a `Param` may carry a `default`
 expression that runs when the caller omits that trailing argument.  Rust
@@ -153,8 +155,52 @@ rather than panicking:
   (`unknown_method`), never a reflective lookup on the raw name.  No new
   `unsafe`.
 
+Executes (E4): **exception handling**.  `Feature::Exceptions` (Ruby
+`begin/rescue/ensure`, `raise`) is accepted.  Rust has **no native
+exceptions**, so v0 maps the SIR exception model onto Rust's **unwinding
+panic** machinery — a *localized* transform touching only the
+`raise`/`TryCatch` arms:
+
+- **`raise`** → `__sir::raise("Class", <msg>)`, which
+  `std::panic::panic_any(SirError { class, msg })`.  A `Const` class name
+  (`raise Foo`/`raise Foo, "m"`) is **lifted to a string literal** (never a
+  runtime constant read); a non-const first arg → `raise("RuntimeError",
+  <arg>)`; bare `raise` → `__sir::reraise()`.
+- **`TryCatch`** → a `std::panic::catch_unwind(AssertUnwindSafe(|| { …
+  }))` region.  Its `match` runs `ensure` on the `Ok` (no-exception) arm;
+  on the `Err` arm it downcasts the payload with `exc_from_payload`
+  (**re-`resume_unwind`ing a non-`SirError` panic** — a real Rust bug is
+  never swallowed as a rescue), then dispatches the rescue clauses in
+  source order via `rescue_matches`, binding `=> e` with `exc_value`.  A
+  matched clause runs its body then `ensure`; an unmatched exception runs
+  `ensure` then `resume_unwind`s (re-raise).  **`ensure` runs on every
+  path.**  `main` wraps the user body in a top-level `catch_unwind` so an
+  uncaught exception exits cleanly non-zero (`Class: message`).
+- **Ancestry matching** — `rescue_matches(&SirError, &[&str])` walks an
+  **explicit** built-in ancestry table (a verbatim parity port of the TS
+  `sir-runtime-exceptions` `ANCESTRY`: `ArgumentError`/`TypeError`/… →
+  `StandardError` → `Exception`, etc.) merged with **user edges** collected
+  from the module's `ClassDef { name, superclass }` pairs and registered
+  once at init via `register_ancestry`.  So `class MyErr < StandardError`
+  makes a raised `MyErr` catchable by `rescue StandardError`.  A `seen`-set
+  **cycle guard** bounds the walk.
+- **Classes/Constants — narrow acceptance.**  `Feature::Classes` is
+  accepted only for an **empty-body** exception-subclass declaration
+  (`class MyErr < StandardError; end`; methods hoist to top-level
+  `Function`s); a non-empty body is rejected cleanly by
+  `reject_stateful_class`.  `Feature::Constants` is accepted only because
+  `raise MyErr` names its class via a `Const` VarRef (lifted to a string);
+  any other `Const` reference is rejected cleanly by `reject_const_ref`.
+- **Security** — rescue matching is the explicit table lookup only, never
+  reflection; the cycle guard is mandatory; a non-`SirError` panic passes
+  through untouched.  `AssertUnwindSafe` is used for generated code (the
+  `Err` path re-derives what it needs and never reads partially-mutated
+  captured state).  No new `unsafe`.
+
 Rejects: `TailCalls` (Rust does not guarantee TCO), `Intrinsics`
-(empty whitelist in v0), and the SIR17/18 features above.
+(empty whitelist in v0), and the remaining SIR17/18 features above
+(`Modules`, `InstanceVars`, `ClassVars`, `StringInterpolation`,
+non-exception `Constants`/stateful `Classes`).
 
 ## Value model
 
@@ -184,7 +230,10 @@ enum Value {
 SIR's synthesised `main` function is renamed to `__sir_user_main`
 in the generated Rust because `main` is Rust's process entry
 point.  The emitter generates its own `main()` that calls `_init()`
-(if present) then `__sir_user_main()`.
+(if present) then `__sir_user_main()`.  For an exception-using module,
+`main()` additionally installs the quiet panic hook, registers the
+module's user ancestry, and wraps the body in a top-level `catch_unwind`
+so an uncaught SIR exception exits cleanly non-zero.
 
 ## Tests
 
@@ -193,6 +242,14 @@ point.  The emitter generates its own `main()` that calls `_init()`
 Covers per-node lowering, identifier sanitisation (including
 raw-identifier syntax for Rust keywords), deterministic output,
 and end-to-end pipelines from Twig source.
+
+Exception execution-proof (`tests/compile_and_run_exceptions.rs`) compiles
+emitted Rust with `rustc` and runs it, checking five cases against the
+Python/TS reference behaviour: typed rescue via built-in ancestry, bare
+rescue, unmatched re-raise (non-zero exit), `ensure` on caught + uncaught
+paths, and user ancestry (`MyErr < StandardError`).  It skips (never fails)
+when no linker is available; point it at one via `SIR_TEST_RUSTC_LINKER`
+(e.g. the toolchain's bundled `rust-lld`).
 
 ## Related crates
 

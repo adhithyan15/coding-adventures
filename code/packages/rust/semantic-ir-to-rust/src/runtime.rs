@@ -1250,6 +1250,237 @@ pub const RUNTIME: &str = r##"mod __sir {
             }),
         }))
     }
+
+    // ── exception model (SIR17 Exceptions) ────────────────────────────
+    //
+    // Rust has NO native exceptions.  Ruby's `begin/rescue/ensure`
+    // maps onto Rust's *unwinding panic* machinery: a `raise` becomes a
+    // `std::panic::panic_any(SirError { … })` carrying a class-tagged
+    // payload, and a `TryCatch` region runs its body under
+    // `std::panic::catch_unwind`, then downcasts the caught payload back
+    // to a `SirError` to dispatch the rescue clauses.  See `emit.rs` for
+    // the emitted shape; this module is the runtime half.
+    //
+    // Why panic-unwind and not a `Result`-threading discipline?  Threading
+    // a `Result` would demand rewriting *every* emitted expression into a
+    // `?`-propagating form and changing every `fn … -> Value` signature to
+    // `-> Result<Value, SirError>`.  Panic-unwind is a *localized*
+    // transform: only `raise` and `TryCatch` change; all other emit arms
+    // are byte-for-byte unchanged, matching how the TS/Python backends add
+    // exceptions as a localized `throw`/`try` transform over otherwise
+    // unchanged code.
+    //
+    // SECURITY: rescue matching is an EXPLICIT ancestry-table lookup —
+    // never reflection / type-name introspection.  The built-in table is a
+    // small curated slice of Ruby's hierarchy (parity with the TS
+    // `sir-runtime-exceptions` `ANCESTRY`); user classes contribute edges
+    // only through `register_ancestry`, emitted from the module's own
+    // `ClassDef { superclass }` pairs.  A `seen`-set cycle guard bounds the
+    // ancestry walk so a malicious/cyclic edge set can never spin forever.
+
+    /// A raised SIR exception: a Ruby/SIR class name plus a message.
+    ///
+    /// This is the panic *payload* — `raise` calls `panic_any(SirError{…})`
+    /// and a `TryCatch` recovers it with `catch_unwind` + `downcast`.
+    ///
+    /// ## Why `msg: String` (not `Value`)
+    ///
+    /// `std::panic::panic_any<M>` requires `M: Any + Send + 'static`, but our
+    /// `Value` model is built on `Rc` (single-threaded by design) and is
+    /// therefore NOT `Send`.  So the payload cannot carry a raw `Value`.  A
+    /// `raise Klass, msg` renders `msg` to its string form *at raise time*
+    /// (via `format`) and stores that `String` — which is `Send` — exactly as
+    /// Ruby's `exception.message` is a string.  `exc_value` re-wraps it as a
+    /// `Value::Str` for a `rescue … => e` binding.  This keeps the whole
+    /// unwinding path `Send`-clean with no `unsafe`, at the cost of a
+    /// non-string message value being flattened to its printed form — an
+    /// acceptable v0 fidelity trade (Ruby itself expects a string message).
+    #[derive(Clone)]
+    pub struct SirError {
+        /// The Ruby/SIR class this was raised as (`ArgumentError`, `MyErr`…).
+        pub class: String,
+        /// The message Ruby's `raise Klass, "msg"` carries, rendered to a
+        /// string.  When no message is given, the class name is used (Ruby's
+        /// default `exception.message`).
+        pub msg: String,
+    }
+
+    // Built-in Ruby exception ancestry: subclass → immediate superclass.
+    // A verbatim parity port of the TS `sir-runtime-exceptions` `ANCESTRY`
+    // table.  Every entry ultimately chains up to `StandardError →
+    // Exception`.  Kept as a match (not a `HashMap`) so it is a pure,
+    // allocation-free, compile-time-closed lookup — the runtime can only
+    // ever return an edge this function spells out.
+    fn builtin_super(class: &str) -> Option<&'static str> {
+        match class {
+            "RuntimeError" => Some("StandardError"),
+            "ArgumentError" => Some("StandardError"),
+            "TypeError" => Some("StandardError"),
+            "NameError" => Some("StandardError"),
+            "NoMethodError" => Some("NameError"),
+            "IndexError" => Some("StandardError"),
+            "KeyError" => Some("IndexError"),
+            "RangeError" => Some("StandardError"),
+            "ZeroDivisionError" => Some("StandardError"),
+            "IOError" => Some("StandardError"),
+            "StopIteration" => Some("StandardError"),
+            "NotImplementedError" => Some("StandardError"),
+            "StandardError" => Some("Exception"),
+            _ => None,
+        }
+    }
+
+    thread_local! {
+        // User-defined ancestry edges (subclass → superclass), populated
+        // once at program init from the module's `ClassDef` pairs via
+        // `register_ancestry`.  Consulted *in addition to* the built-in
+        // table so `class MyErr < StandardError` makes a raised `MyErr`
+        // catchable by `rescue StandardError`.
+        static USER_ANCESTRY: RefCell<HashMap<String, String>> =
+            RefCell::new(HashMap::new());
+    }
+
+    /// Register user-defined `subclass → superclass` edges, once at init.
+    ///
+    /// The emitter collects every `Stmt::ClassDef { name, superclass:
+    /// Some(sup) }` in the module and emits a single call to this with all
+    /// the pairs.  This is the ONLY way a user edge enters the matcher —
+    /// there is no reflection over runtime type names.
+    pub fn register_ancestry(edges: &[(&str, &str)]) {
+        USER_ANCESTRY.with(|m| {
+            let mut m = m.borrow_mut();
+            for (sub, sup) in edges {
+                m.insert((*sub).to_string(), (*sup).to_string());
+            }
+        });
+    }
+
+    /// The immediate superclass of `class`, consulting the user table first
+    /// (so a user edge can extend, but a built-in is the fallback).
+    fn super_of(class: &str) -> Option<String> {
+        if let Some(sup) = USER_ANCESTRY.with(|m| m.borrow().get(class).cloned()) {
+            return Some(sup);
+        }
+        builtin_super(class).map(|s| s.to_string())
+    }
+
+    /// `true` if `actual` is `target` or descends from it via the merged
+    /// built-in + user ancestry.  The `seen` set bounds the walk so a
+    /// cyclic edge set (`A→B→A`) terminates instead of looping forever.
+    fn is_ancestor_or_self(actual: &str, target: &str) -> bool {
+        let mut cur = actual.to_string();
+        let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
+        loop {
+            if cur == target {
+                return true;
+            }
+            if !seen.insert(cur.clone()) {
+                return false; // cycle — stop.
+            }
+            match super_of(&cur) {
+                Some(next) => cur = next,
+                None => return false,
+            }
+        }
+    }
+
+    /// Does a caught `SirError` match a rescue clause naming `class_names`?
+    ///
+    /// - An **empty** list is a bare `rescue` (catch-all) → always `true`.
+    /// - `Exception` is Ruby's universal root → matches anything.
+    /// - Otherwise the error matches if its class equals, or descends from,
+    ///   any named class (per the merged ancestry table).
+    ///
+    /// Parity with the TS `rescueMatches`.
+    pub fn rescue_matches(exc: &SirError, class_names: &[&str]) -> bool {
+        if class_names.is_empty() {
+            return true;
+        }
+        class_names
+            .iter()
+            .any(|name| *name == "Exception" || is_ancestor_or_self(&exc.class, name))
+    }
+
+    /// The message value a rescue binding (`rescue … => e`) sees — the
+    /// exception's message, re-wrapped as a `Value::Str`.  Ruby would bind an
+    /// exception *object* here; SIR v0 has no exception-object model, so the
+    /// message string is the honest stand-in (the same choice the TS backend
+    /// makes, where `=> e` binds the thrown value's message).
+    pub fn exc_value(exc: &SirError) -> Value {
+        Value::Str(Rc::from(exc.msg.as_str()))
+    }
+
+    /// Raise a SIR exception of `class` with message `msg` by panicking with
+    /// a `SirError` payload.  The `msg` `Value` is rendered to a string at
+    /// raise time (see `SirError`'s doc for why the payload cannot carry a
+    /// raw `Value`).  Declared `-> !` (never returns) so control-flow
+    /// analysis knows code after a `raise` is unreachable.
+    ///
+    /// A quiet panic hook (installed by `install_panic_hook`, called at
+    /// program init) suppresses Rust's default `thread 'main' panicked …`
+    /// banner for *our* `SirError` payloads on the caught path, so a rescued
+    /// exception prints no spurious stderr noise.  A genuine (non-`SirError`)
+    /// Rust panic still prints normally.
+    pub fn raise(class: &str, msg: Value) -> ! {
+        std::panic::panic_any(SirError { class: class.to_string(), msg: format(&msg) })
+    }
+
+    /// Bare `raise` with no in-flight exception threaded: re-raise as a
+    /// generic `RuntimeError` (SIR v0 does not carry the current exception
+    /// into a bare re-raise — documented limitation, parity with TS).
+    pub fn reraise() -> ! {
+        std::panic::panic_any(SirError {
+            class: "RuntimeError".to_string(),
+            msg: "RuntimeError".to_string(),
+        })
+    }
+
+    /// Recover a `SirError` from a `catch_unwind` payload, or **re-panic**.
+    ///
+    /// A `catch_unwind` `Err` payload is `Box<dyn Any + Send>`.  If it
+    /// downcasts to our `SirError`, that is a SIR-level `raise` we should
+    /// dispatch to rescue clauses.  If it does NOT — it is a *genuine Rust
+    /// panic* (an index-out-of-bounds, an `unwrap` on `None`, an internal
+    /// bug), which must NEVER be silently swallowed as if it were a
+    /// rescuable Ruby exception.  We `resume_unwind` it so it propagates
+    /// exactly as an uncaught panic would, preserving Rust's own crash
+    /// semantics.  This is the security-critical passthrough: a rescue
+    /// clause can only ever catch a value that a `raise` produced.
+    pub fn exc_from_payload(payload: Box<dyn std::any::Any + Send>) -> SirError {
+        match payload.downcast::<SirError>() {
+            Ok(e) => *e,
+            Err(other) => std::panic::resume_unwind(other),
+        }
+    }
+
+    /// Install a quiet panic hook so a *`SirError`* panic (a SIR `raise`)
+    /// does not print Rust's default panic banner to stderr — the
+    /// `catch_unwind` in a `TryCatch` is responsible for that exception, and
+    /// an *uncaught* one already renders its own message via `report_uncaught`.
+    /// A non-`SirError` panic (a real Rust bug) still prints normally.
+    ///
+    /// Idempotent-safe to call once at program init.
+    pub fn install_panic_hook() {
+        let default = std::panic::take_hook();
+        std::panic::set_hook(Box::new(move |info| {
+            if info.payload().is::<SirError>() {
+                // A SIR raise: stay silent here.  If it is ultimately
+                // uncaught, the process still aborts with a non-zero status
+                // (the unwind reaches `main` and terminates the thread); the
+                // top-level `catch_unwind` in `main` prints a clean message.
+                return;
+            }
+            default(info);
+        }));
+    }
+
+    /// Render an uncaught SIR exception (one that unwound past every
+    /// `TryCatch`) as Ruby would at top level (`Class: message`) and exit
+    /// non-zero.  Called by the `main`-level `catch_unwind` wrapper.
+    pub fn report_uncaught(exc: &SirError) -> ! {
+        eprintln!("{}: {}", exc.class, exc.msg);
+        std::process::exit(1)
+    }
 }
 "##;
 
@@ -1356,5 +1587,44 @@ mod tests {
         // ForEach reconciliation: `seq_iter` must snapshot a `Value::Seq`
         // (the new real sequence) as well as walk a cons-list.
         assert!(RUNTIME.contains("if let Value::Seq(items) = v"));
+    }
+
+    #[test]
+    fn runtime_declares_exception_helpers() {
+        // E4: the inline runtime must ship the exception model + matcher so a
+        // `raise`/`TryCatch` program runs end to end.
+        for helper in &[
+            "pub struct SirError",
+            "pub fn raise",
+            "pub fn reraise",
+            "pub fn exc_from_payload",
+            "pub fn exc_value",
+            "pub fn rescue_matches",
+            "pub fn register_ancestry",
+            "pub fn install_panic_hook",
+            "pub fn report_uncaught",
+        ] {
+            assert!(RUNTIME.contains(helper), "runtime missing `{}`", helper);
+        }
+    }
+
+    #[test]
+    fn runtime_rescue_matcher_is_explicit_table_with_cycle_guard() {
+        // SECURITY: rescue matching is an EXPLICIT ancestry table (no
+        // reflection), and the ancestry walk carries a `seen`-set cycle
+        // guard so a cyclic edge set terminates.
+        assert!(RUNTIME.contains("fn builtin_super"), "missing explicit ancestry table");
+        // A representative built-in edge (parity with the TS ANCESTRY).
+        assert!(RUNTIME.contains(r#""ArgumentError" => Some("StandardError")"#));
+        assert!(RUNTIME.contains(r#""StandardError" => Some("Exception")"#));
+        // Cycle guard.
+        assert!(RUNTIME.contains("seen.insert"), "missing cycle guard");
+    }
+
+    #[test]
+    fn runtime_non_sir_error_payload_is_resumed_not_swallowed() {
+        // A non-`SirError` panic payload must be re-raised, never treated as
+        // a rescuable exception.
+        assert!(RUNTIME.contains("std::panic::resume_unwind(other)"));
     }
 }
