@@ -4710,5 +4710,160 @@ mod tests {
             .collect();
         assert_eq!(ops, vec!["<<=".to_string(), ">>=".to_string()]);
     }
+
+    // -----------------------------------------------------------------------
+    // Phase KW7 (Ruby 1.0 unblock) — keyword parameters & arguments.
+    //
+    // Grammar additions:
+    //   param    = [ "*" | "**" ] NAME [ COLON [ expression ] | EQUALS expression ] ;
+    //   call_arg = NAME COLON expression | [ "*" | "**" | "&" ] expression ;
+    //
+    // These tests pin the PARSE-tree shape: a keyword param carries a COLON
+    // token child (and, for the optional form, a trailing `expression`); a
+    // keyword call arg is a `call_arg` node with a NAME token + COLON token +
+    // `expression` child.
+    // -----------------------------------------------------------------------
+
+    /// Collect the `param` subnodes of the first `def_statement`'s `params`.
+    fn def_param_nodes(ast: &GrammarASTNode) -> Vec<&GrammarASTNode> {
+        let def = find_def_statement(ast).expect("expected def_statement");
+        let params = def
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "params" => Some(n),
+                _ => None,
+            })
+            .expect("expected params subnode");
+        params
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "param" => Some(n),
+                _ => None,
+            })
+            .collect()
+    }
+
+    /// Does this `param` node carry a single-colon token (⇒ keyword param)?
+    fn param_has_colon(param: &GrammarASTNode) -> bool {
+        param.children.iter().any(|c| matches!(
+            c,
+            ASTNodeOrToken::Token(t)
+                if matches!(t.type_, lexer::token::TokenType::Colon) && t.value == ":"
+        ))
+    }
+
+    /// Does this `param` node carry a trailing `expression` (⇒ has a default)?
+    fn param_has_expression(param: &GrammarASTNode) -> bool {
+        param
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression"))
+    }
+
+    #[test]
+    fn test_parse_required_keyword_param() {
+        // `def f(a:)` — a required keyword param: COLON present, no default.
+        let ast = parse_ruby("def f(a:)\nend");
+        let params = def_param_nodes(&ast);
+        assert_eq!(params.len(), 1);
+        assert!(param_has_colon(params[0]), "keyword param must carry a colon");
+        assert!(
+            !param_has_expression(params[0]),
+            "required keyword param must have NO default expression"
+        );
+    }
+
+    #[test]
+    fn test_parse_optional_keyword_param() {
+        // `def f(a: 1)` — an optional keyword param: COLON + default expr.
+        let ast = parse_ruby("def f(a: 1)\nend");
+        let params = def_param_nodes(&ast);
+        assert_eq!(params.len(), 1);
+        assert!(param_has_colon(params[0]), "keyword param must carry a colon");
+        assert!(
+            param_has_expression(params[0]),
+            "optional keyword param must carry a default expression"
+        );
+    }
+
+    #[test]
+    fn test_parse_mixed_positional_and_keyword_params() {
+        // `def f(a, b:, c: 2)` — one positional required, one required
+        // keyword, one optional keyword.  Pins the per-param shape.
+        let ast = parse_ruby("def f(a, b:, c: 2)\nend");
+        let params = def_param_nodes(&ast);
+        assert_eq!(params.len(), 3, "expected three params");
+        // a — positional: no colon, no default.
+        assert!(!param_has_colon(params[0]));
+        assert!(!param_has_expression(params[0]));
+        // b — required keyword: colon, no default.
+        assert!(param_has_colon(params[1]));
+        assert!(!param_has_expression(params[1]));
+        // c — optional keyword: colon + default.
+        assert!(param_has_colon(params[2]));
+        assert!(param_has_expression(params[2]));
+    }
+
+    #[test]
+    fn test_parse_keyword_call_arg() {
+        // `f(x: 1)` — a keyword call arg.  The `call_arg` node must carry a
+        // NAME token, a COLON token, and an `expression` child.
+        let ast = parse_ruby("f(x: 1)");
+        let call_arg = find_descendant(&ast, "call_arg").expect("expected call_arg");
+        let name = call_arg.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t)
+                if matches!(t.type_, lexer::token::TokenType::Name) =>
+            {
+                Some(t.value.clone())
+            }
+            _ => None,
+        });
+        assert_eq!(name.as_deref(), Some("x"), "keyword arg name must be `x`");
+        assert!(
+            call_arg.children.iter().any(|c| matches!(
+                c,
+                ASTNodeOrToken::Token(t)
+                    if matches!(t.type_, lexer::token::TokenType::Colon) && t.value == ":"
+            )),
+            "keyword call arg must carry a colon token"
+        );
+        assert!(
+            call_arg
+                .children
+                .iter()
+                .any(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "expression")),
+            "keyword call arg must carry a value expression"
+        );
+    }
+
+    #[test]
+    fn test_parse_positional_then_keyword_call_args() {
+        // `f(1, y: 2)` — a positional arg followed by a keyword arg.  Two
+        // `call_arg` nodes: the first has NO colon (positional), the second
+        // has a colon (keyword).
+        let ast = parse_ruby("f(1, y: 2)");
+        let method_call =
+            find_descendant(&ast, "method_call").expect("expected method_call");
+        let call_args: Vec<&GrammarASTNode> = method_call
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "call_arg" => Some(n),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(call_args.len(), 2, "expected two call_args");
+        let colon = |ca: &GrammarASTNode| {
+            ca.children.iter().any(|c| matches!(
+                c,
+                ASTNodeOrToken::Token(t)
+                    if matches!(t.type_, lexer::token::TokenType::Colon) && t.value == ":"
+            ))
+        };
+        assert!(!colon(call_args[0]), "first arg is positional (no colon)");
+        assert!(colon(call_args[1]), "second arg is a keyword (colon)");
+    }
 }
 

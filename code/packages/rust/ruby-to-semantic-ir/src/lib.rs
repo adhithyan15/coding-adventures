@@ -250,6 +250,196 @@ mod tests {
         }
     }
 
+    // -----------------------------------------------------------------
+    // Phase KW7 (Ruby 1.0 unblock) — keyword parameters & arguments.
+    //
+    // The frontend now PRODUCES `Param { kind: Keyword }` for `def f(a:)` /
+    // `def f(a: 1)` and `Expr::KeywordArg` for `f(a: 1)`.  Required vs
+    // optional rides on the existing `default` field (`None` ⇒ required,
+    // `Some` ⇒ optional) exactly as positional optionals do — the
+    // distinguishing axis is `ParamKind::Keyword`.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn def_required_keyword_param_lowers_to_keyword_no_default() {
+        // `def f(a:)` → the single Param is `Keyword` with `default: None`.
+        let m = lower("def f(a:)\n  a + 0\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "f").expect("fn f");
+        assert_eq!(f.params.len(), 1);
+        assert_eq!(f.params[0].kind, ParamKind::Keyword);
+        assert!(
+            f.params[0].default.is_none(),
+            "required keyword param must have NO default"
+        );
+    }
+
+    #[test]
+    fn def_optional_keyword_param_lowers_to_keyword_with_default_intlit() {
+        // `def f(a: 1)` → `Keyword` with `default: Some(IntLit 1)`.
+        let m = lower("def f(a: 1)\n  a + 0\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "f").expect("fn f");
+        assert_eq!(f.params[0].kind, ParamKind::Keyword);
+        match &f.params[0].default {
+            Some(boxed) => assert!(
+                matches!(&**boxed, Expr::IntLit { value: 1, .. }),
+                "expected default IntLit(1), got {:?}",
+                boxed
+            ),
+            None => panic!("expected a default value, got None"),
+        }
+    }
+
+    #[test]
+    fn def_mixed_positional_and_keyword_params_lower_in_order() {
+        // `def f(a, b:, c: 2)` → positional-required `a`, required keyword
+        // `b`, optional keyword `c`.  The declared order is preserved.
+        let m = lower("def f(a, b:, c: 2)\n  a + b + c\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "f").expect("fn f");
+        assert_eq!(f.params.len(), 3);
+        // a — positional required.
+        assert_eq!(f.params[0].kind, ParamKind::Required);
+        assert!(f.params[0].default.is_none());
+        // b — required keyword.
+        assert_eq!(f.params[1].kind, ParamKind::Keyword);
+        assert!(f.params[1].default.is_none());
+        // c — optional keyword with default 2.
+        assert_eq!(f.params[2].kind, ParamKind::Keyword);
+        assert!(
+            matches!(f.params[2].default.as_deref(), Some(Expr::IntLit { value: 2, .. })),
+            "c must default to IntLit(2)"
+        );
+    }
+
+    #[test]
+    fn keyword_param_observes_keyword_params_feature() {
+        // Any keyword param must make the manifest declare `KeywordParams`
+        // (the SIR validator gates the feature otherwise).
+        let m = lower("def f(a:)\n  a + 0\nend\n");
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::KeywordParams),
+            "manifest should declare KeywordParams; declared = {:?}",
+            m.manifest
+        );
+    }
+
+    #[test]
+    fn positional_param_never_trips_keyword_params_feature() {
+        // Regression: an ordinary positional param must NOT observe
+        // KeywordParams (only a `:`-suffixed param or a keyword arg does).
+        let m = lower("def f(a)\n  a + 0\nend\n");
+        assert_eq!(
+            m.functions.iter().find(|f| f.name == "f").unwrap().params[0].kind,
+            ParamKind::Required
+        );
+        assert!(!m.manifest.contains(semantic_ir::Feature::KeywordParams));
+    }
+
+    #[test]
+    fn keyword_call_arg_lowers_to_keyword_arg_node() {
+        // `f(x: 2)` → the call's arg list holds an `Expr::KeywordArg`
+        // wrapper `{ name: "x", value: IntLit 2 }` (NOT a trailing hash).
+        // Use a BARE call to `f` (not wrapped in `puts`) so the arg is the
+        // direct child of the DirectCall.
+        let m = lower("def f(x:)\n  x + 0\nend\nf(x: 2)\n");
+        let body = main_body(&m);
+        match &body.value {
+            Expr::DirectCall { fn_name, args, .. } if fn_name == "f" => {
+                assert_eq!(args.len(), 1, "expected exactly one (keyword) arg");
+                match &args[0] {
+                    Expr::KeywordArg { name, value, .. } => {
+                        assert_eq!(name, "x");
+                        assert!(
+                            matches!(&**value, Expr::IntLit { value: 2, .. }),
+                            "keyword value must be IntLit(2), got {:?}",
+                            value
+                        );
+                    }
+                    other => panic!("expected KeywordArg, got {:?}", other),
+                }
+            }
+            other => panic!("expected DirectCall to f, got {:?}", other),
+        }
+        // The whole module round-trips through the validator.
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "module with a keyword call arg should validate: {:?}",
+            semantic_ir::validate(&m).issues
+        );
+    }
+
+    #[test]
+    fn keyword_arg_follows_positional_arg() {
+        // `g(1, y: 2)` → `args: [IntLit(1), KeywordArg{ name:"y", .. }]`.
+        // The positional stays bare and precedes the keyword.
+        let m = lower("def g(a, y:)\n  a + y\nend\ng(1, y: 2)\n");
+        let body = main_body(&m);
+        match &body.value {
+            Expr::DirectCall { fn_name, args, .. } if fn_name == "g" => {
+                assert_eq!(args.len(), 2);
+                assert!(
+                    matches!(&args[0], Expr::IntLit { value: 1, .. }),
+                    "first arg must be the bare positional IntLit(1), got {:?}",
+                    args[0]
+                );
+                assert!(
+                    matches!(&args[1], Expr::KeywordArg { name, .. } if name == "y"),
+                    "second arg must be the keyword `y`, got {:?}",
+                    args[1]
+                );
+            }
+            other => panic!("expected DirectCall to g, got {:?}", other),
+        }
+        assert!(semantic_ir::validate(&m).is_ok());
+    }
+
+    #[test]
+    fn keyword_arg_observes_keyword_params_feature() {
+        // A keyword ARG (call side) also trips the feature, even when the
+        // callee's params happen to be declared elsewhere.
+        let m = lower("def f(x:)\n  x + 0\nend\nf(x: 3)\n");
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::KeywordParams),
+            "a keyword call arg must observe KeywordParams; manifest = {:?}",
+            m.manifest
+        );
+    }
+
+    #[test]
+    fn omitting_required_keyword_is_rejected_by_validator() {
+        // `def h(x:)` declares a REQUIRED keyword; a call `h()` that omits it
+        // must be rejected by the SIR validator (round-trip proof that the
+        // required-ness produced by the frontend is enforced downstream).
+        let m = lower("def h(x:)\n  x + 0\nend\nh()\n");
+        let result = semantic_ir::validate(&m);
+        assert!(
+            !result.is_ok(),
+            "omitting a required keyword must fail validation, but it passed"
+        );
+    }
+
+    #[test]
+    fn supplying_required_keyword_validates() {
+        // The mirror of the above: supplying the required keyword validates.
+        let m = lower("def h(x:)\n  x + 0\nend\nh(x: 9)\n");
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "supplying a required keyword should validate: {:?}",
+            semantic_ir::validate(&m).issues
+        );
+    }
+
+    #[test]
+    fn optional_keyword_may_be_omitted_at_call() {
+        // `def f(a: 1)` — an OPTIONAL keyword may be omitted; `f()` validates
+        // (the backend fills the default).
+        let m = lower("def f(a: 1)\n  a + 0\nend\nf()\n");
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "omitting an optional keyword should validate: {:?}",
+            semantic_ir::validate(&m).issues
+        );
+    }
+
     #[test]
     fn empty_program_compiles_to_nil_main() {
         let m = lower("");

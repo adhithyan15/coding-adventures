@@ -147,7 +147,7 @@ impl Backend for PythonBackend {
 mod tests {
     use super::*;
     use semantic_ir::{
-        Block, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Span,
+        Block, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, ParamKind, Span,
     };
 
     fn s() -> Span {
@@ -349,6 +349,73 @@ mod tests {
             assert_eq!(
                 stdout, "6\n10\n",
                 "Ruby call-time param-scoped default produced wrong output"
+            );
+        }
+    }
+
+    #[test]
+    fn end_to_end_ruby_keyword_params_and_args_execute_py() {
+        // KW7 (Ruby-1.0 unblock) full-pipeline execution-proof: Ruby SOURCE
+        // with a keyword parameter list AND keyword call arguments →
+        // ruby-to-semantic-ir → semantic-ir-to-python → CPython.
+        //
+        //   def greet(greeting:, name: "world")
+        //     "#{greeting}, #{name}"
+        //   end
+        //
+        // `greeting:` is a REQUIRED keyword (no default); `name: "world"` is
+        // an OPTIONAL keyword.  Two calls exercise both paths:
+        //   • greet(greeting: "hi")              → omits `name` → "hi, world"
+        //   • greet(greeting: "hi", name: "ada") → supplies `name` → "hi, ada"
+        // so stdout must be `hi, world` then `hi, ada`.  This is the
+        // discriminating proof that the Ruby frontend now PRODUCES keyword
+        // params (`ParamKind::Keyword`) and keyword args (`Expr::KeywordArg`)
+        // and that they bind BY NAME end to end — the single most-requested
+        // modern-Ruby gap.
+        //
+        // NB: the output builtin is `print` rather than `puts` — `print` is
+        // one of the few builtins `sir-runtime-core` implements natively
+        // (same reason the P7 default-param execution-proof above uses it).
+        let src = "def greet(greeting:, name: \"world\")\n  \"#{greeting}, #{name}\"\nend\n\
+                   print greet(greeting: \"hi\")\n\
+                   print greet(greeting: \"hi\", name: \"ada\")\n";
+        let module = ruby_to_semantic_ir::compile_source(src, "demo").expect("lower ruby");
+
+        // Frontend must have produced keyword params and declared the feature.
+        assert!(
+            module.manifest.contains(Feature::KeywordParams),
+            "ruby frontend must declare KeywordParams; manifest = {:?}",
+            module.manifest
+        );
+        let greet = module
+            .functions
+            .iter()
+            .find(|f| f.name == "greet")
+            .expect("fn greet");
+        assert_eq!(greet.params[0].kind, ParamKind::Keyword);
+        assert!(
+            greet.params[0].default.is_none(),
+            "`greeting:` is a required keyword (no default)"
+        );
+        assert_eq!(greet.params[1].kind, ParamKind::Keyword);
+        assert!(
+            greet.params[1].default.is_some(),
+            "`name: \"world\"` is an optional keyword (has a default)"
+        );
+
+        let a = compile(&module).expect("compile to python");
+        // Python-native keyword-only shape: a bare `*` opens the keyword-only
+        // region; the optional keyword reuses the sentinel-default machinery.
+        assert!(
+            a.source.contains("def greet(*, greeting"),
+            "keyword params must be keyword-only after a bare `*`; got:\n{}",
+            a.source
+        );
+
+        if let Some(stdout) = run_emitted_python(&a.source) {
+            assert_eq!(
+                stdout, "hi, world\nhi, ada\n",
+                "Ruby keyword params/args produced wrong output"
             );
         }
     }

@@ -2,15 +2,65 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
-## Unreleased
+## [0.100.0] - 2026-06-30
+
+### Added (KW7 — keyword parameter & argument production, the Ruby-1.0 unblock)
+
+The frontend now PRODUCES keyword parameters and keyword arguments — the
+single most-requested modern-Ruby gap. `def f(a:)` / `def f(a: 1)` and
+`f(a: 1)` previously could not even parse, let alone lower.
+
+- **Def side (`extract_params`).** A `param` whose grammar suffix is a COLON
+  (`a:` / `a: expr`) now lowers to `Param { kind: ParamKind::Keyword, .. }`.
+  Required-vs-optional rides on the existing `default` field exactly as
+  positional optionals do: a keyword param with a trailing `expression` (the
+  `a: 1` form) gets `default: Some(_)` (OPTIONAL keyword); one without (`a:`)
+  gets `default: None` (REQUIRED keyword). The COLON token is the sole
+  discriminator between a keyword param and a positional-default (`a = 1`)
+  param.
+- **Call side (`lower_call_arg`).** A `call_arg` node carrying a COLON
+  (`f(a: 1)`) now lowers to the first-class `Expr::KeywordArg { name, value }`
+  — NOT a trailing hash literal. Positional args stay bare and precede the
+  keyword (`g(1, y: 2)` → `args: [IntLit(1), KeywordArg{name:"y", ..}]`),
+  matching the core's "keywords trail positionals" contract that the SIR
+  validator enforces.
+- **Feature manifest.** Any keyword param OR keyword arg now observes
+  `Feature::KeywordParams`, and the manifest materialiser emits it (mirrors
+  how a positional default observes `DefaultParams`), so the SIR validator
+  accepts the used feature.
+- **Validator round-trip.** A required keyword omitted at a call site is
+  rejected by `semantic_ir::validate`; supplying it (or omitting an optional
+  keyword) validates. The frontend produces the required-ness; the core
+  enforces it.
 
 ### Changed
 
-- Compile-compat stub arms for the new core `semantic-ir` variant
-  `Expr::KeywordArg` (KW1). Every affected pass — the swap-safety reference
-  check, the `yield`-rewrite and call-normalization `&mut` visitors, and the
-  bound-name collector — recurses faithfully into the keyword arg's inner
-  `value`. Real keyword-argument lowering is pending KW2–KW8.
+- Compile-compat stub arms for the core `Expr::KeywordArg` variant (KW1) are
+  now backed by real production: the swap-safety reference check, the
+  `yield`-rewrite and call-normalization `&mut` visitors, and the bound-name
+  collector already recurse into the keyword arg's inner `value`.
+
+### Tests
+
+- Eleven new unit tests: `def f(a:)` → `Param{kind:Keyword, default:None}`;
+  `def f(a: 1)` → `default:Some(IntLit 1)`; a mixed
+  positional+required-keyword+optional-keyword signature lowers in declared
+  order; `f(x: 2)` → `Expr::KeywordArg{name:"x", value:IntLit 2}`; a keyword
+  arg follows a positional (`g(1, y: 2)`); the `KeywordParams` feature is
+  observed on both the def and call sides but not by ordinary positional
+  params; a required keyword omitted at a call is rejected by the validator
+  while supplying it (or omitting an optional keyword) validates.
+- End-to-end execution proof lives in `semantic-ir-to-python` (which already
+  depends on this crate as a dev-dependency):
+  `def greet(greeting:, name: "world")\n "#{greeting}, #{name}"\nend\n
+  print greet(greeting: "hi")\nprint greet(greeting: "hi", name: "ada")` →
+  Ruby SIR → Python source → CPython prints `hi, world` then `hi, ada`,
+  proving keyword params/args bind BY NAME through the whole pipeline (the
+  omitted optional `name` resolves to its default `"world"`).
+
+### Notes
+
+- Cargo crate version bumped `0.2.0` → `0.3.0`.
 
 ## [0.99.1] - 2026-06-30
 

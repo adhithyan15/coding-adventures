@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.82.0] - 2026-06-30
+
+### Added (KW7 — keyword parameters & arguments, the Ruby-1.0 unblock)
+
+- The `param` rule now accepts a KEYWORD parameter:
+  `param = [ "*" | "**" ] NAME [ COLON [ expression ] | EQUALS expression ] ;`.
+  This makes `def f(a:)` (required keyword) and `def f(a: 1)` (optional
+  keyword) parse — core Ruby 2.0+ syntax that previously parse-panicked
+  because `param` had no colon branch. The suffix is a three-way choice keyed
+  on the token after `NAME`: `COLON` → keyword param, `EQUALS` → positional
+  optional/default (P7), nothing → positional required. The two suffix
+  branches are disjoint on their opening token, so lowering is unambiguous.
+- The `call_arg` rule now accepts a KEYWORD argument:
+  `call_arg = NAME COLON expression | [ "*" | "**" | "&" ] expression ;`.
+  This makes `f(a: 1)` and `f(1, y: 2)` parse a keyword argument. The
+  `NAME COLON expression` branch is listed FIRST so a bare `NAME` immediately
+  followed by a colon is captured as a keyword; every other argument shape
+  (positional, splat, block-pass, or an explicit brace hash `f({ a: 1 })`)
+  falls through to the second branch unchanged.
+- **Grammar disambiguation.** `NAME COLON` also opens a `hash_entry` (`k: v`)
+  and a `hash_pattern_pair` (`k:`), but those rules are only reachable inside
+  a `{ … }` hash literal or a `case/in` pattern — never inside a
+  parenthesised parameter list or a call-argument position. So the new
+  keyword `NAME COLON` forms never collide with hash-entry parsing.
+- Updated both `code/grammars/ruby.grammar` and the embedded `src/_grammar.rs`
+  (regenerated via `grammar-tools generate-rust-compiled-grammars ruby-parser`).
+- Five regression tests added (279 total, up from 274) pinning the parse-tree
+  shape of required/optional/mixed keyword params and keyword call args.
+- Cargo crate version bumped `0.3.0` → `0.4.0`.
+
 ## [0.81.0] - 2026-06-30
 
 ### Fixed (bare-identifier block bodies swallowed their `end`)
