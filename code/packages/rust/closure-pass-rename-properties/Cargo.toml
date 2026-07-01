@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-pass-rename-properties"
-version = "0.9.0"
+version = "0.9.1"
 edition = "2021"
 description = "Aggressive property renaming pass for the Closure Compiler clone (ADVANCED-only). Consistently shortens program-private object property names that are never quoted/computed and not in the built-in or externs do-not-rename boundary."
 
@@ -15,3 +15,9 @@ coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
 coding-adventures-javascript-parser = { path = "../javascript-parser" }
 coding-adventures-closure-emitter = { path = "../closure-emitter" }
 coding-adventures-type-sidecar = { path = "../type-sidecar" }
+
+# CLOC12 upstream test-suite port. Integration test built against the crate's
+# public API; needs an explicit `[[test]]` entry. Per CLOC12.01 §3.
+[[test]]
+name = "upstream_rename_properties"
+path = "tests/upstream/rename_properties_test.rs"

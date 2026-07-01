@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-properties` crate will be documented in this file.
 
+## [0.9.1] - 2026-07-01
+
+### Added — CLOC12 upstream test port (`RenamePropertiesTest`)
+
+Ported the applicable cases from Google Closure Compiler's
+`RenamePropertiesTest.java` into `tests/upstream/rename_properties_test.rs`,
+following the CLOC12.01 convention (header cites the Java source; `UPSTREAM_SHA`
+pins the tracked commit; `ATTRIBUTION.md` records Apache-2.0 provenance; a
+`[[test]]` entry wires the file in). Like the `rename-globals` port, the pass
+exposes a source-string surface through public crate APIs, so each case drives
+the real `source → bridge → rename → emit` chain and asserts on the emitted
+string.
+
+- **8 active `#[test]`s pass**: a private property renamed consistently across
+  dotted reads, reads-and-object-literal-keys collapsing to one short name,
+  distinct names assigned down a member chain (`a.a.b`), quoted-access poisoning
+  the rename (`o["mode"]` leaves `.mode` alone), built-in / DOM names left
+  untouched, a single-character property un-shortened, a computed-subscript
+  index untouched, and an externs property preserved.
+- **No new closurec bug** — every active expectation matched the pass on the
+  first run.
+- **3 `#[ignore = "blocked on gap-NNN"]` placeholders** for upstream behavior the
+  name-based pass does not cover: type-/heap-aware disambiguation of same-named
+  properties (gap-138), frequency-ordered short-name assignment (gap-139), and a
+  cross-module shared rename map (gap-140). Pinned to
+  `code/specs/CLOC12-gaps.md` §CLOC12.140; run with `--include-ignored` to track
+  progress as they close.
+
+No library code changed — this release is test coverage plus docs.
+
 ## [0.9.0] - 2026-06-30
 
 ### Added — correlation-vector rename provenance (#89)
