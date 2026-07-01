@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 23 \u2014 iron studies from a single iron panel (a NEW panel: iron metabolism). From three stated quantities (serum iron IRON, unbound iron-binding capacity UIBC, ferritin FERR) compute the transferrin saturation (IRON/(IRON+UIBC)), the unbound fraction of TIBC (UIBC/(IRON+UIBC)), or the iron-to-UIBC ratio (IRON/UIBC). Each item is a compute_dimensioned program (observe the three quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a division AND an inner sum-in-parentheses for total iron-binding capacity (TIBC = IRON + UIBC) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the three observed quantities via /, +, and grouping \u2014 no constant leaks (TIBC is derived from its components, not observed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same quantities, so the distractors are exactly the slips students make: the inverse iron:UIBC ratio (UIBC/IRON, written upside-down) and the iron-to-ferritin ratio (IRON/FERR, confusing the transport pool with the store).",
+  "items": [
+    {
+      "id": "r23iron-01",
+      "qtype": "iron_index",
+      "stem": "An iron panel shows serum iron 50 ug/dL, unbound iron-binding capacity (UIBC) 200 ug/dL, and ferritin 100 ng/mL. What is the patient's transferrin saturation?",
+      "program": "observe serum_iron(50)\nobserve uibc(200)\nobserve ferritin(100)\nlet answer = serum_iron / (serum_iron + uibc)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r23iron-02",
+      "qtype": "iron_index",
+      "stem": "An iron panel shows serum iron 50 ug/dL, unbound iron-binding capacity (UIBC) 200 ug/dL, and ferritin 100 ng/mL. What is the patient's unbound fraction of total iron-binding capacity?",
+      "program": "observe serum_iron(50)\nobserve uibc(200)\nobserve ferritin(100)\nlet answer = uibc / (serum_iron + uibc)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r23iron-03",
+      "qtype": "iron_index",
+      "stem": "An iron panel shows serum iron 50 ug/dL, unbound iron-binding capacity (UIBC) 200 ug/dL, and ferritin 100 ng/mL. What is the patient's iron-to-UIBC ratio?",
+      "program": "observe serum_iron(50)\nobserve uibc(200)\nobserve ferritin(100)\nlet answer = serum_iron / uibc\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r23iron-04",
+      "qtype": "iron_index",
+      "stem": "An iron panel shows serum iron 60 ug/dL, unbound iron-binding capacity (UIBC) 140 ug/dL, and ferritin 150 ng/mL. What is the patient's transferrin saturation?",
+      "program": "observe serum_iron(60)\nobserve uibc(140)\nobserve ferritin(150)\nlet answer = serum_iron / (serum_iron + uibc)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.42857142857142855,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.3333333333333335,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.3,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r23iron-05",
+      "qtype": "iron_index",
+      "stem": "An iron panel shows serum iron 60 ug/dL, unbound iron-binding capacity (UIBC) 140 ug/dL, and ferritin 150 ng/mL. What is the patient's unbound fraction of total iron-binding capacity?",
+      "program": "observe serum_iron(60)\nobserve uibc(140)\nobserve ferritin(150)\nlet answer = uibc / (serum_iron + uibc)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.42857142857142855,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.3333333333333335,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.7,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r23iron-06",
+      "qtype": "iron_index",
+      "stem": "An iron panel shows serum iron 60 ug/dL, unbound iron-binding capacity (UIBC) 140 ug/dL, and ferritin 150 ng/mL. What is the patient's iron-to-UIBC ratio?",
+      "program": "observe serum_iron(60)\nobserve uibc(140)\nobserve ferritin(150)\nlet answer = serum_iron / uibc\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.42857142857142855,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.3333333333333335,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r23iron-07",
+      "qtype": "iron_index",
+      "stem": "An iron panel shows serum iron 75 ug/dL, unbound iron-binding capacity (UIBC) 225 ug/dL, and ferritin 150 ng/mL. What is the patient's transferrin saturation?",
+      "program": "observe serum_iron(75)\nobserve uibc(225)\nobserve ferritin(150)\nlet answer = serum_iron / (serum_iron + uibc)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r23iron-08",
+      "qtype": "iron_index",
+      "stem": "An iron panel shows serum iron 75 ug/dL, unbound iron-binding capacity (UIBC) 225 ug/dL, and ferritin 150 ng/mL. What is the patient's unbound fraction of total iron-binding capacity?",
+      "program": "observe serum_iron(75)\nobserve uibc(225)\nobserve ferritin(150)\nlet answer = uibc / (serum_iron + uibc)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r23iron-09",
+      "qtype": "iron_index",
+      "stem": "An iron panel shows serum iron 75 ug/dL, unbound iron-binding capacity (UIBC) 225 ug/dL, and ferritin 150 ng/mL. What is the patient's iron-to-UIBC ratio?",
+      "program": "observe serum_iron(75)\nobserve uibc(225)\nobserve ferritin(150)\nlet answer = serum_iron / uibc\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r23iron-10",
+      "qtype": "iron_index",
+      "stem": "An iron panel shows serum iron 120 ug/dL, unbound iron-binding capacity (UIBC) 80 ug/dL, and ferritin 150 ng/mL. What is the patient's transferrin saturation?",
+      "program": "observe serum_iron(120)\nobserve uibc(80)\nobserve ferritin(150)\nlet answer = serum_iron / (serum_iron + uibc)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r23iron-11",
+      "qtype": "iron_index",
+      "stem": "An iron panel shows serum iron 120 ug/dL, unbound iron-binding capacity (UIBC) 80 ug/dL, and ferritin 150 ng/mL. What is the patient's unbound fraction of total iron-binding capacity?",
+      "program": "observe serum_iron(120)\nobserve uibc(80)\nobserve ferritin(150)\nlet answer = uibc / (serum_iron + uibc)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r23iron-12",
+      "qtype": "iron_index",
+      "stem": "An iron panel shows serum iron 120 ug/dL, unbound iron-binding capacity (UIBC) 80 ug/dL, and ferritin 150 ng/mL. What is the patient's iron-to-UIBC ratio?",
+      "program": "observe serum_iron(120)\nobserve uibc(80)\nobserve ferritin(150)\nlet answer = serum_iron / uibc\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r23iron-13",
+      "qtype": "iron_index",
+      "stem": "An iron panel shows serum iron 90 ug/dL, unbound iron-binding capacity (UIBC) 210 ug/dL, and ferritin 180 ng/mL. What is the patient's transferrin saturation?",
+      "program": "observe serum_iron(90)\nobserve uibc(210)\nobserve ferritin(180)\nlet answer = serum_iron / (serum_iron + uibc)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.42857142857142855,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.3,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.3333333333333335,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r23iron-14",
+      "qtype": "iron_index",
+      "stem": "An iron panel shows serum iron 90 ug/dL, unbound iron-binding capacity (UIBC) 210 ug/dL, and ferritin 180 ng/mL. What is the patient's unbound fraction of total iron-binding capacity?",
+      "program": "observe serum_iron(90)\nobserve uibc(210)\nobserve ferritin(180)\nlet answer = uibc / (serum_iron + uibc)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.42857142857142855,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.3333333333333335,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.7,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r23iron-15",
+      "qtype": "iron_index",
+      "stem": "An iron panel shows serum iron 90 ug/dL, unbound iron-binding capacity (UIBC) 210 ug/dL, and ferritin 180 ng/mL. What is the patient's iron-to-UIBC ratio?",
+      "program": "observe serum_iron(90)\nobserve uibc(210)\nobserve ferritin(180)\nlet answer = serum_iron / uibc\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.3333333333333335,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.42857142857142855,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r23iron-16",
+      "qtype": "iron_index",
+      "stem": "An iron panel shows serum iron 80 ug/dL, unbound iron-binding capacity (UIBC) 320 ug/dL, and ferritin 160 ng/mL. What is the patient's transferrin saturation?",
+      "program": "observe serum_iron(80)\nobserve uibc(320)\nobserve ferritin(160)\nlet answer = serum_iron / (serum_iron + uibc)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r23iron-17",
+      "qtype": "iron_index",
+      "stem": "An iron panel shows serum iron 80 ug/dL, unbound iron-binding capacity (UIBC) 320 ug/dL, and ferritin 160 ng/mL. What is the patient's unbound fraction of total iron-binding capacity?",
+      "program": "observe serum_iron(80)\nobserve uibc(320)\nobserve ferritin(160)\nlet answer = uibc / (serum_iron + uibc)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r23iron-18",
+      "qtype": "iron_index",
+      "stem": "An iron panel shows serum iron 80 ug/dL, unbound iron-binding capacity (UIBC) 320 ug/dL, and ferritin 160 ng/mL. What is the patient's iron-to-UIBC ratio?",
+      "program": "observe serum_iron(80)\nobserve uibc(320)\nobserve ferritin(160)\nlet answer = serum_iron / uibc\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r23iron-19",
+      "qtype": "iron_index",
+      "stem": "An iron panel shows serum iron 140 ug/dL, unbound iron-binding capacity (UIBC) 210 ug/dL, and ferritin 280 ng/mL. What is the patient's transferrin saturation?",
+      "program": "observe serum_iron(140)\nobserve uibc(210)\nobserve ferritin(280)\nlet answer = serum_iron / (serum_iron + uibc)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r23iron-20",
+      "qtype": "iron_index",
+      "stem": "An iron panel shows serum iron 140 ug/dL, unbound iron-binding capacity (UIBC) 210 ug/dL, and ferritin 280 ng/mL. What is the patient's unbound fraction of total iron-binding capacity?",
+      "program": "observe serum_iron(140)\nobserve uibc(210)\nobserve ferritin(280)\nlet answer = uibc / (serum_iron + uibc)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r23iron-21",
+      "qtype": "iron_index",
+      "stem": "An iron panel shows serum iron 140 ug/dL, unbound iron-binding capacity (UIBC) 210 ug/dL, and ferritin 280 ng/mL. What is the patient's iron-to-UIBC ratio?",
+      "program": "observe serum_iron(140)\nobserve uibc(210)\nobserve ferritin(280)\nlet answer = serum_iron / uibc\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
