@@ -73,6 +73,13 @@ pub enum Dimension {
     Date,
 }
 
+/// The largest integer exponent a **dimensioned** base may be raised to via
+/// [`Dimension::pow`]. A dimension to a very high power has no practical meaning
+/// (nobody needs `usd^500`), and the bound keeps the `x·x·…` fold — and the
+/// composite tag it builds — from blowing up on an adversarial exponent. Scalar
+/// bases are unbounded (they stay `Scalar` without folding).
+const MAX_DIM_POW: f64 = 64.0;
+
 impl Dimension {
     /// A human-readable tag for audit rendering (`"usd"`, `"scalar"`,
     /// `"mg_dl"`, `"%"`, `"days"`).
@@ -122,6 +129,54 @@ impl Dimension {
             DimOp::Mul => Ok(Self::combine_mul(lhs, rhs)),
             DimOp::Div => Self::combine_div(lhs, rhs),
         }
+    }
+
+    /// The dimension of `self ^ exponent`, where the *exponent is a scalar
+    /// magnitude* (the caller has already checked the exponent is dimensionless).
+    /// Power is not a symmetric [`combine`](Dimension::combine): the exponent is
+    /// a number, not a second dimension, so raising has its own rule —
+    ///
+    /// - A **scalar** base stays scalar for any exponent (`ratio^k` is still a
+    ///   pure number), so `Scalar.pow(anything) = Scalar` — this covers the
+    ///   overwhelmingly common case of powering an index/ratio.
+    /// - A **dimensioned** base is only well-defined for a **non-negative
+    ///   integer** exponent, and then `x^n` is exactly `x · x · … · x` (`n`
+    ///   times), so it folds through the multiplicative algebra: `x^0 = Scalar`
+    ///   (dimensionless), `x^1 = x`, `x^2 = Unit("x·x")` — identical to what an
+    ///   expanded `x*x` chain would produce, just as one node.
+    /// - Any other exponent on a dimensioned base (fractional like a square
+    ///   root, or negative) has no representable dimension here, so it is a
+    ///   [`DimError::Mismatch`] rather than a silently-wrong tag.
+    ///
+    /// (`Date` bases are rejected by [`combine`], which this reuses.)
+    pub fn pow(&self, exponent: f64) -> Result<Dimension, DimError> {
+        // A dimensionless base is closed under any power.
+        if self.is_scalar() {
+            return Ok(Dimension::Scalar);
+        }
+        // A dimensioned base needs a whole, non-negative exponent to name a
+        // dimension (you can square dollars → usd·usd, but √dollars has no tag).
+        // The exponent is also bounded by `MAX_DIM_POW`: a dimension raised to a
+        // huge power has no practical meaning, and an unbounded `exponent as u32`
+        // would spin the fold loop below (and grow a giant `x·x·…` tag) — an
+        // algorithmic-DoS guard mirroring [`MAX_EXACT_POW`].
+        // (`(0.0..=MAX_DIM_POW).contains` also rejects NaN and infinities, since
+        // neither lands in the range; `fract() == 0.0` enforces whole numbers.)
+        if !(exponent.fract() == 0.0 && (0.0..=MAX_DIM_POW).contains(&exponent)) {
+            return Err(DimError::Mismatch {
+                op: DimOp::Mul,
+                lhs: self.tag(),
+                rhs: self.tag(),
+            });
+        }
+        let n = exponent as u32;
+        // Fold `Scalar · self · self · …` so x^0 = Scalar, x^1 = self, etc.,
+        // reusing the multiplicative algebra (and its Date rejection) exactly.
+        let mut acc = Dimension::Scalar;
+        for _ in 0..n {
+            acc = Dimension::combine(DimOp::Mul, &acc, self)?;
+        }
+        Ok(acc)
     }
 
     fn combine_mul(lhs: &Dimension, rhs: &Dimension) -> Dimension {
@@ -384,5 +439,40 @@ mod tests {
             Dimension::combine(DimOp::Div, &usd, &days).unwrap(),
             Dimension::Unit("usd/days".into())
         );
+    }
+
+    #[test]
+    fn scalar_base_is_closed_under_any_power() {
+        // A dimensionless base stays scalar for whole, fractional, and negative
+        // exponents alike (a ratio to any power is still a pure number).
+        assert_eq!(Dimension::Scalar.pow(3.0).unwrap(), Dimension::Scalar);
+        assert_eq!(Dimension::Scalar.pow(0.5).unwrap(), Dimension::Scalar);
+        assert_eq!(Dimension::Scalar.pow(-2.0).unwrap(), Dimension::Scalar);
+    }
+
+    #[test]
+    fn dimensioned_base_to_an_integer_power_folds_through_mul() {
+        let mgdl = Dimension::Unit("mg_dl".into());
+        // x^0 = scalar, x^1 = x, x^2 = x·x (identical to a mul chain).
+        assert_eq!(mgdl.pow(0.0).unwrap(), Dimension::Scalar);
+        assert_eq!(mgdl.pow(1.0).unwrap(), mgdl.clone());
+        assert_eq!(
+            mgdl.pow(2.0).unwrap(),
+            Dimension::Unit("mg_dl·mg_dl".into())
+        );
+    }
+
+    #[test]
+    fn dimensioned_base_to_a_fractional_or_negative_power_is_an_error() {
+        let usd = Dimension::Money("usd".into());
+        // √dollars and 1/dollars have no representable dimension tag here.
+        assert!(matches!(usd.pow(0.5), Err(DimError::Mismatch { .. })));
+        assert!(matches!(usd.pow(-1.0), Err(DimError::Mismatch { .. })));
+    }
+
+    #[test]
+    fn a_date_base_cannot_be_raised() {
+        // Date^n reuses combine's Date rejection (dates aren't magnitudes).
+        assert!(matches!(Dimension::Date.pow(2.0), Err(DimError::Mismatch { .. })));
     }
 }

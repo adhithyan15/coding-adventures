@@ -127,7 +127,34 @@ impl ExactRational {
     pub fn to_f64(self) -> f64 {
         self.num as f64 / self.den as f64
     }
+
+    /// Raise to a **non-negative integer** power, exactly, by repeated
+    /// multiplication (`x^0 = 1`). This keeps the exact sidecar precise for the
+    /// common `x^n` case — a rational raised to a whole power is itself rational,
+    /// so `(3/2)^2 = 9/4` stays exact rather than collapsing to the `f64` 2.25.
+    ///
+    /// Returns `None` when the exponent is negative (a reciprocal power — the
+    /// caller keeps the `f64` result instead), when the exponent exceeds
+    /// [`MAX_EXACT_POW`] (a guard so a pathological exponent can't spin the loop
+    /// for an unbounded time — the `f64` result still stands), or on `i128`
+    /// overflow. `None` is never *wrong*: it only means "no exact sidecar here".
+    pub fn powi(self, exp: i128) -> Option<Self> {
+        if !(0..=MAX_EXACT_POW).contains(&exp) {
+            return None;
+        }
+        let mut acc = Self::from_i128(1);
+        for _ in 0..exp {
+            acc = acc.mul(self)?;
+        }
+        Some(acc)
+    }
 }
+
+/// The largest exponent for which the exact-rational sidecar is computed by
+/// repeated multiplication (see [`ExactRational::powi`]). Beyond this the `f64`
+/// magnitude is authoritative; the cap bounds the loop so an adversarial program
+/// (`base^{10^18}`) cannot make the engine spin — an algorithmic-DoS guard.
+const MAX_EXACT_POW: i128 = 1024;
 
 fn gcd_i128(a: u128, b: u128) -> u128 {
     let (mut a, mut b) = (a, b);
@@ -142,7 +169,7 @@ fn gcd_i128(a: u128, b: u128) -> u128 {
     a.max(1)
 }
 
-/// A computation operator. Binary ops (`Add`/`Sub`/`Mul`/`Div`) take two
+/// A computation operator. Binary ops (`Add`/`Sub`/`Mul`/`Div`/`Pow`) take two
 /// operands; aggregation ops (`Sum`/`Count`/`Min`/`Max`/`Avg`) reduce a list
 /// of same-slot observations.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -151,6 +178,14 @@ pub enum ComputeOp {
     Sub,
     Mul,
     Div,
+    /// Exponentiation, `base ^ exponent`. Unlike the other binary ops it is
+    /// **not** a symmetric dimensional combine: the exponent must be
+    /// dimensionless (`Scalar`) and the result dimension is the *base* raised to
+    /// the exponent (`x^0 = scalar`, `x^2 = x·x`), so it is evaluated on its own
+    /// path rather than through [`dim_op`] + [`Dimension::combine`]. This is what
+    /// makes a LaTeX `x^n` (adj-lang's `latex "…"` surface) computable as a
+    /// single native node instead of an expanded `x*x*…*x` chain.
+    Pow,
     Sum,
     Count,
     Min,
@@ -166,6 +201,7 @@ impl ComputeOp {
             ComputeOp::Sub => "-",
             ComputeOp::Mul => "*",
             ComputeOp::Div => "/",
+            ComputeOp::Pow => "^",
             ComputeOp::Sum => "sum",
             ComputeOp::Count => "count",
             ComputeOp::Min => "min",
@@ -186,7 +222,7 @@ pub enum ComputeExpr {
     /// A numeric literal in the formula. The **no-magic-numbers** gate (step
     /// 3d) will require each of these to be a declared structural constant.
     Lit(f64),
-    /// A binary operation: `Add`/`Sub`/`Mul`/`Div` only.
+    /// A binary operation: `Add`/`Sub`/`Mul`/`Div`/`Pow` only.
     Bin(ComputeOp, Box<ComputeExpr>, Box<ComputeExpr>),
     /// An aggregation over **every** observation of a slot:
     /// `Sum`/`Count`/`Min`/`Max`/`Avg`.
@@ -382,6 +418,56 @@ fn eval(
         ComputeExpr::Bin(op, a, b) => {
             let (lhs, dim_l, exact_l) = eval(a, kb, depth + 1)?;
             let (rhs, dim_r, exact_r) = eval(b, kb, depth + 1)?;
+            // Power is special: not a symmetric combine. The exponent must be
+            // dimensionless and the result dimension is `base ^ exponent`
+            // (`x^0 = scalar`, `x^2 = x·x`), so it bypasses the `dim_op` +
+            // `Dimension::combine` path the additive/multiplicative ops share.
+            if *op == ComputeOp::Pow {
+                // An exponent with a dimension (`x ^ money(…)`) is a category
+                // error — you cannot raise to a "3 dollars" power.
+                if !dim_r.is_scalar() {
+                    return Err(ComputeError::DimensionMismatch {
+                        op: *op,
+                        lhs: dim_l.tag(),
+                        rhs: dim_r.tag(),
+                    });
+                }
+                let (base, exponent) = (lhs.value(), rhs.value());
+                // Guard the *inputs* before `powf`, not just the result: `powf`
+                // special-cases `1.0.powf(NaN) == 1.0` and `1.0.powf(inf) == 1.0`,
+                // so a non-finite exponent (a `Lit(NaN)` in an LLM-emitted IR) with
+                // a unit base would otherwise launder into a clean `1.0`, violating
+                // the "no silently-wrong number" contract. (`base` is already
+                // finite-checked upstream; re-checking is cheap defense-in-depth.)
+                if !base.is_finite() || !exponent.is_finite() {
+                    return Err(ComputeError::NonFinite { op: *op });
+                }
+                let result_dim = dim_l.pow(exponent).map_err(|e| match e {
+                    crate::DimError::Mismatch { lhs, rhs, .. } => {
+                        ComputeError::DimensionMismatch { op: *op, lhs, rhs }
+                    }
+                })?;
+                let result = base.powf(exponent);
+                if !result.is_finite() {
+                    return Err(ComputeError::NonFinite { op: *op });
+                }
+                // Exact sidecar only for a non-negative integer exponent of an
+                // exact base — `(3/2)^2 = 9/4` stays exact; anything else keeps
+                // just the `f64` result.
+                let exact = match (exact_l, exact_r) {
+                    (Some(a), Some(b)) if b.den == 1 => a.powi(b.num),
+                    _ => None,
+                };
+                return Ok((
+                    DerivationNode::Op {
+                        op: *op,
+                        operands: vec![lhs, rhs],
+                        result,
+                    },
+                    result_dim,
+                    exact,
+                ));
+            }
             // Dimensional check FIRST: usd + days is a category error regardless
             // of the magnitudes.
             let dimop = dim_op(*op).ok_or(ComputeError::MalformedExpr {
@@ -588,6 +674,167 @@ mod tests {
         .unwrap();
         assert_eq!(d.value, 2000.0);
         assert_eq!(d.dim, Dimension::Money("usd".into()));
+    }
+
+    // ---- exponentiation (ComputeOp::Pow) ----
+
+    fn quantity(slot: &str, amount: i64, unit: &str) -> crate::Fact {
+        crate::Fact::certain(compound(
+            slot,
+            vec![compound("quantity", vec![int(amount), atom(unit)])],
+        ))
+    }
+
+    #[test]
+    fn scalar_base_to_an_integer_power_computes_and_stays_scalar() {
+        // 3 ^ 4 = 81, dimensionless, and exact (81/1).
+        let kb = kb_with(vec![quantity("x", 3, "index")]);
+        let d = compute(
+            "p",
+            &bin(ComputeOp::Pow, refexpr("x"), ComputeExpr::Lit(4.0)),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(d.value, 81.0);
+        // `quantity(3, index)` is a Unit dim; cubing a Unit is composite, but here
+        // the base's own dimension is a Unit — see the dimensioned test below. For
+        // a *scalar* base we use a literal:
+        let kb2 = kb_with(vec![]);
+        let d2 = compute(
+            "p",
+            &bin(ComputeOp::Pow, ComputeExpr::Lit(3.0), ComputeExpr::Lit(4.0)),
+            &kb2,
+        )
+        .unwrap();
+        assert_eq!(d2.value, 81.0);
+        assert_eq!(d2.dim, Dimension::Scalar);
+        assert_eq!(d2.exact, Some(ExactRational::new(81, 1).unwrap()));
+        // the derivation tree records a single `^` node, not an expanded chain.
+        if let DerivationNode::Op { op, operands, .. } = &d2.tree {
+            assert_eq!(*op, ComputeOp::Pow);
+            assert_eq!(operands.len(), 2);
+        } else {
+            panic!("expected a Pow op node");
+        }
+    }
+
+    #[test]
+    fn power_zero_is_one_and_dimensionless_even_for_a_dimensioned_base() {
+        // (money)^0 = 1, scalar. x^0 discards the base's dimension.
+        let kb = kb_with(vec![money("m", 500, "usd")]);
+        let d = compute(
+            "p",
+            &bin(ComputeOp::Pow, refexpr("m"), ComputeExpr::Lit(0.0)),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(d.value, 1.0);
+        assert_eq!(d.dim, Dimension::Scalar);
+    }
+
+    #[test]
+    fn squaring_a_dimensioned_base_composes_its_dimension() {
+        // quantity(4, mg_dl) ^ 2 = 16, dim mg_dl·mg_dl — same as mg_dl * mg_dl.
+        let kb = kb_with(vec![quantity("c", 4, "mg_dl")]);
+        let d = compute(
+            "sq",
+            &bin(ComputeOp::Pow, refexpr("c"), ComputeExpr::Lit(2.0)),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(d.value, 16.0);
+        assert_eq!(d.dim, Dimension::Unit("mg_dl·mg_dl".into()));
+    }
+
+    #[test]
+    fn power_of_a_dimensioned_base_by_one_keeps_its_dimension() {
+        let kb = kb_with(vec![money("m", 7, "usd")]);
+        let d = compute(
+            "p",
+            &bin(ComputeOp::Pow, refexpr("m"), ComputeExpr::Lit(1.0)),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(d.value, 7.0);
+        assert_eq!(d.dim, Dimension::Money("usd".into()));
+    }
+
+    #[test]
+    fn a_dimensioned_exponent_is_a_category_error() {
+        // x ^ (money) is meaningless — the exponent must be dimensionless.
+        let kb = kb_with(vec![quantity("x", 2, "index"), money("e", 3, "usd")]);
+        let err = compute(
+            "p",
+            &bin(ComputeOp::Pow, refexpr("x"), refexpr("e")),
+            &kb,
+        )
+        .unwrap_err();
+        assert!(matches!(
+            err,
+            ComputeError::DimensionMismatch {
+                op: ComputeOp::Pow,
+                ..
+            }
+        ));
+    }
+
+    #[test]
+    fn a_fractional_power_of_a_dimensioned_base_has_no_dimension() {
+        // (money)^0.5 — a square root of dollars — has no representable dim.
+        let kb = kb_with(vec![money("m", 4, "usd")]);
+        let err = compute(
+            "root",
+            &bin(ComputeOp::Pow, refexpr("m"), ComputeExpr::Lit(0.5)),
+            &kb,
+        )
+        .unwrap_err();
+        assert!(matches!(err, ComputeError::DimensionMismatch { .. }));
+    }
+
+    #[test]
+    fn a_fractional_power_of_a_scalar_base_is_fine() {
+        // 9 ^ 0.5 = 3, scalar (a scalar base is closed under any power). No exact
+        // sidecar (the exponent isn't a whole number), but the f64 is correct.
+        let d = compute(
+            "root",
+            &bin(ComputeOp::Pow, ComputeExpr::Lit(9.0), ComputeExpr::Lit(0.5)),
+            &kb_with(vec![]),
+        )
+        .unwrap();
+        assert!((d.value - 3.0).abs() < 1e-12);
+        assert_eq!(d.dim, Dimension::Scalar);
+        assert_eq!(d.exact, None);
+    }
+
+    #[test]
+    fn an_overflowing_power_is_a_clean_nonfinite_error_not_inf() {
+        // 10 ^ 400 overflows f64 → a NonFinite error, never a silent `inf`.
+        let err = compute(
+            "big",
+            &bin(ComputeOp::Pow, ComputeExpr::Lit(10.0), ComputeExpr::Lit(400.0)),
+            &kb_with(vec![]),
+        )
+        .unwrap_err();
+        assert!(matches!(err, ComputeError::NonFinite { op: ComputeOp::Pow }));
+    }
+
+    #[test]
+    fn a_non_finite_exponent_is_rejected_not_laundered() {
+        // `1.0.powf(NaN) == 1.0` and `1.0.powf(inf) == 1.0` in IEEE — a unit base
+        // would otherwise turn a NaN/inf exponent into a clean 1.0. The input guard
+        // rejects it instead, upholding "no silently-wrong number".
+        for exp in [f64::NAN, f64::INFINITY, f64::NEG_INFINITY] {
+            let err = compute(
+                "p",
+                &bin(ComputeOp::Pow, ComputeExpr::Lit(1.0), ComputeExpr::Lit(exp)),
+                &kb_with(vec![]),
+            )
+            .unwrap_err();
+            assert!(
+                matches!(err, ComputeError::NonFinite { op: ComputeOp::Pow }),
+                "exponent {exp} should be rejected, got {err:?}"
+            );
+        }
     }
 
     #[test]
