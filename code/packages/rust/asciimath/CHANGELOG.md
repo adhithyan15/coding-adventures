@@ -2,6 +2,28 @@
 
 All notable changes to the AsciiMath pluggable frontend.
 
+## [0.13.0] — 2026-07-01
+
+### Added — delimiter-wrapping functions (`abs`/`norm`/`floor`/`ceil` → `Fenced`)
+
+The frontend now reads AsciiMath's delimiter-wrapping functions and lowers each to the neutral
+`MathExpr::Fenced { open, body, close }` node (the same node the `latex` and `mathml` frontends emit
+for their fenced forms), carrying the specific bracket pair as data:
+
+- `abs(x)` → `Fenced { open: "|", body: x, close: "|" }`  (|x|)
+- `norm(v)` → `Fenced { … "‖" … "‖" }`  (‖v‖, U+2016)
+- `floor(x)` → `Fenced { … "⌊" … "⌋" }`  (⌊x⌋, U+230A/U+230B)
+- `ceil(x)` → `Fenced { … "⌈" … "⌉" }`  (⌈x⌉, U+2308/U+2309)
+
+Each takes the next single atom as its body (the `sqrt x` convention — `abs(x)` reads the `(x)`
+group, whose parens normalise away), so `abs(x+y)` fences the whole group. Because the bracket kind
+is preserved, a bar `|x|` is no longer indistinguishable from a paren `(x)`. Recognised via the
+parser's own keyword tables (a single `fenced_delim_of`, shared with the tokenizer's longest-match
+scan through `is_keyword`, so lexer and parser can't drift). `capabilities()` now declares
+`fenced_delimiters`, closing that gap vs the `latex`/`mathml` frontends; the conformance harness
+enforces it. No consumer change — the `Fenced` node already existed and is lowered by the `adj-lang`
+adapter; verified across `latex`/`mathml`/`asciimath`/`unicode-math`/`adj-lang`/`adj-lang-cli`.
+
 ## [0.12.0] — 2026-07-01
 
 ### Added — plus-or-minus (`+-` → ±, `-+` → ∓)

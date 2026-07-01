@@ -41,6 +41,7 @@ second notation.
 | `root(3)(x)`, `root 3 x` | `Root { degree: Some(3), .. }` |
 | `sin x`, `ln(x)` | `Call { func, arg }` |
 | `a = b`, `x <= y`, `a != b` | `Rel` |
+| `abs(x)`, `norm(v)`, `floor(x)`, `ceil(x)` | `Fenced { open, body, close }` — the bracket pair \|·\|, ‖·‖, ⌊·⌋, ⌈·⌉ (same node as LaTeX `\left…\right`); a bar `\|x\|` ≠ a paren `(x)` |
 | `( .. )`, `[ .. ]`, `{ .. }` | `Group` |
 | `"kg"` (text literal) | `Text` |
 
