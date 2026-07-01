@@ -13,8 +13,9 @@ use smart_home_core::{
     BridgeTransport, Capability, CapabilityGrant, CapabilityGrantId,
     CapabilityGrantInventorySummary, CapabilityGrantScope, CapabilityGrantStatus, CapabilityId,
     CapabilityMode, CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device,
-    DeviceEvent, DeviceEventType, Entity, EntityId, EntityKind, EventId, Health, PrivilegeTier,
-    Scene, SceneScope, StateConfidence, StateDelta, StateSource, Value, ValueKind,
+    DeviceCommand, DeviceEvent, DeviceEventType, Entity, EntityId, EntityKind, EventId, Health,
+    PrivilegeTier, Scene, SceneScope, SmartHomeTool, StateConfidence, StateDelta, StateSource,
+    Value, ValueKind,
 };
 use smart_home_runtime::{
     DesiredEntityState, DesiredStateQuery, RuntimeAuthorizationDecisionQuery,
@@ -1073,6 +1074,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
     const entityBridgeCommandsUrl = (entity) => entity.bridge_id
       ? `/api/smart_home/command_results?bridge_id=${encodeURIComponent(entity.bridge_id)}&limit=8&sort=status_then_newest`
       : "/api/smart_home/command_results?limit=8&sort=status_then_newest";
+    const commandAuthorizationUrl = (entity, commandType) =>
+      `/api/smart_home/command_authorization?entity_id=${encodeURIComponent(entityIdentity(entity))}&command_type=${encodeURIComponent(commandType)}`;
     const sceneDetailUrl = (scene) =>
       `/api/smart_home/scenes/${encodeURIComponent(scene.home_assistant_scene_id || scene.scene_id)}`;
     const serviceDetailUrl = (service) => {
@@ -1264,6 +1267,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         const brightnessMax = Number.isFinite(brightness?.max) ? brightness.max : 100;
         const brightnessStep = Number.isFinite(brightness?.step) && brightness.step > 0 ? brightness.step : 1;
         const brightnessCurrent = brightnessValue(entity, brightnessMin, brightnessMax);
+        const commandableCount = (entity.capabilities || []).filter((item) => item.commandable).length;
         return `
           <article class="entity-card">
             <div class="row" style="justify-content: space-between;">
@@ -1274,6 +1278,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
             </div>
             <p class="muted">${entity.home_assistant_entity_id}</p>
             <p>${value}</p>
+            <p class="muted">${commandableCount} commandable capabilities</p>
             <div class="actions row">
               ${inspectButton(stateDetailUrl(entity), "state detail")}
               ${inspectButton(entityDetailUrl(entity), "entity detail")}
@@ -1281,13 +1286,14 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
               ${inspectButton(entityEventsUrl(entity), "entity events", "Events")}
               ${inspectButton(entityDesiredStateUrl(entity), "desired state", "Desired")}
               ${inspectButton(entityBridgeCommandsUrl(entity), "bridge command results", "Commands")}
-              ${canToggle ? `<button type="button" data-service="turn_on" data-entity="${entity.home_assistant_entity_id}">Turn on</button><button type="button" data-service="turn_off" data-entity="${entity.home_assistant_entity_id}">Turn off</button>` : ""}
+              ${canToggle ? `${inspectButton(commandAuthorizationUrl(entity, "turn_on"), "turn on authorization", "Auth on")} ${inspectButton(commandAuthorizationUrl(entity, "turn_off"), "turn off authorization", "Auth off")} <button type="button" data-service="turn_on" data-entity="${entity.home_assistant_entity_id}">Turn on</button><button type="button" data-service="turn_off" data-entity="${entity.home_assistant_entity_id}">Turn off</button>` : ""}
               ${canToggle ? `<button type="button" data-desired-action="on" data-entity="${entity.home_assistant_entity_id}">Target on</button><button type="button" data-desired-action="off" data-entity="${entity.home_assistant_entity_id}">Target off</button>` : ""}
             </div>
             ${canSetBrightness ? `
               <label class="range-control">
                 <span class="muted">Brightness <strong data-brightness-value="${entity.home_assistant_entity_id}">${brightnessCurrent}%</strong></span>
                 <input type="range" min="${brightnessMin}" max="${brightnessMax}" step="${brightnessStep}" value="${brightnessCurrent}" data-brightness-input="${entity.home_assistant_entity_id}">
+                ${inspectButton(commandAuthorizationUrl(entity, "set_brightness"), "brightness authorization", "Auth brightness")}
                 <button type="button" data-service="set_brightness" data-entity="${entity.home_assistant_entity_id}" data-brightness-for="${entity.home_assistant_entity_id}">Set brightness</button>
                 <button type="button" data-desired-action="brightness" data-entity="${entity.home_assistant_entity_id}" data-brightness-for="${entity.home_assistant_entity_id}">Target brightness</button>
               </label>
@@ -2270,6 +2276,13 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.get("/api/smart_home/command_authorization", move |request| {
+            runtime_command_authorization_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
         app.get(
             "/api/smart_home/authorization_decisions/:decision_index",
             move |request| runtime_authorization_decision_response(&runtime, request),
@@ -3084,6 +3097,15 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
     },
     ApiRouteDescriptor {
         method: "GET",
+        path: "/api/smart_home/command_authorization",
+        category: "authorization",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &["command_type", "entity_id", "principal_id"],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
         path: "/api/smart_home/authorization_decisions/:decision_index",
         category: "authorization",
         surface: "smart_home",
@@ -3728,6 +3750,57 @@ fn runtime_authorization_decisions_response(
     WebResponse::json(authorization_decisions_json(&records, &summary).into_bytes())
 }
 
+fn runtime_command_authorization_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let Some(target) = query_string(request, "entity_id") else {
+        return api_error_response(ApiError::bad_request("missing entity_id"));
+    };
+    let Some(command_type) = query_string(request, "command_type") else {
+        return api_error_response(ApiError::bad_request("missing command_type"));
+    };
+    let command_type = match command_type_from_label(command_type) {
+        Ok(command_type) => command_type,
+        Err(error) => return api_error_response(error),
+    };
+    let principal_id = query_string(request, "principal_id")
+        .map(AgentId::trusted)
+        .unwrap_or_else(|| runtime.principal_id.clone());
+
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let entity = match runtime_entity(&runtime_guard, target) {
+        Ok(entity) => entity,
+        Err(error) => return api_error_response(error),
+    };
+    let command = match preview_command(&entity, command_type, &principal_id, runtime.now_ms) {
+        Ok(command) => command,
+        Err(error) => return api_error_response(error),
+    };
+    let grants = runtime_guard
+        .registry()
+        .capability_grants_for_principal(&principal_id);
+    let tool_decision = AuthorizationDecision::for_tool(
+        principal_id.clone(),
+        SmartHomeTool::Command,
+        grants.iter().copied(),
+        runtime.now_ms,
+    );
+    let command_decision = AuthorizationDecision::for_command(
+        principal_id.clone(),
+        &command,
+        grants.iter().copied(),
+        runtime.now_ms,
+    );
+    WebResponse::json(
+        command_authorization_preview_json(&entity, &command, &tool_decision, &command_decision)
+            .into_bytes(),
+    )
+}
+
 fn runtime_authorization_decision_response(
     runtime: &SmartHomePlatformHttpRuntime,
     request: &WebRequest,
@@ -4289,7 +4362,7 @@ fn runtime_bootstrap_json(
     let authorization_summary = runtime_guard.authorization_decision_summary(&authorization_query);
 
     format!(
-        "{{\"generated_at_ms\":{},\"version\":{},\"links\":{{\"readiness\":{},\"dashboard\":{},\"smoke\":{},\"api\":{},\"states\":{},\"state_history\":{},\"command_results\":{},\"authorization_decisions\":{},\"capability_grants\":{}}},\"health\":{},\"dashboard\":{},\"api\":{},\"state_gaps\":{},\"recent_activity\":{{\"events\":{{\"summary\":{}}},\"command_results\":{{\"summary\":{}}},\"authorization_decisions\":{{\"summary\":{}}}}}}}",
+        "{{\"generated_at_ms\":{},\"version\":{},\"links\":{{\"readiness\":{},\"dashboard\":{},\"smoke\":{},\"api\":{},\"states\":{},\"state_history\":{},\"command_results\":{},\"authorization_decisions\":{},\"command_authorization\":{},\"capability_grants\":{}}},\"health\":{},\"dashboard\":{},\"api\":{},\"state_gaps\":{},\"recent_activity\":{{\"events\":{{\"summary\":{}}},\"command_results\":{{\"summary\":{}}},\"authorization_decisions\":{{\"summary\":{}}}}}}}",
         runtime.now_ms,
         json_string(VERSION),
         json_string("/api/smart_home/readiness"),
@@ -4300,6 +4373,7 @@ fn runtime_bootstrap_json(
         json_string("/api/smart_home/state_history"),
         json_string("/api/smart_home/command_results"),
         json_string("/api/smart_home/authorization_decisions"),
+        json_string("/api/smart_home/command_authorization"),
         json_string("/api/smart_home/capability_grants"),
         runtime_health_json(runtime, runtime_guard),
         runtime_dashboard_json(runtime, runtime_guard),
@@ -4357,7 +4431,7 @@ fn runtime_smoke_json(
         .count();
 
     format!(
-        "{{\"generated_at_ms\":{},\"version\":{},\"status\":{},\"ready\":{},\"principal_id\":{},\"summary\":{{\"total_checks\":{},\"safe_get_checks\":{},\"mutating_checks\":{},\"runtime_authorized_checks\":{},\"blocking_readiness_checks\":{},\"attention_readiness_checks\":{}}},\"links\":{{\"self\":{},\"dashboard\":{},\"readiness\":{},\"bootstrap\":{},\"api\":{},\"command_results\":{},\"authorization_decisions\":{},\"capability_grants\":{}}},\"checks\":[{}]}}",
+        "{{\"generated_at_ms\":{},\"version\":{},\"status\":{},\"ready\":{},\"principal_id\":{},\"summary\":{{\"total_checks\":{},\"safe_get_checks\":{},\"mutating_checks\":{},\"runtime_authorized_checks\":{},\"blocking_readiness_checks\":{},\"attention_readiness_checks\":{}}},\"links\":{{\"self\":{},\"dashboard\":{},\"readiness\":{},\"bootstrap\":{},\"api\":{},\"command_results\":{},\"authorization_decisions\":{},\"command_authorization\":{},\"capability_grants\":{}}},\"checks\":[{}]}}",
         runtime.now_ms,
         json_string(VERSION),
         json_string(status),
@@ -4376,6 +4450,7 @@ fn runtime_smoke_json(
         json_string("/api/smart_home/api"),
         json_string("/api/smart_home/command_results"),
         json_string("/api/smart_home/authorization_decisions"),
+        json_string("/api/smart_home/command_authorization"),
         json_string("/api/smart_home/capability_grants"),
         checks
             .iter()
@@ -4469,6 +4544,7 @@ fn runtime_smoke_checks(
             "API catalog lists mutating routes that still dispatch through runtime authorization.",
         ),
     ];
+    checks.push(runtime_smoke_command_authorization_probe(&state));
     checks.push(runtime_smoke_command_probe(&state));
     checks.extend([
         runtime_smoke_check(
@@ -4509,6 +4585,41 @@ fn runtime_smoke_checks(
         ),
     ]);
     checks
+}
+
+fn runtime_smoke_command_authorization_probe(
+    state: &SmartHomePlatformHttpState,
+) -> RuntimeSmokeCheck {
+    let Some(target) = smoke_light_target(state) else {
+        return runtime_smoke_check(
+            "command_authorization_preview",
+            "Command authorization preview",
+            "GET",
+            "/api/smart_home/services?domain=light",
+            "authorization",
+            false,
+            false,
+            200,
+            None,
+            "No commandable light target is available; inspect the service catalog before previewing command authorization.",
+        );
+    };
+
+    runtime_smoke_check(
+        "command_authorization_preview",
+        "Command authorization preview",
+        "GET",
+        format!(
+            "/api/smart_home/command_authorization?entity_id={}&command_type=turn_on",
+            url_component(&target)
+        ),
+        "authorization",
+        false,
+        false,
+        200,
+        None,
+        "Previews the local API principal's runtime grants for a light command without dispatching it.",
+    )
 }
 
 fn runtime_smoke_command_probe(state: &SmartHomePlatformHttpState) -> RuntimeSmokeCheck {
@@ -4855,6 +4966,63 @@ fn capability_grant_scope_json(scope: &CapabilityGrantScope) -> String {
     }
 }
 
+fn command_authorization_preview_json(
+    entity: &Entity,
+    command: &DeviceCommand,
+    tool_decision: &AuthorizationDecision,
+    command_decision: &AuthorizationDecision,
+) -> String {
+    let unsupported_capabilities = unsupported_command_capabilities(entity, command);
+    let read_only_capabilities = read_only_command_capabilities(entity, command);
+    let supported = unsupported_capabilities.is_empty();
+    let commandable = read_only_capabilities.is_empty();
+    let authorized = tool_decision.is_allowed() && command_decision.is_allowed();
+    let dispatchable = supported && commandable && authorized;
+    let missing_capabilities = unique_capability_ids(
+        tool_decision
+            .missing_capabilities
+            .iter()
+            .chain(command_decision.missing_capabilities.iter()),
+    );
+    let matched_grants = unique_grant_ids(
+        tool_decision
+            .matched_grants
+            .iter()
+            .chain(command_decision.matched_grants.iter()),
+    );
+
+    format!(
+        "{{\"principal_id\":{},\"entity_id\":{},\"home_assistant_entity_id\":{},\"command_type\":{},\"required_tier\":{},\"supported\":{},\"commandable\":{},\"authorized\":{},\"dispatchable\":{},\"required_capabilities\":[{}],\"missing_capabilities\":[{}],\"unsupported_capabilities\":[{}],\"read_only_capabilities\":[{}],\"matched_grants\":[{}],\"tool_decision\":{},\"command_decision\":{}}}",
+        json_string(command.requested_by.as_str()),
+        json_string(command.entity_id.as_str()),
+        json_string(home_assistant_entity_id(entity)),
+        json_string(command_type_label(command.command_type)),
+        json_string(privilege_tier_label(command.required_tier)),
+        supported,
+        commandable,
+        authorized,
+        dispatchable,
+        json_id_array(command.required_capabilities.iter().map(|capability| capability.as_str())),
+        json_id_array(missing_capabilities.iter().map(|capability| capability.as_str())),
+        json_id_array(unsupported_capabilities.iter().map(|capability| capability.as_str())),
+        json_id_array(read_only_capabilities.iter().map(|capability| capability.as_str())),
+        json_id_array(matched_grants.iter().map(|grant_id| grant_id.as_str())),
+        authorization_decision_json(tool_decision),
+        authorization_decision_json(command_decision),
+    )
+}
+
+fn authorization_decision_json(decision: &AuthorizationDecision) -> String {
+    format!(
+        "{{\"outcome\":{},\"required_tier\":{},\"required_capabilities\":[{}],\"missing_capabilities\":[{}],\"matched_grants\":[{}]}}",
+        json_string(authorization_outcome_label(decision.outcome)),
+        json_string(privilege_tier_label(decision.required_tier)),
+        json_id_array(decision.required_capabilities.iter().map(|capability| capability.as_str())),
+        json_id_array(decision.missing_capabilities.iter().map(|capability| capability.as_str())),
+        json_id_array(decision.matched_grants.iter().map(|grant_id| grant_id.as_str())),
+    )
+}
+
 fn authorization_decisions_json(
     records: &[AuthorizationDecisionRecord<'_>],
     summary: &smart_home_core::AuthorizationDecisionLogSummary,
@@ -5000,14 +5168,10 @@ fn state_registry_json(entity: &Entity, runtime: &SmartHomeRuntime, now_ms: u64)
     let device = runtime.registry().device(&entity.device_id);
     let bridge_id = device.map(|device| device.bridge_id.as_str());
     let room_id = device.and_then(|device| device.room_id.as_deref());
-    let capability_ids = entity
-        .capabilities
-        .iter()
-        .map(|capability| capability.capability_id.as_str());
     let snapshot = entity.state.as_ref();
 
     format!(
-        "{{\"entity_id\":{},\"home_assistant_entity_id\":{},\"device_id\":{},\"bridge_id\":{},\"room_id\":{},\"name\":{},\"domain\":{},\"entity_kind\":{},\"has_state\":{},\"stale\":{},\"value\":{},\"source\":{},\"confidence\":{},\"observed_at_ms\":{},\"received_at_ms\":{},\"expires_at_ms\":{},\"capability_ids\":[{}]}}",
+        "{{\"entity_id\":{},\"home_assistant_entity_id\":{},\"device_id\":{},\"bridge_id\":{},\"room_id\":{},\"name\":{},\"domain\":{},\"entity_kind\":{},\"has_state\":{},\"stale\":{},\"value\":{},\"source\":{},\"confidence\":{},\"observed_at_ms\":{},\"received_at_ms\":{},\"expires_at_ms\":{},\"capability_ids\":[{}],\"capabilities\":[{}]}}",
         json_string(entity.entity_id.as_str()),
         json_string(home_assistant_entity_id(entity)),
         json_string(entity.device_id.as_str()),
@@ -5030,7 +5194,18 @@ fn state_registry_json(entity: &Entity, runtime: &SmartHomeRuntime, now_ms: u64)
         optional_u64_json(snapshot.map(|snapshot| snapshot.observed_at_ms)),
         optional_u64_json(snapshot.map(|snapshot| snapshot.received_at_ms)),
         optional_u64_json(snapshot.and_then(|snapshot| snapshot.expires_at_ms)),
-        json_id_array(capability_ids),
+        json_id_array(
+            entity
+                .capabilities
+                .iter()
+                .map(|capability| capability.capability_id.as_str())
+        ),
+        entity
+            .capabilities
+            .iter()
+            .map(capability_json)
+            .collect::<Vec<_>>()
+            .join(","),
     )
 }
 
@@ -6667,6 +6842,80 @@ impl ApiError {
     }
 }
 
+fn preview_command(
+    entity: &Entity,
+    command_type: CommandType,
+    principal_id: &AgentId,
+    now_ms: u64,
+) -> Result<DeviceCommand, ApiError> {
+    DeviceCommand::new(
+        CommandId::trusted(format!(
+            "preview:{}:{}:{}:{now_ms}",
+            principal_id.as_str(),
+            entity.entity_id.as_str(),
+            command_type_label(command_type)
+        )),
+        entity.entity_id.clone(),
+        command_type,
+        Value::Null,
+        principal_id.as_str(),
+        CorrelationId::trusted(format!(
+            "preview:{}:{}:{}:{now_ms}",
+            principal_id.as_str(),
+            entity.entity_id.as_str(),
+            command_type_label(command_type)
+        )),
+    )
+    .map_err(|error| ApiError::bad_request(format!("invalid command preview: {error}")))
+}
+
+fn unsupported_command_capabilities(entity: &Entity, command: &DeviceCommand) -> Vec<CapabilityId> {
+    command
+        .required_capabilities
+        .iter()
+        .filter(|required| {
+            !entity
+                .capabilities
+                .iter()
+                .any(|capability| capability.capability_id == **required)
+        })
+        .cloned()
+        .collect()
+}
+
+fn read_only_command_capabilities(entity: &Entity, command: &DeviceCommand) -> Vec<CapabilityId> {
+    command
+        .required_capabilities
+        .iter()
+        .filter(|required| {
+            entity
+                .capabilities
+                .iter()
+                .find(|capability| capability.capability_id == **required)
+                .is_some_and(|capability| !capability_allows_command(capability))
+        })
+        .cloned()
+        .collect()
+}
+
+fn unique_capability_ids<'a>(
+    capability_ids: impl Iterator<Item = &'a CapabilityId>,
+) -> Vec<CapabilityId> {
+    let mut capability_ids = capability_ids.cloned().collect::<Vec<_>>();
+    capability_ids.sort();
+    capability_ids.dedup();
+    capability_ids
+}
+
+fn unique_grant_ids<'a>(
+    grant_ids: impl Iterator<Item = &'a CapabilityGrantId>,
+) -> Vec<CapabilityGrantId> {
+    let mut grant_ids = grant_ids.cloned().collect::<Vec<_>>();
+    grant_ids.sort();
+    grant_ids.dedup();
+    grant_ids
+}
+
 fn set_desired_state_response(
     runtime: &SmartHomePlatformHttpRuntime,
     request: &WebRequest,
@@ -7657,6 +7906,22 @@ fn command_type_label(command_type: CommandType) -> &'static str {
         CommandType::RecallScene => "recall_scene",
         CommandType::SetLock => "set_lock",
         CommandType::SetThermostatSetpoint => "set_thermostat_setpoint",
+    }
+}
+
+fn command_type_from_label(command_type: &str) -> Result<CommandType, ApiError> {
+    match command_type {
+        "turn_on" => Ok(CommandType::TurnOn),
+        "turn_off" => Ok(CommandType::TurnOff),
+        "set_brightness" => Ok(CommandType::SetBrightness),
+        "set_color" => Ok(CommandType::SetColor),
+        "set_color_temperature" => Ok(CommandType::SetColorTemperature),
+        "recall_scene" => Ok(CommandType::RecallScene),
+        "set_lock" => Ok(CommandType::SetLock),
+        "set_thermostat_setpoint" => Ok(CommandType::SetThermostatSetpoint),
+        other => Err(ApiError::bad_request(format!(
+            "unsupported command_type `{other}`"
+        ))),
     }
 }
 
@@ -8837,6 +9102,69 @@ mod tests {
     }
 
     #[test]
+    fn runtime_web_app_previews_command_authorization_without_dispatch() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+        let preview = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/command_authorization?entity_id=light.entity_light_1&command_type=turn_on",
+            ))
+            .into(),
+        );
+        assert!(preview.contains(r#""principal_id":"agent:home-assistant-local-api""#));
+        assert!(preview.contains(r#""entity_id":"entity-light-1""#));
+        assert!(preview.contains(r#""home_assistant_entity_id":"light.entity_light_1""#));
+        assert!(preview.contains(r#""command_type":"turn_on""#));
+        assert!(preview.contains(r#""required_tier":"low_risk""#));
+        assert!(preview.contains(r#""supported":true"#));
+        assert!(preview.contains(r#""commandable":true"#));
+        assert!(preview.contains(r#""authorized":true"#));
+        assert!(preview.contains(r#""dispatchable":true"#));
+        assert!(preview.contains(r#""required_capabilities":["light.on_off"]"#));
+        assert!(preview.contains(r#""missing_capabilities":[]"#));
+        assert!(preview.contains(
+            r#""matched_grants":["grant:agent:home-assistant-local-api:local-api-full-access"]"#
+        ));
+        assert!(preview.contains(r#""tool_decision":{"outcome":"allowed""#));
+        assert!(preview.contains(r#""command_decision":{"outcome":"allowed""#));
+
+        let denied_app = home_assistant_runtime_web_app(fixture_runtime(false));
+        let denied = response_body(
+            denied_app
+                .handle(request(
+                    "GET",
+                    "/api/smart_home/command_authorization?entity_id=light.entity_light_1&command_type=set_brightness",
+                ))
+                .into(),
+        );
+        assert!(denied.contains(r#""authorized":false"#));
+        assert!(denied.contains(r#""dispatchable":false"#));
+        assert!(denied.contains(r#""smart_home.command.light""#));
+        assert!(denied.contains(r#""light.brightness""#));
+        assert!(denied.contains(r#""tool_decision":{"outcome":"denied""#));
+        assert!(denied.contains(r#""command_decision":{"outcome":"denied""#));
+
+        let unsupported = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/command_authorization?entity_id=sensor.entity_sensor_1&command_type=turn_on",
+            ))
+            .into(),
+        );
+        assert!(unsupported.contains(r#""supported":false"#));
+        assert!(unsupported.contains(r#""dispatchable":false"#));
+        assert!(unsupported.contains(r#""unsupported_capabilities":["light.on_off"]"#));
+
+        let invalid_command: web_core::WebResponse = app
+            .handle(request(
+                "GET",
+                "/api/smart_home/command_authorization?entity_id=light.entity_light_1&command_type=blink",
+            ))
+            .into();
+        assert_eq!(invalid_command.status, 400);
+    }
+
+    #[test]
     fn runtime_web_app_serves_dashboard_ready_capability_grants() {
         let app = home_assistant_runtime_web_app(fixture_runtime(true));
 
@@ -9009,6 +9337,8 @@ mod tests {
         assert!(bootstrap.contains(r#""dashboard":"/api/smart_home/dashboard""#));
         assert!(bootstrap.contains(r#""smoke":"/api/smart_home/smoke""#));
         assert!(bootstrap.contains(r#""states":"/api/smart_home/states""#));
+        assert!(bootstrap
+            .contains(r#""command_authorization":"/api/smart_home/command_authorization""#));
         assert!(bootstrap.contains(r#""health":{"generated_at_ms":5000"#));
         assert!(bootstrap.contains(r#""dashboard":{"generated_at_ms":5000"#));
         assert!(bootstrap.contains(r#""api":{"version":"0.1.0""#));
@@ -9030,6 +9360,13 @@ mod tests {
         assert!(smoke.contains(r#""ready":true"#));
         assert!(smoke.contains(r#""principal_id":"agent:home-assistant-local-api""#));
         assert!(smoke.contains(r#""self":"/api/smart_home/smoke""#));
+        assert!(
+            smoke.contains(r#""command_authorization":"/api/smart_home/command_authorization""#)
+        );
+        assert!(smoke.contains(r#""check_id":"command_authorization_preview""#));
+        assert!(smoke.contains(
+            r#""path":"/api/smart_home/command_authorization?entity_id=light.entity_light_1&command_type=turn_on""#
+        ));
         assert!(smoke.contains(r#""check_id":"command_probe""#));
         assert!(smoke.contains(r#""path":"/api/services/light/turn_on""#));
         assert!(smoke.contains(r#""runtime_authorized":true"#));
@@ -9038,18 +9375,18 @@ mod tests {
 
         let smoke_json: JsonValue =
             serde_json::from_str(&smoke).expect("smoke plan response is JSON");
-        assert_eq!(smoke_json["summary"]["total_checks"], 10);
-        assert_eq!(smoke_json["summary"]["safe_get_checks"], 9);
+        assert_eq!(smoke_json["summary"]["total_checks"], 11);
+        assert_eq!(smoke_json["summary"]["safe_get_checks"], 10);
         assert_eq!(smoke_json["summary"]["mutating_checks"], 1);
         assert_eq!(smoke_json["summary"]["runtime_authorized_checks"], 1);
         assert_eq!(smoke_json["summary"]["blocking_readiness_checks"], 0);
         assert_eq!(smoke_json["summary"]["attention_readiness_checks"], 1);
         assert_eq!(
-            smoke_json["checks"][6]["request_body"]["entity_id"],
+            smoke_json["checks"][7]["request_body"]["entity_id"],
             "light.entity_light_1"
         );
         assert_eq!(
-            smoke_json["checks"][6]["request_body"]["brightness_pct"],
+            smoke_json["checks"][7]["request_body"]["brightness_pct"],
             75
         );
     }
@@ -9080,6 +9417,9 @@ mod tests {
         ));
         assert!(catalog.contains(
             r#""path":"/api/smart_home/capability_grants","category":"authorization","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["capability_id","entity_id","limit","principal_id","scope","sort","status"]"#
+        ));
+        assert!(catalog.contains(
+            r#""path":"/api/smart_home/command_authorization","category":"authorization","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["command_type","entity_id","principal_id"]"#
         ));
         assert!(catalog.contains(
             r#""path":"/api/smart_home/state_history","category":"state_history","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["bridge_id","entity_id","event_type","from_ms","limit","observed_at_or_after_ms","observed_at_or_before_ms","received_at_or_after_ms","received_at_or_before_ms","room_id","sort","to_ms"]"#
@@ -9279,6 +9619,13 @@ mod tests {
         assert!(missing_states.contains(r#""has_state":false"#));
         assert!(missing_states.contains(r#""value":null"#));
         assert!(missing_states.contains(r#""stale":true"#));
+        assert!(missing_states.contains(
+            r#""capability_ids":["light.on_off","light.brightness","light.color_temperature"]"#
+        ));
+        assert!(missing_states.contains(r#""capabilities":[{"capability_id":"light.on_off""#));
+        assert!(missing_states
+            .contains(r#""capability_id":"light.brightness","mode":"observe_and_command""#));
+        assert!(missing_states.contains(r#""min":0,"max":100,"step":1"#));
 
         let room_states = response_body(
             app.handle(request(
@@ -10104,6 +10451,14 @@ mod tests {
         assert!(body.contains("entityHistoryUrl(entity)"));
         assert!(body.contains("entityEventsUrl(entity)"));
         assert!(body.contains("entityBridgeCommandsUrl(entity)"));
+        assert!(body.contains("commandAuthorizationUrl(entity, \"turn_on\")"));
+        assert!(body.contains("commandAuthorizationUrl(entity, \"turn_off\")"));
+        assert!(body.contains("commandAuthorizationUrl(entity, \"set_brightness\")"));
+        assert!(body.contains("/api/smart_home/command_authorization?entity_id="));
+        assert!(body.contains("Auth on"));
+        assert!(body.contains("Auth off"));
+        assert!(body.contains("Auth brightness"));
+        assert!(body.contains("commandable capabilities"));
         assert!(body.contains("serviceDetailUrl(service)"));
         assert!(body.contains("roomDetailUrl(room)"));
         assert!(body.contains("/api/smart_home/devices/${encodeURIComponent(device.device_id)}"));
