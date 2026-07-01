@@ -311,6 +311,25 @@ fn tag_attr(src: &[u8], span: (usize, usize), attr: &str) -> Option<String> {
     None
 }
 
+/// Is an `<mfrac>`'s `linethickness` value a ZERO thickness — i.e. a binomial-coefficient stack
+/// rather than a fraction? MathML thickness values are either a `<length>` (a number with an
+/// optional unit: `0`, `0pt`, `0.0em`, `2px`) or one of the keywords `thin`/`medium`/`thick`.
+/// Only a length whose numeric part is zero suppresses the bar; the keywords and any nonzero
+/// length are ordinary (non-zero) fractions, and an absent attribute (`None`) defaults to the
+/// normal bar. We read the leading numeric run (digits + `.`) and test it against zero, so every
+/// unit spelling of "zero" (`0`, `0pt`, `0.0em`, `0px`) is caught while `thin` — which has no
+/// numeric prefix — is not.
+fn linethickness_is_zero(value: Option<&str>) -> bool {
+    match value {
+        None => false,
+        Some(raw) => {
+            let s = raw.trim();
+            let num: String = s.chars().take_while(|c| c.is_ascii_digit() || *c == '.').collect();
+            !num.is_empty() && num.parse::<f64>().map(|n| n == 0.0).unwrap_or(false)
+        }
+    }
+}
+
 /// Decode entity references (`&name;`, `&#NN;`) inside an attribute value, reusing the same entity
 /// table as character data. Non-entity bytes pass through (lossy UTF-8, matching the lexer).
 fn decode_attr_value(raw: &[u8]) -> String {
@@ -477,7 +496,19 @@ impl Parser {
                 let mut it = args.into_iter();
                 let num = it.next().unwrap();
                 let den = it.next().unwrap();
-                Ok(Child::Expr(MathExpr::Frac(Box::new(num), Box::new(den))))
+                // A fraction whose bar has ZERO thickness (`linethickness="0"`) is MathML's
+                // encoding of a binomial coefficient "n choose k" — the same top-over-bottom stack
+                // with the division rule suppressed. It is exactly what LaTeX `\binom{n}{k}` /
+                // `{n \choose k}` export to, and it lowers to the neutral `Binom` node (distinct
+                // from `Frac`, the SAME as the latex frontend emits). Any nonzero or absent
+                // thickness — including the keyword widths `thin`/`medium`/`thick` — is an ordinary
+                // fraction. (`linethickness` is meaning-bearing here, so we re-read it from the
+                // start-tag span, the same way `<mfenced>` re-reads its `open`/`close` delimiters.)
+                if linethickness_is_zero(tag_attr(&self.src, span, "linethickness").as_deref()) {
+                    Ok(Child::Expr(MathExpr::Binom(Box::new(num), Box::new(den))))
+                } else {
+                    Ok(Child::Expr(MathExpr::Frac(Box::new(num), Box::new(den))))
+                }
             }
             "mroot" => {
                 let args = self.read_n_args(name, 2, depth)?;

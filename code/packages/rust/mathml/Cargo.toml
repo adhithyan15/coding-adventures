@@ -1,6 +1,6 @@
 [package]
 name = "mathml"
-version = "0.7.0"
+version = "0.8.0"
 edition = "2021"
 description = "A Presentation-MathML reader that implements the math-frontend MathFrontend trait: turns <math>…</math> (mn/mi/mo/mrow/mfrac/msup/msub/msqrt/mroot/mtext/mtable/mover/munder/mfenced + named functions) into the neutral MathExpr AST. The fourth pluggable frontend after LaTeX and AsciiMath (see PFE01). Total, panic-free, spanned errors."
 license = "MIT"
