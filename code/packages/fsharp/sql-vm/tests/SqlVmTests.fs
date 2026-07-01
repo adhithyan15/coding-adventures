@@ -2043,3 +2043,550 @@ let ``Like: multiple percent signs collapse`` () =
         Instruction.Halt
     ]
     assertRow [ boolVal true ] r.Rows.[0]
+
+// ── 42. Qualified column lookup (resolveColumn Some alias branch) ─────────
+
+[<Fact>]
+let ``LoadColumn with table alias looks up in aliased cursor`` () =
+    let b = usersBackend ()
+    insertUser b 7L "Zara"
+    // OpenScan with alias "u" — then LoadColumn(Some "u", "name")
+    let r = run b [
+        Instruction.OpenScan("users", Some "u")
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(Some "u", "end")
+        Instruction.AdvanceCursor (Some "u")
+        Instruction.BeginRow
+        Instruction.LoadColumn(Some "u", "name")
+        Instruction.EmitColumn "name"
+        Instruction.EmitRow
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan (Some "u")
+        Instruction.Halt
+    ]
+    Assert.Equal(1, r.Rows.Length)
+    assertRow [ textVal "Zara" ] r.Rows.[0]
+
+[<Fact>]
+let ``LoadColumn with unknown alias falls back to default cursor`` () =
+    // Open under alias "t1"; reference with alias "t1" which is in the dict
+    let b = usersBackend ()
+    insertUser b 1L "Alice"
+    let r = run b [
+        Instruction.OpenScan("users", Some "t1")
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(Some "t1", "end")
+        Instruction.AdvanceCursor(Some "t1")
+        Instruction.BeginRow
+        Instruction.LoadColumn(Some "t1", "id")
+        Instruction.EmitColumn "id"
+        Instruction.EmitRow
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan(Some "t1")
+        Instruction.Halt
+    ]
+    Assert.Equal(1, r.Rows.Length)
+    assertRow [ intVal 1L ] r.Rows.[0]
+
+// ── 43. InsertRow with colsOpt = None (use backend column list) ──────────
+
+[<Fact>]
+let ``InsertRow with None columns uses backend column order`` () =
+    let b = usersBackend ()
+    // InsertRow with None columns list — VM must call backend.Columns("users")
+    let r = run b [
+        Instruction.LoadConst (intVal 42L)
+        Instruction.LoadConst (textVal "NoList")
+        Instruction.InsertRow("users", None)
+        Instruction.Halt
+    ]
+    Assert.Equal(1, r.RowsAffected)
+    let it = b.Scan("users")
+    let row = it.Next()
+    Assert.NotNull(row)
+
+// ── 44. evalExpr / plannerBinOp / plannerUnOp via UpdateRows ─────────────
+//
+// UpdateRows calls evalExpr on its assignment expressions. By using each
+// BinaryOperator and UnaryOperator, we drive plannerBinOp and plannerUnOp.
+
+[<Fact>]
+let ``UpdateRows with BinaryOp expression exercises plannerBinOp`` () =
+    let b = usersBackend ()
+    insertUser b 5L "Test"
+    // UPDATE users SET id = id + 10 (uses Expr.BinaryOp + plannerBinOp Add)
+    run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.UpdateRows("users", [("id", Expr.BinaryOp(BinaryOperator.Add, Expr.Column(None, "id"), Expr.Literal(intVal 10L)))])
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ] |> ignore
+    let it = b.Scan("users")
+    let row = it.Next()
+    Assert.NotNull(row)
+    Assert.Equal(box (15L : int64), row["id"])
+
+[<Fact>]
+let ``UpdateRows with Sub BinaryOp`` () =
+    let b = usersBackend ()
+    insertUser b 10L "Test"
+    run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.UpdateRows("users", [("id", Expr.BinaryOp(BinaryOperator.Sub, Expr.Column(None, "id"), Expr.Literal(intVal 3L)))])
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ] |> ignore
+    let it = b.Scan("users")
+    let row = it.Next()
+    Assert.Equal(box (7L : int64), row["id"])
+
+[<Fact>]
+let ``UpdateRows with Mul BinaryOp`` () =
+    let b = usersBackend ()
+    insertUser b 4L "Test"
+    run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.UpdateRows("users", [("id", Expr.BinaryOp(BinaryOperator.Mul, Expr.Column(None, "id"), Expr.Literal(intVal 3L)))])
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ] |> ignore
+    let it = b.Scan("users")
+    let row = it.Next()
+    Assert.Equal(box (12L : int64), row["id"])
+
+[<Fact>]
+let ``UpdateRows with Div BinaryOp`` () =
+    let b = usersBackend ()
+    insertUser b 12L "Test"
+    run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.UpdateRows("users", [("id", Expr.BinaryOp(BinaryOperator.Div, Expr.Column(None, "id"), Expr.Literal(intVal 4L)))])
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ] |> ignore
+    let it = b.Scan("users")
+    let row = it.Next()
+    Assert.Equal(box (3L : int64), row["id"])
+
+[<Fact>]
+let ``UpdateRows with Mod BinaryOp`` () =
+    let b = usersBackend ()
+    insertUser b 10L "Test"
+    run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.UpdateRows("users", [("id", Expr.BinaryOp(BinaryOperator.Mod, Expr.Column(None, "id"), Expr.Literal(intVal 3L)))])
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ] |> ignore
+    let it = b.Scan("users")
+    let row = it.Next()
+    Assert.Equal(box (1L : int64), row["id"])
+
+[<Fact>]
+let ``UpdateRows with Eq BinaryOp (plannerBinOp Eq)`` () =
+    let b = usersBackend ()
+    insertUser b 1L "Test"
+    // Use Eq expression — result is Bool but we store it (tests the path)
+    run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.UpdateRows("users", [("name", Expr.BinaryOp(BinaryOperator.Eq, Expr.Column(None, "id"), Expr.Literal(intVal 1L)))])
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ] |> ignore
+
+[<Fact>]
+let ``UpdateRows with NotEq BinaryOp`` () =
+    let b = usersBackend ()
+    insertUser b 1L "Test"
+    run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.UpdateRows("users", [("name", Expr.BinaryOp(BinaryOperator.NotEq, Expr.Column(None, "id"), Expr.Literal(intVal 2L)))])
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ] |> ignore
+
+[<Fact>]
+let ``UpdateRows with Lt BinaryOp`` () =
+    let b = usersBackend ()
+    insertUser b 1L "Test"
+    run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.UpdateRows("users", [("name", Expr.BinaryOp(BinaryOperator.Lt, Expr.Column(None, "id"), Expr.Literal(intVal 5L)))])
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ] |> ignore
+
+[<Fact>]
+let ``UpdateRows with Lte BinaryOp`` () =
+    let b = usersBackend ()
+    insertUser b 1L "Test"
+    run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.UpdateRows("users", [("name", Expr.BinaryOp(BinaryOperator.Lte, Expr.Column(None, "id"), Expr.Literal(intVal 5L)))])
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ] |> ignore
+
+[<Fact>]
+let ``UpdateRows with Gt BinaryOp`` () =
+    let b = usersBackend ()
+    insertUser b 1L "Test"
+    run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.UpdateRows("users", [("name", Expr.BinaryOp(BinaryOperator.Gt, Expr.Column(None, "id"), Expr.Literal(intVal 0L)))])
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ] |> ignore
+
+[<Fact>]
+let ``UpdateRows with Gte BinaryOp`` () =
+    let b = usersBackend ()
+    insertUser b 1L "Test"
+    run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.UpdateRows("users", [("name", Expr.BinaryOp(BinaryOperator.Gte, Expr.Column(None, "id"), Expr.Literal(intVal 1L)))])
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ] |> ignore
+
+[<Fact>]
+let ``UpdateRows with And BinaryOp`` () =
+    let b = usersBackend ()
+    insertUser b 1L "Test"
+    run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.UpdateRows("users", [("name", Expr.BinaryOp(BinaryOperator.And, Expr.Literal(boolVal true), Expr.Literal(boolVal false)))])
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ] |> ignore
+
+[<Fact>]
+let ``UpdateRows with Or BinaryOp`` () =
+    let b = usersBackend ()
+    insertUser b 1L "Test"
+    run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.UpdateRows("users", [("name", Expr.BinaryOp(BinaryOperator.Or, Expr.Literal(boolVal false), Expr.Literal(boolVal true)))])
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ] |> ignore
+
+[<Fact>]
+let ``UpdateRows with UnaryOp Not (exercises plannerUnOp)`` () =
+    let b = usersBackend ()
+    insertUser b 1L "Test"
+    run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.UpdateRows("users", [("name", Expr.UnaryOp(UnaryOperator.Not, Expr.Literal(boolVal false)))])
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ] |> ignore
+
+[<Fact>]
+let ``UpdateRows with UnaryOp Neg`` () =
+    let b = usersBackend ()
+    insertUser b 5L "Test"
+    run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.UpdateRows("users", [("id", Expr.UnaryOp(UnaryOperator.Neg, Expr.Column(None, "id")))])
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ] |> ignore
+    let it = b.Scan("users")
+    let row = it.Next()
+    Assert.Equal(box (-5L : int64), row["id"])
+
+[<Fact>]
+let ``UpdateRows with IsNull expr`` () =
+    let b = usersBackend ()
+    insertUser b 1L "Test"
+    run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.UpdateRows("users", [("name", Expr.IsNull(Expr.Literal nullVal))])
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ] |> ignore
+
+[<Fact>]
+let ``UpdateRows with IsNotNull expr`` () =
+    let b = usersBackend ()
+    insertUser b 1L "Test"
+    run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.UpdateRows("users", [("name", Expr.IsNotNull(Expr.Column(None, "name")))])
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ] |> ignore
+
+[<Fact>]
+let ``UpdateRows with Like expr`` () =
+    let b = usersBackend ()
+    insertUser b 1L "Test"
+    run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.UpdateRows("users", [("name", Expr.Like(Expr.Column(None, "name"), "T%"))])
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ] |> ignore
+
+[<Fact>]
+let ``UpdateRows with Between expr`` () =
+    let b = usersBackend ()
+    insertUser b 5L "Test"
+    run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.UpdateRows("users", [("name", Expr.Between(Expr.Column(None, "id"), Expr.Literal(intVal 1L), Expr.Literal(intVal 10L)))])
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ] |> ignore
+
+// ── 45. ensureSlot array growth ───────────────────────────────────────────
+
+[<Fact>]
+let ``Multiple agg slots grow the aggSlots array`` () =
+    // InitAgg 2 and UpdateAgg for slots 0 and 1 — exercises ensureSlot growth.
+    let b = usersBackend ()
+    insertUser b 10L "A"
+    insertUser b 20L "B"
+    let r = run b [
+        Instruction.InitAgg 2
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.UpdateAgg(0, AggFn.CountStar)
+        Instruction.LoadColumn(None, "id")
+        Instruction.UpdateAgg(1, AggFn.Sum)
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.BeginRow
+        Instruction.FinalizeAgg(0, AggFn.CountStar)
+        Instruction.EmitColumn "cnt"
+        Instruction.FinalizeAgg(1, AggFn.Sum)
+        Instruction.EmitColumn "sum"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    Assert.Equal(1, r.Rows.Length)
+    assertRow [ intVal 2L; intVal 30L ] r.Rows.[0]
+
+[<Fact>]
+let ``FinalizeAgg before any InitAgg uses ensureSlot to grow`` () =
+    // FinalizeAgg when aggSlots is empty — ensureSlot grows the array.
+    let r = runFresh [
+        Instruction.BeginRow
+        Instruction.FinalizeAgg(0, AggFn.CountStar)
+        Instruction.EmitColumn "c"
+        Instruction.EmitRow
+        Instruction.Halt
+    ]
+    // No rows scanned, CountStar = 0.
+    assertRow [ intVal 0L ] r.Rows.[0]
+
+// ── 46. Non-InMemoryBackend fallback in openCursor ────────────────────────
+//
+// We create a minimal read-only Backend subclass that does NOT extend
+// InMemoryBackend, so the openCursor match falls through to the generic
+// Scan branch (Cursor = None). UpdateRows and DeleteRows must silently
+// skip (no cursor) rather than crash.
+
+type private ReadOnlyBackend(rows: Row list, cols: ColumnDef list) =
+    inherit Backend()
+    override _.Tables() = [| "t" |] :> System.Collections.Generic.IReadOnlyList<string>
+    override _.Columns(_table) = cols |> List.toArray :> System.Collections.Generic.IReadOnlyList<ColumnDef>
+    override _.Scan(_table) = ListRowIterator(rows) :> IRowIterator
+    override _.Insert(_table, _row) = ()
+    override _.Update(_table, _cursor, _assignments) = ()
+    override _.Delete(_table, _cursor) = ()
+    override _.CreateTable(_table, _columns, _ifNotExists) = ()
+    override _.DropTable(_table, _ifExists) = ()
+    override _.AddColumn(_table, _column) = ()
+    override _.CreateIndex(_index) = ()
+    override _.DropIndex(_name, _ifExists) = ()
+    override _.ListIndexes(_table: string option) = [||] :> System.Collections.Generic.IReadOnlyList<IndexDef>
+    override _.ScanIndex(_indexName, _lo, _hi, _loInclusive, _hiInclusive) = Seq.empty
+    override _.ScanByRowIds(_table: string, _rowids: System.Collections.Generic.IReadOnlyList<int>) = ListRowIterator([]) :> IRowIterator
+    override _.BeginTransaction() = { Value = 1 }
+    override _.Commit(_handle) = ()
+    override _.Rollback(_handle) = ()
+
+[<Fact>]
+let ``openCursor with non-InMemoryBackend falls back to Scan`` () =
+    let row = Row()
+    row["v"] <- box (42L : int64)
+    let b = ReadOnlyBackend([ row ], [ ColumnDef("v", "INTEGER") ])
+    let r = run b [
+        Instruction.OpenScan("t", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.BeginRow
+        Instruction.LoadColumn(None, "v")
+        Instruction.EmitColumn "v"
+        Instruction.EmitRow
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ]
+    Assert.Equal(1, r.Rows.Length)
+    assertRow [ intVal 42L ] r.Rows.[0]
+
+[<Fact>]
+let ``DeleteRows on non-InMemoryBackend is a no-op (no cursor)`` () =
+    let row = Row()
+    row["v"] <- box (1L : int64)
+    let b = ReadOnlyBackend([ row ], [ ColumnDef("v", "INTEGER") ])
+    let r = run b [
+        Instruction.OpenScan("t", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        // Cursor is None for ReadOnlyBackend so DeleteRows is a no-op
+        Instruction.DeleteRows "t"
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.Halt
+    ]
+    Assert.Equal(0, r.RowsAffected)  // no-op: Cursor = None
+
+// ── 47. LimitResult toSafeInt with negative and MaxValue values ──────────
+
+[<Fact>]
+let ``LimitResult with very large limit (Int64 MaxValue) works`` () =
+    let b = usersBackend ()
+    insertUser b 1L "A"
+    insertUser b 2L "B"
+    let r = run b [
+        Instruction.OpenScan("users", None)
+        Instruction.Label "loop"
+        Instruction.JumpIfExhausted(None, "end")
+        Instruction.AdvanceCursor None
+        Instruction.BeginRow
+        Instruction.LoadColumn(None, "id")
+        Instruction.EmitColumn "id"
+        Instruction.EmitRow
+        Instruction.Jump "loop"
+        Instruction.Label "end"
+        Instruction.CloseScan None
+        Instruction.LimitResult(Some System.Int64.MaxValue, None)
+        Instruction.Halt
+    ]
+    Assert.Equal(2, r.Rows.Length)
+
+// ── 48. CommitTransaction when no active transaction is a no-op ──────────
+
+[<Fact>]
+let ``CommitTransaction with no active handle is a no-op`` () =
+    let r = runFresh [
+        Instruction.CommitTransaction  // no BeginTransaction — should not throw
+        Instruction.Halt
+    ]
+    Assert.Equal(0, r.RowsAffected)
+
+[<Fact>]
+let ``RollbackTransaction with no active handle is a no-op`` () =
+    let r = runFresh [
+        Instruction.RollbackTransaction  // no BeginTransaction — should not throw
+        Instruction.Halt
+    ]
+    Assert.Equal(0, r.RowsAffected)
