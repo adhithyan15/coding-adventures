@@ -98,6 +98,23 @@ enabled.
 It runs before `remove-unused-vars` (which clears the emptied
 declaration) and feeds `constant-fold` on the next fixed-point sweep.
 
+## Upstream conformance tests
+
+`tests/upstream/` ports Google Closure Compiler tests (Apache-2.0; see
+`ATTRIBUTION.md` and `UPSTREAM_SHA`), per the CLOC12 test-port convention:
+
+- `inline_variables_test.rs` — `InlineVariablesTest.java`. Drives the real
+  source → bridge → `InlineVariablesPass` → emit roundtrip and pins the
+  const-literal propagation this pass performs (single/multi-use with the size
+  budget, boolean/null literals, the shadow + TDZ soundness guards, and
+  property-vs-computed-member handling). **13 active `#[test]`s** plus **3
+  `#[ignore]` placeholders** for the whole-`InlineVariables` behaviors this
+  pass does not do (single-assignment `let`/`var` inlining, identifier-alias
+  initializers, and dead-declaration removal — owned by `remove-unused-vars`),
+  each pinned to gap-148 … gap-150 in `code/specs/CLOC12-gaps.md`. Run with
+  `cargo test --test upstream_inline_variables` (add `--include-ignored` to
+  measure gap progress).
+
 ## Dependency whitelist
 
 - `coding-adventures-closure-pass-pipeline` — `Pass` trait + types.

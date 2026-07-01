@@ -1285,3 +1285,47 @@ Placeholder: `rename_function_declaration_name`.
 Upstream's generator (`testBias*`) hands the shortest name to the
 most-referenced variable to improve gzip. `RenamePass` allocates fresh names in
 declaration order. Placeholder: `frequency_biased_name_allocation`.
+
+## CLOC12.146 — InlineVariables port (inline-variables)
+
+- **What it is:** a CLOC12 upstream port and the **first** into
+  `closure-pass-inline-variables`. New file
+  `tests/upstream/inline_variables_test.rs`, registered as the
+  `upstream_inline_variables` test target, ported from upstream
+  `InlineVariablesTest.java`. Drives the real source → `grammar_to_program`
+  bridge → `InlineVariablesPass` → `emit` roundtrip (the crate carries
+  `javascript-parser` + `closure-emitter` dev-deps), so each case is
+  `assert_eq!(propagate(src), expected)` on emitted JS.
+- **13 active `#[test]`s pass on the first run** (no new propagation bug):
+  single-use const-literal propagation, propagation into an expression, a
+  short literal at multiple sites, boolean/null literals, the multi-use size
+  budget (long literal declined at multiple sites, propagated at a single
+  site), `let`/`var` never propagated, non-literal initializers declined, the
+  shadowed-name guard, property names never replaced while computed member
+  indices are, and two TDZ soundness cases.
+- **3 `#[ignore]` placeholders** pin whole-`InlineVariables` behaviors this
+  pass does not do — see gap-148 … gap-150.
+
+  (Numbering note: this port was authored off `origin/main` in parallel with
+  the rename port CLOC12.145 / gap-144…147, so it deliberately takes the next
+  free numbers CLOC12.146 / gap-148…150 to avoid collision when both merge.)
+
+### gap-148 — single-assignment `let`/`var` not inlined
+
+closurec's `InlineVariablesPass` only propagates `const` bound to a literal.
+Upstream `InlineVariables` inlines any *effectively-constant* variable — a
+`let`/`var` assigned exactly once and never reassigned — and removes the
+declaration. Placeholder: `inline_single_assignment_let`.
+
+### gap-149 — identifier-alias initializers not inlined
+
+Upstream inlines `const A = B;` (an identifier-alias initializer), replacing
+uses of `A` with `B` when the alias target is not reassigned. Ours declines any
+non-literal initializer. Placeholder: `inline_identifier_alias`.
+
+### gap-150 — dead `const` declaration husk not removed
+
+closurec's pass only *propagates*: after inlining every reference it leaves the
+now-dead `const R = 2;` in place for the downstream `remove-unused-vars` pass
+to delete. Upstream `InlineVariables` removes the declaration itself once it has
+no remaining uses. Placeholder: `removes_dead_const_after_inlining`.
