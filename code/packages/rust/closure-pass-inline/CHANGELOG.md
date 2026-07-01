@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.23.0] - 2026-07-01
+
+### Added — CLOC12.149: inline across `FunctionExpression` bodies
+
+All seven expression walks gain a `FunctionExpression` arm: use tally,
+call inlining, param mutation detection, node-count budget, binding-ident
+collection, and `substitute`/`rename_in_expr` (the last two remove the
+function's own name/params from the map before recursing, so a shadowed
+reference is left untouched). Sound over function values.
+
 ## [0.22.0] - 2026-06-30
 
 ### Added — CV provenance for inlining (#89)

@@ -26,6 +26,21 @@ whitelist is what keeps the AST reusable.
 - A `CvId` type alias for `String` (matching the current `correlation-vector`
   representation; see the module docs for the migration plan).
 
+## Phase 1.x variant additions
+
+Beyond the Phase 1 core, variants are added incrementally as the passes and
+emitter grow a need for them — each behind its own `CLOC12.NN` slice:
+
+- `BigIntLiteral` (CLOC12.15), `UndefinedLiteral` (CLOC12.16).
+- `FunctionExpression` (CLOC12.149) — a function used in **value** position
+  (`var f = function () {}`, IIFEs `(function () {})()`, function-valued
+  properties/arguments). The expression sibling of `FunctionDeclaration`; the
+  only structural difference is `id: Option<Identifier>` (anonymous, or a
+  body-local name). Rolled out bottom-up: this crate adds the node; the
+  `javascript-parser` bridge, `closure-emitter`, and the passes wire it up in
+  follow-on slices. (Arrow functions, methods, getters/setters, and classes
+  remain Phase 3.)
+
 ## What's coming (follow-up PRs)
 
 Per CLOC02:

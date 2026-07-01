@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline-variables` crate will be documented in this file.
 
+## [0.9.0] - 2026-07-01
+
+### Added — CLOC12.149: propagate through `FunctionExpression` bodies
+
+`count_uses_expr` and `propagate_in_expr` now recurse into a
+`FunctionExpression` body (via the `_stmt` helpers), keeping the use
+count and the substitution walk over the same positions. Over-counting
+under param/self-name shadowing is conservative — it only declines an
+inline, never performs a wrong one.
+
 ## [0.8.0] - 2026-07-01
 
 ### Added — upstream `InlineVariablesTest.java` conformance port (#88, CLOC12.146)

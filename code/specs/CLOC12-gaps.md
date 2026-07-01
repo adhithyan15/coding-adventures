@@ -1389,3 +1389,28 @@ after a `break` inside a loop is unreachable (`while (c) { break; y(); }` →
 `while (c) { break; }`). closurec only treats break/continue as terminators
 inside switch-case consequents (`is_case_terminator`), so the loop-body `y()`
 survives. Placeholder: `drops_code_after_break_in_loop_block`.
+
+## CLOC12.149 — `FunctionExpression` (function in value position)
+
+**Landed (AST + emitter + passes):** `Expression::FunctionExpression` is now a
+first-class node (`javascript-ast`), the emitter prints it (statement-start and
+call-callee parenthesisation, no trailing `;`), and every optimisation pass
+(`constant-fold`, `fold-control-flow`, `dce`, `inline`, `inline-variables`,
+`rename`, `rename-globals`, `rename-properties`, `scope-analyzer`) handles it
+soundly — recursing into the body, with the function's own name/params removed
+from the active rename/substitute map so a shadowed binding is never rewritten.
+The expression sibling of `FunctionDeclaration`; `id` is `Option<Identifier>`
+(anonymous, or a body-local name). Spec: CLOC09 §"Phase 1.x FunctionExpression".
+
+### gap-153 — bridge still declines `function_expression`
+
+The parser/grammar already produce `function_expression` (and `arrow_function`,
+`async_function_expression`, `generator_expression`), but the typed-AST bridge
+(`javascript-parser::bridge`) still maps them to `UnsupportedSyntax`, so no
+`FunctionExpression` reaches the pipeline yet — any program containing one falls
+back to WHITESPACE_ONLY. **Next slice:** convert `function_expression` →
+`Expression::FunctionExpression` in the bridge (remove it from the `unsupported`
+list), add a closurec end-to-end fixture (IIFE, function-valued property,
+callback), and port the upstream `CodePrinter`/function-expression conformance
+cases now unblocked. Arrow functions, methods, getters/setters, and class
+expressions remain Phase 3.

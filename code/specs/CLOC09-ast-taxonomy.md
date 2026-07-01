@@ -486,8 +486,8 @@ matches ESTree exactly.
 
 This is the only field-name divergence Phase 1 introduces. It
 applies anywhere a function-like node has the async flag
-(`FunctionDeclaration`, future Phase 1.x `FunctionExpression`,
-Phase 3 `ArrowFunctionExpression`, `Method`, `ClassMethod`,
+(`FunctionDeclaration`, Phase 1.x `FunctionExpression` — landed in
+CLOC12.149, Phase 3 `ArrowFunctionExpression`, `Method`, `ClassMethod`,
 etc.).
 
 ## Why split `Statement` and `Declaration` enums
@@ -610,6 +610,16 @@ implementations are independent follow-ups.
 - Phase 1.5: `Visitor` / `VisitorMut` traits with a default
   walk implementation; revise after seeing the first real pass
   body.
+- Phase 1.x incremental variant additions (landed as the passes
+  and emitter grew a need for them, each behind its own CLOC12.NN
+  slice + gap entry): `BigIntLiteral` (CLOC12.15), `UndefinedLiteral`
+  (CLOC12.16), and **`FunctionExpression` (CLOC12.149)** — the
+  expression sibling of `FunctionDeclaration` (`var f = function () {}`,
+  IIFEs, function-valued properties). `id` is `Option<Identifier>`
+  (anonymous vs. named-but-body-local); `params` / `body` /
+  `generator` / `is_async` reuse the declaration's types. Landed
+  bottom-up: AST node first (this slice), then the parser→typed-AST
+  bridge, emitter printing, and pass traversal in follow-on slices.
 - Phase 2: leaf coverage gaps + control-flow variants
   (`SwitchStatement`, `TryStatement`, etc.).
 - Phase 3: patterns, arrow functions, classes.

@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.19.0] - 2026-07-01
+
+### Added — CLOC12.149: emit `FunctionExpression`
+
+Adds `emit_function_expression` (the expression sibling of
+`emit_function_declaration`: optional name, and no trailing `;` since a
+function *value* is not a declaration). Tags `FunctionExpression` below
+`PREC_PRIMARY` in `expr_prec` so a call/member parent wraps it
+(`(function(){})()`, `(function(){}).x`), and wraps a leading one in
+`emit_expression_statement` (a statement starting with `function` would
+otherwise parse as a declaration). +5 tests.
+
 ## [0.18.16] - 2026-07-01
 
 ### Test — CodePrinter object-literal port (#88, CLOC12.147)

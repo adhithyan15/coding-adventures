@@ -10,12 +10,17 @@
 //!   [`ConditionalExpression`].
 //! - Application: [`CallExpression`], [`MemberExpression`].
 //! - Composites: [`ArrayExpression`], [`ObjectExpression`].
+//! - Callables: [`FunctionExpression`] (Phase 1.x — added in CLOC12.149;
+//!   the expression sibling of [`crate::FunctionDeclaration`], e.g.
+//!   `var f = function () {}`, IIFEs, function-valued properties).
 //!
 //! Every struct carries `cv: Option<CvId>` first per the CLOC09
 //! amendment. Operator enums serialize to ESTree-canonical operator
 //! strings (`"=="`, `"==="`, `"&&"`, etc.) via per-variant
 //! `#[serde(rename = "...")]`.
 
+use crate::declaration::FunctionParam;
+use crate::statement::BlockStatement;
 use crate::CvId;
 use serde::{Deserialize, Serialize};
 
@@ -44,6 +49,7 @@ pub enum Expression {
     MemberExpression(MemberExpression),
     ArrayExpression(ArrayExpression),
     ObjectExpression(ObjectExpression),
+    FunctionExpression(FunctionExpression),
 }
 
 // ---------------------------------------------------------------------
@@ -402,6 +408,58 @@ pub enum PropertyKey {
     NumericLiteral(NumericLiteral),
     /// When the property is `[expr]: value` (computed = true).
     Expression(Box<Expression>),
+}
+
+// ---------------------------------------------------------------------
+// FunctionExpression — a function used in value position
+// ---------------------------------------------------------------------
+
+/// `function (p1, p2) { body }` or the *named* form
+/// `function f(p1, p2) { body }`, appearing where an **expression** is
+/// expected — the right side of an assignment (`var g = function () {}`),
+/// an argument (`arr.map(function (x) { return x; })`), a property value
+/// (`{ run: function () {} }`), or the callee of an IIFE
+/// (`(function () {})()`).
+///
+/// # How it differs from [`crate::FunctionDeclaration`]
+///
+/// A declaration *binds a name in the enclosing scope* and is a
+/// statement; an expression *produces a function value* and its name
+/// (if any) is visible **only inside its own body** (so a named
+/// function expression can recurse by its own name without leaking that
+/// name outward). That single semantic difference is exactly why `id`
+/// here is `Option<Identifier>` — anonymous function expressions are the
+/// common case — whereas a declaration's `id` is mandatory.
+///
+/// ```text
+///   declaration:  function f(){}      f is bound in the outer scope
+///   expression:   (function f(){})    f is bound ONLY inside the body
+///   expression:   (function (){})     anonymous — no name at all
+/// ```
+///
+/// `params`, `body`, `generator`, and `is_async` carry the identical
+/// meaning as on [`crate::FunctionDeclaration`], and the two share the
+/// [`FunctionParam`] and [`BlockStatement`] types so passes that walk a
+/// function body do not care which form produced it.
+///
+/// Added in Phase 1.x (CLOC09 §"future Phase 1.x FunctionExpression").
+/// Arrow functions, methods, getters/setters, and class expressions
+/// remain Phase 3.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct FunctionExpression {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    /// `None` for an anonymous `function () {}`; `Some` for a named
+    /// `function f() {}` expression (the name is body-local — see the
+    /// type-level docs).
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub id: Option<Identifier>,
+    pub params: Vec<FunctionParam>,
+    pub body: BlockStatement,
+    pub generator: bool,
+    #[serde(rename = "async")]
+    pub is_async: bool,
 }
 
 #[cfg(test)]
@@ -866,5 +924,87 @@ mod tests {
             let json = serde_json::to_string(&k).expect("serialize");
             assert_eq!(json, format!("\"{}\"", expected));
         }
+    }
+
+    // -----------------------------------------------------------------
+    // FunctionExpression (Phase 1.x, CLOC09) — the expression sibling of
+    // FunctionDeclaration. Round-trips + tag + the `id`-is-optional and
+    // `async`-renames-to-JSON contracts.
+    // -----------------------------------------------------------------
+    use crate::declaration::FunctionParam as TestFunctionParam;
+    use crate::statement::{BlockStatement as TestBlock, ReturnStatement, Statement};
+
+    /// `function f(x) { return x; }` used in value position.
+    fn named_fn_expr() -> Expression {
+        Expression::FunctionExpression(FunctionExpression {
+            cv: Some("fe.1".to_string()),
+            id: Some(Identifier { cv: None, name: "f".to_string() }),
+            params: vec![TestFunctionParam::Identifier(Identifier {
+                cv: None,
+                name: "x".to_string(),
+            })],
+            body: TestBlock {
+                cv: None,
+                body: vec![Statement::return_statement(ReturnStatement {
+                    cv: None,
+                    argument: Some(Expression::Identifier(Identifier {
+                        cv: None,
+                        name: "x".to_string(),
+                    })),
+                })],
+            },
+            generator: false,
+            is_async: false,
+        })
+    }
+
+    /// Anonymous `function () {}`.
+    fn anon_fn_expr() -> Expression {
+        Expression::FunctionExpression(FunctionExpression {
+            cv: None,
+            id: None,
+            params: vec![],
+            body: TestBlock { cv: None, body: vec![] },
+            generator: false,
+            is_async: false,
+        })
+    }
+
+    #[test]
+    fn function_expression_named_roundtrips_and_tags() {
+        let e = named_fn_expr();
+        assert_eq!(e.clone(), roundtrip(e.clone()));
+        assert_eq!(type_tag(&e), "FunctionExpression");
+    }
+
+    #[test]
+    fn function_expression_anonymous_roundtrips() {
+        let e = anon_fn_expr();
+        assert_eq!(e.clone(), roundtrip(e.clone()));
+        assert_eq!(type_tag(&e), "FunctionExpression");
+    }
+
+    #[test]
+    fn function_expression_anonymous_omits_id_in_json() {
+        // `id: None` must NOT appear in the wire format — an anonymous
+        // function expression has no `id` key at all (ESTree uses
+        // `"id": null`, but our `skip_serializing_if` omits it; both
+        // deserialize back to `None`, which is what round-trip asserts).
+        let json = serde_json::to_string(&anon_fn_expr()).expect("serialize");
+        assert!(!json.contains("\"id\""), "anonymous fn-expr should omit id; got {}", json);
+    }
+
+    #[test]
+    fn function_expression_async_key_renames() {
+        // The `is_async` field serializes as JSON `"async"` (ESTree),
+        // exactly as on FunctionDeclaration.
+        let mut e = anon_fn_expr();
+        if let Expression::FunctionExpression(f) = &mut e {
+            f.is_async = true;
+        }
+        let json = serde_json::to_string(&e).expect("serialize");
+        assert!(json.contains("\"async\":true"), "expected async key; got {}", json);
+        assert!(!json.contains("isAsync"), "must not leak Rust field name; got {}", json);
+        assert_eq!(e.clone(), roundtrip(e));
     }
 }

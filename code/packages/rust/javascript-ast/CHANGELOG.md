@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.14.0] - 2026-07-01
+
+### Added — CLOC12.149: `FunctionExpression` (function in value position)
+
+Adds `FunctionExpression { cv, id: Option<Identifier>, params, body, generator,
+is_async }` and the `Expression::FunctionExpression` variant — the expression
+sibling of `FunctionDeclaration`, covering `var f = function () {}`, IIFEs
+(`(function () {})()`), and function-valued properties/arguments. The one
+structural difference from the declaration is `id: Option<Identifier>`: an
+anonymous `function () {}` has no name, and a *named* function expression's name
+is body-local (visible only for self-recursion inside its own body), never bound
+in the enclosing scope. `params` / `body` / `generator` / `is_async` reuse
+`FunctionParam` and `BlockStatement`, so a pass walking a function body does not
+care which form produced it. `is_async` serializes as JSON `"async"` per ESTree,
+and `id`/`cv` are omitted from the wire format when `None`.
+
+This is the **AST-node slice** of a bottom-up `FunctionExpression` rollout: the
+parser→typed-AST bridge (`javascript-parser` currently declines
+`function_expression` as `UnsupportedSyntax`), emitter printing, and pass
+traversal land in follow-on slices. Arrow functions, methods, getters/setters,
+and class expressions remain Phase 3.
+
 ## [0.13.0] - 2026-06-20
 
 ### Changed — CLOC24: `DebuggerStatement` doc reflects stripping

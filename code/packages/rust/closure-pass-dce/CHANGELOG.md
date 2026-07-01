@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.18.0] - 2026-07-01
+
+### Added — CLOC12.149: DCE inside `FunctionExpression` bodies
+
+`dce_expression` recurses into a `FunctionExpression` body via
+`dce_block_statement` (mirroring `dce_declaration` for a
+`FunctionDeclaration`), so dead code after a `return`/`throw` inside a
+function value is eliminated.
+
 ## [0.17.0] - 2026-07-01
 
 ### Added — upstream `UnreachableCodeEliminationTest.java` conformance port (#88, CLOC12.148)

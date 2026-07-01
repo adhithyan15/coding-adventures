@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.10.0] - 2026-07-01
+
+### Added — CLOC12.149: scope-analyze `FunctionExpression`
+
+Adds `walk_function_expression`, mirroring `walk_function_declaration`
+except a named function expression's name is **body-local** (bound inside
+the function's own scope for self-recursion, not the enclosing scope).
+Params become Param bindings in the function scope; the body is walked in
+that scope. Keeps renaming/inlining consumers sound over function values.
+
 ## [0.9.0] - 2026-06-20
 
 ### Added — CLOC23: scope analysis for `for`-`of`

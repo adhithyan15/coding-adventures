@@ -1199,6 +1199,20 @@ fn classify_expr(expr: &Expression, cls: &mut Classify) {
                 classify_expr(&prop.value, cls);
             }
         }
+        // Classify property accesses inside a function *value*'s body — a
+        // quoted `o["foo"]` written there must still DISABLE renaming of
+        // `foo`, so we cannot skip the body (that would risk an unsound
+        // rename). The fn's name/params are variable bindings, never
+        // property names, so they don't touch the property namespace.
+        // `nodes_touched` counts statements/declarations for stats only;
+        // `classify_expr` isn't threaded it, so a throwaway counter is
+        // used for the nested walk.
+        Expression::FunctionExpression(fe) => {
+            let mut nested = 0u32;
+            for s in &fe.body.body {
+                classify_stmt(s, cls, &mut nested);
+            }
+        }
     }
 }
 
@@ -1418,6 +1432,13 @@ fn rewrite_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                     }
                 }
                 rewrite_expr(&mut prop.value, map);
+            }
+        }
+        // Rewrite property accesses inside a function *value*'s body, the
+        // mirror of classifying them above.
+        Expression::FunctionExpression(fe) => {
+            for s in &mut fe.body.body {
+                rewrite_stmt(s, map);
             }
         }
     }
