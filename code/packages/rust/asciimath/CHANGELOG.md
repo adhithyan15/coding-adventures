@@ -2,6 +2,26 @@
 
 All notable changes to the AsciiMath pluggable frontend.
 
+## [0.10.0] — 2026-06-30
+
+### Added — comma-separated fences lower to `Sequence`
+
+- **`(a, b, c)` → `MathExpr::Sequence([a, b, c])`.** A single fence containing top-level
+  commas is now a LIST (a coordinate tuple, an argument list) instead of a parse error: each
+  item is parsed as a full relation and collected, mirroring the matrix row's cell loop (a
+  bounded loop, never recursion, so a wide list cannot overflow the stack). This is the
+  second frontend to emit the neutral `Sequence` node added in `math-frontend` 0.6.0 (after
+  `mathml`) — write-once-use-many across notations.
+- **A comma-free fence is unchanged** — `(x+1)` / `(a)` still lower to plain grouping (the
+  delimiters dropped, the inner expression returned). The matrix shape `((a,b),(c,d))`
+  (an outer bracket immediately followed by another opening bracket) is unaffected — it is
+  still handled by `parse_matrix` before this path. A trailing/doubled comma leaves a
+  non-atom before the next item and yields a clean spanned error (no panic).
+- **Capabilities** gain `sequences`, kept honest by the shared `check_frontend` harness (the
+  conformance corpus now includes `(a,b,c)`). Requires `math-frontend` >= 0.6.0.
+- 3 new tests (comma list, compound items, retained comma-free grouping) + a conformance
+  sample; the capability-honesty test asserts `sequences`.
+
 ## [0.9.0] — 2026-06-30
 
 ### Added — ASM01 PR-3c (the last remainder): greedy longest-match identifier scan

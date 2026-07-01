@@ -133,6 +133,13 @@ shapes for representative inputs.
   own lookup tables (one `is_keyword`, no drift). The operator words `xx`/`cdot`/`div` are part of
   that set so they are taken whole (else `cdot` would mis-split on the accent `dot`). Like real
   AsciiMath, a multi-letter *variable* that collides with a keyword must be quoted or spaced.
+- **PR-4 (shipped, v0.10.0):** **comma-separated fences → `Sequence`.** A single fence with
+  top-level commas — `(a, b, c)` — lowers to `MathExpr::Sequence([a, b, c])` (a coordinate
+  tuple / argument list) instead of a parse error; each item is a full relation, collected by a
+  bounded loop (never recursion). A comma-free fence is unchanged (plain grouping), and the
+  matrix shape `((a,b),(c,d))` is still handled first by `parse_matrix`. Enabled by
+  `math-frontend` 0.6.0's neutral `Sequence` node (first emitted by `mathml`); `capabilities()`
+  adds `sequences`, enforced by the conformance harness. The second frontend on the shared node.
 
 ## 6. Non-goals
 Evaluation, simplification, rendering — none are a frontend's job (PFE01 §7). Lowering

@@ -61,9 +61,11 @@ impl MathFrontend for AsciiMath {
         // (`hat x`/`bar y`/`vec v`/`dot x`/`ddot x`/`tilde a`/`ul x`, emitted as
         // `MathExpr::Accent` since math-frontend 0.4.0 grew the node) + `oversets`
         // (`overset(a)(b)`/`stackrel(a)(b)`/`underset(a)(b)`, emitted as
-        // `MathExpr::Overset`/`Underset` since math-frontend 0.5.0). `plusminus`/`binomials`
-        // are not part of AsciiMath's core spelling here. Declaring `implicit_mul` is a
-        // parser-behavior claim (juxtaposition ⇒ `Mul`) the goldens cover.
+        // `MathExpr::Overset`/`Underset` since math-frontend 0.5.0) + `sequences`
+        // (a comma-separated fence `(a, b, c)` → `MathExpr::Sequence` since math-frontend
+        // 0.6.0). `plusminus`/`binomials` are not part of AsciiMath's core spelling here.
+        // Declaring `implicit_mul` is a parser-behavior claim (juxtaposition ⇒ `Mul`) the
+        // goldens cover.
         Capabilities::none()
             .with_fractions()
             .with_roots()
@@ -76,6 +78,7 @@ impl MathFrontend for AsciiMath {
             .with_big_operators()
             .with_accents()
             .with_oversets()
+            .with_sequences()
     }
 }
 
@@ -315,6 +318,30 @@ mod tests {
     }
 
     #[test]
+    fn comma_separated_fence_is_a_sequence() {
+        // A single fence with commas is a LIST: `(a, b, c)` → Sequence([a, b, c]).
+        assert_eq!(p("(a,b,c)"), MathExpr::Sequence(vec![sym("a"), sym("b"), sym("c")]));
+        // The common coordinate-pair case.
+        assert_eq!(p("(x,y)"), MathExpr::Sequence(vec![sym("x"), sym("y")]));
+    }
+
+    #[test]
+    fn sequence_items_are_full_expressions() {
+        // Each item between commas is a full relation, not just a leaf.
+        assert_eq!(
+            p("(x+1,2)"),
+            MathExpr::Sequence(vec![b(BinOp::Add, sym("x"), num(1)), num(2)])
+        );
+    }
+
+    #[test]
+    fn comma_free_fence_is_still_plain_grouping() {
+        // No comma → ordinary grouping, unchanged (delimiters dropped, inner returned).
+        assert_eq!(p("(x+1)"), b(BinOp::Add, sym("x"), num(1)));
+        assert_eq!(p("(a)"), sym("a"));
+    }
+
+    #[test]
     fn det_of_a_matrix() {
         // det binds the matrix as its argument atom.
         assert_eq!(
@@ -404,6 +431,7 @@ mod tests {
         assert!(c.fractions && c.roots && c.powers && c.functions && c.relations && c.text && c.implicit_mul);
         assert!(c.matrices && c.big_operators); // PR-2 breadth
         assert!(c.accents); // PR-2b: hat/bar/vec/dot/ddot/tilde/ul
+        assert!(c.oversets && c.sequences); // overset/underset + comma-separated fence → Sequence
         assert!(!c.plusminus && !c.binomials); // not part of AsciiMath's core spelling
     }
 
@@ -502,6 +530,7 @@ mod tests {
                 "text(kg)",        // text(…) keyword form (PR-3c) — twin of "kg"
                 "overset(a)(b)",   // over-set annotation (PR-3c emitter) → MathExpr::Overset
                 "underset(a)(b)",  // under-set annotation → MathExpr::Underset
+                "(a,b,c)",         // comma-separated fence → MathExpr::Sequence
                 "1 +",   // error: trailing operator (span in range, not a panic)
                 "(x",    // error: missing close
                 "",      // error: empty
