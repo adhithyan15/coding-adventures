@@ -98,6 +98,9 @@ public sealed class CursorNotOpen(int cursorId) : VmError($"cursor {cursorId} is
 ///   <item>AVG:              <c>Acc</c> is the running sum; <c>Count</c> is the non-null count.</item>
 ///   <item>MIN / MAX:        <c>Acc</c> is the running extremum (null until first non-null).</item>
 /// </list>
+///
+/// When <see cref="Distinct"/> is true (e.g. COUNT(DISTINCT col)), the <see cref="Seen"/>
+/// set tracks which values have already been fed to the accumulator; duplicates are skipped.
 /// </summary>
 internal sealed class AggAccumulator
 {
@@ -105,11 +108,16 @@ internal sealed class AggAccumulator
     public object? Acc { get; set; }   // running sum / min / max
     public int Count { get; set; }     // running count of non-null inputs (or COUNT(*))
 
-    public AggAccumulator(AggFunc func)
+    // When non-null, duplicate values are filtered out before accumulation.
+    // Contains non-null values already seen for this slot/group.
+    public HashSet<object>? Seen { get; }  // null when Distinct is false
+
+    public AggAccumulator(AggFunc func, bool distinct)
     {
-        Func = func;
-        Acc = null;
+        Func  = func;
+        Acc   = null;
         Count = 0;
+        Seen  = distinct ? new HashSet<object>() : null;
     }
 }
 
@@ -570,7 +578,7 @@ public static class SqlVm
                     // Idempotent: if the slot already exists, leave it unchanged.
                     // The codegen emits InitAgg on every input row, so this is
                     // called many times per group; we only allocate once.
-                    EnsureAggSlot(st, ia.Slot, ia.Func);
+                    EnsureAggSlot(st, ia.Slot, ia.Func, ia.Distinct);
                     break;
 
                 case UpdateAgg ua:
@@ -856,11 +864,11 @@ public static class SqlVm
     /// in a group, allocate a fresh AggAccumulator. Subsequent calls are
     /// no-ops (we never reset once initialized).
     /// </summary>
-    private static void EnsureAggSlot(VmState st, int slot, AggFunc func)
+    private static void EnsureAggSlot(VmState st, int slot, AggFunc func, bool distinct = false)
     {
         var key = (st.CurrentGroupKey, slot);
         if (!st.AggTable.ContainsKey(key))
-            st.AggTable[key] = new AggAccumulator(func);
+            st.AggTable[key] = new AggAccumulator(func, distinct);
     }
 
     /// <summary>
@@ -876,6 +884,15 @@ public static class SqlVm
         var key = (st.CurrentGroupKey, slot);
         if (!st.AggTable.TryGetValue(key, out var agg))
             return; // InitAgg was not called — ignore (defensive)
+
+        // DISTINCT filtering: skip duplicate non-null values.
+        // NULL values are never added to the Seen set — they are simply skipped
+        // for aggregates that already ignore nulls (Count, Sum, Avg, Min, Max).
+        if (agg.Seen is not null)
+        {
+            if (value is null) return; // COUNT(DISTINCT col) ignores NULLs
+            if (!agg.Seen.Add(value))  return; // duplicate — skip
+        }
 
         switch (agg.Func)
         {
@@ -1244,6 +1261,12 @@ public static class SqlVm
             "HEX" when args.Length == 1 =>
                 args[0] is byte[] bytes ? (object)Convert.ToHexString(bytes).ToUpperInvariant() : null,
 
+            // CONCAT(a, b, ...) — string concatenation; NULL arg makes the whole result NULL
+            // (matches SQLite's || behaviour: NULL || 'x' is NULL).
+            "CONCAT" =>
+                args.Any(v => v is null) ? null
+                    : (object?)string.Concat(args.Select(v => v?.ToString() ?? "")),
+
             _ => null, // Unknown function — return NULL (lenient)
         };
     }
@@ -1325,20 +1348,34 @@ public static class SqlVm
                 var av = idx < a.Count ? a[idx] : null;
                 var bv = idx < b.Count ? b[idx] : null;
 
-                var cmp = CompareWithNulls(av, bv, key.NullsOrder);
+                var cmp = CompareForSort(av, bv, key.Direction, key.NullsOrder);
                 if (cmp != 0)
-                    return key.Direction == Direction.Desc ? -cmp : cmp;
+                    return cmp;
             }
             return 0;
         });
     }
 
-    private static int CompareWithNulls(object? a, object? b, NullsOrder nullsOrder)
+    // Compare two values for sorting, honouring direction and null placement.
+    //
+    // Key insight: NULLS FIRST / NULLS LAST is about POSITION IN THE OUTPUT, not
+    // about the numeric value of null.  So null placement must be applied BEFORE
+    // direction negation — if we want null first in DESC, we must not negate the
+    // null-placement signal.
+    //
+    // Algorithm:
+    //   1. If either value is null, return a fixed signal based on NullsOrder alone.
+    //   2. Both non-null: compare normally, then negate for DESC.
+    private static int CompareForSort(object? a, object? b, Direction dir, NullsOrder nullsOrder)
     {
+        // Null placement is absolute (independent of sort direction).
         if (a is null && b is null) return 0;
         if (a is null) return nullsOrder == NullsOrder.First ? -1 :  1;
         if (b is null) return nullsOrder == NullsOrder.First ?  1 : -1;
-        return SqlCompare(a, b);
+
+        // Both non-null: apply direction.
+        var cmp = SqlCompare(a, b);
+        return dir == Direction.Desc ? -cmp : cmp;
     }
 
     // ── Post-processing: limit/offset ──────────────────────────────────────────

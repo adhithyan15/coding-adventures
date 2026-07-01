@@ -5,9 +5,9 @@
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>CodingAdventures.MiniSqlite.CSharp</PackageId>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Authors>Adhithya Rajasekaran</Authors>
-    <Description>Level 0 in-memory mini-sqlite facade for C#</Description>
+    <Description>Level 1 in-memory mini-sqlite facade wiring the full sql-backend → sql-planner → sql-optimizer → sql-codegen → sql-vm pipeline</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
@@ -15,5 +15,13 @@
     <Compile Remove="tests\**\*.cs" />
     <EmbeddedResource Remove="tests\**" />
     <None Remove="tests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../csharp/sql-backend/CodingAdventures.SqlBackend.csproj" />
+    <ProjectReference Include="../../csharp/sql-planner/CodingAdventures.SqlPlanner.csproj" />
+    <ProjectReference Include="../../csharp/sql-optimizer/CodingAdventures.SqlOptimizer.csproj" />
+    <ProjectReference Include="../../csharp/sql-codegen/CodingAdventures.SqlCodegen.csproj" />
+    <ProjectReference Include="../../csharp/sql-vm/CodingAdventures.SqlVm.csproj" />
   </ItemGroup>
 </Project>
