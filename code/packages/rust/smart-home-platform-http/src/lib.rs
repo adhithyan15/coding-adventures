@@ -1460,13 +1460,15 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       const entries = filterRows(eventLog.events || [], filters);
       els.events.innerHTML = entries.map((entry) => {
         const event = entry.event || {};
+        const eventLinks = entry.links || {};
+        const eventDetailUrl = eventLinks.self || `/api/smart_home/events/${entry.sequence}`;
         return `
           <tr>
             <td>${entry.sequence}<br><span class="muted">next ${entry.next_sequence}</span></td>
             <td>${event.kind || "event"}</td>
             <td>${eventSubject(event)}</td>
             <td><span class="${statusClass(eventStatus(event))}">${eventStatus(event)}</span></td>
-            <td>${inspectButton(`/api/smart_home/events/${entry.sequence}`, "runtime event")}</td>
+            <td>${inspectButton(eventDetailUrl, "runtime event")}</td>
           </tr>
         `;
       }).join("") || `<tr><td colspan="5" class="muted">No runtime events</td></tr>`;
@@ -1476,14 +1478,17 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       const results = filterRows(audit.results || [], filters);
       els.commandResults.innerHTML = results.map((record) => {
         const result = record.result || {};
-        const detailUrl = `/api/smart_home/command_results/${encodeURIComponent(result.command_id || "")}`;
+        const resultLinks = result.links || {};
+        const recordLinks = record.links || {};
+        const detailUrl = recordLinks.self || resultLinks.self || `/api/smart_home/command_results/${encodeURIComponent(result.command_id || "")}`;
+        const eventUrl = recordLinks.event;
         return `
           <tr>
             <td>${result.command_id || "unknown"}<br><span class="muted">${result.correlation_id || ""}</span></td>
             <td><span class="${statusClass(result.status || "ok")}">${result.status || "unknown"}</span></td>
             <td>${result.bridge_id || ""}</td>
             <td>${record.sequence}</td>
-            <td>${result.command_id ? inspectButton(detailUrl, "command result") : ""}</td>
+            <td>${result.command_id ? inspectButton(detailUrl, "command result") : ""} ${eventUrl ? inspectButton(eventUrl, "command result event", "Event") : ""}</td>
           </tr>
         `;
       }).join("") || `<tr><td colspan="5" class="muted">No command results</td></tr>`;
@@ -1491,15 +1496,20 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
 
     const renderAuthorizationDecisions = (audit, filters) => {
       const decisions = filterRows(audit.decisions || [], filters);
-      els.authorizationDecisions.innerHTML = decisions.map((record) => `
-        <tr>
-          <td>${record.principal_id}<br><span class="muted">${observedText(record.decided_at_ms)}</span></td>
-          <td>${subjectText(record.subject)}</td>
-          <td><span class="${statusClass(record.outcome || "ok")}">${record.outcome}</span></td>
-          <td>${record.required_tier}</td>
-          <td>${inspectButton(`/api/smart_home/authorization_decisions/${record.decision_index}`, "authorization decision")} ${inspectButton(principalCapabilityGrantsUrl(record.principal_id), "principal grants", "Grants")}</td>
-        </tr>
-      `).join("") || `<tr><td colspan="5" class="muted">No authorization decisions</td></tr>`;
+      els.authorizationDecisions.innerHTML = decisions.map((record) => {
+        const links = record.links || {};
+        const detailUrl = links.self || `/api/smart_home/authorization_decisions/${record.decision_index}`;
+        const grantsUrl = links.principal_grants || principalCapabilityGrantsUrl(record.principal_id);
+        return `
+          <tr>
+            <td>${record.principal_id}<br><span class="muted">${observedText(record.decided_at_ms)}</span></td>
+            <td>${subjectText(record.subject)}</td>
+            <td><span class="${statusClass(record.outcome || "ok")}">${record.outcome}</span></td>
+            <td>${record.required_tier}</td>
+            <td>${inspectButton(detailUrl, "authorization decision")} ${inspectButton(grantsUrl, "principal grants", "Grants")} ${links.subject_command_result ? inspectButton(links.subject_command_result, "subject command result", "Command") : ""}</td>
+          </tr>
+        `;
+      }).join("") || `<tr><td colspan="5" class="muted">No authorization decisions</td></tr>`;
     };
 
     const renderCapabilityGrants = (audit, filters) => {
@@ -5303,10 +5313,109 @@ fn runtime_event_summary_json(summary: &smart_home_runtime::RuntimeEventLogSumma
 
 fn runtime_event_entry_json(entry: &RuntimeEventLogEntry<'_>) -> String {
     format!(
-        "{{\"sequence\":{},\"next_sequence\":{},\"event\":{}}}",
+        "{{\"sequence\":{},\"next_sequence\":{},\"links\":{},\"event\":{}}}",
         entry.sequence,
         entry.next_checkpoint.next_sequence(),
+        runtime_event_links_json(entry),
         runtime_event_json(entry.event),
+    )
+}
+
+fn runtime_event_links_json(entry: &RuntimeEventLogEntry<'_>) -> String {
+    let event = entry.event;
+    let (entity, bridge, state_history_event, command_result, correlation_commands) = match event {
+        RuntimeEvent::Device(event) => (
+            event
+                .entity_id
+                .as_ref()
+                .map(|entity_id| audit_entity_links_json(entity_id)),
+            Some(format!(
+                "/api/smart_home/bridges/{}",
+                url_component(event.bridge_id.as_str())
+            )),
+            Some(format!(
+                "/api/smart_home/state_history/{}",
+                url_component(event.event_id.as_str())
+            )),
+            None,
+            event.correlation_id.as_ref().map(|correlation_id| {
+                format!(
+                    "/api/smart_home/command_results?correlation_id={}",
+                    correlation_id.as_str()
+                )
+            }),
+        ),
+        RuntimeEvent::CommandResult(result) => (
+            None,
+            Some(format!(
+                "/api/smart_home/bridges/{}",
+                url_component(result.bridge_id.as_str())
+            )),
+            None,
+            Some(format!(
+                "/api/smart_home/command_results/{}",
+                result.command_id.as_str()
+            )),
+            Some(format!(
+                "/api/smart_home/command_results?correlation_id={}",
+                result.correlation_id.as_str()
+            )),
+        ),
+        RuntimeEvent::BridgeHealth { bridge_id, .. } => (
+            None,
+            Some(format!(
+                "/api/smart_home/bridges/{}",
+                url_component(bridge_id.as_str())
+            )),
+            None,
+            None,
+            None,
+        ),
+        RuntimeEvent::StateExpired { entity_id, .. } => (
+            Some(audit_entity_links_json(entity_id)),
+            None,
+            None,
+            None,
+            None,
+        ),
+        RuntimeEvent::DesiredStateDrift {
+            bridge_id,
+            entity_id,
+            ..
+        } => (
+            Some(audit_entity_links_json(entity_id)),
+            Some(format!(
+                "/api/smart_home/bridges/{}",
+                url_component(bridge_id.as_str())
+            )),
+            None,
+            None,
+            None,
+        ),
+        RuntimeEvent::WorkerNeedsRestart { bridge_id, .. } => (
+            None,
+            Some(format!(
+                "/api/smart_home/bridges/{}",
+                url_component(bridge_id.as_str())
+            )),
+            None,
+            None,
+            None,
+        ),
+    };
+
+    format!(
+        "{{\"self\":{},\"event_window\":{},\"entity\":{},\"bridge\":{},\"state_history_event\":{},\"command_result\":{},\"command_results_by_correlation\":{}}}",
+        json_string(format!("/api/smart_home/events/{}", entry.sequence)),
+        json_string(format!(
+            "/api/smart_home/events?from_sequence={}&to_sequence={}",
+            entry.sequence, entry.sequence
+        )),
+        entity.unwrap_or_else(|| "null".to_string()),
+        optional_link_json(bridge),
+        optional_link_json(state_history_event),
+        optional_link_json(command_result),
+        optional_link_json(correlation_commands),
     )
 }
 
@@ -5419,10 +5528,34 @@ fn command_results_audit_json(
 
 fn command_result_record_json(record: &RuntimeCommandResultRecord) -> String {
     format!(
-        "{{\"sequence\":{},\"next_sequence\":{},\"result\":{}}}",
+        "{{\"sequence\":{},\"next_sequence\":{},\"links\":{},\"result\":{}}}",
         record.sequence,
         record.next_checkpoint.next_sequence(),
+        command_result_record_links_json(record),
         command_result_json(&record.result),
+    )
+}
+
+fn command_result_record_links_json(record: &RuntimeCommandResultRecord) -> String {
+    format!(
+        "{{\"self\":{},\"event\":{},\"event_window\":{},\"command_results_by_correlation\":{},\"command_results_by_bridge\":{}}}",
+        json_string(format!(
+            "/api/smart_home/command_results/{}",
+            record.result.command_id.as_str()
+        )),
+        json_string(format!("/api/smart_home/events/{}", record.sequence)),
+        json_string(format!(
+            "/api/smart_home/events?from_sequence={}&to_sequence={}",
+            record.sequence, record.sequence
+        )),
+        json_string(format!(
+            "/api/smart_home/command_results?correlation_id={}",
+            record.result.correlation_id.as_str()
+        )),
+        json_string(format!(
+            "/api/smart_home/command_results?bridge_id={}",
+            url_component(record.result.bridge_id.as_str())
+        )),
     )
 }
 
@@ -5882,7 +6015,7 @@ fn authorization_decision_summary_json(
 fn authorization_decision_record_json(record: &AuthorizationDecisionRecord<'_>) -> String {
     let decision = record.decision;
     format!(
-        "{{\"decision_index\":{},\"principal_id\":{},\"subject\":{},\"outcome\":{},\"required_tier\":{},\"required_capabilities\":[{}],\"matched_grants\":[{}],\"missing_capabilities\":[{}],\"decided_at_ms\":{}}}",
+        "{{\"decision_index\":{},\"principal_id\":{},\"subject\":{},\"outcome\":{},\"required_tier\":{},\"required_capabilities\":[{}],\"matched_grants\":[{}],\"missing_capabilities\":[{}],\"decided_at_ms\":{},\"links\":{}}}",
         record.decision_index,
         json_string(decision.principal_id.as_str()),
         authorization_subject_json(&decision.subject),
@@ -5892,6 +6025,56 @@ fn authorization_decision_record_json(record: &AuthorizationDecisionRecord<'_>) 
         json_id_array(decision.matched_grants.iter().map(|id| id.as_str())),
         json_id_array(decision.missing_capabilities.iter().map(|id| id.as_str())),
         decision.decided_at_ms,
+        authorization_decision_links_json(record),
+    )
+}
+
+fn authorization_decision_links_json(record: &AuthorizationDecisionRecord<'_>) -> String {
+    let decision = record.decision;
+    let (subject_entity, subject_command_result, subject_authorization) = match &decision.subject {
+        AuthorizationSubject::Tool(_) => (None, None, None),
+        AuthorizationSubject::Command {
+            command_id,
+            entity_id,
+            command_type,
+        } => (
+            Some(audit_entity_links_json(entity_id)),
+            Some(format!(
+                "/api/smart_home/command_results/{}",
+                command_id.as_str()
+            )),
+            Some(format!(
+                "/api/smart_home/command_authorization?entity_id={}&command_type={}",
+                url_component(entity_id.as_str()),
+                url_component(command_type_label(*command_type))
+            )),
+        ),
+    };
+
+    format!(
+        "{{\"self\":{},\"principal_grants\":{},\"matched_grants\":[{}],\"subject_entity\":{},\"subject_command_result\":{},\"subject_authorization\":{}}}",
+        json_string(format!(
+            "/api/smart_home/authorization_decisions/{}",
+            record.decision_index
+        )),
+        json_string(format!(
+            "/api/smart_home/capability_grants?principal_id={}&status=active",
+            decision.principal_id.as_str()
+        )),
+        decision
+            .matched_grants
+            .iter()
+            .map(|grant_id| {
+                json_string(format!(
+                    "/api/smart_home/capability_grants/{}",
+                    grant_id.as_str()
+                ))
+            })
+            .collect::<Vec<_>>()
+            .join(","),
+        subject_entity.unwrap_or_else(|| "null".to_string()),
+        optional_link_json(subject_command_result),
+        optional_link_json(subject_authorization),
     )
 }
 
@@ -8672,7 +8855,7 @@ fn service_call_json(
 
 fn command_result_json(result: &CommandResult) -> String {
     format!(
-        "{{\"command_id\":{},\"status\":{},\"bridge_id\":{},\"correlation_id\":{},\"message\":{}}}",
+        "{{\"command_id\":{},\"status\":{},\"bridge_id\":{},\"correlation_id\":{},\"message\":{},\"links\":{}}}",
         json_string(result.command_id.as_str()),
         json_string(command_status_label(result.status)),
         json_string(result.bridge_id.as_str()),
@@ -8682,6 +8865,25 @@ fn command_result_json(result: &CommandResult) -> String {
             .as_ref()
             .map(json_string)
             .unwrap_or_else(|| "null".to_string()),
+        command_result_links_json(result),
+    )
+}
+
+fn command_result_links_json(result: &CommandResult) -> String {
+    format!(
+        "{{\"self\":{},\"command_results_by_correlation\":{},\"command_results_by_bridge\":{}}}",
+        json_string(format!(
+            "/api/smart_home/command_results/{}",
+            result.command_id.as_str()
+        )),
+        json_string(format!(
+            "/api/smart_home/command_results?correlation_id={}",
+            result.correlation_id.as_str()
+        )),
+        json_string(format!(
+            "/api/smart_home/command_results?bridge_id={}",
+            url_component(result.bridge_id.as_str())
+        )),
     )
 }
 
@@ -9335,6 +9537,22 @@ fn optional_str_json(value: Option<&str>) -> String {
     value.map(json_string).unwrap_or_else(|| "null".to_string())
 }
 
+fn optional_link_json(value: Option<String>) -> String {
+    value.map(json_string).unwrap_or_else(|| "null".to_string())
+}
+
+fn audit_entity_links_json(entity_id: &EntityId) -> String {
+    let entity = url_component(entity_id.as_str());
+    format!(
+        "{{\"self\":{},\"state\":{},\"desired_state\":{},\"state_history\":{},\"events\":{}}}",
+        json_string(format!("/api/smart_home/entities/{entity}")),
+        json_string(format!("/api/smart_home/states/{entity}")),
+        json_string(format!("/api/smart_home/desired_states?entity_id={entity}")),
+        json_string(format!("/api/smart_home/state_history?entity_id={entity}")),
+        json_string(format!("/api/smart_home/events?entity_id={entity}")),
+    )
+}
+
 fn shell_single_quote(value: &str) -> String {
     format!("'{}'", value.replace('\'', "'\"'\"'"))
 }
@@ -9797,6 +10015,14 @@ mod tests {
             assert!(body.contains(
                 "/api/smart_home/command_results?correlation_id=${encodeURIComponent(correlationId)}"
             ));
+            assert!(body.contains("const eventLinks = entry.links || {}"));
+            assert!(body.contains("const eventDetailUrl = eventLinks.self ||"));
+            assert!(body.contains("const resultLinks = result.links || {}"));
+            assert!(body.contains("const recordLinks = record.links || {}"));
+            assert!(body.contains("const eventUrl = recordLinks.event"));
+            assert!(body.contains("const links = record.links || {}"));
+            assert!(body.contains("const grantsUrl = links.principal_grants ||"));
+            assert!(body.contains("links.subject_command_result"));
             assert!(body.contains("stateDetailUrl(entity)"));
             assert!(body.contains("entityDetailUrl(entity)"));
             assert!(body.contains("entityDesiredStateUrl(entity)"));
@@ -9950,9 +10176,29 @@ mod tests {
             .expect("command result exposes correlation_id");
 
         let command_detail_path = format!("/api/smart_home/command_results/{command_id}");
+        let command_correlation_path =
+            format!("/api/smart_home/command_results?correlation_id={command_correlation_id}");
+        assert_eq!(
+            command_results_json["results"][0]["links"]["self"].as_str(),
+            Some(command_detail_path.as_str())
+        );
+        assert_eq!(
+            command_results_json["results"][0]["links"]["event"].as_str(),
+            Some("/api/smart_home/events/0")
+        );
+        assert_eq!(
+            command_results_json["results"][0]["links"]["event_window"].as_str(),
+            Some("/api/smart_home/events?from_sequence=0&to_sequence=0")
+        );
+        assert_eq!(
+            command_results_json["results"][0]["result"]["links"]["command_results_by_correlation"]
+                .as_str(),
+            Some(command_correlation_path.as_str())
+        );
         let command_detail = response_body(app.handle(request("GET", &command_detail_path)).into());
         assert!(command_detail.contains(r#""sequence":0"#));
         assert!(command_detail.contains(&format!(r#""command_id":"{command_id}""#)));
+        assert!(command_detail.contains(r#""event":"/api/smart_home/events/0""#));
 
         let by_command_id = response_body(
             app.handle(request(
@@ -10087,6 +10333,11 @@ mod tests {
         );
         assert!(event_detail.contains(r#""sequence":0"#));
         assert!(event_detail.contains(r#""kind":"command_result""#));
+        assert!(event_detail
+            .contains(r#""event_window":"/api/smart_home/events?from_sequence=0&to_sequence=0""#));
+        assert!(event_detail.contains(&format!(
+            r#""command_result":"/api/smart_home/command_results/{command_id}""#
+        )));
 
         let missing_event: web_core::WebResponse = app
             .handle(request("GET", "/api/smart_home/events/999"))
@@ -10112,6 +10363,9 @@ mod tests {
         assert!(decisions.contains(r#""principal_id":"agent:home-assistant-local-api""#));
         assert!(decisions.contains(r#""kind":"command""#));
         assert!(decisions.contains(r#""decision_index":"#));
+        assert!(decisions.contains(r#""principal_grants":"/api/smart_home/capability_grants?principal_id=agent:home-assistant-local-api&status=active""#));
+        assert!(decisions.contains(r#""subject_command_result":"/api/smart_home/command_results/"#));
+        assert!(decisions.contains(r#""subject_authorization":"/api/smart_home/command_authorization?entity_id=entity-light-1&command_type=turn_on""#));
         let decisions_json: JsonValue =
             serde_json::from_str(&decisions).expect("authorization decisions response is JSON");
         let decision_index = decisions_json["decisions"][0]["decision_index"]
@@ -10134,6 +10388,9 @@ mod tests {
             response_body(app.handle(request("GET", &decision_detail_path)).into());
         assert!(decision_detail.contains(&format!(r#""decision_index":{decision_index}"#)));
         assert!(decision_detail.contains(r#""principal_id":"agent:home-assistant-local-api""#));
+        assert!(decision_detail.contains(&format!(
+            r#""self":"/api/smart_home/authorization_decisions/{decision_index}""#
+        )));
 
         let missing_decision: web_core::WebResponse = app
             .handle(request(

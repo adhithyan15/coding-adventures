@@ -23,6 +23,10 @@ All notable changes to this package will be documented in this file.
 - Added a read-only service authorization preview route and browser dashboard
   Auth action so Home Assistant service calls can show their expanded command
   grants before dispatching commands.
+- Added runtime audit-row links on event-log entries, command-result records,
+  and authorization decisions so local-controller clients can pivot between
+  command, event, grant, state-history, and policy detail routes without
+  rebuilding endpoint paths.
 - Added browser dashboard action feedback that renders accepted command,
   scene, and desired-state mutation responses with command-result and
   desired-state readback links in the detail panel.
