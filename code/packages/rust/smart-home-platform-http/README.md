@@ -53,6 +53,7 @@ stable local API responses for:
 - `/api/smart_home/command_authorization`
 - `/api/smart_home/desired_state_authorization`
 - `/api/smart_home/scene_authorization`
+- `/api/smart_home/service_authorization/:domain/:service`
 - `/api/smart_home/authorization_decisions/:decision_index`
 - `/api/smart_home/desired_states`
 - `POST /api/smart_home/desired_states/:entity_id`
@@ -240,6 +241,7 @@ curl 'http://127.0.0.1:8123/api/smart_home/command_results?sort=status_then_newe
 curl 'http://127.0.0.1:8123/api/smart_home/command_authorization?entity_id=light.entity_light_1&command_type=turn_on'
 curl 'http://127.0.0.1:8123/api/smart_home/desired_state_authorization?entity_id=light.entity_light_1&operation=set'
 curl 'http://127.0.0.1:8123/api/smart_home/desired_state_authorization?entity_id=light.entity_light_1&operation=clear'
+curl 'http://127.0.0.1:8123/api/smart_home/service_authorization/light/turn_on?entity_id=light.entity_light_1&brightness_pct=75'
 curl 'http://127.0.0.1:8123/api/smart_home/capability_grants?principal_id=agent:home-assistant-local-api&status=active'
 curl 'http://127.0.0.1:8123/api/smart_home/capability_grants/grant:agent:home-assistant-local-api:local-api-full-access'
 curl 'http://127.0.0.1:8123/api/smart_home/authorization_decisions?principal_id=agent:home-assistant-local-api&sort=oldest_first'
