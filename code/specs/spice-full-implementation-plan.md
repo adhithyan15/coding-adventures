@@ -33,36 +33,40 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card actions.
+1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menus.
    - Status: current PR completion candidate.
    - Add schema-versioned Rust app shell dashboard dispatch-queue lane-tab
-     panel-card-action surfaces and JSON helpers that project queued, blocked,
-     and attention dispatch queue lane-tab panel cards into stable action
-     descriptors with active-action routing, attention-action routing,
-     enabled/disabled/empty action counts, compact labels, targets, disabled
-     reasons, card links, panel links, tab links, lane links, and
-     lane-tab-panel-card-actions capability metadata for first-render
-     product-shell navigation.
+     panel-card-action-menu surfaces and JSON helpers that project queued,
+     blocked, and attention dispatch queue lane-tab panel card actions into
+     stable menu items with active-item routing, attention-item routing,
+     default-item routing, enabled/disabled/empty/primary/selected/attention
+     item counts, positions, action links, disabled reasons, card links, panel
+     links, tab links, lane links, and lane-tab-panel-card-action-menu
+     capability metadata for first-render product-shell menus.
    - Preserve package name, source fingerprint, ready/blocked route, status
      severity, attention-required flag, active lane ID, active tab ID,
      active panel ID, active panel-card ID, active panel-card action ID,
-     attention lane ID, attention tab ID, attention panel ID,
-     attention panel-card ID, attention panel-card action ID,
+     active menu item ID, attention lane ID, attention tab ID, attention panel
+     ID, attention panel-card ID, attention panel-card action ID, attention
+     menu item ID, default menu item ID, primary menu item ID,
      lane count, tab count, enabled tab count, disabled tab count, panel count,
      enabled panel count, disabled panel count, empty panel count, panel-card
      count, enabled panel-card count, disabled panel-card count, empty
      panel-card count, panel-card action count, enabled panel-card action
      count, disabled panel-card action count, empty panel-card action count,
-     primary panel-card action count, per-action selected, default, active,
-     attention, disabled, empty, enabled, primary, label, target, summary,
-     disabled-reason, and badge-count fields, dispatch-queue capability ID,
-     dispatch-queue summary capability ID, dispatch-queue digest capability ID,
-     dispatch-queue lanes capability ID, dispatch-queue lane-tabs capability
-     ID, dispatch-queue lane-tab-panels capability ID, dispatch-queue
-     lane-tab-panel-cards capability ID, dispatch-queue
-     lane-tab-panel-card-actions capability ID, and advertised capability count
-     so Mosaic, WebAssembly, and product shells can append compact lane card
-     actions without walking every queue item.
+     primary panel-card action count, menu item count, enabled menu item count,
+     disabled menu item count, empty menu item count, primary menu item count,
+     selected menu item count, attention menu item count, per-menu-item
+     action ID, selected, default, active, attention, disabled, empty, enabled,
+     primary, label, target, summary, position, disabled-reason, and
+     badge-count fields, dispatch-queue capability ID, dispatch-queue summary
+     capability ID, dispatch-queue digest capability ID, dispatch-queue lanes
+     capability ID, dispatch-queue lane-tabs capability ID, dispatch-queue
+     lane-tab-panels capability ID, dispatch-queue lane-tab-panel-cards
+     capability ID, dispatch-queue lane-tab-panel-card-actions capability ID,
+     dispatch-queue lane-tab-panel-card-action-menu capability ID, and
+     advertised capability count so Mosaic, WebAssembly, and product shells can
+     append compact lane card action menus without walking every queue item.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -2075,6 +2079,37 @@ the Rust, Python, and TypeScript surfaces together.
      capability ID, dispatch-queue lane-tab-panel-cards capability ID, and
      advertised capability count so Mosaic, WebAssembly, and product shells
      can append compact lane card navigation without walking every queue item.
+
+176. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card actions.
+   - Status: completed in PR 7257.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell dashboard dispatch-queue lane-tab panel-card-action surfaces
+     plus JSON helpers that project queued, blocked, and attention dispatch
+     queue lane-tab panel cards into stable action descriptors with
+     active-action routing, attention-action routing, enabled/disabled/empty
+     action counts, compact labels, targets, disabled reasons, card links,
+     panel links, tab links, lane links, and lane-tab-panel-card-actions
+     capability metadata for first-render product-shell navigation.
+   - The dispatch-queue lane-tab panel card actions payload preserves package
+     name, source fingerprint, ready/blocked route, status severity,
+     attention-required flag, active lane ID, active tab ID, active panel ID,
+     active panel-card ID, active panel-card action ID, attention lane ID,
+     attention tab ID, attention panel ID, attention panel-card ID, attention
+     panel-card action ID, lane count, tab count, enabled tab count, disabled
+     tab count, panel count, enabled panel count, disabled panel count, empty
+     panel count, panel-card count, enabled panel-card count, disabled
+     panel-card count, empty panel-card count, panel-card action count,
+     enabled panel-card action count, disabled panel-card action count, empty
+     panel-card action count, primary panel-card action count, per-action
+     selected, default, active, attention, disabled, empty, enabled, primary,
+     label, target, summary, disabled-reason, and badge-count fields,
+     dispatch-queue capability ID, dispatch-queue summary capability ID,
+     dispatch-queue digest capability ID, dispatch-queue lanes capability ID,
+     dispatch-queue lane-tabs capability ID, dispatch-queue lane-tab-panels
+     capability ID, dispatch-queue lane-tab-panel-cards capability ID,
+     dispatch-queue lane-tab-panel-card-actions capability ID, and advertised
+     capability count so Mosaic, WebAssembly, and product shells can append
+     compact lane card actions without walking every queue item.
 
 ## Backlog
 
