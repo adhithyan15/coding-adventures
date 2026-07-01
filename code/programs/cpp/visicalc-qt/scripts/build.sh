@@ -51,12 +51,26 @@ SRC="$REPO_ROOT/code/programs/mosaic/visicalc"
 OUT_DIR="$DEMO_DIR/build"
 mkdir -p "$OUT_DIR"
 
-echo "Compiling FormulaBar (Qt / QML)..."
+echo "Compiling FormulaBar — desktop layout (Qt / QML)..."
 "$MOSAIC_COMPILE" --backend qt \
   --interface "$SRC/FormulaBar.mil" \
   --layout    "$SRC/FormulaBar.desktop.mll" \
   --style     "$SRC/FormulaBar.dark.msl" \
   -o "$OUT_DIR/FormulaBar.qml"
+
+echo "Compiling FormulaBar — touch layout (Qt / QML)..."
+# UI30 touch variant: FormulaBar.touch.mll stacks the address label ABOVE a
+# full-width input (Column) instead of the desktop Row. Same .mil interface,
+# same slot/emit wiring — only the spatial arrangement differs, so main.qml can
+# swap FormulaBar <-> FormulaBarTouch at runtime against the identical model
+# contract (the UI30 "one component, many layouts" invariant). We emit it as
+# FormulaBarTouch.qml because a QML component's type name is its file basename,
+# and both variants must coexist in the `qml` module.
+"$MOSAIC_COMPILE" --backend qt \
+  --interface "$SRC/FormulaBar.mil" \
+  --layout    "$SRC/FormulaBar.touch.mll" \
+  --style     "$SRC/FormulaBar.dark.msl" \
+  -o "$OUT_DIR/FormulaBarTouch.qml"
 
 echo "Compiling Grid (Qt / QML)..."
 # UI34 — Grid is now generated from the shared visicalc/mosaic/

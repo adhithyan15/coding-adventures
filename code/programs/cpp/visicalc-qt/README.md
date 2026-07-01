@@ -84,6 +84,26 @@ are `Q_INVOKABLE`, so a windowed QML grid (rendering only the visible rectangle
 of an unbounded sheet, the Qt sibling of the web/SwiftUI infinite views) binds
 to them directly.
 
+### The touch FormulaBar layout (`FormulaBarTouch.qml`)
+
+The **Touch bar** button (shown in classic-grid mode) swaps the formula bar
+between two layouts generated from the *same* `FormulaBar.mil` interface:
+
+- **Desktop** (`FormulaBar.desktop.mll` → `FormulaBar.qml`): a `RowLayout` —
+  the cell-address label sits to the **left** of the input.
+- **Touch** (`FormulaBar.touch.mll` → `FormulaBarTouch.qml`): a `ColumnLayout` —
+  the address label stacks **above** a full-width input, the arrangement that
+  fits a phone-width viewport.
+
+`scripts/build.sh` emits both QML files (the touch one as `FormulaBarTouch.qml`
+because a QML type name is its file basename), `qml/qmldir` registers both, and
+`main.qml` mounts both bound to the same `model` + shared `commitFormula()` /
+`cancelFormula()` handlers — only one is `visible` at a time. This is the UI30
+"one component, many layouts, identical host contract" invariant made a runtime
+toggle: the native analogue of the web demo's `touch.html`, which pivots the
+same `FormulaBar.touch.mll` to `flex-direction: column`. Editing behaves
+identically in both — the layout is the only thing that changes.
+
 ### The scrollable infinite GUI (`InfiniteSheet.qml`)
 
 The **Infinite sheet** button in the running app toggles from the classic 5×5
