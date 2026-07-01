@@ -2,6 +2,27 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.47.0] — 2026-06-30
+
+### Added — rung 14 batch 2: three-way tie abstention (top THREE co-equal)
+
+- **`rung14_indeterminate_decision/items.json` grows 24 → 48** (`r14id-25`..`r14id-48`): a second
+  abstention family that widens batch-1's two-way dead heat to a **three-way** tie. Three diagnoses of
+  a genuine three-way differential are made exactly co-equal at the top (each finding carries the same
+  likelihood ratio, `5`), so the engine still returns a `kickback` (its reason names the top two,
+  which are tied) and the gold is the "insufficient information to distinguish" option. The paired
+  **determinate control** is a crowded field: three findings fire but one is stronger (`12` vs `8`,
+  `8`), so a unique leader survives and the gold is that diagnosis.
+- Verified against the live CLI that the decision engine commits on **any** positive margin — even a
+  likelihood ratio of `100` vs `99` is `determinate` — so there is no "near-tie" band to exploit;
+  only an exact tie abstains. Batch 2 therefore widens the tie (two → three), it does not narrow the
+  margin. Reuses the batch-1 `kickback → tie_label` harness hook, so **no harness/engine change**.
+- 12 three-way-differential scenarios (microcytic anemia; dementia; thrombocytopenia; hyponatremia;
+  AKI; hypercalcemia; Cushing source; hyperthyroid uptake; infectious diarrhea; crystal/septic
+  arthritis; chest pain; jaundice) × 2 items (tie + determinate). Contamination-safe (priors/LRs
+  printed; answer categorical; identifiers digit-free); gold rotates A–E; the three tied findings are
+  asserted distinct at build. Engine **48/48** cached; full ladder suite / ruff / items-valid clean.
+
 ## [0.46.0] — 2026-06-30
 
 ### Added — rung 15: fractional excretion of urea (the FENa sibling for the diuretic patient)
