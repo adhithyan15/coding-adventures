@@ -4,16 +4,56 @@ All notable changes to `semantic-ir-to-javascript` are documented here.
 
 ## Unreleased
 
-### Changed
-
-- Compile-compat stub arms for the new core `semantic-ir` variants
-  `ParamKind::Keyword` / `Expr::KeywordArg` (KW1). A single `Keyword` param
-  emits as a best-effort trailing positional (combined with `KwRest`);
-  `emit_expr` follows the crate's deferred-node convention (positioned
-  panic). Real keyword-parameter support is pending KW2–KW8.
-
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## 0.4.0 — KW4 (keyword-parameter & argument emission)
+
+Replaces the KW1 compile-compat stubs with **real** keyword-parameter and
+keyword-argument emission.  JavaScript has no native keyword-argument call
+form, so — exactly as the TypeScript backend does (spec §4) — keyword
+constructs lower to a zero-dependency **options object**.  No runtime
+library is required; the lowering is direct.
+
+### Added
+
+- `accepts_features()` now declares `KeywordParams` (mirrors `DefaultParams`).
+- **Def side.** A function's `Keyword` params (`def f(a:)` / `def f(a: 1)`)
+  are folded into a single trailing options-object parameter `__kw`; the
+  body prologue destructures it: `const { b, c = <default> } = __kw ?? {};`.
+  A **required** keyword (`Keyword`, `default: None`) destructures bare; an
+  **optional** keyword (`Keyword`, `default: Some(e)`) carries a JS
+  destructuring default `name = <e>`, which fires on `undefined` exactly
+  like SIR optional-keyword semantics.  The `?? {}` guard lets an
+  all-optional callee be called with no options object.  When a keyword
+  name is not a valid JS identifier, the prologue emits the explicit
+  `{ "raw key": sanitized_local }` rename form so the object key still
+  matches the call site.  `__kw` is collision-safe: `sanitize_ident` never
+  produces a leading `__`, so no user parameter can sanitize to it.
+- **Call side.** In a call's `args`, positionals emit as before and every
+  `Expr::KeywordArg` collapses into one trailing object literal:
+  `f(1, b: 2, c: 3)` → `f(1, { b: 2, c: 3 })`; a call with only keyword
+  args → `f({ b: 2 })`; none → no trailing object.  `IndirectCall` routes
+  the same object as the last element of its argument array.  The object
+  key is the raw keyword `name`, matching the callee's destructuring
+  prologue.  A new `emit_call_args` helper drives both call sites.
+
+### Changed
+
+- The `emit_expr` `KeywordArg` arm is now a pure defensive panic: keyword
+  args are peeled off by `emit_call_args` before recursion, so reaching
+  that arm signals a backend bug rather than a deferred feature.
+
+### Tests
+
+- Emitted-shape unit tests: trailing `__kw` object + destructuring
+  prologue (required & optional keywords), keyword-only function, call-side
+  object collapse (positional+keyword, keyword-only, none), and the
+  `IndirectCall` object placement.
+- Execution-proof through `node` (skips gracefully if absent):
+  `add(5)` defaults the omitted keyword to 10 (→15) and
+  `add(5, delta: 100)` supplies it (→105); a required-keyword call
+  `pick(chosen: 7)` returns 7.
 
 ## 0.3.0 — P2d (default-parameter emission)
 

@@ -59,7 +59,7 @@
 use std::cell::Cell;
 use std::fmt::Write;
 
-use semantic_ir::{Block, Expr, Function, Global, Module, ParamKind, Scope, Stmt};
+use semantic_ir::{Block, Expr, Function, Global, Module, Param, ParamKind, Scope, Stmt};
 
 use crate::runtime::RUNTIME;
 
@@ -152,14 +152,32 @@ fn emit_function(out: &mut String, f: &Function) {
         first = false;
         out.push_str(&sanitize_ident(&c.name));
     }
+    // JavaScript has no native keyword-argument call form, so `Keyword`
+    // params (`def f(a:)` / `def f(a: 1)`) are lowered — exactly as the
+    // TypeScript backend does (spec §4) — to a single trailing
+    // **options-object** parameter (`__kw`).  The individual keyword names
+    // are recovered in the body prologue by destructuring that object (see
+    // `emit_keyword_prologue`).  So here we emit every *non-keyword* param
+    // in the signature and, iff the function declares any keyword params, a
+    // final `__kw`.
+    //
+    // Why `__kw` is collision-safe: like the backend's other synthetic
+    // names (`__Sir`, `__l`, `__sir_stop_*`), it relies on the convention
+    // that SIR-source identifiers do not begin with the `__` runtime
+    // prefix — `sanitize_ident` never *produces* a leading `__` (it prefixes
+    // `_$`), so no user parameter can sanitize to `__kw`.
+    let has_keyword_params = f.params.iter().any(|p| p.kind == ParamKind::Keyword);
     for p in &f.params {
-        if !first {
-            out.push_str(", ");
-        }
-        first = false;
         match p.kind {
+            // Keyword params are not emitted positionally; they are folded
+            // into the single trailing `__kw` object emitted after the loop.
+            ParamKind::Keyword => continue,
             // `*rest` → native JS rest parameter.
             ParamKind::Rest => {
+                if !first {
+                    out.push_str(", ");
+                }
+                first = false;
                 out.push_str("...");
                 out.push_str(&sanitize_ident(&p.name));
             }
@@ -167,13 +185,11 @@ fn emit_function(out: &mut String, f: &Function) {
             // v0 binds it as a trailing ordinary parameter — but this
             // backend does not accept the features that produce KwRest
             // yet, so in practice only `Required` is reached here.
-            // KW1 compile-compat stub: a single `Keyword` param has no native
-            // JS form (JS has no keyword-argument call), so mirror the
-            // `KwRest` best-effort — emit it as a trailing ordinary parameter.
-            // Real keyword-param support lands in KW2–KW6; the validator
-            // rejects `Feature::KeywordParams` until then, so this arm is
-            // unreachable today.
-            ParamKind::Required | ParamKind::KwRest | ParamKind::Keyword => {
+            ParamKind::Required | ParamKind::KwRest => {
+                if !first {
+                    out.push_str(", ");
+                }
+                first = false;
                 out.push_str(&sanitize_ident(&p.name));
                 // P2d: a defaulted param (`Param { default: Some(e) }`)
                 // becomes a native JS default parameter `name = <e>`.
@@ -192,9 +208,70 @@ fn emit_function(out: &mut String, f: &Function) {
             }
         }
     }
+    if has_keyword_params {
+        if !first {
+            out.push_str(", ");
+        }
+        out.push_str("__kw");
+    }
     out.push_str(") {\n");
+    if has_keyword_params {
+        emit_keyword_prologue(out, &f.params, 2);
+    }
     emit_function_body(out, &f.body, 2);
     out.push_str("}\n");
+}
+
+/// Emit the body prologue that unpacks the trailing `__kw` options object
+/// into the function's keyword-param locals (KW4).
+///
+/// For `def f(a, b:, c: 1)` this emits, at the top of the body:
+///
+/// ```js
+///   const { b, c = 1 } = __kw ?? {};
+/// ```
+///
+/// - A **required** keyword (`Keyword`, `default == None`) destructures to a
+///   bare `name` — the validator has already guaranteed the caller supplied
+///   it, so the key is always present.
+/// - An **optional** keyword (`Keyword`, `default == Some(e)`) destructures
+///   with a JS default `name = <e>`, which fills in when the caller omits
+///   the key (property is `undefined`).  JS destructuring defaults fire on
+///   `undefined` exactly like SIR optional-keyword semantics.
+/// - The `?? {}` guard means a callee with only optional keywords still
+///   works when the caller passes no options object at all (`f(1)`).
+///
+/// The **object key** is the raw source `name` (it must match the key the
+/// call site writes); the **bound local** is `sanitize_ident(name)`.  When
+/// they differ we emit the explicit `{ key: local }` rename form.
+fn emit_keyword_prologue(out: &mut String, params: &[Param], indent: usize) {
+    let pad = " ".repeat(indent);
+    let _ = write!(out, "{pad}const {{ ");
+    let mut first = true;
+    for p in params.iter().filter(|p| p.kind == ParamKind::Keyword) {
+        if !first {
+            out.push_str(", ");
+        }
+        first = false;
+        let local = sanitize_ident(&p.name);
+        if local == p.name {
+            // Shorthand `{ name }` / `{ name = default }` — key and binding
+            // coincide because the source name is already a valid JS ident.
+            out.push_str(&local);
+        } else {
+            // Rename `{ "raw key": local }` — the object key stays the raw
+            // source name so it lines up with the call site, but the local
+            // binding is the sanitized identifier.
+            out.push_str(&quote_js_string(&p.name));
+            out.push_str(": ");
+            out.push_str(&local);
+        }
+        if let Some(default) = &p.default {
+            out.push_str(" = ");
+            emit_expr(out, default, indent);
+        }
+    }
+    out.push_str(" } = __kw ?? {};\n");
 }
 
 /// Emit a block as a **function body** — a flat statement list followed
@@ -412,7 +489,7 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         // closure defaults are unchanged / deferred.
         Expr::DirectCall { fn_name, args, .. } => {
             let _ = write!(out, "{}(", sanitize_ident(fn_name));
-            emit_args(out, args, indent);
+            emit_call_args(out, args, indent);
             out.push(')');
         }
         // `__Sir.applyClosure(target, [args…])` — invokes a first-class
@@ -421,7 +498,7 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             out.push_str("__Sir.applyClosure(");
             emit_expr(out, target, indent);
             out.push_str(", [");
-            emit_args(out, args, indent);
+            emit_call_args(out, args, indent);
             out.push_str("])");
         }
         Expr::BuiltinCall { name, args, .. } => emit_builtin_call(out, name, args, indent),
@@ -509,13 +586,14 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 "emit reached an Intrinsic `{name}` at {span} — backend should have rejected it"
             );
         }
-        // KW1 compile-compat stub: keyword arguments (`f(a: 1)`) are gated
-        // behind `Feature::KeywordParams`, rejected at the capability check
-        // until real support lands in KW2–KW6.  Follow this crate's deferred
-        // -node convention (see `StrConcat` above): a positioned panic
-        // covering backend bugs only.  No real emission yet.
+        // A keyword argument (`f(a: 1)`) is **not** a first-class value: the
+        // validator guarantees it appears only inside a call's `args` vec,
+        // and `emit_call_args` peels every `KeywordArg` off into the trailing
+        // options object *before* recursing into `emit_expr`.  Reaching this
+        // arm therefore means a backend bug (a `KeywordArg` somewhere it was
+        // never meant to be), so we panic with the offending span.
         Expr::KeywordArg { span, .. } => {
-            panic!("javascript backend reached a deferred `KeywordArg` at {span} — not accepted yet (real support pending KW2–KW6)");
+            panic!("javascript backend reached a `KeywordArg` outside call-argument position at {span} — this is a backend bug (keyword args are collapsed by emit_call_args)");
         }
     }
 }
@@ -547,6 +625,70 @@ fn emit_args(out: &mut String, args: &[Expr], indent: usize) {
             out.push_str(", ");
         }
         emit_expr(out, a, indent);
+    }
+}
+
+/// Emit a **call**'s argument list (KW4), splitting positional args from
+/// keyword args.
+///
+/// A call's `args` vec holds positionals first, then zero or more
+/// `Expr::KeywordArg` (the validator enforces this ordering and rejects
+/// duplicate keyword names).  JavaScript has no keyword-call syntax, so —
+/// mirroring the def-side `__kw` options object and the TypeScript backend
+/// (spec §4) — every `KeywordArg` collapses into a single trailing object
+/// literal:
+///
+/// ```text
+///   f(1, a: 2, b: 3)   →   f(1, { a: 2, b: 3 })
+///   f(1)               →   f(1)                    // no keyword args → no object
+///   f(a: 2)            →   f({ a: 2 })
+/// ```
+///
+/// The object key is the raw keyword `name` — the exact string the callee's
+/// destructuring prologue (`emit_keyword_prologue`) reads — so the two sides
+/// line up regardless of identifier sanitisation.
+fn emit_call_args(out: &mut String, args: &[Expr], indent: usize) {
+    // Positionals are every arg that is not a keyword.  Because the
+    // validator forbids a positional after a keyword, this is exactly the
+    // leading run of the vec; a `filter` is equivalent and order-preserving.
+    let positionals = args.iter().filter(|a| !matches!(a, Expr::KeywordArg { .. }));
+    let mut wrote_any = false;
+    for a in positionals {
+        if wrote_any {
+            out.push_str(", ");
+        }
+        wrote_any = true;
+        emit_expr(out, a, indent);
+    }
+
+    let mut first_kw = true;
+    for a in args {
+        if let Expr::KeywordArg { name, value, .. } = a {
+            if first_kw {
+                // Open the single trailing options object, preceded by a
+                // comma iff any positional args were already written.
+                if wrote_any {
+                    out.push_str(", ");
+                }
+                out.push_str("{ ");
+                first_kw = false;
+            } else {
+                out.push_str(", ");
+            }
+            // `key: value`.  A raw source name that is a valid JS ident can
+            // be a bare property key; otherwise quote it.  Either form is
+            // read back identically by the destructuring prologue.
+            if is_valid_js_ident(name) {
+                out.push_str(name);
+            } else {
+                out.push_str(&quote_js_string(name));
+            }
+            out.push_str(": ");
+            emit_expr(out, value, indent);
+        }
+    }
+    if !first_kw {
+        out.push_str(" }");
     }
 }
 
@@ -1527,6 +1669,132 @@ mod tests {
             span: s(),
         };
         assert_eq!(emit_e(&dc), "f(5)");
+    }
+
+    // ── KW4: keyword parameters & arguments ───────────────────────
+
+    fn kw_param(name: &str, default: Option<Expr>) -> Param {
+        Param {
+            name: name.into(),
+            sir_type: None,
+            kind: ParamKind::Keyword,
+            default: default.map(Box::new),
+            span: s(),
+        }
+    }
+
+    fn req_param(name: &str) -> Param {
+        Param { name: name.into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() }
+    }
+
+    #[test]
+    fn emit_keyword_params_become_trailing_options_object() {
+        // def f(a, b:, c: 1)  →
+        //   function f(a, __kw) { const { b, c = 1 } = __kw ?? {}; … }
+        // `b` (no default) destructures bare; `c` (default 1) carries a JS
+        // destructuring default; both fold into the single trailing `__kw`.
+        let f = fun(
+            "f",
+            vec![req_param("a"), kw_param("b", None), kw_param("c", Some(int(1)))],
+            Block {
+                stmts: vec![],
+                value: Expr::VarRef { name: "b".into(), scope: Scope::Param, span: s() },
+                span: s(),
+            },
+        );
+        let mut out = String::new();
+        emit_function(&mut out, &f);
+        assert!(out.contains("function f(a, __kw) {"), "signature: {out}");
+        assert!(out.contains("const { b, c = 1 } = __kw ?? {};"), "prologue: {out}");
+    }
+
+    #[test]
+    fn emit_keyword_only_function_has_no_positional_params() {
+        // def f(x:)  →  function f(__kw) { const { x } = __kw ?? {}; … }
+        // A required keyword with no positionals: `__kw` is the *only*
+        // parameter, and `x` destructures without a default.
+        let f = fun(
+            "f",
+            vec![kw_param("x", None)],
+            Block {
+                stmts: vec![],
+                value: Expr::VarRef { name: "x".into(), scope: Scope::Param, span: s() },
+                span: s(),
+            },
+        );
+        let mut out = String::new();
+        emit_function(&mut out, &f);
+        assert!(out.contains("function f(__kw) {"), "signature: {out}");
+        assert!(out.contains("const { x } = __kw ?? {};"), "prologue: {out}");
+    }
+
+    #[test]
+    fn emit_function_without_keyword_params_has_no_kw_object() {
+        // A function with only positionals must be byte-for-byte unchanged:
+        // no `__kw` param, no destructuring prologue.
+        let f = fun(
+            "g",
+            vec![req_param("a")],
+            Block { stmts: vec![], value: int(0), span: s() },
+        );
+        let mut out = String::new();
+        emit_function(&mut out, &f);
+        assert!(out.contains("function g(a) {"), "got {out}");
+        assert!(!out.contains("__kw"), "no options object expected: {out}");
+    }
+
+    /// Build a `KeywordArg` call-argument.
+    fn kw_arg(name: &str, value: Expr) -> Expr {
+        Expr::KeywordArg { name: name.into(), value: Box::new(value), span: s() }
+    }
+
+    #[test]
+    fn emit_call_collapses_keyword_args_into_trailing_object() {
+        // f(1, b: 2, c: 3)  →  f(1, { b: 2, c: 3 })
+        let dc = Expr::DirectCall {
+            fn_name: "f".into(),
+            args: vec![int(1), kw_arg("b", int(2)), kw_arg("c", int(3))],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        assert_eq!(emit_e(&dc), "f(1, { b: 2, c: 3 })");
+    }
+
+    #[test]
+    fn emit_call_with_only_keyword_args_has_no_leading_comma() {
+        // f(a: 2)  →  f({ a: 2 })  — no positionals, so no leading comma.
+        let dc = Expr::DirectCall {
+            fn_name: "f".into(),
+            args: vec![kw_arg("a", int(2))],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        assert_eq!(emit_e(&dc), "f({ a: 2 })");
+    }
+
+    #[test]
+    fn emit_call_without_keyword_args_emits_no_object() {
+        // f(1, 2)  →  f(1, 2)  — plain positional call, unchanged.
+        let dc = Expr::DirectCall {
+            fn_name: "f".into(),
+            args: vec![int(1), int(2)],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        assert_eq!(emit_e(&dc), "f(1, 2)");
+    }
+
+    #[test]
+    fn emit_indirect_call_keyword_args_go_into_the_arg_array() {
+        // Closure application routes args through `[…]`; the keyword object
+        // is the last element of that array: applyClosure(t, [1, { b: 2 }]).
+        let ic = Expr::IndirectCall {
+            target: Box::new(Expr::VarRef { name: "t".into(), scope: Scope::Local, span: s() }),
+            args: vec![int(1), kw_arg("b", int(2))],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        assert_eq!(emit_e(&ic), "__Sir.applyClosure(t, [1, { b: 2 }])");
     }
 
     #[test]
