@@ -4,7 +4,7 @@
 // and asserts the values are engine-computed and recompute on edit.
 //
 // Run (after scripts/build.sh has vendored native/libspreadsheet_capi.*):
-//   cd demo/visicalc-xaml && bash scripts/verify.sh
+//   cd code/programs/csharp/visicalc-xaml && bash scripts/verify.sh
 // or directly:
 //   CAPI_LIB=$PWD/native/libspreadsheet_capi.dylib dotnet run --project test
 

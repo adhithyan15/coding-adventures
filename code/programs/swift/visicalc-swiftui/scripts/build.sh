@@ -9,14 +9,14 @@
 # the package and mounts the view inside a VStack.
 #
 # UI34 rewire — Grid is now also generated through the pipeline
-# from the shared `demo/visicalc/mosaic/Grid.{mil,desktop.mll,dark.msl}`
+# from the shared `code/programs/mosaic/visicalc/Grid.{mil,desktop.mll,dark.msl}`
 # triple.  Grid.desktop.mll is a UI34 `pkg::mosaic-pkg-grid::Grid`
 # one-liner; we pass --package-search-path so the resolver
 # substitutes the package's full composition before the SwiftUI
 # emitter runs.
 #
 # Usage:
-#   cd demo/visicalc-swiftui
+#   cd code/programs/swift/visicalc-swiftui
 #   bash scripts/build.sh
 #
 # Then to actually run the app (Swift 5.9+ / Xcode 15+ required):

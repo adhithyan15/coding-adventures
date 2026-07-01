@@ -16,7 +16,7 @@
 # eventual auto-generated Grid widget should look like.
 #
 # Usage:
-#   cd demo/visicalc-flutter
+#   cd code/programs/dart/visicalc-flutter
 #   bash scripts/build.sh
 #
 # Then to actually run the app (Flutter SDK required):

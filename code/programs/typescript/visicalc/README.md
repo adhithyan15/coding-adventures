@@ -10,7 +10,7 @@ sources in [`mosaic/`](mosaic/); the only hand-written code lives in
 ## What's here
 
 ```
-demo/visicalc/
+code/programs/typescript/visicalc/
   mosaic/
     Grid.mil              — interface (slots + emits) for the spreadsheet grid
     Grid.desktop.mll      — desktop layout (pass-through to the Grid primitive)
@@ -37,7 +37,7 @@ repo; they're regenerated on demand from the source files in
 `mosaic-compile` if needed and invokes it twice (once per component):
 
 ```bash
-cd demo/visicalc
+cd code/programs/typescript/visicalc
 bash scripts/build.sh
 # Writes: src/components/Grid.tsx, src/components/FormulaBar.tsx
 ```
@@ -45,7 +45,7 @@ bash scripts/build.sh
 ## How to run the demo
 
 ```bash
-cd demo/visicalc
+cd code/programs/typescript/visicalc
 npm install
 npm run dev       # rebuilds components then starts Vite at http://localhost:5174
 ```

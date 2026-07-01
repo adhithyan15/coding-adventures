@@ -3,7 +3,7 @@
 // Mounts a *generated* `FormulaBar` composable (from
 // `src/main/kotlin/generated/FormulaBar.kt`, produced by
 // `mosaic-compile --backend compose` against
-// `demo/visicalc/mosaic/FormulaBar.{mil,desktop.mll,dark.msl}`)
+// `code/programs/mosaic/visicalc/FormulaBar.{mil,desktop.mll,dark.msl}`)
 // above a hand-written 5×5 grid.  Both surface and dispatch shape
 // match what every sibling backend ships.
 //

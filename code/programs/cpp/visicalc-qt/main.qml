@@ -3,7 +3,7 @@
 //
 // Mounts the auto-generated `FormulaBar` and `Grid` components from build/.
 // Both come from `bash scripts/build.sh`, which runs `mosaic-compile --backend
-// qt` against the shared `demo/visicalc/mosaic/{FormulaBar,Grid}.*` triples.
+// qt` against the shared `code/programs/mosaic/visicalc/{FormulaBar,Grid}.*` triples.
 // No hand-written widgets in this file.
 //
 // The grid's DATA comes from `model.viewportRows` — `model` is the C++

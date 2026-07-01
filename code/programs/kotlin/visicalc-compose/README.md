@@ -11,7 +11,7 @@ backend on the one engine.
 
 A `Window` (from `androidx.compose.ui.window`) mounting the auto-generated
 `FormulaBar` and `Grid` composables (`src/main/kotlin/generated/`, produced by
-`mosaic-compile --backend compose` from the shared `demo/visicalc/mosaic/*`
+`mosaic-compile --backend compose` from the shared `code/programs/mosaic/visicalc/*`
 sources).
 
 - The grid renders **engine-computed** values: the classic cross-footing budget
@@ -149,7 +149,7 @@ sheet.
 #### Visual design
 
 `InfiniteSheet.kt` mirrors the **reference visual language** defined by the web
-demo (`demo/visicalc-html/infinite.html`) so every VisiCalc backend reads as one
+demo (`code/programs/typescript/visicalc-html/infinite.html`) so every VisiCalc backend reads as one
 considered dark, modern-spreadsheet surface — the same token set the Qt and
 Flutter ports use. The palette lives in a small set of `Color` design tokens at
 the top of the file (`BG`/`PANEL`/`SURFACE`/`LINE`/`INK`/`MUTED`/`ACCENT`…),
@@ -210,7 +210,7 @@ binding mechanism differs (FFM on the JVM, JNI on Android).
 ## File tree
 
 ```
-demo/visicalc-compose/
+code/programs/kotlin/visicalc-compose/
 ├── README.md                     ← this file
 ├── BUILD                          ← `gradle run` from the build-tool
 ├── .gitignore                     ← .gradle/, .gradle-out/, build/, native/, …

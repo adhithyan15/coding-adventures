@@ -17,7 +17,7 @@
      and the column-letter header follows the body's horizontal pan.
 
      Visually this mirrors the reference design language from the web demo
-     (demo/visicalc-html/infinite.html) — a dark, modern-spreadsheet surface built
+     (code/programs/typescript/visicalc-html/infinite.html) — a dark, modern-spreadsheet surface built
      from a small set of color tokens: an address pill + `fx` marker + a formula
      field with an accent focus ring, segmented tool-button groups, zebra row
      banding, a 2px accent selection ring with accent-tinted row/col headers, and a

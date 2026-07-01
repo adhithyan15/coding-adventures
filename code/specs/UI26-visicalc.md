@@ -794,7 +794,7 @@ export function cellKey(row: number, col: number): string {
 ## 10. Demo app directory structure
 
 ```
-demo/visicalc/
+code/programs/typescript/visicalc/
   package.json
   tsconfig.json
   vite.config.ts

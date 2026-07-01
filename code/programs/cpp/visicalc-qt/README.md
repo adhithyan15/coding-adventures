@@ -10,7 +10,7 @@ proof that the one-engine-everywhere architecture reaches C++.
 
 - An auto-generated `FormulaBar.qml` and `Grid.qml`
   (`build/`, produced by `mosaic-compile --backend qt` from the shared
-  `demo/visicalc/mosaic/*` sources — the same triples the React, HTML,
+  `code/programs/mosaic/visicalc/*` sources — the same triples the React, HTML,
   WebComponent, and SwiftUI demos consume).
 - The grid renders **engine-computed** values: the classic cross-footing budget
   where column E totals each row, row 5 totals each column, and E5 is the grand
@@ -130,7 +130,7 @@ is derived from `usedRange()` plus a margin.
 #### Visual design
 
 `InfiniteSheet.qml` mirrors the **reference visual language** defined by the web
-demo (`demo/visicalc-html/infinite.html`) so every VisiCalc backend reads as one
+demo (`code/programs/typescript/visicalc-html/infinite.html`) so every VisiCalc backend reads as one
 considered dark, modern-spreadsheet surface. The palette lives in a small set of
 `readonly property color` design tokens at the top of the file (`cBg`/`cPanel`/
 `cSurface`/`cLine`/`cInk`/`cMuted`/`cAccent`…), echoing the web demo's CSS custom

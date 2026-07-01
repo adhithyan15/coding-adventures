@@ -13,7 +13,7 @@
 # exists.
 #
 # Usage:
-#   cd demo/visicalc-xaml && bash scripts/verify.sh
+#   cd code/programs/csharp/visicalc-xaml && bash scripts/verify.sh
 
 set -euo pipefail
 

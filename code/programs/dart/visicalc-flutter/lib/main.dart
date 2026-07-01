@@ -2,7 +2,7 @@
 //
 // Mounts the auto-generated `FormulaBar` AND `Grid` widgets, both
 // produced by `mosaic-compile --backend flutter` from the shared
-// `demo/visicalc/mosaic/{FormulaBar,Grid}.{mil,desktop.mll,dark.msl}`
+// `code/programs/mosaic/visicalc/{FormulaBar,Grid}.{mil,desktop.mll,dark.msl}`
 // triples.  Grid.desktop.mll is a UI34
 // `pkg::mosaic-pkg-grid::Grid` one-liner, so the widget's structure
 // comes from the authoritative `mosaic-pkg-grid` composition.  No

@@ -423,7 +423,7 @@ struct InfiniteGridView: View {
     static let headH: CGFloat = 28
 
     // ── Design tokens ──────────────────────────────────────────────────
-    // Mirror demo/visicalc-html/infinite.html's palette so every VisiCalc backend
+    // Mirror code/programs/typescript/visicalc-html/infinite.html's palette so every VisiCalc backend
     // reads as one considered surface (dark modern spreadsheet). Same token set as
     // the Qt / Flutter / Compose / XAML ports.
     private let cBg = Color(hex: 0x16181D) // app / base cell

@@ -20,9 +20,9 @@ webcomponent|swiftui|qt|flutter` now works in pipeline mode:
 
 ```
 mosaic-compile --backend html \
-  --interface demo/visicalc/mosaic/FormulaBar.mil \
-  --layout    demo/visicalc/mosaic/FormulaBar.desktop.mll \
-  --style     demo/visicalc/mosaic/FormulaBar.dark.msl \
+  --interface code/programs/mosaic/visicalc/FormulaBar.mil \
+  --layout    code/programs/mosaic/visicalc/FormulaBar.desktop.mll \
+  --style     code/programs/mosaic/visicalc/FormulaBar.dark.msl \
   -o FormulaBar.html
 ```
 
@@ -67,8 +67,8 @@ the resolved file path. This keeps the diff small and the
 backwards-compatibility surface narrow.
 
 Smoke verified end-to-end against the VisiCalc sources:
-- `--layout demo/visicalc/mosaic/FormulaBar.desktop.mll` (file
-  mode) and `--layout demo/visicalc/mosaic/ --variant desktop`
+- `--layout code/programs/mosaic/visicalc/FormulaBar.desktop.mll` (file
+  mode) and `--layout code/programs/mosaic/visicalc/ --variant desktop`
   (directory mode) produce **byte-identical** `.tsx` output.
 - Fallback path: a tempdir with only `FormulaBar.mll` (no
   `.touch.mll`) compiles cleanly with `--variant touch`,

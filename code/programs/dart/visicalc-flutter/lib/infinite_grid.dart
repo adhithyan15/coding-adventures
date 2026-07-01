@@ -38,7 +38,7 @@ const double _gutterW = 64;
 const double _headH = 28;
 
 // ── Design tokens ──────────────────────────────────────────────────────────
-// Mirror demo/visicalc-html/infinite.html's palette so every VisiCalc backend
+// Mirror code/programs/typescript/visicalc-html/infinite.html's palette so every VisiCalc backend
 // reads as one considered surface (dark modern spreadsheet). Same token set as
 // the Qt InfiniteSheet.qml port.
 const _cBg = Color(0xFF16181D); // app / base cell

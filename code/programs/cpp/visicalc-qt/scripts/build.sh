@@ -17,7 +17,7 @@
 #      demo's Vendor/.
 #
 # Usage:
-#   cd demo/visicalc-qt
+#   cd code/programs/cpp/visicalc-qt
 #   bash scripts/build.sh
 #
 # Then build & run. The engine-backed binary is the real demo:

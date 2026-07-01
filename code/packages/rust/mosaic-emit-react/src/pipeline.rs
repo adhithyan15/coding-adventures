@@ -511,7 +511,7 @@ pub fn from_pipeline(
     // primitives (text / number / bool / list of those), `React` is
     // never referenced — emitting the import unconditionally would
     // trip TypeScript's `noUnusedLocals` rule in strict-mode hosts
-    // (such as the VisiCalc demo at demo/visicalc/tsconfig.json).
+    // (such as the VisiCalc demo at code/programs/typescript/visicalc/tsconfig.json).
     //
     // The modern JSX transform (`"jsx": "react-jsx"`) auto-imports
     // the `jsx`/`jsxs` helpers from `react/jsx-runtime`, so JSX
@@ -617,7 +617,7 @@ fn emit_event_union(component: &str, emits: &[EmitDecl]) -> Result<String, Pipel
     // `import type { GridEvent } from "./Grid"` directly instead of
     // re-declaring the same shape inline. Before this change, the
     // emitter wrote a non-exported `type ...` declaration and hosts
-    // (such as the VisiCalc demo at demo/visicalc/src/app/state.ts)
+    // (such as the VisiCalc demo at code/programs/typescript/visicalc/src/app/state.ts)
     // had to carry a hand-maintained copy of the event-union shape
     // — drift between the two was a real risk.
     if emits.is_empty() {
@@ -4268,7 +4268,7 @@ mod tests {
 
     /// Event-union types are emitted with `export` so hosts can import them
     /// directly from the generated component file rather than redeclaring
-    /// the shape. See `demo/visicalc/README.md` Known Limitation #2.
+    /// the shape. See `code/programs/typescript/visicalc/README.md` Known Limitation #2.
     #[test]
     fn event_union_is_exported() {
         let m = component("Grid", vec![], vec![emit("onNavigate", vec![])]);

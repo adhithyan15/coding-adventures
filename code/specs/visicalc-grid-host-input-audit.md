@@ -12,7 +12,7 @@
 ## 1. What the plan asked
 
 VC1 (already shipped, #4078) migrated
-`demo/visicalc/mosaic/FormulaBar.desktop.mll` from the legacy
+`code/programs/mosaic/visicalc/FormulaBar.desktop.mll` from the legacy
 `Input` primitive (UI25) to the kernel-canonical `HostInput`
 (UI29 §2.1). The migration was a one-token rename with
 byte-identical generated React output.

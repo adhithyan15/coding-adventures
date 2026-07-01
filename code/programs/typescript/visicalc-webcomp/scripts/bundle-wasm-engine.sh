@@ -16,7 +16,7 @@
 # is missing we build it.
 #
 # Usage:
-#   cd demo/visicalc-html && bash scripts/bundle-wasm-engine.sh
+#   cd code/programs/typescript/visicalc-html && bash scripts/bundle-wasm-engine.sh
 # Tooling comes from mise; run via `mise exec -- bash scripts/...` if needed.
 
 set -euo pipefail

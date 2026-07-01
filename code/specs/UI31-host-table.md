@@ -300,7 +300,7 @@ PRs. Each gets its own branch and PR:
 | L2     | `feat/ui31-k-react`                         | mosaic-emit-react: `HostTable*` → real `<table>`. Includes a11y + RTL gates. |
 | L3     | `feat/ui31-g-kernel-primitives`             | Add 6 names to `moslayout-compiler::PRIMITIVES` and `mosaic-package-resolver::KERNEL_PRIMITIVES`. Kernel grows 21 → 27. |
 | L4-L9  | `feat/ui31-k-{html,webcomp,flutter,qt,swiftui,xaml}` | One PR per remaining backend, same shape as L2. |
-| L10    | `feat/visicalc-grid-to-host-table`          | Rewrite `demo/visicalc/mosaic/Grid.{desktop,touch}.mll` to compose from `HostTable*` primitives instead of the built-in `Grid`. |
+| L10    | `feat/visicalc-grid-to-host-table`          | Rewrite `code/programs/mosaic/visicalc/Grid.{desktop,touch}.mll` to compose from `HostTable*` primitives instead of the built-in `Grid`. |
 | L11    | `feat/visicalc-demos-strip-handwritten-grids` | Replace the hand-written grid blocks in every VC2-* demo with mounts of the now-correctly-generated Grid component. |
 
 The cycle's order intentionally puts L2 (React) before L3 (kernel

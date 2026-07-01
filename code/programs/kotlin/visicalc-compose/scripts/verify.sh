@@ -13,7 +13,7 @@
 # Run scripts/build.sh first so native/libspreadsheet_capi.* exists.
 #
 # Usage:
-#   cd demo/visicalc-compose && bash scripts/verify.sh
+#   cd code/programs/kotlin/visicalc-compose && bash scripts/verify.sh
 
 set -euo pipefail
 

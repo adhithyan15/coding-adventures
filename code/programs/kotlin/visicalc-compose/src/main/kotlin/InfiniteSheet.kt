@@ -22,7 +22,7 @@
 // LazyColumn.
 //
 // Visually this mirrors the reference design language from the web demo
-// (demo/visicalc-html/infinite.html) — a dark, modern-spreadsheet surface built
+// (code/programs/typescript/visicalc-html/infinite.html) — a dark, modern-spreadsheet surface built
 // from a small set of color tokens: an address pill + `fx` marker + a formula
 // field with an accent focus ring, segmented tool-button groups, zebra row
 // banding, a 2px accent selection ring with accent-tinted row/col headers, and a
@@ -82,7 +82,7 @@ private val GUTTER_W = 64.dp
 private val HEAD_H = 28.dp
 
 // ── Design tokens ───────────────────────────────────────────────────────────
-// Mirror demo/visicalc-html/infinite.html's palette so every VisiCalc backend
+// Mirror code/programs/typescript/visicalc-html/infinite.html's palette so every VisiCalc backend
 // reads as one considered surface (dark modern spreadsheet). Same token set as
 // the Qt InfiniteSheet.qml / Flutter infinite_grid.dart ports.
 private val BG = Color(0xFF16181D) // app / base cell

@@ -12,7 +12,7 @@
 # it is launched from.
 #
 # Usage:
-#   cd demo/visicalc-flutter
+#   cd code/programs/dart/visicalc-flutter
 #   bash scripts/run-macos.sh            # debug build
 #   bash scripts/run-macos.sh --release  # release build
 set -euo pipefail

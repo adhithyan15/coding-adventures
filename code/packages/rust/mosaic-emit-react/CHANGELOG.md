@@ -444,10 +444,10 @@ spec-promised follow-up is closed.
 - When the prop is absent (existing demos), no `<colgroup>` is emitted,
   preserving the previous flex-default behaviour.
 - Two new tests cover both branches.
-- The VisiCalc demo (`demo/visicalc/mosaic/Grid.mil` and
+- The VisiCalc demo (`code/programs/mosaic/visicalc/Grid.mil` and
   `Grid.desktop.mll`) was updated to declare and bind the slot, and
   `App.tsx` now passes `state.columnWidths` through. Resolves known
-  limitation #5 in `demo/visicalc/README.md`.
+  limitation #5 in `code/programs/typescript/visicalc/README.md`.
 
 ### Changed — event-union types are now exported
 
@@ -455,7 +455,7 @@ spec-promised follow-up is closed.
   (and `export type {Component}Event = never` in the empty-emit case)
   so host applications can `import type { GridEvent } from "./Grid"`
   directly instead of redeclaring the event-union shape inline. The
-  VisiCalc demo (`demo/visicalc/src/app/state.ts`) previously carried a
+  VisiCalc demo (`code/programs/typescript/visicalc/src/app/state.ts`) previously carried a
   hand-maintained copy of `GridEvent` and `FormulaBarEvent` for exactly
   this reason; it now imports them from the generated component files.
 - Two new tests assert the `export` keyword is emitted in both the

@@ -1302,7 +1302,7 @@ impl RootShape {
 /// inside a UserControl and then shown via ShowAsync(); the parented
 /// child can't be re-parented for the modal popup.
 ///
-/// Discovered in `demo/hello-dialog-xaml/ISSUES.md` A1.
+/// Discovered in `code/programs/csharp/hello-dialog-xaml/ISSUES.md` A1.
 fn pick_root_shape(root: &LayoutNode) -> RootShape {
     match root.tag.as_str() {
         "HostDialog" => RootShape::ContentDialog,
@@ -2032,7 +2032,7 @@ fn emit_divider(
 /// `"spinner"`) the lowering switches to the WinUI-native widget that
 /// expresses that semantic â€” `<ProgressRing IsActive="True"/>` for
 /// `"spinner"`.  This is X5 Path A from
-/// `demo/toolkit-multi-demo/ISSUES.md`: Segoe Fluent has no glyph
+/// `code/programs/csharp/toolkit-multi-demo/ISSUES.md`: Segoe Fluent has no glyph
 /// literally named `"spinner"`, and even if it did, `FontIcon` only
 /// renders a static character â€” the toolkit's `Spinner` component
 /// wants the animated spinning ring that `ProgressRing` provides.
@@ -2835,7 +2835,7 @@ fn emit_bool_to_vis_resource_block(indent: usize, resources_tag: &str) -> String
 /// sibling file in `XamlEmitResult::if_helpers` whenever the
 /// generator wrote `{StaticResource BoolToVisibilityConverter}` into
 /// the XAML (any `If` use, or any HostDialog with bound `open`). Fix
-/// A5 from `demo/hello-dialog-xaml/ISSUES.md`.
+/// A5 from `code/programs/csharp/hello-dialog-xaml/ISSUES.md`.
 ///
 /// Implements `IValueConverter` with optional `ConverterParameter`
 /// support: passing `"invert"` flips the boolean before converting

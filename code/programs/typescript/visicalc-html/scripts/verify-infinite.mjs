@@ -17,7 +17,7 @@
 // a browser does) is out of scope, and render() is a direct transcription of
 // these computations into DOM nodes.
 //
-// Run:  node demo/visicalc-html/scripts/verify-infinite.mjs
+// Run:  node code/programs/typescript/visicalc-html/scripts/verify-infinite.mjs
 
 import { readFileSync } from "node:fs";
 import vm from "node:vm";

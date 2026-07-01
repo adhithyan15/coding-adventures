@@ -185,7 +185,7 @@ userland component references.
 * **UI28-1 v0.2.0 (this release)**: complete the Cell-and-Column
   composition — full header row, nested-For body, per-cell
   predicates, stable iteration keys. **Done.**
-* **U29-D1**: migrate `demo/visicalc/mosaic/Grid.{desktop,touch}.mll`
+* **U29-D1**: migrate `code/programs/mosaic/visicalc/Grid.{desktop,touch}.mll`
   to reference this package's `Grid` (replacing the local degraded
   HostTable composition the L10 migration shipped). Next.
 * **U29-X1**: remove the legacy `Grid` built-in primitive from

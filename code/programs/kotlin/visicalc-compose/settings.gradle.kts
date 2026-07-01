@@ -8,4 +8,4 @@
 //   https://docs.gradle.org/current/userguide/composite_builds.html
 rootProject.name = "visicalc-compose"
 
-includeBuild("../../code/packages/kotlin/mosaic-flux-compose")
+includeBuild("../../../../code/packages/kotlin/mosaic-flux-compose")

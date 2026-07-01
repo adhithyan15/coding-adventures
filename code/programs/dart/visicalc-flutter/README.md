@@ -9,7 +9,7 @@ WebAssembly. This is the third native backend wired to the engine.
 
 A `MaterialApp` shell containing the auto-generated `FormulaBar` and `Grid`
 widgets (`lib/generated/`, produced by `mosaic-compile --backend flutter` from
-the shared `demo/visicalc/mosaic/*` sources).
+the shared `code/programs/mosaic/visicalc/*` sources).
 
 - The grid renders **engine-computed** values: the classic cross-footing budget
   where column E totals each row, row 5 totals each column, and E5 is the grand
@@ -170,7 +170,7 @@ is byte-identical — an unqualified `A1` still means the active sheet.
 #### Visual design
 
 `lib/infinite_grid.dart` mirrors the **reference visual language** defined by the
-web demo (`demo/visicalc-html/infinite.html`) so every VisiCalc backend reads as
+web demo (`code/programs/typescript/visicalc-html/infinite.html`) so every VisiCalc backend reads as
 one considered dark, modern-spreadsheet surface — the same token set the Qt port
 uses. The palette lives in a small set of `Color` design constants at the top of
 the file (`_cBg`/`_cPanel`/`_cSurface`/`_cLine`/`_cInk`/`_cMuted`/`_cAccent`…),

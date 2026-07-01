@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # build.sh — regenerate FormulaBar + Grid composables from the
-# shared `demo/visicalc/mosaic/*` sources via mosaic-compile.
+# shared `code/programs/mosaic/visicalc/*` sources via mosaic-compile.
 #
 # UI34 PR — visicalc-android joins the rest of the cross-backend
 # matrix.  Both composables are now generated from the same
@@ -15,7 +15,7 @@
 # the same Kotlin compilation unit without ceremony imports.
 #
 # Usage:
-#   cd demo/visicalc-android
+#   cd code/programs/kotlin/visicalc-android
 #   bash scripts/build.sh
 #
 # Then to run the demo:

@@ -17,7 +17,7 @@
 # generated Grid renders as a real styled spreadsheet.
 #
 # Usage:
-#   cd demo/visicalc-compose
+#   cd code/programs/kotlin/visicalc-compose
 #   bash scripts/build.sh
 #
 # Then to run the demo:

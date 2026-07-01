@@ -8,7 +8,7 @@
 # manually or via `npm run components`.
 #
 # Usage:
-#   cd demo/visicalc
+#   cd code/programs/typescript/visicalc
 #   bash scripts/build.sh
 #
 # Output:

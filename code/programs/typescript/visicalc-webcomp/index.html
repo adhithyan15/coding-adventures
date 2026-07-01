@@ -18,14 +18,14 @@
        page handler logs to the console (proof the wiring works).
 
   The Grid below is ALSO a Custom Element — `<mos-grid>`, registered
-  by `build/Grid.js`, compiled from demo/visicalc/mosaic/Grid.* via
+  by `build/Grid.js`, compiled from code/programs/mosaic/visicalc/Grid.* via
   the same `mosaic-compile --backend webcomponent` pipeline.
   Grid.desktop.mll itself is a UI34 `pkg::mosaic-pkg-grid::Grid`
   one-liner, so the element's structure comes from the authoritative
   package composition.  No hand-written widgets in this file.
 
-  To regenerate: cd demo/visicalc-webcomp && bash scripts/build.sh
-  To view:       open demo/visicalc-webcomp/index.html in any browser.
+  To regenerate: cd code/programs/typescript/visicalc-webcomp && bash scripts/build.sh
+  To view:       open code/programs/typescript/visicalc-webcomp/index.html in any browser.
 -->
 <html lang="en">
 <head>
@@ -101,7 +101,7 @@
     <!--
       ===== Grid (compiled Custom Element) =====
       `<mos-grid>` is registered by `build/Grid.js`, compiled from
-      demo/visicalc/mosaic/Grid.{mil,desktop.mll,dark.msl} via
+      code/programs/mosaic/visicalc/Grid.{mil,desktop.mll,dark.msl} via
       `mosaic-compile --backend webcomponent`.  Grid.desktop.mll
       itself is a UI34 `pkg::mosaic-pkg-grid::Grid` one-liner, so the
       element's structure comes from `mosaic-pkg-grid`'s authoritative
@@ -128,7 +128,7 @@
       double-click a cell to edit in place. Every dependent cell recomputes.
       The UI is two real Web Components compiled by
       <code>mosaic-compile --backend webcomponent</code> from
-      <code>demo/visicalc/mosaic/*</code> (the same source the React + HTML
+      <code>code/programs/mosaic/visicalc/*</code> (the same source the React + HTML
       demos use): <code>&lt;mos-grid&gt;</code> for display and
       <code>&lt;mos-formula-bar&gt;</code> for input, both shadow-DOM custom
       elements firing <code>mosaic:*</code> CustomEvents (logged above). The

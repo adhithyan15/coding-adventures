@@ -210,7 +210,7 @@ still means the active sheet.
 #### Visual design
 
 `InfiniteSheet.xaml` / `.xaml.cs` mirror the **reference visual language** defined
-by the web demo (`demo/visicalc-html/infinite.html`) so every VisiCalc backend
+by the web demo (`code/programs/typescript/visicalc-html/infinite.html`) so every VisiCalc backend
 reads as one considered dark, modern-spreadsheet surface — the same token set the
 Qt, Flutter, and Compose ports use. The palette lives in a small set of
 `SolidColorBrush` design tokens at the top of the code-behind (`Bg`/`Panel`/
@@ -268,7 +268,7 @@ and the `InfiniteSheetModel` seed exposes `Sheet1`/`Summary` with a live cross-r
 | 2 | VC2-swiftui | ✅ |
 | 2 | VC2-xaml (this one) | ✅ |
 | 3 | multi-component artifact-builder shells | TODO ([M]) |
-| 4 | demo/visicalc-all/ | TODO |
+| 4 | code/programs/typescript/visicalc-all/ | TODO |
 
 **Phase 2 is complete.** All six backends have a runnable VC2 demo
 (or, for Windows-only platforms, the buildable scaffolding).

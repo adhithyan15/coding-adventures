@@ -28,7 +28,7 @@ Electron specifically gives end users:
 2. Filesystem access via `dialog.showOpenDialog` + `fs.promises`
    (deferred to v0.2.0).
 
-The same `demo/visicalc/mosaic/Grid.{mil,desktop.mll,dark.msl}` and
+The same `code/programs/mosaic/visicalc/Grid.{mil,desktop.mll,dark.msl}` and
 `FormulaBar.{mil,desktop.mll,dark.msl}` sources drive both the web
 build and this Electron host.  When the eventual `.touch.mll`
 variant lands we'll also see the same React components in a
@@ -41,14 +41,14 @@ code/programs/typescript/visicalc-electron/main.js
                                             │
                                             ▼  loads
                                        file:///…/
-                                       demo/visicalc/dist/index.html
+                                       code/programs/typescript/visicalc/dist/index.html
                                             │
                                             ▼  bundles
-                                       demo/visicalc/src/
+                                       code/programs/typescript/visicalc/src/
                                        (Vite build of the React app)
                                             │
                                             ▼  generated from
-                                       demo/visicalc/mosaic/
+                                       code/programs/mosaic/visicalc/
                                        (the Mosaic IR: .mil/.mll/.msl)
 ```
 
@@ -64,7 +64,7 @@ npm install
 npm start                # builds the React bundle first, then launches Electron
 ```
 
-The `start` script triggers `npm run build` in `demo/visicalc/`,
+The `start` script triggers `npm run build` in `code/programs/typescript/visicalc/`,
 which produces `dist/index.html` + bundled assets, then launches
 Electron pointing at the dist URL.
 

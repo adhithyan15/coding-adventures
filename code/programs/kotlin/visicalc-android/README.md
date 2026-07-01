@@ -3,10 +3,10 @@
 Ninth cross-backend VisiCalc visualisation.  Native Android app
 running on Jetpack Compose, sibling to:
 
-- `demo/visicalc-compose/` — Compose for Desktop (JVM)
-- `demo/visicalc-swiftui/` — SwiftUI (macOS + iOS)
-- `demo/visicalc-flutter/` — Flutter (mobile + desktop + web)
-- `demo/visicalc-qt/`, `demo/visicalc-electron/`, ...
+- `code/programs/kotlin/visicalc-compose/` — Compose for Desktop (JVM)
+- `code/programs/swift/visicalc-swiftui/` — SwiftUI (macOS + iOS)
+- `code/programs/dart/visicalc-flutter/` — Flutter (mobile + desktop + web)
+- `code/programs/cpp/visicalc-qt/`, `code/programs/typescript/visicalc-electron/`, ...
 
 ## What it shows
 
@@ -76,7 +76,7 @@ adb shell am start -n com.example.visicalc/.MainActivity
 ## File tree
 
 ```
-demo/visicalc-android/
+code/programs/kotlin/visicalc-android/
 ├── README.md                        ← this file
 ├── BUILD                             ← `gradle :app:assembleDebug` (build-tool entry)
 ├── .gitignore                        ← .gradle/, .gradle-out/, build/, .cxx/, etc.

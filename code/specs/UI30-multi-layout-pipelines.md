@@ -275,7 +275,7 @@ The cycle splits into three small PRs:
 
 ### ML3 — touch variant proof-of-concept for VisiCalc
 
-- Write `demo/visicalc/mosaic/FormulaBar.touch.mll` and
+- Write `code/programs/mosaic/visicalc/FormulaBar.touch.mll` and
   `Grid.touch.mll` that meaningfully diverge from the desktop
   variants (large tap targets, no sticky header, etc.).
 - Verify both variants compile through `mosaic-compile --variant

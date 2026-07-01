@@ -39,7 +39,7 @@ public sealed partial class InfiniteSheet : UserControl
     private const double ColW = 92, RowH = 26, GutterW = 64, HeadH = 28;
 
     // ── Design tokens ──────────────────────────────────────────────────
-    // Mirror demo/visicalc-html/infinite.html's palette so every VisiCalc backend
+    // Mirror code/programs/typescript/visicalc-html/infinite.html's palette so every VisiCalc backend
     // reads as one considered surface (dark modern spreadsheet). Same token set as
     // the Qt / Flutter / Compose ports.
     private static readonly SolidColorBrush Bg = New(0x16, 0x18, 0x1D); // base cell

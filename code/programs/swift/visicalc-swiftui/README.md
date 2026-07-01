@@ -9,7 +9,7 @@ to the engine: it proves the one-engine-everywhere architecture reaches Swift.
 
 - An auto-generated `FormulaBarView` and `GridView`
   (`Sources/VisiCalc/Generated/`, produced by `mosaic-compile --backend
-  swiftui` from the shared `demo/visicalc/mosaic/*` sources).
+  swiftui` from the shared `code/programs/mosaic/visicalc/*` sources).
 - The grid renders **engine-computed** values: a cross-footing budget where
   column E totals each row, row 5 totals each column, and E5 is the grand total
   (169) — all formulas evaluated by the Rust engine, not hard-coded.
@@ -146,7 +146,7 @@ the active sheet.
 ### Visual design
 
 `InfiniteGridView` mirrors the **reference visual language** defined by the web
-demo (`demo/visicalc-html/infinite.html`) so every VisiCalc backend reads as one
+demo (`code/programs/typescript/visicalc-html/infinite.html`) so every VisiCalc backend reads as one
 considered dark, modern-spreadsheet surface — the same token set the Qt, Flutter,
 Compose, and XAML ports use. The palette lives in a small set of `Color` design
 tokens at the top of the view (`cBg`/`cPanel`/`cSurface`/`line`/`ink`/`muted`/

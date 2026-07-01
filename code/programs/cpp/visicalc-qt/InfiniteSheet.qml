@@ -55,7 +55,7 @@ Item {
     readonly property int headH: 28
 
     // ── Design tokens ────────────────────────────────────────────────
-    // Mirror demo/visicalc-html/infinite.html's palette so every VisiCalc
+    // Mirror code/programs/typescript/visicalc-html/infinite.html's palette so every VisiCalc
     // backend reads as one considered surface (dark modern spreadsheet).
     readonly property color cBg:          "#16181d"  // app / base cell
     readonly property color cPanel:       "#1b1e24"  // toolbar + zebra band

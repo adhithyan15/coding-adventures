@@ -23,7 +23,7 @@
 # is hand-authored.
 #
 # Usage:
-#   cd demo/visicalc-xaml
+#   cd code/programs/csharp/visicalc-xaml
 #   bash scripts/build.sh
 #
 # Then to actually run the app (WinUI 3 SDK / .NET 9 required;

@@ -19,7 +19,7 @@ Two independently-generated halves, glued by host code that owns *no*
 spreadsheet logic:
 
 1. **The UI** — two real custom elements compiled by
-   `mosaic-compile --backend webcomponent` from `demo/visicalc/mosaic/*` (the
+   `mosaic-compile --backend webcomponent` from `code/programs/mosaic/visicalc/*` (the
    same source the React and HTML demos consume):
    - `<mos-grid>` — a shadow-DOM table rendered from its observed attributes
      (`viewport-rows`, `selected-row/col`, `edit-row/col`, …).
@@ -51,7 +51,7 @@ index.html
 ## How to view
 
 ```
-open demo/visicalc-webcomp/index.html
+open code/programs/typescript/visicalc-webcomp/index.html
 ```
 
 Any modern browser works — no server. The events from `<mos-formula-bar>` /

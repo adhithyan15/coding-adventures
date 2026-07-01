@@ -17,13 +17,13 @@
 # its hand-written placeholder.
 #
 # Usage:
-#   cd demo/visicalc-html
+#   cd code/programs/typescript/visicalc-html
 #   bash scripts/build.sh
 #
 # Output:
-#   demo/visicalc-html/build/FormulaBar.html
+#   code/programs/typescript/visicalc-html/build/FormulaBar.html
 #
-# Open `demo/visicalc-html/index.html` in any browser to view.
+# Open `code/programs/typescript/visicalc-html/index.html` in any browser to view.
 
 set -euo pipefail
 

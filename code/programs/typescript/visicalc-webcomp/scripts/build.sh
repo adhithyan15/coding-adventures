@@ -19,13 +19,13 @@
 # the hand-written `<table>` placeholder.
 #
 # Usage:
-#   cd demo/visicalc-webcomp
+#   cd code/programs/typescript/visicalc-webcomp
 #   bash scripts/build.sh
 #
 # Output:
-#   demo/visicalc-webcomp/build/FormulaBar.js
+#   code/programs/typescript/visicalc-webcomp/build/FormulaBar.js
 #
-# Open `demo/visicalc-webcomp/index.html` in any browser to view.
+# Open `code/programs/typescript/visicalc-webcomp/index.html` in any browser to view.
 
 set -euo pipefail
 
