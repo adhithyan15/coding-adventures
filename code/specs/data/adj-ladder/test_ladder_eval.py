@@ -68,6 +68,7 @@ SELF_CONTAINED_RUNGS = (
     "rung28_coagulation_ratios",
     "rung29_serum_protein_indices",
     "rung30_body_mass_index",
+    "rung31_starling_filtration",
 )
 
 
