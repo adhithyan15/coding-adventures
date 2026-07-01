@@ -217,7 +217,9 @@ is text-primary, which is a different mode model.)
 
   **Extensible / labelled arrows (latex 0.16.0):** the amsmath stretching-arrow family —
   `\xrightarrow`, `\xleftarrow`, `\xleftrightarrow`, `\xRightarrow`, `\xLeftarrow`, `\xmapsto`,
-  `\xhookrightarrow`, `\xhookleftarrow` — parses with a **mandatory `{above}` group** and an
+  `\xhookrightarrow`, `\xhookleftarrow` — plus (latex 0.21.0) `\xLeftrightarrow` and the mathtools
+  **extensible harpoons** `\xrightharpoonup`/`\xrightharpoondown`/`\xleftharpoonup`/`\xleftharpoondown`/
+  `\xrightleftharpoons`/`\xleftrightharpoons` — parses with a **mandatory `{above}` group** and an
   **optional `[below]` group** (`\xrightarrow[g]{f}`). No new node: a labelled arrow IS an
   annotation stacked on the plain arrow symbol, so it desugars onto the existing `Overset`/`Underset`
   nodes — `\xrightarrow{f}` → `Overset { over: f, base: \rightarrow }`, `\xrightarrow[g]{f}` →
@@ -234,7 +236,10 @@ is text-primary, which is a different mode model.)
   base: a+b }`; `\overbrace{x+y}^{n}` → `Overset { over: n, base: Overset { over: ⏞, base: x+y } }`
   (the optional label is consumed inside the brace parse so it stacks centered on the brace, not as a
   postfix raised script). The L6 lowering and `to_latex` therefore need **zero change**; round-trips
-  through `to_latex`, and a missing mandatory body is a spanned error, never a panic.
+  through `to_latex`, and a missing mandatory body is a spanned error, never a panic. **latex 0.21.0**
+  extends this family to the amsmath/mathtools paren & group accents `\overparen`/`\underparen`
+  (⏜ U+23DC / ⏝ U+23DD) and `\overgroup`/`\undergroup` (⏠ U+23E0 / ⏡ U+23E1), sharing the identical
+  glyph-over-body desugaring and label mechanism.
 
   **Stretchy over-arrow accents (latex 0.18.0):** `\overrightarrow{body}` / `\overleftarrow{body}` /
   `\overleftrightarrow{body}` / `\overrightharpoonup` / `\overleftharpoonup` — an arrow drawn over a
