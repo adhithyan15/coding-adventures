@@ -645,22 +645,55 @@ impl<'a> MathParser<'a> {
         MathNode::Num(s)
     }
 
-    /// Read a fenced body: one relation, or — when a top-level comma follows — a comma-separated
-    /// [`MathNode::Sequence`] of relations (`a, b, c`). The caller consumes the delimiters. A
-    /// bounded loop over `parse_relation` (never recursion), so a wide list cannot overflow the
-    /// stack; a trailing/leading/doubled comma leaves a non-atom before the next `parse_relation`,
-    /// which returns a clean spanned error.
+    /// Read a fenced body. Three shapes, decided by the top-level separators:
+    ///
+    ///   * no separator      → one relation, returned as-is (`a + b`).
+    ///   * `,` only          → a flat [`MathNode::Sequence`] list (`a, b, c`).
+    ///   * any `;`           → ROWS. Semicolons are the row separator and commas the within-row
+    ///     (column) separator — the classic fenced-matrix reading `(a, b; c, d)` →
+    ///     `Sequence([Sequence([a, b]), Sequence([c, d])])`. A row with no comma is a single
+    ///     relation, so a semicolon-only fence `(a; b; c)` — a column vector — collapses to the same
+    ///     flat `Sequence([a, b, c])` as a comma list (no row has a second column); a ragged fence
+    ///     `(a; b, c)` stays faithful as `Sequence([a, Sequence([b, c])])`. Mirrors the MathML
+    ///     `<mfenced>` reading exactly.
+    ///
+    /// The caller consumes the delimiters. A bounded loop over `parse_relation` (never recursion),
+    /// so a wide list cannot overflow the stack; a trailing/leading/doubled separator leaves a
+    /// non-atom before the next `parse_relation`, which returns a clean spanned error.
     fn read_fence_body(&mut self) -> Result<MathNode, ParseError> {
-        let first = self.parse_relation()?;
-        if !matches!(self.peek().kind, TokenKind::Char(',')) {
-            return Ok(first);
-        }
-        let mut items = vec![first];
-        while matches!(self.peek().kind, TokenKind::Char(',')) {
-            self.bump(); // consume the comma
+        let mut items = vec![self.parse_relation()?];
+        // `seps[i]` is the separator that follows `items[i]` (so `seps.len() == items.len() - 1`).
+        let mut seps: Vec<char> = Vec::new();
+        while let TokenKind::Char(sep @ (',' | ';')) = self.peek().kind {
+            self.bump(); // consume the separator
+            seps.push(sep);
             items.push(self.parse_relation()?);
         }
-        Ok(MathNode::Sequence(items))
+        if seps.is_empty() {
+            // Exactly one relation, no separator.
+            return Ok(items.pop().expect("one item"));
+        }
+        if !seps.contains(&';') {
+            // Comma-only: a flat list.
+            return Ok(MathNode::Sequence(items));
+        }
+        // Semicolons present: split into rows at each `;`, and fold each row's comma-separated
+        // columns into an inner Sequence (a single-column row folds to that one relation).
+        let mut rows: Vec<MathNode> = Vec::new();
+        let mut current: Vec<MathNode> = Vec::new();
+        for (i, item) in items.into_iter().enumerate() {
+            current.push(item);
+            let ends_row = i >= seps.len() || seps[i] == ';';
+            if ends_row {
+                if current.len() == 1 {
+                    rows.push(current.pop().expect("one column"));
+                } else {
+                    rows.push(MathNode::Sequence(std::mem::take(&mut current)));
+                }
+                current.clear();
+            }
+        }
+        Ok(MathNode::Sequence(rows))
     }
 
     /// Read `( … )` / `[ … ]` up to the matching `close` char.
@@ -1265,13 +1298,29 @@ impl MathNode {
                 }
             }
             MathNode::Sequence(items) => {
-                // Comma-join the items; the enclosing Fenced supplies the delimiters, so
-                // `Fenced { body: Sequence([a, b, c]) }` round-trips to `(a, b, c)`.
+                // The enclosing Fenced supplies the delimiters. A flat list comma-joins its items;
+                // a ROWS sequence (one built from `;` — detectable because a comma-list item is
+                // always a relation, never a bare `Sequence`, so a bare `Sequence` child can only be
+                // a row) semicolon-joins its rows, each row comma-joining its own columns. Thus
+                // `Fenced { body: Sequence([a, b, c]) }` → `(a, b, c)` and
+                // `Fenced { body: Sequence([Sequence([a, b]), Sequence([c, d])]) }` → `(a, b; c, d)`.
+                let is_rows = items.iter().any(|it| matches!(it, MathNode::Sequence(_)));
+                let sep = if is_rows { "; " } else { ", " };
                 for (i, item) in items.iter().enumerate() {
                     if i > 0 {
-                        out.push_str(", ");
+                        out.push_str(sep);
                     }
-                    item.write(out, 0);
+                    match item {
+                        MathNode::Sequence(cols) => {
+                            for (j, col) in cols.iter().enumerate() {
+                                if j > 0 {
+                                    out.push_str(", ");
+                                }
+                                col.write(out, 0);
+                            }
+                        }
+                        other => other.write(out, 0),
+                    }
                 }
             }
             MathNode::Text(t) => {
@@ -1532,9 +1581,63 @@ mod tests {
             "[x, y, z]",
             "\\left(p, q\\right)",
             "(x + 1, 2)",
+            "(a, b; c, d)",
+            "\\left(a, b; c, d\\right)",
+            "(a; b, c)",
+            "(x + 1, 2; y, z)",
         ] {
             round_trips(s);
         }
+    }
+
+    #[test]
+    fn semicolon_fence_is_rows_of_columns() {
+        // (a, b; c, d) → Fenced { body: Sequence([Sequence([a, b]), Sequence([c, d])]) }.
+        let n = parse_math("(a, b; c, d)").expect("parse");
+        let MathNode::Fenced { body, .. } = &n else { panic!("expected Fenced, got {n:?}") };
+        let MathNode::Sequence(rows) = &**body else { panic!("expected Sequence, got {body:?}") };
+        assert_eq!(rows.len(), 2);
+        assert_eq!(rows[0], MathNode::Sequence(vec![sym("a"), sym("b")]));
+        assert_eq!(rows[1], MathNode::Sequence(vec![sym("c"), sym("d")]));
+    }
+
+    #[test]
+    fn semicolon_only_fence_is_a_flat_sequence() {
+        // A column vector (a; b; c) has no second column in any row, so it collapses to the same
+        // flat Sequence([a, b, c]) as a comma list — no spurious one-element nesting.
+        let n = parse_math("(a; b; c)").expect("parse");
+        let MathNode::Fenced { body, .. } = &n else { panic!("expected Fenced, got {n:?}") };
+        assert_eq!(**body, MathNode::Sequence(vec![sym("a"), sym("b"), sym("c")]));
+    }
+
+    #[test]
+    fn ragged_semicolon_fence_is_faithful() {
+        // (a; b, c) keeps its shape: row 1 is a single relation, row 2 is a pair.
+        let n = parse_math("(a; b, c)").expect("parse");
+        let MathNode::Fenced { body, .. } = &n else { panic!("expected Fenced, got {n:?}") };
+        assert_eq!(
+            **body,
+            MathNode::Sequence(vec![sym("a"), MathNode::Sequence(vec![sym("b"), sym("c")])])
+        );
+    }
+
+    #[test]
+    fn semicolon_rows_fold_each_cell() {
+        // Each cell is a full relation, not just a leaf: (x + 1, 2; y).
+        let n = parse_math("(x + 1, 2; y)").expect("parse");
+        let MathNode::Fenced { body, .. } = &n else { panic!("expected Fenced, got {n:?}") };
+        let MathNode::Sequence(rows) = &**body else { panic!("expected Sequence, got {body:?}") };
+        assert_eq!(rows.len(), 2);
+        let MathNode::Sequence(cols) = &rows[0] else { panic!("expected row Sequence, got {:?}", rows[0]) };
+        assert!(matches!(cols[0], MathNode::Bin(MBinOp::Add, ..)));
+        assert_eq!(cols[1], num("2"));
+        assert_eq!(rows[1], sym("y")); // single-column row folds to the bare relation
+    }
+
+    #[test]
+    fn trailing_semicolon_is_an_error_not_a_dropped_row() {
+        // A trailing separator leaves a non-atom before the next parse_relation → clean error.
+        assert!(parse_math("(a, b;)").is_err());
     }
 
     #[test]

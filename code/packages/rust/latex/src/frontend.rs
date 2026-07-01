@@ -624,6 +624,35 @@ mod tests {
     }
 
     #[test]
+    fn semicolon_fence_lowers_to_nested_sequence() {
+        // A semicolon fence is ROWS of columns → a nested MathExpr::Sequence (matching MathML
+        // `<mfenced>` semicolon rows). `(a, b; c, d)` → Sequence([Sequence([a,b]), Sequence([c,d])]).
+        let sym = |s: &str| MathExpr::Symbol(s.into());
+        assert_eq!(
+            m("(a, b; c, d)"),
+            MathExpr::Sequence(vec![
+                MathExpr::Sequence(vec![sym("a"), sym("b")]),
+                MathExpr::Sequence(vec![sym("c"), sym("d")]),
+            ])
+        );
+        // `\left(…;…\right)` lowers the same way.
+        assert_eq!(
+            m(r"\left(a, b; c, d\right)"),
+            MathExpr::Sequence(vec![
+                MathExpr::Sequence(vec![sym("a"), sym("b")]),
+                MathExpr::Sequence(vec![sym("c"), sym("d")]),
+            ])
+        );
+        // A semicolon-only fence collapses to a flat Sequence (no row has a second column).
+        assert_eq!(m("(a; b; c)"), MathExpr::Sequence(vec![sym("a"), sym("b"), sym("c")]));
+        // A ragged fence keeps its shape.
+        assert_eq!(
+            m("(a; b, c)"),
+            MathExpr::Sequence(vec![sym("a"), MathExpr::Sequence(vec![sym("b"), sym("c")])])
+        );
+    }
+
+    #[test]
     fn accent_lowers_to_neutral_accent_node() {
         // `\hat{x}` is a diacritic OVER x — the neutral `MathExpr::Accent`, distinct from the
         // named function `hat(x)` (which would be `\hat(x)` text / `\operatorname`).

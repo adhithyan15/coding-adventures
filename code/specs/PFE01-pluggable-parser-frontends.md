@@ -150,6 +150,11 @@ frontend additionally ships notation-specific golden tests.
   `[x, y, z]`, `\left(p, q\right)` — parses to a `Sequence` in its own document AST (round-tripping
   through `to_latex`) and lowers to `MathExpr::Sequence` (delimiters dropped), exactly matching
   MathML `<mfenced>` comma rows and AsciiMath `(a,b,c)`. A comma-free fence still lowers to `Group`.
+  Since 0.20.0 it also mirrors MathML's **semicolon rows**: a fence with a top-level `;` —
+  `(a, b; c, d)` — reads semicolons as the row separator and commas as the column separator →
+  `Sequence([Sequence([a, b]), Sequence([c, d])])`, with the same degenerate handling (semicolon-only
+  collapses to a flat `Sequence`, ragged stays faithful). Both structural frontends (LaTeX, MathML)
+  now agree on the neutral rows shape.
 - `asciimath` — the second frontend (terse ASCII math; see [ASM01](ASM01-asciimath-frontend.md)).
 - `unicode-math` — the **third** frontend: Unicode plain math as people and models type it
   (`x² + y² = r²`, `√x`, `½`, `π·α`, `a ≤ b`). A small crate implementing the trait; its Greek /
