@@ -1222,3 +1222,20 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **No `#[ignore]` placeholders** — every case the emitter handles today is an
   active conformance test. (The `ascii_only` `\uXXXX` escaping of printable
   non-ASCII is a separate `EmitOptions` path and is left for a follow-up port.)
+
+## CLOC12.144 — CodePrinter ASCII-only escape port (emitter)
+
+- **What it is:** the eleventh CLOC12 upstream port and the fourth into
+  `closure-emitter`. New file `tests/upstream/code_printer_ascii_escape_test.rs`,
+  registered as the `upstream_code_printer_ascii_escape` test target. It covers
+  upstream `CodePrinterTest.testUnicode`'s `--output_charset=US-ASCII` behavior
+  — our `EmitOptions { ascii_only: true }` path (`escape_ascii_only`), the
+  distinct sibling of the default-mode string-escape port (CLOC12.143).
+- **7 active `#[test]`s pass on the first run** (no new emitter bug): printable
+  ASCII verbatim, a Latin-1 accent (`é` → `é`), a BMP CJK ideograph
+  (`中` → `中`), an astral code point using the braced form (`💩` →
+  `\u{1F4A9}`), a control char (`U+0007` → ``), the named `\n`/`\t`
+  escapes still applying, and the `ascii_only`-always-double-quotes rule (a
+  value of two `"` prints `"\"\""`, not single-quoted).
+- **No `#[ignore]` placeholders.** The ASCII-only `\uXXXX` escaping that the
+  CLOC12.143 port noted as a follow-up is now covered here.
