@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.18.11] - 2026-06-30
+
+### Fixed — deep operator chains no longer overflow the native stack (DoS)
+
+`emit_binary`/`emit_logical` recurse on the left operand once per operator, so
+a deeply left-nested chain — the shape the bridge builds for flat source like
+`1+1+…+1` (tens of thousands of terms) — recursed once per operator and, past a
+few thousand levels, overflowed the caller's ordinary ~2 MiB stack. That is an
+*uncatchable* abort, and closurec feeds this emitter *untrusted* JS, so it must
+not be crashable by pathological input.
+
+`emit` now runs the recursive emission on a 64 MiB worker thread
+(`EMIT_STACK_SIZE`) via `std::thread::scope` (borrows the program without
+`'static`; the shallow source-map serialisation finishes on the caller thread).
+Emission is **byte-identical** to before — only the stack size differs — so
+every existing fixture is unchanged. Regression test builds a 20 000-deep `+`
+chain and asserts it emits `1+1+…+1;` without crashing.
+
+(Very deep ASTs can still stress *other* recursive stages — notably the AST's
+own recursive `Drop` — which closurec absorbs on its 8 MiB main thread for the
+inputs seen here; full pipeline-level hardening is tracked separately.)
+
 ## [0.18.10] - 2026-06-30
 
 ### Changed — drop needless parens around assignments in conditional branches
