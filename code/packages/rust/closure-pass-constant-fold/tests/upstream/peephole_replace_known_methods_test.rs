@@ -240,11 +240,12 @@ fn folds_array_join() {
     assert_str(call(arr, "join", vec![s("-")]), "a-b-c");
 }
 
-/// Upstream folds `"a".concat("b","c")` — covered by our pass for strings, but
-/// the *number*-coercing form `"x".concat(1, 2)` is an upstream case we do not
-/// fold (coercion of non-string args).
+/// Upstream folds `"x".concat(1, 2)` → `"x12"` by coercing each argument via
+/// `ToString`. gap-143 RESOLVED (CLOC12.141) — our pass now coerces the
+/// primitive-constant argument forms. Previously an `#[ignore]` placeholder;
+/// now an active conformance test. With this the whole
+/// `PeepholeReplaceKnownMethods` port is active (gaps 141/142/143 all closed).
 #[test]
-#[ignore = "blocked on gap-143: constant-fold does not fold String#concat with non-string (coerced) args"]
 fn folds_string_concat_with_coerced_args() {
     assert_str(call(s("x"), "concat", vec![n(1.0), n(2.0)]), "x12");
 }

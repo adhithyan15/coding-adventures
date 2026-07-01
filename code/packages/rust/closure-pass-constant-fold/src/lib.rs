@@ -745,9 +745,11 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                 //
                 // `"a".concat("b", "c")` → `"abc"`, `"".concat("x")` → `"x"`,
                 // `"a".concat()` → `"a"` (ECMAScript §22.1.3.4, the variadic
-                // form). Every argument must itself be a STRING literal — JS
-                // coerces non-strings via `ToString` (`"a".concat(1)` → `"a1"`),
-                // but we don't model that coercion, so a numeric/identifier
+                // form). JS coerces every argument via `ToString`, and we now
+                // model that for the primitive constants: `"x".concat(1, 2)` →
+                // `"x12"`, `"a".concat(true)` → `"atrue"`, `"a".concat(null)` →
+                // `"anull"` (note `ToString(null)` is `"null"`, NOT `""` — that
+                // is `Array#join`'s rule). A non-constant / object / array
                 // argument makes `fold_string_concat_call` decline and the call
                 // is left for the runtime. Concatenating valid strings can only
                 // ever yield valid UTF-16 (no surrogate pair is ever split, the
@@ -3065,6 +3067,38 @@ fn fold_string_repeat(value: &str, args: &[Expression]) -> Option<String> {
 ///   pieces all come from the source, so this is a defensive cap (and
 ///   `checked_add` stops the running length from overflowing) rather than a
 ///   true blowup vector, but it mirrors the `repeat`/`pad` guards.
+/// Coerce a single `String.prototype.concat` argument to the string JS would
+/// pass to the concatenation, or `None` if it is not a compile-time constant we
+/// can coerce faithfully.
+///
+/// `concat` runs `ToString` on every argument (ECMAScript §22.1.3.4), which is
+/// where this differs from `Array.prototype.join`: `join` maps `null`/
+/// `undefined` to the empty string, but `ToString(null)` is `"null"` and
+/// `ToString(undefined)` is `"undefined"`.
+///
+/// ```text
+///   argument        concat string
+///   -------------   -------------
+///   "abc"           abc
+///   42              42          (String(Number))
+///   true / false    true / false
+///   null            null
+///   undefined       undefined
+///   anything else   None  → decline the whole fold
+/// ```
+fn concat_arg_str(arg: &Expression) -> Option<String> {
+    match arg {
+        Expression::StringLiteral(s) => Some(s.value.clone()),
+        Expression::NumericLiteral(n) => Some(format_js_number(n.value)),
+        Expression::BooleanLiteral(b) => Some(if b.value { "true" } else { "false" }.to_string()),
+        Expression::NullLiteral(_) => Some("null".to_string()),
+        Expression::UndefinedLiteral(_) => Some("undefined".to_string()),
+        // Objects, arrays, identifiers, calls, … have runtime-dependent string
+        // forms — decline so the call stands.
+        _ => None,
+    }
+}
+
 fn fold_string_concat_call(value: &str, args: &[Expression]) -> Option<String> {
     /// Cap on the folded result's length, in UTF-16 code units.
     const MAX_CONCAT_UNITS: usize = 100_000;
@@ -3072,15 +3106,12 @@ fn fold_string_concat_call(value: &str, args: &[Expression]) -> Option<String> {
     let mut units = value.encode_utf16().count();
     let mut out = String::from(value);
     for a in args {
-        let piece = match a {
-            Expression::StringLiteral(s) => &s.value,
-            _ => return None,
-        };
+        let piece = concat_arg_str(a)?;
         units = units.checked_add(piece.encode_utf16().count())?;
         if units > MAX_CONCAT_UNITS {
             return None;
         }
-        out.push_str(piece);
+        out.push_str(&piece);
     }
     Some(out)
 }
@@ -10584,18 +10615,70 @@ mod tests {
         }
     }
 
-    #[test]
-    fn concat_non_string_argument_does_not_fold() {
-        // `"a".concat(1)` is `"a1"` in JS via ToString, but we don't model that
-        // coercion — leave it for the runtime rather than guess.
-        let c = Expression::CallExpression(CallExpression {
+    /// Build `"<recv>".concat(<args…>)` from arbitrary argument expressions.
+    fn concat_call_exprs(recv: &str, args: Vec<Expression>) -> Expression {
+        Expression::CallExpression(CallExpression {
             cv: Some("c.cv".to_string()),
-            callee: Box::new(member(string("a", None), "concat")),
-            arguments: vec![num(1.0, None)],
+            callee: Box::new(member(string(recv, None), "concat")),
+            arguments: args,
+        })
+    }
+
+    fn folded_concat(recv: &str, args: Vec<Expression>) -> Option<String> {
+        let (out, _, changed, _) = run_pass(program_with_expr(concat_call_exprs(recv, args), true));
+        if !changed {
+            return None;
+        }
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => Some(s.value.clone()),
+            other => panic!("expected a string literal; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn concat_coerces_numeric_arguments() {
+        // `"x".concat(1, 2)` → `"x12"` (ToString on each argument) — gap-143.
+        assert_eq!(
+            folded_concat("x", vec![num(1.0, None), num(2.0, None)]).as_deref(),
+            Some("x12")
+        );
+        // Mixed with a string argument.
+        assert_eq!(
+            folded_concat("a", vec![string("b", None), num(3.0, None)]).as_deref(),
+            Some("ab3")
+        );
+    }
+
+    #[test]
+    fn concat_coerces_boolean_and_nullish_arguments() {
+        // ToString(true)="true", ToString(false)="false".
+        assert_eq!(
+            folded_concat("a", vec![boolean(true, None), boolean(false, None)]).as_deref(),
+            Some("atruefalse")
+        );
+        // ToString(null)="null", ToString(undefined)="undefined" — note this is
+        // DIFFERENT from Array#join, where nullish coerces to "".
+        assert_eq!(
+            folded_concat(
+                "x",
+                vec![
+                    Expression::NullLiteral(NullLiteral { cv: None }),
+                    Expression::UndefinedLiteral(UndefinedLiteral { cv: None }),
+                ],
+            )
+            .as_deref(),
+            Some("xnullundefined")
+        );
+    }
+
+    #[test]
+    fn concat_object_argument_does_not_fold() {
+        // An object argument has a runtime-dependent `toString` → decline.
+        let obj = Expression::ObjectExpression(ObjectExpression {
+            cv: None,
+            properties: vec![],
         });
-        let (out, _, changed, _) = run_pass(program_with_expr(c, true));
-        assert!(!changed, "concat with a numeric argument must not fold");
-        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        assert_eq!(folded_concat("a", vec![obj]), None);
     }
 
     #[test]
