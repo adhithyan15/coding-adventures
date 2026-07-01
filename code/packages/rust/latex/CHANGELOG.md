@@ -2,6 +2,32 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.25.0] — 2026-07-01
+
+### Changed — comma/semicolon fence lists now keep their delimiters (`Fenced`-of-`Sequence`)
+
+The fence-delimiters arc's remaining slice: a **comma- or semicolon-separated** fence body now
+carries its delimiters too. Previously a single-body fence lowered to `MathExpr::Fenced { open,
+body, close }` (0.24.0) but a *list* fence (`(a, b)`, `[a, b]`, `\left(a, b\right)`, semicolon
+rows) lowered to a bare `MathExpr::Sequence`, **dropping** the surrounding brackets — so `(a, b)`
+and `[a, b]` were indistinguishable. Now the frontend adapter wraps the list in a `Fenced` carrying
+the open/close strings: `(a, b)` → `Fenced { open: "(", body: Sequence([a, b]), close: ")" }`,
+distinct from `[a, b]` → `Fenced { open: "[", … }`. **Both** the delimiters and the list structure
+are preserved.
+
+- The change is a one-line relaxation in the neutral-lowering worklist (`frontend.rs`): the
+  `MathNode::Fenced` arm now always pushes a `Build::Fenced` wrapper, instead of skipping it when
+  the body is a `Sequence`. The inner `Sequence` still builds via its own arm; the `Fenced` build
+  wraps it. No new node, no capability change (`fenced_delimiters` + `sequences` already declared).
+- Matrices (`pmatrix`/`bmatrix`/…) are unaffected — their delimiter style stays presentation on
+  `Matrix` as before; only `\left…\right` / `( ) [ ]` *list* fences are wrapped.
+- Tests `comma_fence_lowers_to_sequence` / `semicolon_fence_lowers_to_nested_sequence` become
+  `…_lowers_to_fenced_sequence` / `…_lowers_to_fenced_nested_sequence`, asserting the delimiters are
+  now carried around the (unchanged) inner sequence. All downstream consumers (`math-frontend`,
+  `mathml`, `asciimath`, `unicode-math`, `adj-lang`, `adj-lang-cli`) build and pass unchanged — the
+  `adj-lang` adapter already unwraps `Fenced` to its body, so a `Fenced`-of-`Sequence` lowers
+  exactly as the bare `Sequence` did (both non-arithmetic).
+
 ## [0.24.0] — 2026-06-30
 
 ### Changed — fence delimiters preserved as data (frontend adapter)

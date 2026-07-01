@@ -15,8 +15,9 @@
 //! - `\times`, `\cdot`, and juxtaposition all become [`BinOp::Mul`]; `\dfrac`/`\tfrac`/`\frac`
 //!   all become [`MathExpr::Frac`] — two source strings that mean the same math lower equal.
 //! - fence *delimiters* are preserved as data: `(x)`, `[x]`, `|x|`, `\left(x\right)` become
-//!   [`MathExpr::Fenced`] carrying their open/close strings (a comma-list body still lowers to
-//!   [`MathExpr::Sequence`] with delimiters dropped — carrying them there is a later slice).
+//!   [`MathExpr::Fenced`] carrying their open/close strings (so `|x|` abs/norm ≠ `(x)`). A
+//!   comma-list body keeps its delimiters too: `(a, b)` → `Fenced { body: Sequence([a, b]) }`,
+//!   distinct from `[a, b]` — both the delimiters and the list structure are preserved.
 //! - matrix *delimiter* is dropped: `pmatrix`/`bmatrix`/`cases`/… all become [`MathExpr::Matrix`].
 //! - `base^sup` → [`BinOp::Pow`]; `base_sub` → [`MathExpr::Subscript`]; both → `Pow(Subscript(…))`.
 //! - an accent (`\hat{x}`, `\vec{v}`) lowers to the neutral [`MathExpr::Accent`] (a diacritic
@@ -272,17 +273,15 @@ fn lower(root: MathNode, span: (usize, usize)) -> Result<MathExpr, FrontendError
                 }
                 // A fence brackets its body; we preserve *which* delimiters were used as data on
                 // the neutral `MathExpr::Fenced { open, close }` — so `|x|` (abs/norm) is no
-                // longer confused with `(x)`. EXCEPTION: a comma-list body is a Sequence (a tuple
-                // / list) whose delimiters still drop, matching MathML `<mfenced>` and AsciiMath
-                // `(a,b,c)` (carrying delimiters on sequences is a later slice of this arc).
+                // longer confused with `(x)`. This holds for a comma-list body too: a tuple
+                // `(a, b)` lowers to `Fenced { body: Sequence([a, b]) }`, keeping BOTH the
+                // delimiters and the list structure (so `(a, b)` and `[a, b]` are distinct). The
+                // Sequence still builds via its own arm below; the `Fenced` build wraps it.
                 MathNode::Fenced { left, body, right } => {
                     let open = std::mem::take(left);
                     let close = std::mem::take(right);
                     let body = take_box(body);
-                    if !matches!(body, MathNode::Sequence(_)) {
-                        work.push(Task::Build(Build::Fenced { open, close }));
-                    }
-                    // A Sequence body lowers via its own arm (delimiters dropped, for now).
+                    work.push(Task::Build(Build::Fenced { open, close }));
                     work.push(Task::Node(body));
                 }
                 // A comma-separated sequence — the fence's delimiters are already dropped.
@@ -613,21 +612,43 @@ mod tests {
         assert!(matches!(m(r"\left|x\right|"), MathExpr::Fenced { ref open, ref close, .. } if open == "|" && close == "|"));
     }
 
+    /// Unwrap a `Fenced { open, body, close }`, asserting the delimiters, and return the body — so
+    /// the comma/semicolon-list tests can check the inner Sequence while also verifying that the
+    /// fence's delimiters are now carried (rather than dropped).
+    fn fenced_body(e: MathExpr, open: &str, close: &str) -> MathExpr {
+        // Match by reference and clone the body: `MathExpr` implements `Drop` (iterative), so a
+        // field cannot be moved out of it by pattern.
+        match &e {
+            MathExpr::Fenced { open: o, body, close: c } => {
+                assert_eq!((o.as_str(), c.as_str()), (open, close));
+                (**body).clone()
+            }
+            other => panic!("expected Fenced({open:?}, .., {close:?}), got {other:?}"),
+        }
+    }
+
     #[test]
-    fn comma_fence_lowers_to_sequence() {
-        // A comma-separated fence is a LIST → MathExpr::Sequence (delimiters dropped, as for
-        // MathML `<mfenced>` and AsciiMath `(a,b,c)`). The third frontend on the neutral node.
+    fn comma_fence_lowers_to_fenced_sequence() {
+        // A comma-separated fence is a LIST → MathExpr::Sequence, now WRAPPED in a `Fenced` that
+        // keeps the delimiters (so `(a, b)` and `[a, b]` are distinguishable — both the brackets
+        // and the list structure are preserved).
         let sym = |s: &str| MathExpr::Symbol(s.into());
         assert_eq!(
-            m("(a, b, c)"),
+            fenced_body(m("(a, b, c)"), "(", ")"),
             MathExpr::Sequence(vec![sym("a"), sym("b"), sym("c")])
         );
-        // `\left(…\right)` and bracket fences lower the same way.
-        assert_eq!(m(r"\left(a, b\right)"), MathExpr::Sequence(vec![sym("a"), sym("b")]));
-        assert_eq!(m("[x, y]"), MathExpr::Sequence(vec![sym("x"), sym("y")]));
+        // `\left(…\right)` and bracket fences carry their own delimiters around the list.
+        assert_eq!(
+            fenced_body(m(r"\left(a, b\right)"), "(", ")"),
+            MathExpr::Sequence(vec![sym("a"), sym("b")])
+        );
+        assert_eq!(
+            fenced_body(m("[x, y]"), "[", "]"),
+            MathExpr::Sequence(vec![sym("x"), sym("y")])
+        );
         // Each item is a full expression, not just a leaf.
         assert_eq!(
-            m("(x + 1, 2)"),
+            fenced_body(m("(x + 1, 2)"), "(", ")"),
             MathExpr::Sequence(vec![
                 MathExpr::Bin(BinOp::Add, Box::new(sym("x")), Box::new(num(1))),
                 num(2),
@@ -638,12 +659,12 @@ mod tests {
     }
 
     #[test]
-    fn semicolon_fence_lowers_to_nested_sequence() {
-        // A semicolon fence is ROWS of columns → a nested MathExpr::Sequence (matching MathML
-        // `<mfenced>` semicolon rows). `(a, b; c, d)` → Sequence([Sequence([a,b]), Sequence([c,d])]).
+    fn semicolon_fence_lowers_to_fenced_nested_sequence() {
+        // A semicolon fence is ROWS of columns → a nested MathExpr::Sequence, wrapped in a `Fenced`
+        // carrying the delimiters. `(a, b; c, d)` → Fenced("(", Sequence([Seq[a,b], Seq[c,d]]), ")").
         let sym = |s: &str| MathExpr::Symbol(s.into());
         assert_eq!(
-            m("(a, b; c, d)"),
+            fenced_body(m("(a, b; c, d)"), "(", ")"),
             MathExpr::Sequence(vec![
                 MathExpr::Sequence(vec![sym("a"), sym("b")]),
                 MathExpr::Sequence(vec![sym("c"), sym("d")]),
@@ -651,17 +672,20 @@ mod tests {
         );
         // `\left(…;…\right)` lowers the same way.
         assert_eq!(
-            m(r"\left(a, b; c, d\right)"),
+            fenced_body(m(r"\left(a, b; c, d\right)"), "(", ")"),
             MathExpr::Sequence(vec![
                 MathExpr::Sequence(vec![sym("a"), sym("b")]),
                 MathExpr::Sequence(vec![sym("c"), sym("d")]),
             ])
         );
         // A semicolon-only fence collapses to a flat Sequence (no row has a second column).
-        assert_eq!(m("(a; b; c)"), MathExpr::Sequence(vec![sym("a"), sym("b"), sym("c")]));
+        assert_eq!(
+            fenced_body(m("(a; b; c)"), "(", ")"),
+            MathExpr::Sequence(vec![sym("a"), sym("b"), sym("c")])
+        );
         // A ragged fence keeps its shape.
         assert_eq!(
-            m("(a; b, c)"),
+            fenced_body(m("(a; b, c)"), "(", ")"),
             MathExpr::Sequence(vec![sym("a"), MathExpr::Sequence(vec![sym("b"), sym("c")])])
         );
     }
