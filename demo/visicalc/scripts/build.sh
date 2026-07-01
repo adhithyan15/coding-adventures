@@ -27,10 +27,13 @@ REPO_ROOT="$(cd "$DEMO_DIR/../.." && pwd)"
 MOSAIC_COMPILE="$REPO_ROOT/code/packages/rust/target/debug/mosaic-compile"
 
 # Build mosaic-compile if it doesn't exist or is older than the source.
-if [ ! -x "$MOSAIC_COMPILE" ]; then
-  echo "Building mosaic-compile..."
-  (cd "$REPO_ROOT/code/packages/rust" && cargo build -p mosaic-compile)
-fi
+# Always (re)build mosaic-compile so emitter fixes reach the generated code.
+# cargo is incremental, so this is ~free when nothing changed. The old
+# `if [ ! -x "$MOSAIC_COMPILE" ]` guard skipped the build whenever ANY stale
+# binary already existed, silently serving pre-fix output (this is what hid the
+# Compose formula-bar textStyle fix — the demo kept using an old mosaic-compile).
+echo "Building mosaic-compile..."
+(cd "$REPO_ROOT/code/packages/rust" && cargo build -p mosaic-compile)
 
 OUT_DIR="$DEMO_DIR/src/components"
 mkdir -p "$OUT_DIR"

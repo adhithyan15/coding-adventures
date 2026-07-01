@@ -16,20 +16,36 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
+import androidx.compose.material.Checkbox
+import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 sealed class FormulaBarEvent {
-    data class FormulaChange(val value: String) : FormulaBarEvent()
-    data object Commit : FormulaBarEvent()
-    data object Cancel : FormulaBarEvent()
+    abstract val mosaicName: String
+    open val mosaicPayload: Map<String, Any?> = emptyMap()
+    val mosaicEnvelope: Map<String, Any?> get() = mapOf("event" to mosaicName) + mosaicPayload
+    data class FormulaChange(val value: String) : FormulaBarEvent() {
+        override val mosaicName: String = "onFormulaChange"
+        override val mosaicPayload: Map<String, Any?> get() = mapOf("value" to value)
+    }
+    data object Commit : FormulaBarEvent() {
+        override val mosaicName: String = "onCommit"
+    }
+    data object Cancel : FormulaBarEvent() {
+        override val mosaicName: String = "onCancel"
+    }
 }
 
 @Composable
@@ -48,6 +64,10 @@ fun FormulaBar(
         BasicTextField(
             value = formula,
             onValueChange = { v -> dispatch(FormulaBarEvent.FormulaChange(v)) },
+            modifier = Modifier
+                .background(Color.Transparent)
+                .padding(4.dp),
+            textStyle = TextStyle(color = Color(0xFFCCCCCC), fontFamily = FontFamily.Monospace, fontSize = 13.sp),
             enabled = !readOnly,
         )
     }

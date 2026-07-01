@@ -16,21 +16,40 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
+import androidx.compose.material.Checkbox
+import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 sealed class GridEvent {
-    data class Navigate(val row: Double, val col: Double) : GridEvent()
-    data class FormulaChange(val value: String) : GridEvent()
-    data object EditCommit : GridEvent()
-    data object EditCancel : GridEvent()
+    abstract val mosaicName: String
+    open val mosaicPayload: Map<String, Any?> = emptyMap()
+    val mosaicEnvelope: Map<String, Any?> get() = mapOf("event" to mosaicName) + mosaicPayload
+    data class Navigate(val row: Double, val col: Double) : GridEvent() {
+        override val mosaicName: String = "onNavigate"
+        override val mosaicPayload: Map<String, Any?> get() = mapOf("row" to row, "col" to col)
+    }
+    data class FormulaChange(val value: String) : GridEvent() {
+        override val mosaicName: String = "onFormulaChange"
+        override val mosaicPayload: Map<String, Any?> get() = mapOf("value" to value)
+    }
+    data object EditCommit : GridEvent() {
+        override val mosaicName: String = "onEditCommit"
+    }
+    data object EditCancel : GridEvent() {
+        override val mosaicName: String = "onEditCancel"
+    }
 }
 
 @Composable
@@ -98,6 +117,7 @@ fun Grid(
                                 BasicTextField(
                                     value = editContent,
                                     onValueChange = { v -> dispatch(GridEvent.FormulaChange(v)) },
+                                    textStyle = TextStyle(color = if ( r == selectedRow && c == selectedCol ) Color(0xFFFFFFFF) else Color(0xFFCCCCCC), fontFamily = FontFamily.Monospace, fontSize = 12.sp),
                                 )
                             } else {
                                 Text(( v ), color = if ( r == selectedRow && c == selectedCol ) Color(0xFFFFFFFF) else Color(0xFFCCCCCC), fontFamily = FontFamily.Monospace, fontSize = 12.sp)
