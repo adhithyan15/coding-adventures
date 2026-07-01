@@ -1634,11 +1634,13 @@ fn push_aot_string_literal(
         vec![Operand::Int(n)],
         "i64",
     ));
-    // total allocation = header (8 bytes) + string bytes
+    // total allocation = header (8 bytes) + string bytes.
+    // saturating_add prevents n+8 from wrapping negative on a theoretical
+    // 9-exabyte literal, avoiding a heap under-allocation.
     lowered.push(IIRInstr::new(
         "const",
         Some(tlen_var.clone()),
-        vec![Operand::Int(n + 8)],
+        vec![Operand::Int(n.saturating_add(8))],
         "i64",
     ));
     lowered.push(IIRInstr::new(

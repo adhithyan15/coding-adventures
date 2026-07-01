@@ -162,8 +162,16 @@ void __twig_exit(int32_t code) {
  * are responsible for ensuring this — V1 does not null-check).
  */
 int64_t __twig_str_eq(int64_t a, int64_t b) {
+    /* Null-pointer guard: a 0 value means the caller passed an uninitialized
+     * slot (e.g. from a compiler bug).  Treat as "not equal" rather than
+     * crashing on the dereference below. */
+    if (a == 0 || b == 0) return 0;
     int64_t len_a = *(int64_t *)a;
     int64_t len_b = *(int64_t *)b;
+    /* Negative-length guard: if the header is negative (corrupt buffer or
+     * adversarial write), casting to size_t would produce a huge value and
+     * cause memcmp to over-read the heap.  Treat as "not equal". */
+    if (len_a < 0 || len_b < 0) return 0;
     if (len_a != len_b) return 0;
     if (len_a == 0) return 1;
     return memcmp((const char *)a + 8, (const char *)b + 8, (size_t)len_a) == 0 ? 1 : 0;
