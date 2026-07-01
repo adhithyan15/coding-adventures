@@ -103,6 +103,11 @@ detail lookups; the Home Assistant-style history route accepts
 Runtime event-log reads accept Home Assistant entity aliases through
 `entity_id`, letting dashboard clients drill from an entity into its device,
 state-expiration, and desired-state drift events.
+Runtime event-log entries, command-result records, and authorization decisions
+also include native `links` objects for their related command, event-window,
+state-history, entity, bridge, principal-grant, and authorization preview
+routes, so local-controller clients can pivot across audit surfaces without
+reconstructing endpoint paths.
 
 `GET /api/smart_home/smoke` exposes a machine-readable local-controller smoke
 plan with safe GET probes, command and desired-state authorization previews,
