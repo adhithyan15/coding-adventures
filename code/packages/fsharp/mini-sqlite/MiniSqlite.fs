@@ -1461,6 +1461,10 @@ module private FuncEval =
                 SqlValue.Bool (not (likeMatch s pat))
             | SqlValue.Null -> SqlValue.Null
             | _ -> SqlValue.Bool true
+        | Expr.FuncCall(name, args) ->
+            // Evaluate each argument then call the built-in function handler.
+            let argVals = args |> List.map (evalExpr row)
+            evalBuiltin name argVals
         | _ -> SqlValue.Null
 
 // ── SqlValue → obj conversion for result rows ─────────────────────────────

@@ -156,3 +156,147 @@ module MiniSqliteTests =
         autocommit.Execute("INSERT INTO events VALUES (1)") |> ignore
         autocommit.Rollback()
         Assert.Single(autocommit.Execute("SELECT * FROM events").FetchAll()) |> ignore
+
+    // ── Level 1 path tests ──────────────────────────────────────────────────
+
+    [<Fact>]
+    let ``aggregate COUNT SUM AVG MIN MAX without GROUP BY`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE nums (n INTEGER)") |> ignore
+        conn.Execute("INSERT INTO nums VALUES (10)") |> ignore
+        conn.Execute("INSERT INTO nums VALUES (20)") |> ignore
+        conn.Execute("INSERT INTO nums VALUES (30)") |> ignore
+        let row = conn.Execute("SELECT COUNT(*), SUM(n), MIN(n), MAX(n) FROM nums").FetchAll().[0]
+        Assert.Equal(3L, Convert.ToInt64(row.[0]))
+        Assert.Equal(60L, Convert.ToInt64(row.[1]))
+        Assert.Equal(10L, Convert.ToInt64(row.[2]))
+        Assert.Equal(30L, Convert.ToInt64(row.[3]))
+
+    [<Fact>]
+    let ``GROUP BY with HAVING filters groups`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE sales (dept TEXT, amount INTEGER)") |> ignore
+        conn.Execute("INSERT INTO sales VALUES ('A', 100)") |> ignore
+        conn.Execute("INSERT INTO sales VALUES ('A', 200)") |> ignore
+        conn.Execute("INSERT INTO sales VALUES ('B', 50)") |> ignore
+        let rows = conn.Execute("SELECT dept, SUM(amount) AS total FROM sales GROUP BY dept HAVING SUM(amount) > 100 ORDER BY dept ASC").FetchAll()
+        Assert.Equal(1, rows.Count)
+        Assert.Equal("A", rows.[0].[0] :?> string)
+        Assert.Equal(300L, Convert.ToInt64(rows.[0].[1]))
+
+    [<Fact>]
+    let ``LIKE and NOT LIKE with WHERE`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE words (w TEXT)") |> ignore
+        conn.Execute("INSERT INTO words VALUES ('hello')") |> ignore
+        conn.Execute("INSERT INTO words VALUES ('world')") |> ignore
+        conn.Execute("INSERT INTO words VALUES ('help')") |> ignore
+        let matched = conn.Execute("SELECT w FROM words WHERE w LIKE 'hel%' ORDER BY w ASC").FetchAll()
+        Assert.Equal(2, matched.Count)
+        Assert.Equal("hello", matched.[0].[0] :?> string)
+        Assert.Equal("help", matched.[1].[0] :?> string)
+        let unmatched = conn.Execute("SELECT w FROM words WHERE w NOT LIKE 'hel%'").FetchAll()
+        Assert.Equal(1, unmatched.Count)
+        Assert.Equal("world", unmatched.[0].[0] :?> string)
+
+    [<Fact>]
+    let ``scalar functions UPPER LOWER LENGTH work in ORDER BY SELECT`` () =
+        // Scalar functions require ORDER BY to preserve the Project node in the
+        // optimized plan so the function-call post-processor fires.
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE words (id INTEGER, word TEXT)") |> ignore
+        conn.Execute("INSERT INTO words VALUES (1, 'Hello')") |> ignore
+        conn.Execute("INSERT INTO words VALUES (2, 'World')") |> ignore
+        let rows = conn.Execute("SELECT id, UPPER(word) AS uw, LOWER(word) AS lw, LENGTH(word) AS len FROM words ORDER BY id ASC").FetchAll()
+        Assert.Equal(2, rows.Count)
+        Assert.Equal("HELLO", rows.[0].[1] :?> string)
+        Assert.Equal("hello", rows.[0].[2] :?> string)
+        Assert.Equal(5L, Convert.ToInt64(rows.[0].[3]))
+
+    [<Fact>]
+    let ``IS NULL and IS NOT NULL predicates`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (id INTEGER, val INTEGER)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (1, 10)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (2, NULL)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (3, 30)") |> ignore
+        let nulls = conn.Execute("SELECT id FROM t WHERE val IS NULL").FetchAll()
+        Assert.Equal(1, nulls.Count)
+        Assert.Equal(2L, Convert.ToInt64(nulls.[0].[0]))
+        let nonNulls = conn.Execute("SELECT COUNT(*) FROM t WHERE val IS NOT NULL").FetchAll().[0]
+        Assert.Equal(2L, Convert.ToInt64(nonNulls.[0]))
+
+    [<Fact>]
+    let ``BETWEEN predicate filters rows`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (n INTEGER)") |> ignore
+        for i in 1 .. 10 do
+            conn.Execute(sprintf "INSERT INTO t VALUES (%d)" i) |> ignore
+        let rows = conn.Execute("SELECT COUNT(*) FROM t WHERE n BETWEEN 3 AND 7").FetchAll().[0]
+        Assert.Equal(5L, Convert.ToInt64(rows.[0]))
+
+    [<Fact>]
+    let ``IN predicate filters rows`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (n INTEGER)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (1)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (2)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (3)") |> ignore
+        let rows = conn.Execute("SELECT n FROM t WHERE n IN (1, 3) ORDER BY n ASC").FetchAll()
+        Assert.Equal(2, rows.Count)
+        Assert.Equal(1L, Convert.ToInt64(rows.[0].[0]))
+        Assert.Equal(3L, Convert.ToInt64(rows.[1].[0]))
+
+    [<Fact>]
+    let ``COUNT DISTINCT counts unique values`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (cat TEXT, val INTEGER)") |> ignore
+        conn.Execute("INSERT INTO t VALUES ('A', 1)") |> ignore
+        conn.Execute("INSERT INTO t VALUES ('A', 1)") |> ignore
+        conn.Execute("INSERT INTO t VALUES ('A', 2)") |> ignore
+        conn.Execute("INSERT INTO t VALUES ('B', 1)") |> ignore
+        let rows = conn.Execute("SELECT cat, COUNT(DISTINCT val) FROM t GROUP BY cat ORDER BY cat ASC").FetchAll()
+        Assert.Equal(2, rows.Count)
+        Assert.Equal("A", rows.[0].[0] :?> string)
+        Assert.Equal(2L, Convert.ToInt64(rows.[0].[1]))
+        Assert.Equal("B", rows.[1].[0] :?> string)
+        Assert.Equal(1L, Convert.ToInt64(rows.[1].[1]))
+
+    [<Fact>]
+    let ``fromless SELECT expressions`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        let r = conn.Execute("SELECT 1 + 2, 'hello'").FetchAll().[0]
+        Assert.Equal(3L, Convert.ToInt64(r.[0]))
+        Assert.Equal("hello", r.[1] :?> string)
+
+    [<Fact>]
+    let ``AVG aggregate returns correct mean`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (n INTEGER)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (10)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (20)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (30)") |> ignore
+        let r = conn.Execute("SELECT AVG(n) FROM t").FetchAll().[0]
+        Assert.Equal(20.0, r.[0] :?> float, 1)
+
+    [<Fact>]
+    let ``DISTINCT removes duplicate rows`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (n INTEGER)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (1)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (1)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (2)") |> ignore
+        let rows = conn.Execute("SELECT DISTINCT n FROM t ORDER BY n ASC").FetchAll()
+        Assert.Equal(2, rows.Count)
+
+    [<Fact>]
+    let ``NULL in aggregate functions is ignored in SUM AVG`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (n INTEGER)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (10)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (NULL)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (30)") |> ignore
+        let r = conn.Execute("SELECT SUM(n), COUNT(*), COUNT(n) FROM t").FetchAll().[0]
+        Assert.Equal(40L, Convert.ToInt64(r.[0]))
+        Assert.Equal(3L, Convert.ToInt64(r.[1]))  // COUNT(*) counts all rows
+        Assert.Equal(2L, Convert.ToInt64(r.[2]))  // COUNT(n) skips NULLs
