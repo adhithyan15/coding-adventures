@@ -558,46 +558,52 @@ impl Parser {
             //
             // The `separators` attribute is presentation and dropped — only *literal* `<mo>,</mo>`/
             // `<mo>;</mo>` children are read as separators, matching how the comma list already
-            // worked. The `open`/`close` delimiter attributes, however, ARE meaning-bearing for the
-            // single-body case and re-read from the tag span into `Fenced` (the comma/semicolon list
-            // cases still lower to `Sequence`, which drops them — a later slice of the fence arc).
+            // worked. The `open`/`close` delimiter attributes ARE meaning-bearing in ALL three shapes
+            // and re-read from the tag span into a wrapping `Fenced` — so a comma list `(a, b)` is kept
+            // distinct from `[a, b]`, and the row structure is preserved as the `Fenced` body. This
+            // mirrors the latex frontend, which likewise wraps its list fences in `Fenced` of a
+            // `Sequence`. The adj-lang adapter unwraps `Fenced`, so a `Fenced`-of-`Sequence` lowers
+            // exactly as the bare `Sequence` did — no downstream behaviour changes, only the delimiters
+            // are now carried rather than silently dropped.
             "mfenced" => {
                 let kids = self.parse_row_children(name, depth)?;
                 let has_comma = kids.iter().any(|c| matches!(c, Child::Op(s) if s == ","));
                 let has_semicolon = kids.iter().any(|c| matches!(c, Child::Op(s) if s == ";"));
-                if !has_comma && !has_semicolon {
-                    let inner = fold_row(kids, span, depth)?;
-                    // MathML's own defaults for a bare `<mfenced>` are `(` and `)`.
-                    let open = tag_attr(&self.src, span, "open").unwrap_or_else(|| "(".to_string());
-                    let close = tag_attr(&self.src, span, "close").unwrap_or_else(|| ")".to_string());
-                    return Ok(Child::Expr(MathExpr::Fenced {
-                        open,
-                        body: Box::new(inner),
-                        close,
-                    }));
-                }
-                if !has_semicolon {
+                // MathML's own defaults for a bare `<mfenced>` are `(` and `)`. Read once — every
+                // shape below carries the same open/close on its wrapping `Fenced`.
+                let open = tag_attr(&self.src, span, "open").unwrap_or_else(|| "(".to_string());
+                let close = tag_attr(&self.src, span, "close").unwrap_or_else(|| ")".to_string());
+                let body = if !has_comma && !has_semicolon {
+                    // A single delimited group — the body is just the folded row.
+                    fold_row(kids, span, depth)?
+                } else if !has_semicolon {
                     // Comma-only: a flat list. Each comma-delimited segment folds to one expression.
                     let items = split_fence_children(kids, ",")
                         .into_iter()
                         .map(|seg| fold_row(seg, span, depth))
                         .collect::<Result<Vec<_>, _>>()?;
-                    return Ok(Child::Expr(MathExpr::Sequence(items)));
-                }
-                // Semicolon present: split into rows first, then columns within each row.
-                let mut rows: Vec<MathExpr> = Vec::new();
-                for row in split_fence_children(kids, ";") {
-                    if row.iter().any(|c| matches!(c, Child::Op(s) if s == ",")) {
-                        let cols = split_fence_children(row, ",")
-                            .into_iter()
-                            .map(|seg| fold_row(seg, span, depth))
-                            .collect::<Result<Vec<_>, _>>()?;
-                        rows.push(MathExpr::Sequence(cols));
-                    } else {
-                        rows.push(fold_row(row, span, depth)?);
+                    MathExpr::Sequence(items)
+                } else {
+                    // Semicolon present: split into rows first, then columns within each row.
+                    let mut rows: Vec<MathExpr> = Vec::new();
+                    for row in split_fence_children(kids, ";") {
+                        if row.iter().any(|c| matches!(c, Child::Op(s) if s == ",")) {
+                            let cols = split_fence_children(row, ",")
+                                .into_iter()
+                                .map(|seg| fold_row(seg, span, depth))
+                                .collect::<Result<Vec<_>, _>>()?;
+                            rows.push(MathExpr::Sequence(cols));
+                        } else {
+                            rows.push(fold_row(row, span, depth)?);
+                        }
                     }
-                }
-                Ok(Child::Expr(MathExpr::Sequence(rows)))
+                    MathExpr::Sequence(rows)
+                };
+                Ok(Child::Expr(MathExpr::Fenced {
+                    open,
+                    body: Box::new(body),
+                    close,
+                }))
             }
             // `<mtable>` of `<mtr>` rows of `<mtd>` cells → MathExpr::Matrix (delimiter style is
             // not part of MathML's mtable, so nothing to drop). Parsed structurally below.

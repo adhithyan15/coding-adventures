@@ -27,7 +27,7 @@ tree.
 | `<msqrt>x</msqrt>` / `<mroot>x n</mroot>` | `Root` (degree `None` / `Some(n)`) |
 | `<mover>b a</mover>` / `<munder>b a</munder>` | `Overset { over: a, base: b }` / `Underset { under: a, base: b }` (PR-2) |
 | `<munderover>b u o</munderover>` | `Underset { under: u, base: Overset { over: o, base: b } }` (PR-2) |
-| `<mfenced>…</mfenced>` | single body → `Fenced { open, body, close }` carrying the `open`/`close` delimiters (default `(`/`)`, so `\|x\|` ≠ `(x)`); comma / semicolon lists → `Sequence` |
+| `<mfenced>…</mfenced>` | every shape → `Fenced { open, body, close }` carrying the `open`/`close` delimiters (default `(`/`)`, so `\|x\|` ≠ `(x)` and `(a,b)` ≠ `[a,b]`); a comma / semicolon list is the `Sequence` body of that `Fenced` |
 | `<mtable><mtr><mtd>…</mtd></mtr></mtable>` | `Matrix(rows × cells)` (PR-2) |
 | `<mi>sin</mi> … x` (applied) | `Call { func: Sin, arg: x }` (PR-3) |
 
@@ -40,10 +40,11 @@ operator — so `<mover><mi>x</mi><mo>^</mo></mover>` is "x with a hat". An `<mi
 function (sin, cos, ln, …) **applied to an argument** becomes a `Call`; the same name with no argument
 stays a plain `Symbol`.
 
-Fence-delimiters arc (remaining slice): a comma / semicolon `<mfenced>` list still lowers to
-`Sequence`, which drops the surrounding `open`/`close` delimiters. Carrying delimiters on the list
-shape (a `Fenced`-of-`Sequence`, or a delimiters field on `Sequence`) is a later slice, tracked with
-the same slice in the `latex` frontend.
+Fence-delimiters arc (complete for `mathml`): a comma / semicolon `<mfenced>` list now lowers to a
+`Fenced`-of-`Sequence`, carrying the surrounding `open`/`close` delimiters rather than dropping them —
+so `(a, b)` and `[a, b]` are distinct while the list/row structure is preserved as the `Fenced` body.
+This mirrors the `latex` frontend (`latex` 0.25.0). The `adj-lang` adapter unwraps `Fenced`, so the
+`Fenced`-of-`Sequence` lowers exactly as the bare `Sequence` did downstream.
 
 ## Contract
 
