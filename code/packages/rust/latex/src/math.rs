@@ -117,6 +117,12 @@ pub enum MathNode {
         body: Box<MathNode>,
         right: String,
     },
+    /// A comma-separated sequence: the items of a fenced list `(a, b, c)` / `[a, b]` /
+    /// `\left(a, b, c\right)` (a coordinate tuple, an argument list). Only ever appears as the
+    /// `body` of a [`MathNode::Fenced`] — the surrounding fence supplies the delimiters, so a
+    /// `Sequence` needs none of its own. Distinct from a `Bin(Mul, …)` juxtaposition: the commas
+    /// are list separators, not an operation.
+    Sequence(Vec<MathNode>),
     /// Prose embedded in math: `\text{…}`, `\mathrm{…}`.
     Text(String),
     /// A relation: `a = b`, `x \le y`.
@@ -214,6 +220,7 @@ fn take_children(n: &mut MathNode, out: &mut Vec<MathNode>) {
         }
         MathNode::Accent { body, .. } => take(body, out),
         MathNode::Fenced { body, .. } => take(body, out),
+        MathNode::Sequence(items) => out.extend(std::mem::take(items)),
         MathNode::Matrix { rows, .. } => {
             for row in std::mem::take(rows) {
                 out.extend(row);
@@ -638,11 +645,29 @@ impl<'a> MathParser<'a> {
         MathNode::Num(s)
     }
 
+    /// Read a fenced body: one relation, or — when a top-level comma follows — a comma-separated
+    /// [`MathNode::Sequence`] of relations (`a, b, c`). The caller consumes the delimiters. A
+    /// bounded loop over `parse_relation` (never recursion), so a wide list cannot overflow the
+    /// stack; a trailing/leading/doubled comma leaves a non-atom before the next `parse_relation`,
+    /// which returns a clean spanned error.
+    fn read_fence_body(&mut self) -> Result<MathNode, ParseError> {
+        let first = self.parse_relation()?;
+        if !matches!(self.peek().kind, TokenKind::Char(',')) {
+            return Ok(first);
+        }
+        let mut items = vec![first];
+        while matches!(self.peek().kind, TokenKind::Char(',')) {
+            self.bump(); // consume the comma
+            items.push(self.parse_relation()?);
+        }
+        Ok(MathNode::Sequence(items))
+    }
+
     /// Read `( … )` / `[ … ]` up to the matching `close` char.
     fn read_fence(&mut self, close: char) -> Result<MathNode, ParseError> {
         let open = if let TokenKind::Char(c) = self.peek().kind { c } else { unreachable!() };
         self.bump(); // opening delimiter
-        let body = self.parse_relation()?;
+        let body = self.read_fence_body()?;
         match self.peek().kind {
             TokenKind::Char(c) if c == close => {
                 self.bump();
@@ -659,7 +684,7 @@ impl<'a> MathParser<'a> {
     /// Read `| … |` (absolute value).
     fn read_bar_fence(&mut self) -> Result<MathNode, ParseError> {
         self.bump(); // opening |
-        let body = self.parse_relation()?;
+        let body = self.read_fence_body()?;
         match self.peek().kind {
             TokenKind::Char('|') => {
                 self.bump();
@@ -807,7 +832,7 @@ impl<'a> MathParser<'a> {
         if name == "left" {
             self.bump();
             let left = self.read_delimiter()?;
-            let body = self.parse_relation()?;
+            let body = self.read_fence_body()?;
             if !matches!(&self.peek().kind, TokenKind::ControlWord(w) if w == "right") {
                 return self.err("expected \\right");
             }
@@ -1239,6 +1264,16 @@ impl MathNode {
                     out.push_str(right);
                 }
             }
+            MathNode::Sequence(items) => {
+                // Comma-join the items; the enclosing Fenced supplies the delimiters, so
+                // `Fenced { body: Sequence([a, b, c]) }` round-trips to `(a, b, c)`.
+                for (i, item) in items.iter().enumerate() {
+                    if i > 0 {
+                        out.push_str(", ");
+                    }
+                    item.write(out, 0);
+                }
+            }
             MathNode::Text(t) => {
                 out.push_str("\\text{");
                 out.push_str(t);
@@ -1493,9 +1528,67 @@ mod tests {
             "\\begin{cases} 1 & x > 0 \\\\ 0 & x \\le 0 \\end{cases}",
             "\\begin{matrix} a \\\\ b \\\\ c \\end{matrix}",
             "\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}^2",
+            "(a, b, c)",
+            "[x, y, z]",
+            "\\left(p, q\\right)",
+            "(x + 1, 2)",
         ] {
             round_trips(s);
         }
+    }
+
+    #[test]
+    fn fenced_comma_list_is_a_sequence() {
+        // (a, b, c) → Fenced { left: "(", body: Sequence([a, b, c]), right: ")" }.
+        let n = parse_math("(a, b, c)").expect("parse");
+        match &n {
+            MathNode::Fenced { left, body, right } => {
+                assert_eq!(left, "(");
+                assert_eq!(right, ")");
+                match &**body {
+                    MathNode::Sequence(items) => {
+                        assert_eq!(items, &[sym("a"), sym("b"), sym("c")]);
+                    }
+                    other => panic!("expected Sequence body, got {other:?}"),
+                }
+            }
+            other => panic!("expected Fenced, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn comma_free_fence_stays_plain() {
+        // No comma → the body is the inner expression directly, NOT a Sequence.
+        let n = parse_math("(x + 1)").expect("parse");
+        match &n {
+            MathNode::Fenced { body, .. } => {
+                assert!(!matches!(**body, MathNode::Sequence(_)), "got {body:?}");
+            }
+            other => panic!("expected Fenced, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn sequence_items_are_full_expressions() {
+        // Each item between commas is a full relation, not just a leaf.
+        let n = parse_math("(x + 1, 2)").expect("parse");
+        let MathNode::Fenced { body, .. } = &n else { panic!("expected Fenced, got {n:?}") };
+        let MathNode::Sequence(items) = &**body else { panic!("expected Sequence, got {body:?}") };
+        assert_eq!(items.len(), 2);
+        assert!(matches!(items[0], MathNode::Bin(MBinOp::Add, ..)));
+        assert_eq!(items[1], num("2"));
+    }
+
+    #[test]
+    fn deeply_nested_sequence_drops_without_overflow() {
+        // A wide Sequence frees via the iterative Drop, not recursion.
+        let items: Vec<MathNode> = (0..200_000).map(|_| sym("x")).collect();
+        let n = MathNode::Fenced {
+            left: "(".into(),
+            body: Box::new(MathNode::Sequence(items)),
+            right: ")".into(),
+        };
+        drop(n);
     }
 
     // ---- L3: environments -----------------------------------------------------

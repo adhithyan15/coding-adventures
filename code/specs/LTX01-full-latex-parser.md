@@ -81,6 +81,7 @@ pub enum MathNode {
     Accent { kind: String, body: Box<MathNode> },   // \hat \bar \vec …
     Fenced { left: Delim, body: Box<MathNode>, right: Delim },   // \left( … \right)
     Group(Box<MathNode>), Text(String),
+    Sequence(Vec<MathNode>),                        // (a, b, c): comma-separated fence → ordered list
     Rel(RelOp, Box<MathNode>, Box<MathNode>),
     Matrix { env: String, col_spec: Option<String>, rows: Vec<Vec<MathNode>> },
 }

@@ -100,6 +100,8 @@ enum Build {
     Group,
     Rel(RelOp),
     Matrix { row_lens: Vec<usize> },
+    /// Assemble a `MathExpr::Sequence` from the top `len` finished children.
+    Sequence { len: usize },
 }
 
 /// One unit of work: either lower a raw node, or assemble a parent from finished children.
@@ -264,11 +266,25 @@ fn lower(root: MathNode, span: (usize, usize)) -> Result<MathExpr, FrontendError
                         work.push(Task::Node(*l));
                     }
                 }
-                // Fence style is presentation; the meaning is "this is grouped".
+                // Fence style is presentation; the meaning is "this is grouped" — unless the
+                // body is a comma list, in which case the fence is a Sequence (a tuple / list),
+                // and the delimiters drop just as for MathML `<mfenced>` and AsciiMath `(a,b,c)`.
                 MathNode::Fenced { body, .. } => {
                     let body = take_box(body);
-                    work.push(Task::Build(Build::Group));
+                    if !matches!(body, MathNode::Sequence(_)) {
+                        work.push(Task::Build(Build::Group));
+                    }
+                    // A Sequence body lowers via its own arm (no Group wrapper).
                     work.push(Task::Node(body));
+                }
+                // A comma-separated sequence — the fence's delimiters are already dropped.
+                MathNode::Sequence(items) => {
+                    let items = std::mem::take(items);
+                    work.push(Task::Build(Build::Sequence { len: items.len() }));
+                    // Push items in reverse so item 0 is processed first.
+                    for item in items.into_iter().rev() {
+                        work.push(Task::Node(item));
+                    }
                 }
                 // Matrix delimiter (pmatrix/bmatrix/cases/…) is presentation; cells carry it.
                 MathNode::Matrix { rows, .. } => {
@@ -374,6 +390,16 @@ fn lower(root: MathNode, span: (usize, usize)) -> Result<MathExpr, FrontendError
                         out.push(cells);
                     }
                     vals.push(MathExpr::Matrix(out));
+                }
+                Build::Sequence { len } => {
+                    // Pop exactly `len` finished items (the ones this sequence pushed), and put
+                    // them back in natural order — pop reverses, so reverse again.
+                    let mut items = Vec::with_capacity(len);
+                    for _ in 0..len {
+                        items.push(pop!());
+                    }
+                    items.reverse();
+                    vals.push(MathExpr::Sequence(items));
                 }
             },
         }
@@ -571,6 +597,30 @@ mod tests {
             MathExpr::Group(inner) => assert!(matches!(**inner, MathExpr::Bin(BinOp::Add, ..))),
             other => panic!("expected Group, got {other:?}"),
         }
+    }
+
+    #[test]
+    fn comma_fence_lowers_to_sequence() {
+        // A comma-separated fence is a LIST → MathExpr::Sequence (delimiters dropped, as for
+        // MathML `<mfenced>` and AsciiMath `(a,b,c)`). The third frontend on the neutral node.
+        let sym = |s: &str| MathExpr::Symbol(s.into());
+        assert_eq!(
+            m("(a, b, c)"),
+            MathExpr::Sequence(vec![sym("a"), sym("b"), sym("c")])
+        );
+        // `\left(…\right)` and bracket fences lower the same way.
+        assert_eq!(m(r"\left(a, b\right)"), MathExpr::Sequence(vec![sym("a"), sym("b")]));
+        assert_eq!(m("[x, y]"), MathExpr::Sequence(vec![sym("x"), sym("y")]));
+        // Each item is a full expression, not just a leaf.
+        assert_eq!(
+            m("(x + 1, 2)"),
+            MathExpr::Sequence(vec![
+                MathExpr::Bin(BinOp::Add, Box::new(sym("x")), Box::new(num(1))),
+                num(2),
+            ])
+        );
+        // A comma-free fence still lowers to Group (unchanged).
+        assert!(matches!(m("(a + b)"), MathExpr::Group(_)));
     }
 
     #[test]
