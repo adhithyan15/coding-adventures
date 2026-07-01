@@ -114,3 +114,16 @@ Dev-deps:
   ordering integration test.
 - `coding-adventures-closure-pass-inline` for the three-pass
   ordering integration test.
+
+## Upstream conformance tests
+
+`tests/upstream/remove_unused_vars_test.rs` ports Google Closure
+Compiler's `RemoveUnusedCodeTest` (Apache-2.0; see `ATTRIBUTION.md` and
+`UPSTREAM_SHA`), per the CLOC12 test-port convention. It pins the 11
+behaviors this pass supports today and records 6 upstream behaviors it
+does not (function-local removal, unused parameters, unused function
+declarations, side-effect extraction, self-referential dead cycles,
+assignment-only dead vars) as `#[ignore = "blocked on gap-NNN"]`
+placeholders tied to `code/specs/CLOC12-gaps.md` (gap-121 … gap-126).
+Run them with `cargo test --test upstream_remove_unused_vars` (add
+`-- --include-ignored` to see the pending gaps).

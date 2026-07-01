@@ -1,0 +1,13 @@
+# UPSTREAM_SHA
+#
+# Tracks google/closure-compiler at this commit. Every Rust file in
+# tests/upstream/ was ported from a Java file at this snapshot.
+#
+# Upgrade policy: bump this SHA only in a dedicated PR that re-ports
+# every Java source listed in ATTRIBUTION.md, diff-checks against the
+# previous port, and explicitly handles added / removed / renamed
+# tests per CLOC12 §4.
+
+commit:  5bb35ec1245dc1d3557481e5f8b4db344bcd1e6b
+date:    2026-05-28
+url:     https://github.com/google/closure-compiler/tree/5bb35ec1245dc1d3557481e5f8b4db344bcd1e6b

@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-pass-remove-unused-vars"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
 description = "Unreferenced-variable cleanup pass for the Closure Compiler clone. Per CLOC06's canonical pass set. The final sweep: deletes variable bindings that have zero post-DCE / post-inline references and whose initializers are pure."
 
@@ -16,3 +16,10 @@ serde_json = "1"
 coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
 coding-adventures-closure-pass-dce = { path = "../closure-pass-dce" }
 coding-adventures-closure-pass-inline = { path = "../closure-pass-inline" }
+
+# Upstream-test ports live under `tests/upstream/`; Cargo only
+# auto-discovers `tests/*.rs` one level deep, so each ported file needs
+# an explicit `[[test]]` entry. Per CLOC12.01 §3.
+[[test]]
+name = "upstream_remove_unused_vars"
+path = "tests/upstream/remove_unused_vars_test.rs"

@@ -2,6 +2,38 @@
 
 All notable changes to the `coding-adventures-closure-pass-remove-unused-vars` crate will be documented in this file.
 
+## [0.5.0] - 2026-06-30
+
+### Added — CLOC12 upstream test port (`RemoveUnusedCodeTest`)
+
+Ported the unused-binding cases from Google Closure Compiler's
+`RemoveUnusedCodeTest.java` (the descendant of the historical
+`RemoveUnusedVarsTest.java`) into `tests/upstream/remove_unused_vars_test.rs`,
+following the CLOC12.01 convention (header cites the Java source; `UPSTREAM_SHA`
+pins the tracked commit; `ATTRIBUTION.md` records the Apache-2.0 provenance; a
+`[[test]]` entry wires the file in).
+
+Because closurec has no public source-string → typed `Program` entry point,
+each case is built directly on the typed AST with small helpers (`var_decl`,
+`var_stmt`, `use_stmt`, `call`) and asserts on the surviving declarator names
+after running **only** `RemoveUnusedVarsPass`.
+
+- **11 active `#[test]`s pass**, covering the pass's whole supported surface:
+  unused global `var`/`let`/`const` removal, keeping referenced bindings, the
+  uninitialized (`var a;`) and pure-identifier-initializer (`var a=b;`) cases,
+  multi-declarator split (`var a=1,b=2; a;` → `var a=1;`), whole-declaration
+  drop when every declarator is dead, the impure-call-initializer keep, and the
+  Statement-wrapped AST shape. **No defect surfaced** — the port confirms the
+  pass is sound on its covered surface and adds canonical upstream coverage.
+- **6 `#[ignore = "blocked on gap-NNN"]` placeholders** record upstream
+  behaviors the narrow pass does not cover yet, each pinned to a new entry in
+  `code/specs/CLOC12-gaps.md` (CLOC12.136): gap-121 function-local removal,
+  gap-122 unused function declarations, gap-123 unused parameters, gap-124
+  side-effect extraction (`var a=f();` → `f();`), gap-125 self-referential dead
+  cycles, gap-126 assignment-only dead vars.
+
+Test-only change — no production code touched. Crate version 0.4.0 → 0.5.0.
+
 ## [0.4.0] - 2026-06-16
 
 ### Fixed — the pass was a silent no-op on real programs
