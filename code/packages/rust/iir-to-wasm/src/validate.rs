@@ -134,15 +134,19 @@ const UNSUPPORTED_OPS: &[&str] = &[
 ///
 /// | Builtin       | Host import         | Signature |
 /// |---------------|---------------------|-----------|
-/// | `"putchar"`   | `env.putchar`       | `(i32) -> ()`     |
-/// | `"getchar"`   | `env.getchar`       | `() -> i32`       |
-/// | `"print_i64"` | `env.__print_i64`   | `(i64) -> ()`     |
+/// | `"putchar"`    | `env.putchar`        | `(i32) -> ()`     |
+/// | `"getchar"`    | `env.getchar`        | `() -> i32`       |
+/// | `"print_i64"`  | `env.__print_i64`    | `(i64) -> ()`     |
+/// | `"input_i64"`  | `env.__input_i64`    | `() -> i64`       |
 ///
 /// `print_i64` (G2) reuses the same `env.__print_i64` import the
 /// `io_out` opcode already injects.  This lets BASIC's `PRINT`
 /// statement (which lowers to `call_builtin "print_i64"`) and
 /// Twig's `io_out` opcode share a single host-provided printer
 /// function.
+///
+/// `input_i64` (BA-INPUT) reads a line from stdin and parses it as
+/// an i64.  The host provides `env.__input_i64() -> i64`.
 ///
 /// Adding a new builtin requires:
 ///   1. Listing it here so the validator accepts it.
@@ -155,7 +159,7 @@ pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] =
     // `pair?` lowers to `ref.test $LispyPair` (is this lisp value a cons cell?),
     // the lisp `not` to `i32.eqz` (boolean negation), and `equal?` (McCarthy
     // `EQ` on atoms) to unbox-both-and-`i32.eq`. `ATOM x` = `not(pair? x)`.
-    &["putchar", "getchar", "print_i64", "pair?", "not", "equal?"];
+    &["putchar", "getchar", "print_i64", "input_i64", "pair?", "not", "equal?"];
 
 // ---------------------------------------------------------------------------
 // validate_for_wasm

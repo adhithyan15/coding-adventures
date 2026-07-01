@@ -1,5 +1,27 @@
 # Changelog — iir-to-llvm
 
+## [0.29.0] — 2026-06-30 (BA-INPUT: `input_i64` → `@__twig_input_i64`)
+
+Added `"input_i64"` to `SUPPORTED_BUILTINS` and wired it to the `@__twig_input_i64`
+function from the AOT runtime archive (`twig_runtime.c`).  `@__twig_input_i64` reads
+one line from stdin and parses it as `int64_t`; returns 0 on EOF or parse failure.
+
+Implementation pattern mirrors `@getchar`: a `used_input_i64` flag declares the
+extern once at the top of the module when the builtin is encountered:
+
+```llvm
+declare i64 @__twig_input_i64()
+```
+
+The `call_builtin "input_i64"` instruction then emits:
+
+```llvm
+%dest = call i64 @__twig_input_i64()
+```
+
+Enables `10 INPUT X\n20 PRINT X` to run on the LLVM backend in
+`matrix_every_proven_cell_agrees`.
+
 ## [0.28.0] — 2026-06-30 (LANG-FULL — seed `env_i1` for bool/i1 function parameters)
 
 Fixed a regression in `lower_function` where ALGOL programs with boolean

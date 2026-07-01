@@ -1840,11 +1840,9 @@ const PROGRAMS: &[Prog] = &[
     // now BASIC loops executed only on the VM/JIT; this RUNS a real FOR loop on the
     // code-gen backends.
     //
-    // JVM is excluded pending a separate fix: a backward branch (loop) combined with a
-    // `print_i64` call after it trips the `iir-to-jvm-class-file` StackMapTable
-    // generation (a forward-branch print — the IF program below — and a loop *without*
-    // print — Nib's for-loops — both work on JVM; only the loop+print combination
-    // fails). Tracked as roadmap item BA-JVM-1.
+    // BA-JVM-1 is now resolved: `iir-to-jvm-class-file` ≥ 0.13.3 correctly generates
+    // StackMapTable frames for backward branches (loops) combined with `print_i64` calls.
+    // JVM is included in the backends list above.
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
@@ -2137,6 +2135,36 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("2"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — scalar `INPUT` statement (LANG-FULL BA-INPUT). `INPUT X`
+    // reads one line from stdin, parses it as an integer, and stores the result in
+    // the variable `X`.  The frontend lowers this to `call_builtin "input_i64"` —
+    // a new IIR builtin wired in this slice to all 7 backends:
+    //   • native / LLVM: `__twig_input_i64()` in `twig_runtime.c` (already present)
+    //   • WASM: `env.__input_i64()` host import (new `InputI64Func` here)
+    //   • JVM: `env.BasicRuntime.readLong()J` (new method in BASIC_RUNTIME_JAVA)
+    //   • CLR: `Console.ReadLine()` + `Int32.Parse()` in iir-to-cil-bytecode
+    //   • VM/JIT: registered closures below (same pattern as `getchar`)
+    // Stdin "42\n" → X = 42 → PRINT X ⇒ "42".  The newline-terminated input
+    // proves the line-draining logic works correctly on every backend.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 INPUT X\n20 PRINT X\n30 END\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — two sequential `INPUT` reads, then arithmetic (BA-INPUT).
+    // This proves that two independent calls to `input_i64` drain successive lines
+    // from stdin: A reads `10`, B reads `32`, PRINT A + B ⇒ `42`.  On the WASM
+    // and VM/JIT columns the shared stdin buffer must advance past the first `\n`
+    // before the second read — a single-byte drainer (`getchar`) would fail here.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 INPUT A\n20 INPUT B\n30 PRINT A + B\n40 END\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -2204,6 +2232,10 @@ fn program_stdin(p: &Prog) -> &'static [u8] {
         (Language::Brainfuck, ",+.") => b"A",   // read 'A' (65), `+` → 66, print 'B'
         (Language::Brainfuck, ",.,.") => b"Hi", // read a byte and echo it, twice → "Hi"
         (Language::Brainfuck, ",[.,]") => b"Hi", // cat: echo until EOF (EOF → 0 halts) → "Hi"
+        // BA-INPUT: single INPUT — reads "42\n", PRINT X ⇒ "42"
+        (Language::DartmouthBasic, "10 INPUT X\n20 PRINT X\n30 END\n") => b"42\n",
+        // BA-INPUT: two INPUTs — reads "10\n32\n", PRINT A + B ⇒ "42"
+        (Language::DartmouthBasic, "10 INPUT A\n20 INPUT B\n30 PRINT A + B\n40 END\n") => b"10\n32\n",
         _ => b"",
     }
 }
@@ -2274,7 +2306,12 @@ fn clang_ok() -> bool {
 /// when the emitted `.ll` actually references one of the symbols, so the bare
 /// expression-language programs still link a standalone `.ll`.
 const PRINT_RUNTIME_C: &str =
-    "#include <stdio.h>\n#include <stdint.h>\nvoid __print_i64(int64_t x){printf(\"%lld\\n\",(long long)x);}\nvoid __print_str(const char* p,int64_t len){if(len>0){fwrite(p,1,(size_t)len,stdout);}}\n";
+    "#include <stdio.h>\n#include <stdint.h>\n\
+void __print_i64(int64_t x){printf(\"%lld\\n\",(long long)x);}\n\
+void __print_str(const char* p,int64_t len){if(len>0){fwrite(p,1,(size_t)len,stdout);}}\n\
+int64_t __twig_input_i64(void){char buf[64];int i=0;int c;\
+while((c=getchar())!=EOF&&c!='\\n'&&i<63){buf[i++]=(char)c;}buf[i]=0;\
+long long v=0;sscanf(buf,\"%lld\",&v);return (int64_t)v;}\n";
 
 /// LLVM runner: source → textual `.ll` (`iir-to-llvm`) → real `clang` → run, the
 /// exact CLR-real/McCarthy strategy of handing symbolic code to the real toolchain.
@@ -2305,8 +2342,8 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
     let exe = dir.path().join("prog");
     let mut cmd = Command::new("clang");
     cmd.arg("-x").arg("ir").arg(&ll_path);
-    // Link the generic print runtime iff the program actually prints.
-    if ll.contains("@__print_i64") || ll.contains("@__print_str") {
+    // Link the generic I/O runtime iff the program actually uses print or input.
+    if ll.contains("@__print_i64") || ll.contains("@__print_str") || ll.contains("@__twig_input_i64") {
         let rt_path = dir.path().join("rt.c");
         std::fs::write(&rt_path, PRINT_RUNTIME_C).ok()?;
         cmd.arg("-x").arg("c").arg(&rt_path);
@@ -2496,6 +2533,46 @@ impl wasm_execution::HostFunction for GetcharFunc {
             .pop_front();
         let code = byte.map(i32::from).unwrap_or(-1); // EOF → -1
         Ok(vec![wasm_execution::WasmValue::I32(code)])
+    }
+}
+
+/// `env.__input_i64() -> i64` — WASM host import for BASIC `INPUT X`.
+/// Drains the stdin buffer line-by-line: reads bytes up to (and including) the
+/// next `\n`, parses the trimmed ASCII decimal as an i64, and returns the value.
+/// An empty or exhausted buffer returns 0 (matches `__twig_input_i64` EOF behaviour).
+struct InputI64Func {
+    input: std::sync::Arc<std::sync::Mutex<std::collections::VecDeque<u8>>>,
+}
+
+impl wasm_execution::HostFunction for InputI64Func {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![],
+                results: vec![wasm_types::ValueType::I64],
+            });
+        &FT
+    }
+
+    fn call(
+        &self,
+        _args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let mut buf = self
+            .input
+            .lock()
+            .expect("lang-matrix wasm stdin buffer poisoned");
+        let mut line = Vec::new();
+        loop {
+            match buf.pop_front() {
+                None | Some(b'\n') => break,
+                Some(b) => line.push(b),
+            }
+        }
+        let s = String::from_utf8_lossy(&line);
+        let v: i64 = s.trim().parse().unwrap_or(0);
+        Ok(vec![wasm_execution::WasmValue::I64(v)])
     }
 }
 
@@ -2702,6 +2779,11 @@ impl wasm_execution::HostInterface for PrintHost {
             ("env", "getchar") => Some(Box::new(GetcharFunc {
                 input: std::sync::Arc::clone(&self.input),
             })),
+            // BA-INPUT: `env.__input_i64` reads a full line from the stdin buffer
+            // and parses it as an i64; used by BASIC `INPUT X`.
+            ("env", "__input_i64") => Some(Box::new(InputI64Func {
+                input: std::sync::Arc::clone(&self.input),
+            })),
             // AL8 transcendentals: env.__sin/cos/ln/exp are f64→f64 host imports.
             ("env", "__sin")  => Some(Box::new(SinFunc)),
             ("env", "__cos")  => Some(Box::new(CosFunc)),
@@ -2710,11 +2792,7 @@ impl wasm_execution::HostInterface for PrintHost {
             // AL8-arctan: env.__atan/tan are f64→f64 host imports.
             ("env", "__atan") => Some(Box::new(AtanFunc)),
             ("env", "__tan")  => Some(Box::new(TanFunc)),
-            ("env", "__sin") => Some(Box::new(SinFunc)),
-            ("env", "__cos") => Some(Box::new(CosFunc)),
-            ("env", "__ln")  => Some(Box::new(LnFunc)),
-            ("env", "__exp") => Some(Box::new(ExpFunc)),
-            ("env", "__pow") => Some(Box::new(PowFunc)),
+            ("env", "__pow")  => Some(Box::new(PowFunc)),
             _ => None,
         }
     }
@@ -2812,7 +2890,17 @@ fn java_ok() -> bool {
 /// `run_jvm` compiles it with `javac` onto the classpath only when running an I/O
 /// program, so the expression languages still run a standalone `Main.class`.
 const BASIC_RUNTIME_JAVA: &str =
-    "package env; public final class BasicRuntime { public static void println(long x){ System.out.println(x); } }";
+    "package env; public final class BasicRuntime { \
+public static void println(long x){ System.out.println(x); } \
+public static long readLong(){ try { \
+java.io.InputStream in = System.in; \
+StringBuilder sb = new StringBuilder(); \
+int c; \
+while((c = in.read()) != -1 && c != '\\n'){ sb.append((char)c); } \
+String s = sb.toString().trim(); \
+if(s.isEmpty()) return 0L; \
+return Long.parseLong(s); \
+} catch(Exception e){ return 0L; } } }";
 
 /// The `env.BFRuntime` host class for Brainfuck (LANG-MATRIX LM-J). `iir-to-jvm-class-file`
 /// lowers Brainfuck's tape to a static `byte[] __tape` field (`getstatic … __tape : [B` +
@@ -2982,11 +3070,12 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
     // classpath so its `println(J)V` resolves. `javac` ships with the JDK; if it is
     // somehow absent the cell skips gracefully (`None`).
     if prints {
-        // Pick the host class the program's I/O lowers to. Both Brainfuck's
-        // `.`/`,` and — since BA2 — Dartmouth BASIC's `PRINT` lower to the
-        // generic `putchar` builtin (`invokestatic env/BFRuntime.putchar(I)V`),
-        // so both use `env.BFRuntime`. (The legacy `env.BasicRuntime.println`
-        // path is kept for any future language that lowers `print_i64`.)
+        // Pick the host class(es) the program's I/O lowers to. Brainfuck's `.`/`,`
+        // and — since BA2 — Dartmouth BASIC's `PRINT` lower to `putchar`
+        // (`invokestatic env/BFRuntime.putchar(I)V`), so both use `env.BFRuntime`.
+        // Dartmouth BASIC's `INPUT X` (BA-INPUT) lowers to `invokestatic
+        // env/BasicRuntime.readLong()J`, so DartmouthBasic additionally needs
+        // `BasicRuntime.java` on the classpath alongside `BFRuntime.java`.
         let (file, source) = if p.lang == Language::Brainfuck
             || p.lang == Language::DartmouthBasic
         {
@@ -2999,6 +3088,17 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
         let built = Command::new("javac").arg("-d").arg(dir.path()).arg(&src).output().ok()?;
         if !built.status.success() {
             return None;
+        }
+        // Dartmouth BASIC programs that use INPUT need BasicRuntime.readLong()J.
+        // Compile BasicRuntime.java alongside BFRuntime.java only when the program
+        // actually has an INPUT statement; other programs use only BFRuntime (putchar).
+        if p.lang == Language::DartmouthBasic && p.src.contains("INPUT") {
+            let basic_src = dir.path().join("BasicRuntime.java");
+            std::fs::write(&basic_src, BASIC_RUNTIME_JAVA).ok()?;
+            let built = Command::new("javac").arg("-d").arg(dir.path()).arg(&basic_src).output().ok()?;
+            if !built.status.success() {
+                return None;
+            }
         }
     }
     // A Brainfuck `,` reads `env.BFRuntime.getchar()` → `System.in`, so pipe the
@@ -3160,6 +3260,23 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
         let byte = input.lock().expect("lang-matrix VM stdin buffer poisoned").pop_front();
         Ok(Value::Int(byte.map(i64::from).unwrap_or(0)))
     });
+    // BA-INPUT: `input_i64` reads a full line from the stdin buffer and parses it
+    // as an i64. Mirrors `env.__input_i64` in the WASM column and `__twig_input_i64`
+    // in the native/LLVM column. Returns 0 on empty/drained buffer (EOF semantics).
+    let input = Arc::clone(&stdin_buf);
+    vm.builtins_mut().register("input_i64", move |_args: &[Value]| {
+        let mut buf = input.lock().expect("lang-matrix VM stdin buffer poisoned");
+        let mut line = Vec::new();
+        loop {
+            match buf.pop_front() {
+                None | Some(b'\n') => break,
+                Some(b) => line.push(b),
+            }
+        }
+        let s = String::from_utf8_lossy(&line);
+        let v: i64 = s.trim().parse().unwrap_or(0);
+        Ok(Value::Int(v))
+    });
 
     let result = match vm.execute(&mut module, &entry, &[]) {
         Ok(result) => result,
@@ -3250,6 +3367,20 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
         let byte = input.lock().expect("lang-matrix JIT stdin buffer poisoned").pop_front();
         Ok(Value::Int(byte.map(i64::from).unwrap_or(0)))
     });
+    let input = Arc::clone(&stdin_buf);
+    vm.builtins_mut().register("input_i64", move |_args: &[Value]| {
+        let mut buf = input.lock().expect("lang-matrix JIT stdin buffer poisoned");
+        let mut line = Vec::new();
+        loop {
+            match buf.pop_front() {
+                None | Some(b'\n') => break,
+                Some(b) => line.push(b),
+            }
+        }
+        let s = String::from_utf8_lossy(&line);
+        let v: i64 = s.trim().parse().unwrap_or(0);
+        Ok(Value::Int(v))
+    });
 
     // --- compiled path: the same builtins on the JIT backend (closures return Value) ---
     let backend = GenericCirJit::new();
@@ -3269,6 +3400,20 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
     backend.register_builtin("getchar", move |_args: &[Value]| {
         let byte = input.lock().expect("lang-matrix JIT stdin buffer poisoned").pop_front();
         Value::Int(byte.map(i64::from).unwrap_or(0))
+    });
+    let input = Arc::clone(&stdin_buf);
+    backend.register_builtin("input_i64", move |_args: &[Value]| {
+        let mut buf = input.lock().expect("lang-matrix JIT stdin buffer poisoned");
+        let mut line = Vec::new();
+        loop {
+            match buf.pop_front() {
+                None | Some(b'\n') => break,
+                Some(b) => line.push(b),
+            }
+        }
+        let s = String::from_utf8_lossy(&line);
+        let v: i64 = s.trim().parse().unwrap_or(0);
+        Value::Int(v)
     });
 
     // `JITCore::new` takes `&mut vm` only to thread thresholds — it does not hold the

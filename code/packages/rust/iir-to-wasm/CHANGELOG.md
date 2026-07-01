@@ -1,5 +1,20 @@
 # Changelog — iir-to-wasm
 
+## [0.28.0] — 2026-06-30 (BA-INPUT: `input_i64` → `env.__input_i64` host import)
+
+Added `"input_i64"` to `CALL_BUILTIN_SUPPORTED_NAMES` in `validate.rs` and
+implemented the lowering in `lower.rs`:
+
+- A new `input_i64_fn_idx: Option<u32>` parameter threads the host import index
+  through `emit_instr` (same pattern as `getchar_fn_idx`).
+- The builtin table adds `env.__input_i64` with signature `() -> i64` when
+  `input_i64` is used; the host runtime provides this import.
+- The lowering emits `call $env.__input_i64; local.set $dest` — no widening
+  needed since `env.__input_i64` already returns `i64`.
+
+Enables `10 INPUT X\n20 PRINT X` to run on the WASM backend in
+`matrix_every_proven_cell_agrees`.
+
 ## [0.27.0] — 2026-06-30 (LANG-FULL — boolean i64/i32 width-coherence for `and`/`or`/`xor`)
 
 Fixed a WASM type-validity bug in the `and`/`or`/`xor` lowering arm that

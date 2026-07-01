@@ -834,6 +834,7 @@ fn emit_instr(
     print_str_fn_idx: Option<u32>,
     putchar_fn_idx: Option<u32>,
     getchar_fn_idx: Option<u32>,
+    input_i64_fn_idx: Option<u32>,
     sin_fn_idx: Option<u32>,
     cos_fn_idx: Option<u32>,
     ln_fn_idx: Option<u32>,
@@ -2685,6 +2686,26 @@ fn emit_instr(
                     }
                     code.extend(encode_local_set(rd));
                 }
+                // BA-INPUT: `input_i64` reads a line from stdin and parses it as
+                // an i64. The host provides `env.__input_i64() -> i64`; unlike
+                // `getchar` which returns an i32 byte, this returns a full i64 so
+                // no widening is needed. The BASIC compiler emits:
+                //   call_builtin "input_i64" [dest=reg]
+                // Shape: srcs[0]=Var("input_i64"), dest=Some(varname)
+                "input_i64" => {
+                    let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                        function: fn_name.to_string(),
+                        detail: "call_builtin \"input_i64\" requires a dest register".to_string(),
+                    })?;
+                    let rd = get_reg(dest)?;
+                    let fn_idx = input_i64_fn_idx.ok_or_else(|| IIRWasmError::UnsupportedOp {
+                        function: fn_name.to_string(),
+                        op: "call_builtin \"input_i64\": no env.__input_i64 import registered (internal error)".to_string(),
+                    })?;
+                    // `env.__input_i64` returns i64 directly — no widening needed.
+                    code.extend(encode_call(fn_idx));
+                    code.extend(encode_local_set(rd));
+                }
                 // G2: `print_i64` reuses the same `env.__print_i64`
                 // host import the `io_out` opcode injects.  Lowering
                 // is identical to `io_out`: load the i64 argument from
@@ -2866,6 +2887,7 @@ fn lower_function(
     print_str_fn_idx: Option<u32>,
     putchar_fn_idx: Option<u32>,
     getchar_fn_idx: Option<u32>,
+    input_i64_fn_idx: Option<u32>,
     sin_fn_idx: Option<u32>,
     cos_fn_idx: Option<u32>,
     ln_fn_idx: Option<u32>,
@@ -2980,6 +3002,7 @@ fn lower_function(
                     print_str_fn_idx,
                     putchar_fn_idx,
                     getchar_fn_idx,
+                    input_i64_fn_idx,
                     sin_fn_idx,
                     cos_fn_idx,
                     ln_fn_idx,
@@ -3046,6 +3069,7 @@ fn lower_function(
                 print_str_fn_idx,
                 putchar_fn_idx,
                 getchar_fn_idx,
+                input_i64_fn_idx,
                 sin_fn_idx,
                 cos_fn_idx,
                 ln_fn_idx,
@@ -3127,14 +3151,15 @@ fn make_lispy_pair_struct_type() -> StructType {
 /// module.  Each boolean field gates an injection step in
 /// [`lower_iir_to_wasm`]:
 ///
-/// | Field            | Trigger                              | What it injects |
-/// |------------------|--------------------------------------|-----------------|
-/// | `global_names`   | `global_load` / `global_store`        | `Global` entries (one per name, i64, mutable) |
-/// | `uses_io_out`    | `io_out`                              | `env.__print_i64` import |
-/// | `uses_print_str` | `print_str`                           | `env.__print_str` import + linear memory |
-/// | `uses_putchar`   | `call_builtin` with name `"putchar"`  | `env.putchar` import   |
-/// | `uses_getchar`   | `call_builtin` with name `"getchar"`  | `env.getchar` import   |
-/// | `uses_memory`    | `load_mem` / `store_mem`              | A 1-page linear `Memory` |
+/// | Field              | Trigger                                | What it injects |
+/// |--------------------|----------------------------------------|-----------------|
+/// | `global_names`     | `global_load` / `global_store`          | `Global` entries (one per name, i64, mutable) |
+/// | `uses_io_out`      | `io_out`                                | `env.__print_i64` import |
+/// | `uses_print_str`   | `print_str`                             | `env.__print_str` import + linear memory |
+/// | `uses_putchar`     | `call_builtin` with name `"putchar"`    | `env.putchar` import   |
+/// | `uses_getchar`     | `call_builtin` with name `"getchar"`    | `env.getchar` import   |
+/// | `uses_input_i64`   | `call_builtin` with name `"input_i64"` | `env.__input_i64` import |
+/// | `uses_memory`      | `load_mem` / `store_mem`                | A 1-page linear `Memory` |
 ///
 /// All combinations are valid — the eventual import order is documented
 /// in [`lower_iir_to_wasm`].
@@ -3146,6 +3171,7 @@ struct ModuleFeatures {
     uses_print_str: bool,
     uses_putchar: bool,
     uses_getchar: bool,
+    uses_input_i64: bool,
     /// True when the module calls `f64_sin`/`f64_cos`/`f64_ln`/`f64_exp`/`f64_atan`/`f64_tan`.
     /// Triggers injection of the corresponding host imports (`env.__sin` etc.,
     /// each `f64 -> f64`).  WASM has no built-in transcendental opcodes; these
@@ -3181,6 +3207,7 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
     let mut uses_print_str = false;
     let mut uses_putchar = false;
     let mut uses_getchar = false;
+    let mut uses_input_i64 = false;
     let mut uses_f64_sin  = false;
     let mut uses_f64_cos  = false;
     let mut uses_f64_ln   = false;
@@ -3372,6 +3399,9 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                             // the module uses `print_i64` exclusively
                             // (no `io_out` opcodes).
                             "print_i64" => uses_io_out = true,
+                            // BA-INPUT: BASIC `INPUT X` — triggers injection of
+                            // `env.__input_i64() -> i64` host import.
+                            "input_i64" => uses_input_i64 = true,
                             // Other builtin names are rejected by the
                             // validator before we get here — be defensive
                             // and don't crash on unknown ones at compile time.
@@ -3396,6 +3426,7 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
         uses_print_str,
         uses_putchar,
         uses_getchar,
+        uses_input_i64,
         uses_f64_sin,
         uses_f64_cos,
         uses_f64_ln,
@@ -3475,6 +3506,7 @@ pub fn lower_iir_to_wasm(
     let uses_print_str = features.uses_print_str;
     let uses_putchar = features.uses_putchar;
     let uses_getchar = features.uses_getchar;
+    let uses_input_i64 = features.uses_input_i64;
     let uses_f64_sin  = features.uses_f64_sin;
     let uses_f64_cos  = features.uses_f64_cos;
     let uses_f64_ln   = features.uses_f64_ln;
@@ -3503,13 +3535,14 @@ pub fn lower_iir_to_wasm(
     //   1. env.__print_str   (if uses_print_str)
     //   2. env.putchar       (if uses_putchar)
     //   3. env.getchar       (if uses_getchar)
-    //   4. env.__sin         (if uses_f64_sin)
-    //   5. env.__cos         (if uses_f64_cos)
-    //   6. env.__ln          (if uses_f64_ln)
-    //   7. env.__exp         (if uses_f64_exp)
-    //   8. env.__atan        (if uses_f64_atan)
-    //   9. env.__tan         (if uses_f64_tan)
-    //  10. env.__pow         (if uses_f64_pow)
+    //   4. env.__input_i64   (if uses_input_i64)
+    //   5. env.__sin         (if uses_f64_sin)
+    //   6. env.__cos         (if uses_f64_cos)
+    //   7. env.__ln          (if uses_f64_ln)
+    //   8. env.__exp         (if uses_f64_exp)
+    //   9. env.__atan        (if uses_f64_atan)
+    //  10. env.__tan         (if uses_f64_tan)
+    //  11. env.__pow         (if uses_f64_pow)
     let mut next_import_idx: u32 = 0;
     let print_fn_idx: Option<u32> = if uses_io_out {
         let i = next_import_idx; next_import_idx += 1; Some(i)
@@ -3521,6 +3554,9 @@ pub fn lower_iir_to_wasm(
         let i = next_import_idx; next_import_idx += 1; Some(i)
     } else { None };
     let getchar_fn_idx: Option<u32> = if uses_getchar {
+        let i = next_import_idx; next_import_idx += 1; Some(i)
+    } else { None };
+    let input_i64_fn_idx: Option<u32> = if uses_input_i64 {
         let i = next_import_idx; next_import_idx += 1; Some(i)
     } else { None };
     let sin_fn_idx: Option<u32> = if uses_f64_sin {
@@ -3682,6 +3718,22 @@ pub fn lower_iir_to_wasm(
             type_info: ImportTypeInfo::Function(type_idx),
         });
     }
+    if uses_input_i64 {
+        // env.__input_i64() -> i64 — BASIC's `INPUT X`.  Reads one line from
+        // stdin and parses it as a signed 64-bit integer; returns 0 on EOF or
+        // parse failure (the same V1 permissive contract as `__twig_input_i64`
+        // in `twig_runtime.c`).  The test host in `lang_matrix.rs` resolves
+        // this import to `InputI64Func`, which drains the per-program stdin
+        // buffer line-by-line.
+        let type_idx = types.len() as u32 + struct_type_offset;
+        types.push(FuncType { params: vec![], results: vec![ValueType::I64] });
+        host_imports.push(Import {
+            module_name: "env".to_string(),
+            name: "__input_i64".to_string(),
+            kind: ExternalKind::Function,
+            type_info: ImportTypeInfo::Function(type_idx),
+        });
+    }
     // ALGOL 60 transcendentals — WASM has no built-in opcodes for sin/cos/log/exp
     // so they are resolved via host imports (env.__sin, etc.).  Each is f64 → f64.
     // The test host in lang_matrix.rs resolves these to Rust's f64::sin() etc.
@@ -3805,6 +3857,7 @@ pub fn lower_iir_to_wasm(
         let body = lower_function(
             fn_, &fn_map, lispy_pair_type_idx, &global_map, fn_string_literals,
             print_fn_idx, print_str_fn_idx, putchar_fn_idx, getchar_fn_idx,
+            input_i64_fn_idx,
             sin_fn_idx, cos_fn_idx, ln_fn_idx, exp_fn_idx,
             atan_fn_idx, tan_fn_idx,
             pow_fn_idx,
