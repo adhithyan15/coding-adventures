@@ -2,6 +2,33 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.20.0] — 2026-06-30
+
+### Added — semicolon-separated fences lower to rows (matches MathML `<mfenced>` PR-5)
+
+- A fence whose body contains a top-level semicolon — `(a, b; c, d)`, `\left(a, b; c, d\right)` — is
+  now read as **rows**: semicolons are the row separator and commas the within-row (column)
+  separator, the classic fenced-matrix notation. `(a, b; c, d)` parses to
+  `Sequence([Sequence([a, b]), Sequence([c, d])])` and lowers to the same nested
+  `MathExpr::Sequence`. This mirrors the `mathml` crate's PR-5 exactly, extending the write-once
+  Sequence node to a second structural frontend's row shape.
+- Degenerate shapes are predictable, identical to MathML: a **semicolon-only** fence `(a; b; c)` — a
+  column vector with no second column in any row — collapses to the same flat `Sequence([a, b, c])`
+  as a comma list; a **ragged** fence `(a; b, c)` stays faithful as
+  `Sequence([a, Sequence([b, c])])`. Each cell is still folded to a full relation, so `(x + 1, 2; y)`
+  nests the folded `x + 1`. A comma-only fence is unchanged (flat `Sequence`), and a comma/semicolon-
+  free fence is still a plain grouped expression.
+- **Round-trips** through `to_latex`: a rows `Sequence` (detectable because a comma-list item is
+  always a relation, never a *bare* `Sequence`, so a bare-`Sequence` child can only be a row)
+  semicolon-joins its rows and comma-joins each row's columns, so `parse_math(n.to_latex()) == n`
+  holds for `(a, b; c, d)` and friends. `read_fence_body` records the separator after each relation
+  in a bounded loop (never recursion), so a wide grid cannot overflow the stack; a
+  leading/trailing/doubled `;` or `,` is a clean spanned error, never a dropped row.
+- No new AST node, no shared-crate change (reuses `MathExpr::Sequence`; the neutral node already
+  nests, and the frontend lowering already recurses). 10 new tests (rows, semicolon-only flat,
+  ragged, folded cells, trailing-`;` error, 4 round-trip corpus entries, frontend nested-lowering).
+  `latex` 0.19.0 → 0.20.0.
+
 ## [0.19.0] — 2026-06-30
 
 ### Added — comma-separated fences lower to the neutral `Sequence` node (third frontend)
