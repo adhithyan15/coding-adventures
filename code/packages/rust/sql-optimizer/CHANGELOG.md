@@ -1,0 +1,45 @@
+# Changelog — coding-adventures-sql-optimizer
+
+All notable changes to this crate will be documented here.
+
+## [0.1.0] — 2026-06-30
+
+### Added
+
+- `OptimizedPlan` enum: mirrors `LogicalPlan` from `sql-planner` with two
+  extra annotations on `Scan` (`required_columns: Option<Vec<String>>` and
+  `scan_limit: Option<i64>`) and a new `EmptyResult` sentinel variant.
+- `Pass` trait: `name() -> &str` + `apply(OptimizedPlan) -> OptimizedPlan`.
+- `lift(LogicalPlan) -> OptimizedPlan`: structural conversion, no optimization.
+- `optimize(LogicalPlan) -> OptimizedPlan`: apply all five default passes.
+- `optimize_with_passes(LogicalPlan, &[&dyn Pass]) -> OptimizedPlan`:
+  caller-supplied pass list.
+- `default_passes() -> Vec<Box<dyn Pass>>`: returns the five passes in order.
+
+### Five optimization passes
+
+1. **ConstantFoldingPass** — bottom-up evaluation of constant sub-expressions;
+   SQL three-valued logic (NULL propagation, AND/OR short-circuits); integer
+   arithmetic via `i64::checked_*`; string concatenation.
+
+2. **PredicatePushdownPass** — pushes `Filter` nodes through `Sort`,
+   `Project`, and `Distinct`; blocked by `Limit` and `Aggregate`.
+
+3. **ProjectionPruningPass** — top-down required-column propagation;
+   annotates `Scan.required_columns` with only the columns the rest of the
+   plan needs; wildcard (`*`) disables pruning.
+
+4. **DeadCodeEliminationPass** — replaces `Filter(_, FALSE)`,
+   `Filter(_, NULL)`, and `Limit(_, Some(0))` with `EmptyResult`;
+   propagates `EmptyResult` upward through `Project`, `Sort`, `Limit`,
+   `Distinct`, `Having`, and `INNER`/`CROSS` joins; does NOT eliminate
+   `Aggregate(EmptyResult)` (COUNT(*) must still return 0).
+
+5. **LimitPushdownPass** — attaches `scan_limit = count + offset` hints to
+   `Scan` nodes; pushes through `Sort` but not through `Filter`; preserves
+   the tighter of two competing hints.
+
+### Test coverage
+
+- 60+ unit tests covering lift, all five passes individually, and
+  full-pipeline integration scenarios.

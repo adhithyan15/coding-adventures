@@ -1,0 +1,17 @@
+@echo off
+rem BUILD_windows — sql-optimizer (Windows)
+rem
+rem Dependency chain (leaf-to-root):
+rem   sql-lexer -> sql-parser -> sql-backend -> sql-planner -> sql-optimizer
+
+set CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=rust-lld
+
+pushd %~dp0..
+
+cargo build --package coding-adventures-sql-optimizer
+if errorlevel 1 exit /b 1
+
+cargo test --package coding-adventures-sql-optimizer
+if errorlevel 1 exit /b 1
+
+popd
