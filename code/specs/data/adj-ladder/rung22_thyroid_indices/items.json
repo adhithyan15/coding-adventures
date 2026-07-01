@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 22 \u2014 thyroid function indices from a single thyroid panel (a NEW organ system: endocrine/thyroid on the quantitative band). From four stated quantities (total thyroxine TT4, free thyroxine FT4, total triiodothyronine TT3, free triiodothyronine FT3) compute the total T4:T3 ratio (TT4/TT3), the free T4:T3 ratio (FT4/FT3), or the free fraction of T4 (FT4/TT4). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic (pure division) and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via / \u2014 no constant leaks \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same quantities, so the distractors are exactly the slips students make: the free fraction of T3 (FT3/TT3, confused with the free fraction of T4) and the inverse total ratio (TT3/TT4, written upside-down).",
+  "items": [
+    {
+      "id": "r22thy-01",
+      "qtype": "thyroid_index",
+      "stem": "A thyroid function panel shows total T4 (thyroxine) 8 ug/dL, free T4 2 ng/dL, total T3 (triiodothyronine) 100 ng/dL, and free T3 4 pg/mL. What is the patient's total T4-to-T3 ratio?",
+      "program": "observe total_thyroxine(8)\nobserve free_thyroxine(2)\nobserve total_triiodo(100)\nobserve free_triiodo(4)\nlet answer = total_thyroxine / total_triiodo\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.08,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.04,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r22thy-02",
+      "qtype": "thyroid_index",
+      "stem": "A thyroid function panel shows total T4 (thyroxine) 8 ug/dL, free T4 2 ng/dL, total T3 (triiodothyronine) 100 ng/dL, and free T3 4 pg/mL. What is the patient's free T4-to-T3 ratio?",
+      "program": "observe total_thyroxine(8)\nobserve free_thyroxine(2)\nobserve total_triiodo(100)\nobserve free_triiodo(4)\nlet answer = free_thyroxine / free_triiodo\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.08,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.04,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r22thy-03",
+      "qtype": "thyroid_index",
+      "stem": "A thyroid function panel shows total T4 (thyroxine) 8 ug/dL, free T4 2 ng/dL, total T3 (triiodothyronine) 100 ng/dL, and free T3 4 pg/mL. What is the patient's free fraction of T4?",
+      "program": "observe total_thyroxine(8)\nobserve free_thyroxine(2)\nobserve total_triiodo(100)\nobserve free_triiodo(4)\nlet answer = free_thyroxine / total_thyroxine\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.08,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.04,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r22thy-04",
+      "qtype": "thyroid_index",
+      "stem": "A thyroid function panel shows total T4 (thyroxine) 10 ug/dL, free T4 1 ng/dL, total T3 (triiodothyronine) 120 ng/dL, and free T3 3 pg/mL. What is the patient's total T4-to-T3 ratio?",
+      "program": "observe total_thyroxine(10)\nobserve free_thyroxine(1)\nobserve total_triiodo(120)\nobserve free_triiodo(3)\nlet answer = total_thyroxine / total_triiodo\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.1,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.025,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.08333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r22thy-05",
+      "qtype": "thyroid_index",
+      "stem": "A thyroid function panel shows total T4 (thyroxine) 10 ug/dL, free T4 1 ng/dL, total T3 (triiodothyronine) 120 ng/dL, and free T3 3 pg/mL. What is the patient's free T4-to-T3 ratio?",
+      "program": "observe total_thyroxine(10)\nobserve free_thyroxine(1)\nobserve total_triiodo(120)\nobserve free_triiodo(3)\nlet answer = free_thyroxine / free_triiodo\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.08333333333333333,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.1,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.025,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r22thy-06",
+      "qtype": "thyroid_index",
+      "stem": "A thyroid function panel shows total T4 (thyroxine) 10 ug/dL, free T4 1 ng/dL, total T3 (triiodothyronine) 120 ng/dL, and free T3 3 pg/mL. What is the patient's free fraction of T4?",
+      "program": "observe total_thyroxine(10)\nobserve free_thyroxine(1)\nobserve total_triiodo(120)\nobserve free_triiodo(3)\nlet answer = free_thyroxine / total_thyroxine\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.1,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.08333333333333333,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.025,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r22thy-07",
+      "qtype": "thyroid_index",
+      "stem": "A thyroid function panel shows total T4 (thyroxine) 6 ug/dL, free T4 2 ng/dL, total T3 (triiodothyronine) 90 ng/dL, and free T3 3 pg/mL. What is the patient's total T4-to-T3 ratio?",
+      "program": "observe total_thyroxine(6)\nobserve free_thyroxine(2)\nobserve total_triiodo(90)\nobserve free_triiodo(3)\nlet answer = total_thyroxine / total_triiodo\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.06666666666666667,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.03333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r22thy-08",
+      "qtype": "thyroid_index",
+      "stem": "A thyroid function panel shows total T4 (thyroxine) 6 ug/dL, free T4 2 ng/dL, total T3 (triiodothyronine) 90 ng/dL, and free T3 3 pg/mL. What is the patient's free T4-to-T3 ratio?",
+      "program": "observe total_thyroxine(6)\nobserve free_thyroxine(2)\nobserve total_triiodo(90)\nobserve free_triiodo(3)\nlet answer = free_thyroxine / free_triiodo\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.06666666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.03333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r22thy-09",
+      "qtype": "thyroid_index",
+      "stem": "A thyroid function panel shows total T4 (thyroxine) 6 ug/dL, free T4 2 ng/dL, total T3 (triiodothyronine) 90 ng/dL, and free T3 3 pg/mL. What is the patient's free fraction of T4?",
+      "program": "observe total_thyroxine(6)\nobserve free_thyroxine(2)\nobserve total_triiodo(90)\nobserve free_triiodo(3)\nlet answer = free_thyroxine / total_thyroxine\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.06666666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.03333333333333333,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r22thy-10",
+      "qtype": "thyroid_index",
+      "stem": "A thyroid function panel shows total T4 (thyroxine) 12 ug/dL, free T4 3 ng/dL, total T3 (triiodothyronine) 150 ng/dL, and free T3 5 pg/mL. What is the patient's total T4-to-T3 ratio?",
+      "program": "observe total_thyroxine(12)\nobserve free_thyroxine(3)\nobserve total_triiodo(150)\nobserve free_triiodo(5)\nlet answer = total_thyroxine / total_triiodo\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.03333333333333333,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.08,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r22thy-11",
+      "qtype": "thyroid_index",
+      "stem": "A thyroid function panel shows total T4 (thyroxine) 12 ug/dL, free T4 3 ng/dL, total T3 (triiodothyronine) 150 ng/dL, and free T3 5 pg/mL. What is the patient's free T4-to-T3 ratio?",
+      "program": "observe total_thyroxine(12)\nobserve free_thyroxine(3)\nobserve total_triiodo(150)\nobserve free_triiodo(5)\nlet answer = free_thyroxine / free_triiodo\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.08,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.03333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r22thy-12",
+      "qtype": "thyroid_index",
+      "stem": "A thyroid function panel shows total T4 (thyroxine) 12 ug/dL, free T4 3 ng/dL, total T3 (triiodothyronine) 150 ng/dL, and free T3 5 pg/mL. What is the patient's free fraction of T4?",
+      "program": "observe total_thyroxine(12)\nobserve free_thyroxine(3)\nobserve total_triiodo(150)\nobserve free_triiodo(5)\nlet answer = free_thyroxine / total_thyroxine\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.08,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.03333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r22thy-13",
+      "qtype": "thyroid_index",
+      "stem": "A thyroid function panel shows total T4 (thyroxine) 9 ug/dL, free T4 1 ng/dL, total T3 (triiodothyronine) 180 ng/dL, and free T3 6 pg/mL. What is the patient's total T4-to-T3 ratio?",
+      "program": "observe total_thyroxine(9)\nobserve free_thyroxine(1)\nobserve total_triiodo(180)\nobserve free_triiodo(6)\nlet answer = total_thyroxine / total_triiodo\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.16666666666666666,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.1111111111111111,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.05,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.03333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r22thy-14",
+      "qtype": "thyroid_index",
+      "stem": "A thyroid function panel shows total T4 (thyroxine) 9 ug/dL, free T4 1 ng/dL, total T3 (triiodothyronine) 180 ng/dL, and free T3 6 pg/mL. What is the patient's free T4-to-T3 ratio?",
+      "program": "observe total_thyroxine(9)\nobserve free_thyroxine(1)\nobserve total_triiodo(180)\nobserve free_triiodo(6)\nlet answer = free_thyroxine / free_triiodo\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.05,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.1111111111111111,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.03333333333333333,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.16666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r22thy-15",
+      "qtype": "thyroid_index",
+      "stem": "A thyroid function panel shows total T4 (thyroxine) 9 ug/dL, free T4 1 ng/dL, total T3 (triiodothyronine) 180 ng/dL, and free T3 6 pg/mL. What is the patient's free fraction of T4?",
+      "program": "observe total_thyroxine(9)\nobserve free_thyroxine(1)\nobserve total_triiodo(180)\nobserve free_triiodo(6)\nlet answer = free_thyroxine / total_thyroxine\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.05,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.16666666666666666,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.03333333333333333,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.1111111111111111,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r22thy-16",
+      "qtype": "thyroid_index",
+      "stem": "A thyroid function panel shows total T4 (thyroxine) 5 ug/dL, free T4 2 ng/dL, total T3 (triiodothyronine) 80 ng/dL, and free T3 4 pg/mL. What is the patient's total T4-to-T3 ratio?",
+      "program": "observe total_thyroxine(5)\nobserve free_thyroxine(2)\nobserve total_triiodo(80)\nobserve free_triiodo(4)\nlet answer = total_thyroxine / total_triiodo\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.0625,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.05,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r22thy-17",
+      "qtype": "thyroid_index",
+      "stem": "A thyroid function panel shows total T4 (thyroxine) 5 ug/dL, free T4 2 ng/dL, total T3 (triiodothyronine) 80 ng/dL, and free T3 4 pg/mL. What is the patient's free T4-to-T3 ratio?",
+      "program": "observe total_thyroxine(5)\nobserve free_thyroxine(2)\nobserve total_triiodo(80)\nobserve free_triiodo(4)\nlet answer = free_thyroxine / free_triiodo\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.0625,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.05,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r22thy-18",
+      "qtype": "thyroid_index",
+      "stem": "A thyroid function panel shows total T4 (thyroxine) 5 ug/dL, free T4 2 ng/dL, total T3 (triiodothyronine) 80 ng/dL, and free T3 4 pg/mL. What is the patient's free fraction of T4?",
+      "program": "observe total_thyroxine(5)\nobserve free_thyroxine(2)\nobserve total_triiodo(80)\nobserve free_triiodo(4)\nlet answer = free_thyroxine / total_thyroxine\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.0625,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.05,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r22thy-19",
+      "qtype": "thyroid_index",
+      "stem": "A thyroid function panel shows total T4 (thyroxine) 10 ug/dL, free T4 2 ng/dL, total T3 (triiodothyronine) 100 ng/dL, and free T3 5 pg/mL. What is the patient's total T4-to-T3 ratio?",
+      "program": "observe total_thyroxine(10)\nobserve free_thyroxine(2)\nobserve total_triiodo(100)\nobserve free_triiodo(5)\nlet answer = total_thyroxine / total_triiodo\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.05,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.1,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r22thy-20",
+      "qtype": "thyroid_index",
+      "stem": "A thyroid function panel shows total T4 (thyroxine) 10 ug/dL, free T4 2 ng/dL, total T3 (triiodothyronine) 100 ng/dL, and free T3 5 pg/mL. What is the patient's free T4-to-T3 ratio?",
+      "program": "observe total_thyroxine(10)\nobserve free_thyroxine(2)\nobserve total_triiodo(100)\nobserve free_triiodo(5)\nlet answer = free_thyroxine / free_triiodo\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.1,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.05,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r22thy-21",
+      "qtype": "thyroid_index",
+      "stem": "A thyroid function panel shows total T4 (thyroxine) 10 ug/dL, free T4 2 ng/dL, total T3 (triiodothyronine) 100 ng/dL, and free T3 5 pg/mL. What is the patient's free fraction of T4?",
+      "program": "observe total_thyroxine(10)\nobserve free_thyroxine(2)\nobserve total_triiodo(100)\nobserve free_triiodo(5)\nlet answer = free_thyroxine / total_thyroxine\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.1,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.05,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
