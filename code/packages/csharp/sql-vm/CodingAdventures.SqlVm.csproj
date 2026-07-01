@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.SqlVm</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>C# stack-machine bytecode VM for Mini-SQLite Level 1 pipeline. Executes compiled Program bytecode produced by SqlCodegen against any Backend.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="tests\**\*.cs" />
+    <EmbeddedResource Remove="tests\**" />
+    <None Remove="tests\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../sql-backend/CodingAdventures.SqlBackend.csproj" />
+    <ProjectReference Include="../sql-codegen/CodingAdventures.SqlCodegen.csproj" />
+    <!-- sql-planner and sql-optimizer are transitive via sql-codegen -->
+  </ItemGroup>
+</Project>
