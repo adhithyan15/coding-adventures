@@ -61,17 +61,30 @@ let ast = parser.parse().unwrap();
 
 Produces generic AST nodes where each node has a rule name and a list of children (nested nodes or raw tokens).
 
-#### Recursion-depth guard
+#### Recursion-depth guard (opt-in)
 
 The grammar-driven parser is recursive descent: nested rule references recurse
-once per nesting level. To keep pathological input (e.g. `((((…))))` or
-`[[[…]]]`) from overflowing the native call stack — an *uncatchable* process
-abort — the parser caps recursion depth at `DEFAULT_MAX_RULE_DEPTH` (128).
-Input that nests past the cap returns a normal, recoverable `GrammarParseError`
-("input nests deeper than the supported limit"), never a crash. The cap sits
-far above any real program's nesting (it is 2× the SIR frontends' source-level
-paren-depth limit), so every real input parses identically. Override it with
-`GrammarParser::new(tokens, grammar).with_max_depth(n)` if needed.
+once per nesting level, so pathological input (e.g. `((((…))))` or `[[[…]]]`)
+can overflow the native call stack — an *uncatchable* process abort. The parser
+offers a depth guard that turns this into a normal, recoverable
+`GrammarParseError` ("input nests deeper than the supported limit"), but it is
+**opt-in**: `GrammarParser::new` defaults to *unlimited* depth.
+
+```rust
+// Untrusted input on the default stack → dial in the DoS backstop:
+let mut parser = GrammarParser::new(tokens, grammar)
+    .with_max_depth(DEFAULT_MAX_RULE_DEPTH); // 128
+```
+
+The guard is opt-in because a single global cap is unsound: **rule-chain depth
+≠ source-nesting depth**. A rich grammar (e.g. Wolfram) spends dozens of
+rule-frames per source-nesting level, so a cap low enough to stay below the
+native-stack overflow point (~200 frames) would reject legitimate *moderate*
+nesting — and it would preempt frontends that already guard themselves on an
+enlarged stack (e.g. `python-to-semantic-ir`) and rely on their *lowerer's* own
+depth check. `DEFAULT_MAX_RULE_DEPTH` (128) is the recommended value for
+JS-shaped grammars, where the expression rule-chain is shallow; closurec opts in
+at that value and degrades over-deep input to WHITESPACE_ONLY.
 
 ## Supported language subset
 

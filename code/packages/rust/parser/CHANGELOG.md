@@ -2,6 +2,36 @@
 
 All notable changes to the `parser` crate will be documented in this file.
 
+## [0.4.1] - 2026-06-30
+
+### Fixed — recursion-depth guard is now OPT-IN (default is unlimited)
+
+0.4.0 turned the guard ON for **every** caller by defaulting `new()` to
+`DEFAULT_MAX_RULE_DEPTH` (128). That global default cap is unsound: **rule-chain
+depth ≠ source-nesting depth**. A rich grammar spends many rule-frames per
+source-nesting level, so any single cap low enough to sit below the native-stack
+overflow point on the default stack (~200 frames) rejects legitimate *moderate*
+nesting on richer grammars — and it also preempts frontends that already guard
+themselves on an enlarged stack.
+
+Two downstream consumers broke under the 0.4.0 default cap:
+
+- **wolfram-runtime** — `moderate_nesting_still_evaluates` parses 40 legitimate
+  nested parens; the Wolfram grammar spends ~30 rule-frames per paren, so 40
+  parens ≈ 1280 frames tripped the 128 cap → a real regression.
+- **python-to-semantic-ir** — its deep-nesting tests deliberately run the parse
+  on a 64 MiB worker stack so the *lowerer's* own 256-level depth check is what
+  fires; the parser's 128 cap preempted it with a different error.
+
+**Fix:** `new()` now defaults `max_depth` to `usize::MAX` (unlimited),
+restoring 0.4.0-pre behaviour for every existing frontend. The guard is opt-in:
+callers that parse untrusted input on the default stack dial it in with
+`.with_max_depth(DEFAULT_MAX_RULE_DEPTH)`. (closurec opts in at its ASI parse
+sites — see `coding-adventures-javascript-parser`.) `DEFAULT_MAX_RULE_DEPTH`
+stays as the recommended value for opt-in callers; its doc no longer claims to
+be "far above any real program's nesting" for *all* grammars (only for the
+JS-shaped grammars that opt in).
+
 ## [0.4.0] - 2026-06-30
 
 ### Fixed — recursion-depth guard against native stack overflow (DoS)

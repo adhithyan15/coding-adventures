@@ -262,15 +262,26 @@ pub struct GrammarParser {
 ///   pinned empirically by binary-searching the cap that still returns `Err`
 ///   instead of overflowing on a default-stack worker thread.
 ///
-/// * **Far above any real program's nesting.** Hand-written source virtually
-///   never nests grouping constructs even a few dozen deep, and the SIR
-///   frontends already cap *source-level* nesting much lower
-///   (twig-parser's `MAX_PAREN_DEPTH` is 64). 128 is double that, so any input
-///   a frontend accepts parses through here untouched; this generic cap is a
-///   pure backstop that only the frontends' own guards would normally reach
-///   first. Because it is this generous, every existing test and every real
-///   program parses identically — the guard fires *only* on pathological,
-///   DoS-shaped input.
+/// * **Above any real program's nesting — for JS-shaped grammars.** In a
+///   grammar whose expression rule-chain is shallow (like ECMAScript), each
+///   source-nesting level costs only a few `parse_rule` frames, so 128 frames
+///   is dozens of source levels — far beyond hand-written JS, which virtually
+///   never nests grouping even a few dozen deep. This is why closurec opts into
+///   this value: real JS parses identically and the guard fires *only* on
+///   pathological, DoS-shaped input.
+///
+/// # Why this is NOT a safe *global default*
+///
+/// Rule-chain depth ≠ source-nesting depth. A rich grammar (e.g. Wolfram)
+/// spends *dozens* of rule-frames per source-nesting level, so 128 frames is
+/// only a handful of real brackets — far too few for legitimate *moderate*
+/// nesting. And frontends that already guard themselves on an enlarged stack
+/// (python-to-semantic-ir / javascript-to-semantic-ir) rely on their own
+/// *lowerer's* depth check firing, which a parser cap would preempt. That is
+/// why [`GrammarParser::new`] defaults to *unlimited* and the guard is opt-in
+/// per caller — a single global cap cannot be both DoS-safe on the heaviest
+/// grammar's default stack *and* generous enough for every grammar's real
+/// input.
 pub const DEFAULT_MAX_RULE_DEPTH: usize = 128;
 
 impl GrammarParser {
@@ -337,7 +348,20 @@ impl GrammarParser {
             post_parse_hooks: Vec::new(),
             trace,
             depth: 0,
-            max_depth: DEFAULT_MAX_RULE_DEPTH,
+            // The recursion-depth guard is OPT-IN: `new()` defaults to
+            // *unlimited*. A single global default cap is unsound because
+            // rule-chain depth ≠ source-nesting depth — a rich grammar (e.g.
+            // Wolfram) spends dozens of rule-frames per bracket, so any cap low
+            // enough to sit below the native-stack overflow point on the
+            // default stack (~200 frames) would reject legitimate *moderate*
+            // nesting (40 parens ≈ 1280 frames), and would also preempt
+            // frontends that already guard themselves on an enlarged stack
+            // (python-to-semantic-ir / javascript-to-semantic-ir run the parse
+            // on a big-stack worker and rely on their *lowerer's* own depth
+            // check firing). Callers that parse untrusted input on the default
+            // stack and want a DoS backstop opt in explicitly with
+            // `.with_max_depth(DEFAULT_MAX_RULE_DEPTH)`.
+            max_depth: usize::MAX,
             depth_exceeded: false,
         }
     }
@@ -1704,7 +1728,10 @@ term       = NUMBER | NAME ;
             .spawn(|| {
                 let grammar = nested_group_grammar();
                 let tokens = nested_paren_tokens(5000);
-                let mut parser = GrammarParser::new(tokens, grammar);
+                // The guard is opt-in (`new()` is unlimited), so a caller that
+                // wants the DoS backstop dials it in with `with_max_depth`.
+                let mut parser =
+                    GrammarParser::new(tokens, grammar).with_max_depth(DEFAULT_MAX_RULE_DEPTH);
                 let result = parser.parse();
                 let err = result.expect_err(
                     "deeply-nested input must fail with an error, not parse or crash",
@@ -1757,22 +1784,24 @@ term       = NUMBER | NAME ;
         );
     }
 
-    /// The DEFAULT cap must trip *before* the native stack overflows on a
-    /// default-stack thread — otherwise production callers on an ordinary
-    /// thread would still crash. We parse far-too-deep input on a worker thread
-    /// with **no** `stack_size` override (the same ~2 MiB a default thread /
-    /// the test runner gets). If the guard did not fire in time, the thread
-    /// would overflow and `join()` would return `Err`; a clean parse-`Err`
-    /// here proves [`DEFAULT_MAX_RULE_DEPTH`] sits safely below the overflow
-    /// point on the default stack. (Empirically this implementation overflows
-    /// around depth ~200 in a debug build on the default stack, so the cap of
-    /// 128 leaves comfortable headroom.)
+    /// A caller that opts into [`DEFAULT_MAX_RULE_DEPTH`] must have the guard
+    /// trip *before* the native stack overflows on a default-stack thread —
+    /// otherwise a production caller (e.g. closurec) on an ordinary thread
+    /// would still crash. We parse far-too-deep input on a worker thread with
+    /// **no** `stack_size` override (the same ~2 MiB a default thread / the
+    /// test runner gets). If the guard did not fire in time, the thread would
+    /// overflow and `join()` would return `Err`; a clean parse-`Err` here
+    /// proves the recommended opt-in cap sits safely below the overflow point
+    /// on the default stack. (Empirically this implementation overflows around
+    /// depth ~200 in a debug build on the default stack, so the cap of 128
+    /// leaves comfortable headroom.)
     #[test]
-    fn test_default_cap_trips_before_overflow_on_default_stack() {
+    fn test_opt_in_cap_trips_before_overflow_on_default_stack() {
         let handle = std::thread::spawn(|| {
             let grammar = nested_group_grammar();
             let tokens = nested_paren_tokens(5000);
-            let mut parser = GrammarParser::new(tokens, grammar); // default cap
+            let mut parser =
+                GrammarParser::new(tokens, grammar).with_max_depth(DEFAULT_MAX_RULE_DEPTH);
             let err = parser
                 .parse()
                 .expect_err("deeply-nested input must error, not crash");
@@ -1783,7 +1812,7 @@ term       = NUMBER | NAME ;
         });
         handle
             .join()
-            .expect("default cap must trip BEFORE native overflow on default stack");
+            .expect("opt-in cap must trip BEFORE native overflow on default stack");
     }
 
     #[test]

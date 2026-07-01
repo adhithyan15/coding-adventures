@@ -85,7 +85,9 @@
 
 use coding_adventures_javascript_tokens::EsVersion;
 use lexer::token::{Token, TokenType, TOKEN_PRECEDED_BY_NEWLINE};
-use parser::grammar_parser::{GrammarASTNode, GrammarParseError, GrammarParser};
+use parser::grammar_parser::{
+    GrammarASTNode, GrammarParseError, GrammarParser, DEFAULT_MAX_RULE_DEPTH,
+};
 
 /// Parse `tokens` with Phase-1 ASI applied.
 ///
@@ -116,7 +118,17 @@ pub fn parse_with_asi(
     let mut tried: std::collections::HashSet<(usize, usize)> = std::collections::HashSet::new();
 
     for _ in 0..max_insertions {
-        let mut parser = GrammarParser::new(tokens.clone(), grammar.clone());
+        // Opt into the recursive-descent depth guard (the parser is unbounded
+        // by default). closurec runs this on an ordinary ~2 MiB stack over
+        // *untrusted* JS, so pathologically deep nesting (`((((…))))`,
+        // `1+1+…`, `----…a`) would otherwise overflow the native stack — an
+        // uncatchable process abort. `DEFAULT_MAX_RULE_DEPTH` (128) trips a
+        // clean, recoverable parse error well below the ~200-frame overflow
+        // point; closurec then degrades that input to WHITESPACE_ONLY (still
+        // valid output) instead of crashing. Real JS never nests grouping this
+        // deep, so no legitimate program is affected.
+        let mut parser = GrammarParser::new(tokens.clone(), grammar.clone())
+            .with_max_depth(DEFAULT_MAX_RULE_DEPTH);
         match parser.parse() {
             Ok(ast) => return Ok(ast),
             Err(e) => {
@@ -148,8 +160,11 @@ pub fn parse_with_asi(
     }
 
     // Budget exhausted (pathological input). Return the final outcome so the
-    // caller sees a real error rather than a silent wrong parse.
-    GrammarParser::new(tokens, grammar).parse()
+    // caller sees a real error rather than a silent wrong parse. Same opt-in
+    // depth guard as the retry loop above.
+    GrammarParser::new(tokens, grammar)
+        .with_max_depth(DEFAULT_MAX_RULE_DEPTH)
+        .parse()
 }
 
 /// The five ECMAScript "restricted production" keywords (§12.10.1): a line
