@@ -293,6 +293,18 @@ assert!(shell_dashboard_dispatch_events_json
     .contains(r#""selectedDispatchEventId":"dashboard.dispatch-event.status""#));
 assert!(shell_dashboard_dispatch_events_json
     .contains(r#""dispatchEventsCapabilityId":"app-shell-dashboard-dispatch-events-json""#));
+
+let shell_dashboard_dispatch_queue_json =
+    deck.run_app_shell_dashboard_dispatch_queue_json(
+        BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        },
+    )?;
+assert!(shell_dashboard_dispatch_queue_json
+    .contains(r#""selectedDispatchQueueItemId":"dashboard.dispatch-queue.status""#));
+assert!(shell_dashboard_dispatch_queue_json
+    .contains(r#""dispatchQueueCapabilityId":"app-shell-dashboard-dispatch-queue-json""#));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -315,7 +327,9 @@ fields without walking the full event stream, then join dashboard panel cards to
 stable launch actions and action dispatch descriptors for first-render button
 and menu wiring. Dashboard dispatch events turn those descriptors into compact
 ready/blocked event rows so product shells can append dispatch telemetry without
-interpreting panel-card-action internals.
+interpreting panel-card-action internals, while dashboard dispatch queues map
+those events into queued/blocked queue items with stable queue-item routing and
+capability metadata.
 Persisted editor-state snapshots resolve saved selection and active-command IDs
 against the current deck, repairing stale UI state after source edits. Host
 surfaces turn those snapshots into stable source, diagnostics, analysis, table,
@@ -371,8 +385,8 @@ navigation items with active, visible, enabled, and badge-count metadata from
 those layout regions. Shell dashboard routes derive stable route IDs, paths,
 active/default route selection, and route capability metadata from navigation
 items for product-shell router setup; the panel-card action, action-dispatch,
-and dispatch-event surfaces then expose button wiring plus ready/blocked
-dispatch telemetry. The
+dispatch-event, and dispatch-queue surfaces then expose button wiring plus
+ready/blocked dispatch telemetry and queue-state metadata. The
 grammar-backed parser generator and Python/TypeScript parity surfaces continue
 to mature.
 
