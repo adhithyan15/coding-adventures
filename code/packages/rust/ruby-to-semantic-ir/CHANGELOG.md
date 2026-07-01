@@ -2,6 +2,18 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.99.1] - 2026-06-30
+
+### Fixed (bare-identifier method bodies now lower)
+
+- `def f(a)\n a\nend` now lowers to a `Function` whose body tail is
+  `VarRef("a", Param)`. It previously produced no function at all: the
+  underlying `ruby-parser` `factor` rule let the bare identifier `a` swallow
+  the method's closing `end`, so the `def` never closed and lowering saw no
+  `def_statement`. The repair lives in `ruby-parser` (guarded bare-`KEYWORD`
+  atom); this crate adds an end-to-end lowering regression test pinning the
+  fixed behaviour (382 tests, up from 381).
+
 ## [0.99.0] - 2026-06-30
 
 ### Added (P7 — default / optional parameters, Ruby-1.0 gap closed)

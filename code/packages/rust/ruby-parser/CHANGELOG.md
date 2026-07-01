@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.81.0] - 2026-06-30
+
+### Fixed (bare-identifier block bodies swallowed their `end`)
+
+- A block whose final statement was a bare identifier mis-parsed: the
+  identifier became a `method_call_no_paren` callee and the block's closing
+  `end` (a `KEYWORD` token) was consumed as that call's *argument*. The
+  enclosing construct then never closed, so its node vanished entirely —
+  `def f(a)\n a\nend` produced **no** `def_statement`, and the same swallow
+  hit `while`/`until`/`class`/`module` bodies and `if` arms, plus the optional
+  argument of `return`/`break`/`next`/`yield`.
+- Root cause: the `factor` atom `KEYWORD` matched *any* reserved word, including
+  structural terminators. Fix guards the bare-`KEYWORD` atom with negative
+  lookaheads so it can no longer match `end`/`rescue`/`ensure`/`else`/`elsif`/
+  `when`/`then`/`in`/`do`. Value keywords (`nil`/`true`/`false`/`self`) are
+  untouched, so `x = nil` and `puts nil` still parse. One guard repairs every
+  block body at the root. Updated `code/grammars/ruby.grammar` and the embedded
+  `src/_grammar.rs` (regenerated via `grammar-tools
+  generate-rust-compiled-grammars ruby-parser`).
+- Six regression tests added (274 total, up from 268).
+- Cargo crate version bumped `0.2.0` → `0.3.0`.
+
 ## [0.80.0] - 2026-06-30
 
 ### Added (P7 — default / optional parameters in `param`)

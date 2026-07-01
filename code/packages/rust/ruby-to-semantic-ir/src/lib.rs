@@ -117,6 +117,28 @@ mod tests {
     }
 
     #[test]
+    fn bare_identifier_method_body_lowers_to_param_varref() {
+        // Regression for the `factor` KEYWORD-swallow bug: `def f(a)\n a\nend`
+        // used to mis-parse (the lone `a` ate the closing `end`, so no
+        // `def_statement` survived and lowering produced no function `f`).
+        // With the grammar guard in place the method lowers normally and its
+        // tail expression is a reference to the parameter `a`.
+        let m = lower("def f(a)\n  a\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "f").expect("fn f present");
+        assert_eq!(f.params.len(), 1);
+        assert_eq!(f.params[0].name, "a");
+        assert!(
+            matches!(
+                &f.body.value,
+                Expr::VarRef { name, scope, .. }
+                    if name == "a" && *scope == Scope::Param
+            ),
+            "method body tail should be VarRef(\"a\", Param), got {:?}",
+            f.body.value
+        );
+    }
+
+    #[test]
     fn def_default_param_can_reference_earlier_param() {
         // `def f(a, b = a + 1)` — Ruby defaults are call-time and may
         // reference EARLIER params.  `a` inside the default for `b` must
