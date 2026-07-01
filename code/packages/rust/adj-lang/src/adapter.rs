@@ -934,8 +934,18 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
             latex_bin(ArithOp::Div, lhs, rhs, source)
         }
         MathExpr::Bin(BinOp::Pow, base, exponent) => {
+            // `x^n` lowers to a single native power node (`ArithOp::Pow` →
+            // `ComputeOp::Pow`), not the old parse-time `x*x*…` expansion — so
+            // there is no integer-exponent cap and the derivation tree shows one
+            // `^` step. The exponent must still be a non-negative integer literal
+            // (a symbolic exponent like `x^y` is a later slice); the engine
+            // computes it and enforces its own dimensional/overflow rules.
             let n = latex_power_exponent(exponent, source)?;
-            expand_power(base, n, source)
+            Ok(ExprAst::Bin(
+                ArithOp::Pow,
+                Box::new(latex_math_to_expr_ast(base, source)?),
+                Box::new(ExprAst::Lit(n)),
+            ))
         }
         MathExpr::Rel(_, _, _) => Err(AdapterError::UnsupportedLatexMath {
             source: source.to_string(),
@@ -980,7 +990,14 @@ fn number_to_lit(number: &Number, source: &str) -> Result<ExprAst, AdapterError>
     Ok(ExprAst::Lit(value))
 }
 
-fn latex_power_exponent(expr: &MathExpr, source: &str) -> Result<usize, AdapterError> {
+/// Validate a LaTeX power exponent and return it as a whole-number `f64` (for a
+/// `ExprAst::Lit`). The exponent must be a **non-negative integer literal** — a
+/// symbolic exponent (`x^y`) is not yet supported on the `latex "…"` surface. No
+/// upper bound is imposed now that the base lowers to a single native
+/// `ComputeOp::Pow` node (rather than an `x*x*…` expansion whose tree size grew
+/// with the exponent); the engine computes the power and applies its own
+/// dimensional and overflow (`NonFinite`) guards.
+fn latex_power_exponent(expr: &MathExpr, source: &str) -> Result<f64, AdapterError> {
     let MathExpr::Number(n) = expr else {
         return Err(AdapterError::UnsupportedLatexMath {
             source: source.to_string(),
@@ -993,25 +1010,13 @@ fn latex_power_exponent(expr: &MathExpr, source: &str) -> Result<usize, AdapterE
             detail: format!("exponent is outside f64 range: {}", n.as_written()),
         });
     };
-    if !(v.is_finite() && v.fract() == 0.0 && v >= 0.0 && v <= 8.0) {
+    if !(v.is_finite() && v.fract() == 0.0 && v >= 0.0) {
         return Err(AdapterError::UnsupportedLatexMath {
             source: source.to_string(),
-            detail: "only integer exponents from 0 through 8 are supported".into(),
+            detail: "only non-negative integer exponents are supported".into(),
         });
     }
-    Ok(v as usize)
-}
-
-fn expand_power(base: &MathExpr, exponent: usize, source: &str) -> Result<ExprAst, AdapterError> {
-    if exponent == 0 {
-        return Ok(ExprAst::Lit(1.0));
-    }
-    let base = latex_math_to_expr_ast(base, source)?;
-    let mut acc = base.clone();
-    for _ in 1..exponent {
-        acc = ExprAst::Bin(ArithOp::Mul, Box::new(acc), Box::new(base.clone()));
-    }
-    Ok(acc)
+    Ok(v)
 }
 
 fn lower_latex_relop(op: MathRelOp, source: &str) -> Result<RelOp, AdapterError> {
