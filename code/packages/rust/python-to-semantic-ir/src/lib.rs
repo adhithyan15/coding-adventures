@@ -2086,6 +2086,127 @@ print(is_even(10))
     }
 
     // ══════════════════════════════════════════════════════════════════
+    // C2: method-call lowering → __method__ dispatch
+    // ══════════════════════════════════════════════════════════════════
+    //
+    // `recv.method(args…)` lowers to the shared SIR dispatch envelope
+    // `BuiltinCall("__method__", [recv, StrLit("method"), ...args])` — the
+    // receiver at args[0], the method name a StrLit at args[1], call args
+    // trailing.  This mirrors the Ruby frontend and needs no core/backend
+    // change (the Python backend + `sir-runtime-oop` already decode it).
+
+    /// Assert `expr` is a `__method__` dispatch, returning `(method_name,
+    /// dispatch_args_without_receiver_or_name)`.
+    fn expect_dispatch(expr: &Expr) -> (&str, &[Expr]) {
+        match expr {
+            Expr::BuiltinCall { name, args, .. } if name == "__method__" => {
+                assert!(args.len() >= 2, "dispatch needs receiver + name: {args:?}");
+                let method = match &args[1] {
+                    Expr::StrLit { value, .. } => value.as_str(),
+                    other => panic!("method name must be a StrLit at args[1], got {other:?}"),
+                };
+                (method, &args[..])
+            }
+            other => panic!("expected __method__ dispatch, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn method_call_lowers_to_method_dispatch() {
+        // `lst.append(1)` → __method__(VarRef lst, "append", IntLit 1).
+        // A trailing expression becomes the block's `value`, so read it
+        // there (not from `stmts`).
+        let m = lower("lst = [0]\nlst.append(1)\n");
+        let (method, args) = expect_dispatch(main_value(&m));
+        assert_eq!(method, "append");
+        // args[0] = receiver VarRef, args[1] = StrLit, args[2] = IntLit(1).
+        assert!(
+            matches!(&args[0], Expr::VarRef { name, .. } if name == "lst"),
+            "receiver at args[0] must be `lst`, got {:?}",
+            args[0]
+        );
+        assert!(
+            matches!(&args[2], Expr::IntLit { value, .. } if *value == 1),
+            "call arg must be IntLit(1), got {:?}",
+            args[2]
+        );
+        assert!(
+            m.manifest.contains(Feature::Strings),
+            "the synthetic method-name StrLit must declare Strings"
+        );
+    }
+
+    #[test]
+    fn zero_arg_method_call_has_only_receiver_and_name() {
+        // `d.keys()` → __method__(VarRef d, "keys") — no extra args.
+        let m = lower("d = {\"a\": 1}\nd.keys()\n");
+        let (method, args) = expect_dispatch(main_value(&m));
+        assert_eq!(method, "keys");
+        assert_eq!(args.len(), 2, "keys() dispatch is [recv, \"keys\"] only");
+    }
+
+    #[test]
+    fn chained_method_calls_nest_dispatch() {
+        // `xs.map(f).count(g)` → outer dispatch whose receiver (args[0]) is
+        // the inner dispatch.  (Uses `count` as the outer method so both
+        // steps are plain method calls with a closure arg.)
+        let m = lower("def f(x):\n    return x\n\ndef g(x):\n    return x\n\nxs = [1]\nxs.map(f).count(g)\n");
+        let (outer_method, outer_args) = expect_dispatch(main_value(&m));
+        assert_eq!(outer_method, "count");
+        // The outer receiver is itself a `map` dispatch on `xs`.
+        let (inner_method, inner_args) = expect_dispatch(&outer_args[0]);
+        assert_eq!(inner_method, "map");
+        assert!(
+            matches!(&inner_args[0], Expr::VarRef { name, .. } if name == "xs"),
+            "innermost receiver must be `xs`, got {:?}",
+            inner_args[0]
+        );
+    }
+
+    #[test]
+    fn method_call_with_lambda_arg_lowers_closure() {
+        // A callable arg is just another arg: `xs.map(lambda x: x)` lowers
+        // the lambda to a MakeClosure that lands in the dispatch args.
+        let m = lower("xs = [1, 2]\nxs.map(lambda x: x)\n");
+        let (method, args) = expect_dispatch(main_value(&m));
+        assert_eq!(method, "map");
+        assert!(
+            matches!(&args[2], Expr::MakeClosure { .. }),
+            "the lambda arg must lower to a MakeClosure, got {:?}",
+            args[2]
+        );
+        assert!(m.manifest.contains(Feature::Closures));
+    }
+
+    #[test]
+    fn method_call_module_validates() {
+        // Round-trip a small collection program through `validate`.
+        for src in [
+            "lst = [1]\nlst.append(2)\n",
+            "d = {\"a\": 1}\nks = d.keys()\n",
+            "s = \"hi\"\nu = s.upper()\n",
+            "xs = [1, 2, 3]\nn = xs.count(2)\n",
+        ] {
+            let m = lower(src);
+            let r = semantic_ir::validate(&m);
+            assert!(r.is_ok(), "module for {src:?} failed validation: {:?}", r.issues);
+        }
+    }
+
+    #[test]
+    fn bare_attribute_access_stays_deferred() {
+        // Attribute-as-value (no trailing call) has no v0 lowering — it must
+        // remain a positioned error, not silently produce a dispatch.
+        let err = compile_source("obj = 1\nx = obj.field\n", "t")
+            .expect_err("bare attribute access rejected");
+        assert!(
+            err.message.contains("attribute access as a value"),
+            "got: {}",
+            err.message
+        );
+    }
+
+    // ══════════════════════════════════════════════════════════════════
     // M5: end-to-end — collections lowered → SIR → Python → execute
     // ══════════════════════════════════════════════════════════════════
     //
@@ -2146,6 +2267,53 @@ print(total)
 ";
         if let Some(out) = run_roundtrip(src) {
             assert_eq!(out, "10", "1+2+3+4 should print 10");
+        }
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    // C2: end-to-end — method calls lowered → SIR → Python → execute
+    // ══════════════════════════════════════════════════════════════════
+    //
+    // Executes the `__method__` dispatch through the Python backend +
+    // `sir-runtime-oop` (already on the `run_roundtrip` PYTHONPATH), the
+    // behavioural proof that method-call lowering runs end to end.
+
+    #[test]
+    fn e2e_list_append_then_len() {
+        // The DoD acceptance program: mutate a list via `append`, then
+        // print its length.  `append` mutates in place (returns the list);
+        // `len(xs)` reads the new length → 4.
+        let src = "\
+xs = [1, 2, 3]
+xs.append(4)
+print(len(xs))
+";
+        if let Some(out) = run_roundtrip(src) {
+            assert_eq!(out, "4", "after append the length should be 4");
+        }
+    }
+
+    #[test]
+    fn e2e_map_over_list_with_closure() {
+        // Higher-order method dispatch: `xs.map(dbl)` applies the closure
+        // per element via the runtime's block-passing contract.  The
+        // runtime is Ruby-flavored (`map`/`collect`), and `sir-runtime-oop`
+        // detects the trailing `Closure` arg as the block, so the result is
+        // `[2, 4, 6]` and its sum is 12.
+        let src = "\
+def dbl(x):
+    return x * 2
+
+xs = [1, 2, 3]
+ys = xs.map(dbl)
+total = 0
+for y in ys:
+    total = total + y
+
+print(total)
+";
+        if let Some(out) = run_roundtrip(src) {
+            assert_eq!(out, "12", "sum of doubled [1,2,3] should be 12");
         }
     }
 }

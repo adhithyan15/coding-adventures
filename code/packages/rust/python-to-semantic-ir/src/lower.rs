@@ -131,13 +131,29 @@
 //! The choice only affects the manifest feature (`Sequences` vs `Maps`),
 //! not runtime behaviour.
 //!
+//! ## Method calls → `__method__` dispatch (C2)
+//!
+//! A **method call** `recv.method(args…)` lowers to the shared SIR
+//! method-dispatch envelope
+//! `BuiltinCall("__method__", [recv, StrLit("method"), ...args])` — the
+//! receiver at `args[0]`, the method name a `StrLit` at `args[1]`, call
+//! args trailing.  This is the same encoding the Ruby frontend emits, and
+//! the Python/TS backends already decode it and route it through
+//! `sir-runtime-oop` (50+ collection methods: `append`/`push`,
+//! `map`/`collect`, `select`/`filter`, `keys`, `values`, `upcase`, …), so
+//! **no core IR or backend change is needed** — see
+//! [`Lowerer::lower_method_call`].  A callable argument (`xs.map(f)`,
+//! `lst.sort(key=lambda x: -x)`) is just another argument and lowers
+//! through the ordinary call-arg path (a lambda → `MakeClosure`).
+//!
 //! ## Still deferred (later milestones / runtime-library work)
 //!
 //! - list/dict **comprehensions** (`[x for x in xs]`)            → deferred
 //! - **slicing** (`xs[a:b]`, `xs[::2]`)                          → deferred
 //! - **tuple** / **set** literals (`(1, 2)`, `{1, 2}`)           → deferred
-//! - list/dict **methods** (`.append` / `.keys` / `.get` …) — these need
-//!   the SIR runtime-library per the project mandate                → deferred
+//! - **attribute access as a value** (`obj.x` *not* followed by a call) —
+//!   an attribute *read* has no v0 lowering (C2 covers method **calls**
+//!   only)                                                        → deferred
 //! - **unpacking** (`a, b = xs`, `*rest`)                        → deferred
 //!
 //! Each deferred form yields a positioned [`PythonLowerError`].
@@ -155,8 +171,9 @@
 //!
 //! ## Still deferred (later milestones)
 //!
-//! - collection *comprehensions* / *slicing* / *methods*      → deferred
-//!   (list & dict literals / index / `len` / subscript-assign land in M5)
+//! - collection *comprehensions* / *slicing*                  → deferred
+//!   (list & dict literals / index / `len` / subscript-assign land in M5;
+//!   method **calls** land in C2 — attribute-as-value stays deferred)
 //! - `*args` / `**kwargs` rest parameters                      → deferred
 //!   (positional/keyword **default** params land in P8; keyword-only
 //!   params & keyword args land in KW8)
@@ -267,12 +284,29 @@ enum Lowered {
     Expr(Expr),
 }
 
-/// What a trailing `primary` `suffix` denotes (M5).  A `suffix` is one of
-/// a *call* (`( … )`), a *subscript* (`[ … ]`), or a deferred attribute
-/// access (`.x`) — classified by [`Lowerer::suffix_kind`].
+/// What a trailing `primary` `suffix` denotes.  A `suffix` is one of a
+/// *call* (`( … )`), a *subscript* (`[ … ]`), or an *attribute access*
+/// (`.x`) — classified by [`Lowerer::suffix_kind`].
+///
+/// ## Attribute access and method calls (C2)
+///
+/// The grammar spells `recv.method(args)` as **two** suffixes on the
+/// `primary`: an `Attr` suffix (`.method`) immediately followed by a
+/// `Call` suffix (`(args)`).  The suffix fold in
+/// [`Lowerer::try_primary_suffixes`] therefore special-cases an `Attr`
+/// suffix by *looking ahead*: an `Attr` followed by a `Call` is a
+/// **method call** and lowers to the shared SIR method-dispatch envelope
+/// `BuiltinCall("__method__", [receiver, StrLit(method), ...args])` (see
+/// [`Lowerer::lower_method_call`]).  A bare `Attr` with no trailing `Call`
+/// (`obj.x` used as a *value*) remains deferred — attribute-as-value has
+/// no v0 lowering.
 enum SuffixKind {
     Call,
     Subscript,
+    /// Attribute access `.name` — the method name of a following `Call`
+    /// suffix, or a deferred bare attribute read.  Carries the lexeme so
+    /// the fold can pack it as the dispatch method-name `StrLit`.
+    Attr(String),
 }
 
 /// Per-function name-resolution context (M4).
@@ -2354,13 +2388,72 @@ impl Lowerer {
 
         let span = self.span_of(node);
 
-        // Apply the first suffix against the bare-name atom (call name
-        // semantics live here), then fold the rest over the result.
-        let mut acc = self.apply_first_suffix(atom, suffixes[0], ctx, depth, &span)?;
-        for suffix in &suffixes[1..] {
-            acc = self.apply_value_suffix(acc, suffix, ctx, depth, &span)?;
+        // Fold the suffixes left to right over an accumulated `Expr`.  Most
+        // suffixes consume one node, but an **attribute** suffix (`.method`)
+        // looks ahead one slot: `.method` immediately followed by a `(args)`
+        // call suffix is a *method call* and consumes **both** suffixes,
+        // producing a `__method__` dispatch envelope (C2).  So the loop is
+        // index-based rather than a plain `for` — an attribute+call pair
+        // advances the cursor by two.
+        //
+        // The *first* suffix is special only when it is a `Call`/`Subscript`
+        // on the bare-name atom: a call there carries full name semantics
+        // (builtin / `len`→`SeqLen` / `DirectCall` / `IndirectCall`) and a
+        // subscript indexes the atom-as-value.  An attribute *first* suffix
+        // (`recv.method(…)` where `recv` is a bare name) needs the atom as an
+        // ordinary *value* receiver, which `handle_attr_suffix` lowers.
+        let mut i = 0usize;
+        let mut acc: Option<Expr> = None;
+        while i < suffixes.len() {
+            let suffix = suffixes[i];
+            match self.suffix_kind(suffix)? {
+                SuffixKind::Attr(method) => {
+                    // Look ahead: `.method (args)` → method call; a bare
+                    // `.method` (no following call) is deferred.
+                    let next_is_call = match suffixes.get(i + 1) {
+                        Some(s) => matches!(self.suffix_kind(s)?, SuffixKind::Call),
+                        None => false,
+                    };
+                    if !next_is_call {
+                        return Err(self.err_at(
+                            suffix,
+                            "unsupported: attribute access as a value \
+                             (deferred to a later milestone)"
+                                .to_string(),
+                        ));
+                    }
+                    // Receiver: the accumulated value, or — for a leading
+                    // attribute — the bare atom lowered as a value.
+                    let receiver = match acc.take() {
+                        Some(recv) => recv,
+                        None => self.lower_expr_d(atom, ctx, depth + 1)?,
+                    };
+                    let call_suffix = suffixes[i + 1];
+                    let name_span = self.span_of(suffix);
+                    acc = Some(self.lower_method_call(
+                        receiver,
+                        method,
+                        name_span,
+                        call_suffix,
+                        ctx,
+                        depth,
+                        &span,
+                    )?);
+                    i += 2;
+                }
+                SuffixKind::Call | SuffixKind::Subscript => {
+                    acc = Some(match acc.take() {
+                        // Chained suffix on a computed value.
+                        Some(base) => self.apply_value_suffix(base, suffix, ctx, depth, &span)?,
+                        // The very first suffix carries bare-name semantics.
+                        None => self.apply_first_suffix(atom, suffix, ctx, depth, &span)?,
+                    });
+                    i += 1;
+                }
+            }
         }
-        Ok(Some(acc))
+        // `suffixes` is non-empty (checked above), so `acc` is always set.
+        Ok(acc)
     }
 
     /// Apply the **first** trailing `suffix` to the bare-name `atom`.  A
@@ -2381,6 +2474,13 @@ impl Lowerer {
                 let base = self.lower_expr_d(atom, ctx, depth + 1)?;
                 self.lower_subscript_suffix(base, suffix, ctx, depth, span)
             }
+            // The suffix fold routes every `Attr` suffix through
+            // `lower_method_call` (with look-ahead) *before* calling this
+            // helper, so an attribute never reaches here.
+            SuffixKind::Attr(_) => Err(self.err_at(
+                suffix,
+                "internal: attribute suffix reached apply_first_suffix".to_string(),
+            )),
         }
     }
 
@@ -2410,21 +2510,129 @@ impl Lowerer {
             SuffixKind::Subscript => {
                 self.lower_subscript_suffix(base, suffix, ctx, depth, span)
             }
+            // Attribute suffixes are consumed by the fold's look-ahead
+            // (`.method (args)` → method dispatch) before reaching here.
+            SuffixKind::Attr(_) => Err(self.err_at(
+                suffix,
+                "internal: attribute suffix reached apply_value_suffix".to_string(),
+            )),
         }
     }
 
-    /// Classify a `suffix`: a call `( … )`, a subscript `[ … ]`, or a
-    /// deferred attribute access `.x`.
+    /// Lower a **method call** `receiver.method(args…)` (C2) to the shared
+    /// SIR method-dispatch envelope.
+    ///
+    /// ## The `__method__` convention
+    ///
+    /// Receiver-dispatched calls are *not* growing the core `Expr` enum;
+    /// instead every frontend packs them into a synthetic
+    ///
+    /// ```text
+    /// BuiltinCall { name: "__method__",
+    ///               args: [ receiver, StrLit("method"), arg1, arg2, … ] }
+    /// ```
+    ///
+    /// so the **receiver is always `args[0]`**, the **method name is always a
+    /// `StrLit` at `args[1]`**, and the call's own arguments follow.  This is
+    /// exactly what the Ruby frontend emits (see
+    /// `ruby-to-semantic-ir::fold_one_dot_call`) and exactly what the
+    /// Python/TS backends already decode and route through
+    /// `sir-runtime-oop`'s `call_method` (50+ collection methods:
+    /// `append`/`push`, `map`/`collect`, `select`/`filter`, `keys`,
+    /// `values`, `upcase`, …).  Because the shape is a plain `BuiltinCall`,
+    /// **no new core IR node, backend change, or feature flag is required** —
+    /// the validator accepts `BuiltinCall`, and the only feature the envelope
+    /// introduces is [`Feature::Strings`] for the synthetic method-name
+    /// literal (declared here, matching the Ruby frontend).  There is
+    /// deliberately **no** `MethodDispatch` feature — that is a later
+    /// (Phase-2) milestone; matching the existing pipeline keeps validation
+    /// and the Python backend happy.
+    ///
+    /// ## Higher-order arguments
+    ///
+    /// A callable argument (`lst.sort(key=lambda x: -x)`, `xs.map(f)`) is
+    /// **just another argument**: Python has no trailing-block syntax, so the
+    /// lambda/closure lowers through the ordinary [`Self::lower_call_args`] →
+    /// [`Self::lower_expr_d`] path (a lambda becomes an [`Expr::MakeClosure`],
+    /// a bare name a closure `VarRef`) and lands in the dispatch args.  The
+    /// backend/runtime detects a trailing `Closure` and applies it as the
+    /// block, so `xs.map(fn)` runs `fn` per element with no special-casing
+    /// here.
+    ///
+    /// Effects default to `PURE` — the receiver type is erased at this layer,
+    /// mirroring the Ruby frontend; a later receiver-type analysis pass can
+    /// widen effects if needed.
+    #[allow(clippy::too_many_arguments)]
+    fn lower_method_call(
+        &mut self,
+        receiver: Expr,
+        method: String,
+        name_span: Span,
+        call_suffix: &GrammarASTNode,
+        ctx: &mut FunctionCtx,
+        depth: usize,
+        span: &Span,
+    ) -> Result<Expr, PythonLowerError> {
+        // Lower the call's arguments first (a lambda arg becomes a
+        // `MakeClosure` here — see the doc note on higher-order args).
+        let call_args = self.lower_call_args(call_suffix, ctx, depth)?;
+
+        // Pack `[receiver, StrLit(method), ...call_args]`.  The synthetic
+        // method-name literal is the reason this envelope declares
+        // `Feature::Strings`.
+        self.observed.add(Feature::Strings);
+        let mut args = Vec::with_capacity(call_args.len() + 2);
+        args.push(receiver);
+        args.push(Expr::StrLit {
+            value: method,
+            span: name_span,
+        });
+        args.extend(call_args);
+
+        Ok(Expr::BuiltinCall {
+            name: "__method__".to_string(),
+            args,
+            effects: EffectSet::PURE,
+            span: span.clone(),
+        })
+    }
+
+    /// Classify a `suffix`: a call `( … )`, a subscript `[ … ]`, or an
+    /// attribute access `.name`.  The grammar's `suffix` rule is
+    /// `DOT NAME | "[" subscript "]" | "(" arguments? ")"`, so the first
+    /// *token* child discriminates: `(` → call, `[` → subscript, `.` →
+    /// attribute (whose NAME lexeme is captured for method dispatch).
     fn suffix_kind(&self, suffix: &GrammarASTNode) -> Result<SuffixKind, PythonLowerError> {
         match suffix.children.first() {
             Some(ASTNodeOrToken::Token(t)) if t.value == "(" => Ok(SuffixKind::Call),
             Some(ASTNodeOrToken::Token(t)) if t.value == "[" => Ok(SuffixKind::Subscript),
+            Some(ASTNodeOrToken::Token(t)) if t.value == "." => {
+                let name = self.attr_name(suffix)?;
+                Ok(SuffixKind::Attr(name))
+            }
             _ => Err(self.err_at(
                 suffix,
-                "unsupported: attribute access / method call (deferred to a later milestone)"
-                    .to_string(),
+                "unsupported: unrecognised suffix (deferred to a later milestone)".to_string(),
             )),
         }
+    }
+
+    /// Extract the attribute NAME lexeme from a `DOT NAME` attribute
+    /// suffix (`.method`).  The suffix's second token child is the NAME.
+    fn attr_name(&self, suffix: &GrammarASTNode) -> Result<String, PythonLowerError> {
+        suffix
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Token(t)
+                    if matches!(t.type_, lexer::token::TokenType::Name) =>
+                {
+                    Some(t.value.clone())
+                }
+                _ => None,
+            })
+            .next()
+            .ok_or_else(|| self.err_at(suffix, "malformed attribute suffix".to_string()))
     }
 
     /// Lower a call `suffix` applied to a bare-name `callee` atom, with
