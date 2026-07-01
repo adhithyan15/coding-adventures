@@ -458,7 +458,7 @@ is implicit. The `.disp` file exists to declare:
 ### 4.1 Syntactic sketch
 
 ```
-// demo/visicalc/mosaic/visicalc.disp
+// code/programs/mosaic/visicalc/visicalc.disp
 dispatcher VisiCalc {
   uses core mosaic-core-grid as grid
   uses core mosaic-core-formula-bar as bar
@@ -538,8 +538,8 @@ produces a runnable shell per backend. UI33 extends this:
 
 ```
 mosaic-compile --backend react --emit-project \
-  --dispatcher demo/visicalc/mosaic/visicalc.disp \
-  -o demo/visicalc/build/react
+  --dispatcher code/programs/mosaic/visicalc/visicalc.disp \
+  -o code/programs/typescript/visicalc/build/react
 ```
 
 …produces, in addition to UI32's existing shell artefacts:
@@ -566,7 +566,7 @@ The first core to ship under this spec replaces VisiCalc's hand-
 written reducer:
 
 - Source: `code/packages/mosaic-core-grid/src/grid.core` (sketch in §3.1).
-- VisiCalc pilot: `demo/visicalc/` adopts `mosaic-core-grid` + the new
+- VisiCalc pilot: `code/programs/typescript/visicalc/` adopts `mosaic-core-grid` + the new
   dispatcher. The 168-line `src/app/state.ts` collapses to a 0-line
   generated `src/cores/grid.ts` plus a small `src/host.ts` containing
   only the formula-engine extension point.

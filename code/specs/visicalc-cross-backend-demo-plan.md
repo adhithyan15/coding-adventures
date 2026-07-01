@@ -16,9 +16,9 @@
 
 ### What ships today
 
-`demo/visicalc/` exists and works **on React only**:
+`code/programs/typescript/visicalc/` exists and works **on React only**:
 
-- **Mosaic sources** (`demo/visicalc/mosaic/`):
+- **Mosaic sources** (`code/programs/mosaic/visicalc/`):
   - `Grid.mil` — interface (column-headers, viewport-rows, column-
     widths, selection slots, onNavigate emit)
   - `Grid.desktop.mll` — one-line wrapper around the legacy `Grid`
@@ -29,7 +29,7 @@
   - `FormulaBar.desktop.mll` — Row[bar] containing a Text label and
     the legacy `Input` primitive
   - `FormulaBar.dark.msl` — dark-theme styles
-- **Host application** (`demo/visicalc/src/app/`):
+- **Host application** (`code/programs/typescript/visicalc/src/app/`):
   - `state.ts` — reducer, AppState
   - `util.ts` — A1 cell-address helpers, viewport builder
   - `App.tsx` — useReducer + composes Grid + FormulaBar
@@ -132,23 +132,23 @@ screenshot**, not by per-backend completeness.
 Each PR adds ONE backend's host scaffold + mock-data harness, runs
 `mosaic-compile`, and produces a runnable visual demo:
 
-- **VC2-html.** Static `demo/visicalc-html/index.html` that includes
+- **VC2-html.** Static `code/programs/typescript/visicalc-html/index.html` that includes
   the compiled `Grid.html` + `FormulaBar.html` fragments with
   hard-coded slot substitutions. Open in browser, see VisiCalc.
-- **VC2-webcomp.** `demo/visicalc-webcomp/index.html` that imports
+- **VC2-webcomp.** `code/programs/typescript/visicalc-webcomp/index.html` that imports
   the `.js` bundle and mounts the custom elements with attributes.
   Open in browser, see VisiCalc.
-- **VC2-qt.** `demo/visicalc-qt/` with `main.qml`, `CMakeLists.txt`,
+- **VC2-qt.** `code/programs/cpp/visicalc-qt/` with `main.qml`, `CMakeLists.txt`,
   and a `qmldir` shim. `qmlscene main.qml` shows VisiCalc.
-- **VC2-swiftui.** `demo/visicalc-swiftui/` with `Package.swift`,
+- **VC2-swiftui.** `code/programs/swift/visicalc-swiftui/` with `Package.swift`,
   `VisiCalcApp.swift`, `ContentView.swift`. `swift run` shows
   VisiCalc on macOS.
-- **VC2-xaml.** `demo/visicalc-xaml/` with the multi-component
+- **VC2-xaml.** `code/programs/csharp/visicalc-xaml/` with the multi-component
   WinUI 3 shell + mock VM. `dotnet build` + `dotnet run` shows
   VisiCalc on Windows. (May require the artifact-builder change in
   Phase 3 first.)
 - **VC2-flutter.** Requires Flutter backend (separate parallel PR).
-  `demo/visicalc-flutter/main.dart` mounts the generated widgets.
+  `code/programs/dart/visicalc-flutter/main.dart` mounts the generated widgets.
   `flutter run` shows VisiCalc.
 
 Each PR is independent — they can land in any order once Phase 1
@@ -172,7 +172,7 @@ needs to write its Mosaic sources and a tiny mock-data shim).
 
 ### Phase 4 — convergence (1 PR)
 
-A `demo/visicalc-all/` directory (or a `Makefile` at the demo root)
+A `code/programs/typescript/visicalc-all/` directory (or a `Makefile` at the demo root)
 that builds + runs every backend's host in one command, producing
 seven screenshots side-by-side. Useful as a regression smoke test
 for the Mosaic compiler and as a portfolio piece.

@@ -28,7 +28,7 @@ In spite of that, every VisiCalc demo today either:
    `index.html`, inline `QtQuick` in `main.qml`) — duplicating the
    composition N times with no consistency guarantees.
 
-The leading comment of `demo/visicalc/mosaic/Grid.desktop.mll`
+The leading comment of `code/programs/mosaic/visicalc/Grid.desktop.mll`
 documents the missing piece in plain English:
 
 > The VisiCalc demo cannot yet `import` Grid from that package
@@ -361,7 +361,7 @@ UI34 lands as a sequence of small PRs.  None are individually scary:
    First exercise target: a synthetic test consumer that
    references `pkg::mosaic-pkg-grid::Grid`.
 4. **PR-4 — demo rewire.**  Collapses
-   `demo/visicalc/mosaic/Grid.desktop.mll` from its inlined-grid
+   `code/programs/mosaic/visicalc/Grid.desktop.mll` from its inlined-grid
    shape to the `pkg::mosaic-pkg-grid::Grid (...)` reference.  No
    visual change in the running app; the React-emitted Grid.tsx is
    byte-identical to today because the resolved subtree is the same.

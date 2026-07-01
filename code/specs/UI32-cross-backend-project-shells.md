@@ -30,7 +30,7 @@ This was a deliberate trade-off in UI29: the kernel ships portable UI
 costs we keep paying:
 
 1. **Demo friction.** Every cross-backend demo
-   (`demo/visicalc-{html,webcomp,flutter,qt,swiftui,xaml}/`) hand-
+   (`code/programs/typescript/visicalc-{html,webcomp,flutter,qt,swiftui,xaml}/`) hand-
    writes the same `main.qml` / `MainWindow.xaml` / `lib/main.dart` /
    `Sources/.../App.swift` / `index.html` shell, then mounts the
    compiled component inside it. That hand-written shell is identical

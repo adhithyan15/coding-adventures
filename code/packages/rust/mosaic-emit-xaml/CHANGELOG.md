@@ -13,7 +13,7 @@ The VisiCalc `Grid` (from `mosaic-pkg-grid`, lowered through
 `HostTable` + nested `For` + `Cell`) regenerated into XAML that the
 WinUI 3 markup compiler would reject and that would block
 `dotnet build`. Four groups of fixes make it valid and
-spreadsheet-correct. The demo `demo/visicalc-xaml/` is rewired to
+spreadsheet-correct. The demo `code/programs/csharp/visicalc-xaml/` is rewired to
 mount the generated `<gen:Grid>` instead of its hand-written
 placeholder.
 
@@ -88,7 +88,7 @@ Tests: `group_c_value_vm_carries_width_and_cell_binds_it`.
 
 ### Group D — demo rewired (no hand-written placeholder)
 
-`demo/visicalc-xaml/`: `scripts/build.sh` now runs a second
+`code/programs/csharp/visicalc-xaml/`: `scripts/build.sh` now runs a second
 `mosaic-compile --backend xaml` for the Grid (with
 `--package-search-path code/packages`); `MainWindow.xaml` mounts
 `<gen:Grid>`; `MainWindow.xaml.cs` feeds the generated control's
@@ -377,7 +377,7 @@ End-to-end Mosaic → XAML → on-screen dialog with **zero hand-patches**.
 ### Fixed — HostDialog now actually renders on WinUI 3
 
 Discovered while making the first end-to-end Mosaic → XAML → on-screen
-dialog demo run (see `demo/hello-dialog-xaml/ISSUES.md`). Five
+dialog demo run (see `code/programs/csharp/hello-dialog-xaml/ISSUES.md`). Five
 generator bugs that each blocked the dialog from displaying.
 
 **A1 — HostDialog at the moslayout root now hoists to a
@@ -448,11 +448,11 @@ converter is a separate type and ships as a sibling file.
 
 ### End-to-end verification
 
-Regenerated the `demo/hello-dialog-xaml/` artifacts from the unedited
+Regenerated the `code/programs/csharp/hello-dialog-xaml/` artifacts from the unedited
 `.mil`/`.mll`/`.msl` triple via `mosaic-compile --backend xaml`. The
 generated XAML, code-behind, and Event union are now byte-identical
 to the working hand-patched files in
-`demo/hello-dialog-xaml/winui/`. After PR-3 (`--emit-project`) and
+`code/programs/csharp/hello-dialog-xaml/winui/`. After PR-3 (`--emit-project`) and
 PR-4 (regenerate the demo) land, the demo will need zero hand-patches.
 
 ## [Unreleased] — U29-1-K-xaml — HostDialog kernel primitive
@@ -548,7 +548,7 @@ intact today.
 
 ### What's NOT in this PR (deferred to PR-7)
 
-- **VisiCalc Windows demo** (`demo/visicalc/windows/xaml/`) — the
+- **VisiCalc Windows demo** (`code/programs/typescript/visicalc/windows/xaml/`) — the
   full end-to-end app that consumes the compiled `mosaic-pkg-grid`
   package and a hand-written `FormulaBar` component. PR-7 lands
   this directory, the `windows/build.ps1` driver, and the

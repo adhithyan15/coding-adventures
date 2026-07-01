@@ -9,7 +9,7 @@ new artifacts.
 
 It is the "Storybook" of the Mosaic stack: an authoring loop with
 zero per-component boilerplate.  All the host-wrapper code that would
-otherwise live in a `demo/visicalc/`-style app is auto-generated from
+otherwise live in a `code/programs/typescript/visicalc/`-style app is auto-generated from
 your component's `.mil` interface.
 
 ## Synopsis

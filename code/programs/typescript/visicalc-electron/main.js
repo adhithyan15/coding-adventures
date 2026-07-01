@@ -1,7 +1,7 @@
 // main.js — Electron main process for the VisiCalc demo.
 //
 // Cross-platform desktop wrapper that hosts the *exact same* React
-// bundle produced by `demo/visicalc/`'s Vite build.  No host-code
+// bundle produced by the sibling `visicalc/` program's Vite build.  No host-code
 // duplication: the .mil/.mll/.msl sources compile once, the React
 // emitter produces `Grid.tsx` + `FormulaBar.tsx`, Vite bundles them
 // into `dist/`, and this main process loads `dist/index.html` into
@@ -27,22 +27,21 @@ const path = require("path");
 const url = require("url");
 
 /**
- * Resolve the file:// URL of `demo/visicalc/dist/index.html`.
+ * Resolve the file:// URL of the React bundle's `dist/index.html`.
  *
  * The Electron host lives at:
  *   code/programs/typescript/visicalc-electron/main.js
  *
- * The compiled React bundle lives at:
- *   demo/visicalc/dist/index.html
+ * The compiled React bundle lives in the sibling program:
+ *   code/programs/typescript/visicalc/dist/index.html
  *
- * Four `..` segments climb out of `programs/typescript/<name>/` back
- * to the repo root, then we descend into `demo/visicalc/dist/`.
+ * One `..` climbs out of `visicalc-electron/` and we descend into the
+ * `visicalc/` sibling's `dist/`.
  */
 function distIndexUrl() {
   const distIndex = path.resolve(
     __dirname,
-    "..", "..", "..", "..",
-    "demo", "visicalc", "dist", "index.html",
+    "..", "visicalc", "dist", "index.html",
   );
   return url.pathToFileURL(distIndex).toString();
 }
