@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 17 \u2014 respiratory ventilation parameters from a single bedside assessment (a NEW organ system: pulmonary mechanics). From three stated quantities (tidal volume TV, respiratory rate RR, anatomic dead space VD) compute the minute ventilation (MV = TV*RR), alveolar ventilation (VA = (TV-VD)*RR), or dead-space ventilation per minute (VDm = VD*RR). Each item is a compute_dimensioned program (observe the three quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a subtraction combined with a product \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every parameter is built only from the three observed quantities via + - * \u2014 no constant leaks. The five options are a family over the same quantities, so the distractors are exactly the slips students make: adding the dead space instead of subtracting it, or dropping the multiply-by-rate.",
+  "items": [
+    {
+      "id": "r17av-01",
+      "qtype": "ventilation_parameter",
+      "stem": "A ventilation assessment shows a tidal volume of 500 mL, a respiratory rate of 12 breaths/min, and an anatomic dead space of 150 mL. What is the patient's minute ventilation (MV)?",
+      "program": "observe tv(500)\nobserve rr(12)\nobserve vd(150)\nlet answer = tv * rr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4200,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1800,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7800,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 350,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r17av-02",
+      "qtype": "ventilation_parameter",
+      "stem": "A ventilation assessment shows a tidal volume of 500 mL, a respiratory rate of 12 breaths/min, and an anatomic dead space of 150 mL. What is the patient's alveolar ventilation (VA)?",
+      "program": "observe tv(500)\nobserve rr(12)\nobserve vd(150)\nlet answer = (tv - vd) * rr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4200,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1800,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7800,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 350,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r17av-03",
+      "qtype": "ventilation_parameter",
+      "stem": "A ventilation assessment shows a tidal volume of 500 mL, a respiratory rate of 12 breaths/min, and an anatomic dead space of 150 mL. What is the patient's dead-space ventilation per minute?",
+      "program": "observe tv(500)\nobserve rr(12)\nobserve vd(150)\nlet answer = vd * rr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4200,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1800,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7800,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 350,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r17av-04",
+      "qtype": "ventilation_parameter",
+      "stem": "A ventilation assessment shows a tidal volume of 600 mL, a respiratory rate of 14 breaths/min, and an anatomic dead space of 160 mL. What is the patient's minute ventilation (MV)?",
+      "program": "observe tv(600)\nobserve rr(14)\nobserve vd(160)\nlet answer = tv * rr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6160,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2240,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10640,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8400,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 440,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r17av-05",
+      "qtype": "ventilation_parameter",
+      "stem": "A ventilation assessment shows a tidal volume of 600 mL, a respiratory rate of 14 breaths/min, and an anatomic dead space of 160 mL. What is the patient's alveolar ventilation (VA)?",
+      "program": "observe tv(600)\nobserve rr(14)\nobserve vd(160)\nlet answer = (tv - vd) * rr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8400,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2240,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10640,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 440,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6160,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r17av-06",
+      "qtype": "ventilation_parameter",
+      "stem": "A ventilation assessment shows a tidal volume of 600 mL, a respiratory rate of 14 breaths/min, and an anatomic dead space of 160 mL. What is the patient's dead-space ventilation per minute?",
+      "program": "observe tv(600)\nobserve rr(14)\nobserve vd(160)\nlet answer = vd * rr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2240,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8400,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6160,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10640,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 440,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r17av-07",
+      "qtype": "ventilation_parameter",
+      "stem": "A ventilation assessment shows a tidal volume of 450 mL, a respiratory rate of 16 breaths/min, and an anatomic dead space of 140 mL. What is the patient's minute ventilation (MV)?",
+      "program": "observe tv(450)\nobserve rr(16)\nobserve vd(140)\nlet answer = tv * rr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4960,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7200,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2240,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9440,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 310,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r17av-08",
+      "qtype": "ventilation_parameter",
+      "stem": "A ventilation assessment shows a tidal volume of 450 mL, a respiratory rate of 16 breaths/min, and an anatomic dead space of 140 mL. What is the patient's alveolar ventilation (VA)?",
+      "program": "observe tv(450)\nobserve rr(16)\nobserve vd(140)\nlet answer = (tv - vd) * rr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7200,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2240,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4960,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9440,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 310,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r17av-09",
+      "qtype": "ventilation_parameter",
+      "stem": "A ventilation assessment shows a tidal volume of 450 mL, a respiratory rate of 16 breaths/min, and an anatomic dead space of 140 mL. What is the patient's dead-space ventilation per minute?",
+      "program": "observe tv(450)\nobserve rr(16)\nobserve vd(140)\nlet answer = vd * rr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7200,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4960,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9440,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2240,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 310,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r17av-10",
+      "qtype": "ventilation_parameter",
+      "stem": "A ventilation assessment shows a tidal volume of 550 mL, a respiratory rate of 10 breaths/min, and an anatomic dead space of 150 mL. What is the patient's minute ventilation (MV)?",
+      "program": "observe tv(550)\nobserve rr(10)\nobserve vd(150)\nlet answer = tv * rr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4000,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1500,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7000,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 400,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5500,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r17av-11",
+      "qtype": "ventilation_parameter",
+      "stem": "A ventilation assessment shows a tidal volume of 550 mL, a respiratory rate of 10 breaths/min, and an anatomic dead space of 150 mL. What is the patient's alveolar ventilation (VA)?",
+      "program": "observe tv(550)\nobserve rr(10)\nobserve vd(150)\nlet answer = (tv - vd) * rr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4000,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5500,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1500,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7000,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 400,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r17av-12",
+      "qtype": "ventilation_parameter",
+      "stem": "A ventilation assessment shows a tidal volume of 550 mL, a respiratory rate of 10 breaths/min, and an anatomic dead space of 150 mL. What is the patient's dead-space ventilation per minute?",
+      "program": "observe tv(550)\nobserve rr(10)\nobserve vd(150)\nlet answer = vd * rr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5500,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1500,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4000,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7000,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 400,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r17av-13",
+      "qtype": "ventilation_parameter",
+      "stem": "A ventilation assessment shows a tidal volume of 700 mL, a respiratory rate of 15 breaths/min, and an anatomic dead space of 170 mL. What is the patient's minute ventilation (MV)?",
+      "program": "observe tv(700)\nobserve rr(15)\nobserve vd(170)\nlet answer = tv * rr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7950,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2550,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10500,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13050,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 530,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r17av-14",
+      "qtype": "ventilation_parameter",
+      "stem": "A ventilation assessment shows a tidal volume of 700 mL, a respiratory rate of 15 breaths/min, and an anatomic dead space of 170 mL. What is the patient's alveolar ventilation (VA)?",
+      "program": "observe tv(700)\nobserve rr(15)\nobserve vd(170)\nlet answer = (tv - vd) * rr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10500,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2550,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13050,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7950,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 530,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r17av-15",
+      "qtype": "ventilation_parameter",
+      "stem": "A ventilation assessment shows a tidal volume of 700 mL, a respiratory rate of 15 breaths/min, and an anatomic dead space of 170 mL. What is the patient's dead-space ventilation per minute?",
+      "program": "observe tv(700)\nobserve rr(15)\nobserve vd(170)\nlet answer = vd * rr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10500,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7950,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13050,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 530,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2550,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r17av-16",
+      "qtype": "ventilation_parameter",
+      "stem": "A ventilation assessment shows a tidal volume of 400 mL, a respiratory rate of 18 breaths/min, and an anatomic dead space of 130 mL. What is the patient's minute ventilation (MV)?",
+      "program": "observe tv(400)\nobserve rr(18)\nobserve vd(130)\nlet answer = tv * rr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7200,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4860,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2340,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9540,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 270,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r17av-17",
+      "qtype": "ventilation_parameter",
+      "stem": "A ventilation assessment shows a tidal volume of 400 mL, a respiratory rate of 18 breaths/min, and an anatomic dead space of 130 mL. What is the patient's alveolar ventilation (VA)?",
+      "program": "observe tv(400)\nobserve rr(18)\nobserve vd(130)\nlet answer = (tv - vd) * rr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7200,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4860,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2340,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9540,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 270,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r17av-18",
+      "qtype": "ventilation_parameter",
+      "stem": "A ventilation assessment shows a tidal volume of 400 mL, a respiratory rate of 18 breaths/min, and an anatomic dead space of 130 mL. What is the patient's dead-space ventilation per minute?",
+      "program": "observe tv(400)\nobserve rr(18)\nobserve vd(130)\nlet answer = vd * rr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7200,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4860,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2340,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9540,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 270,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r17av-19",
+      "qtype": "ventilation_parameter",
+      "stem": "A ventilation assessment shows a tidal volume of 650 mL, a respiratory rate of 11 breaths/min, and an anatomic dead space of 155 mL. What is the patient's minute ventilation (MV)?",
+      "program": "observe tv(650)\nobserve rr(11)\nobserve vd(155)\nlet answer = tv * rr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5445,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1705,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8855,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7150,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 495,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r17av-20",
+      "qtype": "ventilation_parameter",
+      "stem": "A ventilation assessment shows a tidal volume of 650 mL, a respiratory rate of 11 breaths/min, and an anatomic dead space of 155 mL. What is the patient's alveolar ventilation (VA)?",
+      "program": "observe tv(650)\nobserve rr(11)\nobserve vd(155)\nlet answer = (tv - vd) * rr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7150,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1705,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8855,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 495,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5445,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r17av-21",
+      "qtype": "ventilation_parameter",
+      "stem": "A ventilation assessment shows a tidal volume of 650 mL, a respiratory rate of 11 breaths/min, and an anatomic dead space of 155 mL. What is the patient's dead-space ventilation per minute?",
+      "program": "observe tv(650)\nobserve rr(11)\nobserve vd(155)\nlet answer = vd * rr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1705,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7150,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5445,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8855,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 495,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
