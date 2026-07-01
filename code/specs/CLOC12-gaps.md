@@ -1191,3 +1191,22 @@ historical context with status `RESOLVED` and a link to the fix PR.
   still keeps the `0` — distinct from the source-preserving byte-identity path
   that already elides it (gap-107 / gap-113). No new gap number is opened; the
   placeholders reference the existing **gap-133** from CLOC12.138.
+
+## CLOC12.143 — CodePrinter string-escape port (emitter)
+
+- **What it is:** the tenth CLOC12 upstream port and the third into
+  `closure-emitter` (alongside the CodePrinter core / declarations /
+  trailing-comma / numbers ports). New file
+  `tests/upstream/code_printer_string_escape_test.rs`, registered as the
+  `upstream_code_printer_string_escape` test target. It reshapes upstream
+  `CodePrinterTest.java`'s string-escaping assertions onto our AST surface (a
+  `StringLiteral` emitted as a single expression-statement) and pins the escape
+  sequences `emit_string` / `choose_quote_and_escape` produce.
+- **7 active `#[test]`s pass on the first run** (no new emitter bug): backslash
+  doubling, the `\n`/`\r`/`\t` short escapes, an "other" control char as
+  upper-case `\uXXXX` (`U+0007` → ``), the U+2028/U+2029 line-terminator
+  escapes, printable non-ASCII left verbatim in the default (non-`ascii_only`)
+  mode, and two single-quote-path cases selected by quote-choice.
+- **No `#[ignore]` placeholders** — every case the emitter handles today is an
+  active conformance test. (The `ascii_only` `\uXXXX` escaping of printable
+  non-ASCII is a separate `EmitOptions` path and is left for a follow-up port.)

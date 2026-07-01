@@ -2,6 +2,27 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.18.14] - 2026-07-01
+
+### Test — CodePrinter string-escape port (#88, CLOC12.143)
+
+New upstream port `tests/upstream/code_printer_string_escape_test.rs` (registered
+as the `upstream_code_printer_string_escape` test target), extending the
+CodePrinter coverage beyond the quote-choice case already active in
+`code_printer_test.rs` (gap-026). It pins the **escape sequences** `emit_string`
+emits, in both the default double-quote path and the single-quote path that
+quote-choice selects:
+
+- **7 active `#[test]`s** (all pass on the first run — no new emitter bug):
+  backslash doubling (`a\b` → `"a\\b"`), the `\n`/`\r`/`\t` short escapes, an
+  "other" control char as upper-case `\uXXXX` (`U+0007` → ``), the
+  U+2028/U+2029 line-terminator escapes, printable non-ASCII left verbatim
+  (`café` stays `café` in the default non-`ascii_only` mode), and two
+  single-quote-path cases (backslash still doubles; the active `'` is escaped
+  while `"` stays bare).
+
+No library code changed — this release is test coverage plus docs.
+
 ## [0.18.13] - 2026-07-01
 
 ### Test — CodePrinter number-formatting port (#88, CLOC12.142)
