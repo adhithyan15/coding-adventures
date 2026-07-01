@@ -2,6 +2,28 @@
 
 All notable changes to the Presentation-MathML frontend crate.
 
+## [0.8.0] — 2026-07-01
+
+### Added — binomial coefficients (`<mfrac linethickness="0">` → `Binom`)
+
+A `<mfrac>` whose fraction bar has **zero thickness** (`linethickness="0"`) is
+Presentation-MathML's encoding of a **binomial coefficient** "n choose k" — the same
+top-over-bottom stack with the division rule suppressed, and exactly what LaTeX `\binom{n}{k}` /
+`{n \choose k}` export to. It now lowers to the neutral `MathExpr::Binom` node (the SAME node the
+`latex` frontend already emits for `\binom`), distinct from `MathExpr::Frac`:
+
+- `<mfrac linethickness="0"><mi>n</mi><mi>k</mi></mfrac>` → `Binom(n, k)` (source order — numerator
+  = top = n).
+- Every length spelling of zero is recognised (`0`, `0pt`, `0.0em`, `0px`); the keyword thicknesses
+  (`thin`/`medium`/`thick`), any nonzero length, and an absent attribute all stay an ordinary `Frac`.
+- The `linethickness` attribute is re-read from the start-tag byte span (the same mechanism
+  `<mfenced>` uses for its `open`/`close` delimiters) — the lexer still discards presentation
+  attributes.
+- `capabilities()` now declares `binomials`, closing the last shape gap vs the `latex` frontend.
+  Downstream is unaffected: the `Binom` node already existed and is already lowered by the
+  `adj-lang` adapter. Verified across `latex`/`mathml`/`asciimath`/`unicode-math`/`adj-lang`/
+  `adj-lang-cli`.
+
 ## [0.7.0] — 2026-07-01
 
 ### Changed — comma/semicolon list fences now carry their delimiters too

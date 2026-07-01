@@ -19,7 +19,9 @@
 //! The core presentation element set: `<mn>` numbers (exact), `<mi>` identifiers, `<mo>` operators
 //! (`+ - * / = < > ≤ ≥ ≠ ≈ ≡ ± ∓` and their entity spellings), `<mrow>` rows (with operator
 //! precedence, implicit multiplication of adjacent operands, unary signs, and `(`…`)` fences),
-//! `<mfrac>` → [`MathExpr::Frac`], `<msup>` → `Pow`, `<msub>` → [`MathExpr::Subscript`],
+//! `<mfrac>` → [`MathExpr::Frac`] (or, when its bar is zero-thickness — `linethickness="0"`, the
+//! binomial-coefficient encoding — [`MathExpr::Binom`]), `<msup>` → `Pow`, `<msub>` →
+//! [`MathExpr::Subscript`],
 //! `<msubsup>`, `<msqrt>`/`<mroot>` → [`MathExpr::Root`], and `<mtext>` → [`MathExpr::Text`]. The
 //! `<math>`/`<mstyle>`/`<mpadded>` wrappers are transparent. Attributes, namespace prefixes
 //! (`m:math` ≡ `math`), the XML declaration, comments, and DOCTYPE are ignored.
@@ -76,6 +78,9 @@ impl MathFrontend for MathMl {
         // `Fenced { open, body, close }`, and a comma/semicolon LIST lowers to `Fenced { open,
         // body: Sequence(..), close }` — always carrying its `open`/`close` delimiters as data (so
         // `|x|` ≠ `(x)` and `(a, b)` ≠ `[a, b]`).
+        // The binomials slice reads `<mfrac>`'s `linethickness`: a zero-thickness bar
+        // (`linethickness="0"`) is MathML's binomial coefficient "n choose k" → `Binom` (the SAME
+        // node the latex `\binom` emits); any nonzero/absent thickness stays a `Frac`.
         Capabilities::none()
             .with_fractions()
             .with_roots()
@@ -84,6 +89,7 @@ impl MathFrontend for MathMl {
             .with_implicit_mul()
             .with_text()
             .with_plusminus()
+            .with_binomials()
             .with_matrices()
             .with_oversets()
             .with_functions()
@@ -214,6 +220,45 @@ mod tests {
     fn mfrac_is_frac_like_latex_and_asciimath() {
         let e = p("<mfrac><mn>1</mn><mn>2</mn></mfrac>");
         assert_eq!(e, MathExpr::Frac(Box::new(num(1)), Box::new(num(2))));
+    }
+
+    #[test]
+    fn mfrac_linethickness_zero_is_a_binomial() {
+        // A zero-thickness fraction bar is MathML's binomial coefficient "n choose k" — the SAME
+        // neutral node LaTeX `\binom{n}{k}` emits, distinct from `Frac`. The `n`/`k` stay in source
+        // order (numerator = top = n).
+        assert_eq!(
+            p(r#"<mfrac linethickness="0"><mi>n</mi><mi>k</mi></mfrac>"#),
+            MathExpr::Binom(Box::new(sym("n")), Box::new(sym("k")))
+        );
+        // Every unit spelling of zero suppresses the bar (0pt / 0.0em / 0px), and single-quoted
+        // attributes work too.
+        for zero in ["0", "0pt", "0.0em", "0px"] {
+            assert_eq!(
+                p(&format!(r#"<mfrac linethickness="{zero}"><mn>5</mn><mn>2</mn></mfrac>"#)),
+                MathExpr::Binom(Box::new(num(5)), Box::new(num(2))),
+                "linethickness={zero:?} should be a binomial",
+            );
+        }
+        // A nonzero or keyword thickness — and an absent attribute — stay ordinary fractions.
+        for frac in [
+            r#"<mfrac linethickness="1"><mn>1</mn><mn>2</mn></mfrac>"#,
+            r#"<mfrac linethickness="2px"><mn>1</mn><mn>2</mn></mfrac>"#,
+            r#"<mfrac linethickness="thin"><mn>1</mn><mn>2</mn></mfrac>"#,
+            r#"<mfrac linethickness="medium"><mn>1</mn><mn>2</mn></mfrac>"#,
+            "<mfrac><mn>1</mn><mn>2</mn></mfrac>",
+        ] {
+            assert_eq!(
+                p(frac),
+                MathExpr::Frac(Box::new(num(1)), Box::new(num(2))),
+                "{frac} should stay a fraction",
+            );
+        }
+        // Binom and Frac with the same operands are NOT equal — the zero-bar carries meaning.
+        assert_ne!(
+            p(r#"<mfrac linethickness="0"><mn>1</mn><mn>2</mn></mfrac>"#),
+            p("<mfrac><mn>1</mn><mn>2</mn></mfrac>"),
+        );
     }
 
     #[test]
@@ -649,6 +694,7 @@ mod tests {
             "<mi>x</mi>",
             "<math><mn>1</mn><mo>+</mo><mn>2</mn></math>",
             "<mfrac><mn>1</mn><mn>2</mn></mfrac>",
+            r#"<mfrac linethickness="0"><mi>n</mi><mi>k</mi></mfrac>"#,
             "<msup><mi>x</mi><mn>2</mn></msup>",
             "<msqrt><mi>x</mi></msqrt>",
             "<math><mi>x</mi><mo>=</mo><mn>1</mn></math>",

@@ -21,6 +21,7 @@ tree.
 | `<mo>+ - * / = &lt; &gt; ≤ ≥ ≠ ≈ ≡ ± ∓</mo>` | the matching `Bin`/`Rel` operator |
 | `<mrow>…</mrow>` | a folded row: operator precedence (relations < ± / +− < × ÷), implicit multiplication of adjacent operands, unary signs, and `(`…`)` fences → `Group` |
 | `<mfrac>a b</mfrac>` | `Frac(a, b)` |
+| `<mfrac linethickness="0">n k</mfrac>` | `Binom(n, k)` (a zero-thickness bar is the binomial coefficient "n choose k" — same node as LaTeX `\binom{n}{k}`; any nonzero/keyword/absent thickness stays `Frac`) |
 | `<msup>b e</msup>` | `Bin(Pow, b, e)` |
 | `<msub>b s</msub>` | `Subscript(b, s)` |
 | `<msubsup>b s e</msubsup>` | `Bin(Pow, Subscript(b, s), e)` |
