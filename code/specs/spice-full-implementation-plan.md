@@ -33,19 +33,20 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard layout.
+1. Rust Berkeley Mosaic app shell dashboard navigation.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app shell dashboard layout surfaces and JSON
-     helpers that derive stable status, attention, and metrics layout regions
-     from dashboard cards and views for a compact first-render dashboard
-     composition contract.
+   - Add schema-versioned Rust app shell dashboard navigation surfaces and JSON
+     helpers that derive stable status, attention, and metrics navigation items
+     from dashboard layouts for a compact first-render dashboard navigation
+     contract.
    - Preserve package name, source fingerprint, ready/blocked route, status
-     severity, attention-required flag, card IDs, visible card IDs,
-     primary-card routing, primary-region routing, region IDs, region roles,
-     region titles, region card IDs, primary and visible flags, attention-card
-     IDs, metric-card IDs, dashboard/package/card/view/layout capability IDs,
-     and advertised capability count so Mosaic, WebAssembly, and product shells
-     can render startup dashboard layouts without interpreting card internals.
+     severity, attention-required flag, primary-card routing, primary-region
+     routing, active-item routing, item IDs, labels, roles, region IDs, region
+     card IDs, active/visible/enabled flags, visible and enabled item counts,
+     badge counts, dashboard/package/card/view/layout/navigation capability
+     IDs, and advertised capability count so Mosaic, WebAssembly, and product
+     shells can render startup dashboard navigation without interpreting layout
+     internals.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1702,6 +1703,21 @@ the Rust, Python, and TypeScript surfaces together.
      metric-card IDs, dashboard/package/card/view capability IDs, and advertised
      capability count so Mosaic, WebAssembly, and product shells can render
      startup dashboard views without interpreting card internals.
+
+159. Rust Berkeley Mosaic app shell dashboard layout.
+   - Status: completed in PR 7108.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell dashboard layouts plus JSON helpers that derive stable status,
+     attention, and metrics layout regions from dashboard cards and views for a
+     compact first-render dashboard composition contract.
+   - The layout payload preserves package name, source fingerprint,
+     ready/blocked route, status severity, attention-required flag, card IDs,
+     visible card IDs, primary-card routing, primary-region routing, region IDs,
+     region roles, region titles, region card IDs, primary and visible flags,
+     attention-card IDs, metric-card IDs, dashboard/package/card/view/layout
+     capability IDs, and advertised capability count so Mosaic, WebAssembly, and
+     product shells can render startup dashboard layouts without interpreting
+     card internals.
 
 ## Backlog
 
