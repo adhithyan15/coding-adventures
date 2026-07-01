@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-globals` crate will be documented in this file.
 
+## [0.7.1] - 2026-06-30
+
+### Added — CLOC12 upstream test port (`RenameVarsTest`)
+
+Ported the applicable cases from Google Closure Compiler's `RenameVarsTest.java`
+into `tests/upstream/rename_vars_test.rs`, following the CLOC12.01 convention
+(header cites the Java source; `UPSTREAM_SHA` pins the tracked commit;
+`ATTRIBUTION.md` records Apache-2.0 provenance; a `[[test]]` entry wires the file
+in). The pass exposes a source-string surface through public crate APIs, so —
+unlike the AST-builder ports — each case drives the real
+`source → bridge → rename → emit` chain and asserts on the emitted string, the
+same surface upstream uses.
+
+- **8 active `#[test]`s pass**: two globals → `a`/`b`, all-uses-rewritten, a
+  global function-declaration rename, the reserved-extern case (keeps only the
+  reserved `apiHandler`, renames the ordinary global `helper`→`a`), a
+  free/undeclared global left untouched, a dotted property key left untouched, a
+  global used as a computed-member index renamed, and a single-character global
+  left un-lengthened.
+- **No new closurec bug** — the port validated correct behavior; one draft
+  expectation was corrected during authoring (the reserved-extern case).
+- **4 `#[ignore = "blocked on gap-NNN"]` placeholders** for upstream behavior
+  the global-only pass does not cover: function-local renaming (gap-134),
+  parameter renaming (gap-135), short-name reuse across disjoint scopes
+  (gap-136), and pseudo-name / stable-name mode (gap-137). Pinned to
+  `code/specs/CLOC12-gaps.md` §CLOC12.139; run with `--include-ignored` to track
+  progress as they close.
+
+No library code changed — this release is test coverage plus docs.
+
 ## [0.7.0] - 2026-06-30
 
 ### Added — correlation-vector rename provenance (#89)
