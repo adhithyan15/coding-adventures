@@ -1685,6 +1685,7 @@ pub enum SmartHomeTool {
     GetRuntimeSnapshot,
     GetPendingWorkSummary,
     GetAttentionOverview,
+    GetRemediationPlan,
     GetTopologySummary,
     ListDesiredStates,
     ListDesiredStateDriftAudit,
@@ -2404,6 +2405,7 @@ impl SmartHomeTool {
             Self::GetRuntimeSnapshot => read_tool("smart_home.get_runtime_snapshot"),
             Self::GetPendingWorkSummary => read_tool("smart_home.get_pending_work_summary"),
             Self::GetAttentionOverview => read_tool("smart_home.get_attention_overview"),
+            Self::GetRemediationPlan => read_tool("smart_home.get_remediation_plan"),
             Self::GetTopologySummary => read_tool("smart_home.get_topology_summary"),
             Self::ListDesiredStates => read_tool("smart_home.list_desired_states"),
             Self::ListDesiredStateDriftAudit => {
@@ -3298,6 +3300,7 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
         SmartHomeTool::GetRuntimeSnapshot,
         SmartHomeTool::GetPendingWorkSummary,
         SmartHomeTool::GetAttentionOverview,
+        SmartHomeTool::GetRemediationPlan,
         SmartHomeTool::GetTopologySummary,
         SmartHomeTool::ListDesiredStates,
         SmartHomeTool::ListDesiredStateDriftAudit,
@@ -4142,7 +4145,7 @@ mod tests {
             .find(|tool| tool.tool_id == "smart_home.command")
             .unwrap();
 
-        assert_eq!(catalog.len(), 287);
+        assert_eq!(catalog.len(), 288);
         assert!(catalog
             .iter()
             .any(|tool| tool.tool_id == "smart_home.list_command_risk_audit"
@@ -4164,6 +4167,11 @@ mod tests {
         assert!(catalog
             .iter()
             .any(|tool| tool.tool_id == "smart_home.get_attention_overview"
+                && tool.side_effects == ToolSideEffects::Read
+                && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog
+            .iter()
+            .any(|tool| tool.tool_id == "smart_home.get_remediation_plan"
                 && tool.side_effects == ToolSideEffects::Read
                 && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
         assert!(catalog.iter().any(|tool| tool.tool_id
@@ -5277,15 +5285,15 @@ mod tests {
         let summary = smart_home_tool_catalog_summary();
         let pair_bridge = SmartHomeTool::PairBridge.descriptor();
 
-        assert_eq!(summary.total_tools, 287);
-        assert_eq!(summary.read_tools, 279);
+        assert_eq!(summary.total_tools, 288);
+        assert_eq!(summary.read_tools, 280);
         assert_eq!(summary.write_tools, 2);
         assert_eq!(summary.external_tools, 6);
-        assert_eq!(summary.read_only_tier_tools, 279);
+        assert_eq!(summary.read_only_tier_tools, 280);
         assert_eq!(summary.low_risk_tier_tools, 6);
         assert_eq!(summary.high_risk_tier_tools, 0);
         assert_eq!(summary.human_approval_tier_tools, 2);
-        assert_eq!(summary.total_required_capabilities, 287);
+        assert_eq!(summary.total_required_capabilities, 288);
         assert_eq!(summary.risky_tool_count(), 8);
         assert_eq!(summary.approval_gated_tool_count(), 2);
         assert!(pair_bridge.requires_human_approval());

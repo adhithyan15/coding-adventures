@@ -91,7 +91,7 @@ Chief of Staff job/session/agent
      closeout retention
   -> activation-risk list and summary reads for policy-tier/surface rollout risk
   -> activation dependency graph list and summary reads for prerequisite edges
-  -> runtime snapshot, pending-work, attention-overview, desired-state, and pairing-session inventory reads
+  -> runtime snapshot, pending-work, attention-overview, remediation-plan, desired-state, and pairing-session inventory reads
   -> desired-state target set/clear through runtime authorization
   -> non-mutating supervision plan previews
   -> supervision remediation and runtime maintenance-window/action/plan/ticket/work-order/guardrail/evidence/review/disposition/action/outcome/readiness/handoff reads
@@ -268,6 +268,7 @@ Chief of Staff job/session/agent
 - `smart_home.get_runtime_snapshot`
 - `smart_home.get_pending_work_summary`
 - `smart_home.get_attention_overview`
+- `smart_home.get_remediation_plan`
 - `smart_home.get_topology_summary`
 - `smart_home.list_desired_states`
 - `smart_home.set_desired_state`
