@@ -2,6 +2,16 @@
 
 All notable changes to `semantic-ir-to-javascript` are documented here.
 
+## Unreleased
+
+### Changed
+
+- Compile-compat stub arms for the new core `semantic-ir` variants
+  `ParamKind::Keyword` / `Expr::KeywordArg` (KW1). A single `Keyword` param
+  emits as a best-effort trailing positional (combined with `KwRest`);
+  `emit_expr` follows the crate's deferred-node convention (positioned
+  panic). Real keyword-parameter support is pending KW2–KW8.
+
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 

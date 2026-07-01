@@ -3256,6 +3256,12 @@ fn expr_may_have_effects(expr: &Expr) -> bool {
         }
         Expr::Block(b) => block_may_have_effects(b),
 
+        // KW1 compile-compat stub: a `KeywordArg`'s effect is exactly its
+        // inner `value`'s effect (the `name` is a static label) — recurse
+        // faithfully so effect inference stays conservative-correct.  Real
+        // support pending KW2–KW8.
+        Expr::KeywordArg { value, .. } => expr_may_have_effects(value),
+
         // Calls, closures, and intrinsics may do anything → keep.
         Expr::DirectCall { .. }
         | Expr::IndirectCall { .. }

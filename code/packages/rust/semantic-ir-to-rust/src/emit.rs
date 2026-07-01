@@ -321,6 +321,13 @@ fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
             collect_expr_assigned(map, out);
             collect_expr_assigned(key, out);
         }
+        // KW1 compile-compat stub: a `KeywordArg` is a single-child wrapper
+        // whose runtime meaning is its inner `value` (the `name` is a static
+        // label).  This is a pure traversal collecting assigned locals, so we
+        // recurse faithfully into `value`.  Real keyword-arg emission lands in
+        // KW2–KW6; modules using `Feature::KeywordParams` are rejected by the
+        // validator until then, so this arm is effectively unreachable today.
+        Expr::KeywordArg { value, .. } => collect_expr_assigned(value, out),
         // Leaves, and the SIR18 `StrConcat` node (rejected before emit) —
         // nothing nested that could hold a reachable `Assign`.
         Expr::IntLit { .. }
@@ -623,6 +630,16 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         // this arm is an internal bug.
         Expr::StrConcat { span, .. } => {
             panic!("rust backend reached SIR18 str-concat expression at {} — capability check should have rejected it", span);
+        }
+        // KW1 compile-compat stub: keyword arguments (`f(a: 1)`) are gated
+        // behind `Feature::KeywordParams`, which the validator rejects until
+        // real support lands in KW2–KW6.  `emit_expr` is infallible, so we
+        // follow this crate's established convention for an unsupported node
+        // whose feature the capability check should already have rejected
+        // (see `StrConcat`/`Intrinsic` above): a positioned panic documenting
+        // the internal-bug-only reachability.  No real emission yet.
+        Expr::KeywordArg { span, .. } => {
+            panic!("rust backend reached KW1 keyword-arg expression at {} — capability check should have rejected it (real support pending KW2–KW6)", span);
         }
     }
 }

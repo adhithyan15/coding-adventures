@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Compile-compat stub arms for the new core `semantic-ir` variants
+  `ParamKind::Keyword` / `Expr::KeywordArg` (KW1). Analysis passes
+  (builtin-usage scan, assigned-local collection) recurse into the keyword
+  arg's inner `value`; a single `Keyword` param emits as a best-effort typed
+  positional (combined with `KwRest`); `emit_expr` follows the crate's
+  unsupported-node convention. Real keyword-parameter support is pending
+  KW2–KW8.
+
 ## 0.2.0 — default-parameter emission (P2b)
 
 Default parameters now lower to TypeScript-native defaults. A `Param` whose new

@@ -166,6 +166,10 @@ fn expr_uses_builtin(e: &Expr, name: &str) -> bool {
         }
         Expr::StrConcat { parts, .. } => parts.iter().any(|p| expr_uses_builtin(p, name)),
         Expr::Intrinsic { args, .. } => args.iter().any(|a| expr_uses_builtin(a, name)),
+        // KW1 compile-compat stub: a `KeywordArg` is a single-child wrapper
+        // whose runtime meaning is its inner `value`; recurse into it so this
+        // builtin-usage scan stays faithful.  Real support pending KW2–KW6.
+        Expr::KeywordArg { value, .. } => expr_uses_builtin(value, name),
         Expr::IntLit { .. }
         | Expr::FloatLit { .. }
         | Expr::BoolLit { .. }
@@ -318,7 +322,15 @@ fn emit_function(out: &mut String, f: &Function) {
         match p.kind {
             ParamKind::Rest => out.push('*'),
             ParamKind::KwRest => out.push_str("**"),
-            ParamKind::Required => {}
+            // KW1 compile-compat stub: a single keyword param (`Keyword`) is
+            // NOT the `**opts` collector, so it takes no prefix here — the
+            // shared `push_str(name)` below emits its name, giving a
+            // best-effort plain positional.  Real keyword-param syntax (order
+            // after `*`, name-only binding) lands in KW2–KW6; the validator
+            // rejects `Feature::KeywordParams` until then, so this arm is
+            // unreachable today.  Combined with `Required` as both emit no
+            // prefix.
+            ParamKind::Required | ParamKind::Keyword => {}
         }
         out.push_str(&sanitize_ident(&p.name));
         // P2c default parameters.  A defaulted param gets the *sentinel* as its
@@ -802,6 +814,18 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 out.push(')');
             }
             out.push(')');
+        }
+        // KW1 compile-compat stub: keyword arguments (`f(a: 1)`) are gated
+        // behind `Feature::KeywordParams`, which the validator rejects until
+        // real support lands in KW2–KW6.  Follow this crate's convention for
+        // an unsupported codegen node the capability check should have
+        // rejected (see the `Intrinsic` panic above): a positioned panic
+        // covering internal bugs only.  No real emission yet.
+        Expr::KeywordArg { span, .. } => {
+            panic!(
+                "python backend reached KW1 keyword-arg expression at {} — backend should have rejected it (real support pending KW2–KW6)",
+                span
+            );
         }
     }
 }

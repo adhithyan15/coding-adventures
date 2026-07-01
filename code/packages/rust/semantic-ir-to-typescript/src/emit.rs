@@ -174,6 +174,10 @@ fn expr_uses_builtin(e: &Expr, name: &str) -> bool {
         }
         Expr::StrConcat { parts, .. } => parts.iter().any(|p| expr_uses_builtin(p, name)),
         Expr::Intrinsic { args, .. } => args.iter().any(|a| expr_uses_builtin(a, name)),
+        // KW1 compile-compat stub: recurse into a `KeywordArg`'s inner `value`
+        // (its runtime meaning) so this builtin-usage scan stays faithful.
+        // Real support pending KW2–KW6.
+        Expr::KeywordArg { value, .. } => expr_uses_builtin(value, name),
         Expr::IntLit { .. }
         | Expr::FloatLit { .. }
         | Expr::BoolLit { .. }
@@ -317,7 +321,15 @@ fn emit_function(out: &mut String, f: &Function) {
             ParamKind::Rest => {
                 let _ = write!(out, "...{}: __Sir.Val[]", sanitize_ident(&p.name));
             }
-            ParamKind::Required | ParamKind::KwRest => {
+            // KW1 compile-compat stub: a single `Keyword` param has no
+            // faithful native JS/TS declaration (JS has no keyword-call form),
+            // so mirror the `KwRest` best-effort — emit it as an ordinary
+            // trailing typed parameter (`name: __Sir.Val`).  The inner
+            // `Required`-only guard below withholds a default, matching the
+            // KwRest treatment.  Real keyword-param support lands in KW2–KW6;
+            // the validator rejects `Feature::KeywordParams` until then, so
+            // this arm is unreachable today.
+            ParamKind::Required | ParamKind::KwRest | ParamKind::Keyword => {
                 let _ = write!(out, "{}: __Sir.Val", sanitize_ident(&p.name));
                 // P2b default parameters.  A SIR default is evaluated
                 // per-call in the callee's parameter scope and may reference
@@ -478,6 +490,10 @@ fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
                 collect_expr_assigned(p, out);
             }
         }
+        // KW1 compile-compat stub: recurse into a `KeywordArg`'s inner `value`
+        // — its runtime meaning — so assigned-local collection stays faithful.
+        // Real support pending KW2–KW6.
+        Expr::KeywordArg { value, .. } => collect_expr_assigned(value, out),
         // Leaves with no nested blocks/exprs that could hold an Assign.
         Expr::IntLit { .. }
         | Expr::FloatLit { .. }
@@ -909,6 +925,18 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 out.push(')');
             }
             out.push(')');
+        }
+        // KW1 compile-compat stub: keyword arguments (`f(a: 1)`) are gated
+        // behind `Feature::KeywordParams`, which the validator rejects until
+        // real support lands in KW2–KW6.  Follow this crate's convention for
+        // an unsupported codegen node the capability check should have
+        // rejected (see the `Intrinsic` panic): a positioned panic covering
+        // internal bugs only.  No real emission yet.
+        Expr::KeywordArg { span, .. } => {
+            panic!(
+                "typescript backend reached KW1 keyword-arg expression at {} — backend should have rejected it (real support pending KW2–KW6)",
+                span
+            );
         }
     }
 }

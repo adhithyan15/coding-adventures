@@ -167,7 +167,13 @@ fn emit_function(out: &mut String, f: &Function) {
             // v0 binds it as a trailing ordinary parameter — but this
             // backend does not accept the features that produce KwRest
             // yet, so in practice only `Required` is reached here.
-            ParamKind::Required | ParamKind::KwRest => {
+            // KW1 compile-compat stub: a single `Keyword` param has no native
+            // JS form (JS has no keyword-argument call), so mirror the
+            // `KwRest` best-effort — emit it as a trailing ordinary parameter.
+            // Real keyword-param support lands in KW2–KW6; the validator
+            // rejects `Feature::KeywordParams` until then, so this arm is
+            // unreachable today.
+            ParamKind::Required | ParamKind::KwRest | ParamKind::Keyword => {
                 out.push_str(&sanitize_ident(&p.name));
                 // P2d: a defaulted param (`Param { default: Some(e) }`)
                 // becomes a native JS default parameter `name = <e>`.
@@ -502,6 +508,14 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             panic!(
                 "emit reached an Intrinsic `{name}` at {span} — backend should have rejected it"
             );
+        }
+        // KW1 compile-compat stub: keyword arguments (`f(a: 1)`) are gated
+        // behind `Feature::KeywordParams`, rejected at the capability check
+        // until real support lands in KW2–KW6.  Follow this crate's deferred
+        // -node convention (see `StrConcat` above): a positioned panic
+        // covering backend bugs only.  No real emission yet.
+        Expr::KeywordArg { span, .. } => {
+            panic!("javascript backend reached a deferred `KeywordArg` at {span} — not accepted yet (real support pending KW2–KW6)");
         }
     }
 }

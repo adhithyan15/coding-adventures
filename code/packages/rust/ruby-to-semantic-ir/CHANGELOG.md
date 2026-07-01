@@ -2,6 +2,16 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## Unreleased
+
+### Changed
+
+- Compile-compat stub arms for the new core `semantic-ir` variant
+  `Expr::KeywordArg` (KW1). Every affected pass — the swap-safety reference
+  check, the `yield`-rewrite and call-normalization `&mut` visitors, and the
+  bound-name collector — recurses faithfully into the keyword arg's inner
+  `value`. Real keyword-argument lowering is pending KW2–KW8.
+
 ## [0.99.1] - 2026-06-30
 
 ### Fixed (bare-identifier method bodies now lower)

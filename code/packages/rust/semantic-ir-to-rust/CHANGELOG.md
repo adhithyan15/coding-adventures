@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Compile-compat stub arms for the new core `semantic-ir` variants
+  `ParamKind::Keyword` / `Expr::KeywordArg` (KW1). Analysis passes recurse
+  into the keyword arg's inner `value`; codegen follows the crate's existing
+  unsupported-node convention. Real keyword-parameter support is pending
+  KW2–KW8.
+
 ## 0.5.0 — default-parameter emission (P2e)
 
 Adds `Feature::DefaultParams` support: a `Param` may now carry a
