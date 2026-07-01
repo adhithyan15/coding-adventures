@@ -453,6 +453,19 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
               <option value="unknown">Unknown</option>
             </select>
           </label>
+          <label>Scene Scope
+            <select id="filter-scene-scope" data-dashboard-filter="scene-scope">
+              <option value="">All scene scopes</option>
+              <option value="room">Room</option>
+              <option value="zone">Zone</option>
+              <option value="home">Home</option>
+              <option value="bridge">Bridge</option>
+              <option value="custom">Custom</option>
+            </select>
+          </label>
+          <label>Scene Entity
+            <input id="filter-scene-entity" data-dashboard-filter="scene-entity" type="search" autocomplete="off">
+          </label>
           <label>Service Name
             <input id="filter-service-name" data-dashboard-filter="service-name" type="search" autocomplete="off">
           </label>
@@ -776,6 +789,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       filterHistoryToMs: document.querySelector("#filter-history-to-ms"),
       filterHistoryType: document.querySelector("#filter-history-type"),
       filterRoom: document.querySelector("#filter-room"),
+      filterSceneEntity: document.querySelector("#filter-scene-entity"),
+      filterSceneScope: document.querySelector("#filter-scene-scope"),
       filterSearch: document.querySelector("#filter-search"),
       filterServiceCapability: document.querySelector("#filter-service-capability"),
       filterServiceEntity: document.querySelector("#filter-service-entity"),
@@ -823,6 +838,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       ["bridge_integration", els.filterBridgeIntegration],
       ["bridge_transport", els.filterBridgeTransport],
       ["bridge_health", els.filterBridgeHealth],
+      ["scene_scope", els.filterSceneScope],
+      ["scene_entity", els.filterSceneEntity],
       ["service_name", els.filterServiceName],
       ["service_capability", els.filterServiceCapability],
       ["service_entity", els.filterServiceEntity],
@@ -909,6 +926,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       bridgeIntegration: els.filterBridgeIntegration.value.trim(),
       bridgeTransport: els.filterBridgeTransport.value,
       bridgeHealth: els.filterBridgeHealth.value,
+      sceneScope: els.filterSceneScope.value,
+      sceneEntity: els.filterSceneEntity.value.trim(),
       serviceName: els.filterServiceName.value.trim(),
       serviceCapability: els.filterServiceCapability.value.trim(),
       serviceEntity: els.filterServiceEntity.value.trim(),
@@ -1462,7 +1481,12 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           json("/api/smart_home/readiness"),
           json(queryUrl("/api/smart_home/states", {limit: 24, domain: filters.domain, room_id: roomId, stale, capability_id: capabilityId})),
           json(queryUrl("/api/smart_home/states", {limit: 24, room_id: roomId, stale: true, capability_id: capabilityId})),
-          json(queryUrl("/api/smart_home/scenes", {limit: 12, room_id: roomId})),
+          json(queryUrl("/api/smart_home/scenes", {
+            limit: 12,
+            room_id: roomId,
+            scope: filters.sceneScope,
+            entity_id: filters.sceneEntity
+          })),
           json(queryUrl("/api/smart_home/desired_states", {
             limit: 12,
             entity_id: filters.desiredEntity,
@@ -8337,6 +8361,8 @@ mod tests {
             assert!(body.contains("data-dashboard-filter=\"bridge-integration\""));
             assert!(body.contains("data-dashboard-filter=\"bridge-transport\""));
             assert!(body.contains("data-dashboard-filter=\"bridge-health\""));
+            assert!(body.contains("data-dashboard-filter=\"scene-scope\""));
+            assert!(body.contains("data-dashboard-filter=\"scene-entity\""));
             assert!(body.contains("data-dashboard-filter=\"service-name\""));
             assert!(body.contains("data-dashboard-filter=\"service-capability\""));
             assert!(body.contains("data-dashboard-filter=\"service-entity\""));
@@ -8375,6 +8401,8 @@ mod tests {
             assert!(body.contains("[\"bridge_integration\", els.filterBridgeIntegration]"));
             assert!(body.contains("[\"bridge_transport\", els.filterBridgeTransport]"));
             assert!(body.contains("[\"bridge_health\", els.filterBridgeHealth]"));
+            assert!(body.contains("[\"scene_scope\", els.filterSceneScope]"));
+            assert!(body.contains("[\"scene_entity\", els.filterSceneEntity]"));
             assert!(body.contains("[\"service_name\", els.filterServiceName]"));
             assert!(body.contains("[\"service_capability\", els.filterServiceCapability]"));
             assert!(body.contains("[\"service_entity\", els.filterServiceEntity]"));
@@ -8402,9 +8430,10 @@ mod tests {
             assert!(body.contains(
                 "queryUrl(\"/api/smart_home/states\", {limit: 24, room_id: roomId, stale: true, capability_id: capabilityId})"
             ));
-            assert!(
-                body.contains("queryUrl(\"/api/smart_home/scenes\", {limit: 12, room_id: roomId})")
-            );
+            assert!(body.contains("queryUrl(\"/api/smart_home/scenes\", {"));
+            assert!(body.contains("room_id: roomId"));
+            assert!(body.contains("scope: filters.sceneScope"));
+            assert!(body.contains("entity_id: filters.sceneEntity"));
             assert!(body.contains("queryUrl(\"/api/smart_home/desired_states\", {"));
             assert!(body.contains("entity_id: filters.desiredEntity"));
             assert!(body.contains("capability_id: capabilityId"));
@@ -9937,6 +9966,8 @@ mod tests {
         assert!(body.contains("data-dashboard-filter=\"bridge-integration\""));
         assert!(body.contains("data-dashboard-filter=\"bridge-transport\""));
         assert!(body.contains("data-dashboard-filter=\"bridge-health\""));
+        assert!(body.contains("data-dashboard-filter=\"scene-scope\""));
+        assert!(body.contains("data-dashboard-filter=\"scene-entity\""));
         assert!(body.contains("data-dashboard-filter=\"service-name\""));
         assert!(body.contains("data-dashboard-filter=\"service-capability\""));
         assert!(body.contains("data-dashboard-filter=\"service-entity\""));
@@ -9981,6 +10012,8 @@ mod tests {
         assert!(body.contains("[\"bridge_integration\", els.filterBridgeIntegration]"));
         assert!(body.contains("[\"bridge_transport\", els.filterBridgeTransport]"));
         assert!(body.contains("[\"bridge_health\", els.filterBridgeHealth]"));
+        assert!(body.contains("[\"scene_scope\", els.filterSceneScope]"));
+        assert!(body.contains("[\"scene_entity\", els.filterSceneEntity]"));
         assert!(body.contains("[\"service_name\", els.filterServiceName]"));
         assert!(body.contains("[\"service_capability\", els.filterServiceCapability]"));
         assert!(body.contains("[\"service_entity\", els.filterServiceEntity]"));
@@ -10003,7 +10036,10 @@ mod tests {
         assert!(body.contains("[\"grant_status\", els.filterGrantStatus]"));
         assert!(body.contains("window.addEventListener(\"popstate\""));
         assert!(body.contains("window.history.replaceState(null, \"\", nextUrl)"));
-        assert!(body.contains("queryUrl(\"/api/smart_home/scenes\", {limit: 12, room_id: roomId})"));
+        assert!(body.contains("queryUrl(\"/api/smart_home/scenes\", {"));
+        assert!(body.contains("room_id: roomId"));
+        assert!(body.contains("scope: filters.sceneScope"));
+        assert!(body.contains("entity_id: filters.sceneEntity"));
         assert!(body.contains("queryUrl(\"/api/smart_home/desired_states\", {"));
         assert!(body.contains("entity_id: filters.desiredEntity"));
         assert!(body.contains("capability_id: capabilityId"));
