@@ -2,6 +2,34 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.18.16] - 2026-07-01
+
+### Test — CodePrinter object-literal port (#88, CLOC12.147)
+
+The fifth CodePrinter port into `closure-emitter`. New file
+`tests/upstream/code_printer_object_literal_test.rs` (registered as the
+`upstream_code_printer_object_literal` test target) reshapes upstream
+`CodePrinterTest`'s object-literal cases (`testObjectLit*` and the key-quoting
+behaviors) onto our AST surface, pinning the `emit_object` /
+`emit_property` / `emit_property_key` output in the default (minified) mode.
+
+- **13 active `#[test]`s pass on the first run** (no new emitter bug): the
+  empty object, single/multiple identifier-keyed properties (comma-separated,
+  no interior whitespace), string-key quote-stripping (`{"abc":1}` → `{abc:1}`,
+  reserved words bared, non-identifier and numeric-looking keys kept quoted,
+  the `"__proto__"` exception kept quoted), numeric-literal keys, computed keys
+  (`{[a]:1}`), shorthand (`{a}`), a nested object, and a string-valued
+  property. Every case shows the object parenthesized at statement start
+  (`({…});`).
+- **No `#[ignore]` placeholders.** Getters/setters (`{get a(){}}`) and method
+  shorthand (`{m(){}}`) are intentionally out of scope — their values are
+  `FunctionExpression`s, which the Phase-1 emitter does not yet print and the
+  AST cannot fully represent; they join when function-expression emission
+  lands.
+
+This is a **test-only** change: no `src/` file is touched, so there is no
+ripple into downstream consumers. Bumps the crate 0.18.15 → 0.18.16.
+
 ## [0.18.15] - 2026-07-01
 
 ### Test — CodePrinter ASCII-only escape port (#88, CLOC12.144)
