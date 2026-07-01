@@ -45,16 +45,27 @@
 //!   `for…of`, with the `while`/`for-range` tests routed through
 //!   `__Sir.truthy` and a direction-aware, once-evaluated `for-range`.
 //!
+//! ## Exceptions (E1, SIR17)
+//!
+//! `Stmt::TryCatch` lowers to a native `try`/`catch`/`finally` whose catch
+//! body is a `__Sir.rescueMatches`-guarded if/else-if chain, and the
+//! `raise` builtin lowers to `__Sir.raiseError(cls, msg)` — mirroring the
+//! TypeScript backend but against the *inlined* exception runtime.  A
+//! `ClassDef`'s inheritance edge is collected into one
+//! `__Sir.registerAncestry({ … })` at program init so a `rescue
+//! StandardError` catches a `raise MyErr` when `class MyErr < StandardError`
+//! (E2's JS half); the class body's non-`def` statements are emitted inline.
+//!
 //! ## Deferred nodes (still rejected at the capability check)
 //!
-//! String interpolation (`StrConcat`) and the SIR17/18 OOP/exception
-//! scopes (`ClassDef`/`ModuleDef`/`SingletonClassDef`, `TryCatch`, the
-//! `Instance`/`ClassVar`/`Const` scopes) and `Intrinsic` are **not
-//! emitted**.  Their `Feature`s are absent from the backend's
-//! `accepts_features()` list, so a module that uses them is rejected at
-//! the capability check *before* lowering — the `panic!` arms below are
-//! defence-in-depth that fire only on a backend bug (the accept-set
-//! drifting out of sync with what `emit` handles), never on user input.
+//! String interpolation (`StrConcat`), the remaining SIR17 OOP scopes
+//! (`ModuleDef`, `SingletonClassDef` dispatch, the `Instance`/`ClassVar`
+//! scopes), and `Intrinsic` are **not emitted**.  Their `Feature`s are
+//! absent from the backend's `accepts_features()` list, so a module that
+//! uses them is rejected at the capability check *before* lowering — the
+//! `panic!` arms below are defence-in-depth that fire only on a backend bug
+//! (the accept-set drifting out of sync with what `emit` handles), never on
+//! user input.
 
 use std::cell::Cell;
 use std::fmt::Write;
@@ -90,6 +101,7 @@ pub fn emit_module(m: &Module) -> String {
     // file — including the inlined runtime — runs under strict semantics.
     out.push_str("\"use strict\";\n\n");
     out.push_str(RUNTIME);
+    emit_ancestry_registration(&mut out, m);
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {
         out.push('\n');
@@ -132,6 +144,72 @@ fn emit_module_footer(out: &mut String, m: &Module) {
     }
     if m.functions.iter().any(|f| f.name == "main") {
         out.push_str("main();\n");
+    }
+}
+
+/// Emit the module's user-defined exception-class ancestry (E2, the JS
+/// half) once, at program init, as a single `__Sir.registerAncestry({
+/// child: "Super", … })` call — right after the runtime and before any
+/// user code runs.  This merges the module's `class Child < Super` edges
+/// into the runtime's ancestry table so a `rescue StandardError` matches
+/// a `raise MyErr` when `class MyErr < StandardError`.
+///
+/// We register **eagerly at init** rather than at each `ClassDef` site
+/// because a `raise`/`rescue` may lexically precede the class definition
+/// (Ruby's classes are resolved by name, not by source order); the merged
+/// table must already be complete the first time `rescueMatches` runs.
+/// If the module defines no inheriting classes, nothing is emitted (a
+/// pure non-OOP module gains no init noise).
+fn emit_ancestry_registration(out: &mut String, m: &Module) {
+    let mut pairs: Vec<(&str, &str)> = Vec::new();
+    for f in &m.functions {
+        collect_ancestry(&f.body.stmts, &mut pairs);
+    }
+    if pairs.is_empty() {
+        return;
+    }
+    out.push_str("\n__Sir.registerAncestry({");
+    for (i, (child, sup)) in pairs.iter().enumerate() {
+        if i > 0 {
+            out.push(',');
+        }
+        let _ = write!(out, " {}: {}", quote_js_string(child), quote_js_string(sup));
+    }
+    out.push_str(" });\n");
+}
+
+/// Walk a statement list (recursing into every nested body) collecting
+/// `(childClass, superclassName)` pairs from each `Stmt::ClassDef` whose
+/// `superclass` is `Some`.  Base classes (`class Foo`, no `< Bar`) carry
+/// no edge and are skipped.  The recursion covers class bodies, loop /
+/// try / rescue / ensure bodies, and both branches of an `If` statement,
+/// so a class declared inside any of them is still registered.
+fn collect_ancestry<'a>(stmts: &'a [Stmt], pairs: &mut Vec<(&'a str, &'a str)>) {
+    for s in stmts {
+        match s {
+            Stmt::ClassDef { name, superclass, body, .. } => {
+                if let Some(sup) = superclass {
+                    pairs.push((name.as_str(), sup.as_str()));
+                }
+                collect_ancestry(body, pairs);
+            }
+            Stmt::ModuleDef { body, .. } | Stmt::SingletonClassDef { body, .. } => {
+                collect_ancestry(body, pairs);
+            }
+            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+                collect_ancestry(body, pairs);
+                for r in rescues {
+                    collect_ancestry(&r.body, pairs);
+                }
+                if let Some(ens) = ensure_body {
+                    collect_ancestry(ens, pairs);
+                }
+            }
+            Stmt::While { body, .. }
+            | Stmt::ForRange { body, .. }
+            | Stmt::ForEach { body, .. } => collect_ancestry(&body.stmts, pairs),
+            _ => {}
+        }
     }
 }
 
@@ -415,18 +493,76 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             emit_expr(out, value, indent);
             out.push_str(");\n");
         }
-        // ── Deferred (rejected at the capability check) ────────────
-        // The following statement kinds belong to SIR17/18 features this
-        // backend does not accept.  Reaching them means the accept-set
-        // drifted out of sync with `emit`; fail loudly rather than emit
-        // silently-wrong code.
-        Stmt::ClassDef { span, .. }
-        | Stmt::ModuleDef { span, .. }
-        | Stmt::SingletonClassDef { span, .. } => {
-            panic!("javascript backend reached a deferred OOP declaration at {span} — not accepted yet");
+        // ── SIR17: class / module / singleton declarations ─────────
+        // The Ruby→SIR frontend hoists method `def`s to top-level
+        // functions, so a `ClassDef` body carries only its non-`def`
+        // statements (constant / class-variable assigns).  This backend
+        // does not model OOP method dispatch or instantiation; a class is
+        // accepted only for its *ancestry edge* (E2) — the `superclass`
+        // pair is collected separately (see `collect_ancestry`) and
+        // emitted once as `__Sir.registerAncestry({ … })` at program init.
+        // Here we just emit the body statements in source order.
+        Stmt::ClassDef { body, .. }
+        | Stmt::ModuleDef { body, .. }
+        | Stmt::SingletonClassDef { body, .. } => {
+            for st in body {
+                emit_stmt(out, st, indent);
+            }
         }
-        Stmt::TryCatch { span, .. } => {
-            panic!("javascript backend reached a deferred `TryCatch` at {span} — not accepted yet");
+        // `begin … rescue … ensure … end` → native `try { … } catch
+        // (__exc) { … } finally { … }`.  A native `catch` binds *one*
+        // variable and catches *everything*, while Ruby has an ordered
+        // list of typed `rescue` clauses, so the catch body is an
+        // if/else-if chain that asks the runtime `rescueMatches(exc,
+        // [class names])` for each clause in source order and re-`throw`s
+        // if none match (matching Ruby's "propagate when unrescued").
+        // Mirrors the TypeScript backend's `TryCatch` arm exactly, minus
+        // the type annotation on the `=> e` binding.
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            let _ = writeln!(out, "{pad}try {{");
+            for st in body {
+                emit_stmt(out, st, indent + 2);
+            }
+            let _ = write!(out, "{pad}}}");
+            if !rescues.is_empty() {
+                out.push_str(" catch (__exc) {\n");
+                let inner = indent + 2;
+                let ipad = " ".repeat(inner);
+                for (i, r) in rescues.iter().enumerate() {
+                    // Build the `["Foo", "Bar"]` class-name array; an empty
+                    // list is a bare `rescue` (catch-all) → `[]`.
+                    let mut types = String::from("[");
+                    for (j, t) in r.exception_types.iter().enumerate() {
+                        if j > 0 {
+                            types.push_str(", ");
+                        }
+                        types.push_str(&quote_js_string(t));
+                    }
+                    types.push(']');
+                    let kw = if i == 0 { "if" } else { "} else if" };
+                    let _ = writeln!(out, "{ipad}{kw} (__Sir.rescueMatches(__exc, {types})) {{");
+                    // `rescue Foo => e` binds the caught value as a local.
+                    if let Some(bind) = &r.binding {
+                        let _ = writeln!(out, "{ipad}  const {} = __exc;", sanitize_ident(bind));
+                    }
+                    for st in &r.body {
+                        emit_stmt(out, st, inner + 2);
+                    }
+                }
+                // No clause matched → propagate the original exception.
+                let _ = writeln!(out, "{ipad}}} else {{");
+                let _ = writeln!(out, "{ipad}  throw __exc;");
+                let _ = writeln!(out, "{ipad}}}");
+                let _ = write!(out, "{pad}}}");
+            }
+            if let Some(ens) = ensure_body {
+                out.push_str(" finally {\n");
+                for st in ens {
+                    emit_stmt(out, st, indent + 2);
+                }
+                let _ = write!(out, "{pad}}}");
+            }
+            out.push('\n');
         }
     }
 }
@@ -610,9 +746,20 @@ fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
         Scope::Builtin => {
             let _ = write!(out, "__Sir.builtinClosure({})", quote_js_string(name));
         }
-        // The OOP scopes are not accepted by this backend; a validated,
-        // capability-checked module never carries them here.
-        Scope::Instance | Scope::ClassVar | Scope::Const => {
+        // A `Const` reference (`Feature::Constants`) resolves to a bare
+        // identifier — a top-level `const`/`let` binding the frontend
+        // emitted for the constant.  In practice the dominant `Const` use
+        // reaching this backend is an exception *class name* as the first
+        // argument of `raise`, which the `raise` builtin arm consumes as a
+        // *string* (it never calls `emit_expr` on that Const), so a class
+        // name never needs a real binding.  Any other `Const` — a genuine
+        // named constant read for its value — emits its bare name.
+        Scope::Const => {
+            out.push_str(&sanitize_ident(name));
+        }
+        // The remaining OOP scopes are not accepted by this backend; a
+        // validated, capability-checked module never carries them here.
+        Scope::Instance | Scope::ClassVar => {
             panic!("javascript backend reached a deferred scope `{}` — not accepted yet", scope.name());
         }
     }
@@ -725,6 +872,37 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         for a in &args[1..] {
             out.push_str(", ");
             emit_expr(out, a, indent); // StrLit(method), then call args
+        }
+        out.push(')');
+        return;
+    }
+    // `raise` (SIR17) → throw a SIR exception via the inlined runtime.
+    // Mirrors the TypeScript backend's `raise` arm; the first argument
+    // decides the shape:
+    //   • a `Const` class name (`raise Foo` / `raise Foo, "msg"`) → the
+    //     class name is passed as a *string* (built-in classes need no
+    //     binding), with the optional message second →
+    //     `__Sir.raiseError("Foo"[, <msg>])`;
+    //   • any other first arg (`raise "msg"`) → an implicit `RuntimeError`
+    //     carrying that value as the message (matching Ruby) →
+    //     `__Sir.raiseError("RuntimeError", <arg>)`;
+    //   • no args (bare `raise`) → a generic re-raise →
+    //     `__Sir.raiseError()` (the runtime defaults to `RuntimeError`).
+    if name == "raise" {
+        out.push_str("__Sir.raiseError(");
+        match args.first() {
+            None => {}
+            Some(Expr::VarRef { name: cn, scope: Scope::Const, .. }) => {
+                out.push_str(&quote_js_string(cn));
+                if let Some(msg) = args.get(1) {
+                    out.push_str(", ");
+                    emit_expr(out, msg, indent);
+                }
+            }
+            Some(other) => {
+                out.push_str("\"RuntimeError\", ");
+                emit_expr(out, other, indent);
+            }
         }
         out.push(')');
         return;
@@ -1027,7 +1205,7 @@ fn format_float(v: f64) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use semantic_ir::{CaptureValue, EffectSet, Metadata, Param, Span};
+    use semantic_ir::{CaptureValue, EffectSet, Metadata, Param, RescueClause, Span};
 
     fn s() -> Span {
         Span::synthetic()
@@ -1872,5 +2050,179 @@ mod tests {
         assert!(out.contains("function main() {"));
         assert!(out.contains("main();\n"));
         assert!(out.ends_with('\n'));
+    }
+
+    // ── E1: exceptions (raise / TryCatch) ─────────────────────────
+
+    /// `raise Foo, "msg"` (a `Const` class + message) → the class name is
+    /// a *string literal*, the message follows.
+    #[test]
+    fn emit_raise_const_class_with_message() {
+        let e = bc(
+            "raise",
+            vec![
+                Expr::VarRef { name: "ArgumentError".into(), scope: Scope::Const, span: s() },
+                Expr::StrLit { value: "boom".into(), span: s() },
+            ],
+        );
+        assert_eq!(emit_e(&e), r#"__Sir.raiseError("ArgumentError", "boom")"#);
+    }
+
+    /// `raise Foo` (no message) → just the class-name string.
+    #[test]
+    fn emit_raise_const_class_no_message() {
+        let e = bc(
+            "raise",
+            vec![Expr::VarRef { name: "RuntimeError".into(), scope: Scope::Const, span: s() }],
+        );
+        assert_eq!(emit_e(&e), r#"__Sir.raiseError("RuntimeError")"#);
+    }
+
+    /// Bare `raise` (no args) → `raiseError()`, which the runtime defaults
+    /// to a generic `RuntimeError` re-raise.
+    #[test]
+    fn emit_raise_bare_reraises() {
+        assert_eq!(emit_e(&bc("raise", vec![])), "__Sir.raiseError()");
+    }
+
+    /// `raise "msg"` (a non-`Const` first arg) → an implicit `RuntimeError`
+    /// carrying the value as the message, matching Ruby and the TS backend.
+    #[test]
+    fn emit_raise_non_const_is_runtime_error_with_message() {
+        let e = bc("raise", vec![Expr::StrLit { value: "oops".into(), span: s() }]);
+        assert_eq!(emit_e(&e), r#"__Sir.raiseError("RuntimeError", "oops")"#);
+    }
+
+    /// A `TryCatch` with one typed, bound rescue emits a native
+    /// `try { … } catch (__exc) { if (rescueMatches(…)) { … } else { throw
+    /// __exc; } }` — the rescueMatches-guarded else-chain.
+    #[test]
+    fn emit_try_catch_emits_rescue_matches_else_chain() {
+        let st = Stmt::TryCatch {
+            body: vec![Stmt::ExprStmt {
+                expr: bc("print", vec![Expr::StrLit { value: "try".into(), span: s() }]),
+                span: s(),
+            }],
+            rescues: vec![RescueClause {
+                exception_types: vec!["StandardError".into()],
+                binding: Some("e".into()),
+                body: vec![Stmt::ExprStmt {
+                    expr: bc("print", vec![Expr::StrLit { value: "caught".into(), span: s() }]),
+                    span: s(),
+                }],
+                span: s(),
+            }],
+            ensure_body: None,
+            span: s(),
+        };
+        let out = emit_s(&st);
+        assert!(out.contains("try {"), "got:\n{out}");
+        assert!(out.contains("catch (__exc) {"), "got:\n{out}");
+        assert!(
+            out.contains(r#"if (__Sir.rescueMatches(__exc, ["StandardError"])) {"#),
+            "got:\n{out}"
+        );
+        assert!(out.contains("const e = __exc;"), "got:\n{out}");
+        assert!(out.contains("} else {"), "got:\n{out}");
+        assert!(out.contains("throw __exc;"), "got:\n{out}");
+    }
+
+    /// A bare `rescue` (empty `exception_types`) emits the catch-all
+    /// `rescueMatches(__exc, [])`; multiple clauses chain with `else if`;
+    /// an `ensure` becomes a `finally`.
+    #[test]
+    fn emit_try_catch_bare_rescue_chain_and_finally() {
+        let st = Stmt::TryCatch {
+            body: vec![],
+            rescues: vec![
+                RescueClause {
+                    exception_types: vec!["TypeError".into()],
+                    binding: None,
+                    body: vec![],
+                    span: s(),
+                },
+                RescueClause {
+                    exception_types: vec![], // bare `rescue`
+                    binding: None,
+                    body: vec![],
+                    span: s(),
+                },
+            ],
+            ensure_body: Some(vec![]),
+            span: s(),
+        };
+        let out = emit_s(&st);
+        assert!(out.contains(r#"if (__Sir.rescueMatches(__exc, ["TypeError"])) {"#), "got:\n{out}");
+        assert!(out.contains("} else if (__Sir.rescueMatches(__exc, [])) {"), "got:\n{out}");
+        assert!(out.contains("finally {"), "got:\n{out}");
+    }
+
+    // ── E2 (JS half): user-defined class ancestry ─────────────────
+
+    /// A `class MyErr < StandardError` inside a function body is collected
+    /// into a single `__Sir.registerAncestry({ … })` emitted at program
+    /// init (after the runtime, before user functions run).
+    #[test]
+    fn emit_module_registers_user_class_ancestry() {
+        let class_def = Stmt::ClassDef {
+            name: "MyErr".into(),
+            superclass: Some("StandardError".into()),
+            body: vec![],
+            span: s(),
+        };
+        let m = Module {
+            name: "demo".into(),
+            manifest: semantic_ir::FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![fun(
+                "main",
+                vec![],
+                Block { stmts: vec![class_def], value: Expr::NilLit { span: s() }, span: s() },
+            )],
+            globals: vec![],
+            metadata: Metadata::new().with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        };
+        let out = emit_module(&m);
+        assert!(
+            out.contains(r#"__Sir.registerAncestry({ "MyErr": "StandardError" });"#),
+            "got:\n{out}"
+        );
+        // Registration precedes the user's `main` so the table is complete
+        // before any `rescueMatches` runs.
+        let reg = out.find("__Sir.registerAncestry({").unwrap();
+        let main = out.find("function main(").unwrap();
+        assert!(reg < main, "registerAncestry call must precede user functions");
+    }
+
+    /// A base class (`class Foo`, no superclass) carries no ancestry edge,
+    /// so a module with only base classes emits no `registerAncestry`.
+    #[test]
+    fn emit_module_omits_registration_without_inheritance() {
+        let class_def = Stmt::ClassDef {
+            name: "Foo".into(),
+            superclass: None,
+            body: vec![],
+            span: s(),
+        };
+        let m = Module {
+            name: "demo".into(),
+            manifest: semantic_ir::FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![fun(
+                "main",
+                vec![],
+                Block { stmts: vec![class_def], value: Expr::NilLit { span: s() }, span: s() },
+            )],
+            globals: vec![],
+            metadata: Metadata::new().with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        };
+        // The runtime *defines* `registerAncestry`, so only the *call*
+        // `__Sir.registerAncestry({` marks a real registration — and that
+        // must be absent for a module with no inheriting classes.
+        assert!(!emit_module(&m).contains("__Sir.registerAncestry({"));
     }
 }

@@ -87,7 +87,9 @@ impl Default for JavaScriptBackend {
 ///
 /// `TailCalls` and `Intrinsics` are excluded deliberately (the former is
 /// fundamentally unsupported on V8; the latter has an empty whitelist).
-/// The SIR17/18 OOP / exception / string-interpolation features are
+/// SIR17 exceptions (`Exceptions`), the class *ancestry* slice of
+/// `Classes`, and `Constants` are accepted (E1 / E2's JS half); the
+/// remaining SIR17/18 OOP-dispatch and string-interpolation features stay
 /// excluded because their emit arms are deferred — a module that declares
 /// one is rejected here, never silently mis-compiled.
 const ACCEPTED_FEATURES: &[Feature] = &[
@@ -120,6 +122,29 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // the same zero-dependency, direct lowering the TypeScript backend
     // uses (spec §4).  Accepted here exactly as `DefaultParams` is.
     Feature::KeywordParams,
+    // Constants — a `Const`-scoped `VarRef` (an uppercase name like a
+    // class or a named constant).  Accepted because a `raise Foo` names
+    // its exception class as a `Const` VarRef; the `raise` arm consumes
+    // that Const as a *string* class name, and any other constant read
+    // emits its bare identifier.  See `emit_var_ref`'s `Const` arm.
+    Feature::Constants,
+    // E1 (SIR17): structured exception handling.  `Stmt::TryCatch` lowers
+    // to a native `try { … } catch (__exc) { … } finally { … }` whose
+    // catch body is a `__Sir.rescueMatches`-guarded if/else-if chain, and
+    // the `raise` builtin lowers to `__Sir.raiseError(cls, msg)` — the
+    // same direct lowering the TypeScript backend uses, but against the
+    // *inlined* exception runtime rather than an imported package.  See
+    // `emit`'s `TryCatch` / `raise` arms and `runtime::RUNTIME`.
+    Feature::Exceptions,
+    // E2 (SIR17): class definitions — accepted here only to the extent E1
+    // needs them.  A `class MyErr < StandardError` supplies a user
+    // ancestry edge so `raise MyErr; rescue StandardError` matches; the
+    // emitter collects every `ClassDef { name, superclass: Some(_) }` pair
+    // into one `__Sir.registerAncestry({ … })` at program init and emits
+    // the class body's (non-`def`) statements inline.  Method dispatch /
+    // instantiation are NOT modelled — the frontend hoists method `def`s
+    // out of the body, so an exception-class body carries only assigns.
+    Feature::Classes,
 ];
 
 impl Backend for JavaScriptBackend {
@@ -281,13 +306,23 @@ mod tests {
     }
 
     #[test]
-    fn rejects_sir17_exceptions_feature() {
-        // A still-deferred SIR17 feature must be turned away at the
-        // capability check.
+    fn accepts_sir17_exceptions_feature() {
+        // E1: the SIR17 exception feature is now lowered (TryCatch →
+        // native try/catch, `raise` → `__Sir.raiseError`), so a module
+        // declaring it passes the capability check.
         let mut m = minimal_module();
         m.manifest = FeatureManifest::from_features(&[Feature::Exceptions]);
-        let err = compile(&m).expect_err("exceptions rejected");
-        assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
+        compile(&m).expect("exceptions accepted");
+    }
+
+    #[test]
+    fn accepts_sir17_classes_feature() {
+        // E2 (JS half): `Feature::Classes` is accepted for its ancestry
+        // edge — a `class Child < Super` supplies a user-defined
+        // superclass relation the exception runtime merges in.
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[Feature::Classes]);
+        compile(&m).expect("classes accepted");
     }
 
     #[test]

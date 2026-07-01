@@ -16,7 +16,8 @@ use std::process::Command;
 
 use semantic_ir::nodes::MapEntry;
 use semantic_ir::{
-    Block, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Scope, Span, Stmt,
+    Block, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, RescueClause,
+    Scope, Span, Stmt,
 };
 use semantic_ir_to_javascript::compile;
 
@@ -899,5 +900,148 @@ fn runtime_rejects_constructor_gadget() {
             stderr.contains("not an allowed collection method"),
             "expected the allowlist TypeError, got stderr:\n{stderr}"
         );
+    }
+}
+
+// ── E1: exception execution-proof (run under `node`) ───────────────────
+//
+// The unit tests in `emit.rs` prove the emitted *shape*; these prove the
+// emitted *behaviour* by compiling a hand-built SIR module and running the
+// self-contained `.js` under Node, comparing stdout (or, for the
+// re-raise case, asserting a non-zero exit).
+
+/// A string literal expression.
+fn str_(v: &str) -> Expr {
+    Expr::StrLit { value: v.into(), span: sp() }
+}
+
+/// A `Const`-scoped var-ref — how the Ruby frontend spells a bare class
+/// name like `ArgumentError` at a `raise` site.
+fn const_ref(name: &str) -> Expr {
+    Expr::VarRef { name: name.into(), scope: Scope::Const, span: sp() }
+}
+
+/// A `raise Class, "msg"` statement.
+fn raise(class: &str, msg: &str) -> Stmt {
+    Stmt::ExprStmt { expr: bc("raise", vec![const_ref(class), str_(msg)]), span: sp() }
+}
+
+/// (a) Built-in ancestry: `begin; raise ArgumentError, "x"; rescue
+/// StandardError => e; puts "caught"; end` → "caught".  `ArgumentError`
+/// chains up to `StandardError` via the baked-in ancestry table.
+#[test]
+fn try_catch_builtin_ancestry_catches() {
+    let try_catch = Stmt::TryCatch {
+        body: vec![raise("ArgumentError", "x")],
+        rescues: vec![RescueClause {
+            exception_types: vec!["StandardError".into()],
+            binding: Some("e".into()),
+            body: vec![print(str_("caught"))],
+            span: sp(),
+        }],
+        ensure_body: None,
+        span: sp(),
+    };
+    let module = module_with_main(
+        vec![try_catch],
+        Expr::NilLit { span: sp() },
+        &[Feature::Exceptions, Feature::Constants, Feature::Strings],
+    );
+    if let Some(stdout) = run_module(&module, "exc_builtin") {
+        assert_eq!(stdout, "caught");
+    }
+}
+
+/// (b) A bare `rescue` (no exception types) is a catch-all: it must catch
+/// a `raise RuntimeError, "y"` and print "rescued".
+#[test]
+fn bare_rescue_catches_anything() {
+    let try_catch = Stmt::TryCatch {
+        body: vec![raise("RuntimeError", "y")],
+        rescues: vec![RescueClause {
+            exception_types: vec![], // bare `rescue`
+            binding: None,
+            body: vec![print(str_("rescued"))],
+            span: sp(),
+        }],
+        ensure_body: None,
+        span: sp(),
+    };
+    let module = module_with_main(
+        vec![try_catch],
+        Expr::NilLit { span: sp() },
+        &[Feature::Exceptions, Feature::Constants, Feature::Strings],
+    );
+    if let Some(stdout) = run_module(&module, "exc_bare") {
+        assert_eq!(stdout, "rescued");
+    }
+}
+
+/// (c) An unmatched rescue type must NOT catch: `raise TypeError` under a
+/// `rescue ArgumentError` re-raises past the inner handler, so the program
+/// exits non-zero (uncaught exception escapes to node).
+#[test]
+fn unmatched_rescue_type_reraises() {
+    let try_catch = Stmt::TryCatch {
+        body: vec![raise("TypeError", "nope")],
+        rescues: vec![RescueClause {
+            exception_types: vec!["ArgumentError".into()],
+            binding: None,
+            body: vec![print(str_("should-not-print"))],
+            span: sp(),
+        }],
+        ensure_body: None,
+        span: sp(),
+    };
+    let module = module_with_main(
+        vec![try_catch],
+        Expr::NilLit { span: sp() },
+        &[Feature::Exceptions, Feature::Constants, Feature::Strings],
+    );
+    if let Some(stderr) = run_module_expecting_failure(&module, "exc_reraise") {
+        // The escaping exception is our TypeError, and the inner handler's
+        // line never ran.
+        assert!(stderr.contains("TypeError") || stderr.contains("nope"), "stderr:\n{stderr}");
+        assert!(!stderr.contains("should-not-print"));
+    }
+}
+
+/// (d) USER ancestry (E2): `class MyErr < StandardError; …; begin; raise
+/// MyErr, "z"; rescue StandardError => e; puts "user-caught"; end` →
+/// "user-caught".  The class edge is registered at init via
+/// `__Sir.registerAncestry`, so `MyErr` chains up to `StandardError`.
+#[test]
+fn try_catch_user_ancestry_catches() {
+    let class_def = Stmt::ClassDef {
+        name: "MyErr".into(),
+        superclass: Some("StandardError".into()),
+        body: vec![],
+        span: sp(),
+    };
+    let try_catch = Stmt::TryCatch {
+        body: vec![raise("MyErr", "z")],
+        rescues: vec![RescueClause {
+            exception_types: vec!["StandardError".into()],
+            binding: Some("e".into()),
+            body: vec![print(str_("user-caught"))],
+            span: sp(),
+        }],
+        ensure_body: None,
+        span: sp(),
+    };
+    let module = module_with_main(
+        vec![class_def, try_catch],
+        Expr::NilLit { span: sp() },
+        &[Feature::Exceptions, Feature::Classes, Feature::Constants, Feature::Strings],
+    );
+    // Shape check (runs without node): the user edge is registered once.
+    let artifact = compile(&module).expect("compile");
+    assert!(
+        artifact.source.contains(r#"__Sir.registerAncestry({ "MyErr": "StandardError" });"#),
+        "expected user ancestry registration, got:\n{}",
+        artifact.source
+    );
+    if let Some(stdout) = run_module(&module, "exc_user_ancestry") {
+        assert_eq!(stdout, "user-caught");
     }
 }

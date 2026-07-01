@@ -239,10 +239,147 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     return m.apply(recv, args);
   }
 
+  // ── exceptions (SIR17 `Feature::Exceptions`) ───────────────────
+  // Most SIR lowers to native JavaScript, and exception handling is
+  // *mostly* native too: `Stmt::TryCatch` becomes a real
+  // `try { … } catch (__exc) { … } finally { … }`.  Two pieces have no
+  // faithful native equivalent and live here — mirroring the published
+  // TypeScript `@coding-adventures/sir-runtime-exceptions` package
+  // (ported to plain JS so the JavaScript backend stays self-contained,
+  // no `import`/`require`):
+  //
+  //   1. A *class-tagged* thrown object.  Ruby's `raise ArgumentError,
+  //      "boom"` names a **class** and carries a message; JavaScript's
+  //      `throw` takes any value and its `Error` has no Ruby class tag.
+  //      `SirError` is a real `Error` (so stack traces work) that also
+  //      records the SIR class name in `sirClass`.
+  //   2. Rescue-clause *type matching*.  A native `catch` binds one
+  //      variable and catches everything; Ruby's ordered typed `rescue`
+  //      clauses match a *set* of classes (and their subclasses) and
+  //      fall through otherwise.  `rescueMatches` answers "does this
+  //      caught value match this clause's class list?" so the emitted
+  //      `catch` body dispatches to the right clause (or re-`throw`s).
+
+  // Built-in Ruby exception ancestry: subclass name → immediate
+  // superclass name.  Walked by `isAncestorOrSelf` so a
+  // `rescue StandardError` also catches the everyday subclasses a program
+  // raises.  A curated slice of Ruby's tree (the classes a frontend is
+  // likely to name), each chaining up to `StandardError → Exception`.
+  //
+  //   Exception
+  //   └─ StandardError
+  //      ├─ RuntimeError ├─ ArgumentError ├─ TypeError
+  //      ├─ NameError ─ NoMethodError      ├─ RangeError
+  //      ├─ IndexError ─ KeyError          ├─ ZeroDivisionError
+  //      ├─ IOError    ├─ StopIteration    └─ NotImplementedError
+  //
+  // `ancestry` starts as a copy of the built-in table; user-defined
+  // classes are merged in at program init via `registerAncestry` (below).
+  const BUILTIN_ANCESTRY = {
+    RuntimeError: "StandardError",
+    ArgumentError: "StandardError",
+    TypeError: "StandardError",
+    NameError: "StandardError",
+    NoMethodError: "NameError",
+    IndexError: "StandardError",
+    KeyError: "IndexError",
+    RangeError: "StandardError",
+    ZeroDivisionError: "StandardError",
+    IOError: "StandardError",
+    StopIteration: "StandardError",
+    NotImplementedError: "StandardError",
+    StandardError: "Exception",
+  };
+  // A *mutable* lookup seeded from the built-ins.  `Object.create(null)`
+  // gives a prototype-less map so a user class literally named
+  // `"constructor"`/`"__proto__"` cannot poison the lookup — dispatch is
+  // pure DATA, never reflection.
+  const ancestry = Object.assign(Object.create(null), BUILTIN_ANCESTRY);
+
+  // Merge a user `{ childClass: superclassName }` map into `ancestry`
+  // (E2, the JS half of user-defined class ancestry).  The emitter
+  // collects the module's `class Child < Super` pairs and emits ONE
+  // `__Sir.registerAncestry(...)` call at program init, so
+  // `class MyErr < StandardError; raise MyErr; rescue StandardError`
+  // matches through the merged chain.  Own-keys only (no inherited
+  // prototype keys) keeps the merge to explicit source-declared pairs.
+  function registerAncestry(map) {
+    if (map == null) { return; }
+    for (const child of Object.keys(map)) {
+      ancestry[child] = map[child];
+    }
+  }
+
+  // A SIR exception: a native `Error` tagged with its Ruby class name.
+  // `sirClass` is what `rescueMatches` dispatches on; `message` is the
+  // human string `raise Klass, "msg"` carries (defaulting to the class
+  // name, matching Ruby's `exception.message`).
+  class SirError extends Error {
+    constructor(sirClass, message) {
+      const text =
+        message === undefined || message === null ? sirClass : String(message);
+      super(text);
+      this.sirClass = sirClass;
+      this.name = sirClass;
+      // Restore the prototype chain so `err instanceof SirError` holds.
+      Object.setPrototypeOf(this, new.target.prototype);
+    }
+  }
+
+  // Raise a SIR exception of class `className` with an optional message.
+  // Emitted for `raise Foo, "msg"` → `raiseError("Foo", "msg")`,
+  // `raise Foo` → `raiseError("Foo")`, and bare `raise` → `raiseError()`
+  // → a generic `RuntimeError` (SIR v0 does not thread the in-flight
+  // exception into a bare re-raise; documented limitation).
+  function raiseError(className, message) {
+    throw new SirError(className === undefined ? "RuntimeError" : className, message);
+  }
+
+  // The SIR class name of a caught value.  A `SirError` reports its tag;
+  // any other thrown value (a native `Error`, a bare string, …) is
+  // bucketed as `StandardError` — the everyday rescuable root — so a
+  // `rescue StandardError` / bare `rescue` also catches JS runtime errors.
+  function classOfThrown(err) {
+    if (err instanceof SirError) { return err.sirClass; }
+    return "StandardError";
+  }
+
+  // `true` if `actual` is `target` or any of its registered ancestors.
+  // The `seen` guard makes a malformed (cyclic) user ancestry map
+  // terminate rather than loop forever.  Lookup is by EXPLICIT table
+  // (`ancestry[cur]`), never `eval`/reflection — class names are data.
+  function isAncestorOrSelf(actual, target) {
+    let cur = actual;
+    const seen = new Set();
+    while (cur !== undefined && cur !== null && !seen.has(cur)) {
+      if (cur === target) { return true; }
+      seen.add(cur);
+      cur = ancestry[cur];
+    }
+    return false;
+  }
+
+  // Does a caught value match a rescue clause naming `classNames`?
+  //   - empty `classNames` → a bare `rescue` (catch-all) → always true.
+  //   - `Exception` → Ruby's universal root → matches anything.
+  //   - otherwise: matches if the value's class equals or descends from
+  //     any named class (per `ancestry`; user classes by exact name or
+  //     registered chain).
+  // The emitted `catch` calls this once per clause in source order,
+  // running the first match's body and re-`throw`ing if none match.
+  function rescueMatches(err, classNames) {
+    if (classNames.length === 0) { return true; }
+    const actual = classOfThrown(err);
+    return classNames.some(
+      (name) => name === "Exception" || isAncestorOrSelf(actual, name),
+    );
+  }
+
   return {
     Sym, Pair, Closure,
     intern, applyClosure, truthy, format, print,
     builtins, builtinClosure, callBuiltin, callMethod,
+    SirError, raiseError, rescueMatches, registerAncestry,
   };
 })();
 "##;
@@ -272,8 +409,29 @@ mod tests {
             "intern", "applyClosure", "truthy", "format",
             "builtins", "builtinClosure", "callBuiltin", "callMethod",
             "class Sym", "class Pair", "class Closure",
+            // Exception runtime (SIR17): the four helpers the emitter
+            // references from its TryCatch / raise / ClassDef arms.
+            "class SirError", "raiseError", "rescueMatches", "registerAncestry",
         ] {
             assert!(RUNTIME.contains(needed), "runtime missing `{needed}`");
         }
+    }
+
+    #[test]
+    fn runtime_bakes_in_builtin_exception_ancestry() {
+        // `rescue StandardError` must catch the everyday subclasses, so the
+        // built-in ancestry table has to chain them up to StandardError.
+        assert!(RUNTIME.contains("ArgumentError: \"StandardError\""));
+        assert!(RUNTIME.contains("StandardError: \"Exception\""));
+    }
+
+    #[test]
+    fn runtime_dispatches_ancestry_by_table_not_reflection() {
+        // SECURITY: ancestry lookup is an explicit map read, never `eval`
+        // or dynamic code synthesis.  A prototype-less map keeps a user
+        // class named `constructor`/`__proto__` from poisoning the lookup.
+        assert!(RUNTIME.contains("ancestry[cur]"));
+        assert!(RUNTIME.contains("Object.create(null)"));
+        assert!(!RUNTIME.contains("eval("));
     }
 }
