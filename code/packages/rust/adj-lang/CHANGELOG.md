@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.22.0] - 2026-07-01 — nth root `\sqrt[n]{x}` in `latex "…"` (lowers to `x ^ (1/n)`)
+
+### Added
+
+- The `latex "…"` adapter now accepts an **nth root** `\sqrt[n]{x}` (a
+  `MathExpr::Root` *with* an explicit degree), lowering it to `x ^ (1/n)` on the
+  native `ComputeOp::Pow` — the reciprocal exponent `1/n` is computed once at
+  adapt time and emitted as a single `Lit`. The cube root `\sqrt[3]{27}`
+  computes `27 ^ (1/3) = 3`; the fourth root `\sqrt[4]{16}` computes `2`. This
+  completes the radical family alongside the square root `\sqrt{x}` (0.21.0):
+  both reuse the one power engine, so no new engine op is needed.
+- The degree `n` must be a **positive integer** literal (`\sqrt[3]{…}`,
+  `\sqrt[4]{…}`). A symbolic degree (`\sqrt[k]{…}`) has no numeric value and a
+  zero degree would make `1/0` undefined, so both are rejected at adapt time
+  (`UnsupportedLatexMath`), never silently mislowered.
+
+### Notes
+
+- As with the square root, a fractional-power base carries the engine's own
+  dimensional rule: a `Scalar` (dimensionless) base computes cleanly, and a
+  dimensioned base (a `\sqrt[3]{dollars}` has no representable third-dimension)
+  is a `DimensionMismatch`, not a silently-wrong number. An nth-root *constraint*
+  (`constrain latex "$\sqrt[3]{x} = 3$"`) is non-polynomial (a fractional
+  exponent), so the solver treats it as `Unknown`, as before.
+
 ## [0.21.0] - 2026-07-01 — `\sqrt{x}` in `latex "…"` (lowers to `x ^ 0.5`)
 
 ### Added
