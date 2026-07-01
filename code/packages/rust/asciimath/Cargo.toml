@@ -1,6 +1,6 @@
 [package]
 name = "asciimath"
-version = "0.10.0"
+version = "0.11.0"
 edition = "2021"
 description = "An AsciiMath parser that implements the math-frontend MathFrontend trait: turns AsciiMath (1/2, sqrt(x), x^2+y^2=r^2) into the neutral MathExpr AST. The second pluggable frontend after LaTeX (see ASM01/PFE01). Total, panic-free, spanned errors."
 license = "MIT"

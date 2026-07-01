@@ -73,6 +73,9 @@ pub enum TokenKind {
     /// `,` — cell/row separator inside a matrix (`[[a,b],[c,d]]`). Outside a matrix the
     /// parser has no use for it and reports a clean error, never a panic.
     Comma,
+    /// `;` — the ROW separator inside a fenced list (`(a, b; c, d)` = rows of comma-separated
+    /// columns). Outside such a fence the parser reports a clean error, never a panic.
+    Semicolon,
     /// End of input (always the final token; zero-width span at the end).
     Eof,
 }
@@ -278,6 +281,7 @@ pub fn tokenize(src: &str) -> Result<Vec<Token>, FrontendError> {
             b'{' => (TokenKind::LBrace, i + 1),
             b'}' => (TokenKind::RBrace, i + 1),
             b',' => (TokenKind::Comma, i + 1),
+            b';' => (TokenKind::Semicolon, i + 1),
             b'"' => {
                 // A text literal runs to the next double-quote.
                 let mut j = i + 1;

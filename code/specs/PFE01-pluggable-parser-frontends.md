@@ -153,9 +153,13 @@ frontend additionally ships notation-specific golden tests.
   Since 0.20.0 it also mirrors MathML's **semicolon rows**: a fence with a top-level `;` —
   `(a, b; c, d)` — reads semicolons as the row separator and commas as the column separator →
   `Sequence([Sequence([a, b]), Sequence([c, d])])`, with the same degenerate handling (semicolon-only
-  collapses to a flat `Sequence`, ragged stays faithful). Both structural frontends (LaTeX, MathML)
-  now agree on the neutral rows shape.
+  collapses to a flat `Sequence`, ragged stays faithful). Since `asciimath` 0.11.0 all **three**
+  Sequence-emitting frontends (LaTeX, MathML, AsciiMath) agree on the neutral rows shape.
 - `asciimath` — the second frontend (terse ASCII math; see [ASM01](ASM01-asciimath-frontend.md)).
+  Since 0.11.0 it also reads semicolon-separated fences as rows: `(a, b; c, d)` →
+  `Sequence([Sequence([a, b]), Sequence([c, d])])` (a new `;` `Semicolon` token, comma-only stays a
+  flat list, semicolon-only collapses to flat, ragged stays faithful) — mirroring LaTeX and MathML, so
+  all three frontends emit the same neutral nested-`Sequence` rows.
 - `unicode-math` — the **third** frontend: Unicode plain math as people and models type it
   (`x² + y² = r²`, `√x`, `½`, `π·α`, `a ≤ b`). A small crate implementing the trait; its Greek /
   constant glyphs canonicalize to the same `Symbol` names as AsciiMath, so the notations agree on
