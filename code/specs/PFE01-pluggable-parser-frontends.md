@@ -145,7 +145,11 @@ frontend additionally ships notation-specific golden tests.
   Zero deps.
 - `latex` — the first frontend (full LaTeX; see [LTX01](LTX01-full-latex-parser.md)). It is
   a standalone full-LaTeX parser in its own right and *also* implements `MathFrontend` via a
-  thin adapter (math nodes of its document AST → `MathExpr`).
+  thin adapter (math nodes of its document AST → `MathExpr`). Since 0.19.0 it is also the
+  **third emitter** of the neutral `Sequence` node: a comma-separated fence — `(a, b, c)`,
+  `[x, y, z]`, `\left(p, q\right)` — parses to a `Sequence` in its own document AST (round-tripping
+  through `to_latex`) and lowers to `MathExpr::Sequence` (delimiters dropped), exactly matching
+  MathML `<mfenced>` comma rows and AsciiMath `(a,b,c)`. A comma-free fence still lowers to `Group`.
 - `asciimath` — the second frontend (terse ASCII math; see [ASM01](ASM01-asciimath-frontend.md)).
 - `unicode-math` — the **third** frontend: Unicode plain math as people and models type it
   (`x² + y² = r²`, `√x`, `½`, `π·α`, `a ≤ b`). A small crate implementing the trait; its Greek /

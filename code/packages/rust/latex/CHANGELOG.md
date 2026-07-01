@@ -2,6 +2,32 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.19.0] — 2026-06-30
+
+### Added — comma-separated fences lower to the neutral `Sequence` node (third frontend)
+
+- A **comma-separated fence** — `(a, b, c)`, `[x, y, z]`, `\left(p, q\right)` — is now recognised
+  as an ordered **list** rather than a single grouped expression. The parser reads the fence body
+  with a new `read_fence_body` helper: it parses the first relation, and if the next token is a
+  comma it keeps collecting comma-separated items into a new `MathNode::Sequence(items)` AST node.
+  A **comma-free** fence — `(a + b)` — is unchanged: it stays a plain grouped expression. Only a
+  top-level comma inside the fence triggers a `Sequence`; commas nested inside an inner group are
+  the inner group's business.
+- **Round-trips** through `to_latex`: a `Sequence` renders its items comma-joined, wrapped by the
+  fence that produced it, so `parse_math(n.to_latex()) == n` still holds. `Sequence` participates in
+  the iterative-`Drop` `take_children` trampoline, so a pathologically deep nest (tested to 200 000
+  levels) drops without a stack overflow — same guarantee as every other node.
+- **Neutral-frontend lowering** (`frontend.rs`): a `Sequence` fence lowers to `MathExpr::Sequence`
+  (the delimiters are dropped, exactly as for MathML `<mfenced>` comma rows and AsciiMath `(a,b,c)`).
+  This makes `latex` the **third** emitter of the neutral `MathExpr::Sequence` node introduced in
+  `math-frontend` 0.6.0 — completing write-once-use-many across LaTeX + AsciiMath + MathML: one
+  neutral list node, three surface syntaxes, no per-consumer special-casing. A comma-free fence
+  still lowers to `MathExpr::Group` as before.
+- 9 new tests (parse-to-`Sequence`, comma-free-stays-plain, full-expression items, `\left…\right`
+  and bracket fences, 200 000-deep drop, 4 round-trip corpus entries, plus a `frontend.rs` lowering
+  test asserting `(a, b, c)` → `MathExpr::Sequence` and `(a + b)` → `MathExpr::Group`).
+- `latex` 0.18.0 → 0.19.0.
+
 ## [0.18.0] — 2026-06-30
 
 ### Added — stretchy over-arrow accents (`\overrightarrow` & friends)
