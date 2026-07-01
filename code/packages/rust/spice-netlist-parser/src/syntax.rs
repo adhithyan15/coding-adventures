@@ -42,6 +42,7 @@ pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_EVENTS_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SUMMARY_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_DIGEST_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANES_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -99,6 +100,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-dashboard-dispatch-queue-json",
     "app-shell-dashboard-dispatch-queue-summary-json",
     "app-shell-dashboard-dispatch-queue-digest-json",
+    "app-shell-dashboard-dispatch-queue-lanes-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -3864,6 +3866,204 @@ impl BerkeleyAppShellDashboardDispatchQueueDigest {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLane {
+    pub id: String,
+    pub title: String,
+    pub queue_state: String,
+    pub severity: String,
+    pub dispatch_queue_item_count: usize,
+    pub dispatch_queue_item_ids: Vec<String>,
+    pub selected: bool,
+    pub default_dispatch: bool,
+    pub primary: bool,
+    pub attention: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLanes {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub headline_dispatch_queue_item_id: Option<String>,
+    pub headline_queue_state: Option<String>,
+    pub headline_message: String,
+    pub selected_dispatch_queue_item_id: Option<String>,
+    pub default_dispatch_queue_item_id: Option<String>,
+    pub first_queued_dispatch_queue_item_id: Option<String>,
+    pub first_blocked_dispatch_queue_item_id: Option<String>,
+    pub first_attention_dispatch_queue_item_id: Option<String>,
+    pub dispatch_queue_item_count: usize,
+    pub queued_dispatch_count: usize,
+    pub blocked_dispatch_count: usize,
+    pub attention_dispatch_queue_item_count: usize,
+    pub lane_count: usize,
+    pub active_lane_id: Option<String>,
+    pub attention_lane_id: Option<String>,
+    pub lanes: Vec<BerkeleyAppShellDashboardDispatchQueueLane>,
+    pub dispatch_queue_capability_id: String,
+    pub dispatch_queue_summary_capability_id: String,
+    pub dispatch_queue_digest_capability_id: String,
+    pub dispatch_queue_lanes_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLanes {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_dispatch_queue(
+            &BerkeleyAppShellDashboardDispatchQueue::from_bootstrap_snapshot(snapshot),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dispatch_queue(&BerkeleyAppShellDashboardDispatchQueue::from_shell_handoff(
+            handoff,
+        ))
+    }
+
+    pub fn from_dispatch_queue(queue: &BerkeleyAppShellDashboardDispatchQueue) -> Self {
+        let summary = BerkeleyAppShellDashboardDispatchQueueSummary::from_dispatch_queue(queue);
+        let digest = BerkeleyAppShellDashboardDispatchQueueDigest::from_dispatch_queue(queue);
+        let lanes = vec![
+            Self::lane_from_item_ids(
+                queue,
+                "dashboard.dispatch-queue-lane.queued",
+                "Queued dispatches",
+                "queued",
+                summary.queued_dispatch_queue_item_ids.clone(),
+            ),
+            Self::lane_from_item_ids(
+                queue,
+                "dashboard.dispatch-queue-lane.blocked",
+                "Blocked dispatches",
+                "blocked",
+                summary.blocked_dispatch_queue_item_ids.clone(),
+            ),
+            Self::lane_from_item_ids(
+                queue,
+                "dashboard.dispatch-queue-lane.attention",
+                "Attention dispatches",
+                "attention",
+                summary.attention_dispatch_queue_item_ids.clone(),
+            ),
+        ];
+        let active_lane_id =
+            digest
+                .headline_dispatch_queue_item_id
+                .as_ref()
+                .and_then(|headline_id| {
+                    lanes
+                        .iter()
+                        .filter(|lane| lane.dispatch_queue_item_ids.contains(headline_id))
+                        .find(|lane| lane.queue_state == "attention")
+                        .or_else(|| {
+                            lanes
+                                .iter()
+                                .filter(|lane| lane.dispatch_queue_item_ids.contains(headline_id))
+                                .find(|lane| lane.queue_state == "blocked")
+                        })
+                        .or_else(|| {
+                            lanes
+                                .iter()
+                                .find(|lane| lane.dispatch_queue_item_ids.contains(headline_id))
+                        })
+                        .map(|lane| lane.id.clone())
+                });
+        let attention_lane_id = summary
+            .first_attention_dispatch_queue_item_id
+            .as_ref()
+            .map(|_| "dashboard.dispatch-queue-lane.attention".to_string());
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANES_SCHEMA_VERSION,
+            package_name: summary.package_name.clone(),
+            source_fingerprint: summary.source_fingerprint.clone(),
+            title: summary.title.clone(),
+            startup_route: summary.startup_route.clone(),
+            ready: summary.ready,
+            severity: summary.severity.clone(),
+            attention_required: summary.attention_required,
+            headline_dispatch_queue_item_id: digest.headline_dispatch_queue_item_id.clone(),
+            headline_queue_state: digest.headline_queue_state.clone(),
+            headline_message: digest.headline_message.clone(),
+            selected_dispatch_queue_item_id: summary.selected_dispatch_queue_item_id.clone(),
+            default_dispatch_queue_item_id: summary.default_dispatch_queue_item_id.clone(),
+            first_queued_dispatch_queue_item_id: summary
+                .first_queued_dispatch_queue_item_id
+                .clone(),
+            first_blocked_dispatch_queue_item_id: summary
+                .first_blocked_dispatch_queue_item_id
+                .clone(),
+            first_attention_dispatch_queue_item_id: summary
+                .first_attention_dispatch_queue_item_id
+                .clone(),
+            dispatch_queue_item_count: summary.dispatch_queue_item_count,
+            queued_dispatch_count: summary.queued_dispatch_count,
+            blocked_dispatch_count: summary.blocked_dispatch_count,
+            attention_dispatch_queue_item_count: summary.attention_dispatch_queue_item_count,
+            lane_count: lanes.len(),
+            active_lane_id,
+            attention_lane_id,
+            lanes,
+            dispatch_queue_capability_id: summary.dispatch_queue_capability_id.clone(),
+            dispatch_queue_summary_capability_id: summary
+                .dispatch_queue_summary_capability_id
+                .clone(),
+            dispatch_queue_digest_capability_id: digest.dispatch_queue_digest_capability_id.clone(),
+            dispatch_queue_lanes_capability_id: "app-shell-dashboard-dispatch-queue-lanes-json"
+                .to_string(),
+            artifact_capability_count: summary.artifact_capability_count,
+        }
+    }
+
+    fn lane_from_item_ids(
+        queue: &BerkeleyAppShellDashboardDispatchQueue,
+        id: &str,
+        title: &str,
+        queue_state: &str,
+        dispatch_queue_item_ids: Vec<String>,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLane {
+        let lane_items = dispatch_queue_item_ids
+            .iter()
+            .filter_map(|item_id| {
+                queue
+                    .dispatch_queue_items
+                    .iter()
+                    .find(|item| item.id == item_id.as_str())
+            })
+            .collect::<Vec<_>>();
+        let severity = if lane_items.iter().any(|item| item.severity == "error") {
+            "error"
+        } else if lane_items.iter().any(|item| item.severity == "warning") {
+            "warning"
+        } else {
+            "ready"
+        };
+
+        BerkeleyAppShellDashboardDispatchQueueLane {
+            id: id.to_string(),
+            title: title.to_string(),
+            queue_state: queue_state.to_string(),
+            severity: severity.to_string(),
+            dispatch_queue_item_count: dispatch_queue_item_ids.len(),
+            dispatch_queue_item_ids,
+            selected: lane_items.iter().any(|item| item.selected),
+            default_dispatch: lane_items.iter().any(|item| item.default_dispatch),
+            primary: lane_items.iter().any(|item| item.primary),
+            attention: queue_state == "attention" && !lane_items.is_empty(),
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lanes_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BerkeleyAnalysisInventoryEntry {
     pub index: usize,
     pub directive: String,
@@ -5302,6 +5502,43 @@ impl BerkeleyAppDeck {
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self
             .run_app_shell_dashboard_dispatch_queue_digest(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lanes(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLanes {
+        BerkeleyAppShellDashboardDispatchQueueLanes::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lanes(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardDispatchQueueLanes, AnalysisExecutionError> {
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLanes::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lanes_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lanes(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lanes_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lanes(persisted_state)?
             .to_json())
     }
 
@@ -7636,6 +7873,63 @@ fn app_shell_dashboard_dispatch_queue_digest_json_value(
     insert_json!("artifactCapabilityCount", digest.artifact_capability_count);
 
     serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lanes_json_value(
+    lanes: &BerkeleyAppShellDashboardDispatchQueueLanes,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": lanes.schema_version,
+        "packageName": &lanes.package_name,
+        "sourceFingerprint": &lanes.source_fingerprint,
+        "title": &lanes.title,
+        "startupRoute": &lanes.startup_route,
+        "ready": lanes.ready,
+        "severity": &lanes.severity,
+        "attentionRequired": lanes.attention_required,
+        "headlineDispatchQueueItemId": &lanes.headline_dispatch_queue_item_id,
+        "headlineQueueState": &lanes.headline_queue_state,
+        "headlineMessage": &lanes.headline_message,
+        "selectedDispatchQueueItemId": &lanes.selected_dispatch_queue_item_id,
+        "defaultDispatchQueueItemId": &lanes.default_dispatch_queue_item_id,
+        "firstQueuedDispatchQueueItemId": &lanes.first_queued_dispatch_queue_item_id,
+        "firstBlockedDispatchQueueItemId": &lanes.first_blocked_dispatch_queue_item_id,
+        "firstAttentionDispatchQueueItemId": &lanes.first_attention_dispatch_queue_item_id,
+        "dispatchQueueItemCount": lanes.dispatch_queue_item_count,
+        "queuedDispatchCount": lanes.queued_dispatch_count,
+        "blockedDispatchCount": lanes.blocked_dispatch_count,
+        "attentionDispatchQueueItemCount": lanes.attention_dispatch_queue_item_count,
+        "laneCount": lanes.lane_count,
+        "activeLaneId": &lanes.active_lane_id,
+        "attentionLaneId": &lanes.attention_lane_id,
+        "lanes": lanes
+            .lanes
+            .iter()
+            .map(app_shell_dashboard_dispatch_queue_lane_json_value)
+            .collect::<Vec<_>>(),
+        "dispatchQueueCapabilityId": &lanes.dispatch_queue_capability_id,
+        "dispatchQueueSummaryCapabilityId": &lanes.dispatch_queue_summary_capability_id,
+        "dispatchQueueDigestCapabilityId": &lanes.dispatch_queue_digest_capability_id,
+        "dispatchQueueLanesCapabilityId": &lanes.dispatch_queue_lanes_capability_id,
+        "artifactCapabilityCount": lanes.artifact_capability_count,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_json_value(
+    lane: &BerkeleyAppShellDashboardDispatchQueueLane,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &lane.id,
+        "title": &lane.title,
+        "queueState": &lane.queue_state,
+        "severity": &lane.severity,
+        "dispatchQueueItemCount": lane.dispatch_queue_item_count,
+        "dispatchQueueItemIds": &lane.dispatch_queue_item_ids,
+        "selected": lane.selected,
+        "defaultDispatch": lane.default_dispatch,
+        "primary": lane.primary,
+        "attention": lane.attention,
+    })
 }
 
 fn app_shell_dashboard_card_json_value(card: &BerkeleyAppShellDashboardCard) -> serde_json::Value {

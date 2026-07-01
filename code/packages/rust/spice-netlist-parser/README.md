@@ -318,6 +318,19 @@ assert!(shell_dashboard_dispatch_queue_summary_json
 assert!(shell_dashboard_dispatch_queue_summary_json.contains(
     r#""dispatchQueueSummaryCapabilityId":"app-shell-dashboard-dispatch-queue-summary-json""#
 ));
+
+let shell_dashboard_dispatch_queue_lanes_json =
+    deck.run_app_shell_dashboard_dispatch_queue_lanes_json(
+        BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        },
+    )?;
+assert!(shell_dashboard_dispatch_queue_lanes_json
+    .contains(r#""activeLaneId":"dashboard.dispatch-queue-lane.queued""#));
+assert!(shell_dashboard_dispatch_queue_lanes_json.contains(
+    r#""dispatchQueueLanesCapabilityId":"app-shell-dashboard-dispatch-queue-lanes-json""#
+));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -347,6 +360,8 @@ into selected/default queue routing, first queued/blocked/attention item IDs,
 queued/blocked/attention ID lists, counts, and summary capability metadata,
 while dashboard dispatch queue digests pick a single headline queue item with
 its message, target, state, dispatch joins, and digest capability metadata.
+Dashboard dispatch queue lanes bucket the queue into stable queued, blocked,
+and attention lanes with active-lane routing and lane capability metadata.
 Persisted editor-state snapshots resolve saved selection and active-command IDs
 against the current deck, repairing stale UI state after source edits. Host
 surfaces turn those snapshots into stable source, diagnostics, analysis, table,
