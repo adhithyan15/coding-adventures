@@ -72,8 +72,10 @@ impl MathFrontend for MathMl {
         // PR-3 adds named-function recognition (`<mi>sin</mi>` applied to an argument → `Call`).
         // PR-4 adds sequences: an `<mfenced>` with comma separators (`(a, b, c)`) lowers to
         // `Sequence` instead of folding the commas away. The fence-delimiters slice adopts the
-        // neutral `Fenced` node: a single-body `<mfenced>` now lowers to `Fenced { open, body,
-        // close }`, carrying its `open`/`close` delimiters as data (so `|x|` ≠ `(x)`).
+        // neutral `Fenced` node for EVERY `<mfenced>` shape: a single-body `<mfenced>` lowers to
+        // `Fenced { open, body, close }`, and a comma/semicolon LIST lowers to `Fenced { open,
+        // body: Sequence(..), close }` — always carrying its `open`/`close` delimiters as data (so
+        // `|x|` ≠ `(x)` and `(a, b)` ≠ `[a, b]`).
         Capabilities::none()
             .with_fractions()
             .with_roots()
@@ -118,6 +120,20 @@ mod tests {
     }
     fn b(op: BinOp, l: MathExpr, r: MathExpr) -> MathExpr {
         MathExpr::Bin(op, Box::new(l), Box::new(r))
+    }
+
+    /// Unwrap a `Fenced { open, body, close }`, asserting the delimiters, and return the body — so the
+    /// comma/semicolon-list tests can check the inner `Sequence` while also verifying that the fence's
+    /// delimiters are now carried (rather than dropped). `MathExpr` implements `Drop` (iterative), so a
+    /// field cannot be moved out by pattern; match by reference and clone the body.
+    fn fenced_body(e: MathExpr, open: &str, close: &str) -> MathExpr {
+        match &e {
+            MathExpr::Fenced { open: o, body, close: c } => {
+                assert_eq!((o.as_str(), c.as_str()), (open, close));
+                (**body).clone()
+            }
+            other => panic!("expected Fenced({open:?}, .., {close:?}), got {other:?}"),
+        }
     }
 
     // ---- leaf tokens -----------------------------------------------------------
@@ -410,10 +426,23 @@ mod tests {
     }
 
     #[test]
-    fn mfenced_comma_separated_becomes_sequence() {
-        // A fence with comma separators is a LIST: <mfenced>a, b, c</mfenced> → Sequence([a,b,c]).
+    fn mfenced_comma_separated_becomes_fenced_sequence() {
+        // A fence with comma separators is a LIST wrapped in a `Fenced` carrying its delimiters:
+        // <mfenced>a, b, c</mfenced> → Fenced("(", Sequence([a,b,c]), ")"). A bare fence defaults to
+        // `(`/`)`, so `(a, b, c)` stays distinguishable from `[a, b, c]`.
         let e = p("<mfenced><mi>a</mi><mo>,</mo><mi>b</mi><mo>,</mo><mi>c</mi></mfenced>");
-        assert_eq!(e, MathExpr::Sequence(vec![sym("a"), sym("b"), sym("c")]));
+        assert_eq!(
+            fenced_body(e, "(", ")"),
+            MathExpr::Sequence(vec![sym("a"), sym("b"), sym("c")])
+        );
+    }
+
+    #[test]
+    fn mfenced_comma_list_carries_custom_bracket_delimiters() {
+        // The wrapping `Fenced` reads the `open`/`close` attributes, so `[a, b]` is now distinct from
+        // `(a, b)` — the bracket flavour is preserved around the list, not dropped.
+        let e = p("<mfenced open=\"[\" close=\"]\"><mi>a</mi><mo>,</mo><mi>b</mi></mfenced>");
+        assert_eq!(fenced_body(e, "[", "]"), MathExpr::Sequence(vec![sym("a"), sym("b")]));
     }
 
     #[test]
@@ -421,29 +450,29 @@ mod tests {
         // Each item between commas is itself folded to one expression, not just a leaf.
         let e = p("<mfenced><mrow><mi>x</mi><mo>+</mo><mn>1</mn></mrow><mo>,</mo><mn>2</mn></mfenced>");
         assert_eq!(
-            e,
+            fenced_body(e, "(", ")"),
             MathExpr::Sequence(vec![b(BinOp::Add, sym("x"), num(1)), num(2)])
         );
     }
 
     #[test]
     fn mfenced_pair_is_a_two_item_sequence() {
-        // The common coordinate-pair case `(a, b)` → Sequence([a, b]).
+        // The common coordinate-pair case `(a, b)` → Fenced("(", Sequence([a, b]), ")").
         let e = p("<mfenced><mi>a</mi><mo>,</mo><mi>b</mi></mfenced>");
-        assert_eq!(e, MathExpr::Sequence(vec![sym("a"), sym("b")]));
+        assert_eq!(fenced_body(e, "(", ")"), MathExpr::Sequence(vec![sym("a"), sym("b")]));
     }
 
     #[test]
     fn mfenced_semicolon_rows_of_comma_columns_nest() {
         // Semicolons are the ROW separator, commas the column separator — the fenced-matrix
-        // reading `(a, b; c, d)` → Sequence([Sequence([a, b]), Sequence([c, d])]).
+        // reading `(a, b; c, d)` → Fenced("(", Sequence([Sequence([a, b]), Sequence([c, d])]), ")").
         let e = p(concat!(
             "<mfenced>",
             "<mi>a</mi><mo>,</mo><mi>b</mi><mo>;</mo><mi>c</mi><mo>,</mo><mi>d</mi>",
             "</mfenced>"
         ));
         assert_eq!(
-            e,
+            fenced_body(e, "(", ")"),
             MathExpr::Sequence(vec![
                 MathExpr::Sequence(vec![sym("a"), sym("b")]),
                 MathExpr::Sequence(vec![sym("c"), sym("d")]),
@@ -454,9 +483,13 @@ mod tests {
     #[test]
     fn mfenced_semicolon_only_is_a_flat_sequence() {
         // A column vector `(a; b; c)` has no second column in any row, so it collapses to the same
-        // flat Sequence([a, b, c]) as a comma list — no spurious one-element nesting.
+        // flat Sequence([a, b, c]) as a comma list — no spurious one-element nesting — still wrapped
+        // in the delimiter-carrying `Fenced`.
         let e = p("<mfenced><mi>a</mi><mo>;</mo><mi>b</mi><mo>;</mo><mi>c</mi></mfenced>");
-        assert_eq!(e, MathExpr::Sequence(vec![sym("a"), sym("b"), sym("c")]));
+        assert_eq!(
+            fenced_body(e, "(", ")"),
+            MathExpr::Sequence(vec![sym("a"), sym("b"), sym("c")])
+        );
     }
 
     #[test]
@@ -464,7 +497,7 @@ mod tests {
         // A ragged fence `(a; b, c)` keeps its shape: row 1 is a single expr, row 2 is a pair.
         let e = p("<mfenced><mi>a</mi><mo>;</mo><mi>b</mi><mo>,</mo><mi>c</mi></mfenced>");
         assert_eq!(
-            e,
+            fenced_body(e, "(", ")"),
             MathExpr::Sequence(vec![sym("a"), MathExpr::Sequence(vec![sym("b"), sym("c")])])
         );
     }
@@ -479,7 +512,7 @@ mod tests {
             "</mfenced>"
         ));
         assert_eq!(
-            e,
+            fenced_body(e, "(", ")"),
             MathExpr::Sequence(vec![
                 MathExpr::Sequence(vec![b(BinOp::Add, sym("x"), num(1)), num(2)]),
                 sym("y"),

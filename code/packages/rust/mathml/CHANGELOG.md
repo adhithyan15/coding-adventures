@@ -2,6 +2,26 @@
 
 All notable changes to the Presentation-MathML frontend crate.
 
+## [0.7.0] — 2026-07-01
+
+### Changed — comma/semicolon list fences now carry their delimiters too
+
+`0.6.0` adopted the neutral `MathExpr::Fenced` node for **single-body** `<mfenced>`, but a
+comma/semicolon **list** `<mfenced>` still lowered to a bare `Sequence`, silently dropping which
+delimiters bracketed the list — so `(a, b)` and `[a, b]` were indistinguishable. This release wraps
+**every** `<mfenced>` shape in `Fenced`, mirroring the `latex` frontend (`latex` 0.25.0):
+
+- A comma list `(a, b, c)` → `Fenced { open, body: Sequence([a, b, c]), close }`.
+- A semicolon/row fence `(a, b; c, d)` → `Fenced { open, body: Sequence([Sequence([a, b]),
+  Sequence([c, d])]), close }` — both the delimiters and the row/column structure are preserved.
+- The wrapping `Fenced` reads the same `open`/`close` off the start-tag byte span (default `(`/`)`),
+  so `[a, b]`, `{a, b}`, `⟨a, b⟩` are now distinct from `(a, b)`.
+- Downstream is unaffected: the `adj-lang` adapter unwraps `Fenced`, so a `Fenced`-of-`Sequence`
+  lowers exactly as the bare `Sequence` did — only the delimiters, previously dropped, are now
+  carried. Verified across `latex`/`mathml`/`asciimath`/`unicode-math`/`adj-lang`/`adj-lang-cli`.
+
+This completes the list-fence delimiter slice for both `latex` and `mathml`.
+
 ## [0.6.0] — 2026-07-01
 
 ### Added — adopt the neutral `Fenced` node (fence delimiters as data)
