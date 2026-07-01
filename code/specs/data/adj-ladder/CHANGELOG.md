@@ -2,6 +2,34 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.45.0] — 2026-06-30
+
+### Added — rung 14: indeterminate decision (the abstention rung)
+
+- **New rung `rung14_indeterminate_decision/` (24 items)** — a new decision SHAPE: **knowing when NOT
+  to decide**. Every earlier decision rung (6, 11, 12) asks the engine to commit; this one tests the
+  complementary skill — an honest **abstention** when the evidence does not distinguish the top
+  candidates. That is the whole solve-or-abstain thesis in miniature, and the abstention is a
+  first-class, positively-scored answer, not a silent shrug.
+- Each item offers four candidate diagnoses plus a fifth **"insufficient information to distinguish"**
+  choice, in two interleaved families (12 each): **DETERMINATE** — one finding outweighs the other
+  (`L_hi = 8 > L_lo = 3`), the posterior has a unique leader, the engine returns a `determinate`
+  decision, and the gold is that diagnosis; **TIE** — both findings carry the *same* likelihood ratio
+  (`L = 5`), the top two posteriors are exactly equal, the engine returns a `kickback` ("top two
+  hypotheses are tied on posterior log-odds"), and the gold is the abstention option. A guesser fails
+  every tie; a hedger fails every determinate.
+- The engine owns **both** verdicts natively (`decision.type` = `determinate` vs `kickback`). The
+  harness change is one small, generic extension to `decision_leader_to_letter`: a `kickback` maps to
+  `answer_from.tie_label` when the rung provides one, so the engine's own refusal-to-commit is
+  surfaced as the "insufficient information" letter. **Backward-compatible** — without a `tie_label` a
+  kickback stays an abstention (returns `None`), so every existing decision rung is unaffected
+  (verified: full ladder suite 155 passed). Python never compares a number; the abstention is the
+  engine's, not the harness's.
+- Contamination-safe: the only literals are the printed priors (`0.2`) and likelihood ratios
+  (`8`/`3`/`5`), and the answer is a categorical option; identifiers digit-free; gold rotates A–E; the
+  determinate/tie split is 12/12, asserted at build. Added to `SELF_CONTAINED_RUNGS`. Engine **24/24**
+  cached; a dedicated unit test proves kickback→tie_label→E and kickback-without-tie_label→abstain.
+
 ## [0.44.0] — 2026-06-30
 
 ### Added — rung 11 batch 4: combined likelihood beats TWO firing rivals (3-way tie-break)

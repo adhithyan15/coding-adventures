@@ -1,0 +1,461 @@
+{
+  "description": "ADJ-LADDER rung 14 \u2014 indeterminate decision: the abstention rung. Each item offers four candidate diagnoses plus an 'insufficient information to distinguish' option. On DETERMINATE items one finding outweighs the other (L_hi > L_lo), so the engine returns a determinate leader and the gold answer is that diagnosis. On TIE items both findings carry the SAME likelihood ratio, so the top two posteriors are exactly equal, the engine returns a kickback ('top two hypotheses are tied on posterior log-odds'), and the gold answer is the abstention option. The engine owns both verdicts natively (decision.type = determinate vs kickback); the harness maps a determinate leader to its diagnosis letter and a kickback to the tie_label letter \u2014 Python never compares a number. This tests calibration: commit when the log-odds separate, abstain when they coincide. A guesser fails every tie; a hedger fails every determinate. Contamination-safe: the only literals are the printed priors and likelihood ratios, and the answer is a categorical option; identifiers are digit-free; gold rotates A\u2013E; the determinate/tie split is 12/12.",
+  "items": [
+    {
+      "id": "r14id-01",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A tonsillar exudate raises the likelihood of bacterial pharyngitis 8-fold, while coryza raises the likelihood of viral pharyngitis 3-fold. The patient has a tonsillar exudate and coryza. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for bacterial_pharyngitis\nprior 0.2 for viral_pharyngitis\nprior 0.2 for infectious_mononucleosis\nprior 0.2 for oral_candidiasis\ncontributes 8 from tonsillar_exudate to bacterial_pharyngitis\ncontributes 3 from coryza to viral_pharyngitis\nobserve tonsillar_exudate\nobserve coryza\n? bacterial_pharyngitis\n? viral_pharyngitis\n? infectious_mononucleosis\n? oral_candidiasis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "bacterial_pharyngitis",
+        "B": "viral_pharyngitis",
+        "C": "infectious_mononucleosis",
+        "D": "oral_candidiasis",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r14id-02",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A tonsillar exudate raises the likelihood of bacterial pharyngitis 5-fold, and coryza raises the likelihood of viral pharyngitis by the same 5-fold. The patient has a tonsillar exudate and coryza. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for bacterial_pharyngitis\nprior 0.2 for viral_pharyngitis\nprior 0.2 for infectious_mononucleosis\nprior 0.2 for oral_candidiasis\ncontributes 5 from tonsillar_exudate to bacterial_pharyngitis\ncontributes 5 from coryza to viral_pharyngitis\nobserve tonsillar_exudate\nobserve coryza\n? bacterial_pharyngitis\n? viral_pharyngitis\n? infectious_mononucleosis\n? oral_candidiasis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "bacterial_pharyngitis",
+        "B": "insufficient information to distinguish",
+        "C": "viral_pharyngitis",
+        "D": "infectious_mononucleosis",
+        "E": "oral_candidiasis"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r14id-03",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A low ferritin raises the likelihood of iron deficiency anemia 8-fold, while target cells on the smear raises the likelihood of thalassemia trait 3-fold. The patient has a low ferritin and target cells on the smear. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for iron_deficiency_anemia\nprior 0.2 for thalassemia_trait\nprior 0.2 for anemia_of_chronic_disease\nprior 0.2 for sideroblastic_anemia\ncontributes 8 from low_ferritin to iron_deficiency_anemia\ncontributes 3 from target_cells to thalassemia_trait\nobserve low_ferritin\nobserve target_cells\n? iron_deficiency_anemia\n? thalassemia_trait\n? anemia_of_chronic_disease\n? sideroblastic_anemia\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "thalassemia_trait",
+        "B": "anemia_of_chronic_disease",
+        "C": "iron_deficiency_anemia",
+        "D": "sideroblastic_anemia",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r14id-04",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A low ferritin raises the likelihood of iron deficiency anemia 5-fold, and target cells on the smear raises the likelihood of thalassemia trait by the same 5-fold. The patient has a low ferritin and target cells on the smear. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for iron_deficiency_anemia\nprior 0.2 for thalassemia_trait\nprior 0.2 for anemia_of_chronic_disease\nprior 0.2 for sideroblastic_anemia\ncontributes 5 from low_ferritin to iron_deficiency_anemia\ncontributes 5 from target_cells to thalassemia_trait\nobserve low_ferritin\nobserve target_cells\n? iron_deficiency_anemia\n? thalassemia_trait\n? anemia_of_chronic_disease\n? sideroblastic_anemia\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "iron_deficiency_anemia",
+        "B": "thalassemia_trait",
+        "C": "anemia_of_chronic_disease",
+        "D": "insufficient information to distinguish",
+        "E": "sideroblastic_anemia"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r14id-05",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A neutrophilic csf pleocytosis raises the likelihood of bacterial meningitis 8-fold, while a lymphocytic CSF pleocytosis raises the likelihood of viral meningitis 3-fold. The patient has a neutrophilic CSF pleocytosis and a lymphocytic CSF pleocytosis. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for bacterial_meningitis\nprior 0.2 for viral_meningitis\nprior 0.2 for fungal_meningitis\nprior 0.2 for subarachnoid_hemorrhage\ncontributes 8 from neutrophilic_pleocytosis to bacterial_meningitis\ncontributes 3 from lymphocytic_pleocytosis to viral_meningitis\nobserve neutrophilic_pleocytosis\nobserve lymphocytic_pleocytosis\n? bacterial_meningitis\n? viral_meningitis\n? fungal_meningitis\n? subarachnoid_hemorrhage\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "viral_meningitis",
+        "B": "fungal_meningitis",
+        "C": "subarachnoid_hemorrhage",
+        "D": "insufficient information to distinguish",
+        "E": "bacterial_meningitis"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r14id-06",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A neutrophilic csf pleocytosis raises the likelihood of bacterial meningitis 5-fold, and a lymphocytic CSF pleocytosis raises the likelihood of viral meningitis by the same 5-fold. The patient has a neutrophilic CSF pleocytosis and a lymphocytic CSF pleocytosis. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for bacterial_meningitis\nprior 0.2 for viral_meningitis\nprior 0.2 for fungal_meningitis\nprior 0.2 for subarachnoid_hemorrhage\ncontributes 5 from neutrophilic_pleocytosis to bacterial_meningitis\ncontributes 5 from lymphocytic_pleocytosis to viral_meningitis\nobserve neutrophilic_pleocytosis\nobserve lymphocytic_pleocytosis\n? bacterial_meningitis\n? viral_meningitis\n? fungal_meningitis\n? subarachnoid_hemorrhage\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "insufficient information to distinguish",
+        "B": "bacterial_meningitis",
+        "C": "viral_meningitis",
+        "D": "fungal_meningitis",
+        "E": "subarachnoid_hemorrhage"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r14id-07",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). Continuous colonic inflammation raises the likelihood of ulcerative colitis 8-fold, while skip lesions raises the likelihood of crohn disease 3-fold. The patient has continuous colonic inflammation and skip lesions. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for ulcerative_colitis\nprior 0.2 for crohn_disease\nprior 0.2 for ischemic_colitis\nprior 0.2 for infectious_colitis\ncontributes 8 from continuous_colonic_inflammation to ulcerative_colitis\ncontributes 3 from skip_lesions to crohn_disease\nobserve continuous_colonic_inflammation\nobserve skip_lesions\n? ulcerative_colitis\n? crohn_disease\n? ischemic_colitis\n? infectious_colitis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "crohn_disease",
+        "B": "ulcerative_colitis",
+        "C": "ischemic_colitis",
+        "D": "infectious_colitis",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r14id-08",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). Continuous colonic inflammation raises the likelihood of ulcerative colitis 5-fold, and skip lesions raises the likelihood of crohn disease by the same 5-fold. The patient has continuous colonic inflammation and skip lesions. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for ulcerative_colitis\nprior 0.2 for crohn_disease\nprior 0.2 for ischemic_colitis\nprior 0.2 for infectious_colitis\ncontributes 5 from continuous_colonic_inflammation to ulcerative_colitis\ncontributes 5 from skip_lesions to crohn_disease\nobserve continuous_colonic_inflammation\nobserve skip_lesions\n? ulcerative_colitis\n? crohn_disease\n? ischemic_colitis\n? infectious_colitis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "ulcerative_colitis",
+        "B": "crohn_disease",
+        "C": "insufficient information to distinguish",
+        "D": "ischemic_colitis",
+        "E": "infectious_colitis"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r14id-09",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). Exertional chest pain raises the likelihood of stable angina 8-fold, while postprandial burning raises the likelihood of gastroesophageal reflux 3-fold. The patient has exertional chest pain and postprandial burning. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for stable_angina\nprior 0.2 for gastroesophageal_reflux\nprior 0.2 for costochondritis\nprior 0.2 for pericarditis\ncontributes 8 from exertional_chest_pain to stable_angina\ncontributes 3 from postprandial_burning to gastroesophageal_reflux\nobserve exertional_chest_pain\nobserve postprandial_burning\n? stable_angina\n? gastroesophageal_reflux\n? costochondritis\n? pericarditis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "gastroesophageal_reflux",
+        "B": "costochondritis",
+        "C": "pericarditis",
+        "D": "stable_angina",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r14id-10",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). Exertional chest pain raises the likelihood of stable angina 5-fold, and postprandial burning raises the likelihood of gastroesophageal reflux by the same 5-fold. The patient has exertional chest pain and postprandial burning. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for stable_angina\nprior 0.2 for gastroesophageal_reflux\nprior 0.2 for costochondritis\nprior 0.2 for pericarditis\ncontributes 5 from exertional_chest_pain to stable_angina\ncontributes 5 from postprandial_burning to gastroesophageal_reflux\nobserve exertional_chest_pain\nobserve postprandial_burning\n? stable_angina\n? gastroesophageal_reflux\n? costochondritis\n? pericarditis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "stable_angina",
+        "B": "gastroesophageal_reflux",
+        "C": "costochondritis",
+        "D": "pericarditis",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r14id-11",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A low pleural protein raises the likelihood of transudative effusion 8-fold, while a high pleural LDH raises the likelihood of exudative effusion 3-fold. The patient has a low pleural protein and a high pleural LDH. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for transudative_effusion\nprior 0.2 for exudative_effusion\nprior 0.2 for hemothorax\nprior 0.2 for chylothorax\ncontributes 8 from low_pleural_protein to transudative_effusion\ncontributes 3 from high_pleural_ldh to exudative_effusion\nobserve low_pleural_protein\nobserve high_pleural_ldh\n? transudative_effusion\n? exudative_effusion\n? hemothorax\n? chylothorax\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "transudative_effusion",
+        "B": "exudative_effusion",
+        "C": "hemothorax",
+        "D": "chylothorax",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r14id-12",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A low pleural protein raises the likelihood of transudative effusion 5-fold, and a high pleural LDH raises the likelihood of exudative effusion by the same 5-fold. The patient has a low pleural protein and a high pleural LDH. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for transudative_effusion\nprior 0.2 for exudative_effusion\nprior 0.2 for hemothorax\nprior 0.2 for chylothorax\ncontributes 5 from low_pleural_protein to transudative_effusion\ncontributes 5 from high_pleural_ldh to exudative_effusion\nobserve low_pleural_protein\nobserve high_pleural_ldh\n? transudative_effusion\n? exudative_effusion\n? hemothorax\n? chylothorax\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "transudative_effusion",
+        "B": "insufficient information to distinguish",
+        "C": "exudative_effusion",
+        "D": "hemothorax",
+        "E": "chylothorax"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r14id-13",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A suppressed tsh raises the likelihood of hyperthyroidism 8-fold, while clear situational triggers raises the likelihood of anxiety disorder 3-fold. The patient has a suppressed TSH and clear situational triggers. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for hyperthyroidism\nprior 0.2 for anxiety_disorder\nprior 0.2 for pheochromocytoma\nprior 0.2 for caffeine_excess\ncontributes 8 from suppressed_tsh to hyperthyroidism\ncontributes 3 from situational_triggers to anxiety_disorder\nobserve suppressed_tsh\nobserve situational_triggers\n? hyperthyroidism\n? anxiety_disorder\n? pheochromocytoma\n? caffeine_excess\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "anxiety_disorder",
+        "B": "pheochromocytoma",
+        "C": "hyperthyroidism",
+        "D": "caffeine_excess",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r14id-14",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A suppressed tsh raises the likelihood of hyperthyroidism 5-fold, and clear situational triggers raises the likelihood of anxiety disorder by the same 5-fold. The patient has a suppressed TSH and clear situational triggers. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for hyperthyroidism\nprior 0.2 for anxiety_disorder\nprior 0.2 for pheochromocytoma\nprior 0.2 for caffeine_excess\ncontributes 5 from suppressed_tsh to hyperthyroidism\ncontributes 5 from situational_triggers to anxiety_disorder\nobserve suppressed_tsh\nobserve situational_triggers\n? hyperthyroidism\n? anxiety_disorder\n? pheochromocytoma\n? caffeine_excess\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "hyperthyroidism",
+        "B": "anxiety_disorder",
+        "C": "pheochromocytoma",
+        "D": "insufficient information to distinguish",
+        "E": "caffeine_excess"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r14id-15",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). An exertional onset raises the likelihood of cardiac syncope 8-fold, while a prodromal nausea raises the likelihood of vasovagal syncope 3-fold. The patient has an exertional onset and a prodromal nausea. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for cardiac_syncope\nprior 0.2 for vasovagal_syncope\nprior 0.2 for orthostatic_syncope\nprior 0.2 for seizure\ncontributes 8 from exertional_onset to cardiac_syncope\ncontributes 3 from prodromal_nausea to vasovagal_syncope\nobserve exertional_onset\nobserve prodromal_nausea\n? cardiac_syncope\n? vasovagal_syncope\n? orthostatic_syncope\n? seizure\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "vasovagal_syncope",
+        "B": "orthostatic_syncope",
+        "C": "seizure",
+        "D": "insufficient information to distinguish",
+        "E": "cardiac_syncope"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r14id-16",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). An exertional onset raises the likelihood of cardiac syncope 5-fold, and a prodromal nausea raises the likelihood of vasovagal syncope by the same 5-fold. The patient has an exertional onset and a prodromal nausea. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for cardiac_syncope\nprior 0.2 for vasovagal_syncope\nprior 0.2 for orthostatic_syncope\nprior 0.2 for seizure\ncontributes 5 from exertional_onset to cardiac_syncope\ncontributes 5 from prodromal_nausea to vasovagal_syncope\nobserve exertional_onset\nobserve prodromal_nausea\n? cardiac_syncope\n? vasovagal_syncope\n? orthostatic_syncope\n? seizure\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "insufficient information to distinguish",
+        "B": "cardiac_syncope",
+        "C": "vasovagal_syncope",
+        "D": "orthostatic_syncope",
+        "E": "seizure"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r14id-17",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). Heavy proteinuria raises the likelihood of nephrotic syndrome 8-fold, while dysmorphic hematuria raises the likelihood of nephritic syndrome 3-fold. The patient has heavy proteinuria and dysmorphic hematuria. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for nephrotic_syndrome\nprior 0.2 for nephritic_syndrome\nprior 0.2 for acute_tubular_necrosis\nprior 0.2 for prerenal_azotemia\ncontributes 8 from heavy_proteinuria to nephrotic_syndrome\ncontributes 3 from dysmorphic_hematuria to nephritic_syndrome\nobserve heavy_proteinuria\nobserve dysmorphic_hematuria\n? nephrotic_syndrome\n? nephritic_syndrome\n? acute_tubular_necrosis\n? prerenal_azotemia\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "nephritic_syndrome",
+        "B": "nephrotic_syndrome",
+        "C": "acute_tubular_necrosis",
+        "D": "prerenal_azotemia",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r14id-18",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). Heavy proteinuria raises the likelihood of nephrotic syndrome 5-fold, and dysmorphic hematuria raises the likelihood of nephritic syndrome by the same 5-fold. The patient has heavy proteinuria and dysmorphic hematuria. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for nephrotic_syndrome\nprior 0.2 for nephritic_syndrome\nprior 0.2 for acute_tubular_necrosis\nprior 0.2 for prerenal_azotemia\ncontributes 5 from heavy_proteinuria to nephrotic_syndrome\ncontributes 5 from dysmorphic_hematuria to nephritic_syndrome\nobserve heavy_proteinuria\nobserve dysmorphic_hematuria\n? nephrotic_syndrome\n? nephritic_syndrome\n? acute_tubular_necrosis\n? prerenal_azotemia\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "nephrotic_syndrome",
+        "B": "nephritic_syndrome",
+        "C": "insufficient information to distinguish",
+        "D": "acute_tubular_necrosis",
+        "E": "prerenal_azotemia"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r14id-19",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A unilateral throbbing quality raises the likelihood of migraine 8-fold, while a bilateral band-like tightness raises the likelihood of tension headache 3-fold. The patient has a unilateral throbbing quality and a bilateral band-like tightness. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for migraine\nprior 0.2 for tension_headache\nprior 0.2 for cluster_headache\nprior 0.2 for sinus_headache\ncontributes 8 from unilateral_throbbing to migraine\ncontributes 3 from bilateral_band_tightness to tension_headache\nobserve unilateral_throbbing\nobserve bilateral_band_tightness\n? migraine\n? tension_headache\n? cluster_headache\n? sinus_headache\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "tension_headache",
+        "B": "cluster_headache",
+        "C": "sinus_headache",
+        "D": "migraine",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r14id-20",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A unilateral throbbing quality raises the likelihood of migraine 5-fold, and a bilateral band-like tightness raises the likelihood of tension headache by the same 5-fold. The patient has a unilateral throbbing quality and a bilateral band-like tightness. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for migraine\nprior 0.2 for tension_headache\nprior 0.2 for cluster_headache\nprior 0.2 for sinus_headache\ncontributes 5 from unilateral_throbbing to migraine\ncontributes 5 from bilateral_band_tightness to tension_headache\nobserve unilateral_throbbing\nobserve bilateral_band_tightness\n? migraine\n? tension_headache\n? cluster_headache\n? sinus_headache\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "migraine",
+        "B": "tension_headache",
+        "C": "cluster_headache",
+        "D": "sinus_headache",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r14id-21",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). Mechanical joint pain raises the likelihood of osteoarthritis 8-fold, while prolonged morning stiffness raises the likelihood of rheumatoid arthritis 3-fold. The patient has mechanical joint pain and prolonged morning stiffness. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for osteoarthritis\nprior 0.2 for rheumatoid_arthritis\nprior 0.2 for gout\nprior 0.2 for septic_arthritis\ncontributes 8 from mechanical_joint_pain to osteoarthritis\ncontributes 3 from prolonged_morning_stiffness to rheumatoid_arthritis\nobserve mechanical_joint_pain\nobserve prolonged_morning_stiffness\n? osteoarthritis\n? rheumatoid_arthritis\n? gout\n? septic_arthritis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "osteoarthritis",
+        "B": "rheumatoid_arthritis",
+        "C": "gout",
+        "D": "septic_arthritis",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r14id-22",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). Mechanical joint pain raises the likelihood of osteoarthritis 5-fold, and prolonged morning stiffness raises the likelihood of rheumatoid arthritis by the same 5-fold. The patient has mechanical joint pain and prolonged morning stiffness. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for osteoarthritis\nprior 0.2 for rheumatoid_arthritis\nprior 0.2 for gout\nprior 0.2 for septic_arthritis\ncontributes 5 from mechanical_joint_pain to osteoarthritis\ncontributes 5 from prolonged_morning_stiffness to rheumatoid_arthritis\nobserve mechanical_joint_pain\nobserve prolonged_morning_stiffness\n? osteoarthritis\n? rheumatoid_arthritis\n? gout\n? septic_arthritis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "osteoarthritis",
+        "B": "insufficient information to distinguish",
+        "C": "rheumatoid_arthritis",
+        "D": "gout",
+        "E": "septic_arthritis"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r14id-23",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). An acute fluctuating course raises the likelihood of delirium 8-fold, while an insidious progression raises the likelihood of dementia 3-fold. The patient has an acute fluctuating course and an insidious progression. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for delirium\nprior 0.2 for dementia\nprior 0.2 for depression\nprior 0.2 for psychosis\ncontributes 8 from acute_fluctuating_course to delirium\ncontributes 3 from insidious_progression to dementia\nobserve acute_fluctuating_course\nobserve insidious_progression\n? delirium\n? dementia\n? depression\n? psychosis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "dementia",
+        "B": "depression",
+        "C": "delirium",
+        "D": "psychosis",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r14id-24",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). An acute fluctuating course raises the likelihood of delirium 5-fold, and an insidious progression raises the likelihood of dementia by the same 5-fold. The patient has an acute fluctuating course and an insidious progression. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for delirium\nprior 0.2 for dementia\nprior 0.2 for depression\nprior 0.2 for psychosis\ncontributes 5 from acute_fluctuating_course to delirium\ncontributes 5 from insidious_progression to dementia\nobserve acute_fluctuating_course\nobserve insidious_progression\n? delirium\n? dementia\n? depression\n? psychosis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "delirium",
+        "B": "dementia",
+        "C": "depression",
+        "D": "insufficient information to distinguish",
+        "E": "psychosis"
+      },
+      "gold_letter": "D"
+    }
+  ]
+}
