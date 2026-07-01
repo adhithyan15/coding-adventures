@@ -33,24 +33,22 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard dispatch queue lanes.
+1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tabs.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app shell dashboard dispatch-queue lanes
-     surfaces and JSON helpers that bucket dashboard dispatch queues into
-     stable queued, blocked, and attention lanes with active-lane routing,
-     lane item IDs, headline queue metadata, and lanes capability metadata for
-     first-render product-shell dispatch telemetry.
+   - Add schema-versioned Rust app shell dashboard dispatch-queue lane-tab
+     surfaces and JSON helpers that project queued, blocked, and attention
+     dispatch queue lanes into stable tab descriptors with active-tab routing,
+     attention-tab routing, enabled/disabled tab counts, lane links, and
+     lane-tabs capability metadata for first-render product-shell navigation.
    - Preserve package name, source fingerprint, ready/blocked route, status
-     severity, attention-required flag, selected/default dispatch-queue item
-     routing, first queued/blocked/attention queue item IDs, queue counts,
-     queued/blocked/attention queue counts, headline dispatch-queue item ID,
-     headline queue state, headline message, active lane ID, attention lane ID,
-     lane count, per-lane selected/default/primary/attention flags,
-     dispatch-queue capability ID, dispatch-queue summary capability ID,
-     dispatch-queue digest capability ID, dispatch-queue lanes capability ID,
-     and advertised capability count so Mosaic, WebAssembly, and product
-     shells can append compact lane navigation without walking every queue
-     item.
+     severity, attention-required flag, active lane ID, active tab ID,
+     attention lane ID, attention tab ID, lane count, tab count, enabled tab
+     count, disabled tab count, per-tab selected, default, active, attention,
+     and disabled flags, dispatch-queue capability ID, dispatch-queue summary
+     capability ID, dispatch-queue digest capability ID, dispatch-queue lanes
+     capability ID, dispatch-queue lane-tabs capability ID, and advertised
+     capability count so Mosaic, WebAssembly, and product shells can append
+     compact lane tab navigation without walking every queue item.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1975,6 +1973,27 @@ the Rust, Python, and TypeScript surfaces together.
      first queue item routing, and advertised capability count so Mosaic,
      WebAssembly, and product shells can append compact dashboard dispatch
      queue digests without walking every queue item.
+
+172. Rust Berkeley Mosaic app shell dashboard dispatch queue lanes.
+   - Status: completed in PR 7229.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell dashboard dispatch-queue lanes surfaces plus JSON helpers that
+     bucket dashboard dispatch queues into stable queued, blocked, and
+     attention lanes with active-lane routing, attention-lane routing, lane
+     item IDs, per-lane selected/default/primary/attention flags, headline
+     queue metadata, and lanes capability metadata for first-render
+     product-shell dispatch telemetry.
+   - The dispatch-queue lanes payload preserves package name, source
+     fingerprint, ready/blocked route, status severity, attention-required
+     flag, selected/default dispatch-queue item routing, first queued,
+     blocked, and attention queue item IDs, queue counts, queued/blocked/
+     attention queue counts, headline dispatch-queue item ID, headline queue
+     state, headline message, active lane ID, attention lane ID, lane count,
+     dispatch-queue capability ID, dispatch-queue summary capability ID,
+     dispatch-queue digest capability ID, dispatch-queue lanes capability ID,
+     and advertised capability count so Mosaic, WebAssembly, and product
+     shells can append compact lane navigation without walking every queue
+     item.
 
 ## Backlog
 
