@@ -25,6 +25,7 @@ use spice_netlist_parser::{
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANELS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARDS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTIONS_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUPS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SUMMARY_SCHEMA_VERSION,
@@ -2667,6 +2668,12 @@ fn berkeley_app_facade_exports_package_manifest_json() {
         .iter()
         .any(|capability| capability
             == "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-json"));
+    assert!(payload["artifactCapabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|capability| capability
+            == "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-groups-json"));
 }
 
 #[test]
@@ -5251,6 +5258,122 @@ C1 out 0 1p
             ["dispatchQueueLaneTabPanelCardActionMenuCapabilityId"],
         "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-json"
     );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups = app
+        .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(3),
+                active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+            },
+        )
+        .expect(
+            "shell dashboard dispatch queue lane tab panel card action menu groups should execute",
+        );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUPS_SCHEMA_VERSION
+    );
+    assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups.ready);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups
+            .active_menu_group_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group.queued")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups
+            .attention_menu_group_id
+            .as_deref(),
+        None
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups
+            .default_menu_group_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group.queued")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups.menu_group_count,
+        3
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups
+            .enabled_menu_group_count,
+        2
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups
+            .disabled_menu_group_count,
+        1
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups
+            .empty_menu_group_count,
+        1
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups.menu_groups[0].id,
+        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups.menu_groups[0].label,
+        "Queued dispatches"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups.menu_groups[0]
+            .menu_item_ids[0],
+        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-item.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups.menu_groups[0]
+            .action_ids[0],
+        "dashboard.dispatch-queue-lane-tab-panel-card-action.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups.menu_groups[2]
+            .disabled_reason
+            .as_deref(),
+        Some("No attention dispatches")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups
+            .dispatch_queue_lane_tab_panel_card_action_menu_groups_capability_id,
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-groups-json"
+    );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups_payload:
+        serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups_json(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(3),
+                active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+            },
+        )
+        .unwrap(),
+    )
+    .expect(
+        "shell dashboard dispatch queue lane tab panel card action menu groups JSON should parse",
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups_payload
+            ["activeMenuGroupId"],
+        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups_payload["menuGroups"]
+            [0]["menuItemIds"][0],
+        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-item.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups_payload["menuGroups"]
+            [2]["disabledReason"],
+        "No attention dispatches"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups_payload
+            ["dispatchQueueLaneTabPanelCardActionMenuGroupsCapabilityId"],
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-groups-json"
+    );
 }
 
 #[test]
@@ -7510,6 +7633,100 @@ R1 in out
         shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_payload
             ["dispatchQueueLaneTabPanelCardActionMenuCapabilityId"],
         "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-json"
+    );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups = app
+        .app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(2),
+                active_command_id: Some("analysis.2.run".to_string()),
+            },
+        );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUPS_SCHEMA_VERSION
+    );
+    assert!(!shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups.ready);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups
+            .active_menu_group_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group.attention")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups
+            .attention_menu_group_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group.attention")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups.menu_group_count,
+        3
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups
+            .enabled_menu_group_count,
+        2
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups
+            .disabled_menu_group_count,
+        1
+    );
+    assert!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups.menu_groups[2].active
+    );
+    assert!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups.menu_groups[2]
+            .attention
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups.menu_groups[1].label,
+        "Blocked dispatches"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups.menu_groups[1]
+            .disabled_reason
+            .as_deref(),
+        Some("No blocked dispatches")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups
+            .dispatch_queue_lane_tab_panel_card_action_menu_groups_capability_id,
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-groups-json"
+    );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups_payload:
+        serde_json::Value = serde_json::from_str(
+        &app.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups_json(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(2),
+                active_command_id: Some("analysis.2.run".to_string()),
+            },
+        ),
+    )
+    .expect(
+        "blocked shell dashboard dispatch queue lane tab panel card action menu groups JSON should parse",
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups_payload
+            ["activeMenuGroupId"],
+        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group.attention"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups_payload
+            ["attentionMenuGroupId"],
+        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group.attention"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups_payload["menuGroups"]
+            [1]["disabledReason"],
+        "No blocked dispatches"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups_payload
+            ["dispatchQueueLaneTabPanelCardActionMenuGroupsCapabilityId"],
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-groups-json"
     );
 }
 
