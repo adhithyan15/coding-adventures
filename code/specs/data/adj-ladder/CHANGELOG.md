@@ -2,6 +2,31 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.46.0] — 2026-06-30
+
+### Added — rung 15: fractional excretion of urea (the FENa sibling for the diuretic patient)
+
+- **New rung `rung15_fractional_excretion_urea/` (21 items)** — the direct sibling of rung 9 (FENa),
+  reusing verbatim its contamination-safe shape: a paired urine/plasma chemistry stated as four
+  observed quantities and a tight family of mutually-confusable **pure ratios of products** of those
+  quantities — no numeric literal anywhere.
+- The clinical index is the **fractional excretion of urea (FEUrea)** — the AKI work-up index of
+  choice when the patient is on **diuretics** (which make FENa unreliable, but leave urea handling
+  intact). From urine urea (`uurea`), plasma urea/BUN (`purea`), urine Cr (`ucr`), plasma Cr (`pcr`):
+  `FEUrea = (uurea*pcr)/(purea*ucr)` (as a fraction), the urea failure index `UFI = (uurea*pcr)/ucr`,
+  or the U/P creatinine ratio `ucr/pcr`. No constant leaks (not even FEUrea's cosmetic `×100`, since
+  we ask for the fraction).
+- Each queried item is a `compute_dimensioned` program (`observe` the four quantities + `let answer =
+  formula`); the ADJ **engine** carries the multiply/divide arithmetic via the existing
+  `compute_dimensioned` extractor — **no harness/engine change** (identical to rungs 4/7/7b/7c/8/9/13).
+- Contamination-safe: every formula is a product/quotient of the four observed quantities, so every
+  program literal is grounded in the stem, and every identifier (`uurea`/`purea`/`ucr`/`pcr`/`answer`)
+  is **digit-free**. The five options are a family of ratios over the same quantities {FEUrea, UFI,
+  U/P-Cr, inverted-FEUrea, U/P-urea}, so the distractors are the exact slips students make. Gold
+  rotates A–E; the five family values are asserted pairwise-distinct at build.
+- Added to `SELF_CONTAINED_RUNGS`. Engine **21/21** cached (zero-wrong-zero-abstain); contamination /
+  ruff / items-valid gates clean.
+
 ## [0.45.0] — 2026-06-30
 
 ### Added — rung 14: indeterminate decision (the abstention rung)

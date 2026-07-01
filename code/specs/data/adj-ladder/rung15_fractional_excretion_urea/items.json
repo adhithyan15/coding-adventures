@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 15 \u2014 fractional excretion of urea, the sibling of rung 9 (FENa) for the AKI work-up when the patient is on diuretics (FENa unreliable). From four stated quantities of a paired urine/plasma chemistry (urine urea, plasma urea/BUN, urine Cr, plasma Cr) compute the fractional excretion of urea (FEUrea = (UUrea*PCr)/(PUrea*UCr), as a fraction), the urea failure index (UFI = (UUrea*PCr)/UCr), or the urine-to-plasma creatinine ratio (UCr/PCr). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the multiply/divide arithmetic via the existing compute_dimensioned extractor (no harness/engine change). Contamination-safe: no structural constants \u2014 every index is a pure ratio of products of the four stated quantities (not even the *100 of the FEUrea percentage, since we ask for the fraction), and every identifier is digit-free. The five options are a family of ratios over the same quantities {FEUrea, UFI, U/P-Cr, inverted-FEUrea, U/P-urea}, so the distractors are exactly the slips students make (inverting the fractional-excretion ratio; reading the urea U/P ratio for the creatinine one); gold letter rotated A\u2013E.",
+  "items": [
+    {
+      "id": "r15feu-01",
+      "qtype": "urea_index",
+      "stem": "A patient on diuretics is being worked up for acute kidney injury (so FENa is unreliable). The labs show a urine urea nitrogen of 300 mg/dL, a plasma urea nitrogen of 20 mg/dL, a urine creatinine of 80 mg/dL, and a plasma creatinine of 2 mg/dL. What is the fractional excretion of urea (FEUrea), expressed as a fraction?",
+      "program": "observe uurea(300)\nobserve purea(20)\nobserve ucr(80)\nobserve pcr(2)\nlet answer = (uurea * pcr) / (purea * ucr)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.375,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r15feu-02",
+      "qtype": "urea_index",
+      "stem": "A patient on diuretics is being worked up for acute kidney injury (so FENa is unreliable). The labs show a urine urea nitrogen of 300 mg/dL, a plasma urea nitrogen of 20 mg/dL, a urine creatinine of 80 mg/dL, and a plasma creatinine of 2 mg/dL. What is the urea failure index?",
+      "program": "observe uurea(300)\nobserve purea(20)\nobserve ucr(80)\nobserve pcr(2)\nlet answer = (uurea * pcr) / ucr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.375,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r15feu-03",
+      "qtype": "urea_index",
+      "stem": "A patient on diuretics is being worked up for acute kidney injury (so FENa is unreliable). The labs show a urine urea nitrogen of 300 mg/dL, a plasma urea nitrogen of 20 mg/dL, a urine creatinine of 80 mg/dL, and a plasma creatinine of 2 mg/dL. What is the urine-to-plasma creatinine ratio?",
+      "program": "observe uurea(300)\nobserve purea(20)\nobserve ucr(80)\nobserve pcr(2)\nlet answer = ucr / pcr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.375,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r15feu-04",
+      "qtype": "urea_index",
+      "stem": "A patient on diuretics is being worked up for acute kidney injury (so FENa is unreliable). The labs show a urine urea nitrogen of 400 mg/dL, a plasma urea nitrogen of 15 mg/dL, a urine creatinine of 100 mg/dL, and a plasma creatinine of 3 mg/dL. What is the fractional excretion of urea (FEUrea), expressed as a fraction?",
+      "program": "observe uurea(400)\nobserve purea(15)\nobserve ucr(100)\nobserve pcr(3)\nlet answer = (uurea * pcr) / (purea * ucr)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 33.333333333333336,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 26.666666666666668,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r15feu-05",
+      "qtype": "urea_index",
+      "stem": "A patient on diuretics is being worked up for acute kidney injury (so FENa is unreliable). The labs show a urine urea nitrogen of 400 mg/dL, a plasma urea nitrogen of 15 mg/dL, a urine creatinine of 100 mg/dL, and a plasma creatinine of 3 mg/dL. What is the urea failure index?",
+      "program": "observe uurea(400)\nobserve purea(15)\nobserve ucr(100)\nobserve pcr(3)\nlet answer = (uurea * pcr) / ucr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 33.333333333333336,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26.666666666666668,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r15feu-06",
+      "qtype": "urea_index",
+      "stem": "A patient on diuretics is being worked up for acute kidney injury (so FENa is unreliable). The labs show a urine urea nitrogen of 400 mg/dL, a plasma urea nitrogen of 15 mg/dL, a urine creatinine of 100 mg/dL, and a plasma creatinine of 3 mg/dL. What is the urine-to-plasma creatinine ratio?",
+      "program": "observe uurea(400)\nobserve purea(15)\nobserve ucr(100)\nobserve pcr(3)\nlet answer = ucr / pcr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 33.333333333333336,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 26.666666666666668,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r15feu-07",
+      "qtype": "urea_index",
+      "stem": "A patient on diuretics is being worked up for acute kidney injury (so FENa is unreliable). The labs show a urine urea nitrogen of 600 mg/dL, a plasma urea nitrogen of 40 mg/dL, a urine creatinine of 120 mg/dL, and a plasma creatinine of 4 mg/dL. What is the fractional excretion of urea (FEUrea), expressed as a fraction?",
+      "program": "observe uurea(600)\nobserve purea(40)\nobserve ucr(120)\nobserve pcr(4)\nlet answer = (uurea * pcr) / (purea * ucr)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r15feu-08",
+      "qtype": "urea_index",
+      "stem": "A patient on diuretics is being worked up for acute kidney injury (so FENa is unreliable). The labs show a urine urea nitrogen of 600 mg/dL, a plasma urea nitrogen of 40 mg/dL, a urine creatinine of 120 mg/dL, and a plasma creatinine of 4 mg/dL. What is the urea failure index?",
+      "program": "observe uurea(600)\nobserve purea(40)\nobserve ucr(120)\nobserve pcr(4)\nlet answer = (uurea * pcr) / ucr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r15feu-09",
+      "qtype": "urea_index",
+      "stem": "A patient on diuretics is being worked up for acute kidney injury (so FENa is unreliable). The labs show a urine urea nitrogen of 600 mg/dL, a plasma urea nitrogen of 40 mg/dL, a urine creatinine of 120 mg/dL, and a plasma creatinine of 4 mg/dL. What is the urine-to-plasma creatinine ratio?",
+      "program": "observe uurea(600)\nobserve purea(40)\nobserve ucr(120)\nobserve pcr(4)\nlet answer = ucr / pcr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r15feu-10",
+      "qtype": "urea_index",
+      "stem": "A patient on diuretics is being worked up for acute kidney injury (so FENa is unreliable). The labs show a urine urea nitrogen of 250 mg/dL, a plasma urea nitrogen of 10 mg/dL, a urine creatinine of 60 mg/dL, and a plasma creatinine of 1.5 mg/dL. What is the fractional excretion of urea (FEUrea), expressed as a fraction?",
+      "program": "observe uurea(250)\nobserve purea(10)\nobserve ucr(60)\nobserve pcr(1.5)\nlet answer = (uurea * pcr) / (purea * ucr)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 25.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.625,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r15feu-11",
+      "qtype": "urea_index",
+      "stem": "A patient on diuretics is being worked up for acute kidney injury (so FENa is unreliable). The labs show a urine urea nitrogen of 250 mg/dL, a plasma urea nitrogen of 10 mg/dL, a urine creatinine of 60 mg/dL, and a plasma creatinine of 1.5 mg/dL. What is the urea failure index?",
+      "program": "observe uurea(250)\nobserve purea(10)\nobserve ucr(60)\nobserve pcr(1.5)\nlet answer = (uurea * pcr) / ucr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.625,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 25.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r15feu-12",
+      "qtype": "urea_index",
+      "stem": "A patient on diuretics is being worked up for acute kidney injury (so FENa is unreliable). The labs show a urine urea nitrogen of 250 mg/dL, a plasma urea nitrogen of 10 mg/dL, a urine creatinine of 60 mg/dL, and a plasma creatinine of 1.5 mg/dL. What is the urine-to-plasma creatinine ratio?",
+      "program": "observe uurea(250)\nobserve purea(10)\nobserve ucr(60)\nobserve pcr(1.5)\nlet answer = ucr / pcr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.625,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 25.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r15feu-13",
+      "qtype": "urea_index",
+      "stem": "A patient on diuretics is being worked up for acute kidney injury (so FENa is unreliable). The labs show a urine urea nitrogen of 500 mg/dL, a plasma urea nitrogen of 25 mg/dL, a urine creatinine of 90 mg/dL, and a plasma creatinine of 5 mg/dL. What is the fractional excretion of urea (FEUrea), expressed as a fraction?",
+      "program": "observe uurea(500)\nobserve purea(25)\nobserve ucr(90)\nobserve pcr(5)\nlet answer = (uurea * pcr) / (purea * ucr)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 27.77777777777778,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.1111111111111112,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.9,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r15feu-14",
+      "qtype": "urea_index",
+      "stem": "A patient on diuretics is being worked up for acute kidney injury (so FENa is unreliable). The labs show a urine urea nitrogen of 500 mg/dL, a plasma urea nitrogen of 25 mg/dL, a urine creatinine of 90 mg/dL, and a plasma creatinine of 5 mg/dL. What is the urea failure index?",
+      "program": "observe uurea(500)\nobserve purea(25)\nobserve ucr(90)\nobserve pcr(5)\nlet answer = (uurea * pcr) / ucr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.1111111111111112,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 27.77777777777778,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r15feu-15",
+      "qtype": "urea_index",
+      "stem": "A patient on diuretics is being worked up for acute kidney injury (so FENa is unreliable). The labs show a urine urea nitrogen of 500 mg/dL, a plasma urea nitrogen of 25 mg/dL, a urine creatinine of 90 mg/dL, and a plasma creatinine of 5 mg/dL. What is the urine-to-plasma creatinine ratio?",
+      "program": "observe uurea(500)\nobserve purea(25)\nobserve ucr(90)\nobserve pcr(5)\nlet answer = ucr / pcr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.1111111111111112,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 27.77777777777778,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 18.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r15feu-16",
+      "qtype": "urea_index",
+      "stem": "A patient on diuretics is being worked up for acute kidney injury (so FENa is unreliable). The labs show a urine urea nitrogen of 350 mg/dL, a plasma urea nitrogen of 30 mg/dL, a urine creatinine of 70 mg/dL, and a plasma creatinine of 2.5 mg/dL. What is the fractional excretion of urea (FEUrea), expressed as a fraction?",
+      "program": "observe uurea(350)\nobserve purea(30)\nobserve ucr(70)\nobserve pcr(2.5)\nlet answer = (uurea * pcr) / (purea * ucr)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.4166666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 28.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r15feu-17",
+      "qtype": "urea_index",
+      "stem": "A patient on diuretics is being worked up for acute kidney injury (so FENa is unreliable). The labs show a urine urea nitrogen of 350 mg/dL, a plasma urea nitrogen of 30 mg/dL, a urine creatinine of 70 mg/dL, and a plasma creatinine of 2.5 mg/dL. What is the urea failure index?",
+      "program": "observe uurea(350)\nobserve purea(30)\nobserve ucr(70)\nobserve pcr(2.5)\nlet answer = (uurea * pcr) / ucr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.4166666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 28.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r15feu-18",
+      "qtype": "urea_index",
+      "stem": "A patient on diuretics is being worked up for acute kidney injury (so FENa is unreliable). The labs show a urine urea nitrogen of 350 mg/dL, a plasma urea nitrogen of 30 mg/dL, a urine creatinine of 70 mg/dL, and a plasma creatinine of 2.5 mg/dL. What is the urine-to-plasma creatinine ratio?",
+      "program": "observe uurea(350)\nobserve purea(30)\nobserve ucr(70)\nobserve pcr(2.5)\nlet answer = ucr / pcr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.4166666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 28.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r15feu-19",
+      "qtype": "urea_index",
+      "stem": "A patient on diuretics is being worked up for acute kidney injury (so FENa is unreliable). The labs show a urine urea nitrogen of 450 mg/dL, a plasma urea nitrogen of 18 mg/dL, a urine creatinine of 110 mg/dL, and a plasma creatinine of 3 mg/dL. What is the fractional excretion of urea (FEUrea), expressed as a fraction?",
+      "program": "observe uurea(450)\nobserve purea(18)\nobserve ucr(110)\nobserve pcr(3)\nlet answer = (uurea * pcr) / (purea * ucr)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.272727272727273,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 36.666666666666664,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.4666666666666666,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6818181818181818,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 25.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r15feu-20",
+      "qtype": "urea_index",
+      "stem": "A patient on diuretics is being worked up for acute kidney injury (so FENa is unreliable). The labs show a urine urea nitrogen of 450 mg/dL, a plasma urea nitrogen of 18 mg/dL, a urine creatinine of 110 mg/dL, and a plasma creatinine of 3 mg/dL. What is the urea failure index?",
+      "program": "observe uurea(450)\nobserve purea(18)\nobserve ucr(110)\nobserve pcr(3)\nlet answer = (uurea * pcr) / ucr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6818181818181818,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 36.666666666666664,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.4666666666666666,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 25.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.272727272727273,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r15feu-21",
+      "qtype": "urea_index",
+      "stem": "A patient on diuretics is being worked up for acute kidney injury (so FENa is unreliable). The labs show a urine urea nitrogen of 450 mg/dL, a plasma urea nitrogen of 18 mg/dL, a urine creatinine of 110 mg/dL, and a plasma creatinine of 3 mg/dL. What is the urine-to-plasma creatinine ratio?",
+      "program": "observe uurea(450)\nobserve purea(18)\nobserve ucr(110)\nobserve pcr(3)\nlet answer = ucr / pcr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 36.666666666666664,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.6818181818181818,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.272727272727273,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.4666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 25.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
