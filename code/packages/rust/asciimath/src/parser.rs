@@ -300,16 +300,35 @@ impl Parser<'_> {
         Ok(MathExpr::Matrix(rows))
     }
 
-    /// A bracketed group: parentheses are *grouping only* — the delimiter style is dropped
-    /// and the inner expression is returned directly (so `sqrt(x)` ≡ `sqrt x` and
-    /// `(1)/(2)` ≡ `1/2`). Any closing bracket is accepted (AsciiMath treats them loosely).
+    /// A bracketed group. With NO commas, parentheses are *grouping only* — the delimiter style
+    /// is dropped and the inner expression is returned directly (so `sqrt(x)` ≡ `sqrt x` and
+    /// `(1)/(2)` ≡ `1/2`). With one or more top-level commas, the fence is a LIST — `(a, b, c)`
+    /// → `MathExpr::Sequence([a, b, c])` — so the commas are preserved as list structure (a
+    /// coordinate tuple, an argument list) rather than rejected. Each item is a full relation.
+    /// Any closing bracket is accepted (AsciiMath treats them loosely). Note the matrix shape
+    /// `((a,b),(c,d))` is handled earlier by `parse_matrix` (an outer bracket immediately
+    /// followed by another opening bracket); this path sees only single-fence groups/lists.
     fn parse_group(&mut self) -> Result<MathExpr, FrontendError> {
         self.advance(); // opening bracket
-        let inner = self.parse_relation()?;
+        let first = self.parse_relation()?;
+        let expr = if matches!(self.peek(), TokenKind::Comma) {
+            // Comma-separated list → Sequence. Mirrors the matrix row's cell loop: a bounded
+            // loop over `parse_relation` (each item already depth-charged), never recursion, so
+            // a wide `(a, b, …, z)` cannot overflow the stack. A trailing/doubled comma leaves a
+            // non-atom before the next `parse_relation`, which returns a clean spanned error.
+            let mut items = vec![first];
+            while matches!(self.peek(), TokenKind::Comma) {
+                self.advance();
+                items.push(self.parse_relation()?);
+            }
+            MathExpr::Sequence(items)
+        } else {
+            first
+        };
         match self.peek() {
             TokenKind::RParen | TokenKind::RBracket | TokenKind::RBrace => {
                 self.advance();
-                Ok(inner)
+                Ok(expr)
             }
             _ => Err(self.error_here("expected a closing bracket")),
         }
