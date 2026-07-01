@@ -7,6 +7,7 @@ use std::collections::{BTreeMap, HashMap};
 const TREE_CONSTRUCTION_SMOKE: &str = include_str!("fixtures/html5lib-tree-construction-smoke.dat");
 const WHATWG_TABLE_AUDIT: &str = include_str!("fixtures/whatwg-table-audit.json");
 const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
+    ("adoption01-dat-6", "foster-parenting"),
     ("tests26-dat-1251", "cell-boundary"),
     ("tricky01-dat-6", "cell-boundary"),
     ("tricky01-dat-7", "row-group-boundary"),
