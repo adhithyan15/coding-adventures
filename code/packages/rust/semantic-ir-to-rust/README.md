@@ -119,6 +119,40 @@ Out of scope (v0): an `IndirectCall`/closure call carrying keywords has no
 statically-known signature, so it cannot be resolved; the frontends do not
 emit it.
 
+Executes (C6): **collection-method dispatch**.  A source-level
+`recv.meth(args…)` / `recv.meth { |x| … }` reaches every backend as the
+narrow-waist envelope
+`BuiltinCall("__method__", [recv, StrLit("meth"), …args, block?])`.  This
+needs **no new feature gate** — `__method__` observes no dedicated feature,
+and a pure collection module's observed features (`Sequences`/`Closures`/
+`Strings`) are already accepted.  The backend now *executes* the dispatch
+rather than panicking:
+
+- **Emit** — the `"__method__"` arm lowers to
+  `__sir::call_method(<recv>, "meth", vec![<args>])`.  The method name is
+  lifted out of the `StrLit` to a Rust `&str` **literal**, so dispatch is a
+  closed, compile-time-known set.  A trailing block (a `MakeClosure`, or an
+  `&:sym` block-pass lowered via the `"block_pass"` arm to
+  `__sir::sym_to_proc`) is the last `Value::Closure` in the arg `Vec`.
+- **Runtime catalog** — `call_method` in the inline `__sir` module matches
+  **explicitly** on `(receiver type, method name)`, ported from the
+  Python/TS `sir-runtime-oop` reference for parity:
+  - **Array** (`Seq`): `length`/`size`, `first`, `last`, `push`/`append`,
+    `pop`, `include?`, `reverse`, `sort`, `join`, `map`, `select`/`filter`,
+    `reject`, `find`, `reduce`/`inject`, `each`, `any?`/`all?`/`none?`.
+  - **Hash** (`Map`): `keys`, `values`, `size`, `has_key?`, `each`, `map`,
+    `select`.
+  - **String** (`Str`): `length`, `upcase`, `downcase`, `reverse`, `strip`,
+    `include?`, `split`.
+  - **Numeric** (`Int`/`Float`): `abs`, `to_i`, `to_f`, `even?`, `odd?`,
+    `zero?`, `times`; plus a universal `to_s`.
+  - Block-taking methods apply the trailing closure via `apply_closure`;
+    `sym_to_proc` implements `Symbol#to_proc` (`&:sym`).
+- **Security** — the catalog *is* the allowlist.  Dispatch is the explicit
+  match only; an unknown method name returns a controlled Ruby `nil`
+  (`unknown_method`), never a reflective lookup on the raw name.  No new
+  `unsafe`.
+
 Rejects: `TailCalls` (Rust does not guarantee TCO), `Intrinsics`
 (empty whitelist in v0), and the SIR17/18 features above.
 

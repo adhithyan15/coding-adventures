@@ -1,5 +1,77 @@
 # Changelog
 
+## 0.7.0 — collection-method dispatch + runtime catalog (C6)
+
+Makes the Rust backend **execute** collection-method dispatch. A
+source-level `recv.meth(args…)` / `recv.meth { |x| … }` reaches every
+backend as the narrow-waist envelope
+`BuiltinCall("__method__", [recv, StrLit("meth"), …args, block?])`. Before
+this change the Rust backend had no `__method__` arm, so the call fell into
+the `call_builtin_by_name` catch-all and hit its runtime floor
+`panic!("unknown builtin: __method__")` — a collection program compiled but
+crashed at run time. (No capability gate rejected it: `__method__` observes
+no dedicated feature, and a pure collection module's observed features —
+`Sequences`/`Closures`/`Strings` — were already accepted.)
+
+### Added
+
+- **Emit (`emit.rs`).** A `"__method__"` case in `emit_builtin_call`
+  (`emit_method_dispatch`) lowers the envelope to
+  `__sir::call_method(<recv>, "meth", vec![<arg0>, …])`. The receiver is
+  passed by value; the method name is lifted out of the `StrLit` at
+  `args[1]` to a Rust `&str` **literal** (keeping dispatch a closed,
+  compile-time-known set); the remaining args — including any trailing
+  `MakeClosure` block, which emits a `Value::Closure` — fill the arg `Vec`.
+  A `"block_pass"` case lowers `&:sym` / `&blk` to `__sir::sym_to_proc(…)`.
+- **Runtime catalog (`runtime.rs`).** A `call_method(recv: Value, name:
+  &str, args: Vec<Value>) -> Value` in the inline `__sir` module,
+  implementing the collection catalog by an **explicit** match on the
+  receiver's runtime type then the method name, ported from the Python/TS
+  `sir-runtime-oop` reference for parity:
+  - **Array** (`Value::Seq`): `length`/`size`, `first`, `last`, `push`/
+    `append`, `pop`, `include?`, `reverse`, `sort`, `join`, `map`/
+    `collect`, `select`/`filter`, `reject`, `find`/`detect`, `reduce`/
+    `inject`, `each`, `any?`, `all?`, `none?`.
+  - **Hash** (`Value::Map`): `keys`, `values`, `size`/`length`,
+    `has_key?`/`key?`/`include?`/`member?`, `each`/`each_pair`, `map`,
+    `select`/`filter`.
+  - **String** (`Value::Str`): `length`/`size`, `upcase`, `downcase`,
+    `reverse`, `strip`, `include?`, `split`.
+  - **Numeric** (`Value::Int`/`Value::Float`): `abs`, `to_i`, `to_f`,
+    `even?`, `odd?`, `zero?`, `times`.
+  - Universal `to_s` on every receiver (via the runtime `format`), so
+    `&:to_s` works across types.
+  - `sym_to_proc` implements Ruby `Symbol#to_proc` (`&:sym`): the returned
+    `Closure` dispatches `recv.sym(rest…)` through `call_method`. An
+    already-callable `&blk` passes through unchanged.
+- **Execution-proof test** (`tests/compile_and_run_collection_methods.rs`):
+  hand-builds SIR modules for `map { x*2 }` → `[2, 4, 6]`,
+  `select { even? }` → `[2, 4]`, `length` → `3`, `reduce(0)`/`inject` sum
+  → `6`, `map(&:to_s).join(",")` → `"1,2,3"`, `sort` → `[1, 2, 3]`, and
+  `bogus_xyz` → `nil`; emits Rust, compiles with `rustc`, runs it, and
+  diffs stdout against the Python/TS reference. Skips gracefully if
+  `rustc`/linker is absent (`SIR_TEST_RUSTC_LINKER`).
+- Emitted-shape unit tests for the `__method__` and `block_pass` arms, and
+  runtime-content tests asserting the catalog + the absence of a reflective
+  fallback.
+
+### Security
+
+- Dispatch is an **explicit allowlist**: `call_method` matches only the
+  hand-written `(type, name)` catalog. An unknown method name falls through
+  to `unknown_method`, which returns a controlled Ruby `nil` — never a
+  reflective lookup on the raw name and never an out-of-catalog effect.
+  This mirrors the C3 RCE lesson (the catalog *is* the security boundary).
+  No new `unsafe`.
+
+### Notes
+
+- No `Feature` variant added: `Feature::MethodDispatch` (deferred C1) is
+  not required here — the catalog is the gate. A pure collection-method
+  module was already capability-accepted; this change only makes it
+  *execute* instead of panicking. Genuinely-unsupported features stay
+  rejected cleanly.
+
 ## Unreleased — reject keyword params mixed with rest/kwrest (hardening)
 
 ### Fixed

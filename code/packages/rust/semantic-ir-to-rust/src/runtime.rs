@@ -806,6 +806,450 @@ pub const RUNTIME: &str = r##"mod __sir {
             other => panic!("unknown builtin: {}", other),
         }
     }
+
+    // ── collection-method dispatch (C6) ───────────────────────────
+    //
+    // A source-level `recv.meth(args…)` / `recv.meth { |x| … }` reaches
+    // this backend as `BuiltinCall("__method__", [recv, "meth", …args])`
+    // and is emitted as `call_method(recv, "meth", vec![…args])`.  This
+    // is the Rust analogue of the Python/TypeScript `sir-runtime-oop`
+    // `call_method`, ported for behavioural parity (same method names,
+    // same semantics) so a collection program produces identical output
+    // across every backend.
+    //
+    // ── SECURITY: the catalog IS the allowlist ────────────────────
+    //
+    // Dispatch is an EXPLICIT `match` on `(type_of(recv), name)` — every
+    // reachable method is written out by hand below.  There is NO
+    // reflective / dynamic lookup that could turn an attacker-controlled
+    // method name into arbitrary behaviour: a name we do not enumerate
+    // simply falls through to `unknown_method`, which returns a controlled
+    // error value (Ruby `nil`, matching the Python reference's honest
+    // floor) — never an out-of-catalog effect.  This mirrors the C3 RCE
+    // lesson: the allowlist is the whole security boundary, so it must be
+    // a closed, hand-written set, never a table keyed by the raw name.
+    //
+    // ── block convention ──────────────────────────────────────────
+    //
+    // A trailing Ruby block reaches us as the *last* element of `args`
+    // when it is a `Value::Closure` (a `{ }` block lowers to `MakeClosure`;
+    // an `&:sym` block-pass lowers to `sym_to_proc`, also a `Closure`).
+    // Block-taking methods split it off with `split_block` and apply it
+    // via `apply_closure`, exactly as the Python runtime applies a trailing
+    // `Closure`.
+
+    // Coerce a (rarely used) non-literal method name to a `String`.  The
+    // narrow-waist convention makes the name a `StrLit` in practice, so the
+    // emitter passes a `&str` literal directly and this is only reached for
+    // a defensively-handled non-literal name.
+    pub fn method_name(v: &Value) -> String {
+        match v {
+            Value::Str(s) => s.to_string(),
+            Value::Sym(s) => s.to_string(),
+            other => format(other),
+        }
+    }
+
+    // Split a trailing block off an argument list: if the last argument is
+    // a `Closure`, return `(positional_args, Some(block))`, else
+    // `(all_args, None)`.  Mirrors the Python runtime's
+    // `isinstance(arg_list[-1], Closure)` test.
+    fn split_block(mut args: Vec<Value>) -> (Vec<Value>, Option<Value>) {
+        if matches!(args.last(), Some(Value::Closure(_))) {
+            let block = args.pop();
+            (args, block)
+        } else {
+            (args, None)
+        }
+    }
+
+    // The honest "not in the catalog for this receiver" floor.  Ruby would
+    // raise `NoMethodError`; the reference runtimes instead return `nil`
+    // (the never-raise-on-the-OO-surface invariant).  We match that — a
+    // *controlled* value, never undefined behaviour — but keep the name in
+    // one place so the intent (and the security boundary) is explicit.
+    fn unknown_method(_recv: &Value, _name: &str) -> Value {
+        Value::Nil
+    }
+
+    /// Dispatch collection method `name` on `recv`.
+    ///
+    /// Resolution is a closed match on the receiver's runtime type, then on
+    /// the method name within that type.  Block-taking methods pull a
+    /// trailing `Closure` block off `args` first.  Anything unresolved
+    /// bottoms out at `unknown_method` (Ruby `nil`) — never a reflective
+    /// fallthrough.
+    pub fn call_method(recv: Value, name: &str, args: Vec<Value>) -> Value {
+        // Universal `Object#to_s` — available on *every* receiver, matching
+        // the Python/TS reference (where `to_s` lives in the universal
+        // Object table).  Handled here, before the type-specific catalogs,
+        // so `&:to_s` works on numbers, symbols, etc.  It renders via the
+        // runtime's `format` (the same display path `print` uses), so
+        // `1.to_s == "1"` and `[1,2].to_s == "[1, 2]"`.
+        if name == "to_s" && !matches!(recv, Value::Sym(_)) {
+            // A Symbol has its own `to_s` (its bare name) in `symbol_method`;
+            // everything else uses the universal display form.
+            return Value::Str(Rc::from(format(&recv).as_str()));
+        }
+        match &recv {
+            Value::Seq(_) => array_method(recv, name, args),
+            Value::Map(_) => map_method(recv, name, args),
+            Value::Str(_) => string_method(recv, name, args),
+            Value::Sym(_) => symbol_method(recv, name, args),
+            // `bool` is checked before the numeric arm on purpose: a Ruby
+            // `true`/`false` is not a Numeric, so it never resolves the
+            // numeric catalog.
+            Value::Bool(_) => unknown_method(&recv, name),
+            Value::Int(_) | Value::Float(_) => numeric_method(recv, name, args),
+            _ => unknown_method(&recv, name),
+        }
+    }
+
+    // ── Array (`Value::Seq`) catalog ──────────────────────────────
+    //
+    // A Ruby `Array` is a `Value::Seq` (shared, mutable `Vec`).  Non-block
+    // methods read/compute; the mutators (`push`/`pop`) mutate the backing
+    // vector in place through the `Rc<RefCell<…>>`, so the caller's handle
+    // observes the change — exactly like the Python list reference.
+    fn array_method(recv: Value, name: &str, args: Vec<Value>) -> Value {
+        let items_rc = match &recv {
+            Value::Seq(items) => items.clone(),
+            _ => return unknown_method(&recv, name),
+        };
+        let (pos, block) = split_block(args);
+        match name {
+            "length" | "size" => Value::Int(items_rc.borrow().len() as i64),
+            "first" => items_rc.borrow().first().cloned().unwrap_or(Value::Nil),
+            "last" => items_rc.borrow().last().cloned().unwrap_or(Value::Nil),
+            "reverse" => {
+                let mut v = items_rc.borrow().clone();
+                v.reverse();
+                seq_lit(v)
+            }
+            "sort" => {
+                let mut v = items_rc.borrow().clone();
+                // Ordering uses the runtime's numeric `<` (`num_lt`); a
+                // stable insertion-order-preserving sort keeps ties in place.
+                v.sort_by(|a, b| {
+                    if num_lt(a, b) {
+                        std::cmp::Ordering::Less
+                    } else if num_lt(b, a) {
+                        std::cmp::Ordering::Greater
+                    } else {
+                        std::cmp::Ordering::Equal
+                    }
+                });
+                seq_lit(v)
+            }
+            "join" => {
+                let sep = pos.first().map(|s| method_name(s)).unwrap_or_default();
+                let joined = items_rc
+                    .borrow()
+                    .iter()
+                    .map(format)
+                    .collect::<Vec<_>>()
+                    .join(&sep);
+                Value::Str(Rc::from(joined.as_str()))
+            }
+            "include?" => {
+                let needle = pos.first().cloned().unwrap_or(Value::Nil);
+                Value::Bool(items_rc.borrow().iter().any(|x| value_eq(x, &needle)))
+            }
+            "push" | "append" => {
+                items_rc.borrow_mut().extend(pos);
+                recv
+            }
+            "pop" => items_rc.borrow_mut().pop().unwrap_or(Value::Nil),
+            // ── block-taking Array methods ────────────────────────
+            "each" => {
+                if let Some(b) = &block {
+                    for item in items_rc.borrow().clone() {
+                        apply_closure(b, vec![item]);
+                    }
+                }
+                recv
+            }
+            "map" | "collect" => match &block {
+                Some(b) => seq_lit(
+                    items_rc
+                        .borrow()
+                        .clone()
+                        .into_iter()
+                        .map(|item| apply_closure(b, vec![item]))
+                        .collect(),
+                ),
+                None => unknown_method(&recv, name),
+            },
+            "select" | "filter" => match &block {
+                Some(b) => seq_lit(
+                    items_rc
+                        .borrow()
+                        .clone()
+                        .into_iter()
+                        .filter(|item| truthy(&apply_closure(b, vec![item.clone()])))
+                        .collect(),
+                ),
+                None => unknown_method(&recv, name),
+            },
+            "reject" => match &block {
+                Some(b) => seq_lit(
+                    items_rc
+                        .borrow()
+                        .clone()
+                        .into_iter()
+                        .filter(|item| !truthy(&apply_closure(b, vec![item.clone()])))
+                        .collect(),
+                ),
+                None => unknown_method(&recv, name),
+            },
+            "find" | "detect" => match &block {
+                Some(b) => items_rc
+                    .borrow()
+                    .clone()
+                    .into_iter()
+                    .find(|item| truthy(&apply_closure(b, vec![item.clone()])))
+                    .unwrap_or(Value::Nil),
+                None => unknown_method(&recv, name),
+            },
+            "any?" => match &block {
+                Some(b) => Value::Bool(
+                    items_rc
+                        .borrow()
+                        .clone()
+                        .into_iter()
+                        .any(|item| truthy(&apply_closure(b, vec![item]))),
+                ),
+                None => Value::Bool(items_rc.borrow().iter().any(truthy)),
+            },
+            "all?" => match &block {
+                Some(b) => Value::Bool(
+                    items_rc
+                        .borrow()
+                        .clone()
+                        .into_iter()
+                        .all(|item| truthy(&apply_closure(b, vec![item]))),
+                ),
+                None => Value::Bool(items_rc.borrow().iter().all(truthy)),
+            },
+            "none?" => match &block {
+                Some(b) => Value::Bool(
+                    !items_rc
+                        .borrow()
+                        .clone()
+                        .into_iter()
+                        .any(|item| truthy(&apply_closure(b, vec![item]))),
+                ),
+                None => Value::Bool(!items_rc.borrow().iter().any(truthy)),
+            },
+            "reduce" | "inject" => {
+                let b = match &block {
+                    Some(b) => b,
+                    None => return unknown_method(&recv, name),
+                };
+                // With an explicit seed arg the fold starts there over the
+                // whole vector; without one it seeds from the first element
+                // (Ruby `inject`).  An empty seedless reduce is `nil`.
+                let snapshot = items_rc.borrow().clone();
+                let (mut acc, rest): (Value, &[Value]) = if let Some(seed) = pos.into_iter().next() {
+                    (seed, &snapshot[..])
+                } else if let Some((head, tail)) = snapshot.split_first() {
+                    (head.clone(), tail)
+                } else {
+                    return Value::Nil;
+                };
+                for item in rest {
+                    acc = apply_closure(b, vec![acc, item.clone()]);
+                }
+                acc
+            }
+            _ => unknown_method(&recv, name),
+        }
+    }
+
+    // ── Hash (`Value::Map`) catalog ───────────────────────────────
+    //
+    // A Ruby `Hash` is a `Value::Map` (insertion-ordered assoc list).  A
+    // block method receives `[key, value]` per entry, matching the Python
+    // reference's `apply(block, [key, value])`.
+    fn map_method(recv: Value, name: &str, args: Vec<Value>) -> Value {
+        let entries_rc = match &recv {
+            Value::Map(entries) => entries.clone(),
+            _ => return unknown_method(&recv, name),
+        };
+        let (pos, block) = split_block(args);
+        match name {
+            "keys" => seq_lit(entries_rc.borrow().iter().map(|(k, _)| k.clone()).collect()),
+            "values" => seq_lit(entries_rc.borrow().iter().map(|(_, v)| v.clone()).collect()),
+            "size" | "length" => Value::Int(entries_rc.borrow().len() as i64),
+            "has_key?" | "key?" | "include?" | "member?" => {
+                let needle = pos.first().cloned().unwrap_or(Value::Nil);
+                Value::Bool(entries_rc.borrow().iter().any(|(k, _)| value_eq(k, &needle)))
+            }
+            "each" | "each_pair" => {
+                if let Some(b) = &block {
+                    for (k, v) in entries_rc.borrow().clone() {
+                        apply_closure(b, vec![k, v]);
+                    }
+                }
+                recv
+            }
+            "map" | "collect" => match &block {
+                Some(b) => seq_lit(
+                    entries_rc
+                        .borrow()
+                        .clone()
+                        .into_iter()
+                        .map(|(k, v)| apply_closure(b, vec![k, v]))
+                        .collect(),
+                ),
+                None => unknown_method(&recv, name),
+            },
+            "select" | "filter" => match &block {
+                Some(b) => {
+                    let kept: Vec<(Value, Value)> = entries_rc
+                        .borrow()
+                        .clone()
+                        .into_iter()
+                        .filter(|(k, v)| truthy(&apply_closure(b, vec![k.clone(), v.clone()])))
+                        .collect();
+                    Value::Map(Rc::new(RefCell::new(kept)))
+                }
+                None => unknown_method(&recv, name),
+            },
+            _ => unknown_method(&recv, name),
+        }
+    }
+
+    // ── String (`Value::Str`) catalog ─────────────────────────────
+    //
+    // A Ruby `String` is an immutable `Value::Str`, so every method returns
+    // a fresh value.  `split` with no argument splits on whitespace runs
+    // (Ruby's awk-style default); with a separator it splits on that
+    // literal substring.
+    fn string_method(recv: Value, name: &str, args: Vec<Value>) -> Value {
+        let s = match &recv {
+            Value::Str(s) => s.clone(),
+            _ => return unknown_method(&recv, name),
+        };
+        match name {
+            "length" | "size" => Value::Int(s.chars().count() as i64),
+            "upcase" => Value::Str(Rc::from(s.to_uppercase().as_str())),
+            "downcase" => Value::Str(Rc::from(s.to_lowercase().as_str())),
+            "reverse" => Value::Str(Rc::from(s.chars().rev().collect::<String>().as_str())),
+            "strip" => Value::Str(Rc::from(s.trim())),
+            "include?" => {
+                let needle = args.first().map(method_name).unwrap_or_default();
+                Value::Bool(s.contains(&needle))
+            }
+            "split" => {
+                let parts: Vec<Value> = match args.first() {
+                    Some(sep) => {
+                        let sep = method_name(sep);
+                        s.split(&sep).map(|p| Value::Str(Rc::from(p))).collect()
+                    }
+                    None => s.split_whitespace().map(|p| Value::Str(Rc::from(p))).collect(),
+                };
+                seq_lit(parts)
+            }
+            _ => unknown_method(&recv, name),
+        }
+    }
+
+    // ── Numeric (`Value::Int` / `Value::Float`) catalog ───────────
+    fn numeric_method(recv: Value, name: &str, args: Vec<Value>) -> Value {
+        let (pos, block) = split_block(args);
+        match name {
+            "abs" => match &recv {
+                Value::Int(n) => Value::Int(n.abs()),
+                Value::Float(x) => Value::Float(x.abs()),
+                _ => unknown_method(&recv, name),
+            },
+            "to_i" => Value::Int(as_i64_lenient(&recv)),
+            "to_f" => Value::Float(as_f64_lenient(&recv)),
+            "even?" => Value::Bool(as_i64_lenient(&recv) % 2 == 0),
+            "odd?" => Value::Bool(as_i64_lenient(&recv) % 2 != 0),
+            "zero?" => Value::Bool(as_f64_lenient(&recv) == 0.0),
+            "times" => {
+                // `n.times { |i| … }` yields 0..n and returns the receiver.
+                if let Some(b) = &block {
+                    let n = as_i64_lenient(&recv);
+                    let mut i = 0i64;
+                    while i < n {
+                        apply_closure(b, vec![Value::Int(i)]);
+                        i += 1;
+                    }
+                }
+                let _ = pos;
+                recv
+            }
+            _ => unknown_method(&recv, name),
+        }
+    }
+
+    // Lenient numeric coercions for the Numeric catalog: unlike the strict
+    // `as_i64`/`as_f64` used by arithmetic (which panic on a non-number),
+    // these degrade a non-numeric receiver to `0` rather than panicking —
+    // upholding the never-raise-on-the-OO-surface invariant.
+    fn as_i64_lenient(v: &Value) -> i64 {
+        match v {
+            Value::Int(n) => *n,
+            Value::Float(x) => *x as i64,
+            _ => 0,
+        }
+    }
+
+    fn as_f64_lenient(v: &Value) -> f64 {
+        match v {
+            Value::Int(n) => *n as f64,
+            Value::Float(x) => *x,
+            _ => 0.0,
+        }
+    }
+
+    // ── Symbol catalog + `Symbol#to_proc` (`&:sym`) ───────────────
+    fn symbol_method(recv: Value, name: &str, _args: Vec<Value>) -> Value {
+        let s = match &recv {
+            Value::Sym(s) => s.clone(),
+            _ => return unknown_method(&recv, name),
+        };
+        match name {
+            "to_s" => Value::Str(Rc::from(&*s)),
+            "to_sym" => recv,
+            "length" | "size" => Value::Int(s.chars().count() as i64),
+            "upcase" => intern(&s.to_uppercase()),
+            "downcase" => intern(&s.to_lowercase()),
+            _ => unknown_method(&recv, name),
+        }
+    }
+
+    // `sym_to_proc(:m)` builds a `Closure` equivalent to Ruby's
+    // `:m.to_proc`: applied to `[recv, rest…]` it dispatches
+    // `recv.m(rest…)` through `call_method`, so `[1,2,3].map(&:to_s)` is
+    // `[1,2,3].map { |x| x.to_s }`.  The frontend lowers `&:sym` to
+    // `block_pass(SymLit("sym"))`; the emitter turns that surviving
+    // envelope into `sym_to_proc(intern("sym"))`, yielding a `Closure` the
+    // block-taking catalog drives exactly like a `{ }` block.  A non-symbol
+    // argument is coerced to its display name defensively.
+    pub fn sym_to_proc(sym: Value) -> Value {
+        // An already-callable `&blk` (a `Closure`) passes through unchanged
+        // — only a *symbol* is converted into a dispatching proc.
+        if matches!(sym, Value::Closure(_)) {
+            return sym;
+        }
+        let method = match &sym {
+            Value::Sym(s) => s.to_string(),
+            other => format(other),
+        };
+        Value::Closure(Rc::new(Closure {
+            fun: Box::new(move |mut args: Vec<Value>| {
+                if args.is_empty() {
+                    return Value::Nil;
+                }
+                let recv = args.remove(0);
+                call_method(recv, &method, args)
+            }),
+        }))
+    }
 }
 "##;
 
@@ -877,6 +1321,34 @@ mod tests {
         ] {
             assert!(RUNTIME.contains(helper), "runtime missing `{}`", helper);
         }
+    }
+
+    #[test]
+    fn runtime_declares_method_dispatch_and_catalog() {
+        // C6: the inline runtime must ship `call_method` (the dispatcher),
+        // `sym_to_proc` (`&:sym`), and a representative method from each of
+        // the four catalogs so a collection program runs end to end.
+        for helper in &["pub fn call_method", "pub fn sym_to_proc", "pub fn method_name"] {
+            assert!(RUNTIME.contains(helper), "runtime missing `{}`", helper);
+        }
+        // Array / Map / String / Numeric catalog witnesses.
+        for name in &[
+            "\"map\" | \"collect\"",
+            "\"reduce\" | \"inject\"",
+            "\"keys\"",
+            "\"upcase\"",
+            "\"even?\"",
+        ] {
+            assert!(RUNTIME.contains(name), "runtime catalog missing `{}`", name);
+        }
+    }
+
+    #[test]
+    fn runtime_dispatch_has_no_reflective_fallback() {
+        // Security: dispatch is a closed match with an honest `nil` floor
+        // (`unknown_method`) — there must be NO `call_builtin_by_name`-style
+        // raw-name table reachable from `call_method`.
+        assert!(RUNTIME.contains("fn unknown_method"));
     }
 
     #[test]

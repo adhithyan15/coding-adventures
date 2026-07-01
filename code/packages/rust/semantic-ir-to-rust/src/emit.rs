@@ -858,6 +858,55 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "print" => ("__sir::print", false),
         "global_set" => ("__sir::global_set_call", false),
         "global_get" => ("__sir::global_get_call", false),
+        // ── collection-method dispatch (C6) ───────────────────────────
+        // A source-level `recv.meth(arg…)` / `recv.meth { … }` reaches
+        // every backend as the narrow-waist envelope
+        //
+        //     BuiltinCall("__method__", [recv, StrLit("meth"), …args, block?])
+        //
+        // (receiver at args[0]; the method name is *always* a `StrLit` at
+        // args[1]; call args follow; an optional trailing block is a
+        // `MakeClosure`, which lowers to a `Value::Closure`).  We route it
+        // to the runtime dispatcher `__sir::call_method(recv, "meth",
+        // vec![…rest])`.  The receiver is passed *by value* (the catalog
+        // clones what it must and mutates `Seq`/`Map` handles in place, so
+        // by-value is correct and matches the Python/TS reference, whose
+        // `call_method(recv, name, *args)` also takes the receiver by
+        // value).  The trailing block, if present, is simply the last
+        // element of the `vec!` — the runtime detects a trailing
+        // `Value::Closure` and applies it, exactly as the Python runtime
+        // detects a trailing `Closure`.
+        //
+        // WHY a dedicated arm rather than the `call_builtin_by_name`
+        // fallback below: `__method__` is not an arithmetic/list builtin,
+        // and the fallback's runtime floor is `panic!("unknown builtin")`.
+        // The catalog dispatch has entirely different argument conventions
+        // (receiver-first, name-as-string, an *explicit* allowlist match —
+        // never a reflective lookup on the raw name; see `call_method` in
+        // `runtime.rs` for the security rationale).
+        "__method__" => {
+            emit_method_dispatch(out, args, indent);
+            return;
+        }
+        // ── block-pass (`&:sym` / `&blk`) ─────────────────────────────
+        // A trailing `&expr` block-pass reaches us as
+        // `BuiltinCall("block_pass", [expr])`.  The common collection-code
+        // case is `&:sym` (a `SymLit`), which becomes a `Closure` via
+        // `sym_to_proc` — Ruby's `Symbol#to_proc` — so a block-taking
+        // catalog method (`map`/`select`/…) drives it exactly like a `{ }`
+        // block.  An already-callable `&blk` (a `Closure` value) is passed
+        // through unchanged.  `sym_to_proc` handles both: a symbol becomes
+        // a dispatching proc; anything else is coerced defensively.
+        "block_pass" => {
+            out.push_str("__sir::sym_to_proc(");
+            if let Some(arg) = args.first() {
+                emit_expr(out, arg, indent);
+            } else {
+                out.push_str("__sir::Value::Nil");
+            }
+            out.push(')');
+            return;
+        }
         _ => {
             // Unknown name → dispatch by name (forward-compat).
             let _ = write!(out, "__sir::call_builtin_by_name({}, vec![", quote_rs_string(name));
@@ -898,6 +947,68 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         emit_args(out, args, indent);
         out.push(')');
     }
+}
+
+/// Emit a collection-method dispatch call for a
+/// `BuiltinCall("__method__", [recv, StrLit("meth"), …args])`.
+///
+/// The emitted form is
+///
+/// ```text
+/// __sir::call_method(<recv>, "meth", vec![<arg0>, <arg1>, …])
+/// ```
+///
+/// where `<recv>` is `args[0]` emitted by value, `"meth"` is the *literal*
+/// method name lifted out of the `StrLit` at `args[1]`, and the remaining
+/// `args[2..]` (including any trailing `MakeClosure` block, which emits a
+/// `Value::Closure`) fill the argument `Vec`.
+///
+/// ## Why the method name is lifted to a Rust `&str` literal
+///
+/// The narrow-waist convention guarantees `args[1]` is a `StrLit` — the
+/// name is *always* statically known.  Lifting it to a `&'static str`
+/// literal (rather than passing a boxed `Value::Str`) lets `call_method`
+/// take `name: &str` and match on it directly, and — crucially — keeps the
+/// dispatch a *closed, compile-time* set: the runtime can only ever match
+/// the exact names the catalog enumerates.  If a frontend ever emitted a
+/// non-`StrLit` name (it should not), we fall back to coercing the emitted
+/// value to a string at runtime via `__sir::method_name`, so the shape is
+/// still safe rather than a panic in the emitter.
+fn emit_method_dispatch(out: &mut String, args: &[Expr], indent: usize) {
+    // Receiver (args[0]).  A well-formed `__method__` always has at least
+    // the receiver + name; a malformed one degrades to a `Nil` receiver /
+    // empty name rather than panicking in the emitter (defence in depth —
+    // the validator + frontends already guarantee the shape).
+    out.push_str("__sir::call_method(");
+    if let Some(recv) = args.first() {
+        emit_expr(out, recv, indent);
+    } else {
+        out.push_str("__sir::Value::Nil");
+    }
+    out.push_str(", ");
+
+    // Method name (args[1]).  Almost always a `StrLit` — lift it to a Rust
+    // string literal so the runtime matches a compile-time-known `&str`.
+    match args.get(1) {
+        Some(Expr::StrLit { value, .. }) => {
+            out.push_str(&quote_rs_string(value));
+        }
+        Some(other) => {
+            // Non-literal name (unexpected): coerce at runtime.  Wrapped so
+            // `call_method`'s `&str` parameter still receives a `&str`.
+            out.push_str("&__sir::method_name(&(");
+            emit_expr(out, other, indent);
+            out.push_str("))");
+        }
+        None => out.push_str("\"\""),
+    }
+
+    // Remaining call args (args[2..]), including any trailing block.
+    out.push_str(", vec![");
+    if args.len() > 2 {
+        emit_args(out, &args[2..], indent);
+    }
+    out.push_str("])");
 }
 
 fn emit_make_closure(
@@ -1604,6 +1715,81 @@ mod tests {
         assert!(out.contains("__sir::global_set"));
         assert!(out.contains("__sir::intern(\"x\")"));
         assert!(out.contains("__sir::Value::Int(5i64)"));
+    }
+
+    // ── collection-method dispatch (C6) emitted shape ──────────────────
+
+    #[test]
+    fn emit_method_dispatch_no_args() {
+        // `[…].length` → call_method(recv, "length", vec![])
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::BuiltinCall {
+                name: "__method__".into(),
+                args: vec![
+                    Expr::SeqLit {
+                        items: vec![Expr::IntLit { value: 1, span: s() }],
+                        span: s(),
+                    },
+                    Expr::StrLit { value: "length".into(), span: s() },
+                ],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            0,
+        );
+        assert_eq!(
+            out,
+            "__sir::call_method(__sir::seq_lit(vec![__sir::Value::Int(1i64)]), \"length\", vec![])"
+        );
+    }
+
+    #[test]
+    fn emit_method_dispatch_with_args_and_block() {
+        // `[…].reduce(0) { … }` → the seed arg and the block closure both
+        // land in the arg vec; the method name is a compile-time literal.
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::BuiltinCall {
+                name: "__method__".into(),
+                args: vec![
+                    Expr::VarRef { name: "xs".into(), scope: Scope::Local, span: s() },
+                    Expr::StrLit { value: "reduce".into(), span: s() },
+                    Expr::IntLit { value: 0, span: s() },
+                    Expr::MakeClosure {
+                        fn_name: "__blk".into(),
+                        captures: vec![],
+                        span: s(),
+                    },
+                ],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            0,
+        );
+        assert!(out.starts_with("__sir::call_method(xs.clone(), \"reduce\", vec!["));
+        assert!(out.contains("__sir::Value::Int(0i64)"));
+        // The trailing block emits a Closure value (the last vec element).
+        assert!(out.contains("__sir::Value::Closure"));
+    }
+
+    #[test]
+    fn emit_block_pass_symbol_becomes_sym_to_proc() {
+        // `&:to_s` → block_pass(SymLit) → sym_to_proc(intern("to_s")).
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::BuiltinCall {
+                name: "block_pass".into(),
+                args: vec![Expr::SymLit { name: "to_s".into(), span: s() }],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            0,
+        );
+        assert_eq!(out, "__sir::sym_to_proc(__sir::intern(\"to_s\"))");
     }
 
     #[test]
