@@ -113,9 +113,12 @@ native API routes and sends light on/off, light brightness, scene, and
 desired-state set/clear actions through the existing Home
 Assistant-compatible and native service endpoints, preserving runtime
 authorization. Entity action cards expose command-authorization preview buttons
-for light on/off and brightness controls before dispatch. Entity, service,
-scene, device, bridge, history, event-log, command-result, authorization,
-capability catalog, and capability-grant
+for light on/off and brightness controls before dispatch. After command, scene,
+or desired-state mutations, the shell renders the accepted response in the
+detail panel with command-result, correlation, current-state, desired-state, or
+history readback links as applicable. Entity, service, scene, device, bridge,
+history, event-log, command-result, authorization, capability catalog, and
+capability-grant
 rows/cards expose read-only detail buttons that fetch the matching native detail
 route and show formatted JSON plus the endpoint/status in a dedicated detail
 panel. Authorization rows also link to the active grants for their principal so

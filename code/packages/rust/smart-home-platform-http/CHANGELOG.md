@@ -11,6 +11,9 @@ All notable changes to this package will be documented in this file.
 - Added a read-only command-authorization preview route and browser dashboard
   Auth actions so local-controller users can inspect runtime grants before
   dispatching light commands.
+- Added browser dashboard action feedback that renders accepted command,
+  scene, and desired-state mutation responses with command-result and
+  desired-state readback links in the detail panel.
 - Added dashboard-ready runtime read routes for snapshot pending work,
   entity/capability registry records, room topology summaries, event-log
   replay, command-result audit, authorization-decision audit, and desired-state
