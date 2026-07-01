@@ -2,6 +2,34 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename` crate will be documented in this file.
 
+## [0.10.0] - 2026-06-30
+
+### Added — correlation-vector rename provenance (#89)
+
+The pass now records every local α-rename as a `renamed` correlation-vector
+contribution carrying `{scope, from, to}` — the enclosing leaf function's name,
+the original binding name, and its short form. Renaming is a transformation, not
+a deletion, so (like the rename-globals / rename-properties passes) the pass
+contributes a `renamed` record rather than a tombstone.
+
+- The **`scope`** qualifier matters here in a way it does not for globals: local
+  short names are allocated fresh *per function*, so the same `to` (`a`) recurs
+  across functions. `scope` is what lets a `--correlation_vector` consumer map a
+  minified local back to the right original binding.
+- Records come out in `(function source order, then binding declaration order,
+  ties broken by original name)`, so the emitted list is deterministic run to
+  run.
+- Program output is byte-for-byte unchanged: contributions are pure metadata.
+  Verified by the full closurec end-to-end suite.
+- This is the rename *table*; per-output-span provenance (contributing to each
+  renamed identifier's own CV id) needs the log threaded through
+  `rewrite_uses_block` — a documented follow-up mirroring the other rename
+  passes.
+
+Three new unit tests cover a single local rename, the `scope` qualifier
+distinguishing the same original name across two functions, and the no-rename
+(empty table) case.
+
 ## [0.9.0] - 2026-06-20
 
 ### Added — CLOC23: local renaming across `for`-`of` (loop-variable soundness)
