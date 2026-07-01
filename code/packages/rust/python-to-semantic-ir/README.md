@@ -154,6 +154,8 @@ nesting into a clean error rather than a native stack overflow.
 | Python source                          | SIR lowering                                          | Feature declared       |
 |----------------------------------------|-------------------------------------------------------|------------------------|
 | `def f(a, b): …`                       | top-level `Function { name f, params [a, b], body }`  | `DynamicTyping`†       |
+| `def f(a, b=10): …`                     | `Param { name b, default: Some(IntLit 10) }` (P8)     | `DefaultParams`        |
+| `f(5)` (omitting a defaulted arg)       | *partial* `DirectCall { args [IntLit 5] }`            | `DefaultParams`        |
 | `return expr` (tail)                   | function body `value = expr`                          | —                      |
 | `return` / no return (tail)            | function body `value = NilLit` (implicit `None`)      | —                      |
 | `return expr` (non-tail / early)       | **error** — "early return not supported in v0"        | —                      |
@@ -191,6 +193,27 @@ capture.  A bare reference to a function name yields a `MakeClosure`
 (re-threading its captures), so closures can be returned or passed.
 Capture order is deterministic (alphabetical).  Closure bodies reuse the
 `MAX_BLOCK_DEPTH` / `MAX_EXPR_DEPTH` guards, so recursion stays bounded.
+
+**Default parameters (P8).**  A positional default `def f(a, b=10)` lowers
+the `param_with_default` node's `= <expr>` into `Param.default = Some(expr)`
+(plain params keep `None`); the default is lowered with the same
+`MAX_EXPR_DEPTH`-bounded expression walk, so a deep default fails cleanly.
+A function with any defaulted parameter declares `Feature::DefaultParams`.
+A call that **omits** a defaulted argument — `f(5)` — lowers to a *partial*
+`DirectCall` carrying only the arguments present (the frontend never pads
+in defaults); the validator permits this because the missing parameters
+have defaults.
+
+> **Def-time vs. call-time semantics.**  Python evaluates a default
+> **once, at `def` time, in the enclosing scope**, and a default cannot
+> reference another parameter (`def f(a, b=a)` is a `NameError` — not
+> supported, Python forbids it).  The IR's `Param.default` is a
+> *call-time*, param-scope model (a superset).  For the constant /
+> enclosing-reference defaults Python permits the two coincide, so the
+> lowering is faithful.  The one observable divergence is a **mutable
+> default** (`def f(x=[])`): Python shares one list across calls, whereas
+> under the IR it is re-evaluated per call.  That is a deliberate,
+> documented v0 choice.
 
 ### Collections (M5)
 
@@ -236,8 +259,10 @@ Everything past M5 returns a clear positioned `PythonLowerError`:
 - list / dict **comprehensions**, **slicing** (`xs[a:b]`), **tuple** /
   **set** literals, and list/dict **methods** (`.append` / `.keys` /
   `.get` — these need the SIR runtime-library)
-- default / keyword arguments, `*args` / `**kwargs`, multi-level capture
-  chaining (capturing a variable two scopes up)
+- keyword arguments, `*args` / `**kwargs`, keyword-only parameters,
+  multi-level capture chaining (capturing a variable two scopes up)
+  — note **positional default parameters** (`def f(a=1)`) are now
+  supported (P8); only the keyword/variadic forms remain deferred
 - tuple / multi-target `for` (`for k, v in …`), multi-target / chained
   assignment, attribute targets, bitwise operators, the power operator
   (`**`)

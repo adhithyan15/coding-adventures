@@ -10,7 +10,8 @@ produces a `semantic_ir::Module`.  Implemented as the Rust crate
 
 Milestones implemented: **M1** (literals), **M2** (variables /
 assignment / operators), **M3** (control flow), **M4** (functions,
-calls, closures).  Collections / maps (M5) remain deferred.
+calls, closures), **M5** (collections / maps), and **P8** (positional
+default parameters — `def f(a=1)`).
 
 ## Pipeline
 
@@ -138,6 +139,33 @@ route through `__getitem__` / `__setitem__`).  The choice affects only the
 manifest feature (`Sequences` vs `Maps`), never runtime behaviour.
 Comprehensions, slicing (`xs[a:b]`), tuple / set literals, list/dict
 methods, and unpacking remain deferred (positioned errors).
+
+**Implementation note (P8 — positional default parameters):** a
+`def f(a, b=10)` parameter is represented by the parser as a
+`param_with_default` node; a *defaulted* one carries `[NAME, EQUALS,
+expression]`, a *plain* one just `[NAME]`.  M4 originally **rejected** the
+defaulted form (`"unsupported: default parameter value (deferred)"`); P8
+removes that rejection and lowers the default `expression` — **in the
+enclosing scope** — into the IR's `Param.default = Some(Box::new(expr))`
+via the existing `MAX_EXPR_DEPTH`-bounded expression walk.  A function with
+any defaulted parameter declares `Feature::DefaultParams`.  A call that
+omits a defaulted argument (`f(5)`) lowers to a *partial* `DirectCall`
+carrying only the arguments present — the frontend never pads in defaults;
+the validator accepts the shortfall because the omitted parameters have
+defaults.
+
+*Def-time vs. call-time semantics.*  Python evaluates a default **once, at
+`def` time, in the enclosing scope**, and a default **cannot** reference
+another parameter (`def f(a, b=a)` is a `NameError`) — so we never need to
+resolve a default against the param scope, and that unsupported form is
+forbidden by Python anyway.  The IR's `Param.default` is a *call-time*,
+param-scope model (a strict superset).  For the constant / enclosing-
+reference defaults Python permits, the two coincide and the lowering is
+faithful.  The single observable divergence is a **mutable default**
+(`def f(x=[])`): Python shares one list object across calls; under the IR
+the default is re-evaluated per call.  This is a deliberate, documented v0
+choice.  Keyword-only parameters, `*args` / `**kwargs`, and keyword
+arguments at call sites remain deferred.
 
 ## Return statement
 
@@ -290,7 +318,8 @@ Coverage target ≥ 90%.
 - Decorators
 - Multi-target assignment / unpacking
 - Slicing
-- Default + keyword arguments
+- Keyword arguments, keyword-only parameters, `*args` / `**kwargs`
+  (positional default parameters `def f(a=1)` ARE supported — P8)
 - String methods
 - `with` / context managers
 - Module-level `import`

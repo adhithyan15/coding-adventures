@@ -5,6 +5,58 @@ All notable changes to `python-to-semantic-ir` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to semantic versioning.
 
+## 0.6.0 — 2026-06-30
+
+**P8**: produce **default parameters** — `def f(a=1)` now lowers to
+`Param { default: Some(<lowered default expr>) }`.  The core IR and all
+five backends gained `Param.default` support on `main`; this wires the
+Python frontend through to emit it.
+
+### Added
+
+- **Positional default parameters** `def f(a, b=10)` → the defaulted
+  parameter's `param_with_default` CST node (`[NAME, EQUALS, expression]`)
+  has its `expression` lowered into `Param { default: Some(Box::new(..)) }`.
+  Plain parameters keep `default: None`.  The default is lowered via the
+  existing `MAX_EXPR_DEPTH`-bounded expression walk, so a pathologically
+  deep default fails with a clean positioned error rather than overflowing
+  the stack.
+- **`Feature::DefaultParams`** is declared in the manifest whenever a
+  lowered function carries at least one defaulted parameter — matching what
+  the validator observes from `Param.default = Some(_)`.
+- **Partial calls** — a call that omits a defaulted argument, e.g.
+  `f(5)`, lowers to a *partial* `DirectCall` carrying only the arguments
+  actually present (the frontend never pads in defaults).  The validator
+  permits this because the omitted parameters have defaults.
+- Free-variable analysis now visits default expressions against the
+  **enclosing** scope, so an enclosing-referencing default
+  (`x = 1; def f(a=x): ...`) is captured correctly.
+
+### Changed
+
+- **M4 no longer rejects default parameters.**  The former positioned error
+  `"unsupported: default parameter value (deferred)"` is gone; `def_params`
+  was reworked into `def_param_specs` (returning `(name, optional default
+  CST node)` pairs), and `lower_callable` / `push_function` now thread
+  `(name, Option<Expr>)` pairs so defaults reach `Param.default`.  The unit
+  test `default_parameter_is_rejected` was replaced by positive tests
+  (`default_parameter_lowers_to_param_default`,
+  `call_omitting_defaulted_arg_lowers_to_partial_directcall`,
+  `default_parameter_module_validates`) plus an e2e
+  (`e2e_default_parameter`).
+
+### Semantics note (def-time vs. call-time)
+
+Python evaluates a default **once, at `def` time, in the enclosing scope**,
+and a default cannot reference another parameter (`def f(a, b=a)` is a
+`NameError` — not supported here, Python forbids it anyway).  The IR's
+`Param.default` is a *call-time*, param-scope model (a superset).  For the
+constant / enclosing-reference defaults Python permits, the two coincide,
+so the lowering is faithful.  The one observable divergence is a **mutable
+default** (`def f(x=[])`): Python shares a single list across calls; under
+the IR it is re-evaluated per call.  That is a deliberate, documented v0
+choice.
+
 ## 0.5.0 — 2026-06-30
 
 Milestone **M5**: collections — list & dict literals, indexing, `len`, and

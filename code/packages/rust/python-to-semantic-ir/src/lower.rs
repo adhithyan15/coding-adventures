@@ -1238,7 +1238,30 @@ impl Lowerer {
         depth: usize,
     ) -> Result<Expr, PythonLowerError> {
         let name = self.def_name(def)?;
-        let params = self.def_params(def)?;
+        // Resolve `(name, optional default-CST)` for each parameter, then
+        // lower every default **in the enclosing scope** (Python evaluates
+        // defaults at `def` time in the scope the `def` is written inside).
+        // The bounded `lower_expr_in` reuses the `MAX_EXPR_DEPTH`-capped
+        // expression walk, so a pathologically deep default fails cleanly.
+        let specs = self.def_param_specs(def)?;
+        let mut params: Vec<(String, Option<Expr>)> = Vec::with_capacity(specs.len());
+        let mut any_default = false;
+        for (pname, default_node) in specs {
+            let default = match default_node {
+                Some(node) => {
+                    any_default = true;
+                    Some(self.lower_expr_in(node, enclosing, depth + 1)?)
+                }
+                None => None,
+            };
+            params.push((pname, default));
+        }
+        if any_default {
+            // A `Param.default = Some(_)` is exactly what the validator
+            // observes as `DefaultParams`; declare it here so the manifest
+            // matches.
+            self.observed.add(Feature::DefaultParams);
+        }
         let suite = self
             .first_child_named(def, "suite")
             .ok_or_else(|| self.err_at(def, "malformed def: missing body".to_string()))?;
@@ -1247,9 +1270,31 @@ impl Lowerer {
         self.lower_callable(&name, &params, suite, enclosing, depth, span)
     }
 
-    /// Extract a `def_stmt`'s parameter names (rejecting defaults / `*args`
-    /// / `**kwargs`, which are deferred).
-    fn def_params(&self, def: &GrammarASTNode) -> Result<Vec<String>, PythonLowerError> {
+    /// Extract a `def_stmt`'s parameters as `(name, optional default-value
+    /// CST node)` pairs.
+    ///
+    /// A *plain* positional parameter (`a`) yields `(name, None)`.  A
+    /// *defaulted* one (`b = 10`) yields `(name, Some(<expression node>))`
+    /// — the `param_with_default` node carries an extra `=` token and an
+    /// `expression` child, which the caller lowers (in the **enclosing**
+    /// scope) into the IR's `Param.default`.
+    ///
+    /// ## Python def-time semantics vs. the IR's call-time model
+    ///
+    /// Python evaluates a default **once, at `def` time, in the enclosing
+    /// scope** — so a default cannot reference another parameter
+    /// (`def f(a, b=a)` is a `NameError`).  The IR's `Param.default` is a
+    /// *call-time*, param-scope model (a superset).  For the constant /
+    /// enclosing-reference defaults Python actually permits, the two
+    /// coincide, so lowering the Python default straight into
+    /// `Param.default` is faithful.  The one observable divergence is a
+    /// *mutable* default (`def f(x=[])`): Python shares one list across
+    /// calls; under the IR it is re-evaluated per call.  That is a
+    /// deliberate, documented v0 choice (see the crate README).
+    fn def_param_specs<'a>(
+        &self,
+        def: &'a GrammarASTNode,
+    ) -> Result<Vec<(String, Option<&'a GrammarASTNode>)>, PythonLowerError> {
         let parameters = match self.first_child_named(def, "parameters") {
             Some(p) => p,
             None => return Ok(vec![]), // `def f():` — no params.
@@ -1258,40 +1303,54 @@ impl Lowerer {
         let list = self
             .first_child_named(parameters, "parameter_list")
             .unwrap_or(parameters);
-        let mut names = Vec::new();
+        let mut specs = Vec::new();
         for pwd in child_nodes(list) {
             if pwd.rule_name != "param_with_default" {
                 continue;
             }
-            names.push(self.param_name(pwd)?);
+            specs.push(self.param_spec(pwd)?);
         }
-        Ok(names)
+        Ok(specs)
     }
 
-    /// Extract one parameter's name from a `param_with_default`, rejecting
-    /// a default value (`a=1`) — the node then carries an extra `EQUALS`
-    /// token / default `expression`, which v0 does not model.
-    fn param_name(&self, pwd: &GrammarASTNode) -> Result<String, PythonLowerError> {
-        // A plain parameter is exactly one `NAME` token.  A default adds
-        // an `EQUALS` token (+ a default expression node).
-        let has_default = pwd.children.iter().any(|c| {
-            matches!(c, ASTNodeOrToken::Token(t) if t.value == "=")
-                || matches!(c, ASTNodeOrToken::Node(_))
-        });
-        if has_default {
-            return Err(self.err_at(
-                pwd,
-                "unsupported: default parameter value (deferred)".to_string(),
-            ));
-        }
+    /// Extract one parameter's `(name, optional default node)` from a
+    /// `param_with_default`.
+    ///
+    /// The CST shapes are:
+    ///   - plain `a`     → `[NAME]`                       → `(name, None)`
+    ///   - default `b=1` → `[NAME, EQUALS, expression]`   → `(name, Some(expr))`
+    ///
+    /// Only positional defaults are modelled here; keyword-only markers and
+    /// `*args` / `**kwargs` never reach this rule in the M5 subset.
+    fn param_spec<'a>(
+        &self,
+        pwd: &'a GrammarASTNode,
+    ) -> Result<(String, Option<&'a GrammarASTNode>), PythonLowerError> {
+        let mut name: Option<String> = None;
+        let mut default: Option<&GrammarASTNode> = None;
         for child in &pwd.children {
-            if let ASTNodeOrToken::Token(t) = child {
-                if matches!(t.type_, lexer::token::TokenType::Name) && t.type_name.is_none() {
-                    return Ok(t.value.clone());
+            match child {
+                ASTNodeOrToken::Token(t) => {
+                    if matches!(t.type_, lexer::token::TokenType::Name)
+                        && t.type_name.is_none()
+                        && name.is_none()
+                    {
+                        name = Some(t.value.clone());
+                    }
+                    // The `=` token is the marker only; the value that
+                    // follows is the `expression` node captured below.
+                }
+                // The default-value `expression` node (present only for a
+                // `name = expr` parameter).
+                ASTNodeOrToken::Node(n) => {
+                    default = Some(n);
                 }
             }
         }
-        Err(self.err_at(pwd, "malformed parameter".to_string()))
+        match name {
+            Some(name) => Ok((name, default)),
+            None => Err(self.err_at(pwd, "malformed parameter".to_string())),
+        }
     }
 
     /// Lower a `lambda_expr` into a fresh top-level synthesised
@@ -1329,7 +1388,11 @@ impl Lowerer {
             value,
             span: span.clone(),
         };
-        self.push_function(&fn_name, &params, &captures, body, span.clone());
+        // Lambdas in the M5 subset never carry defaults (rejected in
+        // `lambda_params`), so every param maps to `(name, None)`.
+        let lambda_params: Vec<(String, Option<Expr>)> =
+            params.iter().map(|n| (n.clone(), None)).collect();
+        self.push_function(&fn_name, &lambda_params, &captures, body, span.clone());
 
         // A lambda always yields a retained closure value.
         self.observed.add(Feature::Closures);
@@ -1379,7 +1442,7 @@ impl Lowerer {
     fn lower_callable(
         &mut self,
         name: &str,
-        params: &[String],
+        params: &[(String, Option<Expr>)],
         suite: &GrammarASTNode,
         enclosing: &mut FunctionCtx,
         depth: usize,
@@ -1387,8 +1450,11 @@ impl Lowerer {
     ) -> Result<Expr, PythonLowerError> {
         // ── Free-variable analysis over the suite. ──
         // Names bound *within* the body — the params plus every name the
-        // body assigns / `for`-binds — are body-local, not captures.
-        let mut bound: HashSet<String> = params.iter().cloned().collect();
+        // body assigns / `for`-binds — are body-local, not captures.  Note
+        // a default expression sees the *enclosing* scope (it was already
+        // lowered there by the caller), so it never contributes to the
+        // body's free/bound sets here.
+        let mut bound: HashSet<String> = params.iter().map(|(n, _)| n.clone()).collect();
         self.collect_suite_bound_names(suite, &mut bound)?;
         let mut free = Vec::new();
         let mut seen = HashSet::new();
@@ -1398,7 +1464,7 @@ impl Lowerer {
 
         // ── Lower the body in the function's own context. ──
         let mut inner = FunctionCtx::new(
-            params.iter().cloned().collect(),
+            params.iter().map(|(n, _)| n.clone()).collect(),
             captures.iter().cloned().collect(),
         );
         let body = self.lower_function_suite(suite, &mut inner, depth + 1)?;
@@ -1413,7 +1479,7 @@ impl Lowerer {
     fn push_function(
         &mut self,
         name: &str,
-        params: &[String],
+        params: &[(String, Option<Expr>)],
         captures: &[String],
         body: Block,
         span: Span,
@@ -1437,11 +1503,15 @@ impl Lowerer {
             name: name.to_string(),
             params: params
                 .iter()
-                .map(|p| Param {
-                    name: p.clone(),
+                .map(|(pname, default)| Param {
+                    name: pname.clone(),
                     sir_type: None,
+                    // A defaulted positional param keeps `Required` kind —
+                    // `ParamKind` distinguishes only `Required`/`Rest`/
+                    // `KwRest`; the presence of a default lives in
+                    // `default`, not the kind.
                     kind: ParamKind::Required,
-                    default: None,
+                    default: default.clone().map(Box::new),
                     span: span.clone(),
                 })
                 .collect(),
@@ -1687,9 +1757,17 @@ impl Lowerer {
             if let Ok(n) = self.def_name(node) {
                 inner.insert(n);
             }
-            if let Ok(ps) = self.def_params(node) {
-                for p in ps {
-                    inner.insert(p);
+            if let Ok(specs) = self.def_param_specs(node) {
+                for (pname, default_node) in specs {
+                    // A *default expression* is evaluated in the **enclosing**
+                    // scope (Python def-time semantics), so any name it
+                    // references is free against the *outer* `bound` set — not
+                    // shadowed by the params.  Collect those before adding the
+                    // param itself to `inner`.
+                    if let Some(default) = default_node {
+                        self.collect_free_names(default, bound, free, seen, depth + 1)?;
+                    }
+                    inner.insert(pname);
                 }
             }
             if let Some(suite) = self.first_child_named(node, "suite") {
