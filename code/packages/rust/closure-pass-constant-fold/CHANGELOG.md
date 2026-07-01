@@ -2,6 +2,40 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.81.0] - 2026-07-01
+
+### Added — fold `Array.prototype.join` on an array literal of constants (closes gap-142)
+
+`[a, b, c].join(sep)` on an array literal whose elements are all compile-time
+constants now folds to a string literal:
+
+```
+["a","b","c"].join("-")  → "a-b-c"      [1,2,3].join()   → "1,2,3"
+[].join("-")             → ""           [1,true,null].join(",") → "1,true,"
+```
+
+- Each element is coerced the way `Array.prototype.join` does (ECMAScript
+  §23.1.3.16): `null`, `undefined`, and array **holes** all become `""`;
+  numbers and booleans take their `String(...)` form; strings pass through.
+- The separator is either **absent** (defaults to `","`) or a single **string
+  literal**. A numeric separator (`[1,2].join(0)` → `"102"`, separator coerces
+  to `"0"`) or any non-literal separator is DECLINED — left for the runtime so
+  the fold stays obviously correct.
+- We DECLINE (leave the call intact) when any element is something whose string
+  form is runtime-dependent — a nested array/object, an identifier, a call, a
+  template literal, etc.
+- **DoS guard:** `fold_array_join` caps the accumulated result length
+  (mirroring `fold_string_repeat`), so a crafted array literal can't materialize
+  an oversized string at compile time.
+
+This resolves gap-142 (opened by the `PeepholeReplaceKnownMethods` port). Seven
+new unit tests cover the string/number/boolean/nullish/hole coercions, the
+default-comma separator, the empty array, and the non-constant-element /
+non-string-separator / nested-array declines; the `folds_array_join` upstream
+placeholder is now an active conformance test. Verified against the full
+closurec end-to-end suite and the downstream pass consumers — all green; the
+change is purely additive (previously-unfoldable joins now fold).
+
 ## [0.80.0] - 2026-07-01
 
 ### Test — activate the gap-141 upstream placeholder (#88, CLOC12.141)

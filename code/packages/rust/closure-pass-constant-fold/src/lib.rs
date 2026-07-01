@@ -571,6 +571,61 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
 /// the computed form `"x"["toUpperCase"]()`, and a method on a non-literal
 /// (`s.toUpperCase()`) all pass through unchanged. We still recurse into the
 /// callee and arguments so nested constants inside them fold.
+/// Coerce a single array-literal element to the string `Array.prototype.join`
+/// would produce for it, or `None` if the element is not a compile-time
+/// constant we can represent faithfully.
+///
+/// Truth table (mirrors ECMAScript's per-element `ToString`, with the
+/// join-specific rule that `null`/`undefined`/holes stringify to `""`):
+///
+/// ```text
+///   element            join string
+///   ----------------   -----------
+///   hole (elision)     ""
+///   null               ""
+///   undefined          ""
+///   "abc"              abc
+///   42                 42          (String(Number))
+///   true / false       true / false
+///   anything else      None  → decline the whole fold
+/// ```
+fn join_element_str(element: &Option<Expression>) -> Option<String> {
+    match element {
+        // A hole (`[1, , 3]`) and the two nullish literals all join as `""`.
+        None => Some(String::new()),
+        Some(Expression::NullLiteral(_)) => Some(String::new()),
+        Some(Expression::UndefinedLiteral(_)) => Some(String::new()),
+        Some(Expression::StringLiteral(s)) => Some(s.value.clone()),
+        Some(Expression::NumericLiteral(n)) => Some(format_js_number(n.value)),
+        Some(Expression::BooleanLiteral(b)) => {
+            Some(if b.value { "true" } else { "false" }.to_string())
+        }
+        // Nested arrays/objects, identifiers, calls, template literals, … all
+        // have runtime-dependent string forms — decline so the call stands.
+        _ => None,
+    }
+}
+
+/// Fold `array.join(sep)` when every element is a join-representable constant.
+/// Returns the joined string, or `None` to leave the call intact.
+///
+/// A length cap (mirroring `fold_string_repeat`'s DoS guard) prevents a crafted
+/// array literal from materializing an oversized string at compile time.
+fn fold_array_join(arr: &ArrayExpression, sep: &str) -> Option<String> {
+    const MAX_JOIN_LEN: usize = 100_000;
+    let mut parts: Vec<String> = Vec::with_capacity(arr.elements.len());
+    let mut total = 0usize;
+    for element in &arr.elements {
+        let piece = join_element_str(element)?;
+        total = total.saturating_add(piece.len()).saturating_add(sep.len());
+        if total > MAX_JOIN_LEN {
+            return None;
+        }
+        parts.push(piece);
+    }
+    Some(parts.join(sep))
+}
+
 fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
     let callee = fold_expression(&c.callee, st);
     let arguments: Vec<Expression> = c.arguments.iter().map(|a| fold_expression(a, st)).collect();
@@ -1111,6 +1166,47 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                             let after = if value { "true" } else { "false" };
                             let new_cv = st.fork_cv(&parent, &before, after);
                             return stamp_literal_cv(FoldedLiteral::Boolean(value), new_cv);
+                        }
+                    }
+                }
+            }
+
+            // ---- `[a, b, c].join(sep)` on an array literal of constants ----
+            //
+            // `["a","b","c"].join("-")` → `"a-b-c"`, `[1,2,3].join()` →
+            // `"1,2,3"` (the separator defaults to `","`), `[].join("-")` →
+            // `""` (ECMAScript §23.1.3.16). Each element is coerced to a string
+            // the way `Array.prototype.join` does: `null`, `undefined`, and
+            // array HOLES all become the empty string `""`; numbers and
+            // booleans take their `String(...)` form. We DECLINE (leave the
+            // call intact) if any element is something we cannot coerce at
+            // compile time without changing semantics — a nested array/object
+            // (its own `toString` runs at runtime), an identifier, a call, etc.
+            // — or if the separator is anything other than an absent argument or
+            // a single STRING literal (a numeric separator like `[1,2].join(0)`
+            // coerces to `"0"`, which we leave for the runtime to keep the fold
+            // obviously correct). `fold_array_join` also caps the result length
+            // as an algorithmic-blowup guard.
+            if let (Expression::ArrayExpression(arr), Expression::Identifier(id)) =
+                (m.object.as_ref(), m.property.as_ref())
+            {
+                if id.name == "join" {
+                    let sep = match arguments.as_slice() {
+                        [] => Some(",".to_string()),
+                        [Expression::StringLiteral(s)] => Some(s.value.clone()),
+                        _ => None,
+                    };
+                    if let Some(sep) = sep {
+                        if let Some(result) = fold_array_join(arr, &sep) {
+                            let parent = c.cv.clone();
+                            let sep_src = match arguments.first() {
+                                Some(Expression::StringLiteral(s)) => format!("\"{}\"", s.value),
+                                _ => String::new(),
+                            };
+                            let before = format!("[...].join({sep_src})");
+                            let after = format!("\"{result}\"");
+                            let new_cv = st.fork_cv(&parent, &before, &after);
+                            return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
                         }
                     }
                 }
@@ -11204,5 +11300,108 @@ mod tests {
             .diagnostics
             .iter()
             .any(|d| d.group.0 == "pipeline.fixed-point-not-yet-iterated"));
+    }
+
+    // =================================================================
+    // Array.prototype.join folding (gap-142 / CLOC12.141)
+    // =================================================================
+
+    /// Build `[<elements>].join(<sep_arg?>)` as a CallExpression.
+    fn join_call(elements: Vec<Option<Expression>>, sep_arg: Option<Expression>) -> Expression {
+        let arr = Expression::ArrayExpression(ArrayExpression {
+            cv: None,
+            elements,
+        });
+        Expression::CallExpression(CallExpression {
+            cv: Some("c.cv".to_string()),
+            callee: Box::new(member(arr, "join")),
+            arguments: sep_arg.into_iter().collect(),
+        })
+    }
+
+    #[test]
+    fn fold_array_join_strings_with_separator() {
+        let c = join_call(
+            vec![
+                Some(string("a", None)),
+                Some(string("b", None)),
+                Some(string("c", None)),
+            ],
+            Some(string("-", None)),
+        );
+        assert_eq!(folded_string(c).as_deref(), Some("a-b-c"));
+    }
+
+    #[test]
+    fn fold_array_join_default_separator_is_comma() {
+        // No separator argument → `,` (ECMAScript §23.1.3.16).
+        let c = join_call(
+            vec![
+                Some(num(1.0, None)),
+                Some(num(2.0, None)),
+                Some(num(3.0, None)),
+            ],
+            None,
+        );
+        assert_eq!(folded_string(c).as_deref(), Some("1,2,3"));
+    }
+
+    #[test]
+    fn fold_array_join_coerces_mixed_constants() {
+        // Numbers, booleans, null, undefined, and holes each coerce the way
+        // `join` does: nullish + holes → "", number/boolean → String(...).
+        let c = join_call(
+            vec![
+                Some(num(1.0, None)),
+                Some(boolean(true, None)),
+                Some(Expression::NullLiteral(NullLiteral { cv: None })),
+                None, // a hole
+                Some(string("x", None)),
+            ],
+            Some(string(",", None)),
+        );
+        // 1 , "true" , "" , "" , "x"  →  "1,true,,,x"
+        assert_eq!(folded_string(c).as_deref(), Some("1,true,,,x"));
+    }
+
+    #[test]
+    fn fold_array_join_empty_array_is_empty_string() {
+        let c = join_call(vec![], Some(string("-", None)));
+        assert_eq!(folded_string(c).as_deref(), Some(""));
+    }
+
+    #[test]
+    fn array_join_non_constant_element_does_not_fold() {
+        // An identifier element has a runtime-dependent string form → decline.
+        let c = join_call(
+            vec![Some(string("a", None)), Some(ident("x"))],
+            Some(string("-", None)),
+        );
+        assert_eq!(folded_string(c), None);
+    }
+
+    #[test]
+    fn array_join_non_string_separator_does_not_fold() {
+        // A numeric separator (`[1,2].join(0)` → "102") coerces to "0"; we
+        // leave it for the runtime to keep the fold obviously correct.
+        let c = join_call(
+            vec![Some(num(1.0, None)), Some(num(2.0, None))],
+            Some(num(0.0, None)),
+        );
+        assert_eq!(folded_string(c), None);
+    }
+
+    #[test]
+    fn array_join_nested_array_element_does_not_fold() {
+        // A nested array element runs its own `toString` at runtime → decline.
+        let nested = Expression::ArrayExpression(ArrayExpression {
+            cv: None,
+            elements: vec![Some(num(1.0, None))],
+        });
+        let c = join_call(
+            vec![Some(string("a", None)), Some(nested)],
+            Some(string("-", None)),
+        );
+        assert_eq!(folded_string(c), None);
     }
 }

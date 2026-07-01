@@ -68,9 +68,11 @@ Plus `coding-adventures-javascript-tokens` as a dev-dependency for
 - `peephole_replace_known_methods_test.rs` — `PeepholeReplaceKnownMethodsTest`.
   Pins the String-method folds this pass performs (indexOf, lastIndexOf, case
   conversion, slice, substring, substr, charAt, charCodeAt, repeat, trim,
-  includes/startsWith/endsWith) and records the upstream folds it does not yet
-  perform — `Math.abs`/`floor`/`ceil`/`round`, `Array#join`, and `String#concat`
-  with coerced non-string args — as `#[ignore = "blocked on gap-NNN"]`
-  placeholders tied to `code/specs/CLOC12-gaps.md` (gap-141 … gap-143). Run with
+  includes/startsWith/endsWith), the numeric `Math.abs`/`floor`/`ceil`/`round`
+  and `Math.max`/`Math.min` folds, and the `Array.prototype.join` fold on an
+  array literal of constants (gap-142, `["a","b"].join("-")` → `"a-b"`). The one
+  remaining upstream fold it does not yet perform — `String#concat` with coerced
+  non-string args — is recorded as an `#[ignore = "blocked on gap-143"]`
+  placeholder tied to `code/specs/CLOC12-gaps.md`. Run with
   `cargo test --test upstream_peephole_replace_known_methods` (add
-  `-- --include-ignored` to list the pending gaps).
+  `-- --include-ignored` to list the pending gap).
