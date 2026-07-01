@@ -162,10 +162,87 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // the readable `__Sir.print(x)` rather than `__Sir.builtins["print"](x)`.
   function print(x) { console.log(format(x)); return null; }
 
+  // ── method dispatch (`__method__`) ─────────────────────────────
+  // `recv.meth(args…)` reaches the backend as
+  // `BuiltinCall("__method__", [recv, "meth", args…])`; the emitter routes
+  // it here as `callMethod(recv, "meth", args…)`.  We dispatch to the
+  // JS-native method on the receiver — arrays' `push`/`pop`/`map`/`filter`/
+  // `forEach`/`includes`/`reduce`/…, strings' `toUpperCase`/… — so
+  // frontend collection code runs end-to-end (C3/C4).
+  //
+  // A callback argument arrives as a `Closure` (the frontend lowers an
+  // arrow / function argument to `MakeClosure`); `unwrapArg` turns it into
+  // an ordinary JS function via `applyClosure`, so `arr.map(fn)` and
+  // friends receive a callable the native method can invoke.  `length` is
+  // accepted as a zero-arg method too (a property read spelled as a call),
+  // though the frontend normally lowers bare `.length` to `SeqLen`.
+  function unwrapArg(a) {
+    if (a instanceof Closure) {
+      // Native higher-order methods pass (element, index, array); the SIR
+      // closure only binds the params it declared, so extra JS arguments
+      // are harmlessly ignored by `applyClosure`'s spread.
+      return (...xs) => applyClosure(a, xs);
+    }
+    return a;
+  }
+  // ── method-name allowlist (SECURITY, load-bearing) ─────────────
+  // `name` here is ATTACKER-CONTROLLED: it originates as a source-level
+  // method name in an untrusted input program and reaches us verbatim.
+  // `recv[name]` is therefore an *unrestricted* dynamic property lookup, and
+  // a handful of JavaScript member names are reflective gadgets that turn
+  // that lookup into arbitrary-code execution.  The worst is `constructor`:
+  // on any function it yields the `Function` constructor, so a translated
+  // program can write
+  //     id.constructor("return …payload…")
+  // to synthesise and run evil code — and a native higher-order method
+  // (Array.prototype.map/filter/…) will then invoke the result.  That is a
+  // remote-code-execution hole.  `apply`/`call`/`bind` re-bind `this`, and
+  // `__proto__`/`prototype`/`__define*etter__`/`__lookup*etter__`/`valueOf`/
+  // `hasOwnProperty` are the other prototype-chain escape hatches.
+  //
+  // We therefore dispatch ONLY through this fixed allowlist of known-safe
+  // collection / String / Number methods.  Anything not on the list — every
+  // gadget above included, none of which appear here — is rejected with a
+  // TypeError *before* any property is looked up or invoked.  This is the
+  // primary gate: the emitted JS is what actually executes, so the allowlist
+  // must live here (the frontend denylist is defense in depth in front of it).
+  const METHOD_ALLOWLIST = new Set([
+    // Array
+    "push", "pop", "shift", "unshift", "slice", "splice", "concat",
+    "map", "filter", "reduce", "reduceRight", "forEach", "includes",
+    "indexOf", "lastIndexOf", "join", "sort", "reverse", "find",
+    "findIndex", "some", "every", "flat", "flatMap", "fill", "at",
+    "keys", "values", "entries",
+    // String
+    "toUpperCase", "toLowerCase", "trim", "trimStart", "trimEnd", "split",
+    "charAt", "charCodeAt", "codePointAt", "substring", "repeat",
+    "startsWith", "endsWith", "replace", "replaceAll", "padStart", "padEnd",
+    // Number
+    "toFixed", "toString",
+  ]);
+  function callMethod(recv, name, ...rawArgs) {
+    const args = rawArgs.map(unwrapArg);
+    // `length` as a nullary method mirrors the property.  Kept special-cased
+    // ahead of the allowlist: it is a property read, not a method call.
+    if (name === "length" && args.length === 0) { return recv.length; }
+    // SECURITY gate: refuse any name outside the allowlist so reflective
+    // gadgets (`constructor`, `__proto__`, `apply`, …) can never be reached.
+    if (!METHOD_ALLOWLIST.has(name)) {
+      throw new TypeError(
+        "method `" + name + "` is not an allowed collection method");
+    }
+    const m = recv == null ? undefined : recv[name];
+    if (typeof m !== "function") {
+      throw new TypeError(
+        "method `" + name + "` is not defined on " + format(recv));
+    }
+    return m.apply(recv, args);
+  }
+
   return {
     Sym, Pair, Closure,
     intern, applyClosure, truthy, format, print,
-    builtins, builtinClosure, callBuiltin,
+    builtins, builtinClosure, callBuiltin, callMethod,
   };
 })();
 "##;
@@ -193,7 +270,7 @@ mod tests {
     fn runtime_exports_the_helpers_the_emitter_calls() {
         for needed in [
             "intern", "applyClosure", "truthy", "format",
-            "builtins", "builtinClosure", "callBuiltin",
+            "builtins", "builtinClosure", "callBuiltin", "callMethod",
             "class Sym", "class Pair", "class Closure",
         ] {
             assert!(RUNTIME.contains(needed), "runtime missing `{needed}`");

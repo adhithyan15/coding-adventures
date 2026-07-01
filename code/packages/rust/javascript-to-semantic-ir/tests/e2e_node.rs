@@ -178,3 +178,122 @@ fn mutual_recursion_runs_in_node() {
     // SIR `print` renders booleans Lisp-style (`#t`/`#f`).
     assert_eq!(out, "#t");
 }
+
+// ── C3: collection-method dispatch (`__method__`) executes ─────────────
+//
+// These prove the frontend's `__method__` lowering runs end-to-end: the JS
+// backend routes the dispatch envelope to the runtime's `callMethod`, which
+// invokes the JS-native array/string method (unwrapping any `Closure`
+// callback).  The example in the C3 brief — `xs.push(4)` then `xs.length`
+// → `4` — is the canonical case: a mutating method call plus a length read.
+
+#[test]
+fn array_push_length_runs_in_node() {
+    if !node_available() {
+        eprintln!("skipping array_push_length_runs_in_node: `node` not available");
+        return;
+    }
+    // `xs.push(4)` lowers to __method__ dispatch → runtime `callMethod`;
+    // `xs.length` is a property read (SeqLen).  After the push the length
+    // is 4.
+    let out = run_via_node(
+        "array_push_length",
+        "const xs = [1, 2, 3]; xs.push(4); console.log(xs.length);",
+    );
+    assert_eq!(out, "4");
+}
+
+#[test]
+fn array_map_reduce_runs_in_node() {
+    if !node_available() {
+        eprintln!("skipping array_map_reduce_runs_in_node: `node` not available");
+        return;
+    }
+    // Higher-order dispatch: `.map` with an arrow callback (lowered to a
+    // MakeClosure argument, unwrapped by the runtime), then `.reduce` with a
+    // two-param accumulator and an initial value.  [1,2,3] → *2 → [2,4,6] →
+    // sum → 12.
+    let out = run_via_node(
+        "array_map_reduce",
+        "const xs = [1, 2, 3]; \
+         const doubled = xs.map(x => x * 2); \
+         const total = doubled.reduce((a, b) => a + b, 0); \
+         console.log(total);",
+    );
+    assert_eq!(out, "12");
+}
+
+// ── SECURITY (C3): reflective-gadget method names are refused ─────────
+//
+// `recv.method(args…)` lowers to a `__method__` dispatch whose method name is
+// attacker-controlled.  A handful of JavaScript member names are reflective
+// gadgets that would turn the backend's `recv[name]` lookup into arbitrary
+// code execution — most dangerously `constructor`, which yields the
+// `Function` constructor:
+//
+//     function id(x){ return x; }
+//     let xs = [1];
+//     xs.map( id.constructor("return …evil…") );   // RCE
+//
+// The frontend now refuses to *lower* those names, so the dangerous `StrLit`
+// never enters SIR (protecting every backend).  These tests assert the
+// gadget program is rejected at compile time — it never reaches node.  No
+// `node` gate: the rejection happens in the node-independent lowering pass.
+
+#[test]
+fn constructor_gadget_is_rejected_at_lowering() {
+    // The C3-brief RCE gadget: `id.constructor("…")` must not lower.
+    let src = "function id(x){ return x; } \
+               let xs = [1]; \
+               xs.map(id.constructor(\"return 1\"));";
+    let err = compile_source(src, "prog")
+        .expect_err("`constructor` method dispatch must be refused, not lowered");
+    let msg = format!("{err:?}");
+    assert!(
+        msg.contains("constructor"),
+        "error should name the refused gadget, got: {msg}"
+    );
+}
+
+#[test]
+fn proto_gadget_is_rejected_at_lowering() {
+    // `obj.__proto__(…)` — a prototype-chain escape hatch — is refused too.
+    let src = "let obj = {}; obj.__proto__(1);";
+    let err = compile_source(src, "prog")
+        .expect_err("`__proto__` method dispatch must be refused, not lowered");
+    let msg = format!("{err:?}");
+    assert!(
+        msg.contains("__proto__"),
+        "error should name the refused gadget, got: {msg}"
+    );
+}
+
+#[test]
+fn apply_gadget_is_rejected_at_lowering() {
+    // `fn.apply(…)` re-binds `this`; also on the denylist.
+    let src = "function f(){ return 1; } f.apply(null);";
+    let err = compile_source(src, "prog")
+        .expect_err("`apply` method dispatch must be refused, not lowered");
+    let msg = format!("{err:?}");
+    assert!(
+        msg.contains("apply"),
+        "error should name the refused gadget, got: {msg}"
+    );
+}
+
+#[test]
+fn array_filter_includes_runs_in_node() {
+    if !node_available() {
+        eprintln!("skipping array_filter_includes_runs_in_node: `node` not available");
+        return;
+    }
+    // `.filter` (closure callback) then `.includes` (value membership).
+    // [1,2,3,4] keep >2 → [3,4]; includes(4) → true (printed `#t`).
+    let out = run_via_node(
+        "array_filter_includes",
+        "const xs = [1, 2, 3, 4]; \
+         const big = xs.filter(x => x > 2); \
+         console.log(big.includes(4));",
+    );
+    assert_eq!(out, "#t");
+}

@@ -713,6 +713,22 @@ fn emit_call_args(out: &mut String, args: &[Expr], indent: usize) {
 /// runtime helpers; an unknown builtin lands on `callBuiltin` so a new
 /// builtin needs no backend change to *run* (only to be idiomatic).
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {
+    // Method dispatch (`recv.meth(args…)` → `BuiltinCall("__method__",
+    // [recv, StrLit("meth"), args…])`, produced by the Ruby/JS frontends)
+    // routes to the runtime's `callMethod(recv, name, args…)`, which applies
+    // the JS-native method (arrays' `push`/`map`/… or strings'
+    // `toUpperCase`/…) and unwraps any `Closure` callback argument.  The
+    // method name is always a `StrLit` at `args[1]`.
+    if name == "__method__" && args.len() >= 2 {
+        out.push_str("__Sir.callMethod(");
+        emit_expr(out, &args[0], indent); // receiver
+        for a in &args[1..] {
+            out.push_str(", ");
+            emit_expr(out, a, indent); // StrLit(method), then call args
+        }
+        out.push(')');
+        return;
+    }
     // 2-argument binary operators → native infix.
     if args.len() == 2 {
         let infix = match name {
@@ -1185,6 +1201,35 @@ mod tests {
             emit_e(&bc("print", vec![Expr::IntLit { value: 7, span: s() }])),
             "__Sir.print(7)"
         );
+    }
+
+    #[test]
+    fn emit_method_dispatch_routes_to_call_method() {
+        // `arr.push(1)` → BuiltinCall("__method__", [arr, "push", 1]) →
+        // `__Sir.callMethod(arr, "push", 1)`.  Receiver first, method name
+        // (a StrLit) second, call args after.
+        let e = bc(
+            "__method__",
+            vec![
+                Expr::VarRef { name: "arr".into(), scope: Scope::Local, span: s() },
+                Expr::StrLit { value: "push".into(), span: s() },
+                Expr::IntLit { value: 1, span: s() },
+            ],
+        );
+        assert_eq!(emit_e(&e), r#"__Sir.callMethod(arr, "push", 1)"#);
+    }
+
+    #[test]
+    fn emit_zero_arg_method_dispatch() {
+        // `s.toUpperCase()` → __method__(s, "toUpperCase") → no trailing args.
+        let e = bc(
+            "__method__",
+            vec![
+                Expr::VarRef { name: "s".into(), scope: Scope::Local, span: s() },
+                Expr::StrLit { value: "toUpperCase".into(), span: s() },
+            ],
+        );
+        assert_eq!(emit_e(&e), r#"__Sir.callMethod(s, "toUpperCase")"#);
     }
 
     #[test]
