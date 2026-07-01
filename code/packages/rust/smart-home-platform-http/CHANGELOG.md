@@ -17,6 +17,9 @@ All notable changes to this package will be documented in this file.
 - Added a read-only desired-state authorization preview route and browser
   dashboard Auth actions so target set/clear controls expose runtime grant
   boundaries before mutating desired-state supervision targets.
+- Added a read-only scene authorization preview route and browser dashboard
+  Auth action so scene activation can show every runtime command grant before
+  dispatching commands.
 - Added browser dashboard action feedback that renders accepted command,
   scene, and desired-state mutation responses with command-result and
   desired-state readback links in the detail panel.
