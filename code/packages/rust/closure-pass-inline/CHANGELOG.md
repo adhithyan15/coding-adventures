@@ -2,6 +2,39 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.21.0] - 2026-06-30
+
+### Added — CLOC12 upstream test port (`InlineFunctionsTest`)
+
+Ported the function-inlining cases from Google Closure Compiler's
+`InlineFunctionsTest.java` into `tests/upstream/inline_functions_test.rs`,
+following the CLOC12.01 convention (header cites the Java source; `UPSTREAM_SHA`
+pins the tracked commit; `ATTRIBUTION.md` records Apache-2.0 provenance; a
+`[[test]]` entry wires the file in). Each case drives the real
+`source → bridge → inline → emit` chain and asserts on the emitted string — the
+same surface upstream uses.
+
+- **7 active `#[test]`s pass**: zero-param constant and string-literal returns,
+  a tiny body inlined at two call sites, argument substitution into a member
+  object (property name preserved), a call nested in a binary expression, and
+  the two decline cases (a non-call use of the callee; a multi-use body over the
+  size budget). Because only the inline pass runs, the dead callee declaration
+  is retained (removed downstream) and no folding happens (`d(2)` → `2*2`).
+- **6 `#[ignore = "blocked on gap-NNN"]` placeholders** record upstream
+  behaviors not yet covered, pinned to `code/specs/CLOC12-gaps.md` (CLOC12.137):
+  gap-127 local-declaration bodies, gap-128 `this`-using methods, gap-129
+  function-expression/arrow bindings, gap-130 void side-effect-only calls,
+  gap-131 explicit recursion guard.
+- **gap-132 — surfaced by this port.** A compound (non-leaf) argument
+  expression is declined rather than inlined: `function d(x){return x*2}
+  g(d(a+b));` is left as `g(d(a+b));` where upstream produces `g((a+b)*2);`. The
+  slice substitutes only simple (identifier/literal) arguments. This is a
+  conservative miss (not a miscompile); the fix needs single-use-parameter
+  detection plus precedence-preserving parenthesization. Documented as a
+  follow-up fix candidate.
+
+Test-only change — no production code touched. Crate version 0.20.0 → 0.21.0.
+
 ## [0.20.0] - 2026-06-20
 
 ### Added — CLOC23: function inlining across `for`-`of`

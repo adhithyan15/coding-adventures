@@ -308,3 +308,17 @@ Dev-deps:
   two-pass ordering integration test.
 - `coding-adventures-javascript-parser` + `coding-adventures-closure-emitter`
   for the source → bridge → inline → emit roundtrip tests.
+
+## Upstream conformance tests
+
+`tests/upstream/inline_functions_test.rs` ports Google Closure Compiler's
+`InlineFunctionsTest` (Apache-2.0; see `ATTRIBUTION.md` and `UPSTREAM_SHA`),
+per the CLOC12 test-port convention. It pins the 7 behaviors this pass
+supports today and records 6 upstream behaviors it does not — local-declaration
+bodies, `this`-using methods, function-expression/arrow bindings, void
+side-effect calls, an explicit recursion guard, and **compound-argument
+inlining** (`d(a+b)` → `(a+b)*2`, a conservative miss surfaced by this port) —
+as `#[ignore = "blocked on gap-NNN"]` placeholders tied to
+`code/specs/CLOC12-gaps.md` (gap-127 … gap-132). Run with
+`cargo test --test upstream_inline_functions` (add `-- --include-ignored` to
+list the pending gaps).

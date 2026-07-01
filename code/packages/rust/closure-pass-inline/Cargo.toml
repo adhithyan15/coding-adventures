@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-pass-inline"
-version = "0.20.0"
+version = "0.21.0"
 edition = "2021"
 description = "Function-inlining pass for the Closure Compiler clone. Per CLOC06's canonical pass set. Substitutes small or single-use function bodies at their call sites to enable downstream folding and shrink call overhead."
 
@@ -19,3 +19,10 @@ coding-adventures-closure-pass-constant-fold = { path = "../closure-pass-constan
 # actual AST shape the parser produces (not hand-built ASTs).
 coding-adventures-javascript-parser = { path = "../javascript-parser" }
 coding-adventures-closure-emitter = { path = "../closure-emitter" }
+
+# Upstream-test ports live under `tests/upstream/`; Cargo only
+# auto-discovers `tests/*.rs` one level deep, so each ported file needs
+# an explicit `[[test]]` entry. Per CLOC12.01 §3.
+[[test]]
+name = "upstream_inline_functions"
+path = "tests/upstream/inline_functions_test.rs"
