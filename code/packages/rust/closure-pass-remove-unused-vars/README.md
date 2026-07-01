@@ -98,6 +98,19 @@ CLOC06 §"Canonical pass set" pins this **last** before the
 emitter. Everything else has had its turn to shrink references;
 this pass cleans up the resulting orphans.
 
+## Deletion provenance (correlation vector)
+
+When this pass removes an unreferenced binding it tombstones that
+declarator's own CV entry via `cv.delete(cv_id, "remove-unused-vars",
+"removed-unused-binding", meta)` (meta carries the binding `name`), and
+emits one summary `Contribution` against the program root — the same
+audit trail the DCE and treeshake passes record for what *they* delete.
+So a `--correlation_vector` consumer asking "what happened to
+`const foo`?" gets a definite answer instead of the binding silently
+vanishing. `delete` is a no-op when the log is disabled (the production
+default), so this costs nothing off the `--correlation_vector` path, and
+program output is byte-for-byte unchanged.
+
 ## Dependency whitelist
 
 - `coding-adventures-closure-pass-pipeline` — `Pass` trait + types.
@@ -105,7 +118,8 @@ this pass cleans up the resulting orphans.
 - `coding-adventures-type-sidecar` — `pure` / `no_side_effects`
   attributes inform delete safety.
 - `coding_adventures_correlation_vector` — receives mutable
-  `CVLog` for per-deletion `Contribution` emission.
+  `CVLog`; removed bindings are tombstoned via `cv.delete()` and a
+  summary `Contribution` is emitted.
 - `serde_json` — `Contribution.meta` JSON values.
 
 Dev-deps:
