@@ -2,6 +2,28 @@
 
 ## Unreleased
 
+### Fixed
+
+- **Reject keyword params mixed with `*rest`/`**kwrest` (unsound static
+  resolution).**  KW6 resolves keyword arguments by *static* keyword→positional
+  slot mapping, which is only sound for **fixed-arity** callees.  The core
+  validator, however, accepts a callee that mixes a `Keyword` param with a
+  variadic (its ordering rule is `Required* Rest? Keyword* KwRest?`, so Ruby's
+  `def f(a, *rest, x: 1)` is well-formed), and this backend accepts
+  `Feature::KeywordParams` — so such a module reached `emit_direct_call`, where
+  the `*rest` slot has no fixed position for a keyword to resolve against.  The
+  result was a **panic** in debug builds (`debug_assert!` in the slot loop) or a
+  **silent mis-emit** in release builds (a single `_sir_missing` sentinel landed
+  in the variadic slot instead of a collected sequence).  A new capability check
+  (`check_no_keyword_rest_mix`, run beside the manifest gate in `compile`) now
+  returns a clean `BackendError { kind: UnsupportedFeature }` for any function
+  carrying BOTH a `Keyword` param AND a `Rest`/`KwRest` param, naming the
+  offending function.  This becomes frontend-reachable once the Ruby frontend
+  (KW7) emits keyword+splat methods.  The keyword-params-**without**-rest happy
+  path (fixed arity) is unchanged and still passes all existing tests.
+  Added unit tests for both the `*rest` and `**kwrest` rejections and for the
+  preserved happy path.
+
 ## 0.6.0 — KW6 keyword parameters & arguments via static positional resolution
 
 Adds `Feature::KeywordParams` to the Go backend's accepted set (see
