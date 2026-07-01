@@ -308,6 +308,7 @@ pub const SMART_HOME_GET_CAPABILITY_GRANT_SUMMARY_TOOL_ID: &str =
 pub const SMART_HOME_GET_CONTROLLER_HANDOFF_SUMMARY_TOOL_ID: &str =
     "smart_home.get_controller_handoff_summary";
 pub const SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID: &str = "smart_home.get_runtime_snapshot";
+pub const SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID: &str = "smart_home.get_pending_work_summary";
 pub const SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID: &str = "smart_home.get_topology_summary";
 pub const SMART_HOME_LIST_DESIRED_STATES_TOOL_ID: &str = "smart_home.list_desired_states";
 pub const SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID: &str =
@@ -2376,6 +2377,14 @@ impl SmartHomeToolBridge {
                         )
                         .map_err(runtime_error)?;
                     Ok(read_output_handler_output(output, "get_runtime_snapshot"))
+                }
+                SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID => {
+                    let _ = expect_object(&arguments)?;
+                    get_pending_work_summary_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                    )
                 }
                 SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
@@ -6467,6 +6476,7 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_capability_grant_summary_definition(),
         get_controller_handoff_summary_definition(),
         get_runtime_snapshot_definition(),
+        get_pending_work_summary_definition(),
         get_topology_summary_definition(),
         list_desired_states_definition(),
         list_desired_state_drift_audit_definition(),
@@ -7227,6 +7237,34 @@ fn get_runtime_snapshot_definition() -> ToolDefinition {
                 "state_refresh_target_count",
                 "pending_work",
                 "has_pending_work",
+            ],
+            false,
+        ),
+    )
+}
+
+fn get_pending_work_summary_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID,
+        "Get smart-home pending work summary",
+        "Read the D23 runtime pending-work pressure summary that Chief of Staff jobs use before choosing event polling, desired-state reconciliation, or supervision ticks.",
+        empty_object_schema(),
+        object_schema(
+            vec![
+                SchemaProperty::new("generated_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("has_pending_work", JsonSchema::Boolean),
+                SchemaProperty::new("total_pending_work_count", JsonSchema::Integer),
+                SchemaProperty::new("has_event_backlog", JsonSchema::Boolean),
+                SchemaProperty::new("has_supervision_pressure", JsonSchema::Boolean),
+            ],
+            vec![
+                "generated_at_ms",
+                "summary",
+                "has_pending_work",
+                "total_pending_work_count",
+                "has_event_backlog",
+                "has_supervision_pressure",
             ],
             false,
         ),
@@ -42800,6 +42838,32 @@ fn read_output_handler_output(
     )
 }
 
+fn get_pending_work_summary_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let snapshot_output = runtime
+        .execute_read_tool(
+            principal_id,
+            RuntimeReadToolRequest::GetRuntimeSnapshot,
+            now_ms,
+        )
+        .map_err(runtime_error)?;
+    let RuntimeReadToolOutput::RuntimeSnapshot(snapshot) = snapshot_output else {
+        return Err(ToolCallError::new(
+            ToolErrorKind::ToolExecutionError,
+            "pending work summary expected runtime snapshot output",
+        ));
+    };
+    Ok(
+        ToolHandlerOutput::new(pending_work_summary_output_json(&snapshot)).with_event(
+            ToolEventKind::Progress,
+            object([("operation", string("get_pending_work_summary"))]),
+        ),
+    )
+}
+
 fn get_controller_handoff_summary_output_handler_output(
     runtime: &mut SmartHomeRuntime,
     principal_id: AgentId,
@@ -44205,6 +44269,30 @@ fn pending_work_summary_json(summary: &RuntimePendingWorkSummary) -> JsonValue {
             integer(summary.total_pending_work_count() as i64),
         ),
         ("is_idle", JsonValue::Bool(summary.is_idle())),
+        (
+            "has_event_backlog",
+            JsonValue::Bool(summary.has_event_backlog()),
+        ),
+        (
+            "has_supervision_pressure",
+            JsonValue::Bool(summary.has_supervision_pressure()),
+        ),
+    ])
+}
+
+fn pending_work_summary_output_json(snapshot: &RuntimeReadSnapshot) -> JsonValue {
+    let summary = snapshot.pending_work_summary();
+    object([
+        ("generated_at_ms", integer(snapshot.generated_at_ms as i64)),
+        ("summary", pending_work_summary_json(&summary)),
+        (
+            "has_pending_work",
+            JsonValue::Bool(snapshot.has_pending_work()),
+        ),
+        (
+            "total_pending_work_count",
+            integer(summary.total_pending_work_count() as i64),
+        ),
         (
             "has_event_backlog",
             JsonValue::Bool(summary.has_event_backlog()),
@@ -76489,7 +76577,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 285);
+        assert_eq!(definitions.len(), 286);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -76888,6 +76976,9 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID));
@@ -77309,7 +77400,7 @@ mod tests {
         ));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            277
+            278
         );
         assert_eq!(
             export
@@ -78001,6 +78092,7 @@ mod tests {
         assert!(
             smart_home_tool_definition(SMART_HOME_GET_CONTROLLER_HANDOFF_SUMMARY_TOOL_ID).is_some()
         );
+        assert!(smart_home_tool_definition(SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_SET_DESIRED_STATE_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID).is_some());
@@ -78297,11 +78389,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(285))
+            Some(&integer(286))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(277))
+            Some(&integer(278))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -90317,6 +90409,42 @@ mod tests {
             Some(&integer(1))
         );
 
+        let pending_work_request = request(
+            "call-pending-work-summary",
+            SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID,
+            object([]),
+            1_100,
+        );
+        let pending_work_trace = tool_runtime.invoke_with_events(&pending_work_request);
+        assert!(pending_work_trace.result.ok);
+        let pending_work_output = pending_work_trace.result.output.as_ref().unwrap();
+        assert_eq!(
+            field(pending_work_output, "generated_at_ms"),
+            Some(&integer(1_100))
+        );
+        assert_eq!(
+            field(pending_work_output, "has_pending_work"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(pending_work_output, "total_pending_work_count"),
+            Some(&integer(3))
+        );
+        assert_eq!(
+            field(
+                field(pending_work_output, "summary").unwrap(),
+                "event_backlog_count"
+            ),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(
+                field(pending_work_output, "summary").unwrap(),
+                "discovery_worker_due_count"
+            ),
+            Some(&integer(1))
+        );
+
         let topology_summary_request = request(
             "call-topology-summary",
             SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID,
@@ -91353,6 +91481,7 @@ mod tests {
         journal.record_trace(report_event_request, report_event_trace);
         journal.record_trace(report_health_request, report_health_trace);
         journal.record_trace(runtime_snapshot_request, runtime_snapshot_trace);
+        journal.record_trace(pending_work_request, pending_work_trace);
         journal.record_trace(topology_summary_request, topology_summary_trace);
         journal.record_trace(supervision_plan_request, supervision_plan_trace);
         journal.record_trace(desired_states_request, desired_states_trace);
@@ -91376,9 +91505,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 163);
-        assert_eq!(journal_summary.completed_count, 163);
-        assert_eq!(journal.audit_records().len(), 163);
+        assert_eq!(journal_summary.invocation_count, 164);
+        assert_eq!(journal_summary.completed_count, 164);
+        assert_eq!(journal.audit_records().len(), 164);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);
@@ -91392,7 +91521,7 @@ mod tests {
         ));
         assert_eq!(
             runtime.registry().counts().authorization_decisions,
-            40,
+            41,
             "read, subscribe, poll, unsubscribe, pairing, ingest, and desired-state calls record tool authorization, while command records tool and command authorization"
         );
         assert_eq!(

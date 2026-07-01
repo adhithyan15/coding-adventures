@@ -266,6 +266,7 @@ Chief of Staff job/session/agent
 - `smart_home.get_capability_grant_summary`
 - `smart_home.get_controller_handoff_summary`
 - `smart_home.get_runtime_snapshot`
+- `smart_home.get_pending_work_summary`
 - `smart_home.get_topology_summary`
 - `smart_home.list_desired_states`
 - `smart_home.set_desired_state`
