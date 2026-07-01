@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.18.15] - 2026-07-01
+
+### Test — CodePrinter ASCII-only escape port (#88, CLOC12.144)
+
+New upstream port `tests/upstream/code_printer_ascii_escape_test.rs` (registered
+as the `upstream_code_printer_ascii_escape` test target), covering the
+`--output_charset=US-ASCII` mode from `CodePrinterTest.testUnicode` — our
+`EmitOptions { ascii_only: true }` path (`escape_ascii_only`). The sibling
+`code_printer_string_escape_test.rs` pins the DEFAULT (non-ASCII passthrough)
+mode; this pins the distinct ASCII-only branch of `emit_string`.
+
+- **7 active `#[test]`s** (all pass on the first run — no new emitter bug):
+  printable ASCII verbatim; a Latin-1 accent (`é` → `é`); a BMP CJK
+  ideograph (`中` → `中`); an astral code point using the braced form
+  (`💩` → `{1F4A9}`); a control char (`U+0007` → ``); the named
+  `\n`/`\t` escapes still applying; and the `ascii_only`-always-double-quotes
+  rule (a value of two `"` prints `"\"\""`, not single-quoted).
+
+No library code changed — this release is test coverage plus docs.
+
 ## [0.18.14] - 2026-07-01
 
 ### Test — CodePrinter string-escape port (#88, CLOC12.143)
