@@ -180,6 +180,7 @@ impl RegAlloc {
 // | `lispy_cons`  | `uint64_t __twig_lispy_cons(uint64_t, uint64_t)` | yes  |
 // | `lispy_car`   | `uint64_t __twig_lispy_car(uint64_t)`         | yes     |
 // | `lispy_cdr`   | `uint64_t __twig_lispy_cdr(uint64_t)`         | yes     |
+// | `str_eq`      | `int64_t __twig_str_eq(int64_t, int64_t)`    | yes     |
 
 #[derive(Debug, Clone, Copy)]
 struct BuiltinSig {
@@ -218,6 +219,9 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // (lambda / `any`) result: dispatch on the runtime tag.
     // `int64_t __twig_lispy_to_exit_code(uint64_t)`.
     BuiltinSig { name: "lispy_to_exit_code", n_args: 1, returns: true },
+    // LANG-STR-RT — runtime string ops on LANG-STR-RT length-prefixed buffers.
+    // Both operands are i64 pointers to `[int64_t len][char bytes...]` buffers.
+    BuiltinSig { name: "str_eq", n_args: 2, returns: true },
 ];
 
 fn lookup_builtin(name: &str) -> Option<BuiltinSig> {

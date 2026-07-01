@@ -1,11 +1,18 @@
 # Changelog — `aarch64-backend`
 
-## 0.18.0 — 2026-06-29 (LANG-FULL BA-pow — `f64_pow` AArch64 lowering)
+## 0.18.0 — 2026-07-01 — BA-pow `f64_pow` + LANG-STR-RT `str_eq` builtin
 
-Added `f64_pow` block: loads base into D0 via `load_fp_operand`, loads exponent
-into D1, emits `BL pow` via `bl_external("pow")` (AAPCS64: D0=base, D1=exp,
-result in D0), and stores D0 to the dest stack slot.  This is the first
-two-argument floating-point external call in the aarch64-backend.
+**LANG-STR-RT `str_eq`**: Added `BuiltinSig { name: "str_eq", n_args: 2,
+returns: true }` to `V1_BUILTINS`.  The callee is `__twig_str_eq(int64_t a,
+int64_t b) -> int64_t` in `twig_runtime.c`, which reads the 8-byte length
+header from each LANG-STR-RT buffer and `memcmp`s the data regions.  Required
+for `str_eq` when one or both operands are function parameters.
+
+**BA-pow `f64_pow` (LANG-FULL)**: Added `f64_pow` block: loads base into D0
+via `load_fp_operand`, loads exponent into D1, emits `BL pow` via
+`bl_external("pow")` (AAPCS64: D0=base, D1=exp, result in D0), and stores D0
+to the dest stack slot.  This is the first two-argument floating-point external
+call in the aarch64-backend.
 ## 0.17.0 — 2026-06-29 — `f64_atan/f64_tan` via libm `BL` (LANG-FULL AL8-arctan)
 
 Extended the transcendental match arm to cover two more ops:

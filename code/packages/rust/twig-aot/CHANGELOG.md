@@ -1,5 +1,44 @@
 # Changelog — `twig-aot`
 
+## 0.24.0 — 2026-07-01 — LANG-STR-RT: string function parameters on NativeAot
+
+**Root cause fixed:** `str_const dest = "HELLO"` was removed from the IIR
+instruction stream after `lower_string_literals_for_aot`, leaving `dest`
+undefined.  When `call strlen(dest)` followed, the backend loaded the
+uninitialized stack slot and passed 0 to the callee — causing
+`str_len(param)` to read 0 from the buffer header instead of the actual length.
+
+**Fix — alias mov:** After every `push_aot_string_literal` block, now emit
+`mov dest = buf_var` (type `i64`) so `dest` is always a defined, live pointer
+to the LANG-STR-RT buffer.  `strings[dest] = (dest, len_var, literal)` so
+subsequent string ops still fold statically.
+
+**Fix — dead-stripping alias tracking:** `strip_dead_aot_string_allocs` was
+updated to understand the alias pattern:
+- `alias_movs` — collects `{dest → buf_var}` from `mov` instructions whose
+  src is an `__aot_str{N}_buf` variable.
+- `live_alias_dests` — dests that appear in srcs of any non-write-only,
+  non-alias-mov instruction (e.g. `call strlen(dest)` makes `dest` live).
+- A buf is live if directly referenced OR its alias dest is live.
+- Dead buf blocks AND their alias-movs are stripped together when the alias
+  is not observed outside already-folded string ops.
+
+This ensures `FrameTooLarge` cannot be triggered by fold-only strings
+(their buffers are still dead-stripped), while passing strings to function
+calls now works correctly.
+
+**New unit tests** (in `tests` module):
+- `string_param_len_lowers_to_field_load` — `str_len` on a function parameter
+  generates `field_load(s, 0)` runtime fallback.
+- `string_param_eq_lowers_to_call_builtin_str_eq` — `str_eq` with a non-literal
+  operand generates `call_builtin "str_eq" left right`.
+- `string_literal_buffer_has_length_header` — buffer for "hello" allocates 13
+  bytes, stores `field_store buf, 0, 5`, and writes 5 bytes at offsets 8–12.
+
+**`__twig_str_eq` C helper** (`runtime/twig_runtime.c`): reads the 8-byte
+length prefix from each LANG-STR-RT buffer and does a `memcmp` over the data
+region.  Returns 1 (equal) or 0 (not equal).
+
 ## 0.23.0 — 2026-06-30 — strip dead AOT string-literal allocation blocks
 
 Added `strip_dead_aot_string_allocs` pass (called from `prepare_module_for_aot`
