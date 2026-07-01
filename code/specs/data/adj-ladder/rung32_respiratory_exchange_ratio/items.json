@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 32 \u2014 respiratory exchange ratio from paired blood-gas contents across the lung (a NEW panel: pulmonary gas exchange / respiratory). From four stated contents (arterial O2 Ca_O2, venous O2 Cv_O2, arterial CO2 Ca_CO2, venous CO2 Cv_CO2) compute the respiratory exchange ratio ((Cv_CO2-Ca_CO2)/(Ca_O2-Cv_O2)), the CO2 output (Cv_CO2-Ca_CO2), or the O2 uptake (Ca_O2-Cv_O2). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, a RATIO OF TWO DIFFERENCES ((Cv_CO2-Ca_CO2)/(Ca_O2-Cv_O2)), so one parenthesised difference is divided by another \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed contents via - and / \u2014 no constant leaks (R is a pure ratio), and neither the CO2 output nor the O2 uptake ever appears as a literal (each is computed from the observed contents) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same quantities, so the distractors are exactly the slips students make: the inverted ratio ((Ca_O2-Cv_O2)/(Cv_CO2-Ca_CO2), O2 over CO2 = 1/R) and the crossed ratio ((Cv_CO2-Ca_CO2)/(Cv_O2-Ca_O2), the O2 difference reversed = -R). The core confusion tested is pairing CO2 output over O2 uptake with each difference in the right direction.",
+  "items": [
+    {
+      "id": "r32resp-01",
+      "qtype": "respiratory_exchange_ratio",
+      "stem": "Paired blood samples across the lung show an arterial oxygen content of 20 vol% and a mixed-venous oxygen content of 15 vol%; the arterial CO2 content is 44 vol% and the mixed-venous CO2 content is 48 vol%. What is the patient's respiratory exchange ratio?",
+      "program": "observe arterial_o2_content(20)\nobserve venous_o2_content(15)\nobserve arterial_co2_content(44)\nobserve venous_co2_content(48)\nlet answer = (venous_co2_content - arterial_co2_content) / (arterial_o2_content - venous_o2_content)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": -0.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r32resp-02",
+      "qtype": "respiratory_exchange_ratio",
+      "stem": "Paired blood samples across the lung show an arterial oxygen content of 20 vol% and a mixed-venous oxygen content of 15 vol%; the arterial CO2 content is 44 vol% and the mixed-venous CO2 content is 48 vol%. What is the patient's CO2 output across the lung?",
+      "program": "observe arterial_o2_content(20)\nobserve venous_o2_content(15)\nobserve arterial_co2_content(44)\nobserve venous_co2_content(48)\nlet answer = venous_co2_content - arterial_co2_content\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": -0.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r32resp-03",
+      "qtype": "respiratory_exchange_ratio",
+      "stem": "Paired blood samples across the lung show an arterial oxygen content of 20 vol% and a mixed-venous oxygen content of 15 vol%; the arterial CO2 content is 44 vol% and the mixed-venous CO2 content is 48 vol%. What is the patient's O2 uptake across the lung?",
+      "program": "observe arterial_o2_content(20)\nobserve venous_o2_content(15)\nobserve arterial_co2_content(44)\nobserve venous_co2_content(48)\nlet answer = arterial_o2_content - venous_o2_content\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": -0.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r32resp-04",
+      "qtype": "respiratory_exchange_ratio",
+      "stem": "Paired blood samples across the lung show an arterial oxygen content of 19 vol% and a mixed-venous oxygen content of 12 vol%; the arterial CO2 content is 45 vol% and the mixed-venous CO2 content is 50 vol%. What is the patient's respiratory exchange ratio?",
+      "program": "observe arterial_o2_content(19)\nobserve venous_o2_content(12)\nobserve arterial_co2_content(45)\nobserve venous_co2_content(50)\nlet answer = (venous_co2_content - arterial_co2_content) / (arterial_o2_content - venous_o2_content)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.7142857142857143,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": -0.7142857142857143,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r32resp-05",
+      "qtype": "respiratory_exchange_ratio",
+      "stem": "Paired blood samples across the lung show an arterial oxygen content of 19 vol% and a mixed-venous oxygen content of 12 vol%; the arterial CO2 content is 45 vol% and the mixed-venous CO2 content is 50 vol%. What is the patient's CO2 output across the lung?",
+      "program": "observe arterial_o2_content(19)\nobserve venous_o2_content(12)\nobserve arterial_co2_content(45)\nobserve venous_co2_content(50)\nlet answer = venous_co2_content - arterial_co2_content\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.7142857142857143,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -0.7142857142857143,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r32resp-06",
+      "qtype": "respiratory_exchange_ratio",
+      "stem": "Paired blood samples across the lung show an arterial oxygen content of 19 vol% and a mixed-venous oxygen content of 12 vol%; the arterial CO2 content is 45 vol% and the mixed-venous CO2 content is 50 vol%. What is the patient's O2 uptake across the lung?",
+      "program": "observe arterial_o2_content(19)\nobserve venous_o2_content(12)\nobserve arterial_co2_content(45)\nobserve venous_co2_content(50)\nlet answer = arterial_o2_content - venous_o2_content\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.7142857142857143,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": -0.7142857142857143,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r32resp-07",
+      "qtype": "respiratory_exchange_ratio",
+      "stem": "Paired blood samples across the lung show an arterial oxygen content of 21 vol% and a mixed-venous oxygen content of 14 vol%; the arterial CO2 content is 46 vol% and the mixed-venous CO2 content is 52 vol%. What is the patient's respiratory exchange ratio?",
+      "program": "observe arterial_o2_content(21)\nobserve venous_o2_content(14)\nobserve arterial_co2_content(46)\nobserve venous_co2_content(52)\nlet answer = (venous_co2_content - arterial_co2_content) / (arterial_o2_content - venous_o2_content)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.8571428571428571,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.1666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": -0.8571428571428571,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r32resp-08",
+      "qtype": "respiratory_exchange_ratio",
+      "stem": "Paired blood samples across the lung show an arterial oxygen content of 21 vol% and a mixed-venous oxygen content of 14 vol%; the arterial CO2 content is 46 vol% and the mixed-venous CO2 content is 52 vol%. What is the patient's CO2 output across the lung?",
+      "program": "observe arterial_o2_content(21)\nobserve venous_o2_content(14)\nobserve arterial_co2_content(46)\nobserve venous_co2_content(52)\nlet answer = venous_co2_content - arterial_co2_content\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.8571428571428571,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.1666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": -0.8571428571428571,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r32resp-09",
+      "qtype": "respiratory_exchange_ratio",
+      "stem": "Paired blood samples across the lung show an arterial oxygen content of 21 vol% and a mixed-venous oxygen content of 14 vol%; the arterial CO2 content is 46 vol% and the mixed-venous CO2 content is 52 vol%. What is the patient's O2 uptake across the lung?",
+      "program": "observe arterial_o2_content(21)\nobserve venous_o2_content(14)\nobserve arterial_co2_content(46)\nobserve venous_co2_content(52)\nlet answer = arterial_o2_content - venous_o2_content\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.8571428571428571,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.1666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": -0.8571428571428571,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r32resp-10",
+      "qtype": "respiratory_exchange_ratio",
+      "stem": "Paired blood samples across the lung show an arterial oxygen content of 18 vol% and a mixed-venous oxygen content of 12 vol%; the arterial CO2 content is 43 vol% and the mixed-venous CO2 content is 48 vol%. What is the patient's respiratory exchange ratio?",
+      "program": "observe arterial_o2_content(18)\nobserve venous_o2_content(12)\nobserve arterial_co2_content(43)\nobserve venous_co2_content(48)\nlet answer = (venous_co2_content - arterial_co2_content) / (arterial_o2_content - venous_o2_content)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -0.8333333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r32resp-11",
+      "qtype": "respiratory_exchange_ratio",
+      "stem": "Paired blood samples across the lung show an arterial oxygen content of 18 vol% and a mixed-venous oxygen content of 12 vol%; the arterial CO2 content is 43 vol% and the mixed-venous CO2 content is 48 vol%. What is the patient's CO2 output across the lung?",
+      "program": "observe arterial_o2_content(18)\nobserve venous_o2_content(12)\nobserve arterial_co2_content(43)\nobserve venous_co2_content(48)\nlet answer = venous_co2_content - arterial_co2_content\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": -0.8333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r32resp-12",
+      "qtype": "respiratory_exchange_ratio",
+      "stem": "Paired blood samples across the lung show an arterial oxygen content of 18 vol% and a mixed-venous oxygen content of 12 vol%; the arterial CO2 content is 43 vol% and the mixed-venous CO2 content is 48 vol%. What is the patient's O2 uptake across the lung?",
+      "program": "observe arterial_o2_content(18)\nobserve venous_o2_content(12)\nobserve arterial_co2_content(43)\nobserve venous_co2_content(48)\nlet answer = arterial_o2_content - venous_o2_content\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": -0.8333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r32resp-13",
+      "qtype": "respiratory_exchange_ratio",
+      "stem": "Paired blood samples across the lung show an arterial oxygen content of 24 vol% and a mixed-venous oxygen content of 15 vol%; the arterial CO2 content is 44 vol% and the mixed-venous CO2 content is 52 vol%. What is the patient's respiratory exchange ratio?",
+      "program": "observe arterial_o2_content(24)\nobserve venous_o2_content(15)\nobserve arterial_co2_content(44)\nobserve venous_co2_content(52)\nlet answer = (venous_co2_content - arterial_co2_content) / (arterial_o2_content - venous_o2_content)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.8888888888888888,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.125,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": -0.8888888888888888,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r32resp-14",
+      "qtype": "respiratory_exchange_ratio",
+      "stem": "Paired blood samples across the lung show an arterial oxygen content of 24 vol% and a mixed-venous oxygen content of 15 vol%; the arterial CO2 content is 44 vol% and the mixed-venous CO2 content is 52 vol%. What is the patient's CO2 output across the lung?",
+      "program": "observe arterial_o2_content(24)\nobserve venous_o2_content(15)\nobserve arterial_co2_content(44)\nobserve venous_co2_content(52)\nlet answer = venous_co2_content - arterial_co2_content\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.8888888888888888,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.125,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": -0.8888888888888888,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r32resp-15",
+      "qtype": "respiratory_exchange_ratio",
+      "stem": "Paired blood samples across the lung show an arterial oxygen content of 24 vol% and a mixed-venous oxygen content of 15 vol%; the arterial CO2 content is 44 vol% and the mixed-venous CO2 content is 52 vol%. What is the patient's O2 uptake across the lung?",
+      "program": "observe arterial_o2_content(24)\nobserve venous_o2_content(15)\nobserve arterial_co2_content(44)\nobserve venous_co2_content(52)\nlet answer = arterial_o2_content - venous_o2_content\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.8888888888888888,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.125,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -0.8888888888888888,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r32resp-16",
+      "qtype": "respiratory_exchange_ratio",
+      "stem": "Paired blood samples across the lung show an arterial oxygen content of 21 vol% and a mixed-venous oxygen content of 13 vol%; the arterial CO2 content is 43 vol% and the mixed-venous CO2 content is 50 vol%. What is the patient's respiratory exchange ratio?",
+      "program": "observe arterial_o2_content(21)\nobserve venous_o2_content(13)\nobserve arterial_co2_content(43)\nobserve venous_co2_content(50)\nlet answer = (venous_co2_content - arterial_co2_content) / (arterial_o2_content - venous_o2_content)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.875,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.1428571428571428,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": -0.875,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r32resp-17",
+      "qtype": "respiratory_exchange_ratio",
+      "stem": "Paired blood samples across the lung show an arterial oxygen content of 21 vol% and a mixed-venous oxygen content of 13 vol%; the arterial CO2 content is 43 vol% and the mixed-venous CO2 content is 50 vol%. What is the patient's CO2 output across the lung?",
+      "program": "observe arterial_o2_content(21)\nobserve venous_o2_content(13)\nobserve arterial_co2_content(43)\nobserve venous_co2_content(50)\nlet answer = venous_co2_content - arterial_co2_content\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.875,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.1428571428571428,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": -0.875,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r32resp-18",
+      "qtype": "respiratory_exchange_ratio",
+      "stem": "Paired blood samples across the lung show an arterial oxygen content of 21 vol% and a mixed-venous oxygen content of 13 vol%; the arterial CO2 content is 43 vol% and the mixed-venous CO2 content is 50 vol%. What is the patient's O2 uptake across the lung?",
+      "program": "observe arterial_o2_content(21)\nobserve venous_o2_content(13)\nobserve arterial_co2_content(43)\nobserve venous_co2_content(50)\nlet answer = arterial_o2_content - venous_o2_content\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.875,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.1428571428571428,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": -0.875,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r32resp-19",
+      "qtype": "respiratory_exchange_ratio",
+      "stem": "Paired blood samples across the lung show an arterial oxygen content of 26 vol% and a mixed-venous oxygen content of 16 vol%; the arterial CO2 content is 46 vol% and the mixed-venous CO2 content is 54 vol%. What is the patient's respiratory exchange ratio?",
+      "program": "observe arterial_o2_content(26)\nobserve venous_o2_content(16)\nobserve arterial_co2_content(46)\nobserve venous_co2_content(54)\nlet answer = (venous_co2_content - arterial_co2_content) / (arterial_o2_content - venous_o2_content)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": -0.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r32resp-20",
+      "qtype": "respiratory_exchange_ratio",
+      "stem": "Paired blood samples across the lung show an arterial oxygen content of 26 vol% and a mixed-venous oxygen content of 16 vol%; the arterial CO2 content is 46 vol% and the mixed-venous CO2 content is 54 vol%. What is the patient's CO2 output across the lung?",
+      "program": "observe arterial_o2_content(26)\nobserve venous_o2_content(16)\nobserve arterial_co2_content(46)\nobserve venous_co2_content(54)\nlet answer = venous_co2_content - arterial_co2_content\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -0.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r32resp-21",
+      "qtype": "respiratory_exchange_ratio",
+      "stem": "Paired blood samples across the lung show an arterial oxygen content of 26 vol% and a mixed-venous oxygen content of 16 vol%; the arterial CO2 content is 46 vol% and the mixed-venous CO2 content is 54 vol%. What is the patient's O2 uptake across the lung?",
+      "program": "observe arterial_o2_content(26)\nobserve venous_o2_content(16)\nobserve arterial_co2_content(46)\nobserve venous_co2_content(54)\nlet answer = arterial_o2_content - venous_o2_content\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": -0.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
