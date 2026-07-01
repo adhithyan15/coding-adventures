@@ -33,14 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard dispatch queue.
+1. Rust Berkeley Mosaic app shell dashboard dispatch queue summary.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app shell dashboard dispatch-queue surfaces and
-     JSON helpers that derive stable queue item IDs, selected/default queue
-     routing, queued/blocked state, queue messages, dispatch event IDs, action
-     dispatch IDs, panel-card action IDs, action IDs, targets, paths,
-     dispatchable flags, attention flags, and disabled reasons from dashboard
-     dispatch events for compact first-render product-shell dispatch queues.
+   - Add schema-versioned Rust app shell dashboard dispatch-queue summary
+     surfaces and JSON helpers that derive compact selected/default queue
+     routing, selected/default action and event routing, first
+     queued/blocked/attention queue item IDs, queued/blocked/attention queue
+     item ID lists, queue counts, queue state counts, and summary capability
+     metadata from dashboard dispatch queues for first-render product-shell
+     dispatch telemetry.
    - Preserve package name, source fingerprint, ready/blocked route, status
      severity, attention-required flag, selected/default action-dispatch
      routing, selected/default dispatch-event routing, selected/default action
@@ -48,10 +49,11 @@ the Rust, Python, and TypeScript surfaces together.
      dispatch-event, and dispatch-queue counts, ready/blocked/attention
      dispatch-event counts, queued/blocked/attention queue counts,
      selected/default queued flags, action-dispatch capability ID,
-     dispatch-events capability ID, dispatch-queue capability ID, and
-     advertised capability count so Mosaic, WebAssembly, and product shells can
-     append dashboard dispatch queues without interpreting panel-card-action,
-     action-dispatch, or dispatch-event internals.
+     dispatch-events capability ID, dispatch-queue capability ID,
+     dispatch-queue summary capability ID, first queue item routing, queue item
+     ID lists, and advertised capability count so Mosaic, WebAssembly, and
+     product shells can append compact dashboard dispatch queue summaries
+     without walking every queue item.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1908,6 +1910,27 @@ the Rust, Python, and TypeScript surfaces together.
      dispatch-events capability ID, and advertised capability count so Mosaic,
      WebAssembly, and product shells can append dashboard dispatch events
      without interpreting panel-card-action or action-dispatch internals.
+
+169. Rust Berkeley Mosaic app shell dashboard dispatch queue.
+   - Status: completed in PR 7206.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell dashboard dispatch-queue surfaces plus JSON helpers that derive
+     stable queue item IDs, selected/default queue routing, queued/blocked
+     state, queue messages, dispatch event IDs, action dispatch IDs,
+     panel-card action IDs, action IDs, targets, paths, dispatchable flags,
+     attention flags, and disabled reasons from dashboard dispatch events for
+     compact first-render product-shell dispatch queues.
+   - The dispatch-queue payload preserves package name, source fingerprint,
+     ready/blocked route, status severity, attention-required flag,
+     selected/default action-dispatch routing, selected/default dispatch-event
+     routing, selected/default action IDs, selected/default dispatch-queue item
+     routing, action-dispatch, dispatch-event, and dispatch-queue counts,
+     ready/blocked/attention dispatch-event counts, queued/blocked/attention
+     queue counts, selected/default queued flags, action-dispatch capability
+     ID, dispatch-events capability ID, dispatch-queue capability ID, and
+     advertised capability count so Mosaic, WebAssembly, and product shells can
+     append dashboard dispatch queues without interpreting panel-card-action,
+     action-dispatch, or dispatch-event internals.
 
 ## Backlog
 

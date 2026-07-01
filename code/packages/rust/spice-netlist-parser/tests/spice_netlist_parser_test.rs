@@ -20,6 +20,7 @@ use spice_netlist_parser::{
     BERKELEY_APP_SHELL_DASHBOARD_CARDS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_EVENTS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SUMMARY_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_NAVIGATION_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_PACKAGE_SCHEMA_VERSION,
@@ -4454,6 +4455,113 @@ C1 out 0 1p
         shell_dashboard_dispatch_queue_payload["dispatchQueueCapabilityId"],
         "app-shell-dashboard-dispatch-queue-json"
     );
+
+    let shell_dashboard_dispatch_queue_summary = app
+        .run_app_shell_dashboard_dispatch_queue_summary(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("shell dashboard dispatch queue summary should execute");
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SUMMARY_SCHEMA_VERSION
+    );
+    assert!(shell_dashboard_dispatch_queue_summary.ready);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary
+            .selected_dispatch_queue_item_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue.status")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary
+            .default_dispatch_queue_item_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue.status")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary.dispatch_queue_item_count,
+        3
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary.queued_dispatch_count,
+        2
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary.blocked_dispatch_count,
+        1
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary.attention_dispatch_queue_item_count,
+        0
+    );
+    assert!(shell_dashboard_dispatch_queue_summary.selected_queued);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary
+            .first_queued_dispatch_queue_item_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue.status")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary
+            .first_blocked_dispatch_queue_item_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue.attention")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary
+            .first_attention_dispatch_queue_item_id
+            .as_deref(),
+        None
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary.queued_dispatch_queue_item_ids,
+        vec![
+            "dashboard.dispatch-queue.status".to_string(),
+            "dashboard.dispatch-queue.metrics".to_string()
+        ]
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary.blocked_dispatch_queue_item_ids,
+        vec!["dashboard.dispatch-queue.attention".to_string()]
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary.dispatch_queue_capability_id,
+        shell_dashboard_dispatch_queue.dispatch_queue_capability_id
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary.dispatch_queue_summary_capability_id,
+        "app-shell-dashboard-dispatch-queue-summary-json"
+    );
+
+    let shell_dashboard_dispatch_queue_summary_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_dashboard_dispatch_queue_summary_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap(),
+    )
+    .expect("shell dashboard dispatch queue summary JSON should parse");
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary_payload["selectedDispatchQueueItemId"],
+        "dashboard.dispatch-queue.status"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary_payload["queuedDispatchQueueItemIds"][1],
+        "dashboard.dispatch-queue.metrics"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary_payload["blockedDispatchQueueItemIds"][0],
+        "dashboard.dispatch-queue.attention"
+    );
+    assert!(
+        shell_dashboard_dispatch_queue_summary_payload["firstAttentionDispatchQueueItemId"]
+            .is_null()
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary_payload["dispatchQueueSummaryCapabilityId"],
+        "app-shell-dashboard-dispatch-queue-summary-json"
+    );
 }
 
 #[test]
@@ -6017,6 +6125,108 @@ R1 in out
     assert_eq!(
         shell_dashboard_dispatch_queue_payload["dispatchQueueCapabilityId"],
         "app-shell-dashboard-dispatch-queue-json"
+    );
+
+    let shell_dashboard_dispatch_queue_summary =
+        app.app_shell_dashboard_dispatch_queue_summary(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        });
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SUMMARY_SCHEMA_VERSION
+    );
+    assert!(!shell_dashboard_dispatch_queue_summary.ready);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary
+            .selected_dispatch_queue_item_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue.attention")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary
+            .default_dispatch_queue_item_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue.attention")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary.dispatch_queue_item_count,
+        3
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary.queued_dispatch_count,
+        3
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary.blocked_dispatch_count,
+        0
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary.attention_dispatch_queue_item_count,
+        1
+    );
+    assert!(shell_dashboard_dispatch_queue_summary.selected_queued);
+    assert!(shell_dashboard_dispatch_queue_summary.default_queued);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary
+            .first_queued_dispatch_queue_item_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue.status")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary
+            .first_blocked_dispatch_queue_item_id
+            .as_deref(),
+        None
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary
+            .first_attention_dispatch_queue_item_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue.attention")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary.queued_dispatch_queue_item_ids,
+        vec![
+            "dashboard.dispatch-queue.status".to_string(),
+            "dashboard.dispatch-queue.attention".to_string(),
+            "dashboard.dispatch-queue.metrics".to_string()
+        ]
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary.attention_dispatch_queue_item_ids,
+        vec!["dashboard.dispatch-queue.attention".to_string()]
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary.dispatch_queue_summary_capability_id,
+        "app-shell-dashboard-dispatch-queue-summary-json"
+    );
+
+    let shell_dashboard_dispatch_queue_summary_payload: serde_json::Value = serde_json::from_str(
+        &app.app_shell_dashboard_dispatch_queue_summary_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        }),
+    )
+    .expect("blocked shell dashboard dispatch queue summary JSON should parse");
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary_payload["selectedDispatchQueueItemId"],
+        "dashboard.dispatch-queue.attention"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary_payload["queuedDispatchQueueItemIds"][1],
+        "dashboard.dispatch-queue.attention"
+    );
+    assert!(
+        shell_dashboard_dispatch_queue_summary_payload["firstBlockedDispatchQueueItemId"].is_null()
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary_payload["firstAttentionDispatchQueueItemId"],
+        "dashboard.dispatch-queue.attention"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_summary_payload["dispatchQueueSummaryCapabilityId"],
+        "app-shell-dashboard-dispatch-queue-summary-json"
     );
 }
 
