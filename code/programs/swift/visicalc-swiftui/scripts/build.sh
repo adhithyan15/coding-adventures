@@ -23,12 +23,10 @@
 #   swift run                  # macOS terminal target
 #   open Package.swift         # open in Xcode for iOS / macOS app
 #
-# NOTE: there's a known emitter glitch in the generated FormulaBar
-# (the `.onSubmit` handler emits `.commit(value: formula)` while
-# the `FormulaBarEvent` enum's `commit` case carries no associated
-# value). The Swift compiler will reject this. Track as
-# UI31-swiftui-commit-arity in a follow-up; meanwhile, hand-patch
-# the generated file or wait for the emitter fix before `swift run`.
+# (UI31-swiftui-commit-arity — RESOLVED.) The SwiftUI emitter now emits a
+# payloadless onCommit correctly: `emit onCommit ;` (no declared value) lowers to
+# `.onSubmit { dispatch(.commit) }` against an enum `case commit` with no associated
+# value, so the generated FormulaBar compiles as-is — no hand-patching needed.
 
 set -euo pipefail
 

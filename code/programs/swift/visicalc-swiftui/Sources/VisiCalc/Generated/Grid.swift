@@ -8,6 +8,32 @@ enum GridEvent {
     case editCancel
 }
 
+extension GridEvent {
+    var mosaicName: String {
+        switch self {
+        case .navigate(row: _, col: _): return "onNavigate"
+        case .formulaChange(value: _): return "onFormulaChange"
+        case .editCommit: return "onEditCommit"
+        case .editCancel: return "onEditCancel"
+        }
+    }
+
+    var mosaicPayload: [String: Any] {
+        switch self {
+        case let .navigate(row: row, col: col): return ["row": row, "col": col]
+        case let .formulaChange(value: value): return ["value": value]
+        case .editCommit: return [:]
+        case .editCancel: return [:]
+        }
+    }
+
+    var mosaicEnvelope: [String: Any] {
+        var envelope = mosaicPayload
+        envelope["event"] = mosaicName
+        return envelope
+    }
+}
+
 struct GridView: View {
     let columnHeaders: [String]
     let viewportRows: [[String]]
