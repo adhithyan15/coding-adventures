@@ -64,6 +64,7 @@ SELF_CONTAINED_RUNGS = (
     "rung24_oxygen_extraction",
     "rung25_lipid_indices",
     "rung26_mineral_indices",
+    "rung27_urine_anion_gap",
 )
 
 
