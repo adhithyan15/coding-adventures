@@ -18,6 +18,7 @@ use spice_netlist_parser::{
     BERKELEY_APP_SHELL_DASHBOARD_ACTION_DISPATCH_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_BREADCRUMBS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_CARDS_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_EVENTS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_NAVIGATION_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_PACKAGE_SCHEMA_VERSION,
@@ -4268,6 +4269,101 @@ C1 out 0 1p
         shell_dashboard_action_dispatch_payload["actionDispatchCapabilityId"],
         "app-shell-dashboard-action-dispatch-json"
     );
+
+    let shell_dashboard_dispatch_events = app
+        .run_app_shell_dashboard_dispatch_events(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("shell dashboard dispatch events should execute");
+    assert_eq!(
+        shell_dashboard_dispatch_events.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_EVENTS_SCHEMA_VERSION
+    );
+    assert!(shell_dashboard_dispatch_events.ready);
+    assert_eq!(
+        shell_dashboard_dispatch_events
+            .selected_dispatch_event_id
+            .as_deref(),
+        Some("dashboard.dispatch-event.status")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events
+            .default_dispatch_event_id
+            .as_deref(),
+        Some("dashboard.dispatch-event.status")
+    );
+    assert_eq!(shell_dashboard_dispatch_events.dispatch_event_count, 3);
+    assert_eq!(
+        shell_dashboard_dispatch_events.dispatch_ready_event_count,
+        2
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events.dispatch_blocked_event_count,
+        1
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events.attention_dispatch_event_count,
+        0
+    );
+    assert!(shell_dashboard_dispatch_events.selected_dispatchable);
+    assert_eq!(
+        shell_dashboard_dispatch_events.dispatch_events[0].action_dispatch_id,
+        "dashboard.action-dispatch.status"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events.dispatch_events[0].kind,
+        "dispatch-ready"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events.dispatch_events[1].kind,
+        "dispatch-blocked"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events.dispatch_events[2].target,
+        "analysis-waveform"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events.action_dispatch_capability_id,
+        shell_dashboard_action_dispatch.action_dispatch_capability_id
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events.dispatch_events_capability_id,
+        "app-shell-dashboard-dispatch-events-json"
+    );
+
+    let shell_dashboard_dispatch_events_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_dashboard_dispatch_events_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap(),
+    )
+    .expect("shell dashboard dispatch events JSON should parse");
+    assert_eq!(
+        shell_dashboard_dispatch_events_payload["selectedDispatchEventId"],
+        "dashboard.dispatch-event.status"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events_payload["dispatchReadyEventCount"],
+        2
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events_payload["dispatchBlockedEventCount"],
+        1
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events_payload["dispatchEvents"][1]["kind"],
+        "dispatch-blocked"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events_payload["dispatchEvents"][2]["actionId"],
+        "launch.waveform"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events_payload["dispatchEventsCapabilityId"],
+        "app-shell-dashboard-dispatch-events-json"
+    );
 }
 
 #[test]
@@ -5663,6 +5759,93 @@ R1 in out
     assert_eq!(
         shell_dashboard_action_dispatch_payload["actionDispatchCapabilityId"],
         "app-shell-dashboard-action-dispatch-json"
+    );
+
+    let shell_dashboard_dispatch_events =
+        app.app_shell_dashboard_dispatch_events(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        });
+    assert_eq!(
+        shell_dashboard_dispatch_events.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_EVENTS_SCHEMA_VERSION
+    );
+    assert!(!shell_dashboard_dispatch_events.ready);
+    assert_eq!(
+        shell_dashboard_dispatch_events
+            .selected_dispatch_event_id
+            .as_deref(),
+        Some("dashboard.dispatch-event.attention")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events
+            .default_dispatch_event_id
+            .as_deref(),
+        Some("dashboard.dispatch-event.attention")
+    );
+    assert_eq!(shell_dashboard_dispatch_events.dispatch_event_count, 3);
+    assert_eq!(
+        shell_dashboard_dispatch_events.dispatch_ready_event_count,
+        3
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events.dispatch_blocked_event_count,
+        0
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events.attention_dispatch_event_count,
+        1
+    );
+    assert!(shell_dashboard_dispatch_events.selected_dispatchable);
+    assert!(shell_dashboard_dispatch_events.default_dispatchable);
+    assert_eq!(
+        shell_dashboard_dispatch_events.dispatch_events[1].id,
+        "dashboard.dispatch-event.attention"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events.dispatch_events[1].kind,
+        "dispatch-ready"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events.dispatch_events[1].severity,
+        "warning"
+    );
+    assert!(shell_dashboard_dispatch_events.dispatch_events[1].attention);
+    assert_eq!(
+        shell_dashboard_dispatch_events.dispatch_events_capability_id,
+        "app-shell-dashboard-dispatch-events-json"
+    );
+
+    let shell_dashboard_dispatch_events_payload: serde_json::Value = serde_json::from_str(
+        &app.app_shell_dashboard_dispatch_events_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        }),
+    )
+    .expect("blocked shell dashboard dispatch events JSON should parse");
+    assert_eq!(
+        shell_dashboard_dispatch_events_payload["selectedDispatchEventId"],
+        "dashboard.dispatch-event.attention"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events_payload["dispatchReadyEventCount"],
+        3
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events_payload["dispatchBlockedEventCount"],
+        0
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events_payload["dispatchEvents"][1]["severity"],
+        "warning"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events_payload["dispatchEvents"][1]["actionDispatchId"],
+        "dashboard.action-dispatch.attention"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_events_payload["dispatchEventsCapabilityId"],
+        "app-shell-dashboard-dispatch-events-json"
     );
 }
 
