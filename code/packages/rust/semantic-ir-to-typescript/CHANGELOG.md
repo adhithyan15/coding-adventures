@@ -2,15 +2,49 @@
 
 ## Unreleased
 
-### Changed
+## 0.3.0 — keyword-parameter & argument emission (KW3)
 
-- Compile-compat stub arms for the new core `semantic-ir` variants
-  `ParamKind::Keyword` / `Expr::KeywordArg` (KW1). Analysis passes
-  (builtin-usage scan, assigned-local collection) recurse into the keyword
-  arg's inner `value`; a single `Keyword` param emits as a best-effort typed
-  positional (combined with `KwRest`); `emit_expr` follows the crate's
-  unsupported-node convention. Real keyword-parameter support is pending
-  KW2–KW8.
+Keyword parameters (`ParamKind::Keyword`) and keyword arguments
+(`Expr::KeywordArg`) now lower to real TypeScript, replacing the KW1
+compile-compat stubs. `Feature::KeywordParams` is added to the backend's
+accepted feature set (mirroring `DefaultParams`). See
+`code/specs/sir-keyword-params.md` §4.
+
+- **Def side — trailing options object.** TypeScript has no native keyword
+  arguments, so all of a function's `Keyword` params collapse into ONE trailing
+  parameter, `__kw`, appended after the positionals. The function body opens
+  with a destructure prologue binding each keyword:
+
+  ```text
+  def f(a, x:, y: 1)  →  function f(a: __Sir.Val, __kw: __Sir.Val): __Sir.Val {
+                           const { x, y = 1 } = (__kw ?? {}) as { [k: string]: __Sir.Val };
+                           …
+                         }
+  ```
+
+  A *required* keyword (`default: None`) destructures as a bare name; an
+  *optional* one (`default: Some(e)`) carries its default expression (`y = 1`),
+  so an omitted optional falls back to it. `__kw ?? {}` tolerates a caller that
+  supplies no keyword object at all (every keyword optional and omitted). The
+  `__`-prefix is the backend's reserved namespace (`__Sir`, `__l`, …), so
+  `__kw` cannot shadow a user binding. A function with no keyword params is
+  byte-for-byte unchanged (no `__kw`, no prologue).
+
+- **Call side — collapsed object literal.** Every `KeywordArg` in a call
+  (always trailing, per the validator) collapses into one trailing object
+  literal; positionals emit as before. `f(1, y: 2)` → `f(1, { y: 2 })`; a call
+  with no keyword args emits no trailing object.
+
+- **Direct lowering, no runtime helper** — same posture as `DefaultParams`.
+  Default and value expressions lower through the ordinary expression emitter.
+
+- **Tests.** Emitted-shape unit tests (destructure prologue for
+  required+optional; call collapsing to one/two-entry objects; positional +
+  keyword mix; no-keyword-args emits no object) plus a `node` execution proof
+  (`tests/run_with_node.rs`): the spec's `greet(greeting:, name: "world")`
+  program prints `hi, world` (optional omitted) and `hi, sir` (supplied), and a
+  positional+keyword mix prints `A!` / `B-`. Node is optional — the test
+  degrades to shape assertions when it is absent.
 
 ## 0.2.0 — default-parameter emission (P2b)
 

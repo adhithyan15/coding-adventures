@@ -303,7 +303,42 @@ fn emit_function(out: &mut String, f: &Function) {
         first = false;
         let _ = write!(out, "{}: __Sir.Val", sanitize_ident(&c.name));
     }
+    // KW3 — keyword parameters lower to a single trailing "options object".
+    //
+    // TypeScript (like JavaScript) has NO native keyword-argument syntax: a
+    // caller cannot write `f(y: 2)` and have `y` bound by name to a formal
+    // parameter.  The idiomatic, zero-runtime equivalent is the *options
+    // object* — one trailing parameter that carries a bag of named values,
+    // destructured on entry.  So for a definition
+    //
+    //     def f(a, x:, y: 1)          # a positional, x required-kw, y opt-kw
+    //
+    // we emit
+    //
+    //     function f(a: __Sir.Val, __kw: __Sir.Val): __Sir.Val {
+    //       const { x, y = 1 } = (__kw ?? {}) as { [k: string]: __Sir.Val };
+    //       …
+    //     }
+    //
+    // The destructure carries each *optional* keyword's default (`y = 1`) and
+    // omits it for a *required* one (`x`) — matching the call side, which for
+    // a validator-accepted call always supplies every required keyword.  We
+    // split the param list rather than interleave: all `Keyword` params
+    // collapse into the ONE `__kw` object, appended after the positionals, so
+    // the arity of the JS parameter list stays `positionals + 1`.
+    //
+    // Why `__kw`?  The `__`-prefix is this backend's reserved namespace for
+    // synthesized bindings (`__Sir`, `__SirOop`, `__l`, `__sir_result`, …).
+    // A user keyword name never round-trips through the frontends as `__kw`,
+    // and `sanitize_ident` passes real user idents through verbatim, so the
+    // options-object parameter cannot shadow a user binding in practice.
+    let keyword_params: Vec<&semantic_ir::Param> = f.keyword_params();
     for p in &f.params {
+        // Keyword params are NOT emitted inline — they fold into the trailing
+        // `__kw` object handled after this loop.  Skip them here.
+        if p.kind == ParamKind::Keyword {
+            continue;
+        }
         if !first {
             out.push_str(", ");
         }
@@ -321,14 +356,8 @@ fn emit_function(out: &mut String, f: &Function) {
             ParamKind::Rest => {
                 let _ = write!(out, "...{}: __Sir.Val[]", sanitize_ident(&p.name));
             }
-            // KW1 compile-compat stub: a single `Keyword` param has no
-            // faithful native JS/TS declaration (JS has no keyword-call form),
-            // so mirror the `KwRest` best-effort — emit it as an ordinary
-            // trailing typed parameter (`name: __Sir.Val`).  The inner
-            // `Required`-only guard below withholds a default, matching the
-            // KwRest treatment.  Real keyword-param support lands in KW2–KW6;
-            // the validator rejects `Feature::KeywordParams` until then, so
-            // this arm is unreachable today.
+            // Keyword handled above (skipped); this arm covers positionals and
+            // the KwRest object fallback.
             ParamKind::Required | ParamKind::KwRest | ParamKind::Keyword => {
                 let _ = write!(out, "{}: __Sir.Val", sanitize_ident(&p.name));
                 // P2b default parameters.  A SIR default is evaluated
@@ -354,7 +383,39 @@ fn emit_function(out: &mut String, f: &Function) {
             }
         }
     }
+    // Append the single trailing options-object parameter iff the function has
+    // any keyword params.  (No keyword params → no `__kw`, so ordinary
+    // positional functions are byte-for-byte unchanged.)
+    if !keyword_params.is_empty() {
+        if !first {
+            out.push_str(", ");
+        }
+        out.push_str("__kw: __Sir.Val");
+    }
     out.push_str("): __Sir.Val {\n");
+
+    // Body prologue: destructure the options object into the keyword bindings.
+    // Each required keyword (`default: None`) is a bare name; each optional
+    // (`default: Some(e)`) carries its default expression, so an omitted
+    // optional falls back to `e`.  `__kw ?? {}` tolerates a caller that
+    // supplied NO keywords at all (the object is then absent → `undefined`),
+    // which happens when every keyword is optional and the call omits them.
+    if !keyword_params.is_empty() {
+        out.push_str("  const { ");
+        for (i, p) in keyword_params.iter().enumerate() {
+            if i > 0 {
+                out.push_str(", ");
+            }
+            out.push_str(&sanitize_ident(&p.name));
+            if let Some(default) = &p.default {
+                out.push_str(" = ");
+                emit_expr(out, default, 2);
+            }
+        }
+        // Cast the untyped `Val` to an index signature so the destructure
+        // typechecks under `strict` — the runtime shape is a plain object.
+        out.push_str(" } = (__kw ?? {}) as { [k: string]: __Sir.Val };\n");
+    }
 
     // Pre-pass: any local that is later reassigned must bind with `let`.
     MUTABLE_NAMES.with(|m| {
@@ -926,15 +987,16 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             }
             out.push(')');
         }
-        // KW1 compile-compat stub: keyword arguments (`f(a: 1)`) are gated
-        // behind `Feature::KeywordParams`, which the validator rejects until
-        // real support lands in KW2–KW6.  Follow this crate's convention for
-        // an unsupported codegen node the capability check should have
-        // rejected (see the `Intrinsic` panic): a positioned panic covering
-        // internal bugs only.  No real emission yet.
+        // KW3 — a `KeywordArg` is NOT a first-class value: it only ever
+        // appears inside a call's `args`, where `emit_call_args` collapses the
+        // trailing run of them into one options-object literal (never routing
+        // them through `emit_expr`).  The validator (spec rule 6) rejects a
+        // `KeywordArg` in any other position, so reaching this arm means the
+        // call path bypassed `emit_call_args` — an internal backend bug.  A
+        // positioned panic surfaces it (mirrors the `Intrinsic` guard).
         Expr::KeywordArg { span, .. } => {
             panic!(
-                "typescript backend reached KW1 keyword-arg expression at {} — backend should have rejected it (real support pending KW2–KW6)",
+                "typescript backend reached a bare keyword-arg expression at {} — a KeywordArg must be collapsed by emit_call_args, never emitted as a value",
                 span
             );
         }
@@ -1066,22 +1128,43 @@ fn is_double_splat(a: &Expr) -> bool {
 ///
 /// v0 cut-line: mixing inline `key: value` pairs with `**h` at one call site is
 /// not modelled — only explicit `**map` operands are merged.
+///
+/// **KW3 — keyword arguments (`f(1, y: 2)`).**  A named keyword argument
+/// reaches the backend as an [`Expr::KeywordArg`] inside `args`, always AFTER
+/// every positional (the validator enforces the ordering).  The def side folds
+/// keyword *parameters* into a trailing `__kw` options object, so the call side
+/// must supply that object: every `KeywordArg` in this call collapses into ONE
+/// trailing object literal `{ name: value, … }`.  With no keyword args the
+/// object is omitted entirely, so an ordinary positional call is unchanged:
+///
+/// | SIR `args`                                   | emitted            |
+/// |----------------------------------------------|--------------------|
+/// | `[Int(1)]`                                    | `f(1)`             |
+/// | `[Int(1), KeywordArg{y, Int(2)}]`             | `f(1, { y: 2 })`   |
+/// | `[KeywordArg{x,…}, KeywordArg{y,…}]`          | `f({ x: …, y: … })`|
 fn emit_call_args(out: &mut String, args: &[Expr], indent: usize) {
+    // Split positionals from the trailing run of keyword arguments.  Because
+    // the validator guarantees every `KeywordArg` follows all positionals, the
+    // keyword args are exactly the trailing suffix — we partition once.
+    let n_positional = args.iter().take_while(|a| !is_keyword_arg(a)).count();
+    let positional = &args[..n_positional];
+    let keyword = &args[n_positional..];
+
     let mut first = true;
     let mut i = 0;
-    while i < args.len() {
+    while i < positional.len() {
         if !first {
             out.push_str(", ");
         }
         first = false;
-        if is_double_splat(&args[i]) {
+        if is_double_splat(&positional[i]) {
             // Gather this maximal contiguous run of `**` markers.
             let start = i;
-            while i < args.len() && is_double_splat(&args[i]) {
+            while i < positional.len() && is_double_splat(&positional[i]) {
                 i += 1;
             }
             out.push_str("__Sir.doubleSplatMerge(");
-            for (j, a) in args[start..i].iter().enumerate() {
+            for (j, a) in positional[start..i].iter().enumerate() {
                 if j > 0 {
                     out.push_str(", ");
                 }
@@ -1091,10 +1174,36 @@ fn emit_call_args(out: &mut String, args: &[Expr], indent: usize) {
             }
             out.push(')');
         } else {
-            emit_arg(out, &args[i], indent);
+            emit_arg(out, &positional[i], indent);
             i += 1;
         }
     }
+
+    // Collapse the trailing keyword arguments into one options-object literal
+    // that binds the callee's `__kw` parameter (see `emit_function`).  Each
+    // `KeywordArg { name, value }` becomes an object entry `name: <value>`;
+    // the value lowers through the ordinary expression emitter.
+    if !keyword.is_empty() {
+        if !first {
+            out.push_str(", ");
+        }
+        out.push_str("{ ");
+        for (j, a) in keyword.iter().enumerate() {
+            if j > 0 {
+                out.push_str(", ");
+            }
+            if let Expr::KeywordArg { name, value, .. } = a {
+                let _ = write!(out, "{}: ", sanitize_ident(name));
+                emit_expr(out, value, indent);
+            }
+        }
+        out.push_str(" }");
+    }
+}
+
+/// Is this argument a keyword argument (`f(y: 2)` → `Expr::KeywordArg`)?
+fn is_keyword_arg(a: &Expr) -> bool {
+    matches!(a, Expr::KeywordArg { .. })
 }
 
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {

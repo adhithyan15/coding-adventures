@@ -54,6 +54,15 @@ The TypeScript backend accepts these SIR features:
   padding) and the native default fills the rest. So `def f(a, b = a + 1)`
   emits `function f(a: __Sir.Val, b: __Sir.Val = __Sir.add(a, 1))`, and `f(5)`
   emits `f(5)`.
+- `KeywordParams` (KW3) — keyword parameters and arguments lower to the
+  conventional "options object". TypeScript has no native keyword arguments, so
+  a function's `Keyword` params collapse into ONE trailing `__kw` parameter,
+  destructured in the body prologue (required keyword → bare name, optional →
+  its default): `def f(a, x:, y: 1)` emits
+  `function f(a: __Sir.Val, __kw: __Sir.Val)` with
+  `const { x, y = 1 } = (__kw ?? {}) as { [k: string]: __Sir.Val };`. On the
+  call side every `KeywordArg` collapses into one trailing object literal:
+  `f(1, y: 2)` emits `f(1, { y: 2 })`. Direct lowering, no runtime helper.
 
 It **rejects**:
 

@@ -114,6 +114,14 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // inline (no runtime helper, no call-site padding).  Per
     // code/specs/sir-runtime.md.
     Feature::DefaultParams,
+    // KW3 keyword parameters & arguments — a `Keyword` param or an
+    // `Expr::KeywordArg`.  TypeScript has no native kwargs, so both lower to
+    // the conventional zero-runtime "options object" (see `emit::emit_function`
+    // / `emit::emit_call_args` and `code/specs/sir-keyword-params.md` §4): the
+    // callee gains a trailing `__kw` object destructured in its prologue, and a
+    // call collapses its keyword args into one trailing object literal.  Direct
+    // lowering, no runtime helper — mirrors how `DefaultParams` is declared.
+    Feature::KeywordParams,
 ];
 
 impl Backend for TypeScriptBackend {
@@ -1363,6 +1371,200 @@ mod tests {
             !a.source.contains("@coding-adventures/sir-runtime-range"),
             "unexpected range import; got:\n{}",
             a.source
+        );
+    }
+
+    // ── KW3: keyword parameters & arguments (options-object lowering) ──────
+
+    /// A callee with one required and one optional keyword param, plus a
+    /// leading positional, and two calls: one that omits the optional and one
+    /// that supplies it.  Mirrors the spec's canonical KW3 program shape.
+    fn keyword_module() -> Module {
+        use semantic_ir::{Param, ParamKind, Scope};
+
+        fn kw(name: &str, default: Option<Expr>) -> Param {
+            Param {
+                name: name.into(),
+                sir_type: None,
+                kind: ParamKind::Keyword,
+                default: default.map(Box::new),
+                span: s(),
+            }
+        }
+        let prefix = Param {
+            name: "prefix".into(),
+            sir_type: None,
+            kind: ParamKind::Required,
+            default: None,
+            span: s(),
+        };
+        // greet body just returns the required keyword `x` (value irrelevant to
+        // the shape assertions; the destructure prologue is what we inspect).
+        let f = Function {
+            name: "f".into(),
+            params: vec![
+                prefix,
+                kw("x", None),                                            // required keyword
+                kw("y", Some(Expr::IntLit { value: 1, span: s() })),      // optional keyword
+            ],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::VarRef { name: "x".into(), scope: Scope::Param, span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+
+        // f("p", x: 2)          — optional `y` omitted → one-entry object.
+        let call_omit = Expr::DirectCall {
+            fn_name: "f".into(),
+            args: vec![
+                Expr::StrLit { value: "p".into(), span: s() },
+                Expr::KeywordArg {
+                    name: "x".into(),
+                    value: Box::new(Expr::IntLit { value: 2, span: s() }),
+                    span: s(),
+                },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        // f("p", x: 2, y: 3)    — both keywords supplied → two-entry object.
+        let call_full = Expr::DirectCall {
+            fn_name: "f".into(),
+            args: vec![
+                Expr::StrLit { value: "p".into(), span: s() },
+                Expr::KeywordArg {
+                    name: "x".into(),
+                    value: Box::new(Expr::IntLit { value: 2, span: s() }),
+                    span: s(),
+                },
+                Expr::KeywordArg {
+                    name: "y".into(),
+                    value: Box::new(Expr::IntLit { value: 3, span: s() }),
+                    span: s(),
+                },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let main = Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![semantic_ir::Stmt::ExprStmt { expr: call_omit, span: s() }],
+                value: call_full,
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        Module {
+            name: "kw".into(),
+            manifest: FeatureManifest::from_features(&[
+                Feature::KeywordParams,
+                Feature::Strings,
+                Feature::DynamicTyping,
+            ]),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![f, main],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("test")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        }
+    }
+
+    #[test]
+    fn keyword_params_fold_into_trailing_options_object_with_destructure() {
+        let m = keyword_module();
+        let a = compile(&m).expect("keyword module must compile (feature accepted)");
+        let src = &a.source;
+        // The positional `prefix` stays inline; both keyword params collapse
+        // into ONE trailing `__kw` object parameter.
+        assert!(
+            src.contains("function f(prefix: __Sir.Val, __kw: __Sir.Val): __Sir.Val {"),
+            "keyword params must fold into a single trailing __kw object; got:\n{src}"
+        );
+        // Prologue destructure: required keyword bare, optional carries default.
+        assert!(
+            src.contains(
+                "const { x, y = 1 } = (__kw ?? {}) as { [k: string]: __Sir.Val };"
+            ),
+            "prologue must destructure __kw, bare required + defaulted optional; got:\n{src}"
+        );
+    }
+
+    #[test]
+    fn keyword_call_collapses_args_into_single_object_literal() {
+        let m = keyword_module();
+        let a = compile(&m).expect("compile");
+        let src = &a.source;
+        // Omitting the optional → one-entry object; positional stays outside it.
+        assert!(
+            src.contains("f(\"p\", { x: 2 })"),
+            "omitted-optional call collapses keyword args to one object; got:\n{src}"
+        );
+        // Supplying both → two-entry object.
+        assert!(
+            src.contains("f(\"p\", { x: 2, y: 3 })"),
+            "full call collapses both keyword args into one object; got:\n{src}"
+        );
+    }
+
+    #[test]
+    fn no_keyword_args_emits_no_trailing_object() {
+        use semantic_ir::{Param, ParamKind, Scope};
+        // A callee with a keyword param, but a caller in an IndirectCall-free
+        // world that supplies only positionals for a purely-positional callee:
+        // here we build a callee with NO keyword params and confirm the call
+        // path is byte-for-byte the ordinary positional form (no `{ … }`).
+        let g = Function {
+            name: "g".into(),
+            params: vec![Param {
+                name: "a".into(),
+                sir_type: None,
+                kind: ParamKind::Required,
+                default: None,
+                span: s(),
+            }],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::VarRef { name: "a".into(), scope: Scope::Param, span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let call = Expr::DirectCall {
+            fn_name: "g".into(),
+            args: vec![Expr::IntLit { value: 7, span: s() }],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let mut m = module_with_main_body(vec![], call, &[Feature::DynamicTyping]);
+        m.functions.insert(0, g);
+        let a = compile(&m).expect("compile");
+        let src = &a.source;
+        assert!(
+            src.contains("function g(a: __Sir.Val): __Sir.Val {"),
+            "no keyword params → no __kw parameter; got:\n{src}"
+        );
+        assert!(
+            src.contains("g(7)") && !src.contains("g(7, {"),
+            "a call with no keyword args emits no trailing object; got:\n{src}"
         );
     }
 }
