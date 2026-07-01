@@ -277,7 +277,39 @@ params       = "..." | param { COMMA param } ;
 # default subtree in the param scope.  Splat (`*rest`) and double-splat
 # (`**kwrest`) params never carry a default; the grammar is permissive
 # here and the lowerer attaches `Param.default` only to ordinary params.
-param        = [ "*" | "**" ] NAME [ EQUALS expression ] ;
+#
+# Phase KW7 (Ruby 1.0 unblock) — keyword parameters `name:` / `name: expr`.
+#
+# A `param` may instead carry a trailing `COLON [ expression ]` making it a
+# KEYWORD parameter (matched by name at the call site, not by position):
+#   `def f(a:)`     → required keyword (no default)
+#   `def f(a: 1)`   → optional keyword (default `1`)
+# The trailing suffix is a THREE-WAY choice keyed on the token right after
+# NAME:
+#   COLON   → keyword param   (KW7 — this branch)
+#   EQUALS  → positional optional/default param (P7)
+#   nothing → positional required param
+# The COLON is the sole discriminator between a keyword param and a
+# positional-default param — `a:` vs `a = 1` are DIFFERENT constructs
+# (`a:` is bound by name, `a = 1` by position), so keeping the two suffix
+# branches disjoint on their opening token (COLON vs EQUALS) is what keeps
+# lowering unambiguous.
+#
+# Disambiguation from hash/symbol syntax (`NAME COLON` also opens a
+# `hash_entry` `k: v` and a `hash_pattern_pair` `k:`): those rules are only
+# reachable inside a `{ … }` hash literal or a `case/in` pattern, never
+# inside a parenthesised parameter list.  A `param` is reached ONLY from
+# `params`, which is reached ONLY from the `def`/lambda `LPAREN … RPAREN`
+# frame — so the `NAME COLON` here can never collide with a hash-entry
+# parse.  The optional trailing `expression` after COLON is what separates
+# required (`a:`) from optional (`a: 1`); a bare `NAME COLON` at the end of
+# the list (next token `,` / `)`) cleanly matches the no-expression form
+# (same optional-tail shape as `hash_pattern_pair`).
+#
+# The suffix alternation lists the COLON branch BEFORE the EQUALS branch;
+# the two are disjoint on their first token so order is not load-bearing,
+# but keeping keyword-first mirrors the call-side `call_arg` ordering below.
+param        = [ "*" | "**" ] NAME [ COLON [ expression ] | EQUALS expression ] ;
 if_statement = "if" expression { !"else" !"elsif" !"end" statement } { elsif_clause } [ else_clause ] "end" ;
 elsif_clause = "elsif" expression { !"else" !"elsif" !"end" statement } ;
 else_clause  = "else" { !"end" statement } ;
@@ -474,7 +506,32 @@ scope_resolution = "::" ( NAME | KEYWORD ) ;
 # dead — the NAME branch shadows it — and listing it first would break
 # `m(...5)` since the parser does not backtrack across the call_arg
 # boundary once `...` is consumed.)
-call_arg     = [ "*" | "**" | "&" ] expression ;
+# Phase KW7 (Ruby 1.0 unblock) — keyword argument `name: expr`.
+#
+# `f(a: 1)` passes `1` to the callee's keyword parameter `a` BY NAME.  A
+# new leading alternative `NAME COLON expression` captures it and lowers to
+# an `Expr::KeywordArg { name, value }` — NOT a trailing hash literal.
+#
+# Why the keyword branch must be listed FIRST: without it, `f(a: 1)` would
+# funnel `a` into the `expression` branch, which parses `a` as a bare
+# `factor` and then STOPS (the trailing `{ dot_call | scope_resolution }`
+# postfix accepts only `.`/`::`, not `:`), leaving `: 1` unconsumed and the
+# RPAREN match failing.  (Real Ruby treats `f(a: 1)` as sugar for a trailing
+# keyword — equivalently a trailing implicit hash — but SIR models it as a
+# first-class `KeywordArg`, so we produce the keyword node directly rather
+# than a `hash_literal`.)  Listing `NAME COLON expression` before the
+# `[ "*" | "**" | "&" ] expression` branch makes the keyword form win
+# whenever a bare `NAME` is immediately followed by a COLON; every other
+# argument shape (a positional whose expression merely *starts* with a NAME
+# that is NOT followed by a colon, a splat, a block-pass) falls through to
+# the second branch unchanged.
+#
+# Disjointness: the two branches share a `NAME` opener, but the SECOND token
+# decides — COLON selects the keyword branch, anything else backtracks into
+# the positional `expression` branch.  A hash-literal argument written with
+# braces (`f({ a: 1 })`) still parses via the `expression` branch (its first
+# token is `{`, not a bare `NAME`), so explicit-hash args are unaffected.
+call_arg     = NAME COLON expression | [ "*" | "**" | "&" ] expression ;
 # Phase 6h — paren-less method call.  Idiomatic Ruby allows
 # `puts 1, 2` (no parens) when the call has at least one argument.
 #

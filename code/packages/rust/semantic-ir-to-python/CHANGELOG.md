@@ -34,6 +34,18 @@ separator, keyword call arg) and execution-proof tests that shell out to
 `python3`/`python` (skipped gracefully if absent): `greet("hi")` → `hi, world`
 and `greet("hi", name="ada")` → `hi, ada`.
 
+### KW7 — Ruby-frontend-driven execution proof (test only; emission unchanged)
+
+Once the Ruby frontend (`ruby-to-semantic-ir` 0.3.0) began PRODUCING keyword
+params/args (KW7), a full-pipeline execution-proof was added here (the natural
+home, since this crate already dev-depends on the Ruby frontend): Ruby SOURCE
+`def greet(greeting:, name: "world")\n "#{greeting}, #{name}"\nend\n
+print greet(greeting: "hi")\nprint greet(greeting: "hi", name: "ada")` →
+Ruby SIR → Python → CPython prints `hi, world` then `hi, ada`. This exercises
+the KW2 keyword-only-def + `name=value`-call emission end to end from real Ruby
+syntax (78 tests, up from 77). No emission behaviour changed, so the crate
+version is unchanged.
+
 ## 0.2.0 — default-parameter emission via sentinel + body prologue (P2c)
 
 The backend now accepts `Feature::DefaultParams` and lowers default parameters.

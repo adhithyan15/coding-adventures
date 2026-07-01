@@ -179,6 +179,11 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         // lowers to `Param.default = Some(_)` and triggers the
         // `DefaultParams` feature (`extract_params`).
         Feature::DefaultParams,
+        // Phase KW7 (Ruby 1.0 unblock) — a keyword parameter (`a:` / `a: 1`,
+        // `ParamKind::Keyword`) or a keyword argument (`f(a: 1)`,
+        // `Expr::KeywordArg`) triggers the `KeywordParams` feature. Set by
+        // `extract_params` (def side) and `lower_call_arg` (call side).
+        Feature::KeywordParams,
     ] {
         if lw.features_used.contains(&f) {
             manifest.add(f);
@@ -5522,6 +5527,61 @@ impl Lowerer {
         &mut self,
         node: &GrammarASTNode,
     ) -> Result<Expr, RubyLowerError> {
+        // KW7 — keyword argument `name: value` (`f(a: 1)`).  The grammar's
+        // FIRST `call_arg` alternative is `NAME COLON expression`, so a
+        // keyword arg node carries a COLON token child (the single `:`).
+        // We detect that colon and, when present, produce the first-class
+        // `Expr::KeywordArg { name, value }` — NOT a trailing hash literal.
+        // (Real Ruby desugars `f(a: 1)` to a trailing implicit-hash keyword,
+        // but SIR models the keyword as its own node so backends can bind it
+        // to the callee's `Keyword` param by name.)  The COLON is matched by
+        // value: the lexer emits both `:` and `::` as Colon-typed tokens, but
+        // only the single `:` ever appears in this call_arg position (`::` is
+        // scope-resolution, which lives inside the `expression` branch).  A
+        // splat/block-pass prefix (`*`/`**`/`&`) never co-occurs with a
+        // keyword colon, so this check is unambiguous.
+        let has_kw_colon = node.children.iter().any(|c| match c {
+            ASTNodeOrToken::Token(t) => matches!(t.type_, TokenType::Colon) && t.value == ":",
+            _ => false,
+        });
+        if has_kw_colon {
+            // The keyword name is the leading NAME token; the value is the
+            // trailing `expression` child.
+            let name_tok = node
+                .children
+                .iter()
+                .find_map(|c| match c {
+                    ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t),
+                    _ => None,
+                })
+                .ok_or_else(|| RubyLowerError {
+                    message: "keyword call arg missing name token".to_string(),
+                    line: node.start_line.unwrap_or(0),
+                    column: node.start_column.unwrap_or(0),
+                })?;
+            let value_node = node
+                .children
+                .iter()
+                .find_map(|c| match c {
+                    ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
+                    _ => None,
+                })
+                .ok_or_else(|| RubyLowerError {
+                    message: "keyword call arg missing value expression".to_string(),
+                    line: node.start_line.unwrap_or(0),
+                    column: node.start_column.unwrap_or(0),
+                })?;
+            let value = self.lower_expression(value_node)?;
+            // Observe the feature so the SIR validator accepts the keyword
+            // arg (mirrors the def-side `extract_params` KeywordParams gate).
+            self.features_used.insert(Feature::KeywordParams);
+            return Ok(Expr::KeywordArg {
+                name: name_tok.value.clone(),
+                value: Box::new(value),
+                span: self.span_of(node),
+            });
+        }
+
         // Detect the leading `*` / `**` / `&` token (if present).  All
         // three land on Token children with their value preserved
         // (the 1.8-baseline state machine coalesces `**` into one
@@ -6268,11 +6328,30 @@ impl Lowerer {
                 continue;
             }
 
-            // Splat prefix → ParamKind (same detection as before).
-            let kind = param_node.children.iter().find_map(|cc| match cc {
+            // Splat prefix → ParamKind (same detection as before).  The
+            // KEYWORD kind (KW7) is NOT a prefix — it is signalled by a
+            // trailing COLON token instead (detected just below), so it is
+            // handled separately from the `*`/`**` prefix walk here.
+            let splat_kind = param_node.children.iter().find_map(|cc| match cc {
                 ASTNodeOrToken::Token(t) if t.value == "**" => Some(ParamKind::KwRest),
                 ASTNodeOrToken::Token(t) if t.value == "*" => Some(ParamKind::Rest),
                 _ => None,
+            });
+
+            // KW7 — keyword parameter discriminator.  The grammar's `param`
+            // suffix is `[ COLON [ expression ] | EQUALS expression ]`; a
+            // COLON token child means this is a *keyword* param (`a:` or
+            // `a: 1`), bound by name at the call site rather than by
+            // position.  A splat/double-splat never carries a colon, so a
+            // COLON unambiguously means `ParamKind::Keyword`.  (The COLON is
+            // matched from the token value — the lexer emits both `:` and
+            // `::` as Colon-typed tokens, but a param suffix only ever holds
+            // the single `:`.)
+            let is_keyword = param_node.children.iter().any(|cc| match cc {
+                ASTNodeOrToken::Token(t) => {
+                    matches!(t.type_, TokenType::Colon) && t.value == ":"
+                }
+                _ => false,
             });
 
             // The parameter Name token is the one that is not the
@@ -6291,21 +6370,50 @@ impl Lowerer {
                 continue;
             };
 
-            // Optional default — the trailing `expression` child (present
-            // only when the source wrote `name = expr`).  Rest/kwrest
-            // params keep `default: None`.
+            // The final param kind: KEYWORD wins over the (absent) splat
+            // prefix when a colon is present; otherwise it is the splat
+            // kind, defaulting to positional `Required`.
+            let kind = if is_keyword {
+                ParamKind::Keyword
+            } else {
+                splat_kind.unwrap_or(ParamKind::Required)
+            };
+
+            // Optional default — the trailing `expression` child.  For a
+            // positional param it is the `name = expr` default (P7); for a
+            // keyword param it is the `name: expr` default (KW7, present ⇒
+            // optional keyword, absent ⇒ required keyword).  In BOTH cases
+            // the lowered expression becomes `Param.default`.  Rest/kwrest
+            // splat params keep `default: None` (the grammar is permissive
+            // but Ruby never defaults a splat).
             let default_node = param_node.children.iter().find_map(|cc| match cc {
                 ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
                 _ => None,
             });
             let default = match (kind, default_node) {
-                (None, Some(expr_node)) => {
+                // Positional optional (`a = 1`) — the P7 path.
+                (ParamKind::Required, Some(expr_node)) => {
                     let lowered = self.lower_expression(expr_node)?;
                     self.features_used.insert(Feature::DefaultParams);
                     Some(Box::new(lowered))
                 }
+                // Keyword optional (`a: 1`) — the KW7 path.  A keyword param
+                // with a default is an OPTIONAL keyword; one without is a
+                // REQUIRED keyword (the validator enforces that required
+                // keywords are supplied at each call).
+                (ParamKind::Keyword, Some(expr_node)) => {
+                    let lowered = self.lower_expression(expr_node)?;
+                    Some(Box::new(lowered))
+                }
                 _ => None,
             };
+
+            // KW7 — any keyword param makes the module observe the
+            // `KeywordParams` feature so the SIR validator accepts it
+            // (mirrors how a positional default observes `DefaultParams`).
+            if kind == ParamKind::Keyword {
+                self.features_used.insert(Feature::KeywordParams);
+            }
 
             // Make THIS param visible to LATER params' defaults
             // (`def f(a, b = a)`), then record it.
@@ -6315,7 +6423,7 @@ impl Lowerer {
             params.push(Param {
                 name: name_tok.value.clone(),
                 sir_type: None,
-                kind: kind.unwrap_or(ParamKind::Required),
+                kind,
                 default,
                 span: self.span_of_token(name_tok),
             });
