@@ -20,6 +20,7 @@ use spice_netlist_parser::{
     BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_NAVIGATION_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_PACKAGE_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_DASHBOARD_PANEL_CARDS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_ROUTES_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_TABS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_TAB_PANELS_SCHEMA_VERSION,
@@ -2638,6 +2639,11 @@ fn berkeley_app_facade_exports_package_manifest_json() {
         .unwrap()
         .iter()
         .any(|capability| capability == "app-shell-dashboard-tab-panels-json"));
+    assert!(payload["artifactCapabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|capability| capability == "app-shell-dashboard-panel-cards-json"));
 }
 
 #[test]
@@ -3936,6 +3942,106 @@ C1 out 0 1p
         shell_dashboard_tab_panels_payload["tabPanelsCapabilityId"],
         "app-shell-dashboard-tab-panels-json"
     );
+
+    let shell_dashboard_panel_cards = app
+        .run_app_shell_dashboard_panel_cards(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("shell dashboard panel cards should execute");
+    assert_eq!(
+        shell_dashboard_panel_cards.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_PANEL_CARDS_SCHEMA_VERSION
+    );
+    assert!(shell_dashboard_panel_cards.ready);
+    assert_eq!(
+        shell_dashboard_panel_cards
+            .selected_panel_card_id
+            .as_deref(),
+        Some("dashboard.panel-card.status")
+    );
+    assert_eq!(
+        shell_dashboard_panel_cards.selected_card_id.as_deref(),
+        Some("dashboard.status")
+    );
+    assert_eq!(
+        shell_dashboard_panel_cards.default_panel_card_id.as_deref(),
+        Some("dashboard.panel-card.status")
+    );
+    assert_eq!(
+        shell_dashboard_panel_cards.default_card_id.as_deref(),
+        Some("dashboard.status")
+    );
+    assert_eq!(shell_dashboard_panel_cards.panel_card_count, 3);
+    assert_eq!(shell_dashboard_panel_cards.visible_panel_card_count, 2);
+    assert_eq!(shell_dashboard_panel_cards.enabled_panel_card_count, 2);
+    assert_eq!(
+        shell_dashboard_panel_cards.panel_cards[0].panel_id,
+        "dashboard.tab-panel.status"
+    );
+    assert_eq!(
+        shell_dashboard_panel_cards.panel_cards[0].card_id,
+        "dashboard.status"
+    );
+    assert_eq!(
+        shell_dashboard_panel_cards.panel_cards[0].title,
+        "Startup status"
+    );
+    assert!(shell_dashboard_panel_cards.panel_cards[0].selected);
+    assert!(shell_dashboard_panel_cards.panel_cards[0].primary);
+    assert_eq!(shell_dashboard_panel_cards.panel_cards[1].role, "attention");
+    assert!(!shell_dashboard_panel_cards.panel_cards[1].visible);
+    assert!(!shell_dashboard_panel_cards.panel_cards[1].enabled);
+    assert_eq!(shell_dashboard_panel_cards.panel_cards[2].event_count, 3);
+    assert_eq!(
+        shell_dashboard_panel_cards.panel_cards[2].event_ids,
+        vec![
+            "shell.diagnostics".to_string(),
+            "shell.state".to_string(),
+            "shell.capabilities".to_string()
+        ]
+    );
+    assert_eq!(
+        shell_dashboard_panel_cards.panel_cards_capability_id,
+        "app-shell-dashboard-panel-cards-json"
+    );
+    assert_eq!(
+        shell_dashboard_panel_cards.tab_panels_capability_id,
+        shell_dashboard_tab_panels.tab_panels_capability_id
+    );
+
+    let shell_dashboard_panel_cards_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_dashboard_panel_cards_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap(),
+    )
+    .expect("shell dashboard panel cards JSON should parse");
+    assert_eq!(
+        shell_dashboard_panel_cards_payload["selectedPanelCardId"],
+        "dashboard.panel-card.status"
+    );
+    assert_eq!(
+        shell_dashboard_panel_cards_payload["defaultCardId"],
+        "dashboard.status"
+    );
+    assert_eq!(
+        shell_dashboard_panel_cards_payload["visiblePanelCardCount"],
+        2
+    );
+    assert_eq!(
+        shell_dashboard_panel_cards_payload["panelCards"][1]["visible"],
+        false
+    );
+    assert_eq!(
+        shell_dashboard_panel_cards_payload["panelCards"][2]["eventIds"][0],
+        "shell.diagnostics"
+    );
+    assert_eq!(
+        shell_dashboard_panel_cards_payload["panelCardsCapabilityId"],
+        "app-shell-dashboard-panel-cards-json"
+    );
 }
 
 #[test]
@@ -5050,6 +5156,93 @@ R1 in out
     assert_eq!(
         shell_dashboard_tab_panels_payload["tabPanelsCapabilityId"],
         "app-shell-dashboard-tab-panels-json"
+    );
+
+    let shell_dashboard_panel_cards =
+        app.app_shell_dashboard_panel_cards(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        });
+    assert_eq!(
+        shell_dashboard_panel_cards.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_PANEL_CARDS_SCHEMA_VERSION
+    );
+    assert!(!shell_dashboard_panel_cards.ready);
+    assert_eq!(
+        shell_dashboard_panel_cards
+            .selected_panel_card_id
+            .as_deref(),
+        Some("dashboard.panel-card.attention")
+    );
+    assert_eq!(
+        shell_dashboard_panel_cards.selected_card_id.as_deref(),
+        Some("dashboard.attention")
+    );
+    assert_eq!(
+        shell_dashboard_panel_cards.default_panel_card_id.as_deref(),
+        Some("dashboard.panel-card.attention")
+    );
+    assert_eq!(
+        shell_dashboard_panel_cards.default_card_id.as_deref(),
+        Some("dashboard.attention")
+    );
+    assert_eq!(shell_dashboard_panel_cards.panel_card_count, 3);
+    assert_eq!(shell_dashboard_panel_cards.visible_panel_card_count, 3);
+    assert_eq!(shell_dashboard_panel_cards.enabled_panel_card_count, 3);
+    assert_eq!(shell_dashboard_panel_cards.panel_cards[0].role, "status");
+    assert!(!shell_dashboard_panel_cards.panel_cards[0].selected);
+    assert!(shell_dashboard_panel_cards.panel_cards[0].enabled);
+    assert_eq!(
+        shell_dashboard_panel_cards.panel_cards[1].id,
+        "dashboard.panel-card.attention"
+    );
+    assert_eq!(
+        shell_dashboard_panel_cards.panel_cards[1].panel_id,
+        "dashboard.tab-panel.attention"
+    );
+    assert_eq!(
+        shell_dashboard_panel_cards.panel_cards[1].card_id,
+        "dashboard.attention"
+    );
+    assert!(shell_dashboard_panel_cards.panel_cards[1].selected);
+    assert!(shell_dashboard_panel_cards.panel_cards[1].default_panel);
+    assert!(shell_dashboard_panel_cards.panel_cards[1].attention);
+    assert_eq!(shell_dashboard_panel_cards.panel_cards[1].position, 2);
+    assert_eq!(
+        shell_dashboard_panel_cards.panel_cards_capability_id,
+        "app-shell-dashboard-panel-cards-json"
+    );
+
+    let shell_dashboard_panel_cards_payload: serde_json::Value = serde_json::from_str(
+        &app.app_shell_dashboard_panel_cards_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        }),
+    )
+    .expect("blocked shell dashboard panel cards JSON should parse");
+    assert_eq!(
+        shell_dashboard_panel_cards_payload["selectedPanelCardId"],
+        "dashboard.panel-card.attention"
+    );
+    assert_eq!(
+        shell_dashboard_panel_cards_payload["selectedCardId"],
+        "dashboard.attention"
+    );
+    assert_eq!(
+        shell_dashboard_panel_cards_payload["enabledPanelCardCount"],
+        3
+    );
+    assert_eq!(
+        shell_dashboard_panel_cards_payload["panelCards"][1]["attention"],
+        true
+    );
+    assert_eq!(
+        shell_dashboard_panel_cards_payload["panelCards"][1]["cardId"],
+        "dashboard.attention"
+    );
+    assert_eq!(
+        shell_dashboard_panel_cards_payload["panelCardsCapabilityId"],
+        "app-shell-dashboard-panel-cards-json"
     );
 }
 

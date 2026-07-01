@@ -33,24 +33,27 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard tab panels.
+1. Rust Berkeley Mosaic app shell dashboard panel cards.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app shell dashboard tab-panel surfaces and JSON
-     helpers that derive stable selected/default render-panel IDs and
-     tab/breadcrumb/route metadata from dashboard tabs for a compact
-     first-render product-shell panel contract.
+   - Add schema-versioned Rust app shell dashboard panel-card surfaces and JSON
+     helpers that derive stable selected/default panel-card IDs,
+     selected/default card IDs, and panel/card joins from dashboard tab panels
+     and cards for a compact first-render product-shell card placement
+     contract.
    - Preserve package name, source fingerprint, ready/blocked route, status
      severity, attention-required flag, primary-card routing, primary-region
      routing, active-item routing, active/default route routing,
      active/default breadcrumb routing, selected/default tab routing,
-     selected/default panel routing, panel IDs, titles, roles, paths,
-     positions, tab IDs, breadcrumb IDs, route IDs, item IDs, region IDs,
+     selected/default panel routing, selected/default panel-card routing,
+     panel-card IDs, panel IDs, card IDs, section IDs, event IDs, titles,
+     roles, paths, positions, tab IDs, breadcrumb IDs, route IDs, item IDs,
+     region IDs, severities, primary/attention flags,
      selected/default/visible/enabled flags, visible and enabled route,
-     breadcrumb, tab, and panel counts, badge counts, dashboard, package,
-     card, view, layout, navigation, routes, breadcrumbs, tabs, and tab-panels
-     capability IDs, and advertised capability count so Mosaic, WebAssembly,
-     and product shells can render startup dashboard panels without
-     interpreting tab internals.
+     breadcrumb, tab, panel, and panel-card counts, badge counts, dashboard,
+     package, card, view, layout, navigation, routes, breadcrumbs, tabs,
+     tab-panels, and panel-cards capability IDs, and advertised capability
+     count so Mosaic, WebAssembly, and product shells can render startup
+     dashboard panel cards without interpreting tab-panel internals.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1793,6 +1796,26 @@ the Rust, Python, and TypeScript surfaces together.
      capability IDs, and advertised capability count so Mosaic, WebAssembly,
      and product shells can render startup dashboard tabs without interpreting
      breadcrumb internals.
+
+164. Rust Berkeley Mosaic app shell dashboard tab panels.
+   - Status: completed in PR 7144.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell dashboard tab-panel surfaces plus JSON helpers that derive
+     stable selected/default render-panel IDs and tab/breadcrumb/route metadata
+     from dashboard tabs for a compact first-render product-shell panel
+     contract.
+   - The tab-panel payload preserves package name, source fingerprint,
+     ready/blocked route, status severity, attention-required flag,
+     primary-card routing, primary-region routing, active-item routing,
+     active/default route routing, active/default breadcrumb routing,
+     selected/default tab routing, selected/default panel routing, panel IDs,
+     titles, roles, paths, positions, tab IDs, breadcrumb IDs, route IDs, item
+     IDs, region IDs, selected/default/visible/enabled flags, visible and
+     enabled route, breadcrumb, tab, and panel counts, badge counts, dashboard,
+     package, card, view, layout, navigation, routes, breadcrumbs, tabs, and
+     tab-panels capability IDs, and advertised capability count so Mosaic,
+     WebAssembly, and product shells can render startup dashboard panels
+     without interpreting tab internals.
 
 ## Backlog
 
