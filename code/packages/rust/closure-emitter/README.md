@@ -88,6 +88,24 @@ pub enum EmitError {
   `source_map` field becomes the actual map blob.
 - CLOC08: `closurec` CLI that wires `emit()` up to file IO.
 
+## Upstream conformance tests
+
+`tests/upstream/` ports Google Closure Compiler `CodePrinterTest.java`
+(Apache-2.0; see `ATTRIBUTION.md` and `UPSTREAM_SHA`), per the CLOC12
+test-port convention. Each file isolates one printing area:
+
+- `code_printer_test.rs` / `code_printer_declarations_test.rs` /
+  `code_printer_trailing_comma_test.rs` — core expressions, `var`/`let`/`const`
+  declarations, trailing-comma handling.
+- `code_printer_numbers_test.rs` — numeric formatting.
+- `code_printer_string_escape_test.rs` / `code_printer_ascii_escape_test.rs` —
+  default-mode and `ascii_only` string escaping.
+- `code_printer_object_literal_test.rs` — object-literal printing:
+  identifier / string / numeric / computed keys, the key quote-stripping rules
+  (including the `"__proto__"` exception), shorthand, and statement-start
+  parenthesization. 13 active `#[test]`s, no `#[ignore]`. Run with
+  `cargo test --test upstream_code_printer_object_literal`.
+
 ## Dependency whitelist
 
 - `coding-adventures-javascript-ast` — `Program` input.

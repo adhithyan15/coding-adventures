@@ -1329,3 +1329,27 @@ closurec's pass only *propagates*: after inlining every reference it leaves the
 now-dead `const R = 2;` in place for the downstream `remove-unused-vars` pass
 to delete. Upstream `InlineVariables` removes the declaration itself once it has
 no remaining uses. Placeholder: `removes_dead_const_after_inlining`.
+
+## CLOC12.147 — CodePrinter object-literal port (emitter)
+
+- **What it is:** the fifth CodePrinter port into `closure-emitter`. New file
+  `tests/upstream/code_printer_object_literal_test.rs`, registered as the
+  `upstream_code_printer_object_literal` test target. It reshapes upstream
+  `CodePrinterTest`'s object-literal cases (`testObjectLit*` and the key-quoting
+  behaviors) onto our AST surface and pins the `emit_object` /
+  `emit_property` / `emit_property_key` output in the default (minified) mode.
+- **13 active `#[test]`s pass on the first run** (no new emitter bug): the empty
+  object, single/multiple identifier-keyed properties (comma-separated, no
+  interior whitespace), string-key quote-stripping (`{"abc":1}` → `{abc:1}`,
+  reserved words bared, non-identifier and numeric-looking keys kept quoted, the
+  `"__proto__"` exception kept quoted), numeric-literal keys, computed keys
+  (`{[a]:1}`), shorthand (`{a}`), a nested object, and a string-valued property.
+  Every case shows the object parenthesized at statement start (`({…});`).
+- **No `#[ignore]` placeholders.** Getters/setters (`{get a(){}}`) and method
+  shorthand (`{m(){}}`) are out of scope — their values are
+  `FunctionExpression`s, which the Phase-1 emitter does not yet print and the
+  AST cannot fully represent; they join when function-expression emission lands.
+
+  (Numbering note: authored off `origin/main` in parallel with the
+  inline-variables port CLOC12.146 / gap-148…150, so this takes CLOC12.147 to
+  avoid collision when both merge. This port opens no new gaps.)
