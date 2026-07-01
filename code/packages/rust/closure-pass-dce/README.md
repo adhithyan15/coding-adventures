@@ -94,6 +94,23 @@ Once the AST grows the needed variants:
   (constant-discriminant `switch` collapse, dead ternary arms), which
   currently emit only a summary contribution.
 
+## Upstream conformance tests
+
+`tests/upstream/` ports Google Closure Compiler tests (Apache-2.0; see
+`ATTRIBUTION.md` and `UPSTREAM_SHA`), per the CLOC12 test-port convention:
+
+- `peephole_remove_dead_code_test.rs` — `PeepholeRemoveDeadCodeTest.java`
+  (block flattening, no-op labelled statements, …).
+- `unreachable_code_elimination_test.rs` — `UnreachableCodeEliminationTest.java`.
+  Pins the block-level reachability cleanup this pass performs
+  (drop-after-`return`/`throw`, empty-statement removal, nested-block
+  recursion, and the hoisting-soundness decline when a dead tail carries a
+  `var`/`function`). **8 active `#[test]`s** plus **2 `#[ignore]` placeholders**
+  for the CFG-based reachability we don't do yet (`if`-both-branches-terminate →
+  gap-151; `break`/`continue` in a general loop block → gap-152), pinned in
+  `code/specs/CLOC12-gaps.md`. Run with
+  `cargo test --test upstream_unreachable_code_elimination`.
+
 ## Dependency whitelist
 
 - `coding-adventures-closure-pass-pipeline` — `Pass` trait + types.

@@ -1353,3 +1353,39 @@ no remaining uses. Placeholder: `removes_dead_const_after_inlining`.
   (Numbering note: authored off `origin/main` in parallel with the
   inline-variables port CLOC12.146 / gap-148…150, so this takes CLOC12.147 to
   avoid collision when both merge. This port opens no new gaps.)
+
+## CLOC12.148 — UnreachableCodeElimination port (dce)
+
+- **What it is:** the **second** CLOC12 upstream port into `closure-pass-dce`
+  (alongside the `PeepholeRemoveDeadCode` port). New file
+  `tests/upstream/unreachable_code_elimination_test.rs`, registered as the
+  `upstream_unreachable_code_elimination` test target, ported from upstream
+  `UnreachableCodeEliminationTest.java`. Hand-built typed-AST harness (the crate
+  has no source-string entry point), asserting surviving function-body
+  statements after running only `DcePass`.
+- **8 active `#[test]`s pass on the first run** (no new DCE bug): drop
+  single/multiple statements after `return`, drop after `throw`, keep reachable
+  code before the terminator, bare `return` unchanged, empty-statement removal,
+  dead-code cleanup inside a nested `if`-consequent block, and the
+  hoisting-soundness decline (a dead tail carrying a `var` is kept verbatim).
+- **2 `#[ignore]` placeholders** — see gap-151, gap-152.
+
+  (Numbering note: authored off `origin/main` in parallel with the emitter
+  object-literal port CLOC12.147, so this takes CLOC12.148 to avoid collision
+  when both merge.)
+
+### gap-151 — `if`-both-branches-terminate not recognised as unreachable
+
+Upstream removes code after an `if` whose every branch terminates
+(`if (c) return; else return; y();` → the `y()` is unreachable). closurec's DCE
+only truncates after a *direct* terminator statement; an `IfStatement` is not
+`is_terminator`, so the trailing `y()` survives today. Placeholder:
+`drops_code_after_if_both_branches_return`.
+
+### gap-152 — `break`/`continue` only terminate switch cases, not loop blocks
+
+Upstream treats `break`/`continue` as ending the enclosing loop body, so code
+after a `break` inside a loop is unreachable (`while (c) { break; y(); }` →
+`while (c) { break; }`). closurec only treats break/continue as terminators
+inside switch-case consequents (`is_case_terminator`), so the loop-body `y()`
+survives. Placeholder: `drops_code_after_break_in_loop_block`.
