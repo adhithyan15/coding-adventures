@@ -1,5 +1,5 @@
 {
-  "description": "ADJ-LADDER rung 11 \u2014 syndromic decision: the first rung that is BOTH a decision and genuinely multi-hop. Each item gives five equally-likely diagnoses; the engine must first DERIVE which clinical syndrome the patient satisfies (a `rule` head that fires only when BOTH of its findings are observed \u2014 the rung-3 mechanism), then RANK the diagnoses by posterior and pick the leader (the rung-6 decision_leader extractor). The fully-satisfied syndrome (likelihood L_syn) beats a rival supported by a single flashy finding (L_flash < L_syn) \u2014 the anchoring trap: the diagnosis is the one backed by the COMPLETE pattern, not the loudest lone clue. No engine/harness change (reuses rule + decision_leader); synthetic priors/LRs (the ladder is a capability benchmark, not the grounded CAS). Contamination-safe: every prior and LR is printed in the stem and the answer is a disease name, so no result literal leaks; gold rotates A\u2013E; every item's unique leader is asserted at build. Batch 2 adds the completeness-over-strength variant: a complete 3-finding triad competes against a rival whose 2-finding syndrome is only partially present (one finding observed) and is nominally STRONGER \u2014 yet the rival rule never fires, so the fully-satisfied triad wins. Pattern completeness, not nominal association strength, decides.",
+  "description": "ADJ-LADDER rung 11 \u2014 syndromic decision: the first rung that is BOTH a decision and genuinely multi-hop. Each item gives five equally-likely diagnoses; the engine must first DERIVE which clinical syndrome the patient satisfies (a `rule` head that fires only when BOTH of its findings are observed \u2014 the rung-3 mechanism), then RANK the diagnoses by posterior and pick the leader (the rung-6 decision_leader extractor). The fully-satisfied syndrome (likelihood L_syn) beats a rival supported by a single flashy finding (L_flash < L_syn) \u2014 the anchoring trap: the diagnosis is the one backed by the COMPLETE pattern, not the loudest lone clue. No engine/harness change (reuses rule + decision_leader); synthetic priors/LRs (the ladder is a capability benchmark, not the grounded CAS). Contamination-safe: every prior and LR is printed in the stem and the answer is a disease name, so no result literal leaks; gold rotates A\u2013E; every item's unique leader is asserted at build. Batch 2 adds the completeness-over-strength variant: a complete 3-finding triad competes against a rival whose 2-finding syndrome is only partially present (one finding observed) and is nominally STRONGER \u2014 yet the rival rule never fires, so the fully-satisfied triad wins. Pattern completeness, not nominal association strength, decides. Batch 3 adds the combined-likelihood tie-break: two syndromes both fully fire, but the gold disease carries a 2-finding syndrome PLUS an independent corroborating finding whose product (the engine multiplies contributions to one hypothesis) beats the rival's single nominally-stronger syndrome. Batch 4 raises it to a 3-way tie-break: the same gold product must outweigh TWO rivals that both fully fire, each backed by a single syndrome nominally stronger than either of the gold's two pieces.",
   "items": [
     {
       "id": "r11sd-01",
@@ -864,6 +864,222 @@
         "E": "idiopathic_condition"
       },
       "gold_letter": "C"
+    },
+    {
+      "id": "r11sd-49",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of a new regurgitant murmur with Janeway lesions raises the likelihood of infective endocarditis 8-fold, and splinter hemorrhages independently raises it a further 3-fold. Two rival syndromes are each a stronger single association: a malar rash with photosensitivity raises systemic lupus 15-fold, and a migratory polyarthritis with subcutaneous nodules raises rheumatic fever 20-fold. The patient has a new regurgitant murmur with Janeway lesions, splinter hemorrhages, a malar rash with photosensitivity, and a migratory polyarthritis with subcutaneous nodules. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for infective_endocarditis\nprior 0.2 for systemic_lupus\nprior 0.2 for rheumatic_fever\nprior 0.2 for pericarditis\nprior 0.2 for atrial_myxoma\ncontributes 8 from endocarditis_pattern to infective_endocarditis\ncontributes 3 from splinter_hemorrhages to infective_endocarditis\ncontributes 15 from lupus_pattern to systemic_lupus\ncontributes 20 from rheumatic_pattern to rheumatic_fever\nrule { head: endocarditis_pattern when: new_regurgitant_murmur, janeway_lesions }\nrule { head: lupus_pattern when: malar_rash, photosensitivity }\nrule { head: rheumatic_pattern when: migratory_polyarthritis, subcutaneous_nodules }\nobserve new_regurgitant_murmur\nobserve janeway_lesions\nobserve splinter_hemorrhages\nobserve malar_rash\nobserve photosensitivity\nobserve migratory_polyarthritis\nobserve subcutaneous_nodules\n? infective_endocarditis\n? systemic_lupus\n? rheumatic_fever\n? pericarditis\n? atrial_myxoma\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "systemic_lupus",
+        "B": "rheumatic_fever",
+        "C": "pericarditis",
+        "D": "infective_endocarditis",
+        "E": "atrial_myxoma"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r11sd-50",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of a new regurgitant murmur with Janeway lesions raises the likelihood of infective endocarditis 6-fold, and splinter hemorrhages independently raises it a further 5-fold. Two rival syndromes are each a stronger single association: a malar rash with photosensitivity raises systemic lupus 18-fold, and a migratory polyarthritis with subcutaneous nodules raises rheumatic fever 25-fold. The patient has a new regurgitant murmur with Janeway lesions, splinter hemorrhages, a malar rash with photosensitivity, and a migratory polyarthritis with subcutaneous nodules. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for infective_endocarditis\nprior 0.2 for systemic_lupus\nprior 0.2 for rheumatic_fever\nprior 0.2 for pericarditis\nprior 0.2 for atrial_myxoma\ncontributes 6 from endocarditis_pattern to infective_endocarditis\ncontributes 5 from splinter_hemorrhages to infective_endocarditis\ncontributes 18 from lupus_pattern to systemic_lupus\ncontributes 25 from rheumatic_pattern to rheumatic_fever\nrule { head: endocarditis_pattern when: new_regurgitant_murmur, janeway_lesions }\nrule { head: lupus_pattern when: malar_rash, photosensitivity }\nrule { head: rheumatic_pattern when: migratory_polyarthritis, subcutaneous_nodules }\nobserve new_regurgitant_murmur\nobserve janeway_lesions\nobserve splinter_hemorrhages\nobserve malar_rash\nobserve photosensitivity\nobserve migratory_polyarthritis\nobserve subcutaneous_nodules\n? infective_endocarditis\n? systemic_lupus\n? rheumatic_fever\n? pericarditis\n? atrial_myxoma\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "systemic_lupus",
+        "B": "rheumatic_fever",
+        "C": "pericarditis",
+        "D": "atrial_myxoma",
+        "E": "infective_endocarditis"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r11sd-51",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of bilateral hilar adenopathy with erythema nodosum raises the likelihood of sarcoidosis 8-fold, and an elevated ACE level independently raises it a further 3-fold. Two rival syndromes are each a stronger single association: drenching night sweats with apical cavitation raises tuberculosis 15-fold, and a bulky mediastinal mass with generalized pruritus raises lymphoma 20-fold. The patient has bilateral hilar adenopathy with erythema nodosum, an elevated ACE level, drenching night sweats with apical cavitation, and a bulky mediastinal mass with generalized pruritus. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for sarcoidosis\nprior 0.2 for tuberculosis\nprior 0.2 for lymphoma\nprior 0.2 for histoplasmosis\nprior 0.2 for silicosis\ncontributes 8 from sarcoid_pattern to sarcoidosis\ncontributes 3 from elevated_ace_level to sarcoidosis\ncontributes 15 from tuberculosis_pattern to tuberculosis\ncontributes 20 from lymphoma_pattern to lymphoma\nrule { head: sarcoid_pattern when: bilateral_hilar_adenopathy, erythema_nodosum }\nrule { head: tuberculosis_pattern when: drenching_night_sweats, apical_cavitation }\nrule { head: lymphoma_pattern when: bulky_mediastinal_mass, generalized_pruritus }\nobserve bilateral_hilar_adenopathy\nobserve erythema_nodosum\nobserve elevated_ace_level\nobserve drenching_night_sweats\nobserve apical_cavitation\nobserve bulky_mediastinal_mass\nobserve generalized_pruritus\n? sarcoidosis\n? tuberculosis\n? lymphoma\n? histoplasmosis\n? silicosis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "sarcoidosis",
+        "B": "tuberculosis",
+        "C": "lymphoma",
+        "D": "histoplasmosis",
+        "E": "silicosis"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r11sd-52",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of bilateral hilar adenopathy with erythema nodosum raises the likelihood of sarcoidosis 6-fold, and an elevated ACE level independently raises it a further 5-fold. Two rival syndromes are each a stronger single association: drenching night sweats with apical cavitation raises tuberculosis 18-fold, and a bulky mediastinal mass with generalized pruritus raises lymphoma 25-fold. The patient has bilateral hilar adenopathy with erythema nodosum, an elevated ACE level, drenching night sweats with apical cavitation, and a bulky mediastinal mass with generalized pruritus. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for sarcoidosis\nprior 0.2 for tuberculosis\nprior 0.2 for lymphoma\nprior 0.2 for histoplasmosis\nprior 0.2 for silicosis\ncontributes 6 from sarcoid_pattern to sarcoidosis\ncontributes 5 from elevated_ace_level to sarcoidosis\ncontributes 18 from tuberculosis_pattern to tuberculosis\ncontributes 25 from lymphoma_pattern to lymphoma\nrule { head: sarcoid_pattern when: bilateral_hilar_adenopathy, erythema_nodosum }\nrule { head: tuberculosis_pattern when: drenching_night_sweats, apical_cavitation }\nrule { head: lymphoma_pattern when: bulky_mediastinal_mass, generalized_pruritus }\nobserve bilateral_hilar_adenopathy\nobserve erythema_nodosum\nobserve elevated_ace_level\nobserve drenching_night_sweats\nobserve apical_cavitation\nobserve bulky_mediastinal_mass\nobserve generalized_pruritus\n? sarcoidosis\n? tuberculosis\n? lymphoma\n? histoplasmosis\n? silicosis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "tuberculosis",
+        "B": "sarcoidosis",
+        "C": "lymphoma",
+        "D": "histoplasmosis",
+        "E": "silicosis"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r11sd-53",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of episodic flushing with secretory diarrhea raises the likelihood of carcinoid syndrome 8-fold, and a right-sided heart murmur independently raises it a further 3-fold. Two rival syndromes are each a stronger single association: paroxysmal hypertension with palpitations raises pheochromocytoma 15-fold, and a watery diarrhea with hypokalemia raises vipoma 20-fold. The patient has episodic flushing with secretory diarrhea, a right-sided heart murmur, paroxysmal hypertension with palpitations, and a watery diarrhea with hypokalemia. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for carcinoid_syndrome\nprior 0.2 for pheochromocytoma\nprior 0.2 for vipoma\nprior 0.2 for mastocytosis\nprior 0.2 for zollinger_ellison\ncontributes 8 from carcinoid_pattern to carcinoid_syndrome\ncontributes 3 from right_sided_heart_murmur to carcinoid_syndrome\ncontributes 15 from pheochromocytoma_pattern to pheochromocytoma\ncontributes 20 from vipoma_pattern to vipoma\nrule { head: carcinoid_pattern when: episodic_flushing, secretory_diarrhea }\nrule { head: pheochromocytoma_pattern when: paroxysmal_hypertension, palpitations }\nrule { head: vipoma_pattern when: watery_diarrhea, hypokalemia }\nobserve episodic_flushing\nobserve secretory_diarrhea\nobserve right_sided_heart_murmur\nobserve paroxysmal_hypertension\nobserve palpitations\nobserve watery_diarrhea\nobserve hypokalemia\n? carcinoid_syndrome\n? pheochromocytoma\n? vipoma\n? mastocytosis\n? zollinger_ellison\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "pheochromocytoma",
+        "B": "vipoma",
+        "C": "carcinoid_syndrome",
+        "D": "mastocytosis",
+        "E": "zollinger_ellison"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r11sd-54",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of episodic flushing with secretory diarrhea raises the likelihood of carcinoid syndrome 6-fold, and a right-sided heart murmur independently raises it a further 5-fold. Two rival syndromes are each a stronger single association: paroxysmal hypertension with palpitations raises pheochromocytoma 18-fold, and a watery diarrhea with hypokalemia raises vipoma 25-fold. The patient has episodic flushing with secretory diarrhea, a right-sided heart murmur, paroxysmal hypertension with palpitations, and a watery diarrhea with hypokalemia. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for carcinoid_syndrome\nprior 0.2 for pheochromocytoma\nprior 0.2 for vipoma\nprior 0.2 for mastocytosis\nprior 0.2 for zollinger_ellison\ncontributes 6 from carcinoid_pattern to carcinoid_syndrome\ncontributes 5 from right_sided_heart_murmur to carcinoid_syndrome\ncontributes 18 from pheochromocytoma_pattern to pheochromocytoma\ncontributes 25 from vipoma_pattern to vipoma\nrule { head: carcinoid_pattern when: episodic_flushing, secretory_diarrhea }\nrule { head: pheochromocytoma_pattern when: paroxysmal_hypertension, palpitations }\nrule { head: vipoma_pattern when: watery_diarrhea, hypokalemia }\nobserve episodic_flushing\nobserve secretory_diarrhea\nobserve right_sided_heart_murmur\nobserve paroxysmal_hypertension\nobserve palpitations\nobserve watery_diarrhea\nobserve hypokalemia\n? carcinoid_syndrome\n? pheochromocytoma\n? vipoma\n? mastocytosis\n? zollinger_ellison\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "pheochromocytoma",
+        "B": "vipoma",
+        "C": "mastocytosis",
+        "D": "carcinoid_syndrome",
+        "E": "zollinger_ellison"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r11sd-55",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of lytic bone lesions with hypercalcemia raises the likelihood of multiple myeloma 8-fold, and rouleaux formation on the smear independently raises it a further 3-fold. Two rival syndromes are each a stronger single association: serum hyperviscosity with lymphadenopathy raises waldenstrom macroglobulinemia 15-fold, and nephrotic-range proteinuria with macroglossia raises primary amyloidosis 20-fold. The patient has lytic bone lesions with hypercalcemia, rouleaux formation on the smear, serum hyperviscosity with lymphadenopathy, and nephrotic-range proteinuria with macroglossia. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for multiple_myeloma\nprior 0.2 for waldenstrom_macroglobulinemia\nprior 0.2 for primary_amyloidosis\nprior 0.2 for monoclonal_gammopathy\nprior 0.2 for chronic_lymphocytic_leukemia\ncontributes 8 from myeloma_pattern to multiple_myeloma\ncontributes 3 from rouleaux_formation to multiple_myeloma\ncontributes 15 from waldenstrom_pattern to waldenstrom_macroglobulinemia\ncontributes 20 from amyloid_pattern to primary_amyloidosis\nrule { head: myeloma_pattern when: lytic_bone_lesions, hypercalcemia }\nrule { head: waldenstrom_pattern when: serum_hyperviscosity, lymphadenopathy }\nrule { head: amyloid_pattern when: nephrotic_proteinuria, macroglossia }\nobserve lytic_bone_lesions\nobserve hypercalcemia\nobserve rouleaux_formation\nobserve serum_hyperviscosity\nobserve lymphadenopathy\nobserve nephrotic_proteinuria\nobserve macroglossia\n? multiple_myeloma\n? waldenstrom_macroglobulinemia\n? primary_amyloidosis\n? monoclonal_gammopathy\n? chronic_lymphocytic_leukemia\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "waldenstrom_macroglobulinemia",
+        "B": "primary_amyloidosis",
+        "C": "monoclonal_gammopathy",
+        "D": "chronic_lymphocytic_leukemia",
+        "E": "multiple_myeloma"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r11sd-56",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of lytic bone lesions with hypercalcemia raises the likelihood of multiple myeloma 6-fold, and rouleaux formation on the smear independently raises it a further 5-fold. Two rival syndromes are each a stronger single association: serum hyperviscosity with lymphadenopathy raises waldenstrom macroglobulinemia 18-fold, and nephrotic-range proteinuria with macroglossia raises primary amyloidosis 25-fold. The patient has lytic bone lesions with hypercalcemia, rouleaux formation on the smear, serum hyperviscosity with lymphadenopathy, and nephrotic-range proteinuria with macroglossia. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for multiple_myeloma\nprior 0.2 for waldenstrom_macroglobulinemia\nprior 0.2 for primary_amyloidosis\nprior 0.2 for monoclonal_gammopathy\nprior 0.2 for chronic_lymphocytic_leukemia\ncontributes 6 from myeloma_pattern to multiple_myeloma\ncontributes 5 from rouleaux_formation to multiple_myeloma\ncontributes 18 from waldenstrom_pattern to waldenstrom_macroglobulinemia\ncontributes 25 from amyloid_pattern to primary_amyloidosis\nrule { head: myeloma_pattern when: lytic_bone_lesions, hypercalcemia }\nrule { head: waldenstrom_pattern when: serum_hyperviscosity, lymphadenopathy }\nrule { head: amyloid_pattern when: nephrotic_proteinuria, macroglossia }\nobserve lytic_bone_lesions\nobserve hypercalcemia\nobserve rouleaux_formation\nobserve serum_hyperviscosity\nobserve lymphadenopathy\nobserve nephrotic_proteinuria\nobserve macroglossia\n? multiple_myeloma\n? waldenstrom_macroglobulinemia\n? primary_amyloidosis\n? monoclonal_gammopathy\n? chronic_lymphocytic_leukemia\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "multiple_myeloma",
+        "B": "waldenstrom_macroglobulinemia",
+        "C": "primary_amyloidosis",
+        "D": "monoclonal_gammopathy",
+        "E": "chronic_lymphocytic_leukemia"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r11sd-57",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of bronze skin with a restrictive cardiomyopathy raises the likelihood of hereditary hemochromatosis 8-fold, and an elevated ferritin independently raises it a further 3-fold. Two rival syndromes are each a stronger single association: Kayser-Fleischer rings with a resting tremor raises wilson disease 15-fold, and polyuria with polydipsia raises diabetes mellitus 20-fold. The patient has bronze skin with a restrictive cardiomyopathy, an elevated ferritin, Kayser-Fleischer rings with a resting tremor, and polyuria with polydipsia. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for hereditary_hemochromatosis\nprior 0.2 for wilson_disease\nprior 0.2 for diabetes_mellitus\nprior 0.2 for porphyria\nprior 0.2 for addison_disease\ncontributes 8 from hemochromatosis_pattern to hereditary_hemochromatosis\ncontributes 3 from elevated_ferritin to hereditary_hemochromatosis\ncontributes 15 from wilson_pattern to wilson_disease\ncontributes 20 from diabetes_pattern to diabetes_mellitus\nrule { head: hemochromatosis_pattern when: bronze_skin, restrictive_cardiomyopathy }\nrule { head: wilson_pattern when: kayser_fleischer_rings, resting_tremor }\nrule { head: diabetes_pattern when: polyuria, polydipsia }\nobserve bronze_skin\nobserve restrictive_cardiomyopathy\nobserve elevated_ferritin\nobserve kayser_fleischer_rings\nobserve resting_tremor\nobserve polyuria\nobserve polydipsia\n? hereditary_hemochromatosis\n? wilson_disease\n? diabetes_mellitus\n? porphyria\n? addison_disease\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "wilson_disease",
+        "B": "hereditary_hemochromatosis",
+        "C": "diabetes_mellitus",
+        "D": "porphyria",
+        "E": "addison_disease"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r11sd-58",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of bronze skin with a restrictive cardiomyopathy raises the likelihood of hereditary hemochromatosis 6-fold, and an elevated ferritin independently raises it a further 5-fold. Two rival syndromes are each a stronger single association: Kayser-Fleischer rings with a resting tremor raises wilson disease 18-fold, and polyuria with polydipsia raises diabetes mellitus 25-fold. The patient has bronze skin with a restrictive cardiomyopathy, an elevated ferritin, Kayser-Fleischer rings with a resting tremor, and polyuria with polydipsia. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for hereditary_hemochromatosis\nprior 0.2 for wilson_disease\nprior 0.2 for diabetes_mellitus\nprior 0.2 for porphyria\nprior 0.2 for addison_disease\ncontributes 6 from hemochromatosis_pattern to hereditary_hemochromatosis\ncontributes 5 from elevated_ferritin to hereditary_hemochromatosis\ncontributes 18 from wilson_pattern to wilson_disease\ncontributes 25 from diabetes_pattern to diabetes_mellitus\nrule { head: hemochromatosis_pattern when: bronze_skin, restrictive_cardiomyopathy }\nrule { head: wilson_pattern when: kayser_fleischer_rings, resting_tremor }\nrule { head: diabetes_pattern when: polyuria, polydipsia }\nobserve bronze_skin\nobserve restrictive_cardiomyopathy\nobserve elevated_ferritin\nobserve kayser_fleischer_rings\nobserve resting_tremor\nobserve polyuria\nobserve polydipsia\n? hereditary_hemochromatosis\n? wilson_disease\n? diabetes_mellitus\n? porphyria\n? addison_disease\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "wilson_disease",
+        "B": "diabetes_mellitus",
+        "C": "hereditary_hemochromatosis",
+        "D": "porphyria",
+        "E": "addison_disease"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r11sd-59",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of Gottron papules with a heliotrope rash raises the likelihood of dermatomyositis 8-fold, and proximal muscle weakness independently raises it a further 3-fold. Two rival syndromes are each a stronger single association: sclerodactyly with Raynaud phenomenon raises systemic sclerosis 15-fold, and nail pitting with dactylitis raises psoriatic arthritis 20-fold. The patient has Gottron papules with a heliotrope rash, proximal muscle weakness, sclerodactyly with Raynaud phenomenon, and nail pitting with dactylitis. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for dermatomyositis\nprior 0.2 for systemic_sclerosis\nprior 0.2 for psoriatic_arthritis\nprior 0.2 for lichen_planus\nprior 0.2 for rosacea\ncontributes 8 from dermatomyositis_pattern to dermatomyositis\ncontributes 3 from proximal_muscle_weakness to dermatomyositis\ncontributes 15 from sclerosis_pattern to systemic_sclerosis\ncontributes 20 from psoriatic_pattern to psoriatic_arthritis\nrule { head: dermatomyositis_pattern when: gottron_papules, heliotrope_rash }\nrule { head: sclerosis_pattern when: sclerodactyly, raynaud_phenomenon }\nrule { head: psoriatic_pattern when: nail_pitting, dactylitis }\nobserve gottron_papules\nobserve heliotrope_rash\nobserve proximal_muscle_weakness\nobserve sclerodactyly\nobserve raynaud_phenomenon\nobserve nail_pitting\nobserve dactylitis\n? dermatomyositis\n? systemic_sclerosis\n? psoriatic_arthritis\n? lichen_planus\n? rosacea\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "systemic_sclerosis",
+        "B": "psoriatic_arthritis",
+        "C": "lichen_planus",
+        "D": "dermatomyositis",
+        "E": "rosacea"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r11sd-60",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of Gottron papules with a heliotrope rash raises the likelihood of dermatomyositis 6-fold, and proximal muscle weakness independently raises it a further 5-fold. Two rival syndromes are each a stronger single association: sclerodactyly with Raynaud phenomenon raises systemic sclerosis 18-fold, and nail pitting with dactylitis raises psoriatic arthritis 25-fold. The patient has Gottron papules with a heliotrope rash, proximal muscle weakness, sclerodactyly with Raynaud phenomenon, and nail pitting with dactylitis. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for dermatomyositis\nprior 0.2 for systemic_sclerosis\nprior 0.2 for psoriatic_arthritis\nprior 0.2 for lichen_planus\nprior 0.2 for rosacea\ncontributes 6 from dermatomyositis_pattern to dermatomyositis\ncontributes 5 from proximal_muscle_weakness to dermatomyositis\ncontributes 18 from sclerosis_pattern to systemic_sclerosis\ncontributes 25 from psoriatic_pattern to psoriatic_arthritis\nrule { head: dermatomyositis_pattern when: gottron_papules, heliotrope_rash }\nrule { head: sclerosis_pattern when: sclerodactyly, raynaud_phenomenon }\nrule { head: psoriatic_pattern when: nail_pitting, dactylitis }\nobserve gottron_papules\nobserve heliotrope_rash\nobserve proximal_muscle_weakness\nobserve sclerodactyly\nobserve raynaud_phenomenon\nobserve nail_pitting\nobserve dactylitis\n? dermatomyositis\n? systemic_sclerosis\n? psoriatic_arthritis\n? lichen_planus\n? rosacea\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "systemic_sclerosis",
+        "B": "psoriatic_arthritis",
+        "C": "lichen_planus",
+        "D": "rosacea",
+        "E": "dermatomyositis"
+      },
+      "gold_letter": "E"
     }
   ]
 }

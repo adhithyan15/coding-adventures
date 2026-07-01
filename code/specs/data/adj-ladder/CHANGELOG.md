@@ -2,6 +2,31 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.44.0] — 2026-06-30
+
+### Added — rung 11 batch 4: combined likelihood beats TWO firing rivals (3-way tie-break)
+
+- **`rung11_syndromic_decision/items.json` grows 48 → 60** (`r11sd-49`..`r11sd-60`): a fourth
+  decision family that raises batch-3's tie-break from two competing syndromes to **three**. The
+  **gold** disease is again backed by a 2-finding syndrome (LR `l_gold`) **plus** an independent
+  corroborating finding (LR `l_extra`), whose product the engine forms as `l_gold · l_extra`. It now
+  competes against **two** rivals that **both fully fire**, each backed by a single 2-finding
+  syndrome (LRs `l_ra`, `l_rb`). Each rival's single syndrome is nominally stronger than either of
+  the gold's two pieces (`l_ra`, `l_rb` both `> l_gold` and `> l_extra`), yet the gold's **product**
+  outweighs both (`l_gold · l_extra > l_ra` and `> l_rb`). Three syndrome `rule`s fire; the engine
+  multiplies every fired likelihood and `decision_leader` returns the gold disease. The trap deepens:
+  there are now **two** louder single clues to anchor on, and only the greater total weight of the
+  gold's two independent pieces wins.
+- 6 scenarios (infective endocarditis vs SLE vs rheumatic fever; sarcoidosis vs TB vs lymphoma;
+  carcinoid vs pheochromocytoma vs VIPoma; multiple myeloma vs Waldenström vs amyloidosis;
+  hemochromatosis vs Wilson vs diabetes; dermatomyositis vs systemic sclerosis vs psoriatic
+  arthritis) × 2 LR variants `(8,3,15,20)`/`(6,5,18,25)`. Reuses the same machinery — multi-atom
+  `rule` heads + **two `contributes` to the gold hypothesis** (which multiply) + one `contributes`
+  to each of two rivals + `decision_leader`; **no engine/harness change**.
+- Contamination-safe (every prior/LR printed in the stem; the answer is a disease name; identifiers
+  digit-free); gold rotates A–E; unique leader asserted at build. Engine **60/60** cached;
+  contamination / ruff / items-valid gates clean.
+
 ## [0.43.0] — 2026-06-30
 
 ### Added — rung 13: the transtubular potassium gradient (constant-free renal ratio)

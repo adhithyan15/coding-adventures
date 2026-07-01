@@ -204,6 +204,68 @@ COMBINED_LR_SCENARIOS = [
 # syndrome is nominally stronger than either of the gold disease's two pieces, yet their PRODUCT wins.
 VARIANTS_COMBINED = [(8, 3, 15), (6, 4, 20)]
 
+# --- batch 4: combined likelihood beats TWO firing rivals (3-way tie-break) ----------------------
+# Batch 3 pitted the gold disease's combined evidence against ONE firing rival. Batch 4 raises the
+# bar: the same GOLD disease — a 2-finding syndrome (LR `l_gold`) PLUS an independent corroborating
+# finding (LR `l_extra`), whose product the engine forms as `l_gold * l_extra` — now competes against
+# TWO rivals that BOTH fully fire, each backed by a single 2-finding syndrome (LRs `l_ra`, `l_rb`).
+# Each rival's single syndrome is nominally stronger than either of the gold's two pieces
+# (`l_ra`,`l_rb` both `> l_gold` and `> l_extra`), yet the gold's PRODUCT beats both
+# (`l_gold * l_extra > l_ra` and `> l_rb`). Three syndrome rules fire; `decision_leader` ranks by the
+# product of every fired likelihood and returns the gold disease. The trap deepens: there are now two
+# louder single clues to anchor on, and the reader must recognise that the gold's two independent
+# pieces of evidence COMBINE to outweigh either. Two prior-only diseases fill the five options.
+# (gold_syn, gold, (g1, g2), extra, ra_syn, ra, (ra1, ra2), rb_syn, rb, (rb1, rb2), [2 prior-only],
+#  gold_syn_phrase, gold_extra_phrase, ra_syn_phrase, rb_syn_phrase)
+TWO_RIVAL_SCENARIOS = [
+    ("endocarditis_pattern", "infective_endocarditis", ("new_regurgitant_murmur", "janeway_lesions"),
+     "splinter_hemorrhages",
+     "lupus_pattern", "systemic_lupus", ("malar_rash", "photosensitivity"),
+     "rheumatic_pattern", "rheumatic_fever", ("migratory_polyarthritis", "subcutaneous_nodules"),
+     ["pericarditis", "atrial_myxoma"],
+     "a new regurgitant murmur with Janeway lesions", "splinter hemorrhages",
+     "a malar rash with photosensitivity", "a migratory polyarthritis with subcutaneous nodules"),
+    ("sarcoid_pattern", "sarcoidosis", ("bilateral_hilar_adenopathy", "erythema_nodosum"),
+     "elevated_ace_level",
+     "tuberculosis_pattern", "tuberculosis", ("drenching_night_sweats", "apical_cavitation"),
+     "lymphoma_pattern", "lymphoma", ("bulky_mediastinal_mass", "generalized_pruritus"),
+     ["histoplasmosis", "silicosis"],
+     "bilateral hilar adenopathy with erythema nodosum", "an elevated ACE level",
+     "drenching night sweats with apical cavitation",
+     "a bulky mediastinal mass with generalized pruritus"),
+    ("carcinoid_pattern", "carcinoid_syndrome", ("episodic_flushing", "secretory_diarrhea"),
+     "right_sided_heart_murmur",
+     "pheochromocytoma_pattern", "pheochromocytoma", ("paroxysmal_hypertension", "palpitations"),
+     "vipoma_pattern", "vipoma", ("watery_diarrhea", "hypokalemia"),
+     ["mastocytosis", "zollinger_ellison"],
+     "episodic flushing with secretory diarrhea", "a right-sided heart murmur",
+     "paroxysmal hypertension with palpitations", "a watery diarrhea with hypokalemia"),
+    ("myeloma_pattern", "multiple_myeloma", ("lytic_bone_lesions", "hypercalcemia"),
+     "rouleaux_formation",
+     "waldenstrom_pattern", "waldenstrom_macroglobulinemia", ("serum_hyperviscosity", "lymphadenopathy"),
+     "amyloid_pattern", "primary_amyloidosis", ("nephrotic_proteinuria", "macroglossia"),
+     ["monoclonal_gammopathy", "chronic_lymphocytic_leukemia"],
+     "lytic bone lesions with hypercalcemia", "rouleaux formation on the smear",
+     "serum hyperviscosity with lymphadenopathy", "nephrotic-range proteinuria with macroglossia"),
+    ("hemochromatosis_pattern", "hereditary_hemochromatosis", ("bronze_skin", "restrictive_cardiomyopathy"),
+     "elevated_ferritin",
+     "wilson_pattern", "wilson_disease", ("kayser_fleischer_rings", "resting_tremor"),
+     "diabetes_pattern", "diabetes_mellitus", ("polyuria", "polydipsia"),
+     ["porphyria", "addison_disease"],
+     "bronze skin with a restrictive cardiomyopathy", "an elevated ferritin",
+     "Kayser-Fleischer rings with a resting tremor", "polyuria with polydipsia"),
+    ("dermatomyositis_pattern", "dermatomyositis", ("gottron_papules", "heliotrope_rash"),
+     "proximal_muscle_weakness",
+     "sclerosis_pattern", "systemic_sclerosis", ("sclerodactyly", "raynaud_phenomenon"),
+     "psoriatic_pattern", "psoriatic_arthritis", ("nail_pitting", "dactylitis"),
+     ["lichen_planus", "rosacea"],
+     "Gottron papules with a heliotrope rash", "proximal muscle weakness",
+     "sclerodactyly with Raynaud phenomenon", "nail pitting with dactylitis"),
+]
+# (l_gold, l_extra, l_ra, l_rb): l_gold*l_extra > l_ra and > l_rb, while each rival LR exceeds
+# l_gold and l_extra individually. The two rivals differ (distinct posteriors), neither ties gold.
+VARIANTS_TWO_RIVAL = [(8, 3, 15, 20), (6, 5, 18, 25)]
+
 
 def build():
     items = []
@@ -382,6 +444,75 @@ def build():
                 "gold_letter": LETTERS[gold_pos],
             })
             idx += 1
+    # --- batch 4: combined likelihood beats TWO firing rivals (3-way tie-break) ------------------
+    for scen in TWO_RIVAL_SCENARIOS:
+        (gold_syn, gold, (g1, g2), extra, ra_syn, ra, (ra1, ra2), rb_syn, rb, (rb1, rb2),
+         priors_only, gold_syn_phrase, gold_extra_phrase, ra_syn_phrase, rb_syn_phrase) = scen
+        for (l_gold, l_extra, l_ra, l_rb) in VARIANTS_TWO_RIVAL:
+            diseases = [gold, ra, rb, *priors_only]  # gold + two rivals + two prior-only = five
+            assert len(set(diseases)) == 5, diseases
+            prior = "0.2"
+            # gold's two independent contributions MULTIPLY (l_gold * l_extra); BOTH rivals fire one
+            # nominally-stronger syndrome each (l_ra, l_rb). All three syndrome rules fire fully.
+            posterior = {d: 0.2 for d in diseases}
+            posterior[gold] = 0.2 * l_gold * l_extra
+            posterior[ra] = 0.2 * l_ra
+            posterior[rb] = 0.2 * l_rb
+            leader = max(posterior, key=posterior.get)
+            assert leader == gold, (gold, posterior)
+            assert sum(1 for d in diseases if posterior[d] == posterior[gold]) == 1, scen
+            # each rival is nominally stronger than either of the gold's two pieces, yet the product wins
+            assert l_gold * l_extra > l_ra and l_gold * l_extra > l_rb, scen
+            assert l_ra > l_gold and l_ra > l_extra, scen
+            assert l_rb > l_gold and l_rb > l_extra, scen
+
+            gold_pos = idx % 5
+            opts = [d for d in diseases if d != gold]
+            opts.insert(gold_pos, gold)
+            opts = opts[:5]
+            if opts[gold_pos] != gold:
+                opts[gold_pos] = gold
+            assert len(set(opts)) == 5, opts
+            options = {LETTERS[i]: opts[i] for i in range(5)}
+
+            prog = (
+                "".join(f"prior {prior} for {d}\n" for d in diseases)
+                + f"contributes {l_gold} from {gold_syn} to {gold}\n"
+                + f"contributes {l_extra} from {extra} to {gold}\n"
+                + f"contributes {l_ra} from {ra_syn} to {ra}\n"
+                + f"contributes {l_rb} from {rb_syn} to {rb}\n"
+                + f"rule {{ head: {gold_syn} when: {g1}, {g2} }}\n"
+                + f"rule {{ head: {ra_syn} when: {ra1}, {ra2} }}\n"
+                + f"rule {{ head: {rb_syn} when: {rb1}, {rb2} }}\n"
+                + f"observe {g1}\n"
+                + f"observe {g2}\n"
+                + f"observe {extra}\n"
+                + f"observe {ra1}\n"
+                + f"observe {ra2}\n"
+                + f"observe {rb1}\n"
+                + f"observe {rb2}\n"
+                + "".join(f"? {d}\n" for d in diseases)
+            )
+            stem = (
+                f"Five diagnoses are equally likely a priori (each prior {prior}). The syndrome of "
+                f"{gold_syn_phrase} raises the likelihood of {gold.replace('_', ' ')} {l_gold}-fold, "
+                f"and {gold_extra_phrase} independently raises it a further {l_extra}-fold. Two rival "
+                f"syndromes are each a stronger single association: {ra_syn_phrase} raises "
+                f"{ra.replace('_', ' ')} {l_ra}-fold, and {rb_syn_phrase} raises "
+                f"{rb.replace('_', ' ')} {l_rb}-fold. The patient has {gold_syn_phrase}, "
+                f"{gold_extra_phrase}, {ra_syn_phrase}, and {rb_syn_phrase}. Which single diagnosis is "
+                f"most likely?"
+            )
+            items.append({
+                "id": f"r11sd-{idx + 1:02d}",
+                "qtype": "syndromic_decision",
+                "stem": stem,
+                "program": prog,
+                "answer_from": {"type": "decision_leader", "structural_weights": False},
+                "options": options,
+                "gold_letter": LETTERS[gold_pos],
+            })
+            idx += 1
     return {
         "description": (
             "ADJ-LADDER rung 11 — syndromic decision: the first rung that is BOTH a decision and "
@@ -399,7 +530,12 @@ def build():
             "a complete 3-finding triad competes against a rival whose 2-finding syndrome is only "
             "partially present (one finding observed) and is nominally STRONGER — yet the rival rule "
             "never fires, so the fully-satisfied triad wins. Pattern completeness, not nominal "
-            "association strength, decides."
+            "association strength, decides. Batch 3 adds the combined-likelihood tie-break: two "
+            "syndromes both fully fire, but the gold disease carries a 2-finding syndrome PLUS an "
+            "independent corroborating finding whose product (the engine multiplies contributions to "
+            "one hypothesis) beats the rival's single nominally-stronger syndrome. Batch 4 raises it "
+            "to a 3-way tie-break: the same gold product must outweigh TWO rivals that both fully fire, "
+            "each backed by a single syndrome nominally stronger than either of the gold's two pieces."
         ),
         "items": items,
     }
