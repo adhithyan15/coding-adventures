@@ -1,5 +1,5 @@
 {
-  "description": "ADJ-LADDER rung 14 \u2014 indeterminate decision: the abstention rung. Each item offers four candidate diagnoses plus an 'insufficient information to distinguish' option. On DETERMINATE items one finding outweighs the other (L_hi > L_lo), so the engine returns a determinate leader and the gold answer is that diagnosis. On TIE items both findings carry the SAME likelihood ratio, so the top two posteriors are exactly equal, the engine returns a kickback ('top two hypotheses are tied on posterior log-odds'), and the gold answer is the abstention option. The engine owns both verdicts natively (decision.type = determinate vs kickback); the harness maps a determinate leader to its diagnosis letter and a kickback to the tie_label letter \u2014 Python never compares a number. This tests calibration: commit when the log-odds separate, abstain when they coincide. A guesser fails every tie; a hedger fails every determinate. Contamination-safe: the only literals are the printed priors and likelihood ratios, and the answer is a categorical option; identifiers are digit-free; gold rotates A\u2013E; the determinate/tie split is 12/12.",
+  "description": "ADJ-LADDER rung 14 \u2014 indeterminate decision: the abstention rung. Each item offers four candidate diagnoses plus an 'insufficient information to distinguish' option. On DETERMINATE items one finding outweighs the other (L_hi > L_lo), so the engine returns a determinate leader and the gold answer is that diagnosis. On TIE items both findings carry the SAME likelihood ratio, so the top two posteriors are exactly equal, the engine returns a kickback ('top two hypotheses are tied on posterior log-odds'), and the gold answer is the abstention option. The engine owns both verdicts natively (decision.type = determinate vs kickback); the harness maps a determinate leader to its diagnosis letter and a kickback to the tie_label letter \u2014 Python never compares a number. This tests calibration: commit when the log-odds separate, abstain when they coincide. A guesser fails every tie; a hedger fails every determinate. Contamination-safe: the only literals are the printed priors and likelihood ratios, and the answer is a categorical option; identifiers are digit-free; gold rotates A\u2013E; the determinate/tie split is 12/12. Batch 2 raises the tie from two-way to THREE-way: three diagnoses of a genuine three-way differential are exactly co-equal at the top (still a kickback), versus a crowded determinate control where three findings fire but one is stronger (a unique leader survives). Because the engine commits on any positive margin, only an exact tie abstains \u2014 batch 2 widens the tie, it does not narrow the margin.",
   "items": [
     {
       "id": "r14id-01",
@@ -456,6 +456,462 @@
         "E": "psychosis"
       },
       "gold_letter": "D"
+    },
+    {
+      "id": "r14id-25",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A low serum iron raises iron deficiency anemia 12-fold, while target cells with a normal iron level raises thalassemia trait 8-fold and a high ferritin with a low transferrin saturation raises anemia of chronic disease 8-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for iron_deficiency_anemia\nprior 0.2 for thalassemia_trait\nprior 0.2 for anemia_of_chronic_disease\nprior 0.2 for sideroblastic_anemia\ncontributes 12 from low_serum_iron to iron_deficiency_anemia\ncontributes 8 from target_cells_normal_iron to thalassemia_trait\ncontributes 8 from high_ferritin_low_saturation to anemia_of_chronic_disease\nobserve low_serum_iron\nobserve target_cells_normal_iron\nobserve high_ferritin_low_saturation\n? iron_deficiency_anemia\n? thalassemia_trait\n? anemia_of_chronic_disease\n? sideroblastic_anemia\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "thalassemia_trait",
+        "B": "anemia_of_chronic_disease",
+        "C": "sideroblastic_anemia",
+        "D": "insufficient information to distinguish",
+        "E": "iron_deficiency_anemia"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r14id-26",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A low serum iron raises iron deficiency anemia 5-fold, target cells with a normal iron level raises thalassemia trait by the same 5-fold, and a high ferritin with a low transferrin saturation raises anemia of chronic disease by the same 5-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for iron_deficiency_anemia\nprior 0.2 for thalassemia_trait\nprior 0.2 for anemia_of_chronic_disease\nprior 0.2 for sideroblastic_anemia\ncontributes 5 from low_serum_iron to iron_deficiency_anemia\ncontributes 5 from target_cells_normal_iron to thalassemia_trait\ncontributes 5 from high_ferritin_low_saturation to anemia_of_chronic_disease\nobserve low_serum_iron\nobserve target_cells_normal_iron\nobserve high_ferritin_low_saturation\n? iron_deficiency_anemia\n? thalassemia_trait\n? anemia_of_chronic_disease\n? sideroblastic_anemia\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "insufficient information to distinguish",
+        "B": "iron_deficiency_anemia",
+        "C": "thalassemia_trait",
+        "D": "anemia_of_chronic_disease",
+        "E": "sideroblastic_anemia"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r14id-27",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A gradual amnestic decline raises alzheimer disease 12-fold, while a stepwise decline with focal signs raises vascular dementia 8-fold and visual hallucinations with parkinsonism raises lewy body dementia 8-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for alzheimer_disease\nprior 0.2 for vascular_dementia\nprior 0.2 for lewy_body_dementia\nprior 0.2 for frontotemporal_dementia\ncontributes 12 from gradual_amnestic_decline to alzheimer_disease\ncontributes 8 from stepwise_focal_decline to vascular_dementia\ncontributes 8 from hallucinations_with_parkinsonism to lewy_body_dementia\nobserve gradual_amnestic_decline\nobserve stepwise_focal_decline\nobserve hallucinations_with_parkinsonism\n? alzheimer_disease\n? vascular_dementia\n? lewy_body_dementia\n? frontotemporal_dementia\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "vascular_dementia",
+        "B": "alzheimer_disease",
+        "C": "lewy_body_dementia",
+        "D": "frontotemporal_dementia",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r14id-28",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A gradual amnestic decline raises alzheimer disease 5-fold, a stepwise decline with focal signs raises vascular dementia by the same 5-fold, and visual hallucinations with parkinsonism raises lewy body dementia by the same 5-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for alzheimer_disease\nprior 0.2 for vascular_dementia\nprior 0.2 for lewy_body_dementia\nprior 0.2 for frontotemporal_dementia\ncontributes 5 from gradual_amnestic_decline to alzheimer_disease\ncontributes 5 from stepwise_focal_decline to vascular_dementia\ncontributes 5 from hallucinations_with_parkinsonism to lewy_body_dementia\nobserve gradual_amnestic_decline\nobserve stepwise_focal_decline\nobserve hallucinations_with_parkinsonism\n? alzheimer_disease\n? vascular_dementia\n? lewy_body_dementia\n? frontotemporal_dementia\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "alzheimer_disease",
+        "B": "vascular_dementia",
+        "C": "insufficient information to distinguish",
+        "D": "lewy_body_dementia",
+        "E": "frontotemporal_dementia"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r14id-29",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). An isolated low platelet count raises immune thrombocytopenia 12-fold, while schistocytes with neurologic signs raises thrombotic thrombocytopenic purpura 8-fold and a prolonged PT and PTT with low fibrinogen raises disseminated intravascular coagulation 8-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for immune_thrombocytopenia\nprior 0.2 for thrombotic_thrombocytopenic_purpura\nprior 0.2 for disseminated_intravascular_coagulation\nprior 0.2 for heparin_induced_thrombocytopenia\ncontributes 12 from isolated_low_platelets to immune_thrombocytopenia\ncontributes 8 from schistocytes_with_neuro_signs to thrombotic_thrombocytopenic_purpura\ncontributes 8 from prolonged_coags_low_fibrinogen to disseminated_intravascular_coagulation\nobserve isolated_low_platelets\nobserve schistocytes_with_neuro_signs\nobserve prolonged_coags_low_fibrinogen\n? immune_thrombocytopenia\n? thrombotic_thrombocytopenic_purpura\n? disseminated_intravascular_coagulation\n? heparin_induced_thrombocytopenia\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "thrombotic_thrombocytopenic_purpura",
+        "B": "disseminated_intravascular_coagulation",
+        "C": "heparin_induced_thrombocytopenia",
+        "D": "immune_thrombocytopenia",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r14id-30",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). An isolated low platelet count raises immune thrombocytopenia 5-fold, schistocytes with neurologic signs raises thrombotic thrombocytopenic purpura by the same 5-fold, and a prolonged PT and PTT with low fibrinogen raises disseminated intravascular coagulation by the same 5-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for immune_thrombocytopenia\nprior 0.2 for thrombotic_thrombocytopenic_purpura\nprior 0.2 for disseminated_intravascular_coagulation\nprior 0.2 for heparin_induced_thrombocytopenia\ncontributes 5 from isolated_low_platelets to immune_thrombocytopenia\ncontributes 5 from schistocytes_with_neuro_signs to thrombotic_thrombocytopenic_purpura\ncontributes 5 from prolonged_coags_low_fibrinogen to disseminated_intravascular_coagulation\nobserve isolated_low_platelets\nobserve schistocytes_with_neuro_signs\nobserve prolonged_coags_low_fibrinogen\n? immune_thrombocytopenia\n? thrombotic_thrombocytopenic_purpura\n? disseminated_intravascular_coagulation\n? heparin_induced_thrombocytopenia\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "immune_thrombocytopenia",
+        "B": "thrombotic_thrombocytopenic_purpura",
+        "C": "disseminated_intravascular_coagulation",
+        "D": "heparin_induced_thrombocytopenia",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r14id-31",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A high urine osmolality when euvolemic raises siadh 12-fold, while a low urine sodium when volume-depleted raises hypovolemic hyponatremia 8-fold and a maximally dilute urine with high water intake raises psychogenic polydipsia 8-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for siadh\nprior 0.2 for hypovolemic_hyponatremia\nprior 0.2 for psychogenic_polydipsia\nprior 0.2 for adrenal_insufficiency\ncontributes 12 from high_urine_osm_euvolemic to siadh\ncontributes 8 from low_urine_sodium_dry to hypovolemic_hyponatremia\ncontributes 8 from dilute_urine_high_intake to psychogenic_polydipsia\nobserve high_urine_osm_euvolemic\nobserve low_urine_sodium_dry\nobserve dilute_urine_high_intake\n? siadh\n? hypovolemic_hyponatremia\n? psychogenic_polydipsia\n? adrenal_insufficiency\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "siadh",
+        "B": "hypovolemic_hyponatremia",
+        "C": "psychogenic_polydipsia",
+        "D": "adrenal_insufficiency",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r14id-32",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A high urine osmolality when euvolemic raises siadh 5-fold, a low urine sodium when volume-depleted raises hypovolemic hyponatremia by the same 5-fold, and a maximally dilute urine with high water intake raises psychogenic polydipsia by the same 5-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for siadh\nprior 0.2 for hypovolemic_hyponatremia\nprior 0.2 for psychogenic_polydipsia\nprior 0.2 for adrenal_insufficiency\ncontributes 5 from high_urine_osm_euvolemic to siadh\ncontributes 5 from low_urine_sodium_dry to hypovolemic_hyponatremia\ncontributes 5 from dilute_urine_high_intake to psychogenic_polydipsia\nobserve high_urine_osm_euvolemic\nobserve low_urine_sodium_dry\nobserve dilute_urine_high_intake\n? siadh\n? hypovolemic_hyponatremia\n? psychogenic_polydipsia\n? adrenal_insufficiency\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "siadh",
+        "B": "insufficient information to distinguish",
+        "C": "hypovolemic_hyponatremia",
+        "D": "psychogenic_polydipsia",
+        "E": "adrenal_insufficiency"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r14id-33",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A low feurea with a high bun-to-creatinine ratio raises prerenal azotemia 12-fold, while muddy-brown granular casts raises acute tubular necrosis 8-fold and hydronephrosis on ultrasound raises postrenal obstruction 8-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for prerenal_azotemia\nprior 0.2 for acute_tubular_necrosis\nprior 0.2 for postrenal_obstruction\nprior 0.2 for glomerulonephritis\ncontributes 12 from low_feurea_high_bun_ratio to prerenal_azotemia\ncontributes 8 from muddy_brown_casts to acute_tubular_necrosis\ncontributes 8 from hydronephrosis_on_ultrasound to postrenal_obstruction\nobserve low_feurea_high_bun_ratio\nobserve muddy_brown_casts\nobserve hydronephrosis_on_ultrasound\n? prerenal_azotemia\n? acute_tubular_necrosis\n? postrenal_obstruction\n? glomerulonephritis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "acute_tubular_necrosis",
+        "B": "postrenal_obstruction",
+        "C": "prerenal_azotemia",
+        "D": "glomerulonephritis",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r14id-34",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A low feurea with a high bun-to-creatinine ratio raises prerenal azotemia 5-fold, muddy-brown granular casts raises acute tubular necrosis by the same 5-fold, and hydronephrosis on ultrasound raises postrenal obstruction by the same 5-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for prerenal_azotemia\nprior 0.2 for acute_tubular_necrosis\nprior 0.2 for postrenal_obstruction\nprior 0.2 for glomerulonephritis\ncontributes 5 from low_feurea_high_bun_ratio to prerenal_azotemia\ncontributes 5 from muddy_brown_casts to acute_tubular_necrosis\ncontributes 5 from hydronephrosis_on_ultrasound to postrenal_obstruction\nobserve low_feurea_high_bun_ratio\nobserve muddy_brown_casts\nobserve hydronephrosis_on_ultrasound\n? prerenal_azotemia\n? acute_tubular_necrosis\n? postrenal_obstruction\n? glomerulonephritis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "prerenal_azotemia",
+        "B": "acute_tubular_necrosis",
+        "C": "postrenal_obstruction",
+        "D": "insufficient information to distinguish",
+        "E": "glomerulonephritis"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r14id-35",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A high parathyroid hormone level raises primary hyperparathyroidism 12-fold, while an elevated parathyroid-hormone-related peptide raises hypercalcemia of malignancy 8-fold and an elevated vitamin D with noncaseating granulomas raises sarcoidosis 8-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for primary_hyperparathyroidism\nprior 0.2 for hypercalcemia_of_malignancy\nprior 0.2 for sarcoidosis\nprior 0.2 for milk_alkali_syndrome\ncontributes 12 from high_parathyroid_hormone to primary_hyperparathyroidism\ncontributes 8 from elevated_pth_related_peptide to hypercalcemia_of_malignancy\ncontributes 8 from high_vitamin_d_granulomas to sarcoidosis\nobserve high_parathyroid_hormone\nobserve elevated_pth_related_peptide\nobserve high_vitamin_d_granulomas\n? primary_hyperparathyroidism\n? hypercalcemia_of_malignancy\n? sarcoidosis\n? milk_alkali_syndrome\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "hypercalcemia_of_malignancy",
+        "B": "sarcoidosis",
+        "C": "milk_alkali_syndrome",
+        "D": "insufficient information to distinguish",
+        "E": "primary_hyperparathyroidism"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r14id-36",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A high parathyroid hormone level raises primary hyperparathyroidism 5-fold, an elevated parathyroid-hormone-related peptide raises hypercalcemia of malignancy by the same 5-fold, and an elevated vitamin D with noncaseating granulomas raises sarcoidosis by the same 5-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for primary_hyperparathyroidism\nprior 0.2 for hypercalcemia_of_malignancy\nprior 0.2 for sarcoidosis\nprior 0.2 for milk_alkali_syndrome\ncontributes 5 from high_parathyroid_hormone to primary_hyperparathyroidism\ncontributes 5 from elevated_pth_related_peptide to hypercalcemia_of_malignancy\ncontributes 5 from high_vitamin_d_granulomas to sarcoidosis\nobserve high_parathyroid_hormone\nobserve elevated_pth_related_peptide\nobserve high_vitamin_d_granulomas\n? primary_hyperparathyroidism\n? hypercalcemia_of_malignancy\n? sarcoidosis\n? milk_alkali_syndrome\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "insufficient information to distinguish",
+        "B": "primary_hyperparathyroidism",
+        "C": "hypercalcemia_of_malignancy",
+        "D": "sarcoidosis",
+        "E": "milk_alkali_syndrome"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r14id-37",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A high acth from a pituitary source raises cushing disease 12-fold, while a suppressed ACTH from an adrenal source raises adrenal cushing adenoma 8-fold and a very high ACTH with rapid onset and hypokalemia raises ectopic acth syndrome 8-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for cushing_disease\nprior 0.2 for adrenal_cushing_adenoma\nprior 0.2 for ectopic_acth_syndrome\nprior 0.2 for exogenous_steroid_effect\ncontributes 12 from high_acth_pituitary_source to cushing_disease\ncontributes 8 from suppressed_acth_adrenal_source to adrenal_cushing_adenoma\ncontributes 8 from very_high_acth_rapid_onset to ectopic_acth_syndrome\nobserve high_acth_pituitary_source\nobserve suppressed_acth_adrenal_source\nobserve very_high_acth_rapid_onset\n? cushing_disease\n? adrenal_cushing_adenoma\n? ectopic_acth_syndrome\n? exogenous_steroid_effect\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "adrenal_cushing_adenoma",
+        "B": "cushing_disease",
+        "C": "ectopic_acth_syndrome",
+        "D": "exogenous_steroid_effect",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r14id-38",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A high acth from a pituitary source raises cushing disease 5-fold, a suppressed ACTH from an adrenal source raises adrenal cushing adenoma by the same 5-fold, and a very high ACTH with rapid onset and hypokalemia raises ectopic acth syndrome by the same 5-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for cushing_disease\nprior 0.2 for adrenal_cushing_adenoma\nprior 0.2 for ectopic_acth_syndrome\nprior 0.2 for exogenous_steroid_effect\ncontributes 5 from high_acth_pituitary_source to cushing_disease\ncontributes 5 from suppressed_acth_adrenal_source to adrenal_cushing_adenoma\ncontributes 5 from very_high_acth_rapid_onset to ectopic_acth_syndrome\nobserve high_acth_pituitary_source\nobserve suppressed_acth_adrenal_source\nobserve very_high_acth_rapid_onset\n? cushing_disease\n? adrenal_cushing_adenoma\n? ectopic_acth_syndrome\n? exogenous_steroid_effect\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "cushing_disease",
+        "B": "adrenal_cushing_adenoma",
+        "C": "insufficient information to distinguish",
+        "D": "ectopic_acth_syndrome",
+        "E": "exogenous_steroid_effect"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r14id-39",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A diffuse uptake with orbitopathy raises graves disease 12-fold, while a patchy nodular uptake raises toxic multinodular goiter 8-fold and a low uptake with a tender gland raises subacute thyroiditis 8-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for graves_disease\nprior 0.2 for toxic_multinodular_goiter\nprior 0.2 for subacute_thyroiditis\nprior 0.2 for factitious_thyrotoxicosis\ncontributes 12 from diffuse_uptake_orbitopathy to graves_disease\ncontributes 8 from patchy_nodular_uptake to toxic_multinodular_goiter\ncontributes 8 from low_uptake_tender_gland to subacute_thyroiditis\nobserve diffuse_uptake_orbitopathy\nobserve patchy_nodular_uptake\nobserve low_uptake_tender_gland\n? graves_disease\n? toxic_multinodular_goiter\n? subacute_thyroiditis\n? factitious_thyrotoxicosis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "toxic_multinodular_goiter",
+        "B": "subacute_thyroiditis",
+        "C": "factitious_thyrotoxicosis",
+        "D": "graves_disease",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r14id-40",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A diffuse uptake with orbitopathy raises graves disease 5-fold, a patchy nodular uptake raises toxic multinodular goiter by the same 5-fold, and a low uptake with a tender gland raises subacute thyroiditis by the same 5-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for graves_disease\nprior 0.2 for toxic_multinodular_goiter\nprior 0.2 for subacute_thyroiditis\nprior 0.2 for factitious_thyrotoxicosis\ncontributes 5 from diffuse_uptake_orbitopathy to graves_disease\ncontributes 5 from patchy_nodular_uptake to toxic_multinodular_goiter\ncontributes 5 from low_uptake_tender_gland to subacute_thyroiditis\nobserve diffuse_uptake_orbitopathy\nobserve patchy_nodular_uptake\nobserve low_uptake_tender_gland\n? graves_disease\n? toxic_multinodular_goiter\n? subacute_thyroiditis\n? factitious_thyrotoxicosis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "graves_disease",
+        "B": "toxic_multinodular_goiter",
+        "C": "subacute_thyroiditis",
+        "D": "factitious_thyrotoxicosis",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r14id-41",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A watery self-limited course raises viral gastroenteritis 12-fold, while a bloody febrile diarrhea raises bacterial colitis 8-fold and recent antibiotics with pseudomembranes raises clostridioides difficile colitis 8-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for viral_gastroenteritis\nprior 0.2 for bacterial_colitis\nprior 0.2 for clostridioides_difficile_colitis\nprior 0.2 for inflammatory_bowel_disease\ncontributes 12 from watery_self_limited to viral_gastroenteritis\ncontributes 8 from bloody_febrile_diarrhea to bacterial_colitis\ncontributes 8 from recent_antibiotics_pseudomembranes to clostridioides_difficile_colitis\nobserve watery_self_limited\nobserve bloody_febrile_diarrhea\nobserve recent_antibiotics_pseudomembranes\n? viral_gastroenteritis\n? bacterial_colitis\n? clostridioides_difficile_colitis\n? inflammatory_bowel_disease\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "viral_gastroenteritis",
+        "B": "bacterial_colitis",
+        "C": "clostridioides_difficile_colitis",
+        "D": "inflammatory_bowel_disease",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r14id-42",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). A watery self-limited course raises viral gastroenteritis 5-fold, a bloody febrile diarrhea raises bacterial colitis by the same 5-fold, and recent antibiotics with pseudomembranes raises clostridioides difficile colitis by the same 5-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for viral_gastroenteritis\nprior 0.2 for bacterial_colitis\nprior 0.2 for clostridioides_difficile_colitis\nprior 0.2 for inflammatory_bowel_disease\ncontributes 5 from watery_self_limited to viral_gastroenteritis\ncontributes 5 from bloody_febrile_diarrhea to bacterial_colitis\ncontributes 5 from recent_antibiotics_pseudomembranes to clostridioides_difficile_colitis\nobserve watery_self_limited\nobserve bloody_febrile_diarrhea\nobserve recent_antibiotics_pseudomembranes\n? viral_gastroenteritis\n? bacterial_colitis\n? clostridioides_difficile_colitis\n? inflammatory_bowel_disease\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "viral_gastroenteritis",
+        "B": "insufficient information to distinguish",
+        "C": "bacterial_colitis",
+        "D": "clostridioides_difficile_colitis",
+        "E": "inflammatory_bowel_disease"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r14id-43",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). Negatively birefringent crystals raises gout 12-fold, while positively birefringent crystals raises pseudogout 8-fold and a purulent aspirate with organisms on Gram stain raises septic arthritis 8-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for gout\nprior 0.2 for pseudogout\nprior 0.2 for septic_arthritis\nprior 0.2 for rheumatoid_arthritis\ncontributes 12 from negatively_birefringent_crystals to gout\ncontributes 8 from positively_birefringent_crystals to pseudogout\ncontributes 8 from purulent_aspirate_organisms to septic_arthritis\nobserve negatively_birefringent_crystals\nobserve positively_birefringent_crystals\nobserve purulent_aspirate_organisms\n? gout\n? pseudogout\n? septic_arthritis\n? rheumatoid_arthritis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "pseudogout",
+        "B": "septic_arthritis",
+        "C": "gout",
+        "D": "rheumatoid_arthritis",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r14id-44",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). Negatively birefringent crystals raises gout 5-fold, positively birefringent crystals raises pseudogout by the same 5-fold, and a purulent aspirate with organisms on Gram stain raises septic arthritis by the same 5-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for gout\nprior 0.2 for pseudogout\nprior 0.2 for septic_arthritis\nprior 0.2 for rheumatoid_arthritis\ncontributes 5 from negatively_birefringent_crystals to gout\ncontributes 5 from positively_birefringent_crystals to pseudogout\ncontributes 5 from purulent_aspirate_organisms to septic_arthritis\nobserve negatively_birefringent_crystals\nobserve positively_birefringent_crystals\nobserve purulent_aspirate_organisms\n? gout\n? pseudogout\n? septic_arthritis\n? rheumatoid_arthritis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "gout",
+        "B": "pseudogout",
+        "C": "septic_arthritis",
+        "D": "insufficient information to distinguish",
+        "E": "rheumatoid_arthritis"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r14id-45",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). An exertional pain relieved by rest raises stable angina 12-fold, while a pleuritic positional chest pain raises acute pericarditis 8-fold and a tearing pain radiating to the back raises aortic dissection 8-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for stable_angina\nprior 0.2 for acute_pericarditis\nprior 0.2 for aortic_dissection\nprior 0.2 for pulmonary_embolism\ncontributes 12 from exertional_pain_relieved_by_rest to stable_angina\ncontributes 8 from pleuritic_positional_pain to acute_pericarditis\ncontributes 8 from tearing_pain_to_back to aortic_dissection\nobserve exertional_pain_relieved_by_rest\nobserve pleuritic_positional_pain\nobserve tearing_pain_to_back\n? stable_angina\n? acute_pericarditis\n? aortic_dissection\n? pulmonary_embolism\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "acute_pericarditis",
+        "B": "aortic_dissection",
+        "C": "pulmonary_embolism",
+        "D": "insufficient information to distinguish",
+        "E": "stable_angina"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r14id-46",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). An exertional pain relieved by rest raises stable angina 5-fold, a pleuritic positional chest pain raises acute pericarditis by the same 5-fold, and a tearing pain radiating to the back raises aortic dissection by the same 5-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for stable_angina\nprior 0.2 for acute_pericarditis\nprior 0.2 for aortic_dissection\nprior 0.2 for pulmonary_embolism\ncontributes 5 from exertional_pain_relieved_by_rest to stable_angina\ncontributes 5 from pleuritic_positional_pain to acute_pericarditis\ncontributes 5 from tearing_pain_to_back to aortic_dissection\nobserve exertional_pain_relieved_by_rest\nobserve pleuritic_positional_pain\nobserve tearing_pain_to_back\n? stable_angina\n? acute_pericarditis\n? aortic_dissection\n? pulmonary_embolism\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "insufficient information to distinguish",
+        "B": "stable_angina",
+        "C": "acute_pericarditis",
+        "D": "aortic_dissection",
+        "E": "pulmonary_embolism"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r14id-47",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). An unconjugated hyperbilirubinemia with anemia raises hemolytic jaundice 12-fold, while an isolated mild unconjugated hyperbilirubinemia when fasting raises gilbert syndrome 8-fold and markedly elevated transaminases raises acute viral hepatitis 8-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for hemolytic_jaundice\nprior 0.2 for gilbert_syndrome\nprior 0.2 for acute_viral_hepatitis\nprior 0.2 for choledocholithiasis\ncontributes 12 from unconjugated_bili_with_anemia to hemolytic_jaundice\ncontributes 8 from mild_unconjugated_bili_fasting to gilbert_syndrome\ncontributes 8 from elevated_transaminases to acute_viral_hepatitis\nobserve unconjugated_bili_with_anemia\nobserve mild_unconjugated_bili_fasting\nobserve elevated_transaminases\n? hemolytic_jaundice\n? gilbert_syndrome\n? acute_viral_hepatitis\n? choledocholithiasis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "gilbert_syndrome",
+        "B": "hemolytic_jaundice",
+        "C": "acute_viral_hepatitis",
+        "D": "choledocholithiasis",
+        "E": "insufficient information to distinguish"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r14id-48",
+      "qtype": "indeterminate_decision",
+      "stem": "Four diagnoses are equally likely a priori (each prior 0.2). An unconjugated hyperbilirubinemia with anemia raises hemolytic jaundice 5-fold, an isolated mild unconjugated hyperbilirubinemia when fasting raises gilbert syndrome by the same 5-fold, and markedly elevated transaminases raises acute viral hepatitis by the same 5-fold. The patient has all three findings. Which single diagnosis is most likely \u2014 or is the evidence insufficient to distinguish them?",
+      "program": "prior 0.2 for hemolytic_jaundice\nprior 0.2 for gilbert_syndrome\nprior 0.2 for acute_viral_hepatitis\nprior 0.2 for choledocholithiasis\ncontributes 5 from unconjugated_bili_with_anemia to hemolytic_jaundice\ncontributes 5 from mild_unconjugated_bili_fasting to gilbert_syndrome\ncontributes 5 from elevated_transaminases to acute_viral_hepatitis\nobserve unconjugated_bili_with_anemia\nobserve mild_unconjugated_bili_fasting\nobserve elevated_transaminases\n? hemolytic_jaundice\n? gilbert_syndrome\n? acute_viral_hepatitis\n? choledocholithiasis\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false,
+        "tie_label": "insufficient information to distinguish"
+      },
+      "options": {
+        "A": "hemolytic_jaundice",
+        "B": "gilbert_syndrome",
+        "C": "insufficient information to distinguish",
+        "D": "acute_viral_hepatitis",
+        "E": "choledocholithiasis"
+      },
+      "gold_letter": "C"
     }
   ]
 }
