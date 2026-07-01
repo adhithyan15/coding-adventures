@@ -120,3 +120,19 @@ recursion.)
 Dev-deps: `coding-adventures-javascript-tokens`,
 `coding-adventures-javascript-parser`, `coding-adventures-closure-emitter`,
 `coding-adventures-type-sidecar`.
+
+## Upstream conformance tests
+
+`tests/upstream/rename_properties_test.rs` ports Google Closure Compiler's
+`RenamePropertiesTest` (Apache-2.0; see `ATTRIBUTION.md` and `UPSTREAM_SHA`), per
+the CLOC12 test-port convention. Because the pass exposes a source-string surface
+through public crate APIs, the port drives the real `source → bridge → rename →
+emit` chain and asserts on the emitted string — the same `test(js, expected)`
+surface upstream uses. It pins the 8 name-based renaming behaviors this pass
+supports today and records 3 upstream behaviors it does not — type-/heap-aware
+disambiguation of same-named properties, frequency-ordered short-name
+assignment, and a cross-module shared rename map — as
+`#[ignore = "blocked on gap-NNN"]` placeholders tied to
+`code/specs/CLOC12-gaps.md` (gap-138 … gap-140). Run with
+`cargo test --test upstream_rename_properties` (add `-- --include-ignored` to
+list the pending gaps).

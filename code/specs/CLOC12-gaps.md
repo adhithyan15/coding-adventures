@@ -1116,3 +1116,33 @@ historical context with status `RESOLVED` and a link to the fix PR.
   - **gap-137** — **pseudo-name / stable-name mode**: upstream can map each
     original name to a stable human-readable placeholder instead of a minimal
     short name. Our pass has only the minimal-short-name mode.
+
+## CLOC12.140 — port `RenamePropertiesTest` into `closure-pass-rename-properties`
+
+- **Status:** port landed; 8 active `#[test]`s pass, 3 `#[ignore]` gaps opened.
+- **What it is:** the seventh CLOC12 upstream port. Like the `rename-globals`
+  port, `closure-pass-rename-properties` exposes a source-string surface through
+  public crate APIs, so this port drives the real
+  `source → bridge → RenamePropertiesPass → emit` chain and asserts on the
+  emitted string, exactly as upstream `RenamePropertiesTest`'s
+  `test(js, expected)`. It pins the sound name-based slice our pass implements:
+  rename dotted, unquoted property names (member accesses and object-literal
+  keys) to the shortest fresh names `a`, `b`, `c`, … in first-appearance order,
+  consistently across every occurrence, leaving untouched a name accessed via a
+  quoted/computed subscript anywhere, a single-character name, a curated set of
+  built-in / DOM names, and any externs entry. 8 active cases pass (consistent
+  private-property rename, reads-and-object-literal-keys collapse, distinct-name
+  assignment down a member chain, quoted-access-poisons-rename, built-in-names-
+  untouched, single-char-untouched, computed-index-untouched, externs-preserved).
+- **No new closurec bug surfaced** — every active expectation matched the pass
+  on the first run.
+- **New gaps** (executable `#[ignore = "blocked on gap-NNN"]` placeholders):
+  - **gap-138** — **type-/heap-aware disambiguation**: upstream can rename the
+    same property name on two unrelated object types to two different short
+    names. Our pass renames a name once, globally.
+  - **gap-139** — **frequency-ordered short-name assignment**: upstream packs
+    the most-used property into the shortest name; our pass assigns by first
+    appearance regardless of usage count.
+  - **gap-140** — **cross-module shared rename map**: upstream can keep a
+    property rename stable across separately-compiled modules via a shared map;
+    our single-program pass has no such map.
