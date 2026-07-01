@@ -104,6 +104,23 @@ has decided which functions stay. Renaming earlier wastes work on
 bindings that'll get deleted and makes the inliner's heuristic
 harder.
 
+## Upstream conformance tests
+
+`tests/upstream/` ports Google Closure Compiler tests (Apache-2.0; see
+`ATTRIBUTION.md` and `UPSTREAM_SHA`), per the CLOC12 test-port convention:
+
+- `rename_vars_test.rs` — `RenameVarsTest.java`. Drives the real source →
+  bridge → `RenamePass` → emit roundtrip and pins the local-renaming
+  behaviors this pass performs (leaf parameter and `var`/`let`/`const` local
+  renaming, reserved-name avoidance, property/object-key preservation, and the
+  catch-binding / redeclaration soundness guards). **12 active `#[test]`s**
+  plus **4 `#[ignore]` placeholders** for the whole-program `RenameVars`
+  behaviors closurec splits out or defers (globals → `rename-globals`, non-leaf
+  function params, function-declaration names, frequency-biased allocation),
+  each pinned to gap-144 … gap-147 in `code/specs/CLOC12-gaps.md`. Run with
+  `cargo test --test upstream_rename_vars` (add `--include-ignored` to measure
+  gap progress).
+
 ## Dependency whitelist
 
 - `coding-adventures-closure-pass-pipeline` — `Pass` trait + types.
