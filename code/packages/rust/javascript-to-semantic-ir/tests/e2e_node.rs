@@ -178,3 +178,64 @@ fn mutual_recursion_runs_in_node() {
     // SIR `print` renders booleans Lisp-style (`#t`/`#f`).
     assert_eq!(out, "#t");
 }
+
+// ── C3: collection-method dispatch (`__method__`) executes ─────────────
+//
+// These prove the frontend's `__method__` lowering runs end-to-end: the JS
+// backend routes the dispatch envelope to the runtime's `callMethod`, which
+// invokes the JS-native array/string method (unwrapping any `Closure`
+// callback).  The example in the C3 brief — `xs.push(4)` then `xs.length`
+// → `4` — is the canonical case: a mutating method call plus a length read.
+
+#[test]
+fn array_push_length_runs_in_node() {
+    if !node_available() {
+        eprintln!("skipping array_push_length_runs_in_node: `node` not available");
+        return;
+    }
+    // `xs.push(4)` lowers to __method__ dispatch → runtime `callMethod`;
+    // `xs.length` is a property read (SeqLen).  After the push the length
+    // is 4.
+    let out = run_via_node(
+        "array_push_length",
+        "const xs = [1, 2, 3]; xs.push(4); console.log(xs.length);",
+    );
+    assert_eq!(out, "4");
+}
+
+#[test]
+fn array_map_reduce_runs_in_node() {
+    if !node_available() {
+        eprintln!("skipping array_map_reduce_runs_in_node: `node` not available");
+        return;
+    }
+    // Higher-order dispatch: `.map` with an arrow callback (lowered to a
+    // MakeClosure argument, unwrapped by the runtime), then `.reduce` with a
+    // two-param accumulator and an initial value.  [1,2,3] → *2 → [2,4,6] →
+    // sum → 12.
+    let out = run_via_node(
+        "array_map_reduce",
+        "const xs = [1, 2, 3]; \
+         const doubled = xs.map(x => x * 2); \
+         const total = doubled.reduce((a, b) => a + b, 0); \
+         console.log(total);",
+    );
+    assert_eq!(out, "12");
+}
+
+#[test]
+fn array_filter_includes_runs_in_node() {
+    if !node_available() {
+        eprintln!("skipping array_filter_includes_runs_in_node: `node` not available");
+        return;
+    }
+    // `.filter` (closure callback) then `.includes` (value membership).
+    // [1,2,3,4] keep >2 → [3,4]; includes(4) → true (printed `#t`).
+    let out = run_via_node(
+        "array_filter_includes",
+        "const xs = [1, 2, 3, 4]; \
+         const big = xs.filter(x => x > 2); \
+         console.log(big.includes(4));",
+    );
+    assert_eq!(out, "#t");
+}

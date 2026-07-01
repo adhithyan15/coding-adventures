@@ -162,10 +162,45 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // the readable `__Sir.print(x)` rather than `__Sir.builtins["print"](x)`.
   function print(x) { console.log(format(x)); return null; }
 
+  // ── method dispatch (`__method__`) ─────────────────────────────
+  // `recv.meth(args…)` reaches the backend as
+  // `BuiltinCall("__method__", [recv, "meth", args…])`; the emitter routes
+  // it here as `callMethod(recv, "meth", args…)`.  We dispatch to the
+  // JS-native method on the receiver — arrays' `push`/`pop`/`map`/`filter`/
+  // `forEach`/`includes`/`reduce`/…, strings' `toUpperCase`/… — so
+  // frontend collection code runs end-to-end (C3/C4).
+  //
+  // A callback argument arrives as a `Closure` (the frontend lowers an
+  // arrow / function argument to `MakeClosure`); `unwrapArg` turns it into
+  // an ordinary JS function via `applyClosure`, so `arr.map(fn)` and
+  // friends receive a callable the native method can invoke.  `length` is
+  // accepted as a zero-arg method too (a property read spelled as a call),
+  // though the frontend normally lowers bare `.length` to `SeqLen`.
+  function unwrapArg(a) {
+    if (a instanceof Closure) {
+      // Native higher-order methods pass (element, index, array); the SIR
+      // closure only binds the params it declared, so extra JS arguments
+      // are harmlessly ignored by `applyClosure`'s spread.
+      return (...xs) => applyClosure(a, xs);
+    }
+    return a;
+  }
+  function callMethod(recv, name, ...rawArgs) {
+    const args = rawArgs.map(unwrapArg);
+    // `length` as a nullary method mirrors the property.
+    if (name === "length" && args.length === 0) { return recv.length; }
+    const m = recv == null ? undefined : recv[name];
+    if (typeof m !== "function") {
+      throw new TypeError(
+        "method `" + name + "` is not defined on " + format(recv));
+    }
+    return m.apply(recv, args);
+  }
+
   return {
     Sym, Pair, Closure,
     intern, applyClosure, truthy, format, print,
-    builtins, builtinClosure, callBuiltin,
+    builtins, builtinClosure, callBuiltin, callMethod,
   };
 })();
 "##;
@@ -193,7 +228,7 @@ mod tests {
     fn runtime_exports_the_helpers_the_emitter_calls() {
         for needed in [
             "intern", "applyClosure", "truthy", "format",
-            "builtins", "builtinClosure", "callBuiltin",
+            "builtins", "builtinClosure", "callBuiltin", "callMethod",
             "class Sym", "class Pair", "class Closure",
         ] {
             assert!(RUNTIME.contains(needed), "runtime missing `{needed}`");

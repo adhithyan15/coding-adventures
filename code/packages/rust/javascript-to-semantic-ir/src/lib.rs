@@ -1131,6 +1131,158 @@ mod tests {
         assert!(has_print, "expected a print BuiltinCall in main");
     }
 
+    // ── C3: member-method calls → `__method__` dispatch ────────────
+    //
+    // `recv.method(args…)` (other than `console.log`) lowers to
+    // `BuiltinCall("__method__", [recv, StrLit("method"), args…])`: the
+    // receiver at `args[0]`, the method name always a `StrLit` at `args[1]`,
+    // the call arguments following.  These tests pin the envelope shape, the
+    // `Feature::Strings` declaration, closure-arg lowering, and chaining.
+
+    /// Assert `e` is a `__method__` dispatch, returning `(method, args)` —
+    /// where `args` is the *whole* argument vector (receiver at `[0]`,
+    /// `StrLit(method)` at `[1]`, call args at `[2..]`).
+    fn expect_method(e: &Expr) -> (String, &[Expr]) {
+        match e {
+            Expr::BuiltinCall { name, args, .. } if name == "__method__" => {
+                assert!(args.len() >= 2, "dispatch needs receiver + method name");
+                let method = match &args[1] {
+                    Expr::StrLit { value, .. } => value.clone(),
+                    other => panic!("method name must be a StrLit, got {other:?}"),
+                };
+                (method, args.as_slice())
+            }
+            other => panic!("expected __method__ dispatch, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn push_lowers_to_method_dispatch() {
+        // `arr.push(1)` → __method__(VarRef arr, "push", IntLit 1).
+        let m = lower("let arr = [0]; arr.push(1);");
+        assert_valid(&m);
+        let (method, args) = expect_method(main_value(&m));
+        assert_eq!(method, "push");
+        assert_eq!(args.len(), 3, "receiver + name + one call arg");
+        assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "arr"));
+        assert!(matches!(&args[2], Expr::IntLit { value: 1, .. }));
+        // The synthetic method-name StrLit declares Strings.
+        assert!(m.manifest.contains(Feature::Strings));
+    }
+
+    #[test]
+    fn pop_lowers_to_zero_arg_method_dispatch() {
+        // `arr.pop()` → __method__(VarRef arr, "pop") — no trailing args.
+        let m = lower("let arr = [1, 2]; arr.pop();");
+        assert_valid(&m);
+        let (method, args) = expect_method(main_value(&m));
+        assert_eq!(method, "pop");
+        assert_eq!(args.len(), 2, "receiver + name only");
+        assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "arr"));
+    }
+
+    #[test]
+    fn map_with_arrow_callback_lowers_to_dispatch_with_closure() {
+        // `arr.map(x => x * 2)` → __method__(arr, "map", MakeClosure{…}).
+        // The arrow reuses the existing closure lowering, so the callback
+        // arrives as a MakeClosure argument.
+        let m = lower("let arr = [1, 2, 3]; arr.map(x => x * 2);");
+        assert_valid(&m);
+        let (method, args) = expect_method(main_value(&m));
+        assert_eq!(method, "map");
+        assert_eq!(args.len(), 3, "receiver + name + closure arg");
+        assert!(
+            matches!(&args[2], Expr::MakeClosure { .. }),
+            "callback should lower to MakeClosure, got {:?}",
+            &args[2]
+        );
+        assert!(m.manifest.contains(Feature::Closures));
+        assert!(m.manifest.contains(Feature::Strings));
+    }
+
+    #[test]
+    fn map_with_named_function_callback_passes_closure() {
+        // A named function passed by reference (`arr.map(dbl)`) resolves to a
+        // value and lowers as an IndirectCall-able closure handle argument.
+        let m = lower("function dbl(x) { return x * 2; } let arr = [1]; arr.map(dbl);");
+        assert_valid(&m);
+        let (method, args) = expect_method(main_value(&m));
+        assert_eq!(method, "map");
+        assert_eq!(args.len(), 3);
+        // `dbl` names a module function → passed as a MakeClosure handle.
+        assert!(matches!(&args[2], Expr::MakeClosure { .. } | Expr::VarRef { .. }));
+    }
+
+    #[test]
+    fn string_method_lowers_to_dispatch() {
+        // `s.toUpperCase()` → __method__(VarRef s, "toUpperCase").
+        let m = lower("let s = \"hi\"; s.toUpperCase();");
+        assert_valid(&m);
+        let (method, args) = expect_method(main_value(&m));
+        assert_eq!(method, "toUpperCase");
+        assert_eq!(args.len(), 2);
+        assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "s"));
+    }
+
+    #[test]
+    fn chained_methods_nest_dispatch() {
+        // `xs.filter(f).map(g)` → the outer `.map` dispatch whose *receiver*
+        // (args[0]) is itself the inner `.filter` dispatch.
+        let m = lower(
+            "let xs = [1, 2, 3]; \
+             let f = (x) => x > 1; \
+             let g = (x) => x * 10; \
+             xs.filter(f).map(g);",
+        );
+        assert_valid(&m);
+        let (outer_method, outer_args) = expect_method(main_value(&m));
+        assert_eq!(outer_method, "map");
+        // The receiver of `.map` is the `.filter` dispatch.
+        let (inner_method, inner_args) = expect_method(&outer_args[0]);
+        assert_eq!(inner_method, "filter");
+        // Innermost receiver is `xs`.
+        assert!(matches!(&inner_args[0], Expr::VarRef { name, .. } if name == "xs"));
+    }
+
+    #[test]
+    fn method_on_object_property_lowers_receiver_via_member_read() {
+        // A deeper receiver: `box.items.push(9)` — the receiver `box.items`
+        // is a member read (MapGet), folded before the `.push` dispatch.
+        let m = lower("let box = {items: [1]}; box.items.push(9);");
+        assert_valid(&m);
+        let (method, args) = expect_method(main_value(&m));
+        assert_eq!(method, "push");
+        assert!(matches!(&args[0], Expr::MapGet { .. }));
+        assert!(matches!(&args[2], Expr::IntLit { value: 9, .. }));
+    }
+
+    #[test]
+    fn console_log_still_lowers_to_print_not_method_dispatch() {
+        // Guard against a regression: `console.log` must keep its dedicated
+        // `print` lowering rather than being swept into `__method__`.
+        let m = lower("console.log(1);");
+        assert_valid(&m);
+        match main_value(&m) {
+            Expr::BuiltinCall { name, .. } => {
+                assert_eq!(name, "print", "console.log must stay a print builtin");
+            }
+            other => panic!("expected print BuiltinCall, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn computed_member_call_stays_deferred() {
+        // `obj[key](x)` is a *computed* member call — not a named method — so
+        // it remains a positioned error, not a `__method__` dispatch.
+        let err = compile_source("let obj = {}; let key = \"m\"; obj[key](1);", "test")
+            .expect_err("computed member call should be deferred");
+        assert!(
+            err.message.contains("deferred") || err.message.contains("non-identifier"),
+            "unexpected message: {}",
+            err.message
+        );
+    }
+
     #[test]
     fn zero_arg_call() {
         let m = lower("function h() { return 42; } h();");
@@ -1405,10 +1557,16 @@ mod tests {
     }
 
     #[test]
-    fn method_call_other_than_console_log_is_deferred() {
-        let err = compile_source("let o = 0; o.foo(1);", "test")
-            .expect_err("arbitrary method call deferred");
-        assert!(err.message.contains("deferred"), "got: {}", err.message);
+    fn method_call_other_than_console_log_lowers_to_dispatch() {
+        // C3: previously deferred, a general member-method call now lowers to
+        // the `__method__` dispatch envelope (receiver, StrLit(name), args…).
+        let m = lower("let o = [0]; o.foo(1);");
+        assert_valid(&m);
+        let (method, args) = expect_method(main_value(&m));
+        assert_eq!(method, "foo");
+        assert_eq!(args.len(), 3);
+        assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "o"));
+        assert!(matches!(&args[2], Expr::IntLit { value: 1, .. }));
     }
 
     #[test]

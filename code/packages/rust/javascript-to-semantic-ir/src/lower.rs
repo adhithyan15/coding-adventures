@@ -247,11 +247,14 @@
 //! `f(args)` dispatches on the callee:
 //!   * a known top-level/synthesised `function` name → [`DirectCall`];
 //!   * `console.log(x)` (and the M1–M3 builtin map) → [`BuiltinCall`];
+//!   * any *other* dotted member call `recv.method(args…)` → the SIR
+//!     method-dispatch envelope `BuiltinCall("__method__", [recv,
+//!     StrLit("method"), args…])` (C3 — collection methods);
 //!   * any other callee that resolves to a *value* (a local/param/captured
 //!     closure handle) → [`IndirectCall`] on that value.
 //!
-//! Member-call methods other than `console.log`, and calling a
-//! non-identifier callee, are deferred (M5).
+//! Calling a *computed* member (`obj[expr](…)`) or a non-identifier callee
+//! is deferred.
 //!
 //! ### Recursion bound
 //!
@@ -315,8 +318,9 @@
 //! Spread (`[...xs]` / `{...o}`), array elisions (`[1, , 3]`), object
 //! shorthand (`{x}`), computed keys (`{[e]: v}`), numeric keys (`{0: v}`),
 //! object methods / getters / setters, `.length` *assignment* (a resize, with
-//! no IR node), array methods (`.map`/`.push`/… — these would need
-//! runtime-library support, per the project mandate), classes, `this`/`new`,
+//! no IR node) — note that array/collection method **calls** (`.map`/`.push`/…)
+//! are now lowered to `__method__` dispatch (C3), routed to the backend's OOP
+//! runtime; classes, `this`/`new`,
 //! generators / `async`/`await`, **rest** params (`...args`),
 //! destructuring, and template literals all remain positioned errors.
 //!
@@ -1536,26 +1540,147 @@ impl Lowerer {
     /// CST: `[callee, arguments]`.  Dispatch on the callee:
     ///   * a bare identifier that names a module `function` → `DirectCall`;
     ///   * `console.log(x)` → `BuiltinCall("print", [x])`;
+    ///   * any *other* dotted member call `recv.method(a, b)` → the SIR
+    ///     **method-dispatch convention**
+    ///     `BuiltinCall("__method__", [recv, StrLit("method"), a, b])`
+    ///     (C3 — collection methods; see below);
     ///   * a bare identifier resolving to a closure *value* (local / param /
     ///     capture) → `IndirectCall` on that value.
     ///
-    /// Other member-call methods and non-identifier callees are deferred.
+    /// ## Member-method calls → `__method__` dispatch (C3)
+    ///
+    /// The narrow waist for a method call already exists and needs **no new
+    /// IR node**: every frontend packs `recv.meth(arg1, arg2)` as
+    ///
+    /// ```text
+    /// BuiltinCall {
+    ///     name:    "__method__",
+    ///     args:    [recv_expr, StrLit("meth"), arg1_expr, arg2_expr, …],
+    ///     effects, span,
+    /// }
+    /// ```
+    ///
+    /// with the **receiver at `args[0]`**, the **method name always a
+    /// `StrLit` at `args[1]`**, and the call arguments following.  This is
+    /// exactly how the Ruby frontend lowers `recv.meth(…)`
+    /// (`ruby-to-semantic-ir`'s `fold_one_dot_call`); a backend routes the
+    /// envelope to its OOP runtime (`__SirOop.callMethod` / the JS runtime's
+    /// method dispatcher), so `arr.map`/`arr.push`/`str.toUpperCase()` run
+    /// end-to-end without any per-method backend change.
+    ///
+    /// The synthetic `StrLit` method name is the reason we declare
+    /// [`Feature::Strings`] — the SIR validator observes `Strings` for every
+    /// `StrLit`, so the manifest must match.  We deliberately do **not**
+    /// invent a `MethodDispatch` feature here: `__method__` is not gated by a
+    /// dedicated flag in v0, and `Strings` is what makes validation pass.
+    ///
+    /// A callback argument (`arr.map(x => x * 2)`) lowers through the
+    /// crate's existing arrow/closure path, so it arrives as a
+    /// [`MakeClosure`](Expr::MakeClosure) in the argument list — the JS
+    /// higher-order convention (pass a callable, no trailing-block syntax).
+    ///
+    /// `console.log(...)` keeps its dedicated `print` lowering (below); a
+    /// *computed* member call (`obj[expr](…)`) stays deferred.
     fn lower_call_expression(
         &mut self,
         node: &GrammarASTNode,
         depth: usize,
     ) -> Result<Expr, JsLowerError> {
         let span = self.span_of(node);
-        let nodes = child_nodes(node);
-        let callee = nodes
-            .first()
-            .ok_or_else(|| self.unsupported(node, "call_expression (no callee)"))?;
-        let args_node = child_node_named(node, "arguments")
-            .ok_or_else(|| self.unsupported(node, "call_expression (no arguments)"))?;
-        let arg_exprs = self.lower_arguments(args_node, depth)?;
 
+        // ## The flat call chain (learned by probing the parser)
+        //
+        // A chained call `xs.filter(f).map(g)` is **flat** in the CST: the
+        // parser emits a *single* `call_expression` whose children are
+        //
+        // ```text
+        // [ callee, arguments, (Dot, Name, arguments)* ]
+        // ```
+        //
+        // — e.g. `xs.filter(f).map(g)` →
+        // `[member_expr(xs.filter), args(f), ., map, args(g)]`.  The first
+        // `[callee, arguments]` pair is the base call; each trailing
+        // `.name(args)` triple is a further method invocation whose receiver
+        // is the accumulated call so far.  We therefore lower the base call,
+        // then fold each `.name(args)` step into a `__method__` dispatch with
+        // the running expression as `args[0]`.  The fold is iterative (a
+        // long chain costs no native stack); every lowered argument still
+        // consumes the `MAX_EXPR_DEPTH` budget through `lower_arguments`.
+        let children = &node.children;
+        let callee = children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Node(n) => Some(n),
+                ASTNodeOrToken::Token(_) => None,
+            })
+            .ok_or_else(|| self.unsupported(node, "call_expression (no callee)"))?;
+        // The first `arguments` node (and its child index) — the base call's
+        // argument list.
+        let first_args_idx = children
+            .iter()
+            .position(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "arguments"))
+            .ok_or_else(|| self.unsupported(node, "call_expression (no arguments)"))?;
+        let base_args_node = match &children[first_args_idx] {
+            ASTNodeOrToken::Node(n) => n,
+            ASTNodeOrToken::Token(_) => unreachable!("position found an arguments Node"),
+        };
+        let base_args = self.lower_arguments(base_args_node, depth)?;
+
+        // Lower the *base* call segment (`callee(base_args)`).
+        let mut acc = self.lower_base_call(callee, base_args, span.clone())?;
+
+        // Fold each trailing `.name(args)` method step into a `__method__`
+        // dispatch on the running receiver.
+        let mut i = first_args_idx + 1;
+        while i < children.len() {
+            // Expect `Dot`, `Name`, `arguments`.
+            let is_dot =
+                matches!(&children[i], ASTNodeOrToken::Token(t) if t.value == ".");
+            if !is_dot {
+                // A computed step (`…[expr](…)`) or other trailing access is
+                // not a named method → deferred.
+                return Err(JsLowerError {
+                    message: "computed / non-dot call chain step is deferred".to_string(),
+                    line: span.start_line,
+                    column: span.start_col,
+                });
+            }
+            let method_tok = match children.get(i + 1) {
+                Some(ASTNodeOrToken::Token(t)) if matches!(t.type_, TokenType::Name) => t,
+                _ => return Err(self.unsupported(node, "call chain (non-name method)")),
+            };
+            let args_node = match children.get(i + 2) {
+                Some(ASTNodeOrToken::Node(n)) if n.rule_name == "arguments" => n,
+                _ => return Err(self.unsupported(node, "call chain (method without arguments)")),
+            };
+            let step_args = self.lower_arguments(args_node, depth)?;
+            let name_span = self.span_of_token(method_tok);
+            acc = self.make_method_dispatch(acc, method_tok.value.clone(), name_span, step_args, span.clone());
+            i += 3;
+        }
+
+        Ok(acc)
+    }
+
+    /// Lower the *base* segment of a call chain — `callee(args)` with the
+    /// callee already lowered from its CST node.  Dispatches exactly as the
+    /// original single-call lowering did:
+    ///   * `console.log(...)` → `BuiltinCall("print", …)` (kept intact);
+    ///   * any *other* dotted member callee `recv.method` → `__method__`
+    ///     dispatch (C3);
+    ///   * a bare module-function name → `DirectCall`;
+    ///   * a bare value name (a closure handle) → `IndirectCall`.
+    ///
+    /// A computed / non-identifier callee stays deferred.
+    fn lower_base_call(
+        &mut self,
+        callee: &GrammarASTNode,
+        arg_exprs: Vec<Expr>,
+        span: Span,
+    ) -> Result<Expr, JsLowerError> {
         // `console.log(...)` → builtin print.  Detect the two-segment
-        // member callee `member_expression[ console, ., log ]`.
+        // member callee `member_expression[ console, ., log ]` and keep its
+        // dedicated lowering intact (do not route it through `__method__`).
         if let Some((obj, method)) = member_callee_parts(callee) {
             if obj == "console" && method == "log" {
                 // `print` may print; mark the effect so backends emit it.
@@ -1566,14 +1691,22 @@ impl Lowerer {
                     span,
                 });
             }
-            return Err(JsLowerError {
-                message: format!(
-                    "method call `{obj}.{method}(…)` is deferred past M4 (only \
-                     `console.log` is supported)"
-                ),
-                line: span.start_line,
-                column: span.start_col,
-            });
+        }
+
+        // Any *other* dotted member call `recv.method(args…)` → `__method__`
+        // dispatch (C3).  We peel the callee to its branching
+        // `member_expression` and require the **final** access to be a
+        // `.name` (a dot method); the receiver is everything before it,
+        // lowered through the ordinary member-read path (so `obj.inner.push`
+        // folds the `obj.inner` map read as the receiver of `.push`).  A
+        // computed final access (`obj[expr](…)`) is not a named method and
+        // stays deferred.
+        if let Some((method_tok, last_access)) = dotted_method_callee(callee) {
+            let name_span = self.span_of_token(method_tok);
+            let method = method_tok.value.clone();
+            let branch = peel_to_branch(callee);
+            let recv = self.lower_member_prefix(branch, last_access, &span)?;
+            return Ok(self.make_method_dispatch(recv, method, name_span, arg_exprs, span));
         }
 
         // A bare-identifier callee.
@@ -1611,6 +1744,32 @@ impl Lowerer {
             line: span.start_line,
             column: span.start_col,
         })
+    }
+
+    /// Build the SIR method-dispatch envelope
+    /// `BuiltinCall("__method__", [receiver, StrLit(method), args…])` and
+    /// declare [`Feature::Strings`] for the synthetic method-name `StrLit`.
+    /// This is the single narrow-waist convention every backend routes to
+    /// its OOP runtime (see [`lower_call_expression`](Self::lower_call_expression)).
+    fn make_method_dispatch(
+        &mut self,
+        receiver: Expr,
+        method: String,
+        name_span: Span,
+        args: Vec<Expr>,
+        span: Span,
+    ) -> Expr {
+        self.features_used.add(Feature::Strings);
+        let mut full_args = Vec::with_capacity(args.len() + 2);
+        full_args.push(receiver);
+        full_args.push(Expr::StrLit { value: method, span: name_span });
+        full_args.extend(args);
+        Expr::BuiltinCall {
+            name: "__method__".to_string(),
+            args: full_args,
+            effects: EffectSet::PURE,
+            span,
+        }
     }
 
     /// Lower the `arguments` node (`( argument_list? )`) into a `Vec<Expr>`.
@@ -3467,6 +3626,48 @@ fn member_callee_parts(callee: &GrammarASTNode) -> Option<(String, String)> {
         .value
         .clone();
     Some((obj, method))
+}
+
+/// If `callee` peels to a `member_expression` whose **final** access is a
+/// dot-name (`recv.method`), return the method-name `Name` token together
+/// with the child index of that final `.` token (its access position in the
+/// flat member chain).  The caller uses the index to split off the receiver
+/// prefix via [`lower_member_prefix`](Lowerer::lower_member_prefix).
+///
+/// The receiver may be *any* expression — a bare identifier (`arr.map`) or a
+/// deeper member chain (`obj.inner.push`, where the receiver `obj.inner` is a
+/// map read folded before the `.push` dispatch).  We therefore do **not**
+/// constrain the receiver's shape here (unlike [`member_callee_parts`], which
+/// only matches a bare-identifier object for the `console.log` special case).
+/// A *chained* call (`xs.filter(f).map(g)`) is folded one step at a time by
+/// [`lower_call_expression`](Lowerer::lower_call_expression) — each step's
+/// base callee reaching this helper is a plain `member_expression`.
+///
+/// Returns `None` for a bare identifier (not a member access) or when the
+/// final access is a *computed* subscript (`obj[expr](…)`) — those are not
+/// named methods and stay deferred.
+fn dotted_method_callee(callee: &GrammarASTNode) -> Option<(&Token, usize)> {
+    let branch = peel_to_branch(callee);
+    if branch.rule_name != "member_expression" {
+        return None;
+    }
+    // Locate the *final* access token (`.` or `[`) in the flat chain.
+    let last_access = branch
+        .children
+        .iter()
+        .rposition(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "." || t.value == "["))?;
+    // The final access must be a dot — a named method, not a computed
+    // subscript — followed by a `Name` token (the method name).
+    let is_dot =
+        matches!(&branch.children[last_access], ASTNodeOrToken::Token(t) if t.value == ".");
+    if !is_dot {
+        return None;
+    }
+    let method_tok = match branch.children.get(last_access + 1) {
+        Some(ASTNodeOrToken::Token(t)) if matches!(t.type_, TokenType::Name) => t,
+        _ => return None,
+    };
+    Some((method_tok, last_access))
 }
 
 /// Detect *genuine* mutual recursion: a cycle of length ≥ 2 in the static

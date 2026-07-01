@@ -7,6 +7,26 @@ All notable changes to `semantic-ir-to-javascript` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.5.0 — method dispatch (`__method__`) execution
+
+Adds the minimal runtime support the JavaScript frontend's C3 member-method
+lowering needs to **run**.  A method call `recv.meth(args…)` reaches the
+backend as `BuiltinCall("__method__", [recv, StrLit("meth"), args…])`; the
+emitter now routes it to a new runtime helper, `__Sir.callMethod`, which
+invokes the JS-native method on the receiver (arrays' `push`/`pop`/`map`/
+`filter`/`forEach`/`includes`/`reduce`/…, strings' `toUpperCase`/…) and
+unwraps any `Closure` callback argument into a plain JS function.  This lets
+JavaScript→SIR→JS collection programs execute end-to-end under `node`.
+
+### Added
+
+- `emit_builtin_call` special-cases `BuiltinCall("__method__", [recv,
+  StrLit(name), args…])` → `__Sir.callMethod(recv, "name", args…)` (receiver
+  first, method name second, call args after).
+- Runtime `callMethod(recv, name, ...args)`: unwraps `Closure` args via
+  `applyClosure`, accepts `length` as a nullary method, and dispatches to the
+  native `recv[name]` method (throwing a clear `TypeError` when absent).
+
 ## 0.4.0 — KW4 (keyword-parameter & argument emission)
 
 Replaces the KW1 compile-compat stubs with **real** keyword-parameter and

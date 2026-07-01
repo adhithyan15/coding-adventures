@@ -4,15 +4,49 @@ All notable changes to `javascript-to-semantic-ir` are documented here.
 
 ## Unreleased
 
+The format is based on [Keep a Changelog](https://keepachangelog.com/),
+and this project adheres to [Semantic Versioning](https://semver.org/).
+
+## 0.7.0
+
+**Member-method calls → `__method__` dispatch (C3 — collection methods).**
+The frontend previously *deferred* every member-method call (`arr.map(fn)`,
+`arr.push(x)`, `str.toUpperCase()`, …) to a positioned error, special-casing
+only `console.log`.  It now lowers them to the SIR method-dispatch
+convention — `BuiltinCall("__method__", [receiver, StrLit("method"),
+args…])` — exactly as the Ruby frontend does.  This is the JavaScript arm of
+the `sir-collection-methods` cascade; collection code (`.map`/`.filter`/
+`.push`/`.reduce`/…) now lowers, validates, and executes end-to-end through
+the JS backend.
+
+### Added
+
+- **Member-method-call lowering.**  A dotted call `recv.method(args…)` (other
+  than `console.log`) lowers to `BuiltinCall("__method__", [recv,
+  StrLit("method"), args…])`: the receiver at `args[0]`, the method name
+  always a `StrLit` at `args[1]`, the call arguments following.  The synthetic
+  method-name `StrLit` declares `Feature::Strings` (no dedicated
+  `MethodDispatch` feature in v0 — `Strings` is what the validator observes).
+- **Chained method calls.**  A flat call chain `xs.filter(f).map(g)` folds one
+  step at a time — each `.method(args)` wraps the accumulated expression as
+  the receiver of the next `__method__` dispatch.
+- **Callback arguments.**  An arrow / function argument (`arr.map(x => x*2)`)
+  reuses the existing closure lowering, arriving as a `MakeClosure` in the
+  dispatch's argument list (the JS higher-order convention — no trailing-block
+  syntax).
+- Lowering-assertion tests (`push`/`pop`/`map`/`filter`/`toUpperCase`,
+  chaining, `console.log` non-regression, deferred computed calls) plus node
+  execution-proofs (`xs.push(4); xs.length` → `4`; `.map`+`.reduce` → `12`;
+  `.filter`+`.includes` → `#t`).
+
 ### Changed
 
+- `console.log` keeps its dedicated `print` lowering (not routed through
+  `__method__`); a *computed* member call (`obj[expr](…)`) stays deferred.
 - Compile-compat stub arm for the new core `semantic-ir` variant
   `Expr::KeywordArg` (KW1) — the effect-inference pass recurses into the
   keyword arg's inner `value` so purity analysis stays
   conservative-correct. Real keyword-argument lowering is pending KW2–KW8.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/),
-and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## 0.6.0
 
