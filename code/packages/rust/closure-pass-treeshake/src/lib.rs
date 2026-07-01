@@ -80,10 +80,12 @@
 use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
 };
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 use coding_adventures_closure_scope_analyzer::{analyze, BindingId, BindingKind, ScopeId};
+use coding_adventures_correlation_vector::Contribution;
 use coding_adventures_javascript_ast::{Declaration, ProgramItem};
+use serde_json::json;
 
 /// `Pass::depends_on` value. CLOC06 canonical order pins DCE
 /// before tree-shake. Kept as a `const` so future tests / sibling
@@ -245,15 +247,53 @@ impl Pass for TreeshakePass {
 
         let mut new_body: Vec<ProgramItem> = Vec::with_capacity(ctx.program.body.len());
         let mut removed_count: usize = 0;
+        // Capture each removed function's own CV id (and name) BEFORE it
+        // is dropped, so we can tombstone the exact span that vanished.
+        let mut removed: Vec<(Option<String>, String)> = Vec::new();
         for item in &ctx.program.body {
             match item {
                 ProgramItem::Declaration(Declaration::FunctionDeclaration(fd))
                     if dead_names.contains(&fd.id.name) =>
                 {
                     removed_count += 1;
+                    removed.push((fd.cv.clone(), fd.id.name.clone()));
                     // Drop.
                 }
                 _ => new_body.push(item.clone()),
+            }
+        }
+
+        // Deletion provenance (#89). Treeshake is the whole-program
+        // analogue of DCE: it deletes unreferenced top-level functions.
+        // Like DCE, it must not delete code silently — each removed
+        // function's own CV entry is tombstoned with a `DeletionRecord`
+        // (via `CVLog::delete`), so a `--correlation_vector` consumer
+        // asking "what happened to `function foo`?" gets a definite
+        // answer: *treeshake removed it because it was unexported /
+        // unreferenced.* `delete` is a no-op when the log is disabled
+        // (production default), so this costs nothing off that path. We
+        // also emit one summary `Contribution` against the program root.
+        let mut contributions: Vec<Contribution> = Vec::new();
+        if removed_count > 0 {
+            for (cv_id, name) in &removed {
+                if let Some(id) = cv_id {
+                    let mut meta: HashMap<String, serde_json::Value> = HashMap::new();
+                    meta.insert("name".to_string(), json!(name));
+                    ctx.cv
+                        .delete(id, "treeshake", "removed-unreferenced-function", meta);
+                }
+            }
+            if let Some(prog_cv) = &ctx.program.cv {
+                contributions.push(Contribution {
+                    source: "treeshake".to_string(),
+                    tag: "removed-unreferenced-function".to_string(),
+                    meta: [
+                        ("removed".to_string(), json!(removed_count)),
+                        ("parent_cv".to_string(), json!(prog_cv)),
+                    ]
+                    .into_iter()
+                    .collect(),
+                });
             }
         }
 
@@ -263,7 +303,7 @@ impl Pass for TreeshakePass {
 
         Ok(PassOutput {
             program: new_program,
-            contributions: Vec::new(),
+            contributions,
             changed,
             diagnostics: Vec::new(),
             stats: PassStats {
@@ -467,6 +507,125 @@ mod tests {
         let mut p = program();
         p.body = items;
         p
+    }
+
+    // -----------------------------------------------------------------
+    // CV deletion provenance (#89).
+    //
+    // Mirror the pipeline: the lexer/parser `create` a CV entry per node
+    // and stamp its id onto the AST. So we `create` the function's entry
+    // FIRST, stamp its id, then run treeshake — otherwise `cv.delete`
+    // has no entry to tombstone and the assertion would be vacuous.
+    // Property: a treeshake-removed function's CV entry survives with a
+    // `DeletionRecord{source:"treeshake"}`, so "what happened to
+    // `function foo`?" stays answerable.
+    // -----------------------------------------------------------------
+
+    /// A `function <name>(){}` whose CV id is freshly created in `log`.
+    fn traced_fn_decl(log: &mut CVLog, name: &str) -> (ProgramItem, String) {
+        let id = log.create(None);
+        let item = ProgramItem::Declaration(Declaration::FunctionDeclaration(FunctionDeclaration {
+            cv: Some(id.clone()),
+            id: ident(name),
+            params: Vec::new(),
+            body: BlockStatement {
+                cv: None,
+                body: Vec::new(),
+            },
+            generator: false,
+            is_async: false,
+        }));
+        (item, id)
+    }
+
+    /// Like [`run_pass`] but threads the caller's CV log through so its
+    /// `DeletionRecord`s can be inspected after the pass returns.
+    fn run_capturing_cv(
+        prog: &Program,
+        cv: &mut CVLog,
+    ) -> coding_adventures_closure_pass_pipeline::PassOutput {
+        let sidecar = Sidecar::new();
+        let ctx = coding_adventures_closure_pass_pipeline::PassContext {
+            program: prog,
+            sidecar: &sidecar,
+            cv,
+        };
+        TreeshakePass::new().run(ctx).expect("pass ran")
+    }
+
+    #[test]
+    fn removed_function_is_tombstoned() {
+        let mut log = CVLog::new(true);
+        let (dead, dead_cv) = traced_fn_decl(&mut log, "dead");
+        let prog = program_with(vec![dead]);
+
+        let out = run_capturing_cv(&prog, &mut log);
+
+        assert!(out.changed);
+        assert!(out.program.body.is_empty());
+        let del = log
+            .get(&dead_cv)
+            .unwrap()
+            .deleted
+            .as_ref()
+            .expect("a removed function must be tombstoned");
+        assert_eq!(del.source, "treeshake");
+        assert_eq!(del.reason, "removed-unreferenced-function");
+        assert_eq!(del.meta.get("name").and_then(|v| v.as_str()), Some("dead"));
+    }
+
+    #[test]
+    fn each_removed_function_is_tombstoned() {
+        let mut log = CVLog::new(true);
+        let (f, f_cv) = traced_fn_decl(&mut log, "f");
+        let (g, g_cv) = traced_fn_decl(&mut log, "g");
+        let prog = program_with(vec![f, g]);
+
+        let out = run_capturing_cv(&prog, &mut log);
+
+        assert!(out.changed);
+        assert!(log.get(&f_cv).unwrap().deleted.is_some());
+        assert!(log.get(&g_cv).unwrap().deleted.is_some());
+    }
+
+    #[test]
+    fn referenced_function_is_not_tombstoned() {
+        // `function f(){} f();` — the call keeps f live, so it is
+        // neither removed nor tombstoned.
+        use coding_adventures_javascript_ast::{CallExpression, Expression};
+        let mut log = CVLog::new(true);
+        let (f, f_cv) = traced_fn_decl(&mut log, "f");
+        let call_f = ProgramItem::Statement(Statement::expression_statement(ExpressionStatement {
+            cv: None,
+            expression: Expression::CallExpression(CallExpression {
+                cv: None,
+                callee: Box::new(Expression::Identifier(ident("f"))),
+                arguments: Vec::new(),
+            }),
+        }));
+        let prog = program_with(vec![f, call_f]);
+
+        let out = run_capturing_cv(&prog, &mut log);
+
+        assert!(!out.changed, "a referenced function must survive");
+        assert!(
+            log.get(&f_cv).unwrap().deleted.is_none(),
+            "a surviving function must NOT be tombstoned"
+        );
+    }
+
+    #[test]
+    fn disabled_log_still_removes_without_panicking() {
+        // With CV disabled, `delete` is a no-op; the pass must still
+        // drop the dead function and never panic on the missing entry.
+        let mut log = CVLog::new(false);
+        let (dead, _cv) = traced_fn_decl(&mut log, "dead");
+        let prog = program_with(vec![dead]);
+
+        let out = run_capturing_cv(&prog, &mut log);
+
+        assert!(out.changed);
+        assert!(out.program.body.is_empty());
     }
 
     fn run_pass(prog: Program) -> coding_adventures_closure_pass_pipeline::PassOutput {

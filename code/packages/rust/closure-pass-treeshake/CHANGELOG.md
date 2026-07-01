@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closure-pass-treeshake` crate will be documented in this file.
 
+## [0.4.0] - 2026-06-30
+
+### Added — correlation-vector deletion provenance (#89)
+
+Treeshake is the whole-program analogue of DCE: it deletes unreferenced
+top-level `function` declarations. Like DCE, it must not delete code silently.
+Before this change the pass received the shared `CVLog` (via `PassContext`) but
+never used it, and returned `contributions: Vec::new()` — so a
+`--correlation_vector` consumer asking "what happened to `function foo`?" got no
+answer; the removed function vanished from the provenance graph.
+
+Now each removed function's own CV entry is **tombstoned** with a
+`DeletionRecord` via `CVLog::delete(cv_id, "treeshake",
+"removed-unreferenced-function", meta)` (meta carries the function's `name`), and
+one summary `Contribution` is emitted against the program root recording how
+many were removed. This mirrors the deletion provenance merged for the DCE and
+fold-control-flow passes.
+
+- **Byte-for-byte identical program output** — the same functions are removed;
+  only the CV log gains the deletion records and the summary contribution.
+- **Zero cost off the hot path** — `delete` is a no-op when the log is disabled
+  (production default), so tombstones only materialise under
+  `--correlation_vector`. The `changed`/`contributions` behavior for the
+  no-removal case is unchanged (still empty).
+- Four new tests: a removed function is tombstoned with `source == "treeshake"`
+  and the right reason/name; every function in a multi-removal is tombstoned; a
+  **referenced** function (kept alive by a call site) is NOT tombstoned; and a
+  disabled log still removes the dead function without panicking. Crate version
+  0.3.2 → 0.4.0.
+
 ## [0.3.2] - 2026-06-16
 
 ### Docs

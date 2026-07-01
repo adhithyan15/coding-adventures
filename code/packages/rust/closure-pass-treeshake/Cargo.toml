@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-pass-treeshake"
-version = "0.3.2"
+version = "0.4.0"
 edition = "2021"
 description = "Tree-shaking pass for the Closure Compiler clone. Per CLOC06's canonical pass set. Removes module exports and imports that aren't reachable from the program's entry points, eliminating whole-module dead weight that intra-module DCE can't see."
 
