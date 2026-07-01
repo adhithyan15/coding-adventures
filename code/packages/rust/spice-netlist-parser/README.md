@@ -397,6 +397,19 @@ assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_json
 assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_json.contains(
     r#""dispatchQueueLaneTabPanelCardActionMenuCapabilityId":"app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-json""#
 ));
+
+let shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups_json =
+    deck.run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups_json(
+        BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        },
+    )?;
+assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups_json
+    .contains(r#""activeMenuGroupId":"dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group.queued""#));
+assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups_json.contains(
+    r#""dispatchQueueLaneTabPanelCardActionMenuGroupsCapabilityId":"app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-groups-json""#
+));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -446,6 +459,11 @@ Dashboard dispatch queue lane tab panel card action menus project those actions
 into menu items with active/attention/default item IDs, enabled, disabled,
 empty, primary, selected, and attention item counts, positions, action links,
 and lane-tab-panel-card-action-menu capability metadata.
+Dashboard dispatch queue lane tab panel card action menu groups bucket those
+menu items by queue state with active/attention/default/primary group IDs,
+item/action ID lists, enabled, disabled, empty, primary, selected, and
+attention group counts, badge totals, and lane-tab-panel-card-action-menu-group
+capability metadata.
 Persisted editor-state snapshots resolve saved selection and active-command IDs
 against the current deck, repairing stale UI state after source edits. Host
 surfaces turn those snapshots into stable source, diagnostics, analysis, table,
