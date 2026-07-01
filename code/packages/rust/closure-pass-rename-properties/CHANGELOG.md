@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-properties` crate will be documented in this file.
 
+## [0.9.0] - 2026-06-30
+
+### Added — correlation-vector rename provenance (#89)
+
+Mirrors the rename-globals pass. Renaming is a transformation, not a deletion,
+so this pass now records each property rename as a `renamed` **contribution**
+carrying `{from, to}`. Before, `run()` returned `contributions: Vec::new()` and
+never touched the CV log, so property renaming silently erased the link between
+a minified property (`o.a`) and its original name (`o.longProp`): a
+`--correlation_vector` consumer had no way to recover it.
+
+`rename_properties` now returns its applied rename table (`(from, to)` pairs,
+sorted by original name for deterministic output) alongside the `changed` flag,
+and `run` maps each pair to a `Contribution{source:"rename-properties",
+tag:"renamed", meta:{from, to}}`. The pipeline attaches these to the
+program-root CV entry, so the rename table becomes queryable provenance.
+
+- **Byte-for-byte identical program output** — the renames applied are exactly
+  as before; only the returned `contributions` list is now populated. All 24
+  existing output tests are unchanged.
+- Two new tests: a renamed property emits one `renamed` contribution with the
+  right `from`/shorter `to`; a program whose only property is a built-in
+  (`o.length`) emits none.
+- `correlation-vector` moved from dev- to regular dependency; `serde_json` added
+  (for `Contribution.meta`). Crate version 0.8.0 → 0.9.0.
+
+**Scope / follow-up.** This attaches the rename *table* at the program root.
+Per-output-span provenance — contributing to each renamed property occurrence's
+own CV id — needs the log threaded through the `rewrite_*` recursion and is a
+documented follow-up.
+
 ## [0.8.0] - 2026-06-20
 
 ### Added — CLOC23: property renaming recurses through `for`-`of`

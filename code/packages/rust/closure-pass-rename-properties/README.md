@@ -95,11 +95,28 @@ the common browser surface safe even when the externs file doesn't list it,
 but `--externs` remains the authoritative boundary for vendor-/library-
 specific external properties, so the opt-in gate stays.
 
+## Rename provenance (correlation vector)
+
+Renaming is a transformation, not a deletion, so this pass records each
+property rename as a `renamed` **contribution** carrying `{from, to}`
+(rather than tombstoning, as the DCE / fold-control-flow / treeshake
+passes do for what they delete). The pipeline attaches these to the
+program-root CV entry, so a `--correlation_vector` consumer can map a
+minified property (`o.a`) back to its original source name
+(`o.longProp`) — the rename *table* as queryable provenance. Mirrors the
+rename-globals pass; program output is byte-for-byte unchanged.
+(Follow-up: per-output-span provenance — contributing to each renamed
+occurrence's own CV id — needs the log threaded through the `rewrite_*`
+recursion.)
+
 ## Dependency whitelist
 
 - `coding-adventures-closure-pass-pipeline` — `Pass` trait + types.
 - `coding-adventures-javascript-ast` — `Program` and the typed AST.
+- `coding_adventures_correlation_vector` — the `Contribution` type for
+  rename provenance.
+- `serde_json` — `Contribution.meta` JSON values.
 
 Dev-deps: `coding-adventures-javascript-tokens`,
 `coding-adventures-javascript-parser`, `coding-adventures-closure-emitter`,
-`coding-adventures-type-sidecar`, `coding_adventures_correlation_vector`.
+`coding-adventures-type-sidecar`.

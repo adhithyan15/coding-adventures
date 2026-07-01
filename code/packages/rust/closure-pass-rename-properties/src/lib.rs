@@ -79,7 +79,9 @@ use std::collections::{HashMap, HashSet};
 use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
 };
+use coding_adventures_correlation_vector::Contribution;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
+use serde_json::json;
 use coding_adventures_javascript_ast::{
     AssignmentTarget, Declaration, Expression, ForInit, Program, ProgramItem, PropertyKey,
     Statement,
@@ -774,11 +776,35 @@ impl Pass for RenamePropertiesPass {
     fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
         let mut program = ctx.program.clone();
         let mut nodes_touched: u32 = 1;
-        let changed = rename_properties(&mut program, &self.do_not_rename, &mut nodes_touched);
+        let (changed, renames) =
+            rename_properties(&mut program, &self.do_not_rename, &mut nodes_touched);
+
+        // CV provenance (#89): record every property rename as a `renamed`
+        // contribution carrying `{from, to}`. The pipeline attaches these
+        // to the program-root CV entry, so a `--correlation_vector`
+        // consumer can map a minified property (`o.a`) back to its
+        // original name (`o.longProp`) — provenance that renaming would
+        // otherwise erase. Mirrors the rename-globals pass. (Per-node
+        // span attachment — contributing to each renamed property
+        // occurrence's own CV id — is a documented follow-up that needs
+        // the log threaded through the `rewrite_*` recursion.)
+        let contributions: Vec<Contribution> = renames
+            .into_iter()
+            .map(|(from, to)| Contribution {
+                source: "rename-properties".to_string(),
+                tag: "renamed".to_string(),
+                meta: [
+                    ("from".to_string(), json!(from)),
+                    ("to".to_string(), json!(to)),
+                ]
+                .into_iter()
+                .collect(),
+            })
+            .collect();
 
         Ok(PassOutput {
             program,
-            contributions: Vec::new(),
+            contributions,
             changed,
             diagnostics: Vec::new(),
             stats: PassStats { nodes_touched },
@@ -813,11 +839,17 @@ impl Classify {
     }
 }
 
+/// Renames qualifying dotted property names to fresh short names.
+///
+/// Returns `(changed, renames)` where `renames` is the applied rename
+/// table as `(from, to)` pairs sorted by original name (deterministic
+/// order for stable CV provenance). `renames` is empty exactly when
+/// `changed` is `false`.
 fn rename_properties(
     program: &mut Program,
     do_not_rename: &HashSet<String>,
     nodes_touched: &mut u32,
-) -> bool {
+) -> (bool, Vec<(String, String)>) {
     // 1. Classify every property occurrence as dotted (renameable shape)
     //    or quoted (off-limits).
     let mut cls = Classify::default();
@@ -860,14 +892,19 @@ fn rename_properties(
     }
 
     if map.is_empty() {
-        return false;
+        return (false, Vec::new());
     }
 
     // 3. Rewrite every dotted / unquoted-key occurrence of a renamed name.
     for item in &mut program.body {
         rewrite_item(item, &map);
     }
-    true
+
+    // The rename table drives CV provenance (#89). Sort by original name
+    // so the emitted contributions are deterministic run to run.
+    let mut renames: Vec<(String, String)> = map.into_iter().collect();
+    renames.sort();
+    (true, renames)
 }
 
 /// Collect **every property name that appears anywhere** in `program` —
@@ -1448,6 +1485,70 @@ mod tests {
 
     fn rename(src: &str) -> String {
         rename_with(src, &[])
+    }
+
+    /// Run the pass and return its CV contributions (the rename table).
+    fn rename_contributions(src: &str) -> Vec<Contribution> {
+        let es = EsVersion::Es2025;
+        let node = parse_javascript_typed(src, es).expect("parse");
+        let prog = bridge::grammar_to_program(&node, es).expect("bridge");
+        let pass = RenamePropertiesPass::new(HashSet::new());
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(true);
+        pass.run(PassContext {
+            program: &prog,
+            sidecar: &sidecar,
+            cv: &mut cv,
+        })
+        .expect("rename-properties")
+        .contributions
+    }
+
+    // ----- CV provenance (#89) -----
+
+    #[test]
+    fn emits_renamed_contribution_per_property() {
+        // `o.longProp;` — `longProp` is dotted, unquoted, not a built-in,
+        // len>1 → renamed; the pass records a `renamed` contribution
+        // mapping the original property name to its short form.
+        let contribs = rename_contributions("o.longProp;");
+        let renamed: Vec<_> = contribs
+            .iter()
+            .filter(|c| c.source == "rename-properties" && c.tag == "renamed")
+            .collect();
+        assert_eq!(
+            renamed.len(),
+            1,
+            "expected exactly one renamed contribution; got {:?}",
+            contribs
+        );
+        let c = renamed[0];
+        assert_eq!(
+            c.meta.get("from").and_then(|v| v.as_str()),
+            Some("longProp")
+        );
+        let to = c
+            .meta
+            .get("to")
+            .and_then(|v| v.as_str())
+            .expect("`to` present");
+        assert!(
+            to.len() < "longProp".len(),
+            "renamed to a shorter name; got {:?}",
+            to
+        );
+    }
+
+    #[test]
+    fn no_contributions_when_nothing_renamed() {
+        // `o.length;` — `length` is a built-in property, never renamed,
+        // so there is nothing to rename and no contribution is emitted.
+        let contribs = rename_contributions("o.length;");
+        assert!(
+            contribs.is_empty(),
+            "expected no contributions; got {:?}",
+            contribs
+        );
     }
 
     // ----- metadata -----
