@@ -2,6 +2,30 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.42.0] — 2026-06-30
+
+### Added — rung 11 batch 3: combined likelihood wins a true tie-break
+
+- **`rung11_syndromic_decision/items.json` grows 36 → 48** (`r11sd-37`..`r11sd-48`): a third
+  decision family where **two competing syndromes BOTH fully fire** — a genuine tie-break among
+  satisfied patterns (unlike batch-2, where the loser never fired). The **gold** disease is backed
+  by a 2-finding syndrome (LR `l_gold`) **and** an independent corroborating finding (LR `l_extra`);
+  the engine **multiplies** them, so the gold disease's combined likelihood is `l_gold · l_extra`.
+  The **rival** is backed by a single, nominally **stronger** syndrome (`l_rival`), with
+  `l_rival > l_gold` and `l_rival > l_extra` but `l_gold · l_extra > l_rival`. Both rules fire; the
+  engine ranks by the product of every fired likelihood, so the gold disease — two independent pieces
+  of evidence that **combine** to outweigh the rival's one louder clue — wins. The trap: comparing
+  the single strongest syndrome picks the rival; the diagnosis is the one with the greater **total**
+  weight of independent evidence.
+- 6 scenarios (infective endocarditis vs rheumatic fever; SLE vs dermatomyositis; sarcoidosis vs
+  TB; hemochromatosis vs diabetes; carcinoid vs pheochromocytoma; myeloma vs Waldenström) × 2 LR
+  variants. Reuses the same machinery — multi-atom `rule` heads + **two `contributes` to one
+  hypothesis** + `decision_leader`; **no engine/harness change** (verified: the engine multiplies
+  multiple contributions to the same term).
+- Contamination-safe (every prior/LR printed in the stem; the answer is a disease name; identifiers
+  digit-free); gold rotates A–E; unique leader asserted at build. Engine **48/48** cached;
+  contamination / ruff / pytest clean (full ladder suite 149 passed).
+
 ## [0.41.0] — 2026-06-30
 
 ### Added — rung 12 batch 2: therapeutic-range band decision

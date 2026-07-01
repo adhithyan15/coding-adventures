@@ -152,6 +152,58 @@ THREE_FINDING_SCENARIOS = [
 # it is incomplete so it never fires; the gold triad (which IS complete) wins regardless.
 VARIANTS3 = [(10, 15), (12, 18)]
 
+# --- batch 3: combined likelihood wins a true tie-break -----------------------------------------
+# Two competing syndromes BOTH fully fire (all their findings observed), so this is a real
+# tie-break among satisfied patterns — unlike batch-2, where the loser never fired. The GOLD
+# disease is supported by a 2-finding syndrome (LR `l_gold`) AND a second, independent corroborating
+# finding (LR `l_extra`); the engine MULTIPLIES the two, so its combined likelihood is
+# `l_gold * l_extra`. The RIVAL disease is supported by a single, nominally STRONGER syndrome (LR
+# `l_rival`), with `l_rival > l_gold` and `l_rival > l_extra` but `l_gold * l_extra > l_rival`. Both
+# rules fire; the engine ranks by the product of every fired likelihood, so the gold disease — whose
+# two independent pieces of evidence COMBINE to outweigh the rival's one louder clue — wins. The
+# trap: comparing the single strongest syndrome (the rival's) picks the rival; the diagnosis is the
+# one with the greater TOTAL weight of independent evidence.
+# (gold_syndrome, gold, (g1, g2), extra_finding, rival_syndrome, rival, (r1, r2), [2 prior-only],
+#  gold_syn_phrase, gold_extra_phrase, rival_syn_phrase)
+COMBINED_LR_SCENARIOS = [
+    ("endocarditis_pattern", "infective_endocarditis", ("new_regurgitant_murmur", "janeway_lesions"),
+     "splinter_hemorrhages", "rheumatic_pattern", "rheumatic_fever",
+     ("migratory_polyarthritis", "subcutaneous_nodules"),
+     ["pericarditis", "atrial_myxoma"],
+     "a new regurgitant murmur with Janeway lesions", "splinter hemorrhages",
+     "a migratory polyarthritis with subcutaneous nodules"),
+    ("lupus_pattern", "systemic_lupus", ("malar_rash", "photosensitivity"), "oral_ulcers",
+     "dermatomyositis_pattern", "dermatomyositis", ("gottron_papules", "heliotrope_rash"),
+     ["psoriasis", "lichen_planus"],
+     "a malar rash with photosensitivity", "oral ulcers",
+     "Gottron papules with a heliotrope rash"),
+    ("sarcoid_pattern", "sarcoidosis", ("bilateral_hilar_adenopathy", "erythema_nodosum"),
+     "elevated_ace_level", "tuberculosis_pattern", "tuberculosis",
+     ("night_sweats", "apical_cavitation"),
+     ["lymphoma", "histoplasmosis"],
+     "bilateral hilar adenopathy with erythema nodosum", "an elevated ACE level",
+     "night sweats with apical cavitation"),
+    ("hemochromatosis_pattern", "hereditary_hemochromatosis", ("bronze_skin", "restrictive_cardiomyopathy"),
+     "elevated_ferritin", "diabetes_pattern", "diabetes_mellitus", ("polyuria", "polydipsia"),
+     ["wilson_disease", "porphyria"],
+     "bronze skin with a restrictive cardiomyopathy", "an elevated ferritin",
+     "polyuria with polydipsia"),
+    ("carcinoid_pattern", "carcinoid_syndrome", ("episodic_flushing", "secretory_diarrhea"),
+     "right_sided_heart_murmur", "pheochromocytoma_pattern", "pheochromocytoma",
+     ("paroxysmal_hypertension", "palpitations"),
+     ["vipoma", "mastocytosis"],
+     "episodic flushing with secretory diarrhea", "a right-sided heart murmur",
+     "paroxysmal hypertension with palpitations"),
+    ("myeloma_pattern", "multiple_myeloma", ("lytic_bone_lesions", "hypercalcemia"), "rouleaux_formation",
+     "waldenstrom_pattern", "waldenstrom_macroglobulinemia", ("serum_hyperviscosity", "lymphadenopathy"),
+     ["monoclonal_gammopathy", "amyloidosis"],
+     "lytic bone lesions with hypercalcemia", "rouleaux formation on the smear",
+     "serum hyperviscosity with lymphadenopathy"),
+]
+# (l_gold, l_extra, l_rival): l_gold*l_extra > l_rival > l_gold and > l_extra, so the rival's single
+# syndrome is nominally stronger than either of the gold disease's two pieces, yet their PRODUCT wins.
+VARIANTS_COMBINED = [(8, 3, 15), (6, 4, 20)]
+
 
 def build():
     items = []
@@ -251,6 +303,74 @@ def build():
                 f"{l_rival}-fold — a stronger association — but it requires both of its findings. The "
                 f"patient has {triad_phrase}, and {partial_phrase} but not the rest of that syndrome. "
                 f"Which single diagnosis is most likely?"
+            )
+            items.append({
+                "id": f"r11sd-{idx + 1:02d}",
+                "qtype": "syndromic_decision",
+                "stem": stem,
+                "program": prog,
+                "answer_from": {"type": "decision_leader", "structural_weights": False},
+                "options": options,
+                "gold_letter": LETTERS[gold_pos],
+            })
+            idx += 1
+    # --- batch 3: combined likelihood wins a true tie-break between two FIRING syndromes ---------
+    for scen in COMBINED_LR_SCENARIOS:
+        (gold_syn, gold, (g1, g2), extra, rival_syn, rival, (r1, r2), priors_only,
+         gold_syn_phrase, gold_extra_phrase, rival_syn_phrase) = scen
+        for (l_gold, l_extra, l_rival) in VARIANTS_COMBINED:
+            diseases = [gold, rival, *priors_only]  # four here; a fifth prior-only is added below
+            # Pad to five distinct diseases with a neutral, digit-free distractor per scenario slot.
+            filler = ["idiopathic_condition", "reactive_process", "paraneoplastic_syndrome"]
+            for f in filler:
+                if len(diseases) >= 5:
+                    break
+                if f not in diseases:
+                    diseases.append(f)
+            diseases = diseases[:5]
+            assert len(set(diseases)) == 5, diseases
+            prior = "0.2"
+            # gold's two independent contributions MULTIPLY (l_gold * l_extra); the rival fires one
+            # nominally-stronger syndrome (l_rival). Both rules fire fully.
+            posterior = {d: 0.2 for d in diseases}
+            posterior[gold] = 0.2 * l_gold * l_extra
+            posterior[rival] = 0.2 * l_rival
+            leader = max(posterior, key=posterior.get)
+            assert leader == gold, (gold, posterior)
+            assert sum(1 for d in diseases if posterior[d] == posterior[gold]) == 1, scen
+            assert l_gold * l_extra > l_rival > l_gold and l_rival > l_extra, scen
+
+            gold_pos = idx % 5
+            opts = [d for d in diseases if d != gold]
+            opts.insert(gold_pos, gold)
+            opts = opts[:5]
+            if opts[gold_pos] != gold:
+                opts[gold_pos] = gold
+            assert len(set(opts)) == 5, opts
+            options = {LETTERS[i]: opts[i] for i in range(5)}
+
+            prog = (
+                "".join(f"prior {prior} for {d}\n" for d in diseases)
+                + f"contributes {l_gold} from {gold_syn} to {gold}\n"
+                + f"contributes {l_extra} from {extra} to {gold}\n"
+                + f"contributes {l_rival} from {rival_syn} to {rival}\n"
+                + f"rule {{ head: {gold_syn} when: {g1}, {g2} }}\n"
+                + f"rule {{ head: {rival_syn} when: {r1}, {r2} }}\n"
+                + f"observe {g1}\n"
+                + f"observe {g2}\n"
+                + f"observe {extra}\n"
+                + f"observe {r1}\n"
+                + f"observe {r2}\n"
+                + "".join(f"? {d}\n" for d in diseases)
+            )
+            stem = (
+                f"Five diagnoses are equally likely a priori (each prior {prior}). The syndrome of "
+                f"{gold_syn_phrase} raises the likelihood of {gold.replace('_', ' ')} {l_gold}-fold, "
+                f"and {gold_extra_phrase} independently raises it a further {l_extra}-fold. The "
+                f"syndrome of {rival_syn_phrase} raises {rival.replace('_', ' ')} {l_rival}-fold — a "
+                f"stronger single association than either finding of the first. The patient has "
+                f"{gold_syn_phrase}, {gold_extra_phrase}, and {rival_syn_phrase}. Which single "
+                f"diagnosis is most likely?"
             )
             items.append({
                 "id": f"r11sd-{idx + 1:02d}",
