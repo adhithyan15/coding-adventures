@@ -56,6 +56,7 @@ SELF_CONTAINED_RUNGS = (
     "rung16_cardiac_output",
     "rung17_alveolar_ventilation",
     "rung18_ejection_fraction",
+    "rung19_rbc_indices",
 )
 
 
