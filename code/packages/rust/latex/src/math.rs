@@ -384,6 +384,27 @@ fn over_arrow_base(name: &str) -> Option<&'static str> {
     })
 }
 
+/// The stretchy UNDER-arrow accents `\underrightarrow` / `\underleftarrow` /
+/// `\underleftrightarrow` (amsmath) are the exact mirror of the over-arrow family: they draw a
+/// stretchy arrow UNDER the argument rather than over it. So they lower onto the existing
+/// [`MathNode::Underset`] node over the plain arrow symbol — the same annotation-under-a-body
+/// shape as `\underbrace` and the `[below]` label of an xarrow — and need no new AST node and no
+/// frontend change (`to_latex` round-trips through `\underset`). Returns the base arrow's
+/// control-word name, so `underrightarrow` → `rightarrow`, printing back as `\rightarrow`.
+///
+/// Truth table (command → arrow set under the body):
+///   \underrightarrow{AB}      → Underset{→,  AB}
+///   \underleftarrow{AB}       → Underset{←,  AB}
+///   \underleftrightarrow{AB}  → Underset{↔, AB}
+fn under_arrow_base(name: &str) -> Option<&'static str> {
+    Some(match name {
+        "underrightarrow" => "rightarrow",
+        "underleftarrow" => "leftarrow",
+        "underleftrightarrow" => "leftrightarrow",
+        _ => return None,
+    })
+}
+
 /// Math environments with `&`/`\\` row/column structure (L3). Case-sensitive — `bmatrix`
 /// (square brackets) and `Bmatrix` (braces) are different environments. The `array`/`subarray`
 /// grids take a **mandatory** column-spec argument (`\begin{array}{cc}`) — see
@@ -852,6 +873,19 @@ impl<'a> MathParser<'a> {
             let body = self.read_arg()?;
             return Ok(MathNode::Overset {
                 over: Box::new(MathNode::Sym(arrow.to_string())),
+                base: Box::new(body),
+            });
+        }
+        // `\underrightarrow{body}` / `\underleftarrow{body}` / `\underleftrightarrow{body}` — the
+        // mirror of the over-arrow accents: a stretchy arrow drawn UNDER the body. One mandatory
+        // `{body}` group; we lower to `Underset { under: <arrow>, base: body }` (see
+        // `under_arrow_base`), so `\underrightarrow{AB}` lowers identically to
+        // `\underset{\rightarrow}{AB}` — no new AST node, no frontend change.
+        if let Some(arrow) = under_arrow_base(name) {
+            self.bump();
+            let body = self.read_arg()?;
+            return Ok(MathNode::Underset {
+                under: Box::new(MathNode::Sym(arrow.to_string())),
                 base: Box::new(body),
             });
         }
@@ -2272,6 +2306,55 @@ mod tests {
     fn over_arrow_missing_mandatory_body_is_a_spanned_error() {
         // The `{body}` is mandatory; a trailing command with no argument is a clean error.
         assert!(parse_math(r"\overrightarrow").is_err());
+    }
+
+    // ---- stretchy UNDER-arrow accents (\underrightarrow & friends) --------------
+
+    #[test]
+    fn underrightarrow_is_the_arrow_set_under_the_body() {
+        // `\underrightarrow{AB}` ≡ a `\rightarrow` set UNDER the body `AB` — the mirror of
+        // `\overrightarrow`, lowering onto `Underset` instead of `Overset`.
+        let n = parse_math(r"\underrightarrow{AB}").unwrap();
+        match &n {
+            MathNode::Underset { under, base } => {
+                assert_eq!(**under, sym("rightarrow"));
+                // `AB` is implicit multiplication A·B
+                assert!(matches!(**base, MathNode::Bin(MBinOp::Mul, ..)));
+            }
+            other => panic!("expected Underset, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn under_arrows_use_their_own_base_arrow() {
+        // Each command maps to its own base arrow symbol, set under the body.
+        for (src, arrow) in [
+            (r"\underrightarrow{v}", "rightarrow"),
+            (r"\underleftarrow{w}", "leftarrow"),
+            (r"\underleftrightarrow{u}", "leftrightarrow"),
+        ] {
+            match &parse_math(src).unwrap() {
+                MathNode::Underset { under, .. } => assert_eq!(**under, sym(arrow), "{src}"),
+                other => panic!("expected Underset for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn under_arrow_round_trips_through_to_latex() {
+        // parse → to_latex → parse is a fixed point (surface normalises to \underset).
+        for src in [r"\underrightarrow{AB}", r"\underleftarrow{x}", r"\underleftrightarrow{PQ}"] {
+            let once = parse_math(src).unwrap();
+            assert!(once.to_latex().contains(r"\underset"), "{src} should print \\underset");
+            let twice = parse_math(&once.to_latex()).unwrap();
+            assert_eq!(once, twice, "round-trip changed the tree for {src:?}");
+        }
+    }
+
+    #[test]
+    fn under_arrow_missing_mandatory_body_is_a_spanned_error() {
+        // The `{body}` is mandatory; a trailing command with no argument is a clean error.
+        assert!(parse_math(r"\underrightarrow").is_err());
     }
 
     // ---- deep-tree Drop safety -------------------------------------------------
