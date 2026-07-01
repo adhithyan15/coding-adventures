@@ -165,13 +165,28 @@ static size_t gc_live_bytes = 0;
 static size_t gc_collection_count = 0;
 
 /** Adaptive threshold: trigger a collection when gc_live_bytes exceeds this. */
-#define GC_INITIAL_THRESHOLD (1u * 1024u * 1024u) /* 1 MB */
+#define GC_INITIAL_THRESHOLD (1u * 1024u * 1024u)    /* 1 MB floor */
+#define GC_MAX_THRESHOLD     (256u * 1024u * 1024u)  /* 256 MB ceiling */
 static size_t gc_threshold = GC_INITIAL_THRESHOLD;
 
-/** Mark stack for iterative BFS — avoids deep C recursion. */
-#define GC_MARK_STACK_CAP 4096
-static gc_header_t *gc_mark_stack[GC_MARK_STACK_CAP];
-static int gc_mark_stack_top = 0;
+/** Mark stack for iterative BFS — avoids deep C recursion.
+ *
+ * The stack starts at GC_MARK_STACK_CAP entries and grows via `realloc` on
+ * overflow.  A fixed-size static array would silently drop GC roots when the
+ * live set exceeds the capacity (e.g. a linked list of > 4096 cons cells),
+ * causing children of the overflowing entry to be swept as dead — use-after-
+ * free for any Lispy tagged pointer still referencing them.
+ *
+ * If `realloc` itself fails (OOM), `gc_mark_had_oom` is set and the sweep
+ * phase is SKIPPED — it is always safer to retain everything (risking only a
+ * temporary memory spike) than to free objects whose children were not fully
+ * traced.
+ */
+#define GC_MARK_STACK_CAP 4096  /* initial capacity; grows on demand */
+static gc_header_t **gc_mark_stack = NULL;  /* heap-allocated pointer array */
+static size_t gc_mark_stack_cap = 0;
+static size_t gc_mark_stack_top = 0;
+static int    gc_mark_had_oom   = 0;  /* set if realloc failed mid-mark */
 
 /* ── Internal helpers ───────────────────────────────────────────────────────*/
 
@@ -194,20 +209,41 @@ static gc_header_t *gc_find_header(uintptr_t raw) {
     return NULL;
 }
 
-/** Push an unmarked header onto the mark stack.  Returns 0 if the stack is
- *  full — the object will be found again on the next collection (conservative
- *  correctness: live objects may be retained but never freed too early). */
+/** Push an unmarked header onto the mark stack.
+ *
+ * Grows the stack via realloc if the current capacity is exhausted.  On
+ * realloc failure, sets gc_mark_had_oom and returns 0 WITHOUT marking the
+ * object — this causes __twig_gc_collect to skip the sweep entirely, so
+ * objects whose children were not traced are never freed prematurely.
+ */
 static int gc_mark_push(gc_header_t *hdr) {
     if (hdr->marked) return 1; /* already marked — nothing to do */
-    hdr->marked = 1;
-    if (gc_mark_stack_top < GC_MARK_STACK_CAP) {
-        gc_mark_stack[gc_mark_stack_top++] = hdr;
-        return 1;
+
+    if (gc_mark_stack_top >= gc_mark_stack_cap) {
+        /* Grow the mark stack. */
+        size_t new_cap = (gc_mark_stack_cap == 0)
+            ? (size_t)GC_MARK_STACK_CAP
+            : gc_mark_stack_cap * 2;
+        /* Overflow guard: stop if new_cap would wrap or exceed addressable
+         * pointer array space. */
+        if (new_cap < gc_mark_stack_cap ||
+            new_cap > SIZE_MAX / sizeof(gc_header_t *)) {
+            gc_mark_had_oom = 1;
+            return 0; /* do NOT mark — sweep will be skipped */
+        }
+        gc_header_t **new_stack = (gc_header_t **)realloc(
+            gc_mark_stack, new_cap * sizeof(gc_header_t *));
+        if (new_stack == NULL) {
+            gc_mark_had_oom = 1;
+            return 0; /* do NOT mark — sweep will be skipped */
+        }
+        gc_mark_stack = new_stack;
+        gc_mark_stack_cap = new_cap;
     }
-    /* Stack overflow — the object is already marked, so it won't be freed.
-     * Its children will be processed in a future collection triggered by
-     * the next allocation.  Acceptable for a conservative collector. */
-    return 0;
+
+    hdr->marked = 1;
+    gc_mark_stack[gc_mark_stack_top++] = hdr;
+    return 1;
 }
 
 /** Scan `len` bytes of memory starting at `base` for pointers into managed
@@ -267,8 +303,9 @@ static void gc_mark(void) {
 
     /* 3. Drain the mark stack — scan each marked object's payload for
      *    further pointers.  New entries pushed by gc_scan_region extend
-     *    the work list until it is empty. */
-    while (gc_mark_stack_top > 0) {
+     *    the work list until it is empty.  Stop early on OOM (gc_scan_region
+     *    may set gc_mark_had_oom via gc_mark_push). */
+    while (gc_mark_stack_top > 0 && !gc_mark_had_oom) {
         gc_header_t *hdr = gc_mark_stack[--gc_mark_stack_top];
         /* Scan this object's payload for further managed pointers. */
         gc_scan_region((const char *)(hdr + 1), hdr->size);
@@ -297,12 +334,20 @@ static void gc_sweep(void) {
     gc_live_bytes = live_bytes;
 }
 
-/** Update the adaptive threshold based on how much survived the last sweep. */
+/** Update the adaptive threshold based on how much survived the last sweep.
+ *
+ * The threshold is capped at GC_MAX_THRESHOLD (256 MB) to prevent a runaway
+ * doubling loop from permanently disabling the GC.  A live-heavy burst that
+ * doubles the threshold all the way to SIZE_MAX/2 would make
+ * `gc_live_bytes >= gc_threshold` unreachable, reverting to unbounded leaking
+ * and enabling a memory-exhaustion DoS from untrusted IIR programs. */
 static void gc_adapt_threshold(size_t prev_live) {
     if (gc_live_bytes > prev_live / 2) {
-        /* More than 50% live — double the threshold. */
-        if (gc_threshold < SIZE_MAX / 2) {
+        /* More than 50% live — double the threshold, capped at 256 MB. */
+        if (gc_threshold < GC_MAX_THRESHOLD / 2) {
             gc_threshold *= 2;
+        } else {
+            gc_threshold = GC_MAX_THRESHOLD;
         }
     } else {
         /* Less than 50% survived — halve (floor: 1 MB). */
@@ -339,6 +384,13 @@ int64_t __twig_gc_alloc(int64_t n) {
         __twig_gc_collect();
     }
 
+    /* Integer overflow guard: `sizeof(gc_header_t) + (size_t)n` must not wrap.
+     * Without this check, an `n` near SIZE_MAX - 31 would produce a tiny
+     * `total`, calloc would succeed with a small buffer, but `hdr->size` would
+     * store the original large value — causing gc_scan_region to read far past
+     * the allocation during marking (heap over-read / potential heap corruption). */
+    if ((size_t)n > SIZE_MAX - sizeof(gc_header_t)) return 0;
+
     /* Allocate header + payload in one `calloc` call (zero-initialises both). */
     size_t total = sizeof(gc_header_t) + (size_t)n;
     gc_header_t *hdr = (gc_header_t *)calloc(1, total);
@@ -368,7 +420,26 @@ int64_t __twig_gc_alloc(int64_t n) {
 void __twig_gc_collect(void) {
     size_t prev_live = gc_live_bytes;
     gc_mark_stack_top = 0; /* reset mark stack */
+    gc_mark_had_oom   = 0; /* reset OOM flag */
     gc_mark();
+
+    if (gc_mark_had_oom) {
+        /* The mark-stack realloc failed mid-collection.  Some reachable
+         * objects were not fully traced; their children are NOT marked.
+         * Sweeping now would free those children while live pointers still
+         * reference them — use-after-free.
+         *
+         * Instead: clear all marks so the next collection starts clean, and
+         * return without freeing anything.  This retains all objects this
+         * cycle (conservative), which is correct: we never free a live
+         * object, only temporarily delay reclaiming dead ones. */
+        for (gc_header_t *hdr = gc_all_objects; hdr != NULL; hdr = hdr->next) {
+            hdr->marked = 0;
+        }
+        gc_collection_count++;
+        return;
+    }
+
     gc_sweep();
     gc_adapt_threshold(prev_live);
     gc_collection_count++;
