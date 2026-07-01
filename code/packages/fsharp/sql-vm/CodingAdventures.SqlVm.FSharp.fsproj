@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <RootNamespace>CodingAdventures.SqlVm.FSharp</RootNamespace>
+    <AssemblyName>CodingAdventures.SqlVm.FSharp</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.SqlVm.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>F# stack-machine bytecode VM: executes Programs produced by sql-codegen against a sql-backend for the Mini-SQLite Level 1 pipeline.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="SqlVm.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../fsharp/sql-backend/CodingAdventures.SqlBackend.fsproj" />
+    <ProjectReference Include="../../fsharp/sql-codegen/CodingAdventures.SqlCodegen.FSharp.fsproj" />
+  </ItemGroup>
+</Project>
