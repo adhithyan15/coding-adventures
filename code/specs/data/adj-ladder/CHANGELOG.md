@@ -2,6 +2,28 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.41.0] — 2026-06-30
+
+### Added — rung 12 batch 2: therapeutic-range band decision
+
+- **`rung12_threshold_decision/items.json` grows 24 → 48** (`r12td-25`..`r12td-48`): a second
+  decision family that deepens rung-12 from a single threshold to a **two-sided therapeutic
+  window**. A pinned drug level is tested against BOTH bounds at once — `constrain level == value`
+  + `constrain level >= low` + `constrain level <= high` + `check` — so **sat → "Continue the
+  current dose"** (in range) and **unsat → "Adjust the dose"** (out of range), mapped via the same
+  `check_outcome` extractor.
+- The reasoning trap: a value can clear the lower bound yet still be out of range by exceeding the
+  upper bound, so a one-sided "is it above the minimum?" heuristic fails. Half the out-of-range
+  values are **below** the window and half **above** (12 therapeutic ranges — digoxin, lithium,
+  vancomycin, phenytoin, theophylline, valproate, carbamazepine, tacrolimus, cyclosporine,
+  gentamicin, procainamide, sirolimus — × 2 items each). Gold split 12/12 across the two actions.
+- **Distinct from batch-1** (single one-sided threshold) **and from rung-6b** (which searches a
+  *free* dose over a window; here the observed value is **pinned**, not searched). **No
+  engine/harness change** — reuses `check_outcome`.
+- Contamination-safe: the only literals are the observed value and the two bounds, all printed in
+  the stem; the answer is an action label; the variable name is digit-free. Engine **48/48** cached;
+  contamination / ruff / pytest clean (full ladder suite 149 passed).
+
 ## [0.40.0] — 2026-06-30
 
 ### Added — rung 12: threshold decision (wait-vs-treat)
