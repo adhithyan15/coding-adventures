@@ -2,6 +2,23 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.23.0] — 2026-06-30
+
+### Added — down-barb & under harpoon accents (completing the harpoon accent family)
+
+- **Down-barb over-harpoons** (`harpoon` package) — `\overrightharpoondown`, `\overleftharpoondown`,
+  the down-barb siblings of the existing up-barb `\overrightharpoonup`/`\overleftharpoonup`. Added
+  to `over_arrow_base`, lowering onto `Overset` over the standard amsmath ⇁/↽ relation symbols.
+- **Under-harpoons** (`harpoon` package) — `\underrightharpoonup`, `\underleftharpoonup`,
+  `\underrightharpoondown`, `\underleftharpoondown`, the under-body mirror of the over-harpoons.
+  Added to `under_arrow_base`, lowering onto `Underset` over the plain harpoon symbol.
+
+Both extend the two existing base-name tables (no new machinery, no new AST node, no frontend
+change); `to_latex` round-trips through `\overset`/`\underset` over the plain harpoon symbol (an
+unknown control word re-parses to a `Sym`). Missing `{body}` is a clean spanned error. With the
+prior `\overrightharpoonup`/`\overleftharpoonup` and the `\underrightarrow` family, the crate now
+covers all four over/under × up/down harpoon accents.
+
 ## [0.22.0] — 2026-06-30
 
 ### Added — stretchy UNDER-arrow accents (the mirror of the over-arrow family)
