@@ -53,6 +53,7 @@ SELF_CONTAINED_RUNGS = (
     "rung13_transtubular_gradient",
     "rung14_indeterminate_decision",
     "rung15_fractional_excretion_urea",
+    "rung16_cardiac_output",
 )
 
 
