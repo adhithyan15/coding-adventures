@@ -56,6 +56,12 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // rewrites each still-sentinel param to its (call-time, param-scoped)
     // default expression.  See `emit_function`.
     Feature::DefaultParams,
+    // KW2 keyword parameters & arguments — Python-native.  A `Keyword` param
+    // becomes a keyword-only parameter (after a bare `*`, or after an existing
+    // `*args`); a `KeywordArg` call element becomes `name=value`.  Optional
+    // keyword params reuse the same sentinel + body-prologue default machinery
+    // as positional optionals.  See `emit_function` / the `KeywordArg` emit arm.
+    Feature::KeywordParams,
     // SIR16 expression features — emitted natively (sequences → list,
     // maps → dict, short-circuit → truthy-guarded lambda, interpolation →
     // display-joined), per code/specs/sir-runtime.md.
@@ -1556,5 +1562,301 @@ mod tests {
             "unexpected range import; got:\n{}",
             a.source
         );
+    }
+
+    // ── KW2: keyword-parameter & keyword-argument emission ──────────────────
+    //
+    // These build SIR modules DIRECTLY (the Ruby/Python frontends do not yet
+    // produce keyword params — that is KW7/KW8), so we hand-assemble the
+    // `Keyword` params and `KeywordArg` call elements the validator now accepts.
+
+    /// Build `def greet(greeting, *, name=<default "world">): return "<greeting>, <name>"`
+    /// — one positional required param, one optional keyword param — as a
+    /// `Function`.  Reused by several KW2 tests below.
+    fn greet_function() -> Function {
+        use semantic_ir::{Param, ParamKind, Scope};
+        // Body: `return greeting + ", " + name` (SIR string concat).
+        let body_value = Expr::StrConcat {
+            parts: vec![
+                Expr::VarRef { name: "greeting".into(), scope: Scope::Param, span: s() },
+                Expr::StrLit { value: ", ".into(), span: s() },
+                Expr::VarRef { name: "name".into(), scope: Scope::Param, span: s() },
+            ],
+            span: s(),
+        };
+        Function {
+            name: "greet".into(),
+            params: vec![
+                Param {
+                    name: "greeting".into(),
+                    sir_type: None,
+                    kind: ParamKind::Required,
+                    default: None,
+                    span: s(),
+                },
+                Param {
+                    name: "name".into(),
+                    sir_type: None,
+                    kind: ParamKind::Keyword,
+                    default: Some(Box::new(Expr::StrLit { value: "world".into(), span: s() })),
+                    span: s(),
+                },
+            ],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: body_value, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        }
+    }
+
+    /// Assemble a module: `greet` (above) + a `main` whose body value is the
+    /// given call expression, printed via `print(...)`.
+    fn kw_module(main_value_call: Expr) -> Module {
+        let print_stmt = semantic_ir::Stmt::ExprStmt {
+            expr: Expr::BuiltinCall {
+                name: "print".into(),
+                args: vec![main_value_call],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            span: s(),
+        };
+        let main = Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![print_stmt], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        Module {
+            name: "demo".into(),
+            manifest: FeatureManifest::from_features(&[
+                Feature::KeywordParams,
+                Feature::DefaultParams,
+                Feature::Strings,
+                Feature::StringInterpolation,
+                Feature::DynamicTyping,
+            ]),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![greet_function(), main],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("test")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        }
+    }
+
+    /// A `greet("hi", <keyword args…>)` call expression.
+    fn greet_call(kw_args: Vec<Expr>) -> Expr {
+        let mut args = vec![Expr::StrLit { value: "hi".into(), span: s() }];
+        args.extend(kw_args);
+        Expr::DirectCall { fn_name: "greet".into(), args, effects: EffectSet::PURE, span: s() }
+    }
+
+    #[test]
+    fn emit_keyword_param_def_uses_bare_star_separator_py() {
+        // `def greet(greeting, *, name=...)`: the bare `*` opens Python's
+        // keyword-only region, and the optional keyword param reuses the
+        // sentinel + prologue default machinery (so it emits `name=_SIR_MISSING`,
+        // NOT `name="world"`, giving call-time defaults).
+        let a = compile(&kw_module(greet_call(vec![]))).expect("compile to python");
+        assert!(
+            a.source.contains("def greet(greeting, *, name=_SIR_MISSING):"),
+            "keyword param must be keyword-only after a bare `*`; got:\n{}",
+            a.source
+        );
+        // The default resolves in the body prologue, not at def time.
+        assert!(
+            a.source.contains("    if name is _SIR_MISSING:"),
+            "optional keyword default must resolve via prologue; got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn emit_required_keyword_param_has_no_default_py() {
+        // A REQUIRED keyword param (`Keyword` + `default: None`) emits bare,
+        // still after the `*`: `def h(a, *, b):`.
+        use semantic_ir::{Param, ParamKind, Scope};
+        let f = Function {
+            name: "h".into(),
+            params: vec![
+                Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+                Param { name: "b".into(), sir_type: None, kind: ParamKind::Keyword, default: None, span: s() },
+            ],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::VarRef { name: "b".into(), scope: Scope::Param, span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        // main: print(h("x", b="y")) — required keyword must be supplied.
+        let call = Expr::DirectCall {
+            fn_name: "h".into(),
+            args: vec![
+                Expr::StrLit { value: "x".into(), span: s() },
+                Expr::KeywordArg {
+                    name: "b".into(),
+                    value: Box::new(Expr::StrLit { value: "y".into(), span: s() }),
+                    span: s(),
+                },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let print_stmt = semantic_ir::Stmt::ExprStmt {
+            expr: Expr::BuiltinCall {
+                name: "print".into(),
+                args: vec![call],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            span: s(),
+        };
+        let main = Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![print_stmt], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let m = Module {
+            name: "demo".into(),
+            manifest: FeatureManifest::from_features(&[
+                Feature::KeywordParams,
+                Feature::Strings,
+                Feature::DynamicTyping,
+            ]),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![f, main],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("test")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        };
+        let a = compile(&m).expect("compile to python");
+        assert!(
+            a.source.contains("def h(a, *, b):"),
+            "required keyword param must be bare after `*`; got:\n{}",
+            a.source
+        );
+        assert!(a.source.contains("h(\"x\", b=\"y\")"), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn emit_keyword_param_after_rest_has_no_extra_star_py() {
+        // When a `*args`/`Rest` param is present it ALREADY forces keyword-only,
+        // so the backend must NOT inject a second bare `*` (that is a Python
+        // SyntaxError): `def g(*rest, kw=_SIR_MISSING):`.
+        use semantic_ir::{Param, ParamKind, Scope};
+        let f = Function {
+            name: "g".into(),
+            params: vec![
+                Param { name: "rest".into(), sir_type: None, kind: ParamKind::Rest, default: None, span: s() },
+                Param {
+                    name: "kw".into(),
+                    sir_type: None,
+                    kind: ParamKind::Keyword,
+                    default: Some(Box::new(Expr::IntLit { value: 1, span: s() })),
+                    span: s(),
+                },
+            ],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::VarRef { name: "kw".into(), scope: Scope::Param, span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let m = Module {
+            name: "demo".into(),
+            manifest: FeatureManifest::from_features(&[
+                Feature::KeywordParams,
+                Feature::DefaultParams,
+                Feature::DynamicTyping,
+            ]),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![f],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("test")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        };
+        let a = compile(&m).expect("compile to python");
+        assert!(
+            a.source.contains("def g(*rest, kw=_SIR_MISSING):"),
+            "a Rest param already forces keyword-only; no extra `*`; got:\n{}",
+            a.source
+        );
+        assert!(
+            !a.source.contains("*rest, *,"),
+            "must not emit a second bare `*` after `*rest`; got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn emit_keyword_arg_at_call_site_py() {
+        // Call side: a positional arg stays bare, a `KeywordArg` becomes
+        // `name=value`: `greet("hi", name="ada")`.
+        let call = greet_call(vec![Expr::KeywordArg {
+            name: "name".into(),
+            value: Box::new(Expr::StrLit { value: "ada".into(), span: s() }),
+            span: s(),
+        }]);
+        let a = compile(&kw_module(call)).expect("compile to python");
+        assert!(
+            a.source.contains("greet(\"hi\", name=\"ada\")"),
+            "keyword arg must emit as `name=value` after the positional; got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn end_to_end_keyword_default_omitted_executes_py() {
+        // Execution-proof: `greet("hi")` omits the optional keyword `name`, so
+        // the prologue resolves it to "world" → prints `hi, world`.
+        let a = compile(&kw_module(greet_call(vec![]))).expect("compile to python");
+        if let Some(stdout) = run_emitted_python(&a.source) {
+            assert_eq!(stdout, "hi, world\n", "emitted python printed unexpected output");
+        }
+    }
+
+    #[test]
+    fn end_to_end_keyword_arg_supplied_executes_py() {
+        // Execution-proof: `greet("hi", name="ada")` supplies the keyword, so
+        // the default is suppressed → prints `hi, ada`.
+        let call = greet_call(vec![Expr::KeywordArg {
+            name: "name".into(),
+            value: Box::new(Expr::StrLit { value: "ada".into(), span: s() }),
+            span: s(),
+        }]);
+        let a = compile(&kw_module(call)).expect("compile to python");
+        if let Some(stdout) = run_emitted_python(&a.source) {
+            assert_eq!(stdout, "hi, ada\n", "emitted python printed unexpected output");
+        }
     }
 }

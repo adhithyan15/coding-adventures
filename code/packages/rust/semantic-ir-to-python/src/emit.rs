@@ -310,7 +310,37 @@ fn emit_function(out: &mut String, f: &Function) {
         first = false;
         out.push_str(&sanitize_ident(&c.name));
     }
+    // KW2 keyword-only `*` separator.  A `Keyword` param is Python-native as a
+    // *keyword-only* parameter — one that sits AFTER a `*` in the signature and
+    // is bound by name only (`def f(a, *, b, c=1)` accepts `f(1, b=2)` but
+    // rejects `f(1, 2)`).  Python opens the keyword-only region in one of two
+    // ways, and we must emit the separator exactly once:
+    //
+    //   * an explicit `*args` collector (SIR `Rest`) — everything after it is
+    //     already keyword-only, so it *is* the separator; a second bare `*`
+    //     would be a `SyntaxError` (`def f(*a, *, b)`).
+    //   * a bare `*` with no name — the form to emit when there is NO `Rest`.
+    //
+    // The validator's def-side ordering (positional → Rest → Keyword* → KwRest)
+    // guarantees every `Keyword` param follows any `Rest`, so a single lookahead
+    // suffices: does the whole list contain a `Rest`?  If not, we inject the
+    // bare `*` immediately before the FIRST `Keyword` param.  `kw_sep_needed`
+    // tracks "still owe a bare `*`", and is cleared the moment we emit one (so
+    // the second, third … keyword params do not each re-emit it).
+    let has_rest = f.params.iter().any(|p| p.kind == ParamKind::Rest);
+    let mut kw_sep_needed = !has_rest;
     for p in &f.params {
+        // Inject the bare `*` separator right before the first keyword param,
+        // when no `*args`/`Rest` already provides it.  The separator is a
+        // stand-alone list element, so it obeys the same comma rule as a param.
+        if p.kind == ParamKind::Keyword && kw_sep_needed {
+            if !first {
+                out.push_str(", ");
+            }
+            out.push('*');
+            first = false;
+            kw_sep_needed = false;
+        }
         if !first {
             out.push_str(", ");
         }
@@ -318,29 +348,24 @@ fn emit_function(out: &mut String, f: &Function) {
         // M3 variadic kinds map to Python's native variadic forms:
         //   Rest   (`*rest`)  → `*rest`   (collects trailing positionals)
         //   KwRest (`**opts`) → `**opts`  (collects trailing keywords)
-        // Both are faithful in Python; only the construction differs.
+        // Both are faithful in Python; only the construction differs.  A
+        // `Keyword` param takes no prefix: its name is emitted bare, but because
+        // it now sits after the `*` (or after `*args`) it is keyword-only.
         match p.kind {
             ParamKind::Rest => out.push('*'),
             ParamKind::KwRest => out.push_str("**"),
-            // KW1 compile-compat stub: a single keyword param (`Keyword`) is
-            // NOT the `**opts` collector, so it takes no prefix here — the
-            // shared `push_str(name)` below emits its name, giving a
-            // best-effort plain positional.  Real keyword-param syntax (order
-            // after `*`, name-only binding) lands in KW2–KW6; the validator
-            // rejects `Feature::KeywordParams` until then, so this arm is
-            // unreachable today.  Combined with `Required` as both emit no
-            // prefix.
             ParamKind::Required | ParamKind::Keyword => {}
         }
         out.push_str(&sanitize_ident(&p.name));
-        // P2c default parameters.  A defaulted param gets the *sentinel* as its
-        // native Python default — `name=_SIR_MISSING` — so callers may omit the
-        // trailing argument.  We deliberately do NOT emit `name=<expr>`: SIR
-        // defaults are call-time and may reference earlier params, which
-        // Python's def-time defaults cannot express (`def f(a, b=a)` is a
-        // NameError).  The real default is resolved in the body prologue below.
-        // (Only `Required` params carry a default; `*rest`/`**opts` never do.)
-        if p.kind == ParamKind::Required && p.default.is_some() {
+        // Default parameters (positional P2c *and* KW2 optional keyword params).
+        // A defaulted param gets the *sentinel* as its native Python default —
+        // `name=_SIR_MISSING` — so callers may omit the trailing/keyword
+        // argument.  We deliberately do NOT emit `name=<expr>`: SIR defaults are
+        // call-time and may reference earlier params, which Python's def-time
+        // defaults cannot express (`def f(a, b=a)` is a NameError).  The real
+        // default is resolved in the body prologue below, uniformly for both
+        // positional and keyword optionals.  (`*rest`/`**opts` never default.)
+        if matches!(p.kind, ParamKind::Required | ParamKind::Keyword) && p.default.is_some() {
             out.push_str("=_SIR_MISSING");
         }
     }
@@ -815,17 +840,17 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             }
             out.push(')');
         }
-        // KW1 compile-compat stub: keyword arguments (`f(a: 1)`) are gated
-        // behind `Feature::KeywordParams`, which the validator rejects until
-        // real support lands in KW2–KW6.  Follow this crate's convention for
-        // an unsupported codegen node the capability check should have
-        // rejected (see the `Intrinsic` panic above): a positioned panic
-        // covering internal bugs only.  No real emission yet.
-        Expr::KeywordArg { span, .. } => {
-            panic!(
-                "python backend reached KW1 keyword-arg expression at {} — backend should have rejected it (real support pending KW2–KW6)",
-                span
-            );
+        // KW2 keyword argument.  A `KeywordArg { name, value }` reaches the
+        // backend only inside a call's `args` vec, after all positionals (the
+        // validator enforces both).  Python's native call syntax spells it
+        // `name=value` (`f(1, b=2)`), which binds `value` to the callee's
+        // keyword-only parameter `name`.  The name is a bare identifier here —
+        // not a string literal — so it is emitted through `sanitize_ident`,
+        // and the value lowers through the ordinary expression emitter.
+        Expr::KeywordArg { name, value, .. } => {
+            out.push_str(&sanitize_ident(name));
+            out.push('=');
+            emit_expr(out, value, indent);
         }
     }
 }
