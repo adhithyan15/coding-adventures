@@ -33,23 +33,23 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard breadcrumbs.
+1. Rust Berkeley Mosaic app shell dashboard tabs.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app shell dashboard breadcrumb surfaces and JSON
-     helpers that derive stable breadcrumb IDs, positions, active/default
-     breadcrumb selection, and route metadata from dashboard routes for a
-     compact first-render product-shell breadcrumb contract.
+   - Add schema-versioned Rust app shell dashboard tab-strip surfaces and JSON
+     helpers that derive stable tab IDs, selected/default tab routing, and
+     breadcrumb/route metadata from dashboard breadcrumbs for a compact
+     first-render product-shell tab contract.
    - Preserve package name, source fingerprint, ready/blocked route, status
      severity, attention-required flag, primary-card routing, primary-region
      routing, active-item routing, active/default route routing,
-     active/default breadcrumb routing, breadcrumb IDs, labels, roles, paths,
-     positions, route IDs, item IDs, region IDs, region card IDs,
-     active/default/visible/enabled flags, visible and enabled route and
-     breadcrumb counts, badge counts,
-     dashboard/package/card/view/layout/navigation/routes/breadcrumbs
+     active/default breadcrumb routing, selected/default tab routing, tab IDs,
+     labels, roles, paths, positions, breadcrumb IDs, route IDs, item IDs,
+     region IDs, region card IDs, selected/default/visible/enabled flags,
+     visible and enabled route, breadcrumb, and tab counts, badge counts,
+     dashboard/package/card/view/layout/navigation/routes/breadcrumbs/tabs
      capability IDs, and advertised capability count so Mosaic, WebAssembly,
-     and product shells can render startup dashboard breadcrumbs without
-     interpreting route internals.
+     and product shells can render startup dashboard tabs without interpreting
+     breadcrumb internals.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1754,6 +1754,25 @@ the Rust, Python, and TypeScript surfaces together.
      advertised capability count so Mosaic, WebAssembly, and product shells can
      install startup dashboard routes without interpreting navigation
      internals.
+
+162. Rust Berkeley Mosaic app shell dashboard breadcrumbs.
+   - Status: completed in PR 7132.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell dashboard breadcrumb surfaces plus JSON helpers that derive
+     stable breadcrumb IDs, positions, active/default breadcrumb selection, and
+     route metadata from dashboard routes for a compact first-render
+     product-shell breadcrumb contract.
+   - The breadcrumb payload preserves package name, source fingerprint,
+     ready/blocked route, status severity, attention-required flag,
+     primary-card routing, primary-region routing, active-item routing,
+     active/default route routing, active/default breadcrumb routing,
+     breadcrumb IDs, labels, roles, paths, positions, route IDs, item IDs,
+     region IDs, region card IDs, active/default/visible/enabled flags, visible
+     and enabled route and breadcrumb counts, badge counts,
+     dashboard/package/card/view/layout/navigation/routes/breadcrumbs
+     capability IDs, and advertised capability count so Mosaic, WebAssembly,
+     and product shells can render startup dashboard breadcrumbs without
+     interpreting route internals.
 
 ## Backlog
 

@@ -33,6 +33,7 @@ pub const BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_NAVIGATION_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_ROUTES_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_BREADCRUMBS_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_TABS_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -81,6 +82,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-dashboard-navigation-json",
     "app-shell-dashboard-routes-json",
     "app-shell-dashboard-breadcrumbs-json",
+    "app-shell-dashboard-tabs-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -1977,6 +1979,197 @@ impl BerkeleyAppShellDashboardBreadcrumbs {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardTab {
+    pub id: String,
+    pub breadcrumb_id: String,
+    pub route_id: String,
+    pub item_id: String,
+    pub region_id: String,
+    pub role: String,
+    pub label: String,
+    pub path: String,
+    pub position: usize,
+    pub selected: bool,
+    pub default_tab: bool,
+    pub visible: bool,
+    pub enabled: bool,
+    pub badge_count: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardTabs {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub primary_card_id: Option<String>,
+    pub primary_region_id: Option<String>,
+    pub active_item_id: Option<String>,
+    pub active_route_id: Option<String>,
+    pub active_route_path: Option<String>,
+    pub default_route_id: Option<String>,
+    pub default_route_path: Option<String>,
+    pub active_breadcrumb_id: Option<String>,
+    pub active_breadcrumb_path: Option<String>,
+    pub default_breadcrumb_id: Option<String>,
+    pub default_breadcrumb_path: Option<String>,
+    pub selected_tab_id: Option<String>,
+    pub selected_tab_path: Option<String>,
+    pub default_tab_id: Option<String>,
+    pub default_tab_path: Option<String>,
+    pub route_count: usize,
+    pub visible_route_count: usize,
+    pub enabled_route_count: usize,
+    pub breadcrumb_count: usize,
+    pub visible_breadcrumb_count: usize,
+    pub enabled_breadcrumb_count: usize,
+    pub tab_count: usize,
+    pub visible_tab_count: usize,
+    pub enabled_tab_count: usize,
+    pub item_count: usize,
+    pub visible_item_count: usize,
+    pub enabled_item_count: usize,
+    pub region_count: usize,
+    pub visible_region_count: usize,
+    pub card_count: usize,
+    pub visible_card_count: usize,
+    pub attention_card_count: usize,
+    pub metric_card_count: usize,
+    pub tabs: Vec<BerkeleyAppShellDashboardTab>,
+    pub package_capability_id: String,
+    pub dashboard_capability_id: String,
+    pub cards_capability_id: String,
+    pub view_capability_id: String,
+    pub layout_capability_id: String,
+    pub navigation_capability_id: String,
+    pub routes_capability_id: String,
+    pub breadcrumbs_capability_id: String,
+    pub tabs_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardTabs {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_dashboard_breadcrumbs(
+            &BerkeleyAppShellDashboardBreadcrumbs::from_bootstrap_snapshot(snapshot),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dashboard_breadcrumbs(&BerkeleyAppShellDashboardBreadcrumbs::from_shell_handoff(
+            handoff,
+        ))
+    }
+
+    pub fn from_dashboard_breadcrumbs(breadcrumbs: &BerkeleyAppShellDashboardBreadcrumbs) -> Self {
+        let tabs = breadcrumbs
+            .breadcrumbs
+            .iter()
+            .map(|breadcrumb| BerkeleyAppShellDashboardTab {
+                id: format!("dashboard.tab.{}", breadcrumb.role),
+                breadcrumb_id: breadcrumb.id.clone(),
+                route_id: breadcrumb.route_id.clone(),
+                item_id: breadcrumb.item_id.clone(),
+                region_id: breadcrumb.region_id.clone(),
+                role: breadcrumb.role.clone(),
+                label: breadcrumb.label.clone(),
+                path: breadcrumb.path.clone(),
+                position: breadcrumb.position,
+                selected: breadcrumb.active,
+                default_tab: breadcrumb.default_route,
+                visible: breadcrumb.visible,
+                enabled: breadcrumb.enabled,
+                badge_count: breadcrumb.badge_count,
+            })
+            .collect::<Vec<_>>();
+        let selected_tab_id = tabs
+            .iter()
+            .find(|tab| tab.selected)
+            .map(|tab| tab.id.clone());
+        let selected_tab_path = selected_tab_id.as_ref().and_then(|selected_id| {
+            tabs.iter()
+                .find(|tab| &tab.id == selected_id)
+                .map(|tab| tab.path.clone())
+        });
+        let default_tab_id = tabs
+            .iter()
+            .find(|tab| tab.default_tab)
+            .map(|tab| tab.id.clone());
+        let default_tab_path = default_tab_id.as_ref().and_then(|default_id| {
+            tabs.iter()
+                .find(|tab| &tab.id == default_id)
+                .map(|tab| tab.path.clone())
+        });
+        let tab_count = tabs.len();
+        let visible_tab_count = tabs.iter().filter(|tab| tab.visible).count();
+        let enabled_tab_count = tabs.iter().filter(|tab| tab.enabled).count();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_TABS_SCHEMA_VERSION,
+            package_name: breadcrumbs.package_name.clone(),
+            source_fingerprint: breadcrumbs.source_fingerprint.clone(),
+            title: breadcrumbs.title.clone(),
+            startup_route: breadcrumbs.startup_route.clone(),
+            ready: breadcrumbs.ready,
+            severity: breadcrumbs.severity.clone(),
+            attention_required: breadcrumbs.attention_required,
+            primary_card_id: breadcrumbs.primary_card_id.clone(),
+            primary_region_id: breadcrumbs.primary_region_id.clone(),
+            active_item_id: breadcrumbs.active_item_id.clone(),
+            active_route_id: breadcrumbs.active_route_id.clone(),
+            active_route_path: breadcrumbs.active_route_path.clone(),
+            default_route_id: breadcrumbs.default_route_id.clone(),
+            default_route_path: breadcrumbs.default_route_path.clone(),
+            active_breadcrumb_id: breadcrumbs.active_breadcrumb_id.clone(),
+            active_breadcrumb_path: breadcrumbs.active_breadcrumb_path.clone(),
+            default_breadcrumb_id: breadcrumbs.default_breadcrumb_id.clone(),
+            default_breadcrumb_path: breadcrumbs.default_breadcrumb_path.clone(),
+            selected_tab_id,
+            selected_tab_path,
+            default_tab_id,
+            default_tab_path,
+            route_count: breadcrumbs.route_count,
+            visible_route_count: breadcrumbs.visible_route_count,
+            enabled_route_count: breadcrumbs.enabled_route_count,
+            breadcrumb_count: breadcrumbs.breadcrumb_count,
+            visible_breadcrumb_count: breadcrumbs.visible_breadcrumb_count,
+            enabled_breadcrumb_count: breadcrumbs.enabled_breadcrumb_count,
+            tab_count,
+            visible_tab_count,
+            enabled_tab_count,
+            item_count: breadcrumbs.item_count,
+            visible_item_count: breadcrumbs.visible_item_count,
+            enabled_item_count: breadcrumbs.enabled_item_count,
+            region_count: breadcrumbs.region_count,
+            visible_region_count: breadcrumbs.visible_region_count,
+            card_count: breadcrumbs.card_count,
+            visible_card_count: breadcrumbs.visible_card_count,
+            attention_card_count: breadcrumbs.attention_card_count,
+            metric_card_count: breadcrumbs.metric_card_count,
+            tabs,
+            package_capability_id: breadcrumbs.package_capability_id.clone(),
+            dashboard_capability_id: breadcrumbs.dashboard_capability_id.clone(),
+            cards_capability_id: breadcrumbs.cards_capability_id.clone(),
+            view_capability_id: breadcrumbs.view_capability_id.clone(),
+            layout_capability_id: breadcrumbs.layout_capability_id.clone(),
+            navigation_capability_id: breadcrumbs.navigation_capability_id.clone(),
+            routes_capability_id: breadcrumbs.routes_capability_id.clone(),
+            breadcrumbs_capability_id: breadcrumbs.breadcrumbs_capability_id.clone(),
+            tabs_capability_id: "app-shell-dashboard-tabs-json".to_string(),
+            artifact_capability_count: breadcrumbs.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_tabs_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BerkeleyAnalysisInventoryEntry {
     pub index: usize,
     pub directive: String,
@@ -3087,6 +3280,40 @@ impl BerkeleyAppDeck {
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self
             .run_app_shell_dashboard_breadcrumbs(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_tabs(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardTabs {
+        BerkeleyAppShellDashboardTabs::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_tabs(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardTabs, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellDashboardTabs::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_dashboard_tabs_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_tabs(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_dashboard_tabs_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_tabs(persisted_state)?
             .to_json())
     }
 
@@ -4346,6 +4573,97 @@ fn app_shell_dashboard_breadcrumb_json_value(
         "visible": breadcrumb.visible,
         "enabled": breadcrumb.enabled,
         "badgeCount": breadcrumb.badge_count,
+    })
+}
+
+fn app_shell_dashboard_tabs_json_value(tabs: &BerkeleyAppShellDashboardTabs) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $field:expr) => {
+            value.insert($key.to_string(), serde_json::json!($field));
+        };
+    }
+
+    insert_json!("schemaVersion", tabs.schema_version);
+    insert_json!("packageName", &tabs.package_name);
+    insert_json!("sourceFingerprint", &tabs.source_fingerprint);
+    insert_json!("title", &tabs.title);
+    insert_json!("startupRoute", &tabs.startup_route);
+    insert_json!("ready", tabs.ready);
+    insert_json!("severity", &tabs.severity);
+    insert_json!("attentionRequired", tabs.attention_required);
+    insert_json!("primaryCardId", &tabs.primary_card_id);
+    insert_json!("primaryRegionId", &tabs.primary_region_id);
+    insert_json!("activeItemId", &tabs.active_item_id);
+    insert_json!("activeRouteId", &tabs.active_route_id);
+    insert_json!("activeRoutePath", &tabs.active_route_path);
+    insert_json!("defaultRouteId", &tabs.default_route_id);
+    insert_json!("defaultRoutePath", &tabs.default_route_path);
+    insert_json!("activeBreadcrumbId", &tabs.active_breadcrumb_id);
+    insert_json!("activeBreadcrumbPath", &tabs.active_breadcrumb_path);
+    insert_json!("defaultBreadcrumbId", &tabs.default_breadcrumb_id);
+    insert_json!("defaultBreadcrumbPath", &tabs.default_breadcrumb_path);
+    insert_json!("selectedTabId", &tabs.selected_tab_id);
+    insert_json!("selectedTabPath", &tabs.selected_tab_path);
+    insert_json!("defaultTabId", &tabs.default_tab_id);
+    insert_json!("defaultTabPath", &tabs.default_tab_path);
+    insert_json!("routeCount", tabs.route_count);
+    insert_json!("visibleRouteCount", tabs.visible_route_count);
+    insert_json!("enabledRouteCount", tabs.enabled_route_count);
+    insert_json!("breadcrumbCount", tabs.breadcrumb_count);
+    insert_json!("visibleBreadcrumbCount", tabs.visible_breadcrumb_count);
+    insert_json!("enabledBreadcrumbCount", tabs.enabled_breadcrumb_count);
+    insert_json!("tabCount", tabs.tab_count);
+    insert_json!("visibleTabCount", tabs.visible_tab_count);
+    insert_json!("enabledTabCount", tabs.enabled_tab_count);
+    insert_json!("itemCount", tabs.item_count);
+    insert_json!("visibleItemCount", tabs.visible_item_count);
+    insert_json!("enabledItemCount", tabs.enabled_item_count);
+    insert_json!("regionCount", tabs.region_count);
+    insert_json!("visibleRegionCount", tabs.visible_region_count);
+    insert_json!("cardCount", tabs.card_count);
+    insert_json!("visibleCardCount", tabs.visible_card_count);
+    insert_json!("attentionCardCount", tabs.attention_card_count);
+    insert_json!("metricCardCount", tabs.metric_card_count);
+    value.insert(
+        "tabs".to_string(),
+        serde_json::Value::Array(
+            tabs.tabs
+                .iter()
+                .map(app_shell_dashboard_tab_json_value)
+                .collect(),
+        ),
+    );
+    insert_json!("packageCapabilityId", &tabs.package_capability_id);
+    insert_json!("dashboardCapabilityId", &tabs.dashboard_capability_id);
+    insert_json!("cardsCapabilityId", &tabs.cards_capability_id);
+    insert_json!("viewCapabilityId", &tabs.view_capability_id);
+    insert_json!("layoutCapabilityId", &tabs.layout_capability_id);
+    insert_json!("navigationCapabilityId", &tabs.navigation_capability_id);
+    insert_json!("routesCapabilityId", &tabs.routes_capability_id);
+    insert_json!("breadcrumbsCapabilityId", &tabs.breadcrumbs_capability_id);
+    insert_json!("tabsCapabilityId", &tabs.tabs_capability_id);
+    insert_json!("artifactCapabilityCount", tabs.artifact_capability_count);
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_tab_json_value(tab: &BerkeleyAppShellDashboardTab) -> serde_json::Value {
+    serde_json::json!({
+        "id": &tab.id,
+        "breadcrumbId": &tab.breadcrumb_id,
+        "routeId": &tab.route_id,
+        "itemId": &tab.item_id,
+        "regionId": &tab.region_id,
+        "role": &tab.role,
+        "label": &tab.label,
+        "path": &tab.path,
+        "position": tab.position,
+        "selected": tab.selected,
+        "default": tab.default_tab,
+        "visible": tab.visible,
+        "enabled": tab.enabled,
+        "badgeCount": tab.badge_count,
     })
 }
 

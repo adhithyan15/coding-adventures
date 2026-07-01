@@ -21,6 +21,7 @@ use spice_netlist_parser::{
     BERKELEY_APP_SHELL_DASHBOARD_NAVIGATION_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_PACKAGE_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_ROUTES_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_DASHBOARD_TABS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_VIEW_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_EVENT_DASHBOARD_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_EVENT_DIGEST_SCHEMA_VERSION, BERKELEY_APP_SHELL_EVENT_LOG_SCHEMA_VERSION,
@@ -2626,6 +2627,11 @@ fn berkeley_app_facade_exports_package_manifest_json() {
         .unwrap()
         .iter()
         .any(|capability| capability == "app-shell-dashboard-breadcrumbs-json"));
+    assert!(payload["artifactCapabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|capability| capability == "app-shell-dashboard-tabs-json"));
 }
 
 #[test]
@@ -3763,6 +3769,83 @@ C1 out 0 1p
         shell_dashboard_breadcrumbs_payload["breadcrumbsCapabilityId"],
         "app-shell-dashboard-breadcrumbs-json"
     );
+
+    let shell_dashboard_tabs = app
+        .run_app_shell_dashboard_tabs(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("shell dashboard tabs should execute");
+    assert_eq!(
+        shell_dashboard_tabs.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_TABS_SCHEMA_VERSION
+    );
+    assert!(shell_dashboard_tabs.ready);
+    assert_eq!(
+        shell_dashboard_tabs.selected_tab_id.as_deref(),
+        Some("dashboard.tab.status")
+    );
+    assert_eq!(
+        shell_dashboard_tabs.selected_tab_path.as_deref(),
+        Some("/dashboard/status")
+    );
+    assert_eq!(
+        shell_dashboard_tabs.default_tab_id.as_deref(),
+        Some("dashboard.tab.status")
+    );
+    assert_eq!(shell_dashboard_tabs.tab_count, 3);
+    assert_eq!(shell_dashboard_tabs.visible_tab_count, 2);
+    assert_eq!(shell_dashboard_tabs.enabled_tab_count, 2);
+    assert_eq!(
+        shell_dashboard_tabs.tabs[0].breadcrumb_id,
+        "dashboard.breadcrumb.status"
+    );
+    assert_eq!(
+        shell_dashboard_tabs.tabs[0].route_id,
+        "dashboard.route.status"
+    );
+    assert_eq!(shell_dashboard_tabs.tabs[0].position, 1);
+    assert!(shell_dashboard_tabs.tabs[0].selected);
+    assert!(shell_dashboard_tabs.tabs[0].default_tab);
+    assert_eq!(shell_dashboard_tabs.tabs[1].role, "attention");
+    assert!(!shell_dashboard_tabs.tabs[1].visible);
+    assert!(!shell_dashboard_tabs.tabs[1].enabled);
+    assert_eq!(shell_dashboard_tabs.tabs[2].path, "/dashboard/metrics");
+    assert_eq!(
+        shell_dashboard_tabs.tabs_capability_id,
+        "app-shell-dashboard-tabs-json"
+    );
+    assert_eq!(
+        shell_dashboard_tabs.breadcrumbs_capability_id,
+        shell_dashboard_breadcrumbs.breadcrumbs_capability_id
+    );
+
+    let shell_dashboard_tabs_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_dashboard_tabs_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap(),
+    )
+    .expect("shell dashboard tabs JSON should parse");
+    assert_eq!(
+        shell_dashboard_tabs_payload["selectedTabId"],
+        "dashboard.tab.status"
+    );
+    assert_eq!(
+        shell_dashboard_tabs_payload["defaultTabPath"],
+        "/dashboard/status"
+    );
+    assert_eq!(shell_dashboard_tabs_payload["visibleTabCount"], 2);
+    assert_eq!(shell_dashboard_tabs_payload["tabs"][1]["enabled"], false);
+    assert_eq!(
+        shell_dashboard_tabs_payload["tabs"][2]["breadcrumbId"],
+        "dashboard.breadcrumb.metrics"
+    );
+    assert_eq!(
+        shell_dashboard_tabs_payload["tabsCapabilityId"],
+        "app-shell-dashboard-tabs-json"
+    );
 }
 
 #[test]
@@ -4738,6 +4821,72 @@ R1 in out
     assert_eq!(
         shell_dashboard_breadcrumbs_payload["breadcrumbsCapabilityId"],
         "app-shell-dashboard-breadcrumbs-json"
+    );
+
+    let shell_dashboard_tabs = app.app_shell_dashboard_tabs(BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(2),
+        active_command_id: Some("analysis.2.run".to_string()),
+    });
+    assert_eq!(
+        shell_dashboard_tabs.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_TABS_SCHEMA_VERSION
+    );
+    assert!(!shell_dashboard_tabs.ready);
+    assert_eq!(
+        shell_dashboard_tabs.selected_tab_id.as_deref(),
+        Some("dashboard.tab.attention")
+    );
+    assert_eq!(
+        shell_dashboard_tabs.default_tab_id.as_deref(),
+        Some("dashboard.tab.attention")
+    );
+    assert_eq!(
+        shell_dashboard_tabs.default_tab_path.as_deref(),
+        Some("/dashboard/attention")
+    );
+    assert_eq!(shell_dashboard_tabs.tab_count, 3);
+    assert_eq!(shell_dashboard_tabs.visible_tab_count, 3);
+    assert_eq!(shell_dashboard_tabs.enabled_tab_count, 3);
+    assert_eq!(shell_dashboard_tabs.tabs[0].role, "status");
+    assert!(!shell_dashboard_tabs.tabs[0].selected);
+    assert!(shell_dashboard_tabs.tabs[0].enabled);
+    assert_eq!(shell_dashboard_tabs.tabs[1].id, "dashboard.tab.attention");
+    assert_eq!(
+        shell_dashboard_tabs.tabs[1].breadcrumb_id,
+        "dashboard.breadcrumb.attention"
+    );
+    assert_eq!(
+        shell_dashboard_tabs.tabs[1].route_id,
+        "dashboard.route.attention"
+    );
+    assert!(shell_dashboard_tabs.tabs[1].selected);
+    assert!(shell_dashboard_tabs.tabs[1].default_tab);
+    assert_eq!(shell_dashboard_tabs.tabs[1].position, 2);
+    assert_eq!(
+        shell_dashboard_tabs.tabs_capability_id,
+        "app-shell-dashboard-tabs-json"
+    );
+
+    let shell_dashboard_tabs_payload: serde_json::Value = serde_json::from_str(
+        &app.app_shell_dashboard_tabs_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        }),
+    )
+    .expect("blocked shell dashboard tabs JSON should parse");
+    assert_eq!(
+        shell_dashboard_tabs_payload["selectedTabId"],
+        "dashboard.tab.attention"
+    );
+    assert_eq!(shell_dashboard_tabs_payload["enabledTabCount"], 3);
+    assert_eq!(shell_dashboard_tabs_payload["tabs"][1]["default"], true);
+    assert_eq!(
+        shell_dashboard_tabs_payload["tabs"][1]["breadcrumbId"],
+        "dashboard.breadcrumb.attention"
+    );
+    assert_eq!(
+        shell_dashboard_tabs_payload["tabsCapabilityId"],
+        "app-shell-dashboard-tabs-json"
     );
 }
 
