@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added `smart_home.get_remediation_plan`, a read-only Chief adapter tool that
+  turns existing D23 runtime pending-work, audit, desired-state, state-transition,
+  and supervision remediation signals into ordered operator steps without owning
+  smart-home state.
 - Added `smart_home.get_controller_handoff_summary`, a Chief-facing read tool
   that summarizes Home Assistant-style controller readiness from existing D23
   runtime and platform primitives without owning smart-home state.
