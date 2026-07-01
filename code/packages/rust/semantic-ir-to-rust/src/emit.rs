@@ -817,11 +817,18 @@ fn emit_direct_call(out: &mut String, fn_name: &str, args: &[Expr], indent: usiz
                 Some(arg) => emit_expr(out, arg, indent),
                 None => out.push_str("__sir::missing()"),
             },
-            // `Rest`/`KwRest` are not accepted by this backend (their
-            // features are unaccepted, so the capability check rejects
-            // such modules before emit).  Unreachable on valid input.
+            // A `Rest`/`KwRest` param can only reach the keyword-resolution
+            // path when the callee ALSO has a `Keyword` param (this branch
+            // runs only for keyword-carrying signatures).  The backend's
+            // `reject_keyword_with_variadic` capability check (see `lib.rs`)
+            // now rejects any module mixing a keyword param with a
+            // `*rest`/`**kwrest` param BEFORE emit, because static
+            // keyword→positional resolution requires fixed arity.  This arm
+            // is therefore an INTERNAL-BUG guard: it fires only if that
+            // upstream check were removed or bypassed, never on a module
+            // that reached emit through the normal `compile` path.
             ParamKind::Rest | ParamKind::KwRest => panic!(
-                "rust backend reached a `{:?}` param of `{fn_name}` — capability check should have rejected variadic params",
+                "rust backend reached a `{:?}` param of `{fn_name}` — the keyword+variadic capability check should have rejected this module upstream",
                 p.kind
             ),
         }

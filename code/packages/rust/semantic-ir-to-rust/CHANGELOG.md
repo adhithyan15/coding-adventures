@@ -1,5 +1,37 @@
 # Changelog
 
+## Unreleased — reject keyword params mixed with rest/kwrest (hardening)
+
+### Fixed
+
+- **Reachable emit panic on validator-accepted input (DoS).** The core
+  validator's M3 ordering rule accepts a signature that mixes a keyword
+  parameter with a variadic slot (`Required* Rest? Keyword* KwRest?`),
+  e.g. Ruby `def f(a, *rest, x: 1)`. Because this backend accepts
+  `Feature::KeywordParams`, such a module reached the emitter's static
+  keyword→positional resolution path and hit the
+  `ParamKind::Rest | ParamKind::KwRest` `panic!` — a reachable panic on
+  validated input (and frontend-reachable once the Ruby frontend emits
+  keyword+splat methods). Static keyword resolution genuinely cannot
+  handle a variadic slot: a `*rest`/`**kwrest` param absorbs a *variable*
+  number of arguments, so the name→position map that keyword resolution
+  depends on is no longer a function of the signature alone (variable
+  arity breaks fixed slot indices). The backend now REJECTS such modules
+  cleanly at capability-check time (`reject_keyword_with_variadic`,
+  `BackendErrorKind::UnsupportedFeature`, message
+  `rust backend cannot emit a function mixing keyword parameters with
+  *rest/**kwrest (static keyword resolution requires fixed arity)`)
+  instead of panicking. With the check in place, the emit-side variadic
+  arm is now a true internal-bug guard, never reachable through the normal
+  `compile` path. The happy path (keyword params WITHOUT rest/kwrest) is
+  unchanged and still emits.
+
+### Added
+
+- Unit tests: keyword+`*rest` and keyword+`**kwrest` callees with a
+  keyword call are rejected via `compile()` (return `Err`, do NOT panic);
+  a keyword-only module (no variadic) still compiles.
+
 ## 0.6.0 — keyword-parameter & argument emission (KW5)
 
 Adds `Feature::KeywordParams` support: name-matched keyword parameters
