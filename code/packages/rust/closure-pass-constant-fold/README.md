@@ -69,10 +69,11 @@ Plus `coding-adventures-javascript-tokens` as a dev-dependency for
   Pins the String-method folds this pass performs (indexOf, lastIndexOf, case
   conversion, slice, substring, substr, charAt, charCodeAt, repeat, trim,
   includes/startsWith/endsWith), the numeric `Math.abs`/`floor`/`ceil`/`round`
-  and `Math.max`/`Math.min` folds, and the `Array.prototype.join` fold on an
-  array literal of constants (gap-142, `["a","b"].join("-")` → `"a-b"`). The one
-  remaining upstream fold it does not yet perform — `String#concat` with coerced
-  non-string args — is recorded as an `#[ignore = "blocked on gap-143"]`
-  placeholder tied to `code/specs/CLOC12-gaps.md`. Run with
-  `cargo test --test upstream_peephole_replace_known_methods` (add
-  `-- --include-ignored` to list the pending gap).
+  and `Math.max`/`Math.min` folds, the `Array.prototype.join` fold on an
+  array literal of constants (gap-142, `["a","b"].join("-")` → `"a-b"`), and
+  the `String#concat` fold with `ToString`-coerced primitive arguments (gap-143,
+  `"x".concat(1, 2)` → `"x12"`). **This port is now fully active** — gaps
+  141/142/143 are all closed, so there are no remaining `#[ignore]`
+  placeholders. Run with
+  `cargo test --test upstream_peephole_replace_known_methods` (every case is
+  active — nothing is ignored).

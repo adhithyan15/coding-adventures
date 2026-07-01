@@ -1173,8 +1173,13 @@ historical context with status `RESOLVED` and a link to the fix PR.
     separator is absent (`","`) or a string literal; declines non-constant
     elements, nested arrays/objects, and non-string separators; DoS length cap.
     The `folds_array_join` placeholder is now an **active** conformance test.
-  - **gap-143** — fold `String#concat` with **non-string (coerced) args**
-    (`"x".concat(1, 2)` → `"x12"`). Our concat fold handles string args only.
+  - **gap-143** — ~~fold `String#concat` with **non-string (coerced) args**
+    (`"x".concat(1, 2)` → `"x12"`)~~ **RESOLVED** (constant-fold 0.82.0). The
+    concat fold now applies `ToString` to primitive-constant arguments
+    (number/boolean/`null`→`"null"`/`undefined`→`"undefined"`); objects/arrays/
+    non-constants still decline. The `folds_string_concat_with_coerced_args`
+    placeholder is now an **active** conformance test. **With this the whole
+    `PeepholeReplaceKnownMethods` port is active — gaps 141/142/143 all closed.**
 
 ## CLOC12.142 — CodePrinter number-formatting port (emitter)
 

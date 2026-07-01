@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.82.0] - 2026-07-01
+
+### Added — `String#concat` coerces primitive-constant arguments (closes gap-143)
+
+`"x".concat(1, 2)` now folds to `"x12"`. The existing `String.prototype.concat`
+fold only accepted string-literal arguments; it now applies `ToString` to the
+primitive-constant argument forms, matching ECMAScript §22.1.3.4:
+
+```
+"x".concat(1, 2)   → "x12"       "a".concat(true)       → "atrue"
+"a".concat(null)   → "anull"     "a".concat(undefined)  → "aundefined"
+```
+
+- Coercion table: string → itself, number → `String(n)`, boolean →
+  `"true"`/`"false"`, `null` → `"null"`, `undefined` → `"undefined"`. **Note
+  this differs from `Array#join`** (0.81.0), where `null`/`undefined` coerce to
+  `""` — `concat` runs `ToString`, whose null/undefined forms are the words.
+- A non-constant argument (identifier, call), an **object**, or an array still
+  makes the fold **decline** — those have runtime-dependent `toString`.
+- The existing UTF-16 length cap (`MAX_CONCAT_UNITS`) still guards against a
+  crafted oversized result.
+
+This resolves gap-143 — the last open gap from the `PeepholeReplaceKnownMethods`
+port, so **that port is now fully active** (gaps 141/142/143 all closed). Four
+new/updated unit tests cover the numeric/boolean/nullish coercions and the
+object-argument decline; the `folds_string_concat_with_coerced_args` upstream
+placeholder is now an active conformance test. Verified against the full
+closurec end-to-end suite and the downstream pass consumers — all green; the
+change is purely additive (previously-declined concat calls now fold).
+
 ## [0.81.0] - 2026-07-01
 
 ### Added — fold `Array.prototype.join` on an array literal of constants (closes gap-142)
