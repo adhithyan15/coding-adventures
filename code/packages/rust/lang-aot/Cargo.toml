@@ -1,8 +1,8 @@
 [package]
 name = "lang-aot"
-version = "0.163.0"
+version = "0.164.0"
 edition = "2021"
-description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.163.0 (BA-INPUT): JVM INPUT X end-to-end — fixed concretize_scalar_any_for_jvm to exempt input_i64 from i32 narrowing; putchar lload+l2i in wide i64 mode; emit_lconst_cp for large Long constants; two INPUT matrix Prog cells.  v0.162.0 (boolean backends): ALGOL compound boolean string comparison on all 7 backends."
+description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.164.0 (LANG-STR-RT): NativeAot string function parameters — 7 previously-excluded matrix cells now run on NativeAot via LANG-STR-RT length-prefixed buffer layout.  v0.163.0 (BA-INPUT): JVM INPUT X end-to-end."
 
 [dependencies]
 twig-aot              = { path = "../twig-aot" }

@@ -344,107 +344,101 @@ const PROGRAMS: &[Prog] = &[
     // Twig — E4 string ops over an annotated top-level function parameter. The
     // bare `str` annotation gives the compiler enough static evidence to stamp
     // the parameter as `str`, so `string-length s` lowers to `str_len` instead of
-    // the dynamic builtin path.  NativeAot, Llvm, and Wasm are excluded: all three
-    // backends fold `str_len` only for compile-time-known literals; a `str`
-    // function parameter is not in the `strings`/`str_lens` map at the callee's
-    // scope (none of these backends have a runtime string-length ABI wired up yet).
-    // The JVM/CLR/VM/JIT backends use a runtime `String` or value-model that
-    // carries a length at all times, so they handle parameter strings correctly.
+    // the dynamic builtin path.  NativeAot uses the LANG-STR-RT runtime: the
+    // caller builds a length-prefixed `[i64 len][bytes...]` heap buffer and the
+    // callee emits `field_load s, 0 → len` to read it.  Llvm and Wasm are still
+    // excluded: they use a separate `str_lens` metadata map without a runtime-load
+    // fallback (unrelated gap, not addressed here).
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (strlen (s : str)) (string-length s)) (strlen \"HELLO\")",
         expect: Expect::Exit(5),
-        backends: &[Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Jvm, Clr, Vm, Jit],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from `main`. The direct `(strlen "HELLO")`
     // call gives the compiler enough static evidence to stamp `s` as `str`
-    // without creating refinement annotations.  NativeAot excluded: same
-    // reason as the annotated-parameter cell above.  Llvm excluded: same
-    // `str_lens` map limitation as NativeAot — function parameters not seeded.
+    // without creating refinement annotations.  NativeAot now uses the
+    // LANG-STR-RT runtime (`field_load s, 0 → len`) — see cell above.
+    // Llvm excluded: same `str_lens` map limitation — function parameters not seeded.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (strlen s) (string-length s)) (strlen \"HELLO\")",
         expect: Expect::Exit(5),
-        backends: &[Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Jvm, Clr, Vm, Jit],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a static string expression actual. The
     // actual materialises through `str_concat` + `str_slice`, then feeds the
     // inferred `str` parameter without creating refinement annotations.
-    // NativeAot excluded: same reason as the annotated-parameter cell above
-    // (dynamic str param; native AOT only folds str_len for known literals).
+    // NativeAot: caller folds str_concat+str_slice to a literal-backed buffer
+    // (LANG-STR-RT layout), callee reads length via `field_load x, 0 → len`.
     // Llvm excluded: same `str_lens` map limitation — parameter not seeded.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (strlen x) (string-length x)) (strlen (substring (string-append \"HE\" \"LLO!\") 0 5))",
         expect: Expect::Exit(5),
-        backends: &[Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Jvm, Clr, Vm, Jit],
     },
     // Twig — E4 string equality over multiple unannotated top-level function
     // parameters inferred from one direct call. The first actual is literal,
     // the second is a static `str_concat` expression, so both slots are stamped
     // `str` and the function body lowers `string=? a b` through `str_eq`.
-    // NativeAot is excluded: `lower_string_literals_for_aot` folds `str_eq`
-    // only for compile-time-known literals tracked in the `strings` map;
-    // dynamic `str` parameters are not in that map, so the backend receives a
-    // raw `str_eq` CIR op it cannot lower (no runtime ABI wired up yet).
-    // Llvm is also excluded: `iir-to-llvm`'s `str_values` map has the same
-    // compile-time-only scope; `lower_str_eq` returns `InvalidOperand` for
-    // any parameter not seeded by `str_const`.
+    // NativeAot: runtime `str_eq` parameters lower to `call_builtin "str_eq"` →
+    // `__twig_str_eq(a, b)` which compares the LANG-STR-RT length headers then
+    // memcmp's the byte data.
+    // Llvm is excluded: `iir-to-llvm`'s `str_values` map has compile-time-only
+    // scope; `lower_str_eq` returns `InvalidOperand` for any parameter not
+    // seeded by `str_const` (separate gap, not addressed here).
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (same a b) (if (string=? a b) 42 0)) (same \"OK\" (string-append \"O\" \"K\"))",
         expect: Expect::Exit(42),
-        backends: &[Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Jvm, Clr, Vm, Jit],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a non-escaping top-level string value. The
-    // named actual stays in `main` as a typed `str` register, so `(strlen s)`
-    // gets the same backend-safe parameter evidence as a literal actual.
-    // NativeAot is excluded: the native lowering pass folds `str_len` only for
-    // compile-time-known literals; a `str` parameter passed from a global
-    // `define` is not tracked in the `strings` map at the callee's scope.
+    // named actual stays in `main` as a typed `str` register.  NativeAot: the
+    // global string `s` is built as a LANG-STR-RT buffer in `main`; the callee
+    // reads the length via `field_load x, 0 → len`.
     // Llvm excluded: same `str_lens` map limitation — callee parameter not seeded.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define s \"HELLO\") (define (strlen x) (string-length x)) (strlen s)",
         expect: Expect::Exit(5),
-        backends: &[Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Jvm, Clr, Vm, Jit],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a lexical string local in `main`. The
     // `let` binding keeps `s` as a typed `str` register at the call site.
-    // NativeAot is excluded: the native lowering pass folds `str_len` only for
-    // compile-time-known literals; a `str` parameter bound through a `let`
-    // local in the caller is not visible in the callee's `strings` map.
+    // NativeAot: let-bound string is a LANG-STR-RT buffer; callee reads length
+    // via `field_load x, 0 → len`.
     // Llvm excluded: same `str_lens` map limitation — callee parameter not seeded.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (strlen x) (string-length x)) (let ((s \"HELLO\")) (strlen s))",
         expect: Expect::Exit(5),
-        backends: &[Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Jvm, Clr, Vm, Jit],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a derived sequential `let*` string local
     // in `main`. The second binding sees the first as static string evidence,
     // materialises `b` through `str_concat`, and keeps `(strlen b)` typed.
-    // NativeAot is excluded: the native lowering pass folds `str_len` only for
-    // compile-time-known literals; a `str_concat` result bound in `let*` is not
-    // tracked in the callee's `strings` map (runtime strlen ABI not yet wired).
+    // NativeAot: `main`'s lowering folds `str_concat` to a LANG-STR-RT buffer;
+    // callee reads length via `field_load x, 0 → len`.
     // Llvm excluded: same `str_lens` map limitation — `str_concat` result not seeded.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (strlen x) (string-length x)) (let* ((a \"HE\") (b (string-append a \"LLO\"))) (strlen b))",
         expect: Expect::Exit(5),
-        backends: &[Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Jvm, Clr, Vm, Jit],
     },
     // Twig — *top-level value `define`* read from `main` (`(define x 40) (define
     // y 2) (+ x y)` = 42).  A value define previously lowered to
