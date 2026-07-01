@@ -84,12 +84,16 @@ vanishing from the provenance graph:
 - `if (true)  A else B` → `A` — the `else` branch **B** is tombstoned;
 - `if (false) A else B` → `B` — the `then` branch **A** is tombstoned;
 - `while (false) BODY`  → `;` — **BODY** is tombstoned.
+- `{ return; dead(); }` → `{ return; }` — the unreachable
+  dead-after-terminator statements are tombstoned (`removed-dead-code`),
+  matching what DCE records for the same drop.
 
 Rewrites that *preserve* both branches (`if→ternary`, `if→&&`, De Morgan
 swaps) do NOT tombstone — the content is restructured, not removed.
 `delete` is a no-op when the log is disabled (the production default),
-so this costs nothing off the `--correlation_vector` path. (Follow-ups:
-the block dead-code drop and the constant-condition ternary collapse.)
+so this costs nothing off the `--correlation_vector` path. (Remaining
+follow-up: the constant-condition ternary collapse, whose discarded arm
+is an `Expression` and needs an `expression_cv` helper.)
 
 ## Dependency whitelist
 

@@ -449,9 +449,13 @@ fn fold_block_statement(b: &BlockStatement, st: &mut FoldState) -> BlockStatemen
     let mut new_body = Vec::with_capacity(b.body.len());
     let mut hit_terminator = false;
     let mut dropped_count = 0usize;
+    // Capture each dead-after-terminator statement's CV id so it can be
+    // tombstoned (see the `record_fold_deleting` call below).
+    let mut removed_cvs: Vec<Option<String>> = Vec::new();
     for s in &b.body {
         if hit_terminator {
             dropped_count += 1;
+            removed_cvs.push(statement_cv(s));
             continue;
         }
         let folded = fold_statement(s, st);
@@ -512,8 +516,13 @@ fn fold_block_statement(b: &BlockStatement, st: &mut FoldState) -> BlockStatemen
         }
     }
     if dropped_count > 0 {
-        st.record_fold(
+        // These statements are unreachable after a definite terminator
+        // (`return`/`throw`) and are eliminated — tombstone each so its
+        // span stays auditable, matching what DCE records for the same
+        // dead-after-terminator drop it performs.
+        st.record_fold_deleting(
             &b.cv,
+            &removed_cvs,
             "removed-dead-code",
             &format!("block with {} statements", b.body.len()),
             &format!("dropped {} statements after terminator", dropped_count),
@@ -1649,6 +1658,42 @@ mod tests {
             .as_ref()
             .expect("the eliminated `while (false)` body must be tombstoned");
         assert_eq!(del.reason, "folded-branch");
+    }
+
+    #[test]
+    fn dead_code_after_terminator_is_tombstoned() {
+        // `{ return; dead; }` — `dead` is unreachable after the `return`
+        // and is eliminated by the block dead-code drop, so its span must
+        // be tombstoned (matching what DCE records for the same drop).
+        let mut log = CVLog::new(true);
+        let dead_id = log.create(None);
+        let block = Statement::block_statement(BlockStatement {
+            cv: Some("blk.1".to_string()),
+            body: vec![
+                Statement::return_statement(ReturnStatement {
+                    cv: None,
+                    argument: None,
+                }),
+                expr_stmt(ident("dead"), Some(dead_id.as_str())),
+            ],
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(block)]);
+
+        let _out = run_capturing_cv(&prog, &mut log);
+
+        let del = log
+            .get(&dead_id)
+            .unwrap()
+            .deleted
+            .as_ref()
+            .expect("a statement after a terminator must be tombstoned");
+        assert_eq!(del.source, "fold-control-flow");
+        assert_eq!(del.reason, "removed-dead-code");
+        assert_eq!(
+            del.meta.get("container_cv").and_then(|v| v.as_str()),
+            Some("blk.1"),
+            "tombstone should record the enclosing block's cv"
+        );
     }
 
     #[test]
