@@ -1080,6 +1080,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       `/api/smart_home/desired_state_authorization?entity_id=${encodeURIComponent(entityIdentity(entity))}&operation=${encodeURIComponent(operation)}`;
     const sceneDetailUrl = (scene) =>
       `/api/smart_home/scenes/${encodeURIComponent(scene.home_assistant_scene_id || scene.scene_id)}`;
+    const sceneAuthorizationUrl = (scene) =>
+      `/api/smart_home/scene_authorization?scene_id=${encodeURIComponent(scene.home_assistant_scene_id || scene.scene_id)}`;
     const serviceDetailUrl = (service) => {
       const [domain, serviceName] = String(service.service_id || "").split(".");
       return domain && serviceName
@@ -1198,6 +1200,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           <p>${scene.action_count} actions${scene.room_ids.length ? ` | ${scene.room_ids.join(", ")}` : ""}</p>
           <div class="actions row">
             <button type="button" data-scene="${scene.home_assistant_scene_id}">Run</button>
+            ${inspectButton(sceneAuthorizationUrl(scene), "Auth scene")}
             ${inspectButton(sceneDetailUrl(scene), "scene detail")}
           </div>
         </article>
@@ -2353,6 +2356,13 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.get("/api/smart_home/scene_authorization", move |request| {
+            runtime_scene_authorization_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
         app.get(
             "/api/smart_home/authorization_decisions/:decision_index",
             move |request| runtime_authorization_decision_response(&runtime, request),
@@ -3194,6 +3204,15 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
     },
     ApiRouteDescriptor {
         method: "GET",
+        path: "/api/smart_home/scene_authorization",
+        category: "authorization",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &["scene_id", "principal_id"],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
         path: "/api/smart_home/authorization_decisions/:decision_index",
         category: "authorization",
         surface: "smart_home",
@@ -3940,6 +3959,93 @@ fn runtime_desired_state_authorization_response(
     )
 }
 
+fn runtime_scene_authorization_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let Some(target) = query_string(request, "scene_id") else {
+        return api_error_response(ApiError::bad_request("missing scene_id"));
+    };
+    let principal_id = query_string(request, "principal_id")
+        .map(AgentId::trusted)
+        .unwrap_or_else(|| runtime.principal_id.clone());
+
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let state = SmartHomePlatformHttpState::from_runtime(
+        &runtime_guard,
+        runtime.config.clone(),
+        runtime.event_types.clone(),
+        runtime.now_ms,
+    );
+    let scene = match state
+        .scenes
+        .iter()
+        .find(|scene| scene_matches_external_id(scene, target))
+        .cloned()
+    {
+        Some(scene) => scene,
+        None => {
+            return api_error_response(ApiError::not_found(format!("scene `{target}` not found")))
+        }
+    };
+    let call = ServiceCall {
+        target_entity_ids: Vec::new(),
+        target_scene_ids: vec![scene.scene_id.as_str().to_string()],
+        body: JsonValue::Object(Default::default()),
+        idempotency_key: None,
+        timeout_ms: None,
+    };
+    let service_commands = match scene_service_commands(&state, &call) {
+        Ok(commands) => commands,
+        Err(error) => return api_error_response(error),
+    };
+    let grants = runtime_guard
+        .registry()
+        .capability_grants_for_principal(&principal_id);
+    let tool_decision = AuthorizationDecision::for_tool(
+        principal_id.clone(),
+        SmartHomeTool::Command,
+        grants.iter().copied(),
+        runtime.now_ms,
+    );
+
+    let mut command_previews = Vec::new();
+    for (index, service_command) in service_commands.iter().enumerate() {
+        let entity = match runtime_guard.registry().entity(&service_command.entity_id) {
+            Some(entity) => entity.clone(),
+            None => {
+                return api_error_response(ApiError::not_found(format!(
+                    "entity `{}` not found",
+                    service_command.entity_id.as_str()
+                )))
+            }
+        };
+        let command =
+            match preview_service_command(service_command, &principal_id, runtime.now_ms, index) {
+                Ok(command) => command,
+                Err(error) => return api_error_response(error),
+            };
+        let decision = AuthorizationDecision::for_command(
+            principal_id.clone(),
+            &command,
+            grants.iter().copied(),
+            runtime.now_ms,
+        );
+        command_previews.push(SceneAuthorizationCommandPreview {
+            entity,
+            command,
+            decision,
+        });
+    }
+
+    WebResponse::json(
+        scene_authorization_preview_json(&scene, &tool_decision, &command_previews).into_bytes(),
+    )
+}
+
 fn runtime_authorization_decision_response(
     runtime: &SmartHomePlatformHttpRuntime,
     request: &WebRequest,
@@ -4501,7 +4607,7 @@ fn runtime_bootstrap_json(
     let authorization_summary = runtime_guard.authorization_decision_summary(&authorization_query);
 
     format!(
-        "{{\"generated_at_ms\":{},\"version\":{},\"links\":{{\"readiness\":{},\"dashboard\":{},\"smoke\":{},\"smoke_script\":{},\"api\":{},\"states\":{},\"state_history\":{},\"command_results\":{},\"authorization_decisions\":{},\"command_authorization\":{},\"desired_state_authorization\":{},\"capability_grants\":{}}},\"health\":{},\"dashboard\":{},\"api\":{},\"state_gaps\":{},\"recent_activity\":{{\"events\":{{\"summary\":{}}},\"command_results\":{{\"summary\":{}}},\"authorization_decisions\":{{\"summary\":{}}}}}}}",
+        "{{\"generated_at_ms\":{},\"version\":{},\"links\":{{\"readiness\":{},\"dashboard\":{},\"smoke\":{},\"smoke_script\":{},\"api\":{},\"states\":{},\"state_history\":{},\"command_results\":{},\"authorization_decisions\":{},\"command_authorization\":{},\"desired_state_authorization\":{},\"scene_authorization\":{},\"capability_grants\":{}}},\"health\":{},\"dashboard\":{},\"api\":{},\"state_gaps\":{},\"recent_activity\":{{\"events\":{{\"summary\":{}}},\"command_results\":{{\"summary\":{}}},\"authorization_decisions\":{{\"summary\":{}}}}}}}",
         runtime.now_ms,
         json_string(VERSION),
         json_string("/api/smart_home/readiness"),
@@ -4515,6 +4621,7 @@ fn runtime_bootstrap_json(
         json_string("/api/smart_home/authorization_decisions"),
         json_string("/api/smart_home/command_authorization"),
         json_string("/api/smart_home/desired_state_authorization"),
+        json_string("/api/smart_home/scene_authorization"),
         json_string("/api/smart_home/capability_grants"),
         runtime_health_json(runtime, runtime_guard),
         runtime_dashboard_json(runtime, runtime_guard),
@@ -4572,7 +4679,7 @@ fn runtime_smoke_json(
         .count();
 
     format!(
-        "{{\"generated_at_ms\":{},\"version\":{},\"status\":{},\"ready\":{},\"principal_id\":{},\"summary\":{{\"total_checks\":{},\"safe_get_checks\":{},\"mutating_checks\":{},\"runtime_authorized_checks\":{},\"blocking_readiness_checks\":{},\"attention_readiness_checks\":{}}},\"links\":{{\"self\":{},\"script\":{},\"dashboard\":{},\"readiness\":{},\"bootstrap\":{},\"api\":{},\"command_results\":{},\"authorization_decisions\":{},\"command_authorization\":{},\"desired_state_authorization\":{},\"capability_grants\":{}}},\"checks\":[{}]}}",
+        "{{\"generated_at_ms\":{},\"version\":{},\"status\":{},\"ready\":{},\"principal_id\":{},\"summary\":{{\"total_checks\":{},\"safe_get_checks\":{},\"mutating_checks\":{},\"runtime_authorized_checks\":{},\"blocking_readiness_checks\":{},\"attention_readiness_checks\":{}}},\"links\":{{\"self\":{},\"script\":{},\"dashboard\":{},\"readiness\":{},\"bootstrap\":{},\"api\":{},\"command_results\":{},\"authorization_decisions\":{},\"command_authorization\":{},\"desired_state_authorization\":{},\"scene_authorization\":{},\"capability_grants\":{}}},\"checks\":[{}]}}",
         runtime.now_ms,
         json_string(VERSION),
         json_string(status),
@@ -4594,6 +4701,7 @@ fn runtime_smoke_json(
         json_string("/api/smart_home/authorization_decisions"),
         json_string("/api/smart_home/command_authorization"),
         json_string("/api/smart_home/desired_state_authorization"),
+        json_string("/api/smart_home/scene_authorization"),
         json_string("/api/smart_home/capability_grants"),
         checks
             .iter()
@@ -4773,6 +4881,7 @@ fn runtime_smoke_checks(
     ];
     checks.push(runtime_smoke_command_authorization_probe(&state));
     checks.push(runtime_smoke_desired_state_authorization_probe(&state));
+    checks.push(runtime_smoke_scene_authorization_probe(&state));
     checks.push(runtime_smoke_command_probe(&state));
     checks.extend([
         runtime_smoke_check(
@@ -4885,6 +4994,41 @@ fn runtime_smoke_desired_state_authorization_probe(
     )
 }
 
+fn runtime_smoke_scene_authorization_probe(
+    state: &SmartHomePlatformHttpState,
+) -> RuntimeSmokeCheck {
+    let Some(target) = smoke_scene_target(state) else {
+        return runtime_smoke_check(
+            "scene_authorization_preview",
+            "Scene authorization preview",
+            "GET",
+            "/api/smart_home/scenes",
+            "authorization",
+            false,
+            false,
+            200,
+            None,
+            "No scene target is available; inspect the scene catalog before previewing scene authorization.",
+        );
+    };
+
+    runtime_smoke_check(
+        "scene_authorization_preview",
+        "Scene authorization preview",
+        "GET",
+        format!(
+            "/api/smart_home/scene_authorization?scene_id={}",
+            url_component(&target)
+        ),
+        "authorization",
+        false,
+        false,
+        200,
+        None,
+        "Previews the local API principal's runtime grants for every command a scene activation would dispatch.",
+    )
+}
+
 fn runtime_smoke_command_probe(state: &SmartHomePlatformHttpState) -> RuntimeSmokeCheck {
     let Some(target) = smoke_light_target(state) else {
         return runtime_smoke_check(
@@ -4931,6 +5075,10 @@ fn smoke_light_target(state: &SmartHomePlatformHttpState) -> Option<String> {
                 .map(home_assistant_entity_id)
                 .unwrap_or(entity_id)
         })
+}
+
+fn smoke_scene_target(state: &SmartHomePlatformHttpState) -> Option<String> {
+    state.scenes.first().map(home_assistant_scene_id)
 }
 
 fn runtime_smoke_check(
@@ -5309,6 +5457,127 @@ fn desired_state_authorization_preview_json(
                 .map(|grant_id| grant_id.as_str())
         ),
         authorization_decision_json(tool_decision),
+    )
+}
+
+fn scene_authorization_preview_json(
+    scene: &Scene,
+    tool_decision: &AuthorizationDecision,
+    commands: &[SceneAuthorizationCommandPreview],
+) -> String {
+    let descriptor = SmartHomeTool::Command.descriptor();
+    let supported = commands.iter().all(|preview| {
+        unsupported_command_capabilities(&preview.entity, &preview.command).is_empty()
+    });
+    let commandable = commands.iter().all(|preview| {
+        read_only_command_capabilities(&preview.entity, &preview.command).is_empty()
+    });
+    let authorized =
+        tool_decision.is_allowed() && commands.iter().all(|preview| preview.decision.is_allowed());
+    let dispatchable = supported && commandable && authorized && !commands.is_empty();
+
+    let mut required_capabilities = tool_decision.required_capabilities.clone();
+    let mut missing_capabilities = tool_decision.missing_capabilities.clone();
+    let mut matched_grants = tool_decision.matched_grants.clone();
+    let mut unsupported_capabilities = Vec::new();
+    let mut read_only_capabilities = Vec::new();
+
+    for preview in commands {
+        required_capabilities.extend(preview.command.required_capabilities.iter().cloned());
+        missing_capabilities.extend(preview.decision.missing_capabilities.iter().cloned());
+        matched_grants.extend(preview.decision.matched_grants.iter().cloned());
+        unsupported_capabilities.extend(unsupported_command_capabilities(
+            &preview.entity,
+            &preview.command,
+        ));
+        read_only_capabilities.extend(read_only_command_capabilities(
+            &preview.entity,
+            &preview.command,
+        ));
+    }
+
+    required_capabilities.sort();
+    required_capabilities.dedup();
+    missing_capabilities.sort();
+    missing_capabilities.dedup();
+    matched_grants.sort();
+    matched_grants.dedup();
+    unsupported_capabilities.sort();
+    unsupported_capabilities.dedup();
+    read_only_capabilities.sort();
+    read_only_capabilities.dedup();
+
+    format!(
+        "{{\"principal_id\":{},\"scene_id\":{},\"home_assistant_scene_id\":{},\"tool_id\":{},\"required_tier\":{},\"preview_only\":true,\"would_mutate_runtime\":true,\"action_count\":{},\"command_count\":{},\"supported\":{},\"commandable\":{},\"authorized\":{},\"dispatchable\":{},\"required_capabilities\":[{}],\"missing_capabilities\":[{}],\"unsupported_capabilities\":[{}],\"read_only_capabilities\":[{}],\"matched_grants\":[{}],\"tool_decision\":{},\"commands\":[{}]}}",
+        json_string(tool_decision.principal_id.as_str()),
+        json_string(scene.scene_id.as_str()),
+        json_string(home_assistant_scene_id(scene)),
+        json_string(descriptor.tool_id),
+        json_string(privilege_tier_label(tool_decision.required_tier)),
+        scene.actions.len(),
+        commands.len(),
+        supported,
+        commandable,
+        authorized,
+        dispatchable,
+        json_id_array(required_capabilities.iter().map(|capability| capability.as_str())),
+        json_id_array(missing_capabilities.iter().map(|capability| capability.as_str())),
+        json_id_array(unsupported_capabilities.iter().map(|capability| capability.as_str())),
+        json_id_array(read_only_capabilities.iter().map(|capability| capability.as_str())),
+        json_id_array(matched_grants.iter().map(|grant_id| grant_id.as_str())),
+        authorization_decision_json(tool_decision),
+        commands
+            .iter()
+            .map(scene_authorization_command_preview_json)
+            .collect::<Vec<_>>()
+            .join(","),
+    )
+}
+
+fn scene_authorization_command_preview_json(preview: &SceneAuthorizationCommandPreview) -> String {
+    let unsupported_capabilities =
+        unsupported_command_capabilities(&preview.entity, &preview.command);
+    let read_only_capabilities = read_only_command_capabilities(&preview.entity, &preview.command);
+    let supported = unsupported_capabilities.is_empty();
+    let commandable = read_only_capabilities.is_empty();
+    let authorized = preview.decision.is_allowed();
+    let dispatchable = supported && commandable && authorized;
+
+    format!(
+        "{{\"entity_id\":{},\"home_assistant_entity_id\":{},\"command_type\":{},\"required_tier\":{},\"arguments\":{},\"supported\":{},\"commandable\":{},\"authorized\":{},\"dispatchable\":{},\"required_capabilities\":[{}],\"missing_capabilities\":[{}],\"unsupported_capabilities\":[{}],\"read_only_capabilities\":[{}],\"matched_grants\":[{}],\"command_decision\":{}}}",
+        json_string(preview.command.entity_id.as_str()),
+        json_string(home_assistant_entity_id(&preview.entity)),
+        json_string(command_type_label(preview.command.command_type)),
+        json_string(privilege_tier_label(preview.command.required_tier)),
+        value_json(&preview.command.arguments),
+        supported,
+        commandable,
+        authorized,
+        dispatchable,
+        json_id_array(
+            preview
+                .command
+                .required_capabilities
+                .iter()
+                .map(|capability| capability.as_str())
+        ),
+        json_id_array(
+            preview
+                .decision
+                .missing_capabilities
+                .iter()
+                .map(|capability| capability.as_str())
+        ),
+        json_id_array(unsupported_capabilities.iter().map(|capability| capability.as_str())),
+        json_id_array(read_only_capabilities.iter().map(|capability| capability.as_str())),
+        json_id_array(
+            preview
+                .decision
+                .matched_grants
+                .iter()
+                .map(|grant_id| grant_id.as_str())
+        ),
+        authorization_decision_json(&preview.decision),
     )
 }
 
@@ -7115,6 +7384,13 @@ struct ServiceCommand {
     timeout_ms: Option<u64>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+struct SceneAuthorizationCommandPreview {
+    entity: Entity,
+    command: DeviceCommand,
+    decision: AuthorizationDecision,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct ApiError {
     status: u16,
@@ -7167,6 +7443,33 @@ fn preview_command(
         )),
     )
     .map_err(|error| ApiError::bad_request(format!("invalid command preview: {error}")))
+}
+
+fn preview_service_command(
+    command: &ServiceCommand,
+    principal_id: &AgentId,
+    now_ms: u64,
+    sequence: usize,
+) -> Result<DeviceCommand, ApiError> {
+    DeviceCommand::new(
+        CommandId::trusted(format!(
+            "preview:{}:{}:{}:{sequence}:{now_ms}",
+            principal_id.as_str(),
+            command.entity_id.as_str(),
+            command_type_label(command.command_type)
+        )),
+        command.entity_id.clone(),
+        command.command_type,
+        command.arguments.clone(),
+        principal_id.as_str(),
+        CorrelationId::trusted(format!(
+            "preview:{}:{}:{}:{sequence}:{now_ms}",
+            principal_id.as_str(),
+            command.entity_id.as_str(),
+            command_type_label(command.command_type)
+        )),
+    )
+    .map_err(|error| ApiError::bad_request(format!("invalid scene command preview: {error}")))
 }
 
 fn unsupported_command_capabilities(entity: &Entity, command: &DeviceCommand) -> Vec<CapabilityId> {
@@ -9592,6 +9895,76 @@ mod tests {
     }
 
     #[test]
+    fn runtime_web_app_previews_scene_authorization_without_dispatch() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+        let preview = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/scene_authorization?scene_id=scene.scene_kitchen_bright",
+            ))
+            .into(),
+        );
+        assert!(preview.contains(r#""principal_id":"agent:home-assistant-local-api""#));
+        assert!(preview.contains(r#""scene_id":"scene-kitchen-bright""#));
+        assert!(preview.contains(r#""home_assistant_scene_id":"scene.scene_kitchen_bright""#));
+        assert!(preview.contains(r#""tool_id":"smart_home.command""#));
+        assert!(preview.contains(r#""preview_only":true"#));
+        assert!(preview.contains(r#""would_mutate_runtime":true"#));
+        assert!(preview.contains(r#""command_count":2"#));
+        assert!(preview.contains(r#""supported":true"#));
+        assert!(preview.contains(r#""commandable":true"#));
+        assert!(preview.contains(r#""authorized":true"#));
+        assert!(preview.contains(r#""dispatchable":true"#));
+        assert!(preview.contains(r#""light.on_off""#));
+        assert!(preview.contains(r#""light.brightness""#));
+        assert!(preview.contains(r#""smart_home.command.light""#));
+        assert!(preview.contains(r#""missing_capabilities":[]"#));
+        assert!(preview.contains(
+            r#""matched_grants":["grant:agent:home-assistant-local-api:local-api-full-access"]"#
+        ));
+        assert!(preview.contains(r#""tool_decision":{"outcome":"allowed""#));
+        assert!(preview.contains(r#""command_decision":{"outcome":"allowed""#));
+        assert!(preview.contains(r#""home_assistant_entity_id":"light.entity_light_1""#));
+        assert!(preview.contains(r#""command_type":"turn_on""#));
+        assert!(preview.contains(r#""command_type":"set_brightness""#));
+
+        let command_results = response_body(
+            app.handle(request("GET", "/api/smart_home/command_results?limit=10"))
+                .into(),
+        );
+        assert!(command_results.contains(r#""total_results":0"#));
+
+        let denied_app = home_assistant_runtime_web_app(fixture_runtime(false));
+        let denied = response_body(
+            denied_app
+                .handle(request(
+                    "GET",
+                    "/api/smart_home/scene_authorization?scene_id=scene.scene_kitchen_bright",
+                ))
+                .into(),
+        );
+        assert!(denied.contains(r#""authorized":false"#));
+        assert!(denied.contains(r#""dispatchable":false"#));
+        assert!(denied.contains(r#""smart_home.command.light""#));
+        assert!(denied.contains(r#""light.brightness""#));
+        assert!(denied.contains(r#""tool_decision":{"outcome":"denied""#));
+        assert!(denied.contains(r#""command_decision":{"outcome":"denied""#));
+
+        let missing_scene: web_core::WebResponse = app
+            .handle(request("GET", "/api/smart_home/scene_authorization"))
+            .into();
+        assert_eq!(missing_scene.status, 400);
+
+        let unknown_scene: web_core::WebResponse = app
+            .handle(request(
+                "GET",
+                "/api/smart_home/scene_authorization?scene_id=scene.missing",
+            ))
+            .into();
+        assert_eq!(unknown_scene.status, 404);
+    }
+
+    #[test]
     fn runtime_web_app_serves_dashboard_ready_capability_grants() {
         let app = home_assistant_runtime_web_app(fixture_runtime(true));
 
@@ -9770,6 +10143,9 @@ mod tests {
         assert!(bootstrap.contains(
             r#""desired_state_authorization":"/api/smart_home/desired_state_authorization""#
         ));
+        assert!(
+            bootstrap.contains(r#""scene_authorization":"/api/smart_home/scene_authorization""#)
+        );
         assert!(bootstrap.contains(r#""health":{"generated_at_ms":5000"#));
         assert!(bootstrap.contains(r#""dashboard":{"generated_at_ms":5000"#));
         assert!(bootstrap.contains(r#""api":{"version":"0.1.0""#));
@@ -9798,6 +10174,7 @@ mod tests {
         assert!(smoke.contains(
             r#""desired_state_authorization":"/api/smart_home/desired_state_authorization""#
         ));
+        assert!(smoke.contains(r#""scene_authorization":"/api/smart_home/scene_authorization""#));
         assert!(smoke.contains(r#""check_id":"command_authorization_preview""#));
         assert!(smoke.contains(
             r#""path":"/api/smart_home/command_authorization?entity_id=light.entity_light_1&command_type=turn_on""#
@@ -9805,6 +10182,10 @@ mod tests {
         assert!(smoke.contains(r#""check_id":"desired_state_authorization_preview""#));
         assert!(smoke.contains(
             r#""path":"/api/smart_home/desired_state_authorization?entity_id=light.entity_light_1&operation=set""#
+        ));
+        assert!(smoke.contains(r#""check_id":"scene_authorization_preview""#));
+        assert!(smoke.contains(
+            r#""path":"/api/smart_home/scene_authorization?scene_id=scene.scene_kitchen_bright""#
         ));
         assert!(smoke.contains(r#""check_id":"command_probe""#));
         assert!(smoke.contains(r#""path":"/api/services/light/turn_on""#));
@@ -9814,18 +10195,18 @@ mod tests {
 
         let smoke_json: JsonValue =
             serde_json::from_str(&smoke).expect("smoke plan response is JSON");
-        assert_eq!(smoke_json["summary"]["total_checks"], 12);
-        assert_eq!(smoke_json["summary"]["safe_get_checks"], 11);
+        assert_eq!(smoke_json["summary"]["total_checks"], 13);
+        assert_eq!(smoke_json["summary"]["safe_get_checks"], 12);
         assert_eq!(smoke_json["summary"]["mutating_checks"], 1);
         assert_eq!(smoke_json["summary"]["runtime_authorized_checks"], 1);
         assert_eq!(smoke_json["summary"]["blocking_readiness_checks"], 0);
         assert_eq!(smoke_json["summary"]["attention_readiness_checks"], 1);
         assert_eq!(
-            smoke_json["checks"][8]["request_body"]["entity_id"],
+            smoke_json["checks"][9]["request_body"]["entity_id"],
             "light.entity_light_1"
         );
         assert_eq!(
-            smoke_json["checks"][8]["request_body"]["brightness_pct"],
+            smoke_json["checks"][9]["request_body"]["brightness_pct"],
             75
         );
     }
@@ -9855,9 +10236,12 @@ mod tests {
             r#"run_check 'Desired-state authorization preview' 'GET' '/api/smart_home/desired_state_authorization?entity_id=light.entity_light_1&operation=set' '200'"#
         ));
         assert!(script.contains(
+            r#"run_check 'Scene authorization preview' 'GET' '/api/smart_home/scene_authorization?scene_id=scene.scene_kitchen_bright' '200'"#
+        ));
+        assert!(script.contains(
             r#"run_check 'Command probe' 'POST' '/api/services/light/turn_on' '200' '{"entity_id":"light.entity_light_1","brightness_pct":75}'"#
         ));
-        assert!(script.contains("All smart-home smoke checks passed (12 checks)"));
+        assert!(script.contains("All smart-home smoke checks passed (13 checks)"));
     }
 
     #[test]
@@ -9893,6 +10277,9 @@ mod tests {
         ));
         assert!(catalog.contains(
             r#""path":"/api/smart_home/desired_state_authorization","category":"authorization","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["entity_id","operation","principal_id"]"#
+        ));
+        assert!(catalog.contains(
+            r#""path":"/api/smart_home/scene_authorization","category":"authorization","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["scene_id","principal_id"]"#
         ));
         assert!(catalog.contains(
             r#""path":"/api/smart_home/state_history","category":"state_history","surface":"smart_home","mutates_runtime":false,"runtime_authorized":false,"query_params":["bridge_id","entity_id","event_type","from_ms","limit","observed_at_or_after_ms","observed_at_or_before_ms","received_at_or_after_ms","received_at_or_before_ms","room_id","sort","to_ms"]"#
@@ -10932,11 +11319,14 @@ mod tests {
         assert!(body.contains("desiredStateAuthorizationUrl(entity, \"clear\")"));
         assert!(body.contains("desiredStateAuthorizationUrl(target, \"clear\")"));
         assert!(body.contains("/api/smart_home/desired_state_authorization?entity_id="));
+        assert!(body.contains("sceneAuthorizationUrl(scene)"));
+        assert!(body.contains("/api/smart_home/scene_authorization?scene_id="));
         assert!(body.contains("Auth on"));
         assert!(body.contains("Auth off"));
         assert!(body.contains("Auth brightness"));
         assert!(body.contains("Auth target"));
         assert!(body.contains("Auth clear"));
+        assert!(body.contains("Auth scene"));
         assert!(body.contains("commandable capabilities"));
         assert!(body.contains("serviceDetailUrl(service)"));
         assert!(body.contains("roomDetailUrl(room)"));
@@ -10975,7 +11365,7 @@ mod tests {
         assert!(
             body.contains(r#"run_check 'Startup bundle' 'GET' '/api/smart_home/bootstrap' '200'"#)
         );
-        assert!(body.contains("All smart-home smoke checks passed (12 checks)"));
+        assert!(body.contains("All smart-home smoke checks passed (13 checks)"));
     }
 
     #[test]

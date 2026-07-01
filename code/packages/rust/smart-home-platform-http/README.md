@@ -52,6 +52,7 @@ stable local API responses for:
 - `/api/smart_home/authorization_decisions`
 - `/api/smart_home/command_authorization`
 - `/api/smart_home/desired_state_authorization`
+- `/api/smart_home/scene_authorization`
 - `/api/smart_home/authorization_decisions/:decision_index`
 - `/api/smart_home/desired_states`
 - `POST /api/smart_home/desired_states/:entity_id`
@@ -227,6 +228,7 @@ curl 'http://127.0.0.1:8123/api/smart_home/rooms?sort=scene_count&state_gaps_onl
 curl 'http://127.0.0.1:8123/api/smart_home/rooms/kitchen'
 curl 'http://127.0.0.1:8123/api/smart_home/scenes?room_id=kitchen&scope=room'
 curl 'http://127.0.0.1:8123/api/smart_home/scenes/scene.scene_kitchen_bright'
+curl 'http://127.0.0.1:8123/api/smart_home/scene_authorization?scene_id=scene.scene_kitchen_bright'
 curl 'http://127.0.0.1:8123/api/smart_home/events?limit=12'
 curl 'http://127.0.0.1:8123/api/smart_home/events?room_id=kitchen&limit=12'
 curl 'http://127.0.0.1:8123/api/smart_home/events?entity_id=light.entity_light_1&limit=12'
