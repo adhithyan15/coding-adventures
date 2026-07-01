@@ -111,6 +111,11 @@ pub fn from_pipeline(
     .unwrap();
     writeln!(
         out,
+        "import androidx.compose.foundation.text.KeyboardActions"
+    )
+    .unwrap();
+    writeln!(
+        out,
         "import androidx.compose.foundation.text.KeyboardOptions"
     )
     .unwrap();
@@ -125,6 +130,7 @@ pub fn from_pipeline(
     writeln!(out, "import androidx.compose.ui.graphics.Color").unwrap();
     writeln!(out, "import androidx.compose.ui.text.TextStyle").unwrap();
     writeln!(out, "import androidx.compose.ui.text.font.FontFamily").unwrap();
+    writeln!(out, "import androidx.compose.ui.text.input.ImeAction").unwrap();
     writeln!(out, "import androidx.compose.ui.text.input.KeyboardType").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.dp").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.sp").unwrap();
@@ -1666,6 +1672,29 @@ fn emit_host_input(
         // satisfy BasicTextField's required parameter — emit a
         // no-op closure.
         writeln!(out, "{inner}onValueChange = {{ }},").unwrap();
+    }
+
+    // onCommit — a payloadless "the user finished editing" event (Enter). Compose
+    // has no free-standing submit on a BasicTextField, so wire it to the soft
+    // keyboard's Done IME action and make the field single-line, so Enter (soft or
+    // hardware keyboard) fires the commit instead of inserting a newline. Without
+    // this the generated field could take keystrokes but never dispatch onCommit —
+    // the host's write-through / recompute was unreachable. Mirrors the SwiftUI
+    // emitter's `.onSubmit { dispatch(.commit) }`.
+    if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
+        let case = pascalize(&strip_on_prefix(emit_name));
+        validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
+        writeln!(out, "{inner}singleLine = true,").unwrap();
+        writeln!(
+            out,
+            "{inner}keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),"
+        )
+        .unwrap();
+        writeln!(
+            out,
+            "{inner}keyboardActions = KeyboardActions(onDone = {{ dispatch({component_name}Event.{case}) }}),"
+        )
+        .unwrap();
     }
 
     if let Some(style) = &style {
