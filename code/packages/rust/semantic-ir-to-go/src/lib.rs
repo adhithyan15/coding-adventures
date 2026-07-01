@@ -83,6 +83,19 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // sentinel by pointer identity; `_sir_format`/`_sir_value_eq` handle
     // it defensively so it never reaches user-visible output.
     Feature::DefaultParams,
+    // ── KW6 — keyword parameters & arguments ───────────────────────
+    // `KeywordParams` is DIRECT-lowered (no runtime library), mirroring
+    // `DefaultParams` above.  Go has no native keyword arguments, so:
+    //   * a `Keyword` DEF param emits as an ordinary positional `name Value`
+    //     (it already does — `emit_function` walks every param uniformly),
+    //     and an *optional* keyword's default is filled by the same
+    //     `_sir_missing`/prologue path as a positional default; and
+    //   * a `KeywordArg` at a `DirectCall` is resolved to the callee's
+    //     declared position at emit time (the signature is statically known —
+    //     see `emit::emit_direct_call`), producing a plain positional call.
+    // Indirect/closure keyword calls are deferred (spec §Out of scope); the
+    // frontends do not emit them, so accepting this feature is safe.
+    Feature::KeywordParams,
 ];
 
 impl Backend for GoBackend {

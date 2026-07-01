@@ -19,7 +19,7 @@ use std::collections::HashMap;
 use std::fmt::Write;
 
 use semantic_ir::{
-    Block, Expr, Function, Global, Module, Scope, Stmt,
+    Block, Expr, Function, Global, Module, ParamKind, Scope, Stmt,
 };
 
 use crate::runtime::RUNTIME;
@@ -30,6 +30,28 @@ pub fn emit_module(m: &Module) -> String {
         t.clear();
         for f in &m.functions {
             t.insert(f.name.clone(), f.params.len());
+        }
+    });
+    // KW6: snapshot each function's *parameter shape* (name, is-keyword,
+    // has-default) in declared order.  The `DirectCall` arm needs this to
+    // resolve a `KeywordArg` (matched by NAME) back to the callee's declared
+    // POSITION — Go has no native keywords, so the call is lowered to a plain
+    // positional one (see `resolve_direct_call_args`).  `FN_ARITY` alone can't
+    // do this: it only knows *how many* params, not their names/kinds.
+    FN_PARAMS.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        for f in &m.functions {
+            let shape = f
+                .params
+                .iter()
+                .map(|p| ParamShape {
+                    name: p.name.clone(),
+                    is_keyword: p.kind == ParamKind::Keyword,
+                    has_default: p.default.is_some(),
+                })
+                .collect();
+            t.insert(f.name.clone(), shape);
         }
     });
     // Reset the loop-id counter so emission is deterministic across
@@ -55,6 +77,7 @@ pub fn emit_module(m: &Module) -> String {
     emit_main(&mut out, m);
 
     FN_ARITY.with(|t| t.borrow_mut().clear());
+    FN_PARAMS.with(|t| t.borrow_mut().clear());
 
     out
 }
@@ -359,28 +382,7 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         }
         Expr::Block(b) => emit_block_as_expr(out, b, indent),
         Expr::DirectCall { fn_name, args, .. } => {
-            // ── SIR19 default params: caller-side padding ───────────────
-            // Emitted Go functions are fixed-arity, so a call that omits
-            // trailing defaulted arguments must PAD up to the callee's full
-            // param count with the `_sir_missing` sentinel.  The callee's
-            // body prologue (see `emit_default_prologue`) then swaps each
-            // sentinel for that param's default.  The full param count comes
-            // from the module's function table (`FN_ARITY`), which
-            // `emit_module` populated with every function's `params.len()`
-            // before walking bodies.  A validated module never *over*-
-            // supplies, so `pad` is the non-negative shortfall; an unknown
-            // callee (not in the table) pads nothing.
-            let full_arity = FN_ARITY.with(|t| t.borrow().get(fn_name).copied());
-            let pad = full_arity.map_or(0, |n| n.saturating_sub(args.len()));
-            let _ = write!(out, "{}(", function_emit_name(fn_name));
-            emit_args(out, args, indent);
-            for i in 0..pad {
-                if i > 0 || !args.is_empty() {
-                    out.push_str(", ");
-                }
-                out.push_str("_sir_missing");
-            }
-            out.push(')');
+            emit_direct_call(out, fn_name, args, indent);
         }
         Expr::IndirectCall { target, args, .. } => {
             out.push_str("_sir_apply(");
@@ -518,14 +520,19 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         Expr::StrConcat { span, .. } => {
             panic!("go backend reached SIR18 str-concat expression at {} — capability check should have rejected it", span);
         }
-        // KW1 compile-compat stub: keyword arguments (`f(a: 1)`) are gated
-        // behind `Feature::KeywordParams`, which the validator rejects until
-        // real support lands in KW2–KW6.  `emit_expr` is infallible, so we
-        // follow this crate's established convention for an unsupported node
-        // (see `StrConcat` above): a positioned panic documenting the
-        // internal-bug-only reachability.  No real emission yet.
+        // KW6: a `KeywordArg` is NOT a first-class value — it exists only
+        // inside a call's `args` vec.  For a `DirectCall` (the only shape the
+        // Ruby/Python frontends emit) `emit_direct_call` intercepts the whole
+        // `args` slice and resolves each keyword to its callee position BEFORE
+        // any element is emitted, so a `KeywordArg` never reaches `emit_expr`
+        // on that path.  Reaching this arm therefore means a keyword argument
+        // rode into an `IndirectCall`/closure `emit_args` — the indirect
+        // keyword-call case the spec (§ "Out of scope") explicitly DEFERS for
+        // Rust/Go v0 (frontends do not emit it).  We do not crash on valid
+        // input (a `DirectCall` is always resolved first); we panic only here,
+        // on the deferred indirect path, with a message that says so.
         Expr::KeywordArg { span, .. } => {
-            panic!("go backend reached KW1 keyword-arg expression at {} — capability check should have rejected it (real support pending KW2–KW6)", span);
+            panic!("go backend reached a keyword argument outside a DirectCall at {} — indirect/closure keyword calls are deferred for the Go backend (KW6, spec §Out of scope); frontends do not emit them", span);
         }
     }
 }
@@ -567,6 +574,128 @@ fn emit_args(out: &mut String, args: &[Expr], indent: usize) {
         }
         emit_expr(out, a, indent);
     }
+}
+
+/// Emit a `DirectCall`, performing **static keyword→positional resolution**
+/// (KW6).
+///
+/// # Why this is needed
+///
+/// Go has no keyword arguments.  SIR models a call `f(1, y: 2)` as
+/// `args = [IntLit(1), KeywordArg{ name: "y", value: IntLit(2) }]` — positional
+/// args first, then `KeywordArg` wrappers (the validator guarantees this
+/// ordering).  A keyword argument is matched to its parameter by **name**, not
+/// position, so a naive positional emit would misplace it.  Because a
+/// `DirectCall`'s callee signature is statically known (we snapshot it in
+/// `FN_PARAMS`), the backend resolves each keyword to its declared position at
+/// **emit time** and produces a plain positional Go call — no runtime library.
+///
+/// # The algorithm — a name→position reorder plus default-padding
+///
+/// The callee has params `p[0..N]` in declared order.  We build a Go argument
+/// for every slot:
+///
+/// 1. **Positional args fill leading slots in order.**  The `k` bare
+///    (non-`KeywordArg`) elements of `args` fill `p[0..k]`.
+/// 2. **Each `KeywordArg{name, value}` fills the slot whose param name
+///    matches** — regardless of where it sat in `args`.
+/// 3. **Every remaining slot is omitted-optional** — either a trailing
+///    positional with a default, or an optional keyword the caller left out.
+///    The validator guarantees each such slot carries a `default` (a *required*
+///    keyword left out is a validation error), so we emit the `_sir_missing`
+///    sentinel; the callee's body prologue (`emit_default_prologue`) swaps it
+///    for the real default.  This is EXACTLY the SIR19 positional-default
+///    padding, generalised to fill interior gaps a keyword reorder can leave.
+///
+/// # Worked example
+///
+/// ```text
+///   def greet(greeting:, name: "world")   // p[0]=greeting (kw, req)
+///                                          // p[1]=name     (kw, opt, default "world")
+///
+///   greet(greeting: "hi")             →  greet("hi", _sir_missing)
+///                                          //  name omitted → sentinel → prologue fills "world"
+///   greet(greeting: "hi", name: "ada")→  greet("hi", "ada")
+///   greet(name: "ada", greeting: "hi")→  greet("hi", "ada")
+///                                          //  source order irrelevant: matched by name
+/// ```
+///
+/// # Unknown / signatureless callees
+///
+/// If the callee is not in `FN_PARAMS` (not a module function) we cannot
+/// resolve by name.  A validated module never lets a `KeywordArg` reach such a
+/// callee (keyword name resolution requires a known signature), so in practice
+/// this path sees only positional args; we fall back to the plain
+/// positional-with-`FN_ARITY`-padding emit the crate already used pre-KW6.
+fn emit_direct_call(out: &mut String, fn_name: &str, args: &[Expr], indent: usize) {
+    let shapes = FN_PARAMS.with(|t| t.borrow().get(fn_name).cloned());
+
+    // Split `args` into leading positionals and trailing keyword args.  The
+    // validator guarantees every `KeywordArg` follows all positionals, so a
+    // single partition point suffices.
+    let positionals: Vec<&Expr> = args
+        .iter()
+        .filter(|a| !matches!(a, Expr::KeywordArg { .. }))
+        .collect();
+    let keyword_args: Vec<(&str, &Expr)> = args
+        .iter()
+        .filter_map(|a| match a {
+            Expr::KeywordArg { name, value, .. } => Some((name.as_str(), value.as_ref())),
+            _ => None,
+        })
+        .collect();
+
+    // Fast path: no keywords and a known signature ⇒ behave exactly like the
+    // pre-KW6 emit (positionals then `_sir_missing` padding for trailing
+    // omitted defaults).  Also the fallback when the callee is unknown.
+    if keyword_args.is_empty() {
+        let full_arity = FN_ARITY.with(|t| t.borrow().get(fn_name).copied());
+        let pad = full_arity.map_or(0, |n| n.saturating_sub(args.len()));
+        let _ = write!(out, "{}(", function_emit_name(fn_name));
+        emit_args(out, args, indent);
+        for i in 0..pad {
+            if i > 0 || !args.is_empty() {
+                out.push_str(", ");
+            }
+            out.push_str("_sir_missing");
+        }
+        out.push(')');
+        return;
+    }
+
+    // Keyword path.  We *must* have the callee's shape to resolve by name; the
+    // validator guarantees this (unknown callees never receive keywords).
+    let shapes = shapes
+        .expect("validated module: a DirectCall carrying keyword args always targets a known module function");
+
+    // Build one Go argument string per callee slot, in declared order.
+    let _ = write!(out, "{}(", function_emit_name(fn_name));
+    for (slot, shape) in shapes.iter().enumerate() {
+        if slot > 0 {
+            out.push_str(", ");
+        }
+        if slot < positionals.len() {
+            // A leading positional argument fills this slot.
+            emit_expr(out, positionals[slot], indent);
+        } else if let Some((_, value)) =
+            keyword_args.iter().find(|(kw_name, _)| *kw_name == shape.name)
+        {
+            // A `KeywordArg` names this param — resolved by name, not position.
+            emit_expr(out, value, indent);
+        } else {
+            // Omitted optional slot.  The validator guarantees it has a
+            // default (a required keyword left out would be rejected), so the
+            // sentinel is safe: the callee's prologue substitutes the default.
+            debug_assert!(
+                shape.has_default,
+                "validated module: an omitted slot for `{}` must carry a default",
+                shape.name,
+            );
+            let _ = shape.is_keyword; // documented: kw or trailing positional
+            out.push_str("_sir_missing");
+        }
+    }
+    out.push(')');
 }
 
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {
@@ -769,8 +898,30 @@ fn emit_for_each(out: &mut String, var: &str, iter: &Expr, body: &Block, indent:
 // TLS arity table + loop counter
 // ---------------------------------------------------------------------------
 
+/// A single callee parameter's shape, as needed by keyword→position
+/// resolution at a `DirectCall` (KW6).  We keep only the three facts the
+/// resolver consults — the param's `name` (to match a `KeywordArg`), whether
+/// it is a `Keyword` param (`is_keyword`), and whether it carries a `default`
+/// (`has_default`, i.e. it may be omitted).  The default *expression* itself
+/// is NOT stored: an omitted param is filled with the `_sir_missing` sentinel
+/// and the callee's body prologue emits the real default (identical to the
+/// SIR19 positional-default machinery), so the call site never needs the
+/// default's Go text.
+#[derive(Clone)]
+struct ParamShape {
+    name: String,
+    is_keyword: bool,
+    has_default: bool,
+}
+
 thread_local! {
     static FN_ARITY: RefCell<HashMap<String, usize>> = RefCell::new(HashMap::new());
+    /// Per-module map from function name to its declared parameter shapes,
+    /// in order.  Populated by `emit_module` before any body is walked, and
+    /// consulted by the `DirectCall` arm to resolve keyword arguments to
+    /// positions (KW6).  Cleared at the end of `emit_module` alongside
+    /// `FN_ARITY`.
+    static FN_PARAMS: RefCell<HashMap<String, Vec<ParamShape>>> = RefCell::new(HashMap::new());
     /// Monotonic per-module loop counter — gives each emitted `ForRange`
     /// a unique suffix so its `__sir_i_`/`__sir_stop_`/`__sir_step_`
     /// temporaries never collide with a sibling or nested loop's.
@@ -1503,6 +1654,191 @@ mod tests {
         assert!(out.contains("f(Value(int64(5)), _sir_missing)"), "got: {out}");
         // `f(5, 10)` is full-arity — no padding.
         assert!(out.contains("f(Value(int64(5)), Value(int64(10)))"), "got: {out}");
+    }
+
+    // ── KW6 keyword parameters & arguments ─────────────────────────
+    //
+    // `greet(greeting:, name: "world")`: a REQUIRED keyword `greeting`
+    // (`Keyword`, no default) followed by an OPTIONAL keyword `name`
+    // (`Keyword`, default `"world"`).  The body returns `name` so a shape
+    // test can pin the emitted default; the execution proof
+    // (`compile_and_run_keyword_params.rs`) exercises both params.
+
+    fn strlit(v: &str) -> Expr {
+        Expr::StrLit { value: v.into(), span: s() }
+    }
+
+    fn kwarg(name: &str, value: Expr) -> Expr {
+        Expr::KeywordArg { name: name.into(), value: Box::new(value), span: s() }
+    }
+
+    fn greet_fn() -> Function {
+        Function {
+            name: "greet".into(),
+            params: vec![
+                Param {
+                    name: "greeting".into(),
+                    kind: ParamKind::Keyword,
+                    sir_type: None,
+                    default: None,
+                    span: s(),
+                },
+                Param {
+                    name: "name".into(),
+                    kind: ParamKind::Keyword,
+                    sir_type: None,
+                    default: Some(Box::new(strlit("world"))),
+                    span: s(),
+                },
+            ],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::VarRef { name: "name".into(), scope: Scope::Param, span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        }
+    }
+
+    /// A module whose `main` calls `greet` twice with `KeywordArg`s.  Emission
+    /// of a keyword call consults the module's `FN_PARAMS` table, so we drive
+    /// the whole thing through `emit_module`.
+    fn greet_module(call_args_first: Vec<Expr>, call_args_second: Vec<Expr>) -> Module {
+        let main = Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![
+                    Stmt::ExprStmt {
+                        expr: Expr::DirectCall {
+                            fn_name: "greet".into(),
+                            args: call_args_first,
+                            effects: EffectSet::PURE,
+                            span: s(),
+                        },
+                        span: s(),
+                    },
+                    Stmt::ExprStmt {
+                        expr: Expr::DirectCall {
+                            fn_name: "greet".into(),
+                            args: call_args_second,
+                            effects: EffectSet::PURE,
+                            span: s(),
+                        },
+                        span: s(),
+                    },
+                ],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        Module {
+            name: "greet_demo".into(),
+            manifest: FeatureManifest::from_features(&[
+                semantic_ir::Feature::KeywordParams,
+                semantic_ir::Feature::DefaultParams,
+                semantic_ir::Feature::Strings,
+                semantic_ir::Feature::DynamicTyping,
+            ]),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![greet_fn(), main],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("test")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        }
+    }
+
+    #[test]
+    fn keyword_def_param_emits_positional() {
+        // A `Keyword` param is emitted as an ordinary positional Go param, in
+        // declared order — the by-name-ness is a source affordance the backend
+        // resolves at the CALL site.  The optional keyword's default is filled
+        // by the same `_sir_missing`/prologue path as a positional default.
+        let mut out = String::new();
+        emit_function(&mut out, &greet_fn());
+        assert!(
+            out.contains("func greet(greeting Value, name Value) Value"),
+            "got: {out}"
+        );
+        // The optional keyword `name` carries a default → a prologue guard.
+        assert!(out.contains("if _sir_is_missing(name) {"), "got: {out}");
+        assert!(out.contains("name = Value(\"world\")"), "got: {out}");
+        // The required keyword `greeting` has no default → no guard.
+        assert!(!out.contains("_sir_is_missing(greeting)"), "got: {out}");
+    }
+
+    #[test]
+    fn keyword_call_reorders_by_name() {
+        // Source order of the `KeywordArg`s must NOT matter: they are matched
+        // to callee params by NAME.  Supply them out of declared order and
+        // confirm the emitted positional call restores declared order.
+        let m = greet_module(
+            // greet(name: "ada", greeting: "hi")  — reversed source order
+            vec![kwarg("name", strlit("ada")), kwarg("greeting", strlit("hi"))],
+            // greet(greeting: "hi", name: "ada")  — declared source order
+            vec![kwarg("greeting", strlit("hi")), kwarg("name", strlit("ada"))],
+        );
+        let out = emit_module(&m);
+        // Both calls must emit `greet("hi", "ada")` — greeting first, then name.
+        let occurrences = out.matches("greet(Value(\"hi\"), Value(\"ada\"))").count();
+        assert_eq!(occurrences, 2, "expected both calls reordered to declared order; got: {out}");
+    }
+
+    #[test]
+    fn keyword_call_omitted_optional_filled_with_sentinel() {
+        // `greet(greeting: "hi")` omits the OPTIONAL keyword `name`.  The slot
+        // is padded with `_sir_missing`; the callee prologue supplies the
+        // default `"world"`.  The second call supplies `name` explicitly.
+        let m = greet_module(
+            // greet(greeting: "hi")               — name omitted
+            vec![kwarg("greeting", strlit("hi"))],
+            // greet(greeting: "hi", name: "ada")  — name supplied
+            vec![kwarg("greeting", strlit("hi")), kwarg("name", strlit("ada"))],
+        );
+        let out = emit_module(&m);
+        // Omitted optional → sentinel in the name slot.
+        assert!(
+            out.contains("greet(Value(\"hi\"), _sir_missing)"),
+            "omitted optional keyword should pad with sentinel; got: {out}"
+        );
+        // Supplied → the value lands in the name slot.
+        assert!(
+            out.contains("greet(Value(\"hi\"), Value(\"ada\"))"),
+            "supplied keyword should fill its slot; got: {out}"
+        );
+    }
+
+    #[test]
+    fn keyword_call_mixes_positional_and_keyword() {
+        // A positional argument fills a leading slot; a trailing `KeywordArg`
+        // fills its named slot.  `greet` here is called `greet("hi", name:
+        // "ada")` — `"hi"` positionally fills `greeting`, `name:` fills `name`.
+        let m = greet_module(
+            vec![strlit("hi"), kwarg("name", strlit("ada"))],
+            // Second call omits the keyword: positional greeting + default name.
+            vec![strlit("hi")],
+        );
+        let out = emit_module(&m);
+        assert!(
+            out.contains("greet(Value(\"hi\"), Value(\"ada\"))"),
+            "positional+keyword mix should resolve; got: {out}"
+        );
+        assert!(
+            out.contains("greet(Value(\"hi\"), _sir_missing)"),
+            "positional-only call should default the optional keyword; got: {out}"
+        );
     }
 
     #[test]

@@ -2,13 +2,56 @@
 
 ## Unreleased
 
-### Changed
+## 0.6.0 — KW6 keyword parameters & arguments via static positional resolution
 
-- Compile-compat stub arm for the new core `semantic-ir` variant
-  `Expr::KeywordArg` (KW1) — `emit_expr` follows this crate's existing
-  unsupported-node convention (positioned panic that the capability check
-  should already have rejected). Real keyword-argument support is pending
-  KW2–KW8.
+Adds `Feature::KeywordParams` to the Go backend's accepted set (see
+`code/specs/sir-keyword-params.md`, §4 Go row).  Go has **no** native keyword
+arguments, so the backend lowers them **directly** — no runtime library — by
+resolving each keyword to a positional slot at *emit time* (a `DirectCall`'s
+callee signature is statically known).  This mirrors the Rust backend's
+strategy and reuses the SIR19 default-parameter machinery (the `_sir_missing`
+sentinel + callee body prologue) unchanged.
+
+### Added
+
+- **Keyword def params are positional-ized.**  A `ParamKind::Keyword` parameter
+  emits as an ordinary positional Go parameter in declared order — the
+  by-name-ness is a source affordance the backend resolves at the call site.
+  An *optional* keyword (`Keyword` + `default: Some`) reuses the existing
+  default-param prologue: `if _sir_is_missing(name) { name = <default> }`.
+- **Static keyword→positional call resolution.**  A `DirectCall` whose `args`
+  contain `Expr::KeywordArg{ name, value }` elements is emitted as a plain
+  positional Go call, built in the callee's declared param order:
+  leading positionals fill leading slots; each `KeywordArg` fills the slot
+  whose param **name** matches (source order irrelevant); every omitted
+  *optional* slot is padded with `_sir_missing` (the callee prologue supplies
+  the default). Worked example — `greet(greeting:, name: "world")`:
+  `greet(greeting: "hi")` → `greet("hi", _sir_missing)`;
+  `greet(name: "ada", greeting: "hi")` → `greet("hi", "ada")`.
+- **`FN_PARAMS` signature table.**  A new per-module thread-local mapping each
+  function name to its parameter shapes (name, is-keyword, has-default), in
+  order, populated by `emit_module` alongside `FN_ARITY`.  The `DirectCall`
+  arm consults it to reorder keywords by name — `FN_ARITY` alone knows only
+  *how many* params, not their names.
+
+### Tests
+
+- Emitted-shape unit tests: positional-ized keyword def with optional-keyword
+  default prologue; keyword call reordered to declared order (source order
+  scrambled); omitted optional keyword padded with the sentinel; mixed
+  positional + keyword call.
+- Execution proof (`tests/compile_and_run_keyword_params.rs`): a
+  `greet(greeting:, name: "world")` module compiled and run through `go run`,
+  asserting `greet(greeting: "hi")` prints `(hi world)` (default filled) and
+  `greet(greeting: "hi", name: "ada")` prints `(hi ada)` (supplied). Skips
+  gracefully if `go` is absent.
+
+### Deferred (spec §Out of scope)
+
+- **Indirect/closure keyword calls.**  An `IndirectCall`/`MakeClosure` cannot
+  resolve keywords by name (the callee signature is not statically known); the
+  frontends do not emit such calls, so a `KeywordArg` reaching that path
+  panics with a documented deferral message rather than mis-emitting.
 
 ## 0.5.0 — SIR19 default parameters (P2f) via missing-sentinel runtime-mimic
 
