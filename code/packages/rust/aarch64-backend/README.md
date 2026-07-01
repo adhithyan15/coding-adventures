@@ -35,5 +35,14 @@ McCarthy 1960 Lisp (LANG77) compiles end-to-end through this backend via the
 predicates, COND truthiness, and (W14b) `LAMBDA`: cross-function `call`s plus
 `lispy_to_exit_code` (the polymorphic program-exit coercion) make native lambda run.
 
+## TWIG-GC integration (native-aot-substrate PR-1)
+
+The `alloc` IIR op now calls `__twig_gc_alloc(size)` (TWIG-GC) instead of the
+leaking `__twig_alloc_bytes`.  Size is read from `srcs[0]`; defaults to 16
+(LispyPair) if absent.  The `safepoint` IIR op lowers to
+`BL __twig_gc_safepoint` — a no-arg call that triggers GC when the live-byte
+threshold is exceeded.  Two new V1_BUILTINS — `gc_alloc` and `gc_safepoint` —
+let frontends emit `call_builtin "gc_alloc"` / `"gc_safepoint"` directly.
+
 Later passes will add: real register allocation, float operations,
 runtime-call lowering, deopt support for JIT.

@@ -44,6 +44,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* TWIG-GC (twig_gc.c) — used by __twig_lispy_cons to allocate cons cells on
+ * the managed heap instead of leaking via calloc. */
+extern int64_t __twig_gc_alloc(int64_t n);
+
 /* ── Tag constants ──────────────────────────────────────────────────────
  *
  * These mirror lispy-runtime/src/value.rs.  The golden test reads them back
@@ -96,17 +100,19 @@ uint64_t __twig_lispy_nil(void) {
  *     │  [0] car   │  [8] cdr   │
  *     └────────────┴────────────┘
  *
- * `calloc(1, 16)` returns memory aligned to at least 16 bytes on every
- * libc, so the low 3 bits of the pointer are zero — which the OR-with-tag
- * (0b111) scheme requires.  V1 intentionally leaks (no free); the heap is
- * valid until process exit, matching `__twig_alloc_bytes`.  Out-of-memory
- * returns nil rather than crashing inside the runtime.
+ * `__twig_gc_alloc(16)` returns memory aligned to at least 16 bytes (the GC
+ * header is 32 bytes, so the payload is always 16-byte–aligned), so the low
+ * 3 bits of the pointer are zero — which the OR-with-tag (0b111) scheme
+ * requires.  The allocation is managed by TWIG-GC (twig_gc.c) and will be
+ * collected when the cell becomes unreachable.  Out-of-memory returns nil
+ * rather than crashing inside the runtime.
  */
 uint64_t __twig_lispy_cons(uint64_t car, uint64_t cdr) {
-    uint64_t *cell = (uint64_t *)calloc(1, 2 * sizeof(uint64_t));
-    if (cell == NULL) {
+    int64_t ptr = __twig_gc_alloc(2 * (int64_t)sizeof(uint64_t));
+    if (ptr == 0) {
         return LISPY_NIL;
     }
+    uint64_t *cell = (uint64_t *)(intptr_t)ptr;
     cell[0] = car;
     cell[1] = cdr;
     return ((uint64_t)(uintptr_t)cell) | LISPY_TAG_HEAP;

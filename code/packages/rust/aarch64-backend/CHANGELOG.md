@@ -1,5 +1,21 @@
 # Changelog — `aarch64-backend`
 
+## 0.19.0 — 2026-07-01 — TWIG-GC: `alloc` → `__twig_gc_alloc`, `safepoint` lowering
+
+**`alloc` op** (TWIG-GC, native-aot-substrate PR-1):
+- Now reads the allocation size from `srcs[0]` (a compile-time `Int`) instead
+  of hardcoding 16 bytes.  Falls back to 16 if `srcs[0]` is absent (legacy IIR).
+- Calls `__twig_gc_alloc` (TWIG-GC) instead of `__twig_alloc_bytes`.  The
+  returned pointer is tracked by the conservative GC and freed when unreachable.
+
+**`safepoint` op**: Previously returned `UnsupportedOp`.  Now lowers to
+`BL __twig_gc_safepoint` — a no-arg, no-return call that triggers a GC cycle
+when `gc_live_bytes >= gc_threshold`.  Emitted by frontends at loop back-edges.
+
+**V1_BUILTINS additions**: `gc_alloc` (1 arg, returns) and `gc_safepoint`
+(0 args, no return) so frontends can emit `call_builtin "gc_alloc"` and
+`call_builtin "gc_safepoint"` directly without going through the `alloc` op.
+
 ## 0.18.0 — 2026-07-01 — BA-pow `f64_pow` + LANG-STR-RT `str_eq` builtin
 
 **LANG-STR-RT `str_eq`**: Added `BuiltinSig { name: "str_eq", n_args: 2,

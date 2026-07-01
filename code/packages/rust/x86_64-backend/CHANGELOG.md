@@ -1,5 +1,13 @@
 # Changelog — `x86_64-backend`
 
+## 0.21.0 — 2026-07-01 — TWIG-GC: `gc_alloc` + `gc_safepoint` in V1_BUILTINS
+
+**V1_BUILTINS additions** (TWIG-GC, native-aot-substrate PR-1): Added
+`gc_alloc` (1 arg, returns) and `gc_safepoint` (0 args, no return) so
+frontends that emit `call_builtin "gc_alloc"` / `"gc_safepoint"` are dispatched
+to `__twig_gc_alloc` / `__twig_gc_safepoint` in `twig_gc.c`.  Mirrors the same
+additions made to `aarch64-backend v0.19.0`.
+
 ## 0.20.0 — 2026-07-01 — BA-pow `f64_pow` + LANG-STR-RT `str_eq` builtin
 
 **LANG-STR-RT `str_eq`**: Added `BuiltinSig { name: "str_eq", n_args: 2,
