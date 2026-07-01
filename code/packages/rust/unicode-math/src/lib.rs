@@ -22,9 +22,11 @@
 //! the **big operators** `∑ ∏ ∫ ∮ ∐` with optional lower/upper bounds (PR-2, e.g. `∑_(i=1)^n i`);
 //! **named functions** `sin cos tan … ln log exp` applied to the next atom (PR-3, `sin x`, `log(x)`,
 //! `arcsin x` — longest-match, so `sinx` ⇒ `sin·x`); the relations `= ≠ < ≤ > ≥ ≈ ≡`; and
-//! **matrices** `[[a,b],[c,d]]` (PR-4, rows in `[…]` or `(…)`). The only remaining gap vs the
-//! AsciiMath frontend is embedded `\text` (no Unicode equivalent) — an out-of-scope input is a
-//! clean spanned error, never a panic.
+//! **matrices** `[[a,b],[c,d]]` (PR-4, rows in `[…]` or `(…)`); and **accents** written as Unicode
+//! combining diacritics over the preceding glyph — `x̂` (hat), `v⃗` (vec), `x̄` (bar), `x̃` (tilde),
+//! `ẋ` (dot), `ẍ` (ddot) — lowering to the same [`MathExpr::Accent`] as LaTeX `\hat{x}` and MathML
+//! `<mover>`. The only remaining gap vs the AsciiMath frontend is embedded `\text` (no Unicode
+//! equivalent) — an out-of-scope input is a clean spanned error, never a panic.
 //!
 //! ```
 //! use unicode_math::UnicodeMath;
@@ -66,8 +68,9 @@ impl MathFrontend for UnicodeMath {
     fn capabilities(&self) -> Capabilities {
         // `fractions` covers both `a/b` and the vulgar-fraction glyphs; `powers` covers Unicode
         // superscripts and the ASCII `^` operator; `plusminus` covers `±`/`∓`; `big_operators`
-        // covers `∑ ∏ ∫ ∮ ∐` (PR-2). `functions`, `matrices`, and `text` are PR-3 — declared OFF
-        // so the conformance harness holds us honest. (Subscripts need no flag: `Subscript` is
+        // covers `∑ ∏ ∫ ∮ ∐` (PR-2). `functions`, `matrices` are PR-3. `accents` covers the Unicode
+        // combining diacritics (`x̂`/`v⃗`/`x̄`/`x̃`/`ẋ`/`ẍ` → `MathExpr::Accent`), bringing this
+        // frontend to parity with latex/mathml/asciimath. (Subscripts need no flag: `Subscript` is
         // not a gated capability.)
         Capabilities::none()
             .with_fractions()
@@ -79,6 +82,7 @@ impl MathFrontend for UnicodeMath {
             .with_big_operators()
             .with_functions()
             .with_matrices()
+            .with_accents()
     }
 }
 
@@ -153,6 +157,39 @@ mod tests {
             p("∛x"),
             MathExpr::Root { degree: Some(Box::new(num(3))), radicand: Box::new(sym("x")) }
         );
+    }
+
+    // ---- accents (combining diacritics) ----------------------------------------
+    fn accent(name: &str, body: MathExpr) -> MathExpr {
+        MathExpr::Accent { accent: name.to_string(), body: Box::new(body) }
+    }
+
+    #[test]
+    fn combining_diacritics_are_accents() {
+        // Each combining mark sits over the preceding glyph and lowers to the SAME neutral
+        // `MathExpr::Accent` that LaTeX `\hat{x}` / MathML `<mover>` produce (matching accent names).
+        assert_eq!(p("x\u{0302}"), accent("hat", sym("x")));    // x̂
+        assert_eq!(p("v\u{20D7}"), accent("vec", sym("v")));    // v⃗
+        assert_eq!(p("x\u{0304}"), accent("bar", sym("x")));    // x̄
+        assert_eq!(p("x\u{0303}"), accent("tilde", sym("x")));  // x̃
+        assert_eq!(p("x\u{0307}"), accent("dot", sym("x")));    // ẋ
+        assert_eq!(p("x\u{0308}"), accent("ddot", sym("x")));   // ẍ
+    }
+
+    #[test]
+    fn accent_binds_tighter_than_scripts_and_operators() {
+        // `x̂²` is (x̂)² — the accent attaches to the base before the power.
+        assert_eq!(p("x\u{0302}\u{00B2}"), b(BinOp::Pow, accent("hat", sym("x")), num(2)));
+        // In a sum, only the marked glyph is decorated: `x̂ + y` = Accent(hat,x) + y.
+        assert_eq!(p("x\u{0302} + y"), b(BinOp::Add, accent("hat", sym("x")), sym("y")));
+        // A hatted x times y: `x̂y` ⇒ (x̂)·y.
+        assert_eq!(p("x\u{0302}y"), b(BinOp::Mul, accent("hat", sym("x")), sym("y")));
+    }
+
+    #[test]
+    fn leading_combining_mark_is_a_clean_error() {
+        // A combining mark with no base atom is a spanned error, never a panic (totality).
+        assert!(UnicodeMath.parse("\u{0302}").is_err());
     }
 
     // ---- operators / precedence / relations ------------------------------------
@@ -308,8 +345,9 @@ mod tests {
         assert!(c.big_operators); // PR-2: ∑ ∏ ∫ ∮ ∐
         assert!(c.functions);     // PR-3: sin/cos/log/… → Call
         assert!(c.matrices);      // PR-4: [[a,b],[c,d]]
-        // `text` is the last remaining gap (no Unicode equivalent); the rest are not AsciiMath's.
-        assert!(!c.text && !c.binomials && !c.accents && !c.oversets);
+        assert!(c.accents);       // combining diacritics x̂/v⃗/x̄/x̃/ẋ/ẍ → Accent
+        // `text` is the last remaining gap (no Unicode equivalent); the rest are not emitted.
+        assert!(!c.text && !c.binomials && !c.oversets);
     }
 
     #[test]
@@ -339,6 +377,8 @@ mod tests {
                 "log(x) + 1",   // function with a grouped argument
                 "arcsin x",     // longest-match function name
                 "[[a,b],[c,d]]", // matrix (PR-4)
+                "x̂",            // combining hat → Accent("hat", x)
+                "v⃗ + x̄",       // vec and bar accents in an expression
                 "[[a,b],[c]]",   // error: ragged matrix rows
                 "1 +",   // error: trailing operator
                 "(x",    // error: missing close
