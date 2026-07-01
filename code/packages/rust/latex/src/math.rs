@@ -319,18 +319,53 @@ fn xarrow_base(name: &str) -> Option<&'static str> {
         "xleftrightarrow" => "leftrightarrow",
         "xRightarrow" => "Rightarrow",
         "xLeftarrow" => "Leftarrow",
+        "xLeftrightarrow" => "Leftrightarrow",
         "xmapsto" => "mapsto",
         "xhookrightarrow" => "hookrightarrow",
         "xhookleftarrow" => "hookleftarrow",
+        // mathtools extensible harpoons — an arrow-like relation with a stretchable label, exactly
+        // like the xarrows, so they lower onto the same Overset/Underset stack over the plain harpoon.
+        "xrightharpoonup" => "rightharpoonup",
+        "xrightharpoondown" => "rightharpoondown",
+        "xleftharpoonup" => "leftharpoonup",
+        "xleftharpoondown" => "leftharpoondown",
+        "xrightleftharpoons" => "rightleftharpoons",
+        "xleftrightharpoons" => "leftrightharpoons",
         _ => return None,
     })
 }
-/// The horizontal-brace glyphs `\overbrace` / `\underbrace` lower onto (U+23DE TOP CURLY BRACKET /
-/// U+23DF BOTTOM CURLY BRACKET) — the standard Unicode over/under-brace, carried as a plain `Sym`
-/// so the existing `Overset`/`Underset` machinery (and its `to_latex`/frontend lowering) needs no
-/// change. See the `\overbrace`/`\underbrace` branch in [`Parser::parse_command`].
-const OVERBRACE: &str = "\u{23DE}";
-const UNDERBRACE: &str = "\u{23DF}";
+/// The horizontal-brace family — `\overbrace`/`\underbrace`, `\overparen`/`\underparen`,
+/// `\overgroup`/`\undergroup` — draws a stretchy brace / parenthesis / group bracket over (or under)
+/// its argument, optionally labelled by a trailing `^{label}` (over) or `_{label}` (under). Each
+/// lowers onto the existing `Overset`/`Underset` node over the corresponding Unicode top/bottom glyph
+/// (carried as a plain `Sym`), reusing the same machinery as `\overset` and the xarrows, so the
+/// neutral frontend lowering (and `to_latex` round-trip) needs no change. See the horizontal-brace
+/// branch in [`Parser::parse_command`].
+const OVERBRACE: &str = "\u{23DE}"; // ⏞ TOP CURLY BRACKET
+const UNDERBRACE: &str = "\u{23DF}"; // ⏟ BOTTOM CURLY BRACKET
+const OVERPAREN: &str = "\u{23DC}"; // ⏜ TOP PARENTHESIS
+const UNDERPAREN: &str = "\u{23DD}"; // ⏝ BOTTOM PARENTHESIS
+const OVERGROUP: &str = "\u{23E0}"; // ⏠ TOP TORTOISE SHELL BRACKET
+const UNDERGROUP: &str = "\u{23E1}"; // ⏡ BOTTOM TORTOISE SHELL BRACKET
+
+/// The over-brace-family accent glyph for a command drawn OVER its body (labelled by `^{…}`).
+fn over_accent_glyph(name: &str) -> Option<&'static str> {
+    Some(match name {
+        "overbrace" => OVERBRACE,
+        "overparen" => OVERPAREN,
+        "overgroup" => OVERGROUP,
+        _ => return None,
+    })
+}
+/// The under-brace-family accent glyph for a command drawn UNDER its body (labelled by `_{…}`).
+fn under_accent_glyph(name: &str) -> Option<&'static str> {
+    Some(match name {
+        "underbrace" => UNDERBRACE,
+        "underparen" => UNDERPAREN,
+        "undergroup" => UNDERGROUP,
+        _ => return None,
+    })
+}
 
 /// The stretchy over-arrow accents `\overrightarrow` / `\overleftarrow` / `\overleftrightarrow`
 /// (and harpoon variants) draw an arrow OVER their argument — exactly an annotation stacked on the
@@ -772,17 +807,18 @@ impl<'a> MathParser<'a> {
             let base = self.read_arg()?;
             return Ok(MathNode::Underset { under: Box::new(under), base: Box::new(base) });
         }
-        // `\overbrace{body}` / `\underbrace{body}` — a horizontal brace drawn over/under the body,
-        // optionally labelled by a trailing `^{label}` (overbrace) / `_{label}` (underbrace) that
-        // sits over/under the brace. We lower to the existing Overset/Underset nodes on the brace
-        // glyph (⏞ U+23DE / ⏟ U+23DF), reusing the same machinery as `\overset` and the xarrows, so
-        // the neutral frontend lowering needs no change. `\overbrace{x}` → `Overset{⏞, x}`;
-        // `\overbrace{x}^{n}` → `Overset{n, Overset{⏞, x}}` (label over brace over body).
-        if name == "overbrace" {
+        // The horizontal-brace family — `\overbrace`/`\overparen`/`\overgroup` (and the `under`
+        // counterparts) — a stretchy brace/paren/group bracket drawn over (under) the body,
+        // optionally labelled by a trailing `^{label}` (over) / `_{label}` (under) that sits over
+        // (under) the glyph. We lower to the existing Overset/Underset nodes on the glyph
+        // (see `over_accent_glyph`/`under_accent_glyph`), reusing the same machinery as `\overset` and
+        // the xarrows, so the neutral frontend lowering needs no change. `\overbrace{x}` →
+        // `Overset{⏞, x}`; `\overbrace{x}^{n}` → `Overset{n, Overset{⏞, x}}` (label over glyph over body).
+        if let Some(glyph) = over_accent_glyph(name) {
             self.bump();
             let body = self.read_arg()?;
             let braced = MathNode::Overset {
-                over: Box::new(MathNode::Sym(OVERBRACE.to_string())),
+                over: Box::new(MathNode::Sym(glyph.to_string())),
                 base: Box::new(body),
             };
             if matches!(self.peek().kind, TokenKind::Superscript) {
@@ -792,11 +828,11 @@ impl<'a> MathParser<'a> {
             }
             return Ok(braced);
         }
-        if name == "underbrace" {
+        if let Some(glyph) = under_accent_glyph(name) {
             self.bump();
             let body = self.read_arg()?;
             let braced = MathNode::Underset {
-                under: Box::new(MathNode::Sym(UNDERBRACE.to_string())),
+                under: Box::new(MathNode::Sym(glyph.to_string())),
                 base: Box::new(body),
             };
             if matches!(self.peek().kind, TokenKind::Subscript) {
@@ -1996,6 +2032,99 @@ mod tests {
         assert!(parse_math(r"\xrightarrow").is_err());
         assert!(parse_math(r"\xrightarrow[n]").is_err()); // optional present, mandatory missing
         assert!(parse_math(r"\xrightarrow[n{f}").is_err()); // unterminated optional label
+    }
+
+    #[test]
+    fn extensible_harpoons_lower_onto_their_harpoon_base() {
+        // The mathtools extensible harpoons behave exactly like the xarrows: label OVER the plain
+        // harpoon symbol. `\xrightleftharpoons{k}` ≡ Overset { over: k, base: ⇌ }.
+        for (src, base) in [
+            (r"\xrightharpoonup{k}", "rightharpoonup"),
+            (r"\xrightharpoondown{k}", "rightharpoondown"),
+            (r"\xleftharpoonup{k}", "leftharpoonup"),
+            (r"\xleftharpoondown{k}", "leftharpoondown"),
+            (r"\xrightleftharpoons{k}", "rightleftharpoons"),
+            (r"\xleftrightharpoons{k}", "leftrightharpoons"),
+            (r"\xLeftrightarrow{k}", "Leftrightarrow"),
+        ] {
+            match &parse_math(src).unwrap() {
+                MathNode::Overset { over, base: b } => {
+                    assert_eq!(**over, sym("k"), "label for {src:?}");
+                    assert_eq!(**b, sym(base), "base for {src:?}");
+                }
+                other => panic!("expected Overset for {src:?}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn extensible_harpoon_optional_below_label_is_an_underset() {
+        // Like the xarrows, an optional `[below]` group stacks under the harpoon.
+        let n = parse_math(r"\xrightleftharpoons[b]{a}").unwrap();
+        match &n {
+            MathNode::Underset { under, base } => {
+                assert_eq!(**under, sym("b"));
+                assert!(matches!(**base, MathNode::Overset { .. }));
+            }
+            other => panic!("expected Underset over Overset, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn over_and_under_paren_and_group_accents() {
+        // `\overparen`/`\overgroup` (and the `under` counterparts) draw a paren / group bracket over
+        // (under) the body, lowering onto Overset/Underset over the Unicode glyph — like `\overbrace`.
+        assert_eq!(
+            parse_math(r"\overparen{a+b}").unwrap(),
+            MathNode::Overset {
+                over: Box::new(sym(OVERPAREN)),
+                base: Box::new(MathNode::Bin(MBinOp::Add, Box::new(sym("a")), Box::new(sym("b")))),
+            }
+        );
+        assert_eq!(
+            parse_math(r"\underparen{x}").unwrap(),
+            MathNode::Underset { under: Box::new(sym(UNDERPAREN)), base: Box::new(sym("x")) }
+        );
+        assert_eq!(
+            parse_math(r"\overgroup{y}").unwrap(),
+            MathNode::Overset { over: Box::new(sym(OVERGROUP)), base: Box::new(sym("y")) }
+        );
+        assert_eq!(
+            parse_math(r"\undergroup{z}").unwrap(),
+            MathNode::Underset { under: Box::new(sym(UNDERGROUP)), base: Box::new(sym("z")) }
+        );
+    }
+
+    #[test]
+    fn over_paren_group_labels_stack_and_round_trip() {
+        // A trailing `^{label}` (over) / `_{label}` (under) sits over/under the glyph, like overbrace;
+        // and parse → to_latex → parse is a fixed point for the whole new family.
+        match &parse_math(r"\overparen{x+y}^{n}").unwrap() {
+            MathNode::Overset { over, base } => {
+                assert_eq!(**over, sym("n"));
+                assert!(matches!(**base, MathNode::Overset { .. }));
+            }
+            other => panic!("expected labelled Overset, got {other:?}"),
+        }
+        for src in [
+            r"\overparen{a+b}",
+            r"\underparen{x}",
+            r"\overgroup{y}^{k}",
+            r"\undergroup{z}_{m}",
+            r"\xrightleftharpoons{K}",
+            r"\xleftrightharpoons[b]{a}",
+        ] {
+            let once = parse_math(src).unwrap();
+            let twice = parse_math(&once.to_latex()).unwrap();
+            assert_eq!(once, twice, "round-trip changed the tree for {src:?}");
+        }
+    }
+
+    #[test]
+    fn over_under_accent_missing_body_is_a_spanned_error() {
+        // The `{body}` group is mandatory for the new accents — absence is a clean error, no panic.
+        assert!(parse_math(r"\overparen").is_err());
+        assert!(parse_math(r"\undergroup").is_err());
     }
 
     // ---- horizontal braces (\overbrace / \underbrace) --------------------------

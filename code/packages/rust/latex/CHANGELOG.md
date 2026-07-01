@@ -2,6 +2,28 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.21.0] — 2026-06-30
+
+### Added — more stretchy accents & extensible arrows (all onto the existing Overset/Underset node)
+
+- **Extensible harpoons** (mathtools) — `\xrightharpoonup`, `\xrightharpoondown`, `\xleftharpoonup`,
+  `\xleftharpoondown`, `\xrightleftharpoons`, `\xleftrightharpoons`, plus `\xLeftrightarrow`. These
+  are arrow-like relations with a stretchable label, so they lower **exactly like the xarrows**:
+  `\xrightleftharpoons{k}` → `Overset { over: k, base: ⇌ }`, and an optional `[below]` group stacks
+  under (`Underset`). Added to the `xarrow_base` table — no new machinery.
+- **Over/under paren & group accents** (amsmath/mathtools) — `\overparen`/`\underparen`,
+  `\overgroup`/`\undergroup`, alongside the existing `\overbrace`/`\underbrace`. Each draws a
+  stretchy parenthesis / group bracket over (under) the body and lowers onto `Overset`/`Underset`
+  over the Unicode top/bottom glyph (⏜ U+23DC / ⏝ U+23DD / ⏠ U+23E0 / ⏡ U+23E1), with an optional
+  trailing `^{label}` (over) / `_{label}` (under) stacked on the glyph — the same mechanism as
+  `\overbrace`. The two hardcoded brace branches were generalised into `over_accent_glyph` /
+  `under_accent_glyph` tables (behaviour-identical for the existing braces).
+- **No new AST node, no frontend change** — every command reuses the neutral `Overset`/`Underset`
+  nodes, so the `math-frontend` lowering and `to_latex` round-trip need no change (the surface
+  normalises to `\overset`/`\underset`, which re-parse to the identical tree). 6 new tests (harpoon
+  base mapping, harpoon `[below]` underset, the four paren/group accents, label stacking + round-trip
+  corpus, missing-body error). `adj-lang` (the only consumer) builds. `latex` 0.20.0 → 0.21.0.
+
 ## [0.20.0] — 2026-06-30
 
 ### Added — semicolon-separated fences lower to rows (matches MathML `<mfenced>` PR-5)
