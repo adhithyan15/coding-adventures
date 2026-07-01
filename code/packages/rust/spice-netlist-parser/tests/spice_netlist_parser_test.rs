@@ -22,6 +22,7 @@ use spice_netlist_parser::{
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_DIGEST_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANES_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TABS_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANELS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SUMMARY_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION,
@@ -4830,6 +4831,103 @@ C1 out 0 1p
         shell_dashboard_dispatch_queue_lane_tabs_payload["dispatchQueueLaneTabsCapabilityId"],
         "app-shell-dashboard-dispatch-queue-lane-tabs-json"
     );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panels = app
+        .run_app_shell_dashboard_dispatch_queue_lane_tab_panels(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("shell dashboard dispatch queue lane tab panels should execute");
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANELS_SCHEMA_VERSION
+    );
+    assert!(shell_dashboard_dispatch_queue_lane_tab_panels.ready);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels
+            .active_tab_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab.queued")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels
+            .active_panel_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab-panel.queued")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels
+            .attention_panel_id
+            .as_deref(),
+        None
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels.panel_count,
+        3
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels.enabled_panel_count,
+        2
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels.disabled_panel_count,
+        1
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels.empty_panel_count,
+        1
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels.panels[0].id,
+        "dashboard.dispatch-queue-lane-tab-panel.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels.panels[0].tab_id,
+        "dashboard.dispatch-queue-lane-tab.queued"
+    );
+    assert!(shell_dashboard_dispatch_queue_lane_tab_panels.panels[0].active);
+    assert!(!shell_dashboard_dispatch_queue_lane_tab_panels.panels[0].empty);
+    assert!(shell_dashboard_dispatch_queue_lane_tab_panels.panels[2].disabled);
+    assert!(shell_dashboard_dispatch_queue_lane_tab_panels.panels[2].empty);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels.panels[2]
+            .empty_message
+            .as_deref(),
+        Some("No attention dispatches")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels.dispatch_queue_lane_tab_panels_capability_id,
+        "app-shell-dashboard-dispatch-queue-lane-tab-panels-json"
+    );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panels_payload: serde_json::Value =
+        serde_json::from_str(
+            &app.run_app_shell_dashboard_dispatch_queue_lane_tab_panels_json(
+                BerkeleyAppPersistedEditorState {
+                    selected_syntax_card_index: Some(3),
+                    active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+                },
+            )
+            .unwrap(),
+        )
+        .expect("shell dashboard dispatch queue lane tab panels JSON should parse");
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels_payload["activePanelId"],
+        "dashboard.dispatch-queue-lane-tab-panel.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels_payload["panels"][0]["tabId"],
+        "dashboard.dispatch-queue-lane-tab.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels_payload["panels"][2]["emptyMessage"],
+        "No attention dispatches"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels_payload
+            ["dispatchQueueLaneTabPanelsCapabilityId"],
+        "app-shell-dashboard-dispatch-queue-lane-tab-panels-json"
+    );
 }
 
 #[test]
@@ -6731,6 +6829,91 @@ R1 in out
     assert_eq!(
         shell_dashboard_dispatch_queue_lane_tabs_payload["dispatchQueueLaneTabsCapabilityId"],
         "app-shell-dashboard-dispatch-queue-lane-tabs-json"
+    );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panels = app
+        .app_shell_dashboard_dispatch_queue_lane_tab_panels(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        });
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANELS_SCHEMA_VERSION
+    );
+    assert!(!shell_dashboard_dispatch_queue_lane_tab_panels.ready);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels
+            .active_panel_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab-panel.attention")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels
+            .attention_panel_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab-panel.attention")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels.panel_count,
+        3
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels.enabled_panel_count,
+        2
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels.disabled_panel_count,
+        1
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels.empty_panel_count,
+        1
+    );
+    assert!(shell_dashboard_dispatch_queue_lane_tab_panels.panels[2].active);
+    assert!(shell_dashboard_dispatch_queue_lane_tab_panels.panels[2].attention);
+    assert!(shell_dashboard_dispatch_queue_lane_tab_panels.panels[1].disabled);
+    assert!(shell_dashboard_dispatch_queue_lane_tab_panels.panels[1].empty);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels.panels[1]
+            .empty_message
+            .as_deref(),
+        Some("No blocked dispatches")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels.dispatch_queue_lane_tab_panels_capability_id,
+        "app-shell-dashboard-dispatch-queue-lane-tab-panels-json"
+    );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panels_payload: serde_json::Value =
+        serde_json::from_str(
+            &app.app_shell_dashboard_dispatch_queue_lane_tab_panels_json(
+                BerkeleyAppPersistedEditorState {
+                    selected_syntax_card_index: Some(2),
+                    active_command_id: Some("analysis.2.run".to_string()),
+                },
+            ),
+        )
+        .expect("blocked shell dashboard dispatch queue lane tab panels JSON should parse");
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels_payload["activePanelId"],
+        "dashboard.dispatch-queue-lane-tab-panel.attention"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels_payload["attentionPanelId"],
+        "dashboard.dispatch-queue-lane-tab-panel.attention"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels_payload["panels"][1]["empty"],
+        true
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels_payload["panels"][2]["attention"],
+        true
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panels_payload
+            ["dispatchQueueLaneTabPanelsCapabilityId"],
+        "app-shell-dashboard-dispatch-queue-lane-tab-panels-json"
     );
 }
 
