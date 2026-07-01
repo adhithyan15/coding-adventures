@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.17.0] - 2026-06-30
+
+### Added — CV tombstones for constant-condition ternary collapse (#89 follow-up)
+
+Closes the second and final follow-up noted in 0.15.0 (the first, block dead-code,
+landed in 0.16.0). When `fold_conditional` collapses a `cond ? c : a` whose
+`cond` is a literal, the unreachable arm — an **`Expression`**, not a statement —
+is now tombstoned via the existing `record_fold_deleting`, matching what the
+`if`/`while` branch eliminations already do:
+
+- `(<truthy literal>) ? c : a` → `c` — the **`a`** (alternate) arm is tombstoned;
+- `(<falsy literal>)  ? c : a` → `a` — the **`c`** (consequent) arm is tombstoned.
+
+New helper `expression_cv` (the `Expression` analogue of `statement_cv`) — an
+exhaustive match over all 16 expression variants, so a new expression kind fails
+to compile rather than silently losing provenance.
+
+The `de-morgan-swap-not-ternary` rewrite (`!x ? c : a` → `x ? a : c`) deliberately
+does NOT tombstone — both arms are preserved, just swapped — and keeps plain
+`record_fold`.
+
+Byte-for-byte identical AST output; only the CV log gains the deletion records.
+`delete` is a no-op when the log is disabled (production default). Two new tests
+(true-arm and false-arm tombstoning). 38 unit + 13 upstream all green. Crate
+0.16.0 → 0.17.0. With this, **every** elimination site in the pass records
+deletion provenance.
+
 ## [0.16.0] - 2026-06-30
 
 ### Added — CV tombstones for block dead-code-after-terminator (#89 follow-up)
