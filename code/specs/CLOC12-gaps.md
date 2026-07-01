@@ -1168,3 +1168,26 @@ historical context with status `RESOLVED` and a link to the fix PR.
     Array#join.
   - **gap-143** — fold `String#concat` with **non-string (coerced) args**
     (`"x".concat(1, 2)` → `"x12"`). Our concat fold handles string args only.
+
+## CLOC12.142 — CodePrinter number-formatting port (emitter)
+
+- **What it is:** the ninth CLOC12 upstream port and the second into
+  `closure-emitter` (alongside the CodePrinter core / declarations /
+  trailing-comma ports). New file
+  `tests/upstream/code_printer_numbers_test.rs`, registered as the
+  `upstream_code_printer_numbers` test target. It reshapes upstream
+  `CodePrinterTest.java`'s number-printing assertions onto our AST surface
+  (a `NumericLiteral` emitted as a single expression-statement) and pins the
+  **exponential-vs-decimal cut-over** in `format_js_number`: the emitter forms
+  the plain-decimal and the uppercase-`E` exponential spellings and keeps
+  whichever is strictly shorter, breaking ties toward decimal.
+- **6 active `#[test]`s pass on the first run** (no new emitter bug): `1e18` →
+  `1E18`, `1e100` → `1E100`, `2.5e10` → `2.5E10`, `123456789` stays decimal
+  (its `1.23456789E8` spelling is longer), `1e-7` → `1E-7`, and `1234.5` stays
+  decimal.
+- **2 `#[ignore = "blocked on gap-133"]` placeholders** pin the leading-zero
+  drop upstream applies to bare fractions (`0.25` → `.25`, `0.125` → `.125`).
+  These exercise the **emitter** path (`format_js_number`, AST → string), which
+  still keeps the `0` — distinct from the source-preserving byte-identity path
+  that already elides it (gap-107 / gap-113). No new gap number is opened; the
+  placeholders reference the existing **gap-133** from CLOC12.138.
