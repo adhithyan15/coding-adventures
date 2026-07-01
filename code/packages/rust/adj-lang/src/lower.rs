@@ -715,6 +715,7 @@ fn lower_arith_op(op: ArithOp) -> ComputeOp {
         ArithOp::Sub => ComputeOp::Sub,
         ArithOp::Mul => ComputeOp::Mul,
         ArithOp::Div => ComputeOp::Div,
+        ArithOp::Pow => ComputeOp::Pow,
     }
 }
 
@@ -1731,10 +1732,29 @@ contributes 1000000 from answer == 60 to correct
             compile("symbol x : scalar\nconstrain latex \"$x^2 = 4$\"\nsolve for { x }\n").unwrap();
         let c = &lowered.constraints.constraints[0];
         assert_eq!(c.op, crate::ast::RelOp::Eq);
+        // `x^2` now lowers to a single native power node (ComputeOp::Pow), not the
+        // old `x*x` expansion; the constraint solver's polynomial path still reads
+        // it as a quadratic (see adj-constraint-solver `poly_of`).
         assert!(matches!(
             c.lhs,
-            logic_engine::ComputeExpr::Bin(logic_engine::ComputeOp::Mul, _, _)
+            logic_engine::ComputeExpr::Bin(logic_engine::ComputeOp::Pow, _, _)
         ));
+    }
+
+    #[test]
+    fn native_latex_power_computes_as_one_node_without_the_old_cap() {
+        // `x^{10}` used to be rejected (expansion capped at exponent 8); it now
+        // lowers to a single ComputeOp::Pow node and computes: 2^10 = 1024.
+        // (A single-letter symbol — LaTeX math reads `base` as b·a·s·e.)
+        let d = crate::compile_and_decide(
+            "observe x(2)\n\
+             let answer = latex \"$x^{10}$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 1024 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
     }
 
     #[test]

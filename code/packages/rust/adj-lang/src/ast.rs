@@ -77,6 +77,10 @@ pub enum ArithOp {
     Sub,
     Mul,
     Div,
+    /// Exponentiation, `base ^ exponent`. Produced by the `latex "…"` adapter
+    /// for `x^n` (lowered to `logic_engine::ComputeOp::Pow`); the surface
+    /// arithmetic grammar does not yet spell `^` directly.
+    Pow,
 }
 
 /// An aggregation operator in a `let` formula — reduces every

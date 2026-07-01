@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.11.0] - 2026-07-01 — polynomial path reads `ComputeOp::Pow`
+
+### Changed
+
+- `poly_of` (the univariate-polynomial recogniser behind the nonlinear root
+  tactic) now understands `ComputeOp::Pow(base, n)` for a **constant
+  non-negative integer** exponent `n`: it folds `base` into a polynomial `n`
+  times (`base^0 = 1`). This keeps `constrain latex "$x^2 = 4$"` solving as a
+  quadratic (→ {±2}) — and `x^3`, `x^4` as cubics/quartics — now that the
+  adj-lang latex adapter lowers `x^n` to a native `Pow` node rather than an
+  `x*x*…` expansion (adj-lang 0.20.0). A symbolic or fractional exponent is
+  (as before) not polynomial → the constraint is treated as non-linear.
+- `n` is bounded by `MAX_POLY_POW` (64) so a pathological `x^{huge}` cannot
+  balloon the coefficient vector; the univariate solvers cover only degree ≤ 4,
+  so the cap loses nothing real.
+
 ## [0.10.0] - 2026-06-14 — general boolean-clause recognizer (n-ary combinations scale)
 
 ### Added / Changed

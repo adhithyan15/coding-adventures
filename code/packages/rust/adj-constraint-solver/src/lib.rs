@@ -2001,6 +2001,12 @@ fn substitute_observed(
 /// (`p[0] + p[1]·x + p[2]·x² + …`).
 type Poly = Vec<f64>;
 
+/// The largest constant integer exponent [`poly_of`] will expand a `base ^ n`
+/// into (repeated multiplication). The univariate root solvers cover only
+/// degree ≤ 4, so this bound is generous; it exists purely to stop an
+/// adversarial `x^{huge}` from allocating an enormous coefficient vector.
+const MAX_POLY_POW: f64 = 64.0;
+
 /// Build the polynomial of `e` in the single unknown `x`, or `None` if `e`
 /// isn't a polynomial in `x` (e.g. division *by* `x`, an aggregation, or a free
 /// reference — observed refs have already been substituted to literals).
@@ -2023,6 +2029,42 @@ fn poly_of(e: &ComputeExpr, x: &str) -> Option<Poly> {
                     } else {
                         None
                     }
+                }
+                // `base ^ n` is a polynomial iff the exponent is a constant
+                // **non-negative integer** (`ComputeOp::Pow` from a LaTeX `x^n`):
+                // then it is `base` multiplied by itself `n` times (`base^0 = 1`),
+                // so a latex `x^2 = 4` still solves as a quadratic, `x^3` as a
+                // cubic, etc. A symbolic or fractional exponent is not polynomial.
+                // `n` is capped at `MAX_POLY_POW` so a pathological `x^{10^9}`
+                // cannot balloon the coefficient vector (the univariate solvers
+                // handle only degree ≤ 4 anyway, so the cap loses nothing real).
+                ComputeOp::Pow => {
+                    if poly_degree(&pb) != 0 {
+                        return None;
+                    }
+                    let n = pb[0];
+                    if !(n.is_finite() && n.fract() == 0.0 && (0.0..=MAX_POLY_POW).contains(&n)) {
+                        return None;
+                    }
+                    // Cap the CUMULATIVE result degree, not just this exponent:
+                    // `pa` may itself be a high-degree polynomial from an inner
+                    // power, so nested powers like `(((x^64)^64)^64)` would
+                    // otherwise compound (64 → 4096 → 262144 → …), ballooning the
+                    // coefficient vector (`poly_mul` is O(len²)). The base degree
+                    // times `n` must stay within `MAX_POLY_POW`; a constant base
+                    // has degree 0 so `c^n` still expands cheaply.
+                    let base_deg = poly_degree(&pa);
+                    if base_deg
+                        .checked_mul(n as usize)
+                        .is_none_or(|d| (d as f64) > MAX_POLY_POW)
+                    {
+                        return None;
+                    }
+                    let mut acc = vec![1.0];
+                    for _ in 0..(n as u32) {
+                        acc = poly_mul(&acc, &pa);
+                    }
+                    Some(acc)
                 }
                 _ => None,
             }
@@ -2407,6 +2449,46 @@ mod tests {
             SolveOutcome::SolvedRoots { roots, .. } => roots.clone(),
             other => panic!("expected SolvedRoots, got {other:?}"),
         }
+    }
+
+    #[test]
+    fn quadratic_via_latex_power_still_solves() {
+        // `constrain latex "$x^2 = 4$"` now lowers to a native ComputeOp::Pow
+        // node (not `x*x`); the polynomial path must still read it as a quadratic
+        // and find {±2}. Guards against a regression from the Pow rewrite.
+        let r = roots(&solve_src(
+            "symbol x : scalar\nconstrain latex \"$x^2 = 4$\"\nsolve for { x }\n",
+        ));
+        assert_eq!(r.len(), 2);
+        assert!((r[0] - -2.0).abs() < 1e-6, "{r:?}");
+        assert!((r[1] - 2.0).abs() < 1e-6, "{r:?}");
+    }
+
+    #[test]
+    fn cubic_via_latex_power_still_solves() {
+        // A latex `x^3` lowers to Pow too; the cubic solver still finds the root.
+        let r = roots(&solve_src(
+            "symbol x : scalar\nconstrain latex \"$x^3 = 8$\"\nsolve for { x }\n",
+        ));
+        assert!(r.iter().any(|v| (v - 2.0).abs() < 1e-6), "{r:?}");
+    }
+
+    #[test]
+    fn nested_powers_do_not_explode_the_polynomial_degree() {
+        // `(((x^64)^64)^64) = 1` would compound to degree ~262144+ without the
+        // cumulative-degree cap. It must return quickly as Unknown (not solved,
+        // not hung) — the constraint is simply not treated as a small polynomial.
+        let out = solve_src(
+            "symbol x : scalar\n\
+             constrain latex \"$((x^{64})^{64})^{64} = 1$\"\n\
+             solve for { x }\n",
+        );
+        // Any non-panicking, promptly-returned outcome is acceptable; it must not
+        // be a solved low-degree polynomial (the degree is far beyond the cap).
+        assert!(
+            !matches!(out, SolveOutcome::SolvedRoots { .. }),
+            "nested powers must not be expanded into a solvable polynomial: {out:?}"
+        );
     }
 
     #[test]

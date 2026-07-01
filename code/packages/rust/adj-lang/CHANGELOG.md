@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.20.0] - 2026-07-01 — native `^` power in `latex "…"` (emit `ComputeOp::Pow`)
+
+### Changed
+
+- The `latex "…"` adapter now lowers `x^n` to a **single native power node**
+  (`ArithOp::Pow` → `logic_engine::ComputeOp::Pow`) instead of expanding it to a
+  parse-time `x*x*…` chain. Two consequences:
+  - The old **integer-exponent cap (0–8) is gone** — `latex "$x^{10}$"` (and
+    higher) now compute; the engine computes the power and applies its own
+    dimensional / overflow (`NonFinite`) rules.
+  - The derivation tree shows one `^` step rather than a multiplication chain.
+  The exponent must still be a **non-negative integer literal** (a symbolic
+  exponent like `x^y` remains unsupported on this surface — a later slice).
+- Added `ArithOp::Pow` to the `let`-formula AST (produced only by the latex
+  adapter; the surface arithmetic grammar does not yet spell `^`). Removed the
+  now-unused `expand_power` helper.
+
+### Notes
+
+- A latex `x^2 = 4` constraint still solves as a quadratic: the constraint
+  solver's polynomial recogniser was taught to read `ComputeOp::Pow` (see
+  adj-constraint-solver 0.11.0), so no solving capability regresses.
+
 ## [0.19.0] - 2026-06-27 — predicate RHS expressions
 
 ### Added
