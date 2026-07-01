@@ -372,6 +372,7 @@ members = [
     "sql-csv-source",
     "sql-backend",
     "sql-planner",
+    "sql-optimizer",
     "ean-13",
     "epoll",
     "macos-job-backend-launchd-files",
