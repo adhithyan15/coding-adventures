@@ -561,22 +561,38 @@ def decision_leader_to_letter(
     Probability-decision rungs ask the model to emit priors, likelihood-ratio
     contributions, observations, and queries. ADJ owns the posterior ranking; the
     harness only maps `decision.leader` to the printed categorical choices.
+
+    A `determinate` decision names a winning hypothesis → that option's letter. A
+    `kickback` decision is the engine DECLINING to commit — the top two hypotheses are
+    tied on posterior log-odds, so the evidence does not distinguish them. When the rung
+    supplies a `tie_label`, that indeterminacy IS the answer (an "insufficient
+    information" option), so the engine's own honest abstention is surfaced as a positive
+    choice rather than a silent miss. Without a `tie_label`, a kickback (like any
+    non-determinate decision) stays an abstention — returns None — so every existing
+    decision rung is unaffected.
     """
     if not doc or not answer_from or answer_from.get("type") != "decision_leader":
         return None
     if not program_requirements_hold(doc, answer_from):
         return None
     decision = doc.get("decision")
-    if not isinstance(decision, dict) or decision.get("type") != "determinate":
+    if not isinstance(decision, dict):
         return None
-    leader = decision.get("leader")
-    if not isinstance(leader, str):
-        return None
+    dtype = decision.get("type")
     labels = answer_from.get("labels") or {}
-    label = labels.get(leader, leader)
-    if not isinstance(label, str):
-        return None
-    return _letter_for_engine_label(label, options)
+    if dtype == "determinate":
+        leader = decision.get("leader")
+        if not isinstance(leader, str):
+            return None
+        label = labels.get(leader, leader)
+        if not isinstance(label, str):
+            return None
+        return _letter_for_engine_label(label, options)
+    if dtype == "kickback":
+        tie_label = answer_from.get("tie_label")
+        if isinstance(tie_label, str):
+            return _letter_for_engine_label(tie_label, options)
+    return None
 
 
 def compute_dimensioned_to_letter(

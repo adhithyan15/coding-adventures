@@ -51,6 +51,7 @@ SELF_CONTAINED_RUNGS = (
     "rung11_syndromic_decision",
     "rung12_threshold_decision",
     "rung13_transtubular_gradient",
+    "rung14_indeterminate_decision",
 )
 
 
@@ -807,6 +808,43 @@ def test_probability_decision_program_maps_engine_leader_to_label_option():
             "E": "unknown",
         },
     ) == "A"
+
+
+def test_tied_decision_maps_kickback_to_tie_label_option():
+    """rung-14: two equally-supported hypotheses → the engine kicks back, and with a
+    `tie_label` the harness surfaces that abstention as the 'insufficient information' option."""
+    if le._CLI is None:
+        pytest.skip("adj-lang-cli not built")
+    program = (
+        "prior 0.2 for alpha\n"
+        "prior 0.2 for beta\n"
+        "prior 0.2 for gamma\n"
+        "prior 0.2 for delta\n"
+        "contributes 5 from clue_a to alpha\n"
+        "contributes 5 from clue_b to beta\n"
+        "observe clue_a\n"
+        "observe clue_b\n"
+        "? alpha\n? beta\n? gamma\n? delta\n"
+    )
+    doc = le.run_program(program)
+    # The engine must report a genuine tie (kickback), not a determinate leader.
+    assert isinstance(doc, dict) and doc.get("decision", {}).get("type") == "kickback"
+    options = {
+        "A": "alpha",
+        "B": "beta",
+        "C": "gamma",
+        "D": "delta",
+        "E": "insufficient information to distinguish",
+    }
+    # With a tie_label the kickback resolves to the abstention option E …
+    assert le.program_answer_to_letter(
+        doc,
+        {"type": "decision_leader", "tie_label": "insufficient information to distinguish"},
+        options,
+    ) == "E"
+    # … and WITHOUT a tie_label the same kickback stays an abstention (None), preserving
+    # every existing decision rung's behaviour.
+    assert le.program_answer_to_letter(doc, {"type": "decision_leader"}, options) is None
 
 
 def test_derived_probability_decision_requires_evidence_proof():
