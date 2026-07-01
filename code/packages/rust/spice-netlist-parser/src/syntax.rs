@@ -44,6 +44,7 @@ pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SUMMARY_SCHEMA_VERSION: u3
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_DIGEST_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANES_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TABS_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANELS_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -103,6 +104,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-dashboard-dispatch-queue-digest-json",
     "app-shell-dashboard-dispatch-queue-lanes-json",
     "app-shell-dashboard-dispatch-queue-lane-tabs-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panels-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -4190,6 +4192,156 @@ impl BerkeleyAppShellDashboardDispatchQueueLaneTabs {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanel {
+    pub id: String,
+    pub tab_id: String,
+    pub lane_id: String,
+    pub title: String,
+    pub queue_state: String,
+    pub severity: String,
+    pub dispatch_queue_item_count: usize,
+    pub selected: bool,
+    pub default_dispatch: bool,
+    pub active: bool,
+    pub attention: bool,
+    pub disabled: bool,
+    pub empty: bool,
+    pub empty_message: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanels {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub active_lane_id: Option<String>,
+    pub active_tab_id: Option<String>,
+    pub active_panel_id: Option<String>,
+    pub attention_lane_id: Option<String>,
+    pub attention_tab_id: Option<String>,
+    pub attention_panel_id: Option<String>,
+    pub lane_count: usize,
+    pub tab_count: usize,
+    pub enabled_tab_count: usize,
+    pub disabled_tab_count: usize,
+    pub panel_count: usize,
+    pub enabled_panel_count: usize,
+    pub disabled_panel_count: usize,
+    pub empty_panel_count: usize,
+    pub panels: Vec<BerkeleyAppShellDashboardDispatchQueueLaneTabPanel>,
+    pub dispatch_queue_capability_id: String,
+    pub dispatch_queue_summary_capability_id: String,
+    pub dispatch_queue_digest_capability_id: String,
+    pub dispatch_queue_lanes_capability_id: String,
+    pub dispatch_queue_lane_tabs_capability_id: String,
+    pub dispatch_queue_lane_tab_panels_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanels {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_lane_tabs(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabs::from_bootstrap_snapshot(snapshot),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_lane_tabs(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabs::from_shell_handoff(handoff),
+        )
+    }
+
+    pub fn from_lane_tabs(tabs: &BerkeleyAppShellDashboardDispatchQueueLaneTabs) -> Self {
+        let panels = tabs
+            .tabs
+            .iter()
+            .map(|tab| {
+                let panel_id_suffix = tab
+                    .id
+                    .strip_prefix("dashboard.dispatch-queue-lane-tab.")
+                    .unwrap_or(tab.queue_state.as_str());
+                let empty = tab.dispatch_queue_item_count == 0;
+                BerkeleyAppShellDashboardDispatchQueueLaneTabPanel {
+                    id: format!("dashboard.dispatch-queue-lane-tab-panel.{panel_id_suffix}"),
+                    tab_id: tab.id.clone(),
+                    lane_id: tab.lane_id.clone(),
+                    title: tab.title.clone(),
+                    queue_state: tab.queue_state.clone(),
+                    severity: tab.severity.clone(),
+                    dispatch_queue_item_count: tab.dispatch_queue_item_count,
+                    selected: tab.selected,
+                    default_dispatch: tab.default_dispatch,
+                    active: tab.active,
+                    attention: tab.attention,
+                    disabled: tab.disabled,
+                    empty,
+                    empty_message: empty.then(|| format!("No {} dispatches", tab.queue_state)),
+                }
+            })
+            .collect::<Vec<_>>();
+        let active_panel_id = panels
+            .iter()
+            .find(|panel| panel.active)
+            .map(|panel| panel.id.clone());
+        let attention_panel_id = tabs.attention_tab_id.as_ref().and_then(|attention_tab_id| {
+            panels
+                .iter()
+                .find(|panel| panel.tab_id == attention_tab_id.as_str())
+                .map(|panel| panel.id.clone())
+        });
+        let enabled_panel_count = panels.iter().filter(|panel| !panel.disabled).count();
+        let disabled_panel_count = panels.len().saturating_sub(enabled_panel_count);
+        let empty_panel_count = panels.iter().filter(|panel| panel.empty).count();
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANELS_SCHEMA_VERSION,
+            package_name: tabs.package_name.clone(),
+            source_fingerprint: tabs.source_fingerprint.clone(),
+            title: tabs.title.clone(),
+            startup_route: tabs.startup_route.clone(),
+            ready: tabs.ready,
+            severity: tabs.severity.clone(),
+            attention_required: tabs.attention_required,
+            active_lane_id: tabs.active_lane_id.clone(),
+            active_tab_id: tabs.active_tab_id.clone(),
+            active_panel_id,
+            attention_lane_id: tabs.attention_lane_id.clone(),
+            attention_tab_id: tabs.attention_tab_id.clone(),
+            attention_panel_id,
+            lane_count: tabs.lane_count,
+            tab_count: tabs.tab_count,
+            enabled_tab_count: tabs.enabled_tab_count,
+            disabled_tab_count: tabs.disabled_tab_count,
+            panel_count: panels.len(),
+            enabled_panel_count,
+            disabled_panel_count,
+            empty_panel_count,
+            panels,
+            dispatch_queue_capability_id: tabs.dispatch_queue_capability_id.clone(),
+            dispatch_queue_summary_capability_id: tabs.dispatch_queue_summary_capability_id.clone(),
+            dispatch_queue_digest_capability_id: tabs.dispatch_queue_digest_capability_id.clone(),
+            dispatch_queue_lanes_capability_id: tabs.dispatch_queue_lanes_capability_id.clone(),
+            dispatch_queue_lane_tabs_capability_id: tabs
+                .dispatch_queue_lane_tabs_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panels_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panels-json".to_string(),
+            artifact_capability_count: tabs.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panels_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BerkeleyAnalysisInventoryEntry {
     pub index: usize,
     pub directive: String,
@@ -5702,6 +5854,43 @@ impl BerkeleyAppDeck {
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self
             .run_app_shell_dashboard_dispatch_queue_lane_tabs(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panels(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanels {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanels::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panels(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardDispatchQueueLaneTabPanels, AnalysisExecutionError> {
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanels::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panels_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panels(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panels_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panels(persisted_state)?
             .to_json())
     }
 
@@ -8144,6 +8333,68 @@ fn app_shell_dashboard_dispatch_queue_lane_tab_json_value(
         "active": tab.active,
         "attention": tab.attention,
         "disabled": tab.disabled,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panels_json_value(
+    panels: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanels,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": panels.schema_version,
+        "packageName": &panels.package_name,
+        "sourceFingerprint": &panels.source_fingerprint,
+        "title": &panels.title,
+        "startupRoute": &panels.startup_route,
+        "ready": panels.ready,
+        "severity": &panels.severity,
+        "attentionRequired": panels.attention_required,
+        "activeLaneId": &panels.active_lane_id,
+        "activeTabId": &panels.active_tab_id,
+        "activePanelId": &panels.active_panel_id,
+        "attentionLaneId": &panels.attention_lane_id,
+        "attentionTabId": &panels.attention_tab_id,
+        "attentionPanelId": &panels.attention_panel_id,
+        "laneCount": panels.lane_count,
+        "tabCount": panels.tab_count,
+        "enabledTabCount": panels.enabled_tab_count,
+        "disabledTabCount": panels.disabled_tab_count,
+        "panelCount": panels.panel_count,
+        "enabledPanelCount": panels.enabled_panel_count,
+        "disabledPanelCount": panels.disabled_panel_count,
+        "emptyPanelCount": panels.empty_panel_count,
+        "panels": panels
+            .panels
+            .iter()
+            .map(app_shell_dashboard_dispatch_queue_lane_tab_panel_json_value)
+            .collect::<Vec<_>>(),
+        "dispatchQueueCapabilityId": &panels.dispatch_queue_capability_id,
+        "dispatchQueueSummaryCapabilityId": &panels.dispatch_queue_summary_capability_id,
+        "dispatchQueueDigestCapabilityId": &panels.dispatch_queue_digest_capability_id,
+        "dispatchQueueLanesCapabilityId": &panels.dispatch_queue_lanes_capability_id,
+        "dispatchQueueLaneTabsCapabilityId": &panels.dispatch_queue_lane_tabs_capability_id,
+        "dispatchQueueLaneTabPanelsCapabilityId": &panels.dispatch_queue_lane_tab_panels_capability_id,
+        "artifactCapabilityCount": panels.artifact_capability_count,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_json_value(
+    panel: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanel,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &panel.id,
+        "tabId": &panel.tab_id,
+        "laneId": &panel.lane_id,
+        "title": &panel.title,
+        "queueState": &panel.queue_state,
+        "severity": &panel.severity,
+        "dispatchQueueItemCount": panel.dispatch_queue_item_count,
+        "selected": panel.selected,
+        "defaultDispatch": panel.default_dispatch,
+        "active": panel.active,
+        "attention": panel.attention,
+        "disabled": panel.disabled,
+        "empty": panel.empty,
+        "emptyMessage": &panel.empty_message,
     })
 }
 
