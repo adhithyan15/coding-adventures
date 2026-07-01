@@ -1,2 +1,6 @@
-packages:
-  .
+packages: .
+           ../sql-backend
+           ../sql-planner
+           ../sql-optimizer
+           ../sql-codegen
+           ../sql-vm

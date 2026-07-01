@@ -398,6 +398,13 @@ data Instruction
     --   Nothing means "no limit" or "no offset" respectively.
     | LimitResult (Maybe Int64) (Maybe Int64)
 
+    -- | Call a built-in scalar function with `arity` arguments already on the
+    --   stack (rightmost argument was pushed last).  Pop the arguments, apply
+    --   the function, and push the result.
+    --   Examples: LENGTH(s) → CallBuiltin "length" 1
+    --             SUBSTR(s,p,n) → CallBuiltin "substr" 3
+    | CallBuiltin String Int
+
     deriving (Show, Eq)
 
 -- ── Program — the compiled output ────────────────────────────────────────
@@ -560,10 +567,12 @@ compileExpr expr = case expr of
         [LoadNull]
 
     -- ── Function calls ────────────────────────────────────────────────────
-    -- SQL scalar functions compile each argument onto the stack.
-    -- For Level 1, unknown scalar functions return NULL as a placeholder.
-    P.FuncCall _ args ->
-        concatMap compileExpr args ++ [LoadNull]
+    -- Compile each argument onto the stack, then emit a CallBuiltin
+    -- instruction naming the function and its arity.  The VM dispatches to
+    -- a table of built-in scalar functions (LENGTH, UPPER, LOWER, …).
+    -- Unknown function names produce NULL at runtime (the VM falls through).
+    P.FuncCall name args ->
+        concatMap compileExpr args ++ [CallBuiltin name (length args)]
 
     -- ── Wildcard ─────────────────────────────────────────────────────────
     -- SELECT * is handled at the plan level; bare Wildcard pushes NULL.

@@ -1,6 +1,6 @@
 cabal-version: 3.0
 name:          sql-codegen
-version:       0.1.0.0
+version:       0.1.1.0
 synopsis:      Haskell bytecode code generator for Mini-SQLite Level 1
 description:
     Transforms an OptimizedPlan (produced by sql-optimizer) into a flat list

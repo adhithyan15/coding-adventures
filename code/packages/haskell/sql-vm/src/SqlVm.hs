@@ -59,14 +59,16 @@
 module SqlVm
     ( QueryResult(..)
     , execute
+    , executeWithRef
     ) where
 
+import Control.Exception (throwIO)
 import Control.Monad (forM_, replicateM, unless, when)
 import Control.Monad.State.Strict
-import Data.Char (toLower)
+import Data.Char (isSpace, toLower, toUpper)
 import Data.Int (Int64)
 import Data.IORef
-import Data.List (nub, sortBy)
+import Data.List (dropWhileEnd, isPrefixOf, nub, sortBy)
 import qualified Data.Map.Strict as Map
 import Data.Maybe (fromMaybe, mapMaybe)
 
@@ -537,6 +539,124 @@ evalUnary Not SqlNull      = SqlNull
 evalUnary Not (SqlBool b)  = SqlBool (not b)
 evalUnary Not _            = SqlNull
 
+-- ── Built-in scalar function evaluation ──────────────────────────────────
+--
+-- This mirrors the mini-sqlite `evalScalarFunc` but lives in the VM so that
+-- function calls inside FROM-clause queries (e.g. LOWER(col)) work correctly.
+-- The argument list is in left-to-right order (first arg first).
+
+evalBuiltin :: String -> [SqlValue] -> SqlValue
+evalBuiltin "length" [SqlNull]   = SqlNull
+evalBuiltin "length" [SqlText s] = SqlInteger (fromIntegral (length s))
+evalBuiltin "length" _           = SqlNull
+
+evalBuiltin "upper" [SqlNull]   = SqlNull
+evalBuiltin "upper" [SqlText s] = SqlText (map toUpper s)
+evalBuiltin "upper" _           = SqlNull
+
+evalBuiltin "lower" [SqlNull]   = SqlNull
+evalBuiltin "lower" [SqlText s] = SqlText (map toLower s)
+evalBuiltin "lower" _           = SqlNull
+
+evalBuiltin "substr" [SqlNull, _] = SqlNull
+evalBuiltin "substr" [_, SqlNull] = SqlNull
+evalBuiltin "substr" [SqlText s, SqlInteger pos] =
+    let start = fromIntegral pos - 1
+    in SqlText (drop (max 0 start) s)
+evalBuiltin "substr" [SqlText s, SqlInteger pos, SqlInteger len] =
+    let start = fromIntegral pos - 1
+    in SqlText (take (fromIntegral len) (drop (max 0 start) s))
+evalBuiltin "substr" _ = SqlNull
+
+evalBuiltin "trim"  [SqlNull]   = SqlNull
+evalBuiltin "trim"  [SqlText s] = SqlText (dropWhileEnd isSpace (dropWhile isSpace s))
+evalBuiltin "trim"  _           = SqlNull
+
+evalBuiltin "ltrim" [SqlNull]   = SqlNull
+evalBuiltin "ltrim" [SqlText s] = SqlText (dropWhile isSpace s)
+evalBuiltin "ltrim" _           = SqlNull
+
+evalBuiltin "rtrim" [SqlNull]   = SqlNull
+evalBuiltin "rtrim" [SqlText s] = SqlText (dropWhileEnd isSpace s)
+evalBuiltin "rtrim" _           = SqlNull
+
+evalBuiltin "replace" [SqlNull, _, _] = SqlNull
+evalBuiltin "replace" [SqlText s, SqlText from, SqlText to] =
+    SqlText (replaceAllVm from to s)
+evalBuiltin "replace" _ = SqlNull
+
+evalBuiltin "abs" [SqlNull]        = SqlNull
+evalBuiltin "abs" [SqlInteger n]   = SqlInteger (abs n)
+evalBuiltin "abs" [SqlReal    d]   = SqlReal    (abs d)
+evalBuiltin "abs" _                = SqlNull
+
+evalBuiltin "concat" [SqlNull, _]  = SqlNull
+evalBuiltin "concat" [_, SqlNull]  = SqlNull
+evalBuiltin "concat" [a, b]        = SqlText (sqlToStr a ++ sqlToStr b)
+evalBuiltin "concat" _             = SqlNull
+
+evalBuiltin "coalesce" args =
+    case filter (/= SqlNull) args of
+        (x:_) -> x
+        []    -> SqlNull
+
+evalBuiltin "ifnull" [SqlNull, b] = b
+evalBuiltin "ifnull" [a, _]       = a
+evalBuiltin "ifnull" _            = SqlNull
+
+evalBuiltin "round" [SqlNull]        = SqlNull
+evalBuiltin "round" [SqlInteger n]   = SqlReal (fromIntegral n)
+evalBuiltin "round" [SqlReal    d]   = SqlReal (roundHalfAwayVm d 0)
+evalBuiltin "round" [SqlInteger n, SqlInteger p] =
+    SqlReal (roundHalfAwayVm (fromIntegral n) (fromIntegral p))
+evalBuiltin "round" [SqlReal    d, SqlInteger p] =
+    SqlReal (roundHalfAwayVm d (fromIntegral p))
+evalBuiltin "round" _ = SqlNull
+
+evalBuiltin _ _ = SqlNull
+
+-- | Round a Double to `digits` decimal places using half-away-from-zero
+-- rounding (SQLite ROUND semantics, not Haskell banker rounding).
+--
+-- Security notes:
+--   1. 'Integer' (arbitrary-precision) is used for intermediate values to
+--      prevent silent overflow that would corrupt results.  The original
+--      'Int' path overflowed silently for digits >= 19 on 64-bit systems.
+--   2. 'digits' is clamped to [-15, 15].  Negative values implement SQLite's
+--      "round to tens/hundreds/…" semantics and avoid a "Negative exponent"
+--      runtime exception from '(^)'.  The upper clamp of 15 reflects Double
+--      precision limits.
+roundHalfAwayVm :: Double -> Int -> Double
+roundHalfAwayVm x digits
+    | digits < 0 =
+        let factor = (10 :: Integer) ^ (min 15 (negate digits))
+            scaled = x / fromIntegral factor
+            rounded :: Integer
+            rounded = if x >= 0
+                      then floor   (scaled + 0.5)
+                      else ceiling (scaled - 0.5)
+        in fromIntegral rounded * fromIntegral factor
+    | digits == 0 =
+        let rounded :: Integer
+            rounded = if x >= 0 then floor (x + 0.5) else ceiling (x - 0.5)
+        in fromIntegral rounded
+    | otherwise =
+        let d      = min digits 15
+            factor = (10 :: Integer) ^ d
+            scaled = x * fromIntegral factor
+            truncated :: Integer
+            truncated = if x >= 0
+                        then floor   (scaled + 0.5)
+                        else ceiling (scaled - 0.5)
+        in fromIntegral truncated / fromIntegral factor
+
+-- | Replace all non-overlapping occurrences of 'from' with 'to' in 's'.
+replaceAllVm :: String -> String -> String -> String
+replaceAllVm _ _ [] = []
+replaceAllVm from to s@(c:cs)
+    | from `isPrefixOf` s = to ++ replaceAllVm from to (drop (length from) s)
+    | otherwise           = c : replaceAllVm from to cs
+
 -- ── BETWEEN evaluation ────────────────────────────────────────────────────
 --
 -- `value BETWEEN lo AND hi` means `lo <= value AND value <= hi`.
@@ -914,7 +1034,14 @@ dispatch instr = case instr of
         bRef <- gets vmBackend
         backend <- liftIO (readIORef bRef)
         case insert backend tbl rowBuf of
-            Left err -> error ("SqlVm: insert failed: " ++ errorMessage err)
+            Left err ->
+                -- Use throwIO (a proper IO exception) rather than 'error'
+                -- (an impure exception).  The caller's IO-level catch in
+                -- MiniSqlite.runPipeline will intercept this and convert it
+                -- to a Left MiniSqliteError.  Internal error message details
+                -- are intentionally included only in the error value returned
+                -- to the application layer, not logged to stderr.
+                liftIO (throwIO (userError ("insert failed: " ++ errorMessage err)))
             Right b' -> do
                 liftIO (writeIORef bRef b')
                 modify (\st -> st { vmRowsAffected = vmRowsAffected st + 1 })
@@ -943,6 +1070,17 @@ dispatch instr = case instr of
     LimitResult cnt off ->
         modify (\st -> st { vmPostLimit = Just (cnt, off) })
 
+    -- ── Built-in scalar function calls ────────────────────────────────────
+    -- CallBuiltin pops `arity` arguments (rightmost was pushed last), applies
+    -- the named function, and pushes the result.  NULL propagates for most
+    -- functions (except COALESCE and IFNULL which are null-specific).
+    CallBuiltin name arity -> do
+        -- replicateM n pop yields [last-arg, ..., first-arg].
+        -- Reverse to get first-arg first, matching LEFT-TO-RIGHT argument order.
+        argVals <- replicateM arity pop
+        let args = reverse argVals
+        push (evalBuiltin (map toLower name) args)
+
 -- ── Public execute function ───────────────────────────────────────────────
 --
 -- This is the single public entry point. It:
@@ -956,11 +1094,20 @@ dispatch instr = case instr of
 execute :: Program -> InMemoryBackend -> IO QueryResult
 execute prog backend = do
     bRef <- newIORef backend
+    fst <$> executeWithRef prog bRef
+
+-- | Execute a Program using a caller-supplied IORef for the backend.
+-- On return the IORef holds the post-execution (possibly mutated) backend.
+-- This is the low-level entry point used by callers that need to persist
+-- DML/DDL side-effects (e.g. the mini-sqlite connection layer).
+executeWithRef :: Program -> IORef InMemoryBackend -> IO (QueryResult, InMemoryBackend)
+executeWithRef prog bRef = do
     let instrs   = instructions prog
         lblIdx   = buildLabelIndex instrs
         initSt   = mkInitState instrs lblIdx bRef
     finalSt <- execStateT runLoop initSt
-    return (buildResult finalSt)
+    finalBe <- readIORef bRef
+    return (buildResult finalSt, finalBe)
 
 -- | Build the initial VmState for a fresh execution.
 mkInitState :: [Instruction] -> Map.Map String Int -> IORef InMemoryBackend -> VmState

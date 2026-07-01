@@ -3,6 +3,23 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.1.0] — 2026-07-01
+
+### Added
+
+- **`CallBuiltin String Int` instruction** — emitted by `compileExpr` for
+  `FuncCall` nodes instead of the previous `LoadNull` stub.  The `String` is
+  the (lowercased) function name; `Int` is the arity.  The VM pops `arity`
+  arguments from the stack, applies the named built-in scalar function, and
+  pushes the result.  Supports `length`, `upper`, `lower`, `substr`, `trim`,
+  `ltrim`, `rtrim`, `replace`, `abs`, `concat`, `coalesce`, `ifnull`.
+
+### Changed
+
+- `compileExpr` for `P.FuncCall name args` now emits
+  `concatMap compileExpr args ++ [CallBuiltin name (length args)]` instead of
+  `concatMap compileExpr args ++ [LoadNull]`.
+
 ## [0.1.0.0] — 2026-06-30
 
 ### Added

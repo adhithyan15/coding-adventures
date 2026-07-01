@@ -3,6 +3,45 @@
 All notable changes to this package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.2.0] — 2026-07-01
+
+### Security
+
+- **`roundHalfAwayVm` overflow fix (CRITICAL)**: replaced `Int` intermediate
+  arithmetic with `Integer` (arbitrary-precision) to prevent silent integer
+  overflow corrupting ROUND results for large inputs.  Added negative-digits
+  support (SQLite ROUND semantics) and clamped `digits` to [-15, 15] to prevent
+  a `"Negative exponent"` runtime exception on user-controlled input.
+- **`InsertRow` error handling (HIGH)**: replaced `error` (impure exception) with
+  `liftIO (throwIO (userError …))` (proper IO exception).  The existing
+  `catch`-based wrapper in `MiniSqlite` already handled IO exceptions; this
+  change makes the handling structurally sound rather than relying on an ambient
+  catch that could be removed by future refactoring.
+
+## [0.1.1.0] — 2026-07-01
+
+### Added
+
+- **`executeWithRef :: Program -> IORef InMemoryBackend -> IO (QueryResult, InMemoryBackend)`**
+  — new export that accepts a caller-supplied `IORef` for the backend and
+  returns both the `QueryResult` and the final (possibly mutated) backend.
+  Enables callers (e.g. `mini-sqlite`) to capture DML/DDL side-effects.
+- **`CallBuiltin` dispatch** in the VM's `dispatch` function:
+  pops `arity` arguments, reverses to restore left-to-right order, and calls
+  `evalBuiltin`.
+- **`evalBuiltin :: String -> [SqlValue] -> SqlValue`** — evaluates built-in
+  scalar functions: `length`, `upper`, `lower`, `substr` (1-indexed, 2- or
+  3-arg), `trim`, `ltrim`, `rtrim`, `replace`, `abs`, `concat`, `coalesce`,
+  `ifnull`.  Unknown names return `SqlNull`.
+- **`replaceAllVm`** helper for non-overlapping string replacement (used by
+  `evalBuiltin "replace"`).
+- Imports extended: `Data.Char.isSpace`, `Data.Char.toUpper`,
+  `Data.List.dropWhileEnd`, `Data.List.isPrefixOf`.
+
+### Changed
+
+- `execute` now delegates to `executeWithRef` internally.
+
 ## [0.1.0.0] — 2026-07-01
 
 ### Added
