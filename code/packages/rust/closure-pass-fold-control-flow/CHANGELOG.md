@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.16.0] - 2026-06-30
+
+### Added — CV tombstones for block dead-code-after-terminator (#89 follow-up)
+
+Closes the first of the two follow-ups noted in 0.15.0. The block-level
+dead-code-after-terminator drop (`fold_block_statement`, tag `removed-dead-code`)
+now tombstones each eliminated statement's own CV entry via the existing
+`record_fold_deleting` + `statement_cv` machinery, instead of emitting only a
+summary contribution. So `{ return; dead(); more(); }` → `{ return; }` records a
+`DeletionRecord{source:"fold-control-flow", reason:"removed-dead-code"}` on each
+of `dead()` / `more()`, exactly as the DCE pass records for the same
+dead-after-terminator drop it performs. The dropped statements' CV ids are
+captured in the block-fold loop before they are skipped.
+
+Byte-for-byte identical AST output; only the CV log gains the deletion records.
+`delete` is a no-op when the log is disabled (production default). One new test
+(`dead_code_after_terminator_is_tombstoned`); 36 unit + 13 upstream all green.
+Crate 0.15.0 → 0.16.0.
+
+The remaining follow-up — the constant-condition **ternary** collapse
+(`cond ? c : a` with a literal `cond`), whose discarded arm is an `Expression`
+and needs an `expression_cv` helper — is still open.
+
 ## [0.15.0] - 2026-06-30
 
 ### Added — correlation-vector deletion provenance for eliminated branches (#89)
