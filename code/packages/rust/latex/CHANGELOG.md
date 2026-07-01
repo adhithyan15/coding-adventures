@@ -2,6 +2,19 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.22.0] — 2026-06-30
+
+### Added — stretchy UNDER-arrow accents (the mirror of the over-arrow family)
+
+- **Under-arrow accents** (amsmath) — `\underrightarrow`, `\underleftarrow`, `\underleftrightarrow`.
+  These are the exact mirror of the existing `\overrightarrow`-family: a stretchy arrow drawn
+  **under** the argument rather than over it. Each lowers onto the existing `Underset` node over the
+  plain arrow symbol — the same annotation-under-a-body shape as `\underbrace` and an xarrow's
+  `[below]` label — so there is no new AST node and no frontend change:
+  `\underrightarrow{AB}` → `Underset { under: →, base: AB }` ≡ `\underset{\rightarrow}{AB}`, and
+  `to_latex` round-trips through `\underset`. Implemented via a new `under_arrow_base` table mirroring
+  `over_arrow_base`; missing `{body}` is a clean spanned error, never a panic.
+
 ## [0.21.0] — 2026-06-30
 
 ### Added — more stretchy accents & extensible arrows (all onto the existing Overset/Underset node)
