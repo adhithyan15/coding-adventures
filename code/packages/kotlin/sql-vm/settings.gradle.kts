@@ -11,6 +11,7 @@
 // CRITICAL: all four packages must be listed.  Missing one causes an
 // "unresolved reference" at compile time on a fresh CI runner.
 
+includeBuild("../sql-backend")
 includeBuild("../sql-planner")
 includeBuild("../sql-optimizer")
 includeBuild("../sql-codegen")
