@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.4.0 — user-defined exception-class ancestry (E2)
+
+The backend now threads user `class Child < Parent` inheritance edges into the
+exception matcher, so a `rescue StandardError` catches a raised user
+`MyErr < StandardError` — not just built-in subclasses.
+
+- **Emit.** For any module that uses `Feature::Exceptions` **and** declares at
+  least one class with a superclass, the emitter collects every
+  `Stmt::ClassDef { name, superclass: Some(sc) }` pair (walking nested class /
+  module / try / loop bodies) and emits a single program-init
+  `_sir_exc_register_ancestry({"MyErr": "StandardError", …})` call, placed
+  after the runtime imports and before any function or `main` runs. Modules with
+  no superclass edge emit no registration (no empty, meaningless call).
+- **Runtime alias.** The exception-runtime import header now also aliases
+  `register_ancestry as _sir_exc_register_ancestry`.
+- Built-in matching is unchanged; user edges are purely additive. Requires
+  `coding-adventures-sir-runtime-exceptions >= 0.2.0`.
+
 ## 0.3.0 — keyword-parameter & keyword-argument emission (KW2)
 
 The backend now accepts `Feature::KeywordParams` and lowers keyword parameters

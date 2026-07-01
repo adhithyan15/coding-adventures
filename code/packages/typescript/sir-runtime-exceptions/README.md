@@ -42,6 +42,7 @@ dependency.
 | `raiseError(className?, message?): never` | Throw a `SirError`. Bare `raiseError()` re-raises as a generic `RuntimeError`. |
 | `classOfThrown(err): string` | The SIR class name of a caught value (native errors and non-errors → `StandardError`). |
 | `rescueMatches(err, classNames): boolean` | Does a caught value match a `rescue` clause naming `classNames`? Empty list = bare `rescue` (catch-all). |
+| `registerAncestry(mapping): void` | Merge user `{childClassName: superclassName}` edges (from `class Child < Parent`) into the ancestry the matcher walks, so `rescue StandardError` catches a raised user `MyErr extends StandardError`. Additive over the built-in table; explicit string map (no reflection). |
 
 ### Emitted shape
 

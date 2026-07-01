@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.2.0 — user-defined exception-class ancestry (E2)
+
+Adds `registerAncestry(mapping)`: the SIR backend threads user
+`class Child < Parent` edges here at program init (an explicit
+`{childClassName: superclassName}` string map — no `eval`/reflection), so
+`rescueMatches` walks a user class up through its registered superclass and on
+into the built-in table. A `rescue StandardError` now catches a raised user
+`MyErr extends StandardError`.
+
+- User edges are **additive**: they layer over the frozen built-in ancestry
+  (`BUILTIN_ANCESTRY`, spread into a mutable live copy) without replacing it, so
+  built-in matching is unchanged. A user class with no registered edge still
+  matches only by exact name (or via `Exception` / a bare `rescue`).
+- The cycle guard in `isAncestorOrSelf` already tolerates a malformed
+  self-referential edge.
+
 ## 0.1.0 — initial release
 
 First release of the SIR exception runtime for TypeScript/JavaScript, per

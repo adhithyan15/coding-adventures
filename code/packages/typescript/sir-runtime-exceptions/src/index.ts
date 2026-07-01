@@ -24,13 +24,17 @@
  * so a future JavaScript→SIR→TS path reuses them unchanged.  See
  * `code/specs/sir-runtime.md`.
  *
- * **Honest v0 limitation.**  SIR has no exception-class symbol table, so the
- * ancestry of *user-defined* exception classes is unknown here.  We bake in the
- * common built-in Ruby hierarchy (so `rescue StandardError` catches a
- * `RuntimeError`/`ArgumentError`/…), match user classes by exact name, and let
- * the universal root `Exception` (and a bare `rescue`) catch anything.  Full
- * user-class ancestry awaits a frontend that threads class definitions into the
- * exception model.
+ * **User-class ancestry (E2).**  The built-in table below is fixed, but SIR
+ * *does* carry `class MyErr < StandardError` edges in `Stmt::ClassDef`.  The
+ * backend threads them here with {@link registerAncestry} at program init, so a
+ * `rescue StandardError` catches a raised `MyErr` even though `MyErr` is not in
+ * the built-in table.  We keep this an **explicit string→string map** — no
+ * `eval`/reflection, no walking real JS classes — because the SIR class names
+ * are just tags, not live constructors.  User edges are *additive*: they extend
+ * the chain up to a built-in root (`StandardError → Exception`) and never mutate
+ * the built-in entries, so built-in matching is unchanged.  A user class with no
+ * registered superclass still matches only by exact name (or via `Exception` / a
+ * bare `rescue`), exactly as before.
  */
 
 /** The SIR universal value type at this package's boundary. */
@@ -55,7 +59,7 @@ export type Val = any;
  *    ├─ IOError    ├─ StopIteration    └─ NotImplementedError
  * ```
  */
-const ANCESTRY: Readonly<Record<string, string>> = {
+const BUILTIN_ANCESTRY: Readonly<Record<string, string>> = {
   RuntimeError: "StandardError",
   ArgumentError: "StandardError",
   TypeError: "StandardError",
@@ -70,6 +74,39 @@ const ANCESTRY: Readonly<Record<string, string>> = {
   NotImplementedError: "StandardError",
   StandardError: "Exception",
 };
+
+/**
+ * The *live* ancestry the matcher walks.  Seeded from the built-in table and
+ * then extended in place by {@link registerAncestry} with user
+ * `child → superclass` edges.  We start from a spread copy so callers can never
+ * mutate the frozen built-in reference.
+ */
+const ANCESTRY: Record<string, string> = { ...BUILTIN_ANCESTRY };
+
+/**
+ * Merge user `{childClassName: superclassName}` edges into the ancestry.
+ *
+ * Called once at program init with the module's `class Child < Parent` pairs,
+ * *before* any `rescue` runs.  After this, {@link rescueMatches} walks a user
+ * child up through its registered superclass and on into the built-in table —
+ * so `rescue StandardError` catches a raised `MyErr extends StandardError`.
+ *
+ * The mapping is an **explicit string→string map**: keys and values are SIR
+ * class-name tags, not JS constructors.  We deliberately do no reflection and
+ * trust no live type — the frontend already knows the static superclass edge,
+ * so threading it as data keeps the runtime free of `eval`/import magic.
+ *
+ * Idempotent and additive: re-registering the same edge is a no-op, and user
+ * edges layer on top of the built-in table without replacing it (a chain like
+ * `Grandchild → Child → StandardError → Exception` resolves by walking both
+ * layers).  {@link isAncestorOrSelf} already guards against cycles, so a
+ * malformed self-referential edge cannot loop forever.
+ */
+export function registerAncestry(mapping: Record<string, string>): void {
+  for (const child of Object.keys(mapping)) {
+    ANCESTRY[child] = mapping[child];
+  }
+}
 
 /**
  * A SIR exception: a native `Error` tagged with its Ruby class name.

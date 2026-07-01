@@ -47,6 +47,123 @@ fn uses_exceptions(m: &Module) -> bool {
     m.manifest.contains(Feature::Exceptions)
 }
 
+/// Collect every `class Child < Parent` edge in the module as `(child, parent)`
+/// pairs, in source order, de-duplicated (first edge for a name wins).
+///
+/// **Why (E2).**  A `rescue StandardError` must catch a raised user
+/// `MyErr < StandardError`, but the exception runtime only knows the built-in
+/// hierarchy — it has no way to learn that `MyErr` descends from
+/// `StandardError` unless we *tell* it.  `Stmt::ClassDef` carries exactly that
+/// static edge, so we harvest the `superclass`-bearing class defs here and emit
+/// a single `register_ancestry({...})` call at program init (see
+/// [`emit_module`]).  Classes without a superclass (`class Foo`) contribute no
+/// edge — they still match by exact name, unchanged.
+///
+/// The walk mirrors [`stmt_uses_builtin`]: exhaustive over the statement forms
+/// that nest bodies (`ClassDef`/`ModuleDef`/`SingletonClassDef`/`TryCatch` and
+/// the loops), so a class defined *inside* a `begin`/loop/class body is still
+/// found.  A `ClassDef`'s own nested `body` is walked too — Ruby's frontend
+/// hoists method `def`s out, but a nested class declaration would remain.
+fn collect_user_ancestry(m: &Module) -> Vec<(String, String)> {
+    let mut pairs: Vec<(String, String)> = Vec::new();
+    let mut seen: BTreeSet<String> = BTreeSet::new();
+    for f in &m.functions {
+        collect_ancestry_in_block(&f.body, &mut pairs, &mut seen);
+    }
+    pairs
+}
+
+fn collect_ancestry_in_block(
+    b: &Block,
+    pairs: &mut Vec<(String, String)>,
+    seen: &mut BTreeSet<String>,
+) {
+    collect_ancestry_in_stmts(&b.stmts, pairs, seen);
+    collect_ancestry_in_expr(&b.value, pairs, seen);
+}
+
+fn collect_ancestry_in_stmts(
+    stmts: &[Stmt],
+    pairs: &mut Vec<(String, String)>,
+    seen: &mut BTreeSet<String>,
+) {
+    for s in stmts {
+        collect_ancestry_in_stmt(s, pairs, seen);
+    }
+}
+
+fn collect_ancestry_in_stmt(
+    s: &Stmt,
+    pairs: &mut Vec<(String, String)>,
+    seen: &mut BTreeSet<String>,
+) {
+    match s {
+        Stmt::ClassDef { name, superclass, body, .. } => {
+            if let Some(sup) = superclass {
+                if seen.insert(name.clone()) {
+                    pairs.push((name.clone(), sup.clone()));
+                }
+            }
+            collect_ancestry_in_stmts(body, pairs, seen);
+        }
+        Stmt::ModuleDef { body, .. } | Stmt::SingletonClassDef { body, .. } => {
+            collect_ancestry_in_stmts(body, pairs, seen);
+        }
+        Stmt::While { body, .. }
+        | Stmt::ForRange { body, .. }
+        | Stmt::ForEach { body, .. } => {
+            collect_ancestry_in_block(body, pairs, seen);
+        }
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            collect_ancestry_in_stmts(body, pairs, seen);
+            for r in rescues {
+                collect_ancestry_in_stmts(&r.body, pairs, seen);
+            }
+            if let Some(e) = ensure_body {
+                collect_ancestry_in_stmts(e, pairs, seen);
+            }
+        }
+        // A class declaration only surfaces as a `Stmt::ClassDef`; the remaining
+        // statement forms carry expressions, which may embed a block (e.g. an
+        // `if` in value position) that in turn holds a class def.  Recurse into
+        // any nested expression so those are not missed.
+        Stmt::LetBinding { value, .. }
+        | Stmt::LetStarBinding { value, .. }
+        | Stmt::Assign { value, .. }
+        | Stmt::ExprStmt { expr: value, .. } => {
+            collect_ancestry_in_expr(value, pairs, seen);
+        }
+        Stmt::SeqSet { seq, index, value, .. } => {
+            collect_ancestry_in_expr(seq, pairs, seen);
+            collect_ancestry_in_expr(index, pairs, seen);
+            collect_ancestry_in_expr(value, pairs, seen);
+        }
+        Stmt::MapSet { map, key, value, .. } => {
+            collect_ancestry_in_expr(map, pairs, seen);
+            collect_ancestry_in_expr(key, pairs, seen);
+            collect_ancestry_in_expr(value, pairs, seen);
+        }
+    }
+}
+
+fn collect_ancestry_in_expr(
+    e: &Expr,
+    pairs: &mut Vec<(String, String)>,
+    seen: &mut BTreeSet<String>,
+) {
+    match e {
+        Expr::If { then_branch, else_branch, .. } => {
+            collect_ancestry_in_block(then_branch, pairs, seen);
+            collect_ancestry_in_block(else_branch, pairs, seen);
+        }
+        Expr::Block(b) => collect_ancestry_in_block(b, pairs, seen),
+        // No other expression form can nest a statement block that could hold a
+        // class declaration (calls/literals carry only sub-*expressions*), so
+        // there is nothing further to descend into for ancestry purposes.
+        _ => {}
+    }
+}
+
 /// True if the module uses cons pairs, in which case the emitted artifact
 /// imports `coding-adventures-sir-runtime-pairs` (the `cons`/`car`/`cdr`/
 /// `pair?` helpers, extracted from core).
@@ -220,6 +337,31 @@ pub fn emit_module(m: &Module) -> String {
     // Only range-using modules import the range runtime.
     if uses_range(m) {
         out.push_str(crate::runtime::RUNTIME_RANGE);
+    }
+    // E2: thread user `class Child < Parent` ancestry into the exception
+    // matcher at program init, *before* any function or main body runs, so a
+    // `rescue StandardError` catches a raised user `MyErr < StandardError`.
+    // Gated on both the exception import (so the helper exists) and the
+    // presence of at least one superclass edge (so we never emit an empty,
+    // meaningless registration for a module that has classes but no
+    // inheritance).
+    if uses_exceptions(m) {
+        let pairs = collect_user_ancestry(m);
+        if !pairs.is_empty() {
+            out.push_str("\n_sir_exc_register_ancestry({");
+            for (i, (child, parent)) in pairs.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                let _ = write!(
+                    out,
+                    "{}: {}",
+                    quote_py_string(child),
+                    quote_py_string(parent)
+                );
+            }
+            out.push_str("})\n");
+        }
     }
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {
