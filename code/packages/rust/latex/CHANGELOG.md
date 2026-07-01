@@ -2,6 +2,21 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.24.0] — 2026-06-30
+
+### Changed — fence delimiters preserved as data (frontend adapter)
+
+- The `MathFrontend` adapter now lowers a single-body fence to the new neutral
+  **`MathExpr::Fenced { open, body, close }`** (math-frontend 0.7.0) instead of the delimiter-less
+  `MathExpr::Group`, carrying the surface delimiters as data: `(x+1)` → `Fenced("(", …, ")")`,
+  `[x]` → `Fenced("[", …, "]")`, `\left|x\right|` → `Fenced("|", …, "|")`. An absolute value / norm
+  is no longer indistinguishable from a parenthesised group. The latex frontend declares the new
+  `fenced_delimiters` capability (via `Capabilities::all()`).
+- A **comma-list** fence still lowers to `MathExpr::Sequence` (delimiters dropped, matching MathML
+  `<mfenced>` / AsciiMath) — carrying delimiters on sequences is a later slice of this arc.
+- The internal `MathNode` and `to_latex` round-trip are unchanged; this only affects the neutral
+  lowering. Golden tests updated to assert the preserved delimiters.
+
 ## [0.23.0] — 2026-06-30
 
 ### Added — down-barb & under harpoon accents (completing the harpoon accent family)

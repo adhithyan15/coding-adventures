@@ -71,6 +71,9 @@ pub struct Capabilities {
     pub oversets: bool,
     /// Emits comma-separated sequences ([`crate::MathExpr::Sequence`]: fenced lists `(a, b, c)`).
     pub sequences: bool,
+    /// Emits delimited groups that carry their fence as data ([`crate::MathExpr::Fenced`]:
+    /// `(x+1)`, `[a]`, `|z|`, `\left(…\right)`), preserving *which* delimiters bracketed the body.
+    pub fenced_delimiters: bool,
 }
 
 impl Capabilities {
@@ -97,6 +100,7 @@ impl Capabilities {
             accents: true,
             oversets: true,
             sequences: true,
+            fenced_delimiters: true,
         }
     }
 
@@ -114,6 +118,7 @@ impl Capabilities {
     pub fn with_accents(mut self) -> Self { self.accents = true; self }
     pub fn with_oversets(mut self) -> Self { self.oversets = true; self }
     pub fn with_sequences(mut self) -> Self { self.sequences = true; self }
+    pub fn with_fenced_delimiters(mut self) -> Self { self.fenced_delimiters = true; self }
 }
 
 /// The contract every notation parser implements.

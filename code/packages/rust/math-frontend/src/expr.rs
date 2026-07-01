@@ -282,6 +282,21 @@ pub enum MathExpr {
     /// the items as a delimited list, not a product. The items appear in source order; an
     /// empty sequence is not representable (a fence with no items is not a list).
     Sequence(Vec<MathExpr>),
+    /// A **delimited** group that carries its opening and closing fence as data: `(x+1)`,
+    /// `[a]`, `\{s\}`, `\langle v\rangle`, `|z|`, `\left(\frac a b\right)`. Where
+    /// [`MathExpr::Group`] records only *that* a subexpression was parenthesised (style dropped),
+    /// `Fenced` preserves *which* delimiters bracketed it, so a bar (`|x|`, an absolute value /
+    /// norm) is no longer indistinguishable from a paren `(x)`, and a renderer can reproduce the
+    /// exact brackets. `open`/`close` are the surface delimiter strings (`"("`, `"["`, `"\\{"`,
+    /// `"\\langle"`, `"|"`, or `"."` for an omitted `\left.`/`\right.`) — a `String` so the
+    /// open-ended set of TeX delimiters needs no enum churn. Kept DISTINCT from `Sequence` (a
+    /// comma list, whose items are separated) and `Matrix` (rows/cells): a `Fenced` brackets a
+    /// *single* inner expression.
+    Fenced {
+        open: String,
+        body: Box<MathExpr>,
+        close: String,
+    },
 }
 
 /// Drop a `MathExpr` **iteratively** so freeing a deeply-nested tree cannot overflow the
@@ -341,6 +356,7 @@ fn take_children(e: &mut MathExpr, out: &mut Vec<MathExpr>) {
         }
         MathExpr::Call { arg, .. } => take(arg, out),
         MathExpr::Accent { body, .. } => take(body, out),
+        MathExpr::Fenced { body, .. } => take(body, out),
         MathExpr::Overset { over: a, base: b } | MathExpr::Underset { under: a, base: b } => {
             take(a, out);
             take(b, out);

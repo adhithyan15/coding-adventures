@@ -2,6 +2,25 @@
 
 All notable changes to the pluggable parser-frontend framework.
 
+## [0.7.0] — 2026-06-30
+
+### Added — fence delimiters as data (`MathExpr::Fenced`)
+
+- New neutral node **`MathExpr::Fenced { open: String, body, close: String }`** — a delimited
+  group that carries *which* delimiters bracketed it, so `|x|` (absolute value / norm) is no
+  longer indistinguishable from `(x)`. Where `MathExpr::Group` records only *that* a subexpression
+  was parenthesised (style dropped), `Fenced` preserves the surface open/close strings (`"("`,
+  `"["`, `"\\{"`, `"\\langle"`, `"|"`, `"."` for an omitted `\left.`). Kept distinct from
+  `Sequence` (a comma list) and `Matrix` (rows): `Fenced` brackets a single inner expression.
+- New capability flag **`Capabilities::fenced_delimiters`** (+ `with_fenced_delimiters()`), wired
+  into `all()`, the conformance `collect_used` walker, and the honesty check (`over_emitted`), so a
+  frontend emitting `Fenced` without declaring it is flagged — the gate polices the new node.
+- The iterative `Drop` for `MathExpr` handles `Fenced` (deep fence nesting frees without overflow).
+
+This is the first slice of the fence-delimiters arc; individual frontends adopt `Fenced` one at a
+time (latex first, in this release). Carrying delimiters on comma-list `Sequence` bodies is a later
+slice.
+
 ## [0.6.0] — 2026-06-30
 
 ### Added — neutral `Sequence` node (comma-separated lists in fences)
