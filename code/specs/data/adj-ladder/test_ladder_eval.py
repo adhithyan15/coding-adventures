@@ -63,6 +63,7 @@ SELF_CONTAINED_RUNGS = (
     "rung23_iron_studies",
     "rung24_oxygen_extraction",
     "rung25_lipid_indices",
+    "rung26_mineral_indices",
 )
 
 
