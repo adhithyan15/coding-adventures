@@ -648,6 +648,222 @@
         "E": "multiple_sclerosis"
       },
       "gold_letter": "A"
+    },
+    {
+      "id": "r11sd-37",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of a new regurgitant murmur with Janeway lesions raises the likelihood of infective endocarditis 8-fold, and splinter hemorrhages independently raises it a further 3-fold. The syndrome of a migratory polyarthritis with subcutaneous nodules raises rheumatic fever 15-fold \u2014 a stronger single association than either finding of the first. The patient has a new regurgitant murmur with Janeway lesions, splinter hemorrhages, and a migratory polyarthritis with subcutaneous nodules. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for infective_endocarditis\nprior 0.2 for rheumatic_fever\nprior 0.2 for pericarditis\nprior 0.2 for atrial_myxoma\nprior 0.2 for idiopathic_condition\ncontributes 8 from endocarditis_pattern to infective_endocarditis\ncontributes 3 from splinter_hemorrhages to infective_endocarditis\ncontributes 15 from rheumatic_pattern to rheumatic_fever\nrule { head: endocarditis_pattern when: new_regurgitant_murmur, janeway_lesions }\nrule { head: rheumatic_pattern when: migratory_polyarthritis, subcutaneous_nodules }\nobserve new_regurgitant_murmur\nobserve janeway_lesions\nobserve splinter_hemorrhages\nobserve migratory_polyarthritis\nobserve subcutaneous_nodules\n? infective_endocarditis\n? rheumatic_fever\n? pericarditis\n? atrial_myxoma\n? idiopathic_condition\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "rheumatic_fever",
+        "B": "infective_endocarditis",
+        "C": "pericarditis",
+        "D": "atrial_myxoma",
+        "E": "idiopathic_condition"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r11sd-38",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of a new regurgitant murmur with Janeway lesions raises the likelihood of infective endocarditis 6-fold, and splinter hemorrhages independently raises it a further 4-fold. The syndrome of a migratory polyarthritis with subcutaneous nodules raises rheumatic fever 20-fold \u2014 a stronger single association than either finding of the first. The patient has a new regurgitant murmur with Janeway lesions, splinter hemorrhages, and a migratory polyarthritis with subcutaneous nodules. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for infective_endocarditis\nprior 0.2 for rheumatic_fever\nprior 0.2 for pericarditis\nprior 0.2 for atrial_myxoma\nprior 0.2 for idiopathic_condition\ncontributes 6 from endocarditis_pattern to infective_endocarditis\ncontributes 4 from splinter_hemorrhages to infective_endocarditis\ncontributes 20 from rheumatic_pattern to rheumatic_fever\nrule { head: endocarditis_pattern when: new_regurgitant_murmur, janeway_lesions }\nrule { head: rheumatic_pattern when: migratory_polyarthritis, subcutaneous_nodules }\nobserve new_regurgitant_murmur\nobserve janeway_lesions\nobserve splinter_hemorrhages\nobserve migratory_polyarthritis\nobserve subcutaneous_nodules\n? infective_endocarditis\n? rheumatic_fever\n? pericarditis\n? atrial_myxoma\n? idiopathic_condition\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "rheumatic_fever",
+        "B": "pericarditis",
+        "C": "infective_endocarditis",
+        "D": "atrial_myxoma",
+        "E": "idiopathic_condition"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r11sd-39",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of a malar rash with photosensitivity raises the likelihood of systemic lupus 8-fold, and oral ulcers independently raises it a further 3-fold. The syndrome of Gottron papules with a heliotrope rash raises dermatomyositis 15-fold \u2014 a stronger single association than either finding of the first. The patient has a malar rash with photosensitivity, oral ulcers, and Gottron papules with a heliotrope rash. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for systemic_lupus\nprior 0.2 for dermatomyositis\nprior 0.2 for psoriasis\nprior 0.2 for lichen_planus\nprior 0.2 for idiopathic_condition\ncontributes 8 from lupus_pattern to systemic_lupus\ncontributes 3 from oral_ulcers to systemic_lupus\ncontributes 15 from dermatomyositis_pattern to dermatomyositis\nrule { head: lupus_pattern when: malar_rash, photosensitivity }\nrule { head: dermatomyositis_pattern when: gottron_papules, heliotrope_rash }\nobserve malar_rash\nobserve photosensitivity\nobserve oral_ulcers\nobserve gottron_papules\nobserve heliotrope_rash\n? systemic_lupus\n? dermatomyositis\n? psoriasis\n? lichen_planus\n? idiopathic_condition\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "dermatomyositis",
+        "B": "psoriasis",
+        "C": "lichen_planus",
+        "D": "systemic_lupus",
+        "E": "idiopathic_condition"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r11sd-40",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of a malar rash with photosensitivity raises the likelihood of systemic lupus 6-fold, and oral ulcers independently raises it a further 4-fold. The syndrome of Gottron papules with a heliotrope rash raises dermatomyositis 20-fold \u2014 a stronger single association than either finding of the first. The patient has a malar rash with photosensitivity, oral ulcers, and Gottron papules with a heliotrope rash. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for systemic_lupus\nprior 0.2 for dermatomyositis\nprior 0.2 for psoriasis\nprior 0.2 for lichen_planus\nprior 0.2 for idiopathic_condition\ncontributes 6 from lupus_pattern to systemic_lupus\ncontributes 4 from oral_ulcers to systemic_lupus\ncontributes 20 from dermatomyositis_pattern to dermatomyositis\nrule { head: lupus_pattern when: malar_rash, photosensitivity }\nrule { head: dermatomyositis_pattern when: gottron_papules, heliotrope_rash }\nobserve malar_rash\nobserve photosensitivity\nobserve oral_ulcers\nobserve gottron_papules\nobserve heliotrope_rash\n? systemic_lupus\n? dermatomyositis\n? psoriasis\n? lichen_planus\n? idiopathic_condition\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "dermatomyositis",
+        "B": "psoriasis",
+        "C": "lichen_planus",
+        "D": "idiopathic_condition",
+        "E": "systemic_lupus"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r11sd-41",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of bilateral hilar adenopathy with erythema nodosum raises the likelihood of sarcoidosis 8-fold, and an elevated ACE level independently raises it a further 3-fold. The syndrome of night sweats with apical cavitation raises tuberculosis 15-fold \u2014 a stronger single association than either finding of the first. The patient has bilateral hilar adenopathy with erythema nodosum, an elevated ACE level, and night sweats with apical cavitation. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for sarcoidosis\nprior 0.2 for tuberculosis\nprior 0.2 for lymphoma\nprior 0.2 for histoplasmosis\nprior 0.2 for idiopathic_condition\ncontributes 8 from sarcoid_pattern to sarcoidosis\ncontributes 3 from elevated_ace_level to sarcoidosis\ncontributes 15 from tuberculosis_pattern to tuberculosis\nrule { head: sarcoid_pattern when: bilateral_hilar_adenopathy, erythema_nodosum }\nrule { head: tuberculosis_pattern when: night_sweats, apical_cavitation }\nobserve bilateral_hilar_adenopathy\nobserve erythema_nodosum\nobserve elevated_ace_level\nobserve night_sweats\nobserve apical_cavitation\n? sarcoidosis\n? tuberculosis\n? lymphoma\n? histoplasmosis\n? idiopathic_condition\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "sarcoidosis",
+        "B": "tuberculosis",
+        "C": "lymphoma",
+        "D": "histoplasmosis",
+        "E": "idiopathic_condition"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r11sd-42",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of bilateral hilar adenopathy with erythema nodosum raises the likelihood of sarcoidosis 6-fold, and an elevated ACE level independently raises it a further 4-fold. The syndrome of night sweats with apical cavitation raises tuberculosis 20-fold \u2014 a stronger single association than either finding of the first. The patient has bilateral hilar adenopathy with erythema nodosum, an elevated ACE level, and night sweats with apical cavitation. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for sarcoidosis\nprior 0.2 for tuberculosis\nprior 0.2 for lymphoma\nprior 0.2 for histoplasmosis\nprior 0.2 for idiopathic_condition\ncontributes 6 from sarcoid_pattern to sarcoidosis\ncontributes 4 from elevated_ace_level to sarcoidosis\ncontributes 20 from tuberculosis_pattern to tuberculosis\nrule { head: sarcoid_pattern when: bilateral_hilar_adenopathy, erythema_nodosum }\nrule { head: tuberculosis_pattern when: night_sweats, apical_cavitation }\nobserve bilateral_hilar_adenopathy\nobserve erythema_nodosum\nobserve elevated_ace_level\nobserve night_sweats\nobserve apical_cavitation\n? sarcoidosis\n? tuberculosis\n? lymphoma\n? histoplasmosis\n? idiopathic_condition\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "tuberculosis",
+        "B": "sarcoidosis",
+        "C": "lymphoma",
+        "D": "histoplasmosis",
+        "E": "idiopathic_condition"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r11sd-43",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of bronze skin with a restrictive cardiomyopathy raises the likelihood of hereditary hemochromatosis 8-fold, and an elevated ferritin independently raises it a further 3-fold. The syndrome of polyuria with polydipsia raises diabetes mellitus 15-fold \u2014 a stronger single association than either finding of the first. The patient has bronze skin with a restrictive cardiomyopathy, an elevated ferritin, and polyuria with polydipsia. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for hereditary_hemochromatosis\nprior 0.2 for diabetes_mellitus\nprior 0.2 for wilson_disease\nprior 0.2 for porphyria\nprior 0.2 for idiopathic_condition\ncontributes 8 from hemochromatosis_pattern to hereditary_hemochromatosis\ncontributes 3 from elevated_ferritin to hereditary_hemochromatosis\ncontributes 15 from diabetes_pattern to diabetes_mellitus\nrule { head: hemochromatosis_pattern when: bronze_skin, restrictive_cardiomyopathy }\nrule { head: diabetes_pattern when: polyuria, polydipsia }\nobserve bronze_skin\nobserve restrictive_cardiomyopathy\nobserve elevated_ferritin\nobserve polyuria\nobserve polydipsia\n? hereditary_hemochromatosis\n? diabetes_mellitus\n? wilson_disease\n? porphyria\n? idiopathic_condition\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "diabetes_mellitus",
+        "B": "wilson_disease",
+        "C": "hereditary_hemochromatosis",
+        "D": "porphyria",
+        "E": "idiopathic_condition"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r11sd-44",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of bronze skin with a restrictive cardiomyopathy raises the likelihood of hereditary hemochromatosis 6-fold, and an elevated ferritin independently raises it a further 4-fold. The syndrome of polyuria with polydipsia raises diabetes mellitus 20-fold \u2014 a stronger single association than either finding of the first. The patient has bronze skin with a restrictive cardiomyopathy, an elevated ferritin, and polyuria with polydipsia. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for hereditary_hemochromatosis\nprior 0.2 for diabetes_mellitus\nprior 0.2 for wilson_disease\nprior 0.2 for porphyria\nprior 0.2 for idiopathic_condition\ncontributes 6 from hemochromatosis_pattern to hereditary_hemochromatosis\ncontributes 4 from elevated_ferritin to hereditary_hemochromatosis\ncontributes 20 from diabetes_pattern to diabetes_mellitus\nrule { head: hemochromatosis_pattern when: bronze_skin, restrictive_cardiomyopathy }\nrule { head: diabetes_pattern when: polyuria, polydipsia }\nobserve bronze_skin\nobserve restrictive_cardiomyopathy\nobserve elevated_ferritin\nobserve polyuria\nobserve polydipsia\n? hereditary_hemochromatosis\n? diabetes_mellitus\n? wilson_disease\n? porphyria\n? idiopathic_condition\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "diabetes_mellitus",
+        "B": "wilson_disease",
+        "C": "porphyria",
+        "D": "hereditary_hemochromatosis",
+        "E": "idiopathic_condition"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r11sd-45",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of episodic flushing with secretory diarrhea raises the likelihood of carcinoid syndrome 8-fold, and a right-sided heart murmur independently raises it a further 3-fold. The syndrome of paroxysmal hypertension with palpitations raises pheochromocytoma 15-fold \u2014 a stronger single association than either finding of the first. The patient has episodic flushing with secretory diarrhea, a right-sided heart murmur, and paroxysmal hypertension with palpitations. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for carcinoid_syndrome\nprior 0.2 for pheochromocytoma\nprior 0.2 for vipoma\nprior 0.2 for mastocytosis\nprior 0.2 for idiopathic_condition\ncontributes 8 from carcinoid_pattern to carcinoid_syndrome\ncontributes 3 from right_sided_heart_murmur to carcinoid_syndrome\ncontributes 15 from pheochromocytoma_pattern to pheochromocytoma\nrule { head: carcinoid_pattern when: episodic_flushing, secretory_diarrhea }\nrule { head: pheochromocytoma_pattern when: paroxysmal_hypertension, palpitations }\nobserve episodic_flushing\nobserve secretory_diarrhea\nobserve right_sided_heart_murmur\nobserve paroxysmal_hypertension\nobserve palpitations\n? carcinoid_syndrome\n? pheochromocytoma\n? vipoma\n? mastocytosis\n? idiopathic_condition\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "pheochromocytoma",
+        "B": "vipoma",
+        "C": "mastocytosis",
+        "D": "idiopathic_condition",
+        "E": "carcinoid_syndrome"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r11sd-46",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of episodic flushing with secretory diarrhea raises the likelihood of carcinoid syndrome 6-fold, and a right-sided heart murmur independently raises it a further 4-fold. The syndrome of paroxysmal hypertension with palpitations raises pheochromocytoma 20-fold \u2014 a stronger single association than either finding of the first. The patient has episodic flushing with secretory diarrhea, a right-sided heart murmur, and paroxysmal hypertension with palpitations. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for carcinoid_syndrome\nprior 0.2 for pheochromocytoma\nprior 0.2 for vipoma\nprior 0.2 for mastocytosis\nprior 0.2 for idiopathic_condition\ncontributes 6 from carcinoid_pattern to carcinoid_syndrome\ncontributes 4 from right_sided_heart_murmur to carcinoid_syndrome\ncontributes 20 from pheochromocytoma_pattern to pheochromocytoma\nrule { head: carcinoid_pattern when: episodic_flushing, secretory_diarrhea }\nrule { head: pheochromocytoma_pattern when: paroxysmal_hypertension, palpitations }\nobserve episodic_flushing\nobserve secretory_diarrhea\nobserve right_sided_heart_murmur\nobserve paroxysmal_hypertension\nobserve palpitations\n? carcinoid_syndrome\n? pheochromocytoma\n? vipoma\n? mastocytosis\n? idiopathic_condition\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "carcinoid_syndrome",
+        "B": "pheochromocytoma",
+        "C": "vipoma",
+        "D": "mastocytosis",
+        "E": "idiopathic_condition"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r11sd-47",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of lytic bone lesions with hypercalcemia raises the likelihood of multiple myeloma 8-fold, and rouleaux formation on the smear independently raises it a further 3-fold. The syndrome of serum hyperviscosity with lymphadenopathy raises waldenstrom macroglobulinemia 15-fold \u2014 a stronger single association than either finding of the first. The patient has lytic bone lesions with hypercalcemia, rouleaux formation on the smear, and serum hyperviscosity with lymphadenopathy. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for multiple_myeloma\nprior 0.2 for waldenstrom_macroglobulinemia\nprior 0.2 for monoclonal_gammopathy\nprior 0.2 for amyloidosis\nprior 0.2 for idiopathic_condition\ncontributes 8 from myeloma_pattern to multiple_myeloma\ncontributes 3 from rouleaux_formation to multiple_myeloma\ncontributes 15 from waldenstrom_pattern to waldenstrom_macroglobulinemia\nrule { head: myeloma_pattern when: lytic_bone_lesions, hypercalcemia }\nrule { head: waldenstrom_pattern when: serum_hyperviscosity, lymphadenopathy }\nobserve lytic_bone_lesions\nobserve hypercalcemia\nobserve rouleaux_formation\nobserve serum_hyperviscosity\nobserve lymphadenopathy\n? multiple_myeloma\n? waldenstrom_macroglobulinemia\n? monoclonal_gammopathy\n? amyloidosis\n? idiopathic_condition\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "waldenstrom_macroglobulinemia",
+        "B": "multiple_myeloma",
+        "C": "monoclonal_gammopathy",
+        "D": "amyloidosis",
+        "E": "idiopathic_condition"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r11sd-48",
+      "qtype": "syndromic_decision",
+      "stem": "Five diagnoses are equally likely a priori (each prior 0.2). The syndrome of lytic bone lesions with hypercalcemia raises the likelihood of multiple myeloma 6-fold, and rouleaux formation on the smear independently raises it a further 4-fold. The syndrome of serum hyperviscosity with lymphadenopathy raises waldenstrom macroglobulinemia 20-fold \u2014 a stronger single association than either finding of the first. The patient has lytic bone lesions with hypercalcemia, rouleaux formation on the smear, and serum hyperviscosity with lymphadenopathy. Which single diagnosis is most likely?",
+      "program": "prior 0.2 for multiple_myeloma\nprior 0.2 for waldenstrom_macroglobulinemia\nprior 0.2 for monoclonal_gammopathy\nprior 0.2 for amyloidosis\nprior 0.2 for idiopathic_condition\ncontributes 6 from myeloma_pattern to multiple_myeloma\ncontributes 4 from rouleaux_formation to multiple_myeloma\ncontributes 20 from waldenstrom_pattern to waldenstrom_macroglobulinemia\nrule { head: myeloma_pattern when: lytic_bone_lesions, hypercalcemia }\nrule { head: waldenstrom_pattern when: serum_hyperviscosity, lymphadenopathy }\nobserve lytic_bone_lesions\nobserve hypercalcemia\nobserve rouleaux_formation\nobserve serum_hyperviscosity\nobserve lymphadenopathy\n? multiple_myeloma\n? waldenstrom_macroglobulinemia\n? monoclonal_gammopathy\n? amyloidosis\n? idiopathic_condition\n",
+      "answer_from": {
+        "type": "decision_leader",
+        "structural_weights": false
+      },
+      "options": {
+        "A": "waldenstrom_macroglobulinemia",
+        "B": "monoclonal_gammopathy",
+        "C": "multiple_myeloma",
+        "D": "amyloidosis",
+        "E": "idiopathic_condition"
+      },
+      "gold_letter": "C"
     }
   ]
 }
