@@ -2,6 +2,47 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.16.0] - 2026-06-30
+
+### Added — correlation-vector deletion provenance (#89, full CV tracing)
+
+DCE now records *why code disappeared* in the correlation-vector log. Before
+this change the pass received the shared `CVLog` but explicitly discarded it
+(`let _ = self.cv`), pushing only a coarse summary `Contribution` against the
+enclosing container. So a `--correlation_vector` consumer that asked "what
+happened to the span at 42:3-42:19?" got no answer — the removed node simply
+vanished from the provenance graph. For a minifier whose entire premise is
+auditability, silently deleting code is the one thing it must never do.
+
+Each removal site now **tombstones every removed node individually** via
+`CVLog::delete(cv_id, "dce", <reason>, meta)`, populating that node's own
+`DeletionRecord` so the span remains queryable forever with a definite answer:
+*dce removed it, because `<reason>`*. Wired at all five statement-list removal
+sites, each carrying its precise reason tag and the enclosing `container_cv`:
+
+- `removed-dead-code` — statements after a block-level terminator;
+- `removed-dead-code-in-case` — statements after a `switch`-case terminator;
+- `removed-empty-statement` — `;` swept from a block body;
+- `removed-debugger` — `debugger;` stripped from a block body **and** from the
+  program top level (two distinct code paths, each covered).
+
+`block-flattened` deliberately does **not** tombstone: flattening *moves* a
+nested block's statements up one scope level rather than deleting them, so those
+nodes must stay live in the log. A regression test pins this distinction.
+
+New helpers: `DceState::record_deletion` (tombstone + keep the summary
+contribution), and `statement_cv` / `tagged_statement_cv` / `program_item_cv`
+to fetch a removed node's own CV id (exhaustive match — a new statement kind
+fails to compile rather than silently losing provenance).
+
+Zero cost on the production hot path: `delete` is a no-op when the CV log is
+disabled (the default), so tombstones only materialise under
+`--correlation_vector`. AST output is byte-for-byte unchanged — the same nodes
+are removed and the same summary contributions emitted as before; only the CV
+log gains the deletion records. Six new tests assert each removal tombstones
+its node with `source == "dce"` and the right reason, that flattening does not
+tombstone, and that a disabled log still strips code without panicking.
+
 ## [0.15.0] - 2026-06-20
 
 ### Added — CLOC24: strip `debugger` statements at SIMPLE/ADVANCED

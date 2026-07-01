@@ -53,8 +53,32 @@ module-level docs in `src/lib.rs` for the authoritative description.)
 2. Pass metadata (name, policy, cost) is what the future `closurec`
    CLI reads to surface enable/disable flags.
 3. The contribution-emission path is wired up for CLOC03's
-   `"deleted"` tag — when real deletion lands, the integration is
-   in place.
+   `"deleted"` tag, and every real removal now also **tombstones**
+   the removed node's own CV entry via `cv.delete(...)` (see
+   "Deletion provenance" below).
+
+## Deletion provenance (correlation vector)
+
+When DCE removes a node it does two things in the correlation-vector
+log: it pushes a coarse summary `Contribution` against the enclosing
+container (for stats/history), **and** it marks the removed node's own
+CV entry with a `DeletionRecord` via `cv.delete(cv_id, "dce", reason,
+meta)`. That second step is what makes the removal auditable: a
+`--correlation_vector` consumer asking "what happened to this span?"
+gets a definite answer — *dce removed it, because `<reason>`* — instead
+of the span silently vanishing from the provenance graph.
+
+Reason tags, one per removal site:
+
+- `removed-dead-code` — after a block-level terminator;
+- `removed-dead-code-in-case` — after a `switch`-case terminator;
+- `removed-empty-statement` — a swept `;`;
+- `removed-debugger` — a stripped `debugger;` (block body or top level).
+
+`block-flattened` is intentionally NOT a deletion: flattening *moves* a
+nested block's statements up one scope, so those nodes stay live in the
+log. `delete` is a no-op when the log is disabled (the production
+default), so this costs nothing off the `--correlation_vector` path.
 
 ## What's coming
 
@@ -66,8 +90,9 @@ Once the AST grows the needed variants:
 - Deletion of unreferenced variable bindings whose initializers are
   pure (`closure-pass-remove-unused-vars` is a specialization of
   this).
-- `cv.delete()` per CLOC03 §"When a pass deletes a node" with a
-  `"deleted"` tag whose `meta` records why.
+- Extending `cv.delete()` provenance to the branch-elimination sites
+  (constant-discriminant `switch` collapse, dead ternary arms), which
+  currently emit only a summary contribution.
 
 ## Dependency whitelist
 
