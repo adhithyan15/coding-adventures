@@ -36,6 +36,7 @@ pub const BERKELEY_APP_SHELL_DASHBOARD_BREADCRUMBS_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_TABS_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_TAB_PANELS_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_PANEL_CARDS_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_PANEL_CARD_ACTIONS_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -87,6 +88,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-dashboard-tabs-json",
     "app-shell-dashboard-tab-panels-json",
     "app-shell-dashboard-panel-cards-json",
+    "app-shell-dashboard-panel-card-actions-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -2631,6 +2633,283 @@ impl BerkeleyAppShellDashboardPanelCards {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardPanelCardAction {
+    pub id: String,
+    pub panel_card_id: String,
+    pub panel_id: String,
+    pub card_id: String,
+    pub action_id: String,
+    pub label: String,
+    pub target: String,
+    pub panel_kind: String,
+    pub role: String,
+    pub path: String,
+    pub position: usize,
+    pub selected: bool,
+    pub default_panel: bool,
+    pub visible: bool,
+    pub enabled: bool,
+    pub primary: bool,
+    pub card_primary: bool,
+    pub attention: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardPanelCardActions {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub primary_card_id: Option<String>,
+    pub primary_region_id: Option<String>,
+    pub active_item_id: Option<String>,
+    pub active_route_id: Option<String>,
+    pub active_route_path: Option<String>,
+    pub default_route_id: Option<String>,
+    pub default_route_path: Option<String>,
+    pub active_breadcrumb_id: Option<String>,
+    pub active_breadcrumb_path: Option<String>,
+    pub default_breadcrumb_id: Option<String>,
+    pub default_breadcrumb_path: Option<String>,
+    pub selected_tab_id: Option<String>,
+    pub selected_tab_path: Option<String>,
+    pub default_tab_id: Option<String>,
+    pub default_tab_path: Option<String>,
+    pub selected_panel_id: Option<String>,
+    pub selected_panel_path: Option<String>,
+    pub default_panel_id: Option<String>,
+    pub default_panel_path: Option<String>,
+    pub selected_panel_card_id: Option<String>,
+    pub selected_card_id: Option<String>,
+    pub default_panel_card_id: Option<String>,
+    pub default_card_id: Option<String>,
+    pub selected_panel_card_action_id: Option<String>,
+    pub selected_action_id: Option<String>,
+    pub default_panel_card_action_id: Option<String>,
+    pub default_action_id: Option<String>,
+    pub route_count: usize,
+    pub visible_route_count: usize,
+    pub enabled_route_count: usize,
+    pub breadcrumb_count: usize,
+    pub visible_breadcrumb_count: usize,
+    pub enabled_breadcrumb_count: usize,
+    pub tab_count: usize,
+    pub visible_tab_count: usize,
+    pub enabled_tab_count: usize,
+    pub panel_count: usize,
+    pub visible_panel_count: usize,
+    pub enabled_panel_count: usize,
+    pub panel_card_count: usize,
+    pub visible_panel_card_count: usize,
+    pub enabled_panel_card_count: usize,
+    pub action_count: usize,
+    pub enabled_action_count: usize,
+    pub primary_action_count: usize,
+    pub panel_card_action_count: usize,
+    pub visible_panel_card_action_count: usize,
+    pub enabled_panel_card_action_count: usize,
+    pub item_count: usize,
+    pub visible_item_count: usize,
+    pub enabled_item_count: usize,
+    pub region_count: usize,
+    pub visible_region_count: usize,
+    pub card_count: usize,
+    pub visible_card_count: usize,
+    pub attention_card_count: usize,
+    pub metric_card_count: usize,
+    pub panel_card_actions: Vec<BerkeleyAppShellDashboardPanelCardAction>,
+    pub package_capability_id: String,
+    pub dashboard_capability_id: String,
+    pub cards_capability_id: String,
+    pub view_capability_id: String,
+    pub layout_capability_id: String,
+    pub navigation_capability_id: String,
+    pub routes_capability_id: String,
+    pub breadcrumbs_capability_id: String,
+    pub tabs_capability_id: String,
+    pub tab_panels_capability_id: String,
+    pub panel_cards_capability_id: String,
+    pub panel_card_actions_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardPanelCardActions {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_shell_handoff(&BerkeleyAppShellHandoff::from_bootstrap_snapshot(snapshot))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dashboard_panel_cards_and_launch_plan(
+            &BerkeleyAppShellDashboardPanelCards::from_shell_handoff(handoff),
+            &handoff.launch_plan,
+        )
+    }
+
+    pub fn from_dashboard_panel_cards_and_launch_plan(
+        panel_cards: &BerkeleyAppShellDashboardPanelCards,
+        launch_plan: &BerkeleyAppLaunchPlan,
+    ) -> Self {
+        let panel_card_actions = panel_cards
+            .panel_cards
+            .iter()
+            .filter_map(|panel_card| {
+                dashboard_panel_card_launch_action(panel_card, launch_plan).map(|action| {
+                    BerkeleyAppShellDashboardPanelCardAction {
+                        id: format!("dashboard.panel-card-action.{}", panel_card.role),
+                        panel_card_id: panel_card.id.clone(),
+                        panel_id: panel_card.panel_id.clone(),
+                        card_id: panel_card.card_id.clone(),
+                        action_id: action.id.clone(),
+                        label: action.label.clone(),
+                        target: action.target.clone(),
+                        panel_kind: action.panel_kind.clone(),
+                        role: panel_card.role.clone(),
+                        path: panel_card.path.clone(),
+                        position: panel_card.position,
+                        selected: panel_card.selected,
+                        default_panel: panel_card.default_panel,
+                        visible: panel_card.visible,
+                        enabled: panel_card.enabled && action.enabled,
+                        primary: action.primary,
+                        card_primary: panel_card.primary,
+                        attention: panel_card.attention,
+                        disabled_reason: if panel_card.enabled {
+                            action.disabled_reason.clone()
+                        } else {
+                            action
+                                .disabled_reason
+                                .clone()
+                                .or_else(|| Some("panel card is not enabled".to_string()))
+                        },
+                    }
+                })
+            })
+            .collect::<Vec<_>>();
+        let selected_panel_card_action = panel_card_actions.iter().find(|action| action.selected);
+        let selected_panel_card_action_id =
+            selected_panel_card_action.map(|action| action.id.clone());
+        let selected_action_id = selected_panel_card_action.map(|action| action.action_id.clone());
+        let default_panel_card_action = panel_card_actions
+            .iter()
+            .find(|action| action.default_panel);
+        let default_panel_card_action_id =
+            default_panel_card_action.map(|action| action.id.clone());
+        let default_action_id = default_panel_card_action.map(|action| action.action_id.clone());
+        let enabled_action_count = launch_plan
+            .actions
+            .iter()
+            .filter(|action| action.enabled)
+            .count();
+        let primary_action_count = launch_plan
+            .actions
+            .iter()
+            .filter(|action| action.primary)
+            .count();
+        let panel_card_action_count = panel_card_actions.len();
+        let visible_panel_card_action_count = panel_card_actions
+            .iter()
+            .filter(|action| action.visible)
+            .count();
+        let enabled_panel_card_action_count = panel_card_actions
+            .iter()
+            .filter(|action| action.enabled)
+            .count();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_PANEL_CARD_ACTIONS_SCHEMA_VERSION,
+            package_name: panel_cards.package_name.clone(),
+            source_fingerprint: panel_cards.source_fingerprint.clone(),
+            title: panel_cards.title.clone(),
+            startup_route: panel_cards.startup_route.clone(),
+            ready: panel_cards.ready,
+            severity: panel_cards.severity.clone(),
+            attention_required: panel_cards.attention_required,
+            primary_card_id: panel_cards.primary_card_id.clone(),
+            primary_region_id: panel_cards.primary_region_id.clone(),
+            active_item_id: panel_cards.active_item_id.clone(),
+            active_route_id: panel_cards.active_route_id.clone(),
+            active_route_path: panel_cards.active_route_path.clone(),
+            default_route_id: panel_cards.default_route_id.clone(),
+            default_route_path: panel_cards.default_route_path.clone(),
+            active_breadcrumb_id: panel_cards.active_breadcrumb_id.clone(),
+            active_breadcrumb_path: panel_cards.active_breadcrumb_path.clone(),
+            default_breadcrumb_id: panel_cards.default_breadcrumb_id.clone(),
+            default_breadcrumb_path: panel_cards.default_breadcrumb_path.clone(),
+            selected_tab_id: panel_cards.selected_tab_id.clone(),
+            selected_tab_path: panel_cards.selected_tab_path.clone(),
+            default_tab_id: panel_cards.default_tab_id.clone(),
+            default_tab_path: panel_cards.default_tab_path.clone(),
+            selected_panel_id: panel_cards.selected_panel_id.clone(),
+            selected_panel_path: panel_cards.selected_panel_path.clone(),
+            default_panel_id: panel_cards.default_panel_id.clone(),
+            default_panel_path: panel_cards.default_panel_path.clone(),
+            selected_panel_card_id: panel_cards.selected_panel_card_id.clone(),
+            selected_card_id: panel_cards.selected_card_id.clone(),
+            default_panel_card_id: panel_cards.default_panel_card_id.clone(),
+            default_card_id: panel_cards.default_card_id.clone(),
+            selected_panel_card_action_id,
+            selected_action_id,
+            default_panel_card_action_id,
+            default_action_id,
+            route_count: panel_cards.route_count,
+            visible_route_count: panel_cards.visible_route_count,
+            enabled_route_count: panel_cards.enabled_route_count,
+            breadcrumb_count: panel_cards.breadcrumb_count,
+            visible_breadcrumb_count: panel_cards.visible_breadcrumb_count,
+            enabled_breadcrumb_count: panel_cards.enabled_breadcrumb_count,
+            tab_count: panel_cards.tab_count,
+            visible_tab_count: panel_cards.visible_tab_count,
+            enabled_tab_count: panel_cards.enabled_tab_count,
+            panel_count: panel_cards.panel_count,
+            visible_panel_count: panel_cards.visible_panel_count,
+            enabled_panel_count: panel_cards.enabled_panel_count,
+            panel_card_count: panel_cards.panel_card_count,
+            visible_panel_card_count: panel_cards.visible_panel_card_count,
+            enabled_panel_card_count: panel_cards.enabled_panel_card_count,
+            action_count: launch_plan.action_count,
+            enabled_action_count,
+            primary_action_count,
+            panel_card_action_count,
+            visible_panel_card_action_count,
+            enabled_panel_card_action_count,
+            item_count: panel_cards.item_count,
+            visible_item_count: panel_cards.visible_item_count,
+            enabled_item_count: panel_cards.enabled_item_count,
+            region_count: panel_cards.region_count,
+            visible_region_count: panel_cards.visible_region_count,
+            card_count: panel_cards.card_count,
+            visible_card_count: panel_cards.visible_card_count,
+            attention_card_count: panel_cards.attention_card_count,
+            metric_card_count: panel_cards.metric_card_count,
+            panel_card_actions,
+            package_capability_id: panel_cards.package_capability_id.clone(),
+            dashboard_capability_id: panel_cards.dashboard_capability_id.clone(),
+            cards_capability_id: panel_cards.cards_capability_id.clone(),
+            view_capability_id: panel_cards.view_capability_id.clone(),
+            layout_capability_id: panel_cards.layout_capability_id.clone(),
+            navigation_capability_id: panel_cards.navigation_capability_id.clone(),
+            routes_capability_id: panel_cards.routes_capability_id.clone(),
+            breadcrumbs_capability_id: panel_cards.breadcrumbs_capability_id.clone(),
+            tabs_capability_id: panel_cards.tabs_capability_id.clone(),
+            tab_panels_capability_id: panel_cards.tab_panels_capability_id.clone(),
+            panel_cards_capability_id: panel_cards.panel_cards_capability_id.clone(),
+            panel_card_actions_capability_id: "app-shell-dashboard-panel-card-actions-json"
+                .to_string(),
+            artifact_capability_count: panel_cards.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_panel_card_actions_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BerkeleyAnalysisInventoryEntry {
     pub index: usize,
     pub directive: String,
@@ -3850,6 +4129,43 @@ impl BerkeleyAppDeck {
             .to_json())
     }
 
+    pub fn app_shell_dashboard_panel_card_actions(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardPanelCardActions {
+        BerkeleyAppShellDashboardPanelCardActions::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_panel_card_actions(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardPanelCardActions, AnalysisExecutionError> {
+        Ok(
+            BerkeleyAppShellDashboardPanelCardActions::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_panel_card_actions_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_panel_card_actions(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_panel_card_actions_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_panel_card_actions(persisted_state)?
+            .to_json())
+    }
+
     pub fn run_source_order(&self) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
         let parsed = self.parsed.as_ref().ok_or_else(|| {
             AnalysisExecutionError::Netlist(NetlistParseError::new(self.blocking_message()))
@@ -4465,6 +4781,49 @@ fn launch_action_from_panel(
         enabled: panel.enabled,
         primary: entry_panel_id == Some(panel.id.as_str()),
         disabled_reason: panel.disabled_reason.clone(),
+    }
+}
+
+fn dashboard_panel_card_launch_action<'a>(
+    panel_card: &BerkeleyAppShellDashboardPanelCard,
+    launch_plan: &'a BerkeleyAppLaunchPlan,
+) -> Option<&'a BerkeleyAppLaunchAction> {
+    let preferred_panel_id =
+        dashboard_panel_card_preferred_action_panel_id(&panel_card.role, launch_plan);
+    let preferred_action = launch_plan
+        .actions
+        .iter()
+        .find(|action| action.panel_id == preferred_panel_id);
+
+    if let Some(action) = preferred_action {
+        if action.enabled
+            || panel_card.selected
+            || panel_card.default_panel
+            || panel_card.role == "attention"
+        {
+            return Some(action);
+        }
+    }
+
+    launch_plan
+        .actions
+        .iter()
+        .find(|action| action.primary && action.enabled)
+        .or_else(|| launch_plan.actions.iter().find(|action| action.enabled))
+        .or(preferred_action)
+        .or_else(|| launch_plan.actions.first())
+}
+
+fn dashboard_panel_card_preferred_action_panel_id<'a>(
+    role: &str,
+    launch_plan: &'a BerkeleyAppLaunchPlan,
+) -> &'a str {
+    match role {
+        "status" if launch_plan.ready => "analysis",
+        "status" => "source",
+        "attention" => "diagnostics",
+        "metrics" => "waveform",
+        _ => launch_plan.entry_panel_id.as_deref().unwrap_or("source"),
     }
 }
 
@@ -5456,6 +5815,221 @@ fn app_shell_dashboard_panel_card_json_value(
         "eventCount": panel_card.event_count,
         "eventIds": &panel_card.event_ids,
         "badgeCount": panel_card.badge_count,
+    })
+}
+
+fn app_shell_dashboard_panel_card_actions_json_value(
+    panel_card_actions: &BerkeleyAppShellDashboardPanelCardActions,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $field:expr) => {
+            value.insert($key.to_string(), serde_json::json!($field));
+        };
+    }
+
+    insert_json!("schemaVersion", panel_card_actions.schema_version);
+    insert_json!("packageName", &panel_card_actions.package_name);
+    insert_json!("sourceFingerprint", &panel_card_actions.source_fingerprint);
+    insert_json!("title", &panel_card_actions.title);
+    insert_json!("startupRoute", &panel_card_actions.startup_route);
+    insert_json!("ready", panel_card_actions.ready);
+    insert_json!("severity", &panel_card_actions.severity);
+    insert_json!("attentionRequired", panel_card_actions.attention_required);
+    insert_json!("primaryCardId", &panel_card_actions.primary_card_id);
+    insert_json!("primaryRegionId", &panel_card_actions.primary_region_id);
+    insert_json!("activeItemId", &panel_card_actions.active_item_id);
+    insert_json!("activeRouteId", &panel_card_actions.active_route_id);
+    insert_json!("activeRoutePath", &panel_card_actions.active_route_path);
+    insert_json!("defaultRouteId", &panel_card_actions.default_route_id);
+    insert_json!("defaultRoutePath", &panel_card_actions.default_route_path);
+    insert_json!(
+        "activeBreadcrumbId",
+        &panel_card_actions.active_breadcrumb_id
+    );
+    insert_json!(
+        "activeBreadcrumbPath",
+        &panel_card_actions.active_breadcrumb_path
+    );
+    insert_json!(
+        "defaultBreadcrumbId",
+        &panel_card_actions.default_breadcrumb_id
+    );
+    insert_json!(
+        "defaultBreadcrumbPath",
+        &panel_card_actions.default_breadcrumb_path
+    );
+    insert_json!("selectedTabId", &panel_card_actions.selected_tab_id);
+    insert_json!("selectedTabPath", &panel_card_actions.selected_tab_path);
+    insert_json!("defaultTabId", &panel_card_actions.default_tab_id);
+    insert_json!("defaultTabPath", &panel_card_actions.default_tab_path);
+    insert_json!("selectedPanelId", &panel_card_actions.selected_panel_id);
+    insert_json!("selectedPanelPath", &panel_card_actions.selected_panel_path);
+    insert_json!("defaultPanelId", &panel_card_actions.default_panel_id);
+    insert_json!("defaultPanelPath", &panel_card_actions.default_panel_path);
+    insert_json!(
+        "selectedPanelCardId",
+        &panel_card_actions.selected_panel_card_id
+    );
+    insert_json!("selectedCardId", &panel_card_actions.selected_card_id);
+    insert_json!(
+        "defaultPanelCardId",
+        &panel_card_actions.default_panel_card_id
+    );
+    insert_json!("defaultCardId", &panel_card_actions.default_card_id);
+    insert_json!(
+        "selectedPanelCardActionId",
+        &panel_card_actions.selected_panel_card_action_id
+    );
+    insert_json!("selectedActionId", &panel_card_actions.selected_action_id);
+    insert_json!(
+        "defaultPanelCardActionId",
+        &panel_card_actions.default_panel_card_action_id
+    );
+    insert_json!("defaultActionId", &panel_card_actions.default_action_id);
+    insert_json!("routeCount", panel_card_actions.route_count);
+    insert_json!("visibleRouteCount", panel_card_actions.visible_route_count);
+    insert_json!("enabledRouteCount", panel_card_actions.enabled_route_count);
+    insert_json!("breadcrumbCount", panel_card_actions.breadcrumb_count);
+    insert_json!(
+        "visibleBreadcrumbCount",
+        panel_card_actions.visible_breadcrumb_count
+    );
+    insert_json!(
+        "enabledBreadcrumbCount",
+        panel_card_actions.enabled_breadcrumb_count
+    );
+    insert_json!("tabCount", panel_card_actions.tab_count);
+    insert_json!("visibleTabCount", panel_card_actions.visible_tab_count);
+    insert_json!("enabledTabCount", panel_card_actions.enabled_tab_count);
+    insert_json!("panelCount", panel_card_actions.panel_count);
+    insert_json!("visiblePanelCount", panel_card_actions.visible_panel_count);
+    insert_json!("enabledPanelCount", panel_card_actions.enabled_panel_count);
+    insert_json!("panelCardCount", panel_card_actions.panel_card_count);
+    insert_json!(
+        "visiblePanelCardCount",
+        panel_card_actions.visible_panel_card_count
+    );
+    insert_json!(
+        "enabledPanelCardCount",
+        panel_card_actions.enabled_panel_card_count
+    );
+    insert_json!("actionCount", panel_card_actions.action_count);
+    insert_json!(
+        "enabledActionCount",
+        panel_card_actions.enabled_action_count
+    );
+    insert_json!(
+        "primaryActionCount",
+        panel_card_actions.primary_action_count
+    );
+    insert_json!(
+        "panelCardActionCount",
+        panel_card_actions.panel_card_action_count
+    );
+    insert_json!(
+        "visiblePanelCardActionCount",
+        panel_card_actions.visible_panel_card_action_count
+    );
+    insert_json!(
+        "enabledPanelCardActionCount",
+        panel_card_actions.enabled_panel_card_action_count
+    );
+    insert_json!("itemCount", panel_card_actions.item_count);
+    insert_json!("visibleItemCount", panel_card_actions.visible_item_count);
+    insert_json!("enabledItemCount", panel_card_actions.enabled_item_count);
+    insert_json!("regionCount", panel_card_actions.region_count);
+    insert_json!(
+        "visibleRegionCount",
+        panel_card_actions.visible_region_count
+    );
+    insert_json!("cardCount", panel_card_actions.card_count);
+    insert_json!("visibleCardCount", panel_card_actions.visible_card_count);
+    insert_json!(
+        "attentionCardCount",
+        panel_card_actions.attention_card_count
+    );
+    insert_json!("metricCardCount", panel_card_actions.metric_card_count);
+    value.insert(
+        "panelCardActions".to_string(),
+        serde_json::Value::Array(
+            panel_card_actions
+                .panel_card_actions
+                .iter()
+                .map(app_shell_dashboard_panel_card_action_json_value)
+                .collect(),
+        ),
+    );
+    insert_json!(
+        "packageCapabilityId",
+        &panel_card_actions.package_capability_id
+    );
+    insert_json!(
+        "dashboardCapabilityId",
+        &panel_card_actions.dashboard_capability_id
+    );
+    insert_json!("cardsCapabilityId", &panel_card_actions.cards_capability_id);
+    insert_json!("viewCapabilityId", &panel_card_actions.view_capability_id);
+    insert_json!(
+        "layoutCapabilityId",
+        &panel_card_actions.layout_capability_id
+    );
+    insert_json!(
+        "navigationCapabilityId",
+        &panel_card_actions.navigation_capability_id
+    );
+    insert_json!(
+        "routesCapabilityId",
+        &panel_card_actions.routes_capability_id
+    );
+    insert_json!(
+        "breadcrumbsCapabilityId",
+        &panel_card_actions.breadcrumbs_capability_id
+    );
+    insert_json!("tabsCapabilityId", &panel_card_actions.tabs_capability_id);
+    insert_json!(
+        "tabPanelsCapabilityId",
+        &panel_card_actions.tab_panels_capability_id
+    );
+    insert_json!(
+        "panelCardsCapabilityId",
+        &panel_card_actions.panel_cards_capability_id
+    );
+    insert_json!(
+        "panelCardActionsCapabilityId",
+        &panel_card_actions.panel_card_actions_capability_id
+    );
+    insert_json!(
+        "artifactCapabilityCount",
+        panel_card_actions.artifact_capability_count
+    );
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_panel_card_action_json_value(
+    panel_card_action: &BerkeleyAppShellDashboardPanelCardAction,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &panel_card_action.id,
+        "panelCardId": &panel_card_action.panel_card_id,
+        "panelId": &panel_card_action.panel_id,
+        "cardId": &panel_card_action.card_id,
+        "actionId": &panel_card_action.action_id,
+        "label": &panel_card_action.label,
+        "target": &panel_card_action.target,
+        "panelKind": &panel_card_action.panel_kind,
+        "role": &panel_card_action.role,
+        "path": &panel_card_action.path,
+        "position": panel_card_action.position,
+        "selected": panel_card_action.selected,
+        "default": panel_card_action.default_panel,
+        "visible": panel_card_action.visible,
+        "enabled": panel_card_action.enabled,
+        "primary": panel_card_action.primary,
+        "cardPrimary": panel_card_action.card_primary,
+        "attention": panel_card_action.attention,
+        "disabledReason": &panel_card_action.disabled_reason,
     })
 }
 

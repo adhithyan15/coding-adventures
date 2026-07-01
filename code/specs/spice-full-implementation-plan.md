@@ -33,27 +33,29 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard panel cards.
+1. Rust Berkeley Mosaic app shell dashboard panel-card actions.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app shell dashboard panel-card surfaces and JSON
-     helpers that derive stable selected/default panel-card IDs,
-     selected/default card IDs, and panel/card joins from dashboard tab panels
-     and cards for a compact first-render product-shell card placement
-     contract.
+   - Add schema-versioned Rust app shell dashboard panel-card action surfaces
+     and JSON helpers that join dashboard panel cards to launch actions with
+     stable selected/default panel-card action IDs, selected/default action
+     IDs, labels, targets, panel kinds, enabled state, and disabled reasons for
+     compact first-render product-shell button and menu wiring.
    - Preserve package name, source fingerprint, ready/blocked route, status
      severity, attention-required flag, primary-card routing, primary-region
      routing, active-item routing, active/default route routing,
      active/default breadcrumb routing, selected/default tab routing,
      selected/default panel routing, selected/default panel-card routing,
-     panel-card IDs, panel IDs, card IDs, section IDs, event IDs, titles,
+     selected/default panel-card action routing, panel-card action IDs, action
+     IDs, panel-card IDs, panel IDs, card IDs, labels, targets, panel kinds,
      roles, paths, positions, tab IDs, breadcrumb IDs, route IDs, item IDs,
-     region IDs, severities, primary/attention flags,
-     selected/default/visible/enabled flags, visible and enabled route,
-     breadcrumb, tab, panel, and panel-card counts, badge counts, dashboard,
-     package, card, view, layout, navigation, routes, breadcrumbs, tabs,
-     tab-panels, and panel-cards capability IDs, and advertised capability
-     count so Mosaic, WebAssembly, and product shells can render startup
-     dashboard panel cards without interpreting tab-panel internals.
+     region IDs, card-primary and attention flags,
+     selected/default/visible/enabled/primary flags, visible and enabled route,
+     breadcrumb, tab, panel, panel-card, action, and panel-card-action counts,
+     badge counts, dashboard, package, card, view, layout, navigation, routes,
+     breadcrumbs, tabs, tab-panels, panel-cards, and panel-card-actions
+     capability IDs, and advertised capability count so Mosaic, WebAssembly,
+     and product shells can wire startup dashboard panel-card actions without
+     interpreting launch-plan or panel-card internals.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1816,6 +1818,29 @@ the Rust, Python, and TypeScript surfaces together.
      tab-panels capability IDs, and advertised capability count so Mosaic,
      WebAssembly, and product shells can render startup dashboard panels
      without interpreting tab internals.
+
+165. Rust Berkeley Mosaic app shell dashboard panel cards.
+   - Status: completed in PR 7149.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell dashboard panel-card surfaces plus JSON helpers that derive
+     stable selected/default panel-card IDs, selected/default card IDs, and
+     panel/card joins from dashboard tab panels and cards for a compact
+     first-render product-shell card placement contract.
+   - The panel-card payload preserves package name, source fingerprint,
+     ready/blocked route, status severity, attention-required flag,
+     primary-card routing, primary-region routing, active-item routing,
+     active/default route routing, active/default breadcrumb routing,
+     selected/default tab routing, selected/default panel routing,
+     selected/default panel-card routing, panel-card IDs, panel IDs, card IDs,
+     section IDs, event IDs, titles, roles, paths, positions, tab IDs,
+     breadcrumb IDs, route IDs, item IDs, region IDs, severities,
+     primary/attention flags, selected/default/visible/enabled flags, visible
+     and enabled route, breadcrumb, tab, panel, and panel-card counts, badge
+     counts, dashboard, package, card, view, layout, navigation, routes,
+     breadcrumbs, tabs, tab-panels, and panel-cards capability IDs, and
+     advertised capability count so Mosaic, WebAssembly, and product shells can
+     render startup dashboard panel cards without interpreting tab-panel
+     internals.
 
 ## Backlog
 
