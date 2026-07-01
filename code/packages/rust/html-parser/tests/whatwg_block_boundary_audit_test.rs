@@ -9,6 +9,7 @@ const WHATWG_BLOCK_BOUNDARY_AUDIT: &str =
     include_str!("fixtures/whatwg-block-boundary-audit.json");
 const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
     ("tricky01-dat-5", "block-formatting-boundary"),
+    ("tricky01-dat-6", "block-table-boundary"),
     ("tricky01-dat-8", "block-table-boundary"),
     ("tricky01-dat-9", "block-text-mode-boundary"),
 ];
