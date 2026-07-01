@@ -15,6 +15,7 @@ use spice_netlist_parser::{
     BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION, BERKELEY_APP_LAUNCH_PLAN_SCHEMA_VERSION,
     BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION, BERKELEY_APP_PACKAGE_NAME,
     BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_DASHBOARD_BREADCRUMBS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_CARDS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_NAVIGATION_SCHEMA_VERSION,
@@ -2620,6 +2621,11 @@ fn berkeley_app_facade_exports_package_manifest_json() {
         .unwrap()
         .iter()
         .any(|capability| capability == "app-shell-dashboard-routes-json"));
+    assert!(payload["artifactCapabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|capability| capability == "app-shell-dashboard-breadcrumbs-json"));
 }
 
 #[test]
@@ -3673,6 +3679,90 @@ C1 out 0 1p
         shell_dashboard_routes_payload["routesCapabilityId"],
         "app-shell-dashboard-routes-json"
     );
+
+    let shell_dashboard_breadcrumbs = app
+        .run_app_shell_dashboard_breadcrumbs(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("shell dashboard breadcrumbs should execute");
+    assert_eq!(
+        shell_dashboard_breadcrumbs.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_BREADCRUMBS_SCHEMA_VERSION
+    );
+    assert!(shell_dashboard_breadcrumbs.ready);
+    assert_eq!(
+        shell_dashboard_breadcrumbs.active_breadcrumb_id.as_deref(),
+        Some("dashboard.breadcrumb.status")
+    );
+    assert_eq!(
+        shell_dashboard_breadcrumbs
+            .active_breadcrumb_path
+            .as_deref(),
+        Some("/dashboard/status")
+    );
+    assert_eq!(
+        shell_dashboard_breadcrumbs.default_breadcrumb_id.as_deref(),
+        Some("dashboard.breadcrumb.status")
+    );
+    assert_eq!(shell_dashboard_breadcrumbs.breadcrumb_count, 3);
+    assert_eq!(shell_dashboard_breadcrumbs.visible_breadcrumb_count, 2);
+    assert_eq!(shell_dashboard_breadcrumbs.enabled_breadcrumb_count, 2);
+    assert_eq!(
+        shell_dashboard_breadcrumbs.breadcrumbs[0].route_id,
+        "dashboard.route.status"
+    );
+    assert_eq!(shell_dashboard_breadcrumbs.breadcrumbs[0].position, 1);
+    assert!(shell_dashboard_breadcrumbs.breadcrumbs[0].active);
+    assert!(shell_dashboard_breadcrumbs.breadcrumbs[0].default_route);
+    assert_eq!(shell_dashboard_breadcrumbs.breadcrumbs[1].role, "attention");
+    assert!(!shell_dashboard_breadcrumbs.breadcrumbs[1].visible);
+    assert!(!shell_dashboard_breadcrumbs.breadcrumbs[1].enabled);
+    assert_eq!(
+        shell_dashboard_breadcrumbs.breadcrumbs[2].path,
+        "/dashboard/metrics"
+    );
+    assert_eq!(
+        shell_dashboard_breadcrumbs.breadcrumbs_capability_id,
+        "app-shell-dashboard-breadcrumbs-json"
+    );
+    assert_eq!(
+        shell_dashboard_breadcrumbs.routes_capability_id,
+        shell_dashboard_routes.routes_capability_id
+    );
+
+    let shell_dashboard_breadcrumbs_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_dashboard_breadcrumbs_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap(),
+    )
+    .expect("shell dashboard breadcrumbs JSON should parse");
+    assert_eq!(
+        shell_dashboard_breadcrumbs_payload["activeBreadcrumbId"],
+        "dashboard.breadcrumb.status"
+    );
+    assert_eq!(
+        shell_dashboard_breadcrumbs_payload["defaultBreadcrumbPath"],
+        "/dashboard/status"
+    );
+    assert_eq!(
+        shell_dashboard_breadcrumbs_payload["visibleBreadcrumbCount"],
+        2
+    );
+    assert_eq!(
+        shell_dashboard_breadcrumbs_payload["breadcrumbs"][1]["enabled"],
+        false
+    );
+    assert_eq!(
+        shell_dashboard_breadcrumbs_payload["breadcrumbs"][2]["routeId"],
+        "dashboard.route.metrics"
+    );
+    assert_eq!(
+        shell_dashboard_breadcrumbs_payload["breadcrumbsCapabilityId"],
+        "app-shell-dashboard-breadcrumbs-json"
+    );
 }
 
 #[test]
@@ -4574,6 +4664,80 @@ R1 in out
     assert_eq!(
         shell_dashboard_routes_payload["routesCapabilityId"],
         "app-shell-dashboard-routes-json"
+    );
+
+    let shell_dashboard_breadcrumbs =
+        app.app_shell_dashboard_breadcrumbs(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        });
+    assert_eq!(
+        shell_dashboard_breadcrumbs.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_BREADCRUMBS_SCHEMA_VERSION
+    );
+    assert!(!shell_dashboard_breadcrumbs.ready);
+    assert_eq!(
+        shell_dashboard_breadcrumbs.active_breadcrumb_id.as_deref(),
+        Some("dashboard.breadcrumb.attention")
+    );
+    assert_eq!(
+        shell_dashboard_breadcrumbs.default_breadcrumb_id.as_deref(),
+        Some("dashboard.breadcrumb.attention")
+    );
+    assert_eq!(
+        shell_dashboard_breadcrumbs
+            .default_breadcrumb_path
+            .as_deref(),
+        Some("/dashboard/attention")
+    );
+    assert_eq!(shell_dashboard_breadcrumbs.breadcrumb_count, 3);
+    assert_eq!(shell_dashboard_breadcrumbs.visible_breadcrumb_count, 3);
+    assert_eq!(shell_dashboard_breadcrumbs.enabled_breadcrumb_count, 3);
+    assert_eq!(shell_dashboard_breadcrumbs.breadcrumbs[0].role, "status");
+    assert!(!shell_dashboard_breadcrumbs.breadcrumbs[0].active);
+    assert!(shell_dashboard_breadcrumbs.breadcrumbs[0].enabled);
+    assert_eq!(
+        shell_dashboard_breadcrumbs.breadcrumbs[1].id,
+        "dashboard.breadcrumb.attention"
+    );
+    assert_eq!(
+        shell_dashboard_breadcrumbs.breadcrumbs[1].route_id,
+        "dashboard.route.attention"
+    );
+    assert!(shell_dashboard_breadcrumbs.breadcrumbs[1].active);
+    assert!(shell_dashboard_breadcrumbs.breadcrumbs[1].default_route);
+    assert_eq!(shell_dashboard_breadcrumbs.breadcrumbs[1].position, 2);
+    assert_eq!(
+        shell_dashboard_breadcrumbs.breadcrumbs_capability_id,
+        "app-shell-dashboard-breadcrumbs-json"
+    );
+
+    let shell_dashboard_breadcrumbs_payload: serde_json::Value = serde_json::from_str(
+        &app.app_shell_dashboard_breadcrumbs_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        }),
+    )
+    .expect("blocked shell dashboard breadcrumbs JSON should parse");
+    assert_eq!(
+        shell_dashboard_breadcrumbs_payload["activeBreadcrumbId"],
+        "dashboard.breadcrumb.attention"
+    );
+    assert_eq!(
+        shell_dashboard_breadcrumbs_payload["enabledBreadcrumbCount"],
+        3
+    );
+    assert_eq!(
+        shell_dashboard_breadcrumbs_payload["breadcrumbs"][1]["default"],
+        true
+    );
+    assert_eq!(
+        shell_dashboard_breadcrumbs_payload["breadcrumbs"][1]["itemId"],
+        "dashboard.nav.attention"
+    );
+    assert_eq!(
+        shell_dashboard_breadcrumbs_payload["breadcrumbsCapabilityId"],
+        "app-shell-dashboard-breadcrumbs-json"
     );
 }
 

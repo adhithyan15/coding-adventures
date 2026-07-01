@@ -32,6 +32,7 @@ pub const BERKELEY_APP_SHELL_DASHBOARD_VIEW_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_NAVIGATION_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_ROUTES_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_BREADCRUMBS_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -79,6 +80,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-dashboard-layout-json",
     "app-shell-dashboard-navigation-json",
     "app-shell-dashboard-routes-json",
+    "app-shell-dashboard-breadcrumbs-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -1793,6 +1795,188 @@ impl BerkeleyAppShellDashboardRoutes {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardBreadcrumb {
+    pub id: String,
+    pub route_id: String,
+    pub item_id: String,
+    pub region_id: String,
+    pub role: String,
+    pub label: String,
+    pub path: String,
+    pub position: usize,
+    pub active: bool,
+    pub default_route: bool,
+    pub visible: bool,
+    pub enabled: bool,
+    pub badge_count: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardBreadcrumbs {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub primary_card_id: Option<String>,
+    pub primary_region_id: Option<String>,
+    pub active_item_id: Option<String>,
+    pub active_route_id: Option<String>,
+    pub active_route_path: Option<String>,
+    pub default_route_id: Option<String>,
+    pub default_route_path: Option<String>,
+    pub active_breadcrumb_id: Option<String>,
+    pub active_breadcrumb_path: Option<String>,
+    pub default_breadcrumb_id: Option<String>,
+    pub default_breadcrumb_path: Option<String>,
+    pub route_count: usize,
+    pub visible_route_count: usize,
+    pub enabled_route_count: usize,
+    pub breadcrumb_count: usize,
+    pub visible_breadcrumb_count: usize,
+    pub enabled_breadcrumb_count: usize,
+    pub item_count: usize,
+    pub visible_item_count: usize,
+    pub enabled_item_count: usize,
+    pub region_count: usize,
+    pub visible_region_count: usize,
+    pub card_count: usize,
+    pub visible_card_count: usize,
+    pub attention_card_count: usize,
+    pub metric_card_count: usize,
+    pub breadcrumbs: Vec<BerkeleyAppShellDashboardBreadcrumb>,
+    pub package_capability_id: String,
+    pub dashboard_capability_id: String,
+    pub cards_capability_id: String,
+    pub view_capability_id: String,
+    pub layout_capability_id: String,
+    pub navigation_capability_id: String,
+    pub routes_capability_id: String,
+    pub breadcrumbs_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardBreadcrumbs {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_dashboard_routes(&BerkeleyAppShellDashboardRoutes::from_bootstrap_snapshot(
+            snapshot,
+        ))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dashboard_routes(&BerkeleyAppShellDashboardRoutes::from_shell_handoff(
+            handoff,
+        ))
+    }
+
+    pub fn from_dashboard_routes(routes: &BerkeleyAppShellDashboardRoutes) -> Self {
+        let breadcrumbs = routes
+            .routes
+            .iter()
+            .enumerate()
+            .map(|(index, route)| BerkeleyAppShellDashboardBreadcrumb {
+                id: format!("dashboard.breadcrumb.{}", route.role),
+                route_id: route.id.clone(),
+                item_id: route.item_id.clone(),
+                region_id: route.region_id.clone(),
+                role: route.role.clone(),
+                label: route.label.clone(),
+                path: route.path.clone(),
+                position: index + 1,
+                active: route.active,
+                default_route: route.default_route,
+                visible: route.visible,
+                enabled: route.enabled,
+                badge_count: route.badge_count,
+            })
+            .collect::<Vec<_>>();
+        let active_breadcrumb_id = breadcrumbs
+            .iter()
+            .find(|breadcrumb| breadcrumb.active)
+            .map(|breadcrumb| breadcrumb.id.clone());
+        let active_breadcrumb_path = active_breadcrumb_id.as_ref().and_then(|active_id| {
+            breadcrumbs
+                .iter()
+                .find(|breadcrumb| &breadcrumb.id == active_id)
+                .map(|breadcrumb| breadcrumb.path.clone())
+        });
+        let default_breadcrumb_id = breadcrumbs
+            .iter()
+            .find(|breadcrumb| breadcrumb.default_route)
+            .map(|breadcrumb| breadcrumb.id.clone());
+        let default_breadcrumb_path = default_breadcrumb_id.as_ref().and_then(|default_id| {
+            breadcrumbs
+                .iter()
+                .find(|breadcrumb| &breadcrumb.id == default_id)
+                .map(|breadcrumb| breadcrumb.path.clone())
+        });
+        let breadcrumb_count = breadcrumbs.len();
+        let visible_breadcrumb_count = breadcrumbs
+            .iter()
+            .filter(|breadcrumb| breadcrumb.visible)
+            .count();
+        let enabled_breadcrumb_count = breadcrumbs
+            .iter()
+            .filter(|breadcrumb| breadcrumb.enabled)
+            .count();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_BREADCRUMBS_SCHEMA_VERSION,
+            package_name: routes.package_name.clone(),
+            source_fingerprint: routes.source_fingerprint.clone(),
+            title: routes.title.clone(),
+            startup_route: routes.startup_route.clone(),
+            ready: routes.ready,
+            severity: routes.severity.clone(),
+            attention_required: routes.attention_required,
+            primary_card_id: routes.primary_card_id.clone(),
+            primary_region_id: routes.primary_region_id.clone(),
+            active_item_id: routes.active_item_id.clone(),
+            active_route_id: routes.active_route_id.clone(),
+            active_route_path: routes.active_route_path.clone(),
+            default_route_id: routes.default_route_id.clone(),
+            default_route_path: routes.default_route_path.clone(),
+            active_breadcrumb_id,
+            active_breadcrumb_path,
+            default_breadcrumb_id,
+            default_breadcrumb_path,
+            route_count: routes.route_count,
+            visible_route_count: routes.visible_route_count,
+            enabled_route_count: routes.enabled_route_count,
+            breadcrumb_count,
+            visible_breadcrumb_count,
+            enabled_breadcrumb_count,
+            item_count: routes.item_count,
+            visible_item_count: routes.visible_item_count,
+            enabled_item_count: routes.enabled_item_count,
+            region_count: routes.region_count,
+            visible_region_count: routes.visible_region_count,
+            card_count: routes.card_count,
+            visible_card_count: routes.visible_card_count,
+            attention_card_count: routes.attention_card_count,
+            metric_card_count: routes.metric_card_count,
+            breadcrumbs,
+            package_capability_id: routes.package_capability_id.clone(),
+            dashboard_capability_id: routes.dashboard_capability_id.clone(),
+            cards_capability_id: routes.cards_capability_id.clone(),
+            view_capability_id: routes.view_capability_id.clone(),
+            layout_capability_id: routes.layout_capability_id.clone(),
+            navigation_capability_id: routes.navigation_capability_id.clone(),
+            routes_capability_id: routes.routes_capability_id.clone(),
+            breadcrumbs_capability_id: "app-shell-dashboard-breadcrumbs-json".to_string(),
+            artifact_capability_count: routes.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_breadcrumbs_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BerkeleyAnalysisInventoryEntry {
     pub index: usize,
     pub directive: String,
@@ -2866,6 +3050,43 @@ impl BerkeleyAppDeck {
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self
             .run_app_shell_dashboard_routes(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_breadcrumbs(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardBreadcrumbs {
+        BerkeleyAppShellDashboardBreadcrumbs::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_breadcrumbs(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardBreadcrumbs, AnalysisExecutionError> {
+        Ok(
+            BerkeleyAppShellDashboardBreadcrumbs::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_breadcrumbs_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_breadcrumbs(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_breadcrumbs_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_breadcrumbs(persisted_state)?
             .to_json())
     }
 
@@ -4017,6 +4238,114 @@ fn app_shell_dashboard_route_json_value(
         "visible": route.visible,
         "enabled": route.enabled,
         "badgeCount": route.badge_count,
+    })
+}
+
+fn app_shell_dashboard_breadcrumbs_json_value(
+    breadcrumbs: &BerkeleyAppShellDashboardBreadcrumbs,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $field:expr) => {
+            value.insert($key.to_string(), serde_json::json!($field));
+        };
+    }
+
+    insert_json!("schemaVersion", breadcrumbs.schema_version);
+    insert_json!("packageName", &breadcrumbs.package_name);
+    insert_json!("sourceFingerprint", &breadcrumbs.source_fingerprint);
+    insert_json!("title", &breadcrumbs.title);
+    insert_json!("startupRoute", &breadcrumbs.startup_route);
+    insert_json!("ready", breadcrumbs.ready);
+    insert_json!("severity", &breadcrumbs.severity);
+    insert_json!("attentionRequired", breadcrumbs.attention_required);
+    insert_json!("primaryCardId", &breadcrumbs.primary_card_id);
+    insert_json!("primaryRegionId", &breadcrumbs.primary_region_id);
+    insert_json!("activeItemId", &breadcrumbs.active_item_id);
+    insert_json!("activeRouteId", &breadcrumbs.active_route_id);
+    insert_json!("activeRoutePath", &breadcrumbs.active_route_path);
+    insert_json!("defaultRouteId", &breadcrumbs.default_route_id);
+    insert_json!("defaultRoutePath", &breadcrumbs.default_route_path);
+    insert_json!("activeBreadcrumbId", &breadcrumbs.active_breadcrumb_id);
+    insert_json!("activeBreadcrumbPath", &breadcrumbs.active_breadcrumb_path);
+    insert_json!("defaultBreadcrumbId", &breadcrumbs.default_breadcrumb_id);
+    insert_json!(
+        "defaultBreadcrumbPath",
+        &breadcrumbs.default_breadcrumb_path
+    );
+    insert_json!("routeCount", breadcrumbs.route_count);
+    insert_json!("visibleRouteCount", breadcrumbs.visible_route_count);
+    insert_json!("enabledRouteCount", breadcrumbs.enabled_route_count);
+    insert_json!("breadcrumbCount", breadcrumbs.breadcrumb_count);
+    insert_json!(
+        "visibleBreadcrumbCount",
+        breadcrumbs.visible_breadcrumb_count
+    );
+    insert_json!(
+        "enabledBreadcrumbCount",
+        breadcrumbs.enabled_breadcrumb_count
+    );
+    insert_json!("itemCount", breadcrumbs.item_count);
+    insert_json!("visibleItemCount", breadcrumbs.visible_item_count);
+    insert_json!("enabledItemCount", breadcrumbs.enabled_item_count);
+    insert_json!("regionCount", breadcrumbs.region_count);
+    insert_json!("visibleRegionCount", breadcrumbs.visible_region_count);
+    insert_json!("cardCount", breadcrumbs.card_count);
+    insert_json!("visibleCardCount", breadcrumbs.visible_card_count);
+    insert_json!("attentionCardCount", breadcrumbs.attention_card_count);
+    insert_json!("metricCardCount", breadcrumbs.metric_card_count);
+    value.insert(
+        "breadcrumbs".to_string(),
+        serde_json::Value::Array(
+            breadcrumbs
+                .breadcrumbs
+                .iter()
+                .map(app_shell_dashboard_breadcrumb_json_value)
+                .collect(),
+        ),
+    );
+    insert_json!("packageCapabilityId", &breadcrumbs.package_capability_id);
+    insert_json!(
+        "dashboardCapabilityId",
+        &breadcrumbs.dashboard_capability_id
+    );
+    insert_json!("cardsCapabilityId", &breadcrumbs.cards_capability_id);
+    insert_json!("viewCapabilityId", &breadcrumbs.view_capability_id);
+    insert_json!("layoutCapabilityId", &breadcrumbs.layout_capability_id);
+    insert_json!(
+        "navigationCapabilityId",
+        &breadcrumbs.navigation_capability_id
+    );
+    insert_json!("routesCapabilityId", &breadcrumbs.routes_capability_id);
+    insert_json!(
+        "breadcrumbsCapabilityId",
+        &breadcrumbs.breadcrumbs_capability_id
+    );
+    insert_json!(
+        "artifactCapabilityCount",
+        breadcrumbs.artifact_capability_count
+    );
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_breadcrumb_json_value(
+    breadcrumb: &BerkeleyAppShellDashboardBreadcrumb,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &breadcrumb.id,
+        "routeId": &breadcrumb.route_id,
+        "itemId": &breadcrumb.item_id,
+        "regionId": &breadcrumb.region_id,
+        "role": &breadcrumb.role,
+        "label": &breadcrumb.label,
+        "path": &breadcrumb.path,
+        "position": breadcrumb.position,
+        "active": breadcrumb.active,
+        "default": breadcrumb.default_route,
+        "visible": breadcrumb.visible,
+        "enabled": breadcrumb.enabled,
+        "badgeCount": breadcrumb.badge_count,
     })
 }
 
