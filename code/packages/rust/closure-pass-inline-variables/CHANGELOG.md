@@ -2,6 +2,35 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline-variables` crate will be documented in this file.
 
+## [0.7.0] - 2026-07-01
+
+### Added — CV provenance for constant propagation (#89)
+
+The pass now records every constant it propagates as a `propagated`
+correlation-vector contribution carrying `{name, value, sites}` — the original
+`const` name, a compact rendering of its literal value, and how many use sites
+the literal replaced. Propagation *dissolves* the binding: its declaration
+becomes unreferenced (remove-unused-vars deletes it) and the literal is copied
+to each reader, so without this record the minified output has no trace that a
+named constant ever stood there. These contributions let a `--correlation_vector`
+consumer map an inlined literal back to the `const` it came from.
+
+- Records emit in program (source) order, one per propagated constant, so the
+  contribution list is deterministic run to run.
+- `value` renders numbers/bigints from their raw text, strings quoted, and
+  `true`/`false`/`null`/`undefined` literally.
+- Attached at the program root — a coarse name→value/site-count *table*. Tagging
+  each substituted literal's own CV id is a documented follow-up, mirroring the
+  inline / rename passes.
+- Emitted JS is byte-identical: contributions are pure metadata. Verified by the
+  full closurec end-to-end suite.
+
+`coding_adventures_correlation_vector` moves from a dev-dependency to a runtime
+dependency (the pass now names `Contribution`), and `serde_json` is added for
+the `json!` meta values. Three new unit tests cover a single-use propagation
+(`sites: 1`), a multi-use propagation (`sites: 2`), and the no-propagation
+(`let`, empty table) case.
+
 ## [0.6.1] - 2026-06-30
 
 ### Changed — test sync for closure-emitter boolean shorthand

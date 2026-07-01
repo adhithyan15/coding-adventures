@@ -60,6 +60,37 @@ The pass only propagates; it leaves the emptied `const` for
 `remove-unused-vars` to delete (mirroring how `inline` leaves dead
 functions for `treeshake`).
 
+## Correlation-vector provenance (#89)
+
+Propagation *dissolves* a constant: its `const` declaration becomes unreferenced
+(remove-unused-vars deletes it) and the literal is copied to each reader. After
+that the minified output has no trace that a named constant ever stood there —
+the exact kind of provenance loss the correlation vector exists to prevent.
+
+So the pass records one `propagated` contribution per constant it propagates,
+carrying the original name, a compact rendering of the literal value, and the
+number of use sites it replaced:
+
+```text
+const N = 42; use(N);
+  → contribution { source: "inline-variables", tag: "propagated",
+                   meta: { name: "N", value: "42", sites: 1 } }
+
+const K = 1; a(K); b(K);
+  → contribution { …, meta: { name: "K", value: "1", sites: 2 } }
+```
+
+Records emit in program (source) order, one per propagated constant, so the list
+is deterministic run to run, and the pipeline attaches them to the program-root
+CV entry — where a `--correlation_vector` consumer can read an inlined literal
+back to the `const` it came from. `value` renders numbers/bigints from raw text,
+strings quoted, and `true`/`false`/`null`/`undefined` literally.
+
+This is the propagation *table*; tagging each substituted literal's own CV id is
+a documented follow-up shared with the inline / rename passes. Contributions are
+pure metadata: the emitted JS is byte-identical with or without the CV log
+enabled.
+
 ## Where it sits
 
 `depends_on = ["constant-fold"]` so a folded initializer

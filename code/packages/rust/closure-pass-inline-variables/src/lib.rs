@@ -103,6 +103,8 @@ use std::collections::HashMap;
 use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
 };
+use coding_adventures_correlation_vector::Contribution;
+use serde_json::json;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
     AssignmentTarget, BindingTarget, Declaration, Expression, ForInit, FunctionParam, Program,
@@ -166,11 +168,45 @@ impl Pass for InlineVariablesPass {
     fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
         let mut program = ctx.program.clone();
         let mut nodes_touched: u32 = 1; // the program root
-        let changed = inline_variables_program(&mut program, &mut nodes_touched);
+        let mut propagated: Vec<PropagatedConst> = Vec::new();
+        let changed =
+            inline_variables_program(&mut program, &mut nodes_touched, &mut propagated);
+
+        // CV provenance (#89): record every constant we propagated as a
+        // `propagated` contribution carrying `{name, value, sites}` — the
+        // original `const` name, a compact rendering of its literal value,
+        // and how many use sites the literal was substituted into.
+        // Propagation *dissolves* the binding: its declaration becomes
+        // unreferenced (remove-unused-vars deletes it) and the literal is
+        // copied to each reader, so without this record the minified output
+        // has no trace that a named constant ever stood there. The pipeline
+        // attaches these to the program-root CV entry, so a
+        // `--correlation_vector` consumer can map an inlined literal back to
+        // the `const` it came from. Records come out in program (source)
+        // order, one per propagated constant, so the emitted list is
+        // deterministic run to run.
+        //
+        // This is the propagation *table* (name → value/site-count); tagging
+        // each substituted literal's OWN CV id is a documented follow-up,
+        // mirroring the inline / rename passes.
+        let contributions: Vec<Contribution> = propagated
+            .into_iter()
+            .map(|p| Contribution {
+                source: "inline-variables".to_string(),
+                tag: "propagated".to_string(),
+                meta: [
+                    ("name".to_string(), json!(p.name)),
+                    ("value".to_string(), json!(p.value)),
+                    ("sites".to_string(), json!(p.sites)),
+                ]
+                .into_iter()
+                .collect(),
+            })
+            .collect();
 
         Ok(PassOutput {
             program,
-            contributions: Vec::new(),
+            contributions,
             changed,
             diagnostics: Vec::new(),
             stats: PassStats { nodes_touched },
@@ -189,9 +225,38 @@ struct ConstCandidate {
     value: Expression,
 }
 
+/// One propagation event for CV provenance (#89): the original `const`
+/// name, a compact rendering of its literal value, and how many use sites
+/// the literal replaced. `run` turns each into a `propagated` contribution.
+struct PropagatedConst {
+    name: String,
+    value: String,
+    sites: usize,
+}
+
+/// A compact source-like rendering of a literal for the `value` meta field.
+/// Covers exactly the variants [`is_literal`] admits; anything else is
+/// unreachable here but rendered as `"?"` defensively.
+fn literal_repr(expr: &Expression) -> String {
+    match expr {
+        Expression::NumericLiteral(n) => n.raw.clone(),
+        Expression::StringLiteral(s) => format!("{:?}", s.value), // quoted
+        Expression::BooleanLiteral(b) => b.value.to_string(),
+        Expression::NullLiteral(_) => "null".to_string(),
+        Expression::BigIntLiteral(b) => b.raw.clone(),
+        Expression::UndefinedLiteral(_) => "undefined".to_string(),
+        _ => "?".to_string(),
+    }
+}
+
 /// Walk the whole program and propagate every qualifying top-level
-/// `const = literal`. Returns whether anything changed.
-fn inline_variables_program(program: &mut Program, nodes_touched: &mut u32) -> bool {
+/// `const = literal`. Returns whether anything changed. `propagated`
+/// accumulates each propagation for CV provenance.
+fn inline_variables_program(
+    program: &mut Program,
+    nodes_touched: &mut u32,
+    propagated: &mut Vec<PropagatedConst>,
+) -> bool {
     // Phase 1 — count how many times each name is declared as a binding
     // anywhere in the program (function names, parameters, var/let/const
     // targets). A candidate's name must be declared exactly once, so no
@@ -273,6 +338,14 @@ fn inline_variables_program(program: &mut Program, nodes_touched: &mut u32) -> b
         }
         if propagate_all(program, cand) {
             changed = true;
+            // CV: the literal was substituted into all `uses` sites (gate
+            // above guarantees `uses > 0`), after which the `const`
+            // declaration is unreferenced.
+            propagated.push(PropagatedConst {
+                name: cand.name.clone(),
+                value: literal_repr(&cand.value),
+                sites: uses,
+            });
         }
     }
     changed
@@ -981,7 +1054,7 @@ mod tests {
     use coding_adventures_closure_emitter::{emit, EmitOptions};
     use coding_adventures_closure_pass_constant_fold::ConstantFoldPass;
     use coding_adventures_closure_pass_pipeline::{PassContext, PassPipeline, PipelineOutput};
-    use coding_adventures_correlation_vector::CVLog;
+    use coding_adventures_correlation_vector::{CVLog, Contribution};
     use coding_adventures_javascript_ast::{Program, SourceType};
     use coding_adventures_javascript_parser::{bridge, parse_javascript_typed};
     use coding_adventures_javascript_tokens::EsVersion;
@@ -1016,6 +1089,64 @@ mod tests {
         emit(&out.program, &sidecar, &mut cv2, &opts)
             .expect("emit")
             .code
+    }
+
+    /// Parse `src`, bridge, run the pass, and return its CV contributions —
+    /// the propagation table (#89 provenance).
+    fn propagate_contributions(src: &str) -> Vec<Contribution> {
+        let es = EsVersion::Es2025;
+        let node = parse_javascript_typed(src, es).expect("parse");
+        let prog = bridge::grammar_to_program(&node, es).expect("bridge");
+        let pass = InlineVariablesPass::new();
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(true);
+        pass.run(PassContext {
+            program: &prog,
+            sidecar: &sidecar,
+            cv: &mut cv,
+        })
+        .expect("inline-variables")
+        .contributions
+    }
+
+    // ----- CV provenance (#89): `propagated` contributions -----
+
+    #[test]
+    fn single_use_propagation_records_value_and_one_site() {
+        // `const N = 42; use(N);` → the literal is propagated to its lone use.
+        let contribs = propagate_contributions("const N = 42; use(N);");
+        assert_eq!(contribs.len(), 1, "one propagated const; got {contribs:?}");
+        let c = &contribs[0];
+        assert_eq!(c.source, "inline-variables");
+        assert_eq!(c.tag, "propagated");
+        assert_eq!(c.meta.get("name").and_then(|v| v.as_str()), Some("N"));
+        assert_eq!(c.meta.get("value").and_then(|v| v.as_str()), Some("42"));
+        assert_eq!(c.meta.get("sites").and_then(|v| v.as_u64()), Some(1));
+    }
+
+    #[test]
+    fn multi_use_propagation_records_site_count() {
+        // A short literal used twice is propagated to BOTH sites.
+        let contribs = propagate_contributions("const K = 1; a(K); b(K);");
+        assert_eq!(contribs.len(), 1, "one propagated const; got {contribs:?}");
+        assert_eq!(
+            contribs[0].meta.get("name").and_then(|v| v.as_str()),
+            Some("K")
+        );
+        assert_eq!(
+            contribs[0].meta.get("sites").and_then(|v| v.as_u64()),
+            Some(2)
+        );
+    }
+
+    #[test]
+    fn no_propagation_emits_no_contributions() {
+        // `let` is reassignable — never propagated, so the table is empty.
+        let contribs = propagate_contributions("let x = 1; use(x);");
+        assert!(
+            contribs.is_empty(),
+            "expected no contributions; got {contribs:?}"
+        );
     }
 
     // ----- metadata contract -----
