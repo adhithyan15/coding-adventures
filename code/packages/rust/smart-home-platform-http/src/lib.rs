@@ -2168,6 +2168,13 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
         });
     }
 
+    {
+        let runtime = runtime.clone();
+        app.get("/api/smart_home/smoke_script", move |request| {
+            runtime_smoke_script_response(&runtime, request)
+        });
+    }
+
     app.get("/api/smart_home/api", api_catalog_response);
 
     {
@@ -2881,6 +2888,15 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
     },
     ApiRouteDescriptor {
         method: "GET",
+        path: "/api/smart_home/smoke_script",
+        category: "smoke",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
         path: "/api/smart_home/api",
         category: "api_catalog",
         surface: "smart_home",
@@ -3338,6 +3354,17 @@ fn runtime_smoke_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResponse
         .lock()
         .expect("smart-home runtime mutex should not be poisoned");
     WebResponse::json(runtime_smoke_json(runtime, &runtime_guard).into_bytes())
+}
+
+fn runtime_smoke_script_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    WebResponse::text(runtime_smoke_script(runtime, &runtime_guard, request))
 }
 
 fn api_catalog_response(request: &WebRequest) -> WebResponse {
@@ -4415,12 +4442,13 @@ fn runtime_bootstrap_json(
     let authorization_summary = runtime_guard.authorization_decision_summary(&authorization_query);
 
     format!(
-        "{{\"generated_at_ms\":{},\"version\":{},\"links\":{{\"readiness\":{},\"dashboard\":{},\"smoke\":{},\"api\":{},\"states\":{},\"state_history\":{},\"command_results\":{},\"authorization_decisions\":{},\"command_authorization\":{},\"capability_grants\":{}}},\"health\":{},\"dashboard\":{},\"api\":{},\"state_gaps\":{},\"recent_activity\":{{\"events\":{{\"summary\":{}}},\"command_results\":{{\"summary\":{}}},\"authorization_decisions\":{{\"summary\":{}}}}}}}",
+        "{{\"generated_at_ms\":{},\"version\":{},\"links\":{{\"readiness\":{},\"dashboard\":{},\"smoke\":{},\"smoke_script\":{},\"api\":{},\"states\":{},\"state_history\":{},\"command_results\":{},\"authorization_decisions\":{},\"command_authorization\":{},\"capability_grants\":{}}},\"health\":{},\"dashboard\":{},\"api\":{},\"state_gaps\":{},\"recent_activity\":{{\"events\":{{\"summary\":{}}},\"command_results\":{{\"summary\":{}}},\"authorization_decisions\":{{\"summary\":{}}}}}}}",
         runtime.now_ms,
         json_string(VERSION),
         json_string("/api/smart_home/readiness"),
         json_string("/api/smart_home/dashboard"),
         json_string("/api/smart_home/smoke"),
+        json_string("/api/smart_home/smoke_script"),
         json_string("/api/smart_home/api"),
         json_string("/api/smart_home/states"),
         json_string("/api/smart_home/state_history"),
@@ -4484,7 +4512,7 @@ fn runtime_smoke_json(
         .count();
 
     format!(
-        "{{\"generated_at_ms\":{},\"version\":{},\"status\":{},\"ready\":{},\"principal_id\":{},\"summary\":{{\"total_checks\":{},\"safe_get_checks\":{},\"mutating_checks\":{},\"runtime_authorized_checks\":{},\"blocking_readiness_checks\":{},\"attention_readiness_checks\":{}}},\"links\":{{\"self\":{},\"dashboard\":{},\"readiness\":{},\"bootstrap\":{},\"api\":{},\"command_results\":{},\"authorization_decisions\":{},\"command_authorization\":{},\"capability_grants\":{}}},\"checks\":[{}]}}",
+        "{{\"generated_at_ms\":{},\"version\":{},\"status\":{},\"ready\":{},\"principal_id\":{},\"summary\":{{\"total_checks\":{},\"safe_get_checks\":{},\"mutating_checks\":{},\"runtime_authorized_checks\":{},\"blocking_readiness_checks\":{},\"attention_readiness_checks\":{}}},\"links\":{{\"self\":{},\"script\":{},\"dashboard\":{},\"readiness\":{},\"bootstrap\":{},\"api\":{},\"command_results\":{},\"authorization_decisions\":{},\"command_authorization\":{},\"capability_grants\":{}}},\"checks\":[{}]}}",
         runtime.now_ms,
         json_string(VERSION),
         json_string(status),
@@ -4497,6 +4525,7 @@ fn runtime_smoke_json(
         blocking_checks,
         attention_checks,
         json_string("/api/smart_home/smoke"),
+        json_string("/api/smart_home/smoke_script"),
         json_string("/"),
         json_string("/api/smart_home/readiness"),
         json_string("/api/smart_home/bootstrap"),
@@ -4511,6 +4540,90 @@ fn runtime_smoke_json(
             .collect::<Vec<_>>()
             .join(","),
     )
+}
+
+fn runtime_smoke_script(
+    runtime: &SmartHomePlatformHttpRuntime,
+    runtime_guard: &SmartHomeRuntime,
+    request: &WebRequest,
+) -> String {
+    let base_url = runtime_smoke_base_url(request);
+    let checks = runtime_smoke_checks(runtime, runtime_guard);
+    let mut script = String::new();
+
+    script.push_str("#!/usr/bin/env sh\n");
+    script.push_str("set -eu\n\n");
+    script.push_str("# Generated by GET /api/smart_home/smoke_script from the live smoke plan.\n");
+    script.push_str(&format!(
+        "BASE_URL=${{SMART_HOME_BASE_URL:-{}}}\n",
+        shell_single_quote(&base_url)
+    ));
+    script.push_str("CURL=${CURL:-curl}\n\n");
+    script.push_str("run_check() {\n");
+    script.push_str("  label=$1\n");
+    script.push_str("  method=$2\n");
+    script.push_str("  path=$3\n");
+    script.push_str("  expected_status=$4\n");
+    script.push_str("  body=${5-}\n");
+    script.push_str("  url=\"${BASE_URL}${path}\"\n");
+    script.push_str("  printf '%s %s ... ' \"$method\" \"$path\"\n");
+    script.push_str("  if [ -n \"$body\" ]; then\n");
+    script.push_str(
+        "    status=$(\"$CURL\" -sS -o /dev/null -w '%{http_code}' -X \"$method\" -H 'Content-Type: application/json' -d \"$body\" \"$url\")\n",
+    );
+    script.push_str("  else\n");
+    script.push_str(
+        "    status=$(\"$CURL\" -sS -o /dev/null -w '%{http_code}' -X \"$method\" \"$url\")\n",
+    );
+    script.push_str("  fi\n");
+    script.push_str("  if [ \"$status\" != \"$expected_status\" ]; then\n");
+    script.push_str(
+        "    printf 'expected %s, got %s for %s\\n' \"$expected_status\" \"$status\" \"$label\" >&2\n",
+    );
+    script.push_str("    exit 1\n");
+    script.push_str("  fi\n");
+    script.push_str("  printf 'ok\\n'\n");
+    script.push_str("}\n");
+
+    for check in &checks {
+        script.push('\n');
+        script.push_str(&format!("# {}\n", check.expected));
+        script.push_str(&format!(
+            "run_check {} {} {} {}",
+            shell_single_quote(check.label),
+            shell_single_quote(check.method),
+            shell_single_quote(&check.path),
+            shell_single_quote(&check.expected_status.to_string())
+        ));
+        if let Some(request_body) = &check.request_body {
+            script.push(' ');
+            script.push_str(&shell_single_quote(request_body));
+        }
+        script.push('\n');
+    }
+
+    script.push_str(&format!(
+        "\nprintf 'All smart-home smoke checks passed ({} checks)\\n'\n",
+        checks.len()
+    ));
+    script
+}
+
+fn runtime_smoke_base_url(request: &WebRequest) -> String {
+    let host_with_port = request
+        .header("host")
+        .map(str::trim)
+        .filter(|host| !host.is_empty())
+        .filter(|host| host.contains(':') || host.starts_with('['));
+    let authority = host_with_port
+        .map(str::to_string)
+        .unwrap_or_else(|| request.http.connection.local_addr.to_string());
+
+    if authority.starts_with("http://") || authority.starts_with("https://") {
+        authority
+    } else {
+        format!("http://{authority}")
+    }
 }
 
 fn runtime_smoke_checks(
@@ -8369,6 +8482,10 @@ fn optional_str_json(value: Option<&str>) -> String {
     value.map(json_string).unwrap_or_else(|| "null".to_string())
 }
 
+fn shell_single_quote(value: &str) -> String {
+    format!("'{}'", value.replace('\'', "'\"'\"'"))
+}
+
 fn url_component(value: &str) -> String {
     const HEX: &[u8; 16] = b"0123456789ABCDEF";
     let mut encoded = String::new();
@@ -9409,6 +9526,7 @@ mod tests {
         assert!(bootstrap.contains(r#""readiness":"/api/smart_home/readiness""#));
         assert!(bootstrap.contains(r#""dashboard":"/api/smart_home/dashboard""#));
         assert!(bootstrap.contains(r#""smoke":"/api/smart_home/smoke""#));
+        assert!(bootstrap.contains(r#""smoke_script":"/api/smart_home/smoke_script""#));
         assert!(bootstrap.contains(r#""states":"/api/smart_home/states""#));
         assert!(bootstrap
             .contains(r#""command_authorization":"/api/smart_home/command_authorization""#));
@@ -9433,6 +9551,7 @@ mod tests {
         assert!(smoke.contains(r#""ready":true"#));
         assert!(smoke.contains(r#""principal_id":"agent:home-assistant-local-api""#));
         assert!(smoke.contains(r#""self":"/api/smart_home/smoke""#));
+        assert!(smoke.contains(r#""script":"/api/smart_home/smoke_script""#));
         assert!(
             smoke.contains(r#""command_authorization":"/api/smart_home/command_authorization""#)
         );
@@ -9465,6 +9584,33 @@ mod tests {
     }
 
     #[test]
+    fn runtime_web_app_serves_fixture_controller_smoke_script() {
+        let app = home_assistant_runtime_web_app(fixture_runtime(true));
+        let response: web_core::WebResponse = app
+            .handle(request("GET", "/api/smart_home/smoke_script"))
+            .into();
+        assert_eq!(response.status, 200);
+        assert!(response.headers.iter().any(|(name, value)| {
+            name == "content-type" && value == "text/plain; charset=utf-8"
+        }));
+        let script = response_body(response);
+
+        assert!(script.contains("#!/usr/bin/env sh"));
+        assert!(script.contains("set -eu"));
+        assert!(script.contains("SMART_HOME_BASE_URL"));
+        assert!(script.contains("BASE_URL=${SMART_HOME_BASE_URL:-'http://127.0.0.1:8123'}"));
+        assert!(script.contains("CURL=${CURL:-curl}"));
+        assert!(script.contains(r#"run_check 'Dashboard shell' 'GET' '/' '200'"#));
+        assert!(script.contains(
+            r#"run_check 'Command authorization preview' 'GET' '/api/smart_home/command_authorization?entity_id=light.entity_light_1&command_type=turn_on' '200'"#
+        ));
+        assert!(script.contains(
+            r#"run_check 'Command probe' 'POST' '/api/services/light/turn_on' '200' '{"entity_id":"light.entity_light_1","brightness_pct":75}'"#
+        ));
+        assert!(script.contains("All smart-home smoke checks passed (11 checks)"));
+    }
+
+    #[test]
     fn runtime_web_app_serves_dashboard_ready_api_catalog() {
         let app = home_assistant_runtime_web_app(fixture_runtime(true));
 
@@ -9472,6 +9618,7 @@ mod tests {
         assert!(catalog.contains(r#""path":"/api/smart_home/readiness""#));
         assert!(catalog.contains(r#""path":"/api/smart_home/dashboard""#));
         assert!(catalog.contains(r#""path":"/api/smart_home/smoke""#));
+        assert!(catalog.contains(r#""path":"/api/smart_home/smoke_script""#));
         assert!(catalog.contains(r#""path":"/api/smart_home/rooms/:room_id""#));
         assert!(catalog.contains(r#""path":"/api/services/:domain/:service""#));
         assert!(catalog
@@ -10554,6 +10701,22 @@ mod tests {
         assert_eq!(status, 200);
         assert!(body.contains(r#""registry":{"bridges":1"#));
         assert!(body.contains(r#""desired_state":{"target_count":0"#));
+    }
+
+    #[test]
+    fn runtime_web_app_serves_smoke_script_over_repo_http_server() {
+        let (port, stop) = start_server(home_assistant_runtime_web_app(fixture_runtime(true)));
+        let (status, body) = http_get(port, "/api/smart_home/smoke_script");
+        stop.stop();
+
+        assert_eq!(status, 200);
+        assert!(body.contains(&format!(
+            "BASE_URL=${{SMART_HOME_BASE_URL:-'http://127.0.0.1:{port}'}}"
+        )));
+        assert!(
+            body.contains(r#"run_check 'Startup bundle' 'GET' '/api/smart_home/bootstrap' '200'"#)
+        );
+        assert!(body.contains("All smart-home smoke checks passed (11 checks)"));
     }
 
     #[test]

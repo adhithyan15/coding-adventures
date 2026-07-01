@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 - Added a Home Assistant-compatible read-only local API `web-core::WebApp` for
   config, state, services, and events over smart-home runtime snapshots.
+- Added a local-controller smoke script export generated from the runtime smoke
+  plan so fixture-controller launches can run the dashboard/API/readiness and
+  command probes without hand-copying curls.
 - Added a live runtime-backed API constructor with `POST /api/services/:domain/:service`
   dispatch through runtime command authorization and command results.
 - Added a read-only command-authorization preview route and browser dashboard

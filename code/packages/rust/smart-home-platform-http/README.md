@@ -26,6 +26,7 @@ stable local API responses for:
 - `/api/smart_home/dashboard`
 - `/api/smart_home/bootstrap`
 - `/api/smart_home/smoke`
+- `/api/smart_home/smoke_script`
 - `/api/smart_home/api`
 - `/api/smart_home/states`
 - `/api/smart_home/states/:entity_id`
@@ -103,6 +104,9 @@ plan with safe GET probes, a command-authorization preview, and a single
 runtime-authorized Home Assistant-style command probe. It lets scripts discover
 the dashboard/API/readiness checks and the exact request body to use for
 fixture-controller verification without scraping launch text.
+`GET /api/smart_home/smoke_script` renders that same plan as a copy-pasteable
+`sh` script using `curl`; set `SMART_HOME_BASE_URL` or `CURL` to override the
+defaults when the fixture controller runs on a custom address.
 
 The browser routes serve an embedded local dashboard shell over the same
 `web-core::WebApp`. The shell loads bootstrap, readiness, state, scene,
@@ -177,8 +181,9 @@ cargo run -p smart-home-platform-http --example hue_fixture_controller
 ```
 
 The controller defaults to `127.0.0.1:8123`, accepts either a positional bind
-address or `--bind`, and prints dashboard, health, readiness, API catalog, and
-smoke-test URLs after the repo HTTP server binds. It raises the repo TCP
+address or `--bind`, and prints dashboard, health, readiness, API catalog,
+smoke-test URLs, and a generated smoke-script URL after the repo HTTP server
+binds. It raises the repo TCP
 runtime pending-write budget for the embedded dashboard response while leaving
 request limits at the default HTTP-server settings:
 
@@ -198,6 +203,8 @@ curl http://127.0.0.1:8123/api/smart_home/readiness
 curl http://127.0.0.1:8123/api/smart_home/dashboard
 curl http://127.0.0.1:8123/api/smart_home/bootstrap
 curl http://127.0.0.1:8123/api/smart_home/smoke
+curl http://127.0.0.1:8123/api/smart_home/smoke_script
+SMART_HOME_BASE_URL=http://127.0.0.1:8123 sh -c "$(curl -fsS http://127.0.0.1:8123/api/smart_home/smoke_script)"
 curl 'http://127.0.0.1:8123/api/smart_home/api?surface=home_assistant&method=POST'
 curl 'http://127.0.0.1:8123/api/smart_home/api?mutating=true&authorized=true'
 curl 'http://127.0.0.1:8123/api/smart_home/states?domain=light&stale=true'
