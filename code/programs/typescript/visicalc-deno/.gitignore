@@ -1,0 +1,5 @@
+# Compiled `deno desktop` output (rebuilt by `deno desktop`, like other demos'
+# build artifacts) and any local Deno cache.
+*.app/
+*.dylib
+.deno/

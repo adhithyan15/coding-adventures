@@ -1,0 +1,9 @@
+{
+  "name": "@coding-adventures/visicalc-deno",
+  "version": "0.1.0",
+  "tasks": {
+    "dev": "deno run --allow-net main.ts",
+    "desktop": "deno desktop -A main.ts",
+    "build": "deno desktop -A --output VisiCalc.app main.ts"
+  }
+}
