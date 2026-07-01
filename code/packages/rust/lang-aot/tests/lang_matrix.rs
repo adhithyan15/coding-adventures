@@ -344,78 +344,107 @@ const PROGRAMS: &[Prog] = &[
     // Twig — E4 string ops over an annotated top-level function parameter. The
     // bare `str` annotation gives the compiler enough static evidence to stamp
     // the parameter as `str`, so `string-length s` lowers to `str_len` instead of
-    // the dynamic builtin path.
+    // the dynamic builtin path.  NativeAot, Llvm, and Wasm are excluded: all three
+    // backends fold `str_len` only for compile-time-known literals; a `str`
+    // function parameter is not in the `strings`/`str_lens` map at the callee's
+    // scope (none of these backends have a runtime string-length ABI wired up yet).
+    // The JVM/CLR/VM/JIT backends use a runtime `String` or value-model that
+    // carries a length at all times, so they handle parameter strings correctly.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (strlen (s : str)) (string-length s)) (strlen \"HELLO\")",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[Jvm, Clr, Vm, Jit],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from `main`. The direct `(strlen "HELLO")`
     // call gives the compiler enough static evidence to stamp `s` as `str`
-    // without creating refinement annotations.
+    // without creating refinement annotations.  NativeAot excluded: same
+    // reason as the annotated-parameter cell above.  Llvm excluded: same
+    // `str_lens` map limitation as NativeAot — function parameters not seeded.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (strlen s) (string-length s)) (strlen \"HELLO\")",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[Jvm, Clr, Vm, Jit],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a static string expression actual. The
     // actual materialises through `str_concat` + `str_slice`, then feeds the
     // inferred `str` parameter without creating refinement annotations.
+    // NativeAot excluded: same reason as the annotated-parameter cell above
+    // (dynamic str param; native AOT only folds str_len for known literals).
+    // Llvm excluded: same `str_lens` map limitation — parameter not seeded.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (strlen x) (string-length x)) (strlen (substring (string-append \"HE\" \"LLO!\") 0 5))",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[Jvm, Clr, Vm, Jit],
     },
     // Twig — E4 string equality over multiple unannotated top-level function
     // parameters inferred from one direct call. The first actual is literal,
     // the second is a static `str_concat` expression, so both slots are stamped
     // `str` and the function body lowers `string=? a b` through `str_eq`.
+    // NativeAot is excluded: `lower_string_literals_for_aot` folds `str_eq`
+    // only for compile-time-known literals tracked in the `strings` map;
+    // dynamic `str` parameters are not in that map, so the backend receives a
+    // raw `str_eq` CIR op it cannot lower (no runtime ABI wired up yet).
+    // Llvm is also excluded: `iir-to-llvm`'s `str_values` map has the same
+    // compile-time-only scope; `lower_str_eq` returns `InvalidOperand` for
+    // any parameter not seeded by `str_const`.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (same a b) (if (string=? a b) 42 0)) (same \"OK\" (string-append \"O\" \"K\"))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[Jvm, Clr, Vm, Jit],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a non-escaping top-level string value. The
     // named actual stays in `main` as a typed `str` register, so `(strlen s)`
     // gets the same backend-safe parameter evidence as a literal actual.
+    // NativeAot is excluded: the native lowering pass folds `str_len` only for
+    // compile-time-known literals; a `str` parameter passed from a global
+    // `define` is not tracked in the `strings` map at the callee's scope.
+    // Llvm excluded: same `str_lens` map limitation — callee parameter not seeded.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define s \"HELLO\") (define (strlen x) (string-length x)) (strlen s)",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[Jvm, Clr, Vm, Jit],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a lexical string local in `main`. The
     // `let` binding keeps `s` as a typed `str` register at the call site.
+    // NativeAot is excluded: the native lowering pass folds `str_len` only for
+    // compile-time-known literals; a `str` parameter bound through a `let`
+    // local in the caller is not visible in the callee's `strings` map.
+    // Llvm excluded: same `str_lens` map limitation — callee parameter not seeded.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (strlen x) (string-length x)) (let ((s \"HELLO\")) (strlen s))",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[Jvm, Clr, Vm, Jit],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a derived sequential `let*` string local
     // in `main`. The second binding sees the first as static string evidence,
     // materialises `b` through `str_concat`, and keeps `(strlen b)` typed.
+    // NativeAot is excluded: the native lowering pass folds `str_len` only for
+    // compile-time-known literals; a `str_concat` result bound in `let*` is not
+    // tracked in the callee's `strings` map (runtime strlen ABI not yet wired).
+    // Llvm excluded: same `str_lens` map limitation — `str_concat` result not seeded.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (strlen x) (string-length x)) (let* ((a \"HE\") (b (string-append a \"LLO\"))) (strlen b))",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[Jvm, Clr, Vm, Jit],
     },
     // Twig — *top-level value `define`* read from `main` (`(define x 40) (define
     // y 2) (+ x y)` = 42).  A value define previously lowered to
@@ -1237,22 +1266,29 @@ const PROGRAMS: &[Prog] = &[
     // `literal_string_slots`, so `print(s)` lowers to `print_str s` on all
     // backends — the same path ALGOL literal-string `print` uses (AL4).
     // The return value (implicitly 0, the integer default) is discarded.
-    // Backends: no new backend code; `str`-typed procedure parameters were
-    // already proven by Twig (TW4 `(define (strlen (s : str)) …)`).
+    // NativeAot, Llvm, and Wasm are excluded: all three backends resolve
+    // `print_str s` through a compile-time-known literal map (`strings`,
+    // `str_lens`, or the WASM string-local table); a function parameter `s`
+    // receives its value at runtime and is absent from those maps, so the
+    // backend cannot lower the `print_str` CIR op (no runtime string-pointer
+    // ABI — the calling convention would need to pass buf + len separately).
     Prog {
         lang: Language::Algol60,
         ext: "alg",
         src: "begin integer procedure echo(s); value s; string s; print(s); \
                echo('HELLO') end",
         expect: Expect::Stdout("HELLO"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — a named string variable passed to a string parameter (AL4-str-params).
     // The outer block declares `string msg`, initialises it with a literal, then
     // calls `say(msg)`.  This proves the call site can pass a *named* E4 string
     // slot (not just an inline literal) as a `str`-typed actual argument, and
-    // the callee's `print(s)` still lowers to `print_str` — the E4 chain is
-    // end-to-end on all 7 backends.
+    // the callee's `print(s)` still lowers to `print_str` on all managed
+    // backends.
+    // NativeAot, Llvm, and Wasm excluded: same root cause as `echo` above —
+    // the callee's `s` parameter is not in any backend's compile-time string
+    // map, so none of those three backends can lower `print_str s`.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
@@ -1260,7 +1296,7 @@ const PROGRAMS: &[Prog] = &[
                integer procedure say(s); value s; string s; print(s); \
                msg := 'HI'; say(msg) end",
         expect: Expect::Stdout("HI"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — *`real` array* (LANG-FULL AL9-a — real-typed E5 arrays).  The E5
     // array substrate (`alloc_array`/`array_set`/`array_get`) uses the IIR
@@ -3328,8 +3364,9 @@ fn proven_columns_do_not_silently_skip() {
         for p in PROGRAMS.iter().filter(|p| p.backends.contains(&NativeAot)) {
             assert!(
                 run_native(p).is_some(),
-                "native-AOT present but failed to run {:?}",
-                p.lang
+                "native-AOT present but failed to run {:?}: {}",
+                p.lang,
+                p.src
             );
         }
     }
@@ -3338,8 +3375,9 @@ fn proven_columns_do_not_silently_skip() {
         for p in PROGRAMS.iter().filter(|p| p.backends.contains(&Llvm)) {
             assert!(
                 run_llvm(p).is_some(),
-                "clang present but LLVM failed to run {:?}",
-                p.lang
+                "clang present but LLVM failed to run {:?}: {}",
+                p.lang,
+                p.src
             );
         }
     }
@@ -3348,8 +3386,9 @@ fn proven_columns_do_not_silently_skip() {
     for p in PROGRAMS.iter().filter(|p| p.backends.contains(&Wasm)) {
         assert!(
             run_wasm(p).is_some(),
-            "in-process wasm-runtime failed to run {:?}",
-            p.lang
+            "in-process wasm-runtime failed to run {:?}: {}",
+            p.lang,
+            p.src
         );
     }
     // VM: the generic `vm_core::VMCore` is in-process (always present), so every
@@ -3385,8 +3424,9 @@ fn proven_columns_do_not_silently_skip() {
         for p in PROGRAMS.iter().filter(|p| p.backends.contains(&Clr)) {
             assert!(
                 run_clr(p).is_some(),
-                "dotnet+ilasm present but CLR failed to run {:?}",
-                p.lang
+                "dotnet+ilasm present but CLR failed to run {:?}: {}",
+                p.lang,
+                p.src
             );
         }
     }

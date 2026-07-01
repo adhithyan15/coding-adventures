@@ -1,5 +1,27 @@
 # Changelog — `twig-aot`
 
+## 0.23.0 — 2026-06-30 — strip dead AOT string-literal allocation blocks
+
+Added `strip_dead_aot_string_allocs` pass (called from `prepare_module_for_aot`
+after `lower_string_literals_for_aot`):
+
+After `lower_string_literals_for_aot` folds literal-only `str_eq`/`str_cmp`
+ops to constant integers, the `push_aot_string_literal` blocks that allocated
+the buffer (`alloc_bytes` + `store_byte` writes) are left with no live
+consumer — their `__aot_str{N}_buf` variable is written but never read.
+
+On aarch64, each such dead block uses 8+ frame slots. With multiple string
+comparisons (e.g. the ALGOL `s = 'ALPHA' and s != 'OMEGA'` cell), the
+accumulated frame size exceeded the 504-byte limit of the
+`stp_pre`/`ldp_post` 7-bit signed immediate, causing
+`BackendError::FrameTooLarge` in the NativeAot backend.
+
+The pass scans all `alloc_bytes` instructions whose dest starts with
+`__aot_str` and ends with `_buf`, checks whether any instruction other than
+`store_byte` references that var as a source, and removes the entire dead
+block (the `alloc_bytes` + every `store_byte` into it) when no live
+consumer exists.
+
 ## 0.22.0 — 2026-06-28 — native string comparison metadata folding (LANG-FULL E4)
 
 `prepare_module_for_aot` now folds literal-only `str_cmp` to the shared `-1`,

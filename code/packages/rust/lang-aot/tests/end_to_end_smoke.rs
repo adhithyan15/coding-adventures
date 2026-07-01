@@ -883,11 +883,11 @@ fn end_to_end_twig_emits_llvm_ir_via_lang_aot() {
 
 #[test]
 fn end_to_end_basic_print_emits_llvm_ir_with_print_extern() {
-    // BASIC's PRINT triggers `call_builtin print_i64`, which the LLVM
-    // backend lowers to `call void @__print_i64(i64 ...)` + a module-top
-    // `declare void @__print_i64(i64)`.  This is the LLVM counterpart
-    // to gaps G2 (wasm) / G3 (JVM) / G4 (CLR) — same builtin name on
-    // every backend.
+    // After the BA2 PRINT overhaul, BASIC's `PRINT 42` compiles the integer
+    // literal as a real constant (42.0) and routes it through
+    // `@__basic_print_real`, which handles the full numeric format including
+    // sign, digits, and decimal point.  The old `@__print_i64` path is no
+    // longer used for numeric PRINT expressions.
     let dir = tempfile::tempdir().expect("tempdir");
     let src = dir.path().join("smoke.bas");
     let ll  = dir.path().join("smoke.ll");
@@ -904,10 +904,10 @@ fn end_to_end_basic_print_emits_llvm_ir_with_print_extern() {
     }
 
     let body = std::fs::read_to_string(&ll).expect("read .ll");
-    assert!(body.contains("declare void @__print_i64(i64)"),
-        "BASIC `PRINT 42` should produce an `@__print_i64` declare in the .ll; got:\n{body}");
-    assert!(body.contains("call void @__print_i64(i64"),
-        "BASIC `PRINT 42` should produce a `call void @__print_i64(i64 …)` site; got:\n{body}");
+    assert!(body.contains("@__basic_print_real"),
+        "BASIC `PRINT 42` should route through `@__basic_print_real` after BA2; got:\n{body}");
+    assert!(body.contains("call i64 @__basic_print_real(double"),
+        "BASIC `PRINT 42` should call `@__basic_print_real` with a double; got:\n{body}");
 }
 
 // ===========================================================================

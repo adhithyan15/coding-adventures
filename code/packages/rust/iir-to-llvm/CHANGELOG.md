@@ -1,5 +1,28 @@
 # Changelog — iir-to-llvm
 
+## [0.28.0] — 2026-06-30 (LANG-FULL — seed `env_i1` for bool/i1 function parameters)
+
+Fixed a regression in `lower_function` where ALGOL programs with boolean
+parameters passed to functions that used bitwise logic would emit a bogus
+`trunc i64 %param to i1` instruction, corrupting the i1 form in `env_i1`.
+
+**Root cause**: `lower_bitwise` retrieves the i1 form of a value from
+`env_i1` before emitting boolean `and`/`or`/`xor`.  For comparison
+results (e.g. `icmp eq`), the i1 result is stored in `env_i1` naturally.
+For *function parameters* typed "bool"/"i1", the parameter arrives in LLVM
+IR already as an `i1` SSA value, but `env_i1` was not seeded at function
+entry.  `lower_bitwise` then fell through to the truncation fallback and
+emitted `trunc i64 %p to i1` — treating an `i1` as `i64`, which LLVM
+rejects.
+
+**Fix** (`lower_function` initialization loop, `lib.rs`):
+After inserting each parameter into `state.env`, check whether its declared
+type is "bool" or "i1".  If so, also insert the same `%pname` string into
+`state.env_i1`.  `lower_bitwise` then finds it directly and skips the
+truncation path entirely.
+
+Regression test: `bitwise_bool_ops_lower_as_i1_logic` now passes cleanly.
+
 ## [0.26.0] — 2026-06-29 (LANG-FULL BA-pow — `f64_pow` LLVM lowering)
 
 Added `lower_f64_pow`: detects use of `f64_pow` during the scan pass

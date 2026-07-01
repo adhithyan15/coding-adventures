@@ -1,5 +1,27 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.36.0] — 2026-06-30 (LANG-FULL — CIL text backend: `Operand::Bool` and `neg`)
+
+Two missing cases in `il_text.rs` that caused CLR failures for ALGOL boolean
+programs on the text-based CIL backend:
+
+**`Operand::Bool` in `const` handler** (`il_text.rs`):
+The `const` IIR op's source-operand match arm only handled `Operand::Int(n)`.
+ALGOL emits `Operand::Bool(true)` / `Operand::Bool(false)` for boolean
+declarations (`boolean b; b := true`).  The text backend returned an error for
+these; the binary backend (`lower.rs` line 695) already handled them.
+
+Fix: added `Some(Operand::Bool(b)) => if *b { 1 } else { 0 }` case to the
+match arm, giving booleans the same treatment as in the binary backend.
+
+**`"neg"` arithmetic-negation op** (`il_text.rs`):
+The `neg` IIR op (emitted by BASIC `ABS(n)` as `neg` + select-positive) was
+only handled by the binary backend (`lower.rs`).  The text backend had no
+arm for it, causing a "unknown op" error.
+
+Fix: added `"neg"` arm after the `"not"` arm that loads the source variable,
+emits CIL `neg`, applies `emit_narrow_width_mask`, and stores the result.
+
 ## [0.35.0] — 2026-06-29 (LANG-FULL BA-pow — `f64_pow` CLR lowering)
 
 Added `"f64_pow"` arm in `il_text`: loads base and exponent via `load_var`,

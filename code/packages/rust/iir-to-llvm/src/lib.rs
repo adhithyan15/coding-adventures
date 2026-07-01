@@ -239,6 +239,9 @@ const SUPPORTED_OPS: &[&str] = &[
     // bitwise NOT — synthesised as `xor x, -1` (LLVM has no `not`); unlocks
     // Nib N3-`~` and Oct O2-`~`.
     "not",
+    // unary negation — `fneg` for floats, `sub 0, x` for integers.  Used by
+    // BASIC ABS/SGN inline conditionals and any frontend that emits unary `-`.
+    "neg",
     // LLVM03 — comparison (both naked and cmp_-prefixed; see G1)
     "eq", "ne", "lt", "le", "gt", "ge",
     "cmp_eq", "cmp_ne", "cmp_lt", "cmp_le", "cmp_gt", "cmp_ge",
@@ -1245,8 +1248,14 @@ fn lower_function(
         slots,
         slot_types,
     };
-    for (pname, _) in &func.params {
-        state.env.insert(pname.clone(), format!("%{pname}"));
+    for (pname, pty) in &func.params {
+        let llvm_val = format!("%{pname}");
+        state.env.insert(pname.clone(), llvm_val.clone());
+        // Bool/i1 parameters arrive as i1 SSA values — seed env_i1 so
+        // `lower_bitwise` can use them directly without `trunc i64 → i1`.
+        if matches!(pty.as_str(), "bool" | "i1") {
+            state.env_i1.insert(pname.clone(), llvm_val);
+        }
     }
 
     // ── Body ──────────────────────────────────────────────────────────────
@@ -1485,6 +1494,12 @@ fn lower_instr(
         // (flip every bit). For a narrow unsigned width the E2 mask brings it
         // back into range (`~0u8 = 255`). Used by Nib/Oct unary `~`.
         "not" => lower_not(instr, state, out),
+
+        // ── unary negation ───────────────────────────────────────────────
+        //
+        // `fneg` for floats; `sub 0, x` for integers.  BASIC ABS/SGN emit
+        // this to negate a real value inside an inline conditional.
+        "neg" => lower_neg(instr, state, out),
 
         // ── comparison ──────────────────────────────────────────────────
         //
@@ -2639,17 +2654,68 @@ fn lower_bitwise(
     }
     let dest = require_dest(instr, iir_op, state.fn_name)?.to_string();
     let ty = llvm_type_for(&instr.type_hint, state.fn_name)?;
-    let a = resolve_operand(instr.srcs.first(), &state.env, &instr.type_hint, state.fn_name)?;
-    let b = resolve_operand(instr.srcs.get(1), &state.env, &instr.type_hint, state.fn_name)?;
 
     // E2: a narrow unsigned bitwise op (u4/u8/u16/u32) flows through i64 slots —
     // compute at i64 and mask the result into its width (matches lower_arith and
     // the register backends). `and`/`or`/`xor` of in-range operands is unchanged
     // by the mask; the mask matters once `not`/`shl` widen the result.
+    // Note: narrow_unsigned_width_mask("bool") is None, so bool ops skip this path.
     if let Some(mask) = narrow_unsigned_width_mask(&instr.type_hint) {
+        let a = resolve_operand(instr.srcs.first(), &state.env, &instr.type_hint, state.fn_name)?;
+        let b = resolve_operand(instr.srcs.get(1), &state.env, &instr.type_hint, state.fn_name)?;
         emit_narrow_wrapped(iir_op, &a, &b, &dest, mask, state, out);
         return Ok(());
     }
+
+    // When the target type is i1 (`bool` or `i1` type_hint), comparison results
+    // are stored in `env` as zext'd i64 values — using them directly in `and i1`
+    // would be a type error.  Prefer the i1 forms from `env_i1` (set by
+    // `lower_cmp`), with a trunc fallback for other i64 sources.  Mirrors the
+    // operand-lifting logic in `lower_jmp_if`.
+    let (a, b) = if ty == "i1" {
+        let lift_a = match instr.srcs.first() {
+            Some(Operand::Var(name)) => {
+                if let Some(i1) = state.env_i1.get(name).cloned() {
+                    i1
+                } else {
+                    let wide = state.env.get(name).cloned().ok_or_else(|| {
+                        IIRLlvmError::UndefinedVariable {
+                            function: state.fn_name.into(),
+                            name: name.clone(),
+                        }
+                    })?;
+                    let t = state.fresh("tobool");
+                    out.push_str(&format!("  {t} = trunc i64 {wide} to i1\n"));
+                    t
+                }
+            }
+            other => render_literal(other, "bool", state.fn_name)?,
+        };
+        let lift_b = match instr.srcs.get(1) {
+            Some(Operand::Var(name)) => {
+                if let Some(i1) = state.env_i1.get(name).cloned() {
+                    i1
+                } else {
+                    let wide = state.env.get(name).cloned().ok_or_else(|| {
+                        IIRLlvmError::UndefinedVariable {
+                            function: state.fn_name.into(),
+                            name: name.clone(),
+                        }
+                    })?;
+                    let t = state.fresh("tobool");
+                    out.push_str(&format!("  {t} = trunc i64 {wide} to i1\n"));
+                    t
+                }
+            }
+            other => render_literal(other, "bool", state.fn_name)?,
+        };
+        (lift_a, lift_b)
+    } else {
+        (
+            resolve_operand(instr.srcs.first(), &state.env, &instr.type_hint, state.fn_name)?,
+            resolve_operand(instr.srcs.get(1), &state.env, &instr.type_hint, state.fn_name)?,
+        )
+    };
 
     out.push_str(&format!("  %{dest} = {iir_op} {ty} {a}, {b}\n"));
     let value = format!("%{dest}");
@@ -2682,6 +2748,28 @@ fn lower_not(
     }
     let ty = llvm_type_for(&instr.type_hint, state.fn_name)?;
     out.push_str(&format!("  %{dest} = xor {ty} {a}, -1\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+/// Lower `neg dest <- src` — unary arithmetic negation.
+///
+/// LLVM IR uses `fneg` for floating-point and `sub 0, x` for integers.
+/// The `sub 0, x` form is idiomatic and matches every existing backend's
+/// negation pattern (WASM `f64.neg`, native `fneg`/`neg r`).
+fn lower_neg(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "neg", state.fn_name)?.to_string();
+    let ty = llvm_type_for(&instr.type_hint, state.fn_name)?;
+    let a = resolve_operand(instr.srcs.first(), &state.env, &instr.type_hint, state.fn_name)?;
+    if is_float_type(&instr.type_hint) {
+        out.push_str(&format!("  %{dest} = fneg {ty} {a}\n"));
+    } else {
+        out.push_str(&format!("  %{dest} = sub {ty} 0, {a}\n"));
+    }
     state.env.insert(dest.clone(), format!("%{dest}"));
     Ok(())
 }
