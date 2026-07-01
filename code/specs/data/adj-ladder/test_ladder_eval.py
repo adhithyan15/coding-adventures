@@ -57,6 +57,7 @@ SELF_CONTAINED_RUNGS = (
     "rung17_alveolar_ventilation",
     "rung18_ejection_fraction",
     "rung19_rbc_indices",
+    "rung20_hepatic_indices",
 )
 
 
