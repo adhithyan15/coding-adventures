@@ -2,6 +2,57 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.99.0] - 2026-06-30
+
+### Added (P7 — default / optional parameters, Ruby-1.0 gap closed)
+
+- `def f(a = 1)` now PRODUCES a default parameter. The frontend used to extract
+  the param name but *silently drop* the `= <default>` subtree; worse, the
+  grammar `param` rule (`[ "*" | "**" ] NAME`) had **no default-value branch at
+  all**, so `def f(a = 1)` did not even parse. Both gaps are now closed:
+  - **Grammar.** `param` is extended to `param = [ "*" | "**" ] NAME [ EQUALS
+    expression ]` in both `code/grammars/ruby.grammar` and the embedded
+    `ruby-parser/src/_grammar.rs` (kept in sync per the grammar-tools rule).
+  - **Lowering.** A new `Lowerer::extract_params` helper centralises the
+    parameter walk for all three call sites (`def_statement`,
+    `endless_def_statement`, `lambda_literal`). When a param carries a default
+    `expression` child, it is lowered through the normal bounded
+    `lower_expression` path into `Param { default: Some(Box::new(expr)), .. }`.
+    Required / rest (`*r`) / kwrest (`**o`) params keep `default: None`.
+  - **Call-time, param-scoped.** Ruby defaults evaluate at call time and may
+    reference EARLIER params (`def f(a, b = a)` is legal Ruby). `extract_params`
+    lowers each default with every prior param already visible as a
+    `Scope::Param`, matching the SIR validator's model exactly. The temporary
+    scope visibility is snapshotted and restored so it does not leak into the
+    method body scope.
+  - **Feature manifest.** A defaulted param now observes `Feature::DefaultParams`
+    and the manifest materialiser emits it, so the SIR validator accepts the
+    used feature.
+  - **Partial calls.** A call that omits a defaulted arg (`f(5)` for
+    `def f(a, b = 1)`) lowers to a call with FEWER args — the frontend lowers the
+    args present and does not pad. The SIR validator (and the Python/JS backends)
+    now permit omitting trailing defaulted args.
+
+### Tests
+
+- Six new unit tests: `def f(a = 1)` → `Param.default = Some(IntLit 1)`;
+  `def f(a, b = a + 1)` → default referencing param `a` resolves to
+  `Scope::Param` and the module validates; required/rest params keep no default;
+  the DefaultParams feature is observed only when a default is present; and a
+  partial call lowers without padding the omitted default.
+- End-to-end execution proof lives in `semantic-ir-to-python` (which already
+  depends on this crate as a dev-dependency):
+  `def f(a, b = a + 1)\n  b + 0\nend\nprint f(5)\nprint f(5, 10)` → Ruby SIR →
+  Python source → CPython prints `6` then `10`, proving the default is genuinely
+  call-time and param-scoped through the whole pipeline.
+
+### Notes
+
+- A pre-existing parser quirk (a method body that is a single *bare* identifier,
+  e.g. `def f(a)\n  a\nend`, mis-parses as a no-paren call) is unrelated to this
+  change; the new tests use honest expression bodies (`a + 0`).
+- Cargo crate version bumped `0.1.0` → `0.2.0`.
+
 ## [0.98.0] - 2026-06-26
 
 ### Changed (M5 — `when` uses case-equality `===`, not `==`)

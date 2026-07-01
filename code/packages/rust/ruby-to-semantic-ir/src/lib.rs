@@ -76,6 +76,158 @@ mod tests {
         &f.body
     }
 
+    // -----------------------------------------------------------------
+    // Phase P7 (Ruby 1.0) — default / optional parameters.
+    //
+    // Before P7 the grammar `param` rule was `[ "*" | "**" ] NAME`, with
+    // no default-value branch — so `def f(a = 1)` did not even PARSE.  P7
+    // extends the grammar to `param = [ "*" | "**" ] NAME [ EQUALS
+    // expression ]` and the lowerer (`extract_params`) carries the
+    // default subtree into `Param.default`.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn def_default_param_lowers_to_param_default_intlit() {
+        // `def f(a = 1)` → the single Param carries `default: Some(IntLit 1)`.
+        let m = lower("def f(a = 1)\n  a + 0\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "f").expect("fn f");
+        assert_eq!(f.params.len(), 1);
+        assert_eq!(f.params[0].name, "a");
+        assert_eq!(f.params[0].kind, ParamKind::Required);
+        match &f.params[0].default {
+            Some(boxed) => assert!(
+                matches!(**boxed, Expr::IntLit { value: 1, .. }),
+                "expected default IntLit(1), got {:?}",
+                boxed
+            ),
+            None => panic!("expected a default value, got None"),
+        }
+    }
+
+    #[test]
+    fn def_default_param_observes_default_params_feature() {
+        // A defaulted param must make the manifest declare `DefaultParams`
+        // (otherwise the validator rejects the used-but-undeclared feature).
+        let m = lower("def f(a = 1)\n  a + 0\nend\n");
+        assert!(
+            m.manifest.contains(semantic_ir::Feature::DefaultParams),
+            "manifest should declare DefaultParams; declared = {:?}",
+            m.manifest
+        );
+    }
+
+    #[test]
+    fn def_default_param_can_reference_earlier_param() {
+        // `def f(a, b = a + 1)` — Ruby defaults are call-time and may
+        // reference EARLIER params.  `a` inside the default for `b` must
+        // resolve to `Scope::Param`, not an unbound local.
+        let m = lower("def f(a, b = a + 1)\n  b + 0\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "f").expect("fn f");
+        assert_eq!(f.params.len(), 2);
+        assert_eq!(f.params[0].name, "a");
+        assert!(f.params[0].default.is_none(), "first param has no default");
+        assert_eq!(f.params[1].name, "b");
+        let default = f.params[1]
+            .default
+            .as_ref()
+            .expect("second param has a default");
+        // The default is `a + 1` → BuiltinCall("+", [VarRef(a, Param), IntLit 1]).
+        match &**default {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "+");
+                match &args[0] {
+                    Expr::VarRef { name, scope, .. } => {
+                        assert_eq!(name, "a");
+                        assert_eq!(*scope, Scope::Param);
+                    }
+                    other => panic!("expected VarRef(a, Param), got {:?}", other),
+                }
+                assert!(matches!(args[1], Expr::IntLit { value: 1, .. }));
+            }
+            other => panic!("expected BuiltinCall(+), got {:?}", other),
+        }
+        // And the module validates (the default checks in param scope).
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "module with param-scoped default should validate: {:?}",
+            semantic_ir::validate(&m).issues
+        );
+    }
+
+    #[test]
+    fn def_required_param_keeps_no_default() {
+        // Regression: an ordinary positional param keeps `default: None`
+        // and does NOT trip the DefaultParams feature.
+        let m = lower("def k(a)\nend\n");
+        let k = m.functions.iter().find(|f| f.name == "k").expect("fn k");
+        assert!(k.params[0].default.is_none());
+        assert!(!m.manifest.contains(semantic_ir::Feature::DefaultParams));
+    }
+
+    #[test]
+    fn def_rest_param_never_carries_default() {
+        // Splat params keep `default: None` even though the grammar is
+        // permissive — `extract_params` attaches defaults only to ordinary
+        // params.
+        let m = lower("def f(a = 1, *r)\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "f").expect("fn f");
+        assert_eq!(f.params.len(), 2);
+        assert!(f.params[0].default.is_some());
+        assert_eq!(f.params[1].kind, ParamKind::Rest);
+        assert!(f.params[1].default.is_none());
+    }
+
+    #[test]
+    fn call_omitting_default_lowers_to_partial_arg_list() {
+        // A call that omits the defaulted arg must lower with FEWER args —
+        // the frontend lowers the args present and does NOT pad.  The SIR
+        // validator now permits a DirectCall/BuiltinCall that omits trailing
+        // defaulted params.
+        let m = lower("def f(a, b = 1)\n  a + b\nend\nf(5)\n");
+        // The whole module (def with default + partial call) validates.
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "module with partial call should validate: {:?}",
+            semantic_ir::validate(&m).issues
+        );
+        // Locate the call in main's body and confirm it carries a single arg.
+        let body = main_body(&m);
+        // The defaulted-arg value `1` must NOT appear in the call's lowered
+        // args — i.e. the call carries exactly one arg (the literal `5`),
+        // proving the frontend does not pad omitted defaults.
+        let mut found_int5 = false;
+        let mut found_int1_as_arg = false;
+        for s in &body.stmts {
+            if let Stmt::ExprStmt { expr, .. } = s {
+                scan_call_args(expr, &mut found_int5, &mut found_int1_as_arg);
+            }
+        }
+        scan_call_args(&body.value, &mut found_int5, &mut found_int1_as_arg);
+        assert!(found_int5, "expected the literal arg 5 in the call to f");
+        assert!(
+            !found_int1_as_arg,
+            "frontend must NOT pad the omitted default (no synthesised arg 1)"
+        );
+    }
+
+    /// Walk an expression; for every call node record whether its arg list
+    /// contains an `IntLit 5` and whether it contains an `IntLit 1`.  Used
+    /// to prove `f(5)` lowers to a single-arg call (the `b = 1` default is
+    /// NOT padded in by the frontend).
+    fn scan_call_args(e: &Expr, found5: &mut bool, found1: &mut bool) {
+        if let Expr::DirectCall { args, .. } | Expr::BuiltinCall { args, .. } = e {
+            for a in args {
+                if matches!(a, Expr::IntLit { value: 5, .. }) {
+                    *found5 = true;
+                }
+                if matches!(a, Expr::IntLit { value: 1, .. }) {
+                    *found1 = true;
+                }
+                scan_call_args(a, found5, found1);
+            }
+        }
+    }
+
     #[test]
     fn empty_program_compiles_to_nil_main() {
         let m = lower("");

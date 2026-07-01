@@ -293,6 +293,61 @@ mod tests {
     }
 
     #[test]
+    fn end_to_end_ruby_default_param_resolves_at_call_time_executes_py() {
+        // Ruby-1.0 (P7) full-pipeline execution-proof: Ruby SOURCE with a
+        // call-time, param-referencing default → ruby-to-semantic-ir →
+        // semantic-ir-to-python → CPython.  `def f(a, b = a + 1)` is legal
+        // Ruby (the default sees the EARLIER param `a`).  Two calls:
+        //   • `f(5)`     omits `b` → default resolves `b = a + 1 = 6`
+        //   • `f(5, 10)` passes `b` → default suppressed, `b = 10`
+        // so stdout must be `6` then `10`.  This is the discriminating proof
+        // that the Ruby frontend now PRODUCES `Param.default` (it previously
+        // dropped the `= <expr>` subtree) AND that the default is genuinely
+        // call-time and param-scoped end to end — not Python def-time
+        // semantics (which could not reference `a`).
+        // NB: the def body is `b + 0` rather than a bare `b` — the Ruby
+        // parser currently mis-parses a method body that is a single bare
+        // identifier as a no-paren call (a pre-existing quirk unrelated to
+        // defaults); `b + 0` is an honest expression that evaluates to `b`.
+        let src = "def f(a, b = a + 1)\n  b + 0\nend\nprint f(5)\nprint f(5, 10)\n";
+        let module = ruby_to_semantic_ir::compile_source(src, "demo").expect("lower ruby");
+
+        // Frontend must have produced the default and declared the feature.
+        assert!(
+            module.manifest.contains(Feature::DefaultParams),
+            "ruby frontend must declare DefaultParams; manifest = {:?}",
+            module.manifest
+        );
+        let f = module
+            .functions
+            .iter()
+            .find(|f| f.name == "f")
+            .expect("fn f");
+        assert!(
+            f.params[1].default.is_some(),
+            "b must carry a lowered default"
+        );
+
+        let a = compile(&module).expect("compile to python");
+        // Sentinel-default + body-prologue shape (call-time, param-scoped).
+        assert!(
+            a.source.contains("def f(a, b=_SIR_MISSING):"),
+            "got:\n{}",
+            a.source
+        );
+        assert!(a.source.contains("    if b is _SIR_MISSING:"), "got:\n{}", a.source);
+        // The omitting call passes only the present arg (no frontend padding).
+        assert!(a.source.contains("f(5)"), "got:\n{}", a.source);
+
+        if let Some(stdout) = run_emitted_python(&a.source) {
+            assert_eq!(
+                stdout, "6\n10\n",
+                "Ruby call-time param-scoped default produced wrong output"
+            );
+        }
+    }
+
+    #[test]
     fn end_to_end_default_param_resolves_at_call_time_executes_py() {
         // P2c discriminating execution-proof.  `def f(a, b)` where `b`'s default
         // is `a + 1` — a *param-referencing* default that Python's native

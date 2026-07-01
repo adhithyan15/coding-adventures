@@ -175,6 +175,10 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         // or nested element ANDs its checks via `Expr::LogicalAnd`, which
         // triggers the `ShortCircuit` feature.
         Feature::ShortCircuit,
+        // Phase P7 (Ruby 1.0) — a parameter with a `name = expr` default
+        // lowers to `Param.default = Some(_)` and triggers the
+        // `DefaultParams` feature (`extract_params`).
+        Feature::DefaultParams,
     ] {
         if lw.features_used.contains(&f) {
             manifest.add(f);
@@ -3968,43 +3972,13 @@ impl Lowerer {
         // Reuse the same extraction (find each `param` subnode, detect the
         // `*`/`**` splat prefix → ParamKind, take the identifier Name).  See
         // the matching code in `lower_def_statement` (M3).
+        // Phase P7: extract params with `name = expr` defaults (see
+        // `extract_params`).  Endless defs share the `params` rule shape.
         let params_node = node.children.iter().find_map(|c| match c {
             ASTNodeOrToken::Node(n) if n.rule_name == "params" => Some(n),
             _ => None,
         });
-        let params: Vec<Param> = if let Some(pn) = params_node {
-            pn.children
-                .iter()
-                .filter_map(|c| match c {
-                    ASTNodeOrToken::Node(param_node) if param_node.rule_name == "param" => {
-                        let kind = param_node.children.iter().find_map(|cc| match cc {
-                            ASTNodeOrToken::Token(t) if t.value == "**" => Some(ParamKind::KwRest),
-                            ASTNodeOrToken::Token(t) if t.value == "*" => Some(ParamKind::Rest),
-                            _ => None,
-                        });
-                        param_node.children.iter().find_map(|cc| match cc {
-                            ASTNodeOrToken::Token(t)
-                                if matches!(t.type_, TokenType::Name)
-                                    && t.value != "*"
-                                    && t.value != "**" =>
-                            {
-                                Some(Param {
-                                    name: t.value.clone(),
-                                    sir_type: None,
-                                    kind: kind.unwrap_or(ParamKind::Required),
-                                    default: None,
-                                    span: self.span_of_token(t),
-                                })
-                            }
-                            _ => None,
-                        })
-                    }
-                    _ => None,
-                })
-                .collect()
-        } else {
-            Vec::new()
-        };
+        let params: Vec<Param> = self.extract_params(params_node)?;
 
         if !params.is_empty() {
             self.features_used.insert(Feature::DynamicTyping);
@@ -4105,49 +4079,14 @@ impl Lowerer {
         // `ParamKind::Required` — so the backends can emit faithful
         // `*args`/`**kwargs` (Python) / `...rest` (TypeScript).  See
         // `code/specs/sir-variadic-params.md`.
+        // Phase P7: extract params, lowering `name = expr` defaults into
+        // `Param.default` (param-scoped, so later defaults may reference
+        // earlier params).  See `extract_params`.
         let params_node = node.children.iter().find_map(|c| match c {
             ASTNodeOrToken::Node(n) if n.rule_name == "params" => Some(n),
             _ => None,
         });
-        let params: Vec<Param> = if let Some(pn) = params_node {
-            pn.children
-                .iter()
-                .filter_map(|c| match c {
-                    ASTNodeOrToken::Node(param_node) if param_node.rule_name == "param" => {
-                        // Detect the leading `*`/`**` splat prefix (the
-                        // 1.8-baseline state machine coalesces `**` into one
-                        // Name token with value `"**"`; `*` is a Star token,
-                        // but a defensive value match covers either spelling).
-                        let kind = param_node.children.iter().find_map(|cc| match cc {
-                            ASTNodeOrToken::Token(t) if t.value == "**" => Some(ParamKind::KwRest),
-                            ASTNodeOrToken::Token(t) if t.value == "*" => Some(ParamKind::Rest),
-                            _ => None,
-                        });
-                        // The parameter Name token is the one that is not the
-                        // `*`/`**` prefix.
-                        param_node.children.iter().find_map(|cc| match cc {
-                            ASTNodeOrToken::Token(t)
-                                if matches!(t.type_, TokenType::Name)
-                                    && t.value != "*"
-                                    && t.value != "**" =>
-                            {
-                                Some(Param {
-                                    name: t.value.clone(),
-                                    sir_type: None,
-                                    kind: kind.unwrap_or(ParamKind::Required),
-                                    default: None,
-                                    span: self.span_of_token(t),
-                                })
-                            }
-                            _ => None,
-                        })
-                    }
-                    _ => None,
-                })
-                .collect()
-        } else {
-            Vec::new()
-        };
+        let params: Vec<Param> = self.extract_params(params_node)?;
 
         // Phase 6b: any non-empty parameter list means we'll emit
         // untyped Params (sir_type=None), which the SIR validator
@@ -6097,44 +6036,11 @@ impl Lowerer {
 
         // 2. Extract arrow-lambda params from the optional `params`
         //    subnode (Phase 6s: param = [ "*"|"**" ] NAME).
+        // Phase P7: extract arrow-lambda params with `name = expr`
+        // defaults (see `extract_params`).  `->(a = 1) { ... }` is valid
+        // Ruby; the parens-list IS the param list here.
         let params_node = self.find_node_child(node, "params");
-        let params: Vec<Param> = if let Some(pn) = params_node {
-            pn.children
-                .iter()
-                .filter_map(|c| match c {
-                    ASTNodeOrToken::Node(param_node)
-                        if param_node.rule_name == "param" =>
-                    {
-                        // M3: detect the `*`/`**` splat prefix → ParamKind,
-                        // then pick the bare NAME token.
-                        let kind = param_node.children.iter().find_map(|cc| match cc {
-                            ASTNodeOrToken::Token(t) if t.value == "**" => Some(ParamKind::KwRest),
-                            ASTNodeOrToken::Token(t) if t.value == "*" => Some(ParamKind::Rest),
-                            _ => None,
-                        });
-                        param_node.children.iter().find_map(|cc| match cc {
-                            ASTNodeOrToken::Token(t)
-                                if matches!(t.type_, TokenType::Name)
-                                    && t.value != "*"
-                                    && t.value != "**" =>
-                            {
-                                Some(Param {
-                                    name: t.value.clone(),
-                                    sir_type: None,
-                                    kind: kind.unwrap_or(ParamKind::Required),
-                                    default: None,
-                                    span: self.span_of_token(t),
-                                })
-                            }
-                            _ => None,
-                        })
-                    }
-                    _ => None,
-                })
-                .collect()
-        } else {
-            Vec::new()
-        };
+        let params: Vec<Param> = self.extract_params(params_node)?;
         if !params.is_empty() {
             self.features_used.insert(Feature::DynamicTyping);
         }
@@ -6267,6 +6173,137 @@ impl Lowerer {
         });
 
         Ok(fn_name)
+    }
+
+    // -------------------------------------------------------------------
+    // parameters
+    // -------------------------------------------------------------------
+
+    /// Phase P7 (Ruby 1.0) — extract a `def`/lambda parameter list from a
+    /// `params` CST node, lowering any `name = expr` default value into
+    /// `Param.default`.
+    ///
+    /// ## Why this is its own helper
+    ///
+    /// Three call sites (`def_statement`, `endless_def_statement`,
+    /// `lambda_literal`) used to inline the same `filter_map` that pulled
+    /// the param Name and the splat kind but *silently dropped* the
+    /// `= <default>` subtree.  Now that the grammar parses the default
+    /// (`param = [ "*" | "**" ] NAME [ EQUALS expression ]`), the default
+    /// must be lowered through the normal expression path.  Centralising
+    /// it here keeps the three sites in lock-step.
+    ///
+    /// ## CST shape
+    ///
+    /// A `param` node has one of these child layouts:
+    ///
+    /// ```text
+    /// param ::= NAME                         # required:   default = None
+    ///        |  ("*"|"**") NAME              # rest/kwrest: default = None
+    ///        |  NAME EQUALS expression       # optional:   default = Some(expr)
+    /// ```
+    ///
+    /// ## Param-scoped, call-time defaults
+    ///
+    /// Ruby defaults are evaluated at CALL time and may reference EARLIER
+    /// parameters — `def f(a, b = a)` is legal and binds `b` to `a`'s
+    /// runtime value.  This matches the SIR model exactly (the validator
+    /// checks each default in a scope holding the params declared so far).
+    /// To honour that, we lower each default with every *prior* param name
+    /// already visible as a `Scope::Param`, so a `VarRef` to an earlier
+    /// param resolves correctly.  We snapshot and restore the caller's
+    /// `current_params` / `declared_locals` so this temporary visibility
+    /// does not leak — the caller re-establishes the full param scope for
+    /// the body afterwards.
+    ///
+    /// Splat (`*rest`) and double-splat (`**kwrest`) params never carry a
+    /// default; the grammar is permissive but we attach `default` only to
+    /// ordinary params.
+    ///
+    /// The walk is depth-bounded: it reuses the existing bounded
+    /// `lower_expression` for the default subtree and introduces no new
+    /// recursion over the CST.
+    fn extract_params(
+        &mut self,
+        params_node: Option<&GrammarASTNode>,
+    ) -> Result<Vec<Param>, RubyLowerError> {
+        let Some(pn) = params_node else {
+            return Ok(Vec::new());
+        };
+
+        // Snapshot the caller's scope so the incremental "earlier params
+        // are visible" trick below is fully reverted on return.
+        let saved_params = self.current_params.clone();
+        let saved_locals = self.declared_locals.clone();
+
+        let mut params: Vec<Param> = Vec::new();
+        for c in &pn.children {
+            let ASTNodeOrToken::Node(param_node) = c else {
+                continue;
+            };
+            if param_node.rule_name != "param" {
+                continue;
+            }
+
+            // Splat prefix → ParamKind (same detection as before).
+            let kind = param_node.children.iter().find_map(|cc| match cc {
+                ASTNodeOrToken::Token(t) if t.value == "**" => Some(ParamKind::KwRest),
+                ASTNodeOrToken::Token(t) if t.value == "*" => Some(ParamKind::Rest),
+                _ => None,
+            });
+
+            // The parameter Name token is the one that is not the
+            // `*`/`**` prefix.
+            let name_tok = param_node.children.iter().find_map(|cc| match cc {
+                ASTNodeOrToken::Token(t)
+                    if matches!(t.type_, TokenType::Name)
+                        && t.value != "*"
+                        && t.value != "**" =>
+                {
+                    Some(t)
+                }
+                _ => None,
+            });
+            let Some(name_tok) = name_tok else {
+                continue;
+            };
+
+            // Optional default — the trailing `expression` child (present
+            // only when the source wrote `name = expr`).  Rest/kwrest
+            // params keep `default: None`.
+            let default_node = param_node.children.iter().find_map(|cc| match cc {
+                ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
+                _ => None,
+            });
+            let default = match (kind, default_node) {
+                (None, Some(expr_node)) => {
+                    let lowered = self.lower_expression(expr_node)?;
+                    self.features_used.insert(Feature::DefaultParams);
+                    Some(Box::new(lowered))
+                }
+                _ => None,
+            };
+
+            // Make THIS param visible to LATER params' defaults
+            // (`def f(a, b = a)`), then record it.
+            self.current_params.insert(name_tok.value.clone());
+            self.declared_locals.insert(name_tok.value.clone());
+
+            params.push(Param {
+                name: name_tok.value.clone(),
+                sir_type: None,
+                kind: kind.unwrap_or(ParamKind::Required),
+                default,
+                span: self.span_of_token(name_tok),
+            });
+        }
+
+        // Revert the temporary scope visibility — the caller owns the
+        // real body scope.
+        self.current_params = saved_params;
+        self.declared_locals = saved_locals;
+
+        Ok(params)
     }
 
     // -------------------------------------------------------------------

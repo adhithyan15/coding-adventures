@@ -45,6 +45,14 @@ parses (see [ruby-parser/src/_grammar.rs](../ruby-parser/src/_grammar.rs)):
   is the sequence of lowered statements.  If the final source-level
   statement is a bare expression, it becomes the block's *value*;
   otherwise the value is `NilLit`.
+- **Parameters** — positional, splat (`*rest`), and double-splat
+  (`**kwrest`), plus **default / optional parameters** (P7, Ruby-1.0):
+  `def f(a = 1)` lowers `a`'s default to `Param.default = Some(IntLit 1)`.
+  Ruby defaults are call-time and may reference earlier params
+  (`def f(a, b = a + 1)`), so the default expression is lowered in the
+  parameter scope and resolves earlier params as `Scope::Param`.  A
+  defaulted param observes `Feature::DefaultParams`; a call that omits a
+  defaulted arg (`f(5)`) lowers to a call with fewer args (no padding).
 
 ## Usage
 
