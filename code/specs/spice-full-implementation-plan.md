@@ -33,23 +33,24 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard tabs.
+1. Rust Berkeley Mosaic app shell dashboard tab panels.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app shell dashboard tab-strip surfaces and JSON
-     helpers that derive stable tab IDs, selected/default tab routing, and
-     breadcrumb/route metadata from dashboard breadcrumbs for a compact
-     first-render product-shell tab contract.
+   - Add schema-versioned Rust app shell dashboard tab-panel surfaces and JSON
+     helpers that derive stable selected/default render-panel IDs and
+     tab/breadcrumb/route metadata from dashboard tabs for a compact
+     first-render product-shell panel contract.
    - Preserve package name, source fingerprint, ready/blocked route, status
      severity, attention-required flag, primary-card routing, primary-region
      routing, active-item routing, active/default route routing,
-     active/default breadcrumb routing, selected/default tab routing, tab IDs,
-     labels, roles, paths, positions, breadcrumb IDs, route IDs, item IDs,
-     region IDs, region card IDs, selected/default/visible/enabled flags,
-     visible and enabled route, breadcrumb, and tab counts, badge counts,
-     dashboard/package/card/view/layout/navigation/routes/breadcrumbs/tabs
+     active/default breadcrumb routing, selected/default tab routing,
+     selected/default panel routing, panel IDs, titles, roles, paths,
+     positions, tab IDs, breadcrumb IDs, route IDs, item IDs, region IDs,
+     selected/default/visible/enabled flags, visible and enabled route,
+     breadcrumb, tab, and panel counts, badge counts, dashboard, package,
+     card, view, layout, navigation, routes, breadcrumbs, tabs, and tab-panels
      capability IDs, and advertised capability count so Mosaic, WebAssembly,
-     and product shells can render startup dashboard tabs without interpreting
-     breadcrumb internals.
+     and product shells can render startup dashboard panels without
+     interpreting tab internals.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1773,6 +1774,25 @@ the Rust, Python, and TypeScript surfaces together.
      capability IDs, and advertised capability count so Mosaic, WebAssembly,
      and product shells can render startup dashboard breadcrumbs without
      interpreting route internals.
+
+163. Rust Berkeley Mosaic app shell dashboard tabs.
+   - Status: completed in PR 7138.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell dashboard tab-strip surfaces plus JSON helpers that derive
+     stable tab IDs, selected/default tab routing, and breadcrumb/route
+     metadata from dashboard breadcrumbs for a compact first-render
+     product-shell tab contract.
+   - The tab payload preserves package name, source fingerprint, ready/blocked
+     route, status severity, attention-required flag, primary-card routing,
+     primary-region routing, active-item routing, active/default route routing,
+     active/default breadcrumb routing, selected/default tab routing, tab IDs,
+     labels, roles, paths, positions, breadcrumb IDs, route IDs, item IDs,
+     region IDs, region card IDs, selected/default/visible/enabled flags,
+     visible and enabled route, breadcrumb, and tab counts, badge counts,
+     dashboard/package/card/view/layout/navigation/routes/breadcrumbs/tabs
+     capability IDs, and advertised capability count so Mosaic, WebAssembly,
+     and product shells can render startup dashboard tabs without interpreting
+     breadcrumb internals.
 
 ## Backlog
 

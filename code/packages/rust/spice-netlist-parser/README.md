@@ -235,6 +235,17 @@ let shell_dashboard_tabs_json = deck.run_app_shell_dashboard_tabs_json(
 assert!(shell_dashboard_tabs_json.contains(r#""selectedTabId":"dashboard.tab.status""#));
 assert!(shell_dashboard_tabs_json
     .contains(r#""tabsCapabilityId":"app-shell-dashboard-tabs-json""#));
+
+let shell_dashboard_tab_panels_json = deck.run_app_shell_dashboard_tab_panels_json(
+    BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(3),
+        active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+    },
+)?;
+assert!(shell_dashboard_tab_panels_json
+    .contains(r#""selectedPanelId":"dashboard.tab-panel.status""#));
+assert!(shell_dashboard_tab_panels_json
+    .contains(r#""tabPanelsCapabilityId":"app-shell-dashboard-tab-panels-json""#));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
