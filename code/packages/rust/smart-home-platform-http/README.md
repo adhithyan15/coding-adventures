@@ -51,6 +51,7 @@ stable local API responses for:
 - `/api/smart_home/capability_grants/:grant_id`
 - `/api/smart_home/authorization_decisions`
 - `/api/smart_home/command_authorization`
+- `/api/smart_home/desired_state_authorization`
 - `/api/smart_home/authorization_decisions/:decision_index`
 - `/api/smart_home/desired_states`
 - `POST /api/smart_home/desired_states/:entity_id`
@@ -88,7 +89,9 @@ projections, command-result audit records with
 command, bridge, correlation, room, status, and sort filters, indexed
 authorization decisions with principal, outcome, and sort filters, read-only
 command-authorization previews that evaluate the local API principal's tool and
-device-command grants without dispatching commands, capability grant
+device-command grants without dispatching commands, read-only desired-state
+authorization previews that evaluate set/clear tool grants without mutating
+targets, capability grant
 inventory/detail routes with principal, status, scope, capability, entity, and
 sort filters, and desired-state supervision targets.
 State-history reads expose registry-backed device events with Home Assistant
@@ -100,10 +103,10 @@ Runtime event-log reads accept Home Assistant entity aliases through
 state-expiration, and desired-state drift events.
 
 `GET /api/smart_home/smoke` exposes a machine-readable local-controller smoke
-plan with safe GET probes, a command-authorization preview, and a single
-runtime-authorized Home Assistant-style command probe. It lets scripts discover
-the dashboard/API/readiness checks and the exact request body to use for
-fixture-controller verification without scraping launch text.
+plan with safe GET probes, command and desired-state authorization previews,
+and a single runtime-authorized Home Assistant-style command probe. It lets
+scripts discover the dashboard/API/readiness checks and the exact request body
+to use for fixture-controller verification without scraping launch text.
 `GET /api/smart_home/smoke_script` renders that same plan as a copy-pasteable
 `sh` script using `curl`; set `SMART_HOME_BASE_URL` or `CURL` to override the
 defaults when the fixture controller runs on a custom address.
@@ -117,10 +120,11 @@ native API routes and sends light on/off, light brightness, scene, and
 desired-state set/clear actions through the existing Home
 Assistant-compatible and native service endpoints, preserving runtime
 authorization. Entity action cards expose command-authorization preview buttons
-for light on/off and brightness controls before dispatch. After command, scene,
-or desired-state mutations, the shell renders the accepted response in the
-detail panel with command-result, correlation, current-state, desired-state, or
-history readback links as applicable. Entity, service, scene, device, bridge,
+for light on/off and brightness controls before dispatch and desired-state
+authorization preview buttons before target set/clear actions. After command,
+scene, or desired-state mutations, the shell renders the accepted response in
+the detail panel with command-result, correlation, current-state, desired-state,
+or history readback links as applicable. Entity, service, scene, device, bridge,
 history, event-log, command-result, authorization, capability catalog, and
 capability-grant
 rows/cards expose read-only detail buttons that fetch the matching native detail
@@ -232,6 +236,8 @@ curl 'http://127.0.0.1:8123/api/smart_home/command_results?room_id=kitchen&limit
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?bridge_id=bridge-1'
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?sort=status_then_newest'
 curl 'http://127.0.0.1:8123/api/smart_home/command_authorization?entity_id=light.entity_light_1&command_type=turn_on'
+curl 'http://127.0.0.1:8123/api/smart_home/desired_state_authorization?entity_id=light.entity_light_1&operation=set'
+curl 'http://127.0.0.1:8123/api/smart_home/desired_state_authorization?entity_id=light.entity_light_1&operation=clear'
 curl 'http://127.0.0.1:8123/api/smart_home/capability_grants?principal_id=agent:home-assistant-local-api&status=active'
 curl 'http://127.0.0.1:8123/api/smart_home/capability_grants/grant:agent:home-assistant-local-api:local-api-full-access'
 curl 'http://127.0.0.1:8123/api/smart_home/authorization_decisions?principal_id=agent:home-assistant-local-api&sort=oldest_first'
