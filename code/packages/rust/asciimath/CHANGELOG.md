@@ -2,6 +2,28 @@
 
 All notable changes to the AsciiMath pluggable frontend.
 
+## [0.11.0] — 2026-06-30
+
+### Added — semicolon-separated fences lower to rows (third Sequence frontend to get rows)
+
+- A fence whose body contains a top-level semicolon — `(a, b; c, d)` — is now read as **rows**:
+  semicolons are the row separator and commas the within-row (column) separator, the classic
+  fenced-matrix notation. `(a, b; c, d)` lowers to `Sequence([Sequence([a, b]), Sequence([c, d])])`.
+  This mirrors the `latex` and `mathml` crates' semicolon-rows exactly, so **all three
+  Sequence-emitting frontends now agree on the neutral rows shape** — the same write-once-use-many
+  the flat `Sequence` list already demonstrated.
+- Degenerate shapes are predictable, identical to LaTeX/MathML: a **semicolon-only** fence `(a; b; c)`
+  — a column vector with no second column in any row — collapses to the same flat `Sequence([a, b, c])`
+  as a comma list; a **ragged** fence `(a; b, c)` stays faithful as `Sequence([a, Sequence([b, c])])`.
+  Each cell is still folded to a full relation. A comma-only fence is unchanged (flat `Sequence`),
+  and a separator-free fence is still plain grouping.
+- Adds a `Semicolon` token (`;`, previously an "unknown byte" error). `parse_group` records the
+  separator after each parsed relation in a bounded loop (never recursion) and groups rows at each
+  `;`; a leading/trailing/doubled `;` or `,` leaves a non-atom before the next `parse_relation` → a
+  clean spanned error, never a dropped row. No new AST node, no shared-crate change (reuses
+  `MathExpr::Sequence`, which already nests). 5 new tests (rows, semicolon-only flat, ragged, folded
+  cells, trailing-`;` error). `asciimath` 0.10.0 → 0.11.0.
+
 ## [0.10.0] — 2026-06-30
 
 ### Added — comma-separated fences lower to `Sequence`

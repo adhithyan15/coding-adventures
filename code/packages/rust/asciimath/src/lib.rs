@@ -342,6 +342,54 @@ mod tests {
     }
 
     #[test]
+    fn semicolon_fence_is_rows_of_columns() {
+        // Semicolons are the ROW separator, commas the column separator — the fenced-matrix
+        // reading `(a, b; c, d)` → Sequence([Sequence([a, b]), Sequence([c, d])]). Mirrors the
+        // LaTeX and MathML fence reading.
+        assert_eq!(
+            p("(a,b;c,d)"),
+            MathExpr::Sequence(vec![
+                MathExpr::Sequence(vec![sym("a"), sym("b")]),
+                MathExpr::Sequence(vec![sym("c"), sym("d")]),
+            ])
+        );
+    }
+
+    #[test]
+    fn semicolon_only_fence_is_a_flat_sequence() {
+        // A column vector `(a; b; c)` has no second column in any row → the same flat
+        // Sequence([a, b, c]) as a comma list, no spurious one-element nesting.
+        assert_eq!(p("(a;b;c)"), MathExpr::Sequence(vec![sym("a"), sym("b"), sym("c")]));
+    }
+
+    #[test]
+    fn ragged_semicolon_fence_is_faithful() {
+        // `(a; b, c)` keeps its shape: row 1 is a single relation, row 2 is a pair.
+        assert_eq!(
+            p("(a;b,c)"),
+            MathExpr::Sequence(vec![sym("a"), MathExpr::Sequence(vec![sym("b"), sym("c")])])
+        );
+    }
+
+    #[test]
+    fn semicolon_rows_fold_each_cell() {
+        // Each cell is a full relation, not just a leaf: `(x+1,2;y)`.
+        assert_eq!(
+            p("(x+1,2;y)"),
+            MathExpr::Sequence(vec![
+                MathExpr::Sequence(vec![b(BinOp::Add, sym("x"), num(1)), num(2)]),
+                sym("y"),
+            ])
+        );
+    }
+
+    #[test]
+    fn trailing_semicolon_is_an_error_not_a_dropped_row() {
+        // A trailing separator leaves a non-atom before the next parse_relation → clean error.
+        assert!(AsciiMath.parse("(a,b;)").is_err());
+    }
+
+    #[test]
     fn det_of_a_matrix() {
         // det binds the matrix as its argument atom.
         assert_eq!(
