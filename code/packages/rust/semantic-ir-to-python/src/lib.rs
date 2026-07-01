@@ -147,7 +147,8 @@ impl Backend for PythonBackend {
 mod tests {
     use super::*;
     use semantic_ir::{
-        Block, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, ParamKind, Span,
+        Block, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, ParamKind, Scope,
+        Span, Stmt,
     };
 
     fn s() -> Span {
@@ -601,6 +602,134 @@ mod tests {
         assert!(a.source.contains("def _sir_user_main():"));
         assert!(a.source.contains("return 42"));
         assert!(a.filename.ends_with(".py"));
+    }
+
+    // ── O1: OOP object-model builtins gate the import + execute ───────────────
+
+    #[test]
+    fn oop_builtins_gate_the_oop_import_py() {
+        // A module whose only OOP touch is a `__new__` (no `Feature::Classes`)
+        // must still import the OOP runtime, else `_sir_oop_call_new` would be
+        // undefined at runtime.  This proves the O1 import gating fires.
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[Feature::Strings]);
+        m.functions[0].body.value = Expr::BuiltinCall {
+            name: "__new__".into(),
+            args: vec![Expr::StrLit { value: "Dog".into(), span: s() }],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let a = compile(&m).expect("compile");
+        assert!(
+            a.source.contains("call_new as _sir_oop_call_new"),
+            "OOP import must be gated on __new__; got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn end_to_end_oop_new_and_dispatch_executes_py() {
+        // O1 execution-proof (hand-built SIR — the frontend does not emit these
+        // builtins until O2).  Model the classic `Dog.new(...).speak` shape:
+        //   • a hoisted top-level `Dog_speak` returning "Rex says woof",
+        //   • `__def_method__("Dog", "speak", MakeClosure(Dog_speak))` registers it,
+        //   • `d = __new__("Dog")` allocates an instance,
+        //   • `print(__method__(d, "speak"))` dispatches through the method table.
+        // Running it through a real interpreter proves the O1 runtime wiring
+        // (def_method → call_new → call_method) actually executes end to end.
+        let speak_body = Block {
+            stmts: vec![],
+            value: Expr::StrLit { value: "Rex says woof".into(), span: s() },
+            span: s(),
+        };
+        let speak_fn = Function {
+            name: "Dog_speak".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: speak_body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+
+        let def_method = Expr::BuiltinCall {
+            name: "__def_method__".into(),
+            args: vec![
+                Expr::StrLit { value: "Dog".into(), span: s() },
+                Expr::StrLit { value: "speak".into(), span: s() },
+                Expr::MakeClosure { fn_name: "Dog_speak".into(), captures: vec![], span: s() },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let new_dog = Expr::BuiltinCall {
+            name: "__new__".into(),
+            args: vec![Expr::StrLit { value: "Dog".into(), span: s() }],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let dispatch_speak = Expr::BuiltinCall {
+            name: "__method__".into(),
+            args: vec![
+                Expr::VarRef { name: "d".into(), scope: Scope::Local, span: s() },
+                Expr::StrLit { value: "speak".into(), span: s() },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let print_stmt = Expr::BuiltinCall {
+            name: "print".into(),
+            args: vec![dispatch_speak],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+
+        let main_body = Block {
+            stmts: vec![
+                Stmt::ExprStmt { expr: def_method, span: s() },
+                Stmt::LetBinding { name: "d".into(), sir_type: None, value: new_dog, span: s() },
+            ],
+            value: print_stmt,
+            span: s(),
+        };
+        let main_fn = Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: main_body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+
+        let m = Module {
+            name: "demo".into(),
+            manifest: FeatureManifest::from_features(&[
+                Feature::Classes,
+                Feature::Closures,
+                Feature::Strings,
+            ]),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![speak_fn, main_fn],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("ruby")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        };
+
+        let a = compile(&m).expect("compile to python");
+        // Shape: the three O1 helpers appear in the emitted source.
+        assert!(a.source.contains("_sir_oop_def_method(\"Dog\", \"speak\","), "got:\n{}", a.source);
+        assert!(a.source.contains("_sir_oop_call_new(\"Dog\")"), "got:\n{}", a.source);
+        assert!(a.source.contains("_sir_oop_call_method(d, \"speak\")"), "got:\n{}", a.source);
+        // Execution: the whole chain must run and print the method's result.
+        if let Some(stdout) = run_emitted_python(&a.source) {
+            assert_eq!(stdout, "Rex says woof\n", "O1 dispatch produced wrong output");
+        }
     }
 
     #[test]

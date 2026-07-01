@@ -39,6 +39,16 @@ fn uses_oop(m: &Module) -> bool {
         || module_uses_builtin(m, "__scope__")
         // `case_eq` (M5) routes through the OOP runtime helper.
         || module_uses_builtin(m, "case_eq")
+        // OOP object-model builtins (O1): `Foo.new`, `super`, `self`, and the
+        // method-table registrations all resolve to the OOP runtime, so their
+        // presence must pull in the import even in a module that declares no
+        // class of its own (defensive — the frontend always pairs them with a
+        // `ClassDef`, but the gate must not depend on that).
+        || module_uses_builtin(m, "__new__")
+        || module_uses_builtin(m, "__super__")
+        || module_uses_builtin(m, "__def_method__")
+        || module_uses_builtin(m, "__def_class_method__")
+        || module_uses_builtin(m, "__self__")
 }
 
 /// True if the module uses exception handling, in which case the emitted
@@ -1133,6 +1143,49 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
             return;
         }
     }
+    // OOP object-model builtins (O1).  The Ruby→SIR frontend (O2) emits these
+    // for user-defined classes; each routes to the OOP runtime's explicit
+    // method-table helpers (never reflection — the C3 RCE lesson).  Class and
+    // method names arrive as `StrLit` args and are emitted through the normal
+    // expression path (`quote_py_string`), so no source-derived name is ever
+    // interpolated raw.
+    //
+    //   __new__(class, ...ctor_args)          → _sir_oop_call_new(class, args…)
+    //   __super__(method, class, ...args)     → _sir_oop_call_super(method, class, args…)
+    //   __def_method__(class, method, fn)     → _sir_oop_def_method(class, method, fn)
+    //   __def_class_method__(class, meth, fn) → _sir_oop_def_class_method(class, meth, fn)
+    //   __self__()                            → _sir_oop_current_self()
+    //
+    // All args are ordinary SIR `Expr`s (`StrLit` for the names, `MakeClosure`
+    // for the method body), so a plain `emit_args` is correct and safe.
+    if name == "__new__" && !args.is_empty() {
+        out.push_str("_sir_oop_call_new(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    if name == "__super__" && args.len() >= 2 {
+        out.push_str("_sir_oop_call_super(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    if name == "__def_method__" && args.len() == 3 {
+        out.push_str("_sir_oop_def_method(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    if name == "__def_class_method__" && args.len() == 3 {
+        out.push_str("_sir_oop_def_class_method(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    if name == "__self__" && args.is_empty() {
+        out.push_str("_sir_oop_current_self()");
+        return;
+    }
     // `case_eq` (M5) — Ruby case-equality `pattern === value`, emitted by a
     // `when` clause for range/regex/literal patterns (the class case lowers to
     // `is_a?` via `__method__` instead).  Routes to the OOP runtime helper,
@@ -1941,6 +1994,79 @@ mod tests {
             effects: EffectSet::PURE,
             span: s(),
         }
+    }
+
+    // ── O1: OOP object-model builtin emit arms ───────────────────────────────
+
+    fn str_lit(v: &str) -> Expr {
+        Expr::StrLit { value: v.into(), span: s() }
+    }
+
+    fn builtin(name: &str, args: Vec<Expr>) -> Expr {
+        Expr::BuiltinCall { name: name.into(), args, effects: EffectSet::PURE, span: s() }
+    }
+
+    #[test]
+    fn oop_new_emits_call_new() {
+        // Dog.new("Rex") → _sir_oop_call_new("Dog", "Rex").
+        let e = builtin("__new__", vec![str_lit("Dog"), str_lit("Rex")]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"_sir_oop_call_new("Dog", "Rex")"#);
+    }
+
+    #[test]
+    fn oop_super_emits_call_super() {
+        // super in Cat#describe → _sir_oop_call_super("describe", "Cat").
+        let e = builtin("__super__", vec![str_lit("describe"), str_lit("Cat")]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"_sir_oop_call_super("describe", "Cat")"#);
+    }
+
+    #[test]
+    fn oop_def_method_emits_registration() {
+        // __def_method__("Dog", "speak", MakeClosure(speak)) →
+        // _sir_oop_def_method("Dog", "speak", _sir_make_closure(speak, [])).
+        let closure = Expr::MakeClosure {
+            fn_name: "speak".into(),
+            captures: vec![],
+            span: s(),
+        };
+        let e = builtin("__def_method__", vec![str_lit("Dog"), str_lit("speak"), closure]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(
+            out,
+            r#"_sir_oop_def_method("Dog", "speak", _sir_make_closure(speak, []))"#
+        );
+    }
+
+    #[test]
+    fn oop_def_class_method_emits_registration() {
+        let closure = Expr::MakeClosure {
+            fn_name: "zero".into(),
+            captures: vec![],
+            span: s(),
+        };
+        let e = builtin(
+            "__def_class_method__",
+            vec![str_lit("Counter"), str_lit("zero"), closure],
+        );
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(
+            out,
+            r#"_sir_oop_def_class_method("Counter", "zero", _sir_make_closure(zero, []))"#
+        );
+    }
+
+    #[test]
+    fn oop_self_emits_current_self() {
+        let e = builtin("__self__", vec![]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, "_sir_oop_current_self()");
     }
 
     #[test]

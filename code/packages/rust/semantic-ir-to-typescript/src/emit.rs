@@ -48,6 +48,16 @@ fn uses_oop(m: &Module) -> bool {
         || module_uses_builtin(m, "__scope__")
         // `case_eq` (M5) routes through the OOP runtime helper.
         || module_uses_builtin(m, "case_eq")
+        // OOP object-model builtins (O1): `Foo.new`, `super`, `self`, and the
+        // method-table registrations all resolve to the OOP runtime, so their
+        // presence must pull in the import even in a module that declares no
+        // class of its own (defensive — the frontend always pairs them with a
+        // `ClassDef`, but the gate must not depend on that).
+        || module_uses_builtin(m, "__new__")
+        || module_uses_builtin(m, "__super__")
+        || module_uses_builtin(m, "__def_method__")
+        || module_uses_builtin(m, "__def_class_method__")
+        || module_uses_builtin(m, "__self__")
 }
 
 /// True if the module uses exception handling, in which case the emitted
@@ -1375,6 +1385,49 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
             return;
         }
     }
+    // OOP object-model builtins (O1).  The Ruby→SIR frontend (O2) emits these
+    // for user-defined classes; each routes to the OOP runtime's explicit
+    // method-table helpers (never reflection — the C3 RCE lesson).  Class and
+    // method names arrive as `StrLit` args and emit through the normal
+    // expression path (`quote_ts_string`), so no source-derived name is ever
+    // interpolated raw.
+    //
+    //   __new__(class, ...ctor_args)          → __SirOop.callNew(class, args…)
+    //   __super__(method, class, ...args)     → __SirOop.callSuper(method, class, args…)
+    //   __def_method__(class, method, fn)     → __SirOop.defMethod(class, method, fn)
+    //   __def_class_method__(class, meth, fn) → __SirOop.defClassMethod(class, meth, fn)
+    //   __self__()                            → __SirOop.currentSelfVal()
+    //
+    // All args are ordinary SIR `Expr`s (`StrLit` for the names, `MakeClosure`
+    // for the method body), so a plain `emit_args` is correct and safe.
+    if name == "__new__" && !args.is_empty() {
+        out.push_str("__SirOop.callNew(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    if name == "__super__" && args.len() >= 2 {
+        out.push_str("__SirOop.callSuper(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    if name == "__def_method__" && args.len() == 3 {
+        out.push_str("__SirOop.defMethod(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    if name == "__def_class_method__" && args.len() == 3 {
+        out.push_str("__SirOop.defClassMethod(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    if name == "__self__" && args.is_empty() {
+        out.push_str("__SirOop.currentSelfVal()");
+        return;
+    }
     // `case_eq` (M5) — Ruby case-equality `pattern === value`, emitted by a
     // `when` clause for range/regex/literal patterns (the class case lowers to
     // `is_a?` via `__method__` instead).  Routes to the OOP runtime helper.
@@ -2173,6 +2226,78 @@ mod tests {
             effects: EffectSet::PURE,
             span: s(),
         }
+    }
+
+    // ── O1: OOP object-model builtin emit arms ───────────────────────────────
+
+    fn ts_str_lit(v: &str) -> Expr {
+        Expr::StrLit { value: v.into(), span: s() }
+    }
+
+    fn ts_builtin(name: &str, args: Vec<Expr>) -> Expr {
+        Expr::BuiltinCall { name: name.into(), args, effects: EffectSet::PURE, span: s() }
+    }
+
+    #[test]
+    fn oop_new_emits_call_new_ts() {
+        // Dog.new("Rex") → __SirOop.callNew("Dog", "Rex").
+        let e = ts_builtin("__new__", vec![ts_str_lit("Dog"), ts_str_lit("Rex")]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"__SirOop.callNew("Dog", "Rex")"#);
+    }
+
+    #[test]
+    fn oop_super_emits_call_super_ts() {
+        let e = ts_builtin("__super__", vec![ts_str_lit("describe"), ts_str_lit("Cat")]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"__SirOop.callSuper("describe", "Cat")"#);
+    }
+
+    #[test]
+    fn oop_def_method_emits_registration_ts() {
+        // __def_method__("Dog", "speak", MakeClosure(Dog_speak)) →
+        // __SirOop.defMethod("Dog", "speak", new __Sir.Closure(...)).
+        let closure = Expr::MakeClosure {
+            fn_name: "Dog_speak".into(),
+            captures: vec![],
+            span: s(),
+        };
+        let e = ts_builtin("__def_method__", vec![ts_str_lit("Dog"), ts_str_lit("speak"), closure]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert!(
+            out.starts_with(r#"__SirOop.defMethod("Dog", "speak", new __Sir.Closure("#),
+            "got: {out}"
+        );
+    }
+
+    #[test]
+    fn oop_def_class_method_emits_registration_ts() {
+        let closure = Expr::MakeClosure {
+            fn_name: "Counter_zero".into(),
+            captures: vec![],
+            span: s(),
+        };
+        let e = ts_builtin(
+            "__def_class_method__",
+            vec![ts_str_lit("Counter"), ts_str_lit("zero"), closure],
+        );
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert!(
+            out.starts_with(r#"__SirOop.defClassMethod("Counter", "zero", new __Sir.Closure("#),
+            "got: {out}"
+        );
+    }
+
+    #[test]
+    fn oop_self_emits_current_self_ts() {
+        let e = ts_builtin("__self__", vec![]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, "__SirOop.currentSelfVal()");
     }
 
     #[test]
