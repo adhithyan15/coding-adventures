@@ -74,6 +74,20 @@ Tree-shake runs late — after DCE has trimmed every module
 internally, after inline has fixed call-site references, after
 rename has settled on the final names.
 
+## Deletion provenance (correlation vector)
+
+When treeshake removes an unreferenced top-level `function`, it
+tombstones that function's own CV entry via `cv.delete(cv_id,
+"treeshake", "removed-unreferenced-function", meta)` (meta carries the
+function `name`), and emits one summary `Contribution` against the
+program root. So a `--correlation_vector` consumer asking "what happened
+to `function foo`?" gets a definite answer instead of the function
+silently vanishing from the provenance graph — the same audit trail the
+DCE and fold-control-flow passes record for what *they* delete. `delete`
+is a no-op when the log is disabled (the production default), so this
+costs nothing off the `--correlation_vector` path, and program output is
+byte-for-byte unchanged.
+
 ## Dependency whitelist
 
 - `coding-adventures-closure-pass-pipeline` — `Pass` trait + types.
@@ -82,7 +96,8 @@ rename has settled on the final names.
   future tree-shake will read module-level `external` attributes
   to seed the root set.
 - `coding_adventures_correlation_vector` — receives mutable
-  `CVLog` for per-removal `Contribution` emission.
+  `CVLog`; removed functions are tombstoned via `cv.delete()` and a
+  summary `Contribution` is emitted.
 - `serde_json` — `Contribution.meta` JSON values.
 
 Dev-deps:
