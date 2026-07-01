@@ -2,6 +2,40 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.79.0] - 2026-07-01
+
+### Added — fold the unary numeric `Math` methods (closes gap-141)
+
+`Math.abs`, `Math.floor`, `Math.ceil`, and `Math.round` on a single numeric
+literal now fold to a numeric literal, extending the existing `Math.max`/`Math.min`
+support:
+
+```
+Math.abs(-5)   → 5      Math.floor(4.7)  → 4
+Math.ceil(4.2) → 5      Math.round(2.5)  → 3
+```
+
+- Folds only the exact-arity-1, numeric-literal case with a bare-global `Math`
+  callee (a shadowed `m.abs(...)` is left alone), so there is no `ToNumber` side
+  effect and no receiver ambiguity.
+- `Math.round` follows ECMAScript §21.3.2.28 — rounds a half **toward
+  +Infinity** (`Math.round(-2.5) === -2`), NOT Rust's round-half-away-from-zero.
+  A dedicated `js_math_round` helper handles the one divergent case (an exact
+  `.5` fraction), and agrees with JS on the fp-pathological
+  `0.49999999999999994 → 0`.
+- **Negative-zero care** (mirrors the `Math.max`/`min` folds): any result that is
+  `-0`, or any zero-magnitude result from a negative input where JS yields `-0`
+  (`Math.ceil(-0.4)`, `Math.round(-0.4)`, `Math.round(-0.5)`, `Math.floor(-0)`),
+  is DECLINED — `-0` has no numeric-literal spelling, so emitting it would be a
+  sign-bit miscompile. Leaving the call intact is always safe.
+
+This resolves gap-141 (opened by the `PeepholeReplaceKnownMethods` port). Six
+new unit tests cover the folds, the half-rounding rule, the negative-zero
+declines, the arity / non-literal / non-global declines, and the `js_math_round`
+helper directly. Verified against the full closurec end-to-end suite and the
+downstream pass consumers (fold-control-flow, inline-variables, dce, emitter) —
+all green; the change is purely additive (previously-declined calls now fold).
+
 ## [0.78.0] - 2026-07-01
 
 ### Added — CLOC12 upstream test port (`PeepholeReplaceKnownMethodsTest`)
