@@ -21,6 +21,8 @@ use std::fmt::Write;
 use semantic_ir::{
     Block, Expr, Function, Global, Module, ParamKind, Scope, Stmt,
 };
+// `RescueClause` is referenced by name in `emit_try_catch`'s signature.
+use semantic_ir::RescueClause;
 
 use crate::runtime::RUNTIME;
 
@@ -113,6 +115,11 @@ fn emit_globals(out: &mut String, globals: &[Global]) {
 
 fn emit_main(out: &mut String, m: &Module) {
     out.push_str("\nfunc main() {\n");
+    // E3: register user-defined exception-subclass ancestry edges ONCE,
+    // before any user code runs, so a `rescue StandardError` can catch a
+    // raised `MyErr` (`class MyErr < StandardError`).  Registration is an
+    // EXPLICIT `subclass → superclass` string map — never reflection.
+    emit_ancestry_init(out, m);
     if m.functions.iter().any(|f| f.name == "_init") {
         out.push_str("\t_init()\n");
     }
@@ -120,6 +127,74 @@ fn emit_main(out: &mut String, m: &Module) {
         out.push_str("\t_sir_user_main()\n");
     }
     out.push_str("}\n");
+}
+
+/// Emit the one-shot ancestry registration at program init.
+///
+/// Collects every `ClassDef { name, superclass: Some(sup), .. }` reachable
+/// in the module (walking nested statement lists — class bodies, loops,
+/// try/catch) and emits a single `_sir_register_ancestry(map[string]string{
+/// … })` call.  Edges are sorted by subclass name for deterministic output
+/// (the determinism test relies on stable emission).  When no user class
+/// declares a superclass, nothing is emitted.
+fn emit_ancestry_init(out: &mut String, m: &Module) {
+    let mut edges: Vec<(String, String)> = Vec::new();
+    for f in &m.functions {
+        collect_ancestry_edges_in_block(&f.body, &mut edges);
+    }
+    if edges.is_empty() {
+        return;
+    }
+    edges.sort();
+    edges.dedup();
+    out.push_str("\t_sir_register_ancestry(map[string]string{\n");
+    for (sub, sup) in &edges {
+        let _ = writeln!(out, "\t\t{}: {},", quote_go_string(sub), quote_go_string(sup));
+    }
+    out.push_str("\t})\n");
+}
+
+fn collect_ancestry_edges_in_block(b: &Block, edges: &mut Vec<(String, String)>) {
+    for s in &b.stmts {
+        collect_ancestry_edges_in_stmt(s, edges);
+    }
+}
+
+fn collect_ancestry_edges_in_stmt(s: &Stmt, edges: &mut Vec<(String, String)>) {
+    match s {
+        Stmt::ClassDef { name, superclass, body, .. } => {
+            if let Some(sup) = superclass {
+                edges.push((name.clone(), sup.clone()));
+            }
+            for st in body {
+                collect_ancestry_edges_in_stmt(st, edges);
+            }
+        }
+        Stmt::ModuleDef { body, .. } | Stmt::SingletonClassDef { body, .. } => {
+            for st in body {
+                collect_ancestry_edges_in_stmt(st, edges);
+            }
+        }
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            for st in body {
+                collect_ancestry_edges_in_stmt(st, edges);
+            }
+            for r in rescues {
+                for st in &r.body {
+                    collect_ancestry_edges_in_stmt(st, edges);
+                }
+            }
+            if let Some(ens) = ensure_body {
+                for st in ens {
+                    collect_ancestry_edges_in_stmt(st, edges);
+                }
+            }
+        }
+        Stmt::While { body, .. } | Stmt::ForRange { body, .. } | Stmt::ForEach { body, .. } => {
+            collect_ancestry_edges_in_block(body, edges);
+        }
+        _ => {}
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -305,24 +380,144 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         Stmt::Assign { span, .. } => {
             panic!("go backend reached an Assign to an unsupported scope at {} — capability check should have rejected it", span);
         }
-        // SIR17 (classes) — `Feature::Classes` is not accepted by
-        // this backend, so a class-using module is rejected by the
-        // capability check before emit.  Reaching this arm is a bug.
-        Stmt::ClassDef { span, .. } => {
-            panic!("go backend reached SIR17 class-def statement at {} — capability check should have rejected it", span);
+        // ── SIR17 class declarations (E3, exception-subclass support) ──
+        //
+        // `Feature::Classes` is accepted ONLY so exception-*subclass*
+        // declarations (`class MyErr < StandardError; end`) pass the gate:
+        // their sole backend meaning is a `subclass → superclass` ANCESTRY
+        // edge, registered ONCE at program init (see `emit_ancestry_init`),
+        // so a `rescue StandardError` catches a raised `MyErr`.
+        //
+        // Method `def`s are hoisted to top-level Functions by the frontend,
+        // so a `ClassDef` body carries only non-`def` statements.  A class
+        // carrying instance/class variables observes `Feature::InstanceVars`
+        // / `ClassVars` (NOT accepted) and is rejected before emit; a class
+        // body with `Assign{Const}` is rejected by `check_no_class_body_const`.
+        // So the body reaching here is empty (or all-supported), and we just
+        // emit it in order — the ancestry edge itself was already registered
+        // at init.
+        Stmt::ClassDef { body, .. } => {
+            for st in body {
+                emit_stmt(out, st, indent);
+            }
         }
+        // Modules/singleton classes are not part of the E3 exception surface
+        // (`Feature::Modules` is not accepted; a `SingletonClassDef` observes
+        // `Feature::Classes` but the Ruby frontend only emits it for OOP, not
+        // exception subclasses).  A `ModuleDef` is rejected at the gate; a
+        // `SingletonClassDef` that slipped through carries no ancestry meaning
+        // here, so — defensively — emit its (hoisted-out) body statements.
         Stmt::ModuleDef { span, .. } => {
             panic!("go backend reached SIR17 module-def statement at {} — capability check should have rejected it", span);
         }
-        Stmt::SingletonClassDef { span, .. } => {
-            panic!("go backend reached SIR17 singleton-class-def statement at {} — capability check should have rejected it", span);
+        Stmt::SingletonClassDef { body, .. } => {
+            for st in body {
+                emit_stmt(out, st, indent);
+            }
         }
-        // SIR17 (exceptions) — `Feature::Exceptions` is not accepted by
-        // this backend, so a try/catch-using module is rejected by the
-        // capability check before emit.  Unreachable.
-        Stmt::TryCatch { span, .. } => {
-            panic!("go backend reached SIR17 try-catch statement at {} — capability check should have rejected it", span);
+        // ── SIR17 exceptions (E3): begin/rescue/ensure → panic/recover ──
+        //
+        // Go has NO native try/catch; it unwinds with `panic` + deferred
+        // `recover`.  We map a `TryCatch` onto an immediately-invoked func:
+        //
+        //   func() {
+        //     defer func() { <ensure> }()          // only if ensure present
+        //     defer func() {
+        //       if r := recover(); r != nil {
+        //         if _sir_rescue_matches(r, []string{...}) { e := _sir_exc_value(r); <body> } else
+        //         if _sir_rescue_matches(r, []string{...}) { <body> } else { panic(r) }
+        //       }
+        //     }()
+        //     <try body>
+        //   }()
+        //
+        // ORDERING (subtle): deferred funcs run LIFO.  Ruby's `ensure` must
+        // run whether or not a rescue matched — i.e. it must run LAST — so we
+        // register its defer FIRST (deferred earliest ⇒ runs last).  The
+        // rescue/recover defer is registered SECOND (runs first): it recovers
+        // the panic and dispatches, and if NO clause matches it re-`panic`s —
+        // that re-panic still unwinds through the already-registered ensure
+        // defer, so `ensure` runs on the propagating path too.  On the normal
+        // (no-raise) path recover returns nil and only ensure's body runs.
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            emit_try_catch(out, body, rescues, ensure_body.as_deref(), indent);
         }
+    }
+}
+
+/// Emit a `TryCatch` as a panic/recover IIFE.  See the `Stmt::TryCatch`
+/// arm for the shape + the LIFO ensure-ordering rationale.
+fn emit_try_catch(
+    out: &mut String,
+    body: &[Stmt],
+    rescues: &[RescueClause],
+    ensure_body: Option<&[Stmt]>,
+    indent: usize,
+) {
+    let pad = indent_str(indent);
+    let inner = indent + 1;
+    let ipad = indent_str(inner);
+    out.push_str(&pad);
+    out.push_str("func() {\n");
+
+    // 1. ensure's defer FIRST so it runs LAST (LIFO), on every path.
+    if let Some(ens) = ensure_body {
+        let _ = writeln!(out, "{}defer func() {{", ipad);
+        emit_stmt_list(out, ens, inner + 1);
+        let _ = writeln!(out, "{}}}()", ipad);
+    }
+
+    // 2. the recover/dispatch defer SECOND so it runs FIRST.
+    if !rescues.is_empty() {
+        let _ = writeln!(out, "{}defer func() {{", ipad);
+        let rpad = indent_str(inner + 1);
+        let _ = writeln!(out, "{}if r := recover(); r != nil {{", rpad);
+        let cpad = indent_str(inner + 2);
+        for (i, r) in rescues.iter().enumerate() {
+            // `[]string{"Foo", "Bar"}` — the clause's exception class names.
+            let mut types = String::from("[]string{");
+            for (j, t) in r.exception_types.iter().enumerate() {
+                if j > 0 {
+                    types.push_str(", ");
+                }
+                types.push_str(&quote_go_string(t));
+            }
+            types.push('}');
+            if i == 0 {
+                let _ = writeln!(out, "{}if _sir_rescue_matches(r, {}) {{", cpad, types);
+            } else {
+                let _ = writeln!(out, "{}}} else if _sir_rescue_matches(r, {}) {{", cpad, types);
+            }
+            // `rescue Foo => e` binds the caught value; only emit the
+            // binding when the clause names one (avoids an unused `e`).
+            if let Some(bind) = &r.binding {
+                let safe = sanitize_ident(bind);
+                let _ = writeln!(out, "{}{} := _sir_exc_value(r)", indent_str(inner + 3), safe);
+                let _ = writeln!(out, "{}_ = {}", indent_str(inner + 3), safe);
+            }
+            emit_stmt_list(out, &r.body, inner + 3);
+        }
+        // No clause matched → re-raise so the exception propagates (and
+        // still unwinds through the ensure defer registered above).
+        let _ = writeln!(out, "{}}} else {{", cpad);
+        let _ = writeln!(out, "{}panic(r)", indent_str(inner + 3));
+        let _ = writeln!(out, "{}}}", cpad);
+        let _ = writeln!(out, "{}}}", rpad);
+        let _ = writeln!(out, "{}}}()", ipad);
+    }
+
+    // 3. the try body runs after both defers are registered.
+    emit_stmt_list(out, body, inner);
+
+    let _ = writeln!(out, "{}}}()", pad);
+}
+
+/// Emit a bare statement list (a `Vec<Stmt>`, as carried by `TryCatch`
+/// bodies / rescue / ensure and `ClassDef` bodies).  Unlike a `Block`,
+/// there is no trailing value slot, so this just emits each statement.
+fn emit_stmt_list(out: &mut String, stmts: &[Stmt], indent: usize) {
+    for s in stmts {
+        emit_stmt(out, s, indent);
     }
 }
 
@@ -787,6 +982,44 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
             return;
         }
     }
+    // ── SIR17 exceptions (E3): `raise` → panic ─────────────────────
+    //
+    // `raise` has no return value — it unwinds — so it emits a Go `panic`.
+    // The first argument decides the shape (mirroring the TS/Python backends
+    // for parity):
+    //   • `raise Foo` / `raise Foo, "msg"` — first arg a `Const` class name
+    //     ⇒ `panic(_sir_new_error("Foo", <msg or nil>))`.  The class name is
+    //     passed as a STRING (no runtime binding for a class), so this Const
+    //     ref is intercepted HERE and never reaches `emit_var_ref`'s panic.
+    //   • `raise <expr>` — any non-Const first arg (`raise "boom"`) ⇒ an
+    //     implicit `RuntimeError` carrying that value as the message.
+    //   • bare `raise` (no args) ⇒ a generic `RuntimeError`.  Go's `recover()`
+    //     only returns the in-flight panic when called DIRECTLY by a deferred
+    //     func; a bare `raise` in a rescue body is not in that position, so —
+    //     matching the TS/Python backends' documented v0 limitation — SIR does
+    //     not thread the in-flight exception into a bare re-raise; we panic a
+    //     fresh `RuntimeError`.
+    if name == "raise" {
+        match args.first() {
+            None => {
+                out.push_str("func() Value { panic(_sir_new_error(\"RuntimeError\", nil)) }()");
+            }
+            Some(Expr::VarRef { name: cn, scope: Scope::Const, .. }) => {
+                let _ = write!(out, "func() Value {{ panic(_sir_new_error({}, ", quote_go_string(cn));
+                match args.get(1) {
+                    Some(msg) => emit_expr(out, msg, indent),
+                    None => out.push_str("nil"),
+                }
+                out.push_str(")) }()");
+            }
+            Some(other) => {
+                out.push_str("func() Value { panic(_sir_new_error(\"RuntimeError\", ");
+                emit_expr(out, other, indent);
+                out.push_str(")) }()");
+            }
+        }
+        return;
+    }
     // All variadic-ish builtins in the Go runtime take []Value and
     // return Value.  Same calling shape for fixed-arity ones to keep
     // the emitter simple.
@@ -1169,7 +1402,7 @@ fn quote_go_string(s: &str) -> String {
 mod tests {
     use super::*;
     use semantic_ir::{
-        EffectSet, FeatureManifest, Metadata, Param, ParamKind, Span,
+        EffectSet, Feature, FeatureManifest, Metadata, Param, ParamKind, Span,
     };
 
     fn s() -> Span {
@@ -2062,5 +2295,209 @@ mod tests {
         assert!(RUNTIME.contains("func _sir_numeric_method("));
         assert!(RUNTIME.contains("func _sir_symbol_method("));
         assert!(RUNTIME.contains("undefined method"));
+    }
+
+    // ── E3: exception emission shapes ─────────────────────────────────────
+
+    /// `raise Foo, "msg"` → `panic(_sir_new_error("Foo", "msg"))`.
+    #[test]
+    fn emit_raise_with_class_and_message() {
+        let raise = Expr::BuiltinCall {
+            name: "raise".into(),
+            args: vec![
+                Expr::VarRef { name: "ArgumentError".into(), scope: Scope::Const, span: s() },
+                Expr::StrLit { value: "bad".into(), span: s() },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_expr(&mut out, &raise, 0);
+        assert_eq!(
+            out,
+            r#"func() Value { panic(_sir_new_error("ArgumentError", Value("bad"))) }()"#
+        );
+    }
+
+    /// `raise Foo` (no message) → `panic(_sir_new_error("Foo", nil))`.
+    #[test]
+    fn emit_raise_with_class_only() {
+        let raise = Expr::BuiltinCall {
+            name: "raise".into(),
+            args: vec![Expr::VarRef {
+                name: "MyErr".into(),
+                scope: Scope::Const,
+                span: s(),
+            }],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_expr(&mut out, &raise, 0);
+        assert_eq!(out, r#"func() Value { panic(_sir_new_error("MyErr", nil)) }()"#);
+    }
+
+    /// `raise "boom"` (non-const first arg) → implicit `RuntimeError`.
+    #[test]
+    fn emit_raise_bare_string_is_runtime_error() {
+        let raise = Expr::BuiltinCall {
+            name: "raise".into(),
+            args: vec![Expr::StrLit { value: "boom".into(), span: s() }],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_expr(&mut out, &raise, 0);
+        assert_eq!(out, r#"func() Value { panic(_sir_new_error("RuntimeError", Value("boom"))) }()"#);
+    }
+
+    /// Bare `raise` (no args) → a generic `RuntimeError`.
+    #[test]
+    fn emit_bare_raise_is_runtime_error() {
+        let raise = Expr::BuiltinCall {
+            name: "raise".into(),
+            args: vec![],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_expr(&mut out, &raise, 0);
+        assert_eq!(out, r#"func() Value { panic(_sir_new_error("RuntimeError", nil)) }()"#);
+    }
+
+    fn print_stmt(v: Expr) -> Stmt {
+        Stmt::ExprStmt {
+            expr: Expr::BuiltinCall {
+                name: "print".into(),
+                args: vec![v],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            span: s(),
+        }
+    }
+
+    /// A `TryCatch` with one typed rescue → an IIFE whose deferred closure
+    /// calls `recover`, `_sir_rescue_matches`, binds via `_sir_exc_value`,
+    /// and re-`panic`s when no clause matches.
+    #[test]
+    fn emit_try_catch_shape() {
+        let tc = Stmt::TryCatch {
+            body: vec![print_stmt(Expr::StrLit { value: "try".into(), span: s() })],
+            rescues: vec![RescueClause {
+                exception_types: vec!["StandardError".into()],
+                binding: Some("e".into()),
+                body: vec![print_stmt(Expr::StrLit { value: "caught".into(), span: s() })],
+                span: s(),
+            }],
+            ensure_body: None,
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_stmt(&mut out, &tc, 0);
+        // Structural checks: IIFE, deferred recover, matcher, binding, re-raise.
+        assert!(out.starts_with("func() {\n"), "must open an IIFE; got:\n{out}");
+        assert!(out.contains("defer func() {"), "must register a deferred recover");
+        assert!(out.contains("if r := recover(); r != nil {"), "must recover the panic");
+        assert!(
+            out.contains(r#"if _sir_rescue_matches(r, []string{"StandardError"}) {"#),
+            "must ask the ancestry matcher; got:\n{out}"
+        );
+        assert!(out.contains("e := _sir_exc_value(r)"), "must bind `=> e`");
+        assert!(out.contains("} else {\n") && out.contains("panic(r)"), "must re-raise unmatched");
+        assert!(out.trim_end().ends_with("}()"), "must invoke the IIFE");
+    }
+
+    /// A catch-all rescue (empty `exception_types`) → `[]string{}`.
+    #[test]
+    fn emit_bare_rescue_is_catch_all() {
+        let tc = Stmt::TryCatch {
+            body: vec![],
+            rescues: vec![RescueClause {
+                exception_types: vec![],
+                binding: None,
+                body: vec![],
+                span: s(),
+            }],
+            ensure_body: None,
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_stmt(&mut out, &tc, 0);
+        assert!(out.contains("_sir_rescue_matches(r, []string{})"), "empty list = catch-all");
+        // No binding was named → no `_sir_exc_value` call.
+        assert!(!out.contains("_sir_exc_value"), "no binding ⇒ no exc-value bind");
+    }
+
+    /// ENSURE ORDERING: the ensure defer must be registered BEFORE the
+    /// recover defer, so (LIFO) it runs LAST on every path.
+    #[test]
+    fn emit_ensure_defer_registered_before_recover_defer() {
+        let tc = Stmt::TryCatch {
+            body: vec![],
+            rescues: vec![RescueClause {
+                exception_types: vec![],
+                binding: None,
+                body: vec![print_stmt(Expr::StrLit { value: "r".into(), span: s() })],
+                span: s(),
+            }],
+            ensure_body: Some(vec![print_stmt(Expr::StrLit { value: "ens".into(), span: s() })]),
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_stmt(&mut out, &tc, 0);
+        let ensure_pos = out.find("\"ens\"").expect("ensure body present");
+        let recover_pos = out.find("recover()").expect("recover present");
+        assert!(
+            ensure_pos < recover_pos,
+            "ensure's defer must be emitted first (runs last, LIFO); got:\n{out}"
+        );
+    }
+
+    /// A `ClassDef { superclass: Some }` registers ONE ancestry edge at
+    /// program init.
+    #[test]
+    fn emit_ancestry_registration_at_init() {
+        let class = Stmt::ClassDef {
+            name: "MyErr".into(),
+            superclass: Some("StandardError".into()),
+            body: vec![],
+            span: s(),
+        };
+        let main = Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![class],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let m = Module {
+            name: "anc".into(),
+            manifest: FeatureManifest::from_features(&[Feature::Classes]),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![main],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("test")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        };
+        let src = emit_module(&m);
+        assert!(
+            src.contains("_sir_register_ancestry(map[string]string{"),
+            "must emit one ancestry registration; got:\n{src}"
+        );
+        assert!(
+            src.contains(r#""MyErr": "StandardError","#),
+            "must register the MyErr → StandardError edge; got:\n{src}"
+        );
     }
 }

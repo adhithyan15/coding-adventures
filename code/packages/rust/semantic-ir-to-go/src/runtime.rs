@@ -572,6 +572,16 @@ func _sir_format_d(v Value, visited map[Value]bool) string {
 	if _, ok := v.(*Closure); ok {
 		return "<closure>"
 	}
+	// A SIR exception prints as its message (Ruby's `exception.message`):
+	// the raised message when present, else the class name.  This lets a
+	// `rescue => e` do `print(e)` and see something meaningful rather than
+	// Go's default `&{...}` struct rendering.
+	if se, ok := v.(*SirError); ok {
+		if se.Msg == nil {
+			return se.Class
+		}
+		return _sir_format_d(se.Msg, visited)
+	}
 	return fmt.Sprintf("%v", v)
 }
 
@@ -1542,6 +1552,155 @@ func _sir_symbol_method(recv *Symbol, name string, args []Value) (Value, bool) {
 	return nil, false
 }
 
+// ── SIR17 exceptions (E3): panic / recover ─────────────────────
+//
+// Go has NO native try/catch — it models unwinding with `panic` +
+// deferred `recover`.  The emitter maps a SIR `TryCatch` onto an
+// immediately-invoked func whose deferred closure calls `recover()`
+// and dispatches to the matching rescue clause (see emit.rs).  These
+// helpers are the non-native pieces that dispatch needs:
+//
+//   * `SirError`     — the thrown value: a Ruby/SIR class NAME tag plus
+//                      an optional message.  A `raise Foo, "m"` boxes one
+//                      of these and `panic`s it.
+//   * `_sir_new_error` — construct a `*SirError` for `raise`.
+//   * `_sir_exc_value` — the `Value` a `rescue … => e` binds: the caught
+//                        `*SirError` boxed back into a `Value` (or, for a
+//                        non-`SirError` panic — e.g. a runtime "division by
+//                        zero" — a synthesised `StandardError` so ordinary
+//                        `rescue`s can still bind something meaningful).
+//   * `_sir_rescue_matches` — does the caught value match a clause naming
+//                        `classNames`?  This is the ordered, ancestry-aware
+//                        type test Ruby's typed `rescue` performs.
+//
+// SECURITY — the ancestry walk is an EXPLICIT string-map lookup; it never
+// reflects on a Go type name.  User-defined class edges are added ONLY via
+// `_sir_register_ancestry` (emitted from `ClassDef{superclass:Some}` pairs),
+// so a rescue can never resolve to arbitrary host behaviour.  Every walk
+// carries a `seen` set so a malicious cyclic hierarchy (`class A<B; class
+// B<A`) terminates instead of looping forever.
+
+// A SIR exception: a class-name tag plus an optional message value.  Boxed
+// as a `*SirError` and thrown with `panic`.  `Msg` is nil when `raise Foo`
+// gave no message (Ruby's default `exception.message` is then the class
+// name — see `_sir_format_d`'s SirError arm).
+type SirError struct {
+	Class string
+	Msg   Value
+}
+
+// Built-in Ruby exception ancestry: subclass name → immediate superclass
+// name.  A curated slice of Ruby's tree (the classes a frontend is likely
+// to name), each chaining up to `StandardError → Exception`.  Mirrors the
+// TS/Python `sir-runtime-exceptions` ANCESTRY table for cross-backend
+// parity.  Seeded once at package init; user edges are appended by
+// `_sir_register_ancestry`.
+//
+//	Exception
+//	└─ StandardError
+//	   ├─ RuntimeError ├─ ArgumentError ├─ TypeError
+//	   ├─ NameError ─ NoMethodError      ├─ RangeError
+//	   ├─ IndexError ─ KeyError          ├─ ZeroDivisionError
+//	   ├─ IOError    ├─ StopIteration    └─ NotImplementedError
+var _sir_ancestry = map[string]string{
+	"RuntimeError":        "StandardError",
+	"ArgumentError":       "StandardError",
+	"TypeError":           "StandardError",
+	"NameError":           "StandardError",
+	"NoMethodError":       "NameError",
+	"IndexError":          "StandardError",
+	"KeyError":            "IndexError",
+	"RangeError":          "StandardError",
+	"ZeroDivisionError":   "StandardError",
+	"IOError":             "StandardError",
+	"StopIteration":       "StandardError",
+	"NotImplementedError": "StandardError",
+	"StandardError":       "Exception",
+}
+
+// Register user-defined `subclass → superclass` edges (from
+// `ClassDef{superclass:Some}`).  Called once at program init.  A built-in
+// edge is never overwritten (the built-in table is authoritative for
+// built-in names); a user redefinition of a built-in name is ignored so
+// the curated hierarchy stays intact.
+func _sir_register_ancestry(edges map[string]string) {
+	for sub, sup := range edges {
+		if _, isBuiltin := _sir_ancestry[sub]; !isBuiltin {
+			_sir_ancestry[sub] = sup
+		}
+	}
+}
+
+// Construct a SIR exception for `raise Class, msg`.  `msg` may be nil
+// (bare `raise Class`), in which case the class name serves as the
+// message (Ruby's default).
+func _sir_new_error(class string, msg Value) *SirError {
+	return &SirError{Class: class, Msg: msg}
+}
+
+// The `Value` a `rescue => e` binds for a recovered panic `r`.
+//
+//   - A `*SirError` (from `raise`) is boxed straight back as the binding.
+//   - Any OTHER recovered value (a runtime panic string like "division by
+//     zero", or a stray `panic(x)`) is wrapped as a `StandardError` whose
+//     message is the value's printed form — so `rescue StandardError => e`
+//     still catches Go-level runtime failures and `e` is meaningful.
+func _sir_exc_value(r any) Value {
+	if se, ok := r.(*SirError); ok {
+		return se
+	}
+	return &SirError{Class: "StandardError", Msg: _sir_format(r)}
+}
+
+// The SIR class name of a recovered panic value.  A `*SirError` reports
+// its tag; anything else is treated as `StandardError` — the everyday
+// rescuable root — so a native Go runtime panic is catchable by an
+// ordinary `rescue`.
+func _sir_class_of_thrown(r any) string {
+	if se, ok := r.(*SirError); ok {
+		return se.Class
+	}
+	return "StandardError"
+}
+
+// True iff `actual` is `target` or descends from it via `_sir_ancestry`.
+// The `seen` set makes the walk total even for a cyclic user hierarchy.
+func _sir_is_ancestor_or_self(actual string, target string) bool {
+	cur := actual
+	seen := make(map[string]bool)
+	for cur != "" && !seen[cur] {
+		if cur == target {
+			return true
+		}
+		seen[cur] = true
+		cur = _sir_ancestry[cur] // "" when `cur` has no registered super
+	}
+	return false
+}
+
+// Does a recovered panic `r` match a rescue clause naming `classNames`?
+//
+//   - EMPTY `classNames` is a bare `rescue` (catch-all) ⇒ always true.
+//   - `Exception` is Ruby's universal root ⇒ matches anything.
+//   - Otherwise `r`'s class must equal, or descend from, some named class
+//     (per `_sir_ancestry`; user classes match by exact name or via
+//     registered edges).
+//
+// The emitted deferred recover calls this once per clause, in SOURCE
+// order, running the first match and re-`panic`king if none match.
+func _sir_rescue_matches(r any, classNames []string) bool {
+	if len(classNames) == 0 {
+		return true
+	}
+	actual := _sir_class_of_thrown(r)
+	for _, name := range classNames {
+		if name == "Exception" || _sir_is_ancestor_or_self(actual, name) {
+			return true
+		}
+	}
+	return false
+}
+
 "##;
 
 #[cfg(test)]
@@ -1686,8 +1845,24 @@ mod tests {
             "_sir_print", "_sir_global_set", "_sir_global_get",
             "_sir_apply", "_sir_make_closure", "_sir_intern", "_sir_truthy",
             "_sir_format", "_sir_builtin_closure", "_sir_call_builtin_by_name",
+            // E3 exception helpers.
+            "_sir_new_error", "_sir_exc_value", "_sir_rescue_matches",
+            "_sir_register_ancestry",
         ] {
             assert!(RUNTIME.contains(s), "missing: {}", s);
         }
+    }
+
+    // E3: the ancestry table and rescue matcher must be present with the
+    // built-in edges the TS/Python reference bakes in.
+    #[test]
+    fn runtime_includes_exception_ancestry() {
+        assert!(RUNTIME.contains("type SirError struct"));
+        assert!(RUNTIME.contains("var _sir_ancestry = map[string]string{"));
+        assert!(RUNTIME.contains(r#""StandardError":       "Exception""#));
+        assert!(RUNTIME.contains(r#""NoMethodError":       "NameError""#));
+        assert!(RUNTIME.contains(r#""KeyError":            "IndexError""#));
+        // The cycle-guard `seen` set must be present (no unbounded walk).
+        assert!(RUNTIME.contains("seen := make(map[string]bool)"));
     }
 }
