@@ -380,6 +380,10 @@ fn over_arrow_base(name: &str) -> Option<&'static str> {
         "overleftrightarrow" => "leftrightarrow",
         "overrightharpoonup" => "rightharpoonup",
         "overleftharpoonup" => "leftharpoonup",
+        // Down-barb harpoon accents (the `harpoon` package) — the down-barb siblings of the
+        // up-barb over-harpoons above, over the standard amsmath ⇁/↽ relation symbols.
+        "overrightharpoondown" => "rightharpoondown",
+        "overleftharpoondown" => "leftharpoondown",
         _ => return None,
     })
 }
@@ -396,11 +400,19 @@ fn over_arrow_base(name: &str) -> Option<&'static str> {
 ///   \underrightarrow{AB}      → Underset{→,  AB}
 ///   \underleftarrow{AB}       → Underset{←,  AB}
 ///   \underleftrightarrow{AB}  → Underset{↔, AB}
+///
+/// The under-HARPOON accents (`harpoon` package) are the under-body mirror of the over-harpoons in
+/// [`over_arrow_base`]: `\underrightharpoonup{AB}` → `Underset{⇀, AB}`, etc., over the standard
+/// amsmath harpoon relation symbols (both up- and down-barb variants).
 fn under_arrow_base(name: &str) -> Option<&'static str> {
     Some(match name {
         "underrightarrow" => "rightarrow",
         "underleftarrow" => "leftarrow",
         "underleftrightarrow" => "leftrightarrow",
+        "underrightharpoonup" => "rightharpoonup",
+        "underleftharpoonup" => "leftharpoonup",
+        "underrightharpoondown" => "rightharpoondown",
+        "underleftharpoondown" => "leftharpoondown",
         _ => return None,
     })
 }
@@ -2355,6 +2367,52 @@ mod tests {
     fn under_arrow_missing_mandatory_body_is_a_spanned_error() {
         // The `{body}` is mandatory; a trailing command with no argument is a clean error.
         assert!(parse_math(r"\underrightarrow").is_err());
+    }
+
+    // ---- down-barb & under harpoon accents (the `harpoon` package) ---------------
+
+    #[test]
+    fn down_barb_over_harpoons_set_their_symbol_over_the_body() {
+        // The down-barb over-harpoons are the siblings of the up-barb ones, set OVER the body.
+        for (src, sym_name) in [
+            (r"\overrightharpoondown{x}", "rightharpoondown"),
+            (r"\overleftharpoondown{y}", "leftharpoondown"),
+        ] {
+            match &parse_math(src).unwrap() {
+                MathNode::Overset { over, .. } => assert_eq!(**over, sym(sym_name), "{src}"),
+                other => panic!("expected Overset for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn under_harpoons_set_their_symbol_under_the_body() {
+        // Both barb directions of the under-harpoon accents lower onto Underset.
+        for (src, sym_name) in [
+            (r"\underrightharpoonup{a}", "rightharpoonup"),
+            (r"\underleftharpoonup{b}", "leftharpoonup"),
+            (r"\underrightharpoondown{c}", "rightharpoondown"),
+            (r"\underleftharpoondown{d}", "leftharpoondown"),
+        ] {
+            match &parse_math(src).unwrap() {
+                MathNode::Underset { under, .. } => assert_eq!(**under, sym(sym_name), "{src}"),
+                other => panic!("expected Underset for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn harpoon_accents_round_trip_through_to_latex() {
+        for src in [
+            r"\overrightharpoondown{x}",
+            r"\overleftharpoondown{y}",
+            r"\underrightharpoonup{a}",
+            r"\underleftharpoondown{d}",
+        ] {
+            let once = parse_math(src).unwrap();
+            let twice = parse_math(&once.to_latex()).unwrap();
+            assert_eq!(once, twice, "round-trip changed the tree for {src:?}");
+        }
     }
 
     // ---- deep-tree Drop safety -------------------------------------------------
