@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.18.13] - 2026-07-01
+
+### Test — CodePrinter number-formatting port (#88, CLOC12.142)
+
+New upstream port `tests/upstream/code_printer_numbers_test.rs` (registered as
+the `upstream_code_printer_numbers` test target), extending the CodePrinter
+coverage beyond the core shortest-form cases already active in
+`code_printer_test.rs`. It pins the **exponential-vs-decimal cut-over** that
+`format_js_number` performs — it keeps whichever spelling is strictly shorter,
+breaking ties toward decimal:
+
+- **6 active `#[test]`s** covering the cut-over both ways: `1e18` → `1E18`,
+  `1e100` → `1E100`, `2.5e10` → `2.5E10`, `123456789` stays decimal (its
+  `1.23456789E8` is longer), `1e-7` → `1E-7`, `1234.5` stays decimal.
+- **2 `#[ignore = "blocked on gap-133"]` placeholders** for the leading-zero
+  drop upstream applies to bare fractions (`0.25` → `.25`, `0.125` → `.125`).
+  Our emitter's `format_js_number` currently keeps the `0`; the placeholders
+  document the intended upstream byte output. This is the *emitter* (AST →
+  string) path — the separate source-preserving byte-identity path already
+  elides the leading zero (gap-107 / gap-113).
+
+No library code changed — this release is test coverage plus docs. Every active
+assertion matched the emitter's current output on the first run (no new bug).
+
 ## [0.18.12] - 2026-06-30
 
 ### Test — activate stale CodePrinter conformance placeholders (#88, CLOC12.138)
