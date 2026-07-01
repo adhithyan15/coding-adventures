@@ -25,6 +25,7 @@ use spice_netlist_parser::{
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANELS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARDS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTIONS_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SUMMARY_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION,
@@ -2660,6 +2661,12 @@ fn berkeley_app_facade_exports_package_manifest_json() {
         .unwrap()
         .iter()
         .any(|capability| capability == "app-shell-dashboard-panel-card-actions-json"));
+    assert!(payload["artifactCapabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|capability| capability
+            == "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-json"));
 }
 
 #[test]
@@ -5137,6 +5144,113 @@ C1 out 0 1p
             ["dispatchQueueLaneTabPanelCardActionsCapabilityId"],
         "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-actions-json"
     );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu = app
+        .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(3),
+                active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+            },
+        )
+        .expect("shell dashboard dispatch queue lane tab panel card action menu should execute");
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_SCHEMA_VERSION
+    );
+    assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu.ready);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu
+            .active_menu_item_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab-panel-card-action-menu-item.queued")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu
+            .attention_menu_item_id
+            .as_deref(),
+        None
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu
+            .default_menu_item_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab-panel-card-action-menu-item.queued")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu.menu_item_count,
+        3
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu.enabled_menu_item_count,
+        2
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu.disabled_menu_item_count,
+        1
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu.empty_menu_item_count,
+        1
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu.menu_items[0].id,
+        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-item.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu.menu_items[0].action_id,
+        "dashboard.dispatch-queue-lane-tab-panel-card-action.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu.menu_items[0].position,
+        0
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu.menu_items[0].label,
+        "Open queued dispatches"
+    );
+    assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu.menu_items[0].primary);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu.menu_items[2]
+            .disabled_reason
+            .as_deref(),
+        Some("No attention dispatches")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu
+            .dispatch_queue_lane_tab_panel_card_action_menu_capability_id,
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-json"
+    );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_payload: serde_json::Value =
+        serde_json::from_str(
+            &app.run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_json(
+                BerkeleyAppPersistedEditorState {
+                    selected_syntax_card_index: Some(3),
+                    active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+                },
+            )
+            .unwrap(),
+        )
+        .expect("shell dashboard dispatch queue lane tab panel card action menu JSON should parse");
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_payload["activeMenuItemId"],
+        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-item.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_payload["menuItems"][0]
+            ["actionId"],
+        "dashboard.dispatch-queue-lane-tab-panel-card-action.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_payload["menuItems"][2]
+            ["disabledReason"],
+        "No attention dispatches"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_payload
+            ["dispatchQueueLaneTabPanelCardActionMenuCapabilityId"],
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-json"
+    );
 }
 
 #[test]
@@ -7310,6 +7424,92 @@ R1 in out
         shell_dashboard_dispatch_queue_lane_tab_panel_card_actions_payload
             ["dispatchQueueLaneTabPanelCardActionsCapabilityId"],
         "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-actions-json"
+    );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu = app
+        .app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(2),
+                active_command_id: Some("analysis.2.run".to_string()),
+            },
+        );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_SCHEMA_VERSION
+    );
+    assert!(!shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu.ready);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu
+            .active_menu_item_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab-panel-card-action-menu-item.attention")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu
+            .attention_menu_item_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab-panel-card-action-menu-item.attention")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu.menu_item_count,
+        3
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu.enabled_menu_item_count,
+        2
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu.disabled_menu_item_count,
+        1
+    );
+    assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu.menu_items[2].active);
+    assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu.menu_items[2].attention);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu.menu_items[1].label,
+        "View blocked dispatches"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu.menu_items[1]
+            .disabled_reason
+            .as_deref(),
+        Some("No blocked dispatches")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu
+            .dispatch_queue_lane_tab_panel_card_action_menu_capability_id,
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-json"
+    );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_payload: serde_json::Value =
+        serde_json::from_str(
+            &app.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_json(
+                BerkeleyAppPersistedEditorState {
+                    selected_syntax_card_index: Some(2),
+                    active_command_id: Some("analysis.2.run".to_string()),
+                },
+            ),
+        )
+        .expect(
+            "blocked shell dashboard dispatch queue lane tab panel card action menu JSON should parse",
+        );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_payload["activeMenuItemId"],
+        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-item.attention"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_payload
+            ["attentionMenuItemId"],
+        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-item.attention"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_payload["menuItems"][1]
+            ["disabledReason"],
+        "No blocked dispatches"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_payload
+            ["dispatchQueueLaneTabPanelCardActionMenuCapabilityId"],
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-json"
     );
 }
 
