@@ -270,6 +270,78 @@ fn decode_entity(name: &str) -> String {
     mapped.to_string()
 }
 
+/// Read an attribute's value out of an already-lexed start-tag byte span
+/// (`src[span.0..span.1]` = `<name … attr="value" …>`). The lexer drops attributes as it scans
+/// (they are presentation), so a handler that needs a *meaning-bearing* one — the `open`/`close`
+/// delimiters on `<mfenced>` — re-reads it from the source slice here. `attr` matches only as a
+/// whole word (the byte before it must be whitespace, so `open` never matches inside another
+/// attribute name); the value may be single- or double-quoted; entity references in the value are
+/// decoded (`&lang;` → ⟨, `&#x2016;` → ‖). Returns `None` when the attribute is absent.
+fn tag_attr(src: &[u8], span: (usize, usize), attr: &str) -> Option<String> {
+    let end = span.1.min(src.len());
+    let start = span.0.min(end);
+    let tag = &src[start..end];
+    let key = attr.as_bytes();
+    // Start at 1: the byte at index 0 is `<`, and every real attribute is preceded by whitespace.
+    let mut i = 1;
+    while i + key.len() <= tag.len() {
+        if tag[i - 1].is_ascii_whitespace() && tag[i..].starts_with(key) {
+            let mut j = i + key.len();
+            while j < tag.len() && tag[j].is_ascii_whitespace() {
+                j += 1;
+            }
+            if j < tag.len() && tag[j] == b'=' {
+                j += 1;
+                while j < tag.len() && tag[j].is_ascii_whitespace() {
+                    j += 1;
+                }
+                if j < tag.len() && (tag[j] == b'"' || tag[j] == b'\'') {
+                    let quote = tag[j];
+                    j += 1;
+                    let val_start = j;
+                    while j < tag.len() && tag[j] != quote {
+                        j += 1;
+                    }
+                    return Some(decode_attr_value(&tag[val_start..j]));
+                }
+            }
+        }
+        i += 1;
+    }
+    None
+}
+
+/// Decode entity references (`&name;`, `&#NN;`) inside an attribute value, reusing the same entity
+/// table as character data. Non-entity bytes pass through (lossy UTF-8, matching the lexer).
+fn decode_attr_value(raw: &[u8]) -> String {
+    let s = String::from_utf8_lossy(raw);
+    let mut out = String::new();
+    let mut rest: &str = &s;
+    loop {
+        match rest.find('&') {
+            None => {
+                out.push_str(rest);
+                break;
+            }
+            Some(amp) => {
+                out.push_str(&rest[..amp]);
+                match rest[amp + 1..].find(';') {
+                    Some(semi) => {
+                        out.push_str(&decode_entity(&rest[amp + 1..amp + 1 + semi]));
+                        rest = &rest[amp + 1 + semi + 1..];
+                    }
+                    None => {
+                        // A bare `&` with no terminator: keep it verbatim, stop.
+                        out.push_str(&rest[amp..]);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    out
+}
+
 // ---- element-tree builder ---------------------------------------------------------------------
 
 /// One processed child of a row: either a finished operand expression, or a raw `<mo>` operator
@@ -283,11 +355,15 @@ struct Parser {
     events: Vec<Event>,
     pos: usize,
     src_len: usize,
+    /// The original source bytes. The lexer discards attributes as it scans (they are
+    /// presentation), but a handler that needs a *meaning-bearing* attribute — the `open`/`close`
+    /// delimiters on `<mfenced>` — re-reads it here from the start-tag's byte span (`tag_attr`).
+    src: Vec<u8>,
 }
 
 impl Parser {
-    fn new(events: Vec<Event>, src_len: usize) -> Self {
-        Parser { events, pos: 0, src_len }
+    fn new(events: Vec<Event>, src: &[u8]) -> Self {
+        Parser { events, pos: 0, src_len: src.len(), src: src.to_vec() }
     }
 
     fn peek(&self) -> Option<&Event> {
@@ -464,7 +540,11 @@ impl Parser {
             }
             // `<mfenced>…</mfenced>` — a fence. Three shapes, decided by the top-level separators:
             //
-            //   * NO separator            → an ordinary parenthesised group `(a b)` → `Group`.
+            //   * NO separator            → a single delimited group → `Fenced { open, body, close }`,
+            //                               carrying WHICH delimiters bracketed it (the `open`/`close`
+            //                               attributes, default `(`/`)`) so `|x|` (absolute value) is
+            //                               kept distinct from `(x)`. This is the mathml frontend
+            //                               adopting the neutral `Fenced` node (latex already does).
             //   * `<mo>,</mo>` only       → a flat LIST `(a, b, c)` → `Sequence([a, b, c])`.
             //   * any `<mo>;</mo>`        → ROWS. Semicolons are the row separator and commas the
             //                               within-row (column) separator — the classic fenced-matrix
@@ -476,16 +556,25 @@ impl Parser {
             //                               second column). A ragged fence `(a; b, c)` is faithful:
             //                               `Sequence([a, Sequence([b, c])])`.
             //
-            // The delimiters and the `open`/`close`/`separators` *attributes* are presentation and
-            // dropped like all attributes — only *literal* `<mo>,</mo>`/`<mo>;</mo>` children are
-            // read as separators, matching how the comma list already worked.
+            // The `separators` attribute is presentation and dropped — only *literal* `<mo>,</mo>`/
+            // `<mo>;</mo>` children are read as separators, matching how the comma list already
+            // worked. The `open`/`close` delimiter attributes, however, ARE meaning-bearing for the
+            // single-body case and re-read from the tag span into `Fenced` (the comma/semicolon list
+            // cases still lower to `Sequence`, which drops them — a later slice of the fence arc).
             "mfenced" => {
                 let kids = self.parse_row_children(name, depth)?;
                 let has_comma = kids.iter().any(|c| matches!(c, Child::Op(s) if s == ","));
                 let has_semicolon = kids.iter().any(|c| matches!(c, Child::Op(s) if s == ";"));
                 if !has_comma && !has_semicolon {
                     let inner = fold_row(kids, span, depth)?;
-                    return Ok(Child::Expr(MathExpr::Group(Box::new(inner))));
+                    // MathML's own defaults for a bare `<mfenced>` are `(` and `)`.
+                    let open = tag_attr(&self.src, span, "open").unwrap_or_else(|| "(".to_string());
+                    let close = tag_attr(&self.src, span, "close").unwrap_or_else(|| ")".to_string());
+                    return Ok(Child::Expr(MathExpr::Fenced {
+                        open,
+                        body: Box::new(inner),
+                        close,
+                    }));
                 }
                 if !has_semicolon {
                     // Comma-only: a flat list. Each comma-delimited segment folds to one expression.
@@ -981,6 +1070,6 @@ fn func_of(name: &str) -> Option<Func> {
 /// The crate entry point: parse a Presentation-MathML string into the neutral [`MathExpr`].
 pub fn parse(src: &str) -> Result<MathExpr, FrontendError> {
     let events = Lexer::new(src).events()?;
-    let mut parser = Parser::new(events, src.len());
+    let mut parser = Parser::new(events, src.as_bytes());
     parser.parse_document()
 }

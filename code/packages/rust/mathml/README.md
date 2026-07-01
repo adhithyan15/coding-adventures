@@ -27,7 +27,7 @@ tree.
 | `<msqrt>x</msqrt>` / `<mroot>x n</mroot>` | `Root` (degree `None` / `Some(n)`) |
 | `<mover>b a</mover>` / `<munder>b a</munder>` | `Overset { over: a, base: b }` / `Underset { under: a, base: b }` (PR-2) |
 | `<munderover>b u o</munderover>` | `Underset { under: u, base: Overset { over: o, base: b } }` (PR-2) |
-| `<mfenced>…</mfenced>` | `Group` over the folded contents (PR-2) |
+| `<mfenced>…</mfenced>` | single body → `Fenced { open, body, close }` carrying the `open`/`close` delimiters (default `(`/`)`, so `\|x\|` ≠ `(x)`); comma / semicolon lists → `Sequence` |
 | `<mtable><mtr><mtd>…</mtd></mtr></mtable>` | `Matrix(rows × cells)` (PR-2) |
 | `<mi>sin</mi> … x` (applied) | `Call { func: Sin, arg: x }` (PR-3) |
 
@@ -40,8 +40,10 @@ operator — so `<mover><mi>x</mi><mo>^</mo></mover>` is "x with a hat". An `<mi
 function (sin, cos, ln, …) **applied to an argument** becomes a `Call`; the same name with no argument
 stays a plain `Symbol`.
 
-Deferred to PR-4: `<mfenced>` separator modelling (a comma-separated `(a, b)` list) — needs a neutral
-*list* node the AST does not yet have; today a fence's contents fold as one row.
+Fence-delimiters arc (remaining slice): a comma / semicolon `<mfenced>` list still lowers to
+`Sequence`, which drops the surrounding `open`/`close` delimiters. Carrying delimiters on the list
+shape (a `Fenced`-of-`Sequence`, or a delimiters field on `Sequence`) is a later slice, tracked with
+the same slice in the `latex` frontend.
 
 ## Contract
 

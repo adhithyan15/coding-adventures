@@ -68,10 +68,12 @@ impl MathFrontend for MathMl {
         // PR-1 surface: fractions (`<mfrac>`), roots (`<msqrt>`/`<mroot>`), powers (`<msup>` →
         // `Pow`), relations (`<mo>=`/`<` …), implicit multiplication (adjacent operands in a row),
         // text (`<mtext>`), and ± / ∓ (`<mo>±`). Subscripts are core (not a capability flag).
-        // PR-2 adds matrices (`<mtable>`) and over/under-sets (`<mover>`/`<munder>`/`<munderover>`);
-        // a plain `<mfenced>` lowers to `Group` (core). PR-3 adds named-function recognition
-        // (`<mi>sin</mi>` applied to an argument → `Call`). PR-4 adds sequences: an `<mfenced>` with
-        // comma separators (`(a, b, c)`) lowers to `Sequence` instead of folding the commas away.
+        // PR-2 adds matrices (`<mtable>`) and over/under-sets (`<mover>`/`<munder>`/`<munderover>`).
+        // PR-3 adds named-function recognition (`<mi>sin</mi>` applied to an argument → `Call`).
+        // PR-4 adds sequences: an `<mfenced>` with comma separators (`(a, b, c)`) lowers to
+        // `Sequence` instead of folding the commas away. The fence-delimiters slice adopts the
+        // neutral `Fenced` node: a single-body `<mfenced>` now lowers to `Fenced { open, body,
+        // close }`, carrying its `open`/`close` delimiters as data (so `|x|` ≠ `(x)`).
         Capabilities::none()
             .with_fractions()
             .with_roots()
@@ -84,6 +86,7 @@ impl MathFrontend for MathMl {
             .with_oversets()
             .with_functions()
             .with_sequences()
+            .with_fenced_delimiters()
     }
 }
 
@@ -347,11 +350,63 @@ mod tests {
     }
 
     #[test]
-    fn mfenced_without_commas_lowers_to_group() {
-        // A fence with no comma separators is an ordinary parenthesised sub-expression:
-        // <mfenced><mrow>x + 1</mrow></mfenced> → Group(Add(x,1)).
+    fn mfenced_without_commas_lowers_to_fenced() {
+        // A fence with no comma separators is a single delimited group. It lowers to the neutral
+        // `Fenced` node carrying its delimiters — a bare `<mfenced>` defaults to `(`/`)`:
+        // <mfenced><mrow>x + 1</mrow></mfenced> → Fenced("(", Add(x,1), ")").
         let e = p("<mfenced><mrow><mi>x</mi><mo>+</mo><mn>1</mn></mrow></mfenced>");
-        assert_eq!(e, MathExpr::Group(Box::new(b(BinOp::Add, sym("x"), num(1)))));
+        assert_eq!(
+            e,
+            MathExpr::Fenced {
+                open: "(".to_string(),
+                body: Box::new(b(BinOp::Add, sym("x"), num(1))),
+                close: ")".to_string(),
+            }
+        );
+    }
+
+    #[test]
+    fn mfenced_carries_custom_bracket_delimiters() {
+        // `open`/`close` attributes are meaning-bearing and preserved on `Fenced`: an interval
+        // `[x]` must not be confused with a parenthesised group `(x)`.
+        let e = p("<mfenced open=\"[\" close=\"]\"><mi>x</mi></mfenced>");
+        assert_eq!(
+            e,
+            MathExpr::Fenced {
+                open: "[".to_string(),
+                body: Box::new(sym("x")),
+                close: "]".to_string(),
+            }
+        );
+    }
+
+    #[test]
+    fn mfenced_carries_bar_delimiters_for_absolute_value() {
+        // `|x|` (absolute value / norm) — the case that motivated the node — round-trips its bars.
+        let e = p("<mfenced open=\"|\" close=\"|\"><mi>x</mi></mfenced>");
+        assert_eq!(
+            e,
+            MathExpr::Fenced {
+                open: "|".to_string(),
+                body: Box::new(sym("x")),
+                close: "|".to_string(),
+            }
+        );
+    }
+
+    #[test]
+    fn mfenced_decodes_entity_delimiters() {
+        // Delimiter attributes may be entity references (`&#x2308;` = ⌈, `&#x2309;` = ⌉ — ceiling).
+        // They are decoded through the same entity table as character data.
+        let e = p("<mfenced open=\"&#x2308;\" close=\"&#x2309;\"><mi>x</mi></mfenced>");
+        assert_eq!(
+            e,
+            MathExpr::Fenced {
+                open: "\u{2308}".to_string(),
+                body: Box::new(sym("x")),
+                close: "\u{2309}".to_string(),
+            }
+        );
     }
 
     #[test]
