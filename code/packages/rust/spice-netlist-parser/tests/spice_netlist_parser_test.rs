@@ -19,6 +19,7 @@ use spice_netlist_parser::{
     BERKELEY_APP_SHELL_DASHBOARD_BREADCRUMBS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_CARDS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_EVENTS_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_DIGEST_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SUMMARY_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION,
@@ -4562,6 +4563,97 @@ C1 out 0 1p
         shell_dashboard_dispatch_queue_summary_payload["dispatchQueueSummaryCapabilityId"],
         "app-shell-dashboard-dispatch-queue-summary-json"
     );
+
+    let shell_dashboard_dispatch_queue_digest = app
+        .run_app_shell_dashboard_dispatch_queue_digest(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("shell dashboard dispatch queue digest should execute");
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_DIGEST_SCHEMA_VERSION
+    );
+    assert!(shell_dashboard_dispatch_queue_digest.ready);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest
+            .headline_dispatch_queue_item_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue.status")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest
+            .headline_action_dispatch_id
+            .as_deref(),
+        Some("dashboard.action-dispatch.status")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest
+            .headline_action_id
+            .as_deref(),
+        Some("launch.analysis")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest
+            .headline_queue_state
+            .as_deref(),
+        Some("queued")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest.headline_message,
+        "Analysis queued for dispatch"
+    );
+    assert!(shell_dashboard_dispatch_queue_digest.headline_selected);
+    assert!(shell_dashboard_dispatch_queue_digest.headline_default_dispatch);
+    assert!(shell_dashboard_dispatch_queue_digest.headline_queued);
+    assert!(!shell_dashboard_dispatch_queue_digest.headline_attention);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest.blocked_dispatch_count,
+        shell_dashboard_dispatch_queue_summary.blocked_dispatch_count
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest
+            .first_blocked_dispatch_queue_item_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue.attention")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest.dispatch_queue_summary_capability_id,
+        shell_dashboard_dispatch_queue_summary.dispatch_queue_summary_capability_id
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest.dispatch_queue_digest_capability_id,
+        "app-shell-dashboard-dispatch-queue-digest-json"
+    );
+
+    let shell_dashboard_dispatch_queue_digest_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_dashboard_dispatch_queue_digest_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap(),
+    )
+    .expect("shell dashboard dispatch queue digest JSON should parse");
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest_payload["headlineDispatchQueueItemId"],
+        "dashboard.dispatch-queue.status"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest_payload["headlineQueueState"],
+        "queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest_payload["headlineMessage"],
+        "Analysis queued for dispatch"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest_payload["headlineQueued"],
+        true
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest_payload["dispatchQueueDigestCapabilityId"],
+        "app-shell-dashboard-dispatch-queue-digest-json"
+    );
 }
 
 #[test]
@@ -6227,6 +6319,90 @@ R1 in out
     assert_eq!(
         shell_dashboard_dispatch_queue_summary_payload["dispatchQueueSummaryCapabilityId"],
         "app-shell-dashboard-dispatch-queue-summary-json"
+    );
+
+    let shell_dashboard_dispatch_queue_digest =
+        app.app_shell_dashboard_dispatch_queue_digest(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        });
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_DIGEST_SCHEMA_VERSION
+    );
+    assert!(!shell_dashboard_dispatch_queue_digest.ready);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest
+            .headline_dispatch_queue_item_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue.attention")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest
+            .headline_dispatch_event_id
+            .as_deref(),
+        Some("dashboard.dispatch-event.attention")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest
+            .headline_action_dispatch_id
+            .as_deref(),
+        Some("dashboard.action-dispatch.attention")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest
+            .headline_queue_state
+            .as_deref(),
+        Some("queued")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest.headline_message,
+        "Diagnostics queued for dispatch"
+    );
+    assert!(shell_dashboard_dispatch_queue_digest.headline_selected);
+    assert!(shell_dashboard_dispatch_queue_digest.headline_default_dispatch);
+    assert!(shell_dashboard_dispatch_queue_digest.headline_attention);
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest
+            .first_attention_dispatch_queue_item_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue.attention")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest.attention_dispatch_queue_item_count,
+        1
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest.dispatch_queue_digest_capability_id,
+        "app-shell-dashboard-dispatch-queue-digest-json"
+    );
+
+    let shell_dashboard_dispatch_queue_digest_payload: serde_json::Value = serde_json::from_str(
+        &app.app_shell_dashboard_dispatch_queue_digest_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        }),
+    )
+    .expect("blocked shell dashboard dispatch queue digest JSON should parse");
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest_payload["headlineDispatchQueueItemId"],
+        "dashboard.dispatch-queue.attention"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest_payload["headlineMessage"],
+        "Diagnostics queued for dispatch"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest_payload["headlineAttention"],
+        true
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest_payload["firstAttentionDispatchQueueItemId"],
+        "dashboard.dispatch-queue.attention"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_digest_payload["dispatchQueueDigestCapabilityId"],
+        "app-shell-dashboard-dispatch-queue-digest-json"
     );
 }
 

@@ -344,7 +344,9 @@ interpreting panel-card-action internals, while dashboard dispatch queues map
 those events into queued/blocked queue items with stable queue-item routing and
 capability metadata. Dashboard dispatch queue summaries condense the same queue
 into selected/default queue routing, first queued/blocked/attention item IDs,
-queued/blocked/attention ID lists, counts, and summary capability metadata.
+queued/blocked/attention ID lists, counts, and summary capability metadata,
+while dashboard dispatch queue digests pick a single headline queue item with
+its message, target, state, dispatch joins, and digest capability metadata.
 Persisted editor-state snapshots resolve saved selection and active-command IDs
 against the current deck, repairing stale UI state after source edits. Host
 surfaces turn those snapshots into stable source, diagnostics, analysis, table,

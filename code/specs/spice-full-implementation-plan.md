@@ -33,27 +33,30 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard dispatch queue summary.
+1. Rust Berkeley Mosaic app shell dashboard dispatch queue digest.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app shell dashboard dispatch-queue summary
-     surfaces and JSON helpers that derive compact selected/default queue
-     routing, selected/default action and event routing, first
-     queued/blocked/attention queue item IDs, queued/blocked/attention queue
-     item ID lists, queue counts, queue state counts, and summary capability
-     metadata from dashboard dispatch queues for first-render product-shell
-     dispatch telemetry.
+   - Add schema-versioned Rust app shell dashboard dispatch-queue digest
+     surfaces and JSON helpers that derive a compact headline queue item with
+     selected/default queue routing, selected/default action and event routing,
+     first queued/blocked/attention queue item IDs, queue counts, queue state
+     counts, headline message, target, path, state, dispatch joins, and digest
+     capability metadata from dashboard dispatch queues for first-render
+     product-shell dispatch telemetry.
    - Preserve package name, source fingerprint, ready/blocked route, status
      severity, attention-required flag, selected/default action-dispatch
      routing, selected/default dispatch-event routing, selected/default action
      IDs, selected/default dispatch-queue item routing, action-dispatch,
      dispatch-event, and dispatch-queue counts, ready/blocked/attention
      dispatch-event counts, queued/blocked/attention queue counts,
-     selected/default queued flags, action-dispatch capability ID,
-     dispatch-events capability ID, dispatch-queue capability ID,
-     dispatch-queue summary capability ID, first queue item routing, queue item
-     ID lists, and advertised capability count so Mosaic, WebAssembly, and
-     product shells can append compact dashboard dispatch queue summaries
-     without walking every queue item.
+     selected/default queued flags, headline dispatch-queue item ID,
+     headline dispatch-event ID, headline action-dispatch ID, headline
+     panel-card-action ID, headline action ID, headline selected/default,
+     queued/blocked/dispatchable/primary/attention flags, headline disabled
+     reason, dispatch-queue capability ID, dispatch-queue summary capability
+     ID, dispatch-queue digest capability ID, first queue item routing, and
+     advertised capability count so Mosaic, WebAssembly, and product shells can
+     append compact dashboard dispatch queue digests without walking every
+     queue item.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1931,6 +1934,27 @@ the Rust, Python, and TypeScript surfaces together.
      advertised capability count so Mosaic, WebAssembly, and product shells can
      append dashboard dispatch queues without interpreting panel-card-action,
      action-dispatch, or dispatch-event internals.
+
+170. Rust Berkeley Mosaic app shell dashboard dispatch queue summary.
+   - Status: completed in PR 7214.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell dashboard dispatch-queue summary surfaces plus JSON helpers that
+     derive compact selected/default queue routing, selected/default action and
+     event routing, first queued/blocked/attention queue item IDs,
+     queued/blocked/attention queue item ID lists, queue counts, queue state
+     counts, and summary capability metadata from dashboard dispatch queues for
+     first-render product-shell dispatch telemetry.
+   - The dispatch-queue summary payload preserves package name, source
+     fingerprint, ready/blocked route, status severity, attention-required
+     flag, selected/default action-dispatch routing, selected/default
+     dispatch-event routing, selected/default action IDs, selected/default
+     dispatch-queue item routing, action-dispatch, dispatch-event, and
+     dispatch-queue counts, ready/blocked/attention dispatch-event counts,
+     queued/blocked/attention queue counts, selected/default queued flags,
+     dispatch-queue capability ID, dispatch-queue summary capability ID, first
+     queue item routing, queue item ID lists, and advertised capability count so
+     Mosaic, WebAssembly, and product shells can append compact dashboard
+     dispatch queue summaries without walking every queue item.
 
 ## Backlog
 

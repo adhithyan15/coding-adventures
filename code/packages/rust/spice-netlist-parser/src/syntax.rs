@@ -41,6 +41,7 @@ pub const BERKELEY_APP_SHELL_DASHBOARD_ACTION_DISPATCH_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_EVENTS_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SUMMARY_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_DIGEST_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -97,6 +98,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-dashboard-dispatch-events-json",
     "app-shell-dashboard-dispatch-queue-json",
     "app-shell-dashboard-dispatch-queue-summary-json",
+    "app-shell-dashboard-dispatch-queue-digest-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -3678,6 +3680,190 @@ impl BerkeleyAppShellDashboardDispatchQueueSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueDigest {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub headline_dispatch_queue_item_id: Option<String>,
+    pub headline_dispatch_event_id: Option<String>,
+    pub headline_action_dispatch_id: Option<String>,
+    pub headline_panel_card_action_id: Option<String>,
+    pub headline_action_id: Option<String>,
+    pub headline_queue_state: Option<String>,
+    pub headline_message: String,
+    pub headline_label: Option<String>,
+    pub headline_target: Option<String>,
+    pub headline_role: Option<String>,
+    pub headline_path: Option<String>,
+    pub headline_position: Option<usize>,
+    pub headline_selected: bool,
+    pub headline_default_dispatch: bool,
+    pub headline_queued: bool,
+    pub headline_blocked: bool,
+    pub headline_dispatchable: bool,
+    pub headline_primary: bool,
+    pub headline_attention: bool,
+    pub headline_disabled_reason: Option<String>,
+    pub selected_action_dispatch_id: Option<String>,
+    pub selected_dispatch_event_id: Option<String>,
+    pub selected_dispatch_queue_item_id: Option<String>,
+    pub selected_action_id: Option<String>,
+    pub default_action_dispatch_id: Option<String>,
+    pub default_dispatch_event_id: Option<String>,
+    pub default_dispatch_queue_item_id: Option<String>,
+    pub default_action_id: Option<String>,
+    pub action_dispatch_count: usize,
+    pub dispatch_event_count: usize,
+    pub dispatch_ready_event_count: usize,
+    pub dispatch_blocked_event_count: usize,
+    pub dispatch_queue_item_count: usize,
+    pub queued_dispatch_count: usize,
+    pub blocked_dispatch_count: usize,
+    pub attention_dispatch_queue_item_count: usize,
+    pub selected_queued: bool,
+    pub default_queued: bool,
+    pub first_queued_dispatch_queue_item_id: Option<String>,
+    pub first_blocked_dispatch_queue_item_id: Option<String>,
+    pub first_attention_dispatch_queue_item_id: Option<String>,
+    pub dispatch_queue_capability_id: String,
+    pub dispatch_queue_summary_capability_id: String,
+    pub dispatch_queue_digest_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueDigest {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_dispatch_queue(
+            &BerkeleyAppShellDashboardDispatchQueue::from_bootstrap_snapshot(snapshot),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dispatch_queue(&BerkeleyAppShellDashboardDispatchQueue::from_shell_handoff(
+            handoff,
+        ))
+    }
+
+    pub fn from_dispatch_queue(queue: &BerkeleyAppShellDashboardDispatchQueue) -> Self {
+        let summary = BerkeleyAppShellDashboardDispatchQueueSummary::from_dispatch_queue(queue);
+        let headline_dispatch_queue_item_id = summary
+            .selected_dispatch_queue_item_id
+            .clone()
+            .or_else(|| summary.default_dispatch_queue_item_id.clone())
+            .or_else(|| summary.first_attention_dispatch_queue_item_id.clone())
+            .or_else(|| summary.first_blocked_dispatch_queue_item_id.clone())
+            .or_else(|| summary.first_queued_dispatch_queue_item_id.clone());
+        let headline_dispatch_queue_item =
+            headline_dispatch_queue_item_id.as_ref().and_then(|id| {
+                queue
+                    .dispatch_queue_items
+                    .iter()
+                    .find(|item| item.id == id.as_str())
+            });
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_DIGEST_SCHEMA_VERSION,
+            package_name: summary.package_name.clone(),
+            source_fingerprint: summary.source_fingerprint.clone(),
+            title: summary.title.clone(),
+            startup_route: summary.startup_route.clone(),
+            ready: summary.ready,
+            severity: summary.severity.clone(),
+            attention_required: summary.attention_required,
+            headline_dispatch_queue_item_id,
+            headline_dispatch_event_id: headline_dispatch_queue_item
+                .map(|item| item.dispatch_event_id.clone()),
+            headline_action_dispatch_id: headline_dispatch_queue_item
+                .map(|item| item.action_dispatch_id.clone()),
+            headline_panel_card_action_id: headline_dispatch_queue_item
+                .map(|item| item.panel_card_action_id.clone()),
+            headline_action_id: headline_dispatch_queue_item.map(|item| item.action_id.clone()),
+            headline_queue_state: headline_dispatch_queue_item.map(|item| item.queue_state.clone()),
+            headline_message: headline_dispatch_queue_item
+                .map(|item| item.message.clone())
+                .unwrap_or_else(|| {
+                    if summary.ready {
+                        "Berkeley SPICE dashboard dispatch queue ready".to_string()
+                    } else {
+                        "Berkeley SPICE dashboard dispatch queue blocked".to_string()
+                    }
+                }),
+            headline_label: headline_dispatch_queue_item.map(|item| item.label.clone()),
+            headline_target: headline_dispatch_queue_item.map(|item| item.target.clone()),
+            headline_role: headline_dispatch_queue_item.map(|item| item.role.clone()),
+            headline_path: headline_dispatch_queue_item.map(|item| item.path.clone()),
+            headline_position: headline_dispatch_queue_item.map(|item| item.position),
+            headline_selected: headline_dispatch_queue_item
+                .map(|item| item.selected)
+                .unwrap_or(false),
+            headline_default_dispatch: headline_dispatch_queue_item
+                .map(|item| item.default_dispatch)
+                .unwrap_or(false),
+            headline_queued: headline_dispatch_queue_item
+                .map(|item| item.queued)
+                .unwrap_or(false),
+            headline_blocked: headline_dispatch_queue_item
+                .map(|item| item.blocked)
+                .unwrap_or(false),
+            headline_dispatchable: headline_dispatch_queue_item
+                .map(|item| item.dispatchable)
+                .unwrap_or(false),
+            headline_primary: headline_dispatch_queue_item
+                .map(|item| item.primary)
+                .unwrap_or(false),
+            headline_attention: headline_dispatch_queue_item
+                .map(|item| item.attention)
+                .unwrap_or(false),
+            headline_disabled_reason: headline_dispatch_queue_item
+                .and_then(|item| item.disabled_reason.clone()),
+            selected_action_dispatch_id: summary.selected_action_dispatch_id.clone(),
+            selected_dispatch_event_id: summary.selected_dispatch_event_id.clone(),
+            selected_dispatch_queue_item_id: summary.selected_dispatch_queue_item_id.clone(),
+            selected_action_id: summary.selected_action_id.clone(),
+            default_action_dispatch_id: summary.default_action_dispatch_id.clone(),
+            default_dispatch_event_id: summary.default_dispatch_event_id.clone(),
+            default_dispatch_queue_item_id: summary.default_dispatch_queue_item_id.clone(),
+            default_action_id: summary.default_action_id.clone(),
+            action_dispatch_count: summary.action_dispatch_count,
+            dispatch_event_count: summary.dispatch_event_count,
+            dispatch_ready_event_count: summary.dispatch_ready_event_count,
+            dispatch_blocked_event_count: summary.dispatch_blocked_event_count,
+            dispatch_queue_item_count: summary.dispatch_queue_item_count,
+            queued_dispatch_count: summary.queued_dispatch_count,
+            blocked_dispatch_count: summary.blocked_dispatch_count,
+            attention_dispatch_queue_item_count: summary.attention_dispatch_queue_item_count,
+            selected_queued: summary.selected_queued,
+            default_queued: summary.default_queued,
+            first_queued_dispatch_queue_item_id: summary
+                .first_queued_dispatch_queue_item_id
+                .clone(),
+            first_blocked_dispatch_queue_item_id: summary
+                .first_blocked_dispatch_queue_item_id
+                .clone(),
+            first_attention_dispatch_queue_item_id: summary
+                .first_attention_dispatch_queue_item_id
+                .clone(),
+            dispatch_queue_capability_id: summary.dispatch_queue_capability_id.clone(),
+            dispatch_queue_summary_capability_id: summary
+                .dispatch_queue_summary_capability_id
+                .clone(),
+            dispatch_queue_digest_capability_id: "app-shell-dashboard-dispatch-queue-digest-json"
+                .to_string(),
+            artifact_capability_count: summary.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_digest_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BerkeleyAnalysisInventoryEntry {
     pub index: usize,
     pub directive: String,
@@ -5079,6 +5265,43 @@ impl BerkeleyAppDeck {
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self
             .run_app_shell_dashboard_dispatch_queue_summary(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_digest(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueueDigest {
+        BerkeleyAppShellDashboardDispatchQueueDigest::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_digest(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardDispatchQueueDigest, AnalysisExecutionError> {
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueDigest::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_digest_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_digest(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_digest_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_digest(persisted_state)?
             .to_json())
     }
 
@@ -7295,6 +7518,124 @@ fn app_shell_dashboard_dispatch_queue_summary_json_value(
         "dispatchQueueSummaryCapabilityId": &summary.dispatch_queue_summary_capability_id,
         "artifactCapabilityCount": summary.artifact_capability_count,
     })
+}
+
+fn app_shell_dashboard_dispatch_queue_digest_json_value(
+    digest: &BerkeleyAppShellDashboardDispatchQueueDigest,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $field:expr) => {
+            value.insert($key.to_string(), serde_json::json!($field));
+        };
+    }
+
+    insert_json!("schemaVersion", digest.schema_version);
+    insert_json!("packageName", &digest.package_name);
+    insert_json!("sourceFingerprint", &digest.source_fingerprint);
+    insert_json!("title", &digest.title);
+    insert_json!("startupRoute", &digest.startup_route);
+    insert_json!("ready", digest.ready);
+    insert_json!("severity", &digest.severity);
+    insert_json!("attentionRequired", digest.attention_required);
+    insert_json!(
+        "headlineDispatchQueueItemId",
+        &digest.headline_dispatch_queue_item_id
+    );
+    insert_json!(
+        "headlineDispatchEventId",
+        &digest.headline_dispatch_event_id
+    );
+    insert_json!(
+        "headlineActionDispatchId",
+        &digest.headline_action_dispatch_id
+    );
+    insert_json!(
+        "headlinePanelCardActionId",
+        &digest.headline_panel_card_action_id
+    );
+    insert_json!("headlineActionId", &digest.headline_action_id);
+    insert_json!("headlineQueueState", &digest.headline_queue_state);
+    insert_json!("headlineMessage", &digest.headline_message);
+    insert_json!("headlineLabel", &digest.headline_label);
+    insert_json!("headlineTarget", &digest.headline_target);
+    insert_json!("headlineRole", &digest.headline_role);
+    insert_json!("headlinePath", &digest.headline_path);
+    insert_json!("headlinePosition", digest.headline_position);
+    insert_json!("headlineSelected", digest.headline_selected);
+    insert_json!("headlineDefaultDispatch", digest.headline_default_dispatch);
+    insert_json!("headlineQueued", digest.headline_queued);
+    insert_json!("headlineBlocked", digest.headline_blocked);
+    insert_json!("headlineDispatchable", digest.headline_dispatchable);
+    insert_json!("headlinePrimary", digest.headline_primary);
+    insert_json!("headlineAttention", digest.headline_attention);
+    insert_json!("headlineDisabledReason", &digest.headline_disabled_reason);
+    insert_json!(
+        "selectedActionDispatchId",
+        &digest.selected_action_dispatch_id
+    );
+    insert_json!(
+        "selectedDispatchEventId",
+        &digest.selected_dispatch_event_id
+    );
+    insert_json!(
+        "selectedDispatchQueueItemId",
+        &digest.selected_dispatch_queue_item_id
+    );
+    insert_json!("selectedActionId", &digest.selected_action_id);
+    insert_json!(
+        "defaultActionDispatchId",
+        &digest.default_action_dispatch_id
+    );
+    insert_json!("defaultDispatchEventId", &digest.default_dispatch_event_id);
+    insert_json!(
+        "defaultDispatchQueueItemId",
+        &digest.default_dispatch_queue_item_id
+    );
+    insert_json!("defaultActionId", &digest.default_action_id);
+    insert_json!("actionDispatchCount", digest.action_dispatch_count);
+    insert_json!("dispatchEventCount", digest.dispatch_event_count);
+    insert_json!("dispatchReadyEventCount", digest.dispatch_ready_event_count);
+    insert_json!(
+        "dispatchBlockedEventCount",
+        digest.dispatch_blocked_event_count
+    );
+    insert_json!("dispatchQueueItemCount", digest.dispatch_queue_item_count);
+    insert_json!("queuedDispatchCount", digest.queued_dispatch_count);
+    insert_json!("blockedDispatchCount", digest.blocked_dispatch_count);
+    insert_json!(
+        "attentionDispatchQueueItemCount",
+        digest.attention_dispatch_queue_item_count
+    );
+    insert_json!("selectedQueued", digest.selected_queued);
+    insert_json!("defaultQueued", digest.default_queued);
+    insert_json!(
+        "firstQueuedDispatchQueueItemId",
+        &digest.first_queued_dispatch_queue_item_id
+    );
+    insert_json!(
+        "firstBlockedDispatchQueueItemId",
+        &digest.first_blocked_dispatch_queue_item_id
+    );
+    insert_json!(
+        "firstAttentionDispatchQueueItemId",
+        &digest.first_attention_dispatch_queue_item_id
+    );
+    insert_json!(
+        "dispatchQueueCapabilityId",
+        &digest.dispatch_queue_capability_id
+    );
+    insert_json!(
+        "dispatchQueueSummaryCapabilityId",
+        &digest.dispatch_queue_summary_capability_id
+    );
+    insert_json!(
+        "dispatchQueueDigestCapabilityId",
+        &digest.dispatch_queue_digest_capability_id
+    );
+    insert_json!("artifactCapabilityCount", digest.artifact_capability_count);
+
+    serde_json::Value::Object(value)
 }
 
 fn app_shell_dashboard_card_json_value(card: &BerkeleyAppShellDashboardCard) -> serde_json::Value {
