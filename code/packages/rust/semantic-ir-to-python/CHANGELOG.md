@@ -1,15 +1,38 @@
 # Changelog
 
-## Unreleased
+## 0.3.0 — keyword-parameter & keyword-argument emission (KW2)
 
-### Changed
+The backend now accepts `Feature::KeywordParams` and lowers keyword parameters
+and keyword arguments to their **native Python** forms — replacing the KW1
+compile-compat stubs (the panicking `Expr::KeywordArg` emit arm and the
+positional-fold of `ParamKind::Keyword`).
 
-- Compile-compat stub arms for the new core `semantic-ir` variants
-  `ParamKind::Keyword` / `Expr::KeywordArg` (KW1). The builtin-usage scan
-  recurses into the keyword arg's inner `value`; a single `Keyword` param
-  emits as a best-effort plain positional (combined with `Required`);
-  `emit_expr` follows the crate's unsupported-node convention. Real
-  keyword-parameter support is pending KW2–KW8.
+Python keyword parameters are *keyword-only* parameters: they sit after a `*`
+in the signature and bind by name only.
+
+- **Def side — keyword-only params.** A `ParamKind::Keyword` param becomes a
+  keyword-only parameter. The backend injects a single bare `*` separator
+  immediately before the first keyword param — **unless** a `Rest` (`*args`)
+  param is already present, since `*args` itself opens the keyword-only region
+  and a second bare `*` would be a `SyntaxError`. The validator's def-side
+  ordering (positional → `Rest` → `Keyword*` → `KwRest`) guarantees a single
+  whole-list lookahead for a `Rest` suffices. Examples:
+  - `[a(Required), b(Keyword,None), c(Keyword,default 1)]` → `def f(a, *, b, c=_SIR_MISSING):`
+  - `[rest(Rest), kw(Keyword,default 1)]` → `def g(*rest, kw=_SIR_MISSING):` (no extra `*`)
+- **Optional keyword defaults reuse the P2c machinery.** An optional keyword
+  param (`Keyword` + `default: Some`) emits the sentinel `name=_SIR_MISSING`
+  and is resolved in the body prologue — exactly like a positional optional —
+  so keyword defaults are **call-time** and may reference earlier params. (This
+  is a deliberate departure from a literal `name=<default-expr>` in the def, for
+  the same NameError / evaluation-time reasons documented in 0.2.0.)
+- **Call side — keyword arguments.** An `Expr::KeywordArg { name, value }`
+  (which the validator permits only inside a call's `args`, after all
+  positionals) emits as `name=value`, e.g. `greet("hi", name="ada")`.
+
+Verified with emitted-shape tests (required + optional keyword def, `*`-vs-`*args`
+separator, keyword call arg) and execution-proof tests that shell out to
+`python3`/`python` (skipped gracefully if absent): `greet("hi")` → `hi, world`
+and `greet("hi", name="ada")` → `hi, ada`.
 
 ## 0.2.0 — default-parameter emission via sentinel + body prologue (P2c)
 
