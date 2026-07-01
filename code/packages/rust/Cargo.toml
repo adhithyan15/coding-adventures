@@ -840,6 +840,7 @@ members = [
     "spreadsheet-core",
     "number-format-core",
     "spreadsheet-core-wasm",
+    "spreadsheet-android-jni",
     "spreadsheet-capi",
     "spreadsheet-wasm",
 ]
