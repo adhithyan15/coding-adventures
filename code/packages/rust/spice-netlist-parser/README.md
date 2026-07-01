@@ -269,6 +269,18 @@ assert!(shell_dashboard_panel_card_actions_json
     .contains(r#""selectedPanelCardActionId":"dashboard.panel-card-action.status""#));
 assert!(shell_dashboard_panel_card_actions_json
     .contains(r#""panelCardActionsCapabilityId":"app-shell-dashboard-panel-card-actions-json""#));
+
+let shell_dashboard_action_dispatch_json =
+    deck.run_app_shell_dashboard_action_dispatch_json(
+        BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        },
+    )?;
+assert!(shell_dashboard_action_dispatch_json
+    .contains(r#""selectedActionDispatchId":"dashboard.action-dispatch.status""#));
+assert!(shell_dashboard_action_dispatch_json
+    .contains(r#""actionDispatchCapabilityId":"app-shell-dashboard-action-dispatch-json""#));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -288,7 +300,8 @@ Product shells can also consume compact shell event summaries, digests, and
 dashboards with stable event-kind, severity, diagnostic, repaired-state,
 capability, headline-event, attention-event, metric-event, and dashboard-section
 fields without walking the full event stream, then join dashboard panel cards to
-stable launch actions for first-render button and menu wiring.
+stable launch actions and action dispatch descriptors for first-render button
+and menu wiring.
 Persisted editor-state snapshots resolve saved selection and active-command IDs
 against the current deck, repairing stale UI state after source edits. Host
 surfaces turn those snapshots into stable source, diagnostics, analysis, table,

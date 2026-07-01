@@ -15,6 +15,7 @@ use spice_netlist_parser::{
     BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION, BERKELEY_APP_LAUNCH_PLAN_SCHEMA_VERSION,
     BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION, BERKELEY_APP_PACKAGE_NAME,
     BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_DASHBOARD_ACTION_DISPATCH_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_BREADCRUMBS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_CARDS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION,
@@ -4165,6 +4166,108 @@ C1 out 0 1p
         shell_dashboard_panel_card_actions_payload["panelCardActionsCapabilityId"],
         "app-shell-dashboard-panel-card-actions-json"
     );
+
+    let shell_dashboard_action_dispatch = app
+        .run_app_shell_dashboard_action_dispatch(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("shell dashboard action dispatch should execute");
+    assert_eq!(
+        shell_dashboard_action_dispatch.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_ACTION_DISPATCH_SCHEMA_VERSION
+    );
+    assert!(shell_dashboard_action_dispatch.ready);
+    assert_eq!(
+        shell_dashboard_action_dispatch
+            .selected_action_dispatch_id
+            .as_deref(),
+        Some("dashboard.action-dispatch.status")
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch
+            .selected_action_id
+            .as_deref(),
+        Some("launch.analysis")
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch
+            .default_action_dispatch_id
+            .as_deref(),
+        Some("dashboard.action-dispatch.status")
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch.default_action_id.as_deref(),
+        Some("launch.analysis")
+    );
+    assert_eq!(shell_dashboard_action_dispatch.action_dispatch_count, 3);
+    assert_eq!(
+        shell_dashboard_action_dispatch.visible_action_dispatch_count,
+        2
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch.enabled_action_dispatch_count,
+        2
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch.action_dispatches[0].panel_card_action_id,
+        "dashboard.panel-card-action.status"
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch.action_dispatches[0].action_id,
+        "launch.analysis"
+    );
+    assert!(shell_dashboard_action_dispatch.action_dispatches[0].dispatchable);
+    assert_eq!(
+        shell_dashboard_action_dispatch.action_dispatches[1].action_id,
+        "launch.diagnostics"
+    );
+    assert!(!shell_dashboard_action_dispatch.action_dispatches[1].dispatchable);
+    assert_eq!(
+        shell_dashboard_action_dispatch.action_dispatches[2].target,
+        "analysis-waveform"
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch.action_dispatch_capability_id,
+        "app-shell-dashboard-action-dispatch-json"
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch.panel_card_actions_capability_id,
+        shell_dashboard_panel_card_actions.panel_card_actions_capability_id
+    );
+
+    let shell_dashboard_action_dispatch_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_dashboard_action_dispatch_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap(),
+    )
+    .expect("shell dashboard action dispatch JSON should parse");
+    assert_eq!(
+        shell_dashboard_action_dispatch_payload["selectedActionDispatchId"],
+        "dashboard.action-dispatch.status"
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch_payload["selectedActionId"],
+        "launch.analysis"
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch_payload["enabledActionDispatchCount"],
+        2
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch_payload["actionDispatches"][1]["dispatchable"],
+        false
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch_payload["actionDispatches"][2]["target"],
+        "analysis-waveform"
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch_payload["actionDispatchCapabilityId"],
+        "app-shell-dashboard-action-dispatch-json"
+    );
 }
 
 #[test]
@@ -5468,6 +5571,98 @@ R1 in out
     assert_eq!(
         shell_dashboard_panel_card_actions_payload["panelCardActionsCapabilityId"],
         "app-shell-dashboard-panel-card-actions-json"
+    );
+
+    let shell_dashboard_action_dispatch =
+        app.app_shell_dashboard_action_dispatch(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        });
+    assert_eq!(
+        shell_dashboard_action_dispatch.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_ACTION_DISPATCH_SCHEMA_VERSION
+    );
+    assert!(!shell_dashboard_action_dispatch.ready);
+    assert_eq!(
+        shell_dashboard_action_dispatch
+            .selected_action_dispatch_id
+            .as_deref(),
+        Some("dashboard.action-dispatch.attention")
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch
+            .selected_action_id
+            .as_deref(),
+        Some("launch.diagnostics")
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch
+            .default_action_dispatch_id
+            .as_deref(),
+        Some("dashboard.action-dispatch.attention")
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch.default_action_id.as_deref(),
+        Some("launch.diagnostics")
+    );
+    assert_eq!(shell_dashboard_action_dispatch.action_dispatch_count, 3);
+    assert_eq!(
+        shell_dashboard_action_dispatch.visible_action_dispatch_count,
+        3
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch.enabled_action_dispatch_count,
+        3
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch.action_dispatches[0].action_id,
+        "launch.source"
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch.action_dispatches[1].id,
+        "dashboard.action-dispatch.attention"
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch.action_dispatches[1].panel_card_action_id,
+        "dashboard.panel-card-action.attention"
+    );
+    assert!(shell_dashboard_action_dispatch.action_dispatches[1].dispatchable);
+    assert!(shell_dashboard_action_dispatch.action_dispatches[1].attention);
+    assert_eq!(
+        shell_dashboard_action_dispatch.action_dispatch_capability_id,
+        "app-shell-dashboard-action-dispatch-json"
+    );
+
+    let shell_dashboard_action_dispatch_payload: serde_json::Value = serde_json::from_str(
+        &app.app_shell_dashboard_action_dispatch_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        }),
+    )
+    .expect("blocked shell dashboard action dispatch JSON should parse");
+    assert_eq!(
+        shell_dashboard_action_dispatch_payload["selectedActionDispatchId"],
+        "dashboard.action-dispatch.attention"
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch_payload["selectedActionId"],
+        "launch.diagnostics"
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch_payload["enabledActionDispatchCount"],
+        3
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch_payload["actionDispatches"][1]["dispatchable"],
+        true
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch_payload["actionDispatches"][1]["actionId"],
+        "launch.diagnostics"
+    );
+    assert_eq!(
+        shell_dashboard_action_dispatch_payload["actionDispatchCapabilityId"],
+        "app-shell-dashboard-action-dispatch-json"
     );
 }
 
