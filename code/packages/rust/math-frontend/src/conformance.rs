@@ -94,7 +94,7 @@ pub fn check_frontend(frontend: &dyn MathFrontend, samples: &[&str]) -> Conforma
 /// Names of capabilities that `used` requires but `declared` did not advertise.
 fn over_emitted(used: Capabilities, declared: Capabilities) -> Vec<&'static str> {
     let mut v = Vec::new();
-    let pairs: [(&str, bool, bool); 13] = [
+    let pairs: [(&str, bool, bool); 14] = [
         ("fractions", used.fractions, declared.fractions),
         ("roots", used.roots, declared.roots),
         ("powers", used.powers, declared.powers),
@@ -108,6 +108,7 @@ fn over_emitted(used: Capabilities, declared: Capabilities) -> Vec<&'static str>
         ("binomials", used.binomials, declared.binomials),
         ("accents", used.accents, declared.accents),
         ("oversets", used.oversets, declared.oversets),
+        ("sequences", used.sequences, declared.sequences),
     ];
     for (label, used_it, declared_it) in pairs {
         if used_it && !declared_it {
@@ -197,6 +198,12 @@ fn collect_used(e: &MathExpr, caps: &mut Capabilities) {
             caps.oversets = true;
             collect_used(a, caps);
             collect_used(b, caps);
+        }
+        MathExpr::Sequence(items) => {
+            caps.sequences = true;
+            for item in items {
+                collect_used(item, caps);
+            }
         }
     }
 }
@@ -339,6 +346,44 @@ mod tests {
             fn capabilities(&self) -> Capabilities { Capabilities::none().with_oversets() }
         }
         assert!(check_frontend(&OversetHonest, &["over", "under"]).passed());
+    }
+
+    #[test]
+    fn emitting_sequence_without_declaring_is_flagged() {
+        // A frontend that emits a `Sequence` but declares `none()` must be flagged for the
+        // `sequences` capability — the gate polices the new node too.
+        struct SequenceOverClaimer;
+        impl MathFrontend for SequenceOverClaimer {
+            fn name(&self) -> &str { "sequence" }
+            fn parse(&self, _src: &str) -> Result<MathExpr, FrontendError> {
+                Ok(MathExpr::Sequence(vec![
+                    MathExpr::Symbol("a".into()),
+                    MathExpr::Symbol("b".into()),
+                ]))
+            }
+            fn capabilities(&self) -> Capabilities { Capabilities::none() }
+        }
+        let r = check_frontend(&SequenceOverClaimer, &["a,b"]);
+        assert!(!r.passed());
+        assert!(r.issues.iter().any(|i| i.contains("sequences")));
+    }
+
+    #[test]
+    fn declaring_sequences_admits_sequence() {
+        // Declaring `with_sequences()` makes emitting a Sequence conforming.
+        struct SequenceHonest;
+        impl MathFrontend for SequenceHonest {
+            fn name(&self) -> &str { "sequence-honest" }
+            fn parse(&self, _src: &str) -> Result<MathExpr, FrontendError> {
+                Ok(MathExpr::Sequence(vec![
+                    MathExpr::Symbol("a".into()),
+                    MathExpr::Symbol("b".into()),
+                    MathExpr::Symbol("c".into()),
+                ]))
+            }
+            fn capabilities(&self) -> Capabilities { Capabilities::none().with_sequences() }
+        }
+        assert!(check_frontend(&SequenceHonest, &["a,b,c"]).passed());
     }
 
     #[test]

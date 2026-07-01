@@ -462,13 +462,35 @@ impl Parser {
                 let overset = MathExpr::Overset { over: Box::new(over), base: Box::new(base) };
                 Ok(Child::Expr(MathExpr::Underset { under: Box::new(under), base: Box::new(overset) }))
             }
-            // `<mfenced>…</mfenced>` — a parenthesised group. We model the fence as a `Group` over
-            // the folded contents (its `open`/`close`/`separators` attributes are presentation,
-            // dropped like all attributes); a comma-separated list folds as one row (PR-2 limit).
+            // `<mfenced>…</mfenced>` — a fence. With NO comma separators it is an ordinary
+            // parenthesised group (a sub-expression) and folds to a `Group`, as before. With one
+            // or more top-level `<mo>,</mo>` separators it is a LIST — `(a, b, c)` → `Sequence([a,
+            // b, c])` — so the commas are preserved as list structure rather than folded into the
+            // row (the previous PR-2 limit). Each segment between commas is itself folded to one
+            // expression. The fence's `open`/`close`/`separators` attributes are presentation,
+            // dropped like all attributes.
             "mfenced" => {
                 let kids = self.parse_row_children(name, depth)?;
-                let inner = fold_row(kids, span, depth)?;
-                Ok(Child::Expr(MathExpr::Group(Box::new(inner))))
+                let has_comma = kids.iter().any(|c| matches!(c, Child::Op(s) if s == ","));
+                if !has_comma {
+                    let inner = fold_row(kids, span, depth)?;
+                    return Ok(Child::Expr(MathExpr::Group(Box::new(inner))));
+                }
+                let mut items: Vec<MathExpr> = Vec::new();
+                let mut current: Vec<Child> = Vec::new();
+                for child in kids {
+                    match child {
+                        Child::Op(ref s) if s == "," => {
+                            // End of one list item: fold the accumulated children. An empty
+                            // segment (a leading/trailing/doubled comma) is malformed — fold_row
+                            // reports "empty MathML group", so no item is silently dropped.
+                            items.push(fold_row(std::mem::take(&mut current), span, depth)?);
+                        }
+                        _ => current.push(child),
+                    }
+                }
+                items.push(fold_row(current, span, depth)?);
+                Ok(Child::Expr(MathExpr::Sequence(items)))
             }
             // `<mtable>` of `<mtr>` rows of `<mtd>` cells → MathExpr::Matrix (delimiter style is
             // not part of MathML's mtable, so nothing to drop). Parsed structurally below.

@@ -275,6 +275,13 @@ pub enum MathExpr {
     /// `underset(a)(b)` (AsciiMath). The under-the-base twin of [`MathExpr::Overset`] —
     /// distinct from `Subscript` for the same centered-vs-lowered reason.
     Underset { under: Box<MathExpr>, base: Box<MathExpr> },
+    /// An ordered, comma-separated sequence of expressions: the items of a fenced list
+    /// `(a, b, c)` (MathML `<mfenced>` with separators), a coordinate tuple, a function's
+    /// argument list. Kept DISTINCT from nested `Bin(Mul, …)` (implicit multiplication):
+    /// the commas are *list separators*, not an operation, so a faithful renderer must show
+    /// the items as a delimited list, not a product. The items appear in source order; an
+    /// empty sequence is not representable (a fence with no items is not a list).
+    Sequence(Vec<MathExpr>),
 }
 
 /// Drop a `MathExpr` **iteratively** so freeing a deeply-nested tree cannot overflow the
@@ -348,6 +355,9 @@ fn take_children(e: &mut MathExpr, out: &mut Vec<MathExpr>) {
                 out.extend(row);
             }
         }
+        MathExpr::Sequence(items) => {
+            out.extend(std::mem::take(items));
+        }
     }
 }
 
@@ -408,6 +418,27 @@ mod tests {
             } else {
                 MathExpr::Underset { under: s("g"), base: Box::new(e) }
             };
+        }
+        drop(e);
+    }
+
+    #[test]
+    fn sequence_is_constructible_distinct_and_drops_deep() {
+        let s = |n: &str| MathExpr::Symbol(n.to_string());
+        let seq = MathExpr::Sequence(vec![s("a"), s("b"), s("c")]);
+        // Equal to itself; it is an ORDERED list, so order and length both matter.
+        assert_eq!(seq, MathExpr::Sequence(vec![s("a"), s("b"), s("c")]));
+        assert_ne!(seq, MathExpr::Sequence(vec![s("a"), s("b")]));
+        assert_ne!(seq, MathExpr::Sequence(vec![s("c"), s("b"), s("a")]));
+        // Distinct from implicit-mul juxtaposition of the same operands (commas ≠ product).
+        assert_ne!(
+            MathExpr::Sequence(vec![s("a"), s("b")]),
+            MathExpr::Bin(BinOp::Mul, Box::new(s("a")), Box::new(s("b")))
+        );
+        // A deep Sequence spine must free via the iterative Drop, not recurse.
+        let mut e = MathExpr::Symbol("x".to_string());
+        for _ in 0..300_000 {
+            e = MathExpr::Sequence(vec![e, MathExpr::Symbol("y".to_string())]);
         }
         drop(e);
     }

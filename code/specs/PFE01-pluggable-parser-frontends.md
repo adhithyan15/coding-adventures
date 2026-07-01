@@ -55,6 +55,9 @@ pub enum MathExpr {
     Underset { under: Box<MathExpr>, base: Box<MathExpr> }, //   a full expr stacked over/under a
                                                 //   base — generalises Accent; distinct from
                                                 //   Pow/Subscript (centered, not raised/lowered)
+    Sequence(Vec<MathExpr>),                    // (a, b, c): an ordered comma-separated list —
+                                                //   <mfenced> separators, tuples, arg lists;
+                                                //   distinct from Bin(Mul,…) (commas ≠ product)
 }
 ```
 
@@ -161,7 +164,9 @@ frontend additionally ships notation-specific golden tests.
   `Overset`/`Underset` (an `<mo>` annotation in over/under position is read as a mark symbol), and
   `<mfenced>` → `Group`. PR-3 adds named-function recognition: an `<mi>` whose name is a known
   function (sin/cos/ln/…) applied to an argument → `Call`, matching the other frontends' `Func` set.
-  `<mfenced>` separator modelling (a `(a, b)` list) is PR-4 — it needs a neutral list node.
+  PR-4 adds `<mfenced>` separator modelling: a fence with comma separators (`(a, b, c)`) lowers to
+  the new neutral `Sequence` list node (math-frontend 0.6.0), while a comma-free fence still lowers
+  to `Group`. Semicolon separators and surfacing the `open`/`close` delimiters as data are deferred.
 - Future: MathJSON, content-MathML, spreadsheet formulae, … each a small crate implementing the
   trait. None require changes to consumers. **Four frontends now in (LaTeX, AsciiMath, Unicode,
   MathML), all feeding one neutral AST with zero consumer change** — the pluggability claim is

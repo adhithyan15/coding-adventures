@@ -69,8 +69,9 @@ impl MathFrontend for MathMl {
         // `Pow`), relations (`<mo>=`/`<` …), implicit multiplication (adjacent operands in a row),
         // text (`<mtext>`), and ± / ∓ (`<mo>±`). Subscripts are core (not a capability flag).
         // PR-2 adds matrices (`<mtable>`) and over/under-sets (`<mover>`/`<munder>`/`<munderover>`);
-        // `<mfenced>` lowers to `Group` (core). PR-3 adds named-function recognition (`<mi>sin</mi>`
-        // applied to an argument → `Call`).
+        // a plain `<mfenced>` lowers to `Group` (core). PR-3 adds named-function recognition
+        // (`<mi>sin</mi>` applied to an argument → `Call`). PR-4 adds sequences: an `<mfenced>` with
+        // comma separators (`(a, b, c)`) lowers to `Sequence` instead of folding the commas away.
         Capabilities::none()
             .with_fractions()
             .with_roots()
@@ -82,6 +83,7 @@ impl MathFrontend for MathMl {
             .with_matrices()
             .with_oversets()
             .with_functions()
+            .with_sequences()
     }
 }
 
@@ -345,10 +347,35 @@ mod tests {
     }
 
     #[test]
-    fn mfenced_lowers_to_group() {
+    fn mfenced_without_commas_lowers_to_group() {
+        // A fence with no comma separators is an ordinary parenthesised sub-expression:
         // <mfenced><mrow>x + 1</mrow></mfenced> → Group(Add(x,1)).
         let e = p("<mfenced><mrow><mi>x</mi><mo>+</mo><mn>1</mn></mrow></mfenced>");
         assert_eq!(e, MathExpr::Group(Box::new(b(BinOp::Add, sym("x"), num(1)))));
+    }
+
+    #[test]
+    fn mfenced_comma_separated_becomes_sequence() {
+        // A fence with comma separators is a LIST: <mfenced>a, b, c</mfenced> → Sequence([a,b,c]).
+        let e = p("<mfenced><mi>a</mi><mo>,</mo><mi>b</mi><mo>,</mo><mi>c</mi></mfenced>");
+        assert_eq!(e, MathExpr::Sequence(vec![sym("a"), sym("b"), sym("c")]));
+    }
+
+    #[test]
+    fn mfenced_sequence_items_are_each_folded() {
+        // Each item between commas is itself folded to one expression, not just a leaf.
+        let e = p("<mfenced><mrow><mi>x</mi><mo>+</mo><mn>1</mn></mrow><mo>,</mo><mn>2</mn></mfenced>");
+        assert_eq!(
+            e,
+            MathExpr::Sequence(vec![b(BinOp::Add, sym("x"), num(1)), num(2)])
+        );
+    }
+
+    #[test]
+    fn mfenced_pair_is_a_two_item_sequence() {
+        // The common coordinate-pair case `(a, b)` → Sequence([a, b]).
+        let e = p("<mfenced><mi>a</mi><mo>,</mo><mi>b</mi></mfenced>");
+        assert_eq!(e, MathExpr::Sequence(vec![sym("a"), sym("b")]));
     }
 
     #[test]
@@ -481,6 +508,7 @@ mod tests {
             "<munder><mi>lim</mi><mi>n</mi></munder>",
             "<mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd></mtr></mtable>",
             "<mfenced><mrow><mi>x</mi><mo>+</mo><mn>1</mn></mrow></mfenced>",
+            "<mfenced><mi>a</mi><mo>,</mo><mi>b</mi></mfenced>",
             "<math><mi>sin</mi><mi>x</mi></math>",
         ];
         let report = check_frontend(&MathMl, &samples);
