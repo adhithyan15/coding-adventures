@@ -50,6 +50,7 @@ SELF_CONTAINED_RUNGS = (
     "rung10_anion_gap",
     "rung11_syndromic_decision",
     "rung12_threshold_decision",
+    "rung13_transtubular_gradient",
 )
 
 

@@ -2,6 +2,34 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.43.0] — 2026-06-30
+
+### Added — rung 13: the transtubular potassium gradient (constant-free renal ratio)
+
+- **New rung `rung13_transtubular_gradient/` (21 items)** — a second nephrology rung in the
+  quantitative-clinical band, reusing verbatim the rung-9 (fractional-excretion) contamination-safe
+  shape: a paired urine/plasma chemistry stated as four observed quantities, and a tight family of
+  mutually-confusable **pure ratios of products** of those quantities — no numeric literal anywhere.
+- The clinical index is the **transtubular potassium gradient (TTKG)** — the bedside estimate of the
+  potassium gradient across the cortical collecting duct in a hypo-/hyperkalaemia work-up. From
+  urine K (`uk`), plasma K (`pk`), urine osmolality (`uosm`), plasma osmolality (`posm`), the three
+  queried ratios are `TTKG = (uk*posm)/(pk*uosm)` (equivalently the U/P potassium ratio *divided by*
+  the U/P osmolality ratio, so the osmolality ratio undoes the water reabsorption), the
+  `U/P potassium ratio = uk/pk`, and the `U/P osmolality ratio = uosm/posm`. TTKG needs **no
+  constant at all** — unlike FENa's cosmetic `×100`, there is no rendering multiplier to leak.
+- Each queried item is a `compute_dimensioned` program (`observe` the four quantities + `let answer =
+  formula`); the ADJ **engine** carries the multiply/divide arithmetic via the existing
+  `compute_dimensioned` extractor — **no harness/engine change** (identical to rungs 4/7/7b/7c/8/9).
+- Contamination-safe by construction: every formula is a product/quotient of the four observed
+  quantities, so every program literal is grounded in the stem, and every identifier
+  (`uk`/`pk`/`uosm`/`posm`/`answer`) is **digit-free**. The five options are a family of ratios over
+  the same quantities {TTKG, U/P-K, U/P-osm, inverted-TTKG, wrong-direction-osmolar-correction}, so
+  the distractors are exactly the slips students make: inverting the whole gradient, or *multiplying*
+  by the osmolality ratio instead of dividing by it. Gold rotates A–E; the five family values are
+  asserted pairwise-distinct at build for every item.
+- Added to `SELF_CONTAINED_RUNGS` in `test_ladder_eval.py`. Engine **21/21** cached
+  (zero-wrong-zero-abstain); contamination / items-valid gates clean.
+
 ## [0.42.0] — 2026-06-30
 
 ### Added — rung 11 batch 3: combined likelihood wins a true tie-break
