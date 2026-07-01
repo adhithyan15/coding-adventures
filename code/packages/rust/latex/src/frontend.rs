@@ -14,7 +14,9 @@
 //! The neutral AST deliberately drops *presentation* and keeps *meaning*, so this lowering:
 //! - `\times`, `\cdot`, and juxtaposition all become [`BinOp::Mul`]; `\dfrac`/`\tfrac`/`\frac`
 //!   all become [`MathExpr::Frac`] — two source strings that mean the same math lower equal.
-//! - fence *style* is dropped: `(…)`, `[…]`, `\left(…\right)` all become [`MathExpr::Group`].
+//! - fence *delimiters* are preserved as data: `(x)`, `[x]`, `|x|`, `\left(x\right)` become
+//!   [`MathExpr::Fenced`] carrying their open/close strings (a comma-list body still lowers to
+//!   [`MathExpr::Sequence`] with delimiters dropped — carrying them there is a later slice).
 //! - matrix *delimiter* is dropped: `pmatrix`/`bmatrix`/`cases`/… all become [`MathExpr::Matrix`].
 //! - `base^sup` → [`BinOp::Pow`]; `base_sub` → [`MathExpr::Subscript`]; both → `Pow(Subscript(…))`.
 //! - an accent (`\hat{x}`, `\vec{v}`) lowers to the neutral [`MathExpr::Accent`] (a diacritic
@@ -97,7 +99,9 @@ enum Build {
     Call(Func),
     Accent(String),
     BigOp { op: BigOp, has_lower: bool, has_upper: bool },
-    Group,
+    /// Assemble a `MathExpr::Fenced { open, body, close }` from the top finished child,
+    /// preserving the surface delimiters carried on `MathNode::Fenced { left, right }`.
+    Fenced { open: String, close: String },
     Rel(RelOp),
     Matrix { row_lens: Vec<usize> },
     /// Assemble a `MathExpr::Sequence` from the top `len` finished children.
@@ -266,15 +270,19 @@ fn lower(root: MathNode, span: (usize, usize)) -> Result<MathExpr, FrontendError
                         work.push(Task::Node(*l));
                     }
                 }
-                // Fence style is presentation; the meaning is "this is grouped" — unless the
-                // body is a comma list, in which case the fence is a Sequence (a tuple / list),
-                // and the delimiters drop just as for MathML `<mfenced>` and AsciiMath `(a,b,c)`.
-                MathNode::Fenced { body, .. } => {
+                // A fence brackets its body; we preserve *which* delimiters were used as data on
+                // the neutral `MathExpr::Fenced { open, close }` — so `|x|` (abs/norm) is no
+                // longer confused with `(x)`. EXCEPTION: a comma-list body is a Sequence (a tuple
+                // / list) whose delimiters still drop, matching MathML `<mfenced>` and AsciiMath
+                // `(a,b,c)` (carrying delimiters on sequences is a later slice of this arc).
+                MathNode::Fenced { left, body, right } => {
+                    let open = std::mem::take(left);
+                    let close = std::mem::take(right);
                     let body = take_box(body);
                     if !matches!(body, MathNode::Sequence(_)) {
-                        work.push(Task::Build(Build::Group));
+                        work.push(Task::Build(Build::Fenced { open, close }));
                     }
-                    // A Sequence body lowers via its own arm (no Group wrapper).
+                    // A Sequence body lowers via its own arm (delimiters dropped, for now).
                     work.push(Task::Node(body));
                 }
                 // A comma-separated sequence — the fence's delimiters are already dropped.
@@ -369,9 +377,9 @@ fn lower(root: MathNode, span: (usize, usize)) -> Result<MathExpr, FrontendError
                     let lower = if has_lower { Some(Box::new(pop!())) } else { None };
                     vals.push(MathExpr::BigOp { op, lower, upper, body: Box::new(body) });
                 }
-                Build::Group => {
+                Build::Fenced { open, close } => {
                     let inner = pop!();
-                    vals.push(MathExpr::Group(Box::new(inner)));
+                    vals.push(MathExpr::Fenced { open, body: Box::new(inner), close });
                 }
                 Build::Matrix { row_lens } => {
                     let total: usize = row_lens.iter().sum();
@@ -592,11 +600,17 @@ mod tests {
     fn symbols_text_and_groups() {
         assert_eq!(m(r"\pi"), MathExpr::Symbol("pi".into()));
         assert_eq!(m(r"\text{kg}"), MathExpr::Text("kg".into()));
-        // fence style dropped to Group.
+        // Fence delimiters are preserved as data on MathExpr::Fenced.
         match &m("(a+b)") {
-            MathExpr::Group(inner) => assert!(matches!(**inner, MathExpr::Bin(BinOp::Add, ..))),
-            other => panic!("expected Group, got {other:?}"),
+            MathExpr::Fenced { open, body, close } => {
+                assert_eq!((open.as_str(), close.as_str()), ("(", ")"));
+                assert!(matches!(**body, MathExpr::Bin(BinOp::Add, ..)));
+            }
+            other => panic!("expected Fenced, got {other:?}"),
         }
+        // Bracket / bar fences carry their own delimiters — no longer confused with parens.
+        assert!(matches!(m("[x]"), MathExpr::Fenced { ref open, ref close, .. } if open == "[" && close == "]"));
+        assert!(matches!(m(r"\left|x\right|"), MathExpr::Fenced { ref open, ref close, .. } if open == "|" && close == "|"));
     }
 
     #[test]
@@ -619,8 +633,8 @@ mod tests {
                 num(2),
             ])
         );
-        // A comma-free fence still lowers to Group (unchanged).
-        assert!(matches!(m("(a + b)"), MathExpr::Group(_)));
+        // A comma-free fence lowers to Fenced (single body, delimiters preserved).
+        assert!(matches!(m("(a + b)"), MathExpr::Fenced { .. }));
     }
 
     #[test]

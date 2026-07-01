@@ -94,7 +94,7 @@ pub fn check_frontend(frontend: &dyn MathFrontend, samples: &[&str]) -> Conforma
 /// Names of capabilities that `used` requires but `declared` did not advertise.
 fn over_emitted(used: Capabilities, declared: Capabilities) -> Vec<&'static str> {
     let mut v = Vec::new();
-    let pairs: [(&str, bool, bool); 14] = [
+    let pairs: [(&str, bool, bool); 15] = [
         ("fractions", used.fractions, declared.fractions),
         ("roots", used.roots, declared.roots),
         ("powers", used.powers, declared.powers),
@@ -109,6 +109,7 @@ fn over_emitted(used: Capabilities, declared: Capabilities) -> Vec<&'static str>
         ("accents", used.accents, declared.accents),
         ("oversets", used.oversets, declared.oversets),
         ("sequences", used.sequences, declared.sequences),
+        ("fenced_delimiters", used.fenced_delimiters, declared.fenced_delimiters),
     ];
     for (label, used_it, declared_it) in pairs {
         if used_it && !declared_it {
@@ -181,6 +182,10 @@ fn collect_used(e: &MathExpr, caps: &mut Capabilities) {
             collect_used(b, caps);
         }
         MathExpr::Group(a) => collect_used(a, caps),
+        MathExpr::Fenced { body, .. } => {
+            caps.fenced_delimiters = true;
+            collect_used(body, caps);
+        }
         MathExpr::Text(_) => caps.text = true,
         MathExpr::Matrix(rows) => {
             caps.matrices = true;
@@ -384,6 +389,44 @@ mod tests {
             fn capabilities(&self) -> Capabilities { Capabilities::none().with_sequences() }
         }
         assert!(check_frontend(&SequenceHonest, &["a,b,c"]).passed());
+    }
+
+    #[test]
+    fn fenced_delimiters_over_and_under_claim() {
+        // A frontend that emits a `Fenced` but declares `none()` must be flagged for the
+        // `fenced_delimiters` capability — the gate polices the new delimiter node too.
+        struct FencedOverClaimer;
+        impl MathFrontend for FencedOverClaimer {
+            fn name(&self) -> &str { "fenced" }
+            fn parse(&self, _src: &str) -> Result<MathExpr, FrontendError> {
+                Ok(MathExpr::Fenced {
+                    open: "|".into(),
+                    body: Box::new(MathExpr::Symbol("x".into())),
+                    close: "|".into(),
+                })
+            }
+            fn capabilities(&self) -> Capabilities { Capabilities::none() }
+        }
+        let r = check_frontend(&FencedOverClaimer, &["|x|"]);
+        assert!(!r.passed());
+        assert!(r.issues.iter().any(|i| i.contains("fenced_delimiters")));
+
+        // Declaring `with_fenced_delimiters()` makes emitting a Fenced conforming.
+        struct FencedHonest;
+        impl MathFrontend for FencedHonest {
+            fn name(&self) -> &str { "fenced-honest" }
+            fn parse(&self, _src: &str) -> Result<MathExpr, FrontendError> {
+                Ok(MathExpr::Fenced {
+                    open: "[".into(),
+                    body: Box::new(MathExpr::Symbol("y".into())),
+                    close: "]".into(),
+                })
+            }
+            fn capabilities(&self) -> Capabilities {
+                Capabilities::none().with_fenced_delimiters()
+            }
+        }
+        assert!(check_frontend(&FencedHonest, &["[y]"]).passed());
     }
 
     #[test]
