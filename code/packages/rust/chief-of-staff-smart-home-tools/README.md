@@ -37,6 +37,7 @@ Chief of Staff job/session/agent
   -> typed command-result audit reads and summaries
   -> authorization decision audit reads and summaries
   -> capability grant ledger reads and summaries
+  -> controller-readiness handoff summary over runtime and platform primitives
   -> policy-surface inventory and summary reads for review planning
   -> ecosystem platform coverage and summary reads for primitive planning
   -> primitive coverage gap list and summary reads for backlog planning
@@ -263,6 +264,7 @@ Chief of Staff job/session/agent
 - `smart_home.get_authorization_summary`
 - `smart_home.list_capability_grants`
 - `smart_home.get_capability_grant_summary`
+- `smart_home.get_controller_handoff_summary`
 - `smart_home.get_runtime_snapshot`
 - `smart_home.get_topology_summary`
 - `smart_home.list_desired_states`
