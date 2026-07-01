@@ -225,10 +225,12 @@ fn folds_math_unary_methods() {
     assert_num(call(ident("Math"), "round", vec![n(2.5)]), 3.0);
 }
 
-/// Upstream folds `[a,b,c].join(sep)` on an array literal of constants. Our
-/// pass folds String methods but not Array#join.
+/// Upstream folds `[a,b,c].join(sep)` on an array literal of constants.
+/// gap-142 RESOLVED (CLOC12.141) — our pass now folds it. Previously an
+/// `#[ignore]` placeholder; now an active conformance test. The default-`,`
+/// separator and the numeric-element coercion are exercised in the pass's own
+/// unit tests.
 #[test]
-#[ignore = "blocked on gap-142: constant-fold does not fold Array.prototype.join on array literals"]
 fn folds_array_join() {
     use coding_adventures_javascript_ast::ArrayExpression;
     let arr = Expression::ArrayExpression(ArrayExpression {

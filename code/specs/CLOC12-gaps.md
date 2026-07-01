@@ -1166,9 +1166,13 @@ historical context with status `RESOLVED` and a link to the fix PR.
     with round-half-toward-`+Infinity` and negative-zero declines). The
     `folds_math_unary_methods` placeholder is now an **active** conformance
     test (also covers `ceil`/`round`) as of constant-fold 0.80.0.
-  - **gap-142** *(still open)* — fold `Array.prototype.join` on an array literal
-    of constants (`[a,b,c].join("-")` → `"a-b-c"`). Our pass folds String
-    methods but not Array#join.
+  - **gap-142** — ~~fold `Array.prototype.join` on an array literal of
+    constants (`[a,b,c].join("-")` → `"a-b-c"`)~~ **RESOLVED** (constant-fold
+    0.81.0). Folds when every element is a join-representable constant
+    (strings, numbers, booleans, `null`/`undefined`/holes → `""`) and the
+    separator is absent (`","`) or a string literal; declines non-constant
+    elements, nested arrays/objects, and non-string separators; DoS length cap.
+    The `folds_array_join` placeholder is now an **active** conformance test.
   - **gap-143** — fold `String#concat` with **non-string (coerced) args**
     (`"x".concat(1, 2)` → `"x12"`). Our concat fold handles string args only.
 
