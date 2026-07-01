@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.19.11] - 2026-06-30
+
+### Changed — opt into the parser's recursion-depth guard (DoS backstop)
+
+`parser` 0.4.1 made `GrammarParser`'s depth guard opt-in (default unlimited),
+after a global default cap regressed richer grammars (Wolfram) and preempted
+self-guarding frontends (python-to-semantic-ir). closurec, however, feeds
+*untrusted* JavaScript to `parse_with_asi` on an ordinary ~2 MiB stack, so
+pathologically deep grouping (`((((…))))`, deep unary chains) would otherwise
+overflow the native stack — an uncatchable process abort. Both `GrammarParser`
+construction sites in `asi::parse_with_asi` (the retry loop and the
+budget-exhausted final parse) now opt in with
+`.with_max_depth(DEFAULT_MAX_RULE_DEPTH)`. Deep grouping now returns a clean,
+recoverable parse error (which closurec degrades to WHITESPACE_ONLY — still
+valid output) instead of crashing. Real JS never nests grouping this deep, so
+no legitimate program is affected, and all 97 crate tests are unchanged.
+
+(Deep *flat* expressions like `1+1+…+1` overflow a separate downstream
+AST-traversal stage, not the parser — tracked as its own follow-up.)
+
 ## [0.19.10] - 2026-06-30
 
 ### Fixed — function expressions (IIFEs etc.) aborted the compile

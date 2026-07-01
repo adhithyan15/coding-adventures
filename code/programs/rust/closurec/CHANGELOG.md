@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.0] - 2026-06-30
+
+### Fixed — deep-grouping parser DoS no longer aborts the process
+
+Deeply nested grouping in untrusted input (`x=((((…))))` with thousands of
+parens, or long unary chains `x=----…a`) previously overflowed the native stack
+at `--compilation_level SIMPLE`/`ADVANCED` — an uncatchable abort. closurec now
+parses via `coding-adventures-javascript-parser` 0.19.11, which opts into the
+`parser` recursion-depth guard at its ASI parse sites; such input returns a
+clean parse error, and closurec degrades it to WHITESPACE_ONLY (still valid
+output) exactly as it already does for any other parse failure. Verified:
+5000-deep parens now emit `x=1;` (exit 0), 10000-deep unary emits cleanly, and
+normal JS is byte-identical.
+
+Known remaining: a very deep *flat* expression (`x=1+1+…+1` with ~20000 terms)
+still overflows a separate **downstream** AST-traversal stage (the parser itself
+survives it — `--print_tree` succeeds). Tracked as a distinct follow-up.
+
 ## [0.233.0] - 2026-06-30
 
 ### Fixed — `**` operand precedence emitted invalid JS (miscompile)
