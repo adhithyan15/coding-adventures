@@ -951,8 +951,7 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
         // `x ^ 0.5`, reusing the native `ComputeOp::Pow`. The engine computes it
         // for a dimensionless (Scalar) base — `√9 = 3` — and cleanly rejects a
         // dimensioned base (a `√dollars` has no representable half-dimension), so
-        // no new engine op is needed. An nth root `\sqrt[n]{x}` (degree present)
-        // is a later slice: its `1/n` exponent needs its own non-integer path.
+        // no new engine op is needed.
         MathExpr::Root {
             degree: None,
             radicand,
@@ -961,6 +960,26 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
             Box::new(latex_math_to_expr_ast(radicand, source)?),
             Box::new(ExprAst::Lit(0.5)),
         )),
+        // An nth root `\sqrt[n]{x}` (degree present) lowers to `x ^ (1/n)`, again
+        // reusing the native `ComputeOp::Pow` — the cube root `\sqrt[3]{27}`
+        // computes `27 ^ (1/3) = 3`. The degree `n` must be a *positive integer*
+        // literal (`\sqrt[3]{…}`, `\sqrt[4]{…}`); a symbolic degree (`\sqrt[k]{…}`)
+        // and a non-positive degree are rejected. The fractional exponent `1/n` is
+        // computed once at adapt time and emitted as a single `Lit`, so — exactly
+        // like the square root — the engine sees one `Pow` node and applies its own
+        // dimensional rule (a fractional power of a dimensioned base has no
+        // representable dimension and is rejected; a Scalar base computes cleanly).
+        MathExpr::Root {
+            degree: Some(degree),
+            radicand,
+        } => {
+            let n = latex_root_degree(degree, source)?;
+            Ok(ExprAst::Bin(
+                ArithOp::Pow,
+                Box::new(latex_math_to_expr_ast(radicand, source)?),
+                Box::new(ExprAst::Lit(1.0 / n)),
+            ))
+        }
         MathExpr::Rel(_, _, _) => Err(AdapterError::UnsupportedLatexMath {
             source: source.to_string(),
             detail: "relation-valued LaTeX is only valid in `constrain latex`".into(),
@@ -1028,6 +1047,36 @@ fn latex_power_exponent(expr: &MathExpr, source: &str) -> Result<f64, AdapterErr
         return Err(AdapterError::UnsupportedLatexMath {
             source: source.to_string(),
             detail: "only non-negative integer exponents are supported".into(),
+        });
+    }
+    Ok(v)
+}
+
+/// Validate an nth-root degree (`n` in `\sqrt[n]{x}`) and return it as a
+/// whole-number `f64`, so the caller can build the reciprocal exponent `1/n`. The
+/// degree must be a **positive integer literal** (`\sqrt[3]{…}`, `\sqrt[4]{…}`): a
+/// symbolic degree (`\sqrt[k]{…}`) has no numeric value, and a zero or negative
+/// degree has no root meaning (a `1/0` exponent is undefined). We reuse the same
+/// finite/integer discipline as `latex_power_exponent`, but exclude `0` (the
+/// exponent's denominator) — `n ≥ 1`, so `\sqrt[1]{x}` degenerates cleanly to
+/// `x^1 = x`, and `\sqrt[3]{27}` becomes `27^(1/3) = 3`.
+fn latex_root_degree(expr: &MathExpr, source: &str) -> Result<f64, AdapterError> {
+    let MathExpr::Number(n) = expr else {
+        return Err(AdapterError::UnsupportedLatexMath {
+            source: source.to_string(),
+            detail: "only a positive integer root degree is supported in ADJ arithmetic".into(),
+        });
+    };
+    let Some(v) = n.to_f64() else {
+        return Err(AdapterError::UnsupportedLatexMath {
+            source: source.to_string(),
+            detail: format!("root degree is outside f64 range: {}", n.as_written()),
+        });
+    };
+    if !(v.is_finite() && v.fract() == 0.0 && v >= 1.0) {
+        return Err(AdapterError::UnsupportedLatexMath {
+            source: source.to_string(),
+            detail: "only a positive integer root degree is supported".into(),
         });
     }
     Ok(v)

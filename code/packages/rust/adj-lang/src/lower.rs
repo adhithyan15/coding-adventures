@@ -1786,6 +1786,61 @@ contributes 1000000 from answer == 60 to correct
     }
 
     #[test]
+    fn native_latex_cube_root_computes() {
+        // `\sqrt[3]{27}` lowers to `27 ^ (1/3)` (reusing ComputeOp::Pow) and
+        // computes 3 for a dimensionless base — the nth-root slice on top of the
+        // square root: a degree present emits the reciprocal exponent `1/n`.
+        let d = crate::compile_and_decide(
+            "let answer = latex \"$\\sqrt[3]{27}$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 3 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_latex_fourth_root_of_an_observed_scalar_computes() {
+        // `\sqrt[4]{x}` over an observed dimensionless value: the fourth root of
+        // 16 is 2 (16 ^ (1/4) = 2).
+        let d = crate::compile_and_decide(
+            "observe x(16)\n\
+             let answer = latex \"$\\sqrt[4]{x}$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 2 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_latex_symbolic_root_degree_is_rejected() {
+        // `\sqrt[k]{x}` — a symbolic degree has no numeric value, so the reciprocal
+        // exponent `1/k` cannot be formed. It must be rejected, not silently
+        // mislowered.
+        let err = compile(
+            "observe x(16)\n\
+             let answer = latex \"$\\sqrt[k]{x}$\"\n\
+             ? answer\n",
+        );
+        assert!(err.is_err(), "symbolic root degree must be rejected: {err:?}");
+    }
+
+    #[test]
+    fn native_latex_zero_root_degree_is_rejected() {
+        // `\sqrt[0]{x}` — a zero degree would make the exponent `1/0` undefined, so
+        // it is rejected at adapt time (positive integer degrees only).
+        let err = compile(
+            "observe x(16)\n\
+             let answer = latex \"$\\sqrt[0]{x}$\"\n\
+             ? answer\n",
+        );
+        assert!(err.is_err(), "zero root degree must be rejected: {err:?}");
+    }
+
+    #[test]
     fn all_relational_operators_parse() {
         for (src, want) in [
             ("constrain a >= 1", crate::ast::RelOp::Ge),
