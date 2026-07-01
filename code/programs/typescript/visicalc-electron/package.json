@@ -5,7 +5,7 @@
   "description": "Electron desktop wrapper around the Mosaic VisiCalc React demo. Demonstrates that the same Mosaic .mil/.mll/.msl sources that drive the web React build can power a native-windowed desktop app via Electron, with no host-code duplication.",
   "main": "main.js",
   "scripts": {
-    "build:react": "cd ../../../../demo/visicalc && npm install --silent && npm run components && npx vite build --base ./",
+    "build:react": "cd ../visicalc && npm install --silent && npm run components && npx vite build --base ./",
     "start": "npm run build:react && electron .",
     "start:dev": "electron .",
     "test": "node -e \"require('./main.js'); console.log('main.js parses')\""
