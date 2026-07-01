@@ -1,14 +1,57 @@
 # Changelog
 
-## Unreleased
+## 0.6.0 — keyword-parameter & argument emission (KW5)
 
-### Changed
+Adds `Feature::KeywordParams` support: name-matched keyword parameters
+(`def f(a:)` / `def f(a: 1)`) and keyword arguments (`f(a: 1)`). Rust has
+**no native keyword-argument syntax**, so — per `sir-keyword-params.md`
+§4 — the backend performs **static keyword→positional resolution at emit
+time** (no runtime library). This replaces the KW1 compile-compat stub
+(a `KeywordArg` panic arm; `ParamKind::Keyword` folded into a positional
+arm) with real emission.
 
-- Compile-compat stub arms for the new core `semantic-ir` variants
-  `ParamKind::Keyword` / `Expr::KeywordArg` (KW1). Analysis passes recurse
-  into the keyword arg's inner `value`; codegen follows the crate's existing
-  unsupported-node convention. Real keyword-parameter support is pending
-  KW2–KW8.
+### Added
+
+- **Def-side positional-ization** — a `Keyword` param emits as an
+  ORDINARY positional Rust parameter in its declared order (the by-name
+  affordance is dropped; the name becomes the Rust parameter name). An
+  OPTIONAL keyword (one carrying a `default`) reuses the existing
+  `DefaultParams` body-top prologue unchanged — it is a defaulted
+  parameter like any other — so no new def-side machinery is required.
+- **Call-side static resolution** — for a `DirectCall` whose callee
+  signature is known, the emitter builds the FULL positional argument
+  list in the callee's DECLARED order: positionals fill positional params
+  in order; each `KeywordArg { name, value }` fills the callee param whose
+  name matches `name` (a name→position reorder); an omitted OPTIONAL
+  keyword is padded with the `__sir::missing()` sentinel so the callee's
+  prologue substitutes its default (deferring default evaluation to callee
+  scope — correct even when a default references an earlier param). The
+  result is a plain positional Rust call `f(a, b_val, c_default)`.
+- **`FN_PARAMS` thread-local signature table** — SIR function name → its
+  full parameter list (kinds + defaults). Where `FN_ARITY` records only
+  the param count, keyword resolution needs the params' ORDER, NAMES, and
+  DEFAULTS. Populated alongside `FN_ARITY` in
+  `emit_module_with_arity_table` and consulted by the `DirectCall`
+  emitter.
+- **`Feature::KeywordParams`** added to the backend's `ACCEPTED_FEATURES`
+  (mirroring `DefaultParams`).
+- **Unit tests** — def-side positional-ization + default prologue;
+  call-side supplied-keyword → positional; call-side omitted-optional →
+  sentinel; call-side name→declared-position reorder.
+- **Execution proof** (`tests/compile_and_run_keyword_params.rs`) — a
+  `def greet(greeting, name: "world") -> name` module, compiled with
+  `rustc` and run: `greet("hi")` prints `world` (default) and
+  `greet("hi", name: "ada")` prints `ada` (supplied), matching the
+  Python/TS reference for `name`. Skips gracefully if `rustc`/linker are
+  absent (`SIR_TEST_RUSTC_LINKER`).
+
+### Out of scope (documented)
+
+- **Indirect/closure keyword calls** — an `IndirectCall`/closure carrying
+  keywords has no statically-known signature, so keyword→position
+  resolution cannot run. The frontends do not emit this (spec
+  §"Out of scope"); the `emit_expr` `KeywordArg` arm keeps a positioned
+  panic documenting that narrow, internal-bug-only reachability.
 
 ## 0.5.0 — default-parameter emission (P2e)
 

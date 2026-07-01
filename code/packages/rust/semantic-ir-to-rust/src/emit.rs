@@ -21,7 +21,7 @@ use std::collections::HashSet;
 use std::fmt::Write;
 
 use semantic_ir::{
-    Block, Expr, Function, Global, Module, Scope, Stmt,
+    Block, Expr, Function, Global, Module, Param, ParamKind, Scope, Stmt,
 };
 
 use crate::runtime::RUNTIME;
@@ -499,34 +499,7 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         }
         Expr::Block(b) => emit_block_as_expr(out, b, indent),
         Expr::DirectCall { fn_name, args, .. } => {
-            let _ = write!(out, "{}(", function_emit_name(fn_name));
-            emit_args(out, args, indent);
-            // ── DefaultParams (P2e) caller padding ─────────────────
-            //
-            // The IR call may carry FEWER args than the callee declares
-            // (the validator allows omitting trailing defaulted params).
-            // Rust fns are fixed-arity, so we PAD the omitted trailing
-            // positions with the `__sir::missing()` sentinel — the
-            // callee's prologue then swaps each sentinel for that param's
-            // default.  The callee's full param count comes from the same
-            // `FN_ARITY` table that `MakeClosure` already consults; it is
-            // keyed by the function's SIR name (`fn_name`), not its
-            // emitted name.  A callee absent from the table (e.g. a
-            // builtin reached via DirectCall) yields `0`, so `saturating_
-            // sub` pads nothing and the call is emitted unchanged.
-            let arity = FN_ARITY.with(|t| t.borrow().get(fn_name).copied().unwrap_or(0));
-            let pad_count = arity.saturating_sub(args.len());
-            for i in 0..pad_count {
-                // A comma precedes every sentinel that is not the very
-                // first emitted argument: either real args were emitted
-                // (so the first sentinel still needs a separator), or a
-                // prior sentinel was emitted.
-                if !args.is_empty() || i > 0 {
-                    out.push_str(", ");
-                }
-                out.push_str("__sir::missing()");
-            }
-            out.push(')');
+            emit_direct_call(out, fn_name, args, indent);
         }
         Expr::IndirectCall { target, args, .. } => {
             out.push_str("__sir::apply_closure(&(");
@@ -631,15 +604,20 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         Expr::StrConcat { span, .. } => {
             panic!("rust backend reached SIR18 str-concat expression at {} — capability check should have rejected it", span);
         }
-        // KW1 compile-compat stub: keyword arguments (`f(a: 1)`) are gated
-        // behind `Feature::KeywordParams`, which the validator rejects until
-        // real support lands in KW2–KW6.  `emit_expr` is infallible, so we
-        // follow this crate's established convention for an unsupported node
-        // whose feature the capability check should already have rejected
-        // (see `StrConcat`/`Intrinsic` above): a positioned panic documenting
-        // the internal-bug-only reachability.  No real emission yet.
+        // KW5: a `KeywordArg` is never emitted as a stand-alone
+        // expression.  The validator guarantees it appears ONLY inside a
+        // call's `args` vec, and a `DirectCall` — the only call form that
+        // carries keywords in v0 — resolves each `KeywordArg` statically
+        // into its callee's declared parameter position inside
+        // `emit_direct_call` (it never routes the wrapper through
+        // `emit_expr`).  The single way to reach this arm is an
+        // `IndirectCall`/closure call carrying a keyword — the
+        // spec-documented out-of-scope case (`sir-keyword-params.md`
+        // §"Out of scope"), which the frontends do not emit.  A positioned
+        // panic documents that narrow, internal-bug-only reachability
+        // (matching `StrConcat`/`Intrinsic` above).
         Expr::KeywordArg { span, .. } => {
-            panic!("rust backend reached KW1 keyword-arg expression at {} — capability check should have rejected it (real support pending KW2–KW6)", span);
+            panic!("rust backend reached a stand-alone keyword-arg expression at {} — indirect/closure keyword calls are out of scope for v0 (see sir-keyword-params.md)", span);
         }
     }
 }
@@ -681,6 +659,174 @@ fn emit_args(out: &mut String, args: &[Expr], indent: usize) {
         }
         emit_expr(out, a, indent);
     }
+}
+
+/// Emit a `DirectCall` — resolving keyword arguments and defaulted
+/// parameters to a **plain positional** Rust call.
+///
+/// Rust has no native keyword arguments, so the whole affordance is
+/// resolved *statically*, at emit time, against the callee's known
+/// signature (looked up in `FN_PARAMS`).  This unifies two previously
+/// separate concerns into one pass:
+///
+///   1. **DefaultParams (P2e)** — omitted trailing positional defaults
+///      are padded with the `__sir::missing()` sentinel; the callee's
+///      body-top prologue swaps each sentinel for that param's default.
+///   2. **KeywordParams (KW5)** — a `KeywordArg { name, value }` names
+///      its target param, so we reorder it into that param's declared
+///      position; an omitted OPTIONAL keyword is filled with its own
+///      default expression (emitted inline, not via a sentinel).
+///
+/// ### Worked example (the case KW5 adds)
+///
+/// ```text
+///   def greet(greeting, name: "world")   // name is an optional keyword
+///
+///   greet("hi")                 args = [Str("hi")]
+///     → positional greeting = "hi"; name omitted → emit its default
+///     → greet(Str("hi"), Str("world"))
+///
+///   greet("hi", name: "ada")    args = [Str("hi"), KeywordArg{name, Str("ada")}]
+///     → positional greeting = "hi"; name supplied by keyword = "ada"
+///     → greet(Str("hi"), Str("ada"))
+/// ```
+///
+/// ### Resolution truth table (per callee param, left→right)
+///
+/// ```text
+///   param kind        supplied?                 emitted value
+///   ────────────────  ────────────────────────  ─────────────────────────
+///   positional (req)  yes (by position)         the positional arg
+///   positional (opt)  yes (by position)         the positional arg
+///   positional (opt)  no  (trailing, omitted)   __sir::missing()  (sentinel)
+///   Keyword           yes (by name match)       the KeywordArg's value
+///   Keyword (opt)     no  (omitted)             its default expression
+///   Keyword (req)     no                        — impossible: validator
+///                                                 rejects an omitted
+///                                                 required keyword
+/// ```
+///
+/// ### Fallback (no static signature)
+///
+/// A callee absent from `FN_PARAMS` (a builtin reached via `DirectCall`)
+/// or one with neither keyword params NOR keyword args is emitted by the
+/// original positional path (positional args + trailing `missing()`
+/// padding) — byte-for-byte unchanged from before KW5.
+fn emit_direct_call(out: &mut String, fn_name: &str, args: &[Expr], indent: usize) {
+    // Split the IR `args` (positionals first, then any `KeywordArg`s —
+    // the validator guarantees this ordering) into the two groups.
+    let mut positionals: Vec<&Expr> = Vec::new();
+    let mut keyword_args: Vec<(&str, &Expr)> = Vec::new();
+    for a in args {
+        match a {
+            Expr::KeywordArg { name, value, .. } => keyword_args.push((name.as_str(), value)),
+            other => positionals.push(other),
+        }
+    }
+
+    let sig = FN_PARAMS.with(|t| t.borrow().get(fn_name).cloned());
+
+    // Does the callee have any keyword params?  (An `IndirectCall`/builtin
+    // has no signature here, so `sig` is `None` and this is `false`.)
+    let callee_has_keyword_params = sig
+        .as_ref()
+        .map(|ps| ps.iter().any(|p| p.kind == ParamKind::Keyword))
+        .unwrap_or(false);
+
+    // Fast path: NO keyword arguments at the call site and NO keyword
+    // params on the callee.  This is every pre-KW5 call — resolve exactly
+    // as before (positional args + trailing `missing()` padding).  Keeping
+    // this path identical means non-keyword output is byte-for-byte
+    // unchanged.
+    if keyword_args.is_empty() && !callee_has_keyword_params {
+        let _ = write!(out, "{}(", function_emit_name(fn_name));
+        emit_args(out, args, indent);
+        let arity = FN_ARITY.with(|t| t.borrow().get(fn_name).copied().unwrap_or(0));
+        let pad_count = arity.saturating_sub(args.len());
+        for i in 0..pad_count {
+            if !args.is_empty() || i > 0 {
+                out.push_str(", ");
+            }
+            out.push_str("__sir::missing()");
+        }
+        out.push(')');
+        return;
+    }
+
+    // Keyword path.  If we reached here with keyword args or keyword
+    // params but NO static signature, that is the spec-documented
+    // out-of-scope case (an indirect/closure call carrying keywords).
+    // The frontends do not emit it; a `DirectCall` always names a known
+    // function, so `sig` is `Some`.  Guard defensively rather than emit
+    // a wrong call.
+    let Some(params) = sig else {
+        panic!(
+            "rust backend: keyword arguments to `{fn_name}` whose signature is not statically known — indirect/closure keyword calls are out of scope for v0 (see sir-keyword-params.md §\"Out of scope\")"
+        );
+    };
+
+    // Build the FULL positional argument list in the callee's DECLARED
+    // parameter order.  We consume positionals in order for the
+    // positional params, and match keyword args by name for the
+    // `Keyword` params.  (Every supplied keyword names a real `Keyword`
+    // param — the validator guarantees it — so nothing is left over.)
+    let mut pos_iter = positionals.iter();
+
+    let _ = write!(out, "{}(", function_emit_name(fn_name));
+    let mut first = true;
+    for p in &params {
+        if !first {
+            out.push_str(", ");
+        }
+        first = false;
+        match p.kind {
+            ParamKind::Keyword => {
+                // Matched by NAME.  Either the caller supplied it (emit
+                // its value) or it was omitted — in which case it is an
+                // OPTIONAL keyword (the validator rejects an omitted
+                // required keyword), so it carries a default.
+                //
+                // For an OMITTED optional keyword we emit the
+                // `__sir::missing()` sentinel and let the callee's
+                // body-top prologue substitute the default — the SAME
+                // mechanism that positional defaults use.  This is not
+                // just for symmetry: a keyword default may reference an
+                // EARLIER parameter (`def f(a, b: a)`), whose Rust binding
+                // exists only inside the callee body, not at this call
+                // site.  Evaluating the default in the prologue (where
+                // `a` is bound) is therefore the only correct place —
+                // exactly the call-time, param-scope semantics the
+                // positional-default prologue already provides.
+                if let Some((_, value)) = keyword_args.iter().find(|(n, _)| *n == p.name) {
+                    emit_expr(out, value, indent);
+                } else {
+                    debug_assert!(
+                        p.default.is_some(),
+                        "required keyword `{}` omitted at call to `{fn_name}` — validator should have rejected this",
+                        p.name
+                    );
+                    out.push_str("__sir::missing()");
+                }
+            }
+            // Positional param (Required, incl. positional-optional).
+            // Filled from the next positional argument if the caller
+            // supplied one; otherwise it is an omitted trailing default,
+            // padded with the `missing()` sentinel exactly as the fast
+            // path does (the callee's prologue substitutes the default).
+            ParamKind::Required => match pos_iter.next() {
+                Some(arg) => emit_expr(out, arg, indent),
+                None => out.push_str("__sir::missing()"),
+            },
+            // `Rest`/`KwRest` are not accepted by this backend (their
+            // features are unaccepted, so the capability check rejects
+            // such modules before emit).  Unreachable on valid input.
+            ParamKind::Rest | ParamKind::KwRest => panic!(
+                "rust backend reached a `{:?}` param of `{fn_name}` — capability check should have rejected variadic params",
+                p.kind
+            ),
+        }
+    }
+    out.push(')');
 }
 
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {
@@ -857,10 +1003,24 @@ fn emit_make_closure(
 thread_local! {
     static FN_ARITY: std::cell::RefCell<std::collections::HashMap<String, usize>> =
         std::cell::RefCell::new(std::collections::HashMap::new());
+
+    /// Thread-local function *signature* table: SIR function name → its
+    /// full parameter list (kinds + defaults).  Where `FN_ARITY` records
+    /// only the param *count* (enough for `MakeClosure` drains and
+    /// default-arg padding), keyword→positional resolution (KW5) needs
+    /// the params themselves — their declared ORDER, their NAMES (to
+    /// match a `KeywordArg`), and their DEFAULTS (to fill an omitted
+    /// optional keyword).  Populated alongside `FN_ARITY` and consulted
+    /// by the `DirectCall` emitter.  A callee absent from this table
+    /// (e.g. a builtin reached via `DirectCall`) resolves to `None`, and
+    /// the emitter falls back to plain positional emission.
+    static FN_PARAMS: std::cell::RefCell<std::collections::HashMap<String, Vec<Param>>> =
+        std::cell::RefCell::new(std::collections::HashMap::new());
 }
 
 /// Wrap a call to `emit_module` so that `MakeClosure` can resolve
-/// each lambda's parameter count.  Public for direct use; the
+/// each lambda's parameter count and `DirectCall` can resolve a
+/// callee's keyword parameters.  Public for direct use; the
 /// crate-level `compile` entry point routes through here.
 pub fn emit_module_with_arity_table(m: &Module) -> String {
     FN_ARITY.with(|t| {
@@ -870,8 +1030,16 @@ pub fn emit_module_with_arity_table(m: &Module) -> String {
             t.insert(f.name.clone(), f.params.len());
         }
     });
+    FN_PARAMS.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        for f in &m.functions {
+            t.insert(f.name.clone(), f.params.clone());
+        }
+    });
     let out = emit_module(m);
     FN_ARITY.with(|t| t.borrow_mut().clear());
+    FN_PARAMS.with(|t| t.borrow_mut().clear());
     out
 }
 
@@ -1778,6 +1946,182 @@ mod tests {
         let out = emit_module_with_arity_table(&m);
         assert!(out.contains("g(__sir::Value::Int(1i64), __sir::Value::Int(2i64))"));
         assert!(!out.contains("__sir::missing()"));
+    }
+
+    // ── KeywordParams (KW5) ────────────────────────────────────────
+    //
+    // Rust has no native kwargs, so a `Keyword` param becomes an
+    // ORDINARY positional Rust parameter (def side), and a call's
+    // `KeywordArg`s are RESOLVED to positional order at emit time
+    // (call side).  These tests pin all three call-side outcomes:
+    // supplied-by-keyword, omitted-optional-keyword (filled with the
+    // sentinel so the callee prologue substitutes the default), and the
+    // name→position reorder.
+
+    /// Build `greet(greeting, name: <default>)`: a required positional
+    /// followed by an OPTIONAL keyword param.  Shared by the call-side
+    /// tests below.
+    fn greet_fn(default_name: Expr) -> Function {
+        Function {
+            name: "greet".into(),
+            params: vec![
+                Param { name: "greeting".into(), kind: ParamKind::Required, sir_type: None, default: None, span: s() },
+                Param { name: "name".into(), kind: ParamKind::Keyword, sir_type: None, default: Some(Box::new(default_name)), span: s() },
+            ],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::VarRef { name: "name".into(), scope: Scope::Param, span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        }
+    }
+
+    fn kw_str(v: &str) -> Expr {
+        Expr::StrLit { value: v.into(), span: s() }
+    }
+
+    fn main_calling(call: Expr) -> Function {
+        Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: call, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        }
+    }
+
+    fn module_of(functions: Vec<Function>) -> Module {
+        Module {
+            name: "demo".into(),
+            manifest: FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions,
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("test")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        }
+    }
+
+    /// Def side: a `Keyword` param is emitted as an ORDINARY positional
+    /// Rust parameter (the by-name affordance is dropped — the name
+    /// simply becomes the Rust parameter name), and an OPTIONAL keyword
+    /// (one with a default) reuses the default-param body-top prologue.
+    #[test]
+    fn emit_keyword_param_is_positional_with_default_prologue() {
+        let mut out = String::new();
+        emit_function(&mut out, &greet_fn(kw_str("world")));
+        // Both params are ordinary positional Rust parameters.
+        assert!(
+            out.contains("fn greet(greeting: __sir::Value, name: __sir::Value) -> __sir::Value"),
+            "keyword param should positional-ize; got:\n{out}"
+        );
+        // The optional keyword reuses the default-param prologue.
+        assert!(
+            out.contains("let name = if __sir::is_missing(&name) { __sir::Value::Str(::std::rc::Rc::from(\"world\")) } else { name };"),
+            "optional keyword missing its default prologue; got:\n{out}"
+        );
+    }
+
+    /// Call side, keyword SUPPLIED: `greet("hi", name: "ada")` resolves
+    /// to the plain positional call `greet("hi", "ada")` — the keyword
+    /// value fills its named param's declared position.
+    #[test]
+    fn emit_call_with_supplied_keyword_resolves_to_positional() {
+        let call = Expr::DirectCall {
+            fn_name: "greet".into(),
+            args: vec![
+                kw_str("hi"),
+                Expr::KeywordArg {
+                    name: "name".into(),
+                    value: Box::new(kw_str("ada")),
+                    span: s(),
+                },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let m = module_of(vec![greet_fn(kw_str("world")), main_calling(call)]);
+        let out = emit_module_with_arity_table(&m);
+        assert!(
+            out.contains(
+                "greet(__sir::Value::Str(::std::rc::Rc::from(\"hi\")), __sir::Value::Str(::std::rc::Rc::from(\"ada\")))"
+            ),
+            "supplied keyword should resolve to positional; got:\n{out}"
+        );
+        // No sentinel — the keyword was supplied, not omitted.
+        assert!(!out.contains("greet(__sir::Value::Str(::std::rc::Rc::from(\"hi\")), __sir::missing())"));
+    }
+
+    /// Call side, keyword OMITTED: `greet("hi")` fills the omitted
+    /// optional keyword with the `__sir::missing()` sentinel — the
+    /// callee's body-top prologue then substitutes its default (this
+    /// defers default evaluation to callee scope, correct even when a
+    /// default references an earlier param).
+    #[test]
+    fn emit_call_omitting_optional_keyword_pads_sentinel() {
+        let call = Expr::DirectCall {
+            fn_name: "greet".into(),
+            args: vec![kw_str("hi")],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let m = module_of(vec![greet_fn(kw_str("world")), main_calling(call)]);
+        let out = emit_module_with_arity_table(&m);
+        assert!(
+            out.contains(
+                "greet(__sir::Value::Str(::std::rc::Rc::from(\"hi\")), __sir::missing())"
+            ),
+            "omitted optional keyword should pad the sentinel; got:\n{out}"
+        );
+    }
+
+    /// Call side, keyword REORDER: even when the caller writes the
+    /// keyword arg for an *earlier*-declared param, the emitter places
+    /// its value in the DECLARED param position, not the written order.
+    /// `f(x: 1)` with `def f(x:, y: 2)` → `f(1, missing())` (x supplied
+    /// by name, y omitted → sentinel).
+    #[test]
+    fn emit_call_reorders_keyword_to_declared_position() {
+        let f = Function {
+            name: "f".into(),
+            params: vec![
+                Param { name: "x".into(), kind: ParamKind::Keyword, sir_type: None, default: None, span: s() },
+                Param { name: "y".into(), kind: ParamKind::Keyword, sir_type: None, default: Some(Box::new(Expr::IntLit { value: 2, span: s() })), span: s() },
+            ],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::VarRef { name: "x".into(), scope: Scope::Param, span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let call = Expr::DirectCall {
+            fn_name: "f".into(),
+            args: vec![Expr::KeywordArg {
+                name: "x".into(),
+                value: Box::new(Expr::IntLit { value: 1, span: s() }),
+                span: s(),
+            }],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let m = module_of(vec![f, main_calling(call)]);
+        let out = emit_module_with_arity_table(&m);
+        assert!(
+            out.contains("f(__sir::Value::Int(1i64), __sir::missing())"),
+            "keyword should land in declared position with omitted trailing → sentinel; got:\n{out}"
+        );
     }
 
     #[test]

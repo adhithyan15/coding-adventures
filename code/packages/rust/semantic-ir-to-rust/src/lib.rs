@@ -118,6 +118,36 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // validator change (the core validator already permits omitting
     // trailing defaulted args in a `DirectCall`).
     Feature::DefaultParams,
+    // `KeywordParams` (KW5) adds name-matched keyword parameters
+    // (`def f(a:)` / `def f(a: 1)`) and keyword arguments (`f(a: 1)`).
+    // Rust has NO native keyword-argument syntax, so — per spec §4 — the
+    // backend performs STATIC keyword→positional resolution at emit time
+    // (no runtime library):
+    //
+    //   • Def side: a `Keyword` param emits as an ORDINARY positional
+    //     parameter in its declared order (the name simply becomes the
+    //     Rust parameter name; the by-name affordance is dropped).  An
+    //     OPTIONAL keyword (one carrying a `default`) reuses the very same
+    //     `DefaultParams` body-top prologue — it is a defaulted parameter
+    //     like any other — so no new def-side machinery is required.
+    //
+    //   • Call side: for a `DirectCall` whose callee signature is known
+    //     (looked up in the module's functions, exactly as default-param
+    //     padding consults the arity table), the backend builds the FULL
+    //     positional argument list in the callee's DECLARED order:
+    //       1. positional args fill positional params in order;
+    //       2. each `KeywordArg { name, value }` fills the callee param
+    //          whose name matches `name` (a name→position reorder);
+    //       3. any omitted OPTIONAL keyword param is filled by emitting
+    //          ITS default (via `Function::missing_keywords`), exactly as
+    //          trailing positional defaults are filled today.
+    //     The result is a plain positional Rust call `f(a, b_val, c_def)`.
+    //
+    // This is the same shape as the existing default-param call emission
+    // (fill omitted params with their defaults) plus a name→position
+    // reorder — so accepting the feature keeps the capability check and
+    // emit coverage consistent.
+    Feature::KeywordParams,
 ];
 
 impl Backend for RustBackend {
