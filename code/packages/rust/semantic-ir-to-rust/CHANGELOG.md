@@ -1,5 +1,90 @@
 # Changelog
 
+## 0.8.0 — exception handling via catch_unwind + ancestry (E4)
+
+Makes the Rust backend **accept and execute** structured exceptions
+(`Feature::Exceptions`). Before this change `Stmt::TryCatch` and the
+`raise` builtin hit `panic!` guards in `emit.rs` (the feature was not in
+`ACCEPTED_FEATURES`), so any `begin/rescue/ensure` module was rejected.
+Rust has no native exceptions, so v0 maps Ruby's exception model onto
+Rust's **unwinding panic** machinery — a *localized* transform touching
+only the `raise`/`TryCatch` arms; every other emit path is unchanged.
+
+### Added
+
+- **Runtime (`runtime.rs`).** An exception model in the inline `__sir`
+  module:
+  - `SirError { class: String, msg: String }` — the panic payload. `msg`
+    is a `String` (not `Value`) because `std::panic::panic_any<M>` requires
+    `M: Send`, and our `Rc`-based `Value` is not `Send`; the message is
+    rendered at raise time, matching Ruby's string `exception.message`.
+  - `raise(class, msg: Value) -> !` → `std::panic::panic_any(SirError{…})`;
+    `reraise() -> !` for a bare `raise`.
+  - `exc_from_payload(Box<dyn Any + Send>) -> SirError` — downcasts the
+    caught payload to a `SirError`, or **`resume_unwind`s** a non-`SirError`
+    payload (a genuine Rust panic is never swallowed as a rescuable
+    exception).
+  - `rescue_matches(&SirError, &[&str]) -> bool` over an **explicit**
+    built-in ancestry table (a verbatim parity port of the TS
+    `sir-runtime-exceptions` `ANCESTRY`) merged with user edges, with a
+    `seen`-set **cycle guard**. `exc_value(&SirError) -> Value` re-wraps the
+    message for a `rescue … => e` binding.
+  - `register_ancestry(&[(&str, &str)])` — the ONLY channel for user
+    ancestry edges (no reflection). `install_panic_hook()` quiets Rust's
+    default panic banner for `SirError` payloads; `report_uncaught` renders
+    an unrescued exception (`Class: message`) and exits non-zero.
+- **Emit (`emit.rs`).**
+  - `raise` arm: a `Const` class name (`raise Foo`/`raise Foo, "m"`) is
+    **lifted to a string literal** (never emitted as a runtime `Const`
+    read); a non-const first arg → `raise("RuntimeError", <arg>)`; bare
+    `raise` → `reraise()`.
+  - `Stmt::TryCatch` → a `std::panic::catch_unwind(AssertUnwindSafe(||
+    {…}))` region whose `match` dispatches rescue clauses in order via
+    `rescue_matches`, binds `=> e` with `exc_value`, and **runs `ensure` on
+    every path** (Ok, matched, and unmatched-before-`resume_unwind`).
+  - `main` wraps the user body in a top-level `catch_unwind` so an uncaught
+    SIR exception exits cleanly non-zero; the module's `ClassDef` ancestry
+    edges are registered once at init (`register_ancestry`), and the quiet
+    panic hook is installed.
+  - `Stmt::ClassDef` (empty-body exception subclass) emits no runtime code —
+    it is pure ancestry metadata.
+
+### Accepted features
+
+- `Feature::Exceptions`, plus `Feature::Classes` and `Feature::Constants`
+  **for the narrow exception use case only**:
+  - `Classes` — an empty-body exception-subclass declaration `class MyErr <
+    StandardError; end` (methods hoist to top-level `Function`s). A
+    **non-empty** class body is rejected cleanly by `reject_stateful_class`.
+  - `Constants` — a `raise MyErr` names its class via a `Scope::Const`
+    VarRef (lifted to a string). Any **other** `Const` reference is rejected
+    cleanly by `reject_const_ref`, keeping the acceptance sound (no
+    `emit_var_ref` `Const` panic on validated input).
+
+### Tests
+
+- Emitted-shape unit tests (`emit.rs`): `raise` variants, `TryCatch` →
+  `catch_unwind`/`match`, ensure-on-all-paths, empty ClassDef.
+- Capability-gate unit tests (`lib.rs`): accept exceptions/subclass, reject
+  stateful class, reject non-raise const ref, allow raise-class-name const.
+- Runtime-shape tests (`runtime.rs`): exception helpers present, explicit
+  table + cycle guard, non-`SirError` passthrough.
+- Execution-proof through `rustc` (`tests/compile_and_run_exceptions.rs`,
+  gated on `SIR_TEST_RUSTC_LINKER`): (a) typed rescue via built-in ancestry,
+  (b) bare rescue, (c) unmatched re-raise exits non-zero, (d) ensure runs on
+  caught + uncaught, (e) user ancestry `MyErr < StandardError` caught by
+  `rescue StandardError`.
+
+### Security
+
+- Rescue matching is an **explicit ancestry-table lookup** — never
+  reflection / type-name introspection. A `seen`-set cycle guard bounds the
+  ancestry walk. A non-`SirError` panic (a real Rust bug) is `resume_unwind`
+  ed, never mis-dispatched to a rescue. `AssertUnwindSafe` is used for
+  generated code only (documented rationale: the `Err` path re-derives what
+  it needs and never reads partially-mutated captured state). No new
+  `unsafe`.
+
 ## 0.7.0 — collection-method dispatch + runtime catalog (C6)
 
 Makes the Rust backend **execute** collection-method dispatch. A

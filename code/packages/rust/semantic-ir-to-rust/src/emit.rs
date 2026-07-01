@@ -109,16 +109,124 @@ fn emit_globals(out: &mut String, globals: &[Global]) {
 fn emit_main(out: &mut String, m: &Module) {
     out.push('\n');
     out.push_str("fn main() {\n");
-    if m.functions.iter().any(|f| f.name == "_init") {
-        out.push_str("    let _ = _init();\n");
+
+    // ── exception runtime init (Feature::Exceptions) ────────────────
+    //
+    // When the module uses exceptions we (1) install a quiet panic hook so
+    // a SIR `raise` doesn't print Rust's default panic banner, and (2)
+    // register the module's user-defined exception ancestry so
+    // `rescue StandardError` catches a raised `class MyErr < StandardError`.
+    // Both are pure init side-effects, emitted only when needed so
+    // exception-free modules are byte-for-byte unchanged.
+    let uses_exceptions = m.manifest.contains(semantic_ir::Feature::Exceptions);
+    if uses_exceptions {
+        out.push_str("    __sir::install_panic_hook();\n");
+        emit_ancestry_registration(out, m);
     }
-    if m.functions.iter().any(|f| f.name == "main") {
-        // SIR's `main` was renamed to `__sir_user_main` during
-        // function emission (Rust's `main` is reserved for the
-        // process entry point).  Call it here.
-        out.push_str("    let _ = __sir_user_main();\n");
+
+    // The user body runs under a top-level `catch_unwind` so an *uncaught*
+    // SIR exception (one that unwound past every `TryCatch`) is rendered
+    // cleanly (`Class: message`) and exits non-zero, exactly as Ruby prints
+    // an unrescued exception at top level — rather than as a raw Rust panic.
+    // A *non-`SirError`* panic (a genuine Rust bug) is re-raised via
+    // `exc_from_payload`'s `resume_unwind`, so real crashes keep their Rust
+    // semantics.  Exception-free modules skip the wrapper entirely.
+    let run_body = |out: &mut String, indent: &str| {
+        if m.functions.iter().any(|f| f.name == "_init") {
+            let _ = writeln!(out, "{}let _ = _init();", indent);
+        }
+        if m.functions.iter().any(|f| f.name == "main") {
+            // SIR's `main` was renamed to `__sir_user_main` during
+            // function emission (Rust's `main` is reserved for the
+            // process entry point).  Call it here.
+            let _ = writeln!(out, "{}let _ = __sir_user_main();", indent);
+        }
+    };
+
+    if uses_exceptions {
+        out.push_str(
+            "    let __r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {\n",
+        );
+        run_body(out, "        ");
+        out.push_str("    }));\n");
+        out.push_str("    if let Err(__payload) = __r {\n");
+        out.push_str("        let __exc = __sir::exc_from_payload(__payload);\n");
+        out.push_str("        __sir::report_uncaught(&__exc);\n");
+        out.push_str("    }\n");
+    } else {
+        run_body(out, "    ");
     }
     out.push_str("}\n");
+}
+
+/// Emit the one-shot `__sir::register_ancestry(&[…])` call that threads the
+/// module's user-defined exception ancestry into the rescue matcher.
+///
+/// We collect every `Stmt::ClassDef { name, superclass: Some(sup) }` reachable
+/// in the module (top-level and nested), producing `(sub, sup)` edges.  A class
+/// with no superclass contributes no edge (its ancestry is either a built-in or
+/// unknown, matched by exact name — the honest v0 contract).  When the module
+/// declares no such edges we emit nothing, keeping the output minimal.
+fn emit_ancestry_registration(out: &mut String, m: &Module) {
+    let mut edges: Vec<(String, String)> = Vec::new();
+    for f in &m.functions {
+        collect_ancestry_block(&f.body, &mut edges);
+    }
+    if edges.is_empty() {
+        return;
+    }
+    out.push_str("    __sir::register_ancestry(&[");
+    for (i, (sub, sup)) in edges.iter().enumerate() {
+        if i > 0 {
+            out.push_str(", ");
+        }
+        let _ = write!(out, "({}, {})", quote_rs_string(sub), quote_rs_string(sup));
+    }
+    out.push_str("]);\n");
+}
+
+/// Walk a block's statements collecting `ClassDef` ancestry edges.
+fn collect_ancestry_block(b: &Block, edges: &mut Vec<(String, String)>) {
+    for s in &b.stmts {
+        collect_ancestry_stmt(s, edges);
+    }
+}
+
+/// Collect `(subclass, superclass)` edges from a statement, recursing into
+/// nested class/try bodies so a `class MyErr < StandardError` inside a
+/// `begin`/`class` still registers.
+fn collect_ancestry_stmt(s: &Stmt, edges: &mut Vec<(String, String)>) {
+    match s {
+        Stmt::ClassDef { name, superclass: Some(sup), body, .. } => {
+            edges.push((name.clone(), sup.clone()));
+            for st in body {
+                collect_ancestry_stmt(st, edges);
+            }
+        }
+        Stmt::ClassDef { body, .. }
+        | Stmt::ModuleDef { body, .. }
+        | Stmt::SingletonClassDef { body, .. } => {
+            for st in body {
+                collect_ancestry_stmt(st, edges);
+            }
+        }
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            for st in body {
+                collect_ancestry_stmt(st, edges);
+            }
+            for r in rescues {
+                for st in &r.body {
+                    collect_ancestry_stmt(st, edges);
+                }
+            }
+            if let Some(ens) = ensure_body {
+                for st in ens {
+                    collect_ancestry_stmt(st, edges);
+                }
+            }
+        }
+        _ => {}
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -450,11 +558,31 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         Stmt::Assign { span, .. } => {
             panic!("rust backend reached an Assign to an unsupported scope at {} — capability check should have rejected it", span);
         }
-        // SIR17 (classes) — `Feature::Classes` is not accepted by
-        // this backend, so a class-using module is rejected by the
-        // capability check before emit.  Reaching this arm is a bug.
-        Stmt::ClassDef { span, .. } => {
-            panic!("rust backend reached SIR17 class-def statement at {} — capability check should have rejected it", span);
+        // SIR17 (classes) — `Feature::Classes` is accepted ONLY for the
+        // narrow exception-subclass use case: `class MyErr < StandardError;
+        // end`.  The Ruby frontend hoists method `def`s to top-level
+        // `Function`s, so an accepted class body is empty (the structural
+        // capability check `reject_stateful_class` rejects any non-empty
+        // body before emit).  The class name → superclass edge is threaded
+        // into the exception matcher at program init (see
+        // `emit_ancestry_registration`); the declaration itself emits no
+        // runtime code here — it exists purely as ancestry metadata.  We
+        // emit a comment marker so the output is self-documenting.
+        Stmt::ClassDef { name, superclass, body, .. } => {
+            match superclass {
+                Some(sup) => {
+                    let _ = writeln!(out, "{}// class {} < {} (exception ancestry registered at init)", pad, sanitize_comment(name), sanitize_comment(sup));
+                }
+                None => {
+                    let _ = writeln!(out, "{}// class {} (no ancestry edge)", pad, sanitize_comment(name));
+                }
+            }
+            // Body is empty for accepted (exception-subclass) classes, but
+            // emit any statements defensively in case a future frontend
+            // populates it with backend-supported statements.
+            for st in body {
+                emit_stmt(out, st, indent);
+            }
         }
         Stmt::ModuleDef { span, .. } => {
             panic!("rust backend reached SIR17 module-def statement at {} — capability check should have rejected it", span);
@@ -462,9 +590,165 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         Stmt::SingletonClassDef { span, .. } => {
             panic!("rust backend reached SIR17 singleton-class-def statement at {} — capability check should have rejected it", span);
         }
-        Stmt::TryCatch { span, .. } => {
-            panic!("rust backend reached SIR17 try-catch statement at {} — capability check should have rejected it", span);
+        // `begin … rescue … ensure … end` → a `catch_unwind` region.  See
+        // `emit_try_catch` for the full mapping and its ensure-ordering
+        // guarantees.
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            emit_try_catch(out, body, rescues, ensure_body, indent);
         }
+    }
+}
+
+/// Emit a `Stmt::TryCatch` as a `std::panic::catch_unwind` region.
+///
+/// ## Mapping (Ruby `begin/rescue/ensure` → Rust unwinding)
+///
+/// ```text
+/// {
+///     let __r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+///         <try body>              // may panic_any(SirError) via raise
+///     }));
+///     match __r {
+///         Ok(_) => { <ensure> }                       // no exception
+///         Err(__payload) => {
+///             let __exc = __sir::exc_from_payload(__payload); // downcast or re-panic
+///             if __sir::rescue_matches(&__exc, &["Foo","Bar"]) {
+///                 let e = __sir::exc_value(&__exc);    // `rescue … => e`
+///                 <rescue body>; <ensure>
+///             } else if … { … }
+///             else { <ensure>; std::panic::resume_unwind(Box::new(__exc)); } // re-raise
+///         }
+///     }
+/// }
+/// ```
+///
+/// ## Why `AssertUnwindSafe`
+///
+/// `catch_unwind` requires its closure to be `UnwindSafe`, a marker that a
+/// panic mid-closure can't leave a shared value in a torn state observable
+/// afterwards.  Our value model is `Rc<RefCell<…>>` (`Seq`/`Map`), which is
+/// *not* `UnwindSafe`.  In generated code this is sound to assert: on the
+/// `Err` path we do not read any partially-mutated captured binding — the
+/// rescue/ensure bodies re-derive what they need — and Ruby semantics
+/// deliberately expose "state as of the raise" to a rescue anyway.  So we
+/// wrap the closure in `AssertUnwindSafe`, exactly as the reference
+/// backends rely on their host's `try`/`catch` seeing post-throw state.
+///
+/// ## Ensure runs on ALL paths
+///
+/// The `ensure` body is emitted into **every** arm: the `Ok` (no-exception)
+/// arm, each matched-rescue arm, and the unmatched `else` arm (immediately
+/// before `resume_unwind`).  This guarantees `ensure` runs whether the body
+/// completed normally, an exception was caught, or an exception is being
+/// re-raised — matching Ruby's `ensure`.  We inline it per-arm (rather than
+/// a single post-match block) because the re-raise arm must run `ensure`
+/// *before* it diverges via `resume_unwind`.
+///
+/// ## Non-`SirError` panics pass through
+///
+/// `exc_from_payload` downcasts the caught payload; a payload that is NOT a
+/// `SirError` (a genuine Rust panic — index OOB, `unwrap` on `None`) is
+/// `resume_unwind`-ed there, so it is never mis-dispatched to a rescue
+/// clause.  A `rescue` can only ever catch a value a SIR `raise` produced.
+fn emit_try_catch(
+    out: &mut String,
+    body: &[Stmt],
+    rescues: &[semantic_ir::RescueClause],
+    ensure_body: &Option<Vec<Stmt>>,
+    indent: usize,
+) {
+    let pad = indent_str(indent);
+    let inner = indent + 1;
+    let ipad = indent_str(inner);
+    let arm = indent + 2;
+    let arm_pad = indent_str(arm);
+
+    // Helper: emit the ensure body (if any) at a given indent.
+    let emit_ensure = |out: &mut String, at: usize| {
+        if let Some(ens) = ensure_body {
+            emit_bare_stmts(out, ens, at);
+        }
+    };
+
+    let _ = writeln!(out, "{}{{", pad);
+    let _ = writeln!(
+        out,
+        "{}let __r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {{",
+        ipad
+    );
+    emit_bare_stmts(out, body, arm);
+    // The closure yields `()` — the try body is a statement list with no
+    // value slot (like a `ClassDef` body), so nothing is returned.
+    let _ = writeln!(out, "{}}}));", ipad);
+
+    let _ = writeln!(out, "{}match __r {{", ipad);
+    // ── Ok: no exception ─────────────────────────────────────────────
+    let _ = writeln!(out, "{}Ok(_) => {{", arm_pad);
+    emit_ensure(out, arm + 1);
+    let _ = writeln!(out, "{}}}", arm_pad);
+    // ── Err: an unwind occurred ──────────────────────────────────────
+    let _ = writeln!(out, "{}Err(__payload) => {{", arm_pad);
+    let dpad = indent_str(arm + 1);
+    let _ = writeln!(out, "{}let __exc = __sir::exc_from_payload(__payload);", dpad);
+    if rescues.is_empty() {
+        // No rescue clauses: run ensure, then re-raise the exception.
+        emit_ensure(out, arm + 1);
+        let _ = writeln!(
+            out,
+            "{}std::panic::resume_unwind(Box::new(__exc));",
+            dpad
+        );
+    } else {
+        for (i, r) in rescues.iter().enumerate() {
+            let kw = if i == 0 { "if" } else { "}} else if" };
+            let mut types = String::from("&[");
+            for (j, t) in r.exception_types.iter().enumerate() {
+                if j > 0 {
+                    types.push_str(", ");
+                }
+                types.push_str(&quote_rs_string(t));
+            }
+            types.push(']');
+            let _ = writeln!(
+                out,
+                "{}{} __sir::rescue_matches(&__exc, {}) {{",
+                dpad, kw, types
+            );
+            let bpad = indent_str(arm + 2);
+            // `rescue Foo => e` binds the caught exception's message value.
+            if let Some(bind) = &r.binding {
+                let _ = writeln!(
+                    out,
+                    "{}let {}: __sir::Value = __sir::exc_value(&__exc);",
+                    bpad,
+                    sanitize_ident(bind)
+                );
+            }
+            emit_bare_stmts(out, &r.body, arm + 2);
+            emit_ensure(out, arm + 2);
+        }
+        // No clause matched → run ensure, then re-raise (propagate).
+        let _ = writeln!(out, "{}}} else {{", dpad);
+        emit_ensure(out, arm + 2);
+        let _ = writeln!(
+            out,
+            "{}std::panic::resume_unwind(Box::new(__exc));",
+            indent_str(arm + 2)
+        );
+        let _ = writeln!(out, "{}}}", dpad);
+    }
+    let _ = writeln!(out, "{}}}", arm_pad);
+    let _ = writeln!(out, "{}}}", ipad);
+    let _ = writeln!(out, "{}}}", pad);
+}
+
+/// Emit a bare statement list (a `Vec<Stmt>`, as carried by `TryCatch`,
+/// `ClassDef`, and `RescueClause` bodies — no trailing value slot) at the
+/// given indent.  Each statement is emitted via the ordinary `emit_stmt`
+/// path.
+fn emit_bare_stmts(out: &mut String, stmts: &[Stmt], indent: usize) {
+    for s in stmts {
+        emit_stmt(out, s, indent);
     }
 }
 
@@ -837,6 +1121,51 @@ fn emit_direct_call(out: &mut String, fn_name: &str, args: &[Expr], indent: usiz
 }
 
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {
+    // `raise` → panic with a class-tagged `SirError` payload (SIR17
+    // Exceptions).  The first argument decides the shape, mirroring the
+    // TS backend's `raiseError` emission:
+    //   • a `Const` class name (`raise Foo` / `raise Foo, "msg"`) → the
+    //     class name is LIFTED to a Rust string literal (never emitted as
+    //     a `Const` VarRef, which this backend cannot read), with the
+    //     optional message second — or the class name itself as the
+    //     default message when none is given;
+    //   • any other first arg (`raise "msg"`) → an implicit `RuntimeError`
+    //     carrying that value as the message (matching Ruby);
+    //   • no args (bare `raise`) → a generic re-raise (`RuntimeError`).
+    //
+    // Lifting the `Const` name here is what makes accepting
+    // `Feature::Constants` sound: the ONLY `Const` reference this backend
+    // lowers is a raise class name, and it becomes a `&str` — never a
+    // runtime constant read (which stays rejected by `reject_const_ref`).
+    if name == "raise" {
+        match args.first() {
+            None => {
+                out.push_str("__sir::reraise()");
+            }
+            Some(Expr::VarRef { name: cn, scope: Scope::Const, .. }) => {
+                let _ = write!(out, "__sir::raise({}, ", quote_rs_string(cn));
+                match args.get(1) {
+                    Some(msg) => emit_expr(out, msg, indent),
+                    None => {
+                        // Ruby's default message is the class name itself.
+                        let _ = write!(
+                            out,
+                            "__sir::Value::Str(::std::rc::Rc::from({}))",
+                            quote_rs_string(cn)
+                        );
+                    }
+                }
+                out.push(')');
+            }
+            Some(other) => {
+                out.push_str("__sir::raise(\"RuntimeError\", ");
+                emit_expr(out, other, indent);
+                out.push(')');
+            }
+        }
+        return;
+    }
+
     // Variadic helpers take a Vec<Value>; fixed-arity helpers take
     // positional Value arguments.  This matches the inlined runtime
     // signatures.
@@ -1375,11 +1704,23 @@ fn emit_stmt_inline(out: &mut String, s: &Stmt, indent: usize) {
         Stmt::Assign { span, .. } => {
             panic!("rust backend (inline) reached an Assign to an unsupported scope at {} — capability check should have rejected it", span);
         }
-        // SIR17 (classes) — unreachable: rejected by the capability
-        // check, and a class declaration has no inline-expression
-        // form regardless.
-        Stmt::ClassDef { span, .. } => {
-            panic!("rust backend (inline) reached SIR17 class-def statement at {} — capability check should have rejected it", span);
+        // SIR17 (classes) — an accepted (exception-subclass) class
+        // declaration emits no runtime code; its ancestry edge is
+        // registered at init.  In a block-as-expression context we emit
+        // just the self-documenting comment (multi-line is faithful in a
+        // Rust `{ … }`), reusing the same helpers as the loop arms.
+        Stmt::ClassDef { name, superclass, body, .. } => {
+            match superclass {
+                Some(sup) => {
+                    let _ = write!(out, "/* class {} < {} */ ", sanitize_comment(name), sanitize_comment(sup));
+                }
+                None => {
+                    let _ = write!(out, "/* class {} */ ", sanitize_comment(name));
+                }
+            }
+            for st in body {
+                emit_stmt_inline(out, st, indent);
+            }
         }
         Stmt::ModuleDef { span, .. } => {
             panic!("rust backend (inline) reached SIR17 module-def statement at {} — capability check should have rejected it", span);
@@ -1387,8 +1728,13 @@ fn emit_stmt_inline(out: &mut String, s: &Stmt, indent: usize) {
         Stmt::SingletonClassDef { span, .. } => {
             panic!("rust backend (inline) reached SIR17 singleton-class-def statement at {} — capability check should have rejected it", span);
         }
-        Stmt::TryCatch { span, .. } => {
-            panic!("rust backend (inline) reached SIR17 try-catch statement at {} — capability check should have rejected it", span);
+        // `begin … rescue … ensure … end` in a block-as-expression
+        // context.  The multi-line `catch_unwind` region the shared
+        // `emit_try_catch` helper renders is faithful inside a Rust
+        // `{ … }`, so the inline path reuses it rather than maintaining a
+        // second shape (same strategy as the loop arms above).
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            emit_try_catch(out, body, rescues, ensure_body, indent);
         }
     }
 }
@@ -2814,5 +3160,160 @@ mod tests {
         let mut out = String::new();
         emit_function(&mut out, &f);
         assert!(out.contains("let mut acc: __sir::Value = __sir::Value::Int(0i64);"), "got: {out}");
+    }
+
+    // ── E4: exception emission shape ───────────────────────────────
+
+    fn constref(name: &str) -> Expr {
+        Expr::VarRef { name: name.into(), scope: Scope::Const, span: s() }
+    }
+
+    fn builtin(name: &str, args: Vec<Expr>) -> Expr {
+        Expr::BuiltinCall { name: name.into(), args, effects: EffectSet::PURE, span: s() }
+    }
+
+    fn strlit(v: &str) -> Expr {
+        Expr::StrLit { value: v.into(), span: s() }
+    }
+
+    #[test]
+    fn emit_raise_const_class_with_message() {
+        // `raise ArgumentError, "bad"` → __sir::raise("ArgumentError", <msg>)
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &builtin("raise", vec![constref("ArgumentError"), strlit("bad")]),
+            0,
+        );
+        assert!(
+            out.starts_with(r#"__sir::raise("ArgumentError", "#),
+            "got: {out}"
+        );
+        assert!(out.contains(r#""bad""#), "got: {out}");
+    }
+
+    #[test]
+    fn emit_raise_const_class_defaults_message_to_class_name() {
+        // `raise RuntimeError` → __sir::raise("RuntimeError", Str("RuntimeError"))
+        let mut out = String::new();
+        emit_expr(&mut out, &builtin("raise", vec![constref("RuntimeError")]), 0);
+        assert!(out.contains(r#"__sir::raise("RuntimeError""#), "got: {out}");
+        assert!(out.contains(r#"Rc::from("RuntimeError")"#), "got: {out}");
+    }
+
+    #[test]
+    fn emit_raise_nonconst_first_arg_is_runtime_error() {
+        // `raise "boom"` → __sir::raise("RuntimeError", <arg>)
+        let mut out = String::new();
+        emit_expr(&mut out, &builtin("raise", vec![strlit("boom")]), 0);
+        assert!(out.contains(r#"__sir::raise("RuntimeError", "#), "got: {out}");
+        assert!(out.contains(r#""boom""#), "got: {out}");
+    }
+
+    #[test]
+    fn emit_bare_raise_is_reraise() {
+        // bare `raise` → __sir::reraise()
+        let mut out = String::new();
+        emit_expr(&mut out, &builtin("raise", vec![]), 0);
+        assert_eq!(out, "__sir::reraise()");
+    }
+
+    #[test]
+    fn emit_try_catch_uses_catch_unwind_and_match() {
+        // begin; raise ArgumentError,"x"; rescue StandardError=>e; <e>; end
+        let tc = Stmt::TryCatch {
+            body: vec![Stmt::ExprStmt {
+                expr: builtin("raise", vec![constref("ArgumentError"), strlit("x")]),
+                span: s(),
+            }],
+            rescues: vec![semantic_ir::RescueClause {
+                exception_types: vec!["StandardError".into()],
+                binding: Some("e".into()),
+                body: vec![Stmt::ExprStmt { expr: local("e"), span: s() }],
+                span: s(),
+            }],
+            ensure_body: None,
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_stmt(&mut out, &tc, 1);
+        assert!(out.contains("std::panic::catch_unwind"), "got: {out}");
+        assert!(out.contains("std::panic::AssertUnwindSafe"), "got: {out}");
+        assert!(out.contains("match __r {"), "got: {out}");
+        assert!(out.contains("let __exc = __sir::exc_from_payload(__payload);"), "got: {out}");
+        assert!(
+            out.contains(r#"if __sir::rescue_matches(&__exc, &["StandardError"])"#),
+            "got: {out}"
+        );
+        // `=> e` binds the exception value.
+        assert!(out.contains("let e: __sir::Value = __sir::exc_value(&__exc);"), "got: {out}");
+        // No rescue matched → re-raise.
+        assert!(out.contains("std::panic::resume_unwind(Box::new(__exc));"), "got: {out}");
+    }
+
+    #[test]
+    fn emit_try_catch_ensure_runs_on_all_paths() {
+        // ensure body must appear in the Ok arm, the matched arm, AND the
+        // unmatched-else arm (before resume_unwind).
+        let tc = Stmt::TryCatch {
+            body: vec![Stmt::ExprStmt {
+                expr: builtin("raise", vec![constref("ArgumentError"), strlit("x")]),
+                span: s(),
+            }],
+            rescues: vec![semantic_ir::RescueClause {
+                exception_types: vec!["TypeError".into()],
+                binding: None,
+                body: vec![Stmt::ExprStmt { expr: int(1), span: s() }],
+                span: s(),
+            }],
+            ensure_body: Some(vec![Stmt::ExprStmt {
+                expr: builtin("print", vec![int(9)]),
+                span: s(),
+            }]),
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_stmt(&mut out, &tc, 1);
+        // The ensure body (`print(9)`) must appear three times: Ok arm,
+        // matched arm, unmatched-else arm.
+        let count = out.matches("__sir::print(__sir::Value::Int(9i64))").count();
+        assert_eq!(count, 3, "ensure should run on all 3 paths; got {count}:\n{out}");
+    }
+
+    #[test]
+    fn emit_try_catch_no_rescue_runs_ensure_then_reraises() {
+        // begin; …; ensure …; end  (no rescue) → ensure then resume_unwind.
+        let tc = Stmt::TryCatch {
+            body: vec![Stmt::ExprStmt { expr: int(1), span: s() }],
+            rescues: vec![],
+            ensure_body: Some(vec![Stmt::ExprStmt {
+                expr: builtin("print", vec![int(9)]),
+                span: s(),
+            }]),
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_stmt(&mut out, &tc, 1);
+        assert!(out.contains("Err(__payload) => {"), "got: {out}");
+        // ensure appears in both Ok and Err arms.
+        let count = out.matches("__sir::print(__sir::Value::Int(9i64))").count();
+        assert_eq!(count, 2, "got {count}:\n{out}");
+        assert!(out.contains("std::panic::resume_unwind(Box::new(__exc));"), "got: {out}");
+    }
+
+    #[test]
+    fn emit_classdef_registers_ancestry_comment_no_runtime_code() {
+        // `class MyErr < StandardError; end` emits only a marker comment.
+        let cd = Stmt::ClassDef {
+            name: "MyErr".into(),
+            superclass: Some("StandardError".into()),
+            body: vec![],
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_stmt(&mut out, &cd, 1);
+        assert!(out.contains("class MyErr < StandardError"), "got: {out}");
+        // No runtime statement is emitted for the class body.
+        assert!(!out.contains("__sir::"), "class def should emit no runtime code; got: {out}");
     }
 }
