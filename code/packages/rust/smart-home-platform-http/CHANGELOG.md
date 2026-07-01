@@ -8,6 +8,9 @@ All notable changes to this package will be documented in this file.
   config, state, services, and events over smart-home runtime snapshots.
 - Added a live runtime-backed API constructor with `POST /api/services/:domain/:service`
   dispatch through runtime command authorization and command results.
+- Added a read-only command-authorization preview route and browser dashboard
+  Auth actions so local-controller users can inspect runtime grants before
+  dispatching light commands.
 - Added dashboard-ready runtime read routes for snapshot pending work,
   entity/capability registry records, room topology summaries, event-log
   replay, command-result audit, authorization-decision audit, and desired-state

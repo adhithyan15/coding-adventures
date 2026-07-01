@@ -49,6 +49,7 @@ stable local API responses for:
 - `/api/smart_home/capability_grants`
 - `/api/smart_home/capability_grants/:grant_id`
 - `/api/smart_home/authorization_decisions`
+- `/api/smart_home/command_authorization`
 - `/api/smart_home/authorization_decisions/:decision_index`
 - `/api/smart_home/desired_states`
 - `POST /api/smart_home/desired_states/:entity_id`
@@ -84,9 +85,11 @@ target aliases, a native current-state registry with confidence/source/staleness
 filters plus room filters and detail lookups, a scene registry with room/action
 projections, command-result audit records with
 command, bridge, correlation, room, status, and sort filters, indexed
-authorization decisions with principal, outcome, and sort filters, capability
-grant inventory/detail routes with principal, status, scope, capability,
-entity, and sort filters, and desired-state supervision targets.
+authorization decisions with principal, outcome, and sort filters, read-only
+command-authorization previews that evaluate the local API principal's tool and
+device-command grants without dispatching commands, capability grant
+inventory/detail routes with principal, status, scope, capability, entity, and
+sort filters, and desired-state supervision targets.
 State-history reads expose registry-backed device events with Home Assistant
 entity aliases, room filters, state deltas, timestamp filters, and event-id
 detail lookups; the Home Assistant-style history route accepts
@@ -96,10 +99,10 @@ Runtime event-log reads accept Home Assistant entity aliases through
 state-expiration, and desired-state drift events.
 
 `GET /api/smart_home/smoke` exposes a machine-readable local-controller smoke
-plan with safe GET probes and a single runtime-authorized Home Assistant-style
-command probe. It lets scripts discover the dashboard/API/readiness checks and
-the exact request body to use for fixture-controller verification without
-scraping launch text.
+plan with safe GET probes, a command-authorization preview, and a single
+runtime-authorized Home Assistant-style command probe. It lets scripts discover
+the dashboard/API/readiness checks and the exact request body to use for
+fixture-controller verification without scraping launch text.
 
 The browser routes serve an embedded local dashboard shell over the same
 `web-core::WebApp`. The shell loads bootstrap, readiness, state, scene,
@@ -109,8 +112,10 @@ catalog, capability catalog, API catalog, and audit summary data from the
 native API routes and sends light on/off, light brightness, scene, and
 desired-state set/clear actions through the existing Home
 Assistant-compatible and native service endpoints, preserving runtime
-authorization. Entity, service, scene, device, bridge, history, event-log,
-command-result, authorization, capability catalog, and capability-grant
+authorization. Entity action cards expose command-authorization preview buttons
+for light on/off and brightness controls before dispatch. Entity, service,
+scene, device, bridge, history, event-log, command-result, authorization,
+capability catalog, and capability-grant
 rows/cards expose read-only detail buttons that fetch the matching native detail
 route and show formatted JSON plus the endpoint/status in a dedicated detail
 panel. Authorization rows also link to the active grants for their principal so
@@ -216,6 +221,7 @@ curl 'http://127.0.0.1:8123/api/smart_home/command_results?limit=10'
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?room_id=kitchen&limit=10'
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?bridge_id=bridge-1'
 curl 'http://127.0.0.1:8123/api/smart_home/command_results?sort=status_then_newest'
+curl 'http://127.0.0.1:8123/api/smart_home/command_authorization?entity_id=light.entity_light_1&command_type=turn_on'
 curl 'http://127.0.0.1:8123/api/smart_home/capability_grants?principal_id=agent:home-assistant-local-api&status=active'
 curl 'http://127.0.0.1:8123/api/smart_home/capability_grants/grant:agent:home-assistant-local-api:local-api-full-access'
 curl 'http://127.0.0.1:8123/api/smart_home/authorization_decisions?principal_id=agent:home-assistant-local-api&sort=oldest_first'
