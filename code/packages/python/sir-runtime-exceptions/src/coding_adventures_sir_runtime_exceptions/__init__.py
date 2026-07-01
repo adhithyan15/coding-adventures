@@ -16,11 +16,13 @@ ship here, imported by the emitted module::
 It implements **SIR** semantics (not any one source language's), so a future
 JavaScript -> SIR -> Python path reuses it.  See ``code/specs/sir-runtime.md``.
 
-**v0 limitation:** user-defined exception-class ancestry is unknown (no SIR
-exception-class symbol table), so ``rescue StandardError`` matches only the
-built-in subclasses and user classes match by exact name; a bare re-raise
-becomes a generic ``RuntimeError``.  Both await frontend threading of the
-exception model.
+**User ancestry (E2):** the backend threads ``class Child < Parent`` edges here
+via :func:`register_ancestry` at program init, so ``rescue StandardError`` also
+catches a raised user ``MyErr < StandardError``.  User edges are additive over
+the built-in table; a user class with no registered superclass still matches by
+exact name (or via ``Exception`` / a bare ``rescue``).  A bare re-raise still
+becomes a generic ``RuntimeError`` (awaits frontend threading of the in-flight
+exception).
 """
 
 from __future__ import annotations
@@ -30,6 +32,7 @@ from .exceptions import (
     Val,
     class_of_thrown,
     raise_error,
+    register_ancestry,
     rescue_matches,
 )
 
@@ -38,5 +41,6 @@ __all__ = [
     "Val",
     "class_of_thrown",
     "raise_error",
+    "register_ancestry",
     "rescue_matches",
 ]

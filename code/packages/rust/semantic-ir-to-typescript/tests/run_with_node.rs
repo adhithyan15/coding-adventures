@@ -36,6 +36,286 @@ use semantic_ir::{
 };
 use semantic_ir_to_typescript::compile;
 
+/// A minimal `__SirExc` runtime stub for the E2 execution proof, mirroring the
+/// real `sir-runtime-exceptions` package's logic: the built-in ancestry table,
+/// a mutable live copy, `registerAncestry` that merges user edges, and a
+/// `rescueMatches` that walks the merged chain.  We inline it (rather than
+/// resolve the workspace package under bare `node`) for the same reason the
+/// `__Sir` stub is inlined — see the module doc-comment.  Keeping the built-in
+/// table and merge here means the proof genuinely exercises "user edge is
+/// walked", not just "the emitted call is syntactically present".
+const SIR_EXC_STUB: &str = r#"const __SirExc = (() => {
+  const BUILTIN = {
+    RuntimeError: "StandardError", ArgumentError: "StandardError",
+    TypeError: "StandardError", NameError: "StandardError",
+    NoMethodError: "NameError", IndexError: "StandardError",
+    KeyError: "IndexError", RangeError: "StandardError",
+    ZeroDivisionError: "StandardError", IOError: "StandardError",
+    StopIteration: "StandardError", NotImplementedError: "StandardError",
+    StandardError: "Exception",
+  };
+  const ANCESTRY = { ...BUILTIN };
+  class SirError extends Error {
+    constructor(sirClass, message) {
+      super(message == null ? sirClass : String(message));
+      this.sirClass = sirClass;
+    }
+  }
+  const registerAncestry = (m) => { for (const k of Object.keys(m)) ANCESTRY[k] = m[k]; };
+  const raiseError = (c, m) => { throw new SirError(c ?? "RuntimeError", m); };
+  const classOfThrown = (e) => (e instanceof SirError ? e.sirClass : "StandardError");
+  const isAncestorOrSelf = (actual, target) => {
+    let cur = actual; const seen = new Set();
+    while (cur !== undefined && !seen.has(cur)) {
+      if (cur === target) return true;
+      seen.add(cur); cur = ANCESTRY[cur];
+    }
+    return false;
+  };
+  const rescueMatches = (e, names) => {
+    if (names.length === 0) return true;
+    const actual = classOfThrown(e);
+    return names.some((n) => n === "Exception" || isAncestorOrSelf(actual, n));
+  };
+  return { registerAncestry, raiseError, rescueMatches };
+})();
+"#;
+
+/// A minimal `__SirOop` stub: the E2 programs only call `defineClass`, which
+/// for exception purposes is a no-op (ancestry is threaded via `__SirExc`).
+const SIR_OOP_STUB: &str = r#"const __SirOop = { defineClass: () => null };
+"#;
+
+/// Transform emitted TypeScript that imports the core + OOP + exceptions
+/// runtimes into runnable JavaScript by swapping each import for its inline
+/// stub and stripping type syntax.  Faithful for the E2 surface (see the
+/// `__SirExc` stub doc).
+fn ts_to_runnable_js_with_exceptions(ts: &str) -> String {
+    let mut js = ts.to_string();
+    js = js.replace(
+        "import * as __Sir from \"@coding-adventures/sir-runtime-core\";\n",
+        SIR_STUB,
+    );
+    js = js.replace(
+        "import * as __SirOop from \"@coding-adventures/sir-runtime-oop\";\n",
+        SIR_OOP_STUB,
+    );
+    js = js.replace(
+        "import * as __SirExc from \"@coding-adventures/sir-runtime-exceptions\";\n",
+        SIR_EXC_STUB,
+    );
+    js = js.replace(" as { [k: string]: __Sir.Val }", "");
+    js = js.replace(": __Sir.Val[]", "");
+    js = js.replace(": __Sir.Val", "");
+    js
+}
+
+/// Run a compiled exception-using module under node, returning `(success,
+/// stdout)`.  `None` when node is unavailable.  Unlike [`run_module`] this does
+/// NOT assert a zero exit — the no-match proof expects a non-zero exit from an
+/// unrescued re-throw.
+fn run_exc_module(module: &Module, tag: &str) -> Option<(bool, String)> {
+    let artifact = compile(module).expect("compile to typescript");
+    if !node_available() {
+        eprintln!("note: `node` unavailable — skipping execution for `{tag}`");
+        return None;
+    }
+    let js = ts_to_runnable_js_with_exceptions(&artifact.source);
+    let mut path: PathBuf = std::env::temp_dir();
+    path.push(format!("sir_ts_exc_{}_{}.js", tag, std::process::id()));
+    std::fs::write(&path, &js).expect("write temp js");
+    let output = Command::new("node").arg(&path).output().expect("spawn node");
+    let _ = std::fs::remove_file(&path);
+    let stdout = String::from_utf8_lossy(&output.stdout)
+        .trim_end_matches(['\n', '\r'])
+        .to_string();
+    Some((output.status.success(), stdout))
+}
+
+fn sir_span() -> Span {
+    Span::synthetic()
+}
+
+/// Build `class <name> < <superclass>; end; begin; raise <name>, "x"; rescue
+/// <rescued> => e; print("caught"); end` as a hand-built SIR module.  Mirrors
+/// what the Ruby frontend lowers, so the TS execution proof does not depend on
+/// the Ruby crate.
+fn exc_module(name: &str, superclass: &str, rescued: &str) -> Module {
+    let classdef = Stmt::ClassDef {
+        name: name.into(),
+        superclass: Some(superclass.into()),
+        body: vec![],
+        span: sir_span(),
+    };
+    let raise = Stmt::ExprStmt {
+        expr: Expr::BuiltinCall {
+            name: "raise".into(),
+            args: vec![
+                Expr::VarRef { name: name.into(), scope: Scope::Const, span: sir_span() },
+                str_lit("x"),
+            ],
+            effects: EffectSet::PURE,
+            span: sir_span(),
+        },
+        span: sir_span(),
+    };
+    let try_stmt = Stmt::TryCatch {
+        body: vec![raise],
+        rescues: vec![semantic_ir::RescueClause {
+            exception_types: vec![rescued.into()],
+            binding: Some("e".into()),
+            body: vec![print(str_lit("caught"))],
+            span: sir_span(),
+        }],
+        ensure_body: None,
+        span: sir_span(),
+    };
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: vec![classdef, try_stmt],
+            value: Expr::NilLit { span: sir_span() },
+            span: sir_span(),
+        },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sir_span(),
+    };
+    Module {
+        name: "excmod".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Exceptions,
+            Feature::Classes,
+            Feature::Constants,
+            Feature::Strings,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![main],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sir_span(),
+    }
+}
+
+#[test]
+fn e2_emits_register_ancestry_for_user_subclass_ts() {
+    // The module has a `class MyErr < StandardError`, so a single program-init
+    // `registerAncestry` call threads its edge before any code runs.
+    let module = exc_module("MyErr", "StandardError", "StandardError");
+    let artifact = compile(&module).expect("compile");
+    let src = &artifact.source;
+    assert!(
+        src.contains("__SirExc.registerAncestry({\"MyErr\": \"StandardError\"});"),
+        "expected user ancestry registration; got:\n{src}"
+    );
+    // Must precede `function main` so ancestry is known before any rescue.
+    let reg = src.find("__SirExc.registerAncestry(").expect("reg present");
+    let main = src.find("function main").expect("main present");
+    assert!(reg < main, "registration must come before main; got:\n{src}");
+}
+
+#[test]
+fn e2_no_register_ancestry_without_superclass_ts() {
+    // A throwing module whose only class has no superclass emits no empty,
+    // meaningless registration.
+    let classdef = Stmt::ClassDef {
+        name: "Foo".into(),
+        superclass: None,
+        body: vec![],
+        span: sir_span(),
+    };
+    let raise = Stmt::ExprStmt {
+        expr: Expr::BuiltinCall {
+            name: "raise".into(),
+            args: vec![
+                Expr::VarRef { name: "RuntimeError".into(), scope: Scope::Const, span: sir_span() },
+                str_lit("boom"),
+            ],
+            effects: EffectSet::PURE,
+            span: sir_span(),
+        },
+        span: sir_span(),
+    };
+    let try_stmt = Stmt::TryCatch {
+        body: vec![raise],
+        rescues: vec![semantic_ir::RescueClause {
+            exception_types: vec!["RuntimeError".into()],
+            binding: None,
+            body: vec![print(str_lit("x"))],
+            span: sir_span(),
+        }],
+        ensure_body: None,
+        span: sir_span(),
+    };
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: vec![classdef, try_stmt],
+            value: Expr::NilLit { span: sir_span() },
+            span: sir_span(),
+        },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sir_span(),
+    };
+    let module = Module {
+        name: "excmod".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Exceptions,
+            Feature::Classes,
+            Feature::Constants,
+            Feature::Strings,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![main],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sir_span(),
+    };
+    let artifact = compile(&module).expect("compile");
+    assert!(
+        !artifact.source.contains("__SirExc.registerAncestry("),
+        "should not register ancestry with no superclass edge; got:\n{}",
+        artifact.source
+    );
+}
+
+#[test]
+fn e2_user_subclass_rescued_by_ancestor_executes_ts() {
+    // Execution proof: `raise MyErr` (a user `StandardError` subclass) IS caught
+    // by `rescue StandardError` under node — the registered edge is walked.
+    let module = exc_module("MyErr", "StandardError", "StandardError");
+    if let Some((ok, stdout)) = run_exc_module(&module, "match") {
+        assert!(ok, "matched program should exit zero; stdout={stdout:?}");
+        assert_eq!(stdout, "caught", "user subclass must be rescued by its ancestor");
+    }
+}
+
+#[test]
+fn e2_unrelated_user_class_not_rescued_executes_ts() {
+    // Dual: `Other < RuntimeError` raised, `rescue TypeError` does NOT catch it,
+    // so the exception propagates and node exits non-zero (nothing printed).
+    let module = exc_module("Other", "RuntimeError", "TypeError");
+    if let Some((ok, stdout)) = run_exc_module(&module, "nomatch") {
+        assert!(!ok, "unmatched program must propagate (exit non-zero)");
+        assert_ne!(stdout, "caught", "unrelated user class must not be rescued");
+    }
+}
+
 fn sp() -> Span {
     Span::synthetic()
 }

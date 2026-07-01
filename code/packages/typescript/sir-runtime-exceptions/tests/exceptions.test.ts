@@ -3,6 +3,7 @@ import {
   SirError,
   raiseError,
   classOfThrown,
+  registerAncestry,
   rescueMatches,
 } from "../src/index.js";
 
@@ -115,5 +116,48 @@ describe("rescueMatches", () => {
     expect(rescueMatches(new SirError("MyError"), ["StandardError"])).toBe(
       false,
     );
+  });
+});
+
+describe("registerAncestry (E2)", () => {
+  // Each test uses distinct class names so a registration in one cannot leak
+  // into another (the live ancestry table is module-global and mutable).
+  it("threads a user edge so rescue matches a built-in ancestor", () => {
+    // Before registration: matches only by exact name.
+    expect(rescueMatches(new SirError("E2Sub"), ["StandardError"])).toBe(false);
+    registerAncestry({ E2Sub: "StandardError" });
+    // After: it descends from StandardError and on up to Exception.
+    expect(rescueMatches(new SirError("E2Sub"), ["StandardError"])).toBe(true);
+    expect(rescueMatches(new SirError("E2Sub"), ["Exception"])).toBe(true);
+    expect(rescueMatches(new SirError("E2Sub"), ["E2Sub"])).toBe(true);
+  });
+
+  it("leaves an unrelated user class unmatched", () => {
+    registerAncestry({ E2Known: "StandardError" });
+    expect(rescueMatches(new SirError("E2Unknown"), ["StandardError"])).toBe(
+      false,
+    );
+    expect(rescueMatches(new SirError("E2Known"), ["TypeError"])).toBe(false);
+  });
+
+  it("walks a multi-level user chain up into the built-in table", () => {
+    registerAncestry({ E2Child: "RuntimeError", E2Grand: "E2Child" });
+    expect(rescueMatches(new SirError("E2Grand"), ["RuntimeError"])).toBe(true);
+    expect(rescueMatches(new SirError("E2Grand"), ["StandardError"])).toBe(true);
+    expect(rescueMatches(new SirError("E2Grand"), ["E2Child"])).toBe(true);
+  });
+
+  it("is additive: built-in edges are untouched by user registration", () => {
+    registerAncestry({ E2Add: "StandardError" });
+    expect(rescueMatches(new SirError("ArgumentError"), ["StandardError"])).toBe(
+      true,
+    );
+    expect(rescueMatches(new SirError("E2Add"), ["StandardError"])).toBe(true);
+  });
+
+  it("does not loop on a self-referential edge (cycle guard)", () => {
+    registerAncestry({ E2Loop: "E2Loop" });
+    expect(rescueMatches(new SirError("E2Loop"), ["E2Loop"])).toBe(true);
+    expect(rescueMatches(new SirError("E2Loop"), ["StandardError"])).toBe(false);
   });
 });

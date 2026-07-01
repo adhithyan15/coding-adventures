@@ -37,6 +37,7 @@ pub const RUNTIME_EXC: &str = r##"# ── SIR exception runtime (imported from 
 from coding_adventures_sir_runtime_exceptions import (
     raise_error as _sir_exc_raise_error,
     rescue_matches as _sir_exc_rescue_matches,
+    register_ancestry as _sir_exc_register_ancestry,
 )
 "##;
 
@@ -173,6 +174,7 @@ mod tests {
         assert!(RUNTIME_EXC.contains("from coding_adventures_sir_runtime_exceptions import"));
         assert!(RUNTIME_EXC.contains("raise_error as _sir_exc_raise_error"));
         assert!(RUNTIME_EXC.contains("rescue_matches as _sir_exc_rescue_matches"));
+        assert!(RUNTIME_EXC.contains("register_ancestry as _sir_exc_register_ancestry"));
         assert!(RUNTIME_OOP.ends_with('\n'));
         assert!(RUNTIME_EXC.ends_with('\n'));
     }

@@ -41,6 +41,7 @@ feature (a `try`/`rescue` or a `raise`); pure modules never gain the dependency.
 | `raise_error(class_name="RuntimeError", message=None) -> NoReturn` | Raise a `SirError`. Bare `raise_error()` re-raises as a generic `RuntimeError`. |
 | `class_of_thrown(exc) -> str` | The SIR class name of a caught value (native errors → `StandardError`). |
 | `rescue_matches(exc, class_names) -> bool` | Does a caught value match a `rescue` clause naming `class_names`? Empty list = bare `rescue` (catch-all). |
+| `register_ancestry(mapping) -> None` | Merge user `{childClassName: superclassName}` edges (from `class Child < Parent`) into the ancestry the matcher walks, so `rescue StandardError` catches a raised user `MyErr < StandardError`. Additive over the built-in table; explicit string map (no reflection). |
 
 ### Emitted shape
 

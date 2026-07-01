@@ -221,6 +221,10 @@ mod tests {
             py_root.join("sir-runtime-oop/src"),
             py_root.join("sir-runtime-range/src"),
             py_root.join("sir-runtime-regex/src"),
+            // E2 execution-proof runs emitted `try/rescue` + `register_ancestry`
+            // through a real interpreter, so the exceptions runtime must be
+            // importable too.
+            py_root.join("sir-runtime-exceptions/src"),
         ])
         .expect("join PYTHONPATH");
 
@@ -1266,6 +1270,127 @@ mod tests {
         assert!(src.contains("e = __exc"), "got:\n{}", src);
         assert!(src.contains("raise\n"), "got:\n{}", src);
         assert!(src.contains("finally:"), "got:\n{}", src);
+    }
+
+    #[test]
+    fn emits_register_ancestry_for_user_subclass_py() {
+        // E2: a `class MyErr < StandardError` in a throwing module threads its
+        // superclass edge to the exception runtime via a single program-init
+        // `register_ancestry` call, before `main` runs.
+        let module = ruby_to_semantic_ir::compile_source(
+            "class MyErr < StandardError\nend\nbegin\n  raise MyErr, \"x\"\nrescue StandardError => e\n  print(\"caught\")\nend\n",
+            "demo",
+        )
+        .expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        let src = &a.source;
+        assert!(
+            src.contains("register_ancestry as _sir_exc_register_ancestry"),
+            "expected the register_ancestry alias; got:\n{}",
+            src
+        );
+        assert!(
+            src.contains("_sir_exc_register_ancestry({\"MyErr\": \"StandardError\"})"),
+            "expected the user ancestry registration; got:\n{}",
+            src
+        );
+        // The registration must precede the user's main function so ancestry is
+        // known before any rescue runs.
+        let reg = src.find("_sir_exc_register_ancestry(").expect("reg present");
+        let main = src.find("def _sir_user_main").expect("main present");
+        assert!(reg < main, "registration must come before main; got:\n{}", src);
+    }
+
+    #[test]
+    fn no_register_ancestry_when_no_user_superclass_py() {
+        // A throwing module whose only class has *no* superclass (or has no
+        // classes at all) must NOT emit an empty, meaningless registration.
+        let module = ruby_to_semantic_ir::compile_source(
+            "class Foo\nend\nbegin\n  raise RuntimeError, \"boom\"\nrescue RuntimeError => e\n  print(\"x\")\nend\n",
+            "demo",
+        )
+        .expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        assert!(
+            !a.source.contains("_sir_exc_register_ancestry("),
+            "should not register ancestry with no superclass edge; got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn execution_user_subclass_rescued_by_ancestor_py() {
+        // E2 execution-proof: `raise MyErr` (a user `StandardError` subclass)
+        // *is* caught by `rescue StandardError` at runtime — proving the
+        // registered user edge is walked by the matcher, not just emitted.
+        let module = ruby_to_semantic_ir::compile_source(
+            "class MyErr < StandardError\nend\nbegin\n  raise MyErr, \"x\"\nrescue StandardError => e\n  print(\"caught\")\nend\n",
+            "demo",
+        )
+        .expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        if let Some(stdout) = run_emitted_python(&a.source) {
+            // `print("caught")` emits the string plus a trailing newline.
+            assert_eq!(
+                stdout, "caught\n",
+                "user subclass should be rescued by its ancestor"
+            );
+        }
+    }
+
+    #[test]
+    fn execution_unrelated_user_class_not_rescued_py() {
+        // The dual: a user class that does NOT descend from the rescued type is
+        // NOT caught, so the exception propagates (the interpreter exits
+        // non-zero and `run_emitted_python` would panic on a success assertion).
+        // We assert the *shape* of non-matching here and prove propagation via
+        // a direct interpreter run that expects a failure exit.
+        let module = ruby_to_semantic_ir::compile_source(
+            "class Other < RuntimeError\nend\nbegin\n  raise Other, \"y\"\nrescue TypeError => e\n  print(\"wrong\")\nend\n",
+            "demo",
+        )
+        .expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        let src = &a.source;
+        // `Other` descends from RuntimeError, not TypeError, so the emitted
+        // rescue names only TypeError and the registration records the true edge.
+        assert!(
+            src.contains("_sir_exc_register_ancestry({\"Other\": \"RuntimeError\"})"),
+            "got:\n{}",
+            src
+        );
+        assert!(
+            src.contains("if _sir_exc_rescue_matches(__exc, [\"TypeError\"]):"),
+            "got:\n{}",
+            src
+        );
+
+        // Direct interpreter run: the program must *fail* (uncaught re-raise).
+        let exe = ["python3", "python"].into_iter().find(|e| python_is_runnable(e));
+        if let Some(exe) = exe {
+            let py_root =
+                std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../python");
+            let pythonpath = std::env::join_paths([
+                py_root.join("sir-runtime-core/src"),
+                py_root.join("sir-runtime-oop/src"),
+                py_root.join("sir-runtime-exceptions/src"),
+            ])
+            .expect("join PYTHONPATH");
+            let file = std::env::temp_dir()
+                .join(format!("sir_e2_nomatch_{}.py", std::process::id()));
+            std::fs::write(&file, &a.source).expect("write temp python");
+            let out = std::process::Command::new(exe)
+                .arg(&file)
+                .env("PYTHONPATH", &pythonpath)
+                .output()
+                .expect("spawn python");
+            let _ = std::fs::remove_file(&file);
+            assert!(
+                !out.status.success(),
+                "unrelated user class must NOT be rescued (expected propagation); stdout={:?}",
+                String::from_utf8_lossy(&out.stdout)
+            );
+        }
     }
 
     #[test]
