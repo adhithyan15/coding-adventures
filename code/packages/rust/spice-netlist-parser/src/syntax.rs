@@ -40,6 +40,7 @@ pub const BERKELEY_APP_SHELL_DASHBOARD_PANEL_CARD_ACTIONS_SCHEMA_VERSION: u32 = 
 pub const BERKELEY_APP_SHELL_DASHBOARD_ACTION_DISPATCH_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_EVENTS_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SUMMARY_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -95,6 +96,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-dashboard-action-dispatch-json",
     "app-shell-dashboard-dispatch-events-json",
     "app-shell-dashboard-dispatch-queue-json",
+    "app-shell-dashboard-dispatch-queue-summary-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -3557,6 +3559,125 @@ impl BerkeleyAppShellDashboardDispatchQueue {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueSummary {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub selected_action_dispatch_id: Option<String>,
+    pub selected_dispatch_event_id: Option<String>,
+    pub selected_dispatch_queue_item_id: Option<String>,
+    pub selected_action_id: Option<String>,
+    pub default_action_dispatch_id: Option<String>,
+    pub default_dispatch_event_id: Option<String>,
+    pub default_dispatch_queue_item_id: Option<String>,
+    pub default_action_id: Option<String>,
+    pub action_dispatch_count: usize,
+    pub dispatch_event_count: usize,
+    pub dispatch_ready_event_count: usize,
+    pub dispatch_blocked_event_count: usize,
+    pub dispatch_queue_item_count: usize,
+    pub queued_dispatch_count: usize,
+    pub blocked_dispatch_count: usize,
+    pub attention_dispatch_queue_item_count: usize,
+    pub selected_queued: bool,
+    pub default_queued: bool,
+    pub first_queued_dispatch_queue_item_id: Option<String>,
+    pub first_blocked_dispatch_queue_item_id: Option<String>,
+    pub first_attention_dispatch_queue_item_id: Option<String>,
+    pub queued_dispatch_queue_item_ids: Vec<String>,
+    pub blocked_dispatch_queue_item_ids: Vec<String>,
+    pub attention_dispatch_queue_item_ids: Vec<String>,
+    pub dispatch_queue_capability_id: String,
+    pub dispatch_queue_summary_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueSummary {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_dispatch_queue(
+            &BerkeleyAppShellDashboardDispatchQueue::from_bootstrap_snapshot(snapshot),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dispatch_queue(&BerkeleyAppShellDashboardDispatchQueue::from_shell_handoff(
+            handoff,
+        ))
+    }
+
+    pub fn from_dispatch_queue(queue: &BerkeleyAppShellDashboardDispatchQueue) -> Self {
+        let queued_dispatch_queue_item_ids = queue
+            .dispatch_queue_items
+            .iter()
+            .filter(|item| item.queued)
+            .map(|item| item.id.clone())
+            .collect::<Vec<_>>();
+        let blocked_dispatch_queue_item_ids = queue
+            .dispatch_queue_items
+            .iter()
+            .filter(|item| item.blocked)
+            .map(|item| item.id.clone())
+            .collect::<Vec<_>>();
+        let attention_dispatch_queue_item_ids = queue
+            .dispatch_queue_items
+            .iter()
+            .filter(|item| item.attention)
+            .map(|item| item.id.clone())
+            .collect::<Vec<_>>();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SUMMARY_SCHEMA_VERSION,
+            package_name: queue.package_name.clone(),
+            source_fingerprint: queue.source_fingerprint.clone(),
+            title: queue.title.clone(),
+            startup_route: queue.startup_route.clone(),
+            ready: queue.ready,
+            severity: queue.severity.clone(),
+            attention_required: queue.attention_required,
+            selected_action_dispatch_id: queue.selected_action_dispatch_id.clone(),
+            selected_dispatch_event_id: queue.selected_dispatch_event_id.clone(),
+            selected_dispatch_queue_item_id: queue.selected_dispatch_queue_item_id.clone(),
+            selected_action_id: queue.selected_action_id.clone(),
+            default_action_dispatch_id: queue.default_action_dispatch_id.clone(),
+            default_dispatch_event_id: queue.default_dispatch_event_id.clone(),
+            default_dispatch_queue_item_id: queue.default_dispatch_queue_item_id.clone(),
+            default_action_id: queue.default_action_id.clone(),
+            action_dispatch_count: queue.action_dispatch_count,
+            dispatch_event_count: queue.dispatch_event_count,
+            dispatch_ready_event_count: queue.dispatch_ready_event_count,
+            dispatch_blocked_event_count: queue.dispatch_blocked_event_count,
+            dispatch_queue_item_count: queue.dispatch_queue_item_count,
+            queued_dispatch_count: queue.queued_dispatch_count,
+            blocked_dispatch_count: queue.blocked_dispatch_count,
+            attention_dispatch_queue_item_count: queue.attention_dispatch_queue_item_count,
+            selected_queued: queue.selected_queued,
+            default_queued: queue.default_queued,
+            first_queued_dispatch_queue_item_id: queued_dispatch_queue_item_ids.first().cloned(),
+            first_blocked_dispatch_queue_item_id: blocked_dispatch_queue_item_ids.first().cloned(),
+            first_attention_dispatch_queue_item_id: attention_dispatch_queue_item_ids
+                .first()
+                .cloned(),
+            queued_dispatch_queue_item_ids,
+            blocked_dispatch_queue_item_ids,
+            attention_dispatch_queue_item_ids,
+            dispatch_queue_capability_id: queue.dispatch_queue_capability_id.clone(),
+            dispatch_queue_summary_capability_id: "app-shell-dashboard-dispatch-queue-summary-json"
+                .to_string(),
+            artifact_capability_count: queue.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_summary_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BerkeleyAnalysisInventoryEntry {
     pub index: usize,
     pub directive: String,
@@ -4921,6 +5042,43 @@ impl BerkeleyAppDeck {
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self
             .run_app_shell_dashboard_dispatch_queue(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_summary(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueueSummary {
+        BerkeleyAppShellDashboardDispatchQueueSummary::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_summary(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardDispatchQueueSummary, AnalysisExecutionError> {
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueSummary::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_summary_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_summary(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_summary_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_summary(persisted_state)?
             .to_json())
     }
 
@@ -7094,6 +7252,48 @@ fn app_shell_dashboard_dispatch_queue_item_json_value(
         "primary": item.primary,
         "attention": item.attention,
         "disabledReason": &item.disabled_reason,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_summary_json_value(
+    summary: &BerkeleyAppShellDashboardDispatchQueueSummary,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": summary.schema_version,
+        "packageName": &summary.package_name,
+        "sourceFingerprint": &summary.source_fingerprint,
+        "title": &summary.title,
+        "startupRoute": &summary.startup_route,
+        "ready": summary.ready,
+        "severity": &summary.severity,
+        "attentionRequired": summary.attention_required,
+        "selectedActionDispatchId": &summary.selected_action_dispatch_id,
+        "selectedDispatchEventId": &summary.selected_dispatch_event_id,
+        "selectedDispatchQueueItemId": &summary.selected_dispatch_queue_item_id,
+        "selectedActionId": &summary.selected_action_id,
+        "defaultActionDispatchId": &summary.default_action_dispatch_id,
+        "defaultDispatchEventId": &summary.default_dispatch_event_id,
+        "defaultDispatchQueueItemId": &summary.default_dispatch_queue_item_id,
+        "defaultActionId": &summary.default_action_id,
+        "actionDispatchCount": summary.action_dispatch_count,
+        "dispatchEventCount": summary.dispatch_event_count,
+        "dispatchReadyEventCount": summary.dispatch_ready_event_count,
+        "dispatchBlockedEventCount": summary.dispatch_blocked_event_count,
+        "dispatchQueueItemCount": summary.dispatch_queue_item_count,
+        "queuedDispatchCount": summary.queued_dispatch_count,
+        "blockedDispatchCount": summary.blocked_dispatch_count,
+        "attentionDispatchQueueItemCount": summary.attention_dispatch_queue_item_count,
+        "selectedQueued": summary.selected_queued,
+        "defaultQueued": summary.default_queued,
+        "firstQueuedDispatchQueueItemId": &summary.first_queued_dispatch_queue_item_id,
+        "firstBlockedDispatchQueueItemId": &summary.first_blocked_dispatch_queue_item_id,
+        "firstAttentionDispatchQueueItemId": &summary.first_attention_dispatch_queue_item_id,
+        "queuedDispatchQueueItemIds": &summary.queued_dispatch_queue_item_ids,
+        "blockedDispatchQueueItemIds": &summary.blocked_dispatch_queue_item_ids,
+        "attentionDispatchQueueItemIds": &summary.attention_dispatch_queue_item_ids,
+        "dispatchQueueCapabilityId": &summary.dispatch_queue_capability_id,
+        "dispatchQueueSummaryCapabilityId": &summary.dispatch_queue_summary_capability_id,
+        "artifactCapabilityCount": summary.artifact_capability_count,
     })
 }
 
