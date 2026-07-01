@@ -30,6 +30,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.darkColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,18 +41,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// 5×5 sample dataset shared with every other visicalc-* demo.
-// Each row's leading cell is the row-label ("1".."5"), matching the
-// shape the other VC2-* demos feed their Grid: the column count lines
-// up 1:1 with columnHeaders (leading "" corner) and columnWidths
-// (leading 48px gutter), so row numbers march down the left edge.
-private val sampleRows: List<List<String>> = listOf(
-    listOf("1", "15", "3",  "12", "8",  "5"),
-    listOf("2", "8",  "14", "7",  "22", "11"),
-    listOf("3", "12", "9",  "18", "6",  "25"),
-    listOf("4", "4",  "11", "3",  "17", "9"),
-    listOf("5", "7",  "5",  "13", "10", "19"),
-)
+// The A1 address of a selected (row, col) in the grid's coordinate space:
+// column 0 is the row-label gutter (no cell), column 1 → "A"; selectedRow is
+// 0-based (0 → sheet row 1).
+private fun cellAddress(selectedRow: Double, selectedCol: Double): String =
+    "${('A' + selectedCol.toInt() - 1)}${selectedRow.toInt() + 1}"
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,12 +69,22 @@ private fun VisiCalcApp() {
     // coordinate (mosaic-emit-compose lowers `number`-typed slots
     // to `Double` so verbatim Expr like `r == editRow` compiles).
     // Column 0 is the row-label gutter; the first data cell is column 1.
+    // The Rust engine, reached over JNI (see Engine.kt). Seeded with the shared
+    // cross-footing budget, it holds the cells / dependency graph / recalc — the
+    // grid below renders ITS computed values, and edits write back through it.
+    val engine = remember { Engine() }
+    // Free the native session (the boxed SpreadsheetSession on the Rust heap) when
+    // this composable leaves the tree, so the handle doesn't leak.
+    DisposableEffect(Unit) { onDispose { engine.close() } }
+    var viewportRows by remember { mutableStateOf(engine.viewportRows()) }
+
     var selectedRow by remember { mutableStateOf(0.0) }
     var selectedCol by remember { mutableStateOf(1.0) }
     var editRow     by remember { mutableStateOf(-1.0) }
     var editCol     by remember { mutableStateOf(-1.0) }
     var editContent by remember { mutableStateOf("") }
-    var formulaText by remember { mutableStateOf("=SUM(B1:B5)") }
+    // Start showing A1's source ("15") in the bar, like the sibling demos.
+    var formulaText by remember { mutableStateOf(engine.rawAt("A1")) }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text(
@@ -100,9 +104,22 @@ private fun VisiCalcApp() {
                 dispatch = { event ->
                     when (event) {
                         is FormulaBarEvent.FormulaChange -> formulaText = event.value
-                        is FormulaBarEvent.Commit -> { /* no-op for v0.1.0 */ }
+                        is FormulaBarEvent.Commit -> {
+                            // Write the edit through to the engine and recompute;
+                            // every dependent cell (E-column row sums, row-5 column
+                            // sums, the grand total) updates in the refreshed grid.
+                            if (selectedCol.toInt() >= 1) {
+                                val a1 = cellAddress(selectedRow, selectedCol)
+                                engine.setCell(a1, formulaText)
+                                viewportRows = engine.viewportRows()
+                                formulaText = engine.rawAt(a1)
+                            }
+                        }
                         is FormulaBarEvent.Cancel ->
-                            formulaText = sampleRows[selectedRow.toInt()][selectedCol.toInt()]
+                            formulaText =
+                                if (selectedCol.toInt() >= 1)
+                                    engine.rawAt(cellAddress(selectedRow, selectedCol))
+                                else ""
                     }
                 },
             )
@@ -115,7 +132,7 @@ private fun VisiCalcApp() {
                 // Leading "" is the empty corner above the row-label
                 // gutter; A–E label the five data columns.
                 columnHeaders = listOf("", "A", "B", "C", "D", "E"),
-                viewportRows = sampleRows,
+                viewportRows = viewportRows,
                 columnWidths = listOf(48.0, 96.0, 96.0, 96.0, 96.0, 96.0),
                 totalHeight = 0.0,
                 selectedRow = selectedRow,
@@ -128,12 +145,12 @@ private fun VisiCalcApp() {
                         is GridEvent.Navigate -> {
                             selectedRow = event.row
                             selectedCol = event.col
-                            val r = event.row.toInt()
-                            val c = event.col.toInt()
-                            if (r in sampleRows.indices &&
-                                c in sampleRows[r].indices) {
-                                formulaText = sampleRows[r][c]
-                            }
+                            // Load the newly-selected cell's SOURCE into the bar
+                            // (A1 → "15", E1 → "=SUM(A1:D1)") from the engine.
+                            formulaText =
+                                if (event.col.toInt() >= 1)
+                                    engine.rawAt(cellAddress(event.row, event.col))
+                                else ""
                         }
                         is GridEvent.FormulaChange -> editContent = event.value
                         is GridEvent.EditCommit -> {

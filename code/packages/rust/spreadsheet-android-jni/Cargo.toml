@@ -1,0 +1,19 @@
+[package]
+name = "spreadsheet-android-jni"
+version = "0.1.0"
+edition = "2021"
+description = "JNI native library bridging the com.example.visicalc Android host to spreadsheet-core"
+publish = false
+
+[lib]
+# cdylib → the libspreadsheet_android_jni.so that Android loads via
+# System.loadLibrary("spreadsheet_android_jni"). `lib` too so `cargo test --lib`
+# can exercise the pure-Rust helpers without a JVM. Android can't use the JVM
+# Foreign Function & Memory API the Compose *Desktop* demo uses (FFM isn't on
+# Android), so the engine is reached through JNI + a cross-compiled .so instead.
+crate-type = ["cdylib", "lib"]
+name = "spreadsheet_android_jni"
+
+[dependencies]
+jni-bridge             = { path = "../jni-bridge" }
+spreadsheet-core-wasm  = { path = "../spreadsheet-core-wasm" }

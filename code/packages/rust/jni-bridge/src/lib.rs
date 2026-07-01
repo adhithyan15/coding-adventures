@@ -68,6 +68,12 @@
 //! }
 //! ```
 
+// C `char` is signed (i8) on x86_64/aarch64 desktop but UNSIGNED (u8) on
+// Android/aarch64, so JNI string-pointer types must use `c_char`, not a hardcoded
+// `i8`, to cross-compile for Android. `CString::as_ptr()` already returns `*const
+// c_char`, so this is a no-op on desktop and a fix on Android.
+use core::ffi::c_char;
+
 use std::ffi::{CStr, CString, c_void};
 use std::ptr::null_mut;
 
@@ -266,7 +272,7 @@ pub unsafe fn jni_find_class(env: *mut JNIEnv, name: &str) -> jclass {
         Ok(c) => c,
         Err(_) => return null_mut(),
     };
-    type F = unsafe extern "C" fn(*mut JNIEnv, *const i8) -> jclass;
+    type F = unsafe extern "C" fn(*mut JNIEnv, *const c_char) -> jclass;
     let f: F = table_fn(env, FIND_CLASS_OFFSET);
     f(env, cs.as_ptr())
 }
@@ -296,7 +302,7 @@ pub unsafe fn jni_throw_new(env: *mut JNIEnv, class_name: &str, msg: &str) {
         Ok(c) => c,
         Err(_) => CString::new("<message contained NUL byte>").unwrap(),
     };
-    type F = unsafe extern "C" fn(*mut JNIEnv, jclass, *const i8) -> jint;
+    type F = unsafe extern "C" fn(*mut JNIEnv, jclass, *const c_char) -> jint;
     let f: F = table_fn(env, THROW_NEW_OFFSET);
     f(env, cls, cs.as_ptr());
 }
@@ -337,8 +343,8 @@ pub unsafe fn jni_get_string_utf(env: *mut JNIEnv, s: jstring) -> Option<String>
     if s.is_null() {
         return None;
     }
-    type GetF = unsafe extern "C" fn(*mut JNIEnv, jstring, *mut jboolean) -> *const i8;
-    type RelF = unsafe extern "C" fn(*mut JNIEnv, jstring, *const i8);
+    type GetF = unsafe extern "C" fn(*mut JNIEnv, jstring, *mut jboolean) -> *const c_char;
+    type RelF = unsafe extern "C" fn(*mut JNIEnv, jstring, *const c_char);
     let get_chars: GetF = table_fn(env, GET_STRING_UTF_CHARS_OFFSET);
     let release:   RelF = table_fn(env, RELEASE_STRING_UTF_CHARS_OFFSET);
 
@@ -365,7 +371,7 @@ pub unsafe fn jni_new_string_utf(env: *mut JNIEnv, s: &str) -> jstring {
         Ok(c) => c,
         Err(_) => return null_mut(),
     };
-    type F = unsafe extern "C" fn(*mut JNIEnv, *const i8) -> jstring;
+    type F = unsafe extern "C" fn(*mut JNIEnv, *const c_char) -> jstring;
     let f: F = table_fn(env, NEW_STRING_UTF_OFFSET);
     f(env, cs.as_ptr())
 }
@@ -390,7 +396,7 @@ pub unsafe fn jni_get_method_id(
 ) -> jmethodID {
     let cn = match CString::new(name) { Ok(c) => c, Err(_) => return null_mut() };
     let cs = match CString::new(sig)  { Ok(c) => c, Err(_) => return null_mut() };
-    type F = unsafe extern "C" fn(*mut JNIEnv, jclass, *const i8, *const i8) -> jmethodID;
+    type F = unsafe extern "C" fn(*mut JNIEnv, jclass, *const c_char, *const c_char) -> jmethodID;
     let f: F = table_fn(env, GET_METHOD_ID_OFFSET);
     f(env, cls, cn.as_ptr(), cs.as_ptr())
 }
@@ -409,7 +415,7 @@ pub unsafe fn jni_get_field_id(
 ) -> jfieldID {
     let cn = match CString::new(name) { Ok(c) => c, Err(_) => return null_mut() };
     let cs = match CString::new(sig)  { Ok(c) => c, Err(_) => return null_mut() };
-    type F = unsafe extern "C" fn(*mut JNIEnv, jclass, *const i8, *const i8) -> jfieldID;
+    type F = unsafe extern "C" fn(*mut JNIEnv, jclass, *const c_char, *const c_char) -> jfieldID;
     let f: F = table_fn(env, GET_FIELD_ID_OFFSET);
     f(env, cls, cn.as_ptr(), cs.as_ptr())
 }

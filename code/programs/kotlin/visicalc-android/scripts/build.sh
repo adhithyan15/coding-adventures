@@ -69,6 +69,37 @@ generate() {
 generate "FormulaBar" "$SRC/FormulaBar.desktop.mll"
 generate "Grid"       "$SRC/Grid.desktop.mll"
 
+
+# ── Engine (Rust → per-ABI .so via the NDK) ──────────────────────────────────
+# Android's ART runtime has no JVM Foreign Function & Memory API (the path the
+# Compose *Desktop* demo uses), so the shared engine is reached over JNI: this
+# cross-compiles the `spreadsheet-android-jni` crate (a zero-dep jni-bridge shim
+# over spreadsheet-core) to a `.so` per ABI and stages it into jniLibs/, where
+# `System.loadLibrary("spreadsheet_android_jni")` (Engine.kt) loads it.
+NDK_ROOT="${ANDROID_NDK_HOME:-${ANDROID_HOME:-$HOME/Library/Android/sdk}/ndk/28.2.13676358}"
+TC="$(ls -d "$NDK_ROOT/toolchains/llvm/prebuilt/"*/ 2>/dev/null | head -1)"
+MIN_API=26
+if [ -n "$TC" ]; then
+  for pair in "arm64-v8a:aarch64-linux-android" "x86_64:x86_64-linux-android"; do
+    abi="${pair%%:*}"; target="${pair##*:}"
+    LINKER="$TC/bin/${target}${MIN_API}-clang"
+    [ -x "$LINKER" ] || continue
+    upper="$(printf '%s' "$target" | tr 'a-z-' 'A-Z_')"
+    under="$(printf '%s' "$target" | tr '-' '_')"
+    echo "Cross-compiling engine for $abi ($target)..."
+    ( cd "$REPO_ROOT/code/packages/rust"       && "$(command -v rustup)" target add "$target" >/dev/null 2>&1 || true
+      env "CARGO_TARGET_${upper}_LINKER=$LINKER" "CC_${under}=$LINKER" "AR_${under}=$TC/bin/llvm-ar"         cargo build -q -p spreadsheet-android-jni --target "$target" --release )
+    so="$REPO_ROOT/code/packages/rust/target/$target/release/libspreadsheet_android_jni.so"
+    if [ -f "$so" ]; then
+      mkdir -p "$DEMO_DIR/app/src/main/jniLibs/$abi"
+      cp "$so" "$DEMO_DIR/app/src/main/jniLibs/$abi/"
+      echo "  staged -> app/src/main/jniLibs/$abi/libspreadsheet_android_jni.so"
+    fi
+  done
+else
+  echo "WARN: Android NDK not found at $NDK_ROOT — skipping engine cross-compile."
+fi
+
 echo "Done. Generated:"
 ls -la "$OUT_DIR" | grep -E '\.kt$'
 echo
