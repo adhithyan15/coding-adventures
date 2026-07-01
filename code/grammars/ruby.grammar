@@ -620,7 +620,33 @@ term         = factor { ( STAR | SLASH ) factor } ;
 # leaving `(1).bar` unconsumed.  When no parens follow the name, the
 # method_call alternative fails (requires LPAREN) and we fall through to
 # the bare-NAME branch.
-factor       = ( defined_expression | lambda_literal | method_call | NUMBER | STRING | NAME | KEYWORD | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN | unary_minus ) { dot_call | scope_resolution } ;
+#
+# The bare `KEYWORD` atom is what lets value-keywords `nil`/`true`/`false`/
+# `self` stand alone as expressions (e.g. `x = nil`, `puts self`).  But the
+# lexer tags EVERY reserved word as a `KEYWORD` token, so an unguarded
+# `KEYWORD` atom will happily match a *structural* keyword too — and that
+# silently corrupts block bodies.  Worked example:
+#
+#     def f(a)
+#       a
+#     end
+#
+# The body statement `a` funnels into `method_call_no_paren` (`NAME
+# expression`).  Its argument `expression` reaches this `factor`, where an
+# unguarded `KEYWORD` cheerfully consumes the `end` that was meant to close
+# the `def`.  The def's terminator is gone → `def_statement` fails to close
+# and the whole method is mis-parsed (no `def_statement` node at all).  The
+# same swallow breaks any block whose final statement is a bare identifier
+# (`while … a end`, `class … a end`, an `if` arm, …) and the optional
+# argument of `return`/`break`/`next`/`yield`.
+#
+# Fix: forbid the bare-`KEYWORD` atom from matching the block-terminator /
+# clause-separator keywords.  These never denote a *value*, so excluding
+# them costs nothing and stops the swallow at the root — one guard repairs
+# every block body and every optional-expression statement at once.  Value
+# keywords (`nil`/`true`/`false`/`self`) are untouched, so `puts nil` etc.
+# still parse.  The `!"…"` lookaheads only peek; they consume nothing.
+factor       = ( defined_expression | lambda_literal | method_call | NUMBER | STRING | NAME | ( !"end" !"rescue" !"ensure" !"else" !"elsif" !"when" !"then" !"in" !"do" KEYWORD ) | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN | unary_minus ) { dot_call | scope_resolution } ;
 # Phase 6w — arrow-lambda literal `->(params){body}` / `->{body}`.
 #
 # Ruby 1.9+ shorthand for creating a `Proc`/`Lambda`.  The parameter

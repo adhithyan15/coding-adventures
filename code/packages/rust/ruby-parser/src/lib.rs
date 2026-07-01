@@ -297,6 +297,76 @@ mod tests {
         None
     }
 
+    // -----------------------------------------------------------------------
+    // Regression — bare-identifier block bodies must not swallow their `end`.
+    //
+    // Before the `factor` guard, a block whose final statement is a bare
+    // identifier mis-parsed: the identifier became a `method_call_no_paren`
+    // callee and the block's terminating `end` (a KEYWORD token) was consumed
+    // as that call's argument, so the enclosing `def`/`while`/`class` never
+    // closed and its node vanished entirely.  These pin the repair: the
+    // structural node is present, and value-keyword expressions still parse.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn bare_identifier_is_valid_def_body() {
+        // `def f(a)\n a\nend` — the lone `a` used to eat the `end`.
+        let ast = parse_ruby("def f(a)\n  a\nend");
+        assert!(
+            find_statement_inner(&ast, "def_statement").is_some(),
+            "bare-identifier method body must keep the def intact"
+        );
+    }
+
+    #[test]
+    fn bare_identifier_is_valid_while_body() {
+        let ast = parse_ruby("while c\n  a\nend");
+        assert!(
+            find_statement_inner(&ast, "while_statement").is_some(),
+            "bare-identifier while body must keep the while intact"
+        );
+    }
+
+    #[test]
+    fn bare_identifier_is_valid_class_body() {
+        let ast = parse_ruby("class Foo\n  a\nend");
+        assert!(
+            find_statement_inner(&ast, "class_statement").is_some(),
+            "bare-identifier class body must keep the class intact"
+        );
+    }
+
+    #[test]
+    fn argless_return_does_not_eat_end() {
+        // `return`'s optional expression must not consume the closing `end`.
+        let ast = parse_ruby("def f\n  return\nend");
+        assert!(
+            find_statement_inner(&ast, "def_statement").is_some(),
+            "argless return must not swallow the method's end"
+        );
+    }
+
+    #[test]
+    fn value_keywords_still_parse_as_expressions() {
+        // The guard excludes only *structural* keywords; the value keywords
+        // `nil`/`true`/`false`/`self` must still stand alone as expressions.
+        for src in ["x = nil", "y = true", "z = false", "w = self"] {
+            let ast = parse_ruby(src);
+            assert!(
+                count_statements(&ast) >= 1,
+                "value-keyword expression `{src}` should still parse"
+            );
+        }
+    }
+
+    #[test]
+    fn value_keyword_as_noparen_argument_still_parses() {
+        // `puts nil` — a value keyword is a legitimate no-paren argument and
+        // must survive the guard (only terminators are excluded).
+        let ast = parse_ruby("puts nil");
+        assert!(count_statements(&ast) >= 1, "`puts nil` should parse");
+    }
+
     #[test]
     fn test_parse_if_with_body() {
         let ast = parse_ruby("if x\n  y = 1\nend");
