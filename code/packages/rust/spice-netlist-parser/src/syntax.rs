@@ -39,6 +39,7 @@ pub const BERKELEY_APP_SHELL_DASHBOARD_PANEL_CARDS_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_PANEL_CARD_ACTIONS_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_ACTION_DISPATCH_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_EVENTS_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -93,6 +94,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-dashboard-panel-card-actions-json",
     "app-shell-dashboard-action-dispatch-json",
     "app-shell-dashboard-dispatch-events-json",
+    "app-shell-dashboard-dispatch-queue-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -3373,6 +3375,188 @@ impl BerkeleyAppShellDashboardDispatchEvents {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueItem {
+    pub id: String,
+    pub dispatch_event_id: String,
+    pub action_dispatch_id: String,
+    pub panel_card_action_id: String,
+    pub action_id: String,
+    pub queue_state: String,
+    pub severity: String,
+    pub message: String,
+    pub label: String,
+    pub target: String,
+    pub role: String,
+    pub path: String,
+    pub position: usize,
+    pub selected: bool,
+    pub default_dispatch: bool,
+    pub queued: bool,
+    pub blocked: bool,
+    pub dispatchable: bool,
+    pub primary: bool,
+    pub attention: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueue {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub selected_action_dispatch_id: Option<String>,
+    pub selected_dispatch_event_id: Option<String>,
+    pub selected_dispatch_queue_item_id: Option<String>,
+    pub selected_action_id: Option<String>,
+    pub default_action_dispatch_id: Option<String>,
+    pub default_dispatch_event_id: Option<String>,
+    pub default_dispatch_queue_item_id: Option<String>,
+    pub default_action_id: Option<String>,
+    pub action_dispatch_count: usize,
+    pub dispatch_event_count: usize,
+    pub dispatch_ready_event_count: usize,
+    pub dispatch_blocked_event_count: usize,
+    pub dispatch_queue_item_count: usize,
+    pub queued_dispatch_count: usize,
+    pub blocked_dispatch_count: usize,
+    pub attention_dispatch_queue_item_count: usize,
+    pub selected_queued: bool,
+    pub default_queued: bool,
+    pub dispatch_queue_items: Vec<BerkeleyAppShellDashboardDispatchQueueItem>,
+    pub action_dispatch_capability_id: String,
+    pub dispatch_events_capability_id: String,
+    pub dispatch_queue_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueue {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_dispatch_events(
+            &BerkeleyAppShellDashboardDispatchEvents::from_bootstrap_snapshot(snapshot),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dispatch_events(
+            &BerkeleyAppShellDashboardDispatchEvents::from_shell_handoff(handoff),
+        )
+    }
+
+    pub fn from_dispatch_events(dispatch_events: &BerkeleyAppShellDashboardDispatchEvents) -> Self {
+        let dispatch_queue_items = dispatch_events
+            .dispatch_events
+            .iter()
+            .map(|event| {
+                let queued = event.dispatchable;
+                let blocked = !event.dispatchable;
+                let queue_state = if queued { "queued" } else { "blocked" };
+                let message = if queued {
+                    format!("{} queued for dispatch", event.label)
+                } else {
+                    format!(
+                        "{} cannot be queued: {}",
+                        event.label,
+                        event
+                            .disabled_reason
+                            .as_deref()
+                            .unwrap_or("dispatch is not available")
+                    )
+                };
+
+                BerkeleyAppShellDashboardDispatchQueueItem {
+                    id: format!("dashboard.dispatch-queue.{}", event.role),
+                    dispatch_event_id: event.id.clone(),
+                    action_dispatch_id: event.action_dispatch_id.clone(),
+                    panel_card_action_id: event.panel_card_action_id.clone(),
+                    action_id: event.action_id.clone(),
+                    queue_state: queue_state.to_string(),
+                    severity: event.severity.clone(),
+                    message,
+                    label: event.label.clone(),
+                    target: event.target.clone(),
+                    role: event.role.clone(),
+                    path: event.path.clone(),
+                    position: event.position,
+                    selected: event.selected,
+                    default_dispatch: event.default_dispatch,
+                    queued,
+                    blocked,
+                    dispatchable: event.dispatchable,
+                    primary: event.primary,
+                    attention: event.attention,
+                    disabled_reason: event.disabled_reason.clone(),
+                }
+            })
+            .collect::<Vec<_>>();
+        let selected_dispatch_queue_item = dispatch_queue_items.iter().find(|item| item.selected);
+        let default_dispatch_queue_item = dispatch_queue_items
+            .iter()
+            .find(|item| item.default_dispatch);
+        let dispatch_queue_item_count = dispatch_queue_items.len();
+        let queued_dispatch_count = dispatch_queue_items
+            .iter()
+            .filter(|item| item.queued)
+            .count();
+        let blocked_dispatch_count = dispatch_queue_items
+            .iter()
+            .filter(|item| item.blocked)
+            .count();
+        let attention_dispatch_queue_item_count = dispatch_queue_items
+            .iter()
+            .filter(|item| item.attention)
+            .count();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SCHEMA_VERSION,
+            package_name: dispatch_events.package_name.clone(),
+            source_fingerprint: dispatch_events.source_fingerprint.clone(),
+            title: dispatch_events.title.clone(),
+            startup_route: dispatch_events.startup_route.clone(),
+            ready: dispatch_events.ready,
+            severity: dispatch_events.severity.clone(),
+            attention_required: dispatch_events.attention_required,
+            selected_action_dispatch_id: dispatch_events.selected_action_dispatch_id.clone(),
+            selected_dispatch_event_id: dispatch_events.selected_dispatch_event_id.clone(),
+            selected_dispatch_queue_item_id: selected_dispatch_queue_item
+                .map(|item| item.id.clone()),
+            selected_action_id: dispatch_events.selected_action_id.clone(),
+            default_action_dispatch_id: dispatch_events.default_action_dispatch_id.clone(),
+            default_dispatch_event_id: dispatch_events.default_dispatch_event_id.clone(),
+            default_dispatch_queue_item_id: default_dispatch_queue_item.map(|item| item.id.clone()),
+            default_action_id: dispatch_events.default_action_id.clone(),
+            action_dispatch_count: dispatch_events.action_dispatch_count,
+            dispatch_event_count: dispatch_events.dispatch_event_count,
+            dispatch_ready_event_count: dispatch_events.dispatch_ready_event_count,
+            dispatch_blocked_event_count: dispatch_events.dispatch_blocked_event_count,
+            dispatch_queue_item_count,
+            queued_dispatch_count,
+            blocked_dispatch_count,
+            attention_dispatch_queue_item_count,
+            selected_queued: selected_dispatch_queue_item
+                .map(|item| item.queued)
+                .unwrap_or(false),
+            default_queued: default_dispatch_queue_item
+                .map(|item| item.queued)
+                .unwrap_or(false),
+            dispatch_queue_items,
+            action_dispatch_capability_id: dispatch_events.action_dispatch_capability_id.clone(),
+            dispatch_events_capability_id: dispatch_events.dispatch_events_capability_id.clone(),
+            dispatch_queue_capability_id: "app-shell-dashboard-dispatch-queue-json".to_string(),
+            artifact_capability_count: dispatch_events.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BerkeleyAnalysisInventoryEntry {
     pub index: usize,
     pub directive: String,
@@ -4700,6 +4884,43 @@ impl BerkeleyAppDeck {
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self
             .run_app_shell_dashboard_dispatch_events(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueue {
+        BerkeleyAppShellDashboardDispatchQueue::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardDispatchQueue, AnalysisExecutionError> {
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueue::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue(persisted_state)?
             .to_json())
     }
 
@@ -6803,6 +7024,76 @@ fn app_shell_dashboard_dispatch_event_json_value(
         "primary": event.primary,
         "attention": event.attention,
         "disabledReason": &event.disabled_reason,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_json_value(
+    dispatch_queue: &BerkeleyAppShellDashboardDispatchQueue,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": dispatch_queue.schema_version,
+        "packageName": &dispatch_queue.package_name,
+        "sourceFingerprint": &dispatch_queue.source_fingerprint,
+        "title": &dispatch_queue.title,
+        "startupRoute": &dispatch_queue.startup_route,
+        "ready": dispatch_queue.ready,
+        "severity": &dispatch_queue.severity,
+        "attentionRequired": dispatch_queue.attention_required,
+        "selectedActionDispatchId": &dispatch_queue.selected_action_dispatch_id,
+        "selectedDispatchEventId": &dispatch_queue.selected_dispatch_event_id,
+        "selectedDispatchQueueItemId": &dispatch_queue.selected_dispatch_queue_item_id,
+        "selectedActionId": &dispatch_queue.selected_action_id,
+        "defaultActionDispatchId": &dispatch_queue.default_action_dispatch_id,
+        "defaultDispatchEventId": &dispatch_queue.default_dispatch_event_id,
+        "defaultDispatchQueueItemId": &dispatch_queue.default_dispatch_queue_item_id,
+        "defaultActionId": &dispatch_queue.default_action_id,
+        "actionDispatchCount": dispatch_queue.action_dispatch_count,
+        "dispatchEventCount": dispatch_queue.dispatch_event_count,
+        "dispatchReadyEventCount": dispatch_queue.dispatch_ready_event_count,
+        "dispatchBlockedEventCount": dispatch_queue.dispatch_blocked_event_count,
+        "dispatchQueueItemCount": dispatch_queue.dispatch_queue_item_count,
+        "queuedDispatchCount": dispatch_queue.queued_dispatch_count,
+        "blockedDispatchCount": dispatch_queue.blocked_dispatch_count,
+        "attentionDispatchQueueItemCount": dispatch_queue.attention_dispatch_queue_item_count,
+        "selectedQueued": dispatch_queue.selected_queued,
+        "defaultQueued": dispatch_queue.default_queued,
+        "dispatchQueueItems": dispatch_queue
+            .dispatch_queue_items
+            .iter()
+            .map(app_shell_dashboard_dispatch_queue_item_json_value)
+            .collect::<Vec<_>>(),
+        "actionDispatchCapabilityId": &dispatch_queue.action_dispatch_capability_id,
+        "dispatchEventsCapabilityId": &dispatch_queue.dispatch_events_capability_id,
+        "dispatchQueueCapabilityId": &dispatch_queue.dispatch_queue_capability_id,
+        "artifactCapabilityCount": dispatch_queue.artifact_capability_count,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_item_json_value(
+    item: &BerkeleyAppShellDashboardDispatchQueueItem,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &item.id,
+        "dispatchEventId": &item.dispatch_event_id,
+        "actionDispatchId": &item.action_dispatch_id,
+        "panelCardActionId": &item.panel_card_action_id,
+        "actionId": &item.action_id,
+        "queueState": &item.queue_state,
+        "severity": &item.severity,
+        "message": &item.message,
+        "label": &item.label,
+        "target": &item.target,
+        "role": &item.role,
+        "path": &item.path,
+        "position": item.position,
+        "selected": item.selected,
+        "default": item.default_dispatch,
+        "queued": item.queued,
+        "blocked": item.blocked,
+        "dispatchable": item.dispatchable,
+        "primary": item.primary,
+        "attention": item.attention,
+        "disabledReason": &item.disabled_reason,
     })
 }
 
