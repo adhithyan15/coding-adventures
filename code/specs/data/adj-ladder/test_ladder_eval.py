@@ -55,6 +55,7 @@ SELF_CONTAINED_RUNGS = (
     "rung15_fractional_excretion_urea",
     "rung16_cardiac_output",
     "rung17_alveolar_ventilation",
+    "rung18_ejection_fraction",
 )
 
 
