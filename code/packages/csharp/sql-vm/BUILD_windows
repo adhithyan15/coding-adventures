@@ -1,0 +1,1 @@
+dotnet test tests/CodingAdventures.SqlVm.Tests/CodingAdventures.SqlVm.Tests.csproj --disable-build-servers /p:CollectCoverage=true "/p:Include=[CodingAdventures.SqlVm]*" /p:Threshold=80 /p:ThresholdType=line
