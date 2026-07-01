@@ -982,3 +982,40 @@ historical context with status `RESOLVED` and a link to the fix PR.
     `TEMPLATE_TAIL`, raising `LexerError: Unexpected sequence '` `` ` `` `'`.
   - gap-044b states the correct fix: an explicit mode stack in `GrammarLexer`
     (push template mode on `${`, pop on matching `}`).
+
+## CLOC12.137 — port `InlineFunctionsTest` into `closure-pass-inline`
+
+- **Status:** port landed; 7 active `#[test]`s pass, 6 `#[ignore]` gaps opened.
+- **What it is:** the fifth CLOC12 upstream port, covering the function-body
+  substitution that `InlineFunctions` performs.
+  `closure-pass-inline/tests/upstream/inline_functions_test.rs` drives the real
+  `source → bridge → inline → emit` chain and asserts on the emitted string. It
+  pins the sound core our `InlinePass` implements: substitute a `return <expr>;`
+  body at its call site(s) — single-use always, multi-use under a size budget —
+  when every argument is a simple leaf (identifier/literal) and the body has no
+  free identifiers beyond the parameters. 7 active cases pass (zero-param
+  constant/string returns, two-site inlining, member-object substitution,
+  nested-in-binary, decline-non-call-use, decline-over-budget-multi-use).
+- **New gaps** (executable `#[ignore = "blocked on gap-NNN"]` placeholders):
+  - **gap-127** — inlining a function with local declarations (`var`/`let` in
+    the body); the slice handles only a single `return <expr>;`.
+  - **gap-128** — inlining a method that references `this`; the slice bails on
+    any free identifier.
+  - **gap-129** — inlining a function *expression* / arrow bound to a variable
+    (`var f = function(x){…}`); the slice recognizes only `function`
+    declarations.
+  - **gap-130** — inlining a void (no-return) function called for its side
+    effect only; the slice targets value-position `return` bodies.
+  - **gap-131** — no dedicated recursion guard: a self-referential callee is
+    declined today only because its body's free self-reference fails the
+    no-free-identifier gate; pinned so widening that gate can't silently start
+    inlining a recursive body.
+  - **gap-132 (surfaced by this port)** — a **compound (non-leaf) argument**
+    expression is declined rather than inlined. `function d(x){return x*2}
+    g(d(a+b));` is left as `g(d(a+b));`; upstream inlines it to `g((a+b)*2);`.
+    Our slice substitutes only simple (identifier/literal) arguments. This is a
+    conservative miss, **not** a miscompile. The fix needs: (1) allow a compound
+    argument when its parameter is used exactly once in the body (so it isn't
+    duplicated / re-evaluated), and (2) parenthesize the substituted expression
+    against the surrounding operator's precedence. Candidate for a dedicated
+    follow-up fix PR.
