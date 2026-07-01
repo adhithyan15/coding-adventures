@@ -223,15 +223,30 @@ class SpreadsheetSession {
             ? 'spreadsheet_capi.dll'
             : 'libspreadsheet_capi.so';
 
-    // Search for `native/<lib>` by walking up from two roots: the current
-    // working directory (set when run via `flutter test` / the headless tools)
-    // AND the running executable's directory (a desktop app — `flutter run -d
-    // macos` or the built .app — whose CWD is the bundle, not the project). The
-    // first hit wins. CAPI_LIB-style overrides aren't needed; the demo vendors
-    // the lib into the project's native/ via scripts/build.sh.
+    // 1. A packaged macOS .app is self-contained: scripts/run-macos.sh copies the
+    //    dylib into the bundle's Contents/Frameworks. Platform.resolvedExecutable
+    //    is `<App>.app/Contents/MacOS/<exe>`, so its parent's parent is Contents/.
+    //    Check the bundled locations FIRST so a double-clicked / relocated app
+    //    finds its own engine without depending on the source tree. (Before this,
+    //    the built .app searched only `native/<lib>` relative to CWD — which is
+    //    `/` when launched via Finder/`open` — and failed with a red error page.)
+    final exeDir = File(Platform.resolvedExecutable).parent; // Contents/MacOS
+    final contents = exeDir.parent; // Contents
+    for (final sub in const ['Frameworks', 'Resources']) {
+      final bundled = File('${contents.path}/$sub/$name');
+      if (bundled.existsSync()) return bundled.path;
+    }
+
+    // 2. Otherwise search for the vendored `native/<lib>` by walking up from two
+    //    roots: the current working directory (set by `flutter run` / the
+    //    headless tools) AND the executable's directory (a built .app still
+    //    living inside the repo's build/ tree). Walk far enough to climb back out
+    //    of build/macos/Build/Products/Debug/<app>.app/Contents/MacOS to the demo
+    //    root's native/ (~9 levels up). The demo vendors the lib there via
+    //    scripts/build.sh; no CAPI_LIB-style override needed.
     File? findNear(Directory start) {
       var dir = start;
-      for (var i = 0; i < 6; i++) {
+      for (var i = 0; i < 12; i++) {
         final candidate = File('${dir.path}/native/$name');
         if (candidate.existsSync()) return candidate;
         final parent = dir.parent;
@@ -243,7 +258,6 @@ class SpreadsheetSession {
 
     final fromCwd = findNear(Directory.current);
     if (fromCwd != null) return fromCwd.path;
-    final exeDir = File(Platform.resolvedExecutable).parent;
     final fromExe = findNear(exeDir);
     if (fromExe != null) return fromExe.path;
 
