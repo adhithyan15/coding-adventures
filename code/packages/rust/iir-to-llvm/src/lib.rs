@@ -305,7 +305,9 @@ const SUPPORTED_OPS: &[&str] = &[
 /// `.` and `,`. These lower directly to the libc `@putchar(i32)` / `@getchar()`
 /// the C standard library already provides, so no host-runtime shim is needed
 /// (unlike `print_i64`); `clang` links libc by default.
-const SUPPORTED_BUILTINS: &[&str] = &["print_i64", "putchar", "getchar"];
+/// `input_i64` — BASIC's `INPUT X` — lowers to `@__twig_input_i64()` from the
+/// AOT runtime archive, which reads a line from stdin and parses it as `int64_t`.
+const SUPPORTED_BUILTINS: &[&str] = &["print_i64", "putchar", "getchar", "input_i64"];
 
 #[derive(Debug, Clone)]
 struct LlvmStringLiteralDef {
@@ -703,6 +705,9 @@ pub fn lower_iir_to_llvm(
     // allocator behind `alloc_bytes`. Declared once each, when used.
     let mut used_putchar = false;
     let mut used_getchar = false;
+    // BA-INPUT: BASIC's `INPUT X` lowers to `@__twig_input_i64()` from the AOT
+    // runtime archive (reads a line, parses as int64_t; 0 on EOF/parse failure).
+    let mut used_input_i64 = false;
     let mut used_alloc_bytes = false;
     // LANG-FULL E5: any array op needs `@calloc` (the allocation) and `@llvm.trap`
     // (the out-of-bounds trap). `is_array_op` covers alloc_array/array_*.
@@ -760,6 +765,7 @@ pub fn lower_iir_to_llvm(
                         "print_i64" => used_print_i64 = true,
                         "putchar" => used_putchar = true,
                         "getchar" => used_getchar = true,
+                        "input_i64" => used_input_i64 = true,
                         _ => {
                             if let Some(b) = lispy_builtin(name) {
                                 if !used_lispy.iter().any(|(n, _, _)| n == &b.0) {
@@ -833,6 +839,12 @@ pub fn lower_iir_to_llvm(
         }
         if used_getchar {
             out.push_str("declare i32 @getchar()\n");
+        }
+        if used_input_i64 {
+            // `@__twig_input_i64` is provided by `twig_runtime.c` in the AOT archive:
+            // reads one line from stdin and parses it as `int64_t`; returns 0 on
+            // EOF or parse failure (V1 permissive contract).
+            out.push_str("declare i64 @__twig_input_i64()\n");
         }
     }
     if !used_lispy.is_empty() {
@@ -3100,6 +3112,21 @@ fn lower_call_builtin(
             let g = state.fresh("gc");
             out.push_str(&format!("  {g} = call i32 @getchar()\n"));
             out.push_str(&format!("  %{dest} = sext i32 {g} to i64\n"));
+            state.env.insert(dest.clone(), format!("%{dest}"));
+            Ok(())
+        }
+        // ── input_i64() -> v — BASIC `INPUT X` (BA-INPUT) ───────────────
+        //
+        // `@__twig_input_i64()` (in `twig_runtime.c`) reads one line from
+        // stdin and parses it as `int64_t`; returns 0 on EOF / parse
+        // failure (V1 permissive contract). The result goes straight into
+        // the dest register — no conversion needed since the return type
+        // is already i64.
+        //
+        //   srcs = [Var("input_i64")], dest = v  →  %v = call i64 @__twig_input_i64()
+        "input_i64" => {
+            let dest = require_dest(instr, "input_i64", state.fn_name)?.to_string();
+            out.push_str(&format!("  %{dest} = call i64 @__twig_input_i64()\n"));
             state.env.insert(dest.clone(), format!("%{dest}"));
             Ok(())
         }

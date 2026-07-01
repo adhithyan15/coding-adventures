@@ -1157,12 +1157,56 @@ fn emit_lconst(code: &mut Vec<u8>, value: i64) {
             code.push(I2L);
         }
         _ => {
-            // Values outside i16 range need a real Long CP entry.
-            // This path is unreachable for Twig arithmetic programs.
-            // Emit a deliberate invalid sequence so the verifier surfaces it
-            // rather than producing silent wrong results.
+            // Values outside i16 range but within i32 range: push as int + i2l.
+            // This avoids a CP Long entry for the i32-range values.
+            if value >= i32::MIN as i64 && value <= i32::MAX as i64 {
+                code.push(LDC);
+                // Placeholder — callers that need CP must use emit_lconst_cp instead.
+                // This arm should not be reached for JvmType::Long const lowering.
+                code.extend_from_slice(&0xFFFFu16.to_be_bytes());
+            } else {
+                code.push(LDC2_W);
+                code.extend_from_slice(&0xFFFFu16.to_be_bytes());
+            }
+        }
+    }
+}
+
+/// Emit a long constant push, adding a `CONSTANT_Long` pool entry for values
+/// outside the i16 range that `emit_lconst` cannot handle inline.
+///
+/// JVM has 1-byte short forms for `0L` (`lconst_0`) and `1L` (`lconst_1`).
+/// For small values (−128 to 32767) we reuse the existing `bipush`/`sipush`/
+/// `iconst_*` + `i2l` tricks from `emit_lconst`. Larger values require an
+/// `ldc2_w <cp_index>` pointing at a `CONSTANT_Long` pool entry — the Long form
+/// of what `emit_iconst_cp` does for `int`.
+///
+/// This is the correct counterpart to `emit_dconst_cp` / `emit_iconst_cp`.
+/// Call this instead of `emit_lconst` whenever the constant can be an arbitrary
+/// i64 (e.g. the `"const"` IIR lowering path for `JvmType::Long` destinations).
+fn emit_lconst_cp(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder, value: i64) {
+    match value {
+        0 => code.push(LCONST_0),
+        1 => code.push(LCONST_1),
+        2 => { code.push(ICONST_2); code.push(I2L); }
+        3 => { code.push(ICONST_3); code.push(I2L); }
+        4 => { code.push(ICONST_4); code.push(I2L); }
+        5 => { code.push(ICONST_5); code.push(I2L); }
+        -1 => { code.push(ICONST_M1); code.push(I2L); }
+        v if v >= -128 && v <= 127 => {
+            code.push(BIPUSH);
+            code.push(v as i8 as u8);
+            code.push(I2L);
+        }
+        v if v >= i16::MIN as i64 && v <= i16::MAX as i64 => {
+            code.push(SIPUSH);
+            code.extend_from_slice(&(v as i16).to_be_bytes());
+            code.push(I2L);
+        }
+        _ => {
+            let idx = cp.add_long(value);
             code.push(LDC2_W);
-            code.extend_from_slice(&0xFFFFu16.to_be_bytes()); // invalid CP index
+            code.extend_from_slice(&idx.to_be_bytes());
         }
     }
 }
@@ -2339,7 +2383,7 @@ fn lower_function(
                 match src {
                     Operand::Int(v) => {
                         match dest_type {
-                            JvmType::Long => emit_lconst(&mut code, *v),
+                            JvmType::Long => emit_lconst_cp(&mut code, cp, *v),
                             JvmType::Float => emit_fconst(&mut code, *v as f32),
                             JvmType::Double => emit_dconst_cp(&mut code, cp, *v as f64),
                             _ => emit_iconst_cp(&mut code, cp, *v as i32),
@@ -2902,7 +2946,7 @@ fn lower_function(
                         let ret_type = iir_type_to_jvm(&func.return_type).unwrap_or(JvmType::Int);
                         match ret_type {
                             JvmType::Long => {
-                                emit_lconst(&mut code, *v);
+                                emit_lconst_cp(&mut code, cp, *v);
                                 code.push(LRETURN);
                             }
                             _ => {
@@ -3314,7 +3358,7 @@ fn lower_function(
             //
             // | Builtin   | Operand layout                          | Bytecode emitted |
             // |-----------|------------------------------------------|-------------------|
-            // | `putchar`   | srcs = [Var("putchar"), Var(val)]; no dest    | iload val; invokestatic env/BFRuntime.putchar(I)V |
+            // | `putchar`   | srcs = [Var("putchar"), Var(val)]; no dest    | [l]load val [l2i]; invokestatic env/BFRuntime.putchar(I)V |
             // | `getchar`   | srcs = [Var("getchar")]; dest = byte slot     | invokestatic env/BFRuntime.getchar()I; istore dest |
             // | `print_i64` | srcs = [Var("print_i64"), Var(val:i64)]; no dest | lload val; invokestatic env/BasicRuntime.println(J)V |
             "call_builtin" => {
@@ -3328,6 +3372,14 @@ fn lower_function(
                 match builtin_name.as_str() {
                     "putchar" => {
                         // putchar takes one i32 arg and returns void.
+                        //
+                        // In the narrow i32 value model (expression programs, Brainfuck)
+                        // the char value is an `Int` slot → load with `iload`.
+                        //
+                        // In the wide i64 value model (BASIC `INPUT` + `PRINT`, where
+                        // `input_i64` forces i64 — see BA-JVM-INPUT in `lang-aot`) the
+                        // char value is a `Long` slot → load with `lload` then narrow
+                        // with `l2i` before handing it to `putchar(I)V`.
                         let val_name = match instr.srcs.get(1) {
                             Some(Operand::Var(s)) => s.clone(),
                             _ => return Err(IIRJvmError::InvalidOperand {
@@ -3335,8 +3387,13 @@ fn lower_function(
                                 detail: "call_builtin \"putchar\" requires srcs[1] = Operand::Var(val)".to_string(),
                             }),
                         };
-                        let (val_slot, _) = lookup_var(&val_name)?;
-                        emit_iload(&mut code, val_slot);
+                        let (val_slot, val_type) = lookup_var(&val_name)?;
+                        if val_type == JvmType::Long {
+                            emit_lload(&mut code, val_slot);
+                            code.push(L2I);
+                        } else {
+                            emit_iload(&mut code, val_slot);
+                        }
                         let mref = cp.add_methodref(BF_RUNTIME_CLASS, "putchar", "(I)V");
                         code.push(INVOKESTATIC);
                         code.extend_from_slice(&mref.to_be_bytes());
@@ -3378,6 +3435,21 @@ fn lower_function(
                         let mref = cp.add_methodref(BASIC_RUNTIME_CLASS, "println", "(J)V");
                         code.push(INVOKESTATIC);
                         code.extend_from_slice(&mref.to_be_bytes());
+                    }
+                    "input_i64" => {
+                        // input_i64 takes no arguments and returns one i64 (`long`).
+                        // This is BASIC's `INPUT X` lowered: we call the host's
+                        // `readLong()J` static method, which reads one line from stdin
+                        // and parses it as a `long` (0 on EOF / parse failure — the
+                        // same V1 permissive contract as `__twig_input_i64` in C).
+                        // The result sits on the JVM stack as a long; `lstore` moves
+                        // it into `dest`.
+                        let dest_name = builtin_dest(instr, fname, "input_i64")?;
+                        let (dest_slot, _) = lookup_var(dest_name)?;
+                        let mref = cp.add_methodref(BASIC_RUNTIME_CLASS, "readLong", "()J");
+                        code.push(INVOKESTATIC);
+                        code.extend_from_slice(&mref.to_be_bytes());
+                        emit_lstore(&mut code, dest_slot);
                     }
                     // ── McCarthy W4: the lisp predicates (F3–F5). ──
                     //

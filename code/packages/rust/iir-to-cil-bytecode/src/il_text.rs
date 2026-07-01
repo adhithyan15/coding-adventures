@@ -1350,6 +1350,23 @@ fn emit_method(
                         );
                         store_var(il, &regs, dest)?;
                     }
+                    // `input_i64` — BASIC's `INPUT X`. Reads one line from stdin and
+                    // parses it as a signed 32-bit integer (scalar concretization lowers
+                    // BASIC integers to `int32` in the CLR backend, matching `print_i64`'s
+                    // `Console.WriteLine(int32)` overload). Returns `0` on EOF or parse
+                    // failure — the same permissive-V1 contract as `__twig_input_i64` in
+                    // the native C runtime.
+                    "input_i64" => {
+                        let _ = writeln!(
+                            il,
+                            "    call string [System.Console]System.Console::ReadLine()"
+                        );
+                        let _ = writeln!(
+                            il,
+                            "    call int32 [System.Runtime]System.Int32::Parse(string)"
+                        );
+                        store_var(il, &regs, dest)?;
+                    }
                     other => {
                         return Err(IIRClrError::UnsupportedOp {
                             function: f.name.clone(),
