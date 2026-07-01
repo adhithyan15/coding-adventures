@@ -87,13 +87,16 @@ vanishing from the provenance graph:
 - `{ return; dead(); }` → `{ return; }` — the unreachable
   dead-after-terminator statements are tombstoned (`removed-dead-code`),
   matching what DCE records for the same drop.
+- `(<literal>) ? c : a` — the unreachable **arm** (an `Expression`) is
+  tombstoned via the `expression_cv` helper: a truthy `cond` discards
+  `a`, a falsy `cond` discards `c`.
 
 Rewrites that *preserve* both branches (`if→ternary`, `if→&&`, De Morgan
-swaps) do NOT tombstone — the content is restructured, not removed.
-`delete` is a no-op when the log is disabled (the production default),
-so this costs nothing off the `--correlation_vector` path. (Remaining
-follow-up: the constant-condition ternary collapse, whose discarded arm
-is an `Expression` and needs an `expression_cv` helper.)
+swaps — including `de-morgan-swap-not-ternary`) do NOT tombstone — the
+content is restructured, not removed. `delete` is a no-op when the log is
+disabled (the production default), so this costs nothing off the
+`--correlation_vector` path. **Every** elimination site in the pass now
+records deletion provenance.
 
 ## Dependency whitelist
 

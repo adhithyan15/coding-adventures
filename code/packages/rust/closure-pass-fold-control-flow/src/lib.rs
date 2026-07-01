@@ -247,6 +247,36 @@ fn tagged_statement_cv(t: &TaggedStatement) -> Option<String> {
     }
 }
 
+/// Fetch an expression's own correlation-vector id, if it carries one.
+///
+/// The ternary-collapse site (`fold_conditional`) discards one *arm* of a
+/// `cond ? c : a` when `cond` is a literal — an `Expression`, not a
+/// statement — so it needs this alongside [`statement_cv`] to tombstone
+/// the exact expression that vanished. Exhaustive on purpose (no `_`
+/// wildcard): a new expression kind added upstream fails to compile here
+/// rather than silently losing provenance.
+fn expression_cv(expr: &Expression) -> Option<String> {
+    use Expression::*;
+    match expr {
+        Identifier(e) => e.cv.clone(),
+        NumericLiteral(e) => e.cv.clone(),
+        StringLiteral(e) => e.cv.clone(),
+        BooleanLiteral(e) => e.cv.clone(),
+        NullLiteral(e) => e.cv.clone(),
+        BigIntLiteral(e) => e.cv.clone(),
+        UndefinedLiteral(e) => e.cv.clone(),
+        BinaryExpression(e) => e.cv.clone(),
+        LogicalExpression(e) => e.cv.clone(),
+        UnaryExpression(e) => e.cv.clone(),
+        AssignmentExpression(e) => e.cv.clone(),
+        ConditionalExpression(e) => e.cv.clone(),
+        CallExpression(e) => e.cv.clone(),
+        MemberExpression(e) => e.cv.clone(),
+        ArrayExpression(e) => e.cv.clone(),
+        ObjectExpression(e) => e.cv.clone(),
+    }
+}
+
 // =====================================================================
 // Program / top-level
 // =====================================================================
@@ -1433,8 +1463,12 @@ fn fold_conditional(c: &ConditionalExpression, st: &mut FoldState) -> Expression
 
     match literal_truthy(&test) {
         Some(true) => {
-            st.record_fold(
+            // The `alternate` arm is statically unreachable and is
+            // discarded — tombstone it so its span stays auditable.
+            let discarded = [expression_cv(&alternate)];
+            st.record_fold_deleting(
                 &c.cv,
+                &discarded,
                 "folded-branch",
                 "(<truthy literal>) ? … : …",
                 "consequent",
@@ -1442,8 +1476,12 @@ fn fold_conditional(c: &ConditionalExpression, st: &mut FoldState) -> Expression
             consequent
         }
         Some(false) => {
-            st.record_fold(
+            // The `consequent` arm is statically unreachable and is
+            // discarded — tombstone it so its span stays auditable.
+            let discarded = [expression_cv(&consequent)];
+            st.record_fold_deleting(
                 &c.cv,
+                &discarded,
                 "folded-branch",
                 "(<falsy literal>) ? … : …",
                 "alternate",
@@ -1723,6 +1761,63 @@ mod tests {
             log.get(&a_id).unwrap().deleted.is_none(),
             "the alternate is preserved in the ternary, not discarded"
         );
+    }
+
+    #[test]
+    fn ternary_true_tombstones_discarded_alternate_arm() {
+        // `true ? kept : dead` → `kept` — the `dead` alternate arm is
+        // statically unreachable and eliminated, so it must be tombstoned.
+        let mut log = CVLog::new(true);
+        let dead_id = log.create(None);
+        let ternary = Expression::ConditionalExpression(ConditionalExpression {
+            cv: Some("tern.1".to_string()),
+            test: Box::new(boolean(true, None)),
+            consequent: Box::new(ident("kept")),
+            alternate: Box::new(Expression::Identifier(Identifier {
+                cv: Some(dead_id.clone()),
+                name: "dead".to_string(),
+            })),
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(expr_stmt(ternary, None))]);
+
+        let _out = run_capturing_cv(&prog, &mut log);
+
+        let del = log
+            .get(&dead_id)
+            .unwrap()
+            .deleted
+            .as_ref()
+            .expect("the discarded ternary `alternate` arm must be tombstoned");
+        assert_eq!(del.source, "fold-control-flow");
+        assert_eq!(del.reason, "folded-branch");
+    }
+
+    #[test]
+    fn ternary_false_tombstones_discarded_consequent_arm() {
+        // `false ? dead : kept` → `kept` — the `dead` consequent arm is
+        // statically unreachable and eliminated, so it must be tombstoned.
+        let mut log = CVLog::new(true);
+        let dead_id = log.create(None);
+        let ternary = Expression::ConditionalExpression(ConditionalExpression {
+            cv: Some("tern.2".to_string()),
+            test: Box::new(boolean(false, None)),
+            consequent: Box::new(Expression::Identifier(Identifier {
+                cv: Some(dead_id.clone()),
+                name: "dead".to_string(),
+            })),
+            alternate: Box::new(ident("kept")),
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(expr_stmt(ternary, None))]);
+
+        let _out = run_capturing_cv(&prog, &mut log);
+
+        let del = log
+            .get(&dead_id)
+            .unwrap()
+            .deleted
+            .as_ref()
+            .expect("the discarded ternary `consequent` arm must be tombstoned");
+        assert_eq!(del.reason, "folded-branch");
     }
 
     // ---------------- metadata + identity ---------------------
