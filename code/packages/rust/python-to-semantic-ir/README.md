@@ -156,6 +156,8 @@ nesting into a clean error rather than a native stack overflow.
 | `def f(a, b): …`                       | top-level `Function { name f, params [a, b], body }`  | `DynamicTyping`†       |
 | `def f(a, b=10): …`                     | `Param { name b, default: Some(IntLit 10) }` (P8)     | `DefaultParams`        |
 | `f(5)` (omitting a defaulted arg)       | *partial* `DirectCall { args [IntLit 5] }`            | `DefaultParams`        |
+| `def f(a, *, x, y=1): …`                 | `Param { kind Keyword, .. }` for `x`, `y` (KW8)       | `KeywordParams`        |
+| `f(1, y=2)`                             | `args [IntLit 1, KeywordArg { name y, value 2 }]`     | `KeywordParams`        |
 | `return expr` (tail)                   | function body `value = expr`                          | —                      |
 | `return` / no return (tail)            | function body `value = NilLit` (implicit `None`)      | —                      |
 | `return expr` (non-tail / early)       | **error** — "early return not supported in v0"        | —                      |
@@ -215,6 +217,28 @@ have defaults.
 > under the IR it is re-evaluated per call.  That is a deliberate,
 > documented v0 choice.
 
+**Keyword parameters & arguments (KW8).**  A parameter that follows a bare
+`*` in a `def` signature is **keyword-only** — it can only be supplied *by
+name* at the call site — and lowers to `Param { kind: ParamKind::Keyword }`.
+Required-vs-optional rides on the existing `default` field exactly as it
+does for positional optionals: in `def f(a, *, x, y=1)`, `x` (no default)
+is a **required** keyword (`Keyword` + `default: None`) and `y=1` is an
+**optional** keyword (`Keyword` + `default: Some(IntLit 1)`); the positional
+`a` before the `*` stays `Required`.  The `*` boundary is not scanned for as
+a token — the parser models it *structurally*, nesting the keyword-only
+`param_with_default` nodes inside a `star_params` node while positional
+params are direct children of `parameter_list`, so the lowerer stamps the
+kind by nesting.  On the call side an explicit `name=value` argument
+(`f(1, y=2)`) lowers to `Expr::KeywordArg { name, value }` appended to the
+call's `args` **after** the positionals (the core IR carries keyword args as
+trailing `args` elements, not a parallel `kwargs` field).  A keyword
+argument is distinguished from a `**dict` double-splat by its leading `NAME`
++ `=` tokens, so `**dict` (which names no single parameter) is never
+mis-lowered as a keyword.  Any keyword parameter or argument declares
+`Feature::KeywordParams`.  The out-of-subset positional-rest `*args` and
+keyword-rest `**kwargs` params are rejected with a positioned error rather
+than silently dropped.
+
 ### Collections (M5)
 
 | Python source              | SIR lowering                                  | Feature declared |
@@ -259,10 +283,12 @@ Everything past M5 returns a clear positioned `PythonLowerError`:
 - list / dict **comprehensions**, **slicing** (`xs[a:b]`), **tuple** /
   **set** literals, and list/dict **methods** (`.append` / `.keys` /
   `.get` — these need the SIR runtime-library)
-- keyword arguments, `*args` / `**kwargs`, keyword-only parameters,
-  multi-level capture chaining (capturing a variable two scopes up)
-  — note **positional default parameters** (`def f(a=1)`) are now
-  supported (P8); only the keyword/variadic forms remain deferred
+- `*args` / `**kwargs` (positional-rest / keyword-rest params — `Rest` /
+  `KwRest` are not yet modelled by this crate), multi-level capture chaining
+  (capturing a variable two scopes up) — note **positional default
+  parameters** (`def f(a=1)`, P8) and **keyword parameters / arguments**
+  (`def f(*, x)`, `f(x=1)`, KW8) are now supported; only the variadic
+  rest forms remain deferred
 - tuple / multi-target `for` (`for k, v in …`), multi-target / chained
   assignment, attribute targets, bitwise operators, the power operator
   (`**`)

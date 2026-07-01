@@ -55,9 +55,14 @@
 //!   so a *mutable* default (`def f(x=[])`) is re-evaluated per call — a
 //!   documented v0 choice.  A default referencing another parameter is a
 //!   Python `NameError` and is not supported.
+//! - **keyword parameters & arguments** (KW8) — a param after a bare `*`
+//!   (`def f(a, *, x, y=1)`) is keyword-only and lowers to
+//!   `Param { kind: ParamKind::Keyword }` (required if it has no default,
+//!   optional if it does); a `name=value` call argument (`f(1, y=2)`)
+//!   lowers to `Expr::KeywordArg`.  Either declares `Feature::KeywordParams`.
 //!
-//! Collections / comprehensions / decorators / `*args` & **keyword**
-//! arguments are deferred to later milestones; unhandled forms return a
+//! Collections / comprehensions / decorators / `*args` & `**kwargs` rest
+//! parameters are deferred to later milestones; unhandled forms return a
 //! clear `PythonLowerError`.
 //!
 //! See `code/specs/SIR17-python-to-semantic-ir.md` for the full
@@ -1292,6 +1297,160 @@ mod tests {
         assert!(v.is_ok(), "partial call must validate: {:?}", v.issues);
     }
 
+    // ── keyword parameters & arguments (KW8) ──────────────────────────
+    //
+    // Def-side: a param after a bare `*` is keyword-only — `Keyword` kind,
+    // required (no default) or optional (with default).  Call-side: an
+    // explicit `name=value` argument lowers to `Expr::KeywordArg`, appended
+    // to `args` after positionals.  Both declare `Feature::KeywordParams`.
+
+    /// Locate the first `DirectCall` to `fn_name` in `main` (value or a
+    /// statement), returning its `args`.
+    fn direct_call_args<'a>(m: &'a semantic_ir::Module, fn_name: &str) -> &'a [Expr] {
+        if let Expr::DirectCall { fn_name: n, args, .. } = main_value(m) {
+            if n == fn_name {
+                return args;
+            }
+        }
+        for s in main_stmts(m) {
+            if let Stmt::ExprStmt { expr: Expr::DirectCall { fn_name: n, args, .. }, .. } = s {
+                if n == fn_name {
+                    return args;
+                }
+            }
+        }
+        panic!("no DirectCall to `{fn_name}` found in main");
+    }
+
+    #[test]
+    fn keyword_only_params_lower_to_keyword_kind() {
+        use semantic_ir::ParamKind;
+        // `def f(a, *, x, y=1)` — `a` positional (Required), `x` a REQUIRED
+        // keyword (Keyword + default None), `y` an OPTIONAL keyword
+        // (Keyword + default Some(1)).
+        let m = lower("def f(a, *, x, y=1):\n    return a\n");
+        let f = func(&m, "f");
+        assert_eq!(f.params.len(), 3);
+
+        assert_eq!(f.params[0].name, "a");
+        assert_eq!(f.params[0].kind, ParamKind::Required);
+        assert!(f.params[0].default.is_none());
+
+        assert_eq!(f.params[1].name, "x");
+        assert_eq!(f.params[1].kind, ParamKind::Keyword);
+        assert!(
+            f.params[1].default.is_none(),
+            "`x` (no default) is a REQUIRED keyword param"
+        );
+
+        assert_eq!(f.params[2].name, "y");
+        assert_eq!(f.params[2].kind, ParamKind::Keyword);
+        match f.params[2].default.as_deref() {
+            Some(Expr::IntLit { value, .. }) => assert_eq!(*value, 1),
+            other => panic!("expected y's default = IntLit(1), got {other:?}"),
+        }
+
+        // A keyword param declares KeywordParams in the manifest.
+        assert!(
+            m.manifest.contains(Feature::KeywordParams),
+            "a keyword parameter must declare KeywordParams"
+        );
+    }
+
+    #[test]
+    fn keyword_argument_lowers_to_keyword_arg() {
+        // `f(x=1)` → a single `KeywordArg { name: "x", value: IntLit(1) }`.
+        let m = lower("def f(a, *, x):\n    return a\n\nf(0, x=1)\n");
+        let args = direct_call_args(&m, "f");
+        assert_eq!(args.len(), 2, "one positional + one keyword arg");
+        assert!(
+            matches!(args[0], Expr::IntLit { value: 0, .. }),
+            "positional 0 stays bare"
+        );
+        match &args[1] {
+            Expr::KeywordArg { name, value, .. } => {
+                assert_eq!(name, "x");
+                assert!(matches!(**value, Expr::IntLit { value: 1, .. }));
+            }
+            other => panic!("expected KeywordArg, got {other:?}"),
+        }
+        assert!(
+            m.manifest.contains(Feature::KeywordParams),
+            "a keyword argument must declare KeywordParams"
+        );
+    }
+
+    #[test]
+    fn positional_and_keyword_argument_mix_preserves_order() {
+        // `f(1, y=2)` — positional `1` first (bare), keyword `y=2` after.
+        let m = lower("def f(a, *, y):\n    return a\n\nf(1, y=2)\n");
+        let args = direct_call_args(&m, "f");
+        assert_eq!(args.len(), 2);
+        assert!(matches!(args[0], Expr::IntLit { value: 1, .. }));
+        match &args[1] {
+            Expr::KeywordArg { name, value, .. } => {
+                assert_eq!(name, "y");
+                assert!(matches!(**value, Expr::IntLit { value: 2, .. }));
+            }
+            other => panic!("expected KeywordArg y=2, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn keyword_params_module_validates() {
+        // A keyword-param callee with a supplied required keyword + an
+        // omitted optional keyword round-trips through the validator.
+        let m = lower(
+            "def greet(greeting, *, name=\"world\"):\n    return greeting\n\ngreet(\"hi\", name=\"ada\")\n",
+        );
+        let v = semantic_ir::validate(&m);
+        assert!(
+            v.is_ok(),
+            "module with keyword params/args must validate: {:?}",
+            v.issues
+        );
+    }
+
+    #[test]
+    fn omitting_required_keyword_is_rejected_by_validator() {
+        // `x` is a REQUIRED keyword (no default); the call `need(0)` supplies
+        // no `x=…`, so the validator must reject the lowered module (rule 5:
+        // every required keyword must be supplied).
+        let m = lower("def need(a, *, x):\n    return a\n\nneed(0)\n");
+        let v = semantic_ir::validate(&m);
+        assert!(
+            !v.is_ok(),
+            "omitting a required keyword arg must fail validation"
+        );
+    }
+
+    #[test]
+    fn star_args_rest_param_is_rejected() {
+        // `*args` positional-rest is outside the KW8 subset — rejected with a
+        // positioned error (not silently dropped).  A leading positional is
+        // required for the parameter list to parse (v3.10's `parameter_list`
+        // opens with a mandatory positional `param_with_default`).
+        let err = compile_source("def f(a, *args, x):\n    return x\n", "t")
+            .expect_err("*args must be rejected");
+        assert!(
+            err.message.contains("*args") || err.message.contains("positional-rest"),
+            "got: {}",
+            err.message
+        );
+    }
+
+    #[test]
+    fn double_star_kwargs_param_is_rejected() {
+        // `**kwargs` keyword-rest is outside the KW8 subset — rejected.
+        let err = compile_source("def f(a, **kw):\n    return a\n", "t")
+            .expect_err("**kwargs must be rejected");
+        assert!(
+            err.message.contains("**kwargs") || err.message.contains("keyword-rest"),
+            "got: {}",
+            err.message
+        );
+    }
+
     // ══════════════════════════════════════════════════════════════════
     // M5: collections — list & dict literals, subscript, len, set
     // ══════════════════════════════════════════════════════════════════
@@ -1853,6 +2012,34 @@ print(f(5, 100))
 ";
         if let Some(out) = run_roundtrip(src) {
             assert_eq!(out, "15\n105", "f(5)=15 then f(5,100)=105");
+        }
+    }
+
+    #[test]
+    fn e2e_keyword_parameter() {
+        // The KW8 acceptance check: a keyword-only param with a default,
+        // exercised both ways — `greet("hi")` omits the keyword (name ←
+        // "world") and `greet("hi", name="ada")` supplies it.  Lower →
+        // SIR → validate → emit Python (native keyword-only `def` +
+        // `name=value` call) → run → assert stdout, via the same
+        // PYTHONPATH-aware harness the P8 default-param e2e uses.
+        //
+        // The body returns `name` directly (rather than an f-string, which
+        // is outside the M5 subset) so the proof does not depend on string
+        // concatenation semantics — the value threaded by the keyword is
+        // exactly what is printed.
+        let src = "\
+def greet(greeting, *, name=\"world\"):
+    return name
+
+print(greet(\"hi\"))
+print(greet(\"hi\", name=\"ada\"))
+";
+        if let Some(out) = run_roundtrip(src) {
+            assert_eq!(
+                out, "world\nada",
+                "greet(\"hi\")=world then greet(\"hi\", name=\"ada\")=ada"
+            );
         }
     }
 
