@@ -64,9 +64,11 @@ impl MathFrontend for AsciiMath {
         // `MathExpr::Overset`/`Underset` since math-frontend 0.5.0) + `sequences`
         // (a comma-separated fence `(a, b, c)` → `MathExpr::Sequence` since math-frontend
         // 0.6.0) + `plusminus` (`+-`/`-+` → `BinOp::PlusMinus`/`MinusPlus`, the AsciiMath spelling
-        // of `±`/`∓`, matching the latex/unicode-math frontends). `binomials` is not part of
-        // AsciiMath's core spelling here. Declaring `implicit_mul` is a parser-behavior claim
-        // (juxtaposition ⇒ `Mul`) the goldens cover.
+        // of `±`/`∓`, matching the latex/unicode-math frontends) + `fenced_delimiters` (the
+        // delimiter-wrapping functions `abs(x)`→|x|, `norm(v)`→‖v‖, `floor(x)`→⌊x⌋, `ceil(x)`→⌈x⌉,
+        // each → `MathExpr::Fenced` carrying its bracket pair, like the latex/mathml frontends).
+        // `binomials` is not part of AsciiMath's core spelling here. Declaring `implicit_mul` is a
+        // parser-behavior claim (juxtaposition ⇒ `Mul`) the goldens cover.
         Capabilities::none()
             .with_fractions()
             .with_roots()
@@ -81,6 +83,7 @@ impl MathFrontend for AsciiMath {
             .with_oversets()
             .with_sequences()
             .with_plusminus()
+            .with_fenced_delimiters()
     }
 }
 
@@ -504,7 +507,31 @@ mod tests {
         assert!(c.accents); // PR-2b: hat/bar/vec/dot/ddot/tilde/ul
         assert!(c.oversets && c.sequences); // overset/underset + comma-separated fence → Sequence
         assert!(c.plusminus); // `+-`/`-+` → ±/∓
+        assert!(c.fenced_delimiters); // abs/norm/floor/ceil → Fenced with their bracket pairs
         assert!(!c.binomials); // not part of AsciiMath's core spelling here
+    }
+
+    // ---- fenced delimiters -----------------------------------------------------
+    #[test]
+    fn fenced_delimiter_functions_lower_to_fenced() {
+        // `abs`/`norm`/`floor`/`ceil` take the next single atom (the `sqrt x` convention; `abs(x)`
+        // reads the `(x)` group, whose parens normalise away) and lower to `MathExpr::Fenced`
+        // carrying the specific bracket pair — distinct from a function `Call` and a plain `Group`.
+        let fenced = |open: &str, body: MathExpr, close: &str| MathExpr::Fenced {
+            open: open.to_string(),
+            body: Box::new(body),
+            close: close.to_string(),
+        };
+        assert_eq!(p("abs(x)"), fenced("|", sym("x"), "|"));
+        assert_eq!(p("norm(v)"), fenced("\u{2016}", sym("v"), "\u{2016}"));
+        assert_eq!(p("floor(x)"), fenced("\u{230A}", sym("x"), "\u{230B}"));
+        assert_eq!(p("ceil(x)"), fenced("\u{2308}", sym("x"), "\u{2309}"));
+        // The body is a full atom: `abs(x+y)` fences the whole group (parens normalise away).
+        assert_eq!(p("abs(x+y)"), fenced("|", b(BinOp::Add, sym("x"), sym("y")), "|"));
+        // A bar carries its delimiters, so |x| is NOT the same as the paren group (x).
+        assert_ne!(p("abs(x)"), p("(x)"));
+        // Greedy longest-match keeps the keyword whole: `abs` splits from a glued suffix.
+        assert_eq!(p("abs x"), fenced("|", sym("x"), "|"));
     }
 
     // ---- accents (PR-2b) -------------------------------------------------------
@@ -605,6 +632,10 @@ mod tests {
                 "(a,b,c)",         // comma-separated fence → MathExpr::Sequence
                 "a +- b",          // plus-or-minus → BinOp::PlusMinus (±)
                 "x -+ y",          // minus-or-plus → BinOp::MinusPlus (∓)
+                "abs(x)",          // delimiter-wrapping function → MathExpr::Fenced (|x|)
+                "norm(v)",         // norm → Fenced (‖v‖)
+                "floor(x)",        // floor → Fenced (⌊x⌋)
+                "ceil(x)",         // ceil → Fenced (⌈x⌉)
                 "1 +",   // error: trailing operator (span in range, not a panic)
                 "(x",    // error: missing close
                 "",      // error: empty

@@ -410,6 +410,22 @@ impl Parser<'_> {
             let body = self.parse_atom()?;
             return Ok(MathExpr::Accent { accent: accent.to_string(), body: Box::new(body) });
         }
+        // Delimiter-wrapping functions: `abs(x)` → |x|, `norm(v)` → ‖v‖, `floor(x)` → ⌊x⌋,
+        // `ceil(x)` → ⌈x⌉. Each takes the next single atom as its body (the same "one atom
+        // argument" convention as `sqrt`/functions — `abs(x)` reads the `(x)` group, whose parens
+        // normalise away) and lowers to the neutral `MathExpr::Fenced { open, body, close }`
+        // carrying the specific delimiter pair. Distinct from a function `Call` (a named operator
+        // applied to an argument) and from a plain paren `Group` (which records no delimiters), so
+        // `abs(x)` (|x|) is no longer indistinguishable from `(x)`. Needs the `Fenced` node.
+        if let Some((open, close)) = fenced_delim_of(word) {
+            self.advance();
+            let body = self.parse_atom()?;
+            return Ok(MathExpr::Fenced {
+                open: open.to_string(),
+                body: Box::new(body),
+                close: close.to_string(),
+            });
+        }
         // Over/under-set annotations: `overset(a)(b)`/`stackrel(a)(b)` and `underset(a)(b)`
         // (also the paren-free `stackrel a b` form). TWO atoms — the annotation then the base —
         // lowered to the neutral `MathExpr::Overset`/`Underset` (a sub-expression centered OVER /
@@ -511,6 +527,7 @@ pub(crate) fn is_keyword(word: &str) -> bool {
     func_of(word).is_some()
         || bigop_of(word).is_some()
         || accent_of(word).is_some()
+        || fenced_delim_of(word).is_some()
         || constant_of(word).is_some()
         || matches!(word, "sqrt" | "root" | "overset" | "stackrel" | "underset" | "xx" | "cdot" | "div")
 }
@@ -530,6 +547,21 @@ fn accent_of(word: &str) -> Option<&'static str> {
         "dot" => "dot",
         "ddot" => "ddot",
         "tilde" => "tilde",
+        _ => return None,
+    })
+}
+
+/// Map an AsciiMath delimiter-wrapping function word to its `(open, close)` fence pair, or `None`.
+/// AsciiMath spells these as prefix words taking one argument (like `sqrt`): `abs(x)` → |x|,
+/// `norm(v)` → ‖v‖ (U+2016 double vertical line), `floor(x)` → ⌊x⌋ (U+230A/U+230B), `ceil(x)` →
+/// ⌈x⌉ (U+2308/U+2309). Each wraps its one-atom argument in the neutral [`MathExpr::Fenced`] node
+/// carrying these delimiters, so the bracket kind is preserved (a bar `|x|` is not a paren `(x)`).
+fn fenced_delim_of(word: &str) -> Option<(&'static str, &'static str)> {
+    Some(match word {
+        "abs" => ("|", "|"),
+        "norm" => ("\u{2016}", "\u{2016}"),
+        "floor" => ("\u{230A}", "\u{230B}"),
+        "ceil" => ("\u{2308}", "\u{2309}"),
         _ => return None,
     })
 }
