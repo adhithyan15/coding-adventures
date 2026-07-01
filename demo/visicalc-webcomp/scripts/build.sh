@@ -43,7 +43,7 @@ MOSAIC_COMPILE="$REPO_ROOT/code/packages/rust/target/debug/mosaic-compile"
 echo "Building mosaic-compile..."
 (cd "$REPO_ROOT/code/packages/rust" && cargo build -p mosaic-compile)
 
-SRC="$REPO_ROOT/demo/visicalc/mosaic"
+SRC="$REPO_ROOT/code/programs/mosaic/visicalc"
 OUT_DIR="$DEMO_DIR/build"
 mkdir -p "$OUT_DIR"
 

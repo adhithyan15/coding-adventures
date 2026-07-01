@@ -48,17 +48,17 @@ echo "Compiling Grid..."
 # emitter runs.  The generated Grid.tsx is byte-identical to the
 # pre-UI34 inlined-kernel-primitives output.
 "$MOSAIC_COMPILE" --backend react \
-  --interface           "$DEMO_DIR/mosaic/Grid.mil" \
-  --layout              "$DEMO_DIR/mosaic/Grid.desktop.mll" \
-  --style               "$DEMO_DIR/mosaic/Grid.dark.msl" \
+  --interface           "$REPO_ROOT/code/programs/mosaic/visicalc/Grid.mil" \
+  --layout              "$REPO_ROOT/code/programs/mosaic/visicalc/Grid.desktop.mll" \
+  --style               "$REPO_ROOT/code/programs/mosaic/visicalc/Grid.dark.msl" \
   --package-search-path "$REPO_ROOT/code/packages" \
   -o "$OUT_DIR/Grid.tsx"
 
 echo "Compiling FormulaBar..."
 "$MOSAIC_COMPILE" --backend react \
-  --interface "$DEMO_DIR/mosaic/FormulaBar.mil" \
-  --layout    "$DEMO_DIR/mosaic/FormulaBar.desktop.mll" \
-  --style     "$DEMO_DIR/mosaic/FormulaBar.dark.msl" \
+  --interface "$REPO_ROOT/code/programs/mosaic/visicalc/FormulaBar.mil" \
+  --layout    "$REPO_ROOT/code/programs/mosaic/visicalc/FormulaBar.desktop.mll" \
+  --style     "$REPO_ROOT/code/programs/mosaic/visicalc/FormulaBar.dark.msl" \
   -o "$OUT_DIR/FormulaBar.tsx"
 
 # The pipeline emitter writes `export type {Component}Event = ...` into
