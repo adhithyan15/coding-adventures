@@ -59,6 +59,7 @@ SELF_CONTAINED_RUNGS = (
     "rung19_rbc_indices",
     "rung20_hepatic_indices",
     "rung21_renal_indices",
+    "rung22_thyroid_indices",
 )
 
 
