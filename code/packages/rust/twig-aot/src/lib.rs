@@ -1447,6 +1447,84 @@ fn strip_dead_string_consts(func: &mut IIRFunction) {
     });
 }
 
+/// After `lower_string_literals_for_aot`, some `push_aot_string_literal` blocks
+/// (alloc_bytes + store_byte sequences) become dead because their `buf_var` is
+/// never used by anything other than the `store_byte` writes into that buffer.
+/// This happens when every `str_eq`/`str_cmp` op whose operands were in the
+/// `strings` map got folded to a `const` integer, leaving the allocation with
+/// no live consumer.
+///
+/// Dead blocks inflate the CIR variable count; on aarch64 the frame-size limit
+/// is 504 bytes (7-bit signed immediate × 8 for stp_pre/ldp_post), so a
+/// function with several string-literal comparisons exceeds that limit and the
+/// backend returns `BackendError::FrameTooLarge`.  This pass eliminates those
+/// dead blocks before register allocation.
+///
+/// A block is dead when its `__aot_str{N}_buf` variable does not appear in the
+/// srcs of any instruction other than `store_byte` (writes into the buffer are
+/// not observable consumers; they only make sense if the buffer is later read).
+fn strip_dead_aot_string_allocs(func: &mut IIRFunction) {
+    use std::collections::HashSet;
+
+    // Collect all __aot_str{N}_buf vars produced by alloc_bytes.
+    let aot_bufs: HashSet<String> = func.instructions
+        .iter()
+        .filter(|instr| instr.op == "alloc_bytes")
+        .filter_map(|instr| instr.dest.as_ref())
+        .filter(|dest| dest.starts_with("__aot_str") && dest.ends_with("_buf"))
+        .cloned()
+        .collect();
+
+    if aot_bufs.is_empty() {
+        return;
+    }
+
+    // A buf is live if it appears in the srcs of any instruction that is NOT
+    // `store_byte`.  `store_byte` only writes into the buffer; it does not make
+    // the buffer observable to the rest of the program.
+    let live_bufs: HashSet<String> = func.instructions
+        .iter()
+        .filter(|instr| instr.op != "store_byte")
+        .flat_map(|instr| instr.srcs.iter())
+        .filter_map(|op| if let Operand::Var(n) = op { Some(n.clone()) } else { None })
+        .filter(|n| aot_bufs.contains(n))
+        .collect();
+
+    let dead_bufs: HashSet<String> = aot_bufs.difference(&live_bufs).cloned().collect();
+    if dead_bufs.is_empty() {
+        return;
+    }
+
+    // Derive the string prefix (__aot_str{N}) from each dead buf name so we can
+    // match all associated vars (_len, _buf, _off{i}, _byte{i}).
+    let dead_prefixes: HashSet<String> = dead_bufs
+        .iter()
+        .map(|buf| buf.strip_suffix("_buf").unwrap_or(buf).to_string())
+        .collect();
+
+    // Remove instructions that belong to dead string blocks:
+    //  - Any instruction whose dest starts with `{prefix}_` (const for len/off/byte,
+    //    alloc_bytes for buf).
+    //  - Any `store_byte` instruction whose first src (the pointer) is a dead buf.
+    func.instructions.retain(|instr| {
+        if let Some(dest) = &instr.dest {
+            for prefix in &dead_prefixes {
+                if dest.starts_with(&format!("{prefix}_")) {
+                    return false;
+                }
+            }
+        }
+        if instr.op == "store_byte" {
+            if let Some(Operand::Var(ptr)) = instr.srcs.first() {
+                if dead_bufs.contains(ptr) {
+                    return false;
+                }
+            }
+        }
+        true
+    });
+}
+
 /// Lower the landed E4 literal-output string ops to native byte-buffer I/O.
 ///
 /// The direct native backends already know how to allocate bytes, store bytes,
@@ -1848,6 +1926,11 @@ fn default_any_to_i64(func: &mut IIRFunction) {
 ///     instructions that are now dead after step 0.  Without this pass,
 ///     `aot_specialise` converts them to `const_str` which the ARM64 backend
 ///     cannot lower (there is no stack-slot for a string pointer).
+///  0c. `strip_dead_aot_string_allocs` — removes `alloc_bytes` + `store_byte`
+///     blocks for `__aot_str{N}` buffers whose `buf_var` is never read by any
+///     non-`store_byte` instruction.  This shrinks the CIR variable count for
+///     functions with many folded string comparisons, keeping the aarch64 stack
+///     frame within the 504-byte stp/ldp limit.
 ///  1. `pre_lower_aot_builtins` — lowers `call_builtin "+"` → `add`, etc.
 ///  2. `normalize_params_to_i64` — promotes untyped params to `i64`.
 ///  3. `propagate_aot_types` — fixed-point type propagation.
@@ -1892,6 +1975,7 @@ fn prepare_module_for_aot(module: &mut IIRModule) {
         // the `global_set`/`global_get` that consumed it is rewritten.
         // These become `const_str` in CIR which the ARM64 backend rejects.
         strip_dead_string_consts(func);
+        strip_dead_aot_string_allocs(func);
         pre_lower_aot_builtins(func);
         normalize_params_to_i64(func);
         propagate_aot_types(func);

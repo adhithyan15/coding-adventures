@@ -1263,16 +1263,40 @@ fn emit_instr(
             let r1 = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
             let r2 = get_src_reg(&instr.srcs, 1, reg_map, fn_name)?;
 
-            code.extend(encode_local_get(r1));
-            code.extend(encode_local_get(r2));
-
             // E2: narrow unsigned types use the i64 register model (see above).
+            //
+            // Additionally, ALGOL boolean comparisons on strings emit `cmp_ne`
+            // with type_hint "i64" (so the comparison locals are i64), then feed
+            // those into `and`/`or` with type_hint "bool".  We detect this via
+            // the actual local types of r1/r2 and upgrade to the i64 opcode so
+            // the WASM types remain consistent.
+            //
+            // When one operand is i32 and the other i64, the narrower operand
+            // must be widened BEFORE the operation so both stack values match
+            // the chosen opcode (WASM is strictly typed; mixing widths is rejected).
+            let op_is_bitwise = matches!(instr.op.as_str(), "and" | "or" | "xor");
+            let r1_is_i64 = slot_is_i64(r1);
+            let r2_is_i64 = slot_is_i64(r2);
+            let type_is_i64 = uses_i64_register(ty);
+            let use_i64 = type_is_i64 || (op_is_bitwise && (r1_is_i64 || r2_is_i64));
+
+            // Push r1 then widen if the operation needs i64 but this slot is i32.
+            code.extend(encode_local_get(r1));
+            if op_is_bitwise && use_i64 && !r1_is_i64 {
+                code.extend(encode_i64_extend_i32_u());
+            }
+            // Push r2 then widen if the operation needs i64 but this slot is i32.
+            code.extend(encode_local_get(r2));
+            if op_is_bitwise && use_i64 && !r2_is_i64 {
+                code.extend(encode_i64_extend_i32_u());
+            }
+
             let opcode: u8 = match (instr.op.as_str(), ty) {
-                ("and", t) if uses_i64_register(t) => I64_AND,
+                ("and", _) if use_i64 => I64_AND,
                 ("and", _) => I32_AND,
-                ("or", t) if uses_i64_register(t) => I64_OR,
+                ("or", _) if use_i64 => I64_OR,
                 ("or", _) => I32_OR,
-                ("xor", t) if uses_i64_register(t) => I64_XOR,
+                ("xor", _) if use_i64 => I64_XOR,
                 ("xor", _) => I32_XOR,
                 ("shl", t) if uses_i64_register(t) => I64_SHL,
                 ("shl", _) => I32_SHL,
@@ -1286,6 +1310,12 @@ fn emit_instr(
             // E2: a narrow left-shift can push bits past the width (`1u8 << 8`),
             // so mask the result; `and`/`or`/`xor`/`shr` stay canonical too.
             emit_wasm_width_mask(code, ty);
+            // When the result is i64 but the dest local is narrower (e.g. "bool"
+            // → i32), wrap the i64 result back to i32 before local.set so the
+            // stored type matches the declared local type.
+            if op_is_bitwise && use_i64 && !slot_is_i64(rd) {
+                code.extend(encode_i32_wrap_i64());
+            }
             code.extend(encode_local_set(rd));
         }
 

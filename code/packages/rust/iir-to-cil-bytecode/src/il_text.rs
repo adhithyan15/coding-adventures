@@ -762,6 +762,9 @@ fn emit_method(
                 } else {
                     let n = match instr.srcs.first() {
                         Some(Operand::Int(n)) => *n,
+                        // Booleans are represented as int32 0/1 in CIL, exactly
+                        // as the binary backend's `emit_ldc_i4(if *b {1} else {0})`.
+                        Some(Operand::Bool(b)) => if *b { 1 } else { 0 },
                         other => {
                             return Err(IIRClrError::InvalidOperand {
                                 function: f.name.clone(),
@@ -1384,6 +1387,23 @@ fn emit_method(
                 let a = var_src(f, instr, 0, "not")?;
                 load_var(il, &regs, a)?;
                 let _ = writeln!(il, "    not");
+                emit_narrow_width_mask(il, &instr.type_hint);
+                store_var(il, &regs, dest)?;
+            }
+            // ── Unary arithmetic negation (neg) ──────────────────────────────
+            //
+            // `dest = neg(a)` — arithmetic negation; the CIL `neg` opcode (0x65)
+            // works for both integer and float operands.  Matches the binary path
+            // (`builder.emit_raw(vec![0x65])` in lower.rs).  BASIC `ABS(x)` emits
+            // a conditional that calls this for the x < 0 branch.
+            "neg" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "neg must have a dest".into(),
+                })?;
+                let a = var_src(f, instr, 0, "neg")?;
+                load_var(il, &regs, a)?;
+                let _ = writeln!(il, "    neg");
                 emit_narrow_width_mask(il, &instr.type_hint);
                 store_var(il, &regs, dest)?;
             }

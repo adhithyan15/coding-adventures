@@ -1,5 +1,29 @@
 # Changelog — iir-to-wasm
 
+## [0.27.0] — 2026-06-30 (LANG-FULL — boolean i64/i32 width-coherence for `and`/`or`/`xor`)
+
+Fixed a WASM type-validity bug in the `and`/`or`/`xor` lowering arm that
+surfaced when ALGOL string-comparison boolean chains (type_hint "i64") fed
+into a logical `and` with type_hint "bool".
+
+**Root cause**: WASM is strictly typed. When `cmp_ne` with type_hint "i64"
+produces an i64 local, feeding it into `and` with type_hint "bool" caused
+the backend to select `I32_AND` (based on the instruction's type_hint), but
+both operand locals were i64 → WASM validation error.
+
+**Fix** (`lower.rs`, `and`|`or`|`xor` arm):
+- Compute `use_i64 = type_is_i64 || (r1_is_i64 || r2_is_i64)` — upgrade to
+  i64 arithmetic when EITHER operand's local is i64, even if the instruction
+  type_hint is "bool".
+- Emit `i64.extend_i32_u` for narrower operands BEFORE both locals are
+  pushed, so the WASM stack types match the chosen opcode.
+- After the i64 op, emit `i32.wrap_i64` when the dest local is i32 (e.g. a
+  "bool"-typed result slot) so the store type is consistent.
+
+This also fixes the mixed case (`a and (not b)`) where `a` is i32 but
+`not b` (a `cmp_eq` result) is i64 — previously the i64 check was only on
+r1, missing the case where r2 is the i64 operand.
+
 ## [0.25.0] — 2026-06-29 (LANG-FULL BA-pow — `f64_pow` WASM lowering)
 
 Added `env.__pow(f64, f64) -> f64` host import (slot 4, after getchar) to

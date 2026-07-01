@@ -2914,13 +2914,20 @@ impl Compiler {
         if value.ty != ScalarType::Boolean {
             return Err(CompileError::Type("not operand must be boolean".into()));
         }
+        // Emit `cmp_eq bool_value, 0` with type_hint "i64" so LLVM generates
+        // `icmp eq i64 <i64_load>, 0` — correct when `b` is promoted to an i64
+        // alloca (written 2+ times).  The false constant uses `ScalarType::Boolean`
+        // so it gets a "bool" type_hint: in WASM this makes the false-slot an i32
+        // local, matching a non-promoted boolean variable's i32 register width.
+        // In LLVM both Bool(false) and Int(0) render as the literal "0", so the
+        // choice of ScalarType here has no effect on LLVM output.
         let false_slot = self.emit_const(ScalarType::Boolean, Operand::Bool(false));
         let dest = self.fresh_temp();
         self.emit(IIRInstr::new(
             "cmp_eq",
             Some(dest.clone()),
             vec![Operand::Var(value.slot), Operand::Var(false_slot)],
-            "bool",
+            "i64",
         ));
         Ok(ExprValue {
             slot: dest,
