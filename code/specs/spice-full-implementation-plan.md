@@ -33,27 +33,30 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panels.
+1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel cards.
    - Status: current PR completion candidate.
    - Add schema-versioned Rust app shell dashboard dispatch-queue lane-tab
-     panel surfaces and JSON helpers that project queued, blocked, and
-     attention dispatch queue lane tabs into stable panel descriptors with
-     active-panel routing, attention-panel routing, enabled/disabled/empty
-     panel counts, empty-state messages, lane links, tab links, and
-     lane-tab-panels capability metadata for first-render product-shell
-     navigation.
+     panel-card surfaces and JSON helpers that project queued, blocked, and
+     attention dispatch queue lane-tab panels into stable card descriptors with
+     active-card routing, attention-card routing, enabled/disabled/empty card
+     counts, compact summaries, badge counts, panel links, tab links, lane
+     links, and lane-tab-panel-cards capability metadata for first-render
+     product-shell navigation.
    - Preserve package name, source fingerprint, ready/blocked route, status
      severity, attention-required flag, active lane ID, active tab ID,
-     active panel ID, attention lane ID, attention tab ID, attention panel ID,
+     active panel ID, active panel-card ID, attention lane ID, attention tab ID,
+     attention panel ID, attention panel-card ID,
      lane count, tab count, enabled tab count, disabled tab count, panel count,
-     enabled panel count, disabled panel count, empty panel count, per-panel
-     selected, default, active, attention, disabled, and empty flags,
-     dispatch-queue capability ID, dispatch-queue summary capability ID,
-     dispatch-queue digest capability ID, dispatch-queue lanes capability ID,
-     dispatch-queue lane-tabs capability ID, dispatch-queue lane-tab-panels
-     capability ID, and advertised capability count so Mosaic, WebAssembly,
-     and product shells can append compact lane panel navigation without
-     walking every queue item.
+     enabled panel count, disabled panel count, empty panel count, panel-card
+     count, enabled panel-card count, disabled panel-card count, empty
+     panel-card count, per-card selected, default, active, attention, disabled,
+     empty, summary, and badge-count fields, dispatch-queue capability ID,
+     dispatch-queue summary capability ID, dispatch-queue digest capability ID,
+     dispatch-queue lanes capability ID, dispatch-queue lane-tabs capability
+     ID, dispatch-queue lane-tab-panels capability ID, dispatch-queue
+     lane-tab-panel-cards capability ID, and advertised capability count so
+     Mosaic, WebAssembly, and product shells can append compact lane card
+     navigation without walking every queue item.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -2018,6 +2021,28 @@ the Rust, Python, and TypeScript surfaces together.
      lane-tabs capability ID, and advertised capability count so Mosaic,
      WebAssembly, and product shells can append compact lane tab navigation
      without walking every queue item.
+
+174. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panels.
+   - Status: completed in PR 7241.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell dashboard dispatch-queue lane-tab panel surfaces plus JSON
+     helpers that project queued, blocked, and attention dispatch queue lane
+     tabs into stable panel descriptors with active-panel routing,
+     attention-panel routing, enabled/disabled/empty panel counts, lane links,
+     tab links, empty-state messages, and lane-tab-panels capability metadata
+     for first-render product-shell navigation.
+   - The dispatch-queue lane-tab panels payload preserves package name, source
+     fingerprint, ready/blocked route, status severity, attention-required
+     flag, active lane ID, active tab ID, active panel ID, attention lane ID,
+     attention tab ID, attention panel ID, lane count, tab count, enabled tab
+     count, disabled tab count, panel count, enabled panel count, disabled
+     panel count, empty panel count, per-panel selected, default, active,
+     attention, disabled, and empty flags, dispatch-queue capability ID,
+     dispatch-queue summary capability ID, dispatch-queue digest capability
+     ID, dispatch-queue lanes capability ID, dispatch-queue lane-tabs
+     capability ID, dispatch-queue lane-tab-panels capability ID, and
+     advertised capability count so Mosaic, WebAssembly, and product shells
+     can append compact lane panel navigation without walking every queue item.
 
 ## Backlog
 
