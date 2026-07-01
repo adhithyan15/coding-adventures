@@ -1,8 +1,8 @@
 [package]
 name = "javascript-to-semantic-ir"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
-description = "JavaScript (GrammarASTNode CST) → narrow-waist Semantic IR. SIR19 frontend, milestone M5 (collections: arrays & objects)."
+description = "JavaScript (GrammarASTNode CST) → narrow-waist Semantic IR. SIR19 frontend, milestone M5 (collections) + default parameters."
 
 [dependencies]
 coding-adventures-javascript-parser = { path = "../javascript-parser" }

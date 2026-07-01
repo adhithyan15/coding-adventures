@@ -197,6 +197,32 @@ and `value = r`.
 declarations are not preserved.  v0 doesn't support `this` at all —
 no class support means no `this` cases worth modelling.
 
+## Default parameters (P9)
+
+A formal parameter with an initializer — the CST shape
+`formal_parameter[ Name, "=", assignment_expression ]` — lowers to
+`Param { default: Some(<lowered initializer>) }`.  A plain `formal_parameter`
+(`[Name]`) keeps `default: None`.  This applies uniformly to `function`
+declarations and arrow functions.
+
+JavaScript defaults are **call-time** and may reference **earlier**
+parameters (`function f(a, b = a + 1)`), which is exactly the SIR
+`Param.default` model.  We honour this by lowering each default initializer
+*inside the function frame* (after the param scope is pushed): a reference to
+an earlier param then resolves as a `Scope::Param` `VarRef`.  The initializer
+is an ordinary expression, lowered through the `MAX_EXPR_DEPTH`-bounded
+expression lowerer (no new unbounded CST walk).
+
+A call that omits a trailing defaulted argument (`f(5)` against
+`function f(a, b = a + 1)`) lowers to a **partial** `DirectCall` carrying only
+the present arguments; the omitted parameter is filled by its default at the
+call site.  The SIR validator permits such partial calls when the trailing
+params have defaults.
+
+A defaulted parameter makes the module observe `Feature::DefaultParams` (plus
+any feature the default expression itself uses).  Rest `...args` and
+destructuring parameters remain deferred.
+
 ## Collections (M5)
 
 **Implementation note (M5).**  Arrays, objects, member / dot / subscript
@@ -314,8 +340,10 @@ Errors:
 - Early `return` mid-function
 - Reassignment to a `const` — actually NOT an error in v0; permitted.
 - Unsupported syntax: `class`, `try`/`catch`, `throw`, `async`/`await`,
-  generators, destructuring, spread, default parameters, rest parameters,
+  generators, destructuring, spread, rest parameters (`...args`),
   `with`, `eval`, `new`, `this` outside permitted contexts.
+  (Default parameters are now **supported** — see "Default parameters
+  (P9)".)
 - `import` / `export` (multi-module is out of scope)
 
 ## Tests
@@ -339,8 +367,7 @@ Coverage target ≥ 90%.
 - Generators / `yield`
 - `async function` / `await`
 - Destructuring (`const { a, b } = obj;`)
-- Spread / rest (`...args`)
-- Default parameters
+- Spread / rest parameters (`...args`)
 - Tagged template literals
 - ES module `import` / `export`
 - `eval` / `Function()` constructor

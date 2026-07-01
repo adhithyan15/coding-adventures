@@ -143,6 +143,26 @@ fn object_get_set_runs_in_node() {
 }
 
 #[test]
+fn default_params_run_in_node() {
+    if !node_available() {
+        eprintln!("skipping default_params_run_in_node: `node` not available");
+        return;
+    }
+    // A default that references an earlier param (`b = a + 1`), exercised
+    // both by a *partial* call that omits `b` (`f(5)` → default → 6) and a
+    // full call that supplies it (`f(5, 10)` → 10).  Running this under node
+    // proves the call-time + param-scope semantics end to end: the default
+    // is evaluated at the call site against the actual `a`.
+    let out = run_via_node(
+        "default_params",
+        "function f(a, b = a + 1) { return b; }\n\
+         console.log(f(5));\n\
+         console.log(f(5, 10));",
+    );
+    assert_eq!(out, "6\n10");
+}
+
+#[test]
 fn mutual_recursion_runs_in_node() {
     if !node_available() {
         eprintln!("skipping mutual_recursion_runs_in_node: `node` not available");
