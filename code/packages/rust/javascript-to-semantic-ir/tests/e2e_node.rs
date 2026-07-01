@@ -223,6 +223,64 @@ fn array_map_reduce_runs_in_node() {
     assert_eq!(out, "12");
 }
 
+// ── SECURITY (C3): reflective-gadget method names are refused ─────────
+//
+// `recv.method(args…)` lowers to a `__method__` dispatch whose method name is
+// attacker-controlled.  A handful of JavaScript member names are reflective
+// gadgets that would turn the backend's `recv[name]` lookup into arbitrary
+// code execution — most dangerously `constructor`, which yields the
+// `Function` constructor:
+//
+//     function id(x){ return x; }
+//     let xs = [1];
+//     xs.map( id.constructor("return …evil…") );   // RCE
+//
+// The frontend now refuses to *lower* those names, so the dangerous `StrLit`
+// never enters SIR (protecting every backend).  These tests assert the
+// gadget program is rejected at compile time — it never reaches node.  No
+// `node` gate: the rejection happens in the node-independent lowering pass.
+
+#[test]
+fn constructor_gadget_is_rejected_at_lowering() {
+    // The C3-brief RCE gadget: `id.constructor("…")` must not lower.
+    let src = "function id(x){ return x; } \
+               let xs = [1]; \
+               xs.map(id.constructor(\"return 1\"));";
+    let err = compile_source(src, "prog")
+        .expect_err("`constructor` method dispatch must be refused, not lowered");
+    let msg = format!("{err:?}");
+    assert!(
+        msg.contains("constructor"),
+        "error should name the refused gadget, got: {msg}"
+    );
+}
+
+#[test]
+fn proto_gadget_is_rejected_at_lowering() {
+    // `obj.__proto__(…)` — a prototype-chain escape hatch — is refused too.
+    let src = "let obj = {}; obj.__proto__(1);";
+    let err = compile_source(src, "prog")
+        .expect_err("`__proto__` method dispatch must be refused, not lowered");
+    let msg = format!("{err:?}");
+    assert!(
+        msg.contains("__proto__"),
+        "error should name the refused gadget, got: {msg}"
+    );
+}
+
+#[test]
+fn apply_gadget_is_rejected_at_lowering() {
+    // `fn.apply(…)` re-binds `this`; also on the denylist.
+    let src = "function f(){ return 1; } f.apply(null);";
+    let err = compile_source(src, "prog")
+        .expect_err("`apply` method dispatch must be refused, not lowered");
+    let msg = format!("{err:?}");
+    assert!(
+        msg.contains("apply"),
+        "error should name the refused gadget, got: {msg}"
+    );
+}
+
 #[test]
 fn array_filter_includes_runs_in_node() {
     if !node_available() {

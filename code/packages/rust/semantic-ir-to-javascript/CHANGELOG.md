@@ -7,6 +7,25 @@ All notable changes to `semantic-ir-to-javascript` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### Security
+
+- **Allowlist method-dispatch names in `callMethod` to block a
+  Function-constructor RCE (C3).**  `callMethod(recv, name, …args)` performed
+  an unrestricted dynamic `recv[name]` lookup with an attacker-controlled
+  `name`.  A translated untrusted program could therefore reach reflective
+  gadgets — chiefly `constructor`, which on any function yields the global
+  `Function` constructor, letting `id.constructor("return …evil…")` synthesise
+  and run arbitrary code (a native higher-order method like
+  `Array.prototype.map` then invokes it → remote code execution).  `apply`,
+  `call`, `bind`, `__proto__`, `prototype`, and the `__define/lookup*etter__`
+  pair were equally reachable.  `callMethod` now dispatches **only** through a
+  fixed allowlist of known-safe Array / String / Number methods; any name
+  outside it (every gadget included) throws a `TypeError` *before* the lookup.
+  This is the primary, load-bearing gate — the emitted JS is what executes.
+  A node execution-proof asserts `callMethod(id, "constructor", …)` throws
+  instead of building a function.  `length` remains special-cased ahead of the
+  allowlist as a property read.
+
 ## 0.5.0 — method dispatch (`__method__`) execution
 
 Adds the minimal runtime support the JavaScript frontend's C3 member-method

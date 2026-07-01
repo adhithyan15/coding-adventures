@@ -7,6 +7,26 @@ All notable changes to `javascript-to-semantic-ir` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+### Security
+
+- **Reject reflective-gadget method names at lowering time (C3, defense in
+  depth).**  The method name in a `recv.method(args…)` dispatch is
+  attacker-controlled and flows verbatim into a `StrLit` that every backend
+  turns into a dynamic `recv[name]` property lookup.  A handful of JavaScript
+  member names are reflective gadgets that make that lookup arbitrary-code
+  execution — most dangerously `constructor`, which yields the `Function`
+  constructor (`id.constructor("return …evil…")` → RCE once a native
+  higher-order method such as `Array.prototype.map` invokes the result).
+  `make_method_dispatch` now refuses to lower any name on a fixed denylist —
+  `constructor`, `__proto__`, `prototype`, `apply`, `call`, `bind`,
+  `__defineGetter__`, `__defineSetter__`, `__lookupGetter__`,
+  `__lookupSetter__` — with a positioned error, so the dangerous `StrLit`
+  never enters SIR and every backend is protected at the source.  The
+  frontend stays otherwise permissive; the JS runtime's method allowlist is
+  the tight complementary gate.  Regression tests assert the
+  `xs.map(id.constructor("…"))` gadget and `obj.__proto__` / `fn.apply` are
+  rejected.
+
 ## 0.7.0
 
 **Member-method calls → `__method__` dispatch (C3 — collection methods).**

@@ -777,3 +777,127 @@ fn required_keyword_param_supplied_by_call() {
         assert_eq!(stdout, "7", "pick(chosen: 7) must return 7");
     }
 }
+
+// ── SECURITY: runtime `callMethod` allowlist blocks the RCE gadget ─────
+//
+// `callMethod(recv, name, …)` performs a dynamic `recv[name]` lookup with an
+// attacker-controlled `name`.  Without a gate, `name = "constructor"` on a
+// function receiver yields the global `Function` constructor and lets a
+// translated untrusted program synthesise and run arbitrary code — a remote
+// code-execution hole.  The runtime now dispatches only through a fixed
+// allowlist of safe collection/String/Number methods; anything else throws a
+// `TypeError` *before* the lookup.  This test builds a module that emits
+// `__Sir.callMethod(fn, "constructor", "…")` directly (bypassing the frontend
+// denylist, to exercise the runtime's own gate) and asserts node throws
+// rather than executing the payload.
+
+/// Compile + run a module expecting node to FAIL (non-zero exit).  Returns
+/// the captured stderr so the caller can assert on the thrown message.
+/// Returns `None` when node is unavailable.
+fn run_module_expecting_failure(module: &Module, tag: &str) -> Option<String> {
+    let artifact = compile(module).expect("compile to javascript");
+    if !node_available() {
+        eprintln!("note: `node` unavailable — skipping execution for `{tag}`");
+        return None;
+    }
+    let mut path: PathBuf = std::env::temp_dir();
+    path.push(format!("sir_js_{}_{}.js", tag, std::process::id()));
+    std::fs::write(&path, &artifact.source).expect("write temp js");
+    let output = Command::new("node").arg(&path).output().expect("spawn node");
+    let _ = std::fs::remove_file(&path);
+    assert!(
+        !output.status.success(),
+        "SECURITY: node UNEXPECTEDLY SUCCEEDED for `{tag}` — the gadget was \
+         not blocked!\nstdout: {}\nsource:\n{}",
+        String::from_utf8_lossy(&output.stdout),
+        artifact.source,
+    );
+    Some(String::from_utf8_lossy(&output.stderr).to_string())
+}
+
+#[test]
+fn runtime_rejects_constructor_gadget() {
+    // Build:  function id(x) { return x; }
+    //         function main() { print(callMethod(id, "constructor", "return 1")); }
+    // where `callMethod(id, "constructor", …)` is the raw __method__ envelope.
+    // Unguarded, `id["constructor"]` is `Function`, and invoking it would
+    // build+run code.  The allowlist must reject "constructor" with a
+    // TypeError so node exits non-zero.
+    use semantic_ir::Param;
+
+    let id = Function {
+        name: "id".into(),
+        params: vec![Param {
+            name: "x".into(),
+            sir_type: None,
+            kind: semantic_ir::ParamKind::Required,
+            default: None,
+            span: sp(),
+        }],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: vec![],
+            value: Expr::VarRef { name: "x".into(), scope: Scope::Param, span: sp() },
+            span: sp(),
+        },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+
+    // The raw method-dispatch envelope: BuiltinCall("__method__",
+    // [receiver, "constructor", payload]) → __Sir.callMethod(id, "constructor",
+    // "return 1").  `id` is referenced as a global function handle.
+    let gadget = bc(
+        "__method__",
+        vec![
+            Expr::VarRef { name: "id".into(), scope: Scope::Global, span: sp() },
+            Expr::StrLit { value: "constructor".into(), span: sp() },
+            Expr::StrLit { value: "return 1".into(), span: sp() },
+        ],
+    );
+
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts: vec![print(gadget)], value: Expr::NilLit { span: sp() }, span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+
+    let module = Module {
+        name: "rce_gadget".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Strings,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![id, main],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+
+    // Shape check (runs without node): the emitted call routes to callMethod
+    // with the dangerous name — proving we are genuinely exercising the gate.
+    let artifact = compile(&module).expect("compile to javascript");
+    assert!(
+        artifact.source.contains(r#"__Sir.callMethod(id, "constructor", "return 1")"#),
+        "expected the raw constructor gadget in emitted source, got:\n{}",
+        artifact.source
+    );
+
+    if let Some(stderr) = run_module_expecting_failure(&module, "rce_gadget") {
+        assert!(
+            stderr.contains("not an allowed collection method"),
+            "expected the allowlist TypeError, got stderr:\n{stderr}"
+        );
+    }
+}

@@ -1655,7 +1655,7 @@ impl Lowerer {
             };
             let step_args = self.lower_arguments(args_node, depth)?;
             let name_span = self.span_of_token(method_tok);
-            acc = self.make_method_dispatch(acc, method_tok.value.clone(), name_span, step_args, span.clone());
+            acc = self.make_method_dispatch(acc, method_tok.value.clone(), name_span, step_args, span.clone())?;
             i += 3;
         }
 
@@ -1706,7 +1706,7 @@ impl Lowerer {
             let method = method_tok.value.clone();
             let branch = peel_to_branch(callee);
             let recv = self.lower_member_prefix(branch, last_access, &span)?;
-            return Ok(self.make_method_dispatch(recv, method, name_span, arg_exprs, span));
+            return self.make_method_dispatch(recv, method, name_span, arg_exprs, span);
         }
 
         // A bare-identifier callee.
@@ -1751,6 +1751,27 @@ impl Lowerer {
     /// declare [`Feature::Strings`] for the synthetic method-name `StrLit`.
     /// This is the single narrow-waist convention every backend routes to
     /// its OOP runtime (see [`lower_call_expression`](Self::lower_call_expression)).
+    ///
+    /// # Security — reject dangerous method names at lowering time
+    ///
+    /// The method name here is *attacker-controlled*: it is a source-level
+    /// identifier from an untrusted input program, and it flows verbatim into
+    /// a `StrLit` that every backend uses to perform a dynamic property
+    /// lookup on the receiver (`recv[name]`).  A handful of JavaScript member
+    /// names are *reflective gadgets* that turn that lookup into code
+    /// execution — most dangerously `constructor`, which on any function
+    /// yields the `Function` constructor and lets a translated program build
+    /// and run arbitrary code (`id.constructor("…evil…")` → RCE).  `apply`,
+    /// `call`, `bind`, `__proto__`, `prototype`, and the
+    /// `__define/lookup*etter__` pair are the other prototype-chain escape
+    /// hatches.
+    ///
+    /// We therefore refuse to *lower* any of those names: the dangerous
+    /// `StrLit` never enters SIR, so every backend — not just the JS runtime,
+    /// which carries its own allowlist as the tight gate — is protected at the
+    /// source.  The frontend stays otherwise permissive (unknown-but-harmless
+    /// method names still lower fine); this denylist blocks only the names
+    /// that are *never* legitimate collection/String/Number methods.
     fn make_method_dispatch(
         &mut self,
         receiver: Expr,
@@ -1758,18 +1779,29 @@ impl Lowerer {
         name_span: Span,
         args: Vec<Expr>,
         span: Span,
-    ) -> Expr {
+    ) -> Result<Expr, JsLowerError> {
+        if is_dangerous_method_name(&method) {
+            return Err(JsLowerError {
+                message: format!(
+                    "method `{method}` is a reflective JavaScript gadget \
+                     (a prototype/constructor escape hatch) and is refused at \
+                     lowering time to prevent arbitrary-code execution"
+                ),
+                line: name_span.start_line,
+                column: name_span.start_col,
+            });
+        }
         self.features_used.add(Feature::Strings);
         let mut full_args = Vec::with_capacity(args.len() + 2);
         full_args.push(receiver);
         full_args.push(Expr::StrLit { value: method, span: name_span });
         full_args.extend(args);
-        Expr::BuiltinCall {
+        Ok(Expr::BuiltinCall {
             name: "__method__".to_string(),
             args: full_args,
             effects: EffectSet::PURE,
             span,
-        }
+        })
     }
 
     /// Lower the `arguments` node (`( argument_list? )`) into a `Vec<Expr>`.
@@ -3626,6 +3658,36 @@ fn member_callee_parts(callee: &GrammarASTNode) -> Option<(String, String)> {
         .value
         .clone();
     Some((obj, method))
+}
+
+/// Method names that must never be lowered into a `__method__` dispatch
+/// because they are reflective JavaScript gadgets — prototype-chain and
+/// constructor escape hatches that turn an ordinary `recv[name]` property
+/// lookup into arbitrary-code execution.
+///
+/// The headline gadget is `constructor`: on any function value it resolves to
+/// the global `Function` constructor, so a translated untrusted program of the
+/// form `id.constructor("return …")` synthesises and runs attacker code (an
+/// RCE — a native higher-order method such as `Array.prototype.map` will then
+/// happily invoke the resulting function).  `apply`/`call`/`bind` re-bind
+/// `this`, and `__proto__`/`prototype`/`__define*etter__`/`__lookup*etter__`
+/// walk or mutate the prototype chain.  None of these is ever a legitimate
+/// collection / String / Number method, so we reject them outright here —
+/// this is defense in depth in front of the JS runtime's own allowlist.
+fn is_dangerous_method_name(name: &str) -> bool {
+    matches!(
+        name,
+        "constructor"
+            | "__proto__"
+            | "prototype"
+            | "apply"
+            | "call"
+            | "bind"
+            | "__defineGetter__"
+            | "__defineSetter__"
+            | "__lookupGetter__"
+            | "__lookupSetter__"
+    )
 }
 
 /// If `callee` peels to a `member_expression` whose **final** access is a

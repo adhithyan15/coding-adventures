@@ -185,10 +185,52 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     }
     return a;
   }
+  // ── method-name allowlist (SECURITY, load-bearing) ─────────────
+  // `name` here is ATTACKER-CONTROLLED: it originates as a source-level
+  // method name in an untrusted input program and reaches us verbatim.
+  // `recv[name]` is therefore an *unrestricted* dynamic property lookup, and
+  // a handful of JavaScript member names are reflective gadgets that turn
+  // that lookup into arbitrary-code execution.  The worst is `constructor`:
+  // on any function it yields the `Function` constructor, so a translated
+  // program can write
+  //     id.constructor("return …payload…")
+  // to synthesise and run evil code — and a native higher-order method
+  // (Array.prototype.map/filter/…) will then invoke the result.  That is a
+  // remote-code-execution hole.  `apply`/`call`/`bind` re-bind `this`, and
+  // `__proto__`/`prototype`/`__define*etter__`/`__lookup*etter__`/`valueOf`/
+  // `hasOwnProperty` are the other prototype-chain escape hatches.
+  //
+  // We therefore dispatch ONLY through this fixed allowlist of known-safe
+  // collection / String / Number methods.  Anything not on the list — every
+  // gadget above included, none of which appear here — is rejected with a
+  // TypeError *before* any property is looked up or invoked.  This is the
+  // primary gate: the emitted JS is what actually executes, so the allowlist
+  // must live here (the frontend denylist is defense in depth in front of it).
+  const METHOD_ALLOWLIST = new Set([
+    // Array
+    "push", "pop", "shift", "unshift", "slice", "splice", "concat",
+    "map", "filter", "reduce", "reduceRight", "forEach", "includes",
+    "indexOf", "lastIndexOf", "join", "sort", "reverse", "find",
+    "findIndex", "some", "every", "flat", "flatMap", "fill", "at",
+    "keys", "values", "entries",
+    // String
+    "toUpperCase", "toLowerCase", "trim", "trimStart", "trimEnd", "split",
+    "charAt", "charCodeAt", "codePointAt", "substring", "repeat",
+    "startsWith", "endsWith", "replace", "replaceAll", "padStart", "padEnd",
+    // Number
+    "toFixed", "toString",
+  ]);
   function callMethod(recv, name, ...rawArgs) {
     const args = rawArgs.map(unwrapArg);
-    // `length` as a nullary method mirrors the property.
+    // `length` as a nullary method mirrors the property.  Kept special-cased
+    // ahead of the allowlist: it is a property read, not a method call.
     if (name === "length" && args.length === 0) { return recv.length; }
+    // SECURITY gate: refuse any name outside the allowlist so reflective
+    // gadgets (`constructor`, `__proto__`, `apply`, …) can never be reached.
+    if (!METHOD_ALLOWLIST.has(name)) {
+      throw new TypeError(
+        "method `" + name + "` is not an allowed collection method");
+    }
     const m = recv == null ? undefined : recv[name];
     if (typeof m !== "function") {
       throw new TypeError(
