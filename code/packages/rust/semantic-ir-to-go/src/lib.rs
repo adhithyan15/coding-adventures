@@ -12,7 +12,7 @@ mod runtime;
 
 use semantic_ir::{
     Artifact, ArtifactMetadata, Backend, BackendError, BackendErrorKind, Feature, Module,
-    ParamKind,
+    ParamKind, Scope,
 };
 
 pub use emit::sanitize_ident;
@@ -118,6 +118,31 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // The runtime catalog IS the gate: an unknown method name fails at
     // runtime with a controlled "undefined method" panic, never via
     // reflection.  (See the `pure_method_dispatch_module_is_accepted` test.)
+    //
+    // ── E3 — exception handling (panic / recover) ──────────────────
+    //
+    // `Exceptions` maps `Stmt::TryCatch` onto an immediately-invoked func
+    // with a deferred `recover` (Go has no native try/catch) and the `raise`
+    // builtin onto `panic(_sir_new_error(...))`.  See `emit::emit_try_catch`.
+    Feature::Exceptions,
+    // `Classes` + `Constants` are accepted ONLY to admit exception-*subclass*
+    // declarations and the `raise Foo`/`rescue Foo` class-name refs they
+    // carry — NOT general OOP.  A `class MyErr < StandardError` contributes a
+    // single ANCESTRY edge (registered at init) and its `raise ClassName`
+    // first-arg is a `VarRef{Const}` intercepted in `emit::emit_builtin_call`.
+    //
+    // Accepting these two features is SOUND because the ONLY class/const
+    // shapes the backend can emit are those two exception-specific ones; any
+    // OTHER class/const usage is rejected CLEANLY (not mis-emitted) by
+    // `check_exception_soundness` below:
+    //   * a class body carrying instance/class variables observes
+    //     `InstanceVars`/`ClassVars` (NOT accepted) → rejected at the manifest
+    //     gate; a method-bearing class hoists its `def`s to top-level
+    //     Functions, so the ClassDef body is ordinary supported statements;
+    //   * a `Const` reference or assignment OUTSIDE the whitelisted
+    //     `raise ClassName` position → rejected by `check_no_general_const`.
+    Feature::Classes,
+    Feature::Constants,
 ];
 
 impl Backend for GoBackend {
@@ -153,6 +178,11 @@ impl Backend for GoBackend {
         // backend's promise: it never silently emits wrong code.
         let mut cap_errors = self.check_module(module);
         check_no_keyword_rest_mix(module, &mut cap_errors);
+        // E3: accepting `Classes`/`Constants` only for exception subclasses
+        // means we must reject any OTHER class/const usage cleanly (never
+        // mis-emit).  This layers a structural gate on top of the manifest
+        // gate, right beside `check_no_keyword_rest_mix`.
+        check_exception_soundness(module, &mut cap_errors);
         if let Some(e) = cap_errors.into_iter().next() {
             return Err(e);
         }
@@ -242,6 +272,207 @@ fn check_no_keyword_rest_mix(module: &Module, errs: &mut Vec<BackendError>) {
             });
         }
     }
+}
+
+/// E3 structural soundness gate.
+///
+/// The Go backend accepts `Feature::Classes`/`Constants` ONLY for exception
+/// subclasses and the `raise Foo`/`rescue Foo` class-name refs.  Any OTHER
+/// class/const usage would reach an emit path that cannot represent it, so
+/// we reject those modules CLEANLY here (an honest "unsupported construct"
+/// error) rather than let a `panic!` or a mis-emit through.  Rejected:
+///
+///   * a `ModuleDef` (`module M; …; end`) — a namespace, not an exception
+///     subclass; the backend has no OOP runtime to host it;
+///   * a `Const` reference (`VarRef{Const}`) ANYWHERE except as the first
+///     argument of a `raise` builtin — a general constant-as-value (`x =
+///     MyClass`) has no runtime representation here;
+///   * a `Const` assignment (`Assign{Const}`, i.e. `FOO = 4`, including
+///     inside a class body) — the backend has no constant store.
+///
+/// Every offending node appends one `BackendError`.  Instance/class-variable
+/// usage is already rejected upstream by the manifest gate (those observe
+/// `InstanceVars`/`ClassVars`, which this backend does not accept), so this
+/// gate need only cover the const/module surface that `Classes`/`Constants`
+/// acceptance newly admits.
+fn check_exception_soundness(module: &Module, errs: &mut Vec<BackendError>) {
+    for f in &module.functions {
+        for s in &f.body.stmts {
+            check_soundness_stmt(s, errs);
+        }
+        check_soundness_expr(&f.body.value, errs);
+    }
+}
+
+fn unsupported(msg: &str, span: semantic_ir::Span) -> BackendError {
+    BackendError {
+        kind: BackendErrorKind::UnsupportedFeature,
+        message: msg.into(),
+        span,
+    }
+}
+
+fn check_soundness_stmt(s: &semantic_ir::Stmt, errs: &mut Vec<BackendError>) {
+    use semantic_ir::Stmt;
+    match s {
+        Stmt::Assign { scope: Scope::Const, name, span, .. } => {
+            errs.push(unsupported(
+                &format!(
+                    "go backend cannot emit a constant assignment `{}` — \
+                     `Feature::Constants` is accepted only for `raise ClassName` \
+                     exception class references, not general constants",
+                    name
+                ),
+                span.clone(),
+            ));
+        }
+        Stmt::ModuleDef { name, span, .. } => {
+            errs.push(unsupported(
+                &format!(
+                    "go backend cannot emit a module definition `{}` — the exception \
+                     backend supports only exception-subclass class declarations",
+                    name
+                ),
+                span.clone(),
+            ));
+        }
+        Stmt::LetBinding { value, .. }
+        | Stmt::LetStarBinding { value, .. }
+        | Stmt::Assign { value, .. }
+        | Stmt::ExprStmt { expr: value, .. } => check_soundness_expr(value, errs),
+        Stmt::While { cond, body, .. } => {
+            check_soundness_expr(cond, errs);
+            for st in &body.stmts {
+                check_soundness_stmt(st, errs);
+            }
+            check_soundness_expr(&body.value, errs);
+        }
+        Stmt::ForRange { start, stop, step, body, .. } => {
+            check_soundness_expr(start, errs);
+            check_soundness_expr(stop, errs);
+            check_soundness_expr(step, errs);
+            for st in &body.stmts {
+                check_soundness_stmt(st, errs);
+            }
+            check_soundness_expr(&body.value, errs);
+        }
+        Stmt::ForEach { iter, body, .. } => {
+            check_soundness_expr(iter, errs);
+            for st in &body.stmts {
+                check_soundness_stmt(st, errs);
+            }
+            check_soundness_expr(&body.value, errs);
+        }
+        Stmt::SeqSet { seq, index, value, .. } => {
+            check_soundness_expr(seq, errs);
+            check_soundness_expr(index, errs);
+            check_soundness_expr(value, errs);
+        }
+        Stmt::MapSet { map, key, value, .. } => {
+            check_soundness_expr(map, errs);
+            check_soundness_expr(key, errs);
+            check_soundness_expr(value, errs);
+        }
+        Stmt::ClassDef { body, .. } | Stmt::SingletonClassDef { body, .. } => {
+            for st in body {
+                check_soundness_stmt(st, errs);
+            }
+        }
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            for st in body {
+                check_soundness_stmt(st, errs);
+            }
+            for r in rescues {
+                for st in &r.body {
+                    check_soundness_stmt(st, errs);
+                }
+            }
+            if let Some(ens) = ensure_body {
+                for st in ens {
+                    check_soundness_stmt(st, errs);
+                }
+            }
+        }
+    }
+}
+
+fn check_soundness_expr(e: &semantic_ir::Expr, errs: &mut Vec<BackendError>) {
+    use semantic_ir::Expr;
+    match e {
+        Expr::VarRef { scope: Scope::Const, name, span, .. } => {
+            errs.push(unsupported(
+                &format!(
+                    "go backend cannot emit a constant reference `{}` outside a \
+                     `raise ClassName` — `Feature::Constants` is accepted only for \
+                     exception class references",
+                    name
+                ),
+                span.clone(),
+            ));
+        }
+        Expr::BuiltinCall { name, args, .. } if name == "raise" => {
+            // The FIRST arg of `raise` may be a `Const` class name — that is
+            // the whitelisted position, so skip it and check only the rest.
+            for (i, a) in args.iter().enumerate() {
+                if i == 0 && matches!(a, Expr::VarRef { scope: Scope::Const, .. }) {
+                    continue;
+                }
+                check_soundness_expr(a, errs);
+            }
+        }
+        Expr::BuiltinCall { args, .. } | Expr::DirectCall { args, .. } => {
+            for a in args {
+                check_soundness_expr(a, errs);
+            }
+        }
+        Expr::IndirectCall { target, args, .. } => {
+            check_soundness_expr(target, errs);
+            for a in args {
+                check_soundness_expr(a, errs);
+            }
+        }
+        Expr::If { cond, then_branch, else_branch, .. } => {
+            check_soundness_expr(cond, errs);
+            check_soundness_block(then_branch, errs);
+            check_soundness_block(else_branch, errs);
+        }
+        Expr::Block(b) => check_soundness_block(b, errs),
+        Expr::MakeClosure { captures, .. } => {
+            for c in captures {
+                check_soundness_expr(&c.value, errs);
+            }
+        }
+        Expr::SeqLit { items, .. } => {
+            for it in items {
+                check_soundness_expr(it, errs);
+            }
+        }
+        Expr::SeqIndex { seq, index, .. } => {
+            check_soundness_expr(seq, errs);
+            check_soundness_expr(index, errs);
+        }
+        Expr::SeqLen { seq, .. } => check_soundness_expr(seq, errs),
+        Expr::MapLit { entries, .. } => {
+            for en in entries {
+                check_soundness_expr(&en.key, errs);
+                check_soundness_expr(&en.value, errs);
+            }
+        }
+        Expr::MapGet { map, key, .. } => {
+            check_soundness_expr(map, errs);
+            check_soundness_expr(key, errs);
+        }
+        Expr::KeywordArg { value, .. } => check_soundness_expr(value, errs),
+        // Leaves / nodes with no sub-exprs of interest.
+        _ => {}
+    }
+}
+
+fn check_soundness_block(b: &semantic_ir::Block, errs: &mut Vec<BackendError>) {
+    for s in &b.stmts {
+        check_soundness_stmt(s, errs);
+    }
+    check_soundness_expr(&b.value, errs);
 }
 
 #[cfg(test)]
@@ -555,13 +786,163 @@ mod tests {
         assert!(a.source.contains(r#", "length", []Value{}"#));
     }
 
-    // A class-bearing module stays REJECTED — we do not accept `Feature::Classes`,
-    // so loosening the `__method__` path never accidentally admits class semantics.
+    // ── E3 soundness: full OOP class semantics stay REJECTED ──────────────
+    //
+    // Post-E3 the Go backend accepts `Feature::Classes`/`Constants`, but ONLY
+    // for exception subclasses.  A class carrying INSTANCE VARIABLES observes
+    // `Feature::InstanceVars` (which we do NOT accept), so it is rejected at
+    // the manifest gate — accepting `Classes` never admits real OOP.
+    // (`Block`, `Stmt`, `Scope`, … are already imported by the KW6 test
+    // block above; `sp()` is the shared span helper.)
+
     #[test]
-    fn class_bearing_module_still_rejected() {
-        let mut m = twig_to_semantic_ir::compile_source("(+ 1 2)", "demo").expect("lower");
-        m.manifest = semantic_ir::FeatureManifest::from_features(&[Feature::Classes]);
-        let err = compile(&m).expect_err("classes must stay rejected");
+    fn class_with_instance_vars_still_rejected() {
+        // class Counter; @count = 0; end   (an ivar assign in the body)
+        let class = Stmt::ClassDef {
+            name: "Counter".into(),
+            superclass: None,
+            body: vec![Stmt::Assign {
+                name: "@count".into(),
+                scope: Scope::Instance,
+                value: Expr::IntLit { value: 0, span: sp() },
+                span: sp(),
+            }],
+            span: sp(),
+        };
+        let main = Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![class],
+                value: Expr::NilLit { span: sp() },
+                span: sp(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: sp(),
+        };
+        let m = Module {
+            name: "oop".into(),
+            manifest: FeatureManifest::from_features(&[
+                Feature::Classes,
+                Feature::InstanceVars,
+            ]),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![main],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("test")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: sp(),
+        };
+        // Rejected CLEANLY (an `Err`, never a panic/mis-emit).  The rejection
+        // may come from the manifest gate (`InstanceVars` unaccepted) — the
+        // point is that accepting `Classes` never admits real OOP.
+        let err = compile(&m).expect_err("instance-var class must stay rejected");
+        assert!(matches!(
+            err.kind,
+            BackendErrorKind::UnsupportedFeature | BackendErrorKind::InvalidModule
+        ));
+    }
+
+    // A general constant assignment (`FOO = 4`) is rejected CLEANLY — the E3
+    // soundness gate (or the upstream validator) turns it into an honest
+    // `Err`, never a panic or a silent mis-emit.  `Constants` is accepted only
+    // for `raise ClassName`.
+    #[test]
+    fn general_constant_assignment_rejected() {
+        let main = Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::Assign {
+                    name: "FOO".into(),
+                    scope: Scope::Const,
+                    value: Expr::IntLit { value: 4, span: sp() },
+                    span: sp(),
+                }],
+                value: Expr::NilLit { span: sp() },
+                span: sp(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: sp(),
+        };
+        let m = Module {
+            name: "const".into(),
+            manifest: FeatureManifest::from_features(&[Feature::Constants]),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![main],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("test")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: sp(),
+        };
+        let err = compile(&m).expect_err("general const assignment must be rejected");
+        assert!(matches!(
+            err.kind,
+            BackendErrorKind::UnsupportedFeature | BackendErrorKind::InvalidModule
+        ));
+    }
+
+    // Direct proof that the E3 SOUNDNESS GATE fires: a `VarRef{Const}` used as
+    // a value OUTSIDE a `raise` (here as a `print` argument) is a shape the
+    // validator accepts (`Constants` observed, manifest declares it) yet the
+    // Go backend cannot emit — so `check_exception_soundness` rejects it with
+    // an `UnsupportedFeature` naming the constant reference.
+    #[test]
+    fn general_constant_reference_rejected_by_soundness_gate() {
+        let main = Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::ExprStmt {
+                    expr: Expr::BuiltinCall {
+                        name: "print".into(),
+                        args: vec![Expr::VarRef {
+                            name: "FOO".into(),
+                            scope: Scope::Const,
+                            span: sp(),
+                        }],
+                        effects: EffectSet::PURE,
+                        span: sp(),
+                    },
+                    span: sp(),
+                }],
+                value: Expr::NilLit { span: sp() },
+                span: sp(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: sp(),
+        };
+        let m = Module {
+            name: "constref".into(),
+            manifest: FeatureManifest::from_features(&[Feature::Constants]),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![main],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("test")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: sp(),
+        };
+        let err = compile(&m).expect_err("const-as-value must be rejected");
         assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
+        assert!(
+            err.message.contains("constant reference"),
+            "expected the soundness gate's message; got: {}",
+            err.message
+        );
     }
 }

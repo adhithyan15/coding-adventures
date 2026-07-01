@@ -174,8 +174,10 @@ runtime catalog** and emits every dispatch to it:
 - **No new feature gate.**  A pure collection-method module observes no
   `Feature::MethodDispatch` (the validator marks nothing for `__method__`), so
   it carries only its receiver/argument features — all already accepted — and is
-  accepted **without dragging in class semantics** (`Feature::Classes` stays
-  unaccepted).  The runtime catalog is the real gate.
+  accepted **without dragging in class semantics**.  (`Feature::Classes` is
+  accepted post-E3 only for exception subclasses — see below — never for general
+  OOP, which `check_exception_soundness` still rejects.)  The runtime catalog is
+  the real gate.
 
 Catalog coverage (v0): **Array** `length`/`size`/`count`, `first`, `last`,
 `empty?`, `include?`, `index`, `push`/`append`, `<<`, `pop`, `shift`, `reverse`,
@@ -189,6 +191,50 @@ Catalog coverage (v0): **Array** `length`/`size`/`count`, `first`, `last`,
 `zero?`, `positive?`, `negative?`, `succ`/`next`, `pred`, `times`; **Symbol**
 `to_s`, `to_sym`, `length`/`size`, `upcase`, `downcase`, `empty?`; **universal**
 `nil?`, `==`, `!=`, `class`, `to_s`, `itself`.
+
+### E3 — exception handling (`Exceptions`, panic/recover)
+
+Go has **no native try/catch** — it unwinds with `panic` and a deferred
+`recover`.  The backend maps SIR's `begin/rescue/ensure` (`Stmt::TryCatch`) onto
+an **immediately-invoked func** whose deferred closure recovers the panic and
+dispatches to the matching rescue clause; `raise` maps onto `panic`:
+
+```go
+func() {
+  defer func() { <ensure body> }()             // registered FIRST ⇒ runs LAST
+  defer func() {
+    if r := recover(); r != nil {
+      if _sir_rescue_matches(r, []string{"ArgumentError"}) { e := _sir_exc_value(r); /* body */ } else
+      if _sir_rescue_matches(r, []string{"TypeError"}) { /* body */ } else { panic(r) } // re-raise
+    }
+  }()                                          // registered SECOND ⇒ runs FIRST
+  /* try body — may panic(_sir_new_error("ArgumentError", "msg")) */
+}()
+```
+
+- **`raise Foo, "m"`** → `panic(_sir_new_error("Foo", <msg>))`; **`raise "m"`** →
+  an implicit `RuntimeError`; **bare `raise`** → a generic `RuntimeError` (SIR v0
+  does not thread the in-flight exception, matching the TS/Python backends).
+- **`ensure` ordering.**  Deferred funcs run **LIFO**, and `ensure` must run
+  LAST on every path — so its `defer` is registered **first** (deferred earliest
+  ⇒ runs last).  The recover/dispatch defer, registered second, runs first; when
+  no clause matches it re-`panic`s, which still unwinds through the ensure defer,
+  so `ensure` runs on the propagating path too.
+- **Ancestry (typed `rescue`).**  `_sir_rescue_matches` walks a built-in Ruby
+  ancestry table (`StandardError → Exception`, `ArgumentError`/`TypeError`/… →
+  `StandardError`, `NoMethodError → NameError`, `KeyError → IndexError`, …),
+  ported from the TS/Python `sir-runtime-exceptions` reference for parity.  A
+  bare `rescue` (empty class list) is catch-all; `Exception` matches anything.
+- **User subclasses.**  A `class MyErr < StandardError` contributes one
+  `subclass → superclass` edge; all such edges are collected and registered
+  **once at program init** via `_sir_register_ancestry`, so `rescue StandardError`
+  catches a raised `MyErr`.
+- **Security.**  Rescue matching is an **explicit string-map lookup**, never
+  reflection on a Go type name; the ancestry walk carries a `seen` set so a
+  cyclic user hierarchy (`class A<B; class B<A`) terminates.  `Feature::Classes`/
+  `Constants` are accepted **only** for exception subclasses / `raise ClassName`
+  refs — any other class/const usage is rejected cleanly by
+  `check_exception_soundness`, so accepting them never admits general OOP.
 
 ## Value model
 

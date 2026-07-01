@@ -1,5 +1,80 @@
 # Changelog
 
+## 0.8.0
+
+### Added
+
+- **Exception handling via panic/recover + ancestry (E3).**  The Go backend now
+  EXECUTES `begin/rescue/ensure` and `raise` end to end.  Go has NO native
+  try/catch, so exceptions are modelled with `panic` + a deferred `recover`:
+  - **`Stmt::TryCatch` → an immediately-invoked func** (`emit::emit_try_catch`).
+    The func registers up to two deferred closures and then runs the try body:
+    ```go
+    func() {
+      defer func() { <ensure> }()            // only if ensure present
+      defer func() {
+        if r := recover(); r != nil {
+          if _sir_rescue_matches(r, []string{"Foo","Bar"}) { e := _sir_exc_value(r); <body> } else
+          if _sir_rescue_matches(r, []string{"Baz"}) { <body> } else { panic(r) }
+        }
+      }()
+      <try body>
+    }()
+    ```
+    Rescue clauses are tried in **source order**; the first whose class list
+    matches (per the ancestry table) runs, and if **none** match the recovered
+    value is re-`panic`ked so it propagates (Ruby's "propagate when unrescued").
+    An empty `exception_types` is a bare `rescue` (catch-all); `=> e` binds the
+    caught value via `_sir_exc_value(r)`.
+  - **ENSURE ORDERING (LIFO).**  Deferred funcs run last-in-first-out, and Ruby's
+    `ensure` must run whether or not a rescue matched — i.e. it must run LAST — so
+    its `defer` is registered **first** (deferred earliest ⇒ runs last).  The
+    recover/dispatch `defer` is registered second (runs first): it recovers,
+    dispatches, and re-`panic`s unmatched exceptions — a re-panic still unwinds
+    through the already-registered ensure defer, so `ensure` runs on the
+    propagating path too.
+  - **`raise` → `panic`** (`emit::emit_builtin_call`).  `raise Foo, "m"` →
+    `panic(_sir_new_error("Foo", <msg>))` (the `Const` class name is intercepted
+    and passed as a string — it never reaches `emit_var_ref`); `raise "boom"`
+    (non-const first arg) → an implicit `RuntimeError`; bare `raise` → a generic
+    `RuntimeError` (SIR v0 does not thread the in-flight exception into a bare
+    re-raise — Go's `recover()` only works in a deferred func, matching the
+    TS/Python backends' documented limitation).
+  - **Runtime helpers** (`runtime.rs`, inlined verbatim): a `SirError` struct
+    `{ Class string; Msg Value }`; `_sir_new_error(class, msg)`;
+    `_sir_exc_value(r)` (the `Value` a `rescue => e` binds — a `*SirError`
+    verbatim, or a synthesised `StandardError` wrapping a native Go panic);
+    `_sir_rescue_matches(r, classNames)` (the ordered, ancestry-aware type test);
+    and `_sir_register_ancestry(edges)` for user-defined class edges.  A
+    `_sir_format` arm makes a caught exception print as its message (Ruby's
+    `exception.message`).
+  - **Built-in Ruby ancestry table** (`_sir_ancestry`), **ported from the
+    TS/Python `sir-runtime-exceptions` reference for parity**: `StandardError →
+    Exception`, `ArgumentError`/`TypeError`/`RuntimeError`/`RangeError`/
+    `ZeroDivisionError`/`IOError`/`StopIteration`/`NotImplementedError`/
+    `NameError`/`IndexError → StandardError`, `NoMethodError → NameError`,
+    `KeyError → IndexError`.  User `class MyErr < StandardError` declarations
+    contribute one edge each, collected from every `ClassDef{superclass:Some}`
+    and registered **once at program init** (`emit::emit_ancestry_init`).
+  - **SECURITY — no reflection, cycle-guarded.**  Rescue matching is an EXPLICIT
+    string-map lookup (`_sir_ancestry`), never reflection on a Go type name; user
+    edges enter only via `_sir_register_ancestry` (built-in edges are never
+    overwritten).  The ancestry walk carries a `seen` set so a malicious cyclic
+    hierarchy (`class A<B; class B<A`) terminates instead of looping.
+
+### Changed
+
+- **`Feature::Exceptions`, `Feature::Classes`, `Feature::Constants` are now
+  accepted** — but `Classes`/`Constants` ONLY for exception subclasses and the
+  `raise Foo`/`rescue Foo` class-name references they carry, NOT general OOP.  A
+  new structural gate `check_exception_soundness` (beside `check_no_keyword_rest_mix`)
+  keeps the backend's "never mis-emit" promise: a `Const` reference/assignment
+  OUTSIDE a `raise ClassName`, or a `module … end`, is rejected CLEANLY with an
+  `UnsupportedFeature` error.  A class carrying instance/class variables observes
+  `InstanceVars`/`ClassVars` (still unaccepted) and is rejected at the manifest
+  gate; method-bearing classes hoist their `def`s to top-level Functions, so the
+  `ClassDef` body reaching emit is ordinary supported statements.
+
 ## 0.7.0
 
 ### Added
