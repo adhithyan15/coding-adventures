@@ -81,3 +81,18 @@ the rename *table* as queryable provenance. Program output is
 byte-for-byte unchanged. (Follow-up: per-output-span provenance —
 contributing to each renamed identifier's own CV id — needs the log
 threaded through the `rename_apply_*` recursion.)
+
+## Upstream conformance tests
+
+`tests/upstream/rename_vars_test.rs` ports Google Closure Compiler's
+`RenameVarsTest` (Apache-2.0; see `ATTRIBUTION.md` and `UPSTREAM_SHA`), per the
+CLOC12 test-port convention. Because the pass exposes a source-string surface
+through public crate APIs, the port drives the real `source → bridge → rename →
+emit` chain and asserts on the emitted string — the same `test(js, expected)`
+surface upstream uses. It pins the 8 global-renaming behaviors this pass
+supports today and records 4 upstream behaviors it does not — function-local
+renaming, parameter renaming, short-name reuse across disjoint scopes, and
+pseudo-name mode — as `#[ignore = "blocked on gap-NNN"]` placeholders tied to
+`code/specs/CLOC12-gaps.md` (gap-134 … gap-137). Run with
+`cargo test --test upstream_rename_vars` (add `-- --include-ignored` to list the
+pending gaps).

@@ -1084,3 +1084,35 @@ historical context with status `RESOLVED` and a link to the fix PR.
     duplicated / re-evaluated), and (2) parenthesize the substituted expression
     against the surrounding operator's precedence. Candidate for a dedicated
     follow-up fix PR.
+
+## CLOC12.139 — port `RenameVarsTest` into `closure-pass-rename-globals`
+
+- **Status:** port landed; 8 active `#[test]`s pass, 4 `#[ignore]` gaps opened.
+- **What it is:** the sixth CLOC12 upstream port. `closure-pass-rename-globals`
+  exposes everything a source-string surface needs through public crate APIs,
+  so — unlike the AST-builder ports (dce, remove-unused-vars) — this port drives
+  the real `source → bridge → RenameGlobalsPass → emit` chain and asserts on the
+  emitted string, exactly as upstream `RenameVarsTest`'s `test(js, expected)`.
+  It pins the sound global slice our `RenameGlobalsPass` implements: rename
+  top-level `function` names and `var`/`let`/`const` targets to the shortest
+  fresh names `a`, `b`, `c`, … in first-appearance order, leaving untouched
+  names already one character long, free/undeclared globals, dotted property
+  keys, and any do-not-rename extern. 8 active cases pass (two-globals→`a`/`b`,
+  all-uses-rewritten, function-decl rename, reserved-extern-skipped-but-ordinary-
+  global-renamed, free-global-untouched, dotted-key-untouched, computed-member-
+  index-renamed, single-char-not-lengthened).
+- **No new closurec bug surfaced** — one expectation was corrected during the
+  port (the reserved-extern case renames the *ordinary* global `helper`→`a`
+  while keeping only the reserved `apiHandler`, which is the correct behavior).
+- **New gaps** (executable `#[ignore = "blocked on gap-NNN"]` placeholders):
+  - **gap-134** — rename **function-local** variables. Upstream `RenameVars`
+    shortens locals too; our pass only renames globals, so a body-local
+    `var innerLongName` is left as written.
+  - **gap-135** — rename **function parameters**. Upstream shortens parameter
+    names; our pass leaves them untouched.
+  - **gap-136** — **reuse** a freed short name across two disjoint local scopes
+    (both locals may become `a`). Our global-only pass never allocates local
+    names, so it cannot reuse them.
+  - **gap-137** — **pseudo-name / stable-name mode**: upstream can map each
+    original name to a stable human-readable placeholder instead of a minimal
+    short name. Our pass has only the minimal-short-name mode.
