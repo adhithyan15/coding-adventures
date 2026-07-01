@@ -2,6 +2,33 @@
 
 All notable changes to the ADJ-LADDER two-arm reasoning scoreboard.
 
+## [0.40.0] — 2026-06-30
+
+### Added — rung 12: threshold decision (wait-vs-treat)
+
+- **`rung12_threshold_decision/`** — **24 items** (`r12td-01`..`r12td-24`), a NEW decision SHAPE:
+  the *wait-vs-treat threshold* decision. A single patient measurement is pinned (`constrain marker
+  == value`) and tested against a published treatment threshold (`constrain marker >= threshold`, or
+  `<=` for a low-is-dangerous marker) with `check`. The engine's QF_LRA feasibility verdict **is**
+  the decision — the pinned value and the threshold are jointly satisfiable exactly when the value
+  has crossed the threshold, so **sat → "Start treatment now"** and **unsat → "Continue
+  observation"** (the harness maps the verdict to an option label via the rung-6b `check_outcome`
+  extractor; Python never compares the numbers).
+- The reasoning tested is the inequality **direction**: six markers are dangerous when **HIGH**
+  (potassium, INR, calcium, lactate, bilirubin, ammonia) and six when **LOW** (platelets, glucose,
+  haemoglobin, sodium, neutrophils, arterial pH), so a "bigger number means treat" heuristic fails
+  exactly half the items. Two items per marker (one that crosses → treat, one that does not →
+  observe) = 24 items, gold split 12/12 across the two actions.
+- **No engine/harness change** — reuses the existing `check_outcome` dispatch with custom `labels`.
+  Distinct from rung-6b (which checks whether a dose fits inside a *window* of two caps) and from the
+  ranking decisions of rung-6/rung-11: this is the clean "given THIS number and THIS cut-off, act or
+  wait?" shape.
+- Contamination-safe: the only literals are the observed value and the threshold, both printed
+  verbatim in the stem, and the answer is an action LABEL (never a number), so nothing numeric leaks;
+  identifiers are digit-free; gold rotates A–E and every item's verdict is asserted against the
+  threshold at build. Engine **24/24** cached (`check_outcome` selects every gold); contamination /
+  ruff / pytest clean (full ladder suite 149 passed). Added to `SELF_CONTAINED_RUNGS`.
+
 ## [0.39.0] — 2026-06-30
 
 ### Added — rung 11 batch 2: completeness over nominal strength
