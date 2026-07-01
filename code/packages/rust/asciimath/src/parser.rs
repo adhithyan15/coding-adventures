@@ -112,6 +112,9 @@ impl Parser<'_> {
             let op = match self.peek() {
                 TokenKind::Plus => BinOp::Add,
                 TokenKind::Minus => BinOp::Sub,
+                // `+-`/`-+` (±/∓) bind at the same additive level as `+`/`-`.
+                TokenKind::PlusMinus => BinOp::PlusMinus,
+                TokenKind::MinusPlus => BinOp::MinusPlus,
                 _ => break,
             };
             self.advance();

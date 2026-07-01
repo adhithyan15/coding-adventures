@@ -33,6 +33,7 @@ second notation.
 | `xy` | `x · y` (implicit product of single letters, the AsciiMath rule) |
 | `sinx`, `pir` | `sin x` / `pi · r` (greedy longest-match splits glued keywords, the AsciiMath rule) |
 | `a + b`, `a - b`, `a*b`, `a xx b`, `a -: b` | `Bin(Add/Sub/Mul/Div)` |
+| `a +- b`, `a -+ b` | `Bin(PlusMinus/MinusPlus)` (± / ∓, same node as LaTeX `\pm`/`\mp`) |
 | `a b` (juxtaposition) | `Bin(Mul)` (implicit multiplication) |
 | `1/2` | `Frac` |
 | `x^2`, `a_i`, `a_i^2` | `Bin(Pow)` / `Subscript` / `Pow(Subscript)` |
