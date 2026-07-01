@@ -2,6 +2,30 @@
 
 All notable changes to the Presentation-MathML frontend crate.
 
+## [0.5.0] — 2026-06-30
+
+### Added — PR-5: semicolon-separated `<mfenced>` lowers to rows
+
+- An `<mfenced>` whose top-level children include a `<mo>;</mo>` separator is now read as **rows**:
+  semicolons are the row separator and commas the within-row (column) separator, the classic
+  fenced-matrix notation. `(a, b; c, d)` → `Sequence([Sequence([a, b]), Sequence([c, d])])` — an
+  outer sequence of rows, each row an inner sequence of columns. This is the natural extension of
+  the PR-4 comma list (which stays a flat `Sequence`) and keeps `<mfenced>` distinct from
+  `<mtable>` → `Matrix` (a fenced list of tuples vs a true table).
+- Degenerate shapes are handled predictably: a **semicolon-only** fence `(a; b; c)` — a column
+  vector with no second column in any row — collapses to the same flat `Sequence([a, b, c])` as a
+  comma list, so there is no spurious one-element nesting; a **ragged** fence `(a; b, c)` is kept
+  faithfully as `Sequence([a, Sequence([b, c])])`. Each cell is still folded to one expression
+  (operator precedence, implicit multiplication), so `(x + 1, 2; y)` nests the folded `x+1`.
+- A leading/trailing/doubled `;` (or `,`) leaves an empty segment, which `fold_row` rejects as
+  "empty MathML group" — a malformed fence is a clean spanned error, **never a silently-dropped
+  row**. Only *literal* `<mo>,</mo>`/`<mo>;</mo>` children are separators; the `separators`
+  attribute (like all attributes) remains dropped, matching how the comma list already worked.
+- Implemented with a shared `split_fence_children` helper (one bounded pass, no recursion); no new
+  AST node, no shared-crate change (reuses the neutral `MathExpr::Sequence` from `math-frontend`
+  0.6.0), so no downstream ripple. 5 new tests (nested rows, semicolon-only flat, ragged, folded
+  cells, trailing-separator error). `mathml` 0.4.0 → 0.5.0.
+
 ## [0.4.0] — 2026-06-30
 
 ### Added — PR-4: comma-separated `<mfenced>` lists lower to `Sequence`

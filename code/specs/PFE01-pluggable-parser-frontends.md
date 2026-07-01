@@ -170,7 +170,13 @@ frontend additionally ships notation-specific golden tests.
   function (sin/cos/ln/…) applied to an argument → `Call`, matching the other frontends' `Func` set.
   PR-4 adds `<mfenced>` separator modelling: a fence with comma separators (`(a, b, c)`) lowers to
   the new neutral `Sequence` list node (math-frontend 0.6.0), while a comma-free fence still lowers
-  to `Group`. Semicolon separators and surfacing the `open`/`close` delimiters as data are deferred.
+  to `Group`. PR-5 adds semicolon separators as **rows**: a `<mfenced>` containing a `<mo>;</mo>`
+  reads semicolons as the row separator and commas as the within-row column separator (the classic
+  fenced-matrix notation), so `(a, b; c, d)` → `Sequence([Sequence([a, b]), Sequence([c, d])])`. A
+  semicolon-only fence `(a; b; c)` collapses to the same flat `Sequence` as a comma list (no row has
+  a second column); a ragged fence `(a; b, c)` keeps its shape faithfully. Surfacing the
+  `open`/`close` delimiters as data remains deferred (they are presentation, dropped like all
+  attributes).
 - Future: MathJSON, content-MathML, spreadsheet formulae, … each a small crate implementing the
   trait. None require changes to consumers. **Four frontends now in (LaTeX, AsciiMath, Unicode,
   MathML), all feeding one neutral AST with zero consumer change** — the pluggability claim is

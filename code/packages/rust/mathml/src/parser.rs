@@ -462,35 +462,53 @@ impl Parser {
                 let overset = MathExpr::Overset { over: Box::new(over), base: Box::new(base) };
                 Ok(Child::Expr(MathExpr::Underset { under: Box::new(under), base: Box::new(overset) }))
             }
-            // `<mfenced>…</mfenced>` — a fence. With NO comma separators it is an ordinary
-            // parenthesised group (a sub-expression) and folds to a `Group`, as before. With one
-            // or more top-level `<mo>,</mo>` separators it is a LIST — `(a, b, c)` → `Sequence([a,
-            // b, c])` — so the commas are preserved as list structure rather than folded into the
-            // row (the previous PR-2 limit). Each segment between commas is itself folded to one
-            // expression. The fence's `open`/`close`/`separators` attributes are presentation,
-            // dropped like all attributes.
+            // `<mfenced>…</mfenced>` — a fence. Three shapes, decided by the top-level separators:
+            //
+            //   * NO separator            → an ordinary parenthesised group `(a b)` → `Group`.
+            //   * `<mo>,</mo>` only       → a flat LIST `(a, b, c)` → `Sequence([a, b, c])`.
+            //   * any `<mo>;</mo>`        → ROWS. Semicolons are the row separator and commas the
+            //                               within-row (column) separator — the classic fenced-matrix
+            //                               reading `(a, b; c, d)` → `Sequence([Sequence([a, b]),
+            //                               Sequence([c, d])])`. A row with no comma is a single
+            //                               expression, so a semicolon-only fence `(a; b; c)` — a
+            //                               column vector — collapses to the same flat
+            //                               `Sequence([a, b, c])` as a comma list (no row has a
+            //                               second column). A ragged fence `(a; b, c)` is faithful:
+            //                               `Sequence([a, Sequence([b, c])])`.
+            //
+            // The delimiters and the `open`/`close`/`separators` *attributes* are presentation and
+            // dropped like all attributes — only *literal* `<mo>,</mo>`/`<mo>;</mo>` children are
+            // read as separators, matching how the comma list already worked.
             "mfenced" => {
                 let kids = self.parse_row_children(name, depth)?;
                 let has_comma = kids.iter().any(|c| matches!(c, Child::Op(s) if s == ","));
-                if !has_comma {
+                let has_semicolon = kids.iter().any(|c| matches!(c, Child::Op(s) if s == ";"));
+                if !has_comma && !has_semicolon {
                     let inner = fold_row(kids, span, depth)?;
                     return Ok(Child::Expr(MathExpr::Group(Box::new(inner))));
                 }
-                let mut items: Vec<MathExpr> = Vec::new();
-                let mut current: Vec<Child> = Vec::new();
-                for child in kids {
-                    match child {
-                        Child::Op(ref s) if s == "," => {
-                            // End of one list item: fold the accumulated children. An empty
-                            // segment (a leading/trailing/doubled comma) is malformed — fold_row
-                            // reports "empty MathML group", so no item is silently dropped.
-                            items.push(fold_row(std::mem::take(&mut current), span, depth)?);
-                        }
-                        _ => current.push(child),
+                if !has_semicolon {
+                    // Comma-only: a flat list. Each comma-delimited segment folds to one expression.
+                    let items = split_fence_children(kids, ",")
+                        .into_iter()
+                        .map(|seg| fold_row(seg, span, depth))
+                        .collect::<Result<Vec<_>, _>>()?;
+                    return Ok(Child::Expr(MathExpr::Sequence(items)));
+                }
+                // Semicolon present: split into rows first, then columns within each row.
+                let mut rows: Vec<MathExpr> = Vec::new();
+                for row in split_fence_children(kids, ";") {
+                    if row.iter().any(|c| matches!(c, Child::Op(s) if s == ",")) {
+                        let cols = split_fence_children(row, ",")
+                            .into_iter()
+                            .map(|seg| fold_row(seg, span, depth))
+                            .collect::<Result<Vec<_>, _>>()?;
+                        rows.push(MathExpr::Sequence(cols));
+                    } else {
+                        rows.push(fold_row(row, span, depth)?);
                     }
                 }
-                items.push(fold_row(current, span, depth)?);
-                Ok(Child::Expr(MathExpr::Sequence(items)))
+                Ok(Child::Expr(MathExpr::Sequence(rows)))
             }
             // `<mtable>` of `<mtr>` rows of `<mtd>` cells → MathExpr::Matrix (delimiter style is
             // not part of MathML's mtable, so nothing to drop). Parsed structurally below.
@@ -681,6 +699,25 @@ enum RowTok {
     Operand(MathExpr),
     Bin(BinOp),
     Rel(RelOp),
+}
+
+/// Split a fence's children into the maximal segments separated by a top-level `sep` operator
+/// (e.g. `,` or `;`). A leading, trailing, or doubled separator yields an *empty* segment, which
+/// `fold_row` later rejects as "empty MathML group" — so a malformed list is a clean spanned error,
+/// never a silently-dropped item. Only *literal* `<mo>sep</mo>` children are separators; nested
+/// elements keep their own inner separators (this looks at the top level only). A single bounded
+/// pass over `children`, no recursion.
+fn split_fence_children(children: Vec<Child>, sep: &str) -> Vec<Vec<Child>> {
+    let mut segments: Vec<Vec<Child>> = Vec::new();
+    let mut current: Vec<Child> = Vec::new();
+    for child in children {
+        match &child {
+            Child::Op(s) if s == sep => segments.push(std::mem::take(&mut current)),
+            _ => current.push(child),
+        }
+    }
+    segments.push(current);
+    segments
 }
 
 /// Fold a row of `Child`s into one `MathExpr`, applying parenthesis fences, operator precedence

@@ -379,6 +379,69 @@ mod tests {
     }
 
     #[test]
+    fn mfenced_semicolon_rows_of_comma_columns_nest() {
+        // Semicolons are the ROW separator, commas the column separator — the fenced-matrix
+        // reading `(a, b; c, d)` → Sequence([Sequence([a, b]), Sequence([c, d])]).
+        let e = p(concat!(
+            "<mfenced>",
+            "<mi>a</mi><mo>,</mo><mi>b</mi><mo>;</mo><mi>c</mi><mo>,</mo><mi>d</mi>",
+            "</mfenced>"
+        ));
+        assert_eq!(
+            e,
+            MathExpr::Sequence(vec![
+                MathExpr::Sequence(vec![sym("a"), sym("b")]),
+                MathExpr::Sequence(vec![sym("c"), sym("d")]),
+            ])
+        );
+    }
+
+    #[test]
+    fn mfenced_semicolon_only_is_a_flat_sequence() {
+        // A column vector `(a; b; c)` has no second column in any row, so it collapses to the same
+        // flat Sequence([a, b, c]) as a comma list — no spurious one-element nesting.
+        let e = p("<mfenced><mi>a</mi><mo>;</mo><mi>b</mi><mo>;</mo><mi>c</mi></mfenced>");
+        assert_eq!(e, MathExpr::Sequence(vec![sym("a"), sym("b"), sym("c")]));
+    }
+
+    #[test]
+    fn mfenced_ragged_semicolon_rows_are_faithful() {
+        // A ragged fence `(a; b, c)` keeps its shape: row 1 is a single expr, row 2 is a pair.
+        let e = p("<mfenced><mi>a</mi><mo>;</mo><mi>b</mi><mo>,</mo><mi>c</mi></mfenced>");
+        assert_eq!(
+            e,
+            MathExpr::Sequence(vec![sym("a"), MathExpr::Sequence(vec![sym("b"), sym("c")])])
+        );
+    }
+
+    #[test]
+    fn mfenced_semicolon_rows_fold_each_cell() {
+        // Each cell is folded to one expression, not just a leaf: `(x + 1, 2; y)`.
+        let e = p(concat!(
+            "<mfenced>",
+            "<mrow><mi>x</mi><mo>+</mo><mn>1</mn></mrow><mo>,</mo><mn>2</mn>",
+            "<mo>;</mo><mi>y</mi>",
+            "</mfenced>"
+        ));
+        assert_eq!(
+            e,
+            MathExpr::Sequence(vec![
+                MathExpr::Sequence(vec![b(BinOp::Add, sym("x"), num(1)), num(2)]),
+                sym("y"),
+            ])
+        );
+    }
+
+    #[test]
+    fn mfenced_trailing_semicolon_is_an_error_not_a_dropped_row() {
+        // A trailing separator leaves an empty final row → "empty MathML group", never silently
+        // dropped (same guarantee as the comma list).
+        assert!(MathMl
+            .parse("<mfenced><mi>a</mi><mo>,</mo><mi>b</mi><mo>;</mo></mfenced>")
+            .is_err());
+    }
+
+    #[test]
     fn mtable_is_a_matrix_of_rows_and_cells() {
         // 2×2 table → Matrix([[1,2],[3,4]]).
         let e = p(concat!(
