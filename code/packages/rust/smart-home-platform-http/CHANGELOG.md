@@ -27,6 +27,10 @@ All notable changes to this package will be documented in this file.
   and authorization decisions so local-controller clients can pivot between
   command, event, grant, state-history, and policy detail routes without
   rebuilding endpoint paths.
+- Added a controller handoff manifest route that groups the local-controller
+  readiness evidence across repo HTTP, browser dashboard, fixture smoke,
+  state/history/event, command/service/scene, and runtime authorization
+  surfaces.
 - Added browser dashboard action feedback that renders accepted command,
   scene, and desired-state mutation responses with command-result and
   desired-state readback links in the detail panel.
