@@ -1128,6 +1128,50 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       }
     };
 
+    const uniqueValues = (items) => Array.from(new Set(items.filter(Boolean)));
+    const commandActionFollowUp = (body, entityId) => {
+      const results = body && Array.isArray(body.results) ? body.results : [];
+      const commandIds = uniqueValues(results.map((result) => result.command_id));
+      const correlationIds = uniqueValues(results.map((result) => result.correlation_id));
+      return {
+        state: entityId ? stateDetailUrl({home_assistant_entity_id: entityId}) : undefined,
+        command_results: commandIds.map((commandId) =>
+          `/api/smart_home/command_results/${encodeURIComponent(commandId)}`
+        ),
+        correlation_results: correlationIds.map((correlationId) =>
+          `/api/smart_home/command_results?correlation_id=${encodeURIComponent(correlationId)}`
+        ),
+        latest_command_results: "/api/smart_home/command_results?limit=8&sort=status_then_newest"
+      };
+    };
+    const desiredStateFollowUp = (entityId) => ({
+      desired_state: `/api/smart_home/desired_states?entity_id=${encodeURIComponent(entityId)}`,
+      state: stateDetailUrl({home_assistant_entity_id: entityId}),
+      history: `/api/smart_home/state_history?entity_id=${encodeURIComponent(entityId)}`
+    });
+    const renderActionDetail = (label, url, status, ok, body, followUp) => {
+      renderDetail(label, url, status, ok, {
+        accepted: ok,
+        response: body,
+        follow_up: followUp
+      });
+    };
+    const actionJson = async (url, options, label, followUpFactory = () => ({})) => {
+      const response = await fetch(url, options);
+      const text = await response.text();
+      let body = text;
+      try {
+        body = JSON.parse(text);
+      } catch (_) {
+        body = text || response.statusText;
+      }
+      renderActionDetail(label, url, response.status, response.ok, body, followUpFactory(body));
+      if (!response.ok) {
+        throw new Error(body.error || response.statusText);
+      }
+      return body;
+    };
+
     const renderChecks = (readiness) => {
       els.checks.innerHTML = readiness.checks.map((check) => `
         <div class="row" style="justify-content: space-between; margin-top: 8px;">
@@ -1663,24 +1707,29 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
             const input = brightnessInputFor(serviceButton.dataset.brightnessFor);
             body.brightness_pct = input ? Number(input.value) : 100;
           }
-          await json(`/api/services/light/${serviceButton.dataset.service}`, {
+          const url = `/api/services/light/${serviceButton.dataset.service}`;
+          await actionJson(url, {
             method: "POST",
             headers: {"content-type": "application/json"},
             body: JSON.stringify(body)
-          });
+          }, `light.${serviceButton.dataset.service} response`, (responseBody) =>
+            commandActionFollowUp(responseBody, serviceButton.dataset.entity)
+          );
           log(`${serviceButton.dataset.service} accepted for ${serviceButton.dataset.entity}`);
         } else if (sceneButton) {
-          await json("/api/services/scene/turn_on", {
+          await actionJson("/api/services/scene/turn_on", {
             method: "POST",
             headers: {"content-type": "application/json"},
             body: JSON.stringify({entity_id: sceneButton.dataset.scene})
-          });
+          }, "scene.turn_on response", commandActionFollowUp);
           log(`scene.turn_on accepted for ${sceneButton.dataset.scene}`);
         } else if (clearDesiredButton) {
-          await json(`/api/smart_home/desired_states/${encodeURIComponent(clearDesiredButton.dataset.clearDesired)}`, {
+          const entityId = clearDesiredButton.dataset.clearDesired;
+          const url = `/api/smart_home/desired_states/${encodeURIComponent(entityId)}`;
+          await actionJson(url, {
             method: "DELETE"
-          });
-          log(`desired state cleared for ${clearDesiredButton.dataset.clearDesired}`);
+          }, "clear desired state response", () => desiredStateFollowUp(entityId));
+          log(`desired state cleared for ${entityId}`);
         } else {
           const desiredState = {};
           if (desiredButton.dataset.desiredAction === "brightness") {
@@ -1689,7 +1738,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           } else {
             desiredState["light.on_off"] = desiredButton.dataset.desiredAction === "on";
           }
-          await json(`/api/smart_home/desired_states/${encodeURIComponent(desiredButton.dataset.entity)}`, {
+          const entityId = desiredButton.dataset.entity;
+          const url = `/api/smart_home/desired_states/${encodeURIComponent(entityId)}`;
+          await actionJson(url, {
             method: "POST",
             headers: {"content-type": "application/json"},
             body: JSON.stringify({
@@ -1697,8 +1748,10 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
               requested_by: "agent:dashboard",
               command_timeout_ms: 3000
             })
-          });
-          log(`desired ${desiredButton.dataset.desiredAction} target accepted for ${desiredButton.dataset.entity}`);
+          }, `desired ${desiredButton.dataset.desiredAction} response`, () =>
+            desiredStateFollowUp(entityId)
+          );
+          log(`desired ${desiredButton.dataset.desiredAction} target accepted for ${entityId}`);
         }
         if (!inspectDetailButton) {
           await render();
@@ -8761,6 +8814,19 @@ mod tests {
             assert!(body.contains("renderDetail(label, url, response.status, response.ok, body)"));
             assert!(body.contains("inspectDetail(inspectDetailButton)"));
             assert!(body.contains("data-inspect-url"));
+            assert!(body.contains("const commandActionFollowUp = (body, entityId)"));
+            assert!(body.contains("const desiredStateFollowUp = (entityId)"));
+            assert!(body
+                .contains("const renderActionDetail = (label, url, status, ok, body, followUp)"));
+            assert!(body.contains("const actionJson = async (url, options, label"));
+            assert!(body.contains("follow_up: followUp"));
+            assert!(body.contains("accepted: ok"));
+            assert!(
+                body.contains("/api/smart_home/command_results/${encodeURIComponent(commandId)}")
+            );
+            assert!(body.contains(
+                "/api/smart_home/command_results?correlation_id=${encodeURIComponent(correlationId)}"
+            ));
             assert!(body.contains("stateDetailUrl(entity)"));
             assert!(body.contains("entityDetailUrl(entity)"));
             assert!(body.contains("entityDesiredStateUrl(entity)"));
@@ -8783,10 +8849,17 @@ mod tests {
                 body.contains("/api/smart_home/authorization_decisions/${record.decision_index}")
             );
             assert!(body.contains("/api/services/light/"));
+            assert!(body.contains("light.${serviceButton.dataset.service} response"));
+            assert!(
+                body.contains("commandActionFollowUp(responseBody, serviceButton.dataset.entity)")
+            );
+            assert!(body.contains("scene.turn_on response"));
             assert!(body.contains("data-service=\"set_brightness\""));
             assert!(body.contains("brightness_pct"));
             assert!(body.contains("/api/services/scene/turn_on"));
             assert!(body.contains("/api/smart_home/desired_states/"));
+            assert!(body.contains("clear desired state response"));
+            assert!(body.contains("desired ${desiredButton.dataset.desiredAction} response"));
         }
     }
 
