@@ -113,6 +113,13 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // short DirectCall to the bare args (defaults fill omitted trailing
     // params).  See `emit_function` / `emit_expr`'s `DirectCall` arm.
     Feature::DefaultParams,
+    // KW4: keyword parameters & arguments.  JavaScript has no native
+    // keyword-call form, so `emit` lowers `Keyword` params to a trailing
+    // `__kw` options object (destructured in the body prologue) and each
+    // `Expr::KeywordArg` at a call site into a trailing object literal —
+    // the same zero-dependency, direct lowering the TypeScript backend
+    // uses (spec §4).  Accepted here exactly as `DefaultParams` is.
+    Feature::KeywordParams,
 ];
 
 impl Backend for JavaScriptBackend {

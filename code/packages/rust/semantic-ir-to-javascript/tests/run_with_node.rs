@@ -564,3 +564,216 @@ fn mutable_reassignment_updates_binding() {
         assert_eq!(stdout, "42");
     }
 }
+
+#[test]
+fn keyword_params_options_object_omitted_and_supplied() {
+    // KW4 discriminating execution-proof.  Build a module with a function
+    // that has one positional and one *optional* keyword param:
+    //
+    //   function add(base, __kw) { const { delta = 10 } = __kw ?? {};
+    //                              return base + delta; }
+    //   function main() { print(add(5)); print(add(5, delta: 100)); }
+    //
+    // - `add(5)`             omits the keyword → default 10 fires → 15.
+    // - `add(5, delta: 100)` supplies it       → 100 used         → 105.
+    //
+    // Printing 15 then 105 proves (a) the callee destructures `__kw` and its
+    // JS default fills an omitted keyword, and (b) a supplied `KeywordArg`
+    // collapses into the trailing options object and overrides the default.
+    use semantic_ir::{Param, ParamKind};
+
+    let base = Param {
+        name: "base".into(),
+        sir_type: None,
+        kind: ParamKind::Required,
+        default: None,
+        span: sp(),
+    };
+    let delta = Param {
+        name: "delta".into(),
+        sir_type: None,
+        kind: ParamKind::Keyword,
+        default: Some(Box::new(int(10))),
+        span: sp(),
+    };
+    let param_ref = |n: &str| Expr::VarRef { name: n.into(), scope: Scope::Param, span: sp() };
+
+    let add = Function {
+        name: "add".into(),
+        params: vec![base, delta],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: vec![],
+            value: bc("+", vec![param_ref("base"), param_ref("delta")]),
+            span: sp(),
+        },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+
+    let kw_arg = |name: &str, value: Expr| Expr::KeywordArg {
+        name: name.into(),
+        value: Box::new(value),
+        span: sp(),
+    };
+    let call_omitted = Expr::DirectCall {
+        fn_name: "add".into(),
+        args: vec![int(5)],
+        effects: EffectSet::PURE,
+        span: sp(),
+    };
+    let call_supplied = Expr::DirectCall {
+        fn_name: "add".into(),
+        args: vec![int(5), kw_arg("delta", int(100))],
+        effects: EffectSet::PURE,
+        span: sp(),
+    };
+
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: vec![print(call_omitted), print(call_supplied)],
+            value: Expr::NilLit { span: sp() },
+            span: sp(),
+        },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+
+    let module = Module {
+        name: "kwparams".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::KeywordParams,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![add, main],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+
+    // Shape check first (runs even without node): the callee folds the
+    // keyword into a trailing `__kw` object, destructures it with the JS
+    // default, and the supplied call collapses the keyword into an object.
+    let artifact = compile(&module).expect("compile to javascript");
+    assert!(
+        artifact.source.contains("function add(base, __kw) {"),
+        "expected trailing __kw options object, got:\n{}",
+        artifact.source
+    );
+    assert!(
+        artifact.source.contains("const { delta = 10 } = __kw ?? {};"),
+        "expected keyword destructuring prologue, got:\n{}",
+        artifact.source
+    );
+    assert!(
+        artifact.source.contains("__Sir.print(add(5))"),
+        "omitted-keyword call should have no options object, got:\n{}",
+        artifact.source
+    );
+    assert!(
+        artifact.source.contains("__Sir.print(add(5, { delta: 100 }))"),
+        "supplied keyword should collapse into a trailing object, got:\n{}",
+        artifact.source
+    );
+
+    if let Some(stdout) = run_module(&module, "kwparams") {
+        assert_eq!(
+            stdout, "15\n105",
+            "add(5) must default delta to 10 (→15); add(5, delta: 100) must use 100 (→105)"
+        );
+    }
+}
+
+#[test]
+fn required_keyword_param_supplied_by_call() {
+    // A *required* keyword (no default) must destructure bare and be filled
+    // by the caller.  Mirrors the spec's `greet(greeting:, …)` shape:
+    //
+    //   function pick(__kw) { const { chosen } = __kw ?? {}; return chosen; }
+    //   function main() { print(pick(chosen: 7)); }   → 7
+    use semantic_ir::{Param, ParamKind};
+
+    let chosen = Param {
+        name: "chosen".into(),
+        sir_type: None,
+        kind: ParamKind::Keyword,
+        default: None,
+        span: sp(),
+    };
+    let pick = Function {
+        name: "pick".into(),
+        params: vec![chosen],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: vec![],
+            value: Expr::VarRef { name: "chosen".into(), scope: Scope::Param, span: sp() },
+            span: sp(),
+        },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    let call = Expr::DirectCall {
+        fn_name: "pick".into(),
+        args: vec![Expr::KeywordArg {
+            name: "chosen".into(),
+            value: Box::new(int(7)),
+            span: sp(),
+        }],
+        effects: EffectSet::PURE,
+        span: sp(),
+    };
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts: vec![print(call)], value: Expr::NilLit { span: sp() }, span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    let module = Module {
+        name: "kwreq".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::KeywordParams,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![pick, main],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+
+    let artifact = compile(&module).expect("compile to javascript");
+    assert!(
+        artifact.source.contains("function pick(__kw) {"),
+        "keyword-only function should have __kw as its sole param, got:\n{}",
+        artifact.source
+    );
+    assert!(
+        artifact.source.contains("const { chosen } = __kw ?? {};"),
+        "required keyword destructures bare (no default), got:\n{}",
+        artifact.source
+    );
+
+    if let Some(stdout) = run_module(&module, "kwreq") {
+        assert_eq!(stdout, "7", "pick(chosen: 7) must return 7");
+    }
+}
