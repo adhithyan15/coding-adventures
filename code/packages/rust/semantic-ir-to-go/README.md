@@ -137,6 +137,59 @@ Worked example — `def greet(greeting:, name: "world")`:
 Indirect/closure keyword calls are **deferred** (spec §Out of scope): the
 callee signature is not statically known, and the frontends do not emit them.
 
+### C5 — collection-method dispatch (runtime catalog)
+
+`recv.meth(args…)` reaches the backend as
+`BuiltinCall("__method__", [recv, StrLit("meth"), …args])` (receiver at
+`args[0]`, method name always a `StrLit` at `args[1]`, an optional trailing
+block surviving as a `MakeClosure`).  Go has no native method dispatch, so —
+like the Python/TS backends' `sir-runtime-oop` — the backend ships an **inlined
+runtime catalog** and emits every dispatch to it:
+
+```text
+  [1, 2, 3].map { |x| x * 2 }
+    → _sir_call_method(<seq>, "map", []Value{_sir_make_closure(…)})
+    → [2, 4, 6]
+```
+
+- **Emit.**  `emit_builtin_call` has a `"__method__"` case producing
+  `_sir_call_method(recv, "name", []Value{…args})`.  A trailing block rides in
+  as the last `[]Value` element; a `&:sym` / `&proc` block-pass that survives on
+  the dispatch is converted (`_sir_sym_to_proc(intern("sym"))` for `&:sym`, the
+  proc verbatim otherwise).  A `Const`-scoped class operand on a class predicate
+  (`x.is_a?(Integer)`) is passed as its name string.
+- **Runtime catalog** (`_sir_call_method`).  An **explicit type-switch +
+  method-name switch** over the receiver — Array (`*Seq`), Hash (`*Map`),
+  String, Numeric (`int64`/`float64`), Symbol — **ported from the Python/TS
+  reference for behavioural parity** (same names, same semantics).  Block-taking
+  methods (`each`/`map`/`select`/`reduce`/`times`/…) detect a trailing `*Closure`
+  and apply it via `_sir_apply`; `Symbol#to_proc` (`_sir_sym_to_proc`) makes
+  `map(&:to_s)` behave exactly like `map { |x| x.to_s }`.
+- **Security — the catalog is the allowlist.**  Dispatch is **only** through the
+  explicit switches; there is **no reflection** on the raw method name and no
+  dynamic Go method/field lookup.  An unknown method on a known receiver hits
+  `_sir_method_unknown`, which panics with a controlled
+  `undefined method '<name>' for <Class>` — a surfaced runtime error, never
+  arbitrary behaviour (the C3 RCE lesson).
+- **No new feature gate.**  A pure collection-method module observes no
+  `Feature::MethodDispatch` (the validator marks nothing for `__method__`), so
+  it carries only its receiver/argument features — all already accepted — and is
+  accepted **without dragging in class semantics** (`Feature::Classes` stays
+  unaccepted).  The runtime catalog is the real gate.
+
+Catalog coverage (v0): **Array** `length`/`size`/`count`, `first`, `last`,
+`empty?`, `include?`, `index`, `push`/`append`, `<<`, `pop`, `shift`, `reverse`,
+`sort`, `join`, `to_a`, `each`, `map`/`collect`, `select`/`filter`, `reject`,
+`reduce`/`inject`, `find`/`detect`, `any?`, `all?`, `none?`; **Hash** `keys`,
+`values`, `has_key?`/`key?`/`include?`/`member?`, `has_value?`/`value?`, `size`/
+`length`, `empty?`, `each`/`each_pair`, `map`, `select`/`filter`, `reject`;
+**String** `length`/`size`, `upcase`, `downcase`, `reverse`, `strip`/`lstrip`/
+`rstrip`, `empty?`, `include?`, `start_with?`, `end_with?`, `split`, `chars`,
+`to_i`, `to_f`, `to_sym`; **Numeric** `abs`, `to_i`, `to_f`, `even?`, `odd?`,
+`zero?`, `positive?`, `negative?`, `succ`/`next`, `pred`, `times`; **Symbol**
+`to_s`, `to_sym`, `length`/`size`, `upcase`, `downcase`, `empty?`; **universal**
+`nil?`, `==`, `!=`, `class`, `to_s`, `itself`.
+
 ## Value model
 
 ```go

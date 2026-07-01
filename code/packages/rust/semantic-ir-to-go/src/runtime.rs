@@ -877,6 +877,671 @@ func _sir_call_builtin_by_name(name string, args []Value) Value {
 	panic("unknown builtin: " + name)
 }
 
+// ── Collection-method dispatch catalog (C5) ────────────────────
+//
+// `recv.meth(args…)` reaches this backend as
+//   BuiltinCall("__method__", [recv, StrLit("meth"), …args])
+// and is emitted as `_sir_call_method(recv, "meth", []Value{…})`.
+// This is the Go analogue of the Python/TS `sir-runtime-oop`
+// `call_method` catalog, ported for behavioural parity: the SAME
+// method names and SAME semantics (Array/Hash/String/Numeric/Symbol),
+// including block-passing (a trailing `*Closure` arg applied via
+// `_sir_apply`) and `Symbol#to_proc` (`&:sym`, see `_sir_sym_to_proc`).
+//
+//   Ruby type  | Go representation
+//   -----------|----------------------------------------------------
+//   Array      | *Seq  (shared, mutable — push/<</pop mutate in place)
+//   Hash       | *Map  (insertion-ordered assoc list)
+//   String     | string
+//   Integer    | int64
+//   Float      | float64
+//   Symbol     | *Symbol
+//
+// SECURITY (the C3 RCE lesson): dispatch is ONLY through the explicit
+// name switches below — there is NO reflection on the raw method name,
+// no dynamic Go method/field lookup.  The catalog switch IS the
+// allowlist.  An unknown method name on a known receiver falls through
+// to `_sir_method_unknown`, which panics with a clear, controlled
+// message ("undefined method `bogus' for <type>") — a surfaced runtime
+// error, never arbitrary behaviour.
+//
+// Return convention: every catalog helper returns `(Value, bool)` where
+// the bool is `true` iff it recognised `name` for that receiver (a hit).
+// A miss falls through to the next resolution tier, exactly mirroring the
+// Python reference's `_MISS` sentinel.
+
+// A block reaches a block-taking method as the LAST element of the args
+// slice — a `*Closure` (an emitted `MakeClosure`, or a `_sir_sym_to_proc`
+// for `&:sym`).  `_sir_split_block` peels a trailing closure off, so the
+// leading positional args and the block are handed to the catalog
+// separately (matching the Python reference's `arg_list[:-1], arg_list[-1]`).
+func _sir_split_block(args []Value) ([]Value, *Closure) {
+	if len(args) > 0 {
+		if cl, ok := args[len(args)-1].(*Closure); ok {
+			return args[:len(args)-1], cl
+		}
+	}
+	return args, nil
+}
+
+// Ruby `to_s` display of a value used by `Array#join` (and elsewhere).
+// The runtime's `_sir_format` already renders Ruby-ish forms EXCEPT that
+// it prints booleans as Lisp `#t`/`#f` and `nil` as `nil`.  For the
+// method catalog we want Ruby's surface (`true`/`false`, and `nil.to_s`
+// == "" so it joins to nothing), so we special-case those here and defer
+// to `_sir_format` for everything else.
+func _sir_ruby_to_s(v Value) string {
+	if v == nil {
+		return ""
+	}
+	if b, ok := v.(bool); ok {
+		if b {
+			return "true"
+		}
+		return "false"
+	}
+	return _sir_format(v)
+}
+
+// ── Symbol#to_proc (&:sym) ─────────────────────────────────────
+//
+// Ruby's `&:sym` converts a Symbol to a block whose body calls the named
+// method on its first argument, forwarding the rest.  So `xs.map(&:to_s)`
+// is `xs.map { |x| x.to_s }` and `xs.inject(&:+)` is
+// `inject { |a, x| a + x }`.  The frontend lowers `&:sym` to
+// `block_pass(SymLit("sym"))`; the backend emits `_sir_sym_to_proc(
+// _sir_intern("sym"))`, yielding a `*Closure` the block-taking catalog
+// drives through `_sir_apply` exactly like a `{ }` block.  Applying it to
+// `[recv, rest…]` re-enters `_sir_call_method(recv, "sym", rest…)`, so an
+// out-of-catalog method surfaces the same controlled failure as a direct
+// call.
+func _sir_sym_to_proc(sym Value) Value {
+	name := ""
+	if s, ok := sym.(*Symbol); ok {
+		name = s.Name
+	} else if s, ok := sym.(string); ok {
+		name = s
+	}
+	return &Closure{Fn: func(args []Value) Value {
+		if len(args) == 0 {
+			return nil
+		}
+		return _sir_call_method(args[0], name, args[1:])
+	}}
+}
+
+// Public dispatch entry point emitted for every `__method__` call.
+func _sir_call_method(recv Value, name string, args []Value) Value {
+	// Type-specific catalogs first (a String is neither Seq nor Map).
+	// `bool` is checked before the numeric arm so `true`/`false` never
+	// enter the numeric catalog (they resolve only universal methods).
+	switch r := recv.(type) {
+	case string:
+		if v, ok := _sir_string_method(r, name, args); ok {
+			return v
+		}
+	case *Symbol:
+		if v, ok := _sir_symbol_method(r, name, args); ok {
+			return v
+		}
+	case bool:
+		// bool has no dedicated catalog here beyond the universal
+		// methods handled below; fall through.
+	case int64, int, float64:
+		if v, ok := _sir_numeric_method(recv, name, args); ok {
+			return v
+		}
+	case *Seq:
+		if v, ok := _sir_array_method(r, name, args); ok {
+			return v
+		}
+	case *Map:
+		if v, ok := _sir_hash_method(r, name, args); ok {
+			return v
+		}
+	}
+	// Universal Object methods available on every receiver.
+	if v, ok := _sir_object_method(recv, name, args); ok {
+		return v
+	}
+	// No catalog entry matched → a controlled, clearly-messaged failure.
+	// NEVER a reflective fallthrough (the C3 allowlist discipline).
+	return _sir_method_unknown(recv, name)
+}
+
+// Clean, controlled failure for an unknown method — panics with a Ruby
+// `NoMethodError`-shaped message.  A `go run` surfaces it as a non-zero
+// exit plus this message, exactly like `car` on a non-pair — NOT a silent
+// nil or arbitrary behaviour.
+func _sir_method_unknown(recv Value, name string) Value {
+	panic("undefined method `" + name + "' for " + _sir_ruby_class_name(recv))
+}
+
+// Conventional Ruby class name of a value (for error messages / `class`).
+func _sir_ruby_class_name(v Value) string {
+	if v == nil {
+		return "NilClass"
+	}
+	switch t := v.(type) {
+	case bool:
+		if t {
+			return "TrueClass"
+		}
+		return "FalseClass"
+	case int64, int:
+		return "Integer"
+	case float64:
+		return "Float"
+	case string:
+		return "String"
+	case *Symbol:
+		return "Symbol"
+	case *Seq:
+		return "Array"
+	case *Map:
+		return "Hash"
+	}
+	return "Object"
+}
+
+// ── Universal Object methods ───────────────────────────────────
+func _sir_object_method(recv Value, name string, args []Value) (Value, bool) {
+	switch name {
+	case "nil?":
+		return recv == nil, true
+	case "==":
+		return _sir_value_eq(recv, args[0]), true
+	case "!=":
+		return !_sir_value_eq(recv, args[0]), true
+	case "class":
+		return _sir_ruby_class_name(recv), true
+	case "to_s":
+		return _sir_ruby_to_s(recv), true
+	case "itself":
+		return recv, true
+	}
+	return nil, false
+}
+
+// ── Array (*Seq) catalog ───────────────────────────────────────
+func _sir_array_method(recv *Seq, name string, args []Value) (Value, bool) {
+	// Block-taking methods are dispatched only when a trailing *Closure
+	// is present; peel it off the positional args first.
+	pos, block := _sir_split_block(args)
+	if block != nil {
+		if v, ok := _sir_array_block_method(recv, name, pos, block); ok {
+			return v, true
+		}
+	}
+	switch name {
+	case "length", "size", "count":
+		if name == "count" && len(args) > 0 {
+			n := int64(0)
+			for _, x := range recv.Items {
+				if _sir_value_eq(x, args[0]) {
+					n++
+				}
+			}
+			return n, true
+		}
+		return int64(len(recv.Items)), true
+	case "first":
+		if len(recv.Items) == 0 {
+			return nil, true
+		}
+		return recv.Items[0], true
+	case "last":
+		if len(recv.Items) == 0 {
+			return nil, true
+		}
+		return recv.Items[len(recv.Items)-1], true
+	case "empty?":
+		return len(recv.Items) == 0, true
+	case "include?":
+		for _, x := range recv.Items {
+			if _sir_value_eq(x, args[0]) {
+				return true, true
+			}
+		}
+		return false, true
+	case "index":
+		for i, x := range recv.Items {
+			if _sir_value_eq(x, args[0]) {
+				return int64(i), true
+			}
+		}
+		return nil, true
+	case "push", "append":
+		// Mutate the shared handle in place (Ruby `push`/`<<` mutate);
+		// return the receiver so `xs.push(4)` chains.
+		recv.Items = append(recv.Items, args...)
+		return recv, true
+	case "<<":
+		recv.Items = append(recv.Items, args[0])
+		return recv, true
+	case "pop":
+		if len(recv.Items) == 0 {
+			return nil, true
+		}
+		last := recv.Items[len(recv.Items)-1]
+		recv.Items = recv.Items[:len(recv.Items)-1]
+		return last, true
+	case "shift":
+		if len(recv.Items) == 0 {
+			return nil, true
+		}
+		first := recv.Items[0]
+		recv.Items = recv.Items[1:]
+		return first, true
+	case "reverse":
+		out := make([]Value, len(recv.Items))
+		for i, x := range recv.Items {
+			out[len(recv.Items)-1-i] = x
+		}
+		return &Seq{Items: out}, true
+	case "sort":
+		out := make([]Value, len(recv.Items))
+		copy(out, recv.Items)
+		sort.SliceStable(out, func(i, j int) bool {
+			return _sir_value_lt(out[i], out[j])
+		})
+		return &Seq{Items: out}, true
+	case "join":
+		sep := ""
+		if len(args) > 0 {
+			if s, ok := args[0].(string); ok {
+				sep = s
+			}
+		}
+		parts := make([]string, len(recv.Items))
+		for i, x := range recv.Items {
+			parts[i] = _sir_ruby_to_s(x)
+		}
+		return strings.Join(parts, sep), true
+	case "to_a":
+		return recv, true
+	}
+	return nil, false
+}
+
+// Block-taking Array/Enumerable methods.  `block` is applied via
+// `_sir_apply` (proc-lenient); predicate results route through
+// `_sir_truthy` (only false/nil are falsy).
+func _sir_array_block_method(recv *Seq, name string, args []Value, block *Closure) (Value, bool) {
+	switch name {
+	case "each":
+		for _, x := range recv.Items {
+			_sir_apply(block, []Value{x})
+		}
+		return recv, true
+	case "map", "collect":
+		out := make([]Value, len(recv.Items))
+		for i, x := range recv.Items {
+			out[i] = _sir_apply(block, []Value{x})
+		}
+		return &Seq{Items: out}, true
+	case "select", "filter":
+		out := []Value{}
+		for _, x := range recv.Items {
+			if _sir_truthy(_sir_apply(block, []Value{x})) {
+				out = append(out, x)
+			}
+		}
+		return &Seq{Items: out}, true
+	case "reject":
+		out := []Value{}
+		for _, x := range recv.Items {
+			if !_sir_truthy(_sir_apply(block, []Value{x})) {
+				out = append(out, x)
+			}
+		}
+		return &Seq{Items: out}, true
+	case "reduce", "inject":
+		var acc Value
+		var rest []Value
+		if len(args) > 0 {
+			acc = args[0]
+			rest = recv.Items
+		} else if len(recv.Items) > 0 {
+			acc = recv.Items[0]
+			rest = recv.Items[1:]
+		} else {
+			return nil, true
+		}
+		for _, x := range rest {
+			acc = _sir_apply(block, []Value{acc, x})
+		}
+		return acc, true
+	case "find", "detect":
+		for _, x := range recv.Items {
+			if _sir_truthy(_sir_apply(block, []Value{x})) {
+				return x, true
+			}
+		}
+		return nil, true
+	case "any?":
+		for _, x := range recv.Items {
+			if _sir_truthy(_sir_apply(block, []Value{x})) {
+				return true, true
+			}
+		}
+		return false, true
+	case "all?":
+		for _, x := range recv.Items {
+			if !_sir_truthy(_sir_apply(block, []Value{x})) {
+				return false, true
+			}
+		}
+		return true, true
+	case "none?":
+		for _, x := range recv.Items {
+			if _sir_truthy(_sir_apply(block, []Value{x})) {
+				return false, true
+			}
+		}
+		return true, true
+	}
+	return nil, false
+}
+
+// Ordering used by `Array#sort`.  Numbers compare numerically, strings
+// lexicographically, symbols by name; a mixed/uncomparable pair keeps a
+// stable order (returns false) rather than panicking — the never-raise
+// floor for the OO surface.
+func _sir_value_lt(a Value, b Value) bool {
+	if _sir_is_number_val(a) && _sir_is_number_val(b) {
+		return _sir_as_float(a) < _sir_as_float(b)
+	}
+	if as, ok := a.(string); ok {
+		if bs, ok := b.(string); ok {
+			return as < bs
+		}
+	}
+	if as, ok := a.(*Symbol); ok {
+		if bs, ok := b.(*Symbol); ok {
+			return as.Name < bs.Name
+		}
+	}
+	return false
+}
+
+// ── Hash (*Map) catalog ────────────────────────────────────────
+func _sir_hash_method(recv *Map, name string, args []Value) (Value, bool) {
+	pos, block := _sir_split_block(args)
+	if block != nil {
+		if v, ok := _sir_hash_block_method(recv, name, pos, block); ok {
+			return v, true
+		}
+	}
+	switch name {
+	case "keys":
+		out := make([]Value, len(recv.Entries))
+		for i, e := range recv.Entries {
+			out[i] = e.Key
+		}
+		return &Seq{Items: out}, true
+	case "values":
+		out := make([]Value, len(recv.Entries))
+		for i, e := range recv.Entries {
+			out[i] = e.Val
+		}
+		return &Seq{Items: out}, true
+	case "has_key?", "key?", "include?", "member?":
+		for _, e := range recv.Entries {
+			if _sir_value_eq(e.Key, args[0]) {
+				return true, true
+			}
+		}
+		return false, true
+	case "has_value?", "value?":
+		for _, e := range recv.Entries {
+			if _sir_value_eq(e.Val, args[0]) {
+				return true, true
+			}
+		}
+		return false, true
+	case "size", "length":
+		return int64(len(recv.Entries)), true
+	case "empty?":
+		return len(recv.Entries) == 0, true
+	}
+	return nil, false
+}
+
+func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure) (Value, bool) {
+	switch name {
+	case "each", "each_pair":
+		for _, e := range recv.Entries {
+			_sir_apply(block, []Value{e.Key, e.Val})
+		}
+		return recv, true
+	case "map":
+		out := make([]Value, len(recv.Entries))
+		for i, e := range recv.Entries {
+			out[i] = _sir_apply(block, []Value{e.Key, e.Val})
+		}
+		return &Seq{Items: out}, true
+	case "select", "filter":
+		m := &Map{Entries: []MapEntry{}}
+		for _, e := range recv.Entries {
+			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+				m.Entries = append(m.Entries, MapEntry{Key: e.Key, Val: e.Val})
+			}
+		}
+		return m, true
+	case "reject":
+		m := &Map{Entries: []MapEntry{}}
+		for _, e := range recv.Entries {
+			if !_sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+				m.Entries = append(m.Entries, MapEntry{Key: e.Key, Val: e.Val})
+			}
+		}
+		return m, true
+	}
+	return nil, false
+}
+
+// ── String catalog ─────────────────────────────────────────────
+//
+// A Ruby String is an immutable Go `string`, so every method returns a
+// fresh value (nothing mutates in place).
+func _sir_string_method(recv string, name string, args []Value) (Value, bool) {
+	switch name {
+	case "length", "size":
+		return int64(len([]rune(recv))), true
+	case "upcase":
+		return strings.ToUpper(recv), true
+	case "downcase":
+		return strings.ToLower(recv), true
+	case "reverse":
+		r := []rune(recv)
+		for i, j := 0, len(r)-1; i < j; i, j = i+1, j-1 {
+			r[i], r[j] = r[j], r[i]
+		}
+		return string(r), true
+	case "strip":
+		return strings.TrimSpace(recv), true
+	case "lstrip":
+		return strings.TrimLeft(recv, " \t\r\n\f\v"), true
+	case "rstrip":
+		return strings.TrimRight(recv, " \t\r\n\f\v"), true
+	case "empty?":
+		return len(recv) == 0, true
+	case "include?":
+		if s, ok := args[0].(string); ok {
+			return strings.Contains(recv, s), true
+		}
+		return false, true
+	case "start_with?":
+		if s, ok := args[0].(string); ok {
+			return strings.HasPrefix(recv, s), true
+		}
+		return false, true
+	case "end_with?":
+		if s, ok := args[0].(string); ok {
+			return strings.HasSuffix(recv, s), true
+		}
+		return false, true
+	case "split":
+		// No separator ⇒ split on runs of whitespace (Ruby's awk-style
+		// default); with a separator ⇒ split on that literal substring.
+		var parts []string
+		if len(args) == 0 {
+			parts = strings.Fields(recv)
+		} else if s, ok := args[0].(string); ok {
+			parts = strings.Split(recv, s)
+		} else {
+			parts = strings.Fields(recv)
+		}
+		out := make([]Value, len(parts))
+		for i, p := range parts {
+			out[i] = p
+		}
+		return &Seq{Items: out}, true
+	case "chars":
+		r := []rune(recv)
+		out := make([]Value, len(r))
+		for i, c := range r {
+			out[i] = string(c)
+		}
+		return &Seq{Items: out}, true
+	case "to_i":
+		return _sir_str_to_i(recv), true
+	case "to_f":
+		return _sir_str_to_f(recv), true
+	case "to_sym":
+		return _sir_intern(recv), true
+	}
+	return nil, false
+}
+
+// Ruby `String#to_i`: parse the longest leading (optionally-signed)
+// integer run after trimming whitespace; yield 0 when nothing leads
+// (Ruby never raises here, unlike Go's `strconv.Atoi`).
+func _sir_str_to_i(s string) Value {
+	s = strings.TrimSpace(s)
+	i := 0
+	if i < len(s) && (s[i] == '+' || s[i] == '-') {
+		i++
+	}
+	j := i
+	for j < len(s) && s[j] >= '0' && s[j] <= '9' {
+		j++
+	}
+	if j == i {
+		return int64(0)
+	}
+	n, err := strconv.ParseInt(s[:j], 10, 64)
+	if err != nil {
+		return int64(0)
+	}
+	return n
+}
+
+// Ruby `String#to_f`: leading float, else 0.0.  We grow the longest
+// prefix that still parses as a float via `strconv.ParseFloat`.
+func _sir_str_to_f(s string) Value {
+	s = strings.TrimSpace(s)
+	best := 0.0
+	for j := 1; j <= len(s); j++ {
+		if f, err := strconv.ParseFloat(s[:j], 64); err == nil {
+			best = f
+		}
+	}
+	return best
+}
+
+// ── Numeric (Integer/Float) catalog ────────────────────────────
+func _sir_numeric_method(recv Value, name string, args []Value) (Value, bool) {
+	// Block-taking `times` is dispatched when a trailing *Closure is present.
+	_, block := _sir_split_block(args)
+	if block != nil && name == "times" {
+		n := _sir_as_int(recv)
+		for i := int64(0); i < n; i++ {
+			_sir_apply(block, []Value{i})
+		}
+		return recv, true
+	}
+	isInt := false
+	switch recv.(type) {
+	case int64, int:
+		isInt = true
+	}
+	switch name {
+	case "abs":
+		if isInt {
+			n := _sir_as_int(recv)
+			if n < 0 {
+				return -n, true
+			}
+			return n, true
+		}
+		return math.Abs(_sir_as_float(recv)), true
+	case "to_i":
+		return _sir_as_int_trunc(recv), true
+	case "to_f":
+		return _sir_as_float(recv), true
+	case "even?":
+		return _sir_as_int_trunc(recv)%2 == 0, true
+	case "odd?":
+		return _sir_as_int_trunc(recv)%2 != 0, true
+	case "zero?":
+		return _sir_as_float(recv) == 0, true
+	case "positive?":
+		return _sir_as_float(recv) > 0, true
+	case "negative?":
+		return _sir_as_float(recv) < 0, true
+	case "succ", "next":
+		if isInt {
+			return _sir_as_int(recv) + 1, true
+		}
+		return _sir_as_float(recv) + 1, true
+	case "pred":
+		if isInt {
+			return _sir_as_int(recv) - 1, true
+		}
+		return _sir_as_float(recv) - 1, true
+	}
+	return nil, false
+}
+
+// `to_i`-style truncation that also accepts a float receiver (Ruby's
+// `3.7.to_i == 3`, `even?`/`odd?` truncate first).  A non-finite float
+// degrades to 0 rather than panicking (never-raise floor).
+func _sir_as_int_trunc(v Value) int64 {
+	switch n := v.(type) {
+	case int64:
+		return n
+	case int:
+		return int64(n)
+	case float64:
+		if math.IsNaN(n) || math.IsInf(n, 0) {
+			return 0
+		}
+		return int64(math.Trunc(n))
+	}
+	return 0
+}
+
+// ── Symbol catalog ─────────────────────────────────────────────
+func _sir_symbol_method(recv *Symbol, name string, args []Value) (Value, bool) {
+	switch name {
+	case "to_s":
+		return recv.Name, true
+	case "to_sym":
+		return recv, true
+	case "length", "size":
+		return int64(len([]rune(recv.Name))), true
+	case "upcase":
+		return _sir_intern(strings.ToUpper(recv.Name)), true
+	case "downcase":
+		return _sir_intern(strings.ToLower(recv.Name)), true
+	case "empty?":
+		return len(recv.Name) == 0, true
+	}
+	return nil, false
+}
+
 "##;
 
 #[cfg(test)]

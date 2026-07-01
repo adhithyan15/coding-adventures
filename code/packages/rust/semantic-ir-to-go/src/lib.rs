@@ -97,6 +97,27 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // Indirect/closure keyword calls are deferred (spec §Out of scope); the
     // frontends do not emit them, so accepting this feature is safe.
     Feature::KeywordParams,
+    // ── C5 — collection-method dispatch (runtime catalog) ──────────
+    //
+    // `recv.meth(args…)` reaches the backend as
+    // `BuiltinCall("__method__", [recv, StrLit("meth"), …])` and is
+    // emitted as `_sir_call_method(recv, "meth", []Value{…})`, an EXPLICIT
+    // type-switch + name-switch catalog inlined in the runtime preamble
+    // (see `runtime::RUNTIME`), ported from the Python/TS `sir-runtime-oop`
+    // reference for behavioural parity.
+    //
+    // Crucially, the deferred `Feature::MethodDispatch` variant (spec §C1)
+    // is NOT needed here: the validator observes NO feature for a
+    // `BuiltinCall("__method__", …)` (it falls through the builtin-name
+    // match), so a *pure* collection-method module observes only the
+    // features of its receiver/argument nodes — `Sequences`, `Strings`,
+    // `Closures`, `Symbols`, `Maps`, `DynamicTyping` — every one already in
+    // this accepted set.  So method-dispatch-WITHOUT-classes is accepted
+    // with no feature-gate change, while class-bearing modules stay
+    // rejected (they observe `Feature::Classes`, which we do NOT accept).
+    // The runtime catalog IS the gate: an unknown method name fails at
+    // runtime with a controlled "undefined method" panic, never via
+    // reflection.  (See the `pure_method_dispatch_module_is_accepted` test.)
 ];
 
 impl Backend for GoBackend {
@@ -465,5 +486,82 @@ mod tests {
         let m = twig_to_semantic_ir::compile_source("(+ 1 2)", "compiler/lexer").expect("lower");
         let a = compile(&m).expect("compile");
         assert_eq!(a.filename, "compiler_lexer.go");
+    }
+
+    // ── C5: collection-method dispatch acceptance ─────────────────────────
+    //
+    // A pure collection-method module (a `__method__` dispatch with NO class
+    // features) must be ACCEPTED — method dispatch is decoupled from classes.
+    // `__method__` observes no feature in the validator, so the module carries
+    // only its receiver/argument features (here `Sequences`), all accepted.
+    #[test]
+    fn pure_method_dispatch_module_is_accepted() {
+        use semantic_ir::{
+            Block, EffectSet, Expr, FeatureManifest, Function, Metadata, Span, Stmt,
+        };
+        let sp = Span::synthetic;
+        // main() { [1,2,3].length }
+        let dispatch = Expr::BuiltinCall {
+            name: "__method__".into(),
+            args: vec![
+                Expr::SeqLit {
+                    items: vec![
+                        Expr::IntLit { value: 1, span: sp() },
+                        Expr::IntLit { value: 2, span: sp() },
+                        Expr::IntLit { value: 3, span: sp() },
+                    ],
+                    span: sp(),
+                },
+                Expr::StrLit { value: "length".into(), span: sp() },
+            ],
+            effects: EffectSet::PURE,
+            span: sp(),
+        };
+        let main = Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::ExprStmt { expr: dispatch, span: sp() }],
+                value: Expr::NilLit { span: sp() },
+                span: sp(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: sp(),
+        };
+        let m = Module {
+            name: "coll".into(),
+            // `Sequences` (the receiver) + `Strings` (the method-name StrLit).
+            // Notably NO `Classes` / `InstanceVars` — this is method dispatch
+            // decoupled from OOP, and it is accepted with no gate change.
+            manifest: FeatureManifest::from_features(&[Feature::Sequences, Feature::Strings]),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![main],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("test")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: sp(),
+        };
+        let a = compile(&m).expect("pure method-dispatch module must be accepted");
+        assert!(
+            a.source.contains(r#"_sir_call_method(_sir_seq_lit"#),
+            "expected dispatch emission; got:\n{}",
+            a.source
+        );
+        assert!(a.source.contains(r#", "length", []Value{}"#));
+    }
+
+    // A class-bearing module stays REJECTED — we do not accept `Feature::Classes`,
+    // so loosening the `__method__` path never accidentally admits class semantics.
+    #[test]
+    fn class_bearing_module_still_rejected() {
+        let mut m = twig_to_semantic_ir::compile_source("(+ 1 2)", "demo").expect("lower");
+        m.manifest = semantic_ir::FeatureManifest::from_features(&[Feature::Classes]);
+        let err = compile(&m).expect_err("classes must stay rejected");
+        assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
     }
 }
