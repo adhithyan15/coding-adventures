@@ -2,6 +2,44 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.15.0 — Reject keyword arguments on indirect/closure calls (KW hardening)
+
+Closes a **soundness gap** left by KW1. The validator's shared keyword check
+(`check_kwargs_common`) enforced ordering and duplicate rules on **every** call
+kind, but for an `IndirectCall` (callee not statically known — a closure/
+function value, validated with `callee == None`) it stopped there and did
+**not** reject the mere *presence* of a keyword argument.
+
+Per the design spec (`code/specs/sir-keyword-params.md`, "Out of scope"),
+**indirect/closure keyword calls are out of scope for v0** — no backend can
+emit them. Every backend's `emit_args` for an `IndirectCall` routes each
+argument through `emit_expr`, whose `KeywordArg` arm is a hard `panic!`
+(resolving a keyword needs the callee's parameter names/order, which an
+indirect call does not have statically). So a validator-accepted module such
+as `main(g) { g(x: 1) }` would **panic the backend at lowering time** — a
+denial-of-service on validator-accepted input.
+
+The validator now rejects any `KeywordArg` in the argument list of an
+`IndirectCall` with:
+
+> keyword argument `NAME` is not allowed on an indirect/closure call (only
+> direct calls support keyword arguments in v0)
+
+This change is **purely subtractive**: it forbids more (previously
+ill-formed-but-accepted) programs, adds **no** new enum variant or field, and
+does **not** alter any accepted `DirectCall` behavior (the direct path passes
+`Some(callee)` and never reaches this branch). Downstream crates that only
+*construct* IR are therefore unaffected; only ill-formed IR is now caught
+earlier, at validation, instead of at backend emission.
+
+### Tests
+
+Added: an `IndirectCall` carrying a `KeywordArg` is rejected with the new
+message; the same keyword argument to a matching-signature `DirectCall` still
+validates; an `IndirectCall` with only positional args still validates. The
+former `indirect_call_skips_keyword_name_resolution` test (which asserted the
+now-unsound acceptance) is replaced accordingly.
+
 ## 0.14.0 — Keyword parameters & arguments (KW1; core IR)
 
 Adds **named keyword parameters** (`def f(x:)` / `def f(x: 1)`) and

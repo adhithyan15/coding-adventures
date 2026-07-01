@@ -989,8 +989,40 @@ impl<'m> ValidatorState<'m> {
             }
         }
 
-        // Name resolution against a *known* callee only.
-        let Some(callee) = callee else { return };
+        // ── Indirect/closure keyword rejection (v0 soundness gate) ────────
+        //
+        // `callee == None` means the call target is *not* a statically-known
+        // direct function — it is an `IndirectCall` through a closure/function
+        // value.  Per `code/specs/sir-keyword-params.md` ("Out of scope"),
+        // keyword arguments on such calls are OUT OF SCOPE for v0: **no**
+        // backend can emit them.  Every emitter's `emit_args` for an
+        // `IndirectCall` routes each argument through `emit_expr`, whose
+        // `KeywordArg` arm is a hard `panic!` (keyword resolution needs the
+        // callee's parameter names/order, which an indirect call does not have
+        // statically).  If the validator accepted such a module, lowering it
+        // would panic — a denial-of-service on validator-accepted input.
+        //
+        // The ordering/duplicate loop above still runs (a keyword mis-ordered
+        // even on an indirect call is malformed), but we additionally reject
+        // the mere *presence* of any keyword argument here.  This is purely
+        // subtractive: it forbids more programs, changes no accepted DirectCall
+        // behaviour (that path passes `Some(callee)` and never reaches this
+        // branch), and adds no enum variant — so downstream crates that only
+        // *construct* IR are unaffected; only ill-formed IR is now caught.
+        let Some(callee) = callee else {
+            for a in args {
+                if let Expr::KeywordArg { name, span, .. } = a {
+                    self.error(
+                        format!(
+                            "keyword argument `{}` is not allowed on an indirect/closure call (only direct calls support keyword arguments in v0)",
+                            name
+                        ),
+                        span,
+                    );
+                }
+            }
+            return;
+        };
         // Clone out the callee's keyword-param facts we need, to avoid
         // holding a borrow of `self.module` across the `self.error` calls.
         let Some(f) = self.module.functions.iter().find(|f| f.name == callee) else {
@@ -3219,12 +3251,11 @@ mod tests {
         assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
     }
 
-    #[test]
-    fn indirect_call_skips_keyword_name_resolution() {
-        // A closure/indirect call has no statically known signature, so
-        // ordering + dup checks apply but NOT name resolution: an "unknown"
-        // keyword against a closure is accepted.  Ordering violations still
-        // fail (checked separately); here we prove a lone keyword arg is ok.
+    /// Build a single-function module whose body is an `IndirectCall`
+    /// through parameter `cb` with the given `call_args`.  The manifest
+    /// declares KeywordParams + Closures so the constructs pass the manifest
+    /// gate and the interesting failure (if any) is the validator rule.
+    fn module_indirect_call(call_args: Vec<Expr>) -> Module {
         let mut m = empty_module(FeatureManifest::from_features(&[
             Feature::DynamicTyping,
             Feature::KeywordParams,
@@ -3243,7 +3274,7 @@ mod tests {
                         scope: Scope::Param,
                         span: s(),
                     }),
-                    args: vec![kwarg("anything", 1)],
+                    args: call_args,
                     effects: EffectSet::PURE,
                     span: s(),
                 },
@@ -3253,8 +3284,44 @@ mod tests {
             metadata: Metadata::new(),
             span: s(),
         });
+        m
+    }
+
+    #[test]
+    fn indirect_call_with_keyword_arg_is_rejected() {
+        // DoD (a): a keyword argument on an indirect/closure call is REJECTED.
+        // No backend can emit an indirect keyword call (their `emit_expr`
+        // `KeywordArg` arm panics), so accepting one would be a DoS on
+        // validator-accepted input.  `main(g) { g(x: 1) }` is exactly the
+        // program described in the soundness gap.
+        let m = module_indirect_call(vec![kwarg("x", 1)]);
         let r = validate(&m);
-        assert!(r.is_ok(), "indirect keyword call must skip resolution, got {:?}", r.issues);
+        assert!(!r.is_ok(), "indirect keyword call must be rejected");
+        assert!(
+            r.errors().any(|i| i
+                .message
+                .contains("keyword argument `x` is not allowed on an indirect/closure call")),
+            "expected the indirect-keyword rejection message, got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn direct_call_with_matching_keyword_still_validates() {
+        // DoD (b): the SAME keyword arg to a matching-signature DIRECT callee
+        // still validates — the fix is subtractive and does not touch the
+        // DirectCall path.  def f(x:); g() = f(x: 1).
+        let m = module_kw_call(vec![kw("x", None)], vec![kwarg("x", 1)], &[]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "direct keyword call must still validate, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn indirect_call_with_only_positionals_still_validates() {
+        // DoD (c): an indirect call with only positional args is unaffected.
+        let m = module_indirect_call(vec![Expr::IntLit { value: 1, span: s() }]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "positional indirect call must validate, got {:?}", r.issues);
     }
 
     #[test]
