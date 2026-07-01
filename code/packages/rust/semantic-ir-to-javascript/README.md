@@ -65,29 +65,40 @@ surface the emitter lowers today. JavaScript supports every SIR16 feature
 natively (arrays, `Map`, `while`/`for`, reassignable `let`), so each
 lowering is direct.
 
-| Accepted (v0 + SIR16)      | Rejected (deferred / unsupported)            |
-|----------------------------|----------------------------------------------|
-| `Closures`                 | `Classes`, `Modules`, `InstanceVars` (SIR17) |
-| `Pairs`                    | `ClassVars`, `Constants`, `Exceptions`       |
-| `Symbols`                  | `StringInterpolation` (`StrConcat`, SIR18)   |
-| `Strings`                  | `TailCalls` (V8 has no reliable TCO)         |
-| `DynamicTyping`            | `Intrinsics` (empty whitelist)               |
-| `OptionalTypeAnnotations`  |                                              |
-| `MutualRecursion`          |                                              |
-| `Globals`                  |                                              |
-| `Floats` (SIR16)           |                                              |
-| `ShortCircuit` (SIR16)     |                                              |
-| `Sequences` (SIR16)        |                                              |
-| `Maps` (SIR16)             |                                              |
-| `MutableBindings` (SIR16)  |                                              |
-| `Loops` (SIR16)            |                                              |
-| `DefaultParams` (P2d)      |                                              |
+| Accepted (v0 + SIR16 + E1)  | Rejected (deferred / unsupported)            |
+|-----------------------------|----------------------------------------------|
+| `Closures`                  | `Modules`, `InstanceVars` (SIR17)            |
+| `Pairs`                     | `ClassVars`                                  |
+| `Symbols`                   | `StringInterpolation` (`StrConcat`, SIR18)   |
+| `Strings`                   | `TailCalls` (V8 has no reliable TCO)         |
+| `DynamicTyping`             | `Intrinsics` (empty whitelist)               |
+| `OptionalTypeAnnotations`   |                                              |
+| `MutualRecursion`           |                                              |
+| `Globals`                   |                                              |
+| `Floats` (SIR16)            |                                              |
+| `ShortCircuit` (SIR16)      |                                              |
+| `Sequences` (SIR16)         |                                              |
+| `Maps` (SIR16)              |                                              |
+| `MutableBindings` (SIR16)   |                                              |
+| `Loops` (SIR16)             |                                              |
+| `DefaultParams` (P2d)       |                                              |
+| `KeywordParams` (KW4)       |                                              |
+| `Exceptions` (E1, SIR17)    |                                              |
+| `Classes` (E2 ancestry)     |                                              |
+| `Constants`                 |                                              |
 
 `accepts_intrinsics()` is empty. The accept-set is deliberately matched
 to what `emit` handles, so a module using a deferred node is turned away
 *before* lowering rather than mis-compiled — and every accepted feature
 has a real emit arm (the residual `panic!` guards cover only the
-rejected SIR17/18 nodes).
+still-deferred SIR17/18 nodes — `Modules`, `SingletonClassDef` OOP
+dispatch, instance/class variables, and string interpolation).
+
+`Classes` is accepted only to the depth exceptions need: a `ClassDef`
+supplies its `superclass` *ancestry edge* (so `raise MyErr; rescue
+StandardError` matches when `class MyErr < StandardError`) and its
+non-`def` body statements are emitted inline. OOP method dispatch and
+instantiation are **not** modelled.
 
 ### SIR16 lowering at a glance
 
@@ -103,6 +114,41 @@ rejected SIR17/18 nodes).
 | `While`                          | `while (__Sir.truthy(cond)) { … }`              |
 | `ForRange`                       | direction-aware C-style `for` (bounds once)     |
 | `ForEach`                        | `for (let x of iter) { … }`                     |
+
+### Exceptions (E1) — `try`/`catch`/`raise`
+
+`Stmt::TryCatch` lowers to a **native** `try`/`catch`/`finally`. A native
+`catch` binds one variable and catches everything, but Ruby has an ordered
+list of *typed* `rescue` clauses, so the catch body is an if/else-if chain
+that asks the runtime `__Sir.rescueMatches(__exc, [...classNames])` for
+each clause in source order — running the first match, binding `=> e` when
+present, and re-`throw`ing the original exception if none match:
+
+```js
+try {
+  __Sir.raiseError("ArgumentError", "x");
+} catch (__exc) {
+  if (__Sir.rescueMatches(__exc, ["StandardError"])) {
+    const e = __exc;
+    __Sir.print("caught");
+  } else {
+    throw __exc;
+  }
+}
+```
+
+An empty `exception_types` is a bare `rescue` (catch-all → `rescueMatches`
+returns `true`); an `ensure` becomes a `finally`. The `raise` builtin
+lowers to `__Sir.raiseError(cls, msg)` (`raise Foo, "m"` →
+`raiseError("Foo", "m")`; a non-class first arg → an implicit
+`RuntimeError`; bare `raise` → a generic re-raise).
+
+**User-class ancestry (E2 half).** So that `rescue StandardError` catches a
+`raise MyErr` when `class MyErr < StandardError`, the emitter collects
+every `ClassDef` inheritance edge and emits one `__Sir.registerAncestry({
+"MyErr": "StandardError" })` at program init, merging the pairs into the
+runtime's ancestry table. Dispatch is a pure string-map walk — never
+`eval` or reflection (see the runtime section).
 
 ### Default parameters (P2d)
 
@@ -176,6 +222,33 @@ a runtime call:
 A **variadic** operator (`(+ 1 2 3)` — more than two args) and any
 unrecognised builtin fall back to `__Sir.callBuiltin("+", […])`, so a new
 builtin runs without a backend change.
+
+### Exception helpers (E1)
+
+The inlined `__Sir` also carries the exception runtime — a plain-JS port
+of the published `@coding-adventures/sir-runtime-exceptions` package, so
+the artifact stays self-contained:
+
+- `SirError` — a real `Error` subclass tagged with its Ruby class name in
+  `.sirClass`; what `raise` throws.
+- `raiseError(cls, msg)` — throws a `SirError`; the target of a lowered
+  `raise`.
+- `rescueMatches(exc, classNames)` — the per-clause dispatcher: `true` for
+  a bare `rescue` (empty list) or `Exception` (universal root), otherwise
+  a superclass-chain walk over the ancestry table.
+- `registerAncestry(map)` — merges user `{ child: "Super" }` edges into the
+  ancestry lookup (called once at program init for the module's inheriting
+  classes).
+
+The built-in Ruby ancestry (`RuntimeError`/`ArgumentError`/… →
+`StandardError` → `Exception`) is baked in, so `rescue StandardError`
+catches the everyday subclasses out of the box.
+
+**Security.** Ancestry resolution is a pure `ancestry[cur]` string-map
+walk — never `eval` or dynamic property reflection; class and method names
+are treated strictly as data. The mutable map is `Object.create(null)`
+(prototype-less), so a user class named `constructor`/`__proto__` cannot
+poison the lookup, and a cyclic user map terminates via a `seen` guard.
 
 ## Output format
 

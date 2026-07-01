@@ -26,6 +26,67 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   instead of building a function.  `length` remains special-cased ahead of the
   allowlist as a property read.
 
+## 0.6.0 — exception handling (try/catch/raise) + user-class ancestry (E1)
+
+### Added
+
+- **`Stmt::TryCatch` lowers to native `try`/`catch`/`finally` (E1).**  The
+  backend previously *panicked* on any `TryCatch`.  It now emits a native
+  `try { <body> } catch (__exc) { … } finally { <ensure> }`.  Because a native
+  `catch` binds one variable and catches everything while Ruby has an ordered
+  list of *typed* `rescue` clauses, the catch body is an if/else-if chain that
+  asks `__Sir.rescueMatches(__exc, ["Foo", "Bar"])` for each clause in source
+  order, binds `=> e` when present, and re-`throw`s the original exception if
+  no clause matches (Ruby's "propagate when unrescued").  An empty
+  `exception_types` is a bare `rescue` (catch-all).  Mirrors the TypeScript
+  backend's `TryCatch` arm exactly, minus the type annotation on the binding.
+- **`raise` builtin lowers to `__Sir.raiseError` (E1).**  `raise Foo, "msg"`
+  (a `Const` class name + message) → `__Sir.raiseError("Foo", <msg>)`;
+  `raise Foo` → `__Sir.raiseError("Foo")`; a non-`Const` first arg
+  (`raise "msg"`) → `__Sir.raiseError("RuntimeError", <arg>)`; bare `raise` →
+  `__Sir.raiseError()` (a generic `RuntimeError` re-raise).  Matches the TS
+  backend's shape.
+- **Inlined exception runtime.**  Ported the plain-JS-compatible pieces of the
+  published `@coding-adventures/sir-runtime-exceptions` package into the
+  backend's self-contained `__Sir` IIFE: a class-name-tagged `SirError` (a real
+  `Error` subclass), `raiseError(cls, msg)`, `rescueMatches(exc, classNames)`,
+  and the built-in Ruby `ANCESTRY` table (so `rescue StandardError` catches a
+  `RuntimeError`/`ArgumentError`/…).  No `import`/`require`; the emitted `.js`
+  still runs directly under `node`.
+- **User-defined class ancestry (E2, the JS half).**  Added
+  `__Sir.registerAncestry(map)`, which merges a user
+  `{ childClass: superclassName }` map into the runtime's ancestry lookup.  The
+  emitter collects every `Stmt::ClassDef { name, superclass: Some(_) }` pair in
+  the module (recursing into nested bodies) and emits one
+  `__Sir.registerAncestry({ … })` at program init — so
+  `class MyErr < StandardError; raise MyErr; rescue StandardError` matches
+  through the merged chain.  A `ClassDef` body's (non-`def`) statements are now
+  emitted inline instead of panicking.
+- **Accepts `Feature::Exceptions`, `Feature::Classes`, and `Feature::Constants`.**
+  Exceptions and classes are lowered as above; `Constants` is accepted because
+  `raise Foo` names its class as a `Const` `VarRef` (consumed by the `raise` arm
+  as a string) — any other constant read emits its bare identifier.
+
+### Security
+
+- **Ancestry dispatch is by explicit table lookup, never reflection.**
+  `rescueMatches` / `isAncestorOrSelf` resolve a class's superclass chain via
+  `ancestry[cur]` string-map reads only — no `eval`, no dynamic code
+  synthesis; class and method names are treated as pure data.  The mutable
+  ancestry map is `Object.create(null)` (prototype-less), so a user class
+  literally named `constructor`/`__proto__` cannot poison the lookup, and a
+  malformed (cyclic) user map terminates via a `seen` guard.
+
+### Tests
+
+- Emitted-shape unit tests for the `TryCatch` else-chain, the four `raise`
+  shapes, and one-shot `registerAncestry` emission (present iff a class
+  inherits).
+- Four `node` execution-proofs: built-in ancestry (`ArgumentError` caught by
+  `rescue StandardError`), bare `rescue` catch-all, an unmatched type
+  re-raising to a non-zero exit, and USER ancestry
+  (`class MyErr < StandardError` caught by `rescue StandardError`).
+
 ## 0.5.0 — method dispatch (`__method__`) execution
 
 Adds the minimal runtime support the JavaScript frontend's C3 member-method
