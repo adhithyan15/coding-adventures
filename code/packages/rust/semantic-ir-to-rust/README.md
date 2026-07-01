@@ -87,6 +87,38 @@ language's **call-time, param-scope** semantics:
 
 Non-default behaviour is byte-for-byte unchanged.
 
+Accepts (KW5): `KeywordParams` — name-matched keyword parameters
+(`def f(a:)` / `def f(a: 1)`) and keyword arguments (`f(a: 1)`).  Rust has
+**no native keyword-argument syntax**, so the backend resolves keywords to
+a plain positional call **statically, at emit time** (no runtime library):
+
+- **Def side** — a `Keyword` param emits as an *ordinary positional*
+  Rust parameter in its declared order (the by-name affordance is dropped;
+  the name becomes the Rust parameter name).  An *optional* keyword (one
+  with a `default`) reuses the same `DefaultParams` body-top prologue —
+  it is a defaulted parameter like any other.
+- **Call side** — for a `DirectCall` whose callee signature is known
+  (looked up in a `FN_PARAMS` signature table, populated alongside
+  `FN_ARITY`), the emitter builds the full positional argument list in the
+  callee's *declared* order: positionals fill positional params in order;
+  each `KeywordArg { name, value }` fills the param whose name matches
+  (a name→position reorder); an omitted optional keyword is padded with
+  `__sir::missing()` so the callee's prologue substitutes its default
+  (deferring default evaluation to callee scope — correct even when a
+  default references an earlier param).  The result is a plain positional
+  Rust call `f(a, b_val, c_default)`.
+
+Worked example — `def greet(greeting, name: "world")`:
+
+```text
+  greet("hi")               → greet("hi", missing())   // name omitted → default "world"
+  greet("hi", name: "ada")  → greet("hi", "ada")        // name supplied by keyword
+```
+
+Out of scope (v0): an `IndirectCall`/closure call carrying keywords has no
+statically-known signature, so it cannot be resolved; the frontends do not
+emit it.
+
 Rejects: `TailCalls` (Rust does not guarantee TCO), `Intrinsics`
 (empty whitelist in v0), and the SIR17/18 features above.
 
