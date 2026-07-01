@@ -23,6 +23,7 @@ stable local API responses for:
 - `/api/smart_home/runtime`
 - `/api/smart_home/health`
 - `/api/smart_home/readiness`
+- `/api/smart_home/controller_handoff`
 - `/api/smart_home/dashboard`
 - `/api/smart_home/bootstrap`
 - `/api/smart_home/smoke`
@@ -80,7 +81,10 @@ The `GET /api/smart_home/*` routes expose dashboard-ready read models for the
 same runtime: pending-work snapshot counts, entity and capability registry
 records, a compact health probe, a capability catalog grouped across entities,
 device and bridge inventory, room topology summaries with member detail lookups
-and room-scoped links, a readiness checklist with actionable links, a dashboard
+and room-scoped links, a readiness checklist with actionable links, a controller
+handoff manifest that groups platform readiness evidence across the repo HTTP
+stack, browser dashboard, fixture controller, state/history/events,
+commands/services/scenes, and runtime authorization boundaries, a dashboard
 overview, a bootstrap payload that composes startup links, route discovery, state
 gaps, and recent audit summaries, an API route catalog with
 surface/method/authorization filters, checkpointed event-log entries with detail
@@ -211,6 +215,7 @@ curl http://127.0.0.1:8123/api/
 curl http://127.0.0.1:8123/api/states
 curl http://127.0.0.1:8123/api/smart_home/health
 curl http://127.0.0.1:8123/api/smart_home/readiness
+curl http://127.0.0.1:8123/api/smart_home/controller_handoff
 curl http://127.0.0.1:8123/api/smart_home/dashboard
 curl http://127.0.0.1:8123/api/smart_home/bootstrap
 curl http://127.0.0.1:8123/api/smart_home/smoke

@@ -97,7 +97,7 @@ fn invalid_input(message: impl Into<String>) -> io::Error {
 fn launch_guide(local_addr: SocketAddr) -> String {
     let base_url = format!("http://{local_addr}");
     format!(
-        "serving smart-home fixture controller\n  Dashboard: {base_url}/\n  Smart Home: {base_url}/smart-home\n  Health: {base_url}/api/smart_home/health\n  Readiness: {base_url}/api/smart_home/readiness\n  Smoke plan: {base_url}/api/smart_home/smoke\n  Smoke script: {base_url}/api/smart_home/smoke_script\n  API catalog: {base_url}/api/smart_home/api\n\nSmoke commands:\n  curl {base_url}/api/smart_home/smoke\n  curl {base_url}/api/smart_home/smoke_script\n  SMART_HOME_BASE_URL={base_url} sh -c \"$(curl -fsS {base_url}/api/smart_home/smoke_script)\"\n  curl {base_url}/api/smart_home/bootstrap\n  curl {base_url}/api/smart_home/events?limit=12\n  curl -X POST {base_url}/api/services/light/turn_on -H 'Content-Type: application/json' -d '{{\"entity_id\":\"light.entity_light_1\",\"brightness_pct\":75}}'"
+        "serving smart-home fixture controller\n  Dashboard: {base_url}/\n  Smart Home: {base_url}/smart-home\n  Health: {base_url}/api/smart_home/health\n  Readiness: {base_url}/api/smart_home/readiness\n  Controller handoff: {base_url}/api/smart_home/controller_handoff\n  Smoke plan: {base_url}/api/smart_home/smoke\n  Smoke script: {base_url}/api/smart_home/smoke_script\n  API catalog: {base_url}/api/smart_home/api\n\nSmoke commands:\n  curl {base_url}/api/smart_home/smoke\n  curl {base_url}/api/smart_home/smoke_script\n  SMART_HOME_BASE_URL={base_url} sh -c \"$(curl -fsS {base_url}/api/smart_home/smoke_script)\"\n  curl {base_url}/api/smart_home/controller_handoff\n  curl {base_url}/api/smart_home/bootstrap\n  curl {base_url}/api/smart_home/events?limit=12\n  curl -X POST {base_url}/api/services/light/turn_on -H 'Content-Type: application/json' -d '{{\"entity_id\":\"light.entity_light_1\",\"brightness_pct\":75}}'"
     )
 }
 
@@ -153,11 +153,15 @@ mod tests {
         let guide = launch_guide("127.0.0.1:8123".parse().expect("socket addr"));
         assert!(guide.contains("Dashboard: http://127.0.0.1:8123/"));
         assert!(guide.contains("Smart Home: http://127.0.0.1:8123/smart-home"));
+        assert!(guide.contains(
+            "Controller handoff: http://127.0.0.1:8123/api/smart_home/controller_handoff"
+        ));
         assert!(guide.contains("Smoke plan: http://127.0.0.1:8123/api/smart_home/smoke"));
         assert!(guide.contains("Smoke script: http://127.0.0.1:8123/api/smart_home/smoke_script"));
         assert!(guide.contains("curl http://127.0.0.1:8123/api/smart_home/smoke"));
         assert!(guide.contains("curl http://127.0.0.1:8123/api/smart_home/smoke_script"));
         assert!(guide.contains("SMART_HOME_BASE_URL=http://127.0.0.1:8123 sh -c"));
+        assert!(guide.contains("curl http://127.0.0.1:8123/api/smart_home/controller_handoff"));
         assert!(guide.contains("curl http://127.0.0.1:8123/api/smart_home/bootstrap"));
         assert!(guide.contains("curl http://127.0.0.1:8123/api/smart_home/events?limit=12"));
         assert!(guide.contains("light.entity_light_1"));
