@@ -1,5 +1,21 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.37.0] — 2026-06-30 (BA-INPUT: `input_i64` → `Console.ReadLine` + `Int32.Parse`)
+
+Added `"input_i64"` arm to the `call_builtin` handler in `il_text.rs`:
+
+```
+call string [System.Console]System.Console::ReadLine()
+call int32 [System.Runtime]System.Int32::Parse(string)
+store_var <dest>
+```
+
+The CLR backend's scalar concretization narrows BASIC integers to `int32`, so
+`Int32.Parse` matches the `print_i64` overload (`Console.WriteLine(int32)`) and
+needs no widening. Returns `0` on EOF or parse failure via CLR exception propagation
+(same permissive-V1 contract as the other backends). Enables `10 INPUT X\n20 PRINT X`
+to run end-to-end on the CLR backend in `matrix_every_proven_cell_agrees`.
+
 ## [0.36.0] — 2026-06-30 (LANG-FULL — CIL text backend: `Operand::Bool` and `neg`)
 
 Two missing cases in `il_text.rs` that caused CLR failures for ALGOL boolean

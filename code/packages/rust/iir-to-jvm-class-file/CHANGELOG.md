@@ -1,5 +1,34 @@
 # Changelog — iir-to-jvm-class-file
 
+## [0.27.0] — 2026-06-30 (BA-INPUT: JVM wide i64 model fixes for `input_i64`)
+
+Two correctness fixes that together allow Dartmouth BASIC `INPUT X` programs to
+run on the JVM without VerifyErrors:
+
+**`emit_lconst_cp` (new helper)**: `emit_lconst` previously emitted a deliberate
+invalid `ldc2_w 0xFFFF` placeholder for values outside the i16 range, on the
+assumption that wide Long constants were unreachable in arithmetic programs.
+`input_i64` puts BASIC programs into the wide i64 model, where `__basic_print_real`
+uses constants such as `100000` (for the digit-extraction loop).  Added
+`emit_lconst_cp(code, cp, value)` that interns a `CONSTANT_Long` entry via
+`cp.add_long` and emits a proper `ldc2_w <idx>` — the Long counterpart of
+`emit_dconst_cp` / `emit_iconst_cp`.
+
+**`"const"` lowering**: Updated the `JvmType::Long` arm in `Operand::Int` handling
+to call `emit_lconst_cp` instead of `emit_lconst`, so arbitrary integer literals
+stored into Long slots get a valid CP entry.
+
+**`"return"` lowering**: Same fix in the `Operand::Int` + `JvmType::Long` arm of
+the `"return"` case, for functions that return a Long with an integer literal.
+
+**`putchar` lowering** (prior session): When the calling program is in wide i64
+model, the value being written via `putchar(I)V` lives in a Long slot. Updated
+to emit `lload; l2i` instead of `iload` when `val_type == JvmType::Long`.
+
+Combined with the `concretize_scalar_any_for_jvm` fix in `lang-aot` (adding
+`input_i64` to the wide-model check), BASIC `INPUT X` now works end-to-end on
+the JVM: `matrix_every_proven_cell_agrees` passes for both INPUT programs.
+
 ## [0.25.0] — 2026-06-29 (LANG-FULL BA-pow — `f64_pow` JVM lowering)
 
 Added `"f64_pow"` arm: loads base and exponent onto the JVM operand stack with

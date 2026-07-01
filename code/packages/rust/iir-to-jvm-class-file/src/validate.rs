@@ -108,7 +108,8 @@ const UNSUPPORTED_OPS: &[&str] = &[
 pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] =
     // McCarthy W4 (F3–F5): the lisp predicates — `pair?` (instanceof Object[]),
     // `not` (logical not), `equal?` (unbox + if_icmpeq).
-    &["putchar", "getchar", "print_i64", "pair?", "not", "equal?"];
+    // `input_i64`: BASIC `INPUT X` — reads a long from stdin via `BasicRuntime.readLong()J`.
+    &["putchar", "getchar", "print_i64", "input_i64", "pair?", "not", "equal?"];
 
 /// Ops that are conditionally supported depending on their `type_hint`.
 ///

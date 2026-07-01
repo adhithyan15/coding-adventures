@@ -574,12 +574,20 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
     // in the module prints, the whole scalar module stays at i64, keeping every
     // cross-function call signature consistent. (A module with no printing
     // function — Nib/Twig/ALGOL, which return an exit code — concretizes to i32
-    // uniformly, exactly as before; this changes only printing modules.)
+    // uniformly, exactly as before; this changes only printing/input modules.)
+    //
+    // `input_i64` (BASIC `INPUT X`) also forces the wide i64 model: the host's
+    // `readLong()J` returns a JVM `long`, so the receiving slot must be `Long`
+    // (two slots wide). Concretizing `"i64"` → `"i32"` would give the slot type
+    // `Int`, but `lstore` would tag it as `Long` in the verifier's type state →
+    // `VerifyError: type mismatch` when the subsequent `iload` reads an `Int`
+    // slot that the verifier sees as `Long`. (BA-JVM-INPUT)
+    const WIDE_I64_BUILTINS: &[&str] = &["print_i64", "input_i64"];
     let module_prints = module.functions.iter().any(|f| {
         f.instructions.iter().any(|i| {
             i.op == "call_builtin"
                 && matches!(i.srcs.first(),
-                    Some(interpreter_ir::Operand::Var(n)) if n == "print_i64")
+                    Some(interpreter_ir::Operand::Var(n)) if WIDE_I64_BUILTINS.contains(&n.as_str()))
         })
     });
     for func in &mut module.functions {
@@ -594,26 +602,27 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
         if uses_lisp {
             continue; // uniform-Object value model — JVM W3b+.
         }
-        // A function that prints (Dartmouth BASIC's `PRINT`) needs the **wide**
-        // i64 value model: `print_i64` lowers to `lload val; invokestatic
-        // env/BasicRuntime.println(J)V`, i.e. the value is loaded as a `long`. If
-        // we concretized it to `i32` the value would be `istore`d as an `int` but
-        // `lload`ed as a `long`, and a real `java` rejects the mismatch with
-        // `VerifyError: Accessing value from uninitialized register pair`. So,
-        // exactly like the lisp/heap functions above, we leave a printing function
-        // at its native i64 width. (Concretization exists only because the in-repo
-        // `jvm-simulator` is a 32-bit machine; BASIC runs on real `java`, where
-        // `long` is fine and is never exercised on the simulator.)
-        let prints_i64 = func.instructions.iter().any(|i| {
+        // A function that prints (Dartmouth BASIC's `PRINT`) or reads input
+        // (Dartmouth BASIC's `INPUT`) needs the **wide** i64 value model:
+        //   • `print_i64` lowers to `lload val; invokestatic
+        //     env/BasicRuntime.println(J)V`, i.e. the value is loaded as a `long`.
+        //   • `input_i64` lowers to `invokestatic env/BasicRuntime.readLong()J;
+        //     lstore dest`, i.e. the return value is stored as a `long`.
+        // If we concretized either to `i32`, slot types would mismatch — a real
+        // `java` rejects it with `VerifyError: Accessing value from uninitialized
+        // register pair` / `type mismatch`. So, exactly like the lisp/heap functions
+        // above, we leave any function using a wide builtin at its native i64 width.
+        // (Concretization exists only because the in-repo `jvm-simulator` is a 32-bit
+        // machine; BASIC runs on real `java`, where `long` is fine.)
+        let uses_wide_builtin = func.instructions.iter().any(|i| {
             i.op == "call_builtin"
                 && matches!(i.srcs.first(),
-                    Some(interpreter_ir::Operand::Var(n)) if n == "print_i64")
+                    Some(interpreter_ir::Operand::Var(n)) if WIDE_I64_BUILTINS.contains(&n.as_str()))
         });
-        if prints_i64 || module_prints {
-            // Wide i64 value model: this function either prints directly
-            // (`println(J)V` needs a `long`) or shares a module with one that
-            // does, so it must keep i64 to stay call-signature-consistent with
-            // its callers/callees (see the module-level note above).
+        if uses_wide_builtin || module_prints {
+            // Wide i64 value model: this function uses a wide builtin directly
+            // or shares a module with one, so it must keep i64 to stay
+            // call-signature-consistent with its callers/callees.
             continue;
         }
         let to_i32 = |t: &str| t == "any" || t == "polymorphic" || t == "i64";
