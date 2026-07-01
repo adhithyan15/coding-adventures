@@ -1,5 +1,5 @@
 {
-  "description": "ADJ-LADDER rung 12 \u2014 threshold decision: the wait-vs-treat shape. A single patient measurement is pinned (`constrain marker == value`) and tested against a published treatment threshold (`constrain marker >= threshold`, or `<=` for a low-is-dangerous marker) with `check`. The engine's QF_LRA feasibility verdict IS the decision \u2014 the pinned value and the threshold are jointly satisfiable exactly when the value has crossed the threshold, so sat -> 'Start treatment now' and unsat -> 'Continue observation' (the harness only maps the verdict to an option label via check_outcome). The reasoning tested is the inequality DIRECTION: half the markers (potassium, INR, calcium, lactate, bilirubin, ammonia) are dangerous when HIGH and half (platelets, glucose, haemoglobin, sodium, neutrophils, arterial pH) when LOW, so a 'bigger number means treat' heuristic fails exactly half the items. No engine/harness change (reuses the rung-6b check_outcome extractor). Contamination-safe: the only literals are the observed value and the threshold, both printed in the stem, and the answer is an action label, so no result literal leaks; identifiers are digit-free; gold rotates A-E and every item's verdict is asserted against the threshold at build.",
+  "description": "ADJ-LADDER rung 12 \u2014 threshold decision: the wait-vs-treat shape. A single patient measurement is pinned (`constrain marker == value`) and tested against a published treatment threshold (`constrain marker >= threshold`, or `<=` for a low-is-dangerous marker) with `check`. The engine's QF_LRA feasibility verdict IS the decision \u2014 the pinned value and the threshold are jointly satisfiable exactly when the value has crossed the threshold, so sat -> 'Start treatment now' and unsat -> 'Continue observation' (the harness only maps the verdict to an option label via check_outcome). The reasoning tested is the inequality DIRECTION: half the markers (potassium, INR, calcium, lactate, bilirubin, ammonia) are dangerous when HIGH and half (platelets, glucose, haemoglobin, sodium, neutrophils, arterial pH) when LOW, so a 'bigger number means treat' heuristic fails exactly half the items. No engine/harness change (reuses the rung-6b check_outcome extractor). Contamination-safe: the only literals are the observed value and the threshold, both printed in the stem, and the answer is an action label, so no result literal leaks; identifiers are digit-free; gold rotates A-E and every item's verdict is asserted against the threshold at build. Batch 2 adds the therapeutic-range BAND decision: a pinned drug level is tested against a TWO-SIDED window (`constrain level >= low` AND `constrain level <= high`), so sat -> 'Continue the current dose' (in range) and unsat -> 'Adjust the dose' (out of range). Both bounds must hold at once \u2014 a value can clear the lower bound yet still be out of range by exceeding the upper bound (half the out-of-range values are below the window, half above, so a one-sided 'is it above the minimum?' heuristic fails). Distinct from batch-1's single threshold and from rung-6b's free-dose window feasibility (here the observed value is PINNED, not searched).",
   "items": [
     {
       "id": "r12td-01",
@@ -528,6 +528,534 @@
         "E": "Repeat the test before deciding"
       },
       "gold_letter": "D"
+    },
+    {
+      "id": "r12td-25",
+      "qtype": "band_decision",
+      "stem": "A patient's serum digoxin level is 1.2 ng/mL. The therapeutic range for serum digoxin level is 0.8 ng/mL to 2.0 ng/mL: within that window (at or above 0.8 ng/mL and at or below 2.0 ng/mL) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 1.2\nconstrain level >= 0.8\nconstrain level <= 2.0\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Adjust the dose",
+        "B": "Stop the drug entirely",
+        "C": "Switch to a different drug",
+        "D": "Recheck the level tomorrow",
+        "E": "Continue the current dose"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r12td-26",
+      "qtype": "band_decision",
+      "stem": "A patient's serum digoxin level is 2.8 ng/mL. The therapeutic range for serum digoxin level is 0.8 ng/mL to 2.0 ng/mL: within that window (at or above 0.8 ng/mL and at or below 2.0 ng/mL) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 2.8\nconstrain level >= 0.8\nconstrain level <= 2.0\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Adjust the dose",
+        "B": "Continue the current dose",
+        "C": "Stop the drug entirely",
+        "D": "Switch to a different drug",
+        "E": "Recheck the level tomorrow"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r12td-27",
+      "qtype": "band_decision",
+      "stem": "A patient's serum lithium level is 0.9 mEq/L. The therapeutic range for serum lithium level is 0.6 mEq/L to 1.2 mEq/L: within that window (at or above 0.6 mEq/L and at or below 1.2 mEq/L) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 0.9\nconstrain level >= 0.6\nconstrain level <= 1.2\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Adjust the dose",
+        "B": "Continue the current dose",
+        "C": "Stop the drug entirely",
+        "D": "Switch to a different drug",
+        "E": "Recheck the level tomorrow"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r12td-28",
+      "qtype": "band_decision",
+      "stem": "A patient's serum lithium level is 1.8 mEq/L. The therapeutic range for serum lithium level is 0.6 mEq/L to 1.2 mEq/L: within that window (at or above 0.6 mEq/L and at or below 1.2 mEq/L) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 1.8\nconstrain level >= 0.6\nconstrain level <= 1.2\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Continue the current dose",
+        "B": "Stop the drug entirely",
+        "C": "Adjust the dose",
+        "D": "Switch to a different drug",
+        "E": "Recheck the level tomorrow"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r12td-29",
+      "qtype": "band_decision",
+      "stem": "A patient's vancomycin trough is 15 mcg/mL. The therapeutic range for vancomycin trough is 10 mcg/mL to 20 mcg/mL: within that window (at or above 10 mcg/mL and at or below 20 mcg/mL) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 15\nconstrain level >= 10\nconstrain level <= 20\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Adjust the dose",
+        "B": "Stop the drug entirely",
+        "C": "Switch to a different drug",
+        "D": "Continue the current dose",
+        "E": "Recheck the level tomorrow"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r12td-30",
+      "qtype": "band_decision",
+      "stem": "A patient's vancomycin trough is 6 mcg/mL. The therapeutic range for vancomycin trough is 10 mcg/mL to 20 mcg/mL: within that window (at or above 10 mcg/mL and at or below 20 mcg/mL) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 6\nconstrain level >= 10\nconstrain level <= 20\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Continue the current dose",
+        "B": "Stop the drug entirely",
+        "C": "Switch to a different drug",
+        "D": "Recheck the level tomorrow",
+        "E": "Adjust the dose"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r12td-31",
+      "qtype": "band_decision",
+      "stem": "A patient's serum phenytoin level is 14 mcg/mL. The therapeutic range for serum phenytoin level is 10 mcg/mL to 20 mcg/mL: within that window (at or above 10 mcg/mL and at or below 20 mcg/mL) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 14\nconstrain level >= 10\nconstrain level <= 20\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Continue the current dose",
+        "B": "Adjust the dose",
+        "C": "Stop the drug entirely",
+        "D": "Switch to a different drug",
+        "E": "Recheck the level tomorrow"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r12td-32",
+      "qtype": "band_decision",
+      "stem": "A patient's serum phenytoin level is 27 mcg/mL. The therapeutic range for serum phenytoin level is 10 mcg/mL to 20 mcg/mL: within that window (at or above 10 mcg/mL and at or below 20 mcg/mL) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 27\nconstrain level >= 10\nconstrain level <= 20\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Continue the current dose",
+        "B": "Adjust the dose",
+        "C": "Stop the drug entirely",
+        "D": "Switch to a different drug",
+        "E": "Recheck the level tomorrow"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r12td-33",
+      "qtype": "band_decision",
+      "stem": "A patient's serum theophylline level is 16 mcg/mL. The therapeutic range for serum theophylline level is 10 mcg/mL to 20 mcg/mL: within that window (at or above 10 mcg/mL and at or below 20 mcg/mL) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 16\nconstrain level >= 10\nconstrain level <= 20\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Adjust the dose",
+        "B": "Stop the drug entirely",
+        "C": "Continue the current dose",
+        "D": "Switch to a different drug",
+        "E": "Recheck the level tomorrow"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r12td-34",
+      "qtype": "band_decision",
+      "stem": "A patient's serum theophylline level is 4 mcg/mL. The therapeutic range for serum theophylline level is 10 mcg/mL to 20 mcg/mL: within that window (at or above 10 mcg/mL and at or below 20 mcg/mL) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 4\nconstrain level >= 10\nconstrain level <= 20\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Continue the current dose",
+        "B": "Stop the drug entirely",
+        "C": "Switch to a different drug",
+        "D": "Adjust the dose",
+        "E": "Recheck the level tomorrow"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r12td-35",
+      "qtype": "band_decision",
+      "stem": "A patient's serum valproate level is 72 mcg/mL. The therapeutic range for serum valproate level is 50 mcg/mL to 100 mcg/mL: within that window (at or above 50 mcg/mL and at or below 100 mcg/mL) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 72\nconstrain level >= 50\nconstrain level <= 100\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Adjust the dose",
+        "B": "Stop the drug entirely",
+        "C": "Switch to a different drug",
+        "D": "Recheck the level tomorrow",
+        "E": "Continue the current dose"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r12td-36",
+      "qtype": "band_decision",
+      "stem": "A patient's serum valproate level is 128 mcg/mL. The therapeutic range for serum valproate level is 50 mcg/mL to 100 mcg/mL: within that window (at or above 50 mcg/mL and at or below 100 mcg/mL) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 128\nconstrain level >= 50\nconstrain level <= 100\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Adjust the dose",
+        "B": "Continue the current dose",
+        "C": "Stop the drug entirely",
+        "D": "Switch to a different drug",
+        "E": "Recheck the level tomorrow"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r12td-37",
+      "qtype": "band_decision",
+      "stem": "A patient's serum carbamazepine level is 8 mcg/mL. The therapeutic range for serum carbamazepine level is 4 mcg/mL to 12 mcg/mL: within that window (at or above 4 mcg/mL and at or below 12 mcg/mL) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 8\nconstrain level >= 4\nconstrain level <= 12\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Adjust the dose",
+        "B": "Continue the current dose",
+        "C": "Stop the drug entirely",
+        "D": "Switch to a different drug",
+        "E": "Recheck the level tomorrow"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r12td-38",
+      "qtype": "band_decision",
+      "stem": "A patient's serum carbamazepine level is 2 mcg/mL. The therapeutic range for serum carbamazepine level is 4 mcg/mL to 12 mcg/mL: within that window (at or above 4 mcg/mL and at or below 12 mcg/mL) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 2\nconstrain level >= 4\nconstrain level <= 12\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Continue the current dose",
+        "B": "Stop the drug entirely",
+        "C": "Adjust the dose",
+        "D": "Switch to a different drug",
+        "E": "Recheck the level tomorrow"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r12td-39",
+      "qtype": "band_decision",
+      "stem": "A patient's tacrolimus trough is 9 ng/mL. The therapeutic range for tacrolimus trough is 5 ng/mL to 15 ng/mL: within that window (at or above 5 ng/mL and at or below 15 ng/mL) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 9\nconstrain level >= 5\nconstrain level <= 15\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Adjust the dose",
+        "B": "Stop the drug entirely",
+        "C": "Switch to a different drug",
+        "D": "Continue the current dose",
+        "E": "Recheck the level tomorrow"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r12td-40",
+      "qtype": "band_decision",
+      "stem": "A patient's tacrolimus trough is 22 ng/mL. The therapeutic range for tacrolimus trough is 5 ng/mL to 15 ng/mL: within that window (at or above 5 ng/mL and at or below 15 ng/mL) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 22\nconstrain level >= 5\nconstrain level <= 15\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Continue the current dose",
+        "B": "Stop the drug entirely",
+        "C": "Switch to a different drug",
+        "D": "Recheck the level tomorrow",
+        "E": "Adjust the dose"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r12td-41",
+      "qtype": "band_decision",
+      "stem": "A patient's cyclosporine trough is 180 ng/mL. The therapeutic range for cyclosporine trough is 100 ng/mL to 300 ng/mL: within that window (at or above 100 ng/mL and at or below 300 ng/mL) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 180\nconstrain level >= 100\nconstrain level <= 300\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Continue the current dose",
+        "B": "Adjust the dose",
+        "C": "Stop the drug entirely",
+        "D": "Switch to a different drug",
+        "E": "Recheck the level tomorrow"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r12td-42",
+      "qtype": "band_decision",
+      "stem": "A patient's cyclosporine trough is 60 ng/mL. The therapeutic range for cyclosporine trough is 100 ng/mL to 300 ng/mL: within that window (at or above 100 ng/mL and at or below 300 ng/mL) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 60\nconstrain level >= 100\nconstrain level <= 300\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Continue the current dose",
+        "B": "Adjust the dose",
+        "C": "Stop the drug entirely",
+        "D": "Switch to a different drug",
+        "E": "Recheck the level tomorrow"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r12td-43",
+      "qtype": "band_decision",
+      "stem": "A patient's gentamicin peak is 7 mcg/mL. The therapeutic range for gentamicin peak is 5 mcg/mL to 10 mcg/mL: within that window (at or above 5 mcg/mL and at or below 10 mcg/mL) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 7\nconstrain level >= 5\nconstrain level <= 10\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Adjust the dose",
+        "B": "Stop the drug entirely",
+        "C": "Continue the current dose",
+        "D": "Switch to a different drug",
+        "E": "Recheck the level tomorrow"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r12td-44",
+      "qtype": "band_decision",
+      "stem": "A patient's gentamicin peak is 13 mcg/mL. The therapeutic range for gentamicin peak is 5 mcg/mL to 10 mcg/mL: within that window (at or above 5 mcg/mL and at or below 10 mcg/mL) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 13\nconstrain level >= 5\nconstrain level <= 10\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Continue the current dose",
+        "B": "Stop the drug entirely",
+        "C": "Switch to a different drug",
+        "D": "Adjust the dose",
+        "E": "Recheck the level tomorrow"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r12td-45",
+      "qtype": "band_decision",
+      "stem": "A patient's serum procainamide level is 6 mcg/mL. The therapeutic range for serum procainamide level is 4 mcg/mL to 10 mcg/mL: within that window (at or above 4 mcg/mL and at or below 10 mcg/mL) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 6\nconstrain level >= 4\nconstrain level <= 10\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Adjust the dose",
+        "B": "Stop the drug entirely",
+        "C": "Switch to a different drug",
+        "D": "Recheck the level tomorrow",
+        "E": "Continue the current dose"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r12td-46",
+      "qtype": "band_decision",
+      "stem": "A patient's serum procainamide level is 2.5 mcg/mL. The therapeutic range for serum procainamide level is 4 mcg/mL to 10 mcg/mL: within that window (at or above 4 mcg/mL and at or below 10 mcg/mL) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 2.5\nconstrain level >= 4\nconstrain level <= 10\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Adjust the dose",
+        "B": "Continue the current dose",
+        "C": "Stop the drug entirely",
+        "D": "Switch to a different drug",
+        "E": "Recheck the level tomorrow"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r12td-47",
+      "qtype": "band_decision",
+      "stem": "A patient's sirolimus trough is 10 ng/mL. The therapeutic range for sirolimus trough is 5 ng/mL to 15 ng/mL: within that window (at or above 5 ng/mL and at or below 15 ng/mL) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 10\nconstrain level >= 5\nconstrain level <= 15\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Adjust the dose",
+        "B": "Continue the current dose",
+        "C": "Stop the drug entirely",
+        "D": "Switch to a different drug",
+        "E": "Recheck the level tomorrow"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r12td-48",
+      "qtype": "band_decision",
+      "stem": "A patient's sirolimus trough is 19 ng/mL. The therapeutic range for sirolimus trough is 5 ng/mL to 15 ng/mL: within that window (at or above 5 ng/mL and at or below 15 ng/mL) the dose is correct; outside it \u2014 whether too low or too high \u2014 the dose must be adjusted. Based on this level, what is the correct management step?",
+      "program": "symbol level : scalar\nconstrain level == 19\nconstrain level >= 5\nconstrain level <= 15\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome",
+        "labels": {
+          "sat": "Continue the current dose",
+          "sat_real": "Continue the current dose",
+          "unsat": "Adjust the dose"
+        }
+      },
+      "options": {
+        "A": "Continue the current dose",
+        "B": "Stop the drug entirely",
+        "C": "Adjust the dose",
+        "D": "Switch to a different drug",
+        "E": "Recheck the level tomorrow"
+      },
+      "gold_letter": "C"
     }
   ]
 }
