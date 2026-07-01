@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 29 \u2014 serum protein indices from a single protein panel (a NEW panel: serum protein / hepatic synthesis). From two stated quantities (total protein TP, albumin ALB) compute the albumin-to-globulin ratio (ALB/(TP-ALB)), the albumin fraction (ALB/TP), or the globulin level (TP-ALB). Each item is a compute_dimensioned program (observe the two quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, a ratio whose DENOMINATOR is itself a difference (ALB/(TP-ALB)), so globulin must be reconstructed as TP-ALB before dividing \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the two observed quantities via - and / \u2014 no constant leaks, and the globulin value never appears as a literal (it is computed as TP-ALB) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same quantities, so the distractors are exactly the slips students make: the inverted globulin:albumin ratio ((TP-ALB)/ALB) and the globulin fraction ((TP-ALB)/TP). The core confusion tested is reconstructing globulin before dividing, plus the ratio's direction.",
+  "items": [
+    {
+      "id": "r29prot-01",
+      "qtype": "serum_protein_index",
+      "stem": "A serum protein panel shows a total protein of 7 g/dL and an albumin of 4 g/dL. What is the patient's albumin-to-globulin ratio?",
+      "program": "observe total_protein(7)\nobserve albumin(4)\nlet answer = albumin / (total_protein - albumin)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5714285714285714,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.42857142857142855,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r29prot-02",
+      "qtype": "serum_protein_index",
+      "stem": "A serum protein panel shows a total protein of 7 g/dL and an albumin of 4 g/dL. What is the patient's albumin fraction of total protein?",
+      "program": "observe total_protein(7)\nobserve albumin(4)\nlet answer = albumin / total_protein\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5714285714285714,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.42857142857142855,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r29prot-03",
+      "qtype": "serum_protein_index",
+      "stem": "A serum protein panel shows a total protein of 7 g/dL and an albumin of 4 g/dL. What is the patient's globulin level?",
+      "program": "observe total_protein(7)\nobserve albumin(4)\nlet answer = total_protein - albumin\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5714285714285714,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.42857142857142855,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r29prot-04",
+      "qtype": "serum_protein_index",
+      "stem": "A serum protein panel shows a total protein of 8 g/dL and an albumin of 5 g/dL. What is the patient's albumin-to-globulin ratio?",
+      "program": "observe total_protein(8)\nobserve albumin(5)\nlet answer = albumin / (total_protein - albumin)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.625,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r29prot-05",
+      "qtype": "serum_protein_index",
+      "stem": "A serum protein panel shows a total protein of 8 g/dL and an albumin of 5 g/dL. What is the patient's albumin fraction of total protein?",
+      "program": "observe total_protein(8)\nobserve albumin(5)\nlet answer = albumin / total_protein\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.375,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.625,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r29prot-06",
+      "qtype": "serum_protein_index",
+      "stem": "A serum protein panel shows a total protein of 8 g/dL and an albumin of 5 g/dL. What is the patient's globulin level?",
+      "program": "observe total_protein(8)\nobserve albumin(5)\nlet answer = total_protein - albumin\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.625,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r29prot-07",
+      "qtype": "serum_protein_index",
+      "stem": "A serum protein panel shows a total protein of 9 g/dL and an albumin of 5 g/dL. What is the patient's albumin-to-globulin ratio?",
+      "program": "observe total_protein(9)\nobserve albumin(5)\nlet answer = albumin / (total_protein - albumin)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.5555555555555556,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4444444444444444,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r29prot-08",
+      "qtype": "serum_protein_index",
+      "stem": "A serum protein panel shows a total protein of 9 g/dL and an albumin of 5 g/dL. What is the patient's albumin fraction of total protein?",
+      "program": "observe total_protein(9)\nobserve albumin(5)\nlet answer = albumin / total_protein\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.5555555555555556,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4444444444444444,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r29prot-09",
+      "qtype": "serum_protein_index",
+      "stem": "A serum protein panel shows a total protein of 9 g/dL and an albumin of 5 g/dL. What is the patient's globulin level?",
+      "program": "observe total_protein(9)\nobserve albumin(5)\nlet answer = total_protein - albumin\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5555555555555556,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4444444444444444,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r29prot-10",
+      "qtype": "serum_protein_index",
+      "stem": "A serum protein panel shows a total protein of 7 g/dL and an albumin of 5 g/dL. What is the patient's albumin-to-globulin ratio?",
+      "program": "observe total_protein(7)\nobserve albumin(5)\nlet answer = albumin / (total_protein - albumin)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.7142857142857143,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.2857142857142857,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r29prot-11",
+      "qtype": "serum_protein_index",
+      "stem": "A serum protein panel shows a total protein of 7 g/dL and an albumin of 5 g/dL. What is the patient's albumin fraction of total protein?",
+      "program": "observe total_protein(7)\nobserve albumin(5)\nlet answer = albumin / total_protein\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.7142857142857143,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.2857142857142857,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r29prot-12",
+      "qtype": "serum_protein_index",
+      "stem": "A serum protein panel shows a total protein of 7 g/dL and an albumin of 5 g/dL. What is the patient's globulin level?",
+      "program": "observe total_protein(7)\nobserve albumin(5)\nlet answer = total_protein - albumin\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.7142857142857143,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.2857142857142857,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r29prot-13",
+      "qtype": "serum_protein_index",
+      "stem": "A serum protein panel shows a total protein of 8 g/dL and an albumin of 6 g/dL. What is the patient's albumin-to-globulin ratio?",
+      "program": "observe total_protein(8)\nobserve albumin(6)\nlet answer = albumin / (total_protein - albumin)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r29prot-14",
+      "qtype": "serum_protein_index",
+      "stem": "A serum protein panel shows a total protein of 8 g/dL and an albumin of 6 g/dL. What is the patient's albumin fraction of total protein?",
+      "program": "observe total_protein(8)\nobserve albumin(6)\nlet answer = albumin / total_protein\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r29prot-15",
+      "qtype": "serum_protein_index",
+      "stem": "A serum protein panel shows a total protein of 8 g/dL and an albumin of 6 g/dL. What is the patient's globulin level?",
+      "program": "observe total_protein(8)\nobserve albumin(6)\nlet answer = total_protein - albumin\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r29prot-16",
+      "qtype": "serum_protein_index",
+      "stem": "A serum protein panel shows a total protein of 10 g/dL and an albumin of 6 g/dL. What is the patient's albumin-to-globulin ratio?",
+      "program": "observe total_protein(10)\nobserve albumin(6)\nlet answer = albumin / (total_protein - albumin)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r29prot-17",
+      "qtype": "serum_protein_index",
+      "stem": "A serum protein panel shows a total protein of 10 g/dL and an albumin of 6 g/dL. What is the patient's albumin fraction of total protein?",
+      "program": "observe total_protein(10)\nobserve albumin(6)\nlet answer = albumin / total_protein\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r29prot-18",
+      "qtype": "serum_protein_index",
+      "stem": "A serum protein panel shows a total protein of 10 g/dL and an albumin of 6 g/dL. What is the patient's globulin level?",
+      "program": "observe total_protein(10)\nobserve albumin(6)\nlet answer = total_protein - albumin\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r29prot-19",
+      "qtype": "serum_protein_index",
+      "stem": "A serum protein panel shows a total protein of 6 g/dL and an albumin of 3.5 g/dL. What is the patient's albumin-to-globulin ratio?",
+      "program": "observe total_protein(6)\nobserve albumin(3.5)\nlet answer = albumin / (total_protein - albumin)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.5833333333333334,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.7142857142857143,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4166666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r29prot-20",
+      "qtype": "serum_protein_index",
+      "stem": "A serum protein panel shows a total protein of 6 g/dL and an albumin of 3.5 g/dL. What is the patient's albumin fraction of total protein?",
+      "program": "observe total_protein(6)\nobserve albumin(3.5)\nlet answer = albumin / total_protein\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.7142857142857143,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.4166666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5833333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r29prot-21",
+      "qtype": "serum_protein_index",
+      "stem": "A serum protein panel shows a total protein of 6 g/dL and an albumin of 3.5 g/dL. What is the patient's globulin level?",
+      "program": "observe total_protein(6)\nobserve albumin(3.5)\nlet answer = total_protein - albumin\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.5833333333333334,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.7142857142857143,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4166666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

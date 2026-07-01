@@ -66,6 +66,7 @@ SELF_CONTAINED_RUNGS = (
     "rung26_mineral_indices",
     "rung27_urine_anion_gap",
     "rung28_coagulation_ratios",
+    "rung29_serum_protein_indices",
 )
 
 
