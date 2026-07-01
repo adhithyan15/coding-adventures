@@ -19,6 +19,7 @@ use spice_netlist_parser::{
     BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_NAVIGATION_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_PACKAGE_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_DASHBOARD_ROUTES_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_VIEW_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_EVENT_DASHBOARD_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_EVENT_DIGEST_SCHEMA_VERSION, BERKELEY_APP_SHELL_EVENT_LOG_SCHEMA_VERSION,
@@ -2614,6 +2615,11 @@ fn berkeley_app_facade_exports_package_manifest_json() {
         .unwrap()
         .iter()
         .any(|capability| capability == "app-shell-dashboard-cards-json"));
+    assert!(payload["artifactCapabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|capability| capability == "app-shell-dashboard-routes-json"));
 }
 
 #[test]
@@ -3588,6 +3594,85 @@ C1 out 0 1p
         shell_dashboard_navigation_payload["navigationCapabilityId"],
         "app-shell-dashboard-navigation-json"
     );
+
+    let shell_dashboard_routes = app
+        .run_app_shell_dashboard_routes(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .expect("shell dashboard routes should execute");
+    assert_eq!(
+        shell_dashboard_routes.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_ROUTES_SCHEMA_VERSION
+    );
+    assert!(shell_dashboard_routes.ready);
+    assert_eq!(
+        shell_dashboard_routes.active_route_id.as_deref(),
+        Some("dashboard.route.status")
+    );
+    assert_eq!(
+        shell_dashboard_routes.active_route_path.as_deref(),
+        Some("/dashboard/status")
+    );
+    assert_eq!(
+        shell_dashboard_routes.default_route_id.as_deref(),
+        Some("dashboard.route.status")
+    );
+    assert_eq!(shell_dashboard_routes.route_count, 3);
+    assert_eq!(shell_dashboard_routes.visible_route_count, 2);
+    assert_eq!(shell_dashboard_routes.enabled_route_count, 2);
+    assert_eq!(
+        shell_dashboard_routes.routes[0].item_id,
+        "dashboard.nav.status"
+    );
+    assert_eq!(
+        shell_dashboard_routes.routes[0].region_id,
+        "dashboard.layout.status"
+    );
+    assert!(shell_dashboard_routes.routes[0].active);
+    assert!(shell_dashboard_routes.routes[0].default_route);
+    assert_eq!(shell_dashboard_routes.routes[1].role, "attention");
+    assert!(!shell_dashboard_routes.routes[1].visible);
+    assert!(!shell_dashboard_routes.routes[1].enabled);
+    assert_eq!(shell_dashboard_routes.routes[2].path, "/dashboard/metrics");
+    assert_eq!(
+        shell_dashboard_routes.routes_capability_id,
+        "app-shell-dashboard-routes-json"
+    );
+    assert_eq!(
+        shell_dashboard_routes.navigation_capability_id,
+        shell_dashboard_navigation.navigation_capability_id
+    );
+
+    let shell_dashboard_routes_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_dashboard_routes_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        })
+        .unwrap(),
+    )
+    .expect("shell dashboard routes JSON should parse");
+    assert_eq!(
+        shell_dashboard_routes_payload["activeRouteId"],
+        "dashboard.route.status"
+    );
+    assert_eq!(
+        shell_dashboard_routes_payload["defaultRoutePath"],
+        "/dashboard/status"
+    );
+    assert_eq!(shell_dashboard_routes_payload["enabledRouteCount"], 2);
+    assert_eq!(
+        shell_dashboard_routes_payload["routes"][1]["enabled"],
+        false
+    );
+    assert_eq!(
+        shell_dashboard_routes_payload["routes"][2]["path"],
+        "/dashboard/metrics"
+    );
+    assert_eq!(
+        shell_dashboard_routes_payload["routesCapabilityId"],
+        "app-shell-dashboard-routes-json"
+    );
 }
 
 #[test]
@@ -4421,6 +4506,74 @@ R1 in out
     assert_eq!(
         shell_dashboard_navigation_payload["navigationCapabilityId"],
         "app-shell-dashboard-navigation-json"
+    );
+
+    let shell_dashboard_routes = app.app_shell_dashboard_routes(BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(2),
+        active_command_id: Some("analysis.2.run".to_string()),
+    });
+    assert_eq!(
+        shell_dashboard_routes.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_ROUTES_SCHEMA_VERSION
+    );
+    assert!(!shell_dashboard_routes.ready);
+    assert_eq!(
+        shell_dashboard_routes.active_route_id.as_deref(),
+        Some("dashboard.route.attention")
+    );
+    assert_eq!(
+        shell_dashboard_routes.default_route_id.as_deref(),
+        Some("dashboard.route.attention")
+    );
+    assert_eq!(
+        shell_dashboard_routes.default_route_path.as_deref(),
+        Some("/dashboard/attention")
+    );
+    assert_eq!(shell_dashboard_routes.route_count, 3);
+    assert_eq!(shell_dashboard_routes.visible_route_count, 3);
+    assert_eq!(shell_dashboard_routes.enabled_route_count, 3);
+    assert_eq!(shell_dashboard_routes.routes[0].role, "status");
+    assert!(!shell_dashboard_routes.routes[0].active);
+    assert!(shell_dashboard_routes.routes[0].enabled);
+    assert_eq!(
+        shell_dashboard_routes.routes[1].id,
+        "dashboard.route.attention"
+    );
+    assert_eq!(
+        shell_dashboard_routes.routes[1].item_id,
+        "dashboard.nav.attention"
+    );
+    assert!(shell_dashboard_routes.routes[1].active);
+    assert!(shell_dashboard_routes.routes[1].default_route);
+    assert_eq!(
+        shell_dashboard_routes.routes[1].path,
+        "/dashboard/attention"
+    );
+    assert_eq!(
+        shell_dashboard_routes.routes_capability_id,
+        "app-shell-dashboard-routes-json"
+    );
+
+    let shell_dashboard_routes_payload: serde_json::Value = serde_json::from_str(
+        &app.app_shell_dashboard_routes_json(BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(2),
+            active_command_id: Some("analysis.2.run".to_string()),
+        }),
+    )
+    .expect("blocked shell dashboard routes JSON should parse");
+    assert_eq!(
+        shell_dashboard_routes_payload["activeRouteId"],
+        "dashboard.route.attention"
+    );
+    assert_eq!(shell_dashboard_routes_payload["visibleRouteCount"], 3);
+    assert_eq!(shell_dashboard_routes_payload["routes"][1]["default"], true);
+    assert_eq!(
+        shell_dashboard_routes_payload["routes"][1]["itemId"],
+        "dashboard.nav.attention"
+    );
+    assert_eq!(
+        shell_dashboard_routes_payload["routesCapabilityId"],
+        "app-shell-dashboard-routes-json"
     );
 }
 

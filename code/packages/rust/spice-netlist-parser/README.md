@@ -205,6 +205,15 @@ let shell_dashboard_navigation_json = deck.run_app_shell_dashboard_navigation_js
 )?;
 assert!(shell_dashboard_navigation_json.contains(r#""activeItemId":"dashboard.nav.status""#));
 assert!(shell_dashboard_navigation_json.contains(r#""navigationCapabilityId":"app-shell-dashboard-navigation-json""#));
+
+let shell_dashboard_routes_json = deck.run_app_shell_dashboard_routes_json(
+    BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: Some(3),
+        active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+    },
+)?;
+assert!(shell_dashboard_routes_json.contains(r#""activeRoutePath":"/dashboard/status""#));
+assert!(shell_dashboard_routes_json.contains(r#""routesCapabilityId":"app-shell-dashboard-routes-json""#));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -276,7 +285,9 @@ turn those card and view descriptors into stable status, attention, and metrics
 regions with primary and visible flags for first-render host composition. Shell
 dashboard navigation derives stable status, attention, and metrics
 navigation items with active, visible, enabled, and badge-count metadata from
-those layout regions. The
+those layout regions. Shell dashboard routes derive stable route IDs, paths,
+active/default route selection, and route capability metadata from navigation
+items for product-shell router setup. The
 grammar-backed parser generator and Python/TypeScript parity surfaces continue
 to mature.
 

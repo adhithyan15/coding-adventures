@@ -31,6 +31,7 @@ pub const BERKELEY_APP_SHELL_DASHBOARD_CARDS_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_VIEW_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_NAVIGATION_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_ROUTES_SCHEMA_VERSION: u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -77,6 +78,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-dashboard-view-json",
     "app-shell-dashboard-layout-json",
     "app-shell-dashboard-navigation-json",
+    "app-shell-dashboard-routes-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -1620,6 +1622,177 @@ impl BerkeleyAppShellDashboardNavigation {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardRoute {
+    pub id: String,
+    pub item_id: String,
+    pub region_id: String,
+    pub role: String,
+    pub label: String,
+    pub path: String,
+    pub card_ids: Vec<String>,
+    pub active: bool,
+    pub default_route: bool,
+    pub visible: bool,
+    pub enabled: bool,
+    pub badge_count: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardRoutes {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub primary_card_id: Option<String>,
+    pub primary_region_id: Option<String>,
+    pub active_item_id: Option<String>,
+    pub active_route_id: Option<String>,
+    pub active_route_path: Option<String>,
+    pub default_route_id: Option<String>,
+    pub default_route_path: Option<String>,
+    pub route_count: usize,
+    pub visible_route_count: usize,
+    pub enabled_route_count: usize,
+    pub item_count: usize,
+    pub visible_item_count: usize,
+    pub enabled_item_count: usize,
+    pub region_count: usize,
+    pub visible_region_count: usize,
+    pub card_count: usize,
+    pub visible_card_count: usize,
+    pub attention_card_count: usize,
+    pub metric_card_count: usize,
+    pub routes: Vec<BerkeleyAppShellDashboardRoute>,
+    pub package_capability_id: String,
+    pub dashboard_capability_id: String,
+    pub cards_capability_id: String,
+    pub view_capability_id: String,
+    pub layout_capability_id: String,
+    pub navigation_capability_id: String,
+    pub routes_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardRoutes {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_dashboard_navigation(
+            &BerkeleyAppShellDashboardNavigation::from_bootstrap_snapshot(snapshot),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dashboard_navigation(&BerkeleyAppShellDashboardNavigation::from_shell_handoff(
+            handoff,
+        ))
+    }
+
+    pub fn from_dashboard_navigation(navigation: &BerkeleyAppShellDashboardNavigation) -> Self {
+        let mut routes = navigation
+            .items
+            .iter()
+            .map(|item| BerkeleyAppShellDashboardRoute {
+                id: format!("dashboard.route.{}", item.role),
+                item_id: item.id.clone(),
+                region_id: item.region_id.clone(),
+                role: item.role.clone(),
+                label: item.label.clone(),
+                path: format!("/dashboard/{}", item.role),
+                card_ids: item.card_ids.clone(),
+                active: item.active,
+                default_route: false,
+                visible: item.visible,
+                enabled: item.enabled,
+                badge_count: item.badge_count,
+            })
+            .collect::<Vec<_>>();
+        let active_route_id = routes
+            .iter()
+            .find(|route| route.active)
+            .map(|route| route.id.clone());
+        let default_route_id = active_route_id
+            .clone()
+            .or_else(|| {
+                routes
+                    .iter()
+                    .find(|route| route.enabled)
+                    .map(|route| route.id.clone())
+            })
+            .or_else(|| {
+                routes
+                    .iter()
+                    .find(|route| route.visible)
+                    .map(|route| route.id.clone())
+            })
+            .or_else(|| routes.first().map(|route| route.id.clone()));
+        for route in &mut routes {
+            route.default_route = Some(&route.id) == default_route_id.as_ref();
+        }
+        let active_route_path = active_route_id.as_ref().and_then(|active_id| {
+            routes
+                .iter()
+                .find(|route| &route.id == active_id)
+                .map(|route| route.path.clone())
+        });
+        let default_route_path = default_route_id.as_ref().and_then(|default_id| {
+            routes
+                .iter()
+                .find(|route| &route.id == default_id)
+                .map(|route| route.path.clone())
+        });
+        let route_count = routes.len();
+        let visible_route_count = routes.iter().filter(|route| route.visible).count();
+        let enabled_route_count = routes.iter().filter(|route| route.enabled).count();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_ROUTES_SCHEMA_VERSION,
+            package_name: navigation.package_name.clone(),
+            source_fingerprint: navigation.source_fingerprint.clone(),
+            title: navigation.title.clone(),
+            startup_route: navigation.startup_route.clone(),
+            ready: navigation.ready,
+            severity: navigation.severity.clone(),
+            attention_required: navigation.attention_required,
+            primary_card_id: navigation.primary_card_id.clone(),
+            primary_region_id: navigation.primary_region_id.clone(),
+            active_item_id: navigation.active_item_id.clone(),
+            active_route_id,
+            active_route_path,
+            default_route_id,
+            default_route_path,
+            route_count,
+            visible_route_count,
+            enabled_route_count,
+            item_count: navigation.item_count,
+            visible_item_count: navigation.visible_item_count,
+            enabled_item_count: navigation.enabled_item_count,
+            region_count: navigation.region_count,
+            visible_region_count: navigation.visible_region_count,
+            card_count: navigation.card_count,
+            visible_card_count: navigation.visible_card_count,
+            attention_card_count: navigation.attention_card_count,
+            metric_card_count: navigation.metric_card_count,
+            routes,
+            package_capability_id: navigation.package_capability_id.clone(),
+            dashboard_capability_id: navigation.dashboard_capability_id.clone(),
+            cards_capability_id: navigation.cards_capability_id.clone(),
+            view_capability_id: navigation.view_capability_id.clone(),
+            layout_capability_id: navigation.layout_capability_id.clone(),
+            navigation_capability_id: navigation.navigation_capability_id.clone(),
+            routes_capability_id: "app-shell-dashboard-routes-json".to_string(),
+            artifact_capability_count: navigation.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_routes_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BerkeleyAnalysisInventoryEntry {
     pub index: usize,
     pub directive: String,
@@ -2659,6 +2832,40 @@ impl BerkeleyAppDeck {
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self
             .run_app_shell_dashboard_navigation(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_routes(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardRoutes {
+        BerkeleyAppShellDashboardRoutes::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_routes(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardRoutes, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellDashboardRoutes::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_dashboard_routes_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_routes(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_dashboard_routes_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_routes(persisted_state)?
             .to_json())
     }
 
@@ -3744,6 +3951,72 @@ fn app_shell_dashboard_navigation_item_json_value(
         "visible": item.visible,
         "enabled": item.enabled,
         "badgeCount": item.badge_count,
+    })
+}
+
+fn app_shell_dashboard_routes_json_value(
+    routes: &BerkeleyAppShellDashboardRoutes,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": routes.schema_version,
+        "packageName": &routes.package_name,
+        "sourceFingerprint": &routes.source_fingerprint,
+        "title": &routes.title,
+        "startupRoute": &routes.startup_route,
+        "ready": routes.ready,
+        "severity": &routes.severity,
+        "attentionRequired": routes.attention_required,
+        "primaryCardId": &routes.primary_card_id,
+        "primaryRegionId": &routes.primary_region_id,
+        "activeItemId": &routes.active_item_id,
+        "activeRouteId": &routes.active_route_id,
+        "activeRoutePath": &routes.active_route_path,
+        "defaultRouteId": &routes.default_route_id,
+        "defaultRoutePath": &routes.default_route_path,
+        "routeCount": routes.route_count,
+        "visibleRouteCount": routes.visible_route_count,
+        "enabledRouteCount": routes.enabled_route_count,
+        "itemCount": routes.item_count,
+        "visibleItemCount": routes.visible_item_count,
+        "enabledItemCount": routes.enabled_item_count,
+        "regionCount": routes.region_count,
+        "visibleRegionCount": routes.visible_region_count,
+        "cardCount": routes.card_count,
+        "visibleCardCount": routes.visible_card_count,
+        "attentionCardCount": routes.attention_card_count,
+        "metricCardCount": routes.metric_card_count,
+        "routes": routes
+            .routes
+            .iter()
+            .map(app_shell_dashboard_route_json_value)
+            .collect::<Vec<_>>(),
+        "packageCapabilityId": &routes.package_capability_id,
+        "dashboardCapabilityId": &routes.dashboard_capability_id,
+        "cardsCapabilityId": &routes.cards_capability_id,
+        "viewCapabilityId": &routes.view_capability_id,
+        "layoutCapabilityId": &routes.layout_capability_id,
+        "navigationCapabilityId": &routes.navigation_capability_id,
+        "routesCapabilityId": &routes.routes_capability_id,
+        "artifactCapabilityCount": routes.artifact_capability_count,
+    })
+}
+
+fn app_shell_dashboard_route_json_value(
+    route: &BerkeleyAppShellDashboardRoute,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &route.id,
+        "itemId": &route.item_id,
+        "regionId": &route.region_id,
+        "role": &route.role,
+        "label": &route.label,
+        "path": &route.path,
+        "cardIds": &route.card_ids,
+        "active": route.active,
+        "default": route.default_route,
+        "visible": route.visible,
+        "enabled": route.enabled,
+        "badgeCount": route.badge_count,
     })
 }
 

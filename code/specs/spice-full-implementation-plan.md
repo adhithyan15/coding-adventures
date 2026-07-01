@@ -33,20 +33,21 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard navigation.
+1. Rust Berkeley Mosaic app shell dashboard routes.
    - Status: current PR completion candidate.
-   - Add schema-versioned Rust app shell dashboard navigation surfaces and JSON
-     helpers that derive stable status, attention, and metrics navigation items
-     from dashboard layouts for a compact first-render dashboard navigation
-     contract.
+   - Add schema-versioned Rust app shell dashboard route-map surfaces and JSON
+     helpers that derive stable route IDs, paths, active/default route
+     selection, and router metadata from dashboard navigation items for a
+     compact first-render product-shell routing contract.
    - Preserve package name, source fingerprint, ready/blocked route, status
      severity, attention-required flag, primary-card routing, primary-region
-     routing, active-item routing, item IDs, labels, roles, region IDs, region
-     card IDs, active/visible/enabled flags, visible and enabled item counts,
-     badge counts, dashboard/package/card/view/layout/navigation capability
-     IDs, and advertised capability count so Mosaic, WebAssembly, and product
-     shells can render startup dashboard navigation without interpreting layout
-     internals.
+     routing, active-item routing, active/default route routing, route IDs,
+     labels, roles, paths, item IDs, region IDs, region card IDs,
+     active/default/visible/enabled flags, visible and enabled route counts,
+     badge counts, dashboard/package/card/view/layout/navigation/routes
+     capability IDs, and advertised capability count so Mosaic, WebAssembly,
+     and product shells can install startup dashboard routes without
+     interpreting navigation internals.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -1718,6 +1719,21 @@ the Rust, Python, and TypeScript surfaces together.
      capability IDs, and advertised capability count so Mosaic, WebAssembly, and
      product shells can render startup dashboard layouts without interpreting
      card internals.
+
+160. Rust Berkeley Mosaic app shell dashboard navigation.
+   - Status: completed in PR 7117.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell dashboard navigation surfaces plus JSON helpers that derive
+     stable status, attention, and metrics navigation items from dashboard
+     layouts for a compact first-render dashboard navigation contract.
+   - The navigation payload preserves package name, source fingerprint,
+     ready/blocked route, status severity, attention-required flag,
+     primary-card routing, primary-region routing, active-item routing, item
+     IDs, labels, roles, region IDs, region card IDs,
+     active/visible/enabled flags, visible and enabled item counts, badge
+     counts, dashboard/package/card/view/layout/navigation capability IDs, and
+     advertised capability count so Mosaic, WebAssembly, and product shells can
+     render startup dashboard navigation without interpreting layout internals.
 
 ## Backlog
 
