@@ -3234,6 +3234,10 @@ fn collect_callees_expr(expr: &Expr, out: &mut HashSet<String>) {
                 collect_callees_expr(a, out);
             }
         }
+        // KW1 compile-compat stub: recurse into the `KeywordArg`'s inner
+        // `value` (its runtime meaning) so callees nested in a keyword
+        // argument are still collected.  Real support pending KW2–KW8.
+        Expr::KeywordArg { value, .. } => collect_callees_expr(value, out),
         // Atoms and references bind nothing.
         Expr::IntLit { .. }
         | Expr::BoolLit { .. }

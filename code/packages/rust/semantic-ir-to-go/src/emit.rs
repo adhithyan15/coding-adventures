@@ -518,6 +518,15 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         Expr::StrConcat { span, .. } => {
             panic!("go backend reached SIR18 str-concat expression at {} — capability check should have rejected it", span);
         }
+        // KW1 compile-compat stub: keyword arguments (`f(a: 1)`) are gated
+        // behind `Feature::KeywordParams`, which the validator rejects until
+        // real support lands in KW2–KW6.  `emit_expr` is infallible, so we
+        // follow this crate's established convention for an unsupported node
+        // (see `StrConcat` above): a positioned panic documenting the
+        // internal-bug-only reachability.  No real emission yet.
+        Expr::KeywordArg { span, .. } => {
+            panic!("go backend reached KW1 keyword-arg expression at {} — capability check should have rejected it (real support pending KW2–KW6)", span);
+        }
     }
 }
 

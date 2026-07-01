@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Compile-compat stub arms for the new core `semantic-ir` variants
+  `ParamKind::Keyword` / `Expr::KeywordArg` (KW1). The builtin-usage scan
+  recurses into the keyword arg's inner `value`; a single `Keyword` param
+  emits as a best-effort plain positional (combined with `Required`);
+  `emit_expr` follows the crate's unsupported-node convention. Real
+  keyword-parameter support is pending KW2–KW8.
+
 ## 0.2.0 — default-parameter emission via sentinel + body prologue (P2c)
 
 The backend now accepts `Feature::DefaultParams` and lowers default parameters.

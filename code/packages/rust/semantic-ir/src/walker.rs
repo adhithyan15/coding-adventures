@@ -258,6 +258,15 @@ pub fn walk_expr_default<V: Visitor>(v: &mut V, e: &Expr) {
                 v.visit_expr(p);
             }
         }
+        // ── KW1: keyword argument ──────────────────────────────────
+        // A keyword argument has exactly one child, its `value`.  We
+        // recurse into it so a visitor sees the argument expression (e.g.
+        // the `1` in `f(a: 1)`).  The recursion is depth-bounded like the
+        // rest of the walk: the same `visit_expr` dispatch that guards
+        // every other child applies here — we add no bypass.
+        Expr::KeywordArg { value, .. } => {
+            v.visit_expr(value);
+        }
     }
 }
 
@@ -415,6 +424,49 @@ mod tests {
         let mut c = Counter { builtins: 0, ints: 0 };
         c.visit_module(&m);
         assert_eq!(c.ints, 1, "walker should visit the default-value expression");
+    }
+
+    #[test]
+    fn visitor_visits_keyword_arg_value() {
+        // KW1: the walker must recurse into a KeywordArg's value, so the
+        // IntLit `2` inside `f(a: 2)` is counted.
+        let body = Block {
+            stmts: vec![],
+            value: Expr::DirectCall {
+                fn_name: "f".into(),
+                args: vec![Expr::KeywordArg {
+                    name: "a".into(),
+                    value: Box::new(Expr::IntLit { value: 2, span: s() }),
+                    span: s(),
+                }],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            span: s(),
+        };
+        let f = Function {
+            name: "g".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let m = Module {
+            name: "m".into(),
+            manifest: FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![f],
+            globals: vec![],
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let mut c = Counter { builtins: 0, ints: 0 };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 1, "walker should visit the keyword-arg value");
     }
 
     #[test]

@@ -275,6 +275,12 @@ fn expr_references_any_name(expr: &Expr, names: &HashSet<String>) -> bool {
         Expr::StrConcat { parts, .. } => {
             parts.iter().any(|p| expr_references_any_name(p, names))
         }
+
+        // KW1 compile-compat stub: a `KeywordArg` is a single-child wrapper
+        // whose runtime meaning is its inner `value` (the `name` is a static
+        // label carrying no `VarRef`).  Recurse into `value` so the swap-safety
+        // reference check stays faithful.  Real support pending KW2–KW8.
+        Expr::KeywordArg { value, .. } => expr_references_any_name(value, names),
     }
 }
 
@@ -3246,6 +3252,13 @@ impl Lowerer {
                 }
                 found
             }
+            // KW1 compile-compat stub: recurse into the `KeywordArg`'s inner
+            // `value` (its runtime meaning) so a `yield` nested inside a
+            // keyword argument is still rewritten.  Real support pending
+            // KW2–KW8.
+            Expr::KeywordArg { value, .. } => {
+                Self::rewrite_yields_in_expr(value, block_scope)
+            }
             // Phase Q10b — `block_given?` reaches the lowerer as a bare
             // `VarRef` named "block_given?" (it is parenless, so the
             // method-call parser treats it as a name).  Inside a method
@@ -3775,6 +3788,12 @@ impl Lowerer {
                     Self::normalize_calls_in_expr(p, ctx);
                 }
             }
+            // KW1 compile-compat stub: recurse into the `KeywordArg`'s inner
+            // `value` so a parenless block-method call nested in a keyword
+            // argument is still normalized.  Real support pending KW2–KW8.
+            Expr::KeywordArg { value, .. } => {
+                Self::normalize_calls_in_expr(value, ctx);
+            }
             // Atomic literals and a non-rewritten VarRef carry no
             // sub-expressions.
             Expr::IntLit { .. }
@@ -3918,6 +3937,10 @@ impl Lowerer {
                     Self::collect_bound_names_expr(p, out);
                 }
             }
+            // KW1 compile-compat stub: recurse into the `KeywordArg`'s inner
+            // `value` so a name bound inside a keyword argument is still
+            // collected.  Real support pending KW2–KW8.
+            Expr::KeywordArg { value, .. } => Self::collect_bound_names_expr(value, out),
             Expr::IntLit { .. }
             | Expr::BoolLit { .. }
             | Expr::NilLit { .. }

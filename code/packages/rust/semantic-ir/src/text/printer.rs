@@ -100,25 +100,34 @@ fn print_function_indented(out: &mut String, f: &Function, indent: usize) {
         if i > 0 {
             out.push(' ');
         }
-        // Variadic kinds render with a Ruby-faithful prefix so a
-        // round-tripped module preserves splat-ness: `*rest` for a Rest
-        // param, `**opts` for a KwRest param, plain `name` otherwise.
-        let prefix = match p.kind {
-            ParamKind::Required => "",
-            ParamKind::Rest => "*",
-            ParamKind::KwRest => "**",
+        // Kinds render with a Ruby-faithful sigil so a round-tripped
+        // module preserves the parameter's binding form:
+        //   - `Rest`    → `*name`   prefix (slurps positionals)
+        //   - `KwRest`  → `**name`  prefix (slurps keywords)
+        //   - `Keyword` → `name:`   *suffix* (a named keyword param — the
+        //     trailing colon mirrors Ruby `def f(x:)` / `def f(x: 1)`)
+        //   - `Required`→ plain `name`
+        // A keyword param uses a suffix (not a prefix) so its printed form
+        // reads exactly like the Ruby source that produced it.
+        let (prefix, suffix) = match p.kind {
+            ParamKind::Required => ("", ""),
+            ParamKind::Rest => ("*", ""),
+            ParamKind::Keyword => ("", ":"),
+            ParamKind::KwRest => ("**", ""),
         };
-        // A parameter with a default-value expression (SIR19) renders an
-        // extra `(default <expr>)` clause inside the param form, e.g.
+        // A parameter with a default-value expression renders an extra
+        // `(default <expr>)` clause inside the param form, e.g.
         // `(a any (default (int 1)))`.  Params with no default keep the
         // original `(name type)` shape, so existing modules round-trip
-        // unchanged.
+        // unchanged.  For a keyword param the same clause distinguishes an
+        // OPTIONAL keyword (`(x: any (default (int 1)))`, Ruby `x: 1`) from
+        // a REQUIRED one (`(x: any)`, Ruby `x:`).
         if let Some(default) = &p.default {
-            let _ = write!(out, "({}{} {} (default ", prefix, p.name, type_or_any(p.sir_type.as_ref()));
+            let _ = write!(out, "({}{}{} {} (default ", prefix, p.name, suffix, type_or_any(p.sir_type.as_ref()));
             print_expr_inline_depth(out, default, 0);
             out.push_str("))");
         } else {
-            let _ = write!(out, "({}{} {})", prefix, p.name, type_or_any(p.sir_type.as_ref()));
+            let _ = write!(out, "({}{}{} {})", prefix, p.name, suffix, type_or_any(p.sir_type.as_ref()));
         }
     }
     let _ = write!(out, ") {}", type_or_any(f.return_type.as_ref()));
@@ -452,6 +461,17 @@ fn print_expr_inline_depth(out: &mut String, e: &Expr, depth: usize) {
         Expr::StrConcat { parts, .. } => {
             let _ = write!(out, "(str-concat");
             print_args(out, parts, depth);
+            out.push(')');
+        }
+        // ── KW1: keyword argument ──────────────────────────────────
+        // `(keyword-arg name <value>)` — the head keyword names the
+        // concept, then the keyword's name (bare, like a `var-ref`'s name),
+        // then the value expression.  It appears inline in a call's arg
+        // list, so `f(1, a: 2)` prints as
+        // `(direct-call f (effects …) (int 1) (keyword-arg a (int 2)))`.
+        Expr::KeywordArg { name, value, .. } => {
+            let _ = write!(out, "(keyword-arg {} ", name);
+            print_expr_inline_depth(out, value, depth + 1);
             out.push(')');
         }
     }
@@ -796,6 +816,65 @@ mod tests {
         assert!(
             text.contains("(function f ((a any (default (int 1))) (b any)) any"),
             "got: {text}"
+        );
+    }
+
+    #[test]
+    fn print_keyword_params_render_colon_suffix() {
+        // KW1: `def f(x:, y: 1)` → a REQUIRED keyword `x` renders `(x: any)`
+        // and an OPTIONAL keyword `y` renders `(y: any (default (int 1)))`.
+        let body = Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() };
+        let f = Function {
+            name: "f".into(),
+            params: vec![
+                Param { name: "x".into(), sir_type: None, kind: ParamKind::Keyword, default: None, span: s() },
+                Param {
+                    name: "y".into(),
+                    sir_type: None,
+                    kind: ParamKind::Keyword,
+                    default: Some(Box::new(Expr::IntLit { value: 1, span: s() })),
+                    span: s(),
+                },
+            ],
+            return_type: None,
+            captures: vec![],
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let m = module_with(
+            vec![f],
+            FeatureManifest::from_features(&[Feature::DynamicTyping, Feature::KeywordParams]),
+        );
+        let text = print_module(&m);
+        assert!(
+            text.contains("(function f ((x: any) (y: any (default (int 1)))) any"),
+            "got: {text}"
+        );
+    }
+
+    #[test]
+    fn print_keyword_arg_renders_head_name_value() {
+        // KW1: `f(1, a: 2)` → a keyword argument prints as
+        // `(keyword-arg a (int 2))`, inline in the call's arg list after
+        // the positional `(int 1)`.
+        let e = Expr::DirectCall {
+            fn_name: "f".into(),
+            args: vec![
+                Expr::IntLit { value: 1, span: s() },
+                Expr::KeywordArg {
+                    name: "a".into(),
+                    value: Box::new(Expr::IntLit { value: 2, span: s() }),
+                    span: s(),
+                },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        assert_eq!(
+            print_expr(&e),
+            "(direct-call f (effects pure) (int 1) (keyword-arg a (int 2)))"
         );
     }
 

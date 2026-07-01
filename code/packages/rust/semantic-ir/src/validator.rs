@@ -153,6 +153,15 @@ struct ValidatorState<'m> {
     /// `true` once a depth-overflow error has been recorded for
     /// this module.  Suppresses duplicate spam.
     depth_overflow_reported: bool,
+    /// `true` while checking the *immediate* arguments of a call node
+    /// (DirectCall / IndirectCall / MakeClosure).  A `KeywordArg` is only
+    /// well-placed as such an immediate argument; the flag lets the
+    /// `check_expr` `KeywordArg` arm distinguish a legitimate call-position
+    /// keyword from a misplaced one (e.g. `(+ (kw a 1))` or a keyword arg
+    /// nested inside another expression).  It is set true just around the
+    /// per-arg walk of a call and reset to false before recursing into any
+    /// argument's sub-expressions.
+    in_call_args: bool,
 }
 
 impl<'m> ValidatorState<'m> {
@@ -165,6 +174,7 @@ impl<'m> ValidatorState<'m> {
             fn_arity: HashMap::new(),
             global_names: HashSet::new(),
             depth_overflow_reported: false,
+            in_call_args: false,
         }
     }
 
@@ -301,29 +311,59 @@ impl<'m> ValidatorState<'m> {
             } else {
                 self.observed.add(Feature::DynamicTyping);
             }
+            // Keyword parameter (KW1): observe the feature.  A `Keyword`
+            // param is matched by name, not position; whether it is
+            // REQUIRED (`default == None`) or OPTIONAL (`default == Some`)
+            // rides on the same `default` field checked just below, so we
+            // do not special-case the default handling here — a keyword
+            // default is validated exactly like a positional default.
+            if p.kind == ParamKind::Keyword {
+                self.observed.add(Feature::KeywordParams);
+            }
             // Default-value expression (SIR19): observe the feature and
             // validate the expression as if it appeared in the function's
             // parameter scope with the params declared so far in view.
+            //
+            // A default on a `Keyword` param means "optional keyword"; it
+            // triggers `KeywordParams` (above), NOT `DefaultParams` —
+            // `DefaultParams` is specifically the *positional* trailing
+            // default feature.  Only observe `DefaultParams` for a
+            // non-keyword default.
             if let Some(default) = &p.default {
-                self.observed.add(Feature::DefaultParams);
+                if p.kind != ParamKind::Keyword {
+                    self.observed.add(Feature::DefaultParams);
+                }
                 let mut env = LocalEnv::new(&scope_so_far, &no_captures);
                 self.check_expr(default, &mut env, 0);
             }
             scope_so_far.insert(p.name.clone());
         }
 
-        // Variadic-parameter well-formedness (M3). A Ruby-faithful, v0-light
-        // rule set over `kind`:
+        // Variadic/keyword-parameter well-formedness (M3 + KW1). A
+        // Ruby-faithful, v0-light rule set over `kind`:
         //   - at most one `Rest` (`*rest`) parameter;
         //   - at most one `KwRest` (`**opts`) parameter;
-        //   - ordering: required positionals come first, then the lone Rest,
-        //     then the lone KwRest. A Required after a Rest, or anything after
-        //     a KwRest, is a structural error (not a panic).
-        // Truth table for the offending transitions we reject:
-        //   prev\cur | Required | Rest     | KwRest
-        //   Rest     | ERROR    | (dup)    | ok
-        //   KwRest   | ERROR    | ERROR    | (dup)
+        //   - ordering: positional `Required` first, then the lone `Rest`,
+        //     then any number of `Keyword` params, then the lone `KwRest`.
+        //     Anything out of that order is a structural error (not a panic).
+        //
+        // The canonical param list is therefore:
+        //     Required*  Rest?  Keyword*  KwRest?
+        //
+        // Truth table for the offending transitions we reject (prev seen ⇒
+        // current kind is illegal):
+        //   prev seen \ cur | Required | Rest  | Keyword | KwRest
+        //   Rest            | ERROR    | (dup) | ok      | ok
+        //   Keyword         | ERROR    | ERROR | ok      | ok
+        //   KwRest          | ERROR    | ERROR | ERROR   | (dup)
+        //
+        // Rationale for `Keyword` sitting *after* `Rest` but *before*
+        // `KwRest`: a `*rest` slurps trailing *positional* args, so it must
+        // close the positional run before any name-matched keyword params;
+        // a `**opts` slurps *unmatched* keywords, so it must come after the
+        // explicitly-named keyword params it would otherwise shadow.
         let mut rest_seen = false;
+        let mut keyword_seen = false;
         let mut kwrest_seen = false;
         for p in &f.params {
             match p.kind {
@@ -334,6 +374,12 @@ impl<'m> ValidatorState<'m> {
                             &p.span,
                         );
                     }
+                    if keyword_seen {
+                        self.error(
+                            format!("rest parameter `*{}` must precede keyword parameters", p.name),
+                            &p.span,
+                        );
+                    }
                     if kwrest_seen {
                         self.error(
                             format!("rest parameter `*{}` must precede the keyword-rest parameter", p.name),
@@ -341,6 +387,17 @@ impl<'m> ValidatorState<'m> {
                         );
                     }
                     rest_seen = true;
+                }
+                ParamKind::Keyword => {
+                    // A keyword param must precede the lone `**opts`; it may
+                    // follow positionals, the `*rest`, and other keywords.
+                    if kwrest_seen {
+                        self.error(
+                            format!("keyword parameter `{}` must precede the keyword-rest parameter", p.name),
+                            &p.span,
+                        );
+                    }
+                    keyword_seen = true;
                 }
                 ParamKind::KwRest => {
                     if kwrest_seen {
@@ -354,13 +411,19 @@ impl<'m> ValidatorState<'m> {
                 ParamKind::Required => {
                     // The reserved trailing block parameter (Q9e) is always
                     // Required and always appended last — after any variadic
-                    // params — so it is exempt from the ordering rule.
+                    // or keyword params — so it is exempt from the ordering
+                    // rule.
                     if p.name == "__sir_block__" {
                         continue;
                     }
                     if kwrest_seen {
                         self.error(
                             format!("required parameter `{}` must precede the keyword-rest parameter", p.name),
+                            &p.span,
+                        );
+                    } else if keyword_seen {
+                        self.error(
+                            format!("required parameter `{}` must precede keyword parameters", p.name),
                             &p.span,
                         );
                     } else if rest_seen {
@@ -657,6 +720,10 @@ impl<'m> ValidatorState<'m> {
             }
             Expr::Block(b) => self.check_block(b, env, depth + 1),
             Expr::DirectCall { fn_name, args, .. } => {
+                // Call-side keyword-argument checks (ordering, duplicates,
+                // name resolution against the known callee) run first, then
+                // arity, then the recursive arg walk.
+                self.check_call_kwargs(fn_name, args, e.span());
                 if let Some(arity) = self.fn_arity.get(fn_name).copied() {
                     // SIR10 default-param call-arity rule.  Let R be the
                     // callee's required (leading no-default) param count and
@@ -687,7 +754,18 @@ impl<'m> ValidatorState<'m> {
                     // for every existing frontend lowering, which relied on the
                     // validator never checking DirectCall arity at all.
                     if !arity.variadic && args_are_plain(args) {
-                        let n = args.len();
+                        // Only *positional* args count against the R/M
+                        // bounds; any `KeywordArg` is matched by name, not
+                        // position, so it is excluded here (its validity is
+                        // handled by `check_call_kwargs`).  A plain
+                        // positional callee that receives a stray keyword
+                        // still gets the precise "unknown keyword" diagnostic
+                        // from name resolution rather than a misleading
+                        // arity-count error.
+                        let n = args
+                            .iter()
+                            .filter(|a| !matches!(a, Expr::KeywordArg { .. }))
+                            .count();
                         if n < arity.min {
                             self.error(
                                 format!(
@@ -712,16 +790,15 @@ impl<'m> ValidatorState<'m> {
                         e.span(),
                     );
                 }
-                for a in args {
-                    self.check_expr(a, env, depth + 1);
-                }
+                self.check_args(args, env, depth);
             }
             Expr::IndirectCall { target, args, .. } => {
                 self.observed.add(Feature::Closures);
+                // Ordering + duplicate keyword checks apply, but the callee
+                // signature is not statically known, so no name resolution.
+                self.check_kwargs_common(None, args, e.span());
                 self.check_expr(target, env, depth + 1);
-                for a in args {
-                    self.check_expr(a, env, depth + 1);
-                }
+                self.check_args(args, env, depth);
             }
             Expr::BuiltinCall { name, args, .. } => {
                 match name.as_str() {
@@ -808,6 +885,155 @@ impl<'m> ValidatorState<'m> {
                 for p in parts {
                     self.check_expr(p, env, depth + 1);
                 }
+            }
+            // ── KW1: keyword argument ──────────────────────────────
+            Expr::KeywordArg { value, span, .. } => {
+                // Using a keyword argument at all requires the feature.
+                self.observed.add(Feature::KeywordParams);
+                // A `KeywordArg` is only well-formed as an *immediate*
+                // argument of a call.  `in_call_args` is true exactly when
+                // we are walking such immediate arguments (see
+                // `check_args`); anywhere else — nested inside another
+                // expression, as a `BuiltinCall`/`Intrinsic` argument, as a
+                // block value, a let RHS, a default expr, etc. — it is
+                // misplaced and rejected.
+                if !self.in_call_args {
+                    self.error(
+                        "keyword argument may only appear directly in a call's argument list"
+                            .to_string(),
+                        span,
+                    );
+                }
+                // Recurse into the value with the call-args flag cleared:
+                // the value itself is an ordinary expression position (a
+                // nested `KeywordArg` inside it would be misplaced).
+                let prev = self.in_call_args;
+                self.in_call_args = false;
+                self.check_expr(value, env, depth + 1);
+                self.in_call_args = prev;
+            }
+        }
+    }
+
+    /// Walk the arguments of a call node (DirectCall / IndirectCall /
+    /// BuiltinCall / MakeClosure), permitting a top-level `KeywordArg`.
+    ///
+    /// A `KeywordArg` is only well-placed as a *direct* argument of a call,
+    /// so we set `in_call_args = true` around this loop; the `KeywordArg`
+    /// arm of [`Self::check_expr`] reads the flag to allow the keyword here
+    /// and to *reject* it anywhere else (it clears the flag before
+    /// recursing into the keyword's value).  We save and restore the prior
+    /// flag value so nested calls compose correctly.
+    fn check_args(&mut self, args: &[Expr], env: &mut LocalEnv, depth: usize) {
+        let prev = self.in_call_args;
+        self.in_call_args = true;
+        for a in args {
+            self.check_expr(a, env, depth + 1);
+        }
+        self.in_call_args = prev;
+    }
+
+    /// Call-side keyword-argument validation for a call whose args vec is
+    /// `args` (KW1).  Enforces, independent of the callee's identity:
+    ///
+    ///   1. **Ordering** — every `KeywordArg` must follow all positional
+    ///      (non-`KeywordArg`) arguments.  `f(1, a: 2)` is fine; a
+    ///      positional after a keyword (`f(a: 2, 1)`) is rejected.
+    ///   2. **No duplicate keyword names** within one call's args.
+    ///
+    /// When `known_callee` is `Some(name)` and that name resolves to a
+    /// function in this module, it additionally performs
+    ///   3. **Name resolution** — each `KeywordArg.name` must match a
+    ///      `Keyword` param of the callee OR the callee declares a
+    ///      `KwRest`; and every REQUIRED keyword param (Keyword, default
+    ///      None) must be supplied.
+    ///
+    /// IndirectCall / closure calls pass `None`: the signature is not
+    /// statically known, so only ordering + duplicate checks apply.
+    fn check_call_kwargs(&mut self, callee: &str, args: &[Expr], call_span: &Span) {
+        self.check_kwargs_common(Some(callee), args, call_span);
+    }
+
+    /// Ordering + duplicate checks (and optional name resolution) shared by
+    /// every call kind.  `callee` is `Some` only for a `DirectCall`, whose
+    /// target may be a known module function.
+    fn check_kwargs_common(&mut self, callee: Option<&str>, args: &[Expr], call_span: &Span) {
+        let mut seen_keyword = false;
+        let mut names: HashSet<&str> = HashSet::new();
+        let mut supplied: Vec<&str> = Vec::new();
+        for a in args {
+            match a {
+                Expr::KeywordArg { name, span, .. } => {
+                    seen_keyword = true;
+                    if !names.insert(name.as_str()) {
+                        self.error(
+                            format!("duplicate keyword argument `{}` in call", name),
+                            span,
+                        );
+                    }
+                    supplied.push(name.as_str());
+                }
+                _ => {
+                    // A positional argument.  Once a keyword has appeared,
+                    // positionals are illegal — keyword args must trail all
+                    // positionals so a backend can split `args` at the first
+                    // keyword unambiguously.
+                    if seen_keyword {
+                        self.error(
+                            "positional argument may not follow a keyword argument"
+                                .to_string(),
+                            a.span(),
+                        );
+                    }
+                }
+            }
+        }
+
+        // Name resolution against a *known* callee only.
+        let Some(callee) = callee else { return };
+        // Clone out the callee's keyword-param facts we need, to avoid
+        // holding a borrow of `self.module` across the `self.error` calls.
+        let Some(f) = self.module.functions.iter().find(|f| f.name == callee) else {
+            return;
+        };
+        let kw_names: HashSet<String> =
+            f.keyword_params().iter().map(|p| p.name.clone()).collect();
+        let has_kwrest = f.params.iter().any(|p| p.kind == ParamKind::KwRest);
+        let required_kw: Vec<String> = f
+            .params
+            .iter()
+            .filter(|p| p.kind == ParamKind::Keyword && p.default.is_none())
+            .map(|p| p.name.clone())
+            .collect();
+
+        // Every supplied keyword must name a declared keyword param, unless
+        // the callee slurps extras via `**kwrest`.
+        if !has_kwrest {
+            for a in args {
+                if let Expr::KeywordArg { name, span, .. } = a {
+                    if !kw_names.contains(name) {
+                        self.error(
+                            format!(
+                                "call to `{}` passes unknown keyword `{}` (callee declares no such keyword parameter and no `**` keyword-rest)",
+                                callee, name
+                            ),
+                            span,
+                        );
+                    }
+                }
+            }
+        }
+
+        // Every required keyword param must be supplied.
+        for req in &required_kw {
+            if !supplied.contains(&req.as_str()) {
+                self.error(
+                    format!(
+                        "call to `{}` is missing required keyword `{}`",
+                        callee, req
+                    ),
+                    call_span,
+                );
             }
         }
     }
@@ -2671,5 +2897,532 @@ mod tests {
         });
         let r = validate(&m);
         assert!(!r.is_ok(), "expected `e` out-of-scope error in ensure body");
+    }
+
+    // ── KW1: keyword parameters & arguments ────────────────────────────
+
+    /// A keyword param `name:` (required) or `name: 1` (optional).
+    fn kw(name: &str, default: Option<i64>) -> Param {
+        Param {
+            name: name.into(),
+            sir_type: None,
+            kind: ParamKind::Keyword,
+            default: default.map(|v| Box::new(Expr::IntLit { value: v, span: s() })),
+            span: s(),
+        }
+    }
+
+    /// A keyword argument `name: <int>` for a call's args vec.
+    fn kwarg(name: &str, v: i64) -> Expr {
+        Expr::KeywordArg {
+            name: name.into(),
+            value: Box::new(Expr::IntLit { value: v, span: s() }),
+            span: s(),
+        }
+    }
+
+    /// Build a two-function module: callee `f` with `callee_params` and a
+    /// caller `g` whose body is a `DirectCall` to `f` with `call_args`.
+    /// The manifest declares KeywordParams so keyword-using modules pass
+    /// the manifest check; extra features can be appended by the caller
+    /// via `extra`.
+    fn module_kw_call(
+        callee_params: Vec<Param>,
+        call_args: Vec<Expr>,
+        extra: &[Feature],
+    ) -> Module {
+        let mut feats = vec![Feature::DynamicTyping, Feature::KeywordParams];
+        feats.extend_from_slice(extra);
+        let mut m = empty_module(FeatureManifest::from_features(&feats));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: callee_params,
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m.functions.push(Function {
+            name: "g".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::DirectCall {
+                    fn_name: "f".into(),
+                    args: call_args,
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    #[test]
+    fn keyword_param_observes_feature_and_gating() {
+        // def f(x:) with the feature declared → ok; without it → error.
+        let ok = module_with_params(vec![kw("x", Some(1))]);
+        // module_with_params only declares DynamicTyping, so the keyword
+        // param is undeclared → error.
+        assert!(
+            !validate(&ok).is_ok(),
+            "keyword param without KeywordParams declared must error"
+        );
+        // Now declare it.
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::DynamicTyping,
+            Feature::KeywordParams,
+        ]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![kw("x", Some(1))],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn keyword_arg_requires_feature() {
+        // f(a: 1) where the manifest omits KeywordParams → error, even
+        // though the callee accepts `a` (feature gating is independent of
+        // name resolution).
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::DynamicTyping]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![kw("a", Some(0))],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m.functions.push(Function {
+            name: "g".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::DirectCall {
+                    fn_name: "f".into(),
+                    args: vec![kwarg("a", 1)],
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(!r.is_ok(), "keyword arg without the feature must error");
+        assert!(r.errors().any(|i| i.message.contains("keyword-params")));
+    }
+
+    // ── def-side ordering ──────────────────────────────────────────────
+
+    #[test]
+    fn keyword_params_canonical_order_is_valid() {
+        // def f(a, *rest, x:, y: 1, **opts) — required, rest, keywords, kwrest.
+        let m = module_with_params_kw(vec![
+            p("a", ParamKind::Required),
+            p("rest", ParamKind::Rest),
+            kw("x", None),
+            kw("y", Some(1)),
+            p("opts", ParamKind::KwRest),
+        ]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    /// module_with_params but declaring KeywordParams too.
+    fn module_with_params_kw(params: Vec<Param>) -> Module {
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::DynamicTyping,
+            Feature::KeywordParams,
+        ]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params,
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    #[test]
+    fn keyword_param_before_positional_is_error() {
+        // def f(x:, a) — a required positional after a keyword param.
+        let m = module_with_params_kw(vec![kw("x", None), p("a", ParamKind::Required)]);
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors().any(|i| i.message.contains("must precede keyword parameters")),
+            "got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn keyword_param_after_kwrest_is_error() {
+        // def f(**opts, x:) — a keyword param after the keyword-rest.
+        let m = module_with_params_kw(vec![p("opts", ParamKind::KwRest), kw("x", None)]);
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors()
+                .any(|i| i.message.contains("must precede the keyword-rest")),
+            "got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn rest_after_keyword_is_error() {
+        // def f(x:, *rest) — the rest param must precede keyword params.
+        let m = module_with_params_kw(vec![kw("x", None), p("rest", ParamKind::Rest)]);
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors()
+                .any(|i| i.message.contains("must precede keyword parameters")),
+            "got {:?}",
+            r.issues
+        );
+    }
+
+    // ── call-side ordering / duplicates ────────────────────────────────
+
+    #[test]
+    fn keyword_arg_after_positional_is_valid() {
+        // def f(a, x:); f(1, x: 2) — one positional then one keyword.
+        let m = module_kw_call(
+            vec![p("a", ParamKind::Required), kw("x", None)],
+            vec![Expr::IntLit { value: 1, span: s() }, kwarg("x", 2)],
+            &[],
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn positional_after_keyword_arg_is_error() {
+        // f(x: 2, 1) — a positional after a keyword argument.
+        let m = module_kw_call(
+            vec![kw("x", Some(0)), p("a", ParamKind::Required)],
+            vec![kwarg("x", 2), Expr::IntLit { value: 1, span: s() }],
+            &[],
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors()
+                .any(|i| i.message.contains("positional argument may not follow a keyword")),
+            "got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn duplicate_keyword_arg_is_error() {
+        // f(x: 1, x: 2) — the same keyword twice in one call.
+        let m = module_kw_call(
+            vec![kw("x", Some(0))],
+            vec![kwarg("x", 1), kwarg("x", 2)],
+            &[],
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors().any(|i| i.message.contains("duplicate keyword argument")),
+            "got {:?}",
+            r.issues
+        );
+    }
+
+    // ── name resolution against a known callee ─────────────────────────
+
+    #[test]
+    fn unknown_keyword_without_kwrest_is_error() {
+        // def f(x:); f(y: 1) — `y` is not a declared keyword and there is
+        // no **kwrest to absorb it.
+        let m = module_kw_call(vec![kw("x", None)], vec![kwarg("y", 1)], &[]);
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors().any(|i| i.message.contains("unknown keyword `y`")),
+            "got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn unknown_keyword_with_kwrest_is_accepted() {
+        // def f(**opts); f(y: 1) — the **opts absorbs the unmatched keyword,
+        // so an otherwise-unknown keyword name is accepted.
+        let m = module_kw_call(
+            vec![p("opts", ParamKind::KwRest)],
+            vec![kwarg("y", 1)],
+            &[],
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok with **kwrest, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn missing_required_keyword_is_error() {
+        // def f(x:); f() — the required keyword `x` is not supplied.
+        let m = module_kw_call(vec![kw("x", None)], vec![], &[]);
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors().any(|i| i.message.contains("missing required keyword `x`")),
+            "got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn optional_keyword_may_be_omitted() {
+        // def f(x: 1); f() — the keyword `x` is optional (has a default),
+        // so omitting it is fine.
+        let m = module_kw_call(vec![kw("x", Some(1))], vec![], &[]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn supplying_required_keyword_is_valid() {
+        // def f(x:); f(x: 5) — the required keyword is supplied.
+        let m = module_kw_call(vec![kw("x", None)], vec![kwarg("x", 5)], &[]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn indirect_call_skips_keyword_name_resolution() {
+        // A closure/indirect call has no statically known signature, so
+        // ordering + dup checks apply but NOT name resolution: an "unknown"
+        // keyword against a closure is accepted.  Ordering violations still
+        // fail (checked separately); here we prove a lone keyword arg is ok.
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::DynamicTyping,
+            Feature::KeywordParams,
+            Feature::Closures,
+        ]));
+        m.functions.push(Function {
+            name: "g".into(),
+            params: vec![p("cb", ParamKind::Required)],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::IndirectCall {
+                    target: Box::new(Expr::VarRef {
+                        name: "cb".into(),
+                        scope: Scope::Param,
+                        span: s(),
+                    }),
+                    args: vec![kwarg("anything", 1)],
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "indirect keyword call must skip resolution, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn indirect_call_still_enforces_keyword_ordering() {
+        // Even without name resolution, a positional after a keyword in an
+        // indirect call is rejected.
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::DynamicTyping,
+            Feature::KeywordParams,
+            Feature::Closures,
+        ]));
+        m.functions.push(Function {
+            name: "g".into(),
+            params: vec![p("cb", ParamKind::Required)],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::IndirectCall {
+                    target: Box::new(Expr::VarRef {
+                        name: "cb".into(),
+                        scope: Scope::Param,
+                        span: s(),
+                    }),
+                    args: vec![kwarg("x", 1), Expr::IntLit { value: 2, span: s() }],
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors()
+                .any(|i| i.message.contains("positional argument may not follow a keyword")),
+            "got {:?}",
+            r.issues
+        );
+    }
+
+    // ── KeywordArg only in call position ───────────────────────────────
+
+    #[test]
+    fn keyword_arg_outside_call_is_error() {
+        // A KeywordArg used as a block value (not a call argument) is
+        // misplaced.  `def g() = (a: 1)` — invalid.
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::DynamicTyping,
+            Feature::KeywordParams,
+        ]));
+        m.functions.push(Function {
+            name: "g".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: kwarg("a", 1),
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors()
+                .any(|i| i.message.contains("may only appear directly in a call")),
+            "got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn keyword_arg_nested_in_builtin_call_is_error() {
+        // A KeywordArg buried in a BuiltinCall's args (not a keyword-taking
+        // call position) is misplaced.  `(+ (a: 1))` — invalid.
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::DynamicTyping,
+            Feature::KeywordParams,
+        ]));
+        m.functions.push(Function {
+            name: "g".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::BuiltinCall {
+                    name: "+".into(),
+                    args: vec![kwarg("a", 1)],
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors()
+                .any(|i| i.message.contains("may only appear directly in a call")),
+            "got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn keyword_arg_value_may_not_nest_a_keyword_arg() {
+        // The *value* of a keyword arg is an ordinary expression position,
+        // so a keyword arg nested inside it is misplaced.
+        // f(a: (b: 1)) — the inner `(b: 1)` is invalid.
+        let inner = Expr::KeywordArg {
+            name: "b".into(),
+            value: Box::new(Expr::IntLit { value: 1, span: s() }),
+            span: s(),
+        };
+        let outer = Expr::KeywordArg {
+            name: "a".into(),
+            value: Box::new(inner),
+            span: s(),
+        };
+        let m = module_kw_call(
+            vec![p("opts", ParamKind::KwRest)],
+            vec![outer],
+            &[],
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors()
+                .any(|i| i.message.contains("may only appear directly in a call")),
+            "got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn keyword_arg_value_expression_is_validated() {
+        // The keyword arg's value is recursed into: a bad var-ref inside it
+        // is caught.  f(**opts); f(x: <unknown local>) — scope error.
+        let m = module_kw_call(
+            vec![p("opts", ParamKind::KwRest)],
+            vec![Expr::KeywordArg {
+                name: "x".into(),
+                value: Box::new(Expr::VarRef {
+                    name: "ghost".into(),
+                    scope: Scope::Local,
+                    span: s(),
+                }),
+                span: s(),
+            }],
+            &[],
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors().any(|i| i.message.contains("unknown name `ghost`")),
+            "got {:?}",
+            r.issues
+        );
     }
 }

@@ -350,6 +350,10 @@ where
                 walk_intrinsics_in_expr(p, f, depth + 1);
             }
         }
+        // ── KW1: keyword argument ──────────────────────────────────
+        Expr::KeywordArg { value, .. } => {
+            walk_intrinsics_in_expr(value, f, depth + 1);
+        }
     }
 }
 

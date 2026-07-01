@@ -185,6 +185,48 @@ impl Function {
         let n = n_args.min(self.params.len());
         &self.params[n..]
     }
+
+    /// The callee's *keyword* parameters — those with `kind == Keyword`
+    /// (KW1).  Unlike positionals, a keyword param is matched by **name**
+    /// at the call site, so the validator's call-side resolution consults
+    /// this list (rather than a positional index) to decide whether a
+    /// `KeywordArg` is accepted and which required keywords were supplied.
+    ///
+    /// ```text
+    ///   def f(a, x:, y: 1, **rest)   →  keyword_params() == [x, y]
+    /// ```
+    ///
+    /// (`a` is positional, `**rest` is `KwRest` — neither is a `Keyword`.)
+    pub fn keyword_params(&self) -> Vec<&Param> {
+        self.params
+            .iter()
+            .filter(|p| p.kind == ParamKind::Keyword)
+            .collect()
+    }
+
+    /// The `Keyword` params whose name is **not** in `supplied` — i.e. the
+    /// keyword parameters a caller left out (KW1).
+    ///
+    /// Backends use this the way [`Self::missing_defaults`] is used for
+    /// trailing positionals: for a call the validator has **accepted**,
+    /// every returned param is guaranteed to carry a `default`.  That is
+    /// precisely the required-keyword rule: a *required* keyword (kind
+    /// `Keyword`, `default == None`) that the caller omits is a validation
+    /// error, so it can never survive into this list.  A backend may
+    /// therefore emit each returned param's default unconditionally.
+    ///
+    /// ```text
+    ///   def f(x:, y: 1, z: 2)
+    ///   f.missing_keywords(&["x", "y"])  →  [z]        // z omitted, has default
+    ///   f.missing_keywords(&["x"])       →  [y, z]     // y, z omitted, both have defaults
+    /// ```
+    pub fn missing_keywords(&self, supplied: &[&str]) -> Vec<&Param> {
+        self.params
+            .iter()
+            .filter(|p| p.kind == ParamKind::Keyword)
+            .filter(|p| !supplied.contains(&p.name.as_str()))
+            .collect()
+    }
 }
 
 /// How a parameter binds its arguments (M3 — see
@@ -198,6 +240,29 @@ pub enum ParamKind {
     /// A rest parameter (`*rest`) — collects trailing positional arguments
     /// into a sequence.
     Rest,
+    /// A named keyword parameter (`x:` / `x: 1` in Ruby, `x` / `x=1` after
+    /// `*` in Python) — bound by *name* at the call site, never by
+    /// position (KW1 — see `code/specs/sir-keyword-params.md`).
+    ///
+    /// Required-vs-optional rides on the **existing** `Param.default`
+    /// field, exactly as a positional optional does — there is no separate
+    /// "is-required" flag:
+    ///
+    /// ```text
+    ///   Param { kind: Keyword, default: None    }  →  REQUIRED keyword: `def f(x:)`
+    ///   Param { kind: Keyword, default: Some(e) }  →  OPTIONAL keyword: `def f(x: 1)`
+    /// ```
+    ///
+    /// Why reuse `default` rather than add a flag?  Because the two axes
+    /// (how the argument is *matched* — position vs. name — and whether it
+    /// may be *omitted*) are orthogonal.  `ParamKind` already answers the
+    /// first for the positional/`Rest`/`KwRest` cases; `default` already
+    /// answers the second for positionals.  A `Keyword` param simply
+    /// combines the name-matched axis with the same omissibility rule, so
+    /// no new field (and, because `ParamKind` is `Copy` with
+    /// `#[default] = Required`, no existing `Param { .. }` construction)
+    /// changes.
+    Keyword,
     /// A keyword-rest parameter (`**opts`) — collects trailing keyword
     /// arguments into a map.
     KwRest,
@@ -666,6 +731,27 @@ pub enum Expr {
     /// degenerate — frontends emit a bare `StrLit` (empty string) or the
     /// single part directly rather than wrapping it.
     StrConcat { parts: Vec<Expr>, span: Span },
+
+    // ── KW1: keyword arguments ─────────────────────────────────────
+    /// A keyword argument at a call site: `name: value` (Ruby `f(a: 1)`,
+    /// Python `f(a=1)`).  Appears ONLY inside a call's `args` vec, and only
+    /// AFTER all positional arguments.  The validator enforces both rules.
+    ///
+    /// Design note — why a `KeywordArg` *inside* `args` rather than a
+    /// separate `kwargs` field on each call node?  Three call nodes
+    /// (`DirectCall`, `IndirectCall`, `MakeClosure`) all take arguments;
+    /// threading a parallel `kwargs: Vec<(String, Expr)>` through every one
+    /// (plus the walker, printer, and every backend `match`) would triple
+    /// the surface area.  Instead a keyword argument is just another
+    /// `Expr` variant that may sit in the *existing* `args` vec, so
+    /// `f(1, a: 2)` lowers to `args: [IntLit(1), KeywordArg { name: "a",
+    /// value: IntLit(2) }]`.  Positional args stay bare; the validator
+    /// guarantees every `KeywordArg` trails all positionals, so a backend
+    /// can split `args` at the first `KeywordArg` without ambiguity.
+    ///
+    /// `value` is boxed for the same fixed-size reason as the other
+    /// single-child expression variants (`SeqLen`, `MapGet`, …).
+    KeywordArg { name: String, value: Box<Expr>, span: Span },
 }
 
 /// A single capture provided to `MakeClosure`.  The `name` matches a
@@ -710,6 +796,7 @@ impl Expr {
             Expr::LogicalAnd { span, .. } => span,
             Expr::LogicalOr { span, .. } => span,
             Expr::StrConcat { span, .. } => span,
+            Expr::KeywordArg { span, .. } => span,
         }
     }
 
@@ -739,6 +826,7 @@ impl Expr {
             Expr::LogicalAnd { .. } => "and",
             Expr::LogicalOr { .. } => "or",
             Expr::StrConcat { .. } => "str-concat",
+            Expr::KeywordArg { .. } => "keyword-arg",
         }
     }
 }
@@ -916,6 +1004,105 @@ mod tests {
         let c = Expr::FloatLit { value: 3.14, span: s() };
         let d = Expr::FloatLit { value: 3.14, span: s() };
         assert_eq!(c, d);
+    }
+
+    // ── KW1: keyword parameters & arguments ────────────────────────
+
+    #[test]
+    fn keyword_arg_span_and_kind_name() {
+        let e = Expr::KeywordArg {
+            name: "a".into(),
+            value: Box::new(Expr::IntLit { value: 1, span: s() }),
+            span: s(),
+        };
+        assert_eq!(e.span(), &s());
+        assert_eq!(e.kind_name(), "keyword-arg");
+    }
+
+    /// A `Keyword` param with `default == None` is REQUIRED; with
+    /// `default == Some(_)` it is OPTIONAL.  This test pins the truth table
+    /// documented on `ParamKind::Keyword`.
+    #[test]
+    fn keyword_param_required_vs_optional_via_default() {
+        let required = Param {
+            name: "x".into(),
+            sir_type: None,
+            kind: ParamKind::Keyword,
+            default: None,
+            span: s(),
+        };
+        let optional = Param {
+            name: "y".into(),
+            sir_type: None,
+            kind: ParamKind::Keyword,
+            default: Some(Box::new(Expr::IntLit { value: 1, span: s() })),
+            span: s(),
+        };
+        assert_eq!(required.kind, ParamKind::Keyword);
+        assert!(required.default.is_none(), "kw with no default = required");
+        assert!(optional.default.is_some(), "kw with default = optional");
+    }
+
+    fn kw_param(name: &str, default: Option<i64>) -> Param {
+        Param {
+            name: name.into(),
+            sir_type: None,
+            kind: ParamKind::Keyword,
+            default: default.map(|v| Box::new(Expr::IntLit { value: v, span: s() })),
+            span: s(),
+        }
+    }
+
+    fn fn_with_params(params: Vec<Param>) -> Function {
+        Function {
+            name: "f".into(),
+            params,
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        }
+    }
+
+    #[test]
+    fn keyword_params_helper_selects_only_keyword_kind() {
+        // def f(a, x:, y: 1, **rest) → keyword_params() == [x, y].
+        let f = fn_with_params(vec![
+            Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+            kw_param("x", None),
+            kw_param("y", Some(1)),
+            Param { name: "rest".into(), sir_type: None, kind: ParamKind::KwRest, default: None, span: s() },
+        ]);
+        let kws: Vec<&str> = f.keyword_params().iter().map(|p| p.name.as_str()).collect();
+        assert_eq!(kws, vec!["x", "y"]);
+    }
+
+    #[test]
+    fn missing_keywords_returns_unsupplied_keyword_params() {
+        // def f(x:, y: 1, z: 2)
+        let f = fn_with_params(vec![
+            kw_param("x", None),
+            kw_param("y", Some(1)),
+            kw_param("z", Some(2)),
+        ]);
+        // Supplying x and y leaves z omitted.
+        let missing: Vec<&str> = f
+            .missing_keywords(&["x", "y"])
+            .iter()
+            .map(|p| p.name.as_str())
+            .collect();
+        assert_eq!(missing, vec!["z"]);
+        // Supplying only x leaves y and z omitted (both carry defaults).
+        let missing2: Vec<&str> = f
+            .missing_keywords(&["x"])
+            .iter()
+            .map(|p| p.name.as_str())
+            .collect();
+        assert_eq!(missing2, vec!["y", "z"]);
+        // Supplying all leaves nothing.
+        assert!(f.missing_keywords(&["x", "y", "z"]).is_empty());
     }
 
     #[test]

@@ -27,6 +27,7 @@ use std::fmt;
 /// | `Intrinsics`               | any `Intrinsic` node                  |
 /// | `StringInterpolation`      | an `Expr::StrConcat` node             |
 /// | `DefaultParams`            | a param with `default = Some(_)`      |
+/// | `KeywordParams`            | a `Keyword` param or `KeywordArg`     |
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Feature {
     Closures,
@@ -97,6 +98,21 @@ pub enum Feature {
     /// check until each backend gains support.  Emission (backends) and
     /// lowering (frontends) land in follow-up PRs.
     DefaultParams,
+    // ── KW1 (keyword parameters & arguments) ─────────────────────────
+    /// The module uses **named keyword parameters** (a `Param` with
+    /// `kind == ParamKind::Keyword`, e.g. Ruby `def f(x:)` / `def f(x: 1)`)
+    /// and/or **keyword arguments** at a call site (an `Expr::KeywordArg`,
+    /// e.g. Ruby `f(x: 1)` / Python `f(x=1)`).  Distinct from
+    /// `DefaultParams`: a keyword param is matched by *name*, not position,
+    /// and its default (when present) marks it *optional* rather than
+    /// *required* — a different axis from a positional trailing default.
+    /// Like `DefaultParams`, this is the core-IR representation only: it is
+    /// observed by the validator when a keyword param or argument appears
+    /// and is NOT yet accepted by any backend, so a keyword-using module is
+    /// correctly rejected by the capability check until each backend gains
+    /// support.  Emission (backends) and lowering (frontends) land in
+    /// follow-up PRs.
+    KeywordParams,
 }
 
 impl Feature {
@@ -126,6 +142,7 @@ impl Feature {
         Feature::Exceptions,
         Feature::StringInterpolation,
         Feature::DefaultParams,
+        Feature::KeywordParams,
     ];
 
     /// Kebab-case name for the SIR text format.
@@ -155,6 +172,7 @@ impl Feature {
             Feature::Exceptions => "exceptions",
             Feature::StringInterpolation => "string-interpolation",
             Feature::DefaultParams => "default-params",
+            Feature::KeywordParams => "keyword-params",
         }
     }
 
@@ -256,6 +274,17 @@ mod tests {
         for f in Feature::ALL {
             assert_eq!(Feature::from_name(f.name()), Some(*f));
         }
+    }
+
+    #[test]
+    fn keyword_params_feature_name_and_round_trip() {
+        assert_eq!(Feature::KeywordParams.name(), "keyword-params");
+        assert_eq!(
+            Feature::from_name("keyword-params"),
+            Some(Feature::KeywordParams)
+        );
+        assert_eq!(format!("{}", Feature::KeywordParams), "keyword-params");
+        assert!(Feature::ALL.contains(&Feature::KeywordParams));
     }
 
     #[test]

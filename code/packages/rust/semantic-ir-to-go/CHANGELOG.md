@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Compile-compat stub arm for the new core `semantic-ir` variant
+  `Expr::KeywordArg` (KW1) — `emit_expr` follows this crate's existing
+  unsupported-node convention (positioned panic that the capability check
+  should already have rejected). Real keyword-argument support is pending
+  KW2–KW8.
+
 ## 0.5.0 — SIR19 default parameters (P2f) via missing-sentinel runtime-mimic
 
 Adds `Feature::DefaultParams` to the Go backend's accepted set.  Go has no

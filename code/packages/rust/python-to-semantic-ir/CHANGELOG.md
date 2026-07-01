@@ -2,6 +2,15 @@
 
 All notable changes to `python-to-semantic-ir` are documented here.
 
+## Unreleased
+
+### Changed
+
+- Compile-compat stub arm for the new core `semantic-ir` variant
+  `Expr::KeywordArg` (KW1) — the callee-collection pass recurses into the
+  keyword arg's inner `value`. Real keyword-argument lowering is pending
+  KW2–KW8.
+
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to semantic versioning.
 

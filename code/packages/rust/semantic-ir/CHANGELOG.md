@@ -2,6 +2,95 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.14.0 — Keyword parameters & arguments (KW1; core IR)
+
+Adds **named keyword parameters** (`def f(x:)` / `def f(x: 1)`) and
+**keyword arguments** (`f(x: 1)`, Python `f(x=1)`) to the core IR. This is
+**milestone KW1 of the keyword-params cascade**: it lands the
+representation, validation, walker, and printer support only. No frontend
+lowers to keyword params yet and no backend accepts the new
+`Feature::KeywordParams`, so a keyword-using module is correctly rejected by
+the capability check until each backend gains support — **all existing
+behavior is unchanged**.
+
+### Model — required vs. optional rides on `Param.default`
+
+A keyword parameter is a `Param` with `kind == ParamKind::Keyword`. Whether
+it is *required* or *optional* is carried by the **existing** `default`
+field, exactly as a positional optional already works — there is no separate
+"is-required" flag:
+
+| `kind`    | `default` | meaning                          | source        |
+|-----------|-----------|----------------------------------|---------------|
+| `Keyword` | `None`    | **required** keyword parameter   | `def f(x:)`   |
+| `Keyword` | `Some(e)` | **optional** keyword parameter   | `def f(x: 1)` |
+
+`ParamKind` remains `Copy` with `#[default] = Required`, so no existing
+`Param { .. }` construction changes.
+
+A keyword argument at a call site is the new `Expr::KeywordArg { name,
+value, span }`. It lives **inside the existing `args` vec** of a call, after
+all positional args (`f(1, a: 2)` → `args: [IntLit(1), KeywordArg{…}]`),
+rather than a parallel `kwargs` field on every call node — keeping the
+walker/printer/backend surface area unchanged for positional callers.
+
+### Added
+
+- `ParamKind::Keyword` — a named keyword parameter variant.
+- `Expr::KeywordArg { name, value, span }` — a call-site keyword argument;
+  covered by `Expr::span()` and `Expr::kind_name()` (`"keyword-arg"`).
+- `Feature::KeywordParams` (name string `"keyword-params"`) — observed when
+  a `Keyword` param or a `KeywordArg` appears; wired into `Feature::ALL`,
+  `name`/`from_name`, and `Display`.
+- `Function::keyword_params(&self) -> Vec<&Param>` — the params with
+  `kind == Keyword`.
+- `Function::missing_keywords(&self, supplied: &[&str]) -> Vec<&Param>` —
+  the keyword params a caller omitted. For a validator-accepted call every
+  returned param carries a `default` (required keywords can never be
+  omitted), so a backend may emit each default unconditionally.
+- Validator rules:
+  - **Def-side ordering** — the canonical param list is
+    `Required* Rest? Keyword* KwRest?`. A `Keyword` before a positional/rest,
+    or after the `KwRest`, is rejected (and a positional/rest after a
+    `Keyword` symmetrically).
+  - **Call-side ordering** — every `KeywordArg` must follow all positional
+    args; a positional after a keyword is rejected.
+  - **No duplicate keyword names** within one call's args.
+  - **Known-callee name resolution** (DirectCall only) — each keyword must
+    match a `Keyword` param OR the callee declares a `**kwrest`; every
+    **required** keyword param must be supplied. IndirectCall/closure calls
+    skip resolution (signature not statically known) but still enforce
+    ordering + duplicates.
+  - **KeywordArg only in call position** — a `KeywordArg` anywhere other
+    than directly inside a call's `args` vec is rejected.
+  - **Feature gating** — using a `Keyword` param or a `KeywordArg` requires
+    the manifest to declare `Feature::KeywordParams` (same contract as
+    `DefaultParams`). A keyword param's default triggers `KeywordParams`,
+    not `DefaultParams` (that feature is specifically *positional* trailing
+    defaults).
+- Walker: `walk_expr_default` and the backend intrinsic walker recurse into
+  `KeywordArg.value` (depth-bounded like every other child).
+- Printer: a `Keyword` param renders `(x: any)` (required) /
+  `(x: any (default (int 1)))` (optional); a `KeywordArg` renders
+  `(keyword-arg name <value>)` inline in a call's arg list.
+- Unit tests (28): ParamKind::Keyword required/optional distinction;
+  `Expr::KeywordArg` span/kind-name; the two `Function` helpers; feature
+  name/round-trip; def-side ordering (valid + each rejection); call-side
+  ordering + duplicate rejection; known-callee name resolution (unknown
+  keyword with/without kwrest, missing/optional/supplied required keyword);
+  indirect-call skips resolution but keeps ordering; KeywordArg-out-of-call
+  rejection (block value, builtin arg, nested in a keyword value); keyword
+  value expression is validated; printer output; walker traversal.
+
+### Deferred / scoped
+
+- **Backends** do not yet accept `Feature::KeywordParams`; a keyword-using
+  module is rejected at the capability check until per-backend emission
+  lands (later milestones).
+- **Frontends** do not yet lower to keyword params/args (later milestones).
+- **IndirectCall / closure** keyword-name resolution stays deferred (the
+  target signature is not known statically).
+
 ## 0.13.0 — Default-param call-arity semantics (P2a; behavior-neutral)
 
 Defines the **call-arity rule for default parameters** so a `DirectCall`

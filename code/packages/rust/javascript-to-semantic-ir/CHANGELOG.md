@@ -2,6 +2,15 @@
 
 All notable changes to `javascript-to-semantic-ir` are documented here.
 
+## Unreleased
+
+### Changed
+
+- Compile-compat stub arm for the new core `semantic-ir` variant
+  `Expr::KeywordArg` (KW1) — the effect-inference pass recurses into the
+  keyword arg's inner `value` so purity analysis stays
+  conservative-correct. Real keyword-argument lowering is pending KW2–KW8.
+
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
