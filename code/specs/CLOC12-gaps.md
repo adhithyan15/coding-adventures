@@ -186,21 +186,21 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Status:** RESOLVED in CLOC12.12
 - **Upstream test:** `CodePrinterTest` lines like `assertPrint("1000000000", "1E9")`
 - **Ported file:** `closure-emitter/tests/upstream/code_printer_test.rs`
-- **Resolution:** `format_js_number` now computes both decimal and exponential forms for finite non-zero numbers and returns the shorter (ties → decimal). `format_exponential_uppercase` wraps Rust's `{:e}` formatter and uppercases the `e`. Examples: `1000000000` → `1E9`, `5000000` → `5E6`, `1.5e-10` → `1.5E-10`. Small integers and decimals stay decimal. NaN/Infinity unchanged. The `test_number_formatting_shortest_form` ignored placeholder in `tests/upstream/code_printer_test.rs` stays — to be re-port'd with real upstream `assertPrint` lines in a follow-up; the underlying emitter behaviour is in place.
+- **Resolution:** `format_js_number` now computes both decimal and exponential forms for finite non-zero numbers and returns the shorter (ties → decimal). `format_exponential_uppercase` wraps Rust's `{:e}` formatter and uppercases the `e`. Examples: `1000000000` → `1E9`, `5000000` → `5E6`, `1.5e-10` → `1.5E-10`. Small integers and decimals stay decimal. NaN/Infinity unchanged. **CLOC12.138:** the `test_number_formatting_shortest_form` placeholder is now an **active** conformance test (`1E9`, `1E6`, `1E21`, `100`→decimal tie, `0.5`, `-0`) — the follow-up re-port is done. (Residual finer optimisation not yet done: Closure drops the leading zero on `0.5` → `.5`; ours keeps `0.5`. Filed as gap-133 below.)
 
 ### gap-026 — String quote-choice optimisation not implemented
 
 - **Status:** RESOLVED in CLOC12.11
 - **Upstream test:** `CodePrinterTest` quote-choice lines
 - **Ported file:** `closure-emitter/tests/upstream/code_printer_test.rs`
-- **Resolution:** Added `choose_quote_and_escape(value)` + `escape_str_sq` helpers in `closure-emitter/src/lib.rs`. `emit_string` now picks single-quote when value contains strictly more `"` than `'` (each saved `\"` is one fewer escape); double-quote otherwise (canonical, ties picked toward double). `ascii_only` mode still always uses double — that's upstream's own invariant. Six new inline tests cover all branches. The `test_string_quote_choice_minimises_escapes` ignored placeholder in the upstream port file will be re-port'd with real upstream `assertPrint` cases in a follow-up.
+- **Resolution:** Added `choose_quote_and_escape(value)` + `escape_str_sq` helpers in `closure-emitter/src/lib.rs`. `emit_string` now picks single-quote when value contains strictly more `"` than `'` (each saved `\"` is one fewer escape); double-quote otherwise (canonical, ties picked toward double). `ascii_only` mode still always uses double — that's upstream's own invariant. Six new inline tests cover all branches. **CLOC12.138:** the `test_string_quote_choice_minimises_escapes` placeholder is now an **active** conformance test (`she said "hi"`→single-quote, `o'malley`→double, `plain`→double) — the follow-up re-port is done.
 
 ### gap-027 — Precedence-aware paren insertion not implemented
 
 - **Status:** RESOLVED in CLOC12.10 (incidental, via the same fix as gap-024)
 - **Upstream test:** `CodePrinterTest` operator-precedence lines (e.g. `a*(b+c)` keeps inner parens)
 - **Ported file:** `closure-emitter/tests/upstream/code_printer_test.rs`
-- **Resolution:** The precedence ladder added for gap-024 covers this directly. `emit_expression_inner(e, parent_prec)` checks `expr_prec(e) < parent_prec` and inserts parens when so — which means `a * (b + c)` correctly keeps the inner parens because `+` (prec 11) < `*` (prec 12). The `test_operator_precedence_inserts_inner_parens` ignored placeholder will be re-port'd with real upstream test cases in a follow-up; the emitter machinery is already in place.
+- **Resolution:** The precedence ladder added for gap-024 covers this directly. `emit_expression_inner(e, parent_prec)` checks `expr_prec(e) < parent_prec` and inserts parens when so — which means `a * (b + c)` correctly keeps the inner parens because `+` (prec 11) < `*` (prec 12). **CLOC12.138:** the `test_operator_precedence_inserts_inner_parens` placeholder is now an **active** conformance test (`a*(b+c)`, `(a+b)*c`, and `a+b*c` no-parens) — the follow-up re-port is done.
 
 ### gap-028 — VLQ encoder for source-map `mappings` field not implemented
 
@@ -1018,6 +1018,31 @@ historical context with status `RESOLVED` and a link to the fix PR.
     with no external use should be removed. A naive use-count sees `a`
     referenced by its own body and keeps it; needs reference-cycle detection
     (SCC over the binding→reference graph).
+
+## CLOC12.138 — activate the stale emitter-conformance placeholders (gap-025/026/027) + open gap-133
+
+- **Status:** three previously-`#[ignore]`d emitter conformance tests are now
+  **active** and passing; one new gap opened.
+- **What it was:** gap-025 (number shortest-form), gap-026 (string quote-choice),
+  and gap-027 (precedence-aware paren insertion) were all RESOLVED in the emitter
+  (CLOC12.10/11/12) but their `closure-emitter/tests/upstream/code_printer_test.rs`
+  placeholders were left `#[ignore]`d "to be re-port'd in a follow-up". This is
+  that follow-up: the three placeholders now carry real byte-equal assertions
+  against the emitter's actual output, converting them from documentation stubs
+  into executable conformance coverage:
+  - `test_number_formatting_shortest_form` — `1000000000`→`1E9`, `1000000`→`1E6`,
+    `1e21`→`1E21`, `100`→`100` (tie→decimal), `0.5`→`0.5`, `-0.0`→`-0`.
+  - `test_string_quote_choice_minimises_escapes` — `she said "hi"`→
+    `'she said "hi"'` (single-quote), `o'malley`→`"o'malley"`, `plain`→`"plain"`.
+  - `test_operator_precedence_inserts_inner_parens` — `a*(b+c)`, `(a+b)*c`, and
+    `a+b*c` (no parens where `*` already binds tighter).
+- **gap-133 (surfaced here)** — leading-zero drop for fractional literals.
+  Upstream Closure emits `.5` for `0.5` (and `-.5` for `-0.5`), dropping the
+  redundant leading zero; `format_js_number` keeps `0.5` because its
+  decimal-vs-exponential comparison never strips the leading `0`. A conservative
+  miss (both are valid, same-value JS), **not** a miscompile. Fix: after picking
+  the decimal spelling, strip a leading `0` before `.` (and after a `-`). Small,
+  self-contained follow-up in `format_js_number`.
   - **gap-126** — assignment-only dead var: `var a; a = 1;` (never read) should
     be removed. The analyzer counts the `a = 1` write as a reference, so `a`
     survives; needs write-vs-read reference classification so pure writes to an

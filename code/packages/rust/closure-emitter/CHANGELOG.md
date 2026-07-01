@@ -2,6 +2,31 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.18.12] - 2026-06-30
+
+### Test — activate stale CodePrinter conformance placeholders (#88, CLOC12.138)
+
+Three `#[ignore]`d placeholders in `tests/upstream/code_printer_test.rs` were
+left as documentation stubs when their underlying emitter features shipped
+(gap-025 number shortest-form in CLOC12.12, gap-026 quote-choice in CLOC12.11,
+gap-027 precedence-parens in CLOC12.10). This turns them into **active**
+byte-equal conformance tests against the emitter's actual output — no
+production code change:
+
+- `test_number_formatting_shortest_form` — `1E9`/`1E6`/`1E21` exponential
+  collapse, `100`→decimal tie, `0.5`, and `-0` sign preservation.
+- `test_string_quote_choice_minimises_escapes` — single-quote when the value has
+  more `"` than `'` (`she said "hi"` → `'she said "hi"'`), double otherwise.
+- `test_operator_precedence_inserts_inner_parens` — `a*(b+c)`, `(a+b)*c`, and
+  `a+b*c` (no parens where `*` already binds tighter).
+
+Also opened **gap-133** (CLOC12-gaps.md): the number formatter keeps `0.5`
+where upstream drops the leading zero to `.5` — a conservative miss (not a
+miscompile), tracked for a small `format_js_number` follow-up.
+
+Test-only + docs; crate version 0.18.11 → 0.18.12. Full emitter suite green
+(96 lib + 9 code_printer port, 3 unrelated placeholders still ignored).
+
 ## [0.18.11] - 2026-06-30
 
 ### Fixed — deep operator chains no longer overflow the native stack (DoS)
