@@ -710,6 +710,7 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
         ExprAst::Ceil(a) => ComputeExpr::Unary(ComputeOp::Ceil, Box::new(lower_expr(a))),
         ExprAst::Round(a) => ComputeExpr::Unary(ComputeOp::Round, Box::new(lower_expr(a))),
         ExprAst::Trunc(a) => ComputeExpr::Unary(ComputeOp::Trunc, Box::new(lower_expr(a))),
+        ExprAst::Sign(a) => ComputeExpr::Unary(ComputeOp::Sign, Box::new(lower_expr(a))),
         ExprAst::Call(f, a) => ComputeExpr::Unary(lower_named_fn(*f), Box::new(lower_expr(a))),
         ExprAst::Call2(f, a, b) => ComputeExpr::Bin(
             lower_bin_fn(*f),
@@ -2018,6 +2019,48 @@ contributes 1000000 from answer == 60 to correct
         )
         .unwrap();
         assert!(neg.ranked[0].posterior > 0.99, "{neg:?}");
+    }
+
+    #[test]
+    fn native_latex_sgn_computes_the_sign() {
+        // `\operatorname{sgn}(x)` with x=5 is +1; with x=−5 (written 0−x) is −1 — the
+        // native ComputeOp::Sign via the operator-name-juxtaposition path
+        // (`Bin(Mul, Text("sgn"), (x))`), the same shape as `\operatorname{trunc}`.
+        let pos = crate::compile_and_decide(
+            "observe x(5)\n\
+             let answer = latex \"$\\operatorname{sgn}(x)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 1 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(pos.ranked[0].posterior > 0.99, "{pos:?}");
+        let neg = crate::compile_and_decide(
+            "observe x(5)\n\
+             let answer = latex \"$\\operatorname{sgn}(0 - x)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == -1 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(neg.ranked[0].posterior > 0.99, "{neg:?}");
+    }
+
+    #[test]
+    fn native_latex_sgn_of_a_net_difference_gives_the_direction() {
+        // `\operatorname{sgn}(a - b)` with a=3, b=8 is sgn(−5) = −1 — the sign of a net
+        // quantity, computed as a single node. Confirms the adapter passes the inner
+        // difference through to ComputeOp::Sign (which returns a dimensionless ±1).
+        let d = crate::compile_and_decide(
+            "observe a(3)\n\
+             observe b(8)\n\
+             let answer = latex \"$\\operatorname{sgn}(a - b)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == -1 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
     }
 
     #[test]

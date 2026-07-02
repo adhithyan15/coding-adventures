@@ -188,6 +188,14 @@ pub enum ExprAst {
     /// operator-name juxtaposition (`Text("trunc")` implicitly multiplied by its
     /// parenthesised argument).
     Trunc(Box<ExprAst>),
+    /// The **sign** function `sgn(x)` — `−1`/`0`/`+1` for a negative/zero/positive
+    /// operand. Lowers to the native `ComputeOp::Sign`, which — unlike the
+    /// dimension-preserving rounding ops — collapses the result to a dimensionless
+    /// `Scalar` (a sign is a pure number) while accepting a dimensioned operand.
+    /// Produced by the `latex "…"` adapter from a `\operatorname{sgn}(x)` — the
+    /// operator-name juxtaposition (`Text("sgn")` implicitly multiplied by its
+    /// parenthesised argument), exactly like `\operatorname{trunc}`.
+    Sign(Box<ExprAst>),
     /// A named **transcendental** function applied to one argument
     /// (`\sin(x)`, `\ln(x)`, `\exp(x)`, …). Lowers to the matching native
     /// transcendental `ComputeOp` (`Scalar → Scalar`, exact dropped). Produced by

@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.33.0] - 2026-07-02 — `\operatorname{sgn}` sign function in `latex "…"`
+
+### Added
+
+- `latex "\operatorname{sgn}(x)"` now computes the **sign** `sgn(x)` (`−1`/`0`/`+1`).
+  New `ExprAst::Sign` lowers to the new `logic_engine::ComputeOp::Sign`. `\operatorname`
+  is a TEXT command, so `\operatorname{sgn}(x)` parses as the operator-name
+  juxtaposition `Bin(Mul, Text("sgn"), (x))` — the same shape the adapter already
+  recognises for `\operatorname{trunc}` — and lowers via `operator_name_is(lhs, "sgn")`.
+  Unlike the rounding ops, `sgn` collapses to a dimensionless `Scalar` while accepting a
+  dimensioned operand, so `\operatorname{sgn}(a - b)` (the sign of a net quantity)
+  computes to a clean ±1. +adapter and lower unit tests.
+
 ## [0.32.0] - 2026-07-02 — `\bmod` / `\pmod` modulo in `latex "…"`
 
 ### Added

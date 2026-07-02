@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.37.0] - 2026-07-02 — sign function (`Sign`)
+
+### Added
+
+- `ComputeOp::Sign` — the **mathematical** sign `sgn(x)`: `−1`/`0`/`+1` for a
+  negative/zero/positive operand (NOT `f64::signum`, which returns `±1` for zero).
+  A unary op folded into the **existing** `eval_unary` arm (no new recursion frame),
+  but dimensionally in a category of its own: a sign is a pure number, so `sgn`
+  **accepts any input dimension and collapses the result to `Scalar`** — unlike the
+  dimension-preserving rounding family (`|dollars| = dollars`) and unlike the
+  transcendentals (which reject a dimensioned operand). This makes the sign of a
+  dimensioned difference (`sgn(pressure_a − pressure_b)`, a net pressure/charge/trend
+  direction) a clean ±1. The result is exact (`±1`/`0` is rational), so the exact
+  sidecar is the sign of the numerator carried as `q/1`. A NaN operand is produced
+  explicitly so the shared non-finite guard rejects it rather than laundering it to
+  `0`. `symbol()` renders it `"sgn"`. Lowered from a LaTeX `\operatorname{sgn}(x)`
+  (adj-lang's `latex "…"` surface, operator-name juxtaposition like
+  `\operatorname{trunc}`). +4 unit tests (pos/neg/zero scalar,
+  dimensioned-operand-collapses-to-scalar, exact-sign sidecar, sign of a net
+  difference).
+
 ## [0.36.0] - 2026-07-02 — binary modulo (`Mod`)
 
 ### Added

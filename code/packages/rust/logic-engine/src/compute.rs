@@ -255,6 +255,21 @@ pub enum ComputeOp {
     Cot,
     Sec,
     Csc,
+    /// The **sign** function `sgn(x)` — `−1` for a negative operand, `0` for zero,
+    /// `+1` for a positive one. **Unary**, but dimensionally in a category of its own:
+    /// the sign of a quantity is a pure number (`sgn(−5 mmHg) = −1`, dimensionless),
+    /// so — unlike the dimension-*preserving* rounding family (`|dollars| = dollars`)
+    /// and unlike the transcendentals (which *reject* a dimensioned operand) — `sgn`
+    /// **accepts any dimension and collapses the result to `Scalar`**. That makes the
+    /// sign of a dimensioned difference (a net pressure, a net charge, a trend
+    /// direction) computable: `sgn(pressure_a − pressure_b)` is a clean ±1. It is exact
+    /// (`±1`/`0` is rational), so the exact sidecar is the sign of the numerator,
+    /// carried as `q/1`. Lowered from a LaTeX `\operatorname{sgn}(x)` — the
+    /// operator-name juxtaposition surface (like `\operatorname{trunc}`; adj-lang's
+    /// `latex "…"`). Note this is the **mathematical** sign (`sgn(0) = 0`), NOT
+    /// `f64::signum` (which returns `±1` for zero); a NaN operand is produced explicitly
+    /// so the shared non-finite guard rejects it rather than laundering it to `0`.
+    Sign,
     /// Binary **minimum** / **maximum** — `min(a, b)` / `max(a, b)` over exactly
     /// TWO operands. Unlike the aggregation [`ComputeOp::Min`]/[`ComputeOp::Max`]
     /// (which reduce *every* observation of a single slot), these are honest
@@ -330,6 +345,7 @@ impl ComputeOp {
             ComputeOp::Cot => "cot",
             ComputeOp::Sec => "sec",
             ComputeOp::Csc => "csc",
+            ComputeOp::Sign => "sgn",
             ComputeOp::Min2 => "min",
             ComputeOp::Max2 => "max",
             ComputeOp::Gcd => "gcd",
@@ -894,6 +910,20 @@ fn eval_unary(
         ComputeOp::Cot => value.cos() / value.sin(),
         ComputeOp::Sec => 1.0 / value.cos(),
         ComputeOp::Csc => 1.0 / value.sin(),
+        // The MATHEMATICAL sign: sgn(0) = 0 (NOT `f64::signum`, which returns ±1 for
+        // zero). A NaN operand yields NaN explicitly so the non-finite guard below
+        // rejects it, rather than the `else` branch laundering it to a clean `0`.
+        ComputeOp::Sign => {
+            if value.is_nan() {
+                f64::NAN
+            } else if value > 0.0 {
+                1.0
+            } else if value < 0.0 {
+                -1.0
+            } else {
+                0.0
+            }
+        }
         _ => {
             return Err(ComputeError::MalformedExpr {
                 detail: "non-unary operator in unary position",
@@ -953,11 +983,15 @@ fn eval_unary(
         // den > 0 (no `div_euclid`, which would floor toward −∞). The result is an
         // integer, carried as q/1.
         ComputeOp::Trunc => ExactRational::new(r.num / r.den, 1),
+        // sgn(num/den) = sign of the numerator (den > 0 doesn't affect the sign);
+        // `i64::signum` is the mathematical sign (0 → 0), carried as q/1.
+        ComputeOp::Sign => ExactRational::new(r.num.signum(), 1),
         _ => None,
     });
     // Rounding preserves the operand's dimension; a transcendental collapses to a
-    // pure number (`Scalar`).
-    let result_dim = if transcendental {
+    // pure number (`Scalar`); `sgn` also collapses to `Scalar` (a sign is
+    // dimensionless) but — unlike the transcendentals — accepts a dimensioned operand.
+    let result_dim = if transcendental || op == ComputeOp::Sign {
         Dimension::Scalar
     } else {
         dim
@@ -1487,6 +1521,92 @@ mod tests {
         )
         .unwrap_err();
         assert!(matches!(err, ComputeError::DimensionMismatch { .. }));
+    }
+
+    #[test]
+    fn sign_of_positive_negative_and_zero_scalars() {
+        // sgn(5) = 1, sgn(−5) = −1, sgn(0) = 0. Zero maps to zero — the MATHEMATICAL
+        // sign, NOT `f64::signum` (which returns +1 for zero). Result is a Scalar.
+        for (input, want) in [(5.0, 1.0), (-5.0, -1.0), (0.0, 0.0)] {
+            let d = compute(
+                "s",
+                &ComputeExpr::Unary(ComputeOp::Sign, Box::new(ComputeExpr::Lit(input))),
+                &kb_with(vec![]),
+            )
+            .unwrap();
+            assert_eq!(d.value, want, "sgn({input})");
+            assert_eq!(d.dim, Dimension::Scalar);
+        }
+    }
+
+    #[test]
+    fn sign_accepts_a_dimensioned_operand_and_collapses_to_scalar() {
+        // sgn(−3 mmol) = −1 (dimensionless). Unlike a transcendental, `sgn` does NOT
+        // reject a dimensioned operand — the sign of a quantity is a pure number — so
+        // the result is a Scalar −1, not a mmol and not a DimensionMismatch error.
+        let kb = kb_with(vec![quantity("a", -3, "mmol")]);
+        let d = compute(
+            "s",
+            &ComputeExpr::Unary(ComputeOp::Sign, Box::new(refexpr("a"))),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(d.value, -1.0);
+        assert_eq!(d.dim, Dimension::Scalar);
+    }
+
+    #[test]
+    fn sign_preserves_the_exact_sign_sidecar() {
+        // sgn(−7/2) = −1 and sgn(7/2) = +1, both exact (a sign is ±1, rational).
+        let neg = compute(
+            "s",
+            &ComputeExpr::Unary(
+                ComputeOp::Sign,
+                Box::new(bin(
+                    ComputeOp::Div,
+                    ComputeExpr::Lit(-7.0),
+                    ComputeExpr::Lit(2.0),
+                )),
+            ),
+            &kb_with(vec![]),
+        )
+        .unwrap();
+        assert_eq!(neg.value, -1.0);
+        assert_eq!(neg.exact, ExactRational::new(-1, 1));
+        let pos = compute(
+            "s",
+            &ComputeExpr::Unary(
+                ComputeOp::Sign,
+                Box::new(bin(
+                    ComputeOp::Div,
+                    ComputeExpr::Lit(7.0),
+                    ComputeExpr::Lit(2.0),
+                )),
+            ),
+            &kb_with(vec![]),
+        )
+        .unwrap();
+        assert_eq!(pos.value, 1.0);
+        assert_eq!(pos.exact, ExactRational::new(1, 1));
+    }
+
+    #[test]
+    fn sign_of_a_net_difference_gives_its_direction() {
+        // sgn(a − b) with a = 3 mmol, b = 8 mmol is sgn(−5 mmol) = −1: the DIRECTION of
+        // a net (dimensioned) quantity, computed as a single Scalar node. This is the
+        // whole point of accepting a dimensioned operand.
+        let kb = kb_with(vec![quantity("a", 3, "mmol"), quantity("b", 8, "mmol")]);
+        let d = compute(
+            "s",
+            &ComputeExpr::Unary(
+                ComputeOp::Sign,
+                Box::new(bin(ComputeOp::Sub, refexpr("a"), refexpr("b"))),
+            ),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(d.value, -1.0);
+        assert_eq!(d.dim, Dimension::Scalar);
     }
 
     #[test]

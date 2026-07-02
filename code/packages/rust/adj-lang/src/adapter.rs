@@ -973,6 +973,15 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
         MathExpr::Bin(BinOp::Mul, lhs, rhs) if operator_name_is(lhs, "trunc") => {
             Ok(ExprAst::Trunc(Box::new(latex_math_to_expr_ast(rhs, source)?)))
         }
+        // `\operatorname{sgn}(x)` — the sign function. Same operator-name-juxtaposition
+        // shape as `\operatorname{trunc}` above (`\operatorname{…}` is a TEXT command,
+        // so `\operatorname{sgn}(x)` parses as `Bin(Mul, Text("sgn"), (x))`). Lowers to
+        // the native `ComputeOp::Sign` (via `ExprAst::Sign`), which collapses the result
+        // to a dimensionless `Scalar` (a sign is ±1/0) while accepting a dimensioned
+        // operand — so `\operatorname{sgn}(a - b)` (the sign of a net quantity) computes.
+        MathExpr::Bin(BinOp::Mul, lhs, rhs) if operator_name_is(lhs, "sgn") => {
+            Ok(ExprAst::Sign(Box::new(latex_math_to_expr_ast(rhs, source)?)))
+        }
         // `a \bmod b` / `a \pmod{b}` — the modulo operator. `\bmod`/`\pmod` are not in
         // the frontend's operator tables, so they lower to a bare `Symbol("bmod")` /
         // `Symbol("pmod")` and the whole expression parses as a LEFT-associated implicit
