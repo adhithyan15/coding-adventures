@@ -445,7 +445,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // Resolution is `resolveMethod` → explicit `Map.get` on the
     // `(class, method)` key; a name like `constructor` simply misses.
     if (recv instanceof SirInstance) {
-      const fn = resolveMethod(methodTable, recv.sirClass, name);
+      const fn = resolveMethod(methodTable, recv.sirClass, name, includedModules);
       if (fn === undefined) {
         raiseError("NoMethodError",
           "undefined method `" + name + "` for an instance of `" +
@@ -727,17 +727,114 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     classMethodTable.set(methodKey(cls, name), fn);
   }
 
-  // Resolve `name` on `cls` or any ancestor, walking the SAME `ancestry`
-  // table the exception runtime uses.  `seen` guards a malformed cyclic
-  // hierarchy so the walk terminates instead of looping forever.  Lookup
-  // is `table.get(methodKey(cur, name))` — explicit data, never `[name]`.
-  function resolveMethod(table, cls, name) {
-    let cur = cls;
+  // ── mixins (MX4): `include` / `extend` ─────────────────────────────
+  //
+  // A *module* registers its `def`s exactly like a class (via `defMethod`
+  // keyed by the module name — an "owner" is now a class OR a module).
+  // Two per-owner association lists connect an owner to the modules mixed
+  // into it, in Ruby's include order:
+  //
+  //   • `includedModules[owner] = [M1, M2, …]` — `include M` appends `M`.
+  //     Ruby searches the MOST-RECENTLY-included module first, so the MRO
+  //     walk iterates this list in REVERSE.  The module's *instance*
+  //     methods become instance methods of the owner.
+  //   • `extendedModules[owner] = [M1, M2, …]` — `extend M` appends `M`.
+  //     The module's *instance* methods become CLASS ("singleton")
+  //     methods of the owner (callable as `Owner.method`).
+  //
+  // SECURITY (the same bar as the method tables): both are real `Map`s
+  // keyed on the owner *name string*, holding arrays of module *name
+  // strings*.  Nothing here is `Object`-property access, so a module or
+  // owner literally named `__proto__` / `constructor` is inert data — a
+  // Map key / array element, never a prototype write or a host callable.
+  const includedModules = new Map();
+  const extendedModules = new Map();
+  // Append `mod` to `owner`'s list in `map`, preserving include order and
+  // idempotently allowing a re-include (Ruby keeps the first position; a
+  // repeat is harmless — the MRO walk de-dupes with its `seen` set).
+  function appendModule(map, owner, mod) {
+    let list = map.get(owner);
+    if (list === undefined) { list = []; map.set(owner, list); }
+    list.push(mod);
+  }
+  // `include M` inside `class C` (or module) → `includeModule("C", "M")`.
+  function includeModule(owner, mod) { appendModule(includedModules, owner, mod); }
+  // `extend M` → `extendModule("C", "M")` (M's methods become CLASS methods).
+  function extendModule(owner, mod) { appendModule(extendedModules, owner, mod); }
+
+  // Resolve `name` on `cls` following Ruby's Method Resolution Order (MRO),
+  // walking the SAME `ancestry` table the exception runtime uses AND the
+  // per-owner module lists.  For each class in the superclass chain the
+  // walk checks, in order:
+  //
+  //   1. the class's OWN entry in `ownerTable` (a class-defined method
+  //      SHADOWS a mixed module method — class-first MRO);
+  //   2. its mixed-in modules, MOST-RECENT-FIRST (reverse of mix order),
+  //      each recursively expanded so a module's OWN `include`d modules are
+  //      searched too (depth-first);
+  //   3. then it ascends to the superclass and repeats.
+  //
+  // Two tables split the class's own methods from a MODULE's methods:
+  //   • instance dispatch: `ownerTable = moduleTable = methodTable`, and
+  //     `topModules = includedModules` — a class and its included modules
+  //     both live in `methodTable`.
+  //   • class-method dispatch (`extend`): `ownerTable = classMethodTable`
+  //     (the class's own `def self.m`), `moduleTable = methodTable` (a
+  //     module's plain `def foo` — `extend` promotes those to class
+  //     methods), and `topModules = extendedModules`.
+  // Below the top owner we always follow a module's `includedModules` and
+  // read from `moduleTable`, because a module mixes in *instance* methods
+  // regardless of whether the top owner included or extended it.
+  //
+  // A single shared `seen` set spans the WHOLE walk, so a diamond include
+  // (a module reached via two paths) is checked ONCE at its earliest
+  // position, and a cyclic hierarchy / self-including module terminates
+  // instead of looping.  Every lookup is `table.get(methodKey(owner,
+  // name))` — explicit data, never `[name]` / reflection.
+  function resolveMethod(ownerTable, cls, name, topModules) {
     const seen = new Set();
+    // Search a MODULE `mod` (and, depth-first, its own included modules).
+    // A module's methods always live in `methodTable` (instance methods).
+    function searchModule(mod) {
+      if (mod === undefined || mod === null || seen.has(mod)) {
+        return undefined;
+      }
+      seen.add(mod);
+      const own = methodTable.get(methodKey(mod, name));
+      if (own !== undefined) { return own; }
+      const mods = includedModules.get(mod);
+      if (mods !== undefined) {
+        for (let i = mods.length - 1; i >= 0; i--) {
+          const fn = searchModule(mods[i]);
+          if (fn !== undefined) { return fn; }
+        }
+      }
+      return undefined;
+    }
+    // Search a CLASS `owner`: its own table first, then its top-level
+    // mixed-in modules (most-recently-mixed wins → reverse iteration).
+    function searchOwner(owner) {
+      if (owner === undefined || owner === null || seen.has(owner)) {
+        return undefined;
+      }
+      seen.add(owner);
+      const own = ownerTable.get(methodKey(owner, name));
+      if (own !== undefined) { return own; }
+      const mods = topModules === undefined ? undefined : topModules.get(owner);
+      if (mods !== undefined) {
+        for (let i = mods.length - 1; i >= 0; i--) {
+          const fn = searchModule(mods[i]);
+          if (fn !== undefined) { return fn; }
+        }
+      }
+      return undefined;
+    }
+    // Walk the superclass chain; the `ancestry` edge itself is also
+    // `seen`-guarded above, so a cyclic `ancestry` map still terminates.
+    let cur = cls;
     while (cur !== undefined && cur !== null && !seen.has(cur)) {
-      const fn = table.get(methodKey(cur, name));
+      const fn = searchOwner(cur);
       if (fn !== undefined) { return fn; }
-      seen.add(cur);
       cur = ancestry[cur];
     }
     return undefined;
@@ -776,9 +873,28 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // valid: `new` just yields a bare instance.
   function callNew(cls, ...args) {
     const obj = newInstance(cls);
-    const init = resolveMethod(methodTable, cls, "initialize");
+    const init = resolveMethod(methodTable, cls, "initialize", includedModules);
     if (init !== undefined) { applyWithSelf(init, obj, args); }
     return obj;
+  }
+
+  // `Klass.m(args…)` on a CONSTANT receiver → `callClassMethod("Klass",
+  // "m", args…)`.  Resolves through the CLASS-method MRO: the class's own
+  // `def self.m` table first, then any `extend`ed modules (most-recently-
+  // extended first), ascending the superclass chain — the class-method
+  // analogue of instance dispatch, so `extend M` makes `M`'s instance
+  // methods callable as `Klass.m`.  `self` is bound to the class-name
+  // string for the duration (a module's method body may read `self`),
+  // mirroring Ruby where `self` inside a class method is the class.  A
+  // miss is a NoMethodError, matching Ruby's `undefined method` for a
+  // class receiver.
+  function callClassMethod(cls, name, ...args) {
+    const fn = resolveMethod(classMethodTable, cls, name, extendedModules);
+    if (fn === undefined) {
+      raiseError("NoMethodError",
+        "undefined method `" + name + "` for class `" + cls + "`");
+    }
+    return applyWithSelf(fn, cls, args);
   }
 
   // `super(args…)` inside method `method` of class `cls` →
@@ -787,7 +903,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // it with the CURRENT `self` still bound — `super` reuses the live
   // receiver.  A missing super method is a NoMethodError, matching Ruby.
   function callSuper(method, cls, ...args) {
-    const fn = resolveMethod(methodTable, ancestry[cls], method);
+    const fn = resolveMethod(methodTable, ancestry[cls], method, includedModules);
     if (fn === undefined) {
       raiseError("NoMethodError",
         "super: no superclass method `" + method + "` for `" + cls + "`");
@@ -849,6 +965,8 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     SirInstance, newInstance, callNew, callSuper,
     defMethod, defClassMethod, currentSelf,
     ivarGet, ivarSet, cvarGet, cvarSet,
+    // Mixins (MX4): include/extend registration + class-method dispatch.
+    includeModule, extendModule, callClassMethod,
   };
 })();
 "##;
@@ -886,6 +1004,8 @@ mod tests {
             "class SirInstance", "callNew", "callSuper",
             "defMethod", "defClassMethod", "currentSelf",
             "ivarGet", "ivarSet", "cvarGet", "cvarSet",
+            // Mixins (MX4): include/extend + class-method dispatch.
+            "includeModule", "extendModule", "callClassMethod",
         ] {
             assert!(RUNTIME.contains(needed), "runtime missing `{needed}`");
         }
@@ -900,7 +1020,8 @@ mod tests {
         // data (a Map miss), not a reflective gadget.
         assert!(RUNTIME.contains("const methodTable = new Map();"));
         assert!(RUNTIME.contains(r#"return cls + "\x00" + name;"#));
-        assert!(RUNTIME.contains("table.get(methodKey(cur, name))"));
+        assert!(RUNTIME.contains("ownerTable.get(methodKey(owner, name))"));
+        assert!(RUNTIME.contains("methodTable.get(methodKey(mod, name))"));
         // No dynamic-code gadget is ever *invoked*: `new Function(` and
         // `eval(` as calls appear nowhere in the runtime (the phrase
         // "new Function" occurs only in the SECURITY comment prose, so we
@@ -910,6 +1031,12 @@ mod tests {
         // The ivar / instance bags are prototype-less, so a `"__proto__"`
         // name is data and cannot poison a prototype chain.
         assert!(RUNTIME.contains("this.ivars = Object.create(null);"));
+        // MX4: the per-owner mixin lists are real `Map`s (not `{}`), keyed
+        // by the owner NAME string and holding module NAME strings — so a
+        // module/owner named `__proto__` is inert data, never a prototype
+        // write, matching the method-table bar.
+        assert!(RUNTIME.contains("const includedModules = new Map();"));
+        assert!(RUNTIME.contains("const extendedModules = new Map();"));
     }
 
     #[test]

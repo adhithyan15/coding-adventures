@@ -31,6 +31,7 @@ async function installEngramHost(): Promise<void> {
   }
 
   installEngramMosaicHost(target, await response.arrayBuffer(), {
+    demo: true,
     deckId: selectedDeckId,
     now: () => Date.now(),
     onHostIntent: (intent: HostIntent, result: HostResult) => {

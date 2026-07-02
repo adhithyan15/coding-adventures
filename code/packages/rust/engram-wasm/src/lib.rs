@@ -79,6 +79,16 @@ pub extern "C" fn reset() {
 }
 
 #[no_mangle]
+pub extern "C" fn reset_demo() {
+    SESSION.with(|session| *session.borrow_mut() = EngramSession::new_demo());
+}
+
+#[no_mangle]
+pub extern "C" fn demo_snapshot() -> *mut u8 {
+    pack(EngramSession::demo_snapshot_json().to_string())
+}
+
+#[no_mangle]
 pub extern "C" fn snapshot() -> *mut u8 {
     pack(SESSION.with(|session| session.borrow().snapshot()))
 }
@@ -343,6 +353,39 @@ mod tests {
         );
         assert!(
             props.contains(r#""browser-result-card-ids":["card"]"#),
+            "{props}"
+        );
+    }
+
+    #[test]
+    fn abi_demo_session_exposes_lit_up_app_props() {
+        reset_demo();
+
+        let snapshot = take(demo_snapshot());
+        assert!(snapshot.contains(r#""id": "tamil-script""#), "{snapshot}");
+        assert!(snapshot.contains("Tamil::Script and Roots"), "{snapshot}");
+
+        let props = call_deck_now(engram_app_props, "", NOW);
+        assert!(props.contains(r#""ok":true"#), "{props}");
+        assert!(
+            props.contains(r#""deck-name":"Tamil::Script and Roots""#),
+            "{props}"
+        );
+        assert!(props.contains(r#""deck-total-value":"2""#), "{props}");
+        assert!(
+            props.contains(r#""collection-note-count-value":"5""#),
+            "{props}"
+        );
+        assert!(
+            props.contains(
+                r#""deck-names":["Tamil::Script and Roots","Hindi::Devanagari","Kannada::Script","Spanish::Latin Roots"]"#
+            ),
+            "{props}"
+        );
+        assert!(
+            props.contains(
+                r#""browser-result-card-ids":["card-tamil-amma","card-tamil-uyir","card-hindi-namaste","card-kannada-amma","card-spanish-hablar"]"#
+            ),
             "{props}"
         );
     }

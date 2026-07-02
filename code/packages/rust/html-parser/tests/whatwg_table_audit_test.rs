@@ -5,6 +5,12 @@ use serde::Deserialize;
 use std::collections::{BTreeMap, HashMap};
 
 const TREE_CONSTRUCTION_SMOKE: &str = include_str!("fixtures/html5lib-tree-construction-smoke.dat");
+const WHATWG_BLOCK_BOUNDARY_AUDIT: &str = include_str!("fixtures/whatwg-block-boundary-audit.json");
+const WHATWG_FORMATTING_AUDIT: &str = include_str!("fixtures/whatwg-formatting-audit.json");
+const WHATWG_FORM_INTERACTIVE_AUDIT: &str =
+    include_str!("fixtures/whatwg-form-interactive-audit.json");
+const WHATWG_LEGACY_ELEMENT_AUDIT: &str = include_str!("fixtures/whatwg-legacy-element-audit.json");
+const WHATWG_PARAGRAPH_AUDIT: &str = include_str!("fixtures/whatwg-paragraph-audit.json");
 const WHATWG_TABLE_AUDIT: &str = include_str!("fixtures/whatwg-table-audit.json");
 const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
     ("adoption01-dat-6", "foster-parenting"),
@@ -15,6 +21,35 @@ const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
     ("tricky01-dat-8", "cell-boundary"),
 ];
 const DUPLICATE_FOSTERED_NOBR_ROWS: &[(&str, &str)] = &[("tests26-dat-4", "tests26-dat-1251")];
+const INSANELY_BADLY_NESTED_REPAIR_CASE_ID: &str = "tricky01-dat-8";
+const INSANELY_BADLY_NESTED_REPAIR_SUITES: &[(&str, &str, &str)] = &[
+    (
+        "block-boundary",
+        WHATWG_BLOCK_BOUNDARY_AUDIT,
+        "block-table-boundary",
+    ),
+    (
+        "formatting",
+        WHATWG_FORMATTING_AUDIT,
+        "interactive-formatting-boundary",
+    ),
+    (
+        "form-interactive",
+        WHATWG_FORM_INTERACTIVE_AUDIT,
+        "interactive-formatting",
+    ),
+    (
+        "legacy-element",
+        WHATWG_LEGACY_ELEMENT_AUDIT,
+        "tricky-parser-recovery",
+    ),
+    (
+        "paragraph",
+        WHATWG_PARAGRAPH_AUDIT,
+        "paragraph-table-boundary",
+    ),
+    ("table", WHATWG_TABLE_AUDIT, "cell-boundary"),
+];
 
 #[derive(Debug, Deserialize)]
 struct TableAuditSuite {
@@ -28,6 +63,19 @@ struct TableAuditSuite {
 
 #[derive(Debug, Deserialize)]
 struct TableAuditCase {
+    id: String,
+    source: String,
+    axis: String,
+    reason: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct GenericAuditSuite {
+    cases: Vec<GenericAuditCase>,
+}
+
+#[derive(Debug, Deserialize)]
+struct GenericAuditCase {
     id: String,
     source: String,
     axis: String,
@@ -169,8 +217,71 @@ fn whatwg_table_audit_keeps_duplicate_fostered_nobr_rows_in_lockstep() {
     }
 }
 
+#[test]
+fn whatwg_table_audit_keeps_insanely_badly_nested_repair_case_cross_axis() {
+    let smoke_cases = parse_tree_construction_cases(TREE_CONSTRUCTION_SMOKE)
+        .into_iter()
+        .map(|case| (case.source.clone(), case))
+        .collect::<HashMap<_, _>>();
+    let mut shared_source = None;
+
+    for (suite_name, fixture, expected_axis) in INSANELY_BADLY_NESTED_REPAIR_SUITES {
+        let audit_case = generic_audit_case(fixture, suite_name);
+        assert_eq!(
+            audit_case.axis, *expected_axis,
+            "`{suite_name}` should keep the insanely badly nested repair row on its focused axis"
+        );
+        assert!(
+            !audit_case.reason.is_empty(),
+            "`{suite_name}` should keep a reason for the repair-bearing row"
+        );
+
+        if let Some(source) = &shared_source {
+            assert_eq!(
+                audit_case.source, *source,
+                "`{suite_name}` should point at the same html5lib row as the other repair axes"
+            );
+        } else {
+            shared_source = Some(audit_case.source);
+        }
+    }
+
+    let shared_source = shared_source.expect("repair evidence should include at least one suite");
+    let source_case = smoke_cases
+        .get(&shared_source)
+        .unwrap_or_else(|| panic!("case `{shared_source}` should exist in smoke fixture"));
+    assert!(
+        source_case
+            .data
+            .contains("This page contains an insanely badly-nested tag sequence."),
+        "repair evidence should stay tied to the html5lib badly nested table case"
+    );
+
+    let actual = actual_dom_dump_for_tree_case(source_case)
+        .unwrap_or_else(|error| panic!("case `{shared_source}` parse failed: {error}"));
+    assert_eq!(
+        actual, source_case.document,
+        "cross-axis repair evidence case `{shared_source}` failed for input {:?}",
+        source_case.data
+    );
+}
+
 fn load_suite() -> TableAuditSuite {
     serde_json::from_str(WHATWG_TABLE_AUDIT).expect("WHATWG table audit fixture should parse")
+}
+
+fn generic_audit_case(fixture: &str, suite_name: &str) -> GenericAuditCase {
+    let suite = serde_json::from_str::<GenericAuditSuite>(fixture)
+        .unwrap_or_else(|error| panic!("`{suite_name}` audit fixture should parse: {error}"));
+    suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == INSANELY_BADLY_NESTED_REPAIR_CASE_ID)
+        .unwrap_or_else(|| {
+            panic!(
+                "`{suite_name}` should audit repair case `{INSANELY_BADLY_NESTED_REPAIR_CASE_ID}`"
+            )
+        })
 }
 
 fn assert_axis_count(suite: &TableAuditSuite, axis: &str, minimum: usize) {

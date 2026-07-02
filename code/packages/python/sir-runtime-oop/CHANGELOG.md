@@ -2,6 +2,32 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.11] - 2026-07-02
+
+### Added — mixins: `include` / `extend` + Ruby MRO (MX2 of sir-mixins)
+
+Ruby modules mixed into a class now resolve correctly. A module registers its
+`def`s in the same method table as a class (owner key = module name, via the
+existing `__def_method__`); `include`/`extend` wire them in. See
+[`code/specs/sir-mixins.md`](../../../specs/sir-mixins.md).
+
+- **`include_module(owner, module)`** (emitted `__include__`) — appends `module`
+  to the owner's included-modules list (`_included_modules[owner]`) in **include
+  order**.
+- **`extend_module(owner, module)`** (emitted `__extend__`) — copies the
+  module's instance methods into the owner's **class-method** table, so they
+  answer as `Owner.method` (singleton methods).
+- **Ruby MRO** — instance-method resolution now walks the linearised order
+  **class → its included modules (reverse / most-recent-first, depth-first) →
+  superclass → its modules → … → Object**, via the new `_owner_mro` helper. A
+  diamond include resolves the shared module **once** (first occurrence fixes its
+  position); the walk is cycle-guarded by a `seen` set, so a self-including
+  module terminates. A class's own method **shadows** an included module's; a
+  module method **shadows** the superclass's; the most-recently-included module
+  wins among modules. Dispatch stays explicit-table only — never reflection on a
+  source-derived name (the C3 RCE lesson).
+- `reset_oop` clears the new `_included_modules` table.
+
 ## [0.1.10] - 2026-07-01
 
 ### Changed — typed runtime errors (T1 of sir-typed-runtime-errors)

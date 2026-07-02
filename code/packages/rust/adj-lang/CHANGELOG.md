@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.31.0] - 2026-07-02 — n-ary `\min`/`\max`/`\gcd`/`\lcm` in `latex "…"`
+
+### Changed
+
+- `\min`/`\max`/`\gcd`/`\lcm` now accept **two OR MORE** comma-separated arguments
+  (previously exactly two). Because these ops are associative, an n-ary call
+  **left-folds** into a chain of the existing binary `ExprAst::Call2` —
+  `\min(a, b, c)` becomes `min(min(a, b), c)` — so it reuses the native
+  `ComputeOp::Min2`/`Max2`/`Gcd`/`Lcm` with **no engine change** and no n-ary op.
+  A two-arg call is unchanged (a single `Call2`). `latex_two_args` (exactly-two)
+  became `latex_nary_args` (≥ 2). A single-arg `\min(a)` is still a clean
+  `UnsupportedLatexMath` error.
+
+### Tests
+
+- n-ary lower test: `\min(a,b,c,d)=2`, `\max(a,b,c,d)=9`, `\gcd(24,36,60)=12`,
+  `\lcm(2,3,4)=12`. The wrong-arity test now asserts only the one-arg rejection
+  (three-plus args are valid).
+
 ## [0.30.0] - 2026-07-02 — `\operatorname{trunc}(x)` truncation in `latex "…"`
 
 ### Added

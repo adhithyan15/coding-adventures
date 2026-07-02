@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.7.0 — Ruby mixins: `include` / `extend` emit arms (MX3)
+
+Part of the `sir-mixins` cascade (spec `code/specs/sir-mixins.md`). Adds the
+TypeScript emit arms for the mixin builtins the Ruby frontend (MX1) lowers, so
+the emitted code drives the `@coding-adventures/sir-runtime-oop` MX3 runtime
+(`0.1.11`). Class/method/module names all arrive as `StrLit`s and emit through
+the normal expression path (`quote_ts_string`) — no source-derived name is ever
+interpolated raw (the C3 RCE lesson).
+
+### Added
+
+- **`__include__("Owner", "M")` → `__SirOop.includeModule("Owner", "M")`** and
+  **`__extend__("Owner", "M")` → `__SirOop.extendModule("Owner", "M")`** — the
+  two mixin directives now route to the OOP runtime's include-list and
+  class-method-copy helpers.
+- **`__class_method__("Class", "method", …args)` →
+  `__SirOop.callClassMethod(...)`** (issue #59, mirrored from the Python
+  backend, which already had it). Previously a `Foo.bar` class-method call fell
+  through to the generic `__Sir.callBuiltin("__class_method__", […])` dispatch
+  on the TS side; it now routes to the OOP runtime, which is what makes a
+  method mixed in via `extend M` callable as `Owner.method`.
+- The OOP-runtime import gate now also fires on `__include__`, `__extend__`,
+  and `__class_method__`.
+- Execution proofs in `run_with_node.rs` (MX3): five tests lower real Ruby
+  mixin programs → TypeScript → `node`, proving an included module method is
+  callable, a class method shadows the module's, the most-recently-included
+  module wins, a diamond include resolves once, and `extend` makes a module
+  method a class method. Plus emit-shape unit tests for the three new arms.
+
 ## 0.6.0 — `puts` builtin (Ruby semantics)
 
 ### Added

@@ -53,7 +53,8 @@ use coding_adventures_javascript_ast::{
         VariableDeclaration, VariableDeclarator,
     },
     expression::{
-        ArrayExpression, AssignmentExpression, AssignmentOperator, AssignmentTarget,
+        ArrayExpression, ArrowBody, ArrowFunctionExpression, AssignmentExpression,
+        AssignmentOperator, AssignmentTarget,
         BigIntLiteral, BinaryExpression, BinaryOperator, BooleanLiteral, CallExpression,
         ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
         LogicalOperator,
@@ -999,6 +1000,119 @@ fn convert_function_expression(node: &GrammarASTNode) -> Result<FunctionExpressi
     })
 }
 
+// ---------------------------------------------------------------------
+// ArrowFunctionExpression (CLOC12.152 — bridge enable)
+// ---------------------------------------------------------------------
+
+/// Convert an `arrow_function` grammar node into an
+/// [`ArrowFunctionExpression`].
+///
+/// ```text
+///   arrow_function   = arrow_parameters ARROW concise_body ;
+///   arrow_parameters = NAME | LPAREN [ formal_parameters ] RPAREN ;
+///   concise_body     = assignment_expression | LBRACE function_body RBRACE ;
+/// ```
+///
+/// # Two grammar limitations this bridge works around
+///
+/// 1. **Block bodies don't parse (gap-156).** The current ECMAScript
+///    grammar rejects a *statement* block body — `x => { return x; }`
+///    fails to parse outright — so the parser only ever produces a
+///    **concise** (expression) `concise_body`. This converter therefore
+///    always yields [`ArrowBody::Expression`]; the emitter and passes
+///    already model [`ArrowBody::Block`] for when the grammar is fixed.
+/// 2. **`() => {}` mis-parses as an empty-*object* concise body.** Because
+///    the block alternative isn't taken, the grammar reads the braces of
+///    `() => {}` as an empty **object literal** returned by a concise body
+///    (`() => ({})`), which is a *different value* than the real
+///    empty-block arrow (which returns `undefined`). We cannot tell the
+///    two apart from the parse tree — the distinguishing information was
+///    already lost — so to avoid a **miscompile** we DECLINE any arrow
+///    whose concise body is an object literal (falling back to
+///    whitespace-only, which re-emits the source unchanged and is always
+///    correct). Genuine object-returning arrows (`x => ({a:1})`) decline
+///    too; that only forgoes an optimisation, never correctness.
+///
+/// Async arrows (`async x => x`) parse under the separate
+/// `async_arrow_function` rule and remain declined for now — a follow-up
+/// once the async evaluation model lands.
+fn convert_arrow_function(node: &GrammarASTNode) -> Result<ArrowFunctionExpression, BridgeError> {
+    let children = node_children(node);
+
+    let mut params = Vec::new();
+    let mut body: Option<ArrowBody> = None;
+
+    for n in &children {
+        match n.rule_name.as_str() {
+            "arrow_parameters" => params = convert_arrow_parameters(n)?,
+            "concise_body" => body = Some(convert_concise_body(n)?),
+            _ => {}
+        }
+    }
+
+    let body = body.ok_or_else(|| internal(node, "arrow_function: missing concise_body"))?;
+
+    // Guard against the `() => {}` ambiguity described above: an
+    // object-literal concise body cannot be distinguished from an empty
+    // block body, so decline rather than risk a miscompile.
+    if let ArrowBody::Expression(e) = &body {
+        if matches!(**e, Expression::ObjectExpression(_)) {
+            return Err(unsupported(node));
+        }
+    }
+
+    Ok(ArrowFunctionExpression {
+        cv: None,
+        params,
+        body,
+        is_async: false,
+    })
+}
+
+/// `arrow_parameters = NAME | LPAREN [ formal_parameters ] RPAREN`.
+///
+/// A parenthesised list wraps a `formal_parameters` node; a single bare
+/// identifier is just a `NAME` token (no wrapper); `()` has neither.
+fn convert_arrow_parameters(node: &GrammarASTNode) -> Result<Vec<FunctionParam>, BridgeError> {
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(n) = c {
+            if n.rule_name == "formal_parameters" {
+                return convert_formal_parameters(n);
+            }
+        }
+    }
+    // No `formal_parameters` node → either `()` (no NAME tokens) or a bare
+    // single `NAME` identifier. Any token that is not a paren is that name.
+    let params = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.value != "(" && t.value != ")" => {
+                Some(FunctionParam::Identifier(Identifier { cv: None, name: t.value.clone() }))
+            }
+            _ => None,
+        })
+        .collect();
+    Ok(params)
+}
+
+/// `concise_body = assignment_expression | LBRACE function_body RBRACE`.
+///
+/// In practice only the expression alternative is reachable today (see the
+/// gap-156 note on [`convert_arrow_function`]); the `function_body` arm is
+/// kept so the bridge is already correct once the grammar parses block
+/// bodies.
+fn convert_concise_body(node: &GrammarASTNode) -> Result<ArrowBody, BridgeError> {
+    for n in node_children(node) {
+        if n.rule_name == "function_body" {
+            return Ok(ArrowBody::Block(convert_function_body(n)?));
+        }
+        return Ok(ArrowBody::Expression(Box::new(convert_expression(n)?)));
+    }
+    // Only brace tokens, no inner node → an empty block body `() => {}`.
+    Ok(ArrowBody::Block(BlockStatement { cv: None, body: vec![] }))
+}
+
 fn convert_formal_parameters(node: &GrammarASTNode) -> Result<Vec<FunctionParam>, BridgeError> {
     // formal_parameters = formal_parameter { COMMA formal_parameter } [ COMMA ]
     // formal_parameter = ( NAME | binding_pattern ) [ EQUALS assignment_expression ]
@@ -1121,14 +1235,20 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
             convert_function_expression(node).map(Expression::FunctionExpression)
         }
 
+        // Concise-body arrow function (CLOC12.152). `convert_arrow_function`
+        // itself declines the ambiguous `() => {}` / object-body case and
+        // (until the grammar parses them) never sees a block body.
+        "arrow_function" => {
+            convert_arrow_function(node).map(Expression::ArrowFunctionExpression)
+        }
+
         // The remaining function-valued and ES2015+ expression forms the
         // typed bridge does not yet represent. DECLINE GRACEFULLY
         // (`UnsupportedSyntax` → the CLI falls back to WHITESPACE_ONLY and
         // still emits valid JS). Generators/async carry evaluation semantics
-        // the passes don't model yet; arrow functions, classes, and template
+        // the passes don't model yet; async arrows, classes, and template
         // literals are separate future AST slices.
-        "arrow_function"
-        | "async_arrow_function"
+        "async_arrow_function"
         | "yield_expression"
         | "await_expression"
         | "generator_expression"
@@ -2971,6 +3091,96 @@ mod tests {
             },
             other => panic!("expected an ExpressionStatement, got {other:?}"),
         }
+    }
+
+    // ---- ArrowFunctionExpression (CLOC12.152 bridge enable) ------
+
+    /// Pull the arrow-function initialiser out of `var f = <arrow>;`.
+    fn bridge_var_init_arrow(src: &str) -> ArrowFunctionExpression {
+        let p = bridge_ok(src);
+        match &p.body[0] {
+            ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(vd))) => {
+                match vd.declarations[0].init.as_ref().expect("init") {
+                    Expression::ArrowFunctionExpression(a) => a.clone(),
+                    other => panic!("expected ArrowFunctionExpression init, got {other:?}"),
+                }
+            }
+            other => panic!("expected a VariableDeclaration statement, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn arrow_single_param_concise_body_converts() {
+        // `var f = x => x + 1` — one param `x`, a concise (expression) body.
+        let a = bridge_var_init_arrow("var f=x=>x+1;");
+        assert!(!a.is_async);
+        assert_eq!(a.params.len(), 1);
+        let FunctionParam::Identifier(p) = &a.params[0];
+        assert_eq!(p.name, "x");
+        assert!(
+            matches!(a.body, ArrowBody::Expression(_)),
+            "concise body must be ArrowBody::Expression, got {:?}",
+            a.body
+        );
+    }
+
+    #[test]
+    fn arrow_multi_param_and_empty_param_convert() {
+        let a = bridge_var_init_arrow("var g=(a,b)=>a;");
+        assert_eq!(a.params.len(), 2);
+        let empty = bridge_var_init_arrow("var h=()=>1;");
+        assert!(empty.params.is_empty(), "`()` yields zero params");
+        assert!(matches!(empty.body, ArrowBody::Expression(_)));
+    }
+
+    #[test]
+    fn arrow_callback_argument_converts() {
+        // `arr.map(x => x)` — the callback arg is an ArrowFunctionExpression.
+        let p = bridge_ok("arr.map(x=>x);");
+        match &p.body[0] {
+            ProgramItem::Statement(Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::ExpressionStatement(es),
+            )) => match &es.expression {
+                Expression::CallExpression(call) => assert!(
+                    matches!(&call.arguments[0], Expression::ArrowFunctionExpression(_)),
+                    "callback arg should be an arrow, got {:?}",
+                    call.arguments[0]
+                ),
+                other => panic!("expected CallExpression, got {other:?}"),
+            },
+            other => panic!("expected ExpressionStatement, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn arrow_object_concise_body_is_declined() {
+        // `() => ({})` / `() => {}` are indistinguishable in the current
+        // grammar (both parse as an object-literal concise body), so the
+        // bridge DECLINES them (UnsupportedSyntax) rather than risk the
+        // empty-block-vs-object miscompile. A declined program surfaces as a
+        // bridge error → the CLI's whitespace-only passthrough.
+        assert!(
+            grammar_to_program(
+                &crate::parse_javascript("var f=()=>({a:1});", "es2025").expect("parse"),
+                DEFAULT_ES_VERSION,
+            )
+            .is_err(),
+            "object-body arrow must decline to avoid the () => {{}} ambiguity"
+        );
+    }
+
+    #[test]
+    fn async_arrow_is_still_declined() {
+        // Async arrows parse under `async_arrow_function` and remain declined
+        // (safe whitespace-only passthrough) until the async model lands.
+        assert!(
+            grammar_to_program(
+                &crate::parse_javascript("var f=async x=>x;", "es2025").expect("parse"),
+                DEFAULT_ES_VERSION,
+            )
+            .is_err(),
+            "async arrow should still decline"
+        );
     }
 
     /// Pull the single `ForOfStatement` out of a one-statement program.

@@ -57,7 +57,14 @@ fn uses_oop(m: &Module) -> bool {
         || module_uses_builtin(m, "__super__")
         || module_uses_builtin(m, "__def_method__")
         || module_uses_builtin(m, "__def_class_method__")
+        || module_uses_builtin(m, "__class_method__")
         || module_uses_builtin(m, "__self__")
+        // Mixin directives (MX3): `include M` / `extend M` route to the OOP
+        // runtime's `includeModule`/`extendModule`, so their presence pulls in
+        // the import (the frontend pairs them with module `__def_method__`s,
+        // which already gate, but the gate must not depend on that).
+        || module_uses_builtin(m, "__include__")
+        || module_uses_builtin(m, "__extend__")
 }
 
 /// True if the module uses exception handling, in which case the emitted
@@ -1424,6 +1431,41 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         out.push(')');
         return;
     }
+    // Class-method CALL dispatch `Foo.bar(args)` (const receiver) →
+    // `__SirOop.callClassMethod("Foo", "bar", args…)` (issue #59, mirrored from
+    // the Python backend).  Needed for `extend M`'s methods (registered as class
+    // methods) to be callable as `Owner.method`.  The class + method names
+    // arrive as `StrLit`s through the normal expression path — never a raw
+    // source-derived name (the C3 RCE lesson).
+    if name == "__class_method__" && args.len() >= 2 {
+        out.push_str("__SirOop.callClassMethod(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    // Mixin directives (MX3).  The Ruby frontend (MX1) lowers `include M` /
+    // `extend M` in a class/module body to these two builtins, both carrying the
+    // owner and module names as `StrLit`s (never a source-derived value that is
+    // interpolated raw — the C3 RCE lesson):
+    //
+    //   __include__("Owner", "M")  → __SirOop.includeModule("Owner", "M")
+    //   __extend__("Owner", "M")   → __SirOop.extendModule("Owner", "M")
+    //
+    // `includeModule` appends `M` to the owner's include-order list (consulted
+    // by the method-resolution walk); `extendModule` copies `M`'s instance
+    // methods into the owner's class-method table (`Owner.method`).
+    if name == "__include__" && args.len() == 2 {
+        out.push_str("__SirOop.includeModule(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    if name == "__extend__" && args.len() == 2 {
+        out.push_str("__SirOop.extendModule(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
     if name == "__self__" && args.is_empty() {
         out.push_str("__SirOop.currentSelfVal()");
         return;
@@ -2301,6 +2343,33 @@ mod tests {
         let mut out = String::new();
         emit_expr(&mut out, &e, 0);
         assert_eq!(out, "__SirOop.currentSelfVal()");
+    }
+
+    #[test]
+    fn class_method_call_emits_call_class_method_ts() {
+        // __class_method__("Counter", "zero") → __SirOop.callClassMethod("Counter", "zero").
+        let e = ts_builtin("__class_method__", vec![ts_str_lit("Counter"), ts_str_lit("zero")]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"__SirOop.callClassMethod("Counter", "zero")"#);
+    }
+
+    #[test]
+    fn mixin_include_emits_include_module_ts() {
+        // __include__("Greeter", "Loud") → __SirOop.includeModule("Greeter", "Loud").
+        let e = ts_builtin("__include__", vec![ts_str_lit("Greeter"), ts_str_lit("Loud")]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"__SirOop.includeModule("Greeter", "Loud")"#);
+    }
+
+    #[test]
+    fn mixin_extend_emits_extend_module_ts() {
+        // __extend__("Widget", "Describable") → __SirOop.extendModule("Widget", "Describable").
+        let e = ts_builtin("__extend__", vec![ts_str_lit("Widget"), ts_str_lit("Describable")]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"__SirOop.extendModule("Widget", "Describable")"#);
     }
 
     #[test]

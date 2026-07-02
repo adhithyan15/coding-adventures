@@ -142,6 +142,29 @@ subtest 'parse_token_grammar: keywords section' => sub {
     is($g->keywords, ['if', 'else'], 'keywords parsed');
 };
 
+# F10 declarative lexer modes: flat consumers must accept (and ignore)
+# start_mode:/transitions: rather than mistaking them for token definitions.
+subtest 'parse_token_grammar: start_mode directive' => sub {
+    my $src = "start_mode: default\nNAME = /[a-z]+/\n";
+    my ($g, $err) = CodingAdventures::GrammarTools->parse_token_grammar($src);
+    ok(!$err, 'no error');
+    is($g->start_mode, 'default', 'start_mode parsed');
+    is($g->keywords, [], 'no spurious keywords');
+};
+
+subtest 'parse_token_grammar: transitions section ignored by flat consumer' => sub {
+    my $src = "start_mode: default\n"
+        . "NAME = /[a-z]+/\n"
+        . "transitions:\n"
+        . "  # comment inside transitions\n"
+        . "  on NAME -> set-mode div\n"
+        . "  on (LPAREN | COMMA) -> set-mode default\n";
+    my ($g, $err) = CodingAdventures::GrammarTools->parse_token_grammar($src);
+    ok(!$err, 'no error on transition rules');
+    is(scalar @{ $g->transitions }, 2, 'two transition rules recorded');
+    is(scalar @{ $g->definitions }, 1, 'transition lines are not token definitions');
+};
+
 subtest 'parse_token_grammar: skip section' => sub {
     my $src = "NAME = /[a-zA-Z]+/\nskip:\n  WHITESPACE = /[ \\t]+/\n";
     my ($g, $err) = CodingAdventures::GrammarTools->parse_token_grammar($src);

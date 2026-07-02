@@ -65,10 +65,10 @@ surface the emitter lowers today. JavaScript supports every SIR16 feature
 natively (arrays, `Map`, `while`/`for`, reassignable `let`), so each
 lowering is direct.
 
-| Accepted (v0 + SIR16 + E1 + O3) | Rejected (deferred / unsupported)        |
+| Accepted (v0 + SIR16 + E1 + O3 + MX4) | Rejected (deferred / unsupported)  |
 |---------------------------------|------------------------------------------|
-| `Closures`                      | `Modules` (SIR17)                        |
-| `Pairs`                         | `StringInterpolation` (`StrConcat`, SIR18) |
+| `Closures`                      | `StringInterpolation` (`StrConcat`, SIR18) |
+| `Pairs`                         | `SingletonClassDef` OOP dispatch         |
 | `Symbols`                       | `TailCalls` (V8 has no reliable TCO)     |
 | `Strings`                       | `Intrinsics` (empty whitelist)           |
 | `DynamicTyping`                 |                                          |
@@ -87,14 +87,15 @@ lowering is direct.
 | `Classes` (E2 ancestry + O3 OOP)|                                          |
 | `InstanceVars` (O3)             |                                          |
 | `ClassVars` (O3)                |                                          |
+| `Modules` (MX4 mixins)          |                                          |
 | `Constants`                     |                                          |
 
 `accepts_intrinsics()` is empty. The accept-set is deliberately matched
 to what `emit` handles, so a module using a deferred node is turned away
 *before* lowering rather than mis-compiled — and every accepted feature
 has a real emit arm (the residual `panic!` guards cover only the
-still-deferred SIR17/18 nodes — `Modules`, `SingletonClassDef` OOP
-dispatch, and string interpolation).
+still-deferred SIR18 nodes — `SingletonClassDef` OOP dispatch and string
+interpolation).
 
 `Classes` now covers **full user-defined-class OOP (O3)**: a `ClassDef`
 supplies its `superclass` *ancestry edge* (so `raise MyErr; rescue
@@ -131,6 +132,29 @@ and an exception thrown mid-method still unwinds cleanly.  A `SirInstance`
 receiver dispatches to the user method table; every **other** receiver
 (array, string, …) falls through to the unchanged built-in / collection
 path, so collection methods and exceptions are not regressed.
+
+### Mixins — `include` / `extend` (MX4)
+
+A `module M … end` registers its `def`s into the **same** `methodTable` a
+class uses (keyed by the module name), and the two mixin directives lower to
+one builtin each; dispatch then follows Ruby's **Method Resolution Order**.
+
+| SIR (from MX1 frontend)         | JavaScript emitted                          |
+|---------------------------------|---------------------------------------------|
+| `include Greet` in `class C`    | `__Sir.includeModule("C", "Greet")`         |
+| `extend Counter` in `class C`   | `__Sir.extendModule("C", "Counter")`        |
+| `Widget.tally(1)` (const recv)  | `__Sir.callClassMethod("Widget", "tally", 1)` |
+
+`__Sir.resolveMethod` walks the MRO: **class → its included modules
+most-recent-first (each expanded depth-first through its own `include`s) →
+superclass → …**  A class-defined method **shadows** a mixed-in module
+method, a **diamond** include resolves the shared module **once**, and
+`extend` promotes a module's instance methods to **class methods** (found by
+`callClassMethod`).  The per-owner `includedModules` / `extendedModules` are
+real `Map`s keyed by *name strings* holding module *name strings* — the same
+explicit-table, no-reflection bar as the method tables — and a single shared
+`seen` set makes a self-including module or cyclic hierarchy **terminate**
+(`NoMethodError`) rather than loop.
 
 ### SIR16 lowering at a glance
 

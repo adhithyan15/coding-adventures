@@ -50,6 +50,232 @@ const ANKI_QUEUE_USER_BURIED: i64 = -2;
 const ANKI_QUEUE_SUSPENDED: i64 = -1;
 const ANKI_QUEUE_NEW: i64 = 0;
 const ANKI_QUEUE_REVIEW: i64 = 2;
+const DEMO_SNAPSHOT_JSON: &str = r#"{
+  "decks": [
+    {
+      "id": "tamil-script",
+      "name": "Tamil::Script and Roots",
+      "description": "Native Tamil script, family words, and Dravidian roots.",
+      "createdAt": 1700000000000
+    },
+    {
+      "id": "hindi-devanagari",
+      "name": "Hindi::Devanagari",
+      "description": "Hindi script and Indo-Aryan vocabulary.",
+      "createdAt": 1700000000000
+    },
+    {
+      "id": "kannada-script",
+      "name": "Kannada::Script",
+      "description": "Kannada letters and South Indian cognates.",
+      "createdAt": 1700000000000
+    },
+    {
+      "id": "spanish-latin-roots",
+      "name": "Spanish::Latin Roots",
+      "description": "Spanish words with Latin and English connections.",
+      "createdAt": 1700000000000
+    }
+  ],
+  "noteTypes": [
+    {
+      "id": "basic-story",
+      "name": "Basic Grammar Story",
+      "fields": [
+        {"id": "front", "name": "Front", "required": true, "ordinal": 0},
+        {"id": "back", "name": "Back", "required": true, "ordinal": 1},
+        {"id": "story", "name": "Story", "required": false, "ordinal": 2}
+      ],
+      "templates": [
+        {
+          "id": "forward",
+          "name": "Forward",
+          "frontTemplate": "{{Front}}",
+          "backTemplate": "{{Back}}\n\n{{Story}}",
+          "requiredFieldNames": ["Front"],
+          "ordinal": 0
+        }
+      ],
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    }
+  ],
+  "notes": [
+    {
+      "id": "note-tamil-amma",
+      "noteTypeId": "basic-story",
+      "deckId": "tamil-script",
+      "fields": [
+        {"fieldId": "front", "value": "அம்மா / amma"},
+        {"fieldId": "back", "value": "mother"},
+        {"fieldId": "story", "value": "A family word shared across many Dravidian languages; compare Tamil amma and Kannada amma."}
+      ],
+      "tags": ["tamil", "dravidian", "family"],
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    },
+    {
+      "id": "note-tamil-uyir",
+      "noteTypeId": "basic-story",
+      "deckId": "tamil-script",
+      "fields": [
+        {"fieldId": "front", "value": "உயிர் / uyir"},
+        {"fieldId": "back", "value": "life; vowel"},
+        {"fieldId": "story", "value": "Tamil grammar calls vowels uyir ezhuthu, literally life letters."}
+      ],
+      "tags": ["tamil", "script", "grammar"],
+      "createdAt": 1700000000001,
+      "updatedAt": 1700000000001
+    },
+    {
+      "id": "note-hindi-namaste",
+      "noteTypeId": "basic-story",
+      "deckId": "hindi-devanagari",
+      "fields": [
+        {"fieldId": "front", "value": "नमस्ते / namaste"},
+        {"fieldId": "back", "value": "hello; I bow to you"},
+        {"fieldId": "story", "value": "From Sanskrit namas, a bow or reverence, plus te, to you."}
+      ],
+      "tags": ["hindi", "sanskrit", "greeting"],
+      "createdAt": 1700000000002,
+      "updatedAt": 1700000000002
+    },
+    {
+      "id": "note-kannada-amma",
+      "noteTypeId": "basic-story",
+      "deckId": "kannada-script",
+      "fields": [
+        {"fieldId": "front", "value": "ಅಮ್ಮ / amma"},
+        {"fieldId": "back", "value": "mother"},
+        {"fieldId": "story", "value": "A Kannada cognate that lets the Tamil amma story travel sideways across South India."}
+      ],
+      "tags": ["kannada", "dravidian", "family"],
+      "createdAt": 1700000000003,
+      "updatedAt": 1700000000003
+    },
+    {
+      "id": "note-spanish-hablar",
+      "noteTypeId": "basic-story",
+      "deckId": "spanish-latin-roots",
+      "fields": [
+        {"fieldId": "front", "value": "hablar"},
+        {"fieldId": "back", "value": "to speak"},
+        {"fieldId": "story", "value": "From Latin fabulari, to converse; a cousin of English fable and French fable."}
+      ],
+      "tags": ["spanish", "latin", "etymology"],
+      "createdAt": 1700000000004,
+      "updatedAt": 1700000000004
+    }
+  ],
+  "cards": [
+    {
+      "id": "card-tamil-amma",
+      "deckId": "tamil-script",
+      "front": "அம்மா / amma",
+      "back": "mother",
+      "createdAt": 1700000000000,
+      "lineage": {"noteId": "note-tamil-amma", "noteTypeId": "basic-story", "templateId": "forward", "ordinal": 0}
+    },
+    {
+      "id": "card-tamil-uyir",
+      "deckId": "tamil-script",
+      "front": "உயிர் / uyir",
+      "back": "life; vowel",
+      "createdAt": 1700000000001,
+      "lineage": {"noteId": "note-tamil-uyir", "noteTypeId": "basic-story", "templateId": "forward", "ordinal": 0}
+    },
+    {
+      "id": "card-hindi-namaste",
+      "deckId": "hindi-devanagari",
+      "front": "नमस्ते / namaste",
+      "back": "hello; I bow to you",
+      "createdAt": 1700000000002,
+      "lineage": {"noteId": "note-hindi-namaste", "noteTypeId": "basic-story", "templateId": "forward", "ordinal": 0}
+    },
+    {
+      "id": "card-kannada-amma",
+      "deckId": "kannada-script",
+      "front": "ಅಮ್ಮ / amma",
+      "back": "mother",
+      "createdAt": 1700000000003,
+      "lineage": {"noteId": "note-kannada-amma", "noteTypeId": "basic-story", "templateId": "forward", "ordinal": 0}
+    },
+    {
+      "id": "card-spanish-hablar",
+      "deckId": "spanish-latin-roots",
+      "front": "hablar",
+      "back": "to speak",
+      "createdAt": 1700000000004,
+      "lineage": {"noteId": "note-spanish-hablar", "noteTypeId": "basic-story", "templateId": "forward", "ordinal": 0}
+    }
+  ],
+  "cardProgress": [
+    {
+      "cardId": "card-tamil-amma",
+      "state": "review",
+      "interval": 3,
+      "easeFactor": 2.5,
+      "nextDueAt": 1699999999900,
+      "learningStepIndex": null,
+      "buriedUntil": null,
+      "suspendedAt": null,
+      "timesSeen": 2,
+      "timesCorrect": 2,
+      "timesIncorrect": 0,
+      "lastSeenAt": 1699999990000
+    }
+  ],
+  "sessions": [],
+  "reviews": [
+    {
+      "id": "review-demo-good",
+      "sessionId": "demo-session",
+      "cardId": "card-tamil-amma",
+      "rating": "good",
+      "reviewedAt": 1699999990000
+    },
+    {
+      "id": "review-demo-again",
+      "sessionId": "demo-session",
+      "cardId": "card-spanish-hablar",
+      "rating": "again",
+      "reviewedAt": 1699999980000
+    }
+  ],
+  "deckOptions": [
+    {
+      "deckId": "tamil-script",
+      "options": {
+        "newCardsPerDay": 12,
+        "reviewsPerDay": 80,
+        "learningStepsMinutes": [1, 10],
+        "relearningStepsMinutes": [10],
+        "graduatingIntervalDays": 2,
+        "easyIntervalDays": 5,
+        "initialEaseFactor": 2.8,
+        "maximumIntervalDays": 90,
+        "reviewIntervalModifier": 0.75,
+        "hardIntervalMultiplier": 1.4,
+        "easyBonusMultiplier": 1.6,
+        "lapseIntervalMultiplier": 0.5,
+        "leechThreshold": 6,
+        "desiredRetention": 0.92,
+        "fsrsParameters": [0.1, 1.2, 2.3],
+        "fsrsParameterSearch": "tag:tamil is:review",
+        "ignoreReviewHistoryBefore": "2024-01-02",
+        "historicalRetention": 0.86,
+        "easyDaysPercentages": [1.0, 0.9, 0.8, 1.1, 1.2, 1.0, 0.95],
+        "leechAction": "suspend",
+        "buryNewSiblings": false,
+        "buryReviewSiblings": true,
+        "buryInterdayLearningSiblings": false
+      }
+    }
+  ],
+  "externalSources": [],
+  "mediaAssets": [],
+  "activeSession": null
+}"#;
 
 #[derive(Default)]
 pub struct EngramSession {
@@ -435,6 +661,18 @@ impl BrowserSessionState {
 impl EngramSession {
     pub fn new() -> Self {
         Self::default()
+    }
+
+    pub fn new_demo() -> Self {
+        Self {
+            state: serde_json::from_str(DEMO_SNAPSHOT_JSON)
+                .expect("built-in Engram demo snapshot must be valid AppState JSON"),
+            ..Self::default()
+        }
+    }
+
+    pub fn demo_snapshot_json() -> &'static str {
+        DEMO_SNAPSHOT_JSON
     }
 
     pub fn state(&self) -> &AppState {
@@ -7417,6 +7655,40 @@ mod tests {
         );
         assert_eq!(value["props"]["action-suspend-card-label"], "Suspend");
         assert_eq!(value["props"]["action-mark-label"], "Mark");
+    }
+
+    #[test]
+    fn demo_session_lights_up_engram_app_props() {
+        let session = EngramSession::new_demo();
+        let value: Value = serde_json::from_str(&session.engram_app_props("", NOW)).unwrap();
+
+        assert_eq!(value["ok"], true);
+        assert_eq!(value["props"]["deck-name"], "Tamil::Script and Roots");
+        assert_eq!(value["props"]["deck-total-value"], "2");
+        assert_eq!(value["props"]["deck-new-value"], "1");
+        assert_eq!(value["props"]["deck-due-value"], "1");
+        assert_eq!(value["props"]["collection-note-count-value"], "5");
+        assert_eq!(value["props"]["collection-note-type-count-value"], "1");
+        assert_eq!(value["props"]["collection-media-count-value"], "0");
+        assert_eq!(
+            value["props"]["deck-names"],
+            json!([
+                "Tamil::Script and Roots",
+                "Hindi::Devanagari",
+                "Kannada::Script",
+                "Spanish::Latin Roots"
+            ])
+        );
+        assert_eq!(
+            value["props"]["browser-result-card-ids"],
+            json!([
+                "card-tamil-amma",
+                "card-tamil-uyir",
+                "card-hindi-namaste",
+                "card-kannada-amma",
+                "card-spanish-hablar"
+            ])
+        );
     }
 
     #[test]

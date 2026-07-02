@@ -7,7 +7,7 @@ import org.json.JSONObject
 
 class MosaicHost {
     private val capi: EngramCapi? = loadCapi()
-    private val session: Pointer? = capi?.eg_session_new()
+    private val session: Pointer? = capi?.eg_session_new_demo()
 
     init {
         Runtime.getRuntime().addShutdownHook(Thread {
@@ -96,7 +96,7 @@ class MosaicHost {
 }
 
 interface EngramCapi : Library {
-    fun eg_session_new(): Pointer?
+    fun eg_session_new_demo(): Pointer?
     fun eg_session_free(session: Pointer?)
     fun eg_string_free(value: Pointer?)
     fun eg_engram_app_props(session: Pointer?, deckId: String, nowMs: Long): Pointer?
