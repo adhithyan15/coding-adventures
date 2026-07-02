@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.36.0] - 2026-07-02 — `\operatorname{abs/exp/log/ln}` word spellings in `latex "…"`
+
+### Added
+
+- `latex "\operatorname{abs}(x)"`, `\operatorname{exp}(x)`, `\operatorname{log}(x)`, and
+  `\operatorname{ln}(x)` now compute the **single-argument unary functions**, reaching the SAME
+  native nodes as their existing spellings: `abs`→`ExprAst::Abs` (the `|x|` absolute value,
+  dimension-preserving), and `exp`/`log`/`ln`→`ExprAst::Call(NamedFn::Exp/Log/Ln)` (the
+  transcendentals already lowered from the `\exp`/`\log`/`\ln` macro `Call`s). A model that writes
+  the operator *name* instead of the bracket/macro lands on the identical node. `\operatorname{…}`
+  is a TEXT command, so — exactly like `\operatorname{floor}`/`sgn`/`trunc` — these parse as the
+  operator-name juxtaposition `Bin(Mul, Text("exp"), (x))` rather than a `Call` or a `Fenced`; the
+  adapter matches via `operator_name_is(lhs, …)` and lowers to the existing node. Pure **adapter**
+  recognition: no engine, AST, or lowering change. +1 e2e unit test (abs(a−b)=7; exp(ln(x))
+  round-trip; base-10 log(1000)=3).
+
 ## [0.35.0] - 2026-07-02 — `\operatorname{min/max/gcd/lcm}` word spellings in `latex "…"`
 
 ### Added
