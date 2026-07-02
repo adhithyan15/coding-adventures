@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 36 \u2014 pooled concentration of two transfusion component units from two volumes and two concentrations (a NEW panel: transfusion medicine / blood banking). From four stated quantities (first volume V1, first concentration C1, second volume V2, second concentration C2) compute the pooled concentration ((V1*C1+V2*C2)/(V1+V2)), the total content (V1*C1+V2*C2), or the total volume (V1+V2). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, a WEIGHTED AVERAGE (a sum of products divided by a sum of the weights, (V1*C1+V2*C2)/(V1+V2)), the first three-way composition on the ladder \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via *, + and / \u2014 no constant leaks (a weighted mean needs no constant), and neither the combined content nor the combined volume ever appears as a literal (each is computed from the observed quantities) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same quantities, so the distractors are exactly the slips students make: the crossed-weighted concentration ((V1*C2+V2*C1)/(V1+V2), volumes paired with the wrong counts) and the content-over-counts ((V1*C1+V2*C2)/(C1+C2), dividing by the sum of concentrations instead of volumes). The core confusion tested is dividing the total amount by the total VOLUME, the correct weights.",
+  "items": [
+    {
+      "id": "r36pool-01",
+      "qtype": "transfusion_pooling",
+      "stem": "Two component units are pooled into one bag: the first is 2 dL at a cell concentration of 150 \u00d710\u00b3/\u00b5L, and the second is 3 dL at 250 \u00d710\u00b3/\u00b5L. What is the pooled concentration of the combined bag?",
+      "program": "observe volume_first(2)\nobserve concentration_first(150)\nobserve volume_second(3)\nobserve concentration_second(250)\nlet answer = (volume_first * concentration_first + volume_second * concentration_second) / (volume_first + volume_second)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 210.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1050,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 190.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.625,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r36pool-02",
+      "qtype": "transfusion_pooling",
+      "stem": "Two component units are pooled into one bag: the first is 2 dL at a cell concentration of 150 \u00d710\u00b3/\u00b5L, and the second is 3 dL at 250 \u00d710\u00b3/\u00b5L. What is the total cell content of the combined bag?",
+      "program": "observe volume_first(2)\nobserve concentration_first(150)\nobserve volume_second(3)\nobserve concentration_second(250)\nlet answer = volume_first * concentration_first + volume_second * concentration_second\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 210.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1050,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 190.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.625,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r36pool-03",
+      "qtype": "transfusion_pooling",
+      "stem": "Two component units are pooled into one bag: the first is 2 dL at a cell concentration of 150 \u00d710\u00b3/\u00b5L, and the second is 3 dL at 250 \u00d710\u00b3/\u00b5L. What is the total volume of the combined bag?",
+      "program": "observe volume_first(2)\nobserve concentration_first(150)\nobserve volume_second(3)\nobserve concentration_second(250)\nlet answer = volume_first + volume_second\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 210.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1050,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 190.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.625,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r36pool-04",
+      "qtype": "transfusion_pooling",
+      "stem": "Two component units are pooled into one bag: the first is 4 dL at a cell concentration of 120 \u00d710\u00b3/\u00b5L, and the second is 2 dL at 300 \u00d710\u00b3/\u00b5L. What is the pooled concentration of the combined bag?",
+      "program": "observe volume_first(4)\nobserve concentration_first(120)\nobserve volume_second(2)\nobserve concentration_second(300)\nlet answer = (volume_first * concentration_first + volume_second * concentration_second) / (volume_first + volume_second)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1080,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 240.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 180.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.5714285714285716,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r36pool-05",
+      "qtype": "transfusion_pooling",
+      "stem": "Two component units are pooled into one bag: the first is 4 dL at a cell concentration of 120 \u00d710\u00b3/\u00b5L, and the second is 2 dL at 300 \u00d710\u00b3/\u00b5L. What is the total cell content of the combined bag?",
+      "program": "observe volume_first(4)\nobserve concentration_first(120)\nobserve volume_second(2)\nobserve concentration_second(300)\nlet answer = volume_first * concentration_first + volume_second * concentration_second\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 180.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 240.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.5714285714285716,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1080,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r36pool-06",
+      "qtype": "transfusion_pooling",
+      "stem": "Two component units are pooled into one bag: the first is 4 dL at a cell concentration of 120 \u00d710\u00b3/\u00b5L, and the second is 2 dL at 300 \u00d710\u00b3/\u00b5L. What is the total volume of the combined bag?",
+      "program": "observe volume_first(4)\nobserve concentration_first(120)\nobserve volume_second(2)\nobserve concentration_second(300)\nlet answer = volume_first + volume_second\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 180.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1080,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 240.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.5714285714285716,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r36pool-07",
+      "qtype": "transfusion_pooling",
+      "stem": "Two component units are pooled into one bag: the first is 3 dL at a cell concentration of 200 \u00d710\u00b3/\u00b5L, and the second is 1 dL at 320 \u00d710\u00b3/\u00b5L. What is the pooled concentration of the combined bag?",
+      "program": "observe volume_first(3)\nobserve concentration_first(200)\nobserve volume_second(1)\nobserve concentration_second(320)\nlet answer = (volume_first * concentration_first + volume_second * concentration_second) / (volume_first + volume_second)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 920,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 230.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 290.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.7692307692307692,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r36pool-08",
+      "qtype": "transfusion_pooling",
+      "stem": "Two component units are pooled into one bag: the first is 3 dL at a cell concentration of 200 \u00d710\u00b3/\u00b5L, and the second is 1 dL at 320 \u00d710\u00b3/\u00b5L. What is the total cell content of the combined bag?",
+      "program": "observe volume_first(3)\nobserve concentration_first(200)\nobserve volume_second(1)\nobserve concentration_second(320)\nlet answer = volume_first * concentration_first + volume_second * concentration_second\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 230.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 920,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 290.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.7692307692307692,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r36pool-09",
+      "qtype": "transfusion_pooling",
+      "stem": "Two component units are pooled into one bag: the first is 3 dL at a cell concentration of 200 \u00d710\u00b3/\u00b5L, and the second is 1 dL at 320 \u00d710\u00b3/\u00b5L. What is the total volume of the combined bag?",
+      "program": "observe volume_first(3)\nobserve concentration_first(200)\nobserve volume_second(1)\nobserve concentration_second(320)\nlet answer = volume_first + volume_second\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 230.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 920,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 290.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.7692307692307692,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r36pool-10",
+      "qtype": "transfusion_pooling",
+      "stem": "Two component units are pooled into one bag: the first is 2 dL at a cell concentration of 180 \u00d710\u00b3/\u00b5L, and the second is 4 dL at 260 \u00d710\u00b3/\u00b5L. What is the pooled concentration of the combined bag?",
+      "program": "observe volume_first(2)\nobserve concentration_first(180)\nobserve volume_second(4)\nobserve concentration_second(260)\nlet answer = (volume_first * concentration_first + volume_second * concentration_second) / (volume_first + volume_second)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1400,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 206.66666666666666,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.1818181818181817,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 233.33333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r36pool-11",
+      "qtype": "transfusion_pooling",
+      "stem": "Two component units are pooled into one bag: the first is 2 dL at a cell concentration of 180 \u00d710\u00b3/\u00b5L, and the second is 4 dL at 260 \u00d710\u00b3/\u00b5L. What is the total cell content of the combined bag?",
+      "program": "observe volume_first(2)\nobserve concentration_first(180)\nobserve volume_second(4)\nobserve concentration_second(260)\nlet answer = volume_first * concentration_first + volume_second * concentration_second\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1400,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 233.33333333333334,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 206.66666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.1818181818181817,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r36pool-12",
+      "qtype": "transfusion_pooling",
+      "stem": "Two component units are pooled into one bag: the first is 2 dL at a cell concentration of 180 \u00d710\u00b3/\u00b5L, and the second is 4 dL at 260 \u00d710\u00b3/\u00b5L. What is the total volume of the combined bag?",
+      "program": "observe volume_first(2)\nobserve concentration_first(180)\nobserve volume_second(4)\nobserve concentration_second(260)\nlet answer = volume_first + volume_second\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 233.33333333333334,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1400,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 206.66666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.1818181818181817,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r36pool-13",
+      "qtype": "transfusion_pooling",
+      "stem": "Two component units are pooled into one bag: the first is 1 dL at a cell concentration of 140 \u00d710\u00b3/\u00b5L, and the second is 3 dL at 280 \u00d710\u00b3/\u00b5L. What is the pooled concentration of the combined bag?",
+      "program": "observe volume_first(1)\nobserve concentration_first(140)\nobserve volume_second(3)\nobserve concentration_second(280)\nlet answer = (volume_first * concentration_first + volume_second * concentration_second) / (volume_first + volume_second)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 980,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 245.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 175.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.3333333333333335,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r36pool-14",
+      "qtype": "transfusion_pooling",
+      "stem": "Two component units are pooled into one bag: the first is 1 dL at a cell concentration of 140 \u00d710\u00b3/\u00b5L, and the second is 3 dL at 280 \u00d710\u00b3/\u00b5L. What is the total cell content of the combined bag?",
+      "program": "observe volume_first(1)\nobserve concentration_first(140)\nobserve volume_second(3)\nobserve concentration_second(280)\nlet answer = volume_first * concentration_first + volume_second * concentration_second\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 245.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 175.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 980,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.3333333333333335,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r36pool-15",
+      "qtype": "transfusion_pooling",
+      "stem": "Two component units are pooled into one bag: the first is 1 dL at a cell concentration of 140 \u00d710\u00b3/\u00b5L, and the second is 3 dL at 280 \u00d710\u00b3/\u00b5L. What is the total volume of the combined bag?",
+      "program": "observe volume_first(1)\nobserve concentration_first(140)\nobserve volume_second(3)\nobserve concentration_second(280)\nlet answer = volume_first + volume_second\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 245.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 980,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 175.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.3333333333333335,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r36pool-16",
+      "qtype": "transfusion_pooling",
+      "stem": "Two component units are pooled into one bag: the first is 3 dL at a cell concentration of 160 \u00d710\u00b3/\u00b5L, and the second is 2 dL at 240 \u00d710\u00b3/\u00b5L. What is the pooled concentration of the combined bag?",
+      "program": "observe volume_first(3)\nobserve concentration_first(160)\nobserve volume_second(2)\nobserve concentration_second(240)\nlet answer = (volume_first * concentration_first + volume_second * concentration_second) / (volume_first + volume_second)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 192.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 960,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 208.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r36pool-17",
+      "qtype": "transfusion_pooling",
+      "stem": "Two component units are pooled into one bag: the first is 3 dL at a cell concentration of 160 \u00d710\u00b3/\u00b5L, and the second is 2 dL at 240 \u00d710\u00b3/\u00b5L. What is the total cell content of the combined bag?",
+      "program": "observe volume_first(3)\nobserve concentration_first(160)\nobserve volume_second(2)\nobserve concentration_second(240)\nlet answer = volume_first * concentration_first + volume_second * concentration_second\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 192.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 960,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 208.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r36pool-18",
+      "qtype": "transfusion_pooling",
+      "stem": "Two component units are pooled into one bag: the first is 3 dL at a cell concentration of 160 \u00d710\u00b3/\u00b5L, and the second is 2 dL at 240 \u00d710\u00b3/\u00b5L. What is the total volume of the combined bag?",
+      "program": "observe volume_first(3)\nobserve concentration_first(160)\nobserve volume_second(2)\nobserve concentration_second(240)\nlet answer = volume_first + volume_second\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 192.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 960,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 208.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r36pool-19",
+      "qtype": "transfusion_pooling",
+      "stem": "Two component units are pooled into one bag: the first is 4 dL at a cell concentration of 210 \u00d710\u00b3/\u00b5L, and the second is 1 dL at 150 \u00d710\u00b3/\u00b5L. What is the pooled concentration of the combined bag?",
+      "program": "observe volume_first(4)\nobserve concentration_first(210)\nobserve volume_second(1)\nobserve concentration_second(150)\nlet answer = (volume_first * concentration_first + volume_second * concentration_second) / (volume_first + volume_second)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 990,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 162.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 198.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r36pool-20",
+      "qtype": "transfusion_pooling",
+      "stem": "Two component units are pooled into one bag: the first is 4 dL at a cell concentration of 210 \u00d710\u00b3/\u00b5L, and the second is 1 dL at 150 \u00d710\u00b3/\u00b5L. What is the total cell content of the combined bag?",
+      "program": "observe volume_first(4)\nobserve concentration_first(210)\nobserve volume_second(1)\nobserve concentration_second(150)\nlet answer = volume_first * concentration_first + volume_second * concentration_second\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 198.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 162.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 990,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r36pool-21",
+      "qtype": "transfusion_pooling",
+      "stem": "Two component units are pooled into one bag: the first is 4 dL at a cell concentration of 210 \u00d710\u00b3/\u00b5L, and the second is 1 dL at 150 \u00d710\u00b3/\u00b5L. What is the total volume of the combined bag?",
+      "program": "observe volume_first(4)\nobserve concentration_first(210)\nobserve volume_second(1)\nobserve concentration_second(150)\nlet answer = volume_first + volume_second\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 198.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 990,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 162.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
