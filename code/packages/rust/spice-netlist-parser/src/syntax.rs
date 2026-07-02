@@ -70,6 +70,8 @@ pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION
     u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPTS_SCHEMA_VERSION:
     u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_SUMMARY_SCHEMA_VERSION:
+    u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -143,6 +145,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-selection-json",
     "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-json",
     "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipts-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-summary-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -8383,6 +8386,180 @@ impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortc
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptSummary
+{
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub receipt_summary_id: String,
+    pub receipt_stream_id: String,
+    pub search_invocation_id: String,
+    pub search_selection_id: String,
+    pub search_results_id: String,
+    pub search_index_id: String,
+    pub palette_id: String,
+    pub registry_id: String,
+    pub command_group: String,
+    pub query: String,
+    pub normalized_query: String,
+    pub query_tokens: Vec<String>,
+    pub query_token_count: usize,
+    pub invocation_state: String,
+    pub receipt_state: Option<String>,
+    pub status_kind: String,
+    pub status_title: String,
+    pub status_message: String,
+    pub can_dispatch: bool,
+    pub dispatch_accepted: bool,
+    pub dispatch_blocked: bool,
+    pub dispatch_action: Option<String>,
+    pub latest_receipt_id: Option<String>,
+    pub selected_search_result_id: Option<String>,
+    pub selected_command_id: Option<String>,
+    pub selected_handler_id: Option<String>,
+    pub selected_target: Option<String>,
+    pub selected_label: Option<String>,
+    pub selected_queue_state: Option<String>,
+    pub blocked_reason: Option<String>,
+    pub receipt_count: usize,
+    pub accepted_receipt_count: usize,
+    pub blocked_receipt_count: usize,
+    pub empty_receipt_count: usize,
+    pub has_receipts: bool,
+    pub attention: bool,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipts_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptSummary {
+    pub fn from_bootstrap_snapshot(
+        snapshot: &BerkeleyAppBootstrapSnapshot,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_search_invocation_receipts(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceipts::from_bootstrap_snapshot(
+                snapshot,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(
+        handoff: &BerkeleyAppShellHandoff,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_search_invocation_receipts(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceipts::from_shell_handoff(
+                handoff,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_search_invocation_receipts(
+        receipts: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceipts,
+    ) -> Self {
+        let latest_receipt = receipts.receipts.last();
+        let receipt_state = latest_receipt.map(|receipt| receipt.receipt_state.clone());
+        let (status_kind, status_title) = match receipt_state.as_deref() {
+            Some("accepted") => ("success", "Command accepted"),
+            Some("blocked") => ("blocked", "Command blocked"),
+            Some("empty") => ("empty", "No command selected"),
+            Some(_) => ("unknown", "Command receipt"),
+            None => ("empty", "No invocation receipt"),
+        };
+        let status_message = latest_receipt
+            .map(|receipt| receipt.message.clone())
+            .unwrap_or_else(|| "No command palette invocation receipt is available.".to_string());
+        let dispatch_accepted = latest_receipt
+            .map(|receipt| receipt.dispatch_accepted)
+            .unwrap_or(false);
+        let dispatch_blocked = latest_receipt
+            .map(|receipt| receipt.dispatch_blocked)
+            .unwrap_or(false);
+        let attention = receipts.attention_required
+            || latest_receipt.map(|receipt| receipt.attention).unwrap_or(false)
+            || receipts.blocked_receipt_count > 0;
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_SUMMARY_SCHEMA_VERSION,
+            package_name: receipts.package_name.clone(),
+            source_fingerprint: receipts.source_fingerprint.clone(),
+            title: receipts.title.clone(),
+            startup_route: receipts.startup_route.clone(),
+            ready: receipts.ready,
+            severity: receipts.severity.clone(),
+            attention_required: receipts.attention_required,
+            receipt_summary_id:
+                "dashboard.dispatch-queue.shortcut-command-palette-search-invocation-receipt-summary"
+                    .to_string(),
+            receipt_stream_id: receipts.receipt_stream_id.clone(),
+            search_invocation_id: receipts.search_invocation_id.clone(),
+            search_selection_id: receipts.search_selection_id.clone(),
+            search_results_id: receipts.search_results_id.clone(),
+            search_index_id: receipts.search_index_id.clone(),
+            palette_id: receipts.palette_id.clone(),
+            registry_id: receipts.registry_id.clone(),
+            command_group: receipts.command_group.clone(),
+            query: receipts.query.clone(),
+            normalized_query: receipts.normalized_query.clone(),
+            query_tokens: receipts.query_tokens.clone(),
+            query_token_count: receipts.query_token_count,
+            invocation_state: receipts.invocation_state.clone(),
+            receipt_state,
+            status_kind: status_kind.to_string(),
+            status_title: status_title.to_string(),
+            status_message,
+            can_dispatch: receipts.can_dispatch,
+            dispatch_accepted,
+            dispatch_blocked,
+            dispatch_action: latest_receipt.and_then(|receipt| receipt.dispatch_action.clone()),
+            latest_receipt_id: receipts.latest_receipt_id.clone(),
+            selected_search_result_id: latest_receipt
+                .and_then(|receipt| receipt.selected_search_result_id.clone()),
+            selected_command_id: latest_receipt.and_then(|receipt| receipt.selected_command_id.clone()),
+            selected_handler_id: latest_receipt.and_then(|receipt| receipt.selected_handler_id.clone()),
+            selected_target: latest_receipt.and_then(|receipt| receipt.selected_target.clone()),
+            selected_label: latest_receipt.and_then(|receipt| receipt.selected_label.clone()),
+            selected_queue_state: latest_receipt.and_then(|receipt| receipt.selected_queue_state.clone()),
+            blocked_reason: latest_receipt.and_then(|receipt| receipt.blocked_reason.clone()),
+            receipt_count: receipts.receipt_count,
+            accepted_receipt_count: receipts.accepted_receipt_count,
+            blocked_receipt_count: receipts.blocked_receipt_count,
+            empty_receipt_count: receipts.empty_receipt_count,
+            has_receipts: !receipts.receipts.is_empty(),
+            attention,
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipts_capability_id:
+                receipts
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipts_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-summary-json"
+                    .to_string(),
+            artifact_capability_count: receipts.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary_json_value(self)
+            .to_string()
+    }
+}
+
 fn command_palette_search_tokens(search_text: &str, keywords: &[String]) -> Vec<String> {
     let mut tokens = Vec::new();
     for source in std::iter::once(search_text).chain(keywords.iter().map(String::as_str)) {
@@ -10584,6 +10761,67 @@ impl BerkeleyAppDeck {
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self
             .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipts(
+                persisted_state,
+                search_query,
+                selected_search_result_id,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptSummary
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptSummary::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+            search_query,
+            selected_search_result_id,
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptSummary,
+        AnalysisExecutionError,
+    >{
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptSummary::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary(
+            persisted_state,
+            search_query,
+            selected_search_result_id,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary(
                 persisted_state,
                 search_query,
                 selected_search_result_id,
@@ -15390,6 +15628,75 @@ fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shor
         "artifactCapabilityCount",
         receipts.artifact_capability_count
     );
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary_json_value(
+    summary: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptSummary,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", summary.schema_version);
+    insert_json!("packageName", &summary.package_name);
+    insert_json!("sourceFingerprint", &summary.source_fingerprint);
+    insert_json!("title", &summary.title);
+    insert_json!("startupRoute", &summary.startup_route);
+    insert_json!("ready", summary.ready);
+    insert_json!("severity", &summary.severity);
+    insert_json!("attentionRequired", summary.attention_required);
+    insert_json!("receiptSummaryId", &summary.receipt_summary_id);
+    insert_json!("receiptStreamId", &summary.receipt_stream_id);
+    insert_json!("searchInvocationId", &summary.search_invocation_id);
+    insert_json!("searchSelectionId", &summary.search_selection_id);
+    insert_json!("searchResultsId", &summary.search_results_id);
+    insert_json!("searchIndexId", &summary.search_index_id);
+    insert_json!("paletteId", &summary.palette_id);
+    insert_json!("registryId", &summary.registry_id);
+    insert_json!("commandGroup", &summary.command_group);
+    insert_json!("query", &summary.query);
+    insert_json!("normalizedQuery", &summary.normalized_query);
+    insert_json!("queryTokens", &summary.query_tokens);
+    insert_json!("queryTokenCount", summary.query_token_count);
+    insert_json!("invocationState", &summary.invocation_state);
+    insert_json!("receiptState", &summary.receipt_state);
+    insert_json!("statusKind", &summary.status_kind);
+    insert_json!("statusTitle", &summary.status_title);
+    insert_json!("statusMessage", &summary.status_message);
+    insert_json!("canDispatch", summary.can_dispatch);
+    insert_json!("dispatchAccepted", summary.dispatch_accepted);
+    insert_json!("dispatchBlocked", summary.dispatch_blocked);
+    insert_json!("dispatchAction", &summary.dispatch_action);
+    insert_json!("latestReceiptId", &summary.latest_receipt_id);
+    insert_json!("selectedSearchResultId", &summary.selected_search_result_id);
+    insert_json!("selectedCommandId", &summary.selected_command_id);
+    insert_json!("selectedHandlerId", &summary.selected_handler_id);
+    insert_json!("selectedTarget", &summary.selected_target);
+    insert_json!("selectedLabel", &summary.selected_label);
+    insert_json!("selectedQueueState", &summary.selected_queue_state);
+    insert_json!("blockedReason", &summary.blocked_reason);
+    insert_json!("receiptCount", summary.receipt_count);
+    insert_json!("acceptedReceiptCount", summary.accepted_receipt_count);
+    insert_json!("blockedReceiptCount", summary.blocked_receipt_count);
+    insert_json!("emptyReceiptCount", summary.empty_receipt_count);
+    insert_json!("hasReceipts", summary.has_receipts);
+    insert_json!("attention", summary.attention);
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptsCapabilityId",
+        &summary
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipts_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptSummaryCapabilityId",
+        &summary
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary_capability_id
+    );
+    insert_json!("artifactCapabilityCount", summary.artifact_capability_count);
 
     serde_json::Value::Object(value)
 }
