@@ -576,6 +576,11 @@ primary entry routing, and search-index capability metadata. Search results
 filter those entries by normalized query tokens, preserving matched tokens,
 active/attention/default/primary result routing, result counts, and empty-state
 text for command-palette product shells.
+Search invocation receipt notification stack summary product handoffs wrap the
+latest stack summary with stable product surface, render region, handoff route,
+product-shell action, live-region, announcement, badge, and nested
+`stackSummary` metadata so WebAssembly and product shells can render
+post-dispatch feedback without making a second summary call.
 Persisted editor-state snapshots resolve saved selection and active-command IDs
 against the current deck, repairing stale UI state after source edits. Host
 surfaces turn those snapshots into stable source, diagnostics, analysis, table,
