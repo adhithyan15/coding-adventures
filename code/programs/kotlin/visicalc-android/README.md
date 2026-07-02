@@ -27,6 +27,22 @@ visicalc-* demo so the screenshot you take on an Android phone or
 emulator looks visually identical to its React, HTML, Qt, Flutter,
 SwiftUI, and Compose Desktop siblings.
 
+### Desktop/touch FormulaBar toggle
+
+A **Touch bar** button flips the formula bar between two composables
+generated from the *same* `FormulaBar.mil` interface: the desktop `Row`
+(address label left of the input) and the UI30 touch `Column` (address
+label stacked above a full-width input — the phone arrangement, so this
+demo defaults to touch). `scripts/build.sh` emits both; because the
+Compose emitter names the composable after the `.mil` component
+(`FormulaBar`) and also emits the shared `sealed class FormulaBarEvent`,
+the touch output has its duplicate event class stripped (it reuses the
+one in `FormulaBar.kt`) and its composable renamed to `FormulaBarTouch`.
+`MainActivity` holds a `touch` flag and calls one or the other with the
+identical dispatch — editing behaves the same in both; only the shape
+changes. This is the Android sibling of the Qt / Compose / Flutter toggles
+and the web demo's switcher (the UI30 "one component, many layouts" invariant).
+
 ## What this demo does NOT yet do
 
 - No `mosaic-compile --backend compose` exists yet (tracked as

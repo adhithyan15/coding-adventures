@@ -69,6 +69,39 @@ generate() {
 generate "FormulaBar" "$SRC/FormulaBar.desktop.mll"
 generate "Grid"       "$SRC/Grid.desktop.mll"
 
+# UI30 touch variant: FormulaBar.touch.mll stacks the address label ABOVE a
+# full-width input (Column) instead of the desktop Row. Same FormulaBar.mil
+# interface, so MainActivity can swap FormulaBar <-> FormulaBarTouch at runtime
+# against the identical dispatch contract. The `generate` helper can't be reused
+# as-is because the Compose emitter names the composable after the .mil component
+# (FormulaBar) and also emits the shared `sealed class FormulaBarEvent`; to let
+# both composables coexist in package com.example.visicalc we (1) strip the
+# DUPLICATE FormulaBarEvent from the touch output (it reuses the one in
+# FormulaBar.kt) and (2) rename the composable to FormulaBarTouch. One event
+# type, two layouts — mirrors the visicalc-compose demo.
+echo "Compiling FormulaBar (Compose / Android, touch)..."
+"$MOSAIC_COMPILE" --backend compose \
+  --interface           "$SRC/FormulaBar.mil" \
+  --layout              "$SRC/FormulaBar.touch.mll" \
+  --style               "$SRC/FormulaBar.dark.msl" \
+  --package-search-path "$REPO_ROOT/code/packages" \
+  -o "$OUT_DIR/FormulaBarTouch.kt.raw"
+{
+  echo "// THIS FILE IS GENERATED.  Edit FormulaBar.{mil,touch.mll,dark.msl}"
+  echo "// and re-run scripts/build.sh to regenerate."
+  echo
+  printf 'package com.example.visicalc\n\n'
+  # Drop the sealed-class FormulaBarEvent block (lives in FormulaBar.kt, same
+  # package). Its closing brace is the first column-0 `}`; nested data-class
+  # braces are indented, so `^}` matches only the outer close. Then rename the fun.
+  awk '/^sealed class FormulaBarEvent \{/{skip=1}
+       skip && /^\}/{skip=0; next}
+       skip{next}
+       {print}' "$OUT_DIR/FormulaBarTouch.kt.raw" \
+    | sed 's/fun FormulaBar(/fun FormulaBarTouch(/'
+} > "$OUT_DIR/FormulaBarTouch.kt"
+rm -f "$OUT_DIR/FormulaBarTouch.kt.raw"
+
 
 # ── Engine (Rust → per-ABI .so via the NDK) ──────────────────────────────────
 # Android's ART runtime has no JVM Foreign Function & Memory API (the path the
