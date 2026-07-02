@@ -107,6 +107,30 @@ total — so it cross-foots both ways.
   **double-click** a cell to edit it in place.
 - Every dependent cell recomputes. Errors propagate too:
   `=1/0` shows `#DIV/0!`, and any total that depends on it does as well.
+- A **Theme** (Dark / Light) and **Layout** (Desktop / Touch) switcher sits
+  above the sheet. Flipping either swaps the mosaic-generated fragments **at
+  runtime over the same engine workbook** — no reload, no lost edits: change a
+  cell, toggle the theme, and your edit is still there.
+
+## Theme + layout switcher
+
+The switcher is the demo's proof of the UI30 *"one component, many layouts +
+themes, identical host contract"* invariant, exercised live:
+
+- **Layout** picks the FormulaBar `.mll` variant — desktop (a `Row`: address
+  label left of the input) vs touch (a `Column`: address label stacked above a
+  full-width input, the phone arrangement).
+- **Theme** picks the `.msl` style — `*.dark.msl` vs `*.light.msl`. The light
+  styles existed in the sources but were rendered by **no** demo until now; this
+  switcher is what finally ships them.
+
+`scripts/build.sh` compiles the full matrix — FormulaBar × {desktop, touch} ×
+{dark, light} plus Grid × {dark, light} — and `index.html` embeds each as a
+`<template>`. A ~40-line switcher (`renderFormulaBar()` / `gridTemplateEl()` /
+`applySwitcher()`) swaps the active fragment into the page and re-renders the
+grid from the workbook. The engine (cells, dependency graph, recalc) is
+untouched by either toggle — only the DOM is rebuilt. `touch.html` remains as
+the standalone touch snapshot; the switcher supersedes it for interactive use.
 
 ## How it works
 
