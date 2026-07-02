@@ -334,10 +334,13 @@ dceSpec = do
         let opt = optimizeWithPasses [deadCodeElimination] lp
         opt `shouldBe` EmptyResult
 
-    it "DCE4: Limit(_, Just 0, _) → EmptyResult" $ do
+    it "DCE4: Limit(_, Just 0, _) is NOT collapsed — preserves schema for cursor description" $ do
+        -- LIMIT 0 must NOT become EmptyResult because the VM still needs to
+        -- emit the correct column descriptions (cursorDescription).  Only
+        -- Limit(EmptyResult, _, _) → EmptyResult (child already has no rows).
         let lp = Limit (Scan "users" Nothing) (Just 0) Nothing
         let opt = optimizeWithPasses [deadCodeElimination] lp
-        opt `shouldBe` EmptyResult
+        opt `shouldBe` OptLimit (OptScan "users" Nothing Nothing Nothing) (Just 0) Nothing
 
     it "DCE5: Project(EmptyResult) → EmptyResult" $ do
         let inner = Filter (Scan "users" Nothing) (Literal (Just (LitBool False)))
@@ -473,12 +476,20 @@ e2eSpec = do
         let opt = optimizeWithPasses [deadCodeElimination] lp
         opt `shouldBe` EmptyResult
 
-    it "E2E6: LIMIT 0 with full pipeline yields EmptyResult" $ do
+    it "E2E6: LIMIT 0 with full pipeline preserves schema (no EmptyResult collapse)" $ do
+        -- LIMIT 0 must NOT collapse to EmptyResult — the VM emits column
+        -- descriptions from the plan tree; EmptyResult carries no schema.
+        -- limitPushdown propagates the 0 hint into the scan's optScanLimit.
         let stmt = SelectStmt False [OutputStar] [TableRef "users" Nothing]
                                [] Nothing [] Nothing [] (Just (LimitClause (Just 0) Nothing))
         let lp = planRight stmt
         let opt = optimize lp
-        opt `shouldBe` EmptyResult
+        opt `shouldBe` OptProject
+                            (OptLimit
+                                (OptScan "users" Nothing Nothing (Just 0))
+                                (Just 0)
+                                Nothing)
+                            [OutputStar]
 
     it "E2E7: DML passthrough — InsertPlan lifts and passes through all passes unchanged" $ do
         let lp = InsertPlan "users" ["id"] [[Literal (Just (LitInt 1))]]
