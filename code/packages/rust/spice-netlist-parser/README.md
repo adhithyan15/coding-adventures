@@ -581,6 +581,11 @@ latest stack summary with stable product surface, render region, handoff route,
 product-shell action, live-region, announcement, badge, and nested
 `stackSummary` metadata so WebAssembly and product shells can render
 post-dispatch feedback without making a second summary call.
+Product handoff delivery packages add a stable delivery package ID, package
+kind, delivery route, WebAssembly export symbol, hydration target, top-level
+notification counts, nested `productHandoff`, and delivery-package capability
+metadata so Mosaic and product-shell hosts can bootstrap the post-dispatch
+handoff without re-walking the command-palette receipt stack.
 Persisted editor-state snapshots resolve saved selection and active-command IDs
 against the current deck, repairing stale UI state after source edits. Host
 surfaces turn those snapshots into stable source, diagnostics, analysis, table,

@@ -33,29 +33,27 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification stack summary product handoff.
+1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification stack summary product handoff delivery package.
    - Status: current PR completion candidate.
    - Add schema-versioned Rust app shell dashboard dispatch-queue lane-tab
      panel-card-action-menu-group-shortcut-command-palette-search-invocation
-     receipt-notification-stack-summary-product-handoff surfaces and JSON
-     helpers that wrap command-palette search invocation receipt notification
-     stack summaries into deterministic product surface, render region,
-     handoff route, product-shell action, live-region, announcement, badge, and
-     nested stack-summary metadata for first-render product-shell dispatch
-     feedback.
-   - Preserve package name, source fingerprint, route/status metadata, receipt
-     notification stack summary product handoff ID, receipt notification stack
-     summary ID, receipt notification stack ID, receipt notification ID,
-     receipt summary ID, receipt stream ID, search invocation/selection/
-     results/index IDs, palette ID, registry ID, command group, raw/normalized
-     query, query tokens, product surface/region routing, handoff status/action,
-     live-region/announcement metadata, headline notification ID/kind/level/
-     title/body, summary kind/level/title/body, render/announce flags,
-     visible/announce/attention/success/error/info counts, nested stack
-     summary, stack-summary capability ID, stack-summary-product-handoff
-     capability ID, and advertised capability count so Mosaic, WebAssembly, and
-     product shells can render compact post-invocation product handoffs without
-     re-walking summary rows.
+     receipt-notification-stack-summary-product-handoff-delivery-package
+     surfaces and JSON helpers that wrap product handoffs into deterministic
+     package kind, delivery route, WebAssembly export symbol, hydration target,
+     top-level notification counts, nested product-handoff metadata, and
+     delivery-package capability IDs for first-render product-shell
+     bootstrapping.
+   - Preserve package name, source fingerprint, route/status metadata, delivery
+     package ID/kind/route, WebAssembly export symbol, hydration target, product
+     surface/region routing, product-shell action, product handoff IDs, receipt
+     notification stack summary/stack/notification IDs, receipt summary/stream
+     IDs, search invocation/selection/results/index IDs, palette ID, registry
+     ID, live-region/announcement metadata, render/announce/hydrate flags,
+     visible/announce/attention/success/error/info counts, nested product
+     handoff, product-handoff capability ID, delivery-package capability ID, and
+     advertised capability count so Mosaic, WebAssembly, and product shells can
+     hydrate compact post-invocation product handoffs without re-walking
+     receipt or summary rows.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -2426,6 +2424,31 @@ the Rust, Python, and TypeScript surfaces together.
      capability count so Mosaic, WebAssembly, and product shells can render
      compact post-invocation notification stack summaries without walking
      notification rows.
+
+190. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification stack summary product handoff.
+   - Status: completed in PR 7406.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell dashboard dispatch-queue lane-tab panel-card-action-menu-group-
+     shortcut-command-palette-search-invocation receipt-notification-stack-
+     summary-product-handoff surfaces plus JSON helpers that wrap command-
+     palette search invocation receipt notification stack summaries into
+     deterministic product surface, render region, handoff route, product-shell
+     action, live-region, announcement, badge, and nested stack-summary metadata
+     for first-render product-shell dispatch feedback.
+   - The invocation receipt notification stack summary product handoff payload
+     preserves package name, source fingerprint, route/status metadata, receipt
+     notification stack summary product handoff ID, receipt notification stack
+     summary ID, receipt notification stack ID, receipt notification ID,
+     receipt summary ID, receipt stream ID, search invocation/selection/results/
+     index IDs, palette ID, registry ID, command group, raw/normalized query,
+     query tokens, product surface/region routing, handoff status/action,
+     live-region/announcement metadata, headline notification ID/kind/level/
+     title/body, summary kind/level/title/body, render/announce flags,
+     visible/announce/attention/success/error/info counts, nested stack summary,
+     stack-summary capability ID, stack-summary-product-handoff capability ID,
+     and advertised capability count so Mosaic, WebAssembly, and product shells
+     can render compact post-invocation product handoffs without re-walking
+     summary rows.
 
 ## Backlog
 
