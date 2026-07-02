@@ -27,6 +27,7 @@
  *    neither a string nor an array falls through to the numeric fold unchanged.
  */
 
+import { raiseError } from "@coding-adventures/sir-runtime-exceptions";
 import type { Val } from "./values.js";
 import { toDisplay } from "./values.js";
 
@@ -202,14 +203,34 @@ export function mul(...args: Val[]): Val {
   return acc;
 }
 
-/** Variadic quotient with truncating-integer division (toward zero). */
+/**
+ * Variadic quotient with truncating-integer division (toward zero).
+ *
+ * **Division by zero raises `ZeroDivisionError` (T2).** Ruby raises for *both*
+ * integer and float division by 0 (`1 / 0` and `1.0 / 0` both raise
+ * `ZeroDivisionError: divided by 0`) — unlike bare JavaScript, where `1 / 0`
+ * silently yields `Infinity` (and `0 / 0` yields `NaN`). Native `/` therefore
+ * never surfaces the fault, so we ADD an explicit zero-divisor check *before*
+ * each division step and raise the typed `SirError` through the exceptions
+ * runtime's existing `raiseError` entry point, so a Ruby
+ * `rescue ZeroDivisionError` catches it identically to the reference.
+ *
+ * The guard sits inside the fold, so the divisor of *every* step is checked
+ * (`div(10, 2, 0)` raises on the trailing 0). We test `=== 0` rather than
+ * "falsy" so a legitimate non-zero divisor is never mistaken; the message is
+ * Ruby's exact `"divided by 0"`.
+ */
 export function div(...args: Val[]): Val {
   if (args.length === 0) {
     return 0;
   }
   let acc = num(args[0]!);
   for (let i = 1; i < args.length; i++) {
-    acc = Math.trunc(acc / num(args[i]!));
+    const divisor = num(args[i]!);
+    if (divisor === 0) {
+      raiseError("ZeroDivisionError", "divided by 0");
+    }
+    acc = Math.trunc(acc / divisor);
   }
   return acc;
 }

@@ -2,6 +2,31 @@
 
 All notable changes to `@coding-adventures/sir-runtime-core` are documented here.
 
+## [0.1.9] - 2026-07-01
+
+### Added — typed `ZeroDivisionError` on division by zero (T2)
+
+Part of the `sir-typed-runtime-errors` cascade (spec
+`code/specs/sir-typed-runtime-errors.md`). Ruby's `/` raises `ZeroDivisionError`
+("divided by 0") for both integer and float division by zero, but native
+JavaScript `/` silently yields `Infinity`/`NaN`, so a Ruby `rescue
+ZeroDivisionError` never caught it.
+
+- **`div`** (`arithmetic.ts`) now performs an explicit `=== 0` divisor check
+  *before* each division step and raises a typed `SirError` of class
+  `ZeroDivisionError` (message `"divided by 0"`) via the exceptions runtime's
+  `raiseError` entry point. The guard sits inside the variadic fold, so a zero
+  divisor anywhere (`div(10, 2, 0)`) raises; a zero *dividend* (`div(0, 5)`) is
+  unaffected. Truncating-integer semantics are otherwise unchanged.
+- The typed raise is explicit-string (`raiseError("ZeroDivisionError", …)`) — no
+  reflection, no source-derived dispatch.
+
+### Dependencies
+
+- Adds a `file:` dependency on `@coding-adventures/sir-runtime-exceptions` (for
+  the shared `raiseError`/`SirError` typed-raise entry point). BUILD deps updated
+  to list the full transitive `file:` set.
+
 ## [0.1.8] - 2026-07-01
 
 ### Added — polymorphic `+`/`*` on strings and arrays (PO2)

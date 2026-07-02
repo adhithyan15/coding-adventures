@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/sir-runtime-core",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Core runtime for Semantic-IR-emitted TypeScript/JavaScript — SIR truthiness, symbols, pairs, equality, display, arithmetic, closures, globals",
   "type": "module",
   "main": "src/index.ts",
@@ -20,6 +20,7 @@
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "dependencies": {
+    "@coding-adventures/sir-runtime-exceptions": "file:../sir-runtime-exceptions",
     "@coding-adventures/sir-runtime-pairs": "file:../sir-runtime-pairs"
   },
   "devDependencies": {

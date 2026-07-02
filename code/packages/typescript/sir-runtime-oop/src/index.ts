@@ -39,6 +39,7 @@
 // proc-lenient arity, and `truthy` applies SIR truthiness (only `false`/`nil` are
 // falsy) to predicate results.
 import { apply, Closure, eq, intern, isSymbol, truthy } from "@coding-adventures/sir-runtime-core";
+import { raiseError } from "@coding-adventures/sir-runtime-exceptions";
 
 /**
  * The SIR universal value type at this package's boundary.  Kept as `unknown`'s
@@ -446,6 +447,7 @@ const ARRAY_METHODS = new Set<string>([
   "empty?",
   "to_a",
   "join",
+  "fetch",
 ]);
 
 // Block-taking `Array`/`Enumerable` methods (M1b); each invokes a trailing
@@ -809,6 +811,26 @@ function arrayMethod(recv: Val[], name: string, args: Val[]): Val | typeof MISS 
       const sep = args.length > 0 ? args[0] : "";
       return recv.map((item: Val) => rubyToS(item)).join(sep);
     }
+    case "fetch": {
+      // Ruby `Array#fetch(i)` — unlike `arr[i]` (which returns nil OOB), `fetch`
+      // raises `IndexError` when the index is out of bounds AND no default was
+      // supplied (T2). A negative index counts from the end (`fetch(-1)` is the
+      // last element). With a second argument, that default is returned instead
+      // of raising (Ruby's `fetch(i, default)`); a block form is out of scope.
+      const raw = args[0] as number;
+      const idx = raw < 0 ? recv.length + raw : raw;
+      if (idx >= 0 && idx < recv.length) {
+        return recv[idx];
+      }
+      if (args.length > 1) {
+        return args[1]; // explicit default — no raise (Ruby semantics)
+      }
+      raiseError(
+        "IndexError",
+        `index ${raw} outside of array bounds: ${-recv.length}...${recv.length}`,
+      );
+      return MISS; // unreachable: raiseError returns `never`
+    }
     default:
       return MISS;
   }
@@ -896,8 +918,14 @@ function hashMethod(recv: Map<Val, Val>, name: string, args: Val[]): Val | typeo
     case "value?":
       return [...recv.values()].some((v: Val) => valEq(v, args[0]));
     case "fetch":
+      // Ruby `Hash#fetch(key)` — unlike `hash[key]` (which returns nil on a
+      // miss), `fetch` raises `KeyError` when the key is absent AND no default
+      // was supplied (T2). With a second argument, that default is returned
+      // (Ruby's `fetch(key, default)`); a block form is out of scope.
       if (recv.has(args[0])) return recv.get(args[0]);
-      return args.length > 1 ? args[1] : null;
+      if (args.length > 1) return args[1]; // explicit default — no raise
+      raiseError("KeyError", `key not found: ${rubyInspect(args[0])}`);
+      return MISS; // unreachable: raiseError returns `never`
     case "size":
     case "length":
       return recv.size;
@@ -1397,6 +1425,27 @@ export function callMethod(recv: Val, name: string, ...args: Val[]): Val {
   const objResult = objectMethod(recv, name, args);
   if (objResult !== MISS) return objResult;
 
+  // Nothing resolved `name` on `recv`. Ruby distinguishes two cases here, and
+  // so must we (T2) — the difference is load-bearing so we do NOT over-raise:
+  //
+  //   • A method the receiver GENUINELY DOES NOT HAVE (`obj.undefined`,
+  //     `nil.foo`, `5.bit_length`) → Ruby raises `NoMethodError`. We raise the
+  //     typed `SirError` so a Ruby `rescue NoMethodError` catches it, replacing
+  //     the previous silent `nil` floor.
+  //
+  //   • A method the receiver DOES have but was called in a shape v0 doesn't
+  //     model — most notably a block-taking method invoked WITHOUT a block
+  //     (`[1,2,3].map`, `5.times`) → Ruby returns an *Enumerator*, NOT a
+  //     `NoMethodError`. We have no Enumerator in v0, so the honest floor stays
+  //     `nil` (never a spurious raise). `respondsTo` reports catalog membership,
+  //     so it cleanly separates the two: an unknown name is `false` (→ raise), a
+  //     known-but-unsupported-shape name is `true` (→ nil floor).
+  //
+  // A method that legitimately RETURNS nil (`[].first`, `{}.fetch(k, nil)`)
+  // never reaches here — it returns from its catalog arm above.
+  if (!respondsTo(recv, name)) {
+    raiseError("NoMethodError", `undefined method '${name}' for ${classOf(recv)}`);
+  }
   return null;
 }
 
