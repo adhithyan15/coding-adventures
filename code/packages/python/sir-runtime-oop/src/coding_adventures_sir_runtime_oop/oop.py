@@ -255,11 +255,45 @@ _instance_methods: dict[tuple[str, str], Closure] = {}
 _class_methods: dict[tuple[str, str], Closure] = {}
 
 
+# ── Mixins: included-modules table + Ruby MRO (MX2) ──────────────────────────
+#
+# Ruby's ``module M; def foo; …; end; end`` registers ``foo`` in the SAME method
+# table as a class def — the *owner* key is simply the module name ``"M"`` (the
+# frontend emits ``__def_method__("M", "foo", ⟨foo⟩)`` for a module body, exactly
+# as it does for a class body).  A ``class C; include M; end`` then makes ``M``'s
+# methods reachable from a ``C`` instance.  We record that mixing-in with one
+# explicit table — NEVER reflection on a source-derived name (the C3 RCE lesson):
+#
+#     _included_modules[owner] = [M1, M2, …]   # append in *include order*
+#
+# Ruby searches the most-recently-included module first, so the resolution walk
+# iterates this list in **reverse**.  Method resolution follows Ruby's MRO:
+#
+#     receiver class C
+#       → C's own methods
+#       → C's included modules, most-recent-first (each module's own methods,
+#         and *its* included modules, depth-first)
+#       → C's superclass
+#       → the superclass's modules
+#       → … → Object
+#
+# A diamond (a module reachable by two paths) is de-duplicated: the FIRST time an
+# owner is visited fixes its position; later re-encounters are skipped.  The walk
+# is cycle-guarded by the same ``seen``-set — a module that (transitively)
+# includes itself terminates rather than looping.  ``extend`` reuses this table
+# indirectly: :func:`extend_module` copies a module's instance methods into the
+# owner's *class-method* table so they answer as ``Owner.method`` / singleton.
+
+_included_modules: dict[str, list[str]] = {}
+
+
 def def_method(class_name: str, method_name: str, fn: Closure) -> None:
     """Register instance method ``method_name`` for ``class_name`` (``def m``).
 
     Emitted by the frontend as ``__def_method__``; ``fn`` is the hoisted
-    top-level function as a :class:`Closure`.
+    top-level function as a :class:`Closure`.  The ``class_name`` owner key may
+    be a *module* name — a module body's ``def`` registers identically, which is
+    what :func:`include_module` / :func:`extend_module` then draw from.
     """
     _instance_methods[(class_name, method_name)] = fn
 
@@ -272,21 +306,85 @@ def def_class_method(class_name: str, method_name: str, fn: Closure) -> None:
     _class_methods[(class_name, method_name)] = fn
 
 
-def _resolve_instance_method(class_name: str, method_name: str) -> Closure | None:
-    """Find ``method_name`` on ``class_name`` or any registered ancestor.
+def include_module(owner: str, module_name: str) -> None:
+    """Mix ``module_name``'s instance methods into ``owner`` (``include M``).
 
-    Walks the superclass chain (cycle-guarded, reusing the :func:`is_a`
-    ``seen``-set pattern) and returns the first matching :class:`Closure`, or
-    ``None`` if unresolved.
+    Emitted by the frontend as ``__include__("Owner", "M")``.  Appends ``M`` to
+    ``owner``'s included-modules list **in include order**; the MRO walk
+    (:func:`_owner_mro`) searches this list in reverse, so a later ``include``
+    shadows an earlier one — matching Ruby, where the most-recently-included
+    module wins.  Re-including a module appends it again (harmless: the MRO
+    de-dups by first occurrence, so the earliest position stands).
     """
-    cur: str | None = class_name
+    _included_modules.setdefault(owner, []).append(module_name)
+
+
+def extend_module(owner: str, module_name: str) -> None:
+    """Mix ``module_name``'s instance methods in as ``owner``'s CLASS methods
+    (``extend M``).
+
+    Emitted by the frontend as ``__extend__("Owner", "M")``.  Ruby's ``extend``
+    adds a module's *instance* methods to the receiver's singleton — for a class
+    receiver that means they become callable as ``Owner.method``.  We realise
+    that by copying every ``(module_name, m)`` entry from the instance-method
+    table into the class-method table under ``owner``, so :func:`call_class_method`
+    (a plain ``(class, method)`` dict lookup — no reflection) resolves them.  A
+    class method the owner defines itself is registered *after* class-body defs
+    run, so an explicit ``def self.m`` still wins if it was registered later; in
+    practice the frontend emits ``extend`` directives after the owner's own defs,
+    matching Ruby's "own class method shadows the extended module" order.
+    """
+    for (mod, method_name), fn in list(_instance_methods.items()):
+        if mod == module_name:
+            _class_methods.setdefault((owner, method_name), fn)
+
+
+def _owner_mro(class_name: str) -> list[str]:
+    """The Ruby method-resolution order for a receiver of class ``class_name``.
+
+    Produces the linearised, de-duplicated owner list: for each class in the
+    superclass chain we emit the class itself, then its included modules
+    depth-first and most-recent-first (a module's own included modules follow
+    it).  A given owner appears at most once — its FIRST occurrence fixes its
+    position, so a diamond include resolves to a single slot.  Cycle-guarded by
+    the shared ``seen`` set (a self-including module or a superclass cycle
+    terminates).
+    """
+    order: list[str] = []
     seen: set[str] = set()
+
+    def visit_module(mod: str) -> None:
+        if mod in seen:
+            return
+        seen.add(mod)
+        order.append(mod)
+        # A module's own included modules, most-recent-first (reverse), depth
+        # first — same discipline as a class's modules.
+        for sub in reversed(_included_modules.get(mod, [])):
+            visit_module(sub)
+
+    cur: str | None = class_name
     while cur is not None and cur not in seen:
-        fn = _instance_methods.get((cur, method_name))
+        seen.add(cur)
+        order.append(cur)
+        for mod in reversed(_included_modules.get(cur, [])):
+            visit_module(mod)
+        cur = superclass_of(cur)
+    return order
+
+
+def _resolve_instance_method(class_name: str, method_name: str) -> Closure | None:
+    """Find ``method_name`` on ``class_name`` or any MRO ancestor.
+
+    Walks the Ruby method-resolution order (:func:`_owner_mro` — class → its
+    included modules reverse → superclass → its modules → … Object) and returns
+    the first matching :class:`Closure`, or ``None`` if unresolved.  The MRO is
+    cycle- and diamond-safe.
+    """
+    for owner in _owner_mro(class_name):
+        fn = _instance_methods.get((owner, method_name))
         if fn is not None:
             return fn
-        seen.add(cur)
-        cur = superclass_of(cur)
     return None
 
 
@@ -1567,3 +1665,4 @@ def reset_oop() -> None:
     _methods.clear()
     _instance_methods.clear()
     _class_methods.clear()
+    _included_modules.clear()

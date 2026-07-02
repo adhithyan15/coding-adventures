@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.8.0 — mixin emit arms: `include` / `extend` (MX2 of sir-mixins)
+
+### Added
+
+- **`__include__` / `__extend__` emit arms.** The MX1 frontend lowers
+  `include M` / `extend M` (in a class or module body) to
+  `__include__("Owner", "M")` / `__extend__("Owner", "M")`. Two new arms in the
+  builtin-call emitter route these to the OOP runtime's explicit tables:
+  - `__include__("Owner", "M")` → `_sir_oop_include_module("Owner", "M")`
+    (appends `M` to the owner's included-modules list, consulted by the MRO
+    walk).
+  - `__extend__("Owner", "M")` → `_sir_oop_extend_module("Owner", "M")` (copies
+    `M`'s instance methods into the owner's class-method table).
+  Both names are emitted via `quote_py_string`, never interpolated raw — dispatch
+  stays fully table-driven (the C3 dynamic-dispatch RCE lesson).
+- **OOP-runtime import gate** now fires on `__include__` / `__extend__`, and the
+  `RUNTIME_OOP` import header aliases `include_module`/`extend_module` to
+  `_sir_oop_include_module`/`_sir_oop_extend_module`.
+
+### Tests
+
+- Unit: `oop_include_emits_include_module`, `oop_extend_emits_extend_module`
+  (emit shape); the runtime-alias test asserts both new aliases.
+- End-to-end (Ruby → SIR → Python → CPython): a module method `include`d into a
+  class and called on an instance (`hi`); a class method **shadowing** the
+  included module's (`class`); `extend` making a module method a **class**
+  method (`7`). See `code/specs/sir-mixins.md`.
+
 ## 0.7.0 — `puts` builtin (Ruby semantics)
 
 ### Changed

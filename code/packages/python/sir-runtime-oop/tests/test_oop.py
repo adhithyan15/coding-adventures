@@ -1069,3 +1069,112 @@ def test_index_operator_still_returns_nil_no_over_raise() -> None:
     assert {"a": 1}.get("missing") is None  # the [] lowering's miss → nil
     assert oop.call_method([], "first") is None  # empty-array accessor stays nil
     assert oop.call_method({"a": 1}, "dig", "z") is None  # dig miss stays nil
+
+
+# ── MX2: mixins — include / extend / MRO ──────────────────────────────────────
+
+
+def test_include_makes_module_instance_method_reachable() -> None:
+    # module Greetable; def greet; "hi"; end; end + class Robot; include Greetable.
+    oop.define_class("Robot", None)
+    oop.def_method("Greetable", "greet", Closure(lambda: "hi"))
+    oop.include_module("Robot", "Greetable")
+    robot = oop.call_new("Robot")
+    assert oop.call_method(robot, "greet") == "hi"
+
+
+def test_class_own_method_shadows_included_module() -> None:
+    # A method the class defines itself wins over the module's (class-first MRO).
+    oop.define_class("Widget", None)
+    oop.def_method("Nameable", "name", Closure(lambda: "module"))
+    oop.include_module("Widget", "Nameable")
+    oop.def_method("Widget", "name", Closure(lambda: "class"))
+    widget = oop.call_new("Widget")
+    assert oop.call_method(widget, "name") == "class"
+
+
+def test_most_recently_included_module_wins() -> None:
+    # include A, then include B: B (most recent) shadows A for a shared method.
+    oop.define_class("C", None)
+    oop.def_method("A", "who", Closure(lambda: "A"))
+    oop.def_method("B", "who", Closure(lambda: "B"))
+    oop.include_module("C", "A")
+    oop.include_module("C", "B")
+    c = oop.call_new("C")
+    assert oop.call_method(c, "who") == "B"
+
+
+def test_module_shadows_superclass() -> None:
+    # A module method is found before the superclass's (module precedes super in MRO).
+    oop.define_class("Base", None)
+    oop.define_class("Derived", "Base")
+    oop.def_method("Base", "kind", Closure(lambda: "base"))
+    oop.def_method("Mix", "kind", Closure(lambda: "mix"))
+    oop.include_module("Derived", "Mix")
+    obj = oop.call_new("Derived")
+    assert oop.call_method(obj, "kind") == "mix"
+
+
+def test_included_module_can_access_ivars_via_current_self() -> None:
+    # A mixed-in method runs with the receiver pushed as current self.
+    oop.define_class("Account", None)
+    oop.def_method("Account", "initialize", Closure(lambda bal: oop.ivar_set("@bal", bal)))
+    oop.def_method("Reportable", "report", Closure(lambda: oop.ivar_get("@bal")))
+    oop.include_module("Account", "Reportable")
+    acct = oop.call_new("Account", 42)
+    assert oop.call_method(acct, "report") == 42
+
+
+def test_diamond_include_resolves_once() -> None:
+    # M includes Base; C includes M and Base directly (two paths to Base).  The
+    # MRO lists Base exactly once and resolution finds Base#origin.
+    oop.define_class("C", None)
+    oop.def_method("Base", "origin", Closure(lambda: "base"))
+    oop.include_module("M", "Base")
+    oop.include_module("C", "Base")
+    oop.include_module("C", "M")
+    mro = oop.oop._owner_mro("C")
+    assert mro.count("Base") == 1
+    c = oop.call_new("C")
+    assert oop.call_method(c, "origin") == "base"
+
+
+def test_self_including_module_terminates() -> None:
+    # A module that (pathologically) includes itself must not loop the MRO walk.
+    oop.define_class("C", None)
+    oop.def_method("Loopy", "go", Closure(lambda: "ok"))
+    oop.include_module("Loopy", "Loopy")  # cycle
+    oop.include_module("C", "Loopy")
+    c = oop.call_new("C")
+    assert oop.call_method(c, "go") == "ok"
+
+
+def test_extend_registers_module_method_as_class_method() -> None:
+    # extend M mixes M's instance methods in as class/singleton methods.
+    oop.define_class("Widget", None)
+    oop.def_method("Counting", "count", Closure(lambda: 7))
+    oop.extend_module("Widget", "Counting")
+    assert oop.call_class_method("Widget", "count") == 7
+
+
+def test_extend_does_not_add_instance_method() -> None:
+    # extend attaches to the class, NOT to instances — an instance call is a
+    # NoMethodError (the method is not on the instance MRO).
+    oop.define_class("Widget", None)
+    oop.def_method("Counting", "count", Closure(lambda: 7))
+    oop.extend_module("Widget", "Counting")
+    w = oop.call_new("Widget")
+    with pytest.raises(SirError) as excinfo:
+        oop.call_method(w, "count")
+    assert excinfo.value.sir_class == "NoMethodError"
+
+
+def test_include_unknown_method_still_raises_no_method_error() -> None:
+    # include adds behaviour but does not swallow genuinely missing methods.
+    oop.define_class("Robot", None)
+    oop.def_method("Greetable", "greet", Closure(lambda: "hi"))
+    oop.include_module("Robot", "Greetable")
+    robot = oop.call_new("Robot")
+    with pytest.raises(SirError) as excinfo:
+        oop.call_method(robot, "nope")
+    assert excinfo.value.sir_class == "NoMethodError"
