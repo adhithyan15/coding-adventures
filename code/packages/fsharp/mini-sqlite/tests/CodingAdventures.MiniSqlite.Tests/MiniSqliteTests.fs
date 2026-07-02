@@ -702,3 +702,101 @@ module MiniSqliteTests =
         conn.Execute("INSERT INTO t VALUES (42, 'hello')") |> ignore
         let rows = conn.Execute("SELECT * FROM t").FetchAll()
         Assert.Equal(1, rows.Count)  // one row regardless of column count
+
+    [<Fact>]
+    let ``CREATE TABLE with NOT NULL PRIMARY KEY UNIQUE DEFAULT constraints`` () =
+        // Exercises parseColumnDef branches for NOT NULL, PRIMARY KEY, UNIQUE,
+        // and DEFAULT (lines 729-740 in MiniSqlite.fs).
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE employees (id INTEGER PRIMARY KEY, name TEXT NOT NULL, dept TEXT DEFAULT 'unknown', score INTEGER UNIQUE)") |> ignore
+        conn.Execute("INSERT INTO employees VALUES (1, 'Alice', 'engineering', 100)") |> ignore
+        conn.Execute("INSERT INTO employees VALUES (2, 'Bob', 'marketing', 200)") |> ignore
+        let rows = conn.Execute("SELECT id, name, dept FROM employees ORDER BY id ASC").FetchAll()
+        Assert.Equal(2, rows.Count)
+        Assert.Equal(1L, Convert.ToInt64(rows.[0].[0]))
+        Assert.Equal("Alice", rows.[0].[1] :?> string)
+        Assert.Equal("engineering", rows.[0].[2] :?> string)
+
+    [<Fact>]
+    let ``ORDER BY non-SELECT column injects hidden sort column`` () =
+        // Exercises the augmentedCols/remappedOrderKeys branch in parseSelect
+        // (lines 1039-1053) where ORDER BY column is NOT in SELECT list.
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (name TEXT, score INTEGER, rank INTEGER)") |> ignore
+        conn.Execute("INSERT INTO t VALUES ('Alice', 90, 3)") |> ignore
+        conn.Execute("INSERT INTO t VALUES ('Bob', 85, 1)") |> ignore
+        conn.Execute("INSERT INTO t VALUES ('Carol', 92, 2)") |> ignore
+        // SELECT name but ORDER BY rank (not in SELECT list)
+        let rows = conn.Execute("SELECT name FROM t ORDER BY rank ASC").FetchAll()
+        Assert.Equal(3, rows.Count)
+        Assert.Equal("Bob", rows.[0].[0] :?> string)
+        Assert.Equal("Carol", rows.[1].[0] :?> string)
+        Assert.Equal("Alice", rows.[2].[0] :?> string)
+
+    [<Fact>]
+    let ``DROP TABLE IF EXISTS is safe when table absent`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        // Should not throw even if table doesn't exist
+        conn.Execute("DROP TABLE IF EXISTS nonexistent_table") |> ignore
+        Assert.True(true)
+
+    [<Fact>]
+    let ``NULL arithmetic returns NULL`` () =
+        // Exercises NULL propagation in BinaryOp cases for Add/Sub/Mul/Div
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (a INTEGER, b INTEGER)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (5, NULL)") |> ignore
+        let r = conn.Execute("SELECT a + b, a - b, a * b, a / b FROM t").FetchAll().[0]
+        Assert.Null(r.[0])
+        Assert.Null(r.[1])
+        Assert.Null(r.[2])
+        Assert.Null(r.[3])
+
+    [<Fact>]
+    let ``NOT equal operator works`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (n INTEGER)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (1)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (2)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (3)") |> ignore
+        let rows = conn.Execute("SELECT n FROM t WHERE n <> 2 ORDER BY n ASC").FetchAll()
+        Assert.Equal(2, rows.Count)
+        Assert.Equal(1L, Convert.ToInt64(rows.[0].[0]))
+        Assert.Equal(3L, Convert.ToInt64(rows.[1].[0]))
+
+    [<Fact>]
+    let ``real literal values parse correctly`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (x REAL)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (3.14)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (2.71828)") |> ignore
+        let rows = conn.Execute("SELECT x FROM t WHERE x > 3 ORDER BY x ASC").FetchAll()
+        Assert.Equal(1, rows.Count)
+        Assert.Equal(3.14, rows.[0].[0] :?> float, 5)
+
+    [<Fact>]
+    let ``UPDATE without WHERE updates all rows`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (id INTEGER, v INTEGER)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (1, 10)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (2, 20)") |> ignore
+        let res = conn.Execute("UPDATE t SET v = 99")
+        Assert.Equal(2, res.RowCount)
+        let rows = conn.Execute("SELECT v FROM t ORDER BY id ASC").FetchAll()
+        Assert.Equal(99L, Convert.ToInt64(rows.[0].[0]))
+        Assert.Equal(99L, Convert.ToInt64(rows.[1].[0]))
+
+    [<Fact>]
+    let ``comparison operators LT LTE GT GTE work`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (n INTEGER)") |> ignore
+        for i in 1 .. 5 do
+            conn.Execute(sprintf "INSERT INTO t VALUES (%d)" i) |> ignore
+        let lt = conn.Execute("SELECT COUNT(*) FROM t WHERE n < 3").FetchAll().[0]
+        Assert.Equal(2L, Convert.ToInt64(lt.[0]))
+        let lte = conn.Execute("SELECT COUNT(*) FROM t WHERE n <= 3").FetchAll().[0]
+        Assert.Equal(3L, Convert.ToInt64(lte.[0]))
+        let gt = conn.Execute("SELECT COUNT(*) FROM t WHERE n > 3").FetchAll().[0]
+        Assert.Equal(2L, Convert.ToInt64(gt.[0]))
+        let gte = conn.Execute("SELECT COUNT(*) FROM t WHERE n >= 3").FetchAll().[0]
+        Assert.Equal(3L, Convert.ToInt64(gte.[0]))
