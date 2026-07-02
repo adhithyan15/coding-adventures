@@ -1,0 +1,4 @@
+--js
+tests/diff/simple-update-expression/input/a.js
+--compilation_level
+SIMPLE

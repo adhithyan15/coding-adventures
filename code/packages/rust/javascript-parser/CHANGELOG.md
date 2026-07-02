@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.23.0] - 2026-07-02
+
+### Added — CLOC12.158 PR2: bridge `++` / `--` → `UpdateExpression` (closes gap-159)
+
+The typed-AST bridge now converts update operators instead of declining them
+as `UnsupportedSyntax`:
+  - `convert_postfix_expression` builds `UpdateExpression { prefix: false }`
+    for `a++` / `a--` over the converted operand,
+  - the prefix `++`/`--` arm of `convert_unary_expression` builds
+    `UpdateExpression { prefix: true }` for `++a` / `--a`,
+  - shared helper `update_operator_from_node` maps the `++`/`--` token child.
+
+Both declines predated the `UpdateExpression` node (added in `javascript-ast`
+0.17.0, CLOC12.158 PR1); with the node in place the whole SIMPLE/ADVANCED
+pipeline now runs on files containing `++`/`--` end-to-end instead of dropping
+the whole file to WHITESPACE_ONLY on the bridge decline. **Critical invariant
+preserved:** additive-with-unary-sign (`a + +b`, `a - -b`) are separate
+`+`/`-` tokens, never a single `++`/`--`, so the `has_token(node, "++")` check
+does not false-positive them into an update — pinned by a bridge test. 6 new
+bridge tests + a closurec e2e diff fixture (`tests/diff/simple-update-expression/`)
+proving `i++` round-trips (never dropped to `i`) while the adjacent `1 + 2`
+folds to `3`.
+
 ## [0.22.0] - 2026-07-02
 
 ### Added — CLOC12.155: bridge `template_literal` → `Expression::TemplateLiteral` (no-substitution only)
