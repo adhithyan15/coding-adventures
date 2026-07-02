@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.32.0] - 2026-07-01 — inverse-trig unary ops (`arcsin`/`arccos`/`arctan`)
+
+### Added
+
+- Three **inverse-trig** unary ops — `ComputeOp::Asin`, `Acos`, `Atan` — carried in
+  the existing `ComputeExpr::Unary` (no new node type), evaluated in `eval_unary`.
+  They make LaTeX `\arcsin(x)` / `\arccos(x)` / `\arctan(x)` calls (adj-lang's
+  `latex "…"` surface) computable as single native nodes.
+- Like all transcendentals: operand must be dimensionless (`Scalar`); result is
+  `Scalar`; exact-rational sidecar is dropped (inverse-trig is irrational). A
+  dimensioned operand raises `DimensionMismatch`.
+- Domain errors surface through the non-finite guard: `arcsin`/`arccos` of a value
+  outside [−1, 1] produces `NaN` in IEEE, caught as `ComputeError::NonFinite` before
+  it can propagate into a verdict. `arctan` is defined on all reals and never
+  produces a non-finite result.
+- `ComputeOp::symbol()` returns `"arcsin"` / `"arccos"` / `"arctan"` for audit
+  rendering.
+- 4 unit tests: identity anchors (arcsin(0)=0, arccos(1)=0, arctan(0)=0),
+  round-trip (arcsin(sin(π/6))=π/6), out-of-domain NonFinite guard, dimension error.
+
 ## [0.31.0] - 2026-07-02 — native transcendental functions (`sin`/`cos`/`tan`/`ln`/`log`/`exp`)
 
 ### Added

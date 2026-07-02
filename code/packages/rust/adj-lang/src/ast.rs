@@ -91,6 +91,12 @@ pub enum NamedFn {
     Sin,
     Cos,
     Tan,
+    /// Inverse sine, `arcsin(x)` — result in radians, domain [−1, 1] (`\arcsin`).
+    Asin,
+    /// Inverse cosine, `arccos(x)` — result in radians, domain [−1, 1] (`\arccos`).
+    Acos,
+    /// Inverse tangent, `arctan(x)` — result in radians, all reals (`\arctan`).
+    Atan,
     /// Natural logarithm (`\ln`).
     Ln,
     /// Base-10 logarithm (`\log`).

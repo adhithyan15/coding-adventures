@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.27.0] - 2026-07-01 — inverse-trig in `latex "…"` (`\arcsin`/`\arccos`/`\arctan`)
+
+### Added
+
+- The `latex "…"` adapter now lowers **inverse-trig calls** — `\arcsin(x)`,
+  `\arccos(x)`, `\arctan(x)` (a `MathExpr::Call` with `Func::Asin/Acos/Atan`) — to
+  the new `NamedFn::Asin/Acos/Atan` and thence to `ComputeOp::Asin/Acos/Atan` in
+  the engine. Same `Scalar → Scalar` contract as the forward-trig family.
+- Domain errors (operand outside [−1, 1] for arcsin/arccos) surface as
+  `ComputeError::NonFinite` through the engine's non-finite guard — never a silent
+  NaN in a verdict.
+- 3 integration tests in `lower.rs`: `\arcsin(0)=0`, `\arccos(1)=0`, `\arctan(0)=0`.
+- Unrecognised `Func` variants still produce a clean adapter error (unchanged).
+
 ## [0.26.0] - 2026-07-02 — named transcendental functions in `latex "…"` (`\sin`/`\cos`/`\tan`/`\ln`/`\log`/`\exp`)
 
 ### Added

@@ -1020,6 +1020,13 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
                 Func::Sin => NamedFn::Sin,
                 Func::Cos => NamedFn::Cos,
                 Func::Tan => NamedFn::Tan,
+                // Inverse-trig family: `\arcsin(x)` / `\arccos(x)` / `\arctan(x)`.
+                // Operand must be in [−1, 1] for arcsin/arccos; arctan accepts all reals.
+                // Domain errors (|x|>1 for arcsin/arccos) surface as the NonFinite guard
+                // in the engine — the engine never silently emits a NaN.
+                Func::Asin => NamedFn::Asin,
+                Func::Acos => NamedFn::Acos,
+                Func::Atan => NamedFn::Atan,
                 Func::Ln => NamedFn::Ln,
                 Func::Log => NamedFn::Log,
                 Func::Exp => NamedFn::Exp,

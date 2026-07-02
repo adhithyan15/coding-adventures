@@ -213,18 +213,25 @@ pub enum ComputeOp {
     /// LaTeX fence `\left\lfloor x\right\rceil` (floor-left, ceil-right).
     Round,
     /// The named **transcendental** unary functions `sin`, `cos`, `tan`, `ln`
-    /// (natural log), `log` (base-10), `exp`. Unlike the rounding unary ops these
-    /// are **not** dimension-preserving: a transcendental is only defined on a
-    /// pure number, so the operand must be dimensionless (`Scalar`) and the
-    /// result is `Scalar` (`sin(3 dollars)` is a category error, rejected). They
-    /// are irrational in general, so they drop the exact-rational sidecar. Each
-    /// is carried in a [`ComputeExpr::Unary`] and lowered from a LaTeX
-    /// `\sin(x)` / `\ln(x)` / `\exp(x)` … named-function call (adj-lang's
-    /// `latex "…"` surface). Domain errors (`ln` of a non-positive number,
-    /// `exp` overflow, `tan` at a pole) surface as the usual non-finite guard.
+    /// (natural log), `log` (base-10), `exp`, and the **inverse-trig** family
+    /// `arcsin`, `arccos`, `arctan`. Unlike the rounding unary ops these are
+    /// **not** dimension-preserving: a transcendental is only defined on a pure
+    /// number, so the operand must be dimensionless (`Scalar`) and the result is
+    /// `Scalar` (`sin(3 dollars)` is a category error, rejected). They are
+    /// irrational in general, so they drop the exact-rational sidecar. Each is
+    /// carried in a [`ComputeExpr::Unary`] and lowered from a LaTeX named-function
+    /// call (adj-lang's `latex "…"` surface). Domain errors (`ln` of a non-positive
+    /// number, `exp` overflow, `tan` at a pole, `arcsin`/`arccos` outside [−1, 1])
+    /// surface as the usual non-finite guard — never a silently-wrong number.
     Sin,
     Cos,
     Tan,
+    /// Inverse sine — result in radians, defined on [−1, 1] (`\arcsin`).
+    Asin,
+    /// Inverse cosine — result in radians, defined on [−1, 1] (`\arccos`).
+    Acos,
+    /// Inverse tangent — result in radians, defined on all reals (`\arctan`).
+    Atan,
     Ln,
     Log,
     Exp,
@@ -251,6 +258,9 @@ impl ComputeOp {
             ComputeOp::Sin => "sin",
             ComputeOp::Cos => "cos",
             ComputeOp::Tan => "tan",
+            ComputeOp::Asin => "arcsin",
+            ComputeOp::Acos => "arccos",
+            ComputeOp::Atan => "arctan",
             ComputeOp::Ln => "ln",
             ComputeOp::Log => "log",
             ComputeOp::Exp => "exp",
@@ -636,8 +646,8 @@ fn eval(
 }
 
 /// Evaluate a unary op — the rounding family (`Abs`/`Floor`/`Ceil`/`Round`) or a
-/// transcendental (`Sin`/`Cos`/`Tan`/`Ln`/`Log`/`Exp`) — into a derivation node +
-/// dimension.
+/// transcendental (`Sin`/`Cos`/`Tan`/`Asin`/`Acos`/`Atan`/`Ln`/`Log`/`Exp`) —
+/// into a derivation node + dimension.
 /// Split out of [`eval`] and marked `#[inline(never)]` so its locals live in their
 /// own stack frame rather than enlarging every one of `eval`'s up-to-`MAX_EVAL_DEPTH`
 /// recursive frames — a fatter `eval` frame multiplied across 256 levels can
@@ -658,7 +668,15 @@ fn eval_unary(
     // ops use (the operand's dimension vs the required `Scalar`).
     let transcendental = matches!(
         op,
-        ComputeOp::Sin | ComputeOp::Cos | ComputeOp::Tan | ComputeOp::Ln | ComputeOp::Log | ComputeOp::Exp
+        ComputeOp::Sin
+            | ComputeOp::Cos
+            | ComputeOp::Tan
+            | ComputeOp::Asin
+            | ComputeOp::Acos
+            | ComputeOp::Atan
+            | ComputeOp::Ln
+            | ComputeOp::Log
+            | ComputeOp::Exp
     );
     if transcendental && !dim.is_scalar() {
         return Err(ComputeError::DimensionMismatch {
@@ -680,6 +698,12 @@ fn eval_unary(
         ComputeOp::Sin => value.sin(),
         ComputeOp::Cos => value.cos(),
         ComputeOp::Tan => value.tan(),
+        // arcsin/arccos are defined on [−1, 1]; outside that domain f64 returns NaN,
+        // which the non-finite guard below converts to a clean ComputeError::NonFinite.
+        ComputeOp::Asin => value.asin(),
+        ComputeOp::Acos => value.acos(),
+        // arctan is defined on all reals; it never produces a non-finite result.
+        ComputeOp::Atan => value.atan(),
         ComputeOp::Ln => value.ln(),
         ComputeOp::Log => value.log10(),
         ComputeOp::Exp => value.exp(),
@@ -1160,6 +1184,67 @@ mod tests {
         let c = compute("c", &ComputeExpr::Unary(ComputeOp::Cos, Box::new(ComputeExpr::Lit(0.0))), &kb_with(vec![])).unwrap();
         assert_eq!(c.value, 1.0);
         assert_eq!(c.dim, Dimension::Scalar);
+    }
+
+    #[test]
+    fn arcsin_of_zero_is_zero_arccos_of_one_is_zero_arctan_of_zero_is_zero() {
+        // Identity anchors that don't depend on π: arcsin(0)=0, arccos(1)=0, arctan(0)=0.
+        // All three are transcendental: operand is Scalar, result is Scalar, exact sidecar
+        // is dropped.
+        let kb = kb_with(vec![]);
+        let s = compute("s", &ComputeExpr::Unary(ComputeOp::Asin, Box::new(ComputeExpr::Lit(0.0))), &kb).unwrap();
+        assert_eq!(s.value, 0.0);
+        assert_eq!(s.dim, Dimension::Scalar);
+        assert_eq!(s.exact, None);
+
+        let c = compute("c", &ComputeExpr::Unary(ComputeOp::Acos, Box::new(ComputeExpr::Lit(1.0))), &kb).unwrap();
+        assert_eq!(c.value, 0.0);
+        assert_eq!(c.dim, Dimension::Scalar);
+
+        let t = compute("t", &ComputeExpr::Unary(ComputeOp::Atan, Box::new(ComputeExpr::Lit(0.0))), &kb).unwrap();
+        assert_eq!(t.value, 0.0);
+        assert_eq!(t.dim, Dimension::Scalar);
+    }
+
+    #[test]
+    fn arcsin_and_arccos_are_inverses_of_sin_and_cos() {
+        // arcsin(sin(x)) = x and arccos(cos(x)) = x for x in [−π/2, π/2] and [0, π].
+        // Use x = π/6 (30°): sin(π/6)=0.5 → arcsin(0.5)=π/6; cos(π/6)=√3/2 → arccos(√3/2)=π/6.
+        let half_pi_over_3 = std::f64::consts::PI / 6.0;
+        let kb = kb_with(vec![]);
+        let inner_sin = ComputeExpr::Unary(ComputeOp::Sin, Box::new(ComputeExpr::Lit(half_pi_over_3)));
+        let roundtrip = compute("r", &ComputeExpr::Unary(ComputeOp::Asin, Box::new(inner_sin)), &kb).unwrap();
+        assert!((roundtrip.value - half_pi_over_3).abs() < 1e-12, "{}", roundtrip.value);
+
+        let inner_cos = ComputeExpr::Unary(ComputeOp::Cos, Box::new(ComputeExpr::Lit(half_pi_over_3)));
+        let roundtrip2 = compute("r2", &ComputeExpr::Unary(ComputeOp::Acos, Box::new(inner_cos)), &kb).unwrap();
+        assert!((roundtrip2.value - half_pi_over_3).abs() < 1e-12, "{}", roundtrip2.value);
+    }
+
+    #[test]
+    fn arcsin_of_out_of_domain_value_is_a_clean_nonfinite_error() {
+        // arcsin(2) and arccos(−2) are outside [−1, 1] → NaN in IEEE → NonFinite error.
+        // The engine must never let NaN propagate silently into a verdict.
+        let kb = kb_with(vec![]);
+        let err = compute("a", &ComputeExpr::Unary(ComputeOp::Asin, Box::new(ComputeExpr::Lit(2.0))), &kb)
+            .unwrap_err();
+        assert!(matches!(err, ComputeError::NonFinite { op: ComputeOp::Asin }), "{err:?}");
+
+        let err2 = compute("a2", &ComputeExpr::Unary(ComputeOp::Acos, Box::new(ComputeExpr::Lit(-2.0))), &kb)
+            .unwrap_err();
+        assert!(matches!(err2, ComputeError::NonFinite { op: ComputeOp::Acos }), "{err2:?}");
+    }
+
+    #[test]
+    fn inverse_trig_of_a_dimensioned_operand_is_a_category_error() {
+        // arctan(4 dollars) is meaningless — inverse trig is only defined on pure numbers.
+        let kb = kb_with(vec![money("m", 4, "usd")]);
+        let err = compute("a", &ComputeExpr::Unary(ComputeOp::Atan, Box::new(refexpr("m"))), &kb)
+            .unwrap_err();
+        assert!(
+            matches!(err, ComputeError::DimensionMismatch { op: ComputeOp::Atan, .. }),
+            "{err:?}"
+        );
     }
 
     #[test]

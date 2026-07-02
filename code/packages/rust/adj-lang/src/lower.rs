@@ -719,6 +719,9 @@ fn lower_named_fn(f: NamedFn) -> ComputeOp {
         NamedFn::Sin => ComputeOp::Sin,
         NamedFn::Cos => ComputeOp::Cos,
         NamedFn::Tan => ComputeOp::Tan,
+        NamedFn::Asin => ComputeOp::Asin,
+        NamedFn::Acos => ComputeOp::Acos,
+        NamedFn::Atan => ComputeOp::Atan,
         NamedFn::Ln => ComputeOp::Ln,
         NamedFn::Log => ComputeOp::Log,
         NamedFn::Exp => ComputeOp::Exp,
@@ -1939,6 +1942,51 @@ contributes 1000000 from answer == 60 to correct
              let answer = latex \"$\\cos(x)$\"\n\
              prior 0.10 for correct\n\
              contributes 1000000 from answer == 1 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_latex_arcsin_of_zero_is_zero() {
+        // `\arcsin(x)` with x=0 is 0 — a domain-safe anchor that the named-function
+        // call lowers through NamedFn::Asin → ComputeOp::Asin and the engine computes
+        // as f64::asin(0.0)=0.0.
+        let d = crate::compile_and_decide(
+            "observe x(0)\n\
+             let answer = latex \"$\\arcsin(x)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 0 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_latex_arccos_of_one_is_zero() {
+        // `\arccos(x)` with x=1 is 0 — domain-safe anchor: arccos(1)=0 in radians.
+        let d = crate::compile_and_decide(
+            "observe x(1)\n\
+             let answer = latex \"$\\arccos(x)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 0 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_latex_arctan_of_zero_is_zero() {
+        // `\arctan(x)` with x=0 is 0 — defined on all reals, never produces a
+        // domain error. Lowered through NamedFn::Atan → ComputeOp::Atan.
+        let d = crate::compile_and_decide(
+            "observe x(0)\n\
+             let answer = latex \"$\\arctan(x)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 0 to correct\n\
              ? correct\n",
         )
         .unwrap();
