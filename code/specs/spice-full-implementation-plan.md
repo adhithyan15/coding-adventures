@@ -33,34 +33,36 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search index.
+1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search results.
    - Status: current PR completion candidate.
    - Add schema-versioned Rust app shell dashboard dispatch-queue lane-tab
-     panel-card-action-menu-group-shortcut-command-palette-search-index
-     surfaces and JSON helpers that project queued, blocked, and attention
-     command-palette items into stable searchable entries with search-index
-     IDs, normalized search text, token lists, keyword lists, ranking,
-     selectable state, active-search-entry routing, attention-search-entry
-     routing, default-search-entry routing, primary-search-entry routing,
-     palette item counts, search-entry counts, token counts, disabled reasons,
-     and lane-tab-panel-card-action-menu-group-shortcut-command-palette-
-     search-index capability metadata for first-render product-shell command
-     palette search and filter UIs.
+     panel-card-action-menu-group-shortcut-command-palette-search-results
+     surfaces and JSON helpers that filter queued, blocked, and attention
+     command-palette search-index entries by normalized query tokens into stable
+     result rows with search-result IDs, matched query token lists,
+     active-search-result routing, attention-search-result routing,
+     default-search-result routing, primary-search-result routing, result
+     counts, empty-state metadata, disabled reasons, and lane-tab-panel-card-
+     action-menu-group-shortcut-command-palette-search-results capability
+     metadata for first-render product-shell command palette search UIs.
    - Preserve package name, source fingerprint, ready/blocked route, status
-     severity, attention-required flag, search index ID, palette ID, registry
-     ID, command group, active/attention/default/primary command palette item
-     IDs, active/attention/default/primary search-index entry IDs, palette item
-     counts, search-index entry counts, token counts, per-entry palette item
-     ID, command-entry ID, binding ID, shortcut ID, command ID, registry ID,
-     handler ID, command group, invocation kind, scope, target kind, target,
-     menu group ID, queue state, label, summary, accelerator, source search
-     text, normalized search text, search tokens, keywords, item/action ID
-     lists, item counts, badge counts, rank, position, selectable/selected/
-     default/active/attention/disabled/empty/enabled/primary/visible flags,
-     disabled reason, command-palette capability ID, command-palette-search-
-     index capability ID, and advertised capability count so Mosaic,
-     WebAssembly, and product shells can append compact lane card action menu
-     shortcut command palette search indexes without walking every queue item.
+     severity, attention-required flag, search results ID, search index ID,
+     palette ID, registry ID, command group, raw query, normalized query, query
+     tokens, active/attention/default/primary search-index entry IDs,
+     active/attention/default/primary search-result IDs, search-index entry
+     counts, visible search-index entry counts, result counts, per-result
+     search-index entry ID, palette item ID, command-entry ID, binding ID,
+     shortcut ID, command ID, registry ID, handler ID, command group,
+     invocation kind, scope, target kind, target, menu group ID, queue state,
+     label, summary, accelerator, source search text, normalized search text,
+     search tokens, keywords, matched query tokens, item/action ID lists, item
+     counts, badge counts, rank, position, result position, selectable/
+     selected/default/active/attention/disabled/empty/enabled/primary/visible
+     flags, disabled reason, empty-state title/message, command-palette-search-
+     index capability ID, command-palette-search-results capability ID, and
+     advertised capability count so Mosaic, WebAssembly, and product shells can
+     append compact lane card action menu shortcut command palette search
+     results without walking every queue item.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -2256,6 +2258,35 @@ the Rust, Python, and TypeScript surfaces together.
      command-palette capability ID, and advertised capability count so Mosaic,
      WebAssembly, and product shells can append compact lane card action menu
      shortcut command palettes without walking every queue item.
+
+183. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search index.
+   - Status: completed in PR 7320.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell dashboard dispatch-queue lane-tab panel-card-action-menu-group-
+     shortcut-command-palette-search-index surfaces plus JSON helpers that
+     project queued, blocked, and attention command-palette items into stable
+     searchable entries with search-index IDs, normalized search text, token
+     lists, keyword lists, ranking, selectable state, active/attention/default/
+     primary search-entry routing, disabled reasons, and command-palette search
+     index capability metadata for product-shell command palette search and
+     filter UIs.
+   - The dispatch-queue lane-tab panel-card action menu group shortcut command
+     palette search-index payload preserves package name, source fingerprint,
+     ready/blocked route, status severity, attention-required flag, search
+     index ID, palette ID, registry ID, command group, active/attention/default/
+     primary command palette item IDs, active/attention/default/primary search-
+     index entry IDs, palette item counts, search-index entry counts, token
+     counts, per-entry palette item ID, command-entry ID, binding ID, shortcut
+     ID, command ID, registry ID, handler ID, command group, invocation kind,
+     scope, target kind, target, menu group ID, queue state, label, summary,
+     accelerator, source search text, normalized search text, search tokens,
+     keywords, item/action ID lists, item counts, badge counts, rank, position,
+     selectable/selected/default/active/attention/disabled/empty/enabled/
+     primary/visible flags, disabled reason, command-palette capability ID,
+     command-palette-search-index capability ID, and advertised capability count
+     so Mosaic, WebAssembly, and product shells can append compact lane card
+     action menu shortcut command palette search indexes without walking every
+     queue item.
 
 ## Backlog
 

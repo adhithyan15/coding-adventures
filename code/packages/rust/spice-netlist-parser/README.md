@@ -470,6 +470,19 @@ assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_sho
     .contains(r#""activeMenuGroupShortcutCommandSearchIndexEntryId":"dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-index-entry.queued""#));
 assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_json
     .contains(r#""dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndexCapabilityId":"app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-index-json""#));
+
+let shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_results_json =
+    deck.run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_results_json(
+        BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        },
+        "queued dispatch",
+    )?;
+assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_results_json
+    .contains(r#""activeMenuGroupShortcutCommandSearchResultId":"dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-result.queued""#));
+assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_results_json
+    .contains(r#""dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchResultsCapabilityId":"app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-results-json""#));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -529,6 +542,12 @@ host accelerator hints over those queue-state groups with stable shortcut IDs,
 targets, active/attention/default/primary shortcut routing, accelerator labels,
 disabled reasons, and lane-tab-panel-card-action-menu-group-shortcuts
 capability metadata.
+Shortcut command palette search indexes turn command-palette items into stable
+searchable entries with normalized text, token lists, active/attention/default/
+primary entry routing, and search-index capability metadata. Search results
+filter those entries by normalized query tokens, preserving matched tokens,
+active/attention/default/primary result routing, result counts, and empty-state
+text for command-palette product shells.
 Persisted editor-state snapshots resolve saved selection and active-command IDs
 against the current deck, repairing stale UI state after source edits. Host
 surfaces turn those snapshots into stable source, diagnostics, analysis, table,
