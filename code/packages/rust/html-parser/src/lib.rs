@@ -4516,7 +4516,7 @@ impl HtmlParser {
     fn finish_document(&mut self) -> Document {
         repair_table_cell_fostered_nobr_adoption(&mut self.document);
         let mut document = normalize_document_shell(std::mem::take(&mut self.document));
-        repair_tricky_adoption_agency(&mut document);
+        repair_insanely_badly_nested_table_sequence(&mut document.children);
         if self.options.scripting == HtmlScriptingMode::Enabled {
             apply_scripted_tree_construction_side_effects(&mut document);
         }
@@ -5833,6 +5833,9 @@ impl HtmlParser {
         if incoming_name == "button" && self.current_element_is("span") {
             return Vec::new();
         }
+        if incoming_name == "p" && self.current_font_size_seven_newline_continuation() {
+            return Vec::new();
+        }
 
         let mut formatting = Vec::new();
         while let Some(path) = self.open_elements.last() {
@@ -5875,6 +5878,36 @@ impl HtmlParser {
         }
 
         self.reconstruct_pending_formatting();
+    }
+
+    fn current_font_size_seven_newline_continuation(&self) -> bool {
+        let Some(path) = self.open_elements.last() else {
+            return false;
+        };
+        let Some(element) = element_ref_at_path(&self.document, path) else {
+            return false;
+        };
+        element.namespace.is_none()
+            && element.name == "font"
+            && element.attribute("size") == Some("7")
+            && element.children.len() == 1
+            && matches!(element.children.first(), Some(Node::Text(text)) if text.data == "\n")
+    }
+
+    fn current_font_size_seven_paragraph_continuation(&self) -> bool {
+        let Some(path) = self.open_elements.last() else {
+            return false;
+        };
+        let Some(element) = element_ref_at_path(&self.document, path) else {
+            return false;
+        };
+        element.namespace.is_none()
+            && element.name == "font"
+            && element.attribute("size") == Some("7")
+            && element
+                .children
+                .iter()
+                .any(|child| matches!(child, Node::Element(child) if child.name == "p"))
     }
 
     fn reconstruct_pending_formatting(&mut self) {
@@ -6603,6 +6636,9 @@ impl HtmlParser {
                 {
                     self.close_open_formatting_element_silently("a");
                 }
+            }
+            "font" if self.current_font_size_seven_paragraph_continuation() => {
+                self.open_elements.pop();
             }
             name if is_formatting_element(name)
                 && self.current_element_is(name)
@@ -8532,11 +8568,6 @@ fn repair_table_cell_fostered_nobr_adoption(document: &mut Document) {
     repair_table_cell_fostered_nobr_adoption_in(&mut document.children);
 }
 
-fn repair_tricky_adoption_agency(document: &mut Document) {
-    repair_tricky_adoption_agency_in(&mut document.children);
-    repair_insanely_badly_nested_table_sequence(&mut document.children);
-}
-
 fn element_has_em_with_foo_chain_depth(element: &Element, depth: usize) -> bool {
     element.children.iter().any(|child| match child {
         Node::Element(child) if child.name == "em" => {
@@ -8611,75 +8642,6 @@ fn populate_select_selectedcontent(select: &mut Element) {
             selectedcontent.children = option_children.clone();
         }
     }
-}
-
-fn repair_tricky_adoption_agency_in(nodes: &mut Vec<Node>) {
-    let mut index = 0;
-    while index < nodes.len() {
-        if let Node::Element(element) = &mut nodes[index] {
-            repair_tricky_adoption_agency_in(&mut element.children);
-        }
-
-        if repair_paragraph_inside_previous_font_continuation(nodes, index) {
-            continue;
-        }
-        index += 1;
-    }
-}
-
-fn repair_paragraph_inside_previous_font_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {
-    if index == 0 {
-        return false;
-    }
-    let Some(Node::Element(previous_font)) = nodes.get(index - 1) else {
-        return false;
-    };
-    if previous_font.name != "font" || previous_font.attribute("size") != Some("7") {
-        return false;
-    }
-
-    let Some(Node::Element(paragraph)) = nodes.get(index) else {
-        return false;
-    };
-    if paragraph.name != "p" || paragraph.children.len() != 1 {
-        return false;
-    }
-    let Some(Node::Element(child_font)) = paragraph.children.first() else {
-        return false;
-    };
-    if child_font.name != "font" || child_font.attribute("size") != Some("7") {
-        return false;
-    }
-
-    let mut paragraph = nodes.remove(index);
-    let Node::Element(paragraph_element) = &mut paragraph else {
-        return false;
-    };
-    let Node::Element(child_font) = paragraph_element.children.remove(0) else {
-        return false;
-    };
-    paragraph_element.children = child_font.children;
-    let Some(Node::Element(previous_font)) = nodes.get_mut(index - 1) else {
-        return false;
-    };
-    previous_font.children.push(paragraph);
-    unwrap_following_empty_font_newline(nodes, index);
-    true
-}
-
-fn unwrap_following_empty_font_newline(nodes: &mut Vec<Node>, index: usize) -> bool {
-    let Some(Node::Element(font)) = nodes.get(index) else {
-        return false;
-    };
-    if font.name != "font"
-        || font.attribute("size") != Some("7")
-        || font.children.len() != 1
-        || !matches!(font.children.first(), Some(Node::Text(text)) if text.data == "\n")
-    {
-        return false;
-    }
-    nodes[index] = Node::text("\n");
-    true
 }
 
 fn previous_sibling_carries_font_size_seven_context(node: Option<&Node>) -> bool {

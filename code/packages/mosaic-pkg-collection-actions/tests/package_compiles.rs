@@ -169,15 +169,63 @@ fn collection_actions_layout_wires_counts_and_actions() {
 fn collection_actions_package_emitters_accept_workflow_surface() {
     let tmp = tempfile::tempdir().expect("temp dist root");
     let backends = [
-        (Backend::Html, "html/CollectionActions.html"),
-        (Backend::React, "react/CollectionActions.tsx"),
-        (Backend::SwiftUI, "swiftui/CollectionActions.swift"),
-        (Backend::Qt, "qt/CollectionActions.qml"),
-        (Backend::Xaml, "xaml/CollectionActions.xaml"),
-        (Backend::Flutter, "flutter/CollectionActions.dart"),
+        (
+            Backend::React,
+            "react/CollectionActions.tsx",
+            "background: \"#0e7490\"",
+            "background: \"#be123c\"",
+        ),
+        (
+            Backend::Electron,
+            "electron/CollectionActions.tsx",
+            "background: \"#0e7490\"",
+            "background: \"#be123c\"",
+        ),
+        (
+            Backend::SwiftUI,
+            "swiftui/CollectionActions.swift",
+            "Color(red: 0.055, green: 0.455, blue: 0.565)",
+            "Color(red: 0.745, green: 0.071, blue: 0.235)",
+        ),
+        (
+            Backend::Qt,
+            "qt/CollectionActions.qml",
+            "color: \"#0e7490\"",
+            "color: \"#be123c\"",
+        ),
+        (
+            Backend::WebComponent,
+            "webcomponent/CollectionActions.js",
+            "background: #0e7490",
+            "background: #be123c",
+        ),
+        (
+            Backend::Html,
+            "html/CollectionActions.html",
+            "background: #0e7490",
+            "background: #be123c",
+        ),
+        (
+            Backend::Xaml,
+            "xaml/CollectionActions.xaml",
+            "Background=\"#0e7490\"",
+            "Background=\"#be123c\"",
+        ),
+        (
+            Backend::Flutter,
+            "flutter/CollectionActions.dart",
+            "Color(0xFF0E7490)",
+            "Color(0xFFBE123C)",
+        ),
+        (
+            Backend::Compose,
+            "compose/CollectionActions.kt",
+            "Color(0xFF0E7490)",
+            "Color(0xFFBE123C)",
+        ),
     ];
 
-    for (backend, expected_artifact) in backends {
+    for (backend, expected_artifact, primary_button_style, destructive_button_style) in backends {
         let result = build_package(&BuildOptions {
             package_root: package_root(),
             output_root: tmp.path().to_path_buf(),
@@ -190,6 +238,17 @@ fn collection_actions_package_emitters_accept_workflow_surface() {
         assert!(
             tmp.path().join(expected_artifact).exists(),
             "{backend:?} did not write {expected_artifact}"
+        );
+
+        let artifact = fs::read_to_string(tmp.path().join(expected_artifact))
+            .unwrap_or_else(|e| panic!("failed to read {expected_artifact}: {e}"));
+        assert!(
+            artifact.contains(primary_button_style),
+            "{backend:?} did not lower the import-button style into {expected_artifact}"
+        );
+        assert!(
+            artifact.contains(destructive_button_style),
+            "{backend:?} did not lower the delete-button style into {expected_artifact}"
         );
     }
 
