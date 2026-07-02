@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Persisted Engram Mosaic SwiftUI, Qt, XAML, Flutter, and Compose native host
+  snapshots through `engram-capi`, matching the web/Electron snapshot behavior
+  with an `ENGRAM_SNAPSHOT_PATH` override and a shared home-directory fallback.
 - Persisted Engram Mosaic web, React, WebComponent, and Electron host snapshots
   across launches, seeding from the built-in language-learning demo only when no
   saved state is available.

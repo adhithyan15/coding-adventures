@@ -4,6 +4,9 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QDir>
+#include <QFile>
+#include <QFileInfo>
+#include <QJsonValue>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonParseError>
@@ -41,8 +44,12 @@ QVariantMap MosaicHost::handleEvent(const QVariantMap &event) {
   const QByteArray eventJson =
       QJsonDocument(QJsonObject::fromVariantMap(event)).toJson(QJsonDocument::Compact);
   const QByteArray deck = deckId();
-  return hostResponseFromJson(takeCString(
+  const QVariantMap response = hostResponseFromJson(takeCString(
       handleEngramAppEvent_(session_, eventJson.constData(), deck.constData(), nowMs())));
+  if (!response.contains(QStringLiteral("error"))) {
+    persistSnapshot();
+  }
+  return response;
 }
 
 bool MosaicHost::ensureLoaded() {
@@ -82,12 +89,15 @@ bool MosaicHost::ensureLoaded() {
   sessionNewDemo_ = resolveSymbol<EgSessionNewDemoFn>(library_, "eg_session_new_demo");
   sessionFree_ = resolveSymbol<EgSessionFreeFn>(library_, "eg_session_free");
   stringFree_ = resolveSymbol<EgStringFreeFn>(library_, "eg_string_free");
+  snapshot_ = resolveSymbol<EgSnapshotFn>(library_, "eg_snapshot");
+  loadSnapshot_ = resolveSymbol<EgLoadSnapshotFn>(library_, "eg_load_snapshot");
   engramAppProps_ = resolveSymbol<EgEngramAppPropsFn>(library_, "eg_engram_app_props");
   handleEngramAppEvent_ =
       resolveSymbol<EgHandleEngramAppEventFn>(library_, "eg_handle_engram_app_event");
 
   if (sessionNewDemo_ == nullptr || sessionFree_ == nullptr || stringFree_ == nullptr ||
-      engramAppProps_ == nullptr || handleEngramAppEvent_ == nullptr) {
+      snapshot_ == nullptr || loadSnapshot_ == nullptr || engramAppProps_ == nullptr ||
+      handleEngramAppEvent_ == nullptr) {
     qWarning() << "Engram MosaicHost loaded engram-capi but required symbols are missing";
     library_.unload();
     return false;
@@ -98,7 +108,57 @@ bool MosaicHost::ensureLoaded() {
     qWarning() << "Engram MosaicHost failed to create an Engram session";
     return false;
   }
+  hydrateSession();
   return true;
+}
+
+void MosaicHost::hydrateSession() {
+  const QString path = snapshotPath();
+  QFile file(path);
+  if (file.exists() && file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    const QByteArray snapshot = file.readAll();
+    const QVariantMap loaded =
+        hostResponseFromJson(takeCString(loadSnapshot_(session_, snapshot.constData())));
+    if (!loaded.contains(QStringLiteral("error"))) {
+      return;
+    }
+    qWarning() << "Engram MosaicHost persisted snapshot was invalid; using demo state";
+  }
+
+  persistSnapshot();
+}
+
+void MosaicHost::persistSnapshot() {
+  if (session_ == nullptr || snapshot_ == nullptr) {
+    return;
+  }
+
+  const QString json = takeCString(snapshot_(session_));
+  QJsonParseError parseError;
+  const QJsonDocument document = QJsonDocument::fromJson(json.toUtf8(), &parseError);
+  if (parseError.error != QJsonParseError::NoError || !document.isObject()) {
+    qWarning() << "Engram MosaicHost could not parse snapshot JSON:" << parseError.errorString();
+    return;
+  }
+
+  const QJsonObject root = document.object();
+  if (root.value(QStringLiteral("ok")).toBool(true) == false ||
+      root.value(QStringLiteral("state")).isUndefined() ||
+      root.value(QStringLiteral("state")).isNull()) {
+    qWarning() << "Engram MosaicHost snapshot response was not persistable";
+    return;
+  }
+
+  const QString path = snapshotPath();
+  const QFileInfo info(path);
+  QDir().mkpath(info.absolutePath());
+  QFile file(path);
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
+    qWarning() << "Engram MosaicHost could not persist snapshot:" << file.errorString();
+    return;
+  }
+
+  file.write(QJsonDocument(root.value(QStringLiteral("state")).toObject()).toJson(QJsonDocument::Compact));
 }
 
 QString MosaicHost::takeCString(char *value) const {
@@ -171,6 +231,14 @@ QString MosaicHost::mosaicPropName(const QString &name) const {
     }
   }
   return out;
+}
+
+QString MosaicHost::snapshotPath() const {
+  const QByteArray configured = qgetenv("ENGRAM_SNAPSHOT_PATH");
+  if (!configured.isEmpty()) {
+    return QString::fromLocal8Bit(configured);
+  }
+  return QDir::home().filePath(QStringLiteral(".engram/mosaic-snapshot.v1.json"));
 }
 
 QByteArray MosaicHost::deckId() const {

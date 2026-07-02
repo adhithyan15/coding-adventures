@@ -17,6 +17,7 @@ class MosaicHost {
                 api.eg_session_free(handle)
             }
         })
+        hydrateSession()
     }
 
     fun props(): Map<String, Any?> {
@@ -29,9 +30,45 @@ class MosaicHost {
         val api = capi ?: return emptyMap()
         val handle = session ?: return emptyMap()
         val eventJson = JSONObject(event).toString()
-        return hostResponseFromJson(
+        val response = hostResponseFromJson(
             takeCString(api.eg_handle_engram_app_event(handle, eventJson, deckId(), nowMs()), api)
         )
+        if (!response.containsKey("error")) {
+            persistSnapshot()
+        }
+        return response
+    }
+
+    private fun hydrateSession() {
+        val api = capi ?: return
+        val handle = session ?: return
+        val file = snapshotFile()
+        if (file.exists()) {
+            val loaded = runCatching {
+                val json = takeCString(api.eg_load_snapshot(handle, file.readText()), api)
+                jsonOk(json)
+            }.getOrDefault(false)
+            if (loaded) {
+                return
+            }
+            println("Engram Compose MosaicHost persisted snapshot was invalid; using demo state")
+        }
+        persistSnapshot()
+    }
+
+    private fun persistSnapshot() {
+        val api = capi ?: return
+        val handle = session ?: return
+        val json = takeCString(api.eg_snapshot(handle), api)
+        val root = runCatching { JSONObject(json) }.getOrNull() ?: return
+        if (!root.optBoolean("ok", true) || root.isNull("state")) {
+            return
+        }
+        runCatching {
+            val file = snapshotFile()
+            file.parentFile?.mkdirs()
+            file.writeText(root.get("state").toString())
+        }
     }
 
     private fun hostResponseFromJson(json: String): Map<String, Any?> {
@@ -66,6 +103,10 @@ class MosaicHost {
 
     private fun nowMs(): Long = System.currentTimeMillis()
 
+    private fun snapshotFile(): File =
+        System.getenv("ENGRAM_SNAPSHOT_PATH")?.takeIf { it.isNotBlank() }?.let(::File)
+            ?: File(File(System.getProperty("user.home"), ".engram"), "mosaic-snapshot.v1.json")
+
     private fun loadCapi(): EngramCapi? {
         val names = listOf(nativeLibraryFileName(), "engram_capi")
         val roots = listOfNotNull(
@@ -99,6 +140,8 @@ interface EngramCapi : Library {
     fun eg_session_new_demo(): Pointer?
     fun eg_session_free(session: Pointer?)
     fun eg_string_free(value: Pointer?)
+    fun eg_snapshot(session: Pointer?): Pointer?
+    fun eg_load_snapshot(session: Pointer?, snapshotJson: String): Pointer?
     fun eg_engram_app_props(session: Pointer?, deckId: String, nowMs: Long): Pointer?
     fun eg_handle_engram_app_event(
         session: Pointer?,
@@ -121,3 +164,6 @@ private fun jsonValue(value: Any?): Any? =
         is JSONArray -> jsonArrayToList(value)
         else -> value
     }
+
+private fun jsonOk(json: String): Boolean =
+    runCatching { JSONObject(json).optBoolean("ok", true) }.getOrDefault(false)

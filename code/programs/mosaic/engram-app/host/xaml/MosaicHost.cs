@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -15,6 +16,8 @@ public sealed record MosaicHostResult(string Status, MosaicHostIntent? HostInten
 public static class MosaicHost
 {
     private const string NativeLibrary = "engram_capi";
+    private const string SnapshotPathEnvironmentVariable = "ENGRAM_SNAPSHOT_PATH";
+    private const string SnapshotFileName = "mosaic-snapshot.v1.json";
     private static readonly object SessionLock = new();
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private static IntPtr Session = IntPtr.Zero;
@@ -72,10 +75,15 @@ public static class MosaicHost
                         CurrentDeckId(),
                         CurrentTimeMillis()));
                 using var document = JsonDocument.Parse(json);
-                return ApplyPropsFromRoot(
+                var result = ApplyPropsFromRoot(
                     component,
                     document.RootElement,
                     $"Status: Engram host handled {ev.MosaicName}");
+                if (!IsErrorRoot(document.RootElement))
+                {
+                    PersistSnapshot(session);
+                }
+                return result;
             }
             catch (Exception ex) when (IsNativeAvailabilityFailure(ex))
             {
@@ -280,8 +288,77 @@ public static class MosaicHost
         }
 
         session = Session;
+        HydrateSession(session);
         unavailable = "";
         return true;
+    }
+
+    private static void HydrateSession(IntPtr session)
+    {
+        var path = SnapshotPath();
+        if (File.Exists(path))
+        {
+            try
+            {
+                var snapshot = File.ReadAllText(path, Encoding.UTF8);
+                var json = Native.TakeString(Native.eg_load_snapshot(session, snapshot));
+                using var document = JsonDocument.Parse(json);
+                if (!IsErrorRoot(document.RootElement))
+                {
+                    return;
+                }
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
+            {
+                Console.Error.WriteLine($"Engram could not read persisted snapshot: {ex.Message}");
+            }
+        }
+
+        PersistSnapshot(session);
+    }
+
+    private static void PersistSnapshot(IntPtr session)
+    {
+        try
+        {
+            var json = Native.TakeString(Native.eg_snapshot(session));
+            using var document = JsonDocument.Parse(json);
+            if (IsErrorRoot(document.RootElement)
+                || !document.RootElement.TryGetProperty("state", out var state)
+                || state.ValueKind is JsonValueKind.Undefined or JsonValueKind.Null)
+            {
+                return;
+            }
+
+            var path = SnapshotPath();
+            var directory = Path.GetDirectoryName(path);
+            if (!string.IsNullOrEmpty(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+            File.WriteAllText(path, state.GetRawText(), Encoding.UTF8);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
+        {
+            Console.Error.WriteLine($"Engram could not persist snapshot: {ex.Message}");
+        }
+    }
+
+    private static bool IsErrorRoot(JsonElement root)
+    {
+        return root.TryGetProperty("ok", out var ok) && ok.ValueKind == JsonValueKind.False;
+    }
+
+    private static string SnapshotPath()
+    {
+        var configured = Environment.GetEnvironmentVariable(SnapshotPathEnvironmentVariable);
+        if (!string.IsNullOrWhiteSpace(configured))
+        {
+            return configured;
+        }
+
+        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        return Path.Combine(home, ".engram", SnapshotFileName);
     }
 
     private static MosaicHostResult HostUnavailable(string reason)
@@ -333,6 +410,14 @@ public static class MosaicHost
 
         [DllImport(NativeLibrary, EntryPoint = "eg_string_free", CallingConvention = CallingConvention.Cdecl)]
         internal static extern void eg_string_free(IntPtr value);
+
+        [DllImport(NativeLibrary, EntryPoint = "eg_snapshot", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr eg_snapshot(IntPtr session);
+
+        [DllImport(NativeLibrary, EntryPoint = "eg_load_snapshot", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr eg_load_snapshot(
+            IntPtr session,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string snapshotJson);
 
         [DllImport(NativeLibrary, EntryPoint = "eg_engram_app_props", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr eg_engram_app_props(

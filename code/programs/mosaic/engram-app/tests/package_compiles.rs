@@ -2485,6 +2485,12 @@ fn source_tree_has_expected_shape() {
     assert_contains(&xaml_host, "private static IntPtr Session = IntPtr.Zero");
     assert_contains(&xaml_host, "TryGetSession");
     assert_contains(&xaml_host, "Engram native host unavailable");
+    assert_contains(&xaml_host, "ENGRAM_SNAPSHOT_PATH");
+    assert_contains(&xaml_host, "mosaic-snapshot.v1.json");
+    assert_contains(&xaml_host, "HydrateSession");
+    assert_contains(&xaml_host, "PersistSnapshot");
+    assert_contains(&xaml_host, "eg_snapshot");
+    assert_contains(&xaml_host, "eg_load_snapshot");
     assert!(
         !xaml_host.contains("private static IntPtr Session = Native.eg_session_new()"),
         "xaml host template must not load the native library from a static field initializer"
@@ -2498,6 +2504,12 @@ fn source_tree_has_expected_shape() {
     assert_contains(&swiftui_host, "hostResponseDictionary");
     assert_contains(&swiftui_host, "\"hostIntent\"");
     assert_contains(&swiftui_host, "\"props\"");
+    assert_contains(&swiftui_host, "ENGRAM_SNAPSHOT_PATH");
+    assert_contains(&swiftui_host, "mosaic-snapshot.v1.json");
+    assert_contains(&swiftui_host, "hydrateSession");
+    assert_contains(&swiftui_host, "persistSnapshot");
+    assert_contains(&swiftui_host, "eg_snapshot");
+    assert_contains(&swiftui_host, "eg_load_snapshot");
 
     let qt_host = fs::read_to_string(package_root().join("host/qt/MosaicHost.cpp"))
         .expect("qt host template");
@@ -2508,6 +2520,12 @@ fn source_tree_has_expected_shape() {
     assert_contains(&qt_host, "hostResponseFromJson");
     assert_contains(&qt_host, "hostIntent");
     assert_contains(&qt_host, "props");
+    assert_contains(&qt_host, "ENGRAM_SNAPSHOT_PATH");
+    assert_contains(&qt_host, "mosaic-snapshot.v1.json");
+    assert_contains(&qt_host, "hydrateSession");
+    assert_contains(&qt_host, "persistSnapshot");
+    assert_contains(&qt_host, "eg_snapshot");
+    assert_contains(&qt_host, "eg_load_snapshot");
 
     let compose_host = fs::read_to_string(package_root().join("host/compose/MosaicHost.kt"))
         .expect("compose host template");
@@ -2518,6 +2536,12 @@ fn source_tree_has_expected_shape() {
     assert_contains(&compose_host, "JSONObject(event)");
     assert_contains(&compose_host, "\"hostIntent\"");
     assert_contains(&compose_host, "\"props\"");
+    assert_contains(&compose_host, "ENGRAM_SNAPSHOT_PATH");
+    assert_contains(&compose_host, "mosaic-snapshot.v1.json");
+    assert_contains(&compose_host, "hydrateSession");
+    assert_contains(&compose_host, "persistSnapshot");
+    assert_contains(&compose_host, "eg_snapshot");
+    assert_contains(&compose_host, "eg_load_snapshot");
 
     let flutter_host = fs::read_to_string(package_root().join("host/flutter/mosaic_host.dart"))
         .expect("flutter host template");
@@ -2529,6 +2553,12 @@ fn source_tree_has_expected_shape() {
     assert_contains(&flutter_host, "jsonEncode(event)");
     assert_contains(&flutter_host, "'hostIntent'");
     assert_contains(&flutter_host, "'props'");
+    assert_contains(&flutter_host, "ENGRAM_SNAPSHOT_PATH");
+    assert_contains(&flutter_host, "mosaic-snapshot.v1.json");
+    assert_contains(&flutter_host, "_hydrateSession");
+    assert_contains(&flutter_host, "_persistSnapshot");
+    assert_contains(&flutter_host, "eg_snapshot");
+    assert_contains(&flutter_host, "eg_load_snapshot");
 
     let build_script =
         fs::read_to_string(package_root().join("scripts/build-all.ps1")).expect("build-all.ps1");
