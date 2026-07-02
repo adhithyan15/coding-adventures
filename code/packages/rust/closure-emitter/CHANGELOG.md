@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.21.1] - 2026-07-02
+
+### Test — CLOC12.153: CodePrinter arrow-function conformance port
+
+New upstream port `tests/upstream/code_printer_arrow_test.rs` (from
+`CodePrinterTest.java`) isolating `emit_arrow_function_expression` + the
+`PREC_ASSIGNMENT` precedence wrap that landed with
+`Expression::ArrowFunctionExpression` (CLOC12.151). **12 active `#[test]`s, no
+`#[ignore]`, no new gaps** — the emitter conforms to every covered arrow shape:
+single-param param-paren drop (`x=>x`), zero/multi param (`()=>1`, `(a,b)=>a`),
+object-literal-body wrap (`()=>({})`), concise vs block body (`x=>{return x}`),
+IIFE / member-object wrap (`(()=>{})()`, `(()=>{}).x`), un-parenthesised
+call-argument (`g(x=>x)`), and the async prefix (`async x=>x`, `async()=>{}`).
+Inputs are hand-constructed AST, so the port also covers block-bodied arrows the
+grammar can't yet parse (gap-156). Test-only; no `src/` change.
+
 ## [0.21.0] - 2026-07-02
 
 ### Added — CLOC12.154: emit `TemplateLiteral` (backtick template strings)

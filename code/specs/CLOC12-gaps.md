@@ -1497,6 +1497,21 @@ bridge) constrain CLOC12.152 to concise expression bodies:
    arrows (`x => ({a:1})`) decline too — forgoing an optimisation, never
    correctness. Fixing the grammar's block-body parse resolves both.
 
+## CLOC12.153 — CodePrinter arrow-function conformance port (emitter)
+
+New upstream port `closure-emitter/tests/upstream/code_printer_arrow_test.rs`
+(from `CodePrinterTest.java`), isolating `emit_arrow_function_expression` + the
+`PREC_ASSIGNMENT` wrap that landed with `Expression::ArrowFunctionExpression`
+(CLOC12.151). **12 active `#[test]`s, no `#[ignore]`, no new gaps** — the emitter
+conforms to every covered arrow printing shape: single-param param-paren drop
+(`x=>x`), zero/multi param (`()=>1`, `(a,b)=>a`), object-literal-body wrap
+(`()=>({})`), concise vs block body (`x=>{return x}`), IIFE / member-object wrap
+(`(()=>{})()`, `(()=>{}).x`), un-parenthesised call-argument (`g(x=>x)`), and the
+`async` prefix (`async x=>x`, `async()=>{}`). Inputs are hand-constructed AST, so
+the port also covers **block-bodied** arrows that the current grammar can't yet
+parse (see gap-156, added with CLOC12.152) — the emitter already prints them
+correctly; only the parser needs the grammar fix.
+
 ## CLOC12.154 — `TemplateLiteral` (backtick template strings)
 
 New `Expression::TemplateLiteral { cv, quasis: Vec<TemplateElement>,
