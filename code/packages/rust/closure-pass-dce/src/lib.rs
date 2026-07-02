@@ -78,7 +78,7 @@ use coding_adventures_javascript_ast::{
     ArrowBody, ArrowFunctionExpression, TemplateLiteral,
     FunctionDeclaration, FunctionExpression, IfStatement, LogicalExpression, MemberExpression, NullLiteral,
     NumericLiteral, ObjectExpression, Program, ProgramItem, Property, PropertyKey,
-    ReturnStatement, Statement, StringLiteral, UnaryExpression, UndefinedLiteral, VarKind,
+    ReturnStatement, Statement, StringLiteral, UnaryExpression, UndefinedLiteral, UpdateExpression, VarKind,
     DoWhileStatement, VariableDeclaration, VariableDeclarator, WhileStatement,
 };
 use serde_json::json;
@@ -1178,6 +1178,15 @@ fn dce_expression(expr: &Expression, st: &mut DceState) -> Expression {
             right: Box::new(dce_expression(&l.right, st)),
         }),
         Expression::UnaryExpression(u) => Expression::UnaryExpression(UnaryExpression {
+            cv: u.cv.clone(),
+            operator: u.operator,
+            prefix: u.prefix,
+            argument: Box::new(dce_expression(&u.argument, st)),
+        }),
+        // `++x` / `x++` has a side effect (mutates its operand), so it is NOT
+        // dead code even in value-discarded position — preserve it, recursing
+        // only into the argument.
+        Expression::UpdateExpression(u) => Expression::UpdateExpression(UpdateExpression {
             cv: u.cv.clone(),
             operator: u.operator,
             prefix: u.prefix,

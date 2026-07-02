@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.17.0] - 2026-07-02
+
+### Added — CLOC12.158: `UpdateExpression` (`++` / `--`)
+
+New `Expression::UpdateExpression` variant (`UpdateExpression { operator,
+prefix, argument }`) plus the `UpdateOperator` enum (`Increment` `++` /
+`Decrement` `--`), closing the long-standing Phase 2 gap noted in the
+`UnaryExpression` docs. Kept **distinct** from `UnaryExpression` because
+`++`/`--` are a read-modify-write: they carry a side effect (so DCE/purity
+passes must not drop them) and require a *writable reference* operand (an
+identifier or member), unlike the pure prefix unary operators. `prefix`
+distinguishes `++x` (yield the new value) from `x++` (yield the old value).
+This is the atomic node addition — the emitter and every exhaustive
+`Expression` match across the pass crates are updated in the same change so
+the workspace stays green; the parser bridge enable (grammar
+`postfix_expression` / prefix `++`/`--` → this node) is the follow-up PR2.
+
 ## [0.16.0] - 2026-07-02
 
 ### Added — CLOC12.154: `TemplateLiteral` (backtick template strings)

@@ -139,7 +139,7 @@ pub use expression::{
     LogicalOperator, MemberExpression,
     NullLiteral, NumericLiteral, ObjectExpression, Property, PropertyKey, PropertyKind,
     StringLiteral, TemplateElement, TemplateLiteral, UnaryExpression, UnaryOperator,
-    UndefinedLiteral,
+    UndefinedLiteral, UpdateExpression, UpdateOperator,
 };
 pub use statement::{
     BlockStatement, BreakStatement, CatchClause, ContinueStatement, DebuggerStatement,

@@ -98,7 +98,7 @@ use coding_adventures_javascript_ast::{
     FunctionDeclaration, FunctionExpression, Identifier,
     IfStatement, LogicalExpression, LogicalOperator, MemberExpression, NullLiteral, NumericLiteral,
     ObjectExpression, Program, ProgramItem, Property, PropertyKey, PropertyKind, ReturnStatement, Statement,
-    StringLiteral, UnaryExpression, UnaryOperator, UndefinedLiteral, VariableDeclaration,
+    StringLiteral, UnaryExpression, UnaryOperator, UndefinedLiteral, UpdateExpression, VariableDeclaration,
     DoWhileStatement, VariableDeclarator, WhileStatement,
 };
 use serde_json::json;
@@ -505,6 +505,16 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         Expression::BinaryExpression(b) => fold_binary(b, st),
         Expression::LogicalExpression(l) => fold_logical(l, st),
         Expression::UnaryExpression(u) => fold_unary(u, st),
+        // `++x` / `x++`: a read-modify-write with a side effect — never a
+        // constant, so we do NOT collapse it (dropping it would drop the
+        // mutation). Recurse into the argument only for the member-object case
+        // (`a[i].b++` etc.); the update node itself is preserved verbatim.
+        Expression::UpdateExpression(u) => Expression::UpdateExpression(UpdateExpression {
+            cv: u.cv.clone(),
+            operator: u.operator,
+            prefix: u.prefix,
+            argument: Box::new(fold_expression(&u.argument, st)),
+        }),
         Expression::ConditionalExpression(c) => fold_conditional(c, st),
 
         // Recurse but don't collapse — these have runtime semantics.

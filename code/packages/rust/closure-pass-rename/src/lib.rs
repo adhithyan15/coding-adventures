@@ -922,6 +922,7 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
             collect_all_idents_expr(&le.right, out);
         }
         Expression::UnaryExpression(ue) => collect_all_idents_expr(&ue.argument, out),
+        Expression::UpdateExpression(ue) => collect_all_idents_expr(&ue.argument, out),
         Expression::AssignmentExpression(ae) => {
             match &ae.left {
                 AssignmentTarget::Identifier(id) => {
@@ -1205,6 +1206,7 @@ fn rewrite_uses_expr(expr: &mut Expression, map: &HashMap<String, String>) {
             rewrite_uses_expr(&mut le.right, map);
         }
         Expression::UnaryExpression(ue) => rewrite_uses_expr(&mut ue.argument, map),
+        Expression::UpdateExpression(ue) => rewrite_uses_expr(&mut ue.argument, map),
         Expression::AssignmentExpression(ae) => {
             match &mut ae.left {
                 AssignmentTarget::Identifier(id) => {

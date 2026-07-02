@@ -739,6 +739,7 @@ fn count_uses_expr(expr: &Expression, name: &str, count: &mut usize) {
             count_uses_expr(&le.right, name, count);
         }
         Expression::UnaryExpression(ue) => count_uses_expr(&ue.argument, name, count),
+        Expression::UpdateExpression(ue) => count_uses_expr(&ue.argument, name, count),
         Expression::AssignmentExpression(ae) => {
             // The assignment TARGET is a write, not a use we propagate
             // into (you can't assign to a literal). Only the member-
@@ -1016,6 +1017,7 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
             changed |= propagate_in_expr(&mut le.right, cand);
         }
         Expression::UnaryExpression(ue) => changed |= propagate_in_expr(&mut ue.argument, cand),
+        Expression::UpdateExpression(ue) => changed |= propagate_in_expr(&mut ue.argument, cand),
         Expression::AssignmentExpression(ae) => {
             // The target identifier is a write — never replaced (a
             // `const` can't be assigned, and you can't assign to a

@@ -63,7 +63,7 @@ use coding_adventures_javascript_ast::{
     LogicalExpression,
     LogicalOperator,
     MemberExpression, ObjectExpression, Program, ProgramItem, Property, PropertyKey,
-    ReturnStatement, Statement, UnaryExpression, UnaryOperator, VarKind, VariableDeclaration,
+    ReturnStatement, Statement, UnaryExpression, UnaryOperator, UpdateExpression, VarKind, VariableDeclaration,
     DoWhileStatement, VariableDeclarator, WhileStatement,
 };
 use serde_json::json;
@@ -269,6 +269,7 @@ fn expression_cv(expr: &Expression) -> Option<String> {
         BinaryExpression(e) => e.cv.clone(),
         LogicalExpression(e) => e.cv.clone(),
         UnaryExpression(e) => e.cv.clone(),
+        UpdateExpression(e) => e.cv.clone(),
         AssignmentExpression(e) => e.cv.clone(),
         ConditionalExpression(e) => e.cv.clone(),
         CallExpression(e) => e.cv.clone(),
@@ -1366,6 +1367,14 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
             right: Box::new(fold_expression(&l.right, st)),
         }),
         Expression::UnaryExpression(u) => Expression::UnaryExpression(UnaryExpression {
+            cv: u.cv.clone(),
+            operator: u.operator,
+            prefix: u.prefix,
+            argument: Box::new(fold_expression(&u.argument, st)),
+        }),
+        // `++x` / `x++`: recurse into the argument; the read-modify-write is
+        // preserved verbatim (it has a side effect and is not a constant).
+        Expression::UpdateExpression(u) => Expression::UpdateExpression(UpdateExpression {
             cv: u.cv.clone(),
             operator: u.operator,
             prefix: u.prefix,

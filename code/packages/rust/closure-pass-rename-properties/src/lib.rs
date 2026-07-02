@@ -1155,6 +1155,7 @@ fn classify_expr(expr: &Expression, cls: &mut Classify) {
             classify_expr(&le.right, cls);
         }
         Expression::UnaryExpression(ue) => classify_expr(&ue.argument, cls),
+        Expression::UpdateExpression(ue) => classify_expr(&ue.argument, cls),
         Expression::AssignmentExpression(ae) => {
             if let AssignmentTarget::MemberExpression(m) = &ae.left {
                 classify_member(&m.object, &m.property, m.computed, cls);
@@ -1414,6 +1415,7 @@ fn rewrite_expr(expr: &mut Expression, map: &HashMap<String, String>) {
             rewrite_expr(&mut le.right, map);
         }
         Expression::UnaryExpression(ue) => rewrite_expr(&mut ue.argument, map),
+        Expression::UpdateExpression(ue) => rewrite_expr(&mut ue.argument, map),
         Expression::AssignmentExpression(ae) => {
             if let AssignmentTarget::MemberExpression(m) = &mut ae.left {
                 rewrite_member(&mut m.object, &mut m.property, m.computed, map);
