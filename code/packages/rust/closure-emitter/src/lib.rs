@@ -66,6 +66,7 @@ use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentOperator,
     AssignmentTarget, BigIntLiteral, BinaryExpression, BinaryOperator, BlockStatement,
     ArrowBody, ArrowFunctionExpression,
+    TemplateElement, TemplateLiteral,
     BooleanLiteral,
     BreakStatement, CallExpression, CatchClause, ConditionalExpression, ContinueStatement,
     Declaration, DebuggerStatement, DoWhileStatement,
@@ -983,6 +984,44 @@ impl<'a> Emitter<'a> {
         }
     }
 
+    /// Emit a [`TemplateLiteral`] — a backtick template string.
+    ///
+    /// The `quasis` (fixed string parts) and `expressions` (`${…}` inserts)
+    /// interleave, and the structural invariant `quasis.len() ==
+    /// expressions.len() + 1` guarantees a quasi both opens and closes the
+    /// run:
+    ///
+    /// ```text
+    ///   `q0${e0}q1${e1}…qN`
+    /// ```
+    ///
+    /// Each quasi is emitted from its **raw** text (escape sequences intact,
+    /// exactly as written) so the template round-trips byte-for-byte; the
+    /// `${` / `}` delimiters make each inserted expression an unambiguous
+    /// full-expression context, so it is emitted at the loosest precedence
+    /// (no wrapping — the braces already delimit it).
+    fn emit_template_literal(&mut self, t: &TemplateLiteral) {
+        self.maybe_map(&t.cv);
+        self.write_str("`");
+        for (i, quasi) in t.quasis.iter().enumerate() {
+            self.emit_template_element(quasi);
+            // Between quasi i and quasi i+1 sits expression i (there are
+            // exactly `quasis.len() - 1` of them).
+            if let Some(expr) = t.expressions.get(i) {
+                self.write_str("${");
+                self.emit_expression_inner(expr, 0);
+                self.write_str("}");
+            }
+        }
+        self.write_str("`");
+    }
+
+    /// Emit one [`TemplateElement`] — its verbatim `raw` text.
+    fn emit_template_element(&mut self, q: &TemplateElement) {
+        self.maybe_map(&q.cv);
+        self.write_str(&q.raw);
+    }
+
     // ---- Expressions ---------------------------------------------
 
     /// Public entry: emit an expression assuming the loosest binding
@@ -1039,6 +1078,7 @@ impl<'a> Emitter<'a> {
             Expression::ObjectExpression(o) => self.emit_object(o),
             Expression::FunctionExpression(f) => self.emit_function_expression(f),
             Expression::ArrowFunctionExpression(a) => self.emit_arrow_function_expression(a),
+            Expression::TemplateLiteral(t) => self.emit_template_literal(t),
         }
         if needs_parens {
             self.write_str(")");
@@ -1688,6 +1728,11 @@ fn expr_prec(e: &Expression) -> u8 {
         // are all valid). Unlike a function expression it needs no
         // statement-start wrap, so `emit_expression_statement` ignores it.
         Expression::ArrowFunctionExpression(_) => PREC_ASSIGNMENT,
+        // A template literal is a *primary* expression — a leaf token run
+        // delimited by backticks. It never needs wrapping from any parent
+        // (`` `x`.length ``, `` f`x` `` as a member/call base are all valid),
+        // so it tags at `PREC_PRIMARY` like the array/object literals.
+        Expression::TemplateLiteral(_) => PREC_PRIMARY,
         // `true`/`false` are emitted as `!0`/`!1` (see `emit_boolean`), which
         // are UnaryExpressions — precedence `PREC_UNARY`, NOT primary. Tagging
         // them here is what makes `emit_expression_inner` parenthesise them in
@@ -3987,5 +4032,66 @@ mod tests {
             a.is_async = true;
         }
         assert_eq!(emit_expr(zero), "async()=>{};");
+    }
+
+    // ---- TemplateLiteral (CLOC12.154) -------------------------
+
+    fn tquasi(raw: &str, tail: bool) -> TemplateElement {
+        TemplateElement { cv: None, raw: raw.to_string(), cooked: Some(raw.to_string()), tail }
+    }
+
+    fn template(quasis: Vec<TemplateElement>, expressions: Vec<Expression>) -> Expression {
+        Expression::TemplateLiteral(TemplateLiteral { cv: None, quasis, expressions })
+    }
+
+    /// A no-substitution template prints its raw text between backticks.
+    #[test]
+    fn template_no_substitution() {
+        assert_eq!(emit_expr(template(vec![tquasi("abc", true)], vec![])), "`abc`;");
+    }
+
+    /// A single `${…}` interleaves the two quasis around the expression.
+    #[test]
+    fn template_single_substitution() {
+        let t = template(vec![tquasi("a", false), tquasi("b", true)], vec![ident("x")]);
+        assert_eq!(emit_expr(t), "`a${x}b`;");
+    }
+
+    /// Adjacent substitutions have empty quasis between them; the run still
+    /// opens and closes with a (possibly empty) quasi.
+    #[test]
+    fn template_adjacent_substitutions() {
+        let t = template(
+            vec![tquasi("", false), tquasi("", false), tquasi("", true)],
+            vec![ident("x"), ident("y")],
+        );
+        assert_eq!(emit_expr(t), "`${x}${y}`;");
+    }
+
+    /// A `${…}` context is the loosest, so a low-precedence inner expression
+    /// needs no parens — the braces already delimit it.
+    #[test]
+    fn template_substitution_needs_no_inner_parens() {
+        let sum = Expression::BinaryExpression(BinaryExpression {
+            cv: None,
+            operator: coding_adventures_javascript_ast::BinaryOperator::Add,
+            left: Box::new(ident("a")),
+            right: Box::new(ident("b")),
+        });
+        let t = template(vec![tquasi("", false), tquasi("", true)], vec![sum]);
+        assert_eq!(emit_expr(t), "`${a+b}`;");
+    }
+
+    /// A template as a member-access object needs no wrapping — it's a
+    /// primary expression (`` `abc`.length ``).
+    #[test]
+    fn template_as_member_object_is_not_wrapped() {
+        let m = Expression::MemberExpression(MemberExpression {
+            cv: None,
+            object: Box::new(template(vec![tquasi("abc", true)], vec![])),
+            property: Box::new(ident("length")),
+            computed: false,
+        });
+        assert_eq!(emit_expr(m), "`abc`.length;");
     }
 }

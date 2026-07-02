@@ -717,6 +717,14 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                 ArrowBody::Expression(e) => collect_all_idents_expr(e, out),
             }
         }
+        // A template literal contributes the identifiers used in its `${…}`
+        // inserts (it introduces no names). Quasis are leaf strings — only
+        // the insert expressions carry identifiers to record.
+        Expression::TemplateLiteral(t) => {
+            for e in &t.expressions {
+                collect_all_idents_expr(e, out);
+            }
+        }
     }
 }
 
@@ -1018,6 +1026,14 @@ fn rename_apply_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                     }
                 }
                 ArrowBody::Expression(e) => rename_apply_expr(e, &inner),
+            }
+        }
+        // A template literal binds nothing, so there is no shadowing to strip
+        // — rename globals straight through each `${…}` insert. Quasis are
+        // leaf strings and hold no renamable use.
+        Expression::TemplateLiteral(t) => {
+            for e in &mut t.expressions {
+                rename_apply_expr(e, map);
             }
         }
     }

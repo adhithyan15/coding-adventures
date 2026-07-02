@@ -46,6 +46,13 @@ emitter grow a need for them — each behind its own `CLOC12.NN` slice:
   traversals land in one atomic PR (adding an `Expression` variant makes every
   exhaustive `match` non-exhaustive); the bridge-enable + conformance port
   follow. (Methods, getters/setters, and classes remain Phase 3.)
+- `TemplateLiteral` (CLOC12.154) — backtick template strings (`` `abc` ``,
+  `` `a${x}b` ``). Parallel `quasis: Vec<TemplateElement>` (fixed string parts)
+  and `expressions: Vec<Expression>` (`${…}` inserts) with the ESTree invariant
+  `quasis.len() == expressions.len() + 1`. `TemplateElement` keeps `raw` /
+  `cooked` / `tail`. Node + `closure-emitter` + all pass traversals land in one
+  atomic PR; the bridge-enable + conformance port follow. (Tagged templates
+  `` tag`…` `` remain Phase 3.)
 
 ## What's coming (follow-up PRs)
 

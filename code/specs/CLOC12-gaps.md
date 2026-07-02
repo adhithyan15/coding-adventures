@@ -1458,3 +1458,30 @@ emits `()=>{}.x`, which mis-parses the `{}` as a block body. This is the same
 leftmost-token class as the general expression-statement `{`-wrap and is rare in
 practice (an object-literal-rooted concise body used as a member/call base);
 deferred until a general leftmost-token analysis lands.
+
+## CLOC12.154 — `TemplateLiteral` (backtick template strings)
+
+New `Expression::TemplateLiteral { cv, quasis: Vec<TemplateElement>,
+expressions: Vec<Expression> }` + `TemplateElement { cv, raw, cooked:
+Option<String>, tail }` in `javascript-ast` (0.16.0), plus the emitter and every
+pass traversal — one **atomic** PR (adding an `Expression` variant makes every
+exhaustive `match` across the workspace non-exhaustive; CI builds the workspace).
+
+A template interleaves fixed string parts (`quasis`) with `${…}` `expressions`,
+satisfying the ESTree invariant `quasis.len() == expressions.len() + 1`. Emit
+prints `` `q0${e0}q1${e1}…qN` `` from each quasi's verbatim `raw` text; a template
+tags at `PREC_PRIMARY` (never wrapped). Because a template introduces **no
+bindings and no scopes**, every pass arm simply recurses into `expressions` (the
+`quasis` are leaf strings) — no map reduction / shadowing logic, unlike the arrow
+arms.
+
+Landed bottom-up: node + emitter + passes here; the parser→typed-AST bridge
+(`javascript-parser` currently declines `template_literal` as `UnsupportedSyntax`)
+and an upstream conformance port follow in later slices. *Tagged* templates
+(`` tag`…` ``, node `TaggedTemplateExpression`) remain Phase 3.
+
+### Future — fold an all-constant template to a string literal
+
+`` `a${1}b` `` could fold to the string literal `"a1b"` when every `${…}` is a
+constant. Not done here — CLOC12.154 only recurses to fold *inside* each `${…}`;
+whole-template folding is a later constant-fold enhancement.

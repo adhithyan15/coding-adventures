@@ -58,7 +58,7 @@ use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentOperator,
     AssignmentTarget, BinaryExpression, BindingTarget, BlockStatement, CallExpression,
     ConditionalExpression, Declaration, EmptyStatement, Expression, ExpressionStatement, ForInit,
-    ArrowBody, ArrowFunctionExpression,
+    ArrowBody, ArrowFunctionExpression, TemplateLiteral,
     ForInStatement, ForOfStatement, ForStatement, FunctionDeclaration, FunctionExpression, Identifier, IfStatement,
     LogicalExpression,
     LogicalOperator,
@@ -277,6 +277,7 @@ fn expression_cv(expr: &Expression) -> Option<String> {
         ObjectExpression(e) => e.cv.clone(),
         FunctionExpression(e) => e.cv.clone(),
         ArrowFunctionExpression(e) => e.cv.clone(),
+        TemplateLiteral(e) => e.cv.clone(),
     }
 }
 
@@ -1459,6 +1460,13 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                 is_async: a.is_async,
             })
         }
+        // Fold control flow inside a template literal's `${…}` expressions;
+        // the `quasis` are fixed string segments.
+        Expression::TemplateLiteral(t) => Expression::TemplateLiteral(TemplateLiteral {
+            cv: t.cv.clone(),
+            quasis: t.quasis.clone(),
+            expressions: t.expressions.iter().map(|e| fold_expression(e, st)).collect(),
+        }),
     }
 }
 

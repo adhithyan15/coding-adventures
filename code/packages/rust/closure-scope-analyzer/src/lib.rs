@@ -908,6 +908,14 @@ fn walk_expression(
         Expression::ArrowFunctionExpression(ae) => {
             walk_arrow_function_expression(ae, ctx, analysis, pending);
         }
+        // A template literal introduces no scope or binding — walk each
+        // `${…}` insert in the current scope. Quasis are leaf strings with
+        // nothing to resolve.
+        Expression::TemplateLiteral(t) => {
+            for e in &t.expressions {
+                walk_expression(e, ctx, analysis, pending);
+            }
+        }
     }
 }
 
