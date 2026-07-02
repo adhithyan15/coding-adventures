@@ -3093,11 +3093,13 @@ mod tests {
 
     #[test]
     fn test_parse_super_bare() {
-        // Phase 22d — bare `super` (zsuper): no argument list.  Must
-        // parse as a `super_statement` with NO `super_args` child (the
-        // absence is what marks it as implicit-forward zsuper).
+        // Phase 22d / Issue #59 — bare `super` (zsuper): no argument list.
+        // Now parses as a `super_expr` (the statement-only `super_statement`
+        // was folded into `factor` so `super` works in expression position)
+        // with NO `super_args` child (the absence marks it as implicit-forward
+        // zsuper).
         let ast = parse_ruby("super");
-        let sup = find_descendant(&ast, "super_statement").expect("expected super_statement");
+        let sup = find_descendant(&ast, "super_expr").expect("expected super_expr");
         assert!(tree_has_token_value(sup, "super"), "expected `super` keyword");
         assert!(
             find_descendant(sup, "super_args").is_none(),
@@ -3107,11 +3109,11 @@ mod tests {
 
     #[test]
     fn test_parse_super_empty_parens() {
-        // Phase 22d — `super()`: explicit empty arg list.  A
+        // Phase 22d / Issue #59 — `super()`: explicit empty arg list.  A
         // `super_args` node IS present (with zero `call_arg` children),
         // distinguishing it from bare zsuper.
         let ast = parse_ruby("super()");
-        let sup = find_descendant(&ast, "super_statement").expect("expected super_statement");
+        let sup = find_descendant(&ast, "super_expr").expect("expected super_expr");
         let args = find_descendant(sup, "super_args").expect("expected super_args node");
         let arg_count = args
             .children
@@ -3123,10 +3125,10 @@ mod tests {
 
     #[test]
     fn test_parse_super_with_args() {
-        // Phase 22d — `super(x, y)`: explicit args.  `super_args` holds
-        // two `call_arg` children.
+        // Phase 22d / Issue #59 — `super(x, y)`: explicit args.  `super_args`
+        // holds two `call_arg` children.
         let ast = parse_ruby("super(x, y)");
-        let sup = find_descendant(&ast, "super_statement").expect("expected super_statement");
+        let sup = find_descendant(&ast, "super_expr").expect("expected super_expr");
         let args = find_descendant(sup, "super_args").expect("expected super_args node");
         let arg_count = args
             .children
@@ -4864,6 +4866,120 @@ mod tests {
         };
         assert!(!colon(call_args[0]), "first arg is positional (no colon)");
         assert!(colon(call_args[1]), "second arg is a keyword (colon)");
+    }
+
+    // -----------------------------------------------------------------------
+    // Issue #59 — class-method definitions `def self.m` / `def Foo.m`
+    // -----------------------------------------------------------------------
+
+    /// `def self.zero; end` parses to a `def_statement` carrying a
+    /// `def_receiver` whose singleton receiver is `self`.
+    #[test]
+    fn test_parse_def_self_method() {
+        let ast = parse_ruby("def self.zero\nend");
+        let def = find_descendant(&ast, "def_statement").expect("expected def_statement");
+        let recv = find_descendant(def, "def_receiver").expect("expected def_receiver");
+        // The receiver holds `self` (a KEYWORD token) via singleton_receiver.
+        let sr = find_descendant(recv, "singleton_receiver").expect("singleton_receiver");
+        let has_self = sr.children.iter().any(|c| matches!(
+            c,
+            ASTNodeOrToken::Token(t) if t.value == "self"
+        ));
+        assert!(has_self, "def self.m receiver must be `self`");
+    }
+
+    /// `def Foo.bar(x); end` parses to a `def_statement` with a `def_receiver`
+    /// naming the constant `Foo` and a normal parameter list.
+    #[test]
+    fn test_parse_def_const_method_with_params() {
+        let ast = parse_ruby("def Foo.bar(x)\nend");
+        let def = find_descendant(&ast, "def_statement").expect("expected def_statement");
+        let recv = find_descendant(def, "def_receiver").expect("expected def_receiver");
+        let sr = find_descendant(recv, "singleton_receiver").expect("singleton_receiver");
+        let has_foo = sr.children.iter().any(|c| matches!(
+            c,
+            ASTNodeOrToken::Token(t) if t.value == "Foo"
+        ));
+        assert!(has_foo, "def Foo.bar receiver must be `Foo`");
+        // The parameter `x` is still parsed under a `params` node.
+        assert!(find_descendant(def, "params").is_some(), "expected params");
+    }
+
+    /// A plain `def m` (no receiver) must NOT grow a `def_receiver` node —
+    /// the optional prefix cleanly matches nothing (regression guard).
+    #[test]
+    fn test_parse_def_no_receiver_unchanged() {
+        let ast = parse_ruby("def zero\n  0\nend");
+        let def = find_descendant(&ast, "def_statement").expect("expected def_statement");
+        assert!(
+            find_descendant(def, "def_receiver").is_none(),
+            "plain `def m` must have NO def_receiver node"
+        );
+    }
+
+    /// Endless class-method form `def self.zero = 0`.
+    #[test]
+    fn test_parse_endless_def_self_method() {
+        let ast = parse_ruby("def self.zero = 0");
+        let def =
+            find_descendant(&ast, "endless_def_statement").expect("expected endless_def_statement");
+        assert!(
+            find_descendant(def, "def_receiver").is_some(),
+            "def self.zero = 0 must carry a def_receiver"
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Issue #59 — `super` as an expression (`super_expr`)
+    // -----------------------------------------------------------------------
+
+    /// `x = super` parses `super` in expression position as a `super_expr`
+    /// (the RHS of the assignment), not a statement-level `super_statement`.
+    #[test]
+    fn test_parse_super_as_assignment_rhs() {
+        let ast = parse_ruby("x = super");
+        let sup = find_descendant(&ast, "super_expr").expect("expected super_expr");
+        assert!(
+            find_descendant(sup, "super_args").is_none(),
+            "bare super (expr) must have NO super_args node"
+        );
+    }
+
+    /// `super + 1` parses as a `sum` whose left operand is a bare
+    /// `super_expr` — the `+` cannot begin a `call_arg`, so `super` stays
+    /// bare and the `+ 1` applies to its produced value.
+    #[test]
+    fn test_parse_super_plus_expr() {
+        let ast = parse_ruby("super + 1");
+        let sup = find_descendant(&ast, "super_expr").expect("expected super_expr");
+        assert!(
+            find_descendant(sup, "super_args").is_none(),
+            "`super + 1` — super must be bare (no super_args)"
+        );
+        // The `+ 1` lives outside super_expr, under a `sum`.
+        assert!(find_descendant(&ast, "sum").is_some(), "expected a sum node");
+    }
+
+    /// `puts(super)` — `super` used as a call argument (deep in expression
+    /// position) parses as a `super_expr`.
+    #[test]
+    fn test_parse_super_as_call_arg() {
+        let ast = parse_ruby("puts(super)");
+        assert!(
+            find_descendant(&ast, "super_expr").is_some(),
+            "super inside puts(...) must parse as super_expr"
+        );
+    }
+
+    /// `super + \" tail\"` (the P3 execution-proof shape) parses with a bare
+    /// `super_expr` on the left of a `sum`.
+    #[test]
+    fn test_parse_super_string_concat() {
+        let ast = parse_ruby("super + \" tail\"");
+        assert!(
+            find_descendant(&ast, "super_expr").is_some(),
+            "expected super_expr"
+        );
     }
 }
 

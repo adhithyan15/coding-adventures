@@ -1293,6 +1293,100 @@ mod tests {
         assert!(a.source.contains("    LEGS = 4"), "got:\n{}", a.source);
     }
 
+    // -----------------------------------------------------------------------
+    // Issue #59 — class-method defs (`def self.m`) + `super` as an expression.
+    // Full Ruby SOURCE → SIR → Python, run through a real interpreter.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn end_to_end_ruby_class_method_def_and_call_executes_py() {
+        // A REAL class method: `def self.zero` allocates and returns a
+        // `Counter` (the classic factory idiom).  `Counter.zero` dispatches to
+        // it via `__class_method__` → `_sir_oop_call_class_method`, and the
+        // returned object answers an instance method.
+        //
+        // NOTE: `print` (not `puts`) — the `puts` builtin has no runtime
+        // dispatch entry on this branch (a parallel PR adds it), so `puts` in a
+        // *run* execution-proof raises `NameError`.  `print` maps to
+        // `_sir_print`, which is in the core dispatch table and appends a
+        // newline, so `print(c.val)` emits "42\n".
+        let module = ruby_to_semantic_ir::compile_source(
+            "class Counter\n\
+            \x20 def self.zero\n\
+            \x20   Counter.new\n\
+            \x20 end\n\
+            \x20 def val\n\
+            \x20   42\n\
+            \x20 end\n\
+            end\n\
+            c = Counter.zero\n\
+            print(c.val)\n",
+            "demo",
+        )
+        .expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        // The class-method registration + dispatch wiring is present.
+        assert!(
+            a.source.contains("_sir_oop_def_class_method(\"Counter\", \"zero\""),
+            "expected class-method registration; got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains("_sir_oop_call_class_method(\"Counter\", \"zero\")"),
+            "expected class-method dispatch; got:\n{}",
+            a.source
+        );
+        if let Some(out) = run_emitted_python(&a.source) {
+            assert_eq!(out, "42\n", "Counter.zero.val must print 42");
+        }
+    }
+
+    #[test]
+    fn end_to_end_ruby_super_as_expression_executes_py() {
+        // `super` used as an EXPRESSION: `def describe; super + 1; end` takes
+        // the PARENT's `describe` result and adds 1.  Exercises both
+        // super-as-subexpression lowering and the `__super__` runtime dispatch,
+        // run end to end — the produced value flows into the enclosing `+`.
+        //
+        // The value is numeric (not `super + " tail"` string-concat) on
+        // purpose: Ruby's `str + str` lowers to the numeric-init `_sir_plus`
+        // (`add` seeds `total = 0`), so string `+` concatenation is a
+        // PRE-EXISTING pipeline gap unrelated to #59 — see the CHANGELOG's
+        // "deferred" note.  `super + 1` proves the #59 feature (super in
+        // expression position) without depending on that separate gap.
+        let module = ruby_to_semantic_ir::compile_source(
+            "class Animal\n\
+            \x20 def describe\n\
+            \x20   40\n\
+            \x20 end\n\
+            end\n\
+            class Cat < Animal\n\
+            \x20 def describe\n\
+            \x20   super + 1\n\
+            \x20 end\n\
+            end\n\
+            c = Cat.new\n\
+            print(c.describe)\n",
+            "demo",
+        )
+        .expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        assert!(
+            a.source.contains("_sir_oop_call_super(\"describe\", \"Cat\")"),
+            "expected super dispatch from Cat; got:\n{}",
+            a.source
+        );
+        // The super call sits INSIDE the `+` — proving expression position.
+        assert!(
+            a.source.contains("_sir_plus(_sir_oop_call_super(\"describe\", \"Cat\"), 1)"),
+            "expected super to sit inside `+`; got:\n{}",
+            a.source
+        );
+        if let Some(out) = run_emitted_python(&a.source) {
+            assert_eq!(out, "41\n", "super (40) + 1 must be 41");
+        }
+    }
+
     #[test]
     fn end_to_end_ruby_class_var_py() {
         let module = ruby_to_semantic_ir::compile_source(

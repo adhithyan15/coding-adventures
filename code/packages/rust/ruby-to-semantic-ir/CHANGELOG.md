@@ -2,6 +2,51 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.5.0] - 2026-07-01
+
+(Cargo manifest minor bump 0.4.0 → 0.5.0.)
+
+### Added (Issue #59 — class-method defs `def self.m` + `super` as an expression)
+
+Lowering support for the two grammar features unblocked in
+`coding-adventures-ruby-parser` 0.5.0.
+
+- **`def self.m` / `def Recv.m` → class-method registration.** A `def` (or
+  endless `def`) carrying a `def_receiver` node now routes to the
+  ALREADY-EXISTING `register_class_method` path (previously unreachable — the
+  grammar had no receiver production): it emits
+  `__def_class_method__("Class", "m", MakeClosure(fn))` instead of
+  `__def_method__`, and hoists the body under a `_cm`-suffixed class-qualified
+  top-level name (`Counter__zero_cm`) so a class method and an instance method
+  of the same name on the same class never collide.
+
+- **Class-method CALL dispatch `Foo.bar` → `__class_method__`.** A non-`new`
+  method call on a CONSTANT receiver (`Counter.zero`, `Foo.bar(x)`) now lowers
+  to a new `__class_method__("Foo", "bar", …args)` builtin (routed by the
+  Python backend to `_sir_oop_call_class_method`, the ancestry-walking lookup
+  in the `def self.m` table). `.new` on a const still routes to `__new__` (the
+  implicit constructor); a method call on a NON-constant receiver
+  (`obj.meth`) still routes through `__method__`.
+
+- **`super` in expression position → `__super__` as an `Expr`.** The
+  `super`-lowering logic moved into a shared `lower_super_expr` helper that
+  returns an `Expr::BuiltinCall("__super__", …)` (rather than a `Stmt`), so
+  `x = super`, `super + 1`, and `puts(super)` slot the `__super__` marker
+  anywhere an expression goes. The statement form (a bare `super` line) wraps
+  the same helper in an `ExprStmt`. The zsuper param-forwarding / explicit-arg
+  behaviour is unchanged.
+
+### Deferred / known gaps
+
+- **String concatenation via `super + "…"`** (or any Ruby `str + str`) is a
+  PRE-EXISTING pipeline limitation unrelated to #59: Ruby `+` lowers to the
+  numeric-seeded `_sir_plus` (`add` starts `total = 0`), so `"a" + "b"` raises
+  `int + str` at runtime. The #59 super-as-expression execution-proof therefore
+  uses `super + 1` (numeric); string `+` awaits a polymorphic-`+` follow-up.
+- **Class-method CALL dispatch is wired for the Python backend only.** The
+  JS/Go/Rust backends have no `call_class_method` runtime yet, so
+  `__class_method__` is not emitted there (a per-backend follow-up).
+
 ## [0.4.0] - 2026-07-01
 
 (Cargo manifest minor bump 0.3.0 → 0.4.0.  Note: earlier CHANGELOG headers use

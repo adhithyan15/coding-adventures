@@ -25,7 +25,7 @@
 # than PUTS, TRUE, FALSE, NIL as token types.
 
 program      = { statement } ;
-statement    = endless_def_statement | def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | case_statement | begin_statement | return_statement | break_statement | next_statement | redo_statement | retry_statement | yield_statement | super_statement | alias_statement | undef_statement | multi_assignment | modifier_statement | rightward_assignment | assignment | defined_expression | method_with_block | method_call | method_call_no_paren | expression_stmt ;
+statement    = endless_def_statement | def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | case_statement | begin_statement | return_statement | break_statement | next_statement | redo_statement | retry_statement | yield_statement | alias_statement | undef_statement | multi_assignment | modifier_statement | rightward_assignment | assignment | defined_expression | method_with_block | method_call | method_call_no_paren | expression_stmt ;
 # Phase 6r — multiple assignment `a, b = 1, 2`.
 #
 # Placed BEFORE `modifier_statement` and `assignment` so the multi-LHS
@@ -112,13 +112,39 @@ modifier_statement = ( assignment | method_call_no_paren | method_call | express
 # the same `!"rescue" !"ensure"` negative-lookahead as begin_statement so
 # it stops at the first clause; the lowerer wraps the body + clauses in a
 # `Stmt::TryCatch` (Phase 16a) when any clause is present.
-def_statement = "def" NAME [ LPAREN [ params ] RPAREN ] { !"rescue" !"ensure" !"end" statement } { rescue_clause } [ ensure_clause ] "end" ;
+#
+# Issue #59 (OOP-cascade unblock) — CLASS-METHOD / singleton-method
+# definitions `def self.m` and `def Recv.m`.  A method definition may now
+# carry an OPTIONAL RECEIVER prefix (`def_receiver`) before the method
+# name: `def self.zero; end` (a class method on the enclosing class) and
+# `def Foo.bar(x); end` (a singleton method on the constant `Foo`).  The
+# receiver is `self` (the dominant idiom for class methods, mirroring
+# `class << self` in Phase 14e) or a bare `NAME`/constant, followed by a
+# literal `.` and then the method name.  The `.` is a `Dot` token matched
+# by VALUE (same convention as `dot_call`), so `def self . m` and
+# `def self.m` both parse.  The lowerer keys on the PRESENCE of the
+# `def_receiver` node: absent → an ordinary instance method (unchanged);
+# present → a class-method registration (`__def_class_method__`).  Because
+# the receiver is OPTIONAL, every pre-existing `def m` continues to parse
+# byte-for-byte as before (the optional group cleanly matches nothing when
+# the token after the method name is `(`, `=`, a newline, or a body
+# statement — none of which is a `.`).
+def_statement = "def" [ def_receiver ] NAME [ LPAREN [ params ] RPAREN ] { !"rescue" !"ensure" !"end" statement } { rescue_clause } [ ensure_clause ] "end" ;
+# The receiver prefix of a class/singleton method definition: `self.` or
+# `Const.` (or `name.`).  `singleton_receiver` (Phase 14e — `self | NAME`)
+# is reused verbatim so the `self`/`NAME` choice stays in one place.  The
+# trailing `.` is matched by literal VALUE (the lexer emits `.` as a `Dot`
+# token; matching the value keeps this in step with `dot_call`'s `"."`).
+def_receiver = singleton_receiver "." ;
 # Phase 7c — Ruby 3.0 endless method definition: `def foo = expr` and
 # `def foo(x, y) = expr`.  No `end`, no block body — just a single
 # expression after the `=`.  Placed BEFORE `def_statement` in the
 # `statement` alternation so PEG tries the endless form first; if the
 # `=` isn't present the parser falls through to the block form.
-endless_def_statement = "def" NAME [ LPAREN [ params ] RPAREN ] EQUALS expression ;
+#
+# Issue #59 — the same optional `def_receiver` prefix admits endless
+# class-method definitions `def self.m = expr` / `def Foo.m = expr`.
+endless_def_statement = "def" [ def_receiver ] NAME [ LPAREN [ params ] RPAREN ] EQUALS expression ;
 # Phase 6f — class/module namespace declarations.  The body is a
 # sequence of statements (which may include nested `def`s).  Like
 # `def_statement`, the body repetition uses a negative lookahead so it
@@ -230,11 +256,18 @@ yield_args = LPAREN [ call_arg { COMMA call_arg } ] RPAREN
 # The bare-vs-`super()` distinction is semantically load-bearing in Ruby
 # (zsuper forwards the caller's args; `super()` forwards none), so the
 # lowerer keys on the PRESENCE of a `super_args` node: absent → bare
-# zsuper, present → explicit (even with zero call_args).  Placed in
-# `statement` right after `yield_statement` and BEFORE the
-# `method_call*` family so the KEYWORD-tagged `super` token doesn't fall
-# through to `method_call_no_paren` and lose its dedicated lowering.
-super_statement = "super" [ super_args ] ;
+# zsuper, present → explicit (even with zero call_args).
+#
+# Issue #59 (OOP-cascade unblock) — `super` is now an EXPRESSION, not a
+# statement.  The old `super_statement` (a `statement`-alternation member)
+# could parse only a stand-alone `super`, so `super + " tail"`, `x = super`
+# and `puts(super)` failed.  The dedicated `super_expr` production (spliced
+# into `factor`, see below) subsumes ALL forms; a stand-alone `super` line
+# now parses as `expression_stmt → … → factor → super_expr`, so
+# `super_statement` was removed from the `statement` alternation to avoid it
+# shadowing the expression form (a PEG match of the statement rule consumes
+# only `super` and cannot backtrack, leaving a trailing `+ 1` orphaned).
+# `super_args` is retained — `super_expr` reuses it verbatim.
 super_args = LPAREN [ call_arg { COMMA call_arg } ] RPAREN
            | call_arg { COMMA call_arg } ;
 # Phase 6s — splat (`*args`) and double-splat (`**kwargs`) parameters.
@@ -467,7 +500,13 @@ rightward_assignment = expression "=>" NAME ;
 #
 # Setter calls (`foo.bar = 1`) and bracket access (`arr[0]`) are
 # deliberately out of scope for this chunk — they get their own phases.
-method_call  = ( NAME | KEYWORD ) LPAREN [ call_arg { COMMA call_arg } ] RPAREN { dot_call } ;
+# Issue #59 — the `KEYWORD` head is guarded with `!"super"` so a statement
+# `super(x, y)` / `super()` does NOT match here (which would mislower it as
+# an ordinary call to a method literally named `super`).  `super` in every
+# form now routes through `factor`'s `super_expr`; the guard hands the
+# `super` token off to `expression_stmt → … → super_expr` instead.  Every
+# other keyword-led call (`puts(1)`, value-keyword receivers) is unaffected.
+method_call  = ( NAME | !"super" KEYWORD ) LPAREN [ call_arg { COMMA call_arg } ] RPAREN { dot_call } ;
 dot_call     = "." ( NAME | KEYWORD ) [ LPAREN [ call_arg { COMMA call_arg } ] RPAREN ] [ block ] ;
 # Phase 15d (FC) — scope-resolution operator `Foo::Bar` (and chains
 # `A::B::C`).  The lexer emits `::` as a `Colon` token whose VALUE is
@@ -545,7 +584,10 @@ call_arg     = NAME COLON expression | [ "*" | "**" | "&" ] expression ;
 # greedily — matching idiomatic Ruby.  `puts(1) + 2`, by contrast,
 # matches `method_call` first and leaves `+ 2` for downstream rules
 # (same as existing behaviour pre-6h).
-method_call_no_paren = ( NAME | KEYWORD ) expression { COMMA expression } ;
+# Issue #59 — `!"super"` guard mirrors `method_call`: a parenless
+# `super x` at statement level routes to `super_expr` (via expression_stmt),
+# not to a spurious paren-less call to a method named `super`.
+method_call_no_paren = ( NAME | !"super" KEYWORD ) expression { COMMA expression } ;
 expression_stmt = expression ;
 # Phase 6i — comparison operators at the top of the precedence pyramid.
 #
@@ -703,7 +745,41 @@ term         = factor { ( STAR | SLASH ) factor } ;
 # every block body and every optional-expression statement at once.  Value
 # keywords (`nil`/`true`/`false`/`self`) are untouched, so `puts nil` etc.
 # still parse.  The `!"…"` lookaheads only peek; they consume nothing.
-factor       = ( defined_expression | lambda_literal | method_call | NUMBER | STRING | NAME | ( !"end" !"rescue" !"ensure" !"else" !"elsif" !"when" !"then" !"in" !"do" KEYWORD ) | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN | unary_minus ) { dot_call | scope_resolution } ;
+# Issue #59 (OOP-cascade unblock) — `super` as an EXPRESSION.
+#
+# Phase 22d gave `super` a statement-only form (`super_statement`).  But
+# `super` is a *value-producing* keyword: `x = super`, `super + " tail"`,
+# `puts(super)` all use its return value in expression position.  A
+# dedicated `super_expr` production is spliced into `factor` FIRST (before
+# the bare `NAME`/guarded-`KEYWORD` atoms) so the leading `super` keyword
+# is claimed here — otherwise the guarded `KEYWORD` atom would match the
+# bare `super` token and leave any `(args)` / parenless args dangling
+# (the exact factor-KEYWORD swallow hazard documented on the `KEYWORD`
+# atom below, and why `defined?`/`alias`/`undef` are handled specially).
+#
+# `super` is intentionally NOT added to the factor `KEYWORD`-guard
+# exclusion list: unlike `end`/`rescue`/`else`/… (which never denote a
+# value and must stay OUT of expressions so block bodies close), `super`
+# DOES denote a value and belongs IN expressions.  Handling it via its
+# own production — rather than relaxing the guard — keeps the arg-carrying
+# forms (`super(x)`, `super x`) intact while the guard continues to
+# protect block terminators.
+#
+# The argument forms reuse `super_args` (Phase 22d) verbatim, so
+# `super()`, `super(x)` and `super x` in expression position lower the
+# same way they do as statements.  A bare `super` (no `super_args`) is the
+# zsuper form; the lowerer keys on the presence of the `super_args` node
+# exactly as `super_statement` does.
+#
+# Precedence note: a parenless `super x + 1` binds as `super(x + 1)`
+# because `super_args`' parenless branch pulls a whole `call_arg`
+# (→ `expression`) greedily — matching `yield x + 1` and idiomatic Ruby.
+# To add to the *result* of a bare `super`, parenthesise the zsuper form
+# is not required — `super + 1` has no `super_args` (the `+` cannot begin
+# a `call_arg`/`LPAREN`), so it parses as bare-`super` then the enclosing
+# `sum` applies `+ 1` to the produced value.
+super_expr   = "super" [ super_args ] ;
+factor       = ( defined_expression | lambda_literal | super_expr | method_call | NUMBER | STRING | NAME | ( !"end" !"rescue" !"ensure" !"else" !"elsif" !"when" !"then" !"in" !"do" KEYWORD ) | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN | unary_minus ) { dot_call | scope_resolution } ;
 # Phase 6w — arrow-lambda literal `->(params){body}` / `->{body}`.
 #
 # Ruby 1.9+ shorthand for creating a `Proc`/`Lambda`.  The parameter
