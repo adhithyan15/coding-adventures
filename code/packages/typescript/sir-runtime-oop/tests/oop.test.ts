@@ -16,6 +16,8 @@ import {
   defineClass,
   defineMethod,
   defMethod,
+  extendModule,
+  includeModule,
   isA,
   ivarGet,
   ivarSet,
@@ -937,5 +939,113 @@ describe("O1: user method tables, callNew / callSuper / self / class methods", (
     resetOop();
     expect(callClassMethod("Dog", "make")).toBeNull();
     expect(callSuper("speak", "Dog")).toBeNull();
+  });
+});
+
+// ── Mixins: include / extend / MRO (MX3) ─────────────────────────────────────
+//
+// A module registers its `def`s via `defMethod` keyed on the MODULE name
+// (exactly as the frontend emits `__def_method__("M", …)`); `includeModule`
+// then weaves the module into an owner's ancestry, and the method-resolution
+// walk (`callMethod`) finds the mixed-in method.  These tests exercise the four
+// spec-mandated behaviours end-to-end through the real dispatch path.
+describe("mixins: include / extend / MRO (MX3)", () => {
+  it("a module method included into a class is callable on an instance", () => {
+    defineClass("Person", null);
+    defMethod("Greeter", "greet", new Closure(() => "hello"));
+    includeModule("Person", "Greeter");
+    expect(callMethod(callNew("Person"), "greet")).toBe("hello");
+  });
+
+  it("a class method shadows an included module's method (class-first MRO)", () => {
+    defineClass("Person", null);
+    defMethod("Greeter", "greet", new Closure(() => "from module"));
+    defMethod("Person", "greet", new Closure(() => "from class"));
+    includeModule("Person", "Greeter");
+    expect(callMethod(callNew("Person"), "greet")).toBe("from class");
+  });
+
+  it("the most recently included module wins (reverse include order)", () => {
+    defineClass("C", null);
+    defMethod("A", "who", new Closure(() => "A"));
+    defMethod("B", "who", new Closure(() => "B"));
+    includeModule("C", "A");
+    includeModule("C", "B");
+    expect(callMethod(callNew("C"), "who")).toBe("B");
+  });
+
+  it("a superclass's included module is reachable (module shadows superclass, class shadows module)", () => {
+    // Base defines `rank`; a mixed-in module on the subclass shadows it; the
+    // subclass's own method shadows the module — full class→module→super MRO.
+    defineClass("Animal", null);
+    defineClass("Dog", "Animal");
+    defMethod("Animal", "rank", new Closure(() => "animal"));
+    defMethod("Trainable", "rank", new Closure(() => "trainable"));
+    includeModule("Dog", "Trainable");
+    // module (on Dog) shadows the Animal superclass method.
+    expect(callMethod(callNew("Dog"), "rank")).toBe("trainable");
+    // adding a Dog-own method shadows the module in turn.
+    defMethod("Dog", "rank", new Closure(() => "dog"));
+    expect(callMethod(callNew("Dog"), "rank")).toBe("dog");
+  });
+
+  it("a diamond include resolves the shared module once (cycle/dedup guard)", () => {
+    // C includes X and Y; both include Base.  Base#tag is found once and the
+    // walk terminates — no infinite loop even though Base is reachable twice.
+    defineClass("C", null);
+    defMethod("Base", "tag", new Closure(() => "base"));
+    includeModule("X", "Base");
+    includeModule("Y", "Base");
+    includeModule("C", "X");
+    includeModule("C", "Y");
+    expect(callMethod(callNew("C"), "tag")).toBe("base");
+  });
+
+  it("a self-including module terminates rather than looping", () => {
+    defineClass("C", null);
+    defMethod("Loopy", "ping", new Closure(() => "pong"));
+    includeModule("Loopy", "Loopy"); // pathological self-include
+    includeModule("C", "Loopy");
+    expect(callMethod(callNew("C"), "ping")).toBe("pong");
+    // an unresolved method still bottoms out (NoMethodError), not a hang.
+    expect(() => callMethod(callNew("C"), "nope")).toThrow(SirError);
+  });
+
+  it("a re-included module is not duplicated (first position kept)", () => {
+    defineClass("C", null);
+    defMethod("M", "hi", new Closure(() => "hi"));
+    includeModule("C", "M");
+    includeModule("C", "M"); // repeat is a no-op
+    expect(callMethod(callNew("C"), "hi")).toBe("hi");
+  });
+
+  it("extend makes a module's instance methods class methods on the owner", () => {
+    defineClass("Widget", null);
+    defMethod("Describable", "describe", new Closure(() => "a widget"));
+    extendModule("Widget", "Describable");
+    expect(callClassMethod("Widget", "describe")).toBe("a widget");
+    // extend does NOT make it an instance method.
+    expect(() => callMethod(callNew("Widget"), "describe")).toThrow(SirError);
+  });
+
+  it("extend copies every current module method into the class-method table", () => {
+    defineClass("W", null);
+    defMethod("Two", "a", new Closure(() => "a!"));
+    defMethod("Two", "b", new Closure(() => "b!"));
+    extendModule("W", "Two");
+    expect(callClassMethod("W", "a")).toBe("a!");
+    expect(callClassMethod("W", "b")).toBe("b!");
+  });
+
+  it("resetOop clears the included-modules table", () => {
+    defineClass("Person", null);
+    defMethod("Greeter", "greet", new Closure(() => "hi"));
+    includeModule("Person", "Greeter");
+    resetOop();
+    // After reset, re-register only the class + module def (no include): the
+    // mixed-in method must no longer resolve, proving the include list cleared.
+    defineClass("Person", null);
+    defMethod("Greeter", "greet", new Closure(() => "hi"));
+    expect(() => callMethod(callNew("Person"), "greet")).toThrow(SirError);
   });
 });

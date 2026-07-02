@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.1] - 2026-07-02
+
+### Fixed
+
+- Handle `mul_expr` in expression dispatch. LANG-FULL N1 inserted a
+  multiplicative precedence level (`add_expr → mul_expr → bitwise_expr`), but
+  `mul_expr` was missing from `%_EXPRESSION_RULE`, so `_expression_children`
+  filtered it out when `add_expr` walked its operands. Arithmetic like
+  `1 +% 2` then inferred `undef`, which slipped past compatibility checks — so
+  an invalid `let x: bool = 1 +% 2;` was accepted instead of raising a
+  type error. `mul_expr` now routes through `_check_add_expression` (shared
+  numeric semantics). Mirrors the Elixir/Ruby/Lua fixes (#5747).
+
 ## [0.1.0] - 2026-04-18
 
 ### Added

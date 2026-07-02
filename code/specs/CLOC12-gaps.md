@@ -1459,6 +1459,44 @@ leftmost-token class as the general expression-statement `{`-wrap and is rare in
 practice (an object-literal-rooted concise body used as a member/call base);
 deferred until a general leftmost-token analysis lands.
 
+## CLOC12.152 — bridge `arrow_function` → `Expression::ArrowFunctionExpression`
+
+The `javascript-parser` typed-AST bridge (0.21.0) now converts **concise-body
+arrow functions** (`x => x + 1`, `(a, b) => a + b`, `() => 1`,
+`arr.map(x => x)`) — `convert_arrow_function` reads `arrow_parameters`
+(`NAME` → one param; `( formal_parameters )` → the list; `()` → none) and the
+`concise_body` expression, yielding an `ArrowFunctionExpression` with an
+`ArrowBody::Expression`. This unblocks the SIMPLE pipeline *inside* arrow bodies
+end-to-end (`var f = x => 1 + 2` → `var f = x => 3`) instead of the previous
+whitespace-only fallback. 5 bridge tests + a closurec e2e diff fixture
+(`tests/diff/simple-arrow-function/`).
+
+### gap-155 — bridge declines `arrow_function` — **RESOLVED** (javascript-parser 0.21.0)
+
+Previously the bridge listed `arrow_function` under `UnsupportedSyntax`. Now
+resolved for concise-body arrows (see above). Async / block-bodied / object-body
+arrows remain out of scope per gap-156 and the async note.
+
+### gap-156 — grammar rejects block-bodied arrows; `() => {}` mis-parses as object body
+
+Two *grammar*-level limitations (in `code/grammars/ecmascript/*.grammar`, not the
+bridge) constrain CLOC12.152 to concise expression bodies:
+
+1. **Block-bodied arrows fail to parse.** `x => { return x; }` — the
+   `concise_body = … | LBRACE function_body RBRACE` alternative is not taken by
+   the generated parser, so a statement block body is a hard parse error. The
+   bridge's `ArrowBody::Block` path and the emitter/passes already model block
+   bodies; only the parser needs fixing (a separate grammar PR).
+2. **`() => {}` is read as an empty-*object* concise body.** With the block
+   alternative unavailable, `{}` after `=>` parses as an empty object literal —
+   i.e. `() => ({})` — which returns a *different value* (an object) than the
+   real empty-block arrow (returns `undefined`). The distinguishing information
+   is already lost in the parse tree, so the bridge **declines** any arrow whose
+   concise body is an `ObjectExpression` (falls back to whitespace-only, which
+   re-emits the source unchanged and is always correct). Genuine object-returning
+   arrows (`x => ({a:1})`) decline too — forgoing an optimisation, never
+   correctness. Fixing the grammar's block-body parse resolves both.
+
 ## CLOC12.153 — CodePrinter arrow-function conformance port (emitter)
 
 New upstream port `closure-emitter/tests/upstream/code_printer_arrow_test.rs`

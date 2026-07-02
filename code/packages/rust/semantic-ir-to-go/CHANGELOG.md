@@ -1,5 +1,51 @@
 # Changelog
 
+## 0.13.0
+
+### Added — Ruby mixins: `module` + `include` / `extend` MRO (sir-mixins MX5)
+
+- The Go backend's emitted OOP runtime now EXECUTES Ruby mixins. A method
+  defined in a `module` and mixed into a class via `include` is found through
+  the class's Method Resolution Order; `extend` exposes a module's methods as
+  class methods. Runtime-only change; no core-IR or frontend edit. Dispatch
+  stays explicit NAME-keyed map lookup — NEVER reflection (the
+  [[dynamic-dispatch-rce]] discipline).
+- **`Feature::Modules` is now ACCEPTED.** A `Stmt::ModuleDef` (`module M; …;
+  end`) is hosted as a method *owner* alongside classes: its body's `def`s
+  register via the SAME `__def_method__("M", …)` builtin classes use (keyed by
+  the module name), and its body is emitted in order like a `ClassDef` body.
+  Previously `ModuleDef` was rejected at the soundness gate; the gate now
+  recurses into a module body for the residual `Const` checks instead.
+- **`__include__("Owner", "M")` → `_sir_include`** — appends `M` to a per-owner
+  included-module list (`_sir_included_modules map[string][]string`) in include
+  order. Ruby searches the most-recently-included module first, so the
+  resolution walk iterates this slice in REVERSE.
+- **MRO-extended method resolution** (`_sir_resolve_instance_method`): the walk
+  now follows class → its included modules (reverse, recursing so a module that
+  itself includes another is honoured) → superclass → its modules → … → Object.
+  A class's own method SHADOWS an included module's; a module method shadows the
+  superclass's. A module reached via two paths (a diamond) resolves ONCE, at its
+  earliest position, because the `seen` set skips an already-visited owner. The
+  walk is cycle-guarded (a self-including module or cyclic class hierarchy
+  TERMINATES).
+- **`__extend__("Owner", "M")` → `_sir_extend`** — copies `M`'s instance
+  methods (including those `M` itself includes) into `Owner`'s class-method
+  table, so they become callable as `Owner.method`. An entry `Owner` already
+  defines is not overwritten (own/class method shadows the extended module's).
+- **`__class_method__("C", "m", args…)` → `_sir_call_class_method`** — a new
+  emit arm + runtime helper wiring class-method *calls* (`Foo.bar`) through an
+  ancestry-walking lookup in the class-method table (which `extend` populates).
+  An unresolved name hits the controlled `NoMethodError` floor.
+- Emit arms added for `__include__`, `__extend__`, and `__class_method__`; all
+  owner/module/method NAMES ride in as `StrLit`s emitted through
+  `quote_go_string` (never interpolated), keeping the runtime side reflection-free.
+- Tests: five `go run` execution proofs (`compile_and_run_mixins.rs`) — an
+  included-module method callable on an instance, a class method shadowing the
+  module's, a module method shadowing the superclass's with a diamond include
+  resolving once, `extend` making a module method a class method, and a mixed-in
+  method reading an including class's `@ivar` through the shared self-stack —
+  plus emit + runtime unit tests for the new arms and helpers.
+
 ## 0.12.0
 
 ### Added — typed runtime errors: ZeroDivision / Index / Key / NoMethod (sir-typed-runtime-errors T4)

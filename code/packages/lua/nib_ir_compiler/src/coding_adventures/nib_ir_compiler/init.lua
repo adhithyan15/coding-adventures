@@ -10,6 +10,10 @@ local expression_rules = {
     eq_expr = true,
     cmp_expr = true,
     add_expr = true,
+    -- mul_expr sits between add_expr and bitwise_expr in the precedence cascade
+    -- (LANG-FULL N1). It must be here so expression_children does not filter it
+    -- out when add_expr walks its operands.
+    mul_expr = true,
     bitwise_expr = true,
     unary_expr = true,
     primary = true,
@@ -188,7 +192,9 @@ function Compiler:emit_expr_into(node, register_index)
         return
     end
 
-    if node.rule_name == "add_expr" then
+    if node.rule_name == "add_expr" or node.rule_name == "mul_expr" then
+        -- mul_expr shares add_expr's binary-operand lowering (same-type operands,
+        -- numeric result), so it routes through the same compile path.
         self:compile_add(node, register_index)
         return
     end

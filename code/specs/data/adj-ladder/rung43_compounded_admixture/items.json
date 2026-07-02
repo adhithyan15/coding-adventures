@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 43 \u2014 compounded IV admixture total drug mass from six stated quantities (a NEW panel: compounding pharmacy / IV admixture). Three additives each contribute volume*concentration of drug; compute the total mass (va*ca + vb*cb + vc*cc), the first-two subtotal (va*ca + vb*cb), or the last-two subtotal (vb*cb + vc*cc). Each item is a compute_dimensioned program (observe the six quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, a SUM OF THREE PRODUCTS (va*ca + vb*cb + vc*cc), extending rung-34's sum-of-two-products to three \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the six observed quantities via * and + \u2014 no constant leaks, and no per-additive amount or total ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same six quantities, so the distractors are exactly the slips students make: pairing each volume with the WRONG additive's concentration, and adding every raw quantity instead of forming each product first. The core confusion tested is summing the three volume-times-concentration products.",
+  "items": [
+    {
+      "id": "r43mix-01",
+      "qtype": "compounded_admixture",
+      "stem": "An IV bag is compounded from three additives: 2 mL of a 10 mg/mL drug, 3 mL of a 20 mg/mL drug, and 1 mL of a 30 mg/mL drug. What is the total drug mass in the bag (all three additive amounts summed)?",
+      "program": "observe volume_a(2)\nobserve concentration_a(10)\nobserve volume_b(3)\nobserve concentration_b(20)\nobserve volume_c(1)\nobserve concentration_c(30)\nlet answer = volume_a * concentration_a + volume_b * concentration_b + volume_c * concentration_c\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 110,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 140,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 66,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r43mix-02",
+      "qtype": "compounded_admixture",
+      "stem": "An IV bag is compounded from three additives: 2 mL of a 10 mg/mL drug, 3 mL of a 20 mg/mL drug, and 1 mL of a 30 mg/mL drug. What is the combined mass of the first two additives only?",
+      "program": "observe volume_a(2)\nobserve concentration_a(10)\nobserve volume_b(3)\nobserve concentration_b(20)\nobserve volume_c(1)\nobserve concentration_c(30)\nlet answer = volume_a * concentration_a + volume_b * concentration_b\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 110,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 140,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 66,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r43mix-03",
+      "qtype": "compounded_admixture",
+      "stem": "An IV bag is compounded from three additives: 2 mL of a 10 mg/mL drug, 3 mL of a 20 mg/mL drug, and 1 mL of a 30 mg/mL drug. What is the combined mass of the last two additives only?",
+      "program": "observe volume_a(2)\nobserve concentration_a(10)\nobserve volume_b(3)\nobserve concentration_b(20)\nobserve volume_c(1)\nobserve concentration_c(30)\nlet answer = volume_b * concentration_b + volume_c * concentration_c\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 110,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 140,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 66,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r43mix-04",
+      "qtype": "compounded_admixture",
+      "stem": "An IV bag is compounded from three additives: 4 mL of a 5 mg/mL drug, 2 mL of a 15 mg/mL drug, and 3 mL of a 10 mg/mL drug. What is the total drug mass in the bag (all three additive amounts summed)?",
+      "program": "observe volume_a(4)\nobserve concentration_a(5)\nobserve volume_b(2)\nobserve concentration_b(15)\nobserve volume_c(3)\nobserve concentration_c(10)\nlet answer = volume_a * concentration_a + volume_b * concentration_b + volume_c * concentration_c\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 95,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 39,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r43mix-05",
+      "qtype": "compounded_admixture",
+      "stem": "An IV bag is compounded from three additives: 4 mL of a 5 mg/mL drug, 2 mL of a 15 mg/mL drug, and 3 mL of a 10 mg/mL drug. What is the combined mass of the first two additives only?",
+      "program": "observe volume_a(4)\nobserve concentration_a(5)\nobserve volume_b(2)\nobserve concentration_b(15)\nobserve volume_c(3)\nobserve concentration_c(10)\nlet answer = volume_a * concentration_a + volume_b * concentration_b\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 95,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 39,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 50,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r43mix-06",
+      "qtype": "compounded_admixture",
+      "stem": "An IV bag is compounded from three additives: 4 mL of a 5 mg/mL drug, 2 mL of a 15 mg/mL drug, and 3 mL of a 10 mg/mL drug. What is the combined mass of the last two additives only?",
+      "program": "observe volume_a(4)\nobserve concentration_a(5)\nobserve volume_b(2)\nobserve concentration_b(15)\nobserve volume_c(3)\nobserve concentration_c(10)\nlet answer = volume_b * concentration_b + volume_c * concentration_c\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 95,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 39,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r43mix-07",
+      "qtype": "compounded_admixture",
+      "stem": "An IV bag is compounded from three additives: 1 mL of a 40 mg/mL drug, 2 mL of a 20 mg/mL drug, and 5 mL of a 4 mg/mL drug. What is the total drug mass in the bag (all three additive amounts summed)?",
+      "program": "observe volume_a(1)\nobserve concentration_a(40)\nobserve volume_b(2)\nobserve concentration_b(20)\nobserve volume_c(5)\nobserve concentration_c(4)\nlet answer = volume_a * concentration_a + volume_b * concentration_b + volume_c * concentration_c\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 228,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 72,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r43mix-08",
+      "qtype": "compounded_admixture",
+      "stem": "An IV bag is compounded from three additives: 1 mL of a 40 mg/mL drug, 2 mL of a 20 mg/mL drug, and 5 mL of a 4 mg/mL drug. What is the combined mass of the first two additives only?",
+      "program": "observe volume_a(1)\nobserve concentration_a(40)\nobserve volume_b(2)\nobserve concentration_b(20)\nobserve volume_c(5)\nobserve concentration_c(4)\nlet answer = volume_a * concentration_a + volume_b * concentration_b\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 228,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 72,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r43mix-09",
+      "qtype": "compounded_admixture",
+      "stem": "An IV bag is compounded from three additives: 1 mL of a 40 mg/mL drug, 2 mL of a 20 mg/mL drug, and 5 mL of a 4 mg/mL drug. What is the combined mass of the last two additives only?",
+      "program": "observe volume_a(1)\nobserve concentration_a(40)\nobserve volume_b(2)\nobserve concentration_b(20)\nobserve volume_c(5)\nobserve concentration_c(4)\nlet answer = volume_b * concentration_b + volume_c * concentration_c\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 228,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 72,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r43mix-10",
+      "qtype": "compounded_admixture",
+      "stem": "An IV bag is compounded from three additives: 3 mL of a 10 mg/mL drug, 1 mL of a 50 mg/mL drug, and 2 mL of a 25 mg/mL drug. What is the total drug mass in the bag (all three additive amounts summed)?",
+      "program": "observe volume_a(3)\nobserve concentration_a(10)\nobserve volume_b(1)\nobserve concentration_b(50)\nobserve volume_c(2)\nobserve concentration_c(25)\nlet answer = volume_a * concentration_a + volume_b * concentration_b + volume_c * concentration_c\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 195,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 91,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 130,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r43mix-11",
+      "qtype": "compounded_admixture",
+      "stem": "An IV bag is compounded from three additives: 3 mL of a 10 mg/mL drug, 1 mL of a 50 mg/mL drug, and 2 mL of a 25 mg/mL drug. What is the combined mass of the first two additives only?",
+      "program": "observe volume_a(3)\nobserve concentration_a(10)\nobserve volume_b(1)\nobserve concentration_b(50)\nobserve volume_c(2)\nobserve concentration_c(25)\nlet answer = volume_a * concentration_a + volume_b * concentration_b\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 130,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 195,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 91,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r43mix-12",
+      "qtype": "compounded_admixture",
+      "stem": "An IV bag is compounded from three additives: 3 mL of a 10 mg/mL drug, 1 mL of a 50 mg/mL drug, and 2 mL of a 25 mg/mL drug. What is the combined mass of the last two additives only?",
+      "program": "observe volume_a(3)\nobserve concentration_a(10)\nobserve volume_b(1)\nobserve concentration_b(50)\nobserve volume_c(2)\nobserve concentration_c(25)\nlet answer = volume_b * concentration_b + volume_c * concentration_c\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 130,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 195,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 91,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r43mix-13",
+      "qtype": "compounded_admixture",
+      "stem": "An IV bag is compounded from three additives: 2 mL of a 25 mg/mL drug, 4 mL of a 10 mg/mL drug, and 1 mL of a 60 mg/mL drug. What is the total drug mass in the bag (all three additive amounts summed)?",
+      "program": "observe volume_a(2)\nobserve concentration_a(25)\nobserve volume_b(4)\nobserve concentration_b(10)\nobserve volume_c(1)\nobserve concentration_c(60)\nlet answer = volume_a * concentration_a + volume_b * concentration_b + volume_c * concentration_c\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 150,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 285,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 102,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r43mix-14",
+      "qtype": "compounded_admixture",
+      "stem": "An IV bag is compounded from three additives: 2 mL of a 25 mg/mL drug, 4 mL of a 10 mg/mL drug, and 1 mL of a 60 mg/mL drug. What is the combined mass of the first two additives only?",
+      "program": "observe volume_a(2)\nobserve concentration_a(25)\nobserve volume_b(4)\nobserve concentration_b(10)\nobserve volume_c(1)\nobserve concentration_c(60)\nlet answer = volume_a * concentration_a + volume_b * concentration_b\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 150,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 285,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 102,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r43mix-15",
+      "qtype": "compounded_admixture",
+      "stem": "An IV bag is compounded from three additives: 2 mL of a 25 mg/mL drug, 4 mL of a 10 mg/mL drug, and 1 mL of a 60 mg/mL drug. What is the combined mass of the last two additives only?",
+      "program": "observe volume_a(2)\nobserve concentration_a(25)\nobserve volume_b(4)\nobserve concentration_b(10)\nobserve volume_c(1)\nobserve concentration_c(60)\nlet answer = volume_b * concentration_b + volume_c * concentration_c\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 150,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 285,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 102,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 100,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r43mix-16",
+      "qtype": "compounded_admixture",
+      "stem": "An IV bag is compounded from three additives: 5 mL of a 4 mg/mL drug, 3 mL of a 20 mg/mL drug, and 2 mL of a 15 mg/mL drug. What is the total drug mass in the bag (all three additive amounts summed)?",
+      "program": "observe volume_a(5)\nobserve concentration_a(4)\nobserve volume_b(3)\nobserve concentration_b(20)\nobserve volume_c(2)\nobserve concentration_c(15)\nlet answer = volume_a * concentration_a + volume_b * concentration_b + volume_c * concentration_c\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 110,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 153,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 49,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r43mix-17",
+      "qtype": "compounded_admixture",
+      "stem": "An IV bag is compounded from three additives: 5 mL of a 4 mg/mL drug, 3 mL of a 20 mg/mL drug, and 2 mL of a 15 mg/mL drug. What is the combined mass of the first two additives only?",
+      "program": "observe volume_a(5)\nobserve concentration_a(4)\nobserve volume_b(3)\nobserve concentration_b(20)\nobserve volume_c(2)\nobserve concentration_c(15)\nlet answer = volume_a * concentration_a + volume_b * concentration_b\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 110,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 153,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 49,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r43mix-18",
+      "qtype": "compounded_admixture",
+      "stem": "An IV bag is compounded from three additives: 5 mL of a 4 mg/mL drug, 3 mL of a 20 mg/mL drug, and 2 mL of a 15 mg/mL drug. What is the combined mass of the last two additives only?",
+      "program": "observe volume_a(5)\nobserve concentration_a(4)\nobserve volume_b(3)\nobserve concentration_b(20)\nobserve volume_c(2)\nobserve concentration_c(15)\nlet answer = volume_b * concentration_b + volume_c * concentration_c\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 110,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 153,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 49,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r43mix-19",
+      "qtype": "compounded_admixture",
+      "stem": "An IV bag is compounded from three additives: 2 mL of a 30 mg/mL drug, 1 mL of a 40 mg/mL drug, and 3 mL of a 10 mg/mL drug. What is the total drug mass in the bag (all three additive amounts summed)?",
+      "program": "observe volume_a(2)\nobserve concentration_a(30)\nobserve volume_b(1)\nobserve concentration_b(40)\nobserve volume_c(3)\nobserve concentration_c(10)\nlet answer = volume_a * concentration_a + volume_b * concentration_b + volume_c * concentration_c\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 70,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 130,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 86,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r43mix-20",
+      "qtype": "compounded_admixture",
+      "stem": "An IV bag is compounded from three additives: 2 mL of a 30 mg/mL drug, 1 mL of a 40 mg/mL drug, and 3 mL of a 10 mg/mL drug. What is the combined mass of the first two additives only?",
+      "program": "observe volume_a(2)\nobserve concentration_a(30)\nobserve volume_b(1)\nobserve concentration_b(40)\nobserve volume_c(3)\nobserve concentration_c(10)\nlet answer = volume_a * concentration_a + volume_b * concentration_b\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 130,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 70,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 86,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 100,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r43mix-21",
+      "qtype": "compounded_admixture",
+      "stem": "An IV bag is compounded from three additives: 2 mL of a 30 mg/mL drug, 1 mL of a 40 mg/mL drug, and 3 mL of a 10 mg/mL drug. What is the combined mass of the last two additives only?",
+      "program": "observe volume_a(2)\nobserve concentration_a(30)\nobserve volume_b(1)\nobserve concentration_b(40)\nobserve volume_c(3)\nobserve concentration_c(10)\nlet answer = volume_b * concentration_b + volume_c * concentration_c\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 70,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 130,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 86,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

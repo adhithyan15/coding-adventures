@@ -19,7 +19,7 @@ public:
   Q_INVOKABLE QVariantMap handleEvent(const QVariantMap &event);
 
 private:
-  using EgSessionNewFn = void *(*)();
+  using EgSessionNewDemoFn = void *(*)();
   using EgSessionFreeFn = void (*)(void *);
   using EgStringFreeFn = void (*)(char *);
   using EgEngramAppPropsFn = char *(*)(void *, const char *, quint64);
@@ -35,7 +35,7 @@ private:
 
   QLibrary library_;
   void *session_ = nullptr;
-  EgSessionNewFn sessionNew_ = nullptr;
+  EgSessionNewDemoFn sessionNewDemo_ = nullptr;
   EgSessionFreeFn sessionFree_ = nullptr;
   EgStringFreeFn stringFree_ = nullptr;
   EgEngramAppPropsFn engramAppProps_ = nullptr;

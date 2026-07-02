@@ -74,6 +74,21 @@ const opened = await intentHost.handleEvent({
 check("browser open intent", opened.hostIntent.type, "openCard");
 check("browser open card", opened.hostIntent.cardId, "card");
 
+const demoEngine = createEngramEngine(wasm, { demo: true, now: () => 1700000000000 });
+const demoSnapshot = demoEngine.demoSnapshot();
+check("demo snapshot first deck", demoSnapshot.decks[0].id, "tamil-script");
+const demoHost = demoEngine.createMosaicHost();
+const demo = await demoHost.getProps({ component: "EngramApp" });
+check("demo host deck name", demo.props.deckName, "Tamil::Script and Roots");
+check("demo host deck total", demo.props.deckTotalValue, "2");
+check("demo host note count", demo.props.collectionNoteCountValue, "5");
+check("demo host deck names", demo.props.deckNames, [
+  "Tamil::Script and Roots",
+  "Hindi::Devanagari",
+  "Kannada::Script",
+  "Spanish::Latin Roots",
+]);
+
 let readyEvent = null;
 const fakeWindow = {
   CustomEvent: class CustomEvent {

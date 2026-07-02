@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `smart_home.get_recovery_brief` tool descriptor for read-only Chief recovery
+  packets over existing D23 incident, policy, runtime, state, supervision, and
+  remediation-plan primitives.
 - `smart_home.get_incident_brief` tool descriptor for read-only Chief incident
   response packets over existing D23 runtime pressure, authorization,
   command-risk, event-delivery, desired-state, state-transition, and

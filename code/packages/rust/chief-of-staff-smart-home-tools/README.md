@@ -40,6 +40,8 @@ Chief of Staff job/session/agent
   -> controller-readiness handoff summary over runtime and platform primitives
   -> platform brief over HTTP, dashboard, fixture, state/history/event,
      command, scene, and authorization readiness
+  -> recovery brief over incident, policy, runtime, state, and validation
+     handoff signals
   -> policy-surface inventory and summary reads for review planning
   -> ecosystem platform coverage and summary reads for primitive planning
   -> primitive coverage gap list and summary reads for backlog planning
@@ -95,8 +97,8 @@ Chief of Staff job/session/agent
   -> activation dependency graph list and summary reads for prerequisite edges
   -> runtime snapshot, platform-brief, pending-work, attention-overview,
      remediation-plan, operations-brief, safety-brief, readiness-brief,
-     maintenance-brief, incident-brief, desired-state, and pairing-session
-     inventory reads
+     maintenance-brief, incident-brief, recovery-brief, desired-state, and
+     pairing-session inventory reads
   -> desired-state target set/clear through runtime authorization
   -> non-mutating supervision plan previews
   -> supervision remediation and runtime maintenance-window/action/plan/ticket/work-order/guardrail/evidence/review/disposition/action/outcome/readiness/handoff/reconciliation reads

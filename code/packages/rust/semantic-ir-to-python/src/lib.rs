@@ -2405,4 +2405,88 @@ mod tests {
             assert_eq!(stdout, "2\n", "P3 attr_accessor/self-chain produced wrong output");
         }
     }
+
+    // ── MX2: mixins (include / extend / MRO) end-to-end ──────────────────────
+    //
+    // These lower REAL Ruby `module`/`include`/`extend` through
+    // `ruby-to-semantic-ir` (MX1, already merged), compile the SIR to Python, and
+    // run it under CPython — proving the mixin mechanism executes end to end
+    // (Ruby → SIR → Python → CPython) through the new `_sir_oop_include_module` /
+    // `_sir_oop_extend_module` arms and the MRO walk in the OOP runtime.
+
+    #[test]
+    fn end_to_end_ruby_include_module_method_executes_py() {
+        // A module instance method mixed into a class, called on an instance.
+        //   module Greetable
+        //     def greet; "hi"; end
+        //   end
+        //   class Robot
+        //     include Greetable
+        //   end
+        //   print Robot.new.greet          # => hi
+        let src = "module Greetable\n  def greet\n    \"hi\"\n  end\nend\n\
+                   class Robot\n  include Greetable\nend\n\
+                   print Robot.new.greet\n";
+        let module = ruby_to_semantic_ir::compile_source(src, "demo").expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        assert!(
+            a.source.contains("_sir_oop_def_method(\"Greetable\", \"greet\","),
+            "module body def must register under the module owner; got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains("_sir_oop_include_module(\"Robot\", \"Greetable\")"),
+            "include Greetable must lower to include_module; got:\n{}",
+            a.source
+        );
+        if let Some(stdout) = run_emitted_python(&a.source) {
+            assert_eq!(stdout, "hi\n", "MX2 include produced wrong output");
+        }
+    }
+
+    #[test]
+    fn end_to_end_ruby_class_method_shadows_included_module_executes_py() {
+        // The class's own method wins over the included module's (class-first MRO).
+        //   module Nameable
+        //     def name; "module"; end
+        //   end
+        //   class Widget
+        //     include Nameable
+        //     def name; "class"; end
+        //   end
+        //   print Widget.new.name          # => class
+        let src = "module Nameable\n  def name\n    \"module\"\n  end\nend\n\
+                   class Widget\n  include Nameable\n  def name\n    \"class\"\n  end\nend\n\
+                   print Widget.new.name\n";
+        let module = ruby_to_semantic_ir::compile_source(src, "demo").expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        if let Some(stdout) = run_emitted_python(&a.source) {
+            assert_eq!(stdout, "class\n", "MX2 class-shadows-module produced wrong output");
+        }
+    }
+
+    #[test]
+    fn end_to_end_ruby_extend_module_class_method_executes_py() {
+        // extend mixes a module's instance methods in as class/singleton methods.
+        //   module Counting
+        //     def count; 7; end
+        //   end
+        //   class Widget
+        //     extend Counting
+        //   end
+        //   print Widget.count             # => 7
+        let src = "module Counting\n  def count\n    7\n  end\nend\n\
+                   class Widget\n  extend Counting\nend\n\
+                   print Widget.count\n";
+        let module = ruby_to_semantic_ir::compile_source(src, "demo").expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        assert!(
+            a.source.contains("_sir_oop_extend_module(\"Widget\", \"Counting\")"),
+            "extend Counting must lower to extend_module; got:\n{}",
+            a.source
+        );
+        if let Some(stdout) = run_emitted_python(&a.source) {
+            assert_eq!(stdout, "7\n", "MX2 extend produced wrong output");
+        }
+    }
 }

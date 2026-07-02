@@ -1026,10 +1026,11 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
         }
         // A named-function call. The single-argument transcendental set
         // (`\sin(x)`, `\ln(x)`, `\exp(x)`, …) lowers to the matching native
-        // transcendental op via `ExprAst::Call`; the two-argument `\min(a, b)` /
-        // `\max(a, b)` / `\gcd(a, b)` / `\lcm(a, b)` lower to the native binary ops
-        // via `ExprAst::Call2` (their argument is a two-element `Sequence`, usually
-        // inside the call's parentheses). (`\operatorname{trunc}(x)` is NOT a `Call` — an
+        // transcendental op via `ExprAst::Call`; the variadic `\min` / `\max` /
+        // `\gcd` / `\lcm` (`\min(a, b)`, `\max(a, b, c)`, …) left-fold their
+        // two-or-more comma-separated operands into a chain of the native binary op
+        // via `ExprAst::Call2` (the argument is a `Sequence`, usually inside the
+        // call's parentheses). (`\operatorname{trunc}(x)` is NOT a `Call` — an
         // operator name is text, so it arrives as a `Bin(Mul, Text("trunc"), (x))`
         // juxtaposition handled in the `Bin` arm above.) The remaining `Func` variants
         // (`det` and an unknown `Other`) have no lowering yet and are a clean, explicit
@@ -1044,12 +1045,25 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
                 _ => None,
             };
             if let Some(bin) = binfn {
-                let (a, b) = latex_two_args(arg, source, func)?;
-                return Ok(ExprAst::Call2(
-                    bin,
-                    Box::new(latex_math_to_expr_ast(a, source)?),
-                    Box::new(latex_math_to_expr_ast(b, source)?),
-                ));
+                // Two OR MORE comma-separated arguments. `min`/`max`/`gcd`/`lcm` are
+                // associative, so an n-ary call left-folds into a chain of the binary
+                // `Call2` node — `min(a, b, c)` becomes `min(min(a, b), c)` — which is
+                // exact and needs no n-ary engine op (the fold reuses `ComputeOp::Min2`
+                // /`Max2`/`Gcd`/`Lcm`). A two-arg call folds to a single `Call2`,
+                // identical to before.
+                let args = latex_nary_args(arg, source, func)?;
+                let mut operands = args.into_iter();
+                // `latex_nary_args` guarantees ≥ 2 items, so the first `next()` is Some.
+                let first = operands.next().expect("latex_nary_args guarantees ≥ 2 args");
+                let mut acc = latex_math_to_expr_ast(first, source)?;
+                for operand in operands {
+                    acc = ExprAst::Call2(
+                        bin,
+                        Box::new(acc),
+                        Box::new(latex_math_to_expr_ast(operand, source)?),
+                    );
+                }
+                return Ok(acc);
             }
             let named = match func {
                 Func::Sin => NamedFn::Sin,
@@ -1162,17 +1176,18 @@ fn latex_power_exponent(expr: &MathExpr, source: &str) -> Result<f64, AdapterErr
     Ok(v)
 }
 
-/// Peel a binary named-function argument (`\min(a, b)` / `\max(a, b)`) into its
-/// two operands. The latex frontend parses the parenthesised comma-list as a
-/// `Sequence([a, b])`, usually wrapped in a `Group`/`Fenced` (the `(…)`), so we
-/// strip those transparent wrappers and require **exactly two** items — a
-/// one-arg (`\min(a)`) or three-arg (`\min(a, b, c)`) call has no binary lowering
-/// and is a clean, explicit error rather than a silent mis-lowering.
-fn latex_two_args<'a>(
+/// Peel a variadic named-function argument (`\min(a, b)`, `\max(a, b, c)`, …) into
+/// its operand list. The latex frontend parses the parenthesised comma-list as a
+/// `Sequence([a, b, …])`, usually wrapped in a `Group`/`Fenced` (the `(…)`), so we
+/// strip those transparent wrappers and require **two or more** items — the caller
+/// left-folds them into a chain of the associative binary op. A one-arg (`\min(a)`)
+/// call, or a non-comma argument, has no such lowering and is a clean, explicit
+/// error rather than a silent mis-lowering.
+fn latex_nary_args<'a>(
     arg: &'a MathExpr,
     source: &str,
     func: &Func,
-) -> Result<(&'a MathExpr, &'a MathExpr), AdapterError> {
+) -> Result<Vec<&'a MathExpr>, AdapterError> {
     // Strip transparent parenthesisation to reach the underlying sequence.
     let mut inner = arg;
     loop {
@@ -1183,15 +1198,15 @@ fn latex_two_args<'a>(
         }
     }
     if let MathExpr::Sequence(items) = inner {
-        if items.len() == 2 {
-            return Ok((&items[0], &items[1]));
+        if items.len() >= 2 {
+            return Ok(items.iter().collect());
         }
     }
     Err(AdapterError::UnsupportedLatexMath {
         source: source.to_string(),
         detail: format!(
-            "{func:?} takes exactly two comma-separated arguments in ADJ arithmetic \
-             (e.g. \\min(a, b)); got {inner:?}"
+            "{func:?} takes two or more comma-separated arguments in ADJ arithmetic \
+             (e.g. \\min(a, b) or \\min(a, b, c)); got {inner:?}"
         ),
     })
 }

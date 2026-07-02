@@ -121,7 +121,10 @@ module CodingAdventures
           return
         end
 
-        if node.rule_name == "add_expr"
+        if node.rule_name == "add_expr" || node.rule_name == "mul_expr"
+          # mul_expr shares add_expr's binary-operand lowering (LANG-FULL N1
+          # inserted a multiplicative precedence level between add_expr and
+          # bitwise_expr), so it routes through the same compile path.
           compile_add(node, register_index)
           return
         end
@@ -304,7 +307,10 @@ module CodingAdventures
       end
 
       def expression_rule?(name)
-        %w[expr or_expr and_expr eq_expr cmp_expr add_expr bitwise_expr unary_expr primary call_expr].include?(name)
+        # mul_expr sits between add_expr and bitwise_expr in the precedence
+        # cascade (LANG-FULL N1). It must be here so expression_children does not
+        # filter it out when add_expr walks its operands.
+        %w[expr or_expr and_expr eq_expr cmp_expr add_expr mul_expr bitwise_expr unary_expr primary call_expr].include?(name)
       end
     end
 

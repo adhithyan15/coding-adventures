@@ -243,13 +243,72 @@ function methodKey(className: string, methodName: string): string {
 const instanceMethods = new Map<string, Closure>();
 const classMethods = new Map<string, Closure>();
 
+// ── Mixins: per-owner included-module list (MX3) ─────────────────────────────
+//
+// Ruby's `include M` weaves module `M` into an owner's ancestry *between the
+// owner and its superclass*.  Because a module registers its `def`s exactly
+// like a class (via `__def_method__` keyed by the MODULE name), the only new
+// state the method-resolution walk needs is **which modules each owner
+// includes, in include order**.  We keep that as an explicit list per owner —
+// no reflection, no scanning the whole method table (the C3 RCE lesson: every
+// dispatch decision is a plain `Map`/array lookup on a source-derived name we
+// merely *store*, never *interpret*).
+//
+//     includedModules.get("Greeter") -> ["Loud", "Polite"]   // include order
+//
+// Ruby searches the *most recently included* module first, so the resolution
+// walk iterates this list in **reverse** (`Polite` before `Loud`).  A diamond
+// (a module reachable by two paths) is de-duplicated by the walk's `seen` set,
+// so it is searched once — at its earliest (deepest-first) position.
+const includedModules = new Map<string, string[]>();
+
 /**
  * Register instance method `methodName` for `className` (`def m`).  Emitted by
  * the frontend as `__def_method__`; `fn` is the hoisted top-level function as a
- * `Closure`.
+ * `Closure`.  A *module* body's `def` registers here too — the frontend keys it
+ * on the module name, so `owner` is simply a module rather than a class.
  */
 export function defMethod(className: string, methodName: string, fn: Closure): void {
   instanceMethods.set(methodKey(className, methodName), fn);
+}
+
+/**
+ * Record that `owner` `include`s module `moduleName` (`include M` in a
+ * class/module body → `__include__("Owner", "M")`).  Appended in include order;
+ * a repeated include of the same module is a no-op (Ruby re-orders rather than
+ * duplicates, but the resolution walk's `seen` set already de-duplicates, so
+ * keeping the first position is faithful for the mechanisms this cascade
+ * covers).  The module's own `def`s must already be registered (the frontend
+ * emits the module's `__def_method__`s before any `__include__` referencing it).
+ */
+export function includeModule(owner: string, moduleName: string): void {
+  const list = includedModules.get(owner);
+  if (list === undefined) {
+    includedModules.set(owner, [moduleName]);
+  } else if (!list.includes(moduleName)) {
+    list.push(moduleName);
+  }
+}
+
+/**
+ * Mix module `moduleName`'s instance methods into `owner` as **class methods**
+ * (`extend M` → `__extend__("Owner", "M")`).  Ruby's `extend` makes the
+ * module's methods callable on the class/singleton itself (`Owner.method`), so
+ * each `def` the module registered as an *instance* method is copied into
+ * `owner`'s class-method table.  We copy the closures explicitly (a plain
+ * table-to-table transfer, never reflection) at extend time; a module method
+ * added *after* the `extend` is not retroactively picked up (v0 floor — real
+ * programs `extend` after defining the module, which the frontend guarantees by
+ * emitting the module's `__def_method__`s first).
+ */
+export function extendModule(owner: string, moduleName: string): void {
+  const prefix = moduleName + METHOD_KEY_SEP;
+  for (const [k, fn] of instanceMethods) {
+    if (k.startsWith(prefix)) {
+      const methodName = k.slice(prefix.length);
+      classMethods.set(methodKey(owner, methodName), fn);
+    }
+  }
 }
 
 /**
@@ -260,16 +319,59 @@ export function defClassMethod(className: string, methodName: string, fn: Closur
   classMethods.set(methodKey(className, methodName), fn);
 }
 
-/** Find `methodName` on `className` or any registered ancestor.  Walks the
- * superclass chain (cycle-guarded, reusing the `isA` `seen`-set pattern) and
- * returns the first matching `Closure`, or `null` if unresolved. */
+/**
+ * Find `methodName` on `className` or any registered ancestor, walking Ruby's
+ * **method resolution order** (MRO) — the mixin-aware generalisation of the
+ * plain superclass chain (MX3):
+ *
+ *     class C  →  C's included modules (most-recent-first)  →
+ *     C's superclass  →  its included modules  →  …  →  Object
+ *
+ * At each class in the ancestry we check the class's own table first (so a
+ * method the **class defines itself shadows a module's** — class-first MRO),
+ * then its included modules in **reverse** include order (Ruby searches the
+ * last-included module first).  A module in turn can itself `include` further
+ * modules, so the walk recurses into a module's own `includedModules` before
+ * moving on — this is the depth-first, most-recent-first linearisation.
+ *
+ * **Cycle / diamond guard.**  A single `seen` set spans the *entire* walk
+ * (classes and modules alike), so a module reachable by two paths (a diamond)
+ * is searched exactly **once**, at its earliest (deepest-first) position, and a
+ * module that (transitively) includes itself terminates rather than looping —
+ * reusing the exception-ancestry `seen`-set discipline.
+ *
+ * Returns the first matching `Closure`, or `null` if unresolved.
+ */
 function resolveInstanceMethod(className: string, methodName: string): Closure | null {
-  let cur: string | null = className;
   const seen = new Set<string>();
-  while (cur !== null && !seen.has(cur)) {
-    const fn = instanceMethods.get(methodKey(cur, methodName));
-    if (fn !== undefined) return fn;
-    seen.add(cur);
+
+  // Search `owner`'s own table, then (depth-first, most-recent-first) the
+  // modules it includes.  Returns the resolved closure or `null` for this
+  // subtree; the shared `seen` set makes the whole search diamond-safe.
+  function searchOwnerAndModules(owner: string): Closure | null {
+    if (seen.has(owner)) return null;
+    seen.add(owner);
+    const own = instanceMethods.get(methodKey(owner, methodName));
+    if (own !== undefined) return own;
+    const mods = includedModules.get(owner);
+    if (mods !== undefined) {
+      // Reverse include order: the most recently included module wins.
+      for (let i = mods.length - 1; i >= 0; i--) {
+        const hit = searchOwnerAndModules(mods[i]!);
+        if (hit !== null) return hit;
+      }
+    }
+    return null;
+  }
+
+  // Ascend the superclass chain; at each class search it + its modules before
+  // moving up.  `seen` also guards a cyclic superclass registration.
+  let cur: string | null = className;
+  const seenClasses = new Set<string>();
+  while (cur !== null && !seenClasses.has(cur)) {
+    seenClasses.add(cur);
+    const hit = searchOwnerAndModules(cur);
+    if (hit !== null) return hit;
     cur = superclassOf(cur);
   }
   return null;
@@ -1525,4 +1627,5 @@ export function resetOop(): void {
   methods.clear();
   instanceMethods.clear();
   classMethods.clear();
+  includedModules.clear();
 }

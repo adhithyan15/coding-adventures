@@ -243,9 +243,11 @@ module CodingAdventures
     #
     # Returned by select_symbol; carries every dimension the rest of the
     # pipeline needs (no further capacity-table lookups required).
+    # Ruby 3.2+ Structs accept keyword arguments natively, so `keyword_init: true`
+    # is redundant here (and flagged by Style/RedundantStructKeywordInit). Callers
+    # still construct with keywords — e.g. SymbolSpec.new(compact: true, ...).
     SymbolSpec = Struct.new(
-      :compact, :layers, :data_cw_count, :ecc_cw_count, :total_bits,
-      keyword_init: true
+      :compact, :layers, :data_cw_count, :ecc_cw_count, :total_bits
     )
 
     # =========================================================================

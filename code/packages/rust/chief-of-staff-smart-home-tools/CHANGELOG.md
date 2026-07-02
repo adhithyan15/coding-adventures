@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added `smart_home.get_recovery_brief`, a read-only Chief adapter tool that
+  composes existing D23 incident, authorization, command-risk, runtime,
+  desired-state, state-transition, supervision-remediation, and remediation-plan
+  signals into one recovery-stage packet without owning smart-home state.
 - Added `smart_home.get_incident_brief`, a read-only Chief adapter tool that
   composes existing D23 runtime pressure, authorization, command-risk,
   event-delivery, desired-state, state-transition, and supervision-remediation

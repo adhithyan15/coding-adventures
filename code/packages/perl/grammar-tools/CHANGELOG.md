@@ -2,6 +2,18 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.0] - 2026-07-02
+
+### Added
+
+- `parse_token_grammar` now tolerates the F10 declarative-lexer-mode directives
+  `start_mode:` and the `transitions:` section (whose indented lines are
+  `on TOKEN -> set-mode NAME` rules, not `NAME = pattern` definitions). Flat
+  consumers record `start_mode`/`transitions` on the `TokenGrammar` but ignore
+  them, so a modal grammar (e.g. `ecmascript/es2025.tokens`) now parses under a
+  flat lexer instead of dying with "Expected token definition (NAME = pattern)".
+- `TokenGrammar` gains `start_mode` and `transitions` accessors.
+
 ## [0.2.0] - 2026-04-04
 
 ### Added

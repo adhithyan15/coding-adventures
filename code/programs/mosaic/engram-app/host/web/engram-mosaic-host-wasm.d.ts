@@ -8,6 +8,7 @@ export function installEngramMosaicHost(
   targetWindow: Window,
   wasmBytes: BufferSource | WebAssembly.Module,
   options?: {
+    demo?: boolean;
     deckId?: string | (() => string);
     now?: number | (() => number);
     onHostIntent?: (intent: Record<string, unknown>, result: Record<string, unknown>) => unknown;

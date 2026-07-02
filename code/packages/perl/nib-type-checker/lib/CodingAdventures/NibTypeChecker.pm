@@ -55,9 +55,12 @@ use constant {
     TYPE_BOOL => 'bool',
 };
 
+# mul_expr sits between add_expr and bitwise_expr in the precedence cascade
+# (LANG-FULL N1). It must be in this set so _expression_children does not filter
+# it out when add_expr walks its operands.
 my %_EXPRESSION_RULE = map { $_ => 1 } qw(
-    expr or_expr and_expr eq_expr cmp_expr add_expr bitwise_expr unary_expr
-    primary call_expr
+    expr or_expr and_expr eq_expr cmp_expr add_expr mul_expr bitwise_expr
+    unary_expr primary call_expr
 );
 
 sub check_source {
@@ -382,7 +385,9 @@ sub _check_expression {
     elsif ($subject->rule_name eq 'primary') {
         $result = _check_primary($state, $subject);
     }
-    elsif ($subject->rule_name eq 'add_expr') {
+    elsif ($subject->rule_name eq 'add_expr' || $subject->rule_name eq 'mul_expr') {
+        # mul_expr shares additive numeric semantics (same-type operands,
+        # numeric result), so it routes through the same checker.
         $result = _check_add_expression($state, $subject);
     }
     elsif ($subject->rule_name eq 'or_expr'
