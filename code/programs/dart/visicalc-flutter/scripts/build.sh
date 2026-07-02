@@ -43,12 +43,44 @@ SRC="$REPO_ROOT/code/programs/mosaic/visicalc"
 OUT_DIR="$DEMO_DIR/lib/generated"
 mkdir -p "$OUT_DIR"
 
-echo "Compiling FormulaBar (Flutter)..."
+echo "Compiling FormulaBar (Flutter, desktop)..."
 "$MOSAIC_COMPILE" --backend flutter \
   --interface "$SRC/FormulaBar.mil" \
   --layout    "$SRC/FormulaBar.desktop.mll" \
   --style     "$SRC/FormulaBar.dark.msl" \
   -o "$OUT_DIR/formula_bar.dart"
+
+# UI30 touch variant: FormulaBar.touch.mll stacks the address label ABOVE a
+# full-width input (Column) instead of the desktop Row. Same FormulaBar.mil
+# interface, so main.dart can swap FormulaBar <-> FormulaBarTouch at runtime
+# against the identical dispatch contract. The Flutter emitter names the widget
+# after the .mil component (FormulaBar) and also emits the shared
+# `sealed class FormulaBarEvent` + subclasses; to let both widgets coexist we
+# (1) strip the DUPLICATE event classes from the touch output and instead
+# `import 'formula_bar.dart'` to reuse them, and (2) rename the widget +
+# constructor to FormulaBarTouch. Result: one event type, two layouts.
+echo "Compiling FormulaBar (Flutter, touch)..."
+"$MOSAIC_COMPILE" --backend flutter \
+  --interface "$SRC/FormulaBar.mil" \
+  --layout    "$SRC/FormulaBar.touch.mll" \
+  --style     "$SRC/FormulaBar.dark.msl" \
+  -o "$OUT_DIR/formula_bar_touch.dart.raw"
+# awk: inject `import 'formula_bar.dart';` right after the material import, and
+# drop the event-class block (from `sealed class FormulaBarEvent {` up to, but
+# excluding, `class FormulaBar extends StatelessWidget {`). sed: rename the
+# widget class + its constructor. (No newlines in the sed replacement, so it is
+# portable across BSD/macOS + GNU sed.)
+awk '
+  /^import '\''package:flutter\/material.dart'\'';/ { print; print "import '\''formula_bar.dart'\'';"; next }
+  /^sealed class FormulaBarEvent \{/ { skip = 1 }
+  /^class FormulaBar extends StatelessWidget \{/ { skip = 0 }
+  skip { next }
+  { print }
+' "$OUT_DIR/formula_bar_touch.dart.raw" \
+  | sed -e 's/class FormulaBar extends StatelessWidget/class FormulaBarTouch extends StatelessWidget/' \
+        -e 's/const FormulaBar(/const FormulaBarTouch(/' \
+  > "$OUT_DIR/formula_bar_touch.dart"
+rm -f "$OUT_DIR/formula_bar_touch.dart.raw"
 
 echo "Compiling Grid (Flutter)..."
 # UI34 — Grid is now generated from the shared visicalc/mosaic/

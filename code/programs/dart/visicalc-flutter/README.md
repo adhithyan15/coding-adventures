@@ -89,6 +89,27 @@ Volatile per-platform caches (`android/.gradle/`, `ios/Pods/`,
 `xcuserdata/`, etc.) are gitignored — `flutter build` regenerates
 them on first run.
 
+## The touch FormulaBar layout (`FormulaBarTouch`)
+
+The **Touch bar** button (shown in classic-grid mode) swaps the formula bar
+between two widgets generated from the *same* `FormulaBar.mil` interface:
+
+- **Desktop** (`FormulaBar.desktop.mll` → `FormulaBar`): a `Row` — the
+  cell-address label sits to the **left** of the input.
+- **Touch** (`FormulaBar.touch.mll` → `FormulaBarTouch`): a `Column` — the
+  address label stacks **above** a full-width input, the phone arrangement.
+
+`scripts/build.sh` emits both into `lib/generated/`. The Flutter emitter names
+the widget after the `.mil` component (`FormulaBar`) and also emits the shared
+`sealed class FormulaBarEvent` + subclasses, so to let both widgets coexist the
+touch output has its **duplicate** event classes stripped — it `import`s them
+from `formula_bar.dart` instead — and its widget + constructor renamed to
+`FormulaBarTouch`. `main.dart` holds a `_touch` flag and renders one or the
+other, passing the identical `_onFormulaBarEvent` — editing behaves the same in
+both; only the shape changes. This is the UI30 "one component, many layouts,
+identical host contract" invariant made a runtime toggle — the Flutter sibling
+of the Qt and Compose demos' toggles and the web demo's switcher.
+
 ## Infinite virtualized sheet
 
 `SpreadsheetSession` (`lib/engine.dart`) also binds the engine's **viewport
