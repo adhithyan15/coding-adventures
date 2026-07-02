@@ -952,3 +952,48 @@ the `rootProject.name` line. This applies to Java and Kotlin optimizer packages 
 any future Gradle packages that depend on siblings via file deps).
 
 Discovered: 2026-06-30 during Java sql-optimizer CI (PR #7073 fix commit d31296a48).
+
+---
+
+### Java mini-sqlite Level 1 graduation — plan tree normalization required
+
+`SqlPlanner.planSelect()` produces `Project(Sort(Limit(Distinct(core))))` — Project is the
+outermost (last) node.  `SqlCodegen.compilePlan()` expects Sort/Limit/Distinct to be
+OUTERMOST so it can peel them in its while-loop and then call `compileCore(Project(core))`.
+If Project is outermost and Sort is inside it, `compileScanBody(Sort(...))` throws
+"Unsupported plan node in scan body: Sort".
+
+**Fix**: normalize the plan before calling `SqlCodegen.compile()`:
+
+1. Peel Sort/Limit/Distinct from under Project (in the order they appear in the plan,
+   i.e., outermost-first via `addLast`).
+2. Rebuild: apply wrappers LAST-to-FIRST so Sort is outermost:
+   `Project(Limit(Sort(core)))` → `Sort(Limit(Project(core)))`.
+3. When Sort key columns are NOT in the SELECT list (e.g. `SELECT label FROM t ORDER BY rank`),
+   inject them as extra hidden OutputColumn.Expr entries into the Project so SortResult can
+   find them by name; strip those extra columns from the final QueryResult.
+
+Additional mini-sqlite Level 1 lessons:
+
+- **SqlPlanner passes `OutputColumn.Star` through unchanged.** `SqlCodegen.emitProjectColumns`
+  silently skips Star columns ("the planner should have resolved them"), producing an empty
+  result schema. Fix: expand `*` to explicit column references before planning by querying
+  `backend.columns(table)` for each table in the FROM/JOIN list.
+- **`INSERT INTO table VALUES (...)` with no column list** sends an empty columns list to
+  `InsertRow`, causing the instruction to pop 0 values and store an empty row.  Fix: expand
+  the column list from `backend.columns(table)` before planning.
+- **`SqlCodegen.compileCore` only handles `Project(Aggregate)` directly.** If `Having` wraps
+  the Aggregate (`Project(Having(Aggregate(...)))`), it falls through to
+  `compileScanBody(Having(Aggregate))` which strips Having then throws "Unsupported: Aggregate".
+  Fix: strip Having from between Project and Aggregate during normalization, save the Having
+  predicate, and post-filter result rows using a simple expression evaluator after execution.
+- **`NullOrder` default in SqlTextParser must be NULLS_FIRST for ASC** to match SqlVm's
+  sort semantics (null rank = 0 = lowest, which makes NULLs sort first in ASC).  Using
+  NULLS_LAST for both ASC and DESC (the initial incorrect default) puts NULLs last in ASC,
+  violating the VM's sort-null-first-by-default contract.
+- **Jacoco `excludes` on violationRules** does NOT exclude classes from measurement — it only
+  applies to class-level rules.  To exclude old/unrelated classes from the COVEREDRATIO
+  check, use `classDirectories.setFrom(files(...).map { fileTree(it) { exclude(...) }})` on
+  the `jacocoTestCoverageVerification` task.
+
+Discovered: 2026-07-01 during Java mini-sqlite Level 1 graduation (PR #7153).
