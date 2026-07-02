@@ -19,6 +19,7 @@
 import 'package:flutter/material.dart';
 import 'engine.dart';
 import 'generated/formula_bar.dart';
+import 'generated/formula_bar_touch.dart';
 import 'generated/grid.dart';
 import 'infinite_grid.dart';
 
@@ -97,6 +98,14 @@ class _VisiCalcHomeState extends State<VisiCalcHome> {
   // on the same engine via the viewport primitive).
   bool _infinite = false;
 
+  // Which FormulaBar LAYOUT is showing in classic-grid mode: the desktop Row
+  // (address label left of the input) or the UI30 touch Column (address label
+  // stacked ABOVE a full-width input). Both are generated from the SAME
+  // FormulaBar.mil interface — only the .mll spatial arrangement differs — so
+  // they share FormulaBarEvent + _onFormulaBarEvent. "One component, many
+  // layouts" made a runtime toggle (the Flutter sibling of the Qt/Compose ones).
+  bool _touch = false;
+
   String get _cellAddress {
     // Column 0 is the row-label gutter; data columns A–E start at
     // index 1, so the letter is offset by one (`65 + col - 1`).
@@ -167,6 +176,13 @@ class _VisiCalcHomeState extends State<VisiCalcHome> {
                         ),
                       ),
                     ),
+                    // The layout toggle only applies to the classic grid's
+                    // formula bar (the infinite view has none), so hide it there.
+                    if (!_infinite)
+                      TextButton(
+                        onPressed: () => setState(() => _touch = !_touch),
+                        child: Text(_touch ? 'Desktop bar' : 'Touch bar'),
+                      ),
                     TextButton(
                       onPressed: () => setState(() => _infinite = !_infinite),
                       child: Text(_infinite ? 'Classic grid' : 'Infinite sheet'),
@@ -179,12 +195,22 @@ class _VisiCalcHomeState extends State<VisiCalcHome> {
               if (_infinite)
                 const Expanded(child: InfiniteGrid())
               else ...[
-                FormulaBar(
-                  cellAddress: _cellAddress,
-                  formula: _formula,
-                  readOnly: false,
-                  dispatch: _onFormulaBarEvent,
-                ),
+                // Desktop (Row) vs touch (Column) — both generated from the same
+                // FormulaBar.mil, sharing FormulaBarEvent + _onFormulaBarEvent.
+                if (_touch)
+                  FormulaBarTouch(
+                    cellAddress: _cellAddress,
+                    formula: _formula,
+                    readOnly: false,
+                    dispatch: _onFormulaBarEvent,
+                  )
+                else
+                  FormulaBar(
+                    cellAddress: _cellAddress,
+                    formula: _formula,
+                    readOnly: false,
+                    dispatch: _onFormulaBarEvent,
+                  ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
