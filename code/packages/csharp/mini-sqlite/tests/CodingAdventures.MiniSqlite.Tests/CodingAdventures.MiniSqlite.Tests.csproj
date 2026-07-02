@@ -10,10 +10,23 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <PackageReference Include="coverlet.collector" Version="6.0.4" />
   </ItemGroup>
 
   <ItemGroup>
     <Using Include="Xunit" />
     <ProjectReference Include="../../CodingAdventures.MiniSqlite.csproj" />
+  </ItemGroup>
+
+  <!-- Copy the conformance fixtures next to the test assembly so they can be
+       loaded at runtime via relative path.
+       Path: tests/CodingAdventures.MiniSqlite.Tests/ -> up 5 -> code/ -> specs/ -->
+  <ItemGroup>
+    <Content Include="..\..\..\..\..\specs\mini-sqlite-conformance\fixtures\*.json"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="conformance-fixtures\%(Filename)%(Extension)" />
+    <Content Include="..\..\..\..\..\specs\mini-sqlite-conformance\manifest.json"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="conformance-fixtures\manifest.json" />
   </ItemGroup>
 </Project>

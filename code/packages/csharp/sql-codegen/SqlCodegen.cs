@@ -311,9 +311,61 @@ public static class SqlCodegen
     /// <summary>
     /// Convenience overload: lift + optimize a LogicalPlan, then compile.
     /// Equivalent to <c>CompileOptimized(SqlOptimizer.Optimize(plan))</c>.
+    ///
+    /// When the optimizer produces OptEmptyResult (e.g. for LIMIT 0 or WHERE FALSE),
+    /// the result schema is normally lost.  We recover it by walking the original
+    /// logical plan for a ProjectPlan node before optimization destroys it.
     /// </summary>
     public static Program Compile(LogicalPlan plan)
-        => CompileOptimized(Optimizer.Optimize(plan));
+    {
+        var compiled = CompileOptimized(Optimizer.Optimize(plan));
+
+        // If the compiled program has no schema (OptEmptyResult erased it), try to
+        // recover the column names from the top-level ProjectPlan in the logical plan.
+        if (compiled.ResultSchema.Count == 0)
+        {
+            var recoveredSchema = ExtractSchemaFromLogical(plan);
+            if (recoveredSchema is { Count: > 0 })
+            {
+                // Inject a SetResultSchema at the front so the VM picks it up.
+                var instrWithSchema = new List<Instruction> { new SetResultSchema(recoveredSchema) };
+                instrWithSchema.AddRange(compiled.Instructions);
+                return compiled with { Instructions = instrWithSchema, ResultSchema = recoveredSchema };
+            }
+        }
+
+        return compiled;
+    }
+
+    // Walk the logical plan tree looking for a ProjectPlan and extract its column names.
+    // Returns null if no project is found or the project has no named columns.
+    private static IReadOnlyList<string>? ExtractSchemaFromLogical(LogicalPlan plan)
+    {
+        // Walk down the spine (Sort, Limit, Distinct, Filter wrap Project).
+        var current = plan;
+        while (true)
+        {
+            switch (current)
+            {
+                case ProjectPlan(var input, var cols):
+                    return ExtractProjectedNames(cols);
+                case SortPlan(var input, _):
+                    current = input;
+                    break;
+                case LimitPlan(var input, _, _):
+                    current = input;
+                    break;
+                case DistinctPlan(var input):
+                    current = input;
+                    break;
+                case FilterPlan(var input, _):
+                    current = input;
+                    break;
+                default:
+                    return null;
+            }
+        }
+    }
 
     /// <summary>
     /// Main entry point.  Compile an already-optimized plan into a Program.
@@ -481,6 +533,21 @@ public static class SqlCodegen
                 var colNames = ExtractProjectedNames(projCols);
                 out_.Add(new SetResultSchema(colNames));
                 CompileAggregate(innerAgg, projCols, out_, ctx);
+                return;
+            }
+
+            // ── Project wrapping HAVING wrapping Aggregate (GROUP BY + HAVING) ──
+            //
+            // When a query has GROUP BY + HAVING, the planner emits:
+            //   ProjectPlan(HavingPlan(AggregatePlan(...), pred), cols)
+            // The optimizer lifts this to OptProject(OptHaving(OptAggregate), cols).
+            // We must compile the aggregate first, then apply the HAVING predicate
+            // as a filter on each emitted group row.
+            case OptProject(OptHaving(OptAggregate innerAgg2, var havingPred), var projCols2):
+            {
+                var colNames = ExtractProjectedNames(projCols2);
+                out_.Add(new SetResultSchema(colNames));
+                CompileAggregateWithHaving(innerAgg2, havingPred, projCols2, out_, ctx);
                 return;
             }
 
@@ -711,14 +778,20 @@ public static class SqlCodegen
             for (var i = 0; i < agg.Aggregates.Count; i++)
             {
                 var item = agg.Aggregates[i];
-                var func = MapAggFunc(item.Func);
+
+                // COUNT(*) uses AggArg.Star — map it to CountStar so the VM
+                // increments the counter unconditionally (even for null values).
+                // COUNT(expr) uses AggArg.Expr — map it to Count (skip nulls).
+                var func = (item.Func == AggFunction.Count && item.Arg is AggArg.Star)
+                    ? AggFunc.CountStar
+                    : MapAggFunc(item.Func);
 
                 out_.Add(new InitAgg(slots[i], func, item.Distinct));
 
                 if (item.Arg is AggArg.Expr(var argExpr))
                     out_.AddRange(CompileExprInCtx(argExpr, ctx));
                 else
-                    out_.Add(new LoadConst(null)); // COUNT_STAR — arg is *
+                    out_.Add(new LoadConst(null)); // COUNT(*) — arg is star; value unused by CountStar
 
                 out_.Add(new UpdateAgg(slots[i]));
             }
@@ -763,13 +836,208 @@ public static class SqlCodegen
                 ? GetColumnName(projCols[projIndex], item.Alias)
                 : item.Alias;
 
-            out_.Add(new FinalizeAgg(slots[i], MapAggFunc(item.Func)));
+            // Use the same func mapping as InitAgg: COUNT(*) → CountStar.
+            var finalFunc = (item.Func == AggFunction.Count && item.Arg is AggArg.Star)
+                ? AggFunc.CountStar
+                : MapAggFunc(item.Func);
+            out_.Add(new FinalizeAgg(slots[i], finalFunc));
             out_.Add(new EmitColumn(name));
         }
 
         out_.Add(new EmitRow());
         out_.Add(new Jump(gStart));
         out_.Add(new CodegenLabel(gEnd));
+    }
+
+    // ── Aggregate + HAVING compilation ───────────────────────────────────────────
+    //
+    // For queries like SELECT region, COUNT(*) FROM sales GROUP BY region HAVING COUNT(*) > 1,
+    // the plan is OptProject(OptHaving(OptAggregate(...), pred), projCols).
+    //
+    // Strategy: run the normal two-phase aggregate loop but add a HAVING predicate check
+    // inside the emit phase (phase 2), skipping groups that don't pass the predicate.
+    // The HAVING expression is re-compiled as part of the group-emit loop; because it
+    // references aggregate results, we evaluate it AFTER FinalizeAgg is called.
+
+    private static void CompileAggregateWithHaving(
+        OptAggregate               agg,
+        SqlExpr                    havingPred,
+        IReadOnlyList<OutputColumn> projCols,
+        List<Instruction>          out_,
+        Ctx                        ctx)
+    {
+        // Phase 1: same as CompileAggregate — accumulate rows into agg slots.
+        var slots = agg.Aggregates.Select(_ => ctx.NextSlot()).ToList();
+
+        CompileScanBody(agg.Input, out_, ctx, () =>
+        {
+            foreach (var gb in agg.GroupBy)
+                out_.AddRange(CompileExprInCtx(gb, ctx));
+            out_.Add(new SaveGroupKey(agg.GroupBy.Count));
+
+            for (var i = 0; i < agg.Aggregates.Count; i++)
+            {
+                var item = agg.Aggregates[i];
+                var func = (item.Func == AggFunction.Count && item.Arg is AggArg.Star)
+                    ? AggFunc.CountStar
+                    : MapAggFunc(item.Func);
+
+                out_.Add(new InitAgg(slots[i], func, item.Distinct));
+
+                if (item.Arg is AggArg.Expr(var argExpr))
+                    out_.AddRange(CompileExprInCtx(argExpr, ctx));
+                else
+                    out_.Add(new LoadConst(null));
+
+                out_.Add(new UpdateAgg(slots[i]));
+            }
+        });
+
+        // Phase 2: emit groups, applying the HAVING filter per group.
+        var colNames = ExtractProjectedNames(projCols);
+
+        var gStart = ctx.NextLabel("hagg_start");
+        var gEnd   = ctx.NextLabel("hagg_end");
+        var gSkip  = ctx.NextLabel("hagg_skip");
+
+        out_.Add(new CodegenLabel(gStart));
+        out_.Add(new AdvanceGroupKey(gEnd, agg.GroupBy.Count > 0));
+
+        // Evaluate the HAVING predicate.
+        //
+        // We use CompileHavingExpr rather than CompileExprInCtx so that AggExpr
+        // nodes (e.g. COUNT(*) in HAVING COUNT(*) > 1) are compiled to
+        // FinalizeAgg(slot_i, func_i) instead of LoadConst(null).
+        //
+        // FinalizeAgg reads the running accumulator without consuming it, so we
+        // can call it again in the emit phase below without re-accumulating.
+        out_.AddRange(CompileHavingExpr(havingPred, agg, slots, ctx));
+        out_.Add(new JumpIfFalse(gSkip));
+
+        // HAVING passed — emit the group row.
+        out_.Add(new BeginRow());
+
+        // Emit group-by keys.
+        for (var i = 0; i < agg.GroupBy.Count; i++)
+        {
+            var name = (i < projCols.Count) ? GetColumnName(projCols[i], $"group_{i}") : $"group_{i}";
+            out_.Add(new LoadGroupKey(i));
+            out_.Add(new EmitColumn(name));
+        }
+
+        // Emit finalized aggregate columns.
+        //
+        // IMPORTANT: agg.Aggregates may contain MORE items than project columns,
+        // because the planner collects aggregates from both SELECT and HAVING.
+        // For example, SELECT region, COUNT(*) AS n ... HAVING COUNT(*) > 1
+        // gives agg.Aggregates = [_agg0 for SELECT, _agg1 for HAVING].
+        //
+        // We must only emit aggregate columns that map to actual project columns.
+        // The number of aggregate-output columns is projCols.Count - agg.GroupBy.Count.
+        var aggOutputCount = projCols.Count - agg.GroupBy.Count;
+        for (var i = 0; i < aggOutputCount && i < agg.Aggregates.Count; i++)
+        {
+            var item      = agg.Aggregates[i];
+            var projIndex = agg.GroupBy.Count + i;
+            var name = (projIndex < projCols.Count)
+                ? GetColumnName(projCols[projIndex], item.Alias)
+                : item.Alias;
+
+            var finalFunc2 = (item.Func == AggFunction.Count && item.Arg is AggArg.Star)
+                ? AggFunc.CountStar
+                : MapAggFunc(item.Func);
+            out_.Add(new FinalizeAgg(slots[i], finalFunc2));
+            out_.Add(new EmitColumn(name));
+        }
+
+        out_.Add(new EmitRow());
+
+        out_.Add(new CodegenLabel(gSkip));
+        out_.Add(new Jump(gStart));
+        out_.Add(new CodegenLabel(gEnd));
+    }
+
+    // ── HAVING expression compiler ────────────────────────────────────────────
+    //
+    // Like CompileExprInCtx but replaces AggExpr nodes with FinalizeAgg instructions
+    // by matching them against the AggregateItem list + slot indices from the
+    // surrounding CompileAggregateWithHaving call.
+    //
+    // This is necessary because AggExpr nodes appear in HAVING predicates
+    // (e.g. HAVING COUNT(*) > 1) and the general expression compiler has no
+    // knowledge of which slot holds which aggregate.
+    //
+    // Matching: we compare (Func, Arg record equality, Distinct) between the
+    // AggExpr in the predicate and the AggregateItem in agg.Aggregates.
+    // AggArg.Star and AggArg.Expr are records so == / Equals works structurally.
+
+    private static IEnumerable<Instruction> CompileHavingExpr(
+        SqlExpr                    expr,
+        OptAggregate               agg,
+        IReadOnlyList<int>         slots,
+        Ctx                        ctx)
+    {
+        // AggExpr → look up matching slot and emit FinalizeAgg.
+        if (expr is SqlExpr.AggExpr(var aggFunc, var aggArg, var aggDistinct))
+        {
+            for (var i = 0; i < agg.Aggregates.Count; i++)
+            {
+                var item = agg.Aggregates[i];
+                if (item.Func == aggFunc && Equals(item.Arg, aggArg) && item.Distinct == aggDistinct)
+                {
+                    var func = (item.Func == AggFunction.Count && item.Arg is AggArg.Star)
+                        ? AggFunc.CountStar
+                        : MapAggFunc(item.Func);
+                    return new Instruction[] { new FinalizeAgg(slots[i], func) };
+                }
+            }
+            // No matching slot found — should not happen if planner is correct.
+            // Fall back to null so the predicate evaluates to false and the group is excluded.
+            return new Instruction[] { new LoadConst(null) };
+        }
+
+        // For compound expressions, recurse into children with the same AggExpr-aware compiler,
+        // then apply the top-level operator at the end.  This handles HAVING predicates like
+        //   COUNT(*) > 1            → BinaryOp(AggExpr, Literal(1))
+        //   SUM(x) > 10 AND y < 5  → BinaryOp(BinaryOp(AggExpr, Literal(10)), BinaryOp(Column, Literal(5)))
+        switch (expr)
+        {
+            case PlBinaryOp(var op, var left, var right):
+                return CompileHavingExpr(left, agg, slots, ctx)
+                    .Concat(CompileHavingExpr(right, agg, slots, ctx))
+                    .Append(new BinaryOpInstr(MapBinaryOp(op)));
+
+            case PlUnaryOp(var op, var operand):
+                return CompileHavingExpr(operand, agg, slots, ctx)
+                    .Append(new UnaryOpInstr(MapUnaryOp(op)));
+
+            case PlIsNull(var operand):
+                return CompileHavingExpr(operand, agg, slots, ctx)
+                    .Append((Instruction)new IsNullInstr());
+
+            case PlIsNotNull(var operand):
+                return CompileHavingExpr(operand, agg, slots, ctx)
+                    .Append((Instruction)new IsNotNullInstr());
+
+            case PlBetween(var value, var low, var high):
+                return CompileHavingExpr(value, agg, slots, ctx)
+                    .Concat(CompileHavingExpr(low, agg, slots, ctx))
+                    .Concat(CompileHavingExpr(high, agg, slots, ctx))
+                    .Append(new BetweenInstr());
+
+            case SqlExpr.FuncCall(var name, var args):
+            {
+                var instrs = new List<Instruction>();
+                foreach (var arg in args)
+                    instrs.AddRange(CompileHavingExpr(arg, agg, slots, ctx));
+                instrs.Add(new CallScalar(name, args.Count));
+                return instrs;
+            }
+
+            // For leaf expressions with no aggregate children, delegate to the general compiler.
+            default:
+                return CompileExprInCtx(expr, ctx);
+        }
     }
 
     // ── DML compilation ───────────────────────────────────────────────────────
