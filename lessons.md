@@ -984,6 +984,33 @@ stack in debug builds. `cargo test -p <crate>` locally is NOT sufficient to catc
 it (margin is runner-dependent); the guard is the deep-nesting stack test on CI
 macOS.
 
+Recurrence (PR #7343, adding binary `Min2`/`Max2`): the same overflow re-appeared,
+and the FIRST two fixes made it WORSE — a cautionary tale about the mechanism:
+  1. Adding a separate `if op == Min2 || Max2 { let result_dim…; let (x,y)…;
+     let result…; let exact…; }` block BEFORE the general path DUPLICATED those
+     locals (the general path has the identical set), so the frame grew by a full
+     extra copy → still overflowed.
+  2. Extracting the whole `Bin` arm into `#[inline(never)] fn eval_binary`
+     (mirroring `eval_unary`) made it WORSE, not better: the `deeply_nested` test
+     nests `Bin(Add, …)` 306 deep, so the recursion is `eval → eval_binary → eval
+     → eval_binary → …` — **two** stack frames per nesting level instead of one.
+     Even though each `eval` frame shrank, the total (`eval`+`eval_binary`) × 256
+     exceeded the single inline frame × 256. Extraction only helps when the
+     extracted helper is NOT on the deep-recursion path (e.g. `eval_unary` is fine
+     because the test doesn't nest unary ops 256-deep).
+The fix that WORKED: keep the `Bin` arm inline and FOLD min/max into the EXISTING
+`result`/`exact` `match op { … }` arms (and map them through `dim_op` like
+addition), adding ZERO new persistent locals — match arms share the frame's slots,
+they don't each get their own. Frame(after) ≈ frame(main), so CI behaviour matches
+the passing baseline.
+Corrected rule: to add an op to a depth-capped recursive `eval`, FOLD it into the
+existing match arms (reuse the shared locals); do NOT add a parallel `if`-block
+(duplicates locals) and do NOT extract the recursive arm into a helper that then
+sits ON the recursion path (doubles frame COUNT). `cargo test` locally cannot
+verify the margin — local debug frames are so fat that even `main` overflows at
+`RUST_MIN_STACK=5MB`, yet passes on CI at 2MB; the only reliable check is the
+delta-vs-main (no new locals) plus the CI macOS run itself.
+
 Discovered: 2026-07-02 during logic-engine abs-value CI (PR #7299 fix commit adf710c3).
 
 ---

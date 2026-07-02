@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.33.0] - 2026-07-02 — binary min/max (`Min2`/`Max2`), the first binary-Call op
+
+### Added
+
+- Two binary compute ops **`ComputeOp::Min2`** / **`ComputeOp::Max2`** —
+  `min(a, b)` / `max(a, b)` over exactly TWO operands, carried in the existing
+  `ComputeExpr::Bin` (the first binary-`Call` lowering, from a LaTeX
+  `\min(a, b)` / `\max(a, b)`). Distinct from the slot-reducing aggregation
+  `Min`/`Max` (which fold *every* observation of one slot).
+- Evaluation is a **selection, not a combine**: dimensionally they behave like
+  addition (both operands must share a dimension — `min(usd, days)` is the same
+  `DimensionMismatch` category error as `usd + days` — and the result carries
+  that shared dimension), the value is one operand chosen unchanged (ties pick
+  the left), and the exact-rational sidecar is preserved verbatim from the
+  winning operand (no rounding, no arithmetic). A non-finite operand is a clean
+  `NonFinite` error rather than letting a NaN silently win a comparison.
+- `symbol()` renders both as `min` / `max` for audit.
+
+### Tests
+
+- Four engine tests: extreme-operand selection (with a two-operand `Op` node
+  shape assertion), exact-rational preservation of the winner, shared-dimension
+  carry + mismatch rejection (`min(usd, usd)` vs `min(usd, days)`), and
+  non-finite-operand rejection.
+
 ## [0.32.0] - 2026-07-02 — the rest of the trig family (inverse / hyperbolic / reciprocal)
 
 ### Added

@@ -117,6 +117,20 @@ pub enum NamedFn {
     Csc,
 }
 
+/// A **binary** named function in a `let` formula — the two-argument set the
+/// `latex "…"` surface understands. Each maps to a native binary
+/// `logic_engine::ComputeOp` carried in a `ComputeExpr::Bin`. Kept distinct from
+/// the single-argument [`NamedFn`] (so the arity is honest) and from the
+/// slot-reducing [`AggOp`] `Min`/`Max` (which fold *every* observation of one
+/// slot, not two sub-expressions).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BinFn {
+    /// `\min(a, b)` — the smaller of two quantities.
+    Min,
+    /// `\max(a, b)` — the larger of two quantities.
+    Max,
+}
+
 /// An aggregation operator in a `let` formula — reduces every
 /// observation of a slot.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -161,6 +175,12 @@ pub enum ExprAst {
     /// transcendental `ComputeOp` (`Scalar → Scalar`, exact dropped). Produced by
     /// the `latex "…"` adapter from a `MathExpr::Call`.
     Call(NamedFn, Box<ExprAst>),
+    /// A **binary** named function applied to two arguments (`\min(a, b)`,
+    /// `\max(a, b)`). Lowers to the matching native binary `ComputeOp`
+    /// (`ComputeOp::Min2`/`Max2`) carried in a `ComputeExpr::Bin`. Produced by the
+    /// `latex "…"` adapter from a `MathExpr::Call` whose argument is a
+    /// two-element `Sequence`.
+    Call2(BinFn, Box<ExprAst>, Box<ExprAst>),
     /// An aggregation over every observation of a slot.
     Agg(AggOp, String),
 }

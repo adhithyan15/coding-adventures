@@ -32,8 +32,8 @@ use logic_engine::{
 use std::collections::HashMap;
 
 use crate::ast::{
-    AggOp, Annotation, ArithOp, CmpOp, Define, DefineKind, Evidence, ExprAst, NamedFn, OptDir,
-    Program, RelOp, Statement, Term as AstTerm, TrustTierName,
+    AggOp, Annotation, ArithOp, BinFn, CmpOp, Define, DefineKind, Evidence, ExprAst, NamedFn,
+    OptDir, Program, RelOp, Statement, Term as AstTerm, TrustTierName,
 };
 
 /// One lowered constraint: `lhs <op> rhs`, with both sides kept as
@@ -710,7 +710,19 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
         ExprAst::Ceil(a) => ComputeExpr::Unary(ComputeOp::Ceil, Box::new(lower_expr(a))),
         ExprAst::Round(a) => ComputeExpr::Unary(ComputeOp::Round, Box::new(lower_expr(a))),
         ExprAst::Call(f, a) => ComputeExpr::Unary(lower_named_fn(*f), Box::new(lower_expr(a))),
+        ExprAst::Call2(f, a, b) => ComputeExpr::Bin(
+            lower_bin_fn(*f),
+            Box::new(lower_expr(a)),
+            Box::new(lower_expr(b)),
+        ),
         ExprAst::Agg(op, slot) => ComputeExpr::Agg(lower_agg_op(*op), slot.clone()),
+    }
+}
+
+fn lower_bin_fn(f: BinFn) -> ComputeOp {
+    match f {
+        BinFn::Min => ComputeOp::Min2,
+        BinFn::Max => ComputeOp::Max2,
     }
 }
 
@@ -1977,6 +1989,45 @@ contributes 1000000 from answer == 60 to correct
         )
         .unwrap();
         assert!(atan.ranked[0].posterior > 0.99, "{atan:?}");
+    }
+
+    #[test]
+    fn native_latex_binary_min_max_lower_to_native_ops() {
+        // `\min(a, b)` / `\max(a, b)` — the first BINARY-Call lowering. The latex
+        // frontend parses the argument as a two-element Sequence; the adapter now
+        // lowers it to ComputeOp::Min2/Max2 instead of erroring as unsupported.
+        let mn = crate::compile_and_decide(
+            "observe a(3)\n\
+             observe b(8)\n\
+             let answer = latex \"$\\min(a, b)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 3 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(mn.ranked[0].posterior > 0.99, "{mn:?}");
+        let mx = crate::compile_and_decide(
+            "observe a(3)\n\
+             observe b(8)\n\
+             let answer = latex \"$\\max(a, b)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 8 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(mx.ranked[0].posterior > 0.99, "{mx:?}");
+    }
+
+    #[test]
+    fn native_latex_min_with_wrong_arity_is_rejected() {
+        // `\min(a)` (one arg) and `\min(a, b, c)` (three args) have no binary
+        // lowering — a clean, explicit error rather than a silent mis-lowering.
+        for src in [
+            "observe a(3)\nlet answer = latex \"$\\min(a)$\"\n? answer\n",
+            "observe a(3)\nobserve b(8)\nobserve c(1)\nlet answer = latex \"$\\min(a, b, c)$\"\n? answer\n",
+        ] {
+            assert!(compile(src).is_err(), "wrong-arity min must be rejected: {src:?}");
+        }
     }
 
     #[test]
