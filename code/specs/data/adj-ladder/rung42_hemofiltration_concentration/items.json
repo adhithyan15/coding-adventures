@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 42 \u2014 hemofiltration concentration after fluid removal from four stated quantities (a NEW panel: renal-replacement / hemofiltration). From two pooled solute amounts and the initial and removed volumes compute the post-filtration concentration ((solute_a+solute_b)/(initial_volume-removed_volume)), the total pooled solute (solute_a+solute_b), or the remaining volume (initial_volume-removed_volume). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, SUM-OVER-DIFFERENCE (a+b)/(c-d), the first quotient on the ladder to divide a parenthesised sum by a parenthesised difference (distinct from rung-37 ratio-of-two-sums (a+b)/(c+d) and rung-41 difference-over-sum (a-b)/(a+b)) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via +, - and / \u2014 no constant leaks, and neither the total, the remaining volume, nor any concentration ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dividing by the STARTING volume instead of the remaining one, and ADDING the removed volume instead of subtracting it. The core confusion tested is dividing the pooled solute by the shrunken (remaining) volume.",
+  "items": [
+    {
+      "id": "r42hf-01",
+      "qtype": "hemofiltration_concentration",
+      "stem": "A hemofiltration circuit pools 30 mmol and 20 mmol of a solute in an initial volume of 5 L, then ultrafilters off 1 L of fluid. What is the concentration after fluid removal (total solute over the remaining volume)?",
+      "program": "observe solute_a(30)\nobserve solute_b(20)\nobserve initial_volume(5)\nobserve removed_volume(1)\nlet answer = (solute_a + solute_b) / (initial_volume - removed_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r42hf-02",
+      "qtype": "hemofiltration_concentration",
+      "stem": "A hemofiltration circuit pools 30 mmol and 20 mmol of a solute in an initial volume of 5 L, then ultrafilters off 1 L of fluid. What is the total pooled solute (the two amounts added)?",
+      "program": "observe solute_a(30)\nobserve solute_b(20)\nobserve initial_volume(5)\nobserve removed_volume(1)\nlet answer = solute_a + solute_b\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r42hf-03",
+      "qtype": "hemofiltration_concentration",
+      "stem": "A hemofiltration circuit pools 30 mmol and 20 mmol of a solute in an initial volume of 5 L, then ultrafilters off 1 L of fluid. What is the the volume remaining after removal (initial minus removed)?",
+      "program": "observe solute_a(30)\nobserve solute_b(20)\nobserve initial_volume(5)\nobserve removed_volume(1)\nlet answer = initial_volume - removed_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r42hf-04",
+      "qtype": "hemofiltration_concentration",
+      "stem": "A hemofiltration circuit pools 24 mmol and 16 mmol of a solute in an initial volume of 6 L, then ultrafilters off 2 L of fluid. What is the concentration after fluid removal (total solute over the remaining volume)?",
+      "program": "observe solute_a(24)\nobserve solute_b(16)\nobserve initial_volume(6)\nobserve removed_volume(2)\nlet answer = (solute_a + solute_b) / (initial_volume - removed_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r42hf-05",
+      "qtype": "hemofiltration_concentration",
+      "stem": "A hemofiltration circuit pools 24 mmol and 16 mmol of a solute in an initial volume of 6 L, then ultrafilters off 2 L of fluid. What is the total pooled solute (the two amounts added)?",
+      "program": "observe solute_a(24)\nobserve solute_b(16)\nobserve initial_volume(6)\nobserve removed_volume(2)\nlet answer = solute_a + solute_b\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 40,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r42hf-06",
+      "qtype": "hemofiltration_concentration",
+      "stem": "A hemofiltration circuit pools 24 mmol and 16 mmol of a solute in an initial volume of 6 L, then ultrafilters off 2 L of fluid. What is the the volume remaining after removal (initial minus removed)?",
+      "program": "observe solute_a(24)\nobserve solute_b(16)\nobserve initial_volume(6)\nobserve removed_volume(2)\nlet answer = initial_volume - removed_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r42hf-07",
+      "qtype": "hemofiltration_concentration",
+      "stem": "A hemofiltration circuit pools 28 mmol and 12 mmol of a solute in an initial volume of 5 L, then ultrafilters off 3 L of fluid. What is the concentration after fluid removal (total solute over the remaining volume)?",
+      "program": "observe solute_a(28)\nobserve solute_b(12)\nobserve initial_volume(5)\nobserve removed_volume(3)\nlet answer = (solute_a + solute_b) / (initial_volume - removed_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r42hf-08",
+      "qtype": "hemofiltration_concentration",
+      "stem": "A hemofiltration circuit pools 28 mmol and 12 mmol of a solute in an initial volume of 5 L, then ultrafilters off 3 L of fluid. What is the total pooled solute (the two amounts added)?",
+      "program": "observe solute_a(28)\nobserve solute_b(12)\nobserve initial_volume(5)\nobserve removed_volume(3)\nlet answer = solute_a + solute_b\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r42hf-09",
+      "qtype": "hemofiltration_concentration",
+      "stem": "A hemofiltration circuit pools 28 mmol and 12 mmol of a solute in an initial volume of 5 L, then ultrafilters off 3 L of fluid. What is the the volume remaining after removal (initial minus removed)?",
+      "program": "observe solute_a(28)\nobserve solute_b(12)\nobserve initial_volume(5)\nobserve removed_volume(3)\nlet answer = initial_volume - removed_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r42hf-10",
+      "qtype": "hemofiltration_concentration",
+      "stem": "A hemofiltration circuit pools 45 mmol and 15 mmol of a solute in an initial volume of 8 L, then ultrafilters off 4 L of fluid. What is the concentration after fluid removal (total solute over the remaining volume)?",
+      "program": "observe solute_a(45)\nobserve solute_b(15)\nobserve initial_volume(8)\nobserve removed_volume(4)\nlet answer = (solute_a + solute_b) / (initial_volume - removed_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r42hf-11",
+      "qtype": "hemofiltration_concentration",
+      "stem": "A hemofiltration circuit pools 45 mmol and 15 mmol of a solute in an initial volume of 8 L, then ultrafilters off 4 L of fluid. What is the total pooled solute (the two amounts added)?",
+      "program": "observe solute_a(45)\nobserve solute_b(15)\nobserve initial_volume(8)\nobserve removed_volume(4)\nlet answer = solute_a + solute_b\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r42hf-12",
+      "qtype": "hemofiltration_concentration",
+      "stem": "A hemofiltration circuit pools 45 mmol and 15 mmol of a solute in an initial volume of 8 L, then ultrafilters off 4 L of fluid. What is the the volume remaining after removal (initial minus removed)?",
+      "program": "observe solute_a(45)\nobserve solute_b(15)\nobserve initial_volume(8)\nobserve removed_volume(4)\nlet answer = initial_volume - removed_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r42hf-13",
+      "qtype": "hemofiltration_concentration",
+      "stem": "A hemofiltration circuit pools 18 mmol and 22 mmol of a solute in an initial volume of 4 L, then ultrafilters off 1 L of fluid. What is the concentration after fluid removal (total solute over the remaining volume)?",
+      "program": "observe solute_a(18)\nobserve solute_b(22)\nobserve initial_volume(4)\nobserve removed_volume(1)\nlet answer = (solute_a + solute_b) / (initial_volume - removed_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.333333333333334,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r42hf-14",
+      "qtype": "hemofiltration_concentration",
+      "stem": "A hemofiltration circuit pools 18 mmol and 22 mmol of a solute in an initial volume of 4 L, then ultrafilters off 1 L of fluid. What is the total pooled solute (the two amounts added)?",
+      "program": "observe solute_a(18)\nobserve solute_b(22)\nobserve initial_volume(4)\nobserve removed_volume(1)\nlet answer = solute_a + solute_b\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 13.333333333333334,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r42hf-15",
+      "qtype": "hemofiltration_concentration",
+      "stem": "A hemofiltration circuit pools 18 mmol and 22 mmol of a solute in an initial volume of 4 L, then ultrafilters off 1 L of fluid. What is the the volume remaining after removal (initial minus removed)?",
+      "program": "observe solute_a(18)\nobserve solute_b(22)\nobserve initial_volume(4)\nobserve removed_volume(1)\nlet answer = initial_volume - removed_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 13.333333333333334,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r42hf-16",
+      "qtype": "hemofiltration_concentration",
+      "stem": "A hemofiltration circuit pools 36 mmol and 24 mmol of a solute in an initial volume of 7 L, then ultrafilters off 2 L of fluid. What is the concentration after fluid removal (total solute over the remaining volume)?",
+      "program": "observe solute_a(36)\nobserve solute_b(24)\nobserve initial_volume(7)\nobserve removed_volume(2)\nlet answer = (solute_a + solute_b) / (initial_volume - removed_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.571428571428571,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r42hf-17",
+      "qtype": "hemofiltration_concentration",
+      "stem": "A hemofiltration circuit pools 36 mmol and 24 mmol of a solute in an initial volume of 7 L, then ultrafilters off 2 L of fluid. What is the total pooled solute (the two amounts added)?",
+      "program": "observe solute_a(36)\nobserve solute_b(24)\nobserve initial_volume(7)\nobserve removed_volume(2)\nlet answer = solute_a + solute_b\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.571428571428571,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r42hf-18",
+      "qtype": "hemofiltration_concentration",
+      "stem": "A hemofiltration circuit pools 36 mmol and 24 mmol of a solute in an initial volume of 7 L, then ultrafilters off 2 L of fluid. What is the the volume remaining after removal (initial minus removed)?",
+      "program": "observe solute_a(36)\nobserve solute_b(24)\nobserve initial_volume(7)\nobserve removed_volume(2)\nlet answer = initial_volume - removed_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.571428571428571,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r42hf-19",
+      "qtype": "hemofiltration_concentration",
+      "stem": "A hemofiltration circuit pools 40 mmol and 20 mmol of a solute in an initial volume of 6 L, then ultrafilters off 1 L of fluid. What is the concentration after fluid removal (total solute over the remaining volume)?",
+      "program": "observe solute_a(40)\nobserve solute_b(20)\nobserve initial_volume(6)\nobserve removed_volume(1)\nlet answer = (solute_a + solute_b) / (initial_volume - removed_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.571428571428571,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r42hf-20",
+      "qtype": "hemofiltration_concentration",
+      "stem": "A hemofiltration circuit pools 40 mmol and 20 mmol of a solute in an initial volume of 6 L, then ultrafilters off 1 L of fluid. What is the total pooled solute (the two amounts added)?",
+      "program": "observe solute_a(40)\nobserve solute_b(20)\nobserve initial_volume(6)\nobserve removed_volume(1)\nlet answer = solute_a + solute_b\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.571428571428571,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 60,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r42hf-21",
+      "qtype": "hemofiltration_concentration",
+      "stem": "A hemofiltration circuit pools 40 mmol and 20 mmol of a solute in an initial volume of 6 L, then ultrafilters off 1 L of fluid. What is the the volume remaining after removal (initial minus removed)?",
+      "program": "observe solute_a(40)\nobserve solute_b(20)\nobserve initial_volume(6)\nobserve removed_volume(1)\nlet answer = initial_volume - removed_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.571428571428571,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
