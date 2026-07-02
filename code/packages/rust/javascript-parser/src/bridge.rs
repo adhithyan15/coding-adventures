@@ -59,7 +59,8 @@ use coding_adventures_javascript_ast::{
         ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
         LogicalOperator,
         MemberExpression, NullLiteral, NumericLiteral, ObjectExpression, Property,
-        PropertyKey, PropertyKind, StringLiteral, UnaryExpression, UnaryOperator,
+        PropertyKey, PropertyKind, StringLiteral, TemplateElement, TemplateLiteral,
+        UnaryExpression, UnaryOperator,
         UndefinedLiteral,
     },
     statement::{
@@ -1113,6 +1114,73 @@ fn convert_concise_body(node: &GrammarASTNode) -> Result<ArrowBody, BridgeError>
     Ok(ArrowBody::Block(BlockStatement { cv: None, body: vec![] }))
 }
 
+/// Convert a `template_literal` node into an [`Expression::TemplateLiteral`]
+/// (CLOC12.155).
+///
+/// **Scope: no-substitution templates only.** The grammar tokenises a
+/// backtick template with no `${…}` inserts as a *single* `TEMPLATE_NO_SUB`
+/// token whose value is the whole literal, backticks included
+/// (`` `abc` `` → one token `"`abc`"`). Substitution templates
+/// (`` `a${x}b` ``) do not parse at all today, so a `template_literal` node
+/// that is anything other than exactly one such token is **declined**
+/// (`UnsupportedSyntax` → the CLI falls back to WHITESPACE_ONLY, always
+/// correct). When the grammar learns to parse `${…}` this converter grows a
+/// multi-part branch; the AST node already models it.
+///
+/// The single backtick-delimited token becomes one tail [`TemplateElement`]:
+/// we strip the leading and trailing `` ` `` to get the `raw` inner text.
+/// `cooked` mirrors `raw` here — a no-substitution template with no illegal
+/// escapes has a well-defined cooked value equal to its raw text for the
+/// ASCII cases the SIMPLE pipeline sees (escape *processing* is a future
+/// refinement; the emitter re-emits `raw` verbatim regardless, so this is
+/// never a correctness hazard).
+fn convert_template_literal(node: &GrammarASTNode) -> Result<TemplateLiteral, BridgeError> {
+    // The node must be exactly one token and no child nodes — any child node
+    // (a parsed `${…}` substitution, once the grammar supports it) is out of
+    // scope for this slice.
+    if !node_children(node).is_empty() {
+        return Err(unsupported(node));
+    }
+    let tokens: Vec<&Token> = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Token(t) => Some(t),
+            ASTNodeOrToken::Node(_) => None,
+        })
+        .collect();
+
+    let [tok] = tokens.as_slice() else {
+        // Zero or many tokens → not the single-token no-sub shape.
+        return Err(unsupported(node));
+    };
+
+    // Guard the exact lexical shape: a `TEMPLATE_NO_SUB` token bounded by
+    // backticks. Anything else (a stray substitution token, a malformed
+    // literal) declines rather than risk mis-slicing.
+    if tok.type_name.as_deref() != Some("TEMPLATE_NO_SUB") {
+        return Err(unsupported(node));
+    }
+    let raw_full = &tok.value;
+    let inner = raw_full
+        .strip_prefix('`')
+        .and_then(|s| s.strip_suffix('`'))
+        .ok_or_else(|| unsupported(node))?
+        .to_string();
+
+    let element = TemplateElement {
+        cv: tok.cv.clone(),
+        raw: inner.clone(),
+        cooked: Some(inner),
+        tail: true,
+    };
+    Ok(TemplateLiteral {
+        cv: tok.cv.clone(),
+        quasis: vec![element],
+        expressions: vec![],
+    })
+}
+
 fn convert_formal_parameters(node: &GrammarASTNode) -> Result<Vec<FunctionParam>, BridgeError> {
     // formal_parameters = formal_parameter { COMMA formal_parameter } [ COMMA ]
     // formal_parameter = ( NAME | binding_pattern ) [ EQUALS assignment_expression ]
@@ -1242,12 +1310,22 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
             convert_arrow_function(node).map(Expression::ArrowFunctionExpression)
         }
 
+        // No-substitution template literal (CLOC12.155). `convert_template_literal`
+        // declines any template that is not a single `TEMPLATE_NO_SUB` token —
+        // i.e. anything with a `${…}` substitution, which the grammar does not
+        // yet parse anyway (see the gap note on the converter).
+        "template_literal" => {
+            convert_template_literal(node).map(Expression::TemplateLiteral)
+        }
+
         // The remaining function-valued and ES2015+ expression forms the
         // typed bridge does not yet represent. DECLINE GRACEFULLY
         // (`UnsupportedSyntax` → the CLI falls back to WHITESPACE_ONLY and
         // still emits valid JS). Generators/async carry evaluation semantics
-        // the passes don't model yet; async arrows, classes, and template
-        // literals are separate future AST slices.
+        // the passes don't model yet; async arrows, classes, and *tagged*
+        // template literals are separate future AST slices. (Plain
+        // no-substitution templates are handled above by
+        // `convert_template_literal`.)
         "async_arrow_function"
         | "yield_expression"
         | "await_expression"
@@ -1255,7 +1333,6 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
         | "async_function_expression"
         | "async_generator_expression"
         | "class_expression"
-        | "template_literal"
         | "tagged_template_expression"
         | "new_target_expression"
         | "import_meta_expression" => Err(unsupported(node)),
@@ -2564,6 +2641,64 @@ mod tests {
             }
             _ => panic!("expected ExpressionStatement"),
         }
+    }
+
+    // -----------------------------------------------------------------------
+    // Template literals — no-substitution only (CLOC12.155)
+    // -----------------------------------------------------------------------
+
+    /// A no-substitution template `` `abc` `` bridges to a `TemplateLiteral`
+    /// with a single tail quasi whose `raw` is the inner text (backticks
+    /// stripped) and no `${…}` expressions.
+    #[test]
+    fn template_literal_no_substitution() {
+        let p = bridge_ok("`abc`;");
+        match &p.body[0] {
+            ProgramItem::Statement(Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::ExpressionStatement(es)
+            )) => match &es.expression {
+                Expression::TemplateLiteral(t) => {
+                    assert_eq!(t.expressions.len(), 0, "no-sub template has no inserts");
+                    assert_eq!(t.quasis.len(), 1, "exactly one quasi");
+                    assert_eq!(t.quasis[0].raw, "abc", "backticks stripped from raw");
+                    assert_eq!(t.quasis[0].cooked.as_deref(), Some("abc"));
+                    assert!(t.quasis[0].tail, "the sole quasi is the tail");
+                }
+                other => panic!("expected TemplateLiteral, got {other:?}"),
+            },
+            _ => panic!("expected ExpressionStatement"),
+        }
+    }
+
+    /// An empty template `` `` `` bridges to a single empty-string quasi.
+    #[test]
+    fn template_literal_empty() {
+        let p = bridge_ok("``;");
+        match &p.body[0] {
+            ProgramItem::Statement(Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::ExpressionStatement(es)
+            )) => match &es.expression {
+                Expression::TemplateLiteral(t) => {
+                    assert_eq!(t.quasis.len(), 1);
+                    assert_eq!(t.quasis[0].raw, "");
+                    assert!(t.expressions.is_empty());
+                }
+                other => panic!("expected TemplateLiteral, got {other:?}"),
+            },
+            _ => panic!("expected ExpressionStatement"),
+        }
+    }
+
+    /// A no-substitution template survives a `var` initializer end-to-end —
+    /// the bridge no longer declines it (previously `UnsupportedSyntax`).
+    #[test]
+    fn template_literal_in_var_initializer() {
+        let p = bridge_ok("var s = `hello`;");
+        // Just assert the bridge accepted it and produced a TemplateLiteral
+        // somewhere in the declaration initializer.
+        let json = serde_json::to_string(&p).expect("serialize");
+        assert!(json.contains("TemplateLiteral"), "initializer should bridge to a TemplateLiteral; got {json}");
+        assert!(json.contains("hello"));
     }
 
     #[test]
