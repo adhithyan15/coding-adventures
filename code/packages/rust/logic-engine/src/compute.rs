@@ -528,41 +528,13 @@ fn eval(
             ))
         }
 
-        ComputeExpr::Unary(op, a) => {
-            let (operand, dim, exact) = eval(a, kb, depth + 1)?;
-            // `Abs` is the only unary op. It is **dimension-preserving**: the
-            // magnitude may flip sign but the unit does not (`|−3 dollars| = 3
-            // dollars`), so — unlike `Pow`, which recomputes the dimension — the
-            // operand's dimension flows straight through.
-            let result = match op {
-                ComputeOp::Abs => operand.value().abs(),
-                _ => {
-                    return Err(ComputeError::MalformedExpr {
-                        detail: "non-unary operator in unary position",
-                    })
-                }
-            };
-            // `abs()` cannot introduce a non-finite value (|±∞| = ∞ was already
-            // non-finite; |NaN| = NaN), but the operand is finite-checked at its
-            // own producing op, so a finite operand yields a finite result. Guard
-            // anyway — cheap defense-in-depth, same contract as the binary ops.
-            if !result.is_finite() {
-                return Err(ComputeError::NonFinite { op: *op });
-            }
-            // The exact sidecar stays exact: |num/den| = |num|/den (den is kept
-            // positive by `ExactRational`), so an integer/rational operand keeps
-            // its exactness through the absolute value.
-            let exact = exact.and_then(|r| r.num.checked_abs().and_then(|n| ExactRational::new(n, r.den)));
-            Ok((
-                DerivationNode::Op {
-                    op: *op,
-                    operands: vec![operand],
-                    result,
-                },
-                dim,
-                exact,
-            ))
-        }
+        // Delegated to an `#[inline(never)]` helper so the unary arm's locals do
+        // NOT enlarge `eval`'s own stack frame. `eval` recurses up to
+        // `MAX_EVAL_DEPTH` levels deep, so a bigger frame here would multiply
+        // across 256 frames and can overflow a small (macOS ~2 MB) test-thread
+        // stack before the depth guard trips — keeping the frame lean preserves
+        // the "clean `TooDeep`, never a stack overflow" contract.
+        ComputeExpr::Unary(op, a) => eval_unary(*op, a, kb, depth),
 
         ComputeExpr::Agg(op, slot) => {
             let observations = kb.observed_values_all(slot);
@@ -616,6 +588,55 @@ fn eval(
             ))
         }
     }
+}
+
+/// Evaluate a unary op (`Abs`) into a derivation node + dimension. Split out of
+/// [`eval`] and marked `#[inline(never)]` so its locals live in their own stack
+/// frame rather than enlarging every one of `eval`'s up-to-`MAX_EVAL_DEPTH`
+/// recursive frames — a fatter `eval` frame multiplied across 256 levels can
+/// overflow a small (macOS ~2 MB) thread stack *before* the depth guard trips,
+/// which would turn the "clean `TooDeep`, never a stack overflow" guarantee into
+/// exactly the abort it promises to prevent.
+#[inline(never)]
+fn eval_unary(
+    op: ComputeOp,
+    a: &ComputeExpr,
+    kb: &KnowledgeBase,
+    depth: usize,
+) -> Result<(DerivationNode, Dimension, Option<ExactRational>), ComputeError> {
+    let (operand, dim, exact) = eval(a, kb, depth + 1)?;
+    // `Abs` is the only unary op. It is **dimension-preserving**: the magnitude
+    // may flip sign but the unit does not (`|−3 dollars| = 3 dollars`), so —
+    // unlike `Pow`, which recomputes the dimension — the operand's dimension
+    // flows straight through.
+    let result = match op {
+        ComputeOp::Abs => operand.value().abs(),
+        _ => {
+            return Err(ComputeError::MalformedExpr {
+                detail: "non-unary operator in unary position",
+            })
+        }
+    };
+    // `abs()` cannot introduce a non-finite value (|±∞| = ∞ was already
+    // non-finite; |NaN| = NaN), but the operand is finite-checked at its own
+    // producing op, so a finite operand yields a finite result. Guard anyway —
+    // cheap defense-in-depth, same contract as the binary ops.
+    if !result.is_finite() {
+        return Err(ComputeError::NonFinite { op });
+    }
+    // The exact sidecar stays exact: |num/den| = |num|/den (den is kept positive
+    // by `ExactRational`), so an integer/rational operand keeps its exactness
+    // through the absolute value.
+    let exact = exact.and_then(|r| r.num.checked_abs().and_then(|n| ExactRational::new(n, r.den)));
+    Ok((
+        DerivationNode::Op {
+            op,
+            operands: vec![operand],
+            result,
+        },
+        dim,
+        exact,
+    ))
 }
 
 #[cfg(test)]
