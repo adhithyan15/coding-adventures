@@ -846,8 +846,14 @@ compileAggregateQuery innerPlan aggs groupBy havingOpt projCols counter =
         -- Count how many aggregates appear in the SELECT list (projCols) vs.
         -- HAVING.  Aggregates collected from HAVING are extra slots that must
         -- NOT be emitted as output columns.
-        numSelectAggs =
-            length (filter isAggInProj projCols)
+        --
+        -- When projCols is empty (no outer Project node), the Aggregate was
+        -- used standalone in a unit test or an otherwise unwrapped plan.  In
+        -- that case every accumulator slot is a SELECT aggregate, so we emit
+        -- all of them.
+        numSelectAggs
+            | null projCols = numAggs
+            | otherwise     = length (filter isAggInProj projCols)
           where
             isAggInProj (OutputExpr (P.AggExpr _ _ _) _) = True
             isAggInProj _                                 = False
