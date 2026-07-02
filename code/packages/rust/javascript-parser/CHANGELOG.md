@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.20.0] - 2026-07-01
+
+### Added — CLOC12.149 / gap-153: bridge `function_expression` → `Expression::FunctionExpression`
+
+The typed-AST bridge now converts a `function_expression` grammar node to the
+`Expression::FunctionExpression` node (landed in `javascript-ast` 0.14) instead
+of declining it as `UnsupportedSyntax`. A function in **value** position — an
+IIFE `(function(){})()`, an assigned function `x = function(){}`, a named
+recursive `function f(){…f()…}`, or a callback `arr.map(function(x){…})` — now
+flows through the full typed pipeline, so closurec optimises *inside* the body
+rather than falling back to WHITESPACE_ONLY.
+
+`convert_function_expression` mirrors `convert_function_declaration` with the one
+grammatical difference that the **name is optional** (`id: Option<Identifier>`):
+`function () {}` is anonymous; a named function expression's name is body-local
+(self-reference for recursion), never bound in the enclosing scope. Generators,
+async functions, arrow functions, classes, and template literals remain declined
+(separate future slices). +4 bridge tests (IIFE callee shape, named body-local
+name, anonymous no-id, all four value positions convert).
+
 ## [0.19.11] - 2026-06-30
 
 ### Changed — opt into the parser's recursion-depth guard (DoS backstop)
