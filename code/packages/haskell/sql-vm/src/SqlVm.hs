@@ -830,10 +830,17 @@ doSort keys rowMaps = sortBy compareRows rowMaps
 
 -- | Evaluate a SqlExpr against a row map (for sort key extraction).
 -- Only handles Column and Literal; anything else returns SqlNull.
+--
+-- For Column references, we first look up the column by its plain name.
+-- If not found (the column was not in the SELECT list), we fall back to the
+-- hidden sentinel "__sort_<col>" name emitted by compileSelect when the
+-- sort key is not part of the projection.
 evalExprOnRow :: SqlExpr -> Map.Map String SqlValue -> SqlValue
 evalExprOnRow expr row = case expr of
     P.Column _ col ->
-        fromMaybe SqlNull (lookupColValue col row)
+        case lookupColValue col row of
+            Just v  -> v
+            Nothing -> fromMaybe SqlNull (lookupColValue ("__sort_" ++ col) row)
     P.Literal (Just lit) ->
         literalToSqlValue lit
     P.Literal Nothing ->
@@ -1291,17 +1298,25 @@ buildResult st =
         -- This preserves SELECT-list order (e.g. SELECT id, name, age)
         -- rather than Map.keys alphabetical order (e.g. age, id, name).
         -- If no rows were emitted (DML or empty result), colNames is [].
-        colNames = vmOutputColumns st
+        --
+        -- Strip hidden sort-key columns (prefixed "__sort_") from the
+        -- output column list.  These were emitted by compileSelect so that
+        -- doSort can look up sort-key values for columns not in the SELECT
+        -- list.  They must not appear in the user-visible query result.
+        allCols  = vmOutputColumns st
+        colNames = filter (not . ("__sort_" `isPrefixOf`)) allCols
 
         -- Convert row maps to value lists in column order.
+        -- Only include the user-visible columns (not the hidden sort cols).
         toValueList rowMap = map (\col -> Map.findWithDefault SqlNull col rowMap) colNames
 
-        -- Apply Sort on the row maps (need column names for lookup).
+        -- Apply Sort on the full row maps (including hidden sort-key cols
+        -- so that evalExprOnRow can find them via the "__sort_" fallback).
         sorted = case vmPostSort st of
             Nothing   -> rawRows
             Just keys -> doSort keys rawRows
 
-        -- Project to value lists.
+        -- Project to value lists (hidden cols are excluded by colNames).
         sortedVals = map toValueList sorted
 
         -- Apply Distinct on value lists.

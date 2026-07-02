@@ -1047,9 +1047,38 @@ compileSelect plan counter =
             let (outputCols, innerPlan) = case corePlan of
                     OptProject inner cols -> (cols, inner)
                     other                -> ([], other)
+
+                -- Collect sort keys from any SortResult post-op.
+                -- For each sort key that is a simple Column reference NOT
+                -- already in the SELECT list, emit a hidden column named
+                -- "__sort_<col>" so that doSort can find the value in the
+                -- row map.  The "__sort_" prefix keeps these hidden columns
+                -- out of the user-visible output (buildResult strips them).
+                sortKeyExtras =
+                    [ (tOpt, col)
+                    | SortResult keys <- postOps
+                    , SortKey (P.Column tOpt col) _ _ <- keys
+                    , not (projectionContains col outputCols)
+                    ]
+
+                -- Returns True when a column name already appears as a
+                -- direct (non-expression) output column in the SELECT list.
+                projectionContains :: String -> [OutputColumn] -> Bool
+                projectionContains col cols =
+                    any (\oc -> case oc of
+                            OutputExpr (P.Column _ c) _ -> c == col
+                            _                            -> False)
+                        cols
+
+                hiddenSortEmit =
+                    concatMap (\(tOpt, col) ->
+                        [LoadColumn tOpt col, EmitColumn ("__sort_" ++ col)])
+                        sortKeyExtras
+
                 emitBody =
                     [BeginRow]
                     ++ compileOutputCols outputCols
+                    ++ hiddenSortEmit
                     ++ [EmitRow]
                 (scanInstrs, c1) = compilePlanCore innerPlan emitBody counter
             in (scanInstrs ++ postOps ++ [Halt], c1)
