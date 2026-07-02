@@ -70,6 +70,7 @@ SELF_CONTAINED_RUNGS = (
     "rung30_body_mass_index",
     "rung31_starling_filtration",
     "rung32_respiratory_exchange_ratio",
+    "rung33_stroke_work",
 )
 
 
