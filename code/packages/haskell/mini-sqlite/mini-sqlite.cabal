@@ -1,7 +1,12 @@
 cabal-version: 3.0
 name:          mini-sqlite
-version:       0.1.0
-synopsis:      Level 0 in-memory mini-sqlite facade for Haskell
+version:       0.2.6
+synopsis:      Level 1 in-memory mini-sqlite facade backed by the full SQL pipeline
+description:
+    Level 0 used a hand-rolled in-memory engine. Level 1 routes every query
+    through the full pipeline:
+      sql-parser → sql-planner → sql-optimizer → sql-codegen → sql-vm
+    The public API (connect, execute, fetchOne, fetchAll, …) is unchanged.
 license:       MIT
 author:        Adhithya Rajasekaran
 maintainer:    Adhithya Rajasekaran
@@ -11,15 +16,28 @@ library
     exposed-modules:  MiniSqlite
     build-depends:    base >=4.14
                     , containers
+                    , sql-backend
+                    , sql-planner
+                    , sql-optimizer
+                    , sql-codegen
+                    , sql-vm
     hs-source-dirs:   src
-    default-language: Haskell2010
+    default-language: GHC2021
 
 test-suite spec
     type:             exitcode-stdio-1.0
     main-is:          Spec.hs
     other-modules:    MiniSqliteSpec
+                    , ConformanceSpec
     hs-source-dirs:   test
     build-depends:    base >=4.14
                     , mini-sqlite
+                    , aeson
+                    , bytestring
+                    , containers
+                    , text
+                    , directory
+                    , filepath
+                    , scientific
                     , hspec == 2.*
-    default-language: Haskell2010
+    default-language: GHC2021

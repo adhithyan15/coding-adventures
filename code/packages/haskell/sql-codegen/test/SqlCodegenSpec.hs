@@ -288,12 +288,12 @@ spec = do
                 let is   = instrs plan
                 -- Check structure: OpenScan, Label, JumpIfExhausted, AdvanceCursor,
                 -- BeginRow, (wildcard), EmitRow, Jump, Label, CloseScan, Halt
-                head is `shouldBe` OpenScan "users" Nothing
+                head is `shouldBe` OpenScan "users" (Just "users")
                 last is `shouldBe` Halt
-                is `shouldContain` [AdvanceCursor Nothing]
+                is `shouldContain` [AdvanceCursor (Just "users")]
                 is `shouldContain` [BeginRow]
                 is `shouldContain` [EmitRow]
-                is `shouldContain` [CloseScan Nothing]
+                is `shouldContain` [CloseScan (Just "users")]
 
         describe "Scan with alias" $
             it "uses alias in cursor instructions" $ do
@@ -339,7 +339,7 @@ spec = do
                 let plan = OptSort (mkScan "users" Nothing) [key]
                 let is   = instrs plan
                 -- CloseScan must appear before SortResult
-                let closeIdx = length (takeWhile (/= CloseScan Nothing) is)
+                let closeIdx = length (takeWhile (/= CloseScan (Just "users")) is)
                 let sortIdx  = length (takeWhile (\i -> case i of SortResult _ -> False; _ -> True) is)
                 sortIdx > closeIdx `shouldBe` True
                 let hasSortResult = any (\i -> case i of SortResult _ -> True; _ -> False) is
@@ -508,7 +508,7 @@ spec = do
             it "compiles UPDATE without WHERE to scan + UpdateRows + Halt" $ do
                 let plan = OptUpdate "users" [] Nothing
                 let is   = instrs plan
-                head is `shouldBe` OpenScan "users" Nothing
+                head is `shouldBe` OpenScan "users" (Just "users")
                 is `shouldContain` [UpdateRows "users"]
                 last is `shouldBe` Halt
 
@@ -526,7 +526,7 @@ spec = do
             it "compiles DELETE without WHERE to scan + DeleteRows + Halt" $ do
                 let plan = OptDelete "logs" Nothing
                 let is   = instrs plan
-                head is `shouldBe` OpenScan "logs" Nothing
+                head is `shouldBe` OpenScan "logs" (Just "logs")
                 is `shouldContain` [DeleteRows "logs"]
                 last is `shouldBe` Halt
 

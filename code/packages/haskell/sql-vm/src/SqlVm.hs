@@ -59,16 +59,19 @@
 module SqlVm
     ( QueryResult(..)
     , execute
+    , executeWithRef
     ) where
 
+import Control.Exception (throwIO)
 import Control.Monad (forM_, replicateM, unless, when)
 import Control.Monad.State.Strict
-import Data.Char (toLower)
+import Data.Char (isSpace, toLower, toUpper)
 import Data.Int (Int64)
 import Data.IORef
-import Data.List (nub, sortBy)
+import Data.List (dropWhileEnd, isPrefixOf, nub, sortBy)
 import qualified Data.Map.Strict as Map
 import Data.Maybe (fromMaybe, mapMaybe)
+import qualified Data.Set as Set
 
 import qualified SqlBackend as SB
 import SqlBackend
@@ -138,20 +141,23 @@ cursorKey (Just s) = s
 --
 -- Each aggregate slot holds one AggAccum. Think of it as a running tally:
 --
---   CountStar  → count increments on every row
---   Count      → count increments only for non-NULL values
+--   CountStar     → count increments on every row
+--   Count         → count increments only for non-NULL values
+--   CountDistinct → distinct non-NULL values tracked in a Set; final result
+--                   is the size of the set
 --   Sum        → acc accumulates the sum; SqlNull if no non-NULL seen yet
 --   Avg        → acc = sum, count = number of non-NULL values seen
 --   Min/Max    → acc tracks the extreme value seen so far
 
 data AggAccum = AggAccum
-    { aggCount :: !Int       -- ^ Non-NULL input count (or all-row count for CountStar).
-    , aggAcc   :: !SqlValue  -- ^ Running sum / min / max; SqlNull until first value.
+    { aggCount       :: !Int               -- ^ Non-NULL input count (or all-row count for CountStar).
+    , aggAcc         :: !SqlValue          -- ^ Running sum / min / max; SqlNull until first value.
+    , aggDistinctSet :: Set.Set SqlValue   -- ^ Distinct values for COUNT(DISTINCT …); empty otherwise.
     } deriving (Show)
 
 -- | The zero state for a fresh accumulator slot.
 defaultAccum :: AggAccum
-defaultAccum = AggAccum { aggCount = 0, aggAcc = SqlNull }
+defaultAccum = AggAccum { aggCount = 0, aggAcc = SqlNull, aggDistinctSet = Set.empty }
 
 -- | Feed one SqlValue into an accumulator for the given aggregate function.
 updateAccum :: AggFn -> AggAccum -> SqlValue -> AggAccum
@@ -165,6 +171,13 @@ updateAccum fn acc val =
             -- COUNT(col): skip NULL inputs.
             if val == SqlNull then acc
             else acc { aggCount = aggCount acc + 1 }
+
+        CountDistinct ->
+            -- COUNT(DISTINCT col): track unique non-NULL values in a Set.
+            -- The Set uses Ord on SqlValue to deduplicate.
+            case val of
+                SqlNull -> acc
+                _       -> acc { aggDistinctSet = Set.insert val (aggDistinctSet acc) }
 
         Sum ->
             -- SUM: skip NULLs; running sum in acc.
@@ -197,11 +210,12 @@ updateAccum fn acc val =
 finalizeAccum :: AggFn -> AggAccum -> SqlValue
 finalizeAccum fn acc =
     case fn of
-        CountStar -> SqlInteger (fromIntegral (aggCount acc))
-        Count     -> SqlInteger (fromIntegral (aggCount acc))
-        Sum       -> aggAcc acc   -- SqlNull if no non-NULL input
-        Min       -> aggAcc acc   -- SqlNull if no non-NULL input
-        Max       -> aggAcc acc   -- SqlNull if no non-NULL input
+        CountStar     -> SqlInteger (fromIntegral (aggCount acc))
+        Count         -> SqlInteger (fromIntegral (aggCount acc))
+        CountDistinct -> SqlInteger (fromIntegral (Set.size (aggDistinctSet acc)))
+        Sum           -> aggAcc acc   -- SqlNull if no non-NULL input
+        Min           -> aggAcc acc   -- SqlNull if no non-NULL input
+        Max           -> aggAcc acc   -- SqlNull if no non-NULL input
         Avg       ->
             -- AVG returns NULL if no non-NULL inputs were seen.
             if aggCount acc == 0
@@ -255,15 +269,37 @@ data VmState = VmState
     , vmStack        :: [SqlValue]
       -- ^ Expression evaluation stack; head = top of stack.
     , vmCursors      :: Map.Map String CursorState
-      -- ^ Open cursors keyed by alias ("" = no alias).
+      -- ^ Open cursors keyed by alias (table name when no explicit alias).
     , vmCurrentRow   :: Map.Map String Row
       -- ^ Current row for each open cursor (keyed by alias).
     , vmRowBuffer    :: Map.Map String SqlValue
       -- ^ Accumulates column values during BeginRow..EmitRow.
+    , vmColOrder     :: [String]
+      -- ^ Column names in the order they were emitted by EmitColumn within
+      -- the current BeginRow..EmitRow sequence.  Reset by BeginRow.
+      -- This preserves SELECT-list order across the Map (which sorts keys).
+    , vmOutputColumns :: [String]
+      -- ^ The canonical column order for this query, captured on the first
+      -- EmitRow.  Used by buildResult so that output rows respect the
+      -- SELECT-list column order rather than alphabetical Map.keys order.
     , vmOutputRows   :: [Map.Map String SqlValue]
       -- ^ Accumulated output rows (in reverse order; reversed at end).
     , vmAggAccums    :: Map.Map Int AggAccum
-      -- ^ Aggregate accumulators keyed by slot index.
+      -- ^ Aggregate accumulators for non-grouped queries (no GROUP BY).
+    , vmGroupAccums  :: Map.Map [SqlValue] (Map.Map Int AggAccum)
+      -- ^ Per-group aggregate accumulators for GROUP BY queries.
+      -- Key = GROUP BY column values; value = slot-indexed accumulators.
+      -- Empty for non-GROUP BY queries.
+    , vmCurrentGroup :: [SqlValue]
+      -- ^ Current GROUP BY key being accumulated (set by SaveGroupKey) or
+      -- the group being emitted (set by AdvanceGroup).
+      -- Empty list = not in GROUP BY mode (non-grouped query).
+    , vmGroupOrder   :: [[SqlValue]]
+      -- ^ Group keys in insertion order (appended by SaveGroupKey).
+      -- After the scan this list drives the per-group emit loop.
+    , vmGroupIndex   :: !Int
+      -- ^ Current position in vmGroupOrder during the emit loop.
+      -- Starts at -1; AdvanceGroup increments it before each use.
     , vmRowsAffected :: !Int
       -- ^ DML rows changed.
     , vmBackend      :: IORef InMemoryBackend
@@ -537,6 +573,124 @@ evalUnary Not SqlNull      = SqlNull
 evalUnary Not (SqlBool b)  = SqlBool (not b)
 evalUnary Not _            = SqlNull
 
+-- ── Built-in scalar function evaluation ──────────────────────────────────
+--
+-- This mirrors the mini-sqlite `evalScalarFunc` but lives in the VM so that
+-- function calls inside FROM-clause queries (e.g. LOWER(col)) work correctly.
+-- The argument list is in left-to-right order (first arg first).
+
+evalBuiltin :: String -> [SqlValue] -> SqlValue
+evalBuiltin "length" [SqlNull]   = SqlNull
+evalBuiltin "length" [SqlText s] = SqlInteger (fromIntegral (length s))
+evalBuiltin "length" _           = SqlNull
+
+evalBuiltin "upper" [SqlNull]   = SqlNull
+evalBuiltin "upper" [SqlText s] = SqlText (map toUpper s)
+evalBuiltin "upper" _           = SqlNull
+
+evalBuiltin "lower" [SqlNull]   = SqlNull
+evalBuiltin "lower" [SqlText s] = SqlText (map toLower s)
+evalBuiltin "lower" _           = SqlNull
+
+evalBuiltin "substr" [SqlNull, _] = SqlNull
+evalBuiltin "substr" [_, SqlNull] = SqlNull
+evalBuiltin "substr" [SqlText s, SqlInteger pos] =
+    let start = fromIntegral pos - 1
+    in SqlText (drop (max 0 start) s)
+evalBuiltin "substr" [SqlText s, SqlInteger pos, SqlInteger len] =
+    let start = fromIntegral pos - 1
+    in SqlText (take (fromIntegral len) (drop (max 0 start) s))
+evalBuiltin "substr" _ = SqlNull
+
+evalBuiltin "trim"  [SqlNull]   = SqlNull
+evalBuiltin "trim"  [SqlText s] = SqlText (dropWhileEnd isSpace (dropWhile isSpace s))
+evalBuiltin "trim"  _           = SqlNull
+
+evalBuiltin "ltrim" [SqlNull]   = SqlNull
+evalBuiltin "ltrim" [SqlText s] = SqlText (dropWhile isSpace s)
+evalBuiltin "ltrim" _           = SqlNull
+
+evalBuiltin "rtrim" [SqlNull]   = SqlNull
+evalBuiltin "rtrim" [SqlText s] = SqlText (dropWhileEnd isSpace s)
+evalBuiltin "rtrim" _           = SqlNull
+
+evalBuiltin "replace" [SqlNull, _, _] = SqlNull
+evalBuiltin "replace" [SqlText s, SqlText from, SqlText to] =
+    SqlText (replaceAllVm from to s)
+evalBuiltin "replace" _ = SqlNull
+
+evalBuiltin "abs" [SqlNull]        = SqlNull
+evalBuiltin "abs" [SqlInteger n]   = SqlInteger (abs n)
+evalBuiltin "abs" [SqlReal    d]   = SqlReal    (abs d)
+evalBuiltin "abs" _                = SqlNull
+
+evalBuiltin "concat" [SqlNull, _]  = SqlNull
+evalBuiltin "concat" [_, SqlNull]  = SqlNull
+evalBuiltin "concat" [a, b]        = SqlText (sqlToStr a ++ sqlToStr b)
+evalBuiltin "concat" _             = SqlNull
+
+evalBuiltin "coalesce" args =
+    case filter (/= SqlNull) args of
+        (x:_) -> x
+        []    -> SqlNull
+
+evalBuiltin "ifnull" [SqlNull, b] = b
+evalBuiltin "ifnull" [a, _]       = a
+evalBuiltin "ifnull" _            = SqlNull
+
+evalBuiltin "round" [SqlNull]        = SqlNull
+evalBuiltin "round" [SqlInteger n]   = SqlReal (fromIntegral n)
+evalBuiltin "round" [SqlReal    d]   = SqlReal (roundHalfAwayVm d 0)
+evalBuiltin "round" [SqlInteger n, SqlInteger p] =
+    SqlReal (roundHalfAwayVm (fromIntegral n) (fromIntegral p))
+evalBuiltin "round" [SqlReal    d, SqlInteger p] =
+    SqlReal (roundHalfAwayVm d (fromIntegral p))
+evalBuiltin "round" _ = SqlNull
+
+evalBuiltin _ _ = SqlNull
+
+-- | Round a Double to `digits` decimal places using half-away-from-zero
+-- rounding (SQLite ROUND semantics, not Haskell banker rounding).
+--
+-- Security notes:
+--   1. 'Integer' (arbitrary-precision) is used for intermediate values to
+--      prevent silent overflow that would corrupt results.  The original
+--      'Int' path overflowed silently for digits >= 19 on 64-bit systems.
+--   2. 'digits' is clamped to [-15, 15].  Negative values implement SQLite's
+--      "round to tens/hundreds/…" semantics and avoid a "Negative exponent"
+--      runtime exception from '(^)'.  The upper clamp of 15 reflects Double
+--      precision limits.
+roundHalfAwayVm :: Double -> Int -> Double
+roundHalfAwayVm x digits
+    | digits < 0 =
+        let factor = (10 :: Integer) ^ (min 15 (negate digits))
+            scaled = x / fromIntegral factor
+            rounded :: Integer
+            rounded = if x >= 0
+                      then floor   (scaled + 0.5)
+                      else ceiling (scaled - 0.5)
+        in fromIntegral rounded * fromIntegral factor
+    | digits == 0 =
+        let rounded :: Integer
+            rounded = if x >= 0 then floor (x + 0.5) else ceiling (x - 0.5)
+        in fromIntegral rounded
+    | otherwise =
+        let d      = min digits 15
+            factor = (10 :: Integer) ^ d
+            scaled = x * fromIntegral factor
+            truncated :: Integer
+            truncated = if x >= 0
+                        then floor   (scaled + 0.5)
+                        else ceiling (scaled - 0.5)
+        in fromIntegral truncated / fromIntegral factor
+
+-- | Replace all non-overlapping occurrences of 'from' with 'to' in 's'.
+replaceAllVm :: String -> String -> String -> String
+replaceAllVm _ _ [] = []
+replaceAllVm from to s@(c:cs)
+    | from `isPrefixOf` s = to ++ replaceAllVm from to (drop (length from) s)
+    | otherwise           = c : replaceAllVm from to cs
+
 -- ── BETWEEN evaluation ────────────────────────────────────────────────────
 --
 -- `value BETWEEN lo AND hi` means `lo <= value AND value <= hi`.
@@ -676,10 +830,17 @@ doSort keys rowMaps = sortBy compareRows rowMaps
 
 -- | Evaluate a SqlExpr against a row map (for sort key extraction).
 -- Only handles Column and Literal; anything else returns SqlNull.
+--
+-- For Column references, we first look up the column by its plain name.
+-- If not found (the column was not in the SELECT list), we fall back to the
+-- hidden sentinel "__sort_<col>" name emitted by compileSelect when the
+-- sort key is not part of the projection.
 evalExprOnRow :: SqlExpr -> Map.Map String SqlValue -> SqlValue
 evalExprOnRow expr row = case expr of
     P.Column _ col ->
-        fromMaybe SqlNull (lookupColValue col row)
+        case lookupColValue col row of
+            Just v  -> v
+            Nothing -> fromMaybe SqlNull (lookupColValue ("__sort_" ++ col) row)
     P.Literal (Just lit) ->
         literalToSqlValue lit
     P.Literal Nothing ->
@@ -739,9 +900,12 @@ dispatch instr = case instr of
         -- Level 1: runtime parameters not supported; push NULL as placeholder.
         push SqlNull
 
-    LoadGroupKey _ ->
-        -- Level 1: group-key loading handled elsewhere; push NULL here.
-        push SqlNull
+    -- LoadGroupKey i: push the i-th value from the current group key.
+    -- Used in the per-group emit loop to project the GROUP BY column values
+    -- into the output row.
+    LoadGroupKey i -> do
+        grp <- gets vmCurrentGroup
+        push (if i < length grp then grp !! i else SqlNull)
 
     Pop -> do
         _ <- pop
@@ -825,48 +989,143 @@ dispatch instr = case instr of
 
     -- ── Row construction ──────────────────────────────────────────────────
     -- Output rows are assembled column by column between BeginRow and EmitRow.
+    --
+    -- vmColOrder tracks the order in which EmitColumn was called.  This
+    -- preserves SELECT-list column order because Data.Map.Strict sorts keys
+    -- alphabetically, which would otherwise reorder columns (e.g. SELECT
+    -- id, name, age → Map.keys gives ["age","id","name"]).
     BeginRow ->
-        modify (\st -> st { vmRowBuffer = Map.empty })
+        modify (\st -> st { vmRowBuffer = Map.empty, vmColOrder = [] })
 
     EmitColumn name -> do
         v <- pop
-        modify (\st -> st { vmRowBuffer = Map.insert name v (vmRowBuffer st) })
+        modify (\st -> st
+            { vmRowBuffer = Map.insert name v (vmRowBuffer st)
+            , vmColOrder  = vmColOrder st ++ [name]
+            })
 
     EmitRow -> do
-        rowBuf <- gets vmRowBuffer
-        modify (\st -> st { vmOutputRows = rowBuf : vmOutputRows st })
+        rowBuf   <- gets vmRowBuffer
+        colOrder <- gets vmColOrder
+        -- SELECT * support: if no EmitColumn was called (colOrder is empty)
+        -- and the top of stack is SqlText "*" (emitted by compileOutputCols for
+        -- OutputStar), expand the current cursor row into the output buffer.
+        -- This is how `SELECT * FROM t` works without knowing column names at
+        -- compile time.
+        (finalBuf, finalOrder) <-
+            if null colOrder
+            then do
+                topMaybe <- gets (\s -> case vmStack s of { (v:_) -> Just v; [] -> Nothing })
+                case topMaybe of
+                    Just (SqlText "*") -> do
+                        -- Pop the wildcard marker from the stack.
+                        _ <- pop
+                        -- Collect all columns from all open cursors in alias order.
+                        curRows <- gets vmCurrentRow
+                        let allPairs = concatMap Map.toAscList (Map.elems curRows)
+                        let buf  = Map.fromList allPairs
+                        let ord  = map fst allPairs
+                        return (buf, ord)
+                    _ -> return (rowBuf, colOrder)
+            else return (rowBuf, colOrder)
+        modify (\st -> st
+            { vmOutputRows    = finalBuf : vmOutputRows st
+              -- Capture column order on first EmitRow; all rows share the same
+              -- schema so we only need to do this once.
+            , vmOutputColumns = if null (vmOutputColumns st)
+                                    then finalOrder
+                                    else vmOutputColumns st
+            })
 
     -- ── Aggregation ───────────────────────────────────────────────────────
-    -- InitAgg n: ensure n accumulator slots exist (idempotent for re-entry
-    -- into the scan loop on a per-row basis — the codegen emits InitAgg once
-    -- per row, but we only allocate the slot on first encounter).
+    -- InitAgg n: initialise n accumulator slots to their zero state.
+    -- For non-GROUP BY queries this populates vmAggAccums.
+    -- For GROUP BY queries the per-group accumulators in vmGroupAccums are
+    -- created lazily by SaveGroupKey / UpdateAgg, so this is a no-op.
     InitAgg n ->
         forM_ [0..n-1] $ \idx ->
             modify (\st -> st
                 { vmAggAccums = Map.insertWith (\_ old -> old) idx defaultAccum (vmAggAccums st)
                 })
 
+    -- UpdateAgg: feed a value into an aggregate accumulator.
+    --
+    -- COUNT(*) (CountStar) does not consume any expression value — it simply
+    -- increments a counter for every row.  All other aggregate functions pop
+    -- the top-of-stack value and feed it into the running accumulator.
+    --
+    -- In GROUP BY mode (vmCurrentGroup non-empty) update the per-group slot;
+    -- otherwise update the global accumulator.
     UpdateAgg idx fn -> do
-        v <- pop
-        modify (\st -> st
-            { vmAggAccums = Map.alter
-                (\mAcc -> Just (updateAccum fn (fromMaybe defaultAccum mAcc) v))
-                idx
-                (vmAggAccums st)
-            })
+        -- Pop a value only when the function actually needs it.
+        -- CountStar ignores the value, so we avoid a stack-underflow crash.
+        v <- if fn == CountStar then return SqlNull else pop
+        grp <- gets vmCurrentGroup
+        if null grp
+            -- Non-GROUP BY: update the global accumulator.
+            then modify (\st -> st
+                { vmAggAccums = Map.alter
+                    (\mAcc -> Just (updateAccum fn (fromMaybe defaultAccum mAcc) v))
+                    idx
+                    (vmAggAccums st)
+                })
+            -- GROUP BY: update the per-group accumulator.
+            else modify (\st ->
+                let grpMap  = Map.findWithDefault Map.empty grp (vmGroupAccums st)
+                    grpMap' = Map.alter
+                                (\mAcc -> Just (updateAccum fn (fromMaybe defaultAccum mAcc) v))
+                                idx grpMap
+                in st { vmGroupAccums = Map.insert grp grpMap' (vmGroupAccums st) })
 
+    -- FinalizeAgg: compute and push the final aggregate value.
+    -- In GROUP BY mode read from the current group's accumulator map;
+    -- otherwise read from the global accumulator map.
     FinalizeAgg idx fn -> do
-        accums <- gets vmAggAccums
-        let acc = Map.findWithDefault defaultAccum idx accums
-        push (finalizeAccum fn acc)
+        grp <- gets vmCurrentGroup
+        acc <- if null grp
+                then do
+                    accums <- gets vmAggAccums
+                    return (Map.findWithDefault defaultAccum idx accums)
+                else do
+                    grpAccums <- gets vmGroupAccums
+                    let grpMap = Map.findWithDefault Map.empty grp grpAccums
+                    return (Map.findWithDefault defaultAccum idx grpMap)
+        let result = finalizeAccum fn acc
+        push result
 
-    SaveGroupKey _ ->
-        -- Level 1: GROUP BY group key is left in the current row naturally.
-        return ()
+    -- SaveGroupKey: pop the GROUP BY expression values from the stack,
+    -- record the current group key, and add it to the ordered group list.
+    -- The codegen emits the GROUP BY expressions onto the stack (leftmost
+    -- first, so the top-of-stack holds the LAST key column).
+    SaveGroupKey names -> do
+        -- Pop one value per GROUP BY column in reverse order, then reverse
+        -- the list to recover the natural left-to-right key tuple.
+        vals <- replicateM (length names) pop
+        let key = reverse vals
+        modify (\st ->
+            let order = vmGroupOrder st
+                -- Append to group order if this key has not been seen yet.
+                order' = if key `elem` order then order else order ++ [key]
+            in st { vmCurrentGroup = key
+                  , vmGroupOrder   = order'
+                  })
 
-    AdvanceGroup ->
-        -- Level 1: simple aggregates only; no group iteration needed.
-        return ()
+    -- AdvanceGroup: step to the next group during the emit loop.
+    -- Increments vmGroupIndex and updates vmCurrentGroup.
+    AdvanceGroup -> do
+        modify (\st ->
+            let i      = vmGroupIndex st + 1
+                order  = vmGroupOrder st
+                newGrp = if i < length order then order !! i else []
+            in st { vmGroupIndex   = i
+                  , vmCurrentGroup = newGrp
+                  })
+
+    -- JumpIfGroupsDone: jump when all groups have been emitted.
+    JumpIfGroupsDone lbl -> do
+        i     <- gets vmGroupIndex
+        order <- gets vmGroupOrder
+        when (i >= length order) (jumpTo lbl)
 
     -- ── Control flow ──────────────────────────────────────────────────────
     Label _ ->
@@ -907,14 +1166,36 @@ dispatch instr = case instr of
             Right b' -> liftIO (writeIORef bRef b')
 
     -- ── DML ───────────────────────────────────────────────────────────────
-    -- InsertRow: the current row buffer contains the values to insert.
-    -- The codegen emits BeginRow + EmitColumn for each column before InsertRow.
-    InsertRow tbl _colsOpt -> do
-        rowBuf <- gets vmRowBuffer
+    -- InsertRow: values were pushed onto the stack by compileInsert (one push
+    -- per column expression, left-to-right).  We pop them in push order
+    -- (popN reverses the LIFO stack so the oldest/leftmost value comes first),
+    -- zip with the column names, build a Row map, and hand it to the backend.
+    --
+    -- When colsOpt is Nothing (INSERT INTO t VALUES (...) with no explicit
+    -- column list) we query the backend schema to get the canonical column
+    -- order.
+    InsertRow tbl colsOpt -> do
         bRef <- gets vmBackend
         backend <- liftIO (readIORef bRef)
+        -- Resolve column names: explicit list takes priority; fall back to schema.
+        colNames <- case colsOpt of
+            Just cs -> return cs
+            Nothing ->
+                case SB.columns backend tbl of
+                    Left  err -> liftIO (throwIO (userError ("insert: schema lookup failed: " ++ errorMessage err)))
+                    Right defs -> return (map SB.columnName defs)
+        -- Pop exactly as many values as columns; popN returns them in push order.
+        vals <- popN (length colNames)
+        let rowBuf = Map.fromList (zip colNames vals)
         case insert backend tbl rowBuf of
-            Left err -> error ("SqlVm: insert failed: " ++ errorMessage err)
+            Left err ->
+                -- Use throwIO (a proper IO exception) rather than 'error'
+                -- (an impure exception).  The caller's IO-level catch in
+                -- MiniSqlite.runPipeline will intercept this and convert it
+                -- to a Left MiniSqliteError.  Internal error message details
+                -- are intentionally included only in the error value returned
+                -- to the application layer, not logged to stderr.
+                liftIO (throwIO (userError ("insert failed: " ++ errorMessage err)))
             Right b' -> do
                 liftIO (writeIORef bRef b')
                 modify (\st -> st { vmRowsAffected = vmRowsAffected st + 1 })
@@ -943,6 +1224,17 @@ dispatch instr = case instr of
     LimitResult cnt off ->
         modify (\st -> st { vmPostLimit = Just (cnt, off) })
 
+    -- ── Built-in scalar function calls ────────────────────────────────────
+    -- CallBuiltin pops `arity` arguments (rightmost was pushed last), applies
+    -- the named function, and pushes the result.  NULL propagates for most
+    -- functions (except COALESCE and IFNULL which are null-specific).
+    CallBuiltin name arity -> do
+        -- replicateM n pop yields [last-arg, ..., first-arg].
+        -- Reverse to get first-arg first, matching LEFT-TO-RIGHT argument order.
+        argVals <- replicateM arity pop
+        let args = reverse argVals
+        push (evalBuiltin (map toLower name) args)
+
 -- ── Public execute function ───────────────────────────────────────────────
 --
 -- This is the single public entry point. It:
@@ -956,30 +1248,45 @@ dispatch instr = case instr of
 execute :: Program -> InMemoryBackend -> IO QueryResult
 execute prog backend = do
     bRef <- newIORef backend
+    fst <$> executeWithRef prog bRef
+
+-- | Execute a Program using a caller-supplied IORef for the backend.
+-- On return the IORef holds the post-execution (possibly mutated) backend.
+-- This is the low-level entry point used by callers that need to persist
+-- DML/DDL side-effects (e.g. the mini-sqlite connection layer).
+executeWithRef :: Program -> IORef InMemoryBackend -> IO (QueryResult, InMemoryBackend)
+executeWithRef prog bRef = do
     let instrs   = instructions prog
         lblIdx   = buildLabelIndex instrs
         initSt   = mkInitState instrs lblIdx bRef
     finalSt <- execStateT runLoop initSt
-    return (buildResult finalSt)
+    finalBe <- readIORef bRef
+    return (buildResult finalSt, finalBe)
 
 -- | Build the initial VmState for a fresh execution.
 mkInitState :: [Instruction] -> Map.Map String Int -> IORef InMemoryBackend -> VmState
 mkInitState instrs lblIdx bRef =
     VmState
-        { vmInstructions = instrs
-        , vmLabelIndex   = lblIdx
-        , vmPc           = 0
-        , vmStack        = []
-        , vmCursors      = Map.empty
-        , vmCurrentRow   = Map.empty
-        , vmRowBuffer    = Map.empty
-        , vmOutputRows   = []
-        , vmAggAccums    = Map.empty
-        , vmRowsAffected = 0
-        , vmBackend      = bRef
-        , vmPostSort     = Nothing
-        , vmPostDistinct = False
-        , vmPostLimit    = Nothing
+        { vmInstructions  = instrs
+        , vmLabelIndex    = lblIdx
+        , vmPc            = 0
+        , vmStack         = []
+        , vmCursors       = Map.empty
+        , vmCurrentRow    = Map.empty
+        , vmRowBuffer     = Map.empty
+        , vmColOrder      = []
+        , vmOutputColumns = []
+        , vmOutputRows    = []
+        , vmAggAccums     = Map.empty
+        , vmGroupAccums   = Map.empty
+        , vmCurrentGroup  = []
+        , vmGroupOrder    = []
+        , vmGroupIndex    = (-1)
+        , vmRowsAffected  = 0
+        , vmBackend       = bRef
+        , vmPostSort      = Nothing
+        , vmPostDistinct  = False
+        , vmPostLimit     = Nothing
         }
 
 -- | Build the final QueryResult from the finished VmState.
@@ -988,21 +1295,37 @@ buildResult :: VmState -> QueryResult
 buildResult st =
     let rawRows  = reverse (vmOutputRows st)
 
-        -- Derive column names from the first row's key set.
-        -- All rows share the same columns (guaranteed by BeginRow/EmitColumn).
-        colNames = case rawRows of
-            []    -> []
-            (r:_) -> Map.keys r
+        -- Use the column order captured during EmitColumn/EmitRow execution.
+        -- This preserves SELECT-list order (e.g. SELECT id, name, age)
+        -- rather than Map.keys alphabetical order (e.g. age, id, name).
+        --
+        -- vmOutputColumns is set on the first EmitRow.  When HAVING filters
+        -- every row (e.g. HAVING COUNT(*) > 5 on a small table), EmitRow
+        -- never fires and vmOutputColumns stays [].  However, BeginRow +
+        -- EmitColumn still ran for each group before the HAVING check, so
+        -- vmColOrder holds the correct column names from the last partial row.
+        -- We fall back to vmColOrder so that cursorDescription returns the
+        -- right schema even when the result set is empty.
+        --
+        -- Strip hidden sort-key columns (prefixed "__sort_") from the
+        -- output column list.  These were emitted by compileSelect so that
+        -- doSort can look up sort-key values for columns not in the SELECT
+        -- list.  They must not appear in the user-visible query result.
+        allCols  = if null (vmOutputColumns st) then vmColOrder st
+                                                else vmOutputColumns st
+        colNames = filter (not . ("__sort_" `isPrefixOf`)) allCols
 
         -- Convert row maps to value lists in column order.
+        -- Only include the user-visible columns (not the hidden sort cols).
         toValueList rowMap = map (\col -> Map.findWithDefault SqlNull col rowMap) colNames
 
-        -- Apply Sort on the row maps (need column names for lookup).
+        -- Apply Sort on the full row maps (including hidden sort-key cols
+        -- so that evalExprOnRow can find them via the "__sort_" fallback).
         sorted = case vmPostSort st of
             Nothing   -> rawRows
             Just keys -> doSort keys rawRows
 
-        -- Project to value lists.
+        -- Project to value lists (hidden cols are excluded by colNames).
         sortedVals = map toValueList sorted
 
         -- Apply Distinct on value lists.

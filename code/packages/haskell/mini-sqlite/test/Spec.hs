@@ -1,5 +1,8 @@
 import Test.Hspec
 import MiniSqliteSpec
+import ConformanceSpec
 
 main :: IO ()
-main = hspec spec
+main = hspec $ do
+    spec
+    conformanceSpec
