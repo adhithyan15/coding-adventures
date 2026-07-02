@@ -1685,6 +1685,13 @@ WHITESPACE_ONLY. 6 bridge tests + a closurec e2e diff fixture
 additive-with-unary-sign invariant (`a + +b`, `a - -b` stay binary, never
 mis-read as `++`) is pinned by a bridge test.
 
-The **PR3 emit conformance port** — the remaining follow-up — ports upstream
-CodePrinter's update-operator cases (postfix/prefix, precedence, fusion) into
-`closure-emitter/tests/upstream/`.
+The **PR3 emit conformance port** (closure-emitter 0.22.1, CLOC12.158 PR3)
+ports upstream CodePrinter's update-operator cases into
+`closure-emitter/tests/upstream/code_printer_update_test.rs` (registered as
+the `upstream_code_printer_update` `[[test]]` target): prefix/postfix
+increment/decrement, a member operand (`a.b++`), bare printing under `!` /
+`typeof`, the `PREC_UNARY` precedence wraps (`(x++).y`, `(++x)**2`), and the
+`+`/`-` token-fusion seams (`a- --b`, `a+ ++b`, `x++ +y`, `x-- -y`, plus the
+non-fusing `x++*y`). 14 active `#[test]`s, no `#[ignore]` — the emitter
+conforms to every covered shape. This completes the CLOC12.158
+`UpdateExpression` three-PR arc (node+emit → bridge → conformance).

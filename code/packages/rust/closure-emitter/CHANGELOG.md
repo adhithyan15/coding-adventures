@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.22.1] - 2026-07-02
+
+### Added — CLOC12.158 PR3: CodePrinter update-operator conformance port
+
+New upstream-cited test file `tests/upstream/code_printer_update_test.rs`
+(registered as the `upstream_code_printer_update` `[[test]]` target) porting
+the Closure Compiler `CodePrinterTest` update-operator (`++` / `--`) printing
+cases against `emit_update`. 14 active `#[test]`s, **0 `#[ignore]`** — prefix
+and postfix increment/decrement, a member operand (`a.b++`), bare printing
+under `!` / `typeof` (`!x++`, `typeof x++`), the `PREC_UNARY` precedence wraps
+(`(x++).y` member-object, `(++x)**2` exponent-base), and the token-fusion seams
+(`a- --b`, `a+ ++b`, `x++ +y`, `x-- -y`, plus the non-fusing `x++*y`). Inputs
+are hand-constructed typed AST; the bridge conversion of `++`/`--` (PR2,
+gap-159) is exercised separately in `javascript-parser`. Test-only change — no
+library behaviour change.
+
 ## [0.22.0] - 2026-07-02
 
 ### Added — CLOC12.158: emit `UpdateExpression` (`++` / `--`)
