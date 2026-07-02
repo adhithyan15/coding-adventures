@@ -77,6 +77,7 @@ SELF_CONTAINED_RUNGS = (
     "rung37_csf_serum_ratio",
     "rung38_serum_anion_gap",
     "rung39_wbc_differential",
+    "rung40_lesion_volume",
 )
 
 
