@@ -28,6 +28,7 @@ use spice_netlist_parser::{
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUPS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUTS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_BINDINGS_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_REGISTRY_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SUMMARY_SCHEMA_VERSION,
@@ -2682,6 +2683,12 @@ fn berkeley_app_facade_exports_package_manifest_json() {
         .iter()
         .any(|capability| capability
             == "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-bindings-json"));
+    assert!(payload["artifactCapabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|capability| capability
+            == "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-registry-json"));
 }
 
 #[test]
@@ -5621,6 +5628,128 @@ C1 out 0 1p
             ["dispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindingsCapabilityId"],
         "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-bindings-json"
     );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry =
+        app.run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(3),
+                active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+            },
+        )
+        .expect(
+            "shell dashboard dispatch queue lane tab panel card action menu group shortcut command registry should execute",
+        );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_REGISTRY_SCHEMA_VERSION
+    );
+    assert!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .ready
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .registry_id,
+        "dashboard.dispatch-queue.shortcut-command-registry"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .active_menu_group_shortcut_command_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command.queued")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .default_menu_group_shortcut_command_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command.queued")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .menu_group_shortcut_command_count,
+        3
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .enabled_menu_group_shortcut_command_count,
+        2
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .visible_menu_group_shortcut_command_count,
+        3
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .menu_group_shortcut_commands[0]
+            .binding_id,
+        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-binding.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .menu_group_shortcut_commands[0]
+            .command_id,
+        "berkeley.app-shell.dashboard.dispatch-queue.menu-group-shortcut.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .menu_group_shortcut_commands[0]
+            .handler_id,
+        "handler.berkeley.app-shell.dashboard.dispatch-queue.menu-group-shortcut.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .menu_group_shortcut_commands[0]
+            .invocation_kind,
+        "shortcut-binding"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .menu_group_shortcut_commands[2]
+            .disabled_reason
+            .as_deref(),
+        Some("No attention dispatches")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_capability_id,
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-registry-json"
+    );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_payload:
+        serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_json(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(3),
+                active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+            },
+        )
+        .unwrap(),
+    )
+    .expect(
+        "shell dashboard dispatch queue lane tab panel card action menu group shortcut command registry JSON should parse",
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_payload
+            ["activeMenuGroupShortcutCommandId"],
+        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_payload
+            ["menuGroupShortcutCommands"][0]["handlerId"],
+        "handler.berkeley.app-shell.dashboard.dispatch-queue.menu-group-shortcut.queued"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_payload
+            ["menuGroupShortcutCommands"][2]["disabledReason"],
+        "No attention dispatches"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_payload
+            ["dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandRegistryCapabilityId"],
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-registry-json"
+    );
 }
 
 #[test]
@@ -8171,6 +8300,101 @@ R1 in out
         shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_payload
             ["dispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindingsCapabilityId"],
         "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-bindings-json"
+    );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry =
+        app.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(2),
+                active_command_id: Some("analysis.2.run".to_string()),
+            },
+        );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_REGISTRY_SCHEMA_VERSION
+    );
+    assert!(
+        !shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .ready
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .active_menu_group_shortcut_command_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command.attention")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .attention_menu_group_shortcut_command_id
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command.attention")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .menu_group_shortcut_command_count,
+        3
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .enabled_menu_group_shortcut_command_count,
+        2
+    );
+    assert!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .menu_group_shortcut_commands[2]
+            .active
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .menu_group_shortcut_commands[2]
+            .handler_id,
+        "handler.berkeley.app-shell.dashboard.dispatch-queue.menu-group-shortcut.attention"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .menu_group_shortcut_commands[1]
+            .disabled_reason
+            .as_deref(),
+        Some("No blocked dispatches")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_capability_id,
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-registry-json"
+    );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_payload:
+        serde_json::Value = serde_json::from_str(
+        &app.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_json(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(2),
+                active_command_id: Some("analysis.2.run".to_string()),
+            },
+        ),
+    )
+    .expect(
+        "blocked shell dashboard dispatch queue lane tab panel card action menu group shortcut command registry JSON should parse",
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_payload
+            ["activeMenuGroupShortcutCommandId"],
+        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command.attention"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_payload
+            ["menuGroupShortcutCommands"][2]["handlerId"],
+        "handler.berkeley.app-shell.dashboard.dispatch-queue.menu-group-shortcut.attention"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_payload
+            ["menuGroupShortcutCommands"][1]["disabledReason"],
+        "No blocked dispatches"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_payload
+            ["dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandRegistryCapabilityId"],
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-registry-json"
     );
 }
 
