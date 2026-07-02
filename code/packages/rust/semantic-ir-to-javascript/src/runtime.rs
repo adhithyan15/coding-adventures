@@ -471,6 +471,19 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         // Ruby allows a negative index (counts from the end); an index
         // resolving outside `0 .. length-1` is out of bounds.
         const raw = args[0];
+        // SECURITY: `raw` is a source-controlled value and MUST be a real
+        // integer before it can index `recv`.  A non-numeric string
+        // (`"constructor"`, `"__proto__"`, `"push"`, …) would sail past the
+        // `NaN`-poisoned bounds checks below (every comparison with NaN is
+        // false) and reach `recv[raw]` — a reflective property read that
+        // leaks prototype/host gadgets and bypasses the method allowlist.
+        // Ruby itself raises here (`TypeError: no implicit conversion of
+        // String into Integer`), so reject a non-integer index with the same
+        // typed error rather than ever indexing by a source-derived name.
+        if (typeof raw !== "number" || !Number.isInteger(raw)) {
+          raiseError("TypeError",
+            "no implicit conversion of " + classDescription(raw) + " into Integer");
+        }
         const idx = raw < 0 ? recv.length + raw : raw;
         if (idx < 0 || idx >= recv.length) {
           if (args.length >= 2) { return args[1]; }

@@ -22,6 +22,13 @@ All notable changes to `semantic-ir-to-javascript` are documented here.
     default → `KeyError`. A supplied default (`fetch(k, d)`) is returned
     instead of raising, matching Ruby. Handled in `callMethod` ahead of the
     method allowlist (negative array indices count from the end).
+    - **Security (CWE-470):** `arr.fetch` first validates its index is a real
+      integer (`typeof === "number" && Number.isInteger`) — a non-integer,
+      source-controlled index (`arr.fetch("constructor")`, `"__proto__"`, …)
+      raises `TypeError` (Ruby: *no implicit conversion of String into
+      Integer*) instead of sailing past the `NaN`-poisoned bounds checks to a
+      reflective `recv[idx]` read that would leak prototype/host gadgets and
+      bypass the allowlist. Regression: `t3_array_fetch_non_integer_index_raises_type_error_not_gadget`.
   - **Unknown method** (an allowlist miss, or a `SirInstance` method miss) →
     `NoMethodError` (`undefined method \`x\` for <class>`) via a new
     `classDescription` receiver-describer, replacing the previous JS-native

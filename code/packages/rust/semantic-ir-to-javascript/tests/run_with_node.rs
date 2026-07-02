@@ -1691,6 +1691,27 @@ fn t3_array_fetch_oob_raises_index_error() {
     );
 }
 
+/// SECURITY (CWE-470): `arr.fetch("constructor")` — a non-integer,
+/// source-controlled index — must raise `TypeError` (Ruby: "no implicit
+/// conversion of String into Integer") rather than falling through the
+/// `NaN`-poisoned bounds checks to `recv["constructor"]`, which would leak
+/// the `Array` constructor / prototype gadgets and bypass the method
+/// allowlist.  A translated `rescue TypeError` catches it.
+#[test]
+fn t3_array_fetch_non_integer_index_raises_type_error_not_gadget() {
+    let arr = seq(vec![int(1), int(2)]);
+    assert_typed_rescue_catches(
+        vec![Stmt::ExprStmt {
+            expr: bc("__method__", vec![arr, str_("fetch"), str_("constructor")]),
+            span: sp(),
+        }],
+        "TypeError",
+        "Integer",
+        &[Feature::Sequences, Feature::Strings, Feature::DynamicTyping],
+        "t3_arr_fetch_gadget",
+    );
+}
+
 /// `hash.fetch(missing)` with no default raises `KeyError`.
 #[test]
 fn t3_hash_fetch_missing_raises_key_error() {
