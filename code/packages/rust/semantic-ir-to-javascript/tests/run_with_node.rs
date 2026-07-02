@@ -1045,3 +1045,298 @@ fn try_catch_user_ancestry_catches() {
         assert_eq!(stdout, "user-caught");
     }
 }
+
+// ── O3: user-defined-class OOP execution-proof (run under `node`) ──────
+//
+// The unit tests in `emit.rs` prove the emitted OOP *shape*; these prove
+// the emitted *behaviour* by hand-building an SIR module the way the O2
+// Ruby frontend will (method bodies hoisted to top-level functions,
+// registered with `__def_method__`, instantiated with `__new__`, `super`
+// via `__super__`, `@ivar` via `Scope::Instance`), compiling to
+// self-contained JS, and running it under Node.
+
+/// A required parameter named `n`.
+fn param(n: &str) -> semantic_ir::Param {
+    semantic_ir::Param {
+        name: n.into(),
+        sir_type: None,
+        kind: semantic_ir::ParamKind::Required,
+        default: None,
+        span: sp(),
+    }
+}
+
+/// A top-level function `name(params…) { stmts…; return value }` — the
+/// shape the frontend hoists a method body into.
+fn func(name: &str, params: Vec<semantic_ir::Param>, stmts: Vec<Stmt>, value: Expr) -> Function {
+    Function {
+        name: name.into(),
+        params,
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value, span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    }
+}
+
+/// `new __Sir.Closure(...)` wrapping the top-level method function
+/// `fn_name` with no captures — how the frontend passes a method body to
+/// `__def_method__`.
+fn method_closure(fn_name: &str) -> Expr {
+    Expr::MakeClosure { fn_name: fn_name.into(), captures: vec![], span: sp() }
+}
+
+/// `Class.def(name, <closure>)` → `__def_method__("Class","name",closure)`.
+fn def_method(cls: &str, name: &str, fn_name: &str) -> Stmt {
+    Stmt::ExprStmt {
+        expr: bc("__def_method__", vec![str_(cls), str_(name), method_closure(fn_name)]),
+        span: sp(),
+    }
+}
+
+/// An instance-variable read (`@x`) / write.
+fn ivar(name: &str) -> Expr {
+    Expr::VarRef { name: name.into(), scope: Scope::Instance, span: sp() }
+}
+fn ivar_set(name: &str, value: Expr) -> Stmt {
+    Stmt::Assign { name: name.into(), scope: Scope::Instance, value, span: sp() }
+}
+fn param_ref(n: &str) -> Expr {
+    Expr::VarRef { name: n.into(), scope: Scope::Param, span: sp() }
+}
+
+/// Assemble a module from method-body functions + a `main`, with the OOP
+/// feature set flagged.
+fn oop_module(methods: Vec<Function>, main_stmts: Vec<Stmt>) -> Module {
+    let mut functions = methods;
+    functions.push(func("main", vec![], main_stmts, Expr::NilLit { span: sp() }));
+    Module {
+        name: "oop".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Classes,
+            Feature::InstanceVars,
+            Feature::ClassVars,
+            Feature::Closures,
+            Feature::Strings,
+            Feature::DynamicTyping,
+            Feature::Constants,
+            // `@x = v` lowers to an `Assign`, which the validator counts
+            // as a mutable binding.
+            Feature::MutableBindings,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions,
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    }
+}
+
+/// P1 — instantiation + instance method + `@ivar`:
+///   class Dog; def initialize(name); @name = name; end
+///             def speak; print(@name + " says woof"); end; end
+///   Dog.new("Rex").speak   →   "Rex says woof"
+#[test]
+fn p1_dog_initialize_and_speak() {
+    // def initialize(name); @name = name; end
+    let dog_init = func(
+        "Dog__initialize",
+        vec![param("name")],
+        vec![ivar_set("@name", param_ref("name"))],
+        Expr::NilLit { span: sp() },
+    );
+    // def speak; print(@name + " says woof"); end
+    let dog_speak = func(
+        "Dog__speak",
+        vec![],
+        vec![print(bc("+", vec![ivar("@name"), str_(" says woof")]))],
+        Expr::NilLit { span: sp() },
+    );
+    // main: register the methods, then `Dog.new("Rex").speak`.
+    let make = bc("__new__", vec![str_("Dog"), str_("Rex")]);
+    let speak = bc("__method__", vec![make, str_("speak")]);
+    let main = vec![
+        def_method("Dog", "initialize", "Dog__initialize"),
+        def_method("Dog", "speak", "Dog__speak"),
+        Stmt::ExprStmt { expr: speak, span: sp() },
+    ];
+    let module = oop_module(vec![dog_init, dog_speak], main);
+
+    // Shape: the OOP builtins routed to the runtime helpers.
+    let artifact = compile(&module).expect("compile");
+    assert!(artifact.source.contains(r#"__Sir.callNew("Dog", "Rex")"#), "{}", artifact.source);
+    assert!(artifact.source.contains(r#"__Sir.defMethod("Dog", "initialize""#), "{}", artifact.source);
+    assert!(artifact.source.contains(r#"__Sir.ivarSet("@name", name)"#), "{}", artifact.source);
+    assert!(artifact.source.contains(r#"__Sir.ivarGet("@name")"#), "{}", artifact.source);
+
+    if let Some(stdout) = run_module(&module, "oop_p1") {
+        assert_eq!(stdout, "Rex says woof");
+    }
+}
+
+/// P2 — inheritance + `super` + ivar-from-parent:
+///   class Animal; def initialize(legs); @legs = legs; end
+///                def legs; @legs; end; end
+///   class Cat < Animal
+///     def initialize; super(4); @name = "Tom"; end
+///     def describe; print(@name + " with " + super_legs); end   (via super)
+///   end
+/// Here `describe` reads `@name` (set in Cat#initialize) and calls
+/// `legs` which reads `@legs` (set by Animal#initialize via `super(4)`).
+/// Output: "Tom with 4".
+#[test]
+fn p2_inheritance_super_and_parent_ivar() {
+    // Animal#initialize(legs): @legs = legs
+    let animal_init = func(
+        "Animal__initialize",
+        vec![param("legs")],
+        vec![ivar_set("@legs", param_ref("legs"))],
+        Expr::NilLit { span: sp() },
+    );
+    // Animal#legs: return @legs (a value method — no print)
+    let animal_legs = func("Animal__legs", vec![], vec![], ivar("@legs"));
+    // Cat#initialize: super(4); @name = "Tom"
+    //   super("initialize","Cat", 4) runs Animal#initialize with self bound.
+    let super_init = bc("__super__", vec![str_("initialize"), str_("Cat"), int(4)]);
+    let cat_init = func(
+        "Cat__initialize",
+        vec![],
+        vec![
+            Stmt::ExprStmt { expr: super_init, span: sp() },
+            ivar_set("@name", str_("Tom")),
+        ],
+        Expr::NilLit { span: sp() },
+    );
+    // Cat#describe: print(@name + " with " + self.legs)
+    //   self.legs dispatches to Animal#legs (inherited), reading @legs.
+    let self_legs = bc("__method__", vec![bc("__self__", vec![]), str_("legs")]);
+    let legs_str = bc("__method__", vec![self_legs, str_("toString")]);
+    let describe_line = bc("+", vec![bc("+", vec![ivar("@name"), str_(" with ")]), legs_str]);
+    let cat_describe = func(
+        "Cat__describe",
+        vec![],
+        vec![print(describe_line)],
+        Expr::NilLit { span: sp() },
+    );
+
+    // Register the ancestry edge (Cat < Animal) by declaring the class so
+    // the emitter emits `registerAncestry`.  Method `def`s are hoisted, so
+    // the ClassDef bodies are empty.
+    let animal_class = Stmt::ClassDef {
+        name: "Animal".into(),
+        superclass: None,
+        body: vec![],
+        span: sp(),
+    };
+    let cat_class = Stmt::ClassDef {
+        name: "Cat".into(),
+        superclass: Some("Animal".into()),
+        body: vec![],
+        span: sp(),
+    };
+
+    let make = bc("__new__", vec![str_("Cat")]);
+    let describe = bc("__method__", vec![make, str_("describe")]);
+    let main = vec![
+        animal_class,
+        cat_class,
+        def_method("Animal", "initialize", "Animal__initialize"),
+        def_method("Animal", "legs", "Animal__legs"),
+        def_method("Cat", "initialize", "Cat__initialize"),
+        def_method("Cat", "describe", "Cat__describe"),
+        Stmt::ExprStmt { expr: describe, span: sp() },
+    ];
+    let module = oop_module(
+        vec![animal_init, animal_legs, cat_init, cat_describe],
+        main,
+    );
+
+    let artifact = compile(&module).expect("compile");
+    assert!(artifact.source.contains(r#"__Sir.callSuper("initialize", "Cat", 4)"#), "{}", artifact.source);
+    assert!(artifact.source.contains(r#"__Sir.registerAncestry({ "Cat": "Animal" });"#), "{}", artifact.source);
+
+    if let Some(stdout) = run_module(&module, "oop_p2") {
+        assert_eq!(stdout, "Tom with 4");
+    }
+}
+
+/// SECURITY — a class / method named `constructor` or `__proto__` must
+/// NOT execute host code.  Dispatch is an explicit `Map` key lookup on
+/// `(class, method)`; a class named `constructor` was never defined in the
+/// table, so `callNew("constructor")` just allocates a bare instance with
+/// NO host `constructor` invoked, and a method named `__proto__` on it is a
+/// clean Map-miss → NoMethodError (node exits non-zero).  This mirrors the
+/// RCE-gadget regression style of `runtime_rejects_constructor_gadget`.
+#[test]
+fn oop_constructor_and_proto_names_are_inert() {
+    // Define a legit method under the ODDLY-NAMED class so we prove the
+    // table works, but the gadget name itself is never registered.
+    // main:
+    //   obj = __new__("constructor")        // Map-miss on "constructor\x00initialize" → bare instance
+    //   print(obj.__proto__)                // "__proto__" method miss → NoMethodError → non-zero exit
+    let make = bc("__new__", vec![str_("constructor")]);
+    let gadget_call = bc("__method__", vec![make, str_("__proto__"), str_("return 1")]);
+    let main = vec![print(gadget_call)];
+    let module = oop_module(vec![], main);
+
+    // Shape check: the emitted dispatch keys on the dangerous *name strings*,
+    // never a reflective member access.
+    let artifact = compile(&module).expect("compile");
+    assert!(artifact.source.contains(r#"__Sir.callNew("constructor")"#), "{}", artifact.source);
+    assert!(
+        artifact.source.contains(r#"__Sir.callMethod(__Sir.callNew("constructor"), "__proto__", "return 1")"#),
+        "{}",
+        artifact.source
+    );
+
+    if let Some(stderr) = run_module_expecting_failure(&module, "oop_gadget") {
+        // The miss surfaces as our NoMethodError (a SirError), NOT any
+        // executed host `constructor`/`Function` payload.
+        assert!(
+            stderr.contains("NoMethodError") || stderr.contains("undefined method"),
+            "expected a clean method-miss error, got stderr:\n{stderr}"
+        );
+    }
+}
+
+/// SECURITY — a genuinely cyclic ancestry (A < B < A) must not loop
+/// forever during method resolution.  We register a cycle and dispatch a
+/// method that exists on neither class: the `seen`-guarded walk terminates
+/// with a NoMethodError instead of hanging.
+#[test]
+fn oop_cyclic_ancestry_terminates() {
+    // Register A<B and B<A via two ClassDefs → a cycle in `ancestry`.
+    let a_class = Stmt::ClassDef {
+        name: "A".into(),
+        superclass: Some("B".into()),
+        body: vec![],
+        span: sp(),
+    };
+    let b_class = Stmt::ClassDef {
+        name: "B".into(),
+        superclass: Some("A".into()),
+        body: vec![],
+        span: sp(),
+    };
+    // obj = A.new; obj.missing  → walk A→B→A… guarded → NoMethodError.
+    let make = bc("__new__", vec![str_("A")]);
+    let call_missing = bc("__method__", vec![make, str_("missing")]);
+    let main = vec![
+        a_class,
+        b_class,
+        Stmt::ExprStmt { expr: call_missing, span: sp() },
+    ];
+    let module = oop_module(vec![], main);
+
+    if let Some(stderr) = run_module_expecting_failure(&module, "oop_cycle") {
+        assert!(
+            stderr.contains("NoMethodError") || stderr.contains("undefined method"),
+            "expected termination with a method-miss error, got stderr:\n{stderr}"
+        );
+    }
+}
