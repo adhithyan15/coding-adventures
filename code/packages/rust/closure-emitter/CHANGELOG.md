@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.21.2] - 2026-07-02
+
+### Test — CLOC12.156: CodePrinter template-literal conformance port
+
+New upstream port `tests/upstream/code_printer_template_test.rs` (from
+`CodePrinterTest.java`) isolating `emit_template_literal` /
+`emit_template_element` + the `PREC_PRIMARY` classification that landed with
+`Expression::TemplateLiteral` (CLOC12.154). **17 active `#[test]`s + 1
+`#[ignore]`.** Coverage: no-substitution templates (empty, escaped backtick
+`` `hel\`lo` ``, escaped `` \${ ``); a template as an unwrapped member-access
+object (`` `hello`.length ``) and as an unwrapped `+` / `==` operand
+(`` `hello`+world ``) — it is primary; and `${…}` substitution templates
+(single `` `${world}` ``, adjacent `` `${a}${b}` ``, text-interleaved
+`` `hello ${world}` ``, low-precedence body `` `${a+b}` ``, member-access body
+`` `${hello.length}` ``). Inputs are hand-constructed AST so the port exercises
+`${…}` substitution templates the grammar tokenises only as no-substitution
+today (gap-157) — the emitter already prints them; the parser can't yet feed
+them. Test-only; no `src/` change. The one ignored case (a quasi carrying a
+*literal* embedded newline) surfaces **gap-158** — `emit_template_element`
+routes `raw` through `write_str`, which forbids embedded `'\n'`. *Tagged*
+templates are intentionally not ported (no `TaggedTemplateExpression` AST node).
+
 ## [0.21.1] - 2026-07-02
 
 ### Test — CLOC12.153: CodePrinter arrow-function conformance port

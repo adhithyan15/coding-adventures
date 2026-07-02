@@ -105,6 +105,21 @@ test-port convention. Each file isolates one printing area:
   (including the `"__proto__"` exception), shorthand, and statement-start
   parenthesization. 13 active `#[test]`s, no `#[ignore]`. Run with
   `cargo test --test upstream_code_printer_object_literal`.
+- `code_printer_function_test.rs` — function-expression printing:
+  anonymous / named, params, body, IIFE, member-object and call-argument
+  wrapping, generator / async prefixes. Run with
+  `cargo test --test upstream_code_printer_function`.
+- `code_printer_arrow_test.rs` — arrow-function printing: param-paren drop,
+  concise vs block body, object-literal-body wrap, IIFE, member-object,
+  call-argument, async prefix. Run with
+  `cargo test --test upstream_code_printer_arrow`.
+- `code_printer_template_test.rs` — template-literal printing: no-substitution
+  templates (escaped backtick / `${`), a template as an unwrapped member-object
+  and binary operand (it is primary), and `${…}` substitution templates
+  (single / adjacent / text-interleaved / low-precedence and member-access
+  bodies). 17 active `#[test]`s + 1 `#[ignore]` (gap-158, a quasi with a
+  literal embedded newline). Run with
+  `cargo test --test upstream_code_printer_template`.
 
 ## Dependency whitelist
 

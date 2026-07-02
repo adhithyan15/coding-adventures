@@ -38,6 +38,24 @@ under the Apache License, Version 2.0:
       port can exercise block-bodied arrows the grammar can't yet parse
       (gap-156).
 
+- `code_printer_template_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/CodePrinterTest.java`
+      (the template-literal `` `…` `` printing cases, including `${…}`
+      substitutions and the multiline internal-whitespace case)
+    - tracked commit: see `UPSTREAM_SHA`
+    - Isolates `emit_template_literal` / `emit_template_element` + the
+      `PREC_PRIMARY` classification that landed with
+      `Expression::TemplateLiteral` (CLOC12.154). 17 active `#[test]`s and
+      1 `#[ignore]` — the emitter conforms to every covered shape
+      (no-substitution, escaped backtick / escaped `${`, member-object and
+      binary operands without wrapping, single / adjacent / text-interleaved
+      `${…}` substitutions, and low-precedence / member-access substitution
+      bodies). Inputs are hand-constructed AST so the port can exercise
+      `${…}` substitution templates the grammar tokenises only as
+      no-substitution today (gap-157). The one ignored case is a quasi
+      carrying a *literal* embedded newline, which the emitter's `write_str`
+      path rejects (gap-158).
+
 ## Translation notes
 
 Fourth port under CLOC12 (after `closure-pass-constant-fold` in
@@ -75,4 +93,7 @@ ignored ports.
 
 ## Skipped (intentionally not ported)
 
-None yet.
+- Upstream `CodePrinterTest`'s **tagged template** cases
+  (`` tag`${x} world` ``). We have no `TaggedTemplateExpression` AST node
+  yet, so these inputs cannot be hand-constructed. They come in with a
+  future tagged-template AST slice, not this port.
