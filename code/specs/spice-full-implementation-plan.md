@@ -33,22 +33,24 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipts.
+1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt summary.
    - Status: current PR completion candidate.
    - Add schema-versioned Rust app shell dashboard dispatch-queue lane-tab
      panel-card-action-menu-group-shortcut-command-palette-search-invocation
-     receipt surfaces and JSON helpers that convert each command-palette search
-     invocation attempt into a deterministic accepted, blocked, or empty
-     receipt for first-render product-shell dispatch feedback.
+     receipt-summary surfaces and JSON helpers that fold command-palette search
+     invocation receipts into deterministic status-card metadata for
+     first-render product-shell dispatch feedback.
    - Preserve package name, source fingerprint, route/status metadata, receipt
-     stream ID, search invocation/selection/results/index IDs, palette ID,
-     registry ID, command group, raw/normalized query, query tokens, invocation
-     state, `canDispatch`, latest/accepted/blocked/empty receipt IDs, receipt
-     counts, selected search-result/command/handler/target/label/queue-state
-     metadata, dispatch action, blocked reason, receipt message, invocation
-     capability ID, invocation-receipts capability ID, and advertised
-     capability count so Mosaic, WebAssembly, and product shells can render
-     post-invocation history without reparsing the selected command payload.
+     summary ID, receipt stream ID, search invocation/selection/results/index
+     IDs, palette ID, registry ID, command group, raw/normalized query, query
+     tokens, invocation state, receipt state, status kind/title/message,
+     `canDispatch`, dispatch accepted/blocked flags, dispatch action, latest
+     receipt ID, selected search-result/command/handler/target/label/
+     queue-state metadata, blocked reason, receipt counts, attention flag,
+     invocation-receipts capability ID, invocation-receipt-summary capability
+     ID, and advertised capability count so Mosaic, WebAssembly, and product
+     shells can render latest post-invocation feedback without walking receipt
+     rows.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
