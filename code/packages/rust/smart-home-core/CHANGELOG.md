@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `smart_home.get_safety_brief` tool descriptor for read-only Chief go/no-go
+  safety handoffs over existing D23 runtime, authorization, command-risk,
+  remediation, and controller-handoff primitives.
 - `smart_home.get_operations_brief` tool descriptor for read-only Chief
   operations handoffs over existing D23 runtime, attention, remediation, and
   topology primitives.
