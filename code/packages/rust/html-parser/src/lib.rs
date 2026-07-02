@@ -8620,10 +8620,6 @@ fn repair_tricky_adoption_agency_in(nodes: &mut Vec<Node>) {
             repair_tricky_adoption_agency_in(&mut element.children);
         }
 
-        if repair_paragraph_trailing_block_continuation(nodes, index) {
-            index += 1;
-            continue;
-        }
         if repair_paragraph_inside_previous_font_continuation(nodes, index) {
             continue;
         }
@@ -8636,49 +8632,6 @@ fn repair_tricky_adoption_agency_in(nodes: &mut Vec<Node>) {
         }
         index += 1;
     }
-}
-
-fn repair_paragraph_trailing_block_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {
-    let Some(Node::Element(paragraph)) = nodes.get_mut(index) else {
-        return false;
-    };
-    if paragraph.name != "p" {
-        return false;
-    }
-
-    let Some(block_index) = paragraph
-        .children
-        .iter()
-        .position(|child| matches!(child, Node::Element(element) if element.name == "b"))
-    else {
-        return false;
-    };
-    let trailing_newline = block_index
-        .checked_sub(1)
-        .and_then(|text_index| split_tail_text(&mut paragraph.children[..=text_index], "\n"))
-        .map(Node::text);
-    let Some(trailing_newline) = trailing_newline else {
-        return false;
-    };
-
-    let mut continuation = paragraph.children.split_off(block_index);
-    continuation.insert(0, trailing_newline);
-    for (offset, node) in continuation.into_iter().enumerate() {
-        nodes.insert(index + 1 + offset, node);
-    }
-    true
-}
-
-fn split_tail_text(nodes: &mut [Node], tail: &str) -> Option<String> {
-    let Node::Text(text) = nodes.last_mut()? else {
-        return None;
-    };
-    if !text.data.ends_with(tail) {
-        return None;
-    }
-    let keep_len = text.data.len() - tail.len();
-    text.data.truncate(keep_len);
-    Some(tail.to_string())
 }
 
 fn repair_paragraph_inside_previous_font_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {

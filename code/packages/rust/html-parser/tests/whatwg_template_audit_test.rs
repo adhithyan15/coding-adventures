@@ -124,8 +124,7 @@ fn whatwg_template_audit_tracks_post_parse_repair_evidence() {
 }
 
 fn load_suite() -> TemplateAuditSuite {
-    serde_json::from_str(WHATWG_TEMPLATE_AUDIT)
-        .expect("WHATWG template audit fixture should parse")
+    serde_json::from_str(WHATWG_TEMPLATE_AUDIT).expect("WHATWG template audit fixture should parse")
 }
 
 fn assert_axis_count(suite: &TemplateAuditSuite, axis: &str, minimum: usize) {
