@@ -1,5 +1,103 @@
 # Changelog
 
+## 0.9.0 — user-defined class OOP runtime + emit (O5)
+
+Makes the Rust backend **accept and execute** real user-defined-class OOP
+(`Foo.new`, `initialize`, instance/class methods, `super`, `self`, `@ivar`,
+`@@cvar`, inheritance) — the Rust analogue of the O1/O3/O4 backends. Before
+this change `Feature::Classes` was accepted ONLY for empty-body
+exception-subclass declarations, and `@ivar`/`@@cvar`/`self`/`new`/`super`
+had no runtime; a real OO program was rejected or hit a `panic!` guard.
+
+### Value-model decision (variant vs. side-table)
+
+A **narrow, dedicated `Value::Instance(u64)` variant backed by a
+`thread_local` side-table**. The `u64` is an opaque instance id; the object
+state (`SirInstance { class, ivars }`) lives in the `INSTANCES` side-table
+keyed by that id. This is a *hybrid* of the two options the milestone
+weighed:
+
+- A side-table alone (reusing a magic `Pair`/`Sym` as a disguised handle)
+  would **leak**: `pair?`/`car`/`cdr` would operate on an "instance" and
+  `format`/`value_eq` would mis-render it.
+- Storing `SirInstance` **inline** (`Instance(Rc<SirInstance>)`) would put a
+  `RefCell<HashMap>` on the hot, frequently-cloned `Value`.
+
+The id-handle-plus-side-table keeps `Value: Clone` a trivial `u64` copy,
+gives instances a *distinct* discriminator (no built-in-type leak, correct
+`format`/`value_eq`), and confines mutable object state to one
+`thread_local`. Adding the arm touches ONLY this backend's emitted-runtime
+`Value` — never the core semantic-IR — and only two existing exhaustive
+sites (`format_d`; an identity arm in `value_eq_d`); every other `match`
+already has a `_`/`matches!` fallback.
+
+### Added
+
+- **Runtime (`runtime.rs`).** A user-defined-class OOP model in the inline
+  `__sir` module, reusing the exception runtime's `seen`-guarded ancestry
+  walk (`super_of`/`is_ancestor_or_self`):
+  - `Value::Instance(u64)` + `SirInstance { class, ivars: RefCell<HashMap> }`
+    in the `INSTANCES` side-table; `new_instance(cls)` allocates a fresh
+    handle.
+  - `METHOD_TABLE` / `CLASS_METHOD_TABLE` — `HashMap<(String, String),
+    Value>` keyed by the `(class, method)` pair (the `Value` is the
+    method-body `Closure`). `def_method`/`def_class_method` populate them.
+  - `call_new(cls, args)` — allocate → run the inherited `initialize`
+    (ancestry-resolved, `seen`-guarded) with `self` bound → return the
+    instance (Ruby discards `initialize`'s result). `call_super(method,
+    cls, args)` — resolve from the superclass of `cls`, reuse the live
+    `self`. `call_method` gains a **user-instance branch, taken FIRST**,
+    that resolves the user table walking ancestry; **every other receiver
+    keeps the unchanged collection/built-in path.**
+  - `current_self()` (`__self__`); `ivar_get`/`ivar_set` and
+    `cvar_get`/`cvar_set` acting on the current self (per-class cvar bags).
+  - **RAII self-stack:** a `SelfGuard` whose `Drop` pops the self-stack, so
+    a panic mid-method (a SIR `raise` unwinds as a panic) still balances the
+    stack — the Rust analogue of the JS runtime's `try { … } finally {
+    popSelf(); }`.
+  - **SECURITY:** every lookup is an EXPLICIT `HashMap::get` on a `(class,
+    method)` key — never reflection/`dyn Any`-by-name. A class/method named
+    `constructor`/`new`/`drop` is inert data; a miss floors to the honest
+    `Nil`/NoMethodError boundary the collection catalog uses. The ancestry
+    walk carries a `seen`-set cycle guard so a cyclic hierarchy terminates.
+- **Emit (`emit.rs`).** Emit arms mirroring `__method__`→`call_method`:
+  `__new__`→`call_new`, `__super__`→`call_super`,
+  `__def_method__`→`def_method`, `__def_class_method__`→`def_class_method`,
+  `__self__`→`current_self`. Class/method NAME args (a `StrLit` or a `Const`
+  VarRef like `Dog.new`) are LIFTED to `&str` string literals via
+  `emit_oop_name_arg` (never a runtime constant read). `@ivar`/`@@cvar`
+  reads route to `ivar_get`/`cvar_get`, writes to `ivar_set`/`cvar_set`
+  (both statement and inline contexts). The user `subclass → superclass`
+  ancestry registration now fires for `Feature::Classes` too (not only
+  `Exceptions`), so the OOP resolver's shared ancestry table is populated.
+- **Feature acceptance (`lib.rs`).** `ACCEPTED_FEATURES` now includes
+  `Modules`, `InstanceVars`, `ClassVars`, and widens the `Classes`/`Constants`
+  rationale to real OOP. `reject_const_ref` skips the class-name slots of
+  `__new__`/`__super__` (lifted to strings), keeping `Constants` acceptance
+  sound. `reject_stateful_class` still rejects a class/module with an
+  executable body (methods hoist to top-level functions, so an accepted
+  class body is empty) — the soundness gate is unchanged.
+
+### Tests
+
+- **Emit-shape unit tests** (`emit.rs`) for `__new__`/`__super__`/
+  `__def_method__`/`__def_class_method__`/`__self__` and `@ivar`/`@@cvar`
+  read+write routing. **Runtime-shape unit tests** (`runtime.rs`) pinning
+  the `Instance` variant, the tables, the explicit-lookup + cycle-guard, and
+  the RAII self-guard.
+- **Execution proof through `rustc`** (`tests/compile_and_run_oop.rs`, gated
+  on `SIR_TEST_RUSTC_LINKER`): P1 `Dog#initialize`/`speak` (ivar-through-
+  method dispatch → `42`); P2 inheritance + `super` (`Cat.new(4).describe` →
+  `104`); a security test (`constructor` class + unregistered `drop` → clean
+  data / `nil` floor); cyclic ancestry terminates (`A<B<A` → `nil`); and a
+  self-stack-balanced check.
+
+### Notes
+
+- No new `unsafe`. No core semantic-IR change (the `Instance` arm is the
+  backend's emitted-runtime `Value` only). No new clippy warnings on touched
+  files.
+
 ## 0.8.0 — exception handling via catch_unwind + ancestry (E4)
 
 Makes the Rust backend **accept and execute** structured exceptions

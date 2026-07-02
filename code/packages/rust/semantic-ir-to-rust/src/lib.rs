@@ -156,23 +156,56 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // `runtime.rs`).  All emit is localized to the `raise`/`TryCatch`
     // arms; every other node is unchanged.
     Feature::Exceptions,
-    // `Classes` is accepted ONLY to permit the narrow exception-subclass
-    // declaration `class MyErr < StandardError; end`, whose sole purpose
-    // is to contribute an ancestry edge to the exception matcher (threaded
-    // at init by `emit_ancestry_registration`).  The Ruby frontend hoists
-    // method `def`s to top-level `Function`s, so an accepted class body is
-    // EMPTY; a class carrying executable state (instance/class vars,
-    // constants, or any other statement in its body) is rejected cleanly
-    // by `reject_stateful_class` below — NEVER mis-emitted.  This mirrors
-    // the E1 JS-review soundness argument: the ClassDef is pure metadata.
+    // ── SIR17 (O5) — user-defined-class OOP ─────────────────────────
+    // `Classes` is now accepted for REAL user-defined classes, not just
+    // the narrow exception-subclass idiom.  The Ruby→SIR frontend (O2)
+    // lowers OOP to a small family of builtins the backend routes to the
+    // inlined `__sir` OOP runtime:
+    //   • `Foo.new(args)`        → `__new__`     → `call_new` (runs an
+    //                                              inherited `initialize`)
+    //   • `def m` in `class C`   → `__def_method__` → `def_method`
+    //   • `def self.m`           → `__def_class_method__` → `def_class_method`
+    //   • `super(args)`          → `__super__`   → `call_super`
+    //   • `self`                 → `__self__`    → `current_self`
+    //   • `recv.m(args)`         → `__method__`  → `call_method` (a
+    //       `Value::Instance` receiver resolves the USER method table
+    //       walking ancestry; every other receiver keeps the unchanged
+    //       collection/built-in path)
+    // Method `def`s still HOIST to top-level `Function`s (referenced by the
+    // `__def_*` builtins' `MakeClosure`), so a `ClassDef` body remains
+    // EMPTY; a class carrying an executable statement in its body is still
+    // rejected by `reject_stateful_class` (the backend emits methods from
+    // the hoisted functions + registrations, never from the class body).
+    // The `subclass → superclass` edge is registered into the SHARED
+    // ancestry table at init (see `emit_ancestry_registration`), which the
+    // OOP method resolver and the exception matcher both walk.  Dispatch is
+    // an EXPLICIT `HashMap` lookup, never reflection (C3 RCE lesson).
     Feature::Classes,
-    // `Constants` is accepted ONLY because a `raise MyErr` names its class
-    // via a `Scope::Const` VarRef (the Ruby frontend's lowering), which
-    // sets `Feature::Constants` in the manifest.  The emitter LIFTS that
-    // Const class name to a string literal in the `raise` arm — it never
-    // reads a runtime constant.  Any OTHER `Const` reference (a genuine
-    // constant read/assign this backend cannot lower) is rejected cleanly
-    // by `reject_const_ref` below, keeping this acceptance sound.
+    // `Modules` (Ruby `module Foo … end`) is accepted on the SAME footing
+    // as `Classes`: the validator marks it for a namespace/mixin-opening
+    // construct, and — like a class — the frontend hoists its method
+    // `def`s to top-level functions with `__def_*` registrations, leaving
+    // the `ModuleDef`/nested `ClassDef` body empty.  A `ModuleDef` with an
+    // executable body reaches the `Stmt::ModuleDef` emit panic, so it is
+    // rejected up front by `reject_stateful_class` (extended to cover
+    // module bodies) — keeping this acceptance sound.
+    Feature::Modules,
+    // `InstanceVars` (`@x`) and `ClassVars` (`@@x`) are accepted: a read
+    // lowers to `__sir::ivar_get`/`cvar_get` and a write to
+    // `ivar_set`/`cvar_set`, both acting on the current-self instance (a
+    // no-op returning the value / `Nil` outside any method).  These are the
+    // storage half of real OOP — with them, `Dog.new("Rex").speak` reading
+    // `@name` through method dispatch executes end to end.
+    Feature::InstanceVars,
+    Feature::ClassVars,
+    // `Constants` is accepted because a `Scope::Const` VarRef names a class
+    // in exactly the positions this backend LIFTS to a string literal — a
+    // `raise MyErr` exception class, and the class-name slot of an OOP
+    // builtin (`Dog.new` → `__new__(Dog, …)`, `super` → `__super__(m, C,
+    // …)`).  In none of those does the emitter read a runtime constant.
+    // Any OTHER `Const` reference (a genuine constant read/assign this
+    // backend cannot lower) is rejected cleanly by `reject_const_ref`
+    // below, keeping this acceptance sound.
     Feature::Constants,
 ];
 
@@ -350,9 +383,29 @@ fn stateful_class_in_stmts(stmts: &[Stmt]) -> Option<BackendError> {
                     });
                 }
             }
-            // Recurse into nested statement lists so a stateful class nested
-            // in a try/rescue/ensure or module body is still caught.
-            Stmt::ModuleDef { body, .. } | Stmt::SingletonClassDef { body, .. } => {
+            // A `module Foo … end` is accepted on the SAME footing as a
+            // class: its method `def`s hoist to top-level functions with
+            // `__def_*` registrations, so an accepted `ModuleDef` body is
+            // EMPTY.  A non-empty body carries executable state the backend
+            // has no object model for (and would reach the `Stmt::ModuleDef`
+            // emit path), so reject it cleanly HERE — mirroring the ClassDef
+            // rule — rather than letting emit produce nonsense.
+            Stmt::ModuleDef { name, body, span, .. } => {
+                if !body.is_empty() {
+                    return Some(BackendError {
+                        kind: BackendErrorKind::UnsupportedFeature,
+                        message: format!(
+                            "rust backend accepts only empty-body module \
+                             declarations (methods hoist to top-level functions); \
+                             module `{name}` has a non-empty body"
+                        ),
+                        span: span.clone(),
+                    });
+                }
+            }
+            // A `class << self`/singleton-class body likewise recurses so a
+            // stateful class nested inside is still caught.
+            Stmt::SingletonClassDef { body, .. } => {
                 if let Some(e) = stateful_class_in_stmts(body) {
                     return Some(e);
                 }
@@ -469,8 +522,8 @@ fn const_ref_in_expr(e: &Expr) -> Option<BackendError> {
         // A `Const` VarRef standing alone (not a raise class name) cannot be
         // lowered — flag it.
         Expr::VarRef { scope: Scope::Const, span, .. } => Some(unsupported_const(span.clone())),
-        // `raise` is the ONE allowed home for a `Const`: its first argument
-        // may be a `Const` class name (lifted to a string).  Skip that slot;
+        // `raise` is one allowed home for a `Const`: its first argument may
+        // be a `Const` class name (lifted to a string).  Skip that slot;
         // still scan the remaining arguments (the message expression, etc.).
         Expr::BuiltinCall { name, args, .. } if name == "raise" => {
             let skip_first = matches!(
@@ -479,6 +532,36 @@ fn const_ref_in_expr(e: &Expr) -> Option<BackendError> {
             );
             let start = if skip_first { 1 } else { 0 };
             for a in &args[start.min(args.len())..] {
+                if let Some(err) = const_ref_in_expr(a) {
+                    return Some(err);
+                }
+            }
+            None
+        }
+        // ── OOP builtins: class/method NAME slots may be `Const` ────────
+        // `__new__("Klass", …)` / `__super__("m", "Klass", …)` carry a class
+        // name that the Ruby frontend may lower as a `Const` VarRef
+        // (`Dog.new`).  The emitter LIFTS that `Const` to a `&str` literal
+        // (see `emit_oop_name_arg`) — never a runtime constant read — so it
+        // is sound to skip the NAME slots here while still scanning the
+        // ordinary call ARGS.  `__new__`'s name is arg[0]; `__super__`'s are
+        // arg[0] (method) and arg[1] (class).  (`__def_method__` /
+        // `__def_class_method__` name slots are `StrLit`, never `Const`, so
+        // they need no skip — but scanning their closure arg is still
+        // correct: a `Const` hidden in a method-body capture is flagged.)
+        Expr::BuiltinCall { name, args, .. } if name == "__new__" => {
+            // Skip the class-name slot (arg[0]); scan the rest.
+            for a in args.iter().skip(1) {
+                if let Some(err) = const_ref_in_expr(a) {
+                    return Some(err);
+                }
+            }
+            None
+        }
+        Expr::BuiltinCall { name, args, .. } if name == "__super__" => {
+            // Skip the method-name (arg[0]) and class-name (arg[1]) slots;
+            // scan the call args from arg[2].
+            for a in args.iter().skip(2) {
                 if let Some(err) = const_ref_in_expr(a) {
                     return Some(err);
                 }
@@ -1059,5 +1142,129 @@ mod tests {
         let a = compile(&exc_module(vec![raise_stmt("Foo")], &[Feature::Constants]))
             .expect("raise-class-name const is allowed");
         assert!(a.source.contains(r#"__sir::raise("Foo", "#), "got:\n{}", a.source);
+    }
+
+    // ── O5: user-defined-class OOP acceptance + soundness ──────────────
+
+    fn feat_module(stmts: Vec<Stmt>, features: &[Feature]) -> Module {
+        let mut m = minimal_module();
+        m.functions[0].body = Block {
+            stmts,
+            value: Expr::NilLit { span: s() },
+            span: s(),
+        };
+        m.manifest = FeatureManifest::from_features(features);
+        m
+    }
+
+    #[test]
+    fn accepts_real_oop_module_and_emits_runtime_calls() {
+        // A real OOP module: `class Dog`, a `__def_method__`, a `Dog.new`,
+        // and an `@ivar` write — all now ACCEPTED and routed to the runtime.
+        let stmts = vec![
+            Stmt::ClassDef { name: "Dog".into(), superclass: None, body: vec![], span: s() },
+            Stmt::ExprStmt {
+                expr: Expr::BuiltinCall {
+                    name: "__def_method__".into(),
+                    args: vec![
+                        Expr::StrLit { value: "Dog".into(), span: s() },
+                        Expr::StrLit { value: "speak".into(), span: s() },
+                        Expr::MakeClosure { fn_name: "Dog_speak".into(), captures: vec![], span: s() },
+                    ],
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+            Stmt::Assign {
+                name: "@name".into(),
+                scope: Scope::Instance,
+                value: Expr::StrLit { value: "Rex".into(), span: s() },
+                span: s(),
+            },
+            Stmt::ExprStmt {
+                expr: Expr::BuiltinCall {
+                    name: "__new__".into(),
+                    args: vec![Expr::StrLit { value: "Dog".into(), span: s() }],
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+        ];
+        // A real `Dog_speak` so the module validates.
+        let mut m = feat_module(
+            stmts,
+            &[
+                Feature::Classes,
+                Feature::InstanceVars,
+                Feature::Closures,
+                Feature::Strings,
+                Feature::MutableBindings,
+            ],
+        );
+        m.functions.push(Function {
+            name: "Dog_speak".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::VarRef { name: "@name".into(), scope: Scope::Instance, span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let a = compile(&m).expect("real OOP module should be accepted");
+        assert!(a.source.contains(r#"__sir::def_method("Dog", "speak", "#), "got:\n{}", a.source);
+        assert!(a.source.contains(r#"__sir::call_new("Dog", vec![])"#), "got:\n{}", a.source);
+        assert!(a.source.contains(r#"__sir::ivar_set("@name", "#), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn accepts_empty_module_def() {
+        // `module Foo … end` with method defs hoisted (empty body) → accepted,
+        // emits only a comment marker.
+        let md = Stmt::ModuleDef { name: "Foo".into(), body: vec![], span: s() };
+        let a = compile(&feat_module(vec![md], &[Feature::Modules]))
+            .expect("empty module def accepted");
+        assert!(a.source.contains("// module Foo"), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn rejects_stateful_module_def() {
+        // A module whose body carries an executable statement is out of scope.
+        let md = Stmt::ModuleDef {
+            name: "Foo".into(),
+            body: vec![Stmt::ExprStmt {
+                expr: Expr::IntLit { value: 1, span: s() },
+                span: s(),
+            }],
+            span: s(),
+        };
+        let err = compile(&feat_module(vec![md], &[Feature::Modules]))
+            .expect_err("stateful module rejected");
+        assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
+        assert!(err.message.contains("non-empty body"), "got: {}", err.message);
+    }
+
+    #[test]
+    fn allows_const_as_new_class_name() {
+        // `Dog.new` lowers the class as a `Const` VarRef in __new__'s name
+        // slot → lifted to a string, so `reject_const_ref` must NOT flag it.
+        let st = Stmt::ExprStmt {
+            expr: Expr::BuiltinCall {
+                name: "__new__".into(),
+                args: vec![Expr::VarRef { name: "Dog".into(), scope: Scope::Const, span: s() }],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            span: s(),
+        };
+        let a = compile(&feat_module(vec![st], &[Feature::Classes, Feature::Constants]))
+            .expect("const class name in __new__ is allowed");
+        assert!(a.source.contains(r#"__sir::call_new("Dog", vec![])"#), "got:\n{}", a.source);
     }
 }

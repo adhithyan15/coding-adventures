@@ -119,8 +119,18 @@ fn emit_main(out: &mut String, m: &Module) {
     // Both are pure init side-effects, emitted only when needed so
     // exception-free modules are byte-for-byte unchanged.
     let uses_exceptions = m.manifest.contains(semantic_ir::Feature::Exceptions);
+    let uses_classes = m.manifest.contains(semantic_ir::Feature::Classes);
     if uses_exceptions {
         out.push_str("    __sir::install_panic_hook();\n");
+    }
+    // The user-defined `subclass → superclass` ancestry edges are threaded
+    // into the SHARED ancestry table (`__sir::register_ancestry`) whenever
+    // the module declares classes OR exceptions: the exception matcher AND
+    // the OOP method resolver (`resolve_method`/`call_super`) both walk it.
+    // A module using neither feature emits nothing (byte-for-byte
+    // unchanged).  A module that panic-hooks but declares no edges likewise
+    // emits nothing (the helper is a no-op when the edge list is empty).
+    if uses_exceptions || uses_classes {
         emit_ancestry_registration(out, m);
     }
 
@@ -521,6 +531,21 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             emit_expr(out, value, indent);
             out.push_str(");\n");
         }
+        // ── SIR17 O5 instance / class variable writes ───────────────
+        // `@x = v` / `@@x = v` route to the runtime `ivar_set`/`cvar_set`,
+        // acting on the current self (a no-op returning `v` outside any
+        // method).  The sigil-bearing name is the map key.  The returned
+        // value is discarded here (`let _ = …`).
+        Stmt::Assign { name, scope: Scope::Instance, value, .. } => {
+            let _ = write!(out, "{}let _ = __sir::ivar_set({}, ", pad, quote_rs_string(name));
+            emit_expr(out, value, indent);
+            out.push_str(");\n");
+        }
+        Stmt::Assign { name, scope: Scope::ClassVar, value, .. } => {
+            let _ = write!(out, "{}let _ = __sir::cvar_set({}, ", pad, quote_rs_string(name));
+            emit_expr(out, value, indent);
+            out.push_str(");\n");
+        }
         // ── SIR16 loops ─────────────────────────────────────────────
         Stmt::While { cond, body, .. } => emit_while(out, cond, body, indent),
         Stmt::ForRange { var, start, stop, step, body, .. } => {
@@ -584,8 +609,18 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 emit_stmt(out, st, indent);
             }
         }
-        Stmt::ModuleDef { span, .. } => {
-            panic!("rust backend reached SIR17 module-def statement at {} — capability check should have rejected it", span);
+        // A `module Foo … end` (O5).  Like an accepted class, its method
+        // `def`s hoist to top-level functions with `__def_*` registrations,
+        // so an accepted `ModuleDef` body is EMPTY — the declaration itself
+        // emits no runtime code (a self-documenting comment marker only).  A
+        // non-empty body is rejected by `reject_stateful_class` before emit,
+        // so the defensive body loop below only ever runs for backend-
+        // supported statements.
+        Stmt::ModuleDef { name, body, .. } => {
+            let _ = writeln!(out, "{}// module {} (methods hoisted to top-level fns)", pad, sanitize_comment(name));
+            for st in body {
+                emit_stmt(out, st, indent);
+            }
         }
         Stmt::SingletonClassDef { span, .. } => {
             panic!("rust backend reached SIR17 singleton-class-def statement at {} — capability check should have rejected it", span);
@@ -918,15 +953,16 @@ fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
             let _ = write!(out, "__sir::builtin_closure({})", quote_rs_string(name));
         }
         Scope::Instance => {
-            // SIR17 Phase 15a — `Feature::InstanceVars` is not accepted
-            // by this backend; instance-var-using modules are rejected
-            // at the capability check before emit.  Unreachable.
-            panic!("rust backend reached SIR17 instance-var ref `{}` — capability check should have rejected it", name);
+            // SIR17 O5 — `@ivar` read on the current self.  Routes to the
+            // runtime `ivar_get`, which reads the current-self instance's
+            // ivar bag (or `Nil` outside a method / for an unset var).  The
+            // sigil-bearing name (`@x`) is the map key.
+            let _ = write!(out, "__sir::ivar_get({})", quote_rs_string(name));
         }
         Scope::ClassVar => {
-            // SIR17 Phase 15b — `Feature::ClassVars` likewise unaccepted;
-            // class-var modules are rejected before emit.  Unreachable.
-            panic!("rust backend reached SIR17 class-var ref `{}` — capability check should have rejected it", name);
+            // SIR17 O5 — `@@cvar` read for the current self's class.  Routes
+            // to the runtime `cvar_get` (per-class bag; `Nil` if unset).
+            let _ = write!(out, "__sir::cvar_get({})", quote_rs_string(name));
         }
         Scope::Const => {
             // SIR17 Phase 15c — `Feature::Constants` likewise unaccepted;
@@ -1120,6 +1156,37 @@ fn emit_direct_call(out: &mut String, fn_name: &str, args: &[Expr], indent: usiz
     out.push(')');
 }
 
+/// Emit a class-/method-NAME argument of an OOP builtin (`__new__`,
+/// `__super__`, `__def_method__`, …) as a Rust `&str` STRING LITERAL.
+///
+/// The frontend passes such a name as a `StrLit` (the literal name) or —
+/// for a class operand written as a bare constant like `Dog.new` — a
+/// `Const`-scoped `VarRef`.  In BOTH cases we emit the *name string* as a
+/// literal (via `quote_rs_string`): the OOP runtime keys its method tables
+/// and its ancestry map on the class/method NAME STRING, never on a live
+/// binding, so a class name never needs (or gets) a real Rust variable.
+/// This is also what keeps accepting `Feature::Constants` sound for OOP —
+/// a `Const` here becomes a `&str`, never a runtime constant read (which
+/// `reject_const_ref` still rejects everywhere else).  Any other
+/// expression (a computed name — not produced by the frontends) falls back
+/// to ordinary emission so the builtin still lowers to *something*.
+fn emit_oop_name_arg(out: &mut String, e: &Expr) {
+    match e {
+        Expr::StrLit { value, .. } => out.push_str(&quote_rs_string(value)),
+        Expr::VarRef { name, scope: Scope::Const, .. } => {
+            out.push_str(&quote_rs_string(name))
+        }
+        other => {
+            // Defensive fallback: coerce a non-literal name to a `&str` at
+            // runtime.  The frontends never emit this; the runtime helpers
+            // take `&str`, so we wrap it to satisfy that.
+            out.push_str("&__sir::method_name(&(");
+            emit_expr(out, other, 0);
+            out.push_str("))");
+        }
+    }
+}
+
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {
     // `raise` → panic with a class-tagged `SirError` payload (SIR17
     // Exceptions).  The first argument decides the shape, mirroring the
@@ -1163,6 +1230,77 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
                 out.push(')');
             }
         }
+        return;
+    }
+
+    // ── user-defined-class OOP (O5) ─────────────────────────────────
+    // The Ruby→SIR frontend (O2) lowers user-defined-class OOP to a small
+    // family of builtins whose FIRST argument is a class- or method-name
+    // string (a `StrLit`, or — for a bare-constant class like `Dog.new` —
+    // a `Const`-scoped `VarRef`).  Each routes to the matching inlined
+    // `__sir` OOP-runtime helper, mirroring the existing `__method__` →
+    // `call_method` routing.  The runtime dispatches by EXPLICIT HashMap
+    // key (never reflection; see `runtime.rs`), so a class/method named
+    // `constructor`/`new`/`drop` is inert data — a miss floors cleanly.
+    //
+    //   `Klass.new(args…)`         → `__new__("Klass", args…)`
+    //                                → `__sir::call_new("Klass", vec![args…])`
+    //   `super(args…)` in `C#m`    → `__super__("m", "C", args…)`
+    //                                → `__sir::call_super("m", "C", vec![args…])`
+    //   `def m …` in `class C`     → `__def_method__("C", "m", <closure>)`
+    //                                → `__sir::def_method("C", "m", <closure>)`
+    //   `def self.m …`             → `__def_class_method__("C", "m", …)`
+    //                                → `__sir::def_class_method("C", "m", …)`
+    //   `self`                     → `__self__()` → `__sir::current_self()`
+    //
+    // A class/method NAME is emitted via `emit_oop_name_arg` (a `StrLit`
+    // or a `Const` VarRef becomes a Rust `&str` literal); call ARGS emit
+    // through the ordinary `emit_expr` path.  The method-body closure
+    // (`__def_*`'s third arg) is a `MakeClosure` that lowers to a
+    // `Value::Closure`, which the runtime tables store and `apply_closure`
+    // invokes.
+    if name == "__new__" && !args.is_empty() {
+        out.push_str("__sir::call_new(");
+        emit_oop_name_arg(out, &args[0]);
+        out.push_str(", vec![");
+        emit_args(out, &args[1..], indent);
+        out.push_str("])");
+        return;
+    }
+    if name == "__super__" && args.len() >= 2 {
+        // args: [method-name, class-name, call-args…].
+        out.push_str("__sir::call_super(");
+        emit_oop_name_arg(out, &args[0]);
+        out.push_str(", ");
+        emit_oop_name_arg(out, &args[1]);
+        out.push_str(", vec![");
+        emit_args(out, &args[2..], indent);
+        out.push_str("])");
+        return;
+    }
+    if name == "__def_method__" && args.len() == 3 {
+        // args: [class-name, method-name, closure].
+        out.push_str("__sir::def_method(");
+        emit_oop_name_arg(out, &args[0]);
+        out.push_str(", ");
+        emit_oop_name_arg(out, &args[1]);
+        out.push_str(", ");
+        emit_expr(out, &args[2], indent);
+        out.push(')');
+        return;
+    }
+    if name == "__def_class_method__" && args.len() == 3 {
+        out.push_str("__sir::def_class_method(");
+        emit_oop_name_arg(out, &args[0]);
+        out.push_str(", ");
+        emit_oop_name_arg(out, &args[1]);
+        out.push_str(", ");
+        emit_expr(out, &args[2], indent);
+        out.push(')');
+        return;
+    }
+    if name == "__self__" {
+        out.push_str("__sir::current_self()");
         return;
     }
 
@@ -1667,6 +1805,17 @@ fn emit_stmt_inline(out: &mut String, s: &Stmt, indent: usize) {
             emit_expr(out, value, indent);
             out.push_str("); ");
         }
+        // ── SIR17 O5 instance / class variable writes (inline) ──────
+        Stmt::Assign { name, scope: Scope::Instance, value, .. } => {
+            let _ = write!(out, "let _ = __sir::ivar_set({}, ", quote_rs_string(name));
+            emit_expr(out, value, indent);
+            out.push_str("); ");
+        }
+        Stmt::Assign { name, scope: Scope::ClassVar, value, .. } => {
+            let _ = write!(out, "let _ = __sir::cvar_set({}, ", quote_rs_string(name));
+            emit_expr(out, value, indent);
+            out.push_str("); ");
+        }
         // ── SIR16 loops ─────────────────────────────────────────────
         // The shared `emit_while`/`emit_for_range`/`emit_for_each`
         // helpers render multi-line, indented loops; that is faithful in
@@ -1722,8 +1871,14 @@ fn emit_stmt_inline(out: &mut String, s: &Stmt, indent: usize) {
                 emit_stmt_inline(out, st, indent);
             }
         }
-        Stmt::ModuleDef { span, .. } => {
-            panic!("rust backend (inline) reached SIR17 module-def statement at {} — capability check should have rejected it", span);
+        // A `module Foo … end` in a block-as-expression context: emit the
+        // self-documenting comment (an accepted module body is empty; a
+        // non-empty one is rejected before emit).
+        Stmt::ModuleDef { name, body, .. } => {
+            let _ = write!(out, "/* module {} */ ", sanitize_comment(name));
+            for st in body {
+                emit_stmt_inline(out, st, indent);
+            }
         }
         Stmt::SingletonClassDef { span, .. } => {
             panic!("rust backend (inline) reached SIR17 singleton-class-def statement at {} — capability check should have rejected it", span);
@@ -3315,5 +3470,107 @@ mod tests {
         assert!(out.contains("class MyErr < StandardError"), "got: {out}");
         // No runtime statement is emitted for the class body.
         assert!(!out.contains("__sir::"), "class def should emit no runtime code; got: {out}");
+    }
+
+    // ── O5: user-defined-class OOP emission shape ──────────────────────
+
+    fn emit_e(e: &Expr) -> String {
+        let mut out = String::new();
+        emit_expr(&mut out, e, 0);
+        out
+    }
+
+    fn emit_s(s: &Stmt) -> String {
+        let mut out = String::new();
+        emit_stmt(&mut out, s, 0);
+        out
+    }
+
+    #[test]
+    fn emit_new_routes_to_call_new_with_string_name() {
+        // `Dog.new("Rex")` → __new__("Dog", "Rex") → call_new("Dog", vec![…]).
+        let e = builtin("__new__", vec![strlit("Dog"), strlit("Rex")]);
+        assert_eq!(
+            emit_e(&e),
+            r#"__sir::call_new("Dog", vec![__sir::Value::Str(::std::rc::Rc::from("Rex"))])"#
+        );
+        // A bare-constant class name (`Dog.new` → Const VarRef) also lifts to
+        // a string literal, never a runtime constant read.
+        let e2 = builtin("__new__", vec![constref("Dog")]);
+        assert_eq!(emit_e(&e2), r#"__sir::call_new("Dog", vec![])"#);
+    }
+
+    #[test]
+    fn emit_super_routes_to_call_super() {
+        // super("x") inside Cat#describe → __super__("describe","Cat","x").
+        let e = builtin("__super__", vec![strlit("describe"), strlit("Cat"), strlit("x")]);
+        assert_eq!(
+            emit_e(&e),
+            r#"__sir::call_super("describe", "Cat", vec![__sir::Value::Str(::std::rc::Rc::from("x"))])"#
+        );
+    }
+
+    #[test]
+    fn emit_def_method_routes_to_def_method() {
+        // def speak; end in class Dog → __def_method__("Dog","speak",<closure>).
+        let closure = Expr::MakeClosure { fn_name: "Dog_speak".into(), captures: vec![], span: s() };
+        let e = builtin("__def_method__", vec![strlit("Dog"), strlit("speak"), closure]);
+        let out = emit_e(&e);
+        assert!(out.starts_with(r#"__sir::def_method("Dog", "speak", "#), "got: {out}");
+        assert!(out.contains("__sir::Value::Closure"), "got: {out}");
+    }
+
+    #[test]
+    fn emit_def_class_method_routes_to_def_class_method() {
+        let closure = Expr::MakeClosure { fn_name: "Dog_count".into(), captures: vec![], span: s() };
+        let e = builtin("__def_class_method__", vec![strlit("Dog"), strlit("count"), closure]);
+        let out = emit_e(&e);
+        assert!(out.starts_with(r#"__sir::def_class_method("Dog", "count", "#), "got: {out}");
+    }
+
+    #[test]
+    fn emit_self_routes_to_current_self() {
+        assert_eq!(emit_e(&builtin("__self__", vec![])), "__sir::current_self()");
+    }
+
+    #[test]
+    fn emit_ivar_read_routes_to_ivar_get() {
+        // `@name` (Scope::Instance, sigil preserved) → ivar_get("@name").
+        let e = Expr::VarRef { name: "@name".into(), scope: Scope::Instance, span: s() };
+        assert_eq!(emit_e(&e), r#"__sir::ivar_get("@name")"#);
+    }
+
+    #[test]
+    fn emit_cvar_read_routes_to_cvar_get() {
+        let e = Expr::VarRef { name: "@@count".into(), scope: Scope::ClassVar, span: s() };
+        assert_eq!(emit_e(&e), r#"__sir::cvar_get("@@count")"#);
+    }
+
+    #[test]
+    fn emit_ivar_write_routes_to_ivar_set() {
+        let st = Stmt::Assign {
+            name: "@name".into(),
+            scope: Scope::Instance,
+            value: strlit("Rex"),
+            span: s(),
+        };
+        assert_eq!(
+            emit_s(&st),
+            "let _ = __sir::ivar_set(\"@name\", __sir::Value::Str(::std::rc::Rc::from(\"Rex\")));\n"
+        );
+    }
+
+    #[test]
+    fn emit_cvar_write_routes_to_cvar_set() {
+        let st = Stmt::Assign {
+            name: "@@count".into(),
+            scope: Scope::ClassVar,
+            value: int(0),
+            span: s(),
+        };
+        assert_eq!(
+            emit_s(&st),
+            "let _ = __sir::cvar_set(\"@@count\", __sir::Value::Int(0i64));\n"
+        );
     }
 }
