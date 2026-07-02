@@ -1002,6 +1002,40 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
         MathExpr::Bin(BinOp::Mul, lhs, rhs) if operator_name_is(lhs, "round") => {
             Ok(ExprAst::Round(Box::new(latex_math_to_expr_ast(rhs, source)?)))
         }
+        // `\operatorname{abs}(x)` / `\operatorname{exp}(x)` / `\operatorname{log}(x)` /
+        // `\operatorname{ln}(x)` — the operator-name spellings of single-argument unary
+        // functions that ALREADY have a native op. `\exp`/`\ln`/`\log` lower in the `Call`
+        // arm below (`Func::Exp`/`Ln`/`Log` → the matching `NamedFn`), and `|x|` lowers to
+        // `ExprAst::Abs` via the absolute-value `Fenced` arm; a model that writes the
+        // operator *name* — `\operatorname{abs}(x)`, `\operatorname{exp}(x)` — should reach
+        // the SAME node. But `\operatorname{…}` is a TEXT command, so — exactly like the
+        // `\operatorname{floor}`/`sgn`/`trunc` roundings above — these parse NOT as a `Call`
+        // but as the operator-name juxtaposition `Bin(Mul, Text("exp"), (x))`. We recognise
+        // that shape here, ABOVE the general product arm, and lower to the existing node:
+        // `abs` → `ExprAst::Abs` (dimension-preserving), `exp`/`log`/`ln` →
+        // `ExprAst::Call(NamedFn::…)` (transcendental, Scalar→Scalar). Pure adapter
+        // recognition: no engine, AST, or lowering change.
+        MathExpr::Bin(BinOp::Mul, lhs, rhs) if operator_name_is(lhs, "abs") => {
+            Ok(ExprAst::Abs(Box::new(latex_math_to_expr_ast(rhs, source)?)))
+        }
+        MathExpr::Bin(BinOp::Mul, lhs, rhs) if operator_name_is(lhs, "exp") => {
+            Ok(ExprAst::Call(
+                NamedFn::Exp,
+                Box::new(latex_math_to_expr_ast(rhs, source)?),
+            ))
+        }
+        MathExpr::Bin(BinOp::Mul, lhs, rhs) if operator_name_is(lhs, "log") => {
+            Ok(ExprAst::Call(
+                NamedFn::Log,
+                Box::new(latex_math_to_expr_ast(rhs, source)?),
+            ))
+        }
+        MathExpr::Bin(BinOp::Mul, lhs, rhs) if operator_name_is(lhs, "ln") => {
+            Ok(ExprAst::Call(
+                NamedFn::Ln,
+                Box::new(latex_math_to_expr_ast(rhs, source)?),
+            ))
+        }
         // `\operatorname{min}(a, b)` / `\operatorname{max}(…)` / `\operatorname{gcd}(…)` /
         // `\operatorname{lcm}(…)` — the operator-name spellings of the variadic binary
         // functions. The function-call spellings (`\min(a, b)`, `\gcd(a, b, c)`) already

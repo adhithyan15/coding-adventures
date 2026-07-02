@@ -2347,6 +2347,48 @@ contributes 1000000 from answer == 60 to correct
     }
 
     #[test]
+    fn native_latex_operatorname_unary_word_spellings() {
+        // `\operatorname{abs}(x)` / `\operatorname{exp}(x)` / `\operatorname{log}(x)` /
+        // `\operatorname{ln}(x)` — the operator-name spellings of single-argument unary
+        // functions that already have a native op. `\operatorname{…}` is a TEXT command, so
+        // these parse as the juxtaposition `Bin(Mul, Text("exp"), (x))` rather than a `Call`
+        // (`\exp`) or a `Fenced` (`|x|`); the adapter recognises that shape and lowers to the
+        // SAME node — `abs`→ExprAst::Abs, `exp`/`log`/`ln`→ExprAst::Call(NamedFn::…).
+        // abs(a - b) with a=3, b=10 → 7 (dimension-preserving magnitude).
+        let a = crate::compile_and_decide(
+            "observe a(3)\n\
+             observe b(10)\n\
+             let answer = latex \"$\\operatorname{abs}(a - b)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 7 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(a.ranked[0].posterior > 0.99, "{a:?}");
+        // exp(ln(x)) round-trips to x — exercises BOTH the exp and ln operator-name arms in
+        // one expression. x = 5 → 5.
+        let e = crate::compile_and_decide(
+            "observe x(5)\n\
+             let answer = latex \"$\\operatorname{exp}(\\operatorname{ln}(x))$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 5 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(e.ranked[0].posterior > 0.99, "{e:?}");
+        // log is base-10 (distinct from ln): log(1000) = 3.
+        let l = crate::compile_and_decide(
+            "observe x(1000)\n\
+             let answer = latex \"$\\operatorname{log}(x)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 3 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(l.ranked[0].posterior > 0.99, "{l:?}");
+    }
+
+    #[test]
     fn native_latex_symbolic_root_degree_is_rejected() {
         // `\sqrt[k]{x}` — a symbolic degree has no numeric value, so the reciprocal
         // exponent `1/k` cannot be formed. It must be rejected, not silently
