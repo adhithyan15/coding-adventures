@@ -60,6 +60,8 @@ pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION
     u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SCHEMA_VERSION:
     u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INDEX_SCHEMA_VERSION:
+    u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -128,6 +130,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-bindings-json",
     "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-registry-json",
     "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-index-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -6921,6 +6924,318 @@ impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortc
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndexEntry
+{
+    pub id: String,
+    pub search_index_id: String,
+    pub palette_item_id: String,
+    pub command_entry_id: String,
+    pub binding_id: String,
+    pub shortcut_id: String,
+    pub command_id: String,
+    pub registry_id: String,
+    pub handler_id: String,
+    pub command_group: String,
+    pub invocation_kind: String,
+    pub scope: String,
+    pub target_kind: String,
+    pub target: String,
+    pub menu_group_id: String,
+    pub queue_state: String,
+    pub label: String,
+    pub summary: String,
+    pub accelerator: String,
+    pub search_text: String,
+    pub normalized_search_text: String,
+    pub search_tokens: Vec<String>,
+    pub keywords: Vec<String>,
+    pub menu_item_ids: Vec<String>,
+    pub action_ids: Vec<String>,
+    pub dispatch_queue_item_count: usize,
+    pub badge_count: usize,
+    pub rank: usize,
+    pub position: usize,
+    pub item_count: usize,
+    pub selectable: bool,
+    pub selected: bool,
+    pub default_dispatch: bool,
+    pub active: bool,
+    pub attention: bool,
+    pub disabled: bool,
+    pub empty: bool,
+    pub enabled: bool,
+    pub primary: bool,
+    pub visible: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndex {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub search_index_id: String,
+    pub palette_id: String,
+    pub registry_id: String,
+    pub command_group: String,
+    pub active_menu_group_shortcut_command_palette_item_id: Option<String>,
+    pub active_menu_group_shortcut_command_search_index_entry_id: Option<String>,
+    pub attention_menu_group_shortcut_command_palette_item_id: Option<String>,
+    pub attention_menu_group_shortcut_command_search_index_entry_id: Option<String>,
+    pub default_menu_group_shortcut_command_palette_item_id: Option<String>,
+    pub default_menu_group_shortcut_command_search_index_entry_id: Option<String>,
+    pub primary_menu_group_shortcut_command_palette_item_id: Option<String>,
+    pub primary_menu_group_shortcut_command_search_index_entry_id: Option<String>,
+    pub command_palette_item_count: usize,
+    pub selectable_command_palette_item_count: usize,
+    pub disabled_command_palette_item_count: usize,
+    pub visible_command_palette_item_count: usize,
+    pub empty_command_palette_item_count: usize,
+    pub primary_command_palette_item_count: usize,
+    pub selected_command_palette_item_count: usize,
+    pub attention_command_palette_item_count: usize,
+    pub search_index_entry_count: usize,
+    pub search_token_count: usize,
+    pub selectable_search_index_entry_count: usize,
+    pub disabled_search_index_entry_count: usize,
+    pub visible_search_index_entry_count: usize,
+    pub empty_search_index_entry_count: usize,
+    pub primary_search_index_entry_count: usize,
+    pub selected_search_index_entry_count: usize,
+    pub attention_search_index_entry_count: usize,
+    pub search_index_entries:
+        Vec<BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndexEntry>,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndex {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_command_palette(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPalette::from_bootstrap_snapshot(
+                snapshot,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_command_palette(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPalette::from_shell_handoff(
+                handoff,
+            ),
+        )
+    }
+
+    pub fn from_command_palette(
+        palette: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPalette,
+    ) -> Self {
+        let search_index_id =
+            "dashboard.dispatch-queue.shortcut-command-palette-search-index".to_string();
+        let search_index_entries = palette
+            .command_palette_items
+            .iter()
+            .map(|item| {
+                let palette_item_id_suffix = item
+                    .id
+                    .strip_prefix(
+                        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-item.",
+                    )
+                    .unwrap_or(item.queue_state.as_str());
+                let search_tokens = command_palette_search_tokens(&item.search_text, &item.keywords);
+                let normalized_search_text = search_tokens.join(" ");
+                BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndexEntry {
+                    id: format!(
+                        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-index-entry.{palette_item_id_suffix}"
+                    ),
+                    search_index_id: search_index_id.clone(),
+                    palette_item_id: item.id.clone(),
+                    command_entry_id: item.command_entry_id.clone(),
+                    binding_id: item.binding_id.clone(),
+                    shortcut_id: item.shortcut_id.clone(),
+                    command_id: item.command_id.clone(),
+                    registry_id: item.registry_id.clone(),
+                    handler_id: item.handler_id.clone(),
+                    command_group: item.command_group.clone(),
+                    invocation_kind: item.invocation_kind.clone(),
+                    scope: item.scope.clone(),
+                    target_kind: item.target_kind.clone(),
+                    target: item.target.clone(),
+                    menu_group_id: item.menu_group_id.clone(),
+                    queue_state: item.queue_state.clone(),
+                    label: item.label.clone(),
+                    summary: item.summary.clone(),
+                    accelerator: item.accelerator.clone(),
+                    search_text: item.search_text.clone(),
+                    normalized_search_text,
+                    search_tokens,
+                    keywords: item.keywords.clone(),
+                    menu_item_ids: item.menu_item_ids.clone(),
+                    action_ids: item.action_ids.clone(),
+                    dispatch_queue_item_count: item.dispatch_queue_item_count,
+                    badge_count: item.badge_count,
+                    rank: item.rank,
+                    position: item.position,
+                    item_count: item.item_count,
+                    selectable: item.selectable,
+                    selected: item.selected,
+                    default_dispatch: item.default_dispatch,
+                    active: item.active,
+                    attention: item.attention,
+                    disabled: item.disabled,
+                    empty: item.empty,
+                    enabled: item.enabled,
+                    primary: item.primary,
+                    visible: item.visible,
+                    disabled_reason: item.disabled_reason.clone(),
+                }
+            })
+            .collect::<Vec<_>>();
+
+        let search_index_entry_id_for_palette_item = |palette_item_id: &Option<String>| {
+            palette_item_id.as_ref().and_then(|palette_item_id| {
+                search_index_entries
+                    .iter()
+                    .find(|entry| entry.palette_item_id == palette_item_id.as_str())
+                    .map(|entry| entry.id.clone())
+            })
+        };
+        let active_menu_group_shortcut_command_search_index_entry_id =
+            search_index_entry_id_for_palette_item(
+                &palette.active_menu_group_shortcut_command_palette_item_id,
+            );
+        let attention_menu_group_shortcut_command_search_index_entry_id =
+            search_index_entry_id_for_palette_item(
+                &palette.attention_menu_group_shortcut_command_palette_item_id,
+            );
+        let default_menu_group_shortcut_command_search_index_entry_id =
+            search_index_entry_id_for_palette_item(
+                &palette.default_menu_group_shortcut_command_palette_item_id,
+            );
+        let primary_menu_group_shortcut_command_search_index_entry_id =
+            search_index_entry_id_for_palette_item(
+                &palette.primary_menu_group_shortcut_command_palette_item_id,
+            );
+
+        let search_token_count = search_index_entries
+            .iter()
+            .map(|entry| entry.search_tokens.len())
+            .sum();
+        let selectable_search_index_entry_count = search_index_entries
+            .iter()
+            .filter(|entry| entry.selectable)
+            .count();
+        let disabled_search_index_entry_count = search_index_entries
+            .iter()
+            .filter(|entry| entry.disabled)
+            .count();
+        let visible_search_index_entry_count = search_index_entries
+            .iter()
+            .filter(|entry| entry.visible)
+            .count();
+        let empty_search_index_entry_count = search_index_entries
+            .iter()
+            .filter(|entry| entry.empty)
+            .count();
+        let primary_search_index_entry_count = search_index_entries
+            .iter()
+            .filter(|entry| entry.primary)
+            .count();
+        let selected_search_index_entry_count = search_index_entries
+            .iter()
+            .filter(|entry| entry.selected)
+            .count();
+        let attention_search_index_entry_count = search_index_entries
+            .iter()
+            .filter(|entry| entry.attention)
+            .count();
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INDEX_SCHEMA_VERSION,
+            package_name: palette.package_name.clone(),
+            source_fingerprint: palette.source_fingerprint.clone(),
+            title: palette.title.clone(),
+            startup_route: palette.startup_route.clone(),
+            ready: palette.ready,
+            severity: palette.severity.clone(),
+            attention_required: palette.attention_required,
+            search_index_id,
+            palette_id: palette.palette_id.clone(),
+            registry_id: palette.registry_id.clone(),
+            command_group: palette.command_group.clone(),
+            active_menu_group_shortcut_command_palette_item_id: palette
+                .active_menu_group_shortcut_command_palette_item_id
+                .clone(),
+            active_menu_group_shortcut_command_search_index_entry_id,
+            attention_menu_group_shortcut_command_palette_item_id: palette
+                .attention_menu_group_shortcut_command_palette_item_id
+                .clone(),
+            attention_menu_group_shortcut_command_search_index_entry_id,
+            default_menu_group_shortcut_command_palette_item_id: palette
+                .default_menu_group_shortcut_command_palette_item_id
+                .clone(),
+            default_menu_group_shortcut_command_search_index_entry_id,
+            primary_menu_group_shortcut_command_palette_item_id: palette
+                .primary_menu_group_shortcut_command_palette_item_id
+                .clone(),
+            primary_menu_group_shortcut_command_search_index_entry_id,
+            command_palette_item_count: palette.command_palette_item_count,
+            selectable_command_palette_item_count: palette.selectable_command_palette_item_count,
+            disabled_command_palette_item_count: palette.disabled_command_palette_item_count,
+            visible_command_palette_item_count: palette.visible_command_palette_item_count,
+            empty_command_palette_item_count: palette.empty_command_palette_item_count,
+            primary_command_palette_item_count: palette.primary_command_palette_item_count,
+            selected_command_palette_item_count: palette.selected_command_palette_item_count,
+            attention_command_palette_item_count: palette.attention_command_palette_item_count,
+            search_index_entry_count: search_index_entries.len(),
+            search_token_count,
+            selectable_search_index_entry_count,
+            disabled_search_index_entry_count,
+            visible_search_index_entry_count,
+            empty_search_index_entry_count,
+            primary_search_index_entry_count,
+            selected_search_index_entry_count,
+            attention_search_index_entry_count,
+            search_index_entries,
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_capability_id:
+                palette
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-index-json"
+                    .to_string(),
+            artifact_capability_count: palette.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_json_value(self)
+            .to_string()
+    }
+}
+
+fn command_palette_search_tokens(search_text: &str, keywords: &[String]) -> Vec<String> {
+    let mut tokens = Vec::new();
+    for source in std::iter::once(search_text).chain(keywords.iter().map(String::as_str)) {
+        for token in source.split(|character: char| !character.is_ascii_alphanumeric()) {
+            let normalized = token.to_ascii_lowercase();
+            if !normalized.is_empty() && !tokens.iter().any(|entry| entry == &normalized) {
+                tokens.push(normalized);
+            }
+        }
+    }
+    tokens
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BerkeleyAnalysisInventoryEntry {
     pub index: usize,
     pub directive: String,
@@ -8808,6 +9123,51 @@ impl BerkeleyAppDeck {
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self
             .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette(
+                persisted_state,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndex
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndex::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndex,
+        AnalysisExecutionError,
+    >{
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndex::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index(
+            persisted_state,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index(
                 persisted_state,
             )?
             .to_json())
@@ -12840,6 +13200,210 @@ fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shor
     insert_json!("primary", item.primary);
     insert_json!("visible", item.visible);
     insert_json!("disabledReason", &item.disabled_reason);
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_json_value(
+    search_index: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndex,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", search_index.schema_version);
+    insert_json!("packageName", &search_index.package_name);
+    insert_json!("sourceFingerprint", &search_index.source_fingerprint);
+    insert_json!("title", &search_index.title);
+    insert_json!("startupRoute", &search_index.startup_route);
+    insert_json!("ready", search_index.ready);
+    insert_json!("severity", &search_index.severity);
+    insert_json!("attentionRequired", search_index.attention_required);
+    insert_json!("searchIndexId", &search_index.search_index_id);
+    insert_json!("paletteId", &search_index.palette_id);
+    insert_json!("registryId", &search_index.registry_id);
+    insert_json!("commandGroup", &search_index.command_group);
+    insert_json!(
+        "activeMenuGroupShortcutCommandPaletteItemId",
+        &search_index.active_menu_group_shortcut_command_palette_item_id
+    );
+    insert_json!(
+        "activeMenuGroupShortcutCommandSearchIndexEntryId",
+        &search_index.active_menu_group_shortcut_command_search_index_entry_id
+    );
+    insert_json!(
+        "attentionMenuGroupShortcutCommandPaletteItemId",
+        &search_index.attention_menu_group_shortcut_command_palette_item_id
+    );
+    insert_json!(
+        "attentionMenuGroupShortcutCommandSearchIndexEntryId",
+        &search_index.attention_menu_group_shortcut_command_search_index_entry_id
+    );
+    insert_json!(
+        "defaultMenuGroupShortcutCommandPaletteItemId",
+        &search_index.default_menu_group_shortcut_command_palette_item_id
+    );
+    insert_json!(
+        "defaultMenuGroupShortcutCommandSearchIndexEntryId",
+        &search_index.default_menu_group_shortcut_command_search_index_entry_id
+    );
+    insert_json!(
+        "primaryMenuGroupShortcutCommandPaletteItemId",
+        &search_index.primary_menu_group_shortcut_command_palette_item_id
+    );
+    insert_json!(
+        "primaryMenuGroupShortcutCommandSearchIndexEntryId",
+        &search_index.primary_menu_group_shortcut_command_search_index_entry_id
+    );
+    insert_json!(
+        "commandPaletteItemCount",
+        search_index.command_palette_item_count
+    );
+    insert_json!(
+        "selectableCommandPaletteItemCount",
+        search_index.selectable_command_palette_item_count
+    );
+    insert_json!(
+        "disabledCommandPaletteItemCount",
+        search_index.disabled_command_palette_item_count
+    );
+    insert_json!(
+        "visibleCommandPaletteItemCount",
+        search_index.visible_command_palette_item_count
+    );
+    insert_json!(
+        "emptyCommandPaletteItemCount",
+        search_index.empty_command_palette_item_count
+    );
+    insert_json!(
+        "primaryCommandPaletteItemCount",
+        search_index.primary_command_palette_item_count
+    );
+    insert_json!(
+        "selectedCommandPaletteItemCount",
+        search_index.selected_command_palette_item_count
+    );
+    insert_json!(
+        "attentionCommandPaletteItemCount",
+        search_index.attention_command_palette_item_count
+    );
+    insert_json!(
+        "searchIndexEntryCount",
+        search_index.search_index_entry_count
+    );
+    insert_json!("searchTokenCount", search_index.search_token_count);
+    insert_json!(
+        "selectableSearchIndexEntryCount",
+        search_index.selectable_search_index_entry_count
+    );
+    insert_json!(
+        "disabledSearchIndexEntryCount",
+        search_index.disabled_search_index_entry_count
+    );
+    insert_json!(
+        "visibleSearchIndexEntryCount",
+        search_index.visible_search_index_entry_count
+    );
+    insert_json!(
+        "emptySearchIndexEntryCount",
+        search_index.empty_search_index_entry_count
+    );
+    insert_json!(
+        "primarySearchIndexEntryCount",
+        search_index.primary_search_index_entry_count
+    );
+    insert_json!(
+        "selectedSearchIndexEntryCount",
+        search_index.selected_search_index_entry_count
+    );
+    insert_json!(
+        "attentionSearchIndexEntryCount",
+        search_index.attention_search_index_entry_count
+    );
+    value.insert(
+        "searchIndexEntries".to_string(),
+        serde_json::Value::Array(
+            search_index
+                .search_index_entries
+                .iter()
+                .map(
+                    app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_entry_json_value,
+                )
+                .collect(),
+        ),
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteCapabilityId",
+        &search_index
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndexCapabilityId",
+        &search_index
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_capability_id
+    );
+    insert_json!(
+        "artifactCapabilityCount",
+        search_index.artifact_capability_count
+    );
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_entry_json_value(
+    entry: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndexEntry,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("id", &entry.id);
+    insert_json!("searchIndexId", &entry.search_index_id);
+    insert_json!("paletteItemId", &entry.palette_item_id);
+    insert_json!("commandEntryId", &entry.command_entry_id);
+    insert_json!("bindingId", &entry.binding_id);
+    insert_json!("shortcutId", &entry.shortcut_id);
+    insert_json!("commandId", &entry.command_id);
+    insert_json!("registryId", &entry.registry_id);
+    insert_json!("handlerId", &entry.handler_id);
+    insert_json!("commandGroup", &entry.command_group);
+    insert_json!("invocationKind", &entry.invocation_kind);
+    insert_json!("scope", &entry.scope);
+    insert_json!("targetKind", &entry.target_kind);
+    insert_json!("target", &entry.target);
+    insert_json!("menuGroupId", &entry.menu_group_id);
+    insert_json!("queueState", &entry.queue_state);
+    insert_json!("label", &entry.label);
+    insert_json!("summary", &entry.summary);
+    insert_json!("accelerator", &entry.accelerator);
+    insert_json!("searchText", &entry.search_text);
+    insert_json!("normalizedSearchText", &entry.normalized_search_text);
+    insert_json!("searchTokens", &entry.search_tokens);
+    insert_json!("keywords", &entry.keywords);
+    insert_json!("menuItemIds", &entry.menu_item_ids);
+    insert_json!("actionIds", &entry.action_ids);
+    insert_json!("dispatchQueueItemCount", entry.dispatch_queue_item_count);
+    insert_json!("badgeCount", entry.badge_count);
+    insert_json!("rank", entry.rank);
+    insert_json!("position", entry.position);
+    insert_json!("itemCount", entry.item_count);
+    insert_json!("selectable", entry.selectable);
+    insert_json!("selected", entry.selected);
+    insert_json!("defaultDispatch", entry.default_dispatch);
+    insert_json!("active", entry.active);
+    insert_json!("attention", entry.attention);
+    insert_json!("disabled", entry.disabled);
+    insert_json!("empty", entry.empty);
+    insert_json!("enabled", entry.enabled);
+    insert_json!("primary", entry.primary);
+    insert_json!("visible", entry.visible);
+    insert_json!("disabledReason", &entry.disabled_reason);
 
     serde_json::Value::Object(value)
 }
