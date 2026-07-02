@@ -205,6 +205,13 @@ pub enum ComputeOp {
     /// carried in a [`ComputeExpr::Unary`], lowered from a LaTeX
     /// `\left\lceil x\right\rceil`.
     Ceil,
+    /// Round to the nearest integer, `⌊x⌉`, with **ties away from zero**
+    /// (matching Rust's `f64::round`: `⌊2.5⌉ = 3`, `⌊−2.5⌉ = −3`). Like
+    /// [`ComputeOp::Floor`]/[`ComputeOp::Ceil`] it is unary and
+    /// dimension-preserving (`⌊3.6 mmol⌉ = 4 mmol`), carried in a
+    /// [`ComputeExpr::Unary`], and lowered from the standard nearest-integer
+    /// LaTeX fence `\left\lfloor x\right\rceil` (floor-left, ceil-right).
+    Round,
     Sum,
     Count,
     Min,
@@ -224,6 +231,7 @@ impl ComputeOp {
             ComputeOp::Abs => "abs",
             ComputeOp::Floor => "floor",
             ComputeOp::Ceil => "ceil",
+            ComputeOp::Round => "round",
             ComputeOp::Sum => "sum",
             ComputeOp::Count => "count",
             ComputeOp::Min => "min",
@@ -246,7 +254,7 @@ pub enum ComputeExpr {
     Lit(f64),
     /// A binary operation: `Add`/`Sub`/`Mul`/`Div`/`Pow` only.
     Bin(ComputeOp, Box<ComputeExpr>, Box<ComputeExpr>),
-    /// A unary operation: `Abs`/`Floor`/`Ceil`. Kept distinct from
+    /// A unary operation: `Abs`/`Floor`/`Ceil`/`Round`. Kept distinct from
     /// [`ComputeExpr::Bin`] so the arity is honest (a unary op has one operand,
     /// not two) — it lowers to a [`DerivationNode::Op`] with a single-element
     /// `operands` vec.
@@ -620,8 +628,8 @@ fn eval_unary(
 ) -> Result<(DerivationNode, Dimension, Option<ExactRational>), ComputeError> {
     let (operand, dim, exact) = eval(a, kb, depth + 1)?;
     // Every unary op here is **dimension-preserving**: the magnitude may change
-    // (sign flip for `Abs`, snap to an integer for `Floor`/`Ceil`) but the unit
-    // does not (`|−3 dollars| = 3 dollars`, `⌊3.7 mmol⌋ = 3 mmol`), so — unlike
+    // (sign flip for `Abs`, snap to an integer for `Floor`/`Ceil`/`Round`) but the
+    // unit does not (`|−3 dollars| = 3 dollars`, `⌊3.7 mmol⌋ = 3 mmol`), so — unlike
     // `Pow`, which recomputes the dimension — the operand's dimension flows
     // straight through.
     let value = operand.value();
@@ -629,6 +637,7 @@ fn eval_unary(
         ComputeOp::Abs => value.abs(),
         ComputeOp::Floor => value.floor(),
         ComputeOp::Ceil => value.ceil(),
+        ComputeOp::Round => value.round(),
         _ => {
             return Err(ComputeError::MalformedExpr {
                 detail: "non-unary operator in unary position",
@@ -636,8 +645,8 @@ fn eval_unary(
         }
     };
     // None of these can introduce a non-finite value from a finite operand
-    // (|±∞|/⌊±∞⌋/⌈±∞⌉ were already non-finite; NaN stays NaN), and the operand is
-    // finite-checked at its own producing op. Guard anyway — cheap
+    // (|±∞|/⌊±∞⌋/⌈±∞⌉/⌊±∞⌉ were already non-finite; NaN stays NaN), and the operand
+    // is finite-checked at its own producing op. Guard anyway — cheap
     // defense-in-depth, same contract as the binary ops.
     if !result.is_finite() {
         return Err(ComputeError::NonFinite { op });
@@ -645,7 +654,11 @@ fn eval_unary(
     // The exact sidecar stays exact. `ExactRational` keeps `den > 0`, so:
     //   • |num/den| = |num|/den (abs of the numerator);
     //   • ⌊num/den⌋ = num.div_euclid(den) (Euclidean division floors for den > 0);
-    //   • ⌈num/den⌉ = that quotient plus one when the division leaves a remainder.
+    //   • ⌈num/den⌉ = that quotient plus one when the division leaves a remainder;
+    //   • ⌊num/den⌉ = round to nearest with TIES AWAY FROM ZERO (matching
+    //     `f64::round`): truncate toward zero, then bump one step outward when the
+    //     fractional part reaches a half (2·|rem| ≥ den). The `den − arem` compare
+    //     avoids the overflow a bare `2·arem` could hit; `arem = |rem| < den`.
     // Each result is an integer, carried as `q/1`.
     let exact = exact.and_then(|r| match op {
         ComputeOp::Abs => r.num.checked_abs().and_then(|n| ExactRational::new(n, r.den)),
@@ -654,6 +667,18 @@ fn eval_unary(
             let q = r.num.div_euclid(r.den);
             let q = if r.num.rem_euclid(r.den) != 0 { q.checked_add(1)? } else { q };
             ExactRational::new(q, 1)
+        }
+        ComputeOp::Round => {
+            let q = r.num / r.den; // truncate toward zero (den > 0 ⇒ no overflow)
+            let rem = r.num % r.den; // in (−den, den), sign of the numerator
+            let arem = if rem >= 0 { rem } else { -rem }; // |rem| < den ⇒ no overflow
+            let bump = if arem >= r.den - arem {
+                // fractional part ≥ 1/2 → round away from zero (ties away from zero)
+                if r.num >= 0 { 1 } else { -1 }
+            } else {
+                0
+            };
+            ExactRational::new(q.checked_add(bump)?, 1)
         }
         _ => None,
     });
@@ -1007,6 +1032,61 @@ mod tests {
         .unwrap();
         assert_eq!(d.value, 3.0);
         assert_eq!(d.exact, ExactRational::new(3, 1));
+    }
+
+    #[test]
+    fn round_ties_go_away_from_zero_and_stay_exact() {
+        // ⌊5/2⌉ = 3, not 2 — a half rounds AWAY from zero (matching f64::round),
+        // and the exact sidecar snaps to the integer 3/1.
+        let d = compute(
+            "rd",
+            &ComputeExpr::Unary(
+                ComputeOp::Round,
+                Box::new(bin(ComputeOp::Div, ComputeExpr::Lit(5.0), ComputeExpr::Lit(2.0))),
+            ),
+            &kb_with(vec![]),
+        )
+        .unwrap();
+        assert_eq!(d.value, 3.0);
+        assert_eq!(d.dim, Dimension::Scalar);
+        assert_eq!(d.exact, ExactRational::new(3, 1));
+    }
+
+    #[test]
+    fn round_of_a_negative_half_goes_away_from_zero_too() {
+        // ⌊−5/2⌉ = −3 (NOT −2): ties away from zero is symmetric, so a negative
+        // half rounds down. Matches f64::round((-2.5)) == -3.0.
+        let d = compute(
+            "rd",
+            &ComputeExpr::Unary(
+                ComputeOp::Round,
+                Box::new(bin(ComputeOp::Div, ComputeExpr::Lit(-5.0), ComputeExpr::Lit(2.0))),
+            ),
+            &kb_with(vec![]),
+        )
+        .unwrap();
+        assert_eq!(d.value, -3.0);
+        assert_eq!(d.exact, ExactRational::new(-3, 1));
+    }
+
+    #[test]
+    fn round_below_a_half_stays_down_and_preserves_dimension() {
+        // ⌊7/3⌉ = 2 (2.33… rounds down, fractional part < ½). Round is
+        // dimension-preserving: ⌊dollars⌉ is still dollars, NOT collapsed to Scalar.
+        let kb = kb_with(vec![money("m", 7, "usd")]);
+        let d = compute(
+            "rd",
+            &ComputeExpr::Unary(
+                ComputeOp::Round,
+                Box::new(bin(ComputeOp::Div, refexpr("m"), ComputeExpr::Lit(3.0))),
+            ),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(d.value, 2.0);
+        assert_eq!(d.exact, ExactRational::new(2, 1));
+        // Same dimension as the operand `m` (money/usd).
+        assert_eq!(d.dim, kb.observed_dimensioned("m").unwrap().0.dim);
     }
 
     #[test]

@@ -117,6 +117,11 @@ pub enum ExprAst {
     /// `ComputeOp::Ceil` (dimension-preserving). Produced by the `latex "…"`
     /// adapter from a `\left\lceil…\right\rceil` fence.
     Ceil(Box<ExprAst>),
+    /// A round-to-nearest, `⌊x⌉` (ties away from zero). Lowers to the native
+    /// `ComputeOp::Round` (dimension-preserving). Produced by the `latex "…"`
+    /// adapter from the nearest-integer fence `\left\lfloor…\right\rceil`
+    /// (floor-left, ceil-right).
+    Round(Box<ExprAst>),
     /// An aggregation over every observation of a slot.
     Agg(AggOp, String),
 }
