@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.6.0 — `puts` builtin (Ruby semantics)
+
+### Added
+
+- `puts` now maps **directly** to the variadic runtime helper `__Sir.puts(...)`
+  (like `print` → `__Sir.print`) instead of routing through the generic
+  `__Sir.callBuiltin("puts", […])` dispatch. This is possible now that
+  `@coding-adventures/sir-runtime-core` implements Ruby `puts` semantics
+  (string+newline, no-arg → one newline, arrays flattened element-per-line,
+  trailing-newline suppression).
+- Execution proof `run_with_node.rs::end_to_end_ruby_puts_executes_ts` lowers
+  real Ruby `puts "hi"` through `ruby-to-semantic-ir`, compiles to TypeScript,
+  and runs the result under `node`, asserting stdout is exactly `hi\n`.
+
 ## Unreleased
 
 ### Tests (O2 — Ruby OOP end-to-end execution proof)

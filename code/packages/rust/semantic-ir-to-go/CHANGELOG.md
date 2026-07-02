@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.10.0
+
+### Added — `puts` builtin (Ruby semantics)
+
+- The Go backend now emits and executes Ruby's `puts`, the most common output
+  method. `puts` maps to a new variadic runtime helper `_sir_puts([]Value{…})`
+  (routed both by the emit helper table and the `_sir_call_builtin_by_name`
+  dispatch), reusing `_sir_format` for element rendering.
+- Ruby semantics implemented exactly: no-arg → one newline; `puts x` →
+  `x.to_s` + newline (no double newline when the text already ends in `"\n"`);
+  `puts a, b` → one line per arg; `puts []` → a single newline; a `*Seq` is
+  flattened recursively, one **element** per line; `puts nil` → a blank line.
+- Execution proof `compile_and_run_puts.rs` runs `puts "hello"; puts;
+  puts [1,2,3]` under `go run` and asserts stdout is exactly
+  `hello\n\n1\n2\n3\n` (the Ruby reference output).
+
 ## 0.9.0
 
 ### Added

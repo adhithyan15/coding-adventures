@@ -2,6 +2,24 @@
 
 All notable changes to `semantic-ir-to-javascript` are documented here.
 
+## 0.8.0 — `puts` builtin (Ruby semantics)
+
+### Added
+
+- The JavaScript backend now emits and executes Ruby's `puts`, the most common
+  output method. `puts` maps to a new variadic runtime helper `__Sir.puts(...)`
+  (routed by the emit helper table, with a matching `builtins["puts"]` entry),
+  reusing `format` for element rendering.
+- Ruby semantics implemented exactly: no-arg → one newline; `puts x` →
+  `x` + newline (no double newline when the text already ends in `"\n"`);
+  `puts a, b` → one line per arg; `puts []` → a single newline; a native array
+  is flattened recursively, one **element** per line; `puts null` → a blank
+  line. Writes via `process.stdout.write` (not `console.log`) so the
+  trailing-newline suppression is honoured.
+- Execution proof `run_with_node.rs::puts_matches_ruby_output` runs
+  `puts "hello"; puts; puts [1,2,3]` under `node` and asserts stdout is exactly
+  `hello\n\n1\n2\n3\n` (the Ruby reference output).
+
 ## Unreleased
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),

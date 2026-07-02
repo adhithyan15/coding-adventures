@@ -1323,6 +1323,8 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "number?" => ("__sir::is_number", false),
         "symbol?" => ("__sir::is_symbol", false),
         "print" => ("__sir::print", false),
+        // `puts` is variadic (`puts a, b`) → takes the whole `Vec<Value>`.
+        "puts" => ("__sir::puts", true),
         "global_set" => ("__sir::global_set_call", false),
         "global_get" => ("__sir::global_get_call", false),
         // ── collection-method dispatch (C6) ───────────────────────────
@@ -3329,6 +3331,29 @@ mod tests {
 
     fn strlit(v: &str) -> Expr {
         Expr::StrLit { value: v.into(), span: s() }
+    }
+
+    /// `puts` routes to the **variadic** `__sir::puts(vec![…])` helper, so
+    /// `puts a, b` (multiple args) reaches the runtime intact — unlike the
+    /// fixed-arity `__sir::print`.
+    #[test]
+    fn emit_puts_routes_to_variadic_helper() {
+        // Single arg.
+        let mut out = String::new();
+        emit_expr(&mut out, &builtin("puts", vec![strlit("hi")]), 0);
+        assert!(out.starts_with("__sir::puts(vec!["), "got: {out}");
+        assert!(out.contains(r#""hi""#), "got: {out}");
+
+        // Multiple args, both forwarded.
+        let mut out2 = String::new();
+        emit_expr(&mut out2, &builtin("puts", vec![strlit("a"), strlit("b")]), 0);
+        assert!(out2.starts_with("__sir::puts(vec!["), "got: {out2}");
+        assert!(out2.contains(r#""a""#) && out2.contains(r#""b""#), "got: {out2}");
+
+        // No args — a bare `puts`.
+        let mut out0 = String::new();
+        emit_expr(&mut out0, &builtin("puts", vec![]), 0);
+        assert_eq!(out0, "__sir::puts(vec![])");
     }
 
     #[test]

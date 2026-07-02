@@ -107,6 +107,68 @@ export function print(v: Val): null {
   return null;
 }
 
+/**
+ * Emit a single `puts` argument, honouring Ruby's per-value rules.
+ *
+ * Ruby `puts` is deceptively subtle. For one argument:
+ * - **Array** → recurse over the *elements*, one per line, flattening
+ *   nesting (`puts [1, [2, 3]]` → `1\n2\n3\n`). An **empty** array writes
+ *   nothing here (the top-level `puts []` still emits one newline — see
+ *   {@link puts}).
+ * - **nil** → a blank line (`nil.to_s` is `""`, then the newline).
+ * - **anything else** → its display string then a newline, *unless* the
+ *   string already ends in `"\n"`, in which case Ruby does not add a second
+ *   (`puts "x\n"` → `x\n`, not `x\n\n`).
+ *
+ * We write via `process.stdout.write` rather than `console.log` because
+ * `console.log` unconditionally appends its own newline, which would defeat
+ * the trailing-newline suppression rule.
+ */
+function putsOne(v: Val): void {
+  if (Array.isArray(v)) {
+    for (const item of v) {
+      putsOne(item);
+    }
+    return;
+  }
+  if (v === null) {
+    process.stdout.write("\n");
+    return;
+  }
+  const text = toDisplay(v);
+  // Suppress the added newline when the rendered text already ends in one,
+  // so `puts "x\n"` and `puts "x"` produce identical output.
+  process.stdout.write(text.endsWith("\n") ? text : text + "\n");
+}
+
+/**
+ * Ruby `puts`: write each argument on its own line (see {@link putsOne}).
+ *
+ * - `puts()` (no args) → a single newline.
+ * - `puts(x)` → `x` on its own line (arrays flattened element-per-line; a
+ *   value already ending in `"\n"` is not double-spaced; `nil` is a blank
+ *   line).
+ * - `puts(a, b)` → each argument handled independently, in order.
+ * - `puts([])` → a single newline: Ruby prints a blank line when an argument
+ *   flattens to nothing, which is why the no-arg and empty-array cases
+ *   converge on one newline.
+ */
+export function puts(...args: Val[]): null {
+  if (args.length === 0) {
+    process.stdout.write("\n");
+    return null;
+  }
+  for (const a of args) {
+    if (Array.isArray(a) && a.length === 0) {
+      // Empty array as an argument still writes one newline.
+      process.stdout.write("\n");
+    } else {
+      putsOne(a);
+    }
+  }
+  return null;
+}
+
 // --- Builtin dispatch ------------------------------------------------------
 
 const builtins: Record<string, (...args: Val[]) => Val> = {
@@ -125,6 +187,7 @@ const builtins: Record<string, (...args: Val[]) => Val> = {
   "number?": (v) => isNumber(v!),
   "symbol?": (v) => isSymbol(v!),
   print: (v) => print(v!),
+  puts: (...args) => puts(...args),
 };
 
 /** Invoke a builtin by SIR name with a list of arguments. */

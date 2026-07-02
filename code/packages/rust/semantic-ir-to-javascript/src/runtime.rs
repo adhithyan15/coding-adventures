@@ -137,6 +137,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "symbol?": (x) => x instanceof Sym,
     "len": (x) => x.length,
     "print": (x) => { console.log(format(x)); return null; },
+    "puts": (...args) => puts(...args),
     "range": (start, stop, step) => {
       const out = [];
       const s = step === undefined || step === null ? 1 : step;
@@ -161,6 +162,40 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // `print` is promoted to a top-level member so emitted code can write
   // the readable `__Sir.print(x)` rather than `__Sir.builtins["print"](x)`.
   function print(x) { console.log(format(x)); return null; }
+
+  // ── puts (Ruby semantics) ──────────────────────────────────────
+  //
+  // Ruby's `puts` is THE common output method and is deceptively subtle:
+  //
+  //   - `puts`            → one newline.
+  //   - `puts x`          → `x.to_s` then a newline, UNLESS `x.to_s` already
+  //                         ends in "\n" (then no second newline is added):
+  //                         `puts "x\n"` prints `x\n`, not `x\n\n`.
+  //   - `puts a, b`       → each argument on its own line, in order.
+  //   - `puts nil`        → a blank line (`nil.to_s` is "", then the newline).
+  //   - `puts []`         → a single newline (an argument that flattens to
+  //                         nothing still prints a blank line).
+  //   - `puts [1,[2,3]]`  → each ELEMENT on its own line, arrays flattened
+  //                         recursively: `1\n2\n3\n`.
+  //
+  // We write via `process.stdout.write` rather than `console.log` because
+  // `console.log` unconditionally appends a newline, defeating the
+  // trailing-newline-suppression rule.  A sequence is a native JS array.
+  function putsOne(v) {
+    if (Array.isArray(v)) { for (const item of v) { putsOne(item); } return; }
+    if (v === null || v === undefined) { process.stdout.write("\n"); return; }
+    const text = format(v);
+    process.stdout.write(text.endsWith("\n") ? text : text + "\n");
+  }
+  function puts(...args) {
+    if (args.length === 0) { process.stdout.write("\n"); return null; }
+    for (const a of args) {
+      // `puts []` (empty array arg) still writes one blank line.
+      if (Array.isArray(a) && a.length === 0) { process.stdout.write("\n"); }
+      else { putsOne(a); }
+    }
+    return null;
+  }
 
   // ── method dispatch (`__method__`) ─────────────────────────────
   // `recv.meth(args…)` reaches the backend as
@@ -559,7 +594,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
 
   return {
     Sym, Pair, Closure,
-    intern, applyClosure, truthy, format, print,
+    intern, applyClosure, truthy, format, print, puts,
     builtins, builtinClosure, callBuiltin, callMethod,
     SirError, raiseError, rescueMatches, registerAncestry,
     // OOP (O3): instantiation, method definition + dispatch, super,

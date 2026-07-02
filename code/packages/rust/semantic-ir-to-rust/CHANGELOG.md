@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.10.0 — `puts` builtin (Ruby semantics)
+
+### Added
+
+- The Rust backend now emits and executes Ruby's `puts`, the most common
+  output method. `puts` maps to a new **variadic** runtime helper
+  `__sir::puts(vec![…])` (routed both by the emit helper table and
+  `call_builtin_by_name`), reusing `__sir::format` for element rendering.
+- Ruby semantics implemented exactly: no-arg → one newline; `puts x` →
+  `x.to_s` + newline (no double newline when the text already ends in `"\n"`);
+  `puts a, b` → one line per arg; `puts []` → a single newline; a
+  `Value::Seq` is flattened recursively, one **element** per line; `puts nil`
+  → a blank line.
+- Execution proof `compile_and_run_puts.rs` compiles `puts "hello"; puts;
+  puts [1,2,3]` with `rustc`, runs it, and asserts stdout is exactly
+  `hello\n\n1\n2\n3\n` (the Ruby reference output).
+
 ## 0.9.0 — user-defined class OOP runtime + emit (O5)
 
 Makes the Rust backend **accept and execute** real user-defined-class OOP

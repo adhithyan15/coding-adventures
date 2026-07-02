@@ -2,6 +2,27 @@
 
 All notable changes to `@coding-adventures/sir-runtime-core` are documented here.
 
+## [0.1.6] - 2026-07-01
+
+### Added (`puts` — Ruby's most common output method)
+
+- New `puts(...args)` implementing Ruby `puts` semantics, and a `"puts"` entry
+  in the builtin dispatch table (so backends that route builtins by name reach
+  it). Exported from the package root.
+- Semantics, matching Ruby exactly:
+  - `puts()` (no args) → a single newline.
+  - `puts(x)` → `x` + newline, **unless** the rendered text already ends in
+    `"\n"` (then no second newline: `puts("x\n")` writes `x\n`, not `x\n\n`).
+  - `puts(a, b)` → each argument on its own line, in order.
+  - `puts([])` → a single newline (an argument that flattens to nothing still
+    writes a blank line).
+  - `puts([1, [2, 3]])` → each **element** on its own line, arrays flattened
+    recursively (`1\n2\n3\n`).
+  - `puts(null)` → a blank line (not the display form `"nil"`).
+- Writes via `process.stdout.write` (not `console.log`) so the
+  trailing-newline suppression rule can be honoured. Reuses `toDisplay` for
+  element rendering.
+
 ## [0.1.5] - 2026-06-21
 
 ### Added (Q10f — call-position `**h` merge helper)

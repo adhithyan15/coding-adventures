@@ -333,6 +333,72 @@ pub const RUNTIME: &str = r##"mod __sir {
         Value::Nil
     }
 
+    // ── puts (Ruby semantics) ──────────────────────────────────────
+    //
+    // Ruby's `puts` is THE common output method and is deceptively subtle:
+    //
+    //   - `puts`            → one newline.
+    //   - `puts x`          → `x.to_s` then a newline, UNLESS `x.to_s`
+    //                         already ends in "\n" (no second newline):
+    //                         `puts "x\n"` prints `x\n`, not `x\n\n`.
+    //   - `puts a, b`       → each argument on its own line, in order.
+    //   - `puts nil`        → a blank line (`nil.to_s` is "", then newline).
+    //   - `puts []`         → a single newline (an argument flattening to
+    //                         nothing still prints a blank line).
+    //   - `puts [1,[2,3]]`  → each ELEMENT on its own line, arrays flattened
+    //                         recursively: `1\n2\n3\n`.
+    //
+    // `puts` is variadic, so it takes the whole `Vec<Value>` (unlike the
+    // fixed-arity `print`).  We use `print!` (no trailing newline) so the
+    // trailing-newline-suppression rule can be honoured.
+    pub fn puts(args: Vec<Value>) -> Value {
+        if args.is_empty() {
+            // No arguments: exactly one newline.
+            print!("\n");
+            return Value::Nil;
+        }
+        for a in &args {
+            // `puts []` (empty array arg) still writes one blank line — Ruby
+            // prints a line when an argument flattens to nothing.  A
+            // recursive flatten of an empty seq writes nothing, so detect it.
+            if let Value::Seq(items) = a {
+                if items.borrow().is_empty() {
+                    print!("\n");
+                    continue;
+                }
+            }
+            puts_one(a);
+        }
+        Value::Nil
+    }
+
+    // Emit a single `puts` argument.  Arrays recurse (element-per-line,
+    // nested arrays flattened); everything else renders via `format` then a
+    // newline — suppressed when the text already ends in one.  `nil` is a
+    // blank line (`format(nil)` is "nil" for `print`, but `puts nil` is a
+    // blank line, so nil is special-cased).
+    fn puts_one(v: &Value) {
+        if let Value::Seq(items) = v {
+            // Clone the handle's items to avoid holding the borrow across the
+            // recursive call (a nested seq re-borrows the same `RefCell`).
+            let snapshot: Vec<Value> = items.borrow().clone();
+            for item in &snapshot {
+                puts_one(item);
+            }
+            return;
+        }
+        if matches!(v, Value::Nil) {
+            print!("\n");
+            return;
+        }
+        let text = format(v);
+        if text.ends_with('\n') {
+            print!("{}", text);
+        } else {
+            println!("{}", text);
+        }
+    }
+
     // ── format ────────────────────────────────────────────────────
     //
     // Cycle safety.  `Value::Seq`/`Value::Map` are *shared, mutable*
@@ -831,6 +897,7 @@ pub const RUNTIME: &str = r##"mod __sir {
             "number?" => is_number(args.into_iter().next().unwrap_or(Value::Nil)),
             "symbol?" => is_symbol(args.into_iter().next().unwrap_or(Value::Nil)),
             "print" => print(args.into_iter().next().unwrap_or(Value::Nil)),
+            "puts" => puts(args),
             "global_set" => {
                 let mut it = args.into_iter();
                 let key = it.next().unwrap_or(Value::Nil);
@@ -1868,7 +1935,7 @@ mod tests {
         for op in &[
             "plus", "minus", "times", "divide", "eq", "lt", "gt",
             "cons", "car", "cdr", "is_null", "is_pair", "is_number",
-            "is_symbol", "print", "global_set", "global_get",
+            "is_symbol", "print", "puts", "global_set", "global_get",
             "apply_closure", "intern", "truthy", "format",
             "call_builtin_by_name", "builtin_closure",
         ] {

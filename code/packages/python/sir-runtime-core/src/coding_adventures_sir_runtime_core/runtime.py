@@ -195,6 +195,87 @@ def sir_print(v: Any) -> None:
     return None
 
 
+def _puts_one(v: Any) -> None:
+    """Emit a single ``puts`` argument, honouring Ruby's per-value rules.
+
+    Ruby ``puts`` is deceptively subtle.  For one argument it behaves as:
+
+    - **Array** → recurse over the *elements*, one per line.  Nesting is
+      flattened: ``puts [1, [2, 3]]`` prints ``1\\n2\\n3\\n``.  An **empty**
+      array prints nothing here (the caller's top-level ``puts []`` still
+      emits a single newline — see :func:`sir_puts` — because ``puts`` with
+      an empty argument list of its own writes one newline).
+    - **nil** → a blank line (``nil.to_s`` is ``""``, then the newline).
+    - **anything else** → its display string, then a newline — *unless* the
+      string already ends in ``"\\n"``, in which case Ruby does **not** add a
+      second newline (``puts "x\\n"`` prints ``x\\n``, not ``x\\n\\n``).
+
+    Truth table (single arg → stdout):
+
+    ============  ================
+    argument      bytes written
+    ============  ================
+    ``"x"``       ``x\\n``
+    ``"x\\n"``     ``x\\n``
+    ``nil``       ``\\n``
+    ``[]``        (nothing)
+    ``[1, 2]``    ``1\\n2\\n``
+    ``[1, [2]]``  ``1\\n2\\n``
+    ============  ================
+    """
+    # A sequence is a Python ``list`` in the runtime-core value model.
+    if isinstance(v, list):
+        for item in v:
+            _puts_one(item)
+        return None
+    text = values.to_display(v)
+    # Ruby suppresses the added newline only when the rendered text already
+    # ends in one — so ``puts "x\n"`` and ``puts "x"`` produce identical
+    # output.  ``to_display(nil)`` is ``"nil"`` for ``print`` semantics, but
+    # ``puts nil`` must be a *blank* line, so nil is special-cased.
+    if v is None:
+        print()
+        return None
+    if text.endswith("\n"):
+        # Already newline-terminated: write verbatim, no extra newline.
+        print(text, end="")
+    else:
+        print(text)
+    return None
+
+
+def sir_puts(*args: Any) -> None:
+    """Ruby ``puts``: write each argument on its own line (see :func:`_puts_one`).
+
+    Ruby's ``puts`` is variadic and array-flattening:
+
+    - ``puts`` (no args) → a single newline.
+    - ``puts x`` → ``x`` on its own line (arrays flattened element-per-line;
+      a value already ending in ``"\\n"`` is not double-spaced; ``nil`` is a
+      blank line).
+    - ``puts a, b`` → each argument handled independently, in order.
+    - ``puts []`` → a single newline (an empty argument *value* still counts
+      as "print a line").
+
+    The empty-array top-level case is why the no-argument-list and the
+    ``[]``-argument cases converge on one newline: Ruby treats ``puts`` with
+    nothing *to* print as "print an empty line".
+    """
+    if not args:
+        # `puts` with no arguments writes exactly one newline.
+        print()
+        return None
+    for a in args:
+        # `puts []` (an empty array as the sole argument) must still emit one
+        # newline — Ruby prints a blank line when an argument flattens to
+        # nothing.  `_puts_one([])` writes nothing, so detect that here.
+        if isinstance(a, list) and len(a) == 0:
+            print()
+        else:
+            _puts_one(a)
+    return None
+
+
 # --- Builtin dispatch ------------------------------------------------------
 
 _builtins: dict[str, Callable[..., Any]] = {
@@ -213,6 +294,7 @@ _builtins: dict[str, Callable[..., Any]] = {
     "number?": values.is_number,
     "symbol?": values.is_symbol,
     "print": sir_print,
+    "puts": sir_puts,
 }
 
 

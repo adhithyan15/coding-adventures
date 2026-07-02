@@ -1340,3 +1340,63 @@ fn oop_cyclic_ancestry_terminates() {
         );
     }
 }
+
+// ── puts builtin (Ruby semantics) ──────────────────────────────────────
+
+/// Compile a hand-built module, run it under `node`, and return the **raw**
+/// stdout (newlines preserved).  Unlike `run_module`, this does NOT trim
+/// trailing newlines — `puts` semantics hinge on the exact byte stream (a
+/// trailing blank line is meaningful).  Returns `None` when Node is absent.
+fn run_module_raw(module: &Module, tag: &str) -> Option<String> {
+    let artifact = compile(module).expect("compile to javascript");
+    if !node_available() {
+        eprintln!("note: `node` unavailable — skipping execution for `{tag}`");
+        return None;
+    }
+    let mut path: PathBuf = std::env::temp_dir();
+    path.push(format!("sir_js_{}_{}.js", tag, std::process::id()));
+    std::fs::write(&path, &artifact.source).expect("write temp js");
+    let output = Command::new("node").arg(&path).output().expect("spawn node");
+    let _ = std::fs::remove_file(&path);
+    assert!(
+        output.status.success(),
+        "node exited non-zero for `{tag}`:\nstdout: {}\nstderr: {}\nsource:\n{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr),
+        artifact.source,
+    );
+    // Normalise CRLF → LF so the assertion tests the semantics (one line per
+    // unit), not the platform newline convention.
+    Some(String::from_utf8(output.stdout).expect("utf8 stdout").replace("\r\n", "\n"))
+}
+
+#[test]
+fn puts_matches_ruby_output() {
+    // Ruby: `puts "hello"; puts; puts [1, 2, 3]`
+    //   → "hello\n"   (string + newline)
+    //   → "\n"        (no-arg puts → one blank line)
+    //   → "1\n2\n3\n" (each array element on its own line)
+    let puts_hello = Stmt::ExprStmt {
+        expr: bc("puts", vec![str_("hello")]),
+        span: sp(),
+    };
+    let puts_bare = Stmt::ExprStmt { expr: bc("puts", vec![]), span: sp() };
+    let puts_arr = Stmt::ExprStmt {
+        expr: bc(
+            "puts",
+            vec![Expr::SeqLit { items: vec![int(1), int(2), int(3)], span: sp() }],
+        ),
+        span: sp(),
+    };
+    let module = module_with_main(
+        vec![puts_hello, puts_bare, puts_arr],
+        Expr::NilLit { span: sp() },
+        &[Feature::Sequences, Feature::Strings],
+    );
+    if let Some(stdout) = run_module_raw(&module, "puts") {
+        assert_eq!(
+            stdout, "hello\n\n1\n2\n3\n",
+            "unexpected puts output (escaped): {stdout:?}"
+        );
+    }
+}

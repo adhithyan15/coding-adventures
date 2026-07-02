@@ -486,6 +486,67 @@ func _sir_print(args []Value) Value {
 	return nil
 }
 
+// ── puts (Ruby semantics) ──────────────────────────────────────
+//
+// Ruby's `puts` is THE common output method and is deceptively subtle:
+//
+//   - `puts`            → one newline.
+//   - `puts x`          → `x.to_s` then a newline, UNLESS `x.to_s` already
+//                         ends in "\n" (then no second newline is added):
+//                         `puts "x\n"` prints `x\n`, not `x\n\n`.
+//   - `puts a, b`       → each argument on its own line, in order.
+//   - `puts nil`        → a blank line (`nil.to_s` is "", then the newline).
+//   - `puts []`         → a single newline (an argument that flattens to
+//                         nothing still prints a blank line).
+//   - `puts [1,[2,3]]`  → each ELEMENT on its own line, arrays flattened
+//                         recursively: `1\n2\n3\n`.
+//
+// `puts` is variadic, so it takes the whole `[]Value` (unlike the fixed-arity
+// `_sir_print`).  We write raw bytes with `fmt.Print`/`os.Stdout` rather than
+// `fmt.Println` so the trailing-newline-suppression rule can be honoured.
+func _sir_puts(args []Value) Value {
+	if len(args) == 0 {
+		// No arguments: exactly one newline.
+		fmt.Print("\n")
+		return nil
+	}
+	for _, a := range args {
+		// `puts []` (empty array arg) still writes one blank line — Ruby
+		// prints a line when an argument flattens to nothing.  A recursive
+		// flatten of an empty seq writes nothing, so detect it here.
+		if s, ok := a.(*Seq); ok && len(s.Items) == 0 {
+			fmt.Print("\n")
+			continue
+		}
+		_sir_puts_one(a)
+	}
+	return nil
+}
+
+// Emit a single `puts` argument.  Arrays recurse (element-per-line, nested
+// arrays flattened); everything else renders via `_sir_format` then a
+// newline — suppressed when the text already ends in one.  `nil` is a blank
+// line (`_sir_format(nil)` is "nil" for `print`, but `puts nil` is a blank
+// line, so nil is special-cased).
+func _sir_puts_one(v Value) {
+	if s, ok := v.(*Seq); ok {
+		for _, item := range s.Items {
+			_sir_puts_one(item)
+		}
+		return
+	}
+	if v == nil {
+		fmt.Print("\n")
+		return
+	}
+	text := _sir_format(v)
+	if strings.HasSuffix(text, "\n") {
+		fmt.Print(text)
+	} else {
+		fmt.Print(text + "\n")
+	}
+}
+
 // ── format (cycle-safe) ────────────────────────────────────────
 //
 // `*Seq`/`*Map` are *shared, mutable* handles, so an emitted program
@@ -879,6 +940,8 @@ func _sir_call_builtin_by_name(name string, args []Value) Value {
 		return _sir_is_symbol(args)
 	case "print":
 		return _sir_print(args)
+	case "puts":
+		return _sir_puts(args)
 	case "global_set":
 		return _sir_global_set(args[0], args[1])
 	case "global_get":
@@ -2074,7 +2137,7 @@ mod tests {
             "_sir_eq", "_sir_lt", "_sir_gt",
             "_sir_cons", "_sir_car", "_sir_cdr",
             "_sir_is_null", "_sir_is_pair", "_sir_is_number", "_sir_is_symbol",
-            "_sir_print", "_sir_global_set", "_sir_global_get",
+            "_sir_print", "_sir_puts", "_sir_global_set", "_sir_global_get",
             "_sir_apply", "_sir_make_closure", "_sir_intern", "_sir_truthy",
             "_sir_format", "_sir_builtin_closure", "_sir_call_builtin_by_name",
             // E3 exception helpers.

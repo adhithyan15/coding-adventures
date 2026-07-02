@@ -100,6 +100,75 @@ def test_print_uses_display(capsys: pytest.CaptureFixture[str]) -> None:
     assert out == "nil\n"
 
 
+# --- puts (Ruby semantics) -------------------------------------------------
+
+
+def test_puts_no_args_prints_single_newline(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    assert sir.sir_puts() is None
+    assert capsys.readouterr().out == "\n"
+
+
+def test_puts_string_appends_newline(capsys: pytest.CaptureFixture[str]) -> None:
+    sir.sir_puts("hello")
+    assert capsys.readouterr().out == "hello\n"
+
+
+def test_puts_does_not_double_trailing_newline(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    # Ruby: a value already ending in "\n" is not double-spaced.
+    sir.sir_puts("x\n")
+    assert capsys.readouterr().out == "x\n"
+
+
+def test_puts_multiple_args_one_per_line(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    sir.sir_puts("a", "b")
+    assert capsys.readouterr().out == "a\nb\n"
+
+
+def test_puts_array_flattens_one_element_per_line(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    sir.sir_puts([1, 2, 3])
+    assert capsys.readouterr().out == "1\n2\n3\n"
+    # Nested arrays are flattened recursively.
+    sir.sir_puts([1, [2, 3]])
+    assert capsys.readouterr().out == "1\n2\n3\n"
+
+
+def test_puts_empty_array_prints_single_newline(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    sir.sir_puts([])
+    assert capsys.readouterr().out == "\n"
+
+
+def test_puts_nil_prints_blank_line(capsys: pytest.CaptureFixture[str]) -> None:
+    # `puts nil` is a blank line — NOT the display form "nil".
+    sir.sir_puts(None)
+    assert capsys.readouterr().out == "\n"
+
+
+def test_puts_reference_program(capsys: pytest.CaptureFixture[str]) -> None:
+    # The canonical execution-proof program: `puts "hello"; puts; puts [1,2,3]`
+    sir.sir_puts("hello")
+    sir.sir_puts()
+    sir.sir_puts([1, 2, 3])
+    assert capsys.readouterr().out == "hello\n\n1\n2\n3\n"
+
+
+def test_puts_routes_through_call_builtin(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    # The backends dispatch `puts` by name through `call_builtin`.
+    assert sir.call_builtin("puts", ["hi"]) is None
+    assert capsys.readouterr().out == "hi\n"
+
+
 # --- arithmetic ------------------------------------------------------------
 
 
