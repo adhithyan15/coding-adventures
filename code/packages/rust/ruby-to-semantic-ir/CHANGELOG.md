@@ -2,6 +2,93 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.4.0] - 2026-07-01
+
+(Cargo manifest minor bump 0.3.0 → 0.4.0.  Note: earlier CHANGELOG headers use
+a separate 0.9x/0.100 sequence that had drifted from the manifest version; this
+entry tracks the actual `Cargo.toml` version.)
+
+### Added (O2 — OOP production: real object-oriented Ruby executes end to end)
+
+The frontend now PRODUCES the OOP wiring so object-oriented Ruby runs end to
+end (Ruby → SIR → Python / TypeScript).  Before O2, classes parsed but their
+methods were disconnected: `.new` was not wired to `initialize`, `super` /
+`self` / `attr_accessor` did nothing.  O2 emits the missing wiring entirely
+through the existing `BuiltinCall` envelope — **no core-IR change** — which the
+O1 OOP runtime + backend emit arms consume.
+
+- **Method registration.**  For every instance method `def m` in `class C`,
+  the frontend now emits — right after the `ClassDef` in program order — a
+  `__def_method__("C", "m", MakeClosure { fn_name, captures: [] })` builtin
+  call.  The registrations run once at startup so `C.new` later finds an
+  `initialize` and dispatch finds the methods.  (Class methods `def self.m`
+  would emit `__def_class_method__` analogously; the register path is ready but
+  currently unreachable — see the deferred note.)
+- **Class-qualified hoisted names.**  A method defined in a class body now
+  hoists under a class-qualified top-level name (`Dog__speak`, not the bare
+  `speak`).  This is what makes inheritance + `super` work: `Animal#initialize`
+  and `Cat#initialize` are two DISTINCT top-level functions (bare `initialize`
+  would collide and the validator would reject the duplicate), yet both stay
+  reachable so `super` can re-run the parent's.  The runtime method table is
+  keyed on `(class, bare_method)`, so *dispatch* is by bare name; only the
+  shared top-level symbol is qualified.  Method names ending in `?`/`!`/`=`
+  map to `_p`/`_bang`/`_set` suffixes to stay valid identifiers.
+- **`Foo.new(args)`.**  A `.new` call on a *constant* receiver lowers to
+  `__new__("Foo", …args)` (→ `call_new`: allocate → push self → run inherited
+  `initialize` → pop self → return the object), rather than a generic
+  `__method__` dispatch.  Chaining falls out for free: `Foo.new(x).meth` nests
+  as `__method__(__new__("Foo", x), "meth")` (and longer chains, e.g.
+  `c.inc.inc`, the same way).
+- **`super(args)` / bare `super`.**  Both now lower to
+  `__super__(method_name, class_name, …args)`, threading the enclosing method +
+  class names from lowerer context (`current_method` / `current_class`).  The
+  runtime walks from `class_name`'s parent to the first ancestor implementation
+  and runs it with the *current* self still bound.  Bare `super` (zsuper)
+  forwards the enclosing method's parameters by reference (sorted for
+  determinism); `super()` forwards nothing.
+- **`self`.**  A bare `self` now lowers to `__self__()` (→ `current_self`) — the
+  receiver on the runtime self-stack — rather than a plain local `VarRef
+  "self"`.  As a dot-chain receiver (`self.count`) and as a method's self-return
+  (`c.inc.inc`, where `inc` ends in `self`) it composes correctly.
+- **`attr_accessor` / `attr_reader` / `attr_writer`.**  Each symbol argument
+  expands into synthesized accessor method(s) — getter `def x; @x; end` and/or
+  setter `def x=(v); @x = v; end` — hoisted like a hand-written method AND
+  registered via `__def_method__`.  `attr_reader` = getter only, `attr_writer`
+  = setter only, `attr_accessor` = both; `attr_accessor :a, :b` expands both.
+
+### Execution proofs (the payoff)
+
+Three golden Ruby programs are lowered and run through the Python backend under
+a real CPython interpreter (and P1 additionally through the TypeScript backend
+under `node`), asserting stdout:
+
+- **P1** `class Dog; def initialize(name); @name = name; end; def speak;
+  "#{@name} says woof"; end; end; print Dog.new("Rex").speak` → `Rex says woof`
+  (construction, instance-method dispatch, `@ivar` through the pushed self,
+  interpolation through the OOP path).
+- **P2** an Animal/Cat inheritance program where `Cat#initialize` `super(name)`s
+  into `Animal#initialize` on the shared self → `Tom with 4 legs`.
+- **P3** a Counter with `attr_accessor :count`, `@count` mutation, and an
+  `inc`-returns-`self` chain (`c.inc.inc; print c.count`) → `2`.
+
+### Deferred (documented v0 limitations)
+
+- **`def self.m` class methods do not parse.**  The ruby-parser `def` rule has
+  no receiver production, so `def self.zero` is a parse error today.  The
+  `__def_class_method__` register path is implemented and ready; wiring it
+  awaits a grammar extension.  (The original P3 used `def self.zero`; it was
+  restated using `Counter.new` so it still proves getter/setter + self-chain.)
+- **`super` is statement-only.**  `super + expr` (super as a sub-expression)
+  does not parse, so `super` used as a value (concatenated, etc.) is out of
+  scope; `super(args)` as a bare statement (e.g. in `initialize`) works.
+- **`puts` vs `print`.**  The golden programs print with `print`; `puts` is not
+  in `sir-runtime-core`'s native `call_builtin` dispatch table (a pre-existing,
+  OOP-unrelated backend coverage gap).
+- **Cross-class same-name intra-class calls.**  A method that calls another of
+  its class's methods by *bare name* lowers to `DirectCall` on that bare name,
+  which will not resolve to the class-qualified hoisted function.  The golden
+  programs do not do this; a future phase can qualify such intra-class calls.
+
 ## [0.100.0] - 2026-06-30
 
 ### Added (KW7 — keyword parameter & argument production, the Ruby-1.0 unblock)

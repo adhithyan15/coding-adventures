@@ -833,3 +833,134 @@ fn positional_and_keyword_mix_binds_both() {
         assert_eq!(stdout, "A!\nB-", "keyword mix must bind positional and defaulted keyword");
     }
 }
+
+// ── O2: Ruby OOP frontend → TS → node execution proof ─────────────────────────
+//
+// The O1 proof above hand-built the SIR.  This O2 proof lowers REAL Ruby source
+// through `ruby-to-semantic-ir`, compiles to TypeScript, and runs it under
+// `node` — the same P1 program the Python backend proves, showing the Ruby
+// frontend's OOP production executes on the TS side too.
+//
+// As with every node proof here, the workspace runtime packages cannot be
+// resolved under bare `node`, so we swap the two runtime imports for faithful
+// inline stubs (see the module doc-comment).  This stub extends the O1
+// dispatch stub with the instance-variable store (`ivarSet`/`ivarGet` on the
+// current self) and a Ruby `toDisplay` — exactly the surface P1 touches — so
+// what runs is the real dispatch + ivar logic, only the import lines rewritten.
+
+const SIR_OOP_P1_STUB: &str = r#"const __SirOop = (() => {
+  const SEP = "\x00";
+  const key = (c, m) => c + SEP + m;
+  const supers = new Map();
+  const instanceMethods = new Map();
+  const selfStack = [];
+  const defaultSelf = { sirClass: "Object", ivars: new Map() };
+  class SirInstance { constructor(c) { this.sirClass = c; this.ivars = new Map(); } }
+  const curSelf = () => (selfStack.length ? selfStack[selfStack.length - 1] : defaultSelf);
+  const superclassOf = (n) => (supers.has(n) ? supers.get(n) : null);
+  const defineClass = (n, s) => { supers.set(n, s ?? null); };
+  const defMethod = (c, m, fn) => { instanceMethods.set(key(c, m), fn); };
+  const ivarSet = (n, v) => { curSelf().ivars.set(n, v); return v; };
+  const ivarGet = (n) => { const iv = curSelf().ivars; return iv.has(n) ? iv.get(n) : null; };
+  const resolve = (c, m) => {
+    let cur = c; const seen = new Set();
+    while (cur !== null && !seen.has(cur)) {
+      const fn = instanceMethods.get(key(cur, m));
+      if (fn !== undefined) return fn;
+      seen.add(cur); cur = superclassOf(cur);
+    }
+    return null;
+  };
+  const callNew = (c, ...args) => {
+    const obj = new SirInstance(c);
+    selfStack.push(obj);
+    try { const init = resolve(c, "initialize"); if (init !== null) __Sir.apply(init, args); }
+    finally { selfStack.pop(); }
+    return obj;
+  };
+  const callMethod = (recv, name, ...args) => {
+    if (recv instanceof SirInstance) {
+      const fn = resolve(recv.sirClass, name);
+      if (fn !== null) {
+        selfStack.push(recv);
+        try { return __Sir.apply(fn, args); } finally { selfStack.pop(); }
+      }
+    }
+    return null;
+  };
+  return { defineClass, defMethod, callNew, callMethod, ivarSet, ivarGet };
+})();
+"#;
+
+/// A `__Sir` stub carrying `Closure` + `apply` (for method closures) plus a
+/// Ruby-flavoured `toDisplay` (strings verbatim, `null`→`nil`) and `print`.
+const SIR_CLOSURE_P1_STUB: &str = r#"const __Sir = {
+  Closure: class { constructor(fn) { this.fn = fn; } },
+  apply: (c, args) => c.fn(...args),
+  toDisplay: (v) => (v === null ? "nil" : String(v)),
+  print: (v) => { console.log(__Sir.toDisplay(v)); return null; },
+};
+"#;
+
+fn ruby_p1_ts_to_runnable_js(ts: &str) -> String {
+    let mut js = ts.to_string();
+    js = js.replace(
+        "import * as __Sir from \"@coding-adventures/sir-runtime-core\";\n",
+        SIR_CLOSURE_P1_STUB,
+    );
+    js = js.replace(
+        "import * as __SirOop from \"@coding-adventures/sir-runtime-oop\";\n",
+        SIR_OOP_P1_STUB,
+    );
+    js = js.replace(" as { [k: string]: __Sir.Val }", "");
+    js = js.replace(": __Sir.Val[]", "");
+    js = js.replace(": __Sir.Val", "");
+    js
+}
+
+#[test]
+fn end_to_end_ruby_oop_new_and_dispatch_executes_ts() {
+    // P1 lowered from real Ruby → TS → node.  Proves the frontend's
+    // `__def_method__`/`__new__`/`__method__`/`@ivar` production drives the OOP
+    // runtime through the TypeScript backend and prints "Rex says woof".
+    let src = "class Dog\n  def initialize(name)\n    @name = name\n  end\n  \
+               def speak\n    \"#{@name} says woof\"\n  end\nend\n\
+               print Dog.new(\"Rex\").speak\n";
+    let module = ruby_to_semantic_ir::compile_source(src, "demo").expect("lower ruby");
+    let artifact = compile(&module).expect("compile to typescript");
+
+    // Shape: registration, construction, dispatch, and ivar access all present.
+    assert!(
+        artifact.source.contains("__SirOop.defMethod(\"Dog\", \"initialize\","),
+        "got:\n{}",
+        artifact.source
+    );
+    assert!(artifact.source.contains("__SirOop.callNew(\"Dog\", \"Rex\")"), "got:\n{}", artifact.source);
+    assert!(
+        artifact.source.contains("__SirOop.callMethod(__SirOop.callNew(\"Dog\", \"Rex\"), \"speak\")"),
+        "chained new().speak must nest callMethod over callNew; got:\n{}",
+        artifact.source
+    );
+
+    if !node_available() {
+        eprintln!("note: `node` unavailable — skipping O2 TS execution proof");
+        return;
+    }
+    let js = ruby_p1_ts_to_runnable_js(&artifact.source);
+    let mut path: PathBuf = std::env::temp_dir();
+    path.push(format!("sir_ts_oop_p1_{}.js", std::process::id()));
+    std::fs::write(&path, &js).expect("write temp js");
+    let output = Command::new("node").arg(&path).output().expect("spawn node");
+    let _ = std::fs::remove_file(&path);
+    assert!(
+        output.status.success(),
+        "node exited non-zero:\nstderr: {}\nsource:\n{}",
+        String::from_utf8_lossy(&output.stderr),
+        js
+    );
+    let stdout = String::from_utf8_lossy(&output.stdout)
+        .trim_end_matches(['\n', '\r'])
+        .to_string();
+    assert_eq!(stdout, "Rex says woof", "P1 OOP dispatch produced wrong output under node");
+}
+
