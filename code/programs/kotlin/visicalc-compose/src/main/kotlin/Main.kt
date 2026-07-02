@@ -20,6 +20,7 @@
 // (excel-blue highlight), formula bar reads "A1 / =SUM(B1:B5)".
 
 import generated.FormulaBar
+import generated.FormulaBarTouch
 import generated.FormulaBarEvent
 import generated.Grid
 import generated.GridEvent
@@ -106,6 +107,14 @@ private fun VisiCalcApp() {
     // same engine via the viewport primitive).
     var infinite by remember { mutableStateOf(false) }
 
+    // Which FormulaBar LAYOUT is showing in classic-grid mode: the desktop Row
+    // (address label left of the input) or the UI30 touch Column (address label
+    // stacked ABOVE a full-width input). Both are generated from the SAME
+    // FormulaBar.mil interface — only the .mll spatial arrangement differs — so
+    // they share FormulaBarEvent + the dispatch below. "One component, many
+    // layouts" made a runtime toggle (the native analogue of the web switcher).
+    var touch by remember { mutableStateOf(false) }
+
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         // Title row + view toggle — kebab-cased label, matching the sibling
         // demos' "VISICALC · MOSAIC <BACKEND> DEMO" style.
@@ -120,6 +129,13 @@ private fun VisiCalcApp() {
                 fontFamily = FontFamily.Monospace,
                 modifier = Modifier.weight(1f),
             )
+            // The layout toggle only applies to the classic grid's formula bar
+            // (the infinite view has no formula bar), so hide it there.
+            if (!infinite) {
+                Button(onClick = { touch = !touch }) {
+                    Text(if (touch) "Desktop bar" else "Touch bar")
+                }
+            }
             Button(onClick = { infinite = !infinite }) {
                 Text(if (infinite) "Classic grid" else "Infinite sheet")
             }
@@ -132,29 +148,34 @@ private fun VisiCalcApp() {
             return@Column
         }
 
+        // Column 0 is the gutter, so subtract 1 to map the selected data
+        // column back to a spreadsheet letter (col 1 → 'A', col 2 → 'B', …).
+        val fbCellAddress = "${('A' + selectedCol.toInt() - 1)}${selectedRow.toInt() + 1}"
+        // Shared dispatch — both layout variants fire the same FormulaBarEvent
+        // union and drive the engine identically; only their shape differs.
+        val fbDispatch: (FormulaBarEvent) -> Unit = { event ->
+            when (event) {
+                is FormulaBarEvent.FormulaChange -> formulaText = event.value
+                is FormulaBarEvent.Commit -> {
+                    // Write the edit to the engine, recompute the grid,
+                    // and reflect the cell's canonicalised source.
+                    model.setCell(selectedRow.toInt(), selectedCol.toInt(), formulaText)
+                    viewportRows = model.viewportRows()
+                    formulaText = model.rawAt(selectedRow.toInt(), selectedCol.toInt())
+                }
+                is FormulaBarEvent.Cancel ->
+                    formulaText = model.rawAt(selectedRow.toInt(), selectedCol.toInt())
+            }
+        }
+
         Box(modifier = Modifier.padding(top = 8.dp)) {
-            FormulaBar(
-                // Column 0 is the gutter, so subtract 1 to map the
-                // selected data column back to a spreadsheet letter
-                // (col 1 → 'A', col 2 → 'B', …).
-                cellAddress = "${('A' + selectedCol.toInt() - 1)}${selectedRow.toInt() + 1}",
-                formula = formulaText,
-                readOnly = false,
-                dispatch = { event ->
-                    when (event) {
-                        is FormulaBarEvent.FormulaChange -> formulaText = event.value
-                        is FormulaBarEvent.Commit -> {
-                            // Write the edit to the engine, recompute the grid,
-                            // and reflect the cell's canonicalised source.
-                            model.setCell(selectedRow.toInt(), selectedCol.toInt(), formulaText)
-                            viewportRows = model.viewportRows()
-                            formulaText = model.rawAt(selectedRow.toInt(), selectedCol.toInt())
-                        }
-                        is FormulaBarEvent.Cancel ->
-                            formulaText = model.rawAt(selectedRow.toInt(), selectedCol.toInt())
-                    }
-                },
-            )
+            // Desktop (Row) vs touch (Column) — both generated from the same
+            // FormulaBar.mil, sharing FormulaBarEvent + fbDispatch above.
+            if (touch) {
+                FormulaBarTouch(cellAddress = fbCellAddress, formula = formulaText, readOnly = false, dispatch = fbDispatch)
+            } else {
+                FormulaBar(cellAddress = fbCellAddress, formula = formulaText, readOnly = false, dispatch = fbDispatch)
+            }
         }
 
         Box(modifier = Modifier.padding(top = 16.dp)) {
