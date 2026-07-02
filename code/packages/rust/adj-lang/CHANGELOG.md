@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.25.0] - 2026-07-02 — round-to-nearest in `latex "…"` (lowers to `ComputeOp::Round`)
+
+### Added
+
+- The `latex "…"` adapter now lowers the standard **nearest-integer fence**
+  `\left\lfloor x\right\rceil` (floor-left, ceil-right — a `MathExpr::Fenced` with
+  delimiters `\lfloor`/`\rceil`) to the native `ComputeOp::Round` via a new
+  `ExprAst::Round`. Round is nearest with **ties away from zero** (`⌊7/2⌉ = 4`).
+- The asymmetric delimiters matter: `\lfloor…\rfloor` is floor, `\lfloor…\rceil`
+  is round — the distinct *closing* delimiter selects the op, so the round arm sits
+  beside the existing floor/ceil arms with no ambiguity. The latex frontend already
+  surfaces these control-word delimiters as data, so no latex-crate change was
+  needed.
+
+### Notes
+
+- Round is **dimension-preserving** (`⌊3.6 mmol⌉ = 4 mmol`) and the exact rational
+  sidecar snaps to an integer. Truncation toward zero (`\operatorname{trunc}`) has
+  no bracket notation and is deferred to the future named-function slice.
+
 ## [0.24.0] - 2026-07-02 — floor & ceiling in `latex "…"` (lower to `ComputeOp::Floor` / `ComputeOp::Ceil`)
 
 ### Added

@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.30.0] - 2026-07-02 — native round-to-nearest (`ComputeOp::Round`)
+
+### Added
+
+- **`ComputeOp::Round`** (`⌊x⌉`, nearest integer, **ties away from zero**) — a
+  third rounding unary op alongside `Floor`/`Ceil`, carried in the existing
+  `ComputeExpr::Unary` and evaluated in the shared `#[inline(never)] eval_unary`
+  helper (the macOS stack-frame guard still holds). It makes the standard
+  nearest-integer LaTeX fence `\left\lfloor x\right\rceil` (adj-lang's `latex "…"`
+  surface) computable as a single native node.
+- Dimension-preserving like `Floor`/`Ceil` (`⌊3.6 mmol⌉ = 4 mmol`). The **exact
+  rational sidecar stays exact**: truncate toward zero, then bump one step outward
+  when the fractional part reaches a half (`2·|rem| ≥ den`), matching Rust's
+  `f64::round` — `⌊5/2⌉ = 3`, `⌊−5/2⌉ = −3`, `⌊7/3⌉ = 2`. The `den − arem` compare
+  (with `arem = |rem| < den`) sidesteps the overflow a bare `2·arem` could hit, and
+  the outward bump is a `checked_add` (drops the exact sidecar rather than
+  panicking on the i128 edge).
+
 ## [0.29.0] - 2026-07-02 — native floor & ceiling (`ComputeOp::Floor` / `ComputeOp::Ceil`)
 
 ### Added

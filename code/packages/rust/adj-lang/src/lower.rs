@@ -708,6 +708,7 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
         ExprAst::Abs(a) => ComputeExpr::Unary(ComputeOp::Abs, Box::new(lower_expr(a))),
         ExprAst::Floor(a) => ComputeExpr::Unary(ComputeOp::Floor, Box::new(lower_expr(a))),
         ExprAst::Ceil(a) => ComputeExpr::Unary(ComputeOp::Ceil, Box::new(lower_expr(a))),
+        ExprAst::Round(a) => ComputeExpr::Unary(ComputeOp::Round, Box::new(lower_expr(a))),
         ExprAst::Agg(op, slot) => ComputeExpr::Agg(lower_agg_op(*op), slot.clone()),
     }
 }
@@ -1874,6 +1875,24 @@ contributes 1000000 from answer == 60 to correct
             "observe a(7)\n\
              observe b(2)\n\
              let answer = latex \"$\\left\\lceil a / b\\right\\rceil$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 4 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_latex_nearest_integer_fence_rounds_a_quotient() {
+        // The asymmetric nearest-integer fence `⌊a / b⌉` = `\left\lfloor…\right\rceil`
+        // (floor-left, ceil-right) rounds to the nearest integer, ties away from
+        // zero: ⌊7/2⌉ = ⌊3.5⌉ = 4, computed on the native ComputeOp::Round — NOT the
+        // floor 3 (that would be `\rfloor`), so the asymmetric delimiters matter.
+        let d = crate::compile_and_decide(
+            "observe a(7)\n\
+             observe b(2)\n\
+             let answer = latex \"$\\left\\lfloor a / b\\right\\rceil$\"\n\
              prior 0.10 for correct\n\
              contributes 1000000 from answer == 4 to correct\n\
              ? correct\n",

@@ -941,6 +941,14 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
         MathExpr::Fenced { open, body, close } if open == "\\lceil" && close == "\\rceil" => {
             Ok(ExprAst::Ceil(Box::new(latex_math_to_expr_ast(body, source)?)))
         }
+        // The standard NEAREST-INTEGER fence is asymmetric — floor on the left,
+        // ceiling on the right — `\left\lfloor x\right\rceil`. It rounds to the
+        // nearest integer (ties away from zero) and lowers to `ComputeOp::Round`.
+        // Its distinct closing delimiter (`\rceil`, not `\rfloor`) keeps it separate
+        // from the plain floor arm above.
+        MathExpr::Fenced { open, body, close } if open == "\\lfloor" && close == "\\rceil" => {
+            Ok(ExprAst::Round(Box::new(latex_math_to_expr_ast(body, source)?)))
+        }
         MathExpr::Fenced { body, .. } => latex_math_to_expr_ast(body, source),
         MathExpr::Unary(UnaryOp::Pos, inner) => latex_math_to_expr_ast(inner, source),
         MathExpr::Unary(UnaryOp::Neg, inner) => Ok(ExprAst::Bin(
