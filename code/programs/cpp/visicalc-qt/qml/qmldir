@@ -11,4 +11,5 @@
 # build/ keeps both well-behaved under version control.
 module qml
 FormulaBar 1.0 ../build/FormulaBar.qml
+FormulaBarTouch 1.0 ../build/FormulaBarTouch.qml
 Grid 1.0 ../build/Grid.qml
