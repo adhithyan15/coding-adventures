@@ -1458,3 +1458,18 @@ emits `()=>{}.x`, which mis-parses the `{}` as a block body. This is the same
 leftmost-token class as the general expression-statement `{`-wrap and is rare in
 practice (an object-literal-rooted concise body used as a member/call base);
 deferred until a general leftmost-token analysis lands.
+
+## CLOC12.153 — CodePrinter arrow-function conformance port (emitter)
+
+New upstream port `closure-emitter/tests/upstream/code_printer_arrow_test.rs`
+(from `CodePrinterTest.java`), isolating `emit_arrow_function_expression` + the
+`PREC_ASSIGNMENT` wrap that landed with `Expression::ArrowFunctionExpression`
+(CLOC12.151). **12 active `#[test]`s, no `#[ignore]`, no new gaps** — the emitter
+conforms to every covered arrow printing shape: single-param param-paren drop
+(`x=>x`), zero/multi param (`()=>1`, `(a,b)=>a`), object-literal-body wrap
+(`()=>({})`), concise vs block body (`x=>{return x}`), IIFE / member-object wrap
+(`(()=>{})()`, `(()=>{}).x`), un-parenthesised call-argument (`g(x=>x)`), and the
+`async` prefix (`async x=>x`, `async()=>{}`). Inputs are hand-constructed AST, so
+the port also covers **block-bodied** arrows that the current grammar can't yet
+parse (see gap-156, added with CLOC12.152) — the emitter already prints them
+correctly; only the parser needs the grammar fix.

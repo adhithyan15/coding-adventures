@@ -25,6 +25,19 @@ under the Apache License, Version 2.0:
       shape (anonymous/named, params, body, IIFE, member-object,
       call-argument, generator/async prefixes).
 
+- `code_printer_arrow_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/CodePrinterTest.java`
+      (the arrow-function `=>` printing cases)
+    - tracked commit: see `UPSTREAM_SHA`
+    - Isolates `emit_arrow_function_expression` + the `PREC_ASSIGNMENT`
+      precedence wrap that landed with `Expression::ArrowFunctionExpression`
+      (CLOC12.151). 12 active `#[test]`s, no `#[ignore]` — the emitter
+      conforms to every covered shape (single/zero/multi param, concise vs
+      block body, object-literal-body wrap, IIFE, member-object,
+      call-argument, async prefix). Inputs are hand-constructed AST so the
+      port can exercise block-bodied arrows the grammar can't yet parse
+      (gap-156).
+
 ## Translation notes
 
 Fourth port under CLOC12 (after `closure-pass-constant-fold` in
