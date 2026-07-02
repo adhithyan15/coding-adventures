@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Persisted Engram Mosaic web, React, WebComponent, and Electron host snapshots
+  across launches, seeding from the built-in language-learning demo only when no
+  saved state is available.
 - Wired the generated Flutter Engram shell to the optional Mosaic host contract
   with a Dart FFI `engram-capi` adapter, shared slot hydration, and generated
   event-envelope routing through the Rust core.

@@ -674,6 +674,14 @@ fn native_project_shells_expose_engram_host_contract() {
         &html_host,
         "window.dispatchEvent(new CustomEvent(HOST_READY_EVENT));",
     );
+    assert_contains(&html_host, "createEngramEngine");
+    assert_contains(
+        &html_host,
+        "const SNAPSHOT_STORAGE_KEY = \"engram.snapshot.v1\";",
+    );
+    assert_contains(&html_host, "hydrateEngine(engine);");
+    assert_contains(&html_host, "withSnapshotPersistence(host, engine)");
+    assert_contains(&html_host, "persistSnapshot(engine);");
 
     let webcomponent_index = fs::read_to_string(tmp.path().join("webcomponent").join("index.html"))
         .expect("webcomponent/index.html");
@@ -756,6 +764,14 @@ fn native_project_shells_expose_engram_host_contract() {
         &webcomponent_host,
         "window.dispatchEvent(new CustomEvent(HOST_READY_EVENT));",
     );
+    assert_contains(&webcomponent_host, "createEngramEngine");
+    assert_contains(
+        &webcomponent_host,
+        "const SNAPSHOT_STORAGE_KEY = \"engram.snapshot.v1\";",
+    );
+    assert_contains(&webcomponent_host, "hydrateEngine(engine);");
+    assert_contains(&webcomponent_host, "withSnapshotPersistence(host, engine)");
+    assert_contains(&webcomponent_host, "persistSnapshot(engine);");
 
     let react_app = fs::read_to_string(tmp.path().join("react").join("src").join("main.tsx"))
         .expect("react/src/main.tsx");
@@ -849,7 +865,7 @@ fn native_project_shells_expose_engram_host_contract() {
     let react_host =
         fs::read_to_string(tmp.path().join("react").join("src").join("engram-host.ts"))
             .expect("react host");
-    assert_contains(&react_host, "installEngramMosaicHost");
+    assert_contains(&react_host, "createEngramEngine");
     assert_contains(&react_host, "engram_engine.wasm");
     assert_contains(
         &react_host,
@@ -859,6 +875,13 @@ fn native_project_shells_expose_engram_host_contract() {
         &react_host,
         "window.dispatchEvent(new CustomEvent(HOST_READY_EVENT));",
     );
+    assert_contains(
+        &react_host,
+        "const SNAPSHOT_STORAGE_KEY = \"engram.snapshot.v1\";",
+    );
+    assert_contains(&react_host, "hydrateEngine(engine);");
+    assert_contains(&react_host, "withSnapshotPersistence(host, engine)");
+    assert_contains(&react_host, "persistSnapshot(engine);");
     assert!(
         tmp.path()
             .join("react")
@@ -997,6 +1020,12 @@ fn native_project_shells_expose_engram_host_contract() {
         fs::read_to_string(tmp.path().join("electron").join("electron").join("host.js"))
             .expect("electron host.js");
     assert_contains(&electron_host, "createMosaicHost");
+    assert_contains(&electron_host, "createEngramEngine");
+    assert_contains(&electron_host, "ENGRAM_SNAPSHOT_PATH");
+    assert_contains(&electron_host, "mosaic-snapshot.v1.json");
+    assert_contains(&electron_host, "hydrateEngine(engine);");
+    assert_contains(&electron_host, "withSnapshotPersistence(host, engine)");
+    assert_contains(&electron_host, "persistSnapshot(engine);");
 
     let flutter_app = fs::read_to_string(tmp.path().join("flutter").join("lib").join("main.dart"))
         .expect("flutter/lib/main.dart");
