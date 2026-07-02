@@ -14,6 +14,15 @@ const WHATWG_HEAD_BODY_AUDIT: &str = include_str!("fixtures/whatwg-head-body-aud
 const WHATWG_LEGACY_ELEMENT_AUDIT: &str = include_str!("fixtures/whatwg-legacy-element-audit.json");
 const WHATWG_PARAGRAPH_AUDIT: &str = include_str!("fixtures/whatwg-paragraph-audit.json");
 const WHATWG_TABLE_AUDIT: &str = include_str!("fixtures/whatwg-table-audit.json");
+const WHATWG_TREE_INSERTION_AUDIT: &str = include_str!("fixtures/whatwg-tree-insertion-audit.json");
+const WHATWG_VOID_ELEMENT_AUDIT: &str = include_str!("fixtures/whatwg-void-element-audit.json");
+
+struct CrossAxisRepairCase {
+    id: &'static str,
+    data_snippet: &'static str,
+    suites: &'static [(&'static str, &'static str, &'static str)],
+}
+
 const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
     ("adoption01-dat-6", "foster-parenting"),
     ("tests26-dat-4", "cell-boundary"),
@@ -42,6 +51,88 @@ const FOSTERED_NOBR_REPAIR_SUITES: &[(&str, &str, &str)] = &[
     ),
     ("head-body", WHATWG_HEAD_BODY_AUDIT, "body-boundary"),
     ("table", WHATWG_TABLE_AUDIT, "cell-boundary"),
+];
+const ADOPTION_TABLE_REPAIR_SUITES: &[(&str, &str, &str)] = &[
+    (
+        "form-interactive",
+        WHATWG_FORM_INTERACTIVE_AUDIT,
+        "interactive-formatting",
+    ),
+    (
+        "formatting",
+        WHATWG_FORMATTING_AUDIT,
+        "interactive-formatting-boundary",
+    ),
+    (
+        "paragraph",
+        WHATWG_PARAGRAPH_AUDIT,
+        "paragraph-table-boundary",
+    ),
+    ("table", WHATWG_TABLE_AUDIT, "foster-parenting"),
+    (
+        "tree-insertion",
+        WHATWG_TREE_INSERTION_AUDIT,
+        "adoption-agency",
+    ),
+];
+const TRICKY_CENTER_TABLE_REPAIR_SUITES: &[(&str, &str, &str)] = &[
+    (
+        "block-boundary",
+        WHATWG_BLOCK_BOUNDARY_AUDIT,
+        "block-table-boundary",
+    ),
+    (
+        "formatting",
+        WHATWG_FORMATTING_AUDIT,
+        "adoption-agency-formatting",
+    ),
+    (
+        "legacy-element",
+        WHATWG_LEGACY_ELEMENT_AUDIT,
+        "tricky-parser-recovery",
+    ),
+    ("table", WHATWG_TABLE_AUDIT, "cell-boundary"),
+    ("void-element", WHATWG_VOID_ELEMENT_AUDIT, "void-in-table"),
+];
+const TRICKY_PARAGRAPH_TABLE_REPAIR_SUITES: &[(&str, &str, &str)] = &[
+    (
+        "form-interactive",
+        WHATWG_FORM_INTERACTIVE_AUDIT,
+        "interactive-formatting",
+    ),
+    (
+        "formatting",
+        WHATWG_FORMATTING_AUDIT,
+        "interactive-formatting-boundary",
+    ),
+    (
+        "legacy-element",
+        WHATWG_LEGACY_ELEMENT_AUDIT,
+        "tricky-parser-recovery",
+    ),
+    (
+        "paragraph",
+        WHATWG_PARAGRAPH_AUDIT,
+        "paragraph-table-boundary",
+    ),
+    ("table", WHATWG_TABLE_AUDIT, "row-group-boundary"),
+];
+const REMAINING_TABLE_REPAIR_CASES: &[CrossAxisRepairCase] = &[
+    CrossAxisRepairCase {
+        id: "adoption01-dat-6",
+        data_snippet: "<table><a>1<p>2</a>3</p>",
+        suites: ADOPTION_TABLE_REPAIR_SUITES,
+    },
+    CrossAxisRepairCase {
+        id: "tricky01-dat-6",
+        data_snippet: "<table><center> <font>a</center> <img> <tr><td> </td> </tr> </table>",
+        suites: TRICKY_CENTER_TABLE_REPAIR_SUITES,
+    },
+    CrossAxisRepairCase {
+        id: "tricky01-dat-7",
+        data_snippet: "<table><tr><p><a><p>You should see this text.",
+        suites: TRICKY_PARAGRAPH_TABLE_REPAIR_SUITES,
+    },
 ];
 const INSANELY_BADLY_NESTED_REPAIR_CASE_ID: &str = "tricky01-dat-8";
 const INSANELY_BADLY_NESTED_REPAIR_SUITES: &[(&str, &str, &str)] = &[
@@ -307,6 +398,61 @@ fn whatwg_table_audit_keeps_fostered_nobr_repair_cases_cross_axis() {
         assert_eq!(
             actual, source_case.document,
             "cross-axis fostered `nobr` repair evidence case `{shared_source}` failed for input {:?}",
+            source_case.data
+        );
+    }
+}
+
+#[test]
+fn whatwg_table_audit_keeps_remaining_repair_cases_cross_axis() {
+    let smoke_cases = parse_tree_construction_cases(TREE_CONSTRUCTION_SMOKE)
+        .into_iter()
+        .map(|case| (case.source.clone(), case))
+        .collect::<HashMap<_, _>>();
+
+    for repair_case in REMAINING_TABLE_REPAIR_CASES {
+        let mut shared_source = None;
+
+        for (suite_name, fixture, expected_axis) in repair_case.suites {
+            let audit_case = generic_audit_case(fixture, suite_name, repair_case.id);
+            assert_eq!(
+                audit_case.axis, *expected_axis,
+                "`{suite_name}` should keep repair row `{}` on its focused axis",
+                repair_case.id
+            );
+            assert!(
+                !audit_case.reason.is_empty(),
+                "`{suite_name}` should keep a reason for repair row `{}`",
+                repair_case.id
+            );
+
+            if let Some(source) = &shared_source {
+                assert_eq!(
+                    audit_case.source, *source,
+                    "`{suite_name}` should point repair row `{}` at the same html5lib row as the other audit axes",
+                    repair_case.id
+                );
+            } else {
+                shared_source = Some(audit_case.source);
+            }
+        }
+
+        let shared_source =
+            shared_source.expect("repair evidence should include at least one suite");
+        let source_case = smoke_cases
+            .get(&shared_source)
+            .unwrap_or_else(|| panic!("case `{shared_source}` should exist in smoke fixture"));
+        assert!(
+            source_case.data.contains(repair_case.data_snippet),
+            "repair evidence row `{}` should stay tied to its html5lib input",
+            repair_case.id
+        );
+
+        let actual = actual_dom_dump_for_tree_case(source_case)
+            .unwrap_or_else(|error| panic!("case `{shared_source}` parse failed: {error}"));
+        assert_eq!(
+            actual, source_case.document,
+            "cross-axis repair evidence case `{shared_source}` failed for input {:?}",
             source_case.data
         );
     }
