@@ -33,17 +33,17 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu groups.
+1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcuts.
    - Status: current PR completion candidate.
    - Add schema-versioned Rust app shell dashboard dispatch-queue lane-tab
-     panel-card-action-menu-group surfaces and JSON helpers that bucket queued,
-     blocked, and attention dispatch queue lane-tab panel card action menu
-     items into stable queue-state menu groups with active-group routing,
-     attention-group routing, default-group routing, primary-group routing,
-     item/action ID lists, enabled/disabled/empty/primary/selected/attention
-     group counts, badge totals, disabled reasons, and
-     lane-tab-panel-card-action-menu-groups capability metadata for
-     first-render product-shell menus.
+     panel-card-action-menu-group-shortcut surfaces and JSON helpers that
+     project queued, blocked, and attention menu groups into stable host
+     shortcut descriptors with active-shortcut routing, attention-shortcut
+     routing, default-shortcut routing, primary-shortcut routing, accelerator
+     labels, menu-group targets, item/action ID lists, enabled/disabled/empty/
+     primary/selected/attention shortcut counts, disabled reasons, and
+     lane-tab-panel-card-action-menu-group-shortcuts capability metadata for
+     first-render product-shell command surfaces.
    - Preserve package name, source fingerprint, ready/blocked route, status
      severity, attention-required flag, active lane ID, active tab ID,
      active panel ID, active panel-card ID, active panel-card action ID,
@@ -65,16 +65,27 @@ the Rust, Python, and TypeScript surfaces together.
      group count, per-menu-group queue state, label, summary, item/action ID
      lists, item count, enabled/disabled/empty/primary/selected/attention item
      counts, selected/default/active/attention/disabled/empty/enabled/primary
-     flags, disabled-reason, dispatch-queue capability ID, dispatch-queue
-     summary capability ID, dispatch-queue digest capability ID,
+     flags, disabled-reason, active menu-group shortcut ID, attention
+     menu-group shortcut ID, default menu-group shortcut ID, primary
+     menu-group shortcut ID, menu-group shortcut count, enabled menu-group
+     shortcut count, disabled menu-group shortcut count, empty menu-group
+     shortcut count, primary menu-group shortcut count, selected menu-group
+     shortcut count, attention menu-group shortcut count, per-shortcut
+     queue state, label, summary, accelerator, target, menu item IDs,
+     action IDs, item counts, badge counts, selected/default/active/
+     attention/disabled/empty/enabled/primary flags, disabled-reason,
+     dispatch-queue capability ID, dispatch-queue summary capability ID,
+     dispatch-queue digest capability ID,
      dispatch-queue lanes capability ID, dispatch-queue lane-tabs capability
      ID, dispatch-queue lane-tab-panels capability ID, dispatch-queue
      lane-tab-panel-cards capability ID, dispatch-queue
      lane-tab-panel-card-actions capability ID, dispatch-queue
      lane-tab-panel-card-action-menu capability ID, dispatch-queue
-     lane-tab-panel-card-action-menu-groups capability ID, and advertised
-     capability count so Mosaic, WebAssembly, and product shells can append
-     compact lane card action menu groups without walking every queue item.
+     lane-tab-panel-card-action-menu-groups capability ID, dispatch-queue
+     lane-tab-panel-card-action-menu-group-shortcuts capability ID, and
+     advertised capability count so Mosaic, WebAssembly, and product shells can
+     append compact lane card action menu shortcut maps without walking every
+     queue item.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -2155,6 +2166,30 @@ the Rust, Python, and TypeScript surfaces together.
      lane-tab-panel-card-action-menu capability ID, and advertised capability
      count so Mosaic, WebAssembly, and product shells can append compact lane
      card action menus without walking every queue item.
+
+178. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu groups.
+   - Status: completed in PR 7272.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell dashboard dispatch-queue lane-tab panel-card-action-menu-group
+     surfaces plus JSON helpers that bucket queued, blocked, and attention
+     dispatch queue lane-tab panel-card action menu items into stable
+     queue-state menu groups with active-group routing, attention-group
+     routing, default-group routing, primary-group routing, item/action ID
+     lists, enabled/disabled/empty/primary/selected/attention group counts,
+     badge totals, disabled reasons, and
+     lane-tab-panel-card-action-menu-groups capability metadata for
+     first-render product-shell menus.
+   - The dispatch-queue lane-tab panel-card action menu group payload preserves
+     package name, source fingerprint, ready/blocked route, status severity,
+     attention-required flag, active lane/tab/panel/panel-card/action/menu-item/
+     menu-group IDs, attention lane/tab/panel/panel-card/action/menu-item/
+     menu-group IDs, default and primary menu item/group IDs, lane/tab/panel/
+     panel-card/action/menu-item/menu-group counts, per-menu-group queue state,
+     label, summary, item/action ID lists, item counts, selected/default/active/
+     attention/disabled/empty/enabled/primary flags, disabled reason,
+     dispatch-queue capability IDs, and advertised capability count so Mosaic,
+     WebAssembly, and product shells can append compact lane card action menu
+     groups without walking every queue item.
 
 ## Backlog
 

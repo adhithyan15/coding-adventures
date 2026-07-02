@@ -410,6 +410,18 @@ assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups_js
 assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups_json.contains(
     r#""dispatchQueueLaneTabPanelCardActionMenuGroupsCapabilityId":"app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-groups-json""#
 ));
+
+let shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_json =
+    deck.run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_json(
+        BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        },
+    )?;
+assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_json
+    .contains(r#""activeMenuGroupShortcutId":"dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut.queued""#));
+assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_json
+    .contains(r#""dispatchQueueLaneTabPanelCardActionMenuGroupShortcutsCapabilityId":"app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcuts-json""#));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
@@ -463,6 +475,11 @@ Dashboard dispatch queue lane tab panel card action menu groups bucket those
 menu items by queue state with active/attention/default/primary group IDs,
 item/action ID lists, enabled, disabled, empty, primary, selected, and
 attention group counts, badge totals, and lane-tab-panel-card-action-menu-group
+capability metadata.
+Dashboard dispatch queue lane tab panel card action menu group shortcuts expose
+host accelerator hints over those queue-state groups with stable shortcut IDs,
+targets, active/attention/default/primary shortcut routing, accelerator labels,
+disabled reasons, and lane-tab-panel-card-action-menu-group-shortcuts
 capability metadata.
 Persisted editor-state snapshots resolve saved selection and active-command IDs
 against the current deck, repairing stale UI state after source edits. Host
