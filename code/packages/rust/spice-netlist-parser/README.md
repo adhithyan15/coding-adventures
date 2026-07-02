@@ -483,6 +483,20 @@ assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_sho
     .contains(r#""activeMenuGroupShortcutCommandSearchResultId":"dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-result.queued""#));
 assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_results_json
     .contains(r#""dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchResultsCapabilityId":"app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-results-json""#));
+
+let shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_selection_json =
+    deck.run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_selection_json(
+        BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        },
+        "queued dispatch",
+        None,
+    )?;
+assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_selection_json
+    .contains(r#""selectedCommandId":"berkeley.app-shell.dashboard.dispatch-queue.menu-group-shortcut.queued""#));
+assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_selection_json
+    .contains(r#""dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchSelectionCapabilityId":"app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-selection-json""#));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
