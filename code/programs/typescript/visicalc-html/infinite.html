@@ -642,8 +642,12 @@
       var n = workbook.replaceAll(q, r, false); // case-insensitive
       render();
       formulaEl.value = workbook.getRaw(a1(selRow, selCol));
-      statusEl.innerHTML += " &nbsp;·&nbsp; replaced " + esc(q) + " → " + esc(r) +
-        " in " + n + " cell(s)";
+      // The find/replace terms are user-controlled, so keep them out of the HTML
+      // sink entirely: append them as a DOM text node (which can never be parsed
+      // as markup) rather than concatenating into innerHTML. The static separator
+      // still goes through insertAdjacentHTML so its entities render.
+      statusEl.insertAdjacentHTML("beforeend", " &nbsp;·&nbsp; replaced ");
+      statusEl.appendChild(document.createTextNode(q + " → " + r + " in " + n + " cell(s)"));
     });
 
     // Save / load: serialize the whole workbook to a single JSON document and
