@@ -372,10 +372,11 @@ fn compile_inner(
     }
 
     let frame = alloc.frame_size();
-    if frame > 504 {
-        // stp_pre/ldp_post use a 7-bit signed immediate × 8, so the
-        // pre-indexed delta is bounded at ±504.  Functions that need a
-        // bigger frame are out of scope for V1.
+    // `sub_imm` takes a 12-bit unsigned immediate (0..4095), so the split
+    // prologue (see below) supports frames up to 4080 bytes (4080 = 4096
+    // rounded down to 16-byte alignment, covering 508 variable slots).
+    // Functions beyond that are out of scope for V1.
+    if frame > 4080 {
         return Err(BackendError::FrameTooLarge(frame));
     }
 
@@ -425,8 +426,19 @@ fn compile_inner(
     }
 
     // ---- Prologue --------------------------------------------------------
-    asm.stp_pre(Reg::Fp, Reg::Lr, Reg::Sp, -(frame as i32))?;
-    asm.add_imm(Reg::Fp, Reg::Sp, 0)?; // mov fp, sp (alias for add #0)
+    // Small frames (≤ 504 bytes): `STP X29,X30,[SP,#-frame]!` — pre-indexed
+    // combined allocate+save in one instruction.
+    // Large frames (> 504 bytes): split into `SUB SP,SP,#frame` (12-bit imm,
+    // up to 4080 bytes) followed by two `STR`s.  The variable slots ([SP,#16]
+    // onward) are the same in both cases; only the fp/lr save differs.
+    if frame <= 504 {
+        asm.stp_pre(Reg::Fp, Reg::Lr, Reg::Sp, -(frame as i32))?;
+    } else {
+        asm.sub_imm(Reg::Sp, Reg::Sp, frame)?;
+        asm.str_(Reg::Fp, Reg::Sp, 0)?; // [sp+0] = saved fp
+        asm.str_(Reg::Lr, Reg::Sp, 8)?; // [sp+8] = saved lr
+    }
+    asm.add_imm(Reg::Fp, Reg::Sp, 0)?; // fp = sp (alias for mov fp,sp)
 
     // Spill incoming params (x0..x7) to their slots.
     for (i, (name, _ty)) in ctx.params.iter().enumerate() {
@@ -1720,7 +1732,15 @@ fn load_operand(
 }
 
 fn emit_epilogue(asm: &mut Assembler, frame: u32) -> Result<(), BackendError> {
-    asm.ldp_post(Reg::Fp, Reg::Lr, Reg::Sp, frame as i32)?;
+    // Mirror the prologue: small frames use the combined `LDP … [SP],#frame`
+    // (post-indexed); large frames use two separate `LDR`s + `ADD SP,SP,#frame`.
+    if frame <= 504 {
+        asm.ldp_post(Reg::Fp, Reg::Lr, Reg::Sp, frame as i32)?;
+    } else {
+        asm.ldr(Reg::Fp, Reg::Sp, 0)?; // restore fp from [sp+0]
+        asm.ldr(Reg::Lr, Reg::Sp, 8)?; // restore lr from [sp+8]
+        asm.add_imm(Reg::Sp, Reg::Sp, frame)?; // sp += frame
+    }
     asm.ret();
     Ok(())
 }
