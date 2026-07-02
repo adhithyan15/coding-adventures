@@ -82,6 +82,7 @@ SELF_CONTAINED_RUNGS = (
     "rung42_hemofiltration_concentration",
     "rung43_compounded_admixture",
     "rung44_indicator_dilution",
+    "rung45_elimination_rate",
 )
 
 

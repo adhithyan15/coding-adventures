@@ -81,6 +81,13 @@ pub enum ArithOp {
     /// for `x^n` (lowered to `logic_engine::ComputeOp::Pow`); the surface
     /// arithmetic grammar does not yet spell `^` directly.
     Pow,
+    /// Modulo, `a mod b` — the remainder carrying the sign of the dividend
+    /// (`7 mod 3 = 1`, `−7 mod 3 = −1`). Produced by the `latex "…"` adapter for
+    /// `a \bmod b` / `a \pmod{b}` (lowered to `logic_engine::ComputeOp::Mod`); the
+    /// surface arithmetic grammar does not spell `mod` directly. Like the engine op
+    /// it combines dimensionally like addition (operands share a dimension, the
+    /// remainder carries it) and rejects a zero divisor.
+    Mod,
 }
 
 /// A named **transcendental** function in a `let` formula — the curated

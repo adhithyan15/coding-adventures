@@ -756,6 +756,7 @@ fn lower_arith_op(op: ArithOp) -> ComputeOp {
         ArithOp::Mul => ComputeOp::Mul,
         ArithOp::Div => ComputeOp::Div,
         ArithOp::Pow => ComputeOp::Pow,
+        ArithOp::Mod => ComputeOp::Mod,
     }
 }
 
@@ -1970,6 +1971,53 @@ contributes 1000000 from answer == 60 to correct
         )
         .unwrap();
         assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_latex_bmod_computes_the_remainder() {
+        // `a \bmod b` with a=7, b=3 is 7 mod 3 = 1, computed on the native
+        // ComputeOp::Mod via the operator-name-juxtaposition path: `\bmod` has no
+        // operator-table entry, so it lowers to Symbol("bmod") inside the implicit
+        // multiplication `Bin(Mul, Bin(Mul, a, bmod), b)`, which the adapter
+        // recognises as `a mod b` — NOT the bare product `a * bmod * b`.
+        let d = crate::compile_and_decide(
+            "observe a(7)\n\
+             observe b(3)\n\
+             let answer = latex \"$a \\bmod b$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 1 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_latex_pmod_matches_bmod_and_carries_the_dividend_sign() {
+        // `a \pmod{b}` computes the same remainder as `\bmod` (a=7, b=3 → 1); and a
+        // negative dividend keeps its sign — `(0 − a) \bmod b` = −7 mod 3 = −1 (Rust
+        // `%`), the whole point of ComputeOp::Mod versus a Euclidean/floored modulo
+        // (which would give +2).
+        let p = crate::compile_and_decide(
+            "observe a(7)\n\
+             observe b(3)\n\
+             let answer = latex \"$a \\pmod{b}$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 1 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(p.ranked[0].posterior > 0.99, "{p:?}");
+        let neg = crate::compile_and_decide(
+            "observe a(7)\n\
+             observe b(3)\n\
+             let answer = latex \"$(0 - a) \\bmod b$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == -1 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(neg.ranked[0].posterior > 0.99, "{neg:?}");
     }
 
     #[test]
