@@ -8623,9 +8623,6 @@ fn repair_tricky_adoption_agency_in(nodes: &mut Vec<Node>) {
         if repair_paragraph_inside_previous_font_continuation(nodes, index) {
             continue;
         }
-        if repair_following_paragraph_inside_font_continuation(nodes, index) {
-            continue;
-        }
         index += 1;
     }
 }
@@ -8667,68 +8664,6 @@ fn repair_paragraph_inside_previous_font_continuation(nodes: &mut Vec<Node>, ind
     };
     previous_font.children.push(paragraph);
     unwrap_following_empty_font_newline(nodes, index);
-    true
-}
-
-fn repair_following_paragraph_inside_font_continuation(
-    nodes: &mut Vec<Node>,
-    index: usize,
-) -> bool {
-    let Some(Node::Element(font)) = nodes.get(index) else {
-        return false;
-    };
-    if font.name != "font"
-        || font.attribute("size") != Some("7")
-        || font.children.len() != 1
-        || !matches!(font.children.first(), Some(Node::Text(text)) if text.data == "\n")
-    {
-        return false;
-    }
-
-    let Some(Node::Element(paragraph)) = nodes.get(index + 1) else {
-        return false;
-    };
-    if paragraph.name != "p" || paragraph.children.len() != 1 {
-        return false;
-    }
-    let Some(Node::Element(child_font)) = paragraph.children.first() else {
-        return false;
-    };
-    if child_font.name != "font" || child_font.attribute("size") != Some("7") {
-        return false;
-    }
-
-    let trailing_newline = match nodes.get(index + 2) {
-        Some(Node::Element(following_font))
-            if following_font.name == "font"
-                && following_font.attribute("size") == Some("7")
-                && following_font.children.len() == 1 =>
-        {
-            match following_font.children.first() {
-                Some(Node::Text(text)) if text.data == "\n" => Some(text.data.clone()),
-                _ => None,
-            }
-        }
-        _ => None,
-    };
-
-    let mut paragraph = nodes.remove(index + 1);
-    let Node::Element(paragraph_element) = &mut paragraph else {
-        return false;
-    };
-    let Node::Element(child_font) = paragraph_element.children.remove(0) else {
-        return false;
-    };
-    paragraph_element.children = child_font.children;
-    let Some(Node::Element(font)) = nodes.get_mut(index) else {
-        return false;
-    };
-    font.children.push(paragraph);
-
-    if let Some(newline) = trailing_newline {
-        nodes.remove(index + 1);
-        nodes.insert(index + 1, Node::text(newline));
-    }
     true
 }
 
