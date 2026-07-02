@@ -78,6 +78,8 @@ pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION
     u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_SCHEMA_VERSION:
     u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_SCHEMA_VERSION:
+    u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -155,6 +157,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-json",
     "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-json",
     "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -9115,6 +9118,213 @@ impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortc
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoff
+{
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub receipt_notification_stack_summary_product_handoff_id: String,
+    pub receipt_notification_stack_summary_id: String,
+    pub receipt_notification_stack_id: String,
+    pub receipt_notification_id: String,
+    pub receipt_summary_id: String,
+    pub receipt_stream_id: String,
+    pub search_invocation_id: String,
+    pub search_selection_id: String,
+    pub search_results_id: String,
+    pub search_index_id: String,
+    pub palette_id: String,
+    pub registry_id: String,
+    pub command_group: String,
+    pub query: String,
+    pub normalized_query: String,
+    pub query_tokens: Vec<String>,
+    pub query_token_count: usize,
+    pub product_surface: String,
+    pub render_region: String,
+    pub handoff_route: String,
+    pub handoff_status: String,
+    pub product_shell_action: String,
+    pub notification_badge_label: String,
+    pub notification_badge_count: usize,
+    pub live_region_id: Option<String>,
+    pub latest_announcement: Option<String>,
+    pub headline_notification_id: Option<String>,
+    pub headline_notification_kind: Option<String>,
+    pub headline_notification_level: Option<String>,
+    pub headline_notification_title: Option<String>,
+    pub headline_notification_body: Option<String>,
+    pub summary_kind: String,
+    pub summary_level: String,
+    pub summary_title: Option<String>,
+    pub summary_body: Option<String>,
+    pub should_render_stack: bool,
+    pub should_announce_latest: bool,
+    pub requires_attention: bool,
+    pub notification_count: usize,
+    pub visible_notification_count: usize,
+    pub announce_notification_count: usize,
+    pub attention_notification_count: usize,
+    pub success_notification_count: usize,
+    pub error_notification_count: usize,
+    pub info_notification_count: usize,
+    pub stack_summary:
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummary,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoff {
+    pub fn from_bootstrap_snapshot(
+        snapshot: &BerkeleyAppBootstrapSnapshot,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_notification_stack_summary(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummary::from_bootstrap_snapshot(
+                snapshot,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(
+        handoff: &BerkeleyAppShellHandoff,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_notification_stack_summary(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummary::from_shell_handoff(
+                handoff,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_notification_stack_summary(
+        summary: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummary,
+    ) -> Self {
+        let handoff_route = if summary.should_render_stack {
+            "notification-stack"
+        } else {
+            "dispatch-status"
+        };
+        let product_shell_action = if summary.has_error_notifications {
+            "open-dispatch-errors"
+        } else if summary.should_render_stack {
+            "render-notification-stack"
+        } else {
+            "render-empty-dispatch-status"
+        };
+        let notification_badge_label = if summary.visible_notification_count == 1 {
+            "1 visible notification".to_string()
+        } else {
+            format!("{} visible notifications", summary.visible_notification_count)
+        };
+        let live_region_id = summary
+            .should_announce_latest
+            .then(|| "app-shell-command-palette-receipt-live-region".to_string());
+        let latest_announcement = if summary.should_announce_latest {
+            match (&summary.summary_title, &summary.summary_body) {
+                (Some(title), Some(body)) => Some(format!("{title}: {body}")),
+                (Some(title), None) => Some(title.clone()),
+                (None, Some(body)) => Some(body.clone()),
+                (None, None) => None,
+            }
+        } else {
+            None
+        };
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_SCHEMA_VERSION,
+            package_name: summary.package_name.clone(),
+            source_fingerprint: summary.source_fingerprint.clone(),
+            title: summary.title.clone(),
+            startup_route: summary.startup_route.clone(),
+            ready: summary.ready,
+            severity: summary.severity.clone(),
+            attention_required: summary.attention_required,
+            receipt_notification_stack_summary_product_handoff_id:
+                "dashboard.dispatch-queue.shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff"
+                    .to_string(),
+            receipt_notification_stack_summary_id: summary
+                .receipt_notification_stack_summary_id
+                .clone(),
+            receipt_notification_stack_id: summary.receipt_notification_stack_id.clone(),
+            receipt_notification_id: summary.receipt_notification_id.clone(),
+            receipt_summary_id: summary.receipt_summary_id.clone(),
+            receipt_stream_id: summary.receipt_stream_id.clone(),
+            search_invocation_id: summary.search_invocation_id.clone(),
+            search_selection_id: summary.search_selection_id.clone(),
+            search_results_id: summary.search_results_id.clone(),
+            search_index_id: summary.search_index_id.clone(),
+            palette_id: summary.palette_id.clone(),
+            registry_id: summary.registry_id.clone(),
+            command_group: summary.command_group.clone(),
+            query: summary.query.clone(),
+            normalized_query: summary.normalized_query.clone(),
+            query_tokens: summary.query_tokens.clone(),
+            query_token_count: summary.query_token_count,
+            product_surface: "command-palette-dispatch-feedback".to_string(),
+            render_region: "app-shell-command-palette-receipt".to_string(),
+            handoff_route: handoff_route.to_string(),
+            handoff_status: summary.summary_level.clone(),
+            product_shell_action: product_shell_action.to_string(),
+            notification_badge_label,
+            notification_badge_count: summary.visible_notification_count,
+            live_region_id,
+            latest_announcement,
+            headline_notification_id: summary.headline_notification_id.clone(),
+            headline_notification_kind: summary.headline_notification_kind.clone(),
+            headline_notification_level: summary.headline_notification_level.clone(),
+            headline_notification_title: summary.headline_notification_title.clone(),
+            headline_notification_body: summary.headline_notification_body.clone(),
+            summary_kind: summary.summary_kind.clone(),
+            summary_level: summary.summary_level.clone(),
+            summary_title: summary.summary_title.clone(),
+            summary_body: summary.summary_body.clone(),
+            should_render_stack: summary.should_render_stack,
+            should_announce_latest: summary.should_announce_latest,
+            requires_attention: summary.has_attention_notifications
+                || summary.has_error_notifications
+                || summary.attention_required,
+            notification_count: summary.notification_count,
+            visible_notification_count: summary.visible_notification_count,
+            announce_notification_count: summary.announce_notification_count,
+            attention_notification_count: summary.attention_notification_count,
+            success_notification_count: summary.success_notification_count,
+            error_notification_count: summary.error_notification_count,
+            info_notification_count: summary.info_notification_count,
+            stack_summary: summary.clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_capability_id:
+                summary
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-json"
+                    .to_string(),
+            artifact_capability_count: summary.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_json_value(self)
+            .to_string()
+    }
+}
+
 fn command_palette_search_tokens(search_text: &str, keywords: &[String]) -> Vec<String> {
     let mut tokens = Vec::new();
     for source in std::iter::once(search_text).chain(keywords.iter().map(String::as_str)) {
@@ -11560,6 +11770,67 @@ impl BerkeleyAppDeck {
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self
             .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary(
+                persisted_state,
+                search_query,
+                selected_search_result_id,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoff
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoff::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+            search_query,
+            selected_search_result_id,
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoff,
+        AnalysisExecutionError,
+    >{
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoff::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff(
+            persisted_state,
+            search_query,
+            selected_search_result_id,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff(
                 persisted_state,
                 search_query,
                 selected_search_result_id,
@@ -16725,6 +16996,123 @@ fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shor
             .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_capability_id
     );
     insert_json!("artifactCapabilityCount", summary.artifact_capability_count);
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_json_value(
+    handoff: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoff,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", handoff.schema_version);
+    insert_json!("packageName", &handoff.package_name);
+    insert_json!("sourceFingerprint", &handoff.source_fingerprint);
+    insert_json!("title", &handoff.title);
+    insert_json!("startupRoute", &handoff.startup_route);
+    insert_json!("ready", handoff.ready);
+    insert_json!("severity", &handoff.severity);
+    insert_json!("attentionRequired", handoff.attention_required);
+    insert_json!(
+        "receiptNotificationStackSummaryProductHandoffId",
+        &handoff.receipt_notification_stack_summary_product_handoff_id
+    );
+    insert_json!(
+        "receiptNotificationStackSummaryId",
+        &handoff.receipt_notification_stack_summary_id
+    );
+    insert_json!(
+        "receiptNotificationStackId",
+        &handoff.receipt_notification_stack_id
+    );
+    insert_json!("receiptNotificationId", &handoff.receipt_notification_id);
+    insert_json!("receiptSummaryId", &handoff.receipt_summary_id);
+    insert_json!("receiptStreamId", &handoff.receipt_stream_id);
+    insert_json!("searchInvocationId", &handoff.search_invocation_id);
+    insert_json!("searchSelectionId", &handoff.search_selection_id);
+    insert_json!("searchResultsId", &handoff.search_results_id);
+    insert_json!("searchIndexId", &handoff.search_index_id);
+    insert_json!("paletteId", &handoff.palette_id);
+    insert_json!("registryId", &handoff.registry_id);
+    insert_json!("commandGroup", &handoff.command_group);
+    insert_json!("query", &handoff.query);
+    insert_json!("normalizedQuery", &handoff.normalized_query);
+    insert_json!("queryTokens", &handoff.query_tokens);
+    insert_json!("queryTokenCount", handoff.query_token_count);
+    insert_json!("productSurface", &handoff.product_surface);
+    insert_json!("renderRegion", &handoff.render_region);
+    insert_json!("handoffRoute", &handoff.handoff_route);
+    insert_json!("handoffStatus", &handoff.handoff_status);
+    insert_json!("productShellAction", &handoff.product_shell_action);
+    insert_json!("notificationBadgeLabel", &handoff.notification_badge_label);
+    insert_json!("notificationBadgeCount", handoff.notification_badge_count);
+    insert_json!("liveRegionId", &handoff.live_region_id);
+    insert_json!("latestAnnouncement", &handoff.latest_announcement);
+    insert_json!("headlineNotificationId", &handoff.headline_notification_id);
+    insert_json!(
+        "headlineNotificationKind",
+        &handoff.headline_notification_kind
+    );
+    insert_json!(
+        "headlineNotificationLevel",
+        &handoff.headline_notification_level
+    );
+    insert_json!(
+        "headlineNotificationTitle",
+        &handoff.headline_notification_title
+    );
+    insert_json!(
+        "headlineNotificationBody",
+        &handoff.headline_notification_body
+    );
+    insert_json!("summaryKind", &handoff.summary_kind);
+    insert_json!("summaryLevel", &handoff.summary_level);
+    insert_json!("summaryTitle", &handoff.summary_title);
+    insert_json!("summaryBody", &handoff.summary_body);
+    insert_json!("shouldRenderStack", handoff.should_render_stack);
+    insert_json!("shouldAnnounceLatest", handoff.should_announce_latest);
+    insert_json!("requiresAttention", handoff.requires_attention);
+    insert_json!("notificationCount", handoff.notification_count);
+    insert_json!(
+        "visibleNotificationCount",
+        handoff.visible_notification_count
+    );
+    insert_json!(
+        "announceNotificationCount",
+        handoff.announce_notification_count
+    );
+    insert_json!(
+        "attentionNotificationCount",
+        handoff.attention_notification_count
+    );
+    insert_json!(
+        "successNotificationCount",
+        handoff.success_notification_count
+    );
+    insert_json!("errorNotificationCount", handoff.error_notification_count);
+    insert_json!("infoNotificationCount", handoff.info_notification_count);
+    value.insert(
+        "stackSummary".to_string(),
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_json_value(
+            &handoff.stack_summary,
+        ),
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryCapabilityId",
+        &handoff
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffCapabilityId",
+        &handoff
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_capability_id
+    );
+    insert_json!("artifactCapabilityCount", handoff.artifact_capability_count);
 
     serde_json::Value::Object(value)
 }
