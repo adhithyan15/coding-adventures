@@ -67,6 +67,7 @@
 
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
+    ArrowBody, ArrowFunctionExpression,
     AssignmentTarget, BindingTarget, BlockStatement, CvId, Declaration, Expression, ForInit,
     FunctionDeclaration, FunctionExpression, FunctionParam, Program, ProgramItem, Property, PropertyKey, Statement,
     VarKind, VariableDeclaration,
@@ -618,6 +619,52 @@ fn walk_function_expression(
     }
 }
 
+/// Walk an arrow function, introducing its own function scope. Two
+/// differences from [`walk_function_expression`]:
+///
+/// - **No name binding.** Arrows are always anonymous, so there is no
+///   body-local `id` to bind (only the params).
+/// - **A dual body.** A block body walks its statements; a concise
+///   (expression) body walks its single expression. Both do so under the
+///   arrow's own scope so a param reference resolves to the param, not to
+///   an outer binding of the same name.
+///
+/// (Arrows do not bind their own `this`/`arguments`, but this analyzer
+/// tracks *name* scopes — `var`/`let`/param bindings — for which an arrow
+/// behaves exactly like any other function scope.)
+fn walk_arrow_function_expression(
+    ae: &ArrowFunctionExpression,
+    ctx: WalkCtx,
+    analysis: &mut ScopeAnalysis,
+    pending: &mut Vec<PendingReference>,
+) {
+    let function_scope = emit_scope(ScopeKind::Function, ctx.current, analysis);
+
+    for param in &ae.params {
+        let FunctionParam::Identifier(id) = param;
+        emit_binding(
+            id.name.clone(),
+            BindingKind::Param,
+            function_scope,
+            id.cv.clone(),
+            analysis,
+        );
+    }
+
+    let inner_ctx = WalkCtx {
+        current: function_scope,
+        enclosing_function: function_scope,
+    };
+    match &ae.body {
+        ArrowBody::Block(b) => {
+            for stmt in &b.body {
+                walk_statement(stmt, inner_ctx, analysis, pending);
+            }
+        }
+        ArrowBody::Expression(e) => walk_expression(e, inner_ctx, analysis, pending),
+    }
+}
+
 fn walk_block_statement(
     block: &BlockStatement,
     ctx: WalkCtx,
@@ -857,6 +904,9 @@ fn walk_expression(
         }
         Expression::FunctionExpression(fe) => {
             walk_function_expression(fe, ctx, analysis, pending);
+        }
+        Expression::ArrowFunctionExpression(ae) => {
+            walk_arrow_function_expression(ae, ctx, analysis, pending);
         }
     }
 }

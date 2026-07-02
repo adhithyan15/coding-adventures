@@ -132,7 +132,8 @@ pub use declaration::{
     VariableDeclaration, VariableDeclarator,
 };
 pub use expression::{
-    ArrayExpression, AssignmentExpression, AssignmentOperator, AssignmentTarget,
+    ArrayExpression, ArrowBody, ArrowFunctionExpression, AssignmentExpression,
+    AssignmentOperator, AssignmentTarget,
     BigIntLiteral, BinaryExpression, BinaryOperator, BooleanLiteral, CallExpression,
     ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
     LogicalOperator, MemberExpression,

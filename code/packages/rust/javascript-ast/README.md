@@ -38,8 +38,14 @@ emitter grow a need for them — each behind its own `CLOC12.NN` slice:
   only structural difference is `id: Option<Identifier>` (anonymous, or a
   body-local name). Rolled out bottom-up: this crate adds the node; the
   `javascript-parser` bridge, `closure-emitter`, and the passes wire it up in
-  follow-on slices. (Arrow functions, methods, getters/setters, and classes
-  remain Phase 3.)
+  follow-on slices.
+- `ArrowFunctionExpression` (CLOC12.151) — the `=>` form (`x => x + 1`,
+  `() => {}`, `async x => f(x)`). No `id` (always anonymous) and no `generator`;
+  the body is a new `ArrowBody` enum — a `Block(BlockStatement)` or a concise
+  `Expression(Box<Expression>)`. The node, `closure-emitter`, and all pass
+  traversals land in one atomic PR (adding an `Expression` variant makes every
+  exhaustive `match` non-exhaustive); the bridge-enable + conformance port
+  follow. (Methods, getters/setters, and classes remain Phase 3.)
 
 ## What's coming (follow-up PRs)
 

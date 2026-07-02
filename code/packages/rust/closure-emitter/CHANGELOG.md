@@ -2,6 +2,31 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.20.0] - 2026-07-02
+
+### Added — CLOC12.151: emit `ArrowFunctionExpression` (the `=>` form)
+
+`emit_arrow_function_expression` prints the new `Expression::ArrowFunctionExpression`
+node. Shape rules:
+
+- **Param parens dropped for a single plain identifier** — `x=>x`; zero
+  (`()=>`) and two-or-more (`(a,b)=>`) keep them.
+- **Dual body** — a block body emits like a function body (`x=>{return x}`,
+  with the last statement's trailing `;` dropped in compact mode); a concise
+  body emits the bare expression at `PREC_ASSIGNMENT` (`x=>x+1`).
+- **Object-literal concise bodies are wrapped** — `()=>({a:1})`, so the leading
+  `{` isn't read as a block. (The deeper leftmost-`{` case, e.g. `()=>({}).x`,
+  is not yet wrapped — tracked in CLOC12-gaps.)
+- **Precedence** — an arrow is tagged `PREC_ASSIGNMENT`, so a call callee /
+  member object parent wraps it (`(()=>{})()`, `(()=>{}).x`), while an
+  assignment RHS or conditional branch leaves it bare. Unlike a function
+  expression it needs no statement-start wrap (`x=>x;` is a valid statement).
+- **`async`** — prints an `async` prefix, with a separating space only before
+  an unparenthesised identifier param (`async x=>x`, but `async()=>{}`).
+
+12 new unit tests. Part of the atomic `ArrowFunctionExpression` enum-variant
+rollout (javascript-ast 0.15.0).
+
 ## [0.19.1] - 2026-07-01
 
 ### Test — CodePrinter function-expression port (#88, CLOC12.150)

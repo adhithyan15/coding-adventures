@@ -107,8 +107,8 @@ use coding_adventures_correlation_vector::Contribution;
 use serde_json::json;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
-    AssignmentTarget, BindingTarget, Declaration, Expression, ForInit, FunctionParam, Program,
-    ProgramItem, PropertyKey, Statement, VarKind, VariableDeclaration,
+    ArrowBody, AssignmentTarget, BindingTarget, Declaration, Expression, ForInit, FunctionParam,
+    Program, ProgramItem, PropertyKey, Statement, VarKind, VariableDeclaration,
 };
 
 /// `Pass::depends_on` value — constant-fold first, so a folded
@@ -788,6 +788,17 @@ fn count_uses_expr(expr: &Expression, name: &str, count: &mut usize) {
                 count_uses_stmt(s, name, count);
             }
         }
+        // Count uses inside an arrow-value's body, same conservative
+        // posture as the function arm (over-counting under a shadowing
+        // param only prevents an inline, never produces a wrong one).
+        Expression::ArrowFunctionExpression(ae) => match &ae.body {
+            ArrowBody::Block(b) => {
+                for s in &b.body {
+                    count_uses_stmt(s, name, count);
+                }
+            }
+            ArrowBody::Expression(e) => count_uses_expr(e, name, count),
+        },
     }
 }
 
@@ -1045,6 +1056,17 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
                 changed |= propagate_in_stmt(s, cand);
             }
         }
+        // Propagate into an arrow-value's body, kept consistent with
+        // `count_uses_expr` so the count and the substitution cover the
+        // same positions.
+        Expression::ArrowFunctionExpression(ae) => match &mut ae.body {
+            ArrowBody::Block(b) => {
+                for s in &mut b.body {
+                    changed |= propagate_in_stmt(s, cand);
+                }
+            }
+            ArrowBody::Expression(e) => changed |= propagate_in_expr(e, cand),
+        },
     }
     changed
 }

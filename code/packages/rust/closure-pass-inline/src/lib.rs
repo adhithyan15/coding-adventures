@@ -127,7 +127,8 @@ use coding_adventures_correlation_vector::Contribution;
 use serde_json::json;
 use coding_adventures_javascript_ast::statement::{ReturnStatement, TaggedStatement};
 use coding_adventures_javascript_ast::{
-    AssignmentExpression, AssignmentOperator, AssignmentTarget, BindingTarget, BlockStatement,
+    ArrowBody, AssignmentExpression, AssignmentOperator, AssignmentTarget, BindingTarget,
+    BlockStatement,
     CallExpression, Declaration, Expression, ExpressionStatement, ForInit, FunctionDeclaration,
     FunctionParam, Identifier, IfStatement, NullLiteral, Program, ProgramItem, PropertyKey,
     Statement, VarKind, VariableDeclaration, VariableDeclarator,
@@ -478,6 +479,16 @@ fn expr_node_count(expr: &Expression) -> usize {
         // a candidate whose value embeds a function from looking
         // deceptively cheap.
         Expression::FunctionExpression(fe) => fe.params.len() + fe.body.body.len(),
+        // Same size heuristic for an arrow: params plus its body weight —
+        // one unit per statement for a block, or the node count of the
+        // concise expression.
+        Expression::ArrowFunctionExpression(ae) => {
+            ae.params.len()
+                + match &ae.body {
+                    ArrowBody::Block(b) => b.body.len(),
+                    ArrowBody::Expression(e) => expr_node_count(e),
+                }
+        }
     }
 }
 
@@ -783,6 +794,14 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                 out.insert(id.name.clone());
             }
         }
+        // An arrow binds its params at its boundary (it has no name);
+        // record them so an inline never captures or collides with them.
+        Expression::ArrowFunctionExpression(ae) => {
+            for p in &ae.params {
+                let FunctionParam::Identifier(id) = p;
+                out.insert(id.name.clone());
+            }
+        }
     }
 }
 
@@ -1040,6 +1059,16 @@ fn tally_expr(expr: &Expression, cand: &InlineCandidate, t: &mut Tally) {
                 tally_stmt(s, cand, t);
             }
         }
+        // A closure over the candidate inside an arrow body is still a
+        // use — mirror the function arm.
+        Expression::ArrowFunctionExpression(ae) => match &ae.body {
+            ArrowBody::Block(b) => {
+                for s in &b.body {
+                    tally_stmt(s, cand, t);
+                }
+            }
+            ArrowBody::Expression(e) => tally_expr(e, cand, t),
+        },
     }
 }
 
@@ -1306,6 +1335,16 @@ fn inline_in_expr(expr: &mut Expression, cand: &InlineCandidate) -> bool {
                 changed |= inline_in_stmt(s, cand);
             }
         }
+        // Inline candidate calls inside an arrow body too, mirroring the
+        // function arm.
+        Expression::ArrowFunctionExpression(ae) => match &mut ae.body {
+            ArrowBody::Block(b) => {
+                for s in &mut b.body {
+                    changed |= inline_in_stmt(s, cand);
+                }
+            }
+            ArrowBody::Expression(e) => changed |= inline_in_expr(e, cand),
+        },
     }
     changed
 }
@@ -1413,6 +1452,24 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
             }
             for s in &mut fe.body.body {
                 substitute_in_stmt(s, &inner);
+            }
+        }
+        // An arrow's params SHADOW the substituted parameter of the same
+        // spelling — remove those keys before recursing so a shadowed
+        // reference is left untouched. (Arrows have no self-name.)
+        Expression::ArrowFunctionExpression(ae) => {
+            let mut inner = map.clone();
+            for p in &ae.params {
+                let FunctionParam::Identifier(id) = p;
+                inner.remove(&id.name);
+            }
+            match &mut ae.body {
+                ArrowBody::Block(b) => {
+                    for s in &mut b.body {
+                        substitute_in_stmt(s, &inner);
+                    }
+                }
+                ArrowBody::Expression(e) => substitute(e, &inner),
             }
         }
     }
@@ -1757,6 +1814,17 @@ fn expr_collect_mutated_params(
                 stmt_collect_mutated_params(s, params, out);
             }
         }
+        // A closure inside an arrow body mutating an outer param counts
+        // as a mutation too — recurse. Over-detection only makes the pass
+        // decline to inline (a mutated param is not substituted).
+        Expression::ArrowFunctionExpression(ae) => match &ae.body {
+            ArrowBody::Block(b) => {
+                for s in &b.body {
+                    stmt_collect_mutated_params(s, params, out);
+                }
+            }
+            ArrowBody::Expression(e) => expr_collect_mutated_params(e, params, out),
+        },
         Expression::Identifier(_)
         | Expression::NumericLiteral(_)
         | Expression::StringLiteral(_)
@@ -3179,6 +3247,24 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
             }
             for s in &mut fe.body.body {
                 rename_in_stmt(s, &inner);
+            }
+        }
+        // An arrow's params SHADOW any outer name being alpha-renamed —
+        // drop those keys before recursing so a shadowed use keeps its
+        // (inner) name. (Arrows have no self-name.)
+        Expression::ArrowFunctionExpression(ae) => {
+            let mut inner = map.clone();
+            for p in &ae.params {
+                let FunctionParam::Identifier(id) = p;
+                inner.remove(&id.name);
+            }
+            match &mut ae.body {
+                ArrowBody::Block(b) => {
+                    for s in &mut b.body {
+                        rename_in_stmt(s, &inner);
+                    }
+                }
+                ArrowBody::Expression(e) => rename_in_expr(e, &inner),
             }
         }
     }

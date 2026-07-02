@@ -83,8 +83,8 @@ use coding_adventures_correlation_vector::Contribution;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use serde_json::json;
 use coding_adventures_javascript_ast::{
-    AssignmentTarget, Declaration, Expression, ForInit, Program, ProgramItem, PropertyKey,
-    Statement,
+    ArrowBody, AssignmentTarget, Declaration, Expression, ForInit, Program, ProgramItem,
+    PropertyKey, Statement,
 };
 
 /// `Pass::depends_on` value — empty. Property renaming is correct
@@ -1213,6 +1213,19 @@ fn classify_expr(expr: &Expression, cls: &mut Classify) {
                 classify_stmt(s, cls, &mut nested);
             }
         }
+        // Classify property accesses inside an arrow-value's body too —
+        // a quoted `o["foo"]` written there must still disable renaming
+        // of `foo`. Params are variable names, never property names, so
+        // they don't touch the property namespace.
+        Expression::ArrowFunctionExpression(ae) => match &ae.body {
+            ArrowBody::Block(b) => {
+                let mut nested = 0u32;
+                for s in &b.body {
+                    classify_stmt(s, cls, &mut nested);
+                }
+            }
+            ArrowBody::Expression(e) => classify_expr(e, cls),
+        },
     }
 }
 
@@ -1441,6 +1454,16 @@ fn rewrite_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                 rewrite_stmt(s, map);
             }
         }
+        // Rewrite property accesses inside an arrow-value's body, the
+        // mirror of classifying them above.
+        Expression::ArrowFunctionExpression(ae) => match &mut ae.body {
+            ArrowBody::Block(b) => {
+                for s in &mut b.body {
+                    rewrite_stmt(s, map);
+                }
+            }
+            ArrowBody::Expression(e) => rewrite_expr(e, map),
+        },
     }
 }
 

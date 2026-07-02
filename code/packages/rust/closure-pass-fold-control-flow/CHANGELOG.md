@@ -2,6 +2,12 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.19.0] - 2026-07-02
+
+### Added — CLOC12.151: `ArrowFunctionExpression` traversal
+
+Handle the new `Expression::ArrowFunctionExpression` variant by recursing into arrow bodies — both the block form (`x => {{ ... }}`) and the concise/expression form (`x => expr`) — mirroring this pass's existing `FunctionExpression` handling. Part of the atomic `ArrowFunctionExpression` enum-variant rollout (javascript-ast 0.15.0); adding the variant makes every exhaustive `match` on `Expression` non-exhaustive, so all consumers gain their arm in one PR. Also covers the exhaustive `expression_cv` provenance map.
+
 ## [0.18.0] - 2026-07-01
 
 ### Added — CLOC12.149: fold control flow inside `FunctionExpression`

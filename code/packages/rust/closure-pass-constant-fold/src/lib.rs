@@ -94,6 +94,7 @@ use coding_adventures_javascript_ast::{
     BinaryOperator, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression,
     Declaration, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
+    ArrowBody, ArrowFunctionExpression,
     FunctionDeclaration, FunctionExpression, Identifier,
     IfStatement, LogicalExpression, LogicalOperator, MemberExpression, NullLiteral, NumericLiteral,
     ObjectExpression, Program, ProgramItem, Property, PropertyKey, PropertyKind, ReturnStatement, Statement,
@@ -560,6 +561,26 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                 },
                 generator: f.generator,
                 is_async: f.is_async,
+            })
+        }
+        // An arrow function value: fold inside its body just like a
+        // function expression. A block body folds statement-by-statement;
+        // a concise (expression) body folds the single expression — so
+        // `x => 1 + 1` folds to `x => 2`. `params` are structural.
+        Expression::ArrowFunctionExpression(a) => {
+            Expression::ArrowFunctionExpression(ArrowFunctionExpression {
+                cv: a.cv.clone(),
+                params: a.params.clone(),
+                body: match &a.body {
+                    ArrowBody::Block(b) => ArrowBody::Block(BlockStatement {
+                        cv: b.cv.clone(),
+                        body: b.body.iter().map(|s| fold_statement(s, st)).collect(),
+                    }),
+                    ArrowBody::Expression(e) => {
+                        ArrowBody::Expression(Box::new(fold_expression(e, st)))
+                    }
+                },
+                is_async: a.is_async,
             })
         }
     }

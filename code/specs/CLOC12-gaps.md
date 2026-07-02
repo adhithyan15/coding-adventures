@@ -1428,3 +1428,33 @@ IIFE callee `(function(){})()`, member object `(function(){}).x`), the
 un-parenthesised call-argument context, and the `function*` / `async function`
 prefixes. Getters/setters/methods (object-literal function values) and arrow
 functions remain deferred to their own AST slices.
+
+## CLOC12.151 — `ArrowFunctionExpression` (the `=>` form)
+
+New `Expression::ArrowFunctionExpression { cv, params, body: ArrowBody, is_async }`
+in `javascript-ast` (0.15.0), plus the emitter and every pass traversal — one
+**atomic** PR, because adding an `Expression` variant makes every exhaustive
+`match` across the workspace non-exhaustive, and CI builds the workspace.
+
+Structural simplifications from `FunctionExpression`: no `id` (arrows are always
+anonymous), no `generator`, and a dual-shape `body` — the new `ArrowBody` enum is
+either a `Block(BlockStatement)` (`x => { return x; }`) or a concise
+`Expression(Box<Expression>)` (`x => x`). Emitter: single plain-identifier param
+drops parens (`x=>x`); object-literal concise bodies are wrapped (`()=>({a:1})`);
+arrows tag at `PREC_ASSIGNMENT` so call-callee/member-object parents wrap them; no
+statement-start wrap. Renaming/inlining passes drop the arrow's param names from
+the active map before recursing so a shadowing param is left untouched.
+
+Landed bottom-up: node + emitter + passes here; the parser→typed-AST bridge
+(`javascript-parser` currently declines `arrow_function` as `UnsupportedSyntax`)
+and an upstream conformance port follow in later slices.
+
+### gap-154 — deeper leftmost-`{` concise arrow body not wrapped
+
+The emitter wraps a concise body that is *directly* an `ObjectExpression`
+(`()=>({a:1})`), but not one whose leftmost token is `{` through a larger
+expression — e.g. `()=>({}).x` (a member access on an object literal) currently
+emits `()=>{}.x`, which mis-parses the `{}` as a block body. This is the same
+leftmost-token class as the general expression-statement `{`-wrap and is rare in
+practice (an object-literal-rooted concise body used as a member/call base);
+deferred until a general leftmost-token analysis lands.
