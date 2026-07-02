@@ -43,6 +43,15 @@ from typing import Any
 # :class:`Symbol` that ``String#to_sym`` / ``Symbol#upcase`` return.
 from coding_adventures_sir_runtime_core import Closure, Symbol, apply, eq, intern, truthy
 
+# Typed-error entry point (T1).  A faulting Ruby method — ``arr.fetch`` out of
+# bounds, ``hash.fetch`` on a missing key, an unknown method — must raise the
+# *typed* :class:`SirError` the rescue matcher names (``IndexError`` / ``KeyError``
+# / ``NoMethodError``), not the ``nil`` floor and not a native Python error (which
+# the matcher only sees as an over-broad ``StandardError``).  ``raise_error`` is
+# the same explicit-string raise the frontend already emits for ``raise Klass`` —
+# no reflection on the source-derived method name (the C3 RCE lesson).
+from coding_adventures_sir_runtime_exceptions import raise_error
+
 # The SIR universal value type at this package's boundary.
 Val = Any
 
@@ -463,6 +472,7 @@ _ARRAY_METHODS = frozenset(
         "empty?",
         "to_a",
         "join",
+        "fetch",
     }
 )
 
@@ -822,6 +832,22 @@ def _array_method(recv: list[Val], name: str, args: list[Val]) -> Val:
         # Ruby ``Array#join``: elements rendered with ``to_s`` (default sep "").
         sep = args[0] if args else ""
         return sep.join(_ruby_to_s(item) for item in recv)
+    if name == "fetch":
+        # Ruby ``Array#fetch(i)``: like ``arr[i]`` for an *in-range* index
+        # (negative indices count from the end), but an **out-of-bounds** index
+        # with no default raises ``IndexError`` (T1) — unlike ``arr[i]``, which
+        # returns nil.  A second argument supplies a default returned instead of
+        # raising.  (The block form ``fetch(i) { … }`` is out of v0 scope.)
+        index = args[0]
+        length = len(recv)
+        if isinstance(index, int) and -length <= index < length:
+            return recv[index]
+        if len(args) > 1:
+            return args[1]
+        raise_error(
+            "IndexError",
+            f"index {index} outside of array bounds: {-length}...{length}",
+        )
     return _MISS
 
 
@@ -890,9 +916,15 @@ def _hash_method(recv: dict[Val, Val], name: str, args: list[Val]) -> Val:
     if name in ("has_value?", "value?"):
         return args[0] in recv.values()
     if name == "fetch":
+        # Ruby ``Hash#fetch(k)``: returns the value for ``k`` if present; a
+        # **missing** key with no default raises ``KeyError`` (T1) — unlike
+        # ``hash[k]``, which returns nil.  A second argument supplies a default
+        # returned instead of raising.  (The block form is out of v0 scope.)
         if args[0] in recv:
             return recv[args[0]]
-        return args[1] if len(args) > 1 else None
+        if len(args) > 1:
+            return args[1]
+        raise_error("KeyError", f"key not found: {_ruby_inspect(args[0])}")
     if name in ("size", "length"):
         return len(recv)
     if name == "empty?":
@@ -1422,7 +1454,28 @@ def call_method(recv: Val, name: str, *args: Val) -> Val:
     if result is not _MISS:
         return result
 
-    return None
+    # ── Floor (T1) ────────────────────────────────────────────────────────────
+    # Nothing above returned a value for ``name`` on ``recv``.  Two distinct
+    # cases hide here, and Ruby treats them differently:
+    #
+    #   1. **Known method, wrong call shape** — a *catalogued* method invoked in
+    #      a form v0 doesn't implement, e.g. a block-taking ``map``/``times``
+    #      called *without* a block.  Ruby returns an Enumerator; the honest v0
+    #      floor is ``nil`` (documented).  This is NOT a missing method, so it
+    #      must not raise ``NoMethodError``.
+    #   2. **Genuinely unknown method** — ``obj.undefined``, ``nil.foo``,
+    #      ``"s".scan`` (no catalog entry at all).  This is exactly Ruby's
+    #      ``NoMethodError`` (T1), replacing the old blanket nil floor.
+    #
+    # :func:`_responds_to` is the precise discriminator: it reports catalog +
+    # reflective + ``define_method`` membership, so a name it knows is case 1
+    # (nil) and a name it doesn't is case 2 (raise).  The message mirrors Ruby's
+    # shape (``undefined method 'x' for <receiver class>``); ``name`` is
+    # interpolated as an opaque string, never used to reflect a Python attribute
+    # (the C3 dynamic-dispatch RCE lesson).
+    if _responds_to(recv, name):
+        return None
+    raise_error("NoMethodError", f"undefined method '{name}' for {class_of(recv)}")
 
 
 # --- Symbol#to_proc (&:sym) ------------------------------------------------

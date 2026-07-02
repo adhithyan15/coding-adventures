@@ -18,6 +18,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from coding_adventures_sir_runtime_exceptions import raise_error
+
 from .values import to_display
 
 
@@ -123,12 +125,39 @@ def mul(*args: Any) -> Any:
 
 def div(*args: Any) -> Any:
     """Variadic quotient with **truncating integer** division (toward
-    zero), matching SIR semantics rather than Python's float ``/``."""
+    zero), matching SIR semantics rather than Python's float ``/``.
+
+    **Division by zero is a *typed* error (T1).**  Ruby's ``1 / 0`` (and,
+    per the SIR error spec, ``1.0 / 0`` too) raises ``ZeroDivisionError`` with
+    the message ``"divided by 0"``.  Python's own ``/`` *also* raises on a zero
+    divisor — but as a **native** ``ZeroDivisionError``, which the SIR rescue
+    matcher only sees as an over-broad ``StandardError`` (``class_of_thrown``
+    treats every non-:class:`SirError` as ``StandardError``).  So a Ruby
+    ``rescue ZeroDivisionError`` would *miss* it.
+
+    We therefore **catch the native fault and re-raise it as a typed
+    :class:`SirError`** — the exact class the ancestry names (``ZeroDivisionError
+    -> StandardError -> Exception``), so ``rescue ZeroDivisionError`` matches it
+    precisely and ``rescue StandardError`` / a bare ``rescue`` still catch it.
+    This is the "wrap the native error" half of the T1 contract; the entry point
+    (:func:`raise_error`) is the same explicit-string raise the frontend already
+    emits for ``raise ZeroDivisionError`` — no reflection, no ``eval``.
+
+    Wrapping happens per-fold-step, so a variadic ``div(a, b, 0)`` reports the
+    zero divisor it actually hit.  The message matches Ruby verbatim (``"divided
+    by 0"``) for a faithful ``e.message``.
+    """
     if not args:
         return 0
     acc = args[0]
     for a in args[1:]:
-        acc = int(acc / a)
+        try:
+            acc = int(acc / a)
+        except ZeroDivisionError:
+            # Re-raise as the typed SIR error via the shared entry point.  The
+            # native ``ZeroDivisionError`` remains chained as ``__context__``;
+            # that's cosmetic — the rescue matcher dispatches on ``sir_class``.
+            raise_error("ZeroDivisionError", "divided by 0")
     return acc
 
 

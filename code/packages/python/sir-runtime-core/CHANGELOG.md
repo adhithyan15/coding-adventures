@@ -2,6 +2,32 @@
 
 All notable changes to `coding-adventures-sir-runtime-core` are documented here.
 
+## [0.1.8] - 2026-07-01
+
+### Added — typed division-by-zero (T1 of sir-typed-runtime-errors)
+
+Ruby's `1 / 0` (and, per the SIR error spec, `1.0 / 0`) raises
+`ZeroDivisionError`. Python's native `/` also raises on a zero divisor, but as a
+**native** `ZeroDivisionError` — which the SIR rescue matcher only sees as an
+over-broad `StandardError`, so a Ruby `rescue ZeroDivisionError` would miss it.
+See
+[`code/specs/sir-typed-runtime-errors.md`](../../../specs/sir-typed-runtime-errors.md).
+
+- **`div`** now catches the native `ZeroDivisionError` and re-raises it as a
+  **typed** `SirError` (`sir_class == "ZeroDivisionError"`, message
+  `"divided by 0"`) via the shared `raise_error` entry point from
+  `coding-adventures-sir-runtime-exceptions`. So `begin; 1 / 0; rescue
+  ZeroDivisionError => e; end` now catches it, and `rescue StandardError` / a bare
+  `rescue` still catch it via the ancestry walk. Applies per fold-step, so a
+  variadic `div(a, b, 0)` reports the zero divisor it actually hit.
+- No reflection or `eval`: the typed raise is an explicit class-name string,
+  identical in shape to the `raise ZeroDivisionError` the frontend already emits.
+
+### Dependency
+
+- Added `coding-adventures-sir-runtime-exceptions` (a leaf package, no cycle) so
+  `div` can reach the typed-raise entry point.
+
 ## [0.1.7] - 2026-07-01
 
 ### Added — polymorphic `+` / `*` for strings and arrays (PO1 of sir-polymorphic-operators)
