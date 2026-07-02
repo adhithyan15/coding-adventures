@@ -1432,6 +1432,42 @@ fn puts_cyclic_array_terminates() {
     }
 }
 
+/// Regression (security, CWE-674): the polymorphic `*`-join arm renders each
+/// element with `format`, which — like `puts` — must be cycle-guarded so a
+/// self-referential array TERMINATES (`[...]` placeholder) instead of blowing
+/// the Node stack.  `puts (a * ", ")` on `a = [a]` must print `[...]\n`.
+#[test]
+fn poly_array_join_cyclic_terminates() {
+    let stmts = vec![
+        // a = [nil]
+        let_("a", Expr::SeqLit { items: vec![Expr::NilLit { span: sp() }], span: sp() }),
+        // a[0] = a  (self-reference)
+        Stmt::SeqSet { seq: local("a"), index: int(0), value: local("a"), span: sp() },
+        // puts (a * ", ")  → join renders the single element, which is `a`
+        // itself → the cycle guard emits `[...]`.
+        Stmt::ExprStmt {
+            expr: bc("puts", vec![bc("*", vec![local("a"), str_(", ")])]),
+            span: sp(),
+        },
+    ];
+    let module = module_with_main(
+        stmts,
+        Expr::NilLit { span: sp() },
+        &[Feature::Sequences, Feature::MutableBindings, Feature::Strings],
+    );
+    // Reaching the assert (clean exit) proves termination; an unguarded
+    // recursion would overflow the Node stack and exit non-zero, failing the
+    // test.  The joined element is `a` itself (`[a]`), so it renders one array
+    // level then the `[...]` cycle placeholder → `[[...]]`; the load-bearing
+    // property is that the `[...]` guard fired and the program TERMINATED.
+    if let Some(stdout) = run_module_raw(&module, "poly_join_cyclic") {
+        assert!(
+            stdout.contains("[...]") && stdout.ends_with('\n'),
+            "cyclic join must terminate with a `[...]` placeholder; got (escaped): {stdout:?}"
+        );
+    }
+}
+
 // ── PO3: polymorphic `+` / `*` (Ruby operator overloading) ─────────────
 //
 // Ruby overloads `+`/`*` by receiver type; all lower to the same SIR

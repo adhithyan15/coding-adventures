@@ -92,7 +92,20 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // `format` renders any SIR value to the string `print` writes.
   // Strings render WITHOUT surrounding quotes (so `print` of a string
   // shows its contents); everything else uses a Lisp-ish notation.
-  function format(v) {
+  // `format` renders a value the way Ruby's `to_s`/inspect would for the
+  // contexts the runtime needs (array display, string interpolation, the
+  // `Array#*`-with-a-string join, string `+` on a non-string operand's
+  // display, …).  A JS array is a shared mutable reference, so a program can
+  // build a *cyclic* array (`a = []; a << a`).  The array branch recurses
+  // through elements, so — exactly like `putsOne` (see its comment) — it MUST
+  // be cycle-guarded or a self-referential array throws `RangeError: Maximum
+  // call stack size exceeded` (a DoS: CWE-674, uncontrolled recursion).  This
+  // path is reachable from the polymorphic `+`/`*` arms (`str + cyclicArray`,
+  // `cyclicArray * ", "`), not just `puts`.  `seen` holds the array references
+  // on the active render path; an array already on the path is a cycle and
+  // renders as `[...]` (matching Ruby's `inspect`), then we recurse no further.
+  function format(v) { return formatSeen(v, new Set()); }
+  function formatSeen(v, seen) {
     if (v === null || v === undefined) { return "nil"; }
     if (v === true) { return "#t"; }
     if (v === false) { return "#f"; }
@@ -100,10 +113,16 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     if (typeof v === "number") { return String(v); }
     if (v instanceof Sym) { return v.name; }
     if (v instanceof Pair) {
-      return "(" + format(v.car) + " . " + format(v.cdr) + ")";
+      return "(" + formatSeen(v.car, seen) + " . " + formatSeen(v.cdr, seen) + ")";
     }
     if (v instanceof Closure) { return "#<closure>"; }
-    if (Array.isArray(v)) { return "[" + v.map(format).join(", ") + "]"; }
+    if (Array.isArray(v)) {
+      if (seen.has(v)) { return "[...]"; }
+      seen.add(v);
+      const body = v.map((el) => formatSeen(el, seen)).join(", ");
+      seen.delete(v);
+      return "[" + body + "]";
+    }
     return String(v);
   }
 
