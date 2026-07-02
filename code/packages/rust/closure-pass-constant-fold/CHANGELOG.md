@@ -6,7 +6,11 @@ All notable changes to the `coding-adventures-closure-pass-constant-fold` crate 
 
 ### Added — CLOC12.151: `ArrowFunctionExpression` traversal
 
-Handle the new `Expression::ArrowFunctionExpression` variant by recursing into arrow bodies — both the block form (`x => {{ ... }}`) and the concise/expression form (`x => expr`) — mirroring this pass's existing `FunctionExpression` handling. Part of the atomic `ArrowFunctionExpression` enum-variant rollout (javascript-ast 0.15.0); adding the variant makes every exhaustive `match` on `Expression` non-exhaustive, so all consumers gain their arm in one PR.
+Handle the new `Expression::ArrowFunctionExpression` variant by recursing into arrow bodies — both the block form (`x => { ... }`) and the concise/expression form (`x => expr`) — mirroring this pass's existing `FunctionExpression` handling. Part of the atomic `ArrowFunctionExpression` enum-variant rollout (javascript-ast 0.15.0); adding the variant makes every exhaustive `match` on `Expression` non-exhaustive, so all consumers gain their arm in one PR.
+
+### Changed — `FOLD_STACK_SIZE` 64 MiB → 128 MiB
+
+The new arrow arm widens `fold_expression`'s per-frame footprint, and on aarch64 (Apple-silicon CI) frames are larger than x86-64. At the ~20 000-deep adversarial chain that the deep-chain DoS regression exercises, the 64 MiB fold-worker stack was near its edge and overflowed on macOS. Doubling to 128 MiB restores a 2× cushion (lazy pages → no cost for real code) so a modest future frame increase can't re-break the regression.
 
 ## [0.83.0] - 2026-07-01
 

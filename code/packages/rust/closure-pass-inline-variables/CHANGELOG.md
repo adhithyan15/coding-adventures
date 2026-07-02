@@ -6,7 +6,7 @@ All notable changes to the `coding-adventures-closure-pass-inline-variables` cra
 
 ### Added — CLOC12.151: `ArrowFunctionExpression` traversal
 
-Handle the new `Expression::ArrowFunctionExpression` variant by recursing into arrow bodies — both the block form (`x => {{ ... }}`) and the concise/expression form (`x => expr`) — mirroring this pass's existing `FunctionExpression` handling. Part of the atomic `ArrowFunctionExpression` enum-variant rollout (javascript-ast 0.15.0); adding the variant makes every exhaustive `match` on `Expression` non-exhaustive, so all consumers gain their arm in one PR.
+Handle the new `Expression::ArrowFunctionExpression` variant by recursing into arrow bodies — both the block form (`x => { ... }`) and the concise/expression form (`x => expr`) — mirroring this pass's existing `FunctionExpression` handling. Part of the atomic `ArrowFunctionExpression` enum-variant rollout (javascript-ast 0.15.0); adding the variant makes every exhaustive `match` on `Expression` non-exhaustive, so all consumers gain their arm in one PR.
 
 ## [0.9.0] - 2026-07-01
 

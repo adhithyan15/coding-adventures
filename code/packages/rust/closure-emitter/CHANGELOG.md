@@ -27,6 +27,15 @@ node. Shape rules:
 12 new unit tests. Part of the atomic `ArrowFunctionExpression` enum-variant
 rollout (javascript-ast 0.15.0).
 
+### Changed — `EMIT_STACK_SIZE` 64 MiB → 128 MiB
+
+The arrow arm widens `emit_expression_inner`'s per-frame footprint, and aarch64
+(Apple-silicon CI) lays out larger frames than x86-64. Doubling the emit-worker
+stack keeps a 2× cushion above the ~20 000-deep adversarial input the deep-emit
+DoS regression exercises, so a modest future frame increase can't re-break it
+(lazy pages → no cost for real code). Mirrors the same bump in
+`closure-pass-constant-fold`'s `FOLD_STACK_SIZE`.
+
 ## [0.19.1] - 2026-07-01
 
 ### Test — CodePrinter function-expression port (#88, CLOC12.150)

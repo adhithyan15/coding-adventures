@@ -151,13 +151,19 @@ impl std::error::Error for EmitError {}
 /// `Result`-returning API cannot report it. closurec feeds *untrusted* JS
 /// here, so it must not be crashable by pathological input.
 ///
-/// 64 MiB holds well over 100 000 levels of this light per-operator frame —
-/// far beyond any hand-written expression, and beyond the ~20 000-deep
-/// adversarial inputs that motivated this — while costing nothing for real
-/// code (the thread reserves address space lazily; only touched pages fault
-/// in). Emission is otherwise **byte-identical** to running on the caller's
-/// stack; only the stack size differs.
-const EMIT_STACK_SIZE: usize = 64 * 1024 * 1024;
+/// 128 MiB comfortably absorbs the ~20 000-deep adversarial inputs that
+/// motivated this, with a healthy margin above them. The margin matters:
+/// `emit_expression_inner` is a wide `match` whose per-frame footprint grows
+/// as new `Expression` variants are handled (e.g. the CLOC12.151
+/// `ArrowFunctionExpression` arm), and per-frame cost also differs by target —
+/// aarch64 (Apple-silicon CI) lays out larger frames than x86-64, so a stack
+/// merely sized to *just* hold 20 000 levels on one target can overflow on
+/// another. A 2× cushion keeps a modest future frame increase from re-breaking
+/// the deep-emit DoS regression, while costing nothing for real code (the
+/// thread reserves address space lazily; only touched pages fault in).
+/// Emission is otherwise **byte-identical** to running on the caller's stack;
+/// only the stack size differs.
+const EMIT_STACK_SIZE: usize = 128 * 1024 * 1024;
 
 pub fn emit(
     program: &Program,
