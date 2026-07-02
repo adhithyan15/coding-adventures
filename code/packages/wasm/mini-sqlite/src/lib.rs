@@ -506,6 +506,11 @@ mod tests {
     fn commit_makes_changes_visible() {
         let mut db = new_conn();
         db.execute("CREATE TABLE t (v)", None).unwrap();
+        // CREATE TABLE opens an implicit transaction (autocommit is off).
+        // Commit it before issuing an explicit BEGIN; otherwise begin_transaction()
+        // returns Err("nested transactions") which — through the JsValue error
+        // path — causes a double-panic on native targets.
+        db.commit().unwrap();
         db.execute("BEGIN", None).unwrap();
         db.execute("INSERT INTO t VALUES (42)", None).unwrap();
         db.commit().unwrap();
