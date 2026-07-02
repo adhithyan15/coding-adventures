@@ -212,6 +212,16 @@ pub enum ComputeOp {
     /// [`ComputeExpr::Unary`], and lowered from the standard nearest-integer
     /// LaTeX fence `\left\lfloor x\right\rceil` (floor-left, ceil-right).
     Round,
+    /// Truncate toward zero, `trunc(x)` — drop the fractional part, keeping the
+    /// integer part with the operand's sign (`trunc(3.7) = 3`, `trunc(−3.7) = −3`).
+    /// Contrast [`ComputeOp::Floor`] (toward −∞: `⌊−3.7⌋ = −4`) — they agree only
+    /// for a non-negative operand. Like the rest of the rounding family it is
+    /// **unary** and **dimension-preserving** (`trunc(3.7 mmol) = 3 mmol`), carried
+    /// in a [`ComputeExpr::Unary`], and lowered from a LaTeX `\operatorname{trunc}(x)`
+    /// — the operator-name juxtaposition surface (adj-lang's `latex "…"`). The exact
+    /// sidecar stays exact: `trunc(num/den) = num / den` (Rust integer division
+    /// truncates toward zero for `den > 0`, carried as `q/1`).
+    Trunc,
     /// The named **transcendental** unary functions `sin`, `cos`, `tan`, `ln`
     /// (natural log), `log` (base-10), `exp`. Unlike the rounding unary ops these
     /// are **not** dimension-preserving: a transcendental is only defined on a
@@ -291,6 +301,7 @@ impl ComputeOp {
             ComputeOp::Floor => "floor",
             ComputeOp::Ceil => "ceil",
             ComputeOp::Round => "round",
+            ComputeOp::Trunc => "trunc",
             ComputeOp::Sin => "sin",
             ComputeOp::Cos => "cos",
             ComputeOp::Tan => "tan",
@@ -836,6 +847,7 @@ fn eval_unary(
         ComputeOp::Floor => value.floor(),
         ComputeOp::Ceil => value.ceil(),
         ComputeOp::Round => value.round(),
+        ComputeOp::Trunc => value.trunc(),
         ComputeOp::Sin => value.sin(),
         ComputeOp::Cos => value.cos(),
         ComputeOp::Tan => value.tan(),
@@ -908,6 +920,10 @@ fn eval_unary(
             };
             ExactRational::new(q.checked_add(bump)?, 1)
         }
+        // trunc(num/den) truncates toward zero — exactly Rust's integer division for
+        // den > 0 (no `div_euclid`, which would floor toward −∞). The result is an
+        // integer, carried as q/1.
+        ComputeOp::Trunc => ExactRational::new(r.num / r.den, 1),
         _ => None,
     });
     // Rounding preserves the operand's dimension; a transcendental collapses to a
@@ -1337,6 +1353,47 @@ mod tests {
         assert_eq!(d.exact, ExactRational::new(2, 1));
         // Same dimension as the operand `m` (money/usd).
         assert_eq!(d.dim, kb.observed_dimensioned("m").unwrap().0.dim);
+    }
+
+    #[test]
+    fn trunc_drops_the_fraction_toward_zero_and_preserves_dimension() {
+        // trunc(7/2) = 3 (3.5 → drop the .5). Trunc is dimension-preserving:
+        // trunc(dollars) is still dollars, NOT collapsed to Scalar.
+        let kb = kb_with(vec![money("m", 7, "usd")]);
+        let d = compute(
+            "tr",
+            &ComputeExpr::Unary(
+                ComputeOp::Trunc,
+                Box::new(bin(ComputeOp::Div, refexpr("m"), ComputeExpr::Lit(2.0))),
+            ),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(d.value, 3.0);
+        assert_eq!(d.exact, ExactRational::new(3, 1));
+        assert_eq!(d.dim, kb.observed_dimensioned("m").unwrap().0.dim);
+    }
+
+    #[test]
+    fn trunc_of_a_negative_value_goes_toward_zero_not_down() {
+        // trunc(−7/2) = −3 (toward zero), NOT −4 the way Floor rounds toward −∞.
+        // This is the whole point of adding Trunc beside Floor: (−7)/2 == −3 in
+        // Rust integer division (truncation), vs (−7).div_euclid(2) == −4.
+        let d = compute(
+            "tr",
+            &ComputeExpr::Unary(
+                ComputeOp::Trunc,
+                Box::new(bin(
+                    ComputeOp::Div,
+                    ComputeExpr::Lit(-7.0),
+                    ComputeExpr::Lit(2.0),
+                )),
+            ),
+            &kb_with(vec![]),
+        )
+        .unwrap();
+        assert_eq!(d.value, -3.0);
+        assert_eq!(d.exact, ExactRational::new(-3, 1));
     }
 
     #[test]

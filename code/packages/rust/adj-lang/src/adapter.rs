@@ -958,6 +958,21 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
         )),
         MathExpr::Bin(BinOp::Add, lhs, rhs) => latex_bin(ArithOp::Add, lhs, rhs, source),
         MathExpr::Bin(BinOp::Sub, lhs, rhs) => latex_bin(ArithOp::Sub, lhs, rhs, source),
+        // `\operatorname{trunc}(x)` — truncation toward zero. `\operatorname{…}` is a
+        // TEXT command (like `\text`/`\mathrm`), so the frontend parses
+        // `\operatorname{trunc}(x)` NOT as a function call but as an *implicit
+        // multiplication* (juxtaposition) of the operator name `Text("trunc")` and its
+        // parenthesised argument: `Bin(Mul, Text("trunc"), (x))`. We recognise that
+        // exact shape here — the operator-name juxtaposition path — and lower it to the
+        // dimension-preserving `ComputeOp::Trunc` (via `ExprAst::Trunc`). This arm sits
+        // ABOVE the general `Bin(Mul, …)` so a genuine product (`2x`) still multiplies;
+        // only a `trunc`-named text factor is intercepted, and only when it is the LEFT
+        // operand of the juxtaposition (`\operatorname{trunc}(x)` itself). Anything else
+        // named (`\operatorname{sgn}(x)`) falls through to the general Mul arm, where the
+        // bare `Text` factor is an explicit `UnsupportedLatexMath` — never a mis-lowering.
+        MathExpr::Bin(BinOp::Mul, lhs, rhs) if operator_name_is(lhs, "trunc") => {
+            Ok(ExprAst::Trunc(Box::new(latex_math_to_expr_ast(rhs, source)?)))
+        }
         MathExpr::Bin(BinOp::Mul, lhs, rhs) => latex_bin(ArithOp::Mul, lhs, rhs, source),
         MathExpr::Bin(BinOp::Div, lhs, rhs) | MathExpr::Frac(lhs, rhs) => {
             latex_bin(ArithOp::Div, lhs, rhs, source)
@@ -1014,9 +1029,11 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
         // transcendental op via `ExprAst::Call`; the two-argument `\min(a, b)` /
         // `\max(a, b)` / `\gcd(a, b)` / `\lcm(a, b)` lower to the native binary ops
         // via `ExprAst::Call2` (their argument is a two-element `Sequence`, usually
-        // inside the call's parentheses). The remaining `Func` variants (`det` and
-        // an unknown `Other` such as `\operatorname{trunc}`) have no lowering yet
-        // and are a clean, explicit error rather than a silent mis-lowering.
+        // inside the call's parentheses). (`\operatorname{trunc}(x)` is NOT a `Call` — an
+        // operator name is text, so it arrives as a `Bin(Mul, Text("trunc"), (x))`
+        // juxtaposition handled in the `Bin` arm above.) The remaining `Func` variants
+        // (`det` and an unknown `Other`) have no lowering yet and are a clean, explicit
+        // error rather than a silent mis-lowering.
         MathExpr::Call { func, arg } => {
             // Binary functions first — their argument is a comma-list, not a scalar.
             let binfn = match func {
@@ -1073,6 +1090,15 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
             detail: format!("unsupported ADJ arithmetic subset: {other:?}"),
         }),
     }
+}
+
+/// Is `expr` an operator-name text (`\operatorname{name}`, `\mathrm{name}`, `\text{name}`)
+/// whose content equals `name`? The frontend lowers all of these to `MathExpr::Text`, so a
+/// juxtaposed `\operatorname{trunc}(x)` arrives as `Bin(Mul, Text("trunc"), (x))`. We match
+/// on the trimmed content (the raw text group can carry surrounding spaces) so
+/// `\operatorname{trunc}` and `\operatorname{ trunc }` both count.
+fn operator_name_is(expr: &MathExpr, name: &str) -> bool {
+    matches!(expr, MathExpr::Text(s) if s.trim() == name)
 }
 
 fn latex_bin(

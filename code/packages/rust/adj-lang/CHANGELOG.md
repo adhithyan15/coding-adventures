@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.30.0] - 2026-07-02 — `\operatorname{trunc}(x)` truncation in `latex "…"`
+
+### Added
+
+- The `latex "…"` adapter now lowers **`\operatorname{trunc}(x)`** to the native
+  `ComputeOp::Trunc` (truncate toward zero) via a new `ExprAst::Trunc`. Because
+  `\operatorname{…}` is a TEXT command, the frontend parses
+  `\operatorname{trunc}(x)` NOT as a function call but as an implicit
+  multiplication (juxtaposition) — `Bin(Mul, Text("trunc"), (x))`. The adapter
+  recognises that exact operator-name shape (a new `operator_name_is` helper)
+  above the general `Bin(Mul, …)` arm, so a genuine product (`2x`) still
+  multiplies; only a `trunc`-named text factor is intercepted. This is the last
+  common scalar unary the surface was missing.
+
+### Tests
+
+- Two lower tests: `\operatorname{trunc}(a/b)` with `a=7, b=2` compute-and-decides
+  to 3, and `\operatorname{trunc}((0 - a)/b)` to −3 (toward zero, NOT the floor −4).
+
 ## [0.29.0] - 2026-07-02 — binary `\gcd(a, b)` / `\lcm(a, b)` in `latex "…"`
 
 ### Added
