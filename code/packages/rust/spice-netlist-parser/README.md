@@ -422,6 +422,18 @@ assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_sho
     .contains(r#""activeMenuGroupShortcutId":"dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut.queued""#));
 assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_json
     .contains(r#""dispatchQueueLaneTabPanelCardActionMenuGroupShortcutsCapabilityId":"app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcuts-json""#));
+
+let shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_json =
+    deck.run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_json(
+        BerkeleyAppPersistedEditorState {
+            selected_syntax_card_index: Some(3),
+            active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+        },
+    )?;
+assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_json
+    .contains(r#""activeMenuGroupShortcutBindingId":"dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-binding.queued""#));
+assert!(shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_json
+    .contains(r#""dispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindingsCapabilityId":"app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-bindings-json""#));
 ```
 
 The facade preserves normalized logical cards, source spans, token names
