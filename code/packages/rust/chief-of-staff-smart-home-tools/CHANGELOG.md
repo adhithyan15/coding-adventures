@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added `smart_home.get_escalation_brief`, a read-only Chief adapter tool that
+  turns the existing D23 morning, platform, operations, safety, readiness,
+  maintenance, incident, and recovery brief signals into one ordered escalation
+  queue without owning smart-home state.
 - Added `smart_home.get_morning_brief`, a read-only Chief adapter tool that
   composes existing D23 platform, operations, safety, readiness, maintenance,
   incident, and recovery briefs into one daily smart-home digest without owning
