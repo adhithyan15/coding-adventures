@@ -493,3 +493,124 @@ module MiniSqliteTests =
         Assert.Equal(2L, Convert.ToInt64(rows.[0].[0]))
         Assert.Equal(4L, Convert.ToInt64(rows.[1].[0]))
         Assert.Equal(6L, Convert.ToInt64(rows.[2].[0]))
+
+    // ── Scalar function tests (hit FuncEval.evalBuiltin branches) ──────────
+
+    [<Fact>]
+    let ``TRIM LTRIM RTRIM functions`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        let r = conn.Execute("SELECT TRIM('  hello  '), LTRIM('  hi'), RTRIM('bye  ')").FetchAll().[0]
+        Assert.Equal("hello", r.[0] :?> string)
+        Assert.Equal("hi", r.[1] :?> string)
+        Assert.Equal("bye", r.[2] :?> string)
+
+    [<Fact>]
+    let ``SUBSTR function with start index`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        let r = conn.Execute("SELECT SUBSTR('hello world', 7), SUBSTR('hello', 2, 3)").FetchAll().[0]
+        Assert.Equal("world", r.[0] :?> string)
+        Assert.Equal("ell", r.[1] :?> string)
+
+    [<Fact>]
+    let ``REPLACE function`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        let r = conn.Execute("SELECT REPLACE('hello world', 'world', 'there')").FetchAll().[0]
+        Assert.Equal("hello there", r.[0] :?> string)
+
+    [<Fact>]
+    let ``ABS function on integers and reals`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        let r = conn.Execute("SELECT ABS(-5), ABS(3)").FetchAll().[0]
+        Assert.Equal(5L, Convert.ToInt64(r.[0]))
+        Assert.Equal(3L, Convert.ToInt64(r.[1]))
+
+    [<Fact>]
+    let ``ROUND function`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        let r = conn.Execute("SELECT ROUND(3.567, 2), ROUND(2.5)").FetchAll().[0]
+        Assert.Equal(3.57, r.[0] :?> float, 6)
+        Assert.Equal(3.0, r.[1] :?> float, 6)
+
+    [<Fact>]
+    let ``COALESCE returns first non-null`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        let r = conn.Execute("SELECT COALESCE(NULL, NULL, 42)").FetchAll().[0]
+        Assert.Equal(42L, Convert.ToInt64(r.[0]))
+
+    [<Fact>]
+    let ``IFNULL falls back on NULL`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        let r = conn.Execute("SELECT IFNULL(NULL, 'default'), IFNULL('value', 'other')").FetchAll().[0]
+        Assert.Equal("default", r.[0] :?> string)
+        Assert.Equal("value", r.[1] :?> string)
+
+    [<Fact>]
+    let ``string concatenation with pipe operator`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (first TEXT, last TEXT)") |> ignore
+        conn.Execute("INSERT INTO t VALUES ('John', 'Doe')") |> ignore
+        let rows = conn.Execute("SELECT first || ' ' || last AS name FROM t ORDER BY name ASC").FetchAll()
+        Assert.Equal(1, rows.Count)
+        Assert.Equal("John Doe", rows.[0].[0] :?> string)
+
+    [<Fact>]
+    let ``negative number literals parse correctly`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (n INTEGER)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (-10)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (-5)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (0)") |> ignore
+        let rows = conn.Execute("SELECT n FROM t WHERE n < 0 ORDER BY n DESC").FetchAll()
+        Assert.Equal(2, rows.Count)
+        Assert.Equal(-5L, Convert.ToInt64(rows.[0].[0]))
+        Assert.Equal(-10L, Convert.ToInt64(rows.[1].[0]))
+
+    [<Fact>]
+    let ``division by zero returns NULL`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        let r = conn.Execute("SELECT 10 / 0").FetchAll().[0]
+        Assert.Null(r.[0])
+
+    [<Fact>]
+    let ``Boolean literals TRUE and FALSE work in INSERT and SELECT`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (flag BOOLEAN)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (TRUE)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (FALSE)") |> ignore
+        let rows = conn.Execute("SELECT flag FROM t WHERE flag = TRUE").FetchAll()
+        Assert.Equal(1, rows.Count)
+
+    [<Fact>]
+    let ``HAVING with MIN aggregate`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (cat TEXT, n INTEGER)") |> ignore
+        conn.Execute("INSERT INTO t VALUES ('A', 5)") |> ignore
+        conn.Execute("INSERT INTO t VALUES ('A', 15)") |> ignore
+        conn.Execute("INSERT INTO t VALUES ('B', 100)") |> ignore
+        let rows = conn.Execute("SELECT cat FROM t GROUP BY cat HAVING MIN(n) < 10 ORDER BY cat ASC").FetchAll()
+        Assert.Equal(1, rows.Count)
+        Assert.Equal("A", rows.[0].[0] :?> string)
+
+    [<Fact>]
+    let ``SELECT with IS NULL in GROUP BY filter`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (cat TEXT, n INTEGER)") |> ignore
+        conn.Execute("INSERT INTO t VALUES ('A', NULL)") |> ignore
+        conn.Execute("INSERT INTO t VALUES ('A', 10)") |> ignore
+        conn.Execute("INSERT INTO t VALUES ('B', NULL)") |> ignore
+        // WHERE filters before grouping
+        let rows = conn.Execute("SELECT cat, COUNT(*) AS n FROM t WHERE n IS NOT NULL GROUP BY cat ORDER BY cat ASC").FetchAll()
+        Assert.Equal(1, rows.Count)
+        Assert.Equal("A", rows.[0].[0] :?> string)
+        Assert.Equal(1L, Convert.ToInt64(rows.[0].[1]))
+
+    [<Fact>]
+    let ``scalar function with ORDER BY in GROUP BY path`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (word TEXT)") |> ignore
+        conn.Execute("INSERT INTO t VALUES ('Hello')") |> ignore
+        conn.Execute("INSERT INTO t VALUES ('World')") |> ignore
+        let rows = conn.Execute("SELECT UPPER(word) AS uw, LENGTH(word) AS ln FROM t ORDER BY word ASC").FetchAll()
+        Assert.Equal(2, rows.Count)
+        Assert.Equal("HELLO", rows.[0].[0] :?> string)
+        Assert.Equal(5L, Convert.ToInt64(rows.[0].[1]))
