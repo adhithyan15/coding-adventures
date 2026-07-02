@@ -1036,6 +1036,25 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
                 Box::new(latex_math_to_expr_ast(rhs, source)?),
             ))
         }
+        // `\operatorname{sin}(x)` / `\operatorname{cos}(x)` / … — the operator-name spellings
+        // of the whole trigonometric family (direct sin/cos/tan/cot/sec/csc, inverse
+        // asin/acos/atan and their `arc…` aliases, hyperbolic sinh/cosh/tanh). The
+        // backslash-macro spellings (`\sin(x)`, `\arctan(x)`) already lower in the `Call`
+        // arm below via `Func::Sin`/`Atan`/…; a model that writes the operator *name* should
+        // reach the SAME native `NamedFn`. But `\operatorname{…}` is a TEXT command, so —
+        // exactly like `\operatorname{exp}`/`floor`/`sgn` above — `\operatorname{sin}(x)`
+        // parses NOT as a `Call` but as the operator-name juxtaposition
+        // `Bin(Mul, Text("sin"), (x))`. One consolidated arm handles the family: the
+        // `operator_name_trig_fn` helper maps the text name (trimmed) to its `NamedFn`, and
+        // we lower to `ExprAst::Call` (transcendental, Scalar→Scalar) — the same node the
+        // macro path produces. Pure adapter recognition: no engine, AST, or lowering change.
+        MathExpr::Bin(BinOp::Mul, lhs, rhs) if operator_name_trig_fn(lhs).is_some() => {
+            let named = operator_name_trig_fn(lhs).expect("guard guarantees Some");
+            Ok(ExprAst::Call(
+                named,
+                Box::new(latex_math_to_expr_ast(rhs, source)?),
+            ))
+        }
         // `\operatorname{min}(a, b)` / `\operatorname{max}(…)` / `\operatorname{gcd}(…)` /
         // `\operatorname{lcm}(…)` — the operator-name spellings of the variadic binary
         // functions. The function-call spellings (`\min(a, b)`, `\gcd(a, b, c)`) already
@@ -1210,6 +1229,33 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
 /// `\operatorname{trunc}` and `\operatorname{ trunc }` both count.
 fn operator_name_is(expr: &MathExpr, name: &str) -> bool {
     matches!(expr, MathExpr::Text(s) if s.trim() == name)
+}
+
+/// If `expr` is a trigonometric operator-name text (`\operatorname{sin}`, `\operatorname{arctan}`,
+/// `\operatorname{sinh}`, …), return the matching `NamedFn`; otherwise `None`. Same recognition as
+/// `operator_name_is` (a `MathExpr::Text` whose trimmed content is the name), but consolidated for
+/// the whole trig family so one adapter arm can lower `\operatorname{sin}(x)` to the SAME
+/// `ExprAst::Call(NamedFn::Sin)` the `\sin(x)` macro produces. The `arc…` spellings are accepted as
+/// aliases for the inverse functions (a model may write either `\operatorname{asin}` or
+/// `\operatorname{arcsin}`). `exp`/`log`/`ln` are intentionally NOT here — they have their own
+/// dedicated arms above (and `abs` lowers to `ExprAst::Abs`, not a `Call`).
+fn operator_name_trig_fn(expr: &MathExpr) -> Option<NamedFn> {
+    let MathExpr::Text(s) = expr else { return None };
+    match s.trim() {
+        "sin" => Some(NamedFn::Sin),
+        "cos" => Some(NamedFn::Cos),
+        "tan" => Some(NamedFn::Tan),
+        "cot" => Some(NamedFn::Cot),
+        "sec" => Some(NamedFn::Sec),
+        "csc" => Some(NamedFn::Csc),
+        "asin" | "arcsin" => Some(NamedFn::Asin),
+        "acos" | "arccos" => Some(NamedFn::Acos),
+        "atan" | "arctan" => Some(NamedFn::Atan),
+        "sinh" => Some(NamedFn::Sinh),
+        "cosh" => Some(NamedFn::Cosh),
+        "tanh" => Some(NamedFn::Tanh),
+        _ => None,
+    }
 }
 
 /// Is `expr` the LEFT operand of a `\bmod`/`\pmod` juxtaposition — i.e.

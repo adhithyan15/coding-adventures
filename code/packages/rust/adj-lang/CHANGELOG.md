@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.37.0] - 2026-07-02 — `\operatorname{sin/cos/…}` trig-family word spellings in `latex "…"`
+
+### Added
+
+- `latex "\operatorname{sin}(x)"` and the whole **trigonometric family** — direct
+  (`sin`/`cos`/`tan`/`cot`/`sec`/`csc`), inverse (`asin`/`acos`/`atan` and their `arc…`
+  aliases), and hyperbolic (`sinh`/`cosh`/`tanh`) — now compute, reaching the SAME native
+  `ExprAst::Call(NamedFn::…)` as their backslash-macro spellings (`\sin(x)`, `\arctan(x)`). A
+  model that writes the operator *name* instead of the macro lands on the identical node.
+  `\operatorname{…}` is a TEXT command, so — exactly like `\operatorname{exp}`/`floor`/`sgn` —
+  these parse as the operator-name juxtaposition `Bin(Mul, Text("sin"), (x))` rather than a
+  `Call`; one consolidated adapter arm recognises the family via the new `operator_name_trig_fn`
+  helper (which maps the trimmed text name — accepting `arcsin`≡`asin` etc. — to its `NamedFn`)
+  and lowers to `ExprAst::Call` (transcendental, Scalar→Scalar). Pure **adapter** recognition:
+  no engine, AST, or lowering change. +1 e2e unit test (cos(0)=1; sinh(0)=0; arctan(0)=0 via
+  the alias path).
+
 ## [0.36.0] - 2026-07-02 — `\operatorname{abs/exp/log/ln}` word spellings in `latex "…"`
 
 ### Added

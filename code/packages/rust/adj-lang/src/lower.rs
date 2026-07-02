@@ -2389,6 +2389,45 @@ contributes 1000000 from answer == 60 to correct
     }
 
     #[test]
+    fn native_latex_operatorname_trig_family_word_spellings() {
+        // `\operatorname{sin}(x)` / `\operatorname{cos}` / `\operatorname{arctan}` / … — the
+        // operator-name spellings of the whole trig family. `\operatorname{…}` is a TEXT command,
+        // so these parse as the juxtaposition `Bin(Mul, Text("sin"), (x))` rather than a `Call`
+        // (`\sin`); the adapter recognises that shape via `operator_name_trig_fn` and lowers to the
+        // SAME `ExprAst::Call(NamedFn::…)` the macro produces. Transcendental ⇒ Scalar→Scalar.
+        // cos(x) with x = 0 → 1.
+        let c = crate::compile_and_decide(
+            "observe x(0)\n\
+             let answer = latex \"$\\operatorname{cos}(x)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 1 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(c.ranked[0].posterior > 0.99, "{c:?}");
+        // sinh(x) with x = 0 → 0 (hyperbolic).
+        let sh = crate::compile_and_decide(
+            "observe x(0)\n\
+             let answer = latex \"$\\operatorname{sinh}(x)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 0 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(sh.ranked[0].posterior > 0.99, "{sh:?}");
+        // The `arc…` alias resolves to the same inverse function: arctan(x) with x = 0 → 0.
+        let at = crate::compile_and_decide(
+            "observe x(0)\n\
+             let answer = latex \"$\\operatorname{arctan}(x)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 0 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(at.ranked[0].posterior > 0.99, "{at:?}");
+    }
+
+    #[test]
     fn native_latex_symbolic_root_degree_is_rejected() {
         // `\sqrt[k]{x}` — a symbolic degree has no numeric value, so the reciprocal
         // exponent `1/k` cannot be formed. It must be rejected, not silently
