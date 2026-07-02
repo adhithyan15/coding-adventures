@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.22.0] - 2026-07-02
+
+### Added — CLOC12.155: bridge `template_literal` → `Expression::TemplateLiteral` (no-substitution only)
+
+The typed-AST bridge now converts **no-substitution template literals**
+(`` `abc` ``, `` `` ``) instead of declining them as `UnsupportedSyntax`.
+`convert_template_literal` reads the single `TEMPLATE_NO_SUB` token (the grammar
+tokenises a substitution-free backtick template as one token whose value is the
+whole literal, backticks included), strips the leading and trailing `` ` ``, and
+produces a `TemplateLiteral` with one tail `TemplateElement { raw, cooked, tail:
+true }` and no `expressions`. This unblocks the full SIMPLE/ADVANCED pipeline for
+files containing plain templates end-to-end, rather than dragging the whole file
+to WHITESPACE_ONLY.
+
+Conservative scope guard: the converter **declines** (`UnsupportedSyntax` →
+WHITESPACE_ONLY, always correct) any `template_literal` node that is not exactly
+one `TEMPLATE_NO_SUB` token — i.e. anything with a `${…}` substitution. Those do
+not parse in the current grammar anyway (see `CLOC12-gaps.md` §CLOC12.155); when
+the grammar learns them, the converter grows a multi-part branch and the AST node
+(`quasis` / `expressions`) already models it. *Tagged* templates
+(`` tag`…` ``) remain declined (Phase 3). 3 new bridge tests.
+
 ## [0.21.0] - 2026-07-02
 
 ### Added — CLOC12.152 / gap-155: bridge `arrow_function` → `Expression::ArrowFunctionExpression`

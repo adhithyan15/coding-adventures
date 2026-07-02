@@ -1538,3 +1538,41 @@ and an upstream conformance port follow in later slices. *Tagged* templates
 `` `a${1}b` `` could fold to the string literal `"a1b"` when every `${…}` is a
 constant. Not done here — CLOC12.154 only recurses to fold *inside* each `${…}`;
 whole-template folding is a later constant-fold enhancement.
+
+## CLOC12.155 — bridge `template_literal` → `Expression::TemplateLiteral` (no-substitution)
+
+The `javascript-parser` typed-AST bridge (0.22.0) now converts **no-substitution
+template literals** (`` `abc` ``, `` `` ``) instead of declining them as
+`UnsupportedSyntax`. `convert_template_literal` reads the single
+`TEMPLATE_NO_SUB` token (see gap-157), strips its leading and trailing `` ` ``,
+and yields a `TemplateLiteral` with one tail `TemplateElement { raw, cooked:
+Some(raw), tail: true }` and empty `expressions`. This unblocks the full
+SIMPLE/ADVANCED pipeline for files containing plain templates end-to-end — a file
+like `` log(`hello`, 1 + 2) `` now folds to `` log(`hello`, 3) `` instead of the
+whole file dropping to WHITESPACE_ONLY on the bridge decline. Bridge tests +
+closurec e2e diff fixture (`tests/diff/simple-template-literal/`).
+
+### gap-157 — grammar tokenises only *no-substitution* templates; `` `${…}` `` does not parse
+
+The ECMAScript grammar (in `code/grammars/ecmascript/*.grammar`) lexes a
+substitution-free backtick template as a **single** `TEMPLATE_NO_SUB` token whose
+value is the entire literal, backticks included (`` `abc` `` → one token
+`"`abc`"`). Templates *with* a `${…}` substitution — which require the lexer to
+split `` `head${ ``, ` }middle${ `, ` }tail` ` into template-head / middle / tail
+tokens interleaved with expression parses — do **not** parse at all today (a hard
+parse error). So CLOC12.155 is scoped to the no-substitution case: the bridge's
+`convert_template_literal` **declines** any `template_literal` node that is not
+exactly one `TEMPLATE_NO_SUB` token (falling back to WHITESPACE_ONLY, always
+correct). The `TemplateLiteral` AST node already models the multi-part shape
+(`quasis` / `expressions`), so once the grammar learns to split substitution
+templates the converter grows a multi-part branch with no node change. *Tagged*
+templates (`` tag`…` ``) remain a separate Phase 3 slice.
+
+### Future — cook escape sequences in `raw` → `cooked`
+
+CLOC12.155 sets `cooked = Some(raw)` verbatim. A no-substitution template with an
+escape (`` `a\tb` ``) should have a `cooked` value with the escape *processed*
+(`a⇥b`) distinct from its `raw` text. The emitter re-emits `raw` regardless, so
+this is never a correctness hazard for round-tripping; genuine cooked-value
+processing is a later refinement (needed once a pass reads `cooked` to fold a
+template to a string literal).
