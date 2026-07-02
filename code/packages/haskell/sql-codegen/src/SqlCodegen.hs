@@ -637,6 +637,19 @@ outputColName (OutputExpr _ Nothing) = "expr"
 
 -- | Compile a table scan loop, wrapping the given body instructions.
 --
+-- The cursor alias must be consistent with how the planner resolves column
+-- references.  The planner's `resolveColumn` assigns each column the alias
+-- `seAlias`, which is the explicit AS-alias when present, and the bare table
+-- name otherwise (see `refToEntry` in SqlPlanner).  So `LoadColumn (Just tbl)
+-- col` refers to the cursor opened for table `tbl`.
+--
+-- When the optimizer passes `alias = Nothing` we therefore normalise it to
+-- `Just table`, making the cursor key equal to the table name — the same
+-- string that the planner used when it emitted `Column (Just table) col`.
+-- Without this, `OpenScan table Nothing` stores the row under key `""` while
+-- `LoadColumn (Just table) col` looks it up under key `table`, resulting in a
+-- miss and `SqlNull` for every column.
+--
 -- Returns (instructions, newCounter).
 compileScanLoop :: String -> Maybe String -> [Instruction] -> Counter
                 -> ([Instruction], Counter)
@@ -644,16 +657,18 @@ compileScanLoop table alias body counter =
     let (n, counter1) = freshLabel counter
         loopLabel = "loop_" ++ n
         endLabel  = "end_"  ++ n
+        -- Normalise: use table name as cursor key when no explicit alias given.
+        effectiveAlias = Just (maybe table id alias)
         instrs =
-            [ OpenScan table alias
+            [ OpenScan table effectiveAlias
             , Label loopLabel
-            , JumpIfExhausted alias endLabel
-            , AdvanceCursor alias
+            , JumpIfExhausted effectiveAlias endLabel
+            , AdvanceCursor effectiveAlias
             ]
             ++ body ++
             [ Jump loopLabel
             , Label endLabel
-            , CloseScan alias
+            , CloseScan effectiveAlias
             ]
     in (instrs, counter1)
 
@@ -770,14 +785,20 @@ compilePlanCore plan body counter = case plan of
 
 -- | Compile an aggregate query.
 --
+-- The `projCols` argument is the outer Project's column list.  When a column
+-- has a user-supplied alias (e.g. `SELECT COUNT(*) AS n`), the alias lives in
+-- the OutputColumn, not in the AggregateItem (which only has `_agg0` etc.).
+-- We use projCols to recover those aliases so EmitColumn uses the right name.
+--
 -- Returns (instructions, newCounter).
-compileAggregateQuery :: OptimizedPlan   -- ^ inner scan plan (below the Aggregate node)
-                      -> [AggregateItem] -- ^ aggregate functions to compute
-                      -> [SqlExpr]       -- ^ GROUP BY expressions
-                      -> Maybe SqlExpr   -- ^ HAVING predicate (optional)
+compileAggregateQuery :: OptimizedPlan    -- ^ inner scan plan (below the Aggregate node)
+                      -> [AggregateItem]  -- ^ aggregate functions to compute
+                      -> [SqlExpr]        -- ^ GROUP BY expressions
+                      -> Maybe SqlExpr    -- ^ HAVING predicate (optional)
+                      -> [OutputColumn]   -- ^ outer Project column list (for aliases)
                       -> Counter
                       -> ([Instruction], Counter)
-compileAggregateQuery innerPlan aggs groupBy havingOpt counter =
+compileAggregateQuery innerPlan aggs groupBy havingOpt projCols counter =
     let numAggs = length aggs
 
         -- Derive group-key column names for SaveGroupKey / LoadGroupKey.
@@ -786,6 +807,19 @@ compileAggregateQuery innerPlan aggs groupBy havingOpt counter =
                 P.Column _ c -> c
                 _            -> "key_" ++ show i)
             [0..] groupBy
+
+        -- Build a mapping from synthetic aggregate alias → user alias.
+        -- projCols may have OutputExpr (AggExpr ...) (Just "alias") which
+        -- contains the AS-alias the user wrote.  Zip with aggs by position.
+        -- If projCols has fewer entries, fall back to the synthetic alias.
+        userAliasFor :: Int -> String -> String
+        userAliasFor i synth =
+            case drop i projCols of
+                (OutputExpr _ (Just userAlias) : _) -> userAlias
+                _                                    -> synth
+
+        -- The group-key columns come first in projCols, then the aggregates.
+        aggProjOffset = length groupKeyNames
 
         -- PHASE 1: inside the loop — save the group key, then update each accumulator.
         saveKeyInstrs
@@ -809,8 +843,10 @@ compileAggregateQuery innerPlan aggs groupBy havingOpt counter =
                       (zip [0..] groupKeyNames)
 
         aggEmitInstrs =
-            concatMap (\(i, a) -> [compileFinalizeAgg i (aggFunc a), EmitColumn (aggAlias a)])
-                      (zip [0..] aggs)
+            concatMap (\(i, a) ->
+                let colName = userAliasFor (aggProjOffset + i) (aggAlias a)
+                in [compileFinalizeAgg i (aggFunc a), EmitColumn colName])
+                (zip [0..] aggs)
 
         -- Apply HAVING filter before emitting the row.
         (emitPhase, counter2) = case havingOpt of
@@ -887,9 +923,9 @@ compileSelect plan counter =
     in case findAggregate corePlan of
 
         -- ── Aggregate query ───────────────────────────────────────────────
-        Just (innerPlan, groupBy, aggs, havingOpt) ->
+        Just (innerPlan, groupBy, aggs, havingOpt, projCols) ->
             let (scanInstrs, c1) =
-                    compileAggregateQuery innerPlan aggs groupBy havingOpt counter
+                    compileAggregateQuery innerPlan aggs groupBy havingOpt projCols counter
             in (scanInstrs ++ postOps ++ [Halt], c1)
 
         -- ── Non-aggregate query ───────────────────────────────────────────
@@ -906,17 +942,21 @@ compileSelect plan counter =
 
 -- | Search for an Aggregate node in the plan, possibly wrapped by Project/Having.
 --
--- Returns Just (innerScanPlan, groupByExprs, aggItems, havingPred) if found.
+-- Returns Just (innerScanPlan, groupByExprs, aggItems, havingPred, projectCols)
+-- where projectCols is the outer Project's column list (used to recover the
+-- user-supplied column aliases for aggregate outputs such as
+-- `SELECT COUNT(*) AS n` — the `AS n` lives in the Project, while the
+-- AggregateItem only has the synthetic `_agg0` alias).
 findAggregate :: OptimizedPlan
-              -> Maybe (OptimizedPlan, [SqlExpr], [AggregateItem], Maybe SqlExpr)
-findAggregate (OptProject (OptAggregate inner gb aggs) _) =
-    Just (inner, gb, aggs, Nothing)
-findAggregate (OptProject (OptHaving (OptAggregate inner gb aggs) pred) _) =
-    Just (inner, gb, aggs, Just pred)
+              -> Maybe (OptimizedPlan, [SqlExpr], [AggregateItem], Maybe SqlExpr, [OutputColumn])
+findAggregate (OptProject (OptAggregate inner gb aggs) projCols) =
+    Just (inner, gb, aggs, Nothing, projCols)
+findAggregate (OptProject (OptHaving (OptAggregate inner gb aggs) pred) projCols) =
+    Just (inner, gb, aggs, Just pred, projCols)
 findAggregate (OptAggregate inner gb aggs) =
-    Just (inner, gb, aggs, Nothing)
+    Just (inner, gb, aggs, Nothing, [])
 findAggregate (OptHaving (OptAggregate inner gb aggs) pred) =
-    Just (inner, gb, aggs, Just pred)
+    Just (inner, gb, aggs, Just pred, [])
 findAggregate _ =
     Nothing
 

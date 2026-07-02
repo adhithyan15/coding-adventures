@@ -3,6 +3,30 @@
 All notable changes to this package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.4.0] — 2026-07-01
+
+### Added
+
+- **`vmColOrder :: [String]` field in `VmState`**: tracks the order in which
+  `EmitColumn` was called within the current `BeginRow`..`EmitRow` sequence.
+  Reset to `[]` by `BeginRow`, extended by `EmitColumn`.  Enables
+  `buildResult` to return columns in SELECT-list order instead of alphabetical
+  `Map.keys` order.
+- **`vmOutputColumns :: [String]` field in `VmState`**: captures `vmColOrder`
+  on the first `EmitRow` call and holds it for the lifetime of the query.
+  `buildResult` reads this instead of `Map.keys` to build the canonical column
+  name list.
+
+### Fixed
+
+- **`SELECT *` wildcard expansion in `EmitRow`**: previously `OutputStar` was
+  compiled to `LoadConst (LitText "*")` which pushed a marker onto the stack
+  but never called `EmitColumn`, so `EmitRow` committed an empty row buffer
+  and every `SELECT * FROM t` returned rows with zero columns.  `EmitRow` now
+  detects the case where `vmColOrder` is empty and the stack top is
+  `SqlText "*"`, pops the marker, and copies all columns from the current
+  cursor row (`vmCurrentRow`) into the output buffer.
+
 ## [0.1.3.0] — 2026-07-01
 
 ### Fixed

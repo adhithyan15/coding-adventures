@@ -257,11 +257,19 @@ data VmState = VmState
     , vmStack        :: [SqlValue]
       -- ^ Expression evaluation stack; head = top of stack.
     , vmCursors      :: Map.Map String CursorState
-      -- ^ Open cursors keyed by alias ("" = no alias).
+      -- ^ Open cursors keyed by alias (table name when no explicit alias).
     , vmCurrentRow   :: Map.Map String Row
       -- ^ Current row for each open cursor (keyed by alias).
     , vmRowBuffer    :: Map.Map String SqlValue
       -- ^ Accumulates column values during BeginRow..EmitRow.
+    , vmColOrder     :: [String]
+      -- ^ Column names in the order they were emitted by EmitColumn within
+      -- the current BeginRow..EmitRow sequence.  Reset by BeginRow.
+      -- This preserves SELECT-list order across the Map (which sorts keys).
+    , vmOutputColumns :: [String]
+      -- ^ The canonical column order for this query, captured on the first
+      -- EmitRow.  Used by buildResult so that output rows respect the
+      -- SELECT-list column order rather than alphabetical Map.keys order.
     , vmOutputRows   :: [Map.Map String SqlValue]
       -- ^ Accumulated output rows (in reverse order; reversed at end).
     , vmAggAccums    :: Map.Map Int AggAccum
@@ -945,16 +953,53 @@ dispatch instr = case instr of
 
     -- ── Row construction ──────────────────────────────────────────────────
     -- Output rows are assembled column by column between BeginRow and EmitRow.
+    --
+    -- vmColOrder tracks the order in which EmitColumn was called.  This
+    -- preserves SELECT-list column order because Data.Map.Strict sorts keys
+    -- alphabetically, which would otherwise reorder columns (e.g. SELECT
+    -- id, name, age → Map.keys gives ["age","id","name"]).
     BeginRow ->
-        modify (\st -> st { vmRowBuffer = Map.empty })
+        modify (\st -> st { vmRowBuffer = Map.empty, vmColOrder = [] })
 
     EmitColumn name -> do
         v <- pop
-        modify (\st -> st { vmRowBuffer = Map.insert name v (vmRowBuffer st) })
+        modify (\st -> st
+            { vmRowBuffer = Map.insert name v (vmRowBuffer st)
+            , vmColOrder  = vmColOrder st ++ [name]
+            })
 
     EmitRow -> do
-        rowBuf <- gets vmRowBuffer
-        modify (\st -> st { vmOutputRows = rowBuf : vmOutputRows st })
+        rowBuf   <- gets vmRowBuffer
+        colOrder <- gets vmColOrder
+        -- SELECT * support: if no EmitColumn was called (colOrder is empty)
+        -- and the top of stack is SqlText "*" (emitted by compileOutputCols for
+        -- OutputStar), expand the current cursor row into the output buffer.
+        -- This is how `SELECT * FROM t` works without knowing column names at
+        -- compile time.
+        (finalBuf, finalOrder) <-
+            if null colOrder
+            then do
+                topMaybe <- gets (\s -> case vmStack s of { (v:_) -> Just v; [] -> Nothing })
+                case topMaybe of
+                    Just (SqlText "*") -> do
+                        -- Pop the wildcard marker from the stack.
+                        _ <- pop
+                        -- Collect all columns from all open cursors in alias order.
+                        curRows <- gets vmCurrentRow
+                        let allPairs = concatMap Map.toAscList (Map.elems curRows)
+                        let buf  = Map.fromList allPairs
+                        let ord  = map fst allPairs
+                        return (buf, ord)
+                    _ -> return (rowBuf, colOrder)
+            else return (rowBuf, colOrder)
+        modify (\st -> st
+            { vmOutputRows    = finalBuf : vmOutputRows st
+              -- Capture column order on first EmitRow; all rows share the same
+              -- schema so we only need to do this once.
+            , vmOutputColumns = if null (vmOutputColumns st)
+                                    then finalOrder
+                                    else vmOutputColumns st
+            })
 
     -- ── Aggregation ───────────────────────────────────────────────────────
     -- InitAgg n: ensure n accumulator slots exist (idempotent for re-entry
@@ -1128,20 +1173,22 @@ executeWithRef prog bRef = do
 mkInitState :: [Instruction] -> Map.Map String Int -> IORef InMemoryBackend -> VmState
 mkInitState instrs lblIdx bRef =
     VmState
-        { vmInstructions = instrs
-        , vmLabelIndex   = lblIdx
-        , vmPc           = 0
-        , vmStack        = []
-        , vmCursors      = Map.empty
-        , vmCurrentRow   = Map.empty
-        , vmRowBuffer    = Map.empty
-        , vmOutputRows   = []
-        , vmAggAccums    = Map.empty
-        , vmRowsAffected = 0
-        , vmBackend      = bRef
-        , vmPostSort     = Nothing
-        , vmPostDistinct = False
-        , vmPostLimit    = Nothing
+        { vmInstructions  = instrs
+        , vmLabelIndex    = lblIdx
+        , vmPc            = 0
+        , vmStack         = []
+        , vmCursors       = Map.empty
+        , vmCurrentRow    = Map.empty
+        , vmRowBuffer     = Map.empty
+        , vmColOrder      = []
+        , vmOutputColumns = []
+        , vmOutputRows    = []
+        , vmAggAccums     = Map.empty
+        , vmRowsAffected  = 0
+        , vmBackend       = bRef
+        , vmPostSort      = Nothing
+        , vmPostDistinct  = False
+        , vmPostLimit     = Nothing
         }
 
 -- | Build the final QueryResult from the finished VmState.
@@ -1150,11 +1197,11 @@ buildResult :: VmState -> QueryResult
 buildResult st =
     let rawRows  = reverse (vmOutputRows st)
 
-        -- Derive column names from the first row's key set.
-        -- All rows share the same columns (guaranteed by BeginRow/EmitColumn).
-        colNames = case rawRows of
-            []    -> []
-            (r:_) -> Map.keys r
+        -- Use the column order captured during EmitColumn/EmitRow execution.
+        -- This preserves SELECT-list order (e.g. SELECT id, name, age)
+        -- rather than Map.keys alphabetical order (e.g. age, id, name).
+        -- If no rows were emitted (DML or empty result), colNames is [].
+        colNames = vmOutputColumns st
 
         -- Convert row maps to value lists in column order.
         toValueList rowMap = map (\col -> Map.findWithDefault SqlNull col rowMap) colNames

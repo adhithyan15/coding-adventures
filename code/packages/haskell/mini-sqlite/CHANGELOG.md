@@ -2,6 +2,46 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.6] - 2026-07-01
+
+### Fixed
+
+- **Cursor alias mismatch — all column reads returned `SqlNull` (runtime
+  bug)**: the full-pipeline path (`sql-codegen` → `sql-vm`) was affected by
+  a mismatch between how `sql-codegen` opened cursors and how `sql-planner`
+  resolved column references.  The planner resolves bare column names as
+  `Column (Just tableName) col` (using the table name as scope alias when no
+  AS alias is given).  The codegen therefore emits `LoadColumn (Just
+  tableName) col`.  However `compileScanLoop` was emitting `OpenScan table
+  Nothing`, which stored the row under cursor key `""`.  `LoadColumn (Just
+  tableName)` looked up `vmCurrentRow[tableName]` which didn't exist, so
+  every column read returned `SqlNull`.  Fixed in `sql-codegen 0.1.2.0` by
+  normalising the cursor alias to `Just tableName` when no explicit alias is
+  present.  After this fix, INSERT + SELECT round-trips return real values
+  instead of `SqlNull`.
+
+- **`SELECT *` returned rows with zero columns (runtime bug)**: `OutputStar`
+  compiled to a bare `LoadConst (LitText "*")` marker which was never
+  converted to `EmitColumn` calls.  `EmitRow` therefore committed an empty
+  row buffer, giving `[[]]` for every `SELECT * FROM t`.  Fixed in `sql-vm
+  0.1.4.0`: `EmitRow` now expands the `"*"` marker by copying all columns
+  from the current cursor row into the output buffer.
+
+- **Output column order was alphabetical instead of SELECT-list order
+  (runtime bug)**: `buildResult` in `sql-vm` derived column names via
+  `Map.keys` of the first output row, which is sorted alphabetically.  Queries
+  like `SELECT id, name, age FROM t` returned `["age","id","name"]` instead
+  of `["id","name","age"]`.  Fixed in `sql-vm 0.1.4.0` by tracking emit order
+  per-row and capturing it into `vmOutputColumns`.
+
+- **Aggregate `AS` aliases ignored — always reported as `_agg0` etc.
+  (runtime bug)**: `collectAggs` in `sql-planner` assigns synthetic aliases
+  `_agg0`, `_agg1` to aggregate items.  The codegen was passing these through
+  to `EmitColumn` even when the outer `SELECT` clause had an explicit `AS`
+  alias.  Fixed in `sql-codegen 0.1.2.0` by forwarding the outer `Project`
+  column list to `compileAggregateQuery` so that user-supplied aliases override
+  the synthetic ones.
+
 ## [0.2.5] - 2026-07-01
 
 ### Fixed
