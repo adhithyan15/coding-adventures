@@ -2,6 +2,58 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.6.0] - 2026-07-01
+
+(Cargo manifest minor bump 0.5.0 → 0.6.0.)
+
+### Added (MX1 — mixin syntax → mixin builtins, frontend only, NO core-IR change)
+
+First milestone of the `sir-mixins` cascade. Lowers Ruby's `module`/`include`/
+`extend` mixin surface to ordinary `BuiltinCall`s, reusing the OOP milestone's
+runtime-method-table pattern. Everything rides the existing `Expr::BuiltinCall`
+node — no new IR variant, no `Feature` enum change — so nothing here can create
+a cross-PR enum/field hazard. Execution is delivered in later milestones
+(MX2–MX6, backend runtimes); MX1 asserts the lowered IR shape only.
+
+- **Module methods now register keyed by the module name.** Before MX1, a
+  `module M … end` body's `def`s hoisted to *detached* top-level `Function`s
+  (bare names) and recorded nothing — no `include M` could ever find them.
+  MX1 routes the module body through the SAME registration-collecting path
+  classes use (`lower_class_body`), keyed by the module name:
+  `module M; def greet; "hi"; end; end` now emits
+  `__def_method__("M", "greet", MakeClosure(M__greet))` right after the
+  `ModuleDef`, and hoists the body under the module-qualified name `M__greet`
+  (avoiding top-level collisions, exactly like class methods). `def self.m` in
+  a module registers as a class method (`__def_class_method__`).
+
+- **`include M` / `extend M` in a class or module body → mixin directives.**
+  A paren-less (or parenthesized) call whose callee is `include`/`extend` and
+  whose sole argument is a bare module constant `M` now lowers to
+  `__include__("Owner", "M")` / `__extend__("Owner", "M")`, where `Owner` is the
+  enclosing class/module being defined. The directive is emitted in the same
+  registration slot the method `__def_*__` calls use, so it runs in source order
+  right after the declaration. The module NAME is extracted as a `StrLit`
+  (mirroring how `Foo.new` / class-method dispatch read a `Scope::Const`
+  operand's name), keeping dispatch fully table-driven — never reflection on a
+  source-derived name (the C3 RCE lesson).
+
+- **Feature gating.** `module`/`include`/`extend` all observe the existing
+  `Feature::Modules` (plus `Feature::Strings`/`Feature::Closures` for the
+  emitted `StrLit`/`MakeClosure` args). No `Feature::Mixins` was added: that
+  would be a core-IR (`semantic-ir`) change, which is out of MX1's frontend-only
+  scope — the mixin builtins validate under `Modules` because they are ordinary
+  `BuiltinCall`s.
+
+### Deferred / known gaps (MX1)
+
+- **Multi-module `include A, B`** and non-constant operands (`include some_expr`)
+  fall through to the ordinary-call path in v0 (documented in
+  `try_expand_mixin_call`); the single-module `include M` form is all MX1 needs.
+- **Top-level `include M`** (outside any class/module) is unchanged (still a
+  `DirectCall`) — the mixin owner is only defined inside a class/module body.
+- **`super` inside a module method** has no anchoring class and remains out of
+  scope (unchanged from the OOP milestone).
+
 ## [0.5.0] - 2026-07-01
 
 (Cargo manifest minor bump 0.4.0 → 0.5.0.)
