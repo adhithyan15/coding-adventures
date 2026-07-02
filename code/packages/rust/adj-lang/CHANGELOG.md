@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.34.0] - 2026-07-02 — `\operatorname{floor/ceil/round}` word spellings in `latex "…"`
+
+### Added
+
+- `latex "\operatorname{floor}(x)"`, `\operatorname{ceil}(x)`, and `\operatorname{round}(x)`
+  now compute the **word-spelled roundings**, reaching the SAME `ComputeOp`s as their
+  already-supported Unicode-bracket twins (`⌊x⌋`→`Floor`, `⌈x⌉`→`Ceil`, `⌊x⌉`→`Round`): a
+  model that writes the operator *name* instead of the bracket lands on the identical node.
+  `\operatorname{…}` is a TEXT command, so each parses as the operator-name juxtaposition
+  `Bin(Mul, Text("floor"), (x))` — the same shape the adapter already recognises for
+  `\operatorname{trunc}`/`\operatorname{sgn}` — and lowers via `operator_name_is(lhs, …)` to
+  the existing `ExprAst::Floor`/`Ceil`/`Round` (dimension-preserving). Pure **adapter**
+  recognition: no engine, AST, or lowering change. +1 e2e unit test (floor/ceil/round).
+
 ## [0.33.0] - 2026-07-02 — `\operatorname{sgn}` sign function in `latex "…"`
 
 ### Added

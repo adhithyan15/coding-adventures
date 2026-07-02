@@ -2064,6 +2064,46 @@ contributes 1000000 from answer == 60 to correct
     }
 
     #[test]
+    fn native_latex_operatorname_floor_ceil_round_word_spellings() {
+        // The word-spelled roundings reach the SAME ComputeOps as their Unicode-bracket
+        // twins (`⌊⌋`/`⌈⌉`/`⌊⌉`). `\operatorname{…}` is a TEXT command, so each parses as
+        // the operator-name juxtaposition `Bin(Mul, Text(name), (arg))` — the same shape as
+        // `\operatorname{trunc}`/`\operatorname{sgn}` — which the adapter now intercepts.
+        // Values chosen so the answer is unambiguous under any half-rounding convention:
+        //   floor(7/2) = floor(3.5) = 3,  ceil(7/2) = ceil(3.5) = 4,  round(9/4) = round(2.25) = 2.
+        let floor = crate::compile_and_decide(
+            "observe a(7)\n\
+             observe b(2)\n\
+             let answer = latex \"$\\operatorname{floor}(a / b)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 3 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(floor.ranked[0].posterior > 0.99, "{floor:?}");
+        let ceil = crate::compile_and_decide(
+            "observe a(7)\n\
+             observe b(2)\n\
+             let answer = latex \"$\\operatorname{ceil}(a / b)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 4 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(ceil.ranked[0].posterior > 0.99, "{ceil:?}");
+        let round = crate::compile_and_decide(
+            "observe a(9)\n\
+             observe b(4)\n\
+             let answer = latex \"$\\operatorname{round}(a / b)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 2 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(round.ranked[0].posterior > 0.99, "{round:?}");
+    }
+
+    #[test]
     fn native_latex_exp_of_ln_round_trips() {
         // `\exp(\ln(x))` with x=5 returns 5, computed on the native transcendental
         // ComputeOp::Exp/Ln via the `MathExpr::Call` → `ExprAst::Call` path. A
