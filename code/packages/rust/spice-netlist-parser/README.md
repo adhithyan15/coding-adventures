@@ -586,6 +586,11 @@ kind, delivery route, WebAssembly export symbol, hydration target, top-level
 notification counts, nested `productHandoff`, and delivery-package capability
 metadata so Mosaic and product-shell hosts can bootstrap the post-dispatch
 handoff without re-walking the command-palette receipt stack.
+Delivery package embed manifests add a stable embed manifest ID, WebAssembly
+module/import/export metadata, hydration mode, preload/instantiate/mount flags,
+nested `deliveryPackage`, and embed-manifest capability metadata so
+WebAssembly-backed product shells can decide when to load, instantiate, and
+mount the post-dispatch handoff.
 Persisted editor-state snapshots resolve saved selection and active-command IDs
 against the current deck, repairing stale UI state after source edits. Host
 surfaces turn those snapshots into stable source, diagnostics, analysis, table,
