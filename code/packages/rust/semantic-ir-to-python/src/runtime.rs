@@ -25,6 +25,7 @@ from coding_adventures_sir_runtime_oop import (
     call_method as _sir_oop_call_method,
     call_new as _sir_oop_call_new,
     call_super as _sir_oop_call_super,
+    call_class_method as _sir_oop_call_class_method,
     def_method as _sir_oop_def_method,
     def_class_method as _sir_oop_def_class_method,
     current_self as _sir_oop_current_self,

@@ -2,6 +2,50 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.5.0] - 2026-07-01
+
+(Cargo manifest minor bump 0.4.0 → 0.5.0.  Note: the older CHANGELOG headers
+use a separate 0.8x sequence that had drifted from the manifest version; this
+entry tracks the actual `Cargo.toml` version, matching the convention adopted
+by `ruby-to-semantic-ir`.)
+
+### Added (Issue #59 — class-method defs `def self.m` + `super` as an expression)
+
+Two grammar limitations that blocked the just-merged OOP cascade (O1–O5) are
+lifted. Both required `ruby.grammar` changes and a regenerated
+`src/_grammar.rs` (via `grammar-tools generate-rust-compiled-grammars
+ruby-parser`).
+
+- **Class-method / singleton-method definitions `def self.m` / `def Recv.m`.**
+  `def_statement` and `endless_def_statement` gained an OPTIONAL leading
+  `def_receiver` prefix:
+  `def_statement = "def" [ def_receiver ] NAME [ LPAREN [ params ] RPAREN ] … "end" ;`
+  with `def_receiver = singleton_receiver "." ;` (reusing Phase 14e's
+  `singleton_receiver = self | NAME`). So `def self.zero; end` and
+  `def Foo.bar(x); end` now parse. The prefix is optional, so every prior
+  `def m` parses byte-for-byte as before (the optional group matches nothing
+  unless a `.` follows the receiver token).
+
+- **`super` as an EXPRESSION.** A dedicated `super_expr = "super" [ super_args ]`
+  production is spliced into `factor` (FIRST, before the bare `NAME`/guarded
+  `KEYWORD` atoms) so `x = super`, `super + 1`, and `puts(super)` parse.
+  Previously `super` was statement-only (`super_statement`), so any
+  `super`-in-expression form parse-panicked.
+
+### Changed
+
+- **`super_statement` removed from the `statement` alternation.** All `super`
+  forms now route through `factor`'s `super_expr` (a stand-alone `super` line
+  parses as `expression_stmt → … → super_expr`). Keeping the old statement
+  rule would have shadowed the expression form — a PEG match of
+  `super_statement` consumes only `super` and cannot backtrack, orphaning a
+  trailing `+ 1`. `super_args` is retained (reused by `super_expr`).
+- **`method_call` / `method_call_no_paren` KEYWORD head guarded with
+  `!"super"`.** A statement `super(x, y)` / `super x` must NOT match these
+  rules (which would mislower it as an ordinary call to a method literally
+  named `super`); the guard hands `super` to `super_expr` instead. Every other
+  keyword-led call (`puts(1)`, value-keyword receivers) is unchanged.
+
 ## [0.82.0] - 2026-06-30
 
 ### Added (KW7 — keyword parameters & arguments, the Ruby-1.0 unblock)

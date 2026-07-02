@@ -48,6 +48,9 @@ fn uses_oop(m: &Module) -> bool {
         || module_uses_builtin(m, "__super__")
         || module_uses_builtin(m, "__def_method__")
         || module_uses_builtin(m, "__def_class_method__")
+        // Issue #59 — a class-method CALL (`Foo.bar` on a const receiver)
+        // routes to `_sir_oop_call_class_method`, so it needs the OOP import.
+        || module_uses_builtin(m, "__class_method__")
         || module_uses_builtin(m, "__self__")
 }
 
@@ -1166,6 +1169,16 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     }
     if name == "__super__" && args.len() >= 2 {
         out.push_str("_sir_oop_call_super(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    // Issue #59 — class-method call `Foo.bar(args)` (const receiver) →
+    // `_sir_oop_call_class_method("Foo", "bar", args…)`.  The class + method
+    // names arrive as `StrLit`s and are emitted via the normal expression path
+    // (`quote_py_string`), so no source-derived name is interpolated raw.
+    if name == "__class_method__" && args.len() >= 2 {
+        out.push_str("_sir_oop_call_class_method(");
         emit_args(out, args, indent);
         out.push(')');
         return;

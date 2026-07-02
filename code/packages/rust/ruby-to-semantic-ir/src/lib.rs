@@ -6223,16 +6223,21 @@ mod tests {
         // `__super__("", "")` (method + class are empty — no enclosing context).
         // The in-class param-forwarding case is covered by
         // `bare_super_forwards_enclosing_params` in the O2 section.
+        //
+        // Issue #59 — `super` is now an EXPRESSION (`super_expr` in `factor`),
+        // so a bare `super` as the SOLE top-level statement is promoted to the
+        // module's tail `value` (like any bare expression), not `stmts[0]`.
+        // The lowered SHAPE (`__super__(method, class, …)`) is unchanged.
         let m = lower("super\n");
         let b = main_body(&m);
-        match &b.stmts[0] {
-            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+        match &b.value {
+            Expr::BuiltinCall { name, args, .. } => {
                 assert_eq!(name, "__super__", "bare super lowers to __super__");
                 assert_eq!(args.len(), 2, "method + class names, no forwarded params");
                 assert!(matches!(&args[0], Expr::StrLit { value, .. } if value.is_empty()));
                 assert!(matches!(&args[1], Expr::StrLit { value, .. } if value.is_empty()));
             }
-            other => panic!("expected ExprStmt(BuiltinCall(__super__, …)), got {:?}", other),
+            other => panic!("expected tail BuiltinCall(__super__, …), got {:?}", other),
         }
     }
 
@@ -6240,14 +6245,15 @@ mod tests {
     fn super_empty_parens_lowers_to_super_builtin_no_args() {
         // `super()` forwards NO arguments: `__super__(method, class)` with no
         // trailing operands (at the top level the two names are empty strings).
+        // Issue #59 — promoted to the module tail `value` (super is an expr).
         let m = lower("super()\n");
         let b = main_body(&m);
-        match &b.stmts[0] {
-            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+        match &b.value {
+            Expr::BuiltinCall { name, args, .. } => {
                 assert_eq!(name, "__super__", "super() lowers to __super__");
                 assert_eq!(args.len(), 2, "super() forwards zero extra args");
             }
-            other => panic!("expected ExprStmt(BuiltinCall(__super__, …)), got {:?}", other),
+            other => panic!("expected tail BuiltinCall(__super__, …), got {:?}", other),
         }
     }
 
@@ -6263,14 +6269,15 @@ mod tests {
             result
         );
         let b = main_body(&m);
-        match &b.stmts[0] {
-            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+        // Issue #59 — promoted to the module tail `value` (super is an expr).
+        match &b.value {
+            Expr::BuiltinCall { name, args, .. } => {
                 assert_eq!(name, "__super__");
                 assert_eq!(args.len(), 4, "method, class, then the two forwarded args");
                 assert!(matches!(&args[2], Expr::IntLit { value: 1, .. }));
                 assert!(matches!(&args[3], Expr::IntLit { value: 2, .. }));
             }
-            other => panic!("expected ExprStmt(BuiltinCall(__super__, …)), got {:?}", other),
+            other => panic!("expected tail BuiltinCall(__super__, …), got {:?}", other),
         }
     }
 
@@ -8539,6 +8546,171 @@ b = "y"
         );
     }
 
+    /// Issue #59 — find the `__super__` `BuiltinCall` args in a function body,
+    /// searching BOTH the statement list and the tail `value` slot.  `super` is
+    /// now an expression, so a method whose sole/last line is `super` puts the
+    /// `__super__` call in `body.value`, not `body.stmts`.
+    fn find_super_args(f: &semantic_ir::Function) -> Option<&[Expr]> {
+        for s in &f.body.stmts {
+            if let Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } = s {
+                if name == "__super__" {
+                    return Some(args);
+                }
+            }
+        }
+        if let Expr::BuiltinCall { name, args, .. } = &f.body.value {
+            if name == "__super__" {
+                return Some(args);
+            }
+        }
+        None
+    }
+
+    // -----------------------------------------------------------------------
+    // Issue #59 — class-method defs (`def self.m`) + class-method calls
+    // (`Foo.bar`), plus `super` in expression position.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn def_self_method_registers_as_class_method() {
+        // `class Counter; def self.zero; 0; end; end` — the receiver-bearing
+        // `def self.zero` must register in the CLASS-method table via
+        // `__def_class_method__("Counter", "zero", MakeClosure(Counter__zero_cm))`
+        // (NOT `__def_method__`), and hoist under a `_cm`-suffixed name.
+        let m = lower("class Counter\n  def self.zero\n    0\n  end\nend\n");
+        // Hoisted under the class-method-qualified name.
+        assert!(
+            m.functions.iter().any(|f| f.name == "Counter__zero_cm"),
+            "expected class-method-qualified `Counter__zero_cm`; got {:?}",
+            m.functions.iter().map(|f| &f.name).collect::<Vec<_>>()
+        );
+        // A `__def_class_method__` registration exists (and NO `__def_method__`
+        // for `zero`).
+        let regs: Vec<(&str, &str)> = main_body(&m)
+            .stmts
+            .iter()
+            .filter_map(|s| match s {
+                Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+                    let meth = match args.get(1) {
+                        Some(Expr::StrLit { value, .. }) => value.as_str(),
+                        _ => "",
+                    };
+                    Some((name.as_str(), meth))
+                }
+                _ => None,
+            })
+            .collect();
+        assert!(
+            regs.contains(&("__def_class_method__", "zero")),
+            "expected __def_class_method__ for `zero`; got {:?}",
+            regs
+        );
+        assert!(
+            !regs.iter().any(|(n, meth)| *n == "__def_method__" && *meth == "zero"),
+            "class method `zero` must NOT register as an instance method"
+        );
+    }
+
+    #[test]
+    fn class_method_call_lowers_to_class_method_dispatch() {
+        // `Counter.zero` — a NON-`new` method call on a CONSTANT receiver is a
+        // class-method dispatch: `__class_method__("Counter", "zero")`.
+        let m = lower("Counter.zero\n");
+        match &main_body(&m).value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "__class_method__");
+                assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "Counter"));
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "zero"));
+            }
+            other => panic!("expected __class_method__ dispatch, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn class_method_call_with_args_forwards_them() {
+        // `Foo.bar(x)` → `__class_method__("Foo", "bar", VarRef(x))`.
+        let m = lower("Foo.bar(1)\n");
+        match &main_body(&m).value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "__class_method__");
+                assert_eq!(args.len(), 3, "class, method, then the forwarded arg");
+                assert!(matches!(&args[2], Expr::IntLit { value: 1, .. }));
+            }
+            other => panic!("expected __class_method__ dispatch, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn dot_new_on_const_still_routes_to_new_not_class_method() {
+        // Regression guard — `Foo.new` is the implicit constructor class method
+        // and must still lower to `__new__`, NOT `__class_method__`.
+        let m = lower("Foo.new\n");
+        match &main_body(&m).value {
+            Expr::BuiltinCall { name, .. } => {
+                assert_eq!(name, "__new__", "`.new` must route to __new__");
+            }
+            other => panic!("expected __new__, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn instance_method_call_on_local_still_uses_method_envelope() {
+        // Regression guard — a method call on a NON-constant receiver (`obj.m`)
+        // must still route through `__method__`, not `__class_method__`.
+        let m = lower("obj = 1\nobj.foo\n");
+        match &main_body(&m).value {
+            Expr::BuiltinCall { name, .. } => {
+                assert_eq!(name, "__method__", "instance dispatch stays __method__");
+            }
+            other => panic!("expected __method__, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn super_as_subexpression_lowers_to_super_builtin() {
+        // Issue #59 — `super` used as a SUB-expression (`x = super + 1`) lowers
+        // to `+`( __super__(…), 1 ) — the `__super__` sits in expression
+        // position inside the binary op.
+        let m = lower(
+            "class Cat\n  def describe\n    result = super + 1\n    result\n  end\nend\n",
+        );
+        let f = m
+            .functions
+            .iter()
+            .find(|f| f.name == "Cat__describe")
+            .expect("Cat__describe");
+        // The `result = super + 1` binding: RHS is `+`(super, 1).
+        let has_super_in_binop = f.body.stmts.iter().any(|s| {
+            let rhs = match s {
+                Stmt::LetBinding { value, .. } => Some(value),
+                Stmt::Assign { value, .. } => Some(value),
+                _ => None,
+            };
+            matches!(
+                rhs,
+                Some(Expr::BuiltinCall { name, args, .. })
+                    if name == "+"
+                        && matches!(&args[0], Expr::BuiltinCall { name: n, .. } if n == "__super__")
+            )
+        });
+        assert!(
+            has_super_in_binop,
+            "expected `super + 1` to lower to +(__super__(…), 1); body = {:?}",
+            f.body.stmts
+        );
+    }
+
+    #[test]
+    fn def_self_endless_method_registers_as_class_method() {
+        // Endless form `def self.zero = 0` also registers as a class method.
+        let m = lower("class Counter\n  def self.zero = 0\nend\n");
+        assert!(
+            m.functions.iter().any(|f| f.name == "Counter__zero_cm"),
+            "expected `Counter__zero_cm`; got {:?}",
+            m.functions.iter().map(|f| &f.name).collect::<Vec<_>>()
+        );
+    }
+
     #[test]
     fn class_def_emits_method_registration() {
         // `class Dog; def speak; end; end` produces a `ClassDef` for Dog PLUS a
@@ -8638,20 +8810,10 @@ b = "y"
             .iter()
             .find(|f| f.name == "Cat__describe")
             .expect("Cat__describe");
-        // The super statement is the (only) body statement.
-        let call = f
-            .body
-            .stmts
-            .iter()
-            .find_map(|s| match s {
-                Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. }
-                    if name == "__super__" =>
-                {
-                    Some(args)
-                }
-                _ => None,
-            })
-            .expect("__super__ call in body");
+        // Issue #59 — `super(a)` is the method's tail expression, so it lands in
+        // `body.value` (super is now an expression, not a statement); helper
+        // scans both slots.
+        let call = find_super_args(f).expect("__super__ call in body");
         assert_eq!(call.len(), 3, "__super__(method, class, arg)");
         assert!(matches!(&call[0], Expr::StrLit { value, .. } if value == "describe"));
         assert!(matches!(&call[1], Expr::StrLit { value, .. } if value == "Cat"));
@@ -8670,19 +8832,8 @@ b = "y"
             "class C\n  def m(a, b)\n    super\n  end\nend\n",
         );
         let f = m.functions.iter().find(|f| f.name == "C__m").expect("C__m");
-        let call = f
-            .body
-            .stmts
-            .iter()
-            .find_map(|s| match s {
-                Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. }
-                    if name == "__super__" =>
-                {
-                    Some(args)
-                }
-                _ => None,
-            })
-            .expect("__super__ call");
+        // Issue #59 — bare `super` is the tail expression → `body.value`.
+        let call = find_super_args(f).expect("__super__ call");
         assert!(matches!(&call[0], Expr::StrLit { value, .. } if value == "m"));
         assert!(matches!(&call[1], Expr::StrLit { value, .. } if value == "C"));
         // Remaining args are the two params (sorted for determinism: a, b).

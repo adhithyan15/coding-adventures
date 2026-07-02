@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.6.0] - 2026-07-01
+
+### Added (Issue #59 — class-method CALL dispatch)
+
+- **`__class_method__("Class", "method", …args)` → `_sir_oop_call_class_method`.**
+  The Ruby frontend (ruby-to-semantic-ir 0.5.0) now emits `__class_method__`
+  for a class-method call on a constant receiver (`Counter.zero`); the emitter
+  routes it to the OOP runtime's ancestry-walking `call_class_method`. The
+  helper is added to the `RUNTIME_OOP` import header and to the OOP-import
+  gating list (`is_oop`), so a module using class-method calls pulls in the
+  runtime dependency.
+
+### Tests (Issue #59 — class-method + super-as-expression execution proofs)
+
+- `end_to_end_ruby_class_method_def_and_call_executes_py` — real
+  `def self.zero; Counter.new; end` factory; `Counter.zero.val` runs and prints
+  `42` under a live interpreter.
+- `end_to_end_ruby_super_as_expression_executes_py` — `def describe; super + 1; end`
+  with inheritance; the parent's `describe` (40) flows into the enclosing `+`,
+  printing `41`. (Uses numeric `+`; string `super + "…"` is a pre-existing
+  `_sir_plus` gap — see ruby-to-semantic-ir CHANGELOG.)
+- Both use `print` rather than `puts`, since `puts` has no runtime dispatch
+  entry on this branch (a parallel PR adds it).
+
 ## Unreleased
 
 ### Tests (O2 — Ruby OOP end-to-end execution proofs)

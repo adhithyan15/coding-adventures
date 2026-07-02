@@ -1063,96 +1063,20 @@ impl Lowerer {
                     span: self.span_of(node),
                 })
             }
-            "super_statement" => {
-                // Phase 22d — `super` keyword.
-                //
-                // Grammar shape:
-                //   super_statement = "super" [ super_args ] ;
-                //   super_args      = LPAREN [ call_arg { COMMA call_arg } ] RPAREN
-                //                   | call_arg { COMMA call_arg } ;
-                //
-                // Two distinct lowerings keyed on whether a `super_args`
-                // node is PRESENT:
-                //   - present → explicit arg list (`super()`, `super(x)`,
-                //     `super x`): the lowered args are forwarded.
-                //   - absent  → bare `super` ("zsuper") forwards ALL of the
-                //     enclosing method's arguments implicitly.  Real Ruby
-                //     re-passes the *current* method's parameters; O2 makes
-                //     that concrete by forwarding a `VarRef` to each of the
-                //     enclosing method's params (in declaration order) —
-                //     captured in `current_params` — so `def describe;
-                //     super; end` inside a param-taking method forwards
-                //     them.  (A method that takes no params forwards
-                //     nothing, which is also correct.)
-                //
-                // O2 (OOP production) — `super` is emitted as the OOP-runtime
-                // builtin `__super__(method_name, class_name, …args)`.  The
-                // runtime walks from `class_name`'s *parent* to find the first
-                // ancestor implementation of `method_name` and runs it with the
-                // *current* self still bound.  We thread the enclosing method +
-                // class names from the lowerer context (`current_method` /
-                // `current_class`).  Outside a class method (`super` at top
-                // level — not legal Ruby, but the parser admits it) both are
-                // empty strings; the runtime then finds no parent and returns
-                // nil, which is the honest floor.
-                //
-                // Effects: PURE, matching `yield` — `super` dispatches to
-                // a parent method whose own effects are accounted for at
-                // its definition/call site; modelling the marker as PURE
-                // keeps the effect lattice from double-counting.
-                let super_args_node = self.find_node_child(node, "super_args");
-                let forwarded: Vec<Expr> = if let Some(sa) = super_args_node {
-                    let call_arg_nodes: Vec<&GrammarASTNode> = sa
-                        .children
-                        .iter()
-                        .filter_map(|c| match c {
-                            ASTNodeOrToken::Node(n) if n.rule_name == "call_arg" => Some(n),
-                            _ => None,
-                        })
-                        .collect();
-                    call_arg_nodes
-                        .into_iter()
-                        .map(|n| self.lower_call_arg(n))
-                        .collect::<Result<Vec<_>, _>>()?
-                } else {
-                    // Bare `super` (zsuper): forward the enclosing method's
-                    // params by reference, in a stable order.  `current_params`
-                    // is a `HashSet`, so sort for determinism (the emitted
-                    // program is otherwise non-reproducible run to run).
-                    let mut params: Vec<String> =
-                        self.current_params.iter().cloned().collect();
-                    params.sort();
-                    params
-                        .into_iter()
-                        .map(|p| Expr::VarRef {
-                            name: p,
-                            scope: Scope::Param,
-                            span: self.span_of(node),
-                        })
-                        .collect()
-                };
-                let method_name = self.current_method.clone().unwrap_or_default();
-                let class_name = self.current_class.clone().unwrap_or_default();
-                self.features_used.insert(Feature::Classes);
-                self.features_used.insert(Feature::Strings);
-                let mut full_args: Vec<Expr> = Vec::with_capacity(forwarded.len() + 2);
-                full_args.push(Expr::StrLit {
-                    value: method_name,
-                    span: self.span_of(node),
-                });
-                full_args.push(Expr::StrLit {
-                    value: class_name,
-                    span: self.span_of(node),
-                });
-                full_args.extend(forwarded);
+            "super_expr" => {
+                // Issue #59 — `super` used in EXPRESSION position but reached
+                // here as a bare statement (`super`, `super()`, `super(x)`,
+                // `super x` written on their own line).  The grammar routes
+                // ALL `super` forms through `factor`'s `super_expr` production
+                // now (the old statement-only `super_statement` is gone), so a
+                // stand-alone `super` line arrives as an `expression_stmt`
+                // wrapping a `super_expr`.  The value-producing lowering lives
+                // in `lower_super_expr`; wrap its result in an `ExprStmt` for
+                // the statement context.
+                let expr = self.lower_super_expr(node)?;
                 Ok(Stmt::ExprStmt {
-                    expr: Expr::BuiltinCall {
-                        name: "__super__".to_string(),
-                        args: full_args,
-                        effects: EffectSet::PURE,
-                        span: self.span_of(node),
-                    },
                     span: self.span_of(node),
+                    expr,
                 })
             }
             "return_statement" | "break_statement" | "next_statement" => {
@@ -3067,36 +2991,46 @@ impl Lowerer {
             };
             match inner.rule_name.as_str() {
                 "def_statement" => {
+                    // Issue #59 — a `def_receiver` child (`def self.m` /
+                    // `def Recv.m`) marks this as a CLASS method: it registers
+                    // in the class-method table (`__def_class_method__`) rather
+                    // than the instance-method table.  The hoisted top-level
+                    // function name is qualified so it never collides with a
+                    // same-named instance method or a class method of another
+                    // class (the `_cm` suffix keeps class methods distinct from
+                    // the instance method `C__m`).
+                    let is_class_method = self.def_has_receiver(inner);
                     let mut func = self.lower_def_statement(inner)?;
                     let method_name = func.name.clone();
-                    // Qualify the hoisted top-level name so same-named methods in
-                    // different classes (and a parent/child `super` target) do not
-                    // collide.  The runtime table key stays the bare method name.
-                    let fn_name = self.qualified_method_fn_name(class_name, &method_name);
+                    let fn_name = if is_class_method {
+                        self.qualified_class_method_fn_name(class_name, &method_name)
+                    } else {
+                        self.qualified_method_fn_name(class_name, &method_name)
+                    };
                     func.name = fn_name.clone();
                     self.user_functions.push(func);
-                    // Instance-method registration.  (`def self.m` class methods
-                    // do not currently parse — the grammar's `def` rule has no
-                    // receiver production — so every hoisted `def` here is an
-                    // instance method.  When the grammar gains `def self.m`,
-                    // route those to `register_class_method`.)
-                    registrations.push(self.register_instance_method(
-                        class_name,
-                        &method_name,
-                        &fn_name,
-                    ));
+                    registrations.push(if is_class_method {
+                        self.register_class_method(class_name, &method_name, &fn_name)
+                    } else {
+                        self.register_instance_method(class_name, &method_name, &fn_name)
+                    });
                 }
                 "endless_def_statement" => {
+                    let is_class_method = self.def_has_receiver(inner);
                     let mut func = self.lower_endless_def_statement(inner)?;
                     let method_name = func.name.clone();
-                    let fn_name = self.qualified_method_fn_name(class_name, &method_name);
+                    let fn_name = if is_class_method {
+                        self.qualified_class_method_fn_name(class_name, &method_name)
+                    } else {
+                        self.qualified_method_fn_name(class_name, &method_name)
+                    };
                     func.name = fn_name.clone();
                     self.user_functions.push(func);
-                    registrations.push(self.register_instance_method(
-                        class_name,
-                        &method_name,
-                        &fn_name,
-                    ));
+                    registrations.push(if is_class_method {
+                        self.register_class_method(class_name, &method_name, &fn_name)
+                    } else {
+                        self.register_instance_method(class_name, &method_name, &fn_name)
+                    });
                 }
                 "method_call_no_paren" | "method_call" => {
                     // `attr_accessor :x, :y` / `attr_reader` / `attr_writer`
@@ -3135,6 +3069,24 @@ impl Lowerer {
         format!("{}__{}", sanitize(class_name), sanitize(method_name))
     }
 
+    /// Issue #59 — the collision-safe top-level function name a CLASS method
+    /// (`def self.m`) hoists to: `Counter#self.zero` → `"Counter__zero_cm"`.
+    /// Uses the same sanitisation as [`Self::qualified_method_fn_name`] plus a
+    /// `_cm` suffix so a class method and an instance method of the *same* name
+    /// on the *same* class hoist to DISTINCT top-level functions (Ruby allows
+    /// `def m` and `def self.m` to coexist).  The runtime class-method table is
+    /// keyed on the bare method name, so dispatch is unaffected by the suffix.
+    fn qualified_class_method_fn_name(&self, class_name: &str, method_name: &str) -> String {
+        format!("{}_cm", self.qualified_method_fn_name(class_name, method_name))
+    }
+
+    /// Issue #59 — does this `def_statement` / `endless_def_statement` carry a
+    /// `def_receiver` (`def self.m` / `def Recv.m`)?  Presence marks it as a
+    /// class/singleton method; absence is an ordinary instance method.
+    fn def_has_receiver(&self, node: &GrammarASTNode) -> bool {
+        self.find_node_child(node, "def_receiver").is_some()
+    }
+
     /// O2 — build the registration statement for an instance method:
     /// `__def_method__("C", "m", MakeClosure { fn_name, captures: [] })`.  The
     /// table is keyed on the *bare* method name `m` (so dispatch by name works),
@@ -3152,11 +3104,11 @@ impl Lowerer {
         self.register_method_call("__def_method__", class_name, method_name, fn_name)
     }
 
-    /// O2 — build the registration statement for a class method (`def self.m`):
-    /// `__def_class_method__("C", "m", MakeClosure { fn_name, captures: [] })`.
-    /// Currently unreachable (the grammar has no `def self.m` receiver form), but
-    /// kept so the class-method path is ready the moment the grammar admits it.
-    #[allow(dead_code)]
+    /// O2 / Issue #59 — build the registration statement for a class method
+    /// (`def self.m`): `__def_class_method__("C", "m", MakeClosure { fn_name,
+    /// captures: [] })`.  Now reachable: the grammar's `def_receiver` production
+    /// (#59) lets `def self.m` parse, and `lower_class_body` routes any
+    /// receiver-bearing `def` here.
     fn register_class_method(
         &mut self,
         class_name: &str,
@@ -6891,6 +6843,89 @@ impl Lowerer {
     // expression / term / factor
     // -------------------------------------------------------------------
 
+    /// Issue #59 — lower a `super_expr` (or, historically, `super_statement`)
+    /// node to the value-producing `__super__(method, class, …args)` builtin.
+    ///
+    /// Grammar shape (Phase 22d, now hosted in `factor` per #59):
+    ///   super_expr = "super" [ super_args ] ;
+    ///   super_args = LPAREN [ call_arg { COMMA call_arg } ] RPAREN
+    ///              | call_arg { COMMA call_arg } ;
+    ///
+    /// Two distinct lowerings keyed on whether a `super_args` node is PRESENT:
+    ///   - present → explicit arg list (`super()`, `super(x)`, `super x`): the
+    ///     lowered args are forwarded verbatim.
+    ///   - absent  → bare `super` ("zsuper") forwards ALL of the enclosing
+    ///     method's arguments implicitly.  Real Ruby re-passes the *current*
+    ///     method's parameters; O2 makes that concrete by forwarding a `VarRef`
+    ///     to each of the enclosing method's params (declaration order — well,
+    ///     sorted for determinism, since `current_params` is a set), so
+    ///     `def describe; super; end` inside a param-taking method forwards
+    ///     them.  A method that takes no params forwards nothing.
+    ///
+    /// O2 (OOP production) — `super` is emitted as the OOP-runtime builtin
+    /// `__super__(method_name, class_name, …args)`.  The runtime walks from
+    /// `class_name`'s *parent* to find the first ancestor implementation of
+    /// `method_name` and runs it with the *current* self still bound.  We
+    /// thread the enclosing method + class names from the lowerer context
+    /// (`current_method` / `current_class`).  Outside a class method (`super`
+    /// at top level — not legal Ruby, but the parser admits it) both are empty
+    /// strings; the runtime then finds no parent and returns nil (the honest
+    /// floor).
+    ///
+    /// Effects: PURE, matching `yield` — `super` dispatches to a parent method
+    /// whose own effects are accounted for at its definition/call site;
+    /// modelling the marker as PURE keeps the effect lattice from
+    /// double-counting.  Returning an `Expr` (not a `Stmt`) is what lets #59's
+    /// `super + " tail"` / `x = super` slot `super` anywhere an expression goes.
+    fn lower_super_expr(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
+        let super_args_node = self.find_node_child(node, "super_args");
+        let forwarded: Vec<Expr> = if let Some(sa) = super_args_node {
+            let call_arg_nodes: Vec<&GrammarASTNode> = sa
+                .children
+                .iter()
+                .filter_map(|c| match c {
+                    ASTNodeOrToken::Node(n) if n.rule_name == "call_arg" => Some(n),
+                    _ => None,
+                })
+                .collect();
+            call_arg_nodes
+                .into_iter()
+                .map(|n| self.lower_call_arg(n))
+                .collect::<Result<Vec<_>, _>>()?
+        } else {
+            let mut params: Vec<String> = self.current_params.iter().cloned().collect();
+            params.sort();
+            params
+                .into_iter()
+                .map(|p| Expr::VarRef {
+                    name: p,
+                    scope: Scope::Param,
+                    span: self.span_of(node),
+                })
+                .collect()
+        };
+        let method_name = self.current_method.clone().unwrap_or_default();
+        let class_name = self.current_class.clone().unwrap_or_default();
+        self.features_used.insert(Feature::Classes);
+        self.features_used.insert(Feature::Strings);
+        let mut full_args: Vec<Expr> = Vec::with_capacity(forwarded.len() + 2);
+        full_args.push(Expr::StrLit {
+            value: method_name,
+            span: self.span_of(node),
+        });
+        full_args.push(Expr::StrLit {
+            value: class_name,
+            span: self.span_of(node),
+        });
+        full_args.extend(forwarded);
+        Ok(Expr::BuiltinCall {
+            name: "__super__".to_string(),
+            args: full_args,
+            effects: EffectSet::PURE,
+            span: self.span_of(node),
+        })
+    }
+
     fn lower_expression(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
         // Pass through wrapper rules transparently — the parser
         // sometimes nests `expression → sum → term → factor → expression`.
@@ -6966,6 +7001,11 @@ impl Lowerer {
             "method_call" => self.lower_method_call(node),
             // Phase 6w — arrow-lambda literal `->(params){body}`.
             "lambda_literal" => self.lower_lambda_literal(node),
+            // Issue #59 — `super` as an expression (`x = super`,
+            // `super + " tail"`, `puts(super)`).  Lowers to the same
+            // value-producing `__super__(method, class, …args)` builtin the
+            // statement form uses.
+            "super_expr" => self.lower_super_expr(node),
             // The parser sometimes wraps a bare token into an "expression_stmt"
             // when reached as the RHS of an assignment.  Recurse into it.
             "expression_stmt" => {
@@ -8712,6 +8752,41 @@ impl Lowerer {
                     span,
                 });
             }
+        }
+
+        // Issue #59 — a NON-`new` method call on a *constant* receiver
+        // (`Counter.zero`, `Foo.bar(x)`) is a CLASS-METHOD dispatch.  It lowers
+        // to `__class_method__(StrLit("Counter"), StrLit("zero"), …args)`,
+        // which the backend routes to the OOP runtime's `call_class_method`
+        // (ancestry-walking lookup in the `def self.m` table registered by
+        // `__def_class_method__`).  We special-case it here, before the generic
+        // `__method__` envelope, and ONLY when the receiver is a bare constant
+        // ref — so an instance method call on a non-constant (`obj.meth`,
+        // `arr.zero`) still routes through `__method__` unchanged.  `.new` was
+        // handled just above (it routes to `__new__`, the implicit constructor
+        // class method), so it never reaches here.  Chaining is preserved: in
+        // `Foo.bar.baz`, this folds `.bar` into a `__class_method__` call and
+        // `apply_dot_chain` then folds `.baz` with that call as the receiver of
+        // an outer `__method__` — exactly the nesting `.new(...).meth` uses.
+        if let Expr::VarRef { name: class_name, scope: Scope::Const, .. } = &receiver {
+            self.features_used.insert(Feature::Classes);
+            self.features_used.insert(Feature::Strings);
+            let mut cm_args: Vec<Expr> = Vec::with_capacity(args.len() + 2);
+            cm_args.push(Expr::StrLit {
+                value: class_name.clone(),
+                span: name_span.clone(),
+            });
+            cm_args.push(Expr::StrLit {
+                value: method_name.clone(),
+                span: name_span,
+            });
+            cm_args.extend(args);
+            return Ok(Expr::BuiltinCall {
+                name: "__class_method__".to_string(),
+                args: cm_args,
+                effects: EffectSet::PURE,
+                span,
+            });
         }
 
         // Pack as BuiltinCall("__method__", [receiver, StrLit(method),
