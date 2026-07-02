@@ -197,10 +197,48 @@ panic** machinery — a *localized* transform touching only the
   `Err` path re-derives what it needs and never reads partially-mutated
   captured state).  No new `unsafe`.
 
+Executes (O5): **user-defined-class OOP**.  `Feature::Classes` (now for
+REAL classes, not just exception subclasses) plus `Modules`,
+`InstanceVars`, and `ClassVars` are accepted.  The Ruby→SIR frontend (O2)
+lowers OOP to a small family of builtins the backend routes to the inline
+`__sir` OOP runtime — mirroring the `__method__`→`call_method` routing:
+
+- **Emit arms** — `Foo.new(args)` → `__new__` → `__sir::call_new`;
+  `super(args)` → `__super__` → `call_super`; `def m` in `class C` →
+  `__def_method__` → `def_method`; `def self.m` → `__def_class_method__`
+  → `def_class_method`; `self` → `__self__` → `current_self`.  A class/method
+  NAME argument (a `StrLit`, or a `Const` VarRef like `Dog.new`) is **lifted
+  to a `&str` literal** (never a runtime constant read).  `@ivar`/`@@cvar`
+  reads route to `ivar_get`/`cvar_get`, writes to `ivar_set`/`cvar_set`.
+  Method `def`s still **hoist** to top-level `Function`s referenced by the
+  `__def_*` builtins' `MakeClosure`, so an accepted class body stays empty.
+- **Runtime** — an object is a `Value::Instance(u64)` handle into a
+  `thread_local` `INSTANCES` side-table of `SirInstance { class, ivars }`
+  (see **Value model** for why a narrow variant + side-table).  Instance and
+  class ("static") method tables are `HashMap<(String, String), Value>`
+  (the `Value` is the method-body `Closure`).  `call_new` allocates then runs
+  the inherited `initialize` (ancestry-resolved) with `self` bound;
+  `call_method` gains a **user-instance branch taken FIRST** (every other
+  receiver keeps the unchanged collection path); `call_super` resolves from
+  the superclass and reuses the live `self`.  The dynamic `self` stack pops
+  via an **RAII drop guard**, so a panic mid-method still balances it.  The
+  user `subclass → superclass` ancestry (shared with the exception matcher)
+  is registered at init whenever the module declares `Classes` or
+  `Exceptions`.
+- **Security** — every method/class lookup is an EXPLICIT `HashMap::get` on
+  a `(class, method)` key — never reflection or `dyn Any`-by-name.  A
+  class/method literally named `constructor`/`new`/`drop` is inert data; a
+  miss floors to the honest `Nil`/NoMethodError boundary.  The ancestry walk
+  carries a `seen`-set **cycle guard** (a cyclic `A < B < A` hierarchy
+  terminates).  Widening `Classes`/`Constants` acceptance stays sound:
+  `reject_stateful_class` still rejects a class/module with an executable
+  body, and `reject_const_ref` skips only the lifted-to-string OOP name
+  slots.  No new `unsafe`.
+
 Rejects: `TailCalls` (Rust does not guarantee TCO), `Intrinsics`
-(empty whitelist in v0), and the remaining SIR17/18 features above
-(`Modules`, `InstanceVars`, `ClassVars`, `StringInterpolation`,
-non-exception `Constants`/stateful `Classes`).
+(empty whitelist in v0), `StringInterpolation`, and a stateful (non-empty
+body) `Class`/`Module` or a non-name-slot `Const` reference (rejected
+cleanly by the soundness gates).
 
 ## Value model
 
@@ -214,10 +252,21 @@ enum Value {
     Closure(Rc<Closure>),
     Seq(Rc<RefCell<Vec<Value>>>),            // SIR16 Sequences
     Map(Rc<RefCell<Vec<(Value, Value)>>>),   // SIR16 Maps (insertion-ordered)
+    Instance(u64),                           // SIR17 O5 user-object handle
 }
 ```
 
 - Single-threaded (`Rc`, not `Arc`).
+- `Instance(u64)` is a **narrow, dedicated** variant carrying only an opaque
+  id; the object state (`SirInstance { class, ivars }`) lives in a
+  `thread_local` `INSTANCES` side-table keyed by that id.  This hybrid keeps
+  `Value: Clone` a trivial `u64` copy and gives instances a *distinct*
+  discriminator (no `pair?`/`car`/`cdr` leak, correct `format`/`value_eq`),
+  while confining mutable object state to one `thread_local`.  A disguised
+  handle (reusing `Pair`/`Sym`) would leak into the built-in catalogs;
+  inlining `SirInstance` would burden every `Value` clone — the id-handle
+  avoids both.  The arm touches only THIS backend's emitted-runtime `Value`,
+  never the core semantic-IR.
 - Closures wrap a `Box<dyn Fn(Vec<Value>) -> Value>` inside an `Rc`.
 - Symbols and strings are interned `Rc<str>` for cheap clones.
 - Globals live in a `thread_local!` `HashMap<String, Value>`.
@@ -250,6 +299,12 @@ rescue, unmatched re-raise (non-zero exit), `ensure` on caught + uncaught
 paths, and user ancestry (`MyErr < StandardError`).  It skips (never fails)
 when no linker is available; point it at one via `SIR_TEST_RUSTC_LINKER`
 (e.g. the toolchain's bundled `rust-lld`).
+
+OOP execution-proof (`tests/compile_and_run_oop.rs`) does the same for
+user-defined classes: `Dog#initialize`/`speak` (ivar-through-method
+dispatch), inheritance + `super` (`Cat.new(4).describe` → `104`), a security
+test (a `constructor`-named class works as data while an unregistered method
+floors to `nil`), and cyclic-ancestry termination.  Same linker gating.
 
 ## Related crates
 

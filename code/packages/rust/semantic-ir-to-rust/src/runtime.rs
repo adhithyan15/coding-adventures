@@ -19,6 +19,7 @@
 /// The full inlined runtime.  Always emitted verbatim.
 pub const RUNTIME: &str = r##"mod __sir {
     //! Runtime support — value model, builtins, helpers.
+    use std::cell::Cell;
     use std::cell::RefCell;
     use std::collections::HashMap;
     use std::rc::Rc;
@@ -69,6 +70,32 @@ pub const RUNTIME: &str = r##"mod __sir {
         // preserves insertion order for deterministic iteration/printing.
         // Shared + mutable via `Rc<RefCell<…>>`, same as `Seq`.
         Map(Rc<RefCell<Vec<(Value, Value)>>>),
+        // ── SIR17 user-defined-class instances (O5) ───────────────
+        // A *handle* into the `INSTANCES` side-table: the `u64` is an
+        // opaque instance id, and the real object state — its class-name
+        // tag plus its `@ivar` bag — lives in a `thread_local` map keyed
+        // by that id (see `SirInstance` / `INSTANCES` below).
+        //
+        // ── Value-model decision (variant vs. side-table) ──────────
+        // We do NOT store `SirInstance` inline in the enum, and we do NOT
+        // reuse an existing variant as a disguised handle.  Instead this
+        // is a NARROW, dedicated variant carrying only an `id`, backed by
+        // a side-table.  The trade-offs we weighed:
+        //   • A side-table alone (reusing, say, a magic `Pair`) would
+        //     leak: `pair?`/`car`/`cdr` would report/operate on an
+        //     "instance", and `format`/`value_eq` would mis-render it.
+        //   • Storing `SirInstance` INLINE (`Instance(Rc<SirInstance>)`)
+        //     would put a `RefCell<HashMap>` on the hot, frequently-cloned
+        //     `Value` and widen every ownership move.
+        // The chosen id-handle-plus-side-table keeps `Value: Clone` a
+        // trivial `Copy` of a `u64`, gives instances a *distinct*
+        // discriminator (no built-in-type leak), and confines the
+        // mutable object state to one `thread_local`.  Adding the arm
+        // touches only THIS backend's emitted runtime `Value` — never the
+        // core semantic-IR — and only two existing exhaustive sites
+        // (`format_d`, and an identity arm in `value_eq_d`); every other
+        // `match` already has a `_`/`matches!` fallback.
+        Instance(u64),
     }
 
     pub struct Pair {
@@ -380,6 +407,13 @@ pub const RUNTIME: &str = r##"mod __sir {
                 visited.remove(&id);
                 out
             }
+            // A user instance renders as Ruby's default `#<Class>` form.
+            // We deliberately do NOT walk its ivars (Ruby's default
+            // `to_s`/`inspect` prints only the class + an object id), so
+            // there is no cyclic-structure risk and no `visited` handling
+            // needed here.  A program wanting a richer form defines its
+            // own `to_s`, which dispatches through `call_method` first.
+            Value::Instance(id) => format!("#<{}>", instance_class(*id)),
         }
     }
 
@@ -752,6 +786,10 @@ pub const RUNTIME: &str = r##"mod __sir {
                 pending.remove(&pair);
                 result
             }
+            // User instances compare by IDENTITY (same handle id) —
+            // Ruby's default `==` is object identity, and two distinct
+            // `Foo.new` objects are unequal even with identical ivars.
+            (Value::Instance(x), Value::Instance(y)) => x == y,
             _ => false,
         }
     }
@@ -880,12 +918,28 @@ pub const RUNTIME: &str = r##"mod __sir {
     /// bottoms out at `unknown_method` (Ruby `nil`) — never a reflective
     /// fallthrough.
     pub fn call_method(recv: Value, name: &str, args: Vec<Value>) -> Value {
+        // ── user-defined-class dispatch (O5) ──────────────────────────
+        // A `Value::Instance` receiver dispatches to the USER method table
+        // (walking ancestry), with `self` bound for the call.  This branch
+        // is taken FIRST and ONLY for instances, so the built-in /
+        // collection path below is byte-for-byte unchanged for every other
+        // receiver.  Resolution is `resolve_method` → an EXPLICIT
+        // `HashMap::get` on the `(class, method)` key (never reflection):
+        // a name like `constructor` simply misses and floors to the same
+        // honest `NoMethodError`/`Nil` boundary the collection catalog uses
+        // (`unknown_method`).  See `dispatch_user_method`.
+        if let Value::Instance(id) = &recv {
+            return dispatch_user_method(*id, &recv, name, args);
+        }
         // Universal `Object#to_s` — available on *every* receiver, matching
         // the Python/TS reference (where `to_s` lives in the universal
         // Object table).  Handled here, before the type-specific catalogs,
         // so `&:to_s` works on numbers, symbols, etc.  It renders via the
         // runtime's `format` (the same display path `print` uses), so
-        // `1.to_s == "1"` and `[1,2].to_s == "[1, 2]"`.
+        // `1.to_s == "1"` and `[1,2].to_s == "[1, 2]"`.  Instances are
+        // excluded above (a user `to_s` may be defined); if none is, the
+        // instance arm falls through to `unknown_method`, matching the
+        // never-raise floor.
         if name == "to_s" && !matches!(recv, Value::Sym(_)) {
             // A Symbol has its own `to_s` (its bare name) in `symbol_method`;
             // everything else uses the universal display form.
@@ -1481,6 +1535,304 @@ pub const RUNTIME: &str = r##"mod __sir {
         eprintln!("{}: {}", exc.class, exc.msg);
         std::process::exit(1)
     }
+
+    // ── user-defined-class OOP (SIR17 `Classes`, O5) ───────────────────
+    //
+    // The Rust analogue of the JS/Python/Go OOP runtimes.  It reuses the
+    // ancestry machinery the exception runtime already built (`super_of`,
+    // the `seen`-guarded `is_ancestor_or_self` walk) and adds four pieces,
+    // all kept to the same security bar as the collection catalog and the
+    // rescue matcher:
+    //
+    //   • `SirInstance`  — a user object: a class-name tag + its own
+    //                      `@ivar` bag.  It lives in the `INSTANCES`
+    //                      side-table, referenced by a `Value::Instance(id)`
+    //                      handle (see the value-model note on the enum).
+    //   • the method tables — instance + class ("static") methods, each a
+    //                      `HashMap<(String, String), Value>` (the `Value`
+    //                      is the method-body `Closure` a `MakeClosure`
+    //                      produced).
+    //   • the self-stack  — the dynamic `self` a running method reads via
+    //                      `current_self()` / `ivar_get`/`ivar_set`.
+    //   • `call_new` / `call_super` — instantiation and superclass dispatch.
+    //
+    // ── SECURITY (the C3 RCE lesson) ──────────────────────────────────
+    // Every lookup here is an EXPLICIT `HashMap::get` on a `(class, method)`
+    // key.  There is NO reflection, no trait-object-by-name, no
+    // `dyn Any`-downcast on a source-derived string.  A user class or
+    // method literally named `constructor` / `new` / `drop` is only ever a
+    // map KEY: a miss floors to the same honest boundary the collection
+    // catalog uses (`Value::Nil` for a plain call, a `NoMethodError`
+    // `raise` where Ruby would).  The ancestry walk reuses the exception
+    // runtime's `seen`-guarded `is_ancestor_or_self`/`super_of`, so a
+    // cyclic user hierarchy (`A < B < A`) TERMINATES rather than looping.
+
+    /// A user object: its class-name tag plus its instance-variable bag.
+    ///
+    /// The `ivars` bag is a plain `HashMap<String, Value>` behind a
+    /// `RefCell` so a method can mutate `@x` through the shared side-table
+    /// entry.  An ivar name is just a map key (`"@x"`), never a field
+    /// accessed by reflection.
+    pub struct SirInstance {
+        pub class: String,
+        pub ivars: RefCell<HashMap<String, Value>>,
+    }
+
+    thread_local! {
+        // The instance side-table: `id → SirInstance`.  We hold each
+        // `SirInstance` behind an `Rc` so a `current_self()` read (and the
+        // `ivar_*`/`cvar_*` helpers) can clone a cheap handle to the object
+        // without removing it from the table.  Instances are never freed in
+        // v0 (the transpiled scripts we target are short-lived); this
+        // matches the reference runtimes, which likewise let the GC/refcount
+        // keep every instance alive for the process lifetime.
+        static INSTANCES: RefCell<HashMap<u64, Rc<SirInstance>>> =
+            RefCell::new(HashMap::new());
+        static NEXT_INSTANCE_ID: Cell<u64> = const { Cell::new(0) };
+
+        // Instance-method table and class-method table, each keyed by the
+        // FLAT `(class, method)` pair.  A `HashMap` key of owned `String`s
+        // means a name like `"constructor"` is inert DATA — there is no
+        // reachable host callable behind it.
+        static METHOD_TABLE: RefCell<HashMap<(String, String), Value>> =
+            RefCell::new(HashMap::new());
+        static CLASS_METHOD_TABLE: RefCell<HashMap<(String, String), Value>> =
+            RefCell::new(HashMap::new());
+
+        // The dynamic `self` stack.  Pushed before a user method runs and
+        // popped after (via an RAII guard — see `SelfGuard` — so a panic
+        // mid-method still pops, leaving no stale `self` for the next
+        // dispatch).
+        static SELF_STACK: RefCell<Vec<Value>> = const { RefCell::new(Vec::new()) };
+
+        // Per-class class-variable (`@@x`) bags, keyed by class name then
+        // var name.  Shared across every instance of a class, matching
+        // Ruby's class-variable semantics.
+        static CLASS_VARS: RefCell<HashMap<String, HashMap<String, Value>>> =
+            RefCell::new(HashMap::new());
+    }
+
+    /// The class-name tag of instance `id` (or `"?"` if the id is stale —
+    /// unreachable in practice, defensive only).  Used by `format`.
+    fn instance_class(id: u64) -> String {
+        INSTANCES.with(|t| {
+            t.borrow().get(&id).map(|o| o.class.clone()).unwrap_or_else(|| "?".to_string())
+        })
+    }
+
+    /// Fetch a cheap `Rc` handle to instance `id`, if it exists.
+    fn instance_of(id: u64) -> Option<Rc<SirInstance>> {
+        INSTANCES.with(|t| t.borrow().get(&id).cloned())
+    }
+
+    /// Allocate a bare instance of `cls` (no `initialize` yet — that is
+    /// `call_new`'s job) and return its `Value::Instance` handle.
+    pub fn new_instance(cls: &str) -> Value {
+        let id = NEXT_INSTANCE_ID.with(|c| {
+            let n = c.get();
+            c.set(n + 1);
+            n
+        });
+        let obj = Rc::new(SirInstance {
+            class: cls.to_string(),
+            ivars: RefCell::new(HashMap::new()),
+        });
+        INSTANCES.with(|t| t.borrow_mut().insert(id, obj));
+        Value::Instance(id)
+    }
+
+    /// Register an instance method: `def m … end` in `class C` →
+    /// `def_method("C", "m", <closure>)`.  The closure is the method body a
+    /// `MakeClosure` produced; storing it as a `Value` keeps dispatch a
+    /// plain `apply_closure`.
+    pub fn def_method(cls: &str, name: &str, f: Value) -> Value {
+        METHOD_TABLE.with(|t| {
+            t.borrow_mut().insert((cls.to_string(), name.to_string()), f);
+        });
+        Value::Nil
+    }
+
+    /// Register a class ("static") method: `def self.m …` →
+    /// `def_class_method("C", "m", <closure>)`.
+    pub fn def_class_method(cls: &str, name: &str, f: Value) -> Value {
+        CLASS_METHOD_TABLE.with(|t| {
+            t.borrow_mut().insert((cls.to_string(), name.to_string()), f);
+        });
+        Value::Nil
+    }
+
+    /// Resolve method `name` on `cls` or any ancestor, walking the SAME
+    /// merged (built-in + user) ancestry the exception runtime uses.  The
+    /// `seen` set bounds the walk so a cyclic hierarchy terminates instead
+    /// of looping forever.  Lookup is `table.get(&(cur, name))` — explicit
+    /// DATA, never reflection on the name.  `from` is the class to START at
+    /// (the receiver's class for a normal call; the SUPERCLASS for `super`).
+    fn resolve_method(
+        table: &'static std::thread::LocalKey<RefCell<HashMap<(String, String), Value>>>,
+        from: Option<String>,
+        name: &str,
+    ) -> Option<Value> {
+        let mut cur = from;
+        let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
+        while let Some(c) = cur {
+            if !seen.insert(c.clone()) {
+                return None; // cycle — stop.
+            }
+            let found = table.with(|t| t.borrow().get(&(c.clone(), name.to_string())).cloned());
+            if found.is_some() {
+                return found;
+            }
+            cur = super_of(&c);
+        }
+        None
+    }
+
+    // ── the dynamic `self` stack (RAII-balanced) ───────────────────────
+    //
+    // A running method needs its receiver for `@ivar` reads and for `self`.
+    // We push the receiver before applying a method and pop it afterwards.
+    // The pop is done by an RAII DROP GUARD rather than an explicit call:
+    // if the method body PANICS (a SIR `raise` unwinds as a panic, or a
+    // genuine Rust panic occurs), the guard's `Drop` still runs during
+    // unwinding, so the stack is always balanced and no stale `self` leaks
+    // to the next dispatch.  This is the Rust analogue of the JS runtime's
+    // `try { … } finally { popSelf(); }`.
+    struct SelfGuard;
+    impl Drop for SelfGuard {
+        fn drop(&mut self) {
+            SELF_STACK.with(|s| {
+                s.borrow_mut().pop();
+            });
+        }
+    }
+
+    /// Push `recv` as the current self and return an RAII guard that pops it
+    /// on drop (including during a panic unwind).
+    fn push_self_guarded(recv: Value) -> SelfGuard {
+        SELF_STACK.with(|s| s.borrow_mut().push(recv));
+        SelfGuard
+    }
+
+    /// The current `self` — the top of the self-stack, or `Nil` outside any
+    /// method (`__self__` at top level).
+    pub fn current_self() -> Value {
+        SELF_STACK.with(|s| s.borrow().last().cloned().unwrap_or(Value::Nil))
+    }
+
+    /// Apply a resolved method closure with `recv` bound as `self`.  The
+    /// `SelfGuard` pops the self-stack on scope exit — normal return OR
+    /// panic unwind — so the stack stays balanced.
+    fn apply_with_self(f: &Value, recv: Value, args: Vec<Value>) -> Value {
+        let _guard = push_self_guarded(recv);
+        apply_closure(f, args)
+        // `_guard` drops here (or during unwind), popping the self-stack.
+    }
+
+    /// Dispatch method `name` on user instance `id`.  Resolves the user
+    /// method table walking ancestry; pushes `self`, applies, pops (RAII);
+    /// an unresolved method floors to the honest `NoMethodError` boundary
+    /// (matching Ruby / the collection catalog's never-silently-wrong
+    /// contract).  `recv` is the `Value::Instance` handle to bind as self.
+    fn dispatch_user_method(id: u64, recv: &Value, name: &str, args: Vec<Value>) -> Value {
+        let class = match instance_of(id) {
+            Some(obj) => obj.class.clone(),
+            // Stale handle (unreachable in practice) → honest floor.
+            None => return unknown_method(recv, name),
+        };
+        match resolve_method(&METHOD_TABLE, Some(class), name) {
+            Some(f) => apply_with_self(&f, recv.clone(), args),
+            None => unknown_method(recv, name),
+        }
+    }
+
+    /// `Klass.new(args…)` → `call_new("Klass", args…)`.  Allocate a bare
+    /// instance, then run the inherited `initialize` (if any is registered
+    /// anywhere in the ancestry chain) with `self` bound to the fresh
+    /// instance, then return the INSTANCE (Ruby discards `initialize`'s
+    /// result).  A class with no `initialize` in its chain is valid — `new`
+    /// just yields a bare instance.
+    pub fn call_new(cls: &str, args: Vec<Value>) -> Value {
+        let obj = new_instance(cls);
+        if let Some(init) = resolve_method(&METHOD_TABLE, Some(cls.to_string()), "initialize") {
+            apply_with_self(&init, obj.clone(), args);
+        }
+        obj
+    }
+
+    /// `super(args…)` inside method `method` of class `cls` →
+    /// `call_super("method", "cls", args…)`.  Resolve `method` starting from
+    /// the SUPERCLASS of `cls` (so the current definition is skipped) and
+    /// apply it with the CURRENT `self` still bound — `super` reuses the
+    /// live receiver, it does NOT push a new one.  A missing super method
+    /// floors to the honest boundary (Ruby raises `NoMethodError`).
+    pub fn call_super(method: &str, cls: &str, args: Vec<Value>) -> Value {
+        match resolve_method(&METHOD_TABLE, super_of(cls), method) {
+            // Reuse the live self already on the stack (no new push).
+            Some(f) => apply_closure(&f, args),
+            None => Value::Nil,
+        }
+    }
+
+    // ── instance / class variables on the current self ─────────────────
+    // `@x` / `@@x` read/write route here.  They act on `current_self()` — a
+    // method body's receiver.  A read of an unset var yields `Nil` (Ruby's
+    // nil), matching the `Scope::Instance`/`Scope::ClassVar` "no prior
+    // declaration" rule.  A read/write outside any method (no instance
+    // self) is a no-op returning `Nil`, never a panic.
+
+    /// Read `@name` on the current self (or `Nil`).
+    pub fn ivar_get(name: &str) -> Value {
+        if let Value::Instance(id) = current_self() {
+            if let Some(obj) = instance_of(id) {
+                return obj.ivars.borrow().get(name).cloned().unwrap_or(Value::Nil);
+            }
+        }
+        Value::Nil
+    }
+
+    /// Write `@name = val` on the current self; returns `val`.
+    pub fn ivar_set(name: &str, val: Value) -> Value {
+        if let Value::Instance(id) = current_self() {
+            if let Some(obj) = instance_of(id) {
+                obj.ivars.borrow_mut().insert(name.to_string(), val.clone());
+            }
+        }
+        val
+    }
+
+    /// The class name of the current self, if it is an instance.
+    fn current_self_class() -> Option<String> {
+        if let Value::Instance(id) = current_self() {
+            return instance_of(id).map(|o| o.class.clone());
+        }
+        None
+    }
+
+    /// Read `@@name` for the current self's class (or `Nil`).
+    pub fn cvar_get(name: &str) -> Value {
+        match current_self_class() {
+            Some(cls) => CLASS_VARS.with(|t| {
+                t.borrow()
+                    .get(&cls)
+                    .and_then(|bag| bag.get(name).cloned())
+                    .unwrap_or(Value::Nil)
+            }),
+            None => Value::Nil,
+        }
+    }
+
+    /// Write `@@name = val` for the current self's class; returns `val`.
+    pub fn cvar_set(name: &str, val: Value) -> Value {
+        if let Some(cls) = current_self_class() {
+            CLASS_VARS.with(|t| {
+                t.borrow_mut()
+                    .entry(cls)
+                    .or_default()
+                    .insert(name.to_string(), val.clone());
+            });
+        }
+        val
+    }
 }
 "##;
 
@@ -1626,5 +1978,50 @@ mod tests {
         // A non-`SirError` panic payload must be re-raised, never treated as
         // a rescuable exception.
         assert!(RUNTIME.contains("std::panic::resume_unwind(other)"));
+    }
+
+    #[test]
+    fn runtime_declares_oop_value_and_helpers() {
+        // O5: the inline runtime must ship the user-defined-class OOP model —
+        // the `Instance` value handle, the side-table + method tables, and
+        // the instantiation/dispatch/super/self/ivar/cvar helpers.
+        assert!(RUNTIME.contains("Instance(u64)"), "missing Instance value arm");
+        assert!(RUNTIME.contains("pub struct SirInstance"));
+        for helper in &[
+            "pub fn new_instance",
+            "pub fn def_method",
+            "pub fn def_class_method",
+            "pub fn call_new",
+            "pub fn call_super",
+            "pub fn current_self",
+            "pub fn ivar_get",
+            "pub fn ivar_set",
+            "pub fn cvar_get",
+            "pub fn cvar_set",
+        ] {
+            assert!(RUNTIME.contains(helper), "runtime missing `{}`", helper);
+        }
+    }
+
+    #[test]
+    fn runtime_oop_dispatch_is_explicit_table_with_cycle_guard() {
+        // SECURITY: user-method resolution is an EXPLICIT `HashMap` lookup on
+        // a `(class, method)` key — never reflection — and the ancestry walk
+        // carries a `seen`-set cycle guard so a cyclic hierarchy terminates.
+        assert!(RUNTIME.contains("static METHOD_TABLE"));
+        assert!(RUNTIME.contains("static CLASS_METHOD_TABLE"));
+        assert!(RUNTIME.contains("fn resolve_method"));
+        assert!(RUNTIME.contains("if !seen.insert(c.clone())"), "missing OOP cycle guard");
+        // The instance dispatch branch is taken FIRST in `call_method`.
+        assert!(RUNTIME.contains("fn dispatch_user_method"));
+    }
+
+    #[test]
+    fn runtime_self_stack_pops_via_raii_guard() {
+        // The self-stack must pop even on a panic unwind: the pop lives in a
+        // `Drop` impl (an RAII guard), not an explicit end-of-scope call.
+        assert!(RUNTIME.contains("struct SelfGuard"));
+        assert!(RUNTIME.contains("impl Drop for SelfGuard"));
+        assert!(RUNTIME.contains("fn apply_with_self"));
     }
 }
