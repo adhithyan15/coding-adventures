@@ -2,6 +2,38 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.21.0] - 2026-07-02
+
+### Added — CLOC12.152 / gap-155: bridge `arrow_function` → `Expression::ArrowFunctionExpression`
+
+The typed-AST bridge now converts **concise-body arrow functions** (`x => x + 1`,
+`(a, b) => a + b`, `() => 1`, `arr.map(x => x)`) instead of declining them as
+`UnsupportedSyntax`. `convert_arrow_function` reads `arrow_parameters`
+(`NAME` → one identifier param; `( formal_parameters )` → the list; `()` → none)
+and the `concise_body`'s expression, producing an `ArrowFunctionExpression` with
+an `ArrowBody::Expression`. This unblocks the full SIMPLE pipeline *inside* arrow
+bodies end-to-end (e.g. `var f = x => 1 + 2` → `var f = x => 3`) rather than
+falling back to WHITESPACE_ONLY.
+
+Two deliberate conservative guards, both to avoid a **miscompile** given current
+grammar limitations (see `CLOC12-gaps.md`):
+
+- **Block-bodied arrows aren't reachable (gap-156).** The ECMAScript grammar
+  currently rejects a statement block body — `x => { return x; }` fails to parse
+  — so the bridge only ever sees a concise `concise_body`. The `ArrowBody::Block`
+  path is written and ready for when the grammar is fixed.
+- **`() => {}` / object-body arrows DECLINE.** Because the block alternative
+  isn't taken, the grammar reads the braces of `() => {}` as an empty *object
+  literal* concise body — indistinguishable from a genuine `() => ({})`. Since we
+  cannot tell an empty-block arrow (returns `undefined`) from an object-returning
+  one, the bridge declines any arrow whose concise body is an `ObjectExpression`,
+  falling back to whitespace-only (which re-emits the source unchanged — always
+  correct). Only an optimisation is forgone, never correctness.
+
+Async arrows (`async x => x`) parse under the separate `async_arrow_function`
+rule and remain declined for now. 5 new bridge tests; a closurec e2e diff
+fixture (`tests/diff/simple-arrow-function/`) proves the fold-inside-body win.
+
 ## [0.20.0] - 2026-07-01
 
 ### Added — CLOC12.149 / gap-153: bridge `function_expression` → `Expression::FunctionExpression`
