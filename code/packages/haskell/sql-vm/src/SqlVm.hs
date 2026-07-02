@@ -71,6 +71,7 @@ import Data.IORef
 import Data.List (dropWhileEnd, isPrefixOf, nub, sortBy)
 import qualified Data.Map.Strict as Map
 import Data.Maybe (fromMaybe, mapMaybe)
+import qualified Data.Set as Set
 
 import qualified SqlBackend as SB
 import SqlBackend
@@ -140,20 +141,23 @@ cursorKey (Just s) = s
 --
 -- Each aggregate slot holds one AggAccum. Think of it as a running tally:
 --
---   CountStar  → count increments on every row
---   Count      → count increments only for non-NULL values
+--   CountStar     → count increments on every row
+--   Count         → count increments only for non-NULL values
+--   CountDistinct → distinct non-NULL values tracked in a Set; final result
+--                   is the size of the set
 --   Sum        → acc accumulates the sum; SqlNull if no non-NULL seen yet
 --   Avg        → acc = sum, count = number of non-NULL values seen
 --   Min/Max    → acc tracks the extreme value seen so far
 
 data AggAccum = AggAccum
-    { aggCount :: !Int       -- ^ Non-NULL input count (or all-row count for CountStar).
-    , aggAcc   :: !SqlValue  -- ^ Running sum / min / max; SqlNull until first value.
+    { aggCount       :: !Int               -- ^ Non-NULL input count (or all-row count for CountStar).
+    , aggAcc         :: !SqlValue          -- ^ Running sum / min / max; SqlNull until first value.
+    , aggDistinctSet :: Set.Set SqlValue   -- ^ Distinct values for COUNT(DISTINCT …); empty otherwise.
     } deriving (Show)
 
 -- | The zero state for a fresh accumulator slot.
 defaultAccum :: AggAccum
-defaultAccum = AggAccum { aggCount = 0, aggAcc = SqlNull }
+defaultAccum = AggAccum { aggCount = 0, aggAcc = SqlNull, aggDistinctSet = Set.empty }
 
 -- | Feed one SqlValue into an accumulator for the given aggregate function.
 updateAccum :: AggFn -> AggAccum -> SqlValue -> AggAccum
@@ -167,6 +171,13 @@ updateAccum fn acc val =
             -- COUNT(col): skip NULL inputs.
             if val == SqlNull then acc
             else acc { aggCount = aggCount acc + 1 }
+
+        CountDistinct ->
+            -- COUNT(DISTINCT col): track unique non-NULL values in a Set.
+            -- The Set uses Ord on SqlValue to deduplicate.
+            case val of
+                SqlNull -> acc
+                _       -> acc { aggDistinctSet = Set.insert val (aggDistinctSet acc) }
 
         Sum ->
             -- SUM: skip NULLs; running sum in acc.
@@ -199,11 +210,12 @@ updateAccum fn acc val =
 finalizeAccum :: AggFn -> AggAccum -> SqlValue
 finalizeAccum fn acc =
     case fn of
-        CountStar -> SqlInteger (fromIntegral (aggCount acc))
-        Count     -> SqlInteger (fromIntegral (aggCount acc))
-        Sum       -> aggAcc acc   -- SqlNull if no non-NULL input
-        Min       -> aggAcc acc   -- SqlNull if no non-NULL input
-        Max       -> aggAcc acc   -- SqlNull if no non-NULL input
+        CountStar     -> SqlInteger (fromIntegral (aggCount acc))
+        Count         -> SqlInteger (fromIntegral (aggCount acc))
+        CountDistinct -> SqlInteger (fromIntegral (Set.size (aggDistinctSet acc)))
+        Sum           -> aggAcc acc   -- SqlNull if no non-NULL input
+        Min           -> aggAcc acc   -- SqlNull if no non-NULL input
+        Max           -> aggAcc acc   -- SqlNull if no non-NULL input
         Avg       ->
             -- AVG returns NULL if no non-NULL inputs were seen.
             if aggCount acc == 0
@@ -273,7 +285,21 @@ data VmState = VmState
     , vmOutputRows   :: [Map.Map String SqlValue]
       -- ^ Accumulated output rows (in reverse order; reversed at end).
     , vmAggAccums    :: Map.Map Int AggAccum
-      -- ^ Aggregate accumulators keyed by slot index.
+      -- ^ Aggregate accumulators for non-grouped queries (no GROUP BY).
+    , vmGroupAccums  :: Map.Map [SqlValue] (Map.Map Int AggAccum)
+      -- ^ Per-group aggregate accumulators for GROUP BY queries.
+      -- Key = GROUP BY column values; value = slot-indexed accumulators.
+      -- Empty for non-GROUP BY queries.
+    , vmCurrentGroup :: [SqlValue]
+      -- ^ Current GROUP BY key being accumulated (set by SaveGroupKey) or
+      -- the group being emitted (set by AdvanceGroup).
+      -- Empty list = not in GROUP BY mode (non-grouped query).
+    , vmGroupOrder   :: [[SqlValue]]
+      -- ^ Group keys in insertion order (appended by SaveGroupKey).
+      -- After the scan this list drives the per-group emit loop.
+    , vmGroupIndex   :: !Int
+      -- ^ Current position in vmGroupOrder during the emit loop.
+      -- Starts at -1; AdvanceGroup increments it before each use.
     , vmRowsAffected :: !Int
       -- ^ DML rows changed.
     , vmBackend      :: IORef InMemoryBackend
@@ -867,9 +893,12 @@ dispatch instr = case instr of
         -- Level 1: runtime parameters not supported; push NULL as placeholder.
         push SqlNull
 
-    LoadGroupKey _ ->
-        -- Level 1: group-key loading handled elsewhere; push NULL here.
-        push SqlNull
+    -- LoadGroupKey i: push the i-th value from the current group key.
+    -- Used in the per-group emit loop to project the GROUP BY column values
+    -- into the output row.
+    LoadGroupKey i -> do
+        grp <- gets vmCurrentGroup
+        push (if i < length grp then grp !! i else SqlNull)
 
     Pop -> do
         _ <- pop
@@ -1002,36 +1031,93 @@ dispatch instr = case instr of
             })
 
     -- ── Aggregation ───────────────────────────────────────────────────────
-    -- InitAgg n: ensure n accumulator slots exist (idempotent for re-entry
-    -- into the scan loop on a per-row basis — the codegen emits InitAgg once
-    -- per row, but we only allocate the slot on first encounter).
+    -- InitAgg n: initialise n accumulator slots to their zero state.
+    -- For non-GROUP BY queries this populates vmAggAccums.
+    -- For GROUP BY queries the per-group accumulators in vmGroupAccums are
+    -- created lazily by SaveGroupKey / UpdateAgg, so this is a no-op.
     InitAgg n ->
         forM_ [0..n-1] $ \idx ->
             modify (\st -> st
                 { vmAggAccums = Map.insertWith (\_ old -> old) idx defaultAccum (vmAggAccums st)
                 })
 
+    -- UpdateAgg: feed a value into an aggregate accumulator.
+    --
+    -- COUNT(*) (CountStar) does not consume any expression value — it simply
+    -- increments a counter for every row.  All other aggregate functions pop
+    -- the top-of-stack value and feed it into the running accumulator.
+    --
+    -- In GROUP BY mode (vmCurrentGroup non-empty) update the per-group slot;
+    -- otherwise update the global accumulator.
     UpdateAgg idx fn -> do
-        v <- pop
-        modify (\st -> st
-            { vmAggAccums = Map.alter
-                (\mAcc -> Just (updateAccum fn (fromMaybe defaultAccum mAcc) v))
-                idx
-                (vmAggAccums st)
-            })
+        -- Pop a value only when the function actually needs it.
+        -- CountStar ignores the value, so we avoid a stack-underflow crash.
+        v <- if fn == CountStar then return SqlNull else pop
+        grp <- gets vmCurrentGroup
+        if null grp
+            -- Non-GROUP BY: update the global accumulator.
+            then modify (\st -> st
+                { vmAggAccums = Map.alter
+                    (\mAcc -> Just (updateAccum fn (fromMaybe defaultAccum mAcc) v))
+                    idx
+                    (vmAggAccums st)
+                })
+            -- GROUP BY: update the per-group accumulator.
+            else modify (\st ->
+                let grpMap  = Map.findWithDefault Map.empty grp (vmGroupAccums st)
+                    grpMap' = Map.alter
+                                (\mAcc -> Just (updateAccum fn (fromMaybe defaultAccum mAcc) v))
+                                idx grpMap
+                in st { vmGroupAccums = Map.insert grp grpMap' (vmGroupAccums st) })
 
+    -- FinalizeAgg: compute and push the final aggregate value.
+    -- In GROUP BY mode read from the current group's accumulator map;
+    -- otherwise read from the global accumulator map.
     FinalizeAgg idx fn -> do
-        accums <- gets vmAggAccums
-        let acc = Map.findWithDefault defaultAccum idx accums
+        grp <- gets vmCurrentGroup
+        acc <- if null grp
+                then do
+                    accums <- gets vmAggAccums
+                    return (Map.findWithDefault defaultAccum idx accums)
+                else do
+                    grpAccums <- gets vmGroupAccums
+                    let grpMap = Map.findWithDefault Map.empty grp grpAccums
+                    return (Map.findWithDefault defaultAccum idx grpMap)
         push (finalizeAccum fn acc)
 
-    SaveGroupKey _ ->
-        -- Level 1: GROUP BY group key is left in the current row naturally.
-        return ()
+    -- SaveGroupKey: pop the GROUP BY expression values from the stack,
+    -- record the current group key, and add it to the ordered group list.
+    -- The codegen emits the GROUP BY expressions onto the stack (leftmost
+    -- first, so the top-of-stack holds the LAST key column).
+    SaveGroupKey names -> do
+        -- Pop one value per GROUP BY column in reverse order, then reverse
+        -- the list to recover the natural left-to-right key tuple.
+        vals <- replicateM (length names) pop
+        let key = reverse vals
+        modify (\st ->
+            let order = vmGroupOrder st
+                -- Append to group order if this key has not been seen yet.
+                order' = if key `elem` order then order else order ++ [key]
+            in st { vmCurrentGroup = key
+                  , vmGroupOrder   = order'
+                  })
 
-    AdvanceGroup ->
-        -- Level 1: simple aggregates only; no group iteration needed.
-        return ()
+    -- AdvanceGroup: step to the next group during the emit loop.
+    -- Increments vmGroupIndex and updates vmCurrentGroup.
+    AdvanceGroup -> do
+        modify (\st ->
+            let i      = vmGroupIndex st + 1
+                order  = vmGroupOrder st
+                newGrp = if i < length order then order !! i else []
+            in st { vmGroupIndex   = i
+                  , vmCurrentGroup = newGrp
+                  })
+
+    -- JumpIfGroupsDone: jump when all groups have been emitted.
+    JumpIfGroupsDone lbl -> do
+        i     <- gets vmGroupIndex
+        order <- gets vmGroupOrder
+        when (i >= length order) (jumpTo lbl)
 
     -- ── Control flow ──────────────────────────────────────────────────────
     Label _ ->
@@ -1184,6 +1270,10 @@ mkInitState instrs lblIdx bRef =
         , vmOutputColumns = []
         , vmOutputRows    = []
         , vmAggAccums     = Map.empty
+        , vmGroupAccums   = Map.empty
+        , vmCurrentGroup  = []
+        , vmGroupOrder    = []
+        , vmGroupIndex    = (-1)
         , vmRowsAffected  = 0
         , vmBackend       = bRef
         , vmPostSort      = Nothing

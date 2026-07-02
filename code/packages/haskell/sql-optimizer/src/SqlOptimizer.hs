@@ -646,7 +646,6 @@ combineReqs (Just a) (Just b) = Just (nub (a ++ b))
 --   Filter(_, Literal (Just (LitBool False))) → EmptyResult
 --   Filter(_, Literal Nothing)           → EmptyResult   (NULL predicate = no rows)
 --   Filter(child, Literal (Just (LitBool True))) → child
---   Limit(_, Just 0, _)                  → EmptyResult
 --   Project(EmptyResult)                 → EmptyResult
 --   Sort(EmptyResult)                    → EmptyResult
 --   Limit(EmptyResult, _, _)             → EmptyResult
@@ -689,11 +688,14 @@ dce (OptSort child keys) =
         EmptyResult -> EmptyResult
         _           -> OptSort child' keys
 
+-- LIMIT 0 is intentionally NOT collapsed to EmptyResult here.  The VM must
+-- still emit a result set with the correct column descriptions so that
+-- `cursorDescription` returns the right column names.  The codegen will
+-- emit a Limit instruction that the VM honours by stopping after 0 rows.
 dce (OptLimit child cnt off) =
     let child' = dce child
     in case (child', cnt) of
         (EmptyResult, _)      -> EmptyResult
-        (_, Just 0)           -> EmptyResult
         _                     -> OptLimit child' cnt off
 
 dce (OptDistinct child) =

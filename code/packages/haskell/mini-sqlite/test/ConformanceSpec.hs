@@ -31,7 +31,7 @@ import Data.List (sort)
 import Data.Maybe (fromMaybe)
 import qualified Data.Map.Strict as Map
 import qualified Data.Text as T
-import Data.Scientific (isInteger, toRealFloat)
+import Data.Scientific (isInteger, toRealFloat, fromFloatDigits)
 import Prelude hiding (readFile)
 import System.Directory (doesFileExist, getDirectoryContents)
 import System.FilePath ((</>), takeExtension)
@@ -319,7 +319,11 @@ sqlValueToJson :: SqlValue -> Value
 sqlValueToJson SqlNull         = Null
 sqlValueToJson (SqlBool b)     = Bool b
 sqlValueToJson (SqlInteger i)  = Number (fromIntegral i)
-sqlValueToJson (SqlReal d)     = Number (realToFrac d)
+-- Use GHC's shortest-representation printing (show) to get a Scientific value
+-- that round-trips cleanly through decimal notation.  The naive `realToFrac`
+-- would produce something like 3.140000000000000124... for 3.14, breaking
+-- fixture comparisons.
+sqlValueToJson (SqlReal d)     = Number (fromFloatDigits d)
 sqlValueToJson (SqlText s)     = String (T.pack s)
 
 -- | Get expected_rows as a list of JSON value lists.

@@ -159,19 +159,21 @@ data UnaryOp
 -- | Aggregate function kinds.
 --
 -- Think of aggregates like running tallies:
---   COUNT  — counts non-NULL values in a column
---   COUNT* — counts all rows including NULLs
+--   COUNT         — counts non-NULL values in a column
+--   COUNT*        — counts all rows including NULLs
+--   CountDistinct — counts UNIQUE non-NULL values (uses a Set internally)
 --   SUM    — running sum, ignoring NULLs
 --   AVG    — average: sum / count (both over non-NULLs)
 --   MIN    — smallest non-NULL value seen
 --   MAX    — largest non-NULL value seen
 data AggFn
-    = Count     -- ^ COUNT(expr) — count non-NULL values
-    | CountStar -- ^ COUNT(*)    — count all rows including NULLs
-    | Sum       -- ^ SUM(expr)   — sum all non-NULL values
-    | Avg       -- ^ AVG(expr)   — arithmetic mean of non-NULL values
-    | Min       -- ^ MIN(expr)   — smallest non-NULL value
-    | Max       -- ^ MAX(expr)   — largest non-NULL value
+    = Count         -- ^ COUNT(expr) — count non-NULL values
+    | CountStar     -- ^ COUNT(*)    — count all rows including NULLs
+    | CountDistinct -- ^ COUNT(DISTINCT expr) — count unique non-NULL values
+    | Sum           -- ^ SUM(expr)   — sum all non-NULL values
+    | Avg           -- ^ AVG(expr)   — arithmetic mean of non-NULL values
+    | Min           -- ^ MIN(expr)   — smallest non-NULL value
+    | Max           -- ^ MAX(expr)   — largest non-NULL value
     deriving (Show, Eq)
 
 -- ── Instruction ADT ───────────────────────────────────────────────────────
@@ -329,6 +331,10 @@ data Instruction
 
     -- | Advance the group iterator to the next group.
     | AdvanceGroup
+
+    -- | Jump to the named label if all groups have been emitted.
+    --   Used to terminate the group-emit loop after GROUP BY.
+    | JumpIfGroupsDone String
 
     -- ── Control flow ──────────────────────────────────────────────────────
     --
@@ -583,25 +589,37 @@ compileExpr expr = case expr of
 
 -- | Compile the accumulate (update) phase for one aggregate slot.
 --
--- COUNT(*)    → just increment; no column load needed.
--- COUNT(expr) → load the value (NULL check done by VM), then UpdateAgg.
+-- COUNT(*)             → just increment; no column load needed.
+-- COUNT(DISTINCT expr) → load value; VM uses a Set to track unique non-NULLs.
+-- COUNT(expr)          → load the value (NULL check done by VM), then UpdateAgg.
 -- SUM/AVG/MIN/MAX → load the expression value, then UpdateAgg.
-compileUpdateAgg :: Int -> AggFunction -> AggArg -> [Instruction]
-compileUpdateAgg idx AggCount AggStar         = [UpdateAgg idx CountStar]
-compileUpdateAgg idx AggCount (AggExprArg e)  = compileExpr e ++ [UpdateAgg idx Count]
-compileUpdateAgg idx AggSum   (AggExprArg e)  = compileExpr e ++ [UpdateAgg idx Sum]
-compileUpdateAgg idx AggAvg   (AggExprArg e)  = compileExpr e ++ [UpdateAgg idx Avg]
-compileUpdateAgg idx AggMin   (AggExprArg e)  = compileExpr e ++ [UpdateAgg idx Min]
-compileUpdateAgg idx AggMax   (AggExprArg e)  = compileExpr e ++ [UpdateAgg idx Max]
-compileUpdateAgg idx _        _               = [UpdateAgg idx CountStar]
+--
+-- The fourth argument is the distinct flag from the AggregateItem.
+compileUpdateAgg :: Int -> AggFunction -> AggArg -> Bool -> [Instruction]
+compileUpdateAgg idx AggCount AggStar  _     = [UpdateAgg idx CountStar]
+compileUpdateAgg idx AggCount (AggExprArg e) True  = compileExpr e ++ [UpdateAgg idx CountDistinct]
+compileUpdateAgg idx AggCount (AggExprArg e) False = compileExpr e ++ [UpdateAgg idx Count]
+compileUpdateAgg idx AggSum   (AggExprArg e) _     = compileExpr e ++ [UpdateAgg idx Sum]
+compileUpdateAgg idx AggAvg   (AggExprArg e) _     = compileExpr e ++ [UpdateAgg idx Avg]
+compileUpdateAgg idx AggMin   (AggExprArg e) _     = compileExpr e ++ [UpdateAgg idx Min]
+compileUpdateAgg idx AggMax   (AggExprArg e) _     = compileExpr e ++ [UpdateAgg idx Max]
+compileUpdateAgg idx _        _              _     = [UpdateAgg idx CountStar]
 
 -- | Compile the finalize (emit) phase for one aggregate slot.
+-- For COUNT(DISTINCT), we look up the distinct-flag on the AggregateItem
+-- and emit FinalizeAgg with CountDistinct so the VM returns the set size.
 compileFinalizeAgg :: Int -> AggFunction -> Instruction
 compileFinalizeAgg idx AggCount = FinalizeAgg idx Count
 compileFinalizeAgg idx AggSum   = FinalizeAgg idx Sum
 compileFinalizeAgg idx AggAvg   = FinalizeAgg idx Avg
 compileFinalizeAgg idx AggMin   = FinalizeAgg idx Min
 compileFinalizeAgg idx AggMax   = FinalizeAgg idx Max
+
+-- | Variant of compileFinalizeAgg that respects the distinct flag.
+compileFinalizeAggItem :: Int -> AggregateItem -> Instruction
+compileFinalizeAggItem idx a
+    | aggFunc a == AggCount && aggDistinct a = FinalizeAgg idx CountDistinct
+    | otherwise                              = compileFinalizeAgg idx (aggFunc a)
 
 -- | Derive a display name for an output column.
 --
@@ -790,6 +808,10 @@ compilePlanCore plan body counter = case plan of
 -- the OutputColumn, not in the AggregateItem (which only has `_agg0` etc.).
 -- We use projCols to recover those aliases so EmitColumn uses the right name.
 --
+-- GROUP BY queries: for each unique combination of GROUP BY column values, the
+-- VM accumulates into per-group slots.  After the scan, we emit a loop that
+-- advances through each group in turn and emits one output row per group.
+--
 -- Returns (instructions, newCounter).
 compileAggregateQuery :: OptimizedPlan    -- ^ inner scan plan (below the Aggregate node)
                       -> [AggregateItem]  -- ^ aggregate functions to compute
@@ -821,6 +843,15 @@ compileAggregateQuery innerPlan aggs groupBy havingOpt projCols counter =
         -- The group-key columns come first in projCols, then the aggregates.
         aggProjOffset = length groupKeyNames
 
+        -- Count how many aggregates appear in the SELECT list (projCols) vs.
+        -- HAVING.  Aggregates collected from HAVING are extra slots that must
+        -- NOT be emitted as output columns.
+        numSelectAggs =
+            length (filter isAggInProj projCols)
+          where
+            isAggInProj (OutputExpr (P.AggExpr _ _ _) _) = True
+            isAggInProj _                                 = False
+
         -- PHASE 1: inside the loop — save the group key, then update each accumulator.
         saveKeyInstrs
             | null groupBy = []
@@ -829,7 +860,7 @@ compileAggregateQuery innerPlan aggs groupBy havingOpt projCols counter =
                 ++ [SaveGroupKey groupKeyNames]
 
         updateInstrs =
-            concatMap (\(i, a) -> compileUpdateAgg i (aggFunc a) (aggArg a))
+            concatMap (\(i, a) -> compileUpdateAgg i (aggFunc a) (aggArg a) (aggDistinct a))
                       (zip [0..] aggs)
 
         accumulateBody = saveKeyInstrs ++ updateInstrs
@@ -842,24 +873,89 @@ compileAggregateQuery innerPlan aggs groupBy havingOpt projCols counter =
             concatMap (\(i, name) -> [LoadGroupKey i, EmitColumn name])
                       (zip [0..] groupKeyNames)
 
+        -- Only emit the SELECT-list aggregates (not HAVING-only aggregate slots).
+        -- Use compileFinalizeAggItem to respect the distinct flag (CountDistinct).
         aggEmitInstrs =
             concatMap (\(i, a) ->
                 let colName = userAliasFor (aggProjOffset + i) (aggAlias a)
-                in [compileFinalizeAgg i (aggFunc a), EmitColumn colName])
-                (zip [0..] aggs)
+                in [compileFinalizeAggItem i a, EmitColumn colName])
+                (zip [0..] (take numSelectAggs aggs))
 
-        -- Apply HAVING filter before emitting the row.
-        (emitPhase, counter2) = case havingOpt of
-            Nothing ->
-                ( [BeginRow] ++ keyEmitInstrs ++ aggEmitInstrs ++ [EmitRow]
-                , counter1 )
-            Just pred ->
-                let (n, c1) = freshLabel counter1
-                    skipLabel = "having_skip_" ++ n
-                in ( [BeginRow] ++ keyEmitInstrs ++ aggEmitInstrs
-                        ++ compileExpr pred
-                        ++ [JumpIfFalse skipLabel, EmitRow, Label skipLabel]
-                   , c1 )
+        -- Compile a HAVING predicate expression, substituting AggExpr nodes
+        -- with the appropriate FinalizeAgg instruction (looking up the slot
+        -- index from the `aggs` list).  This fixes the bug where
+        -- compileExpr (AggExpr ...) would emit LoadNull, causing HAVING to
+        -- always evaluate to NULL and skip all rows.
+        compileHavingExpr :: SqlExpr -> [Instruction]
+        compileHavingExpr expr = case expr of
+            P.AggExpr fn arg _ ->
+                -- Find the first slot in `aggs` whose function and argument
+                -- match this AggExpr, and emit FinalizeAgg for that slot.
+                case findAggSlot fn arg (zip [0..] aggs) of
+                    Just (i, _) -> [compileFinalizeAgg i fn]
+                    Nothing     -> [LoadNull]
+            P.BinaryOp op l r ->
+                compileHavingExpr l
+                ++ compileHavingExpr r
+                ++ [BinaryOpInstr (mapBinaryOp op)]
+            P.UnaryOp op e ->
+                compileHavingExpr e
+                ++ [UnaryOpInstr (mapUnaryOp op)]
+            other -> compileExpr other
+
+        -- Look up the first accumulator slot whose function and argument match.
+        findAggSlot :: AggFunction -> AggArg -> [(Int, AggregateItem)] -> Maybe (Int, AggregateItem)
+        findAggSlot fn arg =
+            foldr (\(i, a) acc ->
+                case acc of
+                    Just _ -> acc
+                    Nothing ->
+                        if aggFunc a == fn && aggArg a == arg
+                            then Just (i, a)
+                            else Nothing)
+                Nothing
+
+        -- PHASE 2 emit: single row (no GROUP BY) or loop per group (GROUP BY).
+        (emitPhase, counter2)
+            | null groupBy =
+                -- Simple aggregates: emit exactly one row.
+                case havingOpt of
+                    Nothing ->
+                        ( [BeginRow] ++ keyEmitInstrs ++ aggEmitInstrs ++ [EmitRow]
+                        , counter1 )
+                    Just pred ->
+                        let (n, c1) = freshLabel counter1
+                            skipLabel = "having_skip_" ++ n
+                        in ( [BeginRow] ++ keyEmitInstrs ++ aggEmitInstrs
+                                ++ compileHavingExpr pred
+                                ++ [JumpIfFalse skipLabel, EmitRow, Label skipLabel]
+                           , c1 )
+            | otherwise =
+                -- GROUP BY: loop over all accumulated groups and emit one row each.
+                let (n, c1)     = freshLabel counter1
+                    loopLabel   = "group_loop_" ++ n
+                    doneLabel   = "group_done_" ++ n
+                    rowInstrs = [BeginRow] ++ keyEmitInstrs ++ aggEmitInstrs
+                    (emitBody, c2) = case havingOpt of
+                        Nothing ->
+                            ( rowInstrs ++ [EmitRow]
+                            , c1 )
+                        Just pred ->
+                            let (m, c1') = freshLabel c1
+                                skipLabel = "having_skip_" ++ m
+                            in ( rowInstrs
+                                    ++ compileHavingExpr pred
+                                    ++ [JumpIfFalse skipLabel, EmitRow, Label skipLabel]
+                               , c1' )
+                in ( [ Label loopLabel
+                     , AdvanceGroup
+                     , JumpIfGroupsDone doneLabel
+                     ]
+                     ++ emitBody
+                     ++ [ Jump loopLabel
+                        , Label doneLabel
+                        ]
+                   , c2 )
 
     in ([InitAgg numAggs] ++ scanInstrs ++ emitPhase, counter2)
 
@@ -890,7 +986,19 @@ compileOutputCols cols = concatMap go cols
 -- | Peel Sort/Limit/Distinct wrappers and collect their post-op instructions.
 --
 -- Returns (postOpInstructions, corePlan).
+--
+-- The planner wraps post-processing nodes (Sort, Limit, Distinct) INSIDE
+-- a Project node — i.e. the tree is Project → Sort → Limit → ... → Scan.
+-- We therefore also peel through OptProject so that Sort/Limit/Distinct
+-- nested under a Project are correctly hoisted into postOps.  Without this
+-- the sort key instructions are silently discarded (compilePlanCore recurses
+-- through OptSort as a no-op) and the result comes out unsorted.
 peelWrappers :: OptimizedPlan -> ([Instruction], OptimizedPlan)
+peelWrappers (OptProject inner cols) =
+    -- Peel through the projection wrapper so that Sort/Limit/Distinct nodes
+    -- nested beneath a Project are hoisted into postOps.
+    let (postOps, core) = peelWrappers inner
+    in (postOps, OptProject core cols)
 peelWrappers (OptSort inner keys) =
     let (postOps, core) = peelWrappers inner
     in (postOps ++ [SortResult keys], core)

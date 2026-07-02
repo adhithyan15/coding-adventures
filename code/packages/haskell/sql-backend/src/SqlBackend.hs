@@ -57,6 +57,12 @@ import qualified Data.Map.Strict as Map
 import Data.Maybe (mapMaybe)
 import Data.Word (Word8)
 
+-- SqlValue carries SQL's five (six) types.  The derived Ord instance orders
+-- constructors by their declaration position (SqlNull < SqlBool < SqlInteger
+-- < SqlReal < SqlText < SqlBlob), which differs from SQL semantics — but
+-- that is intentional: it is used exclusively by the COUNT(DISTINCT …)
+-- accumulator Set to deduplicate values within the same SQL type.
+-- Cross-type SQL ordering uses the explicit `compareSqlValues` function.
 data SqlValue
     = SqlNull
     | SqlBool Bool
@@ -64,7 +70,7 @@ data SqlValue
     | SqlReal Double
     | SqlText String
     | SqlBlob [Word8]
-    deriving (Eq, Show)
+    deriving (Eq, Ord, Show)
 
 isSqlValue :: SqlValue -> Bool
 isSqlValue _ = True

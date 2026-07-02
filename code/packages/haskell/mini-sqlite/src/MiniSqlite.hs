@@ -1492,9 +1492,16 @@ parseAtom toks = case toks of
         (e, rest') <- parseExpr rest
         rest''     <- expectToken TRParen rest' ")"
         pure (e, rest'')
-    -- COUNT(*) / COUNT(expr) and other aggregate functions
+    -- COUNT(*) / COUNT(DISTINCT expr) / COUNT(expr) and other aggregate functions
     (TWord "COUNT" : TLParen : TStar : TRParen : rest) ->
         pure (AggExpr AggCount AggStar False, rest)
+    -- COUNT(DISTINCT expr): must be matched BEFORE the generic COUNT(expr) case
+    -- because the generic case would treat DISTINCT as a column name and fail
+    -- when it hits the closing paren.
+    (TWord "COUNT" : TLParen : TWord "DISTINCT" : rest) -> do
+        (e, rest') <- parseExpr rest
+        rest''     <- expectToken TRParen rest' ")"
+        pure (AggExpr AggCount (AggExprArg e) True, rest'')
     (TWord "COUNT" : TLParen : rest) -> do
         (e, rest') <- parseExpr rest
         rest''     <- expectToken TRParen rest' ")"
