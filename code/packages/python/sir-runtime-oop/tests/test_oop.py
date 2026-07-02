@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pytest
 from coding_adventures_sir_runtime_core import Closure
+from coding_adventures_sir_runtime_exceptions import SirError
 
 import coding_adventures_sir_runtime_oop as oop
 from coding_adventures_sir_runtime_oop import Val
@@ -128,10 +129,15 @@ def test_instance_of_requires_exact_non_ancestor_match() -> None:
     assert oop.call_method(d, "instance_of?", "Animal") is False
 
 
-def test_class_returns_class_name_and_unknown_methods_return_nil() -> None:
+def test_class_returns_class_name_and_unknown_methods_raise_no_method_error() -> None:
     assert oop.call_method(oop.new_instance("Foo"), "class") == "Foo"
     assert oop.call_method(3, "class") == "Integer"
-    assert oop.call_method(3, "no_such_method") is None
+    # A genuinely unknown method now raises a typed NoMethodError (T1), not the
+    # old nil floor — so a Ruby ``rescue NoMethodError`` catches it.
+    with pytest.raises(SirError) as excinfo:
+        oop.call_method(3, "no_such_method")
+    assert excinfo.value.sir_class == "NoMethodError"
+    assert excinfo.value.args[0] == "undefined method 'no_such_method' for Integer"
 
 
 def test_define_method_backs_the_dispatch_fallback() -> None:
@@ -170,6 +176,28 @@ def test_array_include_and_index() -> None:
     assert oop.call_method([1, 2, 3], "include?", 9) is False
     assert oop.call_method([1, 2, 3], "index", 3) == 2
     assert oop.call_method([1, 2, 3], "index", 9) is None
+
+
+def test_array_fetch_in_range_and_negative_index() -> None:
+    # ``Array#fetch`` returns the element for an in-range index (negative counts
+    # from the end), like ``arr[i]`` — the difference is only on out-of-bounds.
+    assert oop.call_method([10, 20, 30], "fetch", 0) == 10
+    assert oop.call_method([10, 20, 30], "fetch", 2) == 30
+    assert oop.call_method([10, 20, 30], "fetch", -1) == 30
+
+
+def test_array_fetch_out_of_bounds_with_default_returns_default() -> None:
+    # A second argument supplies the value returned instead of raising.
+    assert oop.call_method([10, 20], "fetch", 5, 99) == 99
+
+
+def test_array_fetch_out_of_bounds_raises_index_error() -> None:
+    # Ruby ``Array#fetch`` out of bounds with no default raises IndexError (T1) —
+    # unlike ``arr[i]``, which returns nil.
+    with pytest.raises(SirError) as excinfo:
+        oop.call_method([10, 20], "fetch", 100)
+    assert excinfo.value.sir_class == "IndexError"
+    assert excinfo.value.args[0] == "index 100 outside of array bounds: -2...2"
 
 
 def test_array_mutating_push_pop_shift_unshift() -> None:
@@ -251,14 +279,23 @@ def test_respond_to_reports_catalog_membership() -> None:
     assert oop.call_method([1], "respond_to?", "each_slice") is False
 
 
-def test_unknown_method_returns_nil_not_raise() -> None:
-    # A block method called WITHOUT a block bottoms out at nil (Ruby returns an
-    # Enumerator; v0 floor is nil — see spec).
+def test_known_block_method_without_block_still_returns_nil() -> None:
+    # A *known* block method called WITHOUT a block bottoms out at nil (Ruby
+    # returns an Enumerator; v0 floor is nil — see spec).  This is a wrong-shape
+    # invocation of a catalogued method, NOT a missing method, so it must NOT
+    # raise NoMethodError (T1): ``_responds_to`` reports ``map``/``times`` as
+    # known, keeping the nil floor.
     assert oop.call_method([1, 2, 3], "map") is None
-    # An out-of-catalog String method (scan needs a regex engine — later PR).
-    assert oop.call_method("hi", "scan") is None
-    # Numeric has no catalog yet (M1c-Numeric), so every method is the nil floor.
     assert oop.call_method(5, "times") is None
+
+
+def test_out_of_catalog_method_raises_no_method_error() -> None:
+    # An out-of-catalog String method (scan needs a regex engine — later PR) is a
+    # genuinely unknown method → typed NoMethodError (T1).
+    with pytest.raises(SirError) as excinfo:
+        oop.call_method("hi", "scan")
+    assert excinfo.value.sir_class == "NoMethodError"
+    assert excinfo.value.args[0] == "undefined method 'scan' for String"
 
 
 # ── built-in method catalog: block-taking Array/Enumerable (M1b) ──────────────
@@ -345,10 +382,19 @@ def test_hash_key_value_membership() -> None:
 def test_hash_fetch_dig_to_a() -> None:
     h = {"a": 1, "b": 2}
     assert oop.call_method(h, "fetch", "a") == 1
-    assert oop.call_method(h, "fetch", "z") is None
+    # Missing key with an explicit default returns the default (no raise).
     assert oop.call_method(h, "fetch", "z", 99) == 99
     assert oop.call_method(h, "dig", "b") == 2
     assert oop.call_method(h, "to_a") == [["a", 1], ["b", 2]]
+
+
+def test_hash_fetch_missing_key_raises_key_error() -> None:
+    # Ruby ``Hash#fetch`` on a missing key with no default raises KeyError (T1) —
+    # unlike ``hash[k]``, which returns nil.
+    with pytest.raises(SirError) as excinfo:
+        oop.call_method({"a": 1}, "fetch", "z")
+    assert excinfo.value.sir_class == "KeyError"
+    assert excinfo.value.args[0] == 'key not found: "z"'
 
 
 def test_hash_store_merge_delete_clear_invert() -> None:
@@ -385,11 +431,15 @@ def test_hash_each_key_each_value() -> None:
     assert vs == [1, 2]
 
 
-def test_hash_respond_to_and_nil_floor() -> None:
+def test_hash_respond_to_and_no_method_error_floor() -> None:
     assert oop.call_method({"a": 1}, "respond_to?", "keys") is True
     assert oop.call_method({"a": 1}, "respond_to?", "each") is True
     assert oop.call_method({"a": 1}, "respond_to?", "transform_keys") is False
-    assert oop.call_method({"a": 1}, "transform_keys") is None
+    # An out-of-catalog Hash method is genuinely unknown → NoMethodError (T1).
+    with pytest.raises(SirError) as excinfo:
+        oop.call_method({"a": 1}, "transform_keys")
+    assert excinfo.value.sir_class == "NoMethodError"
+    assert excinfo.value.args[0] == "undefined method 'transform_keys' for Hash"
     # Universal Object methods still resolve on a Hash receiver.
     assert oop.call_method({"a": 1}, "nil?") is False
 
@@ -467,11 +517,14 @@ def test_string_each_char_block() -> None:
     assert result == "abc"
 
 
-def test_string_respond_to_and_nil_floor() -> None:
+def test_string_respond_to_and_no_method_error_floor() -> None:
     assert oop.call_method("x", "respond_to?", "upcase") is True
     assert oop.call_method("x", "respond_to?", "each_char") is True
     assert oop.call_method("x", "respond_to?", "scan") is False
-    assert oop.call_method("x", "scan") is None
+    # An out-of-catalog String method is genuinely unknown → NoMethodError (T1).
+    with pytest.raises(SirError) as excinfo:
+        oop.call_method("x", "scan")
+    assert excinfo.value.sir_class == "NoMethodError"
     # Universal Object methods still resolve on a String receiver.
     assert oop.call_method("x", "nil?") is False
     assert oop.call_method("x", "class") == "String"
@@ -537,12 +590,16 @@ def test_numeric_block_times_upto_downto_step() -> None:
     assert step == [0, 5, 10]
 
 
-def test_numeric_respond_to_and_nil_floor() -> None:
+def test_numeric_respond_to_and_floor() -> None:
     assert oop.call_method(5, "respond_to?", "even?") is True
     assert oop.call_method(5, "respond_to?", "times") is True
     assert oop.call_method(5, "respond_to?", "bit_length") is False
-    assert oop.call_method(5, "bit_length") is None
-    # A block method called without a block bottoms out at the nil floor.
+    # An out-of-catalog numeric method is genuinely unknown → NoMethodError (T1).
+    with pytest.raises(SirError) as excinfo:
+        oop.call_method(5, "bit_length")
+    assert excinfo.value.sir_class == "NoMethodError"
+    assert excinfo.value.args[0] == "undefined method 'bit_length' for Integer"
+    # A *known* block method called without a block bottoms out at the nil floor.
     assert oop.call_method(5, "times") is None
 
 
@@ -573,9 +630,13 @@ def test_nil_true_false_to_s_inspect() -> None:
     assert oop.call_method(True, "to_s") == "true"
     assert oop.call_method(False, "to_s") == "false"
     assert oop.call_method(True, "inspect") == "true"
-    # bool resolves only Object methods, never the numeric catalog.
+    # bool resolves only Object methods, never the numeric catalog — so a
+    # numeric method on a boolean is unknown → NoMethodError (T1).
     assert oop.call_method(True, "respond_to?", "even?") is False
-    assert oop.call_method(True, "even?") is None
+    with pytest.raises(SirError) as excinfo:
+        oop.call_method(True, "even?")
+    assert excinfo.value.sir_class == "NoMethodError"
+    assert excinfo.value.args[0] == "undefined method 'even?' for TrueClass"
 
 
 def test_object_to_s_inspect_collections() -> None:
@@ -653,12 +714,16 @@ def test_sym_to_proc_accepts_bare_string_name() -> None:
     assert apply(proc, ["hi"]) == "HI"
 
 
-def test_sym_to_proc_out_of_catalog_method_returns_nil() -> None:
+def test_sym_to_proc_out_of_catalog_method_raises_no_method_error() -> None:
     from coding_adventures_sir_runtime_core import apply, intern
 
-    # An unknown method bottoms out at nil (never-raise OO surface).
+    # ``(&:no_such_method)`` applied to a value dispatches an unknown method, so
+    # it raises NoMethodError (T1) just like a direct ``x.no_such_method`` —
+    # matching Ruby, where ``[42].map(&:no_such_method)`` raises NoMethodError.
     proc = oop.sym_to_proc(intern("no_such_method"))
-    assert apply(proc, [42]) is None
+    with pytest.raises(SirError) as excinfo:
+        apply(proc, [42])
+    assert excinfo.value.sir_class == "NoMethodError"
 
 
 def test_sym_to_proc_drives_array_block_method_dispatch() -> None:
@@ -789,8 +854,10 @@ def test_kernel_respond_to_is_honest() -> None:
     assert oop.call_method(True, "respond_to?", "&") is True
     # A non-bool receiver does not respond to the boolean operators.
     assert oop.call_method(5, "respond_to?", "^") is False
-    # An out-of-catalog name is still both nil and respond_to? == False.
-    assert oop.call_method(True, "nonexistent_method") is None
+    # An out-of-catalog name is both NoMethodError (T1) and respond_to? == False.
+    with pytest.raises(SirError) as excinfo:
+        oop.call_method(True, "nonexistent_method")
+    assert excinfo.value.sir_class == "NoMethodError"
     assert oop.call_method(True, "respond_to?", "nonexistent_method") is False
 
 
@@ -934,3 +1001,71 @@ def test_reset_oop_clears_method_tables() -> None:
     # After reset the tables are empty → nil floor.
     assert oop.call_class_method("Dog", "make") is None
     assert oop.call_super("speak", "Dog") is None
+
+
+# ── Typed runtime errors: end-to-end rescue-matchability (T1) ─────────────────
+#
+# These prove the *emitted rescue shape* works: a Ruby ``begin; <op>; rescue
+# <Class> => e; end`` lowers to a native ``try/except`` that catches broadly and
+# then calls ``rescue_matches(exc, [<Class>])`` per clause.  A faulting op must
+# raise a typed SirError so the right clause fires (and unrelated clauses miss).
+
+
+def test_array_fetch_oob_is_rescued_as_index_error() -> None:
+    from coding_adventures_sir_runtime_exceptions import rescue_matches
+
+    try:
+        oop.call_method([1, 2], "fetch", 100)
+        raise AssertionError("fetch did not raise")  # pragma: no cover
+    except Exception as exc:  # noqa: BLE001 - mirrors the emitted broad catch
+        assert rescue_matches(exc, ["IndexError"]) is True
+        assert rescue_matches(exc, ["StandardError"]) is True
+        assert rescue_matches(exc, ["KeyError"]) is False  # sibling clause misses
+
+
+def test_hash_fetch_miss_is_rescued_as_key_error() -> None:
+    from coding_adventures_sir_runtime_exceptions import rescue_matches
+
+    try:
+        oop.call_method({"a": 1}, "fetch", "z")
+        raise AssertionError("fetch did not raise")  # pragma: no cover
+    except Exception as exc:  # noqa: BLE001
+        assert rescue_matches(exc, ["KeyError"]) is True
+        # KeyError < IndexError < StandardError in the built-in ancestry, so a
+        # ``rescue IndexError`` also catches a raised KeyError (Ruby semantics).
+        assert rescue_matches(exc, ["IndexError"]) is True
+        assert rescue_matches(exc, ["StandardError"]) is True
+
+
+def test_unknown_method_is_rescued_as_no_method_error() -> None:
+    from coding_adventures_sir_runtime_exceptions import rescue_matches
+
+    try:
+        oop.call_method(oop.new_instance("Widget"), "undefined")
+        raise AssertionError("dispatch did not raise")  # pragma: no cover
+    except Exception as exc:  # noqa: BLE001
+        assert rescue_matches(exc, ["NoMethodError"]) is True
+        # NoMethodError < NameError < StandardError — a ``rescue NameError``
+        # catches it too (Ruby semantics).
+        assert rescue_matches(exc, ["NameError"]) is True
+        assert rescue_matches(exc, ["StandardError"]) is True
+
+
+def test_nil_unknown_method_is_no_method_error() -> None:
+    # ``nil.foo`` raises NoMethodError in Ruby (not the old silent nil).
+    with pytest.raises(SirError) as excinfo:
+        oop.call_method(None, "foo")
+    assert excinfo.value.sir_class == "NoMethodError"
+    assert excinfo.value.args[0] == "undefined method 'foo' for NilClass"
+
+
+def test_index_operator_still_returns_nil_no_over_raise() -> None:
+    # REGRESSION: ``.fetch`` raises, but the plain index operator ``arr[i]`` /
+    # ``hash[k]`` must NOT — Ruby returns nil there.  The backend emits ``[]`` as
+    # a *native* Python subscript that never routes through ``call_method`` /
+    # ``.fetch``, so the two paths stay independent.  A missing hash key via the
+    # ``dict.get`` semantics the ``[]`` lowering relies on still yields nil, and
+    # the catalogued (non-fetch) accessors keep their nil returns.
+    assert {"a": 1}.get("missing") is None  # the [] lowering's miss → nil
+    assert oop.call_method([], "first") is None  # empty-array accessor stays nil
+    assert oop.call_method({"a": 1}, "dig", "z") is None  # dig miss stays nil

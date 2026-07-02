@@ -2,6 +2,45 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.10] - 2026-07-01
+
+### Changed — typed runtime errors (T1 of sir-typed-runtime-errors)
+
+Faulting Ruby method calls now raise the **typed** `SirError` the rescue matcher
+names, replacing the old blanket nil floor for `.fetch` misses and unknown
+methods — so `rescue IndexError` / `rescue KeyError` / `rescue NoMethodError`
+catch them, identically to Ruby. See
+[`code/specs/sir-typed-runtime-errors.md`](../../../specs/sir-typed-runtime-errors.md).
+
+- **`Array#fetch`** — added to the array catalog. Returns the element for an
+  in-range index (negatives count from the end), like `arr[i]`; an
+  **out-of-bounds** index with no default now raises `IndexError`
+  (`"index N outside of array bounds: -M...M"`). A second argument supplies a
+  default returned instead of raising.
+- **`Hash#fetch`** — a **missing** key with no default now raises `KeyError`
+  (`"key not found: <inspect>"`) instead of returning nil. A second argument
+  still supplies a default.
+- **Unknown method** — `call_method`'s floor now raises `NoMethodError`
+  (`"undefined method 'x' for <class>"`) for a **genuinely unknown** method
+  (`obj.undefined`, `nil.foo`, `"s".scan`). A *known* block-taking method invoked
+  **without** a block (e.g. `[1,2,3].map`, `5.times`) still returns nil — Ruby
+  returns an Enumerator there, the documented v0 floor — discriminated by
+  `_responds_to`.
+- **Unchanged (no over-raise):** the plain index operators `arr[i]` / `hash[k]`
+  still return nil (Ruby does not raise for `[]`); they are emitted as native
+  Python subscripts and never route through `.fetch` / `call_method`. Catalogued
+  accessors that legitimately return nil (`arr.first` on empty, `hash.dig` miss,
+  `str.index` miss) are unaffected.
+- No reflection or `eval`: every typed raise is an explicit class-name string via
+  the shared `raise_error` entry point; the unknown method name is interpolated
+  as an opaque message string, never used to reflect a Python attribute (the C3
+  dynamic-dispatch RCE lesson).
+
+### Dependency
+
+- Added `coding-adventures-sir-runtime-exceptions` for the typed-raise entry
+  point.
+
 ## [0.1.9] - 2026-07-01
 
 ### Added (O1 — user class/instance method tables + new/super/self)

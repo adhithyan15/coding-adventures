@@ -45,8 +45,20 @@ _sir_oop.cvar_set("@@count", 0)                   # @@count = 0
 `recv.meth(args…)` reaches the backend as `BuiltinCall("__method__", …)` and is
 dispatched by `call_method`, in order: reflective built-ins
 (`is_a?`/`kind_of?`/`instance_of?`/`class`) → user `define_method` table →
-built-in catalog → `nil` floor. `respond_to?` reports exactly which names
-resolve, so an out-of-catalog method is both `nil` *and* `respond_to? == False`.
+built-in catalog → floor. `respond_to?` reports exactly which names resolve.
+
+**Floor (T1 — typed runtime errors).** A **genuinely unknown** method
+(`obj.undefined`, `nil.foo`, `"s".scan` — `respond_to? == False`) now raises a
+typed `NoMethodError` (`"undefined method 'x' for <class>"`), so a Ruby `rescue
+NoMethodError` catches it. A *known* block-taking method invoked **without** a
+block (e.g. `[1,2,3].map`, `5.times`) still returns `nil` — Ruby returns an
+Enumerator there, the documented v0 floor. See
+`code/specs/sir-typed-runtime-errors.md`.
+
+**Typed `.fetch` faults.** `Array#fetch(i)` out of bounds (no default) raises
+`IndexError`; `Hash#fetch(k)` on a missing key (no default) raises `KeyError` —
+matching Ruby. The plain index operators `arr[i]` / `hash[k]` are emitted as
+native Python subscripts and still return `nil` (Ruby does not raise for `[]`).
 
 The catalog currently covers (item **M1a** of `code/specs/sir-method-dispatch.md`)
 the **non-block `Array`** surface — `length`/`size`/`count`, `first`/`last`,
@@ -80,7 +92,8 @@ plus **`Array#join`**.
 backend emits a `&:sym` block-pass on a dispatched call as
 `_sir_oop_sym_to_proc(intern("sym"))`; applying the closure dispatches the named
 method on its first argument (the rest forwarded), through `call_method`, so an
-unknown method still bottoms out at `nil`. Operator symbols (`&:+`) are native
+unknown method raises `NoMethodError` (T1) — as `[42].map(&:undefined)` does in
+Ruby. Operator symbols (`&:+`) are native
 arithmetic, not in the dispatch catalog — a documented v0 boundary.
 
 ### Kernel flow-control + boolean operators (item **M6**)
@@ -106,9 +119,11 @@ The universal-catalog completion the spec's v0 surface called for:
 Because the frontend does not thread receivers into method bodies, the *current
 self* is a process-global stack (not a true per-call binding) and class
 variables share a single namespace keyed by bare name. This faithfully models
-single-instance / single-class programs and never raises on the OO surface, but
-full multi-object Ruby semantics await a frontend that carries receivers into
-methods (out of scope for the backend). See `code/specs/sir-runtime.md`.
+single-instance / single-class programs, but full multi-object Ruby semantics
+await a frontend that carries receivers into methods (out of scope for the
+backend). (As of T1 the dispatch surface *does* raise typed `NoMethodError` /
+`IndexError` / `KeyError` for genuine faults — see the dispatch section above —
+rather than the earlier blanket nil floor.) See `code/specs/sir-runtime.md`.
 
 ## Where it fits
 

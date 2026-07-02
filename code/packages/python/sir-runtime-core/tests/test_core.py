@@ -294,6 +294,56 @@ def test_truncating_division() -> None:
     assert sir.div(9, 3, 1) == 3
 
 
+# ── Typed division-by-zero (T1) ───────────────────────────────────────────────
+
+
+def test_int_division_by_zero_raises_typed_zero_division_error() -> None:
+    # Ruby's ``1 / 0`` raises ZeroDivisionError.  We re-raise Python's native
+    # fault as a *typed* SirError so a Ruby ``rescue ZeroDivisionError`` matches
+    # it (not merely the over-broad StandardError).
+    from coding_adventures_sir_runtime_exceptions import SirError
+
+    with pytest.raises(SirError) as excinfo:
+        sir.div(1, 0)
+    assert excinfo.value.sir_class == "ZeroDivisionError"
+    assert excinfo.value.args[0] == "divided by 0"
+
+
+def test_float_division_by_zero_raises_typed_zero_division_error() -> None:
+    # Per the SIR error spec, ``1.0 / 0`` is also a ZeroDivisionError (Python's
+    # ``1.0 / 0`` raises natively too, so the same wrap applies).
+    from coding_adventures_sir_runtime_exceptions import SirError
+
+    with pytest.raises(SirError) as excinfo:
+        sir.div(1.0, 0)
+    assert excinfo.value.sir_class == "ZeroDivisionError"
+
+
+def test_division_by_zero_reports_the_step_that_faulted() -> None:
+    # A variadic fold that only hits the zero divisor mid-chain still raises.
+    from coding_adventures_sir_runtime_exceptions import SirError
+
+    with pytest.raises(SirError) as excinfo:
+        sir.div(10, 2, 0)
+    assert excinfo.value.sir_class == "ZeroDivisionError"
+
+
+def test_zero_division_error_is_rescue_matchable() -> None:
+    # End-to-end: the typed error the runtime raises is caught by a rescue clause
+    # naming ZeroDivisionError, its StandardError ancestor, or a bare rescue —
+    # exactly the ``begin; 1/0; rescue ZeroDivisionError; end`` shape.
+    from coding_adventures_sir_runtime_exceptions import rescue_matches
+
+    try:
+        sir.div(1, 0)
+        raise AssertionError("div(1, 0) did not raise")  # pragma: no cover
+    except Exception as exc:  # noqa: BLE001 - emitted rescue catches broadly then dispatches
+        assert rescue_matches(exc, ["ZeroDivisionError"]) is True
+        assert rescue_matches(exc, ["StandardError"]) is True  # ancestry walk
+        assert rescue_matches(exc, []) is True  # bare rescue
+        assert rescue_matches(exc, ["KeyError"]) is False  # unrelated clause misses
+
+
 def test_comparisons() -> None:
     assert sir.lt(1, 2) is True
     assert sir.gt(2, 1) is True
