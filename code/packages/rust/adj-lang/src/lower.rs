@@ -2278,6 +2278,75 @@ contributes 1000000 from answer == 60 to correct
     }
 
     #[test]
+    fn native_latex_operatorname_nary_word_spellings() {
+        // `\operatorname{min}(a, b)` / `\operatorname{max}` / `\operatorname{gcd}` /
+        // `\operatorname{lcm}` — the operator-name spellings of the variadic binary
+        // functions. `\operatorname{…}` is a TEXT command, so these parse as the
+        // juxtaposition `Bin(Mul, Text("gcd"), (a, b))` rather than a `Call`; the adapter
+        // recognises that shape and folds through the SAME `Call2` chain as the `\gcd(…)`
+        // spelling, so a model that writes the operator name reaches the identical native
+        // op. Two-arg: min(3, 8) = 3; max(3, 8) = 8.
+        let mn = crate::compile_and_decide(
+            "observe a(3)\n\
+             observe b(8)\n\
+             let answer = latex \"$\\operatorname{min}(a, b)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 3 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(mn.ranked[0].posterior > 0.99, "{mn:?}");
+        let mx = crate::compile_and_decide(
+            "observe a(3)\n\
+             observe b(8)\n\
+             let answer = latex \"$\\operatorname{max}(a, b)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 8 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(mx.ranked[0].posterior > 0.99, "{mx:?}");
+        // Two-arg gcd/lcm: gcd(12, 18) = 6; lcm(4, 6) = 12.
+        let g = crate::compile_and_decide(
+            "observe a(12)\n\
+             observe b(18)\n\
+             let answer = latex \"$\\operatorname{gcd}(a, b)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 6 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(g.ranked[0].posterior > 0.99, "{g:?}");
+        // Three-or-more args left-fold identically to the `\gcd(…)` spelling:
+        // lcm(2, 3, 4) = 12.
+        let l = crate::compile_and_decide(
+            "observe a(2)\n\
+             observe b(3)\n\
+             observe c(4)\n\
+             let answer = latex \"$\\operatorname{lcm}(a, b, c)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 12 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(l.ranked[0].posterior > 0.99, "{l:?}");
+    }
+
+    #[test]
+    fn native_latex_operatorname_min_with_one_argument_is_rejected() {
+        // `\operatorname{min}(a)` — a single argument has no fold (min/max/gcd/lcm need
+        // TWO or more operands), so it is a clean, explicit error via the SAME
+        // `latex_nary_fold` guard the `\min(a)` spelling hits — never a silent
+        // mis-lowering into a bare product.
+        let src =
+            "observe a(3)\nlet answer = latex \"$\\operatorname{min}(a)$\"\n? answer\n";
+        assert!(
+            compile(src).is_err(),
+            "one-arg operatorname min must be rejected: {src:?}"
+        );
+    }
+
+    #[test]
     fn native_latex_symbolic_root_degree_is_rejected() {
         // `\sqrt[k]{x}` — a symbolic degree has no numeric value, so the reciprocal
         // exponent `1/k` cannot be formed. It must be rejected, not silently

@@ -1002,6 +1002,31 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
         MathExpr::Bin(BinOp::Mul, lhs, rhs) if operator_name_is(lhs, "round") => {
             Ok(ExprAst::Round(Box::new(latex_math_to_expr_ast(rhs, source)?)))
         }
+        // `\operatorname{min}(a, b)` / `\operatorname{max}(…)` / `\operatorname{gcd}(…)` /
+        // `\operatorname{lcm}(…)` — the operator-name spellings of the variadic binary
+        // functions. The function-call spellings (`\min(a, b)`, `\gcd(a, b, c)`) already
+        // lower in the `Call` arm below via `Func::Min`/`Max`/`Gcd`/`Lcm`; a model that
+        // writes `\operatorname{gcd}` instead of `\gcd` should reach the SAME native op.
+        // But `\operatorname{…}` is a TEXT command, so — exactly like the single-argument
+        // `\operatorname{floor}`/`\operatorname{sgn}` above — `\operatorname{gcd}(a, b)`
+        // does NOT parse as a `Call`; it parses as the juxtaposition
+        // `Bin(Mul, Text("gcd"), (a, b))`, whose right factor is the parenthesised
+        // comma-list. We recognise that exact shape here, ABOVE the general product arm, and
+        // reuse the SAME `latex_nary_fold` that the `Call` arm uses: the argument sequence
+        // left-folds into a chain of the binary `Call2` op (`gcd(a, b, c)` →
+        // `gcd(gcd(a, b), c)`), so no engine/AST/lowering change — pure adapter recognition.
+        MathExpr::Bin(BinOp::Mul, lhs, rhs) if operator_name_is(lhs, "min") => {
+            latex_nary_fold(rhs, source, BinFn::Min, "min")
+        }
+        MathExpr::Bin(BinOp::Mul, lhs, rhs) if operator_name_is(lhs, "max") => {
+            latex_nary_fold(rhs, source, BinFn::Max, "max")
+        }
+        MathExpr::Bin(BinOp::Mul, lhs, rhs) if operator_name_is(lhs, "gcd") => {
+            latex_nary_fold(rhs, source, BinFn::Gcd, "gcd")
+        }
+        MathExpr::Bin(BinOp::Mul, lhs, rhs) if operator_name_is(lhs, "lcm") => {
+            latex_nary_fold(rhs, source, BinFn::Lcm, "lcm")
+        }
         // `a \bmod b` / `a \pmod{b}` — the modulo operator. `\bmod`/`\pmod` are not in
         // the frontend's operator tables, so they lower to a bare `Symbol("bmod")` /
         // `Symbol("pmod")` and the whole expression parses as a LEFT-associated implicit
@@ -1099,20 +1124,9 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
                 // `Call2` node — `min(a, b, c)` becomes `min(min(a, b), c)` — which is
                 // exact and needs no n-ary engine op (the fold reuses `ComputeOp::Min2`
                 // /`Max2`/`Gcd`/`Lcm`). A two-arg call folds to a single `Call2`,
-                // identical to before.
-                let args = latex_nary_args(arg, source, func)?;
-                let mut operands = args.into_iter();
-                // `latex_nary_args` guarantees ≥ 2 items, so the first `next()` is Some.
-                let first = operands.next().expect("latex_nary_args guarantees ≥ 2 args");
-                let mut acc = latex_math_to_expr_ast(first, source)?;
-                for operand in operands {
-                    acc = ExprAst::Call2(
-                        bin,
-                        Box::new(acc),
-                        Box::new(latex_math_to_expr_ast(operand, source)?),
-                    );
-                }
-                return Ok(acc);
+                // identical to before. `latex_nary_fold` does the same work for the
+                // `\operatorname{min}(…)` operator-name spelling in the `Bin` arm above.
+                return latex_nary_fold(arg, source, bin, &format!("{func:?}"));
             }
             let named = match func {
                 Func::Sin => NamedFn::Sin,
@@ -1246,12 +1260,16 @@ fn latex_power_exponent(expr: &MathExpr, source: &str) -> Result<f64, AdapterErr
 /// left-folds them into a chain of the associative binary op. A one-arg (`\min(a)`)
 /// call, or a non-comma argument, has no such lowering and is a clean, explicit
 /// error rather than a silent mis-lowering.
-fn latex_nary_args<'a>(
-    arg: &'a MathExpr,
+fn latex_nary_fold(
+    arg: &MathExpr,
     source: &str,
-    func: &Func,
-) -> Result<Vec<&'a MathExpr>, AdapterError> {
-    // Strip transparent parenthesisation to reach the underlying sequence.
+    bin: BinFn,
+    label: &str,
+) -> Result<ExprAst, AdapterError> {
+    // Strip transparent parenthesisation to reach the underlying sequence. The
+    // function-call spelling wraps its args in a `Fenced` (the call's parentheses); the
+    // operator-name spelling arrives here already unwrapped to the `Fenced` right factor —
+    // both reduce to the inner `Sequence`.
     let mut inner = arg;
     loop {
         match inner {
@@ -1260,18 +1278,33 @@ fn latex_nary_args<'a>(
             _ => break,
         }
     }
-    if let MathExpr::Sequence(items) = inner {
-        if items.len() >= 2 {
-            return Ok(items.iter().collect());
+    let items = match inner {
+        MathExpr::Sequence(items) if items.len() >= 2 => items,
+        _ => {
+            return Err(AdapterError::UnsupportedLatexMath {
+                source: source.to_string(),
+                detail: format!(
+                    "{label} takes two or more comma-separated arguments in ADJ arithmetic \
+                     (e.g. \\min(a, b) or \\min(a, b, c)); got {inner:?}"
+                ),
+            })
         }
+    };
+    // `min`/`max`/`gcd`/`lcm` are associative, so the ≥2 operands left-fold into a chain of
+    // the binary `Call2` op — `gcd(a, b, c)` → `gcd(gcd(a, b), c)` — which is exact and
+    // needs no n-ary engine op.
+    let mut operands = items.iter();
+    // The `len() >= 2` guard above guarantees the first `next()` is `Some`.
+    let first = operands.next().expect("checked items.len() >= 2");
+    let mut acc = latex_math_to_expr_ast(first, source)?;
+    for operand in operands {
+        acc = ExprAst::Call2(
+            bin,
+            Box::new(acc),
+            Box::new(latex_math_to_expr_ast(operand, source)?),
+        );
     }
-    Err(AdapterError::UnsupportedLatexMath {
-        source: source.to_string(),
-        detail: format!(
-            "{func:?} takes two or more comma-separated arguments in ADJ arithmetic \
-             (e.g. \\min(a, b) or \\min(a, b, c)); got {inner:?}"
-        ),
-    })
+    Ok(acc)
 }
 
 /// Validate an nth-root degree (`n` in `\sqrt[n]{x}`) and return it as a
