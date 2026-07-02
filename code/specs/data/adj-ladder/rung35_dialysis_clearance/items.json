@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 35 \u2014 net solute removed in a dialysis session from two volumes and two concentrations (a NEW panel: renal-replacement / dialysis clearance). From four stated quantities (inflow volume Vi, inflow concentration Ci, outflow volume Vo, outflow concentration Co) compute the net solute removed ((Vi*Ci)-(Vo*Co)), the inflow solute (Vi*Ci), or the outflow solute (Vo*Co). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, a DIFFERENCE OF TWO PRODUCTS ((Vi*Ci)-(Vo*Co)), so one parenthesised product is subtracted from another \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via *, - and + \u2014 no constant leaks (each amount is a pure volume*concentration product), and neither side's solute amount ever appears as a literal (each is computed from the observed volume and concentration) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same quantities, so the distractors are exactly the slips students make: the crossed-products difference ((Vi*Co)-(Vo*Ci), each volume with the other side's concentration) and the summed products ((Vi*Ci)+(Vo*Co), the two amounts added instead of subtracted). The core confusion tested is subtracting one volume*concentration product from another with each pairing correct.",
+  "items": [
+    {
+      "id": "r35dialysis-01",
+      "qtype": "dialysis_clearance",
+      "stem": "Over one dialysis session, 4 L is processed on the inflow side at a solute concentration of 120 mmol/L, and 2 L of spent effluent leaves at 80 mmol/L. What is the net solute removed by the dialyzer?",
+      "program": "observe inflow_volume(4)\nobserve inflow_concentration(120)\nobserve outflow_volume(2)\nobserve outflow_concentration(80)\nlet answer = (inflow_volume * inflow_concentration) - (outflow_volume * outflow_concentration)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 320,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 480,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 160,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 640,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r35dialysis-02",
+      "qtype": "dialysis_clearance",
+      "stem": "Over one dialysis session, 4 L is processed on the inflow side at a solute concentration of 120 mmol/L, and 2 L of spent effluent leaves at 80 mmol/L. What is the solute entering on the inflow side?",
+      "program": "observe inflow_volume(4)\nobserve inflow_concentration(120)\nobserve outflow_volume(2)\nobserve outflow_concentration(80)\nlet answer = inflow_volume * inflow_concentration\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 320,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 480,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 160,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 640,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r35dialysis-03",
+      "qtype": "dialysis_clearance",
+      "stem": "Over one dialysis session, 4 L is processed on the inflow side at a solute concentration of 120 mmol/L, and 2 L of spent effluent leaves at 80 mmol/L. What is the solute leaving in the effluent?",
+      "program": "observe inflow_volume(4)\nobserve inflow_concentration(120)\nobserve outflow_volume(2)\nobserve outflow_concentration(80)\nlet answer = outflow_volume * outflow_concentration\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 320,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 480,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 160,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 640,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r35dialysis-04",
+      "qtype": "dialysis_clearance",
+      "stem": "Over one dialysis session, 5 L is processed on the inflow side at a solute concentration of 130 mmol/L, and 3 L of spent effluent leaves at 70 mmol/L. What is the net solute removed by the dialyzer?",
+      "program": "observe inflow_volume(5)\nobserve inflow_concentration(130)\nobserve outflow_volume(3)\nobserve outflow_concentration(70)\nlet answer = (inflow_volume * inflow_concentration) - (outflow_volume * outflow_concentration)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 650,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 210,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": -40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 440,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 860,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r35dialysis-05",
+      "qtype": "dialysis_clearance",
+      "stem": "Over one dialysis session, 5 L is processed on the inflow side at a solute concentration of 130 mmol/L, and 3 L of spent effluent leaves at 70 mmol/L. What is the solute entering on the inflow side?",
+      "program": "observe inflow_volume(5)\nobserve inflow_concentration(130)\nobserve outflow_volume(3)\nobserve outflow_concentration(70)\nlet answer = inflow_volume * inflow_concentration\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 440,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 210,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": -40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 860,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 650,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r35dialysis-06",
+      "qtype": "dialysis_clearance",
+      "stem": "Over one dialysis session, 5 L is processed on the inflow side at a solute concentration of 130 mmol/L, and 3 L of spent effluent leaves at 70 mmol/L. What is the solute leaving in the effluent?",
+      "program": "observe inflow_volume(5)\nobserve inflow_concentration(130)\nobserve outflow_volume(3)\nobserve outflow_concentration(70)\nlet answer = outflow_volume * outflow_concentration\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 210,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 440,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 650,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -40,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 860,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r35dialysis-07",
+      "qtype": "dialysis_clearance",
+      "stem": "Over one dialysis session, 3 L is processed on the inflow side at a solute concentration of 150 mmol/L, and 2 L of spent effluent leaves at 90 mmol/L. What is the net solute removed by the dialyzer?",
+      "program": "observe inflow_volume(3)\nobserve inflow_concentration(150)\nobserve outflow_volume(2)\nobserve outflow_concentration(90)\nlet answer = (inflow_volume * inflow_concentration) - (outflow_volume * outflow_concentration)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 450,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 270,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -30,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 630,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r35dialysis-08",
+      "qtype": "dialysis_clearance",
+      "stem": "Over one dialysis session, 3 L is processed on the inflow side at a solute concentration of 150 mmol/L, and 2 L of spent effluent leaves at 90 mmol/L. What is the solute entering on the inflow side?",
+      "program": "observe inflow_volume(3)\nobserve inflow_concentration(150)\nobserve outflow_volume(2)\nobserve outflow_concentration(90)\nlet answer = inflow_volume * inflow_concentration\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 270,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 450,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -30,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 630,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r35dialysis-09",
+      "qtype": "dialysis_clearance",
+      "stem": "Over one dialysis session, 3 L is processed on the inflow side at a solute concentration of 150 mmol/L, and 2 L of spent effluent leaves at 90 mmol/L. What is the solute leaving in the effluent?",
+      "program": "observe inflow_volume(3)\nobserve inflow_concentration(150)\nobserve outflow_volume(2)\nobserve outflow_concentration(90)\nlet answer = outflow_volume * outflow_concentration\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 270,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 450,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": -30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 630,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r35dialysis-10",
+      "qtype": "dialysis_clearance",
+      "stem": "Over one dialysis session, 4 L is processed on the inflow side at a solute concentration of 140 mmol/L, and 3 L of spent effluent leaves at 85 mmol/L. What is the net solute removed by the dialyzer?",
+      "program": "observe inflow_volume(4)\nobserve inflow_concentration(140)\nobserve outflow_volume(3)\nobserve outflow_concentration(85)\nlet answer = (inflow_volume * inflow_concentration) - (outflow_volume * outflow_concentration)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 560,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 255,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": -80,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 815,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 305,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r35dialysis-11",
+      "qtype": "dialysis_clearance",
+      "stem": "Over one dialysis session, 4 L is processed on the inflow side at a solute concentration of 140 mmol/L, and 3 L of spent effluent leaves at 85 mmol/L. What is the solute entering on the inflow side?",
+      "program": "observe inflow_volume(4)\nobserve inflow_concentration(140)\nobserve outflow_volume(3)\nobserve outflow_concentration(85)\nlet answer = inflow_volume * inflow_concentration\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 560,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 305,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 255,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -80,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 815,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r35dialysis-12",
+      "qtype": "dialysis_clearance",
+      "stem": "Over one dialysis session, 4 L is processed on the inflow side at a solute concentration of 140 mmol/L, and 3 L of spent effluent leaves at 85 mmol/L. What is the solute leaving in the effluent?",
+      "program": "observe inflow_volume(4)\nobserve inflow_concentration(140)\nobserve outflow_volume(3)\nobserve outflow_concentration(85)\nlet answer = outflow_volume * outflow_concentration\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 305,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 255,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 560,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -80,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 815,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r35dialysis-13",
+      "qtype": "dialysis_clearance",
+      "stem": "Over one dialysis session, 5 L is processed on the inflow side at a solute concentration of 110 mmol/L, and 2 L of spent effluent leaves at 95 mmol/L. What is the net solute removed by the dialyzer?",
+      "program": "observe inflow_volume(5)\nobserve inflow_concentration(110)\nobserve outflow_volume(2)\nobserve outflow_concentration(95)\nlet answer = (inflow_volume * inflow_concentration) - (outflow_volume * outflow_concentration)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 550,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 190,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 360,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 255,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 740,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r35dialysis-14",
+      "qtype": "dialysis_clearance",
+      "stem": "Over one dialysis session, 5 L is processed on the inflow side at a solute concentration of 110 mmol/L, and 2 L of spent effluent leaves at 95 mmol/L. What is the solute entering on the inflow side?",
+      "program": "observe inflow_volume(5)\nobserve inflow_concentration(110)\nobserve outflow_volume(2)\nobserve outflow_concentration(95)\nlet answer = inflow_volume * inflow_concentration\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 360,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 190,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 255,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 550,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 740,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r35dialysis-15",
+      "qtype": "dialysis_clearance",
+      "stem": "Over one dialysis session, 5 L is processed on the inflow side at a solute concentration of 110 mmol/L, and 2 L of spent effluent leaves at 95 mmol/L. What is the solute leaving in the effluent?",
+      "program": "observe inflow_volume(5)\nobserve inflow_concentration(110)\nobserve outflow_volume(2)\nobserve outflow_concentration(95)\nlet answer = outflow_volume * outflow_concentration\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 360,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 550,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 255,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 740,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 190,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r35dialysis-16",
+      "qtype": "dialysis_clearance",
+      "stem": "Over one dialysis session, 3 L is processed on the inflow side at a solute concentration of 160 mmol/L, and 2 L of spent effluent leaves at 100 mmol/L. What is the net solute removed by the dialyzer?",
+      "program": "observe inflow_volume(3)\nobserve inflow_concentration(160)\nobserve outflow_volume(2)\nobserve outflow_concentration(100)\nlet answer = (inflow_volume * inflow_concentration) - (outflow_volume * outflow_concentration)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 280,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 480,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 200,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -20,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 680,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r35dialysis-17",
+      "qtype": "dialysis_clearance",
+      "stem": "Over one dialysis session, 3 L is processed on the inflow side at a solute concentration of 160 mmol/L, and 2 L of spent effluent leaves at 100 mmol/L. What is the solute entering on the inflow side?",
+      "program": "observe inflow_volume(3)\nobserve inflow_concentration(160)\nobserve outflow_volume(2)\nobserve outflow_concentration(100)\nlet answer = inflow_volume * inflow_concentration\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 280,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 480,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 200,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -20,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 680,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r35dialysis-18",
+      "qtype": "dialysis_clearance",
+      "stem": "Over one dialysis session, 3 L is processed on the inflow side at a solute concentration of 160 mmol/L, and 2 L of spent effluent leaves at 100 mmol/L. What is the solute leaving in the effluent?",
+      "program": "observe inflow_volume(3)\nobserve inflow_concentration(160)\nobserve outflow_volume(2)\nobserve outflow_concentration(100)\nlet answer = outflow_volume * outflow_concentration\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 280,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 480,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 200,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -20,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 680,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r35dialysis-19",
+      "qtype": "dialysis_clearance",
+      "stem": "Over one dialysis session, 4 L is processed on the inflow side at a solute concentration of 125 mmol/L, and 2 L of spent effluent leaves at 70 mmol/L. What is the net solute removed by the dialyzer?",
+      "program": "observe inflow_volume(4)\nobserve inflow_concentration(125)\nobserve outflow_volume(2)\nobserve outflow_concentration(70)\nlet answer = (inflow_volume * inflow_concentration) - (outflow_volume * outflow_concentration)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 500,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 140,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 360,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 640,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r35dialysis-20",
+      "qtype": "dialysis_clearance",
+      "stem": "Over one dialysis session, 4 L is processed on the inflow side at a solute concentration of 125 mmol/L, and 2 L of spent effluent leaves at 70 mmol/L. What is the solute entering on the inflow side?",
+      "program": "observe inflow_volume(4)\nobserve inflow_concentration(125)\nobserve outflow_volume(2)\nobserve outflow_concentration(70)\nlet answer = inflow_volume * inflow_concentration\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 360,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 140,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 640,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 500,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r35dialysis-21",
+      "qtype": "dialysis_clearance",
+      "stem": "Over one dialysis session, 4 L is processed on the inflow side at a solute concentration of 125 mmol/L, and 2 L of spent effluent leaves at 70 mmol/L. What is the solute leaving in the effluent?",
+      "program": "observe inflow_volume(4)\nobserve inflow_concentration(125)\nobserve outflow_volume(2)\nobserve outflow_concentration(70)\nlet answer = outflow_volume * outflow_concentration\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 140,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 360,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 500,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 640,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
