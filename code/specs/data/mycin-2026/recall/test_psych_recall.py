@@ -22,6 +22,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+from urllib.parse import urlsplit
 
 HERE = Path(__file__).resolve().parent
 ADJ = HERE / "psych-edges.adj"
@@ -67,7 +68,8 @@ def test_library_is_pure_adj_and_fully_grounded() -> None:
     for line in text.splitlines():
         line = line.strip()
         if line.startswith("locator "):
-            assert "https://www.ncbi.nlm.nih.gov/" in line, f"non-NCBI locator: {line}"
+            locator_url = line.split('"')[1] if '"' in line else line
+            assert urlsplit(locator_url).hostname == "www.ncbi.nlm.nih.gov", f"non-NCBI locator: {line}"
     assert not (HERE / "psych_edge_ground.py").exists()
     assert not (HERE / "psych-edge-grounding.json").exists()
     assert not (HERE / "psych-edge-manifest.json").exists()
