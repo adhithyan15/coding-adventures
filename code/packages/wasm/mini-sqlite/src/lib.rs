@@ -47,7 +47,7 @@
 //! ```
 
 use coding_adventures_mini_sqlite::{
-    connect, Connection as InnerConnection, MiniSqliteError, SqlPrimitive, SqlValue,
+    connect, Connection as InnerConnection, MiniSqliteError, SqlValue,
 };
 use wasm_bindgen::prelude::*;
 
@@ -100,53 +100,54 @@ fn programming_err(_msg: impl std::fmt::Display) -> JsValue {
 
 /// Convert one element of a JSON params array to a `SqlValue`.
 ///
-/// | JSON type  | Resulting SqlValue              |
-/// |------------|---------------------------------|
-/// | `null`     | `None`                          |
-/// | integer    | `Some(SqlPrimitive::Int(i64))`  |
-/// | float      | `Some(SqlPrimitive::Float(f64))`|
-/// | string     | `Some(SqlPrimitive::Text(…))`   |
-/// | boolean    | `Some(SqlPrimitive::Bool(…))`   |
-/// | other      | `Err` (ProgrammingError)        |
+/// | JSON type  | Resulting SqlValue       |
+/// |------------|--------------------------|
+/// | `null`     | `SqlValue::Null`         |
+/// | integer    | `SqlValue::Int(i64)`     |
+/// | float      | `SqlValue::Float(f64)`   |
+/// | string     | `SqlValue::Text(…)`      |
+/// | boolean    | `SqlValue::Bool(…)`      |
+/// | other      | `Err` (ProgrammingError) |
 fn json_to_sql_value(v: &serde_json::Value) -> Result<SqlValue, JsValue> {
     match v {
-        serde_json::Value::Null => Ok(None),
+        serde_json::Value::Null => Ok(SqlValue::Null),
         serde_json::Value::Number(n) => {
             if let Some(i) = n.as_i64() {
-                Ok(Some(SqlPrimitive::Int(i)))
+                Ok(SqlValue::Int(i))
             } else if let Some(f) = n.as_f64() {
-                Ok(Some(SqlPrimitive::Float(f)))
+                Ok(SqlValue::Float(f))
             } else {
                 Err(programming_err("numeric param value out of range"))
             }
         }
-        serde_json::Value::String(s) => Ok(Some(SqlPrimitive::Text(s.clone()))),
-        serde_json::Value::Bool(b) => Ok(Some(SqlPrimitive::Bool(*b))),
+        serde_json::Value::String(s) => Ok(SqlValue::Text(s.clone())),
+        serde_json::Value::Bool(b) => Ok(SqlValue::Bool(*b)),
         other => Err(programming_err(format!("unsupported param type: {other}"))),
     }
 }
 
 /// Convert a `SqlValue` to a `serde_json::Value` for serialising result rows.
 ///
-/// `None` (SQL NULL) maps to JSON `null`, matching the type conventions in the
+/// `SqlValue::Null` maps to JSON `null`, matching the type conventions in the
 /// conformance fixture README.
 fn sql_value_to_json(v: &SqlValue) -> serde_json::Value {
     match v {
-        None => serde_json::Value::Null,
-        Some(SqlPrimitive::Int(i)) => serde_json::json!(i),
-        Some(SqlPrimitive::Float(f)) => serde_json::json!(f),
-        Some(SqlPrimitive::Text(s)) => serde_json::json!(s),
-        Some(SqlPrimitive::Bool(b)) => serde_json::json!(b),
+        SqlValue::Null => serde_json::Value::Null,
+        SqlValue::Int(i) => serde_json::json!(i),
+        SqlValue::Float(f) => serde_json::json!(f),
+        SqlValue::Text(s) => serde_json::json!(s),
+        SqlValue::Bool(b) => serde_json::json!(b),
+        SqlValue::Blob(b) => serde_json::json!(b),
     }
 }
 
 /// Parse an optional JSON params string into a `Vec<SqlValue>`.
 ///
 /// Accepts:
-/// - `None`              → empty params (no `?` binding needed)
-/// - JSON `"null"`       → empty params
-/// - JSON `"[]"`         → empty params
-/// - JSON `"[v1, v2…]"` → one SqlValue per element
+/// - `None` (Rust Option)    → empty params (no `?` binding needed)
+/// - JSON `"null"`           → empty params
+/// - JSON `"[]"`             → empty params
+/// - JSON `"[v1, v2…]"`     → one SqlValue per element
 fn parse_params(json: Option<String>) -> Result<Vec<SqlValue>, JsValue> {
     match json {
         None => Ok(vec![]),
