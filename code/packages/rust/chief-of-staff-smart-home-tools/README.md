@@ -95,7 +95,8 @@ Chief of Staff job/session/agent
   -> activation dependency graph list and summary reads for prerequisite edges
   -> runtime snapshot, platform-brief, pending-work, attention-overview,
      remediation-plan, operations-brief, safety-brief, readiness-brief,
-     maintenance-brief, desired-state, and pairing-session inventory reads
+     maintenance-brief, incident-brief, desired-state, and pairing-session
+     inventory reads
   -> desired-state target set/clear through runtime authorization
   -> non-mutating supervision plan previews
   -> supervision remediation and runtime maintenance-window/action/plan/ticket/work-order/guardrail/evidence/review/disposition/action/outcome/readiness/handoff/reconciliation reads
@@ -278,6 +279,7 @@ Chief of Staff job/session/agent
 - `smart_home.get_safety_brief`
 - `smart_home.get_readiness_brief`
 - `smart_home.get_maintenance_brief`
+- `smart_home.get_incident_brief`
 - `smart_home.get_topology_summary`
 - `smart_home.list_desired_states`
 - `smart_home.set_desired_state`
