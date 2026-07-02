@@ -148,6 +148,8 @@ sub definitions { $_[0]->{definitions} }
 #   error_definitions — arrayref of error-recovery TokenDefinition objects
 #   reserved_keywords — arrayref of keywords that cause lex errors
 #   groups            — hashref of group name => PatternGroup
+#   start_mode        — initial mode for F10 declarative modal lexers ('' if none)
+#   transitions       — arrayref of raw "on ... -> set-mode ..." rule strings
 
 package CodingAdventures::GrammarTools::TokenGrammar;
 
@@ -165,6 +167,8 @@ sub new {
         error_definitions => [],
         reserved_keywords => [],
         groups            => {},
+        start_mode        => '',
+        transitions       => [],
     }, $class;
 }
 
@@ -179,6 +183,8 @@ sub skip_definitions  { $_[0]->{skip_definitions}  }
 sub error_definitions { $_[0]->{error_definitions} }
 sub reserved_keywords { $_[0]->{reserved_keywords} }
 sub groups            { $_[0]->{groups}            }
+sub start_mode        { $_[0]->{start_mode}        }
+sub transitions       { $_[0]->{transitions}       }
 
 # token_names()
 #
@@ -401,6 +407,23 @@ sub parse_token_grammar {
             next;
         }
 
+        # start_mode: directive (F10 declarative lexer modes)
+        #
+        # Declares the initial mode a modal lexer begins in. Flat consumers —
+        # which ignore modes and tokenize in a single first-match-wins pass —
+        # accept and remember it but take no action on it. This lets a richer
+        # grammar (e.g. ecmascript/es2025.tokens, which models regex-vs-division
+        # via `start_mode`/`group`/`transitions`) still parse under a flat lexer.
+        if (substr($stripped, 0, 11) eq 'start_mode:') {
+            my $sm = substr($stripped, 11);
+            $sm =~ s/^\s+|\s+$//g;
+            return (undef, "Line $line_number: Missing value after 'start_mode:'")
+                if $sm eq '';
+            $grammar->{start_mode} = $sm;
+            $current_section = '';
+            next;
+        }
+
         # Group header: "group NAME:"
         if ($stripped =~ /^group\s+/ && substr($stripped, -1) eq ':') {
             my $group_name = substr($stripped, 6, length($stripped) - 7);
@@ -451,6 +474,14 @@ sub parse_token_grammar {
             $current_section = 'soft_keywords';
             next;
         }
+        # transitions: section (F10 declarative lexer modes) — its indented
+        # lines are "on TOKEN -> set-mode NAME" rules, not "NAME = pattern"
+        # definitions. Flat consumers record the raw rules but do not act on
+        # them (see start_mode: above).
+        if ($stripped eq 'transitions:' || $stripped eq 'transitions :') {
+            $current_section = 'transitions';
+            next;
+        }
 
         # Inside a section: lines must be indented
         if ($current_section ne '') {
@@ -470,6 +501,11 @@ sub parse_token_grammar {
                 }
                 elsif ($current_section eq 'reserved') {
                     push @{ $grammar->{reserved_keywords} }, $stripped if $stripped ne '';
+                }
+                elsif ($current_section eq 'transitions') {
+                    # F10 mode-transition rule. Recorded verbatim for modal
+                    # consumers; flat lexers ignore it (no pattern to compile).
+                    push @{ $grammar->{transitions} }, $stripped if $stripped ne '';
                 }
                 elsif ($current_section eq 'skip') {
                     my $eq_pos = index($stripped, '=');
