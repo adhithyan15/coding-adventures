@@ -1331,15 +1331,20 @@ fn collect_columns_in_expr(expr: &SqlExpr, out: &mut HashSet<String>) {
 ///
 /// Once we produce an `EmptyResult`, we propagate it upward:
 ///
-/// | Outer node                     | Result         |
-/// |--------------------------------|----------------|
-/// | `Filter(EmptyResult, _)`       | `EmptyResult`  |
-/// | `Project(EmptyResult, _)`      | `EmptyResult`  |
-/// | `Sort(EmptyResult, _)`         | `EmptyResult`  |
-/// | `Limit(EmptyResult, _, _)`     | `EmptyResult`  |
-/// | `Distinct(EmptyResult)`        | `EmptyResult`  |
-/// | `Join(EmptyResult, _, INNER)`  | `EmptyResult`  |
-/// | `Join(_, EmptyResult, INNER)`  | `EmptyResult`  |
+/// | Outer node                     | Result                      |
+/// |--------------------------------|-----------------------------|
+/// | `Filter(EmptyResult, _)`       | `EmptyResult`               |
+/// | `Project(EmptyResult, _)`      | `Project(EmptyResult, _)` * |
+/// | `Sort(EmptyResult, _)`         | `EmptyResult`               |
+/// | `Limit(EmptyResult, _, _)`     | `EmptyResult`               |
+/// | `Distinct(EmptyResult)`        | `EmptyResult`               |
+/// | `Join(EmptyResult, _, INNER)`  | `EmptyResult`               |
+/// | `Join(_, EmptyResult, INNER)`  | `EmptyResult`               |
+///
+/// \* `Project` is intentionally **not** propagated through: the Project's
+/// column list encodes the SELECT output schema.  Preserving it lets the
+/// codegen emit `DefineColumns` so that `QueryResult.columns` is populated
+/// even when no rows are produced (e.g. `SELECT x FROM t LIMIT 0`).
 ///
 /// Outer joins are NOT propagated in v1 — a LEFT JOIN with an empty right
 /// side still produces left-side rows with NULL-filled right columns.
@@ -1390,13 +1395,18 @@ fn eliminate_dead_code(plan: OptimizedPlan) -> OptimizedPlan {
 
         OptimizedPlan::Project { input, columns } => {
             let input = eliminate_dead_code(*input);
-            if matches!(input, OptimizedPlan::EmptyResult) {
-                OptimizedPlan::EmptyResult
-            } else {
-                OptimizedPlan::Project {
-                    input: Box::new(input),
-                    columns,
-                }
+            // We do NOT propagate EmptyResult through Project because the
+            // Project's column list encodes the SELECT output schema.  If we
+            // collapsed Project(EmptyResult) → EmptyResult the codegen would
+            // lose the column names and the QueryResult would have an empty
+            // `columns` vec even though the SQL clearly selected named columns
+            // (e.g. `SELECT x FROM t LIMIT 0` should return columns=["x"],
+            // rows=[]).  Keeping Project(EmptyResult) lets compile_project emit
+            // a DefineColumns instruction that records the schema without
+            // producing any rows.
+            OptimizedPlan::Project {
+                input: Box::new(input),
+                columns,
             }
         }
 
@@ -2328,9 +2338,11 @@ mod tests {
     }
 
     #[test]
-    fn test_dce_project_on_empty_becomes_empty() {
-        // Project(EmptyResult) → EmptyResult
-        // Build: Filter(scan, FALSE) → EmptyResult after DCE, then Project on top.
+    fn test_dce_project_on_empty_keeps_project() {
+        // Project(EmptyResult) is intentionally NOT collapsed to EmptyResult.
+        // We preserve the Project wrapper so that the codegen can emit a
+        // DefineColumns instruction, giving QueryResult the correct column
+        // schema even when no rows are produced (e.g. SELECT x … LIMIT 0).
         let plan = LogicalPlan::Project {
             input: Box::new(filter(scan("t"), lit_bool(false))),
             columns: vec![OutputColumn {
@@ -2339,7 +2351,11 @@ mod tests {
             }],
         };
         let opt = optimize_with_passes(plan, &[&DeadCodeEliminationPass]);
-        assert_eq!(opt, OptimizedPlan::EmptyResult);
+        // The outer node should still be Project with an EmptyResult inner.
+        assert!(matches!(opt, OptimizedPlan::Project { .. }));
+        if let OptimizedPlan::Project { input, .. } = opt {
+            assert_eq!(*input, OptimizedPlan::EmptyResult);
+        }
     }
 
     #[test]

@@ -32,7 +32,7 @@
 
 use std::collections::HashMap;
 
-use coding_adventures_sql_backend::{Backend, Row, RowIterator, SqlValue};
+use coding_adventures_sql_backend::{Backend, Cursor, Row, RowIterator, SqlValue};
 use coding_adventures_sql_codegen::{AggFn, BinaryOp, CompiledSortKey, Instruction, Program, UnaryOp};
 
 // ===========================================================================
@@ -75,6 +75,9 @@ pub enum VmError {
     AggIndexOutOfRange(usize),
     /// The storage backend returned an error.
     BackendError(String),
+    /// A configurable resource limit was exceeded (e.g. too many GROUP BY groups
+    /// or too many distinct values for COUNT(DISTINCT …)).
+    ResourceLimit(String),
 }
 
 impl std::fmt::Display for VmError {
@@ -87,6 +90,7 @@ impl std::fmt::Display for VmError {
             VmError::DivisionByZero => write!(f, "division by zero"),
             VmError::AggIndexOutOfRange(i) => write!(f, "aggregate slot {} out of range", i),
             VmError::BackendError(m) => write!(f, "backend error: {}", m),
+            VmError::ResourceLimit(m) => write!(f, "resource limit exceeded: {}", m),
         }
     }
 }
@@ -118,6 +122,65 @@ struct CursorState {
     exhausted: bool,
 }
 
+/// A minimal [`Cursor`] implementation backed by the VM's own row buffer.
+///
+/// This lets us call [`Backend::update`] and [`Backend::delete`] from inside
+/// the VM without needing to use the backend's own cursor type (`ListCursor`,
+/// which is produced by the non-trait `InMemoryBackend::open_cursor` method).
+///
+/// The VM knows:
+/// - which rows belong to a table (it scanned them at `OpenScan` time), and
+/// - which row is "current" (`CursorState.pos - 1` after `AdvanceCursor`).
+///
+/// Constructing a `VmCursor` with that information satisfies the `Cursor`
+/// contract so that `Backend::update()` and `Backend::delete()` can safely
+/// locate and modify the correct row in the backend's storage.
+struct VmCursor {
+    /// All rows from the scanned table (same slice the VM uses).
+    rows: Vec<Row>,
+    /// Index of the current row (i.e., `CursorState.pos - 1`).
+    /// Stored as `isize` so `adjust_after_delete` can underflow to -1 safely.
+    index: isize,
+    /// Normalized (lowercase) table name, used to satisfy the
+    /// `cursor.table_key()` check inside `Backend::update()` / `delete()`.
+    table_key: String,
+}
+
+impl RowIterator for VmCursor {
+    fn next(&mut self) -> Option<Row> {
+        // The VM does not use VmCursor as a live iterator — it only uses it to
+        // satisfy the Backend::update/delete trait requirement.  This method is
+        // never called by the VM internally.
+        self.index += 1;
+        let idx = usize::try_from(self.index).ok()?;
+        self.rows.get(idx).cloned()
+    }
+
+    fn close(&mut self) {
+        // No external resources to release.
+    }
+}
+
+impl Cursor for VmCursor {
+    fn current_row(&self) -> Option<Row> {
+        usize::try_from(self.index)
+            .ok()
+            .and_then(|i| self.rows.get(i).cloned())
+    }
+
+    fn current_index(&self) -> Option<usize> {
+        usize::try_from(self.index).ok()
+    }
+
+    fn table_key(&self) -> Option<&str> {
+        Some(&self.table_key)
+    }
+
+    fn adjust_after_delete(&mut self) {
+        self.index -= 1;
+    }
+}
+
 /// Mutable accumulator for a single aggregate slot.
 ///
 /// All six aggregate functions share this struct.  The meaning of `acc` and
@@ -130,11 +193,16 @@ struct CursorState {
 /// | Sum        | running sum    | —                |
 /// | Avg        | running sum    | non-NULL seen    |
 /// | Min / Max  | current extremum | —              |
+/// | CountDistinct | — | distinct value set |
+#[derive(Clone)]
 struct AggAccumulator {
     /// Running value for Sum/Avg/Min/Max.  `None` = no non-null rows yet.
     acc: Option<SqlValue>,
     /// Row counter for Count/CountStar/Avg.
     count: i64,
+    /// Distinct value set for COUNT(DISTINCT col).
+    /// `None` when not in distinct mode; `Some(set)` when tracking distinct values.
+    distinct_vals: Option<std::collections::HashSet<String>>,
 }
 
 // ===========================================================================
@@ -181,12 +249,45 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
     let mut output_rows: Vec<Vec<(String, SqlValue)>> = Vec::new();
     // row_buffer: the row currently being assembled by BeginRow/EmitColumn.
     let mut row_buffer: Vec<(String, SqlValue)> = Vec::new();
-    // Aggregate accumulators.
+    // Aggregate accumulators (for non-grouped aggregates).
     let mut agg_accs: Vec<AggAccumulator> = Vec::new();
+    // Number of aggregate slots (saved from InitAgg for lazy group creation).
+    let mut num_agg_slots: usize = 0;
+    // ── GROUP BY state ────────────────────────────────────────────────────────
+    //
+    // When `SaveGroupKey` fires, group_mode activates.  Instead of updating a
+    // single flat accumulator array, we maintain one accumulator array per
+    // distinct group key.  After the scan loop, `BeginRow` emits all groups.
+    //
+    // `group_key_order` preserves insertion order so that GROUP BY output is
+    // deterministic (matches the scan order, i.e. the order of first
+    // occurrence of each distinct group value in the table).
+    let mut group_mode = false;
+    // Canonical string key → (original SqlValue list for the key columns, accumulators)
+    let mut group_data: HashMap<String, (Vec<SqlValue>, Vec<AggAccumulator>)> = HashMap::new();
+    let mut group_key_order: Vec<String> = Vec::new(); // insertion-order of distinct keys
+    let mut current_group_key: String = String::new(); // set by SaveGroupKey each row
+    // Names of the group-by columns (set by first SaveGroupKey call).
+    let mut group_col_names: Vec<String> = Vec::new();
+    // ── GROUP BY iteration state ───────────────────────────────────────────────
+    //
+    // When `FinalizeAgg` is first called in group mode, the VM switches to
+    // "group iteration" mode: it executes the finalize/predicate/emit block
+    // once per group by rewinding `pc` after each `EmitRow`.
+    //
+    // `group_finalize_pc`: the pc value at the moment of the first FinalizeAgg
+    //     in group mode.  After each EmitRow we jump back here to process the
+    //     next group.  `None` while not yet in group iteration mode.
+    // `group_iter_idx`: index into `group_key_order` of the group currently
+    //     being processed.
+    let mut group_finalize_pc: Option<usize> = None;
+    let mut group_iter_idx: usize = 0;
     // Post-op flags (set during the post-Halt region of the program).
     let mut post_sort: Option<Vec<CompiledSortKey>> = None;
     let mut post_limit: Option<(Option<i64>, Option<i64>)> = None;
     let mut post_distinct = false;
+    // TruncateOutputColumns: strip hidden sort-key columns after SortResult.
+    let mut post_truncate: Option<usize> = None;
     // DML counter.
     let mut rows_affected: i64 = 0;
     // Column names, locked in on the first EmitRow.
@@ -299,10 +400,19 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
             Instruction::OpenScan(tbl, alias) => {
                 // Eagerly buffer all rows.  This keeps the borrow checker happy
                 // (no dangling RowIterator reference) and supports re-opening.
-                let iter = backend
-                    .scan(&tbl)
-                    .map_err(|e| VmError::BackendError(e.to_string()))?;
-                let rows = drain_iterator(iter);
+                //
+                // Special case: "__dual__" is the implicit single-row virtual
+                // table used for `SELECT expr` without a FROM clause (e.g.
+                // `SELECT LENGTH('hello') AS n`).  It yields exactly one
+                // empty row so the scan loop body executes once.
+                let rows = if tbl == "__dual__" {
+                    vec![Row::default()] // one empty row — columns evaluated from expressions
+                } else {
+                    let iter = backend
+                        .scan(&tbl)
+                        .map_err(|e| VmError::BackendError(e.to_string()))?;
+                    drain_iterator(iter)
+                };
                 cursors.insert(alias, CursorState { rows, pos: 0, exhausted: false });
             }
 
@@ -343,6 +453,27 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
             Instruction::CloseScan(alias) => {
                 cursors.remove(&alias);
                 current_row.remove(&alias);
+                // GROUP BY: when the scan loop ends, enter group-iteration mode.
+                // `pc` now points at the first instruction after CloseScan (the
+                // finalize/predicate/emit block).  We save it as the "rewind
+                // target" and immediately load the first group's data so that
+                // LoadColumn / FinalizeAgg instructions execute correctly for
+                // that group.
+                if group_mode && !group_data.is_empty() {
+                    group_finalize_pc = Some(pc); // save rewind target
+                    group_iter_idx = 0;
+                    group_mode = false; // disable so FinalizeAgg/LoadColumn run normally
+                    // Load first group's data.
+                    let key_str = group_key_order[0].clone();
+                    if let Some((key_vals, group_accs)) = group_data.get(&key_str) {
+                        agg_accs = group_accs.clone();
+                        let mut fake_row: Row = Row::default();
+                        for (col_name, val) in group_col_names.iter().zip(key_vals.iter()) {
+                            fake_row.insert(col_name.clone(), val.clone());
+                        }
+                        current_row.insert(alias, fake_row);
+                    }
+                }
             }
 
             // ─────────────── Row assembly ───────────────────────────────────
@@ -356,12 +487,64 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
             }
 
             Instruction::EmitRow => {
+                // Emit the current row_buffer.
                 if !columns_locked {
                     output_columns = row_buffer.iter().map(|(n, _)| n.clone()).collect();
                     columns_locked = true;
                 }
                 output_rows.push(row_buffer.clone());
                 row_buffer.clear();
+
+                // GROUP BY iteration: advance to the next group and rewind pc
+                // to re-execute the finalize/predicate/emit block for it.
+                if let Some(finalize_start) = group_finalize_pc {
+                    group_iter_idx += 1;
+                    if group_iter_idx < group_key_order.len() {
+                        // Load the next group's data so that LoadColumn /
+                        // FinalizeAgg operate on the correct group.
+                        let key_str = group_key_order[group_iter_idx].clone();
+                        if let Some((key_vals, group_accs)) = group_data.get(&key_str) {
+                            agg_accs = group_accs.clone();
+                            // Repopulate current_row[None] with this group's key values.
+                            let mut fake_row: Row = Row::default();
+                            for (col_name, val) in group_col_names.iter().zip(key_vals.iter()) {
+                                fake_row.insert(col_name.clone(), val.clone());
+                            }
+                            // Use None as the cursor alias (no-alias scans store under None).
+                            current_row.insert(None, fake_row);
+                        }
+                        // Clear row_buffer so pre-BeginRow EmitColumn accumulations
+                        // from the previous iteration don't carry over.
+                        row_buffer.clear();
+                        pc = finalize_start; // rewind to first instruction after CloseScan
+                    }
+                }
+            }
+
+            // Lock in the output column schema without emitting any row.
+            //
+            // Emitted by the codegen when `Project(EmptyResult, cols)` is
+            // compiled: the optimizer proved no rows can exist (e.g. LIMIT 0)
+            // but we still need to return the correct column names so that
+            // `QueryResult.columns` is populated.
+            Instruction::DefineColumns(names) => {
+                if !columns_locked {
+                    output_columns = names;
+                    columns_locked = true;
+                }
+            }
+
+            // ─────────────── Built-in scalar functions ───────────────────────
+            Instruction::CallBuiltin(fname, n) => {
+                // Pop `n` arguments (last arg on top → pop in reverse order).
+                // The codegen pushes args left-to-right so arg1 is deepest.
+                let mut args: Vec<SqlValue> = (0..n)
+                    .map(|_| pop(&mut stack))
+                    .collect::<Result<_, _>>()?;
+                args.reverse(); // now args[0] = first arg, args[n-1] = last arg
+
+                let result = call_builtin(&fname, args)?;
+                stack.push(result);
             }
 
             // ─────────────── Aggregation ────────────────────────────────────
@@ -376,31 +559,111 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                 if n > MAX_AGG_SLOTS {
                     return Err(VmError::AggIndexOutOfRange(n));
                 }
+                num_agg_slots = n;
+                // We cannot know the fn_tag for each slot at InitAgg time,
+                // so we always allocate `distinct_vals: None` here.  The
+                // UpdateAgg handler lazily initialises it to `Some(HashSet::new())`
+                // on the first CountDistinct update (see update_accumulator).
                 agg_accs = (0..n)
-                    .map(|_| AggAccumulator { acc: None, count: 0 })
+                    .map(|_| AggAccumulator { acc: None, count: 0, distinct_vals: None })
                     .collect();
+                // Reset GROUP BY state for each new aggregate operation.
+                group_mode = false;
+                group_data.clear();
+                group_key_order.clear();
+                group_col_names.clear();
+                group_finalize_pc = None;
+                group_iter_idx = 0;
             }
 
             Instruction::UpdateAgg(idx, fn_tag) => {
-                if fn_tag == AggFn::CountStar {
-                    // CountStar: count every row, do not pop the stack.
+                if group_mode {
+                    // GROUP BY mode: update the accumulator for the current group.
+                    let (_, group_accs) = group_data
+                        .get_mut(&current_group_key)
+                        .ok_or(VmError::AggIndexOutOfRange(idx))?;
+                    if fn_tag == AggFn::CountStar {
+                        let acc = group_accs.get_mut(idx).ok_or(VmError::AggIndexOutOfRange(idx))?;
+                        acc.count += 1;
+                    } else {
+                        let v = pop(&mut stack)?;
+                        let acc = group_accs.get_mut(idx).ok_or(VmError::AggIndexOutOfRange(idx))?;
+                        update_accumulator(acc, &fn_tag, v)?;
+                    }
+                } else if fn_tag == AggFn::CountStar {
+                    // Non-group CountStar: count every row, do not pop the stack.
                     let acc = agg_accs.get_mut(idx).ok_or(VmError::AggIndexOutOfRange(idx))?;
                     acc.count += 1;
                 } else {
                     let v = pop(&mut stack)?;
                     let acc = agg_accs.get_mut(idx).ok_or(VmError::AggIndexOutOfRange(idx))?;
-                    update_accumulator(acc, &fn_tag, v);
+                    update_accumulator(acc, &fn_tag, v)?;
                 }
             }
 
             Instruction::FinalizeAgg(idx, fn_tag) => {
+                // Group iteration setup is done at CloseScan time, so by the
+                // time FinalizeAgg runs, agg_accs already holds this group's
+                // accumulators.  Just finalize normally in all cases.
                 let acc = agg_accs.get(idx).ok_or(VmError::AggIndexOutOfRange(idx))?;
                 stack.push(finalize_accumulator(acc, &fn_tag));
             }
 
-            // SaveGroupKey is emitted by codegen for GROUP BY but is not needed
-            // in the Level 1 VM which handles only single-group aggregates.
-            Instruction::SaveGroupKey(_) => {}
+            // SaveGroupKey: activate GROUP BY mode and record the current group.
+            //
+            // `cols` is the list of group-by column names.  We look up each in
+            // `current_row` to build a canonical key string (format
+            // "val0\x1Fval1\x1F..." using ASCII unit-separator as delimiter).
+            // On the first invocation we record the column names; subsequent
+            // invocations must use the same columns.
+            Instruction::SaveGroupKey(cols) => {
+                // Activate group mode on first SaveGroupKey.
+                if !group_mode {
+                    group_mode = true;
+                    group_col_names = cols.clone();
+                }
+                // Build the key values by reading each group-by column from the
+                // current (un-aliased) cursor row.  Fall back to Null if a column
+                // is not present (e.g. outer join unmatched side).
+                let key_vals: Vec<SqlValue> = cols.iter().map(|col_name| {
+                    current_row
+                        .get(&None) // the un-aliased cursor
+                        .and_then(|row| row.get(col_name))
+                        .cloned()
+                        .unwrap_or(SqlValue::Null)
+                }).collect();
+                // Compute a canonical key string: "type:value\x1Ftype:value..."
+                let key_str: String = key_vals.iter().map(|v| match v {
+                    SqlValue::Int(n)   => format!("i:{}", n),
+                    SqlValue::Float(f) => format!("f:{}", f),
+                    SqlValue::Text(s)  => format!("t:{}", s),
+                    SqlValue::Bool(b)  => format!("b:{}", b),
+                    SqlValue::Null     => "null".to_string(),
+                    SqlValue::Blob(bytes) => {
+                        let hex: String = bytes.iter().map(|b| format!("{:02x}", b)).collect();
+                        format!("x:{}", hex)
+                    }
+                }).collect::<Vec<_>>().join("\x1F");
+                current_group_key = key_str.clone();
+                // Insert new group if we haven't seen this key before.
+                if !group_data.contains_key(&key_str) {
+                    // Guard against memory exhaustion from high-cardinality GROUP BY keys.
+                    // 1 000 000 distinct groups × (accumulator array + key strings) can
+                    // consume gigabytes; cap at a safe default.
+                    const MAX_GROUP_KEYS: usize = 1_000_000;
+                    if group_data.len() >= MAX_GROUP_KEYS {
+                        return Err(VmError::ResourceLimit(format!(
+                            "GROUP BY exceeded maximum distinct groups ({})",
+                            MAX_GROUP_KEYS
+                        )));
+                    }
+                    group_key_order.push(key_str.clone());
+                    let fresh_accs = (0..num_agg_slots)
+                        .map(|_| AggAccumulator { acc: None, count: 0, distinct_vals: None })
+                        .collect();
+                    group_data.insert(key_str, (key_vals, fresh_accs));
+                }
+            }
 
             // ─────────────── Control flow ───────────────────────────────────
             Instruction::Label(_) => { /* pre-indexed; no-op at runtime */ }
@@ -423,9 +686,51 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
             Instruction::JumpIfFalse(label) => {
                 let v = pop(&mut stack)?;
                 if !is_truthy(&v) {
-                    pc = *label_index
-                        .get(&label)
-                        .ok_or_else(|| VmError::LabelNotFound(label.clone()))?;
+                    // HAVING filter: predicate is false for this group.
+                    // In group iteration mode, instead of jumping to the skip
+                    // label (which leads to Halt/post-ops), advance to the next
+                    // group and rewind to the finalize/predicate/emit block.
+                    if let Some(finalize_start) = group_finalize_pc {
+                        group_iter_idx += 1;
+                        if group_iter_idx < group_key_order.len() {
+                            // Load the next group's data.
+                            let key_str = group_key_order[group_iter_idx].clone();
+                            if let Some((key_vals, group_accs)) = group_data.get(&key_str) {
+                                agg_accs = group_accs.clone();
+                                let mut fake_row: Row = Row::default();
+                                for (col_name, val) in group_col_names.iter().zip(key_vals.iter()) {
+                                    fake_row.insert(col_name.clone(), val.clone());
+                                }
+                                current_row.insert(None, fake_row);
+                            }
+                            // Clear row_buffer so that pre-BeginRow EmitColumn accumulations
+                            // from the previous iteration don't pollute the new one.
+                            row_buffer.clear();
+                            pc = finalize_start;
+                        } else {
+                            // No more groups and none passed the HAVING predicate.
+                            // Lock in column names even though no rows were emitted,
+                            // so that `QueryResult.columns` is correct.
+                            if !columns_locked && !group_col_names.is_empty() {
+                                let mut col_names: Vec<String> = group_col_names.clone();
+                                // Append aggregate column names from row_buffer
+                                // (pre-BeginRow EmitColumn accumulated them here).
+                                for (name, _) in &row_buffer {
+                                    col_names.push(name.clone());
+                                }
+                                output_columns = col_names;
+                                columns_locked = true;
+                            }
+                            // Jump to the skip label to exit normally.
+                            pc = *label_index
+                                .get(&label)
+                                .ok_or_else(|| VmError::LabelNotFound(label.clone()))?;
+                        }
+                    } else {
+                        pc = *label_index
+                            .get(&label)
+                            .ok_or_else(|| VmError::LabelNotFound(label.clone()))?;
+                    }
                 }
             }
 
@@ -454,35 +759,82 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                 row_buffer.clear();
             }
 
-            Instruction::UpdateRows(_tbl) => {
-                // Level 1 limitation: UPDATE requires a Cursor with the correct
-                // table_key(), which can only be constructed by the backend itself
-                // (via `InMemoryBackend::open_cursor`, a non-trait method).
-                // The Backend trait's `update()` verifies `cursor.table_key()` matches
-                // the table; without a way to construct a keyed cursor through the trait
-                // alone, full UPDATE support requires a trait extension or a richer
-                // instruction set (Level 2).
-                //
-                // In the Level 1 VM this instruction counts as one affected row but does
-                // not persistently modify the backend.  The scan loop still advances, so
-                // the count of UpdateRows firings equals the count of matched rows.
+            Instruction::UpdateRows(tbl, col_names) => {
+                // Pop one value per assignment column from the stack (they were
+                // pushed in assignment order by compile_update).  Values are
+                // popped LIFO, so the last assignment is on top — reverse to
+                // restore the original left-to-right order.
+                let n = col_names.len();
+                let mut values: Vec<SqlValue> = (0..n)
+                    .map(|_| pop(&mut stack))
+                    .collect::<Result<_, _>>()?;
+                values.reverse();
+
+                // Build the assignments Row: { column_name → new_value }.
+                let assignments_row: Row = col_names
+                    .iter()
+                    .zip(values.into_iter())
+                    .map(|(c, v)| (c.clone(), v))
+                    .collect();
+
+                // The scan loop has already advanced past the current row:
+                // cursor.pos = last_fetched_index + 1, so current = pos - 1.
+                let current_idx = cursors
+                    .get(&None)
+                    .map(|c| c.pos.saturating_sub(1))
+                    .unwrap_or(0);
+                let cursor_rows = cursors
+                    .get(&None)
+                    .map(|c| c.rows.clone())
+                    .unwrap_or_default();
+
+                // Construct a VmCursor positioned at current_idx so that
+                // Backend::update() can verify table_key and locate the row.
+                let vm_cursor = VmCursor {
+                    rows: cursor_rows,
+                    index: current_idx as isize,
+                    table_key: tbl.to_ascii_lowercase(),
+                };
+
+                backend
+                    .update(&tbl, &vm_cursor, assignments_row)
+                    .map_err(|e| VmError::BackendError(e.to_string()))?;
                 rows_affected += 1;
-                row_buffer.clear();
             }
 
-            Instruction::DeleteRows(_tbl) => {
-                // Level 1 limitation: same as UpdateRows.
-                // We remove the row from the *local cursor buffer* so the scan loop does
-                // not re-visit it, but cannot call backend.delete() without a keyed cursor.
-                // The backend's data is therefore not actually modified.
-                let cursor_state = cursors.get_mut(&None);
-                if let Some(state) = cursor_state {
-                    let current_pos = state.pos.saturating_sub(1);
-                    if current_pos < state.rows.len() {
-                        state.rows.remove(current_pos);
-                        // Back up pos so the next AdvanceCursor picks up the
-                        // row that slid into this position.
-                        state.pos = current_pos;
+            Instruction::DeleteRows(tbl) => {
+                // Get the current cursor position (last row fetched = pos - 1).
+                let current_idx = cursors
+                    .get(&None)
+                    .map(|c| c.pos.saturating_sub(1))
+                    .unwrap_or(0);
+                let cursor_rows = cursors
+                    .get(&None)
+                    .map(|c| c.rows.clone())
+                    .unwrap_or_default();
+
+                // Construct a VmCursor positioned at current_idx.
+                let mut vm_cursor = VmCursor {
+                    rows: cursor_rows,
+                    index: current_idx as isize,
+                    table_key: tbl.to_ascii_lowercase(),
+                };
+
+                // Delete from the backend first.  backend.delete() calls
+                // adjust_after_delete() on the cursor (adjusting vm_cursor.index),
+                // which we can ignore since the VM tracks position via CursorState.
+                backend
+                    .delete(&tbl, &mut vm_cursor)
+                    .map_err(|e| VmError::BackendError(e.to_string()))?;
+
+                // Also remove the row from the VM's local cursor buffer so the
+                // scan loop does not re-visit a row that no longer exists in the
+                // backend.  Back up pos so the next AdvanceCursor picks up the
+                // row that slid into this position.
+                if let Some(state) = cursors.get_mut(&None) {
+                    if current_idx < state.rows.len() {
+                        state.rows.remove(current_idx);
+                        state.pos = current_idx;
                     }
                 }
                 rows_affected += 1;
@@ -529,6 +881,10 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
             Instruction::LimitResult(count, offset) => {
                 post_limit = Some((count, offset));
             }
+
+            Instruction::TruncateOutputColumns(n) => {
+                post_truncate = Some(n);
+            }
         }
     }
 
@@ -536,7 +892,8 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
     //
     // After `Halt` breaks the main loop, `pc` points at the first instruction
     // after `Halt`.  Post-op instructions (SortResult, DistinctResult,
-    // LimitResult) live there.  Run them now to collect the phase-3 flags.
+    // LimitResult, TruncateOutputColumns) live there.  Run them now to collect
+    // the phase-3 flags.
     while pc < instructions.len() {
         let instr = instructions[pc].clone();
         pc += 1;
@@ -550,6 +907,9 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
             Instruction::LimitResult(count, offset) => {
                 post_limit = Some((count, offset));
             }
+            Instruction::TruncateOutputColumns(n) => {
+                post_truncate = Some(n);
+            }
             // Any other instruction after Halt is unexpected; skip it.
             _ => {}
         }
@@ -559,6 +919,16 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
 
     if let Some(keys) = post_sort {
         apply_sort(&mut output_rows, &keys, &output_columns);
+    }
+    // Strip hidden sort-key columns that were appended during compilation so
+    // that SortResult could find them by name.  This truncation must happen
+    // AFTER sorting and BEFORE distinct/limit so that only the SELECT-list
+    // columns remain in the output.
+    if let Some(n) = post_truncate {
+        for row in &mut output_rows {
+            row.truncate(n);
+        }
+        output_columns.truncate(n);
     }
     if post_distinct {
         apply_distinct(&mut output_rows);
@@ -615,6 +985,215 @@ fn drain_iterator(mut iter: Box<dyn RowIterator>) -> Vec<Row> {
 /// Pop one value from the evaluation stack, returning `StackUnderflow` if empty.
 fn pop(stack: &mut Vec<SqlValue>) -> Result<SqlValue, VmError> {
     stack.pop().ok_or(VmError::StackUnderflow)
+}
+
+// ===========================================================================
+// Built-in scalar function dispatcher
+// ===========================================================================
+
+/// Evaluate a named SQL built-in scalar function with the given arguments.
+///
+/// Returns the result as a [`SqlValue`], or a [`VmError::TypeMismatch`] if the
+/// argument types are wrong for the function.  All functions propagate NULL:
+/// if any required argument is NULL the result is NULL (except COALESCE).
+///
+/// ## Supported functions
+///
+/// | Name     | Args | Semantics                                             |
+/// |----------|------|-------------------------------------------------------|
+/// | LENGTH   |  1   | Byte-length of a string (returns Integer or NULL)     |
+/// | UPPER    |  1   | ASCII-uppercase the string                            |
+/// | LOWER    |  1   | ASCII-lowercase the string                            |
+/// | TRIM     |  1   | Strip leading and trailing ASCII whitespace           |
+/// | LTRIM    |  1   | Strip leading ASCII whitespace                        |
+/// | RTRIM    |  1   | Strip trailing ASCII whitespace                       |
+/// | SUBSTR   | 2–3  | 1-indexed substring extraction                        |
+/// | REPLACE  |  3   | Replace all occurrences of a pattern with another str |
+/// | ABS      |  1   | Absolute value (Integer or Float)                     |
+/// | COALESCE | ≥1   | Return the first non-NULL argument                    |
+fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
+    match name {
+        "LENGTH" => {
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("LENGTH expects 1 arg, got {}", args.len())));
+            }
+            match &args[0] {
+                SqlValue::Null => Ok(SqlValue::Null),
+                SqlValue::Text(s) => Ok(SqlValue::Int(s.chars().count() as i64)),
+                other => Err(VmError::TypeMismatch(format!("LENGTH expects TEXT, got {:?}", other))),
+            }
+        }
+
+        "UPPER" => {
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("UPPER expects 1 arg, got {}", args.len())));
+            }
+            match &args[0] {
+                SqlValue::Null => Ok(SqlValue::Null),
+                SqlValue::Text(s) => Ok(SqlValue::Text(s.to_uppercase())),
+                other => Err(VmError::TypeMismatch(format!("UPPER expects TEXT, got {:?}", other))),
+            }
+        }
+
+        "LOWER" => {
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("LOWER expects 1 arg, got {}", args.len())));
+            }
+            match &args[0] {
+                SqlValue::Null => Ok(SqlValue::Null),
+                SqlValue::Text(s) => Ok(SqlValue::Text(s.to_lowercase())),
+                other => Err(VmError::TypeMismatch(format!("LOWER expects TEXT, got {:?}", other))),
+            }
+        }
+
+        "TRIM" => {
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("TRIM expects 1 arg, got {}", args.len())));
+            }
+            match &args[0] {
+                SqlValue::Null => Ok(SqlValue::Null),
+                SqlValue::Text(s) => Ok(SqlValue::Text(s.trim().to_string())),
+                other => Err(VmError::TypeMismatch(format!("TRIM expects TEXT, got {:?}", other))),
+            }
+        }
+
+        "LTRIM" => {
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("LTRIM expects 1 arg, got {}", args.len())));
+            }
+            match &args[0] {
+                SqlValue::Null => Ok(SqlValue::Null),
+                SqlValue::Text(s) => Ok(SqlValue::Text(s.trim_start().to_string())),
+                other => Err(VmError::TypeMismatch(format!("LTRIM expects TEXT, got {:?}", other))),
+            }
+        }
+
+        "RTRIM" => {
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("RTRIM expects 1 arg, got {}", args.len())));
+            }
+            match &args[0] {
+                SqlValue::Null => Ok(SqlValue::Null),
+                SqlValue::Text(s) => Ok(SqlValue::Text(s.trim_end().to_string())),
+                other => Err(VmError::TypeMismatch(format!("RTRIM expects TEXT, got {:?}", other))),
+            }
+        }
+
+        "SUBSTR" => {
+            if args.len() < 2 || args.len() > 3 {
+                return Err(VmError::TypeMismatch(format!("SUBSTR expects 2 or 3 args, got {}", args.len())));
+            }
+            // NULL propagation: NULL string or NULL position → NULL.
+            if matches!(args[0], SqlValue::Null) || matches!(args[1], SqlValue::Null) {
+                return Ok(SqlValue::Null);
+            }
+            let s = match &args[0] {
+                SqlValue::Text(t) => t.clone(),
+                other => return Err(VmError::TypeMismatch(format!("SUBSTR arg1 expects TEXT, got {:?}", other))),
+            };
+            let pos = match &args[1] {
+                SqlValue::Int(n) => *n,
+                other => return Err(VmError::TypeMismatch(format!("SUBSTR arg2 expects INTEGER, got {:?}", other))),
+            };
+            // SQLite SUBSTR is 1-indexed.  pos=1 means the first character.
+            // Negative pos counts from the end.
+            let chars: Vec<char> = s.chars().collect();
+            let len = chars.len() as i64;
+            let start = if pos >= 1 {
+                (pos - 1).min(len) as usize
+            } else {
+                (len + pos).max(0) as usize
+            };
+            let result_chars = if args.len() == 3 {
+                if matches!(args[2], SqlValue::Null) { return Ok(SqlValue::Null); }
+                let take = match &args[2] {
+                    SqlValue::Int(n) => *n,
+                    other => return Err(VmError::TypeMismatch(format!("SUBSTR arg3 expects INTEGER, got {:?}", other))),
+                };
+                let take = take.max(0) as usize;
+                &chars[start..start.saturating_add(take).min(chars.len())]
+            } else {
+                &chars[start..]
+            };
+            Ok(SqlValue::Text(result_chars.iter().collect()))
+        }
+
+        "REPLACE" => {
+            if args.len() != 3 {
+                return Err(VmError::TypeMismatch(format!("REPLACE expects 3 args, got {}", args.len())));
+            }
+            // NULL propagation.
+            if args.iter().any(|a| matches!(a, SqlValue::Null)) {
+                return Ok(SqlValue::Null);
+            }
+            let (s, from, to) = match (&args[0], &args[1], &args[2]) {
+                (SqlValue::Text(a), SqlValue::Text(b), SqlValue::Text(c)) => (a, b, c),
+                _ => return Err(VmError::TypeMismatch("REPLACE expects TEXT, TEXT, TEXT".to_string())),
+            };
+            Ok(SqlValue::Text(s.replace(from.as_str(), to.as_str())))
+        }
+
+        "ABS" => {
+            if args.len() != 1 {
+                return Err(VmError::TypeMismatch(format!("ABS expects 1 arg, got {}", args.len())));
+            }
+            match &args[0] {
+                SqlValue::Null => Ok(SqlValue::Null),
+                SqlValue::Int(n) => Ok(SqlValue::Int(n.abs())),
+                SqlValue::Float(f) => Ok(SqlValue::Float(f.abs())),
+                other => Err(VmError::TypeMismatch(format!("ABS expects numeric, got {:?}", other))),
+            }
+        }
+
+        "COALESCE" => {
+            if args.is_empty() {
+                return Err(VmError::TypeMismatch("COALESCE expects at least 1 arg".to_string()));
+            }
+            // Return the first non-NULL argument; if all are NULL, return NULL.
+            for arg in args {
+                if !matches!(arg, SqlValue::Null) {
+                    return Ok(arg);
+                }
+            }
+            Ok(SqlValue::Null)
+        }
+
+        "ROUND" => {
+            // ROUND(x) or ROUND(x, digits).
+            // SQLite always returns a Float for ROUND.
+            if args.is_empty() || args.len() > 2 {
+                return Err(VmError::TypeMismatch(format!("ROUND expects 1 or 2 args, got {}", args.len())));
+            }
+            if matches!(args[0], SqlValue::Null) {
+                return Ok(SqlValue::Null);
+            }
+            let x: f64 = match &args[0] {
+                SqlValue::Float(f) => *f,
+                SqlValue::Int(n) => *n as f64,
+                other => return Err(VmError::TypeMismatch(format!("ROUND arg1 expects numeric, got {:?}", other))),
+            };
+            let digits: i32 = if args.len() == 2 {
+                if matches!(args[1], SqlValue::Null) { return Ok(SqlValue::Null); }
+                match &args[1] {
+                    SqlValue::Int(n) => *n as i32,
+                    SqlValue::Float(f) => *f as i32,
+                    other => return Err(VmError::TypeMismatch(format!("ROUND arg2 expects numeric, got {:?}", other))),
+                }
+            } else {
+                0
+            };
+            // Round half away from zero (SQLite semantics), to `digits` decimal places.
+            let factor = 10_f64.powi(digits);
+            let rounded = (x * factor).round() / factor;
+            Ok(SqlValue::Float(rounded))
+        }
+
+        other => {
+            // Unknown function — return NULL rather than crashing.
+            // This matches SQLite's behaviour for unrecognised scalar functions.
+            Err(VmError::TypeMismatch(format!("unknown built-in function: {:?}", other)))
+        }
+    }
 }
 
 // ===========================================================================
@@ -760,7 +1339,12 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
         BinaryOp::Gte => Ok(SqlValue::Bool(matches!(sql_cmp(&l, &r), std::cmp::Ordering::Greater | std::cmp::Ordering::Equal))),
 
         // ── String concat ─────────────────────────────────────────────────────
+        // SQL standard: NULL propagates through concatenation.
+        // If either operand is NULL the result is NULL.
         BinaryOp::Concat => {
+            if matches!(l, SqlValue::Null) || matches!(r, SqlValue::Null) {
+                return Ok(SqlValue::Null);
+            }
             let ls = sql_to_str(&l);
             let rs = sql_to_str(&r);
             Ok(SqlValue::Text(ls + &rs))
@@ -980,7 +1564,10 @@ fn sql_to_str(v: &SqlValue) -> String {
 ///
 /// - CountStar is handled in the main loop (no stack pop, not called here).
 /// - All other functions skip NULLs.
-fn update_accumulator(acc: &mut AggAccumulator, fn_tag: &AggFn, v: SqlValue) {
+///
+/// Returns `Err(VmError::ResourceLimit)` if a hard per-accumulator memory cap
+/// is reached (currently only for `CountDistinct`).
+fn update_accumulator(acc: &mut AggAccumulator, fn_tag: &AggFn, v: SqlValue) -> Result<(), VmError> {
     match fn_tag {
         AggFn::CountStar => {
             // Should not be called (handled separately in the main loop).
@@ -1036,7 +1623,39 @@ fn update_accumulator(acc: &mut AggAccumulator, fn_tag: &AggFn, v: SqlValue) {
                 });
             }
         }
+        AggFn::CountDistinct => {
+            // Skip NULLs; insert a canonical string representation of non-NULL
+            // values into the distinct set.  The set is lazily initialised here
+            // in case the slot was not pre-tagged at InitAgg time.
+            //
+            // Safety cap: prevent memory exhaustion from high-cardinality columns.
+            // COUNT(DISTINCT blob_col) over millions of rows could store megabytes
+            // of hex strings per entry; cap at 1 000 000 distinct values.
+            const MAX_DISTINCT_VALS: usize = 1_000_000;
+            if !matches!(v, SqlValue::Null) {
+                let key = match &v {
+                    SqlValue::Int(n)   => format!("i:{}", n),
+                    SqlValue::Float(f) => format!("f:{}", f),
+                    SqlValue::Text(s)  => format!("t:{}", s),
+                    SqlValue::Bool(b)  => format!("b:{}", b),
+                    SqlValue::Blob(bytes) => {
+                        let hex: String = bytes.iter().map(|b| format!("{:02x}", b)).collect();
+                        format!("x:{}", hex)
+                    }
+                    SqlValue::Null => unreachable!(),
+                };
+                let set = acc.distinct_vals.get_or_insert_with(std::collections::HashSet::new);
+                if set.len() >= MAX_DISTINCT_VALS && !set.contains(&key) {
+                    return Err(VmError::ResourceLimit(format!(
+                        "COUNT(DISTINCT) exceeded maximum distinct values ({})",
+                        MAX_DISTINCT_VALS
+                    )));
+                }
+                set.insert(key);
+            }
+        }
     }
+    Ok(())
 }
 
 /// Compute the final value from an accumulator.
@@ -1061,6 +1680,10 @@ fn finalize_accumulator(acc: &AggAccumulator, fn_tag: &AggFn) -> SqlValue {
                 }
             }
         },
+        AggFn::CountDistinct => {
+            let n = acc.distinct_vals.as_ref().map(|s| s.len()).unwrap_or(0);
+            SqlValue::Int(n as i64)
+        }
     }
 }
 
@@ -1186,8 +1809,13 @@ fn apply_limit(
     }
     rows.drain(0..start);
     if let Some(cnt) = count {
-        let take = (cnt.clamp(0, MAX_IDX) as usize).min(rows.len());
-        rows.truncate(take);
+        // LIMIT -1 (or any negative value) means "no limit" in SQLite.
+        // Only truncate when the count is non-negative.
+        if cnt >= 0 {
+            let take = (cnt.clamp(0, MAX_IDX) as usize).min(rows.len());
+            rows.truncate(take);
+        }
+        // cnt < 0 → keep all remaining rows (no truncation).
     }
 }
 

@@ -167,6 +167,8 @@ pub enum AggFn {
     Count,
     /// `COUNT(*)` — counts all rows, including those with NULLs
     CountStar,
+    /// `COUNT(DISTINCT col)` — counts distinct non-NULL values
+    CountDistinct,
     /// `SUM(col)` — sum of all non-NULL values
     Sum,
     /// `AVG(col)` — arithmetic mean of non-NULL values
@@ -427,10 +429,12 @@ pub enum Instruction {
     /// onto the evaluation stack by the preceding expression code.
     InsertRow(String, Option<Vec<String>>), // table, explicit columns
 
-    /// Execute `UPDATE table SET ... [WHERE ...]` for the current cursor row.
+    /// Execute `UPDATE table SET col = expr [WHERE ...]` for the current cursor row.
     ///
-    /// The WHERE predicate and SET expressions are evaluated from the stack.
-    UpdateRows(String), // table
+    /// The SET expressions are evaluated and pushed onto the stack in assignment
+    /// order before this instruction.  The `Vec<String>` carries the matching
+    /// column names so the VM can pair each stack value with its target column.
+    UpdateRows(String, Vec<String>), // table, assignment columns
 
     /// Execute `DELETE FROM table` for the current cursor row.
     DeleteRows(String), // table
@@ -467,6 +471,56 @@ pub enum Instruction {
     /// - `None` for `count` means no row limit.
     /// - `None` for `offset` means start from row 0.
     LimitResult(Option<i64>, Option<i64>), // count, offset
+
+    /// Truncate every output row to the first `n` columns.
+    ///
+    /// Emitted after `SortResult` when the query had ORDER BY on columns that
+    /// are not in the SELECT list.  The code generator temporarily includes
+    /// those sort-key columns in the emitted row so `SortResult` can find them
+    /// by name; after sorting, `TruncateOutputColumns(n)` strips the hidden
+    /// trailing columns so that only the SELECT-list columns are returned to
+    /// the caller.
+    TruncateOutputColumns(usize),
+
+    /// Define the output column names without emitting any rows.
+    ///
+    /// Emitted when the optimizer proves no rows will be produced (e.g.
+    /// `LIMIT 0`) but the SELECT list is still known.  The VM sets
+    /// `output_columns` to these names so the `QueryResult` carries the
+    /// correct column metadata even when `rows` is empty.
+    ///
+    /// ## Example
+    ///
+    /// `SELECT x FROM nums ORDER BY x LIMIT 0`
+    /// → optimizer produces `Project(EmptyResult, ["x"])`
+    /// → codegen emits `DefineColumns(["x"]), Halt`
+    /// → VM returns `QueryResult { columns: ["x"], rows: [], … }`
+    DefineColumns(Vec<String>),
+
+    /// Call a built-in scalar SQL function.
+    ///
+    /// The `usize` argument is the number of arguments already pushed onto
+    /// the evaluation stack (pushed left-to-right, so the first argument is
+    /// deepest).  The VM pops `n` values, calls the named function, and
+    /// pushes the result.
+    ///
+    /// ## Stack effect: `[..., arg1, …, argN] → [..., result]` (N pops, 1 push)
+    ///
+    /// ## Supported built-ins
+    ///
+    /// | Name     | Args | Description                                     |
+    /// |----------|------|-------------------------------------------------|
+    /// | LENGTH   |  1   | Character count of a string (NULL → NULL)       |
+    /// | UPPER    |  1   | Uppercase the string                            |
+    /// | LOWER    |  1   | Lowercase the string                            |
+    /// | TRIM     |  1   | Strip leading and trailing whitespace           |
+    /// | LTRIM    |  1   | Strip leading whitespace                        |
+    /// | RTRIM    |  1   | Strip trailing whitespace                       |
+    /// | SUBSTR   | 2–3  | 1-indexed substring (pos, [len])               |
+    /// | REPLACE  |  3   | Replace all occurrences (src, from, to)         |
+    /// | ABS      |  1   | Absolute value of integer or float              |
+    /// | COALESCE | ≥1   | First non-NULL argument                         |
+    CallBuiltin(String, usize), // function name (uppercase), arg count
 }
 
 // ===========================================================================
@@ -558,6 +612,16 @@ struct Compiler {
     /// Each call to `fresh_label` returns a string like `"scan_3_loop"` and
     /// increments this counter.
     label_counter: usize,
+
+    /// Aggregate slot map for HAVING predicate compilation.
+    ///
+    /// When `compile_having` sets up aggregate slots, it populates this vec
+    /// with `(slot_index, AggregateItem)` pairs so that `compile_expr` can
+    /// emit `FinalizeAgg(slot, fn_tag)` with the correct slot index instead
+    /// of always defaulting to slot 0.
+    ///
+    /// Cleared after HAVING compilation is done.
+    agg_slots: Vec<(usize, AggregateItem)>,
 }
 
 impl Compiler {
@@ -565,6 +629,7 @@ impl Compiler {
         Compiler {
             instructions: Vec::new(),
             label_counter: 0,
+            agg_slots: Vec::new(),
         }
     }
 
@@ -599,15 +664,106 @@ impl Compiler {
     ///
     /// The outer shell: peel post-processing operators, compile the inner plan,
     /// emit `Halt`, then append post-ops.
+    ///
+    /// ## Plan canonicalization
+    ///
+    /// The planner always puts `Project` as the outermost node (so that the
+    /// SELECT list is applied after ORDER BY / LIMIT / DISTINCT).  This means
+    /// we often receive `Project { Sort { Scan } }` rather than
+    /// `Sort { Project { Scan } }`.  `peel_post_ops` only strips the outermost
+    /// Sort/Limit/Distinct wrapper, so it cannot see through a Project.
+    ///
+    /// We handle this by canonicalizing the plan before peeling: when the top
+    /// node is `Project` and its inner plan starts with Sort/Limit/Distinct
+    /// wrappers, we collect those post-ops ourselves and pass `Project { inner }`
+    /// to the normal compilation path.
     fn compile_plan(&mut self, plan: &OptimizedPlan) {
         // Step 1: Peel Sort / Limit / Distinct wrappers from the outermost plan.
         // These operators apply to the entire result buffer; they run *after*
         // the main scan loop terminates.  We collect them here and append them
         // after `Halt`.
-        let (inner, post_ops) = peel_post_ops(plan);
+        //
+        // Special case: the planner emits `Project { Sort { Scan } }` (Project
+        // outermost).  We detect that pattern here and split it so that the Sort
+        // becomes a post-op while the Project wraps the Scan directly.
+        //
+        // Hidden sort columns: when the ORDER BY keys reference columns that are
+        // NOT in the SELECT list, `SortResult` cannot find them by name in the
+        // output buffer.  We work around this by temporarily including those
+        // extra columns in the emitted rows (with a `__sort_N__` prefix) and
+        // appending a `TruncateOutputColumns(n)` post-op after `SortResult` to
+        // strip them.  This keeps `SortResult` as a simple name-based lookup.
+        let (inner, mut post_ops) = peel_post_ops_through_project(plan);
+
+        // Extract the sort keys (if any) so we can pass hidden sort columns
+        // to compile_project.
+        let hidden_sort_cols: Vec<(String, SqlExpr)> =
+            if let OptimizedPlan::Project { columns, .. } = inner.as_ref() {
+                // Collect sort key column names from the first SortResult post-op.
+                let sort_col_names: Vec<String> = post_ops
+                    .iter()
+                    .flat_map(|op| {
+                        if let Instruction::SortResult(keys) = op {
+                            keys.iter().map(|k| k.column.clone()).collect::<Vec<_>>()
+                        } else {
+                            vec![]
+                        }
+                    })
+                    .collect();
+
+                // Check which sort keys are NOT already in the projection output.
+                let projected_names: Vec<String> = columns.iter().map(output_column_name).collect();
+                sort_col_names
+                    .iter()
+                    .filter(|k| !projected_names.contains(k))
+                    .map(|k| {
+                        let hidden_name = format!("__sort_{}__", k);
+                        let expr = SqlExpr::Column {
+                            name: k.clone(),
+                            table: None,
+                        };
+                        (hidden_name.clone(), expr)
+                    })
+                    .collect()
+            } else {
+                vec![]
+            };
+
+        // If there are hidden sort columns, update SortResult to use the hidden
+        // column names AND append TruncateOutputColumns(n).
+        if !hidden_sort_cols.is_empty() {
+            if let OptimizedPlan::Project { columns, .. } = inner.as_ref() {
+                let n_project = columns.len();
+                // Remap SortResult keys to use hidden column names.
+                for op in &mut post_ops {
+                    if let Instruction::SortResult(keys) = op {
+                        for key in keys.iter_mut() {
+                            let hidden = format!("__sort_{}__", key.column);
+                            let projected: Vec<String> =
+                                columns.iter().map(output_column_name).collect();
+                            if !projected.contains(&key.column) {
+                                key.column = hidden;
+                            }
+                        }
+                    }
+                }
+                // Insert TruncateOutputColumns right after SortResult.
+                let sort_pos = post_ops
+                    .iter()
+                    .position(|op| matches!(op, Instruction::SortResult(_)));
+                if let Some(pos) = sort_pos {
+                    post_ops.insert(pos + 1, Instruction::TruncateOutputColumns(n_project));
+                }
+            }
+        }
 
         // Step 2: Compile the inner query (scan loop, filter, project, etc.).
-        self.compile_inner(inner);
+        // Pass hidden sort columns so compile_project can include them.
+        if hidden_sort_cols.is_empty() {
+            self.compile_inner_ref(&inner);
+        } else {
+            self.compile_inner_with_hidden_sort(&inner, &hidden_sort_cols);
+        }
 
         // Step 3: Terminate the main program.
         self.emit(Instruction::Halt);
@@ -624,6 +780,80 @@ impl Compiler {
         // post-ops sequentially: sort the buffer first, then paginate.
         for op in post_ops {
             self.emit(op);
+        }
+    }
+
+    /// Compile the inner plan, with hidden sort-key columns appended to the
+    /// emitted row.  Only called when there are ORDER BY keys that are not in
+    /// the SELECT list.
+    fn compile_inner_with_hidden_sort(
+        &mut self,
+        inner: &InnerPlan<'_>,
+        hidden: &[(String, SqlExpr)],
+    ) {
+        match inner.as_ref() {
+            OptimizedPlan::Project { input, columns } => {
+                let cols = columns.to_vec();
+                let hidden_cols = hidden.to_vec();
+                match input.as_ref() {
+                    OptimizedPlan::Filter { input: filter_input, predicate } => {
+                        let pred_clone = predicate.clone();
+                        let hidden_clone = hidden_cols.clone();
+                        // Generate the skip label BEFORE the closure so it can be
+                        // captured without a double borrow of self.
+                        let skip_lbl = self.fresh_label("hidden_sort_filter_skip");
+                        self.compile_scan_loop(filter_input, move |compiler, _alias| {
+                            compiler.compile_expr(&pred_clone);
+                            compiler.emit(Instruction::JumpIfFalse(skip_lbl.clone()));
+                            compiler.emit(Instruction::BeginRow);
+                            for col in &cols {
+                                compiler.compile_expr(&col.expr);
+                                let name = output_column_name(col);
+                                compiler.emit(Instruction::EmitColumn(name));
+                            }
+                            for (name, expr) in &hidden_clone {
+                                compiler.compile_expr(expr);
+                                compiler.emit(Instruction::EmitColumn(name.clone()));
+                            }
+                            compiler.emit(Instruction::EmitRow);
+                            compiler.emit(Instruction::Label(skip_lbl.clone()));
+                        });
+                    }
+                    OptimizedPlan::Aggregate { .. } | OptimizedPlan::Having { .. } => {
+                        // Aggregate output already handles its own projection.
+                        self.compile_inner(input);
+                    }
+                    _ => {
+                        let hidden_clone = hidden_cols.clone();
+                        self.compile_scan_loop(input, move |compiler, _alias| {
+                            compiler.emit(Instruction::BeginRow);
+                            for col in &cols {
+                                compiler.compile_expr(&col.expr);
+                                let name = output_column_name(col);
+                                compiler.emit(Instruction::EmitColumn(name));
+                            }
+                            for (name, expr) in &hidden_clone {
+                                compiler.compile_expr(expr);
+                                compiler.emit(Instruction::EmitColumn(name.clone()));
+                            }
+                            compiler.emit(Instruction::EmitRow);
+                        });
+                    }
+                }
+            }
+            _ => {
+                // Non-Project inner plan: fall back to normal compilation.
+                self.compile_inner_ref(inner);
+            }
+        }
+    }
+
+    /// Compile `plan` when it arrives as a borrowed reference (used internally
+    /// after canonicalization splits the plan into a borrowed inner + post-ops).
+    fn compile_inner_ref(&mut self, plan: &InnerPlan) {
+        match plan {
+            InnerPlan::Borrowed(p) => self.compile_inner(p),
+            InnerPlan::Owned(p) => self.compile_inner(p),
         }
     }
 
@@ -813,7 +1043,15 @@ impl Compiler {
     fn compile_project(&mut self, input: &OptimizedPlan, columns: &[OutputColumn]) {
         // We need to check if the input is a Filter — in that case, the predicate
         // must gate the row before we project.
+        //
+        // For Aggregate / Having / Distinct inputs: the inner plan already
+        // produces fully-assembled output rows (with EmitColumn+EmitRow).
+        // The Project wrapper is then effectively a rename/projection of those
+        // rows.  At Level 1 we don't re-project; we let the aggregate's own
+        // EmitColumn names stand.  (Aliases are propagated into AggregateItem
+        // by the planner, so the names are already correct.)
         match input {
+            // ── Scan or Filter over Scan: generate the scan loop inline ──────
             OptimizedPlan::Filter {
                 input: filter_input,
                 predicate,
@@ -827,20 +1065,38 @@ impl Compiler {
                     compiler.emit(Instruction::BeginRow);
                     for col in &cols {
                         compiler.compile_expr(&col.expr);
-                        let name = col.alias.clone().unwrap_or_else(|| "?".to_string());
+                        let name = output_column_name(col);
                         compiler.emit(Instruction::EmitColumn(name));
                     }
                     compiler.emit(Instruction::EmitRow);
                     compiler.emit(Instruction::Label(skip_lbl.clone()));
                 });
             }
+
+            // ── EmptyResult: the optimizer proved no rows can exist (e.g. LIMIT 0).
+            //    Emit DefineColumns so the QueryResult still carries the correct
+            //    column metadata even though the row buffer is empty. ───────────
+            OptimizedPlan::EmptyResult => {
+                let col_names: Vec<String> = columns.iter().map(output_column_name).collect();
+                self.emit(Instruction::DefineColumns(col_names));
+            }
+
+            // ── Aggregate / Having: these already emit rows.  The Project
+            //    wrapper's column aliases are pre-propagated into the
+            //    AggregateItem.alias fields by the planner.  Just compile the
+            //    inner plan directly and skip the extra scan loop. ────────────
+            OptimizedPlan::Aggregate { .. } | OptimizedPlan::Having { .. } => {
+                self.compile_inner(input);
+            }
+
+            // ── All other inputs (plain Scan, etc.): standard scan loop ──────
             _ => {
                 let cols = columns.to_vec();
                 self.compile_scan_loop(input, |compiler, _alias| {
                     compiler.emit(Instruction::BeginRow);
                     for col in &cols {
                         compiler.compile_expr(&col.expr);
-                        let name = col.alias.clone().unwrap_or_else(|| "?".to_string());
+                        let name = output_column_name(col);
                         compiler.emit(Instruction::EmitColumn(name));
                     }
                     compiler.emit(Instruction::EmitRow);
@@ -951,7 +1207,7 @@ impl Compiler {
         // can release the borrow on `aggregates` before we use the compiler.
         let agg_fns: Vec<AggFn> = aggregates
             .iter()
-            .map(|a| plan_agg_to_agg_fn(&a.func, a.arg.is_none()))
+            .map(|a| plan_agg_to_agg_fn_with_distinct(&a.func, a.arg.is_none(), a.distinct))
             .collect();
         let agg_args: Vec<Option<SqlExpr>> =
             aggregates.iter().map(|a| a.arg.clone()).collect();
@@ -962,6 +1218,20 @@ impl Compiler {
         let loop_lbl = self.fresh_label("agg_loop");
         let end_lbl = self.fresh_label("agg_end");
 
+        // Build a shared closure body that saves group key + updates accumulators.
+        // This body is injected into the scan loop for both Scan and Filter inputs.
+        let emit_agg_body = |compiler: &mut Compiler| {
+            if !group_key_cols.is_empty() {
+                compiler.emit(Instruction::SaveGroupKey(group_key_cols.clone()));
+            }
+            for (i, (fn_tag, arg)) in agg_fns.iter().zip(agg_args.iter()).enumerate() {
+                if let Some(arg_expr) = arg {
+                    compiler.compile_expr(arg_expr);
+                }
+                compiler.emit(Instruction::UpdateAgg(i, fn_tag.clone()));
+            }
+        };
+
         match input {
             OptimizedPlan::Scan { table, alias, .. } => {
                 let alias = alias.clone();
@@ -969,37 +1239,48 @@ impl Compiler {
                 self.emit(Instruction::Label(loop_lbl.clone()));
                 self.emit(Instruction::AdvanceCursor(alias.clone()));
                 self.emit(Instruction::JumpIfExhausted(alias.clone(), end_lbl.clone()));
-
-                // Save group key (may be empty for global aggregates).
-                if !group_key_cols.is_empty() {
-                    self.emit(Instruction::SaveGroupKey(group_key_cols.clone()));
-                }
-
-                // Update each aggregate slot.
-                for (i, (fn_tag, arg)) in agg_fns.iter().zip(agg_args.iter()).enumerate() {
-                    if let Some(arg_expr) = arg {
-                        self.compile_expr(arg_expr);
-                    }
-                    self.emit(Instruction::UpdateAgg(i, fn_tag.clone()));
-                }
-
+                emit_agg_body(self);
                 self.emit(Instruction::Jump(loop_lbl));
                 self.emit(Instruction::Label(end_lbl));
                 self.emit(Instruction::CloseScan(alias));
             }
-            other => {
+            OptimizedPlan::Filter { input: scan_input, predicate } => {
+                // WHERE-filtered aggregate: emit a scan loop over the base table
+                // and only accumulate rows that pass the predicate.
+                let skip_lbl = self.fresh_label("agg_filter_skip");
+                let pred = predicate.clone();
+                let scan_input = scan_input.as_ref();
+                // We need to manually build the scan loop instead of using
+                // compile_scan_loop because compile_scan_loop takes FnOnce and
+                // we need to call emit_agg_body (which mutably borrows self).
+                if let OptimizedPlan::Scan { table, alias, .. } = scan_input {
+                    let alias = alias.clone();
+                    self.emit(Instruction::OpenScan(table.clone(), alias.clone()));
+                    self.emit(Instruction::Label(loop_lbl.clone()));
+                    self.emit(Instruction::AdvanceCursor(alias.clone()));
+                    self.emit(Instruction::JumpIfExhausted(alias.clone(), end_lbl.clone()));
+                    // Evaluate predicate; skip accumulation if false.
+                    self.compile_expr(&pred);
+                    self.emit(Instruction::JumpIfFalse(skip_lbl.clone()));
+                    emit_agg_body(self);
+                    self.emit(Instruction::Label(skip_lbl));
+                    self.emit(Instruction::Jump(loop_lbl));
+                    self.emit(Instruction::Label(end_lbl));
+                    self.emit(Instruction::CloseScan(alias));
+                } else {
+                    // Nested non-scan filter: fall back to simple accumulation.
+                    self.compile_inner(scan_input);
+                    self.compile_expr(&pred);
+                    self.emit(Instruction::JumpIfFalse(skip_lbl.clone()));
+                    emit_agg_body(self);
+                    self.emit(Instruction::Label(skip_lbl));
+                }
+            }
+            _other => {
                 // Non-scan input: compile the inner plan first, then update.
-                // This is a simplified handling for the test suite.
-                self.compile_inner(other);
-                if !group_key_cols.is_empty() {
-                    self.emit(Instruction::SaveGroupKey(group_key_cols.clone()));
-                }
-                for (i, (fn_tag, arg)) in agg_fns.iter().zip(agg_args.iter()).enumerate() {
-                    if let Some(arg_expr) = arg {
-                        self.compile_expr(arg_expr);
-                    }
-                    self.emit(Instruction::UpdateAgg(i, fn_tag.clone()));
-                }
+                // This is a simplified handling for complex subquery aggregates.
+                self.compile_inner(_other);
+                emit_agg_body(self);
             }
         }
 
@@ -1056,7 +1337,7 @@ impl Compiler {
 
                 let agg_fns: Vec<AggFn> = aggregates
                     .iter()
-                    .map(|a| plan_agg_to_agg_fn(&a.func, a.arg.is_none()))
+                    .map(|a| plan_agg_to_agg_fn_with_distinct(&a.func, a.arg.is_none(), a.distinct))
                     .collect();
                 let agg_args: Vec<Option<SqlExpr>> =
                     aggregates.iter().map(|a| a.arg.clone()).collect();
@@ -1120,7 +1401,18 @@ impl Compiler {
                 }
 
                 // HAVING predicate check — skip the row if false.
+                //
+                // Populate `agg_slots` so that `compile_expr` can emit the
+                // correct slot index for aggregate references in the predicate
+                // (e.g. `SUM(amount) > 50` must use slot 1, not slot 0).
+                self.agg_slots = aggregates
+                    .iter()
+                    .cloned()
+                    .enumerate()
+                    .map(|(i, a)| (i, a))
+                    .collect();
                 self.compile_expr(predicate);
+                self.agg_slots.clear();
                 self.emit(Instruction::JumpIfFalse(skip_lbl.clone()));
 
                 self.emit(Instruction::BeginRow);
@@ -1262,12 +1554,25 @@ impl Compiler {
             InsertSource::Values(rows) => {
                 for row in rows {
                     self.emit(Instruction::BeginRow);
-                    for expr in row {
+                    for (i, expr) in row.iter().enumerate() {
                         self.compile_expr(expr);
+                        // After pushing the value onto the stack, pop it into
+                        // the row_buffer under the appropriate column name.
+                        // The VM's InsertRow instruction reads from row_buffer,
+                        // not directly from the evaluation stack.
+                        let col_name = columns
+                            .as_ref()
+                            .and_then(|cols| cols.get(i))
+                            .cloned()
+                            .unwrap_or_else(|| format!("col_{}", i));
+                        self.emit(Instruction::EmitColumn(col_name));
                     }
+                    // Pass None to InsertRow — the row_buffer already holds
+                    // named (col_name, value) pairs from the EmitColumn sequence
+                    // above, so build_insert_row can use them directly.
                     self.emit(Instruction::InsertRow(
                         table.to_string(),
-                        columns.clone(),
+                        None,
                     ));
                 }
             }
@@ -1302,12 +1607,14 @@ impl Compiler {
             self.emit(Instruction::JumpIfFalse(skip_lbl.clone()));
         }
 
-        // Push each assignment expression.
+        // Push each assignment expression onto the stack (in assignment order).
+        // Collect the column names in the same order so the VM can pair them.
+        let col_names: Vec<String> = assignments.iter().map(|a| a.column.clone()).collect();
         for assignment in assignments {
             self.compile_expr(&assignment.value);
         }
 
-        self.emit(Instruction::UpdateRows(table.to_string()));
+        self.emit(Instruction::UpdateRows(table.to_string(), col_names));
 
         if predicate.is_some() {
             self.emit(Instruction::Label(skip_lbl));
@@ -1486,30 +1793,43 @@ impl Compiler {
 
             // ── Aggregate references ─────────────────────────────────────────
 
-            SqlExpr::Aggregate { func, arg, .. } => {
-                // Aggregate expressions in a non-aggregate context (e.g. inside
-                // a Project or HAVING that wasn't hoisted) are compiled inline.
-                // We push the arg, then treat the aggregate as a function call.
-                // In practice the optimizer ensures these appear only inside
-                // Aggregate plan nodes; this is a defensive fallback.
-                if let Some(a) = arg {
-                    self.compile_expr(a);
-                }
-                let fn_tag = plan_agg_to_agg_fn(func, arg.is_none());
-                // Use slot 0 as a synthetic "inline aggregate" slot.
-                self.emit(Instruction::FinalizeAgg(0, fn_tag));
+            SqlExpr::Aggregate { func, arg, distinct, .. } => {
+                // Aggregate expressions inside a HAVING predicate: look up the
+                // slot index from `agg_slots` (populated by `compile_having`
+                // before calling `compile_expr(predicate)`).  If no match is
+                // found (e.g. an inline aggregate outside a proper HAVING node),
+                // fall back to slot 0.
+                //
+                // Matching is by (func, arg, distinct) so that
+                // `COUNT(DISTINCT x)` and `COUNT(x)` use different slots.
+                let fn_tag = plan_agg_to_agg_fn_with_distinct(func, arg.is_none(), *distinct);
+                let slot = self.agg_slots.iter().find(|(_, a)| {
+                    let a_fn = plan_agg_to_agg_fn_with_distinct(&a.func, a.arg.is_none(), a.distinct);
+                    // `arg` here is Option<Box<SqlExpr>>; `a.arg` is Option<SqlExpr>.
+                    // Compare by derefing the Box.
+                    let arg_matches = match (arg, &a.arg) {
+                        (None, None) => true,
+                        (Some(boxed), Some(a_expr)) => (**boxed) == *a_expr,
+                        _ => false,
+                    };
+                    a_fn == fn_tag && arg_matches
+                }).map(|(i, _)| *i).unwrap_or(0);
+                // No arg to push for aggregate references in predicate context —
+                // the accumulator already holds the accumulated value.
+                self.emit(Instruction::FinalizeAgg(slot, fn_tag));
             }
 
             // ── Function calls ───────────────────────────────────────────────
 
-            SqlExpr::FunctionCall { args, .. } => {
-                // For Level 1, we compile function-call arguments but emit
-                // a NULL result as a placeholder (scalar functions are not
-                // yet implemented in this pipeline stage).
+            SqlExpr::FunctionCall { name, args, .. } => {
+                // Compile each argument (left-to-right, first arg deepest).
+                let n = args.len();
                 for a in args {
                     self.compile_expr(a);
                 }
-                self.emit(Instruction::LoadConst(SqlValue::Null));
+                // Emit a dispatch to the named built-in.  The VM pops `n`
+                // values, applies the function, and pushes the result.
+                self.emit(Instruction::CallBuiltin(name.to_uppercase(), n));
             }
         }
 
@@ -1582,6 +1902,79 @@ fn peel_post_ops(plan: &OptimizedPlan) -> (&OptimizedPlan, Vec<Instruction>) {
 }
 
 // ===========================================================================
+// Helper: derive the output column name from an OutputColumn
+// ===========================================================================
+
+/// Return the name to use for an output column.
+///
+/// Priority:
+/// 1. An explicit alias (`SELECT expr AS alias`) — always wins.
+/// 2. If the expression is a bare column reference (`SELECT col`), use the
+///    column name as the implicit label.  This matches SQL's convention that
+///    `SELECT id FROM t` exposes a column named `id`.
+/// 3. Fall back to `"?"` for complex expressions without an alias.
+fn output_column_name(col: &OutputColumn) -> String {
+    if let Some(alias) = &col.alias {
+        return alias.clone();
+    }
+    match &col.expr {
+        SqlExpr::Column { name, .. } => name.clone(),
+        _ => "?".to_string(),
+    }
+}
+
+// ===========================================================================
+// Helper: InnerPlan — owned-or-borrowed wrapper for canonicalized plans
+// ===========================================================================
+
+/// A plan that is either a borrow of the original (the common case, no
+/// allocation) or a freshly constructed owned value (when we had to
+/// reconstruct a Project around a peeled inner node).
+enum InnerPlan<'a> {
+    Borrowed(&'a OptimizedPlan),
+    Owned(OptimizedPlan),
+}
+
+impl<'a> InnerPlan<'a> {
+    /// Return a reference to the wrapped plan regardless of ownership.
+    fn as_ref(&self) -> &OptimizedPlan {
+        match self {
+            InnerPlan::Borrowed(p) => p,
+            InnerPlan::Owned(p) => p,
+        }
+    }
+}
+
+/// Peel Sort/Limit/Distinct post-ops, looking through a `Project` wrapper.
+///
+/// The planner emits `Project { Sort { ... } }` (Project outermost, per
+/// lessons.md).  The standard `peel_post_ops` cannot see the Sort because
+/// Project is on top.  This function detects that pattern and strips the
+/// Sort/Limit/Distinct from INSIDE the Project, reconstructing
+/// `Project { stripped_inner }` as the effective inner plan.
+///
+/// Without a Project wrapper, this falls back to the standard `peel_post_ops`.
+fn peel_post_ops_through_project(plan: &OptimizedPlan) -> (InnerPlan<'_>, Vec<Instruction>) {
+    // Detect the `Project { Sort/Limit/Distinct { ... } }` pattern.
+    if let OptimizedPlan::Project { input, columns } = plan {
+        // Check whether the project's input starts with post-op wrappers.
+        let (stripped_inner, post_ops) = peel_post_ops(input);
+        if !post_ops.is_empty() {
+            // Rebuild the Project around the stripped inner, owning the result.
+            let owned_inner = OptimizedPlan::Project {
+                input: Box::new(stripped_inner.clone()),
+                columns: columns.clone(),
+            };
+            return (InnerPlan::Owned(owned_inner), post_ops);
+        }
+    }
+
+    // Standard path: peel from the outermost node directly.
+    let (inner, post_ops) = peel_post_ops(plan);
+    (InnerPlan::Borrowed(inner), post_ops)
+}
+
+// ===========================================================================
 // Helper: map planner binary/unary ops to codegen ops
 // ===========================================================================
 
@@ -1635,6 +2028,17 @@ fn plan_agg_to_agg_fn(func: &AggFunc, is_star: bool) -> AggFn {
         AggFunc::Avg => AggFn::Avg,
         AggFunc::Min => AggFn::Min,
         AggFunc::Max => AggFn::Max,
+    }
+}
+
+/// Map a `sql-planner` [`AggFunc`] to a codegen [`AggFn`], taking `distinct`
+/// into account.  `COUNT(DISTINCT col)` maps to `CountDistinct`; all other
+/// combinations fall back to `plan_agg_to_agg_fn`.
+fn plan_agg_to_agg_fn_with_distinct(func: &AggFunc, is_star: bool, distinct: bool) -> AggFn {
+    if distinct && matches!(func, AggFunc::Count) && !is_star {
+        AggFn::CountDistinct
+    } else {
+        plan_agg_to_agg_fn(func, is_star)
     }
 }
 
@@ -2684,20 +3088,25 @@ mod tests {
 
     #[test]
     fn test_insert_with_columns() {
+        // When columns are provided, the codegen emits EmitColumn instructions
+        // using the column names so the VM's row_buffer has named entries.
+        // InsertRow now always receives None (the names live in the row_buffer).
         let plan = optimize(LogicalPlan::Insert {
             table: "t".to_string(),
             columns: Some(vec!["id".to_string(), "name".to_string()]),
             source: InsertSource::Values(vec![vec![lit_int(1), lit_text("bob")]]),
         });
         let v = instrs(&plan);
-        let found = v.iter().any(|i| {
-            if let Instruction::InsertRow(_, Some(cols)) = i {
-                cols.contains(&"id".to_string()) && cols.contains(&"name".to_string())
-            } else {
-                false
-            }
-        });
-        assert!(found, "expected InsertRow with column list");
+        // Verify the InsertRow is emitted.
+        let has_insert_row = v.iter().any(|i| matches!(i, Instruction::InsertRow(t, None) if t == "t"));
+        assert!(has_insert_row, "expected InsertRow for table t with None cols");
+        // Verify EmitColumn is emitted for each provided column.
+        let emit_cols: Vec<_> = v
+            .iter()
+            .filter_map(|i| if let Instruction::EmitColumn(n) = i { Some(n.as_str()) } else { None })
+            .collect();
+        assert!(emit_cols.contains(&"id"), "expected EmitColumn(\"id\")");
+        assert!(emit_cols.contains(&"name"), "expected EmitColumn(\"name\")");
     }
 
     #[test]
@@ -2732,7 +3141,7 @@ mod tests {
         let v = instrs(&plan);
         assert!(v
             .iter()
-            .any(|i| matches!(i, Instruction::UpdateRows(t) if t == "users")));
+            .any(|i| matches!(i, Instruction::UpdateRows(t, _) if t == "users")));
     }
 
     #[test]

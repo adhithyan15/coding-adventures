@@ -490,23 +490,38 @@ pub fn plan_expr(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
 
 /// Dispatch to the appropriate statement planner.
 ///
-/// Grammar: statement = select_stmt | insert_stmt | update_stmt | delete_stmt
+/// Grammar: statement = query_stmt | insert_stmt | update_stmt | delete_stmt
 ///                     | create_table_stmt | drop_table_stmt
+/// Grammar: query_stmt = [ with_clause ] ( values_stmt | select_stmt ) ...
 fn plan_statement(
     node: &GrammarASTNode,
     schema: &dyn SchemaProvider,
 ) -> Result<LogicalPlan, PlanError> {
     // The "statement" node wraps exactly one concrete statement.
-    // Walk its children to find which kind it is.
+    // In the current sql.grammar, SELECT/VALUES are nested under a `query_stmt`
+    // node:  statement → query_stmt → select_stmt.  DML/DDL are direct children.
+    // Walk the children to find which kind it is.
     for child in &node.children {
         if let ASTNodeOrToken::Node(child_node) = child {
             match child_node.rule_name.as_str() {
+                // Direct children (DML/DDL).
                 "select_stmt" => return plan_select(child_node, schema),
-                "insert_stmt" => return plan_insert(child_node),
+                "insert_stmt" => return plan_insert(child_node, schema),
                 "update_stmt" => return plan_update(child_node),
                 "delete_stmt" => return plan_delete(child_node),
                 "create_table_stmt" => return plan_create_table(child_node),
                 "drop_table_stmt" => return plan_drop_table(child_node),
+                // The current grammar wraps SELECT/VALUES in query_stmt.
+                // Recurse through the query_stmt layer transparently.
+                "query_stmt" => {
+                    for qchild in &child_node.children {
+                        if let ASTNodeOrToken::Node(qn) = qchild {
+                            if qn.rule_name == "select_stmt" {
+                                return plan_select(qn, schema);
+                            }
+                        }
+                    }
+                }
                 _ => {}
             }
         }
@@ -553,26 +568,35 @@ fn plan_select(
     // -----------------------------------------------------------------------
     // Step 1: Build the base from the FROM clause.
     // -----------------------------------------------------------------------
-    // Grammar: select_stmt = SELECT [ DISTINCT | ALL ] select_list FROM table_ref
-    //                        { join_clause } [ where_clause ] ...
+    // Grammar: select_stmt = SELECT [ DISTINCT | ALL ] select_list
+    //                        [ FROM table_ref { join_clause } ]
+    //                        [ where_clause ] ...
     //
-    // We must have at least one table_ref.  Additional tables come from join_clauses.
-    let table_ref = find_node(stmt, "table_ref").ok_or_else(|| {
-        PlanError::UnsupportedStatement("SELECT without FROM clause".to_string())
-    })?;
+    // When there is no FROM clause (e.g. `SELECT LENGTH('hello') AS n`),
+    // SQLite evaluates the SELECT list exactly once against an implicit
+    // single-row, no-column virtual table (the "dual" table).  We model
+    // this as a `Scan` of a special `__dual__` table that the backend and
+    // codegen handle as yielding one empty row.
+    let mut plan: LogicalPlan = if let Some(table_ref) = find_node(stmt, "table_ref") {
+        // Extract table name and optional alias from `table_ref = table_name [ "AS" NAME ]`.
+        let (table_name, table_alias) = extract_table_ref(table_ref);
 
-    // Extract table name and optional alias from `table_ref = table_name [ "AS" NAME ]`.
-    let (table_name, table_alias) = extract_table_ref(table_ref);
+        // Validate the table exists in the schema.
+        schema
+            .column_names(&table_name)
+            .map_err(|_| PlanError::UnknownTable(table_name.clone()))?;
 
-    // Validate the table exists in the schema.
-    schema
-        .column_names(&table_name)
-        .map_err(|_| PlanError::UnknownTable(table_name.clone()))?;
-
-    // Start with a Scan node.
-    let mut plan: LogicalPlan = LogicalPlan::Scan {
-        table: table_name,
-        alias: table_alias,
+        LogicalPlan::Scan {
+            table: table_name,
+            alias: table_alias,
+        }
+    } else {
+        // No FROM clause — use the implicit single-row dual table.
+        // This is never looked up in the schema; the VM handles it specially.
+        LogicalPlan::Scan {
+            table: "__dual__".to_string(),
+            alias: None,
+        }
     };
 
     // -----------------------------------------------------------------------
@@ -613,12 +637,30 @@ fn plan_select(
     let select_list = find_node(stmt, "select_list");
 
     // Collect aggregates from the SELECT list and HAVING clause.
+    // For the SELECT list, we walk `select_item` nodes and capture the AS alias
+    // so that the Aggregate plan carries the correct output column names.
     let mut aggregates: Vec<AggregateItem> = Vec::new();
     if let Some(sl) = select_list {
-        collect_aggregates_from_node(sl, &mut aggregates);
+        collect_aggregates_with_aliases(sl, &mut aggregates);
     }
     if let Some(hc) = having_clause {
-        collect_aggregates_from_node(hc, &mut aggregates);
+        let mut having_aggs: Vec<AggregateItem> = Vec::new();
+        collect_aggregates_from_node(hc, &mut having_aggs);
+        // Only add HAVING aggregates that are NOT already present in the
+        // SELECT-list aggregates.  When COUNT(*) appears in both HAVING and
+        // SELECT, they refer to the *same* computed value (slot 0).  Adding a
+        // duplicate would allocate a new slot and emit an extra output column
+        // named "agg_N" that should not be visible to the caller.
+        for hagg in having_aggs {
+            let already = aggregates.iter().any(|a| {
+                a.func == hagg.func
+                    && a.arg == hagg.arg
+                    && a.distinct == hagg.distinct
+            });
+            if !already {
+                aggregates.push(hagg);
+            }
+        }
     }
 
     // Build an Aggregate node if there's a GROUP BY or any aggregate calls.
@@ -875,23 +917,42 @@ fn plan_order_item(item: &GrammarASTNode) -> Result<SortKey, PlanError> {
 
 /// Parse the `limit_clause` and return `(count, offset)`.
 ///
-/// Grammar: `limit_clause = LIMIT NUMBER [ OFFSET NUMBER ]`
+/// Grammar: `limit_clause = LIMIT [ "-" ] NUMBER [ OFFSET NUMBER ]`
+///
+/// SQLite semantics: `LIMIT -1` means "no limit" (return all rows).
 fn plan_limit(limit_clause: &GrammarASTNode) -> Result<(Option<i64>, Option<i64>), PlanError> {
-    // Collect all NUMBER token values in the limit clause.
-    let numbers: Vec<i64> = limit_clause
-        .children
-        .iter()
-        .filter_map(|c| {
-            if let ASTNodeOrToken::Token(tok) = c {
-                tok.value.parse::<i64>().ok()
-            } else {
-                None
-            }
-        })
-        .collect();
+    // Walk the children in order, tracking whether we just saw a MINUS token
+    // (which only applies to the LIMIT count, not the OFFSET value).
+    let children = &limit_clause.children;
+    let mut past_limit_kw = false;
+    let mut pending_minus = false; // sign for the next NUMBER (only for count)
+    let mut count: Option<i64> = None;
+    let mut offset: Option<i64> = None;
 
-    let count = numbers.first().copied();
-    let offset = numbers.get(1).copied();
+    for child in children {
+        match child {
+            ASTNodeOrToken::Token(tok) => match tok.value.as_str() {
+                "LIMIT" => { past_limit_kw = true; }
+                "OFFSET" => { /* next NUMBER is the offset */ }
+                "-" if past_limit_kw && count.is_none() => {
+                    // Unary minus before the LIMIT count (e.g. LIMIT -1).
+                    pending_minus = true;
+                }
+                _ => {
+                    if let Ok(n) = tok.value.parse::<i64>() {
+                        if count.is_none() {
+                            let sign: i64 = if pending_minus { -1 } else { 1 };
+                            count = Some(n * sign);
+                            pending_minus = false;
+                        } else {
+                            offset = Some(n);
+                        }
+                    }
+                }
+            },
+            ASTNodeOrToken::Node(_) => {}
+        }
+    }
 
     Ok((count, offset))
 }
@@ -986,6 +1047,39 @@ fn extract_clause_expr(clause: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
 // Aggregate collection
 // ===========================================================================
 
+/// Walk a `select_list` node and collect aggregate function calls WITH their
+/// aliases from surrounding `select_item` nodes.
+///
+/// For `SELECT COUNT(*) AS cnt, SUM(v) AS total`, we produce:
+///   `[AggregateItem { func: Count, alias: Some("cnt") }, AggregateItem { func: Sum, alias: Some("total") }]`
+///
+/// This lets the codegen emit the right column names without a separate rename step.
+fn collect_aggregates_with_aliases(select_list: &GrammarASTNode, out: &mut Vec<AggregateItem>) {
+    // Walk select_item children at the top level of select_list.
+    for child in &select_list.children {
+        if let ASTNodeOrToken::Node(item) = child {
+            if item.rule_name == "select_item" {
+                // Extract the optional alias (AS name).
+                let alias = extract_as_alias(item);
+                // Look for aggregate function calls inside this item.
+                let before_len = out.len();
+                collect_aggregates_from_node(item, out);
+                // If we found new aggregates, set their alias from this item.
+                if let Some(alias_str) = alias {
+                    for agg in out[before_len..].iter_mut() {
+                        if agg.alias.is_none() {
+                            agg.alias = Some(alias_str.clone());
+                        }
+                    }
+                }
+            } else {
+                // Non-select_item child (e.g., STAR): use recursive fallback.
+                collect_aggregates_from_node(item, out);
+            }
+        }
+    }
+}
+
 /// Walk a subtree and collect all aggregate function calls into `out`.
 ///
 /// Aggregate functions (COUNT, SUM, AVG, MIN, MAX) can appear in the SELECT
@@ -1069,12 +1163,30 @@ fn try_plan_as_aggregate(func_call: &GrammarASTNode) -> Option<AggregateItem> {
 /// Grammar: `insert_stmt = INSERT INTO NAME [ "(" NAME { "," NAME } ")" ]
 ///                          VALUES row_value { "," row_value }`
 /// Grammar: `row_value = "(" expr { "," expr } ")"`
-fn plan_insert(stmt: &GrammarASTNode) -> Result<LogicalPlan, PlanError> {
+///
+/// When the INSERT has no explicit column list (positional VALUES), we resolve
+/// the columns from the schema so downstream codegen always has named columns.
+fn plan_insert(stmt: &GrammarASTNode, schema: &dyn SchemaProvider) -> Result<LogicalPlan, PlanError> {
     // The table name is the first NAME token after INSERT INTO.
     let table = extract_insert_table_name(stmt)?;
 
     // The optional column list: `(col1, col2, ...)`.
-    let columns = extract_insert_columns(stmt);
+    let explicit_columns = extract_insert_columns(stmt);
+
+    // Resolve the column list. If the INSERT specifies columns explicitly, use
+    // them directly. Otherwise resolve from the schema so the codegen always has
+    // named columns to emit (positional INSERT).
+    let columns: Option<Vec<String>> = if explicit_columns.is_some() {
+        explicit_columns
+    } else {
+        // Attempt to resolve column names from schema. If the table is not yet
+        // in the schema (e.g. table created in the same batch), fall back to None
+        // and let the backend handle it positionally.
+        schema
+            .column_names(&table)
+            .ok()
+            .map(|cols| cols)
+    };
 
     // The VALUES rows.
     let rows = find_nodes(stmt, "row_value")
@@ -2500,9 +2612,16 @@ mod tests {
 
     #[test]
     fn test_insert_without_columns() {
+        // When there is no explicit column list, the planner resolves column
+        // names from the schema so the codegen always has named columns.
         let plan = plan_ok("INSERT INTO t VALUES (1, 2, 3)");
         if let LogicalPlan::Insert { columns, .. } = &plan {
-            assert!(columns.is_none(), "Expected no explicit column list");
+            // Table "t" is in the test schema with columns [id, x, y, name, a, b, c].
+            // The planner resolves the first 3 positional columns.
+            assert!(
+                columns.is_some(),
+                "Expected resolved columns from schema, got None"
+            );
         } else {
             panic!("Expected Insert, got: {plan:?}");
         }

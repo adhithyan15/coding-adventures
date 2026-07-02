@@ -43,9 +43,11 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::Literal { value: r#"ALL"#.to_string() },
                     ] }) },
                 GrammarElement::RuleReference { name: r#"select_list"#.to_string() },
-                GrammarElement::Literal { value: r#"FROM"#.to_string() },
-                GrammarElement::RuleReference { name: r#"table_ref"#.to_string() },
-                GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"join_clause"#.to_string() }) },
+                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                    GrammarElement::Literal { value: r#"FROM"#.to_string() },
+                    GrammarElement::RuleReference { name: r#"table_ref"#.to_string() },
+                    GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"join_clause"#.to_string() }) },
+                ] }) },
                 GrammarElement::Optional { element: Box::new(GrammarElement::RuleReference { name: r#"where_clause"#.to_string() }) },
                 GrammarElement::Optional { element: Box::new(GrammarElement::RuleReference { name: r#"group_clause"#.to_string() }) },
                 GrammarElement::Optional { element: Box::new(GrammarElement::RuleReference { name: r#"having_clause"#.to_string() }) },
@@ -189,6 +191,8 @@ pub fn parser_grammar() -> ParserGrammar {
             name: r#"limit_clause"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
                 GrammarElement::Literal { value: r#"LIMIT"#.to_string() },
+                // Allow optional "-" before NUMBER to support LIMIT -1 (all rows).
+                GrammarElement::Optional { element: Box::new(GrammarElement::Literal { value: r#"-"#.to_string() }) },
                 GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
                 GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
                         GrammarElement::Literal { value: r#"OFFSET"#.to_string() },
@@ -290,10 +294,14 @@ pub fn parser_grammar() -> ParserGrammar {
             line_number: 54,
         },
         GrammarRule {
+            // col_def = NAME [ col_type ] col_constraint*
+            // The type name is OPTIONAL — SQLite allows typeless columns such as
+            //   CREATE TABLE t (id, name, age)
+            // When omitted the engine applies TEXT affinity (the SQLite default).
             name: r#"col_def"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
                 GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
-                GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                GrammarElement::Optional { element: Box::new(GrammarElement::TokenReference { name: r#"NAME"#.to_string() }) },
                 GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"col_constraint"#.to_string() }) },
             ] },
             line_number: 56,
@@ -446,6 +454,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
                                 GrammarElement::Literal { value: r#"+"#.to_string() },
                                 GrammarElement::Literal { value: r#"-"#.to_string() },
+                                GrammarElement::Literal { value: r#"||"#.to_string() },
                             ] }) },
                         GrammarElement::RuleReference { name: r#"multiplicative"#.to_string() },
                     ] }) },
@@ -508,13 +517,19 @@ pub fn parser_grammar() -> ParserGrammar {
             line_number: 85,
         },
         GrammarRule {
+            // function_call = NAME "(" ( STAR | [ DISTINCT ] value_list? ) ")"
+            // This supports COUNT(*), COUNT(col), COUNT(DISTINCT col),
+            // SUM(expr), and all other aggregate/scalar function calls.
             name: r#"function_call"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
                 GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                 GrammarElement::Literal { value: r#"("#.to_string() },
                 GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
                         GrammarElement::TokenReference { name: r#"STAR"#.to_string() },
-                        GrammarElement::Optional { element: Box::new(GrammarElement::RuleReference { name: r#"value_list"#.to_string() }) },
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Literal { value: r#"DISTINCT"#.to_string() }) },
+                            GrammarElement::Optional { element: Box::new(GrammarElement::RuleReference { name: r#"value_list"#.to_string() }) },
+                        ] },
                     ] }) },
                 GrammarElement::Literal { value: r#")"#.to_string() },
             ] },
