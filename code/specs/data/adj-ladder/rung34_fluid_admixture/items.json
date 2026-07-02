@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 34 \u2014 total solute of an IV-fluid admixture from two volumes and two concentrations (a NEW panel: fluid & electrolyte / IV therapy). From four stated quantities (first volume V1, first concentration C1, second volume V2, second concentration C2) compute the total solute ((V1*C1)+(V2*C2)), the first-compartment solute (V1*C1), or the second-compartment solute (V2*C2). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, a SUM OF TWO PRODUCTS ((V1*C1)+(V2*C2)), so one parenthesised product is added to another \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via *, + and - \u2014 no constant leaks (each amount is a pure volume*concentration product), and neither compartment's amount ever appears as a literal (each is computed from the observed volume and concentration) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same quantities, so the distractors are exactly the slips students make: the crossed-products sum ((V1*C2)+(V2*C1), each volume with the other fluid's concentration) and the difference of products ((V1*C1)-(V2*C2), the two amounts subtracted instead of added). The core confusion tested is adding a volume*concentration product to another with each pairing correct.",
+  "items": [
+    {
+      "id": "r34admix-01",
+      "qtype": "fluid_admixture",
+      "stem": "Two intravenous fluids are combined: the first is 2 L at a solute concentration of 140 mEq/L, and the second is 1 L at 75 mEq/L. What is the total solute in the combined fluid?",
+      "program": "observe volume_first(2)\nobserve concentration_first(140)\nobserve volume_second(1)\nobserve concentration_second(75)\nlet answer = (volume_first * concentration_first) + (volume_second * concentration_second)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 355,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 280,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 290,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 205,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r34admix-02",
+      "qtype": "fluid_admixture",
+      "stem": "Two intravenous fluids are combined: the first is 2 L at a solute concentration of 140 mEq/L, and the second is 1 L at 75 mEq/L. What is the solute contributed by the first fluid?",
+      "program": "observe volume_first(2)\nobserve concentration_first(140)\nobserve volume_second(1)\nobserve concentration_second(75)\nlet answer = volume_first * concentration_first\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 355,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 280,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 290,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 205,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r34admix-03",
+      "qtype": "fluid_admixture",
+      "stem": "Two intravenous fluids are combined: the first is 2 L at a solute concentration of 140 mEq/L, and the second is 1 L at 75 mEq/L. What is the solute contributed by the second fluid?",
+      "program": "observe volume_first(2)\nobserve concentration_first(140)\nobserve volume_second(1)\nobserve concentration_second(75)\nlet answer = volume_second * concentration_second\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 355,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 280,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 290,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 205,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r34admix-04",
+      "qtype": "fluid_admixture",
+      "stem": "Two intravenous fluids are combined: the first is 3 L at a solute concentration of 120 mEq/L, and the second is 2 L at 85 mEq/L. What is the total solute in the combined fluid?",
+      "program": "observe volume_first(3)\nobserve concentration_first(120)\nobserve volume_second(2)\nobserve concentration_second(85)\nlet answer = (volume_first * concentration_first) + (volume_second * concentration_second)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 360,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 170,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 495,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 530,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 190,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r34admix-05",
+      "qtype": "fluid_admixture",
+      "stem": "Two intravenous fluids are combined: the first is 3 L at a solute concentration of 120 mEq/L, and the second is 2 L at 85 mEq/L. What is the solute contributed by the first fluid?",
+      "program": "observe volume_first(3)\nobserve concentration_first(120)\nobserve volume_second(2)\nobserve concentration_second(85)\nlet answer = volume_first * concentration_first\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 530,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 170,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 495,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 190,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 360,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r34admix-06",
+      "qtype": "fluid_admixture",
+      "stem": "Two intravenous fluids are combined: the first is 3 L at a solute concentration of 120 mEq/L, and the second is 2 L at 85 mEq/L. What is the solute contributed by the second fluid?",
+      "program": "observe volume_first(3)\nobserve concentration_first(120)\nobserve volume_second(2)\nobserve concentration_second(85)\nlet answer = volume_second * concentration_second\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 170,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 530,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 360,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 495,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 190,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r34admix-07",
+      "qtype": "fluid_admixture",
+      "stem": "Two intravenous fluids are combined: the first is 3 L at a solute concentration of 150 mEq/L, and the second is 2 L at 80 mEq/L. What is the total solute in the combined fluid?",
+      "program": "observe volume_first(3)\nobserve concentration_first(150)\nobserve volume_second(2)\nobserve concentration_second(80)\nlet answer = (volume_first * concentration_first) + (volume_second * concentration_second)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 450,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 610,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 160,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 540,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 290,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r34admix-08",
+      "qtype": "fluid_admixture",
+      "stem": "Two intravenous fluids are combined: the first is 3 L at a solute concentration of 150 mEq/L, and the second is 2 L at 80 mEq/L. What is the solute contributed by the first fluid?",
+      "program": "observe volume_first(3)\nobserve concentration_first(150)\nobserve volume_second(2)\nobserve concentration_second(80)\nlet answer = volume_first * concentration_first\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 610,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 160,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 450,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 540,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 290,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r34admix-09",
+      "qtype": "fluid_admixture",
+      "stem": "Two intravenous fluids are combined: the first is 3 L at a solute concentration of 150 mEq/L, and the second is 2 L at 80 mEq/L. What is the solute contributed by the second fluid?",
+      "program": "observe volume_first(3)\nobserve concentration_first(150)\nobserve volume_second(2)\nobserve concentration_second(80)\nlet answer = volume_second * concentration_second\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 610,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 450,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 540,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 160,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 290,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r34admix-10",
+      "qtype": "fluid_admixture",
+      "stem": "Two intravenous fluids are combined: the first is 2 L at a solute concentration of 130 mEq/L, and the second is 3 L at 70 mEq/L. What is the total solute in the combined fluid?",
+      "program": "observe volume_first(2)\nobserve concentration_first(130)\nobserve volume_second(3)\nobserve concentration_second(70)\nlet answer = (volume_first * concentration_first) + (volume_second * concentration_second)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 260,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 210,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 530,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 470,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r34admix-11",
+      "qtype": "fluid_admixture",
+      "stem": "Two intravenous fluids are combined: the first is 2 L at a solute concentration of 130 mEq/L, and the second is 3 L at 70 mEq/L. What is the solute contributed by the first fluid?",
+      "program": "observe volume_first(2)\nobserve concentration_first(130)\nobserve volume_second(3)\nobserve concentration_second(70)\nlet answer = volume_first * concentration_first\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 260,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 470,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 210,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 530,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 50,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r34admix-12",
+      "qtype": "fluid_admixture",
+      "stem": "Two intravenous fluids are combined: the first is 2 L at a solute concentration of 130 mEq/L, and the second is 3 L at 70 mEq/L. What is the solute contributed by the second fluid?",
+      "program": "observe volume_first(2)\nobserve concentration_first(130)\nobserve volume_second(3)\nobserve concentration_second(70)\nlet answer = volume_second * concentration_second\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 470,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 210,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 260,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 530,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 50,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r34admix-13",
+      "qtype": "fluid_admixture",
+      "stem": "Two intravenous fluids are combined: the first is 3 L at a solute concentration of 100 mEq/L, and the second is 1 L at 85 mEq/L. What is the total solute in the combined fluid?",
+      "program": "observe volume_first(3)\nobserve concentration_first(100)\nobserve volume_second(1)\nobserve concentration_second(85)\nlet answer = (volume_first * concentration_first) + (volume_second * concentration_second)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 300,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 85,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 385,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 355,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 215,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r34admix-14",
+      "qtype": "fluid_admixture",
+      "stem": "Two intravenous fluids are combined: the first is 3 L at a solute concentration of 100 mEq/L, and the second is 1 L at 85 mEq/L. What is the solute contributed by the first fluid?",
+      "program": "observe volume_first(3)\nobserve concentration_first(100)\nobserve volume_second(1)\nobserve concentration_second(85)\nlet answer = volume_first * concentration_first\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 385,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 85,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 355,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 300,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 215,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r34admix-15",
+      "qtype": "fluid_admixture",
+      "stem": "Two intravenous fluids are combined: the first is 3 L at a solute concentration of 100 mEq/L, and the second is 1 L at 85 mEq/L. What is the solute contributed by the second fluid?",
+      "program": "observe volume_first(3)\nobserve concentration_first(100)\nobserve volume_second(1)\nobserve concentration_second(85)\nlet answer = volume_second * concentration_second\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 385,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 300,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 355,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 215,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 85,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r34admix-16",
+      "qtype": "fluid_admixture",
+      "stem": "Two intravenous fluids are combined: the first is 2 L at a solute concentration of 110 mEq/L, and the second is 1 L at 95 mEq/L. What is the total solute in the combined fluid?",
+      "program": "observe volume_first(2)\nobserve concentration_first(110)\nobserve volume_second(1)\nobserve concentration_second(95)\nlet answer = (volume_first * concentration_first) + (volume_second * concentration_second)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 315,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 220,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 95,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 300,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 125,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r34admix-17",
+      "qtype": "fluid_admixture",
+      "stem": "Two intravenous fluids are combined: the first is 2 L at a solute concentration of 110 mEq/L, and the second is 1 L at 95 mEq/L. What is the solute contributed by the first fluid?",
+      "program": "observe volume_first(2)\nobserve concentration_first(110)\nobserve volume_second(1)\nobserve concentration_second(95)\nlet answer = volume_first * concentration_first\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 315,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 220,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 95,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 300,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 125,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r34admix-18",
+      "qtype": "fluid_admixture",
+      "stem": "Two intravenous fluids are combined: the first is 2 L at a solute concentration of 110 mEq/L, and the second is 1 L at 95 mEq/L. What is the solute contributed by the second fluid?",
+      "program": "observe volume_first(2)\nobserve concentration_first(110)\nobserve volume_second(1)\nobserve concentration_second(95)\nlet answer = volume_second * concentration_second\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 315,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 220,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 95,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 300,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 125,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r34admix-19",
+      "qtype": "fluid_admixture",
+      "stem": "Two intravenous fluids are combined: the first is 3 L at a solute concentration of 160 mEq/L, and the second is 2 L at 95 mEq/L. What is the total solute in the combined fluid?",
+      "program": "observe volume_first(3)\nobserve concentration_first(160)\nobserve volume_second(2)\nobserve concentration_second(95)\nlet answer = (volume_first * concentration_first) + (volume_second * concentration_second)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 480,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 190,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 605,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 670,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 290,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r34admix-20",
+      "qtype": "fluid_admixture",
+      "stem": "Two intravenous fluids are combined: the first is 3 L at a solute concentration of 160 mEq/L, and the second is 2 L at 95 mEq/L. What is the solute contributed by the first fluid?",
+      "program": "observe volume_first(3)\nobserve concentration_first(160)\nobserve volume_second(2)\nobserve concentration_second(95)\nlet answer = volume_first * concentration_first\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 670,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 190,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 605,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 290,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 480,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r34admix-21",
+      "qtype": "fluid_admixture",
+      "stem": "Two intravenous fluids are combined: the first is 3 L at a solute concentration of 160 mEq/L, and the second is 2 L at 95 mEq/L. What is the solute contributed by the second fluid?",
+      "program": "observe volume_first(3)\nobserve concentration_first(160)\nobserve volume_second(2)\nobserve concentration_second(95)\nlet answer = volume_second * concentration_second\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 190,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 670,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 480,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 605,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 290,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
