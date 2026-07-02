@@ -2,6 +2,15 @@
 
 ## [Unreleased] — VC2-xaml Grid: WinUI value translation + nested-For + per-column widths
 
+### Added - XAML host intent extension point
+
+Generated WinUI project shells now preserve structured `HostIntent` values from
+optional `MosaicHost.HandleEvent` results and can delegate them to an
+app-provided asynchronous `MosaicHost.HandleHostIntent(Window, Component,
+HostIntent)` method. This lets app packages implement native file pickers or
+other platform-owned workflows without hand-patching generated `MainWindow`
+code.
+
 ### Changed - XAML host build script reliability
 
 Generated `build.ps1` drivers now resolve `dotnet` from PATH or the standard

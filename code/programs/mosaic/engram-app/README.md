@@ -50,6 +50,9 @@ editing, and save/delete/cancel controls.
   `host/xaml/MosaicHost.cs` implements it with `engram-capi`, hydrating the
   generated WinUI dependency properties from the shared Rust facade and routing
   generated Mosaic event envelopes back into the same core.
+- The XAML host also handles Engram's Anki import/export `hostIntent` payloads
+  with WinUI file pickers, merging selected `.apkg` / `.colpkg` packages through
+  the native C ABI and saving current collection state back to `.apkg`.
 - The generated SwiftUI project shell has an optional `MosaicHost` hook.
   Engram's `host/swiftui/MosaicHost.swift` implements it with `engram-capi`
   through a staged `CEngram` Swift module, hydrating SwiftUI props and routing

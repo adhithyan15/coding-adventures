@@ -3218,10 +3218,10 @@ fn emit_main_window_cs(
                      /// Receives Mosaic Dispatch events. Replace each arm's body with the\n    \
                      /// business logic that should run when that event fires.\n    \
                      /// </summary>\n    \
-                     private void OnComponentDispatch(object? sender, {name}Event ev)\n    \
+                     private async void OnComponentDispatch(object? sender, {name}Event ev)\n    \
                      {{\n        \
                          var component = sender as {name};\n        \
-                         var hostStatus = component is not null ? TryHandleMosaicHostEvent(component, ev) : null;\n        \
+                         var hostStatus = component is not null ? await TryHandleMosaicHostEvent(component, ev) : null;\n        \
                          if (hostStatus is not null) {{ this.StatusText.Text = hostStatus; return; }}\n        \
                          {dispatch_match}\n    \
                      }}\n\
@@ -3262,9 +3262,9 @@ fn emit_main_window_cs(
                      /// Receives Mosaic Dispatch events. Replace each arm's body with the\n    \
                      /// business logic that should run when that event fires.\n    \
                      /// </summary>\n    \
-                     private void OnComponentDispatch(object? sender, {name}Event ev)\n    \
+                     private async void OnComponentDispatch(object? sender, {name}Event ev)\n    \
                      {{\n        \
-                         var hostStatus = TryHandleMosaicHostEvent(this.Component, ev);\n        \
+                         var hostStatus = await TryHandleMosaicHostEvent(this.Component, ev);\n        \
                          if (hostStatus is not null) {{ this.StatusText.Text = hostStatus; return; }}\n        \
                          {dispatch_match}\n    \
                      }}\n\
@@ -3300,15 +3300,21 @@ fn build_optional_host_helpers(name: &str, namespace: &str) -> String {
              }}\n    \
          }}\n\
          \n    \
-         private string? TryHandleMosaicHostEvent({name} component, {name}Event ev)\n    \
+         private async System.Threading.Tasks.Task<string?> TryHandleMosaicHostEvent({name} component, {name}Event ev)\n    \
          {{\n        \
              var method = FindMosaicHostMethod(\"HandleEvent\", typeof({name}), typeof({name}Event));\n        \
              if (method is null) {{ return null; }}\n        \
              try\n        \
              {{\n            \
-                 return CoerceMosaicHostResult(\n                \
-                     method.Invoke(null, new object[] {{ component, ev }}),\n                \
-                     $\"Status: Mosaic host handled {{ev.MosaicName}}\");\n        \
+                 var result = await UnwrapMosaicHostResultAsync(method.Invoke(null, new object[] {{ component, ev }}));\n            \
+                 var status = CoerceMosaicHostResult(result, $\"Status: Mosaic host handled {{ev.MosaicName}}\");\n            \
+                 var intent = GetMosaicHostIntent(result);\n            \
+                 if (intent is not null)\n            \
+                 {{\n                \
+                     var intentStatus = await TryHandleMosaicHostIntent(component, intent);\n                \
+                     if (intentStatus is not null) {{ return intentStatus; }}\n            \
+                 }}\n            \
+                 return status;\n        \
              }}\n        \
              catch (System.Reflection.TargetInvocationException ex) when (ex.InnerException is not null)\n        \
              {{\n            \
@@ -3318,6 +3324,45 @@ fn build_optional_host_helpers(name: &str, namespace: &str) -> String {
              {{\n            \
                  return $\"Mosaic host failed: {{ex.GetType().Name}}: {{ex.Message}}\";\n        \
              }}\n    \
+         }}\n\
+         \n    \
+         private async System.Threading.Tasks.Task<string?> TryHandleMosaicHostIntent({name} component, object hostIntent)\n    \
+         {{\n        \
+             var hostType = FindMosaicHostType();\n        \
+             if (hostType is null) {{ return null; }}\n        \
+             var method = FindMosaicHostIntentMethod(hostType, hostIntent.GetType(), typeof({name}));\n        \
+             if (method is null) {{ return null; }}\n        \
+             try\n        \
+             {{\n            \
+                 var result = await UnwrapMosaicHostResultAsync(method.Invoke(null, new object[] {{ this, component, hostIntent }}));\n            \
+                 return CoerceMosaicHostResult(result, \"Status: Mosaic host handled host intent\");\n        \
+             }}\n        \
+             catch (System.Reflection.TargetInvocationException ex) when (ex.InnerException is not null)\n        \
+             {{\n            \
+                 return $\"Mosaic host intent failed: {{ex.InnerException.GetType().Name}}: {{ex.InnerException.Message}}\";\n        \
+             }}\n        \
+             catch (System.Exception ex)\n        \
+             {{\n            \
+                 return $\"Mosaic host intent failed: {{ex.GetType().Name}}: {{ex.Message}}\";\n        \
+             }}\n    \
+         }}\n\
+         \n    \
+         private static async System.Threading.Tasks.Task<object?> UnwrapMosaicHostResultAsync(object? result)\n    \
+         {{\n        \
+             if (result is System.Threading.Tasks.Task task)\n        \
+             {{\n            \
+                 await task.ConfigureAwait(true);\n            \
+                 return task.GetType().GetProperty(\"Result\")?.GetValue(task);\n        \
+             }}\n        \
+             return result;\n    \
+         }}\n\
+         \n    \
+         private static object? GetMosaicHostIntent(object? result)\n    \
+         {{\n        \
+             if (result is null || result is string) {{ return null; }}\n        \
+             return result.GetType().GetProperty(\n            \
+                 \"HostIntent\",\n            \
+                 System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public)?.GetValue(result);\n    \
          }}\n\
          \n    \
          private static string CoerceMosaicHostResult(object? result, string fallbackStatus)\n    \
@@ -3330,9 +3375,14 @@ fn build_optional_host_helpers(name: &str, namespace: &str) -> String {
              return statusProperty?.GetValue(result) as string ?? fallbackStatus;\n    \
          }}\n\
          \n    \
+         private static System.Type? FindMosaicHostType()\n    \
+         {{\n        \
+             return System.Type.GetType(\"{host_type}\");\n    \
+         }}\n\
+         \n    \
          private static System.Reflection.MethodInfo? FindMosaicHostMethod(string methodName, params System.Type[] parameterTypes)\n    \
          {{\n        \
-             var hostType = System.Type.GetType(\"{host_type}\");\n        \
+             var hostType = FindMosaicHostType();\n        \
              if (hostType is null) {{ return null; }}\n        \
              return hostType.GetMethod(\n            \
                  methodName,\n            \
@@ -3340,6 +3390,24 @@ fn build_optional_host_helpers(name: &str, namespace: &str) -> String {
                  binder: null,\n            \
                  types: parameterTypes,\n            \
                  modifiers: null);\n    \
+         }}\n\
+         \n    \
+         private static System.Reflection.MethodInfo? FindMosaicHostIntentMethod(\n        \
+             System.Type hostType,\n        \
+             System.Type hostIntentType,\n        \
+             System.Type componentType)\n    \
+         {{\n        \
+             foreach (var method in hostType.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static))\n        \
+             {{\n            \
+                 if (method.Name != \"HandleHostIntent\") {{ continue; }}\n            \
+                 var parameters = method.GetParameters();\n            \
+                 if (parameters.Length != 3) {{ continue; }}\n            \
+                 if (!parameters[0].ParameterType.IsAssignableFrom(typeof(Window))) {{ continue; }}\n            \
+                 if (!parameters[1].ParameterType.IsAssignableFrom(componentType)) {{ continue; }}\n            \
+                 if (!parameters[2].ParameterType.IsAssignableFrom(hostIntentType)) {{ continue; }}\n            \
+                 return method;\n        \
+             }}\n        \
+             return null;\n    \
          }}"
     )
 }
@@ -8690,6 +8758,13 @@ mod tests {
         assert!(p.main_window_cs.contains("TryApplyMosaicHostProps"));
         assert!(p.main_window_cs.contains("CoerceMosaicHostResult"));
         assert!(p.main_window_cs.contains("FindMosaicHostMethod"));
+        assert!(p
+            .main_window_cs
+            .contains("private async void OnComponentDispatch"));
+        assert!(p.main_window_cs.contains("await TryHandleMosaicHostEvent"));
+        assert!(p.main_window_cs.contains("TryHandleMosaicHostIntent"));
+        assert!(p.main_window_cs.contains("UnwrapMosaicHostResultAsync"));
+        assert!(p.main_window_cs.contains("HandleHostIntent"));
         assert!(p.main_window_cs.contains("Mosaic.Generated.MosaicHost"));
         // MainWindow constructor pre-populates the Greeting slot stub.
         assert!(p.main_window_cs.contains("Greeting"));

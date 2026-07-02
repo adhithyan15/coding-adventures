@@ -2275,6 +2275,11 @@ fn native_project_shells_expose_engram_host_contract() {
         .expect("MainWindow.xaml.cs");
     assert_contains(&xaml_main_window, "TryApplyMosaicHostProps");
     assert_contains(&xaml_main_window, "CoerceMosaicHostResult");
+    assert_contains(&xaml_main_window, "private async void OnComponentDispatch");
+    assert_contains(&xaml_main_window, "await TryHandleMosaicHostEvent");
+    assert_contains(&xaml_main_window, "TryHandleMosaicHostIntent");
+    assert_contains(&xaml_main_window, "UnwrapMosaicHostResultAsync");
+    assert_contains(&xaml_main_window, "HandleHostIntent");
     assert_contains(
         &xaml_main_window,
         "FindMosaicHostMethod(\"ApplyProps\", typeof(EngramApp))",
@@ -2482,6 +2487,13 @@ fn source_tree_has_expected_shape() {
     assert_contains(&xaml_host, "public sealed record MosaicHostResult");
     assert_contains(&xaml_host, "HostIntentReceived");
     assert_contains(&xaml_host, "LastHostIntent");
+    assert_contains(&xaml_host, "HandleHostIntent");
+    assert_contains(&xaml_host, "FileOpenPicker");
+    assert_contains(&xaml_host, "FileSavePicker");
+    assert_contains(&xaml_host, "ImportAnkiPackage");
+    assert_contains(&xaml_host, "ExportAnkiPackage");
+    assert_contains(&xaml_host, "eg_merge_anki_apkg");
+    assert_contains(&xaml_host, "eg_export_anki_apkg");
     assert_contains(&xaml_host, "private static IntPtr Session = IntPtr.Zero");
     assert_contains(&xaml_host, "TryGetSession");
     assert_contains(&xaml_host, "Engram native host unavailable");
