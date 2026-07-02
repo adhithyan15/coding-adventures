@@ -17,7 +17,7 @@ namespace into every file:
 | `Pair` / `cons` / `car` / `cdr` | Lisp cons cells; no native type. |
 | `eq`, `toDisplay`, `print` | Symbol-aware equality and Lisp/Ruby display (`nil`, `#t`/`#f`). |
 | `puts` | Ruby `puts`: per-arg line, arrays flattened element-per-line, no double trailing newline, no-arg → one newline. |
-| `add`/`sub`/`mul`/`div`, `lt`/`gt` | Variadic folds + truncating-integer `/`. |
+| `add`/`sub`/`mul`/`div`, `lt`/`gt` | Variadic numeric folds + truncating-integer `/`. `add`/`mul` are **type-polymorphic** like Ruby (dispatched on the first operand's runtime tag): `"a"+"b"`→`"ab"`, `[1]+[2]`→`[1,2]` (fresh array), `"ab"*3`→`"ababab"`, `[0]*3`→`[0,0,0]`, `[1,2]*", "`→`"1, 2"`. `*` repeat guards against oversize allocation (`Error("argument too big")`). |
 | `Closure`/`apply`/`makeClosure`, global store, builtin dispatch | Uniform closure handles + SIR `Globals`. |
 
 It implements **SIR** semantics, not any one source language's — so a Ruby

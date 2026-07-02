@@ -192,6 +192,68 @@ describe("arithmetic", () => {
   });
 });
 
+describe("polymorphic + (string/array concat)", () => {
+  it("string concat", () => {
+    expect(sir.add("a", "b")).toBe("ab");
+    expect(sir.add("a", "b", "c")).toBe("abc"); // variadic fold
+    expect(sir.add("n=", 1)).toBe("n=1"); // non-string operand rendered via display
+  });
+
+  it("array concat builds a fresh array (no aliasing)", () => {
+    const a = [1];
+    const b = [2];
+    const r = sir.add(a, b) as unknown[];
+    expect(r).toEqual([1, 2]);
+    expect(r).not.toBe(a); // fresh — not the receiver
+    expect(a).toEqual([1]); // inputs untouched
+    expect(b).toEqual([2]);
+  });
+
+  it("array concat is variadic and does not rely on [] + []", () => {
+    expect(sir.add([], []) as unknown[]).toEqual([]);
+    expect(sir.add([1], [2], [3]) as unknown[]).toEqual([1, 2, 3]);
+  });
+
+  it("numeric + unchanged", () => {
+    expect(sir.add(1, 2)).toBe(3);
+  });
+});
+
+describe("polymorphic * (string/array repeat and join)", () => {
+  it("string repeat", () => {
+    expect(sir.mul("ab", 3)).toBe("ababab");
+    expect(sir.mul("x", 0)).toBe(""); // non-positive count → empty
+    expect(sir.mul("x", -2)).toBe(""); // negative → empty
+    expect(sir.mul("x", 1.5)).toBe(""); // non-integer → empty
+  });
+
+  it("array repeat builds a fresh array", () => {
+    expect(sir.mul([0], 3) as unknown[]).toEqual([0, 0, 0]);
+    expect(sir.mul([1, 2], 2) as unknown[]).toEqual([1, 2, 1, 2]);
+    expect(sir.mul([1], 0) as unknown[]).toEqual([]); // non-positive → empty
+    expect(sir.mul([1], -1) as unknown[]).toEqual([]);
+  });
+
+  it("array join with a string separator", () => {
+    expect(sir.mul([1, 2], ", ")).toBe("1, 2");
+    expect(sir.mul([], ", ")).toBe(""); // empty array joins to empty string
+  });
+
+  it("numeric * unchanged", () => {
+    expect(sir.mul(2, 3)).toBe(6);
+  });
+
+  it("rejects oversize repeat with a Ruby-shaped ArgumentError", () => {
+    expect(() => sir.mul("ab", Number.MAX_SAFE_INTEGER)).toThrow("argument too big");
+    expect(() => sir.mul([1, 2, 3], Number.MAX_SAFE_INTEGER)).toThrow("argument too big");
+  });
+
+  it("empty receiver short-circuits a huge count (no work, no throw)", () => {
+    expect(sir.mul("", Number.MAX_SAFE_INTEGER)).toBe("");
+    expect(sir.mul([], Number.MAX_SAFE_INTEGER) as unknown[]).toEqual([]);
+  });
+});
+
 describe("closures, globals, dispatch", () => {
   it("makeClosure prepends captures", () => {
     const f = (a: sir.Val, b: sir.Val, c: sir.Val): sir.Val =>

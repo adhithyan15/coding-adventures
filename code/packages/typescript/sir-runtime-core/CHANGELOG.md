@@ -2,6 +2,38 @@
 
 All notable changes to `@coding-adventures/sir-runtime-core` are documented here.
 
+## [0.1.8] - 2026-07-01
+
+### Added — polymorphic `+`/`*` on strings and arrays (PO2)
+
+Ruby overloads `+`/`*` by the runtime type of the first operand, and every case
+lowers to the same SIR `+`/`*` builtins (emitted as `__Sir.add`/`__Sir.mul`), so
+`add`/`mul` in `arithmetic.ts` now dispatch on the concrete JS runtime tag
+(`typeof x === "string"`, `Array.isArray(x)` — never reflection/`eval`):
+
+- **`add`**: first operand a **string** → concat all operands as strings (each
+  non-string rendered via `toDisplay`); first operand an **array** → return a
+  **fresh** array concatenating each operand's elements (never relies on JS
+  `[] + []`, which wrongly yields `""`; inputs are never aliased or mutated);
+  otherwise the numeric fold is unchanged.
+- **`mul`** (binary, per Ruby): **string × int** → repeat; **array × int** →
+  fresh repeated-element array; **array × string** → join elements with the
+  separator via `toDisplay`; otherwise the variadic numeric fold is unchanged.
+
+### Security — guard both `*` repeat arms against oversize allocation (CWE-1284/CWE-770)
+
+- A `*` repeat with a huge count (`[0] * 1e18`, `"x" * 1e18`) would try to
+  allocate an astronomically large result and hang/OOM the process. `repeatCount`
+  now rejects any repeat whose resulting length would exceed
+  `Number.MAX_SAFE_INTEGER` by throwing a Ruby-shaped `Error("argument too big")`
+  (Ruby's `ArgumentError`). Non-positive / non-integer / non-finite counts
+  collapse to an empty result (matching Ruby: `"ab" * 0 == ""`). An **empty
+  receiver** short-circuits before any loop or `String.prototype.repeat` call, so
+  a huge count over `""`/`[]` does no work and cannot throw a spurious JS
+  `RangeError`.
+- New vitest cases cover every arm plus the overflow guard and empty-receiver
+  short-circuit; bumps `package.json` to `0.1.8`.
+
 ## [0.1.7] - 2026-07-01
 
 ### Security — cycle-guard the `puts` array flatten (CWE-674)
