@@ -2,6 +2,40 @@
 
 All notable changes to `@coding-adventures/sir-runtime-oop` are documented here.
 
+## [0.1.9] - 2026-07-01
+
+### Added (O1 — user class/instance method tables + new/super/self)
+
+Mirrors the Python runtime's O1 additions so Ruby→TS executes user-defined OOP.
+Additive: no existing behaviour changes; these helpers only run once the new
+builtins appear (frontend O2).
+
+- **Method tables.** Two explicit `(class, method) → Closure` `Map`s —
+  `instanceMethods` (populated by `defMethod`, for `def m`) and `classMethods`
+  (populated by `defClassMethod`, for `def self.m`). Because a JS `Map` keys
+  arrays by *identity*, the `(class, method)` pair is joined with a NUL
+  separator (`"class\x00method"`); dispatch is **always** an explicit `Map`
+  lookup walking the ancestry chain — **never** reflection on a source-derived
+  name (the C3 RCE lesson). Ancestry walks are cycle-guarded like `isA`.
+- **`callNew(class, ...args)`** — allocate → push self → run inherited
+  `initialize` → pop self → return the object.
+- **`callMethod` user-object path** — a `SirInstance` receiver dispatches a
+  registered instance method (ancestry-walked) first under a pushed self, then
+  falls through to the existing reflective built-ins / primitive catalog (no
+  regression).
+- **`callSuper(method, class, ...args)`** — walks from the parent up, re-runs the
+  first ancestor implementation with the current self still bound; `null` when
+  unresolved.
+- **`callClassMethod(class, method, ...args)`** — `def self.m` dispatch via the
+  class-method table; `null` when unresolved.
+- **`currentSelfVal()`** — the top of the self-stack (or `null` at top level).
+  Named `currentSelfVal` to avoid clashing with the module-private
+  `currentSelf` (the ivar-store default-self helper).
+
+**Single-threaded caveat.** Self is a process-global stack — faithful for the
+single-threaded transpiled scripts we target; true per-object/per-thread binding
+is out of v0 scope.
+
 ## [0.1.8] - 2026-06-30
 
 ### Added (M6 — Kernel flow-control + boolean operators)

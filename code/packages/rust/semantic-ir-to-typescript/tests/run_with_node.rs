@@ -316,6 +316,209 @@ fn e2_unrelated_user_class_not_rescued_executes_ts() {
     }
 }
 
+// ── O1: OOP method-table execution proof ─────────────────────────────────────
+
+/// A faithful inline `__SirOop` stub for the O1 execution proof, mirroring the
+/// real `@coding-adventures/sir-runtime-oop` package's method-table logic:
+/// `defMethod` registers a `(class, method)` closure, `callNew` allocates an
+/// instance and runs `initialize`, and `callMethod` dispatches a user method by
+/// explicit `Map` lookup (never reflection).  We inline it — rather than resolve
+/// the workspace package under bare `node` — for the same reason the other stubs
+/// are inlined (see the module doc-comment).  Keeping the real dispatch logic
+/// here means the proof genuinely exercises "the emitted `defMethod`/`callNew`/
+/// `callMethod` calls drive the method table", not just that they are present.
+const SIR_OOP_DISPATCH_STUB: &str = r#"const __SirOop = (() => {
+  const SEP = "\x00";
+  const key = (c, m) => c + SEP + m;
+  const supers = new Map();
+  const instanceMethods = new Map();
+  const selfStack = [];
+  class SirInstance { constructor(c) { this.sirClass = c; this.ivars = new Map(); } }
+  const superclassOf = (n) => (supers.has(n) ? supers.get(n) : null);
+  const defineClass = (n, s) => { supers.set(n, s ?? null); };
+  const defMethod = (c, m, fn) => { instanceMethods.set(key(c, m), fn); };
+  const resolve = (c, m) => {
+    let cur = c; const seen = new Set();
+    while (cur !== null && !seen.has(cur)) {
+      const fn = instanceMethods.get(key(cur, m));
+      if (fn !== undefined) return fn;
+      seen.add(cur); cur = superclassOf(cur);
+    }
+    return null;
+  };
+  const callNew = (c, ...args) => {
+    const obj = new SirInstance(c);
+    selfStack.push(obj);
+    try { const init = resolve(c, "initialize"); if (init !== null) __Sir.apply(init, args); }
+    finally { selfStack.pop(); }
+    return obj;
+  };
+  const callMethod = (recv, name, ...args) => {
+    if (recv instanceof SirInstance) {
+      const fn = resolve(recv.sirClass, name);
+      if (fn !== null) {
+        selfStack.push(recv);
+        try { return __Sir.apply(fn, args); } finally { selfStack.pop(); }
+      }
+    }
+    return null;
+  };
+  return { defineClass, defMethod, callNew, callMethod };
+})();
+"#;
+
+/// A `__Sir` stub carrying a `Closure` + `apply` (the emitted `MakeClosure`
+/// renders `new __Sir.Closure(...)`, and the OOP stub applies method closures
+/// through `__Sir.apply`), plus `print`/`toDisplay`.
+const SIR_CLOSURE_STUB: &str = r#"const __Sir = {
+  Closure: class { constructor(fn) { this.fn = fn; } },
+  apply: (c, args) => c.fn(...args),
+  toDisplay: (v) => (v === null ? "nil" : String(v)),
+  print: (v) => { console.log(__Sir.toDisplay(v)); return null; },
+};
+"#;
+
+fn ts_to_runnable_js_oop(ts: &str) -> String {
+    let mut js = ts.to_string();
+    js = js.replace(
+        "import * as __Sir from \"@coding-adventures/sir-runtime-core\";\n",
+        SIR_CLOSURE_STUB,
+    );
+    js = js.replace(
+        "import * as __SirOop from \"@coding-adventures/sir-runtime-oop\";\n",
+        SIR_OOP_DISPATCH_STUB,
+    );
+    js = js.replace(" as { [k: string]: __Sir.Val }", "");
+    js = js.replace(": __Sir.Val[]", "");
+    js = js.replace(": __Sir.Val", "");
+    js
+}
+
+#[test]
+fn end_to_end_oop_new_and_dispatch_executes_ts() {
+    // O1 execution proof (hand-built SIR — the frontend does not emit these
+    // builtins until O2).  Model `Dog.new.speak`:
+    //   • a hoisted `Dog_speak` returning "Rex says woof",
+    //   • `__def_method__("Dog", "speak", MakeClosure(Dog_speak))`,
+    //   • `d = __new__("Dog")`,
+    //   • `print(__method__(d, "speak"))`.
+    // Running under node with the faithful `__SirOop` dispatch stub proves the
+    // emitted `defMethod` → `callNew` → `callMethod` chain executes.
+    let speak_fn = Function {
+        name: "Dog_speak".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: vec![],
+            value: str_lit("Rex says woof"),
+            span: sir_span(),
+        },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sir_span(),
+    };
+    let def_method = Expr::BuiltinCall {
+        name: "__def_method__".into(),
+        args: vec![
+            str_lit("Dog"),
+            str_lit("speak"),
+            Expr::MakeClosure { fn_name: "Dog_speak".into(), captures: vec![], span: sir_span() },
+        ],
+        effects: EffectSet::PURE,
+        span: sir_span(),
+    };
+    let new_dog = Expr::BuiltinCall {
+        name: "__new__".into(),
+        args: vec![str_lit("Dog")],
+        effects: EffectSet::PURE,
+        span: sir_span(),
+    };
+    let dispatch = Expr::BuiltinCall {
+        name: "__method__".into(),
+        args: vec![
+            Expr::VarRef { name: "d".into(), scope: Scope::Local, span: sir_span() },
+            str_lit("speak"),
+        ],
+        effects: EffectSet::PURE,
+        span: sir_span(),
+    };
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: vec![
+                Stmt::ExprStmt { expr: def_method, span: sir_span() },
+                Stmt::LetBinding {
+                    name: "d".into(),
+                    sir_type: None,
+                    value: new_dog,
+                    span: sir_span(),
+                },
+                print(dispatch),
+            ],
+            value: Expr::NilLit { span: sir_span() },
+            span: sir_span(),
+        },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sir_span(),
+    };
+    let module = Module {
+        name: "oopmod".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Classes,
+            Feature::Closures,
+            Feature::Strings,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![speak_fn, main],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sir_span(),
+    };
+
+    let artifact = compile(&module).expect("compile to typescript");
+    // Shape: the three O1 helper calls appear.
+    assert!(
+        artifact.source.contains("__SirOop.defMethod(\"Dog\", \"speak\","),
+        "got:\n{}",
+        artifact.source
+    );
+    assert!(artifact.source.contains("__SirOop.callNew(\"Dog\")"), "got:\n{}", artifact.source);
+    assert!(
+        artifact.source.contains("__SirOop.callMethod(d, \"speak\")"),
+        "got:\n{}",
+        artifact.source
+    );
+    // Execution: the chain must run under node and print the method's result.
+    if !node_available() {
+        eprintln!("note: `node` unavailable — skipping O1 TS execution proof");
+        return;
+    }
+    let js = ts_to_runnable_js_oop(&artifact.source);
+    let mut path: PathBuf = std::env::temp_dir();
+    path.push(format!("sir_ts_oop_{}.js", std::process::id()));
+    std::fs::write(&path, &js).expect("write temp js");
+    let output = Command::new("node").arg(&path).output().expect("spawn node");
+    let _ = std::fs::remove_file(&path);
+    assert!(
+        output.status.success(),
+        "node exited non-zero:\nstderr: {}\nsource:\n{}",
+        String::from_utf8_lossy(&output.stderr),
+        js
+    );
+    let stdout = String::from_utf8_lossy(&output.stdout)
+        .trim_end_matches(['\n', '\r'])
+        .to_string();
+    assert_eq!(stdout, "Rex says woof", "O1 dispatch produced wrong output");
+}
+
 fn sp() -> Span {
     Span::synthetic()
 }

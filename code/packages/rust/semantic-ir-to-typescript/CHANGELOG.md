@@ -2,6 +2,29 @@
 
 ## Unreleased
 
+## 0.5.0 — OOP object-model emit arms (O1)
+
+Additive emit support for the object-model builtins the Ruby frontend will
+produce in O2. **No existing program changes behaviour** — nothing emits these
+builtins yet; the arms only fire once they appear, at which point they route to
+the `@coding-adventures/sir-runtime-oop` method-table helpers.
+
+- **New `emit_builtin_call` arms**, mirroring the existing `__method__` →
+  `__SirOop.callMethod` routing:
+  - `__new__(class, ...ctor_args)` → `__SirOop.callNew(class, args…)`
+  - `__super__(method, class, ...args)` → `__SirOop.callSuper(method, class, args…)`
+  - `__def_method__(class, method, closure)` → `__SirOop.defMethod(...)`
+  - `__def_class_method__(class, method, closure)` → `__SirOop.defClassMethod(...)`
+  - `__self__()` → `__SirOop.currentSelfVal()`
+  Class/method-name `StrLit`s are emitted through the normal expression path
+  (`quote_ts_string`) — never raw interpolation of a source-derived name.
+- **Import gating** (`uses_oop`) now also fires on the new builtins, so the
+  `import * as __SirOop` header is present whenever any is emitted.
+- **Tests:** emit-shape unit tests for each arm and an end-to-end execution
+  proof — a hand-built `Dog#speak` module (`__def_method__` + `__new__` +
+  `__method__`) run under `node` with a faithful method-table stub prints
+  `Rex says woof`, proving the emit → runtime wiring executes.
+
 ## 0.4.0 — user-defined exception-class ancestry (E2)
 
 The backend now threads user `class Child < Parent` inheritance edges into the

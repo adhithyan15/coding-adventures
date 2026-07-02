@@ -203,6 +203,150 @@ export function defineMethod(name: string, fn: (recv: Val, args: Val[]) => Val):
   methods.set(name, fn);
 }
 
+// ── User class/instance method tables (O1) ───────────────────────────────────
+//
+// The Ruby→SIR frontend HOISTS every method to a detached top-level function,
+// so nothing in the IR records that `speak` belongs to `Dog`.  We recover that
+// association at *runtime* with two explicit tables, populated by emitted
+// `__def_method__` / `__def_class_method__` registrations:
+//
+//     instanceMethods.get("Dog\x00speak") -> Closure   // def speak
+//     classMethods.get("Counter\x00zero") -> Closure   // def self.zero
+//
+// **Model.**  A method value is a sir-runtime-core `Closure` (the hoisted
+// top-level function captured by `MakeClosure`); it is invoked with `apply` —
+// never property lookup / `eval` / reflection on the source-derived name (the
+// C3 RCE lesson).  Dispatch is *always* an explicit `Map` lookup on the
+// `(class, method)` key, walking the registered ancestry chain.
+//
+// **Self / receiver.**  Instance-method dispatch and `callNew` push the
+// receiver onto the process-global self-stack (`pushSelf`) before invoking the
+// body and pop after, so `@ivar` access reads the right object with no explicit
+// `self` parameter.  `callSuper` runs in the *same* receiver (no push/pop) —
+// `super` is a re-dispatch on the current self.  This mirrors the Python
+// runtime's single-threaded v0 model; true per-object/per-thread binding is out
+// of v0 scope.
+//
+// **Key encoding.**  Python keys the tables on a `(class, method)` tuple (dicts
+// key tuples by value); a JS `Map` keys arrays by *identity*, so the mirror
+// joins the pair with a NUL separator (`"class\x00method"`) — class and method
+// names cannot contain a NUL, so the join is unambiguous.  Still a pure value
+// lookup, never reflection.
+
+const METHOD_KEY_SEP = "\x00";
+
+function methodKey(className: string, methodName: string): string {
+  return className + METHOD_KEY_SEP + methodName;
+}
+
+const instanceMethods = new Map<string, Closure>();
+const classMethods = new Map<string, Closure>();
+
+/**
+ * Register instance method `methodName` for `className` (`def m`).  Emitted by
+ * the frontend as `__def_method__`; `fn` is the hoisted top-level function as a
+ * `Closure`.
+ */
+export function defMethod(className: string, methodName: string, fn: Closure): void {
+  instanceMethods.set(methodKey(className, methodName), fn);
+}
+
+/**
+ * Register class method `methodName` for `className` (`def self.m`).  Emitted by
+ * the frontend as `__def_class_method__`.
+ */
+export function defClassMethod(className: string, methodName: string, fn: Closure): void {
+  classMethods.set(methodKey(className, methodName), fn);
+}
+
+/** Find `methodName` on `className` or any registered ancestor.  Walks the
+ * superclass chain (cycle-guarded, reusing the `isA` `seen`-set pattern) and
+ * returns the first matching `Closure`, or `null` if unresolved. */
+function resolveInstanceMethod(className: string, methodName: string): Closure | null {
+  let cur: string | null = className;
+  const seen = new Set<string>();
+  while (cur !== null && !seen.has(cur)) {
+    const fn = instanceMethods.get(methodKey(cur, methodName));
+    if (fn !== undefined) return fn;
+    seen.add(cur);
+    cur = superclassOf(cur);
+  }
+  return null;
+}
+
+/** Find class method `methodName` on `className` or an ancestor (cycle-guarded
+ * ancestry walk); `null` if unresolved. */
+function resolveClassMethod(className: string, methodName: string): Closure | null {
+  let cur: string | null = className;
+  const seen = new Set<string>();
+  while (cur !== null && !seen.has(cur)) {
+    const fn = classMethods.get(methodKey(cur, methodName));
+    if (fn !== undefined) return fn;
+    seen.add(cur);
+    cur = superclassOf(cur);
+  }
+  return null;
+}
+
+/**
+ * Allocate a `className` instance and run its `initialize` (`Foo.new`).
+ *
+ * Allocates via `newInstance`, pushes the new object as the current self, and —
+ * if an `initialize` is registered for `className` or any ancestor — invokes it
+ * with `args` (so `@ivar` assignments in the constructor land on the new
+ * object).  Always pops self and returns the object, even with no `initialize`.
+ */
+export function callNew(className: string, ...args: Val[]): SirInstance {
+  const obj = newInstance(className);
+  pushSelf(obj);
+  try {
+    const initializer = resolveInstanceMethod(className, "initialize");
+    if (initializer !== null) apply(initializer, args);
+  } finally {
+    popSelf();
+  }
+  return obj;
+}
+
+/**
+ * Dispatch `super` — re-run `methodName` from `className`'s parent.
+ *
+ * Walks from `superclassOf(className)` upward and invokes the first ancestor
+ * implementation of `methodName` with `args`, keeping the *current* self bound
+ * (`super` runs in the same receiver, so no push/pop).  Returns `null` (Ruby
+ * `nil`) if no ancestor defines the method — the honest floor, consistent with
+ * `callMethod`.
+ */
+export function callSuper(methodName: string, className: string, ...args: Val[]): Val {
+  const parent = superclassOf(className);
+  if (parent === null) return null;
+  const fn = resolveInstanceMethod(parent, methodName);
+  if (fn === null) return null;
+  return apply(fn, args);
+}
+
+/**
+ * Dispatch a class method (`Foo.bar` for `def self.bar`).  Looks up `methodName`
+ * in the class-method table walking `className`'s ancestry and applies it;
+ * returns `null` if unresolved.  (`Foo.new` is the implicit class method but
+ * routes to `callNew`, not here.)
+ */
+export function callClassMethod(className: string, methodName: string, ...args: Val[]): Val {
+  const fn = resolveClassMethod(className, methodName);
+  if (fn === null) return null;
+  return apply(fn, args);
+}
+
+/**
+ * The current receiver (top of the self-stack), or `null` if empty.  Backs the
+ * `__self__` builtin — a bare `self` in a method body.  Returns `null` (Ruby
+ * `nil`) at top level where no receiver is bound rather than the internal
+ * default-self sentinel.
+ */
+export function currentSelfVal(): Val {
+  return selfStack.length > 0 ? selfStack[selfStack.length - 1]! : null;
+}
+
 // ── Built-in method catalog (SIR method-dispatch spec, M1) ───────────────────
 //
 // `recv.meth(args…)` reaches the backend as `BuiltinCall("__method__", [recv,
@@ -1152,6 +1296,24 @@ function symbolMethod(recv: Val, name: string): Val | typeof MISS {
  * (non-ancestor) match.
  */
 export function callMethod(recv: Val, name: string, ...args: Val[]): Val {
+  // User objects (O1): a method registered via `defMethod` (walking the class's
+  // ancestry) is dispatched first — push the receiver as the current self, apply
+  // the stored `Closure` with `args`, then pop self.  Only if no user method
+  // resolves does dispatch fall through to the reflective built-ins
+  // (`is_a?`/`class`/…) and the primitive catalog — so `obj.class` still works
+  // while `obj.speak` runs the user body.
+  if (recv instanceof SirInstance) {
+    const userFn = resolveInstanceMethod(recv.sirClass, name);
+    if (userFn !== null) {
+      pushSelf(recv);
+      try {
+        return apply(userFn, args);
+      } finally {
+        popSelf();
+      }
+    }
+  }
+
   switch (name) {
     case "is_a?":
     case "kind_of?":
@@ -1312,4 +1474,6 @@ export function resetOop(): void {
   defaultSelf.ivars.clear();
   cvars.clear();
   methods.clear();
+  instanceMethods.clear();
+  classMethods.clear();
 }

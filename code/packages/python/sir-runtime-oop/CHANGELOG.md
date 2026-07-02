@@ -2,6 +2,42 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.9] - 2026-07-01
+
+### Added (O1 — user class/instance method tables + new/super/self)
+
+The runtime now executes user-defined Ruby OOP (dispatch, construction,
+inheritance) — the substrate the frontend's O2 pass will target. Additive: no
+existing behaviour changes; these helpers only run once the new builtins appear.
+
+- **Method tables.** Two explicit `(class, method) → Closure` tables —
+  `_instance_methods` (populated by `def_method`, for `def m`) and
+  `_class_methods` (populated by `def_class_method`, for `def self.m`). Keyed on
+  a `(class, method)` tuple; dispatch is **always** an explicit dict lookup
+  walking the registered ancestry chain — **never** `getattr`/`eval`/reflection
+  on a source-derived name (the C3 RCE lesson). Every ancestry walk is
+  cycle-guarded with the same `seen`-set pattern as `is_a`.
+- **`call_new(class, *args)`** — allocates an instance, pushes it as the current
+  self, runs an inherited `initialize` (walking ancestry) with the args, pops
+  self, and returns the object (a plain allocation when no `initialize` exists).
+- **`call_method` user-object path** — when the receiver is a `SirInstance`, a
+  registered instance method (resolved through ancestry) is dispatched first
+  under a pushed self; only if none resolves does dispatch fall through to the
+  existing reflective built-ins and primitive catalog (no regression of
+  `obj.class` / collection methods).
+- **`call_super(method, class, *args)`** — walks from the class's parent upward
+  and re-runs the first ancestor implementation with the **current** self still
+  bound (super shares the receiver — no push/pop). Returns `nil` when no
+  ancestor defines the method.
+- **`call_class_method(class, method, *args)`** — dispatches `def self.m` class
+  methods via the class-method table (ancestry-walked); `nil` when unresolved.
+- **`current_self()`** — the top of the self-stack (or `nil` at top level);
+  backs a bare `self`. Named `current_self` to avoid the Python keyword clash.
+
+**Single-threaded caveat.** Self is a process-global stack, so this is faithful
+for the single-threaded transpiled scripts we target; true per-object/per-thread
+binding remains out of v0 scope (as documented at the module head).
+
 ## [0.1.8] - 2026-06-30
 
 ### Added (M6 — Kernel flow-control + boolean operators)
