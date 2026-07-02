@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 41 \u2014 split renal function / renography asymmetry from two stated uptake counts (a NEW panel: nuclear medicine / renography). From the relative uptake counts of the two kidneys (left, right) compute the differential asymmetry index ((left-right)/(left+right)), the left split function (left/(left+right)), or the right split function (right/(left+right)). Each item is a compute_dimensioned program (observe the two counts, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, DIFFERENCE-OVER-SUM (left-right)/(left+right), the first quotient on the ladder to put the SAME operand in both a subtraction (numerator) and an addition (denominator) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the two observed counts via +, - and / \u2014 no constant leaks (the metric asymmetry index and split fractions need none), and neither the sum nor any fraction ever appears as a literal (each is computed from the observed counts) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same two counts, so the distractors are exactly the slips students make: the reversed asymmetry index (a sign error) and the raw left-to-right ratio (instead of a share-of-total or normalised difference). The core confusion tested is the normalised difference vs the plain share-of-total vs the raw ratio.",
+  "items": [
+    {
+      "id": "r41srf-01",
+      "qtype": "split_renal_function",
+      "stem": "A renogram measures relative uptake counts of 60 in the left kidney and 40 in the right kidney. What is the differential asymmetry index (the difference of the two kidneys over their sum)?",
+      "program": "observe left_kidney(60)\nobserve right_kidney(40)\nlet answer = (left_kidney - right_kidney) / (left_kidney + right_kidney)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -0.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r41srf-02",
+      "qtype": "split_renal_function",
+      "stem": "A renogram measures relative uptake counts of 60 in the left kidney and 40 in the right kidney. What is the split function of the left kidney (its share of the total)?",
+      "program": "observe left_kidney(60)\nobserve right_kidney(40)\nlet answer = left_kidney / (left_kidney + right_kidney)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -0.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r41srf-03",
+      "qtype": "split_renal_function",
+      "stem": "A renogram measures relative uptake counts of 60 in the left kidney and 40 in the right kidney. What is the split function of the right kidney (its share of the total)?",
+      "program": "observe left_kidney(60)\nobserve right_kidney(40)\nlet answer = right_kidney / (left_kidney + right_kidney)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -0.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r41srf-04",
+      "qtype": "split_renal_function",
+      "stem": "A renogram measures relative uptake counts of 55 in the left kidney and 45 in the right kidney. What is the differential asymmetry index (the difference of the two kidneys over their sum)?",
+      "program": "observe left_kidney(55)\nobserve right_kidney(45)\nlet answer = (left_kidney - right_kidney) / (left_kidney + right_kidney)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.55,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.45,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": -0.1,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.1,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.2222222222222223,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r41srf-05",
+      "qtype": "split_renal_function",
+      "stem": "A renogram measures relative uptake counts of 55 in the left kidney and 45 in the right kidney. What is the split function of the left kidney (its share of the total)?",
+      "program": "observe left_kidney(55)\nobserve right_kidney(45)\nlet answer = left_kidney / (left_kidney + right_kidney)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.1,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.45,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": -0.1,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.2222222222222223,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.55,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r41srf-06",
+      "qtype": "split_renal_function",
+      "stem": "A renogram measures relative uptake counts of 55 in the left kidney and 45 in the right kidney. What is the split function of the right kidney (its share of the total)?",
+      "program": "observe left_kidney(55)\nobserve right_kidney(45)\nlet answer = right_kidney / (left_kidney + right_kidney)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.45,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.1,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.55,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -0.1,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.2222222222222223,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r41srf-07",
+      "qtype": "split_renal_function",
+      "stem": "A renogram measures relative uptake counts of 70 in the left kidney and 30 in the right kidney. What is the differential asymmetry index (the difference of the two kidneys over their sum)?",
+      "program": "observe left_kidney(70)\nobserve right_kidney(30)\nlet answer = (left_kidney - right_kidney) / (left_kidney + right_kidney)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.3,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -0.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.3333333333333335,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r41srf-08",
+      "qtype": "split_renal_function",
+      "stem": "A renogram measures relative uptake counts of 70 in the left kidney and 30 in the right kidney. What is the split function of the left kidney (its share of the total)?",
+      "program": "observe left_kidney(70)\nobserve right_kidney(30)\nlet answer = left_kidney / (left_kidney + right_kidney)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -0.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.3333333333333335,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r41srf-09",
+      "qtype": "split_renal_function",
+      "stem": "A renogram measures relative uptake counts of 70 in the left kidney and 30 in the right kidney. What is the split function of the right kidney (its share of the total)?",
+      "program": "observe left_kidney(70)\nobserve right_kidney(30)\nlet answer = right_kidney / (left_kidney + right_kidney)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": -0.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.3,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.3333333333333335,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r41srf-10",
+      "qtype": "split_renal_function",
+      "stem": "A renogram measures relative uptake counts of 48 in the left kidney and 52 in the right kidney. What is the differential asymmetry index (the difference of the two kidneys over their sum)?",
+      "program": "observe left_kidney(48)\nobserve right_kidney(52)\nlet answer = (left_kidney - right_kidney) / (left_kidney + right_kidney)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.48,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.52,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.04,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.9230769230769231,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": -0.04,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r41srf-11",
+      "qtype": "split_renal_function",
+      "stem": "A renogram measures relative uptake counts of 48 in the left kidney and 52 in the right kidney. What is the split function of the left kidney (its share of the total)?",
+      "program": "observe left_kidney(48)\nobserve right_kidney(52)\nlet answer = left_kidney / (left_kidney + right_kidney)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.48,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": -0.04,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.52,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.04,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.9230769230769231,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r41srf-12",
+      "qtype": "split_renal_function",
+      "stem": "A renogram measures relative uptake counts of 48 in the left kidney and 52 in the right kidney. What is the split function of the right kidney (its share of the total)?",
+      "program": "observe left_kidney(48)\nobserve right_kidney(52)\nlet answer = right_kidney / (left_kidney + right_kidney)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": -0.04,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.52,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.48,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.04,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.9230769230769231,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r41srf-13",
+      "qtype": "split_renal_function",
+      "stem": "A renogram measures relative uptake counts of 64 in the left kidney and 36 in the right kidney. What is the differential asymmetry index (the difference of the two kidneys over their sum)?",
+      "program": "observe left_kidney(64)\nobserve right_kidney(36)\nlet answer = (left_kidney - right_kidney) / (left_kidney + right_kidney)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.64,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.36,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.28,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -0.28,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.7777777777777777,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r41srf-14",
+      "qtype": "split_renal_function",
+      "stem": "A renogram measures relative uptake counts of 64 in the left kidney and 36 in the right kidney. What is the split function of the left kidney (its share of the total)?",
+      "program": "observe left_kidney(64)\nobserve right_kidney(36)\nlet answer = left_kidney / (left_kidney + right_kidney)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.28,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.36,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": -0.28,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.64,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.7777777777777777,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r41srf-15",
+      "qtype": "split_renal_function",
+      "stem": "A renogram measures relative uptake counts of 64 in the left kidney and 36 in the right kidney. What is the split function of the right kidney (its share of the total)?",
+      "program": "observe left_kidney(64)\nobserve right_kidney(36)\nlet answer = right_kidney / (left_kidney + right_kidney)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.28,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.64,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": -0.28,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.7777777777777777,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.36,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r41srf-16",
+      "qtype": "split_renal_function",
+      "stem": "A renogram measures relative uptake counts of 58 in the left kidney and 42 in the right kidney. What is the differential asymmetry index (the difference of the two kidneys over their sum)?",
+      "program": "observe left_kidney(58)\nobserve right_kidney(42)\nlet answer = (left_kidney - right_kidney) / (left_kidney + right_kidney)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.58,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.42,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -0.16,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.380952380952381,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r41srf-17",
+      "qtype": "split_renal_function",
+      "stem": "A renogram measures relative uptake counts of 58 in the left kidney and 42 in the right kidney. What is the split function of the left kidney (its share of the total)?",
+      "program": "observe left_kidney(58)\nobserve right_kidney(42)\nlet answer = left_kidney / (left_kidney + right_kidney)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.58,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.42,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -0.16,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.380952380952381,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r41srf-18",
+      "qtype": "split_renal_function",
+      "stem": "A renogram measures relative uptake counts of 58 in the left kidney and 42 in the right kidney. What is the split function of the right kidney (its share of the total)?",
+      "program": "observe left_kidney(58)\nobserve right_kidney(42)\nlet answer = right_kidney / (left_kidney + right_kidney)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.58,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.42,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -0.16,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.380952380952381,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r41srf-19",
+      "qtype": "split_renal_function",
+      "stem": "A renogram measures relative uptake counts of 45 in the left kidney and 75 in the right kidney. What is the differential asymmetry index (the difference of the two kidneys over their sum)?",
+      "program": "observe left_kidney(45)\nobserve right_kidney(75)\nlet answer = (left_kidney - right_kidney) / (left_kidney + right_kidney)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.375,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.625,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": -0.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r41srf-20",
+      "qtype": "split_renal_function",
+      "stem": "A renogram measures relative uptake counts of 45 in the left kidney and 75 in the right kidney. What is the split function of the left kidney (its share of the total)?",
+      "program": "observe left_kidney(45)\nobserve right_kidney(75)\nlet answer = left_kidney / (left_kidney + right_kidney)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": -0.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.625,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r41srf-21",
+      "qtype": "split_renal_function",
+      "stem": "A renogram measures relative uptake counts of 45 in the left kidney and 75 in the right kidney. What is the split function of the right kidney (its share of the total)?",
+      "program": "observe left_kidney(45)\nobserve right_kidney(75)\nlet answer = right_kidney / (left_kidney + right_kidney)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.625,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": -0.25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.375,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
