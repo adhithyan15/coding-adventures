@@ -314,6 +314,7 @@ pub const SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID: &str = "smart_home.get_remedi
 pub const SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID: &str = "smart_home.get_operations_brief";
 pub const SMART_HOME_GET_SAFETY_BRIEF_TOOL_ID: &str = "smart_home.get_safety_brief";
 pub const SMART_HOME_GET_READINESS_BRIEF_TOOL_ID: &str = "smart_home.get_readiness_brief";
+pub const SMART_HOME_GET_MAINTENANCE_BRIEF_TOOL_ID: &str = "smart_home.get_maintenance_brief";
 pub const SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID: &str = "smart_home.get_topology_summary";
 pub const SMART_HOME_LIST_DESIRED_STATES_TOOL_ID: &str = "smart_home.list_desired_states";
 pub const SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID: &str =
@@ -2410,6 +2411,10 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_READINESS_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_readiness_brief_output_handler_output(&mut runtime, principal_id, now_ms)
+                }
+                SMART_HOME_GET_MAINTENANCE_BRIEF_TOOL_ID => {
+                    let _ = expect_object(&arguments)?;
+                    get_maintenance_brief_output_handler_output(&mut runtime, principal_id, now_ms)
                 }
                 SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
@@ -6507,6 +6512,7 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_operations_brief_definition(),
         get_safety_brief_definition(),
         get_readiness_brief_definition(),
+        get_maintenance_brief_definition(),
         get_topology_summary_definition(),
         list_desired_states_definition(),
         list_desired_state_drift_audit_definition(),
@@ -7538,6 +7544,56 @@ fn get_readiness_brief_definition() -> ToolDefinition {
                 "summary",
                 "decision",
                 "phases",
+                "source_tools",
+            ],
+            false,
+        ),
+    )
+}
+
+fn get_maintenance_brief_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_MAINTENANCE_BRIEF_TOOL_ID,
+        "Get smart-home maintenance brief",
+        "Compose existing D23 runtime maintenance windows, actions, work orders, evidence, readiness handoffs, and closeout reconciliation signals into a Chief-facing maintenance brief without owning smart-home state.",
+        empty_object_schema(),
+        object_schema(
+            vec![
+                SchemaProperty::new("generated_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("status", JsonSchema::String),
+                SchemaProperty::new("ready", JsonSchema::Boolean),
+                SchemaProperty::new("has_blockers", JsonSchema::Boolean),
+                SchemaProperty::new("requires_operator_handoff", JsonSchema::Boolean),
+                SchemaProperty::new("has_lineage_gaps", JsonSchema::Boolean),
+                SchemaProperty::new("total_maintenance_actions", JsonSchema::Integer),
+                SchemaProperty::new("blocked_maintenance_actions", JsonSchema::Integer),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("decision", JsonSchema::Any),
+                SchemaProperty::new(
+                    "stages",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new(
+                    "source_tools",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::String),
+                    },
+                ),
+            ],
+            vec![
+                "generated_at_ms",
+                "status",
+                "ready",
+                "has_blockers",
+                "requires_operator_handoff",
+                "has_lineage_gaps",
+                "total_maintenance_actions",
+                "blocked_maintenance_actions",
+                "summary",
+                "decision",
+                "stages",
                 "source_tools",
             ],
             false,
@@ -43849,6 +43905,192 @@ fn get_readiness_brief_output_handler_output(
     ))
 }
 
+fn get_maintenance_brief_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let empty_arguments = object([]);
+    let window_query = runtime_maintenance_window_query(&empty_arguments)?;
+    let action_query = runtime_maintenance_action_query(&empty_arguments)?;
+    let plan_query = runtime_maintenance_plan_query(&empty_arguments)?;
+    let ticket_query = runtime_maintenance_ticket_query(&empty_arguments)?;
+    let work_order_query = runtime_maintenance_work_order_query(&empty_arguments)?;
+    let guardrail_query = runtime_maintenance_work_order_guardrail_query(&empty_arguments)?;
+    let evidence_query = runtime_maintenance_work_order_evidence_query(&empty_arguments)?;
+    let evidence_review_query =
+        runtime_maintenance_work_order_evidence_review_query(&empty_arguments)?;
+    let readiness_query =
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_query(
+            &empty_arguments,
+        )?;
+    let handoff_query =
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_query(
+            &empty_arguments,
+        )?;
+    let reconciliation_query =
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_query(
+            &empty_arguments,
+        )?;
+
+    let (_, window_summary) =
+        runtime_maintenance_window_rows(runtime, principal_id.clone(), now_ms, &window_query)?;
+    let (_, action_summary) =
+        runtime_maintenance_action_rows(runtime, principal_id.clone(), now_ms, &action_query)?;
+    let (_, plan_summary) =
+        runtime_maintenance_plan_rows(runtime, principal_id.clone(), now_ms, &plan_query)?;
+    let (_, ticket_summary) =
+        runtime_maintenance_ticket_rows(runtime, principal_id.clone(), now_ms, &ticket_query)?;
+    let (_, work_order_summary) = runtime_maintenance_work_order_rows(
+        runtime,
+        principal_id.clone(),
+        now_ms,
+        &work_order_query,
+    )?;
+    let (_, guardrail_summary) = runtime_maintenance_work_order_guardrail_rows(
+        runtime,
+        principal_id.clone(),
+        now_ms,
+        &guardrail_query,
+    )?;
+    let (_, evidence_summary) = runtime_maintenance_work_order_evidence_packets(
+        runtime,
+        principal_id.clone(),
+        now_ms,
+        &evidence_query,
+    )?;
+    let (_, evidence_review_summary) = runtime_maintenance_work_order_evidence_reviews(
+        runtime,
+        principal_id.clone(),
+        now_ms,
+        &evidence_review_query,
+    )?;
+    let (_, readiness_summary) =
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness(
+            runtime,
+            principal_id.clone(),
+            now_ms,
+            &readiness_query,
+        )?;
+    let (_, handoff_summary) =
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoffs(
+            runtime,
+            principal_id.clone(),
+            now_ms,
+            &handoff_query,
+        )?;
+    let (_, reconciliation_summary) =
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations(
+            runtime,
+            principal_id,
+            now_ms,
+            &reconciliation_query,
+        )?;
+
+    let status = maintenance_brief_status(
+        &window_summary,
+        &action_summary,
+        &plan_summary,
+        &ticket_summary,
+        &work_order_summary,
+        &guardrail_summary,
+        &evidence_summary,
+        &evidence_review_summary,
+        &readiness_summary,
+        &handoff_summary,
+        &reconciliation_summary,
+    );
+    let ready = maintenance_brief_ready(
+        &window_summary,
+        &action_summary,
+        &plan_summary,
+        &ticket_summary,
+        &work_order_summary,
+        &guardrail_summary,
+        &evidence_summary,
+        &evidence_review_summary,
+        &readiness_summary,
+        &handoff_summary,
+        &reconciliation_summary,
+    );
+    let has_blockers = maintenance_brief_has_blockers(
+        &window_summary,
+        &action_summary,
+        &plan_summary,
+        &ticket_summary,
+        &work_order_summary,
+        &guardrail_summary,
+        &evidence_summary,
+        &evidence_review_summary,
+        &readiness_summary,
+        &handoff_summary,
+        &reconciliation_summary,
+    );
+    let requires_operator_handoff = maintenance_brief_requires_operator_handoff(
+        &work_order_summary,
+        &guardrail_summary,
+        &evidence_summary,
+        &evidence_review_summary,
+        &readiness_summary,
+        &handoff_summary,
+        &reconciliation_summary,
+    );
+    let has_lineage_gaps = maintenance_brief_has_lineage_gaps(
+        &readiness_summary,
+        &handoff_summary,
+        &reconciliation_summary,
+    );
+    let next_tool = maintenance_brief_next_tool(
+        &window_summary,
+        &action_summary,
+        &work_order_summary,
+        &guardrail_summary,
+        &evidence_summary,
+        &evidence_review_summary,
+        &readiness_summary,
+        &handoff_summary,
+        &reconciliation_summary,
+    );
+
+    Ok(ToolHandlerOutput::new(maintenance_brief_output_json(
+        now_ms,
+        &window_summary,
+        &action_summary,
+        &plan_summary,
+        &ticket_summary,
+        &work_order_summary,
+        &guardrail_summary,
+        &evidence_summary,
+        &evidence_review_summary,
+        &readiness_summary,
+        &handoff_summary,
+        &reconciliation_summary,
+    ))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_maintenance_brief")),
+            ("status", string(status)),
+            ("ready", JsonValue::Bool(ready)),
+            ("has_blockers", JsonValue::Bool(has_blockers)),
+            (
+                "requires_operator_handoff",
+                JsonValue::Bool(requires_operator_handoff),
+            ),
+            ("has_lineage_gaps", JsonValue::Bool(has_lineage_gaps)),
+            (
+                "total_maintenance_actions",
+                integer(action_summary.total_actions as i64),
+            ),
+            (
+                "blocked_maintenance_actions",
+                integer(action_summary.blocked_actions as i64),
+            ),
+            ("next_tool", string(next_tool)),
+        ]),
+    ))
+}
+
 fn get_controller_handoff_summary_output_handler_output(
     runtime: &mut SmartHomeRuntime,
     principal_id: AgentId,
@@ -46620,6 +46862,827 @@ fn readiness_brief_output_json(
             ]),
         ),
     ])
+}
+
+fn maintenance_brief_output_json(
+    now_ms: u64,
+    window_summary: &RuntimeMaintenanceWindowSummary,
+    action_summary: &RuntimeMaintenanceActionSummary,
+    plan_summary: &RuntimeMaintenancePlanSummary,
+    ticket_summary: &RuntimeMaintenanceTicketSummary,
+    work_order_summary: &RuntimeMaintenanceWorkOrderSummary,
+    guardrail_summary: &RuntimeMaintenanceWorkOrderGuardrailSummary,
+    evidence_summary: &RuntimeMaintenanceWorkOrderEvidenceSummary,
+    evidence_review_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewSummary,
+    readiness_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
+    handoff_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffSummary,
+    reconciliation_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary,
+) -> JsonValue {
+    let status = maintenance_brief_status(
+        window_summary,
+        action_summary,
+        plan_summary,
+        ticket_summary,
+        work_order_summary,
+        guardrail_summary,
+        evidence_summary,
+        evidence_review_summary,
+        readiness_summary,
+        handoff_summary,
+        reconciliation_summary,
+    );
+    let ready = maintenance_brief_ready(
+        window_summary,
+        action_summary,
+        plan_summary,
+        ticket_summary,
+        work_order_summary,
+        guardrail_summary,
+        evidence_summary,
+        evidence_review_summary,
+        readiness_summary,
+        handoff_summary,
+        reconciliation_summary,
+    );
+    let has_blockers = maintenance_brief_has_blockers(
+        window_summary,
+        action_summary,
+        plan_summary,
+        ticket_summary,
+        work_order_summary,
+        guardrail_summary,
+        evidence_summary,
+        evidence_review_summary,
+        readiness_summary,
+        handoff_summary,
+        reconciliation_summary,
+    );
+    let requires_operator_handoff = maintenance_brief_requires_operator_handoff(
+        work_order_summary,
+        guardrail_summary,
+        evidence_summary,
+        evidence_review_summary,
+        readiness_summary,
+        handoff_summary,
+        reconciliation_summary,
+    );
+    let has_lineage_gaps = maintenance_brief_has_lineage_gaps(
+        readiness_summary,
+        handoff_summary,
+        reconciliation_summary,
+    );
+    let next_tool = maintenance_brief_next_tool(
+        window_summary,
+        action_summary,
+        work_order_summary,
+        guardrail_summary,
+        evidence_summary,
+        evidence_review_summary,
+        readiness_summary,
+        handoff_summary,
+        reconciliation_summary,
+    );
+    let next_action = maintenance_brief_next_action(
+        action_summary,
+        work_order_summary,
+        guardrail_summary,
+        evidence_summary,
+        evidence_review_summary,
+        readiness_summary,
+        handoff_summary,
+        reconciliation_summary,
+    );
+    let next_owner_lane = maintenance_brief_next_owner_lane(
+        action_summary,
+        work_order_summary,
+        guardrail_summary,
+        evidence_summary,
+        evidence_review_summary,
+        readiness_summary,
+        handoff_summary,
+        reconciliation_summary,
+    );
+
+    object([
+        ("generated_at_ms", integer(now_ms as i64)),
+        ("status", string(status)),
+        ("ready", JsonValue::Bool(ready)),
+        ("has_blockers", JsonValue::Bool(has_blockers)),
+        (
+            "requires_operator_handoff",
+            JsonValue::Bool(requires_operator_handoff),
+        ),
+        ("has_lineage_gaps", JsonValue::Bool(has_lineage_gaps)),
+        (
+            "total_maintenance_actions",
+            integer(action_summary.total_actions as i64),
+        ),
+        (
+            "blocked_maintenance_actions",
+            integer(action_summary.blocked_actions as i64),
+        ),
+        (
+            "summary",
+            object([
+                (
+                    "boundary",
+                    string(
+                        "Chief reads D23 runtime maintenance primitives; it does not own smart-home maintenance state.",
+                    ),
+                ),
+                ("maintenance_window_count", integer(window_summary.total_windows as i64)),
+                (
+                    "maintenance_action_count",
+                    integer(action_summary.total_actions as i64),
+                ),
+                (
+                    "maintenance_ticket_count",
+                    integer(ticket_summary.total_tickets as i64),
+                ),
+                (
+                    "maintenance_work_order_count",
+                    integer(work_order_summary.total_work_orders as i64),
+                ),
+                (
+                    "evidence_packet_count",
+                    integer(evidence_summary.total_packets as i64),
+                ),
+                (
+                    "readiness_count",
+                    integer(readiness_summary.total_readiness as i64),
+                ),
+                ("handoff_count", integer(handoff_summary.total_handoffs as i64)),
+                (
+                    "reconciliation_count",
+                    integer(reconciliation_summary.total_reconciliations as i64),
+                ),
+                (
+                    "release_hold_count",
+                    integer(
+                        (handoff_summary.release_hold_handoffs
+                            + reconciliation_summary.release_hold_reconciliations)
+                            as i64,
+                    ),
+                ),
+                ("next_tool", string(next_tool)),
+                ("next_action", string(next_action)),
+                ("next_owner_lane", string(next_owner_lane)),
+            ]),
+        ),
+        (
+            "decision",
+            maintenance_brief_decision_json(
+                status,
+                next_tool,
+                next_action,
+                next_owner_lane,
+                maintenance_brief_reason(
+                    action_summary,
+                    work_order_summary,
+                    guardrail_summary,
+                    evidence_summary,
+                    evidence_review_summary,
+                    readiness_summary,
+                    handoff_summary,
+                    reconciliation_summary,
+                ),
+            ),
+        ),
+        (
+            "stages",
+            JsonValue::Array(vec![
+                maintenance_brief_stage_json(
+                    "maintenance_windows",
+                    "Maintenance windows",
+                    !window_summary.has_blockers() && !window_summary.requires_attention(),
+                    window_summary.requires_attention_actions,
+                    window_summary.blocked_actions,
+                    false,
+                    false,
+                    SMART_HOME_LIST_RUNTIME_MAINTENANCE_WINDOWS_TOOL_ID,
+                    "inspect_runtime_maintenance_windows",
+                    object([
+                        (
+                            "windows",
+                            runtime_maintenance_window_summary_json(window_summary),
+                        ),
+                        (
+                            "actions",
+                            runtime_maintenance_action_summary_json(action_summary),
+                        ),
+                    ]),
+                ),
+                maintenance_brief_stage_json(
+                    "maintenance_planning",
+                    "Maintenance planning",
+                    !plan_summary.has_blockers() && !ticket_summary.has_blockers(),
+                    plan_summary.requires_attention_actions + ticket_summary.requires_attention_actions,
+                    plan_summary.blocked_actions + ticket_summary.blocked_actions,
+                    false,
+                    false,
+                    SMART_HOME_LIST_RUNTIME_MAINTENANCE_TICKETS_TOOL_ID,
+                    "inspect_runtime_maintenance_tickets",
+                    object([
+                        ("plans", runtime_maintenance_plan_summary_json(plan_summary)),
+                        ("tickets", runtime_maintenance_ticket_summary_json(ticket_summary)),
+                    ]),
+                ),
+                maintenance_brief_stage_json(
+                    "work_order_guardrails",
+                    "Work order guardrails",
+                    !work_order_summary.has_work_orders()
+                        || (work_order_summary.execution_work_orders_ready()
+                            && guardrail_summary.execution_work_order_guardrails_ready()),
+                    work_order_summary.operator_required_work_orders
+                        + guardrail_summary.operator_handoff_guardrails,
+                    work_order_summary.blocking_work_orders
+                        + guardrail_summary.release_blocker_guardrails,
+                    work_order_summary.operator_required_work_orders > 0
+                        || guardrail_summary.operator_handoff_guardrails > 0,
+                    false,
+                    SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAILS_TOOL_ID,
+                    "resolve_work_order_guardrails",
+                    object([
+                        (
+                            "work_orders",
+                            runtime_maintenance_work_order_summary_json(work_order_summary),
+                        ),
+                        (
+                            "guardrails",
+                            runtime_maintenance_work_order_guardrail_summary_json(
+                                guardrail_summary,
+                            ),
+                        ),
+                    ]),
+                ),
+                maintenance_brief_stage_json(
+                    "evidence_review",
+                    "Evidence review",
+                    (!evidence_summary.has_packets() && !evidence_review_summary.has_reviews())
+                        || (evidence_summary.execution_evidence_ready()
+                            && evidence_review_summary.reviews_ready()),
+                    evidence_summary.operator_required_packets
+                        + evidence_review_summary.operator_handoff_reviews,
+                    evidence_summary.blocking_packets
+                        + evidence_review_summary.release_blocker_reviews,
+                    evidence_summary.needs_operator()
+                        || evidence_review_summary.operator_handoff_reviews > 0,
+                    evidence_summary.has_packets() && !evidence_summary.has_complete_lineage(),
+                    SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEWS_TOOL_ID,
+                    "review_runtime_maintenance_evidence",
+                    object([
+                        (
+                            "evidence",
+                            runtime_maintenance_work_order_evidence_summary_json(evidence_summary),
+                        ),
+                        (
+                            "reviews",
+                            runtime_maintenance_work_order_evidence_review_summary_json(
+                                evidence_review_summary,
+                            ),
+                        ),
+                    ]),
+                ),
+                maintenance_brief_stage_json(
+                    "readiness_handoff",
+                    "Readiness handoff",
+                    (!readiness_summary.has_readiness() && !handoff_summary.has_handoffs())
+                        || (readiness_summary.readiness_ready() && handoff_summary.handoff_ready()),
+                    readiness_summary.operator_handoff_readiness
+                        + handoff_summary.operator_handoff_handoffs,
+                    readiness_summary.blocked_readiness + handoff_summary.release_hold_handoffs,
+                    readiness_summary.operator_handoff_readiness > 0
+                        || handoff_summary.operator_handoff_handoffs > 0,
+                    readiness_summary.lineage_gap_readiness > 0
+                        || handoff_summary.lineage_repair_handoffs > 0,
+                    SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFFS_TOOL_ID,
+                    "prepare_runtime_maintenance_handoff",
+                    object([
+                        (
+                            "readiness",
+                            runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_summary_json(
+                                readiness_summary,
+                            ),
+                        ),
+                        (
+                            "handoffs",
+                            runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_summary_json(
+                                handoff_summary,
+                            ),
+                        ),
+                    ]),
+                ),
+                maintenance_brief_stage_json(
+                    "handoff_reconciliation",
+                    "Handoff reconciliation",
+                    !reconciliation_summary.has_reconciliations()
+                        || reconciliation_summary.reconciliation_ready(),
+                    reconciliation_summary.operator_route_reconciliations,
+                    reconciliation_summary.release_hold_reconciliations,
+                    reconciliation_summary.operator_route_reconciliations > 0,
+                    reconciliation_summary.lineage_repair_reconciliations > 0,
+                    SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_RECONCILIATIONS_TOOL_ID,
+                    "verify_runtime_maintenance_closeout",
+                    runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_summary_json(
+                        reconciliation_summary,
+                    ),
+                ),
+            ]),
+        ),
+        (
+            "source_tools",
+            attention_string_array(&[
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_WINDOWS_TOOL_ID,
+                SMART_HOME_GET_RUNTIME_MAINTENANCE_WINDOW_SUMMARY_TOOL_ID,
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_ACTIONS_TOOL_ID,
+                SMART_HOME_GET_RUNTIME_MAINTENANCE_ACTION_SUMMARY_TOOL_ID,
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_PLANS_TOOL_ID,
+                SMART_HOME_GET_RUNTIME_MAINTENANCE_PLAN_SUMMARY_TOOL_ID,
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_TICKETS_TOOL_ID,
+                SMART_HOME_GET_RUNTIME_MAINTENANCE_TICKET_SUMMARY_TOOL_ID,
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDERS_TOOL_ID,
+                SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_SUMMARY_TOOL_ID,
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAILS_TOOL_ID,
+                SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAIL_SUMMARY_TOOL_ID,
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_TOOL_ID,
+                SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_SUMMARY_TOOL_ID,
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEWS_TOOL_ID,
+                SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_SUMMARY_TOOL_ID,
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_TOOL_ID,
+                SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_SUMMARY_TOOL_ID,
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFFS_TOOL_ID,
+                SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_SUMMARY_TOOL_ID,
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_RECONCILIATIONS_TOOL_ID,
+                SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_RECONCILIATION_SUMMARY_TOOL_ID,
+            ]),
+        ),
+    ])
+}
+
+fn maintenance_brief_decision_json(
+    status: &str,
+    recommended_tool: &str,
+    recommended_action: &str,
+    owner_lane: &str,
+    reason: &str,
+) -> JsonValue {
+    object([
+        (
+            "recommendation",
+            string(maintenance_brief_decision_label(status)),
+        ),
+        ("recommended_tool", string(recommended_tool)),
+        ("recommended_action", string(recommended_action)),
+        ("owner_lane", string(owner_lane)),
+        ("reason", string(reason)),
+    ])
+}
+
+fn maintenance_brief_stage_json(
+    stage_id: &str,
+    label: &str,
+    ready: bool,
+    attention_count: usize,
+    blocked_count: usize,
+    requires_operator_handoff: bool,
+    has_lineage_gaps: bool,
+    recommended_tool: &str,
+    recommended_action: &str,
+    summary: JsonValue,
+) -> JsonValue {
+    object([
+        ("stage_id", string(stage_id)),
+        ("label", string(label)),
+        (
+            "status",
+            string(maintenance_brief_stage_status(
+                ready,
+                attention_count,
+                blocked_count,
+                requires_operator_handoff,
+                has_lineage_gaps,
+            )),
+        ),
+        ("ready", JsonValue::Bool(ready && blocked_count == 0)),
+        ("attention_count", integer(attention_count as i64)),
+        ("blocked_count", integer(blocked_count as i64)),
+        ("has_blockers", JsonValue::Bool(blocked_count > 0)),
+        (
+            "requires_operator_handoff",
+            JsonValue::Bool(requires_operator_handoff),
+        ),
+        ("has_lineage_gaps", JsonValue::Bool(has_lineage_gaps)),
+        ("recommended_tool", string(recommended_tool)),
+        ("recommended_action", string(recommended_action)),
+        ("summary", summary),
+    ])
+}
+
+fn maintenance_brief_stage_status(
+    ready: bool,
+    attention_count: usize,
+    blocked_count: usize,
+    requires_operator_handoff: bool,
+    has_lineage_gaps: bool,
+) -> &'static str {
+    if blocked_count > 0 {
+        "blocked"
+    } else if has_lineage_gaps {
+        "lineage_gap"
+    } else if requires_operator_handoff {
+        "operator_handoff"
+    } else if ready {
+        "ready"
+    } else if attention_count > 0 {
+        "attention"
+    } else {
+        "waiting"
+    }
+}
+
+fn maintenance_brief_status(
+    window_summary: &RuntimeMaintenanceWindowSummary,
+    action_summary: &RuntimeMaintenanceActionSummary,
+    plan_summary: &RuntimeMaintenancePlanSummary,
+    ticket_summary: &RuntimeMaintenanceTicketSummary,
+    work_order_summary: &RuntimeMaintenanceWorkOrderSummary,
+    guardrail_summary: &RuntimeMaintenanceWorkOrderGuardrailSummary,
+    evidence_summary: &RuntimeMaintenanceWorkOrderEvidenceSummary,
+    evidence_review_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewSummary,
+    readiness_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
+    handoff_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffSummary,
+    reconciliation_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary,
+) -> &'static str {
+    if maintenance_brief_has_blockers(
+        window_summary,
+        action_summary,
+        plan_summary,
+        ticket_summary,
+        work_order_summary,
+        guardrail_summary,
+        evidence_summary,
+        evidence_review_summary,
+        readiness_summary,
+        handoff_summary,
+        reconciliation_summary,
+    ) {
+        "blocked"
+    } else if maintenance_brief_has_lineage_gaps(
+        readiness_summary,
+        handoff_summary,
+        reconciliation_summary,
+    ) {
+        "lineage_gap"
+    } else if maintenance_brief_requires_operator_handoff(
+        work_order_summary,
+        guardrail_summary,
+        evidence_summary,
+        evidence_review_summary,
+        readiness_summary,
+        handoff_summary,
+        reconciliation_summary,
+    ) {
+        "operator_handoff"
+    } else if maintenance_brief_ready(
+        window_summary,
+        action_summary,
+        plan_summary,
+        ticket_summary,
+        work_order_summary,
+        guardrail_summary,
+        evidence_summary,
+        evidence_review_summary,
+        readiness_summary,
+        handoff_summary,
+        reconciliation_summary,
+    ) {
+        "ready"
+    } else if maintenance_brief_requires_attention(
+        window_summary,
+        action_summary,
+        plan_summary,
+        ticket_summary,
+        evidence_review_summary,
+    ) {
+        "attention"
+    } else {
+        "waiting"
+    }
+}
+
+fn maintenance_brief_ready(
+    window_summary: &RuntimeMaintenanceWindowSummary,
+    action_summary: &RuntimeMaintenanceActionSummary,
+    plan_summary: &RuntimeMaintenancePlanSummary,
+    ticket_summary: &RuntimeMaintenanceTicketSummary,
+    work_order_summary: &RuntimeMaintenanceWorkOrderSummary,
+    guardrail_summary: &RuntimeMaintenanceWorkOrderGuardrailSummary,
+    evidence_summary: &RuntimeMaintenanceWorkOrderEvidenceSummary,
+    evidence_review_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewSummary,
+    readiness_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
+    handoff_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffSummary,
+    reconciliation_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary,
+) -> bool {
+    if action_summary.total_actions == 0 {
+        return true;
+    }
+
+    !maintenance_brief_has_blockers(
+        window_summary,
+        action_summary,
+        plan_summary,
+        ticket_summary,
+        work_order_summary,
+        guardrail_summary,
+        evidence_summary,
+        evidence_review_summary,
+        readiness_summary,
+        handoff_summary,
+        reconciliation_summary,
+    ) && !maintenance_brief_requires_operator_handoff(
+        work_order_summary,
+        guardrail_summary,
+        evidence_summary,
+        evidence_review_summary,
+        readiness_summary,
+        handoff_summary,
+        reconciliation_summary,
+    ) && !maintenance_brief_has_lineage_gaps(
+        readiness_summary,
+        handoff_summary,
+        reconciliation_summary,
+    ) && work_order_summary.execution_work_orders_ready()
+        && guardrail_summary.execution_work_order_guardrails_ready()
+        && evidence_summary.execution_evidence_ready()
+        && evidence_review_summary.reviews_ready()
+        && readiness_summary.readiness_ready()
+        && handoff_summary.handoff_ready()
+        && reconciliation_summary.reconciliation_ready()
+}
+
+fn maintenance_brief_has_blockers(
+    window_summary: &RuntimeMaintenanceWindowSummary,
+    action_summary: &RuntimeMaintenanceActionSummary,
+    plan_summary: &RuntimeMaintenancePlanSummary,
+    ticket_summary: &RuntimeMaintenanceTicketSummary,
+    work_order_summary: &RuntimeMaintenanceWorkOrderSummary,
+    guardrail_summary: &RuntimeMaintenanceWorkOrderGuardrailSummary,
+    evidence_summary: &RuntimeMaintenanceWorkOrderEvidenceSummary,
+    evidence_review_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewSummary,
+    readiness_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
+    handoff_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffSummary,
+    reconciliation_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary,
+) -> bool {
+    window_summary.has_blockers()
+        || action_summary.has_blockers()
+        || plan_summary.has_blockers()
+        || ticket_summary.has_blockers()
+        || work_order_summary.blocking_work_orders > 0
+        || guardrail_summary.release_blocker_guardrails > 0
+        || evidence_summary.has_blockers()
+        || evidence_review_summary.release_blocker_reviews > 0
+        || readiness_summary.blocked_readiness > 0
+        || handoff_summary.release_hold_handoffs > 0
+        || reconciliation_summary.release_hold_reconciliations > 0
+}
+
+fn maintenance_brief_requires_operator_handoff(
+    work_order_summary: &RuntimeMaintenanceWorkOrderSummary,
+    guardrail_summary: &RuntimeMaintenanceWorkOrderGuardrailSummary,
+    evidence_summary: &RuntimeMaintenanceWorkOrderEvidenceSummary,
+    evidence_review_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewSummary,
+    readiness_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
+    handoff_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffSummary,
+    reconciliation_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary,
+) -> bool {
+    work_order_summary.operator_required_work_orders > 0
+        || guardrail_summary.operator_handoff_guardrails > 0
+        || evidence_summary.needs_operator()
+        || evidence_review_summary.operator_handoff_reviews > 0
+        || readiness_summary.operator_handoff_readiness > 0
+        || handoff_summary.operator_handoff_handoffs > 0
+        || reconciliation_summary.operator_route_reconciliations > 0
+}
+
+fn maintenance_brief_has_lineage_gaps(
+    readiness_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
+    handoff_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffSummary,
+    reconciliation_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary,
+) -> bool {
+    readiness_summary.lineage_gap_readiness > 0
+        || handoff_summary.lineage_repair_handoffs > 0
+        || reconciliation_summary.lineage_repair_reconciliations > 0
+}
+
+fn maintenance_brief_requires_attention(
+    window_summary: &RuntimeMaintenanceWindowSummary,
+    action_summary: &RuntimeMaintenanceActionSummary,
+    plan_summary: &RuntimeMaintenancePlanSummary,
+    ticket_summary: &RuntimeMaintenanceTicketSummary,
+    evidence_review_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewSummary,
+) -> bool {
+    window_summary.requires_attention()
+        || window_summary.has_overdue_actions()
+        || action_summary.requires_attention()
+        || action_summary.has_overdue_actions()
+        || plan_summary.requires_attention()
+        || plan_summary.has_overdue_actions()
+        || ticket_summary.requires_attention()
+        || ticket_summary.has_overdue_actions()
+        || evidence_review_summary.has_review_work()
+}
+
+fn maintenance_brief_decision_label(status: &str) -> &'static str {
+    match status {
+        "blocked" => "hold",
+        "lineage_gap" => "repair_lineage",
+        "operator_handoff" => "route_operator_handoff",
+        "attention" => "inspect",
+        "ready" => "ready",
+        _ => "monitor",
+    }
+}
+
+fn maintenance_brief_next_tool(
+    window_summary: &RuntimeMaintenanceWindowSummary,
+    action_summary: &RuntimeMaintenanceActionSummary,
+    work_order_summary: &RuntimeMaintenanceWorkOrderSummary,
+    guardrail_summary: &RuntimeMaintenanceWorkOrderGuardrailSummary,
+    evidence_summary: &RuntimeMaintenanceWorkOrderEvidenceSummary,
+    evidence_review_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewSummary,
+    readiness_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
+    handoff_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffSummary,
+    reconciliation_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary,
+) -> &'static str {
+    if reconciliation_summary.has_reconciliation_work()
+        || (reconciliation_summary.has_reconciliations()
+            && !reconciliation_summary.reconciliation_ready())
+    {
+        SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_RECONCILIATIONS_TOOL_ID
+    } else if handoff_summary.has_handoff_work()
+        || (handoff_summary.has_handoffs() && !handoff_summary.handoff_ready())
+    {
+        SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFFS_TOOL_ID
+    } else if readiness_summary.has_readiness_work()
+        || (readiness_summary.has_readiness() && !readiness_summary.readiness_ready())
+    {
+        SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_TOOL_ID
+    } else if evidence_review_summary.has_review_work()
+        || (evidence_review_summary.has_reviews() && !evidence_review_summary.reviews_ready())
+    {
+        SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEWS_TOOL_ID
+    } else if evidence_summary.has_packets() && !evidence_summary.execution_evidence_ready() {
+        SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_TOOL_ID
+    } else if guardrail_summary.has_guardrails()
+        && !guardrail_summary.execution_work_order_guardrails_ready()
+    {
+        SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAILS_TOOL_ID
+    } else if work_order_summary.has_work_orders()
+        && !work_order_summary.execution_work_orders_ready()
+    {
+        SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDERS_TOOL_ID
+    } else if action_summary.total_actions > 0
+        && (action_summary.has_blockers() || action_summary.requires_attention())
+    {
+        SMART_HOME_LIST_RUNTIME_MAINTENANCE_ACTIONS_TOOL_ID
+    } else if window_summary.total_windows > 0 {
+        SMART_HOME_LIST_RUNTIME_MAINTENANCE_WINDOWS_TOOL_ID
+    } else {
+        SMART_HOME_GET_RUNTIME_MAINTENANCE_WINDOW_SUMMARY_TOOL_ID
+    }
+}
+
+fn maintenance_brief_next_action(
+    action_summary: &RuntimeMaintenanceActionSummary,
+    work_order_summary: &RuntimeMaintenanceWorkOrderSummary,
+    guardrail_summary: &RuntimeMaintenanceWorkOrderGuardrailSummary,
+    evidence_summary: &RuntimeMaintenanceWorkOrderEvidenceSummary,
+    evidence_review_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewSummary,
+    readiness_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
+    handoff_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffSummary,
+    reconciliation_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary,
+) -> &'static str {
+    if reconciliation_summary.release_hold_reconciliations > 0 {
+        "verify_release_hold_packet"
+    } else if reconciliation_summary.operator_route_reconciliations > 0 {
+        "route_operator_reconciliation"
+    } else if reconciliation_summary.lineage_repair_reconciliations > 0 {
+        "repair_reconciliation_lineage"
+    } else if handoff_summary.release_hold_handoffs > 0 {
+        "maintain_release_hold"
+    } else if handoff_summary.operator_handoff_handoffs > 0 {
+        "route_operator_handoff"
+    } else if handoff_summary.lineage_repair_handoffs > 0 {
+        "repair_handoff_lineage"
+    } else if readiness_summary.blocked_readiness > 0 {
+        "keep_release_hold"
+    } else if readiness_summary.operator_handoff_readiness > 0 {
+        "route_operator_readiness"
+    } else if readiness_summary.lineage_gap_readiness > 0 {
+        "repair_readiness_lineage"
+    } else if evidence_review_summary.release_blocker_reviews > 0 {
+        "review_release_blocker_evidence"
+    } else if evidence_review_summary.operator_handoff_reviews > 0 {
+        "route_operator_evidence_review"
+    } else if evidence_summary.has_blockers() {
+        "collect_release_blocker_evidence"
+    } else if evidence_summary.needs_operator() {
+        "collect_operator_evidence"
+    } else if guardrail_summary.release_blocker_guardrails > 0 {
+        "resolve_work_order_guardrails"
+    } else if guardrail_summary.operator_handoff_guardrails > 0 {
+        "route_work_order_operator_handoff"
+    } else if work_order_summary.blocking_work_orders > 0 {
+        "resolve_blocking_work_orders"
+    } else if work_order_summary.operator_required_work_orders > 0 {
+        "prepare_operator_handoff"
+    } else if action_summary.has_blockers() {
+        "resolve_blocked_runtime_maintenance_actions"
+    } else if action_summary.requires_attention() {
+        "run_runtime_maintenance_actions"
+    } else {
+        "monitor_runtime_maintenance"
+    }
+}
+
+fn maintenance_brief_next_owner_lane(
+    action_summary: &RuntimeMaintenanceActionSummary,
+    work_order_summary: &RuntimeMaintenanceWorkOrderSummary,
+    guardrail_summary: &RuntimeMaintenanceWorkOrderGuardrailSummary,
+    evidence_summary: &RuntimeMaintenanceWorkOrderEvidenceSummary,
+    evidence_review_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewSummary,
+    readiness_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
+    handoff_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffSummary,
+    reconciliation_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary,
+) -> &'static str {
+    if reconciliation_summary.release_hold_reconciliations > 0
+        || handoff_summary.release_hold_handoffs > 0
+        || readiness_summary.blocked_readiness > 0
+        || evidence_review_summary.release_blocker_reviews > 0
+        || evidence_summary.has_blockers()
+        || guardrail_summary.release_blocker_guardrails > 0
+        || work_order_summary.blocking_work_orders > 0
+        || action_summary.has_blockers()
+    {
+        "release"
+    } else if reconciliation_summary.operator_route_reconciliations > 0
+        || handoff_summary.operator_handoff_handoffs > 0
+        || readiness_summary.operator_handoff_readiness > 0
+        || evidence_review_summary.operator_handoff_reviews > 0
+        || evidence_summary.needs_operator()
+        || guardrail_summary.operator_handoff_guardrails > 0
+        || work_order_summary.operator_required_work_orders > 0
+    {
+        "operator"
+    } else if reconciliation_summary.lineage_repair_reconciliations > 0
+        || handoff_summary.lineage_repair_handoffs > 0
+        || readiness_summary.lineage_gap_readiness > 0
+    {
+        "lineage"
+    } else if action_summary.requires_attention() {
+        "maintenance"
+    } else {
+        "monitor"
+    }
+}
+
+fn maintenance_brief_reason(
+    action_summary: &RuntimeMaintenanceActionSummary,
+    work_order_summary: &RuntimeMaintenanceWorkOrderSummary,
+    guardrail_summary: &RuntimeMaintenanceWorkOrderGuardrailSummary,
+    evidence_summary: &RuntimeMaintenanceWorkOrderEvidenceSummary,
+    evidence_review_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewSummary,
+    readiness_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
+    handoff_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffSummary,
+    reconciliation_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary,
+) -> &'static str {
+    if reconciliation_summary.release_hold_reconciliations > 0 {
+        "release_hold_reconciliation"
+    } else if reconciliation_summary.operator_route_reconciliations > 0 {
+        "operator_route_reconciliation"
+    } else if reconciliation_summary.lineage_repair_reconciliations > 0 {
+        "lineage_repair_reconciliation"
+    } else if handoff_summary.has_handoff_work() {
+        "handoff_work"
+    } else if readiness_summary.has_readiness_work() {
+        "readiness_work"
+    } else if evidence_review_summary.has_review_work() {
+        "evidence_review_work"
+    } else if evidence_summary.has_blockers() || evidence_summary.needs_operator() {
+        "evidence_work"
+    } else if guardrail_summary.release_blocker_guardrails > 0
+        || guardrail_summary.operator_handoff_guardrails > 0
+    {
+        "guardrail_work"
+    } else if work_order_summary.blocking_work_orders > 0
+        || work_order_summary.operator_required_work_orders > 0
+    {
+        "work_order_work"
+    } else if action_summary.has_blockers() || action_summary.requires_attention() {
+        "runtime_maintenance_action_work"
+    } else {
+        "runtime_maintenance_monitoring"
+    }
 }
 
 fn readiness_brief_phase_json(
@@ -79802,7 +80865,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 291);
+        assert_eq!(definitions.len(), 292);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -79841,6 +80904,9 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_READINESS_BRIEF_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_MAINTENANCE_BRIEF_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID));
@@ -80640,7 +81706,7 @@ mod tests {
         ));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            283
+            284
         );
         assert_eq!(
             export
@@ -81338,6 +82404,7 @@ mod tests {
         assert!(smart_home_tool_definition(SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_SAFETY_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_READINESS_BRIEF_TOOL_ID).is_some());
+        assert!(smart_home_tool_definition(SMART_HOME_GET_MAINTENANCE_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_SET_DESIRED_STATE_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID).is_some());
@@ -81930,6 +82997,182 @@ mod tests {
         assert_eq!(array_len(field(output, "source_tools").unwrap()), Some(16));
     }
 
+    #[test]
+    fn maintenance_brief_rolls_up_runtime_maintenance_handoff_and_closeout() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime
+            .borrow_mut()
+            .registry_mut()
+            .apply_state_snapshot(StateSnapshot {
+                entity_id: EntityId::trusted("entity-light-1"),
+                value: Value::Object(vec![("light.on_off".to_string(), Value::Bool(true))]),
+                source: StateSource::Poll,
+                observed_at_ms: 1_000,
+                received_at_ms: 1_000,
+                expires_at_ms: None,
+                confidence: StateConfidence::Confirmed,
+            })
+            .unwrap();
+        runtime
+            .borrow_mut()
+            .upsert_desired_state(
+                DesiredEntityState::new(
+                    EntityId::trusted("entity-light-1"),
+                    vec![StateDelta {
+                        capability_id: CapabilityId::trusted("light.on_off"),
+                        value: Value::Bool(false),
+                    }],
+                )
+                .requested_by("agent:scene-planner"),
+            )
+            .unwrap();
+        runtime
+            .borrow_mut()
+            .supervisor_mut()
+            .register_worker(SupervisedBridgeWorker::new(
+                BridgeId::trusted("bridge-1"),
+                IntegrationId::trusted("hue"),
+                1_000,
+                250,
+            ));
+        let discovery_worker_id = DiscoveryWorkerId::trusted("hue-mdns-maintenance-brief");
+        runtime
+            .borrow_mut()
+            .register_discovery_worker_schedule(
+                ScheduledDiscoveryWorker::new(
+                    discovery_worker_id.clone(),
+                    IntegrationId::trusted("hue"),
+                    DiscoveryWorkerKind::MdnsScan,
+                    5_000,
+                    250,
+                    1_100,
+                )
+                .with_retry_backoff(500, 2_000, 2)
+                .with_source(DiscoverySource::Mdns)
+                .with_network_interface("en0")
+                .with_metadata(MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY, "_hue._tcp.local"),
+            )
+            .unwrap();
+        runtime
+            .borrow_mut()
+            .mark_discovery_worker_started(&discovery_worker_id, 1_200)
+            .unwrap();
+        let mut failed_run = DiscoveryWorkerRun::new(
+            discovery_worker_id.clone(),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            1_200,
+            1_260,
+        );
+        failed_run.push_failure(
+            DiscoveryWorkerFailure::new(DiscoverySource::Mdns, "multicast route unavailable")
+                .unwrap(),
+        );
+        runtime
+            .borrow_mut()
+            .record_scheduled_discovery_worker_run(&failed_run, 1_260, 500)
+            .unwrap();
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let request = request(
+            "call-maintenance-brief",
+            SMART_HOME_GET_MAINTENANCE_BRIEF_TOOL_ID,
+            object([]),
+            2_024,
+        );
+        let trace = tool_runtime.invoke_with_events(&request);
+        assert!(trace.result.ok);
+        assert_eq!(trace.summary().progress_event_count, 1);
+
+        let output = trace.result.output.as_ref().unwrap();
+        assert_eq!(field(output, "status"), Some(&string("blocked")));
+        assert_eq!(field(output, "ready"), Some(&JsonValue::Bool(false)));
+        assert_eq!(field(output, "has_blockers"), Some(&JsonValue::Bool(true)));
+        assert_eq!(
+            field(output, "requires_operator_handoff"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(output, "has_lineage_gaps"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert!(integer_value(field(output, "total_maintenance_actions").unwrap()).unwrap() >= 4);
+        assert!(integer_value(field(output, "blocked_maintenance_actions").unwrap()).unwrap() >= 4);
+
+        let summary = field(output, "summary").unwrap();
+        assert_eq!(
+            field(summary, "boundary"),
+            Some(&string(
+                "Chief reads D23 runtime maintenance primitives; it does not own smart-home maintenance state."
+            ))
+        );
+        assert!(
+            integer_value(field(summary, "release_hold_count").unwrap()).unwrap() >= 2,
+            "handoff and reconciliation release holds should both feed the brief"
+        );
+        assert_eq!(
+            field(summary, "next_tool"),
+            Some(&string(
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_RECONCILIATIONS_TOOL_ID
+            ))
+        );
+        assert_eq!(
+            field(summary, "next_action"),
+            Some(&string("verify_release_hold_packet"))
+        );
+        assert_eq!(field(summary, "next_owner_lane"), Some(&string("release")));
+
+        let decision = field(output, "decision").unwrap();
+        assert_eq!(field(decision, "recommendation"), Some(&string("hold")));
+        assert_eq!(
+            field(decision, "recommended_action"),
+            Some(&string("verify_release_hold_packet"))
+        );
+        assert_eq!(
+            field(decision, "reason"),
+            Some(&string("release_hold_reconciliation"))
+        );
+
+        assert_eq!(array_len(field(output, "stages").unwrap()), Some(6));
+        let windows_stage = array_item(field(output, "stages").unwrap(), 0).unwrap();
+        assert_eq!(
+            field(windows_stage, "stage_id"),
+            Some(&string("maintenance_windows"))
+        );
+        assert_eq!(field(windows_stage, "status"), Some(&string("blocked")));
+        let reconciliation_stage = array_item(field(output, "stages").unwrap(), 5).unwrap();
+        assert_eq!(
+            field(reconciliation_stage, "stage_id"),
+            Some(&string("handoff_reconciliation"))
+        );
+        assert_eq!(
+            field(reconciliation_stage, "status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(reconciliation_stage, "recommended_tool"),
+            Some(&string(
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_RECONCILIATIONS_TOOL_ID
+            ))
+        );
+        assert_eq!(array_len(field(output, "source_tools").unwrap()), Some(22));
+        assert!(
+            runtime.borrow().registry().counts().authorization_decisions >= 11,
+            "the brief should authorize through the runtime read tool path for every source rollup"
+        );
+    }
+
     fn chief_of_staff_runtime_drives_smart_home_light_end_to_end_inner() {
         let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
         runtime
@@ -82125,11 +83368,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(291))
+            Some(&integer(292))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(283))
+            Some(&integer(284))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
