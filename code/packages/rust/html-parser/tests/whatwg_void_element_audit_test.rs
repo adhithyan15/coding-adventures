@@ -5,7 +5,23 @@ use serde::Deserialize;
 use std::collections::{BTreeMap, HashMap};
 
 const TREE_CONSTRUCTION_SMOKE: &str = include_str!("fixtures/html5lib-tree-construction-smoke.dat");
+const WHATWG_BLOCK_BOUNDARY_AUDIT: &str = include_str!("fixtures/whatwg-block-boundary-audit.json");
+const WHATWG_DOCUMENT_SHELL_AUDIT: &str = include_str!("fixtures/whatwg-document-shell-audit.json");
+const WHATWG_FOREIGN_AUDIT: &str = include_str!("fixtures/whatwg-foreign-audit.json");
+const WHATWG_FORM_INTERACTIVE_AUDIT: &str =
+    include_str!("fixtures/whatwg-form-interactive-audit.json");
+const WHATWG_FRAMESET_AUDIT: &str = include_str!("fixtures/whatwg-frameset-audit.json");
+const WHATWG_HEAD_BODY_AUDIT: &str = include_str!("fixtures/whatwg-head-body-audit.json");
+const WHATWG_SELECT_LIST_AUDIT: &str = include_str!("fixtures/whatwg-select-list-audit.json");
+const WHATWG_TABLE_AUDIT: &str = include_str!("fixtures/whatwg-table-audit.json");
 const WHATWG_VOID_ELEMENT_AUDIT: &str = include_str!("fixtures/whatwg-void-element-audit.json");
+
+struct VoidElementCrossAxisCase {
+    id: &'static str,
+    data_snippet: &'static str,
+    suites: &'static [(&'static str, &'static str, &'static str)],
+}
+
 const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
     ("adoption01-dat-13", "void-in-table"),
     ("noscript01-dat-332", "metadata-void-elements"),
@@ -15,6 +31,71 @@ const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
     ("tests7-dat-17", "void-in-select"),
     ("tests6-dat-27", "void-fragment-context"),
     ("template-dat-494", "legacy-void-elements"),
+];
+const VOID_IN_SELECT_CROSS_AXIS_SUITES: &[(&str, &str, &str)] = &[
+    (
+        "document-shell",
+        WHATWG_DOCUMENT_SHELL_AUDIT,
+        "implicit-document-shell",
+    ),
+    (
+        "form-interactive",
+        WHATWG_FORM_INTERACTIVE_AUDIT,
+        "select-option",
+    ),
+    ("select-list", WHATWG_SELECT_LIST_AUDIT, "select-shell"),
+    ("void-element", WHATWG_VOID_ELEMENT_AUDIT, "void-in-select"),
+];
+const VOID_IN_TABLE_CROSS_AXIS_SUITES: &[(&str, &str, &str)] = &[
+    (
+        "block-boundary",
+        WHATWG_BLOCK_BOUNDARY_AUDIT,
+        "block-table-boundary",
+    ),
+    (
+        "form-interactive",
+        WHATWG_FORM_INTERACTIVE_AUDIT,
+        "select-option",
+    ),
+    ("select-list", WHATWG_SELECT_LIST_AUDIT, "select-in-table"),
+    ("table", WHATWG_TABLE_AUDIT, "select-in-table"),
+    ("void-element", WHATWG_VOID_ELEMENT_AUDIT, "void-in-table"),
+];
+const VOID_FOREIGN_CROSS_AXIS_SUITES: &[(&str, &str, &str)] = &[
+    (
+        "document-shell",
+        WHATWG_DOCUMENT_SHELL_AUDIT,
+        "body-frameset-boundary",
+    ),
+    ("foreign", WHATWG_FOREIGN_AUDIT, "svg-boundary"),
+    ("frameset", WHATWG_FRAMESET_AUDIT, "foreign-boundary"),
+    (
+        "head-body",
+        WHATWG_HEAD_BODY_AUDIT,
+        "body-frameset-transition",
+    ),
+    (
+        "void-element",
+        WHATWG_VOID_ELEMENT_AUDIT,
+        "void-foreign-boundary",
+    ),
+];
+const VOID_ELEMENT_CROSS_AXIS_CASES: &[VoidElementCrossAxisCase] = &[
+    VoidElementCrossAxisCase {
+        id: "tests7-dat-17",
+        data_snippet: "<!doctype html><select><input>X",
+        suites: VOID_IN_SELECT_CROSS_AXIS_SUITES,
+    },
+    VoidElementCrossAxisCase {
+        id: "webkit01-dat-38",
+        data_snippet: "<kbd><table></kbd><col><select><tr></table><div>",
+        suites: VOID_IN_TABLE_CROSS_AXIS_SUITES,
+    },
+    VoidElementCrossAxisCase {
+        id: "tests19-dat-1086",
+        data_snippet: "<!doctype html><svg></svg><frameset><frame>",
+        suites: VOID_FOREIGN_CROSS_AXIS_SUITES,
+    },
 ];
 
 #[derive(Debug, Deserialize)]
@@ -29,6 +110,19 @@ struct VoidElementAuditSuite {
 
 #[derive(Debug, Deserialize)]
 struct VoidElementAuditCase {
+    id: String,
+    source: String,
+    axis: String,
+    reason: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct GenericAuditSuite {
+    cases: Vec<GenericAuditCase>,
+}
+
+#[derive(Debug, Deserialize)]
+struct GenericAuditCase {
     id: String,
     source: String,
     axis: String,
@@ -84,6 +178,61 @@ fn whatwg_void_element_audit_cases_match_parser_dom_dump() {
 }
 
 #[test]
+fn whatwg_void_element_audit_keeps_special_context_cases_cross_axis() {
+    let smoke_cases = parse_tree_construction_cases(TREE_CONSTRUCTION_SMOKE)
+        .into_iter()
+        .map(|case| (case.source.clone(), case))
+        .collect::<HashMap<_, _>>();
+
+    for evidence in VOID_ELEMENT_CROSS_AXIS_CASES {
+        let mut shared_source = None;
+
+        for (suite_name, fixture, expected_axis) in evidence.suites {
+            let audit_case = generic_audit_case(fixture, suite_name, evidence.id);
+            assert_eq!(
+                audit_case.axis, *expected_axis,
+                "`{suite_name}` should keep void-element row `{}` on its focused axis",
+                evidence.id
+            );
+            assert!(
+                !audit_case.reason.is_empty(),
+                "`{suite_name}` should keep a reason for void-element row `{}`",
+                evidence.id
+            );
+
+            if let Some(source) = &shared_source {
+                assert_eq!(
+                    audit_case.source, *source,
+                    "`{suite_name}` should point void-element row `{}` at the same html5lib row as the other audit axes",
+                    evidence.id
+                );
+            } else {
+                shared_source = Some(audit_case.source);
+            }
+        }
+
+        let shared_source =
+            shared_source.expect("void-element evidence should include at least one suite");
+        let source_case = smoke_cases
+            .get(&shared_source)
+            .unwrap_or_else(|| panic!("case `{shared_source}` should exist in smoke fixture"));
+        assert!(
+            source_case.data.contains(evidence.data_snippet),
+            "void-element evidence row `{}` should stay tied to its html5lib input",
+            evidence.id
+        );
+
+        let actual = actual_dom_dump_for_tree_case(source_case)
+            .unwrap_or_else(|error| panic!("case `{shared_source}` parse failed: {error}"));
+        assert_eq!(
+            actual, source_case.document,
+            "cross-axis void-element evidence case `{shared_source}` failed for input {:?}",
+            source_case.data
+        );
+    }
+}
+
+#[test]
 fn whatwg_void_element_audit_tracks_post_parse_repair_evidence() {
     let suite = load_suite();
     let audit_cases = suite
@@ -126,6 +275,16 @@ fn whatwg_void_element_audit_tracks_post_parse_repair_evidence() {
 fn load_suite() -> VoidElementAuditSuite {
     serde_json::from_str(WHATWG_VOID_ELEMENT_AUDIT)
         .expect("WHATWG void-element audit fixture should parse")
+}
+
+fn generic_audit_case(fixture: &str, suite_name: &str, case_id: &str) -> GenericAuditCase {
+    let suite = serde_json::from_str::<GenericAuditSuite>(fixture)
+        .unwrap_or_else(|error| panic!("`{suite_name}` audit fixture should parse: {error}"));
+    suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == case_id)
+        .unwrap_or_else(|| panic!("`{suite_name}` should audit void-element case `{case_id}`"))
 }
 
 fn assert_axis_count(suite: &VoidElementAuditSuite, axis: &str, minimum: usize) {
