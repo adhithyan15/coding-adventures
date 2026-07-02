@@ -61,7 +61,7 @@ use coding_adventures_javascript_ast::{
         MemberExpression, NullLiteral, NumericLiteral, ObjectExpression, Property,
         PropertyKey, PropertyKind, StringLiteral, TemplateElement, TemplateLiteral,
         UnaryExpression, UnaryOperator,
-        UndefinedLiteral,
+        UndefinedLiteral, UpdateExpression, UpdateOperator,
     },
     statement::{
         BlockStatement, BreakStatement, CatchClause, ContinueStatement, DebuggerStatement,
@@ -1618,24 +1618,24 @@ fn convert_unary_expression(node: &GrammarASTNode) -> Result<Expression, BridgeE
         .first()
         .ok_or_else(|| internal(node, "unary_expression: missing argument"))?;
     match op {
-        // No RECOGNIZED prefix operator. Either this is the genuine
+        // No RECOGNIZED *pure-unary* prefix operator. Either this is the genuine
         // `postfix_expression` pass-through alternative (just the operand), OR a
-        // prefix `++`/`--` whose token `unary_operator_from_str` deliberately
-        // does NOT map (an UpdateExpression is Phase 2, not in the Phase 1 AST).
-        // The two must be distinguished: a bare operand passes through, but a
-        // prefix update operator must be REJECTED — silently returning the
-        // operand drops the `++`/`--` (`++a` → `a`), a miscompile. Rejecting it
-        // makes closurec fall back to identity passthrough, exactly as the
-        // postfix `a++` form already does in `convert_postfix_expression`.
-        None => {
-            if has_token(node, "++") || has_token(node, "--") {
-                return Err(BridgeError::UnsupportedSyntax {
-                    rule: "UpdateExpression".to_string(),
-                    location: loc(node),
-                });
-            }
-            convert_expression(arg_n)
-        }
+        // prefix `++`/`--` (an [`UpdateExpression`], a *separate* node from
+        // `UnaryExpression` because `++`/`--` mutate their operand). The two are
+        // distinguished by the presence of a `++`/`--` token: a bare operand
+        // passes through; a prefix update becomes `UpdateExpression { prefix:
+        // true }` over the converted operand. (CLOC12.158 PR2 — previously this
+        // rejected the update as `UnsupportedSyntax` because the typed AST had
+        // no `UpdateExpression`.)
+        None => match update_operator_from_node(node) {
+            Some(operator) => Ok(Expression::UpdateExpression(UpdateExpression {
+                cv: None,
+                operator,
+                prefix: true,
+                argument: Box::new(convert_expression(arg_n)?),
+            })),
+            None => convert_expression(arg_n),
+        },
         Some(operator) => Ok(Expression::UnaryExpression(UnaryExpression {
             cv: None,
             operator,
@@ -1668,19 +1668,40 @@ fn unary_operator_from_str(s: &str) -> Option<UnaryOperator> {
 
 fn convert_postfix_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     // postfix_expression = left_hand_side_expression [ PLUS_PLUS | MINUS_MINUS ]
+    //
+    // The optional `++`/`--` is a *token* child (dropped by `node_children`),
+    // so both alternatives expose exactly one AST child: the operand. A present
+    // `++`/`--` token becomes `UpdateExpression { prefix: false }` over that
+    // operand; its absence is the plain pass-through. (CLOC12.158 PR2 —
+    // previously the postfix form rejected as `UnsupportedSyntax`.)
     let nodes = node_children(node);
-    let has_postfix = has_token(node, "++") || has_token(node, "--");
-    if has_postfix {
-        // UpdateExpression — Phase 2, not in Phase 1 typed AST.
-        return Err(BridgeError::UnsupportedSyntax {
-            rule: "UpdateExpression".to_string(),
-            location: loc(node),
-        });
+    let operand = match nodes.as_slice() {
+        [operand] => *operand,
+        _ => return Err(internal(node, "postfix_expression: unexpected shape")),
+    };
+    match update_operator_from_node(node) {
+        Some(operator) => Ok(Expression::UpdateExpression(UpdateExpression {
+            cv: None,
+            operator,
+            prefix: false,
+            argument: Box::new(convert_expression(operand)?),
+        })),
+        None => convert_expression(operand),
     }
-    if nodes.len() == 1 {
-        return convert_expression(nodes[0]);
+}
+
+/// If `node` carries a `++` or `--` token child, return the matching
+/// [`UpdateOperator`]; otherwise `None`. Used to distinguish an
+/// `UpdateExpression` from a plain pass-through in both the prefix
+/// (`unary_expression`) and postfix (`postfix_expression`) grammar forms.
+fn update_operator_from_node(node: &GrammarASTNode) -> Option<UpdateOperator> {
+    if has_token(node, "++") {
+        Some(UpdateOperator::Increment)
+    } else if has_token(node, "--") {
+        Some(UpdateOperator::Decrement)
+    } else {
+        None
     }
-    Err(internal(node, "postfix_expression: unexpected shape"))
 }
 
 // -------------------------------------------------------------------------
@@ -2829,25 +2850,25 @@ mod tests {
     }
 
     #[test]
-    fn prefix_update_operators_are_rejected_not_dropped() {
-        // Prefix `++`/`--` (UpdateExpression) are not representable in the
-        // Phase-1 AST. They MUST be rejected — returning the bare operand would
-        // silently drop the operator (`++a` → `a`), a miscompile. Rejection lets
-        // closurec fall back to identity passthrough, matching the postfix
-        // `a++` form (which `convert_postfix_expression` already rejects).
-        assert!(bridge("++a;").is_err(), "prefix ++ must be rejected, not dropped");
-        assert!(bridge("--a;").is_err(), "prefix -- must be rejected, not dropped");
-        assert!(bridge("++a.b;").is_err(), "prefix ++ on member must be rejected");
-        // Genuine unary prefix operators are unaffected and still convert.
-        assert!(bridge("-a;").is_ok());
-        assert!(bridge("!a;").is_ok());
-        assert!(bridge("typeof a;").is_ok());
-        // Additive-with-unary-sign (`a + +b`, `a - -b`) must NOT be rejected:
-        // these are SEPARATE `+`/`-` tokens, never a single `++`/`--` token, so
-        // the shallow `has_token` check cannot false-positive on them. Pin this
-        // invariant against a future change to `has_token`'s search depth.
-        assert!(bridge("a + +b;").is_ok(), "additive + unary plus must convert");
-        assert!(bridge("a - -b;").is_ok(), "additive + unary minus must convert");
+    fn prefix_update_operators_convert_not_dropped() {
+        // CLOC12.158 PR2: prefix `++`/`--` now convert to `UpdateExpression`
+        // (they used to reject as `UnsupportedSyntax` while the typed AST had
+        // no such node). They must NEVER silently drop the operator (`++a` →
+        // `a` would be a miscompile) — assert a genuine UpdateExpression.
+        assert!(matches!(sole_expr("++a;"), Expression::UpdateExpression(u) if u.prefix));
+        assert!(matches!(sole_expr("--a;"), Expression::UpdateExpression(u) if u.prefix));
+        assert!(matches!(sole_expr("++a.b;"), Expression::UpdateExpression(u) if u.prefix));
+        // Genuine unary prefix operators are unaffected and stay UnaryExpression.
+        assert!(matches!(sole_expr("-a;"), Expression::UnaryExpression(_)));
+        assert!(matches!(sole_expr("!a;"), Expression::UnaryExpression(_)));
+        assert!(matches!(sole_expr("typeof a;"), Expression::UnaryExpression(_)));
+        // CRITICAL invariant: additive-with-unary-sign (`a + +b`, `a - -b`) are
+        // SEPARATE `+`/`-` tokens, never a single `++`/`--`, so the shallow
+        // `has_token(node, "++")` check must NOT false-positive them into an
+        // update. They stay a binary `+`/`-` with a unary operand. Pin this
+        // against any future change to `has_token`'s search depth.
+        assert!(matches!(sole_expr("a + +b;"), Expression::BinaryExpression(_)));
+        assert!(matches!(sole_expr("a - -b;"), Expression::BinaryExpression(_)));
     }
 
     // -----------------------------------------------------------------------
@@ -3906,5 +3927,92 @@ mod tests {
             }
             other => panic!("expected CallExpression, got {other:?}"),
         }
+    }
+
+    // -----------------------------------------------------------------------
+    // Update expressions — `++` / `--` (CLOC12.158 PR2, closes gap-159)
+    // -----------------------------------------------------------------------
+
+    /// Extract the sole expression-statement's expression from a program.
+    fn sole_expr(src: &str) -> Expression {
+        let p = bridge_ok(src);
+        match &p.body[0] {
+            ProgramItem::Statement(Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::ExpressionStatement(es),
+            )) => es.expression.clone(),
+            other => panic!("expected ExpressionStatement, got {other:?}"),
+        }
+    }
+
+    /// `a++` bridges to a postfix `UpdateExpression` (Increment) over `a`.
+    #[test]
+    fn postfix_increment() {
+        match sole_expr("a++;") {
+            Expression::UpdateExpression(u) => {
+                assert_eq!(u.operator, UpdateOperator::Increment);
+                assert!(!u.prefix, "a++ is postfix");
+                assert!(matches!(&*u.argument, Expression::Identifier(i) if i.name == "a"));
+            }
+            other => panic!("expected UpdateExpression, got {other:?}"),
+        }
+    }
+
+    /// `a--` bridges to a postfix `UpdateExpression` (Decrement).
+    #[test]
+    fn postfix_decrement() {
+        match sole_expr("a--;") {
+            Expression::UpdateExpression(u) => {
+                assert_eq!(u.operator, UpdateOperator::Decrement);
+                assert!(!u.prefix);
+            }
+            other => panic!("expected UpdateExpression, got {other:?}"),
+        }
+    }
+
+    /// `++a` bridges to a prefix `UpdateExpression` (Increment) — NOT a
+    /// `UnaryExpression` and NOT a silently-dropped operand.
+    #[test]
+    fn prefix_increment() {
+        match sole_expr("++a;") {
+            Expression::UpdateExpression(u) => {
+                assert_eq!(u.operator, UpdateOperator::Increment);
+                assert!(u.prefix, "++a is prefix");
+                assert!(matches!(&*u.argument, Expression::Identifier(i) if i.name == "a"));
+            }
+            other => panic!("expected UpdateExpression, got {other:?}"),
+        }
+    }
+
+    /// `--a` bridges to a prefix `UpdateExpression` (Decrement).
+    #[test]
+    fn prefix_decrement() {
+        match sole_expr("--a;") {
+            Expression::UpdateExpression(u) => {
+                assert_eq!(u.operator, UpdateOperator::Decrement);
+                assert!(u.prefix);
+            }
+            other => panic!("expected UpdateExpression, got {other:?}"),
+        }
+    }
+
+    /// A member operand round-trips: `a.b++` is a postfix update over the
+    /// member access (a valid writable reference).
+    #[test]
+    fn postfix_increment_on_member() {
+        match sole_expr("a.b++;") {
+            Expression::UpdateExpression(u) => {
+                assert!(!u.prefix);
+                assert_eq!(u.operator, UpdateOperator::Increment);
+                assert!(matches!(&*u.argument, Expression::MemberExpression(_)));
+            }
+            other => panic!("expected UpdateExpression, got {other:?}"),
+        }
+    }
+
+    /// A bare `postfix_expression` with no `++`/`--` still passes through to
+    /// its operand (no regression to the pass-through path).
+    #[test]
+    fn bare_operand_still_passes_through() {
+        assert!(matches!(sole_expr("a;"), Expression::Identifier(i) if i.name == "a"));
     }
 }

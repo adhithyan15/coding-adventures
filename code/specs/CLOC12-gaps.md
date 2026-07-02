@@ -1665,17 +1665,26 @@ and token-fusion seams via `arg_starts_with_sign` reporting a prefix update's
 lead sign (`a- --b`, `a+ ++b`) plus the binary emitter's output-tail check for
 postfix (`x++ +y`). 8 emitter unit tests.
 
-### gap-159 — bridge declines `update_expression`; grammar `postfix_expression` / prefix `++`/`--` not yet converted
+### gap-159 — bridge declines `update_expression` — **RESOLVED (javascript-parser 0.23.0, CLOC12.158 PR2)**
 
-The `javascript-parser` typed-AST bridge still returns `UnsupportedSyntax` for
+The `javascript-parser` typed-AST bridge returned `UnsupportedSyntax` for
 `++`/`--` (both the grammar's `postfix_expression = lhs [ ++ | -- ]` and the
-prefix `++x`/`--x` unary alternative) — the decline predates this node and was
-correct while the typed AST had no `UpdateExpression`. Now that the node exists,
-the bridge can convert it: `convert_postfix_expression` builds a postfix
-`UpdateExpression { prefix: false }`, and the prefix `++`/`--` unary arm builds
-`{ prefix: true }`, with the operand converted as a normal left-hand-side
-expression. That is the CLOC12.158 **PR2 bridge-enable** (with a closurec e2e
-diff fixture proving `for` / statement `i++` round-trips instead of dropping the
-whole file to WHITESPACE_ONLY). The **PR3 emit conformance port** ports upstream
+prefix `++x`/`--x` unary alternative) — the decline predated the
+`UpdateExpression` node and was correct while the typed AST had no such node.
+
+**Fix (CLOC12.158 PR2):** with the node in place (PR1), the bridge now
+converts it — `convert_postfix_expression` builds a postfix
+`UpdateExpression { prefix: false }`, the prefix `++`/`--` arm of
+`convert_unary_expression` builds `{ prefix: true }`, and the shared helper
+`update_operator_from_node` maps the `++`/`--` token child. The operand is
+converted as a normal expression. The whole SIMPLE/ADVANCED pipeline now runs
+on files containing `++`/`--` end-to-end instead of dropping to
+WHITESPACE_ONLY. 6 bridge tests + a closurec e2e diff fixture
+(`tests/diff/simple-update-expression/`) proving statement `i++` round-trips
+(never dropped to `i`) while an adjacent `1 + 2` folds to `3`. The
+additive-with-unary-sign invariant (`a + +b`, `a - -b` stay binary, never
+mis-read as `++`) is pinned by a bridge test.
+
+The **PR3 emit conformance port** — the remaining follow-up — ports upstream
 CodePrinter's update-operator cases (postfix/prefix, precedence, fusion) into
 `closure-emitter/tests/upstream/`.
