@@ -2,6 +2,18 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.4] - 2026-07-01
+
+### Fixed
+
+- **`ConformanceSpec` `String`/`T.Text` mismatch (GHC compile error)**: the
+  conformance test file used un-adorned string literals (e.g. `"op"`, `"execute"`,
+  `""`) in contexts that required `Data.Text.Text`.  Added
+  `{-# LANGUAGE OverloadedStrings #-}` to `ConformanceSpec.hs` so that all
+  string literals are polymorphic and unify with `T.Text` at the use sites
+  (`getStr`, `Map.lookup`, case-expression patterns, and the empty-string default
+  in `getStr`).
+
 ## [0.2.3] - 2026-07-01
 
 ### Fixed

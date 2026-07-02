@@ -1,6 +1,6 @@
 cabal-version: 3.0
 name:          mini-sqlite
-version:       0.2.3
+version:       0.2.4
 synopsis:      Level 1 in-memory mini-sqlite facade backed by the full SQL pipeline
 description:
     Level 0 used a hand-rolled in-memory engine. Level 1 routes every query

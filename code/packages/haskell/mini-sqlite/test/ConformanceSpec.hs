@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 -- ConformanceSpec.hs — runs the 24 conformance fixtures from
 -- code/specs/mini-sqlite-conformance/fixtures/ against the public MiniSqlite API.
 --
