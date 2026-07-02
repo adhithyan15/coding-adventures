@@ -79,6 +79,7 @@ SELF_CONTAINED_RUNGS = (
     "rung39_wbc_differential",
     "rung40_lesion_volume",
     "rung41_split_renal_function",
+    "rung42_hemofiltration_concentration",
 )
 
 
