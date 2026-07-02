@@ -515,145 +515,14 @@ fn eval(
             }
         }
 
-        ComputeExpr::Bin(op, a, b) => {
-            let (lhs, dim_l, exact_l) = eval(a, kb, depth + 1)?;
-            let (rhs, dim_r, exact_r) = eval(b, kb, depth + 1)?;
-            // Power is special: not a symmetric combine. The exponent must be
-            // dimensionless and the result dimension is `base ^ exponent`
-            // (`x^0 = scalar`, `x^2 = x·x`), so it bypasses the `dim_op` +
-            // `Dimension::combine` path the additive/multiplicative ops share.
-            if *op == ComputeOp::Pow {
-                // An exponent with a dimension (`x ^ money(…)`) is a category
-                // error — you cannot raise to a "3 dollars" power.
-                if !dim_r.is_scalar() {
-                    return Err(ComputeError::DimensionMismatch {
-                        op: *op,
-                        lhs: dim_l.tag(),
-                        rhs: dim_r.tag(),
-                    });
-                }
-                let (base, exponent) = (lhs.value(), rhs.value());
-                // Guard the *inputs* before `powf`, not just the result: `powf`
-                // special-cases `1.0.powf(NaN) == 1.0` and `1.0.powf(inf) == 1.0`,
-                // so a non-finite exponent (a `Lit(NaN)` in an LLM-emitted IR) with
-                // a unit base would otherwise launder into a clean `1.0`, violating
-                // the "no silently-wrong number" contract. (`base` is already
-                // finite-checked upstream; re-checking is cheap defense-in-depth.)
-                if !base.is_finite() || !exponent.is_finite() {
-                    return Err(ComputeError::NonFinite { op: *op });
-                }
-                let result_dim = dim_l.pow(exponent).map_err(|e| match e {
-                    crate::DimError::Mismatch { lhs, rhs, .. } => {
-                        ComputeError::DimensionMismatch { op: *op, lhs, rhs }
-                    }
-                })?;
-                let result = base.powf(exponent);
-                if !result.is_finite() {
-                    return Err(ComputeError::NonFinite { op: *op });
-                }
-                // Exact sidecar only for a non-negative integer exponent of an
-                // exact base — `(3/2)^2 = 9/4` stays exact; anything else keeps
-                // just the `f64` result.
-                let exact = match (exact_l, exact_r) {
-                    (Some(a), Some(b)) if b.den == 1 => a.powi(b.num),
-                    _ => None,
-                };
-                return Ok((
-                    DerivationNode::Op {
-                        op: *op,
-                        operands: vec![lhs, rhs],
-                        result,
-                    },
-                    result_dim,
-                    exact,
-                ));
-            }
-            // Binary min/max are also special: not a symmetric *combine* but a
-            // *selection*. Like addition both operands must share a dimension
-            // (`min(usd, days)` is a category error), so we reuse `DimOp::Add`
-            // purely for that same-dimension check and to carry the shared
-            // dimension through — but the value is one operand chosen unchanged,
-            // and the exact-rational sidecar is that same winning operand (no
-            // arithmetic, so nothing is lost).
-            if *op == ComputeOp::Min2 || *op == ComputeOp::Max2 {
-                let result_dim =
-                    Dimension::combine(DimOp::Add, &dim_l, &dim_r).map_err(|e| match e {
-                        crate::DimError::Mismatch { lhs, rhs, .. } => {
-                            ComputeError::DimensionMismatch { op: *op, lhs, rhs }
-                        }
-                    })?;
-                let (x, y) = (lhs.value(), rhs.value());
-                // A non-finite operand (a `Lit(NaN)`/`inf` in an LLM-emitted IR)
-                // would make the comparison meaningless, so reject it up front
-                // rather than let a NaN silently "win" a comparison.
-                if !x.is_finite() || !y.is_finite() {
-                    return Err(ComputeError::NonFinite { op: *op });
-                }
-                // Ties pick the LEFT operand (deterministic; the values are equal
-                // anyway). `min` takes the smaller, `max` the larger.
-                let pick_left = if *op == ComputeOp::Min2 {
-                    x <= y
-                } else {
-                    x >= y
-                };
-                let result = if pick_left { x } else { y };
-                let exact = if pick_left { exact_l } else { exact_r };
-                return Ok((
-                    DerivationNode::Op {
-                        op: *op,
-                        operands: vec![lhs, rhs],
-                        result,
-                    },
-                    result_dim,
-                    exact,
-                ));
-            }
-            // Dimensional check FIRST: usd + days is a category error regardless
-            // of the magnitudes.
-            let dimop = dim_op(*op).ok_or(ComputeError::MalformedExpr {
-                detail: "aggregation operator in binary position",
-            })?;
-            let result_dim = Dimension::combine(dimop, &dim_l, &dim_r).map_err(|e| match e {
-                crate::DimError::Mismatch { lhs, rhs, .. } => {
-                    ComputeError::DimensionMismatch { op: *op, lhs, rhs }
-                }
-            })?;
-            let (x, y) = (lhs.value(), rhs.value());
-            let result = match op {
-                ComputeOp::Add => x + y,
-                ComputeOp::Sub => x - y,
-                ComputeOp::Mul => x * y,
-                ComputeOp::Div => {
-                    if y == 0.0 {
-                        return Err(ComputeError::DivisionByZero);
-                    }
-                    x / y
-                }
-                _ => unreachable!("dim_op already rejected non-binary ops"),
-            };
-            if !result.is_finite() {
-                return Err(ComputeError::NonFinite { op: *op });
-            }
-            let exact = match (exact_l, exact_r) {
-                (Some(a), Some(b)) => match op {
-                    ComputeOp::Add => a.add(b),
-                    ComputeOp::Sub => a.sub(b),
-                    ComputeOp::Mul => a.mul(b),
-                    ComputeOp::Div => a.div(b),
-                    _ => None,
-                },
-                _ => None,
-            };
-            Ok((
-                DerivationNode::Op {
-                    op: *op,
-                    operands: vec![lhs, rhs],
-                    result,
-                },
-                result_dim,
-                exact,
-            ))
-        }
+        // Delegated to an `#[inline(never)]` helper for the SAME reason as the
+        // unary arm below: the binary arm's locals (the `Pow`, `Min2`/`Max2` and
+        // additive/multiplicative branches) would otherwise enlarge `eval`'s own
+        // stack frame, and a fatter frame multiplied across `MAX_EVAL_DEPTH`
+        // levels of recursion can overflow a small (macOS ~2 MB) thread stack
+        // *before* the depth guard trips — turning the "clean `TooDeep`, never a
+        // stack overflow" guarantee into the abort it promises to prevent.
+        ComputeExpr::Bin(op, a, b) => eval_binary(*op, a, b, kb, depth),
 
         // Delegated to an `#[inline(never)]` helper so the unary arm's locals do
         // NOT enlarge `eval`'s own stack frame. `eval` recurses up to
@@ -715,6 +584,162 @@ fn eval(
             ))
         }
     }
+}
+
+/// Evaluate a binary op — `Pow`, binary `Min2`/`Max2`, or the additive/
+/// multiplicative family (`Add`/`Sub`/`Mul`/`Div`) — into a derivation node +
+/// dimension.
+/// Split out of [`eval`] and marked `#[inline(never)]` for the SAME stack-frame
+/// reason as [`eval_unary`]: this arm's locals (three distinct branches) would
+/// otherwise enlarge every one of `eval`'s up-to-`MAX_EVAL_DEPTH` recursive
+/// frames, and a fatter frame multiplied across 256 levels can overflow a small
+/// (macOS ~2 MB) thread stack *before* the depth guard trips — turning the
+/// "clean `TooDeep`, never a stack overflow" guarantee into the abort it
+/// promises to prevent.
+#[inline(never)]
+fn eval_binary(
+    op: ComputeOp,
+    a: &ComputeExpr,
+    b: &ComputeExpr,
+    kb: &KnowledgeBase,
+    depth: usize,
+) -> Result<(DerivationNode, Dimension, Option<ExactRational>), ComputeError> {
+    let (lhs, dim_l, exact_l) = eval(a, kb, depth + 1)?;
+    let (rhs, dim_r, exact_r) = eval(b, kb, depth + 1)?;
+    // Power is special: not a symmetric combine. The exponent must be
+    // dimensionless and the result dimension is `base ^ exponent`
+    // (`x^0 = scalar`, `x^2 = x·x`), so it bypasses the `dim_op` +
+    // `Dimension::combine` path the additive/multiplicative ops share.
+    if op == ComputeOp::Pow {
+        // An exponent with a dimension (`x ^ money(…)`) is a category
+        // error — you cannot raise to a "3 dollars" power.
+        if !dim_r.is_scalar() {
+            return Err(ComputeError::DimensionMismatch {
+                op,
+                lhs: dim_l.tag(),
+                rhs: dim_r.tag(),
+            });
+        }
+        let (base, exponent) = (lhs.value(), rhs.value());
+        // Guard the *inputs* before `powf`, not just the result: `powf`
+        // special-cases `1.0.powf(NaN) == 1.0` and `1.0.powf(inf) == 1.0`,
+        // so a non-finite exponent (a `Lit(NaN)` in an LLM-emitted IR) with
+        // a unit base would otherwise launder into a clean `1.0`, violating
+        // the "no silently-wrong number" contract. (`base` is already
+        // finite-checked upstream; re-checking is cheap defense-in-depth.)
+        if !base.is_finite() || !exponent.is_finite() {
+            return Err(ComputeError::NonFinite { op });
+        }
+        let result_dim = dim_l.pow(exponent).map_err(|e| match e {
+            crate::DimError::Mismatch { lhs, rhs, .. } => {
+                ComputeError::DimensionMismatch { op, lhs, rhs }
+            }
+        })?;
+        let result = base.powf(exponent);
+        if !result.is_finite() {
+            return Err(ComputeError::NonFinite { op });
+        }
+        // Exact sidecar only for a non-negative integer exponent of an
+        // exact base — `(3/2)^2 = 9/4` stays exact; anything else keeps
+        // just the `f64` result.
+        let exact = match (exact_l, exact_r) {
+            (Some(a), Some(b)) if b.den == 1 => a.powi(b.num),
+            _ => None,
+        };
+        return Ok((
+            DerivationNode::Op {
+                op,
+                operands: vec![lhs, rhs],
+                result,
+            },
+            result_dim,
+            exact,
+        ));
+    }
+    // Binary min/max are also special: not a symmetric *combine* but a
+    // *selection*. Like addition both operands must share a dimension
+    // (`min(usd, days)` is a category error), so we reuse `DimOp::Add`
+    // purely for that same-dimension check and to carry the shared
+    // dimension through — but the value is one operand chosen unchanged,
+    // and the exact-rational sidecar is that same winning operand (no
+    // arithmetic, so nothing is lost).
+    if op == ComputeOp::Min2 || op == ComputeOp::Max2 {
+        let result_dim = Dimension::combine(DimOp::Add, &dim_l, &dim_r).map_err(|e| match e {
+            crate::DimError::Mismatch { lhs, rhs, .. } => {
+                ComputeError::DimensionMismatch { op, lhs, rhs }
+            }
+        })?;
+        let (x, y) = (lhs.value(), rhs.value());
+        // A non-finite operand (a `Lit(NaN)`/`inf` in an LLM-emitted IR)
+        // would make the comparison meaningless, so reject it up front
+        // rather than let a NaN silently "win" a comparison.
+        if !x.is_finite() || !y.is_finite() {
+            return Err(ComputeError::NonFinite { op });
+        }
+        // Ties pick the LEFT operand (deterministic; the values are equal
+        // anyway). `min` takes the smaller, `max` the larger.
+        let pick_left = if op == ComputeOp::Min2 {
+            x <= y
+        } else {
+            x >= y
+        };
+        let result = if pick_left { x } else { y };
+        let exact = if pick_left { exact_l } else { exact_r };
+        return Ok((
+            DerivationNode::Op {
+                op,
+                operands: vec![lhs, rhs],
+                result,
+            },
+            result_dim,
+            exact,
+        ));
+    }
+    // Dimensional check FIRST: usd + days is a category error regardless
+    // of the magnitudes.
+    let dimop = dim_op(op).ok_or(ComputeError::MalformedExpr {
+        detail: "aggregation operator in binary position",
+    })?;
+    let result_dim = Dimension::combine(dimop, &dim_l, &dim_r).map_err(|e| match e {
+        crate::DimError::Mismatch { lhs, rhs, .. } => {
+            ComputeError::DimensionMismatch { op, lhs, rhs }
+        }
+    })?;
+    let (x, y) = (lhs.value(), rhs.value());
+    let result = match op {
+        ComputeOp::Add => x + y,
+        ComputeOp::Sub => x - y,
+        ComputeOp::Mul => x * y,
+        ComputeOp::Div => {
+            if y == 0.0 {
+                return Err(ComputeError::DivisionByZero);
+            }
+            x / y
+        }
+        _ => unreachable!("dim_op already rejected non-binary ops"),
+    };
+    if !result.is_finite() {
+        return Err(ComputeError::NonFinite { op });
+    }
+    let exact = match (exact_l, exact_r) {
+        (Some(a), Some(b)) => match op {
+            ComputeOp::Add => a.add(b),
+            ComputeOp::Sub => a.sub(b),
+            ComputeOp::Mul => a.mul(b),
+            ComputeOp::Div => a.div(b),
+            _ => None,
+        },
+        _ => None,
+    };
+    Ok((
+        DerivationNode::Op {
+            op,
+            operands: vec![lhs, rhs],
+            result,
+        },
+        result_dim,
+        exact,
+    ))
 }
 
 /// Evaluate a unary op — the rounding family (`Abs`/`Floor`/`Ceil`/`Round`) or a
@@ -815,11 +840,18 @@ fn eval_unary(
     //     avoids the overflow a bare `2·arem` could hit; `arem = |rem| < den`.
     // Each result is an integer, carried as `q/1`.
     let exact = exact.and_then(|r| match op {
-        ComputeOp::Abs => r.num.checked_abs().and_then(|n| ExactRational::new(n, r.den)),
+        ComputeOp::Abs => r
+            .num
+            .checked_abs()
+            .and_then(|n| ExactRational::new(n, r.den)),
         ComputeOp::Floor => ExactRational::new(r.num.div_euclid(r.den), 1),
         ComputeOp::Ceil => {
             let q = r.num.div_euclid(r.den);
-            let q = if r.num.rem_euclid(r.den) != 0 { q.checked_add(1)? } else { q };
+            let q = if r.num.rem_euclid(r.den) != 0 {
+                q.checked_add(1)?
+            } else {
+                q
+            };
             ExactRational::new(q, 1)
         }
         ComputeOp::Round => {
@@ -828,7 +860,11 @@ fn eval_unary(
             let arem = if rem >= 0 { rem } else { -rem }; // |rem| < den ⇒ no overflow
             let bump = if arem >= r.den - arem {
                 // fractional part ≥ 1/2 → round away from zero (ties away from zero)
-                if r.num >= 0 { 1 } else { -1 }
+                if r.num >= 0 {
+                    1
+                } else {
+                    -1
+                }
             } else {
                 0
             };
@@ -838,7 +874,11 @@ fn eval_unary(
     });
     // Rounding preserves the operand's dimension; a transcendental collapses to a
     // pure number (`Scalar`).
-    let result_dim = if transcendental { Dimension::Scalar } else { dim };
+    let result_dim = if transcendental {
+        Dimension::Scalar
+    } else {
+        dim
+    };
     Ok((
         DerivationNode::Op {
             op,
@@ -1044,12 +1084,7 @@ mod tests {
     fn a_dimensioned_exponent_is_a_category_error() {
         // x ^ (money) is meaningless — the exponent must be dimensionless.
         let kb = kb_with(vec![quantity("x", 2, "index"), money("e", 3, "usd")]);
-        let err = compute(
-            "p",
-            &bin(ComputeOp::Pow, refexpr("x"), refexpr("e")),
-            &kb,
-        )
-        .unwrap_err();
+        let err = compute("p", &bin(ComputeOp::Pow, refexpr("x"), refexpr("e")), &kb).unwrap_err();
         assert!(matches!(
             err,
             ComputeError::DimensionMismatch {
@@ -1127,7 +1162,11 @@ mod tests {
             "fl",
             &ComputeExpr::Unary(
                 ComputeOp::Floor,
-                Box::new(bin(ComputeOp::Div, ComputeExpr::Lit(7.0), ComputeExpr::Lit(2.0))),
+                Box::new(bin(
+                    ComputeOp::Div,
+                    ComputeExpr::Lit(7.0),
+                    ComputeExpr::Lit(2.0),
+                )),
             ),
             &kb_with(vec![]),
         )
@@ -1145,7 +1184,11 @@ mod tests {
             "fl",
             &ComputeExpr::Unary(
                 ComputeOp::Floor,
-                Box::new(bin(ComputeOp::Div, ComputeExpr::Lit(-7.0), ComputeExpr::Lit(2.0))),
+                Box::new(bin(
+                    ComputeOp::Div,
+                    ComputeExpr::Lit(-7.0),
+                    ComputeExpr::Lit(2.0),
+                )),
             ),
             &kb_with(vec![]),
         )
@@ -1182,7 +1225,11 @@ mod tests {
             "ce",
             &ComputeExpr::Unary(
                 ComputeOp::Ceil,
-                Box::new(bin(ComputeOp::Div, ComputeExpr::Lit(6.0), ComputeExpr::Lit(2.0))),
+                Box::new(bin(
+                    ComputeOp::Div,
+                    ComputeExpr::Lit(6.0),
+                    ComputeExpr::Lit(2.0),
+                )),
             ),
             &kb_with(vec![]),
         )
@@ -1199,7 +1246,11 @@ mod tests {
             "rd",
             &ComputeExpr::Unary(
                 ComputeOp::Round,
-                Box::new(bin(ComputeOp::Div, ComputeExpr::Lit(5.0), ComputeExpr::Lit(2.0))),
+                Box::new(bin(
+                    ComputeOp::Div,
+                    ComputeExpr::Lit(5.0),
+                    ComputeExpr::Lit(2.0),
+                )),
             ),
             &kb_with(vec![]),
         )
@@ -1217,7 +1268,11 @@ mod tests {
             "rd",
             &ComputeExpr::Unary(
                 ComputeOp::Round,
-                Box::new(bin(ComputeOp::Div, ComputeExpr::Lit(-5.0), ComputeExpr::Lit(2.0))),
+                Box::new(bin(
+                    ComputeOp::Div,
+                    ComputeExpr::Lit(-5.0),
+                    ComputeExpr::Lit(2.0),
+                )),
             ),
             &kb_with(vec![]),
         )
@@ -1252,8 +1307,12 @@ mod tests {
         // operand is a pure number, the result is a pure number (Scalar), and the
         // exact-rational sidecar is dropped (a transcendental is irrational).
         let inner = ComputeExpr::Unary(ComputeOp::Ln, Box::new(ComputeExpr::Lit(5.0)));
-        let d = compute("e", &ComputeExpr::Unary(ComputeOp::Exp, Box::new(inner)), &kb_with(vec![]))
-            .unwrap();
+        let d = compute(
+            "e",
+            &ComputeExpr::Unary(ComputeOp::Exp, Box::new(inner)),
+            &kb_with(vec![]),
+        )
+        .unwrap();
         assert!((d.value - 5.0).abs() < 1e-9, "{}", d.value);
         assert_eq!(d.dim, Dimension::Scalar);
         assert_eq!(d.exact, None);
@@ -1262,9 +1321,19 @@ mod tests {
     #[test]
     fn sin_of_zero_is_zero_and_cos_of_zero_is_one() {
         // Sanity anchors that don't depend on π: sin(0)=0, cos(0)=1.
-        let s = compute("s", &ComputeExpr::Unary(ComputeOp::Sin, Box::new(ComputeExpr::Lit(0.0))), &kb_with(vec![])).unwrap();
+        let s = compute(
+            "s",
+            &ComputeExpr::Unary(ComputeOp::Sin, Box::new(ComputeExpr::Lit(0.0))),
+            &kb_with(vec![]),
+        )
+        .unwrap();
         assert_eq!(s.value, 0.0);
-        let c = compute("c", &ComputeExpr::Unary(ComputeOp::Cos, Box::new(ComputeExpr::Lit(0.0))), &kb_with(vec![])).unwrap();
+        let c = compute(
+            "c",
+            &ComputeExpr::Unary(ComputeOp::Cos, Box::new(ComputeExpr::Lit(0.0))),
+            &kb_with(vec![]),
+        )
+        .unwrap();
         assert_eq!(c.value, 1.0);
         assert_eq!(c.dim, Dimension::Scalar);
     }
@@ -1275,10 +1344,20 @@ mod tests {
         // pure number. The engine rejects it with a DimensionMismatch (operand
         // dimension vs the required Scalar), NOT a silently-wrong number.
         let kb = kb_with(vec![money("m", 4, "usd")]);
-        let err = compute("l", &ComputeExpr::Unary(ComputeOp::Ln, Box::new(refexpr("m"))), &kb)
-            .unwrap_err();
+        let err = compute(
+            "l",
+            &ComputeExpr::Unary(ComputeOp::Ln, Box::new(refexpr("m"))),
+            &kb,
+        )
+        .unwrap_err();
         assert!(
-            matches!(err, ComputeError::DimensionMismatch { op: ComputeOp::Ln, .. }),
+            matches!(
+                err,
+                ComputeError::DimensionMismatch {
+                    op: ComputeOp::Ln,
+                    ..
+                }
+            ),
             "{err:?}"
         );
     }
@@ -1288,9 +1367,16 @@ mod tests {
         // ln(0) = −∞ and ln(−1) = NaN in IEEE — both are rejected by the finite
         // guard rather than flowing a non-finite value into a verdict.
         for x in [0.0, -1.0] {
-            let err = compute("l", &ComputeExpr::Unary(ComputeOp::Ln, Box::new(ComputeExpr::Lit(x))), &kb_with(vec![]))
-                .unwrap_err();
-            assert!(matches!(err, ComputeError::NonFinite { op: ComputeOp::Ln }), "x={x}: {err:?}");
+            let err = compute(
+                "l",
+                &ComputeExpr::Unary(ComputeOp::Ln, Box::new(ComputeExpr::Lit(x))),
+                &kb_with(vec![]),
+            )
+            .unwrap_err();
+            assert!(
+                matches!(err, ComputeError::NonFinite { op: ComputeOp::Ln }),
+                "x={x}: {err:?}"
+            );
         }
     }
 
@@ -1307,8 +1393,17 @@ mod tests {
             (ComputeOp::Atan, 0.0, 0.0),
         ];
         for (op, x, want) in cases {
-            let d = compute("t", &ComputeExpr::Unary(op, Box::new(ComputeExpr::Lit(x))), &kb_with(vec![])).unwrap();
-            assert!((d.value - want).abs() < 1e-12, "{op:?}({x}) = {} want {want}", d.value);
+            let d = compute(
+                "t",
+                &ComputeExpr::Unary(op, Box::new(ComputeExpr::Lit(x))),
+                &kb_with(vec![]),
+            )
+            .unwrap();
+            assert!(
+                (d.value - want).abs() < 1e-12,
+                "{op:?}({x}) = {} want {want}",
+                d.value
+            );
             assert_eq!(d.dim, Dimension::Scalar);
             assert_eq!(d.exact, None);
         }
@@ -1319,12 +1414,25 @@ mod tests {
         // sec(0) = 1/cos(0) = 1 (a clean value); csc(0) = 1/sin(0) and cot(0) =
         // cos(0)/sin(0) are poles (sin 0 = 0 → ±∞) and are rejected by the finite
         // guard, never a silently-wrong number.
-        let sec0 = compute("s", &ComputeExpr::Unary(ComputeOp::Sec, Box::new(ComputeExpr::Lit(0.0))), &kb_with(vec![])).unwrap();
+        let sec0 = compute(
+            "s",
+            &ComputeExpr::Unary(ComputeOp::Sec, Box::new(ComputeExpr::Lit(0.0))),
+            &kb_with(vec![]),
+        )
+        .unwrap();
         assert_eq!(sec0.value, 1.0);
         assert_eq!(sec0.dim, Dimension::Scalar);
         for op in [ComputeOp::Csc, ComputeOp::Cot] {
-            let err = compute("p", &ComputeExpr::Unary(op, Box::new(ComputeExpr::Lit(0.0))), &kb_with(vec![])).unwrap_err();
-            assert!(matches!(err, ComputeError::NonFinite { .. }), "{op:?}(0): {err:?}");
+            let err = compute(
+                "p",
+                &ComputeExpr::Unary(op, Box::new(ComputeExpr::Lit(0.0))),
+                &kb_with(vec![]),
+            )
+            .unwrap_err();
+            assert!(
+                matches!(err, ComputeError::NonFinite { .. }),
+                "{op:?}(0): {err:?}"
+            );
         }
     }
 
@@ -1332,9 +1440,21 @@ mod tests {
     fn arcsine_outside_its_domain_is_a_clean_nonfinite_error() {
         // asin is only defined on [−1, 1]; asin(2) = NaN in IEEE → rejected, not
         // flowed into a verdict.
-        let err = compute("a", &ComputeExpr::Unary(ComputeOp::Asin, Box::new(ComputeExpr::Lit(2.0))), &kb_with(vec![]))
-            .unwrap_err();
-        assert!(matches!(err, ComputeError::NonFinite { op: ComputeOp::Asin }), "{err:?}");
+        let err = compute(
+            "a",
+            &ComputeExpr::Unary(ComputeOp::Asin, Box::new(ComputeExpr::Lit(2.0))),
+            &kb_with(vec![]),
+        )
+        .unwrap_err();
+        assert!(
+            matches!(
+                err,
+                ComputeError::NonFinite {
+                    op: ComputeOp::Asin
+                }
+            ),
+            "{err:?}"
+        );
     }
 
     #[test]
@@ -1342,11 +1462,18 @@ mod tests {
         // 10 ^ 400 overflows f64 → a NonFinite error, never a silent `inf`.
         let err = compute(
             "big",
-            &bin(ComputeOp::Pow, ComputeExpr::Lit(10.0), ComputeExpr::Lit(400.0)),
+            &bin(
+                ComputeOp::Pow,
+                ComputeExpr::Lit(10.0),
+                ComputeExpr::Lit(400.0),
+            ),
             &kb_with(vec![]),
         )
         .unwrap_err();
-        assert!(matches!(err, ComputeError::NonFinite { op: ComputeOp::Pow }));
+        assert!(matches!(
+            err,
+            ComputeError::NonFinite { op: ComputeOp::Pow }
+        ));
     }
 
     #[test]
@@ -1497,19 +1624,9 @@ mod tests {
             Fact::certain(compound("a", vec![int(3)])),
             Fact::certain(compound("b", vec![int(8)])),
         ]);
-        let lo = compute(
-            "lo",
-            &bin(ComputeOp::Min2, refexpr("a"), refexpr("b")),
-            &kb,
-        )
-        .unwrap();
+        let lo = compute("lo", &bin(ComputeOp::Min2, refexpr("a"), refexpr("b")), &kb).unwrap();
         assert_eq!(lo.value, 3.0);
-        let hi = compute(
-            "hi",
-            &bin(ComputeOp::Max2, refexpr("a"), refexpr("b")),
-            &kb,
-        )
-        .unwrap();
+        let hi = compute("hi", &bin(ComputeOp::Max2, refexpr("a"), refexpr("b")), &kb).unwrap();
         assert_eq!(hi.value, 8.0);
         // The result node is a two-operand Op, not an aggregation over one slot.
         match &hi.tree {
@@ -1529,19 +1646,9 @@ mod tests {
             Fact::certain(compound("a", vec![int(3)])),
             Fact::certain(compound("b", vec![int(8)])),
         ]);
-        let lo = compute(
-            "lo",
-            &bin(ComputeOp::Min2, refexpr("a"), refexpr("b")),
-            &kb,
-        )
-        .unwrap();
+        let lo = compute("lo", &bin(ComputeOp::Min2, refexpr("a"), refexpr("b")), &kb).unwrap();
         assert_eq!(lo.exact, ExactRational::new(3, 1));
-        let hi = compute(
-            "hi",
-            &bin(ComputeOp::Max2, refexpr("a"), refexpr("b")),
-            &kb,
-        )
-        .unwrap();
+        let hi = compute("hi", &bin(ComputeOp::Max2, refexpr("a"), refexpr("b")), &kb).unwrap();
         assert_eq!(hi.exact, ExactRational::new(8, 1));
     }
 
@@ -1570,7 +1677,10 @@ mod tests {
             &kb,
         )
         .unwrap_err();
-        assert!(matches!(err, ComputeError::DimensionMismatch { .. }), "{err:?}");
+        assert!(
+            matches!(err, ComputeError::DimensionMismatch { .. }),
+            "{err:?}"
+        );
     }
 
     #[test]

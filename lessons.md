@@ -984,6 +984,15 @@ stack in debug builds. `cargo test -p <crate>` locally is NOT sufficient to catc
 it (margin is runner-dependent); the guard is the deep-nesting stack test on CI
 macOS.
 
+Recurrence (PR #7343, adding binary `Min2`/`Max2`): the same overflow re-appeared
+because only the `Unary` arm had been extracted — the `Bin` arm was still inline,
+and adding a `Min2`/`Max2` branch to it enlarged `eval`'s frame again. Fix was to
+extract the ENTIRE `Bin` arm into `#[inline(never)] fn eval_binary` (mirroring
+`eval_unary`). Reinforced rule: don't just extract the arm you're editing —
+**every** recursive arm of a depth-capped `eval`-style function that carries
+non-trivial locals should live in its own `#[inline(never)]` helper, so a future
+addition to any of them can't re-inflate the shared frame.
+
 Discovered: 2026-07-02 during logic-engine abs-value CI (PR #7299 fix commit adf710c3).
 
 ---
