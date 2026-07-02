@@ -185,19 +185,24 @@ fn raw_preserves_escaped_dollar_brace() {
 
 /// Upstream `testMultilineTemplateLiteralPreservesInternalWhitespace`: an
 /// internal newline (and its following indentation) is part of the raw text
-/// and *should* print exactly, never collapsed.
+/// and prints exactly, never collapsed.
 ///
-/// **Ignored — gap-158.** The emitter routes quasi text through `write_str`,
-/// which `debug_assert!`s the run contains no `'\n'` (newlines must go through
-/// `newline()` so the source-map line/col bookkeeping stays correct). A
-/// template quasi is the one primary token that can legitimately carry a raw
-/// newline, so `emit_template_element` needs a newline-aware write path before
-/// this case can pass. Tracked as gap-158; unignore when the emitter learns to
-/// split quasi raw on embedded newlines.
+/// **gap-158 resolved.** `emit_template_element` now splits the quasi `raw` on
+/// `'\n'` and routes each break through `newline()` (keeping source-map
+/// line/column bookkeeping correct) instead of tripping `write_str`'s
+/// no-embedded-newline `debug_assert!`. The interior `"\n  "` — the line break
+/// plus its indentation — round-trips byte-for-byte.
 #[test]
-#[ignore = "gap-158: emitter write_str forbids embedded newlines in template quasi raw"]
 fn raw_preserves_internal_newline() {
     assert_emits(template_no_sub("hello\n  world"), "`hello\n  world`;");
+}
+
+/// A quasi that both *begins* and *ends* with a newline still round-trips: the
+/// leading and trailing empty split segments write nothing, so only the two
+/// interior `newline()`s advance the line counter — the raw bytes are exact.
+#[test]
+fn raw_preserves_leading_and_trailing_newline() {
+    assert_emits(template_no_sub("\nx\n"), "`\nx\n`;");
 }
 
 // =====================================================================

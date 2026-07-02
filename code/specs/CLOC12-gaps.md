@@ -1594,20 +1594,49 @@ them. Test-only PR (no emitter code change); the one ignored case surfaces
 gap-158. *Tagged* templates are intentionally not ported (no
 `TaggedTemplateExpression` AST node — see the port's ATTRIBUTION).
 
-### gap-158 — emitter cannot print a template quasi with a *literal* embedded newline
+### gap-158 — emitter cannot print a template quasi with a *literal* embedded newline — **RESOLVED (closure-emitter 0.21.3, CLOC12.157)**
 
-`emit_template_element` writes a quasi's `raw` text through the emitter's
+`emit_template_element` wrote a quasi's `raw` text through the emitter's
 `write_str`, which `debug_assert!`s the run contains no `'\n'` — every newline
 must instead flow through `newline()` so the source-map line/column bookkeeping
 (and `line`/`col` counters) stay correct. A template quasi is the one *primary*
 token that can legitimately carry a raw newline (a multiline template such as
 `` `hello⏎world` `` preserves it verbatim per spec), so a quasi whose `raw`
-contains `\n` currently panics the emitter worker rather than printing. The fix
-is a newline-aware quasi-write path in `emit_template_element` (split `raw` on
-`\n`, emitting each segment via `write_str` and each break via `newline()`);
-until then the multiline case is `#[ignore]`d in the conformance port
-(`raw_preserves_internal_newline`). No correctness hazard for the shapes the
-bridge can actually produce today — the grammar's `TEMPLATE_NO_SUB` token can
-span newlines, but the no-substitution SIMPLE/ADVANCED path does not yet reach
-an input that stresses this (it declines multiline via the same token) — so
-this is an emitter-completeness gap, not a live miscompile.
+contained `\n` panicked the emitter worker rather than printing.
+
+**Fix (CLOC12.157):** `emit_template_element` now splits the quasi `raw` on
+`'\n'` and writes each line segment via `write_str` with a real `newline()`
+between segments — so `line` advances and `col` resets exactly as for any other
+newline, and the raw bytes round-trip. `str::split('\n')` yields `N + 1` pieces
+for `N` newlines (empty leading/trailing pieces for a raw that starts/ends with
+`'\n'` write nothing), so the line count lands exactly on the `'\n'` count.
+Single-line quasis are one segment → identical to before. The conformance
+port's `raw_preserves_internal_newline` is un-ignored and a
+`raw_preserves_leading_and_trailing_newline` case plus three inline emitter
+tests were added.
+
+**Residual (not a hazard):** other line-terminator bytes a raw may carry — a
+lone `'\r'` (the `'\r'` of a `\r\n` pair rides on the tail of the preceding
+segment) and the Unicode separators `U+2028` / `U+2029` — are written verbatim
+as ordinary characters: bytes round-trip exactly, and only their *column*
+bookkeeping is approximate (they don't increment `line`). That is a source-map
+nicety, not an output-correctness bug; a fully line-terminator-aware split is a
+later refinement if a source-map consumer ever needs column fidelity across
+CR / LS / PS inside a template.
+
+## CLOC12.157 — newline-aware template quasi emit (resolves gap-158)
+
+`closure-emitter` (0.21.3) makes `emit_template_element` newline-aware: a
+multiline template quasi (`raw` containing a literal `'\n'`) now prints its
+interior line break verbatim instead of panicking the emitter worker on
+`write_str`'s no-embedded-newline `debug_assert!`. See gap-158 (now RESOLVED)
+for the mechanism. First non-test-only change in the TemplateLiteral arc since
+CLOC12.154 — a real `src/` fix in the emitter. The CLOC12.156 conformance
+port's `raw_preserves_internal_newline` case is un-ignored (now 19 active
+`#[test]`s, 0 `#[ignore]` — the port fully conforms), and three inline emitter
+unit tests cover the no-sub, substitution-quasi, and bare-newline shapes. This
+completes multiline handling for the template shapes the emitter can be handed;
+the grammar still only tokenises no-substitution templates into the bridge
+(gap-157), so multiline templates reach the emitter today only via
+hand-constructed AST, but the emitter is now correct for when the bridge grows
+multiline support.
