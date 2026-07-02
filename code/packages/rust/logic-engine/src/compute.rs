@@ -186,6 +186,14 @@ pub enum ComputeOp {
     /// makes a LaTeX `x^n` (adj-lang's `latex "…"` surface) computable as a
     /// single native node instead of an expanded `x*x*…*x` chain.
     Pow,
+    /// Absolute value, `|x|`. Unlike the other operators it is **unary** (one
+    /// operand) and **dimension-preserving**: `|dollars|` is still dollars (a
+    /// magnitude flips sign, its unit does not), so it neither combines two
+    /// dimensions like the additive/multiplicative ops nor collapses to `Scalar`.
+    /// It is carried in a [`ComputeExpr::Unary`] and is what makes a LaTeX
+    /// `|x|`/`\left|x\right|` (adj-lang's `latex "…"` surface) computable instead
+    /// of being silently dropped to a bare `x`.
+    Abs,
     Sum,
     Count,
     Min,
@@ -202,6 +210,7 @@ impl ComputeOp {
             ComputeOp::Mul => "*",
             ComputeOp::Div => "/",
             ComputeOp::Pow => "^",
+            ComputeOp::Abs => "abs",
             ComputeOp::Sum => "sum",
             ComputeOp::Count => "count",
             ComputeOp::Min => "min",
@@ -224,6 +233,10 @@ pub enum ComputeExpr {
     Lit(f64),
     /// A binary operation: `Add`/`Sub`/`Mul`/`Div`/`Pow` only.
     Bin(ComputeOp, Box<ComputeExpr>, Box<ComputeExpr>),
+    /// A unary operation: `Abs` only. Kept distinct from [`ComputeExpr::Bin`] so
+    /// the arity is honest (a unary op has one operand, not two) — it lowers to a
+    /// [`DerivationNode::Op`] with a single-element `operands` vec.
+    Unary(ComputeOp, Box<ComputeExpr>),
     /// An aggregation over **every** observation of a slot:
     /// `Sum`/`Count`/`Min`/`Max`/`Avg`.
     Agg(ComputeOp, String),
@@ -515,6 +528,14 @@ fn eval(
             ))
         }
 
+        // Delegated to an `#[inline(never)]` helper so the unary arm's locals do
+        // NOT enlarge `eval`'s own stack frame. `eval` recurses up to
+        // `MAX_EVAL_DEPTH` levels deep, so a bigger frame here would multiply
+        // across 256 frames and can overflow a small (macOS ~2 MB) test-thread
+        // stack before the depth guard trips — keeping the frame lean preserves
+        // the "clean `TooDeep`, never a stack overflow" contract.
+        ComputeExpr::Unary(op, a) => eval_unary(*op, a, kb, depth),
+
         ComputeExpr::Agg(op, slot) => {
             let observations = kb.observed_values_all(slot);
             // `count` is defined even when there are no observations (it's 0);
@@ -567,6 +588,55 @@ fn eval(
             ))
         }
     }
+}
+
+/// Evaluate a unary op (`Abs`) into a derivation node + dimension. Split out of
+/// [`eval`] and marked `#[inline(never)]` so its locals live in their own stack
+/// frame rather than enlarging every one of `eval`'s up-to-`MAX_EVAL_DEPTH`
+/// recursive frames — a fatter `eval` frame multiplied across 256 levels can
+/// overflow a small (macOS ~2 MB) thread stack *before* the depth guard trips,
+/// which would turn the "clean `TooDeep`, never a stack overflow" guarantee into
+/// exactly the abort it promises to prevent.
+#[inline(never)]
+fn eval_unary(
+    op: ComputeOp,
+    a: &ComputeExpr,
+    kb: &KnowledgeBase,
+    depth: usize,
+) -> Result<(DerivationNode, Dimension, Option<ExactRational>), ComputeError> {
+    let (operand, dim, exact) = eval(a, kb, depth + 1)?;
+    // `Abs` is the only unary op. It is **dimension-preserving**: the magnitude
+    // may flip sign but the unit does not (`|−3 dollars| = 3 dollars`), so —
+    // unlike `Pow`, which recomputes the dimension — the operand's dimension
+    // flows straight through.
+    let result = match op {
+        ComputeOp::Abs => operand.value().abs(),
+        _ => {
+            return Err(ComputeError::MalformedExpr {
+                detail: "non-unary operator in unary position",
+            })
+        }
+    };
+    // `abs()` cannot introduce a non-finite value (|±∞| = ∞ was already
+    // non-finite; |NaN| = NaN), but the operand is finite-checked at its own
+    // producing op, so a finite operand yields a finite result. Guard anyway —
+    // cheap defense-in-depth, same contract as the binary ops.
+    if !result.is_finite() {
+        return Err(ComputeError::NonFinite { op });
+    }
+    // The exact sidecar stays exact: |num/den| = |num|/den (den is kept positive
+    // by `ExactRational`), so an integer/rational operand keeps its exactness
+    // through the absolute value.
+    let exact = exact.and_then(|r| r.num.checked_abs().and_then(|n| ExactRational::new(n, r.den)));
+    Ok((
+        DerivationNode::Op {
+            op,
+            operands: vec![operand],
+            result,
+        },
+        dim,
+        exact,
+    ))
 }
 
 #[cfg(test)]
@@ -804,6 +874,38 @@ mod tests {
         assert!((d.value - 3.0).abs() < 1e-12);
         assert_eq!(d.dim, Dimension::Scalar);
         assert_eq!(d.exact, None);
+    }
+
+    #[test]
+    fn absolute_value_flips_a_negative_scalar_and_stays_exact() {
+        // |−7| = 7, scalar, and the exact sidecar stays exact (|−7/1| = 7/1) —
+        // the absolute value of an integer/rational operand keeps its exactness.
+        let d = compute(
+            "abs",
+            &ComputeExpr::Unary(ComputeOp::Abs, Box::new(ComputeExpr::Lit(-7.0))),
+            &kb_with(vec![]),
+        )
+        .unwrap();
+        assert_eq!(d.value, 7.0);
+        assert_eq!(d.dim, Dimension::Scalar);
+        assert_eq!(d.exact, ExactRational::new(7, 1));
+    }
+
+    #[test]
+    fn absolute_value_preserves_the_operand_dimension() {
+        // |−4 dollars| = 4 dollars — a magnitude flips sign but the UNIT does not
+        // (unlike a square root, which has no representable half-dimension). The
+        // result carries the operand's money dimension unchanged.
+        let kb = kb_with(vec![money("m", -4, "usd")]);
+        let d = compute(
+            "abs",
+            &ComputeExpr::Unary(ComputeOp::Abs, Box::new(refexpr("m"))),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(d.value, 4.0);
+        // Same dimension as the operand `m` (money/usd), NOT collapsed to Scalar.
+        assert_eq!(d.dim, kb.observed_dimensioned("m").unwrap().0.dim);
     }
 
     #[test]

@@ -105,6 +105,10 @@ pub enum ExprAst {
     Lit(f64),
     /// A binary arithmetic operation.
     Bin(ArithOp, Box<ExprAst>, Box<ExprAst>),
+    /// An absolute value, `|x|` — the only unary arithmetic form. Lowers to the
+    /// native `ComputeOp::Abs` (dimension-preserving). Produced by the `latex "…"`
+    /// adapter from a `|…|`/`\left|…\right|` fence.
+    Abs(Box<ExprAst>),
     /// An aggregation over every observation of a slot.
     Agg(AggOp, String),
 }
