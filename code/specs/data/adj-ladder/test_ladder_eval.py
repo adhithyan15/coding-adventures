@@ -73,6 +73,7 @@ SELF_CONTAINED_RUNGS = (
     "rung33_stroke_work",
     "rung34_fluid_admixture",
     "rung35_dialysis_clearance",
+    "rung36_transfusion_pooling",
 )
 
 
