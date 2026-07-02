@@ -93,7 +93,7 @@ runtime errors.
 | `check_lenient_bad_varref_passes` | `twigc_check` on lenient bad varref → `Ok(())` |
 | `emit_iir_produces_fn_listing` | `twigc_emit_iir` → string contains `fn main:` |
 | `run_arithmetic_returns_value` | `twigc_run` on `(define (main) (+ 21 21))` → `Ok(42)` |
-| `run_compiler_tree_main_returns_2` | `twigc_run` on `code/twig/compiler/main.tw` → `Ok(2)` (`(main)` returns the span.tw fn count) |
+| `run_compiler_tree_main_returns_2` | `twigc_run` on `code/packages/twig/compiler/main.tw` → `Ok(2)` (`(main)` returns the span.tw fn count) |
 
 ## Version
 

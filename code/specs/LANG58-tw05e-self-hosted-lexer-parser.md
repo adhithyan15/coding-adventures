@@ -11,8 +11,8 @@
 TW05-E is the first real *compilation phase* of the self-hosted Twig compiler: turning
 source text into an Abstract Syntax Tree (AST).  The deliverable is two new Twig modules:
 
-- `code/twig/compiler/lexer.tw` — `lex-source : String → List[Token]`
-- `code/twig/compiler/parser.tw` — `parse-program : List[Token] → List[Expr]`
+- `code/packages/twig/compiler/lexer.tw` — `lex-source : String → List[Token]`
+- `code/packages/twig/compiler/parser.tw` — `parse-program : List[Token] → List[Expr]`
 
 Both modules build on the data model introduced in TW05-D (LANG57):
 `Span`, `Token`, `TokenKind`, and `Expr` from `compiler/ast`.

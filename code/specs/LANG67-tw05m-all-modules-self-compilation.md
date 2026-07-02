@@ -73,7 +73,7 @@ No VM constant changes are needed.
 
 ## Changes
 
-### `code/twig/compiler/main.tw`
+### `code/packages/twig/compiler/main.tw`
 
 `self-compile-all` extended with four additional `host/read_file` + pipeline
 calls for `token.tw`, `ast.tw`, `iir-types.tw`, and `main.tw`.  The return

@@ -748,7 +748,7 @@ control flow.
   `(number->string 42)` as user-function calls, which then failed with
   "unbound name" when no top-level define existed.  Adding them makes
   string↔number↔symbol conversions usable from any Twig source file,
-  including the new `code/twig/compiler/` data model modules.
+  including the new `code/packages/twig/compiler/` data model modules.
 
 - **`extern_fns` in `compile_module_tree` now covers record/union generated
   names** — the `twig-module-driver` Phase 3 pre-pass was extended to

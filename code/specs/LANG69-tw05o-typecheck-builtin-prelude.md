@@ -124,7 +124,7 @@ fn register_builtins(&mut self) {
 }
 ```
 
-### 2. `code/twig/compiler/span.tw`
+### 2. `code/packages/twig/compiler/span.tw`
 
 Change the module declaration from:
 
@@ -200,7 +200,7 @@ Add `mod tw05o_tests` with the following tests:
 | `code/packages/rust/twig-type-checker/src/lib.rs` | add `tw05o_tests` (8 tests) |
 | `code/packages/rust/twig-type-checker/Cargo.toml` | version bump |
 | `code/packages/rust/twig-type-checker/CHANGELOG.md` | prepend entry |
-| `code/twig/compiler/span.tw` | `(typed lenient)` → `(typed strict)` |
+| `code/packages/twig/compiler/span.tw` | `(typed lenient)` → `(typed strict)` |
 
 ---
 

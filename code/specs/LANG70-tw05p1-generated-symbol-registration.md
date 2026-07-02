@@ -139,11 +139,11 @@ pub fn register_union(&mut self, u: &twig_parser::UnionDef) {
 ### 2. Convert 5 modules to `(typed strict)`
 
 Change the `(typed lenient)` declaration to `(typed strict)` in:
-- `code/twig/compiler/token.tw`
-- `code/twig/compiler/ast.tw`
-- `code/twig/compiler/iir-types.tw`
-- `code/twig/compiler/diagnostic.tw`
-- `code/twig/compiler/iir-builder.tw`
+- `code/packages/twig/compiler/token.tw`
+- `code/packages/twig/compiler/ast.tw`
+- `code/packages/twig/compiler/iir-types.tw`
+- `code/packages/twig/compiler/diagnostic.tw`
+- `code/packages/twig/compiler/iir-builder.tw`
 
 ### 3. Tests in `twig-type-checker/src/lib.rs`
 
@@ -197,11 +197,11 @@ Add `mod tw05p1_tests` with the following tests:
 | `code/packages/rust/twig-type-checker/src/lib.rs` | add `tw05p1_tests` (6 tests) |
 | `code/packages/rust/twig-type-checker/Cargo.toml` | version bump 0.7.0 → 0.8.0 |
 | `code/packages/rust/twig-type-checker/CHANGELOG.md` | prepend entry |
-| `code/twig/compiler/token.tw` | `(typed lenient)` → `(typed strict)` |
-| `code/twig/compiler/ast.tw` | `(typed lenient)` → `(typed strict)` |
-| `code/twig/compiler/iir-types.tw` | `(typed lenient)` → `(typed strict)` |
-| `code/twig/compiler/diagnostic.tw` | `(typed lenient)` → `(typed strict)` |
-| `code/twig/compiler/iir-builder.tw` | `(typed lenient)` → `(typed strict)` |
+| `code/packages/twig/compiler/token.tw` | `(typed lenient)` → `(typed strict)` |
+| `code/packages/twig/compiler/ast.tw` | `(typed lenient)` → `(typed strict)` |
+| `code/packages/twig/compiler/iir-types.tw` | `(typed lenient)` → `(typed strict)` |
+| `code/packages/twig/compiler/diagnostic.tw` | `(typed lenient)` → `(typed strict)` |
+| `code/packages/twig/compiler/iir-builder.tw` | `(typed lenient)` → `(typed strict)` |
 
 ---
 
