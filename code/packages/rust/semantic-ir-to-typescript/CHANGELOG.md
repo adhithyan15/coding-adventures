@@ -16,6 +16,18 @@
 
 ## Unreleased
 
+### Tests (PO2 — polymorphic `+`/`*` execution proof)
+
+Added `tests/polymorphic_operators.rs` (no emitter change — `+`/`*` already lower
+to `__Sir.add`/`__Sir.mul`; the polymorphic dispatch lives in the
+`@coding-adventures/sir-runtime-core` runtime). The test builds SIR `+`/`*`
+programs over strings and arrays, compiles them to TypeScript, and runs each
+under `node` with a faithful inline `__Sir` stub whose `add`/`mul`/`toDisplay`
+transcribe the PO2 runtime logic — proving end-to-end that `"a" + "b"` → `ab`,
+`"ab" * 3` → `ababab`, `[1] + [2]` → the array `[1, 2]` (displayed `1,2`),
+`[0] * 3` → `[0, 0, 0]` (`0,0,0`), `[1, 2] * ", "` → `1, 2`, and that numeric
+`1 + 2` → `3` / `2 * 3` → `6` are unchanged.
+
 ### Tests (O2 — Ruby OOP end-to-end execution proof)
 
 Added an execution-proof test (no source change),
