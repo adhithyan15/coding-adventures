@@ -37,7 +37,8 @@ def parse_args() -> argparse.Namespace:
         description=(
             "Check that every focused WHATWG parser audit fixture has a "
             "matching Rust test that parses the fixture and replays its cases "
-            "through the parser DOM-dump harness."
+            "through the parser DOM-dump harness, with a focused executable "
+            "evidence guard for representative cases."
         )
     )
     parser.add_argument(
@@ -108,6 +109,16 @@ def check_test_file(audit_path: Path) -> list[str]:
     for label, snippet in required_snippets.items():
         if snippet not in text:
             errors.append(f"{test_path.name} is missing {label}: {snippet}")
+
+    evidence_guards = [
+        f"fn whatwg_{rust_name}_audit_tracks_post_parse_repair_evidence()",
+        f"fn whatwg_{rust_name}_audit_tracks_executable_evidence()",
+    ]
+    if not any(snippet in text for snippet in evidence_guards):
+        errors.append(
+            f"{test_path.name} is missing executable evidence guard: "
+            + " or ".join(evidence_guards)
+        )
 
     return errors
 

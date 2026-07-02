@@ -170,7 +170,8 @@ python3 code/packages/rust/html-parser/tests/fixtures/check_html5lib_tree_constr
 ```
 
 Validate that every focused WHATWG parser audit fixture has a matching Rust
-test that parses the fixture and replays the cases through the DOM-dump harness:
+test that parses the fixture, replays the cases through the DOM-dump harness,
+and pins representative executable evidence cases:
 
 ```bash
 python3 code/packages/rust/html-parser/tests/fixtures/check_whatwg_audit_rust_tests.py \
