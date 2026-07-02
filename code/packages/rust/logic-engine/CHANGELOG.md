@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.29.0] - 2026-07-02 — native floor & ceiling (`ComputeOp::Floor` / `ComputeOp::Ceil`)
+
+### Added
+
+- **`ComputeOp::Floor`** (`⌊x⌋`, greatest integer ≤ x) and **`ComputeOp::Ceil`**
+  (`⌈x⌉`, least integer ≥ x) — two more **unary**, **dimension-preserving** ops
+  carried in the existing `ComputeExpr::Unary`, mirroring `Abs`. They make a
+  LaTeX `\left\lfloor x\right\rfloor` / `\left\lceil x\right\rceil` (adj-lang's
+  `latex "…"` surface) computable as a single native node.
+- Like `Abs`, both are dimension-preserving — the magnitude snaps to an integer
+  but the **unit does not** (`⌊3.7 mmol⌋ = 3 mmol`, `⌈3.2 mmol⌉ = 4 mmol`) — so
+  the operand's dimension flows straight through, and they reuse the n-ary
+  `DerivationNode::Op` node (one operand): no new audit-tree variant.
+- The **exact rational sidecar stays exact**: `ExactRational` keeps `den > 0`, so
+  `⌊num/den⌋ = num.div_euclid(den)` (Euclidean division floors) and
+  `⌈num/den⌉` adds one only when the division leaves a remainder — each result an
+  integer `q/1`. Floor rounds toward −∞ (`⌊−7/2⌋ = −4`, NOT −3).
+- Evaluated in the shared `#[inline(never)] eval_unary` helper, so the deeply
+  recursive `eval` frame stays small (the macOS stack-overflow guard from the
+  `Abs` slice still holds).
+
 ## [0.28.0] - 2026-07-01 — native absolute value (`ComputeOp::Abs`)
 
 ### Added

@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.24.0] - 2026-07-02 — floor & ceiling in `latex "…"` (lower to `ComputeOp::Floor` / `ComputeOp::Ceil`)
+
+### Added
+
+- The `latex "…"` adapter now lowers a **floor fence** `\left\lfloor x\right\rfloor`
+  and a **ceiling fence** `\left\lceil x\right\rceil` (a `MathExpr::Fenced` whose
+  delimiters are `\lfloor`/`\rfloor` or `\lceil`/`\rceil`) to the native
+  `ComputeOp::Floor` / `ComputeOp::Ceil` via new `ExprAst::Floor` / `ExprAst::Ceil`.
+  This mirrors the absolute-value slice exactly: a delimiter pair → a unary op,
+  reusing `ComputeExpr::Unary`. `⌊7/2⌋ = 3`, `⌈7/2⌉ = 4`.
+- Any **other** delimiter pair (`|x|` abs, `(x)`, `[x]`, `\langle x\rangle`) keeps
+  its existing meaning — only `\lfloor`/`\rfloor` and `\lceil`/`\rceil` carry the
+  floor / ceiling meaning; the latex frontend already surfaces those control-word
+  delimiters as data, so no latex-crate change was needed.
+
+### Notes
+
+- Floor and ceiling are **dimension-preserving** (`⌊3.7 mmol⌋ = 3 mmol`), so a
+  dimensioned operand computes cleanly, and the exact rational sidecar snaps to an
+  integer (`⌊7/2⌋ = 3/1`). Floor rounds toward −∞ (`⌊−7/2⌋ = −4`).
+
 ## [0.23.0] - 2026-07-01 — absolute value `|x|` in `latex "…"` (lowers to `ComputeOp::Abs`)
 
 ### Fixed / Added

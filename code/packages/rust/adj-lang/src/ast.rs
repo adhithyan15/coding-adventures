@@ -105,10 +105,18 @@ pub enum ExprAst {
     Lit(f64),
     /// A binary arithmetic operation.
     Bin(ArithOp, Box<ExprAst>, Box<ExprAst>),
-    /// An absolute value, `|x|` — the only unary arithmetic form. Lowers to the
-    /// native `ComputeOp::Abs` (dimension-preserving). Produced by the `latex "…"`
+    /// An absolute value, `|x|` — a unary arithmetic form. Lowers to the native
+    /// `ComputeOp::Abs` (dimension-preserving). Produced by the `latex "…"`
     /// adapter from a `|…|`/`\left|…\right|` fence.
     Abs(Box<ExprAst>),
+    /// A floor, `⌊x⌋` — the greatest integer ≤ x. Lowers to the native
+    /// `ComputeOp::Floor` (dimension-preserving). Produced by the `latex "…"`
+    /// adapter from a `\left\lfloor…\right\rfloor` fence.
+    Floor(Box<ExprAst>),
+    /// A ceiling, `⌈x⌉` — the least integer ≥ x. Lowers to the native
+    /// `ComputeOp::Ceil` (dimension-preserving). Produced by the `latex "…"`
+    /// adapter from a `\left\lceil…\right\rceil` fence.
+    Ceil(Box<ExprAst>),
     /// An aggregation over every observation of a slot.
     Agg(AggOp, String),
 }

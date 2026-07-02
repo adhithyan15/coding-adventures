@@ -929,6 +929,18 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
         MathExpr::Fenced { open, body, close } if open == "|" && close == "|" => Ok(ExprAst::Abs(
             Box::new(latex_math_to_expr_ast(body, source)?),
         )),
+        // A `\left\lfloor x\right\rfloor` fence is a FLOOR, `\left\lceil x\right\rceil`
+        // a CEILING — each lowers to its native dimension-preserving unary op, NOT to
+        // a bare `x`. The latex frontend carries the control-word delimiters verbatim
+        // (`\lfloor`/`\rfloor`, `\lceil`/`\rceil`), exactly as it carries `|` for abs,
+        // so we match on those delimiter strings. Any OTHER pair falls through to the
+        // presentation-grouping arm below.
+        MathExpr::Fenced { open, body, close } if open == "\\lfloor" && close == "\\rfloor" => {
+            Ok(ExprAst::Floor(Box::new(latex_math_to_expr_ast(body, source)?)))
+        }
+        MathExpr::Fenced { open, body, close } if open == "\\lceil" && close == "\\rceil" => {
+            Ok(ExprAst::Ceil(Box::new(latex_math_to_expr_ast(body, source)?)))
+        }
         MathExpr::Fenced { body, .. } => latex_math_to_expr_ast(body, source),
         MathExpr::Unary(UnaryOp::Pos, inner) => latex_math_to_expr_ast(inner, source),
         MathExpr::Unary(UnaryOp::Neg, inner) => Ok(ExprAst::Bin(
