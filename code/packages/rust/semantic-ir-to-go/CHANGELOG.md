@@ -1,5 +1,48 @@
 # Changelog
 
+## 0.12.0
+
+### Added — typed runtime errors: ZeroDivision / Index / Key / NoMethod (sir-typed-runtime-errors T4)
+
+- A faulting emitted runtime operation now raises the CORRECT **typed**
+  `SirError` (via the existing `_sir_new_error` + `panic` entry point — the same
+  one an explicit `raise` uses), so a translated `rescue
+  ZeroDivisionError`/`IndexError`/`KeyError`/`NoMethodError` catches it exactly
+  as Ruby would, and uniformly with the other backends. Runtime-only change; no
+  core-IR or frontend edit. Dispatch stays explicit-string (no reflection — the
+  [[dynamic-dispatch-rce]] discipline).
+- **Division by zero** (`_sir_divide`): both the integer path and the
+  float-promoted path now reject a zero divisor with
+  `ZeroDivisionError` ("divided by 0"). Previously the int path did a raw
+  `panic("division by zero")` (caught only as an over-broad generic
+  `StandardError`) and the float path returned IEEE-754 `+Inf` (no error at
+  all). This matches the spec's load-bearing rule that `1/0` **and** `1.0/0`
+  raise `ZeroDivisionError`.
+- **`Array#fetch`** (new entry in `_sir_array_method`): an out-of-bounds index
+  raises `IndexError`; a supplied default (`fetch(i, d)`) is returned instead of
+  raising; negative indices count from the end. The plain index operator
+  `arr[i]` is UNCHANGED — `.fetch` is the raising read, `[]` is not.
+- **`Hash#fetch`** (new entry in `_sir_hash_method`): a missing key raises
+  `KeyError` ("key not found: …"); a supplied default (`fetch(k, d)`) is
+  returned instead. Because `KeyError < IndexError` in the ancestry table, a
+  `rescue IndexError` also catches it. The plain `hash[k]` (`MapGet`) still
+  returns `nil` — UNCHANGED (no over-raise).
+- **Unknown method** (`_sir_method_unknown`): now raises a typed `NoMethodError`
+  with a Ruby-shaped message `undefined method 'x' for <class>`, replacing the
+  previous raw `panic(string)` (which was caught only as generic
+  `StandardError`). The dispatch catalog remains the allowlist — an unknown
+  name still surfaces a controlled, typed failure, never arbitrary behaviour.
+- `*SirError` now implements Go's `error` interface (`Error() string`), so an
+  UNCAUGHT typed panic prints a readable `panic: <Class>: <message>` banner
+  instead of Go's default `(*main.SirError) 0x…` pointer dump. Cosmetic for the
+  uncaught path only; `recover`/rescue matching still keys off the `Class` tag.
+- Execution proof `compile_and_run_typed_errors.rs` (8 tests) runs each case
+  through `go run`: `1/0` caught as `ZeroDivisionError` (and as `StandardError`
+  via ancestry); `arr.fetch(oob)` → `IndexError`; `h.fetch(miss)` → `KeyError`
+  (and caught as `IndexError` via ancestry); `obj.undefined` → `NoMethodError`;
+  regression that `h[miss]` (`MapGet`) still yields `nil`; and that
+  `.fetch(k, default)` / an in-bounds `.fetch` do NOT over-raise.
+
 ## 0.11.0
 
 ### Added — polymorphic `+` / `*` for strings and arrays (sir-polymorphic-operators PO4)
