@@ -76,6 +76,8 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         in_def_body: false,
         block_captures_enclosing: false,
         in_block_body: false,
+        current_class: None,
+        current_method: None,
     };
     // Phase 6a: hoist `def name(params) … end` declarations to
     // top-level Functions BEFORE walking the rest of the program so
@@ -669,6 +671,23 @@ struct Lowerer {
     /// A nested block therefore keeps its raw `yield` (valid SIR) rather
     /// than emitting an invalid cross-level `Param` reference.
     in_block_body: bool,
+    /// Milestone O2 (OOP production) — the name of the class whose body /
+    /// method bodies are currently being lowered, or `None` at the top
+    /// level.  Threaded so `super` inside `Cat#describe` can lower to
+    /// `__super__("describe", "Cat", …)`: the runtime needs the *defining*
+    /// class name to know where to start the parent-method search.  Set by
+    /// the `class_statement` arm around its whole-body lowering and restored
+    /// after (so a class following another class does not inherit a stale
+    /// name).  Modules do NOT set this — `super` in a module method has no
+    /// class to anchor and is out of the v0 OOP-production scope.
+    current_class: Option<String>,
+    /// Milestone O2 — the name of the method (`def m`) whose body is
+    /// currently being lowered, or `None` outside any method.  Threaded
+    /// alongside [`Self::current_class`] so a bare/`super(args)` inside the
+    /// method knows *which* method to re-dispatch on the parent
+    /// (`__super__(method_name, class_name, …)`).  Set by
+    /// `lower_def_statement` around its body lowering and restored after.
+    current_method: Option<String>,
 }
 
 /// Phase Q9e (FC) — the reserved name of the synthesized trailing block
@@ -820,6 +839,15 @@ impl Lowerer {
         match node.rule_name.as_str() {
             "multi_assignment" => self.lower_multi_assignment(node),
             "begin_statement" => self.lower_begin_statement(node),
+            // O2 (OOP production) — a `class Foo … end` now lowers to MORE than
+            // one statement: the `ClassDef` itself PLUS a `__def_method__` /
+            // `__def_class_method__` registration for every method it defines
+            // (and the synthesized accessors from `attr_*`).  Those
+            // registrations must run at program start, right after the
+            // `ClassDef`, so `Foo.new` later finds an `initialize` and dispatch
+            // finds the instance methods.  Routing `class_statement` through the
+            // multi-statement path lets the arm return that whole sequence.
+            "class_statement" => self.lower_class_statement_multi(node),
             _ => Ok(vec![self.lower_statement_inner(node)?]),
         }
     }
@@ -892,49 +920,16 @@ impl Lowerer {
                 })
             }
             "class_statement" => {
-                // Phase 14e (FC): the `class_statement` rule has two
-                // forms.  The *singleton* form `class << RECEIVER … end`
-                // parses with a `singleton_receiver` child node; the
-                // ordinary form `class Foo [< Bar] … end` does not.  We
-                // dispatch on that child's presence.
-                if let Some(target) = self.extract_singleton_receiver(node) {
-                    // Singleton class (`class << self` / `class << obj`)
-                    // → `Stmt::SingletonClassDef { target, body }`.
-                    // Body handling is identical to a class/module:
-                    // method `def`s hoist to top-level Functions,
-                    // non-`def` statements stay in `body`.
-                    self.features_used.insert(Feature::Classes);
-                    let body = self.lower_decl_body_statements(node)?;
-                    return Ok(Stmt::SingletonClassDef {
-                        target,
-                        body,
-                        span: self.span_of(node),
-                    });
-                }
-                // Phase 14b (FC): `class Foo … end` lowers to a
-                // first-class `Stmt::ClassDef { name, body, span }`
-                // whose `body` carries the class's *executable*
-                // statements in source order.
-                //
-                // Method definitions (`def` / endless `def`) inside
-                // the body are hoisted to top-level `Function`s — SIR
-                // v0 has no method-as-statement node, so a method can't
-                // live inside `body` (a `Vec<Stmt>`).  The hoisting is
-                // done per-child inside `lower_decl_body_statements`
-                // (shared with `module_statement`), so each nested
-                // `def` is hoisted exactly once and every non-`def`
-                // statement is preserved in `body` instead of dropped.
-                let name = self.extract_class_name(node)?;
-                // Phase 14c — optional `< Bar` superclass clause.
-                let superclass = self.extract_superclass(node);
-                self.features_used.insert(Feature::Classes);
-                let body = self.lower_decl_body_statements(node)?;
-                Ok(Stmt::ClassDef {
-                    name,
-                    superclass,
-                    body,
-                    span: self.span_of(node),
-                })
+                // O2 — the OOP-production path returns the `ClassDef` PLUS its
+                // method registrations (see `lower_class_statement_multi`).  A
+                // single-`Stmt` caller (only the multi-assignment LHS path,
+                // which is never a class) takes just the first statement — the
+                // `ClassDef`/`SingletonClassDef` — dropping any registrations.
+                // That is safe because a class never appears as a multi-assign
+                // target; the real body/program paths all go through
+                // `lower_statement_inner_multi`, which keeps the registrations.
+                let mut stmts = self.lower_class_statement_multi(node)?;
+                Ok(stmts.remove(0))
             }
             "module_statement" => {
                 // Phase 14d (FC): `module M … end` now lowers to a
@@ -1078,20 +1073,35 @@ impl Lowerer {
                 //
                 // Two distinct lowerings keyed on whether a `super_args`
                 // node is PRESENT:
-                //   - absent  → bare `super` ("zsuper") forwards ALL of
-                //     the enclosing method's arguments implicitly, so it
-                //     carries no operands: `BuiltinCall("zsuper", [])`.
                 //   - present → explicit arg list (`super()`, `super(x)`,
-                //     `super x`): `BuiltinCall("super", lowered_args)`,
-                //     where `super()` lowers to zero args (forwards
-                //     nothing) — distinct from bare zsuper.
+                //     `super x`): the lowered args are forwarded.
+                //   - absent  → bare `super` ("zsuper") forwards ALL of the
+                //     enclosing method's arguments implicitly.  Real Ruby
+                //     re-passes the *current* method's parameters; O2 makes
+                //     that concrete by forwarding a `VarRef` to each of the
+                //     enclosing method's params (in declaration order) —
+                //     captured in `current_params` — so `def describe;
+                //     super; end` inside a param-taking method forwards
+                //     them.  (A method that takes no params forwards
+                //     nothing, which is also correct.)
+                //
+                // O2 (OOP production) — `super` is emitted as the OOP-runtime
+                // builtin `__super__(method_name, class_name, …args)`.  The
+                // runtime walks from `class_name`'s *parent* to find the first
+                // ancestor implementation of `method_name` and runs it with the
+                // *current* self still bound.  We thread the enclosing method +
+                // class names from the lowerer context (`current_method` /
+                // `current_class`).  Outside a class method (`super` at top
+                // level — not legal Ruby, but the parser admits it) both are
+                // empty strings; the runtime then finds no parent and returns
+                // nil, which is the honest floor.
                 //
                 // Effects: PURE, matching `yield` — `super` dispatches to
                 // a parent method whose own effects are accounted for at
                 // its definition/call site; modelling the marker as PURE
                 // keeps the effect lattice from double-counting.
                 let super_args_node = self.find_node_child(node, "super_args");
-                let (name, args): (&str, Vec<Expr>) = if let Some(sa) = super_args_node {
+                let forwarded: Vec<Expr> = if let Some(sa) = super_args_node {
                     let call_arg_nodes: Vec<&GrammarASTNode> = sa
                         .children
                         .iter()
@@ -1100,18 +1110,45 @@ impl Lowerer {
                             _ => None,
                         })
                         .collect();
-                    let lowered: Vec<Expr> = call_arg_nodes
+                    call_arg_nodes
                         .into_iter()
                         .map(|n| self.lower_call_arg(n))
-                        .collect::<Result<Vec<_>, _>>()?;
-                    ("super", lowered)
+                        .collect::<Result<Vec<_>, _>>()?
                 } else {
-                    ("zsuper", Vec::new())
+                    // Bare `super` (zsuper): forward the enclosing method's
+                    // params by reference, in a stable order.  `current_params`
+                    // is a `HashSet`, so sort for determinism (the emitted
+                    // program is otherwise non-reproducible run to run).
+                    let mut params: Vec<String> =
+                        self.current_params.iter().cloned().collect();
+                    params.sort();
+                    params
+                        .into_iter()
+                        .map(|p| Expr::VarRef {
+                            name: p,
+                            scope: Scope::Param,
+                            span: self.span_of(node),
+                        })
+                        .collect()
                 };
+                let method_name = self.current_method.clone().unwrap_or_default();
+                let class_name = self.current_class.clone().unwrap_or_default();
+                self.features_used.insert(Feature::Classes);
+                self.features_used.insert(Feature::Strings);
+                let mut full_args: Vec<Expr> = Vec::with_capacity(forwarded.len() + 2);
+                full_args.push(Expr::StrLit {
+                    value: method_name,
+                    span: self.span_of(node),
+                });
+                full_args.push(Expr::StrLit {
+                    value: class_name,
+                    span: self.span_of(node),
+                });
+                full_args.extend(forwarded);
                 Ok(Stmt::ExprStmt {
                     expr: Expr::BuiltinCall {
-                        name: name.to_string(),
-                        args,
+                        name: "__super__".to_string(),
+                        args: full_args,
                         effects: EffectSet::PURE,
                         span: self.span_of(node),
                     },
@@ -2912,6 +2949,412 @@ impl Lowerer {
         Ok(body)
     }
 
+    // ── O2 (OOP production): class lowering with method registration ──────
+    //
+    // Milestone O2 wires a Ruby class so it EXECUTES end to end.  Today a
+    // class parses and its methods hoist to detached top-level functions, but
+    // nothing records that `speak` belongs to `Dog`, `.new` is not connected
+    // to `initialize`, and `attr_accessor` is a no-op.  This path emits the
+    // missing wiring as ordinary `BuiltinCall`s (NO core-IR change) that the
+    // O1 OOP runtime consumes:
+    //
+    //   • for each instance method `def m`   → `__def_method__("C", "m", ⟨m⟩)`
+    //   • for each class method `def self.m` → `__def_class_method__("C","m",⟨m⟩)`
+    //   • each `attr_reader`/`attr_writer`/`attr_accessor :x` expands into a
+    //     synthesized getter (`def x; @x; end`) and/or setter
+    //     (`def x=(v); @x = v; end`), hoisted like a hand-written method AND
+    //     registered the same way.
+    //
+    // where `⟨m⟩` is `MakeClosure { fn_name: <hoisted name>, captures: [] }`
+    // — the same hoisted top-level function, referenced by name so it resolves
+    // at closure-construction time.  The registrations are returned as
+    // statements that follow the `ClassDef` in program order, so they run once
+    // at startup before any `Foo.new`.
+    //
+    // **Class-qualified hoisted names.**  A method defined in a class body is
+    // hoisted under a *class-qualified* top-level name — `Dog__speak`, not the
+    // bare `speak` (see [`Self::qualified_method_fn_name`]).  This is what makes
+    // inheritance + `super` actually work: `Animal#initialize` and
+    // `Cat#initialize` must be two DISTINCT top-level functions (bare `initialize`
+    // would collide and the validator would reject the duplicate), yet BOTH must
+    // be reachable so `super` in `Cat#initialize` can re-run `Animal#initialize`.
+    // The double-underscore separator keeps the name a valid identifier and is
+    // exceedingly unlikely to collide with a user's own top-level `def`.  The
+    // runtime method table is keyed on `(class, bare_method)`, so *dispatch* uses
+    // the bare method name; only the shared top-level function symbol is
+    // qualified.  (Top-level `def`s — outside any class — keep their bare names,
+    // so ordinary function calls are unaffected.)
+    //
+    // **Single-threaded self model.**  `initialize`/method dispatch runs under
+    // the runtime's process-global self-stack (push on entry, pop on exit), so
+    // `@ivar` reads/writes and `self` resolve to the right receiver without a
+    // threaded `self` parameter.  This is the documented v0 model (see the
+    // `sir-runtime-oop` module docs); true per-object/per-thread binding is out
+    // of scope.
+
+    /// O2 — lower a `class_statement` into the `ClassDef` (or
+    /// `SingletonClassDef`) FOLLOWED BY its method registrations.  Callers that
+    /// need a single statement (the multi-assignment LHS path, never a class)
+    /// take the first element; the body/program paths keep the whole sequence.
+    fn lower_class_statement_multi(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Vec<Stmt>, RubyLowerError> {
+        // Singleton form `class << RECEIVER … end` — unchanged from Phase 14e.
+        // Its methods hoist, but singleton-method *registration* (attaching to
+        // a specific object's singleton class) is out of the v0 OOP-production
+        // scope, so we emit no `__def_*__` calls here.
+        if let Some(target) = self.extract_singleton_receiver(node) {
+            self.features_used.insert(Feature::Classes);
+            let body = self.lower_decl_body_statements(node)?;
+            return Ok(vec![Stmt::SingletonClassDef {
+                target,
+                body,
+                span: self.span_of(node),
+            }]);
+        }
+
+        // Ordinary `class Foo [< Bar] … end`.
+        let name = self.extract_class_name(node)?;
+        let superclass = self.extract_superclass(node);
+        self.features_used.insert(Feature::Classes);
+
+        // Thread the class name so `super` inside a method body resolves to
+        // `__super__(method, "Foo", …)`.  Saved/restored for nested classes.
+        let saved_class = self.current_class.take();
+        self.current_class = Some(name.clone());
+
+        // Lower the body, collecting method registrations alongside the
+        // executable (non-`def`) statements that stay in `ClassDef.body`.
+        let (body, registrations) = self.lower_class_body(&name, node)?;
+
+        self.current_class = saved_class;
+
+        let mut out: Vec<Stmt> = Vec::with_capacity(1 + registrations.len());
+        out.push(Stmt::ClassDef {
+            name,
+            superclass,
+            body,
+            span: self.span_of(node),
+        });
+        out.extend(registrations);
+        Ok(out)
+    }
+
+    /// O2 — lower a class body's statements.  Returns `(body, registrations)`:
+    /// `body` is the executable non-`def` statements kept in `ClassDef.body`
+    /// (constants, nested classes, …, exactly as before); `registrations` is
+    /// the sequence of `__def_method__` / `__def_class_method__` builtin-call
+    /// statements to run after the `ClassDef`.  Every `def` still hoists to a
+    /// top-level `Function` on `self.user_functions` (unchanged); this
+    /// additionally records the registration for it.  `attr_*` calls expand
+    /// into synthesized accessor functions + their registrations.
+    fn lower_class_body(
+        &mut self,
+        class_name: &str,
+        node: &GrammarASTNode,
+    ) -> Result<(Vec<Stmt>, Vec<Stmt>), RubyLowerError> {
+        let mut body: Vec<Stmt> = Vec::new();
+        let mut registrations: Vec<Stmt> = Vec::new();
+        for child in &node.children {
+            let stmt = match child {
+                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => n,
+                _ => continue,
+            };
+            let inner = match self.first_node_child(stmt) {
+                Some(n) => n,
+                None => continue,
+            };
+            match inner.rule_name.as_str() {
+                "def_statement" => {
+                    let mut func = self.lower_def_statement(inner)?;
+                    let method_name = func.name.clone();
+                    // Qualify the hoisted top-level name so same-named methods in
+                    // different classes (and a parent/child `super` target) do not
+                    // collide.  The runtime table key stays the bare method name.
+                    let fn_name = self.qualified_method_fn_name(class_name, &method_name);
+                    func.name = fn_name.clone();
+                    self.user_functions.push(func);
+                    // Instance-method registration.  (`def self.m` class methods
+                    // do not currently parse — the grammar's `def` rule has no
+                    // receiver production — so every hoisted `def` here is an
+                    // instance method.  When the grammar gains `def self.m`,
+                    // route those to `register_class_method`.)
+                    registrations.push(self.register_instance_method(
+                        class_name,
+                        &method_name,
+                        &fn_name,
+                    ));
+                }
+                "endless_def_statement" => {
+                    let mut func = self.lower_endless_def_statement(inner)?;
+                    let method_name = func.name.clone();
+                    let fn_name = self.qualified_method_fn_name(class_name, &method_name);
+                    func.name = fn_name.clone();
+                    self.user_functions.push(func);
+                    registrations.push(self.register_instance_method(
+                        class_name,
+                        &method_name,
+                        &fn_name,
+                    ));
+                }
+                "method_call_no_paren" | "method_call" => {
+                    // `attr_accessor :x, :y` / `attr_reader` / `attr_writer`
+                    // parse as a paren-less (or parenthesized) call inside the
+                    // class body.  Intercept those three and expand into
+                    // synthesized accessor methods + registrations; anything
+                    // else (an ordinary call at class scope) stays in `body`.
+                    if let Some(regs) = self.try_expand_attr_call(class_name, inner)? {
+                        registrations.extend(regs);
+                    } else {
+                        body.extend(self.lower_statement_inner_multi(inner)?);
+                    }
+                }
+                _ => {
+                    body.extend(self.lower_statement_inner_multi(inner)?);
+                }
+            }
+        }
+        Ok((body, registrations))
+    }
+
+    /// O2 — the collision-safe top-level function name a class method hoists to.
+    /// `Dog#speak` → `"Dog__speak"`.  Ruby method names may end in `?`/`!`/`=`
+    /// (predicate / bang / setter), which are not identifier characters in the
+    /// target languages, so they are mapped to word suffixes (`_p` / `_bang` /
+    /// `_set`).  A qualified constant path (`Foo::Bar`, `::` in the class name)
+    /// has its separators mapped too.  The result is always a valid identifier
+    /// and injective enough for the small method sets these programs define.
+    fn qualified_method_fn_name(&self, class_name: &str, method_name: &str) -> String {
+        let sanitize = |s: &str| -> String {
+            s.replace("::", "_")
+                .replace('?', "_p")
+                .replace('!', "_bang")
+                .replace('=', "_set")
+        };
+        format!("{}__{}", sanitize(class_name), sanitize(method_name))
+    }
+
+    /// O2 — build the registration statement for an instance method:
+    /// `__def_method__("C", "m", MakeClosure { fn_name, captures: [] })`.  The
+    /// table is keyed on the *bare* method name `m` (so dispatch by name works),
+    /// while the `MakeClosure` names the *qualified* hoisted top-level function
+    /// (`C__m`) so it resolves at construction and does not collide with a
+    /// same-named method of another class.  Empty captures — a hoisted method
+    /// closes over nothing (its receiver arrives via the runtime self-stack, its
+    /// args via the call).
+    fn register_instance_method(
+        &mut self,
+        class_name: &str,
+        method_name: &str,
+        fn_name: &str,
+    ) -> Stmt {
+        self.register_method_call("__def_method__", class_name, method_name, fn_name)
+    }
+
+    /// O2 — build the registration statement for a class method (`def self.m`):
+    /// `__def_class_method__("C", "m", MakeClosure { fn_name, captures: [] })`.
+    /// Currently unreachable (the grammar has no `def self.m` receiver form), but
+    /// kept so the class-method path is ready the moment the grammar admits it.
+    #[allow(dead_code)]
+    fn register_class_method(
+        &mut self,
+        class_name: &str,
+        method_name: &str,
+        fn_name: &str,
+    ) -> Stmt {
+        self.register_method_call("__def_class_method__", class_name, method_name, fn_name)
+    }
+
+    /// O2 — shared builder for the two registration builtins.
+    fn register_method_call(
+        &mut self,
+        builtin: &str,
+        class_name: &str,
+        method_name: &str,
+        fn_name: &str,
+    ) -> Stmt {
+        self.features_used.insert(Feature::Closures);
+        self.features_used.insert(Feature::Strings);
+        let span = Span::point(&self.file_name, 0, 0);
+        Stmt::ExprStmt {
+            expr: Expr::BuiltinCall {
+                name: builtin.to_string(),
+                args: vec![
+                    Expr::StrLit { value: class_name.to_string(), span: span.clone() },
+                    Expr::StrLit { value: method_name.to_string(), span: span.clone() },
+                    Expr::MakeClosure {
+                        fn_name: fn_name.to_string(),
+                        captures: Vec::new(),
+                        span: span.clone(),
+                    },
+                ],
+                effects: EffectSet::PURE,
+                span: span.clone(),
+            },
+            span,
+        }
+    }
+
+    /// O2 — if `call_node` is an `attr_reader` / `attr_writer` / `attr_accessor`
+    /// invocation, expand each of its symbol arguments into synthesized accessor
+    /// method(s), hoist them to `self.user_functions`, and return their
+    /// registration statements.  Returns `None` when the call is *not* an
+    /// accessor macro (so the caller lowers it as an ordinary class-body
+    /// statement).
+    ///
+    /// The macros:
+    ///   • `attr_reader  :x` → getter `def x;  @x;       end`
+    ///   • `attr_writer  :x` → setter `def x=(v); @x = v; end`
+    ///   • `attr_accessor :x` → both
+    /// Each `:x` symbol arg is handled independently, so `attr_accessor :a, :b`
+    /// generates accessors for both.
+    fn try_expand_attr_call(
+        &mut self,
+        class_name: &str,
+        call_node: &GrammarASTNode,
+    ) -> Result<Option<Vec<Stmt>>, RubyLowerError> {
+        // The callee is the first Name token directly under the call node.
+        let callee = call_node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t.value.as_str()),
+            _ => None,
+        });
+        let (want_reader, want_writer) = match callee {
+            Some("attr_reader") => (true, false),
+            Some("attr_writer") => (false, true),
+            Some("attr_accessor") => (true, true),
+            _ => return Ok(None),
+        };
+
+        // Collect the attribute names from the call's symbol arguments.  Each
+        // argument is an `expression` subtree that bottoms out in a
+        // `symbol_literal` (`:count`); we pull the bare name.  A non-symbol
+        // argument (unusual) is skipped defensively rather than erroring.
+        let mut attr_names: Vec<String> = Vec::new();
+        for c in &call_node.children {
+            if let ASTNodeOrToken::Node(n) = c {
+                if n.rule_name == "expression" {
+                    if let Some(sym) = self.find_symbol_name_in(n) {
+                        attr_names.push(sym);
+                    }
+                }
+            }
+        }
+
+        let mut registrations: Vec<Stmt> = Vec::new();
+        for attr in &attr_names {
+            let ivar = format!("@{attr}");
+            let span = Span::point(&self.file_name, 0, 0);
+            if want_reader {
+                // Getter: `def <attr>; @<attr>; end` → a hoisted function whose
+                // body value is the instance-var read.  Registered under the bare
+                // `attr`; hoisted under the class-qualified name.
+                let getter_fn = self.qualified_method_fn_name(class_name, attr);
+                let getter = Function {
+                    name: getter_fn.clone(),
+                    params: Vec::new(),
+                    return_type: None,
+                    captures: Vec::new(),
+                    body: Block {
+                        stmts: Vec::new(),
+                        value: Expr::VarRef {
+                            name: ivar.clone(),
+                            scope: Scope::Instance,
+                            span: span.clone(),
+                        },
+                        span: span.clone(),
+                    },
+                    effects: EffectSet::PURE,
+                    metadata: Metadata::new(),
+                    span: span.clone(),
+                };
+                self.features_used.insert(Feature::InstanceVars);
+                self.user_functions.push(getter);
+                registrations.push(self.register_instance_method(class_name, attr, &getter_fn));
+            }
+            if want_writer {
+                // Setter: `def <attr>=(v); @<attr> = v; end`.  The method NAME
+                // carries Ruby's `=` suffix (`count=`) so `obj.attr = v` — which
+                // lowers to `__method__(obj, "attr=", v)` — dispatches here.  The
+                // single parameter `v` is `Scope::Param`; the body assigns it to
+                // the instance var and the method returns the assigned value
+                // (Ruby setters evaluate to their RHS).
+                let setter_name = format!("{attr}=");
+                let setter_fn = self.qualified_method_fn_name(class_name, &setter_name);
+                let assign = Stmt::Assign {
+                    name: ivar.clone(),
+                    scope: Scope::Instance,
+                    value: Expr::VarRef {
+                        name: "v".to_string(),
+                        scope: Scope::Param,
+                        span: span.clone(),
+                    },
+                    span: span.clone(),
+                };
+                let setter = Function {
+                    name: setter_fn.clone(),
+                    params: vec![Param {
+                        name: "v".to_string(),
+                        sir_type: None,
+                        kind: ParamKind::Required,
+                        default: None,
+                        span: span.clone(),
+                    }],
+                    return_type: None,
+                    captures: Vec::new(),
+                    body: Block {
+                        stmts: vec![assign],
+                        // Return the assigned value (read the ivar back).
+                        value: Expr::VarRef {
+                            name: ivar.clone(),
+                            scope: Scope::Instance,
+                            span: span.clone(),
+                        },
+                        span: span.clone(),
+                    },
+                    effects: EffectSet::PURE,
+                    metadata: Metadata::new(),
+                    span: span.clone(),
+                };
+                self.features_used.insert(Feature::InstanceVars);
+                self.features_used.insert(Feature::MutableBindings);
+                self.features_used.insert(Feature::DynamicTyping);
+                self.user_functions.push(setter);
+                registrations.push(self.register_instance_method(
+                    class_name,
+                    &setter_name,
+                    &setter_fn,
+                ));
+            }
+        }
+        Ok(Some(registrations))
+    }
+
+    /// O2 — find the first `symbol_literal`'s bare name anywhere under `node`
+    /// (a shallow recursive walk of the single-child `expression` spine down to
+    /// the `factor` that holds the `symbol_literal`).  Returns the symbol name
+    /// (`"count"` for `:count`) or `None` if the subtree carries no symbol.
+    fn find_symbol_name_in(&self, node: &GrammarASTNode) -> Option<String> {
+        if node.rule_name == "symbol_literal" {
+            return node.children.iter().find_map(|c| match c {
+                ASTNodeOrToken::Token(t)
+                    if matches!(t.type_, TokenType::Name | TokenType::Keyword | TokenType::String) =>
+                {
+                    Some(t.value.clone())
+                }
+                _ => None,
+            });
+        }
+        for c in &node.children {
+            if let ASTNodeOrToken::Node(n) = c {
+                if let Some(found) = self.find_symbol_name_in(n) {
+                    return Some(found);
+                }
+            }
+        }
+        None
+    }
+
     /// Phase 14a (FC) — extract the class name from a `class_statement`
     /// AST node.
     ///
@@ -4137,6 +4580,11 @@ impl Lowerer {
         let saved_block_cap = self.block_captures_enclosing;
         self.in_def_body = true;
         self.block_captures_enclosing = false;
+        // O2 — record the method name so a `super` lowered inside this body
+        // knows which method to re-dispatch on the parent.  Saved/restored so
+        // a nested `def`/block does not leak this method's name outward.
+        let saved_method = self.current_method.take();
+        self.current_method = Some(name.clone());
         for p in &params {
             self.declared_locals.insert(p.name.clone());
             self.current_params.insert(p.name.clone());
@@ -4231,6 +4679,8 @@ impl Lowerer {
         // the program lowers correctly.
         self.declared_locals = saved_locals;
         self.current_params = saved_params;
+        // O2 — restore the enclosing method name (usually `None`).
+        self.current_method = saved_method;
 
         // Phase Q9e — if the method body `yield`s, thread the explicit
         // trailing block parameter and rewrite each `yield` into an
@@ -8054,6 +8504,26 @@ impl Lowerer {
                             "nil" => return Ok(Expr::NilLit { span }),
                             "true" => return Ok(Expr::BoolLit { value: true, span }),
                             "false" => return Ok(Expr::BoolLit { value: false, span }),
+                            // O2 (OOP production) — a bare `self` is the current
+                            // receiver.  The Ruby frontend hoists methods to
+                            // detached top-level functions (no `self` parameter),
+                            // so `self` cannot be a plain local: it must ask the
+                            // OOP runtime for the receiver on top of its self-stack.
+                            // Lower to `__self__()`, which the backend routes to
+                            // `_sir_oop_current_self()`.  As a dot-chain receiver
+                            // (`self.count`) this `__self__()` becomes the receiver
+                            // arg of the enclosing `__method__` fold — so
+                            // `self.foo` and a self-returning method (`c.inc.inc`,
+                            // where `inc` ends in `self`) both work.
+                            "self" => {
+                                self.features_used.insert(Feature::Classes);
+                                return Ok(Expr::BuiltinCall {
+                                    name: "__self__".to_string(),
+                                    args: Vec::new(),
+                                    effects: EffectSet::PURE,
+                                    span,
+                                });
+                            }
                             _ => {
                                 // Any other keyword used in factor position
                                 // is an error in v0 — but the parser
@@ -8208,6 +8678,42 @@ impl Lowerer {
             .collect::<Result<Vec<_>, _>>()?;
 
         let span = self.span_of(dot_node);
+
+        // O2 (OOP production) — `Foo.new(args)` on a *constant* receiver is
+        // object construction, not an ordinary method call.  It lowers to the
+        // OOP-runtime builtin `__new__(StrLit("Foo"), …args)` (→
+        // `_sir_oop_call_new`), which allocates an instance, pushes it as the
+        // current self, runs the inherited `initialize` with `args`, pops self,
+        // and returns the object.  We special-case it *here*, before the generic
+        // `__method__` envelope, and only when the receiver is a bare constant
+        // ref (`Scope::Const`) — so `arr.new`/`obj.new` (a `.new` on a
+        // non-constant, which Ruby would dispatch normally) is untouched.
+        //
+        // Chaining falls out for free: in `Foo.new(x).meth`, `apply_dot_chain`
+        // folds `.new` first (this arm → `__new__("Foo", x)`) and then folds
+        // `.meth` with that `__new__` call as the receiver of the outer
+        // `__method__`.  So `__method__(__new__("Foo", x), "meth")` is produced
+        // exactly as required, and a longer chain (`c.inc.inc`) nests the same
+        // way.
+        if method_name == "new" {
+            if let Expr::VarRef { name: class_name, scope: Scope::Const, .. } = &receiver {
+                self.features_used.insert(Feature::Classes);
+                self.features_used.insert(Feature::Strings);
+                let mut new_args: Vec<Expr> = Vec::with_capacity(args.len() + 1);
+                new_args.push(Expr::StrLit {
+                    value: class_name.clone(),
+                    span: name_span,
+                });
+                new_args.extend(args);
+                return Ok(Expr::BuiltinCall {
+                    name: "__new__".to_string(),
+                    args: new_args,
+                    effects: EffectSet::PURE,
+                    span,
+                });
+            }
+        }
+
         // Pack as BuiltinCall("__method__", [receiver, StrLit(method),
         // ...args]) — see apply_dot_chain doc for rationale.
         // The synthetic StrLit triggers the Strings feature, which the

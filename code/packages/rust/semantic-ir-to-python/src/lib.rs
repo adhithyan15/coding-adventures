@@ -2180,4 +2180,126 @@ mod tests {
             assert_eq!(stdout, "hi, ada\n", "emitted python printed unexpected output");
         }
     }
+
+    // ── O2: Ruby OOP end-to-end execution proofs ─────────────────────────
+    //
+    // Milestone O2 makes the Ruby frontend PRODUCE the OOP wiring — method
+    // registration (`__def_method__`), construction (`__new__` → `initialize`),
+    // `super` (`__super__`), `self` (`__self__`), and `attr_accessor`.  The O1
+    // runtime + backend emit arms (already present) consume it.  These three
+    // tests lower REAL Ruby source through `ruby-to-semantic-ir`, compile the
+    // resulting SIR to Python, and run it under a real interpreter — the
+    // payoff proof that object-oriented Ruby executes end to end
+    // (Ruby → SIR → Python → CPython).
+    //
+    // They print with Ruby `print` rather than `puts`: `puts` is not in
+    // `sir-runtime-core`'s native `call_builtin` dispatch table (a pre-existing,
+    // OOP-unrelated backend coverage gap), while `print` is the natively-lowered
+    // line writer.  Using `print` keeps the focus on the OOP mechanism.
+
+    #[test]
+    fn end_to_end_ruby_oop_new_and_method_dispatch_executes_py() {
+        // P1 — construction + instance-method dispatch + `@ivar` through the
+        // pushed self, with string interpolation in the method body:
+        //   class Dog
+        //     def initialize(name); @name = name; end
+        //     def speak; "#{@name} says woof"; end
+        //   end
+        //   print Dog.new("Rex").speak     # => Rex says woof
+        // Proves `__new__` runs `initialize` (setting @name on the new object),
+        // `.speak` dispatches the registered instance method under a pushed
+        // self, and the interpolation (`StrConcat`) works through the OOP path.
+        let src = "class Dog\n  def initialize(name)\n    @name = name\n  end\n  \
+                   def speak\n    \"#{@name} says woof\"\n  end\nend\n\
+                   print Dog.new(\"Rex\").speak\n";
+        let module = ruby_to_semantic_ir::compile_source(src, "demo").expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        // Shape: the registration + construction + dispatch are all present.
+        assert!(
+            a.source.contains("_sir_oop_def_method(\"Dog\", \"initialize\","),
+            "initialize must be registered; got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains("_sir_oop_call_new(\"Dog\", \"Rex\")"),
+            "Dog.new(\"Rex\") must lower to call_new; got:\n{}",
+            a.source
+        );
+        if let Some(stdout) = run_emitted_python(&a.source) {
+            assert_eq!(stdout, "Rex says woof\n", "P1 OOP dispatch produced wrong output");
+        }
+    }
+
+    #[test]
+    fn end_to_end_ruby_inheritance_super_executes_py() {
+        // P2 — inheritance + `super` + shared self:
+        //   class Animal
+        //     def initialize(name); @name = name; @legs = 4; end
+        //   end
+        //   class Cat < Animal
+        //     def initialize(name); super(name); end
+        //     def describe; "#{@name} with #{@legs} legs"; end
+        //   end
+        //   print Cat.new("Tom").describe   # => Tom with 4 legs
+        // `Cat.new` runs `Cat#initialize`, which `super(name)`s into
+        // `Animal#initialize` on the SAME self (setting @name/@legs), then
+        // `.describe` reads them back.  Proves `__super__` threads the enclosing
+        // method+class and re-dispatches on the parent with the receiver bound.
+        let src = "class Animal\n  def initialize(name)\n    @name = name\n    @legs = 4\n  end\nend\n\
+                   class Cat < Animal\n  def initialize(name)\n    super(name)\n  end\n  \
+                   def describe\n    \"#{@name} with #{@legs} legs\"\n  end\nend\n\
+                   print Cat.new(\"Tom\").describe\n";
+        let module = ruby_to_semantic_ir::compile_source(src, "demo").expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        assert!(
+            a.source.contains("_sir_oop_call_super(\"initialize\", \"Cat\", name)"),
+            "super(name) in Cat#initialize must lower to call_super; got:\n{}",
+            a.source
+        );
+        // The two initializers hoist under distinct class-qualified names.
+        assert!(
+            a.source.contains("def Animal__initialize(") && a.source.contains("def Cat__initialize("),
+            "parent + child initializers must be distinct functions; got:\n{}",
+            a.source
+        );
+        if let Some(stdout) = run_emitted_python(&a.source) {
+            assert_eq!(stdout, "Tom with 4 legs\n", "P2 inheritance/super produced wrong output");
+        }
+    }
+
+    #[test]
+    fn end_to_end_ruby_attr_accessor_and_self_chain_executes_py() {
+        // P3 — attr_accessor getter, `@ivar` mutation, and self-return chaining:
+        //   class Counter
+        //     attr_accessor :count
+        //     def initialize; @count = 0; end
+        //     def inc; @count = @count + 1; self; end
+        //   end
+        //   c = Counter.new
+        //   c.inc.inc
+        //   print c.count                  # => 2
+        // Proves the synthesized `count` getter reads @count, `inc` mutates it
+        // and returns `self` (so `c.inc.inc` chains on the same object), and the
+        // final `c.count` dispatches the accessor.
+        let src = "class Counter\n  attr_accessor :count\n  def initialize\n    @count = 0\n  end\n  \
+                   def inc\n    @count = @count + 1\n    self\n  end\nend\n\
+                   c = Counter.new\nc.inc.inc\nprint c.count\n";
+        let module = ruby_to_semantic_ir::compile_source(src, "demo").expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        // The synthesized getter is registered under the bare `count`.
+        assert!(
+            a.source.contains("_sir_oop_def_method(\"Counter\", \"count\","),
+            "attr_accessor must register a `count` getter; got:\n{}",
+            a.source
+        );
+        // `self` in `inc` lowers to the current-self builtin.
+        assert!(
+            a.source.contains("_sir_oop_current_self()"),
+            "self must lower to current_self(); got:\n{}",
+            a.source
+        );
+        if let Some(stdout) = run_emitted_python(&a.source) {
+            assert_eq!(stdout, "2\n", "P3 attr_accessor/self-chain produced wrong output");
+        }
+    }
 }

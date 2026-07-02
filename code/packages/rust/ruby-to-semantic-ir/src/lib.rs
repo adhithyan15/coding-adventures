@@ -1068,10 +1068,11 @@ mod tests {
         // `greet` function on the resulting module, exactly as
         // `def greet … end` at the program top level would.
         let m = lower("class Foo\n  def greet\n  end\nend\n");
-        let greet = m.functions.iter().find(|f| f.name == "greet");
+        // O2: a class method hoists under a class-qualified name (`Foo__greet`).
+        let greet = m.functions.iter().find(|f| f.name == "Foo__greet");
         assert!(
             greet.is_some(),
-            "expected `greet` to be hoisted to top-level functions, got {:?}",
+            "expected `Foo__greet` to be hoisted to top-level functions, got {:?}",
             m.functions.iter().map(|f| &f.name).collect::<Vec<_>>()
         );
         // `main` is still present (no top-level statements were lost).
@@ -1153,13 +1154,14 @@ mod tests {
         // changes the *non-def* statements (see the tests below); the
         // method-hoist contract is unchanged.
         let m = lower("class Foo\n  def bar\n  end\nend\n");
-        // `bar` was hoisted to top-level Functions.
+        // O2: `bar` was hoisted to top-level under the class-qualified name.
         assert!(
-            m.functions.iter().any(|f| f.name == "bar"),
-            "expected hoisted `bar` function; got functions {:?}",
+            m.functions.iter().any(|f| f.name == "Foo__bar"),
+            "expected hoisted `Foo__bar` function; got functions {:?}",
             m.functions.iter().map(|f| &f.name).collect::<Vec<_>>()
         );
-        // The class statement itself produced a ClassDef in main.
+        // The class statement itself produced a ClassDef in main (main[0]);
+        // O2 appends a `__def_method__` registration after it.
         let main = main_body(&m);
         match &main.stmts[0] {
             Stmt::ClassDef { name, body, .. } => {
@@ -1189,8 +1191,8 @@ mod tests {
         // `def bar` is still hoisted to a top-level Function.
         let m = lower("class Foo\n  MAX = 10\n  def bar\n  end\nend\n");
         assert!(
-            m.functions.iter().any(|f| f.name == "bar"),
-            "expected hoisted `bar`; got {:?}",
+            m.functions.iter().any(|f| f.name == "Foo__bar"),
+            "expected hoisted `Foo__bar`; got {:?}",
             m.functions.iter().map(|f| &f.name).collect::<Vec<_>>()
         );
         let main = main_body(&m);
@@ -1267,15 +1269,24 @@ mod tests {
         let m = lower(
             "class Outer\n  def o\n  end\n  class Inner\n    def i\n    end\n  end\nend\n",
         );
+        // O2: each method hoists under its own class-qualified name.
         let count = |needle: &str| m.functions.iter().filter(|f| f.name == needle).count();
-        assert_eq!(count("o"), 1, "`o` hoisted exactly once");
-        assert_eq!(count("i"), 1, "`i` hoisted exactly once");
-        // Outer's body carries the nested Inner ClassDef.
+        assert_eq!(count("Outer__o"), 1, "`Outer__o` hoisted exactly once");
+        assert_eq!(count("Inner__i"), 1, "`Inner__i` hoisted exactly once");
+        // Outer's body carries the nested Inner ClassDef, followed (O2) by
+        // Inner's method registration — nested-class registrations live in the
+        // enclosing body right after the nested ClassDef, mirroring how a
+        // top-level class's registrations follow it in `main`.
         let main = main_body(&m);
         match &main.stmts[0] {
             Stmt::ClassDef { name, body, .. } => {
                 assert_eq!(name, "Outer");
-                assert_eq!(body.len(), 1, "Inner class is the only body stmt; got {:?}", body);
+                assert_eq!(
+                    body.len(),
+                    2,
+                    "Inner ClassDef + its `__def_method__` registration; got {:?}",
+                    body
+                );
                 match &body[0] {
                     Stmt::ClassDef { name, body, .. } => {
                         assert_eq!(name, "Inner");
@@ -1283,6 +1294,12 @@ mod tests {
                     }
                     other => panic!("expected nested ClassDef Inner, got {:?}", other),
                 }
+                assert!(
+                    matches!(&body[1], Stmt::ExprStmt {
+                        expr: Expr::BuiltinCall { name, .. }, .. } if name == "__def_method__"),
+                    "Inner's `i` registration must follow the nested ClassDef; got {:?}",
+                    body[1]
+                );
             }
             other => panic!("expected Stmt::ClassDef Outer, got {:?}", other),
         }
@@ -1332,9 +1349,10 @@ mod tests {
         // captured AND the body's `def`s hoist while non-def statements
         // stay in the body.
         let m = lower("class Cat < Animal\n  LEGS = 4\n  def meow\n  end\nend\n");
+        // O2: `meow` hoists under the class-qualified name `Cat__meow`.
         assert!(
-            m.functions.iter().any(|f| f.name == "meow"),
-            "expected hoisted `meow`; got {:?}",
+            m.functions.iter().any(|f| f.name == "Cat__meow"),
+            "expected hoisted `Cat__meow`; got {:?}",
             m.functions.iter().map(|f| &f.name).collect::<Vec<_>>()
         );
         let main = main_body(&m);
@@ -6187,47 +6205,56 @@ mod tests {
     // -----------------------------------------------------------------------
     // Phase 22d — `super` keyword lowering
     //
-    //   super        → ExprStmt(BuiltinCall("zsuper", []))   (forward ALL)
-    //   super()      → ExprStmt(BuiltinCall("super",  []))   (forward NONE)
-    //   super(1, 2)  → ExprStmt(BuiltinCall("super",  [IntLit(1), IntLit(2)]))
+    //   super        → ExprStmt(BuiltinCall("__super__", [method, class, …params]))
+    //   super()      → ExprStmt(BuiltinCall("__super__", [method, class]))  (no args)
+    //   super(1, 2)  → ExprStmt(BuiltinCall("__super__", [method, class, 1, 2]))
     //
-    // The bare-vs-`super()` split is keyed on the presence of a
-    // `super_args` node; `zsuper` and `super` are distinct builtin names.
+    // Milestone O2 (OOP production) folded the old `super`/`zsuper` markers into
+    // the single OOP-runtime builtin `__super__(method_name, class_name, …args)`.
+    // The leading two args are the enclosing method + class names (empty strings
+    // at the top level, where there is no enclosing class/method — not legal
+    // Ruby, but the parser admits it).  Bare `super` (zsuper) forwards the
+    // enclosing method's params by reference; `super()` forwards nothing.
     // -----------------------------------------------------------------------
 
     #[test]
-    fn bare_super_lowers_to_zsuper_builtin() {
+    fn bare_super_lowers_to_super_builtin_forwarding_params() {
+        // At the top level there are no params, so bare `super` forwards none:
+        // `__super__("", "")` (method + class are empty — no enclosing context).
+        // The in-class param-forwarding case is covered by
+        // `bare_super_forwards_enclosing_params` in the O2 section.
         let m = lower("super\n");
         let b = main_body(&m);
         match &b.stmts[0] {
             Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
-                assert_eq!(name, "zsuper", "bare super must lower to zsuper");
-                assert!(args.is_empty(), "zsuper carries no operands");
+                assert_eq!(name, "__super__", "bare super lowers to __super__");
+                assert_eq!(args.len(), 2, "method + class names, no forwarded params");
+                assert!(matches!(&args[0], Expr::StrLit { value, .. } if value.is_empty()));
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value.is_empty()));
             }
-            other => panic!("expected ExprStmt(BuiltinCall(zsuper, [])), got {:?}", other),
+            other => panic!("expected ExprStmt(BuiltinCall(__super__, …)), got {:?}", other),
         }
     }
 
     #[test]
     fn super_empty_parens_lowers_to_super_builtin_no_args() {
-        // `super()` is semantically distinct from bare `super`: it
-        // forwards NO arguments.  Name is "super" (not "zsuper") with an
-        // empty arg list.
+        // `super()` forwards NO arguments: `__super__(method, class)` with no
+        // trailing operands (at the top level the two names are empty strings).
         let m = lower("super()\n");
         let b = main_body(&m);
         match &b.stmts[0] {
             Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
-                assert_eq!(name, "super", "super() must lower to `super`, not `zsuper`");
-                assert!(args.is_empty(), "super() forwards zero args");
+                assert_eq!(name, "__super__", "super() lowers to __super__");
+                assert_eq!(args.len(), 2, "super() forwards zero extra args");
             }
-            other => panic!("expected ExprStmt(BuiltinCall(super, [])), got {:?}", other),
+            other => panic!("expected ExprStmt(BuiltinCall(__super__, …)), got {:?}", other),
         }
     }
 
     #[test]
     fn super_with_args_lowers_and_passes_validator() {
-        // `super(1, 2)` → BuiltinCall("super", [IntLit(1), IntLit(2)]),
-        // and the module validates (args are recursively well-formed).
+        // `super(1, 2)` → __super__("", "", IntLit(1), IntLit(2)) at the top
+        // level, and the module validates (args are recursively well-formed).
         let m = lower("super(1, 2)\n");
         let result = semantic_ir::validate(&m);
         assert!(
@@ -6238,12 +6265,12 @@ mod tests {
         let b = main_body(&m);
         match &b.stmts[0] {
             Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
-                assert_eq!(name, "super");
-                assert_eq!(args.len(), 2);
-                assert!(matches!(&args[0], Expr::IntLit { value: 1, .. }));
-                assert!(matches!(&args[1], Expr::IntLit { value: 2, .. }));
+                assert_eq!(name, "__super__");
+                assert_eq!(args.len(), 4, "method, class, then the two forwarded args");
+                assert!(matches!(&args[2], Expr::IntLit { value: 1, .. }));
+                assert!(matches!(&args[3], Expr::IntLit { value: 2, .. }));
             }
-            other => panic!("expected ExprStmt(BuiltinCall(super, [1, 2])), got {:?}", other),
+            other => panic!("expected ExprStmt(BuiltinCall(__super__, …)), got {:?}", other),
         }
     }
 
@@ -8480,6 +8507,344 @@ b = "y"
             result.is_ok(),
             "validator rejected shift-assign module: {:?}",
             result
+        );
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // Milestone O2 — OOP production.  The Ruby frontend now emits the
+    // OOP wiring (method registration, `.new`, `super`, `self`,
+    // `attr_accessor`) so object-oriented Ruby executes end to end.
+    // These assert the emitted SIR *shape*; the execution-proofs
+    // (P1/P2/P3) live in the semantic-ir-to-python crate, which can run
+    // the emitted Python through a real interpreter.
+    // ─────────────────────────────────────────────────────────────────
+
+    /// Find the single top-level `Stmt::ExprStmt` in `main` whose expression is
+    /// a `BuiltinCall` named `builtin`, returning its args.  Panics if absent.
+    fn find_builtin_stmt<'a>(
+        m: &'a semantic_ir::Module,
+        builtin: &str,
+    ) -> &'a [Expr] {
+        for s in &main_body(m).stmts {
+            if let Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } = s {
+                if name == builtin {
+                    return args;
+                }
+            }
+        }
+        panic!(
+            "no top-level `{}` BuiltinCall in main; stmts = {:?}",
+            builtin,
+            main_body(m).stmts
+        );
+    }
+
+    #[test]
+    fn class_def_emits_method_registration() {
+        // `class Dog; def speak; end; end` produces a `ClassDef` for Dog PLUS a
+        // `__def_method__("Dog", "speak", MakeClosure(Dog__speak))` registration
+        // right after it, and the method hoists under the class-qualified name.
+        let m = lower("class Dog\n  def speak\n    1\n  end\nend\n");
+
+        // The hoisted method is class-qualified (collision-safe).
+        assert!(
+            m.functions.iter().any(|f| f.name == "Dog__speak"),
+            "expected class-qualified hoisted `Dog__speak`; got {:?}",
+            m.functions.iter().map(|f| &f.name).collect::<Vec<_>>()
+        );
+
+        // main[0] is the ClassDef; a registration follows it.
+        let stmts = &main_body(&m).stmts;
+        assert!(
+            matches!(&stmts[0], Stmt::ClassDef { name, .. } if name == "Dog"),
+            "main[0] should be ClassDef(Dog); got {:?}",
+            stmts[0]
+        );
+        let args = find_builtin_stmt(&m, "__def_method__");
+        // args = [StrLit("Dog"), StrLit("speak"), MakeClosure{Dog__speak}]
+        assert_eq!(args.len(), 3, "def_method takes (class, method, closure)");
+        assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "Dog"));
+        assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "speak"));
+        assert!(
+            matches!(&args[2], Expr::MakeClosure { fn_name, captures, .. }
+                if fn_name == "Dog__speak" && captures.is_empty()),
+            "registration closure must name the hoisted fn with no captures; got {:?}",
+            args[2]
+        );
+    }
+
+    #[test]
+    fn new_on_constant_lowers_to_new_builtin() {
+        // `Dog.new("x")` → `__new__("Dog", StrLit "x")` (not a generic
+        // `__method__` dispatch).
+        let m = lower("class Dog\n  def initialize(n)\n    @n = n\n  end\nend\nd = Dog.new(\"x\")\n");
+        // Find the LetBinding for `d` and inspect its value.
+        let value = main_body(&m)
+            .stmts
+            .iter()
+            .find_map(|s| match s {
+                Stmt::LetBinding { name, value, .. } if name == "d" => Some(value),
+                _ => None,
+            })
+            .expect("let d = …");
+        match value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "__new__", "Foo.new must lower to __new__");
+                assert_eq!(args.len(), 2, "__new__(class, arg)");
+                assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "Dog"));
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "x"));
+            }
+            other => panic!("expected __new__ BuiltinCall, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn new_chained_method_nests_new_inside_method() {
+        // `Foo.new(x).meth` = `__method__(__new__("Foo", x), "meth")` — the
+        // receiver of the outer `__method__` is the `__new__` call.
+        let m = lower(
+            "class Foo\n  def initialize(x)\n    @x = x\n  end\n  def meth\n    @x\n  end\nend\ny = Foo.new(1).meth\n",
+        );
+        let value = main_body(&m)
+            .stmts
+            .iter()
+            .find_map(|s| match s {
+                Stmt::LetBinding { name, value, .. } if name == "y" => Some(value),
+                _ => None,
+            })
+            .expect("let y = …");
+        match value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "__method__");
+                assert!(
+                    matches!(&args[0], Expr::BuiltinCall { name, .. } if name == "__new__"),
+                    "outer __method__ receiver must be the __new__ call; got {:?}",
+                    args[0]
+                );
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "meth"));
+            }
+            other => panic!("expected __method__ over __new__, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn super_with_args_threads_method_and_class() {
+        // `super(a)` inside `Cat#describe` → `__super__("describe", "Cat", a)`.
+        let m = lower(
+            "class Cat\n  def describe(a)\n    super(a)\n  end\nend\n",
+        );
+        let f = m
+            .functions
+            .iter()
+            .find(|f| f.name == "Cat__describe")
+            .expect("Cat__describe");
+        // The super statement is the (only) body statement.
+        let call = f
+            .body
+            .stmts
+            .iter()
+            .find_map(|s| match s {
+                Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. }
+                    if name == "__super__" =>
+                {
+                    Some(args)
+                }
+                _ => None,
+            })
+            .expect("__super__ call in body");
+        assert_eq!(call.len(), 3, "__super__(method, class, arg)");
+        assert!(matches!(&call[0], Expr::StrLit { value, .. } if value == "describe"));
+        assert!(matches!(&call[1], Expr::StrLit { value, .. } if value == "Cat"));
+        assert!(
+            matches!(&call[2], Expr::VarRef { name, scope: Scope::Param, .. } if name == "a"),
+            "the explicit super arg `a` must be forwarded; got {:?}",
+            call[2]
+        );
+    }
+
+    #[test]
+    fn bare_super_forwards_enclosing_params() {
+        // Bare `super` (zsuper) forwards the enclosing method's params by
+        // reference: `def m(a, b); super; end` → `__super__("m", "C", a, b)`.
+        let m = lower(
+            "class C\n  def m(a, b)\n    super\n  end\nend\n",
+        );
+        let f = m.functions.iter().find(|f| f.name == "C__m").expect("C__m");
+        let call = f
+            .body
+            .stmts
+            .iter()
+            .find_map(|s| match s {
+                Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. }
+                    if name == "__super__" =>
+                {
+                    Some(args)
+                }
+                _ => None,
+            })
+            .expect("__super__ call");
+        assert!(matches!(&call[0], Expr::StrLit { value, .. } if value == "m"));
+        assert!(matches!(&call[1], Expr::StrLit { value, .. } if value == "C"));
+        // Remaining args are the two params (sorted for determinism: a, b).
+        let forwarded: Vec<&str> = call[2..]
+            .iter()
+            .filter_map(|e| match e {
+                Expr::VarRef { name, scope: Scope::Param, .. } => Some(name.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(forwarded, vec!["a", "b"], "bare super forwards all params");
+    }
+
+    #[test]
+    fn self_lowers_to_self_builtin() {
+        // `self` → `__self__()` (was a plain local VarRef "self").
+        let m = lower("class C\n  def m\n    self\n  end\nend\n");
+        let f = m.functions.iter().find(|f| f.name == "C__m").expect("C__m");
+        assert!(
+            matches!(&f.body.value, Expr::BuiltinCall { name, args, .. }
+                if name == "__self__" && args.is_empty()),
+            "method tail `self` must lower to __self__(); got {:?}",
+            f.body.value
+        );
+    }
+
+    #[test]
+    fn attr_accessor_expands_to_getter_and_setter() {
+        // `attr_accessor :count` synthesizes a getter (`count`) and setter
+        // (`count=`) def + registrations — exactly as if hand-written.
+        let m = lower("class Counter\n  attr_accessor :count\nend\n");
+
+        // Both accessor functions are hoisted (class-qualified).
+        let names: Vec<&String> = m.functions.iter().map(|f| &f.name).collect();
+        assert!(
+            names.iter().any(|n| *n == "Counter__count"),
+            "getter must hoist; got {:?}",
+            names
+        );
+        assert!(
+            names.iter().any(|n| *n == "Counter__count_set"),
+            "setter (count=) must hoist as Counter__count_set; got {:?}",
+            names
+        );
+
+        // The getter reads the instance var; the setter writes it.
+        let getter = m.functions.iter().find(|f| f.name == "Counter__count").unwrap();
+        assert!(
+            matches!(&getter.body.value, Expr::VarRef { name, scope: Scope::Instance, .. }
+                if name == "@count"),
+            "getter body must read @count; got {:?}",
+            getter.body.value
+        );
+        let setter = m.functions.iter().find(|f| f.name == "Counter__count_set").unwrap();
+        assert_eq!(setter.params.len(), 1, "setter takes one param");
+        assert!(
+            setter.body.stmts.iter().any(|s| matches!(s,
+                Stmt::Assign { name, scope: Scope::Instance, .. } if name == "@count")),
+            "setter must assign @count; got {:?}",
+            setter.body.stmts
+        );
+
+        // Two registrations follow the ClassDef: one for `count`, one for `count=`.
+        let regs: Vec<&str> = main_body(&m)
+            .stmts
+            .iter()
+            .filter_map(|s| match s {
+                Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. }
+                    if name == "__def_method__" =>
+                {
+                    match &args[1] {
+                        Expr::StrLit { value, .. } => Some(value.as_str()),
+                        _ => None,
+                    }
+                }
+                _ => None,
+            })
+            .collect();
+        assert!(regs.contains(&"count"), "getter registered; got {:?}", regs);
+        assert!(regs.contains(&"count="), "setter registered; got {:?}", regs);
+    }
+
+    #[test]
+    fn attr_reader_expands_to_getter_only() {
+        // `attr_reader :x` → getter def only (no setter).
+        let m = lower("class C\n  attr_reader :x\nend\n");
+        let names: Vec<&String> = m.functions.iter().map(|f| &f.name).collect();
+        assert!(names.iter().any(|n| *n == "C__x"), "getter present; got {:?}", names);
+        assert!(
+            !names.iter().any(|n| *n == "C__x_set"),
+            "attr_reader must NOT synthesize a setter; got {:?}",
+            names
+        );
+    }
+
+    #[test]
+    fn attr_writer_expands_to_setter_only() {
+        // `attr_writer :x` → setter def only (no getter).
+        let m = lower("class C\n  attr_writer :x\nend\n");
+        let names: Vec<&String> = m.functions.iter().map(|f| &f.name).collect();
+        assert!(names.iter().any(|n| *n == "C__x_set"), "setter present; got {:?}", names);
+        assert!(
+            !names.iter().any(|n| *n == "C__x"),
+            "attr_writer must NOT synthesize a getter; got {:?}",
+            names
+        );
+    }
+
+    #[test]
+    fn attr_accessor_multiple_symbols_each_expand() {
+        // `attr_accessor :a, :b` expands accessors for BOTH symbols.
+        let m = lower("class C\n  attr_accessor :a, :b\nend\n");
+        let names: Vec<&String> = m.functions.iter().map(|f| &f.name).collect();
+        for want in ["C__a", "C__a_set", "C__b", "C__b_set"] {
+            assert!(
+                names.iter().any(|n| n.as_str() == want),
+                "expected accessor `{}`; got {:?}",
+                want,
+                names
+            );
+        }
+    }
+
+    #[test]
+    fn oop_program_validates_end_to_end() {
+        // The full P1 shape (class + initialize + method + `.new().m`) lowers and
+        // passes the SIR validator — the round-trip the backends consume.
+        let m = lower(
+            "class Dog\n  def initialize(name)\n    @name = name\n  end\n  \
+             def speak\n    \"woof\"\n  end\nend\nd = Dog.new(\"Rex\")\nprint(d.speak)\n",
+        );
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected OOP module: {:?}",
+            result.errors().collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
+    fn inheritance_and_super_program_validates() {
+        // The P2 shape (parent+child, both define `initialize`, child `super`s)
+        // now validates: the two `initialize` methods hoist under DISTINCT
+        // class-qualified names, so there is no duplicate-function error.
+        let m = lower(
+            "class Animal\n  def initialize(name)\n    @name = name\n  end\nend\n\
+             class Cat < Animal\n  def initialize(name)\n    super(name)\n  end\nend\n\
+             c = Cat.new(\"Tom\")\n",
+        );
+        assert!(
+            m.functions.iter().any(|f| f.name == "Animal__initialize"),
+            "Animal__initialize present"
+        );
+        assert!(
+            m.functions.iter().any(|f| f.name == "Cat__initialize"),
+            "Cat__initialize present (distinct from Animal's)"
+        );
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected inheritance module: {:?}",
+            result.errors().collect::<Vec<_>>()
         );
     }
 }

@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased
+
+### Tests (O2 — Ruby OOP end-to-end execution proofs)
+
+Added three execution-proof tests (no source change) that lower real Ruby OOP
+source through `ruby-to-semantic-ir`, compile the SIR to Python, and run it
+under a real interpreter — proving the O1 emit arms + `sir-runtime-oop` runtime
+execute the frontend's O2 production:
+
+- `end_to_end_ruby_oop_new_and_method_dispatch_executes_py` (P1) →
+  `Rex says woof` — construction, instance-method dispatch, `@ivar`.
+- `end_to_end_ruby_inheritance_super_executes_py` (P2) → `Tom with 4 legs` —
+  inheritance + `super` on the shared self.
+- `end_to_end_ruby_attr_accessor_and_self_chain_executes_py` (P3) → `2` —
+  `attr_accessor` getter/setter, `@ivar` mutation, `self`-return chaining.
+
 ## 0.5.0 — OOP object-model emit arms (O1)
 
 Additive emit support for the object-model builtins the Ruby frontend will

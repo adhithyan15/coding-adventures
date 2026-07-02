@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### Tests (O2 — Ruby OOP end-to-end execution proof)
+
+Added an execution-proof test (no source change),
+`end_to_end_ruby_oop_new_and_dispatch_executes_ts`, that lowers real Ruby OOP
+source (the P1 `Dog#speak` program) through `ruby-to-semantic-ir`, compiles the
+SIR to TypeScript, and runs it under `node` with a faithful inline `__SirOop`
+dispatch + instance-variable stub — proving the frontend's O2 production
+(`__def_method__` / `__new__` / `__method__` / `@ivar`) executes on the TS side
+and prints `Rex says woof`.
+
 ## 0.5.0 — OOP object-model emit arms (O1)
 
 Additive emit support for the object-model builtins the Ruby frontend will
