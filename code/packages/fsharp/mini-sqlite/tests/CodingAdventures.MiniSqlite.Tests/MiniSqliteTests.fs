@@ -614,3 +614,92 @@ module MiniSqliteTests =
         Assert.Equal(2, rows.Count)
         Assert.Equal("HELLO", rows.[0].[0] :?> string)
         Assert.Equal(5L, Convert.ToInt64(rows.[0].[1]))
+
+    [<Fact>]
+    let ``INNER JOIN between two tables`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE orders (id INTEGER, cust_id INTEGER, amount INTEGER)") |> ignore
+        conn.Execute("CREATE TABLE customers (id INTEGER, name TEXT)") |> ignore
+        conn.Execute("INSERT INTO customers VALUES (1, 'Alice')") |> ignore
+        conn.Execute("INSERT INTO customers VALUES (2, 'Bob')") |> ignore
+        conn.Execute("INSERT INTO orders VALUES (10, 1, 100)") |> ignore
+        conn.Execute("INSERT INTO orders VALUES (11, 1, 200)") |> ignore
+        conn.Execute("INSERT INTO orders VALUES (12, 2, 50)") |> ignore
+        let rows = conn.Execute("SELECT customers.name, orders.amount FROM customers INNER JOIN orders ON customers.id = orders.cust_id ORDER BY orders.id ASC").FetchAll()
+        Assert.Equal(3, rows.Count)
+        Assert.Equal("Alice", rows.[0].[0] :?> string)
+        Assert.Equal(100L, Convert.ToInt64(rows.[0].[1]))
+        Assert.Equal("Alice", rows.[1].[0] :?> string)
+        Assert.Equal(200L, Convert.ToInt64(rows.[1].[1]))
+        Assert.Equal("Bob", rows.[2].[0] :?> string)
+        Assert.Equal(50L, Convert.ToInt64(rows.[2].[1]))
+
+    [<Fact>]
+    let ``multi-table FROM (implicit cross join with WHERE)`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE a (id INTEGER, v TEXT)") |> ignore
+        conn.Execute("CREATE TABLE b (id INTEGER, w TEXT)") |> ignore
+        conn.Execute("INSERT INTO a VALUES (1, 'x')") |> ignore
+        conn.Execute("INSERT INTO b VALUES (1, 'y')") |> ignore
+        conn.Execute("INSERT INTO b VALUES (2, 'z')") |> ignore
+        let rows = conn.Execute("SELECT a.v, b.w FROM a, b WHERE a.id = b.id ORDER BY b.w ASC").FetchAll()
+        Assert.Equal(1, rows.Count)
+        Assert.Equal("x", rows.[0].[0] :?> string)
+        Assert.Equal("y", rows.[0].[1] :?> string)
+
+    [<Fact>]
+    let ``SELECT with quoted identifier`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (id INTEGER, value TEXT)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (1, 'test')") |> ignore
+        // Quoted identifiers work the same as unquoted
+        let rows = conn.Execute("SELECT \"id\", \"value\" FROM t").FetchAll()
+        Assert.Equal(1, rows.Count)
+        Assert.Equal(1L, Convert.ToInt64(rows.[0].[0]))
+
+    [<Fact>]
+    let ``SELECT with NOT operator on boolean`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (id INTEGER, active BOOLEAN)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (1, TRUE)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (2, FALSE)") |> ignore
+        let rows = conn.Execute("SELECT id FROM t WHERE NOT active ORDER BY id ASC").FetchAll()
+        Assert.Equal(1, rows.Count)
+        Assert.Equal(2L, Convert.ToInt64(rows.[0].[0]))
+
+    [<Fact>]
+    let ``INSERT with explicit column list`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (id INTEGER, name TEXT, score INTEGER)") |> ignore
+        conn.Execute("INSERT INTO t (id, name) VALUES (1, 'Alice')") |> ignore
+        let rows = conn.Execute("SELECT id, name FROM t").FetchAll()
+        Assert.Equal(1, rows.Count)
+        Assert.Equal(1L, Convert.ToInt64(rows.[0].[0]))
+        Assert.Equal("Alice", rows.[0].[1] :?> string)
+
+    [<Fact>]
+    let ``SUBSTR with out-of-bounds start returns empty`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        let r = conn.Execute("SELECT SUBSTR('hello', 100), SUBSTR('hello', -10)").FetchAll().[0]
+        Assert.Equal("", r.[0] :?> string)
+        Assert.Equal("hello", r.[1] :?> string)
+
+    [<Fact>]
+    let ``HAVING MAX aggregate`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (cat TEXT, n INTEGER)") |> ignore
+        conn.Execute("INSERT INTO t VALUES ('A', 5)") |> ignore
+        conn.Execute("INSERT INTO t VALUES ('A', 15)") |> ignore
+        conn.Execute("INSERT INTO t VALUES ('B', 100)") |> ignore
+        let rows = conn.Execute("SELECT cat FROM t GROUP BY cat HAVING MAX(n) >= 100 ORDER BY cat ASC").FetchAll()
+        Assert.Equal(1, rows.Count)
+        Assert.Equal("B", rows.[0].[0] :?> string)
+
+    [<Fact>]
+    let ``SELECT *  returns all columns`` () =
+        use conn = MiniSqlite.Connect(":memory:")
+        conn.Execute("CREATE TABLE t (a INTEGER, b TEXT)") |> ignore
+        conn.Execute("INSERT INTO t VALUES (42, 'hello')") |> ignore
+        let rows = conn.Execute("SELECT * FROM t").FetchAll()
+        Assert.Equal(1, rows.Count)
+        Assert.Equal(2, rows.[0].Count)
