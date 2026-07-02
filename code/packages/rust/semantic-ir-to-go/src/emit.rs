@@ -416,14 +416,22 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 emit_stmt(out, st, indent);
             }
         }
-        // Modules/singleton classes are not part of the E3 exception surface
-        // (`Feature::Modules` is not accepted; a `SingletonClassDef` observes
-        // `Feature::Classes` but the Ruby frontend only emits it for OOP, not
-        // exception subclasses).  A `ModuleDef` is rejected at the gate; a
-        // `SingletonClassDef` that slipped through carries no ancestry meaning
-        // here, so — defensively — emit its (hoisted-out) body statements.
-        Stmt::ModuleDef { span, .. } => {
-            panic!("go backend reached SIR17 module-def statement at {} — capability check should have rejected it", span);
+        // A `SingletonClassDef` observes `Feature::Classes` but the Ruby
+        // frontend only emits it for OOP, not exception subclasses; it carries
+        // no ancestry meaning here, so — defensively — emit its (hoisted-out)
+        // body statements.  (`ModuleDef` is handled above, as a MX5 mixin
+        // method owner.)
+        // MX5 (mixins) — a `module M; …; end` is a method OWNER, exactly like a
+        // class: the frontend hoists each module `def` to a top-level function
+        // and the `ModuleDef` body reaching here is the sequence of
+        // `__def_method__("M", …)` / `__include__` / `__extend__`
+        // registrations that wire those methods into the runtime tables.  Emit
+        // them in order (no ancestry edge — a module has no superclass), just
+        // like the `ClassDef` arm above.
+        Stmt::ModuleDef { body, .. } => {
+            for st in body {
+                emit_stmt(out, st, indent);
+            }
         }
         Stmt::SingletonClassDef { body, .. } => {
             for st in body {
@@ -1052,6 +1060,51 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     if name == "__self__" {
         out.push_str("_sir_current_self()");
         return;
+    }
+    // ── MX5 mixins: `include` / `extend` / class-method call ───────
+    //
+    // The mixin frontend (MX1) lowers module directives to two builtins,
+    // and a class-method call (`Foo.bar`) to a third — all carrying
+    // class/module/method NAMES as `StrLit`s emitted through
+    // `quote_go_string` (never interpolated), so the runtime side is a
+    // pure NAME-keyed map operation with no reflection (the C3 RCE
+    // discipline).
+    //
+    //   __include__(StrLit(owner), StrLit(m))          → _sir_include("owner", "m")
+    //   __extend__(StrLit(owner), StrLit(m))           → _sir_extend("owner", "m")
+    //   __class_method__(StrLit(cls), StrLit(m), args…)→ _sir_call_class_method("cls", "m", args…)
+    if (name == "__include__" || name == "__extend__") && args.len() >= 2 {
+        if let (Expr::StrLit { value: owner, .. }, Expr::StrLit { value: module, .. }) =
+            (&args[0], &args[1])
+        {
+            let helper = if name == "__include__" { "_sir_include" } else { "_sir_extend" };
+            let _ = write!(
+                out,
+                "{}({}, {})",
+                helper,
+                quote_go_string(owner),
+                quote_go_string(module)
+            );
+            return;
+        }
+    }
+    if name == "__class_method__" && args.len() >= 2 {
+        if let (Expr::StrLit { value: cls, .. }, Expr::StrLit { value: meth, .. }) =
+            (&args[0], &args[1])
+        {
+            let _ = write!(
+                out,
+                "_sir_call_class_method({}, {}",
+                quote_go_string(cls),
+                quote_go_string(meth)
+            );
+            for a in &args[2..] {
+                out.push_str(", ");
+                emit_expr(out, a, indent);
+            }
+            out.push(')');
+            return;
+        }
     }
     // ── SIR17 exceptions (E3): `raise` → panic ─────────────────────
     //
@@ -2685,6 +2738,38 @@ mod tests {
             out.starts_with(r#"_sir_def_class_method("Counter", "zero", _sir_make_closure("#),
             "unexpected emit: {out}"
         );
+    }
+
+    /// MX5 — `__include__("C", "M")` → `_sir_include("C", "M")` (NAME-keyed,
+    /// quoted, no reflection).
+    #[test]
+    fn include_emits_include_directive() {
+        let e = builtin("__include__", vec![str_lit("Person"), str_lit("Greet")]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"_sir_include("Person", "Greet")"#);
+    }
+
+    /// MX5 — `__extend__("C", "M")` → `_sir_extend("C", "M")`.
+    #[test]
+    fn extend_emits_extend_directive() {
+        let e = builtin("__extend__", vec![str_lit("Registry"), str_lit("Counting")]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"_sir_extend("Registry", "Counting")"#);
+    }
+
+    /// MX5 — `__class_method__("C", "m", arg)` → `_sir_call_class_method("C",
+    /// "m", <arg>)`; args follow the two NAME strings.
+    #[test]
+    fn class_method_call_emits_dispatch() {
+        let e = builtin(
+            "__class_method__",
+            vec![str_lit("Registry"), str_lit("total"), Expr::IntLit { value: 5, span: s() }],
+        );
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"_sir_call_class_method("Registry", "total", Value(int64(5)))"#);
     }
 
     /// `__self__()` → `_sir_current_self()`.

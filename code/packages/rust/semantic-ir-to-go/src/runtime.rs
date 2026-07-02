@@ -2079,22 +2079,166 @@ func _sir_def_class_method(cls string, method string, fn Value) Value {
 	return fn
 }
 
-// Resolve `method` on `cls` OR any registered ancestor, walking the SHARED
-// `_sir_ancestry` table (the very table exception `rescue` uses — one
-// hierarchy for the whole runtime).  The `seen` set makes the walk total even
-// for a cyclic user hierarchy.  Returns the closure and `true` on a hit, or
-// `(nil, false)` when unresolved.
+// ── MX5 mixins: per-owner included-module list ────────────────────────
+//
+// `include M` inside `class C` (or `module C`) records that `C`'s method
+// resolution must consult `M` — BEFORE ascending to `C`'s superclass, and
+// AFTER `C`'s own methods.  We keep this as an explicit per-owner slice of
+// module names, appended in SOURCE (include) order.  Ruby searches the
+// MOST-RECENTLY-included module first, so the resolution walk iterates this
+// slice in REVERSE (see `_sir_resolve_instance_method`).
+//
+// A module is itself an "owner" in the method table (`module M; def foo`
+// registers `_sir_instance_methods[("M","foo")]` via `__def_method__`), so a
+// module that itself `include`s another module contributes ITS includes too
+// when the walk recurses into it — Ruby's transitive mixin inclusion.
+//
+// SECURITY: this is a plain `map[string][]string` keyed by source-derived
+// NAMES with no reflection (the C3 RCE discipline).  The MRO walk carries a
+// `seen` set so a module that (transitively) includes itself TERMINATES.
+var _sir_included_modules = make(map[string][]string)
+
+// `__include__("Owner", "M")` — record that `Owner` mixes in `M`.  Appends in
+// include order (idempotent duplicates are harmless: the MRO walk's `seen` set
+// de-dups a diamond, and appending a name twice just makes the second visit a
+// no-op).  Returns nil (the directive has no Ruby value the emitter needs).
+func _sir_include(owner string, module string) Value {
+	_sir_included_modules[owner] = append(_sir_included_modules[owner], module)
+	return nil
+}
+
+// `__extend__("Owner", "M")` — mix `M`'s INSTANCE methods in as `Owner`'s
+// CLASS (singleton) methods, so they become callable as `Owner.method`.  We
+// SNAPSHOT `M`'s registered instance methods (including those `M` itself
+// includes, via the same MRO walk used for instances) and copy each into
+// `Owner`'s class-method table.  An entry `Owner` already defines is NOT
+// overwritten (a class/own method shadows an extended module method), matching
+// Ruby's singleton-first precedence.  Copy-at-extend-time is the v0 model:
+// methods defined on `M` AFTER the `extend` are not retroactively added, which
+// is sufficient because the frontend emits every `__def_method__` for `M`
+// before any `__extend__` that names it (registrations run in source order,
+// module def before the including class).
+func _sir_extend(owner string, module string) Value {
+	for _, name := range _sir_module_method_names(module) {
+		key := _sir_method_key(owner, name)
+		if _, exists := _sir_class_methods[key]; exists {
+			continue
+		}
+		if fn, ok := _sir_resolve_instance_method(module, name); ok {
+			_sir_class_methods[key] = fn
+		}
+	}
+	return nil
+}
+
+// The instance-method NAMES reachable on `module` (its own defs plus those of
+// modules IT includes), for `_sir_extend` to copy.  Walks the same
+// include-list MRO as instance resolution, `seen`-guarded against a cyclic
+// include, and de-dups names so each method is copied once (the earliest,
+// most-specific definition wins — we only add a name the first time it is
+// seen).
+func _sir_module_method_names(module string) []string {
+	var names []string
+	added := make(map[string]bool)
+	seenOwners := make(map[string]bool)
+	var walk func(owner string)
+	walk = func(owner string) {
+		if owner == "" || seenOwners[owner] {
+			return
+		}
+		seenOwners[owner] = true
+		prefix := owner + "\x00"
+		for key := range _sir_instance_methods {
+			if len(key) > len(prefix) && key[:len(prefix)] == prefix {
+				name := key[len(prefix):]
+				if !added[name] {
+					added[name] = true
+					names = append(names, name)
+				}
+			}
+		}
+		mods := _sir_included_modules[owner]
+		for i := len(mods) - 1; i >= 0; i-- {
+			walk(mods[i])
+		}
+	}
+	walk(module)
+	return names
+}
+
+// Resolve `method` on `cls` following Ruby's MRO (Method Resolution Order):
+//
+//	cls  →  cls's included modules (REVERSE / most-recent-first)  →
+//	cls's superclass  →  its included modules  →  …  →  Object
+//
+// A class's OWN method shadows any module it includes; a module method shadows
+// the superclass's (module comes before the superclass in the ancestor list).
+// A module included via TWO paths (a diamond) resolves ONCE, at its earliest
+// position, because the `seen` set skips an owner already visited.
+//
+// The walk is a depth-first, most-recent-first, de-duplicated linearisation
+// (the exact order the spec's truth table documents).  It shares the runtime's
+// single `_sir_ancestry` table for the superclass chain (the same table
+// exception `rescue` uses).  The `seen` set makes the walk TOTAL even for a
+// cyclic class hierarchy OR a self-including module.  Returns the closure and
+// `true` on a hit, or `(nil, false)` when unresolved.
 func _sir_resolve_instance_method(cls string, method string) (Value, bool) {
-	cur := cls
 	seen := make(map[string]bool)
-	for cur != "" && !seen[cur] {
-		if fn, ok := _sir_instance_methods[_sir_method_key(cur, method)]; ok {
+	// `resolveOwner` checks `owner`'s own methods, then (reverse-order) its
+	// included modules — each of which may itself include further modules,
+	// so it recurses.  Returns the closure on the first hit.
+	var resolveOwner func(owner string) (Value, bool)
+	resolveOwner = func(owner string) (Value, bool) {
+		if owner == "" || seen[owner] {
+			return nil, false
+		}
+		seen[owner] = true
+		if fn, ok := _sir_instance_methods[_sir_method_key(owner, method)]; ok {
 			return fn, true
 		}
-		seen[cur] = true
+		// Included modules search most-recently-included first (Ruby's rule),
+		// so iterate the include-order slice in REVERSE.  A module search
+		// recurses so a module that itself includes another module is honoured.
+		mods := _sir_included_modules[owner]
+		for i := len(mods) - 1; i >= 0; i-- {
+			if fn, ok := resolveOwner(mods[i]); ok {
+				return fn, true
+			}
+		}
+		return nil, false
+	}
+	cur := cls
+	for cur != "" {
+		if seen[cur] {
+			// The class chain itself is cyclic (`A<B, B<A`): stop.
+			break
+		}
+		if fn, ok := resolveOwner(cur); ok {
+			return fn, true
+		}
 		cur = _sir_ancestry[cur] // "" when `cur` has no registered super
 	}
 	return nil, false
+}
+
+// `Foo.bar(args…)` — a CLASS-method call (`__class_method__`).  Resolves `bar`
+// in `Foo`'s class-method table, walking the ancestry so an inherited
+// `def self.bar` is found, and INCLUDING methods mixed in via `extend` (which
+// `_sir_extend` copied into the class-method table).  No `self` is pushed —
+// v0 class methods run without an instance receiver.  An unresolved name hits
+// the controlled NoMethodError floor, never reflection.
+func _sir_call_class_method(cls string, method string, args ...Value) Value {
+	cur := cls
+	seen := make(map[string]bool)
+	for cur != "" && !seen[cur] {
+		if fn, ok := _sir_class_methods[_sir_method_key(cur, method)]; ok {
+			return _sir_apply(fn, args)
+		}
+		seen[cur] = true
+		cur = _sir_ancestry[cur]
+	}
+	panic(_sir_new_error("NoMethodError",
+		Value("undefined method '"+method+"' for "+cls)))
 }
 
 // ── Current-self stack + instance-variable store ──────────────────────
@@ -2376,5 +2520,21 @@ mod tests {
         assert!(RUNTIME.contains(r#""KeyError":            "IndexError""#));
         // The cycle-guard `seen` set must be present (no unbounded walk).
         assert!(RUNTIME.contains("seen := make(map[string]bool)"));
+    }
+
+    // MX5: the mixin tables + helpers must be present, and the MRO walk must
+    // consult the per-owner included-module list (reverse order).
+    #[test]
+    fn runtime_includes_mixin_helpers() {
+        assert!(RUNTIME.contains("var _sir_included_modules = make(map[string][]string)"));
+        assert!(RUNTIME.contains("func _sir_include(owner string, module string) Value"));
+        assert!(RUNTIME.contains("func _sir_extend(owner string, module string) Value"));
+        assert!(RUNTIME.contains(
+            "func _sir_call_class_method(cls string, method string, args ...Value) Value"
+        ));
+        // The MRO walk consults the included-module list in REVERSE (most
+        // recently included first) and recurses per owner.
+        assert!(RUNTIME.contains("mods := _sir_included_modules[owner]"));
+        assert!(RUNTIME.contains("for i := len(mods) - 1; i >= 0; i--"));
     }
 }

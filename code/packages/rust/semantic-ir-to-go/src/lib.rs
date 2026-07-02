@@ -150,12 +150,27 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // `StrLit` inside a builtin, or a `raise Foo` first-arg `Const` — both
     // handled explicitly), so `check_exception_soundness` below STILL cleanly
     // rejects genuinely-unsupported constructs — a `Const` used as a value
-    // (`x = MyClass`), a `Const` assignment (`FOO = 4`), and a `ModuleDef`
-    // (`Feature::Modules` remains UNACCEPTED — no mixin/MRO runtime in v0).
+    // (`x = MyClass`) and a `Const` assignment (`FOO = 4`).  (`Feature::Modules`
+    // is now ACCEPTED for MX5 mixins; see the note on it below.)
     Feature::Classes,
     Feature::Constants,
     Feature::InstanceVars,
     Feature::ClassVars,
+    // ── MX5 — Ruby mixins (`module` + `include` / `extend`) ────────
+    //
+    // `Modules` admits `module M; …; end` (`Stmt::ModuleDef`) — a method
+    // *owner* alongside classes.  A module body's `def`s hoist and register
+    // via the SAME `__def_method__("M", …)` builtin classes use (keyed by the
+    // module name); `include M` / `extend M` lower to the `__include__` /
+    // `__extend__` builtins, whose owner/module NAMES ride in as `StrLit`s
+    // (never a `Const`), so the runtime side stays a pure NAME-keyed map
+    // operation — NEVER reflection.  Method resolution follows Ruby's MRO
+    // (class → its included modules in reverse → superclass → …), cycle-guarded
+    // (see `runtime::RUNTIME` — `_sir_included_modules`,
+    // `_sir_resolve_instance_method`, `_sir_extend`, `_sir_call_class_method`).
+    // A `ModuleDef` body reaching emit is now hosted (not rejected); the
+    // soundness gate below recurses into it for the residual `Const` checks.
+    Feature::Modules,
 ];
 
 impl Backend for GoBackend {
@@ -295,8 +310,8 @@ fn check_no_keyword_rest_mix(module: &Module, errs: &mut Vec<BackendError>) {
 /// we reject those modules CLEANLY here (an honest "unsupported construct"
 /// error) rather than let a `panic!` or a mis-emit through.  Rejected:
 ///
-///   * a `ModuleDef` (`module M; …; end`) — a namespace, not an exception
-///     subclass; the backend has no OOP runtime to host it;
+///   * (a `ModuleDef` is NO LONGER rejected — MX5 hosts it as a mixin method
+///     owner; we recurse into its body for the residual const checks);
 ///   * a `Const` reference (`VarRef{Const}`) ANYWHERE except as the first
 ///     argument of a `raise` builtin — a general constant-as-value (`x =
 ///     MyClass`) has no runtime representation here;
@@ -339,15 +354,14 @@ fn check_soundness_stmt(s: &semantic_ir::Stmt, errs: &mut Vec<BackendError>) {
                 span.clone(),
             ));
         }
-        Stmt::ModuleDef { name, span, .. } => {
-            errs.push(unsupported(
-                &format!(
-                    "go backend cannot emit a module definition `{}` — the exception \
-                     backend supports only exception-subclass class declarations",
-                    name
-                ),
-                span.clone(),
-            ));
+        // MX5 — a `ModuleDef` is now a HOSTED method owner (mixins).  Its body
+        // still may not carry an unsupported `Const` use, so recurse into it
+        // for the same residual const/module checks a class body gets, rather
+        // than rejecting the module wholesale.
+        Stmt::ModuleDef { body, .. } => {
+            for st in body {
+                check_soundness_stmt(st, errs);
+            }
         }
         Stmt::LetBinding { value, .. }
         | Stmt::LetStarBinding { value, .. }
