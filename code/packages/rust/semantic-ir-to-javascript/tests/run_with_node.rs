@@ -530,8 +530,8 @@ fn default_param_is_call_time_and_param_scoped() {
     // call is NOT padded.
     let artifact = compile(&module).expect("compile to javascript");
     assert!(
-        artifact.source.contains("function f(a, b = (a + 1)) {"),
-        "expected native JS default param, got:\n{}",
+        artifact.source.contains("function f(a, b = __Sir.plus(a, 1)) {"),
+        "expected native JS default param (with polymorphic `+`), got:\n{}",
         artifact.source
     );
     assert!(artifact.source.contains("__Sir.print(f(5))"), "got:\n{}", artifact.source);
@@ -1428,6 +1428,126 @@ fn puts_cyclic_array_terminates() {
         assert_eq!(
             stdout, "[...]\n",
             "unexpected cyclic puts output (escaped): {stdout:?}"
+        );
+    }
+}
+
+// ── PO3: polymorphic `+` / `*` (Ruby operator overloading) ─────────────
+//
+// Ruby overloads `+`/`*` by receiver type; all lower to the same SIR
+// `+`/`*` builtins, so the JS backend dispatches at runtime on the first
+// operand's type (`__Sir.plus` / `__Sir.times`).  These execution-proofs
+// build hand-crafted SIR and assert the exact stdout under Node, covering
+// every arm from the spec table plus the numeric regressions.
+
+/// A sequence literal helper.
+fn seq(items: Vec<Expr>) -> Expr {
+    Expr::SeqLit { items, span: sp() }
+}
+
+/// `"a" + "b"` → "ab" (String concat).
+#[test]
+fn poly_string_plus_concatenates() {
+    let module = module_with_main(
+        vec![print(bc("+", vec![str_("a"), str_("b")]))],
+        Expr::NilLit { span: sp() },
+        &[Feature::Strings],
+    );
+    if let Some(stdout) = run_module(&module, "poly_str_plus") {
+        assert_eq!(stdout, "ab");
+    }
+}
+
+/// `"ab" * 3` → "ababab" (String repeat).
+#[test]
+fn poly_string_times_repeats() {
+    let module = module_with_main(
+        vec![print(bc("*", vec![str_("ab"), int(3)]))],
+        Expr::NilLit { span: sp() },
+        &[Feature::Strings],
+    );
+    if let Some(stdout) = run_module(&module, "poly_str_times") {
+        assert_eq!(stdout, "ababab");
+    }
+}
+
+/// `[1] + [2]` → `[1, 2]` (Array concat, NEW array — no `[]+[]` string
+/// coercion).  Printed via `format`, whose array display is `[1, 2]`.
+#[test]
+fn poly_array_plus_concatenates() {
+    let module = module_with_main(
+        vec![print(bc("+", vec![seq(vec![int(1)]), seq(vec![int(2)])]))],
+        Expr::NilLit { span: sp() },
+        &[Feature::Sequences],
+    );
+    if let Some(stdout) = run_module(&module, "poly_arr_plus") {
+        // The JS backend's `format` renders an array as `[1, 2]` — the
+        // native `[1] + [2]` would WRONGLY print the string `1,2`.
+        assert_eq!(stdout, "[1, 2]");
+    }
+}
+
+/// `[0] * 3` → `[0, 0, 0]` (Array repeat, NEW array).
+#[test]
+fn poly_array_times_int_repeats() {
+    let module = module_with_main(
+        vec![print(bc("*", vec![seq(vec![int(0)]), int(3)]))],
+        Expr::NilLit { span: sp() },
+        &[Feature::Sequences],
+    );
+    if let Some(stdout) = run_module(&module, "poly_arr_times_int") {
+        assert_eq!(stdout, "[0, 0, 0]");
+    }
+}
+
+/// `[1, 2] * ", "` → "1, 2" (Array join with a String separator, using
+/// the SAME `format` display helper `puts` uses on each element).
+#[test]
+fn poly_array_times_string_joins() {
+    let module = module_with_main(
+        vec![print(bc("*", vec![seq(vec![int(1), int(2)]), str_(", ")]))],
+        Expr::NilLit { span: sp() },
+        &[Feature::Sequences, Feature::Strings],
+    );
+    if let Some(stdout) = run_module(&module, "poly_arr_join") {
+        assert_eq!(stdout, "1, 2");
+    }
+}
+
+/// Regression — numeric `+`/`*` are UNCHANGED: `1 + 2` → 3, `2 * 3` → 6.
+#[test]
+fn poly_numeric_plus_times_unchanged() {
+    let module = module_with_main(
+        vec![
+            print(bc("+", vec![int(1), int(2)])),
+            print(bc("*", vec![int(2), int(3)])),
+        ],
+        Expr::NilLit { span: sp() },
+        &[],
+    );
+    if let Some(stdout) = run_module(&module, "poly_numeric") {
+        assert_eq!(stdout, "3\n6");
+    }
+}
+
+/// SECURITY (CWE-1284/400) — an oversized repeat count must raise a
+/// Ruby-shaped `ArgumentError: argument too big` rather than OOMing or
+/// throwing a raw `RangeError`.  `"ab" * 2^53` overflows the safe-integer
+/// product guard; node exits non-zero with our ArgumentError.
+#[test]
+fn poly_string_repeat_overflow_is_rejected() {
+    // 2^53 = 9007199254740992 > MAX_SAFE_INTEGER / 2, so `2 * count`
+    // exceeds the cap and the guard fires before any allocation.
+    let huge = int(9_007_199_254_740_992);
+    let module = module_with_main(
+        vec![print(bc("*", vec![str_("ab"), huge]))],
+        Expr::NilLit { span: sp() },
+        &[Feature::Strings],
+    );
+    if let Some(stderr) = run_module_expecting_failure(&module, "poly_overflow") {
+        assert!(
+            stderr.contains("argument too big"),
+            "expected the ArgumentError overflow guard, got stderr:\n{stderr}"
         );
     }
 }

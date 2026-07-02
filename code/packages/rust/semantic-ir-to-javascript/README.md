@@ -245,7 +245,9 @@ external package import.
 For idiomatic output, common builtins emit native JavaScript instead of
 a runtime call:
 
-- `+ - * / %` (2 args) → native infix `(a + b)`, …
+- `+ *` (2 args) → `__Sir.plus(a, b)` / `__Sir.times(a, b)` — **polymorphic**
+  (see below); native infix would be wrong for the collection arms.
+- `- / %` (2 args) → native infix `(a - b)`, … (numeric-only in the SIR contract)
 - `= != < > <= >=` (2 args) → `(a === b)`, `(a !== b)`, …
 - `not` (1 arg) → `(!__Sir.truthy(a))`; `neg` → `(-(a))`
 - `len` (1 arg) → `(a).length` (arrays and strings)
@@ -254,6 +256,35 @@ a runtime call:
 A **variadic** operator (`(+ 1 2 3)` — more than two args) and any
 unrecognised builtin fall back to `__Sir.callBuiltin("+", […])`, so a new
 builtin runs without a backend change.
+
+### Polymorphic `+` / `*` (Ruby operator overloading)
+
+Ruby overloads `+` and `*` by the receiver's runtime type, and all of these
+lower to the same SIR `+`/`*` builtins, so the JavaScript backend dispatches at
+**runtime** — via the inlined `__Sir.plus` / `__Sir.times` helpers — on the
+**first operand's** type:
+
+| Expr           | Result       | Arm                                    |
+|----------------|--------------|----------------------------------------|
+| `1 + 2`        | `3`          | numeric fold (unchanged)               |
+| `"a" + "b"`    | `"ab"`       | String concat                          |
+| `[1] + [2]`    | `[1, 2]`     | Array concat (a **new** array)         |
+| `"ab" * 3`     | `"ababab"`   | String repeat                          |
+| `[0] * 3`      | `[0, 0, 0]`  | Array repeat (a **new** array)         |
+| `[1, 2] * ", "`| `"1, 2"`     | Array join (elements via `format`)     |
+
+Dispatch is a runtime **tag** test (`typeof x === "string"` /
+`Array.isArray(x)`), never reflection or `eval` on a source-derived name. The
+String/Array arms sit strictly ahead of the numeric path, so every existing
+numeric program is byte-for-byte unchanged. This also fixes the native-JS
+`[1] + [2]` bug, which would otherwise coerce to the string `"1,2"`.
+
+**Security.** The two repeat arms multiply a length by a program-controlled
+count. A shared `repeatCount` guard clamps a non-finite / non-integer /
+non-positive count to an empty result and rejects an oversized product
+(`len * count > Number.MAX_SAFE_INTEGER`) with a Ruby-shaped
+`ArgumentError: argument too big` **before** allocating — so a hostile count
+can neither OOM the process nor throw a raw `RangeError` (CWE-1284 / CWE-400).
 
 ### Exception helpers (E1)
 

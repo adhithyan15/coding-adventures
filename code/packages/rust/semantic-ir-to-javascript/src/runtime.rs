@@ -117,9 +117,13 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     return acc;
   }
   const builtins = {
-    "+": (...a) => a.length === 0 ? 0 : numFold(a.slice(1), a[0], (x, y) => x + y),
+    // `+`/`*` route through the polymorphic helpers (hoisted function
+    // declarations below) so a builtin referenced as a VALUE, or a
+    // variadic `(+ 1 2 3)`, gets the same string/array/numeric dispatch
+    // as the inlined 2-arg form.
+    "+": (...a) => plus(...a),
     "-": (...a) => a.length === 1 ? -a[0] : numFold(a.slice(1), a[0], (x, y) => x - y),
-    "*": (...a) => numFold(a, 1, (x, y) => x * y),
+    "*": (...a) => times(...a),
     "/": (...a) => a.length === 1 ? 1 / a[0] : numFold(a.slice(1), a[0], (x, y) => x / y),
     "=": (x, y) => x === y,
     "<": (x, y) => x < y,
@@ -215,6 +219,118 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       else { putsOne(a, seen); }
     }
     return null;
+  }
+
+  // ── polymorphic `+` / `*` (Ruby operator overloading) ──────────
+  //
+  // Ruby overloads `+` and `*` by the RECEIVER's runtime type, and all of
+  // these lower to the same SIR `+`/`*` builtins, so the dispatch has to
+  // happen HERE at runtime, on the FIRST operand's type:
+  //
+  //   | expr          | Ruby result   | arm                             |
+  //   |---------------|---------------|---------------------------------|
+  //   | `1 + 2`       | `3`           | numeric fold (unchanged)        |
+  //   | `"a" + "b"`   | `"ab"`        | string concat                   |
+  //   | `[1] + [2]`   | `[1, 2]`      | array concat (NEW array)        |
+  //   | `"ab" * 3`    | `"ababab"`    | string repeat                   |
+  //   | `[0] * 3`     | `[0, 0, 0]`   | array repeat (NEW array)        |
+  //   | `[1,2] * ", "`| `"1, 2"`      | array join (via `format`)       |
+  //
+  // Dispatch is `typeof x === "string"` / `Array.isArray(x)` — a runtime
+  // TAG test, NEVER reflection / `eval` / property access on a
+  // source-derived name (the C3 RCE lesson).  The numeric arm is byte-for-
+  // byte the old behaviour; the string/array arms sit strictly *ahead* of
+  // it, so every existing numeric program is unchanged.
+  //
+  // SECURITY — repeat-count guard (CWE-1284 / CWE-400).  The two repeat
+  // arms multiply a length by a PROGRAM-CONTROLLED `count`.  Unguarded,
+  // `String.prototype.repeat` throws a raw `RangeError` on a negative or
+  // huge count, and an array-repeat loop can allocate until the process
+  // OOMs — a denial-of-service.  `repeatCount` normalises `count` to a
+  // safe non-negative integer and rejects an oversized product with a
+  // Ruby-shaped `ArgumentError: argument too big` (matching Ruby, which
+  // raises `ArgumentError` for `"x" * (2**62)`).  A non-finite, non-
+  // integer, or `count <= 0` yields `0` → an empty result (Ruby: `"x" * 0
+  // == ""`, `"x" * -1` raises, but we clamp to empty for DoS-safety since
+  // the typed-error cascade owns the raise).  Callers short-circuit an
+  // empty receiver so a huge count on `"" * n` / `[] * n` does no work.
+  const MAX_REPEAT_ELEMS = Number.MAX_SAFE_INTEGER;
+  function repeatCount(unitLen, count) {
+    // Reject anything that is not a finite integer, and clamp <= 0 to 0.
+    if (typeof count !== "number" || !Number.isFinite(count) ||
+        !Number.isInteger(count) || count <= 0) {
+      return 0;
+    }
+    // Guard the product against the safe-integer cap before we allocate.
+    if (unitLen > 0 && count > MAX_REPEAT_ELEMS / unitLen) {
+      raiseError("ArgumentError", "argument too big");
+    }
+    return count;
+  }
+  // `+` — left-associative fold so the variadic contract survives.  The
+  // arm is chosen by the FIRST operand; `plus()` with no args is `0`,
+  // mirroring the numeric identity.
+  function plus(...args) {
+    if (args.length === 0) { return 0; }
+    const first = args[0];
+    if (typeof first === "string") {
+      // String concat: render every operand through `format` (the same
+      // display used by `puts`/`print`) and join.  A string first operand
+      // means Ruby's `String#+`.
+      let acc = "";
+      for (const a of args) { acc += format(a); }
+      return acc;
+    }
+    if (Array.isArray(first)) {
+      // Array concat into a FRESH array — no aliasing or mutation of any
+      // input (do NOT reuse an operand).  Non-array operands are pushed as
+      // single elements only if they are arrays; Ruby's `Array#+` requires
+      // array operands, so we concat each array operand's elements.
+      const out = [];
+      for (const a of args) {
+        if (Array.isArray(a)) { for (const e of a) { out.push(e); } }
+        else { out.push(a); }
+      }
+      return out;
+    }
+    // Numeric fold (unchanged): int/float promotion via native `+`.
+    return numFold(args.slice(1), first, (x, y) => x + y);
+  }
+  // `*` — Ruby `*` is BINARY (receiver * arg).  We handle the binary
+  // string/array arms explicitly and keep the variadic numeric fold for
+  // the ≥2-arg numeric case (`(* 2 3 4)`).
+  function times(...args) {
+    const first = args[0];
+    if (args.length === 2) {
+      const rhs = args[1];
+      if (typeof first === "string" && typeof rhs === "number") {
+        // String repeat: `"ab" * 3` → "ababab".  Empty receiver short-
+        // circuits so a huge count does no work; the guard rejects an
+        // oversized product before `repeat` allocates.
+        if (first.length === 0) { return ""; }
+        const n = repeatCount(first.length, rhs);
+        return n === 0 ? "" : first.repeat(n);
+      }
+      if (Array.isArray(first) && typeof rhs === "number") {
+        // Array repeat: `[0] * 3` → [0, 0, 0], a NEW array.  Empty
+        // receiver short-circuits; the guard bounds total elements.
+        if (first.length === 0) { return []; }
+        const n = repeatCount(first.length, rhs);
+        const out = [];
+        for (let i = 0; i < n; i++) {
+          for (const e of first) { out.push(e); }
+        }
+        return out;
+      }
+      if (Array.isArray(first) && typeof rhs === "string") {
+        // Array join: `[1, 2] * ", "` → "1, 2".  Elements render through
+        // `format` (the SAME display helper `puts` uses), joined by the
+        // separator string.  Matches Ruby's `Array#*` with a String arg.
+        return first.map(format).join(rhs);
+      }
+    }
+    // Numeric fold (unchanged): variadic product, identity 1.
+    return numFold(args, 1, (x, y) => x * y);
   }
 
   // ── method dispatch (`__method__`) ─────────────────────────────
@@ -615,6 +731,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   return {
     Sym, Pair, Closure,
     intern, applyClosure, truthy, format, print, puts,
+    plus, times,
     builtins, builtinClosure, callBuiltin, callMethod,
     SirError, raiseError, rescueMatches, registerAncestry,
     // OOP (O3): instantiation, method definition + dispatch, super,
@@ -700,6 +817,24 @@ mod tests {
         // built-in ancestry table has to chain them up to StandardError.
         assert!(RUNTIME.contains("ArgumentError: \"StandardError\""));
         assert!(RUNTIME.contains("StandardError: \"Exception\""));
+    }
+
+    #[test]
+    fn runtime_defines_polymorphic_plus_times_helpers() {
+        // PO3: `+`/`*` are type-polymorphic (numeric / String / Array), so
+        // the runtime must define and export the dispatch helpers the
+        // emitter now calls for the 2-arg form.
+        assert!(RUNTIME.contains("function plus("));
+        assert!(RUNTIME.contains("function times("));
+        assert!(RUNTIME.contains("plus, times,"), "helpers must be exported");
+        // Dispatch is a runtime TAG test, never reflection.
+        assert!(RUNTIME.contains(r#"typeof first === "string""#));
+        assert!(RUNTIME.contains("Array.isArray(first)"));
+        // SECURITY: the repeat arms are bounded — an oversized product
+        // raises a Ruby-shaped ArgumentError rather than OOMing / throwing
+        // a raw RangeError.
+        assert!(RUNTIME.contains(r#"raiseError("ArgumentError", "argument too big")"#));
+        assert!(RUNTIME.contains("Number.MAX_SAFE_INTEGER"));
     }
 
     #[test]
