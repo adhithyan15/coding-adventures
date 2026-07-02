@@ -8,6 +8,7 @@ const TREE_CONSTRUCTION_SMOKE: &str = include_str!("fixtures/html5lib-tree-const
 const WHATWG_FORM_INTERACTIVE_AUDIT: &str =
     include_str!("fixtures/whatwg-form-interactive-audit.json");
 const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
+    ("tests26-dat-4", "interactive-formatting"),
     ("tests26-dat-1251", "interactive-formatting"),
     ("tricky01-dat-5", "form-control"),
     ("tricky01-dat-7", "interactive-formatting"),

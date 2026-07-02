@@ -10,6 +10,7 @@ const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
     ("adoption01-dat-16", "formatting-reconstruction"),
     ("scripted-adoption01-dat-1", "adoption-agency-formatting"),
     ("scripted-ark-dat-1", "adoption-agency-formatting"),
+    ("tests26-dat-4", "interactive-formatting-boundary"),
     ("tricky01-dat-1", "adoption-agency-formatting"),
     ("tricky01-dat-3", "adoption-agency-formatting"),
     ("tricky01-dat-7", "interactive-formatting-boundary"),
