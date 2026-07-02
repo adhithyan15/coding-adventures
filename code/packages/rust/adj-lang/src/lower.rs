@@ -2057,15 +2057,67 @@ contributes 1000000 from answer == 60 to correct
     }
 
     #[test]
-    fn native_latex_min_with_wrong_arity_is_rejected() {
-        // `\min(a)` (one arg) and `\min(a, b, c)` (three args) have no binary
-        // lowering — a clean, explicit error rather than a silent mis-lowering.
-        for src in [
-            "observe a(3)\nlet answer = latex \"$\\min(a)$\"\n? answer\n",
-            "observe a(3)\nobserve b(8)\nobserve c(1)\nlet answer = latex \"$\\min(a, b, c)$\"\n? answer\n",
-        ] {
-            assert!(compile(src).is_err(), "wrong-arity min must be rejected: {src:?}");
-        }
+    fn native_latex_min_with_one_argument_is_rejected() {
+        // `\min(a)` (a single argument) has no fold — min/max/gcd/lcm need TWO or
+        // more operands — so it is a clean, explicit error rather than a silent
+        // mis-lowering. (Three-or-more args ARE now accepted; see the n-ary test.)
+        let src = "observe a(3)\nlet answer = latex \"$\\min(a)$\"\n? answer\n";
+        assert!(compile(src).is_err(), "one-arg min must be rejected: {src:?}");
+    }
+
+    #[test]
+    fn native_latex_nary_min_max_left_fold_over_three_or_more_args() {
+        // `\min`/`\max`/`\gcd`/`\lcm` accept TWO OR MORE comma-separated operands and
+        // left-fold into a chain of the associative binary op — min(a, b, c) =
+        // min(min(a, b), c) — reusing ComputeOp::Min2/Max2/Gcd/Lcm, no n-ary engine op.
+        // min(7, 3, 9, 2) = 2; max(7, 3, 9, 2) = 9.
+        let mn = crate::compile_and_decide(
+            "observe a(7)\n\
+             observe b(3)\n\
+             observe c(9)\n\
+             observe d(2)\n\
+             let answer = latex \"$\\min(a, b, c, d)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 2 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(mn.ranked[0].posterior > 0.99, "{mn:?}");
+        let mx = crate::compile_and_decide(
+            "observe a(7)\n\
+             observe b(3)\n\
+             observe c(9)\n\
+             observe d(2)\n\
+             let answer = latex \"$\\max(a, b, c, d)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 9 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(mx.ranked[0].posterior > 0.99, "{mx:?}");
+        // gcd(24, 36, 60) = 12 (three-arg gcd fold); lcm(2, 3, 4) = 12.
+        let g = crate::compile_and_decide(
+            "observe a(24)\n\
+             observe b(36)\n\
+             observe c(60)\n\
+             let answer = latex \"$\\gcd(a, b, c)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 12 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(g.ranked[0].posterior > 0.99, "{g:?}");
+        let l = crate::compile_and_decide(
+            "observe a(2)\n\
+             observe b(3)\n\
+             observe c(4)\n\
+             let answer = latex \"$\\lcm(a, b, c)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 12 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(l.ranked[0].posterior > 0.99, "{l:?}");
     }
 
     #[test]
