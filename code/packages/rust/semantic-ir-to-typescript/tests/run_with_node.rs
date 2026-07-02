@@ -1036,3 +1036,316 @@ fn end_to_end_ruby_puts_executes_ts() {
     let stdout = String::from_utf8_lossy(&output.stdout).replace("\r\n", "\n");
     assert_eq!(stdout, "hi\n", "Ruby `puts \"hi\"` should print `hi` + newline");
 }
+
+// ── T2: typed runtime errors → TypeScript → node execution proof ──────────────
+//
+// The unit tests in the TS packages (`sir-runtime-core`, `sir-runtime-oop`)
+// prove the helpers RAISE the right typed `SirError`.  This proof closes the
+// loop end-to-end: a Ruby `begin … rescue <TypedError> => e … end` lowered
+// through the frontend → TypeScript → `node` actually CATCHES the faulting
+// runtime op with the matching typed class, and the plain index operators
+// (`arr[i]`/`hash[k]`) still return nil (no over-raise).
+//
+// As with every node proof in this file, the workspace runtime packages cannot
+// be resolved under bare `node`, so we swap the three runtime imports for
+// faithful inline stubs.  The stubs here TRANSCRIBE the exact T2 logic added to
+// the real packages:
+//   • `__Sir.div` adds the explicit zero-divisor check (native `/` gives
+//     Infinity) and raises `ZeroDivisionError` via `__SirExc.raiseError`;
+//   • `__SirOop.callMethod` implements `Array#fetch`→IndexError,
+//     `Hash#fetch`→KeyError, and the unknown-method→NoMethodError floor
+//     (guarded by a `respondsTo` check so a known-but-block-less method is not
+//     mis-raised);
+//   • `__SirExc` is the real ancestry + `raiseError` + `rescueMatches` (reused
+//     from the E2 stub) — CRUCIALLY the `__Sir`/`__SirOop` stubs raise through
+//     `__SirExc.raiseError` so every thrown `SirError` shares the one class
+//     identity `classOfThrown` checks, exactly as the real packages do by
+//     importing a single `SirError`.
+// Keeping the real fault logic in the stubs means the proof genuinely exercises
+// "the faulting op raises the typed error that rescue matches", not just that
+// the emitted call sites are present.
+
+/// `__Sir` stub carrying the T2 `div` (with zero-check), plus `puts`/`toDisplay`
+/// for the rescue-body output.  `div` mirrors the real runtime-core: truncating
+/// integer division, but an explicit `=== 0` divisor check that raises
+/// `ZeroDivisionError` through `__SirExc` before dividing.
+const SIR_T2_STUB: &str = r#"const __Sir = {
+  toDisplay: (v) => (v === null ? "nil" : String(v)),
+  print: (v) => { console.log(__Sir.toDisplay(v)); return null; },
+  puts: (...args) => {
+    if (args.length === 0) { process.stdout.write("\n"); return null; }
+    for (const a of args) {
+      const t = __Sir.toDisplay(a);
+      process.stdout.write(t.endsWith("\n") ? t : t + "\n");
+    }
+    return null;
+  },
+  div: (...args) => {
+    if (args.length === 0) return 0;
+    let acc = args[0];
+    for (let i = 1; i < args.length; i++) {
+      const d = args[i];
+      if (d === 0) __SirExc.raiseError("ZeroDivisionError", "divided by 0");
+      acc = Math.trunc(acc / d);
+    }
+    return acc;
+  },
+};
+"#;
+
+/// `__SirOop` stub whose `callMethod` transcribes the T2 fault paths: `fetch`
+/// (IndexError / KeyError), the unknown-method NoMethodError floor guarded by a
+/// minimal `respondsTo`, plus `classOf`/`nil?` for the receiver-class message
+/// and the nil-regression proof.  Faithful to the real dispatch for exactly the
+/// surface these programs touch.
+const SIR_OOP_T2_STUB: &str = r#"const __SirOop = (() => {
+  const classOf = (v) => {
+    if (v === null || v === undefined) return "NilClass";
+    switch (typeof v) {
+      case "boolean": return v ? "TrueClass" : "FalseClass";
+      case "number": return Number.isInteger(v) ? "Integer" : "Float";
+      case "string": return "String";
+      default:
+        if (Array.isArray(v)) return "Array";
+        if (v instanceof Map) return "Hash";
+        return "Object";
+    }
+  };
+  const rubyInspect = (v) => (typeof v === "string" ? JSON.stringify(v) : String(v));
+  const respondsTo = (recv, name) => {
+    if (name === "nil?" || name === "class" || name === "fetch") return true;
+    return false;
+  };
+  const callMethod = (recv, name, ...args) => {
+    if (name === "class") return classOf(recv);
+    if (name === "nil?") return recv === null || recv === undefined;
+    if (name === "fetch") {
+      if (Array.isArray(recv)) {
+        const raw = args[0];
+        const idx = raw < 0 ? recv.length + raw : raw;
+        if (idx >= 0 && idx < recv.length) return recv[idx];
+        if (args.length > 1) return args[1];
+        __SirExc.raiseError("IndexError",
+          "index " + raw + " outside of array bounds: " + (-recv.length) + "..." + recv.length);
+      }
+      if (recv instanceof Map) {
+        if (recv.has(args[0])) return recv.get(args[0]);
+        if (args.length > 1) return args[1];
+        __SirExc.raiseError("KeyError", "key not found: " + rubyInspect(args[0]));
+      }
+    }
+    if (!respondsTo(recv, name)) {
+      __SirExc.raiseError("NoMethodError", "undefined method '" + name + "' for " + classOf(recv));
+    }
+    return null;
+  };
+  return { callMethod };
+})();
+"#;
+
+/// Transform emitted TypeScript into runnable JavaScript for the T2 proof.
+fn ts_to_runnable_js_t2(ts: &str) -> String {
+    let mut js = ts.to_string();
+    js = js.replace(
+        "import * as __Sir from \"@coding-adventures/sir-runtime-core\";\n",
+        SIR_T2_STUB,
+    );
+    js = js.replace(
+        "import * as __SirOop from \"@coding-adventures/sir-runtime-oop\";\n",
+        SIR_OOP_T2_STUB,
+    );
+    js = js.replace(
+        "import * as __SirExc from \"@coding-adventures/sir-runtime-exceptions\";\n",
+        SIR_EXC_STUB,
+    );
+    js = js.replace(" as { [k: string]: __Sir.Val }", "");
+    // Strip the type casts/generics the SeqIndex/MapGet emitter adds — node
+    // parses the bare `<…>`/`as …` as syntax errors.  Longer patterns first so
+    // no fragment is left dangling.
+    js = js.replace(" as Map<__Sir.Val, __Sir.Val>", "");
+    js = js.replace("<__Sir.Val, __Sir.Val>", "");
+    js = js.replace(" as __Sir.Val[]", "");
+    js = js.replace(" as number", "");
+    js = js.replace(": __Sir.Val[]", "");
+    js = js.replace(": __Sir.Val", "");
+    js
+}
+
+/// Compile a module, transform to JS with the T2 stubs, run under node, and
+/// return trimmed stdout.  `None` when node is unavailable.  Asserts a zero
+/// exit — every T2 prog is expected to CATCH its fault and print, so an
+/// uncaught throw (wrong typed class → no rescue match) would exit non-zero.
+fn run_t2_module(module: &Module, tag: &str) -> Option<String> {
+    let artifact = compile(module).expect("compile to typescript");
+    if !node_available() {
+        eprintln!("note: `node` unavailable — skipping T2 execution for `{tag}`");
+        return None;
+    }
+    let js = ts_to_runnable_js_t2(&artifact.source);
+    let mut path: PathBuf = std::env::temp_dir();
+    path.push(format!("sir_ts_t2_{}_{}.js", tag, std::process::id()));
+    std::fs::write(&path, &js).expect("write temp js");
+    let output = Command::new("node").arg(&path).output().expect("spawn node");
+    let _ = std::fs::remove_file(&path);
+    assert!(
+        output.status.success(),
+        "node exited non-zero for `{tag}` (fault not caught by the typed rescue?):\n\
+         stdout: {}\nstderr: {}\nsource:\n{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr),
+        js,
+    );
+    let stdout = String::from_utf8_lossy(&output.stdout)
+        .trim_end_matches(['\n', '\r'])
+        .to_string();
+    Some(stdout)
+}
+
+#[test]
+fn t2_zero_division_caught_by_zerodivisionerror_ts() {
+    // `begin; 1 / 0; rescue ZeroDivisionError => e; ...; end` must catch — native
+    // JS `/` gives Infinity, so the runtime's explicit check is what raises.
+    let module = ruby_to_semantic_ir::compile_source(
+        "begin\n  x = 1 / 0\nrescue ZeroDivisionError => e\n  puts \"caught zde\"\nend\n",
+        "t2div",
+    )
+    .expect("lower ruby");
+    // Shape: division routes through the `__Sir.div` helper (where the check lives).
+    let artifact = compile(&module).expect("compile");
+    assert!(
+        artifact.source.contains("__Sir.div(1, 0)"),
+        "division must route through __Sir.div; got:\n{}",
+        artifact.source
+    );
+    if let Some(stdout) = run_t2_module(&module, "div") {
+        assert_eq!(stdout, "caught zde", "1/0 must be caught as ZeroDivisionError");
+    }
+}
+
+#[test]
+fn t2_array_fetch_oob_caught_by_indexerror_ts() {
+    // `arr.fetch(100)` OOB raises IndexError (unlike `arr[100]`, which is nil).
+    let module = ruby_to_semantic_ir::compile_source(
+        "arr = [1, 2, 3]\nbegin\n  arr.fetch(100)\nrescue IndexError => e\n  puts \"caught ie\"\nend\n",
+        "t2afetch",
+    )
+    .expect("lower ruby");
+    if let Some(stdout) = run_t2_module(&module, "afetch") {
+        assert_eq!(stdout, "caught ie", "arr.fetch(oob) must be caught as IndexError");
+    }
+}
+
+#[test]
+fn t2_hash_fetch_miss_caught_by_keyerror_ts() {
+    // `h.fetch(missing)` raises KeyError (unlike `h[missing]`, which is nil).
+    let module = ruby_to_semantic_ir::compile_source(
+        "h = {\"a\" => 1}\nbegin\n  h.fetch(\"z\")\nrescue KeyError => e\n  puts \"caught ke\"\nend\n",
+        "t2hfetch",
+    )
+    .expect("lower ruby");
+    if let Some(stdout) = run_t2_module(&module, "hfetch") {
+        assert_eq!(stdout, "caught ke", "h.fetch(miss) must be caught as KeyError");
+    }
+}
+
+#[test]
+fn t2_unknown_method_caught_by_nomethoderror_ts() {
+    // `obj.undefined` raises NoMethodError (was a silent nil floor).
+    let module = ruby_to_semantic_ir::compile_source(
+        "x = 5\nbegin\n  x.no_such\nrescue NoMethodError => e\n  puts \"caught nme\"\nend\n",
+        "t2nme",
+    )
+    .expect("lower ruby");
+    if let Some(stdout) = run_t2_module(&module, "nme") {
+        assert_eq!(stdout, "caught nme", "obj.undefined must be caught as NoMethodError");
+    }
+}
+
+#[test]
+fn t2_index_ops_still_return_nil_no_overraise_ts() {
+    // Regression: plain `arr[oob]` and `hash[miss]` must STILL return nil — only
+    // `.fetch` raises.  The Ruby parser has no `[]` index syntax, so we hand-build
+    // the SIR `SeqIndex`/`MapGet` (the exact IR the index operators lower to) and
+    // print each result's `nil?`, expecting `true` / `true`.
+    let arr = Stmt::LetBinding {
+        name: "arr".into(),
+        sir_type: None,
+        value: Expr::SeqLit {
+            items: vec![
+                Expr::IntLit { value: 1, span: sir_span() },
+                Expr::IntLit { value: 2, span: sir_span() },
+            ],
+            span: sir_span(),
+        },
+        span: sir_span(),
+    };
+    // arr[100] — out of bounds → nil
+    let seq_index = Expr::SeqIndex {
+        seq: Box::new(Expr::VarRef { name: "arr".into(), scope: Scope::Local, span: sir_span() }),
+        index: Box::new(Expr::IntLit { value: 100, span: sir_span() }),
+        span: sir_span(),
+    };
+    let idx_nil = Expr::BuiltinCall {
+        name: "__method__".into(),
+        args: vec![seq_index, str_lit("nil?")],
+        effects: EffectSet::PURE,
+        span: sir_span(),
+    };
+    let h = Stmt::LetBinding {
+        name: "h".into(),
+        sir_type: None,
+        value: Expr::MapLit { entries: vec![], span: sir_span() },
+        span: sir_span(),
+    };
+    // h["z"] — missing key → nil
+    let map_get = Expr::MapGet {
+        map: Box::new(Expr::VarRef { name: "h".into(), scope: Scope::Local, span: sir_span() }),
+        key: Box::new(str_lit("z")),
+        span: sir_span(),
+    };
+    let hget_nil = Expr::BuiltinCall {
+        name: "__method__".into(),
+        args: vec![map_get, str_lit("nil?")],
+        effects: EffectSet::PURE,
+        span: sir_span(),
+    };
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: vec![arr, print(idx_nil), h, print(hget_nil)],
+            value: Expr::NilLit { span: sir_span() },
+            span: sir_span(),
+        },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sir_span(),
+    };
+    let module = Module {
+        name: "t2nil".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Sequences,
+            Feature::Maps,
+            Feature::Strings,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![main],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sir_span(),
+    };
+    if let Some(stdout) = run_t2_module(&module, "nilregress") {
+        // Both index ops returned nil, so `.nil?` printed `true` for each.
+        assert_eq!(
+            stdout.replace("\r\n", "\n"),
+            "true\ntrue",
+            "arr[oob] and hash[miss] must still return nil (only .fetch raises)"
+        );
+    }
+}

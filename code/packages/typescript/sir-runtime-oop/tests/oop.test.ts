@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { apply, Closure, intern } from "@coding-adventures/sir-runtime-core";
+import { SirError } from "@coding-adventures/sir-runtime-exceptions";
 import type { Val } from "../src/index.js";
 import {
   callClassMethod,
@@ -136,10 +137,18 @@ describe("method dispatch", () => {
     expect(callMethod(d, "instance_of?", "Animal")).toBe(false);
   });
 
-  it("class returns the class name; unknown methods return nil", () => {
+  it("class returns the class name; unknown methods raise NoMethodError (T2)", () => {
     expect(callMethod(newInstance("Foo"), "class")).toBe("Foo");
     expect(callMethod(3, "class")).toBe("Integer");
-    expect(callMethod(3, "no_such_method")).toBeNull();
+    // T2: a genuinely-unknown method now raises a typed NoMethodError
+    // (previously it returned nil), so `rescue NoMethodError` catches it.
+    expect(() => callMethod(3, "no_such_method")).toThrow(SirError);
+    try {
+      callMethod(3, "no_such_method");
+    } catch (e) {
+      expect((e as InstanceType<typeof SirError>).sirClass).toBe("NoMethodError");
+      expect((e as Error).message).toBe("undefined method 'no_such_method' for Integer");
+    }
   });
 
   it("defineMethod backs the dispatch fallback", () => {
@@ -218,6 +227,32 @@ describe("built-in method catalog: non-block Array (M1a)", () => {
     expect(callMethod([], "empty?")).toBe(true);
     expect(callMethod([1], "empty?")).toBe(false);
   });
+
+  it("fetch returns the element in range, negative indices count from end (T2)", () => {
+    expect(callMethod([10, 20, 30], "fetch", 0)).toBe(10);
+    expect(callMethod([10, 20, 30], "fetch", 2)).toBe(30);
+    expect(callMethod([10, 20, 30], "fetch", -1)).toBe(30); // last
+    expect(callMethod([10, 20, 30], "fetch", -3)).toBe(10); // first
+  });
+
+  it("fetch out of bounds raises a typed IndexError (T2)", () => {
+    // Ruby `arr.fetch(oob)` raises IndexError (unlike `arr[oob]`, which is nil).
+    expect(() => callMethod([1, 2, 3], "fetch", 100)).toThrow(SirError);
+    try {
+      callMethod([1, 2, 3], "fetch", 100);
+    } catch (e) {
+      expect((e as InstanceType<typeof SirError>).sirClass).toBe("IndexError");
+      expect((e as Error).message).toBe("index 100 outside of array bounds: -3...3");
+    }
+    // Negative OOB raises too.
+    expect(() => callMethod([1, 2, 3], "fetch", -4)).toThrow(SirError);
+  });
+
+  it("fetch with an explicit default returns it instead of raising (T2)", () => {
+    // Ruby `arr.fetch(oob, default)` returns the default — no raise.
+    expect(callMethod([1, 2, 3], "fetch", 100, "def")).toBe("def");
+    expect(callMethod([1, 2, 3], "fetch", -4, 0)).toBe(0);
+  });
 });
 
 describe("built-in method catalog: universal Object (M1a)", () => {
@@ -259,13 +294,25 @@ describe("respond_to? honesty + nil floor (M1a)", () => {
     expect(callMethod([1], "respond_to?", "each_slice")).toBe(false);
   });
 
-  it("unknown method returns nil, never throws", () => {
-    // A block method called WITHOUT a block bottoms out at nil (v0 floor).
-    expect(callMethod([1, 2, 3], "map")).toBeNull();
-    // An out-of-catalog String method (scan needs a regex engine — later PR).
-    expect(callMethod("hi", "scan")).toBeNull();
-    // Numeric has no catalog yet (M1c-Numeric), so every method is the nil floor.
-    expect(callMethod(5, "times")).toBeNull();
+  it("known block method WITHOUT a block bottoms out at nil (no over-raise, T2)", () => {
+    // These names ARE in the catalog (respond_to? == true) — Ruby returns an
+    // Enumerator when they're called block-less. We have no Enumerator in v0, so
+    // the honest floor stays nil; crucially it must NOT raise NoMethodError,
+    // since the method is not unknown.
+    expect(callMethod([1, 2, 3], "map")).toBeNull(); // Array block method, no block
+    expect(callMethod(5, "times")).toBeNull(); // Integer block method, no block
+  });
+
+  it("genuinely-unknown method raises NoMethodError (T2)", () => {
+    // `scan` is not in the String catalog (needs a regex engine — later PR), so
+    // it is a genuinely-unknown method → typed NoMethodError, not nil.
+    expect(() => callMethod("hi", "scan")).toThrow(SirError);
+    try {
+      callMethod("hi", "scan");
+    } catch (e) {
+      expect((e as InstanceType<typeof SirError>).sirClass).toBe("NoMethodError");
+      expect((e as Error).message).toBe("undefined method 'scan' for String");
+    }
   });
 });
 
@@ -347,13 +394,29 @@ describe("built-in method catalog: Hash (M1c)", () => {
   it("fetch / dig / to_a", () => {
     const h = new Map<Val, Val>([["a", 1], ["b", 2]]);
     expect(callMethod(h, "fetch", "a")).toBe(1);
-    expect(callMethod(h, "fetch", "z")).toBeNull();
+    // T2: a MISSING key with no default now raises KeyError (was nil).
+    expect(() => callMethod(h, "fetch", "z")).toThrow(SirError);
+    try {
+      callMethod(h, "fetch", "z");
+    } catch (e) {
+      expect((e as InstanceType<typeof SirError>).sirClass).toBe("KeyError");
+      expect((e as Error).message).toBe('key not found: "z"');
+    }
+    // An explicit default is still returned — no raise (Ruby semantics).
     expect(callMethod(h, "fetch", "z", 99)).toBe(99);
     expect(callMethod(h, "dig", "b")).toBe(2);
     expect(callMethod(h, "to_a")).toEqual([
       ["a", 1],
       ["b", 2],
     ]);
+  });
+
+  it("hash [] (index op) still returns nil on a miss — regression (T2)", () => {
+    // Only `.fetch` raises KeyError; plain `hash[k]` (the index op) must still
+    // return nil on a missing key. The index op does not route through
+    // callMethod — this asserts the map get semantics `dig` mirrors.
+    const h = new Map<Val, Val>([["a", 1]]);
+    expect(callMethod(h, "dig", "missing")).toBeNull();
   });
 
   it("store / merge / delete / clear / invert", () => {
@@ -405,7 +468,8 @@ describe("built-in method catalog: Hash (M1c)", () => {
     expect(callMethod(h, "respond_to?", "keys")).toBe(true);
     expect(callMethod(h, "respond_to?", "each")).toBe(true);
     expect(callMethod(h, "respond_to?", "transform_keys")).toBe(false);
-    expect(callMethod(h, "transform_keys")).toBeNull();
+    // T2: an unknown Hash method now raises NoMethodError (was nil).
+    expect(() => callMethod(h, "transform_keys")).toThrow(SirError);
     expect(callMethod(h, "nil?")).toBe(false);
   });
 });
@@ -486,7 +550,8 @@ describe("built-in method catalog: String (M1c)", () => {
     expect(callMethod("x", "respond_to?", "upcase")).toBe(true);
     expect(callMethod("x", "respond_to?", "each_char")).toBe(true);
     expect(callMethod("x", "respond_to?", "scan")).toBe(false);
-    expect(callMethod("x", "scan")).toBeNull();
+    // T2: an unknown String method now raises NoMethodError (was nil).
+    expect(() => callMethod("x", "scan")).toThrow(SirError);
     expect(callMethod("x", "nil?")).toBe(false);
     expect(callMethod("x", "class")).toBe("String");
   });
@@ -553,7 +618,9 @@ describe("built-in method catalog: Numeric (Integer/Float) (M1c)", () => {
     expect(callMethod(5, "respond_to?", "even?")).toBe(true);
     expect(callMethod(5, "respond_to?", "times")).toBe(true);
     expect(callMethod(5, "respond_to?", "bit_length")).toBe(false);
-    expect(callMethod(5, "bit_length")).toBeNull();
+    // T2: an unknown numeric method now raises NoMethodError (was nil)...
+    expect(() => callMethod(5, "bit_length")).toThrow(SirError);
+    // ...but a KNOWN block method called block-less stays nil (Enumerator floor).
     expect(callMethod(5, "times")).toBeNull(); // block method without a block
   });
 });
@@ -583,7 +650,8 @@ describe("nil / true / false + Object to_s/inspect (M1c)", () => {
     expect(callMethod(true, "inspect")).toBe("true");
     // boolean resolves only Object methods, never the numeric catalog.
     expect(callMethod(true, "respond_to?", "even?")).toBe(false);
-    expect(callMethod(true, "even?")).toBeNull();
+    // T2: `even?` is not on TrueClass → NoMethodError (was nil).
+    expect(() => callMethod(true, "even?")).toThrow(SirError);
   });
 
   it("Object to_s / inspect on collections and strings", () => {
@@ -635,8 +703,10 @@ describe("nil / true / false + Object to_s/inspect (M1c)", () => {
     expect(apply(symToProc("upcase" as unknown as Val), ["hi"])).toBe("HI");
   });
 
-  it("symToProc bottoms out at nil for an out-of-catalog method", () => {
-    expect(apply(symToProc(intern("no_such_method")), [42])).toBeNull();
+  it("symToProc raises NoMethodError for an out-of-catalog method (T2)", () => {
+    // `&:no_such_method` re-enters dispatch; the unknown method now raises a
+    // typed NoMethodError (was a silent nil) so `map(&:bad)` surfaces the fault.
+    expect(() => apply(symToProc(intern("no_such_method")), [42])).toThrow(SirError);
   });
 
   it("symToProc drives array block-method dispatch end to end", () => {
@@ -746,8 +816,9 @@ describe("Kernel flow-control + boolean operators (M6)", () => {
     expect(callMethod(true, "respond_to?", "&")).toBe(true);
     // A non-bool receiver does not respond to the boolean operators.
     expect(callMethod(5, "respond_to?", "^")).toBe(false);
-    // An out-of-catalog name is still both null and respond_to? == false.
-    expect(callMethod(true, "nonexistent_method")).toBeNull();
+    // An out-of-catalog name is respond_to? == false and (T2) raises
+    // NoMethodError when actually called.
+    expect(() => callMethod(true, "nonexistent_method")).toThrow(SirError);
     expect(callMethod(true, "respond_to?", "nonexistent_method")).toBe(false);
   });
 });

@@ -14,7 +14,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Brainfuck | 1-loop "print A", nested-loop multiply (`"HA"`), two sequential loops (`"OK"`), stdin echo/transform, and canonical cat all run on all 7 backends | all 8 ops are cross-backend-proven by B1/B1-stdin/B1-eof; no current BF subset gap remains beyond adding more regression programs |
 | Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed and chained concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT` with `;` and `,`, literal-backed scalar string copy, copied-slot string equality, and equality/inequality/lexical-ordering string branches ✅ (BA4/E4); integer-literal `^` ✅ (BA-^); string arrays/input and general runtime-math `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays (BA3/BA7), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3), logical `!` ✅ (O-!); intrinsics remain |
-| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures (including `real procedure` returning f64) ✅ (AL13, all 7 backends), switches, 1-D arrays, `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), literal `print`/`output` string I/O ✅, literal-backed string variables, scalar copy snapshots, multi-argument string `output`, literal-backed string equality/ordering predicates ✅ (AL4 foothold), string-typed value parameters in typed procedures ✅ (AL4-str-params, all 7 backends); no call-by-name, dynamic string variables/arrays, or multidim arrays |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures (including `real procedure` returning f64) ✅ (AL13, all 7 backends), switches, 1-D arrays ✅, N-dimensional integer arrays ✅ (AL-multidim, all 7 backends), `own` static-lifetime variables ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), literal `print`/`output` string I/O ✅, literal-backed string variables, scalar copy snapshots, multi-argument string `output`, literal-backed string equality/ordering predicates ✅ (AL4 foothold), string-typed value parameters in typed procedures ✅ (AL4-str-params, all 7 backends); no call-by-name, dynamic string variables/arrays |
 
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
@@ -649,8 +649,12 @@ backend immediately) come before the enabler-dependent items.
   `llvm.trap` via `clang` (PR-4a), WASM linear-memory+`unreachable` via `wasm-runtime` (PR-4b),
   and **native** x86_64/aarch64 `__twig_alloc_bytes`+`ud2`/`udf` trap (PR-4c — aarch64 local,
   x86_64 CI). The for-loop sum-of-squares array Prog now runs on LLVM too (the ALGOL-for-loop
-  guard-type fix landed in `algol-iir-compiler` 0.5.1). Multidim + array params + `f64` native
-  elements are follow-up.
+  guard-type fix landed in `algol-iir-compiler` 0.5.1). Array params + `f64` native elements
+  are follow-up.  **AL-multidim ✅**: `integer array M[1:2, 1:2]` (2D) runs on **all 7 backends**
+  via row-major flat index `(i-lo1)*stride + (j-lo2)` computed during declaration; strides
+  accumulated right-to-left; `alloc_array`/`array_set`/`array_get` with flat 0-based index;
+  aarch64 NativeAot required large-frame split prologue (frames > 504 bytes → `SUB SP`+`STR`×2,
+  frames ≤ 504 bytes unchanged); `algol-iir-compiler` 0.23.0 / `aarch64-backend` 0.20.0.
 - ✅ **AL3** — typed procedures with value parameters. `integer procedure sq(x);
   value x; integer x; sq := x*x; result := sq(7)` ⇒ exit 49, **verified by running**
   across native/LLVM/WASM/JVM/CLR/VM/JIT (`lang-aot` `lang_matrix.rs`). Lowered to a

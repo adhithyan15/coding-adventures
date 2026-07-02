@@ -1,8 +1,8 @@
 [package]
 name = "algol-iir-compiler"
-version = "0.22.0"
+version = "0.23.0"
 edition = "2021"
-description = "ALGOL 60 scalar frontend for the LANG VM Rust chain, lowering parsed ALGOL into interpreter_ir::IIRModule. v0.22.0 (boolean fix): emit_not_value uses ScalarType::Boolean+Operand::Bool(false) so WASM assigns the false_const slot type bool (i32), matching the boolean variable's i32 local; v0.21.0 (AL13-real-proc): real procedure unit test; v0.20.0 (AL8-arctan): arctan(E) lowers to the f64_atan IIR op on all 7 backends; v0.19.0 (AL8-trig): sin/cos/ln/exp IIR ops."
+description = "ALGOL 60 scalar frontend for the LANG VM Rust chain, lowering parsed ALGOL into interpreter_ir::IIRModule. v0.23.0 (AL-multidim): N-dimensional integer arrays via row-major flat index; ArrayDim per-dim lower/stride slots, `integer array M[lo1:hi1, lo2:hi2]` syntax; all 7 backends via single alloc_array; v0.22.0 (boolean fix): emit_not_value uses ScalarType::Boolean+Operand::Bool(false); v0.21.0 (AL13-real-proc): real procedure unit test."
 
 [dependencies]
 coding-adventures-algol-parser = { path = "../algol-parser" }

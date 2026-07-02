@@ -2,6 +2,44 @@
 
 All notable changes to `@coding-adventures/sir-runtime-oop` are documented here.
 
+## [0.1.10] - 2026-07-01
+
+### Changed — typed runtime errors from `.fetch` and unknown methods (T2)
+
+Part of the `sir-typed-runtime-errors` cascade (spec
+`code/specs/sir-typed-runtime-errors.md`). Three faulting dispatch paths now
+raise the correct typed `SirError` (matching Ruby) so `rescue
+IndexError`/`KeyError`/`NoMethodError` catches them, replacing the previous
+silent `nil` floor. Raises go through the exceptions runtime's `raiseError`
+(explicit-string, no reflection).
+
+- **`Array#fetch(index)`** — added to the catalog. Returns the element for an
+  in-range index (negatives count from the end); an out-of-bounds index with no
+  default raises `IndexError` (`index N outside of array bounds: -M...M`). A
+  second argument is returned as the default (no raise). Unlike `arr[i]` (the
+  index operator), which still returns nil.
+- **`Hash#fetch(key)`** — a missing key with no default now raises `KeyError`
+  (`key not found: <inspect>`) instead of returning nil. A second argument is
+  still returned as the default. Plain `hash[k]` still returns nil.
+- **Unknown method** — the `callMethod` floor now raises `NoMethodError`
+  (`undefined method 'x' for <Class>`) for a method the receiver genuinely does
+  not have. **Guarded by `respondsTo`**: a *known* method invoked in a shape v0
+  does not model — most notably a block-taking method called *without* a block
+  (`[1,2,3].map`, `5.times`, which Ruby answers with an Enumerator) — still
+  bottoms out at `nil` and is NOT mis-raised.
+
+### Dependencies
+
+- Adds a `file:` dependency on `@coding-adventures/sir-runtime-exceptions` (for
+  the shared `raiseError`/`SirError` typed-raise entry point). BUILD deps updated
+  to list the full transitive `file:` set (core + exceptions + pairs).
+
+### Note
+
+This is a behaviour change: programs previously relying on the silent nil floor
+for unknown methods, `Array#fetch` OOB, or `Hash#fetch` miss now see a typed
+raise — which is the correct Ruby semantics and the point of T2.
+
 ## [0.1.9] - 2026-07-01
 
 ### Added (O1 — user class/instance method tables + new/super/self)

@@ -38,6 +38,8 @@ Chief of Staff job/session/agent
   -> authorization decision audit reads and summaries
   -> capability grant ledger reads and summaries
   -> controller-readiness handoff summary over runtime and platform primitives
+  -> platform brief over HTTP, dashboard, fixture, state/history/event,
+     command, scene, and authorization readiness
   -> policy-surface inventory and summary reads for review planning
   -> ecosystem platform coverage and summary reads for primitive planning
   -> primitive coverage gap list and summary reads for backlog planning
@@ -91,9 +93,9 @@ Chief of Staff job/session/agent
      closeout retention
   -> activation-risk list and summary reads for policy-tier/surface rollout risk
   -> activation dependency graph list and summary reads for prerequisite edges
-  -> runtime snapshot, pending-work, attention-overview, remediation-plan,
-     operations-brief, safety-brief, readiness-brief, maintenance-brief,
-     desired-state, and pairing-session inventory reads
+  -> runtime snapshot, platform-brief, pending-work, attention-overview,
+     remediation-plan, operations-brief, safety-brief, readiness-brief,
+     maintenance-brief, desired-state, and pairing-session inventory reads
   -> desired-state target set/clear through runtime authorization
   -> non-mutating supervision plan previews
   -> supervision remediation and runtime maintenance-window/action/plan/ticket/work-order/guardrail/evidence/review/disposition/action/outcome/readiness/handoff/reconciliation reads
@@ -267,6 +269,7 @@ Chief of Staff job/session/agent
 - `smart_home.list_capability_grants`
 - `smart_home.get_capability_grant_summary`
 - `smart_home.get_controller_handoff_summary`
+- `smart_home.get_platform_brief`
 - `smart_home.get_runtime_snapshot`
 - `smart_home.get_pending_work_summary`
 - `smart_home.get_attention_overview`

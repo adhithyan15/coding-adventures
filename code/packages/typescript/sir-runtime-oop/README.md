@@ -45,8 +45,19 @@ __SirOop.cvarSet("@@count", 0);                // @@count = 0
 `recv.meth(args…)` reaches the backend as `BuiltinCall("__method__", …)` and is
 dispatched by `callMethod`, in order: reflective built-ins
 (`is_a?`/`kind_of?`/`instance_of?`/`class`) → user `defineMethod` table →
-built-in catalog → `null` floor. `respond_to?` reports exactly which names
-resolve, so an out-of-catalog method is both `null` *and* `respond_to? == false`.
+built-in catalog → floor. `respond_to?` reports exactly which names resolve.
+
+**Floor behaviour (T2).** A method the receiver genuinely does not have (an
+out-of-catalog name, `respond_to? == false`) raises a typed `NoMethodError`
+(`undefined method 'x' for <Class>`), matching Ruby — replacing the earlier
+silent `nil`. A *known* method invoked in a shape v0 does not model (most
+notably a block-taking method called *without* a block — `[1,2,3].map`,
+`5.times`, which Ruby answers with an Enumerator) still bottoms out at `nil` and
+is **not** mis-raised. Likewise `Array#fetch`/`Hash#fetch` raise
+`IndexError`/`KeyError` on an out-of-bounds index / missing key with no default
+(the plain `arr[i]`/`hash[k]` index operators still return nil). All raises go
+through `@coding-adventures/sir-runtime-exceptions`' explicit-string `raiseError`
+— no reflection.
 
 The catalog currently covers (item **M1a** of `code/specs/sir-method-dispatch.md`)
 the **non-block `Array`** surface — `length`/`size`/`count`, `first`/`last`,

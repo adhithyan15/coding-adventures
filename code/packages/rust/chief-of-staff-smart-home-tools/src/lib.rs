@@ -307,6 +307,7 @@ pub const SMART_HOME_GET_CAPABILITY_GRANT_SUMMARY_TOOL_ID: &str =
     "smart_home.get_capability_grant_summary";
 pub const SMART_HOME_GET_CONTROLLER_HANDOFF_SUMMARY_TOOL_ID: &str =
     "smart_home.get_controller_handoff_summary";
+pub const SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID: &str = "smart_home.get_platform_brief";
 pub const SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID: &str = "smart_home.get_runtime_snapshot";
 pub const SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID: &str = "smart_home.get_pending_work_summary";
 pub const SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID: &str = "smart_home.get_attention_overview";
@@ -2372,6 +2373,10 @@ impl SmartHomeToolBridge {
                         principal_id,
                         now_ms,
                     )
+                }
+                SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID => {
+                    let _ = expect_object(&arguments)?;
+                    get_platform_brief_output_handler_output(&mut runtime, principal_id, now_ms)
                 }
                 SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
@@ -6505,6 +6510,7 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         list_capability_grants_definition(),
         get_capability_grant_summary_definition(),
         get_controller_handoff_summary_definition(),
+        get_platform_brief_definition(),
         get_runtime_snapshot_definition(),
         get_pending_work_summary_definition(),
         get_attention_overview_definition(),
@@ -7227,6 +7233,48 @@ fn get_controller_handoff_summary_definition() -> ToolDefinition {
                 "controller_handoff",
                 "summary",
                 "categories",
+            ],
+            false,
+        ),
+    )
+}
+
+fn get_platform_brief_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID,
+        "Get smart-home platform brief",
+        "Compose Home Assistant-style HTTP, dashboard, fixture, state/history/event, command, and authorization readiness into a Chief-facing platform brief over existing D23 runtime and platform primitives.",
+        empty_object_schema(),
+        object_schema(
+            vec![
+                SchemaProperty::new("generated_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("status", JsonSchema::String),
+                SchemaProperty::new("ready", JsonSchema::Boolean),
+                SchemaProperty::new("has_blockers", JsonSchema::Boolean),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("decision", JsonSchema::Any),
+                SchemaProperty::new(
+                    "sections",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new(
+                    "source_tools",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::String),
+                    },
+                ),
+            ],
+            vec![
+                "generated_at_ms",
+                "status",
+                "ready",
+                "has_blockers",
+                "summary",
+                "decision",
+                "sections",
+                "source_tools",
             ],
             false,
         ),
@@ -44131,25 +44179,124 @@ fn get_controller_handoff_summary_output_handler_output(
     )
 }
 
+fn get_platform_brief_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let snapshot_output = runtime
+        .execute_read_tool(
+            principal_id.clone(),
+            RuntimeReadToolRequest::GetRuntimeSnapshot,
+            now_ms,
+        )
+        .map_err(runtime_error)?;
+    let RuntimeReadToolOutput::RuntimeSnapshot(snapshot) = snapshot_output else {
+        return Err(ToolCallError::new(
+            ToolErrorKind::ToolExecutionError,
+            "platform brief expected runtime snapshot output",
+        ));
+    };
+    let topology_output = runtime
+        .execute_read_tool(
+            principal_id,
+            RuntimeReadToolRequest::GetTopologySummary,
+            now_ms,
+        )
+        .map_err(runtime_error)?;
+    let RuntimeReadToolOutput::TopologySummary { summary: topology } = topology_output else {
+        return Err(ToolCallError::new(
+            ToolErrorKind::ToolExecutionError,
+            "platform brief expected topology summary output",
+        ));
+    };
+    let readiness = controller_platform_readiness(&snapshot, &topology);
+
+    Ok(
+        ToolHandlerOutput::new(platform_brief_output_json(&snapshot, &topology, &readiness))
+            .with_event(
+                ToolEventKind::Progress,
+                object([
+                    ("operation", string("get_platform_brief")),
+                    ("status", string(platform_brief_status(&readiness))),
+                    ("ready", JsonValue::Bool(readiness.ready())),
+                    (
+                        "attention_category_count",
+                        integer(readiness.attention_category_count() as i64),
+                    ),
+                    ("next_tool", string(platform_brief_next_tool(&readiness))),
+                ]),
+            ),
+    )
+}
+
+#[derive(Clone, Copy)]
+struct ControllerPlatformReadiness {
+    repo_http_stack: bool,
+    browser_dashboard: bool,
+    fixture_controller: bool,
+    state_history_events: bool,
+    commands_services_scenes: bool,
+    authorization_boundaries: bool,
+}
+
+impl ControllerPlatformReadiness {
+    fn flags(self) -> [bool; 6] {
+        [
+            self.repo_http_stack,
+            self.browser_dashboard,
+            self.fixture_controller,
+            self.state_history_events,
+            self.commands_services_scenes,
+            self.authorization_boundaries,
+        ]
+    }
+
+    fn category_count(self) -> usize {
+        self.flags().len()
+    }
+
+    fn ready_category_count(self) -> usize {
+        self.flags().iter().filter(|is_ready| **is_ready).count()
+    }
+
+    fn attention_category_count(self) -> usize {
+        self.category_count() - self.ready_category_count()
+    }
+
+    fn ready(self) -> bool {
+        self.ready_category_count() == self.category_count()
+    }
+}
+
+fn controller_platform_readiness(
+    snapshot: &RuntimeReadSnapshot,
+    topology: &RegistryTopologySummary,
+) -> ControllerPlatformReadiness {
+    ControllerPlatformReadiness {
+        repo_http_stack: true,
+        browser_dashboard: topology.has_topology() && snapshot.registry_counts.states > 0,
+        fixture_controller: topology.bridges > 0
+            && topology.devices > 0
+            && snapshot.discovery_record_count > 0,
+        state_history_events: snapshot.registry_counts.states > 0,
+        commands_services_scenes: topology.total_capabilities > 0 && topology.has_scene_actions(),
+        authorization_boundaries: snapshot.registry_counts.capability_grants > 0,
+    }
+}
+
 fn controller_handoff_summary_json(
     snapshot: &RuntimeReadSnapshot,
     topology: &RegistryTopologySummary,
 ) -> JsonValue {
-    let repo_http_stack_ready = true;
-    let browser_dashboard_ready = topology.has_topology() && snapshot.registry_counts.states > 0;
-    let fixture_controller_ready =
-        topology.bridges > 0 && topology.devices > 0 && snapshot.discovery_record_count > 0;
-    let state_history_events_ready = snapshot.registry_counts.states > 0;
-    let commands_services_scenes_ready =
-        topology.total_capabilities > 0 && topology.has_scene_actions();
-    let authorization_boundaries_ready = snapshot.registry_counts.capability_grants > 0;
+    let readiness = controller_platform_readiness(snapshot, topology);
 
     let categories = vec![
         (
             controller_handoff_category_json(
                 "repo_http_stack",
                 "Repo-owned HTTP stack",
-                repo_http_stack_ready,
+                readiness.repo_http_stack,
                 "D23 platform serves browser assets and JSON controller routes from repo code.",
                 vec![
                     controller_handoff_metric(
@@ -44169,13 +44316,13 @@ fn controller_handoff_summary_json(
                     "/",
                 ],
             ),
-            repo_http_stack_ready,
+            readiness.repo_http_stack,
         ),
         (
             controller_handoff_category_json(
                 "browser_dashboard",
                 "Browser dashboard usability",
-                browser_dashboard_ready,
+                readiness.browser_dashboard,
                 "Chief can verify dashboard readiness from D23 topology and state inventory.",
                 vec![
                     controller_handoff_metric("entities", integer(topology.entities as i64)),
@@ -44188,13 +44335,13 @@ fn controller_handoff_summary_json(
                 ],
                 &["/", "/api/smart_home/state"],
             ),
-            browser_dashboard_ready,
+            readiness.browser_dashboard,
         ),
         (
             controller_handoff_category_json(
                 "fixture_controller",
                 "Fixture controller usability",
-                fixture_controller_ready,
+                readiness.fixture_controller,
                 "Discovery records and registered devices give local controller smoke tests a usable fixture path.",
                 vec![
                     controller_handoff_metric("bridges", integer(topology.bridges as i64)),
@@ -44211,13 +44358,13 @@ fn controller_handoff_summary_json(
                 ],
                 &["/api/smart_home/smoke_script", "/api/smart_home/discover"],
             ),
-            fixture_controller_ready,
+            readiness.fixture_controller,
         ),
         (
             controller_handoff_category_json(
                 "state_history_events",
                 "State, history, and event surfaces",
-                state_history_events_ready,
+                readiness.state_history_events,
                 "Runtime state snapshots and event-bus counters expose the observable controller timeline.",
                 vec![
                     controller_handoff_metric("states", integer(snapshot.registry_counts.states as i64)),
@@ -44238,13 +44385,13 @@ fn controller_handoff_summary_json(
                 ],
                 &["/api/smart_home/state", "/api/smart_home/events"],
             ),
-            state_history_events_ready,
+            readiness.state_history_events,
         ),
         (
             controller_handoff_category_json(
                 "commands_services_scenes",
                 "Commands, services, and scenes",
-                commands_services_scenes_ready,
+                readiness.commands_services_scenes,
                 "D23 capabilities and scene actions back controller commands, service calls, and scene previews.",
                 vec![
                     controller_handoff_metric(
@@ -44262,13 +44409,13 @@ fn controller_handoff_summary_json(
                 ],
                 &["/api/smart_home/command", "/api/smart_home/services", "/api/smart_home/scenes"],
             ),
-            commands_services_scenes_ready,
+            readiness.commands_services_scenes,
         ),
         (
             controller_handoff_category_json(
                 "authorization_boundaries",
                 "Runtime authorization boundaries",
-                authorization_boundaries_ready,
+                readiness.authorization_boundaries,
                 "Capability grants and authorization decisions remain runtime-owned policy records.",
                 vec![
                     controller_handoff_metric(
@@ -44288,7 +44435,7 @@ fn controller_handoff_summary_json(
                 ],
                 &["/api/smart_home/authorize/preview", "/api/smart_home/audit"],
             ),
-            authorization_boundaries_ready,
+            readiness.authorization_boundaries,
         ),
     ];
     let category_count = categories.len();
@@ -44364,6 +44511,366 @@ fn controller_handoff_summary_json(
         ),
         ("categories", JsonValue::Array(category_values)),
     ])
+}
+
+fn platform_brief_output_json(
+    snapshot: &RuntimeReadSnapshot,
+    topology: &RegistryTopologySummary,
+    readiness: &ControllerPlatformReadiness,
+) -> JsonValue {
+    let status = platform_brief_status(readiness);
+    let next_tool = platform_brief_next_tool(readiness);
+    let next_action = platform_brief_next_action(readiness);
+    let next_owner_lane = platform_brief_next_owner_lane(readiness);
+
+    object([
+        ("generated_at_ms", integer(snapshot.generated_at_ms as i64)),
+        ("status", string(status)),
+        ("ready", JsonValue::Bool(readiness.ready())),
+        ("has_blockers", JsonValue::Bool(false)),
+        (
+            "summary",
+            object([
+                (
+                    "boundary",
+                    string(
+                        "Chief reads D23 runtime and platform primitives; it does not own smart-home controller state.",
+                    ),
+                ),
+                (
+                    "platform_route",
+                    string("/api/smart_home/controller_handoff"),
+                ),
+                ("dashboard_route", string("/")),
+                (
+                    "smoke_script_route",
+                    string("/api/smart_home/smoke_script"),
+                ),
+                (
+                    "history_route",
+                    string("/api/smart_home/history"),
+                ),
+                ("category_count", integer(readiness.category_count() as i64)),
+                (
+                    "ready_category_count",
+                    integer(readiness.ready_category_count() as i64),
+                ),
+                (
+                    "attention_category_count",
+                    integer(readiness.attention_category_count() as i64),
+                ),
+                ("blocked_category_count", integer(0)),
+                ("runtime_entities", integer(topology.entities as i64)),
+                ("runtime_bridges", integer(topology.bridges as i64)),
+                ("runtime_devices", integer(topology.devices as i64)),
+                (
+                    "runtime_capabilities",
+                    integer(topology.total_capabilities as i64),
+                ),
+                ("runtime_scenes", integer(topology.scenes as i64)),
+                (
+                    "runtime_scene_actions",
+                    integer(topology.scene_actions as i64),
+                ),
+                ("runtime_states", integer(snapshot.registry_counts.states as i64)),
+                (
+                    "runtime_events",
+                    integer(snapshot.registry_counts.events as i64),
+                ),
+                (
+                    "discovery_records",
+                    integer(snapshot.discovery_record_count as i64),
+                ),
+                (
+                    "runtime_authorization_decisions",
+                    integer(snapshot.registry_counts.authorization_decisions as i64),
+                ),
+                ("next_tool", string(next_tool)),
+                ("next_action", string(next_action)),
+                ("next_owner_lane", string(next_owner_lane)),
+            ]),
+        ),
+        ("decision", platform_brief_decision_json(readiness)),
+        (
+            "sections",
+            JsonValue::Array(vec![
+                platform_brief_section_json(
+                    "repo_http_stack",
+                    "Repo-owned HTTP stack",
+                    readiness.repo_http_stack,
+                    SMART_HOME_GET_CONTROLLER_HANDOFF_SUMMARY_TOOL_ID,
+                    "verify_http_stack_routes",
+                    object([
+                        (
+                            "controller_handoff_route",
+                            string("/api/smart_home/controller_handoff"),
+                        ),
+                        (
+                            "smoke_script_route",
+                            string("/api/smart_home/smoke_script"),
+                        ),
+                        ("browser_entry_route", string("/")),
+                    ]),
+                    &[
+                        "/api/smart_home/controller_handoff",
+                        "/api/smart_home/smoke_script",
+                        "/",
+                    ],
+                ),
+                platform_brief_section_json(
+                    "browser_dashboard",
+                    "Browser dashboard",
+                    readiness.browser_dashboard,
+                    SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID,
+                    if readiness.browser_dashboard {
+                        "monitor_dashboard_readiness"
+                    } else {
+                        "refresh_runtime_topology"
+                    },
+                    object([
+                        ("entities", integer(topology.entities as i64)),
+                        ("states", integer(snapshot.registry_counts.states as i64)),
+                        ("unique_rooms", integer(topology.unique_rooms as i64)),
+                    ]),
+                    &["/", "/api/smart_home/state", "/api/smart_home/dashboard"],
+                ),
+                platform_brief_section_json(
+                    "fixture_controller",
+                    "Fixture controller",
+                    readiness.fixture_controller,
+                    SMART_HOME_DISCOVER_TOOL_ID,
+                    if readiness.fixture_controller {
+                        "monitor_fixture_controller"
+                    } else {
+                        "run_fixture_discovery"
+                    },
+                    object([
+                        ("bridges", integer(topology.bridges as i64)),
+                        ("devices", integer(topology.devices as i64)),
+                        (
+                            "discovery_records",
+                            integer(snapshot.discovery_record_count as i64),
+                        ),
+                    ]),
+                    &["/api/smart_home/smoke_script", "/api/smart_home/discover"],
+                ),
+                platform_brief_section_json(
+                    "state_history_events",
+                    "State, history, and event surfaces",
+                    readiness.state_history_events,
+                    SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID,
+                    if readiness.state_history_events {
+                        "monitor_state_history_events"
+                    } else {
+                        "inspect_state_history_events"
+                    },
+                    object([
+                        ("states", integer(snapshot.registry_counts.states as i64)),
+                        ("events", integer(snapshot.registry_counts.events as i64)),
+                        (
+                            "published_events",
+                            integer(snapshot.event_bus.published_event_count as i64),
+                        ),
+                        (
+                            "pending_deliveries",
+                            integer(snapshot.event_bus.pending_delivery_count as i64),
+                        ),
+                    ]),
+                    &[
+                        "/api/smart_home/state",
+                        "/api/smart_home/history",
+                        "/api/smart_home/events",
+                    ],
+                ),
+                platform_brief_section_json(
+                    "commands_services_scenes",
+                    "Commands, services, and scenes",
+                    readiness.commands_services_scenes,
+                    SMART_HOME_LIST_SCENES_TOOL_ID,
+                    if readiness.commands_services_scenes {
+                        "monitor_service_scene_catalog"
+                    } else {
+                        "review_command_scene_catalog"
+                    },
+                    object([
+                        (
+                            "total_capabilities",
+                            integer(topology.total_capabilities as i64),
+                        ),
+                        ("scenes", integer(topology.scenes as i64)),
+                        ("scene_actions", integer(topology.scene_actions as i64)),
+                    ]),
+                    &[
+                        "/api/smart_home/command",
+                        "/api/smart_home/services",
+                        "/api/smart_home/scenes",
+                    ],
+                ),
+                platform_brief_section_json(
+                    "authorization_boundaries",
+                    "Runtime authorization boundaries",
+                    readiness.authorization_boundaries,
+                    SMART_HOME_LIST_CAPABILITY_GRANTS_TOOL_ID,
+                    if readiness.authorization_boundaries {
+                        "monitor_capability_grants"
+                    } else {
+                        "seed_runtime_capability_grants"
+                    },
+                    object([
+                        (
+                            "capability_grants",
+                            integer(snapshot.registry_counts.capability_grants as i64),
+                        ),
+                        (
+                            "authorization_decisions",
+                            integer(snapshot.registry_counts.authorization_decisions as i64),
+                        ),
+                    ]),
+                    &["/api/smart_home/authorize/preview", "/api/smart_home/audit"],
+                ),
+            ]),
+        ),
+        (
+            "source_tools",
+            controller_handoff_string_array(&[
+                SMART_HOME_GET_CONTROLLER_HANDOFF_SUMMARY_TOOL_ID,
+                SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID,
+                SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID,
+                SMART_HOME_DISCOVER_TOOL_ID,
+                SMART_HOME_LIST_COMMAND_RESULTS_TOOL_ID,
+                SMART_HOME_LIST_SCENES_TOOL_ID,
+                SMART_HOME_LIST_CAPABILITY_GRANTS_TOOL_ID,
+                SMART_HOME_GET_AUTHORIZATION_SUMMARY_TOOL_ID,
+            ]),
+        ),
+    ])
+}
+
+fn platform_brief_decision_json(readiness: &ControllerPlatformReadiness) -> JsonValue {
+    object([
+        (
+            "recommendation",
+            string(if readiness.ready() {
+                "continue_chief_adapter_work"
+            } else {
+                "repair_platform_handoff"
+            }),
+        ),
+        (
+            "recommended_tool",
+            string(platform_brief_next_tool(readiness)),
+        ),
+        (
+            "recommended_action",
+            string(platform_brief_next_action(readiness)),
+        ),
+        (
+            "owner_lane",
+            string(platform_brief_next_owner_lane(readiness)),
+        ),
+        ("reason", string(platform_brief_reason(readiness))),
+    ])
+}
+
+fn platform_brief_section_json(
+    section_id: &str,
+    label: &str,
+    ready: bool,
+    recommended_tool: &str,
+    recommended_action: &str,
+    summary: JsonValue,
+    platform_surfaces: &[&str],
+) -> JsonValue {
+    object([
+        ("section_id", string(section_id)),
+        ("label", string(label)),
+        ("status", string(if ready { "ready" } else { "attention" })),
+        ("ready", JsonValue::Bool(ready)),
+        ("attention_count", integer(if ready { 0 } else { 1 })),
+        ("blocked_count", integer(0)),
+        ("has_blockers", JsonValue::Bool(false)),
+        ("recommended_tool", string(recommended_tool)),
+        ("recommended_action", string(recommended_action)),
+        ("summary", summary),
+        (
+            "platform_surfaces",
+            controller_handoff_string_array(platform_surfaces),
+        ),
+    ])
+}
+
+fn platform_brief_status(readiness: &ControllerPlatformReadiness) -> &'static str {
+    if readiness.ready() {
+        "ready"
+    } else {
+        "attention"
+    }
+}
+
+fn platform_brief_next_tool(readiness: &ControllerPlatformReadiness) -> &'static str {
+    if !readiness.repo_http_stack {
+        SMART_HOME_GET_CONTROLLER_HANDOFF_SUMMARY_TOOL_ID
+    } else if !readiness.browser_dashboard {
+        SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID
+    } else if !readiness.fixture_controller {
+        SMART_HOME_DISCOVER_TOOL_ID
+    } else if !readiness.state_history_events {
+        SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID
+    } else if !readiness.commands_services_scenes {
+        SMART_HOME_LIST_SCENES_TOOL_ID
+    } else if !readiness.authorization_boundaries {
+        SMART_HOME_LIST_CAPABILITY_GRANTS_TOOL_ID
+    } else {
+        SMART_HOME_GET_CONTROLLER_HANDOFF_SUMMARY_TOOL_ID
+    }
+}
+
+fn platform_brief_next_action(readiness: &ControllerPlatformReadiness) -> &'static str {
+    if !readiness.repo_http_stack {
+        "verify_http_stack_routes"
+    } else if !readiness.browser_dashboard {
+        "refresh_runtime_topology"
+    } else if !readiness.fixture_controller {
+        "run_fixture_discovery"
+    } else if !readiness.state_history_events {
+        "inspect_state_history_events"
+    } else if !readiness.commands_services_scenes {
+        "review_command_scene_catalog"
+    } else if !readiness.authorization_boundaries {
+        "seed_runtime_capability_grants"
+    } else {
+        "continue_chief_adapter_work"
+    }
+}
+
+fn platform_brief_next_owner_lane(readiness: &ControllerPlatformReadiness) -> &'static str {
+    if !readiness.repo_http_stack || !readiness.browser_dashboard || !readiness.fixture_controller {
+        "platform"
+    } else if !readiness.state_history_events || !readiness.commands_services_scenes {
+        "runtime"
+    } else if !readiness.authorization_boundaries {
+        "policy"
+    } else {
+        "chief_adapter"
+    }
+}
+
+fn platform_brief_reason(readiness: &ControllerPlatformReadiness) -> &'static str {
+    if !readiness.repo_http_stack {
+        "repo_http_stack_attention"
+    } else if !readiness.browser_dashboard {
+        "missing_dashboard_topology_or_state"
+    } else if !readiness.fixture_controller {
+        "missing_fixture_discovery"
+    } else if !readiness.state_history_events {
+        "missing_state_history_events"
+    } else if !readiness.commands_services_scenes {
+        "missing_command_scene_catalog"
+    } else if !readiness.authorization_boundaries {
+        "missing_capability_grants"
+    } else {
+        "platform_ready"
+    }
 }
 
 fn controller_handoff_category_json(
@@ -47964,18 +48471,8 @@ fn operations_brief_controller_handoff_ready_counts(
     snapshot: &RuntimeReadSnapshot,
     topology: &RegistryTopologySummary,
 ) -> (usize, usize) {
-    let readiness = [
-        true,
-        topology.has_topology() && snapshot.registry_counts.states > 0,
-        topology.bridges > 0 && topology.devices > 0 && snapshot.discovery_record_count > 0,
-        snapshot.registry_counts.states > 0,
-        topology.total_capabilities > 0 && topology.has_scene_actions(),
-        snapshot.registry_counts.capability_grants > 0,
-    ];
-    (
-        readiness.len(),
-        readiness.iter().filter(|is_ready| **is_ready).count(),
-    )
+    let readiness = controller_platform_readiness(snapshot, topology);
+    (readiness.category_count(), readiness.ready_category_count())
 }
 
 fn operations_brief_status(
@@ -80865,7 +81362,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 292);
+        assert_eq!(definitions.len(), 293);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -80895,6 +81392,9 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID));
@@ -81706,7 +82206,7 @@ mod tests {
         ));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            284
+            285
         );
         assert_eq!(
             export
@@ -82401,6 +82901,7 @@ mod tests {
         assert!(smart_home_tool_definition(SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID).is_some());
+        assert!(smart_home_tool_definition(SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_SAFETY_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_READINESS_BRIEF_TOOL_ID).is_some());
@@ -82504,6 +83005,130 @@ mod tests {
             field(authorization_category, "ready"),
             Some(&JsonValue::Bool(true))
         );
+    }
+
+    #[test]
+    fn platform_brief_surfaces_home_assistant_controller_signals() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime
+            .borrow_mut()
+            .record_discovery(hue_bridge_discovery_record("001788fffediscovered", 1_000))
+            .unwrap();
+        runtime
+            .borrow_mut()
+            .registry_mut()
+            .apply_state_snapshot(confirmed_state(
+                &EntityId::trusted("entity-light-1"),
+                Value::Bool(true),
+                1_000,
+            ))
+            .unwrap();
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let request = request(
+            "call-platform-brief",
+            SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID,
+            object([]),
+            1_275,
+        );
+        let trace = tool_runtime.invoke_with_events(&request);
+        assert!(trace.result.ok);
+        assert_eq!(trace.summary().progress_event_count, 1);
+
+        let output = trace.result.output.as_ref().unwrap();
+        assert_eq!(field(output, "status"), Some(&string("ready")));
+        assert_eq!(field(output, "ready"), Some(&JsonValue::Bool(true)));
+        assert_eq!(field(output, "has_blockers"), Some(&JsonValue::Bool(false)));
+
+        let summary = field(output, "summary").unwrap();
+        assert_eq!(
+            field(summary, "boundary"),
+            Some(&string(
+                "Chief reads D23 runtime and platform primitives; it does not own smart-home controller state."
+            ))
+        );
+        assert_eq!(
+            field(summary, "platform_route"),
+            Some(&string("/api/smart_home/controller_handoff"))
+        );
+        assert_eq!(field(summary, "dashboard_route"), Some(&string("/")));
+        assert_eq!(
+            field(summary, "smoke_script_route"),
+            Some(&string("/api/smart_home/smoke_script"))
+        );
+        assert_eq!(
+            field(summary, "history_route"),
+            Some(&string("/api/smart_home/history"))
+        );
+        assert_eq!(field(summary, "category_count"), Some(&integer(6)));
+        assert_eq!(field(summary, "ready_category_count"), Some(&integer(6)));
+        assert_eq!(
+            field(summary, "attention_category_count"),
+            Some(&integer(0))
+        );
+        assert_eq!(
+            field(summary, "next_tool"),
+            Some(&string(SMART_HOME_GET_CONTROLLER_HANDOFF_SUMMARY_TOOL_ID))
+        );
+        assert_eq!(
+            field(summary, "next_action"),
+            Some(&string("continue_chief_adapter_work"))
+        );
+        assert_eq!(
+            field(summary, "next_owner_lane"),
+            Some(&string("chief_adapter"))
+        );
+        assert!(
+            integer_value(field(summary, "runtime_authorization_decisions").unwrap()).unwrap() >= 1
+        );
+
+        let decision = field(output, "decision").unwrap();
+        assert_eq!(
+            field(decision, "recommendation"),
+            Some(&string("continue_chief_adapter_work"))
+        );
+        assert_eq!(
+            field(decision, "recommended_tool"),
+            Some(&string(SMART_HOME_GET_CONTROLLER_HANDOFF_SUMMARY_TOOL_ID))
+        );
+        assert_eq!(
+            field(decision, "recommended_action"),
+            Some(&string("continue_chief_adapter_work"))
+        );
+        assert_eq!(field(decision, "reason"), Some(&string("platform_ready")));
+
+        assert_eq!(array_len(field(output, "sections").unwrap()), Some(6));
+        let http_section = array_item(field(output, "sections").unwrap(), 0).unwrap();
+        assert_eq!(
+            field(http_section, "section_id"),
+            Some(&string("repo_http_stack"))
+        );
+        assert_eq!(field(http_section, "status"), Some(&string("ready")));
+        assert_eq!(
+            field(http_section, "recommended_tool"),
+            Some(&string(SMART_HOME_GET_CONTROLLER_HANDOFF_SUMMARY_TOOL_ID))
+        );
+        let authorization_section = array_item(field(output, "sections").unwrap(), 5).unwrap();
+        assert_eq!(
+            field(authorization_section, "section_id"),
+            Some(&string("authorization_boundaries"))
+        );
+        assert_eq!(
+            field(authorization_section, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_CAPABILITY_GRANTS_TOOL_ID))
+        );
+        assert_eq!(array_len(field(output, "source_tools").unwrap()), Some(8));
     }
 
     #[test]
@@ -83368,11 +83993,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(292))
+            Some(&integer(293))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(284))
+            Some(&integer(285))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),

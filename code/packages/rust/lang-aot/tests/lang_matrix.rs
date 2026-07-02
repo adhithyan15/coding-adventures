@@ -1508,6 +1508,28 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — *two-dimensional integer array* (LANG-FULL AL-multidim).
+    // `integer array M[1:2, 1:2]` declares a 2×2 matrix in ALGOL 60 report
+    // §5.2.1 syntax.  The `algol-iir-compiler` (v0.23.0) lowers it to a
+    // **single** flat `alloc_array` of length 4 (= 2×2): subscript `M[i, j]`
+    // translates to the 0-based flat index `(i − 1)*2 + (j − 1)` using the
+    // row-major formula `flat = Σ_d (sub[d] − lower[d]) * stride[d]` where
+    // `stride[last] = 1` (the multiply is elided) and outer strides are
+    // computed right-to-left during declaration.  The program stores four
+    // constants: `M[1,1]=10; M[1,2]=20; M[2,1]=5; M[2,2]=7`, then reads
+    // them all back: `result := M[1,1] + M[1,2] + M[2,1] + M[2,2]` = 42.
+    // The emitted IIR contains only `alloc_array`/`array_set`/`array_get`
+    // with flat indices — **no backend change required** — so the cell runs on
+    // **all 7 backends** identically to E5 straight-line arrays.  Exit 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer array M[1:2, 1:2]; integer result; \
+               M[1, 1] := 10; M[1, 2] := 20; M[2, 1] := 5; M[2, 2] := 7; \
+               result := M[1, 1] + M[1, 2] + M[2, 1] + M[2, 2] end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
     // `lower_brainfuck_for_aot` widens the BF cell/ptr registers to `i64` (byte width
     // survives only at the tape boundary) for every code-gen backend. On LLVM (LM-L)
@@ -3570,3 +3592,5 @@ fn proven_columns_do_not_silently_skip() {
         }
     }
 }
+
+

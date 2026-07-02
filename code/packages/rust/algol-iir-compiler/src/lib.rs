@@ -175,16 +175,35 @@ struct VarBinding {
     is_global: bool,
 }
 
-/// Per-array state recorded at its declaration, so a later `A[i]` access can be
-/// lowered.  ALGOL arrays are declared with an explicit lower bound
-/// (`integer array A[1:10]` ⇒ lower `1`), but the IIR's `array_get`/`array_set`
-/// are **0-based**, so every subscript `i` is translated to `i - lower` before
-/// the access.  The lower bound can be a run-time expression (`A[lo:hi]`), so we
-/// keep the *slot* that holds its evaluated value rather than a constant.
+/// One dimension of a (possibly multidimensional) ALGOL array.
+///
+/// The flat 0-based contribution of dimension `d` to the linear index is
+/// `(subscript[d] - lower[d]) * stride[d]`.  For the **last** dimension the
+/// stride is always 1, so we skip the multiply and represent it as
+/// `stride_slot: None`.  For earlier dimensions the stride equals the product
+/// of all later dimension sizes, and its run-time value lives in `stride_slot`.
+///
+/// Row-major layout: dimension 0 is the outermost (slowest-varying).
+/// For a 2-D array `A[lo1:hi1, lo2:hi2]`:
+///   stride[0] = hi2 − lo2 + 1,  stride[1] = 1 (omitted)
+///   flat_idx = (i − lo1) * stride[0] + (j − lo2)
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct ArrayDim {
+    /// Run-time slot holding the evaluated lower bound of this dimension.
+    lower_slot: String,
+    /// Run-time slot holding the stride, or `None` for the last/only dimension
+    /// where the stride is 1 and the multiply is elided.
+    stride_slot: Option<String>,
+}
+
+/// Per-array state recorded at its declaration, so a later `A[i]` (or
+/// `A[i, j]`, etc.) access can be lowered.  The IIR array ops are **0-based**,
+/// so subscripts are translated to a flat 0-based linear index.
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct ArrayInfo {
-    /// Register slot holding the (run-time) lower bound, for `i - lower`.
-    lower_slot: String,
+    /// One entry per declared dimension, in source order (outermost first).
+    /// Always contains at least one entry.
+    dims: Vec<ArrayDim>,
     /// The array's element type — `array_get` yields it, `array_set` checks it.
     elem_ty: ScalarType,
 }
@@ -516,23 +535,20 @@ impl Compiler {
         Ok(())
     }
 
-    /// Lower an `array_decl` (LANG-FULL E5, 1-D first).
+    /// Lower an `array_decl` (LANG-FULL E5 / AL-multidim).
     ///
     /// ```text
-    /// integer array A, B[1:10]
-    ///   ^type        ^names ^bound_pair (lower:upper)
+    /// integer array A, B[1:10]         -- 1-D
+    /// integer array M[1:3, 1:4]        -- 2-D (row-major, 12 elements)
+    ///   ^type        ^names ^bound_pairs (one per dimension)
     /// ```
     ///
-    /// The element type is the leading `type` keyword, defaulting to `real`
-    /// when omitted (ALGOL 60's rule for a bare `array`).  Each `array_segment`
-    /// gives one or more names that share a single set of bounds.  For each
-    /// one-dimensional segment we evaluate the bound expressions, compute the
-    /// length `upper - lower + 1` at run time (ALGOL permits *dynamic* bounds,
-    /// `array A[lo:hi]`), and emit one `alloc_array` per name.  The lower bound
-    /// is kept in the binding so subscripts translate to the 0-based IIR index.
-    ///
-    /// Multidimensional arrays (`B[i, j]`) and non-numeric element types are
-    /// follow-up work — they produce a clear "unsupported" message here.
+    /// The element type defaults to `real` when omitted (ALGOL 60 rule).  Each
+    /// `array_segment` declares one or more names that share the same bound list.
+    /// For each name we evaluate all dimension bounds at run time, compute the
+    /// flat total length (product of all dimension sizes), and emit one
+    /// `alloc_array`.  Per-dimension lower bounds and row-major strides are
+    /// recorded in `ArrayInfo.dims` so `A[i, j]` can compute the flat index.
     fn emit_array_decl(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         let elem_ty = match first_direct_node(node, "type") {
             Some(type_node) => self.scalar_type(type_node)?,
@@ -553,54 +569,119 @@ impl Compiler {
                 .into_iter()
                 .filter(|n| n.rule_name == "bound_pair")
                 .collect();
-            if bound_pairs.len() != 1 {
-                return Err(CompileError::Unsupported(format!(
-                    "multidimensional arrays ({}-D) — only 1-D so far",
-                    bound_pairs.len()
-                )));
-            }
-            // bound_pair = arith_expr COLON arith_expr  →  [lower, upper]
-            let bounds: Vec<&GrammarASTNode> = direct_nodes(bound_pairs[0])
-                .into_iter()
-                .filter(|n| n.rule_name == "arith_expr")
-                .collect();
-            if bounds.len() != 2 {
+            if bound_pairs.is_empty() {
                 return Err(CompileError::Malformed(
-                    "bound_pair must have exactly two bounds".into(),
-                ));
-            }
-            let lower = self.emit_expr(bounds[0])?;
-            if lower.ty != ScalarType::Integer {
-                return Err(CompileError::Type(
-                    "array lower bound must be an integer".into(),
-                ));
-            }
-            let upper = self.emit_expr(bounds[1])?;
-            if upper.ty != ScalarType::Integer {
-                return Err(CompileError::Type(
-                    "array upper bound must be an integer".into(),
+                    "array segment has no bounds".into(),
                 ));
             }
 
-            // length = upper - lower + 1  (the element count `alloc_array` takes).
-            let span = self.fresh_temp();
-            self.emit(IIRInstr::new(
-                "sub",
-                Some(span.clone()),
-                vec![
-                    Operand::Var(upper.slot.clone()),
-                    Operand::Var(lower.slot.clone()),
-                ],
-                "i64",
-            ));
-            let one = self.emit_const(ScalarType::Integer, Operand::Int(1));
-            let len = self.fresh_temp();
-            self.emit(IIRInstr::new(
-                "add",
-                Some(len.clone()),
-                vec![Operand::Var(span), Operand::Var(one)],
-                "i64",
-            ));
+            // Evaluate (lower_slot, size_slot) for each dimension.
+            // size = upper − lower + 1  (all are run-time i64 values).
+            let mut lower_slots: Vec<String> = Vec::with_capacity(bound_pairs.len());
+            let mut size_slots: Vec<String> = Vec::with_capacity(bound_pairs.len());
+
+            for bp in &bound_pairs {
+                // bound_pair = arith_expr COLON arith_expr → [lower, upper]
+                let bounds: Vec<&GrammarASTNode> = direct_nodes(bp)
+                    .into_iter()
+                    .filter(|n| n.rule_name == "arith_expr")
+                    .collect();
+                if bounds.len() != 2 {
+                    return Err(CompileError::Malformed(
+                        "bound_pair must have exactly two bounds".into(),
+                    ));
+                }
+                let lower = self.emit_expr(bounds[0])?;
+                if lower.ty != ScalarType::Integer {
+                    return Err(CompileError::Type(
+                        "array lower bound must be an integer".into(),
+                    ));
+                }
+                let upper = self.emit_expr(bounds[1])?;
+                if upper.ty != ScalarType::Integer {
+                    return Err(CompileError::Type(
+                        "array upper bound must be an integer".into(),
+                    ));
+                }
+
+                // size = upper − lower + 1
+                let span = self.fresh_temp();
+                self.emit(IIRInstr::new(
+                    "sub",
+                    Some(span.clone()),
+                    vec![
+                        Operand::Var(upper.slot.clone()),
+                        Operand::Var(lower.slot.clone()),
+                    ],
+                    "i64",
+                ));
+                let one = self.emit_const(ScalarType::Integer, Operand::Int(1));
+                let size = self.fresh_temp();
+                self.emit(IIRInstr::new(
+                    "add",
+                    Some(size.clone()),
+                    vec![Operand::Var(span), Operand::Var(one)],
+                    "i64",
+                ));
+                lower_slots.push(lower.slot);
+                size_slots.push(size);
+            }
+
+            // Compute strides right-to-left (row-major).
+            //   stride[last] = 1  → represented as None (multiply elided)
+            //   stride[d]    = size[d+1] * stride[d+1]
+            let n = bound_pairs.len();
+            let mut stride_slots: Vec<Option<String>> = vec![None; n]; // last dim = 1
+            // running product: None means "1" (no slot needed yet)
+            let mut running: Option<String> = None;
+
+            for d in (0..n.saturating_sub(1)).rev() {
+                // stride[d] = size[d+1] * running  (running starts as 1 = None)
+                let s_next = &size_slots[d + 1];
+                let stride_d = if let Some(prev) = running {
+                    let prod = self.fresh_temp();
+                    self.emit(IIRInstr::new(
+                        "mul",
+                        Some(prod.clone()),
+                        vec![Operand::Var(s_next.clone()), Operand::Var(prev)],
+                        "i64",
+                    ));
+                    prod
+                } else {
+                    // stride = size[d+1] * 1 = size[d+1]
+                    s_next.clone()
+                };
+                stride_slots[d] = Some(stride_d.clone());
+                running = stride_slots[d].clone();
+            }
+
+            // Total allocation length = size[0] * stride[0]  (for N ≥ 2)
+            //                         = size[0]              (for N = 1)
+            let total_len = if n == 1 {
+                size_slots[0].clone()
+            } else {
+                let stride_0 = stride_slots[0]
+                    .clone()
+                    .expect("non-last dimension always has a stride slot");
+                let total = self.fresh_temp();
+                self.emit(IIRInstr::new(
+                    "mul",
+                    Some(total.clone()),
+                    vec![Operand::Var(size_slots[0].clone()), Operand::Var(stride_0)],
+                    "i64",
+                ));
+                total
+            };
+
+            // Build the per-dimension descriptor.
+            let dims: Vec<ArrayDim> = lower_slots
+                .into_iter()
+                .zip(stride_slots)
+                .map(|(lower_slot, stride_slot)| ArrayDim {
+                    lower_slot,
+                    stride_slot,
+                })
+                .collect();
 
             let names: Vec<String> = first_direct_node(segment, "ident_list")
                 .map(ident_list_names)
@@ -612,11 +693,11 @@ impl Compiler {
             }
             let array_ty = make_array_type(elem_ty.iir());
             for name in names {
-                let handle = self.declare_array(&name, elem_ty, lower.slot.clone())?;
+                let handle = self.declare_array(&name, elem_ty, dims.clone())?;
                 self.emit(IIRInstr::new(
                     "alloc_array",
                     Some(handle),
-                    vec![Operand::Var(len.clone())],
+                    vec![Operand::Var(total_len.clone())],
                     &array_ty,
                 ));
             }
@@ -624,9 +705,15 @@ impl Compiler {
         Ok(())
     }
 
-    /// Resolve a subscripted `variable` node `A[i]` to the array handle slot,
-    /// a slot holding the **0-based** index `i - lower`, and the element type.
-    /// Shared by the read (`array_get`) and write (`array_set`) paths.
+    /// Resolve a subscripted `variable` node `A[i]` (or `A[i, j]`, etc.) to
+    /// the array handle slot plus a slot holding the flat **0-based** linear
+    /// index.  Shared by the `array_get` (read) and `array_set` (write) paths.
+    ///
+    /// For a 1-D array: flat_idx = i − lower  (same as before).
+    /// For an N-D array (row-major):
+    ///   flat_idx = Σ_d  (sub[d] − lower[d]) * stride[d]
+    /// where stride[last] = 1 (multiply elided) and
+    ///   stride[d] = size[d+1] * stride[d+1]  for d < last.
     fn resolve_array_index(
         &mut self,
         var_node: &GrammarASTNode,
@@ -645,27 +732,66 @@ impl Compiler {
         let subs = array_subscripts(var_node).ok_or_else(|| {
             CompileError::Malformed("subscripted variable missing subscripts".into())
         })?;
-        if subs.len() != 1 {
-            return Err(CompileError::Unsupported(format!(
-                "{}-dimensional subscripts — only 1-D so far",
+        if subs.len() != info.dims.len() {
+            return Err(CompileError::Type(format!(
+                "{name:?} is {}-dimensional but {} subscript(s) given",
+                info.dims.len(),
                 subs.len()
             )));
         }
-        let idx = self.emit_expr(subs[0])?;
-        if idx.ty != ScalarType::Integer {
-            return Err(CompileError::Type(format!(
-                "array subscript for {name:?} must be an integer"
-            )));
+
+        // Compute flat 0-based index: Σ_d (sub[d] − lower[d]) * stride[d].
+        // Accumulate into `flat`; start with None meaning "haven't written yet".
+        let mut flat: Option<String> = None;
+
+        for (dim, sub_node) in info.dims.iter().zip(subs) {
+            let idx = self.emit_expr(sub_node)?;
+            if idx.ty != ScalarType::Integer {
+                return Err(CompileError::Type(format!(
+                    "array subscript for {name:?} must be an integer"
+                )));
+            }
+
+            // diff = sub − lower
+            let diff = self.fresh_temp();
+            self.emit(IIRInstr::new(
+                "sub",
+                Some(diff.clone()),
+                vec![Operand::Var(idx.slot), Operand::Var(dim.lower_slot.clone())],
+                "i64",
+            ));
+
+            // contrib = diff * stride  (or just diff when stride = 1, last dim)
+            let contrib = if let Some(stride) = &dim.stride_slot {
+                let prod = self.fresh_temp();
+                self.emit(IIRInstr::new(
+                    "mul",
+                    Some(prod.clone()),
+                    vec![Operand::Var(diff), Operand::Var(stride.clone())],
+                    "i64",
+                ));
+                prod
+            } else {
+                diff // last dimension: stride = 1, contrib = diff
+            };
+
+            // flat += contrib
+            flat = Some(if let Some(acc) = flat {
+                let sum = self.fresh_temp();
+                self.emit(IIRInstr::new(
+                    "add",
+                    Some(sum.clone()),
+                    vec![Operand::Var(acc), Operand::Var(contrib)],
+                    "i64",
+                ));
+                sum
+            } else {
+                contrib // first (or only) dimension: flat = contrib
+            });
         }
-        // 0-based IIR index = subscript - lower bound.
-        let zero = self.fresh_temp();
-        self.emit(IIRInstr::new(
-            "sub",
-            Some(zero.clone()),
-            vec![Operand::Var(idx.slot), Operand::Var(info.lower_slot)],
-            "i64",
-        ));
-        Ok((binding, zero))
+
+        let flat = flat.expect("dims is always non-empty");
+        Ok((binding, flat))
     }
 
     /// Lower `A[i]` in an expression to a bounds-checked `array_get` (E5).
@@ -3067,7 +3193,7 @@ impl Compiler {
         &mut self,
         name: &str,
         elem_ty: ScalarType,
-        lower_slot: String,
+        dims: Vec<ArrayDim>,
     ) -> Result<String, CompileError> {
         let slot = if self.scopes.len() == 1 {
             name.to_string()
@@ -3088,10 +3214,7 @@ impl Compiler {
             VarBinding {
                 slot: slot.clone(),
                 ty: elem_ty,
-                array: Some(ArrayInfo {
-                    lower_slot,
-                    elem_ty,
-                }),
+                array: Some(ArrayInfo { dims, elem_ty }),
                 is_global: false, // arrays-as-globals are a later E6 slice
             },
         );
@@ -4471,14 +4594,62 @@ mod tests {
             "subscripting a scalar should be a Type error, got {err:?}");
     }
 
-    /// A 2-D declaration is cleanly rejected as follow-up work (1-D only so far).
+    /// A 2-D integer array: element count is 2×2=4; write and read at [2,1].
+    /// Row-major flat index for [2, 1] with bounds [1:2, 1:2]:
+    ///   stride[0]=2, flat=(2−1)*2+(1−1)=2 → element at index 2.
     #[test]
-    fn rejects_multidimensional_array() {
+    fn two_d_array_store_and_load() {
+        let src = "begin integer array M[1:2, 1:2]; integer result; \
+                   M[2, 1] := 42; result := M[2, 1] end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    /// Four distinct cells of a 2×2 array survive independent writes.
+    #[test]
+    fn two_d_array_all_four_cells() {
+        let src = "begin integer array M[1:2, 1:2]; integer result; \
+                   M[1,1] := 10; M[1,2] := 20; M[2,1] := 5; M[2,2] := 7; \
+                   result := M[1,1] + M[1,2] + M[2,1] + M[2,2] end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    /// A 2×3 array proves non-square shapes and the stride=3 calculation.
+    /// flat index for [i,j] (bounds [1:2, 1:3]): (i−1)*3 + (j−1).
+    #[test]
+    fn two_d_array_non_square() {
+        // M[1,1]=1  M[1,2]=4  M[1,3]=9
+        // M[2,1]=2  M[2,2]=8  M[2,3]=18  → sum = 42
+        let src = "begin integer array M[1:2, 1:3]; integer result; \
+                   M[1,1] := 1;  M[1,2] := 4;  M[1,3] := 9; \
+                   M[2,1] := 2;  M[2,2] := 8;  M[2,3] := 18; \
+                   result := M[1,1] + M[1,2] + M[1,3] + \
+                             M[2,1] + M[2,2] + M[2,3] end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    /// Fill a 3×3 integer array with loop indices and sum the diagonal.
+    /// Diagonal: M[1,1]=1, M[2,2]=4, M[3,3]=9 → sum = 14.
+    #[test]
+    fn two_d_array_filled_with_loops() {
+        let src = "begin integer array M[1:3, 1:3]; integer i, j, result; \
+                   result := 0; \
+                   for i := 1 step 1 until 3 do \
+                     for j := 1 step 1 until 3 do \
+                       M[i,j] := i * j; \
+                   for i := 1 step 1 until 3 do \
+                     result := result + M[i,i] \
+                   end";
+        assert_eq!(run_i64(src), 14);
+    }
+
+    /// Wrong number of subscripts for a 2-D array is a type error.
+    #[test]
+    fn rejects_wrong_subscript_count_for_2d_array() {
         let err = compile_source(
-            "begin integer array M[1:2, 1:2]; integer result; result := 0 end", "test")
+            "begin integer array M[1:2, 1:2]; integer result; result := M[1] end", "test")
             .unwrap_err();
-        assert!(matches!(err, CompileError::Unsupported(_)),
-            "2-D array should be Unsupported, got {err:?}");
+        assert!(matches!(err, CompileError::Type(_)),
+            "wrong subscript count should be a Type error, got {err:?}");
     }
 
     /// A `real` array round-trips a double, exercising the f64 element path.

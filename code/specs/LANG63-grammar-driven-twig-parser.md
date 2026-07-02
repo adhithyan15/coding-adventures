@@ -12,7 +12,7 @@ LANG63 replaces the hand-written Twig lexer and recursive-descent parser
 (written in LANG58) with versions generated from the formal grammar files
 (`twig.tokens` and `twig.grammar`) using the `grammar-tools` CLI program.
 
-Three files change in `code/twig/compiler/`:
+Three files change in `code/packages/twig/compiler/`:
 
 1. **`lexer.tw`** — regenerated from `twig.tokens`.  Drops the hand-authored
    dispatch chain; the chain is now produced mechanically by
@@ -101,7 +101,7 @@ Parses `file.tokens`, validates it (unless `--force`), then calls
 Example:
 
 ```
-grammar-tools compile-tokens-twig twig.tokens -o code/twig/compiler/lexer.tw
+grammar-tools compile-tokens-twig twig.tokens -o code/packages/twig/compiler/lexer.tw
 ```
 
 ### `compile-grammar-twig <file.grammar> [<file.tokens>] [-o output.tw]`
@@ -114,7 +114,7 @@ file with the same base name and a `.tokens` extension in the same directory.
 Example:
 
 ```
-grammar-tools compile-grammar-twig twig.grammar twig.tokens -o code/twig/compiler/cst-parser.tw
+grammar-tools compile-grammar-twig twig.grammar twig.tokens -o code/packages/twig/compiler/cst-parser.tw
 ```
 
 ---
@@ -290,9 +290,9 @@ test and all `twig-module-driver` integration tests continue to call
 |------|--------|
 | `code/packages/go/grammar-tools/twig_codegen.go` | New — `GenerateTwigLexer` + `GenerateTwigParser` + helpers |
 | `code/programs/go/grammar-tools/main.go` | Added `compile-tokens-twig` and `compile-grammar-twig` CLI commands and handler functions |
-| `code/twig/compiler/lexer.tw` | Regenerated from `twig.tokens` (replaces LANG58 hand-written version) |
-| `code/twig/compiler/cst-parser.tw` | New — generated CST parser from `twig.grammar` |
-| `code/twig/compiler/parser.tw` | Rewritten as CST→AST extraction layer; now imports `compiler/cst-parser` |
+| `code/packages/twig/compiler/lexer.tw` | Regenerated from `twig.tokens` (replaces LANG58 hand-written version) |
+| `code/packages/twig/compiler/cst-parser.tw` | New — generated CST parser from `twig.grammar` |
+| `code/packages/twig/compiler/parser.tw` | Rewritten as CST→AST extraction layer; now imports `compiler/cst-parser` |
 | `code/packages/rust/twig-module-driver/src/lib.rs` | Added `"cst-parser"` to all `copy_all_tw_modules` and module copy lists in tw05e/f/g/h/i tests |
 
 Grammar source files (not modified by LANG63, but consumed by the generators):

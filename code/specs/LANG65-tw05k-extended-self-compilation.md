@@ -44,7 +44,7 @@ native stack.  Integration tests therefore use a `run_in_xlarge_stack` helper
 
 ## Changes
 
-### `code/twig/compiler/main.tw`
+### `code/packages/twig/compiler/main.tw`
 
 `self-compile-all` extended to read `parser.tw` and `emit.tw` and sum their
 function counts alongside the existing four files.  Return value changes from

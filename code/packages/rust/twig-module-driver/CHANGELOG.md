@@ -50,7 +50,7 @@ TypeErrors {
 ### Added (LANG68 — TW05-N fixed-point self-compilation)
 
 Added IIR opcode-summary serialisation and fixed-point check to
-`code/twig/compiler/main.tw`.
+`code/packages/twig/compiler/main.tw`.
 
 #### New functions in `main.tw` (6 helpers, main.tw: 2 → 8 functions)
 
@@ -124,7 +124,7 @@ New `#[cfg(test)] mod tw05n_tests` with 7 integration tests:
 
 ### Added (LANG67 — TW05-M all-module self-compilation)
 
-Extended `self-compile-all` in `code/twig/compiler/main.tw` from seven files
+Extended `self-compile-all` in `code/packages/twig/compiler/main.tw` from seven files
 (TW05-L, 171 total) to **all eleven** compiler source files (TW05-M, **173 total**)
 by adding `token.tw` (0 fn), `ast.tw` (0 fn), `iir-types.tw` (0 fn), and
 `main.tw` (2 fn).
@@ -189,7 +189,7 @@ remaining four modules).
 - `MAX_INSTRUCTIONS_PER_RUN`: 2²³ → 2²⁵ (lex-loop executes ~90 instrs/char; 7-file total ≈ 8.2 M)
 
 
-Extended `self-compile-all` in `code/twig/compiler/main.tw` from six files
+Extended `self-compile-all` in `code/packages/twig/compiler/main.tw` from six files
 (TW05-K, 102 total) to seven files (TW05-L, 171 total) by adding
 `cst-parser.tw` (69 functions, 29 122 chars).
 
@@ -233,7 +233,7 @@ New `#[cfg(test)] mod tw05l_tests` with 4 integration tests:
 
 ### Added (LANG65 — TW05-K extended self-compilation via parser.tw + emit.tw)
 
-Extended `self-compile-all` in `code/twig/compiler/main.tw` from four files
+Extended `self-compile-all` in `code/packages/twig/compiler/main.tw` from four files
 (TW05-J, 38 total) to six files (TW05-K, 102 total) by adding `parser.tw`
 (29 functions) and `emit.tw` (35 functions).
 
@@ -278,7 +278,7 @@ New `#[cfg(test)] mod tw05j_tests` with 6 integration tests that exercise
 the full lex → parse → `emit-program` pipeline on four real compiler source
 files read from disk via `host/read_file`.
 
-#### New function in `code/twig/compiler/main.tw`
+#### New function in `code/packages/twig/compiler/main.tw`
 
 `(self-compile-all dir)` — reads four `.tw` files from `dir`, compiles each
 through the pipeline, and returns the sum of emitted function counts.
@@ -521,10 +521,10 @@ boundaries produced "unbound name" compile errors.
 Added `twig-vm = { path = "../twig-vm" }` as a `[dev-dependencies]` entry to
 support the new integration tests that execute compiled module trees.
 
-#### `tw05d_tests` — 6 integration tests for `code/twig/compiler/`
+#### `tw05d_tests` — 6 integration tests for `code/packages/twig/compiler/`
 
 Six new tests in `#[cfg(test)] mod tw05d_tests` that exercise the real
-`.tw` source files from `code/twig/compiler/`:
+`.tw` source files from `code/packages/twig/compiler/`:
 
 | Test | Assertion |
 |------|-----------|
