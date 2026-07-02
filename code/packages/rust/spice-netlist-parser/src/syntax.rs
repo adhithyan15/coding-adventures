@@ -54,6 +54,8 @@ pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION
     u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUTS_SCHEMA_VERSION:
     u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_BINDINGS_SCHEMA_VERSION:
+    u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -119,6 +121,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-json",
     "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-groups-json",
     "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcuts-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-bindings-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -5794,6 +5797,379 @@ impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortc
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBinding {
+    pub id: String,
+    pub shortcut_id: String,
+    pub command_id: String,
+    pub scope: String,
+    pub target_kind: String,
+    pub target: String,
+    pub menu_group_id: String,
+    pub queue_state: String,
+    pub label: String,
+    pub summary: String,
+    pub accelerator: String,
+    pub menu_item_ids: Vec<String>,
+    pub action_ids: Vec<String>,
+    pub dispatch_queue_item_count: usize,
+    pub badge_count: usize,
+    pub position: usize,
+    pub item_count: usize,
+    pub enabled_item_count: usize,
+    pub disabled_item_count: usize,
+    pub empty_item_count: usize,
+    pub primary_item_count: usize,
+    pub selected_item_count: usize,
+    pub attention_item_count: usize,
+    pub selected: bool,
+    pub default_dispatch: bool,
+    pub active: bool,
+    pub attention: bool,
+    pub disabled: bool,
+    pub empty: bool,
+    pub enabled: bool,
+    pub primary: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindings {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub active_lane_id: Option<String>,
+    pub active_tab_id: Option<String>,
+    pub active_panel_id: Option<String>,
+    pub active_panel_card_id: Option<String>,
+    pub active_panel_card_action_id: Option<String>,
+    pub active_menu_item_id: Option<String>,
+    pub active_menu_group_id: Option<String>,
+    pub active_menu_group_shortcut_id: Option<String>,
+    pub active_menu_group_shortcut_binding_id: Option<String>,
+    pub attention_lane_id: Option<String>,
+    pub attention_tab_id: Option<String>,
+    pub attention_panel_id: Option<String>,
+    pub attention_panel_card_id: Option<String>,
+    pub attention_panel_card_action_id: Option<String>,
+    pub attention_menu_item_id: Option<String>,
+    pub attention_menu_group_id: Option<String>,
+    pub attention_menu_group_shortcut_id: Option<String>,
+    pub attention_menu_group_shortcut_binding_id: Option<String>,
+    pub default_menu_item_id: Option<String>,
+    pub default_menu_group_id: Option<String>,
+    pub default_menu_group_shortcut_id: Option<String>,
+    pub default_menu_group_shortcut_binding_id: Option<String>,
+    pub primary_menu_item_id: Option<String>,
+    pub primary_menu_group_id: Option<String>,
+    pub primary_menu_group_shortcut_id: Option<String>,
+    pub primary_menu_group_shortcut_binding_id: Option<String>,
+    pub lane_count: usize,
+    pub tab_count: usize,
+    pub enabled_tab_count: usize,
+    pub disabled_tab_count: usize,
+    pub panel_count: usize,
+    pub enabled_panel_count: usize,
+    pub disabled_panel_count: usize,
+    pub empty_panel_count: usize,
+    pub panel_card_count: usize,
+    pub enabled_panel_card_count: usize,
+    pub disabled_panel_card_count: usize,
+    pub empty_panel_card_count: usize,
+    pub panel_card_action_count: usize,
+    pub enabled_panel_card_action_count: usize,
+    pub disabled_panel_card_action_count: usize,
+    pub empty_panel_card_action_count: usize,
+    pub primary_panel_card_action_count: usize,
+    pub menu_item_count: usize,
+    pub enabled_menu_item_count: usize,
+    pub disabled_menu_item_count: usize,
+    pub empty_menu_item_count: usize,
+    pub primary_menu_item_count: usize,
+    pub selected_menu_item_count: usize,
+    pub attention_menu_item_count: usize,
+    pub menu_group_count: usize,
+    pub enabled_menu_group_count: usize,
+    pub disabled_menu_group_count: usize,
+    pub empty_menu_group_count: usize,
+    pub primary_menu_group_count: usize,
+    pub selected_menu_group_count: usize,
+    pub attention_menu_group_count: usize,
+    pub menu_group_shortcut_count: usize,
+    pub enabled_menu_group_shortcut_count: usize,
+    pub disabled_menu_group_shortcut_count: usize,
+    pub empty_menu_group_shortcut_count: usize,
+    pub primary_menu_group_shortcut_count: usize,
+    pub selected_menu_group_shortcut_count: usize,
+    pub attention_menu_group_shortcut_count: usize,
+    pub menu_group_shortcut_binding_count: usize,
+    pub enabled_menu_group_shortcut_binding_count: usize,
+    pub disabled_menu_group_shortcut_binding_count: usize,
+    pub empty_menu_group_shortcut_binding_count: usize,
+    pub primary_menu_group_shortcut_binding_count: usize,
+    pub selected_menu_group_shortcut_binding_count: usize,
+    pub attention_menu_group_shortcut_binding_count: usize,
+    pub menu_group_shortcut_bindings:
+        Vec<BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBinding>,
+    pub dispatch_queue_capability_id: String,
+    pub dispatch_queue_summary_capability_id: String,
+    pub dispatch_queue_digest_capability_id: String,
+    pub dispatch_queue_lanes_capability_id: String,
+    pub dispatch_queue_lane_tabs_capability_id: String,
+    pub dispatch_queue_lane_tab_panels_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_cards_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_actions_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_groups_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindings {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_shortcuts(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcuts::from_bootstrap_snapshot(
+                snapshot,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_shortcuts(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcuts::from_shell_handoff(
+                handoff,
+            ),
+        )
+    }
+
+    pub fn from_shortcuts(
+        shortcuts: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcuts,
+    ) -> Self {
+        let menu_group_shortcut_bindings = shortcuts
+            .menu_group_shortcuts
+            .iter()
+            .map(|shortcut| {
+                let shortcut_id_suffix = shortcut
+                    .id
+                    .strip_prefix(
+                        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut.",
+                    )
+                    .unwrap_or(shortcut.queue_state.as_str());
+                BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBinding {
+                    id: format!(
+                        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-binding.{shortcut_id_suffix}"
+                    ),
+                    shortcut_id: shortcut.id.clone(),
+                    command_id: format!(
+                        "berkeley.app-shell.dashboard.dispatch-queue.menu-group-shortcut.{shortcut_id_suffix}"
+                    ),
+                    scope: "dashboard.dispatch-queue".to_string(),
+                    target_kind: "menu-group".to_string(),
+                    target: shortcut.target.clone(),
+                    menu_group_id: shortcut.menu_group_id.clone(),
+                    queue_state: shortcut.queue_state.clone(),
+                    label: shortcut.label.clone(),
+                    summary: shortcut.summary.clone(),
+                    accelerator: shortcut.accelerator.clone(),
+                    menu_item_ids: shortcut.menu_item_ids.clone(),
+                    action_ids: shortcut.action_ids.clone(),
+                    dispatch_queue_item_count: shortcut.dispatch_queue_item_count,
+                    badge_count: shortcut.badge_count,
+                    position: shortcut.position,
+                    item_count: shortcut.item_count,
+                    enabled_item_count: shortcut.enabled_item_count,
+                    disabled_item_count: shortcut.disabled_item_count,
+                    empty_item_count: shortcut.empty_item_count,
+                    primary_item_count: shortcut.primary_item_count,
+                    selected_item_count: shortcut.selected_item_count,
+                    attention_item_count: shortcut.attention_item_count,
+                    selected: shortcut.selected,
+                    default_dispatch: shortcut.default_dispatch,
+                    active: shortcut.active,
+                    attention: shortcut.attention,
+                    disabled: shortcut.disabled,
+                    empty: shortcut.empty,
+                    enabled: shortcut.enabled,
+                    primary: shortcut.primary,
+                    disabled_reason: shortcut.disabled_reason.clone(),
+                }
+            })
+            .collect::<Vec<_>>();
+
+        let binding_id_for_shortcut = |shortcut_id: &Option<String>| {
+            shortcut_id.as_ref().and_then(|shortcut_id| {
+                menu_group_shortcut_bindings
+                    .iter()
+                    .find(|binding| binding.shortcut_id == shortcut_id.as_str())
+                    .map(|binding| binding.id.clone())
+            })
+        };
+        let active_menu_group_shortcut_binding_id =
+            binding_id_for_shortcut(&shortcuts.active_menu_group_shortcut_id);
+        let attention_menu_group_shortcut_binding_id =
+            binding_id_for_shortcut(&shortcuts.attention_menu_group_shortcut_id);
+        let default_menu_group_shortcut_binding_id =
+            binding_id_for_shortcut(&shortcuts.default_menu_group_shortcut_id);
+        let primary_menu_group_shortcut_binding_id =
+            binding_id_for_shortcut(&shortcuts.primary_menu_group_shortcut_id);
+
+        let enabled_menu_group_shortcut_binding_count = menu_group_shortcut_bindings
+            .iter()
+            .filter(|binding| binding.enabled)
+            .count();
+        let disabled_menu_group_shortcut_binding_count = menu_group_shortcut_bindings
+            .len()
+            .saturating_sub(enabled_menu_group_shortcut_binding_count);
+        let empty_menu_group_shortcut_binding_count = menu_group_shortcut_bindings
+            .iter()
+            .filter(|binding| binding.empty)
+            .count();
+        let primary_menu_group_shortcut_binding_count = menu_group_shortcut_bindings
+            .iter()
+            .filter(|binding| binding.primary)
+            .count();
+        let selected_menu_group_shortcut_binding_count = menu_group_shortcut_bindings
+            .iter()
+            .filter(|binding| binding.selected)
+            .count();
+        let attention_menu_group_shortcut_binding_count = menu_group_shortcut_bindings
+            .iter()
+            .filter(|binding| binding.attention)
+            .count();
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_BINDINGS_SCHEMA_VERSION,
+            package_name: shortcuts.package_name.clone(),
+            source_fingerprint: shortcuts.source_fingerprint.clone(),
+            title: shortcuts.title.clone(),
+            startup_route: shortcuts.startup_route.clone(),
+            ready: shortcuts.ready,
+            severity: shortcuts.severity.clone(),
+            attention_required: shortcuts.attention_required,
+            active_lane_id: shortcuts.active_lane_id.clone(),
+            active_tab_id: shortcuts.active_tab_id.clone(),
+            active_panel_id: shortcuts.active_panel_id.clone(),
+            active_panel_card_id: shortcuts.active_panel_card_id.clone(),
+            active_panel_card_action_id: shortcuts.active_panel_card_action_id.clone(),
+            active_menu_item_id: shortcuts.active_menu_item_id.clone(),
+            active_menu_group_id: shortcuts.active_menu_group_id.clone(),
+            active_menu_group_shortcut_id: shortcuts.active_menu_group_shortcut_id.clone(),
+            active_menu_group_shortcut_binding_id,
+            attention_lane_id: shortcuts.attention_lane_id.clone(),
+            attention_tab_id: shortcuts.attention_tab_id.clone(),
+            attention_panel_id: shortcuts.attention_panel_id.clone(),
+            attention_panel_card_id: shortcuts.attention_panel_card_id.clone(),
+            attention_panel_card_action_id: shortcuts.attention_panel_card_action_id.clone(),
+            attention_menu_item_id: shortcuts.attention_menu_item_id.clone(),
+            attention_menu_group_id: shortcuts.attention_menu_group_id.clone(),
+            attention_menu_group_shortcut_id: shortcuts.attention_menu_group_shortcut_id.clone(),
+            attention_menu_group_shortcut_binding_id,
+            default_menu_item_id: shortcuts.default_menu_item_id.clone(),
+            default_menu_group_id: shortcuts.default_menu_group_id.clone(),
+            default_menu_group_shortcut_id: shortcuts.default_menu_group_shortcut_id.clone(),
+            default_menu_group_shortcut_binding_id,
+            primary_menu_item_id: shortcuts.primary_menu_item_id.clone(),
+            primary_menu_group_id: shortcuts.primary_menu_group_id.clone(),
+            primary_menu_group_shortcut_id: shortcuts.primary_menu_group_shortcut_id.clone(),
+            primary_menu_group_shortcut_binding_id,
+            lane_count: shortcuts.lane_count,
+            tab_count: shortcuts.tab_count,
+            enabled_tab_count: shortcuts.enabled_tab_count,
+            disabled_tab_count: shortcuts.disabled_tab_count,
+            panel_count: shortcuts.panel_count,
+            enabled_panel_count: shortcuts.enabled_panel_count,
+            disabled_panel_count: shortcuts.disabled_panel_count,
+            empty_panel_count: shortcuts.empty_panel_count,
+            panel_card_count: shortcuts.panel_card_count,
+            enabled_panel_card_count: shortcuts.enabled_panel_card_count,
+            disabled_panel_card_count: shortcuts.disabled_panel_card_count,
+            empty_panel_card_count: shortcuts.empty_panel_card_count,
+            panel_card_action_count: shortcuts.panel_card_action_count,
+            enabled_panel_card_action_count: shortcuts.enabled_panel_card_action_count,
+            disabled_panel_card_action_count: shortcuts.disabled_panel_card_action_count,
+            empty_panel_card_action_count: shortcuts.empty_panel_card_action_count,
+            primary_panel_card_action_count: shortcuts.primary_panel_card_action_count,
+            menu_item_count: shortcuts.menu_item_count,
+            enabled_menu_item_count: shortcuts.enabled_menu_item_count,
+            disabled_menu_item_count: shortcuts.disabled_menu_item_count,
+            empty_menu_item_count: shortcuts.empty_menu_item_count,
+            primary_menu_item_count: shortcuts.primary_menu_item_count,
+            selected_menu_item_count: shortcuts.selected_menu_item_count,
+            attention_menu_item_count: shortcuts.attention_menu_item_count,
+            menu_group_count: shortcuts.menu_group_count,
+            enabled_menu_group_count: shortcuts.enabled_menu_group_count,
+            disabled_menu_group_count: shortcuts.disabled_menu_group_count,
+            empty_menu_group_count: shortcuts.empty_menu_group_count,
+            primary_menu_group_count: shortcuts.primary_menu_group_count,
+            selected_menu_group_count: shortcuts.selected_menu_group_count,
+            attention_menu_group_count: shortcuts.attention_menu_group_count,
+            menu_group_shortcut_count: shortcuts.menu_group_shortcut_count,
+            enabled_menu_group_shortcut_count: shortcuts.enabled_menu_group_shortcut_count,
+            disabled_menu_group_shortcut_count: shortcuts.disabled_menu_group_shortcut_count,
+            empty_menu_group_shortcut_count: shortcuts.empty_menu_group_shortcut_count,
+            primary_menu_group_shortcut_count: shortcuts.primary_menu_group_shortcut_count,
+            selected_menu_group_shortcut_count: shortcuts.selected_menu_group_shortcut_count,
+            attention_menu_group_shortcut_count: shortcuts.attention_menu_group_shortcut_count,
+            menu_group_shortcut_binding_count: menu_group_shortcut_bindings.len(),
+            enabled_menu_group_shortcut_binding_count,
+            disabled_menu_group_shortcut_binding_count,
+            empty_menu_group_shortcut_binding_count,
+            primary_menu_group_shortcut_binding_count,
+            selected_menu_group_shortcut_binding_count,
+            attention_menu_group_shortcut_binding_count,
+            menu_group_shortcut_bindings,
+            dispatch_queue_capability_id: shortcuts.dispatch_queue_capability_id.clone(),
+            dispatch_queue_summary_capability_id: shortcuts
+                .dispatch_queue_summary_capability_id
+                .clone(),
+            dispatch_queue_digest_capability_id: shortcuts
+                .dispatch_queue_digest_capability_id
+                .clone(),
+            dispatch_queue_lanes_capability_id: shortcuts
+                .dispatch_queue_lanes_capability_id
+                .clone(),
+            dispatch_queue_lane_tabs_capability_id: shortcuts
+                .dispatch_queue_lane_tabs_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panels_capability_id: shortcuts
+                .dispatch_queue_lane_tab_panels_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_cards_capability_id: shortcuts
+                .dispatch_queue_lane_tab_panel_cards_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_actions_capability_id: shortcuts
+                .dispatch_queue_lane_tab_panel_card_actions_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_capability_id: shortcuts
+                .dispatch_queue_lane_tab_panel_card_action_menu_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_groups_capability_id: shortcuts
+                .dispatch_queue_lane_tab_panel_card_action_menu_groups_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_capability_id: shortcuts
+                .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-bindings-json"
+                    .to_string(),
+            artifact_capability_count: shortcuts.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_json_value(self)
+            .to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BerkeleyAnalysisInventoryEntry {
     pub index: usize,
     pub directive: String,
@@ -7547,6 +7923,50 @@ impl BerkeleyAppDeck {
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self
             .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts(
+                persisted_state,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindings {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindings::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindings,
+        AnalysisExecutionError,
+    > {
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindings::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings(
+            persisted_state,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings(
                 persisted_state,
             )?
             .to_json())
@@ -10833,6 +11253,287 @@ fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shor
         "enabled": shortcut.enabled,
         "primary": shortcut.primary,
         "disabledReason": &shortcut.disabled_reason,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_json_value(
+    bindings: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindings,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", bindings.schema_version);
+    insert_json!("packageName", &bindings.package_name);
+    insert_json!("sourceFingerprint", &bindings.source_fingerprint);
+    insert_json!("title", &bindings.title);
+    insert_json!("startupRoute", &bindings.startup_route);
+    insert_json!("ready", bindings.ready);
+    insert_json!("severity", &bindings.severity);
+    insert_json!("attentionRequired", bindings.attention_required);
+    insert_json!("activeLaneId", &bindings.active_lane_id);
+    insert_json!("activeTabId", &bindings.active_tab_id);
+    insert_json!("activePanelId", &bindings.active_panel_id);
+    insert_json!("activePanelCardId", &bindings.active_panel_card_id);
+    insert_json!(
+        "activePanelCardActionId",
+        &bindings.active_panel_card_action_id
+    );
+    insert_json!("activeMenuItemId", &bindings.active_menu_item_id);
+    insert_json!("activeMenuGroupId", &bindings.active_menu_group_id);
+    insert_json!(
+        "activeMenuGroupShortcutId",
+        &bindings.active_menu_group_shortcut_id
+    );
+    insert_json!(
+        "activeMenuGroupShortcutBindingId",
+        &bindings.active_menu_group_shortcut_binding_id
+    );
+    insert_json!("attentionLaneId", &bindings.attention_lane_id);
+    insert_json!("attentionTabId", &bindings.attention_tab_id);
+    insert_json!("attentionPanelId", &bindings.attention_panel_id);
+    insert_json!("attentionPanelCardId", &bindings.attention_panel_card_id);
+    insert_json!(
+        "attentionPanelCardActionId",
+        &bindings.attention_panel_card_action_id
+    );
+    insert_json!("attentionMenuItemId", &bindings.attention_menu_item_id);
+    insert_json!("attentionMenuGroupId", &bindings.attention_menu_group_id);
+    insert_json!(
+        "attentionMenuGroupShortcutId",
+        &bindings.attention_menu_group_shortcut_id
+    );
+    insert_json!(
+        "attentionMenuGroupShortcutBindingId",
+        &bindings.attention_menu_group_shortcut_binding_id
+    );
+    insert_json!("defaultMenuItemId", &bindings.default_menu_item_id);
+    insert_json!("defaultMenuGroupId", &bindings.default_menu_group_id);
+    insert_json!(
+        "defaultMenuGroupShortcutId",
+        &bindings.default_menu_group_shortcut_id
+    );
+    insert_json!(
+        "defaultMenuGroupShortcutBindingId",
+        &bindings.default_menu_group_shortcut_binding_id
+    );
+    insert_json!("primaryMenuItemId", &bindings.primary_menu_item_id);
+    insert_json!("primaryMenuGroupId", &bindings.primary_menu_group_id);
+    insert_json!(
+        "primaryMenuGroupShortcutId",
+        &bindings.primary_menu_group_shortcut_id
+    );
+    insert_json!(
+        "primaryMenuGroupShortcutBindingId",
+        &bindings.primary_menu_group_shortcut_binding_id
+    );
+    insert_json!("laneCount", bindings.lane_count);
+    insert_json!("tabCount", bindings.tab_count);
+    insert_json!("enabledTabCount", bindings.enabled_tab_count);
+    insert_json!("disabledTabCount", bindings.disabled_tab_count);
+    insert_json!("panelCount", bindings.panel_count);
+    insert_json!("enabledPanelCount", bindings.enabled_panel_count);
+    insert_json!("disabledPanelCount", bindings.disabled_panel_count);
+    insert_json!("emptyPanelCount", bindings.empty_panel_count);
+    insert_json!("panelCardCount", bindings.panel_card_count);
+    insert_json!("enabledPanelCardCount", bindings.enabled_panel_card_count);
+    insert_json!("disabledPanelCardCount", bindings.disabled_panel_card_count);
+    insert_json!("emptyPanelCardCount", bindings.empty_panel_card_count);
+    insert_json!("panelCardActionCount", bindings.panel_card_action_count);
+    insert_json!(
+        "enabledPanelCardActionCount",
+        bindings.enabled_panel_card_action_count
+    );
+    insert_json!(
+        "disabledPanelCardActionCount",
+        bindings.disabled_panel_card_action_count
+    );
+    insert_json!(
+        "emptyPanelCardActionCount",
+        bindings.empty_panel_card_action_count
+    );
+    insert_json!(
+        "primaryPanelCardActionCount",
+        bindings.primary_panel_card_action_count
+    );
+    insert_json!("menuItemCount", bindings.menu_item_count);
+    insert_json!("enabledMenuItemCount", bindings.enabled_menu_item_count);
+    insert_json!("disabledMenuItemCount", bindings.disabled_menu_item_count);
+    insert_json!("emptyMenuItemCount", bindings.empty_menu_item_count);
+    insert_json!("primaryMenuItemCount", bindings.primary_menu_item_count);
+    insert_json!("selectedMenuItemCount", bindings.selected_menu_item_count);
+    insert_json!("attentionMenuItemCount", bindings.attention_menu_item_count);
+    insert_json!("menuGroupCount", bindings.menu_group_count);
+    insert_json!("enabledMenuGroupCount", bindings.enabled_menu_group_count);
+    insert_json!("disabledMenuGroupCount", bindings.disabled_menu_group_count);
+    insert_json!("emptyMenuGroupCount", bindings.empty_menu_group_count);
+    insert_json!("primaryMenuGroupCount", bindings.primary_menu_group_count);
+    insert_json!("selectedMenuGroupCount", bindings.selected_menu_group_count);
+    insert_json!(
+        "attentionMenuGroupCount",
+        bindings.attention_menu_group_count
+    );
+    insert_json!("menuGroupShortcutCount", bindings.menu_group_shortcut_count);
+    insert_json!(
+        "enabledMenuGroupShortcutCount",
+        bindings.enabled_menu_group_shortcut_count
+    );
+    insert_json!(
+        "disabledMenuGroupShortcutCount",
+        bindings.disabled_menu_group_shortcut_count
+    );
+    insert_json!(
+        "emptyMenuGroupShortcutCount",
+        bindings.empty_menu_group_shortcut_count
+    );
+    insert_json!(
+        "primaryMenuGroupShortcutCount",
+        bindings.primary_menu_group_shortcut_count
+    );
+    insert_json!(
+        "selectedMenuGroupShortcutCount",
+        bindings.selected_menu_group_shortcut_count
+    );
+    insert_json!(
+        "attentionMenuGroupShortcutCount",
+        bindings.attention_menu_group_shortcut_count
+    );
+    insert_json!(
+        "menuGroupShortcutBindingCount",
+        bindings.menu_group_shortcut_binding_count
+    );
+    insert_json!(
+        "enabledMenuGroupShortcutBindingCount",
+        bindings.enabled_menu_group_shortcut_binding_count
+    );
+    insert_json!(
+        "disabledMenuGroupShortcutBindingCount",
+        bindings.disabled_menu_group_shortcut_binding_count
+    );
+    insert_json!(
+        "emptyMenuGroupShortcutBindingCount",
+        bindings.empty_menu_group_shortcut_binding_count
+    );
+    insert_json!(
+        "primaryMenuGroupShortcutBindingCount",
+        bindings.primary_menu_group_shortcut_binding_count
+    );
+    insert_json!(
+        "selectedMenuGroupShortcutBindingCount",
+        bindings.selected_menu_group_shortcut_binding_count
+    );
+    insert_json!(
+        "attentionMenuGroupShortcutBindingCount",
+        bindings.attention_menu_group_shortcut_binding_count
+    );
+    value.insert(
+        "menuGroupShortcutBindings".to_string(),
+        serde_json::Value::Array(
+            bindings
+                .menu_group_shortcut_bindings
+                .iter()
+                .map(
+                    app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_binding_json_value,
+                )
+                .collect(),
+        ),
+    );
+    insert_json!(
+        "dispatchQueueCapabilityId",
+        &bindings.dispatch_queue_capability_id
+    );
+    insert_json!(
+        "dispatchQueueSummaryCapabilityId",
+        &bindings.dispatch_queue_summary_capability_id
+    );
+    insert_json!(
+        "dispatchQueueDigestCapabilityId",
+        &bindings.dispatch_queue_digest_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLanesCapabilityId",
+        &bindings.dispatch_queue_lanes_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabsCapabilityId",
+        &bindings.dispatch_queue_lane_tabs_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelsCapabilityId",
+        &bindings.dispatch_queue_lane_tab_panels_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardsCapabilityId",
+        &bindings.dispatch_queue_lane_tab_panel_cards_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionsCapabilityId",
+        &bindings.dispatch_queue_lane_tab_panel_card_actions_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuCapabilityId",
+        &bindings.dispatch_queue_lane_tab_panel_card_action_menu_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupsCapabilityId",
+        &bindings.dispatch_queue_lane_tab_panel_card_action_menu_groups_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutsCapabilityId",
+        &bindings.dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindingsCapabilityId",
+        &bindings
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_capability_id
+    );
+    insert_json!(
+        "artifactCapabilityCount",
+        bindings.artifact_capability_count
+    );
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_binding_json_value(
+    binding: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBinding,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &binding.id,
+        "shortcutId": &binding.shortcut_id,
+        "commandId": &binding.command_id,
+        "scope": &binding.scope,
+        "targetKind": &binding.target_kind,
+        "target": &binding.target,
+        "menuGroupId": &binding.menu_group_id,
+        "queueState": &binding.queue_state,
+        "label": &binding.label,
+        "summary": &binding.summary,
+        "accelerator": &binding.accelerator,
+        "menuItemIds": &binding.menu_item_ids,
+        "actionIds": &binding.action_ids,
+        "dispatchQueueItemCount": binding.dispatch_queue_item_count,
+        "badgeCount": binding.badge_count,
+        "position": binding.position,
+        "itemCount": binding.item_count,
+        "enabledItemCount": binding.enabled_item_count,
+        "disabledItemCount": binding.disabled_item_count,
+        "emptyItemCount": binding.empty_item_count,
+        "primaryItemCount": binding.primary_item_count,
+        "selectedItemCount": binding.selected_item_count,
+        "attentionItemCount": binding.attention_item_count,
+        "selected": binding.selected,
+        "defaultDispatch": binding.default_dispatch,
+        "active": binding.active,
+        "attention": binding.attention,
+        "disabled": binding.disabled,
+        "empty": binding.empty,
+        "enabled": binding.enabled,
+        "primary": binding.primary,
+        "disabledReason": &binding.disabled_reason,
     })
 }
 
