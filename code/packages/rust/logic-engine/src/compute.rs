@@ -245,6 +245,20 @@ pub enum ComputeOp {
     Cot,
     Sec,
     Csc,
+    /// Binary **minimum** / **maximum** — `min(a, b)` / `max(a, b)` over exactly
+    /// TWO operands. Unlike the aggregation [`ComputeOp::Min`]/[`ComputeOp::Max`]
+    /// (which reduce *every* observation of a single slot), these are honest
+    /// binary ops carried in a [`ComputeExpr::Bin`] with two sub-expressions —
+    /// the first binary-`Call` lowering, from a LaTeX `\min(a, b)` / `\max(a, b)`
+    /// (adj-lang's `latex "…"` surface). Dimensionally they behave like addition:
+    /// both operands must share a dimension (`min(usd, days)` is a category
+    /// error, exactly like `usd + days`) and the result carries that dimension.
+    /// They *select* one operand unchanged, so the exact-rational sidecar is
+    /// preserved from whichever operand won (no rounding, no new value). This is
+    /// what makes a capped/floored clinical quantity (a dose capped at a ceiling,
+    /// the worse of two labs) computable as a single native node.
+    Min2,
+    Max2,
     Sum,
     Count,
     Min,
@@ -280,6 +294,8 @@ impl ComputeOp {
             ComputeOp::Cot => "cot",
             ComputeOp::Sec => "sec",
             ComputeOp::Csc => "csc",
+            ComputeOp::Min2 => "min",
+            ComputeOp::Max2 => "max",
             ComputeOp::Sum => "sum",
             ComputeOp::Count => "count",
             ComputeOp::Min => "min",
@@ -542,6 +558,46 @@ fn eval(
                     (Some(a), Some(b)) if b.den == 1 => a.powi(b.num),
                     _ => None,
                 };
+                return Ok((
+                    DerivationNode::Op {
+                        op: *op,
+                        operands: vec![lhs, rhs],
+                        result,
+                    },
+                    result_dim,
+                    exact,
+                ));
+            }
+            // Binary min/max are also special: not a symmetric *combine* but a
+            // *selection*. Like addition both operands must share a dimension
+            // (`min(usd, days)` is a category error), so we reuse `DimOp::Add`
+            // purely for that same-dimension check and to carry the shared
+            // dimension through — but the value is one operand chosen unchanged,
+            // and the exact-rational sidecar is that same winning operand (no
+            // arithmetic, so nothing is lost).
+            if *op == ComputeOp::Min2 || *op == ComputeOp::Max2 {
+                let result_dim =
+                    Dimension::combine(DimOp::Add, &dim_l, &dim_r).map_err(|e| match e {
+                        crate::DimError::Mismatch { lhs, rhs, .. } => {
+                            ComputeError::DimensionMismatch { op: *op, lhs, rhs }
+                        }
+                    })?;
+                let (x, y) = (lhs.value(), rhs.value());
+                // A non-finite operand (a `Lit(NaN)`/`inf` in an LLM-emitted IR)
+                // would make the comparison meaningless, so reject it up front
+                // rather than let a NaN silently "win" a comparison.
+                if !x.is_finite() || !y.is_finite() {
+                    return Err(ComputeError::NonFinite { op: *op });
+                }
+                // Ties pick the LEFT operand (deterministic; the values are equal
+                // anyway). `min` takes the smaller, `max` the larger.
+                let pick_left = if *op == ComputeOp::Min2 {
+                    x <= y
+                } else {
+                    x >= y
+                };
+                let result = if pick_left { x } else { y };
+                let exact = if pick_left { exact_l } else { exact_r };
                 return Ok((
                     DerivationNode::Op {
                         op: *op,
@@ -1430,6 +1486,106 @@ mod tests {
         )
         .unwrap();
         assert!((avg.value - 20.0).abs() < 1e-12);
+    }
+
+    #[test]
+    fn binary_min_max_select_the_extreme_operand() {
+        // min(a, b) / max(a, b) as honest BINARY ops over two sub-expressions —
+        // distinct from the slot-reducing aggregation Min/Max. Selection, not a
+        // new value.
+        let kb = kb_with(vec![
+            Fact::certain(compound("a", vec![int(3)])),
+            Fact::certain(compound("b", vec![int(8)])),
+        ]);
+        let lo = compute(
+            "lo",
+            &bin(ComputeOp::Min2, refexpr("a"), refexpr("b")),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(lo.value, 3.0);
+        let hi = compute(
+            "hi",
+            &bin(ComputeOp::Max2, refexpr("a"), refexpr("b")),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(hi.value, 8.0);
+        // The result node is a two-operand Op, not an aggregation over one slot.
+        match &hi.tree {
+            DerivationNode::Op { op, operands, .. } => {
+                assert_eq!(*op, ComputeOp::Max2);
+                assert_eq!(operands.len(), 2);
+            }
+            other => panic!("expected a binary Op node, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn binary_min_max_preserve_the_winning_operands_exact_rational() {
+        // The winner is selected UNCHANGED, so its exact-rational sidecar carries
+        // through verbatim — no rounding, no arithmetic. `min(3, 8) = 3` keeps 3/1.
+        let kb = kb_with(vec![
+            Fact::certain(compound("a", vec![int(3)])),
+            Fact::certain(compound("b", vec![int(8)])),
+        ]);
+        let lo = compute(
+            "lo",
+            &bin(ComputeOp::Min2, refexpr("a"), refexpr("b")),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(lo.exact, ExactRational::new(3, 1));
+        let hi = compute(
+            "hi",
+            &bin(ComputeOp::Max2, refexpr("a"), refexpr("b")),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(hi.exact, ExactRational::new(8, 1));
+    }
+
+    #[test]
+    fn binary_min_carries_the_shared_dimension_and_rejects_a_mismatch() {
+        // Like addition: both operands must share a dimension. `min(usd, usd)`
+        // stays usd; `min(usd, days)` is the same category error as `usd + days`.
+        let kb = kb_with(vec![
+            money("cap", 200, "usd"),
+            money("dose", 150, "usd"),
+            Fact::certain(compound(
+                "age",
+                vec![compound("duration", vec![int(5), atom("days")])],
+            )),
+        ]);
+        let capped = compute(
+            "capped",
+            &bin(ComputeOp::Min2, refexpr("dose"), refexpr("cap")),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(capped.value, 150.0);
+        let err = compute(
+            "bad",
+            &bin(ComputeOp::Max2, refexpr("cap"), refexpr("age")),
+            &kb,
+        )
+        .unwrap_err();
+        assert!(matches!(err, ComputeError::DimensionMismatch { .. }), "{err:?}");
+    }
+
+    #[test]
+    fn binary_min_max_reject_a_non_finite_operand() {
+        // A NaN/inf operand (an LLM-emitted `Lit(NaN)`) would make the comparison
+        // meaningless, so it is a clean NonFinite error rather than a NaN silently
+        // "winning".
+        let kb = kb_with(vec![Fact::certain(compound("a", vec![int(3)]))]);
+        let err = compute(
+            "x",
+            &bin(ComputeOp::Min2, refexpr("a"), ComputeExpr::Lit(f64::NAN)),
+            &kb,
+        )
+        .unwrap_err();
+        assert!(matches!(err, ComputeError::NonFinite { .. }), "{err:?}");
     }
 
     #[test]

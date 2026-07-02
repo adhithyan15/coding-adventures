@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.28.0] - 2026-07-02 — binary `\min(a, b)` / `\max(a, b)` in `latex "…"`
+
+### Added
+
+- The `latex "…"` adapter now lowers the **binary** `\min(a, b)` / `\max(a, b)`
+  to the native `ComputeOp::Min2` / `Max2` — the **first two-argument (binary)
+  `Call` lowering**. The latex frontend parses the call's parenthesised argument
+  as a two-element `Sequence`; the adapter peels the transparent `Group`/`Fenced`
+  wrapper, requires **exactly two** operands, and builds the new
+  `ExprAst::Call2(BinFn, …)` → `ComputeExpr::Bin(Min2/Max2, …)`. These are the
+  `Func::Min`/`Func::Max` variants the frontend already parsed but the adapter
+  previously rejected as "not yet supported".
+- New surface AST: `BinFn { Min, Max }` and `ExprAst::Call2(BinFn, Box, Box)`,
+  kept distinct from the single-argument `NamedFn`/`ExprAst::Call` (honest arity)
+  and from the slot-reducing `AggOp::Min`/`Max`.
+- A one-argument (`\min(a)`) or three-argument (`\min(a, b, c)`) call has no
+  binary lowering and is a clean, explicit `UnsupportedLatexMath` error rather
+  than a silent mis-lowering. `gcd`/`lcm`/`det`/`Other` remain unsupported.
+
+### Tests
+
+- Two lower tests: `\min(a, b)` / `\max(a, b)` compute-and-decide to the correct
+  selected operand, and wrong-arity (`\min(a)`, `\min(a, b, c)`) is rejected.
+
 ## [0.27.0] - 2026-07-02 — rest of the trig family in `latex "…"` (`\arcsin`…/`\sinh`…/`\cot`/`\sec`/`\csc`)
 
 ### Added

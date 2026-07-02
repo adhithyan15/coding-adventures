@@ -32,8 +32,8 @@ use math_frontend::{BinOp, Func, MathExpr, Number, RelOp as MathRelOp, UnaryOp};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 use crate::ast::{
-    AggOp, Annotation, ArithOp, CmpOp, Define, DefineKind, Evidence, ExprAst, NamedFn, OptDir,
-    Program, RelOp, RuleLiteral, Statement, Term, TrustTierName,
+    AggOp, Annotation, ArithOp, BinFn, CmpOp, Define, DefineKind, Evidence, ExprAst, NamedFn,
+    OptDir, Program, RelOp, RuleLiteral, Statement, Term, TrustTierName,
 };
 
 /// Errors raised while adapting a generic AST to the typed AST.
@@ -1009,14 +1009,30 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
                 Box::new(ExprAst::Lit(1.0 / n)),
             ))
         }
-        // A named-function call `\sin(x)`, `\ln(x)`, `\exp(x)`, … lowers to the
-        // matching native transcendental op via `ExprAst::Call`. Only the curated
-        // single-argument transcendental set is supported; the other `Func`
-        // variants (the aggregate/multi-arg `min`/`max`/`gcd`/`lcm`/`det` and an
-        // unknown `Other` such as `\operatorname{trunc}`) have no single-argument
-        // scalar lowering yet and are a clean, explicit error rather than a silent
-        // mis-lowering.
+        // A named-function call. The single-argument transcendental set
+        // (`\sin(x)`, `\ln(x)`, `\exp(x)`, …) lowers to the matching native
+        // transcendental op via `ExprAst::Call`; the two-argument `\min(a, b)` /
+        // `\max(a, b)` lower to the native binary ops via `ExprAst::Call2` (their
+        // argument is a two-element `Sequence`, usually inside the call's
+        // parentheses). The remaining `Func` variants (aggregate/multi-arg
+        // `gcd`/`lcm`/`det` and an unknown `Other` such as `\operatorname{trunc}`)
+        // have no lowering yet and are a clean, explicit error rather than a
+        // silent mis-lowering.
         MathExpr::Call { func, arg } => {
+            // Binary min/max first — their argument is a comma-list, not a scalar.
+            if let Func::Min | Func::Max = func {
+                let bin = if matches!(func, Func::Min) {
+                    BinFn::Min
+                } else {
+                    BinFn::Max
+                };
+                let (a, b) = latex_two_args(arg, source, func)?;
+                return Ok(ExprAst::Call2(
+                    bin,
+                    Box::new(latex_math_to_expr_ast(a, source)?),
+                    Box::new(latex_math_to_expr_ast(b, source)?),
+                ));
+            }
             let named = match func {
                 Func::Sin => NamedFn::Sin,
                 Func::Cos => NamedFn::Cos,
@@ -1112,6 +1128,40 @@ fn latex_power_exponent(expr: &MathExpr, source: &str) -> Result<f64, AdapterErr
         });
     }
     Ok(v)
+}
+
+/// Peel a binary named-function argument (`\min(a, b)` / `\max(a, b)`) into its
+/// two operands. The latex frontend parses the parenthesised comma-list as a
+/// `Sequence([a, b])`, usually wrapped in a `Group`/`Fenced` (the `(…)`), so we
+/// strip those transparent wrappers and require **exactly two** items — a
+/// one-arg (`\min(a)`) or three-arg (`\min(a, b, c)`) call has no binary lowering
+/// and is a clean, explicit error rather than a silent mis-lowering.
+fn latex_two_args<'a>(
+    arg: &'a MathExpr,
+    source: &str,
+    func: &Func,
+) -> Result<(&'a MathExpr, &'a MathExpr), AdapterError> {
+    // Strip transparent parenthesisation to reach the underlying sequence.
+    let mut inner = arg;
+    loop {
+        match inner {
+            MathExpr::Group(b) => inner = b,
+            MathExpr::Fenced { body, .. } => inner = body,
+            _ => break,
+        }
+    }
+    if let MathExpr::Sequence(items) = inner {
+        if items.len() == 2 {
+            return Ok((&items[0], &items[1]));
+        }
+    }
+    Err(AdapterError::UnsupportedLatexMath {
+        source: source.to_string(),
+        detail: format!(
+            "{func:?} takes exactly two comma-separated arguments in ADJ arithmetic \
+             (e.g. \\min(a, b)); got {inner:?}"
+        ),
+    })
 }
 
 /// Validate an nth-root degree (`n` in `\sqrt[n]{x}`) and return it as a
