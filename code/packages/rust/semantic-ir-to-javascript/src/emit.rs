@@ -990,6 +990,49 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         out.push_str("__Sir.currentSelf()");
         return;
     }
+    // ── mixins (MX4): include / extend / class-method call ───────────
+    // The frontend lowers Ruby mixin surface to three more OOP builtins,
+    // each keyed by class/module *name-string* literals (never a live
+    // object), so the runtime dispatches by explicit `Map` key — a module
+    // named `constructor` is inert data, same bar as the method tables.
+    //
+    //   `include M` in `class C` → `__include__("C", "M")`
+    //                              → `__Sir.includeModule("C", "M")`
+    //   `extend  M` in `class C` → `__extend__("C", "M")`
+    //                              → `__Sir.extendModule("C", "M")`
+    //   `Klass.m(args…)`         → `__class_method__("Klass", "m", args…)`
+    //                              → `__Sir.callClassMethod("Klass", "m", args…)`
+    if name == "__include__" && args.len() == 2 {
+        // args: [owner-name, module-name].
+        out.push_str("__Sir.includeModule(");
+        emit_oop_name_arg(out, &args[0]);
+        out.push_str(", ");
+        emit_oop_name_arg(out, &args[1]);
+        out.push(')');
+        return;
+    }
+    if name == "__extend__" && args.len() == 2 {
+        // args: [owner-name, module-name].
+        out.push_str("__Sir.extendModule(");
+        emit_oop_name_arg(out, &args[0]);
+        out.push_str(", ");
+        emit_oop_name_arg(out, &args[1]);
+        out.push(')');
+        return;
+    }
+    if name == "__class_method__" && args.len() >= 2 {
+        // args: [class-name, method-name, call-args…].
+        out.push_str("__Sir.callClassMethod(");
+        emit_oop_name_arg(out, &args[0]);
+        out.push_str(", ");
+        emit_oop_name_arg(out, &args[1]);
+        for a in &args[2..] {
+            out.push_str(", ");
+            emit_expr(out, a, indent);
+        }
+        out.push(')');
+        return;
+    }
     // `raise` (SIR17) → throw a SIR exception via the inlined runtime.
     // Mirrors the TypeScript backend's `raise` arm; the first argument
     // decides the shape:
@@ -1657,6 +1700,42 @@ mod tests {
     #[test]
     fn emit_self_routes_to_current_self() {
         assert_eq!(emit_e(&bc("__self__", vec![])), "__Sir.currentSelf()");
+    }
+
+    // ── mixins (MX4): include / extend / class-method call ───────────
+
+    #[test]
+    fn emit_include_routes_to_include_module() {
+        // `include Greet` in `class Robot` → __include__("Robot", "Greet")
+        //                                   → __Sir.includeModule("Robot", "Greet").
+        let e = bc("__include__", vec![strlit("Robot"), strlit("Greet")]);
+        assert_eq!(emit_e(&e), r#"__Sir.includeModule("Robot", "Greet")"#);
+    }
+
+    #[test]
+    fn emit_extend_routes_to_extend_module() {
+        // `extend Counter` in `class Widget` → __extend__("Widget", "Counter")
+        //                                     → __Sir.extendModule("Widget", "Counter").
+        let e = bc("__extend__", vec![strlit("Widget"), strlit("Counter")]);
+        assert_eq!(emit_e(&e), r#"__Sir.extendModule("Widget", "Counter")"#);
+    }
+
+    #[test]
+    fn emit_class_method_call_routes_to_call_class_method() {
+        // `Widget.tally(1)` → __class_method__("Widget", "tally", 1)
+        //                    → __Sir.callClassMethod("Widget", "tally", 1).
+        let e = bc(
+            "__class_method__",
+            vec![strlit("Widget"), strlit("tally"), Expr::IntLit { value: 1, span: s() }],
+        );
+        assert_eq!(emit_e(&e), r#"__Sir.callClassMethod("Widget", "tally", 1)"#);
+    }
+
+    #[test]
+    fn emit_class_method_call_no_args() {
+        // `Widget.count` (no call args) → __class_method__("Widget", "count").
+        let e = bc("__class_method__", vec![strlit("Widget"), strlit("count")]);
+        assert_eq!(emit_e(&e), r#"__Sir.callClassMethod("Widget", "count")"#);
     }
 
     #[test]
