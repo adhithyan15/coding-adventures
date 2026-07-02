@@ -64,6 +64,39 @@ TMP="$OUT_DIR/FormulaBar.kt.tmp"
 } > "$TMP"
 mv "$TMP" "$OUT_DIR/FormulaBar.kt"
 
+# UI30 touch variant: FormulaBar.touch.mll stacks the address label ABOVE a
+# full-width input (Column) instead of the desktop Row. Same FormulaBar.mil
+# interface, so Main.kt can swap FormulaBar <-> FormulaBarTouch at runtime
+# against the identical dispatch contract. Kotlin names the composable after
+# the .mil component (FormulaBar), and the emitter also emits the shared
+# `sealed class FormulaBarEvent`; to let both variants coexist in package
+# `generated` we (1) strip the DUPLICATE FormulaBarEvent from the touch output
+# (it reuses the one from FormulaBar.kt) and (2) rename the composable to
+# FormulaBarTouch. Result: one event type, two layouts.
+echo "Compiling FormulaBar (Compose / Kotlin, touch)..."
+"$MOSAIC_COMPILE" --backend compose \
+  --interface "$SRC/FormulaBar.mil" \
+  --layout    "$SRC"   --variant touch \
+  --style     "$SRC/FormulaBar.dark.msl" \
+  -o "$OUT_DIR/FormulaBarTouch.kt.raw"
+TMP="$OUT_DIR/FormulaBarTouch.kt.tmp"
+{
+  echo "// THIS FILE IS GENERATED.  Edit FormulaBar.{mil,touch.mll,dark.msl}"
+  echo "// and re-run scripts/build.sh to regenerate."
+  echo
+  printf 'package generated\n\n'
+  # Drop the sealed-class FormulaBarEvent block (it lives in FormulaBar.kt in
+  # this same package). The class's own closing brace is the first column-0 `}`;
+  # nested data-class braces are indented, so `^}` matches only the outer close.
+  awk '/^sealed class FormulaBarEvent \{/{skip=1}
+       skip && /^\}/{skip=0; next}
+       skip{next}
+       {print}' "$OUT_DIR/FormulaBarTouch.kt.raw" \
+    | sed 's/fun FormulaBar(/fun FormulaBarTouch(/'
+} > "$TMP"
+mv "$TMP" "$OUT_DIR/FormulaBarTouch.kt"
+rm -f "$OUT_DIR/FormulaBarTouch.kt.raw"
+
 echo "Compiling Grid (Compose / Kotlin)..."
 # UI34 — Grid is now generated from the shared visicalc/mosaic/
 # Grid.{mil,desktop.mll,dark.msl} triple, same source the other six
