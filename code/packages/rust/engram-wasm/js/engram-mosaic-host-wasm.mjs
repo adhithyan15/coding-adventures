@@ -91,8 +91,14 @@ export function createEngramEngine(wasmBytes, options = {}) {
     return typeof options.now === "function" ? options.now() : Date.now();
   }
 
+  if (options.demo === true) {
+    ex.reset_demo();
+  }
+
   return {
     reset: () => ex.reset(),
+    resetDemo: () => ex.reset_demo(),
+    demoSnapshot: () => jsonResult(call0("demo_snapshot")),
     snapshot: () => jsonResult(call0("snapshot")),
     getState: () => jsonResult(call0("get_state")),
     loadSnapshot: (snapshot) => jsonResult(call1("load_snapshot", stringifyInput(snapshot))),

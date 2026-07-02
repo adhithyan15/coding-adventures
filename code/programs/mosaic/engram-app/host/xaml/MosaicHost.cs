@@ -261,7 +261,7 @@ public static class MosaicHost
 
         try
         {
-            Session = Native.eg_session_new();
+            Session = Native.eg_session_new_demo();
         }
         catch (Exception ex) when (IsNativeAvailabilityFailure(ex))
         {
@@ -273,7 +273,7 @@ public static class MosaicHost
 
         if (Session == IntPtr.Zero)
         {
-            LoadError = "eg_session_new returned null";
+            LoadError = "eg_session_new_demo returned null";
             session = IntPtr.Zero;
             unavailable = LoadError;
             return false;
@@ -325,8 +325,8 @@ public static class MosaicHost
 
     private static class Native
     {
-        [DllImport(NativeLibrary, EntryPoint = "eg_session_new", CallingConvention = CallingConvention.Cdecl)]
-        internal static extern IntPtr eg_session_new();
+        [DllImport(NativeLibrary, EntryPoint = "eg_session_new_demo", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr eg_session_new_demo();
 
         [DllImport(NativeLibrary, EntryPoint = "eg_session_free", CallingConvention = CallingConvention.Cdecl)]
         internal static extern void eg_session_free(IntPtr session);

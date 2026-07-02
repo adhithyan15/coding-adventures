@@ -46,7 +46,7 @@ class MosaicHost {
     final api = _EngramCapi.load();
     if (api == null) return null;
 
-    final session = api.egSessionNew();
+    final session = api.egSessionNewDemo();
     if (session == nullptr) return null;
 
     return MosaicHost._(api, session);
@@ -105,8 +105,8 @@ class MosaicHost {
 
 class _EngramCapi {
   _EngramCapi._(DynamicLibrary library)
-      : egSessionNew = library.lookupFunction<_EgSessionNewNative, _EgSessionNewDart>(
-          'eg_session_new',
+      : egSessionNewDemo = library.lookupFunction<_EgSessionNewNative, _EgSessionNewDart>(
+          'eg_session_new_demo',
         ),
         egSessionFree =
             library.lookupFunction<_EgSessionFreeNative, _EgSessionFreeDart>(
@@ -124,7 +124,7 @@ class _EngramCapi {
             _EgHandleEngramAppEventNative,
             _EgHandleEngramAppEventDart>('eg_handle_engram_app_event');
 
-  final _EgSessionNewDart egSessionNew;
+  final _EgSessionNewDart egSessionNewDemo;
   final _EgSessionFreeDart egSessionFree;
   final _EgStringFreeDart egStringFree;
   final _EgEngramAppPropsDart egEngramAppProps;

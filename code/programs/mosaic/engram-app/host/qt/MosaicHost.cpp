@@ -79,21 +79,21 @@ bool MosaicHost::ensureLoaded() {
     return false;
   }
 
-  sessionNew_ = resolveSymbol<EgSessionNewFn>(library_, "eg_session_new");
+  sessionNewDemo_ = resolveSymbol<EgSessionNewDemoFn>(library_, "eg_session_new_demo");
   sessionFree_ = resolveSymbol<EgSessionFreeFn>(library_, "eg_session_free");
   stringFree_ = resolveSymbol<EgStringFreeFn>(library_, "eg_string_free");
   engramAppProps_ = resolveSymbol<EgEngramAppPropsFn>(library_, "eg_engram_app_props");
   handleEngramAppEvent_ =
       resolveSymbol<EgHandleEngramAppEventFn>(library_, "eg_handle_engram_app_event");
 
-  if (sessionNew_ == nullptr || sessionFree_ == nullptr || stringFree_ == nullptr ||
+  if (sessionNewDemo_ == nullptr || sessionFree_ == nullptr || stringFree_ == nullptr ||
       engramAppProps_ == nullptr || handleEngramAppEvent_ == nullptr) {
     qWarning() << "Engram MosaicHost loaded engram-capi but required symbols are missing";
     library_.unload();
     return false;
   }
 
-  session_ = sessionNew_();
+  session_ = sessionNewDemo_();
   if (session_ == nullptr) {
     qWarning() << "Engram MosaicHost failed to create an Engram session";
     return false;

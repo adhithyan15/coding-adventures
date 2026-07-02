@@ -11,10 +11,12 @@ extern "C" {
 typedef struct EgSession EgSession;
 
 EgSession *eg_session_new(void);
+EgSession *eg_session_new_demo(void);
 void eg_session_free(EgSession *session);
 void eg_string_free(char *value);
 
 char *eg_snapshot(EgSession *session);
+char *eg_demo_snapshot(void);
 char *eg_load_snapshot(EgSession *session, const char *snapshot_json);
 char *eg_export_backup(EgSession *session, uint64_t exported_at);
 char *eg_import_backup(EgSession *session, const char *backup_json);
