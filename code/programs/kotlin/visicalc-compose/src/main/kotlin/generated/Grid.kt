@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.Checkbox
@@ -28,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -117,6 +119,9 @@ fun Grid(
                                 BasicTextField(
                                     value = editContent,
                                     onValueChange = { v -> dispatch(GridEvent.FormulaChange(v)) },
+                                    singleLine = true,
+                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                    keyboardActions = KeyboardActions(onDone = { dispatch(GridEvent.EditCommit) }),
                                     textStyle = TextStyle(color = if ( r == selectedRow && c == selectedCol ) Color(0xFFFFFFFF) else Color(0xFFCCCCCC), fontFamily = FontFamily.Monospace, fontSize = 12.sp),
                                 )
                             } else {

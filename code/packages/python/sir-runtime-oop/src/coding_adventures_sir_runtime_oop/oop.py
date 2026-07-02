@@ -213,6 +213,150 @@ def _class_name_arg(arg: Val) -> str:
     return arg if isinstance(arg, str) else class_of(arg)
 
 
+# ── User class/instance method tables (O1) ───────────────────────────────────
+#
+# The Ruby→SIR frontend HOISTS every method to a detached top-level function,
+# so nothing in the IR records that ``speak`` belongs to ``Dog``.  We recover
+# that association at *runtime* with two explicit tables, populated by emitted
+# ``__def_method__`` / ``__def_class_method__`` registrations:
+#
+#     _instance_methods[(class_name, method_name)] -> Closure   # def m
+#     _class_methods[(class_name, method_name)]    -> Closure   # def self.m
+#
+# **Model.**  A method value is a ``sir-runtime-core`` :class:`Closure` (the
+# hoisted top-level function captured by ``MakeClosure``); it is invoked with
+# :func:`apply` — never ``getattr``/``eval``/reflection on the source-derived
+# name (the C3 RCE lesson).  Dispatch is *always* an explicit dict lookup on the
+# ``(class, method)`` key, walking the registered ancestry chain.
+#
+# **Self / receiver.**  Instance-method dispatch and ``call_new`` push the
+# receiver onto the process-global self-stack (:func:`push_self`) before
+# invoking the body and pop after, so ``@ivar`` access inside the body reads the
+# right object with no explicit ``self`` parameter.  ``call_super`` runs in the
+# *same* receiver (no push/pop) — ``super`` is a re-dispatch on the current self.
+# This is the single-threaded v0 model documented at the top of this module;
+# true per-object/per-thread binding is out of scope for v0.
+#
+# The ``(class, method)`` pair is stored as a 2-tuple key here (Python dicts key
+# on tuples by value); the TypeScript mirror uses a ``"class\x00method"`` string
+# key because JS ``Map`` keys arrays by identity, not value.  Both are pure
+# value lookups with no reflection.
+
+_instance_methods: dict[tuple[str, str], Closure] = {}
+_class_methods: dict[tuple[str, str], Closure] = {}
+
+
+def def_method(class_name: str, method_name: str, fn: Closure) -> None:
+    """Register instance method ``method_name`` for ``class_name`` (``def m``).
+
+    Emitted by the frontend as ``__def_method__``; ``fn`` is the hoisted
+    top-level function as a :class:`Closure`.
+    """
+    _instance_methods[(class_name, method_name)] = fn
+
+
+def def_class_method(class_name: str, method_name: str, fn: Closure) -> None:
+    """Register class method ``method_name`` for ``class_name`` (``def self.m``).
+
+    Emitted by the frontend as ``__def_class_method__``.
+    """
+    _class_methods[(class_name, method_name)] = fn
+
+
+def _resolve_instance_method(class_name: str, method_name: str) -> Closure | None:
+    """Find ``method_name`` on ``class_name`` or any registered ancestor.
+
+    Walks the superclass chain (cycle-guarded, reusing the :func:`is_a`
+    ``seen``-set pattern) and returns the first matching :class:`Closure`, or
+    ``None`` if unresolved.
+    """
+    cur: str | None = class_name
+    seen: set[str] = set()
+    while cur is not None and cur not in seen:
+        fn = _instance_methods.get((cur, method_name))
+        if fn is not None:
+            return fn
+        seen.add(cur)
+        cur = superclass_of(cur)
+    return None
+
+
+def _resolve_class_method(class_name: str, method_name: str) -> Closure | None:
+    """Find class method ``method_name`` on ``class_name`` or an ancestor
+    (cycle-guarded ancestry walk); ``None`` if unresolved."""
+    cur: str | None = class_name
+    seen: set[str] = set()
+    while cur is not None and cur not in seen:
+        fn = _class_methods.get((cur, method_name))
+        if fn is not None:
+            return fn
+        seen.add(cur)
+        cur = superclass_of(cur)
+    return None
+
+
+def call_new(class_name: str, *args: Val) -> SirInstance:
+    """Allocate a ``class_name`` instance and run its ``initialize`` (``Foo.new``).
+
+    Allocates via :func:`new_instance`, pushes the new object as the current
+    self, and — if an ``initialize`` is registered for ``class_name`` or any
+    ancestor — invokes it with ``args`` (so ``@ivar`` assignments in the
+    constructor land on the new object).  Always pops self and returns the
+    object, even when there is no ``initialize`` (a plain allocation).
+    """
+    obj = new_instance(class_name)
+    push_self(obj)
+    try:
+        initializer = _resolve_instance_method(class_name, "initialize")
+        if initializer is not None:
+            apply(initializer, list(args))
+    finally:
+        pop_self()
+    return obj
+
+
+def call_super(method_name: str, class_name: str, *args: Val) -> Val:
+    """Dispatch ``super`` — re-run ``method_name`` from ``class_name``'s parent.
+
+    Walks from ``superclass_of(class_name)`` upward and invokes the first
+    ancestor implementation of ``method_name`` with ``args``, keeping the
+    *current* self bound (``super`` runs in the same receiver, so no push/pop).
+    If no ancestor defines the method, returns ``None`` (Ruby ``nil``) — the
+    runtime's honest floor, consistent with :func:`call_method`.
+    """
+    parent = superclass_of(class_name)
+    if parent is None:
+        return None
+    fn = _resolve_instance_method(parent, method_name)
+    if fn is None:
+        return None
+    return apply(fn, list(args))
+
+
+def call_class_method(class_name: str, method_name: str, *args: Val) -> Val:
+    """Dispatch a class method (``Foo.bar`` for ``def self.bar``).
+
+    Looks up ``method_name`` in the class-method table walking ``class_name``'s
+    ancestry and applies it; returns ``None`` if unresolved.  (``Foo.new`` is
+    the implicit class method but routes to :func:`call_new`, not here.)
+    """
+    fn = _resolve_class_method(class_name, method_name)
+    if fn is None:
+        return None
+    return apply(fn, list(args))
+
+
+def current_self() -> Val:
+    """The current receiver (top of the self-stack), or ``None`` if empty.
+
+    Backs the ``__self__`` builtin — a bare ``self`` in a method body.  Named
+    ``current_self`` (not ``self``) to avoid the Python keyword clash.  Returns
+    ``None`` (Ruby ``nil``) at top level where no receiver is bound rather than
+    the internal default-self sentinel.
+    """
+    return _self_stack[-1] if _self_stack else None
+
+
 # ── Built-in method catalog (SIR method-dispatch spec, M1) ───────────────────
 #
 # ``recv.meth(args…)`` reaches the backend as ``BuiltinCall("__method__",
@@ -1176,7 +1320,24 @@ def call_method(recv: Val, name: str, *args: Val) -> Val:
     The class argument to a predicate may arrive as a class-name **string** or as
     a value whose class is taken; ``instance_of?`` requires an exact
     (non-ancestor) match.
+
+    **User objects (O1).**  When ``recv`` is a user :class:`SirInstance`, a
+    method registered via ``def_method`` (walking the class's ancestry) is
+    dispatched first: the receiver is pushed as the current self, the stored
+    :class:`Closure` is applied with ``args``, and self is popped.  Only if no
+    user method resolves does dispatch fall through to the reflective built-ins
+    (``is_a?``/``class``/…) and the primitive catalog below — so ``obj.class``
+    still works while ``obj.speak`` runs the user body.
     """
+    if isinstance(recv, SirInstance):
+        user_fn = _resolve_instance_method(recv.sir_class, name)
+        if user_fn is not None:
+            push_self(recv)
+            try:
+                return apply(user_fn, list(args))
+            finally:
+                pop_self()
+
     if name in ("is_a?", "kind_of?"):
         return is_a(recv, _class_name_arg(args[0]))
     if name == "instance_of?":
@@ -1351,3 +1512,5 @@ def reset_oop() -> None:
     _default_self.ivars.clear()
     _cvars.clear()
     _methods.clear()
+    _instance_methods.clear()
+    _class_methods.clear()

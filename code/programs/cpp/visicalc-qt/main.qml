@@ -53,6 +53,27 @@ Window {
     // the active view participates in layout.
     property bool infinite: true
 
+    // Which FormulaBar LAYOUT is showing in classic-grid mode: the desktop Row
+    // (address label left of the input) or the UI30 touch Column (address label
+    // stacked ABOVE a full-width input, bigger tap target). Both are generated
+    // from the SAME FormulaBar.mil interface — only the .mll spatial arrangement
+    // differs — so they share `formulaText`, the model, and the commit/cancel
+    // handlers below. This is the "one component, many layouts" invariant made
+    // runtime-switchable, the native analogue of the web demo's layout toggle.
+    property bool touch: false
+
+    // Shared FormulaBar handlers — reused by BOTH layout variants so the two
+    // bars are behaviourally identical and only their shape differs.
+    function commitFormula() {
+        if (model) {
+            model.setSelected(root.formulaText);
+            root.formulaText = model.selectedRaw; // canonicalised source
+        }
+    }
+    function cancelFormula() {
+        root.formulaText = model ? model.selectedRaw : "";
+    }
+
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
@@ -74,18 +95,27 @@ Window {
                 font.pixelSize: 11
                 font.letterSpacing: 1.0
             }
+            // Toggle the FormulaBar layout variant. Only meaningful in classic-
+            // grid mode (the infinite sheet has no formula bar), so it's hidden
+            // when the infinite view is active.
+            Button {
+                visible: !root.infinite
+                text: root.touch ? "Desktop bar" : "Touch bar"
+                onClicked: root.touch = !root.touch
+            }
             Button {
                 text: root.infinite ? "Classic grid" : "Infinite sheet"
                 onClicked: root.infinite = !root.infinite
             }
         }
 
-        // FormulaBar — the AUTO-GENERATED component. The host pushes the
-        // selected cell's address + source in; on commit (Enter) it writes the
-        // edited text to the engine via `model.setSelected`, which recomputes.
+        // FormulaBar — DESKTOP layout (Row: address label left of the input).
+        // AUTO-GENERATED from FormulaBar.desktop.mll. The host pushes the
+        // selected cell's address + source in; on commit (Enter) the shared
+        // root.commitFormula() writes through to the engine, which recomputes.
         FormulaBar {
             id: formulaBar
-            visible: !root.infinite
+            visible: !root.infinite && !root.touch
             Layout.fillWidth: true
             Layout.topMargin: 8
             cellAddress: model ? model.cellAddress : ""
@@ -93,13 +123,26 @@ Window {
             readOnly: false
 
             onFormulaChange: (value) => root.formulaText = value
-            onCommit: {
-                if (model) {
-                    model.setSelected(root.formulaText);
-                    root.formulaText = model.selectedRaw; // canonicalised source
-                }
-            }
-            onCancel: { root.formulaText = model ? model.selectedRaw : "" }
+            onCommit: root.commitFormula()
+            onCancel: root.cancelFormula()
+        }
+
+        // FormulaBar — TOUCH layout (Column: address label stacked ABOVE a
+        // full-width input). AUTO-GENERATED from FormulaBar.touch.mll. Same
+        // .mil interface, same model contract, same shared handlers as the
+        // desktop bar above — only the spatial arrangement differs (UI30).
+        FormulaBarTouch {
+            id: formulaBarTouch
+            visible: !root.infinite && root.touch
+            Layout.fillWidth: true
+            Layout.topMargin: 8
+            cellAddress: model ? model.cellAddress : ""
+            formula: root.formulaText
+            readOnly: false
+
+            onFormulaChange: (value) => root.formulaText = value
+            onCommit: root.commitFormula()
+            onCancel: root.cancelFormula()
         }
 
         // Grid — AUTO-GENERATED. Its `viewportRows` is bound to the engine's

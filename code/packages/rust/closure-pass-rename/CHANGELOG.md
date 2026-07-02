@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename` crate will be documented in this file.
 
+## [0.12.0] - 2026-07-01
+
+### Added — CLOC12.149: rename locals through `FunctionExpression`
+
+`collect_all_idents_expr` records a nested function value's name +
+params + body idents (fresh-name avoidance). `rewrite_uses_expr` recurses
+into the body with the function's own name/params removed from the map,
+so a closure-over use of a renamed outer local is rewritten while a
+shadowed use keeps its inner name.
+
 ## [0.11.0] - 2026-07-01
 
 ### Added — upstream `RenameVarsTest.java` conformance port (#88, CLOC12.145)

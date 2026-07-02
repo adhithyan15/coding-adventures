@@ -733,17 +733,22 @@ module SqlVm =
                     | None   -> -1
                 let av = if idx >= 0 && idx < a.Length then a.[idx] else SqlValue.Null
                 let bv = if idx >= 0 && idx < b.Length then b.[idx] else SqlValue.Null
-                // Determine the raw comparison result, respecting NULL ordering.
-                let rawCmp =
+                // Determine the comparison result, respecting NULL ordering.
+                // NullOrder specifies where NULLs appear in the FINAL output,
+                // independent of sort direction.  Non-null comparisons are flipped
+                // for descending order.
+                result <-
                     match av, bv with
                     | SqlValue.Null, SqlValue.Null -> 0
                     | SqlValue.Null, _             ->
+                        // NullsFirst → NULL comes before non-null in final output → -1
+                        // NullsLast  → NULL comes after  non-null in final output →  1
                         match k.NullOrder with NullsFirst -> -1 | NullsLast -> 1
                     | _, SqlValue.Null             ->
                         match k.NullOrder with NullsFirst -> 1  | NullsLast -> -1
-                    | l, r -> SqlValues.compareValues (toObj l) (toObj r)
-                // Flip sign for descending order.
-                result <- match k.Direction with SortDir.Asc -> rawCmp | SortDir.Desc -> -rawCmp
+                    | l, r ->
+                        let rawCmp = SqlValues.compareValues (toObj l) (toObj r)
+                        match k.Direction with SortDir.Asc -> rawCmp | SortDir.Desc -> -rawCmp
                 ki <- ki + 1
             result
 

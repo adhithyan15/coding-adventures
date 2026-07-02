@@ -46,6 +46,15 @@ are two implementations of one documented ABI. The `lispy_runtime_golden`
 unit test pins the C side to the Rust `pub const`s/constructors so they can
 never silently diverge. See `code/specs/LANG77-lisp-native-runtime.md`.
 
+- `runtime/twig_gc.c` — **TWIG-GC**: a conservative mark-and-sweep garbage
+  collector (TWIG-GC, Layer 1 of `code/specs/native-aot-substrate.md`). Every
+  managed allocation (`__twig_gc_alloc`) is preceded by a 32-byte header and
+  tracked in a linked list. Collections trigger automatically when total live
+  bytes exceed an adaptive threshold (starts 1 MB, doubles/halves based on
+  survival rate). The stack scan is conservative: every word (and `word & ~0x7`
+  for NaN-boxed Lispy pointers) is tested as a potential managed pointer.
+  `__twig_lispy_cons` now uses `__twig_gc_alloc` instead of leaking `calloc`.
+
 LANG-FULL E4 / BA4 literal string output reuses this runtime path: native AOT
 preparation lowers `str_const` + `print_str` to `alloc_bytes`, `store_byte`, and
 `call_builtin "print_string"`, so source-level BASIC `PRINT "HELLO"` runs through

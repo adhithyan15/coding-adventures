@@ -23,6 +23,11 @@ from coding_adventures_sir_runtime_oop import (
     cvar_get as _sir_oop_cvar_get,
     cvar_set as _sir_oop_cvar_set,
     call_method as _sir_oop_call_method,
+    call_new as _sir_oop_call_new,
+    call_super as _sir_oop_call_super,
+    def_method as _sir_oop_def_method,
+    def_class_method as _sir_oop_def_class_method,
+    current_self as _sir_oop_current_self,
     sym_to_proc as _sir_oop_sym_to_proc,
     case_eq as _sir_oop_case_eq,
 )

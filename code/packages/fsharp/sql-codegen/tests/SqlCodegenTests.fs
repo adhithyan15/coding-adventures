@@ -926,3 +926,72 @@ let ``SELECT LIMIT ORDER BY emits both LimitResult and SortResult`` () =
     let instrs = compile plan
     Assert.True(anyInstr instrs (fun i -> match i with Instruction.SortResult _ -> true | _ -> false))
     Assert.True(anyInstr instrs (fun i -> i = Instruction.LimitResult(Some 10L, None)))
+
+// ── HAVING clause tests ───────────────────────────────────────────────────
+
+[<Fact>]
+let ``HAVING COUNT(*) > 1 emits FinalizeAgg in HAVING phase`` () =
+    // Build: SELECT COUNT(*) FROM t GROUP BY cat HAVING COUNT(*) > 1
+    let countAgg = { Func = AggFunction.Count; Arg = AggArg.Star; Alias = "cnt"; Distinct = false }
+    let catKey = colRef "cat"
+    let pred = Expr.BinaryOp(BinaryOperator.Gt, Expr.AggExpr(AggFunction.Count, AggArg.Star, false), Expr.Literal(SqlValue.Integer 1L))
+    let innerPlan = OptimizedPlan.Aggregate(simpleScan "t", [ catKey ], [ countAgg ])
+    let plan = OptimizedPlan.Having(innerPlan, pred)
+    let instrs = compile plan
+    // Should contain InitAgg
+    Assert.True(anyInstr instrs (fun i -> match i with Instruction.InitAgg _ -> true | _ -> false),
+        "Expected InitAgg")
+    // Should contain FinalizeAgg (for COUNT*)
+    Assert.True(anyInstr instrs (fun i -> match i with Instruction.FinalizeAgg _ -> true | _ -> false),
+        "Expected FinalizeAgg for HAVING predicate")
+    // Should contain JumpIfFalse (HAVING filter)
+    Assert.True(anyInstr instrs (fun i -> match i with Instruction.JumpIfFalse _ -> true | _ -> false),
+        "Expected JumpIfFalse for HAVING filter")
+
+[<Fact>]
+let ``HAVING SUM(amount) > 100 maps to FinalizeAgg for SUM slot`` () =
+    let sumAgg = { Func = AggFunction.Sum; Arg = AggArg.Expr(colRef "amount"); Alias = "total"; Distinct = false }
+    let pred = Expr.BinaryOp(BinaryOperator.Gt,
+                    Expr.AggExpr(AggFunction.Sum, AggArg.Expr(colRef "amount"), false),
+                    Expr.Literal(SqlValue.Integer 100L))
+    let innerPlan = OptimizedPlan.Aggregate(simpleScan "sales", [ colRef "dept" ], [ sumAgg ])
+    let plan = OptimizedPlan.Having(innerPlan, pred)
+    let instrs = compile plan
+    Assert.True(anyInstr instrs (fun i -> match i with Instruction.FinalizeAgg _ -> true | _ -> false))
+    Assert.True(anyInstr instrs (fun i -> match i with Instruction.JumpIfFalse _ -> true | _ -> false))
+
+[<Fact>]
+let ``HAVING with unrecognised AggExpr emits LoadConst Null`` () =
+    // The HAVING predicate references an aggregate not in the accumulator list
+    let countAgg = { Func = AggFunction.Count; Arg = AggArg.Star; Alias = "cnt"; Distinct = false }
+    // Predicate uses SUM(x) but the plan only has COUNT(*) — slot not found
+    let pred = Expr.BinaryOp(BinaryOperator.Gt,
+                    Expr.AggExpr(AggFunction.Sum, AggArg.Expr(colRef "x"), false),
+                    Expr.Literal(SqlValue.Integer 0L))
+    let innerPlan = OptimizedPlan.Aggregate(simpleScan "t", [], [ countAgg ])
+    let plan = OptimizedPlan.Having(innerPlan, pred)
+    let instrs = compile plan
+    // No matching slot → FinalizeAgg NOT emitted for SUM, LoadConst Null used instead
+    Assert.True(anyInstr instrs (fun i -> i = Instruction.LoadConst SqlValue.Null),
+        "Expected LoadConst Null for unrecognised aggregate in HAVING")
+
+[<Fact>]
+let ``No HAVING clause does not emit JumpIfFalse`` () =
+    let countAgg = { Func = AggFunction.Count; Arg = AggArg.Star; Alias = "cnt"; Distinct = false }
+    let plan = OptimizedPlan.Aggregate(simpleScan "t", [], [ countAgg ])
+    let instrs = compile plan
+    Assert.False(anyInstr instrs (fun i -> match i with Instruction.JumpIfFalse _ -> true | _ -> false),
+        "Expected no JumpIfFalse without HAVING clause")
+
+[<Fact>]
+let ``SortResult comes before LimitResult in combined ORDER BY LIMIT plan`` () =
+    let key = { KeyExpr = colRef "name"; Direction = SortDir.Asc; NullOrder = NullOrder.NullsFirst }
+    // Outer = Limit, inner = Sort — peelWrappers must produce Sort before Limit in postOps
+    let plan = OptimizedPlan.Limit(OptimizedPlan.Sort(simpleScan "users", [ key ]), Some 5L, None)
+    let instrs = compile plan
+    let sortIdx  = findInstr instrs (fun i -> match i with Instruction.SortResult _  -> true | _ -> false)
+    let limitIdx = findInstr instrs (fun i -> match i with Instruction.LimitResult _ -> true | _ -> false)
+    Assert.True(sortIdx.IsSome,  "Expected SortResult")
+    Assert.True(limitIdx.IsSome, "Expected LimitResult")
+    Assert.True(sortIdx.Value < limitIdx.Value,
+        sprintf "SortResult (idx %d) must precede LimitResult (idx %d)" sortIdx.Value limitIdx.Value)

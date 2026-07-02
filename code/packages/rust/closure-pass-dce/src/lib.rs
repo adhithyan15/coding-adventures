@@ -75,7 +75,7 @@ use coding_adventures_javascript_ast::{
     Declaration, EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit,
     ForOfStatement,
     ForStatement,
-    FunctionDeclaration, IfStatement, LogicalExpression, MemberExpression, NullLiteral,
+    FunctionDeclaration, FunctionExpression, IfStatement, LogicalExpression, MemberExpression, NullLiteral,
     NumericLiteral, ObjectExpression, Program, ProgramItem, Property, PropertyKey,
     ReturnStatement, Statement, StringLiteral, UnaryExpression, UndefinedLiteral, VarKind,
     DoWhileStatement, VariableDeclaration, VariableDeclarator, WhileStatement,
@@ -1243,6 +1243,18 @@ fn dce_expression(expr: &Expression, st: &mut DceState) -> Expression {
                     method: p.method,
                 })
                 .collect(),
+        }),
+        // Recurse into a function-value's body exactly as `dce_declaration`
+        // does for a `FunctionDeclaration` — dead code after a
+        // `return`/`throw` inside `var f = function(){ return; g(); }`
+        // is just as dead as in a named function.
+        Expression::FunctionExpression(f) => Expression::FunctionExpression(FunctionExpression {
+            cv: f.cv.clone(),
+            id: f.id.clone(),
+            params: f.params.clone(),
+            body: dce_block_statement(&f.body, st),
+            generator: f.generator,
+            is_async: f.is_async,
         }),
     }
 }

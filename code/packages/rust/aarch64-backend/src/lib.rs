@@ -222,6 +222,12 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // LANG-STR-RT — runtime string ops on LANG-STR-RT length-prefixed buffers.
     // Both operands are i64 pointers to `[int64_t len][char bytes...]` buffers.
     BuiltinSig { name: "str_eq", n_args: 2, returns: true },
+    // TWIG-GC (native-aot-substrate PR-1) — GC-managed allocation and safepoint.
+    // `gc_alloc(n)` returns a GC-tracked pointer (0 on OOM).
+    // `gc_safepoint()` triggers a collection when the live set exceeds the
+    // adaptive threshold.  Used by IIR `safepoint` lowering.
+    BuiltinSig { name: "gc_alloc",     n_args: 1, returns: true  },
+    BuiltinSig { name: "gc_safepoint", n_args: 0, returns: false },
 ];
 
 fn lookup_builtin(name: &str) -> Option<BuiltinSig> {
@@ -1211,12 +1217,24 @@ fn emit_instr(
     // exactly: `(CAR (CONS 7 9))` allocates a cell, stores 7/9, loads field
     // 0, and returns the raw `7`.  (V1 leaks like `alloc_bytes`; no GC.)
 
-    // `alloc -> <dest>` — a fresh 2-word LispyPair cell.  No size operand:
-    // the `ref<LispyPair>` is implicitly 2 fields.
+    // `alloc [<size>] -> <dest>` — allocate a GC-managed heap object.
+    //
+    // `srcs[0]` is an optional compile-time integer specifying the payload size
+    // in bytes.  If absent (legacy IIR that omits the size), we default to 16
+    // (two 8-byte words — the original LispyPair size).
+    //
+    // Calls `__twig_gc_alloc` (TWIG-GC, twig_gc.c) instead of the old
+    // `__twig_alloc_bytes` so that the allocation is tracked by the GC and
+    // freed when it becomes unreachable.  `__twig_gc_alloc` has the same
+    // signature: one i64 argument (byte count), returns i64 pointer.
     if op == "alloc" {
         let dest = require_dest(instr)?;
-        asm.mov_imm64(Reg::X0, 16); // 2 fields × 8 bytes
-        asm.bl_external("__twig_alloc_bytes");
+        let size_bytes: u64 = match instr.srcs.first() {
+            Some(CIROperand::Int(n)) if *n > 0 => *n as u64,
+            _ => 16, // default: 2-word LispyPair
+        };
+        asm.mov_imm64(Reg::X0, size_bytes);
+        asm.bl_external("__twig_gc_alloc");
         let slot = alloc.slot_of(dest);
         asm.str_(Reg::X0, Reg::Sp, slot)?;
         return Ok(());
@@ -1268,6 +1286,19 @@ fn emit_instr(
         asm.cset(Reg::X0, Cond::Eq);
         let slot = alloc.slot_of(dest);
         asm.str_(Reg::X0, Reg::Sp, slot)?;
+        return Ok(());
+    }
+
+    // `safepoint` — IIR back-edge / function-entry GC check.
+    //
+    // Lowers to a call to `__twig_gc_safepoint()` which triggers a GC
+    // cycle when gc_live_bytes >= gc_threshold.  No arguments, no return
+    // value, no dest register — the call clobbers X0-X7 + X30 per AAPCS64,
+    // but the callee-save convention means live slots on the stack are
+    // unaffected.  We do not need to save/restore anything because the frame
+    // allocator already spilled all live values before the safepoint.
+    if op == "safepoint" {
+        asm.bl_external("__twig_gc_safepoint");
         return Ok(());
     }
 

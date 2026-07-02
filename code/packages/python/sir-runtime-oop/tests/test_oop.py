@@ -792,3 +792,145 @@ def test_kernel_respond_to_is_honest() -> None:
     # An out-of-catalog name is still both nil and respond_to? == False.
     assert oop.call_method(True, "nonexistent_method") is None
     assert oop.call_method(True, "respond_to?", "nonexistent_method") is False
+
+
+# ── O1: user method tables, call_new / call_super / self / class methods ──────
+
+
+def test_call_new_runs_initialize_and_binds_self() -> None:
+    # Dog.new("Rex") — initialize sets @name on the freshly allocated object.
+    oop.define_class("Dog", None)
+
+    def _init(name: Val) -> Val:
+        return oop.ivar_set("@name", name)
+
+    oop.def_method("Dog", "initialize", Closure(_init))
+    dog = oop.call_new("Dog", "Rex")
+    assert isinstance(dog, oop.SirInstance)
+    assert dog.sir_class == "Dog"
+    assert dog.ivars["@name"] == "Rex"
+    # The self-stack is balanced after construction (initialize popped its self).
+    assert oop.current_self() is None
+
+
+def test_call_new_without_initialize_is_plain_allocation() -> None:
+    oop.define_class("Empty", None)
+    obj = oop.call_new("Empty")
+    assert isinstance(obj, oop.SirInstance)
+    assert obj.ivars == {}
+
+
+def test_call_new_inherits_initialize_from_ancestor() -> None:
+    oop.define_class("Base", None)
+    oop.define_class("Derived", "Base")
+    oop.def_method("Base", "initialize", Closure(lambda v: oop.ivar_set("@v", v)))
+    obj = oop.call_new("Derived", 7)
+    assert obj.sir_class == "Derived"
+    assert obj.ivars["@v"] == 7
+
+
+def test_call_method_dispatches_user_instance_method() -> None:
+    # Dog#speak reads @name via the current self pushed by call_method.
+    oop.define_class("Dog", None)
+    oop.def_method("Dog", "initialize", Closure(lambda n: oop.ivar_set("@name", n)))
+    oop.def_method(
+        "Dog", "speak", Closure(lambda: oop.ivar_get("@name") + " says woof")
+    )
+    dog = oop.call_new("Dog", "Rex")
+    assert oop.call_method(dog, "speak") == "Rex says woof"
+    # Self is balanced after dispatch.
+    assert oop.current_self() is None
+
+
+def test_call_method_walks_ancestry_for_user_method() -> None:
+    oop.define_class("Animal", None)
+    oop.define_class("Cat", "Animal")
+    oop.def_method("Animal", "legs", Closure(lambda: 4))
+    cat = oop.call_new("Cat")
+    assert oop.call_method(cat, "legs") == 4
+
+
+def test_call_method_falls_through_to_builtins_for_instances() -> None:
+    # A SirInstance with no user `class`/`is_a?` still resolves the reflective
+    # built-ins (no regression of the universal Object surface).
+    oop.define_class("Widget", None)
+    w = oop.call_new("Widget")
+    assert oop.call_method(w, "class") == "Widget"
+    assert oop.call_method(w, "is_a?", "Widget") is True
+    assert oop.call_method(w, "nil?") is False
+
+
+def test_call_super_walks_to_parent_implementation() -> None:
+    # Cat#describe calls super (Animal#describe) with the current self bound.
+    oop.define_class("Animal", None)
+    oop.define_class("Cat", "Animal")
+    oop.def_method(
+        "Animal", "describe", Closure(lambda: oop.ivar_get("@name") + " with 4 legs")
+    )
+
+    def _cat_describe() -> Val:
+        # super — same receiver, no new self.
+        return oop.call_super("describe", "Cat")
+
+    oop.def_method("Cat", "initialize", Closure(lambda n: oop.ivar_set("@name", n)))
+    oop.def_method("Cat", "describe", Closure(_cat_describe))
+    cat = oop.call_new("Cat", "Tom")
+    assert oop.call_method(cat, "describe") == "Tom with 4 legs"
+
+
+def test_call_super_returns_nil_when_no_ancestor_method() -> None:
+    oop.define_class("Lonely", None)
+    # No superclass at all → nil floor.
+    assert oop.call_super("whatever", "Lonely") is None
+    # Superclass exists but does not define the method → nil floor.
+    oop.define_class("Base", None)
+    oop.define_class("Sub", "Base")
+    assert oop.call_super("missing", "Sub") is None
+
+
+def test_call_class_method_dispatch_and_ancestry() -> None:
+    # Counter.zero — a `def self.zero` class method.
+    oop.define_class("Counter", None)
+    oop.def_class_method("Counter", "zero", Closure(lambda: 0))
+    assert oop.call_class_method("Counter", "zero") == 0
+    # Inherited class method resolves through the ancestry walk.
+    oop.define_class("Sub", "Counter")
+    assert oop.call_class_method("Sub", "zero") == 0
+    # Unknown class method → nil floor.
+    assert oop.call_class_method("Counter", "nope") is None
+
+
+def test_current_self_reflects_stack_top() -> None:
+    assert oop.current_self() is None
+    obj = oop.new_instance("Thing")
+    oop.push_self(obj)
+    assert oop.current_self() is obj
+    oop.pop_self()
+    assert oop.current_self() is None
+
+
+def test_self_return_chaining() -> None:
+    # Counter#inc returns self (current_self) for method chaining.
+    oop.define_class("Counter", None)
+    oop.def_method("Counter", "initialize", Closure(lambda: oop.ivar_set("@n", 0)))
+
+    def _inc() -> Val:
+        oop.ivar_set("@n", oop.ivar_get("@n") + 1)
+        return oop.current_self()
+
+    oop.def_method("Counter", "inc", Closure(_inc))
+    oop.def_method("Counter", "count", Closure(lambda: oop.ivar_get("@n")))
+    c = oop.call_new("Counter")
+    chained = oop.call_method(oop.call_method(c, "inc"), "inc")
+    assert chained is c
+    assert oop.call_method(c, "count") == 2
+
+
+def test_reset_oop_clears_method_tables() -> None:
+    oop.define_class("Dog", None)
+    oop.def_method("Dog", "speak", Closure(lambda: "woof"))
+    oop.def_class_method("Dog", "make", Closure(lambda: "made"))
+    oop.reset_oop()
+    # After reset the tables are empty → nil floor.
+    assert oop.call_class_method("Dog", "make") is None
+    assert oop.call_super("speak", "Dog") is None

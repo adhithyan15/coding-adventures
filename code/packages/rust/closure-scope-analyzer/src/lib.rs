@@ -68,7 +68,7 @@
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
     AssignmentTarget, BindingTarget, BlockStatement, CvId, Declaration, Expression, ForInit,
-    FunctionDeclaration, FunctionParam, Program, ProgramItem, Property, PropertyKey, Statement,
+    FunctionDeclaration, FunctionExpression, FunctionParam, Program, ProgramItem, Property, PropertyKey, Statement,
     VarKind, VariableDeclaration,
 };
 use serde::{Deserialize, Serialize};
@@ -564,6 +564,60 @@ fn walk_function_declaration(
     }
 }
 
+/// Walk a `FunctionExpression`. Mirrors [`walk_function_declaration`]
+/// with one deliberate difference rooted in JS scoping semantics:
+///
+/// A function *declaration* hoists its name into the **enclosing**
+/// scope. A named function *expression*'s name is **body-local** — it
+/// binds only inside the function's own scope, so the function can refer
+/// to itself for recursion (`var f = function rec(n){ return rec(n-1); }`)
+/// without leaking `rec` outward. So we create the function scope first
+/// and, when the expression is named, bind the name *inside* that scope
+/// (not the enclosing one). Anonymous expressions bind no name at all.
+///
+/// Getting this right matters for renaming soundness: a body reference to
+/// the function's own name must resolve to this local binding, never to a
+/// free/global of the same spelling.
+fn walk_function_expression(
+    fe: &FunctionExpression,
+    ctx: WalkCtx,
+    analysis: &mut ScopeAnalysis,
+    pending: &mut Vec<PendingReference>,
+) {
+    let function_scope = emit_scope(ScopeKind::Function, ctx.current, analysis);
+
+    // Named function expression: the name is visible ONLY inside the
+    // body, bound in the function's own scope.
+    if let Some(id) = &fe.id {
+        emit_binding(
+            id.name.clone(),
+            BindingKind::Function,
+            function_scope,
+            id.cv.clone(),
+            analysis,
+        );
+    }
+
+    for param in &fe.params {
+        let FunctionParam::Identifier(id) = param;
+        emit_binding(
+            id.name.clone(),
+            BindingKind::Param,
+            function_scope,
+            id.cv.clone(),
+            analysis,
+        );
+    }
+
+    let inner_ctx = WalkCtx {
+        current: function_scope,
+        enclosing_function: function_scope,
+    };
+    for stmt in &fe.body.body {
+        walk_statement(stmt, inner_ctx, analysis, pending);
+    }
+}
+
 fn walk_block_statement(
     block: &BlockStatement,
     ctx: WalkCtx,
@@ -800,6 +854,9 @@ fn walk_expression(
             for prop in &oe.properties {
                 walk_property(prop, ctx, analysis, pending);
             }
+        }
+        Expression::FunctionExpression(fe) => {
+            walk_function_expression(fe, ctx, analysis, pending);
         }
     }
 }

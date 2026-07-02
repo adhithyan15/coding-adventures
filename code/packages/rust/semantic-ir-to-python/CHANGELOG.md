@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.5.0 — OOP object-model emit arms (O1)
+
+Additive emit support for the object-model builtins the Ruby frontend will
+produce in O2. **No existing program changes behaviour** — nothing emits these
+builtins yet; the arms only fire once they appear, at which point they route to
+the `sir-runtime-oop` method-table helpers.
+
+- **New `emit_builtin_call` arms**, mirroring the existing `__method__` →
+  `_sir_oop_call_method` routing:
+  - `__new__(class, ...ctor_args)` → `_sir_oop_call_new(class, args…)`
+  - `__super__(method, class, ...args)` → `_sir_oop_call_super(method, class, args…)`
+  - `__def_method__(class, method, closure)` → `_sir_oop_def_method(...)`
+  - `__def_class_method__(class, method, closure)` → `_sir_oop_def_class_method(...)`
+  - `__self__()` → `_sir_oop_current_self()`
+  Class/method-name `StrLit`s are emitted through the normal expression path, so
+  they route through `quote_py_string` — never raw interpolation of a
+  source-derived name.
+- **Import gating** (`uses_oop`) now also fires on the new builtins, so the OOP
+  runtime import is present whenever any of them is emitted, and the import
+  header aliases `call_new`/`call_super`/`def_method`/`def_class_method`/
+  `current_self` to their `_sir_oop_*` names.
+- **Tests:** emit-shape unit tests for each arm; an import-gating test; and an
+  end-to-end execution proof — a hand-built `Dog#speak` module (`__def_method__`
+  + `__new__` + `__method__`) run through a real Python interpreter prints
+  `Rex says woof`, proving the emit → runtime wiring executes.
+
 ## 0.4.0 — user-defined exception-class ancestry (E2)
 
 The backend now threads user `class Child < Parent` inheritance edges into the

@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-globals` crate will be documented in this file.
 
+## [0.8.0] - 2026-07-01
+
+### Added — CLOC12.149: rename globals through `FunctionExpression`
+
+`collect_all_idents_expr` records a function value's name + params +
+body idents (avoid-set). `rename_apply_expr` recurses into the body with
+the function's own name and params **removed from the active map**, so a
+shadowed local is left untouched while genuine globals inside the body
+are still renamed — a self-contained soundness guarantee.
+
 ## [0.7.1] - 2026-06-30
 
 ### Added — CLOC12 upstream test port (`RenameVarsTest`)

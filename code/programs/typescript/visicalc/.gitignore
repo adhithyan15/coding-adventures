@@ -11,3 +11,6 @@ src/components/
 
 # OS junk
 .DS_Store
+
+# Vendored engine bundle — copied from visicalc-html/vendor by scripts/build.sh
+public/spreadsheet-engine-wasm.js

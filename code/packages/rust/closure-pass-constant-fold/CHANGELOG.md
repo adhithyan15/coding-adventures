@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.83.0] - 2026-07-01
+
+### Added — CLOC12.149: fold inside `FunctionExpression` bodies
+
+`fold_expression` now recurses into a `FunctionExpression` body via
+`fold_statement`, exactly as `fold_declaration` does for a
+`FunctionDeclaration`, so constants inside `var f = function(){ return
+1+1; }` fold. The function itself is not a foldable constant.
+
 ## [0.82.0] - 2026-07-01
 
 ### Added — `String#concat` coerces primitive-constant arguments (closes gap-143)

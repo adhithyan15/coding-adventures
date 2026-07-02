@@ -878,4 +878,658 @@ public class ExprTests
         Assert.Equal("b", instrs.OfType<LoadColumn>().Last().Column);
         Assert.IsType<BinaryOpInstr>(instrs.Last());
     }
+
+    // ── 37-45. All remaining BinaryOperator opcodes
+    [Fact]
+    public void Expr_BinaryOp_Sub() =>
+        Assert.Contains(SqlCodegen.CompileExpr(H.BinOp(BinaryOperator.Sub, H.Lit(5L), H.Lit(3L))),
+            i => i is BinaryOpInstr { Op: BinaryOpCode.Sub });
+
+    [Fact]
+    public void Expr_BinaryOp_Mul() =>
+        Assert.Contains(SqlCodegen.CompileExpr(H.BinOp(BinaryOperator.Mul, H.Lit(2L), H.Lit(3L))),
+            i => i is BinaryOpInstr { Op: BinaryOpCode.Mul });
+
+    [Fact]
+    public void Expr_BinaryOp_Div() =>
+        Assert.Contains(SqlCodegen.CompileExpr(H.BinOp(BinaryOperator.Div, H.Lit(6L), H.Lit(2L))),
+            i => i is BinaryOpInstr { Op: BinaryOpCode.Div });
+
+    [Fact]
+    public void Expr_BinaryOp_Mod() =>
+        Assert.Contains(SqlCodegen.CompileExpr(H.BinOp(BinaryOperator.Mod, H.Lit(7L), H.Lit(3L))),
+            i => i is BinaryOpInstr { Op: BinaryOpCode.Mod });
+
+    [Fact]
+    public void Expr_BinaryOp_NotEq() =>
+        Assert.Contains(SqlCodegen.CompileExpr(H.BinOp(BinaryOperator.NotEq, H.Col("x"), H.Lit(0L))),
+            i => i is BinaryOpInstr { Op: BinaryOpCode.Neq });
+
+    [Fact]
+    public void Expr_BinaryOp_Lt() =>
+        Assert.Contains(SqlCodegen.CompileExpr(H.BinOp(BinaryOperator.Lt, H.Col("age"), H.Lit(18L))),
+            i => i is BinaryOpInstr { Op: BinaryOpCode.Lt });
+
+    [Fact]
+    public void Expr_BinaryOp_Lte() =>
+        Assert.Contains(SqlCodegen.CompileExpr(H.BinOp(BinaryOperator.Lte, H.Col("age"), H.Lit(18L))),
+            i => i is BinaryOpInstr { Op: BinaryOpCode.Lte });
+
+    [Fact]
+    public void Expr_BinaryOp_Gt() =>
+        Assert.Contains(SqlCodegen.CompileExpr(H.BinOp(BinaryOperator.Gt, H.Col("price"), H.Lit(100L))),
+            i => i is BinaryOpInstr { Op: BinaryOpCode.Gt });
+
+    [Fact]
+    public void Expr_BinaryOp_Gte() =>
+        Assert.Contains(SqlCodegen.CompileExpr(H.BinOp(BinaryOperator.Gte, H.Col("score"), H.Lit(60L))),
+            i => i is BinaryOpInstr { Op: BinaryOpCode.Gte });
+
+    // ── 46. AggExpr in expression context falls back to LoadConst(null)
+    [Fact]
+    public void Expr_AggExpr_EmitsNullPlaceholder()
+    {
+        var aggExpr = new SqlExpr.AggExpr(AggFunction.Count, new AggArg.Star(), false);
+        var instrs  = SqlCodegen.CompileExpr(aggExpr);
+        var lc = Assert.Single(instrs.OfType<LoadConst>());
+        Assert.Null(lc.Value);
+    }
+
+    // ── 47. Wildcard in expression context falls back to LoadConst(null)
+    [Fact]
+    public void Expr_Wildcard_EmitsNullPlaceholder()
+    {
+        var instrs = SqlCodegen.CompileExpr(new SqlExpr.Wildcard());
+        var lc = Assert.Single(instrs.OfType<LoadConst>());
+        Assert.Null(lc.Value);
+    }
+}
+
+// ── 37. HAVING tests ─────────────────────────────────────────────────────────
+
+public class HavingTests
+{
+    // Build a GROUP BY + HAVING plan: SELECT dept, COUNT(*) FROM t GROUP BY dept HAVING COUNT(*) > 1
+    private static LogicalPlan MakeGroupByHavingPlan(string table)
+    {
+        var countItem = new AggregateItem(AggFunction.Count, new AggArg.Star(), "_count", false);
+        var agg = new AggregatePlan(
+            new ScanPlan(table, null),
+            new SqlExpr[] { new SqlExpr.Column(null, "dept") },
+            new[] { countItem });
+        var havingPred = new SqlExpr.BinaryOp(
+            BinaryOperator.Gt,
+            new SqlExpr.AggExpr(AggFunction.Count, new AggArg.Star(), false),
+            new SqlExpr.Literal(1L));
+        var having = new HavingPlan(agg, havingPred);
+        return new ProjectPlan(having, new OutputColumn[]
+        {
+            new OutputColumn.Expr(new SqlExpr.Column(null, "dept"), "dept"),
+            new OutputColumn.Expr(new SqlExpr.Column(null, "_count"), "cnt"),
+        });
+    }
+
+    [Fact]
+    public void Having_HasAdvanceGroupKey()
+    {
+        var plan = Optimizer.Lift(MakeGroupByHavingPlan("sales"));
+        var prog = SqlCodegen.CompileOptimized(plan);
+        H.HasAny<AdvanceGroupKey>(prog);
+    }
+
+    [Fact]
+    public void Having_HasJumpIfFalse()
+    {
+        var plan = Optimizer.Lift(MakeGroupByHavingPlan("sales"));
+        var prog = SqlCodegen.CompileOptimized(plan);
+        H.HasAny<JumpIfFalse>(prog);
+    }
+
+    [Fact]
+    public void Having_HasFinalizeAgg()
+    {
+        var plan = Optimizer.Lift(MakeGroupByHavingPlan("sales"));
+        var prog = SqlCodegen.CompileOptimized(plan);
+        H.HasAny<FinalizeAgg>(prog);
+    }
+
+    [Fact]
+    public void Having_HasSaveGroupKey()
+    {
+        var plan = Optimizer.Lift(MakeGroupByHavingPlan("orders"));
+        var prog = SqlCodegen.CompileOptimized(plan);
+        H.HasAny<SaveGroupKey>(prog);
+    }
+
+    [Fact]
+    public void Having_HaltPresent()
+    {
+        var plan = Optimizer.Lift(MakeGroupByHavingPlan("t"));
+        var prog = SqlCodegen.CompileOptimized(plan);
+        H.HasHalt(prog);
+    }
+
+    // HAVING with SUM aggregate
+    [Fact]
+    public void Having_SumAggregate_HasInitAgg()
+    {
+        var sumItem = new AggregateItem(AggFunction.Sum, new AggArg.Expr(new SqlExpr.Column(null, "amount")), "_sum", false);
+        var agg = new AggregatePlan(
+            new ScanPlan("orders", null),
+            new SqlExpr[] { new SqlExpr.Column(null, "region") },
+            new[] { sumItem });
+        var havingPred = new SqlExpr.BinaryOp(
+            BinaryOperator.Gt,
+            new SqlExpr.AggExpr(AggFunction.Sum, new AggArg.Expr(new SqlExpr.Column(null, "amount")), false),
+            new SqlExpr.Literal(100L));
+        var having = new HavingPlan(agg, havingPred);
+        var project = new ProjectPlan(having, new OutputColumn[]
+        {
+            new OutputColumn.Expr(new SqlExpr.Column(null, "region"), "region"),
+            new OutputColumn.Expr(new SqlExpr.Column(null, "_sum"), "total"),
+        });
+        var plan = Optimizer.Lift(project);
+        var prog = SqlCodegen.CompileOptimized(plan);
+        H.HasAny<InitAgg>(prog);
+        var init = prog.Instructions.OfType<InitAgg>().First();
+        Assert.Equal(AggFunc.Sum, init.Func);
+    }
+
+    // HAVING with compound predicate: COUNT(*) > 1 AND SUM(x) < 1000
+    [Fact]
+    public void Having_CompoundHavingPredicate_HasMultipleFinalizeAgg()
+    {
+        var countItem = new AggregateItem(AggFunction.Count, new AggArg.Star(), "_count", false);
+        var sumItem   = new AggregateItem(AggFunction.Sum, new AggArg.Expr(new SqlExpr.Column(null, "val")), "_sum", false);
+        var agg = new AggregatePlan(
+            new ScanPlan("t", null),
+            new SqlExpr[] { new SqlExpr.Column(null, "grp") },
+            new[] { countItem, sumItem });
+        // HAVING COUNT(*) > 1 AND SUM(val) < 1000
+        var havingPred = new SqlExpr.BinaryOp(
+            BinaryOperator.And,
+            new SqlExpr.BinaryOp(
+                BinaryOperator.Gt,
+                new SqlExpr.AggExpr(AggFunction.Count, new AggArg.Star(), false),
+                new SqlExpr.Literal(1L)),
+            new SqlExpr.BinaryOp(
+                BinaryOperator.Lt,
+                new SqlExpr.AggExpr(AggFunction.Sum, new AggArg.Expr(new SqlExpr.Column(null, "val")), false),
+                new SqlExpr.Literal(1000L)));
+        var having = new HavingPlan(agg, havingPred);
+        var project = new ProjectPlan(having, new OutputColumn[]
+        {
+            new OutputColumn.Expr(new SqlExpr.Column(null, "grp"), "grp"),
+            new OutputColumn.Expr(new SqlExpr.Column(null, "_count"), "cnt"),
+        });
+        var plan = Optimizer.Lift(project);
+        var prog = SqlCodegen.CompileOptimized(plan);
+        // Should have at least two FinalizeAgg instructions (one for the predicate check,
+        // one for the emit phase).
+        Assert.True(prog.Instructions.OfType<FinalizeAgg>().Count() >= 2,
+            "Expected multiple FinalizeAgg for compound HAVING");
+    }
+
+    // HAVING with unknown AggExpr falls back to LoadConst(null)
+    [Fact]
+    public void Having_UnknownAggExpr_FallsBackToNull()
+    {
+        // Build a HAVING plan where the HAVING predicate references a MAX agg
+        // but the aggregate plan only defines COUNT(*).
+        var countItem = new AggregateItem(AggFunction.Count, new AggArg.Star(), "_count", false);
+        var agg = new AggregatePlan(
+            new ScanPlan("t", null),
+            new SqlExpr[] { new SqlExpr.Column(null, "dept") },
+            new[] { countItem });
+        // HAVING MAX(salary) > 50000 -- but MAX is not in the agg list
+        var havingPred = new SqlExpr.BinaryOp(
+            BinaryOperator.Gt,
+            new SqlExpr.AggExpr(AggFunction.Max, new AggArg.Expr(new SqlExpr.Column(null, "salary")), false),
+            new SqlExpr.Literal(50000L));
+        var having = new HavingPlan(agg, havingPred);
+        var project = new ProjectPlan(having, new OutputColumn[]
+        {
+            new OutputColumn.Expr(new SqlExpr.Column(null, "dept"), "dept"),
+            new OutputColumn.Expr(new SqlExpr.Column(null, "_count"), "cnt"),
+        });
+        var plan = Optimizer.Lift(project);
+        // Should compile without throwing; the HAVING check emits LoadConst(null).
+        var prog = SqlCodegen.CompileOptimized(plan);
+        H.HasHalt(prog);
+    }
+}
+
+// ── 38. Bare aggregate (no wrapping Project) ──────────────────────────────────
+
+public class BareAggregateTests
+{
+    [Fact]
+    public void BareAggregate_NoProject_HasInitAgg()
+    {
+        // Compile OptAggregate directly without an OptProject wrapper.
+        var items = new[] { new AggregateItem(AggFunction.Count, new AggArg.Star(), "_count", false) };
+        var agg   = new AggregatePlan(new ScanPlan("t", null), Array.Empty<SqlExpr>(), items);
+        var opt   = Optimizer.Lift(agg);
+        var prog  = SqlCodegen.CompileOptimized(opt);
+        H.HasAny<InitAgg>(prog);
+    }
+
+    [Fact]
+    public void BareAggregate_NoProject_HasFinalizeAgg()
+    {
+        var items = new[] { new AggregateItem(AggFunction.Sum, new AggArg.Expr(new SqlExpr.Column(null, "price")), "_sum", false) };
+        var agg   = new AggregatePlan(new ScanPlan("products", null), Array.Empty<SqlExpr>(), items);
+        var opt   = Optimizer.Lift(agg);
+        var prog  = SqlCodegen.CompileOptimized(opt);
+        H.HasAny<FinalizeAgg>(prog);
+        var fa = prog.Instructions.OfType<FinalizeAgg>().First();
+        Assert.Equal(AggFunc.Sum, fa.Func);
+    }
+
+    [Fact]
+    public void BareAggregate_WithGroupBy_HasLoadGroupKey()
+    {
+        var items = new[] { new AggregateItem(AggFunction.Count, new AggArg.Star(), "_c", false) };
+        var agg   = new AggregatePlan(
+            new ScanPlan("orders", null),
+            new SqlExpr[] { new SqlExpr.Column(null, "region") },
+            items);
+        var opt  = Optimizer.Lift(agg);
+        var prog = SqlCodegen.CompileOptimized(opt);
+        H.HasAny<LoadGroupKey>(prog);
+    }
+
+    // Aggregate with Avg/Min/Max functions to cover MapAggFunc branches
+    [Fact]
+    public void BareAggregate_AvgMinMax_FuncsMap()
+    {
+        var items = new[]
+        {
+            new AggregateItem(AggFunction.Avg, new AggArg.Expr(new SqlExpr.Column(null, "score")), "_avg", false),
+            new AggregateItem(AggFunction.Min, new AggArg.Expr(new SqlExpr.Column(null, "score")), "_min", false),
+            new AggregateItem(AggFunction.Max, new AggArg.Expr(new SqlExpr.Column(null, "score")), "_max", false),
+        };
+        var agg  = new AggregatePlan(new ScanPlan("t", null), Array.Empty<SqlExpr>(), items);
+        var opt  = Optimizer.Lift(agg);
+        var prog = SqlCodegen.CompileOptimized(opt);
+        var funcs = prog.Instructions.OfType<InitAgg>().Select(i => i.Func).ToHashSet();
+        Assert.Contains(AggFunc.Avg, funcs);
+        Assert.Contains(AggFunc.Min, funcs);
+        Assert.Contains(AggFunc.Max, funcs);
+    }
+
+    // COUNT(expr) (non-star) should use AggFunc.Count, not CountStar
+    [Fact]
+    public void BareAggregate_CountExprArg_UsesCountNotCountStar()
+    {
+        var items = new[]
+        {
+            new AggregateItem(AggFunction.Count, new AggArg.Expr(new SqlExpr.Column(null, "id")), "_count", false)
+        };
+        var agg  = new AggregatePlan(new ScanPlan("t", null), Array.Empty<SqlExpr>(), items);
+        var opt  = Optimizer.Lift(agg);
+        var prog = SqlCodegen.CompileOptimized(opt);
+        var init = prog.Instructions.OfType<InitAgg>().First();
+        Assert.Equal(AggFunc.Count, init.Func);
+    }
+}
+
+// ── 39. Compile(LogicalPlan) overload schema recovery ────────────────────────
+
+public class CompileOverloadTests
+{
+    // When the optimizer emits OptEmptyResult (e.g. LIMIT 0), the Compile overload
+    // recovers the result schema from the logical plan's ProjectPlan.
+    [Fact]
+    public void Compile_RecoverSchemaFromLogicalPlan_WhenOptEmptyResult()
+    {
+        // LIMIT 0 → optimizer produces OptEmptyResult
+        var inner = new ProjectPlan(
+            new ScanPlan("t", null),
+            new OutputColumn[] { new OutputColumn.Expr(new SqlExpr.Column(null, "x"), "x") });
+        var plan  = new LimitPlan(inner, 0L, null); // LIMIT 0 → OptEmptyResult
+        var prog  = SqlCodegen.Compile(plan);
+        // The schema should be recovered even though no rows are produced.
+        Assert.Contains("x", prog.ResultSchema);
+    }
+
+    [Fact]
+    public void Compile_NormalPlan_HasResultSchema()
+    {
+        var plan = new ProjectPlan(
+            new ScanPlan("users", null),
+            new OutputColumn[] { new OutputColumn.Expr(new SqlExpr.Column(null, "name"), "name") });
+        var prog = SqlCodegen.Compile(plan);
+        Assert.Contains("name", prog.ResultSchema);
+    }
+
+    // Compile with SortPlan → DistinctPlan → ProjectPlan spine (exercises ExtractSchemaFromLogical)
+    [Fact]
+    public void Compile_SortLimitDistinctSpine_SchemaRecovered()
+    {
+        // Build a plan with a deep spine where the optimizer still emits rows
+        // so ResultSchema gets populated normally.
+        var inner   = new ProjectPlan(new ScanPlan("t", null),
+            new OutputColumn[] { new OutputColumn.Expr(new SqlExpr.Column(null, "v"), "v") });
+        var sorted  = new SortPlan(inner, new[] { new SortKey(new SqlExpr.Column(null, "v"), SortDir.Asc, NullOrder.NullsLast) });
+        var limited = new LimitPlan(sorted, 10L, null);
+        var prog = SqlCodegen.Compile(limited);
+        Assert.Contains("v", prog.ResultSchema);
+    }
+}
+
+// ── 40. OutputColumn.Star in project ─────────────────────────────────────────
+
+public class StarProjectTests
+{
+    [Fact]
+    public void Project_WithStar_EmitsStarColumnName()
+    {
+        // SELECT * FROM t → output column is OutputColumn.Star
+        var plan = new ProjectPlan(new ScanPlan("t", null),
+            new OutputColumn[] { new OutputColumn.Star() });
+        var opt  = Optimizer.Lift(plan);
+        var prog = SqlCodegen.CompileOptimized(opt);
+        // Star gets schema name "*"
+        H.HasAny<SetResultSchema>(prog);
+        var schema = prog.Instructions.OfType<SetResultSchema>().First().Columns;
+        Assert.Contains("*", schema);
+    }
+
+    [Fact]
+    public void Project_WithStar_EmitsLoadConst()
+    {
+        var plan = new ProjectPlan(new ScanPlan("t", null),
+            new OutputColumn[] { new OutputColumn.Star() });
+        var opt  = Optimizer.Lift(plan);
+        var prog = SqlCodegen.CompileOptimized(opt);
+        // Star emits LoadConst(null) as placeholder
+        H.HasAny<LoadConst>(prog);
+    }
+}
+
+// ── 41. Left join with ON condition ──────────────────────────────────────────
+
+public class LeftJoinWithConditionTests
+{
+    [Fact]
+    public void LeftJoin_WithCondition_HasJoinSetMatched()
+    {
+        var cond = new SqlExpr.BinaryOp(
+            BinaryOperator.Eq,
+            new SqlExpr.Column("u", "id"),
+            new SqlExpr.Column("o", "user_id"));
+        var join = new JoinPlan(
+            new ScanPlan("users", "u"),
+            new ScanPlan("orders", "o"),
+            JoinKind.Left,
+            cond);
+        var plan = new ProjectPlan(join,
+            new OutputColumn[] { new OutputColumn.Expr(new SqlExpr.Column("u", "id"), "id") });
+        var opt  = Optimizer.Lift(plan);
+        var prog = SqlCodegen.CompileOptimized(opt);
+        H.HasAny<JoinSetMatched>(prog);
+        H.HasAny<JoinIfMatched>(prog);
+        H.HasAny<JumpIfFalse>(prog);
+    }
+}
+
+// ── 42. Bare scan/filter/join in CompileCore (no project) ────────────────────
+
+public class BareScanTests
+{
+    [Fact]
+    public void BareScan_EmitsOpenScanAndEmitRow()
+    {
+        // OptScan without OptProject wrapping — hits the bare scan branch in CompileCore.
+        var plan = new ScanPlan("t", null);
+        var opt  = Optimizer.Lift(plan);
+        var prog = SqlCodegen.CompileOptimized(opt);
+        H.HasAny<OpenScan>(prog);
+        H.HasAny<EmitRow>(prog);
+    }
+
+    [Fact]
+    public void BareFilter_EmitsJumpIfFalse()
+    {
+        var pred = new SqlExpr.BinaryOp(BinaryOperator.Eq, new SqlExpr.Column(null, "x"), new SqlExpr.Literal(1L));
+        var plan = new FilterPlan(new ScanPlan("t", null), pred);
+        var opt  = Optimizer.Lift(plan);
+        var prog = SqlCodegen.CompileOptimized(opt);
+        H.HasAny<JumpIfFalse>(prog);
+        H.HasAny<EmitRow>(prog);
+    }
+}
+
+// ── 43. Aggregate without GroupBy (no SaveGroupKey / no LoadGroupKey) ─────────
+
+public class AggregateNoGroupByTests
+{
+    [Fact]
+    public void Aggregate_NoGroupBy_HasNoSaveGroupKey()
+    {
+        var items = new[] { new AggregateItem(AggFunction.Count, new AggArg.Star(), "_count", false) };
+        var agg   = new AggregatePlan(new ScanPlan("t", null), Array.Empty<SqlExpr>(), items);
+        var plan  = new ProjectPlan(agg, new OutputColumn[]
+        {
+            new OutputColumn.Expr(new SqlExpr.Column(null, "_count"), "cnt")
+        });
+        var opt  = Optimizer.Lift(plan);
+        var prog = SqlCodegen.CompileOptimized(opt);
+        // SaveGroupKey(0) is still emitted but LoadGroupKey is not (no group-by columns to load).
+        H.HasNone<LoadGroupKey>(prog);
+    }
+
+    [Fact]
+    public void Aggregate_NoGroupBy_AdvanceGroupKeyHasGroupByFalse()
+    {
+        var items = new[] { new AggregateItem(AggFunction.Count, new AggArg.Star(), "_c", false) };
+        var agg   = new AggregatePlan(new ScanPlan("t", null), Array.Empty<SqlExpr>(), items);
+        var plan  = new ProjectPlan(agg, new OutputColumn[]
+        {
+            new OutputColumn.Expr(new SqlExpr.Column(null, "_c"), "cnt")
+        });
+        var opt  = Optimizer.Lift(plan);
+        var prog = SqlCodegen.CompileOptimized(opt);
+        var agk = prog.Instructions.OfType<AdvanceGroupKey>().First();
+        Assert.False(agk.HasGroupBy);
+    }
+}
+
+// ── 44. ExpressionColumn with no alias (falls back to column name) ─────────────
+
+public class ProjectColumnNameTests
+{
+    [Fact]
+    public void Project_ExprColumnNoAlias_UsesColumnName()
+    {
+        // OutputColumn.Expr with no alias: name should come from the Column expression.
+        var plan = new ProjectPlan(new ScanPlan("t", null),
+            new OutputColumn[]
+            {
+                new OutputColumn.Expr(new SqlExpr.Column(null, "name"), null)
+            });
+        var opt  = Optimizer.Lift(plan);
+        var prog = SqlCodegen.CompileOptimized(opt);
+        var schema = prog.Instructions.OfType<SetResultSchema>().First().Columns;
+        Assert.Contains("name", schema);
+    }
+
+    [Fact]
+    public void Project_ExprNonColumnNoAlias_UsesFallbackName()
+    {
+        // OutputColumn.Expr with a non-column expr and no alias: name is "col_i".
+        var plan = new ProjectPlan(new ScanPlan("t", null),
+            new OutputColumn[]
+            {
+                new OutputColumn.Expr(new SqlExpr.Literal(42L), null)
+            });
+        var opt  = Optimizer.Lift(plan);
+        var prog = SqlCodegen.CompileOptimized(opt);
+        var schema = prog.Instructions.OfType<SetResultSchema>().First().Columns;
+        Assert.Contains("col_0", schema);
+    }
+}
+
+// ── 45. HAVING with non-aggregate leaf in predicate ───────────────────────────
+
+public class HavingLeafExprTests
+{
+    // HAVING uses CompileHavingExpr; a plain column reference in the predicate
+    // should fall through to CompileExprInCtx (the default branch).
+    [Fact]
+    public void Having_PlainColumnInPredicate_FallsBackToExprCompiler()
+    {
+        var countItem = new AggregateItem(AggFunction.Count, new AggArg.Star(), "_count", false);
+        var agg = new AggregatePlan(
+            new ScanPlan("t", null),
+            new SqlExpr[] { new SqlExpr.Column(null, "dept") },
+            new[] { countItem });
+        // HAVING dept = 'Sales' (a plain column, not an aggregate expr)
+        var havingPred = new SqlExpr.BinaryOp(
+            BinaryOperator.Eq,
+            new SqlExpr.Column(null, "dept"),
+            new SqlExpr.Literal("Sales"));
+        var having = new HavingPlan(agg, havingPred);
+        var project = new ProjectPlan(having, new OutputColumn[]
+        {
+            new OutputColumn.Expr(new SqlExpr.Column(null, "dept"), "dept"),
+            new OutputColumn.Expr(new SqlExpr.Column(null, "_count"), "cnt"),
+        });
+        var plan = Optimizer.Lift(project);
+        var prog = SqlCodegen.CompileOptimized(plan);
+        // Should compile; the binary op check emits JumpIfFalse
+        H.HasAny<JumpIfFalse>(prog);
+    }
+}
+
+// ── 46. HAVING expression compiler — all recursive arms ───────────────────────
+
+public class HavingExprCompilerTests
+{
+    private static (OptAggregate agg, IReadOnlyList<int> slots) BuildAgg()
+    {
+        // A single COUNT(*) aggregate so we can build an OptAggregate for testing
+        var countItem = new AggregateItem(AggFunction.Count, new AggArg.Star(), "_c", false);
+        var logical   = new AggregatePlan(
+            new ScanPlan("t", null),
+            new SqlExpr[] { new SqlExpr.Column(null, "dept") },
+            new[] { countItem });
+        var opt = Optimizer.Lift(logical) as OptAggregate
+                  ?? throw new InvalidOperationException("Expected OptAggregate");
+        return (opt, new List<int> { 0 });
+    }
+
+    // HAVING IS NULL(x) — hits PlIsNull arm in CompileHavingExpr
+    [Fact]
+    public void Having_IsNull_InPredicate()
+    {
+        var countItem = new AggregateItem(AggFunction.Count, new AggArg.Star(), "_count", false);
+        var agg = new AggregatePlan(
+            new ScanPlan("t", null),
+            new SqlExpr[] { new SqlExpr.Column(null, "dept") },
+            new[] { countItem });
+        var havingPred = new SqlExpr.IsNull(new SqlExpr.Column(null, "dept"));
+        var having  = new HavingPlan(agg, havingPred);
+        var project = new ProjectPlan(having, new OutputColumn[]
+        {
+            new OutputColumn.Expr(new SqlExpr.Column(null, "dept"), "dept"),
+            new OutputColumn.Expr(new SqlExpr.Column(null, "_count"), "cnt"),
+        });
+        var plan = Optimizer.Lift(project);
+        var prog = SqlCodegen.CompileOptimized(plan);
+        H.HasAny<IsNullInstr>(prog);
+    }
+
+    // HAVING IS NOT NULL(x) — hits PlIsNotNull arm
+    [Fact]
+    public void Having_IsNotNull_InPredicate()
+    {
+        var countItem = new AggregateItem(AggFunction.Count, new AggArg.Star(), "_count", false);
+        var agg = new AggregatePlan(
+            new ScanPlan("t", null),
+            new SqlExpr[] { new SqlExpr.Column(null, "dept") },
+            new[] { countItem });
+        var havingPred = new SqlExpr.IsNotNull(new SqlExpr.Column(null, "dept"));
+        var having  = new HavingPlan(agg, havingPred);
+        var project = new ProjectPlan(having, new OutputColumn[]
+        {
+            new OutputColumn.Expr(new SqlExpr.Column(null, "dept"), "dept"),
+            new OutputColumn.Expr(new SqlExpr.Column(null, "_count"), "cnt"),
+        });
+        var plan = Optimizer.Lift(project);
+        var prog = SqlCodegen.CompileOptimized(plan);
+        H.HasAny<IsNotNullInstr>(prog);
+    }
+
+    // HAVING x BETWEEN low AND high — hits PlBetween arm
+    [Fact]
+    public void Having_Between_InPredicate()
+    {
+        var countItem = new AggregateItem(AggFunction.Count, new AggArg.Star(), "_count", false);
+        var agg = new AggregatePlan(
+            new ScanPlan("t", null),
+            new SqlExpr[] { new SqlExpr.Column(null, "dept") },
+            new[] { countItem });
+        var havingPred = new SqlExpr.Between(
+            new SqlExpr.Column(null, "dept"),
+            new SqlExpr.Literal("A"),
+            new SqlExpr.Literal("Z"));
+        var having  = new HavingPlan(agg, havingPred);
+        var project = new ProjectPlan(having, new OutputColumn[]
+        {
+            new OutputColumn.Expr(new SqlExpr.Column(null, "dept"), "dept"),
+            new OutputColumn.Expr(new SqlExpr.Column(null, "_count"), "cnt"),
+        });
+        var plan = Optimizer.Lift(project);
+        var prog = SqlCodegen.CompileOptimized(plan);
+        H.HasAny<BetweenInstr>(prog);
+    }
+
+    // HAVING upper(dept) = 'SALES' — hits FuncCall arm
+    [Fact]
+    public void Having_FuncCall_InPredicate()
+    {
+        var countItem = new AggregateItem(AggFunction.Count, new AggArg.Star(), "_count", false);
+        var agg = new AggregatePlan(
+            new ScanPlan("t", null),
+            new SqlExpr[] { new SqlExpr.Column(null, "dept") },
+            new[] { countItem });
+        var havingPred = new SqlExpr.BinaryOp(
+            BinaryOperator.Eq,
+            new SqlExpr.FuncCall("upper", new SqlExpr[] { new SqlExpr.Column(null, "dept") }),
+            new SqlExpr.Literal("SALES"));
+        var having  = new HavingPlan(agg, havingPred);
+        var project = new ProjectPlan(having, new OutputColumn[]
+        {
+            new OutputColumn.Expr(new SqlExpr.Column(null, "dept"), "dept"),
+            new OutputColumn.Expr(new SqlExpr.Column(null, "_count"), "cnt"),
+        });
+        var plan = Optimizer.Lift(project);
+        var prog = SqlCodegen.CompileOptimized(plan);
+        Assert.Contains(prog.Instructions, i => i is CallScalar { Func: "upper" });
+    }
+
+    // HAVING NOT (x > 0) — hits UnaryOp arm
+    [Fact]
+    public void Having_UnaryNot_InPredicate()
+    {
+        var countItem = new AggregateItem(AggFunction.Count, new AggArg.Star(), "_count", false);
+        var agg = new AggregatePlan(
+            new ScanPlan("t", null),
+            new SqlExpr[] { new SqlExpr.Column(null, "dept") },
+            new[] { countItem });
+        var havingPred = new SqlExpr.UnaryOp(
+            UnaryOperator.Not,
+            new SqlExpr.BinaryOp(BinaryOperator.Eq, new SqlExpr.Column(null, "dept"), new SqlExpr.Literal("X")));
+        var having  = new HavingPlan(agg, havingPred);
+        var project = new ProjectPlan(having, new OutputColumn[]
+        {
+            new OutputColumn.Expr(new SqlExpr.Column(null, "dept"), "dept"),
+            new OutputColumn.Expr(new SqlExpr.Column(null, "_count"), "cnt"),
+        });
+        var plan = Optimizer.Lift(project);
+        var prog = SqlCodegen.CompileOptimized(plan);
+        Assert.Contains(prog.Instructions, i => i is UnaryOpInstr { Op: UnaryOpCode.Not });
+    }
 }

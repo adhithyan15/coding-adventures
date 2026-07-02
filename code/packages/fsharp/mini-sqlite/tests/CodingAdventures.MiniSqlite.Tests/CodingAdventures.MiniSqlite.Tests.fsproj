@@ -3,6 +3,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <Include>[CodingAdventures.MiniSqlite]*</Include>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,5 +17,13 @@
   <ItemGroup>
     <ProjectReference Include="../../CodingAdventures.MiniSqlite.fsproj" />
     <Compile Include="MiniSqliteTests.fs" />
+    <Compile Include="ConformanceTests.fs" />
+  </ItemGroup>
+
+  <!-- Copy conformance fixtures to output directory so tests can read them -->
+  <ItemGroup>
+    <None Include="../../../../../specs/mini-sqlite-conformance/fixtures/*.json"
+          CopyToOutputDirectory="PreserveNewest"
+          LinkBase="fixtures" />
   </ItemGroup>
 </Project>

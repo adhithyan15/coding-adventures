@@ -26,6 +26,81 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   instead of building a function.  `length` remains special-cased ahead of the
   allowlist as a property read.
 
+## 0.7.0 — user-defined-class OOP: instantiation, dispatch, super, ivars (O3)
+
+The JavaScript analogue of O1's Python/TypeScript OOP runtime.  The
+backend now **executes** user-defined-class object-orientation end-to-end
+through Node, using an inlined `__Sir` OOP runtime (no import, no
+`npm install`) — the JS half of the SIR18 `Classes` dispatch surface.
+
+### Added
+
+- **Inlined OOP runtime (`runtime.rs`).**  Added to the self-contained
+  `__Sir` IIFE:
+  - `SirInstance` — a user object tagged with its class name, carrying a
+    prototype-less (`Object.create(null)`) instance-variable bag; plus
+    `newInstance(cls)`.
+  - `methodTable` / `classMethodTable` — instance and class ("static")
+    method tables, each a real `Map` keyed on a **flat `"Class\x00method"`
+    string** (NUL-joined so distinct `(class, method)` pairs never
+    collide).  `defMethod(cls, name, fn)` / `defClassMethod(cls, name, fn)`
+    register a method body closure.
+  - `callNew(cls, …args)` — allocate, resolve the inherited `initialize`
+    by walking `class → superclass` (the SAME `seen`-guarded ancestry map
+    the exception runtime uses), apply it with `self` bound, and return the
+    instance (Ruby discards `initialize`'s result).
+  - `callMethod` **extended**: a `SirInstance` receiver resolves the user
+    method table (walking ancestry) and applies with `self` bound; every
+    other receiver falls through to the **unchanged** built-in / collection
+    path (arrays' `push`/`map`/…, strings, the RCE-hardened allowlist).
+  - `callSuper(method, cls, …args)` — resolve `method` from the
+    *superclass* of `cls` and apply with the current `self` still bound.
+  - `currentSelf()` + a `pushSelf`/`popSelf` self-stack (balanced with
+    try/finally, so an exception thrown mid-method still unwinds `self`).
+  - `ivarGet`/`ivarSet` and `cvarGet`/`cvarSet` acting on the current
+    `self` (unset reads yield `null`, matching Ruby nil).
+
+- **OOP emit arms (`emit.rs`).**  `emit_builtin_call` now routes the O2
+  frontend's OOP builtins to the runtime: `__new__`→`__Sir.callNew`,
+  `__super__`→`callSuper`, `__def_method__`→`defMethod`,
+  `__def_class_method__`→`defClassMethod`, `__self__`→`currentSelf()`.
+  Class/method-name operands (a `StrLit`, or a `Const` VarRef like
+  `Dog.new`) emit as string literals via `quote_js_string`.  `@x`/`@@x`
+  reads and writes (`Scope::Instance`/`ClassVar`) lower to
+  `ivarGet`/`ivarSet` / `cvarGet`/`cvarSet` — these scopes previously hit
+  the deferred-scope panic.
+
+- **Feature acceptance (`lib.rs`).**  `ACCEPTED_FEATURES` now includes
+  `InstanceVars` and `ClassVars` (alongside the already-accepted
+  `Classes`/`Constants`).  Genuinely-unsupported constructs (e.g.
+  `StrConcat` string interpolation, `TailCalls`, `Intrinsics`) are still
+  rejected cleanly rather than mis-emitted.
+
+### Security
+
+- **All OOP dispatch is explicit `Map` lookup on a `(class, method)`
+  string key — never `recv[name]`, reflection, `eval`, or `new Function`
+  on a source-derived name** (the same C3 RCE lesson that bit this crate's
+  `callMethod`).  A user class or method literally named `constructor` /
+  `__proto__` / `prototype` is only ever a Map *key*: a miss floors to a
+  clean `NoMethodError`, never reaching a host callable.  The method tables
+  are real `Map`s (not `{}`) and the instance/class-var bags are
+  prototype-less, so a `"__proto__"` name cannot poison any prototype
+  chain.  Every ancestry walk is `seen`-guarded, so a cyclic hierarchy
+  terminates instead of looping.
+
+### Tests
+
+- Emitted-shape unit tests for every new builtin (`__new__`→`callNew`,
+  `__super__`→`callSuper`, `def`/`def self`→`defMethod`/`defClassMethod`,
+  `__self__`→`currentSelf`) and for `@ivar`/`@@cvar` reads/writes.
+- Node execution-proofs (hand-built SIR modules): **P1** Dog
+  `initialize`/`speak` prints `Rex says woof`; **P2** `Cat < Animal` with
+  `super(4)` and a parent-set ivar prints `Tom with 4`; a security proof
+  that `__new__("constructor")` + a `__proto__` method dispatch does NOT
+  execute host code (clean method-miss); and a cyclic-ancestry (`A<B<A`)
+  proof that resolution terminates.
+
 ## 0.6.0 — exception handling (try/catch/raise) + user-class ancestry (E1)
 
 ### Added

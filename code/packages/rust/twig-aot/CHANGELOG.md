@@ -1,5 +1,33 @@
 # Changelog — `twig-aot`
 
+## 0.25.0 — 2026-07-01 — TWIG-GC: conservative mark-and-sweep GC for native AOT
+
+**TWIG-GC** (native-aot-substrate Layer 1, `code/specs/native-aot-substrate.md`):
+Added `runtime/twig_gc.c` — a portable conservative mark-and-sweep garbage
+collector for every language that targets the native AOT backend.
+
+Key design points:
+
+- **Conservative stack scanning**: registers flushed via `setjmp`; every stack
+  word (and `word & ~0x7` for NaN-boxed Lispy pointers) is tested against the
+  live-object table.  No GC maps or safepoint metadata needed from the compiler.
+- **32-byte `gc_header_t`** prepended before each allocation; payload is always
+  16-byte–aligned, satisfying the Lispy HEAP-tag requirement (low 3 bits clear).
+- **Adaptive threshold**: starts at 1 MB; doubles when >50% of heap survives;
+  halves otherwise (floor 1 MB) — matches Go/JVM ergonomic GC heuristics.
+- **Public API**: `__twig_gc_alloc(n)`, `__twig_gc_collect()`,
+  `__twig_gc_safepoint()`, `__twig_gc_live_bytes()`, `__twig_gc_collection_count()`.
+- **Stack-base detection**: macOS via `pthread_get_stackaddr_np`; Linux via
+  `pthread_getattr_np + pthread_attr_getstack`; Windows via
+  `__readgsqword(0x08)` (TEB.StackBase).
+
+**`lispy_runtime.c` update**: `__twig_lispy_cons` now calls `__twig_gc_alloc(16)`
+instead of `calloc(1, 16)`.  Cons cells are now GC-tracked and freed when
+unreachable; McCarthy Lisp programs no longer leak heap on every `CONS`.
+
+**`build.rs` update**: `twig_gc.c` added to the `cc::Build` compilation alongside
+`twig_runtime.c` and `lispy_runtime.c`; `cargo:rerun-if-changed` wired up.
+
 ## 0.24.0 — 2026-07-01 — LANG-STR-RT: string function parameters on NativeAot
 
 **Root cause fixed:** `str_const dest = "HELLO"` was removed from the IIR

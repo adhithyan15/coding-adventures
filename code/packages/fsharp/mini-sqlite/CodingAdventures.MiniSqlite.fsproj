@@ -3,13 +3,25 @@
     <TargetFramework>net9.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>CodingAdventures.MiniSqlite.FSharp</PackageId>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Authors>Adhithya Rajasekaran</Authors>
-    <Description>Level 0 in-memory mini-sqlite facade for F#</Description>
+    <Description>Level 1 F# mini-sqlite facade: routes SQL through the full five-stage pipeline (parse → plan → optimize → codegen → vm).</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="MiniSqlite.fs" />
+  </ItemGroup>
+
+  <!-- Level 1 pipeline dependencies: backend → codegen → vm → optimizer → planner → parser -->
+  <!-- F# compilation order: dependencies must be listed before dependents              -->
+  <ItemGroup>
+    <ProjectReference Include="../../fsharp/sql-backend/CodingAdventures.SqlBackend.fsproj" />
+    <ProjectReference Include="../../fsharp/sql-parser/CodingAdventures.SqlParser.fsproj" />
+    <ProjectReference Include="../../fsharp/sql-planner/CodingAdventures.SqlPlanner.fsproj" />
+    <ProjectReference Include="../../fsharp/sql-optimizer/CodingAdventures.SqlOptimizer.fsproj" />
+    <ProjectReference Include="../../fsharp/sql-codegen/CodingAdventures.SqlCodegen.FSharp.fsproj" />
+    <ProjectReference Include="../../fsharp/sql-vm/CodingAdventures.SqlVm.FSharp.fsproj" />
   </ItemGroup>
 </Project>

@@ -472,6 +472,12 @@ fn expr_node_count(expr: &Expression) -> usize {
                 key + expr_node_count(&p.value)
             })
             .sum(),
+        // A function *value* is heavy: count its params and one unit per
+        // body statement. This is only a size heuristic for the multi-use
+        // budget (never a correctness input), and counting the body keeps
+        // a candidate whose value embeds a function from looking
+        // deceptively cheap.
+        Expression::FunctionExpression(fe) => fe.params.len() + fe.body.body.len(),
     }
 }
 
@@ -763,6 +769,20 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                 collect_binding_idents_expr(&prop.value, out);
             }
         }
+        // A function *value* binds its own name (if named) and its params
+        // at its boundary; record them so an inline never captures or
+        // collides with them. (Its body's own `var`/`let`/`const` live in
+        // a nested scope that this top-level-helper inliner does not
+        // substitute into.)
+        Expression::FunctionExpression(fe) => {
+            if let Some(id) = &fe.id {
+                out.insert(id.name.clone());
+            }
+            for p in &fe.params {
+                let FunctionParam::Identifier(id) = p;
+                out.insert(id.name.clone());
+            }
+        }
     }
 }
 
@@ -1009,6 +1029,15 @@ fn tally_expr(expr: &Expression, cand: &InlineCandidate, t: &mut Tally) {
                     }
                 }
                 tally_expr(&prop.value, cand, t);
+            }
+        }
+        // Count uses of the candidate inside a function *value*'s body —
+        // a closure over the candidate is still a use. Mirrors the
+        // `FunctionDeclaration` arm in `tally_decl`; over-counting under
+        // shadowing only makes the pass decline to inline, never wrong.
+        Expression::FunctionExpression(fe) => {
+            for s in &fe.body.body {
+                tally_stmt(s, cand, t);
             }
         }
     }
@@ -1269,6 +1298,14 @@ fn inline_in_expr(expr: &mut Expression, cand: &InlineCandidate) -> bool {
                 changed |= inline_in_expr(&mut prop.value, cand);
             }
         }
+        // Inline candidate calls that appear inside a function *value*'s
+        // body too, mirroring the `FunctionDeclaration` arm in
+        // `inline_in_decl`.
+        Expression::FunctionExpression(fe) => {
+            for s in &mut fe.body.body {
+                changed |= inline_in_stmt(s, cand);
+            }
+        }
     }
     changed
 }
@@ -1359,6 +1396,23 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
                     }
                 }
                 substitute(&mut prop.value, map);
+            }
+        }
+        // Substitute param→arg inside a function *value*'s body, but a
+        // param or the fn's own name SHADOWS the substituted parameter of
+        // the same spelling — remove those keys before recursing so a
+        // shadowed reference is left untouched.
+        Expression::FunctionExpression(fe) => {
+            let mut inner = map.clone();
+            if let Some(id) = &fe.id {
+                inner.remove(&id.name);
+            }
+            for p in &fe.params {
+                let FunctionParam::Identifier(id) = p;
+                inner.remove(&id.name);
+            }
+            for s in &mut fe.body.body {
+                substitute_in_stmt(s, &inner);
             }
         }
     }
@@ -1692,6 +1746,15 @@ fn expr_collect_mutated_params(
                     }
                 }
                 expr_collect_mutated_params(&prop.value, params, out);
+            }
+        }
+        // An assignment to an outer param INSIDE a function value's body
+        // (a closure mutating the param) counts as a mutation. Recurse via
+        // the statement helper. Over-detection only makes the pass decline
+        // to inline (a param treated as mutated is not substituted).
+        Expression::FunctionExpression(fe) => {
+            for s in &fe.body.body {
+                stmt_collect_mutated_params(s, params, out);
             }
         }
         Expression::Identifier(_)
@@ -3100,6 +3163,22 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                     }
                 }
                 rename_in_expr(&mut prop.value, map);
+            }
+        }
+        // Alpha-rename uses inside a function *value*'s body, but its own
+        // name and params SHADOW any outer name being renamed — drop those
+        // keys before recursing so a shadowed use keeps its (inner) name.
+        Expression::FunctionExpression(fe) => {
+            let mut inner = map.clone();
+            if let Some(id) = &fe.id {
+                inner.remove(&id.name);
+            }
+            for p in &fe.params {
+                let FunctionParam::Identifier(id) = p;
+                inner.remove(&id.name);
+            }
+            for s in &mut fe.body.body {
+                rename_in_stmt(s, &inner);
             }
         }
     }

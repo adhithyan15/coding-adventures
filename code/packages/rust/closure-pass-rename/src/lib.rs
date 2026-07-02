@@ -964,6 +964,22 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                 collect_all_idents_expr(&prop.value, out);
             }
         }
+        // A function *value* introduces its own name (if any), its params,
+        // and whatever its body references. Record them all so a fresh
+        // short name chosen for an OUTER local can never collide with —
+        // or capture — a name used inside the nested function.
+        Expression::FunctionExpression(fe) => {
+            if let Some(id) = &fe.id {
+                out.insert(id.name.clone());
+            }
+            for p in &fe.params {
+                let FunctionParam::Identifier(id) = p;
+                out.insert(id.name.clone());
+            }
+            for s in &fe.body.body {
+                collect_all_idents_stmt(s, out);
+            }
+        }
     }
 }
 
@@ -1206,6 +1222,26 @@ fn rewrite_uses_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                     }
                 }
                 rewrite_uses_expr(&mut prop.value, map);
+            }
+        }
+        // A nested function *value* closes over the enclosing function's
+        // locals, so uses of a renamed outer local inside its body must be
+        // rewritten too. BUT the nested function's own name and params
+        // SHADOW any outer local of the same spelling — inside the body
+        // those identifiers refer to the inner binding. Remove them from
+        // the active map before recursing so a shadowed use is left
+        // untouched while a genuine closure-over use is renamed.
+        Expression::FunctionExpression(fe) => {
+            let mut inner = map.clone();
+            if let Some(id) = &fe.id {
+                inner.remove(&id.name);
+            }
+            for p in &fe.params {
+                let FunctionParam::Identifier(id) = p;
+                inner.remove(&id.name);
+            }
+            for s in &mut fe.body.body {
+                rewrite_uses_stmt(s, &inner);
             }
         }
     }

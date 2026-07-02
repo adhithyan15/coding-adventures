@@ -41,8 +41,14 @@
 //!   `MutableBindings`, `Loops` — JavaScript supports all six natively,
 //!   so emit is direct (arrays, `Map`, `while`/`for`, reassignable `let`).
 //!
-//! It **rejects** everything else at the capability check — the SIR17/18
-//! OOP, exception, and string-interpolation features, `TailCalls` (V8
+//! It also accepts the SIR17 exception features (`Exceptions`,
+//! `Classes`, `Constants`) and, as of O3, full user-defined-class OOP
+//! (`InstanceVars`, `ClassVars` alongside `Classes`): instantiation,
+//! method dispatch, `super`, `self`, and `@ivar`/`@@cvar` access lower
+//! to the inlined `__Sir` OOP runtime.
+//!
+//! It **rejects** everything else at the capability check — the
+//! remaining SIR18 features (e.g. string interpolation), `TailCalls` (V8
 //! does not reliably tail-call optimise), and `Intrinsics` (empty
 //! whitelist).  The accept-set is deliberately matched to exactly what
 //! [`emit`](crate::emit) lowers, so a module that uses a deferred node is
@@ -136,15 +142,26 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // *inlined* exception runtime rather than an imported package.  See
     // `emit`'s `TryCatch` / `raise` arms and `runtime::RUNTIME`.
     Feature::Exceptions,
-    // E2 (SIR17): class definitions — accepted here only to the extent E1
-    // needs them.  A `class MyErr < StandardError` supplies a user
-    // ancestry edge so `raise MyErr; rescue StandardError` matches; the
-    // emitter collects every `ClassDef { name, superclass: Some(_) }` pair
-    // into one `__Sir.registerAncestry({ … })` at program init and emits
-    // the class body's (non-`def`) statements inline.  Method dispatch /
-    // instantiation are NOT modelled — the frontend hoists method `def`s
-    // out of the body, so an exception-class body carries only assigns.
+    // E2 (SIR17) + O3 (SIR18): class definitions.  A `class MyErr <
+    // StandardError` supplies a user ancestry edge (the emitter collects
+    // every `ClassDef { superclass: Some(_) }` pair into one
+    // `__Sir.registerAncestry({ … })` at program init) *and* — as of O3 —
+    // full user-defined-class OOP is executed: instantiation, method
+    // definition + dispatch, `super`, and `self` all lower to the inlined
+    // `__Sir` OOP runtime.  The frontend hoists method `def`s to top-level
+    // functions and registers them with `__def_method__` /
+    // `__def_class_method__`; `Klass.new` lowers to `__new__`, `super` to
+    // `__super__`, and `self` to `__self__`.
     Feature::Classes,
+    // O3: instance variables (`@x`) and class variables (`@@x`).  A
+    // `VarRef`/`Assign` with `Scope::Instance` lowers to
+    // `__Sir.ivarGet("@x")` / `ivarSet("@x", v)` on the current `self`;
+    // `Scope::ClassVar` lowers to the analogous `cvarGet`/`cvarSet`.  Both
+    // act on the dynamic `self` a running method pushed, so they are only
+    // meaningful inside a method body (a bare read outside one reads nil,
+    // matching Ruby's "no prior declaration" rule for these scopes).
+    Feature::InstanceVars,
+    Feature::ClassVars,
 ];
 
 impl Backend for JavaScriptBackend {

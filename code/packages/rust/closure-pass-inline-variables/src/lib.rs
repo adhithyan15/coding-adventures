@@ -778,6 +778,16 @@ fn count_uses_expr(expr: &Expression, name: &str, count: &mut usize) {
                 count_uses_expr(&prop.value, name, count);
             }
         }
+        // Count uses of `name` inside a function *value*'s body, exactly
+        // as the `FunctionDeclaration` arm above does. Over-counting
+        // under shadowing (a param or the fn's own name equal to `name`)
+        // is conservative — it only *prevents* an inline, never produces
+        // a wrong one — matching the declaration's existing posture.
+        Expression::FunctionExpression(fe) => {
+            for s in &fe.body.body {
+                count_uses_stmt(s, name, count);
+            }
+        }
     }
 }
 
@@ -1024,6 +1034,15 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
                     }
                 }
                 changed |= propagate_in_expr(&mut prop.value, cand);
+            }
+        }
+        // Propagate the candidate into a function *value*'s body,
+        // mirroring the `FunctionDeclaration` arm in `propagate_in_decl`.
+        // Kept consistent with `count_uses_expr` above so the use count
+        // and the substitution walk cover the same positions.
+        Expression::FunctionExpression(fe) => {
+            for s in &mut fe.body.body {
+                changed |= propagate_in_stmt(s, cand);
             }
         }
     }

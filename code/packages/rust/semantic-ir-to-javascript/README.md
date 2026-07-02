@@ -65,40 +65,72 @@ surface the emitter lowers today. JavaScript supports every SIR16 feature
 natively (arrays, `Map`, `while`/`for`, reassignable `let`), so each
 lowering is direct.
 
-| Accepted (v0 + SIR16 + E1)  | Rejected (deferred / unsupported)            |
-|-----------------------------|----------------------------------------------|
-| `Closures`                  | `Modules`, `InstanceVars` (SIR17)            |
-| `Pairs`                     | `ClassVars`                                  |
-| `Symbols`                   | `StringInterpolation` (`StrConcat`, SIR18)   |
-| `Strings`                   | `TailCalls` (V8 has no reliable TCO)         |
-| `DynamicTyping`             | `Intrinsics` (empty whitelist)               |
-| `OptionalTypeAnnotations`   |                                              |
-| `MutualRecursion`           |                                              |
-| `Globals`                   |                                              |
-| `Floats` (SIR16)            |                                              |
-| `ShortCircuit` (SIR16)      |                                              |
-| `Sequences` (SIR16)         |                                              |
-| `Maps` (SIR16)              |                                              |
-| `MutableBindings` (SIR16)   |                                              |
-| `Loops` (SIR16)             |                                              |
-| `DefaultParams` (P2d)       |                                              |
-| `KeywordParams` (KW4)       |                                              |
-| `Exceptions` (E1, SIR17)    |                                              |
-| `Classes` (E2 ancestry)     |                                              |
-| `Constants`                 |                                              |
+| Accepted (v0 + SIR16 + E1 + O3) | Rejected (deferred / unsupported)        |
+|---------------------------------|------------------------------------------|
+| `Closures`                      | `Modules` (SIR17)                        |
+| `Pairs`                         | `StringInterpolation` (`StrConcat`, SIR18) |
+| `Symbols`                       | `TailCalls` (V8 has no reliable TCO)     |
+| `Strings`                       | `Intrinsics` (empty whitelist)           |
+| `DynamicTyping`                 |                                          |
+| `OptionalTypeAnnotations`       |                                          |
+| `MutualRecursion`               |                                          |
+| `Globals`                       |                                          |
+| `Floats` (SIR16)                |                                          |
+| `ShortCircuit` (SIR16)          |                                          |
+| `Sequences` (SIR16)             |                                          |
+| `Maps` (SIR16)                  |                                          |
+| `MutableBindings` (SIR16)       |                                          |
+| `Loops` (SIR16)                 |                                          |
+| `DefaultParams` (P2d)           |                                          |
+| `KeywordParams` (KW4)           |                                          |
+| `Exceptions` (E1, SIR17)        |                                          |
+| `Classes` (E2 ancestry + O3 OOP)|                                          |
+| `InstanceVars` (O3)             |                                          |
+| `ClassVars` (O3)                |                                          |
+| `Constants`                     |                                          |
 
 `accepts_intrinsics()` is empty. The accept-set is deliberately matched
 to what `emit` handles, so a module using a deferred node is turned away
 *before* lowering rather than mis-compiled — and every accepted feature
 has a real emit arm (the residual `panic!` guards cover only the
 still-deferred SIR17/18 nodes — `Modules`, `SingletonClassDef` OOP
-dispatch, instance/class variables, and string interpolation).
+dispatch, and string interpolation).
 
-`Classes` is accepted only to the depth exceptions need: a `ClassDef`
+`Classes` now covers **full user-defined-class OOP (O3)**: a `ClassDef`
 supplies its `superclass` *ancestry edge* (so `raise MyErr; rescue
-StandardError` matches when `class MyErr < StandardError`) and its
-non-`def` body statements are emitted inline. OOP method dispatch and
-instantiation are **not** modelled.
+StandardError` matches, and so method resolution walks the hierarchy), and
+the O2 Ruby frontend's OOP builtins (`__new__`, `__super__`,
+`__def_method__`, `__def_class_method__`, `__self__`) lower to the inlined
+`__Sir` OOP runtime — instantiation, method dispatch, `super`, `self`, and
+`@ivar`/`@@cvar` access all execute end-to-end.
+
+### User-defined-class OOP (O3)
+
+Method bodies are hoisted by the frontend to top-level functions and
+registered with `__Sir.defMethod("Class", "name", <closure>)`.  Dispatch,
+instantiation, and `super` all key on the **class/method *name string***
+through a `Map` — never `recv[name]`, `eval`, or `new Function` — so a
+class or method named `constructor` / `__proto__` is inert data (a Map
+miss floors to `NoMethodError`), closing the same RCE / prototype-pollution
+door as the collection-method allowlist.
+
+| SIR (from O2 frontend)          | JavaScript emitted                          |
+|---------------------------------|---------------------------------------------|
+| `Dog.new("Rex")`                | `__Sir.callNew("Dog", "Rex")`               |
+| `super(4)` in `Cat#initialize`  | `__Sir.callSuper("initialize", "Cat", 4)`   |
+| `def speak; …; end`             | `__Sir.defMethod("Dog", "speak", <closure>)`|
+| `def self.count; …; end`        | `__Sir.defClassMethod("Dog", "count", …)`   |
+| `self`                          | `__Sir.currentSelf()`                       |
+| `recv.meth(a)` (`SirInstance`)  | `__Sir.callMethod(recv, "meth", a)`         |
+| `@name` read / write            | `__Sir.ivarGet("@name")` / `ivarSet(…)`     |
+| `@@count` read / write          | `__Sir.cvarGet("@@count")` / `cvarSet(…)`   |
+
+`self` is a dynamic stack: a method pushes its receiver before running and
+pops it in a `finally`, so `@ivar` reads resolve against the live receiver
+and an exception thrown mid-method still unwinds cleanly.  A `SirInstance`
+receiver dispatches to the user method table; every **other** receiver
+(array, string, …) falls through to the unchanged built-in / collection
+path, so collection methods and exceptions are not regressed.
 
 ### SIR16 lowering at a glance
 

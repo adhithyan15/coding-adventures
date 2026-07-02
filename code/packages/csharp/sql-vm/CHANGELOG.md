@@ -2,6 +2,17 @@
 
 All notable changes to `CodingAdventures.SqlVm` are documented here.
 
+## [0.2.0] — 2026-07-01
+
+### Added
+
+- **CONCAT scalar function**: `EvalScalar` now handles `CONCAT(a, b, …)`, concatenating all arguments with NULL propagation (any NULL arg makes the result NULL). This matches the `||` operator semantics; the parser emits `FuncCall("CONCAT", ...)` for `||`.
+
+### Fixed
+
+- **COUNT(DISTINCT col)**: `AggAccumulator` gained a `Seen` field (`HashSet<object>?`, populated when `distinct=true`). `EnsureAggSlot` passes the `Distinct` flag from `InitAgg`; `FeedAgg` skips null values and duplicates (values already in `Seen`) before accumulating. This makes `COUNT(DISTINCT v)` over `[1,1,2,2,NULL]` return 2 instead of 4.
+- **NULL ordering in ORDER BY**: `ApplySort` now uses a new `CompareForSort(a, b, direction, nullsOrder)` helper that applies null placement (NullsFirst/Last) independently of sort direction, and only applies direction negation to non-null comparisons. The previous approach negated null placement signals along with regular comparisons, causing NULLs to sort first in DESC when `NullsLast` was specified.
+
 ## [0.1.0] — 2026-06-30
 
 ### Added

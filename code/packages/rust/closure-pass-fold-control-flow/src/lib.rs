@@ -58,7 +58,7 @@ use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentOperator,
     AssignmentTarget, BinaryExpression, BindingTarget, BlockStatement, CallExpression,
     ConditionalExpression, Declaration, EmptyStatement, Expression, ExpressionStatement, ForInit,
-    ForInStatement, ForOfStatement, ForStatement, FunctionDeclaration, Identifier, IfStatement,
+    ForInStatement, ForOfStatement, ForStatement, FunctionDeclaration, FunctionExpression, Identifier, IfStatement,
     LogicalExpression,
     LogicalOperator,
     MemberExpression, ObjectExpression, Program, ProgramItem, Property, PropertyKey,
@@ -274,6 +274,7 @@ fn expression_cv(expr: &Expression) -> Option<String> {
         MemberExpression(e) => e.cv.clone(),
         ArrayExpression(e) => e.cv.clone(),
         ObjectExpression(e) => e.cv.clone(),
+        FunctionExpression(e) => e.cv.clone(),
     }
 }
 
@@ -1422,6 +1423,21 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                 })
                 .collect(),
         }),
+        // Fold control flow inside a function *value*'s body, mirroring
+        // the `FunctionDeclaration` arm in `fold_declaration` (fold the
+        // body, then hoist its `var`s to the function top).
+        Expression::FunctionExpression(f) => {
+            let folded_body = fold_block_statement(&f.body, st);
+            let hoisted_body = hoist_function_body_vars(&folded_body, st);
+            Expression::FunctionExpression(FunctionExpression {
+                cv: f.cv.clone(),
+                id: f.id.clone(),
+                params: f.params.clone(),
+                body: hoisted_body,
+                generator: f.generator,
+                is_async: f.is_async,
+            })
+        }
     }
 }
 

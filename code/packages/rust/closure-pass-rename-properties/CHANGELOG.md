@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-properties` crate will be documented in this file.
 
+## [0.10.0] - 2026-07-01
+
+### Added — CLOC12.149: rename properties inside `FunctionExpression`
+
+`classify_expr` and `rewrite_expr` recurse into a `FunctionExpression`
+body so a quoted `o["foo"]` written there still disables renaming of
+`foo`, and dotted accesses inside are rewritten. Variable bindings
+(name/params) never touch the property namespace.
+
 ## [0.9.1] - 2026-07-01
 
 ### Added — CLOC12 upstream test port (`RenamePropertiesTest`)

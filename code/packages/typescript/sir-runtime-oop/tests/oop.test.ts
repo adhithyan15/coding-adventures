@@ -2,13 +2,19 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { apply, Closure, intern } from "@coding-adventures/sir-runtime-core";
 import type { Val } from "../src/index.js";
 import {
+  callClassMethod,
   callMethod,
+  callNew,
+  callSuper,
   caseEq,
   classOf,
+  currentSelfVal,
   cvarGet,
   cvarSet,
+  defClassMethod,
   defineClass,
   defineMethod,
+  defMethod,
   isA,
   ivarGet,
   ivarSet,
@@ -743,5 +749,122 @@ describe("Kernel flow-control + boolean operators (M6)", () => {
     // An out-of-catalog name is still both null and respond_to? == false.
     expect(callMethod(true, "nonexistent_method")).toBeNull();
     expect(callMethod(true, "respond_to?", "nonexistent_method")).toBe(false);
+  });
+});
+
+describe("O1: user method tables, callNew / callSuper / self / class methods", () => {
+  it("callNew runs initialize and binds self to the new object", () => {
+    defineClass("Dog", null);
+    defMethod("Dog", "initialize", new Closure((name: Val) => ivarSet("@name", name)));
+    const dog = callNew("Dog", "Rex");
+    expect(dog).toBeInstanceOf(SirInstance);
+    expect(dog.sirClass).toBe("Dog");
+    expect(dog.ivars.get("@name")).toBe("Rex");
+    // Self-stack balanced after construction.
+    expect(currentSelfVal()).toBeNull();
+  });
+
+  it("callNew without initialize is a plain allocation", () => {
+    defineClass("Empty", null);
+    const obj = callNew("Empty");
+    expect(obj).toBeInstanceOf(SirInstance);
+    expect(obj.ivars.size).toBe(0);
+  });
+
+  it("callNew inherits initialize from an ancestor", () => {
+    defineClass("Base", null);
+    defineClass("Derived", "Base");
+    defMethod("Base", "initialize", new Closure((v: Val) => ivarSet("@v", v)));
+    const obj = callNew("Derived", 7);
+    expect(obj.sirClass).toBe("Derived");
+    expect(obj.ivars.get("@v")).toBe(7);
+  });
+
+  it("callMethod dispatches a user instance method with self bound", () => {
+    defineClass("Dog", null);
+    defMethod("Dog", "initialize", new Closure((n: Val) => ivarSet("@name", n)));
+    defMethod("Dog", "speak", new Closure(() => ivarGet("@name") + " says woof"));
+    const dog = callNew("Dog", "Rex");
+    expect(callMethod(dog, "speak")).toBe("Rex says woof");
+    expect(currentSelfVal()).toBeNull();
+  });
+
+  it("callMethod walks ancestry for a user method", () => {
+    defineClass("Animal", null);
+    defineClass("Cat", "Animal");
+    defMethod("Animal", "legs", new Closure(() => 4));
+    const cat = callNew("Cat");
+    expect(callMethod(cat, "legs")).toBe(4);
+  });
+
+  it("callMethod falls through to built-ins for instances (no regression)", () => {
+    defineClass("Widget", null);
+    const w = callNew("Widget");
+    expect(callMethod(w, "class")).toBe("Widget");
+    expect(callMethod(w, "is_a?", "Widget")).toBe(true);
+    expect(callMethod(w, "nil?")).toBe(false);
+  });
+
+  it("callSuper walks to the parent implementation, same receiver", () => {
+    defineClass("Animal", null);
+    defineClass("Cat", "Animal");
+    defMethod("Animal", "describe", new Closure(() => ivarGet("@name") + " with 4 legs"));
+    defMethod("Cat", "initialize", new Closure((n: Val) => ivarSet("@name", n)));
+    defMethod("Cat", "describe", new Closure(() => callSuper("describe", "Cat")));
+    const cat = callNew("Cat", "Tom");
+    expect(callMethod(cat, "describe")).toBe("Tom with 4 legs");
+  });
+
+  it("callSuper returns nil when no ancestor defines the method", () => {
+    defineClass("Lonely", null);
+    expect(callSuper("whatever", "Lonely")).toBeNull();
+    defineClass("Base", null);
+    defineClass("Sub", "Base");
+    expect(callSuper("missing", "Sub")).toBeNull();
+  });
+
+  it("callClassMethod dispatches and walks ancestry", () => {
+    defineClass("Counter", null);
+    defClassMethod("Counter", "zero", new Closure(() => 0));
+    expect(callClassMethod("Counter", "zero")).toBe(0);
+    defineClass("Sub", "Counter");
+    expect(callClassMethod("Sub", "zero")).toBe(0);
+    expect(callClassMethod("Counter", "nope")).toBeNull();
+  });
+
+  it("currentSelfVal reflects the stack top", () => {
+    expect(currentSelfVal()).toBeNull();
+    const obj = newInstance("Thing");
+    pushSelf(obj);
+    expect(currentSelfVal()).toBe(obj);
+    popSelf();
+    expect(currentSelfVal()).toBeNull();
+  });
+
+  it("self-return enables method chaining", () => {
+    defineClass("Counter", null);
+    defMethod("Counter", "initialize", new Closure(() => ivarSet("@n", 0)));
+    defMethod(
+      "Counter",
+      "inc",
+      new Closure(() => {
+        ivarSet("@n", ivarGet("@n") + 1);
+        return currentSelfVal();
+      }),
+    );
+    defMethod("Counter", "count", new Closure(() => ivarGet("@n")));
+    const c = callNew("Counter");
+    const chained = callMethod(callMethod(c, "inc"), "inc");
+    expect(chained).toBe(c);
+    expect(callMethod(c, "count")).toBe(2);
+  });
+
+  it("resetOop clears the method tables", () => {
+    defineClass("Dog", null);
+    defMethod("Dog", "speak", new Closure(() => "woof"));
+    defClassMethod("Dog", "make", new Closure(() => "made"));
+    resetOop();
+    expect(callClassMethod("Dog", "make")).toBeNull();
+    expect(callSuper("speak", "Dog")).toBeNull();
   });
 });

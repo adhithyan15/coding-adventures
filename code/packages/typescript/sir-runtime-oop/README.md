@@ -20,7 +20,9 @@ emitted code imports and calls.
 | `newInstance` / `SirInstance` | Tagged objects with an instance-variable bag. |
 | `pushSelf` / `popSelf` / `ivarGet` / `ivarSet` | Instance variables addressed through a *current-self* stack, since methods have no receiver. |
 | `cvarGet` / `cvarSet` | Class-variable store. |
-| `callMethod` / `defineMethod` | Reflective dispatch for `is_a?`/`kind_of?`/`instance_of?`/`class` (emitted as SIR `__method__` calls) + a singleton-method table. |
+| `callMethod` / `defineMethod` | Reflective dispatch for `is_a?`/`kind_of?`/`instance_of?`/`class` (emitted as SIR `__method__` calls) + a singleton-method table. `callMethod` also dispatches user instance methods (O1). |
+| `defMethod` / `defClassMethod` | Register a user instance/class method into the `(class, method)` tables (emitted as `__def_method__`/`__def_class_method__`). Explicit `Map` lookup, never reflection. |
+| `callNew` / `callSuper` / `callClassMethod` / `currentSelfVal` | Object construction (`Foo.new` → allocate + run `initialize`), `super` (ancestry re-dispatch on the same receiver), class-method dispatch (`def self.m`), and the current `self`. |
 | `caseEq` | Ruby case-equality (`pattern === value`) — the test a `when` clause runs. RegExp→match, Range→membership, else `==`. |
 
 ## Usage
