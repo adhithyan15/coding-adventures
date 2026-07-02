@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.35.0] - 2026-07-02 — truncation toward zero (`Trunc`)
+
+### Added
+
+- Unary compute op **`ComputeOp::Trunc`** — `trunc(x)` drops the fractional
+  part toward zero (`trunc(3.7) = 3`, `trunc(−3.7) = −3`), completing the
+  rounding family beside `Abs`/`Floor`/`Ceil`/`Round`. It is **dimension-
+  preserving** (`trunc(3.7 mmol) = 3 mmol`) — folded into the existing
+  `eval_unary` match arms (the f64 `value.trunc()` and the exact `num / den`,
+  Rust integer division toward zero for `den > 0`), so `eval`'s recursive frame
+  is unchanged. Contrast `Floor`, which rounds toward −∞ (`⌊−3.7⌋ = −4`): they
+  agree only for a non-negative operand.
+- Lowered from a LaTeX `\operatorname{trunc}(x)` on adj-lang's `latex "…"`
+  surface (the operator-name juxtaposition path).
+
+### Tests
+
+- Two unit tests: `trunc(7/2) = 3` (dimension-preserving), and `trunc(−7/2) =
+  −3` (toward zero, NOT the `Floor` −4).
+
 ## [0.34.0] - 2026-07-02 — binary gcd/lcm (`Gcd`/`Lcm`) integer ops
 
 ### Added

@@ -709,6 +709,7 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
         ExprAst::Floor(a) => ComputeExpr::Unary(ComputeOp::Floor, Box::new(lower_expr(a))),
         ExprAst::Ceil(a) => ComputeExpr::Unary(ComputeOp::Ceil, Box::new(lower_expr(a))),
         ExprAst::Round(a) => ComputeExpr::Unary(ComputeOp::Round, Box::new(lower_expr(a))),
+        ExprAst::Trunc(a) => ComputeExpr::Unary(ComputeOp::Trunc, Box::new(lower_expr(a))),
         ExprAst::Call(f, a) => ComputeExpr::Unary(lower_named_fn(*f), Box::new(lower_expr(a))),
         ExprAst::Call2(f, a, b) => ComputeExpr::Bin(
             lower_bin_fn(*f),
@@ -1930,6 +1931,41 @@ contributes 1000000 from answer == 60 to correct
              let answer = latex \"$\\left\\lfloor a / b\\right\\rceil$\"\n\
              prior 0.10 for correct\n\
              contributes 1000000 from answer == 4 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_latex_trunc_drops_a_positive_fraction_toward_zero() {
+        // `\operatorname{trunc}(a / b)` with a=7, b=2 is trunc(3.5) = 3, computed on
+        // the native ComputeOp::Trunc via the operator-name juxtaposition path
+        // (`Bin(Mul, Text("trunc"), (a / b))`) — NOT silently dropped to the bare
+        // quotient 3.5.
+        let d = crate::compile_and_decide(
+            "observe a(7)\n\
+             observe b(2)\n\
+             let answer = latex \"$\\operatorname{trunc}(a / b)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 3 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_latex_trunc_of_a_negative_quotient_goes_toward_zero_not_down() {
+        // trunc(−7/2) = −3 (toward zero), the whole distinction from floor, which
+        // would give −4 (toward −∞). Confirms the operator-name path reaches
+        // ComputeOp::Trunc and not ComputeOp::Floor.
+        let d = crate::compile_and_decide(
+            "observe a(7)\n\
+             observe b(2)\n\
+             let answer = latex \"$\\operatorname{trunc}((0 - a) / b)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == -3 to correct\n\
              ? correct\n",
         )
         .unwrap();

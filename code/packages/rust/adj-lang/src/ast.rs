@@ -174,6 +174,13 @@ pub enum ExprAst {
     /// adapter from the nearest-integer fence `\left\lfloor…\right\rceil`
     /// (floor-left, ceil-right).
     Round(Box<ExprAst>),
+    /// A truncation toward zero, `trunc(x)` — drop the fractional part, keeping the
+    /// sign (`trunc(3.7) = 3`, `trunc(−3.7) = −3`; contrast `Floor`, which rounds
+    /// toward −∞). Lowers to the native `ComputeOp::Trunc` (dimension-preserving).
+    /// Produced by the `latex "…"` adapter from a `\operatorname{trunc}(x)` — the
+    /// operator-name juxtaposition (`Text("trunc")` implicitly multiplied by its
+    /// parenthesised argument).
+    Trunc(Box<ExprAst>),
     /// A named **transcendental** function applied to one argument
     /// (`\sin(x)`, `\ln(x)`, `\exp(x)`, …). Lowers to the matching native
     /// transcendental `ComputeOp` (`Scalar → Scalar`, exact dropped). Produced by
