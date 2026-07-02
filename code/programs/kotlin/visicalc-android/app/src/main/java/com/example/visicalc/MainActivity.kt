@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.darkColors
 import androidx.compose.runtime.Composable
@@ -86,6 +87,14 @@ private fun VisiCalcApp() {
     // Start showing A1's source ("15") in the bar, like the sibling demos.
     var formulaText by remember { mutableStateOf(engine.rawAt("A1")) }
 
+    // Which FormulaBar LAYOUT is showing: the desktop Row (address label left of
+    // the input) or the UI30 touch Column (address label stacked ABOVE a
+    // full-width input — the phone arrangement, most apt on Android). Both are
+    // generated from the SAME FormulaBar.mil interface, so they share
+    // FormulaBarEvent + the dispatch below. "One component, many layouts" made a
+    // runtime toggle — the Android sibling of the Qt/Compose/Flutter toggles.
+    var touch by remember { mutableStateOf(true) }
+
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text(
             text = "VISICALC · MOSAIC ANDROID DEMO",
@@ -94,14 +103,20 @@ private fun VisiCalcApp() {
             fontFamily = FontFamily.Monospace,
         )
 
+        // Flip the formula-bar layout between the desktop Row and the touch
+        // Column at runtime — both drive the same engine identically.
+        Button(onClick = { touch = !touch }) {
+            Text(if (touch) "Desktop bar" else "Touch bar")
+        }
+
         Box(modifier = Modifier.padding(top = 8.dp)) {
-            FormulaBar(
-                // Column 0 is the gutter (no address); column 1 → "A".
-                cellAddress = if (selectedCol.toInt() < 1) "${selectedRow.toInt() + 1}"
-                              else "${('A' + selectedCol.toInt() - 1)}${selectedRow.toInt() + 1}",
-                formula = formulaText,
-                readOnly = false,
-                dispatch = { event ->
+            // Desktop (Row) vs touch (Column) — both generated from the same
+            // FormulaBar.mil, sharing FormulaBarEvent + this dispatch. Only the
+            // active variant is composed.
+            val fbCellAddress =
+                if (selectedCol.toInt() < 1) "${selectedRow.toInt() + 1}"
+                else "${('A' + selectedCol.toInt() - 1)}${selectedRow.toInt() + 1}"
+            val fbDispatch: (FormulaBarEvent) -> Unit = { event ->
                     when (event) {
                         is FormulaBarEvent.FormulaChange -> formulaText = event.value
                         is FormulaBarEvent.Commit -> {
@@ -121,8 +136,12 @@ private fun VisiCalcApp() {
                                     engine.rawAt(cellAddress(selectedRow, selectedCol))
                                 else ""
                     }
-                },
-            )
+            }
+            if (touch) {
+                FormulaBarTouch(cellAddress = fbCellAddress, formula = formulaText, readOnly = false, dispatch = fbDispatch)
+            } else {
+                FormulaBar(cellAddress = fbCellAddress, formula = formulaText, readOnly = false, dispatch = fbDispatch)
+            }
         }
 
         Box(modifier = Modifier.padding(top = 16.dp)) {
