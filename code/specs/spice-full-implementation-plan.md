@@ -33,33 +33,32 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search selection.
+1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation.
    - Status: current PR completion candidate.
    - Add schema-versioned Rust app shell dashboard dispatch-queue lane-tab
-     panel-card-action-menu-group-shortcut-command-palette-search-selection
-     surfaces and JSON helpers that resolve a requested, active, attention,
-     default, primary, or first visible command-palette search result into
-     selected command, handler, target, query-match, `canInvoke`, and
-     blocked-reason metadata for first-render product-shell command palette
-     activation UIs.
+     panel-card-action-menu-group-shortcut-command-palette-search-invocation
+     surfaces and JSON helpers that convert command-palette search selections
+     into deterministic invocation state, invocation action, invocation
+     message, blocked reason, `canInvoke`, `canDispatch`, selected command,
+     handler, target, and target-kind metadata for first-render product-shell
+     command dispatch UIs.
    - Preserve package name, source fingerprint, ready/blocked route, status
-     severity, attention-required flag, search selection ID, search results ID,
-     search index ID, palette ID, registry ID, command group, raw query,
-     normalized query, query tokens, requested/selected search-result IDs,
-     selection source, selection state, active/attention/default/primary
+     severity, attention-required flag, search invocation ID, search selection
+     ID, search results ID, search index ID, palette ID, registry ID, command
+     group, raw query, normalized query, query tokens, requested/selected
      search-result IDs, selected search-index entry ID, palette item ID,
-     command-entry ID, binding ID, shortcut ID, command ID, handler ID,
-     invocation kind, scope, target kind, target, menu group ID, queue state,
-     label, summary, accelerator, selected search text, selected normalized
-     search text, selected search tokens, keywords, matched query tokens,
-     item/action ID lists, item counts, badge counts, rank, position, result
-     position, selectable/selected/default/active/attention/disabled/empty/
-     enabled/primary/visible flags, `canInvoke`, blocked reason, empty-state
-     title/message, command-palette-search-results capability ID,
-     command-palette-search-selection capability ID, and advertised capability
+     command-entry ID, binding ID, shortcut ID, command ID, registry ID,
+     handler ID, invocation kind, scope, target kind, target, menu group ID,
+     queue state, label, summary, accelerator, item/action ID lists, matched
+     query tokens, selection source/state, selected active/attention/default/
+     primary flags, selectable/enabled/disabled/empty/visible flags,
+     `canInvoke`, `canDispatch`, invocation state/action/message, blocked
+     reason, active/attention/default/primary search-result IDs, result counts,
+     command-palette-search-selection capability ID,
+     command-palette-search-invocation capability ID, and advertised capability
      count so Mosaic, WebAssembly, and product shells can append compact lane
-     card action menu shortcut command palette selections without walking every
-     queue item.
+     card action menu shortcut command invocations without walking every queue
+     item.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -2316,6 +2315,35 @@ the Rust, Python, and TypeScript surfaces together.
      advertised capability count so Mosaic, WebAssembly, and product shells can
      append compact lane card action menu shortcut command palette search
      results without walking every queue item.
+
+185. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search selection.
+   - Status: completed in PR 7334.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell dashboard dispatch-queue lane-tab panel-card-action-menu-group-
+     shortcut-command-palette-search-selection surfaces plus JSON helpers that
+     resolve a requested, active, attention, default, primary, first-selectable,
+     or first-visible search result into selected command, handler, target,
+     query-match, `canInvoke`, and blocked-reason metadata for first-render
+     product-shell command palette activation UIs.
+   - The command palette search selection payload preserves package name,
+     source fingerprint, ready/blocked route, status severity,
+     attention-required flag, search selection ID, search results ID, search
+     index ID, palette ID, registry ID, command group, raw query, normalized
+     query, query tokens, requested/selected search-result IDs, selection
+     source, selection state, active/attention/default/primary search-result
+     IDs, selected search-index entry ID, palette item ID, command-entry ID,
+     binding ID, shortcut ID, command ID, handler ID, invocation kind, scope,
+     target kind, target, menu group ID, queue state, label, summary,
+     accelerator, selected search text, selected normalized search text,
+     selected search tokens, keywords, matched query tokens, item/action ID
+     lists, item counts, badge counts, rank, position, result position,
+     selectable/selected/default/active/attention/disabled/empty/enabled/
+     primary/visible flags, `canInvoke`, blocked reason, empty-state
+     title/message, command-palette-search-results capability ID,
+     command-palette-search-selection capability ID, and advertised capability
+     count so Mosaic, WebAssembly, and product shells can append compact lane
+     card action menu shortcut command palette selections without walking every
+     queue item.
 
 ## Backlog
 
