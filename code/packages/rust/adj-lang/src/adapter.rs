@@ -1012,20 +1012,21 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
         // A named-function call. The single-argument transcendental set
         // (`\sin(x)`, `\ln(x)`, `\exp(x)`, …) lowers to the matching native
         // transcendental op via `ExprAst::Call`; the two-argument `\min(a, b)` /
-        // `\max(a, b)` lower to the native binary ops via `ExprAst::Call2` (their
-        // argument is a two-element `Sequence`, usually inside the call's
-        // parentheses). The remaining `Func` variants (aggregate/multi-arg
-        // `gcd`/`lcm`/`det` and an unknown `Other` such as `\operatorname{trunc}`)
-        // have no lowering yet and are a clean, explicit error rather than a
-        // silent mis-lowering.
+        // `\max(a, b)` / `\gcd(a, b)` / `\lcm(a, b)` lower to the native binary ops
+        // via `ExprAst::Call2` (their argument is a two-element `Sequence`, usually
+        // inside the call's parentheses). The remaining `Func` variants (`det` and
+        // an unknown `Other` such as `\operatorname{trunc}`) have no lowering yet
+        // and are a clean, explicit error rather than a silent mis-lowering.
         MathExpr::Call { func, arg } => {
-            // Binary min/max first — their argument is a comma-list, not a scalar.
-            if let Func::Min | Func::Max = func {
-                let bin = if matches!(func, Func::Min) {
-                    BinFn::Min
-                } else {
-                    BinFn::Max
-                };
+            // Binary functions first — their argument is a comma-list, not a scalar.
+            let binfn = match func {
+                Func::Min => Some(BinFn::Min),
+                Func::Max => Some(BinFn::Max),
+                Func::Gcd => Some(BinFn::Gcd),
+                Func::Lcm => Some(BinFn::Lcm),
+                _ => None,
+            };
+            if let Some(bin) = binfn {
                 let (a, b) = latex_two_args(arg, source, func)?;
                 return Ok(ExprAst::Call2(
                     bin,
@@ -1052,11 +1053,16 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
                 other => {
                     return Err(AdapterError::UnsupportedLatexMath {
                         source: source.to_string(),
-                        detail: format!("named function not yet supported in ADJ arithmetic: {other:?}"),
+                        detail: format!(
+                            "named function not yet supported in ADJ arithmetic: {other:?}"
+                        ),
                     })
                 }
             };
-            Ok(ExprAst::Call(named, Box::new(latex_math_to_expr_ast(arg, source)?)))
+            Ok(ExprAst::Call(
+                named,
+                Box::new(latex_math_to_expr_ast(arg, source)?),
+            ))
         }
         MathExpr::Rel(_, _, _) => Err(AdapterError::UnsupportedLatexMath {
             source: source.to_string(),

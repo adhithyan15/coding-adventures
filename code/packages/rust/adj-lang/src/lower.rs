@@ -723,6 +723,8 @@ fn lower_bin_fn(f: BinFn) -> ComputeOp {
     match f {
         BinFn::Min => ComputeOp::Min2,
         BinFn::Max => ComputeOp::Max2,
+        BinFn::Gcd => ComputeOp::Gcd,
+        BinFn::Lcm => ComputeOp::Lcm,
     }
 }
 
@@ -2031,6 +2033,32 @@ contributes 1000000 from answer == 60 to correct
     }
 
     #[test]
+    fn native_latex_binary_gcd_lcm_lower_to_native_ops() {
+        // `\gcd(a, b)` / `\lcm(a, b)` reuse the binary-Call path (Call2) and lower
+        // to ComputeOp::Gcd/Lcm. gcd(12, 18) = 6; lcm(4, 6) = 12.
+        let g = crate::compile_and_decide(
+            "observe a(12)\n\
+             observe b(18)\n\
+             let answer = latex \"$\\gcd(a, b)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 6 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(g.ranked[0].posterior > 0.99, "{g:?}");
+        let l = crate::compile_and_decide(
+            "observe a(4)\n\
+             observe b(6)\n\
+             let answer = latex \"$\\lcm(a, b)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 12 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(l.ranked[0].posterior > 0.99, "{l:?}");
+    }
+
+    #[test]
     fn native_latex_symbolic_root_degree_is_rejected() {
         // `\sqrt[k]{x}` — a symbolic degree has no numeric value, so the reciprocal
         // exponent `1/k` cannot be formed. It must be rejected, not silently
@@ -2040,7 +2068,10 @@ contributes 1000000 from answer == 60 to correct
              let answer = latex \"$\\sqrt[k]{x}$\"\n\
              ? answer\n",
         );
-        assert!(err.is_err(), "symbolic root degree must be rejected: {err:?}");
+        assert!(
+            err.is_err(),
+            "symbolic root degree must be rejected: {err:?}"
+        );
     }
 
     #[test]

@@ -259,6 +259,18 @@ pub enum ComputeOp {
     /// the worse of two labs) computable as a single native node.
     Min2,
     Max2,
+    /// Binary **gcd** / **lcm** — `gcd(a, b)` / `lcm(a, b)` over exactly TWO
+    /// operands, from a LaTeX `\gcd(a, b)` / `\lcm(a, b)`. Reuses the binary-`Call`
+    /// path like `Min2`/`Max2`, but they are **integer number-theoretic** ops: both
+    /// operands must be integer-valued (a non-integer like `2.5` is a
+    /// `MalformedExpr`, not silently truncated), and dimensionally they combine
+    /// like addition (a bare count / dimensionless integer in practice). `gcd` is
+    /// Euclid on the magnitudes (`gcd(0, 0) = 0`); `lcm(a, b) = |a·b| / gcd(a, b)`
+    /// with `lcm(_, 0) = 0`, and an overflow to non-finite is caught by the shared
+    /// guard. The value is exact for realistic integer inputs, so the
+    /// exact-rational sidecar is dropped (the f64 already carries it).
+    Gcd,
+    Lcm,
     Sum,
     Count,
     Min,
@@ -296,6 +308,8 @@ impl ComputeOp {
             ComputeOp::Csc => "csc",
             ComputeOp::Min2 => "min",
             ComputeOp::Max2 => "max",
+            ComputeOp::Gcd => "gcd",
+            ComputeOp::Lcm => "lcm",
             ComputeOp::Sum => "sum",
             ComputeOp::Count => "count",
             ComputeOp::Min => "min",
@@ -459,8 +473,55 @@ fn dim_op(op: ComputeOp) -> Option<DimOp> {
         // `DimOp::Add` lets them flow through the general binary path with no
         // extra locals in the deeply-recursive `eval` frame.
         ComputeOp::Min2 | ComputeOp::Max2 => Some(DimOp::Add),
+        // gcd/lcm are number-theoretic on (dimensionless) integers; combine like
+        // addition so a bare count stays a bare count. The integer requirement is
+        // enforced on the values, not the dimension.
+        ComputeOp::Gcd | ComputeOp::Lcm => Some(DimOp::Add),
         _ => None,
     }
+}
+
+/// Compute a binary integer `gcd`/`lcm` on two already-evaluated operand values.
+/// A **leaf** helper (it does NOT call `eval`, so it never sits on the recursion
+/// path) marked `#[inline(never)]` so its loop locals live in their own frame
+/// rather than enlarging the deeply-recursive `eval`/`eval_binary` frame.
+///
+/// Contract: both operands must be **exact integers** in the exactly-representable
+/// range (`|v| ≤ 2^53`); a non-integer (`2.5`), NaN/inf, or out-of-range value is a
+/// clean error, never a silent truncation. `gcd` is Euclid on the magnitudes
+/// (`gcd(0, 0) = 0`, `gcd(n, 0) = |n|`); `lcm(a, b) = |a·b| / gcd(a, b)` with
+/// `lcm(_, 0) = 0`. Everything is done in `i128` so no intermediate overflows; the
+/// caller's shared `is_finite` guard is the final backstop.
+#[inline(never)]
+fn int_gcd_lcm(op: ComputeOp, x: f64, y: f64) -> Result<f64, ComputeError> {
+    // `2^53` is the largest integer every f64 represents exactly — beyond it an
+    // f64 "integer" is already ambiguous, so gcd/lcm on it would be meaningless.
+    const LIMIT: f64 = 9_007_199_254_740_992.0; // 2^53
+    if x.fract() != 0.0 || y.fract() != 0.0 || x.abs() > LIMIT || y.abs() > LIMIT {
+        return Err(ComputeError::MalformedExpr {
+            detail: "gcd/lcm requires integer operands within the exact range",
+        });
+    }
+    let a = (x as i128).unsigned_abs();
+    let b = (y as i128).unsigned_abs();
+    // Euclid's algorithm on the magnitudes.
+    let (mut p, mut q) = (a, b);
+    while q != 0 {
+        let r = p % q;
+        p = q;
+        q = r;
+    }
+    let g = p; // gcd(a, b); 0 iff both operands are 0
+    let value = match op {
+        ComputeOp::Gcd => g as f64,
+        // lcm: divide first (a/g is exact) then multiply, in i128 so the product
+        // cannot overflow the integer type; the f64 cast + caller's finite guard
+        // handle any magnitude concern.
+        ComputeOp::Lcm if g == 0 => 0.0,
+        ComputeOp::Lcm => ((a / g) * b) as f64,
+        _ => unreachable!("int_gcd_lcm only handles Gcd/Lcm"),
+    };
+    Ok(value)
 }
 
 /// Recursively evaluate a sub-expression into a derivation node **and its
@@ -622,6 +683,11 @@ fn eval(
                         y
                     }
                 }
+                // gcd/lcm are integer number-theoretic ops. Delegated to a leaf
+                // `#[inline(never)]` helper (NOT on the recursion path) so its
+                // Euclid-loop locals live in their own frame, not `eval`'s. A
+                // non-integer operand is a clean `MalformedExpr`.
+                ComputeOp::Gcd | ComputeOp::Lcm => int_gcd_lcm(*op, x, y)?,
                 _ => unreachable!("dim_op already rejected non-binary ops"),
             };
             if !result.is_finite() {
@@ -1668,6 +1734,62 @@ mod tests {
         )
         .unwrap_err();
         assert!(matches!(err, ComputeError::NonFinite { .. }), "{err:?}");
+    }
+
+    #[test]
+    fn binary_gcd_lcm_compute_integer_results() {
+        // gcd(12, 18) = 6; lcm(4, 6) = 12. Euclid + divide-then-multiply.
+        let kb = kb_with(vec![
+            Fact::certain(compound("a", vec![int(12)])),
+            Fact::certain(compound("b", vec![int(18)])),
+            Fact::certain(compound("c", vec![int(4)])),
+            Fact::certain(compound("d", vec![int(6)])),
+        ]);
+        let g = compute("g", &bin(ComputeOp::Gcd, refexpr("a"), refexpr("b")), &kb).unwrap();
+        assert_eq!(g.value, 6.0);
+        let l = compute("l", &bin(ComputeOp::Lcm, refexpr("c"), refexpr("d")), &kb).unwrap();
+        assert_eq!(l.value, 12.0);
+    }
+
+    #[test]
+    fn binary_gcd_lcm_zero_edge_cases() {
+        // gcd(0, 0) = 0; gcd(n, 0) = |n|; lcm(_, 0) = 0.
+        let kb = kb_with(vec![
+            Fact::certain(compound("z", vec![int(0)])),
+            Fact::certain(compound("n", vec![int(7)])),
+        ]);
+        assert_eq!(
+            compute("g0", &bin(ComputeOp::Gcd, refexpr("z"), refexpr("z")), &kb)
+                .unwrap()
+                .value,
+            0.0
+        );
+        assert_eq!(
+            compute("gn", &bin(ComputeOp::Gcd, refexpr("n"), refexpr("z")), &kb)
+                .unwrap()
+                .value,
+            7.0
+        );
+        assert_eq!(
+            compute("l0", &bin(ComputeOp::Lcm, refexpr("n"), refexpr("z")), &kb)
+                .unwrap()
+                .value,
+            0.0
+        );
+    }
+
+    #[test]
+    fn binary_gcd_rejects_a_non_integer_operand() {
+        // gcd(12, 2.5) — a non-integer operand is a clean MalformedExpr, never a
+        // silent truncation.
+        let kb = kb_with(vec![Fact::certain(compound("a", vec![int(12)]))]);
+        let err = compute(
+            "x",
+            &bin(ComputeOp::Gcd, refexpr("a"), ComputeExpr::Lit(2.5)),
+            &kb,
+        )
+        .unwrap_err();
+        assert!(matches!(err, ComputeError::MalformedExpr { .. }), "{err:?}");
     }
 
     #[test]
