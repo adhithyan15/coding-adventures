@@ -72,6 +72,7 @@ SELF_CONTAINED_RUNGS = (
     "rung32_respiratory_exchange_ratio",
     "rung33_stroke_work",
     "rung34_fluid_admixture",
+    "rung35_dialysis_clearance",
 )
 
 
