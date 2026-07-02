@@ -2,6 +2,12 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.25.0] - 2026-07-02
+
+### Added — CLOC12.154: `TemplateLiteral` traversal
+
+Handle the new `Expression::TemplateLiteral` variant by recursing into its `${{…}}` sub-expressions (the `expressions` vector); the `quasis` are fixed leaf string segments with nothing to recurse. Part of the atomic `TemplateLiteral` enum-variant rollout (javascript-ast 0.16.0) — adding the variant makes every exhaustive `match` on `Expression` non-exhaustive, so all consumers gain their arm in one PR. Template literals introduce no bindings or scopes, so the renaming/inlining arms need no map reduction.
+
 ## [0.24.0] - 2026-07-02
 
 ### Added — CLOC12.151: `ArrowFunctionExpression` traversal

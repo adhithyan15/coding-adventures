@@ -94,7 +94,7 @@ use coding_adventures_javascript_ast::{
     BinaryOperator, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression,
     Declaration, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
-    ArrowBody, ArrowFunctionExpression,
+    ArrowBody, ArrowFunctionExpression, TemplateLiteral,
     FunctionDeclaration, FunctionExpression, Identifier,
     IfStatement, LogicalExpression, LogicalOperator, MemberExpression, NullLiteral, NumericLiteral,
     ObjectExpression, Program, ProgramItem, Property, PropertyKey, PropertyKind, ReturnStatement, Statement,
@@ -590,6 +590,15 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                 is_async: a.is_async,
             })
         }
+        // A template literal: fold each embedded `${…}` expression. The
+        // `quasis` are fixed string segments with no sub-expressions to
+        // fold. (Folding the *whole* template to a string literal when all
+        // parts are constant is a future optimisation; here we only recurse.)
+        Expression::TemplateLiteral(t) => Expression::TemplateLiteral(TemplateLiteral {
+            cv: t.cv.clone(),
+            quasis: t.quasis.clone(),
+            expressions: t.expressions.iter().map(|e| fold_expression(e, st)).collect(),
+        }),
     }
 }
 

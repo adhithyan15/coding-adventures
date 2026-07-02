@@ -627,6 +627,15 @@ implementations are independent follow-ups.
   The node + emitter + all pass traversals landed in one atomic PR
   (adding an `Expression` variant makes every exhaustive `match`
   non-exhaustive); the bridge-enable + conformance port follow.
+  Also **`TemplateLiteral` (CLOC12.154)** — backtick template strings
+  (`` `abc` ``, `` `a${x}b` ``). Parallel `quasis: Vec<TemplateElement>`
+  (fixed string parts) and `expressions: Vec<Expression>` (`${…}` inserts)
+  with the ESTree invariant `quasis.len() == expressions.len() + 1`;
+  `TemplateElement` keeps `raw` / `cooked` (`Option<String>`, `None` for an
+  illegal-in-untagged escape) / `tail`. Node + emitter + all pass traversals
+  (each recursing only into `expressions` — quasis are leaf strings, no
+  bindings) landed in one atomic PR; bridge-enable + conformance port follow.
+  Tagged templates (`` tag`…` ``) remain Phase 3.
 - Phase 2: leaf coverage gaps + control-flow variants
   (`SwitchStatement`, `TryStatement`, etc.).
 - Phase 3: patterns, arrow functions, classes.
