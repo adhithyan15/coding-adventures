@@ -1,5 +1,75 @@
 # Changelog
 
+## 0.12.0 — typed runtime errors: ZeroDivision / Index / Key / NoMethod (T5)
+
+Implements the Rust milestone (**T5**) of the **sir-typed-runtime-errors**
+cascade. A translated `begin/rescue <Class>` that rescues a *runtime* fault —
+`ZeroDivisionError`, `IndexError`, `KeyError`, `NoMethodError` — must now catch
+it, matching Ruby (and the other four backends). Previously these faults were
+either an uncatchable host `panic!` (division by zero) or a silent `nil` floor
+(unknown method), so `rescue ZeroDivisionError` / `rescue NoMethodError` missed
+them entirely. This is a **runtime-only** change (no core semantic-IR, no
+frontend change): the faulting operations now raise the correct typed
+`SirError` via the existing `raise` entry point (`panic_any(SirError{…})`), so
+the existing `catch_unwind` + `rescue_matches` ancestry machinery dispatches
+them to the right clause.
+
+The typed-raise is explicit-string (a fixed class name + a data-only message);
+there is no reflection over runtime type names — the same C3-allowlist
+discipline the dispatch catalog already upholds. Genuine **non-`SirError` host
+faults** (a real codegen/translator bug — an `unwrap` on `None`, an internal
+`panic!`) are still **re-raised uncaught** by `exc_from_payload`
+(`resume_unwind`), never swallowed by a bare `rescue`: only a value a `raise`
+produced can ever be caught.
+
+### Precise Ruby semantics (load-bearing — no over-raise)
+
+| operation (Ruby)        | before                     | after (T5)                       |
+|-------------------------|----------------------------|----------------------------------|
+| `1 / 0`, `1.0 / 0`      | `panic!` (uncatchable)     | `ZeroDivisionError` ("divided by 0") |
+| `arr.fetch(oob)`        | (no `fetch`)               | `IndexError`                     |
+| `hash.fetch(miss)`      | (no `fetch`)               | `KeyError`                       |
+| `arr.fetch(i, default)` | —                          | returns `default` (no raise)     |
+| `obj.undefined`         | silent `nil` floor         | `NoMethodError` (`undefined method 'x' for <Class>`) |
+| `arr[oob]`, `hash[miss]`| `nil` (arr[] via floor)    | `nil` (unchanged — explicit `[]` arm) |
+
+### Changed (all in the inlined `RUNTIME` string, `runtime.rs`)
+
+- **`divide`.** A zero divisor on the int path OR the float path now raises a
+  typed `ZeroDivisionError` (was an int-only uncatchable `panic!`; the float
+  path previously returned IEEE `inf`). Ruby raises for both `1/0` and `1.0/0`.
+- **`array_method`.** Added `Array#fetch` (strict indexed read — `IndexError`
+  out of bounds, honours a negative index and a supplied default) and
+  `Array#[]` (lenient read — `nil` out of bounds, so `arr[i]` never reaches the
+  new `NoMethodError` floor).
+- **`map_method`.** Added `Hash#fetch` (strict keyed read — `KeyError` on a
+  missing key, or a supplied default) and `Hash#[]` (lenient — `nil` on miss).
+- **Unknown-method floor split into two helpers.** `unknown_method` remains the
+  `nil` floor for a KNOWN method used block-less (`map`/`select`/`reduce`
+  without a block — Ruby returns an `Enumerator`, we floor to `nil`) and for the
+  defensive receiver-type guards. A new `no_method_error` raises a typed
+  `NoMethodError` for a genuinely unknown method name; a new `ruby_class_name`
+  renders the receiver's Ruby class for the message (parity port of the Go
+  backend's `_sir_ruby_class_name`). The true catalog fall-throughs
+  (Array/Map/String/Numeric/Symbol `_` arms, `call_method`'s Bool/default arms,
+  and `dispatch_user_method`'s unresolved-instance-method arm) now raise via
+  `no_method_error`.
+
+### Tests
+
+- New exec-proof integration test `compile_and_run_typed_runtime_errors.rs`:
+  builds SIR, emits Rust, compiles with `rustc`, runs, and asserts a
+  `begin/rescue` catches `1/0`→`ZeroDivisionError`, `1.0/0`→`ZeroDivisionError`,
+  `arr.fetch(oob)`→`IndexError`, `hash.fetch(miss)`→`KeyError`,
+  `obj.undefined`→`NoMethodError` (and its superclass `NameError`), that
+  `fetch` with a default does not raise, and that `arr[oob]` / `hash[miss]`
+  still return `nil` (no over-raise).
+- Updated `compile_and_run_collection_methods.rs` (the `[1].bogus_xyz` case
+  moved to the new test — it now raises rather than flooring to `nil`) and
+  `compile_and_run_oop.rs` (the security "`drop` is inert data" and cyclic-
+  ancestry-terminates cases now `rescue NoMethodError` and prove the surfaced
+  typed error is CONTROLLED — never a host `Drop`/reflection, never a hang).
+
 ## 0.11.0 — polymorphic `+` / `*` for strings and arrays (PO5)
 
 Implements the Rust milestone of the **sir-polymorphic-operators** cascade.

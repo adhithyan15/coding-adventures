@@ -150,10 +150,15 @@ rather than panicking:
     `zero?`, `times`; plus a universal `to_s`.
   - Block-taking methods apply the trailing closure via `apply_closure`;
     `sym_to_proc` implements `Symbol#to_proc` (`&:sym`).
+  - **Strict vs. lenient reads** — `Array#[]` / `Hash#[]` are lenient (out of
+    bounds / missing key ⇒ `nil`, Ruby parity), while `Array#fetch` /
+    `Hash#fetch` are strict (raise `IndexError` / `KeyError`, or return a
+    supplied default).
 - **Security** — the catalog *is* the allowlist.  Dispatch is the explicit
-  match only; an unknown method name returns a controlled Ruby `nil`
-  (`unknown_method`), never a reflective lookup on the raw name.  No new
-  `unsafe`.
+  match only; a genuinely unknown method name raises a controlled, typed
+  `NoMethodError` (`no_method_error`, carrying only the data name string),
+  never a reflective lookup on the raw name.  (A KNOWN method used block-less
+  still floors to Ruby `nil` via `unknown_method`.)  No new `unsafe`.
 
 Executes (E4): **exception handling**.  `Feature::Exceptions` (Ruby
 `begin/rescue/ensure`, `raise`) is accepted.  Rust has **no native
@@ -227,8 +232,9 @@ lowers OOP to a small family of builtins the backend routes to the inline
   `Exceptions`.
 - **Security** — every method/class lookup is an EXPLICIT `HashMap::get` on
   a `(class, method)` key — never reflection or `dyn Any`-by-name.  A
-  class/method literally named `constructor`/`new`/`drop` is inert data; a
-  miss floors to the honest `Nil`/NoMethodError boundary.  The ancestry walk
+  class/method literally named `constructor`/`new`/`drop` is inert data; an
+  unresolved instance method surfaces a controlled, typed `NoMethodError`
+  (never a host callable).  The ancestry walk
   carries a `seen`-set **cycle guard** (a cyclic `A < B < A` hierarchy
   terminates).  Widening `Classes`/`Constants` acceptance stays sound:
   `reject_stateful_class` still rejects a class/module with an executable

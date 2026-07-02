@@ -33,8 +33,8 @@
 use std::process::Command;
 
 use semantic_ir::{
-    Block, Effect, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Scope,
-    Span, Stmt,
+    Block, Effect, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module,
+    RescueClause, Scope, Span, Stmt,
 };
 use semantic_ir_to_rust::compile;
 
@@ -168,6 +168,24 @@ fn class_def(name: &str, superclass: Option<&str>) -> Stmt {
         name: name.into(),
         superclass: superclass.map(|s| s.to_string()),
         body: vec![],
+        span: s(),
+    }
+}
+
+/// `begin <fault>; rescue <class>; <on_catch> end` — used to prove a runtime
+/// fault surfaces as a CATCHABLE typed exception (T5 typed-runtime-errors:
+/// an unresolved instance method now raises `NoMethodError` rather than
+/// flooring to `nil`).
+fn begin_rescue(fault: Stmt, class: &str, on_catch: Vec<Stmt>) -> Stmt {
+    Stmt::TryCatch {
+        body: vec![fault],
+        rescues: vec![RescueClause {
+            exception_types: vec![class.to_string()],
+            binding: None,
+            body: on_catch,
+            span: s(),
+        }],
+        ensure_body: None,
         span: s(),
     }
 }
@@ -324,8 +342,10 @@ fn p2_inheritance_and_super() {
 /// instance.  Two guarantees: (1) the `constructor`-named class + its
 /// methods work purely as map data (`get` returns the ivar marker `7`),
 /// never reaching a host callable; (2) calling an unregistered method
-/// (`drop`) floors cleanly to `nil` (never a host `Drop`/reflection), and
-/// the process still exits 0.  Prints `7` then `nil`.
+/// (`drop`) surfaces a CONTROLLED typed `NoMethodError` (never a host
+/// `Drop`/reflection) — T5 makes the old silent `nil` floor a catchable
+/// error, so we `rescue NoMethodError` and print `8`, and the process still
+/// exits 0.  Prints `7` then `8`.
 #[test]
 fn security_reflective_name_is_inert_data() {
     if !rustc_available() {
@@ -347,10 +367,15 @@ fn security_reflective_name_is_inert_data() {
         def_method_stmt("constructor", "get", "ctor_get"),
         // The class name (Const-like) is passed as a string; `get` works.
         print_stmt(method_call(call("__new__", vec![slit("constructor")]), "get", vec![])),
-        // An UNREGISTERED method name (`drop`) → clean nil floor, no host call.
-        print_stmt(method_call(call("__new__", vec![slit("constructor")]), "drop", vec![])),
+        // An UNREGISTERED method name (`drop`) → a CONTROLLED, catchable
+        // `NoMethodError` (never a host `Drop`/reflection).  Caught → print 8.
+        begin_rescue(
+            print_stmt(method_call(call("__new__", vec![slit("constructor")]), "drop", vec![])),
+            "NoMethodError",
+            vec![print_stmt(ilit(8))],
+        ),
     ];
-    let m = oop_module(vec![init, get], main, &[]);
+    let m = oop_module(vec![init, get], main, &[Feature::Exceptions]);
     let src = compile(&m).expect("compile security").source;
     // The emitted runtime must never turn a source name into a host call:
     // no `recv.name`-style reflection appears — dispatch is HashMap-keyed.
@@ -360,16 +385,17 @@ fn security_reflective_name_is_inert_data() {
     );
     let Some((stdout, ok)) = compile_and_run(&src, "security") else { return };
     assert!(ok, "security process should exit 0; stdout {stdout:?}");
-    assert_eq!(stdout.lines().collect::<Vec<_>>(), vec!["7", "nil"], "got {stdout:?}");
+    assert_eq!(stdout.lines().collect::<Vec<_>>(), vec!["7", "8"], "got {stdout:?}");
 }
 
 /// Cyclic ancestry must TERMINATE (not hang) and floor to `nil`.
 ///
 /// We register `class A < B` and `class B < A` (a cycle), define NO method
 /// named `missing`, then call `A.new.missing`.  `resolve_method`'s `seen`
-/// guard bounds the ancestry walk, so the call returns `nil` and the program
-/// exits — proving the walk cannot loop forever on a malformed hierarchy.
-/// Prints `nil`.
+/// guard bounds the ancestry walk, so the walk TERMINATES (rather than
+/// looping forever) with the method unresolved — which T5 surfaces as a
+/// catchable `NoMethodError`.  We `rescue NoMethodError` and print `3`,
+/// proving the walk cannot hang on a malformed hierarchy.  Prints `3`.
 #[test]
 fn cyclic_ancestry_terminates() {
     if !rustc_available() {
@@ -379,13 +405,17 @@ fn cyclic_ancestry_terminates() {
     let main = vec![
         class_def("A", Some("B")),
         class_def("B", Some("A")),
-        print_stmt(method_call(call("__new__", vec![slit("A")]), "missing", vec![])),
+        begin_rescue(
+            print_stmt(method_call(call("__new__", vec![slit("A")]), "missing", vec![])),
+            "NoMethodError",
+            vec![print_stmt(ilit(3))],
+        ),
     ];
-    let m = oop_module(vec![], main, &[]);
+    let m = oop_module(vec![], main, &[Feature::Exceptions]);
     let src = compile(&m).expect("compile cyclic").source;
     let Some((stdout, ok)) = compile_and_run(&src, "cyclic") else { return };
     assert!(ok, "cyclic-ancestry process should exit 0 (walk terminates); stdout {stdout:?}");
-    assert_eq!(stdout.lines().collect::<Vec<_>>(), vec!["nil"], "got {stdout:?}");
+    assert_eq!(stdout.lines().collect::<Vec<_>>(), vec!["3"], "got {stdout:?}");
 }
 
 /// The self-stack pops even when a method body panics (RAII guard).  We can
