@@ -18,8 +18,8 @@ All notable changes to this package will be documented in this file.
   owning smart-home state.
 - Added `smart_home.get_maintenance_brief`, a read-only Chief adapter tool that
   composes existing D23 runtime maintenance windows, actions, work orders,
-  evidence, readiness, handoff, and reconciliation signals into one maintenance
-  closeout packet without owning smart-home state.
+  evidence, readiness, handoff, reconciliation, and closeout signals into one
+  maintenance closeout packet without owning smart-home state.
 - Added `smart_home.get_readiness_brief`, a read-only Chief adapter tool that
   composes existing D23 controller handoff, runtime operations, safety, and
   catalog signals into one readiness packet without owning smart-home state.
@@ -43,6 +43,10 @@ All notable changes to this package will be documented in this file.
   `smart_home.list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations`
   and
   `smart_home.get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_summary`.
+- Added D18D handlers for Chief-visible smart-home runtime maintenance closeout
+  packets:
+  `smart_home.list_runtime_maintenance_closeout_packets` and
+  `smart_home.get_runtime_maintenance_closeout_summary`.
 - Added D18D handlers for Chief-visible smart-home runtime maintenance outcome
   readiness handoff packages:
   `smart_home.list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoffs`

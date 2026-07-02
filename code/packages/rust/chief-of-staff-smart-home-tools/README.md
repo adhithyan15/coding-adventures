@@ -101,7 +101,7 @@ Chief of Staff job/session/agent
      pairing-session inventory reads
   -> desired-state target set/clear through runtime authorization
   -> non-mutating supervision plan previews
-  -> supervision remediation and runtime maintenance-window/action/plan/ticket/work-order/guardrail/evidence/review/disposition/action/outcome/readiness/handoff/reconciliation reads
+  -> supervision remediation and runtime maintenance-window/action/plan/ticket/work-order/guardrail/evidence/review/disposition/action/outcome/readiness/handoff/reconciliation/closeout reads
   -> authorized desired-state reconciliation and supervision ticks
   -> supervised worker inventory and heartbeat schedule reads
   -> device command acceptance
@@ -318,6 +318,8 @@ Chief of Staff job/session/agent
 - `smart_home.get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_summary`
 - `smart_home.list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations`
 - `smart_home.get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_summary`
+- `smart_home.list_runtime_maintenance_closeout_packets`
+- `smart_home.get_runtime_maintenance_closeout_summary`
 - `smart_home.reconcile_desired_states`
 - `smart_home.run_supervision_tick`
 - `smart_home.pair_bridge`
