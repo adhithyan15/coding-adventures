@@ -5,7 +5,7 @@ import Foundation
     private var session: OpaquePointer?
 
     override init() {
-        self.session = eg_session_new()
+        self.session = eg_session_new_demo()
         super.init()
     }
 

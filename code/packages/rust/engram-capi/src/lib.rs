@@ -28,8 +28,16 @@ pub extern "C" fn eg_session_new() -> *mut EgSession {
     }))
 }
 
+#[no_mangle]
+pub extern "C" fn eg_session_new_demo() -> *mut EgSession {
+    Box::into_raw(Box::new(EgSession {
+        inner: EngramSession::new_demo(),
+    }))
+}
+
 /// # Safety
-/// `session` must be a pointer returned by `eg_session_new` and not already freed.
+/// `session` must be a pointer returned by `eg_session_new` or
+/// `eg_session_new_demo` and not already freed.
 #[no_mangle]
 pub unsafe extern "C" fn eg_session_free(session: *mut EgSession) {
     if !session.is_null() {
@@ -51,6 +59,11 @@ pub unsafe extern "C" fn eg_string_free(value: *mut c_char) {
 #[no_mangle]
 pub unsafe extern "C" fn eg_snapshot(session: *mut EgSession) -> *mut c_char {
     with_session(session, |session| session.snapshot())
+}
+
+#[no_mangle]
+pub extern "C" fn eg_demo_snapshot() -> *mut c_char {
+    into_cstr(EngramSession::demo_snapshot_json().to_string())
 }
 
 /// # Safety
@@ -1918,6 +1931,47 @@ CREATE TABLE graves (
                 json!(["card"])
             );
             assert_eq!(browser_props["props"]["browser-selected-card-id"], "card");
+
+            eg_session_free(session);
+        }
+    }
+
+    #[test]
+    fn c_abi_demo_session_exposes_lit_up_app_props() {
+        unsafe {
+            let session = eg_session_new_demo();
+
+            let snapshot = take(eg_demo_snapshot());
+            let snapshot: Value = serde_json::from_str(&snapshot).unwrap();
+            assert_eq!(snapshot["decks"][0]["id"], "tamil-script");
+            assert_eq!(snapshot["notes"].as_array().unwrap().len(), 5);
+
+            let props = take(eg_engram_app_props(session, cstr("").as_ptr(), NOW));
+            let props: Value = serde_json::from_str(&props).unwrap();
+
+            assert_eq!(props["ok"], true);
+            assert_eq!(props["props"]["deck-name"], "Tamil::Script and Roots");
+            assert_eq!(props["props"]["deck-total-value"], "2");
+            assert_eq!(props["props"]["collection-note-count-value"], "5");
+            assert_eq!(
+                props["props"]["deck-names"],
+                json!([
+                    "Tamil::Script and Roots",
+                    "Hindi::Devanagari",
+                    "Kannada::Script",
+                    "Spanish::Latin Roots"
+                ])
+            );
+            assert_eq!(
+                props["props"]["browser-result-card-ids"],
+                json!([
+                    "card-tamil-amma",
+                    "card-tamil-uyir",
+                    "card-hindi-namaste",
+                    "card-kannada-amma",
+                    "card-spanish-hablar"
+                ])
+            );
 
             eg_session_free(session);
         }
