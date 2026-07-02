@@ -120,8 +120,7 @@ fn whatwg_frameset_audit_tracks_post_parse_repair_evidence() {
 }
 
 fn load_suite() -> FramesetAuditSuite {
-    serde_json::from_str(WHATWG_FRAMESET_AUDIT)
-        .expect("WHATWG frameset audit fixture should parse")
+    serde_json::from_str(WHATWG_FRAMESET_AUDIT).expect("WHATWG frameset audit fixture should parse")
 }
 
 fn assert_axis_count(suite: &FramesetAuditSuite, axis: &str, minimum: usize) {

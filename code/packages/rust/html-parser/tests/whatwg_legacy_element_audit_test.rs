@@ -5,8 +5,7 @@ use serde::Deserialize;
 use std::collections::{BTreeMap, HashMap};
 
 const TREE_CONSTRUCTION_SMOKE: &str = include_str!("fixtures/html5lib-tree-construction-smoke.dat");
-const WHATWG_LEGACY_ELEMENT_AUDIT: &str =
-    include_str!("fixtures/whatwg-legacy-element-audit.json");
+const WHATWG_LEGACY_ELEMENT_AUDIT: &str = include_str!("fixtures/whatwg-legacy-element-audit.json");
 const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
     ("tricky01-dat-3", "tricky-parser-recovery"),
     ("tricky01-dat-8", "tricky-parser-recovery"),
