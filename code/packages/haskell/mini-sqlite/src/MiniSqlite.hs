@@ -1106,11 +1106,11 @@ parseInsert toks = do
             (cols, rest2) <- parseIdentList rest1
             rest3         <- expectToken TRParen rest2 ")"
             rest4         <- expectWord "VALUES" rest3
-            rows          <- parseValueRows rest4
+            (rows, _)     <- parseValueRows rest4
             pure (InsertStmt name cols rows)
         -- INSERT INTO t VALUES (...)
         (TWord "VALUES" : rest1) -> do
-            rows <- parseValueRows rest1
+            (rows, _) <- parseValueRows rest1
             pure (InsertStmt name [] rows)
         _ ->
             Left (mkErr "OperationalError" "INSERT: expected column list or VALUES")

@@ -2,6 +2,18 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.3] - 2026-07-01
+
+### Fixed
+
+- **`parseInsert` type error (GHC compile error)**: `parseValueRows` returns
+  `Either MiniSqliteError ([[SqlExpr]], [Token])` — a pair of (rows, remaining
+  tokens).  The monadic bind in `parseInsert` was discarding the tuple structure,
+  binding `rows` to the entire `([[SqlExpr]], [Token])` pair instead of just the
+  `[[SqlExpr]]` part.  Fixed by destructuring: `(rows, _) <- parseValueRows ...`
+  at both the column-list (`INSERT INTO t (c1,c2) VALUES (...)`) and no-column-
+  list (`INSERT INTO t VALUES (...)`) code paths.
+
 ## [0.2.2] - 2026-07-01
 
 ### Fixed
