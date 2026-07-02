@@ -1480,7 +1480,7 @@ mod tw05p1_tests {
 //
 // The `.tw` source files are embedded at compile time via `include_str!`.
 // Paths are relative to this source file (`src/lib.rs`):
-//   ../../../../twig/compiler/  →  code/twig/compiler/
+//   ../../../twig/compiler/  →  code/packages/twig/compiler/
 
 #[cfg(test)]
 mod tw05p2_tests {
@@ -1511,27 +1511,27 @@ mod tw05p2_tests {
     // ── Source constants ─────────────────────────────────────────────────────
 
     const SPAN_SRC: &str =
-        include_str!("../../../../twig/compiler/span.tw");
+        include_str!("../../../twig/compiler/span.tw");
     const TOKEN_SRC: &str =
-        include_str!("../../../../twig/compiler/token.tw");
+        include_str!("../../../twig/compiler/token.tw");
     const DIAGNOSTIC_SRC: &str =
-        include_str!("../../../../twig/compiler/diagnostic.tw");
+        include_str!("../../../twig/compiler/diagnostic.tw");
     const AST_SRC: &str =
-        include_str!("../../../../twig/compiler/ast.tw");
+        include_str!("../../../twig/compiler/ast.tw");
     const IIR_TYPES_SRC: &str =
-        include_str!("../../../../twig/compiler/iir-types.tw");
+        include_str!("../../../twig/compiler/iir-types.tw");
     const IIR_BUILDER_SRC: &str =
-        include_str!("../../../../twig/compiler/iir-builder.tw");
+        include_str!("../../../twig/compiler/iir-builder.tw");
     const LEXER_SRC: &str =
-        include_str!("../../../../twig/compiler/lexer.tw");
+        include_str!("../../../twig/compiler/lexer.tw");
     const CST_PARSER_SRC: &str =
-        include_str!("../../../../twig/compiler/cst-parser.tw");
+        include_str!("../../../twig/compiler/cst-parser.tw");
     const PARSER_SRC: &str =
-        include_str!("../../../../twig/compiler/parser.tw");
+        include_str!("../../../twig/compiler/parser.tw");
     const EMIT_SRC: &str =
-        include_str!("../../../../twig/compiler/emit.tw");
+        include_str!("../../../twig/compiler/emit.tw");
     const MAIN_SRC: &str =
-        include_str!("../../../../twig/compiler/main.tw");
+        include_str!("../../../twig/compiler/main.tw");
 
     // ── Tests ────────────────────────────────────────────────────────────────
 

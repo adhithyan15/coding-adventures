@@ -193,7 +193,7 @@ provides more than adequate headroom.
 | File | Change |
 |------|--------|
 | `code/specs/LANG68-tw05n-fixed-point-self-compilation.md` | **new** |
-| `code/twig/compiler/main.tw` | add 6 functions, update exports + header |
+| `code/packages/twig/compiler/main.tw` | add 6 functions, update exports + header |
 | `code/packages/rust/twig-module-driver/src/lib.rs` | update 2 test expectations (173→179, 2→8); add `tw05n_tests` (7 tests) |
 | `code/packages/rust/twig-module-driver/Cargo.toml` | `0.12.0 → 0.13.0` |
 | `code/packages/rust/twig-module-driver/CHANGELOG.md` | prepend `[0.13.0]` |

@@ -105,7 +105,7 @@ functions and are NOT included in the count.
 
 - New `## [0.17.0]` entry documenting the `MAX_DISPATCH_DEPTH` bump and why
 
-### `code/twig/compiler/main.tw`
+### `code/packages/twig/compiler/main.tw`
 
 - Module header updated: `(export main self-compile-all)`
 - File header comment updated to describe TW05-J and `self-compile-all`

@@ -12,7 +12,7 @@ TW05-F is the third compilation phase of the self-hosted Twig compiler: turning
 an Abstract Syntax Tree (AST) into Interpreter IR (IIR) instructions.  The
 deliverable is one new Twig module:
 
-- `code/twig/compiler/emit.tw` — `emit-expr : Expr × IirBuilder × Env → (cons IirBuilder reg)`
+- `code/packages/twig/compiler/emit.tw` — `emit-expr : Expr × IirBuilder × Env → (cons IirBuilder reg)`
 
 `emit-expr` walks an `Expr` node (from `compiler/ast`), threads an `IirBuilder`
 (from `compiler/iir-builder`), emits `IirInstr` records for each AST node, and

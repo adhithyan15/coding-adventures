@@ -340,7 +340,7 @@ Example:
 The self-hosted compiler source should live as Twig modules:
 
 ```text
-code/twig/compiler/
+code/packages/twig/compiler/
   compiler/
     token.tw
     span.tw
@@ -499,7 +499,7 @@ twigc --emit=aot src/main.tw -o main
 twigc --emit=wasm src/main.tw -o main.wasm
 twigc --check src/main.tw
 twigc --check --strict-refinements src/main.tw
-twigc --self-check code/twig/compiler/compiler/driver.tw
+twigc --self-check code/packages/twig/compiler/compiler/driver.tw
 ```
 
 `twigc --self-check` runs stage0/stage1/stage2 and verifies the fixed point.
@@ -1070,7 +1070,7 @@ paths.
 
 ## Appendix D — Bootstrapping the compiler on each backend
 
-Once the self-hosted compiler source (Twig modules in `code/twig/compiler/`) is
+Once the self-hosted compiler source (Twig modules in `code/packages/twig/compiler/`) is
 complete, the pipeline for a full bootstrap is:
 
 ```
