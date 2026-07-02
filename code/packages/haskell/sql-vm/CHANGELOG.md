@@ -3,6 +3,23 @@
 All notable changes to this package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.5.0] — 2026-07-01
+
+### Fixed
+
+- **`buildResult` column fallback for HAVING-filtered-all results**: when a
+  `HAVING` clause eliminates every group (e.g. `HAVING COUNT(*) > 5` on a
+  table where no group meets the threshold), `EmitRow` never fires and
+  `vmOutputColumns` stays `[]`.  `buildResult` now falls back to `vmColOrder`
+  (which holds the column names from the last partial `BeginRow`+`EmitColumn`
+  sequence) so that `cursorDescription` returns the correct schema even when
+  the result set is empty.  Previously `cursorDescription` returned `[]`,
+  causing conformance fixture 24 step 3 to fail with
+  `expected ["customer","n"] but got []`.
+- Removed debug `traceM` calls that were logging `UpdateAgg`, `FinalizeAgg`,
+  `SaveGroupKey`, `AdvanceGroup`, `JumpIfGroupsDone`, `JumpIfFalse`, and
+  `EmitRow` internals to stderr during test runs.
+
 ## [0.1.4.0] — 2026-07-01
 
 ### Added

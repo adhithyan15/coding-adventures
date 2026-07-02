@@ -72,7 +72,6 @@ import Data.List (dropWhileEnd, isPrefixOf, nub, sortBy)
 import qualified Data.Map.Strict as Map
 import Data.Maybe (fromMaybe, mapMaybe)
 import qualified Data.Set as Set
-import Debug.Trace (traceM)
 
 import qualified SqlBackend as SB
 import SqlBackend
@@ -1008,7 +1007,6 @@ dispatch instr = case instr of
     EmitRow -> do
         rowBuf   <- gets vmRowBuffer
         colOrder <- gets vmColOrder
-        traceM ("[DBG] EmitRow colOrder=" ++ show colOrder)
         -- SELECT * support: if no EmitColumn was called (colOrder is empty)
         -- and the top of stack is SqlText "*" (emitted by compileOutputCols for
         -- OutputStar), expand the current cursor row into the output buffer.
@@ -1063,7 +1061,6 @@ dispatch instr = case instr of
         -- CountStar ignores the value, so we avoid a stack-underflow crash.
         v <- if fn == CountStar then return SqlNull else pop
         grp <- gets vmCurrentGroup
-        traceM ("[DBG] UpdateAgg idx=" ++ show idx ++ " fn=" ++ show fn ++ " grp=" ++ show grp)
         if null grp
             -- Non-GROUP BY: update the global accumulator.
             then modify (\st -> st
@@ -1094,9 +1091,6 @@ dispatch instr = case instr of
                     let grpMap = Map.findWithDefault Map.empty grp grpAccums
                     return (Map.findWithDefault defaultAccum idx grpMap)
         let result = finalizeAccum fn acc
-        traceM ("[DBG] FinalizeAgg idx=" ++ show idx ++ " fn=" ++ show fn
-                ++ " grp=" ++ show grp ++ " aggCount=" ++ show (aggCount acc)
-                ++ " result=" ++ show result)
         push result
 
     -- SaveGroupKey: pop the GROUP BY expression values from the stack,
@@ -1108,7 +1102,6 @@ dispatch instr = case instr of
         -- the list to recover the natural left-to-right key tuple.
         vals <- replicateM (length names) pop
         let key = reverse vals
-        traceM ("[DBG] SaveGroupKey names=" ++ show names ++ " key=" ++ show key)
         modify (\st ->
             let order = vmGroupOrder st
                 -- Append to group order if this key has not been seen yet.
@@ -1127,16 +1120,11 @@ dispatch instr = case instr of
             in st { vmGroupIndex   = i
                   , vmCurrentGroup = newGrp
                   })
-        i <- gets vmGroupIndex
-        order <- gets vmGroupOrder
-        grp <- gets vmCurrentGroup
-        traceM ("[DBG] AdvanceGroup idx=" ++ show i ++ " orderLen=" ++ show (length order) ++ " currentGrp=" ++ show grp)
 
     -- JumpIfGroupsDone: jump when all groups have been emitted.
     JumpIfGroupsDone lbl -> do
         i     <- gets vmGroupIndex
         order <- gets vmGroupOrder
-        traceM ("[DBG] JumpIfGroupsDone lbl=" ++ lbl ++ " i=" ++ show i ++ " orderLen=" ++ show (length order) ++ " jumps=" ++ show (i >= length order))
         when (i >= length order) (jumpTo lbl)
 
     -- ── Control flow ──────────────────────────────────────────────────────
@@ -1153,7 +1141,6 @@ dispatch instr = case instr of
 
     JumpIfFalse lbl -> do
         v <- pop
-        traceM ("[DBG] JumpIfFalse lbl=" ++ lbl ++ " val=" ++ show v ++ " jumps=" ++ show (not (isTruthy v)))
         unless (isTruthy v) (jumpTo lbl)
 
     Halt ->
@@ -1311,13 +1298,21 @@ buildResult st =
         -- Use the column order captured during EmitColumn/EmitRow execution.
         -- This preserves SELECT-list order (e.g. SELECT id, name, age)
         -- rather than Map.keys alphabetical order (e.g. age, id, name).
-        -- If no rows were emitted (DML or empty result), colNames is [].
+        --
+        -- vmOutputColumns is set on the first EmitRow.  When HAVING filters
+        -- every row (e.g. HAVING COUNT(*) > 5 on a small table), EmitRow
+        -- never fires and vmOutputColumns stays [].  However, BeginRow +
+        -- EmitColumn still ran for each group before the HAVING check, so
+        -- vmColOrder holds the correct column names from the last partial row.
+        -- We fall back to vmColOrder so that cursorDescription returns the
+        -- right schema even when the result set is empty.
         --
         -- Strip hidden sort-key columns (prefixed "__sort_") from the
         -- output column list.  These were emitted by compileSelect so that
         -- doSort can look up sort-key values for columns not in the SELECT
         -- list.  They must not appear in the user-visible query result.
-        allCols  = vmOutputColumns st
+        allCols  = if null (vmOutputColumns st) then vmColOrder st
+                                                else vmOutputColumns st
         colNames = filter (not . ("__sort_" `isPrefixOf`)) allCols
 
         -- Convert row maps to value lists in column order.
