@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 50 \u2014 insulin correction dose from three stated quantities (a NEW panel: diabetes / insulin-correction-dosing). From a correction factor plus a current and a target glucose compute the correction dose (correction_factor*(current_glucose-target_glucose)), the glucose excess (current_glucose-target_glucose), or the factor-times-current product (correction_factor*current_glucose). Each item is a compute_dimensioned program (observe the three quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, DISTRIBUTIVE PRODUCT-OVER-A-DIFFERENCE a*(b-c), the first product on the ladder to multiply a single factor by a parenthesised difference (distinct from rung-48 sum-times-difference (a+b)*(c-d) and rung-49 distributive product-over-a-sum a*(b+c)) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the three observed quantities via *, - and + \u2014 no constant leaks, and neither the glucose excess, the factor-times-current product, nor any correction-dose figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same three quantities, so the distractors are exactly the slips students make: ADDING the current and target glucose instead of subtracting them, and breaking the distributive law by subtracting the raw target instead of the dose it offsets (a*b-c, not a*(b-c)). The core confusion tested is distributing the correction factor over the glucose excess.",
+  "items": [
+    {
+      "id": "r50ins-01",
+      "qtype": "insulin_correction",
+      "stem": "A patient with a correction factor of 3 units per point has a current glucose of 40 and a target of 15. What is the correction dose (the factor times how far the glucose sits above target)?",
+      "program": "observe correction_factor(3)\nobserve current_glucose(40)\nobserve target_glucose(15)\nlet answer = correction_factor * (current_glucose - target_glucose)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 165,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 105,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r50ins-02",
+      "qtype": "insulin_correction",
+      "stem": "A patient with a correction factor of 3 units per point has a current glucose of 40 and a target of 15. What is the the glucose excess (current glucose minus the target)?",
+      "program": "observe correction_factor(3)\nobserve current_glucose(40)\nobserve target_glucose(15)\nlet answer = current_glucose - target_glucose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 165,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 105,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r50ins-03",
+      "qtype": "insulin_correction",
+      "stem": "A patient with a correction factor of 3 units per point has a current glucose of 40 and a target of 15. What is the the factor times the CURRENT glucose (one distributed term, before offsetting the target)?",
+      "program": "observe correction_factor(3)\nobserve current_glucose(40)\nobserve target_glucose(15)\nlet answer = correction_factor * current_glucose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 165,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 105,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r50ins-04",
+      "qtype": "insulin_correction",
+      "stem": "A patient with a correction factor of 2 units per point has a current glucose of 50 and a target of 20. What is the correction dose (the factor times how far the glucose sits above target)?",
+      "program": "observe correction_factor(2)\nobserve current_glucose(50)\nobserve target_glucose(20)\nlet answer = correction_factor * (current_glucose - target_glucose)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 140,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 80,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r50ins-05",
+      "qtype": "insulin_correction",
+      "stem": "A patient with a correction factor of 2 units per point has a current glucose of 50 and a target of 20. What is the the glucose excess (current glucose minus the target)?",
+      "program": "observe correction_factor(2)\nobserve current_glucose(50)\nobserve target_glucose(20)\nlet answer = current_glucose - target_glucose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 140,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r50ins-06",
+      "qtype": "insulin_correction",
+      "stem": "A patient with a correction factor of 2 units per point has a current glucose of 50 and a target of 20. What is the the factor times the CURRENT glucose (one distributed term, before offsetting the target)?",
+      "program": "observe correction_factor(2)\nobserve current_glucose(50)\nobserve target_glucose(20)\nlet answer = correction_factor * current_glucose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 140,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 80,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r50ins-07",
+      "qtype": "insulin_correction",
+      "stem": "A patient with a correction factor of 4 units per point has a current glucose of 35 and a target of 10. What is the correction dose (the factor times how far the glucose sits above target)?",
+      "program": "observe correction_factor(4)\nobserve current_glucose(35)\nobserve target_glucose(10)\nlet answer = correction_factor * (current_glucose - target_glucose)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 140,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 130,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r50ins-08",
+      "qtype": "insulin_correction",
+      "stem": "A patient with a correction factor of 4 units per point has a current glucose of 35 and a target of 10. What is the the glucose excess (current glucose minus the target)?",
+      "program": "observe correction_factor(4)\nobserve current_glucose(35)\nobserve target_glucose(10)\nlet answer = current_glucose - target_glucose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 140,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 130,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r50ins-09",
+      "qtype": "insulin_correction",
+      "stem": "A patient with a correction factor of 4 units per point has a current glucose of 35 and a target of 10. What is the the factor times the CURRENT glucose (one distributed term, before offsetting the target)?",
+      "program": "observe correction_factor(4)\nobserve current_glucose(35)\nobserve target_glucose(10)\nlet answer = correction_factor * current_glucose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 140,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 130,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r50ins-10",
+      "qtype": "insulin_correction",
+      "stem": "A patient with a correction factor of 5 units per point has a current glucose of 28 and a target of 12. What is the correction dose (the factor times how far the glucose sits above target)?",
+      "program": "observe correction_factor(5)\nobserve current_glucose(28)\nobserve target_glucose(12)\nlet answer = correction_factor * (current_glucose - target_glucose)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 140,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 200,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 128,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 80,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r50ins-11",
+      "qtype": "insulin_correction",
+      "stem": "A patient with a correction factor of 5 units per point has a current glucose of 28 and a target of 12. What is the the glucose excess (current glucose minus the target)?",
+      "program": "observe correction_factor(5)\nobserve current_glucose(28)\nobserve target_glucose(12)\nlet answer = current_glucose - target_glucose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 140,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 200,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 128,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r50ins-12",
+      "qtype": "insulin_correction",
+      "stem": "A patient with a correction factor of 5 units per point has a current glucose of 28 and a target of 12. What is the the factor times the CURRENT glucose (one distributed term, before offsetting the target)?",
+      "program": "observe correction_factor(5)\nobserve current_glucose(28)\nobserve target_glucose(12)\nlet answer = correction_factor * current_glucose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 140,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 200,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 128,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r50ins-13",
+      "qtype": "insulin_correction",
+      "stem": "A patient with a correction factor of 3 units per point has a current glucose of 60 and a target of 25. What is the correction dose (the factor times how far the glucose sits above target)?",
+      "program": "observe correction_factor(3)\nobserve current_glucose(60)\nobserve target_glucose(25)\nlet answer = correction_factor * (current_glucose - target_glucose)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 105,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 255,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 155,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r50ins-14",
+      "qtype": "insulin_correction",
+      "stem": "A patient with a correction factor of 3 units per point has a current glucose of 60 and a target of 25. What is the the glucose excess (current glucose minus the target)?",
+      "program": "observe correction_factor(3)\nobserve current_glucose(60)\nobserve target_glucose(25)\nlet answer = current_glucose - target_glucose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 105,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 255,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 155,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r50ins-15",
+      "qtype": "insulin_correction",
+      "stem": "A patient with a correction factor of 3 units per point has a current glucose of 60 and a target of 25. What is the the factor times the CURRENT glucose (one distributed term, before offsetting the target)?",
+      "program": "observe correction_factor(3)\nobserve current_glucose(60)\nobserve target_glucose(25)\nlet answer = correction_factor * current_glucose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 105,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 255,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 155,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 180,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r50ins-16",
+      "qtype": "insulin_correction",
+      "stem": "A patient with a correction factor of 2 units per point has a current glucose of 45 and a target of 18. What is the correction dose (the factor times how far the glucose sits above target)?",
+      "program": "observe correction_factor(2)\nobserve current_glucose(45)\nobserve target_glucose(18)\nlet answer = correction_factor * (current_glucose - target_glucose)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 54,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 27,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 126,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 72,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r50ins-17",
+      "qtype": "insulin_correction",
+      "stem": "A patient with a correction factor of 2 units per point has a current glucose of 45 and a target of 18. What is the the glucose excess (current glucose minus the target)?",
+      "program": "observe correction_factor(2)\nobserve current_glucose(45)\nobserve target_glucose(18)\nlet answer = current_glucose - target_glucose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 54,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 27,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 126,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 72,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r50ins-18",
+      "qtype": "insulin_correction",
+      "stem": "A patient with a correction factor of 2 units per point has a current glucose of 45 and a target of 18. What is the the factor times the CURRENT glucose (one distributed term, before offsetting the target)?",
+      "program": "observe correction_factor(2)\nobserve current_glucose(45)\nobserve target_glucose(18)\nlet answer = correction_factor * current_glucose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 54,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 27,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 126,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 72,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r50ins-19",
+      "qtype": "insulin_correction",
+      "stem": "A patient with a correction factor of 6 units per point has a current glucose of 30 and a target of 14. What is the correction dose (the factor times how far the glucose sits above target)?",
+      "program": "observe correction_factor(6)\nobserve current_glucose(30)\nobserve target_glucose(14)\nlet answer = correction_factor * (current_glucose - target_glucose)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 264,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 96,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 166,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r50ins-20",
+      "qtype": "insulin_correction",
+      "stem": "A patient with a correction factor of 6 units per point has a current glucose of 30 and a target of 14. What is the the glucose excess (current glucose minus the target)?",
+      "program": "observe correction_factor(6)\nobserve current_glucose(30)\nobserve target_glucose(14)\nlet answer = current_glucose - target_glucose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 96,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 264,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 166,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r50ins-21",
+      "qtype": "insulin_correction",
+      "stem": "A patient with a correction factor of 6 units per point has a current glucose of 30 and a target of 14. What is the the factor times the CURRENT glucose (one distributed term, before offsetting the target)?",
+      "program": "observe correction_factor(6)\nobserve current_glucose(30)\nobserve target_glucose(14)\nlet answer = correction_factor * current_glucose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 96,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 264,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 166,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
