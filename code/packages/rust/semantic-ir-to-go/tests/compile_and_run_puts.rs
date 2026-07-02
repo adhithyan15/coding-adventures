@@ -21,8 +21,8 @@
 use std::process::Command;
 
 use semantic_ir::{
-    Block, Effect, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Span,
-    Stmt,
+    Block, Effect, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Scope,
+    Span, Stmt,
 };
 use semantic_ir_to_go::compile;
 
@@ -36,6 +36,10 @@ fn ilit(v: i64) -> Expr {
 
 fn slit(v: &str) -> Expr {
     Expr::StrLit { value: v.into(), span: s() }
+}
+
+fn var(name: &str) -> Expr {
+    Expr::VarRef { name: name.into(), scope: Scope::Local, span: s() }
 }
 
 /// `puts(args…)` as an effectful statement (MayPrint, matching the frontend).
@@ -61,6 +65,55 @@ fn demo_module() -> Module {
 
     Module {
         name: "puts_demo".into(),
+        manifest: FeatureManifest::from_features(&[Feature::Sequences, Feature::Strings]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts, value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE.with(Effect::MayPrint),
+            metadata: Metadata::new(),
+            span: s(),
+        }],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("test")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: s(),
+    }
+}
+
+/// Build a module equivalent to the Ruby program
+///
+///     a = [nil]
+///     a[0] = a
+///     puts a
+///
+/// i.e. a *self-referential* array.  Real Ruby is cycle-aware: `puts a`
+/// prints `[...]` and terminates.  Before the cycle guard the emitted
+/// `_sir_puts_one` recursed per-element with no bound, so this program
+/// overflowed the Go stack and aborted (CWE-674, uncontrolled recursion — a
+/// DoS).  The guard must make it terminate.
+fn cyclic_module() -> Module {
+    let stmts = vec![
+        // a = [nil]  (a one-slot seq we can then point at itself)
+        Stmt::LetBinding {
+            name: "a".into(),
+            sir_type: None,
+            value: Expr::SeqLit { items: vec![Expr::NilLit { span: s() }], span: s() },
+            span: s(),
+        },
+        // a[0] = a  (close the cycle)
+        Stmt::SeqSet { seq: var("a"), index: ilit(0), value: var("a"), span: s() },
+        // puts a
+        puts_stmt(vec![var("a")]),
+    ];
+
+    Module {
+        name: "puts_cyclic".into(),
         manifest: FeatureManifest::from_features(&[Feature::Sequences, Feature::Strings]),
         imports: vec![],
         exports: vec![],
@@ -131,4 +184,44 @@ fn puts_compiles_and_matches_ruby_output() {
     );
 
     let _ = std::fs::remove_file(&src_path);
+}
+
+/// Regression (security, CWE-674): `puts` on a self-referential array must
+/// TERMINATE — printing a `[...]` cycle placeholder like Ruby — rather than
+/// recursing until the Go stack overflows and the process aborts.
+#[test]
+fn puts_cyclic_array_terminates() {
+    if !go_available() {
+        eprintln!("skipping: go not on PATH");
+        return;
+    }
+
+    let artifact = compile(&cyclic_module()).expect("cyclic module should compile to Go source");
+
+    let dir = std::env::temp_dir();
+    let nonce = std::process::id();
+    let src_path = dir.join(format!("sir_go_puts_cyclic_{nonce}.go"));
+    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+
+    let run_out = Command::new("go")
+        .arg("run")
+        .arg(&src_path)
+        .output()
+        .expect("invoke go run");
+
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let stderr = String::from_utf8_lossy(&run_out.stderr);
+    let _ = std::fs::remove_file(&src_path);
+
+    // The program must exit SUCCESSFULLY (no stack-overflow abort) …
+    assert!(
+        run_out.status.success(),
+        "cyclic puts should terminate cleanly, not overflow; stderr: {stderr}"
+    );
+    // … and render the cycle as Ruby does: `[...]` on its own line.
+    let normalised = stdout.replace("\r\n", "\n");
+    assert_eq!(
+        normalised, "[...]\n",
+        "unexpected cyclic puts output; full stdout (escaped): {stdout:?}"
+    );
 }

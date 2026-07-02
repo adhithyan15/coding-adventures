@@ -20,6 +20,21 @@ All notable changes to `semantic-ir-to-javascript` are documented here.
   `puts "hello"; puts; puts [1,2,3]` under `node` and asserts stdout is exactly
   `hello\n\n1\n2\n3\n` (the Ruby reference output).
 
+### Security — cycle-guard the `puts` array flatten (CWE-674)
+
+- `putsOne` flattened arrays by recursing per element with **no bound**. A JS
+  array is a shared, mutable reference, so a translated program can build a
+  self-referential array (`a = []; a << a; puts a`) or a pathologically deep
+  one; the unguarded recursion threw `RangeError: Maximum call stack size
+  exceeded` — a denial of service (uncontrolled recursion). The flatten now
+  threads a `Set` of the array references on the active path: an array
+  re-encountered within its own subtree is a cycle and is written as Ruby's
+  `[...]` placeholder + newline instead of recursing, so `puts a` on a
+  self-referential array now **terminates** exactly as real Ruby does.
+  Non-cyclic output is byte-for-byte unchanged (`puts [1,[2,3]]` →
+  `1\n2\n3\n`); a new regression test (`puts_cyclic_array_terminates`) proves
+  the self-referential case exits cleanly with `[...]\n`.
+
 ## Unreleased
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),

@@ -1400,3 +1400,34 @@ fn puts_matches_ruby_output() {
         );
     }
 }
+
+/// Regression (security, CWE-674): `puts` on a self-referential array must
+/// TERMINATE — printing a `[...]` cycle placeholder like Ruby — rather than
+/// recursing until Node throws `RangeError: Maximum call stack size exceeded`.
+///
+/// Ruby:  `a = [nil]; a[0] = a; puts a`  → `[...]\n`.
+#[test]
+fn puts_cyclic_array_terminates() {
+    let stmts = vec![
+        // a = [nil]
+        let_("a", Expr::SeqLit { items: vec![Expr::NilLit { span: sp() }], span: sp() }),
+        // a[0] = a
+        Stmt::SeqSet { seq: local("a"), index: int(0), value: local("a"), span: sp() },
+        // puts a
+        Stmt::ExprStmt { expr: bc("puts", vec![local("a")]), span: sp() },
+    ];
+    let module = module_with_main(
+        stmts,
+        Expr::NilLit { span: sp() },
+        &[Feature::Sequences, Feature::MutableBindings],
+    );
+    // `run_module_raw` asserts a clean (zero) exit; a stack overflow would
+    // exit non-zero and fail the test — so reaching the assert proves
+    // termination.  The output matches Ruby's `[...]` cycle rendering.
+    if let Some(stdout) = run_module_raw(&module, "puts_cyclic") {
+        assert_eq!(
+            stdout, "[...]\n",
+            "unexpected cyclic puts output (escaped): {stdout:?}"
+        );
+    }
+}

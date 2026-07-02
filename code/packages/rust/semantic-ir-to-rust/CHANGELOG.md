@@ -17,6 +17,23 @@
   puts [1,2,3]` with `rustc`, runs it, and asserts stdout is exactly
   `hello\n\n1\n2\n3\n` (the Ruby reference output).
 
+### Security — cycle-guard the `puts` array flatten (CWE-674)
+
+- `__sir::puts_one` flattened arrays by recursing per element with **no
+  bound**. A `Value::Seq` is a shared, mutable `Rc<RefCell<..>>` handle, so a
+  translated program can build a self-referential array
+  (`a = []; a << a; puts a`) or a pathologically deep one; the unguarded
+  recursion overflowed the native stack and aborted — a denial of service
+  (uncontrolled recursion). The flatten now threads a `visited` set of the `Rc`
+  handle addresses on the active path (the same `seq_handle_id` key
+  `__sir::format` uses): a handle re-encountered within its own subtree is a
+  cycle and renders as Ruby's `[...]` placeholder + newline instead of
+  recursing, so `puts a` on a self-referential array now **terminates** exactly
+  as real Ruby does. Non-cyclic output is byte-for-byte unchanged
+  (`puts [1,[2,3]]` → `1\n2\n3\n`); a new regression test
+  (`puts_cyclic_array_terminates`) proves the self-referential case exits
+  cleanly with `[...]\n`.
+
 ## 0.9.0 — user-defined class OOP runtime + emit (O5)
 
 Makes the Rust backend **accept and execute** real user-defined-class OOP

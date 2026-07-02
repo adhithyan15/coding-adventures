@@ -195,7 +195,7 @@ def sir_print(v: Any) -> None:
     return None
 
 
-def _puts_one(v: Any) -> None:
+def _puts_one(v: Any, seen: set[int]) -> None:
     """Emit a single ``puts`` argument, honouring Ruby's per-value rules.
 
     Ruby ``puts`` is deceptively subtle.  For one argument it behaves as:
@@ -222,11 +222,33 @@ def _puts_one(v: Any) -> None:
     ``[1, 2]``    ``1\\n2\\n``
     ``[1, [2]]``  ``1\\n2\\n``
     ============  ================
+
+    **Cycle safety.**  A list is a shared, mutable reference, so a program can
+    build a *cyclic* array (``a = []; a << a``).  The element-per-line flatten
+    recurses through nested arrays, so it MUST be cycle-guarded or a self-
+    referential array raises ``RecursionError`` (a DoS: CWE-674, uncontrolled
+    recursion).  ``seen`` holds the ``id()`` of the lists currently on the
+    active flatten path.  A list ALREADY on the path is a cycle: rather than
+    recurse forever we write the ``[...]`` placeholder then a newline, matching
+    real Ruby (``puts a`` on a self-referential array prints ``[...]`` and
+    terminates).  (We emit the literal placeholder rather than ``str(v)``:
+    Python's cycle-safe ``repr`` would render the *containing* level too, e.g.
+    ``[[...]]`` for ``a = [a]``, whereas Ruby prints a bare ``[...]``.)  A list
+    removed from ``seen`` on exit still flattens in full via a sibling path —
+    only a true self-cycle is short-circuited, so non-cyclic output is
+    unchanged (``puts [1, [2, 3]]`` still prints ``1\\n2\\n3\\n``).
     """
     # A sequence is a Python ``list`` in the runtime-core value model.
     if isinstance(v, list):
+        vid = id(v)
+        if vid in seen:
+            # Cycle: emit Ruby's `[...]` placeholder and stop recursing.
+            print("[...]")
+            return None
+        seen.add(vid)
         for item in v:
-            _puts_one(item)
+            _puts_one(item, seen)
+        seen.discard(vid)
         return None
     text = values.to_display(v)
     # Ruby suppresses the added newline only when the rendered text already
@@ -265,6 +287,10 @@ def sir_puts(*args: Any) -> None:
         # `puts` with no arguments writes exactly one newline.
         print()
         return None
+    # `seen` guards the array-flatten recursion in `_puts_one` against cyclic
+    # arrays (see its docstring); a fresh, shared set across the args suffices
+    # because each handle is removed on exit.
+    seen: set[int] = set()
     for a in args:
         # `puts []` (an empty array as the sole argument) must still emit one
         # newline — Ruby prints a blank line when an argument flattens to
@@ -272,7 +298,7 @@ def sir_puts(*args: Any) -> None:
         if isinstance(a, list) and len(a) == 0:
             print()
         else:
-            _puts_one(a)
+            _puts_one(a, seen)
     return None
 
 

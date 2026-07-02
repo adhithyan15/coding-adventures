@@ -169,6 +169,33 @@ def test_puts_routes_through_call_builtin(
     assert capsys.readouterr().out == "hi\n"
 
 
+def test_puts_self_referential_array_terminates(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    # Regression (security, CWE-674 uncontrolled recursion): `a = []; a << a;
+    # puts a` in Ruby prints `[...]` and terminates.  Without the cycle guard
+    # the element-per-line flatten recurses forever and raises RecursionError
+    # (a DoS).  The guard must terminate AND render the cycle as Ruby's
+    # `[...]`.
+    a: list = []
+    a.append(a)
+    assert sir.sir_puts(a) is None
+    assert capsys.readouterr().out == "[...]\n"
+
+
+def test_puts_mutually_recursive_arrays_terminate(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    # A cycle through two arrays (a -> b -> a) is still a cycle on the flatten
+    # path.  `puts a` flattens a's element (b, not yet seen), then b's element
+    # (a, already on the path) → `[...]`.  Terminates rather than diverging.
+    a: list = []
+    b: list = [a]
+    a.append(b)
+    assert sir.sir_puts(a) is None
+    assert capsys.readouterr().out == "[...]\n"
+
+
 # --- arithmetic ------------------------------------------------------------
 
 

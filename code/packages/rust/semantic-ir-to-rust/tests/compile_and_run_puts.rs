@@ -19,8 +19,8 @@
 use std::process::Command;
 
 use semantic_ir::{
-    Block, Effect, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Span,
-    Stmt,
+    Block, Effect, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Scope,
+    Span, Stmt,
 };
 use semantic_ir_to_rust::compile;
 
@@ -34,6 +34,10 @@ fn ilit(v: i64) -> Expr {
 
 fn slit(v: &str) -> Expr {
     Expr::StrLit { value: v.into(), span: s() }
+}
+
+fn var(name: &str) -> Expr {
+    Expr::VarRef { name: name.into(), scope: Scope::Local, span: s() }
 }
 
 /// `puts(args…)` as an effectful statement (MayPrint, matching the frontend).
@@ -80,6 +84,51 @@ fn demo_module() -> Module {
     }
 }
 
+/// Build a module equivalent to the Ruby program
+///
+///     a = [nil]
+///     a[0] = a
+///     puts a
+///
+/// i.e. a *self-referential* array.  Real Ruby is cycle-aware: `puts a`
+/// prints `[...]` and terminates.  Before the cycle guard the emitted
+/// `puts_one` recursed per-element with no bound, so this program overflowed
+/// the native stack and aborted (CWE-674, uncontrolled recursion — a DoS).
+fn cyclic_module() -> Module {
+    let stmts = vec![
+        Stmt::LetBinding {
+            name: "a".into(),
+            sir_type: None,
+            value: Expr::SeqLit { items: vec![Expr::NilLit { span: s() }], span: s() },
+            span: s(),
+        },
+        Stmt::SeqSet { seq: var("a"), index: ilit(0), value: var("a"), span: s() },
+        puts_stmt(vec![var("a")]),
+    ];
+
+    Module {
+        name: "puts_cyclic".into(),
+        manifest: FeatureManifest::from_features(&[Feature::Sequences, Feature::Strings]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts, value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE.with(Effect::MayPrint),
+            metadata: Metadata::new(),
+            span: s(),
+        }],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("test")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: s(),
+    }
+}
+
 fn rustc_available() -> bool {
     Command::new("rustc")
         .arg("--version")
@@ -88,20 +137,18 @@ fn rustc_available() -> bool {
         .unwrap_or(false)
 }
 
-#[test]
-fn puts_compiles_and_matches_ruby_output() {
-    if !rustc_available() {
-        eprintln!("skipping: rustc not on PATH");
-        return;
-    }
-
-    let artifact = compile(&demo_module()).expect("module should compile to Rust source");
+/// Compile `module` to Rust, build with `rustc`, run the binary, and return
+/// its normalised (CRLF→LF) stdout.  Returns `None` when the toolchain or a
+/// usable linker is unavailable (the caller then skips).  Panics on a genuine
+/// compile/run failure so a real regression is loud.
+fn compile_run(module: &Module, tag: &str) -> Option<String> {
+    let artifact = compile(module).expect("module should compile to Rust source");
 
     let dir = std::env::temp_dir();
     let nonce = std::process::id();
-    let src_path = dir.join(format!("sir_puts_{nonce}.rs"));
+    let src_path = dir.join(format!("sir_puts_{tag}_{nonce}.rs"));
     let bin_path = dir.join(format!(
-        "sir_puts_{nonce}{}",
+        "sir_puts_{tag}_{nonce}{}",
         if cfg!(windows) { ".exe" } else { "" }
     ));
     std::fs::write(&src_path, &artifact.source).expect("write temp source");
@@ -128,7 +175,7 @@ fn puts_compiles_and_matches_ruby_output() {
         {
             eprintln!("skipping: no usable linker on host\n{stderr}");
             let _ = std::fs::remove_file(&src_path);
-            return;
+            return None;
         }
         panic!(
             "emitted Rust failed to compile:\n--- stderr ---\n{stderr}\n--- source ---\n{}",
@@ -137,20 +184,46 @@ fn puts_compiles_and_matches_ruby_output() {
     }
 
     let run_out = Command::new(&bin_path).output().expect("run compiled binary");
-    assert!(
-        run_out.status.success(),
-        "compiled binary exited non-zero:\n{}",
-        String::from_utf8_lossy(&run_out.stderr),
-    );
-
-    // Exact byte-for-byte match against the Ruby reference output.
-    let stdout = String::from_utf8_lossy(&run_out.stdout);
-    let normalised = stdout.replace("\r\n", "\n");
-    assert_eq!(
-        normalised, "hello\n\n1\n2\n3\n",
-        "unexpected puts output; full stdout (escaped): {stdout:?}"
-    );
-
+    let stderr = String::from_utf8_lossy(&run_out.stderr).into_owned();
+    let stdout = String::from_utf8_lossy(&run_out.stdout).into_owned();
     let _ = std::fs::remove_file(&src_path);
     let _ = std::fs::remove_file(&bin_path);
+
+    // A stack-overflow abort (the pre-fix cyclic behaviour) exits non-zero;
+    // surface it as a test failure with the captured stderr.
+    assert!(
+        run_out.status.success(),
+        "compiled binary exited non-zero (should terminate cleanly):\n{stderr}",
+    );
+    Some(stdout.replace("\r\n", "\n"))
+}
+
+#[test]
+fn puts_compiles_and_matches_ruby_output() {
+    if !rustc_available() {
+        eprintln!("skipping: rustc not on PATH");
+        return;
+    }
+    let Some(out) = compile_run(&demo_module(), "demo") else { return };
+    // Exact byte-for-byte match against the Ruby reference output.
+    assert_eq!(
+        out, "hello\n\n1\n2\n3\n",
+        "unexpected puts output; full stdout (escaped): {out:?}"
+    );
+}
+
+/// Regression (security, CWE-674): `puts` on a self-referential array must
+/// TERMINATE — printing a `[...]` cycle placeholder like Ruby — rather than
+/// recursing until the native stack overflows and the process aborts.
+#[test]
+fn puts_cyclic_array_terminates() {
+    if !rustc_available() {
+        eprintln!("skipping: rustc not on PATH");
+        return;
+    }
+    let Some(out) = compile_run(&cyclic_module(), "cyclic") else { return };
+    assert_eq!(
+        out, "[...]\n",
+        "unexpected cyclic puts output; full stdout (escaped): {out:?}"
+    );
 }

@@ -123,12 +123,30 @@ export function print(v: Val): null {
  * We write via `process.stdout.write` rather than `console.log` because
  * `console.log` unconditionally appends its own newline, which would defeat
  * the trailing-newline suppression rule.
+ *
+ * **Cycle safety.** An array is a shared, mutable reference, so a program can
+ * build a *cyclic* array (`a = []; a << a`). The element-per-line flatten
+ * recurses through nested arrays, so it MUST be cycle-guarded or a self-
+ * referential array throws `RangeError: Maximum call stack size exceeded` (a
+ * DoS: CWE-674, uncontrolled recursion). `seen` is a `Set` of the array
+ * references currently on the active flatten path. An array ALREADY on the
+ * path is a cycle: rather than recurse forever we write `[...]` then a newline
+ * — matching real Ruby, where `puts a` on a self-referential array prints
+ * `[...]` and terminates. An array removed from `seen` on exit still flattens
+ * in full via a sibling path — only a true self-cycle is short-circuited, so
+ * non-cyclic output is unchanged (`puts [1, [2, 3]]` still prints `1\n2\n3\n`).
  */
-function putsOne(v: Val): void {
+function putsOne(v: Val, seen: Set<unknown>): void {
   if (Array.isArray(v)) {
-    for (const item of v) {
-      putsOne(item);
+    if (seen.has(v)) {
+      process.stdout.write("[...]\n");
+      return;
     }
+    seen.add(v);
+    for (const item of v) {
+      putsOne(item, seen);
+    }
+    seen.delete(v);
     return;
   }
   if (v === null) {
@@ -158,12 +176,13 @@ export function puts(...args: Val[]): null {
     process.stdout.write("\n");
     return null;
   }
+  const seen = new Set<unknown>();
   for (const a of args) {
     if (Array.isArray(a) && a.length === 0) {
       // Empty array as an argument still writes one newline.
       process.stdout.write("\n");
     } else {
-      putsOne(a);
+      putsOne(a, seen);
     }
   }
   return null;

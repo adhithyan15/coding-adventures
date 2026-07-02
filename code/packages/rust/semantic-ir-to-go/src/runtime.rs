@@ -510,6 +510,15 @@ func _sir_puts(args []Value) Value {
 		fmt.Print("\n")
 		return nil
 	}
+	// A `*Seq` is a shared, mutable handle, so a program can build a
+	// *cyclic* array (`a = []; a << a`).  The element-per-line flatten below
+	// recurses through nested arrays, so — like `_sir_format` — it MUST be
+	// cycle-guarded or a self-referential array overflows the Go stack (a
+	// DoS: CWE-674, uncontrolled recursion).  We thread a `visited` set of
+	// the `*Seq` pointers on the active flatten path; the top-level args each
+	// share one set (a handle removed on exit still prints in full via a
+	// sibling path — only a true self-cycle is short-circuited).
+	visited := make(map[Value]bool)
 	for _, a := range args {
 		// `puts []` (empty array arg) still writes one blank line — Ruby
 		// prints a line when an argument flattens to nothing.  A recursive
@@ -518,7 +527,7 @@ func _sir_puts(args []Value) Value {
 			fmt.Print("\n")
 			continue
 		}
-		_sir_puts_one(a)
+		_sir_puts_one(a, visited)
 	}
 	return nil
 }
@@ -528,11 +537,30 @@ func _sir_puts(args []Value) Value {
 // newline — suppressed when the text already ends in one.  `nil` is a blank
 // line (`_sir_format(nil)` is "nil" for `print`, but `puts nil` is a blank
 // line, so nil is special-cased).
-func _sir_puts_one(v Value) {
+//
+// Cycle safety: `visited` holds the `*Seq` pointers currently on the active
+// flatten path.  A seq ALREADY on the path is a cycle (`a = []; a << a`):
+// rather than recurse forever we write Ruby's `[...]` placeholder then a
+// newline, matching real Ruby (`puts a` on a self-referential array prints
+// `[...]` and terminates).  (We emit the literal placeholder rather than
+// `_sir_format(v)`: that formatter starts a fresh visited set, so it would
+// render the *containing* level too — `[[...]]` for `a = [a]` — whereas Ruby
+// prints a bare `[...]`.)  A seq reached twice by *sibling* (non-cyclic) paths
+// is fully flattened both times, because each is removed from `visited` on
+// exit — only a handle re-appearing *within its own subtree* is short-
+// circuited.  Non-cyclic output is unchanged (`puts [1,[2,3]]` still prints
+// `1\n2\n3\n`).
+func _sir_puts_one(v Value, visited map[Value]bool) {
 	if s, ok := v.(*Seq); ok {
-		for _, item := range s.Items {
-			_sir_puts_one(item)
+		if visited[v] {
+			fmt.Print("[...]\n")
+			return
 		}
+		visited[v] = true
+		for _, item := range s.Items {
+			_sir_puts_one(item, visited)
+		}
+		delete(visited, v)
 		return
 	}
 	if v == nil {

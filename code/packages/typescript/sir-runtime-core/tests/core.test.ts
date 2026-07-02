@@ -143,6 +143,29 @@ describe("puts (Ruby semantics)", () => {
       "hi\n",
     );
   });
+
+  it("terminates on a self-referential array (cycle-guarded, CWE-674)", () => {
+    // `a = []; a << a; puts a` in Ruby prints `[...]` and terminates.  Without
+    // the cycle guard the element-per-line flatten recurses forever and throws
+    // `RangeError: Maximum call stack size exceeded` (a DoS).  The guard must
+    // both terminate AND render the cycle as `[...]`, matching Ruby.
+    const a: unknown[] = [];
+    a.push(a);
+    expect(capture(() => sir.puts(a))).toBe("[...]\n");
+  });
+
+  it("terminates on a mutually-recursive array pair", () => {
+    // Two arrays referencing each other (a -> b -> a) still forms a cycle on
+    // the flatten path; both must render `[...]` at the back-reference rather
+    // than diverging.  `puts a` flattens a's element (b), then b's element (a),
+    // which is already on the path → `[...]`.
+    const a: unknown[] = [];
+    const b: unknown[] = [a];
+    a.push(b);
+    // a = [b], b = [a].  puts a: flatten a → element b (array, not seen) →
+    // flatten b → element a (already on path) → `[...]`.
+    expect(capture(() => sir.puts(a))).toBe("[...]\n");
+  });
 });
 
 describe("arithmetic", () => {
