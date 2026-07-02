@@ -125,24 +125,37 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // with a deferred `recover` (Go has no native try/catch) and the `raise`
     // builtin onto `panic(_sir_new_error(...))`.  See `emit::emit_try_catch`.
     Feature::Exceptions,
-    // `Classes` + `Constants` are accepted ONLY to admit exception-*subclass*
-    // declarations and the `raise Foo`/`rescue Foo` class-name refs they
-    // carry — NOT general OOP.  A `class MyErr < StandardError` contributes a
-    // single ANCESTRY edge (registered at init) and its `raise ClassName`
-    // first-arg is a `VarRef{Const}` intercepted in `emit::emit_builtin_call`.
+    // ── O4 — user-defined-class OOP ────────────────────────────────
     //
-    // Accepting these two features is SOUND because the ONLY class/const
-    // shapes the backend can emit are those two exception-specific ones; any
-    // OTHER class/const usage is rejected CLEANLY (not mis-emitted) by
-    // `check_exception_soundness` below:
-    //   * a class body carrying instance/class variables observes
-    //     `InstanceVars`/`ClassVars` (NOT accepted) → rejected at the manifest
-    //     gate; a method-bearing class hoists its `def`s to top-level
-    //     Functions, so the ClassDef body is ordinary supported statements;
-    //   * a `Const` reference or assignment OUTSIDE the whitelisted
-    //     `raise ClassName` position → rejected by `check_no_general_const`.
+    // `Classes` + `Constants` were first accepted (post-E3) only to admit
+    // exception-*subclass* declarations; O4 widens acceptance to REAL
+    // user-defined classes by ALSO accepting `InstanceVars`/`ClassVars`.  A
+    // real OO module now routes through the inlined OOP runtime (see
+    // `runtime::RUNTIME` — `_sir_call_new`/`_sir_call_super`/the
+    // `*SirInstance` path in `_sir_call_method`, `_sir_ivar_get`/`set`,
+    // `_sir_cvar_get`/`set`) rather than being rejected:
+    //   * `class C < B` still contributes ONE ANCESTRY edge (shared with the
+    //     exception hierarchy) registered at init;
+    //   * instance methods hoist to top-level Functions and are wired to their
+    //     class at runtime by emitted `__def_method__` registrations;
+    //   * `C.new`/`super`/`self` lower to the `__new__`/`__super__`/`__self__`
+    //     builtins, whose class/method NAMES ride in as `StrLit`s (never a
+    //     `Const` ref) and are emitted through `quote_go_string` — so dispatch
+    //     stays a pure `(class, method)` map lookup, NEVER reflection;
+    //   * `@ivar`/`@@cvar` lower to `VarRef`/`Assign{Instance|ClassVar}`,
+    //     emitted as `_sir_ivar_get/set` / `_sir_cvar_get/set`.
+    //
+    // Accepting these features stays SOUND: the widened surface does NOT emit a
+    // general `Const` reference (a class name reaches the backend only as a
+    // `StrLit` inside a builtin, or a `raise Foo` first-arg `Const` — both
+    // handled explicitly), so `check_exception_soundness` below STILL cleanly
+    // rejects genuinely-unsupported constructs — a `Const` used as a value
+    // (`x = MyClass`), a `Const` assignment (`FOO = 4`), and a `ModuleDef`
+    // (`Feature::Modules` remains UNACCEPTED — no mixin/MRO runtime in v0).
     Feature::Classes,
     Feature::Constants,
+    Feature::InstanceVars,
+    Feature::ClassVars,
 ];
 
 impl Backend for GoBackend {
@@ -786,17 +799,17 @@ mod tests {
         assert!(a.source.contains(r#", "length", []Value{}"#));
     }
 
-    // ── E3 soundness: full OOP class semantics stay REJECTED ──────────────
+    // ── O4: a class carrying instance vars is now ACCEPTED ────────────────
     //
-    // Post-E3 the Go backend accepts `Feature::Classes`/`Constants`, but ONLY
-    // for exception subclasses.  A class carrying INSTANCE VARIABLES observes
-    // `Feature::InstanceVars` (which we do NOT accept), so it is rejected at
-    // the manifest gate — accepting `Classes` never admits real OOP.
-    // (`Block`, `Stmt`, `Scope`, … are already imported by the KW6 test
-    // block above; `sp()` is the shared span helper.)
-
+    // Pre-O4 this exact module (a `ClassDef` whose body assigns `@count`,
+    // observing `Feature::InstanceVars`) was REJECTED at the manifest gate.
+    // O4 accepts `InstanceVars`/`ClassVars`, so a real OO module now compiles:
+    // the ivar assign lowers to `_sir_ivar_set("@count", …)` and the class
+    // itself emits no top-level code (its ancestry edge, if any, registers at
+    // init).  (`Block`, `Stmt`, `Scope`, … are already imported by the KW6
+    // test block above; `sp()` is the shared span helper.)
     #[test]
-    fn class_with_instance_vars_still_rejected() {
+    fn class_with_instance_vars_now_accepted() {
         // class Counter; @count = 0; end   (an ivar assign in the body)
         let class = Stmt::ClassDef {
             name: "Counter".into(),
@@ -828,6 +841,7 @@ mod tests {
             manifest: FeatureManifest::from_features(&[
                 Feature::Classes,
                 Feature::InstanceVars,
+                Feature::MutableBindings,
             ]),
             imports: vec![],
             exports: vec![],
@@ -838,14 +852,12 @@ mod tests {
                 .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
             span: sp(),
         };
-        // Rejected CLEANLY (an `Err`, never a panic/mis-emit).  The rejection
-        // may come from the manifest gate (`InstanceVars` unaccepted) — the
-        // point is that accepting `Classes` never admits real OOP.
-        let err = compile(&m).expect_err("instance-var class must stay rejected");
-        assert!(matches!(
-            err.kind,
-            BackendErrorKind::UnsupportedFeature | BackendErrorKind::InvalidModule
-        ));
+        let a = compile(&m).expect("O4: instance-var class must now compile");
+        assert!(
+            a.source.contains(r#"_sir_ivar_set("@count", "#),
+            "expected ivar-set emission; got:\n{}",
+            a.source
+        );
     }
 
     // A general constant assignment (`FOO = 4`) is rejected CLEANLY — the E3

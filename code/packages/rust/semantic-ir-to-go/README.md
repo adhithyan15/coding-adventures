@@ -231,10 +231,42 @@ func() {
   catches a raised `MyErr`.
 - **Security.**  Rescue matching is an **explicit string-map lookup**, never
   reflection on a Go type name; the ancestry walk carries a `seen` set so a
-  cyclic user hierarchy (`class A<B; class B<A`) terminates.  `Feature::Classes`/
-  `Constants` are accepted **only** for exception subclasses / `raise ClassName`
-  refs — any other class/const usage is rejected cleanly by
-  `check_exception_soundness`, so accepting them never admits general OOP.
+  cyclic user hierarchy (`class A<B; class B<A`) terminates.  The
+  `_sir_ancestry` table this builds is **shared** with the O4 OOP class
+  hierarchy below — one hierarchy for the whole runtime.
+
+## O4 — user-defined class OOP (`InstanceVars` / `ClassVars` + `Classes`)
+
+The backend EXECUTES real user-defined classes — method dispatch, `Foo.new`,
+`self`, `super`, `@ivar`/`@@cvar` — not just exception subclasses.  Because the
+Ruby frontend HOISTS every method to a detached top-level function, the
+method↔class association is recovered at **runtime** with explicit tables.
+
+- **Instances.**  `SirInstance { Class string; Ivars map[string]Value }`; an
+  `@ivar` reads/writes the *current self* (a single-threaded self-stack top,
+  with a default-self so top-level `@x` never panics).  This is the documented
+  v0 model; true per-object/per-thread `self` is out of scope for v0.
+- **Method tables.**  Instance and class methods live in `map[string]Value`
+  keyed by a NUL-joined `class + "\x00" + method` string, populated by emitted
+  `__def_method__` / `__def_class_method__` registrations.  The stored value is
+  the hoisted top-level function as a `*Closure`, invoked via `_sir_apply`.
+- **`new` / `super` / `self`.**  `Foo.new(args)` (`__new__`) allocates, pushes
+  self, resolves an inherited `initialize` (walking the shared `_sir_ancestry`,
+  seen-guarded), applies it, and pops self via `defer`; `super` (`__super__`)
+  walks from the superclass with the **current** self still bound; `self`
+  (`__self__`) returns the self-stack top.
+- **Dispatch.**  `recv.m(args)` reaches `_sir_call_method`; a `*SirInstance`
+  receiver resolves the user table walking ancestry (a miss falls through to the
+  universal Object methods, else the NoMethodError floor).  Non-instance
+  receivers reach the C5 collection catalog **unchanged**.
+- **Security.**  Dispatch is an **explicit `(class, method)` map lookup** —
+  never Go `reflect`/`MethodByName` on a source-derived name.  A class/method
+  named `constructor`/`__proto__` is just a map key (a miss → the clean
+  NoMethodError floor).  Ancestry walks are cycle-guarded; self-stack pops go
+  through `defer` so a panic still unwinds.  `Feature::Modules` stays
+  **unaccepted** (no mixin/MRO runtime in v0), and a general `Const` used as a
+  value / a `Const` assignment / a `ModuleDef` are still rejected cleanly by the
+  soundness gate — the widened acceptance never admits those.
 
 ## Value model
 
