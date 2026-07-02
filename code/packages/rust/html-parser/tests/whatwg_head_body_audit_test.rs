@@ -10,6 +10,7 @@ const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
     ("scripted-adoption01-dat-1", "head-text-mode"),
     ("scripted-webkit01-dat-1", "head-text-mode"),
     ("scripted-webkit01-dat-2", "head-text-mode"),
+    ("tests26-dat-4", "body-boundary"),
     ("tests26-dat-1251", "body-boundary"),
     ("tricky01-dat-3", "body-boundary"),
 ];

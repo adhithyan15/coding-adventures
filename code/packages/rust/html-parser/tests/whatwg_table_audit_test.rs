@@ -8,11 +8,13 @@ const TREE_CONSTRUCTION_SMOKE: &str = include_str!("fixtures/html5lib-tree-const
 const WHATWG_TABLE_AUDIT: &str = include_str!("fixtures/whatwg-table-audit.json");
 const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
     ("adoption01-dat-6", "foster-parenting"),
+    ("tests26-dat-4", "cell-boundary"),
     ("tests26-dat-1251", "cell-boundary"),
     ("tricky01-dat-6", "cell-boundary"),
     ("tricky01-dat-7", "row-group-boundary"),
     ("tricky01-dat-8", "cell-boundary"),
 ];
+const DUPLICATE_FOSTERED_NOBR_ROWS: &[(&str, &str)] = &[("tests26-dat-4", "tests26-dat-1251")];
 
 #[derive(Debug, Deserialize)]
 struct TableAuditSuite {
@@ -115,6 +117,54 @@ fn whatwg_table_audit_tracks_post_parse_repair_evidence() {
             actual, source_case.document,
             "post-parse repair evidence case `{}` ({}) failed for input {:?}",
             audit_case.id, audit_case.axis, source_case.data
+        );
+    }
+}
+
+#[test]
+fn whatwg_table_audit_keeps_duplicate_fostered_nobr_rows_in_lockstep() {
+    let suite = load_suite();
+    let audit_cases = suite
+        .cases
+        .iter()
+        .map(|case| (case.id.as_str(), case))
+        .collect::<HashMap<_, _>>();
+    let smoke_cases = parse_tree_construction_cases(TREE_CONSTRUCTION_SMOKE)
+        .into_iter()
+        .map(|case| (case.source.clone(), case))
+        .collect::<HashMap<_, _>>();
+
+    for (left_id, right_id) in DUPLICATE_FOSTERED_NOBR_ROWS {
+        let left = audit_cases
+            .get(left_id)
+            .unwrap_or_else(|| panic!("duplicate evidence case `{left_id}` should be audited"));
+        let right = audit_cases
+            .get(right_id)
+            .unwrap_or_else(|| panic!("duplicate evidence case `{right_id}` should be audited"));
+
+        assert_eq!(
+            left.axis, right.axis,
+            "duplicate fostered `nobr` evidence rows should stay on the same audit axis"
+        );
+        assert_eq!(
+            left.reason, right.reason,
+            "duplicate fostered `nobr` evidence rows should keep the same audit reason"
+        );
+
+        let left_source = smoke_cases
+            .get(&left.source)
+            .unwrap_or_else(|| panic!("case `{left_id}` should exist in smoke fixture"));
+        let right_source = smoke_cases
+            .get(&right.source)
+            .unwrap_or_else(|| panic!("case `{right_id}` should exist in smoke fixture"));
+
+        assert_eq!(
+            left_source.data, right_source.data,
+            "duplicate fostered `nobr` evidence rows should keep matching input"
+        );
+        assert_eq!(
+            left_source.document, right_source.document,
+            "duplicate fostered `nobr` evidence rows should keep matching expected DOM"
         );
     }
 }
