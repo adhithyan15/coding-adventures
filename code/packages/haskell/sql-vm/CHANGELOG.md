@@ -3,6 +3,21 @@
 All notable changes to this package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.3.0] — 2026-07-01
+
+### Fixed
+
+- **`InsertRow` reads from stack, not vmRowBuffer (runtime bug)**: the codegen
+  compiles `INSERT INTO t VALUES (v1, v2, ...)` by pushing each expression's
+  value onto the evaluation stack then emitting `InsertRow`.  The VM handler was
+  incorrectly reading from `vmRowBuffer` (the SELECT-row accumulator) instead of
+  popping the stack values.  Fixed by: (1) resolving the column list from
+  `colsOpt` or, when absent, from the backend schema via `SB.columns`; (2) calling
+  `popN (length colNames)` to read all pushed values in left-to-right order; and
+  (3) building the `Row` map with `Map.fromList (zip colNames vals)` before
+  handing it to `insert`.  This corrects every INSERT statement in the pipeline
+  (literal values, bound parameters, and multi-row `executeMany` calls).
+
 ## [0.1.2.0] — 2026-07-01
 
 ### Security

@@ -40,9 +40,10 @@ import Test.Hspec
 import MiniSqlite
 
 -- | Path to the fixture directory relative to the package root.
--- cabal test changes cwd to the package root.
+-- cabal test changes cwd to the package root (code/packages/haskell/mini-sqlite).
+-- Three levels up reaches code/, then specs/ holds the fixtures.
 fixtureDir :: FilePath
-fixtureDir = "../../../../specs/mini-sqlite-conformance/fixtures"
+fixtureDir = "../../../specs/mini-sqlite-conformance/fixtures"
 
 conformanceSpec :: Spec
 conformanceSpec = describe "conformance fixtures" $ do

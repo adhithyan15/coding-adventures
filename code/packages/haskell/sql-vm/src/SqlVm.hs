@@ -85,6 +85,8 @@ import SqlBackend
     , insert
     , createTable
     , dropTable
+    , columns
+    , columnName
     )
 
 import SqlCodegen
@@ -1027,12 +1029,27 @@ dispatch instr = case instr of
             Right b' -> liftIO (writeIORef bRef b')
 
     -- ── DML ───────────────────────────────────────────────────────────────
-    -- InsertRow: the current row buffer contains the values to insert.
-    -- The codegen emits BeginRow + EmitColumn for each column before InsertRow.
-    InsertRow tbl _colsOpt -> do
-        rowBuf <- gets vmRowBuffer
+    -- InsertRow: values were pushed onto the stack by compileInsert (one push
+    -- per column expression, left-to-right).  We pop them in push order
+    -- (popN reverses the LIFO stack so the oldest/leftmost value comes first),
+    -- zip with the column names, build a Row map, and hand it to the backend.
+    --
+    -- When colsOpt is Nothing (INSERT INTO t VALUES (...) with no explicit
+    -- column list) we query the backend schema to get the canonical column
+    -- order.
+    InsertRow tbl colsOpt -> do
         bRef <- gets vmBackend
         backend <- liftIO (readIORef bRef)
+        -- Resolve column names: explicit list takes priority; fall back to schema.
+        colNames <- case colsOpt of
+            Just cs -> return cs
+            Nothing ->
+                case columns backend tbl of
+                    Left  err -> liftIO (throwIO (userError ("insert: schema lookup failed: " ++ errorMessage err)))
+                    Right defs -> return (map columnName defs)
+        -- Pop exactly as many values as columns; popN returns them in push order.
+        vals <- popN (length colNames)
+        let rowBuf = Map.fromList (zip colNames vals)
         case insert backend tbl rowBuf of
             Left err ->
                 -- Use throwIO (a proper IO exception) rather than 'error'

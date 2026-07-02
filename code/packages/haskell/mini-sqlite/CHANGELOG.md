@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.5] - 2026-07-01
+
+### Fixed
+
+- **`InsertRow` VM bug — INSERT values silently discarded (runtime)**: the
+  `sql-vm` package's `InsertRow` handler was reading from `vmRowBuffer` (the
+  SELECT-row accumulator) instead of popping the stack values that `compileInsert`
+  had pushed.  Every INSERT therefore inserted an empty row, causing all subsequent
+  SELECTs to return `SqlNull`/empty results.  Fixed in `sql-vm` 0.1.3.0.
+
+- **`ConformanceSpec` fixture path off by one (runtime)**: `fixtureDir` was set
+  to `../../../../specs/...` (four levels up from the package root), which points
+  to the repository root where no `specs/` directory exists.  The correct relative
+  path from `code/packages/haskell/mini-sqlite` is three levels up to `code/`,
+  then into `specs/`.  Fixed to `../../../specs/mini-sqlite-conformance/fixtures`.
+
 ## [0.2.4] - 2026-07-01
 
 ### Fixed
