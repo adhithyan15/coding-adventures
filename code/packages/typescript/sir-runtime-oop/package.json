@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/sir-runtime-oop",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "OOP runtime for Semantic-IR-emitted TypeScript/JavaScript — class registry, is_a?/ancestry, instance- and class-variable stores, and reflective method dispatch",
   "type": "module",
   "main": "src/index.ts",
@@ -22,6 +22,7 @@
   "license": "MIT",
   "dependencies": {
     "@coding-adventures/sir-runtime-core": "file:../sir-runtime-core",
+    "@coding-adventures/sir-runtime-exceptions": "file:../sir-runtime-exceptions",
     "@coding-adventures/sir-runtime-pairs": "file:../sir-runtime-pairs"
   },
   "devDependencies": {

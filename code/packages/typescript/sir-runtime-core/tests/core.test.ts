@@ -2,6 +2,7 @@
 
 import { describe, it, expect, vi } from "vitest";
 import * as sir from "../src/index.js";
+import { SirError } from "@coding-adventures/sir-runtime-exceptions";
 
 describe("truthiness (false/nil-only)", () => {
   it("only false and nil are falsy", () => {
@@ -184,6 +185,34 @@ describe("arithmetic", () => {
     expect(sir.div(-7, 2)).toBe(-3);
     expect(sir.div()).toBe(0);
     expect(sir.div(9, 3, 1)).toBe(3);
+  });
+
+  it("integer division by zero raises a typed ZeroDivisionError (T2)", () => {
+    // Ruby `1 / 0` raises `ZeroDivisionError: divided by 0`; bare JS `/`
+    // silently yields Infinity, so the runtime must ADD the check.
+    expect(() => sir.div(1, 0)).toThrow(SirError);
+    try {
+      sir.div(1, 0);
+    } catch (e) {
+      expect((e as InstanceType<typeof SirError>).sirClass).toBe("ZeroDivisionError");
+      expect((e as Error).message).toBe("divided by 0");
+    }
+  });
+
+  it("float division by zero also raises ZeroDivisionError (T2)", () => {
+    // Ruby raises for float `/` by 0 too (`1.0 / 0` → ZeroDivisionError);
+    // JS would give Infinity. The divisor is 0 in both int and float cases.
+    expect(() => sir.div(1.5, 0)).toThrow(SirError);
+  });
+
+  it("a zero divisor anywhere in the fold raises (T2)", () => {
+    // The guard is inside the fold, so a trailing 0 divisor still raises.
+    expect(() => sir.div(10, 2, 0)).toThrow(SirError);
+  });
+
+  it("a non-zero divisor never raises — regression", () => {
+    expect(sir.div(6, 3)).toBe(2);
+    expect(sir.div(0, 5)).toBe(0); // 0 as the DIVIDEND is fine
   });
 
   it("comparisons", () => {
