@@ -209,7 +209,50 @@ func _sir_as_float(v Value) float64 {
 	panic("expected number")
 }
 
+// ── polymorphic `+` (sir-polymorphic-operators PO4) ────────────
+//
+// Ruby overloads `+` by receiver type; all cases lower to `_sir_plus`,
+// so the runtime dispatches on the FIRST operand's tag (a Go type switch
+// — NEVER reflection, per the [[dynamic-dispatch-rce]] discipline):
+//
+//   | args[0] tag | behaviour                                        |
+//   |-------------|--------------------------------------------------|
+//   | string      | concatenate ALL operands as strings → string     |
+//   | *Seq        | concatenate element slices → NEW *Seq (no alias) |
+//   | otherwise   | numeric fold (int/float promotion), unchanged    |
+//
+// Ruby `+` is binary, but the SIR builtin is variadic; the string/array
+// arms fold left-associatively over ≥2 operands, preserving the existing
+// variadic contract of the numeric path.
 func _sir_plus(args []Value) Value {
+	if len(args) > 0 {
+		switch first := args[0].(type) {
+		case string:
+			// String concat.  Every operand must itself be a string —
+			// Ruby raises TypeError on `"a" + 1` (deferred to the
+			// typed-runtime-errors cascade); here `_sir_as_string`
+			// gives a controlled panic rather than silent garbage.
+			var out string
+			for _, a := range args {
+				out += _sir_as_string(a)
+			}
+			return out
+		case *Seq:
+			// Array concat: build a FRESH backing slice so the result
+			// never aliases any input's backing array (Ruby `+` returns
+			// a new array; only `concat`/`<<` mutate in place).
+			out := make([]Value, 0, len(first.Items))
+			out = append(out, first.Items...)
+			for _, a := range args[1:] {
+				s, ok := a.(*Seq)
+				if !ok {
+					panic("no implicit conversion of " + _sir_ruby_class_name(a) + " into Array")
+				}
+				out = append(out, s.Items...)
+			}
+			return &Seq{Items: out}
+		}
+	}
 	if _sir_any_float(args) {
 		var total float64
 		for _, a := range args {
@@ -222,6 +265,16 @@ func _sir_plus(args []Value) Value {
 		total += _sir_as_int(a)
 	}
 	return total
+}
+
+// Coerce an operand to a Go string for the string `+` arm.  A genuine
+// string passes through; anything else is a controlled panic (Ruby would
+// raise TypeError — the typed-runtime-errors cascade will refine this).
+func _sir_as_string(v Value) string {
+	if s, ok := v.(string); ok {
+		return s
+	}
+	panic("no implicit conversion of " + _sir_ruby_class_name(v) + " into String")
 }
 
 func _sir_minus(args []Value) Value {
@@ -248,7 +301,77 @@ func _sir_minus(args []Value) Value {
 	return acc
 }
 
+// ── polymorphic `*` (sir-polymorphic-operators PO4) ────────────
+//
+// Ruby `*` is binary and overloaded by the RECEIVER (first operand):
+//
+//   | args[0]  | args[1] | behaviour                                    |
+//   |----------|---------|----------------------------------------------|
+//   | string   | Integer | repeat the string N times ("ab"*3 → ababab)  |
+//   | string   | int ≤ 0 | "" (Ruby raises on negative, but "" is the   |
+//   |          |         |   never-raise floor here)                    |
+//   | *Seq     | Integer | repeat the element list N times ([0]*3)      |
+//   | *Seq     | string  | join elements with the separator ([1,2]*", ")|
+//   | otherwise| —       | numeric fold (int/float promotion), unchanged|
+//
+// Dispatch is on the runtime tag via a Go type switch — never reflection.
+// The string/array arms handle the common BINARY case (Ruby `*` is
+// binary); anything else falls through to the variadic numeric fold, so
+// existing numeric semantics are preserved exactly.
 func _sir_times(args []Value) Value {
+	if len(args) == 2 {
+		switch recv := args[0].(type) {
+		case string:
+			// String × Integer → repeat.  A non-positive count (or an
+			// empty receiver) yields the empty string.  Guard the
+			// product len(recv)*n against host-int overflow: Ruby raises
+			// `ArgumentError: argument too big` for an oversized repeat,
+			// so we panic with the same controlled message rather than
+			// let strings.Repeat overflow `int` (opaque panic) or attempt
+			// a multi-gigabyte allocation and OOM the process.
+			n := _sir_as_int(args[1])
+			if n <= 0 || len(recv) == 0 {
+				return ""
+			}
+			maxInt := int64(^uint(0) >> 1)
+			if n > maxInt/int64(len(recv)) {
+				panic("argument too big")
+			}
+			return strings.Repeat(recv, int(n))
+		case *Seq:
+			// Seq × string → join with separator, using the SAME
+			// value-display helper the runtime uses for `puts`
+			// (`_sir_format`), so an element renders identically whether
+			// printed or joined.
+			if sep, ok := args[1].(string); ok {
+				parts := make([]string, len(recv.Items))
+				for i, x := range recv.Items {
+					parts[i] = _sir_format(x)
+				}
+				return strings.Join(parts, sep)
+			}
+			// Seq × Integer → repeat the element list into a FRESH
+			// backing slice (no aliasing of the input).  A non-positive
+			// count (or an empty receiver) yields an empty array; the
+			// empty-receiver short-circuit also avoids spinning the
+			// append loop for a huge count.  Guard len(Items)*n against
+			// host-int overflow (Ruby raises `ArgumentError: argument
+			// too big`) so `make` never receives a wrapped/negative cap.
+			n := _sir_as_int(args[1])
+			if n <= 0 || len(recv.Items) == 0 {
+				return &Seq{Items: []Value{}}
+			}
+			maxInt := int64(^uint(0) >> 1)
+			if n > maxInt/int64(len(recv.Items)) {
+				panic("argument too big")
+			}
+			out := make([]Value, 0, len(recv.Items)*int(n))
+			for i := int64(0); i < n; i++ {
+				out = append(out, recv.Items...)
+			}
+			return &Seq{Items: out}
+		}
+	}
 	if _sir_any_float(args) {
 		acc := 1.0
 		for _, a := range args {

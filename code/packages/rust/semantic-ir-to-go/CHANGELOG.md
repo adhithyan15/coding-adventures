@@ -1,5 +1,46 @@
 # Changelog
 
+## 0.11.0
+
+### Added — polymorphic `+` / `*` for strings and arrays (sir-polymorphic-operators PO4)
+
+- Ruby overloads `+` and `*` by receiver type, and every case lowers to the
+  same SIR builtins (`_sir_plus` / `_sir_times`). The Go runtime helpers were
+  previously **numeric-only** — they ran `_sir_as_int`/`_sir_as_float` on every
+  operand — so `"a" + "b"` and `[1] + [2]` produced garbage or panicked. Both
+  helpers now dispatch on the FIRST operand's runtime tag via a Go **type
+  switch** (never reflection — the [[dynamic-dispatch-rce]] discipline) and add
+  the string/array arms ahead of the unchanged numeric fold:
+  - `_sir_plus`: first operand a `string` → concatenate all operands as strings
+    (`"a"+"b"` → `"ab"`); first operand a `*Seq` → concatenate element slices
+    into a **fresh** backing array with no aliasing of any input (`[1]+[2]` →
+    `[1, 2]`); otherwise the existing int/float-promoting numeric fold.
+  - `_sir_times`: `string × Integer` → repeat via `strings.Repeat` (`"ab"*3` →
+    `"ababab"`; a non-positive count yields `""`, clamped so `strings.Repeat`
+    never panics); `*Seq × Integer` → repeat the element list into a fresh slice
+    (`[0]*3` → `[0, 0, 0]`; non-positive → empty array); `*Seq × string` → join
+    the elements with the separator using the same value-display helper `puts`
+    uses (`_sir_format`), so `[1,2]*", "` → `"1, 2"`; otherwise the numeric fold.
+- Numeric `+`/`*` semantics (int64 fast path, int→float promotion, variadic
+  fold) are **preserved exactly** — the new arms only run when the first operand
+  is a string/`*Seq`. Ruby `+`/`*` are binary; the string/array arms fold
+  left-associatively over the variadic operand list.
+- A controlled-panic helper `_sir_as_string` coerces string-`+` operands (a
+  non-string operand — e.g. `"a" + 1` — panics with a Ruby-shaped "no implicit
+  conversion of Integer into String" message rather than emitting garbage; the
+  strict `TypeError` is deferred to the typed-runtime-errors cascade).
+- Execution proof `compile_and_run_polyops.rs` runs `"a"+"b"`, `"ab"*3`,
+  `[1]+[2]`, `[0]*3`, `[1,2]*", "`, and the numeric regressions `1+2` / `2*3`
+  under `go run` and asserts stdout is exactly `ab\nababab\n[1, 2]\n[0, 0, 0]\n1, 2\n3\n6\n`.
+- **Overflow guard (security):** the `*` repeat arms compute `len × count` in a
+  fixed-width host `int`, which on a large count could overflow (wrapping to a
+  negative/absurd `make` capacity → opaque panic) or drive a multi-gigabyte
+  allocation → OOM. Both arms now short-circuit an empty receiver (also avoiding
+  a huge append loop) and guard `count > maxInt/len` with a controlled
+  `panic("argument too big")` — matching Ruby's `ArgumentError: argument too
+  big` — before any `strings.Repeat`/`make`. The count is program-controlled, so
+  this closes a reachable resource-exhaustion vector.
+
 ## 0.10.0
 
 ### Added — `puts` builtin (Ruby semantics)
