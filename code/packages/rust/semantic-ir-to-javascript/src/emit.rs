@@ -1032,6 +1032,10 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         let poly = match name {
             "+" => Some("__Sir.plus"),
             "*" => Some("__Sir.times"),
+            // `/` routes through the runtime `divide` helper, which ADDS
+            // the Ruby zero-divisor check (native JS `/` yields `Infinity`,
+            // not a `ZeroDivisionError`).  See `runtime::divide`.
+            "/" => Some("__Sir.divide"),
             _ => None,
         };
         if let Some(helper) = poly {
@@ -1476,10 +1480,18 @@ mod tests {
     #[test]
     fn emit_builtin_arithmetic_is_native_infix() {
         let two = || vec![Expr::IntLit { value: 1, span: s() }, Expr::IntLit { value: 2, span: s() }];
-        // `-`/`/`/`%` stay native infix (numeric-only in the SIR contract).
+        // `-`/`%` stay native infix (numeric-only in the SIR contract).
         assert_eq!(emit_e(&bc("-", two())), "(1 - 2)");
-        assert_eq!(emit_e(&bc("/", two())), "(1 / 2)");
         assert_eq!(emit_e(&bc("%", two())), "(1 % 2)");
+    }
+
+    #[test]
+    fn emit_builtin_divide_routes_through_runtime_helper() {
+        // `/` routes through `__Sir.divide`, which adds the Ruby
+        // zero-divisor check (native JS `/` yields `Infinity`, not a
+        // `ZeroDivisionError`).  The numeric result is otherwise identical.
+        let two = || vec![Expr::IntLit { value: 1, span: s() }, Expr::IntLit { value: 2, span: s() }];
+        assert_eq!(emit_e(&bc("/", two())), "__Sir.divide(1, 2)");
     }
 
     #[test]

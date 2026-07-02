@@ -352,6 +352,30 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     return numFold(args, 1, (x, y) => x * y);
   }
 
+  // ── division `/` (Ruby ZeroDivisionError) ──────────────────────
+  //
+  // Ruby raises `ZeroDivisionError` ("divided by 0") for `1 / 0` — for BOTH
+  // integer and float receivers (`1 / 0` and `1.0 / 0` both raise; Ruby's
+  // `Float#/` by an integer zero raises, unlike bare float math which gives
+  // `Infinity`).  Native JavaScript `/` never throws: `1 / 0 === Infinity`
+  // and `0 / 0 === NaN`.  So the backend routes the binary `/` builtin
+  // through this helper, which ADDS the explicit zero-divisor check and
+  // raises a typed `SirError` (`ZeroDivisionError`) that a translated
+  // `rescue ZeroDivisionError` catches — matching Ruby exactly.
+  //
+  // We only special-case a divisor that is exactly `0` (integer or the
+  // float `0`/`-0`); any other numeric divisor divides natively as before,
+  // so no existing numeric program changes.  Note `1.0 / 0.0` in Ruby also
+  // raises `ZeroDivisionError` (it does NOT return `Float::INFINITY`), and
+  // `0 === -0` and `0 === 0.0` in JS, so the single `=== 0` test covers the
+  // integer-zero, float-zero, and negative-zero divisors uniformly.
+  function divide(a, b) {
+    if (b === 0) {
+      raiseError("ZeroDivisionError", "divided by 0");
+    }
+    return a / b;
+  }
+
   // ── method dispatch (`__method__`) ─────────────────────────────
   // `recv.meth(args…)` reaches the backend as
   // `BuiltinCall("__method__", [recv, "meth", args…])`; the emitter routes
@@ -432,18 +456,72 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // `length` as a nullary method mirrors the property.  Kept special-cased
     // ahead of the allowlist: it is a property read, not a method call.
     if (name === "length" && args.length === 0) { return recv.length; }
+    // ── `.fetch` (Ruby typed lookup) ──────────────────────────────
+    // Ruby's `.fetch` is the *raising* sibling of the `[]` index op (which
+    // stays nil-returning): a sequence `arr.fetch(i)` past the end raises
+    // `IndexError`, and a hash `h.fetch(k)` with a MISSING key and NO
+    // default (no second arg / block) raises `KeyError`.  Both are typed
+    // `SirError`s here so a translated `rescue IndexError` / `rescue
+    // KeyError` catches them.  A supplied default arg (`fetch(k, d)`) is
+    // returned instead of raising, matching Ruby.  Handled AHEAD of the
+    // allowlist because native arrays have no `fetch` and native `Map`'s
+    // `fetch` does not exist / does not match Ruby's semantics.
+    if (name === "fetch") {
+      if (Array.isArray(recv)) {
+        // Ruby allows a negative index (counts from the end); an index
+        // resolving outside `0 .. length-1` is out of bounds.
+        const raw = args[0];
+        const idx = raw < 0 ? recv.length + raw : raw;
+        if (idx < 0 || idx >= recv.length) {
+          if (args.length >= 2) { return args[1]; }
+          raiseError("IndexError",
+            "index " + format(raw) + " outside of array bounds: " +
+            (recv.length === 0 ? "0...0" :
+              "-" + recv.length + "..." + recv.length));
+        }
+        return recv[idx];
+      }
+      if (recv instanceof Map) {
+        if (recv.has(args[0])) { return recv.get(args[0]); }
+        if (args.length >= 2) { return args[1]; }
+        raiseError("KeyError", "key not found: " + format(args[0]));
+      }
+      // A `.fetch` on any other receiver has no Ruby-collection meaning
+      // here; fall through to the unknown-method NoMethodError below.
+    }
     // SECURITY gate: refuse any name outside the allowlist so reflective
     // gadgets (`constructor`, `__proto__`, `apply`, …) can never be reached.
+    // An allowlist miss is a *genuinely unknown* method, so — matching Ruby
+    // — we raise a typed `NoMethodError` (rescuable via `rescue
+    // NoMethodError`) rather than a JS-native `TypeError` (which a `rescue`
+    // would either miss or, worse, catch as an over-broad StandardError).
+    // The reflective gadgets never appear in the allowlist, so they still
+    // land here and are rejected before any property is looked up.
     if (!METHOD_ALLOWLIST.has(name)) {
-      throw new TypeError(
-        "method `" + name + "` is not an allowed collection method");
+      raiseError("NoMethodError",
+        "undefined method `" + name + "` for " + classDescription(recv));
     }
     const m = recv == null ? undefined : recv[name];
     if (typeof m !== "function") {
-      throw new TypeError(
-        "method `" + name + "` is not defined on " + format(recv));
+      raiseError("NoMethodError",
+        "undefined method `" + name + "` for " + classDescription(recv));
     }
     return m.apply(recv, args);
+  }
+
+  // A Ruby-ish description of a receiver for a `NoMethodError` message —
+  // e.g. `nil`, `an instance of Array`, `an instance of String`.  Pure
+  // TAG tests on the runtime representation, never reflection on a
+  // source-derived name, so no gadget is reachable from here.
+  function classDescription(recv) {
+    if (recv === null || recv === undefined) { return "nil"; }
+    if (Array.isArray(recv)) { return "an instance of Array"; }
+    if (recv instanceof Map) { return "an instance of Hash"; }
+    if (typeof recv === "string") { return "an instance of String"; }
+    if (typeof recv === "number") { return "an instance of Numeric"; }
+    if (typeof recv === "boolean") { return recv ? "true" : "false"; }
+    if (recv instanceof Sym) { return "an instance of Symbol"; }
+    return "an instance of Object";
   }
 
   // ── exceptions (SIR17 `Feature::Exceptions`) ───────────────────
@@ -750,7 +828,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   return {
     Sym, Pair, Closure,
     intern, applyClosure, truthy, format, print, puts,
-    plus, times,
+    plus, times, divide,
     builtins, builtinClosure, callBuiltin, callMethod,
     SirError, raiseError, rescueMatches, registerAncestry,
     // OOP (O3): instantiation, method definition + dispatch, super,
@@ -854,6 +932,31 @@ mod tests {
         // a raw RangeError.
         assert!(RUNTIME.contains(r#"raiseError("ArgumentError", "argument too big")"#));
         assert!(RUNTIME.contains("Number.MAX_SAFE_INTEGER"));
+    }
+
+    #[test]
+    fn runtime_typed_errors_divide_fetch_unknown_method() {
+        // T3 (sir-typed-runtime-errors): the faulting runtime ops raise the
+        // CORRECT typed SirError, matching Ruby.
+
+        // Division by zero → ZeroDivisionError ("divided by 0").  The helper
+        // adds the check native JS `/` lacks (it yields Infinity).
+        assert!(RUNTIME.contains("function divide(a, b)"));
+        assert!(RUNTIME.contains(r#"raiseError("ZeroDivisionError", "divided by 0")"#));
+        assert!(RUNTIME.contains("plus, times, divide,"), "divide must be exported");
+
+        // `.fetch` raises typed errors: IndexError for a sequence OOB,
+        // KeyError for a missing hash key (no default).
+        assert!(RUNTIME.contains(r#"if (name === "fetch")"#));
+        assert!(RUNTIME.contains(r#"raiseError("IndexError","#));
+        assert!(RUNTIME.contains(r#"raiseError("KeyError", "key not found: ""#));
+
+        // An unknown method raises NoMethodError (not a JS-native TypeError).
+        assert!(RUNTIME.contains(r#"raiseError("NoMethodError","#));
+        assert!(RUNTIME.contains(r#""undefined method `" + name + "` for " + classDescription(recv)"#));
+        assert!(RUNTIME.contains("function classDescription(recv)"));
+        // The old JS-native TypeError floor for the allowlist miss is gone.
+        assert!(!RUNTIME.contains("is not an allowed collection method"));
     }
 
     #[test]
