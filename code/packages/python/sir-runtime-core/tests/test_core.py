@@ -209,6 +209,84 @@ def test_variadic_arithmetic() -> None:
     assert sir.mul() == 1
 
 
+def test_add_string_concat() -> None:
+    # Ruby's `+` is polymorphic: two strings concatenate.
+    assert sir.add("a", "b") == "ab"
+    assert sir.add("foo", "bar", "baz") == "foobarbaz"
+    # A single string argument is returned unchanged (fold of one).
+    assert sir.add("solo") == "solo"
+
+
+def test_add_array_concat() -> None:
+    # SIR arrays are plain Python lists, so `+` concatenates them.
+    assert sir.add([1], [2]) == [1, 2]
+    assert sir.add([1, 2], [3], [4, 5]) == [1, 2, 3, 4, 5]
+
+
+def test_add_array_concat_does_not_alias_operands() -> None:
+    # Ruby's Array#+ is non-destructive: the inputs must be untouched.
+    a = [1]
+    b = [2]
+    result = sir.add(a, b)
+    assert result == [1, 2]
+    result.append(99)
+    assert a == [1]  # first operand not mutated
+    assert b == [2]  # second operand not mutated
+
+
+def test_mul_string_repeat() -> None:
+    # "ab" * 3 -> "ababab"; non-positive counts -> "".
+    assert sir.mul("ab", 3) == "ababab"
+    assert sir.mul("ab", 0) == ""
+    assert sir.mul("ab", -1) == ""
+
+
+def test_mul_array_repeat() -> None:
+    # [0] * 3 -> [0, 0, 0]; a fresh list, non-positive count -> [].
+    assert sir.mul([0], 3) == [0, 0, 0]
+    assert sir.mul([1, 2], 2) == [1, 2, 1, 2]
+    assert sir.mul([1], 0) == []
+
+
+def test_mul_array_repeat_does_not_alias_operand() -> None:
+    src = [1]
+    result = sir.mul(src, 3)
+    assert result == [1, 1, 1]
+    result.append(9)
+    assert src == [1]  # source list untouched
+
+
+def test_mul_array_join_with_string() -> None:
+    # [1, 2] * ", " -> "1, 2" (element to_s via the canonical SIR display).
+    assert sir.mul([1, 2], ", ") == "1, 2"
+    assert sir.mul(["a", "b", "c"], "-") == "a-b-c"
+    assert sir.mul([], ", ") == ""
+    # Join uses to_display, not repr: nil renders as "nil", not "None".
+    assert sir.mul([None, True], "|") == "nil|#t"
+
+
+def test_mul_numeric_fold_unchanged() -> None:
+    # Regression: the pure-numeric variadic fold is preserved exactly.
+    assert sir.mul() == 1
+    assert sir.mul(2, 3) == 6
+    assert sir.mul(2, 3, 4) == 24
+    assert sir.mul(5) == 5
+    # Float promotion still works.
+    assert sir.mul(2, 2.5) == 5.0
+
+
+def test_mul_bool_count_is_not_treated_as_a_repeat() -> None:
+    # bool is an int subclass in Python but NOT a SIR number (see
+    # values.is_number), so the string/array repeat arms must exclude it: a
+    # bool count is not an integer repeat count. `"ab" * True` therefore does
+    # NOT go through the repeat arm — it falls through to the numeric fold,
+    # where Python's `1 * "ab" * True` yields the string once ("ab"), which is
+    # distinct from the repeat arm's `"ab" * True` (which would also be "ab"
+    # here, but for larger truthy-int-like values the distinction matters and
+    # the arm intentionally never fires on a bool).
+    assert sir.mul("ab", True) == "ab"
+
+
 def test_truncating_division() -> None:
     assert sir.div(7, 2) == 3
     assert sir.div(-7, 2) == -3  # truncates toward zero, not floor

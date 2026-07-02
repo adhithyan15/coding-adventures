@@ -2,6 +2,48 @@
 
 All notable changes to `coding-adventures-sir-runtime-core` are documented here.
 
+## [0.1.7] - 2026-07-01
+
+### Added — polymorphic `+` / `*` for strings and arrays (PO1 of sir-polymorphic-operators)
+
+Ruby's `+` and `*` are polymorphic on the receiver type, but the runtime only
+implemented the **numeric** case. `mul` now dispatches explicitly on the runtime
+tag (`isinstance`, never reflection) to match Ruby exactly, and `add` is fixed to
+concatenate strings/arrays as well as sum numbers. See
+[`code/specs/sir-polymorphic-operators.md`](../../../specs/sir-polymorphic-operators.md).
+
+- **`add` (`+`)** now handles all three Ruby arms:
+  - `add(1, 2, 3) == 6` (numeric, unchanged), `add() == 0` (identity, unchanged).
+  - `add("a", "b") == "ab"` and `add("foo", "bar", "baz") == "foobarbaz"` (String
+    concat).
+  - `add([1], [2]) == [1, 2]` (Array concat, a **fresh** list — operands are not
+    mutated, matching Ruby's non-destructive `Array#+`).
+  - Fix: the fold is now **seeded with the first operand** instead of the integer
+    `0`. The previous `total = 0; total += a` raised `TypeError` on the very first
+    string/array operand (`0 + "a"`), so string/array `+` was silently broken;
+    seeding from `args[0]` starts the fold in the right type. Numeric results are
+    identical (addition is associative).
+- **`mul` (`*`)** now implements Ruby's four arms, dispatched on the two-operand
+  (binary) shape the frontend lowers, with the variadic numeric fold preserved for
+  the pure-numeric case:
+  - `str × int` → repeated string (`mul("ab", 3) == "ababab"`; count `<= 0` → `""`).
+  - `list × int` → repeated-element list (`mul([0], 3) == [0, 0, 0]`; fresh list).
+  - `list × str` → join elements with the separator, using the canonical
+    `to_display` (element `to_s`, not `repr`): `mul([1, 2], ", ") == "1, 2"`,
+    `mul([None, True], "|") == "nil|#t"`.
+  - Otherwise the numeric fold, unchanged: `mul() == 1`, `mul(2, 3, 4) == 24`.
+  - `bool` is excluded from the integer repeat/join arms (it is an `int` subclass
+    in Python but not a SIR number, per `values.is_number`), so a bool count is
+    never treated as a repeat count.
+- No core-IR or frontend change — this is a runtime-only correctness fix on the
+  Python backend. New regression tests cover every arm plus numeric preservation
+  and non-aliasing (`test_add_string_concat`, `test_add_array_concat`,
+  `test_add_array_concat_does_not_alias_operands`, `test_mul_string_repeat`,
+  `test_mul_array_repeat`, `test_mul_array_repeat_does_not_alias_operand`,
+  `test_mul_array_join_with_string`, `test_mul_numeric_fold_unchanged`,
+  `test_mul_bool_count_is_not_treated_as_a_repeat`).
+- Bumps `pyproject.toml` to `0.1.7`.
+
 ## [0.1.6] - 2026-07-01
 
 ### Security — cycle-guard the `puts` array flatten (CWE-674)
