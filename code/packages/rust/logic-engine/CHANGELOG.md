@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.36.0] - 2026-07-02 — binary modulo (`Mod`)
+
+### Added
+
+- `ComputeOp::Mod` — binary modulo `a mod b`, the remainder carrying the **sign of
+  the dividend** (`7 mod 3 = 1`, `−7 mod 3 = −1`, `7.5 mod 2 = 1.5`), matching Rust's
+  `f64::%` (truncated division / C `fmod`). Folded into the **existing** general binary
+  `eval` arm next to `Div` (a single inline expression — no extra locals on the
+  deeply-recursive path, preserving the clean-`TooDeep`-never-overflow contract):
+  dimensionally it combines like addition (both operands must share a dimension and the
+  remainder carries it — `7 mmol mod 3 mmol = 1 mmol`, while `7 mmol mod 3` is a category
+  error), a zero divisor is a clean `DivisionByZero` (never a `NaN`), and — unlike
+  `Gcd`/`Lcm` — it does **not** require integer operands. The exact-rational sidecar is
+  dropped (the `f64` remainder already carries the value). This makes a LaTeX
+  `a \bmod b` / `a \pmod{b}` (adj-lang's `latex "…"` surface) computable as a single
+  native node. `symbol()` renders it `"mod"`. +4 unit tests (remainder + dimension
+  preservation, sign-of-dividend / real operands, zero-divisor error, dimension
+  mismatch).
+
 ## [0.35.0] - 2026-07-02 — truncation toward zero (`Trunc`)
 
 ### Added

@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.32.0] - 2026-07-02 — `\bmod` / `\pmod` modulo in `latex "…"`
+
+### Added
+
+- `latex "a \bmod b"` and `latex "a \pmod{b}"` now compute the **modulo** `a mod b`
+  (the remainder with the sign of the dividend). New `ArithOp::Mod` lowers to the new
+  `logic_engine::ComputeOp::Mod`. `\bmod`/`\pmod` are not in the frontend's operator
+  tables, so they parse as a bare `Symbol("bmod")`/`Symbol("pmod")` inside an implicit
+  multiplication — `a \bmod b` → `Bin(Mul, Bin(Mul, a, bmod), b)`. The adapter
+  recognises that operator-name-juxtaposition shape (the same technique used for
+  `\operatorname{trunc}(x)`) via a `mod_juxtaposition_lhs` helper and lowers it to
+  `a mod b`. The arm sits above the general `Bin(Mul, …)` so genuine products still
+  multiply; the congruence form `x \equiv y \pmod{n}` parses as a rejected `Rel(Equiv)`,
+  so only the direct remainder computes — never a mis-lowered congruence. +adapter and
+  lower unit tests.
+
 ## [0.31.0] - 2026-07-02 — n-ary `\min`/`\max`/`\gcd`/`\lcm` in `latex "…"`
 
 ### Changed

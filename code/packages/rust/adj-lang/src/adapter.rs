@@ -973,6 +973,26 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
         MathExpr::Bin(BinOp::Mul, lhs, rhs) if operator_name_is(lhs, "trunc") => {
             Ok(ExprAst::Trunc(Box::new(latex_math_to_expr_ast(rhs, source)?)))
         }
+        // `a \bmod b` / `a \pmod{b}` — the modulo operator. `\bmod`/`\pmod` are not in
+        // the frontend's operator tables, so they lower to a bare `Symbol("bmod")` /
+        // `Symbol("pmod")` and the whole expression parses as a LEFT-associated implicit
+        // multiplication (juxtaposition): `a \bmod b` → `Bin(Mul, Bin(Mul, a, bmod), b)`.
+        // We recognise that exact shape — the operator-name-juxtaposition path, just like
+        // `\operatorname{trunc}(x)` above — and lower it to `ArithOp::Mod` (→
+        // `ComputeOp::Mod`): `real_lhs mod rhs`. This arm sits ABOVE the general
+        // `Bin(Mul, …)` so a genuine product (`2x`) still multiplies; only the
+        // `bmod`/`pmod` marker as the RIGHT factor of the LEFT operand is intercepted.
+        // (The congruence form `x \equiv y \pmod{n}` parses as a `Rel(Equiv, …)`, which
+        // the ADJ arithmetic subset rejects — so only the direct `a \bmod b` /
+        // `a \pmod{b}` remainder computes, never a mis-lowered congruence.)
+        MathExpr::Bin(BinOp::Mul, lhs, rhs) if mod_juxtaposition_lhs(lhs).is_some() => {
+            let real_lhs = mod_juxtaposition_lhs(lhs).expect("guard checked Some");
+            Ok(ExprAst::Bin(
+                ArithOp::Mod,
+                Box::new(latex_math_to_expr_ast(real_lhs, source)?),
+                Box::new(latex_math_to_expr_ast(rhs, source)?),
+            ))
+        }
         MathExpr::Bin(BinOp::Mul, lhs, rhs) => latex_bin(ArithOp::Mul, lhs, rhs, source),
         MathExpr::Bin(BinOp::Div, lhs, rhs) | MathExpr::Frac(lhs, rhs) => {
             latex_bin(ArithOp::Div, lhs, rhs, source)
@@ -1113,6 +1133,20 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
 /// `\operatorname{trunc}` and `\operatorname{ trunc }` both count.
 fn operator_name_is(expr: &MathExpr, name: &str) -> bool {
     matches!(expr, MathExpr::Text(s) if s.trim() == name)
+}
+
+/// Is `expr` the LEFT operand of a `\bmod`/`\pmod` juxtaposition — i.e.
+/// `Bin(Mul, real_lhs, Symbol("bmod"|"pmod"))`? The frontend has no operator table
+/// entry for `\bmod`/`\pmod`, so it lowers them to a bare `Symbol` that ends up as the
+/// right factor of the left operand of the surrounding implicit multiplication. If the
+/// shape matches, return `real_lhs` (the dividend expression); otherwise `None`.
+fn mod_juxtaposition_lhs(expr: &MathExpr) -> Option<&MathExpr> {
+    if let MathExpr::Bin(BinOp::Mul, real_lhs, marker) = expr {
+        if matches!(marker.as_ref(), MathExpr::Symbol(s) if s == "bmod" || s == "pmod") {
+            return Some(real_lhs);
+        }
+    }
+    None
 }
 
 fn latex_bin(
