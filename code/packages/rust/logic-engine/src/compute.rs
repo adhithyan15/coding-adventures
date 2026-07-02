@@ -194,6 +194,17 @@ pub enum ComputeOp {
     /// `|x|`/`\left|x\right|` (adj-lang's `latex "…"` surface) computable instead
     /// of being silently dropped to a bare `x`.
     Abs,
+    /// Floor, `⌊x⌋` — the greatest integer ≤ x. Like [`ComputeOp::Abs`] it is
+    /// **unary** and **dimension-preserving** (⌊3.7 mmol⌋ = 3 mmol: the magnitude
+    /// snaps down to an integer, the unit is untouched). It is carried in a
+    /// [`ComputeExpr::Unary`] and makes a LaTeX `\left\lfloor x\right\rfloor`
+    /// (adj-lang's `latex "…"` surface) computable as a single native node.
+    Floor,
+    /// Ceiling, `⌈x⌉` — the least integer ≥ x. The exact mirror of
+    /// [`ComputeOp::Floor`]: unary, dimension-preserving (⌈3.2 mmol⌉ = 4 mmol),
+    /// carried in a [`ComputeExpr::Unary`], lowered from a LaTeX
+    /// `\left\lceil x\right\rceil`.
+    Ceil,
     Sum,
     Count,
     Min,
@@ -211,6 +222,8 @@ impl ComputeOp {
             ComputeOp::Div => "/",
             ComputeOp::Pow => "^",
             ComputeOp::Abs => "abs",
+            ComputeOp::Floor => "floor",
+            ComputeOp::Ceil => "ceil",
             ComputeOp::Sum => "sum",
             ComputeOp::Count => "count",
             ComputeOp::Min => "min",
@@ -233,9 +246,10 @@ pub enum ComputeExpr {
     Lit(f64),
     /// A binary operation: `Add`/`Sub`/`Mul`/`Div`/`Pow` only.
     Bin(ComputeOp, Box<ComputeExpr>, Box<ComputeExpr>),
-    /// A unary operation: `Abs` only. Kept distinct from [`ComputeExpr::Bin`] so
-    /// the arity is honest (a unary op has one operand, not two) — it lowers to a
-    /// [`DerivationNode::Op`] with a single-element `operands` vec.
+    /// A unary operation: `Abs`/`Floor`/`Ceil`. Kept distinct from
+    /// [`ComputeExpr::Bin`] so the arity is honest (a unary op has one operand,
+    /// not two) — it lowers to a [`DerivationNode::Op`] with a single-element
+    /// `operands` vec.
     Unary(ComputeOp, Box<ComputeExpr>),
     /// An aggregation over **every** observation of a slot:
     /// `Sum`/`Count`/`Min`/`Max`/`Avg`.
@@ -590,9 +604,9 @@ fn eval(
     }
 }
 
-/// Evaluate a unary op (`Abs`) into a derivation node + dimension. Split out of
-/// [`eval`] and marked `#[inline(never)]` so its locals live in their own stack
-/// frame rather than enlarging every one of `eval`'s up-to-`MAX_EVAL_DEPTH`
+/// Evaluate a unary op (`Abs`/`Floor`/`Ceil`) into a derivation node + dimension.
+/// Split out of [`eval`] and marked `#[inline(never)]` so its locals live in their
+/// own stack frame rather than enlarging every one of `eval`'s up-to-`MAX_EVAL_DEPTH`
 /// recursive frames — a fatter `eval` frame multiplied across 256 levels can
 /// overflow a small (macOS ~2 MB) thread stack *before* the depth guard trips,
 /// which would turn the "clean `TooDeep`, never a stack overflow" guarantee into
@@ -605,29 +619,44 @@ fn eval_unary(
     depth: usize,
 ) -> Result<(DerivationNode, Dimension, Option<ExactRational>), ComputeError> {
     let (operand, dim, exact) = eval(a, kb, depth + 1)?;
-    // `Abs` is the only unary op. It is **dimension-preserving**: the magnitude
-    // may flip sign but the unit does not (`|−3 dollars| = 3 dollars`), so —
-    // unlike `Pow`, which recomputes the dimension — the operand's dimension
-    // flows straight through.
+    // Every unary op here is **dimension-preserving**: the magnitude may change
+    // (sign flip for `Abs`, snap to an integer for `Floor`/`Ceil`) but the unit
+    // does not (`|−3 dollars| = 3 dollars`, `⌊3.7 mmol⌋ = 3 mmol`), so — unlike
+    // `Pow`, which recomputes the dimension — the operand's dimension flows
+    // straight through.
+    let value = operand.value();
     let result = match op {
-        ComputeOp::Abs => operand.value().abs(),
+        ComputeOp::Abs => value.abs(),
+        ComputeOp::Floor => value.floor(),
+        ComputeOp::Ceil => value.ceil(),
         _ => {
             return Err(ComputeError::MalformedExpr {
                 detail: "non-unary operator in unary position",
             })
         }
     };
-    // `abs()` cannot introduce a non-finite value (|±∞| = ∞ was already
-    // non-finite; |NaN| = NaN), but the operand is finite-checked at its own
-    // producing op, so a finite operand yields a finite result. Guard anyway —
-    // cheap defense-in-depth, same contract as the binary ops.
+    // None of these can introduce a non-finite value from a finite operand
+    // (|±∞|/⌊±∞⌋/⌈±∞⌉ were already non-finite; NaN stays NaN), and the operand is
+    // finite-checked at its own producing op. Guard anyway — cheap
+    // defense-in-depth, same contract as the binary ops.
     if !result.is_finite() {
         return Err(ComputeError::NonFinite { op });
     }
-    // The exact sidecar stays exact: |num/den| = |num|/den (den is kept positive
-    // by `ExactRational`), so an integer/rational operand keeps its exactness
-    // through the absolute value.
-    let exact = exact.and_then(|r| r.num.checked_abs().and_then(|n| ExactRational::new(n, r.den)));
+    // The exact sidecar stays exact. `ExactRational` keeps `den > 0`, so:
+    //   • |num/den| = |num|/den (abs of the numerator);
+    //   • ⌊num/den⌋ = num.div_euclid(den) (Euclidean division floors for den > 0);
+    //   • ⌈num/den⌉ = that quotient plus one when the division leaves a remainder.
+    // Each result is an integer, carried as `q/1`.
+    let exact = exact.and_then(|r| match op {
+        ComputeOp::Abs => r.num.checked_abs().and_then(|n| ExactRational::new(n, r.den)),
+        ComputeOp::Floor => ExactRational::new(r.num.div_euclid(r.den), 1),
+        ComputeOp::Ceil => {
+            let q = r.num.div_euclid(r.den);
+            let q = if r.num.rem_euclid(r.den) != 0 { q.checked_add(1)? } else { q };
+            ExactRational::new(q, 1)
+        }
+        _ => None,
+    });
     Ok((
         DerivationNode::Op {
             op,
@@ -906,6 +935,78 @@ mod tests {
         assert_eq!(d.value, 4.0);
         // Same dimension as the operand `m` (money/usd), NOT collapsed to Scalar.
         assert_eq!(d.dim, kb.observed_dimensioned("m").unwrap().0.dim);
+    }
+
+    #[test]
+    fn floor_rounds_down_toward_negative_infinity_and_stays_exact() {
+        // ⌊7/2⌋ = 3 (the greatest integer ≤ 3.5), and the exact sidecar snaps to
+        // the integer 3/1. Euclidean division floors: 7.div_euclid(2) == 3.
+        let d = compute(
+            "fl",
+            &ComputeExpr::Unary(
+                ComputeOp::Floor,
+                Box::new(bin(ComputeOp::Div, ComputeExpr::Lit(7.0), ComputeExpr::Lit(2.0))),
+            ),
+            &kb_with(vec![]),
+        )
+        .unwrap();
+        assert_eq!(d.value, 3.0);
+        assert_eq!(d.dim, Dimension::Scalar);
+        assert_eq!(d.exact, ExactRational::new(3, 1));
+    }
+
+    #[test]
+    fn floor_of_a_negative_value_rounds_down_not_toward_zero() {
+        // ⌊−7/2⌋ = −4 (NOT −3): floor rounds toward −∞, so a negative
+        // non-integer snaps DOWN. (−7).div_euclid(2) == −4, the Euclidean floor.
+        let d = compute(
+            "fl",
+            &ComputeExpr::Unary(
+                ComputeOp::Floor,
+                Box::new(bin(ComputeOp::Div, ComputeExpr::Lit(-7.0), ComputeExpr::Lit(2.0))),
+            ),
+            &kb_with(vec![]),
+        )
+        .unwrap();
+        assert_eq!(d.value, -4.0);
+        assert_eq!(d.exact, ExactRational::new(-4, 1));
+    }
+
+    #[test]
+    fn ceil_rounds_up_and_preserves_the_operand_dimension() {
+        // ⌈7/2⌉ = 4 (the least integer ≥ 3.5). Ceil is dimension-preserving:
+        // ⌈dollars⌉ is still dollars, NOT collapsed to Scalar.
+        let kb = kb_with(vec![money("m", 7, "usd")]);
+        let d = compute(
+            "ce",
+            &ComputeExpr::Unary(
+                ComputeOp::Ceil,
+                Box::new(bin(ComputeOp::Div, refexpr("m"), ComputeExpr::Lit(2.0))),
+            ),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(d.value, 4.0);
+        assert_eq!(d.exact, ExactRational::new(4, 1));
+        // Same dimension as the operand `m` (money/usd).
+        assert_eq!(d.dim, kb.observed_dimensioned("m").unwrap().0.dim);
+    }
+
+    #[test]
+    fn ceil_of_an_exact_integer_is_the_integer_itself() {
+        // ⌈6/2⌉ = 3 — an exact integer has no remainder, so ceil leaves it be
+        // (the `+1` fires only when the Euclidean division leaves a remainder).
+        let d = compute(
+            "ce",
+            &ComputeExpr::Unary(
+                ComputeOp::Ceil,
+                Box::new(bin(ComputeOp::Div, ComputeExpr::Lit(6.0), ComputeExpr::Lit(2.0))),
+            ),
+            &kb_with(vec![]),
+        )
+        .unwrap();
+        assert_eq!(d.value, 3.0);
+        assert_eq!(d.exact, ExactRational::new(3, 1));
     }
 
     #[test]

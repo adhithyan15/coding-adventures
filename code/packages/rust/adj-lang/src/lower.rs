@@ -706,6 +706,8 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
             Box::new(lower_expr(b)),
         ),
         ExprAst::Abs(a) => ComputeExpr::Unary(ComputeOp::Abs, Box::new(lower_expr(a))),
+        ExprAst::Floor(a) => ComputeExpr::Unary(ComputeOp::Floor, Box::new(lower_expr(a))),
+        ExprAst::Ceil(a) => ComputeExpr::Unary(ComputeOp::Ceil, Box::new(lower_expr(a))),
         ExprAst::Agg(op, slot) => ComputeExpr::Agg(lower_agg_op(*op), slot.clone()),
     }
 }
@@ -1841,6 +1843,39 @@ contributes 1000000 from answer == 60 to correct
              let answer = latex \"$\\left|x\\right|$\"\n\
              prior 0.10 for correct\n\
              contributes 1000000 from answer == 5 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_latex_floor_rounds_a_quotient_down() {
+        // `⌊a / b⌋` with a=7, b=2 is ⌊3.5⌋ = 3 (the greatest integer ≤ 3.5),
+        // computed on the native ComputeOp::Floor — the `\lfloor…\rfloor` fence
+        // is honoured, not silently dropped to the bare quotient 3.5.
+        let d = crate::compile_and_decide(
+            "observe a(7)\n\
+             observe b(2)\n\
+             let answer = latex \"$\\left\\lfloor a / b\\right\\rfloor$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 3 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_latex_ceiling_rounds_a_quotient_up() {
+        // `⌈a / b⌉` with a=7, b=2 is ⌈3.5⌉ = 4 (the least integer ≥ 3.5),
+        // computed on the native ComputeOp::Ceil via the `\lceil…\rceil` fence.
+        let d = crate::compile_and_decide(
+            "observe a(7)\n\
+             observe b(2)\n\
+             let answer = latex \"$\\left\\lceil a / b\\right\\rceil$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 4 to correct\n\
              ? correct\n",
         )
         .unwrap();
