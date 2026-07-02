@@ -84,6 +84,7 @@ SELF_CONTAINED_RUNGS = (
     "rung44_indicator_dilution",
     "rung45_elimination_rate",
     "rung46_cost_per_patient_day",
+    "rung47_ingestion_concentration",
 )
 
 
