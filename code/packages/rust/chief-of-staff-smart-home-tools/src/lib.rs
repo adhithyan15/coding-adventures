@@ -319,6 +319,7 @@ pub const SMART_HOME_GET_MAINTENANCE_BRIEF_TOOL_ID: &str = "smart_home.get_maint
 pub const SMART_HOME_GET_INCIDENT_BRIEF_TOOL_ID: &str = "smart_home.get_incident_brief";
 pub const SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID: &str = "smart_home.get_recovery_brief";
 pub const SMART_HOME_GET_MORNING_BRIEF_TOOL_ID: &str = "smart_home.get_morning_brief";
+pub const SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID: &str = "smart_home.get_escalation_brief";
 pub const SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID: &str = "smart_home.get_topology_summary";
 pub const SMART_HOME_LIST_DESIRED_STATES_TOOL_ID: &str = "smart_home.list_desired_states";
 pub const SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID: &str =
@@ -2439,6 +2440,10 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_MORNING_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_morning_brief_output_handler_output(&mut runtime, principal_id, now_ms)
+                }
+                SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID => {
+                    let _ = expect_object(&arguments)?;
+                    get_escalation_brief_output_handler_output(&mut runtime, principal_id, now_ms)
                 }
                 SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
@@ -6559,6 +6564,7 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_incident_brief_definition(),
         get_recovery_brief_definition(),
         get_morning_brief_definition(),
+        get_escalation_brief_definition(),
         get_topology_summary_definition(),
         list_desired_states_definition(),
         list_desired_state_drift_audit_definition(),
@@ -7830,6 +7836,58 @@ fn get_morning_brief_definition() -> ToolDefinition {
                 "summary",
                 "decision",
                 "sections",
+                "source_tools",
+            ],
+            false,
+        ),
+    )
+}
+
+fn get_escalation_brief_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID,
+        "Get smart-home escalation brief",
+        "Summarize unresolved Chief escalation lanes from the existing D23 smart-home platform, operations, safety, readiness, maintenance, incident, recovery, and morning briefs without owning smart-home state.",
+        empty_object_schema(),
+        object_schema(
+            vec![
+                SchemaProperty::new("generated_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("status", JsonSchema::String),
+                SchemaProperty::new("ready", JsonSchema::Boolean),
+                SchemaProperty::new("requires_human_review", JsonSchema::Boolean),
+                SchemaProperty::new("has_blockers", JsonSchema::Boolean),
+                SchemaProperty::new("escalation_count", JsonSchema::Integer),
+                SchemaProperty::new("blocker_count", JsonSchema::Integer),
+                SchemaProperty::new("review_count", JsonSchema::Integer),
+                SchemaProperty::new("monitor_count", JsonSchema::Integer),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("decision", JsonSchema::Any),
+                SchemaProperty::new(
+                    "escalation_queue",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new(
+                    "source_tools",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::String),
+                    },
+                ),
+            ],
+            vec![
+                "generated_at_ms",
+                "status",
+                "ready",
+                "requires_human_review",
+                "has_blockers",
+                "escalation_count",
+                "blocker_count",
+                "review_count",
+                "monitor_count",
+                "summary",
+                "decision",
+                "escalation_queue",
                 "source_tools",
             ],
             false,
@@ -45215,6 +45273,46 @@ fn get_morning_brief_output_handler_output(
     ))
 }
 
+fn get_escalation_brief_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let morning = get_morning_brief_output_handler_output(runtime, principal_id, now_ms)?.output;
+    let output = escalation_brief_output_json(now_ms, &morning);
+    let status = morning_brief_string_at(&output, &["status"])
+        .unwrap_or("unknown")
+        .to_string();
+    let ready = morning_brief_bool_at(&output, &["ready"]).unwrap_or(false);
+    let requires_human_review =
+        morning_brief_bool_at(&output, &["requires_human_review"]).unwrap_or(false);
+    let has_blockers = morning_brief_bool_at(&output, &["has_blockers"]).unwrap_or(false);
+    let escalation_count = morning_brief_integer_at(&output, &["escalation_count"]).unwrap_or(0);
+    let blocker_count = morning_brief_integer_at(&output, &["blocker_count"]).unwrap_or(0);
+    let review_count = morning_brief_integer_at(&output, &["review_count"]).unwrap_or(0);
+    let next_tool = morning_brief_string_at(&output, &["decision", "recommended_tool"])
+        .unwrap_or(SMART_HOME_GET_MORNING_BRIEF_TOOL_ID)
+        .to_string();
+
+    Ok(ToolHandlerOutput::new(output).with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_escalation_brief")),
+            ("status", string(&status)),
+            ("ready", JsonValue::Bool(ready)),
+            (
+                "requires_human_review",
+                JsonValue::Bool(requires_human_review),
+            ),
+            ("has_blockers", JsonValue::Bool(has_blockers)),
+            ("escalation_count", integer(escalation_count)),
+            ("blocker_count", integer(blocker_count)),
+            ("review_count", integer(review_count)),
+            ("next_tool", string(&next_tool)),
+        ]),
+    ))
+}
+
 fn get_controller_handoff_summary_output_handler_output(
     runtime: &mut SmartHomeRuntime,
     principal_id: AgentId,
@@ -49450,6 +49548,343 @@ fn morning_brief_integer_at(value: &JsonValue, path: &[&str]) -> Option<i64> {
         JsonValue::Number(JsonNumber::Integer(value)) => Some(*value),
         _ => None,
     }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+struct EscalationBriefItem {
+    section_id: String,
+    label: String,
+    status: String,
+    severity: &'static str,
+    priority: i64,
+    ready: bool,
+    requires_human_review: bool,
+    has_blockers: bool,
+    attention_count: i64,
+    blocked_count: i64,
+    recommended_tool: String,
+    recommended_action: String,
+    owner_lane: String,
+    source_summary: JsonValue,
+}
+
+fn escalation_brief_output_json(now_ms: u64, morning: &JsonValue) -> JsonValue {
+    let mut escalations = escalation_brief_items_from_morning(morning);
+    escalations.sort_by(|left, right| {
+        left.priority
+            .cmp(&right.priority)
+            .then_with(|| left.section_id.cmp(&right.section_id))
+    });
+
+    let generated_at_ms =
+        morning_brief_integer_at(morning, &["generated_at_ms"]).unwrap_or(now_ms as i64);
+    let blocker_count = escalations
+        .iter()
+        .filter(|item| item.has_blockers || item.blocked_count > 0)
+        .count();
+    let review_count = escalations
+        .iter()
+        .filter(|item| item.requires_human_review)
+        .count();
+    let monitor_count = escalations
+        .iter()
+        .filter(|item| !item.has_blockers && !item.requires_human_review)
+        .count();
+    let ready =
+        escalations.is_empty() && morning_brief_bool_at(morning, &["ready"]).unwrap_or(false);
+    let has_blockers = blocker_count > 0;
+    let requires_human_review = review_count > 0;
+    let status = escalation_brief_status(ready, has_blockers, requires_human_review, monitor_count);
+    let next_item = escalations.first();
+
+    object([
+        ("generated_at_ms", integer(generated_at_ms)),
+        ("status", string(status)),
+        ("ready", JsonValue::Bool(ready)),
+        (
+            "requires_human_review",
+            JsonValue::Bool(requires_human_review),
+        ),
+        ("has_blockers", JsonValue::Bool(has_blockers)),
+        ("escalation_count", integer(escalations.len() as i64)),
+        ("blocker_count", integer(blocker_count as i64)),
+        ("review_count", integer(review_count as i64)),
+        ("monitor_count", integer(monitor_count as i64)),
+        (
+            "summary",
+            object([
+                (
+                    "boundary",
+                    string(
+                        "Chief reads D23 runtime and platform primitives; it does not own smart-home controller state.",
+                    ),
+                ),
+                (
+                    "morning_brief_status",
+                    string(
+                        morning_brief_string_at(morning, &["status"])
+                            .unwrap_or("unknown"),
+                    ),
+                ),
+                (
+                    "morning_open_section_count",
+                    integer(
+                        morning_brief_integer_at(morning, &["open_section_count"])
+                            .unwrap_or(0),
+                    ),
+                ),
+                ("escalation_count", integer(escalations.len() as i64)),
+                ("blocker_count", integer(blocker_count as i64)),
+                ("review_count", integer(review_count as i64)),
+                (
+                    "next_tool",
+                    string(escalation_brief_next_tool(next_item)),
+                ),
+                (
+                    "next_action",
+                    string(escalation_brief_next_action(next_item)),
+                ),
+                (
+                    "next_owner_lane",
+                    string(escalation_brief_next_owner_lane(next_item)),
+                ),
+            ]),
+        ),
+        (
+            "decision",
+            escalation_brief_decision_json(status, has_blockers, requires_human_review, next_item),
+        ),
+        (
+            "escalation_queue",
+            JsonValue::Array(escalations.iter().map(escalation_brief_item_json).collect()),
+        ),
+        (
+            "source_tools",
+            attention_string_array(&[
+                SMART_HOME_GET_MORNING_BRIEF_TOOL_ID,
+                SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID,
+                SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID,
+                SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID,
+                SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID,
+                SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID,
+                SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID,
+                SMART_HOME_GET_SAFETY_BRIEF_TOOL_ID,
+                SMART_HOME_GET_READINESS_BRIEF_TOOL_ID,
+                SMART_HOME_GET_MAINTENANCE_BRIEF_TOOL_ID,
+                SMART_HOME_GET_INCIDENT_BRIEF_TOOL_ID,
+                SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID,
+            ]),
+        ),
+    ])
+}
+
+fn escalation_brief_items_from_morning(morning: &JsonValue) -> Vec<EscalationBriefItem> {
+    match optional_field(morning, "sections") {
+        Some(JsonValue::Array(sections)) => sections
+            .iter()
+            .filter_map(escalation_brief_item_from_section)
+            .collect(),
+        _ => Vec::new(),
+    }
+}
+
+fn escalation_brief_item_from_section(section: &JsonValue) -> Option<EscalationBriefItem> {
+    let ready = morning_brief_bool_at(section, &["ready"]).unwrap_or(false);
+    let requires_human_review =
+        morning_brief_bool_at(section, &["requires_human_review"]).unwrap_or(false);
+    let has_blockers = morning_brief_bool_at(section, &["has_blockers"]).unwrap_or(false);
+    let attention_count = morning_brief_integer_at(section, &["attention_count"]).unwrap_or(0);
+    let blocked_count = morning_brief_integer_at(section, &["blocked_count"]).unwrap_or(0);
+
+    if ready
+        && !requires_human_review
+        && !has_blockers
+        && attention_count <= 0
+        && blocked_count <= 0
+    {
+        return None;
+    }
+
+    let severity = escalation_brief_severity(
+        ready,
+        requires_human_review,
+        has_blockers,
+        attention_count,
+        blocked_count,
+    );
+
+    Some(EscalationBriefItem {
+        section_id: morning_brief_string_at(section, &["section_id"])
+            .unwrap_or("unknown")
+            .to_string(),
+        label: morning_brief_string_at(section, &["label"])
+            .unwrap_or("Unknown")
+            .to_string(),
+        status: morning_brief_string_at(section, &["status"])
+            .unwrap_or("unknown")
+            .to_string(),
+        severity,
+        priority: escalation_brief_priority(severity),
+        ready,
+        requires_human_review,
+        has_blockers,
+        attention_count,
+        blocked_count,
+        recommended_tool: morning_brief_string_at(section, &["recommended_tool"])
+            .unwrap_or(SMART_HOME_GET_MORNING_BRIEF_TOOL_ID)
+            .to_string(),
+        recommended_action: morning_brief_string_at(section, &["recommended_action"])
+            .unwrap_or("inspect_morning_brief")
+            .to_string(),
+        owner_lane: morning_brief_string_at(section, &["owner_lane"])
+            .unwrap_or("chief")
+            .to_string(),
+        source_summary: morning_brief_field_clone(section, "summary"),
+    })
+}
+
+fn escalation_brief_item_json(item: &EscalationBriefItem) -> JsonValue {
+    object([
+        (
+            "escalation_id",
+            string(format!("{}:{}", item.severity, item.section_id)),
+        ),
+        ("section_id", string(&item.section_id)),
+        ("label", string(&item.label)),
+        ("status", string(&item.status)),
+        ("severity", string(item.severity)),
+        ("priority", integer(item.priority)),
+        ("ready", JsonValue::Bool(item.ready)),
+        (
+            "requires_human_review",
+            JsonValue::Bool(item.requires_human_review),
+        ),
+        ("has_blockers", JsonValue::Bool(item.has_blockers)),
+        ("attention_count", integer(item.attention_count)),
+        ("blocked_count", integer(item.blocked_count)),
+        ("recommended_tool", string(&item.recommended_tool)),
+        ("recommended_action", string(&item.recommended_action)),
+        ("owner_lane", string(&item.owner_lane)),
+        ("source_summary", item.source_summary.clone()),
+    ])
+}
+
+fn escalation_brief_status(
+    ready: bool,
+    has_blockers: bool,
+    requires_human_review: bool,
+    monitor_count: usize,
+) -> &'static str {
+    if has_blockers {
+        "blocked"
+    } else if requires_human_review {
+        "review_required"
+    } else if monitor_count > 0 {
+        "attention"
+    } else if ready {
+        "ready"
+    } else {
+        "monitor"
+    }
+}
+
+fn escalation_brief_severity(
+    ready: bool,
+    requires_human_review: bool,
+    has_blockers: bool,
+    attention_count: i64,
+    blocked_count: i64,
+) -> &'static str {
+    if has_blockers || blocked_count > 0 {
+        "blocker"
+    } else if requires_human_review {
+        "review"
+    } else if !ready || attention_count > 0 {
+        "attention"
+    } else {
+        "monitor"
+    }
+}
+
+fn escalation_brief_priority(severity: &str) -> i64 {
+    match severity {
+        "blocker" => 0,
+        "review" => 1,
+        "attention" => 2,
+        _ => 3,
+    }
+}
+
+fn escalation_brief_decision_json(
+    status: &str,
+    has_blockers: bool,
+    requires_human_review: bool,
+    next_item: Option<&EscalationBriefItem>,
+) -> JsonValue {
+    object([
+        (
+            "recommendation",
+            string(escalation_brief_decision_label(
+                status,
+                has_blockers,
+                requires_human_review,
+            )),
+        ),
+        (
+            "recommended_tool",
+            string(escalation_brief_next_tool(next_item)),
+        ),
+        (
+            "recommended_action",
+            string(escalation_brief_next_action(next_item)),
+        ),
+        (
+            "owner_lane",
+            string(escalation_brief_next_owner_lane(next_item)),
+        ),
+        (
+            "reason",
+            string(
+                next_item
+                    .map(|item| item.section_id.as_str())
+                    .unwrap_or("no_open_escalations"),
+            ),
+        ),
+    ])
+}
+
+fn escalation_brief_decision_label(
+    status: &str,
+    has_blockers: bool,
+    requires_human_review: bool,
+) -> &'static str {
+    if has_blockers || status == "blocked" {
+        "escalate"
+    } else if requires_human_review {
+        "review"
+    } else if status == "attention" {
+        "coordinate"
+    } else {
+        "monitor"
+    }
+}
+
+fn escalation_brief_next_tool(next_item: Option<&EscalationBriefItem>) -> &str {
+    next_item
+        .map(|item| item.recommended_tool.as_str())
+        .unwrap_or(SMART_HOME_GET_MORNING_BRIEF_TOOL_ID)
+}
+
+fn escalation_brief_next_action(next_item: Option<&EscalationBriefItem>) -> &str {
+    next_item
+        .map(|item| item.recommended_action.as_str())
+        .unwrap_or("monitor_morning_brief")
+}
+
+fn escalation_brief_next_owner_lane(next_item: Option<&EscalationBriefItem>) -> &str {
+    next_item
+        .map(|item| item.owner_lane.as_str())
+        .unwrap_or("chief")
 }
 
 fn readiness_brief_output_json(
@@ -84124,7 +84559,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 298);
+        assert_eq!(definitions.len(), 299);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -84178,6 +84613,9 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_MORNING_BRIEF_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID));
@@ -84983,7 +85421,7 @@ mod tests {
             .contains(&SMART_HOME_GET_RUNTIME_MAINTENANCE_CLOSEOUT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            290
+            291
         );
         assert_eq!(
             export
@@ -85686,6 +86124,7 @@ mod tests {
         assert!(smart_home_tool_definition(SMART_HOME_GET_INCIDENT_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_MORNING_BRIEF_TOOL_ID).is_some());
+        assert!(smart_home_tool_definition(SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_SET_DESIRED_STATE_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID).is_some());
@@ -86649,6 +87088,120 @@ mod tests {
     }
 
     #[test]
+    fn escalation_brief_orders_open_sections_from_morning_brief() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-command-tool-only"),
+                AgentId::trusted(AGENT_ID),
+                CapabilityId::trusted("smart_home.command.light"),
+                PrivilegeTier::LowRisk,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let denied_command = tool_runtime.invoke_with_events(&request(
+            "call-escalation-brief-denied-command",
+            SMART_HOME_COMMAND_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                ("command_type", string("turn_on")),
+            ]),
+            2_000,
+        ));
+        assert!(!denied_command.result.ok);
+
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home-read"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                2_001,
+            ),
+        );
+
+        let request = request(
+            "call-escalation-brief",
+            SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID,
+            object([]),
+            2_002,
+        );
+        let trace = tool_runtime.invoke_with_events(&request);
+        assert!(trace.result.ok);
+        assert_eq!(trace.summary().progress_event_count, 1);
+
+        let output = trace.result.output.as_ref().unwrap();
+        assert_eq!(field(output, "status"), Some(&string("blocked")));
+        assert_eq!(field(output, "ready"), Some(&JsonValue::Bool(false)));
+        assert_eq!(
+            field(output, "requires_human_review"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(field(output, "has_blockers"), Some(&JsonValue::Bool(true)));
+        assert!(integer_value(field(output, "escalation_count").unwrap()).unwrap() >= 4);
+        assert!(integer_value(field(output, "blocker_count").unwrap()).unwrap() >= 1);
+        assert!(integer_value(field(output, "review_count").unwrap()).unwrap() >= 1);
+
+        let summary = field(output, "summary").unwrap();
+        assert_eq!(
+            field(summary, "boundary"),
+            Some(&string(
+                "Chief reads D23 runtime and platform primitives; it does not own smart-home controller state."
+            ))
+        );
+        assert_eq!(
+            field(summary, "morning_brief_status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(summary, "next_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(summary, "next_action"),
+            Some(&string("draft_capability_grant_update"))
+        );
+        assert_eq!(field(summary, "next_owner_lane"), Some(&string("policy")));
+
+        let decision = field(output, "decision").unwrap();
+        assert_eq!(field(decision, "recommendation"), Some(&string("escalate")));
+        assert_eq!(
+            field(decision, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(decision, "recommended_action"),
+            Some(&string("draft_capability_grant_update"))
+        );
+        assert_eq!(field(decision, "owner_lane"), Some(&string("policy")));
+        assert_eq!(field(decision, "reason"), Some(&string("incident")));
+
+        let queue = field(output, "escalation_queue").unwrap();
+        assert!(array_len(queue).unwrap() >= 4);
+        let first = array_item(queue, 0).unwrap();
+        assert_eq!(field(first, "severity"), Some(&string("blocker")));
+        assert_eq!(field(first, "priority"), Some(&integer(0)));
+        assert_eq!(
+            field(first, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(first, "recommended_action"),
+            Some(&string("draft_capability_grant_update"))
+        );
+        assert_eq!(
+            field(first, "source_summary").and_then(|summary| field(summary, "next_tool")),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(array_len(field(output, "source_tools").unwrap()), Some(12));
+    }
+
+    #[test]
     fn readiness_brief_rolls_up_handoff_runtime_safety_and_catalog_phases() {
         let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
@@ -87150,11 +87703,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(298))
+            Some(&integer(299))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(290))
+            Some(&integer(291))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
