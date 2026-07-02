@@ -489,6 +489,11 @@ fn expr_node_count(expr: &Expression) -> usize {
                     ArrowBody::Expression(e) => expr_node_count(e),
                 }
         }
+        // A template literal weighs one unit per quasi (leaf strings, nothing
+        // to recurse) plus the node weight of each `${…}` insert expression.
+        Expression::TemplateLiteral(t) => {
+            t.quasis.len() + t.expressions.iter().map(expr_node_count).sum::<usize>()
+        }
     }
 }
 
@@ -802,6 +807,10 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                 out.insert(id.name.clone());
             }
         }
+        // A template literal introduces NO boundary bindings; its quasis are
+        // leaf strings. Mirror the arrow arm's non-recursion into sub-bodies
+        // (it only records params, and a template has none) — nothing to do.
+        Expression::TemplateLiteral(_) => {}
     }
 }
 
@@ -1069,6 +1078,13 @@ fn tally_expr(expr: &Expression, cand: &InlineCandidate, t: &mut Tally) {
             }
             ArrowBody::Expression(e) => tally_expr(e, cand, t),
         },
+        // A use of the candidate inside a `${…}` insert is still a use.
+        // Quasis are leaf strings — only the insert expressions recurse.
+        Expression::TemplateLiteral(t2) => {
+            for e in &t2.expressions {
+                tally_expr(e, cand, t);
+            }
+        }
     }
 }
 
@@ -1345,6 +1361,13 @@ fn inline_in_expr(expr: &mut Expression, cand: &InlineCandidate) -> bool {
             }
             ArrowBody::Expression(e) => changed |= inline_in_expr(e, cand),
         },
+        // Inline candidate calls inside a `${…}` insert too. Quasis are leaf
+        // strings — only the insert expressions recurse.
+        Expression::TemplateLiteral(t) => {
+            for e in &mut t.expressions {
+                changed |= inline_in_expr(e, cand);
+            }
+        }
     }
     changed
 }
@@ -1470,6 +1493,14 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
                     }
                 }
                 ArrowBody::Expression(e) => substitute(e, &inner),
+            }
+        }
+        // A template literal binds nothing, so there is no shadowing to strip
+        // — substitute straight through each `${…}` insert. Quasis are leaf
+        // strings and never contain a substitutable identifier.
+        Expression::TemplateLiteral(t) => {
+            for e in &mut t.expressions {
+                substitute(e, map);
             }
         }
     }
@@ -1825,6 +1856,13 @@ fn expr_collect_mutated_params(
             }
             ArrowBody::Expression(e) => expr_collect_mutated_params(e, params, out),
         },
+        // A `${…}` insert can mutate an outer param — recurse into each.
+        // Quasis are leaf strings and never mutate anything.
+        Expression::TemplateLiteral(t) => {
+            for e in &t.expressions {
+                expr_collect_mutated_params(e, params, out);
+            }
+        }
         Expression::Identifier(_)
         | Expression::NumericLiteral(_)
         | Expression::StringLiteral(_)
@@ -3265,6 +3303,14 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                     }
                 }
                 ArrowBody::Expression(e) => rename_in_expr(e, &inner),
+            }
+        }
+        // A template literal binds nothing, so there is no shadowing to strip
+        // — alpha-rename straight through each `${…}` insert. Quasis are leaf
+        // strings and contain no identifier uses.
+        Expression::TemplateLiteral(t) => {
+            for e in &mut t.expressions {
+                rename_in_expr(e, map);
             }
         }
     }

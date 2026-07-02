@@ -1226,6 +1226,14 @@ fn classify_expr(expr: &Expression, cls: &mut Classify) {
             }
             ArrowBody::Expression(e) => classify_expr(e, cls),
         },
+        // Classify property accesses inside each `${…}` insert too. Quasis
+        // are leaf strings — only the insert expressions can hold a member
+        // access that touches the property namespace.
+        Expression::TemplateLiteral(t) => {
+            for e in &t.expressions {
+                classify_expr(e, cls);
+            }
+        }
     }
 }
 
@@ -1464,6 +1472,13 @@ fn rewrite_expr(expr: &mut Expression, map: &HashMap<String, String>) {
             }
             ArrowBody::Expression(e) => rewrite_expr(e, map),
         },
+        // Rewrite property accesses inside each `${…}` insert, the mirror of
+        // classifying them above. Quasis are leaf strings — nothing to walk.
+        Expression::TemplateLiteral(t) => {
+            for e in &mut t.expressions {
+                rewrite_expr(e, map);
+            }
+        }
     }
 }
 

@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 44 \u2014 indicator-dilution mixed concentration from four stated quantities (a NEW panel: indicator / tracer dilution). From a tracer bolus (its volume and concentration) and two distribution compartments compute the mixed concentration ((indicator_volume*indicator_concentration)/(central_volume+peripheral_volume)), the injected indicator mass (indicator_volume*indicator_concentration), or the total distribution volume (central_volume+peripheral_volume). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, PRODUCT-OVER-SUM (a*b)/(c+d), the first quotient on the ladder to divide a parenthesised product by a parenthesised sum (distinct from rung-37 ratio-of-two-sums (a+b)/(c+d), rung-41 difference-over-sum (a-b)/(a+b), and rung-42 sum-over-difference (a+b)/(c-d)) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via *, + and / \u2014 no constant leaks, and neither the injected mass, the distribution volume, nor any concentration ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dividing by the central compartment alone (dropping the peripheral one), and adding the bolus's volume and concentration instead of multiplying them. The core confusion tested is dividing the injected product by the pooled (summed) distribution volume.",
+  "items": [
+    {
+      "id": "r44dil-01",
+      "qtype": "indicator_dilution",
+      "stem": "A tracer bolus of 2 mL at 10 mg/mL is injected and distributes through a central volume of 3 L plus a peripheral volume of 2 L. What is the mixed concentration after distribution (injected amount over the total volume)?",
+      "program": "observe indicator_volume(2)\nobserve indicator_concentration(10)\nobserve central_volume(3)\nobserve peripheral_volume(2)\nlet answer = (indicator_volume * indicator_concentration) / (central_volume + peripheral_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r44dil-02",
+      "qtype": "indicator_dilution",
+      "stem": "A tracer bolus of 2 mL at 10 mg/mL is injected and distributes through a central volume of 3 L plus a peripheral volume of 2 L. What is the the injected indicator amount (bolus volume times its concentration)?",
+      "program": "observe indicator_volume(2)\nobserve indicator_concentration(10)\nobserve central_volume(3)\nobserve peripheral_volume(2)\nlet answer = indicator_volume * indicator_concentration\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r44dil-03",
+      "qtype": "indicator_dilution",
+      "stem": "A tracer bolus of 2 mL at 10 mg/mL is injected and distributes through a central volume of 3 L plus a peripheral volume of 2 L. What is the the total distribution volume (central plus peripheral)?",
+      "program": "observe indicator_volume(2)\nobserve indicator_concentration(10)\nobserve central_volume(3)\nobserve peripheral_volume(2)\nlet answer = central_volume + peripheral_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r44dil-04",
+      "qtype": "indicator_dilution",
+      "stem": "A tracer bolus of 4 mL at 5 mg/mL is injected and distributes through a central volume of 3 L plus a peripheral volume of 5 L. What is the mixed concentration after distribution (injected amount over the total volume)?",
+      "program": "observe indicator_volume(4)\nobserve indicator_concentration(5)\nobserve central_volume(3)\nobserve peripheral_volume(5)\nlet answer = (indicator_volume * indicator_concentration) / (central_volume + peripheral_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.125,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r44dil-05",
+      "qtype": "indicator_dilution",
+      "stem": "A tracer bolus of 4 mL at 5 mg/mL is injected and distributes through a central volume of 3 L plus a peripheral volume of 5 L. What is the the injected indicator amount (bolus volume times its concentration)?",
+      "program": "observe indicator_volume(4)\nobserve indicator_concentration(5)\nobserve central_volume(3)\nobserve peripheral_volume(5)\nlet answer = indicator_volume * indicator_concentration\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.125,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r44dil-06",
+      "qtype": "indicator_dilution",
+      "stem": "A tracer bolus of 4 mL at 5 mg/mL is injected and distributes through a central volume of 3 L plus a peripheral volume of 5 L. What is the the total distribution volume (central plus peripheral)?",
+      "program": "observe indicator_volume(4)\nobserve indicator_concentration(5)\nobserve central_volume(3)\nobserve peripheral_volume(5)\nlet answer = central_volume + peripheral_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.125,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r44dil-07",
+      "qtype": "indicator_dilution",
+      "stem": "A tracer bolus of 2 mL at 20 mg/mL is injected and distributes through a central volume of 4 L plus a peripheral volume of 4 L. What is the mixed concentration after distribution (injected amount over the total volume)?",
+      "program": "observe indicator_volume(2)\nobserve indicator_concentration(20)\nobserve central_volume(4)\nobserve peripheral_volume(4)\nlet answer = (indicator_volume * indicator_concentration) / (central_volume + peripheral_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r44dil-08",
+      "qtype": "indicator_dilution",
+      "stem": "A tracer bolus of 2 mL at 20 mg/mL is injected and distributes through a central volume of 4 L plus a peripheral volume of 4 L. What is the the injected indicator amount (bolus volume times its concentration)?",
+      "program": "observe indicator_volume(2)\nobserve indicator_concentration(20)\nobserve central_volume(4)\nobserve peripheral_volume(4)\nlet answer = indicator_volume * indicator_concentration\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r44dil-09",
+      "qtype": "indicator_dilution",
+      "stem": "A tracer bolus of 2 mL at 20 mg/mL is injected and distributes through a central volume of 4 L plus a peripheral volume of 4 L. What is the the total distribution volume (central plus peripheral)?",
+      "program": "observe indicator_volume(2)\nobserve indicator_concentration(20)\nobserve central_volume(4)\nobserve peripheral_volume(4)\nlet answer = central_volume + peripheral_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r44dil-10",
+      "qtype": "indicator_dilution",
+      "stem": "A tracer bolus of 5 mL at 4 mg/mL is injected and distributes through a central volume of 3 L plus a peripheral volume of 2 L. What is the mixed concentration after distribution (injected amount over the total volume)?",
+      "program": "observe indicator_volume(5)\nobserve indicator_concentration(4)\nobserve central_volume(3)\nobserve peripheral_volume(2)\nlet answer = (indicator_volume * indicator_concentration) / (central_volume + peripheral_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r44dil-11",
+      "qtype": "indicator_dilution",
+      "stem": "A tracer bolus of 5 mL at 4 mg/mL is injected and distributes through a central volume of 3 L plus a peripheral volume of 2 L. What is the the injected indicator amount (bolus volume times its concentration)?",
+      "program": "observe indicator_volume(5)\nobserve indicator_concentration(4)\nobserve central_volume(3)\nobserve peripheral_volume(2)\nlet answer = indicator_volume * indicator_concentration\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r44dil-12",
+      "qtype": "indicator_dilution",
+      "stem": "A tracer bolus of 5 mL at 4 mg/mL is injected and distributes through a central volume of 3 L plus a peripheral volume of 2 L. What is the the total distribution volume (central plus peripheral)?",
+      "program": "observe indicator_volume(5)\nobserve indicator_concentration(4)\nobserve central_volume(3)\nobserve peripheral_volume(2)\nlet answer = central_volume + peripheral_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r44dil-13",
+      "qtype": "indicator_dilution",
+      "stem": "A tracer bolus of 3 mL at 10 mg/mL is injected and distributes through a central volume of 2 L plus a peripheral volume of 4 L. What is the mixed concentration after distribution (injected amount over the total volume)?",
+      "program": "observe indicator_volume(3)\nobserve indicator_concentration(10)\nobserve central_volume(2)\nobserve peripheral_volume(4)\nlet answer = (indicator_volume * indicator_concentration) / (central_volume + peripheral_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.1666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r44dil-14",
+      "qtype": "indicator_dilution",
+      "stem": "A tracer bolus of 3 mL at 10 mg/mL is injected and distributes through a central volume of 2 L plus a peripheral volume of 4 L. What is the the injected indicator amount (bolus volume times its concentration)?",
+      "program": "observe indicator_volume(3)\nobserve indicator_concentration(10)\nobserve central_volume(2)\nobserve peripheral_volume(4)\nlet answer = indicator_volume * indicator_concentration\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.1666666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r44dil-15",
+      "qtype": "indicator_dilution",
+      "stem": "A tracer bolus of 3 mL at 10 mg/mL is injected and distributes through a central volume of 2 L plus a peripheral volume of 4 L. What is the the total distribution volume (central plus peripheral)?",
+      "program": "observe indicator_volume(3)\nobserve indicator_concentration(10)\nobserve central_volume(2)\nobserve peripheral_volume(4)\nlet answer = central_volume + peripheral_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.1666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r44dil-16",
+      "qtype": "indicator_dilution",
+      "stem": "A tracer bolus of 2 mL at 25 mg/mL is injected and distributes through a central volume of 5 L plus a peripheral volume of 3 L. What is the mixed concentration after distribution (injected amount over the total volume)?",
+      "program": "observe indicator_volume(2)\nobserve indicator_concentration(25)\nobserve central_volume(5)\nobserve peripheral_volume(3)\nlet answer = (indicator_volume * indicator_concentration) / (central_volume + peripheral_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r44dil-17",
+      "qtype": "indicator_dilution",
+      "stem": "A tracer bolus of 2 mL at 25 mg/mL is injected and distributes through a central volume of 5 L plus a peripheral volume of 3 L. What is the the injected indicator amount (bolus volume times its concentration)?",
+      "program": "observe indicator_volume(2)\nobserve indicator_concentration(25)\nobserve central_volume(5)\nobserve peripheral_volume(3)\nlet answer = indicator_volume * indicator_concentration\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r44dil-18",
+      "qtype": "indicator_dilution",
+      "stem": "A tracer bolus of 2 mL at 25 mg/mL is injected and distributes through a central volume of 5 L plus a peripheral volume of 3 L. What is the the total distribution volume (central plus peripheral)?",
+      "program": "observe indicator_volume(2)\nobserve indicator_concentration(25)\nobserve central_volume(5)\nobserve peripheral_volume(3)\nlet answer = central_volume + peripheral_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.25,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r44dil-19",
+      "qtype": "indicator_dilution",
+      "stem": "A tracer bolus of 4 mL at 10 mg/mL is injected and distributes through a central volume of 6 L plus a peripheral volume of 2 L. What is the mixed concentration after distribution (injected amount over the total volume)?",
+      "program": "observe indicator_volume(4)\nobserve indicator_concentration(10)\nobserve central_volume(6)\nobserve peripheral_volume(2)\nlet answer = (indicator_volume * indicator_concentration) / (central_volume + peripheral_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r44dil-20",
+      "qtype": "indicator_dilution",
+      "stem": "A tracer bolus of 4 mL at 10 mg/mL is injected and distributes through a central volume of 6 L plus a peripheral volume of 2 L. What is the the injected indicator amount (bolus volume times its concentration)?",
+      "program": "observe indicator_volume(4)\nobserve indicator_concentration(10)\nobserve central_volume(6)\nobserve peripheral_volume(2)\nlet answer = indicator_volume * indicator_concentration\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 40,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r44dil-21",
+      "qtype": "indicator_dilution",
+      "stem": "A tracer bolus of 4 mL at 10 mg/mL is injected and distributes through a central volume of 6 L plus a peripheral volume of 2 L. What is the the total distribution volume (central plus peripheral)?",
+      "program": "observe indicator_volume(4)\nobserve indicator_concentration(10)\nobserve central_volume(6)\nobserve peripheral_volume(2)\nlet answer = central_volume + peripheral_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

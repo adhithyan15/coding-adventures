@@ -138,7 +138,8 @@ pub use expression::{
     ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
     LogicalOperator, MemberExpression,
     NullLiteral, NumericLiteral, ObjectExpression, Property, PropertyKey, PropertyKind,
-    StringLiteral, UnaryExpression, UnaryOperator, UndefinedLiteral,
+    StringLiteral, TemplateElement, TemplateLiteral, UnaryExpression, UnaryOperator,
+    UndefinedLiteral,
 };
 pub use statement::{
     BlockStatement, BreakStatement, CatchClause, ContinueStatement, DebuggerStatement,

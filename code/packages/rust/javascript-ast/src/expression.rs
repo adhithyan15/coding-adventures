@@ -15,6 +15,9 @@
 //!   `var f = function () {}`, IIFEs, function-valued properties);
 //!   [`ArrowFunctionExpression`] (Phase 1.x — added in CLOC12.151; the
 //!   `=>` form, e.g. `x => x + 1`, `(a, b) => { return a; }`).
+//! - Templates: [`TemplateLiteral`] (Phase 1.x — added in CLOC12.154; the
+//!   backtick form, e.g. `` `a${x}b` ``, with parallel `quasis` /
+//!   `expressions`).
 //!
 //! Every struct carries `cv: Option<CvId>` first per the CLOC09
 //! amendment. Operator enums serialize to ESTree-canonical operator
@@ -53,6 +56,7 @@ pub enum Expression {
     ObjectExpression(ObjectExpression),
     FunctionExpression(FunctionExpression),
     ArrowFunctionExpression(ArrowFunctionExpression),
+    TemplateLiteral(TemplateLiteral),
 }
 
 // ---------------------------------------------------------------------
@@ -545,6 +549,72 @@ pub enum ArrowBody {
     /// Block body: `x => { return x + 1; }`. Identical to a classic
     /// function body — statements, explicit `return`, etc.
     Block(BlockStatement),
+}
+
+// ---------------------------------------------------------------------
+// TemplateLiteral — backtick template strings
+// ---------------------------------------------------------------------
+
+/// A template literal: `` `hello ${name}, you are ${age} years old` ``.
+///
+/// A template interleaves fixed **string parts** (the [`quasis`]) with
+/// embedded **`${…}` expressions**. The two vectors are stored in parallel
+/// and always satisfy the ESTree invariant
+///
+/// ```text
+///   quasis.len() == expressions.len() + 1
+/// ```
+///
+/// — there is one more string part than expression, because a template
+/// both *begins* and *ends* with a (possibly empty) string part. Emit
+/// interleaves them: quasi₀ `${` expr₀ `}` quasi₁ `${` expr₁ `}` … quasiₙ.
+///
+/// ```text
+///   `abc`                quasis=["abc"]           expressions=[]
+///   `a${x}b`             quasis=["a","b"]         expressions=[x]
+///   `${x}${y}`           quasis=["","",""]        expressions=[x,y]
+/// ```
+///
+/// [`quasis`]: TemplateLiteral::quasis
+///
+/// Added in Phase 1.x (CLOC12.154). *Tagged* templates
+/// (`` tag`…` ``) are a separate node (`TaggedTemplateExpression`,
+/// Phase 3).
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TemplateLiteral {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    /// The `n + 1` fixed string segments, in source order.
+    pub quasis: Vec<TemplateElement>,
+    /// The `n` embedded `${…}` expressions, in source order. Interleaved
+    /// between consecutive [`quasis`](TemplateLiteral::quasis).
+    pub expressions: Vec<Expression>,
+}
+
+/// One fixed string segment of a [`TemplateLiteral`] — the text between
+/// backticks and `${`, between `}` and `${`, or between `}` and the
+/// closing backtick.
+///
+/// ESTree splits the text into `raw` (verbatim source, escapes intact) and
+/// `cooked` (escape-processed value). `cooked` is `None` when the segment
+/// contains an illegal escape sequence that is only legal in a *tagged*
+/// template — such a segment has no cooked value. `tail` marks the final
+/// quasi (the one before the closing backtick), matching ESTree's
+/// `TemplateElement.tail`.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TemplateElement {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    /// Verbatim source text of this segment (escape sequences intact).
+    pub raw: String,
+    /// Escape-processed value, or `None` for an illegal escape that is only
+    /// valid in a tagged template.
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cooked: Option<String>,
+    /// `true` for the final segment (before the closing backtick).
+    pub tail: bool,
 }
 
 #[cfg(test)]
@@ -1170,6 +1240,81 @@ mod tests {
         let json = serde_json::to_string(&e).expect("serialize");
         assert!(json.contains("\"async\":true"), "expected async key; got {}", json);
         assert!(!json.contains("isAsync"), "must not leak Rust field name; got {}", json);
+        assert_eq!(e.clone(), roundtrip(e));
+    }
+
+    // -----------------------------------------------------------------
+    // TemplateLiteral (CLOC12.154)
+    // -----------------------------------------------------------------
+
+    fn quasi(raw: &str, tail: bool) -> TemplateElement {
+        TemplateElement { cv: None, raw: raw.to_string(), cooked: Some(raw.to_string()), tail }
+    }
+
+    /// `` `abc` `` — no substitutions: one quasi, no expressions.
+    fn no_sub_template() -> Expression {
+        Expression::TemplateLiteral(TemplateLiteral {
+            cv: Some("tl.1".to_string()),
+            quasis: vec![quasi("abc", true)],
+            expressions: vec![],
+        })
+    }
+
+    /// `` `a${x}b` `` — one substitution: two quasis, one expression.
+    fn one_sub_template() -> Expression {
+        Expression::TemplateLiteral(TemplateLiteral {
+            cv: None,
+            quasis: vec![quasi("a", false), quasi("b", true)],
+            expressions: vec![Expression::Identifier(Identifier {
+                cv: None,
+                name: "x".to_string(),
+            })],
+        })
+    }
+
+    #[test]
+    fn template_no_substitution_roundtrips_and_tags() {
+        let e = no_sub_template();
+        assert_eq!(e.clone(), roundtrip(e.clone()));
+        assert_eq!(type_tag(&e), "TemplateLiteral");
+    }
+
+    #[test]
+    fn template_with_substitution_roundtrips() {
+        let e = one_sub_template();
+        assert_eq!(e.clone(), roundtrip(e.clone()));
+        assert_eq!(type_tag(&e), "TemplateLiteral");
+    }
+
+    #[test]
+    fn template_invariant_quasis_is_one_more_than_expressions() {
+        // The ESTree structural invariant: a template both begins and ends
+        // with a string part, so there is always exactly one more quasi
+        // than expression.
+        for tmpl in [no_sub_template(), one_sub_template()] {
+            if let Expression::TemplateLiteral(t) = &tmpl {
+                assert_eq!(t.quasis.len(), t.expressions.len() + 1);
+                assert!(t.quasis.last().unwrap().tail, "the final quasi must be tail");
+            }
+        }
+    }
+
+    #[test]
+    fn template_element_omits_none_cooked_in_json() {
+        // A quasi with an illegal-in-untagged escape has `cooked: None`,
+        // which is omitted from the wire format and round-trips back to None.
+        let e = Expression::TemplateLiteral(TemplateLiteral {
+            cv: None,
+            quasis: vec![TemplateElement {
+                cv: None,
+                raw: "\\unicode".to_string(),
+                cooked: None,
+                tail: true,
+            }],
+            expressions: vec![],
+        });
+        let json = serde_json::to_string(&e).expect("serialize");
+        assert!(!json.contains("\"cooked\""), "None cooked should be omitted; got {}", json);
         assert_eq!(e.clone(), roundtrip(e));
     }
 }

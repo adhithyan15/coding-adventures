@@ -75,7 +75,7 @@ use coding_adventures_javascript_ast::{
     Declaration, EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit,
     ForOfStatement,
     ForStatement,
-    ArrowBody, ArrowFunctionExpression,
+    ArrowBody, ArrowFunctionExpression, TemplateLiteral,
     FunctionDeclaration, FunctionExpression, IfStatement, LogicalExpression, MemberExpression, NullLiteral,
     NumericLiteral, ObjectExpression, Program, ProgramItem, Property, PropertyKey,
     ReturnStatement, Statement, StringLiteral, UnaryExpression, UndefinedLiteral, VarKind,
@@ -1275,6 +1275,14 @@ fn dce_expression(expr: &Expression, st: &mut DceState) -> Expression {
                 is_async: a.is_async,
             })
         }
+        // Recurse into a template literal's `${…}` expressions (a single
+        // expression can't contain dead code, but nested functions/arrows
+        // inside it can). The `quasis` are leaf strings.
+        Expression::TemplateLiteral(t) => Expression::TemplateLiteral(TemplateLiteral {
+            cv: t.cv.clone(),
+            quasis: t.quasis.clone(),
+            expressions: t.expressions.iter().map(|e| dce_expression(e, st)).collect(),
+        }),
     }
 }
 

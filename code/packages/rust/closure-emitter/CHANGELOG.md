@@ -2,7 +2,7 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
-## [0.20.1] - 2026-07-02
+## [0.21.1] - 2026-07-02
 
 ### Test — CLOC12.153: CodePrinter arrow-function conformance port
 
@@ -17,6 +17,19 @@ IIFE / member-object wrap (`(()=>{})()`, `(()=>{}).x`), un-parenthesised
 call-argument (`g(x=>x)`), and the async prefix (`async x=>x`, `async()=>{}`).
 Inputs are hand-constructed AST, so the port also covers block-bodied arrows the
 grammar can't yet parse (gap-156). Test-only; no `src/` change.
+
+## [0.21.0] - 2026-07-02
+
+### Added — CLOC12.154: emit `TemplateLiteral` (backtick template strings)
+
+`emit_template_literal` prints the new `Expression::TemplateLiteral` node —
+interleaving the `quasis` (each from its verbatim `raw` text) with the `${…}`
+expressions: `` `q0${e0}q1${e1}…qN` ``. The `${` / `}` delimiters make each
+inserted expression a full-expression context, so it emits at the loosest
+precedence with no wrapping. A template tags at `PREC_PRIMARY` (a primary
+expression / member-call base, `` `x`.length ``), so no parent ever wraps it and
+it needs no statement-start guard. 5 new unit tests. Part of the atomic
+`TemplateLiteral` enum-variant rollout (javascript-ast 0.16.0).
 
 ## [0.20.0] - 2026-07-02
 

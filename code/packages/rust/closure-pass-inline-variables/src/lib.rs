@@ -799,6 +799,13 @@ fn count_uses_expr(expr: &Expression, name: &str, count: &mut usize) {
             }
             ArrowBody::Expression(e) => count_uses_expr(e, name, count),
         },
+        // Count uses of `name` inside each `${…}` insert. Quasis are leaf
+        // strings — only the insert expressions can reference `name`.
+        Expression::TemplateLiteral(t) => {
+            for e in &t.expressions {
+                count_uses_expr(e, name, count);
+            }
+        }
     }
 }
 
@@ -1067,6 +1074,13 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
             }
             ArrowBody::Expression(e) => changed |= propagate_in_expr(e, cand),
         },
+        // Propagate into each `${…}` insert. Quasis are leaf strings and
+        // hold no substitutable reference.
+        Expression::TemplateLiteral(t) => {
+            for e in &mut t.expressions {
+                changed |= propagate_in_expr(e, cand);
+            }
+        }
     }
     changed
 }

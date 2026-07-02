@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.16.0] - 2026-07-02
+
+### Added — CLOC12.154: `TemplateLiteral` (backtick template strings)
+
+Adds `TemplateLiteral { cv, quasis: Vec<TemplateElement>, expressions: Vec<Expression> }`
+and `TemplateElement { cv, raw: String, cooked: Option<String>, tail: bool }`, plus
+the `Expression::TemplateLiteral` variant — covering `` `abc` ``, `` `a${x}b` ``,
+`` `${x}${y}` ``. A template interleaves fixed string parts (`quasis`) with embedded
+`${…}` expressions and satisfies the ESTree invariant
+`quasis.len() == expressions.len() + 1` (a template both begins and ends with a
+string part). `TemplateElement` keeps `raw` (verbatim source, escapes intact) and
+`cooked` (escape-processed value, `None` for an illegal escape only valid in a
+tagged template — omitted from the wire format when `None`); `tail` marks the final
+quasi.
+
+This is the **AST-node slice** of a bottom-up rollout — the emitter and every pass
+traversal land in the same atomic PR (adding an `Expression` variant makes every
+exhaustive `match` across the workspace non-exhaustive, and CI builds the
+workspace). The parser→typed-AST bridge enable + an upstream conformance port
+follow in later slices. *Tagged* templates (`` tag`…` ``) are a separate node
+(Phase 3).
+
 ## [0.15.0] - 2026-07-02
 
 ### Added — CLOC12.151: `ArrowFunctionExpression` (the `=>` form)
