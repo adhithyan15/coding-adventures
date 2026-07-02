@@ -55,7 +55,8 @@ use coding_adventures_javascript_ast::{
     expression::{
         ArrayExpression, AssignmentExpression, AssignmentOperator, AssignmentTarget,
         BigIntLiteral, BinaryExpression, BinaryOperator, BooleanLiteral, CallExpression,
-        ConditionalExpression, Expression, Identifier, LogicalExpression, LogicalOperator,
+        ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
+        LogicalOperator,
         MemberExpression, NullLiteral, NumericLiteral, ObjectExpression, Property,
         PropertyKey, PropertyKind, StringLiteral, UnaryExpression, UnaryOperator,
         UndefinedLiteral,
@@ -946,6 +947,58 @@ fn convert_function_declaration(node: &GrammarASTNode) -> Result<FunctionDeclara
     })
 }
 
+fn convert_function_expression(node: &GrammarASTNode) -> Result<FunctionExpression, BridgeError> {
+    // function_expression = "function" [ NAME ] LPAREN [ formal_parameters ] RPAREN
+    //                       LBRACE function_body RBRACE ;
+    // Structurally identical to `function_declaration` (see above) with ONE
+    // difference: the NAME is OPTIONAL. `function () {}` is anonymous;
+    // `function f () {}` in value position binds `f` only inside its own body
+    // (a body-local self-reference for recursion), never in the enclosing
+    // scope. So a missing name is NOT an error here — it's the common case.
+    let name = node.children.iter().find_map(|c| match c {
+        ASTNodeOrToken::Token(t)
+            if t.value != "function"
+                && t.value != "("
+                && t.value != ")"
+                && t.value != "{"
+                && t.value != "}" =>
+        {
+            Some(t.value.clone())
+        }
+        _ => None,
+    });
+
+    let nodes = node_children(node);
+    let mut params = Vec::new();
+    let mut body_node: Option<&GrammarASTNode> = None;
+
+    for n in &nodes {
+        match n.rule_name.as_str() {
+            "formal_parameters" => {
+                params = convert_formal_parameters(n)?;
+            }
+            "function_body" => {
+                body_node = Some(n);
+            }
+            _ => {}
+        }
+    }
+
+    let body = match body_node {
+        Some(n) => convert_function_body(n)?,
+        None => BlockStatement { cv: None, body: vec![] },
+    };
+
+    Ok(FunctionExpression {
+        cv: None,
+        id: name.map(|name| Identifier { cv: None, name }),
+        params,
+        body,
+        generator: false,
+        is_async: false,
+    })
+}
+
 fn convert_formal_parameters(node: &GrammarASTNode) -> Result<Vec<FunctionParam>, BridgeError> {
     // formal_parameters = formal_parameter { COMMA formal_parameter } [ COMMA ]
     // formal_parameter = ( NAME | binding_pattern ) [ EQUALS assignment_expression ]
@@ -1057,19 +1110,24 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
         "array_literal" => convert_array_literal(node),
         "object_literal" => convert_object_literal(node),
 
-        // Function-valued and ES2015+ expression forms the typed bridge does
-        // not yet represent (Phase 2). DECLINE GRACEFULLY (`UnsupportedSyntax`
-        // → the CLI falls back to WHITESPACE_ONLY and still emits valid JS).
-        //
-        // `function_expression` MUST be here alongside its siblings
-        // (`generator_expression`, `async_function_expression`, …): a plain
-        // function expression in value position — an IIFE `(function(){})()`,
-        // an assigned function `x = function(){}`, a callback
-        // `f(function(){})` — is extremely common, and without this entry it
-        // fell through to the `InternalError` arm below, aborting the whole
-        // compile (`exit 2`, no output) on valid input.
-        "function_expression"
-        | "arrow_function"
+        // A plain (non-generator, non-async) function in value position —
+        // an IIFE `(function(){})()`, an assigned function
+        // `x = function(){}`, a named recursive `function f(){…f()…}`, a
+        // callback `arr.map(function(x){return x})`. Now that the typed AST
+        // has `Expression::FunctionExpression` (CLOC12.149), convert it
+        // instead of declining, so closurec optimises through it rather than
+        // falling back to WHITESPACE_ONLY. (gap-153.)
+        "function_expression" => {
+            convert_function_expression(node).map(Expression::FunctionExpression)
+        }
+
+        // The remaining function-valued and ES2015+ expression forms the
+        // typed bridge does not yet represent. DECLINE GRACEFULLY
+        // (`UnsupportedSyntax` → the CLI falls back to WHITESPACE_ONLY and
+        // still emits valid JS). Generators/async carry evaluation semantics
+        // the passes don't model yet; arrow functions, classes, and template
+        // literals are separate future AST slices.
+        "arrow_function"
         | "async_arrow_function"
         | "yield_expression"
         | "await_expression"
@@ -2841,24 +2899,77 @@ mod tests {
     }
 
     #[test]
-    fn function_expressions_decline_gracefully_not_hard_error() {
-        // A `function` expression in value position — an IIFE, an assigned
-        // function, a callback argument — is Phase 2. It must decline with
-        // `UnsupportedSyntax` (→ WHITESPACE_ONLY fallback, valid output), NOT
-        // raise an `Internal` error (a hard `exit 2` compile abort).
-        // Regression: `function_expression` was missing from the unsupported
-        // list in `convert_expression`, so it fell through to the
-        // `InternalError` catch-all and `(function(){})();` failed to compile.
+    fn function_expressions_convert_to_typed_nodes() {
+        // CLOC12.149 / gap-153: a `function` expression in value position —
+        // an IIFE, an assigned function, a callback argument, a named
+        // recursive one — now converts to `Expression::FunctionExpression`
+        // instead of declining. (It used to fall back to WHITESPACE_ONLY.)
         for src in [
             "(function(){})();",
             "x=function(){};",
             "f(function(){});",
             "var g=function h(){};",
         ] {
-            match bridge(src) {
-                Err(BridgeError::UnsupportedSyntax { .. }) => {} // graceful decline
-                other => panic!("expected UnsupportedSyntax for {src:?}, got {other:?}"),
+            bridge(src).unwrap_or_else(|e| panic!("expected {src:?} to bridge, got {e}"));
+        }
+    }
+
+    /// Walk to the `FunctionExpression` inside a `var g = <fe>;` program. A
+    /// `var` at statement position wraps as
+    /// `ProgramItem::Statement(Statement::Declaration(..))`.
+    fn bridge_var_init_fn_expr(src: &str) -> FunctionExpression {
+        let p = bridge_ok(src);
+        match &p.body[0] {
+            ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(vd))) => {
+                match vd.declarations[0].init.as_ref().expect("init") {
+                    Expression::FunctionExpression(fe) => fe.clone(),
+                    other => panic!("expected FunctionExpression init, got {other:?}"),
+                }
             }
+            other => panic!("expected a VariableDeclaration statement, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn named_function_expression_carries_body_local_name() {
+        // `var g = function h (a) { return a; }` — the expression's own name
+        // is `h` (body-local), distinct from the outer binding `g`; one param
+        // `a`; a return body.
+        let fe = bridge_var_init_fn_expr("var g=function h(a){return a;};");
+        assert_eq!(fe.id.as_ref().map(|i| i.name.as_str()), Some("h"));
+        assert_eq!(fe.params.len(), 1);
+        assert!(!fe.generator && !fe.is_async);
+        assert_eq!(fe.body.body.len(), 1, "one return statement");
+    }
+
+    #[test]
+    fn anonymous_function_expression_has_no_id() {
+        // `var g = function () {}` — anonymous, so `id` is `None`.
+        let fe = bridge_var_init_fn_expr("var g=function(){};");
+        assert!(fe.id.is_none(), "anonymous fn-expr must have no id");
+        assert!(fe.params.is_empty());
+        assert!(fe.body.body.is_empty());
+    }
+
+    #[test]
+    fn iife_callee_is_a_function_expression() {
+        // `(function(){})()` — the CallExpression's callee is a
+        // FunctionExpression (the IIFE shape closurec must optimise/emit).
+        let p = bridge_ok("(function(){})();");
+        match &p.body[0] {
+            ProgramItem::Statement(Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::ExpressionStatement(es),
+            )) => match &es.expression {
+                Expression::CallExpression(call) => {
+                    assert!(
+                        matches!(*call.callee, Expression::FunctionExpression(_)),
+                        "IIFE callee should be a FunctionExpression, got {:?}",
+                        call.callee
+                    );
+                }
+                other => panic!("expected a CallExpression, got {other:?}"),
+            },
+            other => panic!("expected an ExpressionStatement, got {other:?}"),
         }
     }
 

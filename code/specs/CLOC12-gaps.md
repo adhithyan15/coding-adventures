@@ -1402,15 +1402,16 @@ from the active rename/substitute map so a shadowed binding is never rewritten.
 The expression sibling of `FunctionDeclaration`; `id` is `Option<Identifier>`
 (anonymous, or a body-local name). Spec: CLOC09 §"Phase 1.x FunctionExpression".
 
-### gap-153 — bridge still declines `function_expression`
+### gap-153 — bridge declines `function_expression` — **RESOLVED** (javascript-parser 0.20.0)
 
-The parser/grammar already produce `function_expression` (and `arrow_function`,
-`async_function_expression`, `generator_expression`), but the typed-AST bridge
-(`javascript-parser::bridge`) still maps them to `UnsupportedSyntax`, so no
-`FunctionExpression` reaches the pipeline yet — any program containing one falls
-back to WHITESPACE_ONLY. **Next slice:** convert `function_expression` →
-`Expression::FunctionExpression` in the bridge (remove it from the `unsupported`
-list), add a closurec end-to-end fixture (IIFE, function-valued property,
-callback), and port the upstream `CodePrinter`/function-expression conformance
-cases now unblocked. Arrow functions, methods, getters/setters, and class
-expressions remain Phase 3.
+The typed-AST bridge (`javascript-parser::bridge`) now converts
+`function_expression` → `Expression::FunctionExpression` via
+`convert_function_expression` (mirrors `convert_function_declaration`, name
+optional), removed from the `UnsupportedSyntax` list. A function in value
+position — IIFE `(function(){})()`, assigned `x = function(){}`, named recursive
+`function f(){…f()…}`, callback `arr.map(function(x){…})` — flows through the full
+pipeline; closurec optimises **inside** the body instead of falling back to
+WHITESPACE_ONLY. Proven by the `tests/diff/simple-function-expression/` closurec
+fixture (all four value positions fold their bodies at SIMPLE) plus 4 bridge
+unit tests. Generators/async, arrow functions (`arrow_function`), classes, and
+template literals remain declined — separate future AST slices.
