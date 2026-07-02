@@ -2,6 +2,38 @@
 
 All notable changes to `@coding-adventures/sir-runtime-oop` are documented here.
 
+## [0.1.11] - 2026-07-02
+
+### Added — Ruby mixins: `include` / `extend` + module-aware MRO (MX3)
+
+Part of the `sir-mixins` cascade (spec `code/specs/sir-mixins.md`). The OOP
+runtime now executes Ruby mixins: a module registers its `def`s via the
+existing `defMethod` keyed on the *module* name (as the frontend's MX1 lowering
+emits), and two new helpers weave modules into an owner's method resolution.
+All dispatch stays explicit-table and cycle-guarded (never reflection — the C3
+RCE lesson).
+
+- **`includeModule(owner, moduleName)`** (from `__include__("Owner", "M")`) —
+  appends `M` to the owner's per-owner **include-order list**
+  (`includedModules`). A repeated include is a no-op.
+- **`extendModule(owner, moduleName)`** (from `__extend__("Owner", "M")`) —
+  copies the module's instance methods into the owner's **class-method** table,
+  so they become callable as `Owner.method` (Ruby `extend`).
+- **Module-aware MRO in `resolveInstanceMethod`.** The method-resolution walk
+  now implements Ruby's method resolution order: class → the class's included
+  modules **most-recent-first** (depth-first, recursing into a module's own
+  includes) → superclass → its modules → … A single `seen` set spans the whole
+  walk, so a **diamond** include (a module reachable by two paths) resolves
+  **once** at its earliest position, and a module that (transitively) includes
+  itself terminates rather than looping. A class's own method **shadows** a
+  module's (class-first); a module's method shadows the superclass's.
+- `resetOop` now also clears `includedModules`.
+- Extensive vitest coverage: included-method callable, class-shadows-module,
+  most-recent-included-wins, superclass-module reachability, diamond-resolves-
+  once, self-include terminates, re-include de-duplicated, `extend`→class
+  method (and NOT an instance method), multi-method extend, reset clears the
+  include table.
+
 ## [0.1.10] - 2026-07-01
 
 ### Changed — typed runtime errors from `.fetch` and unknown methods (T2)
