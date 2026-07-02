@@ -85,8 +85,6 @@ import SqlBackend
     , insert
     , createTable
     , dropTable
-    , columns
-    , columnName
     )
 
 import SqlCodegen
@@ -1044,9 +1042,9 @@ dispatch instr = case instr of
         colNames <- case colsOpt of
             Just cs -> return cs
             Nothing ->
-                case columns backend tbl of
+                case SB.columns backend tbl of
                     Left  err -> liftIO (throwIO (userError ("insert: schema lookup failed: " ++ errorMessage err)))
-                    Right defs -> return (map columnName defs)
+                    Right defs -> return (map SB.columnName defs)
         -- Pop exactly as many values as columns; popN returns them in push order.
         vals <- popN (length colNames)
         let rowBuf = Map.fromList (zip colNames vals)
