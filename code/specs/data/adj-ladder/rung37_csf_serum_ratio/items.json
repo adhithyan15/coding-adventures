@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 37 \u2014 CSF:serum protein ratio from paired CSF and serum protein fractions (a NEW panel: neurology / cerebrospinal-fluid analysis). From four stated fractions (CSF albumin, CSF globulin, serum albumin, serum globulin) compute the CSF:serum ratio ((CSF_ALB+CSF_GLOB)/(SERUM_ALB+SERUM_GLOB)), the CSF total (CSF_ALB+CSF_GLOB), or the serum total (SERUM_ALB+SERUM_GLOB). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, a RATIO OF TWO SUMS ((CSF_ALB+CSF_GLOB)/(SERUM_ALB+SERUM_GLOB)), so one parenthesised sum is divided by another \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed fractions via +, / and * \u2014 no constant leaks (a CSF:serum ratio is a pure quotient), and neither the CSF total nor the serum total ever appears as a literal (each is computed from the observed fractions) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same quantities, so the distractors are exactly the slips students make: the crossed ratio ((CSF_ALB+SERUM_GLOB)/(SERUM_ALB+CSF_GLOB), each sum mixing one CSF and one serum fraction) and the product ratio ((CSF_ALB*CSF_GLOB)/(SERUM_ALB*SERUM_GLOB), fractions multiplied within each side instead of added). The core confusion tested is summing each side's own two fractions before dividing.",
+  "items": [
+    {
+      "id": "r37csf-01",
+      "qtype": "csf_serum_ratio",
+      "stem": "A paired CSF-and-serum protein panel shows a CSF albumin of 20 mg/dL and a CSF globulin of 30 mg/dL; the serum albumin is 3000 mg/dL and the serum globulin is 2000 mg/dL. What is the CSF:serum protein ratio?",
+      "program": "observe csf_albumin(20)\nobserve csf_globulin(30)\nobserve serum_albumin(3000)\nobserve serum_globulin(2000)\nlet answer = (csf_albumin + csf_globulin) / (serum_albumin + serum_globulin)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.01,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5000,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.0001,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r37csf-02",
+      "qtype": "csf_serum_ratio",
+      "stem": "A paired CSF-and-serum protein panel shows a CSF albumin of 20 mg/dL and a CSF globulin of 30 mg/dL; the serum albumin is 3000 mg/dL and the serum globulin is 2000 mg/dL. What is the total CSF protein?",
+      "program": "observe csf_albumin(20)\nobserve csf_globulin(30)\nobserve serum_albumin(3000)\nobserve serum_globulin(2000)\nlet answer = csf_albumin + csf_globulin\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.01,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5000,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.0001,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r37csf-03",
+      "qtype": "csf_serum_ratio",
+      "stem": "A paired CSF-and-serum protein panel shows a CSF albumin of 20 mg/dL and a CSF globulin of 30 mg/dL; the serum albumin is 3000 mg/dL and the serum globulin is 2000 mg/dL. What is the total serum protein?",
+      "program": "observe csf_albumin(20)\nobserve csf_globulin(30)\nobserve serum_albumin(3000)\nobserve serum_globulin(2000)\nlet answer = serum_albumin + serum_globulin\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.01,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5000,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.0001,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r37csf-04",
+      "qtype": "csf_serum_ratio",
+      "stem": "A paired CSF-and-serum protein panel shows a CSF albumin of 40 mg/dL and a CSF globulin of 20 mg/dL; the serum albumin is 2500 mg/dL and the serum globulin is 3500 mg/dL. What is the CSF:serum protein ratio?",
+      "program": "observe csf_albumin(40)\nobserve csf_globulin(20)\nobserve serum_albumin(2500)\nobserve serum_globulin(3500)\nlet answer = (csf_albumin + csf_globulin) / (serum_albumin + serum_globulin)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.4047619047619047,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.01,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.142857142857143e-05,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r37csf-05",
+      "qtype": "csf_serum_ratio",
+      "stem": "A paired CSF-and-serum protein panel shows a CSF albumin of 40 mg/dL and a CSF globulin of 20 mg/dL; the serum albumin is 2500 mg/dL and the serum globulin is 3500 mg/dL. What is the total CSF protein?",
+      "program": "observe csf_albumin(40)\nobserve csf_globulin(20)\nobserve serum_albumin(2500)\nobserve serum_globulin(3500)\nlet answer = csf_albumin + csf_globulin\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.01,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.4047619047619047,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.142857142857143e-05,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 60,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r37csf-06",
+      "qtype": "csf_serum_ratio",
+      "stem": "A paired CSF-and-serum protein panel shows a CSF albumin of 40 mg/dL and a CSF globulin of 20 mg/dL; the serum albumin is 2500 mg/dL and the serum globulin is 3500 mg/dL. What is the total serum protein?",
+      "program": "observe csf_albumin(40)\nobserve csf_globulin(20)\nobserve serum_albumin(2500)\nobserve serum_globulin(3500)\nlet answer = serum_albumin + serum_globulin\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.01,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.4047619047619047,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.142857142857143e-05,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r37csf-07",
+      "qtype": "csf_serum_ratio",
+      "stem": "A paired CSF-and-serum protein panel shows a CSF albumin of 15 mg/dL and a CSF globulin of 45 mg/dL; the serum albumin is 4000 mg/dL and the serum globulin is 2000 mg/dL. What is the CSF:serum protein ratio?",
+      "program": "observe csf_albumin(15)\nobserve csf_globulin(45)\nobserve serum_albumin(4000)\nobserve serum_globulin(2000)\nlet answer = (csf_albumin + csf_globulin) / (serum_albumin + serum_globulin)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.01,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.49814585908529047,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.4375e-05,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r37csf-08",
+      "qtype": "csf_serum_ratio",
+      "stem": "A paired CSF-and-serum protein panel shows a CSF albumin of 15 mg/dL and a CSF globulin of 45 mg/dL; the serum albumin is 4000 mg/dL and the serum globulin is 2000 mg/dL. What is the total CSF protein?",
+      "program": "observe csf_albumin(15)\nobserve csf_globulin(45)\nobserve serum_albumin(4000)\nobserve serum_globulin(2000)\nlet answer = csf_albumin + csf_globulin\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.01,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.49814585908529047,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.4375e-05,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r37csf-09",
+      "qtype": "csf_serum_ratio",
+      "stem": "A paired CSF-and-serum protein panel shows a CSF albumin of 15 mg/dL and a CSF globulin of 45 mg/dL; the serum albumin is 4000 mg/dL and the serum globulin is 2000 mg/dL. What is the total serum protein?",
+      "program": "observe csf_albumin(15)\nobserve csf_globulin(45)\nobserve serum_albumin(4000)\nobserve serum_globulin(2000)\nlet answer = serum_albumin + serum_globulin\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.01,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.49814585908529047,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.4375e-05,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r37csf-10",
+      "qtype": "csf_serum_ratio",
+      "stem": "A paired CSF-and-serum protein panel shows a CSF albumin of 30 mg/dL and a CSF globulin of 25 mg/dL; the serum albumin is 2200 mg/dL and the serum globulin is 2800 mg/dL. What is the CSF:serum protein ratio?",
+      "program": "observe csf_albumin(30)\nobserve csf_globulin(25)\nobserve serum_albumin(2200)\nobserve serum_globulin(2800)\nlet answer = (csf_albumin + csf_globulin) / (serum_albumin + serum_globulin)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 55,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5000,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.2719101123595506,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.00012175324675324675,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.011,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r37csf-11",
+      "qtype": "csf_serum_ratio",
+      "stem": "A paired CSF-and-serum protein panel shows a CSF albumin of 30 mg/dL and a CSF globulin of 25 mg/dL; the serum albumin is 2200 mg/dL and the serum globulin is 2800 mg/dL. What is the total CSF protein?",
+      "program": "observe csf_albumin(30)\nobserve csf_globulin(25)\nobserve serum_albumin(2200)\nobserve serum_globulin(2800)\nlet answer = csf_albumin + csf_globulin\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 55,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.011,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5000,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.2719101123595506,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.00012175324675324675,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r37csf-12",
+      "qtype": "csf_serum_ratio",
+      "stem": "A paired CSF-and-serum protein panel shows a CSF albumin of 30 mg/dL and a CSF globulin of 25 mg/dL; the serum albumin is 2200 mg/dL and the serum globulin is 2800 mg/dL. What is the total serum protein?",
+      "program": "observe csf_albumin(30)\nobserve csf_globulin(25)\nobserve serum_albumin(2200)\nobserve serum_globulin(2800)\nlet answer = serum_albumin + serum_globulin\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.011,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5000,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 55,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.2719101123595506,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.00012175324675324675,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r37csf-13",
+      "qtype": "csf_serum_ratio",
+      "stem": "A paired CSF-and-serum protein panel shows a CSF albumin of 50 mg/dL and a CSF globulin of 20 mg/dL; the serum albumin is 3600 mg/dL and the serum globulin is 2400 mg/dL. What is the CSF:serum protein ratio?",
+      "program": "observe csf_albumin(50)\nobserve csf_globulin(20)\nobserve serum_albumin(3600)\nobserve serum_globulin(2400)\nlet answer = (csf_albumin + csf_globulin) / (serum_albumin + serum_globulin)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 70,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.011666666666666667,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6767955801104972,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.00011574074074074075,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r37csf-14",
+      "qtype": "csf_serum_ratio",
+      "stem": "A paired CSF-and-serum protein panel shows a CSF albumin of 50 mg/dL and a CSF globulin of 20 mg/dL; the serum albumin is 3600 mg/dL and the serum globulin is 2400 mg/dL. What is the total CSF protein?",
+      "program": "observe csf_albumin(50)\nobserve csf_globulin(20)\nobserve serum_albumin(3600)\nobserve serum_globulin(2400)\nlet answer = csf_albumin + csf_globulin\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.011666666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.6767955801104972,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 70,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.00011574074074074075,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r37csf-15",
+      "qtype": "csf_serum_ratio",
+      "stem": "A paired CSF-and-serum protein panel shows a CSF albumin of 50 mg/dL and a CSF globulin of 20 mg/dL; the serum albumin is 3600 mg/dL and the serum globulin is 2400 mg/dL. What is the total serum protein?",
+      "program": "observe csf_albumin(50)\nobserve csf_globulin(20)\nobserve serum_albumin(3600)\nobserve serum_globulin(2400)\nlet answer = serum_albumin + serum_globulin\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.011666666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 70,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.6767955801104972,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.00011574074074074075,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6000,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r37csf-16",
+      "qtype": "csf_serum_ratio",
+      "stem": "A paired CSF-and-serum protein panel shows a CSF albumin of 25 mg/dL and a CSF globulin of 35 mg/dL; the serum albumin is 2000 mg/dL and the serum globulin is 4000 mg/dL. What is the CSF:serum protein ratio?",
+      "program": "observe csf_albumin(25)\nobserve csf_globulin(35)\nobserve serum_albumin(2000)\nobserve serum_globulin(4000)\nlet answer = (csf_albumin + csf_globulin) / (serum_albumin + serum_globulin)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.01,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.9778869778869779,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.000109375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r37csf-17",
+      "qtype": "csf_serum_ratio",
+      "stem": "A paired CSF-and-serum protein panel shows a CSF albumin of 25 mg/dL and a CSF globulin of 35 mg/dL; the serum albumin is 2000 mg/dL and the serum globulin is 4000 mg/dL. What is the total CSF protein?",
+      "program": "observe csf_albumin(25)\nobserve csf_globulin(35)\nobserve serum_albumin(2000)\nobserve serum_globulin(4000)\nlet answer = csf_albumin + csf_globulin\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.01,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.9778869778869779,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.000109375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r37csf-18",
+      "qtype": "csf_serum_ratio",
+      "stem": "A paired CSF-and-serum protein panel shows a CSF albumin of 25 mg/dL and a CSF globulin of 35 mg/dL; the serum albumin is 2000 mg/dL and the serum globulin is 4000 mg/dL. What is the total serum protein?",
+      "program": "observe csf_albumin(25)\nobserve csf_globulin(35)\nobserve serum_albumin(2000)\nobserve serum_globulin(4000)\nlet answer = serum_albumin + serum_globulin\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.01,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.9778869778869779,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.000109375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r37csf-19",
+      "qtype": "csf_serum_ratio",
+      "stem": "A paired CSF-and-serum protein panel shows a CSF albumin of 45 mg/dL and a CSF globulin of 15 mg/dL; the serum albumin is 3000 mg/dL and the serum globulin is 3500 mg/dL. What is the CSF:serum protein ratio?",
+      "program": "observe csf_albumin(45)\nobserve csf_globulin(15)\nobserve serum_albumin(3000)\nobserve serum_globulin(3500)\nlet answer = (csf_albumin + csf_globulin) / (serum_albumin + serum_globulin)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6500,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.175787728026534,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.009230769230769232,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.428571428571429e-05,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r37csf-20",
+      "qtype": "csf_serum_ratio",
+      "stem": "A paired CSF-and-serum protein panel shows a CSF albumin of 45 mg/dL and a CSF globulin of 15 mg/dL; the serum albumin is 3000 mg/dL and the serum globulin is 3500 mg/dL. What is the total CSF protein?",
+      "program": "observe csf_albumin(45)\nobserve csf_globulin(15)\nobserve serum_albumin(3000)\nobserve serum_globulin(3500)\nlet answer = csf_albumin + csf_globulin\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.009230769230769232,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6500,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.175787728026534,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.428571428571429e-05,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 60,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r37csf-21",
+      "qtype": "csf_serum_ratio",
+      "stem": "A paired CSF-and-serum protein panel shows a CSF albumin of 45 mg/dL and a CSF globulin of 15 mg/dL; the serum albumin is 3000 mg/dL and the serum globulin is 3500 mg/dL. What is the total serum protein?",
+      "program": "observe csf_albumin(45)\nobserve csf_globulin(15)\nobserve serum_albumin(3000)\nobserve serum_globulin(3500)\nlet answer = serum_albumin + serum_globulin\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6500,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.009230769230769232,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.175787728026534,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.428571428571429e-05,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

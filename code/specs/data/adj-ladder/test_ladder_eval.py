@@ -74,6 +74,7 @@ SELF_CONTAINED_RUNGS = (
     "rung34_fluid_admixture",
     "rung35_dialysis_clearance",
     "rung36_transfusion_pooling",
+    "rung37_csf_serum_ratio",
 )
 
 
