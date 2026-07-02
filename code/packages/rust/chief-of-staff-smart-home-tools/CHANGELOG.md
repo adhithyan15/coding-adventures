@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added `smart_home.get_platform_brief`, a read-only Chief adapter tool that
+  composes existing D23 HTTP, dashboard, fixture, state/history/event, command,
+  scene, and authorization readiness signals into one platform packet without
+  owning smart-home state.
 - Added `smart_home.get_maintenance_brief`, a read-only Chief adapter tool that
   composes existing D23 runtime maintenance windows, actions, work orders,
   evidence, readiness, handoff, and reconciliation signals into one maintenance
