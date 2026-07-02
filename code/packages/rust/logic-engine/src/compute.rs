@@ -281,6 +281,19 @@ pub enum ComputeOp {
     /// exact-rational sidecar is dropped (the f64 already carries it).
     Gcd,
     Lcm,
+    /// Binary **modulo** — `a mod b`, the remainder of `a` divided by `b` carrying
+    /// the **sign of the dividend** (`7 mod 3 = 1`, `−7 mod 3 = −1`, `7.5 mod 2 = 1.5`),
+    /// matching Rust's `f64::%` (truncated division, C `fmod`). Lowered from a LaTeX
+    /// `a \bmod b` / `a \pmod{b}` (adj-lang's `latex "…"` surface). Reuses the general
+    /// binary path like [`ComputeOp::Div`]: dimensionally it combines like addition —
+    /// both operands must share a dimension and the remainder carries it
+    /// (`7 mmol mod 3 mmol = 1 mmol`, while `7 mmol mod 3` is a category error, exactly
+    /// like `usd + days`) — and a zero divisor is a clean [`ComputeError::DivisionByZero`],
+    /// never a silent `NaN`. Unlike [`ComputeOp::Gcd`]/[`ComputeOp::Lcm`] it does NOT
+    /// require integer operands (it is the *real* remainder). The exact-rational sidecar
+    /// is dropped — the `f64` remainder already carries the value for the realistic
+    /// integer / short-decimal cases (like gcd/lcm).
+    Mod,
     Sum,
     Count,
     Min,
@@ -321,6 +334,7 @@ impl ComputeOp {
             ComputeOp::Max2 => "max",
             ComputeOp::Gcd => "gcd",
             ComputeOp::Lcm => "lcm",
+            ComputeOp::Mod => "mod",
             ComputeOp::Sum => "sum",
             ComputeOp::Count => "count",
             ComputeOp::Min => "min",
@@ -488,6 +502,11 @@ fn dim_op(op: ComputeOp) -> Option<DimOp> {
         // addition so a bare count stays a bare count. The integer requirement is
         // enforced on the values, not the dimension.
         ComputeOp::Gcd | ComputeOp::Lcm => Some(DimOp::Add),
+        // modulo `a mod b` combines like addition: both operands must share a
+        // dimension and the remainder carries it (`7 mmol mod 3 mmol = 1 mmol`,
+        // `7 mmol mod 3` a category error). Flows through the general binary path
+        // with no extra `eval` locals.
+        ComputeOp::Mod => Some(DimOp::Add),
         _ => None,
     }
 }
@@ -675,6 +694,16 @@ fn eval(
                         return Err(ComputeError::DivisionByZero);
                     }
                     x / y
+                }
+                // modulo `a mod b` — the remainder with the sign of the dividend
+                // (Rust `%` / C `fmod`). Inline like `Div` (a single expression, no
+                // extra `eval` locals on the deeply-recursive path); a zero divisor is
+                // a clean error, never a `NaN`.
+                ComputeOp::Mod => {
+                    if y == 0.0 {
+                        return Err(ComputeError::DivisionByZero);
+                    }
+                    x % y
                 }
                 ComputeOp::Min2 => {
                     if x.is_nan() || y.is_nan() {
@@ -1394,6 +1423,70 @@ mod tests {
         .unwrap();
         assert_eq!(d.value, -3.0);
         assert_eq!(d.exact, ExactRational::new(-3, 1));
+    }
+
+    #[test]
+    fn modulo_returns_the_remainder_and_preserves_dimension() {
+        // 7 mmol mod 3 mmol = 1 mmol. Modulo combines dimensionally like addition:
+        // both operands share a dimension and the remainder carries it (NOT collapsed
+        // to Scalar). The exact-rational sidecar is dropped (like gcd/lcm).
+        let kb = kb_with(vec![quantity("a", 7, "mmol"), quantity("b", 3, "mmol")]);
+        let d = compute(
+            "m",
+            &bin(ComputeOp::Mod, refexpr("a"), refexpr("b")),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(d.value, 1.0);
+        assert_eq!(d.dim, kb.observed_dimensioned("a").unwrap().0.dim);
+        assert_eq!(d.exact, None);
+    }
+
+    #[test]
+    fn modulo_carries_the_sign_of_the_dividend() {
+        // −7 mod 3 = −1 (sign of the DIVIDEND, Rust `%` / C fmod), NOT +2 the way a
+        // Euclidean/floored modulo would give. 7.5 mod 2 = 1.5 (real operands allowed,
+        // unlike gcd/lcm).
+        let neg = compute(
+            "m",
+            &bin(ComputeOp::Mod, ComputeExpr::Lit(-7.0), ComputeExpr::Lit(3.0)),
+            &kb_with(vec![]),
+        )
+        .unwrap();
+        assert_eq!(neg.value, -1.0);
+        let frac = compute(
+            "m",
+            &bin(ComputeOp::Mod, ComputeExpr::Lit(7.5), ComputeExpr::Lit(2.0)),
+            &kb_with(vec![]),
+        )
+        .unwrap();
+        assert_eq!(frac.value, 1.5);
+    }
+
+    #[test]
+    fn modulo_by_zero_is_a_clean_error_not_a_nan() {
+        // A zero divisor is a `DivisionByZero`, exactly like `Div` — never a silent NaN.
+        let err = compute(
+            "m",
+            &bin(ComputeOp::Mod, ComputeExpr::Lit(7.0), ComputeExpr::Lit(0.0)),
+            &kb_with(vec![]),
+        )
+        .unwrap_err();
+        assert!(matches!(err, ComputeError::DivisionByZero));
+    }
+
+    #[test]
+    fn modulo_of_mismatched_dimensions_is_a_category_error() {
+        // 7 mmol mod 3 (scalar) shares no dimension → the same category error as
+        // `usd + days` (modulo combines like addition in `dim_op`).
+        let kb = kb_with(vec![quantity("a", 7, "mmol")]);
+        let err = compute(
+            "m",
+            &bin(ComputeOp::Mod, refexpr("a"), ComputeExpr::Lit(3.0)),
+            &kb,
+        )
+        .unwrap_err();
+        assert!(matches!(err, ComputeError::DimensionMismatch { .. }));
     }
 
     #[test]
