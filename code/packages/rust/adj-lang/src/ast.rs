@@ -97,6 +97,24 @@ pub enum NamedFn {
     Log,
     /// Exponential, `e^x` (`\exp`).
     Exp,
+    /// Inverse sine (`\arcsin`).
+    Asin,
+    /// Inverse cosine (`\arccos`).
+    Acos,
+    /// Inverse tangent (`\arctan`).
+    Atan,
+    /// Hyperbolic sine (`\sinh`).
+    Sinh,
+    /// Hyperbolic cosine (`\cosh`).
+    Cosh,
+    /// Hyperbolic tangent (`\tanh`).
+    Tanh,
+    /// Cotangent, cos/sin (`\cot`).
+    Cot,
+    /// Secant, 1/cos (`\sec`).
+    Sec,
+    /// Cosecant, 1/sin (`\csc`).
+    Csc,
 }
 
 /// An aggregation operator in a `let` formula — reduces every

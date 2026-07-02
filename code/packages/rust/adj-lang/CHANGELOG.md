@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.27.0] - 2026-07-02 — rest of the trig family in `latex "…"` (`\arcsin`…/`\sinh`…/`\cot`/`\sec`/`\csc`)
+
+### Added
+
+- The `latex "…"` adapter now lowers the **inverse** (`\arcsin`/`\arccos`/`\arctan`),
+  **hyperbolic** (`\sinh`/`\cosh`/`\tanh`), and **reciprocal** (`\cot`/`\sec`/`\csc`)
+  trig functions to their native transcendental `ComputeOp`s via the existing
+  `ExprAst::Call` / `NamedFn` mechanism — the `Func` variants the latex frontend
+  already parses but the adapter previously rejected as "not yet supported". No
+  latex-crate change; each is a `Scalar → Scalar` call.
+
+### Notes
+
+- The remaining `Func` variants are still a clean, explicit adapter error: the
+  aggregate/multi-arg `min`/`max`/`gcd`/`lcm`/`det` (await a binary/variadic slice)
+  and an unknown `Other` such as `\operatorname{trunc}` (truncation awaits faithful
+  `\operatorname{…}(x)` juxtaposition handling).
+
 ## [0.26.0] - 2026-07-02 — named transcendental functions in `latex "…"` (`\sin`/`\cos`/`\tan`/`\ln`/`\log`/`\exp`)
 
 ### Added

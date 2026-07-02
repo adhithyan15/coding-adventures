@@ -228,6 +228,23 @@ pub enum ComputeOp {
     Ln,
     Log,
     Exp,
+    /// The rest of the standard trig family: the **inverse** functions `asin`,
+    /// `acos`, `atan` (`\arcsin`/`\arccos`/`\arctan`), the **hyperbolic**
+    /// functions `sinh`, `cosh`, `tanh`, and the **reciprocal** functions `cot`
+    /// (cos/sin), `sec` (1/cos), `csc` (1/sin). Same contract as the other
+    /// transcendentals — `Scalar → Scalar`, exact sidecar dropped, domain and
+    /// pole errors (`asin`/`acos` outside [−1, 1]; `cot`/`csc` at a multiple of π;
+    /// `sec` at an odd multiple of π/2) caught by the non-finite guard. They
+    /// complete the trig set the LaTeX frontend already parses.
+    Asin,
+    Acos,
+    Atan,
+    Sinh,
+    Cosh,
+    Tanh,
+    Cot,
+    Sec,
+    Csc,
     Sum,
     Count,
     Min,
@@ -254,6 +271,15 @@ impl ComputeOp {
             ComputeOp::Ln => "ln",
             ComputeOp::Log => "log",
             ComputeOp::Exp => "exp",
+            ComputeOp::Asin => "asin",
+            ComputeOp::Acos => "acos",
+            ComputeOp::Atan => "atan",
+            ComputeOp::Sinh => "sinh",
+            ComputeOp::Cosh => "cosh",
+            ComputeOp::Tanh => "tanh",
+            ComputeOp::Cot => "cot",
+            ComputeOp::Sec => "sec",
+            ComputeOp::Csc => "csc",
             ComputeOp::Sum => "sum",
             ComputeOp::Count => "count",
             ComputeOp::Min => "min",
@@ -658,7 +684,21 @@ fn eval_unary(
     // ops use (the operand's dimension vs the required `Scalar`).
     let transcendental = matches!(
         op,
-        ComputeOp::Sin | ComputeOp::Cos | ComputeOp::Tan | ComputeOp::Ln | ComputeOp::Log | ComputeOp::Exp
+        ComputeOp::Sin
+            | ComputeOp::Cos
+            | ComputeOp::Tan
+            | ComputeOp::Ln
+            | ComputeOp::Log
+            | ComputeOp::Exp
+            | ComputeOp::Asin
+            | ComputeOp::Acos
+            | ComputeOp::Atan
+            | ComputeOp::Sinh
+            | ComputeOp::Cosh
+            | ComputeOp::Tanh
+            | ComputeOp::Cot
+            | ComputeOp::Sec
+            | ComputeOp::Csc
     );
     if transcendental && !dim.is_scalar() {
         return Err(ComputeError::DimensionMismatch {
@@ -683,6 +723,17 @@ fn eval_unary(
         ComputeOp::Ln => value.ln(),
         ComputeOp::Log => value.log10(),
         ComputeOp::Exp => value.exp(),
+        ComputeOp::Asin => value.asin(),
+        ComputeOp::Acos => value.acos(),
+        ComputeOp::Atan => value.atan(),
+        ComputeOp::Sinh => value.sinh(),
+        ComputeOp::Cosh => value.cosh(),
+        ComputeOp::Tanh => value.tanh(),
+        // Reciprocal trig defined from the primaries; a zero denominator (a pole)
+        // becomes ±∞ and is caught by the finite guard below.
+        ComputeOp::Cot => value.cos() / value.sin(),
+        ComputeOp::Sec => 1.0 / value.cos(),
+        ComputeOp::Csc => 1.0 / value.sin(),
         _ => {
             return Err(ComputeError::MalformedExpr {
                 detail: "non-unary operator in unary position",
@@ -1185,6 +1236,49 @@ mod tests {
                 .unwrap_err();
             assert!(matches!(err, ComputeError::NonFinite { op: ComputeOp::Ln }), "x={x}: {err:?}");
         }
+    }
+
+    #[test]
+    fn hyperbolic_and_inverse_trig_anchors_are_pi_free() {
+        // π-free sanity anchors for the extended trig family: sinh(0)=0, cosh(0)=1,
+        // tanh(0)=0, asin(0)=0, acos(1)=0, atan(0)=0. All Scalar, exact dropped.
+        let cases = [
+            (ComputeOp::Sinh, 0.0, 0.0),
+            (ComputeOp::Cosh, 0.0, 1.0),
+            (ComputeOp::Tanh, 0.0, 0.0),
+            (ComputeOp::Asin, 0.0, 0.0),
+            (ComputeOp::Acos, 1.0, 0.0),
+            (ComputeOp::Atan, 0.0, 0.0),
+        ];
+        for (op, x, want) in cases {
+            let d = compute("t", &ComputeExpr::Unary(op, Box::new(ComputeExpr::Lit(x))), &kb_with(vec![])).unwrap();
+            assert!((d.value - want).abs() < 1e-12, "{op:?}({x}) = {} want {want}", d.value);
+            assert_eq!(d.dim, Dimension::Scalar);
+            assert_eq!(d.exact, None);
+        }
+    }
+
+    #[test]
+    fn reciprocal_trig_uses_the_primary_definitions() {
+        // sec(0) = 1/cos(0) = 1 (a clean value); csc(0) = 1/sin(0) and cot(0) =
+        // cos(0)/sin(0) are poles (sin 0 = 0 → ±∞) and are rejected by the finite
+        // guard, never a silently-wrong number.
+        let sec0 = compute("s", &ComputeExpr::Unary(ComputeOp::Sec, Box::new(ComputeExpr::Lit(0.0))), &kb_with(vec![])).unwrap();
+        assert_eq!(sec0.value, 1.0);
+        assert_eq!(sec0.dim, Dimension::Scalar);
+        for op in [ComputeOp::Csc, ComputeOp::Cot] {
+            let err = compute("p", &ComputeExpr::Unary(op, Box::new(ComputeExpr::Lit(0.0))), &kb_with(vec![])).unwrap_err();
+            assert!(matches!(err, ComputeError::NonFinite { .. }), "{op:?}(0): {err:?}");
+        }
+    }
+
+    #[test]
+    fn arcsine_outside_its_domain_is_a_clean_nonfinite_error() {
+        // asin is only defined on [−1, 1]; asin(2) = NaN in IEEE → rejected, not
+        // flowed into a verdict.
+        let err = compute("a", &ComputeExpr::Unary(ComputeOp::Asin, Box::new(ComputeExpr::Lit(2.0))), &kb_with(vec![]))
+            .unwrap_err();
+        assert!(matches!(err, ComputeError::NonFinite { op: ComputeOp::Asin }), "{err:?}");
     }
 
     #[test]
