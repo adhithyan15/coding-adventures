@@ -1,0 +1,5 @@
+packages: .
+           ../sql-backend
+           ../sql-codegen
+           ../sql-planner
+           ../sql-optimizer
