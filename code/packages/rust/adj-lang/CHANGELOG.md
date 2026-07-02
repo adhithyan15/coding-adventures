@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.35.0] - 2026-07-02 — `\operatorname{min/max/gcd/lcm}` word spellings in `latex "…"`
+
+### Added
+
+- `latex "\operatorname{min}(a, b)"`, `\operatorname{max}(…)`, `\operatorname{gcd}(…)`, and
+  `\operatorname{lcm}(…)` now compute the **variadic binary functions**, reaching the SAME
+  native ops (`ComputeOp::Min2`/`Max2`/`Gcd`/`Lcm`) as their already-supported function-call
+  spellings (`\min(a, b)`, `\gcd(a, b, c)`): a model that writes the operator *name* instead
+  of the backslash macro lands on the identical node. `\operatorname{…}` is a TEXT command,
+  so — unlike `\min(…)`, which parses as a `Call` — `\operatorname{gcd}(a, b)` parses as the
+  operator-name juxtaposition `Bin(Mul, Text("gcd"), (a, b))` (the same shape the adapter
+  already recognises for `\operatorname{floor}`/`sgn`/`trunc`); the adapter matches via
+  `operator_name_is(lhs, …)` and folds the comma-separated argument `Sequence` through the
+  SAME `Call2` chain as the call spelling (`gcd(a, b, c)` → `gcd(gcd(a, b), c)`, associative).
+  Two-or-more operands accepted; a single argument is a clean, explicit error. Pure **adapter**
+  recognition: no engine, AST, or lowering change. The shared fold is factored into
+  `latex_nary_fold`, now used by both the `\min(…)` `Call` path and the `\operatorname{min}(…)`
+  juxtaposition path. +2 e2e unit tests (min/max/gcd/lcm word spellings; one-arg rejection).
+
 ## [0.34.0] - 2026-07-02 — `\operatorname{floor/ceil/round}` word spellings in `latex "…"`
 
 ### Added
