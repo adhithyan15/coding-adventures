@@ -317,6 +317,9 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // LANG-STR-RT — runtime string ops on LANG-STR-RT length-prefixed buffers.
     // Both operands are i64 pointers to `[int64_t len][char bytes...]` buffers.
     BuiltinSig { name: "str_eq", n_args: 2, returns: true },
+    // TWIG-GC (native-aot-substrate PR-1) — GC-managed allocation and safepoint.
+    BuiltinSig { name: "gc_alloc",     n_args: 1, returns: true  },
+    BuiltinSig { name: "gc_safepoint", n_args: 0, returns: false },
 ];
 
 fn lookup_builtin(name: &str) -> Option<BuiltinSig> {
