@@ -375,8 +375,10 @@ mod tests {
         .expect("lower");
         let a = compile(&module).expect("compile");
         assert!(a.source.contains("function add(a, b) {"), "got:\n{}", a.source);
-        // Native infix arithmetic.
-        assert!(a.source.contains("return (a + b);"), "got:\n{}", a.source);
+        // `+` is Ruby-polymorphic, so it routes through the runtime
+        // dispatch helper (numeric add, String/Array concat) rather than
+        // native infix.
+        assert!(a.source.contains("return __Sir.plus(a, b);"), "got:\n{}", a.source);
         // Top-level print of a direct call.
         assert!(a.source.contains("__Sir.print(add(1, 2))"), "got:\n{}", a.source);
     }

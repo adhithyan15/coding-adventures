@@ -2,6 +2,48 @@
 
 All notable changes to `semantic-ir-to-javascript` are documented here.
 
+## 0.9.0 — polymorphic `+` / `*` for strings and arrays (PO3)
+
+### Added
+
+- `+` and `*` are now **type-polymorphic**, matching Ruby's operator
+  overloading (sir-polymorphic-operators, PO3). All these lower to the same
+  SIR `+`/`*` builtins, so dispatch happens at runtime on the **first
+  operand's type** via two new inlined helpers `__Sir.plus` / `__Sir.times`
+  (also exported and used by `builtins["+"]` / `builtins["*"]` for the
+  variadic / value-reference paths):
+  - `"a" + "b"` → `"ab"` (String concat), `[1] + [2]` → `[1, 2]` (Array concat).
+  - `"ab" * 3` → `"ababab"` (String repeat), `[0] * 3` → `[0, 0, 0]`
+    (Array repeat), `[1, 2] * ", "` → `"1, 2"` (Array join via the same
+    `format` display helper `puts`/`print` use).
+- The emitter now routes the **2-arg** `+`/`*` through `__Sir.plus`/`__Sir.times`
+  instead of native infix; numeric `+`/`*` semantics (int/float promotion,
+  variadic fold) are byte-for-byte unchanged — the String/Array arms sit
+  strictly ahead of the numeric path. `-`/`/`/`%` and the comparisons keep
+  native infix.
+- Dispatch is a runtime **tag** test (`typeof x === "string"` /
+  `Array.isArray(x)`), never reflection / `eval` / property access on a
+  source-derived name ([[dynamic-dispatch-rce]]).
+- Fixes the `[] + []` bug: native JS `[1] + [2]` coerces to the string
+  `"1,2"`; the Array-concat arm returns a **fresh** array with no aliasing or
+  mutation of the inputs.
+- Execution proofs in `run_with_node.rs` (`poly_*`) run each arm under `node`
+  and assert stdout, plus a regression that `1 + 2` → 3 and `2 * 3` → 6 are
+  unchanged.
+
+### Security — bound the repeat count (CWE-1284 / CWE-400)
+
+- The String- and Array-repeat arms multiply a length by a
+  **program-controlled** `count`. Unguarded, `String.prototype.repeat` throws a
+  raw `RangeError` on a negative/huge count and an array-repeat loop can
+  allocate until the process OOMs — a denial of service. A shared `repeatCount`
+  guard clamps a non-finite / non-integer / `count <= 0` to an **empty** result
+  and rejects an oversized product (`unitLen * count > Number.MAX_SAFE_INTEGER`)
+  with a Ruby-shaped `ArgumentError: argument too big` **before** any
+  allocation; an empty receiver short-circuits so a huge count on `"" * n` /
+  `[] * n` does no work. Regression: `poly_string_repeat_overflow_is_rejected`
+  asserts node exits non-zero with the `argument too big` message.
+
 ## 0.8.0 — `puts` builtin (Ruby semantics)
 
 ### Added

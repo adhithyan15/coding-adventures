@@ -868,16 +868,25 @@ fn emit_call_args(out: &mut String, args: &[Expr], indent: usize) {
 ///
 /// | builtin (2-arg) | native JS |
 /// |-----------------|-----------|
-/// | `+ - * / %`     | `(a + b)` … |
+/// | `+ *`           | `__Sir.plus(a, b)` / `__Sir.times(a, b)` (polymorphic) |
+/// | `- / %`         | `(a - b)` … |
 /// | `= != < > <= >=`| `(a === b)` … |
 /// | `not` (1-arg)   | `(!__Sir.truthy(a))` |
 /// | `neg` (1-arg)   | `(-(a))` |
 /// | `len` (1-arg)   | `(a).length` |
 /// | `print` (1-arg) | `__Sir.print` helper |
 ///
+/// `+` and `*` are Ruby-POLYMORPHIC: besides numeric add/mul they do
+/// String/Array concat, repeat, and join (see the
+/// sir-polymorphic-operators spec).  Native JS infix would be *wrong* for
+/// the collection arms (`[1] + [2]` is the string `"1,2"`, `"ab" * 3` is
+/// `NaN`), so even the 2-arg form routes through the inlined
+/// `__Sir.plus` / `__Sir.times` helpers, which dispatch on the first
+/// operand's runtime type and preserve the exact old numeric fold.
+///
 /// A variadic arithmetic operator (`(+ 1 2 3)`) has *more* than two
 /// args, so it falls through to `__Sir.callBuiltin("+", […])` — the
-/// dispatch table folds it.  `global_set`/`global_get` route to their
+/// dispatch table folds it (and now dispatches polymorphically too).  `global_set`/`global_get` route to their
 /// runtime helpers; an unknown builtin lands on `callBuiltin` so a new
 /// builtin needs no backend change to *run* (only to be idiomatic).
 /// Emit a class- or method-*name* operand for an OOP builtin
@@ -1012,12 +1021,34 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         out.push(')');
         return;
     }
-    // 2-argument binary operators → native infix.
+    // 2-argument `+` / `*` are POLYMORPHIC in Ruby (numeric add/mul, but
+    // also String/Array concat, repeat, and join — see the
+    // sir-polymorphic-operators spec).  Native JS infix would be *wrong*
+    // for the collection arms (`[1] + [2]` yields the string `"1,2"`, and
+    // `"ab" * 3` yields `NaN`), so they route through the inlined runtime
+    // helpers `__Sir.plus` / `__Sir.times`, which dispatch on the first
+    // operand's runtime type and fall back to the exact old numeric fold.
+    if args.len() == 2 {
+        let poly = match name {
+            "+" => Some("__Sir.plus"),
+            "*" => Some("__Sir.times"),
+            _ => None,
+        };
+        if let Some(helper) = poly {
+            let _ = write!(out, "{helper}(");
+            emit_expr(out, &args[0], indent);
+            out.push_str(", ");
+            emit_expr(out, &args[1], indent);
+            out.push(')');
+            return;
+        }
+    }
+    // Other 2-argument binary operators → native infix.  `-`/`/`/`%` are
+    // numeric-only in the SIR contract, and the comparisons are pure
+    // value tests, so native JS infix is faithful.
     if args.len() == 2 {
         let infix = match name {
-            "+" => Some("+"),
             "-" => Some("-"),
-            "*" => Some("*"),
             "/" => Some("/"),
             "%" => Some("%"),
             "=" => Some("==="),
@@ -1445,11 +1476,22 @@ mod tests {
     #[test]
     fn emit_builtin_arithmetic_is_native_infix() {
         let two = || vec![Expr::IntLit { value: 1, span: s() }, Expr::IntLit { value: 2, span: s() }];
-        assert_eq!(emit_e(&bc("+", two())), "(1 + 2)");
+        // `-`/`/`/`%` stay native infix (numeric-only in the SIR contract).
         assert_eq!(emit_e(&bc("-", two())), "(1 - 2)");
-        assert_eq!(emit_e(&bc("*", two())), "(1 * 2)");
         assert_eq!(emit_e(&bc("/", two())), "(1 / 2)");
         assert_eq!(emit_e(&bc("%", two())), "(1 % 2)");
+    }
+
+    #[test]
+    fn emit_builtin_plus_times_are_polymorphic_runtime_calls() {
+        // `+`/`*` are Ruby-polymorphic (numeric add/mul, String/Array
+        // concat/repeat/join), so the 2-arg form routes through the inlined
+        // runtime dispatch helpers rather than native infix.  Native `[1] +
+        // [2]` would be the wrong string `"1,2"`, and `"ab" * 3` would be
+        // `NaN` — the helpers fix both while preserving the numeric path.
+        let two = || vec![Expr::IntLit { value: 1, span: s() }, Expr::IntLit { value: 2, span: s() }];
+        assert_eq!(emit_e(&bc("+", two())), "__Sir.plus(1, 2)");
+        assert_eq!(emit_e(&bc("*", two())), "__Sir.times(1, 2)");
     }
 
     #[test]
@@ -1915,7 +1957,7 @@ mod tests {
         };
         let out = emit_s(&st);
         assert!(out.starts_with("while (__Sir.truthy((i < 3))) {\n"), "got {out}");
-        assert!(out.contains("i = (i + 1);"));
+        assert!(out.contains("i = __Sir.plus(i, 1);"));
         // The trailing nil body value is dropped.
         assert!(!out.contains("null;"), "got {out}");
         assert!(out.trim_end().ends_with('}'));
@@ -2083,9 +2125,10 @@ mod tests {
 
     #[test]
     fn emit_defaulted_param_is_native_js_default() {
-        // P2d: `f(a, b = a + 1)` emits `function f(a, b = (a + 1)) {`.
+        // P2d: `f(a, b = a + 1)` emits `function f(a, b = __Sir.plus(a, 1)) {`.
         // The default is a native JS default param referencing the earlier
-        // param `a` by name (legal — earlier params are in scope).
+        // param `a` by name (legal — earlier params are in scope); the `+`
+        // itself lowers to the polymorphic runtime helper.
         let default = bc(
             "+",
             vec![
@@ -2113,7 +2156,7 @@ mod tests {
         );
         let mut out = String::new();
         emit_function(&mut out, &f);
-        assert!(out.contains("function f(a, b = (a + 1)) {"), "got {out}");
+        assert!(out.contains("function f(a, b = __Sir.plus(a, 1)) {"), "got {out}");
     }
 
     #[test]
