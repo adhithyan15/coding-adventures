@@ -2,6 +2,59 @@
 
 All notable changes to `semantic-ir-to-javascript` are documented here.
 
+## 0.11.0 — mixins: `include` / `extend` module method resolution (MX4)
+
+### Added
+
+- The inlined `__Sir` OOP runtime now executes **Ruby mixins** — a module's
+  methods are found via `include` / `extend` — so a translated
+  `module M; def foo; …; end; end` + `include M` resolves `foo` on including
+  classes' instances, identically to the reference backends
+  (sir-mixins, MX4). Runtime-only: no core-IR / frontend change (the merged
+  MX1 frontend already lowers module bodies + `include` / `extend`).
+  - `Feature::Modules` is now **accepted** by the JS backend. A module body's
+    `def`s register into the SAME `methodTable` a class uses, keyed by the
+    module name (via the existing `__def_method__` builtin — an "owner" is now
+    a class *or* a module).
+  - **`include M`** → `__include__("Owner", "M")` →
+    `__Sir.includeModule("Owner", "M")`, appending `M` to a per-owner
+    `includedModules` list in include order.
+  - **`extend M`** → `__extend__("Owner", "M")` →
+    `__Sir.extendModule("Owner", "M")`, appending to a per-owner
+    `extendedModules` list; `M`'s (instance) methods become **class methods**
+    of the owner, callable as `Owner.method`.
+  - **`Klass.method(args…)`** on a constant receiver →
+    `__class_method__("Klass", "method", args…)` →
+    `__Sir.callClassMethod(…)` (the class-method dispatch arm — previously
+    unhandled by this backend), resolving through the class-method MRO.
+  - **`resolveMethod` now follows Ruby's MRO**: for a receiver of class `C`
+    the walk searches `C` → `C`'s included modules **most-recent-first**
+    (reverse of include order, each expanded depth-first through its own
+    `include`s) → `C`'s superclass → its modules → … A class-defined method
+    **shadows** a mixed-in module method (class-first MRO), and a **diamond**
+    include (a module reached via two paths) is resolved **once** at its
+    earliest position. `super` and `initialize` resolution are MRO-aware too.
+
+### Security
+
+- Dispatch stays **explicit-table, cycle-guarded** (the C3 RCE bar). The new
+  `includedModules` / `extendedModules` are real `Map`s keyed by owner *name
+  strings* holding module *name strings* — never `Object` properties — so a
+  module or owner literally named `constructor` / `__proto__` is inert data,
+  never a prototype write or a reflective host callable. A single shared
+  `seen` set spans the whole MRO walk, so a self-including module
+  (`module M; include M; end`) or a cyclic hierarchy **terminates** with a
+  `NoMethodError` instead of looping.
+
+### Tests
+
+- Unit (emit shape): `__include__` / `__extend__` / `__class_method__` route
+  to the runtime helpers.
+- Execution-proofs under Node (hand-built SIR mirroring the MX1 frontend):
+  included-module method callable; class method shadows module; diamond
+  include resolves once; `extend` makes a class method; self-including module
+  terminates.
+
 ## 0.10.0 — typed runtime errors (ZeroDivision/Index/Key/NoMethod, T3)
 
 ### Added

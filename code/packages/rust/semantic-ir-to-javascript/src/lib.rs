@@ -162,6 +162,18 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // matching Ruby's "no prior declaration" rule for these scopes).
     Feature::InstanceVars,
     Feature::ClassVars,
+    // MX4 (SIR mixins): `module M … end` + `include` / `extend`.  A module
+    // body's `def`s register into the SAME runtime method table as a class
+    // (keyed by the module name via `__def_method__`), and `include M` /
+    // `extend M` lower to `__include__("Owner","M")` / `__extend__(…)` — the
+    // frontend triggers `Feature::Modules` for all three.  The inlined OOP
+    // runtime's method-resolution walk now follows Ruby's MRO (class →
+    // included modules, most-recent-first → superclass → …), and `extend`
+    // registers a module's methods as class ("singleton") methods, so a
+    // mixed-in method is found on an including class's instances (`include`)
+    // or on the class itself (`extend`).  See `emit`'s `__include__` /
+    // `__extend__` / `__class_method__` arms and `runtime::resolveMethod`.
+    Feature::Modules,
 ];
 
 impl Backend for JavaScriptBackend {

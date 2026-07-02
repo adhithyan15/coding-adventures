@@ -1347,6 +1347,210 @@ fn oop_cyclic_ancestry_terminates() {
     }
 }
 
+// ── MX4: mixin (module include / extend) execution-proof ───────────────
+//
+// A *module* registers its `def`s exactly like a class — via
+// `__def_method__` keyed by the module NAME (an "owner" is now a class OR
+// a module).  `include M` / `extend M` lower to the two mixin builtins
+// `__include__("Owner","M")` / `__extend__("Owner","M")`, and the inlined
+// OOP runtime's `resolveMethod` now follows Ruby's MRO (class → included
+// modules most-recent-first → superclass → …).  These hand-built SIR
+// modules mirror exactly what the (merged) Ruby MX1 frontend emits, then
+// run the self-contained `.js` under Node and assert stdout.
+
+/// `include M` inside owner `Owner` → `__include__("Owner", "M")`.
+fn include_(owner: &str, module: &str) -> Stmt {
+    Stmt::ExprStmt {
+        expr: bc("__include__", vec![str_(owner), str_(module)]),
+        span: sp(),
+    }
+}
+/// `extend M` inside owner `Owner` → `__extend__("Owner", "M")`.
+fn extend_(owner: &str, module: &str) -> Stmt {
+    Stmt::ExprStmt {
+        expr: bc("__extend__", vec![str_(owner), str_(module)]),
+        span: sp(),
+    }
+}
+
+/// Like `oop_module`, but also flags `Feature::Modules` (the feature the
+/// frontend triggers for `module` / `include` / `extend`).
+fn mixin_module(methods: Vec<Function>, main_stmts: Vec<Stmt>) -> Module {
+    let mut functions = methods;
+    functions.push(func("main", vec![], main_stmts, Expr::NilLit { span: sp() }));
+    Module {
+        name: "mixin".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Classes,
+            Feature::Modules,
+            Feature::InstanceVars,
+            Feature::Closures,
+            Feature::Strings,
+            Feature::DynamicTyping,
+            Feature::Constants,
+            Feature::MutableBindings,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions,
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    }
+}
+
+/// MX4 (a) — a module's instance method, `include`d into a class, is
+/// found on an instance of that class:
+///   module Greet; def hello; print("hi from module"); end; end
+///   class Robot; include Greet; end
+///   Robot.new.hello   →   "hi from module"
+#[test]
+fn mixin_included_module_method_is_callable() {
+    let hello = func(
+        "Greet__hello",
+        vec![],
+        vec![print(str_("hi from module"))],
+        Expr::NilLit { span: sp() },
+    );
+    // Module method registers keyed by the MODULE name, exactly like a class.
+    let make = bc("__new__", vec![str_("Robot")]);
+    let call = bc("__method__", vec![make, str_("hello")]);
+    let main = vec![
+        def_method("Greet", "hello", "Greet__hello"),
+        include_("Robot", "Greet"),
+        Stmt::ExprStmt { expr: call, span: sp() },
+    ];
+    let module = mixin_module(vec![hello], main);
+
+    // Shape: include lowers to the runtime registration.
+    let artifact = compile(&module).expect("compile");
+    assert!(
+        artifact.source.contains(r#"__Sir.includeModule("Robot", "Greet")"#),
+        "{}",
+        artifact.source
+    );
+
+    if let Some(stdout) = run_module(&module, "mixin_include") {
+        assert_eq!(stdout, "hi from module");
+    }
+}
+
+/// MX4 (b) — a method the CLASS defines itself SHADOWS the module's
+/// (class-first MRO):
+///   module M; def who; print("module"); end; end
+///   class C; include M; def who; print("class"); end; end
+///   C.new.who   →   "class"
+#[test]
+fn mixin_class_method_shadows_module() {
+    let mod_who = func("M__who", vec![], vec![print(str_("module"))], Expr::NilLit { span: sp() });
+    let cls_who = func("C__who", vec![], vec![print(str_("class"))], Expr::NilLit { span: sp() });
+    let make = bc("__new__", vec![str_("C")]);
+    let call = bc("__method__", vec![make, str_("who")]);
+    let main = vec![
+        def_method("M", "who", "M__who"),
+        // The class both includes M and defines its own `who`.
+        include_("C", "M"),
+        def_method("C", "who", "C__who"),
+        Stmt::ExprStmt { expr: call, span: sp() },
+    ];
+    let module = mixin_module(vec![mod_who, cls_who], main);
+    if let Some(stdout) = run_module(&module, "mixin_shadow") {
+        assert_eq!(stdout, "class", "class-defined method must shadow the module's");
+    }
+}
+
+/// MX4 (c) — a DIAMOND include resolves the shared module ONCE and finds
+/// the method (the `seen`-guarded MRO walk de-dupes and terminates):
+///   module Base; def tag; print("base"); end; end
+///   module Left;  include Base; end
+///   module Right; include Base; end
+///   class C; include Left; include Right; end
+///   C.new.tag   →   "base"     (Base reached via two paths, resolved once)
+#[test]
+fn mixin_diamond_include_resolves_once() {
+    let tag = func("Base__tag", vec![], vec![print(str_("base"))], Expr::NilLit { span: sp() });
+    let make = bc("__new__", vec![str_("C")]);
+    let call = bc("__method__", vec![make, str_("tag")]);
+    let main = vec![
+        def_method("Base", "tag", "Base__tag"),
+        // Two intermediate modules each include Base (the diamond's arms).
+        include_("Left", "Base"),
+        include_("Right", "Base"),
+        // The class includes both arms.
+        include_("C", "Left"),
+        include_("C", "Right"),
+        Stmt::ExprStmt { expr: call, span: sp() },
+    ];
+    let module = mixin_module(vec![tag], main);
+    if let Some(stdout) = run_module(&module, "mixin_diamond") {
+        assert_eq!(stdout, "base", "diamond include must resolve Base once and find `tag`");
+    }
+}
+
+/// MX4 (d) — `extend M` makes M's instance methods CLASS methods of the
+/// owner (callable as `Owner.method`):
+///   module Counter; def describe; print("i am a class method"); end; end
+///   class Widget; extend Counter; end
+///   Widget.describe   →   "i am a class method"
+#[test]
+fn mixin_extend_makes_class_method() {
+    let describe = func(
+        "Counter__describe",
+        vec![],
+        vec![print(str_("i am a class method"))],
+        Expr::NilLit { span: sp() },
+    );
+    // `Widget.describe` on a constant receiver → __class_method__("Widget","describe").
+    let call = bc("__class_method__", vec![str_("Widget"), str_("describe")]);
+    let main = vec![
+        def_method("Counter", "describe", "Counter__describe"),
+        extend_("Widget", "Counter"),
+        Stmt::ExprStmt { expr: call, span: sp() },
+    ];
+    let module = mixin_module(vec![describe], main);
+
+    let artifact = compile(&module).expect("compile");
+    assert!(
+        artifact.source.contains(r#"__Sir.extendModule("Widget", "Counter")"#),
+        "{}",
+        artifact.source
+    );
+    assert!(
+        artifact.source.contains(r#"__Sir.callClassMethod("Widget", "describe")"#),
+        "{}",
+        artifact.source
+    );
+
+    if let Some(stdout) = run_module(&module, "mixin_extend") {
+        assert_eq!(stdout, "i am a class method");
+    }
+}
+
+/// MX4 (e, security) — a SELF-including module must not loop forever: the
+/// shared `seen` set terminates the MRO walk.  `module M; include M; end`
+/// then a call to a MISSING method walks M → M (guarded) → NoMethodError,
+/// so Node exits non-zero rather than hanging.
+#[test]
+fn mixin_self_including_module_terminates() {
+    let make = bc("__new__", vec![str_("C")]);
+    let call = bc("__method__", vec![make, str_("missing")]);
+    let main = vec![
+        // M includes itself; C includes M — the walk must not loop.
+        include_("M", "M"),
+        include_("C", "M"),
+        Stmt::ExprStmt { expr: call, span: sp() },
+    ];
+    let module = mixin_module(vec![], main);
+    if let Some(stderr) = run_module_expecting_failure(&module, "mixin_cycle") {
+        assert!(
+            stderr.contains("NoMethodError") || stderr.contains("undefined method"),
+            "self-including module must terminate with a method-miss, got stderr:\n{stderr}"
+        );
+    }
+}
+
 // ── puts builtin (Ruby semantics) ──────────────────────────────────────
 
 /// Compile a hand-built module, run it under `node`, and return the **raw**
