@@ -78,6 +78,7 @@ SELF_CONTAINED_RUNGS = (
     "rung38_serum_anion_gap",
     "rung39_wbc_differential",
     "rung40_lesion_volume",
+    "rung41_split_renal_function",
 )
 
 
