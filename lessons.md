@@ -952,3 +952,36 @@ the `rootProject.name` line. This applies to Java and Kotlin optimizer packages 
 any future Gradle packages that depend on siblings via file deps).
 
 Discovered: 2026-06-30 during Java sql-optimizer CI (PR #7073 fix commit d31296a48).
+
+## Adding a match arm to a deeply-recursive fn can overflow the stack (macOS CI only)
+
+Symptom: `build (macos-latest)` failed while `windows`/`ubuntu` passed —
+`logic-engine` test `deeply_nested_expression_is_a_clean_error_not_a_stack_overflow`
+aborted with "has overflowed its stack, fatal runtime error: stack overflow"
+(PR #7299, adding `ComputeOp::Abs`).
+
+Cause: `logic-engine/src/compute.rs::eval` recurses up to `MAX_EVAL_DEPTH` (256)
+levels. In **debug builds** (which `cargo test` / CI use) the compiler reserves
+stack for ALL match arms' locals in the function's single frame — it does not
+scope stack slots per-arm. Adding a new `ComputeExpr::Unary` arm with several
+locals (`operand, dim, exact, result, …`) enlarged every one of the up-to-256
+recursive `eval` frames. 256 × a fatter frame overflowed the macOS test thread's
+~2 MB stack BEFORE the depth guard could return a clean `TooDeep`. Windows/ubuntu
+have more headroom so they passed, and the local `cargo test` on macOS passed too
+(margin is razor-thin and runner-dependent) — so it only surfaced on CI macOS.
+
+Fix: move the new arm's body into a separate `#[inline(never)]` helper (e.g.
+`eval_unary`) so its locals live in their own frame instead of bloating every
+recursive `eval` frame — restoring `eval` to ~its pre-change size. Behavior is
+identical; the deep-nesting test's guarantee ("clean `TooDeep`, never a stack
+overflow") is preserved.
+
+Rule: when adding a match arm to a function that RECURSES up to a large fixed
+depth (`eval`, tree walkers, parsers with a depth cap), keep the arm's body in an
+`#[inline(never)]` helper rather than inline — otherwise its locals multiply
+across every recursive frame and can overflow a small (macOS 2 MB) test-thread
+stack in debug builds. `cargo test -p <crate>` locally is NOT sufficient to catch
+it (margin is runner-dependent); the guard is the deep-nesting stack test on CI
+macOS.
+
+Discovered: 2026-07-02 during logic-engine abs-value CI (PR #7299 fix commit adf710c3).
