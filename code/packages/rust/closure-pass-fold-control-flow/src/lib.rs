@@ -58,6 +58,7 @@ use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentOperator,
     AssignmentTarget, BinaryExpression, BindingTarget, BlockStatement, CallExpression,
     ConditionalExpression, Declaration, EmptyStatement, Expression, ExpressionStatement, ForInit,
+    ArrowBody, ArrowFunctionExpression,
     ForInStatement, ForOfStatement, ForStatement, FunctionDeclaration, FunctionExpression, Identifier, IfStatement,
     LogicalExpression,
     LogicalOperator,
@@ -275,6 +276,7 @@ fn expression_cv(expr: &Expression) -> Option<String> {
         ArrayExpression(e) => e.cv.clone(),
         ObjectExpression(e) => e.cv.clone(),
         FunctionExpression(e) => e.cv.clone(),
+        ArrowFunctionExpression(e) => e.cv.clone(),
     }
 }
 
@@ -1436,6 +1438,25 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                 body: hoisted_body,
                 generator: f.generator,
                 is_async: f.is_async,
+            })
+        }
+        // Fold control flow inside an arrow-value's body. A block body is
+        // folded and its `var`s hoisted exactly as a function body; a
+        // concise (expression) body declares no `var`s, so it only needs
+        // its single expression folded.
+        Expression::ArrowFunctionExpression(a) => {
+            let body = match &a.body {
+                ArrowBody::Block(b) => {
+                    let folded = fold_block_statement(b, st);
+                    ArrowBody::Block(hoist_function_body_vars(&folded, st))
+                }
+                ArrowBody::Expression(e) => ArrowBody::Expression(Box::new(fold_expression(e, st))),
+            };
+            Expression::ArrowFunctionExpression(ArrowFunctionExpression {
+                cv: a.cv.clone(),
+                params: a.params.clone(),
+                body,
+                is_async: a.is_async,
             })
         }
     }

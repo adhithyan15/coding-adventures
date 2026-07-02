@@ -2,6 +2,12 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-properties` crate will be documented in this file.
 
+## [0.11.0] - 2026-07-02
+
+### Added — CLOC12.151: `ArrowFunctionExpression` traversal
+
+Handle the new `Expression::ArrowFunctionExpression` variant by recursing into arrow bodies — both the block form (`x => { ... }`) and the concise/expression form (`x => expr`) — mirroring this pass's existing `FunctionExpression` handling. Part of the atomic `ArrowFunctionExpression` enum-variant rollout (javascript-ast 0.15.0); adding the variant makes every exhaustive `match` on `Expression` non-exhaustive, so all consumers gain their arm in one PR. (Params are variable names, never property names, so no map reduction is needed.)
+
 ## [0.10.0] - 2026-07-01
 
 ### Added — CLOC12.149: rename properties inside `FunctionExpression`

@@ -2,6 +2,12 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-globals` crate will be documented in this file.
 
+## [0.9.0] - 2026-07-02
+
+### Added — CLOC12.151: `ArrowFunctionExpression` traversal
+
+Handle the new `Expression::ArrowFunctionExpression` variant by recursing into arrow bodies — both the block form (`x => { ... }`) and the concise/expression form (`x => expr`) — mirroring this pass's existing `FunctionExpression` handling. Part of the atomic `ArrowFunctionExpression` enum-variant rollout (javascript-ast 0.15.0); adding the variant makes every exhaustive `match` on `Expression` non-exhaustive, so all consumers gain their arm in one PR. The arrow's params are removed from the active rename/substitute map before recursing into the body, so a param that shadows an outer binding of the same spelling is left untouched (arrows have no self-name to shadow).
+
 ## [0.8.0] - 2026-07-01
 
 ### Added — CLOC12.149: rename globals through `FunctionExpression`

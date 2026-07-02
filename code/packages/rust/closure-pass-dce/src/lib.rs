@@ -75,6 +75,7 @@ use coding_adventures_javascript_ast::{
     Declaration, EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit,
     ForOfStatement,
     ForStatement,
+    ArrowBody, ArrowFunctionExpression,
     FunctionDeclaration, FunctionExpression, IfStatement, LogicalExpression, MemberExpression, NullLiteral,
     NumericLiteral, ObjectExpression, Program, ProgramItem, Property, PropertyKey,
     ReturnStatement, Statement, StringLiteral, UnaryExpression, UndefinedLiteral, VarKind,
@@ -1256,6 +1257,24 @@ fn dce_expression(expr: &Expression, st: &mut DceState) -> Expression {
             generator: f.generator,
             is_async: f.is_async,
         }),
+        // Recurse into an arrow-value's body. A block body eliminates
+        // dead code after `return`/`throw` exactly as a function body
+        // does; a concise (expression) body has no statements — a single
+        // expression can't contain dead code — so we simply recurse into
+        // it to reach any nested functions/arrows.
+        Expression::ArrowFunctionExpression(a) => {
+            Expression::ArrowFunctionExpression(ArrowFunctionExpression {
+                cv: a.cv.clone(),
+                params: a.params.clone(),
+                body: match &a.body {
+                    ArrowBody::Block(b) => ArrowBody::Block(dce_block_statement(b, st)),
+                    ArrowBody::Expression(e) => {
+                        ArrowBody::Expression(Box::new(dce_expression(e, st)))
+                    }
+                },
+                is_async: a.is_async,
+            })
+        }
     }
 }
 

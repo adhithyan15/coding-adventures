@@ -65,6 +65,7 @@ use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentOperator,
     AssignmentTarget, BigIntLiteral, BinaryExpression, BinaryOperator, BlockStatement,
+    ArrowBody, ArrowFunctionExpression,
     BooleanLiteral,
     BreakStatement, CallExpression, CatchClause, ConditionalExpression, ContinueStatement,
     Declaration, DebuggerStatement, DoWhileStatement,
@@ -150,13 +151,19 @@ impl std::error::Error for EmitError {}
 /// `Result`-returning API cannot report it. closurec feeds *untrusted* JS
 /// here, so it must not be crashable by pathological input.
 ///
-/// 64 MiB holds well over 100 000 levels of this light per-operator frame —
-/// far beyond any hand-written expression, and beyond the ~20 000-deep
-/// adversarial inputs that motivated this — while costing nothing for real
-/// code (the thread reserves address space lazily; only touched pages fault
-/// in). Emission is otherwise **byte-identical** to running on the caller's
-/// stack; only the stack size differs.
-const EMIT_STACK_SIZE: usize = 64 * 1024 * 1024;
+/// 128 MiB comfortably absorbs the ~20 000-deep adversarial inputs that
+/// motivated this, with a healthy margin above them. The margin matters:
+/// `emit_expression_inner` is a wide `match` whose per-frame footprint grows
+/// as new `Expression` variants are handled (e.g. the CLOC12.151
+/// `ArrowFunctionExpression` arm), and per-frame cost also differs by target —
+/// aarch64 (Apple-silicon CI) lays out larger frames than x86-64, so a stack
+/// merely sized to *just* hold 20 000 levels on one target can overflow on
+/// another. A 2× cushion keeps a modest future frame increase from re-breaking
+/// the deep-emit DoS regression, while costing nothing for real code (the
+/// thread reserves address space lazily; only touched pages fault in).
+/// Emission is otherwise **byte-identical** to running on the caller's stack;
+/// only the stack size differs.
+const EMIT_STACK_SIZE: usize = 128 * 1024 * 1024;
 
 pub fn emit(
     program: &Program,
@@ -897,6 +904,85 @@ impl<'a> Emitter<'a> {
         self.emit_block_statement(&f.body);
     }
 
+    /// Emit an [`ArrowFunctionExpression`] — the `=>` form.
+    ///
+    /// Three shape rules distinguish it from
+    /// [`Self::emit_function_expression`]:
+    ///
+    /// 1. **Param parens are dropped for a single plain identifier.**
+    ///    `x => x` prints without parens, matching Closure's minified
+    ///    output; zero params (`() =>`) and two-or-more (`(a,b) =>`) keep
+    ///    them. (Destructuring / default / rest params would force parens
+    ///    too, but those aren't representable yet.)
+    /// 2. **Dual body.** A [`ArrowBody::Block`] emits exactly like a
+    ///    function body (`x => { return x }`); a [`ArrowBody::Expression`]
+    ///    (concise body) emits the bare expression (`x => x + 1`) at
+    ///    `PREC_ASSIGNMENT` — the grammar makes the concise body an
+    ///    `AssignmentExpression`.
+    /// 3. **Object-literal concise bodies are wrapped.** `() => ({a:1})` —
+    ///    without the parens the leading `{` parses as a *block* body, so
+    ///    a concise body that is an [`Expression::ObjectExpression`] gets
+    ///    a disambiguating wrap. (The deeper leftmost-`{` case, e.g.
+    ///    `() => ({}).x`, is not yet wrapped — see CLOC12-gaps.)
+    ///
+    /// Parenthesisation in the two mis-parse contexts — as a call callee
+    /// (`(() => {})()`) and as a member object (`(() => {}).x`) — is
+    /// handled by the precedence machinery: [`expr_prec`] tags an arrow at
+    /// `PREC_ASSIGNMENT`, so a call/member parent (which emits at
+    /// `PREC_PRIMARY`) wraps it. Unlike a function expression, an arrow at
+    /// the *start* of an expression statement needs no wrap — `x => x;` is
+    /// a valid statement — so [`Self::emit_expression_statement`] leaves it
+    /// alone.
+    fn emit_arrow_function_expression(&mut self, a: &ArrowFunctionExpression) {
+        self.maybe_map(&a.cv);
+        if a.is_async {
+            self.write_str("async");
+        }
+        // Param list — single plain identifier drops the parens.
+        if a.params.len() == 1 {
+            // `async x=>` needs a separating space so `async` and the
+            // param identifier don't merge into `asyncx`. The
+            // parenthesised forms below begin with `(`, which
+            // self-delimits, so no space is emitted there (`async()=>`).
+            if a.is_async {
+                self.required_ws();
+            }
+            match &a.params[0] {
+                FunctionParam::Identifier(id) => self.emit_identifier(id),
+            }
+        } else {
+            self.write_str("(");
+            for (i, p) in a.params.iter().enumerate() {
+                if i > 0 {
+                    self.write_str(",");
+                    self.pretty_ws();
+                }
+                match p {
+                    FunctionParam::Identifier(id) => self.emit_identifier(id),
+                }
+            }
+            self.write_str(")");
+        }
+        self.pretty_ws();
+        self.write_str("=>");
+        self.pretty_ws();
+        match &a.body {
+            ArrowBody::Block(b) => self.emit_block_statement(b),
+            ArrowBody::Expression(e) => {
+                // A concise body that starts with `{` (an object literal)
+                // would otherwise be read as a block body.
+                let wrap = matches!(**e, Expression::ObjectExpression(_));
+                if wrap {
+                    self.write_str("(");
+                }
+                self.emit_expression_inner(e, PREC_ASSIGNMENT);
+                if wrap {
+                    self.write_str(")");
+                }
+            }
+        }
+    }
+
     // ---- Expressions ---------------------------------------------
 
     /// Public entry: emit an expression assuming the loosest binding
@@ -952,6 +1038,7 @@ impl<'a> Emitter<'a> {
             Expression::ArrayExpression(a) => self.emit_array(a),
             Expression::ObjectExpression(o) => self.emit_object(o),
             Expression::FunctionExpression(f) => self.emit_function_expression(f),
+            Expression::ArrowFunctionExpression(a) => self.emit_arrow_function_expression(a),
         }
         if needs_parens {
             self.write_str(")");
@@ -1592,6 +1679,15 @@ fn expr_prec(e: &Expression) -> u8 {
         // of an expression statement — is wrapped by
         // `emit_expression_statement`, not here.
         Expression::FunctionExpression(_) => PREC_UNARY,
+        // An arrow function is an `AssignmentExpression` in the grammar —
+        // the loosest-binding expression there is. Tagging it at
+        // `PREC_ASSIGNMENT` makes a call/member parent wrap it into
+        // `(() => {})()` / `(() => {}).x` (both mis-parse otherwise), while
+        // an assignment RHS or a conditional branch — which also emit at
+        // `PREC_ASSIGNMENT` — leave it unwrapped (`x=()=>y`, `c?()=>a:()=>b`
+        // are all valid). Unlike a function expression it needs no
+        // statement-start wrap, so `emit_expression_statement` ignores it.
+        Expression::ArrowFunctionExpression(_) => PREC_ASSIGNMENT,
         // `true`/`false` are emitted as `!0`/`!1` (see `emit_boolean`), which
         // are UnaryExpressions — precedence `PREC_UNARY`, NOT primary. Tagging
         // them here is what makes `emit_expression_inner` parenthesise them in
@@ -3775,5 +3871,121 @@ mod tests {
             })
         };
         assert_eq!(emit_expr(async_call), "h(async function(){});");
+    }
+
+    // ---- ArrowFunctionExpression (CLOC12.151) -----------------
+
+    /// Build an arrow with a *concise* (expression) body.
+    fn arrow_concise(params: &[&str], body: Expression) -> Expression {
+        Expression::ArrowFunctionExpression(ArrowFunctionExpression {
+            cv: None,
+            params: params
+                .iter()
+                .map(|p| FunctionParam::Identifier(Identifier { cv: None, name: p.to_string() }))
+                .collect(),
+            body: ArrowBody::Expression(Box::new(body)),
+            is_async: false,
+        })
+    }
+
+    /// Build an arrow with a *block* body.
+    fn arrow_block(params: &[&str], body: Vec<Statement>) -> Expression {
+        Expression::ArrowFunctionExpression(ArrowFunctionExpression {
+            cv: None,
+            params: params
+                .iter()
+                .map(|p| FunctionParam::Identifier(Identifier { cv: None, name: p.to_string() }))
+                .collect(),
+            body: ArrowBody::Block(BlockStatement { cv: None, body }),
+            is_async: false,
+        })
+    }
+
+    /// A single plain-identifier param drops its parens; a concise body
+    /// prints bare. An arrow at statement start needs NO wrap (unlike a
+    /// function expression) — `x=>x` is a valid expression statement.
+    #[test]
+    fn arrow_single_param_concise_body_no_parens() {
+        assert_eq!(emit_expr(arrow_concise(&["x"], ident("x"))), "x=>x;");
+    }
+
+    /// Zero params keep the empty parens; two-or-more are parenthesised
+    /// and comma-separated.
+    #[test]
+    fn arrow_zero_and_multi_params_are_parenthesised() {
+        assert_eq!(emit_expr(arrow_block(&[], vec![])), "()=>{};");
+        assert_eq!(emit_expr(arrow_concise(&["a", "b"], ident("a"))), "(a,b)=>a;");
+    }
+
+    /// A block body prints like a function body; the last statement drops
+    /// its trailing `;` in compact mode, and the arrow adds none after `}`.
+    #[test]
+    fn arrow_block_body_returns() {
+        let body = vec![Statement::return_statement(ReturnStatement {
+            cv: None,
+            argument: Some(ident("a")),
+        })];
+        assert_eq!(emit_expr(arrow_block(&["a"], body)), "a=>{return a};");
+    }
+
+    /// A concise body that is an object literal must be parenthesised —
+    /// otherwise the leading `{` reads as a block body.
+    #[test]
+    fn arrow_object_literal_concise_body_is_wrapped() {
+        let obj = Expression::ObjectExpression(ObjectExpression { cv: None, properties: vec![] });
+        assert_eq!(emit_expr(arrow_concise(&[], obj)), "()=>({});");
+    }
+
+    /// An IIFE arrow: the callee is wrapped because `()=>{}()` is a
+    /// syntax error.
+    #[test]
+    fn arrow_iife_wraps_callee() {
+        let iife = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(arrow_block(&[], vec![])),
+            arguments: vec![],
+        });
+        assert_eq!(emit_expr(iife), "(()=>{})();");
+    }
+
+    /// An arrow as a member object is wrapped — `()=>{}.x` is invalid.
+    #[test]
+    fn arrow_member_object_is_wrapped() {
+        let m = Expression::MemberExpression(MemberExpression {
+            cv: None,
+            object: Box::new(arrow_block(&[], vec![])),
+            property: Box::new(ident("x")),
+            computed: false,
+        });
+        assert_eq!(emit_expr(m), "(()=>{}).x;");
+    }
+
+    /// As a call argument the arrow needs no parens (loosest context).
+    #[test]
+    fn arrow_as_argument_has_no_parens() {
+        let call = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("g")),
+            arguments: vec![arrow_concise(&["x"], ident("x"))],
+        });
+        assert_eq!(emit_expr(call), "g(x=>x);");
+    }
+
+    /// The `async` prefix needs a separating space before an
+    /// unparenthesised single param (`async x=>x`) but not before `(`
+    /// (`async()=>{}`).
+    #[test]
+    fn arrow_async_prefix() {
+        let mut single = arrow_concise(&["x"], ident("x"));
+        if let Expression::ArrowFunctionExpression(a) = &mut single {
+            a.is_async = true;
+        }
+        assert_eq!(emit_expr(single), "async x=>x;");
+
+        let mut zero = arrow_block(&[], vec![]);
+        if let Expression::ArrowFunctionExpression(a) = &mut zero {
+            a.is_async = true;
+        }
+        assert_eq!(emit_expr(zero), "async()=>{};");
     }
 }

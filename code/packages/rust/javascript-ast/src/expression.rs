@@ -12,7 +12,9 @@
 //! - Composites: [`ArrayExpression`], [`ObjectExpression`].
 //! - Callables: [`FunctionExpression`] (Phase 1.x — added in CLOC12.149;
 //!   the expression sibling of [`crate::FunctionDeclaration`], e.g.
-//!   `var f = function () {}`, IIFEs, function-valued properties).
+//!   `var f = function () {}`, IIFEs, function-valued properties);
+//!   [`ArrowFunctionExpression`] (Phase 1.x — added in CLOC12.151; the
+//!   `=>` form, e.g. `x => x + 1`, `(a, b) => { return a; }`).
 //!
 //! Every struct carries `cv: Option<CvId>` first per the CLOC09
 //! amendment. Operator enums serialize to ESTree-canonical operator
@@ -50,6 +52,7 @@ pub enum Expression {
     ArrayExpression(ArrayExpression),
     ObjectExpression(ObjectExpression),
     FunctionExpression(FunctionExpression),
+    ArrowFunctionExpression(ArrowFunctionExpression),
 }
 
 // ---------------------------------------------------------------------
@@ -460,6 +463,88 @@ pub struct FunctionExpression {
     pub generator: bool,
     #[serde(rename = "async")]
     pub is_async: bool,
+}
+
+// ---------------------------------------------------------------------
+// ArrowFunctionExpression — the `=>` form
+// ---------------------------------------------------------------------
+
+/// `x => x + 1`, `(a, b) => a + b`, `() => {}`, `async x => await f(x)`.
+/// A function value written with the fat-arrow shorthand.
+///
+/// # How it differs from [`FunctionExpression`]
+///
+/// Three structural simplifications — each reflects a real syntactic
+/// rule of arrow functions, not an accident of our encoding:
+///
+/// 1. **No `id`.** An arrow function is *always anonymous*. There is no
+///    `x => x` form that also names itself, so — unlike
+///    [`FunctionExpression`], whose `id` is `Option<Identifier>` — an
+///    arrow simply has no name field. (This matters to renaming passes:
+///    a [`FunctionExpression`] must protect its own body-local name from
+///    substitution; an arrow has no such name to protect, only params.)
+/// 2. **No `generator`.** `x =>*` is not valid syntax — arrows cannot be
+///    generators — so there is no `generator` flag.
+/// 3. **A dual-shape [`body`](ArrowFunctionExpression::body).** A
+///    classic function body is *always* a brace-delimited
+///    [`BlockStatement`]. An arrow body is *either* a block
+///    (`x => { return x; }`) *or* a bare **expression**
+///    (`x => x`, the "concise body"). That fork is modelled by
+///    [`ArrowBody`].
+///
+/// `params` and `is_async` carry the identical meaning as on
+/// [`FunctionExpression`], sharing the [`FunctionParam`] type.
+///
+/// ```text
+///   x => x + 1              one param, concise body
+///   (a, b) => a + b         two params, concise body
+///   () => {}                zero params, empty block body
+///   x => { return x; }      one param, block body
+///   async x => f(x)         async, concise body
+/// ```
+///
+/// Added in Phase 1.x (CLOC12.151). Object-literal concise bodies
+/// (`() => ({ a: 1 })`), destructuring params, and default params are
+/// deferred with the wider Phase 3 pattern work.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ArrowFunctionExpression {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    pub params: Vec<FunctionParam>,
+    pub body: ArrowBody,
+    #[serde(rename = "async")]
+    pub is_async: bool,
+}
+
+/// The body of an [`ArrowFunctionExpression`] — a brace-delimited block,
+/// or a single "concise" expression.
+///
+/// # Why an `#[serde(untagged)]` enum works here
+///
+/// Every [`Expression`] serialises with an internal `{"type": "…"}`
+/// discriminant; a [`BlockStatement`] is a plain struct with **no**
+/// `type` field. So the two shapes are unambiguous by inspection:
+///
+/// ```text
+///   concise:  { "type": "Identifier", "name": "x" }   ← has "type"
+///   block:    { "body": [ … ] }                       ← no "type"
+/// ```
+///
+/// With the [`Expression`](ArrowBody::Expression) arm listed **first**,
+/// serde tries it first: concise-body JSON matches immediately, while
+/// block-body JSON (lacking `type`) is rejected by the internally-tagged
+/// [`Expression`] and falls through to [`Block`](ArrowBody::Block). The
+/// expression is [`Box`]ed to break the `Expression → ArrowFunctionExpression
+/// → ArrowBody → Expression` type cycle.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum ArrowBody {
+    /// Concise body: `x => x + 1`. The arrow's value is this expression.
+    Expression(Box<Expression>),
+    /// Block body: `x => { return x + 1; }`. Identical to a classic
+    /// function body — statements, explicit `return`, etc.
+    Block(BlockStatement),
 }
 
 #[cfg(test)]
@@ -1001,6 +1086,86 @@ mod tests {
         let mut e = anon_fn_expr();
         if let Expression::FunctionExpression(f) = &mut e {
             f.is_async = true;
+        }
+        let json = serde_json::to_string(&e).expect("serialize");
+        assert!(json.contains("\"async\":true"), "expected async key; got {}", json);
+        assert!(!json.contains("isAsync"), "must not leak Rust field name; got {}", json);
+        assert_eq!(e.clone(), roundtrip(e));
+    }
+
+    // -----------------------------------------------------------------
+    // ArrowFunctionExpression (CLOC12.151)
+    // -----------------------------------------------------------------
+
+    /// `x => x` — one param, concise (expression) body.
+    fn concise_arrow() -> Expression {
+        Expression::ArrowFunctionExpression(ArrowFunctionExpression {
+            cv: Some("ar.1".to_string()),
+            params: vec![TestFunctionParam::Identifier(Identifier {
+                cv: None,
+                name: "x".to_string(),
+            })],
+            body: ArrowBody::Expression(Box::new(Expression::Identifier(Identifier {
+                cv: None,
+                name: "x".to_string(),
+            }))),
+            is_async: false,
+        })
+    }
+
+    /// `() => { return x; }` — zero params, block body.
+    fn block_arrow() -> Expression {
+        Expression::ArrowFunctionExpression(ArrowFunctionExpression {
+            cv: None,
+            params: vec![],
+            body: ArrowBody::Block(TestBlock {
+                cv: None,
+                body: vec![Statement::return_statement(ReturnStatement {
+                    cv: None,
+                    argument: Some(Expression::Identifier(Identifier {
+                        cv: None,
+                        name: "x".to_string(),
+                    })),
+                })],
+            }),
+            is_async: false,
+        })
+    }
+
+    #[test]
+    fn arrow_concise_body_roundtrips_and_tags() {
+        let e = concise_arrow();
+        assert_eq!(e.clone(), roundtrip(e.clone()));
+        assert_eq!(type_tag(&e), "ArrowFunctionExpression");
+    }
+
+    #[test]
+    fn arrow_block_body_roundtrips_and_tags() {
+        let e = block_arrow();
+        assert_eq!(e.clone(), roundtrip(e.clone()));
+        assert_eq!(type_tag(&e), "ArrowFunctionExpression");
+    }
+
+    #[test]
+    fn arrow_body_variants_are_distinguished_on_the_wire() {
+        // The untagged ArrowBody must round-trip WITHOUT collapsing the
+        // concise/block distinction: a concise body carries a `"type"`
+        // discriminant, a block body does not, so serde picks the right
+        // arm back. Regression guard for the untagged-enum ordering.
+        let concise = concise_arrow();
+        let block = block_arrow();
+        assert_ne!(concise, block);
+        assert_eq!(concise.clone(), roundtrip(concise));
+        assert_eq!(block.clone(), roundtrip(block));
+    }
+
+    #[test]
+    fn arrow_async_key_renames() {
+        // `is_async` serializes as JSON `"async"`, exactly as on the
+        // function forms.
+        let mut e = concise_arrow();
+        if let Expression::ArrowFunctionExpression(a) = &mut e {
+            a.is_async = true;
         }
         let json = serde_json::to_string(&e).expect("serialize");
         assert!(json.contains("\"async\":true"), "expected async key; got {}", json);

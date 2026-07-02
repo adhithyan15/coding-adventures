@@ -72,8 +72,8 @@ use coding_adventures_correlation_vector::Contribution;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use serde_json::json;
 use coding_adventures_javascript_ast::{
-    AssignmentTarget, BindingTarget, Declaration, Expression, ForInit, FunctionParam, Program,
-    ProgramItem, PropertyKey, Statement, VariableDeclaration,
+    ArrowBody, AssignmentTarget, BindingTarget, Declaration, Expression, ForInit, FunctionParam,
+    Program, ProgramItem, PropertyKey, Statement, VariableDeclaration,
 };
 
 /// `Pass::depends_on` value — empty. Global renaming is correct on its
@@ -701,6 +701,22 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                 collect_all_idents_stmt(s, out);
             }
         }
+        // An arrow value contributes its params and body identifiers (it
+        // has no name), so a renamed global never collides with them.
+        Expression::ArrowFunctionExpression(ae) => {
+            for p in &ae.params {
+                let FunctionParam::Identifier(id) = p;
+                out.insert(id.name.clone());
+            }
+            match &ae.body {
+                ArrowBody::Block(b) => {
+                    for s in &b.body {
+                        collect_all_idents_stmt(s, out);
+                    }
+                }
+                ArrowBody::Expression(e) => collect_all_idents_expr(e, out),
+            }
+        }
     }
 }
 
@@ -982,6 +998,26 @@ fn rename_apply_expr(expr: &mut Expression, map: &HashMap<String, String>) {
             }
             for s in &mut fe.body.body {
                 rename_apply_stmt(s, &inner);
+            }
+        }
+        // An arrow's params are LOCAL bindings that shadow any global of
+        // the same spelling; recurse into the body with those names
+        // removed from the active map, so genuine global uses are renamed
+        // while a shadowed param use is left untouched. (Arrows have no
+        // self-name to shadow.)
+        Expression::ArrowFunctionExpression(ae) => {
+            let mut inner = map.clone();
+            for p in &ae.params {
+                let FunctionParam::Identifier(id) = p;
+                inner.remove(&id.name);
+            }
+            match &mut ae.body {
+                ArrowBody::Block(b) => {
+                    for s in &mut b.body {
+                        rename_apply_stmt(s, &inner);
+                    }
+                }
+                ArrowBody::Expression(e) => rename_apply_expr(e, &inner),
             }
         }
     }

@@ -2,6 +2,34 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.15.0] - 2026-07-02
+
+### Added — CLOC12.151: `ArrowFunctionExpression` (the `=>` form)
+
+Adds `ArrowFunctionExpression { cv, params, body: ArrowBody, is_async }` and the
+`Expression::ArrowFunctionExpression` variant, covering `x => x + 1`,
+`(a, b) => a + b`, `() => {}`, and `async x => f(x)`. Three structural
+simplifications from `FunctionExpression` mirror the real syntax of arrows:
+
+- **No `id`** — arrows are always anonymous, so there is no body-local name to
+  carry (and nothing for renaming passes to protect beyond the params).
+- **No `generator`** — `x =>*` is not valid syntax.
+- **A dual-shape `body`** — modelled by the new `ArrowBody` enum: either a
+  brace-delimited `Block(BlockStatement)` (`x => { return x; }`) or a concise
+  `Expression(Box<Expression>)` (`x => x`). `ArrowBody` is `#[serde(untagged)]`
+  with the `Expression` arm first: every `Expression` serializes with a `"type"`
+  discriminant while a `BlockStatement` has none, so concise/block bodies
+  round-trip without collapsing.
+
+`params` and `is_async` reuse `FunctionParam`; `is_async` serializes as JSON
+`"async"` per ESTree; `cv` is omitted when `None`. This is the **AST-node slice**
+of a bottom-up rollout — emitter printing lands in the same atomic PR (the
+`Expression` enum grows a variant, so every exhaustive `match` across the
+workspace must compile together), and the parser→typed-AST bridge enable +
+upstream conformance port follow in later slices. Object-literal concise bodies
+(`() => ({ a: 1 })`), destructuring params, and default params are deferred with
+the wider Phase 3 pattern work.
+
 ## [0.14.0] - 2026-07-01
 
 ### Added — CLOC12.149: `FunctionExpression` (function in value position)

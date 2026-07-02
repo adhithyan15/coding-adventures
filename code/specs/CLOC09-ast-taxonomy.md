@@ -487,8 +487,8 @@ matches ESTree exactly.
 This is the only field-name divergence Phase 1 introduces. It
 applies anywhere a function-like node has the async flag
 (`FunctionDeclaration`, Phase 1.x `FunctionExpression` — landed in
-CLOC12.149, Phase 3 `ArrowFunctionExpression`, `Method`, `ClassMethod`,
-etc.).
+CLOC12.149, Phase 1.x `ArrowFunctionExpression` — landed in CLOC12.151,
+Phase 3 `Method`, `ClassMethod`, etc.).
 
 ## Why split `Statement` and `Declaration` enums
 
@@ -613,13 +613,20 @@ implementations are independent follow-ups.
 - Phase 1.x incremental variant additions (landed as the passes
   and emitter grew a need for them, each behind its own CLOC12.NN
   slice + gap entry): `BigIntLiteral` (CLOC12.15), `UndefinedLiteral`
-  (CLOC12.16), and **`FunctionExpression` (CLOC12.149)** — the
+  (CLOC12.16), **`FunctionExpression` (CLOC12.149)** — the
   expression sibling of `FunctionDeclaration` (`var f = function () {}`,
   IIFEs, function-valued properties). `id` is `Option<Identifier>`
   (anonymous vs. named-but-body-local); `params` / `body` /
   `generator` / `is_async` reuse the declaration's types. Landed
   bottom-up: AST node first (this slice), then the parser→typed-AST
   bridge, emitter printing, and pass traversal in follow-on slices.
+  Also **`ArrowFunctionExpression` (CLOC12.151)** — the `=>` form
+  (`x => x + 1`, `() => {}`, `async x => f(x)`). No `id` (always
+  anonymous) and no `generator`; the body is a new `ArrowBody` enum —
+  either a `Block(BlockStatement)` or a concise `Expression(Box<Expression>)`.
+  The node + emitter + all pass traversals landed in one atomic PR
+  (adding an `Expression` variant makes every exhaustive `match`
+  non-exhaustive); the bridge-enable + conformance port follow.
 - Phase 2: leaf coverage gaps + control-flow variants
   (`SwitchStatement`, `TryStatement`, etc.).
 - Phase 3: patterns, arrow functions, classes.

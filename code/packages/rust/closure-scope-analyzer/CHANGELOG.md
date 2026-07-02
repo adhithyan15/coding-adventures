@@ -2,6 +2,12 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.11.0] - 2026-07-02
+
+### Added — CLOC12.151: `ArrowFunctionExpression` traversal
+
+Add `walk_arrow_function_expression`: an arrow introduces its own function scope binding its params (no body-local name — arrows are anonymous), then walks the block or concise-expression body. Part of the atomic `ArrowFunctionExpression` rollout (javascript-ast 0.15.0).
+
 ## [0.10.0] - 2026-07-01
 
 ### Added — CLOC12.149: scope-analyze `FunctionExpression`

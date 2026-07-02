@@ -94,6 +94,7 @@ use coding_adventures_javascript_ast::{
     BinaryOperator, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression,
     Declaration, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
+    ArrowBody, ArrowFunctionExpression,
     FunctionDeclaration, FunctionExpression, Identifier,
     IfStatement, LogicalExpression, LogicalOperator, MemberExpression, NullLiteral, NumericLiteral,
     ObjectExpression, Program, ProgramItem, Property, PropertyKey, PropertyKind, ReturnStatement, Statement,
@@ -185,11 +186,18 @@ impl Pass for ConstantFoldPass {
 
 /// Stack size for the constant-fold worker thread (see [`ConstantFoldPass::run`]).
 ///
-/// 64 MiB holds well over 100 000 levels of the light per-operator fold frame —
-/// far beyond any real expression, and beyond the ~20 000-deep adversarial
-/// inputs that motivated this — while costing nothing for real code (pages
-/// fault in lazily). Matches the emitter's `EMIT_STACK_SIZE`.
-const FOLD_STACK_SIZE: usize = 64 * 1024 * 1024;
+/// 128 MiB comfortably absorbs the ~20 000-deep adversarial chains that
+/// motivated this worker, with a healthy margin above them. The margin
+/// matters: `fold_expression` is a wide `match` whose per-frame footprint
+/// grows as new `Expression` variants are handled (e.g. the CLOC12.151
+/// `ArrowFunctionExpression` arm), and per-frame cost also differs by target
+/// — aarch64 (Apple-silicon CI) lays out larger frames than x86-64, so a
+/// stack that merely *just* held 20 000 levels on one target overflowed on
+/// another. Sizing to 128 MiB keeps a 2× cushion so a modest future frame
+/// increase can't re-break the deep-chain DoS regression test. Costs nothing
+/// for real code — pages fault in lazily. Matches the spirit of the emitter's
+/// `EMIT_STACK_SIZE`.
+const FOLD_STACK_SIZE: usize = 128 * 1024 * 1024;
 
 // =====================================================================
 // FoldState — mutable bookkeeping threaded through the recursive walk
@@ -560,6 +568,26 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                 },
                 generator: f.generator,
                 is_async: f.is_async,
+            })
+        }
+        // An arrow function value: fold inside its body just like a
+        // function expression. A block body folds statement-by-statement;
+        // a concise (expression) body folds the single expression — so
+        // `x => 1 + 1` folds to `x => 2`. `params` are structural.
+        Expression::ArrowFunctionExpression(a) => {
+            Expression::ArrowFunctionExpression(ArrowFunctionExpression {
+                cv: a.cv.clone(),
+                params: a.params.clone(),
+                body: match &a.body {
+                    ArrowBody::Block(b) => ArrowBody::Block(BlockStatement {
+                        cv: b.cv.clone(),
+                        body: b.body.iter().map(|s| fold_statement(s, st)).collect(),
+                    }),
+                    ArrowBody::Expression(e) => {
+                        ArrowBody::Expression(Box::new(fold_expression(e, st)))
+                    }
+                },
+                is_async: a.is_async,
             })
         }
     }
