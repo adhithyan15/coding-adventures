@@ -1017,9 +1017,45 @@ impl<'a> Emitter<'a> {
     }
 
     /// Emit one [`TemplateElement`] — its verbatim `raw` text.
+    ///
+    /// A template quasi is the one *primary* token whose `raw` text may legally
+    /// contain a **literal newline**: a multiline template preserves its interior
+    /// line breaks byte-for-byte (`` `a⏎b` `` prints back with the newline
+    /// intact). Every other token the emitter writes is single-line.
+    ///
+    /// The low-level [`Self::write_str`] deliberately forbids an embedded `'\n'`
+    /// (it `debug_assert!`s the run is newline-free) because a raw newline must
+    /// route through [`Self::newline`] to keep the source-map line/column
+    /// bookkeeping correct — `write_str` only advances the *column*, whereas
+    /// `newline` bumps the *line* and resets the column. So we split `raw` on
+    /// `'\n'` and hand each line segment to `write_str`, emitting a real
+    /// `newline()` between segments:
+    ///
+    /// ```text
+    ///   raw = "a\nb\nc"   →   write_str("a") newline() write_str("b")
+    ///                          newline() write_str("c")
+    /// ```
+    ///
+    /// `str::split('\n')` yields `N + 1` pieces for `N` newlines, including an
+    /// empty leading piece when `raw` starts with `'\n'` and an empty trailing
+    /// piece when it ends with one; writing an empty `&str` is a harmless no-op,
+    /// so the line count still lands exactly on the number of `'\n'`s. Other
+    /// line-terminator bytes a raw may carry — a lone `'\r'` (as in a `\r\n`
+    /// pair, where the `'\r'` rides on the end of the preceding segment) and the
+    /// Unicode separators `U+2028` / `U+2029` — are written verbatim as ordinary
+    /// characters: bytes round-trip exactly, and only their column bookkeeping is
+    /// approximate, which is a source-map nicety, not an output-correctness bug.
     fn emit_template_element(&mut self, q: &TemplateElement) {
         self.maybe_map(&q.cv);
-        self.write_str(&q.raw);
+        let mut segments = q.raw.split('\n');
+        // There is always at least one segment (`split` never yields empty).
+        if let Some(first) = segments.next() {
+            self.write_str(first);
+            for segment in segments {
+                self.newline();
+                self.write_str(segment);
+            }
+        }
     }
 
     // ---- Expressions ---------------------------------------------
@@ -4093,5 +4129,30 @@ mod tests {
             computed: false,
         });
         assert_eq!(emit_expr(m), "`abc`.length;");
+    }
+
+    /// gap-158: a no-substitution template whose `raw` carries a *literal*
+    /// newline round-trips it verbatim — `emit_template_element` splits on
+    /// `'\n'` and routes the break through `newline()` instead of tripping
+    /// `write_str`'s no-embedded-newline assert.
+    #[test]
+    fn template_preserves_interior_newline() {
+        assert_eq!(emit_expr(template(vec![tquasi("a\nb", true)], vec![])), "`a\nb`;");
+    }
+
+    /// gap-158: the newline-aware path also covers quasis *inside* a `${…}`
+    /// substitution template — the leading quasi spans two lines around the
+    /// insert.
+    #[test]
+    fn template_substitution_quasi_preserves_newline() {
+        let t = template(vec![tquasi("a\nb", false), tquasi("c", true)], vec![ident("x")]);
+        assert_eq!(emit_expr(t), "`a\nb${x}c`;");
+    }
+
+    /// gap-158: a bare `'\n'` quasi (leading + trailing empty split segments)
+    /// emits just the newline — the empty segments write nothing.
+    #[test]
+    fn template_bare_newline_quasi() {
+        assert_eq!(emit_expr(template(vec![tquasi("\n", true)], vec![])), "`\n`;");
     }
 }

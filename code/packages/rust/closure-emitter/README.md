@@ -117,8 +117,9 @@ test-port convention. Each file isolates one printing area:
   templates (escaped backtick / `${`), a template as an unwrapped member-object
   and binary operand (it is primary), and `${…}` substitution templates
   (single / adjacent / text-interleaved / low-precedence and member-access
-  bodies). 17 active `#[test]`s + 1 `#[ignore]` (gap-158, a quasi with a
-  literal embedded newline). Run with
+  bodies, and multiline quasis with literal interior newlines). 19 active
+  `#[test]`s, no `#[ignore]` (gap-158 resolved in CLOC12.157 — the emitter is
+  now newline-aware). Run with
   `cargo test --test upstream_code_printer_template`.
 
 ## Dependency whitelist

@@ -45,16 +45,18 @@ under the Apache License, Version 2.0:
     - tracked commit: see `UPSTREAM_SHA`
     - Isolates `emit_template_literal` / `emit_template_element` + the
       `PREC_PRIMARY` classification that landed with
-      `Expression::TemplateLiteral` (CLOC12.154). 17 active `#[test]`s and
-      1 `#[ignore]` — the emitter conforms to every covered shape
+      `Expression::TemplateLiteral` (CLOC12.154). 19 active `#[test]`s and
+      **0 `#[ignore]`** — the emitter conforms to every covered shape
       (no-substitution, escaped backtick / escaped `${`, member-object and
       binary operands without wrapping, single / adjacent / text-interleaved
-      `${…}` substitutions, and low-precedence / member-access substitution
-      bodies). Inputs are hand-constructed AST so the port can exercise
-      `${…}` substitution templates the grammar tokenises only as
-      no-substitution today (gap-157). The one ignored case is a quasi
-      carrying a *literal* embedded newline, which the emitter's `write_str`
-      path rejects (gap-158).
+      `${…}` substitutions, low-precedence / member-access substitution
+      bodies, and multiline quasis with literal interior newlines). Inputs are
+      hand-constructed AST so the port can exercise `${…}` substitution
+      templates the grammar tokenises only as no-substitution today (gap-157).
+      The multiline case (`raw_preserves_internal_newline`) was `#[ignore]`d
+      under gap-158 until CLOC12.157 made `emit_template_element`
+      newline-aware; it and `raw_preserves_leading_and_trailing_newline` are
+      now active.
 
 ## Translation notes
 
