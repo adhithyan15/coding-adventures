@@ -4516,7 +4516,7 @@ impl HtmlParser {
     fn finish_document(&mut self) -> Document {
         repair_table_cell_fostered_nobr_adoption(&mut self.document);
         let mut document = normalize_document_shell(std::mem::take(&mut self.document));
-        repair_tricky_adoption_agency(&mut document);
+        repair_insanely_badly_nested_table_sequence(&mut document.children);
         if self.options.scripting == HtmlScriptingMode::Enabled {
             apply_scripted_tree_construction_side_effects(&mut document);
         }
@@ -8568,11 +8568,6 @@ fn repair_table_cell_fostered_nobr_adoption(document: &mut Document) {
     repair_table_cell_fostered_nobr_adoption_in(&mut document.children);
 }
 
-fn repair_tricky_adoption_agency(document: &mut Document) {
-    repair_tricky_adoption_agency_in(&mut document.children);
-    repair_insanely_badly_nested_table_sequence(&mut document.children);
-}
-
 fn element_has_em_with_foo_chain_depth(element: &Element, depth: usize) -> bool {
     element.children.iter().any(|child| match child {
         Node::Element(child) if child.name == "em" => {
@@ -8646,17 +8641,6 @@ fn populate_select_selectedcontent(select: &mut Element) {
         if selectedcontent.children.is_empty() {
             selectedcontent.children = option_children.clone();
         }
-    }
-}
-
-fn repair_tricky_adoption_agency_in(nodes: &mut Vec<Node>) {
-    let mut index = 0;
-    while index < nodes.len() {
-        if let Node::Element(element) = &mut nodes[index] {
-            repair_tricky_adoption_agency_in(&mut element.children);
-        }
-
-        index += 1;
     }
 }
 
