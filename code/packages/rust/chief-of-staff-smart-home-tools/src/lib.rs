@@ -312,6 +312,7 @@ pub const SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID: &str = "smart_home.get_pe
 pub const SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID: &str = "smart_home.get_attention_overview";
 pub const SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID: &str = "smart_home.get_remediation_plan";
 pub const SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID: &str = "smart_home.get_operations_brief";
+pub const SMART_HOME_GET_SAFETY_BRIEF_TOOL_ID: &str = "smart_home.get_safety_brief";
 pub const SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID: &str = "smart_home.get_topology_summary";
 pub const SMART_HOME_LIST_DESIRED_STATES_TOOL_ID: &str = "smart_home.list_desired_states";
 pub const SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID: &str =
@@ -2400,6 +2401,10 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_operations_brief_output_handler_output(&mut runtime, principal_id, now_ms)
+                }
+                SMART_HOME_GET_SAFETY_BRIEF_TOOL_ID => {
+                    let _ = expect_object(&arguments)?;
+                    get_safety_brief_output_handler_output(&mut runtime, principal_id, now_ms)
                 }
                 SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
@@ -6495,6 +6500,7 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_attention_overview_definition(),
         get_remediation_plan_definition(),
         get_operations_brief_definition(),
+        get_safety_brief_definition(),
         get_topology_summary_definition(),
         list_desired_states_definition(),
         list_desired_state_drift_audit_definition(),
@@ -7425,6 +7431,54 @@ fn get_operations_brief_definition() -> ToolDefinition {
                 "total_blocked_count",
                 "summary",
                 "next_action",
+                "sections",
+                "source_tools",
+            ],
+            false,
+        ),
+    )
+}
+
+fn get_safety_brief_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_SAFETY_BRIEF_TOOL_ID,
+        "Get smart-home safety brief",
+        "Compose existing D23 runtime, authorization, command-risk, remediation, and controller-handoff signals into a Chief-facing go/no-go safety brief without owning smart-home state.",
+        empty_object_schema(),
+        object_schema(
+            vec![
+                SchemaProperty::new("generated_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("status", JsonSchema::String),
+                SchemaProperty::new("ready", JsonSchema::Boolean),
+                SchemaProperty::new("requires_human_review", JsonSchema::Boolean),
+                SchemaProperty::new("has_blockers", JsonSchema::Boolean),
+                SchemaProperty::new("total_attention_count", JsonSchema::Integer),
+                SchemaProperty::new("total_blocked_count", JsonSchema::Integer),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("decision", JsonSchema::Any),
+                SchemaProperty::new(
+                    "sections",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new(
+                    "source_tools",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::String),
+                    },
+                ),
+            ],
+            vec![
+                "generated_at_ms",
+                "status",
+                "ready",
+                "requires_human_review",
+                "has_blockers",
+                "total_attention_count",
+                "total_blocked_count",
+                "summary",
+                "decision",
                 "sections",
                 "source_tools",
             ],
@@ -43442,6 +43496,152 @@ fn get_operations_brief_output_handler_output(
     ))
 }
 
+fn get_safety_brief_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let snapshot_output = runtime
+        .execute_read_tool(
+            principal_id.clone(),
+            RuntimeReadToolRequest::GetRuntimeSnapshot,
+            now_ms,
+        )
+        .map_err(runtime_error)?;
+    let RuntimeReadToolOutput::RuntimeSnapshot(snapshot) = snapshot_output else {
+        return Err(ToolCallError::new(
+            ToolErrorKind::ToolExecutionError,
+            "safety brief expected runtime snapshot output",
+        ));
+    };
+    let topology_output = runtime
+        .execute_read_tool(
+            principal_id.clone(),
+            RuntimeReadToolRequest::GetTopologySummary,
+            now_ms,
+        )
+        .map_err(runtime_error)?;
+    let RuntimeReadToolOutput::TopologySummary { summary: topology } = topology_output else {
+        return Err(ToolCallError::new(
+            ToolErrorKind::ToolExecutionError,
+            "safety brief expected topology summary output",
+        ));
+    };
+
+    let (_, command_risk) = command_risk_audit_rows(
+        runtime,
+        principal_id.clone(),
+        now_ms,
+        &default_command_risk_audit_query(),
+    )?;
+    let (_, authorization_gap) = authorization_gap_audit_rows(
+        runtime,
+        principal_id.clone(),
+        now_ms,
+        &default_authorization_gap_audit_query(),
+    )?;
+    let (_, event_delivery) = event_delivery_audit_rows(
+        runtime,
+        principal_id.clone(),
+        now_ms,
+        &default_event_delivery_audit_query(),
+    )?;
+    let (_, desired_state_drift) = desired_state_drift_audit_rows(
+        runtime,
+        principal_id.clone(),
+        now_ms,
+        &default_desired_state_drift_audit_query(),
+    )?;
+    let (_, state_transition) = state_transition_audit_rows(
+        runtime,
+        principal_id.clone(),
+        now_ms,
+        &default_state_transition_audit_query(),
+    )?;
+    let (_, supervision_remediation) = supervision_remediation_rows(
+        runtime,
+        principal_id,
+        now_ms,
+        &default_supervision_remediation_query(),
+    )?;
+
+    let steps = remediation_plan_steps(
+        &snapshot,
+        &command_risk,
+        &authorization_gap,
+        &event_delivery,
+        &desired_state_drift,
+        &state_transition,
+        &supervision_remediation,
+    );
+    let total_attention_count = attention_overview_total_attention_count(
+        &snapshot,
+        &command_risk,
+        &authorization_gap,
+        &event_delivery,
+        &desired_state_drift,
+        &state_transition,
+        &supervision_remediation,
+    );
+    let total_blocked_count = attention_overview_total_blocked_count(
+        &command_risk,
+        &authorization_gap,
+        &event_delivery,
+        &desired_state_drift,
+        &state_transition,
+        &supervision_remediation,
+    );
+    let blocked_steps = steps.iter().filter(|step| step.blocked_count > 0).count();
+    let (controller_category_count, controller_ready_category_count) =
+        operations_brief_controller_handoff_ready_counts(&snapshot, &topology);
+    let controller_ready = controller_ready_category_count == controller_category_count;
+    let requires_human_review =
+        safety_brief_requires_human_review(&command_risk, &authorization_gap);
+    let status = safety_brief_status(
+        controller_ready,
+        total_blocked_count,
+        blocked_steps,
+        requires_human_review,
+        total_attention_count,
+    );
+    let decision = safety_brief_decision_label(
+        controller_ready,
+        total_blocked_count,
+        blocked_steps,
+        requires_human_review,
+        total_attention_count,
+    );
+    let ready = status == "ready";
+    let next_tool = safety_brief_next_tool(&steps, controller_ready, total_attention_count);
+
+    Ok(ToolHandlerOutput::new(safety_brief_output_json(
+        &snapshot,
+        &topology,
+        &command_risk,
+        &authorization_gap,
+        &event_delivery,
+        &desired_state_drift,
+        &state_transition,
+        &supervision_remediation,
+    ))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_safety_brief")),
+            ("status", string(status)),
+            ("ready", JsonValue::Bool(ready)),
+            (
+                "requires_human_review",
+                JsonValue::Bool(requires_human_review),
+            ),
+            ("decision", string(decision)),
+            ("total_blocked_count", integer(total_blocked_count as i64)),
+            ("blocked_steps", integer(blocked_steps as i64)),
+            ("next_tool", string(next_tool)),
+        ]),
+    ))
+}
+
 fn get_controller_handoff_summary_output_handler_output(
     runtime: &mut SmartHomeRuntime,
     principal_id: AgentId,
@@ -45464,6 +45664,463 @@ fn operations_brief_output_json(
             ]),
         ),
     ])
+}
+
+fn safety_brief_output_json(
+    snapshot: &RuntimeReadSnapshot,
+    topology: &RegistryTopologySummary,
+    command_risk: &CommandRiskAuditSummary,
+    authorization_gap: &AuthorizationGapAuditSummary,
+    event_delivery: &EventDeliveryAuditSummary,
+    desired_state_drift: &DesiredStateDriftAuditSummary,
+    state_transition: &StateTransitionAuditSummary,
+    supervision_remediation: &SupervisionRemediationSummary,
+) -> JsonValue {
+    let pending_work = snapshot.pending_work_summary();
+    let steps = remediation_plan_steps(
+        snapshot,
+        command_risk,
+        authorization_gap,
+        event_delivery,
+        desired_state_drift,
+        state_transition,
+        supervision_remediation,
+    );
+    let total_attention_count = attention_overview_total_attention_count(
+        snapshot,
+        command_risk,
+        authorization_gap,
+        event_delivery,
+        desired_state_drift,
+        state_transition,
+        supervision_remediation,
+    );
+    let total_blocked_count = attention_overview_total_blocked_count(
+        command_risk,
+        authorization_gap,
+        event_delivery,
+        desired_state_drift,
+        state_transition,
+        supervision_remediation,
+    );
+    let blocked_steps = steps.iter().filter(|step| step.blocked_count > 0).count();
+    let (controller_category_count, controller_ready_category_count) =
+        operations_brief_controller_handoff_ready_counts(snapshot, topology);
+    let controller_attention_count = controller_category_count - controller_ready_category_count;
+    let controller_ready = controller_ready_category_count == controller_category_count;
+    let requires_human_review = safety_brief_requires_human_review(command_risk, authorization_gap);
+    let status = safety_brief_status(
+        controller_ready,
+        total_blocked_count,
+        blocked_steps,
+        requires_human_review,
+        total_attention_count,
+    );
+    let ready = status == "ready";
+    let runtime_attention_count = pending_work.total_pending_work_count()
+        + event_delivery.requires_attention_rows
+        + desired_state_drift.requires_attention_rows
+        + state_transition.requires_attention_rows
+        + supervision_remediation.requires_attention_rows;
+    let runtime_blocked_count = event_delivery.blocked_rows
+        + desired_state_drift.blocked_rows
+        + state_transition.blocked_rows
+        + supervision_remediation.blocked_rows;
+    let runtime_next_tool = attention_overview_next_tool(
+        &pending_work,
+        command_risk,
+        authorization_gap,
+        event_delivery,
+        desired_state_drift,
+        state_transition,
+        supervision_remediation,
+    );
+
+    object([
+        ("generated_at_ms", integer(snapshot.generated_at_ms as i64)),
+        ("status", string(status)),
+        ("ready", JsonValue::Bool(ready)),
+        (
+            "requires_human_review",
+            JsonValue::Bool(requires_human_review),
+        ),
+        ("has_blockers", JsonValue::Bool(total_blocked_count > 0)),
+        (
+            "total_attention_count",
+            integer(total_attention_count as i64),
+        ),
+        ("total_blocked_count", integer(total_blocked_count as i64)),
+        (
+            "summary",
+            object([
+                (
+                    "boundary",
+                    string(
+                        "Chief reads D23 runtime and platform primitives; it does not own smart-home controller state.",
+                    ),
+                ),
+                ("controller_ready", JsonValue::Bool(controller_ready)),
+                (
+                    "controller_ready_category_count",
+                    integer(controller_ready_category_count as i64),
+                ),
+                (
+                    "controller_category_count",
+                    integer(controller_category_count as i64),
+                ),
+                (
+                    "runtime_pending_work_count",
+                    integer(pending_work.total_pending_work_count() as i64),
+                ),
+                (
+                    "remediation_step_count",
+                    integer(steps.len() as i64),
+                ),
+                ("blocked_steps", integer(blocked_steps as i64)),
+                (
+                    "next_tool",
+                    string(safety_brief_next_tool(
+                        &steps,
+                        controller_ready,
+                        total_attention_count,
+                    )),
+                ),
+                (
+                    "next_action",
+                    string(safety_brief_next_action(
+                        &steps,
+                        controller_ready,
+                        total_attention_count,
+                    )),
+                ),
+                (
+                    "next_owner_lane",
+                    string(safety_brief_next_owner_lane(
+                        &steps,
+                        controller_ready,
+                        total_attention_count,
+                    )),
+                ),
+            ]),
+        ),
+        (
+            "decision",
+            safety_brief_decision_json(
+                &steps,
+                controller_ready,
+                total_blocked_count,
+                blocked_steps,
+                requires_human_review,
+                total_attention_count,
+            ),
+        ),
+        (
+            "sections",
+            JsonValue::Array(vec![
+                operations_brief_section_json(
+                    "authorization",
+                    "Authorization safety",
+                    !authorization_gap.has_authorization_gaps(),
+                    authorization_gap.requires_attention_rows,
+                    authorization_gap.blocked_rows,
+                    SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID,
+                    remediation_plan_authorization_action(authorization_gap),
+                    authorization_gap_audit_summary_json(authorization_gap),
+                ),
+                operations_brief_section_json(
+                    "command_risk",
+                    "Command risk",
+                    !command_risk.has_command_risks(),
+                    command_risk.requires_attention_rows,
+                    command_risk.blocked_rows,
+                    SMART_HOME_LIST_COMMAND_RISK_AUDIT_TOOL_ID,
+                    remediation_plan_command_action(command_risk),
+                    command_risk_audit_summary_json(command_risk),
+                ),
+                operations_brief_section_json(
+                    "runtime_pressure",
+                    "Runtime pressure",
+                    runtime_attention_count == 0,
+                    runtime_attention_count,
+                    runtime_blocked_count,
+                    runtime_next_tool,
+                    if runtime_attention_count > 0 {
+                        "inspect_attention_overview"
+                    } else {
+                        "monitor_runtime_pressure"
+                    },
+                    object([
+                        ("pending_work", pending_work_summary_json(&pending_work)),
+                        ("event_delivery", event_delivery_audit_summary_json(event_delivery)),
+                        (
+                            "desired_state_drift",
+                            desired_state_drift_audit_summary_json(desired_state_drift),
+                        ),
+                        (
+                            "state_transition",
+                            state_transition_audit_summary_json(state_transition),
+                        ),
+                        (
+                            "supervision_remediation",
+                            supervision_remediation_summary_json(supervision_remediation),
+                        ),
+                    ]),
+                ),
+                operations_brief_section_json(
+                    "controller_handoff",
+                    "Controller handoff readiness",
+                    controller_ready,
+                    controller_attention_count,
+                    0,
+                    SMART_HOME_GET_CONTROLLER_HANDOFF_SUMMARY_TOOL_ID,
+                    if controller_ready {
+                        "monitor_controller_handoff"
+                    } else {
+                        "inspect_controller_handoff"
+                    },
+                    object([
+                        (
+                            "platform_route",
+                            string("/api/smart_home/controller_handoff"),
+                        ),
+                        (
+                            "ready_category_count",
+                            integer(controller_ready_category_count as i64),
+                        ),
+                        (
+                            "category_count",
+                            integer(controller_category_count as i64),
+                        ),
+                    ]),
+                ),
+                operations_brief_section_json(
+                    "remediation",
+                    "Remediation plan",
+                    steps.is_empty(),
+                    steps.len(),
+                    blocked_steps,
+                    steps
+                        .first()
+                        .map(|step| step.recommended_tool)
+                        .unwrap_or(SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID),
+                    steps
+                        .first()
+                        .map(|step| step.recommended_action)
+                        .unwrap_or("monitor_remediation_plan"),
+                    object([
+                        ("step_count", integer(steps.len() as i64)),
+                        ("blocked_steps", integer(blocked_steps as i64)),
+                        (
+                            "next_step",
+                            steps
+                                .first()
+                                .map(remediation_plan_step_json)
+                                .unwrap_or(JsonValue::Null),
+                        ),
+                    ]),
+                ),
+            ]),
+        ),
+        (
+            "source_tools",
+            attention_string_array(&[
+                SMART_HOME_GET_CONTROLLER_HANDOFF_SUMMARY_TOOL_ID,
+                SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID,
+                SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID,
+                SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID,
+                SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID,
+                SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID,
+                SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID,
+                SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID,
+                SMART_HOME_LIST_AUTHORIZATION_DECISIONS_TOOL_ID,
+                SMART_HOME_LIST_CAPABILITY_GRANTS_TOOL_ID,
+                SMART_HOME_LIST_COMMAND_RISK_AUDIT_TOOL_ID,
+                SMART_HOME_LIST_SUPERVISION_REMEDIATION_TOOL_ID,
+                SMART_HOME_LIST_STATE_TRANSITION_AUDIT_TOOL_ID,
+                SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID,
+                SMART_HOME_LIST_EVENT_DELIVERY_AUDIT_TOOL_ID,
+            ]),
+        ),
+    ])
+}
+
+fn safety_brief_status(
+    controller_ready: bool,
+    total_blocked_count: usize,
+    blocked_steps: usize,
+    requires_human_review: bool,
+    total_attention_count: usize,
+) -> &'static str {
+    if total_blocked_count > 0 || blocked_steps > 0 {
+        "blocked"
+    } else if requires_human_review {
+        "review_required"
+    } else if !controller_ready {
+        "attention"
+    } else if total_attention_count > 0 {
+        "monitor"
+    } else {
+        "ready"
+    }
+}
+
+fn safety_brief_requires_human_review(
+    command_risk: &CommandRiskAuditSummary,
+    authorization_gap: &AuthorizationGapAuditSummary,
+) -> bool {
+    authorization_gap.has_authorization_gaps()
+        || command_risk.denied_authorizations > 0
+        || command_risk.approval_gated_authorizations > 0
+        || command_risk.missing_capability_authorizations > 0
+}
+
+fn safety_brief_decision_json(
+    steps: &[RemediationPlanStep],
+    controller_ready: bool,
+    total_blocked_count: usize,
+    blocked_steps: usize,
+    requires_human_review: bool,
+    total_attention_count: usize,
+) -> JsonValue {
+    object([
+        (
+            "recommendation",
+            string(safety_brief_decision_label(
+                controller_ready,
+                total_blocked_count,
+                blocked_steps,
+                requires_human_review,
+                total_attention_count,
+            )),
+        ),
+        (
+            "recommended_tool",
+            string(safety_brief_next_tool(
+                steps,
+                controller_ready,
+                total_attention_count,
+            )),
+        ),
+        (
+            "recommended_action",
+            string(safety_brief_next_action(
+                steps,
+                controller_ready,
+                total_attention_count,
+            )),
+        ),
+        (
+            "owner_lane",
+            string(safety_brief_next_owner_lane(
+                steps,
+                controller_ready,
+                total_attention_count,
+            )),
+        ),
+        (
+            "reason",
+            string(safety_brief_reason(
+                steps,
+                controller_ready,
+                total_blocked_count,
+                blocked_steps,
+                requires_human_review,
+                total_attention_count,
+            )),
+        ),
+    ])
+}
+
+fn safety_brief_decision_label(
+    controller_ready: bool,
+    total_blocked_count: usize,
+    blocked_steps: usize,
+    requires_human_review: bool,
+    total_attention_count: usize,
+) -> &'static str {
+    if total_blocked_count > 0 || blocked_steps > 0 {
+        "hold"
+    } else if requires_human_review {
+        "review"
+    } else if !controller_ready || total_attention_count > 0 {
+        "monitor"
+    } else {
+        "go"
+    }
+}
+
+fn safety_brief_next_tool(
+    steps: &[RemediationPlanStep],
+    controller_ready: bool,
+    total_attention_count: usize,
+) -> &'static str {
+    steps
+        .first()
+        .map(|step| step.recommended_tool)
+        .unwrap_or(if !controller_ready {
+            SMART_HOME_GET_CONTROLLER_HANDOFF_SUMMARY_TOOL_ID
+        } else if total_attention_count > 0 {
+            SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID
+        } else {
+            SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID
+        })
+}
+
+fn safety_brief_next_action(
+    steps: &[RemediationPlanStep],
+    controller_ready: bool,
+    total_attention_count: usize,
+) -> &'static str {
+    steps
+        .first()
+        .map(|step| step.recommended_action)
+        .unwrap_or(if !controller_ready {
+            "inspect_controller_handoff"
+        } else if total_attention_count > 0 {
+            "inspect_attention_overview"
+        } else {
+            "proceed_with_controller_handoff"
+        })
+}
+
+fn safety_brief_next_owner_lane(
+    steps: &[RemediationPlanStep],
+    controller_ready: bool,
+    total_attention_count: usize,
+) -> &'static str {
+    steps
+        .first()
+        .map(|step| step.owner_lane)
+        .unwrap_or(if !controller_ready {
+            "platform"
+        } else if total_attention_count > 0 {
+            "operations"
+        } else {
+            "chief"
+        })
+}
+
+fn safety_brief_reason(
+    steps: &[RemediationPlanStep],
+    controller_ready: bool,
+    total_blocked_count: usize,
+    blocked_steps: usize,
+    requires_human_review: bool,
+    total_attention_count: usize,
+) -> &'static str {
+    if let Some(step) = steps.first() {
+        step.reason
+    } else if total_blocked_count > 0 || blocked_steps > 0 {
+        "safety_blockers"
+    } else if requires_human_review {
+        "human_review_required"
+    } else if !controller_ready {
+        "controller_handoff_attention"
+    } else if total_attention_count > 0 {
+        "runtime_monitoring_required"
+    } else {
+        "safety_ready"
+    }
 }
 
 fn operations_brief_controller_handoff_ready_counts(
@@ -78371,7 +79028,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 289);
+        assert_eq!(definitions.len(), 290);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -78404,6 +79061,9 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_SAFETY_BRIEF_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID));
@@ -79203,7 +79863,7 @@ mod tests {
         ));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            281
+            282
         );
         assert_eq!(
             export
@@ -79899,6 +80559,7 @@ mod tests {
         assert!(smart_home_tool_definition(SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID).is_some());
+        assert!(smart_home_tool_definition(SMART_HOME_GET_SAFETY_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_SET_DESIRED_STATE_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID).is_some());
@@ -80260,6 +80921,119 @@ mod tests {
         assert_eq!(array_len(field(output, "source_tools").unwrap()), Some(12));
     }
 
+    #[test]
+    fn safety_brief_holds_on_authorization_gap_blockers() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-command-tool-only"),
+                AgentId::trusted(AGENT_ID),
+                CapabilityId::trusted("smart_home.command.light"),
+                PrivilegeTier::LowRisk,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let denied_command = tool_runtime.invoke_with_events(&request(
+            "call-safety-brief-denied-command",
+            SMART_HOME_COMMAND_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                ("command_type", string("turn_on")),
+            ]),
+            2_000,
+        ));
+        assert!(!denied_command.result.ok);
+
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home-read"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                2_001,
+            ),
+        );
+
+        let request = request(
+            "call-safety-brief",
+            SMART_HOME_GET_SAFETY_BRIEF_TOOL_ID,
+            object([]),
+            2_002,
+        );
+        let trace = tool_runtime.invoke_with_events(&request);
+        assert!(trace.result.ok);
+        assert_eq!(trace.summary().progress_event_count, 1);
+
+        let output = trace.result.output.as_ref().unwrap();
+        assert_eq!(field(output, "status"), Some(&string("blocked")));
+        assert_eq!(field(output, "ready"), Some(&JsonValue::Bool(false)));
+        assert_eq!(
+            field(output, "requires_human_review"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(field(output, "has_blockers"), Some(&JsonValue::Bool(true)));
+        assert!(integer_value(field(output, "total_attention_count").unwrap()).unwrap() >= 2);
+        assert!(integer_value(field(output, "total_blocked_count").unwrap()).unwrap() >= 1);
+
+        let summary = field(output, "summary").unwrap();
+        assert_eq!(
+            field(summary, "boundary"),
+            Some(&string(
+                "Chief reads D23 runtime and platform primitives; it does not own smart-home controller state."
+            ))
+        );
+        assert_eq!(
+            field(summary, "next_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(summary, "next_action"),
+            Some(&string("draft_capability_grant_update"))
+        );
+        assert_eq!(field(summary, "next_owner_lane"), Some(&string("policy")));
+
+        let decision = field(output, "decision").unwrap();
+        assert_eq!(field(decision, "recommendation"), Some(&string("hold")));
+        assert_eq!(
+            field(decision, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(decision, "recommended_action"),
+            Some(&string("draft_capability_grant_update"))
+        );
+        assert_eq!(
+            field(decision, "reason"),
+            Some(&string("missing_capability_grants"))
+        );
+
+        assert_eq!(array_len(field(output, "sections").unwrap()), Some(5));
+        let authorization_section = array_item(field(output, "sections").unwrap(), 0).unwrap();
+        assert_eq!(
+            field(authorization_section, "section_id"),
+            Some(&string("authorization"))
+        );
+        assert_eq!(
+            field(authorization_section, "status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(authorization_section, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        let remediation_section = array_item(field(output, "sections").unwrap(), 4).unwrap();
+        assert_eq!(
+            field(remediation_section, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(array_len(field(output, "source_tools").unwrap()), Some(15));
+    }
+
     fn chief_of_staff_runtime_drives_smart_home_light_end_to_end_inner() {
         let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
         runtime
@@ -80455,11 +81229,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(289))
+            Some(&integer(290))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(281))
+            Some(&integer(282))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
