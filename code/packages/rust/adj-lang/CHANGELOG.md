@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.29.0] - 2026-07-02 — binary `\gcd(a, b)` / `\lcm(a, b)` in `latex "…"`
+
+### Added
+
+- The `latex "…"` adapter now lowers **`\gcd(a, b)`** / **`\lcm(a, b)`** to the
+  native `ComputeOp::Gcd` / `Lcm`, reusing the same two-argument binary-`Call`
+  path as `\min`/`\max`: `BinFn` gains `Gcd`/`Lcm`, the adapter maps
+  `Func::Gcd`/`Func::Lcm` → `ExprAst::Call2` (peeling the transparent
+  `Group`/`Fenced` around the two-element `Sequence`, exactly-two enforced), and
+  `lower_bin_fn` routes them to the engine ops. These are the `Func::Gcd`/`Lcm`
+  variants the latex frontend already parsed but the adapter previously rejected.
+  Only `Func::Det` and unknown `Other` remain unsupported.
+
+### Tests
+
+- One lower test: `\gcd(12, 18)` compute-and-decides to 6 and `\lcm(4, 6)` to 12.
+
 ## [0.28.0] - 2026-07-02 — binary `\min(a, b)` / `\max(a, b)` in `latex "…"`
 
 ### Added

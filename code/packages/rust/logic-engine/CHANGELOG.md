@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.34.0] - 2026-07-02 — binary gcd/lcm (`Gcd`/`Lcm`) integer ops
+
+### Added
+
+- Two binary compute ops **`ComputeOp::Gcd`** / **`ComputeOp::Lcm`** —
+  `gcd(a, b)` / `lcm(a, b)` over exactly TWO operands, from a LaTeX
+  `\gcd(a, b)` / `\lcm(a, b)`. They reuse the `Min2`/`Max2` binary-`Call` path
+  (folded into the general binary arm + `dim_op`, so `eval`'s recursive frame is
+  unchanged), but are **integer number-theoretic**: both operands must be exact
+  integers in the exactly-representable range (`|v| ≤ 2^53`); a non-integer
+  (`2.5`), NaN/inf, or out-of-range value is a clean `MalformedExpr`, never a
+  silent truncation.
+- Value computed by a leaf `#[inline(never)] int_gcd_lcm` helper (NOT on the
+  recursion path, so its loop locals don't enlarge the recursive frame): `gcd`
+  is Euclid on the magnitudes (`gcd(0, 0) = 0`, `gcd(n, 0) = |n|`), `lcm(a, b) =
+  (|a| / gcd) · |b|` in `i128` (`lcm(_, 0) = 0`), with the shared `is_finite`
+  guard as backstop. Dimensionally they combine like addition (a bare
+  dimensionless integer stays one). Exact-rational sidecar dropped — the f64 is
+  exact for the in-range integer results. `symbol()` renders `gcd` / `lcm`.
+
+### Tests
+
+- Three engine tests: gcd(12,18)=6 / lcm(4,6)=12, the zero edge cases
+  (`gcd(0,0)`, `gcd(n,0)`, `lcm(_,0)`), and non-integer-operand rejection.
+
 ## [0.33.0] - 2026-07-02 — binary min/max (`Min2`/`Max2`), the first binary-Call op
 
 ### Added

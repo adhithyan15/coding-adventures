@@ -129,6 +129,10 @@ pub enum BinFn {
     Min,
     /// `\max(a, b)` — the larger of two quantities.
     Max,
+    /// `\gcd(a, b)` — greatest common divisor (integer operands).
+    Gcd,
+    /// `\lcm(a, b)` — least common multiple (integer operands).
+    Lcm,
 }
 
 /// An aggregation operator in a `let` formula — reduces every
