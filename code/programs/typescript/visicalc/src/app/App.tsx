@@ -13,42 +13,106 @@
 // `list<text>` and this file carried a `@ts-expect-error` to mask the
 // resulting `Array<string>` vs `Array<Array<string>>` mismatch.
 
-import { useReducer, useMemo, useEffect, useCallback } from "react";
+import {
+  useReducer,
+  useMemo,
+  useEffect,
+  useCallback,
+  useRef,
+  useState,
+} from "react";
 import { Grid } from "../components/Grid";
 import { FormulaBar } from "../components/FormulaBar";
-import { initialState, reducer } from "./state";
-import { buildViewportRows, cellLabel, cellKey } from "./util";
+import { initialState, reducer, type AppAction } from "./state";
+import { cellLabel } from "./util";
+import { loadEngine, type Engine } from "./engine";
 
 export function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  // Derived: the 2-D viewport slice the Grid component is given.
-  // Recomputed each render; O(viewportSize * totalCols) is negligible.
+  // The Rust spreadsheet-core engine, compiled to WASM (see engine.ts). It holds
+  // the cells / dependency graph / recalc; the grid renders ITS computed values
+  // and commits write through to it — unlike the reducer-only v0.1.0, whose cells
+  // were raw strings with no formula evaluation (so the grid was empty).
+  const engineRef = useRef<Engine | null>(null);
+  const [ready, setReady] = useState(false);
+  const [rev, setRev] = useState(0); // bump to re-derive after a mutation
+
+  useEffect(() => {
+    let live = true;
+    loadEngine().then((e) => {
+      if (!live) return;
+      engineRef.current = e;
+      setReady(true);
+      setRev((r) => r + 1);
+    });
+    return () => {
+      live = false;
+    };
+  }, []);
+
+  // Derived: the 2-D viewport slice the Grid is given — the engine's *computed*
+  // display strings for the visible window. Re-derived when the engine mutates
+  // (rev) or the viewport moves.
   const viewportRows = useMemo(
     () =>
-      buildViewportRows(
-        state.cells,
-        state.viewportOffset,
-        state.viewportSize,
-        state.totalRows,
-        state.totalCols,
-      ),
-    [
-      state.cells,
-      state.viewportOffset,
-      state.viewportSize,
-      state.totalRows,
-      state.totalCols,
-    ],
+      ready && engineRef.current
+        ? engineRef.current.window(
+            state.viewportOffset,
+            state.viewportSize,
+            state.totalRows,
+            state.totalCols,
+          )
+        : [],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [ready, rev, state.viewportOffset, state.viewportSize, state.totalRows, state.totalCols],
   );
 
-  // The formula bar shows either the live edit content (when editing)
-  // or the raw value of the selected cell (when not editing).
+  // The formula bar shows the live edit buffer while editing, else the selected
+  // cell's raw SOURCE (=SUM(A1:D1), not the computed 38) read from the engine.
   const isEditingSelected =
     state.editRow === state.selectedRow && state.editCol === state.selectedCol;
   const formulaBarValue = isEditingSelected
     ? state.editContent
-    : state.cells[cellKey(state.selectedRow, state.selectedCol)] ?? "";
+    : ready && engineRef.current
+      ? engineRef.current.raw(state.selectedRow, state.selectedCol)
+      : "";
+
+  // Intercept commits: write the buffered edit through to the engine (which
+  // recomputes every dependent), then let the reducer update UI state and bump
+  // `rev` so the grid re-reads the engine. `editCommit` is the grid's inline
+  // edit; `commit` is the formula bar's. Both buffer into state.editContent.
+  const engineDispatch = useCallback(
+    (action: AppAction) => {
+      // editStart: seed the edit buffer with the cell's SOURCE from the engine
+      // (the reducer reads state.cells, which is empty now that the engine owns
+      // the data — so an edit would otherwise start blank).
+      if (action.type === "editStart" && engineRef.current) {
+        dispatch(action);
+        dispatch({
+          type: "formulaChange",
+          value: engineRef.current.raw(action.row, action.col),
+        });
+        return;
+      }
+      if (
+        (action.type === "editCommit" || action.type === "commit") &&
+        engineRef.current &&
+        state.editRow !== -1
+      ) {
+        engineRef.current.setCell(
+          state.editRow,
+          state.editCol,
+          state.editContent,
+        );
+        dispatch(action);
+        setRev((r) => r + 1);
+        return;
+      }
+      dispatch(action);
+    },
+    [state.editRow, state.editCol, state.editContent],
+  );
 
   // Keyboard handling (UI26 §8). We attach a single keydown listener
   // on window because navigation is a host concern, not a Grid concern.
@@ -61,32 +125,32 @@ export function App() {
       const c = state.selectedCol;
       switch (e.key) {
         case "ArrowUp":
-          if (r > 0) dispatch({ type: "navigate", row: r - 1, col: c });
+          if (r > 0) engineDispatch({ type: "navigate", row: r - 1, col: c });
           e.preventDefault();
           break;
         case "ArrowDown":
           if (r + 1 < state.totalRows)
-            dispatch({ type: "navigate", row: r + 1, col: c });
+            engineDispatch({ type: "navigate", row: r + 1, col: c });
           e.preventDefault();
           break;
         case "ArrowLeft":
-          if (c > 0) dispatch({ type: "navigate", row: r, col: c - 1 });
+          if (c > 0) engineDispatch({ type: "navigate", row: r, col: c - 1 });
           e.preventDefault();
           break;
         case "ArrowRight":
           if (c + 1 < state.totalCols)
-            dispatch({ type: "navigate", row: r, col: c + 1 });
+            engineDispatch({ type: "navigate", row: r, col: c + 1 });
           e.preventDefault();
           break;
         case "Enter":
         case "F2":
-          dispatch({ type: "editStart", row: r, col: c });
+          engineDispatch({ type: "editStart", row: r, col: c });
           e.preventDefault();
           break;
         default:
           // Any single printable character starts editing.
           if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
-            dispatch({ type: "editStart", row: r, col: c });
+            engineDispatch({ type: "editStart", row: r, col: c });
           }
       }
     },
@@ -96,6 +160,7 @@ export function App() {
       state.editRow,
       state.totalRows,
       state.totalCols,
+      engineDispatch,
     ],
   );
 
@@ -110,7 +175,7 @@ export function App() {
         cellAddress={cellLabel(state.selectedRow, state.selectedCol)}
         formula={formulaBarValue}
         readOnly={false}
-        dispatch={dispatch}
+        dispatch={engineDispatch}
       />
       <Grid
         columnHeaders={state.columnHeaders}
@@ -134,7 +199,7 @@ export function App() {
         // UI28-1 / U29-D1 — the live edit buffer Grid threads into the
         // inline <input value=...> when the user is editing a cell.
         editContent={state.editContent}
-        dispatch={dispatch}
+        dispatch={engineDispatch}
       />
     </div>
   );

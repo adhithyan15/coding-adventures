@@ -65,5 +65,23 @@ echo "Compiling FormulaBar..."
 # each generated .tsx file, so the host (src/app/state.ts) imports
 # `GridEvent` and `FormulaBarEvent` directly. No re-export shims needed.
 
+# Vendor the shared Rust spreadsheet-core engine (compiled to WASM) into
+# `public/` so Vite copies it into `dist/` and index.html can load it. The
+# React host renders the engine's *computed* values (see src/app/engine.ts);
+# without this the grid is empty because the reducer stores raw strings with
+# no formula evaluation. We copy from the sibling HTML demo's committed vendor
+# copy — the single source of truth for the bundle — rather than committing a
+# second ~890 KB duplicate here (public/spreadsheet-engine-wasm.js is gitignored).
+ENGINE_SRC="$REPO_ROOT/code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js"
+PUBLIC_DIR="$DEMO_DIR/public"
+mkdir -p "$PUBLIC_DIR"
+if [ -f "$ENGINE_SRC" ]; then
+  echo "Vendoring engine bundle -> public/spreadsheet-engine-wasm.js"
+  cp "$ENGINE_SRC" "$PUBLIC_DIR/spreadsheet-engine-wasm.js"
+else
+  echo "ERROR: engine bundle not found at $ENGINE_SRC" >&2
+  exit 1
+fi
+
 echo "Done. Generated:"
 ls -la "$OUT_DIR"

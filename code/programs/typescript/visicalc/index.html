@@ -18,6 +18,9 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- The Rust spreadsheet-core engine, compiled to WASM (same bundle the HTML demo
+         ships). It sets window.__spreadsheetEngineReady + window.SpreadsheetEngine. -->
+    <script src="/spreadsheet-engine-wasm.js"></script>
     <script type="module" src="/src/app/main.tsx"></script>
   </body>
 </html>

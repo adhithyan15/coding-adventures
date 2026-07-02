@@ -53,6 +53,39 @@ npm run dev       # rebuilds components then starts Vite at http://localhost:517
 `npm run dev` runs `scripts/build.sh` first, so the components are always
 fresh before the dev server starts.
 
+## The engine
+
+The grid renders *computed* spreadsheet values, not raw text. Those come
+from the shared Rust [`spreadsheet-core`](../../../packages/rust/spreadsheet-core)
+engine — the exact same engine the SwiftUI / Qt / Flutter / Compose /
+Android backends drive through native FFI/JNI. On the web the engine is
+compiled to WebAssembly.
+
+- `scripts/build.sh` vendors the engine bundle into
+  `public/spreadsheet-engine-wasm.js` (copied from the single committed
+  source in [`../visicalc-html/vendor/`](../visicalc-html/vendor); the copy
+  is git-ignored, not a second duplicate). Vite copies `public/` into
+  `dist/`, and `index.html` loads it as a classic script that resolves
+  `window.__spreadsheetEngineReady` before React mounts.
+- [`src/app/engine.ts`](src/app/engine.ts) wraps the workbook in a small
+  React-friendly view: `window(...)` returns the visible slice of computed
+  display strings, `raw(row,col)` returns a cell's source for the formula
+  bar, and `setCell(row,col,value)` writes through and recomputes.
+- The bundle self-contains its `.wasm` (embedded base64 +
+  `WebAssembly.instantiate`, no separate `fetch`), so it loads identically
+  under a dev server (`http://`) and under Electron's `file://`.
+
+### Electron
+
+[`../visicalc-electron`](../visicalc-electron) is a thin desktop shell that
+loads this program's `dist/index.html` in a `BrowserWindow`:
+
+```bash
+cd code/programs/typescript/visicalc-electron
+npm install
+npm start        # build:react (this program) then launches Electron
+```
+
 ## Architecture (UI26 §1)
 
 ```
@@ -81,12 +114,15 @@ Three structural invariants:
 1. **Mosaic components are dumb renderers.** They know nothing about
    spreadsheets — they just render the props they're given and fire the
    events declared in their `.mil` interface.
-2. **The host owns all state** in a single `useReducer`. Cell values,
-   selection, edit state, viewport — all of it.
-3. **Formula evaluation is out of scope** for this demo. The host stores
-   raw string values per cell and displays them as-is. Replacing that
-   with a real expression evaluator is a separate parallel track (see
-   the formula-engine work, tracked separately from the UI queue).
+2. **The host owns UI state** in a single `useReducer` — selection, edit
+   buffer, and viewport. Cell *values* and formula evaluation live in the
+   engine, not the reducer.
+3. **Formula evaluation runs in the shared Rust engine.** The same
+   `spreadsheet-core` engine every other VisiCalc backend uses is compiled
+   to WASM and bound in [`src/app/engine.ts`](src/app/engine.ts). The grid
+   renders the engine's *computed* values (e.g. `=SUM(A1:D1)` shows `38`),
+   and commits write through to the engine, which recomputes every
+   dependent. See "The engine" below.
 
 ## Known limitations of this v1 (deferred to follow-up PRs)
 
@@ -117,9 +153,10 @@ contributor can pick them up:
    through to the generated `<input placeholder="...">`. The FormulaBar
    `.mll` carries `placeholder: "Enter formula"` directly.
 
-4. **No formula evaluation.** Cells store and display raw strings.
-   `editCommit` is where a real formula engine would plug in; see
-   UI26 §11 and the separate formula-engine track for details.
+4. ~~**No formula evaluation.**~~ *Resolved.* Cells are now evaluated by
+   the shared Rust `spreadsheet-core` engine (compiled to WASM), bound in
+   [`src/app/engine.ts`](src/app/engine.ts). `editCommit` writes the edit
+   through to the engine, which recomputes dependents. See "The engine".
 
 5. ~~**No column-widths binding.**~~ *Resolved.* The Grid emitter now
    reads the optional `column-widths` slot ref (UI26 §2.1) and emits a
