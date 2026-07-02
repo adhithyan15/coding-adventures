@@ -1,5 +1,34 @@
 # Changelog — `aarch64-backend`
 
+## 0.20.0 — 2026-07-01 — Large-frame split prologue/epilogue (AL-multidim)
+
+**Problem**: ALGOL 60 programs that use a 2D array emit many IIR variables
+(lower bounds, strides, size temporaries, loop counters, etc.), producing
+stack frames larger than 504 bytes.  The pre-indexed `STP X29,X30,[SP,#-N]!`
+instruction uses a 7-bit signed immediate × 8 (range −504 … +504), so frames
+above 504 bytes were rejected with `BackendError::FrameTooLarge`.
+
+**Fix — split prologue for large frames** (`emit_function_prologue`):
+- Frames ≤ 504 bytes: unchanged — `STP X29,X30,[SP,#-frame]!` (pre-indexed,
+  combined allocate + save in one instruction).
+- Frames > 504 bytes: emits `SUB SP, SP, #frame` (12-bit unsigned immediate,
+  covers up to 4080 bytes = 508 variable slots) followed by two `STR`
+  instructions: `STR X29, [SP, #0]` (saves FP) and `STR X30, [SP, #8]`
+  (saves LR).  Variable slots start at `[SP, #16]` — identical layout in
+  both paths.
+
+**Matching split epilogue** (`emit_epilogue`):
+- Frames ≤ 504 bytes: unchanged — `LDP X29,X30,[SP],#frame` (post-indexed).
+- Frames > 504 bytes: `LDR X29, [SP, #0]`, `LDR X30, [SP, #8]`, `ADD SP,
+  SP, #frame` (12-bit immediate via `add_imm`).
+
+**New frame limit**: 4080 bytes (raised from 504).  `BackendError::FrameTooLarge`
+is only returned for frames > 4080.
+
+**61 unit tests pass** (no new tests added; existing tests exercise both paths
+because the small-frame path is unchanged and the large-frame path is exercised
+by the new AL-multidim matrix cell in `lang-aot`).
+
 ## 0.19.0 — 2026-07-01 — TWIG-GC: `alloc` → `__twig_gc_alloc`, `safepoint` lowering
 
 **`alloc` op** (TWIG-GC, native-aot-substrate PR-1):
