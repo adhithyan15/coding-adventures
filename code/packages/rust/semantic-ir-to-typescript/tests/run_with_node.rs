@@ -1349,3 +1349,247 @@ fn t2_index_ops_still_return_nil_no_overraise_ts() {
         );
     }
 }
+
+// ── MX3: Ruby mixins (include / extend) → TypeScript → node execution proof ───
+//
+// MX1 (merged) lowers `module M`, `include M`, and `extend M` to the
+// `__def_method__` / `__include__` / `__extend__` builtins; MX3 makes the TS
+// OOP runtime EXECUTE them.  These proofs lower REAL Ruby through
+// `ruby-to-semantic-ir`, compile to TypeScript, and run under `node` — the same
+// programs the reference (Python) backend proves.
+//
+// As with every node proof here, the workspace runtime cannot be resolved under
+// bare `node`, so we swap the OOP import for a faithful inline `__SirOop` stub
+// that TRANSCRIBES the real MX3 logic added to `@coding-adventures/sir-runtime-oop`:
+//   • `includeModule` appends to the owner's include-order list;
+//   • `extendModule` copies a module's instance methods into the owner's
+//     class-method table;
+//   • `resolveInstanceMethod` walks Ruby's MRO — class first, then its modules
+//     most-recent-first (depth-first, `seen`-de-duplicated for diamonds), then
+//     the superclass — so a class method SHADOWS a module method and a diamond
+//     resolves once.
+// Keeping the real MRO here means the proof exercises "the mixed-in method is
+// found by the module-aware walk", not just that the emitted calls are present.
+
+const SIR_OOP_MIXIN_STUB: &str = r#"const __SirOop = (() => {
+  const SEP = "\x00";
+  const key = (c, m) => c + SEP + m;
+  const supers = new Map();
+  const instanceMethods = new Map();
+  const classMethods = new Map();
+  const includedModules = new Map();
+  const selfStack = [];
+  const defaultSelf = { sirClass: "Object", ivars: new Map() };
+  class SirInstance { constructor(c) { this.sirClass = c; this.ivars = new Map(); } }
+  const curSelf = () => (selfStack.length ? selfStack[selfStack.length - 1] : defaultSelf);
+  const superclassOf = (n) => (supers.has(n) ? supers.get(n) : null);
+  const defineClass = (n, s) => { supers.set(n, s ?? null); };
+  const defMethod = (c, m, fn) => { instanceMethods.set(key(c, m), fn); };
+  const defClassMethod = (c, m, fn) => { classMethods.set(key(c, m), fn); };
+  const ivarSet = (n, v) => { curSelf().ivars.set(n, v); return v; };
+  const ivarGet = (n) => { const iv = curSelf().ivars; return iv.has(n) ? iv.get(n) : null; };
+  const includeModule = (owner, mod) => {
+    const list = includedModules.get(owner);
+    if (list === undefined) includedModules.set(owner, [mod]);
+    else if (!list.includes(mod)) list.push(mod);
+  };
+  const extendModule = (owner, mod) => {
+    const prefix = mod + SEP;
+    for (const [k, fn] of instanceMethods) {
+      if (k.startsWith(prefix)) classMethods.set(key(owner, k.slice(prefix.length)), fn);
+    }
+  };
+  const resolve = (className, methodName) => {
+    const seen = new Set();
+    const searchOwner = (owner) => {
+      if (seen.has(owner)) return null;
+      seen.add(owner);
+      const own = instanceMethods.get(key(owner, methodName));
+      if (own !== undefined) return own;
+      const mods = includedModules.get(owner);
+      if (mods !== undefined) {
+        for (let i = mods.length - 1; i >= 0; i--) {
+          const hit = searchOwner(mods[i]);
+          if (hit !== null) return hit;
+        }
+      }
+      return null;
+    };
+    let cur = className; const seenClasses = new Set();
+    while (cur !== null && !seenClasses.has(cur)) {
+      seenClasses.add(cur);
+      const hit = searchOwner(cur);
+      if (hit !== null) return hit;
+      cur = superclassOf(cur);
+    }
+    return null;
+  };
+  const resolveClass = (className, methodName) => {
+    let cur = className; const seen = new Set();
+    while (cur !== null && !seen.has(cur)) {
+      const fn = classMethods.get(key(cur, methodName));
+      if (fn !== undefined) return fn;
+      seen.add(cur); cur = superclassOf(cur);
+    }
+    return null;
+  };
+  const callNew = (c, ...args) => {
+    const obj = new SirInstance(c);
+    selfStack.push(obj);
+    try { const init = resolve(c, "initialize"); if (init !== null) __Sir.apply(init, args); }
+    finally { selfStack.pop(); }
+    return obj;
+  };
+  const callMethod = (recv, name, ...args) => {
+    if (recv instanceof SirInstance) {
+      const fn = resolve(recv.sirClass, name);
+      if (fn !== null) {
+        selfStack.push(recv);
+        try { return __Sir.apply(fn, args); } finally { selfStack.pop(); }
+      }
+    }
+    return null;
+  };
+  const callClassMethod = (c, name, ...args) => {
+    const fn = resolveClass(c, name);
+    return fn === null ? null : __Sir.apply(fn, args);
+  };
+  return { defineClass, defMethod, defClassMethod, includeModule, extendModule,
+           callNew, callMethod, callClassMethod, ivarSet, ivarGet };
+})();
+"#;
+
+/// A `__Sir` stub carrying `Closure` + `apply` (for method closures) plus a
+/// Ruby-flavoured `puts` (string+newline; the MX3 programs print via `puts`).
+const SIR_CLOSURE_MIXIN_STUB: &str = r#"const __Sir = {
+  Closure: class { constructor(fn) { this.fn = fn; } },
+  apply: (c, args) => c.fn(...args),
+  toDisplay: (v) => (v === null ? "nil" : String(v)),
+  puts: (...args) => {
+    if (args.length === 0) { process.stdout.write("\n"); return null; }
+    for (const a of args) {
+      const t = __Sir.toDisplay(a);
+      process.stdout.write(t.endsWith("\n") ? t : t + "\n");
+    }
+    return null;
+  },
+};
+"#;
+
+fn ruby_mixin_ts_to_runnable_js(ts: &str) -> String {
+    let mut js = ts.to_string();
+    js = js.replace(
+        "import * as __Sir from \"@coding-adventures/sir-runtime-core\";\n",
+        SIR_CLOSURE_MIXIN_STUB,
+    );
+    js = js.replace(
+        "import * as __SirOop from \"@coding-adventures/sir-runtime-oop\";\n",
+        SIR_OOP_MIXIN_STUB,
+    );
+    js = js.replace(" as { [k: string]: __Sir.Val }", "");
+    js = js.replace(": __Sir.Val[]", "");
+    js = js.replace(": __Sir.Val", "");
+    js
+}
+
+/// Compile a Ruby-lowered mixin module → TS → JS with the MX3 stub, run under
+/// node, and return trimmed stdout.  `None` when node is unavailable.
+fn run_mixin_source(src: &str, tag: &str) -> Option<String> {
+    let module = ruby_to_semantic_ir::compile_source(src, tag).expect("lower ruby");
+    let artifact = compile(&module).expect("compile to typescript");
+    if !node_available() {
+        eprintln!("note: `node` unavailable — skipping MX3 execution for `{tag}`");
+        return None;
+    }
+    let js = ruby_mixin_ts_to_runnable_js(&artifact.source);
+    let mut path: PathBuf = std::env::temp_dir();
+    path.push(format!("sir_ts_mixin_{}_{}.js", tag, std::process::id()));
+    std::fs::write(&path, &js).expect("write temp js");
+    let output = Command::new("node").arg(&path).output().expect("spawn node");
+    let _ = std::fs::remove_file(&path);
+    assert!(
+        output.status.success(),
+        "node exited non-zero for `{tag}`:\nstdout: {}\nstderr: {}\nsource:\n{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr),
+        js,
+    );
+    let stdout = String::from_utf8_lossy(&output.stdout)
+        .trim_end_matches(['\n', '\r'])
+        .to_string();
+    Some(stdout)
+}
+
+#[test]
+fn mx3_included_module_method_is_callable_ts() {
+    // A module instance method mixed into a class is found on an instance.
+    let src = "module Greeter\n  def greet\n    \"hello\"\n  end\nend\n\
+               class Person\n  include Greeter\nend\n\
+               puts Person.new.greet\n";
+    // Shape: the mixin directive maps to the runtime helper.
+    let module = ruby_to_semantic_ir::compile_source(src, "mx_inc").expect("lower ruby");
+    let artifact = compile(&module).expect("compile");
+    assert!(
+        artifact.source.contains("__SirOop.includeModule(\"Person\", \"Greeter\")"),
+        "include must map to includeModule; got:\n{}",
+        artifact.source
+    );
+    if let Some(stdout) = run_mixin_source(src, "mx_inc") {
+        assert_eq!(stdout, "hello", "mixed-in module method must be callable");
+    }
+}
+
+#[test]
+fn mx3_class_method_shadows_module_method_ts() {
+    // The class defines `greet` itself → class-first MRO shadows the module's.
+    let src = "module Greeter\n  def greet\n    \"from module\"\n  end\nend\n\
+               class Person\n  include Greeter\n  def greet\n    \"from class\"\n  end\nend\n\
+               puts Person.new.greet\n";
+    if let Some(stdout) = run_mixin_source(src, "mx_shadow") {
+        assert_eq!(stdout, "from class", "class method must shadow the included module's");
+    }
+}
+
+#[test]
+fn mx3_most_recently_included_module_wins_ts() {
+    // Two modules define the same method; the LAST included wins (reverse walk).
+    let src = "module A\n  def who\n    \"A\"\n  end\nend\n\
+               module B\n  def who\n    \"B\"\n  end\nend\n\
+               class C\n  include A\n  include B\nend\n\
+               puts C.new.who\n";
+    if let Some(stdout) = run_mixin_source(src, "mx_recent") {
+        assert_eq!(stdout, "B", "most recently included module wins the MRO");
+    }
+}
+
+#[test]
+fn mx3_diamond_include_resolves_once_ts() {
+    // Diamond: C includes X and Y, both of which include Base.  Base#tag is
+    // found exactly once (the `seen` set de-duplicates), and the program runs.
+    let src = "module Base\n  def tag\n    \"base\"\n  end\nend\n\
+               module X\n  include Base\nend\n\
+               module Y\n  include Base\nend\n\
+               class C\n  include X\n  include Y\nend\n\
+               puts C.new.tag\n";
+    if let Some(stdout) = run_mixin_source(src, "mx_diamond") {
+        assert_eq!(stdout, "base", "diamond include must resolve the shared module once");
+    }
+}
+
+#[test]
+fn mx3_extend_makes_module_method_a_class_method_ts() {
+    // `extend M` mixes M's instance methods as CLASS methods → `Widget.describe`.
+    let src = "module Describable\n  def describe\n    \"a widget\"\n  end\nend\n\
+               class Widget\n  extend Describable\nend\n\
+               puts Widget.describe\n";
+    let module = ruby_to_semantic_ir::compile_source(src, "mx_ext").expect("lower ruby");
+    let artifact = compile(&module).expect("compile");
+    assert!(
+        artifact.source.contains("__SirOop.extendModule(\"Widget\", \"Describable\")"),
+        "extend must map to extendModule; got:\n{}",
+        artifact.source
+    );
+    if let Some(stdout) = run_mixin_source(src, "mx_ext") {
+        assert_eq!(stdout, "a widget", "extend must make the module method a class method");
+    }
+}
