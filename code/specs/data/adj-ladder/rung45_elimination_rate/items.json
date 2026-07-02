@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 45 \u2014 weight-and-time-normalised drug elimination rate from four stated quantities (a NEW panel: pharmacokinetic elimination rate). From an administered and a residual dose plus the body weight and elapsed time compute the elimination rate ((administered_dose-residual_dose)/(body_weight*elapsed_time)), the eliminated amount (administered_dose-residual_dose), or the weight*time product (body_weight*elapsed_time). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, DIFFERENCE-OVER-PRODUCT (a-b)/(c*d), the first quotient on the ladder to divide a parenthesised difference by a parenthesised product (distinct from rung-41 difference-over-sum (a-b)/(a+b), rung-42 sum-over-difference (a+b)/(c-d), and rung-44 product-over-sum (a*b)/(c+d)) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via -, * and / \u2014 no constant leaks, and neither the eliminated amount, the weight*time product, nor any rate ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: normalising by the body weight alone (dropping the elapsed time), and ADDING the weight and time instead of multiplying them. The core confusion tested is dividing the eliminated amount by the weight-times-time product.",
+  "items": [
+    {
+      "id": "r45elr-01",
+      "qtype": "elimination_rate",
+      "stem": "A 100 mg dose is given to a 4 kg patient; after 2 h, 20 mg remains. What is the weight-and-time-normalised elimination rate (amount eliminated over weight times time)?",
+      "program": "observe administered_dose(100)\nobserve residual_dose(20)\nobserve body_weight(4)\nobserve elapsed_time(2)\nlet answer = (administered_dose - residual_dose) / (body_weight * elapsed_time)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r45elr-02",
+      "qtype": "elimination_rate",
+      "stem": "A 100 mg dose is given to a 4 kg patient; after 2 h, 20 mg remains. What is the the amount of drug eliminated (administered minus residual)?",
+      "program": "observe administered_dose(100)\nobserve residual_dose(20)\nobserve body_weight(4)\nobserve elapsed_time(2)\nlet answer = administered_dose - residual_dose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r45elr-03",
+      "qtype": "elimination_rate",
+      "stem": "A 100 mg dose is given to a 4 kg patient; after 2 h, 20 mg remains. What is the the weight-times-time product (the normalising denominator)?",
+      "program": "observe administered_dose(100)\nobserve residual_dose(20)\nobserve body_weight(4)\nobserve elapsed_time(2)\nlet answer = body_weight * elapsed_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r45elr-04",
+      "qtype": "elimination_rate",
+      "stem": "A 120 mg dose is given to a 3 kg patient; after 3 h, 30 mg remains. What is the weight-and-time-normalised elimination rate (amount eliminated over weight times time)?",
+      "program": "observe administered_dose(120)\nobserve residual_dose(30)\nobserve body_weight(3)\nobserve elapsed_time(3)\nlet answer = (administered_dose - residual_dose) / (body_weight * elapsed_time)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r45elr-05",
+      "qtype": "elimination_rate",
+      "stem": "A 120 mg dose is given to a 3 kg patient; after 3 h, 30 mg remains. What is the the amount of drug eliminated (administered minus residual)?",
+      "program": "observe administered_dose(120)\nobserve residual_dose(30)\nobserve body_weight(3)\nobserve elapsed_time(3)\nlet answer = administered_dose - residual_dose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 90,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r45elr-06",
+      "qtype": "elimination_rate",
+      "stem": "A 120 mg dose is given to a 3 kg patient; after 3 h, 30 mg remains. What is the the weight-times-time product (the normalising denominator)?",
+      "program": "observe administered_dose(120)\nobserve residual_dose(30)\nobserve body_weight(3)\nobserve elapsed_time(3)\nlet answer = body_weight * elapsed_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r45elr-07",
+      "qtype": "elimination_rate",
+      "stem": "A 90 mg dose is given to a 5 kg patient; after 2 h, 10 mg remains. What is the weight-and-time-normalised elimination rate (amount eliminated over weight times time)?",
+      "program": "observe administered_dose(90)\nobserve residual_dose(10)\nobserve body_weight(5)\nobserve elapsed_time(2)\nlet answer = (administered_dose - residual_dose) / (body_weight * elapsed_time)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.428571428571429,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r45elr-08",
+      "qtype": "elimination_rate",
+      "stem": "A 90 mg dose is given to a 5 kg patient; after 2 h, 10 mg remains. What is the the amount of drug eliminated (administered minus residual)?",
+      "program": "observe administered_dose(90)\nobserve residual_dose(10)\nobserve body_weight(5)\nobserve elapsed_time(2)\nlet answer = administered_dose - residual_dose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.428571428571429,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r45elr-09",
+      "qtype": "elimination_rate",
+      "stem": "A 90 mg dose is given to a 5 kg patient; after 2 h, 10 mg remains. What is the the weight-times-time product (the normalising denominator)?",
+      "program": "observe administered_dose(90)\nobserve residual_dose(10)\nobserve body_weight(5)\nobserve elapsed_time(2)\nlet answer = body_weight * elapsed_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.428571428571429,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r45elr-10",
+      "qtype": "elimination_rate",
+      "stem": "A 60 mg dose is given to a 3 kg patient; after 4 h, 12 mg remains. What is the weight-and-time-normalised elimination rate (amount eliminated over weight times time)?",
+      "program": "observe administered_dose(60)\nobserve residual_dose(12)\nobserve body_weight(3)\nobserve elapsed_time(4)\nlet answer = (administered_dose - residual_dose) / (body_weight * elapsed_time)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.857142857142857,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r45elr-11",
+      "qtype": "elimination_rate",
+      "stem": "A 60 mg dose is given to a 3 kg patient; after 4 h, 12 mg remains. What is the the amount of drug eliminated (administered minus residual)?",
+      "program": "observe administered_dose(60)\nobserve residual_dose(12)\nobserve body_weight(3)\nobserve elapsed_time(4)\nlet answer = administered_dose - residual_dose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.857142857142857,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r45elr-12",
+      "qtype": "elimination_rate",
+      "stem": "A 60 mg dose is given to a 3 kg patient; after 4 h, 12 mg remains. What is the the weight-times-time product (the normalising denominator)?",
+      "program": "observe administered_dose(60)\nobserve residual_dose(12)\nobserve body_weight(3)\nobserve elapsed_time(4)\nlet answer = body_weight * elapsed_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.857142857142857,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r45elr-13",
+      "qtype": "elimination_rate",
+      "stem": "A 80 mg dose is given to a 4 kg patient; after 3 h, 20 mg remains. What is the weight-and-time-normalised elimination rate (amount eliminated over weight times time)?",
+      "program": "observe administered_dose(80)\nobserve residual_dose(20)\nobserve body_weight(4)\nobserve elapsed_time(3)\nlet answer = (administered_dose - residual_dose) / (body_weight * elapsed_time)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.571428571428571,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r45elr-14",
+      "qtype": "elimination_rate",
+      "stem": "A 80 mg dose is given to a 4 kg patient; after 3 h, 20 mg remains. What is the the amount of drug eliminated (administered minus residual)?",
+      "program": "observe administered_dose(80)\nobserve residual_dose(20)\nobserve body_weight(4)\nobserve elapsed_time(3)\nlet answer = administered_dose - residual_dose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.571428571428571,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r45elr-15",
+      "qtype": "elimination_rate",
+      "stem": "A 80 mg dose is given to a 4 kg patient; after 3 h, 20 mg remains. What is the the weight-times-time product (the normalising denominator)?",
+      "program": "observe administered_dose(80)\nobserve residual_dose(20)\nobserve body_weight(4)\nobserve elapsed_time(3)\nlet answer = body_weight * elapsed_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.571428571428571,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r45elr-16",
+      "qtype": "elimination_rate",
+      "stem": "A 150 mg dose is given to a 6 kg patient; after 2 h, 30 mg remains. What is the weight-and-time-normalised elimination rate (amount eliminated over weight times time)?",
+      "program": "observe administered_dose(150)\nobserve residual_dose(30)\nobserve body_weight(6)\nobserve elapsed_time(2)\nlet answer = (administered_dose - residual_dose) / (body_weight * elapsed_time)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r45elr-17",
+      "qtype": "elimination_rate",
+      "stem": "A 150 mg dose is given to a 6 kg patient; after 2 h, 30 mg remains. What is the the amount of drug eliminated (administered minus residual)?",
+      "program": "observe administered_dose(150)\nobserve residual_dose(30)\nobserve body_weight(6)\nobserve elapsed_time(2)\nlet answer = administered_dose - residual_dose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r45elr-18",
+      "qtype": "elimination_rate",
+      "stem": "A 150 mg dose is given to a 6 kg patient; after 2 h, 30 mg remains. What is the the weight-times-time product (the normalising denominator)?",
+      "program": "observe administered_dose(150)\nobserve residual_dose(30)\nobserve body_weight(6)\nobserve elapsed_time(2)\nlet answer = body_weight * elapsed_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r45elr-19",
+      "qtype": "elimination_rate",
+      "stem": "A 200 mg dose is given to a 4 kg patient; after 4 h, 40 mg remains. What is the weight-and-time-normalised elimination rate (amount eliminated over weight times time)?",
+      "program": "observe administered_dose(200)\nobserve residual_dose(40)\nobserve body_weight(4)\nobserve elapsed_time(4)\nlet answer = (administered_dose - residual_dose) / (body_weight * elapsed_time)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 160,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r45elr-20",
+      "qtype": "elimination_rate",
+      "stem": "A 200 mg dose is given to a 4 kg patient; after 4 h, 40 mg remains. What is the the amount of drug eliminated (administered minus residual)?",
+      "program": "observe administered_dose(200)\nobserve residual_dose(40)\nobserve body_weight(4)\nobserve elapsed_time(4)\nlet answer = administered_dose - residual_dose\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 160,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r45elr-21",
+      "qtype": "elimination_rate",
+      "stem": "A 200 mg dose is given to a 4 kg patient; after 4 h, 40 mg remains. What is the the weight-times-time product (the normalising denominator)?",
+      "program": "observe administered_dose(200)\nobserve residual_dose(40)\nobserve body_weight(4)\nobserve elapsed_time(4)\nlet answer = body_weight * elapsed_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 160,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
