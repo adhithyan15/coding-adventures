@@ -33,6 +33,7 @@ use spice_netlist_parser::{
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPTS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_SUMMARY_SCHEMA_VERSION,
@@ -6843,6 +6844,86 @@ C1 out 0 1p
             ["dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffCapabilityId"],
         "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-json"
     );
+
+    let accepted_notification_stack_summary_product_handoff_delivery_package =
+        app.run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(3),
+                active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+            },
+            "queued dispatch",
+            Some("dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-result.queued".to_string()),
+        )
+        .expect(
+            "shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification stack summary product handoff delivery package should execute",
+        );
+    assert_eq!(
+        accepted_notification_stack_summary_product_handoff_delivery_package.schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_SCHEMA_VERSION
+    );
+    assert_eq!(
+        accepted_notification_stack_summary_product_handoff_delivery_package.delivery_package_kind,
+        "berkeley-product-handoff-delivery-package"
+    );
+    assert_eq!(
+        accepted_notification_stack_summary_product_handoff_delivery_package.delivery_route,
+        "ready/notification-stack"
+    );
+    assert_eq!(
+        accepted_notification_stack_summary_product_handoff_delivery_package.wasm_export_symbol,
+        "berkeleyAppProductHandoffDeliveryPackage"
+    );
+    assert_eq!(
+        accepted_notification_stack_summary_product_handoff_delivery_package.hydration_target_id,
+        "berkeley-product-handoff-hydration-root"
+    );
+    assert!(accepted_notification_stack_summary_product_handoff_delivery_package.should_hydrate);
+    assert_eq!(
+        accepted_notification_stack_summary_product_handoff_delivery_package
+            .product_handoff
+            .handoff_route,
+        accepted_notification_stack_summary_product_handoff.handoff_route
+    );
+
+    let accepted_notification_stack_summary_product_handoff_delivery_package_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_json(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(3),
+                active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+            },
+            "queued dispatch",
+            Some("dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-result.queued".to_string()),
+        )
+        .unwrap(),
+    )
+    .expect(
+        "shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification stack summary product handoff delivery package JSON should parse",
+    );
+    assert_eq!(
+        accepted_notification_stack_summary_product_handoff_delivery_package_payload
+            ["deliveryPackageKind"],
+        "berkeley-product-handoff-delivery-package"
+    );
+    assert_eq!(
+        accepted_notification_stack_summary_product_handoff_delivery_package_payload
+            ["wasmExportSymbol"],
+        "berkeleyAppProductHandoffDeliveryPackage"
+    );
+    assert_eq!(
+        accepted_notification_stack_summary_product_handoff_delivery_package_payload
+            ["shouldHydrate"],
+        true
+    );
+    assert_eq!(
+        accepted_notification_stack_summary_product_handoff_delivery_package_payload
+            ["productHandoff"]["handoffRoute"],
+        "notification-stack"
+    );
+    assert_eq!(
+        accepted_notification_stack_summary_product_handoff_delivery_package_payload
+            ["dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageCapabilityId"],
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-delivery-package-json"
+    );
 }
 
 #[test]
@@ -10433,6 +10514,38 @@ R1 in out
         empty_notification_stack_summary_product_handoff_payload
             ["dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffCapabilityId"],
         "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-json"
+    );
+
+    let empty_notification_stack_summary_product_handoff_delivery_package_payload: serde_json::Value = serde_json::from_str(
+        &app.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_json(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(2),
+                active_command_id: Some("analysis.2.run".to_string()),
+            },
+            "missing",
+            None,
+        ),
+    )
+    .expect(
+        "blocked shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette empty search invocation receipt notification stack summary product handoff delivery package JSON should parse",
+    );
+    assert_eq!(
+        empty_notification_stack_summary_product_handoff_delivery_package_payload["deliveryRoute"],
+        "blocked/dispatch-status"
+    );
+    assert_eq!(
+        empty_notification_stack_summary_product_handoff_delivery_package_payload["shouldHydrate"],
+        false
+    );
+    assert_eq!(
+        empty_notification_stack_summary_product_handoff_delivery_package_payload["productHandoff"]
+            ["stackSummary"]["summaryKind"],
+        "empty"
+    );
+    assert_eq!(
+        empty_notification_stack_summary_product_handoff_delivery_package_payload
+            ["dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageCapabilityId"],
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-delivery-package-json"
     );
 }
 
