@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.12.0] - 2026-07-01 — absorb `ComputeExpr::Unary` (`ComputeOp::Abs`)
+
+### Changed
+
+- The solver's `ComputeExpr` walkers (LIA predicate extraction, linear-form
+  extraction, observed-value substitution, polynomial extraction, the CAS-IR
+  bridge, and the constant-expr check) now handle the new
+  `ComputeExpr::Unary(ComputeOp, …)` from logic-engine 0.28.0. An absolute value
+  is **piecewise-linear**, not affine/polynomial, so every arithmetic-solving
+  path returns `None` for it (the substitution walker recurses to substitute
+  inside the `|…|`, and the constant-expr check treats `|c|` as constant iff its
+  operand is) — a `|x|` constraint stays `Unknown`, never silently mis-solved.
+  solver 0.11 → 0.12.
+
 ## [0.11.0] - 2026-07-01 — polynomial path reads `ComputeOp::Pow`
 
 ### Changed

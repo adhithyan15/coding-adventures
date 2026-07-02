@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.23.0] - 2026-07-01 — absolute value `|x|` in `latex "…"` (lowers to `ComputeOp::Abs`)
+
+### Fixed / Added
+
+- The `latex "…"` adapter now lowers an **absolute-value fence** `|x|` /
+  `\left|x\right|` (a `MathExpr::Fenced` whose delimiters are `|`/`|`) to the
+  native `ComputeOp::Abs` via a new `ExprAst::Abs`. **This fixes a latent
+  correctness bug**: previously the `|…|` bars were silently dropped and `|a − b|`
+  computed the *signed* difference — `|3 − 10|` returned `−7` instead of `7`.
+- Any **other** delimiter pair (`(x)`, `[x]`, `\langle x\rangle`) is still
+  presentation grouping and unwraps to the body's arithmetic exactly as before —
+  only the `|`/`|` pair carries the absolute-value meaning.
+
+### Notes
+
+- Absolute value is **dimension-preserving** (`|−4 dollars| = 4 dollars`), so a
+  dimensioned operand computes cleanly (unlike `\sqrt`, which needs a
+  representable half-dimension). An abs *constraint* is piecewise-linear (not
+  affine/polynomial), so the solver treats it as `Unknown`. adj-lang 0.22 → 0.23
+  (logic-engine 0.28.0 / adj-constraint-solver 0.12.0).
+
 ## [0.22.0] - 2026-07-01 — nth root `\sqrt[n]{x}` in `latex "…"` (lowers to `x ^ (1/n)`)
 
 ### Added

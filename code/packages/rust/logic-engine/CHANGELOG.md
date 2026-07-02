@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.28.0] - 2026-07-01 — native absolute value (`ComputeOp::Abs`)
+
+### Added
+
+- **`ComputeOp::Abs`** — a native **unary**, **dimension-preserving** absolute
+  value, carried in a new `ComputeExpr::Unary(ComputeOp, Box<ComputeExpr>)`. It
+  is what makes a LaTeX `|x|`/`\left|x\right|` (adj-lang's `latex "…"` surface)
+  computable instead of being silently dropped to a bare `x`. `|−7| = 7`; the
+  exact rational sidecar stays exact (`|−7/1| = 7/1`).
+- Unlike `Pow`, `Abs` neither combines two dimensions nor collapses to `Scalar`:
+  a magnitude flips sign but the **unit does not** (`|−4 dollars| = 4 dollars`),
+  so the operand's dimension flows straight through. It reuses the existing
+  n-ary `DerivationNode::Op` node (one operand) — no new audit-tree variant.
+- A finite operand yields a finite result; the arm re-checks `is_finite()` as
+  defense-in-depth (same "no silently-wrong number" contract as the binary ops).
+
 ## [0.27.0] - 2026-07-01 — native `^` power operator (`ComputeOp::Pow`)
 
 ### Added

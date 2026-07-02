@@ -920,6 +920,15 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
         // lowering — the fence delimiters are presentation, not an operation. (latex now lowers a
         // single-body fence to `Fenced` carrying its delimiters instead of the delimiter-less
         // `Group`; this arm keeps the arithmetic meaning identical.)
+        // A `|x|` / `\left|x\right|` fence is an ABSOLUTE VALUE — it lowers to the
+        // native `ComputeOp::Abs` (dimension-preserving), NOT to a bare `x`. Any
+        // OTHER delimiter pair (`(x)`, `[x]`, `\langle x\rangle`) is presentation
+        // grouping and unwraps to the body's arithmetic, exactly as before. (Before
+        // this arm, `|x|` silently dropped its bars and computed `x` — a quiet
+        // wrong answer; now the absolute value is honoured.)
+        MathExpr::Fenced { open, body, close } if open == "|" && close == "|" => Ok(ExprAst::Abs(
+            Box::new(latex_math_to_expr_ast(body, source)?),
+        )),
         MathExpr::Fenced { body, .. } => latex_math_to_expr_ast(body, source),
         MathExpr::Unary(UnaryOp::Pos, inner) => latex_math_to_expr_ast(inner, source),
         MathExpr::Unary(UnaryOp::Neg, inner) => Ok(ExprAst::Bin(

@@ -705,6 +705,7 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
             Box::new(lower_expr(a)),
             Box::new(lower_expr(b)),
         ),
+        ExprAst::Abs(a) => ComputeExpr::Unary(ComputeOp::Abs, Box::new(lower_expr(a))),
         ExprAst::Agg(op, slot) => ComputeExpr::Agg(lower_agg_op(*op), slot.clone()),
     }
 }
@@ -1809,6 +1810,37 @@ contributes 1000000 from answer == 60 to correct
              let answer = latex \"$\\sqrt[4]{x}$\"\n\
              prior 0.10 for correct\n\
              contributes 1000000 from answer == 2 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_latex_absolute_value_of_a_negative_difference_computes() {
+        // `|a - b|` with a < b is a negative difference; the absolute value flips
+        // it positive. `|3 - 10| = 7`, computed on the native ComputeOp::Abs —
+        // previously the `|…|` bars were silently dropped and it computed `-7`.
+        let d = crate::compile_and_decide(
+            "observe a(3)\n\
+             observe b(10)\n\
+             let answer = latex \"$\\left|a - b\\right|$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 7 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_latex_absolute_value_of_a_positive_value_is_unchanged() {
+        // `|x|` of an already-positive value returns it unchanged: `|5| = 5`.
+        let d = crate::compile_and_decide(
+            "observe x(5)\n\
+             let answer = latex \"$\\left|x\\right|$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 5 to correct\n\
              ? correct\n",
         )
         .unwrap();

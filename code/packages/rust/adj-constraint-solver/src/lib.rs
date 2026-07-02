@@ -363,6 +363,9 @@ fn expr_to_pred(e: &ComputeExpr) -> Option<Predicate> {
                 _ => None, // division / aggregation: out of LIA scope
             }
         }
+        // Absolute value is not a linear-integer-arithmetic term (`|x|` is
+        // piecewise-linear, not affine), so it is out of LIA scope.
+        ComputeExpr::Unary(_, _) => None,
         ComputeExpr::Agg(_, _) => None,
     }
 }
@@ -650,6 +653,9 @@ fn linearize(e: &ComputeExpr) -> Option<LinForm> {
                 _ => None, // aggregation operators are non-linear here
             }
         }
+        // Absolute value is piecewise-linear, not affine — out of the linear-real
+        // fragment, so it can't be represented as a `LinForm`.
+        ComputeExpr::Unary(_, _) => None,
         ComputeExpr::Agg(_, _) => None,
     }
 }
@@ -1989,6 +1995,9 @@ fn substitute_observed(
             Box::new(substitute_observed(a, variables, kb)),
             Box::new(substitute_observed(b, variables, kb)),
         ),
+        ComputeExpr::Unary(op, a) => {
+            ComputeExpr::Unary(*op, Box::new(substitute_observed(a, variables, kb)))
+        }
         ComputeExpr::Agg(_, _) => e.clone(),
     }
 }
@@ -2069,6 +2078,10 @@ fn poly_of(e: &ComputeExpr, x: &str) -> Option<Poly> {
                 _ => None,
             }
         }
+        // `|x|` is not a polynomial in `x` (it is piecewise-linear with a corner
+        // at 0), so an absolute value takes the whole expression out of the
+        // polynomial fragment the univariate root-finders handle.
+        ComputeExpr::Unary(_, _) => None,
         ComputeExpr::Agg(_, _) => None,
     }
 }
@@ -2271,6 +2284,9 @@ fn expr_to_ir(e: &ComputeExpr) -> Option<IRNode> {
                 _ => None,
             }
         }
+        // `|x|` is non-linear (piecewise), so it is not a row this linear CAS
+        // bridge can solve — reject rather than silently drop.
+        ComputeExpr::Unary(_, _) => None,
         ComputeExpr::Agg(_, _) => None,
     }
 }
@@ -2290,6 +2306,9 @@ fn is_constant_expr(e: &ComputeExpr) -> bool {
         ComputeExpr::Lit(_) => true,
         ComputeExpr::Ref(_) | ComputeExpr::Agg(_, _) => false,
         ComputeExpr::Bin(_, a, b) => is_constant_expr(a) && is_constant_expr(b),
+        // `|c|` is constant iff its operand is (the absolute value of a constant
+        // is a constant); `|x|` mentions the symbol `x`, so it is not.
+        ComputeExpr::Unary(_, a) => is_constant_expr(a),
     }
 }
 
