@@ -76,6 +76,8 @@ pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION
     u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SCHEMA_VERSION:
     u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_SCHEMA_VERSION:
+    u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -152,6 +154,7 @@ const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
     "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-summary-json",
     "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-json",
     "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-json",
     "result-tables",
     "waveform-series",
     "run-artifacts",
@@ -8927,6 +8930,191 @@ impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortc
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummary
+{
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub receipt_notification_stack_summary_id: String,
+    pub receipt_notification_stack_id: String,
+    pub receipt_notification_id: String,
+    pub receipt_summary_id: String,
+    pub receipt_stream_id: String,
+    pub search_invocation_id: String,
+    pub search_selection_id: String,
+    pub search_results_id: String,
+    pub search_index_id: String,
+    pub palette_id: String,
+    pub registry_id: String,
+    pub command_group: String,
+    pub query: String,
+    pub normalized_query: String,
+    pub query_tokens: Vec<String>,
+    pub query_token_count: usize,
+    pub invocation_state: String,
+    pub receipt_state: Option<String>,
+    pub headline_notification_id: Option<String>,
+    pub headline_notification_kind: Option<String>,
+    pub headline_notification_level: Option<String>,
+    pub headline_notification_title: Option<String>,
+    pub headline_notification_body: Option<String>,
+    pub summary_kind: String,
+    pub summary_level: String,
+    pub summary_title: Option<String>,
+    pub summary_body: Option<String>,
+    pub should_render_stack: bool,
+    pub should_announce_latest: bool,
+    pub notification_count: usize,
+    pub visible_notification_count: usize,
+    pub announce_notification_count: usize,
+    pub attention_notification_count: usize,
+    pub success_notification_count: usize,
+    pub error_notification_count: usize,
+    pub info_notification_count: usize,
+    pub has_visible_notifications: bool,
+    pub has_announcement: bool,
+    pub has_attention_notifications: bool,
+    pub has_success_notifications: bool,
+    pub has_error_notifications: bool,
+    pub has_info_notifications: bool,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummary {
+    pub fn from_bootstrap_snapshot(
+        snapshot: &BerkeleyAppBootstrapSnapshot,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_notification_stack(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStack::from_bootstrap_snapshot(
+                snapshot,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(
+        handoff: &BerkeleyAppShellHandoff,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_notification_stack(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStack::from_shell_handoff(
+                handoff,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_notification_stack(
+        stack: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStack,
+    ) -> Self {
+        let has_visible_attention_notifications =
+            stack.has_visible_notifications && stack.attention_notification_count > 0;
+        let summary_kind = if has_visible_attention_notifications {
+            "attention"
+        } else if stack.visible_notification_count > 0 {
+            "visible"
+        } else {
+            "empty"
+        };
+        let summary_level = if !stack.has_visible_notifications {
+            "info"
+        } else if stack.error_notification_count > 0 {
+            "error"
+        } else if stack.success_notification_count > 0 {
+            "success"
+        } else {
+            "info"
+        };
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_SCHEMA_VERSION,
+            package_name: stack.package_name.clone(),
+            source_fingerprint: stack.source_fingerprint.clone(),
+            title: stack.title.clone(),
+            startup_route: stack.startup_route.clone(),
+            ready: stack.ready,
+            severity: stack.severity.clone(),
+            attention_required: stack.attention_required,
+            receipt_notification_stack_summary_id:
+                "dashboard.dispatch-queue.shortcut-command-palette-search-invocation-receipt-notification-stack-summary"
+                    .to_string(),
+            receipt_notification_stack_id: stack.receipt_notification_stack_id.clone(),
+            receipt_notification_id: stack.receipt_notification_id.clone(),
+            receipt_summary_id: stack.receipt_summary_id.clone(),
+            receipt_stream_id: stack.receipt_stream_id.clone(),
+            search_invocation_id: stack.search_invocation_id.clone(),
+            search_selection_id: stack.search_selection_id.clone(),
+            search_results_id: stack.search_results_id.clone(),
+            search_index_id: stack.search_index_id.clone(),
+            palette_id: stack.palette_id.clone(),
+            registry_id: stack.registry_id.clone(),
+            command_group: stack.command_group.clone(),
+            query: stack.query.clone(),
+            normalized_query: stack.normalized_query.clone(),
+            query_tokens: stack.query_tokens.clone(),
+            query_token_count: stack.query_token_count,
+            invocation_state: stack.invocation_state.clone(),
+            receipt_state: stack.receipt_state.clone(),
+            headline_notification_id: stack
+                .active_notification_id
+                .clone()
+                .or_else(|| stack.latest_notification_id.clone()),
+            headline_notification_kind: stack.latest_notification_kind.clone(),
+            headline_notification_level: stack.latest_notification_level.clone(),
+            headline_notification_title: stack.latest_notification_title.clone(),
+            headline_notification_body: stack.latest_notification_body.clone(),
+            summary_kind: summary_kind.to_string(),
+            summary_level: summary_level.to_string(),
+            summary_title: stack.latest_notification_title.clone(),
+            summary_body: stack.latest_notification_body.clone(),
+            should_render_stack: stack.has_visible_notifications,
+            should_announce_latest: stack.latest_should_announce,
+            notification_count: stack.notification_count,
+            visible_notification_count: stack.visible_notification_count,
+            announce_notification_count: stack.announce_notification_count,
+            attention_notification_count: stack.attention_notification_count,
+            success_notification_count: stack.success_notification_count,
+            error_notification_count: stack.error_notification_count,
+            info_notification_count: stack.info_notification_count,
+            has_visible_notifications: stack.has_visible_notifications,
+            has_announcement: stack.has_announcement,
+            has_attention_notifications: has_visible_attention_notifications,
+            has_success_notifications: stack.success_notification_count > 0,
+            has_error_notifications: stack.error_notification_count > 0,
+            has_info_notifications: stack.info_notification_count > 0,
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_capability_id:
+                stack
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-json"
+                    .to_string(),
+            artifact_capability_count: stack.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_json_value(self)
+            .to_string()
+    }
+}
+
 fn command_palette_search_tokens(search_text: &str, keywords: &[String]) -> Vec<String> {
     let mut tokens = Vec::new();
     for source in std::iter::once(search_text).chain(keywords.iter().map(String::as_str)) {
@@ -11311,6 +11499,67 @@ impl BerkeleyAppDeck {
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self
             .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack(
+                persisted_state,
+                search_query,
+                selected_search_result_id,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummary
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummary::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+            search_query,
+            selected_search_result_id,
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummary,
+        AnalysisExecutionError,
+    >{
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummary::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary(
+            persisted_state,
+            search_query,
+            selected_search_result_id,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary(
                 persisted_state,
                 search_query,
                 selected_search_result_id,
@@ -16368,6 +16617,114 @@ fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shor
             .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_capability_id
     );
     insert_json!("artifactCapabilityCount", stack.artifact_capability_count);
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_json_value(
+    summary: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummary,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", summary.schema_version);
+    insert_json!("packageName", &summary.package_name);
+    insert_json!("sourceFingerprint", &summary.source_fingerprint);
+    insert_json!("title", &summary.title);
+    insert_json!("startupRoute", &summary.startup_route);
+    insert_json!("ready", summary.ready);
+    insert_json!("severity", &summary.severity);
+    insert_json!("attentionRequired", summary.attention_required);
+    insert_json!(
+        "receiptNotificationStackSummaryId",
+        &summary.receipt_notification_stack_summary_id
+    );
+    insert_json!(
+        "receiptNotificationStackId",
+        &summary.receipt_notification_stack_id
+    );
+    insert_json!("receiptNotificationId", &summary.receipt_notification_id);
+    insert_json!("receiptSummaryId", &summary.receipt_summary_id);
+    insert_json!("receiptStreamId", &summary.receipt_stream_id);
+    insert_json!("searchInvocationId", &summary.search_invocation_id);
+    insert_json!("searchSelectionId", &summary.search_selection_id);
+    insert_json!("searchResultsId", &summary.search_results_id);
+    insert_json!("searchIndexId", &summary.search_index_id);
+    insert_json!("paletteId", &summary.palette_id);
+    insert_json!("registryId", &summary.registry_id);
+    insert_json!("commandGroup", &summary.command_group);
+    insert_json!("query", &summary.query);
+    insert_json!("normalizedQuery", &summary.normalized_query);
+    insert_json!("queryTokens", &summary.query_tokens);
+    insert_json!("queryTokenCount", summary.query_token_count);
+    insert_json!("invocationState", &summary.invocation_state);
+    insert_json!("receiptState", &summary.receipt_state);
+    insert_json!("headlineNotificationId", &summary.headline_notification_id);
+    insert_json!(
+        "headlineNotificationKind",
+        &summary.headline_notification_kind
+    );
+    insert_json!(
+        "headlineNotificationLevel",
+        &summary.headline_notification_level
+    );
+    insert_json!(
+        "headlineNotificationTitle",
+        &summary.headline_notification_title
+    );
+    insert_json!(
+        "headlineNotificationBody",
+        &summary.headline_notification_body
+    );
+    insert_json!("summaryKind", &summary.summary_kind);
+    insert_json!("summaryLevel", &summary.summary_level);
+    insert_json!("summaryTitle", &summary.summary_title);
+    insert_json!("summaryBody", &summary.summary_body);
+    insert_json!("shouldRenderStack", summary.should_render_stack);
+    insert_json!("shouldAnnounceLatest", summary.should_announce_latest);
+    insert_json!("notificationCount", summary.notification_count);
+    insert_json!(
+        "visibleNotificationCount",
+        summary.visible_notification_count
+    );
+    insert_json!(
+        "announceNotificationCount",
+        summary.announce_notification_count
+    );
+    insert_json!(
+        "attentionNotificationCount",
+        summary.attention_notification_count
+    );
+    insert_json!(
+        "successNotificationCount",
+        summary.success_notification_count
+    );
+    insert_json!("errorNotificationCount", summary.error_notification_count);
+    insert_json!("infoNotificationCount", summary.info_notification_count);
+    insert_json!("hasVisibleNotifications", summary.has_visible_notifications);
+    insert_json!("hasAnnouncement", summary.has_announcement);
+    insert_json!(
+        "hasAttentionNotifications",
+        summary.has_attention_notifications
+    );
+    insert_json!("hasSuccessNotifications", summary.has_success_notifications);
+    insert_json!("hasErrorNotifications", summary.has_error_notifications);
+    insert_json!("hasInfoNotifications", summary.has_info_notifications);
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackCapabilityId",
+        &summary
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryCapabilityId",
+        &summary
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_capability_id
+    );
+    insert_json!("artifactCapabilityCount", summary.artifact_capability_count);
 
     serde_json::Value::Object(value)
 }

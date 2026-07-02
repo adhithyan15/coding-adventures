@@ -33,25 +33,25 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification stack.
+1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification stack summary.
    - Status: current PR completion candidate.
    - Add schema-versioned Rust app shell dashboard dispatch-queue lane-tab
      panel-card-action-menu-group-shortcut-command-palette-search-invocation
-     receipt-notification-stack surfaces and JSON helpers that fold command-
-     palette search invocation receipt notifications into deterministic latest
-     notification, active notification, attention notification, and notification
+     receipt-notification-stack-summary surfaces and JSON helpers that fold
+     command-palette search invocation receipt notification stacks into
+     deterministic headline, summary-kind, render/announce, and notification
      count metadata for first-render product-shell dispatch feedback.
    - Preserve package name, source fingerprint, route/status metadata, receipt
-     notification stack ID, receipt notification ID, receipt summary ID,
-     receipt stream ID, search invocation/selection/results/index IDs, palette
-     ID, registry ID, command group, raw/normalized query, query tokens,
-     invocation state, receipt state, latest/active/attention notification IDs,
-     latest notification kind/level/title/body/announcement flags,
-     notification/visible/announce/attention/success/error/info counts, nested
-     notification rows, invocation-receipt-notification capability ID,
-     invocation-receipt-notification-stack capability ID, and advertised
+     notification stack summary ID, receipt notification stack ID, receipt
+     notification ID, receipt summary ID, receipt stream ID, search invocation/
+     selection/results/index IDs, palette ID, registry ID, command group,
+     raw/normalized query, query tokens, invocation state, receipt state,
+     headline notification ID/kind/level/title/body, summary kind/level/title/
+     body, render/announce flags, visible/announce/attention/success/error/info
+     counts, stack capability ID, stack-summary capability ID, and advertised
      capability count so Mosaic, WebAssembly, and product shells can render
-     compact post-invocation notification stacks without walking receipt rows.
+     compact post-invocation notification stack summaries without walking
+     notification rows.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -2378,6 +2378,28 @@ the Rust, Python, and TypeScript surfaces together.
      invocation-receipt-notification capability ID, and advertised capability
      count so Mosaic, WebAssembly, and product shells can render latest
      post-invocation toasts or banners without walking receipt rows.
+
+188. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification stack.
+   - Status: completed in PR 7392.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell dashboard dispatch-queue lane-tab panel-card-action-menu-group-
+     shortcut-command-palette-search-invocation receipt-notification-stack
+     surfaces plus JSON helpers that fold command-palette search invocation
+     receipt notifications into deterministic latest notification, active
+     notification, attention notification, and notification count metadata for
+     first-render product-shell dispatch feedback.
+   - The invocation receipt notification stack payload preserves package name,
+     source fingerprint, route/status metadata, receipt notification stack ID,
+     receipt notification ID, receipt summary ID, receipt stream ID, search
+     invocation/selection/results/index IDs, palette ID, registry ID, command
+     group, raw/normalized query, query tokens, invocation state, receipt state,
+     latest/active/attention notification IDs, latest notification kind/level/
+     title/body/announcement flags, notification/visible/announce/attention/
+     success/error/info counts, nested notification rows, invocation-receipt-
+     notification capability ID, invocation-receipt-notification-stack
+     capability ID, and advertised capability count so Mosaic, WebAssembly, and
+     product shells can render compact post-invocation notification stacks
+     without walking receipt rows.
 
 ## Backlog
 
