@@ -1,5 +1,89 @@
 # Changelog
 
+## 0.11.0 — polymorphic `+` / `*` for strings and arrays (PO5)
+
+Implements the Rust milestone of the **sir-polymorphic-operators** cascade.
+Ruby's `+` and `*` are overloaded by receiver type, but the Rust backend's
+runtime `plus`/`times` were **numeric-only**: they called `as_i64`/`as_f64`
+on every operand, so `"a" + "b"` produced integer garbage (a correctness
+gap on the core translation path, not a missing stdlib method). Both
+helpers are now **type-polymorphic**, matching Ruby exactly. This is a
+**runtime-only** change — no core semantic-IR change and no frontend change;
+`+`/`*` already lower to `__sir::plus`/`__sir::times`.
+
+**Overflow guard (security):** the `*` repeat arms compute `len * count` where
+`count` is cast from a program-controlled `i64`. Both arms now guard the product
+with `checked_mul` and panic `"argument too big"` (matching Ruby's
+`ArgumentError`) on overflow, and the Seq-repeat arm short-circuits an empty
+receiver (also avoiding a huge `0..count` loop) — closing a reachable
+overflow/OOM vector before any `str::repeat`/`Vec::with_capacity`.
+
+### Semantics (dispatched on the FIRST operand's tag)
+
+| expression      | result      | arm                        |
+|-----------------|-------------|----------------------------|
+| `"a" + "b"`     | `"ab"`      | `Str` → concat all args    |
+| `[1] + [2]`     | `[1, 2]`    | `Seq` → new concatenated   |
+| `"ab" * 3`      | `"ababab"`  | `Str * Int` → repeat       |
+| `[0] * 3`       | `[0, 0, 0]` | `Seq * Int` → repeat       |
+| `[1, 2] * ", "` | `"1, 2"`    | `Seq * Str` → join         |
+| `1 + 2`         | `3`         | numeric fold (**unchanged**) |
+| `2 * 3`         | `6`         | numeric fold (**unchanged**) |
+
+### Changed
+
+- **`plus` (`runtime.rs`).** Dispatches on `args.first()` via an explicit
+  `match`:
+  - `Value::Str` first operand → concatenate every operand's string
+    contents into a new `Value::Str`. Each operand must be a `Str` (a
+    non-`Str` operand panics with `string + expects strings, …` rather than
+    silently coercing; typed `TypeError` on `"a" + 1` is deferred to the
+    sir-typed-runtime-errors cascade).
+  - `Value::Seq` first operand → concatenate the element vectors into a
+    **fresh** `Value::Seq` (via `seq_lit`), never aliasing or mutating an
+    input handle (Ruby `Array#+` returns a new array).
+  - Otherwise → the **unchanged** numeric int/float promotion fold.
+- **`times` (`runtime.rs`).** Dispatches on `args.first()`; a `Str`/`Seq`
+  first operand folds left-associatively pairwise through a new
+  `times_binary(lhs, rhs)` atom (Ruby `*` is binary; the SIR builtin is
+  variadic, so this preserves the variadic contract), with three arms:
+  - `Str * Int` → repeat the string N times (N ≤ 0 → empty string).
+  - `Seq * Int` → a fresh `Seq` with the element vector repeated N times
+    (N ≤ 0 → empty), never aliasing the input.
+  - `Seq * Str` → join the elements with the separator, returning a
+    `Value::Str` (elements rendered via the same `format` display `Array#join`
+    uses).
+  - Any other first operand → the **unchanged** numeric fold.
+
+### Security
+
+- Dispatch is an **explicit `match` on the runtime tag** of the first
+  operand — never a reflective / name-indexed lookup (the
+  dynamic-dispatch-RCE lesson). The string/array arms are hand-written; a
+  first operand that is neither `Str` nor `Seq` takes exactly the pre-existing
+  numeric path. No new `unsafe`.
+
+### Tests
+
+- **Execution proof** (`tests/compile_and_run_polymorphic_ops.rs`, gated on
+  `SIR_TEST_RUSTC_LINKER`): a single suite that hand-builds a
+  `puts`/`print (<lhs> <op> <rhs>)` SIR module per case, emits Rust, compiles
+  with `rustc`, runs the binary, and asserts stdout against the Ruby
+  reference — `"a"+"b"→ab`, `"ab"*3→ababab`, `[1]+[2]→[1, 2]` (bracketed via
+  `print`/`format`), `[0]*3→[0, 0, 0]`, `[1,2]*", "→1, 2`, plus regressions
+  `1+2→3` and `2*3→6` proving the numeric path is unchanged.
+- **Runtime-shape unit test** (`runtime.rs`) pinning the new polymorphic arms
+  (`string + expects strings`, `array + expects arrays`, `fn times_binary`
+  with the three `(lhs, rhs)` arms) and the `match args.first()` tag dispatch
+  (no reflection).
+
+### Notes
+
+- No `Feature` variant added and no accepted-feature change: `+`/`*` were
+  already accepted and lowering; this only makes their **string/array** cases
+  correct instead of producing numeric garbage. Every existing test passes
+  unchanged.
+
 ## 0.10.0 — `puts` builtin (Ruby semantics)
 
 ### Added

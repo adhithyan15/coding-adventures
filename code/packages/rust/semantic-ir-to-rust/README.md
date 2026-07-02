@@ -235,6 +235,38 @@ lowers OOP to a small family of builtins the backend routes to the inline
   body, and `reject_const_ref` skips only the lifted-to-string OOP name
   slots.  No new `unsafe`.
 
+Executes (PO5): **polymorphic `+` / `*`** on strings and arrays
+(sir-polymorphic-operators).  Ruby overloads `+`/`*` by receiver type;
+before this change the runtime `plus`/`times` were **numeric-only**, so
+`"a" + "b"` called `as_i64("a")` and produced integer garbage.  Both
+helpers now **dispatch on the tag of the first operand** via an explicit
+`match` (never reflection — see the dynamic-dispatch-RCE lesson), adding
+the string/array arms *ahead of* the unchanged numeric fold:
+
+| expression      | result      | arm                       |
+|-----------------|-------------|---------------------------|
+| `"a" + "b"`     | `"ab"`      | `Str` → concat all args   |
+| `[1] + [2]`     | `[1, 2]`    | `Seq` → new concatenated  |
+| `"ab" * 3`      | `"ababab"`  | `Str * Int` → repeat      |
+| `[0] * 3`       | `[0, 0, 0]` | `Seq * Int` → repeat      |
+| `[1, 2] * ", "` | `"1, 2"`    | `Seq * Str` → join        |
+| `1 + 2`         | `3`         | numeric fold (unchanged)  |
+| `2 * 3`         | `6`         | numeric fold (unchanged)  |
+
+- **`plus`** — a `Str` first operand concatenates every operand's string
+  contents into a new `Str`; a `Seq` first operand concatenates the element
+  vectors into a **fresh** `Seq` (no aliasing/shared mutation of inputs);
+  anything else takes the unchanged int/float promotion fold.
+- **`times`** — `Str * Int` repeats the string (count ≤ 0 → `""`); `Seq *
+  Int` repeats the element vector into a fresh `Seq`; `Seq * String` joins
+  the elements with the separator (via the same `format` display `join`
+  uses).  `*` is binary in Ruby but the SIR builtin is variadic, so the
+  string/array arms fold **left-associatively** pairwise (`times_binary`),
+  preserving the variadic contract; the numeric path is unchanged.
+- **No core-IR or frontend change** — this is purely the backend runtime.
+  `+`/`*` already lower to `__sir::plus`/`__sir::times`; only those two
+  helpers gained the polymorphic arms.
+
 Rejects: `TailCalls` (Rust does not guarantee TCO), `Intrinsics`
 (empty whitelist in v0), `StringInterpolation`, and a stateful (non-empty
 body) `Class`/`Module` or a non-name-slot `Const` reference (rejected

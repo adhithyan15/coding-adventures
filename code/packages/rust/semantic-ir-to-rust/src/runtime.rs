@@ -201,19 +201,72 @@ pub const RUNTIME: &str = r##"mod __sir {
     // (including `times`' wrapping).  The moment *any* operand is a
     // `Float`, the whole fold promotes to f64 — matching the
     // "int op float ⇒ float" rule of Python/Ruby/JS.
+    // `plus` is POLYMORPHIC on the tag of the FIRST operand, matching
+    // Ruby's `+` (overloaded by receiver type).  The dispatch is an
+    // explicit `match` on the first operand's variant — never reflection
+    // (see [[dynamic-dispatch-rce]]): a `String` receiver concatenates,
+    // a `Seq` receiver concatenates element vectors, and everything else
+    // falls through to the UNCHANGED numeric fold below.
+    //
+    // | first arg   | behaviour                                   |
+    // |-------------|---------------------------------------------|
+    // | `Str`       | concatenate all args' string contents → Str |
+    // | `Seq`       | concatenate the element vecs into a NEW Seq |
+    // | otherwise   | numeric int/float fold (unchanged)          |
+    //
+    // Ruby `+` is binary; the SIR builtin is variadic (numeric fold), so
+    // the string/array arms fold left-associatively over ≥2 operands,
+    // preserving the existing variadic contract.
     pub fn plus(args: Vec<Value>) -> Value {
-        if any_float(&args) {
-            let mut total = 0.0f64;
-            for a in &args {
-                total += as_f64(a);
+        match args.first() {
+            // ── String concatenation ──────────────────────────────
+            // `"a" + "b"` → `"ab"`.  Ruby's `String#+` requires a String
+            // right-hand operand (`"a" + 1` raises `TypeError`); typed
+            // rejection belongs to the sir-typed-runtime-errors cascade, so
+            // here we require every operand be a `Str` and concatenate their
+            // contents — a non-Str operand panics with a clear message rather
+            // than silently coercing to integer garbage.
+            Some(Value::Str(_)) => {
+                let mut out = String::new();
+                for a in &args {
+                    match a {
+                        Value::Str(s) => out.push_str(s),
+                        other => panic!("string + expects strings, got {}", format(other)),
+                    }
+                }
+                Value::Str(Rc::from(out.as_str()))
             }
-            return Value::Float(total);
+            // ── Array concatenation ───────────────────────────────
+            // `[1] + [2]` → `[1, 2]`.  Build a FRESH `Seq` from the
+            // concatenated element snapshots — never alias or mutate an
+            // input handle (Ruby `Array#+` returns a new array).  Each
+            // operand must itself be a `Seq`.
+            Some(Value::Seq(_)) => {
+                let mut out: Vec<Value> = Vec::new();
+                for a in &args {
+                    match a {
+                        Value::Seq(items) => out.extend(items.borrow().iter().cloned()),
+                        other => panic!("array + expects arrays, got {}", format(other)),
+                    }
+                }
+                seq_lit(out)
+            }
+            // ── Numeric fold (UNCHANGED) ──────────────────────────
+            _ => {
+                if any_float(&args) {
+                    let mut total = 0.0f64;
+                    for a in &args {
+                        total += as_f64(a);
+                    }
+                    return Value::Float(total);
+                }
+                let mut total: i64 = 0;
+                for a in args {
+                    total += as_i64(&a);
+                }
+                Value::Int(total)
+            }
         }
-        let mut total: i64 = 0;
-        for a in args {
-            total += as_i64(&a);
-        }
-        Value::Int(total)
     }
 
     pub fn minus(args: Vec<Value>) -> Value {
@@ -240,19 +293,116 @@ pub const RUNTIME: &str = r##"mod __sir {
         Value::Int(acc)
     }
 
+    // `times` is POLYMORPHIC on the tag of the FIRST operand, matching
+    // Ruby's `*`.  Dispatch is an explicit `match` (never reflection):
+    //
+    // | first arg | 2nd arg | behaviour                              |
+    // |-----------|---------|----------------------------------------|
+    // | `Str`     | `Int n` | repeat the string n times (n≤0 → "")   |
+    // | `Seq`     | `Int n` | new Seq with elements repeated n times |
+    // | `Seq`     | `Str s` | join elements with `s` → Str           |
+    // | otherwise | —       | numeric int/float fold (unchanged)     |
+    //
+    // Ruby `*` is binary; the SIR builtin is variadic (numeric fold).  The
+    // string/array arms fold left-associatively pairwise, so `"ab" * 2 * 2`
+    // repeats then repeats again — the natural extension of the binary
+    // operator that preserves the variadic contract.  The join arm produces
+    // a `Str`, so a subsequent operand would fold via the `Str` receiver
+    // (repeat), matching left-associative Ruby chaining.
     pub fn times(args: Vec<Value>) -> Value {
-        if any_float(&args) {
-            let mut acc = 1.0f64;
-            for a in &args {
-                acc *= as_f64(a);
+        match args.first() {
+            Some(Value::Str(_)) | Some(Value::Seq(_)) => {
+                // Fold left-associatively over the operands: seed with the
+                // first, apply `times_binary` against each subsequent operand.
+                let mut it = args.into_iter();
+                let mut acc = it.next().expect("first() was Some");
+                for rhs in it {
+                    acc = times_binary(acc, rhs);
+                }
+                acc
             }
-            return Value::Float(acc);
+            // ── Numeric fold (UNCHANGED) ──────────────────────────
+            _ => {
+                if any_float(&args) {
+                    let mut acc = 1.0f64;
+                    for a in &args {
+                        acc *= as_f64(a);
+                    }
+                    return Value::Float(acc);
+                }
+                let mut acc: i64 = 1;
+                for a in args {
+                    acc = acc.wrapping_mul(as_i64(&a));
+                }
+                Value::Int(acc)
+            }
         }
-        let mut acc: i64 = 1;
-        for a in args {
-            acc = acc.wrapping_mul(as_i64(&a));
+    }
+
+    // The binary `*` for a String/Seq left operand — the atom the variadic
+    // `times` fold applies pairwise.  Kept separate so the three
+    // string/array behaviours (string repeat, array repeat, array join)
+    // live in one explicit `match` on `(lhs, rhs)`.
+    fn times_binary(lhs: Value, rhs: Value) -> Value {
+        match (&lhs, &rhs) {
+            // `"ab" * 3` → `"ababab"`.  A count ≤ 0 yields the empty
+            // string (Ruby `"ab" * 0 == ""`, and negative counts raise in
+            // Ruby but we clamp to empty for the never-raise floor).
+            (Value::Str(s), Value::Int(n)) => {
+                let count = if *n > 0 { *n as usize } else { 0 };
+                // Guard `len * count` against `usize` overflow: `count` is cast
+                // from a program-controlled `i64`, so an oversized repeat could
+                // overflow (bogus size into `str::repeat`) or drive an
+                // unbounded allocation.  Ruby raises `ArgumentError: argument
+                // too big`; panic with the same controlled message rather than
+                // overflow/OOM.
+                if s.len().checked_mul(count).is_none() {
+                    panic!("argument too big");
+                }
+                Value::Str(Rc::from(s.repeat(count).as_str()))
+            }
+            // `[0] * 3` → `[0, 0, 0]`.  A fresh Seq whose element snapshot
+            // is repeated n times (n ≤ 0 → empty), never aliasing the input.
+            (Value::Seq(items), Value::Int(n)) => {
+                let count = if *n > 0 { *n as usize } else { 0 };
+                let snapshot = items.borrow().clone();
+                // Short-circuit an empty receiver (also avoids spinning the
+                // `0..count` loop for a huge count), and guard the capacity
+                // multiply against `usize` overflow — same program-controlled
+                // count as the string arm.  `checked_mul` → controlled
+                // `argument too big` panic (Ruby's `ArgumentError`) instead of
+                // a wrapped/absurd `Vec::with_capacity` request.
+                if snapshot.is_empty() || count == 0 {
+                    return seq_lit(Vec::new());
+                }
+                let total = snapshot
+                    .len()
+                    .checked_mul(count)
+                    .unwrap_or_else(|| panic!("argument too big"));
+                let mut out: Vec<Value> = Vec::with_capacity(total);
+                for _ in 0..count {
+                    out.extend(snapshot.iter().cloned());
+                }
+                seq_lit(out)
+            }
+            // `[1, 2] * ", "` → `"1, 2"` (Ruby `Array#*` with a String is
+            // `join`).  Element rendering uses the same `format` display the
+            // rest of the backend uses (so it matches `Array#join`).
+            (Value::Seq(items), Value::Str(sep)) => {
+                let joined = items
+                    .borrow()
+                    .iter()
+                    .map(format)
+                    .collect::<Vec<_>>()
+                    .join(sep);
+                Value::Str(Rc::from(joined.as_str()))
+            }
+            (l, r) => panic!(
+                "unsupported operands for *: {} and {}",
+                format(l),
+                format(r)
+            ),
         }
-        Value::Int(acc)
     }
 
     pub fn divide(args: Vec<Value>) -> Value {
@@ -1972,6 +2122,25 @@ mod tests {
         ] {
             assert!(RUNTIME.contains(op), "runtime missing `{}`", op);
         }
+    }
+
+    #[test]
+    fn runtime_plus_times_are_polymorphic() {
+        // sir-polymorphic-operators (PO5): `plus`/`times` dispatch on the
+        // first operand's tag via an explicit `match` (String/Seq arms
+        // ahead of the numeric fold), never reflection.
+        // `plus` gains the String-concat and Seq-concat arms.
+        assert!(RUNTIME.contains("string + expects strings"));
+        assert!(RUNTIME.contains("array + expects arrays"));
+        // `times` gains the binary String/Seq atom with the three arms
+        // (string repeat, array repeat, array join).
+        assert!(RUNTIME.contains("fn times_binary"));
+        assert!(RUNTIME.contains("(Value::Str(s), Value::Int(n))"));
+        assert!(RUNTIME.contains("(Value::Seq(items), Value::Int(n))"));
+        assert!(RUNTIME.contains("(Value::Seq(items), Value::Str(sep))"));
+        // Dispatch is a `match args.first()` on the runtime tag — no
+        // reflective / name-indexed lookup (see [[dynamic-dispatch-rce]]).
+        assert!(RUNTIME.contains("match args.first()"));
     }
 
     #[test]
