@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 38 \u2014 serum anion gap from three stated serum electrolytes (a NEW panel: acid-base / serum-electrolyte analysis). From three stated values (sodium, chloride, bicarbonate) compute the anion gap (sodium-chloride-bicarbonate), the measured-anion sum (chloride+bicarbonate), or the sodium-minus-chloride partial difference (sodium-chloride). Each item is a compute_dimensioned program (observe the three quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, a THREE-TERM SUCCESSIVE DIFFERENCE (sodium-chloride-bicarbonate), a left-folded chain of two subtractions with no interior grouping \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the three observed electrolytes via - and + \u2014 no constant leaks (the anion gap is a pure running subtraction), and the gap itself never appears as a literal (it is computed from the observed electrolytes) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same quantities, so the distractors are exactly the slips students make: subtracting the WRONG anion (sodium-bicarbonate, using bicarbonate in place of chloride) and ADDING the two anions to the sodium (sodium+chloride+bicarbonate) instead of subtracting them. The core confusion tested is subtracting BOTH measured anions from the sodium.",
+  "items": [
+    {
+      "id": "r38ag-01",
+      "qtype": "serum_anion_gap",
+      "stem": "A basic metabolic panel shows a serum sodium of 140 mEq/L, a chloride of 104 mEq/L, and a bicarbonate of 24 mEq/L. What is the serum anion gap?",
+      "program": "observe sodium(140)\nobserve chloride(104)\nobserve bicarbonate(24)\nlet answer = sodium - chloride - bicarbonate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 128,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 116,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 268,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r38ag-02",
+      "qtype": "serum_anion_gap",
+      "stem": "A basic metabolic panel shows a serum sodium of 140 mEq/L, a chloride of 104 mEq/L, and a bicarbonate of 24 mEq/L. What is the sum of the measured anions?",
+      "program": "observe sodium(140)\nobserve chloride(104)\nobserve bicarbonate(24)\nlet answer = chloride + bicarbonate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 128,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 116,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 268,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r38ag-03",
+      "qtype": "serum_anion_gap",
+      "stem": "A basic metabolic panel shows a serum sodium of 140 mEq/L, a chloride of 104 mEq/L, and a bicarbonate of 24 mEq/L. What is the sodium with only chloride subtracted?",
+      "program": "observe sodium(140)\nobserve chloride(104)\nobserve bicarbonate(24)\nlet answer = sodium - chloride\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 128,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 116,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 268,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r38ag-04",
+      "qtype": "serum_anion_gap",
+      "stem": "A basic metabolic panel shows a serum sodium of 138 mEq/L, a chloride of 100 mEq/L, and a bicarbonate of 22 mEq/L. What is the serum anion gap?",
+      "program": "observe sodium(138)\nobserve chloride(100)\nobserve bicarbonate(22)\nlet answer = sodium - chloride - bicarbonate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 122,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 38,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 116,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 260,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r38ag-05",
+      "qtype": "serum_anion_gap",
+      "stem": "A basic metabolic panel shows a serum sodium of 138 mEq/L, a chloride of 100 mEq/L, and a bicarbonate of 22 mEq/L. What is the sum of the measured anions?",
+      "program": "observe sodium(138)\nobserve chloride(100)\nobserve bicarbonate(22)\nlet answer = chloride + bicarbonate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 38,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 116,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 260,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 122,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r38ag-06",
+      "qtype": "serum_anion_gap",
+      "stem": "A basic metabolic panel shows a serum sodium of 138 mEq/L, a chloride of 100 mEq/L, and a bicarbonate of 22 mEq/L. What is the sodium with only chloride subtracted?",
+      "program": "observe sodium(138)\nobserve chloride(100)\nobserve bicarbonate(22)\nlet answer = sodium - chloride\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 38,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 122,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 116,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 260,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r38ag-07",
+      "qtype": "serum_anion_gap",
+      "stem": "A basic metabolic panel shows a serum sodium of 142 mEq/L, a chloride of 108 mEq/L, and a bicarbonate of 26 mEq/L. What is the serum anion gap?",
+      "program": "observe sodium(142)\nobserve chloride(108)\nobserve bicarbonate(26)\nlet answer = sodium - chloride - bicarbonate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 134,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 34,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 116,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 276,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r38ag-08",
+      "qtype": "serum_anion_gap",
+      "stem": "A basic metabolic panel shows a serum sodium of 142 mEq/L, a chloride of 108 mEq/L, and a bicarbonate of 26 mEq/L. What is the sum of the measured anions?",
+      "program": "observe sodium(142)\nobserve chloride(108)\nobserve bicarbonate(26)\nlet answer = chloride + bicarbonate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 34,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 134,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 116,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 276,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r38ag-09",
+      "qtype": "serum_anion_gap",
+      "stem": "A basic metabolic panel shows a serum sodium of 142 mEq/L, a chloride of 108 mEq/L, and a bicarbonate of 26 mEq/L. What is the sodium with only chloride subtracted?",
+      "program": "observe sodium(142)\nobserve chloride(108)\nobserve bicarbonate(26)\nlet answer = sodium - chloride\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 134,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 116,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 34,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 276,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r38ag-10",
+      "qtype": "serum_anion_gap",
+      "stem": "A basic metabolic panel shows a serum sodium of 136 mEq/L, a chloride of 98 mEq/L, and a bicarbonate of 20 mEq/L. What is the serum anion gap?",
+      "program": "observe sodium(136)\nobserve chloride(98)\nobserve bicarbonate(20)\nlet answer = sodium - chloride - bicarbonate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 118,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 38,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 116,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 254,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 18,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r38ag-11",
+      "qtype": "serum_anion_gap",
+      "stem": "A basic metabolic panel shows a serum sodium of 136 mEq/L, a chloride of 98 mEq/L, and a bicarbonate of 20 mEq/L. What is the sum of the measured anions?",
+      "program": "observe sodium(136)\nobserve chloride(98)\nobserve bicarbonate(20)\nlet answer = chloride + bicarbonate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 118,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 38,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 116,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 254,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r38ag-12",
+      "qtype": "serum_anion_gap",
+      "stem": "A basic metabolic panel shows a serum sodium of 136 mEq/L, a chloride of 98 mEq/L, and a bicarbonate of 20 mEq/L. What is the sodium with only chloride subtracted?",
+      "program": "observe sodium(136)\nobserve chloride(98)\nobserve bicarbonate(20)\nlet answer = sodium - chloride\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 18,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 38,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 118,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 116,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 254,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r38ag-13",
+      "qtype": "serum_anion_gap",
+      "stem": "A basic metabolic panel shows a serum sodium of 145 mEq/L, a chloride of 110 mEq/L, and a bicarbonate of 25 mEq/L. What is the serum anion gap?",
+      "program": "observe sodium(145)\nobserve chloride(110)\nobserve bicarbonate(25)\nlet answer = sodium - chloride - bicarbonate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 135,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 280,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r38ag-14",
+      "qtype": "serum_anion_gap",
+      "stem": "A basic metabolic panel shows a serum sodium of 145 mEq/L, a chloride of 110 mEq/L, and a bicarbonate of 25 mEq/L. What is the sum of the measured anions?",
+      "program": "observe sodium(145)\nobserve chloride(110)\nobserve bicarbonate(25)\nlet answer = chloride + bicarbonate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 135,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 280,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r38ag-15",
+      "qtype": "serum_anion_gap",
+      "stem": "A basic metabolic panel shows a serum sodium of 145 mEq/L, a chloride of 110 mEq/L, and a bicarbonate of 25 mEq/L. What is the sodium with only chloride subtracted?",
+      "program": "observe sodium(145)\nobserve chloride(110)\nobserve bicarbonate(25)\nlet answer = sodium - chloride\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 135,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 280,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 35,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r38ag-16",
+      "qtype": "serum_anion_gap",
+      "stem": "A basic metabolic panel shows a serum sodium of 139 mEq/L, a chloride of 102 mEq/L, and a bicarbonate of 23 mEq/L. What is the serum anion gap?",
+      "program": "observe sodium(139)\nobserve chloride(102)\nobserve bicarbonate(23)\nlet answer = sodium - chloride - bicarbonate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 125,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 37,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 116,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 264,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r38ag-17",
+      "qtype": "serum_anion_gap",
+      "stem": "A basic metabolic panel shows a serum sodium of 139 mEq/L, a chloride of 102 mEq/L, and a bicarbonate of 23 mEq/L. What is the sum of the measured anions?",
+      "program": "observe sodium(139)\nobserve chloride(102)\nobserve bicarbonate(23)\nlet answer = chloride + bicarbonate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 125,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 37,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 116,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 264,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r38ag-18",
+      "qtype": "serum_anion_gap",
+      "stem": "A basic metabolic panel shows a serum sodium of 139 mEq/L, a chloride of 102 mEq/L, and a bicarbonate of 23 mEq/L. What is the sodium with only chloride subtracted?",
+      "program": "observe sodium(139)\nobserve chloride(102)\nobserve bicarbonate(23)\nlet answer = sodium - chloride\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 125,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 37,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 116,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 264,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r38ag-19",
+      "qtype": "serum_anion_gap",
+      "stem": "A basic metabolic panel shows a serum sodium of 141 mEq/L, a chloride of 106 mEq/L, and a bicarbonate of 28 mEq/L. What is the serum anion gap?",
+      "program": "observe sodium(141)\nobserve chloride(106)\nobserve bicarbonate(28)\nlet answer = sodium - chloride - bicarbonate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 134,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 113,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 275,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r38ag-20",
+      "qtype": "serum_anion_gap",
+      "stem": "A basic metabolic panel shows a serum sodium of 141 mEq/L, a chloride of 106 mEq/L, and a bicarbonate of 28 mEq/L. What is the sum of the measured anions?",
+      "program": "observe sodium(141)\nobserve chloride(106)\nobserve bicarbonate(28)\nlet answer = chloride + bicarbonate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 113,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 275,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 134,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r38ag-21",
+      "qtype": "serum_anion_gap",
+      "stem": "A basic metabolic panel shows a serum sodium of 141 mEq/L, a chloride of 106 mEq/L, and a bicarbonate of 28 mEq/L. What is the sodium with only chloride subtracted?",
+      "program": "observe sodium(141)\nobserve chloride(106)\nobserve bicarbonate(28)\nlet answer = sodium - chloride\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 134,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 113,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 275,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
