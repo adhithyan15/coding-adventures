@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 39 \u2014 CBC leukocyte differential totals from four stated absolute counts (a NEW panel: hematology / complete-blood-count differential). From four stated counts (neutrophils, lymphocytes, monocytes, eosinophils) compute the major sum (neutrophils+lymphocytes+monocytes), the neutrophil+lymphocyte partial (neutrophils+lymphocytes), or the lymphocyte+monocyte partial (lymphocytes+monocytes). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, a flat THREE-TERM SUM (neutrophils+lymphocytes+monocytes), all addition (the nearest prior rung, 38, chained two subtractions a-b-c; this is the first pure three-term addition) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed counts via + \u2014 no constant leaks (a differential total is a pure sum), and no total ever appears as a literal (each is computed from the observed counts) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same quantities, so the distractors are exactly the slips students make: sweeping in the eosinophils too (neutrophils+lymphocytes+monocytes+eosinophils, a four-term sum) and a wrong pair (neutrophils+eosinophils, a major plus the odd minor). The core confusion tested is adding the three MAJOR populations and no others.",
+  "items": [
+    {
+      "id": "r39wbc-01",
+      "qtype": "wbc_differential",
+      "stem": "A complete-blood-count differential reports absolute counts of 4000 neutrophils, 2000 lymphocytes, 500 monocytes, and 150 eosinophils (all in cells/uL). What is the combined count of the three major populations (neutrophils, lymphocytes, monocytes)?",
+      "program": "observe neutrophils(4000)\nobserve lymphocytes(2000)\nobserve monocytes(500)\nobserve eosinophils(150)\nlet answer = neutrophils + lymphocytes + monocytes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6500,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2500,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6650,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4150,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r39wbc-02",
+      "qtype": "wbc_differential",
+      "stem": "A complete-blood-count differential reports absolute counts of 4000 neutrophils, 2000 lymphocytes, 500 monocytes, and 150 eosinophils (all in cells/uL). What is the combined count of neutrophils and lymphocytes only?",
+      "program": "observe neutrophils(4000)\nobserve lymphocytes(2000)\nobserve monocytes(500)\nobserve eosinophils(150)\nlet answer = neutrophils + lymphocytes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6500,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2500,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6650,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4150,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r39wbc-03",
+      "qtype": "wbc_differential",
+      "stem": "A complete-blood-count differential reports absolute counts of 4000 neutrophils, 2000 lymphocytes, 500 monocytes, and 150 eosinophils (all in cells/uL). What is the combined count of lymphocytes and monocytes only?",
+      "program": "observe neutrophils(4000)\nobserve lymphocytes(2000)\nobserve monocytes(500)\nobserve eosinophils(150)\nlet answer = lymphocytes + monocytes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6500,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2500,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6650,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4150,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r39wbc-04",
+      "qtype": "wbc_differential",
+      "stem": "A complete-blood-count differential reports absolute counts of 5500 neutrophils, 1500 lymphocytes, 700 monocytes, and 300 eosinophils (all in cells/uL). What is the combined count of the three major populations (neutrophils, lymphocytes, monocytes)?",
+      "program": "observe neutrophils(5500)\nobserve lymphocytes(1500)\nobserve monocytes(700)\nobserve eosinophils(300)\nlet answer = neutrophils + lymphocytes + monocytes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7000,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2200,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8000,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7700,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5800,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r39wbc-05",
+      "qtype": "wbc_differential",
+      "stem": "A complete-blood-count differential reports absolute counts of 5500 neutrophils, 1500 lymphocytes, 700 monocytes, and 300 eosinophils (all in cells/uL). What is the combined count of neutrophils and lymphocytes only?",
+      "program": "observe neutrophils(5500)\nobserve lymphocytes(1500)\nobserve monocytes(700)\nobserve eosinophils(300)\nlet answer = neutrophils + lymphocytes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7700,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2200,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8000,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5800,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7000,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r39wbc-06",
+      "qtype": "wbc_differential",
+      "stem": "A complete-blood-count differential reports absolute counts of 5500 neutrophils, 1500 lymphocytes, 700 monocytes, and 300 eosinophils (all in cells/uL). What is the combined count of lymphocytes and monocytes only?",
+      "program": "observe neutrophils(5500)\nobserve lymphocytes(1500)\nobserve monocytes(700)\nobserve eosinophils(300)\nlet answer = lymphocytes + monocytes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2200,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7700,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7000,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8000,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5800,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r39wbc-07",
+      "qtype": "wbc_differential",
+      "stem": "A complete-blood-count differential reports absolute counts of 3200 neutrophils, 2800 lymphocytes, 400 monocytes, and 250 eosinophils (all in cells/uL). What is the combined count of the three major populations (neutrophils, lymphocytes, monocytes)?",
+      "program": "observe neutrophils(3200)\nobserve lymphocytes(2800)\nobserve monocytes(400)\nobserve eosinophils(250)\nlet answer = neutrophils + lymphocytes + monocytes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6400,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3200,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6650,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3450,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r39wbc-08",
+      "qtype": "wbc_differential",
+      "stem": "A complete-blood-count differential reports absolute counts of 3200 neutrophils, 2800 lymphocytes, 400 monocytes, and 250 eosinophils (all in cells/uL). What is the combined count of neutrophils and lymphocytes only?",
+      "program": "observe neutrophils(3200)\nobserve lymphocytes(2800)\nobserve monocytes(400)\nobserve eosinophils(250)\nlet answer = neutrophils + lymphocytes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6400,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3200,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6650,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3450,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r39wbc-09",
+      "qtype": "wbc_differential",
+      "stem": "A complete-blood-count differential reports absolute counts of 3200 neutrophils, 2800 lymphocytes, 400 monocytes, and 250 eosinophils (all in cells/uL). What is the combined count of lymphocytes and monocytes only?",
+      "program": "observe neutrophils(3200)\nobserve lymphocytes(2800)\nobserve monocytes(400)\nobserve eosinophils(250)\nlet answer = lymphocytes + monocytes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6400,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6650,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3200,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3450,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r39wbc-10",
+      "qtype": "wbc_differential",
+      "stem": "A complete-blood-count differential reports absolute counts of 6000 neutrophils, 1200 lymphocytes, 300 monocytes, and 450 eosinophils (all in cells/uL). What is the combined count of the three major populations (neutrophils, lymphocytes, monocytes)?",
+      "program": "observe neutrophils(6000)\nobserve lymphocytes(1200)\nobserve monocytes(300)\nobserve eosinophils(450)\nlet answer = neutrophils + lymphocytes + monocytes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7200,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1500,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7950,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6450,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7500,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r39wbc-11",
+      "qtype": "wbc_differential",
+      "stem": "A complete-blood-count differential reports absolute counts of 6000 neutrophils, 1200 lymphocytes, 300 monocytes, and 450 eosinophils (all in cells/uL). What is the combined count of neutrophils and lymphocytes only?",
+      "program": "observe neutrophils(6000)\nobserve lymphocytes(1200)\nobserve monocytes(300)\nobserve eosinophils(450)\nlet answer = neutrophils + lymphocytes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7200,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7500,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1500,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7950,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6450,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r39wbc-12",
+      "qtype": "wbc_differential",
+      "stem": "A complete-blood-count differential reports absolute counts of 6000 neutrophils, 1200 lymphocytes, 300 monocytes, and 450 eosinophils (all in cells/uL). What is the combined count of lymphocytes and monocytes only?",
+      "program": "observe neutrophils(6000)\nobserve lymphocytes(1200)\nobserve monocytes(300)\nobserve eosinophils(450)\nlet answer = lymphocytes + monocytes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7500,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1500,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7200,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7950,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6450,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r39wbc-13",
+      "qtype": "wbc_differential",
+      "stem": "A complete-blood-count differential reports absolute counts of 4800 neutrophils, 2400 lymphocytes, 600 monocytes, and 100 eosinophils (all in cells/uL). What is the combined count of the three major populations (neutrophils, lymphocytes, monocytes)?",
+      "program": "observe neutrophils(4800)\nobserve lymphocytes(2400)\nobserve monocytes(600)\nobserve eosinophils(100)\nlet answer = neutrophils + lymphocytes + monocytes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7200,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3000,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7800,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7900,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4900,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r39wbc-14",
+      "qtype": "wbc_differential",
+      "stem": "A complete-blood-count differential reports absolute counts of 4800 neutrophils, 2400 lymphocytes, 600 monocytes, and 100 eosinophils (all in cells/uL). What is the combined count of neutrophils and lymphocytes only?",
+      "program": "observe neutrophils(4800)\nobserve lymphocytes(2400)\nobserve monocytes(600)\nobserve eosinophils(100)\nlet answer = neutrophils + lymphocytes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7800,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3000,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7900,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7200,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4900,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r39wbc-15",
+      "qtype": "wbc_differential",
+      "stem": "A complete-blood-count differential reports absolute counts of 4800 neutrophils, 2400 lymphocytes, 600 monocytes, and 100 eosinophils (all in cells/uL). What is the combined count of lymphocytes and monocytes only?",
+      "program": "observe neutrophils(4800)\nobserve lymphocytes(2400)\nobserve monocytes(600)\nobserve eosinophils(100)\nlet answer = lymphocytes + monocytes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7800,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7200,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7900,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4900,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3000,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r39wbc-16",
+      "qtype": "wbc_differential",
+      "stem": "A complete-blood-count differential reports absolute counts of 3600 neutrophils, 2600 lymphocytes, 900 monocytes, and 150 eosinophils (all in cells/uL). What is the combined count of the three major populations (neutrophils, lymphocytes, monocytes)?",
+      "program": "observe neutrophils(3600)\nobserve lymphocytes(2600)\nobserve monocytes(900)\nobserve eosinophils(150)\nlet answer = neutrophils + lymphocytes + monocytes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7100,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6200,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3500,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7250,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3750,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r39wbc-17",
+      "qtype": "wbc_differential",
+      "stem": "A complete-blood-count differential reports absolute counts of 3600 neutrophils, 2600 lymphocytes, 900 monocytes, and 150 eosinophils (all in cells/uL). What is the combined count of neutrophils and lymphocytes only?",
+      "program": "observe neutrophils(3600)\nobserve lymphocytes(2600)\nobserve monocytes(900)\nobserve eosinophils(150)\nlet answer = neutrophils + lymphocytes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7100,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6200,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3500,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7250,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3750,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r39wbc-18",
+      "qtype": "wbc_differential",
+      "stem": "A complete-blood-count differential reports absolute counts of 3600 neutrophils, 2600 lymphocytes, 900 monocytes, and 150 eosinophils (all in cells/uL). What is the combined count of lymphocytes and monocytes only?",
+      "program": "observe neutrophils(3600)\nobserve lymphocytes(2600)\nobserve monocytes(900)\nobserve eosinophils(150)\nlet answer = lymphocytes + monocytes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7100,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6200,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3500,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7250,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3750,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r39wbc-19",
+      "qtype": "wbc_differential",
+      "stem": "A complete-blood-count differential reports absolute counts of 5000 neutrophils, 1000 lymphocytes, 450 monocytes, and 350 eosinophils (all in cells/uL). What is the combined count of the three major populations (neutrophils, lymphocytes, monocytes)?",
+      "program": "observe neutrophils(5000)\nobserve lymphocytes(1000)\nobserve monocytes(450)\nobserve eosinophils(350)\nlet answer = neutrophils + lymphocytes + monocytes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1450,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6800,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6450,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5350,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r39wbc-20",
+      "qtype": "wbc_differential",
+      "stem": "A complete-blood-count differential reports absolute counts of 5000 neutrophils, 1000 lymphocytes, 450 monocytes, and 350 eosinophils (all in cells/uL). What is the combined count of neutrophils and lymphocytes only?",
+      "program": "observe neutrophils(5000)\nobserve lymphocytes(1000)\nobserve monocytes(450)\nobserve eosinophils(350)\nlet answer = neutrophils + lymphocytes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6450,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1450,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6800,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5350,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6000,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r39wbc-21",
+      "qtype": "wbc_differential",
+      "stem": "A complete-blood-count differential reports absolute counts of 5000 neutrophils, 1000 lymphocytes, 450 monocytes, and 350 eosinophils (all in cells/uL). What is the combined count of lymphocytes and monocytes only?",
+      "program": "observe neutrophils(5000)\nobserve lymphocytes(1000)\nobserve monocytes(450)\nobserve eosinophils(350)\nlet answer = lymphocytes + monocytes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1450,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6450,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6800,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5350,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

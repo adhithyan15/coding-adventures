@@ -76,6 +76,7 @@ SELF_CONTAINED_RUNGS = (
     "rung36_transfusion_pooling",
     "rung37_csf_serum_ratio",
     "rung38_serum_anion_gap",
+    "rung39_wbc_differential",
 )
 
 
