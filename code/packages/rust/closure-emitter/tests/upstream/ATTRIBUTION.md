@@ -13,6 +13,18 @@ under the Apache License, Version 2.0:
     - blob SHA at port time: `64944e8e615c95b0cf845aab86f77d634776a5b1`
     - tracked commit: see `UPSTREAM_SHA`
 
+- `code_printer_function_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/CodePrinterTest.java`
+      (the `testFunctionExpression*` / IIFE / `function`-at-statement-start
+      cases)
+    - tracked commit: see `UPSTREAM_SHA`
+    - Isolates `emit_function_expression` + the precedence wrap that landed
+      with `Expression::FunctionExpression` (CLOC12.149) and became reachable
+      once the bridge converted `function_expression` (gap-153). 12 active
+      `#[test]`s, no `#[ignore]` — the emitter conforms to every covered
+      shape (anonymous/named, params, body, IIFE, member-object,
+      call-argument, generator/async prefixes).
+
 ## Translation notes
 
 Fourth port under CLOC12 (after `closure-pass-constant-fold` in

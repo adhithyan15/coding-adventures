@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.19.1] - 2026-07-01
+
+### Test — CodePrinter function-expression port (#88, CLOC12.150)
+
+New upstream conformance port `tests/upstream/code_printer_function_test.rs`
+(from `CodePrinterTest.java`'s `testFunctionExpression*` / IIFE /
+`function`-at-statement-start cases), now unblocked because
+`Expression::FunctionExpression` is emitted end-to-end (CLOC12.149 + gap-153).
+**12 active `#[test]`s, no `#[ignore]`** — pins that `emit_function_expression`
+conforms to every covered shape: anonymous/named (`(function(){})` /
+`(function f(){})`), params, a return body (no trailing `;` after `}`), the
+three parenthesised contexts (statement-start, IIFE callee `(function(){})()`,
+member object `(function(){}).x`), the un-parenthesised call-argument context
+(`g(function(){})`), and the `function*` / `async function` prefixes.
+Test-only; no `src/` change.
+
 ## [0.19.0] - 2026-07-01
 
 ### Added — CLOC12.149: emit `FunctionExpression`

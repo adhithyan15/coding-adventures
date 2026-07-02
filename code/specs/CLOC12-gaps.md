@@ -1415,3 +1415,16 @@ WHITESPACE_ONLY. Proven by the `tests/diff/simple-function-expression/` closurec
 fixture (all four value positions fold their bodies at SIMPLE) plus 4 bridge
 unit tests. Generators/async, arrow functions (`arrow_function`), classes, and
 template literals remain declined — separate future AST slices.
+
+## CLOC12.150 — CodePrinter function-expression conformance port
+
+New upstream port `closure-emitter/tests/upstream/code_printer_function_test.rs`
+(from `CodePrinterTest.java`), unblocked by CLOC12.149 (`FunctionExpression`
+node + emitter) and gap-153 (bridge conversion). **12 active `#[test]`s, no
+`#[ignore]`, no new gaps** — the emitter conforms to every covered
+function-expression printing shape: anonymous/named, params, return body (no
+trailing `;` after `}`), the three parenthesised contexts (statement-start,
+IIFE callee `(function(){})()`, member object `(function(){}).x`), the
+un-parenthesised call-argument context, and the `function*` / `async function`
+prefixes. Getters/setters/methods (object-literal function values) and arrow
+functions remain deferred to their own AST slices.
