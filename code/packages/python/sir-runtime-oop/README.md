@@ -23,6 +23,7 @@ emitted code imports and calls.
 | `call_method` / `define_method` | Reflective dispatch for `is_a?`/`kind_of?`/`instance_of?`/`class` (emitted as SIR `__method__` calls) + a singleton-method table. `call_method` also dispatches user instance methods (O1). |
 | `def_method` / `def_class_method` | Register a user instance/class method into the `(class, method)` tables (emitted as `__def_method__`/`__def_class_method__`). Explicit table lookup, never reflection. |
 | `call_new` / `call_super` / `call_class_method` / `current_self` | Object construction (`Foo.new` → allocate + run `initialize`), `super` (ancestry re-dispatch on the same receiver), class-method dispatch (`def self.m`), and the current `self`. |
+| `include_module` / `extend_module` | Ruby mixins (emitted as `__include__`/`__extend__`). `include` appends a module to the owner's included-modules list; `extend` copies a module's instance methods in as the owner's class methods. Instance-method resolution walks the Ruby MRO (class → included modules reverse → superclass → …), diamond-deduplicated and cycle-guarded — explicit tables, never reflection. |
 | `case_eq` | Ruby case-equality (`pattern === value`) — the test a `when` clause runs. Regexp→match, Range→membership, else `==`. |
 
 ## Usage

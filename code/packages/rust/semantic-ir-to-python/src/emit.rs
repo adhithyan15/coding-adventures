@@ -48,6 +48,10 @@ fn uses_oop(m: &Module) -> bool {
         || module_uses_builtin(m, "__super__")
         || module_uses_builtin(m, "__def_method__")
         || module_uses_builtin(m, "__def_class_method__")
+        // Mixins (MX2): `include`/`extend` directives route to the OOP runtime's
+        // included-modules / class-method tables, so they pull in the import.
+        || module_uses_builtin(m, "__include__")
+        || module_uses_builtin(m, "__extend__")
         // Issue #59 — a class-method CALL (`Foo.bar` on a const receiver)
         // routes to `_sir_oop_call_class_method`, so it needs the OOP import.
         || module_uses_builtin(m, "__class_method__")
@@ -1195,6 +1199,26 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         out.push(')');
         return;
     }
+    // Mixin directives (MX2).  `include M` / `extend M` in a class or module
+    // body lower to `__include__("Owner", "M")` / `__extend__("Owner", "M")`,
+    // both carrying two `StrLit` name args.  They route to the OOP runtime's
+    // explicit tables: `include` appends `M` to the owner's included-modules
+    // list (consulted by the MRO walk); `extend` copies `M`'s instance methods
+    // into the owner's class-method table.  Dispatch stays table-driven — the
+    // names are emitted via `quote_py_string`, never interpolated raw (the C3
+    // RCE lesson).
+    if name == "__include__" && args.len() == 2 {
+        out.push_str("_sir_oop_include_module(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    if name == "__extend__" && args.len() == 2 {
+        out.push_str("_sir_oop_extend_module(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
     if name == "__self__" && args.is_empty() {
         out.push_str("_sir_oop_current_self()");
         return;
@@ -2083,6 +2107,26 @@ mod tests {
         let mut out = String::new();
         emit_expr(&mut out, &e, 0);
         assert_eq!(out, "_sir_oop_current_self()");
+    }
+
+    #[test]
+    fn oop_include_emits_include_module() {
+        // include Greetable in class Robot → __include__("Robot", "Greetable")
+        // → _sir_oop_include_module("Robot", "Greetable").
+        let e = builtin("__include__", vec![str_lit("Robot"), str_lit("Greetable")]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"_sir_oop_include_module("Robot", "Greetable")"#);
+    }
+
+    #[test]
+    fn oop_extend_emits_extend_module() {
+        // extend Counting in class Widget → __extend__("Widget", "Counting")
+        // → _sir_oop_extend_module("Widget", "Counting").
+        let e = builtin("__extend__", vec![str_lit("Widget"), str_lit("Counting")]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"_sir_oop_extend_module("Widget", "Counting")"#);
     }
 
     #[test]

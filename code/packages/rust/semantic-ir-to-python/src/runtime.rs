@@ -28,6 +28,8 @@ from coding_adventures_sir_runtime_oop import (
     call_class_method as _sir_oop_call_class_method,
     def_method as _sir_oop_def_method,
     def_class_method as _sir_oop_def_class_method,
+    include_module as _sir_oop_include_module,
+    extend_module as _sir_oop_extend_module,
     current_self as _sir_oop_current_self,
     sym_to_proc as _sir_oop_sym_to_proc,
     case_eq as _sir_oop_case_eq,
@@ -179,6 +181,9 @@ mod tests {
     #[test]
     fn oop_and_exc_runtime_import_their_packages() {
         assert!(RUNTIME_OOP.contains("from coding_adventures_sir_runtime_oop import"));
+        // Mixin helpers (MX2) are aliased for the `__include__`/`__extend__` arms.
+        assert!(RUNTIME_OOP.contains("include_module as _sir_oop_include_module"));
+        assert!(RUNTIME_OOP.contains("extend_module as _sir_oop_extend_module"));
         assert!(RUNTIME_EXC.contains("from coding_adventures_sir_runtime_exceptions import"));
         assert!(RUNTIME_EXC.contains("raise_error as _sir_exc_raise_error"));
         assert!(RUNTIME_EXC.contains("rescue_matches as _sir_exc_rescue_matches"));
