@@ -388,6 +388,10 @@ pub const SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSI
     &str = "smart_home.list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations";
 pub const SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_RECONCILIATION_SUMMARY_TOOL_ID:
     &str = "smart_home.get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_summary";
+pub const SMART_HOME_LIST_RUNTIME_MAINTENANCE_CLOSEOUT_PACKETS_TOOL_ID: &str =
+    "smart_home.list_runtime_maintenance_closeout_packets";
+pub const SMART_HOME_GET_RUNTIME_MAINTENANCE_CLOSEOUT_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_runtime_maintenance_closeout_summary";
 pub const SMART_HOME_SET_DESIRED_STATE_TOOL_ID: &str = "smart_home.set_desired_state";
 pub const SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID: &str = "smart_home.clear_desired_state";
 pub const SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID: &str = "smart_home.list_pairing_sessions";
@@ -2795,6 +2799,24 @@ impl SmartHomeToolBridge {
                             &arguments,
                         )?;
                     get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_summary_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_CLOSEOUT_PACKETS_TOOL_ID => {
+                    let query = runtime_maintenance_closeout_query(&arguments)?;
+                    list_runtime_maintenance_closeout_packets_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_GET_RUNTIME_MAINTENANCE_CLOSEOUT_SUMMARY_TOOL_ID => {
+                    let query = runtime_maintenance_closeout_query(&arguments)?;
+                    get_runtime_maintenance_closeout_summary_output_handler_output(
                         &mut runtime,
                         principal_id,
                         now_ms,
@@ -6567,6 +6589,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_summary_definition(),
         list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations_definition(),
         get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_summary_definition(),
+        list_runtime_maintenance_closeout_packets_definition(),
+        get_runtime_maintenance_closeout_summary_definition(),
         set_desired_state_definition(),
         clear_desired_state_definition(),
         list_pairing_sessions_definition(),
@@ -8955,6 +8979,74 @@ fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_rea
     )
 }
 
+fn runtime_maintenance_closeout_query_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("window_kind", JsonSchema::String),
+            SchemaProperty::new("window_kinds", string_array_schema()),
+            SchemaProperty::new("remediation_kind", JsonSchema::String),
+            SchemaProperty::new("remediation_kinds", string_array_schema()),
+            SchemaProperty::new("ticket_status", JsonSchema::String),
+            SchemaProperty::new("ticket_statuses", string_array_schema()),
+            SchemaProperty::new("work_order_status", JsonSchema::String),
+            SchemaProperty::new("work_order_statuses", string_array_schema()),
+            SchemaProperty::new("guardrail_status", JsonSchema::String),
+            SchemaProperty::new("guardrail_statuses", string_array_schema()),
+            SchemaProperty::new("evidence_status", JsonSchema::String),
+            SchemaProperty::new("evidence_statuses", string_array_schema()),
+            SchemaProperty::new("review_status", JsonSchema::String),
+            SchemaProperty::new("review_statuses", string_array_schema()),
+            SchemaProperty::new("disposition_status", JsonSchema::String),
+            SchemaProperty::new("disposition_statuses", string_array_schema()),
+            SchemaProperty::new("action_status", JsonSchema::String),
+            SchemaProperty::new("action_statuses", string_array_schema()),
+            SchemaProperty::new("outcome_status", JsonSchema::String),
+            SchemaProperty::new("outcome_statuses", string_array_schema()),
+            SchemaProperty::new("readiness_status", JsonSchema::String),
+            SchemaProperty::new("readiness_statuses", string_array_schema()),
+            SchemaProperty::new("handoff_status", JsonSchema::String),
+            SchemaProperty::new("handoff_statuses", string_array_schema()),
+            SchemaProperty::new("reconciliation_status", JsonSchema::String),
+            SchemaProperty::new("reconciliation_statuses", string_array_schema()),
+            SchemaProperty::new("closeout_status", JsonSchema::String),
+            SchemaProperty::new("closeout_statuses", string_array_schema()),
+            SchemaProperty::new("risk_lane", JsonSchema::String),
+            SchemaProperty::new("recommended_tool", JsonSchema::String),
+            SchemaProperty::new("max_priority", JsonSchema::Integer),
+            SchemaProperty::new("blocked_only", JsonSchema::Boolean),
+            SchemaProperty::new("requires_attention_only", JsonSchema::Boolean),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        vec![],
+        false,
+    )
+}
+
+fn runtime_maintenance_closeout_packets_output_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new(
+                "runtime_maintenance_closeout_packets",
+                JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                },
+            ),
+            SchemaProperty::new("summary", JsonSchema::Any),
+            SchemaProperty::new("count", JsonSchema::Integer),
+        ],
+        vec!["runtime_maintenance_closeout_packets", "summary", "count"],
+        false,
+    )
+}
+
+fn runtime_maintenance_closeout_summary_output_schema() -> JsonSchema {
+    object_schema(
+        vec![SchemaProperty::new("summary", JsonSchema::Any)],
+        vec!["summary"],
+        false,
+    )
+}
+
 fn list_runtime_maintenance_work_order_evidence_review_dispositions_definition() -> ToolDefinition {
     read_definition(
         SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITIONS_TOOL_ID,
@@ -9083,6 +9175,26 @@ fn get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome
         "Summarize Chief-visible reconciliation checkpoints derived from D23 runtime maintenance handoff packages.",
         runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_query_schema(),
         runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_summary_output_schema(),
+    )
+}
+
+fn list_runtime_maintenance_closeout_packets_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_RUNTIME_MAINTENANCE_CLOSEOUT_PACKETS_TOOL_ID,
+        "List smart-home runtime maintenance closeout packets",
+        "List Chief-visible closeout packets derived from D23 runtime maintenance handoff reconciliations without mutating the runtime.",
+        runtime_maintenance_closeout_query_schema(),
+        runtime_maintenance_closeout_packets_output_schema(),
+    )
+}
+
+fn get_runtime_maintenance_closeout_summary_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_RUNTIME_MAINTENANCE_CLOSEOUT_SUMMARY_TOOL_ID,
+        "Summarize smart-home runtime maintenance closeout packets",
+        "Summarize Chief-visible closeout packets derived from D23 runtime maintenance handoff reconciliations.",
+        runtime_maintenance_closeout_query_schema(),
+        runtime_maintenance_closeout_summary_output_schema(),
     )
 }
 
@@ -10978,6 +11090,29 @@ fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_rea
             .collect::<Result<Vec<_>, _>>()?,
         },
     )
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct RuntimeMaintenanceCloseoutQuery {
+    reconciliation_query:
+        RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationQuery,
+    closeout_statuses: Vec<&'static str>,
+}
+
+fn runtime_maintenance_closeout_query(
+    arguments: &JsonValue,
+) -> Result<RuntimeMaintenanceCloseoutQuery, ToolCallError> {
+    let reconciliation_query =
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_query(
+            arguments,
+        )?;
+    Ok(RuntimeMaintenanceCloseoutQuery {
+        reconciliation_query,
+        closeout_statuses: optional_string_list(arguments, "closeout_status", "closeout_statuses")?
+            .into_iter()
+            .map(|status| parse_runtime_maintenance_closeout_status(&status))
+            .collect::<Result<Vec<_>, _>>()?,
+    })
 }
 
 fn authorization_decision_query(
@@ -41186,6 +41321,186 @@ impl RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessH
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+struct RuntimeMaintenanceCloseoutPacket {
+    closeout_id: String,
+    reconciliation_id: String,
+    handoff_id: String,
+    readiness_id: String,
+    outcome_id: String,
+    action_id: String,
+    disposition_id: String,
+    review_id: String,
+    evidence_id: String,
+    guardrail_id: String,
+    work_order_id: String,
+    ticket_id: String,
+    plan_id: String,
+    window_id: String,
+    window_kind: RuntimeMaintenanceWindowKind,
+    priority: u8,
+    execution_order: usize,
+    closeout_status: &'static str,
+    closeout_kind: &'static str,
+    closeout_lane: &'static str,
+    closeout_package_kind: &'static str,
+    recommended_closeout_action: &'static str,
+    reconciliation_status: &'static str,
+    reconciliation_kind: &'static str,
+    reconciliation_lane: &'static str,
+    reconciliation_package_kind: &'static str,
+    recommended_reconciliation_action: &'static str,
+    handoff_status: &'static str,
+    readiness_status: &'static str,
+    outcome_status: &'static str,
+    action_status: &'static str,
+    disposition_status: &'static str,
+    review_status: &'static str,
+    evidence_status: &'static str,
+    guardrail_status: &'static str,
+    work_order_status: &'static str,
+    recommended_tool: &'static str,
+    source_recommended_action: &'static str,
+    action_count: usize,
+    blocked_action_count: usize,
+    requires_attention_count: usize,
+    overdue_action_count: usize,
+    first_due_at_ms: Option<u64>,
+    max_overdue_by_ms: Option<u64>,
+    next_action_ids: Vec<String>,
+    remediation_ids: Vec<String>,
+    release_blocking: bool,
+    operator_required: bool,
+    lineage_complete: bool,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct RuntimeMaintenanceCloseoutSummary {
+    total_packets: usize,
+    release_hold_packets: usize,
+    operator_handoff_packets: usize,
+    lineage_repair_packets: usize,
+    closeout_ready_packets: usize,
+    release_blocking_packets: usize,
+    operator_required_packets: usize,
+    lineage_complete_packets: usize,
+    source_runtime_actions: usize,
+    blocked_runtime_actions: usize,
+    requires_attention_runtime_actions: usize,
+    overdue_runtime_actions: usize,
+    first_closeout_id: Option<String>,
+    first_release_hold_closeout_id: Option<String>,
+    first_operator_handoff_closeout_id: Option<String>,
+    first_lineage_repair_closeout_id: Option<String>,
+    first_closeout_ready_id: Option<String>,
+    first_reconciliation_id: Option<String>,
+    first_handoff_id: Option<String>,
+    first_readiness_id: Option<String>,
+    first_outcome_id: Option<String>,
+    first_action_id: Option<String>,
+    first_evidence_id: Option<String>,
+    first_work_order_id: Option<String>,
+    first_due_at_ms: Option<u64>,
+    max_overdue_by_ms: Option<u64>,
+    highest_priority: Option<u8>,
+}
+
+impl RuntimeMaintenanceCloseoutSummary {
+    fn from_packets(packets: &[RuntimeMaintenanceCloseoutPacket]) -> Self {
+        let mut summary = Self::default();
+
+        for packet in packets {
+            summary.total_packets += 1;
+            summary.source_runtime_actions += packet.action_count;
+            summary.blocked_runtime_actions += packet.blocked_action_count;
+            summary.requires_attention_runtime_actions += packet.requires_attention_count;
+            summary.overdue_runtime_actions += packet.overdue_action_count;
+            summary.first_due_at_ms =
+                min_optional_u64(summary.first_due_at_ms, packet.first_due_at_ms);
+            summary.max_overdue_by_ms =
+                max_optional_u64(summary.max_overdue_by_ms, packet.max_overdue_by_ms);
+            summary.highest_priority =
+                min_optional_u8(summary.highest_priority, Some(packet.priority));
+            summary
+                .first_closeout_id
+                .get_or_insert_with(|| packet.closeout_id.clone());
+            summary
+                .first_reconciliation_id
+                .get_or_insert_with(|| packet.reconciliation_id.clone());
+            summary
+                .first_handoff_id
+                .get_or_insert_with(|| packet.handoff_id.clone());
+            summary
+                .first_readiness_id
+                .get_or_insert_with(|| packet.readiness_id.clone());
+            summary
+                .first_outcome_id
+                .get_or_insert_with(|| packet.outcome_id.clone());
+            summary
+                .first_action_id
+                .get_or_insert_with(|| packet.action_id.clone());
+            summary
+                .first_evidence_id
+                .get_or_insert_with(|| packet.evidence_id.clone());
+            summary
+                .first_work_order_id
+                .get_or_insert_with(|| packet.work_order_id.clone());
+
+            if packet.release_hold() {
+                summary.release_hold_packets += 1;
+                summary
+                    .first_release_hold_closeout_id
+                    .get_or_insert_with(|| packet.closeout_id.clone());
+            }
+            if packet.operator_handoff() {
+                summary.operator_handoff_packets += 1;
+                summary
+                    .first_operator_handoff_closeout_id
+                    .get_or_insert_with(|| packet.closeout_id.clone());
+            }
+            if packet.lineage_repair() {
+                summary.lineage_repair_packets += 1;
+                summary
+                    .first_lineage_repair_closeout_id
+                    .get_or_insert_with(|| packet.closeout_id.clone());
+            }
+            if packet.ready_to_closeout() {
+                summary.closeout_ready_packets += 1;
+                summary
+                    .first_closeout_ready_id
+                    .get_or_insert_with(|| packet.closeout_id.clone());
+            }
+            if packet.release_blocking {
+                summary.release_blocking_packets += 1;
+            }
+            if packet.operator_required {
+                summary.operator_required_packets += 1;
+            }
+            if packet.lineage_complete {
+                summary.lineage_complete_packets += 1;
+            }
+        }
+
+        summary
+    }
+
+    fn has_packets(&self) -> bool {
+        self.total_packets > 0
+    }
+
+    fn has_closeout_work(&self) -> bool {
+        self.release_hold_packets > 0
+            || self.operator_handoff_packets > 0
+            || self.lineage_repair_packets > 0
+    }
+
+    fn closeout_ready(&self) -> bool {
+        self.total_packets > 0
+            && self.closeout_ready_packets == self.total_packets
+            && self.lineage_complete_packets == self.total_packets
+    }
+}
+
 fn list_runtime_maintenance_work_order_evidence_reviews_output_handler_output(
     runtime: &mut SmartHomeRuntime,
     principal_id: AgentId,
@@ -41990,6 +42305,108 @@ fn get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome
     ))
 }
 
+fn list_runtime_maintenance_closeout_packets_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: RuntimeMaintenanceCloseoutQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (mut packets, summary) =
+        runtime_maintenance_closeout_packets(runtime, principal_id, now_ms, &query)?;
+    if let Some(limit) = query
+        .reconciliation_query
+        .handoff_query
+        .readiness_query
+        .outcome_query
+        .action_query
+        .disposition_query
+        .review_query
+        .evidence_query
+        .guardrail_query
+        .work_order_query
+        .limit
+    {
+        packets.truncate(limit);
+    }
+
+    Ok(ToolHandlerOutput::new(object([
+        (
+            "runtime_maintenance_closeout_packets",
+            JsonValue::Array(
+                packets
+                    .iter()
+                    .map(runtime_maintenance_closeout_packet_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            runtime_maintenance_closeout_summary_json(&summary),
+        ),
+        ("count", integer(packets.len() as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_runtime_maintenance_closeout_packets"),
+            ),
+            ("closeout_packets", integer(packets.len() as i64)),
+            (
+                "release_hold_packets",
+                integer(summary.release_hold_packets as i64),
+            ),
+            (
+                "operator_handoff_packets",
+                integer(summary.operator_handoff_packets as i64),
+            ),
+            (
+                "lineage_repair_packets",
+                integer(summary.lineage_repair_packets as i64),
+            ),
+            ("closeout_ready", JsonValue::Bool(summary.closeout_ready())),
+        ]),
+    ))
+}
+
+fn get_runtime_maintenance_closeout_summary_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: RuntimeMaintenanceCloseoutQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (_, summary) = runtime_maintenance_closeout_packets(runtime, principal_id, now_ms, &query)?;
+
+    Ok(ToolHandlerOutput::new(object([(
+        "summary",
+        runtime_maintenance_closeout_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_runtime_maintenance_closeout_summary"),
+            ),
+            ("total_packets", integer(summary.total_packets as i64)),
+            (
+                "release_hold_packets",
+                integer(summary.release_hold_packets as i64),
+            ),
+            (
+                "operator_handoff_packets",
+                integer(summary.operator_handoff_packets as i64),
+            ),
+            (
+                "lineage_repair_packets",
+                integer(summary.lineage_repair_packets as i64),
+            ),
+            ("has_packets", JsonValue::Bool(summary.has_packets())),
+        ]),
+    ))
+}
+
 fn runtime_maintenance_work_order_evidence_reviews(
     runtime: &mut SmartHomeRuntime,
     principal_id: AgentId,
@@ -42217,6 +42634,34 @@ fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_rea
             &reconciliations,
         );
     Ok((reconciliations, summary))
+}
+
+fn runtime_maintenance_closeout_packets(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: &RuntimeMaintenanceCloseoutQuery,
+) -> Result<
+    (
+        Vec<RuntimeMaintenanceCloseoutPacket>,
+        RuntimeMaintenanceCloseoutSummary,
+    ),
+    ToolCallError,
+> {
+    let (reconciliations, _) =
+        runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations(
+            runtime,
+            principal_id,
+            now_ms,
+            &query.reconciliation_query,
+        )?;
+    let packets = reconciliations
+        .iter()
+        .map(RuntimeMaintenanceCloseoutPacket::from_reconciliation)
+        .filter(|packet| runtime_maintenance_closeout_packet_matches(packet, query))
+        .collect::<Vec<_>>();
+    let summary = RuntimeMaintenanceCloseoutSummary::from_packets(&packets);
+    Ok((packets, summary))
 }
 
 impl RuntimeMaintenanceWorkOrderEvidenceReview {
@@ -42896,6 +43341,91 @@ impl
     }
 }
 
+impl RuntimeMaintenanceCloseoutPacket {
+    fn from_reconciliation(
+        reconciliation: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliation,
+    ) -> Self {
+        let closeout_status = runtime_maintenance_closeout_status(reconciliation);
+        Self {
+            closeout_id: format!("maintenance_closeout:{}", reconciliation.reconciliation_id),
+            reconciliation_id: reconciliation.reconciliation_id.clone(),
+            handoff_id: reconciliation.handoff_id.clone(),
+            readiness_id: reconciliation.readiness_id.clone(),
+            outcome_id: reconciliation.outcome_id.clone(),
+            action_id: reconciliation.action_id.clone(),
+            disposition_id: reconciliation.disposition_id.clone(),
+            review_id: reconciliation.review_id.clone(),
+            evidence_id: reconciliation.evidence_id.clone(),
+            guardrail_id: reconciliation.guardrail_id.clone(),
+            work_order_id: reconciliation.work_order_id.clone(),
+            ticket_id: reconciliation.ticket_id.clone(),
+            plan_id: reconciliation.plan_id.clone(),
+            window_id: reconciliation.window_id.clone(),
+            window_kind: reconciliation.window_kind,
+            priority: reconciliation.priority,
+            execution_order: reconciliation.execution_order,
+            closeout_status,
+            closeout_kind: runtime_maintenance_closeout_kind(closeout_status),
+            closeout_lane: runtime_maintenance_closeout_lane(closeout_status),
+            closeout_package_kind: runtime_maintenance_closeout_package_kind(closeout_status),
+            recommended_closeout_action: runtime_maintenance_recommended_closeout_action(
+                closeout_status,
+            ),
+            reconciliation_status: reconciliation.reconciliation_status,
+            reconciliation_kind: reconciliation.reconciliation_kind,
+            reconciliation_lane: reconciliation.reconciliation_lane,
+            reconciliation_package_kind: reconciliation.reconciliation_package_kind,
+            recommended_reconciliation_action: reconciliation.recommended_reconciliation_action,
+            handoff_status: reconciliation.handoff_status,
+            readiness_status: reconciliation.readiness_status,
+            outcome_status: reconciliation.outcome_status,
+            action_status: reconciliation.action_status,
+            disposition_status: reconciliation.disposition_status,
+            review_status: reconciliation.review_status,
+            evidence_status: reconciliation.evidence_status,
+            guardrail_status: reconciliation.guardrail_status,
+            work_order_status: reconciliation.work_order_status,
+            recommended_tool: reconciliation.recommended_tool,
+            source_recommended_action: reconciliation.source_recommended_action,
+            action_count: reconciliation.action_count,
+            blocked_action_count: reconciliation.blocked_action_count,
+            requires_attention_count: reconciliation.requires_attention_count,
+            overdue_action_count: reconciliation.overdue_action_count,
+            first_due_at_ms: reconciliation.first_due_at_ms,
+            max_overdue_by_ms: reconciliation.max_overdue_by_ms,
+            next_action_ids: reconciliation.next_action_ids.clone(),
+            remediation_ids: reconciliation.remediation_ids.clone(),
+            release_blocking: reconciliation.release_blocking,
+            operator_required: reconciliation.operator_required,
+            lineage_complete: reconciliation.lineage_complete,
+        }
+    }
+
+    fn requires_closeout_work(&self) -> bool {
+        self.closeout_status != "ready_to_closeout"
+    }
+
+    fn release_hold(&self) -> bool {
+        self.closeout_status == "release_hold"
+    }
+
+    fn operator_handoff(&self) -> bool {
+        self.closeout_status == "operator_handoff"
+    }
+
+    fn lineage_repair(&self) -> bool {
+        self.closeout_status == "lineage_repair"
+    }
+
+    fn ready_to_closeout(&self) -> bool {
+        self.closeout_status == "ready_to_closeout"
+    }
+
+    fn closeout_ready(&self) -> bool {
+        self.ready_to_closeout() && self.lineage_complete
+    }
+}
+
 fn runtime_maintenance_work_order_evidence_review_disposition_matches(
     disposition: &RuntimeMaintenanceWorkOrderEvidenceReviewDisposition,
     query: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionQuery,
@@ -42945,6 +43475,13 @@ fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_rea
         || query
             .reconciliation_statuses
             .contains(&reconciliation.reconciliation_status)
+}
+
+fn runtime_maintenance_closeout_packet_matches(
+    packet: &RuntimeMaintenanceCloseoutPacket,
+    query: &RuntimeMaintenanceCloseoutQuery,
+) -> bool {
+    query.closeout_statuses.is_empty() || query.closeout_statuses.contains(&packet.closeout_status)
 }
 
 fn runtime_maintenance_work_order_evidence_review_disposition_status(
@@ -43223,6 +43760,56 @@ fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_rea
         "operator_route_pending" => "route_operator_handoff_packet",
         "lineage_repair_pending" => "repair_lineage_before_closeout",
         _ => "finalize_maintenance_closeout",
+    }
+}
+
+fn runtime_maintenance_closeout_status(
+    reconciliation: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliation,
+) -> &'static str {
+    if reconciliation.release_hold_reconciled() {
+        "release_hold"
+    } else if reconciliation.operator_route_pending() {
+        "operator_handoff"
+    } else if reconciliation.lineage_repair_pending() || !reconciliation.lineage_complete {
+        "lineage_repair"
+    } else {
+        "ready_to_closeout"
+    }
+}
+
+fn runtime_maintenance_closeout_kind(closeout_status: &str) -> &'static str {
+    match closeout_status {
+        "release_hold" => "release_hold_closeout",
+        "operator_handoff" => "operator_handoff_closeout",
+        "lineage_repair" => "lineage_repair_closeout",
+        _ => "ready_closeout",
+    }
+}
+
+fn runtime_maintenance_closeout_lane(closeout_status: &str) -> &'static str {
+    match closeout_status {
+        "release_hold" => "chief_release_decision",
+        "operator_handoff" => "runtime_operator_handoff",
+        "lineage_repair" => "evidence_lineage_repair",
+        _ => "execution_closeout",
+    }
+}
+
+fn runtime_maintenance_closeout_package_kind(closeout_status: &str) -> &'static str {
+    match closeout_status {
+        "release_hold" => "release_hold_closeout_packet",
+        "operator_handoff" => "operator_handoff_closeout_packet",
+        "lineage_repair" => "lineage_repair_closeout_packet",
+        _ => "closeout_acceptance_packet",
+    }
+}
+
+fn runtime_maintenance_recommended_closeout_action(closeout_status: &str) -> &'static str {
+    match closeout_status {
+        "release_hold" => "keep_release_hold",
+        "operator_handoff" => "complete_operator_handoff",
+        "lineage_repair" => "repair_lineage_before_closeout",
+        _ => "close_runtime_maintenance_packet",
     }
 }
 
@@ -44088,6 +44675,7 @@ fn get_maintenance_brief_output_handler_output(
         runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_query(
             &empty_arguments,
         )?;
+    let closeout_query = runtime_maintenance_closeout_query(&empty_arguments)?;
 
     let (_, window_summary) =
         runtime_maintenance_window_rows(runtime, principal_id.clone(), now_ms, &window_query)?;
@@ -44138,10 +44726,12 @@ fn get_maintenance_brief_output_handler_output(
     let (_, reconciliation_summary) =
         runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations(
             runtime,
-            principal_id,
+            principal_id.clone(),
             now_ms,
             &reconciliation_query,
         )?;
+    let (_, closeout_summary) =
+        runtime_maintenance_closeout_packets(runtime, principal_id, now_ms, &closeout_query)?;
 
     let status = maintenance_brief_status(
         &window_summary,
@@ -44155,6 +44745,7 @@ fn get_maintenance_brief_output_handler_output(
         &readiness_summary,
         &handoff_summary,
         &reconciliation_summary,
+        &closeout_summary,
     );
     let ready = maintenance_brief_ready(
         &window_summary,
@@ -44168,6 +44759,7 @@ fn get_maintenance_brief_output_handler_output(
         &readiness_summary,
         &handoff_summary,
         &reconciliation_summary,
+        &closeout_summary,
     );
     let has_blockers = maintenance_brief_has_blockers(
         &window_summary,
@@ -44181,6 +44773,7 @@ fn get_maintenance_brief_output_handler_output(
         &readiness_summary,
         &handoff_summary,
         &reconciliation_summary,
+        &closeout_summary,
     );
     let requires_operator_handoff = maintenance_brief_requires_operator_handoff(
         &work_order_summary,
@@ -44190,11 +44783,13 @@ fn get_maintenance_brief_output_handler_output(
         &readiness_summary,
         &handoff_summary,
         &reconciliation_summary,
+        &closeout_summary,
     );
     let has_lineage_gaps = maintenance_brief_has_lineage_gaps(
         &readiness_summary,
         &handoff_summary,
         &reconciliation_summary,
+        &closeout_summary,
     );
     let next_tool = maintenance_brief_next_tool(
         &window_summary,
@@ -44206,6 +44801,7 @@ fn get_maintenance_brief_output_handler_output(
         &readiness_summary,
         &handoff_summary,
         &reconciliation_summary,
+        &closeout_summary,
     );
 
     Ok(ToolHandlerOutput::new(maintenance_brief_output_json(
@@ -44221,6 +44817,7 @@ fn get_maintenance_brief_output_handler_output(
         &readiness_summary,
         &handoff_summary,
         &reconciliation_summary,
+        &closeout_summary,
     ))
     .with_event(
         ToolEventKind::Progress,
@@ -48600,6 +49197,7 @@ fn maintenance_brief_output_json(
     readiness_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
     handoff_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffSummary,
     reconciliation_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary,
+    closeout_summary: &RuntimeMaintenanceCloseoutSummary,
 ) -> JsonValue {
     let status = maintenance_brief_status(
         window_summary,
@@ -48613,6 +49211,7 @@ fn maintenance_brief_output_json(
         readiness_summary,
         handoff_summary,
         reconciliation_summary,
+        closeout_summary,
     );
     let ready = maintenance_brief_ready(
         window_summary,
@@ -48626,6 +49225,7 @@ fn maintenance_brief_output_json(
         readiness_summary,
         handoff_summary,
         reconciliation_summary,
+        closeout_summary,
     );
     let has_blockers = maintenance_brief_has_blockers(
         window_summary,
@@ -48639,6 +49239,7 @@ fn maintenance_brief_output_json(
         readiness_summary,
         handoff_summary,
         reconciliation_summary,
+        closeout_summary,
     );
     let requires_operator_handoff = maintenance_brief_requires_operator_handoff(
         work_order_summary,
@@ -48648,11 +49249,13 @@ fn maintenance_brief_output_json(
         readiness_summary,
         handoff_summary,
         reconciliation_summary,
+        closeout_summary,
     );
     let has_lineage_gaps = maintenance_brief_has_lineage_gaps(
         readiness_summary,
         handoff_summary,
         reconciliation_summary,
+        closeout_summary,
     );
     let next_tool = maintenance_brief_next_tool(
         window_summary,
@@ -48664,6 +49267,7 @@ fn maintenance_brief_output_json(
         readiness_summary,
         handoff_summary,
         reconciliation_summary,
+        closeout_summary,
     );
     let next_action = maintenance_brief_next_action(
         action_summary,
@@ -48674,6 +49278,7 @@ fn maintenance_brief_output_json(
         readiness_summary,
         handoff_summary,
         reconciliation_summary,
+        closeout_summary,
     );
     let next_owner_lane = maintenance_brief_next_owner_lane(
         action_summary,
@@ -48684,6 +49289,7 @@ fn maintenance_brief_output_json(
         readiness_summary,
         handoff_summary,
         reconciliation_summary,
+        closeout_summary,
     );
 
     object([
@@ -48740,10 +49346,15 @@ fn maintenance_brief_output_json(
                     integer(reconciliation_summary.total_reconciliations as i64),
                 ),
                 (
+                    "closeout_packet_count",
+                    integer(closeout_summary.total_packets as i64),
+                ),
+                (
                     "release_hold_count",
                     integer(
                         (handoff_summary.release_hold_handoffs
-                            + reconciliation_summary.release_hold_reconciliations)
+                            + reconciliation_summary.release_hold_reconciliations
+                            + closeout_summary.release_hold_packets)
                             as i64,
                     ),
                 ),
@@ -48768,6 +49379,7 @@ fn maintenance_brief_output_json(
                     readiness_summary,
                     handoff_summary,
                     reconciliation_summary,
+                    closeout_summary,
                 ),
             ),
         ),
@@ -48910,6 +49522,19 @@ fn maintenance_brief_output_json(
                         reconciliation_summary,
                     ),
                 ),
+                maintenance_brief_stage_json(
+                    "closeout",
+                    "Closeout",
+                    !closeout_summary.has_packets() || closeout_summary.closeout_ready(),
+                    closeout_summary.operator_handoff_packets
+                        + closeout_summary.lineage_repair_packets,
+                    closeout_summary.release_hold_packets,
+                    closeout_summary.operator_handoff_packets > 0,
+                    closeout_summary.lineage_repair_packets > 0,
+                    SMART_HOME_LIST_RUNTIME_MAINTENANCE_CLOSEOUT_PACKETS_TOOL_ID,
+                    "close_runtime_maintenance_packet",
+                    runtime_maintenance_closeout_summary_json(closeout_summary),
+                ),
             ]),
         ),
         (
@@ -48937,6 +49562,8 @@ fn maintenance_brief_output_json(
                 SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_SUMMARY_TOOL_ID,
                 SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_RECONCILIATIONS_TOOL_ID,
                 SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_RECONCILIATION_SUMMARY_TOOL_ID,
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_CLOSEOUT_PACKETS_TOOL_ID,
+                SMART_HOME_GET_RUNTIME_MAINTENANCE_CLOSEOUT_SUMMARY_TOOL_ID,
             ]),
         ),
     ])
@@ -49035,6 +49662,7 @@ fn maintenance_brief_status(
     readiness_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
     handoff_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffSummary,
     reconciliation_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary,
+    closeout_summary: &RuntimeMaintenanceCloseoutSummary,
 ) -> &'static str {
     if maintenance_brief_has_blockers(
         window_summary,
@@ -49048,12 +49676,14 @@ fn maintenance_brief_status(
         readiness_summary,
         handoff_summary,
         reconciliation_summary,
+        closeout_summary,
     ) {
         "blocked"
     } else if maintenance_brief_has_lineage_gaps(
         readiness_summary,
         handoff_summary,
         reconciliation_summary,
+        closeout_summary,
     ) {
         "lineage_gap"
     } else if maintenance_brief_requires_operator_handoff(
@@ -49064,6 +49694,7 @@ fn maintenance_brief_status(
         readiness_summary,
         handoff_summary,
         reconciliation_summary,
+        closeout_summary,
     ) {
         "operator_handoff"
     } else if maintenance_brief_ready(
@@ -49078,6 +49709,7 @@ fn maintenance_brief_status(
         readiness_summary,
         handoff_summary,
         reconciliation_summary,
+        closeout_summary,
     ) {
         "ready"
     } else if maintenance_brief_requires_attention(
@@ -49105,6 +49737,7 @@ fn maintenance_brief_ready(
     readiness_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
     handoff_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffSummary,
     reconciliation_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary,
+    closeout_summary: &RuntimeMaintenanceCloseoutSummary,
 ) -> bool {
     if action_summary.total_actions == 0 {
         return true;
@@ -49122,6 +49755,7 @@ fn maintenance_brief_ready(
         readiness_summary,
         handoff_summary,
         reconciliation_summary,
+        closeout_summary,
     ) && !maintenance_brief_requires_operator_handoff(
         work_order_summary,
         guardrail_summary,
@@ -49130,10 +49764,12 @@ fn maintenance_brief_ready(
         readiness_summary,
         handoff_summary,
         reconciliation_summary,
+        closeout_summary,
     ) && !maintenance_brief_has_lineage_gaps(
         readiness_summary,
         handoff_summary,
         reconciliation_summary,
+        closeout_summary,
     ) && work_order_summary.execution_work_orders_ready()
         && guardrail_summary.execution_work_order_guardrails_ready()
         && evidence_summary.execution_evidence_ready()
@@ -49141,6 +49777,7 @@ fn maintenance_brief_ready(
         && readiness_summary.readiness_ready()
         && handoff_summary.handoff_ready()
         && reconciliation_summary.reconciliation_ready()
+        && closeout_summary.closeout_ready()
 }
 
 fn maintenance_brief_has_blockers(
@@ -49155,6 +49792,7 @@ fn maintenance_brief_has_blockers(
     readiness_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
     handoff_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffSummary,
     reconciliation_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary,
+    closeout_summary: &RuntimeMaintenanceCloseoutSummary,
 ) -> bool {
     window_summary.has_blockers()
         || action_summary.has_blockers()
@@ -49167,6 +49805,7 @@ fn maintenance_brief_has_blockers(
         || readiness_summary.blocked_readiness > 0
         || handoff_summary.release_hold_handoffs > 0
         || reconciliation_summary.release_hold_reconciliations > 0
+        || closeout_summary.release_hold_packets > 0
 }
 
 fn maintenance_brief_requires_operator_handoff(
@@ -49177,6 +49816,7 @@ fn maintenance_brief_requires_operator_handoff(
     readiness_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
     handoff_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffSummary,
     reconciliation_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary,
+    closeout_summary: &RuntimeMaintenanceCloseoutSummary,
 ) -> bool {
     work_order_summary.operator_required_work_orders > 0
         || guardrail_summary.operator_handoff_guardrails > 0
@@ -49185,16 +49825,19 @@ fn maintenance_brief_requires_operator_handoff(
         || readiness_summary.operator_handoff_readiness > 0
         || handoff_summary.operator_handoff_handoffs > 0
         || reconciliation_summary.operator_route_reconciliations > 0
+        || closeout_summary.operator_handoff_packets > 0
 }
 
 fn maintenance_brief_has_lineage_gaps(
     readiness_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
     handoff_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffSummary,
     reconciliation_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary,
+    closeout_summary: &RuntimeMaintenanceCloseoutSummary,
 ) -> bool {
     readiness_summary.lineage_gap_readiness > 0
         || handoff_summary.lineage_repair_handoffs > 0
         || reconciliation_summary.lineage_repair_reconciliations > 0
+        || closeout_summary.lineage_repair_packets > 0
 }
 
 fn maintenance_brief_requires_attention(
@@ -49236,8 +49879,13 @@ fn maintenance_brief_next_tool(
     readiness_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
     handoff_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffSummary,
     reconciliation_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary,
+    closeout_summary: &RuntimeMaintenanceCloseoutSummary,
 ) -> &'static str {
-    if reconciliation_summary.has_reconciliation_work()
+    if closeout_summary.has_closeout_work()
+        || (closeout_summary.has_packets() && !closeout_summary.closeout_ready())
+    {
+        SMART_HOME_LIST_RUNTIME_MAINTENANCE_CLOSEOUT_PACKETS_TOOL_ID
+    } else if reconciliation_summary.has_reconciliation_work()
         || (reconciliation_summary.has_reconciliations()
             && !reconciliation_summary.reconciliation_ready())
     {
@@ -49284,8 +49932,17 @@ fn maintenance_brief_next_action(
     readiness_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
     handoff_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffSummary,
     reconciliation_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary,
+    closeout_summary: &RuntimeMaintenanceCloseoutSummary,
 ) -> &'static str {
-    if reconciliation_summary.release_hold_reconciliations > 0 {
+    if closeout_summary.release_hold_packets > 0 {
+        "keep_release_hold"
+    } else if closeout_summary.operator_handoff_packets > 0 {
+        "complete_operator_handoff"
+    } else if closeout_summary.lineage_repair_packets > 0 {
+        "repair_lineage_before_closeout"
+    } else if closeout_summary.closeout_ready_packets > 0 {
+        "close_runtime_maintenance_packet"
+    } else if reconciliation_summary.release_hold_reconciliations > 0 {
         "verify_release_hold_packet"
     } else if reconciliation_summary.operator_route_reconciliations > 0 {
         "route_operator_reconciliation"
@@ -49337,8 +49994,10 @@ fn maintenance_brief_next_owner_lane(
     readiness_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
     handoff_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffSummary,
     reconciliation_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary,
+    closeout_summary: &RuntimeMaintenanceCloseoutSummary,
 ) -> &'static str {
-    if reconciliation_summary.release_hold_reconciliations > 0
+    if closeout_summary.release_hold_packets > 0
+        || reconciliation_summary.release_hold_reconciliations > 0
         || handoff_summary.release_hold_handoffs > 0
         || readiness_summary.blocked_readiness > 0
         || evidence_review_summary.release_blocker_reviews > 0
@@ -49348,7 +50007,8 @@ fn maintenance_brief_next_owner_lane(
         || action_summary.has_blockers()
     {
         "release"
-    } else if reconciliation_summary.operator_route_reconciliations > 0
+    } else if closeout_summary.operator_handoff_packets > 0
+        || reconciliation_summary.operator_route_reconciliations > 0
         || handoff_summary.operator_handoff_handoffs > 0
         || readiness_summary.operator_handoff_readiness > 0
         || evidence_review_summary.operator_handoff_reviews > 0
@@ -49357,7 +50017,8 @@ fn maintenance_brief_next_owner_lane(
         || work_order_summary.operator_required_work_orders > 0
     {
         "operator"
-    } else if reconciliation_summary.lineage_repair_reconciliations > 0
+    } else if closeout_summary.lineage_repair_packets > 0
+        || reconciliation_summary.lineage_repair_reconciliations > 0
         || handoff_summary.lineage_repair_handoffs > 0
         || readiness_summary.lineage_gap_readiness > 0
     {
@@ -49378,8 +50039,17 @@ fn maintenance_brief_reason(
     readiness_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
     handoff_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffSummary,
     reconciliation_summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessHandoffReconciliationSummary,
+    closeout_summary: &RuntimeMaintenanceCloseoutSummary,
 ) -> &'static str {
-    if reconciliation_summary.release_hold_reconciliations > 0 {
+    if closeout_summary.release_hold_packets > 0 {
+        "release_hold_closeout"
+    } else if closeout_summary.operator_handoff_packets > 0 {
+        "operator_handoff_closeout"
+    } else if closeout_summary.lineage_repair_packets > 0 {
+        "lineage_repair_closeout"
+    } else if closeout_summary.closeout_ready_packets > 0 {
+        "runtime_maintenance_closeout"
+    } else if reconciliation_summary.release_hold_reconciliations > 0 {
         "release_hold_reconciliation"
     } else if reconciliation_summary.operator_route_reconciliations > 0 {
         "operator_route_reconciliation"
@@ -75103,6 +75773,128 @@ fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_rea
     ])
 }
 
+fn runtime_maintenance_closeout_packet_json(
+    packet: &RuntimeMaintenanceCloseoutPacket,
+) -> JsonValue {
+    object([
+        ("closeout_id", string(&packet.closeout_id)),
+        ("reconciliation_id", string(&packet.reconciliation_id)),
+        ("handoff_id", string(&packet.handoff_id)),
+        ("readiness_id", string(&packet.readiness_id)),
+        ("outcome_id", string(&packet.outcome_id)),
+        ("action_id", string(&packet.action_id)),
+        ("disposition_id", string(&packet.disposition_id)),
+        ("review_id", string(&packet.review_id)),
+        ("evidence_id", string(&packet.evidence_id)),
+        ("guardrail_id", string(&packet.guardrail_id)),
+        ("work_order_id", string(&packet.work_order_id)),
+        ("ticket_id", string(&packet.ticket_id)),
+        ("plan_id", string(&packet.plan_id)),
+        ("window_id", string(&packet.window_id)),
+        (
+            "window_kind",
+            string(runtime_maintenance_window_kind_label(packet.window_kind)),
+        ),
+        ("priority", integer(packet.priority as i64)),
+        ("execution_order", integer(packet.execution_order as i64)),
+        ("closeout_status", string(packet.closeout_status)),
+        ("closeout_kind", string(packet.closeout_kind)),
+        ("closeout_lane", string(packet.closeout_lane)),
+        (
+            "closeout_package_kind",
+            string(packet.closeout_package_kind),
+        ),
+        (
+            "recommended_closeout_action",
+            string(packet.recommended_closeout_action),
+        ),
+        (
+            "reconciliation_status",
+            string(packet.reconciliation_status),
+        ),
+        ("reconciliation_kind", string(packet.reconciliation_kind)),
+        ("reconciliation_lane", string(packet.reconciliation_lane)),
+        (
+            "reconciliation_package_kind",
+            string(packet.reconciliation_package_kind),
+        ),
+        (
+            "recommended_reconciliation_action",
+            string(packet.recommended_reconciliation_action),
+        ),
+        ("handoff_status", string(packet.handoff_status)),
+        ("readiness_status", string(packet.readiness_status)),
+        ("outcome_status", string(packet.outcome_status)),
+        ("action_status", string(packet.action_status)),
+        ("disposition_status", string(packet.disposition_status)),
+        ("review_status", string(packet.review_status)),
+        ("evidence_status", string(packet.evidence_status)),
+        ("guardrail_status", string(packet.guardrail_status)),
+        ("work_order_status", string(packet.work_order_status)),
+        ("recommended_tool", string(packet.recommended_tool)),
+        (
+            "source_recommended_action",
+            string(packet.source_recommended_action),
+        ),
+        ("action_count", integer(packet.action_count as i64)),
+        (
+            "blocked_action_count",
+            integer(packet.blocked_action_count as i64),
+        ),
+        (
+            "requires_attention_count",
+            integer(packet.requires_attention_count as i64),
+        ),
+        (
+            "overdue_action_count",
+            integer(packet.overdue_action_count as i64),
+        ),
+        (
+            "first_due_at_ms",
+            packet
+                .first_due_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "max_overdue_by_ms",
+            packet
+                .max_overdue_by_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_action_ids",
+            JsonValue::Array(packet.next_action_ids.iter().map(string).collect()),
+        ),
+        (
+            "remediation_ids",
+            JsonValue::Array(packet.remediation_ids.iter().map(string).collect()),
+        ),
+        ("release_blocking", JsonValue::Bool(packet.release_blocking)),
+        (
+            "operator_required",
+            JsonValue::Bool(packet.operator_required),
+        ),
+        ("lineage_complete", JsonValue::Bool(packet.lineage_complete)),
+        (
+            "requires_closeout_work",
+            JsonValue::Bool(packet.requires_closeout_work()),
+        ),
+        ("release_hold", JsonValue::Bool(packet.release_hold())),
+        (
+            "operator_handoff",
+            JsonValue::Bool(packet.operator_handoff()),
+        ),
+        ("lineage_repair", JsonValue::Bool(packet.lineage_repair())),
+        (
+            "ready_to_closeout",
+            JsonValue::Bool(packet.ready_to_closeout()),
+        ),
+        ("closeout_ready", JsonValue::Bool(packet.closeout_ready())),
+    ])
+}
+
 fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_summary_json(
     summary: &RuntimeMaintenanceWorkOrderEvidenceReviewDispositionActionOutcomeReadinessSummary,
 ) -> JsonValue {
@@ -75621,6 +76413,181 @@ fn runtime_maintenance_work_order_evidence_review_disposition_action_outcome_rea
             "reconciliation_ready",
             JsonValue::Bool(summary.reconciliation_ready()),
         ),
+    ])
+}
+
+fn runtime_maintenance_closeout_summary_json(
+    summary: &RuntimeMaintenanceCloseoutSummary,
+) -> JsonValue {
+    object([
+        ("total_packets", integer(summary.total_packets as i64)),
+        (
+            "release_hold_packets",
+            integer(summary.release_hold_packets as i64),
+        ),
+        (
+            "operator_handoff_packets",
+            integer(summary.operator_handoff_packets as i64),
+        ),
+        (
+            "lineage_repair_packets",
+            integer(summary.lineage_repair_packets as i64),
+        ),
+        (
+            "closeout_ready_packets",
+            integer(summary.closeout_ready_packets as i64),
+        ),
+        (
+            "release_blocking_packets",
+            integer(summary.release_blocking_packets as i64),
+        ),
+        (
+            "operator_required_packets",
+            integer(summary.operator_required_packets as i64),
+        ),
+        (
+            "lineage_complete_packets",
+            integer(summary.lineage_complete_packets as i64),
+        ),
+        (
+            "source_runtime_actions",
+            integer(summary.source_runtime_actions as i64),
+        ),
+        (
+            "blocked_runtime_actions",
+            integer(summary.blocked_runtime_actions as i64),
+        ),
+        (
+            "requires_attention_runtime_actions",
+            integer(summary.requires_attention_runtime_actions as i64),
+        ),
+        (
+            "overdue_runtime_actions",
+            integer(summary.overdue_runtime_actions as i64),
+        ),
+        (
+            "first_closeout_id",
+            summary
+                .first_closeout_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_release_hold_closeout_id",
+            summary
+                .first_release_hold_closeout_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_operator_handoff_closeout_id",
+            summary
+                .first_operator_handoff_closeout_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_lineage_repair_closeout_id",
+            summary
+                .first_lineage_repair_closeout_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_closeout_ready_id",
+            summary
+                .first_closeout_ready_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_reconciliation_id",
+            summary
+                .first_reconciliation_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_handoff_id",
+            summary
+                .first_handoff_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_readiness_id",
+            summary
+                .first_readiness_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_outcome_id",
+            summary
+                .first_outcome_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_action_id",
+            summary
+                .first_action_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_evidence_id",
+            summary
+                .first_evidence_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_work_order_id",
+            summary
+                .first_work_order_id
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_due_at_ms",
+            summary
+                .first_due_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "max_overdue_by_ms",
+            summary
+                .max_overdue_by_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_priority",
+            summary
+                .highest_priority
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("has_packets", JsonValue::Bool(summary.has_packets())),
+        (
+            "has_closeout_work",
+            JsonValue::Bool(summary.has_closeout_work()),
+        ),
+        ("closeout_ready", JsonValue::Bool(summary.closeout_ready())),
     ])
 }
 
@@ -78736,6 +79703,25 @@ fn parse_runtime_maintenance_work_order_evidence_review_disposition_action_outco
         | "ready" => Ok("ready_for_closeout"),
         _ => Err(validation_error(format!(
             "unsupported runtime maintenance work order evidence review disposition action outcome readiness handoff reconciliation status `{value}`"
+        ))),
+    }
+}
+
+fn parse_runtime_maintenance_closeout_status(value: &str) -> Result<&'static str, ToolCallError> {
+    match value {
+        "release_hold" | "blocked" | "release_hold_closeout" | "hold_release" => Ok("release_hold"),
+        "operator_handoff"
+        | "operator_route"
+        | "operator_handoff_closeout"
+        | "handoff"
+        | "requires_operator" => Ok("operator_handoff"),
+        "lineage_repair" | "lineage_gap" | "lineage_repair_closeout" | "repair_lineage" => {
+            Ok("lineage_repair")
+        }
+        "ready_to_closeout" | "ready_for_closeout" | "ready_for_closure" | "closeout_ready"
+        | "ready" => Ok("ready_to_closeout"),
+        _ => Err(validation_error(format!(
+            "unsupported runtime maintenance closeout status `{value}`"
         ))),
     }
 }
@@ -82578,7 +83564,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 295);
+        assert_eq!(definitions.len(), 297);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -83426,9 +84412,15 @@ mod tests {
         assert!(export.tool_ids().contains(
             &SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_RECONCILIATION_SUMMARY_TOOL_ID
         ));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_RUNTIME_MAINTENANCE_CLOSEOUT_PACKETS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_RUNTIME_MAINTENANCE_CLOSEOUT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            287
+            289
         );
         assert_eq!(
             export
@@ -85208,15 +86200,19 @@ mod tests {
             integer_value(field(summary, "release_hold_count").unwrap()).unwrap() >= 2,
             "handoff and reconciliation release holds should both feed the brief"
         );
+        assert!(
+            integer_value(field(summary, "closeout_packet_count").unwrap()).unwrap() >= 1,
+            "closeout packets should feed the terminal maintenance brief stage"
+        );
         assert_eq!(
             field(summary, "next_tool"),
             Some(&string(
-                SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_RECONCILIATIONS_TOOL_ID
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_CLOSEOUT_PACKETS_TOOL_ID
             ))
         );
         assert_eq!(
             field(summary, "next_action"),
-            Some(&string("verify_release_hold_packet"))
+            Some(&string("keep_release_hold"))
         );
         assert_eq!(field(summary, "next_owner_lane"), Some(&string("release")));
 
@@ -85224,14 +86220,14 @@ mod tests {
         assert_eq!(field(decision, "recommendation"), Some(&string("hold")));
         assert_eq!(
             field(decision, "recommended_action"),
-            Some(&string("verify_release_hold_packet"))
+            Some(&string("keep_release_hold"))
         );
         assert_eq!(
             field(decision, "reason"),
-            Some(&string("release_hold_reconciliation"))
+            Some(&string("release_hold_closeout"))
         );
 
-        assert_eq!(array_len(field(output, "stages").unwrap()), Some(6));
+        assert_eq!(array_len(field(output, "stages").unwrap()), Some(7));
         let windows_stage = array_item(field(output, "stages").unwrap(), 0).unwrap();
         assert_eq!(
             field(windows_stage, "stage_id"),
@@ -85253,7 +86249,16 @@ mod tests {
                 SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_DISPOSITION_ACTION_OUTCOME_READINESS_HANDOFF_RECONCILIATIONS_TOOL_ID
             ))
         );
-        assert_eq!(array_len(field(output, "source_tools").unwrap()), Some(22));
+        let closeout_stage = array_item(field(output, "stages").unwrap(), 6).unwrap();
+        assert_eq!(field(closeout_stage, "stage_id"), Some(&string("closeout")));
+        assert_eq!(field(closeout_stage, "status"), Some(&string("blocked")));
+        assert_eq!(
+            field(closeout_stage, "recommended_tool"),
+            Some(&string(
+                SMART_HOME_LIST_RUNTIME_MAINTENANCE_CLOSEOUT_PACKETS_TOOL_ID
+            ))
+        );
+        assert_eq!(array_len(field(output, "source_tools").unwrap()), Some(24));
         assert!(
             runtime.borrow().registry().counts().authorization_decisions >= 11,
             "the brief should authorize through the runtime read tool path for every source rollup"
@@ -85455,11 +86460,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(295))
+            Some(&integer(297))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(287))
+            Some(&integer(289))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -101423,6 +102428,102 @@ mod tests {
             Some(&JsonValue::Bool(false))
         );
 
+        let closeout_list_request = request(
+            "call-list-runtime-maintenance-closeout-packets",
+            SMART_HOME_LIST_RUNTIME_MAINTENANCE_CLOSEOUT_PACKETS_TOOL_ID,
+            object([
+                ("closeout_status", string("release_hold")),
+                ("reconciliation_status", string("release_hold_reconciled")),
+                ("handoff_status", string("release_hold")),
+                ("readiness_status", string("blocked")),
+                ("outcome_status", string("blocked")),
+                ("action_status", string("required")),
+                ("disposition_status", string("blocked")),
+                ("review_status", string("release_blocker_review")),
+                ("evidence_status", string("blocked")),
+                ("guardrail_status", string("release_blocker")),
+                ("work_order_status", string("blocked")),
+                ("blocked_only", JsonValue::Bool(true)),
+                ("max_priority", integer(1)),
+                ("limit", integer(10)),
+            ]),
+            2_024,
+        );
+        let closeout_list_trace = tool_runtime.invoke_with_events(&closeout_list_request);
+        assert!(closeout_list_trace.result.ok);
+        assert_eq!(closeout_list_trace.summary().progress_event_count, 1);
+        let closeout_list_output = closeout_list_trace.result.output.as_ref().unwrap();
+        let closeout_packets =
+            field(closeout_list_output, "runtime_maintenance_closeout_packets").unwrap();
+        let closeout_summary = field(closeout_list_output, "summary").unwrap();
+        assert!(
+            array_len(closeout_packets).unwrap() >= 3,
+            "runtime maintenance closeout packets should expose release-hold closeout work"
+        );
+        assert!(integer_value(field(closeout_summary, "total_packets").unwrap()).unwrap() >= 3);
+        assert!(
+            integer_value(field(closeout_summary, "release_hold_packets").unwrap()).unwrap() >= 3
+        );
+        assert_eq!(
+            field(closeout_summary, "closeout_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+
+        let JsonValue::Array(closeout_rows) = closeout_packets else {
+            panic!("runtime_maintenance_closeout_packets should be an array");
+        };
+        assert!(closeout_rows.iter().any(|row| field(row, "window_kind")
+            == Some(&string("critical_recovery"))
+            && field(row, "closeout_status") == Some(&string("release_hold"))
+            && field(row, "closeout_kind") == Some(&string("release_hold_closeout"))
+            && field(row, "closeout_package_kind")
+                == Some(&string("release_hold_closeout_packet"))
+            && field(row, "recommended_closeout_action") == Some(&string("keep_release_hold"))
+            && field(row, "reconciliation_status") == Some(&string("release_hold_reconciled"))
+            && field(row, "recommended_tool")
+                == Some(&string(SMART_HOME_RUN_SUPERVISION_TICK_TOOL_ID))
+            && field(row, "release_blocking") == Some(&JsonValue::Bool(true))
+            && field(row, "closeout_ready") == Some(&JsonValue::Bool(false))));
+
+        let closeout_summary_request = request(
+            "call-runtime-maintenance-closeout-summary",
+            SMART_HOME_GET_RUNTIME_MAINTENANCE_CLOSEOUT_SUMMARY_TOOL_ID,
+            object([
+                ("window_kind", string("desired_state_reconciliation")),
+                ("closeout_status", string("release_hold")),
+                ("reconciliation_status", string("release_hold_reconciled")),
+                ("handoff_status", string("release_hold")),
+                ("readiness_status", string("blocked")),
+                ("outcome_status", string("blocked")),
+                ("action_status", string("required")),
+                ("disposition_status", string("blocked")),
+                ("review_status", string("release_blocker_review")),
+                ("evidence_status", string("blocked")),
+                ("guardrail_status", string("release_blocker")),
+                ("work_order_status", string("blocked")),
+                ("blocked_only", JsonValue::Bool(true)),
+            ]),
+            2_025,
+        );
+        let closeout_summary_trace = tool_runtime.invoke_with_events(&closeout_summary_request);
+        assert!(closeout_summary_trace.result.ok);
+        assert_eq!(closeout_summary_trace.summary().progress_event_count, 1);
+        let closeout_summary_output = closeout_summary_trace.result.output.as_ref().unwrap();
+        let closeout_rollup = field(closeout_summary_output, "summary").unwrap();
+        assert_eq!(field(closeout_rollup, "total_packets"), Some(&integer(1)));
+        assert_eq!(
+            field(closeout_rollup, "release_hold_packets"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(closeout_rollup, "source_runtime_actions"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(closeout_rollup, "closeout_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+
         let mut journal = ToolExecutionJournal::new();
         journal.record_trace(list_request, list_trace);
         journal.record_trace(summary_request, summary_trace);
@@ -101460,13 +102561,15 @@ mod tests {
             handoff_reconciliation_summary_request,
             handoff_reconciliation_summary_trace,
         );
+        journal.record_trace(closeout_list_request, closeout_list_trace);
+        journal.record_trace(closeout_summary_request, closeout_summary_trace);
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 24);
-        assert_eq!(journal_summary.completed_count, 24);
+        assert_eq!(journal_summary.invocation_count, 26);
+        assert_eq!(journal_summary.completed_count, 26);
         assert_eq!(
             runtime.borrow().registry().counts().authorization_decisions,
-            24,
-            "maintenance plan, ticket, work-order, guardrail, evidence, review, disposition, disposition action, outcome, outcome readiness, readiness handoff, and handoff reconciliation reads authorize through runtime read tools"
+            26,
+            "maintenance plan, ticket, work-order, guardrail, evidence, review, disposition, disposition action, outcome, outcome readiness, readiness handoff, handoff reconciliation, and closeout reads authorize through runtime read tools"
         );
     }
 
