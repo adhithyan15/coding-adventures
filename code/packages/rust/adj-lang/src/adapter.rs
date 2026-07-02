@@ -982,6 +982,26 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
         MathExpr::Bin(BinOp::Mul, lhs, rhs) if operator_name_is(lhs, "sgn") => {
             Ok(ExprAst::Sign(Box::new(latex_math_to_expr_ast(rhs, source)?)))
         }
+        // `\operatorname{floor}(x)` / `\operatorname{ceil}(x)` / `\operatorname{round}(x)` —
+        // the word-spelled roundings. These are the operator-name twins of the Unicode-
+        // bracket forms already lowered elsewhere (`⌊x⌋` → `ExprAst::Floor`, `⌈x⌉` →
+        // `ExprAst::Ceil`, `⌊x⌉` → `ExprAst::Round`): a model that writes the *name* instead
+        // of the bracket should reach the SAME `ComputeOp`. `\operatorname{…}` is a TEXT
+        // command, so — exactly like `\operatorname{trunc}`/`\operatorname{sgn}` above —
+        // `\operatorname{floor}(x)` parses as the juxtaposition `Bin(Mul, Text("floor"), (x))`.
+        // We intercept that shape here, ABOVE the general `Bin(Mul, …)` product arm, so a
+        // genuine product (`2x`) still multiplies; only a `floor`/`ceil`/`round`-named text
+        // LEFT factor is captured, and each maps to its existing dimension-preserving
+        // `ExprAst` node (no engine/AST/lowering change — pure adapter recognition).
+        MathExpr::Bin(BinOp::Mul, lhs, rhs) if operator_name_is(lhs, "floor") => {
+            Ok(ExprAst::Floor(Box::new(latex_math_to_expr_ast(rhs, source)?)))
+        }
+        MathExpr::Bin(BinOp::Mul, lhs, rhs) if operator_name_is(lhs, "ceil") => {
+            Ok(ExprAst::Ceil(Box::new(latex_math_to_expr_ast(rhs, source)?)))
+        }
+        MathExpr::Bin(BinOp::Mul, lhs, rhs) if operator_name_is(lhs, "round") => {
+            Ok(ExprAst::Round(Box::new(latex_math_to_expr_ast(rhs, source)?)))
+        }
         // `a \bmod b` / `a \pmod{b}` — the modulo operator. `\bmod`/`\pmod` are not in
         // the frontend's operator tables, so they lower to a bare `Symbol("bmod")` /
         // `Symbol("pmod")` and the whole expression parses as a LEFT-associated implicit
