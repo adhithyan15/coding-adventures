@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `smart_home.get_readiness_brief` tool descriptor for read-only Chief readiness
+  packets over existing D23 controller handoff, runtime operations, safety, and
+  catalog primitives.
 - `smart_home.get_safety_brief` tool descriptor for read-only Chief go/no-go
   safety handoffs over existing D23 runtime, authorization, command-risk,
   remediation, and controller-handoff primitives.

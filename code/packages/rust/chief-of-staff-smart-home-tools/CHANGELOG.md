@@ -4,6 +4,9 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added `smart_home.get_readiness_brief`, a read-only Chief adapter tool that
+  composes existing D23 controller handoff, runtime operations, safety, and
+  catalog signals into one readiness packet without owning smart-home state.
 - Added `smart_home.get_safety_brief`, a read-only Chief adapter tool that
   composes existing D23 runtime, authorization, command-risk, remediation, and
   controller-handoff signals into a go/no-go safety brief without owning
