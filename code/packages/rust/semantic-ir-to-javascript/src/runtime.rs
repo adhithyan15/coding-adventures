@@ -222,6 +222,23 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   ]);
   function callMethod(recv, name, ...rawArgs) {
     const args = rawArgs.map(unwrapArg);
+    // ── user-defined-class dispatch (O3) ─────────────────────────
+    // A `SirInstance` receiver dispatches to the USER method table
+    // (walking ancestry), with `self` bound for the call.  This branch
+    // is taken FIRST and only for `SirInstance`s, so the built-in /
+    // collection path below (arrays, strings, the RCE-hardened
+    // allowlist) is completely unchanged for every other receiver.
+    // Resolution is `resolveMethod` → explicit `Map.get` on the
+    // `(class, method)` key; a name like `constructor` simply misses.
+    if (recv instanceof SirInstance) {
+      const fn = resolveMethod(methodTable, recv.sirClass, name);
+      if (fn === undefined) {
+        raiseError("NoMethodError",
+          "undefined method `" + name + "` for an instance of `" +
+          recv.sirClass + "`");
+      }
+      return applyWithSelf(fn, recv, args);
+    }
     // `length` as a nullary method mirrors the property.  Kept special-cased
     // ahead of the allowlist: it is a property read, not a method call.
     if (name === "length" && args.length === 0) { return recv.length; }
@@ -375,11 +392,181 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     );
   }
 
+  // ── user-defined-class OOP (SIR18 `Classes` dispatch, O3) ──────
+  // The exceptions work above already gave us the *ancestry* map — a
+  // pure-DATA `class → superclass` table walked with a `seen` cycle
+  // guard, never reflection.  OOP method dispatch reuses that exact
+  // walk and adds three data structures, all built to the same
+  // security bar (spelled out under SECURITY below):
+  //
+  //   • `SirInstance`   — a user object: a class-name tag + its own
+  //                       instance-variable bag (`@x`).
+  //   • `methodTable`   — instance methods, keyed by a FLAT string
+  //                       `"Class\x00method"`.
+  //   • `classMethodTable` — class ("static") methods, same keying.
+  //   • `selfStack`     — the dynamic `self` binding a running method
+  //                       reads via `currentSelf()` / `ivarGet`/`ivarSet`.
+  //
+  // SECURITY (the C3 RCE lesson bit THIS crate — see the method
+  // allowlist above).  Every lookup here is an explicit `Map.get` on a
+  // `(class, method)` string key.  We NEVER do `recv[name]`, `eval`,
+  // `new Function`, or any reflection on a source-derived name.  So a
+  // user class or method literally named `constructor` / `__proto__` /
+  // `prototype` is only ever a Map *key* — a miss floors to "method not
+  // found", it can never reach a host callable.  Two further hardening
+  // points: the tables are real `Map`s (not `{}`), so a `"__proto__"`
+  // key cannot poison the prototype chain; and the `\x00` (NUL)
+  // separator cannot appear in a Ruby/JS identifier, so distinct
+  // `(class, method)` pairs can never collide into one key.
+
+  // A user object.  `sirClass` is the class-name tag dispatch keys on;
+  // `ivars` is a prototype-less bag so an instance variable literally
+  // named `"__proto__"` is plain data, never a prototype write.
+  class SirInstance {
+    constructor(sirClass) {
+      this.sirClass = sirClass;
+      this.ivars = Object.create(null);
+    }
+  }
+  // Bare allocation — no `initialize` yet (that is `callNew`'s job).
+  function newInstance(cls) { return new SirInstance(cls); }
+
+  // Flat method-table key.  `\x00` (NUL) never occurs in a source
+  // identifier, so `"A\x00m"` and `"A" + "\x00m"` are the SAME key while
+  // two genuinely different pairs never collide.  A plain string key in
+  // a `Map` (not an object property) means `"constructor"`/`"__proto__"`
+  // are inert data, closing the prototype-pollution / gadget door.
+  function methodKey(cls, name) { return cls + "\x00" + name; }
+  const methodTable = new Map();
+  const classMethodTable = new Map();
+  // `def m … end` inside `class C` → `defMethod("C", "m", <closure>)`.
+  function defMethod(cls, name, fn) { methodTable.set(methodKey(cls, name), fn); }
+  // `def self.m …` → a class ("static") method.
+  function defClassMethod(cls, name, fn) {
+    classMethodTable.set(methodKey(cls, name), fn);
+  }
+
+  // Resolve `name` on `cls` or any ancestor, walking the SAME `ancestry`
+  // table the exception runtime uses.  `seen` guards a malformed cyclic
+  // hierarchy so the walk terminates instead of looping forever.  Lookup
+  // is `table.get(methodKey(cur, name))` — explicit data, never `[name]`.
+  function resolveMethod(table, cls, name) {
+    let cur = cls;
+    const seen = new Set();
+    while (cur !== undefined && cur !== null && !seen.has(cur)) {
+      const fn = table.get(methodKey(cur, name));
+      if (fn !== undefined) { return fn; }
+      seen.add(cur);
+      cur = ancestry[cur];
+    }
+    return undefined;
+  }
+
+  // ── the dynamic `self` stack ───────────────────────────────────
+  // A running method needs to know its receiver for `@ivar` reads and
+  // for `self`.  We push the receiver before applying a method and pop
+  // it in a `finally`, so an exception thrown mid-method still unwinds
+  // the stack (no stale `self` leaks to the next dispatch).
+  const selfStack = [];
+  function pushSelf(v) { selfStack.push(v); }
+  function popSelf() { selfStack.pop(); }
+  // Top of the stack, or `null` outside any method (`__self__`).
+  function currentSelf() {
+    return selfStack.length === 0 ? null : selfStack[selfStack.length - 1];
+  }
+
+  // Apply a resolved method closure with `recv` bound as `self`.  The
+  // closure is the `__Sir.Closure` a `MakeClosure` produced for the
+  // method body; `applyClosure` invokes it.  try/finally keeps the
+  // self-stack balanced even when the body throws.
+  function applyWithSelf(fn, recv, args) {
+    pushSelf(recv);
+    try {
+      return applyClosure(fn, args);
+    } finally {
+      popSelf();
+    }
+  }
+
+  // `Klass.new(args…)` → `callNew("Klass", args…)`.  Allocate, then run
+  // the inherited `initialize` (if any) with `self` bound to the fresh
+  // instance, then return the instance (NOT `initialize`'s result — Ruby
+  // discards it).  A class with no `initialize` anywhere in its chain is
+  // valid: `new` just yields a bare instance.
+  function callNew(cls, ...args) {
+    const obj = newInstance(cls);
+    const init = resolveMethod(methodTable, cls, "initialize");
+    if (init !== undefined) { applyWithSelf(init, obj, args); }
+    return obj;
+  }
+
+  // `super(args…)` inside method `method` of class `cls` →
+  // `callSuper("method", "cls", args…)`.  Resolve `method` starting from
+  // the SUPERCLASS of `cls` (skipping the current definition) and apply
+  // it with the CURRENT `self` still bound — `super` reuses the live
+  // receiver.  A missing super method is a NoMethodError, matching Ruby.
+  function callSuper(method, cls, ...args) {
+    const fn = resolveMethod(methodTable, ancestry[cls], method);
+    if (fn === undefined) {
+      raiseError("NoMethodError",
+        "super: no superclass method `" + method + "` for `" + cls + "`");
+    }
+    // Reuse the live self (do NOT push a new one): `super` runs in the
+    // same object context as the caller.
+    return applyClosure(fn, args);
+  }
+
+  // ── instance / class variables on the current self ─────────────
+  // `@x` read / write route here.  They act on `currentSelf()` — a
+  // method body's receiver.  Reading an unset `@x` yields `null` (Ruby's
+  // nil), matching the `Scope::Instance` "no prior declaration" rule.
+  // `Object.create(null)` for the bag means a `"__proto__"` ivar is data.
+  function ivarGet(name) {
+    const self = currentSelf();
+    if (self instanceof SirInstance) {
+      const v = self.ivars[name];
+      return v === undefined ? null : v;
+    }
+    return null;
+  }
+  function ivarSet(name, val) {
+    const self = currentSelf();
+    if (self instanceof SirInstance) { self.ivars[name] = val; }
+    return val;
+  }
+  // Class variables (`@@x`) are shared per class name.  A prototype-less
+  // per-class bag, keyed off the current self's class, keeps them out of
+  // any object's prototype chain.
+  const classVarBags = new Map();
+  function classVarBag(cls) {
+    let bag = classVarBags.get(cls);
+    if (bag === undefined) { bag = Object.create(null); classVarBags.set(cls, bag); }
+    return bag;
+  }
+  function cvarGet(name) {
+    const self = currentSelf();
+    const cls = self instanceof SirInstance ? self.sirClass : null;
+    if (cls === null) { return null; }
+    const v = classVarBag(cls)[name];
+    return v === undefined ? null : v;
+  }
+  function cvarSet(name, val) {
+    const self = currentSelf();
+    const cls = self instanceof SirInstance ? self.sirClass : null;
+    if (cls !== null) { classVarBag(cls)[name] = val; }
+    return val;
+  }
+
   return {
     Sym, Pair, Closure,
     intern, applyClosure, truthy, format, print,
     builtins, builtinClosure, callBuiltin, callMethod,
     SirError, raiseError, rescueMatches, registerAncestry,
+    // OOP (O3): instantiation, method definition + dispatch, super,
+    // the self stack, and instance/class-variable access.
+    SirInstance, newInstance, callNew, callSuper,
+    defMethod, defClassMethod, currentSelf,
+    ivarGet, ivarSet, cvarGet, cvarSet,
   };
 })();
 "##;
@@ -412,9 +599,44 @@ mod tests {
             // Exception runtime (SIR17): the four helpers the emitter
             // references from its TryCatch / raise / ClassDef arms.
             "class SirError", "raiseError", "rescueMatches", "registerAncestry",
+            // OOP runtime (O3): the helpers the emitter references from
+            // its __new__ / __super__ / __def_method__ / @ivar arms.
+            "class SirInstance", "callNew", "callSuper",
+            "defMethod", "defClassMethod", "currentSelf",
+            "ivarGet", "ivarSet", "cvarGet", "cvarSet",
         ] {
             assert!(RUNTIME.contains(needed), "runtime missing `{needed}`");
         }
+    }
+
+    #[test]
+    fn oop_dispatch_is_map_keyed_not_reflection() {
+        // SECURITY (O3): the method tables are real `Map`s keyed on a
+        // NUL-joined `(class, method)` string — never `recv[name]`,
+        // `eval`, or `new Function` on a source-derived name.  A class /
+        // method named `constructor` or `__proto__` is therefore inert
+        // data (a Map miss), not a reflective gadget.
+        assert!(RUNTIME.contains("const methodTable = new Map();"));
+        assert!(RUNTIME.contains(r#"return cls + "\x00" + name;"#));
+        assert!(RUNTIME.contains("table.get(methodKey(cur, name))"));
+        // No dynamic-code gadget is ever *invoked*: `new Function(` and
+        // `eval(` as calls appear nowhere in the runtime (the phrase
+        // "new Function" occurs only in the SECURITY comment prose, so we
+        // match the call form `new Function(` to avoid a false positive).
+        assert!(!RUNTIME.contains("new Function("));
+        assert!(!RUNTIME.contains("eval("));
+        // The ivar / instance bags are prototype-less, so a `"__proto__"`
+        // name is data and cannot poison a prototype chain.
+        assert!(RUNTIME.contains("this.ivars = Object.create(null);"));
+    }
+
+    #[test]
+    fn oop_self_stack_unwinds_in_finally() {
+        // The self-stack is balanced with try/finally so an exception
+        // thrown mid-method still pops `self` (no stale binding leaks).
+        assert!(RUNTIME.contains("pushSelf(recv);"));
+        assert!(RUNTIME.contains("popSelf();"));
+        assert!(RUNTIME.contains("} finally {"));
     }
 
     #[test]
