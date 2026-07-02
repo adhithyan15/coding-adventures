@@ -1502,16 +1502,6 @@ module private Level1Engine =
         | Expr.AggExpr(_, AggArg.Expr e2, _) -> hasFuncCall e2
         | _ -> false
 
-    /// Check whether a plan contains any FuncCall nodes in projection columns.
-    let rec private planHasFuncCallProjection (plan: OptimizedPlan) : bool =
-        match plan with
-        | OptimizedPlan.Project(_, cols) ->
-            cols |> List.exists (fun c ->
-                match c with
-                | OutputColumn.Expr(e, _) -> hasFuncCall e
-                | _ -> false)
-        | _ -> false
-
     /// Collect SELECT output column (name, expr) pairs for function rewriting.
     let private collectProjectionExprs (plan: OptimizedPlan) : (string * Expr) list option =
         // Peel Sort/Limit/Distinct wrappers to find the innermost Project node.
@@ -1755,45 +1745,6 @@ module private Level1Engine =
                     Some (name, value))
 
         // Step 6: Build HAVING evaluator.
-        // For HAVING, map AggExpr in the predicate to the computed aggregate values.
-        let aggResultsForHaving (groupRow: (string * SqlValue) list) (pred: Expr) : bool =
-            // Build a row map from output column names to values.
-            let rowMap = groupRow |> Map.ofList
-            // Evaluate predicate using evalExpr but with AggExpr → column name mapping.
-            // We need a modified eval that replaces AggExpr with its computed value.
-            // Since FuncEval.evalExpr doesn't handle AggExpr, we pre-substitute:
-            // AggExpr → the value already computed in `groupRow`.
-            // The approach: rewrite the pred by replacing AggExpr with Literal.
-            let rec rewriteAgg (e: Expr) : Expr =
-                match e with
-                | Expr.AggExpr(fn, arg, distinct) ->
-                    // Find the computed value by matching against the output columns.
-                    let matchingName =
-                        groupRow |> List.tryFind (fun (colName, _) ->
-                            // Match by function name and argument if possible.
-                            // Since GROUP BY aggregates appear in sel.Columns, scan those.
-                            sel.Columns |> List.exists (fun oc ->
-                                match oc with
-                                | OutputColumn.Expr(Expr.AggExpr(fn2, arg2, d2), Some alias) ->
-                                    fn = fn2 && arg = arg2 && distinct = d2 && alias.ToLowerInvariant() = colName.ToLowerInvariant()
-                                | OutputColumn.Expr(Expr.AggExpr(fn2, arg2, d2), None) ->
-                                    fn = fn2 && arg = arg2 && distinct = d2
-                                | _ -> false))
-                    match matchingName with
-                    | Some (_, v) -> Expr.Literal v
-                    | None ->
-                        // Last resort: find any aggregate column in groupRow.
-                        // Re-compute the aggregate value on the fly.
-                        // This handles the HAVING case where the pred agg is not in SELECT.
-                        // We need the group rows, but we don't have them here.
-                        // For now, return Null (aggregate not found).
-                        Expr.Literal SqlValue.Null
-                | Expr.BinaryOp(op, l, r) -> Expr.BinaryOp(op, rewriteAgg l, rewriteAgg r)
-                | Expr.UnaryOp(op, e2) -> Expr.UnaryOp(op, rewriteAgg e2)
-                | other -> other
-            let rewritten = rewriteAgg pred
-            isTruthySqlValue (FuncEval.evalExpr rowMap rewritten)
-
         // Re-compute HAVING evaluation WITH access to group rows for aggregate re-computation.
         let evalHavingWithGroupRows (groupRows: Map<string, SqlValue> list) (groupRow: (string * SqlValue) list) (pred: Expr) : bool =
             let firstRow = if groupRows.IsEmpty then Map.empty else groupRows.[0]
