@@ -63,6 +63,27 @@ rectangle of an unbounded sheet (the Compose sibling of the web/SwiftUI/Qt/
 Flutter infinite views). The window JSON is nested, so it's parsed by a tiny
 in-file JSON reader rather than `display()`'s per-value regex.
 
+### The touch FormulaBar layout (`FormulaBarTouch`)
+
+The **Touch bar** button (shown in classic-grid mode) swaps the formula bar
+between two composables generated from the *same* `FormulaBar.mil` interface:
+
+- **Desktop** (`FormulaBar.desktop.mll` → `FormulaBar`): a `Row` — the
+  cell-address label sits to the **left** of the input.
+- **Touch** (`FormulaBar.touch.mll` → `FormulaBarTouch`): a `Column` — the
+  address label stacks **above** a full-width input, the phone arrangement.
+
+`scripts/build.sh` emits both. Kotlin names a composable after the `.mil`
+component (`FormulaBar`) and the emitter also emits the shared
+`sealed class FormulaBarEvent`, so to let both variants live in package
+`generated` the touch output has its **duplicate** `FormulaBarEvent` stripped
+(it reuses the one from `FormulaBar.kt`) and its composable renamed to
+`FormulaBarTouch`. `Main.kt` holds a `touch` flag and calls one or the other,
+passing the identical `fbDispatch` — so editing behaves the same in both and
+only the shape changes. This is the UI30 "one component, many layouts, identical
+host contract" invariant made a runtime toggle — the Compose sibling of the Qt
+demo's toggle and the web demo's switcher.
+
 ### The scrollable infinite GUI (`InfiniteSheet.kt`)
 
 The **Infinite sheet** button in the running app toggles from the classic 5×5
