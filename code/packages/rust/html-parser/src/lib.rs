@@ -8623,10 +8623,6 @@ fn repair_tricky_adoption_agency_in(nodes: &mut Vec<Node>) {
         if repair_paragraph_inside_previous_font_continuation(nodes, index) {
             continue;
         }
-        if repair_paragraph_inside_following_font_continuation(nodes, index) {
-            index += 1;
-            continue;
-        }
         if repair_following_paragraph_inside_font_continuation(nodes, index) {
             continue;
         }
@@ -8671,63 +8667,6 @@ fn repair_paragraph_inside_previous_font_continuation(nodes: &mut Vec<Node>, ind
     };
     previous_font.children.push(paragraph);
     unwrap_following_empty_font_newline(nodes, index);
-    true
-}
-
-fn repair_paragraph_inside_following_font_continuation(
-    nodes: &mut Vec<Node>,
-    index: usize,
-) -> bool {
-    let Some(Node::Element(paragraph)) = nodes.get(index) else {
-        return false;
-    };
-    if paragraph.name != "p" || paragraph.children.len() != 1 {
-        return false;
-    }
-    let Some(Node::Element(child_font)) = paragraph.children.first() else {
-        return false;
-    };
-    if child_font.name != "font" || child_font.attribute("size") != Some("7") {
-        return false;
-    }
-    let Some(Node::Element(following_font)) = nodes.get(index + 1) else {
-        return false;
-    };
-    if following_font.name != "font"
-        || following_font.attribute("size") != Some("7")
-        || following_font.children.len() != 1
-        || !matches!(following_font.children.first(), Some(Node::Text(text)) if text.data == "\n")
-        || matches!(
-            nodes.get(index + 2),
-            Some(Node::Element(next_paragraph))
-                if next_paragraph.name == "p"
-                    && next_paragraph.children.len() == 1
-                    && matches!(
-                        next_paragraph.children.first(),
-                        Some(Node::Element(next_font))
-                            if next_font.name == "font"
-                                && next_font.attribute("size") == Some("7")
-                    )
-        )
-    {
-        return false;
-    }
-
-    let mut paragraph = nodes.remove(index);
-    let mut following_font = nodes.remove(index);
-    let Node::Element(paragraph_element) = &mut paragraph else {
-        return false;
-    };
-    let Node::Element(child_font) = paragraph_element.children.remove(0) else {
-        return false;
-    };
-    paragraph_element.children = child_font.children;
-    let Node::Element(font_element) = &mut following_font else {
-        return false;
-    };
-    font_element.children.push(paragraph);
-    nodes.insert(index, following_font);
-    nodes.insert(index + 1, Node::text("\n"));
     true
 }
 
