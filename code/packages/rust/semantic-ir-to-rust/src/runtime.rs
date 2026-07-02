@@ -1996,6 +1996,24 @@ pub const RUNTIME: &str = r##"mod __sir {
         // Ruby's class-variable semantics.
         static CLASS_VARS: RefCell<HashMap<String, HashMap<String, Value>>> =
             RefCell::new(HashMap::new());
+
+        // ── MX6 mixins: per-owner included-module list ────────────────
+        //
+        // `include M` (in class/module `Owner`) records `M` on `Owner`'s
+        // list, in SOURCE (include) order.  Ruby's MRO searches the
+        // MOST-RECENTLY-included module first, so the resolution walk
+        // iterates this list in REVERSE (see `resolve_instance_method`).
+        //
+        // An owner is a class OR a module NAME — a module that itself
+        // `include`s another module has its own entry here, so the MRO walk
+        // recursing into it honours Ruby's transitive mixin inclusion.
+        //
+        // SECURITY: a plain `HashMap<String, Vec<String>>` keyed by
+        // source-derived NAMES — no reflection (the C3 RCE discipline).  The
+        // MRO walk carries a `seen` set so a module that (transitively)
+        // includes itself TERMINATES rather than looping forever.
+        static INCLUDED_MODULES: RefCell<HashMap<String, Vec<String>>> =
+            RefCell::new(HashMap::new());
     }
 
     /// The class-name tag of instance `id` (or `"?"` if the id is stale —
@@ -2047,24 +2065,170 @@ pub const RUNTIME: &str = r##"mod __sir {
         Value::Nil
     }
 
-    /// Resolve method `name` on `cls` or any ancestor, walking the SAME
-    /// merged (built-in + user) ancestry the exception runtime uses.  The
-    /// `seen` set bounds the walk so a cyclic hierarchy terminates instead
-    /// of looping forever.  Lookup is `table.get(&(cur, name))` — explicit
-    /// DATA, never reflection on the name.  `from` is the class to START at
-    /// (the receiver's class for a normal call; the SUPERCLASS for `super`).
-    fn resolve_method(
-        table: &'static std::thread::LocalKey<RefCell<HashMap<(String, String), Value>>>,
-        from: Option<String>,
-        name: &str,
-    ) -> Option<Value> {
+    // ── MX6 mixins: include / extend directives ───────────────────────
+
+    /// `__include__("Owner", "M")` — record that `Owner` mixes in `M`.
+    ///
+    /// Appends `M` to `Owner`'s include list in SOURCE order.  Idempotent
+    /// duplicates are harmless: the MRO walk's `seen` set de-dups a diamond,
+    /// and appending a name twice just makes the second visit a no-op.
+    /// Returns `Nil` (the directive has no Ruby value the emitter needs).
+    pub fn include_module(owner: &str, module: &str) -> Value {
+        INCLUDED_MODULES.with(|t| {
+            t.borrow_mut()
+                .entry(owner.to_string())
+                .or_default()
+                .push(module.to_string());
+        });
+        Value::Nil
+    }
+
+    /// `__extend__("Owner", "M")` — mix `M`'s INSTANCE methods in as
+    /// `Owner`'s CLASS (singleton) methods, so they become callable as
+    /// `Owner.method`.
+    ///
+    /// We SNAPSHOT `M`'s registered instance methods (including those `M`
+    /// itself includes, via the same MRO walk instances use) and copy each
+    /// into `Owner`'s class-method table.  An entry `Owner` ALREADY defines
+    /// is NOT overwritten — a class's own `def self.m` shadows an extended
+    /// module method, matching Ruby's singleton-first precedence.
+    ///
+    /// Copy-at-extend-time is the v0 model: methods defined on `M` AFTER the
+    /// `extend` are not retroactively added, which is sufficient because the
+    /// frontend emits every `__def_method__` for `M` before any `__extend__`
+    /// that names it (registrations run in source order, module def before
+    /// the including class).
+    pub fn extend_module(owner: &str, module: &str) -> Value {
+        for name in module_method_names(module) {
+            let key = (owner.to_string(), name.clone());
+            let exists = CLASS_METHOD_TABLE.with(|t| t.borrow().contains_key(&key));
+            if exists {
+                continue;
+            }
+            if let Some(f) = resolve_instance_method(module, &name) {
+                CLASS_METHOD_TABLE.with(|t| {
+                    t.borrow_mut().insert(key, f);
+                });
+            }
+        }
+        Value::Nil
+    }
+
+    /// The instance-method NAMES reachable on `module` (its own defs plus
+    /// those of modules IT includes), for `extend_module` to copy.  Walks the
+    /// same include-list MRO as instance resolution, `seen`-guarded against a
+    /// cyclic include, and de-dups names so each is copied once (the
+    /// earliest, most-specific definition wins).
+    fn module_method_names(module: &str) -> Vec<String> {
+        let mut names: Vec<String> = Vec::new();
+        let mut added: std::collections::HashSet<String> = std::collections::HashSet::new();
+        let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
+        let mut stack: Vec<String> = vec![module.to_string()];
+        while let Some(owner) = stack.pop() {
+            if owner.is_empty() || !seen.insert(owner.clone()) {
+                continue;
+            }
+            METHOD_TABLE.with(|t| {
+                for (o, m) in t.borrow().keys() {
+                    if o == &owner && added.insert(m.clone()) {
+                        names.push(m.clone());
+                    }
+                }
+            });
+            // Recurse into this owner's included modules (order does not
+            // matter for a name-collection pass — `added` de-dups).
+            if let Some(mods) = INCLUDED_MODULES.with(|t| t.borrow().get(&owner).cloned()) {
+                for m in mods {
+                    stack.push(m);
+                }
+            }
+        }
+        names
+    }
+
+    /// Resolve instance method `name` on `cls` following Ruby's MRO:
+    ///
+    /// ```text
+    ///   cls  →  cls's included modules (REVERSE / most-recent-first)  →
+    ///   cls's superclass  →  its included modules  →  …  →  Object
+    /// ```
+    ///
+    /// A class's OWN method shadows any module it includes; a module method
+    /// shadows the superclass's (a module precedes the superclass in the
+    /// ancestor list).  A module included via TWO paths (a diamond) resolves
+    /// ONCE, at its earliest position, because the shared `seen` set skips an
+    /// owner already visited.  The walk is a depth-first, most-recent-first,
+    /// de-duplicated linearisation (the order the spec's truth table
+    /// documents).  It reuses the runtime's single ancestry table
+    /// (`super_of`) for the superclass chain — the SAME table `rescue` walks.
+    ///
+    /// The `seen` set makes the walk TOTAL even for a cyclic class hierarchy
+    /// (`A < B < A`) OR a self-including module.  Lookup is
+    /// `METHOD_TABLE.get(&(owner, name))` — explicit DATA, never reflection.
+    /// `from` is the class to START at (the receiver's class for a normal
+    /// call; the SUPERCLASS for `super`).
+    fn resolve_instance_method(cls: &str, name: &str) -> Option<Value> {
+        let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
+        // Check `owner`'s own methods, then (reverse-order) its included
+        // modules — each of which may itself include further modules, so this
+        // recurses.  Returns the closure on the first hit.
+        fn resolve_owner(
+            owner: &str,
+            name: &str,
+            seen: &mut std::collections::HashSet<String>,
+        ) -> Option<Value> {
+            if owner.is_empty() || !seen.insert(owner.to_string()) {
+                return None;
+            }
+            if let Some(f) =
+                METHOD_TABLE.with(|t| t.borrow().get(&(owner.to_string(), name.to_string())).cloned())
+            {
+                return Some(f);
+            }
+            // Most-recently-included module searched first ⇒ iterate the
+            // include-order list in REVERSE.  A module search recurses so a
+            // module that itself includes another module is honoured.
+            if let Some(mods) = INCLUDED_MODULES.with(|t| t.borrow().get(owner).cloned()) {
+                for m in mods.iter().rev() {
+                    if let Some(f) = resolve_owner(m, name, seen) {
+                        return Some(f);
+                    }
+                }
+            }
+            None
+        }
+        let mut cur = Some(cls.to_string());
+        while let Some(c) = cur {
+            // A cyclic CLASS chain (`A < B < A`) would re-enter an owner
+            // `resolve_owner` already inserted into `seen`; guard here too so
+            // the outer superclass loop terminates.
+            if seen.contains(&c) {
+                break;
+            }
+            if let Some(f) = resolve_owner(&c, name, &mut seen) {
+                return Some(f);
+            }
+            cur = super_of(&c);
+        }
+        None
+    }
+
+    /// Resolve a CLASS ("static") method `name` on `cls` or any ancestor,
+    /// walking the merged (built-in + user) ancestry.  The `seen` set bounds
+    /// the walk so a cyclic hierarchy terminates.  Lookup is
+    /// `CLASS_METHOD_TABLE.get(&(cur, name))` — explicit DATA, never
+    /// reflection.  (Class methods do NOT participate in module include-MRO;
+    /// an `extend`ed module method is COPIED into this table by
+    /// `extend_module`, so it is found by the same plain ancestry walk.)
+    fn resolve_class_method(from: Option<String>, name: &str) -> Option<Value> {
         let mut cur = from;
         let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
         while let Some(c) = cur {
             if !seen.insert(c.clone()) {
                 return None; // cycle — stop.
             }
-            let found = table.with(|t| t.borrow().get(&(c.clone(), name.to_string())).cloned());
+            let found =
+                CLASS_METHOD_TABLE.with(|t| t.borrow().get(&(c.clone(), name.to_string())).cloned());
             if found.is_some() {
                 return found;
             }
@@ -2125,7 +2289,7 @@ pub const RUNTIME: &str = r##"mod __sir {
             // Stale handle (unreachable in practice) → honest floor.
             None => return unknown_method(recv, name),
         };
-        match resolve_method(&METHOD_TABLE, Some(class), name) {
+        match resolve_instance_method(&class, name) {
             Some(f) => apply_with_self(&f, recv.clone(), args),
             // An instance method genuinely absent from the class's table
             // (and all ancestors) is a Ruby `NoMethodError` — surface it
@@ -2142,7 +2306,7 @@ pub const RUNTIME: &str = r##"mod __sir {
     /// just yields a bare instance.
     pub fn call_new(cls: &str, args: Vec<Value>) -> Value {
         let obj = new_instance(cls);
-        if let Some(init) = resolve_method(&METHOD_TABLE, Some(cls.to_string()), "initialize") {
+        if let Some(init) = resolve_instance_method(cls, "initialize") {
             apply_with_self(&init, obj.clone(), args);
         }
         obj
@@ -2155,10 +2319,38 @@ pub const RUNTIME: &str = r##"mod __sir {
     /// live receiver, it does NOT push a new one.  A missing super method
     /// floors to the honest boundary (Ruby raises `NoMethodError`).
     pub fn call_super(method: &str, cls: &str, args: Vec<Value>) -> Value {
-        match resolve_method(&METHOD_TABLE, super_of(cls), method) {
+        // Resolve from the SUPERCLASS, following the full MRO from there (its
+        // own methods, then its included modules, then ITS superclass, …), so
+        // `super` can reach a method a mixed-in module of the parent provides.
+        let resolved = match super_of(cls) {
+            Some(parent) => resolve_instance_method(&parent, method),
+            None => None,
+        };
+        match resolved {
             // Reuse the live self already on the stack (no new push).
             Some(f) => apply_closure(&f, args),
             None => Value::Nil,
+        }
+    }
+
+    /// `Owner.method(args…)` — a CLASS-method call (`__class_method__`).
+    ///
+    /// Resolves `method` in `Owner`'s class-method table, walking the ancestry
+    /// (`resolve_class_method`) so an inherited `def self.method` is found, AND
+    /// including methods mixed in via `extend` (which `extend_module` copied
+    /// into the class-method table).  No `self` is pushed — a v0 class method
+    /// runs without an instance receiver.  An unresolved name hits the
+    /// controlled `NoMethodError` floor (typed, so `rescue NoMethodError`
+    /// catches it), never a reflective fallthrough.
+    pub fn call_class_method(cls: &str, method: &str, args: Vec<Value>) -> Value {
+        match resolve_class_method(Some(cls.to_string()), method) {
+            Some(f) => apply_closure(&f, args),
+            None => raise(
+                "NoMethodError",
+                Value::Str(Rc::from(
+                    format!("undefined method '{}' for {}", method, cls).as_str(),
+                )),
+            ),
         }
     }
 
@@ -2418,10 +2610,31 @@ mod tests {
         // carries a `seen`-set cycle guard so a cyclic hierarchy terminates.
         assert!(RUNTIME.contains("static METHOD_TABLE"));
         assert!(RUNTIME.contains("static CLASS_METHOD_TABLE"));
-        assert!(RUNTIME.contains("fn resolve_method"));
+        assert!(RUNTIME.contains("fn resolve_instance_method"));
+        assert!(RUNTIME.contains("fn resolve_class_method"));
         assert!(RUNTIME.contains("if !seen.insert(c.clone())"), "missing OOP cycle guard");
         // The instance dispatch branch is taken FIRST in `call_method`.
         assert!(RUNTIME.contains("fn dispatch_user_method"));
+    }
+
+    #[test]
+    fn runtime_declares_mixin_helpers() {
+        // MX6: the inline runtime must ship the include/extend mixin model —
+        // the per-owner included-module table, the MRO-aware instance
+        // resolver, the `extend` copy, and the class-method dispatcher.
+        assert!(RUNTIME.contains("static INCLUDED_MODULES"), "missing included-module table");
+        for helper in &[
+            "pub fn include_module",
+            "pub fn extend_module",
+            "pub fn call_class_method",
+            "fn module_method_names",
+        ] {
+            assert!(RUNTIME.contains(helper), "runtime missing `{}`", helper);
+        }
+        // SECURITY: the MRO walk searches most-recently-included first
+        // (reverse iteration) and is `seen`-guarded so a self-including
+        // module terminates.
+        assert!(RUNTIME.contains("mods.iter().rev()"), "missing reverse include-order walk");
     }
 
     #[test]

@@ -1,5 +1,91 @@
 # Changelog
 
+## 0.13.0 — mixins: include / extend module method resolution (MX6)
+
+Implements the Rust milestone (**MX6**) of the **sir-mixins** cascade — the
+LAST of the five backends (Python/TS/JS/Go already merged). A translated Ruby
+`module M … end` mixed into a class with `include M` / `extend M` must now
+resolve `M`'s methods the way Ruby does. Previously a module method mixed into a
+class was **not found** — the call fell through to `NoMethodError`. This is a
+**runtime-only** change (no core semantic-IR, no frontend change): the MX1
+frontend already lowers `module`/`include`/`extend` to the builtins
+`__def_method__("M", …)` (module owner), `__include__("Owner","M")`,
+`__extend__("Owner","M")`, and `__class_method__("Owner","m",args…)`; this
+milestone teaches the Rust backend's inlined `__sir` OOP runtime to consult
+included modules during method resolution and to expose extended module methods
+as class methods.
+
+### Ruby MRO (Method Resolution Order) — the exact linearisation
+
+For a receiver of class `C`, instance-method resolution now walks:
+
+```text
+  C  →  C's included modules (REVERSE / most-recent-first, depth-first
+        through each module's own includes)  →  C's superclass  →
+        its included modules  →  …  →  Object
+```
+
+- A class's **own** method SHADOWS an included module's (class searched first).
+- A module method SHADOWS the **superclass**'s (a module precedes the
+  superclass in the ancestor list).
+- A **diamond** include (a module reached via two paths / included twice)
+  resolves **once**, at its earliest position — a shared `seen` set skips an
+  owner already visited.
+- The walk is **total**: a self-including module (`module M; include M; end`) or
+  a cyclic class hierarchy (`A < B < A`) TERMINATES (the `seen` guard), raising
+  a catchable `NoMethodError` rather than hanging.
+
+### Changed (all in the inlined `RUNTIME` string, `runtime.rs`)
+
+- **New `INCLUDED_MODULES` table** — a per-owner `HashMap<String, Vec<String>>`
+  appended in source (include) order. An owner is a class OR a module name, so a
+  module that itself `include`s another module contributes its includes when the
+  walk recurses into it (transitive mixin inclusion). Keyed by source-derived
+  NAMES with no reflection (the C3 RCE discipline).
+- **`include_module` / `extend_module`.** `__include__` appends to the owner's
+  include list. `__extend__` snapshots the module's instance-method names (via
+  `module_method_names`, the same include-MRO walk) and copies each into the
+  owner's **class-method** table, so they become callable as `Owner.method`; an
+  entry the owner already defines is NOT overwritten (own class method shadows).
+- **`resolve_method` → `resolve_instance_method` (MRO-aware).** The old
+  ancestry-only instance resolver is replaced by the full MRO walk above,
+  `seen`-guarded. Its callers — `dispatch_user_method`, `call_new` (the
+  `initialize` lookup), and `call_super` (now resolves from the superclass
+  through ITS full MRO) — were updated. A dedicated `resolve_class_method`
+  retains the plain class-method-table ancestry walk.
+- **`call_class_method` (closes #61 for Rust).** New dispatcher for
+  `__class_method__("Owner","m",args…)` (`Owner.method`): resolves `m` in the
+  owner's class-method table walking ancestry, INCLUDING methods `extend` copied
+  in. An unresolved name raises a typed `NoMethodError` (catchable by
+  `rescue NoMethodError`), never a reflective fallthrough. This dispatch arm was
+  required to prove `extend` and mirrors the four merged backends.
+
+### Emit (`emit.rs`) + acceptance (`lib.rs`)
+
+- Three new `BuiltinCall` emit arms mirroring the existing `__new__`/`__super__`
+  /`__def_method__` routing: `__include__` → `include_module`, `__extend__` →
+  `extend_module`, `__class_method__` → `call_class_method`. Owner/module/method
+  NAMEs emit through the existing `emit_oop_name_arg` (a `StrLit` or a `Const`
+  VarRef becomes a Rust `&str` literal — the same lifting that keeps
+  `Feature::Constants` sound); call ARGS use the ordinary `emit_expr` path.
+- `reject_const_ref` gains a `__class_method__` arm that skips the owner (arg 0)
+  and method-name (arg 1) NAME slots (a `Const` owner like `Registry.total` is
+  lifted, not read) while still scanning the call args. `Feature::Modules` was
+  already accepted.
+
+### Tests
+
+- New exec-proof integration test `compile_and_run_mixins.rs` (builds SIR, emits
+  Rust, compiles with `rustc`, runs, asserts stdout): (a) an included module's
+  method is reachable on an instance; (b) a class method shadows the module's;
+  (c) a module method shadows the superclass's AND a diamond include resolves
+  once (terminates); (d) `extend` makes a module method a class method; (e) a
+  self-including module TERMINATES (catchable `NoMethodError`, no hang); plus a
+  bonus proving a mixed-in method runs on the same self and reads its `@ivars`.
+- New emit unit tests for the three routing shapes (incl. `Const`-owner lifting
+  and call-arg passthrough) and a `runtime_declares_mixin_helpers` runtime test
+  asserting the table + helpers + the reverse most-recent-first walk are shipped.
+
 ## 0.12.0 — typed runtime errors: ZeroDivision / Index / Key / NoMethod (T5)
 
 Implements the Rust milestone (**T5**) of the **sir-typed-runtime-errors**

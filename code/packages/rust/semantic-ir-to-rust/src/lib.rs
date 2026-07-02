@@ -568,6 +568,24 @@ fn const_ref_in_expr(e: &Expr) -> Option<BackendError> {
             }
             None
         }
+        // MX6 mixins — `Owner.method(args…)` lowers to
+        // `__class_method__(Owner, "method", args…)`, and the OWNER may be a
+        // bare-constant class written as a `Const` VarRef (`Registry.total`).
+        // The emitter LIFTS that `Const` to a `&str` literal (via
+        // `emit_oop_name_arg`) — never a runtime constant read — so it is
+        // sound to skip the owner (arg[0]) and method-name (arg[1]) slots
+        // while still scanning the ordinary call ARGS from arg[2].
+        // (`__include__`/`__extend__` name slots are `StrLit`, never `Const`,
+        // so they need no skip — but scanning their args as ordinary
+        // `BuiltinCall` args below is harmless: they carry only name slots.)
+        Expr::BuiltinCall { name, args, .. } if name == "__class_method__" => {
+            for a in args.iter().skip(2) {
+                if let Some(err) = const_ref_in_expr(a) {
+                    return Some(err);
+                }
+            }
+            None
+        }
         Expr::BuiltinCall { args, .. } | Expr::DirectCall { args, .. } => {
             for a in args {
                 if let Some(err) = const_ref_in_expr(a) {
