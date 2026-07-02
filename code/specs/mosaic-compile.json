@@ -111,7 +111,7 @@
           "id": "backend",
           "long": "backend",
           "short": "b",
-          "description": "Backend to compile for: 'react', 'swiftui', 'qt', 'xaml', 'webcomponent', 'html', or 'flutter'",
+          "description": "Backend to compile for: 'react', 'electron', 'swiftui', 'qt', 'xaml', 'webcomponent', 'html', 'flutter', or 'compose'",
           "type": "string",
           "required": true
         },
