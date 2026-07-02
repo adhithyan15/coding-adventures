@@ -318,6 +318,7 @@ pub const SMART_HOME_GET_READINESS_BRIEF_TOOL_ID: &str = "smart_home.get_readine
 pub const SMART_HOME_GET_MAINTENANCE_BRIEF_TOOL_ID: &str = "smart_home.get_maintenance_brief";
 pub const SMART_HOME_GET_INCIDENT_BRIEF_TOOL_ID: &str = "smart_home.get_incident_brief";
 pub const SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID: &str = "smart_home.get_recovery_brief";
+pub const SMART_HOME_GET_MORNING_BRIEF_TOOL_ID: &str = "smart_home.get_morning_brief";
 pub const SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID: &str = "smart_home.get_topology_summary";
 pub const SMART_HOME_LIST_DESIRED_STATES_TOOL_ID: &str = "smart_home.list_desired_states";
 pub const SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID: &str =
@@ -2434,6 +2435,10 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_recovery_brief_output_handler_output(&mut runtime, principal_id, now_ms)
+                }
+                SMART_HOME_GET_MORNING_BRIEF_TOOL_ID => {
+                    let _ = expect_object(&arguments)?;
+                    get_morning_brief_output_handler_output(&mut runtime, principal_id, now_ms)
                 }
                 SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
@@ -6553,6 +6558,7 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_maintenance_brief_definition(),
         get_incident_brief_definition(),
         get_recovery_brief_definition(),
+        get_morning_brief_definition(),
         get_topology_summary_definition(),
         list_desired_states_definition(),
         list_desired_state_drift_audit_definition(),
@@ -7774,6 +7780,56 @@ fn get_recovery_brief_definition() -> ToolDefinition {
                 "summary",
                 "decision",
                 "stages",
+                "source_tools",
+            ],
+            false,
+        ),
+    )
+}
+
+fn get_morning_brief_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_MORNING_BRIEF_TOOL_ID,
+        "Get smart-home morning brief",
+        "Compose existing D23 platform, operations, safety, readiness, maintenance, incident, and recovery briefs into a Chief-facing daily smart-home digest without owning smart-home state.",
+        empty_object_schema(),
+        object_schema(
+            vec![
+                SchemaProperty::new("generated_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("status", JsonSchema::String),
+                SchemaProperty::new("ready", JsonSchema::Boolean),
+                SchemaProperty::new("requires_human_review", JsonSchema::Boolean),
+                SchemaProperty::new("has_blockers", JsonSchema::Boolean),
+                SchemaProperty::new("total_attention_count", JsonSchema::Integer),
+                SchemaProperty::new("total_blocked_count", JsonSchema::Integer),
+                SchemaProperty::new("open_section_count", JsonSchema::Integer),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("decision", JsonSchema::Any),
+                SchemaProperty::new(
+                    "sections",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new(
+                    "source_tools",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::String),
+                    },
+                ),
+            ],
+            vec![
+                "generated_at_ms",
+                "status",
+                "ready",
+                "requires_human_review",
+                "has_blockers",
+                "total_attention_count",
+                "total_blocked_count",
+                "open_section_count",
+                "summary",
+                "decision",
+                "sections",
                 "source_tools",
             ],
             false,
@@ -45094,6 +45150,71 @@ fn get_recovery_brief_output_handler_output(
     ))
 }
 
+fn get_morning_brief_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let platform =
+        get_platform_brief_output_handler_output(runtime, principal_id.clone(), now_ms)?.output;
+    let operations =
+        get_operations_brief_output_handler_output(runtime, principal_id.clone(), now_ms)?.output;
+    let safety =
+        get_safety_brief_output_handler_output(runtime, principal_id.clone(), now_ms)?.output;
+    let readiness =
+        get_readiness_brief_output_handler_output(runtime, principal_id.clone(), now_ms)?.output;
+    let maintenance =
+        get_maintenance_brief_output_handler_output(runtime, principal_id.clone(), now_ms)?.output;
+    let incident =
+        get_incident_brief_output_handler_output(runtime, principal_id.clone(), now_ms)?.output;
+    let recovery = get_recovery_brief_output_handler_output(runtime, principal_id, now_ms)?.output;
+
+    let output = morning_brief_output_json(
+        now_ms,
+        &platform,
+        &operations,
+        &safety,
+        &readiness,
+        &maintenance,
+        &incident,
+        &recovery,
+    );
+    let status = morning_brief_string_at(&output, &["status"])
+        .unwrap_or("unknown")
+        .to_string();
+    let ready = morning_brief_bool_at(&output, &["ready"]).unwrap_or(false);
+    let requires_human_review =
+        morning_brief_bool_at(&output, &["requires_human_review"]).unwrap_or(false);
+    let has_blockers = morning_brief_bool_at(&output, &["has_blockers"]).unwrap_or(false);
+    let total_attention_count =
+        morning_brief_integer_at(&output, &["total_attention_count"]).unwrap_or(0);
+    let total_blocked_count =
+        morning_brief_integer_at(&output, &["total_blocked_count"]).unwrap_or(0);
+    let open_section_count =
+        morning_brief_integer_at(&output, &["open_section_count"]).unwrap_or(0);
+    let next_tool = morning_brief_string_at(&output, &["decision", "recommended_tool"])
+        .unwrap_or(SMART_HOME_GET_READINESS_BRIEF_TOOL_ID)
+        .to_string();
+
+    Ok(ToolHandlerOutput::new(output).with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_morning_brief")),
+            ("status", string(&status)),
+            ("ready", JsonValue::Bool(ready)),
+            (
+                "requires_human_review",
+                JsonValue::Bool(requires_human_review),
+            ),
+            ("has_blockers", JsonValue::Bool(has_blockers)),
+            ("total_attention_count", integer(total_attention_count)),
+            ("total_blocked_count", integer(total_blocked_count)),
+            ("open_section_count", integer(open_section_count)),
+            ("next_tool", string(&next_tool)),
+        ]),
+    ))
+}
+
 fn get_controller_handoff_summary_output_handler_output(
     runtime: &mut SmartHomeRuntime,
     principal_id: AgentId,
@@ -48889,6 +49010,445 @@ fn recovery_brief_reason(
         "recovery_attention"
     } else {
         "recovery_clear"
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+struct MorningBriefSection {
+    section_id: &'static str,
+    label: &'static str,
+    status: String,
+    ready: bool,
+    requires_human_review: bool,
+    has_blockers: bool,
+    attention_count: i64,
+    blocked_count: i64,
+    recommended_tool: String,
+    recommended_action: String,
+    owner_lane: String,
+    summary: JsonValue,
+}
+
+fn morning_brief_output_json(
+    now_ms: u64,
+    platform: &JsonValue,
+    operations: &JsonValue,
+    safety: &JsonValue,
+    readiness: &JsonValue,
+    maintenance: &JsonValue,
+    incident: &JsonValue,
+    recovery: &JsonValue,
+) -> JsonValue {
+    let sections = vec![
+        morning_brief_section_from_output(
+            "platform",
+            "Platform controller readiness",
+            platform,
+            SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID,
+            "inspect_platform_brief",
+            "platform",
+        ),
+        morning_brief_section_from_output(
+            "operations",
+            "Operations",
+            operations,
+            SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID,
+            "inspect_operations_brief",
+            "operations",
+        ),
+        morning_brief_section_from_output(
+            "safety",
+            "Safety",
+            safety,
+            SMART_HOME_GET_SAFETY_BRIEF_TOOL_ID,
+            "inspect_safety_brief",
+            "safety",
+        ),
+        morning_brief_section_from_output(
+            "readiness",
+            "Readiness",
+            readiness,
+            SMART_HOME_GET_READINESS_BRIEF_TOOL_ID,
+            "inspect_readiness_brief",
+            "release",
+        ),
+        morning_brief_section_from_output(
+            "maintenance",
+            "Maintenance",
+            maintenance,
+            SMART_HOME_GET_MAINTENANCE_BRIEF_TOOL_ID,
+            "inspect_maintenance_brief",
+            "release",
+        ),
+        morning_brief_section_from_output(
+            "incident",
+            "Incident response",
+            incident,
+            SMART_HOME_GET_INCIDENT_BRIEF_TOOL_ID,
+            "inspect_incident_brief",
+            "operations",
+        ),
+        morning_brief_section_from_output(
+            "recovery",
+            "Recovery",
+            recovery,
+            SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID,
+            "inspect_recovery_brief",
+            "operations",
+        ),
+    ];
+    let generated_at_ms = morning_brief_integer_at(operations, &["generated_at_ms"])
+        .or_else(|| morning_brief_integer_at(platform, &["generated_at_ms"]))
+        .unwrap_or(now_ms as i64);
+    let ready = sections.iter().all(|section| section.ready);
+    let requires_human_review = sections.iter().any(|section| section.requires_human_review);
+    let has_blockers = sections.iter().any(|section| section.has_blockers);
+    let total_attention_count = sections
+        .iter()
+        .map(|section| section.attention_count.max(0))
+        .max()
+        .unwrap_or(0);
+    let total_blocked_count = sections
+        .iter()
+        .map(|section| section.blocked_count.max(0))
+        .max()
+        .unwrap_or(0);
+    let open_section_count = sections
+        .iter()
+        .filter(|section| {
+            !section.ready || section.attention_count > 0 || section.blocked_count > 0
+        })
+        .count();
+    let status = morning_brief_status(
+        ready,
+        requires_human_review,
+        has_blockers,
+        open_section_count,
+        total_attention_count,
+    );
+    let next_section = sections
+        .iter()
+        .find(|section| section.has_blockers)
+        .or_else(|| {
+            sections
+                .iter()
+                .find(|section| section.requires_human_review)
+        })
+        .or_else(|| sections.iter().find(|section| !section.ready))
+        .or_else(|| sections.iter().find(|section| section.attention_count > 0));
+
+    object([
+        ("generated_at_ms", integer(generated_at_ms)),
+        ("status", string(status)),
+        ("ready", JsonValue::Bool(ready)),
+        (
+            "requires_human_review",
+            JsonValue::Bool(requires_human_review),
+        ),
+        ("has_blockers", JsonValue::Bool(has_blockers)),
+        ("total_attention_count", integer(total_attention_count)),
+        ("total_blocked_count", integer(total_blocked_count)),
+        ("open_section_count", integer(open_section_count as i64)),
+        (
+            "summary",
+            object([
+                (
+                    "boundary",
+                    string(
+                        "Chief reads D23 runtime and platform primitives; it does not own smart-home controller state.",
+                    ),
+                ),
+                ("section_count", integer(sections.len() as i64)),
+                ("open_section_count", integer(open_section_count as i64)),
+                (
+                    "ready_section_count",
+                    integer((sections.len() - open_section_count) as i64),
+                ),
+                ("next_tool", string(morning_brief_next_tool(next_section))),
+                (
+                    "next_action",
+                    string(morning_brief_next_action(next_section)),
+                ),
+                (
+                    "next_owner_lane",
+                    string(morning_brief_next_owner_lane(next_section)),
+                ),
+            ]),
+        ),
+        (
+            "decision",
+            morning_brief_decision_json(
+                status,
+                requires_human_review,
+                has_blockers,
+                total_attention_count,
+                next_section,
+            ),
+        ),
+        (
+            "sections",
+            JsonValue::Array(sections.iter().map(morning_brief_section_json).collect()),
+        ),
+        (
+            "source_tools",
+            attention_string_array(&[
+                SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID,
+                SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID,
+                SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID,
+                SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID,
+                SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID,
+                SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID,
+                SMART_HOME_GET_SAFETY_BRIEF_TOOL_ID,
+                SMART_HOME_GET_READINESS_BRIEF_TOOL_ID,
+                SMART_HOME_GET_MAINTENANCE_BRIEF_TOOL_ID,
+                SMART_HOME_GET_INCIDENT_BRIEF_TOOL_ID,
+                SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID,
+            ]),
+        ),
+    ])
+}
+
+fn morning_brief_section_from_output(
+    section_id: &'static str,
+    label: &'static str,
+    output: &JsonValue,
+    fallback_tool: &'static str,
+    fallback_action: &'static str,
+    fallback_owner_lane: &'static str,
+) -> MorningBriefSection {
+    let status = morning_brief_string_at(output, &["status"])
+        .unwrap_or("unknown")
+        .to_string();
+    let ready = morning_brief_bool_at(output, &["ready"]).unwrap_or(status == "ready");
+    let has_blockers = morning_brief_bool_at(output, &["has_blockers"]).unwrap_or(false);
+    let requires_human_review =
+        morning_brief_bool_at(output, &["requires_human_review"]).unwrap_or(false);
+    let attention_count = morning_brief_first_integer_at(
+        output,
+        &[
+            &["total_attention_count"],
+            &["total_recovery_actions"],
+            &["total_maintenance_actions"],
+            &["summary", "attention_category_count"],
+        ],
+    )
+    .unwrap_or(0);
+    let blocked_count = morning_brief_first_integer_at(
+        output,
+        &[
+            &["total_blocked_count"],
+            &["blocked_recovery_actions"],
+            &["blocked_maintenance_actions"],
+            &["summary", "blocked_category_count"],
+        ],
+    )
+    .unwrap_or(0);
+
+    MorningBriefSection {
+        section_id,
+        label,
+        status,
+        ready,
+        requires_human_review,
+        has_blockers,
+        attention_count,
+        blocked_count,
+        recommended_tool: morning_brief_next_tool_from_output(output, fallback_tool).to_string(),
+        recommended_action: morning_brief_next_action_from_output(output, fallback_action)
+            .to_string(),
+        owner_lane: morning_brief_next_owner_lane_from_output(output, fallback_owner_lane)
+            .to_string(),
+        summary: morning_brief_field_clone(output, "summary"),
+    }
+}
+
+fn morning_brief_section_json(section: &MorningBriefSection) -> JsonValue {
+    object([
+        ("section_id", string(section.section_id)),
+        ("label", string(section.label)),
+        ("status", string(&section.status)),
+        ("ready", JsonValue::Bool(section.ready)),
+        (
+            "requires_human_review",
+            JsonValue::Bool(section.requires_human_review),
+        ),
+        ("has_blockers", JsonValue::Bool(section.has_blockers)),
+        ("attention_count", integer(section.attention_count)),
+        ("blocked_count", integer(section.blocked_count)),
+        ("recommended_tool", string(&section.recommended_tool)),
+        ("recommended_action", string(&section.recommended_action)),
+        ("owner_lane", string(&section.owner_lane)),
+        ("summary", section.summary.clone()),
+    ])
+}
+
+fn morning_brief_status(
+    ready: bool,
+    requires_human_review: bool,
+    has_blockers: bool,
+    open_section_count: usize,
+    total_attention_count: i64,
+) -> &'static str {
+    if has_blockers {
+        "blocked"
+    } else if requires_human_review {
+        "review_required"
+    } else if open_section_count > 0 || total_attention_count > 0 {
+        "attention"
+    } else if ready {
+        "ready"
+    } else {
+        "monitor"
+    }
+}
+
+fn morning_brief_decision_json(
+    status: &str,
+    requires_human_review: bool,
+    has_blockers: bool,
+    total_attention_count: i64,
+    next_section: Option<&MorningBriefSection>,
+) -> JsonValue {
+    object([
+        (
+            "recommendation",
+            string(morning_brief_decision_label(
+                status,
+                requires_human_review,
+                has_blockers,
+                total_attention_count,
+            )),
+        ),
+        (
+            "recommended_tool",
+            string(morning_brief_next_tool(next_section)),
+        ),
+        (
+            "recommended_action",
+            string(morning_brief_next_action(next_section)),
+        ),
+        (
+            "owner_lane",
+            string(morning_brief_next_owner_lane(next_section)),
+        ),
+        (
+            "reason",
+            string(
+                next_section
+                    .map(|section| section.section_id)
+                    .unwrap_or("all_sections_ready"),
+            ),
+        ),
+    ])
+}
+
+fn morning_brief_decision_label(
+    status: &str,
+    requires_human_review: bool,
+    has_blockers: bool,
+    total_attention_count: i64,
+) -> &'static str {
+    if has_blockers || status == "blocked" {
+        "hold"
+    } else if requires_human_review {
+        "review"
+    } else if total_attention_count > 0 {
+        "coordinate"
+    } else {
+        "monitor"
+    }
+}
+
+fn morning_brief_next_tool(next_section: Option<&MorningBriefSection>) -> &str {
+    next_section
+        .map(|section| section.recommended_tool.as_str())
+        .unwrap_or(SMART_HOME_GET_READINESS_BRIEF_TOOL_ID)
+}
+
+fn morning_brief_next_action(next_section: Option<&MorningBriefSection>) -> &str {
+    next_section
+        .map(|section| section.recommended_action.as_str())
+        .unwrap_or("monitor_smart_home_readiness")
+}
+
+fn morning_brief_next_owner_lane(next_section: Option<&MorningBriefSection>) -> &str {
+    next_section
+        .map(|section| section.owner_lane.as_str())
+        .unwrap_or("chief")
+}
+
+fn morning_brief_next_tool_from_output<'a>(
+    output: &'a JsonValue,
+    fallback_tool: &'static str,
+) -> &'a str {
+    morning_brief_string_at(output, &["summary", "next_tool"])
+        .or_else(|| morning_brief_string_at(output, &["decision", "recommended_tool"]))
+        .or_else(|| morning_brief_string_at(output, &["next_action", "recommended_tool"]))
+        .unwrap_or(fallback_tool)
+}
+
+fn morning_brief_next_action_from_output<'a>(
+    output: &'a JsonValue,
+    fallback_action: &'static str,
+) -> &'a str {
+    morning_brief_string_at(output, &["summary", "next_action"])
+        .or_else(|| morning_brief_string_at(output, &["decision", "recommended_action"]))
+        .or_else(|| morning_brief_string_at(output, &["next_action", "recommended_action"]))
+        .unwrap_or(fallback_action)
+}
+
+fn morning_brief_next_owner_lane_from_output<'a>(
+    output: &'a JsonValue,
+    fallback_owner_lane: &'static str,
+) -> &'a str {
+    morning_brief_string_at(output, &["summary", "next_owner_lane"])
+        .or_else(|| morning_brief_string_at(output, &["decision", "owner_lane"]))
+        .or_else(|| morning_brief_string_at(output, &["next_action", "owner_lane"]))
+        .unwrap_or(fallback_owner_lane)
+}
+
+fn morning_brief_field_clone(value: &JsonValue, field: &str) -> JsonValue {
+    optional_field(value, field)
+        .cloned()
+        .unwrap_or(JsonValue::Null)
+}
+
+fn morning_brief_first_integer_at(value: &JsonValue, paths: &[&[&str]]) -> Option<i64> {
+    paths
+        .iter()
+        .find_map(|path| morning_brief_integer_at(value, path))
+}
+
+fn morning_brief_string_at<'a>(value: &'a JsonValue, path: &[&str]) -> Option<&'a str> {
+    let mut current = value;
+    for field in path {
+        current = optional_field(current, field)?;
+    }
+    match current {
+        JsonValue::String(value) => Some(value.as_str()),
+        _ => None,
+    }
+}
+
+fn morning_brief_bool_at(value: &JsonValue, path: &[&str]) -> Option<bool> {
+    let mut current = value;
+    for field in path {
+        current = optional_field(current, field)?;
+    }
+    match current {
+        JsonValue::Bool(value) => Some(*value),
+        _ => None,
+    }
+}
+
+fn morning_brief_integer_at(value: &JsonValue, path: &[&str]) -> Option<i64> {
+    let mut current = value;
+    for field in path {
+        current = optional_field(current, field)?;
+    }
+    match current {
+        JsonValue::Number(JsonNumber::Integer(value)) => Some(*value),
+        _ => None,
     }
 }
 
@@ -83564,7 +84124,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 297);
+        assert_eq!(definitions.len(), 298);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -83615,6 +84175,9 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_MORNING_BRIEF_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID));
@@ -84420,7 +84983,7 @@ mod tests {
             .contains(&SMART_HOME_GET_RUNTIME_MAINTENANCE_CLOSEOUT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            289
+            290
         );
         assert_eq!(
             export
@@ -85122,6 +85685,7 @@ mod tests {
         assert!(smart_home_tool_definition(SMART_HOME_GET_MAINTENANCE_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_INCIDENT_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID).is_some());
+        assert!(smart_home_tool_definition(SMART_HOME_GET_MORNING_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_SET_DESIRED_STATE_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID).is_some());
@@ -85959,6 +86523,132 @@ mod tests {
     }
 
     #[test]
+    fn morning_brief_prioritizes_daily_blockers_from_existing_briefs() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-command-tool-only"),
+                AgentId::trusted(AGENT_ID),
+                CapabilityId::trusted("smart_home.command.light"),
+                PrivilegeTier::LowRisk,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let denied_command = tool_runtime.invoke_with_events(&request(
+            "call-morning-brief-denied-command",
+            SMART_HOME_COMMAND_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                ("command_type", string("turn_on")),
+            ]),
+            2_000,
+        ));
+        assert!(!denied_command.result.ok);
+
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home-read"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                2_001,
+            ),
+        );
+
+        let request = request(
+            "call-morning-brief",
+            SMART_HOME_GET_MORNING_BRIEF_TOOL_ID,
+            object([]),
+            2_002,
+        );
+        let trace = tool_runtime.invoke_with_events(&request);
+        assert!(trace.result.ok);
+        assert_eq!(trace.summary().progress_event_count, 1);
+
+        let output = trace.result.output.as_ref().unwrap();
+        assert_eq!(field(output, "status"), Some(&string("blocked")));
+        assert_eq!(field(output, "ready"), Some(&JsonValue::Bool(false)));
+        assert_eq!(
+            field(output, "requires_human_review"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(field(output, "has_blockers"), Some(&JsonValue::Bool(true)));
+        assert!(integer_value(field(output, "total_attention_count").unwrap()).unwrap() >= 2);
+        assert!(integer_value(field(output, "total_blocked_count").unwrap()).unwrap() >= 1);
+        assert!(integer_value(field(output, "open_section_count").unwrap()).unwrap() >= 4);
+
+        let summary = field(output, "summary").unwrap();
+        assert_eq!(
+            field(summary, "boundary"),
+            Some(&string(
+                "Chief reads D23 runtime and platform primitives; it does not own smart-home controller state."
+            ))
+        );
+        assert_eq!(field(summary, "section_count"), Some(&integer(7)));
+        assert_eq!(
+            field(summary, "next_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(summary, "next_action"),
+            Some(&string("draft_capability_grant_update"))
+        );
+        assert_eq!(field(summary, "next_owner_lane"), Some(&string("policy")));
+
+        let decision = field(output, "decision").unwrap();
+        assert_eq!(field(decision, "recommendation"), Some(&string("hold")));
+        assert_eq!(
+            field(decision, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(decision, "recommended_action"),
+            Some(&string("draft_capability_grant_update"))
+        );
+        assert_eq!(field(decision, "owner_lane"), Some(&string("policy")));
+        assert_eq!(field(decision, "reason"), Some(&string("operations")));
+
+        assert_eq!(array_len(field(output, "sections").unwrap()), Some(7));
+        let platform_section = array_item(field(output, "sections").unwrap(), 0).unwrap();
+        assert_eq!(
+            field(platform_section, "section_id"),
+            Some(&string("platform"))
+        );
+        assert_eq!(
+            field(platform_section, "recommended_tool"),
+            Some(&string(SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID))
+        );
+        let operations_section = array_item(field(output, "sections").unwrap(), 1).unwrap();
+        assert_eq!(
+            field(operations_section, "section_id"),
+            Some(&string("operations"))
+        );
+        assert_eq!(
+            field(operations_section, "status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(operations_section, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        let recovery_section = array_item(field(output, "sections").unwrap(), 6).unwrap();
+        assert_eq!(
+            field(recovery_section, "section_id"),
+            Some(&string("recovery"))
+        );
+        assert_eq!(
+            field(recovery_section, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(array_len(field(output, "source_tools").unwrap()), Some(11));
+    }
+
+    #[test]
     fn readiness_brief_rolls_up_handoff_runtime_safety_and_catalog_phases() {
         let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
@@ -86460,11 +87150,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(297))
+            Some(&integer(298))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(289))
+            Some(&integer(290))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),

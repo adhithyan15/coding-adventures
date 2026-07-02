@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `smart_home.get_morning_brief` tool descriptor for read-only Chief daily
+  digests over existing D23 platform, operations, safety, readiness,
+  maintenance, incident, and recovery brief primitives.
 - `smart_home.get_recovery_brief` tool descriptor for read-only Chief recovery
   packets over existing D23 incident, policy, runtime, state, supervision, and
   remediation-plan primitives.
