@@ -1304,6 +1304,52 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         return;
     }
 
+    // ── MX6 mixins: include / extend / class-method dispatch ────────────
+    //
+    // The MX1 frontend lowers Ruby's mixin surface to three more OOP
+    // builtins whose leading args are NAME strings (a `StrLit`, or — for a
+    // bare-constant owner/class like `Registry.total` — a `Const` VarRef).
+    // Each routes to the matching inlined `__sir` mixin helper, mirroring the
+    // `__def_method__` routing.  The runtime keys its tables on the NAME
+    // string (never reflection), so an owner/module/method named `new`/`drop`
+    // is inert data — a miss floors to the controlled `NoMethodError`.
+    //
+    //   `include M` in `class C`   → `__include__("C", "M")`
+    //                                → `__sir::include_module("C", "M")`
+    //   `extend  M` in `class C`   → `__extend__("C", "M")`
+    //                                → `__sir::extend_module("C", "M")`
+    //   `Owner.method(args…)`      → `__class_method__("Owner", "method", args…)`
+    //                                → `__sir::call_class_method("Owner", "method", vec![args…])`
+    //
+    // Owner/module/method NAMEs emit via `emit_oop_name_arg` (a `StrLit` or a
+    // `Const` VarRef becomes a Rust `&str` literal — the same lifting that
+    // keeps accepting `Feature::Constants` sound); call ARGS emit through the
+    // ordinary `emit_expr` path.
+    if (name == "__include__" || name == "__extend__") && args.len() == 2 {
+        let helper = if name == "__include__" {
+            "__sir::include_module("
+        } else {
+            "__sir::extend_module("
+        };
+        out.push_str(helper);
+        emit_oop_name_arg(out, &args[0]);
+        out.push_str(", ");
+        emit_oop_name_arg(out, &args[1]);
+        out.push(')');
+        return;
+    }
+    if name == "__class_method__" && args.len() >= 2 {
+        // args: [class-name, method-name, call-args…].
+        out.push_str("__sir::call_class_method(");
+        emit_oop_name_arg(out, &args[0]);
+        out.push_str(", ");
+        emit_oop_name_arg(out, &args[1]);
+        out.push_str(", vec![");
+        emit_args(out, &args[2..], indent);
+        out.push_str("])");
+        return;
+    }
+
     // Variadic helpers take a Vec<Value>; fixed-arity helpers take
     // positional Value arguments.  This matches the inlined runtime
     // signatures.
@@ -3556,6 +3602,47 @@ mod tests {
     #[test]
     fn emit_self_routes_to_current_self() {
         assert_eq!(emit_e(&builtin("__self__", vec![])), "__sir::current_self()");
+    }
+
+    // ── MX6 mixins: include / extend / class-method emit shapes ────────
+
+    #[test]
+    fn emit_include_routes_to_include_module() {
+        // `include Greet` in `class Person` → __include__("Person","Greet").
+        let e = builtin("__include__", vec![strlit("Person"), strlit("Greet")]);
+        assert_eq!(emit_e(&e), r#"__sir::include_module("Person", "Greet")"#);
+    }
+
+    #[test]
+    fn emit_extend_routes_to_extend_module() {
+        let e = builtin("__extend__", vec![strlit("Registry"), strlit("Counting")]);
+        assert_eq!(emit_e(&e), r#"__sir::extend_module("Registry", "Counting")"#);
+    }
+
+    #[test]
+    fn emit_class_method_routes_to_call_class_method() {
+        // `Registry.total` → __class_method__("Registry","total") → call.
+        let e = builtin("__class_method__", vec![strlit("Registry"), strlit("total")]);
+        assert_eq!(emit_e(&e), r#"__sir::call_class_method("Registry", "total", vec![])"#);
+    }
+
+    #[test]
+    fn emit_class_method_with_args_passes_them_through() {
+        let e = builtin("__class_method__", vec![strlit("Math"), strlit("add"), int(1), int(2)]);
+        assert_eq!(
+            emit_e(&e),
+            r#"__sir::call_class_method("Math", "add", vec![__sir::Value::Int(1i64), __sir::Value::Int(2i64)])"#
+        );
+    }
+
+    #[test]
+    fn emit_class_method_lifts_const_owner_to_string() {
+        // `Registry.total` where `Registry` is a bare constant → a `Const`
+        // VarRef in the owner slot, LIFTED to a `&str` literal (never a
+        // runtime constant read), exactly as `__new__`/`__super__` lift.
+        let owner = Expr::VarRef { name: "Registry".into(), scope: Scope::Const, span: s() };
+        let e = builtin("__class_method__", vec![owner, strlit("total")]);
+        assert_eq!(emit_e(&e), r#"__sir::call_class_method("Registry", "total", vec![])"#);
     }
 
     #[test]
