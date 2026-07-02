@@ -1,0 +1,25 @@
+# BUILD_windows — sql-vm (Rust, PowerShell)
+#
+# Stack-machine bytecode VM that executes Programs from sql-codegen against a
+# Backend (sql-backend).  Sixth stage of the Mini-SQLite pipeline.
+#
+# Dependencies (leaf → root order):
+#   sql-backend, sql-planner, sql-optimizer, sql-codegen, sql-vm
+
+$ErrorActionPreference = "Stop"
+
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+Set-Location $ScriptDir
+
+# Use rust-lld on Windows to avoid MSVC linker dependency.
+$env:CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER = "rust-lld"
+
+Write-Host "[sql-vm] Building package..."
+cargo build --package coding-adventures-sql-vm
+if (-not $?) { throw "[sql-vm] Build failed" }
+Write-Host "[sql-vm] Build complete."
+
+Write-Host "[sql-vm] Running tests..."
+cargo test --package coding-adventures-sql-vm
+if (-not $?) { throw "[sql-vm] Tests failed" }
+Write-Host "[sql-vm] Tests complete."
