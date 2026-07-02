@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 49 \u2014 fractionated radiotherapy total dose from three stated quantities (a NEW panel: radiation-oncology / fractionated-dose). From a per-fraction dose plus the fraction counts of two treatment phases compute the total course dose (dose_per_fraction*(fractions_one+fractions_two)), the total fractions (fractions_one+fractions_two), or the first phase's dose (dose_per_fraction*fractions_one). Each item is a compute_dimensioned program (observe the three quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, DISTRIBUTIVE PRODUCT-OVER-A-SUM a*(b+c), the first product on the ladder to multiply a single factor by a parenthesised sum (distinct from rung-34 sum-of-two-products a*b+c*d, rung-43 sum-of-three-products, and rung-48 sum-times-difference (a+b)*(c-d)) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the three observed quantities via *, + and - \u2014 no constant leaks, and neither the total fractions, the phase-one dose, nor any total-dose figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same three quantities, so the distractors are exactly the slips students make: SUBTRACTING the two phases instead of adding them, and breaking the distributive law by adding the raw second-phase count instead of the dose it delivers (a*b+c, not a*(b+c)). The core confusion tested is distributing the per-fraction dose over the summed fraction count.",
+  "items": [
+    {
+      "id": "r49frx-01",
+      "qtype": "fractionated_dose",
+      "stem": "A radiotherapy course delivers 3 Gy per fraction, given for 15 fractions in the first phase and 10 in the second. What is the total course dose (the per-fraction dose times the total number of fractions)?",
+      "program": "observe dose_per_fraction(3)\nobserve fractions_one(15)\nobserve fractions_two(10)\nlet answer = dose_per_fraction * (fractions_one + fractions_two)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 55,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r49frx-02",
+      "qtype": "fractionated_dose",
+      "stem": "A radiotherapy course delivers 3 Gy per fraction, given for 15 fractions in the first phase and 10 in the second. What is the the total number of fractions (the two phases added)?",
+      "program": "observe dose_per_fraction(3)\nobserve fractions_one(15)\nobserve fractions_two(10)\nlet answer = fractions_one + fractions_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 55,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r49frx-03",
+      "qtype": "fractionated_dose",
+      "stem": "A radiotherapy course delivers 3 Gy per fraction, given for 15 fractions in the first phase and 10 in the second. What is the the first phase's dose (the per-fraction dose times the first phase's fractions)?",
+      "program": "observe dose_per_fraction(3)\nobserve fractions_one(15)\nobserve fractions_two(10)\nlet answer = dose_per_fraction * fractions_one\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 55,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r49frx-04",
+      "qtype": "fractionated_dose",
+      "stem": "A radiotherapy course delivers 2 Gy per fraction, given for 20 fractions in the first phase and 12 in the second. What is the total course dose (the per-fraction dose times the total number of fractions)?",
+      "program": "observe dose_per_fraction(2)\nobserve fractions_one(20)\nobserve fractions_two(12)\nlet answer = dose_per_fraction * (fractions_one + fractions_two)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 32,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 64,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 52,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r49frx-05",
+      "qtype": "fractionated_dose",
+      "stem": "A radiotherapy course delivers 2 Gy per fraction, given for 20 fractions in the first phase and 12 in the second. What is the the total number of fractions (the two phases added)?",
+      "program": "observe dose_per_fraction(2)\nobserve fractions_one(20)\nobserve fractions_two(12)\nlet answer = fractions_one + fractions_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 64,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 52,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 32,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r49frx-06",
+      "qtype": "fractionated_dose",
+      "stem": "A radiotherapy course delivers 2 Gy per fraction, given for 20 fractions in the first phase and 12 in the second. What is the the first phase's dose (the per-fraction dose times the first phase's fractions)?",
+      "program": "observe dose_per_fraction(2)\nobserve fractions_one(20)\nobserve fractions_two(12)\nlet answer = dose_per_fraction * fractions_one\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 64,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 32,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 52,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r49frx-07",
+      "qtype": "fractionated_dose",
+      "stem": "A radiotherapy course delivers 4 Gy per fraction, given for 12 fractions in the first phase and 5 in the second. What is the total course dose (the per-fraction dose times the total number of fractions)?",
+      "program": "observe dose_per_fraction(4)\nobserve fractions_one(12)\nobserve fractions_two(5)\nlet answer = dose_per_fraction * (fractions_one + fractions_two)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 17,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 68,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 28,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 53,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r49frx-08",
+      "qtype": "fractionated_dose",
+      "stem": "A radiotherapy course delivers 4 Gy per fraction, given for 12 fractions in the first phase and 5 in the second. What is the the total number of fractions (the two phases added)?",
+      "program": "observe dose_per_fraction(4)\nobserve fractions_one(12)\nobserve fractions_two(5)\nlet answer = fractions_one + fractions_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 68,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 17,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 28,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 53,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r49frx-09",
+      "qtype": "fractionated_dose",
+      "stem": "A radiotherapy course delivers 4 Gy per fraction, given for 12 fractions in the first phase and 5 in the second. What is the the first phase's dose (the per-fraction dose times the first phase's fractions)?",
+      "program": "observe dose_per_fraction(4)\nobserve fractions_one(12)\nobserve fractions_two(5)\nlet answer = dose_per_fraction * fractions_one\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 68,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 17,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 28,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 53,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r49frx-10",
+      "qtype": "fractionated_dose",
+      "stem": "A radiotherapy course delivers 5 Gy per fraction, given for 8 fractions in the first phase and 6 in the second. What is the total course dose (the per-fraction dose times the total number of fractions)?",
+      "program": "observe dose_per_fraction(5)\nobserve fractions_one(8)\nobserve fractions_two(6)\nlet answer = dose_per_fraction * (fractions_one + fractions_two)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 46,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 70,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r49frx-11",
+      "qtype": "fractionated_dose",
+      "stem": "A radiotherapy course delivers 5 Gy per fraction, given for 8 fractions in the first phase and 6 in the second. What is the the total number of fractions (the two phases added)?",
+      "program": "observe dose_per_fraction(5)\nobserve fractions_one(8)\nobserve fractions_two(6)\nlet answer = fractions_one + fractions_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 70,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 46,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r49frx-12",
+      "qtype": "fractionated_dose",
+      "stem": "A radiotherapy course delivers 5 Gy per fraction, given for 8 fractions in the first phase and 6 in the second. What is the the first phase's dose (the per-fraction dose times the first phase's fractions)?",
+      "program": "observe dose_per_fraction(5)\nobserve fractions_one(8)\nobserve fractions_two(6)\nlet answer = dose_per_fraction * fractions_one\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 70,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 46,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r49frx-13",
+      "qtype": "fractionated_dose",
+      "stem": "A radiotherapy course delivers 3 Gy per fraction, given for 18 fractions in the first phase and 8 in the second. What is the total course dose (the per-fraction dose times the total number of fractions)?",
+      "program": "observe dose_per_fraction(3)\nobserve fractions_one(18)\nobserve fractions_two(8)\nlet answer = dose_per_fraction * (fractions_one + fractions_two)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 54,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 78,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 62,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r49frx-14",
+      "qtype": "fractionated_dose",
+      "stem": "A radiotherapy course delivers 3 Gy per fraction, given for 18 fractions in the first phase and 8 in the second. What is the the total number of fractions (the two phases added)?",
+      "program": "observe dose_per_fraction(3)\nobserve fractions_one(18)\nobserve fractions_two(8)\nlet answer = fractions_one + fractions_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 78,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 54,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 62,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r49frx-15",
+      "qtype": "fractionated_dose",
+      "stem": "A radiotherapy course delivers 3 Gy per fraction, given for 18 fractions in the first phase and 8 in the second. What is the the first phase's dose (the per-fraction dose times the first phase's fractions)?",
+      "program": "observe dose_per_fraction(3)\nobserve fractions_one(18)\nobserve fractions_two(8)\nlet answer = dose_per_fraction * fractions_one\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 78,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 26,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 62,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 54,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r49frx-16",
+      "qtype": "fractionated_dose",
+      "stem": "A radiotherapy course delivers 2 Gy per fraction, given for 25 fractions in the first phase and 15 in the second. What is the total course dose (the per-fraction dose times the total number of fractions)?",
+      "program": "observe dose_per_fraction(2)\nobserve fractions_one(25)\nobserve fractions_two(15)\nlet answer = dose_per_fraction * (fractions_one + fractions_two)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 65,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r49frx-17",
+      "qtype": "fractionated_dose",
+      "stem": "A radiotherapy course delivers 2 Gy per fraction, given for 25 fractions in the first phase and 15 in the second. What is the the total number of fractions (the two phases added)?",
+      "program": "observe dose_per_fraction(2)\nobserve fractions_one(25)\nobserve fractions_two(15)\nlet answer = fractions_one + fractions_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 65,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r49frx-18",
+      "qtype": "fractionated_dose",
+      "stem": "A radiotherapy course delivers 2 Gy per fraction, given for 25 fractions in the first phase and 15 in the second. What is the the first phase's dose (the per-fraction dose times the first phase's fractions)?",
+      "program": "observe dose_per_fraction(2)\nobserve fractions_one(25)\nobserve fractions_two(15)\nlet answer = dose_per_fraction * fractions_one\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 65,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r49frx-19",
+      "qtype": "fractionated_dose",
+      "stem": "A radiotherapy course delivers 6 Gy per fraction, given for 9 fractions in the first phase and 4 in the second. What is the total course dose (the per-fraction dose times the total number of fractions)?",
+      "program": "observe dose_per_fraction(6)\nobserve fractions_one(9)\nobserve fractions_two(4)\nlet answer = dose_per_fraction * (fractions_one + fractions_two)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 54,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 78,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 58,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r49frx-20",
+      "qtype": "fractionated_dose",
+      "stem": "A radiotherapy course delivers 6 Gy per fraction, given for 9 fractions in the first phase and 4 in the second. What is the the total number of fractions (the two phases added)?",
+      "program": "observe dose_per_fraction(6)\nobserve fractions_one(9)\nobserve fractions_two(4)\nlet answer = fractions_one + fractions_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 78,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 54,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 58,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r49frx-21",
+      "qtype": "fractionated_dose",
+      "stem": "A radiotherapy course delivers 6 Gy per fraction, given for 9 fractions in the first phase and 4 in the second. What is the the first phase's dose (the per-fraction dose times the first phase's fractions)?",
+      "program": "observe dose_per_fraction(6)\nobserve fractions_one(9)\nobserve fractions_two(4)\nlet answer = dose_per_fraction * fractions_one\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 54,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 78,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 58,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

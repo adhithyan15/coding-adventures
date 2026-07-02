@@ -86,6 +86,7 @@ SELF_CONTAINED_RUNGS = (
     "rung46_cost_per_patient_day",
     "rung47_ingestion_concentration",
     "rung48_infusion_delivered_volume",
+    "rung49_fractionated_dose",
 )
 
 
