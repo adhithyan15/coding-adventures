@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `smart_home.get_platform_brief` tool descriptor for read-only Chief platform
+  packets over existing D23 HTTP, dashboard, fixture, state/history/event,
+  command, scene, and authorization readiness primitives.
 - `smart_home.get_maintenance_brief` tool descriptor for read-only Chief
   maintenance closeout packets over existing D23 runtime maintenance windows,
   actions, work orders, evidence, readiness, handoff, and reconciliation
