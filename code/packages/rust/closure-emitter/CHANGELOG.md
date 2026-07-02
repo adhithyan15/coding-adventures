@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.22.0] - 2026-07-02
+
+### Added — CLOC12.158: emit `UpdateExpression` (`++` / `--`)
+
+`emit_update` prints the new `Expression::UpdateExpression` node —
+`++x` / `--x` (prefix: operator then operand) and `x++` / `x--` (postfix:
+operand then operator). Classified at `PREC_UNARY`, which is loose enough to
+wrap an exponentiation base (`(++x)**2` — a bare `++x**2` is a syntax error)
+and a member/call object (`(x++).y`), yet tight enough to print bare under a
+`!`/`typeof` parent (`!x++`, `typeof x++`). **Token-fusion seams** are handled
+without a new guard: `arg_starts_with_sign` now reports a *prefix* update's
+leading `+`/`-`, so the binary/unary emitters space the seam (`a- --b`, never
+`a---b` = `(a--)-b`; `a+ ++b`, never `a+++b` = `(a++)+b`), and a *postfix*
+update ending in `+`/`-` is spaced by the binary emitter's existing
+output-tail check (`x++ +y`). 8 new unit tests. No behaviour change for
+existing inputs (the bridge does not yet produce update nodes — PR2).
+
 ## [0.21.3] - 2026-07-02
 
 ### Fixed — CLOC12.157 (gap-158): newline-aware template quasi emit

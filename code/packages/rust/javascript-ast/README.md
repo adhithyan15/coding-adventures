@@ -53,6 +53,14 @@ emitter grow a need for them — each behind its own `CLOC12.NN` slice:
   `cooked` / `tail`. Node + `closure-emitter` + all pass traversals land in one
   atomic PR; the bridge-enable + conformance port follow. (Tagged templates
   `` tag`…` `` remain Phase 3.)
+- `UpdateExpression` (CLOC12.158) — the `++` / `--` read-modify-write forms
+  (`++x`, `x++`, `--x`, `x--`). `UpdateExpression { operator: UpdateOperator,
+  prefix: bool, argument: Box<Expression> }`. Distinct from `UnaryExpression`
+  because `++`/`--` carry a side effect (passes must not drop them) and require
+  a writable-reference operand; `prefix` splits `++x` (yield the new value)
+  from `x++` (yield the old value). Node + `closure-emitter` + all pass
+  traversals land in one atomic PR; the bridge-enable + conformance port
+  follow (gap-159).
 
 ## What's coming (follow-up PRs)
 

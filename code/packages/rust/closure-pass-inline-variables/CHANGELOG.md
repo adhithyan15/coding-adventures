@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline-variables` crate will be documented in this file.
 
+## [0.11.1] - 2026-07-02
+
+### Changed — CLOC12.158: exhaustiveness for new `Expression::UpdateExpression`
+
+Handle the new `Expression::UpdateExpression` (`++x` / `x++` / `--x` / `x--`)
+variant added to `javascript-ast` (0.17.0): the pass recurses into the operand for use-counting and propagation. No behaviour
+change for existing inputs — the bridge does not yet produce update
+expressions (that lands in the CLOC12.158 PR2 bridge-enable), so these arms
+are exercised only via hand-constructed AST today.
+
 ## [0.11.0] - 2026-07-02
 
 ### Added — CLOC12.154: `TemplateLiteral` traversal

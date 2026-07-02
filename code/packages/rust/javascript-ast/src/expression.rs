@@ -57,6 +57,7 @@ pub enum Expression {
     FunctionExpression(FunctionExpression),
     ArrowFunctionExpression(ArrowFunctionExpression),
     TemplateLiteral(TemplateLiteral),
+    UpdateExpression(UpdateExpression),
 }
 
 // ---------------------------------------------------------------------
@@ -236,8 +237,10 @@ pub enum LogicalOperator {
 }
 
 /// Prefix unary: `-x`, `+x`, `!x`, `~x`, `typeof x`, `void x`, `delete x`.
-/// `prefix: true` in v1; ESTree's `UpdateExpression` (`++` / `--`) is
-/// deferred to Phase 2.
+/// `prefix: true` in v1. The **read-modify-write** operators `++` / `--` are
+/// *not* here — they carry a side effect and a writability requirement the
+/// pure unary operators do not, so they live in their own
+/// [`UpdateExpression`] node (as in ESTree).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct UnaryExpression {
@@ -257,6 +260,38 @@ pub enum UnaryOperator {
     #[serde(rename = "typeof")] TypeOf,
     #[serde(rename = "void")] Void,
     #[serde(rename = "delete")] Delete,
+}
+
+/// Update expression: `++x`, `x++`, `--x`, `x--`. ESTree's `UpdateExpression`.
+///
+/// Kept distinct from [`UnaryExpression`] because `++` / `--` **mutate** their
+/// operand — a read-modify-write — so unlike the pure unary operators they:
+///   * have a side effect (a DCE or purity pass must NOT treat `x++` as
+///     removable dead code, and a fold pass must NOT reorder past it), and
+///   * require a *writable reference* as their argument (an identifier or a
+///     member access), never an arbitrary value (`5++` is a syntax error).
+///
+/// `prefix` distinguishes the two evaluation orders, which differ in the value
+/// the expression *yields* (the mutation of the operand is identical):
+///
+/// ```text
+///   ++x   prefix:  increment x, then YIELD THE NEW value   (x was 1 → 2, yields 2)
+///   x++   postfix: YIELD THE OLD value, then increment x   (x was 1, yields 1 → x is 2)
+/// ```
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct UpdateExpression {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    pub operator: UpdateOperator,
+    pub prefix: bool,
+    pub argument: Box<Expression>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum UpdateOperator {
+    #[serde(rename = "++")] Increment,
+    #[serde(rename = "--")] Decrement,
 }
 
 /// `x = y`, `x += y`, etc. The target is an [`AssignmentTarget`]

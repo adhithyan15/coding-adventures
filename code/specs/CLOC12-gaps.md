@@ -1640,3 +1640,42 @@ the grammar still only tokenises no-substitution templates into the bridge
 (gap-157), so multiline templates reach the emitter today only via
 hand-constructed AST, but the emitter is now correct for when the bridge grows
 multiline support.
+
+## CLOC12.158 — `UpdateExpression` (`++` / `--`): atomic node + emit + passes (PR1)
+
+Adds `Expression::UpdateExpression` (`UpdateExpression { operator, prefix,
+argument }`) + the `UpdateOperator` enum (`++` / `--`) to `javascript-ast`
+(0.17.0) — the first fundamental non-template `Expression` node added since the
+arrow arc, and the last "Phase 2" expression form the 0.16.0 `UnaryExpression`
+docs still deferred. Kept **distinct** from `UnaryExpression`: `++`/`--` are a
+read-modify-write, so they (a) carry a side effect (DCE/purity must not drop
+`x++`) and (b) require a *writable reference* operand (identifier / member),
+never an arbitrary value. `prefix` splits `++x` (yield the new value) from
+`x++` (yield the old value).
+
+**Atomic scope (PR1):** the node, the emitter (`emit_update`, `closure-emitter`
+0.22.0), and every exhaustive `Expression` match across the pass crates land in
+one change so the workspace never has a broken build — same shape as the
+ArrowFunctionExpression (CLOC12.151) and TemplateLiteral (CLOC12.154) PR1s.
+Downstream crates gained a match arm (patch bumps): constant-fold, dce,
+fold-control-flow, inline, inline-variables, rename, rename-globals,
+rename-properties, scope-analyzer. Emitter handling: `PREC_UNARY` precedence
+(wraps an `**` base and a member/call object, prints bare under `!`/`typeof`)
+and token-fusion seams via `arg_starts_with_sign` reporting a prefix update's
+lead sign (`a- --b`, `a+ ++b`) plus the binary emitter's output-tail check for
+postfix (`x++ +y`). 8 emitter unit tests.
+
+### gap-159 — bridge declines `update_expression`; grammar `postfix_expression` / prefix `++`/`--` not yet converted
+
+The `javascript-parser` typed-AST bridge still returns `UnsupportedSyntax` for
+`++`/`--` (both the grammar's `postfix_expression = lhs [ ++ | -- ]` and the
+prefix `++x`/`--x` unary alternative) — the decline predates this node and was
+correct while the typed AST had no `UpdateExpression`. Now that the node exists,
+the bridge can convert it: `convert_postfix_expression` builds a postfix
+`UpdateExpression { prefix: false }`, and the prefix `++`/`--` unary arm builds
+`{ prefix: true }`, with the operand converted as a normal left-hand-side
+expression. That is the CLOC12.158 **PR2 bridge-enable** (with a closurec e2e
+diff fixture proving `for` / statement `i++` round-trips instead of dropping the
+whole file to WHITESPACE_ONLY). The **PR3 emit conformance port** ports upstream
+CodePrinter's update-operator cases (postfix/prefix, precedence, fusion) into
+`closure-emitter/tests/upstream/`.

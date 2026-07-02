@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.85.1] - 2026-07-02
+
+### Changed — CLOC12.158: exhaustiveness for new `Expression::UpdateExpression`
+
+Handle the new `Expression::UpdateExpression` (`++x` / `x++` / `--x` / `x--`)
+variant added to `javascript-ast` (0.17.0): the pass recurses into the operand and preserves the read-modify-write verbatim (an update is never a constant and carries a side effect, so it is never folded away). No behaviour
+change for existing inputs — the bridge does not yet produce update
+expressions (that lands in the CLOC12.158 PR2 bridge-enable), so these arms
+are exercised only via hand-constructed AST today.
+
 ## [0.85.0] - 2026-07-02
 
 ### Added — CLOC12.154: `TemplateLiteral` traversal

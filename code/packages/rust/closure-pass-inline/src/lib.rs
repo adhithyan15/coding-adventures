@@ -441,6 +441,7 @@ fn expr_node_count(expr: &Expression) -> usize {
         Expression::BinaryExpression(be) => expr_node_count(&be.left) + expr_node_count(&be.right),
         Expression::LogicalExpression(le) => expr_node_count(&le.left) + expr_node_count(&le.right),
         Expression::UnaryExpression(ue) => expr_node_count(&ue.argument),
+        Expression::UpdateExpression(ue) => expr_node_count(&ue.argument),
         Expression::AssignmentExpression(ae) => {
             let left = match &ae.left {
                 AssignmentTarget::Identifier(_) => 1,
@@ -742,6 +743,7 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
             collect_binding_idents_expr(&le.right, out);
         }
         Expression::UnaryExpression(ue) => collect_binding_idents_expr(&ue.argument, out),
+        Expression::UpdateExpression(ue) => collect_binding_idents_expr(&ue.argument, out),
         Expression::AssignmentExpression(ae) => {
             match &ae.left {
                 AssignmentTarget::Identifier(id) => {
@@ -1003,6 +1005,7 @@ fn tally_expr(expr: &Expression, cand: &InlineCandidate, t: &mut Tally) {
             tally_expr(&le.right, cand, t);
         }
         Expression::UnaryExpression(ue) => tally_expr(&ue.argument, cand, t),
+        Expression::UpdateExpression(ue) => tally_expr(&ue.argument, cand, t),
         Expression::AssignmentExpression(ae) => {
             match &ae.left {
                 AssignmentTarget::Identifier(id) => {
@@ -1311,6 +1314,7 @@ fn inline_in_expr(expr: &mut Expression, cand: &InlineCandidate) -> bool {
             changed |= inline_in_expr(&mut le.right, cand);
         }
         Expression::UnaryExpression(ue) => changed |= inline_in_expr(&mut ue.argument, cand),
+        Expression::UpdateExpression(ue) => changed |= inline_in_expr(&mut ue.argument, cand),
         Expression::AssignmentExpression(ae) => {
             if let AssignmentTarget::MemberExpression(m) = &mut ae.left {
                 changed |= inline_in_member(m, cand);
@@ -1412,6 +1416,7 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
             substitute(&mut le.right, map);
         }
         Expression::UnaryExpression(ue) => substitute(&mut ue.argument, map),
+        Expression::UpdateExpression(ue) => substitute(&mut ue.argument, map),
         Expression::AssignmentExpression(ae) => {
             // The left side is an assignment *target*. In the safe slice
             // EXPR's only free identifiers are parameters; a parameter
@@ -1797,6 +1802,7 @@ fn expr_collect_mutated_params(
             expr_collect_mutated_params(&le.right, params, out);
         }
         Expression::UnaryExpression(ue) => expr_collect_mutated_params(&ue.argument, params, out),
+        Expression::UpdateExpression(ue) => expr_collect_mutated_params(&ue.argument, params, out),
         Expression::ConditionalExpression(ce) => {
             expr_collect_mutated_params(&ce.test, params, out);
             expr_collect_mutated_params(&ce.consequent, params, out);
@@ -3223,6 +3229,7 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
             rename_in_expr(&mut le.right, map);
         }
         Expression::UnaryExpression(ue) => rename_in_expr(&mut ue.argument, map),
+        Expression::UpdateExpression(ue) => rename_in_expr(&mut ue.argument, map),
         Expression::AssignmentExpression(ae) => {
             match &mut ae.left {
                 AssignmentTarget::Identifier(id) => {

@@ -76,7 +76,7 @@ use coding_adventures_javascript_ast::{
     FunctionParam, Identifier, IfStatement, LabeledStatement, LogicalExpression, LogicalOperator,
     MemberExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem,
     Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
-    SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator,
+    SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator, UpdateExpression, UpdateOperator,
     UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement,
 };
 use coding_adventures_type_sidecar::Sidecar;
@@ -1106,6 +1106,7 @@ impl<'a> Emitter<'a> {
             Expression::BinaryExpression(b) => self.emit_binary(b),
             Expression::LogicalExpression(l) => self.emit_logical(l),
             Expression::UnaryExpression(u) => self.emit_unary(u),
+            Expression::UpdateExpression(u) => self.emit_update(u),
             Expression::AssignmentExpression(a) => self.emit_assignment(a),
             Expression::ConditionalExpression(c) => self.emit_conditional(c),
             Expression::CallExpression(c) => self.emit_call(c),
@@ -1336,6 +1337,41 @@ impl<'a> Emitter<'a> {
         // `!(a == b)` printed as `!a == b`, which JS reparses as
         // `(!a) == b` — a different program.
         self.emit_expression_inner(&u.argument, PREC_UNARY);
+    }
+
+    /// Emit an update expression — `++x` / `x++` / `--x` / `x--`.
+    ///
+    /// ```text
+    ///   prefix:   <op><arg>     ++x   --x
+    ///   postfix:  <arg><op>     x++   x--
+    /// ```
+    ///
+    /// The operand is emitted at `PREC_UNARY` so anything looser is
+    /// parenthesised (a valid update target — an identifier or member — is
+    /// already tight, so this only matters defensively).
+    ///
+    /// **Seam hazards** are handled without a guard *here*:
+    ///   * A *prefix* update after a sign operator (`a - --b`, `-(--x)`) would
+    ///     fuse into `a---b` / `---x` and mis-tokenise; the binary/unary
+    ///     emitters guard that seam by consulting [`arg_starts_with_sign`],
+    ///     which reports a prefix update's leading `+`/`-`.
+    ///   * A *postfix* update ends in `+`/`-`, so a following binary `+`/`-`
+    ///     (`x++ + y`) would fuse; the binary emitter's left-seam check already
+    ///     inspects the emitted output tail and inserts the space.
+    /// The prefix operator's own seam with its operand never fuses: `++`/`--`
+    /// are already maximal-munch tokens, so `++ +x` and `+++x` tokenise
+    /// identically (and an update of a non-reference operand is invalid input
+    /// anyway).
+    fn emit_update(&mut self, u: &UpdateExpression) {
+        self.maybe_map(&u.cv);
+        let op = update_op_str(u.operator);
+        if u.prefix {
+            self.write_str(op);
+            self.emit_expression_inner(&u.argument, PREC_UNARY);
+        } else {
+            self.emit_expression_inner(&u.argument, PREC_UNARY);
+            self.write_str(op);
+        }
     }
 
     fn emit_assignment(&mut self, a: &AssignmentExpression) {
@@ -1743,6 +1779,13 @@ fn expr_prec(e: &Expression) -> u8 {
         | Expression::MemberExpression(_) => PREC_PRIMARY,
 
         Expression::UnaryExpression(_) => PREC_UNARY,
+        // Update (`++x` / `x++`) binds a hair tighter than the pure unary
+        // operators in the grammar, but tagging it at `PREC_UNARY` is the
+        // safe conservative choice: it is loose enough that an
+        // exponentiation base wraps it (`(x++)**2` — a bare `x++**2` is a
+        // syntax error) and tight enough that a `!`/`typeof` parent does not
+        // over-wrap it (`!x++`, `typeof x++` print bare, which is correct).
+        Expression::UpdateExpression(_) => PREC_UNARY,
         // A function expression is primary-*ish*, but two contexts
         // mis-parse a bare one: as a call callee (`function(){}()` is a
         // syntax error) and as a member object (`function(){}.x`). Tag
@@ -1801,6 +1844,24 @@ fn sign_op_char(op: UnaryOperator) -> Option<char> {
     }
 }
 
+/// The `++` / `--` operator as printed text.
+fn update_op_str(op: UpdateOperator) -> &'static str {
+    match op {
+        UpdateOperator::Increment => "++",
+        UpdateOperator::Decrement => "--",
+    }
+}
+
+/// The leading sign character of an update operator (`+` for `++`, `-` for
+/// `--`) — the character a *prefix* update prints first, and thus the one that
+/// can fuse with a preceding sign operator.
+fn update_op_lead_char(op: UpdateOperator) -> char {
+    match op {
+        UpdateOperator::Increment => '+',
+        UpdateOperator::Decrement => '-',
+    }
+}
+
 /// Would the unary argument `e`, emitted at `PREC_UNARY`, begin with the
 /// character `sign` (`-` or `+`)? Used by [`emit_unary`] to decide whether
 /// a separating space is required to avoid the `--` / `++` token fusion.
@@ -1819,6 +1880,18 @@ fn arg_starts_with_sign(e: &Expression, sign: char) -> bool {
     match e {
         Expression::UnaryExpression(u) => sign_op_char(u.operator) == Some(sign),
         Expression::NumericLiteral(n) => sign == '-' && n.value.is_sign_negative(),
+        // A *prefix* update prints its operator first, so `++x` begins with `+`
+        // and `--x` begins with `-` — either can fuse with a preceding sign
+        // operator (`a - --b` must print `a- --b`, never `a---b`, which JS
+        // reparses as `(a--)-b`). A *postfix* update begins with its operand,
+        // so recurse to see what that operand leads with.
+        Expression::UpdateExpression(u) => {
+            if u.prefix {
+                update_op_lead_char(u.operator) == sign
+            } else {
+                arg_starts_with_sign(&u.argument, sign)
+            }
+        }
         _ => false,
     }
 }
@@ -4154,5 +4227,108 @@ mod tests {
     #[test]
     fn template_bare_newline_quasi() {
         assert_eq!(emit_expr(template(vec![tquasi("\n", true)], vec![])), "`\n`;");
+    }
+
+    // ---- UpdateExpression (CLOC12.158) ------------------------
+
+    fn update(op: UpdateOperator, prefix: bool, arg: Expression) -> Expression {
+        Expression::UpdateExpression(UpdateExpression {
+            cv: None,
+            operator: op,
+            prefix,
+            argument: Box::new(arg),
+        })
+    }
+
+    fn binexpr(op: BinaryOperator, l: Expression, r: Expression) -> Expression {
+        Expression::BinaryExpression(BinaryExpression {
+            cv: None,
+            operator: op,
+            left: Box::new(l),
+            right: Box::new(r),
+        })
+    }
+
+    /// The four core shapes: prefix/postfix × increment/decrement.
+    #[test]
+    fn update_prefix_increment() {
+        assert_eq!(emit_expr(update(UpdateOperator::Increment, true, ident("x"))), "++x;");
+    }
+    #[test]
+    fn update_postfix_increment() {
+        assert_eq!(emit_expr(update(UpdateOperator::Increment, false, ident("x"))), "x++;");
+    }
+    #[test]
+    fn update_prefix_decrement() {
+        assert_eq!(emit_expr(update(UpdateOperator::Decrement, true, ident("x"))), "--x;");
+    }
+    #[test]
+    fn update_postfix_decrement() {
+        assert_eq!(emit_expr(update(UpdateOperator::Decrement, false, ident("x"))), "x--;");
+    }
+
+    /// `a - (--b)` must print `a- --b`, never `a---b` (which JS reparses as
+    /// `(a--)-b`). The binary `-` emitter inserts the seam space because
+    /// `arg_starts_with_sign` reports the prefix `--`'s leading `-`.
+    #[test]
+    fn prefix_decrement_after_minus_needs_space() {
+        let e = binexpr(
+            BinaryOperator::Sub,
+            ident("a"),
+            update(UpdateOperator::Decrement, true, ident("b")),
+        );
+        assert_eq!(emit_expr(e), "a- --b;");
+    }
+
+    /// `a + (++b)` must print `a+ ++b`, never `a+++b` (which JS reparses as
+    /// `(a++)+b`).
+    #[test]
+    fn prefix_increment_after_plus_needs_space() {
+        let e = binexpr(
+            BinaryOperator::Add,
+            ident("a"),
+            update(UpdateOperator::Increment, true, ident("b")),
+        );
+        assert_eq!(emit_expr(e), "a+ ++b;");
+    }
+
+    /// `(x++) + y`: the postfix `++` leaves the output ending in `+`, so the
+    /// following binary `+` needs a left-seam space (`x++ +y`) or the `++`
+    /// would swallow it into `x+++y` = `(x++)+y` — same value here, but the
+    /// emitter guards the seam unconditionally via the output-tail check.
+    #[test]
+    fn postfix_increment_before_plus_needs_space() {
+        let e = binexpr(
+            BinaryOperator::Add,
+            update(UpdateOperator::Increment, false, ident("x")),
+            ident("y"),
+        );
+        assert_eq!(emit_expr(e), "x++ +y;");
+    }
+
+    /// A postfix update as a member-access object is parenthesised: `x++` is
+    /// not a valid `MemberExpression` object, so `(x++).y` — the `PREC_UNARY`
+    /// tag forces the wrap under the primary-precedence member parent.
+    #[test]
+    fn postfix_update_as_member_object_is_wrapped() {
+        let m = Expression::MemberExpression(MemberExpression {
+            cv: None,
+            object: Box::new(update(UpdateOperator::Increment, false, ident("x"))),
+            property: Box::new(ident("y")),
+            computed: false,
+        });
+        assert_eq!(emit_expr(m), "(x++).y;");
+    }
+
+    /// A prefix update as an exponentiation base is parenthesised — a bare
+    /// `++x**2` is a syntax error, so `(++x)**2`.
+    #[test]
+    fn prefix_update_as_exponent_base_is_wrapped() {
+        let e = binexpr(
+            BinaryOperator::Exp,
+            update(UpdateOperator::Increment, true, ident("x")),
+            num(2.0),
+        );
+        assert_eq!(emit_expr(e), "(++x)**2;");
     }
 }

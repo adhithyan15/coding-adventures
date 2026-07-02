@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.20.1] - 2026-07-02
+
+### Changed — CLOC12.158: exhaustiveness for new `Expression::UpdateExpression`
+
+Handle the new `Expression::UpdateExpression` (`++x` / `x++` / `--x` / `x--`)
+variant added to `javascript-ast` (0.17.0): the pass treats `x++`/`--x` as a side effect: it is NOT dead code even in value-discarded position, and is preserved (recursing only into the operand). No behaviour
+change for existing inputs — the bridge does not yet produce update
+expressions (that lands in the CLOC12.158 PR2 bridge-enable), so these arms
+are exercised only via hand-constructed AST today.
+
 ## [0.20.0] - 2026-07-02
 
 ### Added — CLOC12.154: `TemplateLiteral` traversal

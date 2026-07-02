@@ -861,6 +861,12 @@ fn walk_expression(
         Expression::UnaryExpression(ue) => {
             walk_expression(&ue.argument, ctx, analysis, pending);
         }
+        // `++x` / `x++`: the operand is both read AND written, but for scope
+        // resolution what matters is only that its identifier is *referenced*
+        // in this scope — the same as any other operand walk.
+        Expression::UpdateExpression(ue) => {
+            walk_expression(&ue.argument, ctx, analysis, pending);
+        }
         Expression::AssignmentExpression(ae) => {
             match &ae.left {
                 AssignmentTarget::Identifier(id) => {
