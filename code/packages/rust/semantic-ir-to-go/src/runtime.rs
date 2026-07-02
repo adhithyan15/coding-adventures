@@ -391,12 +391,21 @@ func _sir_divide(args []Value) Value {
 		return int64(0)
 	}
 	if _sir_any_float(args) {
-		// Float division follows IEEE-754: `1.0 / 0.0` is `+Inf`
-		// rather than a panic.  Only the all-integer path keeps the
-		// historical divide-by-zero panic.
+		// Ruby raises `ZeroDivisionError` for division by zero on BOTH the
+		// integer AND float paths (`1/0` and `1.0/0` alike — see the
+		// sir-typed-runtime-errors spec, which is load-bearing here).  We
+		// therefore reject a zero divisor before the promoted float divide,
+		// rather than letting IEEE-754 yield `+Inf`.  The typed `SirError`
+		// (raised via the existing `_sir_new_error` entry point + `panic`,
+		// exactly as an explicit `raise ZeroDivisionError` would) is what a
+		// translated `rescue ZeroDivisionError` matches.
 		acc := _sir_as_float(args[0])
 		for _, a := range args[1:] {
-			acc /= _sir_as_float(a)
+			d := _sir_as_float(a)
+			if d == 0 {
+				panic(_sir_new_error("ZeroDivisionError", Value("divided by 0")))
+			}
+			acc /= d
 		}
 		return acc
 	}
@@ -404,7 +413,7 @@ func _sir_divide(args []Value) Value {
 	for _, a := range args[1:] {
 		d := _sir_as_int(a)
 		if d == 0 {
-			panic("division by zero")
+			panic(_sir_new_error("ZeroDivisionError", Value("divided by 0")))
 		}
 		acc /= d
 	}
@@ -1260,12 +1269,16 @@ func _sir_call_method(recv Value, name string, args []Value) Value {
 	return _sir_method_unknown(recv, name)
 }
 
-// Clean, controlled failure for an unknown method — panics with a Ruby
-// `NoMethodError`-shaped message.  A `go run` surfaces it as a non-zero
-// exit plus this message, exactly like `car` on a non-pair — NOT a silent
+// Clean, controlled failure for an unknown method — raises a TYPED Ruby
+// `NoMethodError` (via the existing `_sir_new_error` entry point + `panic`,
+// exactly as an explicit `raise NoMethodError, msg` would) so a translated
+// `rescue NoMethodError` catches it.  The message mirrors Ruby's shape,
+// `undefined method 'x' for <class>`.  A `go run` with no surrounding
+// rescue surfaces it as a non-zero exit plus this message — NOT a silent
 // nil or arbitrary behaviour.
 func _sir_method_unknown(recv Value, name string) Value {
-	panic("undefined method `" + name + "' for " + _sir_ruby_class_name(recv))
+	panic(_sir_new_error("NoMethodError",
+		Value("undefined method '"+name+"' for "+_sir_ruby_class_name(recv))))
 }
 
 // Conventional Ruby class name of a value (for error messages / `class`).
@@ -1414,6 +1427,29 @@ func _sir_array_method(recv *Seq, name string, args []Value) (Value, bool) {
 			parts[i] = _sir_ruby_to_s(x)
 		}
 		return strings.Join(parts, sep), true
+	case "fetch":
+		// Ruby `Array#fetch(i)` is the RAISING index read: an out-of-bounds
+		// index raises `IndexError` (unlike `arr[i]`, which returns nil).
+		// A supplied default (`fetch(i, d)`) is returned instead of raising.
+		// Negative indices count from the end (`fetch(-1)` is the last
+		// element).  We raise the TYPED `SirError` via `_sir_new_error` +
+		// `panic` (the same entry point an explicit `raise` uses), so a
+		// translated `rescue IndexError` matches.
+		i := _sir_as_int(args[0])
+		n := int64(len(recv.Items))
+		idx := i
+		if idx < 0 {
+			idx += n
+		}
+		if idx < 0 || idx >= n {
+			if len(args) > 1 {
+				return args[1], true
+			}
+			panic(_sir_new_error("IndexError",
+				Value("index "+strconv.FormatInt(i, 10)+" outside of array bounds: "+
+					strconv.FormatInt(-n, 10)+"..."+strconv.FormatInt(n, 10))))
+		}
+		return recv.Items[idx], true
 	case "to_a":
 		return recv, true
 	}
@@ -1560,6 +1596,23 @@ func _sir_hash_method(recv *Map, name string, args []Value) (Value, bool) {
 		return int64(len(recv.Entries)), true
 	case "empty?":
 		return len(recv.Entries) == 0, true
+	case "fetch":
+		// Ruby `Hash#fetch(key)` is the RAISING lookup: a missing key raises
+		// `KeyError` (unlike `hash[key]`, which returns nil).  A supplied
+		// default (`fetch(key, d)`) is returned instead of raising.  We
+		// raise the TYPED `SirError` via `_sir_new_error` + `panic` (the same
+		// entry point an explicit `raise` uses), so a translated `rescue
+		// KeyError` (and, since KeyError < IndexError, `rescue IndexError`)
+		// matches.
+		for _, e := range recv.Entries {
+			if _sir_value_eq(e.Key, args[0]) {
+				return e.Val, true
+			}
+		}
+		if len(args) > 1 {
+			return args[1], true
+		}
+		panic(_sir_new_error("KeyError", Value("key not found: "+_sir_format(args[0]))))
 	}
 	return nil, false
 }
@@ -1833,6 +1886,19 @@ func _sir_symbol_method(recv *Symbol, name string, args []Value) (Value, bool) {
 type SirError struct {
 	Class string
 	Msg   Value
+}
+
+// Implement Go's `error` interface so an UNCAUGHT `panic(*SirError)` (a
+// raise/runtime-error that no `rescue` matched) prints a readable
+// `panic: <Class>: <message>` line — mirroring Ruby's uncaught-exception
+// banner — rather than Go's default `(*main.SirError) 0x…` pointer dump.
+// Purely cosmetic for the panic path; `recover`/rescue matching still keys
+// off the `Class` tag via `_sir_class_of_thrown`, never this string.
+func (e *SirError) Error() string {
+	if e.Msg == nil {
+		return e.Class
+	}
+	return e.Class + ": " + _sir_format(e.Msg)
 }
 
 // Built-in Ruby exception ancestry: subclass name → immediate superclass
