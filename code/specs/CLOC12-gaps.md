@@ -1576,3 +1576,38 @@ escape (`` `a\tb` ``) should have a `cooked` value with the escape *processed*
 this is never a correctness hazard for round-tripping; genuine cooked-value
 processing is a later refinement (needed once a pass reads `cooked` to fold a
 template to a string literal).
+
+## CLOC12.156 — CodePrinter template-literal conformance port (emitter)
+
+`closure-emitter` (0.21.2) gains `tests/upstream/code_printer_template_test.rs`
+— the tenth CodePrinter port, isolating `emit_template_literal` /
+`emit_template_element` + the `PREC_PRIMARY` classification that landed with
+`Expression::TemplateLiteral` (CLOC12.154). 17 active `#[test]`s and 1
+`#[ignore]`. Coverage: no-substitution templates (incl. empty, escaped
+backtick, escaped `${`), a template as an unwrapped member-access object and
+as an unwrapped `+` / `==` operand (it is primary), and `${…}` substitution
+templates (single, adjacent, text-interleaved, low-precedence body,
+member-access body). Inputs are hand-constructed AST so the port exercises
+`${…}` substitution templates the grammar tokenises only as no-substitution
+today (gap-157) — the emitter already prints them; the parser can't yet feed
+them. Test-only PR (no emitter code change); the one ignored case surfaces
+gap-158. *Tagged* templates are intentionally not ported (no
+`TaggedTemplateExpression` AST node — see the port's ATTRIBUTION).
+
+### gap-158 — emitter cannot print a template quasi with a *literal* embedded newline
+
+`emit_template_element` writes a quasi's `raw` text through the emitter's
+`write_str`, which `debug_assert!`s the run contains no `'\n'` — every newline
+must instead flow through `newline()` so the source-map line/column bookkeeping
+(and `line`/`col` counters) stay correct. A template quasi is the one *primary*
+token that can legitimately carry a raw newline (a multiline template such as
+`` `hello⏎world` `` preserves it verbatim per spec), so a quasi whose `raw`
+contains `\n` currently panics the emitter worker rather than printing. The fix
+is a newline-aware quasi-write path in `emit_template_element` (split `raw` on
+`\n`, emitting each segment via `write_str` and each break via `newline()`);
+until then the multiline case is `#[ignore]`d in the conformance port
+(`raw_preserves_internal_newline`). No correctness hazard for the shapes the
+bridge can actually produce today — the grammar's `TEMPLATE_NO_SUB` token can
+span newlines, but the no-substitution SIMPLE/ADVANCED path does not yet reach
+an input that stresses this (it declines multiline via the same token) — so
+this is an emitter-completeness gap, not a live miscompile.
