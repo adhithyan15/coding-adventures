@@ -1530,6 +1530,28 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — *two-dimensional **real** array* (LANG-FULL AL-multidim-real).
+    // Identical multidim flat-index machinery as the integer cell above, but the
+    // element type is `real` (f64).  The `algol-iir-compiler` records `elem_ty =
+    // Real` at declaration, so `alloc_array`/`array_set`/`array_get` carry the
+    // fractional doubles on the same 8-byte slots that E5 1-D real arrays use —
+    // only the *index* computation `(i−1)*2 + (j−1)` is multidim.  Four fractional
+    // cells are stored: `M[1,1]=10.25; M[1,2]=10.25; M[2,1]=10.75; M[2,2]=10.75`,
+    // summed with the f64 `add` path to `42.0`, then floored to an integer exit
+    // code via the E8 `entier` (`real_to_int_floor`) conversion.  This proves f64
+    // multidim elements — the follow-up flagged when AL-multidim first landed —
+    // run on **all 7 backends** with no backend change.  Exit 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real array M[1:2, 1:2]; real sum; integer result; \
+               M[1, 1] := 10.25; M[1, 2] := 10.25; \
+               M[2, 1] := 10.75; M[2, 2] := 10.75; \
+               sum := M[1, 1] + M[1, 2] + M[2, 1] + M[2, 2]; \
+               result := entier(sum) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
     // `lower_brainfuck_for_aot` widens the BF cell/ptr registers to `i64` (byte width
     // survives only at the tape boundary) for every code-gen backend. On LLVM (LM-L)

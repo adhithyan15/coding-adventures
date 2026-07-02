@@ -4660,6 +4660,29 @@ mod tests {
         assert_eq!(run_f64(src), 2.5);
     }
 
+    /// A 2-D **`real`** array (AL-multidim-real): the multidim flat-index path
+    /// carries `f64` elements.  The `elem_ty` recorded at declaration is
+    /// `Real`, so `alloc_array`/`array_set`/`array_get` ride the same 8-byte
+    /// slots as 1-D real arrays — only the index computation is multidim.
+    /// Store four doubles into `M[1:2, 1:2]` and read one back.
+    #[test]
+    fn two_d_real_array_roundtrips() {
+        let src = "begin real array M[1:2, 1:2]; real result; \
+                   M[1,1] := 1.5; M[1,2] := 2.5; M[2,1] := 3.5; M[2,2] := 4.5; \
+                   result := M[2,2] end";
+        assert_eq!(run_f64(src), 4.5);
+    }
+
+    /// A 2-D `real` array sums all four cells: 1.5+2.5+3.5+4.5 = 12.0.
+    /// Proves independent cells and the f64 add path over multidim reads.
+    #[test]
+    fn two_d_real_array_sum() {
+        let src = "begin real array M[1:2, 1:2]; real result; \
+                   M[1,1] := 1.5; M[1,2] := 2.5; M[2,1] := 3.5; M[2,2] := 4.5; \
+                   result := M[1,1] + M[1,2] + M[2,1] + M[2,2] end";
+        assert_eq!(run_f64(src), 12.0);
+    }
+
     // ── AL4 string procedure parameters ─────────────────────────────────────
 
     /// A procedure with a string value parameter compiles: `specifier_scalar_type`
