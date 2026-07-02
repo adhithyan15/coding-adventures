@@ -375,20 +375,24 @@ type Program = { Instructions: Instruction list }
 //   loop_0 / end_0 for the outer (left) table
 //   loop_1 / end_1 for the inner (right) table
 //
-// NOTE: Module-level `let mutable` is idiomatic F# for stateful helpers.
-// This is reset at the start of each `compile` call so tests are isolated.
+// Label counter — uses Interlocked.Increment for thread safety so that
+// concurrent calls to SqlCodegen.compile on different threads cannot
+// produce duplicate label names (which would cause the VM to resolve
+// jumps to the wrong instruction).
+//
+// `resetLabelCounter` is kept for deterministic test output only; it
+// must not be called while a concurrent compile is in flight.
 
 [<AutoOpen>]
 module private LabelState =
-    let mutable labelCounter = 0
+    let private labelCounter = ref 0
 
     let freshLabel () =
-        let n = labelCounter
-        labelCounter <- labelCounter + 1
+        let n = System.Threading.Interlocked.Increment(labelCounter)
         string n
 
     let resetLabelCounter () =
-        labelCounter <- 0
+        System.Threading.Interlocked.Exchange(labelCounter, 0) |> ignore
 
 // ── SqlCodegen module ─────────────────────────────────────────────────────
 //
@@ -777,7 +781,33 @@ module SqlCodegen =
                   Instruction.EmitColumn a.Alias ])
             |> List.concat
 
-        // HAVING clause filters out groups whose aggregate result fails the predicate
+        // HAVING clause filters out groups whose aggregate result fails the predicate.
+        //
+        // AggExpr nodes inside the HAVING predicate (e.g. COUNT(*) > 1) must be
+        // compiled to the FinalizeAgg instruction for the matching accumulator slot,
+        // NOT to LoadConst(Null) as `compileExpression` would produce.  We use a
+        // local helper `compileHavingExpr` that intercepts AggExpr and delegates
+        // everything else to the regular `compileExpression`.
+        let rec compileHavingExpr (e: Expr) : Instruction list =
+            match e with
+            | Expr.AggExpr(fn, arg, _distinct) ->
+                // Find the slot whose (Func, Arg) pair matches this aggregate.
+                let slotOpt =
+                    aggs |> List.tryFindIndex (fun a ->
+                        a.Func = fn &&
+                        match a.Arg, arg with
+                        | AggArg.Star, AggArg.Star     -> true
+                        | AggArg.Expr e1, AggArg.Expr e2 -> e1 = e2
+                        | _                            -> false)
+                match slotOpt with
+                | Some slot -> [ compileFinalizeAgg slot fn ]
+                | None      -> [ Instruction.LoadConst SqlValue.Null ]
+            | Expr.BinaryOp(op, l, r) ->
+                compileHavingExpr l @ compileHavingExpr r @ [ Instruction.BinaryOpInstr (mapBinaryOp op) ]
+            | Expr.UnaryOp(op, inner) ->
+                compileHavingExpr inner @ [ Instruction.UnaryOpInstr (mapUnaryOp op) ]
+            | other -> compileExpression other
+
         let emitPhase =
             match havingOpt with
             | None ->
@@ -790,7 +820,7 @@ module SqlCodegen =
                 [ Instruction.BeginRow ]
                 @ keyEmitInstrs
                 @ aggEmitInstrs
-                @ compileExpression pred
+                @ compileHavingExpr pred
                 @ [ Instruction.JumpIfFalse skipLabel
                     Instruction.EmitRow
                     Instruction.Label skipLabel ]
@@ -809,14 +839,22 @@ module SqlCodegen =
     and private compileSelect (plan: OptimizedPlan) : Instruction list =
 
         // ── Step 1: Peel post-processing wrappers ─────────────────────────
+        // Post-ops are collected by recursing from outermost to innermost.
+        // We PREPEND each new instruction so that the innermost wrapper ends
+        // up first in the list.  Execution order must be:
+        //   SortResult → DistinctResult → LimitResult
+        // because LIMIT must run *after* sorting/deduplication so it trims
+        // the already-sorted list.  Appending (postOps @ [instr]) would
+        // produce the reverse order (Limit before Sort), which incorrectly
+        // truncates the unsorted result set.
         let rec peelWrappers (p: OptimizedPlan) (postOps: Instruction list) =
             match p with
             | OptimizedPlan.Sort(inner, keys) ->
-                peelWrappers inner (postOps @ [ Instruction.SortResult keys ])
+                peelWrappers inner ([ Instruction.SortResult keys ] @ postOps)
             | OptimizedPlan.Limit(inner, count, offset) ->
-                peelWrappers inner (postOps @ [ Instruction.LimitResult(count, offset) ])
+                peelWrappers inner ([ Instruction.LimitResult(count, offset) ] @ postOps)
             | OptimizedPlan.Distinct(inner) ->
-                peelWrappers inner (postOps @ [ Instruction.DistinctResult ])
+                peelWrappers inner ([ Instruction.DistinctResult ] @ postOps)
             | other ->
                 (other, postOps)
 
