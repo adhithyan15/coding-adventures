@@ -2,6 +2,50 @@
 
 All notable changes to `semantic-ir-to-javascript` are documented here.
 
+## 0.10.0 — typed runtime errors (ZeroDivision/Index/Key/NoMethod, T3)
+
+### Added
+
+- Faulting emitted-runtime operations now raise the **correct typed
+  `SirError`** (matching Ruby), so a translated
+  `begin; …; rescue ZeroDivisionError => e; …; end` catches them — and
+  identically across backends (sir-typed-runtime-errors, T3). Runtime-only:
+  no core-IR / frontend change.
+  - **Division by zero** (`1 / 0`, `1.0 / 0`) → `ZeroDivisionError`
+    (`"divided by 0"`). Native JS `/` yields `Infinity`, so the emitter now
+    routes the 2-arg `/` builtin through a new inlined `__Sir.divide(a, b)`
+    helper that adds an explicit `b === 0` check (covering integer-zero,
+    float-zero, and `-0` divisors uniformly) and `raiseError`s the typed
+    error. Non-zero divisors divide natively as before — no numeric program
+    changes. (`-`/`%` and comparisons keep native infix.)
+  - **`arr.fetch(oob)`** → `IndexError`; **`hash.fetch(missing)`** with no
+    default → `KeyError`. A supplied default (`fetch(k, d)`) is returned
+    instead of raising, matching Ruby. Handled in `callMethod` ahead of the
+    method allowlist (negative array indices count from the end).
+    - **Security (CWE-470):** `arr.fetch` first validates its index is a real
+      integer (`typeof === "number" && Number.isInteger`) — a non-integer,
+      source-controlled index (`arr.fetch("constructor")`, `"__proto__"`, …)
+      raises `TypeError` (Ruby: *no implicit conversion of String into
+      Integer*) instead of sailing past the `NaN`-poisoned bounds checks to a
+      reflective `recv[idx]` read that would leak prototype/host gadgets and
+      bypass the allowlist. Regression: `t3_array_fetch_non_integer_index_raises_type_error_not_gadget`.
+  - **Unknown method** (an allowlist miss, or a `SirInstance` method miss) →
+    `NoMethodError` (`undefined method \`x\` for <class>`) via a new
+    `classDescription` receiver-describer, replacing the previous JS-native
+    `TypeError` floor (which a `rescue` would miss or catch over-broadly).
+- The plain index operators `arr[i]` / `hash[k]` are **unchanged**: they
+  still return `nil` (Ruby does NOT raise for `[]`) — no over-raise.
+- Dispatch remains an explicit runtime **tag** test / typed-string raise,
+  never reflection / `eval` on a source-derived name
+  ([[dynamic-dispatch-rce]]); the method allowlist still blocks reflective
+  gadgets — now surfacing the rejection as a typed `NoMethodError`.
+- Execution proofs in `run_with_node.rs` (`t3_*`) run each case under `node`
+  and assert the typed clause catches (`1/0`→ZeroDivisionError,
+  `arr.fetch(oob)`→IndexError, `h.fetch(miss)`→KeyError,
+  `obj.frobnicate`→NoMethodError), that `ZeroDivisionError` also chains up to
+  `StandardError`, that `arr[oob]`/`h[miss]` still return `nil` (no
+  over-raise), and that `fetch` with a default returns it.
+
 ## 0.9.0 — polymorphic `+` / `*` for strings and arrays (PO3)
 
 ### Added

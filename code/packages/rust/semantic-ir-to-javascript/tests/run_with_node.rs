@@ -896,9 +896,15 @@ fn runtime_rejects_constructor_gadget() {
     );
 
     if let Some(stderr) = run_module_expecting_failure(&module, "rce_gadget") {
+        // The gadget name is not on the allowlist, so — as with any unknown
+        // method (T3) — it is rejected with a typed `NoMethodError` *before*
+        // any `recv[name]` lookup.  The load-bearing property is that the
+        // `"return 1"` payload was NEVER synthesised/executed (node threw
+        // instead of printing a result), and the miss surfaces as our
+        // NoMethodError, not an executed host `Function` payload.
         assert!(
-            stderr.contains("not an allowed collection method"),
-            "expected the allowlist TypeError, got stderr:\n{stderr}"
+            stderr.contains("NoMethodError") || stderr.contains("undefined method"),
+            "expected the allowlist rejection (NoMethodError), got stderr:\n{stderr}"
         );
     }
 }
@@ -1585,5 +1591,217 @@ fn poly_string_repeat_overflow_is_rejected() {
             stderr.contains("argument too big"),
             "expected the ArgumentError overflow guard, got stderr:\n{stderr}"
         );
+    }
+}
+
+// ── T3: typed runtime errors (ZeroDivision/Index/Key/NoMethod) ─────────
+//
+// The sir-typed-runtime-errors cascade: a faulting emitted runtime op must
+// raise the CORRECT typed `SirError` (matching Ruby) so a translated
+// `begin; …; rescue ZeroDivisionError => e; …; end` catches it.  These
+// execution-proofs build the `begin/rescue` (a `Stmt::TryCatch`) around
+// each faulting op and assert — under Node — that the specific typed clause
+// fires (printing the class name via `e.class` … but the frontend has no
+// `.class` yet, so instead we print a fixed marker from the matching
+// clause).  The nil-returning index ops (`arr[oob]`/`h[miss]`) prove the
+// non-over-raise: they print `nil`, NOT an error.
+
+/// Wrap `body` in `begin; <body>; rescue <class> => e; puts <marker>; end`
+/// and assert the marker prints (i.e. the typed clause caught the fault).
+fn assert_typed_rescue_catches(
+    body: Vec<Stmt>,
+    class: &str,
+    marker: &str,
+    features: &[Feature],
+    tag: &str,
+) {
+    let mut feats = vec![Feature::Exceptions, Feature::Constants, Feature::Strings];
+    feats.extend_from_slice(features);
+    let try_catch = Stmt::TryCatch {
+        body,
+        rescues: vec![RescueClause {
+            exception_types: vec![class.into()],
+            binding: Some("e".into()),
+            body: vec![print(str_(marker))],
+            span: sp(),
+        }],
+        ensure_body: None,
+        span: sp(),
+    };
+    let module = module_with_main(vec![try_catch], Expr::NilLit { span: sp() }, &feats);
+    if let Some(stdout) = run_module(&module, tag) {
+        assert_eq!(stdout, marker, "expected the `{class}` clause to catch");
+    }
+}
+
+/// `begin; 1 / 0; rescue ZeroDivisionError => e; puts "zde"; end` → "zde".
+/// Native JS `1 / 0 === Infinity`; the runtime `divide` helper adds the
+/// zero-divisor check and raises the typed `ZeroDivisionError`.
+#[test]
+fn t3_int_div_by_zero_raises_zero_division_error() {
+    assert_typed_rescue_catches(
+        vec![Stmt::ExprStmt { expr: bc("/", vec![int(1), int(0)]), span: sp() }],
+        "ZeroDivisionError",
+        "zde",
+        &[],
+        "t3_int_zde",
+    );
+}
+
+/// `1.0 / 0` also raises `ZeroDivisionError` in Ruby (float receiver, integer
+/// zero divisor) — the helper's `b === 0` test covers the float case too.
+#[test]
+fn t3_float_div_by_zero_raises_zero_division_error() {
+    assert_typed_rescue_catches(
+        vec![Stmt::ExprStmt { expr: bc("/", vec![float(1.0), int(0)]), span: sp() }],
+        "ZeroDivisionError",
+        "zde-f",
+        &[Feature::Floats],
+        "t3_float_zde",
+    );
+}
+
+/// A `ZeroDivisionError` is also caught by `rescue StandardError` (it chains
+/// up the built-in ancestry) — proving the typed error is a real SirError in
+/// the hierarchy, not an over-broad host fault.
+#[test]
+fn t3_zero_division_caught_by_standard_error() {
+    assert_typed_rescue_catches(
+        vec![Stmt::ExprStmt { expr: bc("/", vec![int(1), int(0)]), span: sp() }],
+        "StandardError",
+        "zde-std",
+        &[],
+        "t3_zde_std",
+    );
+}
+
+/// `arr.fetch(100)` out of bounds raises `IndexError`.
+#[test]
+fn t3_array_fetch_oob_raises_index_error() {
+    let arr = seq(vec![int(10), int(20), int(30)]);
+    assert_typed_rescue_catches(
+        vec![Stmt::ExprStmt {
+            expr: bc("__method__", vec![arr, str_("fetch"), int(100)]),
+            span: sp(),
+        }],
+        "IndexError",
+        "idx",
+        &[Feature::Sequences, Feature::DynamicTyping],
+        "t3_arr_fetch_oob",
+    );
+}
+
+/// SECURITY (CWE-470): `arr.fetch("constructor")` — a non-integer,
+/// source-controlled index — must raise `TypeError` (Ruby: "no implicit
+/// conversion of String into Integer") rather than falling through the
+/// `NaN`-poisoned bounds checks to `recv["constructor"]`, which would leak
+/// the `Array` constructor / prototype gadgets and bypass the method
+/// allowlist.  A translated `rescue TypeError` catches it.
+#[test]
+fn t3_array_fetch_non_integer_index_raises_type_error_not_gadget() {
+    let arr = seq(vec![int(1), int(2)]);
+    assert_typed_rescue_catches(
+        vec![Stmt::ExprStmt {
+            expr: bc("__method__", vec![arr, str_("fetch"), str_("constructor")]),
+            span: sp(),
+        }],
+        "TypeError",
+        "Integer",
+        &[Feature::Sequences, Feature::Strings, Feature::DynamicTyping],
+        "t3_arr_fetch_gadget",
+    );
+}
+
+/// `hash.fetch(missing)` with no default raises `KeyError`.
+#[test]
+fn t3_hash_fetch_missing_raises_key_error() {
+    let map = Expr::MapLit {
+        entries: vec![MapEntry { key: str_("a"), value: int(1) }],
+        span: sp(),
+    };
+    assert_typed_rescue_catches(
+        vec![Stmt::ExprStmt {
+            expr: bc("__method__", vec![map, str_("fetch"), str_("missing")]),
+            span: sp(),
+        }],
+        "KeyError",
+        "key",
+        &[Feature::Maps, Feature::DynamicTyping],
+        "t3_hash_fetch_miss",
+    );
+}
+
+/// An unknown method (`arr.frobnicate`) raises `NoMethodError`, NOT a
+/// JS-native TypeError — so a translated `rescue NoMethodError` catches it.
+#[test]
+fn t3_unknown_method_raises_no_method_error() {
+    let arr = seq(vec![int(1)]);
+    assert_typed_rescue_catches(
+        vec![Stmt::ExprStmt {
+            expr: bc("__method__", vec![arr, str_("frobnicate")]),
+            span: sp(),
+        }],
+        "NoMethodError",
+        "nme",
+        &[Feature::Sequences, Feature::DynamicTyping],
+        "t3_unknown_method",
+    );
+}
+
+/// NON-over-raise: `arr[oob]` and `h[miss]` still return **nil** (Ruby does
+/// NOT raise for `[]`).  A begin/rescue around them must NOT fire; the
+/// program prints `nil` twice.
+#[test]
+fn t3_index_ops_return_nil_no_over_raise() {
+    // begin; puts(arr[100]); puts(h["missing"]); rescue => e; puts "SHOULD-NOT"; end
+    let arr = seq(vec![int(10), int(20)]);
+    let map = Expr::MapLit {
+        entries: vec![MapEntry { key: str_("a"), value: int(1) }],
+        span: sp(),
+    };
+    let try_catch = Stmt::TryCatch {
+        body: vec![
+            print(Expr::SeqIndex { seq: Box::new(arr), index: Box::new(int(100)), span: sp() }),
+            print(Expr::MapGet { map: Box::new(map), key: Box::new(str_("missing")), span: sp() }),
+        ],
+        rescues: vec![RescueClause {
+            exception_types: vec![], // bare rescue — would catch ANY raise
+            binding: None,
+            body: vec![print(str_("SHOULD-NOT-RESCUE"))],
+            span: sp(),
+        }],
+        ensure_body: None,
+        span: sp(),
+    };
+    let module = module_with_main(
+        vec![try_catch],
+        Expr::NilLit { span: sp() },
+        &[
+            Feature::Exceptions,
+            Feature::Constants,
+            Feature::Strings,
+            Feature::Sequences,
+            Feature::Maps,
+        ],
+    );
+    if let Some(stdout) = run_module(&module, "t3_index_nil") {
+        // Two nils printed; the (bare) rescue never fired.
+        assert_eq!(stdout, "nil\nnil", "index ops must return nil, not raise");
+    }
+}
+
+/// `arr.fetch(oob, default)` with a supplied default returns the default
+/// instead of raising — matching Ruby's `fetch(i, d)`.
+#[test]
+fn t3_array_fetch_with_default_returns_default() {
+    // print(arr.fetch(100, 42)) → 42 (no raise).
+    let arr = seq(vec![int(10)]);
+    let module = module_with_main(
+        vec![print(bc("__method__", vec![arr, str_("fetch"), int(100), int(42)]))],
+        Expr::NilLit { span: sp() },
+        &[Feature::Sequences, Feature::DynamicTyping, Feature::Strings],
+    );
+    if let Some(stdout) = run_module(&module, "t3_fetch_default") {
+        assert_eq!(stdout, "42", "fetch with a default must return it, not raise");
     }
 }
