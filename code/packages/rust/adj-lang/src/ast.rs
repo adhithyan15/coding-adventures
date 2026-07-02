@@ -83,6 +83,22 @@ pub enum ArithOp {
     Pow,
 }
 
+/// A named **transcendental** function in a `let` formula — the curated
+/// single-argument set the `latex "…"` surface understands. Each maps to a
+/// native transcendental `logic_engine::ComputeOp` (`Scalar → Scalar`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum NamedFn {
+    Sin,
+    Cos,
+    Tan,
+    /// Natural logarithm (`\ln`).
+    Ln,
+    /// Base-10 logarithm (`\log`).
+    Log,
+    /// Exponential, `e^x` (`\exp`).
+    Exp,
+}
+
 /// An aggregation operator in a `let` formula — reduces every
 /// observation of a slot.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -122,6 +138,11 @@ pub enum ExprAst {
     /// adapter from the nearest-integer fence `\left\lfloor…\right\rceil`
     /// (floor-left, ceil-right).
     Round(Box<ExprAst>),
+    /// A named **transcendental** function applied to one argument
+    /// (`\sin(x)`, `\ln(x)`, `\exp(x)`, …). Lowers to the matching native
+    /// transcendental `ComputeOp` (`Scalar → Scalar`, exact dropped). Produced by
+    /// the `latex "…"` adapter from a `MathExpr::Call`.
+    Call(NamedFn, Box<ExprAst>),
     /// An aggregation over every observation of a slot.
     Agg(AggOp, String),
 }

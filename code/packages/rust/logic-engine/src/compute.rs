@@ -212,6 +212,22 @@ pub enum ComputeOp {
     /// [`ComputeExpr::Unary`], and lowered from the standard nearest-integer
     /// LaTeX fence `\left\lfloor x\right\rceil` (floor-left, ceil-right).
     Round,
+    /// The named **transcendental** unary functions `sin`, `cos`, `tan`, `ln`
+    /// (natural log), `log` (base-10), `exp`. Unlike the rounding unary ops these
+    /// are **not** dimension-preserving: a transcendental is only defined on a
+    /// pure number, so the operand must be dimensionless (`Scalar`) and the
+    /// result is `Scalar` (`sin(3 dollars)` is a category error, rejected). They
+    /// are irrational in general, so they drop the exact-rational sidecar. Each
+    /// is carried in a [`ComputeExpr::Unary`] and lowered from a LaTeX
+    /// `\sin(x)` / `\ln(x)` / `\exp(x)` … named-function call (adj-lang's
+    /// `latex "…"` surface). Domain errors (`ln` of a non-positive number,
+    /// `exp` overflow, `tan` at a pole) surface as the usual non-finite guard.
+    Sin,
+    Cos,
+    Tan,
+    Ln,
+    Log,
+    Exp,
     Sum,
     Count,
     Min,
@@ -232,6 +248,12 @@ impl ComputeOp {
             ComputeOp::Floor => "floor",
             ComputeOp::Ceil => "ceil",
             ComputeOp::Round => "round",
+            ComputeOp::Sin => "sin",
+            ComputeOp::Cos => "cos",
+            ComputeOp::Tan => "tan",
+            ComputeOp::Ln => "ln",
+            ComputeOp::Log => "log",
+            ComputeOp::Exp => "exp",
             ComputeOp::Sum => "sum",
             ComputeOp::Count => "count",
             ComputeOp::Min => "min",
@@ -254,10 +276,11 @@ pub enum ComputeExpr {
     Lit(f64),
     /// A binary operation: `Add`/`Sub`/`Mul`/`Div`/`Pow` only.
     Bin(ComputeOp, Box<ComputeExpr>, Box<ComputeExpr>),
-    /// A unary operation: `Abs`/`Floor`/`Ceil`/`Round`. Kept distinct from
-    /// [`ComputeExpr::Bin`] so the arity is honest (a unary op has one operand,
-    /// not two) — it lowers to a [`DerivationNode::Op`] with a single-element
-    /// `operands` vec.
+    /// A unary operation: the rounding family (`Abs`/`Floor`/`Ceil`/`Round`) and
+    /// the transcendental family (`Sin`/`Cos`/`Tan`/`Ln`/`Log`/`Exp`). Kept
+    /// distinct from [`ComputeExpr::Bin`] so the arity is honest (a unary op has
+    /// one operand, not two) — it lowers to a [`DerivationNode::Op`] with a
+    /// single-element `operands` vec.
     Unary(ComputeOp, Box<ComputeExpr>),
     /// An aggregation over **every** observation of a slot:
     /// `Sum`/`Count`/`Min`/`Max`/`Avg`.
@@ -612,7 +635,9 @@ fn eval(
     }
 }
 
-/// Evaluate a unary op (`Abs`/`Floor`/`Ceil`) into a derivation node + dimension.
+/// Evaluate a unary op — the rounding family (`Abs`/`Floor`/`Ceil`/`Round`) or a
+/// transcendental (`Sin`/`Cos`/`Tan`/`Ln`/`Log`/`Exp`) — into a derivation node +
+/// dimension.
 /// Split out of [`eval`] and marked `#[inline(never)]` so its locals live in their
 /// own stack frame rather than enlarging every one of `eval`'s up-to-`MAX_EVAL_DEPTH`
 /// recursive frames — a fatter `eval` frame multiplied across 256 levels can
@@ -627,27 +652,49 @@ fn eval_unary(
     depth: usize,
 ) -> Result<(DerivationNode, Dimension, Option<ExactRational>), ComputeError> {
     let (operand, dim, exact) = eval(a, kb, depth + 1)?;
-    // Every unary op here is **dimension-preserving**: the magnitude may change
+    // The **transcendental** functions are only defined on a pure number, so — like
+    // `Pow`'s exponent — the operand must be dimensionless. `sin(3 dollars)` is a
+    // category error, rejected here with the same `DimensionMismatch` the binary
+    // ops use (the operand's dimension vs the required `Scalar`).
+    let transcendental = matches!(
+        op,
+        ComputeOp::Sin | ComputeOp::Cos | ComputeOp::Tan | ComputeOp::Ln | ComputeOp::Log | ComputeOp::Exp
+    );
+    if transcendental && !dim.is_scalar() {
+        return Err(ComputeError::DimensionMismatch {
+            op,
+            lhs: dim.tag(),
+            rhs: Dimension::Scalar.tag(),
+        });
+    }
+    // The rounding family is **dimension-preserving**: the magnitude may change
     // (sign flip for `Abs`, snap to an integer for `Floor`/`Ceil`/`Round`) but the
-    // unit does not (`|−3 dollars| = 3 dollars`, `⌊3.7 mmol⌋ = 3 mmol`), so — unlike
-    // `Pow`, which recomputes the dimension — the operand's dimension flows
-    // straight through.
+    // unit does not (`|−3 dollars| = 3 dollars`, `⌊3.7 mmol⌋ = 3 mmol`). The
+    // transcendentals map a pure number to a pure number (`Scalar → Scalar`).
     let value = operand.value();
     let result = match op {
         ComputeOp::Abs => value.abs(),
         ComputeOp::Floor => value.floor(),
         ComputeOp::Ceil => value.ceil(),
         ComputeOp::Round => value.round(),
+        ComputeOp::Sin => value.sin(),
+        ComputeOp::Cos => value.cos(),
+        ComputeOp::Tan => value.tan(),
+        ComputeOp::Ln => value.ln(),
+        ComputeOp::Log => value.log10(),
+        ComputeOp::Exp => value.exp(),
         _ => {
             return Err(ComputeError::MalformedExpr {
                 detail: "non-unary operator in unary position",
             })
         }
     };
-    // None of these can introduce a non-finite value from a finite operand
-    // (|±∞|/⌊±∞⌋/⌈±∞⌉/⌊±∞⌉ were already non-finite; NaN stays NaN), and the operand
-    // is finite-checked at its own producing op. Guard anyway — cheap
-    // defense-in-depth, same contract as the binary ops.
+    // The rounding ops can't turn a finite operand non-finite; the transcendentals
+    // CAN (`ln` of a non-positive number → `NaN`/`−∞`, `exp` overflow → `+∞`,
+    // `tan` near a pole → a huge but finite value). The guard catches all of them —
+    // a `NaN` would otherwise compare `false` against every threshold and silently
+    // suppress a predicate, exactly the quiet wrong answer provenance-through-math
+    // forbids.
     if !result.is_finite() {
         return Err(ComputeError::NonFinite { op });
     }
@@ -682,13 +729,16 @@ fn eval_unary(
         }
         _ => None,
     });
+    // Rounding preserves the operand's dimension; a transcendental collapses to a
+    // pure number (`Scalar`).
+    let result_dim = if transcendental { Dimension::Scalar } else { dim };
     Ok((
         DerivationNode::Op {
             op,
             operands: vec![operand],
             result,
         },
-        dim,
+        result_dim,
         exact,
     ))
 }
@@ -1087,6 +1137,54 @@ mod tests {
         assert_eq!(d.exact, ExactRational::new(2, 1));
         // Same dimension as the operand `m` (money/usd).
         assert_eq!(d.dim, kb.observed_dimensioned("m").unwrap().0.dim);
+    }
+
+    #[test]
+    fn exp_and_ln_are_inverses_on_a_scalar_and_drop_exactness() {
+        // exp(ln 5) = 5 (within float tolerance). Both are transcendental: the
+        // operand is a pure number, the result is a pure number (Scalar), and the
+        // exact-rational sidecar is dropped (a transcendental is irrational).
+        let inner = ComputeExpr::Unary(ComputeOp::Ln, Box::new(ComputeExpr::Lit(5.0)));
+        let d = compute("e", &ComputeExpr::Unary(ComputeOp::Exp, Box::new(inner)), &kb_with(vec![]))
+            .unwrap();
+        assert!((d.value - 5.0).abs() < 1e-9, "{}", d.value);
+        assert_eq!(d.dim, Dimension::Scalar);
+        assert_eq!(d.exact, None);
+    }
+
+    #[test]
+    fn sin_of_zero_is_zero_and_cos_of_zero_is_one() {
+        // Sanity anchors that don't depend on π: sin(0)=0, cos(0)=1.
+        let s = compute("s", &ComputeExpr::Unary(ComputeOp::Sin, Box::new(ComputeExpr::Lit(0.0))), &kb_with(vec![])).unwrap();
+        assert_eq!(s.value, 0.0);
+        let c = compute("c", &ComputeExpr::Unary(ComputeOp::Cos, Box::new(ComputeExpr::Lit(0.0))), &kb_with(vec![])).unwrap();
+        assert_eq!(c.value, 1.0);
+        assert_eq!(c.dim, Dimension::Scalar);
+    }
+
+    #[test]
+    fn a_transcendental_of_a_dimensioned_operand_is_a_category_error() {
+        // `ln(4 dollars)` is meaningless — a transcendental is only defined on a
+        // pure number. The engine rejects it with a DimensionMismatch (operand
+        // dimension vs the required Scalar), NOT a silently-wrong number.
+        let kb = kb_with(vec![money("m", 4, "usd")]);
+        let err = compute("l", &ComputeExpr::Unary(ComputeOp::Ln, Box::new(refexpr("m"))), &kb)
+            .unwrap_err();
+        assert!(
+            matches!(err, ComputeError::DimensionMismatch { op: ComputeOp::Ln, .. }),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn ln_of_a_non_positive_number_is_a_clean_nonfinite_error() {
+        // ln(0) = −∞ and ln(−1) = NaN in IEEE — both are rejected by the finite
+        // guard rather than flowing a non-finite value into a verdict.
+        for x in [0.0, -1.0] {
+            let err = compute("l", &ComputeExpr::Unary(ComputeOp::Ln, Box::new(ComputeExpr::Lit(x))), &kb_with(vec![]))
+                .unwrap_err();
+            assert!(matches!(err, ComputeError::NonFinite { op: ComputeOp::Ln }), "x={x}: {err:?}");
+        }
     }
 
     #[test]

@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.31.0] - 2026-07-02 — native transcendental functions (`sin`/`cos`/`tan`/`ln`/`log`/`exp`)
+
+### Added
+
+- Six **named transcendental** unary ops — `ComputeOp::Sin`, `Cos`, `Tan`, `Ln`
+  (natural log), `Log` (base-10), `Exp` — carried in the existing
+  `ComputeExpr::Unary` (no new node type) and evaluated in the shared
+  `#[inline(never)] eval_unary` helper (the macOS stack-frame guard still holds).
+  They make a LaTeX `\sin(x)` / `\ln(x)` / `\exp(x)` … named-function call
+  (adj-lang's `latex "…"` surface) computable as a single native node.
+- Unlike the rounding unary ops these are **not** dimension-preserving: a
+  transcendental is only defined on a pure number, so the operand must be
+  dimensionless (`Scalar`) and the result is `Scalar`. `sin(3 dollars)` is a
+  category error, rejected with the same `DimensionMismatch` the binary ops raise
+  (operand dimension vs the required `Scalar`). They are irrational in general, so
+  they drop the exact-rational sidecar.
+- Domain errors surface through the existing non-finite guard rather than flowing
+  a bad value into a verdict: `ln` of a non-positive number (`−∞`/`NaN`), `exp`
+  overflow (`+∞`), `tan` near a pole — all become a clean `NonFinite` error.
+
 ## [0.30.0] - 2026-07-02 — native round-to-nearest (`ComputeOp::Round`)
 
 ### Added

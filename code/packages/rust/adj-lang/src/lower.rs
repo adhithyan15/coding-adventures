@@ -32,8 +32,8 @@ use logic_engine::{
 use std::collections::HashMap;
 
 use crate::ast::{
-    AggOp, Annotation, ArithOp, CmpOp, Define, DefineKind, Evidence, ExprAst, OptDir, Program,
-    RelOp, Statement, Term as AstTerm, TrustTierName,
+    AggOp, Annotation, ArithOp, CmpOp, Define, DefineKind, Evidence, ExprAst, NamedFn, OptDir,
+    Program, RelOp, Statement, Term as AstTerm, TrustTierName,
 };
 
 /// One lowered constraint: `lhs <op> rhs`, with both sides kept as
@@ -709,7 +709,19 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
         ExprAst::Floor(a) => ComputeExpr::Unary(ComputeOp::Floor, Box::new(lower_expr(a))),
         ExprAst::Ceil(a) => ComputeExpr::Unary(ComputeOp::Ceil, Box::new(lower_expr(a))),
         ExprAst::Round(a) => ComputeExpr::Unary(ComputeOp::Round, Box::new(lower_expr(a))),
+        ExprAst::Call(f, a) => ComputeExpr::Unary(lower_named_fn(*f), Box::new(lower_expr(a))),
         ExprAst::Agg(op, slot) => ComputeExpr::Agg(lower_agg_op(*op), slot.clone()),
+    }
+}
+
+fn lower_named_fn(f: NamedFn) -> ComputeOp {
+    match f {
+        NamedFn::Sin => ComputeOp::Sin,
+        NamedFn::Cos => ComputeOp::Cos,
+        NamedFn::Tan => ComputeOp::Tan,
+        NamedFn::Ln => ComputeOp::Ln,
+        NamedFn::Log => ComputeOp::Log,
+        NamedFn::Exp => ComputeOp::Exp,
     }
 }
 
@@ -1895,6 +1907,38 @@ contributes 1000000 from answer == 60 to correct
              let answer = latex \"$\\left\\lfloor a / b\\right\\rceil$\"\n\
              prior 0.10 for correct\n\
              contributes 1000000 from answer == 4 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_latex_exp_of_ln_round_trips() {
+        // `\exp(\ln(x))` with x=5 returns 5, computed on the native transcendental
+        // ComputeOp::Exp/Ln via the `MathExpr::Call` → `ExprAst::Call` path. A
+        // dimensionless observed value is required (a transcendental of a pure
+        // number). The contribution fires only if the round-trip lands on 5.
+        let d = crate::compile_and_decide(
+            "observe x(5)\n\
+             let answer = latex \"$\\exp(\\ln(x))$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 5 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_latex_cos_of_zero_is_one() {
+        // `\cos(x)` with x=0 is 1 — a π-free anchor that the named-function call
+        // lowers and the engine computes on ComputeOp::Cos.
+        let d = crate::compile_and_decide(
+            "observe x(0)\n\
+             let answer = latex \"$\\cos(x)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 1 to correct\n\
              ? correct\n",
         )
         .unwrap();

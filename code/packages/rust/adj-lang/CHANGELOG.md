@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.26.0] - 2026-07-02 — named transcendental functions in `latex "…"` (`\sin`/`\cos`/`\tan`/`\ln`/`\log`/`\exp`)
+
+### Added
+
+- The `latex "…"` adapter now lowers a **named-function call** — `\sin(x)`,
+  `\cos(x)`, `\tan(x)`, `\ln(x)`, `\log(x)`, `\exp(x)` (a `MathExpr::Call`) — to
+  the matching native transcendental `ComputeOp` via a new `ExprAst::Call` and a
+  `NamedFn` tag. This is the **named-function mechanism**: the first LaTeX consumer
+  slice beyond the bracket-unary family (√ / ⁿ√ / Pow / Abs / Floor / Ceil /
+  Round), and it reuses the `ComputeExpr::Unary` node — no new engine node type.
+- Each is `Scalar → Scalar` (a transcendental of a dimensioned quantity is a
+  category error, rejected by the engine) and drops the exact-rational sidecar.
+
+### Notes
+
+- Only the curated single-argument transcendental set is supported. The other
+  `Func` variants (`min`/`max`/`gcd`/`lcm`/`det`, the inverse and hyperbolic trig,
+  and an unknown `Other`) are a clean, explicit adapter error rather than a silent
+  mis-lowering — `min`/`max` await the binary-op slice; truncation awaits
+  `\operatorname{trunc}`.
+
 ## [0.25.0] - 2026-07-02 — round-to-nearest in `latex "…"` (lowers to `ComputeOp::Round`)
 
 ### Added
