@@ -66,6 +66,9 @@ editing, and save/delete/cancel controls.
   `host/flutter/mosaic_host.dart` implements it with Dart FFI and
   `engram-capi`, hydrating Flutter slot props and routing generated Mosaic
   event envelopes back into the same core.
+- The web, Electron, and native host adapters persist raw Engram state snapshots
+  across launches. Set `ENGRAM_SNAPSHOT_PATH` to override the storage file; by
+  default host shells use `~/.engram/mosaic-snapshot.v1.json`.
 - Smoke tests now assert the generated Qt, SwiftUI, and XAML project shells
   expose the same Engram host contract slots, collection events, card-browser
   events, rating events, and Anki-style review action events as the shared Rust

@@ -22,14 +22,19 @@ private:
   using EgSessionNewDemoFn = void *(*)();
   using EgSessionFreeFn = void (*)(void *);
   using EgStringFreeFn = void (*)(char *);
+  using EgSnapshotFn = char *(*)(void *);
+  using EgLoadSnapshotFn = char *(*)(void *, const char *);
   using EgEngramAppPropsFn = char *(*)(void *, const char *, quint64);
   using EgHandleEngramAppEventFn = char *(*)(void *, const char *, const char *, quint64);
 
   bool ensureLoaded();
+  void hydrateSession();
+  void persistSnapshot();
   QString takeCString(char *value) const;
   QVariantMap hostResponseFromJson(const QString &json) const;
   QVariantMap camelCaseProps(const QVariantMap &props) const;
   QString mosaicPropName(const QString &name) const;
+  QString snapshotPath() const;
   QByteArray deckId() const;
   quint64 nowMs() const;
 
@@ -38,6 +43,8 @@ private:
   EgSessionNewDemoFn sessionNewDemo_ = nullptr;
   EgSessionFreeFn sessionFree_ = nullptr;
   EgStringFreeFn stringFree_ = nullptr;
+  EgSnapshotFn snapshot_ = nullptr;
+  EgLoadSnapshotFn loadSnapshot_ = nullptr;
   EgEngramAppPropsFn engramAppProps_ = nullptr;
   EgHandleEngramAppEventFn handleEngramAppEvent_ = nullptr;
 };

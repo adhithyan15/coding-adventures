@@ -12,6 +12,16 @@ typedef _EgSessionFreeNative = Void Function(Pointer<EgSession>);
 typedef _EgSessionFreeDart = void Function(Pointer<EgSession>);
 typedef _EgStringFreeNative = Void Function(Pointer<Utf8>);
 typedef _EgStringFreeDart = void Function(Pointer<Utf8>);
+typedef _EgSnapshotNative = Pointer<Utf8> Function(Pointer<EgSession>);
+typedef _EgSnapshotDart = Pointer<Utf8> Function(Pointer<EgSession>);
+typedef _EgLoadSnapshotNative = Pointer<Utf8> Function(
+  Pointer<EgSession>,
+  Pointer<Utf8>,
+);
+typedef _EgLoadSnapshotDart = Pointer<Utf8> Function(
+  Pointer<EgSession>,
+  Pointer<Utf8>,
+);
 typedef _EgEngramAppPropsNative = Pointer<Utf8> Function(
   Pointer<EgSession>,
   Pointer<Utf8>,
@@ -49,7 +59,9 @@ class MosaicHost {
     final session = api.egSessionNewDemo();
     if (session == nullptr) return null;
 
-    return MosaicHost._(api, session);
+    final host = MosaicHost._(api, session);
+    host._hydrateSession();
+    return host;
   }
 
   Map<String, Object?>? props() {
@@ -78,7 +90,11 @@ class MosaicHost {
             _nowMs(),
           ),
         );
-        return _hostResponseFromJson(json);
+        final response = _hostResponseFromJson(json);
+        if (response?['error'] == null) {
+          _persistSnapshot();
+        }
+        return response;
       });
     });
   }
@@ -101,6 +117,47 @@ class MosaicHost {
       _api.egStringFree(pointer);
     }
   }
+
+  void _hydrateSession() {
+    final file = File(_snapshotPath());
+    if (file.existsSync()) {
+      try {
+        final snapshot = file.readAsStringSync();
+        if (_loadSnapshot(snapshot)) {
+          return;
+        }
+      } catch (_) {}
+    }
+    _persistSnapshot();
+  }
+
+  bool _loadSnapshot(String snapshot) {
+    return _withNativeUtf8(snapshot, (snapshotPointer) {
+      final json = _takeCString(
+        _api.egLoadSnapshot(_session, snapshotPointer),
+      );
+      return _jsonOk(json);
+    });
+  }
+
+  void _persistSnapshot() {
+    final json = _takeCString(_api.egSnapshot(_session));
+    final Object? decoded;
+    try {
+      decoded = jsonDecode(json);
+    } catch (_) {
+      return;
+    }
+    if (decoded is! Map || decoded['ok'] == false || decoded['state'] == null) {
+      return;
+    }
+
+    try {
+      final file = File(_snapshotPath());
+      file.parent.createSync(recursive: true);
+      file.writeAsStringSync(jsonEncode(decoded['state']));
+    } catch (_) {}
+  }
 }
 
 class _EngramCapi {
@@ -116,6 +173,13 @@ class _EngramCapi {
             library.lookupFunction<_EgStringFreeNative, _EgStringFreeDart>(
           'eg_string_free',
         ),
+        egSnapshot = library.lookupFunction<_EgSnapshotNative, _EgSnapshotDart>(
+          'eg_snapshot',
+        ),
+        egLoadSnapshot =
+            library.lookupFunction<_EgLoadSnapshotNative, _EgLoadSnapshotDart>(
+          'eg_load_snapshot',
+        ),
         egEngramAppProps = library
             .lookupFunction<_EgEngramAppPropsNative, _EgEngramAppPropsDart>(
           'eg_engram_app_props',
@@ -127,6 +191,8 @@ class _EngramCapi {
   final _EgSessionNewDart egSessionNewDemo;
   final _EgSessionFreeDart egSessionFree;
   final _EgStringFreeDart egStringFree;
+  final _EgSnapshotDart egSnapshot;
+  final _EgLoadSnapshotDart egLoadSnapshot;
   final _EgEngramAppPropsDart egEngramAppProps;
   final _EgHandleEngramAppEventDart egHandleEngramAppEvent;
 
@@ -172,6 +238,15 @@ Map<String, Object?> _hostResponseFromJson(String json) {
   return response;
 }
 
+bool _jsonOk(String json) {
+  try {
+    final decoded = jsonDecode(json);
+    return decoded is Map && decoded['ok'] != false;
+  } catch (_) {
+    return false;
+  }
+}
+
 Map<String, Object?> _mosaicMap(Object? value) {
   if (value is! Map) return const <String, Object?>{};
   final out = <String, Object?>{};
@@ -196,6 +271,15 @@ T _withNativeUtf8<T>(String value, T Function(Pointer<Utf8>) body) {
 String _deckId() => Platform.environment['ENGRAM_DECK_ID'] ?? '';
 
 int _nowMs() => DateTime.now().toUtc().millisecondsSinceEpoch;
+
+String _snapshotPath() =>
+    Platform.environment['ENGRAM_SNAPSHOT_PATH'] ??
+    _joinPath(_joinPath(_homeDirectory(), '.engram'), 'mosaic-snapshot.v1.json');
+
+String _homeDirectory() =>
+    Platform.environment['HOME'] ??
+    Platform.environment['USERPROFILE'] ??
+    Directory.current.path;
 
 Iterable<String> _libraryCandidates() sync* {
   final fileName = _nativeLibraryFileName();
