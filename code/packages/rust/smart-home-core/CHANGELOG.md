@@ -6,6 +6,10 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `smart_home.get_incident_brief` tool descriptor for read-only Chief incident
+  response packets over existing D23 runtime pressure, authorization,
+  command-risk, event-delivery, desired-state, state-transition, and
+  supervision-remediation primitives.
 - `smart_home.get_platform_brief` tool descriptor for read-only Chief platform
   packets over existing D23 HTTP, dashboard, fixture, state/history/event,
   command, scene, and authorization readiness primitives.
