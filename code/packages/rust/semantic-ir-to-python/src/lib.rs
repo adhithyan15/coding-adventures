@@ -822,7 +822,10 @@ mod tests {
     #[test]
     fn end_to_end_ruby_to_python_puts() {
         // `puts("hello")` → a top-level `main` that calls the `puts`
-        // builtin through the runtime dispatcher.
+        // builtin.  `puts` now maps directly to the variadic runtime helper
+        // `_sir_puts(...)` (like `print` → `_sir_print`), rather than routing
+        // through the generic `_sir_call_builtin` dispatch, now that the
+        // runtime implements Ruby `puts` semantics.
         let module = ruby_to_semantic_ir::compile_source("puts(\"hello\")\n", "demo")
             .expect("lower ruby");
         let a = compile(&module).expect("compile to python");
@@ -832,12 +835,18 @@ mod tests {
             a.source
         );
         assert!(
-            a.source.contains("_sir_call_builtin(\"puts\", [\"hello\"])"),
+            a.source.contains("_sir_puts(\"hello\")"),
             "expected the puts call with the string literal; got:\n{}",
             a.source
         );
         assert!(a.source.contains("_sir_user_main()"), "expected main invocation");
         assert!(a.filename.ends_with(".py"));
+
+        // Execution proof: `puts "hello"` must emit exactly `hello\n` under a
+        // real interpreter (Ruby's `puts` string+newline semantics).
+        if let Some(stdout) = run_emitted_python(&a.source) {
+            assert_eq!(stdout, "hello\n", "puts should print `hello` + newline");
+        }
     }
 
     #[test]
@@ -861,7 +870,7 @@ mod tests {
             a.source
         );
         assert!(
-            a.source.contains("_sir_call_builtin(\"puts\", [add(1, 2)])"),
+            a.source.contains("_sir_puts(add(1, 2))"),
             "expected puts(add(1, 2)); got:\n{}",
             a.source
         );
@@ -878,7 +887,7 @@ mod tests {
         .expect("lower ruby");
         let a = compile(&module).expect("compile to python");
         assert!(
-            a.source.contains("_sir_call_builtin(\"puts\", [_sir_plus(x, y)])"),
+            a.source.contains("_sir_puts(_sir_plus(x, y))"),
             "expected puts(x + y) referencing both locals; got:\n{}",
             a.source
         );

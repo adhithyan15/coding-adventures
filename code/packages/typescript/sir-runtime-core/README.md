@@ -16,6 +16,7 @@ namespace into every file:
 | `Sym` / `intern` | Interned identity objects; JS has no symbol *value* type with names. |
 | `Pair` / `cons` / `car` / `cdr` | Lisp cons cells; no native type. |
 | `eq`, `toDisplay`, `print` | Symbol-aware equality and Lisp/Ruby display (`nil`, `#t`/`#f`). |
+| `puts` | Ruby `puts`: per-arg line, arrays flattened element-per-line, no double trailing newline, no-arg → one newline. |
 | `add`/`sub`/`mul`/`div`, `lt`/`gt` | Variadic folds + truncating-integer `/`. |
 | `Closure`/`apply`/`makeClosure`, global store, builtin dispatch | Uniform closure handles + SIR `Globals`. |
 

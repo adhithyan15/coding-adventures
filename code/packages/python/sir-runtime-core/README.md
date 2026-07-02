@@ -16,6 +16,7 @@ prelude into every file:
 | `Symbol` / `intern` | Interned identity objects; Python has no symbol type. |
 | `Pair` / `cons` / `car` / `cdr` | Lisp cons cells; no native type. |
 | `eq`, `to_display`, `print` | Symbol-aware equality and Lisp/Ruby display (`nil`, `#t`/`#f`). |
+| `sir_puts` (`puts`) | Ruby `puts`: per-arg line, arrays flattened element-per-line, no double trailing newline, no-arg → one newline. |
 | `add`/`sub`/`mul`/`div`, `lt`/`gt` | Variadic folds + truncating-integer `/`. |
 | `Closure`/`apply`/`make_closure`, global store, builtin dispatch | Uniform closure handles + SIR `Globals`. |
 

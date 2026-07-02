@@ -195,6 +195,113 @@ def sir_print(v: Any) -> None:
     return None
 
 
+def _puts_one(v: Any, seen: set[int]) -> None:
+    """Emit a single ``puts`` argument, honouring Ruby's per-value rules.
+
+    Ruby ``puts`` is deceptively subtle.  For one argument it behaves as:
+
+    - **Array** → recurse over the *elements*, one per line.  Nesting is
+      flattened: ``puts [1, [2, 3]]`` prints ``1\\n2\\n3\\n``.  An **empty**
+      array prints nothing here (the caller's top-level ``puts []`` still
+      emits a single newline — see :func:`sir_puts` — because ``puts`` with
+      an empty argument list of its own writes one newline).
+    - **nil** → a blank line (``nil.to_s`` is ``""``, then the newline).
+    - **anything else** → its display string, then a newline — *unless* the
+      string already ends in ``"\\n"``, in which case Ruby does **not** add a
+      second newline (``puts "x\\n"`` prints ``x\\n``, not ``x\\n\\n``).
+
+    Truth table (single arg → stdout):
+
+    ============  ================
+    argument      bytes written
+    ============  ================
+    ``"x"``       ``x\\n``
+    ``"x\\n"``     ``x\\n``
+    ``nil``       ``\\n``
+    ``[]``        (nothing)
+    ``[1, 2]``    ``1\\n2\\n``
+    ``[1, [2]]``  ``1\\n2\\n``
+    ============  ================
+
+    **Cycle safety.**  A list is a shared, mutable reference, so a program can
+    build a *cyclic* array (``a = []; a << a``).  The element-per-line flatten
+    recurses through nested arrays, so it MUST be cycle-guarded or a self-
+    referential array raises ``RecursionError`` (a DoS: CWE-674, uncontrolled
+    recursion).  ``seen`` holds the ``id()`` of the lists currently on the
+    active flatten path.  A list ALREADY on the path is a cycle: rather than
+    recurse forever we write the ``[...]`` placeholder then a newline, matching
+    real Ruby (``puts a`` on a self-referential array prints ``[...]`` and
+    terminates).  (We emit the literal placeholder rather than ``str(v)``:
+    Python's cycle-safe ``repr`` would render the *containing* level too, e.g.
+    ``[[...]]`` for ``a = [a]``, whereas Ruby prints a bare ``[...]``.)  A list
+    removed from ``seen`` on exit still flattens in full via a sibling path —
+    only a true self-cycle is short-circuited, so non-cyclic output is
+    unchanged (``puts [1, [2, 3]]`` still prints ``1\\n2\\n3\\n``).
+    """
+    # A sequence is a Python ``list`` in the runtime-core value model.
+    if isinstance(v, list):
+        vid = id(v)
+        if vid in seen:
+            # Cycle: emit Ruby's `[...]` placeholder and stop recursing.
+            print("[...]")
+            return None
+        seen.add(vid)
+        for item in v:
+            _puts_one(item, seen)
+        seen.discard(vid)
+        return None
+    text = values.to_display(v)
+    # Ruby suppresses the added newline only when the rendered text already
+    # ends in one — so ``puts "x\n"`` and ``puts "x"`` produce identical
+    # output.  ``to_display(nil)`` is ``"nil"`` for ``print`` semantics, but
+    # ``puts nil`` must be a *blank* line, so nil is special-cased.
+    if v is None:
+        print()
+        return None
+    if text.endswith("\n"):
+        # Already newline-terminated: write verbatim, no extra newline.
+        print(text, end="")
+    else:
+        print(text)
+    return None
+
+
+def sir_puts(*args: Any) -> None:
+    """Ruby ``puts``: write each argument on its own line (see :func:`_puts_one`).
+
+    Ruby's ``puts`` is variadic and array-flattening:
+
+    - ``puts`` (no args) → a single newline.
+    - ``puts x`` → ``x`` on its own line (arrays flattened element-per-line;
+      a value already ending in ``"\\n"`` is not double-spaced; ``nil`` is a
+      blank line).
+    - ``puts a, b`` → each argument handled independently, in order.
+    - ``puts []`` → a single newline (an empty argument *value* still counts
+      as "print a line").
+
+    The empty-array top-level case is why the no-argument-list and the
+    ``[]``-argument cases converge on one newline: Ruby treats ``puts`` with
+    nothing *to* print as "print an empty line".
+    """
+    if not args:
+        # `puts` with no arguments writes exactly one newline.
+        print()
+        return None
+    # `seen` guards the array-flatten recursion in `_puts_one` against cyclic
+    # arrays (see its docstring); a fresh, shared set across the args suffices
+    # because each handle is removed on exit.
+    seen: set[int] = set()
+    for a in args:
+        # `puts []` (an empty array as the sole argument) must still emit one
+        # newline — Ruby prints a blank line when an argument flattens to
+        # nothing.  `_puts_one([])` writes nothing, so detect that here.
+        if isinstance(a, list) and len(a) == 0:
+            print()
+        else:
+            _puts_one(a, seen)
+    return None
+
+
 # --- Builtin dispatch ------------------------------------------------------
 
 _builtins: dict[str, Callable[..., Any]] = {
@@ -213,6 +320,7 @@ _builtins: dict[str, Callable[..., Any]] = {
     "number?": values.is_number,
     "symbol?": values.is_symbol,
     "print": sir_print,
+    "puts": sir_puts,
 }
 
 

@@ -32,6 +32,7 @@ from .runtime import (
     global_set,
     make_closure,
     sir_print,
+    sir_puts,
 )
 from .symbols import Symbol, intern
 from .values import eq, is_null, is_number, is_symbol, to_display, truthy
@@ -80,6 +81,7 @@ __all__ = [
     "global_get",
     "global_get_static",
     "sir_print",
+    "sir_puts",
     "print",
     "call_builtin",
     "builtin_closure",

@@ -1378,6 +1378,9 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "number?" => "_sir_is_number",
         "symbol?" => "_sir_is_symbol",
         "print" => "_sir_print",
+        // `_sir_puts` is variadic (`sir_puts(*args)`), so `_sir_puts(a, b)`
+        // forwards every argument (Ruby `puts a, b`).
+        "puts" => "_sir_puts",
         "global_set" => "_sir_global_set",
         "global_get" => "_sir_global_get",
         _ => {

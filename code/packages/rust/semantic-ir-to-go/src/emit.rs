@@ -1110,6 +1110,7 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "number?" => "_sir_is_number",
         "symbol?" => "_sir_is_symbol",
         "print" => "_sir_print",
+        "puts" => "_sir_puts",
         "global_set" => {
             // Two args, special signature.
             out.push_str("_sir_global_set(");
@@ -2434,6 +2435,48 @@ mod tests {
         let mut out = String::new();
         emit_expr(&mut out, &raise, 0);
         assert_eq!(out, r#"func() Value { panic(_sir_new_error("RuntimeError", nil)) }()"#);
+    }
+
+    /// `puts` routes to the variadic `_sir_puts` runtime helper (same
+    /// call shape as `_sir_print`, passing all args as a `[]Value`).  This
+    /// lets `puts a, b` (multiple args) reach the runtime intact.
+    #[test]
+    fn emit_puts_routes_to_sir_puts() {
+        // Single arg.
+        let puts1 = Expr::BuiltinCall {
+            name: "puts".into(),
+            args: vec![Expr::StrLit { value: "hi".into(), span: s() }],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_expr(&mut out, &puts1, 0);
+        assert_eq!(out, r#"_sir_puts([]Value{Value("hi")})"#);
+
+        // Multiple args — all forwarded (Ruby `puts a, b`).
+        let puts2 = Expr::BuiltinCall {
+            name: "puts".into(),
+            args: vec![
+                Expr::StrLit { value: "a".into(), span: s() },
+                Expr::StrLit { value: "b".into(), span: s() },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let mut out2 = String::new();
+        emit_expr(&mut out2, &puts2, 0);
+        assert_eq!(out2, r#"_sir_puts([]Value{Value("a"), Value("b")})"#);
+
+        // No args — a bare `puts`.
+        let puts0 = Expr::BuiltinCall {
+            name: "puts".into(),
+            args: vec![],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let mut out0 = String::new();
+        emit_expr(&mut out0, &puts0, 0);
+        assert_eq!(out0, "_sir_puts([]Value{})");
     }
 
     fn print_stmt(v: Expr) -> Stmt {

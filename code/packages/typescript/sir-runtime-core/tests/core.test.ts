@@ -79,6 +79,95 @@ describe("predicates and display", () => {
   });
 });
 
+describe("puts (Ruby semantics)", () => {
+  // `puts` writes via process.stdout.write (not console.log) so the
+  // trailing-newline-suppression rule can be honoured; capture that stream.
+  function capture(fn: () => void): string {
+    let out = "";
+    const spy = vi
+      .spyOn(process.stdout, "write")
+      .mockImplementation((chunk: string | Uint8Array): boolean => {
+        out += String(chunk);
+        return true;
+      });
+    try {
+      fn();
+    } finally {
+      spy.mockRestore();
+    }
+    return out;
+  }
+
+  it("no args prints a single newline", () => {
+    expect(capture(() => expect(sir.puts()).toBe(null))).toBe("\n");
+  });
+
+  it("a string is followed by a newline", () => {
+    expect(capture(() => sir.puts("hello"))).toBe("hello\n");
+  });
+
+  it("does not double a trailing newline", () => {
+    expect(capture(() => sir.puts("x\n"))).toBe("x\n");
+  });
+
+  it("multiple args go one per line", () => {
+    expect(capture(() => sir.puts("a", "b"))).toBe("a\nb\n");
+  });
+
+  it("an array is flattened, one element per line", () => {
+    expect(capture(() => sir.puts([1, 2, 3]))).toBe("1\n2\n3\n");
+    expect(capture(() => sir.puts([1, [2, 3]]))).toBe("1\n2\n3\n");
+  });
+
+  it("an empty array prints a single newline", () => {
+    expect(capture(() => sir.puts([]))).toBe("\n");
+  });
+
+  it("nil prints a blank line (not the display form)", () => {
+    expect(capture(() => sir.puts(null))).toBe("\n");
+  });
+
+  it("matches the reference program output", () => {
+    // `puts "hello"; puts; puts [1,2,3]`
+    expect(
+      capture(() => {
+        sir.puts("hello");
+        sir.puts();
+        sir.puts([1, 2, 3]);
+      }),
+    ).toBe("hello\n\n1\n2\n3\n");
+  });
+
+  it("routes through callBuiltin by name", () => {
+    expect(capture(() => expect(sir.callBuiltin("puts", ["hi"])).toBe(null))).toBe(
+      "hi\n",
+    );
+  });
+
+  it("terminates on a self-referential array (cycle-guarded, CWE-674)", () => {
+    // `a = []; a << a; puts a` in Ruby prints `[...]` and terminates.  Without
+    // the cycle guard the element-per-line flatten recurses forever and throws
+    // `RangeError: Maximum call stack size exceeded` (a DoS).  The guard must
+    // both terminate AND render the cycle as `[...]`, matching Ruby.
+    const a: unknown[] = [];
+    a.push(a);
+    expect(capture(() => sir.puts(a))).toBe("[...]\n");
+  });
+
+  it("terminates on a mutually-recursive array pair", () => {
+    // Two arrays referencing each other (a -> b -> a) still forms a cycle on
+    // the flatten path; both must render `[...]` at the back-reference rather
+    // than diverging.  `puts a` flattens a's element (b), then b's element (a),
+    // which is already on the path → `[...]`.
+    const a: unknown[] = [];
+    const b: unknown[] = [a];
+    a.push(b);
+    // a = [b], b = [a].  puts a: flatten a → element b (array, not seen) →
+    // flatten b → element a (already on path) → `[...]`.
+    expect(capture(() => sir.puts(a))).toBe("[...]\n");
+  });
+});
+
 describe("arithmetic", () => {
   it("variadic", () => {
     expect(sir.add(1, 2, 3)).toBe(6);

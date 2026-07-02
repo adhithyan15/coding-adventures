@@ -486,6 +486,95 @@ func _sir_print(args []Value) Value {
 	return nil
 }
 
+// ── puts (Ruby semantics) ──────────────────────────────────────
+//
+// Ruby's `puts` is THE common output method and is deceptively subtle:
+//
+//   - `puts`            → one newline.
+//   - `puts x`          → `x.to_s` then a newline, UNLESS `x.to_s` already
+//                         ends in "\n" (then no second newline is added):
+//                         `puts "x\n"` prints `x\n`, not `x\n\n`.
+//   - `puts a, b`       → each argument on its own line, in order.
+//   - `puts nil`        → a blank line (`nil.to_s` is "", then the newline).
+//   - `puts []`         → a single newline (an argument that flattens to
+//                         nothing still prints a blank line).
+//   - `puts [1,[2,3]]`  → each ELEMENT on its own line, arrays flattened
+//                         recursively: `1\n2\n3\n`.
+//
+// `puts` is variadic, so it takes the whole `[]Value` (unlike the fixed-arity
+// `_sir_print`).  We write raw bytes with `fmt.Print`/`os.Stdout` rather than
+// `fmt.Println` so the trailing-newline-suppression rule can be honoured.
+func _sir_puts(args []Value) Value {
+	if len(args) == 0 {
+		// No arguments: exactly one newline.
+		fmt.Print("\n")
+		return nil
+	}
+	// A `*Seq` is a shared, mutable handle, so a program can build a
+	// *cyclic* array (`a = []; a << a`).  The element-per-line flatten below
+	// recurses through nested arrays, so — like `_sir_format` — it MUST be
+	// cycle-guarded or a self-referential array overflows the Go stack (a
+	// DoS: CWE-674, uncontrolled recursion).  We thread a `visited` set of
+	// the `*Seq` pointers on the active flatten path; the top-level args each
+	// share one set (a handle removed on exit still prints in full via a
+	// sibling path — only a true self-cycle is short-circuited).
+	visited := make(map[Value]bool)
+	for _, a := range args {
+		// `puts []` (empty array arg) still writes one blank line — Ruby
+		// prints a line when an argument flattens to nothing.  A recursive
+		// flatten of an empty seq writes nothing, so detect it here.
+		if s, ok := a.(*Seq); ok && len(s.Items) == 0 {
+			fmt.Print("\n")
+			continue
+		}
+		_sir_puts_one(a, visited)
+	}
+	return nil
+}
+
+// Emit a single `puts` argument.  Arrays recurse (element-per-line, nested
+// arrays flattened); everything else renders via `_sir_format` then a
+// newline — suppressed when the text already ends in one.  `nil` is a blank
+// line (`_sir_format(nil)` is "nil" for `print`, but `puts nil` is a blank
+// line, so nil is special-cased).
+//
+// Cycle safety: `visited` holds the `*Seq` pointers currently on the active
+// flatten path.  A seq ALREADY on the path is a cycle (`a = []; a << a`):
+// rather than recurse forever we write Ruby's `[...]` placeholder then a
+// newline, matching real Ruby (`puts a` on a self-referential array prints
+// `[...]` and terminates).  (We emit the literal placeholder rather than
+// `_sir_format(v)`: that formatter starts a fresh visited set, so it would
+// render the *containing* level too — `[[...]]` for `a = [a]` — whereas Ruby
+// prints a bare `[...]`.)  A seq reached twice by *sibling* (non-cyclic) paths
+// is fully flattened both times, because each is removed from `visited` on
+// exit — only a handle re-appearing *within its own subtree* is short-
+// circuited.  Non-cyclic output is unchanged (`puts [1,[2,3]]` still prints
+// `1\n2\n3\n`).
+func _sir_puts_one(v Value, visited map[Value]bool) {
+	if s, ok := v.(*Seq); ok {
+		if visited[v] {
+			fmt.Print("[...]\n")
+			return
+		}
+		visited[v] = true
+		for _, item := range s.Items {
+			_sir_puts_one(item, visited)
+		}
+		delete(visited, v)
+		return
+	}
+	if v == nil {
+		fmt.Print("\n")
+		return
+	}
+	text := _sir_format(v)
+	if strings.HasSuffix(text, "\n") {
+		fmt.Print(text)
+	} else {
+		fmt.Print(text + "\n")
+	}
+}
+
 // ── format (cycle-safe) ────────────────────────────────────────
 //
 // `*Seq`/`*Map` are *shared, mutable* handles, so an emitted program
@@ -879,6 +968,8 @@ func _sir_call_builtin_by_name(name string, args []Value) Value {
 		return _sir_is_symbol(args)
 	case "print":
 		return _sir_print(args)
+	case "puts":
+		return _sir_puts(args)
 	case "global_set":
 		return _sir_global_set(args[0], args[1])
 	case "global_get":
@@ -2074,7 +2165,7 @@ mod tests {
             "_sir_eq", "_sir_lt", "_sir_gt",
             "_sir_cons", "_sir_car", "_sir_cdr",
             "_sir_is_null", "_sir_is_pair", "_sir_is_number", "_sir_is_symbol",
-            "_sir_print", "_sir_global_set", "_sir_global_get",
+            "_sir_print", "_sir_puts", "_sir_global_set", "_sir_global_get",
             "_sir_apply", "_sir_make_closure", "_sir_intern", "_sir_truthy",
             "_sir_format", "_sir_builtin_closure", "_sir_call_builtin_by_name",
             // E3 exception helpers.

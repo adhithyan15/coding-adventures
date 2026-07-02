@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.7.0 — `puts` builtin (Ruby semantics)
+
+### Changed
+
+- `puts` now maps **directly** to the variadic runtime helper `_sir_puts(...)`
+  (like `print` → `_sir_print`) instead of routing through the generic
+  `_sir_call_builtin("puts", […])` dispatch. This is possible now that
+  `sir-runtime-core` implements Ruby `puts` semantics; the previous
+  dispatch-table routing would have failed at runtime because `puts` was not
+  registered. A `sir_puts as _sir_puts` import alias was added to the runtime
+  header. Existing Ruby→Python e2e tests were updated to the new call shape,
+  and `end_to_end_ruby_to_python_puts` now runs the emitted Python under a real
+  interpreter and asserts `puts "hello"` prints exactly `hello\n`.
+
 ## [0.6.0] - 2026-07-01
 
 ### Added (Issue #59 — class-method CALL dispatch)

@@ -1582,6 +1582,9 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "number?" => "__Sir.isNumber",
         "symbol?" => "__Sir.isSymbol",
         "print" => "__Sir.print",
+        // `puts` is variadic in the runtime (`puts(...args)`), so a direct
+        // `__Sir.puts(a, b)` forwards every argument (Ruby `puts a, b`).
+        "puts" => "__Sir.puts",
         "global_set" => "__Sir.globalSet",
         "global_get" => "__Sir.globalGet",
         // Unknown builtin: route through the dispatch table.  This

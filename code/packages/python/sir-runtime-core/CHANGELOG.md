@@ -2,6 +2,44 @@
 
 All notable changes to `coding-adventures-sir-runtime-core` are documented here.
 
+## [0.1.6] - 2026-07-01
+
+### Security — cycle-guard the `puts` array flatten (CWE-674)
+
+- `_puts_one` flattened arrays by recursing per element with **no bound**. A
+  list is a shared, mutable reference, so a translated program can build a
+  self-referential array (`a = []; a << a; puts a`) or a pathologically deep
+  one; the unguarded recursion raised `RecursionError` — a denial of service
+  (uncontrolled recursion). `_puts_one` / `sir_puts` now thread a `seen` set of
+  `id(list)` on the active flatten path: a list re-encountered within its own
+  subtree is a cycle and is printed as Ruby's `[...]` placeholder + newline
+  instead of recursing, so `puts a` on a self-referential array now
+  **terminates** exactly as real Ruby does. Non-cyclic output is unchanged
+  (`puts [1, [2, 3]]` → `1\n2\n3\n`); new regression tests
+  (`test_puts_self_referential_array_terminates`,
+  `test_puts_mutually_recursive_arrays_terminate`) cover the cyclic cases.
+- Bumps `pyproject.toml` to `0.1.6`.
+
+## [0.1.5] - 2026-07-01
+
+### Added (`puts` — Ruby's most common output method)
+
+- New `sir_puts(*args)` implementing Ruby `puts` semantics, and a `"puts"`
+  entry in the builtin dispatch table (so backends that route builtins by name
+  reach it). Exposed from the package root and re-exported in `__all__`.
+- Semantics, matching Ruby exactly:
+  - `puts` (no args) → a single newline.
+  - `puts x` → `x.to_s` + newline, **unless** the rendered text already ends in
+    `"\n"` (then no second newline: `puts "x\n"` prints `x\n`, not `x\n\n`).
+  - `puts a, b` → each argument on its own line, in order.
+  - `puts []` → a single newline (an argument that flattens to nothing still
+    prints a blank line).
+  - `puts [1, [2, 3]]` → each **element** on its own line, arrays flattened
+    recursively (`1\n2\n3\n`).
+  - `puts nil` → a blank line (not the display form `"nil"`).
+- Also bumps `pyproject.toml` to `0.1.5` (it had lagged the changelog at
+  `0.1.2`).
+
 ## [0.1.4] - 2026-06-21
 
 ### Added (Q10g — proc-vs-lambda arity)

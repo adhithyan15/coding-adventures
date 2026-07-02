@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/sir-runtime-core",
-  "version": "0.1.3",
+  "version": "0.1.7",
   "description": "Core runtime for Semantic-IR-emitted TypeScript/JavaScript — SIR truthiness, symbols, pairs, equality, display, arithmetic, closures, globals",
   "type": "module",
   "main": "src/index.ts",

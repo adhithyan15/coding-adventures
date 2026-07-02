@@ -1068,6 +1068,7 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     // live in the bracket-indexed dispatch table.
     let helper = match name {
         "print" => Some("__Sir.print"),
+        "puts" => Some("__Sir.puts"),
         "cons" => Some("__Sir.builtins[\"cons\"]"),
         "car" => Some("__Sir.builtins[\"car\"]"),
         "cdr" => Some("__Sir.builtins[\"cdr\"]"),
@@ -1484,6 +1485,28 @@ mod tests {
             emit_e(&bc("print", vec![Expr::IntLit { value: 7, span: s() }])),
             "__Sir.print(7)"
         );
+    }
+
+    /// `puts` routes to the variadic `__Sir.puts(...)` runtime helper.  All
+    /// arguments are forwarded (Ruby `puts a, b`), and a bare `puts` becomes
+    /// `__Sir.puts()`.
+    #[test]
+    fn emit_builtin_puts_routes_to_runtime() {
+        assert_eq!(
+            emit_e(&bc("puts", vec![Expr::IntLit { value: 7, span: s() }])),
+            "__Sir.puts(7)"
+        );
+        assert_eq!(
+            emit_e(&bc(
+                "puts",
+                vec![
+                    Expr::IntLit { value: 1, span: s() },
+                    Expr::IntLit { value: 2, span: s() },
+                ],
+            )),
+            "__Sir.puts(1, 2)"
+        );
+        assert_eq!(emit_e(&bc("puts", vec![])), "__Sir.puts()");
     }
 
     #[test]

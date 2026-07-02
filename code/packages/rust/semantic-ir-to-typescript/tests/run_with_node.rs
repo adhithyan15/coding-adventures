@@ -964,3 +964,75 @@ fn end_to_end_ruby_oop_new_and_dispatch_executes_ts() {
     assert_eq!(stdout, "Rex says woof", "P1 OOP dispatch produced wrong output under node");
 }
 
+
+// ── End-to-end: Ruby `puts` → TypeScript → node ────────────────────────
+//
+// Proves the Ruby frontend's `puts` (a `BuiltinCall("puts", …)`) drives the
+// runtime-core `puts` through the TypeScript backend end-to-end.  As with the
+// other node proofs, the workspace runtime package can't be resolved under
+// bare `node`, so the runtime import is swapped for a faithful inline stub
+// implementing Ruby `puts` semantics (string+newline, no-arg → one newline).
+
+/// A `__Sir` stub whose `puts` mirrors the real runtime-core: variadic,
+/// writes each string arg + "\n" via process.stdout.write (so the exact byte
+/// stream — including a trailing blank line — is observable), and a no-arg
+/// `puts` writes one newline.
+const SIR_PUTS_STUB: &str = r#"const __Sir = {
+  toDisplay: (v) => (v === null ? "nil" : String(v)),
+  puts: (...args) => {
+    if (args.length === 0) { process.stdout.write("\n"); return null; }
+    for (const a of args) {
+      const t = __Sir.toDisplay(a);
+      process.stdout.write(t.endsWith("\n") ? t : t + "\n");
+    }
+    return null;
+  },
+};
+"#;
+
+fn ruby_puts_ts_to_runnable_js(ts: &str) -> String {
+    let mut js = ts.to_string();
+    js = js.replace(
+        "import * as __Sir from \"@coding-adventures/sir-runtime-core\";\n",
+        SIR_PUTS_STUB,
+    );
+    js = js.replace(" as { [k: string]: __Sir.Val }", "");
+    js = js.replace(": __Sir.Val[]", "");
+    js = js.replace(": __Sir.Val", "");
+    js
+}
+
+#[test]
+fn end_to_end_ruby_puts_executes_ts() {
+    // `puts "hi"` lowered from real Ruby → TS → node must print exactly
+    // `hi\n` (Ruby's string+newline semantics).
+    let module = ruby_to_semantic_ir::compile_source("puts \"hi\"\n", "demo")
+        .expect("lower ruby");
+    let artifact = compile(&module).expect("compile to typescript");
+
+    // Shape: `puts` maps to the variadic `__Sir.puts(...)` helper.
+    assert!(
+        artifact.source.contains("__Sir.puts(\"hi\")"),
+        "expected puts to map to __Sir.puts; got:\n{}",
+        artifact.source
+    );
+
+    if !node_available() {
+        eprintln!("note: `node` unavailable — skipping Ruby puts TS execution proof");
+        return;
+    }
+    let js = ruby_puts_ts_to_runnable_js(&artifact.source);
+    let mut path: PathBuf = std::env::temp_dir();
+    path.push(format!("sir_ts_ruby_puts_{}.js", std::process::id()));
+    std::fs::write(&path, &js).expect("write temp js");
+    let output = Command::new("node").arg(&path).output().expect("spawn node");
+    let _ = std::fs::remove_file(&path);
+    assert!(
+        output.status.success(),
+        "node exited non-zero:\nstderr: {}\nsource:\n{}",
+        String::from_utf8_lossy(&output.stderr),
+        js
+    );
+    let stdout = String::from_utf8_lossy(&output.stdout).replace("\r\n", "\n");
+    assert_eq!(stdout, "hi\n", "Ruby `puts \"hi\"` should print `hi` + newline");
+}
