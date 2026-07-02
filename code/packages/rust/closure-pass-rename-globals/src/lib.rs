@@ -686,6 +686,21 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                 collect_all_idents_expr(&prop.value, out);
             }
         }
+        // A function *value* introduces its own name (if any) and params
+        // as identifiers, and its body references more — record them all
+        // so a renamed global never collides with any of them.
+        Expression::FunctionExpression(fe) => {
+            if let Some(id) = &fe.id {
+                out.insert(id.name.clone());
+            }
+            for p in &fe.params {
+                let FunctionParam::Identifier(id) = p;
+                out.insert(id.name.clone());
+            }
+            for s in &fe.body.body {
+                collect_all_idents_stmt(s, out);
+            }
+        }
     }
 }
 
@@ -946,6 +961,27 @@ fn rename_apply_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                     }
                 }
                 rename_apply_expr(&mut prop.value, map);
+            }
+        }
+        // A function *value*'s own name (if named) and its params are
+        // LOCAL bindings that shadow any global of the same spelling.
+        // Recurse into the body with those names REMOVED from the active
+        // map, so genuine global uses inside the body are renamed while a
+        // shadowed use (referring to the param / self-name) is left
+        // untouched — a self-contained soundness guarantee that does not
+        // depend on the candidate-selection step having seen this
+        // function expression.
+        Expression::FunctionExpression(fe) => {
+            let mut inner = map.clone();
+            if let Some(id) = &fe.id {
+                inner.remove(&id.name);
+            }
+            for p in &fe.params {
+                let FunctionParam::Identifier(id) = p;
+                inner.remove(&id.name);
+            }
+            for s in &mut fe.body.body {
+                rename_apply_stmt(s, &inner);
             }
         }
     }

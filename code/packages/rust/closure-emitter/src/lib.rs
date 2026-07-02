@@ -70,7 +70,7 @@ use coding_adventures_javascript_ast::{
     Declaration, DebuggerStatement, DoWhileStatement,
     EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
-    FunctionDeclaration,
+    FunctionDeclaration, FunctionExpression,
     FunctionParam, Identifier, IfStatement, LabeledStatement, LogicalExpression, LogicalOperator,
     MemberExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem,
     Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
@@ -381,7 +381,16 @@ impl<'a> Emitter<'a> {
         // precedence-aware emit at parent_prec = 0, which means no
         // wrapping unless an inner expression has a lower-precedence
         // child that requires it.
-        let needs_paren = matches!(es.expression, Expression::ObjectExpression(_));
+        // A leading `{` parses as a block and a leading `function`
+        // parses as a function *declaration* — both mis-parse a bare
+        // expression statement, so wrap them. (The general "leftmost
+        // token" problem — e.g. a call whose callee is a function
+        // expression — is handled by each child's own precedence wrap;
+        // this covers the direct cases.)
+        let needs_paren = matches!(
+            es.expression,
+            Expression::ObjectExpression(_) | Expression::FunctionExpression(_)
+        );
         self.maybe_map(&es.cv);
         if needs_paren {
             self.write_str("(");
@@ -835,6 +844,59 @@ impl<'a> Emitter<'a> {
         }
     }
 
+    /// Emit a [`FunctionExpression`] — a function in *value* position.
+    ///
+    /// Byte-identical to [`Self::emit_function_declaration`] for the
+    /// `function`/`*`/params/body run, with two deliberate differences:
+    ///
+    /// 1. **`id` is optional.** An anonymous `function () {}` prints no
+    ///    name (`function(){}`); a named one prints it (`function f(){}`).
+    ///    `required_ws()` is only invoked in the named case — it emits a
+    ///    separating space *only when the adjacent tokens would otherwise
+    ///    merge* (`function f`, but `function*f` needs none because `*`
+    ///    already delimits), exactly as the declaration relies on.
+    /// 2. **No trailing `;`.** A function *declaration* appends a
+    ///    normalising `;` after its `}` (gap-030 part B); an expression
+    ///    must not — it is embedded inside a larger expression/statement
+    ///    whose own emitter owns the terminator. Appending one here would
+    ///    corrupt e.g. `f(function(){})` into `f(function(){};)`.
+    ///
+    /// Parenthesisation in the two contexts where a bare
+    /// `function (){}` would be mis-parsed — at the *start* of an
+    /// expression statement (parses as a declaration) and as a *call
+    /// callee* (`function(){}()` is a syntax error) — is handled by the
+    /// precedence machinery: [`expr_prec`] tags `FunctionExpression`
+    /// below `PREC_PRIMARY`, so a call/member parent wraps it, and
+    /// [`Self::emit_expression_statement`] wraps a leading one.
+    fn emit_function_expression(&mut self, f: &FunctionExpression) {
+        self.maybe_map(&f.cv);
+        if f.is_async {
+            self.write_str("async");
+            self.required_ws();
+        }
+        self.write_str("function");
+        if f.generator {
+            self.write_str("*");
+        }
+        if let Some(id) = &f.id {
+            self.required_ws();
+            self.emit_identifier(id);
+        }
+        self.write_str("(");
+        for (i, p) in f.params.iter().enumerate() {
+            if i > 0 {
+                self.write_str(",");
+                self.pretty_ws();
+            }
+            match p {
+                FunctionParam::Identifier(id) => self.emit_identifier(id),
+            }
+        }
+        self.write_str(")");
+        self.pretty_ws();
+        self.emit_block_statement(&f.body);
+    }
+
     // ---- Expressions ---------------------------------------------
 
     /// Public entry: emit an expression assuming the loosest binding
@@ -889,6 +951,7 @@ impl<'a> Emitter<'a> {
             Expression::MemberExpression(m) => self.emit_member(m),
             Expression::ArrayExpression(a) => self.emit_array(a),
             Expression::ObjectExpression(o) => self.emit_object(o),
+            Expression::FunctionExpression(f) => self.emit_function_expression(f),
         }
         if needs_parens {
             self.write_str(")");
@@ -1517,6 +1580,18 @@ fn expr_prec(e: &Expression) -> u8 {
         | Expression::MemberExpression(_) => PREC_PRIMARY,
 
         Expression::UnaryExpression(_) => PREC_UNARY,
+        // A function expression is primary-*ish*, but two contexts
+        // mis-parse a bare one: as a call callee (`function(){}()` is a
+        // syntax error) and as a member object (`function(){}.x`). Tag
+        // it below PREC_PRIMARY (reusing PREC_UNARY, the same trick the
+        // boolean/undefined cases use) so a call/member parent wraps it
+        // into `(function(){})()` / `(function(){}).x`. Operator and
+        // assignment parents bind looser than PREC_UNARY, so
+        // `x=function(){}` and `function(){}+1` stay unwrapped (valid).
+        // The remaining mis-parse — a function expression at the *start*
+        // of an expression statement — is wrapped by
+        // `emit_expression_statement`, not here.
+        Expression::FunctionExpression(_) => PREC_UNARY,
         // `true`/`false` are emitted as `!0`/`!1` (see `emit_boolean`), which
         // are UnaryExpressions — precedence `PREC_UNARY`, NOT primary. Tagging
         // them here is what makes `emit_expression_inner` parenthesise them in
@@ -3603,5 +3678,102 @@ mod tests {
             site: "test",
         };
         assert_error(&e);
+    }
+
+    // ---- FunctionExpression (CLOC12.149) ----------------------
+
+    /// Build a `FunctionExpression` value: `id` name (or anonymous),
+    /// simple identifier params, and a body of statements.
+    fn fexpr(id: Option<&str>, params: &[&str], body: Vec<Statement>) -> Expression {
+        Expression::FunctionExpression(FunctionExpression {
+            cv: None,
+            id: id.map(|n| Identifier { cv: None, name: n.to_string() }),
+            params: params
+                .iter()
+                .map(|p| FunctionParam::Identifier(Identifier { cv: None, name: p.to_string() }))
+                .collect(),
+            body: BlockStatement { cv: None, body },
+            generator: false,
+            is_async: false,
+        })
+    }
+
+    /// An anonymous function expression at the START of an expression
+    /// statement must be parenthesised — a leading `function` otherwise
+    /// parses as a declaration.
+    #[test]
+    fn function_expression_at_statement_start_is_parenthesised() {
+        assert_eq!(emit_expr(fexpr(None, &[], vec![])), "(function(){});");
+    }
+
+    /// An IIFE: the function-expression callee needs parens because
+    /// `function(){}()` is a syntax error.
+    #[test]
+    fn function_expression_iife_wraps_callee() {
+        let iife = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(fexpr(None, &[], vec![])),
+            arguments: vec![],
+        });
+        assert_eq!(emit_expr(iife), "(function(){})();");
+    }
+
+    /// As a call ARGUMENT the function expression needs no parens (the
+    /// argument context is the loosest), and crucially no stray `;` is
+    /// appended after its body `}` — that trailing-`;` normalisation is
+    /// a function *declaration* rule only.
+    #[test]
+    fn function_expression_as_argument_has_no_parens_or_trailing_semi() {
+        let call = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("g")),
+            arguments: vec![fexpr(None, &[], vec![])],
+        });
+        assert_eq!(emit_expr(call), "g(function(){});");
+    }
+
+    /// A *named* function expression prints its name (body-local), and
+    /// params + a return body emit like the declaration form.
+    #[test]
+    fn named_function_expression_with_params_and_body() {
+        let call = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("use")),
+            arguments: vec![fexpr(
+                Some("f"),
+                &["a", "b"],
+                vec![Statement::return_statement(ReturnStatement {
+                    cv: None,
+                    argument: Some(ident("a")),
+                })],
+            )],
+        });
+        // The `;` after the last block statement is dropped in compact
+        // mode (`{return a}`), so the only `;` is the outer statement's.
+        assert_eq!(emit_expr(call), "use(function f(a,b){return a});");
+    }
+
+    /// Generator and async flags render their prefixes (`*` fuses with
+    /// no separating space; `async` needs one).
+    #[test]
+    fn function_expression_generator_and_async_flags() {
+        let mut generator = fexpr(None, &[], vec![]);
+        if let Expression::FunctionExpression(f) = &mut generator {
+            f.generator = true;
+        }
+        assert_eq!(emit_expr(generator), "(function*(){});");
+
+        let async_call = {
+            let mut fe = fexpr(None, &[], vec![]);
+            if let Expression::FunctionExpression(f) = &mut fe {
+                f.is_async = true;
+            }
+            Expression::CallExpression(CallExpression {
+                cv: None,
+                callee: Box::new(ident("h")),
+                arguments: vec![fe],
+            })
+        };
+        assert_eq!(emit_expr(async_call), "h(async function(){});");
     }
 }

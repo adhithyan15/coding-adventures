@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.18.0] - 2026-07-01
+
+### Added — CLOC12.149: fold control flow inside `FunctionExpression`
+
+`fold_expression` recurses into a `FunctionExpression` body (fold +
+`var` hoist), mirroring the `FunctionDeclaration` arm; `expression_cv`
+gains a `FunctionExpression` arm so provenance is preserved.
+
 ## [0.17.0] - 2026-06-30
 
 ### Added — CV tombstones for constant-condition ternary collapse (#89 follow-up)

@@ -94,7 +94,7 @@ use coding_adventures_javascript_ast::{
     BinaryOperator, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression,
     Declaration, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
-    FunctionDeclaration, Identifier,
+    FunctionDeclaration, FunctionExpression, Identifier,
     IfStatement, LogicalExpression, LogicalOperator, MemberExpression, NullLiteral, NumericLiteral,
     ObjectExpression, Program, ProgramItem, Property, PropertyKey, PropertyKind, ReturnStatement, Statement,
     StringLiteral, UnaryExpression, UnaryOperator, UndefinedLiteral, VariableDeclaration,
@@ -542,6 +542,26 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                 })
                 .collect(),
         }),
+
+        // A function *value*: fold constants inside its body exactly as
+        // we do for a `FunctionDeclaration` (see `fold_declaration`).
+        // The function itself is not a foldable constant; we descend so
+        // that `var f = function () { return 1 + 1; }` folds to
+        // `... return 2; ...`. `id`/`params` are structural — passed
+        // through untouched.
+        Expression::FunctionExpression(f) => {
+            Expression::FunctionExpression(FunctionExpression {
+                cv: f.cv.clone(),
+                id: f.id.clone(),
+                params: f.params.clone(),
+                body: BlockStatement {
+                    cv: f.body.cv.clone(),
+                    body: f.body.body.iter().map(|s| fold_statement(s, st)).collect(),
+                },
+                generator: f.generator,
+                is_async: f.is_async,
+            })
+        }
     }
 }
 
