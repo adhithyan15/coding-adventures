@@ -722,6 +722,15 @@ fn lower_named_fn(f: NamedFn) -> ComputeOp {
         NamedFn::Ln => ComputeOp::Ln,
         NamedFn::Log => ComputeOp::Log,
         NamedFn::Exp => ComputeOp::Exp,
+        NamedFn::Asin => ComputeOp::Asin,
+        NamedFn::Acos => ComputeOp::Acos,
+        NamedFn::Atan => ComputeOp::Atan,
+        NamedFn::Sinh => ComputeOp::Sinh,
+        NamedFn::Cosh => ComputeOp::Cosh,
+        NamedFn::Tanh => ComputeOp::Tanh,
+        NamedFn::Cot => ComputeOp::Cot,
+        NamedFn::Sec => ComputeOp::Sec,
+        NamedFn::Csc => ComputeOp::Csc,
     }
 }
 
@@ -1943,6 +1952,31 @@ contributes 1000000 from answer == 60 to correct
         )
         .unwrap();
         assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_latex_extended_trig_family_lowers() {
+        // The rest of the trig family the latex frontend parses — hyperbolic
+        // `\cosh(x)` (cosh 0 = 1) and inverse `\arctan(x)` (atan 0 = 0) — now lower
+        // to the native ComputeOp::Cosh/Atan instead of erroring as unsupported.
+        let cosh = crate::compile_and_decide(
+            "observe x(0)\n\
+             let answer = latex \"$\\cosh(x)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 1 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(cosh.ranked[0].posterior > 0.99, "{cosh:?}");
+        let atan = crate::compile_and_decide(
+            "observe x(0)\n\
+             let answer = latex \"$\\arctan(x)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 0 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(atan.ranked[0].posterior > 0.99, "{atan:?}");
     }
 
     #[test]

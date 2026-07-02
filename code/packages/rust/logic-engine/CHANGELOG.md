@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.32.0] - 2026-07-02 — the rest of the trig family (inverse / hyperbolic / reciprocal)
+
+### Added
+
+- Nine more transcendental unary ops completing the standard trig set the LaTeX
+  frontend already parses: **inverse** `Asin`/`Acos`/`Atan`, **hyperbolic**
+  `Sinh`/`Cosh`/`Tanh`, and **reciprocal** `Cot` (cos/sin), `Sec` (1/cos), `Csc`
+  (1/sin). Carried in the existing `ComputeExpr::Unary`, same contract as the
+  earlier transcendentals: `Scalar → Scalar` (a dimensioned operand is a rejected
+  category error), exact-rational sidecar dropped, evaluated in the shared
+  `#[inline(never)] eval_unary` helper.
+- Domain and pole errors go through the non-finite guard rather than a
+  silently-wrong number: `asin`/`acos` outside `[−1, 1]` → `NaN`; `cot`/`csc` at a
+  multiple of π and `sec` at an odd multiple of π/2 → `±∞` (the reciprocal
+  definitions divide by a zero primary).
+
 ## [0.31.0] - 2026-07-02 — native transcendental functions (`sin`/`cos`/`tan`/`ln`/`log`/`exp`)
 
 ### Added

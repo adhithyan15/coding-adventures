@@ -1012,9 +1012,10 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
         // A named-function call `\sin(x)`, `\ln(x)`, `\exp(x)`, … lowers to the
         // matching native transcendental op via `ExprAst::Call`. Only the curated
         // single-argument transcendental set is supported; the other `Func`
-        // variants (min/max/gcd/lcm/det, the inverse and hyperbolic trig, and an
-        // unknown `Other`) have no single-argument scalar lowering yet and are a
-        // clean, explicit error rather than a silent mis-lowering.
+        // variants (the aggregate/multi-arg `min`/`max`/`gcd`/`lcm`/`det` and an
+        // unknown `Other` such as `\operatorname{trunc}`) have no single-argument
+        // scalar lowering yet and are a clean, explicit error rather than a silent
+        // mis-lowering.
         MathExpr::Call { func, arg } => {
             let named = match func {
                 Func::Sin => NamedFn::Sin,
@@ -1023,6 +1024,15 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
                 Func::Ln => NamedFn::Ln,
                 Func::Log => NamedFn::Log,
                 Func::Exp => NamedFn::Exp,
+                Func::Asin => NamedFn::Asin,
+                Func::Acos => NamedFn::Acos,
+                Func::Atan => NamedFn::Atan,
+                Func::Sinh => NamedFn::Sinh,
+                Func::Cosh => NamedFn::Cosh,
+                Func::Tanh => NamedFn::Tanh,
+                Func::Cot => NamedFn::Cot,
+                Func::Sec => NamedFn::Sec,
+                Func::Csc => NamedFn::Csc,
                 other => {
                     return Err(AdapterError::UnsupportedLatexMath {
                         source: source.to_string(),
