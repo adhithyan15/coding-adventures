@@ -343,6 +343,21 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             emit_expr(out, value, indent);
             out.push('\n');
         }
+        // ── O4 `@ivar` / `@@cvar` writes ────────────────────────────
+        // `@x = v` sets the ivar on the current self; `@@x = v` sets the
+        // class variable.  The full sigil name is the runtime key.  The
+        // helper returns the value; we discard it (`_ = …`) in statement
+        // position.
+        Stmt::Assign { name, scope: Scope::Instance, value, .. } => {
+            let _ = write!(out, "{}_ = _sir_ivar_set({}, ", pad, quote_go_string(name));
+            emit_expr(out, value, indent);
+            out.push_str(")\n");
+        }
+        Stmt::Assign { name, scope: Scope::ClassVar, value, .. } => {
+            let _ = write!(out, "{}_ = _sir_cvar_set({}, ", pad, quote_go_string(name));
+            emit_expr(out, value, indent);
+            out.push_str(")\n");
+        }
         // ── SIR16 loops (Loops) ─────────────────────────────────────
         Stmt::While { cond, body, .. } => emit_while(out, cond, body, indent),
         Stmt::ForRange { var, start, stop, step, body, .. } => {
@@ -373,10 +388,10 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             emit_expr(out, value, indent);
             out.push_str(")\n");
         }
-        // An `Assign` to an Instance/ClassVar/Const/Builtin scope: those
-        // scopes belong to SIR17 features this backend does not accept
-        // (or, for Builtin, are never produced by any frontend), so a
-        // validated module never reaches here.
+        // An `Assign` to a Const/Builtin scope: `Const` writes have no
+        // runtime store here (rejected by `check_no_general_const`), and
+        // `Builtin` is never produced by any frontend, so a validated module
+        // never reaches this arm.  (Instance/ClassVar are handled above.)
         Stmt::Assign { span, .. } => {
             panic!("go backend reached an Assign to an unsupported scope at {} — capability check should have rejected it", span);
         }
@@ -744,15 +759,13 @@ fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
             let _ = write!(out, "_sir_builtin_closure({})", quote_go_string(name));
         }
         Scope::Instance => {
-            // SIR17 Phase 15a — `Feature::InstanceVars` is not in this
-            // backend's accepted set, so an instance-var-using module is
-            // rejected at the capability check before emit.  Unreachable.
-            panic!("go backend reached SIR17 instance-var ref `{}` — capability check should have rejected it", name);
+            // O4 — `@ivar` read.  Routes through the runtime's current-self
+            // store; the full sigil name (`@x`) is preserved as the key.
+            let _ = write!(out, "_sir_ivar_get({})", quote_go_string(name));
         }
         Scope::ClassVar => {
-            // SIR17 Phase 15b — `Feature::ClassVars` likewise unaccepted;
-            // class-var modules are rejected before emit.  Unreachable.
-            panic!("go backend reached SIR17 class-var ref `{}` — capability check should have rejected it", name);
+            // O4 — `@@cvar` read (single flat namespace keyed by `@@name`).
+            let _ = write!(out, "_sir_cvar_get({})", quote_go_string(name));
         }
         Scope::Const => {
             // SIR17 Phase 15c — `Feature::Constants` likewise unaccepted;
@@ -981,6 +994,64 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
             out.push_str("})");
             return;
         }
+    }
+    // ── O4 user-defined-class OOP builtins ─────────────────────────
+    //
+    // The Ruby frontend (O2) emits five OOP builtins that mirror the
+    // `__method__`→`_sir_call_method` routing.  Class and method NAMES ride
+    // in as `StrLit`s and are emitted through `quote_go_string` — never
+    // interpolated — so the runtime side is a pure `(class, method)` map
+    // lookup with no reflection (the C3 RCE discipline).
+    //
+    //   __new__(StrLit(cls), args…)               → _sir_call_new("cls", args…)
+    //   __super__(StrLit(m), StrLit(cls), args…)  → _sir_call_super("m", "cls", args…)
+    //   __def_method__(StrLit(cls), StrLit(m), fn)       → _sir_def_method("cls", "m", fn)
+    //   __def_class_method__(StrLit(cls), StrLit(m), fn) → _sir_def_class_method("cls", "m", fn)
+    //   __self__()                                → _sir_current_self()
+    if name == "__new__" {
+        if let Some(Expr::StrLit { value: cls, .. }) = args.first() {
+            let _ = write!(out, "_sir_call_new({}", quote_go_string(cls));
+            for a in &args[1..] {
+                out.push_str(", ");
+                emit_expr(out, a, indent);
+            }
+            out.push(')');
+            return;
+        }
+    }
+    if name == "__super__" {
+        if let (Some(Expr::StrLit { value: meth, .. }), Some(Expr::StrLit { value: cls, .. })) =
+            (args.first(), args.get(1))
+        {
+            let _ = write!(
+                out,
+                "_sir_call_super({}, {}",
+                quote_go_string(meth),
+                quote_go_string(cls)
+            );
+            for a in &args[2..] {
+                out.push_str(", ");
+                emit_expr(out, a, indent);
+            }
+            out.push(')');
+            return;
+        }
+    }
+    if (name == "__def_method__" || name == "__def_class_method__") && args.len() >= 3 {
+        if let (Expr::StrLit { value: cls, .. }, Expr::StrLit { value: meth, .. }) =
+            (&args[0], &args[1])
+        {
+            let helper =
+                if name == "__def_method__" { "_sir_def_method" } else { "_sir_def_class_method" };
+            let _ = write!(out, "{}({}, {}, ", helper, quote_go_string(cls), quote_go_string(meth));
+            emit_expr(out, &args[2], indent);
+            out.push(')');
+            return;
+        }
+    }
+    if name == "__self__" {
+        out.push_str("_sir_current_self()");
+        return;
     }
     // ── SIR17 exceptions (E3): `raise` → panic ─────────────────────
     //
@@ -2499,5 +2570,158 @@ mod tests {
             src.contains(r#""MyErr": "StandardError","#),
             "must register the MyErr → StandardError edge; got:\n{src}"
         );
+    }
+
+    // ── O4: user-defined-class OOP emission shapes ────────────────────────
+
+    fn builtin(name: &str, args: Vec<Expr>) -> Expr {
+        Expr::BuiltinCall { name: name.into(), args, effects: EffectSet::PURE, span: s() }
+    }
+
+    fn str_lit(v: &str) -> Expr {
+        Expr::StrLit { value: v.into(), span: s() }
+    }
+
+    /// `__new__("Dog", arg)` → `_sir_call_new("Dog", <arg>)`.
+    #[test]
+    fn new_emits_call_new_with_class_name_string() {
+        let e = builtin("__new__", vec![str_lit("Dog"), str_lit("Rex")]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"_sir_call_new("Dog", Value("Rex"))"#);
+    }
+
+    /// A class name with a NUL/quote is still safely quoted (no interpolation).
+    #[test]
+    fn new_with_zero_args_emits_bare_call() {
+        let e = builtin("__new__", vec![str_lit("Widget")]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"_sir_call_new("Widget")"#);
+    }
+
+    /// `__super__("describe", "Cat", arg)` → `_sir_call_super("describe", "Cat", <arg>)`.
+    #[test]
+    fn super_emits_call_super_with_method_and_class() {
+        let e = builtin(
+            "__super__",
+            vec![str_lit("describe"), str_lit("Cat"), Expr::IntLit { value: 4, span: s() }],
+        );
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"_sir_call_super("describe", "Cat", Value(int64(4)))"#);
+    }
+
+    /// `__def_method__("Dog", "speak", <closure>)` → `_sir_def_method("Dog", "speak", <closure>)`.
+    #[test]
+    fn def_method_emits_registration() {
+        FN_ARITY.with(|t| t.borrow_mut().insert("speak_impl".into(), 0));
+        let closure =
+            Expr::MakeClosure { fn_name: "speak_impl".into(), captures: vec![], span: s() };
+        let e = builtin("__def_method__", vec![str_lit("Dog"), str_lit("speak"), closure]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        FN_ARITY.with(|t| t.borrow_mut().clear());
+        assert!(
+            out.starts_with(r#"_sir_def_method("Dog", "speak", _sir_make_closure("#),
+            "unexpected emit: {out}"
+        );
+    }
+
+    /// `__def_class_method__` routes to the class-method table registration.
+    #[test]
+    fn def_class_method_emits_class_registration() {
+        FN_ARITY.with(|t| t.borrow_mut().insert("zero_impl".into(), 0));
+        let closure =
+            Expr::MakeClosure { fn_name: "zero_impl".into(), captures: vec![], span: s() };
+        let e = builtin("__def_class_method__", vec![str_lit("Counter"), str_lit("zero"), closure]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        FN_ARITY.with(|t| t.borrow_mut().clear());
+        assert!(
+            out.starts_with(r#"_sir_def_class_method("Counter", "zero", _sir_make_closure("#),
+            "unexpected emit: {out}"
+        );
+    }
+
+    /// `__self__()` → `_sir_current_self()`.
+    #[test]
+    fn self_emits_current_self() {
+        let e = builtin("__self__", vec![]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, "_sir_current_self()");
+    }
+
+    /// A `@ivar` read (`VarRef{Instance}`) → `_sir_ivar_get("@name")`.
+    #[test]
+    fn ivar_ref_emits_ivar_get() {
+        let e = Expr::VarRef { name: "@name".into(), scope: Scope::Instance, span: s() };
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"_sir_ivar_get("@name")"#);
+    }
+
+    /// A `@@cvar` read (`VarRef{ClassVar}`) → `_sir_cvar_get("@@count")`.
+    #[test]
+    fn cvar_ref_emits_cvar_get() {
+        let e = Expr::VarRef { name: "@@count".into(), scope: Scope::ClassVar, span: s() };
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"_sir_cvar_get("@@count")"#);
+    }
+
+    /// A `@ivar` write (`Assign{Instance}`) → `_ = _sir_ivar_set("@x", <v>)`.
+    #[test]
+    fn ivar_assign_emits_ivar_set() {
+        let s0 = Stmt::Assign {
+            name: "@x".into(),
+            scope: Scope::Instance,
+            value: Expr::IntLit { value: 7, span: s() },
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_stmt(&mut out, &s0, 0);
+        assert_eq!(out, "_ = _sir_ivar_set(\"@x\", Value(int64(7)))\n");
+    }
+
+    /// A `@@cvar` write (`Assign{ClassVar}`) → `_ = _sir_cvar_set("@@n", <v>)`.
+    #[test]
+    fn cvar_assign_emits_cvar_set() {
+        let s0 = Stmt::Assign {
+            name: "@@n".into(),
+            scope: Scope::ClassVar,
+            value: Expr::IntLit { value: 0, span: s() },
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_stmt(&mut out, &s0, 0);
+        assert_eq!(out, "_ = _sir_cvar_set(\"@@n\", Value(int64(0)))\n");
+    }
+
+    /// The OOP runtime helpers must be present in every emitted program's
+    /// inlined preamble.
+    #[test]
+    fn runtime_preamble_carries_oop_helpers() {
+        for helper in &[
+            "type SirInstance struct",
+            "func _sir_new_instance(cls string) *SirInstance",
+            "func _sir_def_method(cls string, method string, fn Value) Value",
+            "func _sir_def_class_method(cls string, method string, fn Value) Value",
+            "func _sir_call_new(cls string, args ...Value) Value",
+            "func _sir_call_super(method string, cls string, args ...Value) Value",
+            "func _sir_current_self() Value",
+            "func _sir_ivar_get(name string) Value",
+            "func _sir_ivar_set(name string, value Value) Value",
+            "func _sir_cvar_get(name string) Value",
+            "func _sir_cvar_set(name string, value Value) Value",
+            "func _sir_resolve_instance_method(cls string, method string) (Value, bool)",
+        ] {
+            assert!(RUNTIME.contains(helper), "runtime missing `{}`", helper);
+        }
+        // Dispatch keys on a NUL-joined (class, method) string — never reflection.
+        assert!(RUNTIME.contains(r#"return cls + "\x00" + method"#));
+        // The user-object path in call_method must resolve + push/pop self.
+        assert!(RUNTIME.contains("if inst, ok := recv.(*SirInstance); ok"));
     }
 }

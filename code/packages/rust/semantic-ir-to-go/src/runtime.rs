@@ -982,6 +982,33 @@ func _sir_sym_to_proc(sym Value) Value {
 
 // Public dispatch entry point emitted for every `__method__` call.
 func _sir_call_method(recv Value, name string, args []Value) Value {
+	// ── O4 user-object path ────────────────────────────────────────
+	//
+	// When `recv` is a user `*SirInstance`, a method registered via
+	// `_sir_def_method` (walking the class's ancestry through the shared
+	// `_sir_ancestry` table) is dispatched FIRST: push the receiver as the
+	// current self, apply the stored closure, pop via `defer` (panic-safe).
+	// Resolution is an EXPLICIT `(class, method)` map lookup — never
+	// reflection — so a method named `constructor`/`__proto__` simply misses.
+	//
+	// Only if NO user method resolves does dispatch FALL THROUGH to the
+	// universal Object methods below (so `obj.class` / `obj.nil?` still work
+	// on an instance).  A `*SirInstance` is neither Seq/Map/String/etc., so
+	// it skips the collection/primitive catalogs entirely and is UNCHANGED
+	// for those receiver types.
+	if inst, ok := recv.(*SirInstance); ok {
+		if fn, found := _sir_resolve_instance_method(inst.Class, name); found {
+			_sir_push_self(inst)
+			defer _sir_pop_self()
+			return _sir_apply(fn, args)
+		}
+		// Universal Object methods (class/nil?/==/…) still apply to an
+		// instance; anything else is the controlled NoMethodError floor.
+		if v, ok := _sir_object_method(recv, name, args); ok {
+			return v
+		}
+		return _sir_method_unknown(recv, name)
+	}
 	// Type-specific catalogs first (a String is neither Seq nor Map).
 	// `bool` is checked before the numeric arm so `true`/`false` never
 	// enter the numeric catalog (they resolve only universal methods).
@@ -1031,6 +1058,11 @@ func _sir_method_unknown(recv Value, name string) Value {
 func _sir_ruby_class_name(v Value) string {
 	if v == nil {
 		return "NilClass"
+	}
+	// A user instance reports its own class tag (so `obj.class` and a
+	// NoMethodError message name the real class, e.g. `Dog`).
+	if inst, ok := v.(*SirInstance); ok {
+		return inst.Class
 	}
 	switch t := v.(type) {
 	case bool:
@@ -1699,6 +1731,206 @@ func _sir_rescue_matches(r any, classNames []string) bool {
 		}
 	}
 	return false
+}
+
+// ── O4 user-defined-class OOP (instances, method tables, self/super) ──
+//
+// The Ruby→SIR frontend HOISTS every `def` inside a class to a detached
+// top-level function with NO receiver — nothing in the IR records that
+// `speak` belongs to `Dog`.  We recover that association at RUNTIME with two
+// explicit method tables, populated by emitted `__def_method__` /
+// `__def_class_method__` registrations.  This is the Go analogue of the
+// Python/TS `sir-runtime-oop` `call_new`/`call_super`/`call_method`
+// user-object path, ported for cross-backend behavioural parity.
+//
+// ── SECURITY (the C3 RCE lesson, restated for OOP) ────────────────────
+// Dispatch is ONLY an explicit map lookup on the `(class, method)` key —
+// NEVER Go `reflect`/`MethodByName` on a source-derived name.  A class or
+// method perversely named `constructor` / `__proto__` / `initialize` is JUST
+// a map key: absent from the table ⇒ a clean miss ⇒ the ordinary
+// `_sir_method_unknown` (NoMethodError-shaped) floor or a `nil` `super`
+// result, never host behaviour.  Every ancestry walk carries a `seen` set so
+// a malicious cyclic hierarchy (`class A<B; class B<A`) TERMINATES instead of
+// looping forever.  Self-stack pops go through `defer`, so even a panic inside
+// a method body still unwinds the stack correctly.
+
+// A SIR object instance: a class-name tag plus a bag of instance variables.
+// `Ivars` is keyed by the FULL Ruby sigil name (`"@name"`), matching how the
+// frontend lowers an `@ivar` reference — the sigil is part of the key, never
+// stripped, so `@x` and a hypothetical local `x` can never collide.
+type SirInstance struct {
+	Class string
+	Ivars map[string]Value
+}
+
+// Allocate a fresh instance tagged with `cls` and an empty ivar bag.
+func _sir_new_instance(cls string) *SirInstance {
+	return &SirInstance{Class: cls, Ivars: make(map[string]Value)}
+}
+
+// ── Method tables ─────────────────────────────────────────────────────
+//
+// Instance methods (`def m`) and class methods (`def self.m`) live in two
+// separate maps keyed by `class + "\x00" + method`.  A NUL joiner is used
+// (rather than a `[2]string` composite key) because a NUL byte cannot appear
+// in a Ruby class or method identifier, so the flattened key is unambiguous —
+// and, crucially, it is a PLAIN VALUE lookup with no reflection.  The value is
+// a `*Closure` (the hoisted top-level function captured by an emitted
+// `MakeClosure`), invoked via `_sir_apply`.
+var _sir_instance_methods = make(map[string]Value)
+var _sir_class_methods = make(map[string]Value)
+
+// The NUL-joined table key for a `(class, method)` pair.
+func _sir_method_key(cls string, method string) string {
+	return cls + "\x00" + method
+}
+
+// Register an instance method (`__def_method__`) / class method
+// (`__def_class_method__`).  Called once per method at program init.  Each
+// returns the closure so the emitter may use the registration in expression
+// position, mirroring the other builtins' `Value`-returning convention.
+func _sir_def_method(cls string, method string, fn Value) Value {
+	_sir_instance_methods[_sir_method_key(cls, method)] = fn
+	return fn
+}
+
+func _sir_def_class_method(cls string, method string, fn Value) Value {
+	_sir_class_methods[_sir_method_key(cls, method)] = fn
+	return fn
+}
+
+// Resolve `method` on `cls` OR any registered ancestor, walking the SHARED
+// `_sir_ancestry` table (the very table exception `rescue` uses — one
+// hierarchy for the whole runtime).  The `seen` set makes the walk total even
+// for a cyclic user hierarchy.  Returns the closure and `true` on a hit, or
+// `(nil, false)` when unresolved.
+func _sir_resolve_instance_method(cls string, method string) (Value, bool) {
+	cur := cls
+	seen := make(map[string]bool)
+	for cur != "" && !seen[cur] {
+		if fn, ok := _sir_instance_methods[_sir_method_key(cur, method)]; ok {
+			return fn, true
+		}
+		seen[cur] = true
+		cur = _sir_ancestry[cur] // "" when `cur` has no registered super
+	}
+	return nil, false
+}
+
+// ── Current-self stack + instance-variable store ──────────────────────
+//
+// The single-threaded self-stack: `_sir_call_new` / instance-method dispatch
+// push the receiver before running a body and pop after (via `defer`), so an
+// `@ivar` reference inside the body reads the right object with NO explicit
+// `self` parameter.  This is the documented v0 model — correct for the
+// single-threaded transpiled scripts we target; true per-object/per-thread
+// binding is out of scope for v0 (consistent with the runtime note).
+var _sir_self_stack []*SirInstance
+
+// A program that never pushes a self (a top-level `@x`) still needs somewhere
+// to put instance variables; this default object provides it so `@x`
+// reads/writes never panic.
+var _sir_default_self = &SirInstance{Class: "Object", Ivars: make(map[string]Value)}
+
+func _sir_current_self_obj() *SirInstance {
+	if len(_sir_self_stack) > 0 {
+		return _sir_self_stack[len(_sir_self_stack)-1]
+	}
+	return _sir_default_self
+}
+
+func _sir_push_self(obj *SirInstance) {
+	_sir_self_stack = append(_sir_self_stack, obj)
+}
+
+func _sir_pop_self() {
+	if len(_sir_self_stack) > 0 {
+		_sir_self_stack = _sir_self_stack[:len(_sir_self_stack)-1]
+	}
+}
+
+// `__self__` — a bare `self` in a method body.  Returns the current receiver
+// (top of the self-stack), or `nil` (Ruby `nil`) at top level where no
+// receiver is bound — never the internal default-self sentinel.
+func _sir_current_self() Value {
+	if len(_sir_self_stack) > 0 {
+		return _sir_self_stack[len(_sir_self_stack)-1]
+	}
+	return nil
+}
+
+// `@ivar` read: the value on the current self, or `nil` for an unset ivar
+// (Ruby reads an unset `@x` as nil — no error).
+func _sir_ivar_get(name string) Value {
+	if v, ok := _sir_current_self_obj().Ivars[name]; ok {
+		return v
+	}
+	return nil
+}
+
+// `@ivar` write on the current self; returns the written value so `@x = v`
+// can be used in expression position.
+func _sir_ivar_set(name string, value Value) Value {
+	_sir_current_self_obj().Ivars[name] = value
+	return value
+}
+
+// ── Class-variable store (`@@cvar`) ───────────────────────────────────
+//
+// Ruby class variables are shared across a class and its instances.  The v0
+// model keys them by their bare `@@name` in a single flat namespace (matching
+// the Python/TS reference's single-namespace `cvar` store), which faithfully
+// models single-class programs; per-class-hierarchy scoping awaits a frontend
+// that threads the enclosing class.
+var _sir_cvars = make(map[string]Value)
+
+func _sir_cvar_get(name string) Value {
+	if v, ok := _sir_cvars[name]; ok {
+		return v
+	}
+	return nil
+}
+
+func _sir_cvar_set(name string, value Value) Value {
+	_sir_cvars[name] = value
+	return value
+}
+
+// `Foo.new(args…)` — allocate a `cls` instance and run its `initialize`.
+//
+// Allocates via `_sir_new_instance`, pushes the new object as the current
+// self, and — if an `initialize` is registered for `cls` or any ancestor —
+// invokes it with `args` (so `@ivar` assignments in the constructor land on
+// the new object).  Self is popped via `defer` (so a panic in `initialize`
+// still unwinds cleanly), and the object is always returned — even with no
+// `initialize` (a plain allocation).
+func _sir_call_new(cls string, args ...Value) Value {
+	obj := _sir_new_instance(cls)
+	_sir_push_self(obj)
+	defer _sir_pop_self()
+	if initializer, ok := _sir_resolve_instance_method(cls, "initialize"); ok {
+		_sir_apply(initializer, args)
+	}
+	return obj
+}
+
+// `super` — re-run `method` from `cls`'s PARENT.
+//
+// Walks from `_sir_ancestry[cls]` upward and invokes the first ancestor
+// implementation of `method` with `args`, keeping the CURRENT self bound
+// (`super` is a re-dispatch on the same receiver, so there is no push/pop
+// here).  If no ancestor defines the method, returns `nil` (Ruby `nil`) — the
+// runtime's honest floor, consistent with `_sir_call_method`'s user-object
+// path.
+func _sir_call_super(method string, cls string, args ...Value) Value {
+	parent := _sir_ancestry[cls] // "" when `cls` has no registered super
+	if parent == "" {
+		return nil
+	}
+	if fn, ok := _sir_resolve_instance_method(parent, method); ok {
+		return _sir_apply(fn, args)
+	}
+	return nil
 }
 
 "##;

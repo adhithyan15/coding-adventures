@@ -1,5 +1,62 @@
 # Changelog
 
+## 0.9.0
+
+### Added
+
+- **User-defined class OOP — method dispatch, `new`, `self`, `super` (O4).**
+  The Go backend now EXECUTES real user-defined classes (the Go analogue of the
+  Python/TS `sir-runtime-oop` O1 path), not just exception subclasses.  The
+  method↔class association — which the Ruby frontend loses when it HOISTS every
+  `def` to a detached top-level function — is recovered at RUNTIME via explicit
+  `(class, method)` map tables.
+  - **Inlined Go runtime** (`runtime.rs`, verbatim in every artifact):
+    - `SirInstance { Class string; Ivars map[string]Value }` + `_sir_new_instance`.
+    - Instance/class method tables `map[string]Value` keyed by a NUL-joined
+      `class + "\x00" + method` string (a NUL cannot appear in an identifier, so
+      the flattened key is unambiguous) — `_sir_def_method` /
+      `_sir_def_class_method`.
+    - `_sir_call_new(cls, args…)` — allocate → push self → resolve an inherited
+      `initialize` (walking the SHARED `_sir_ancestry` table, seen-guarded) →
+      apply → pop self via `defer` → return the instance.
+    - `_sir_call_method` extended: a `*SirInstance` receiver resolves the user
+      method table walking ancestry (push self, apply, pop via `defer`); a miss
+      falls through to universal Object methods, else the NoMethodError floor.
+      NON-instance receivers reach the existing collection/built-in catalog
+      **UNCHANGED**.
+    - `_sir_call_super(method, cls, args…)` — walk from the superclass, apply
+      with the CURRENT self still bound (no push/pop — `super` re-dispatches on
+      the same receiver).
+    - `_sir_current_self()` (`__self__`), `_sir_ivar_get`/`_sir_ivar_set` on the
+      current self (self-stack top, with a default-self so top-level `@x` never
+      panics), and `_sir_cvar_get`/`_sir_cvar_set` for class variables.
+  - **Emit arms** (`emit::emit_builtin_call`, mirroring `__method__`):
+    `__new__`→`_sir_call_new`, `__super__`→`_sir_call_super`,
+    `__def_method__`/`__def_class_method__`→ the table registrations,
+    `__self__`→`_sir_current_self`.  Class/method names ride in as `StrLit`s and
+    are emitted through `quote_go_string` — never interpolated.
+  - **`@ivar` / `@@cvar`** (`emit::emit_var_ref` + `emit_stmt`):
+    `VarRef`/`Assign{scope:Instance}` → `_sir_ivar_get`/`set("@x", …)`;
+    `scope:ClassVar` → the `_sir_cvar_*` helpers.
+  - **Feature acceptance** (`lib.rs`): `ACCEPTED_FEATURES` now includes
+    `InstanceVars` + `ClassVars` (alongside the existing `Classes`/`Constants`),
+    so a REAL OO module is accepted and routed through the runtime.  The existing
+    soundness gate still cleanly REJECTS genuinely-unsupported constructs — a
+    general `Const` used as a value, a `Const` assignment, a `ModuleDef`
+    (`Feature::Modules` stays unaccepted — no mixin/MRO runtime in v0).
+  - **SECURITY (the C3 RCE lesson).**  Dispatch is ONLY an explicit map lookup on
+    the `(class, method)` key — NEVER Go `reflect`/`MethodByName` on a
+    source-derived name.  A class/method named `constructor`/`__proto__` is just
+    a map key (a miss → the clean NoMethodError floor).  Every ancestry walk
+    carries a `seen` set so a cyclic hierarchy TERMINATES; self-stack pops go
+    through `defer` so a panic still unwinds correctly.
+  - **Tests.**  Emitted-shape unit tests for the five builtins + `@ivar`/`@@cvar`
+    refs, plus `tests/compile_and_run_oop.rs` execution proofs through `go run`:
+    P1 (`Dog.new("Rex").speak` → `Rex`), P2 (inheritance + `super`, parent-set
+    ivar visible → `4`), a security case (class/method named `constructor`
+    dispatches the user method; unknown `__proto__` hits the NoMethodError
+    floor), and a cyclic-ancestry-terminates case.
+
 ## 0.8.0
 
 ### Added
