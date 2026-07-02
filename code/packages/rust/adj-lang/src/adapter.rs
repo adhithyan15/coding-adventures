@@ -28,12 +28,12 @@
 //! program.
 
 use lexer::token::TokenType;
-use math_frontend::{BinOp, MathExpr, Number, RelOp as MathRelOp, UnaryOp};
+use math_frontend::{BinOp, Func, MathExpr, Number, RelOp as MathRelOp, UnaryOp};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 use crate::ast::{
-    AggOp, Annotation, ArithOp, CmpOp, Define, DefineKind, Evidence, ExprAst, OptDir, Program,
-    RelOp, RuleLiteral, Statement, Term, TrustTierName,
+    AggOp, Annotation, ArithOp, CmpOp, Define, DefineKind, Evidence, ExprAst, NamedFn, OptDir,
+    Program, RelOp, RuleLiteral, Statement, Term, TrustTierName,
 };
 
 /// Errors raised while adapting a generic AST to the typed AST.
@@ -1008,6 +1008,29 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
                 Box::new(latex_math_to_expr_ast(radicand, source)?),
                 Box::new(ExprAst::Lit(1.0 / n)),
             ))
+        }
+        // A named-function call `\sin(x)`, `\ln(x)`, `\exp(x)`, … lowers to the
+        // matching native transcendental op via `ExprAst::Call`. Only the curated
+        // single-argument transcendental set is supported; the other `Func`
+        // variants (min/max/gcd/lcm/det, the inverse and hyperbolic trig, and an
+        // unknown `Other`) have no single-argument scalar lowering yet and are a
+        // clean, explicit error rather than a silent mis-lowering.
+        MathExpr::Call { func, arg } => {
+            let named = match func {
+                Func::Sin => NamedFn::Sin,
+                Func::Cos => NamedFn::Cos,
+                Func::Tan => NamedFn::Tan,
+                Func::Ln => NamedFn::Ln,
+                Func::Log => NamedFn::Log,
+                Func::Exp => NamedFn::Exp,
+                other => {
+                    return Err(AdapterError::UnsupportedLatexMath {
+                        source: source.to_string(),
+                        detail: format!("named function not yet supported in ADJ arithmetic: {other:?}"),
+                    })
+                }
+            };
+            Ok(ExprAst::Call(named, Box::new(latex_math_to_expr_ast(arg, source)?)))
         }
         MathExpr::Rel(_, _, _) => Err(AdapterError::UnsupportedLatexMath {
             source: source.to_string(),
