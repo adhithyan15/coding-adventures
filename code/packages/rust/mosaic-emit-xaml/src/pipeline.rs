@@ -3490,7 +3490,19 @@ fn emit_build_script(name: &str) -> String {
          #\n\
          param([switch]$Clean, [switch]$Run)\n\
          \n\
+         $ErrorActionPreference = \"Stop\"\n\
          $proj = Join-Path $PSScriptRoot \"{name}.csproj\"\n\
+         $dotnet = (Get-Command dotnet -ErrorAction SilentlyContinue).Source\n\
+         if (-not $dotnet) {{\n    \
+             $defaultDotnet = Join-Path $env:ProgramFiles \"dotnet\\dotnet.exe\"\n    \
+             if (Test-Path $defaultDotnet) {{\n        \
+                 $dotnet = $defaultDotnet\n    \
+             }}\n\
+         }}\n\
+         if (-not $dotnet) {{\n    \
+             Write-Error \"dotnet was not found on PATH or at $env:ProgramFiles\\dotnet\\dotnet.exe\"\n    \
+             exit 127\n\
+         }}\n\
          \n\
          if ($Clean) {{\n    \
              Remove-Item -Recurse -Force -ErrorAction SilentlyContinue (Join-Path $PSScriptRoot \"bin\")\n    \
@@ -3500,7 +3512,7 @@ fn emit_build_script(name: &str) -> String {
          # The Platform=x64 arg is required because WindowsAppSDK's\n\
          # self-contained mode rejects AnyCPU. The csproj's <Platforms>x64</Platforms>\n\
          # only declares the SET of platforms; the ACTIVE one comes from this arg.\n\
-         dotnet build $proj -c Debug -p:Platform=x64 --nologo\n\
+         & $dotnet build $proj -c Debug -p:Platform=x64 --nologo\n\
          $buildExitCode = $LASTEXITCODE\n\
          if ($buildExitCode -ne 0) {{\n    \
              exit $buildExitCode\n\
@@ -3517,8 +3529,13 @@ fn emit_build_script(name: &str) -> String {
              }}\n    \
              if (Test-Path $exe) {{\n        \
                  & $exe\n    \
+                 $runExitCode = $LASTEXITCODE\n        \
+                 if ($runExitCode -ne 0) {{\n            \
+                     exit $runExitCode\n        \
+                 }}\n    \
              }} else {{\n        \
                  Write-Host \"No .exe at $exe -- build must have failed.\" -ForegroundColor Red\n    \
+                 exit 1\n    \
              }}\n\
          }}\n"
     )
@@ -8678,6 +8695,9 @@ mod tests {
         assert!(p.main_window_cs.contains("Greeting"));
         // build.ps1 passes -p:Platform=x64.
         assert!(p.build_script.contains("-p:Platform=x64"));
+        assert!(p.build_script.contains("Get-Command dotnet"));
+        assert!(p.build_script.contains("dotnet\\dotnet.exe"));
+        assert!(p.build_script.contains("exit 127"));
         assert!(p.build_script.contains("$buildExitCode = $LASTEXITCODE"));
         assert!(p.build_script.contains("exit $buildExitCode"));
         // README documents the framework-dependent runtime requirement.

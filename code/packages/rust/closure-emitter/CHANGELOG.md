@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.21.3] - 2026-07-02
+
+### Fixed — CLOC12.157 (gap-158): newline-aware template quasi emit
+
+`emit_template_element` now prints a template quasi whose `raw` text carries a
+**literal newline** — a multiline template `` `a⏎b` `` round-trips its interior
+line break byte-for-byte. Previously the quasi `raw` went straight to
+`write_str`, which `debug_assert!`s the run is newline-free (every `'\n'` must
+route through `newline()` so the source-map line/column bookkeeping stays
+correct); a multiline template therefore panicked the emitter worker. The fix
+splits `raw` on `'\n'`, writing each line segment via `write_str` and emitting a
+real `newline()` between segments, so `line` advances and `col` resets exactly
+as for any other newline. Single-line quasis are unaffected (one segment, no
+break). Other line-terminator bytes a raw may carry — a lone `'\r'` in a `\r\n`
+pair, and `U+2028` / `U+2029` — are written verbatim (bytes round-trip; only
+their column bookkeeping is approximate). Un-ignores the conformance port's
+`raw_preserves_internal_newline` (now 19 active `#[test]`s, **0 `#[ignore]`**)
+and adds three inline emitter tests. Resolves **gap-158**.
+
 ## [0.21.2] - 2026-07-02
 
 ### Test — CLOC12.156: CodePrinter template-literal conformance port
