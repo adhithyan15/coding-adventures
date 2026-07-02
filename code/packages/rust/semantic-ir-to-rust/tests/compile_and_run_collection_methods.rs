@@ -19,7 +19,10 @@
 //!   * `[1,2,3].length`                     → `3`
 //!   * `[1,2,3].reduce(0) { |a,x| a+x }`    → `6`  (and `.inject` too)
 //!   * `[1,2,3].map(&:to_s).join(",")`      → `"1,2,3"`  (`Symbol#to_proc`)
-//!   * `[1].bogus_xyz`                       → `nil`  (unknown ⇒ clean floor)
+//!
+//! (An *unknown* method now raises a typed `NoMethodError` rather than
+//! flooring to `nil` — cascade `sir-typed-runtime-errors`, T5 — so that case
+//! moved to `compile_and_run_typed_runtime_errors.rs`, which catches it.)
 //!
 //! `StrLit` interpolation is not accepted by the Rust backend, so — like
 //! the other Rust exec-proof tests — assertions are on numeric / array /
@@ -201,8 +204,13 @@ fn full_demo() -> Module {
         print_stmt(method(slit("hello"), "upcase", vec![])),
         // 8. [3,1,2].sort  → [1, 2, 3]
         print_stmt(method(seq(vec![ilit(3), ilit(1), ilit(2)]), "sort", vec![])),
-        // 9. [1].bogus_xyz  → nil  (unknown method ⇒ clean nil floor, no panic)
-        print_stmt(method(seq(vec![ilit(1)]), "bogus_xyz", vec![])),
+        // (An unknown method — `[1].bogus_xyz` — now raises a *typed*
+        //  `NoMethodError` rather than flooring to `nil` (cascade
+        //  `sir-typed-runtime-errors`, T5).  That surfaced boundary is proved
+        //  end-to-end in `compile_and_run_typed_runtime_errors.rs`, which
+        //  wraps it in `begin/rescue NoMethodError`; here we only exercise the
+        //  *resolvable* catalog, so the closed dispatch stays observable
+        //  without aborting this program.)
     ];
 
     demo_module(main_stmts, block_fns)
@@ -283,7 +291,6 @@ fn collection_methods_compile_and_run() {
             "1,2,3",     // map(&:to_s).join(",")
             "HELLO",     // "hello".upcase
             "[1, 2, 3]", // sort
-            "nil",       // bogus_xyz ⇒ clean nil floor
         ],
         "unexpected program output; full stdout:\n{stdout}"
     );

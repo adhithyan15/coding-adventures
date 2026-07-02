@@ -410,12 +410,19 @@ pub const RUNTIME: &str = r##"mod __sir {
             return Value::Int(0);
         }
         if any_float(&args) {
-            // Float division follows IEEE-754: `1.0 / 0.0` is `inf`
-            // rather than a panic.  Only the all-integer path keeps the
-            // historical divide-by-zero panic.
+            // Ruby raises `ZeroDivisionError` for `/` by zero on BOTH int
+            // and float operands (`1/0` and `1.0/0` both raise — Ruby does
+            // NOT hand back IEEE `inf` here, unlike a bare host `f64` `/`).
+            // We surface it as a typed `SirError` (via `raise`) so a
+            // translated `rescue ZeroDivisionError` matches it, rather than
+            // producing an uncatchable host `panic!` or a silent `inf`.
             let mut acc = as_f64(&args[0]);
             for a in &args[1..] {
-                acc /= as_f64(a);
+                let d = as_f64(a);
+                if d == 0.0 {
+                    raise("ZeroDivisionError", Value::Str(Rc::from("divided by 0")));
+                }
+                acc /= d;
             }
             return Value::Float(acc);
         }
@@ -423,7 +430,9 @@ pub const RUNTIME: &str = r##"mod __sir {
         for a in &args[1..] {
             let d = as_i64(a);
             if d == 0 {
-                panic!("division by zero");
+                // Typed `ZeroDivisionError` (was an uncatchable `panic!`)
+                // so `rescue ZeroDivisionError` catches it — Ruby parity.
+                raise("ZeroDivisionError", Value::Str(Rc::from("divided by 0")));
             }
             acc /= d;
         }
@@ -1109,9 +1118,10 @@ pub const RUNTIME: &str = r##"mod __sir {
     // reachable method is written out by hand below.  There is NO
     // reflective / dynamic lookup that could turn an attacker-controlled
     // method name into arbitrary behaviour: a name we do not enumerate
-    // simply falls through to `unknown_method`, which returns a controlled
-    // error value (Ruby `nil`, matching the Python reference's honest
-    // floor) — never an out-of-catalog effect.  This mirrors the C3 RCE
+    // simply falls through to `no_method_error`, which raises a typed
+    // `NoMethodError` carrying only the (data) name string — never an
+    // out-of-catalog effect.  (A KNOWN method used block-less floors to
+    // `unknown_method`'s `nil` instead — see those helpers.)  This mirrors the C3 RCE
     // lesson: the allowlist is the whole security boundary, so it must be
     // a closed, hand-written set, never a table keyed by the raw name.
     //
@@ -1149,13 +1159,59 @@ pub const RUNTIME: &str = r##"mod __sir {
         }
     }
 
-    // The honest "not in the catalog for this receiver" floor.  Ruby would
-    // raise `NoMethodError`; the reference runtimes instead return `nil`
-    // (the never-raise-on-the-OO-surface invariant).  We match that — a
-    // *controlled* value, never undefined behaviour — but keep the name in
-    // one place so the intent (and the security boundary) is explicit.
+    // The `nil` floor for a KNOWN method used in a shape Ruby tolerates
+    // without a value — e.g. a block-taking method (`map`, `select`,
+    // `reduce`) called WITHOUT its block.  Ruby returns an `Enumerator`
+    // there; SIR v0 has no `Enumerator`, so we floor to `nil` (a controlled
+    // value, never undefined behaviour) rather than raising.  This is
+    // distinct from `no_method_error` below: a name that is genuinely NOT
+    // in the catalog is a Ruby `NoMethodError`, but a block-less `map` is
+    // not an *unknown* method.  Also used for the defensive receiver-type
+    // guards at each catalog's entry, which are unreachable in practice
+    // (dispatch already routed by type).
     fn unknown_method(_recv: &Value, _name: &str) -> Value {
         Value::Nil
+    }
+
+    // The conventional Ruby class name of a value — for a `NoMethodError`
+    // message and nothing else.  A closed match (never reflection on a
+    // host type name), a verbatim parity port of the Go backend's
+    // `_sir_ruby_class_name`.  A user instance reports its own class tag so
+    // `obj.undefined` names the real class (e.g. `Dog`).
+    fn ruby_class_name(v: &Value) -> String {
+        match v {
+            Value::Nil => "NilClass".to_string(),
+            Value::Bool(true) => "TrueClass".to_string(),
+            Value::Bool(false) => "FalseClass".to_string(),
+            Value::Int(_) => "Integer".to_string(),
+            Value::Float(_) => "Float".to_string(),
+            Value::Str(_) => "String".to_string(),
+            Value::Sym(_) => "Symbol".to_string(),
+            Value::Seq(_) => "Array".to_string(),
+            Value::Map(_) => "Hash".to_string(),
+            Value::Pair(_) => "Pair".to_string(),
+            Value::Closure(_) => "Proc".to_string(),
+            Value::Instance(id) => instance_class(*id),
+            Value::Missing => "Object".to_string(),
+        }
+    }
+
+    // The honest "no such method" boundary: a name genuinely absent from
+    // the receiver's catalog (or an instance's method table) is a Ruby
+    // `NoMethodError`.  We surface a typed `SirError` (via `raise`) with the
+    // Ruby-shaped message `undefined method 'x' for <Class>`, so a
+    // translated `rescue NoMethodError` (or `rescue NameError`, its
+    // superclass) catches it — replacing the old silent `nil` floor for a
+    // truly-unknown method.  Resolution stays a closed match on the name
+    // (never a reflective host lookup — the C3 allowlist discipline), so
+    // this only ever fires for a name no catalog arm claimed.
+    fn no_method_error(recv: &Value, name: &str) -> ! {
+        raise(
+            "NoMethodError",
+            Value::Str(Rc::from(
+                format!("undefined method '{}' for {}", name, ruby_class_name(recv)).as_str(),
+            )),
+        )
     }
 
     /// Dispatch collection method `name` on `recv`.
@@ -1201,9 +1257,9 @@ pub const RUNTIME: &str = r##"mod __sir {
             // `bool` is checked before the numeric arm on purpose: a Ruby
             // `true`/`false` is not a Numeric, so it never resolves the
             // numeric catalog.
-            Value::Bool(_) => unknown_method(&recv, name),
+            Value::Bool(_) => no_method_error(&recv, name),
             Value::Int(_) | Value::Float(_) => numeric_method(recv, name, args),
-            _ => unknown_method(&recv, name),
+            _ => no_method_error(&recv, name),
         }
     }
 
@@ -1223,6 +1279,23 @@ pub const RUNTIME: &str = r##"mod __sir {
             "length" | "size" => Value::Int(items_rc.borrow().len() as i64),
             "first" => items_rc.borrow().first().cloned().unwrap_or(Value::Nil),
             "last" => items_rc.borrow().last().cloned().unwrap_or(Value::Nil),
+            // `Array#[]` — the LENIENT indexed read (the OO-surface `arr[i]`,
+            // as opposed to the strict SIR-native `SeqIndex` primitive).  Ruby
+            // returns `nil` for an out-of-bounds index (it does NOT raise —
+            // that is `fetch`'s job), and folds a negative index from the end.
+            // This arm keeps `arr[oob] ⇒ nil` from falling through to the
+            // `no_method_error` floor.
+            "[]" => {
+                let items = items_rc.borrow();
+                let len = items.len() as i64;
+                let raw = as_i64(pos.first().unwrap_or(&Value::Nil));
+                let idx = if raw < 0 { raw + len } else { raw };
+                if idx >= 0 && idx < len {
+                    items[idx as usize].clone()
+                } else {
+                    Value::Nil
+                }
+            }
             "reverse" => {
                 let mut v = items_rc.borrow().clone();
                 v.reverse();
@@ -1262,6 +1335,33 @@ pub const RUNTIME: &str = r##"mod __sir {
                 recv
             }
             "pop" => items_rc.borrow_mut().pop().unwrap_or(Value::Nil),
+            // `Array#fetch(i)` is the STRICT indexed read: unlike `arr[i]`
+            // (which returns `nil` out of bounds), a `fetch` past the end
+            // (or a negative index past the front) raises `IndexError` in
+            // Ruby.  We surface a typed `SirError` so `rescue IndexError`
+            // matches.  A supplied default arg (`fetch(i, default)`) is
+            // returned instead of raising, matching Ruby.
+            "fetch" => {
+                let items = items_rc.borrow();
+                let len = items.len() as i64;
+                let raw = as_i64(pos.first().unwrap_or(&Value::Nil));
+                // Ruby folds a negative index from the end (`-1` ⇒ last).
+                let idx = if raw < 0 { raw + len } else { raw };
+                if idx >= 0 && idx < len {
+                    items[idx as usize].clone()
+                } else if let Some(default) = pos.get(1) {
+                    default.clone()
+                } else {
+                    drop(items);
+                    raise(
+                        "IndexError",
+                        Value::Str(Rc::from(
+                            format!("index {} outside of array bounds: {}...{}", raw, -len, len)
+                                .as_str(),
+                        )),
+                    );
+                }
+            }
             // ── block-taking Array methods ────────────────────────
             "each" => {
                 if let Some(b) = &block {
@@ -1364,7 +1464,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                 }
                 acc
             }
-            _ => unknown_method(&recv, name),
+            _ => no_method_error(&recv, name),
         }
     }
 
@@ -1382,10 +1482,48 @@ pub const RUNTIME: &str = r##"mod __sir {
         match name {
             "keys" => seq_lit(entries_rc.borrow().iter().map(|(k, _)| k.clone()).collect()),
             "values" => seq_lit(entries_rc.borrow().iter().map(|(_, v)| v.clone()).collect()),
+            // `Hash#[]` — the LENIENT keyed read (the OO-surface `hash[k]`,
+            // as opposed to the SIR-native `MapGet`).  Ruby returns `nil` for a
+            // missing key (never raises — that is `fetch`'s job).  Keeps
+            // `hash[miss] ⇒ nil` from reaching the `no_method_error` floor.
+            "[]" => {
+                let needle = pos.first().cloned().unwrap_or(Value::Nil);
+                entries_rc
+                    .borrow()
+                    .iter()
+                    .find(|(k, _)| value_eq(k, &needle))
+                    .map(|(_, v)| v.clone())
+                    .unwrap_or(Value::Nil)
+            }
             "size" | "length" => Value::Int(entries_rc.borrow().len() as i64),
             "has_key?" | "key?" | "include?" | "member?" => {
                 let needle = pos.first().cloned().unwrap_or(Value::Nil);
                 Value::Bool(entries_rc.borrow().iter().any(|(k, _)| value_eq(k, &needle)))
+            }
+            // `Hash#fetch(k)` is the STRICT keyed read: unlike `hash[k]`
+            // (which returns `nil` for a missing key), a `fetch` of an
+            // absent key raises `KeyError` in Ruby.  We surface a typed
+            // `SirError` so `rescue KeyError` matches.  A supplied default
+            // arg (`fetch(k, default)`) is returned instead of raising.
+            "fetch" => {
+                let needle = pos.first().cloned().unwrap_or(Value::Nil);
+                let hit = entries_rc
+                    .borrow()
+                    .iter()
+                    .find(|(k, _)| value_eq(k, &needle))
+                    .map(|(_, v)| v.clone());
+                match hit {
+                    Some(v) => v,
+                    None => match pos.get(1) {
+                        Some(default) => default.clone(),
+                        None => raise(
+                            "KeyError",
+                            Value::Str(Rc::from(
+                                format!("key not found: {}", format(&needle)).as_str(),
+                            )),
+                        ),
+                    },
+                }
             }
             "each" | "each_pair" => {
                 if let Some(b) = &block {
@@ -1418,7 +1556,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                 }
                 None => unknown_method(&recv, name),
             },
-            _ => unknown_method(&recv, name),
+            _ => no_method_error(&recv, name),
         }
     }
 
@@ -1453,7 +1591,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                 };
                 seq_lit(parts)
             }
-            _ => unknown_method(&recv, name),
+            _ => no_method_error(&recv, name),
         }
     }
 
@@ -1484,7 +1622,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                 let _ = pos;
                 recv
             }
-            _ => unknown_method(&recv, name),
+            _ => no_method_error(&recv, name),
         }
     }
 
@@ -1520,7 +1658,7 @@ pub const RUNTIME: &str = r##"mod __sir {
             "length" | "size" => Value::Int(s.chars().count() as i64),
             "upcase" => intern(&s.to_uppercase()),
             "downcase" => intern(&s.to_lowercase()),
-            _ => unknown_method(&recv, name),
+            _ => no_method_error(&recv, name),
         }
     }
 
@@ -1989,7 +2127,10 @@ pub const RUNTIME: &str = r##"mod __sir {
         };
         match resolve_method(&METHOD_TABLE, Some(class), name) {
             Some(f) => apply_with_self(&f, recv.clone(), args),
-            None => unknown_method(recv, name),
+            // An instance method genuinely absent from the class's table
+            // (and all ancestors) is a Ruby `NoMethodError` — surface it
+            // typed so `rescue NoMethodError` catches it.
+            None => no_method_error(recv, name),
         }
     }
 
