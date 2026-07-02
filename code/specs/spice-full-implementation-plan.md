@@ -33,32 +33,22 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation.
+1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipts.
    - Status: current PR completion candidate.
    - Add schema-versioned Rust app shell dashboard dispatch-queue lane-tab
      panel-card-action-menu-group-shortcut-command-palette-search-invocation
-     surfaces and JSON helpers that convert command-palette search selections
-     into deterministic invocation state, invocation action, invocation
-     message, blocked reason, `canInvoke`, `canDispatch`, selected command,
-     handler, target, and target-kind metadata for first-render product-shell
-     command dispatch UIs.
-   - Preserve package name, source fingerprint, ready/blocked route, status
-     severity, attention-required flag, search invocation ID, search selection
-     ID, search results ID, search index ID, palette ID, registry ID, command
-     group, raw query, normalized query, query tokens, requested/selected
-     search-result IDs, selected search-index entry ID, palette item ID,
-     command-entry ID, binding ID, shortcut ID, command ID, registry ID,
-     handler ID, invocation kind, scope, target kind, target, menu group ID,
-     queue state, label, summary, accelerator, item/action ID lists, matched
-     query tokens, selection source/state, selected active/attention/default/
-     primary flags, selectable/enabled/disabled/empty/visible flags,
-     `canInvoke`, `canDispatch`, invocation state/action/message, blocked
-     reason, active/attention/default/primary search-result IDs, result counts,
-     command-palette-search-selection capability ID,
-     command-palette-search-invocation capability ID, and advertised capability
-     count so Mosaic, WebAssembly, and product shells can append compact lane
-     card action menu shortcut command invocations without walking every queue
-     item.
+     receipt surfaces and JSON helpers that convert each command-palette search
+     invocation attempt into a deterministic accepted, blocked, or empty
+     receipt for first-render product-shell dispatch feedback.
+   - Preserve package name, source fingerprint, route/status metadata, receipt
+     stream ID, search invocation/selection/results/index IDs, palette ID,
+     registry ID, command group, raw/normalized query, query tokens, invocation
+     state, `canDispatch`, latest/accepted/blocked/empty receipt IDs, receipt
+     counts, selected search-result/command/handler/target/label/queue-state
+     metadata, dispatch action, blocked reason, receipt message, invocation
+     capability ID, invocation-receipts capability ID, and advertised
+     capability count so Mosaic, WebAssembly, and product shells can render
+     post-invocation history without reparsing the selected command payload.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
