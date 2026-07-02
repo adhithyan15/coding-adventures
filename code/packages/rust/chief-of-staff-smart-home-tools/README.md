@@ -92,11 +92,11 @@ Chief of Staff job/session/agent
   -> activation-risk list and summary reads for policy-tier/surface rollout risk
   -> activation dependency graph list and summary reads for prerequisite edges
   -> runtime snapshot, pending-work, attention-overview, remediation-plan,
-     operations-brief, safety-brief, readiness-brief, desired-state, and
-     pairing-session inventory reads
+     operations-brief, safety-brief, readiness-brief, maintenance-brief,
+     desired-state, and pairing-session inventory reads
   -> desired-state target set/clear through runtime authorization
   -> non-mutating supervision plan previews
-  -> supervision remediation and runtime maintenance-window/action/plan/ticket/work-order/guardrail/evidence/review/disposition/action/outcome/readiness/handoff reads
+  -> supervision remediation and runtime maintenance-window/action/plan/ticket/work-order/guardrail/evidence/review/disposition/action/outcome/readiness/handoff/reconciliation reads
   -> authorized desired-state reconciliation and supervision ticks
   -> supervised worker inventory and heartbeat schedule reads
   -> device command acceptance
@@ -274,6 +274,7 @@ Chief of Staff job/session/agent
 - `smart_home.get_operations_brief`
 - `smart_home.get_safety_brief`
 - `smart_home.get_readiness_brief`
+- `smart_home.get_maintenance_brief`
 - `smart_home.get_topology_summary`
 - `smart_home.list_desired_states`
 - `smart_home.set_desired_state`

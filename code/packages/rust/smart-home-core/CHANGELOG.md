@@ -6,6 +6,10 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `smart_home.get_maintenance_brief` tool descriptor for read-only Chief
+  maintenance closeout packets over existing D23 runtime maintenance windows,
+  actions, work orders, evidence, readiness, handoff, and reconciliation
+  primitives.
 - `smart_home.get_readiness_brief` tool descriptor for read-only Chief readiness
   packets over existing D23 controller handoff, runtime operations, safety, and
   catalog primitives.

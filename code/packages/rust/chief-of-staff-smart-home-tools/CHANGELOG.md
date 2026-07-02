@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added `smart_home.get_maintenance_brief`, a read-only Chief adapter tool that
+  composes existing D23 runtime maintenance windows, actions, work orders,
+  evidence, readiness, handoff, and reconciliation signals into one maintenance
+  closeout packet without owning smart-home state.
 - Added `smart_home.get_readiness_brief`, a read-only Chief adapter tool that
   composes existing D23 controller handoff, runtime operations, safety, and
   catalog signals into one readiness packet without owning smart-home state.
